@@ -10,10 +10,6 @@ const config = require('./config');
 
 const { port } = config;
 
-
-const { mongoConnection } = require('./mongo');
-
-
 // redis client
 const redisClient = require('./redis');
 
@@ -77,10 +73,15 @@ app.use('/', express.static(path.resolve(config.baseDir, 'public')));
 
 
 // routes
-app.use('/', csrfProtection, require('./routes/index'));
+app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 app.use('/upload', require('./routes/upload'));
 
+
+// signin, signup, report, verify
+app.use('/account', require('./routes/user'));
+
+app.use('/cheaters', require('./routes/cheater'));
 
 // error handling
 app.use((err, req, res, next) => {
@@ -92,14 +93,18 @@ app.use((err, req, res, next) => {
 app.use((req, res, next) => res.sendStatus(404));
 
 
-mongoConnection.on('error', console.error.bind(console, 'mongodb connection error!!'));
-mongoConnection.once('open', () => {
-  // db connected
-  console.log('mongodb connected...');
+// mongoConnection.on('error', console.error.bind(console, 'mongodb connection error!!'));
+// mongoConnection.once('open', () => {
+//   // db connected
+//   console.log('mongodb connected...');
 
-  // app start
-  app.listen(port, () => console.log(`app listen on port ${port}...`));
-});
+//   // app start
+//   app.listen(port, () => console.log(`app listen on port ${port}...`));
+// });
+
+
+// app start
+app.listen(port, () => console.log(`app listen on port ${port}...`));
 
 
 module.exports = app;

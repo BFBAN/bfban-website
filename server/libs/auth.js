@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 
-module.exports = function verifyJWTToken(token) {
+function verifyJWTToken(token) {
   return new Promise(((resolve, reject) => {
     jwt.verify(token, config.secret, (err, decodedToken) => {
       if (err || !decodedToken) {
@@ -10,4 +10,8 @@ module.exports = function verifyJWTToken(token) {
       return resolve(decodedToken);
     });
   }));
+}
+
+module.exports = {
+  verifyJWTToken,
 };

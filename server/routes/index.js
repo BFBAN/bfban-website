@@ -1,11 +1,14 @@
-const express = require('express')
-;
+const express = require('express');
+const csrf = require('csurf');
+
 const router = express.Router();
+
+const csrfProtection = csrf({ cookie: true });
 
 const grabYouku = require('../scraper/youku');
 const grabTeamliquid = require('../scraper/teamliquid');
 
-router.get('/', (req, res, next) => {
+router.get('/', csrfProtection, (req, res, next) => {
   res.render('index', { title: 'Hello world', csrfToken: req.csrfToken() });
 });
 
