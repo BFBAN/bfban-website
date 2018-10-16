@@ -5,8 +5,12 @@
 
             <router-link to="/about">About</router-link>
             <router-link to="/report">Report</router-link>
+            <router-link to="/list">List</router-link>
 
             <router-link to="/misc">Misc</router-link>
+
+            <router-link to="/signin">登录</router-link>
+            <router-link to="/signup">注册</router-link>
         </header>
 
         <div>
@@ -22,7 +26,7 @@
 
 <script>
 export default {
-    
+
 }
 </script>
 
