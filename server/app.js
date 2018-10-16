@@ -73,15 +73,8 @@ app.use('/', express.static(path.resolve(config.baseDir, 'public')));
 
 
 // routes
-app.use('/', require('./routes/index'));
-app.use('/auth', require('./routes/auth'));
-app.use('/upload', require('./routes/upload'));
+app.use('/', require('./routes/'));
 
-
-// signin, signup, report, verify
-app.use('/account', require('./routes/user'));
-
-app.use('/cheaters', require('./routes/cheater'));
 
 // error handling
 app.use((err, req, res, next) => {
