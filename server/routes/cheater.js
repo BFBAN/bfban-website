@@ -1,8 +1,9 @@
 const express = require('express');
-const { verifyJWTToken } = require('../libs/auth');
-const db = require('../mysql');
 const moment = require('moment');
 const uuidv4 = require('uuid/v4');
+
+const { verifyJWTMiddleware, verifyPrivilegeMiddleware } = require('../middlewares/auth');
+const db = require('../mysql');
 
 const router = express.Router();
 
@@ -63,12 +64,12 @@ router.get('/:uid', async (req, res, next) => {
 // originId, cheatMethods, bilibiliLink, description
 // insert user_report_cheater db
 // userId, cheaterUId, datatime
-router.post('/', async (req, res, next) => {
+router.post('/', verifyJWTMiddleware, async (req, res, next) => {
   const {
     originId, cheatMethods, bilibiliLink, description,
   } = req.body;
-  const token = await verifyJWTToken(req.cookies['access-token']);
-  const { userId } = token;
+
+  const { userId } = req.user;
 
   const re = await db.query('select * from cheaters where origin_id = ?', [originId])
     .catch(e => next(e));
@@ -79,7 +80,7 @@ router.post('/', async (req, res, next) => {
 
   // if not in db
   if (re.length === 0) {
-    const result = await db.query('insert into cheaters set ?', {
+    await db.query('insert into cheaters set ?', {
       u_id: uuId,
       origin_id: originId,
     })
@@ -112,18 +113,11 @@ router.post('/', async (req, res, next) => {
 
 // insert user_verify_cheater db
 // status, suggestion, userId, cheaterUId, datetime
-router.post('/verify', async (req, res, next) => {
+router.post('/verify', verifyJWTMiddleware, verifyPrivilegeMiddleware, async (req, res, next) => {
   const { status, suggestion, cheaterUId } = req.body;
-  const token = await verifyJWTToken(req.cookies['access-token']);
-  const { userId } = token;
-  const userPrivilege = token.privilege;
 
-  if (userPrivilege === 'normal') {
-    return res.json({
-      error: 1,
-      msg: 'no privilege',
-    });
-  }
+  const { userId } = req.user;
+
 
   const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
@@ -139,7 +133,7 @@ router.post('/verify', async (req, res, next) => {
   await db.query('update cheaters set status = ? where u_id = ? ', [status, cheaterUId])
     .catch(e => next(e));
 
-  res.json({
+  return res.json({
     error: 0,
     data: {
       cheaterUId,

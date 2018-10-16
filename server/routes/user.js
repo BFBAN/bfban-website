@@ -17,12 +17,12 @@ router.post('/signin', async (req, res, next) => {
     .catch(e => next(e));
 
   if (result[0] && await bcrypt.compare(password, result[0].password)) {
-    const privilege = result[0].privilege;
+    const userPrivilege = result[0].privilege;
 
     const token = jwt.sign({
       username,
       userId: result[0].id,
-      privilege,
+      userPrivilege,
     }, config.secret, {
       expiresIn: '1 day',
     });
@@ -36,7 +36,7 @@ router.post('/signin', async (req, res, next) => {
       error: 0,
       data: {
         username,
-        privilege,
+        userPrivilege,
       },
     });
   } else {
@@ -67,12 +67,12 @@ router.post('/signup', async (req, res, next) => {
   })
     .catch(e => next(e));
 
-  const privilege = result.privilege;
+  const userPrivilege = result.privilege;
 
   const token = jwt.sign({
     username,
     userId: result.insertId,
-    privilege,
+    userPrivilege,
   }, config.secret, {
     expiresIn: '1 day',
   });
@@ -86,7 +86,7 @@ router.post('/signup', async (req, res, next) => {
     error: 0,
     data: {
       username,
-      privilege,
+      userPrivilege,
     },
   });
 });

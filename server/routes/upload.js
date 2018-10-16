@@ -8,7 +8,7 @@ const express = require('express');
 
 const uploadRouter = express.Router();
 
-const verifyJWTMiddleware = require('../middlewares/auth');
+const { verifyJWTMiddleware } = require('../middlewares/auth');
 
 const config = require('../config');
 
