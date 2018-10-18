@@ -32,7 +32,7 @@ function generateUploadToken() {
   // https://github.com/qiniu/nodejs-sdk/blob/master/qiniu/storage/rs.js
   const putPolicy = new qiniu.rs.PutPolicy({
     scope: bucket,
-    mimeLimit: 'image/*',
+    mimeLimit: 'image/*;video/mp4',
     expires: 60 * 60 * 24 * 365, // 一年有效期 正确参数是expires， 傻逼七牛文档
     returnBody: '{"key":$(key),"hash":$(etag),"w":$(imageInfo.width),"h":$(imageInfo.height),"ext":$(ext)}', // 在一次傻逼七牛文档，明明这里是要放可以被JSON parse的string 格式
 

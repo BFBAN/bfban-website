@@ -9,10 +9,11 @@
         :headers="headers"
         :data="extraData"
         action="//up-z2.qiniu.com"
-        accept="image/*"
+        accept="image/*,video/mp4"
+        :format="['jpg','jpeg','png', 'gif', 'mp4']"
         multiple
         name="file"
-        
+
         :with-credentials="withCredentials"
         :show-upload-list="showUploadList"
 
@@ -35,9 +36,28 @@
 import axios from 'axios'
 import qs from 'qs'
 
+// https://github.com/zenoamaro/react-quill/issues/270
+// https://codepen.io/emanuelbsilva/pen/Zpmmzv
+import Quill from 'quill'
+var Embed = Quill.import('blots/embed');
+class QuillHashtag extends Embed {
+  static create(value) {
+    let node = super.create(value);
+    node.innerHTML = `<video width="400" controls><source src="${value}" type="video/mp4"></video>`;
+    return node;
+  }
+}
+QuillHashtag.blotName = 'mp4';
+QuillHashtag.className = 'ql-mp4';
+QuillHashtag.tagName = 'div';
+
+Quill.register({
+    'formats/mp4': QuillHashtag
+});
+
 const toolbarOptions = [
     ["bold", "italic", "underline", "strike"],
-    ["link", "image"],
+    ["link", "image", "video"],
     ["clean"]
 ];
 export default {
@@ -51,6 +71,7 @@ export default {
             extraData: {
                 token: ''
             },
+            uploadType: '',
 
 
             content: '',
@@ -63,11 +84,22 @@ export default {
                             image: (value)=> {
                                 if (value) {
                                     console.log(value)
+                                    this.uploadType = 'image';
                                     document.querySelector('.file-uploader input').click()
                                 } else {
                                     this.quill.format("image", false)
                                 }
-                                
+
+                            },
+
+                            video: (value) => {
+                                if (value) {
+                                    console.log(value)
+                                    this.uploadType = 'video';
+                                    document.querySelector('.file-uploader input').click()
+                                } else {
+                                    this.quill.format("video", false)
+                                }
                             }
                         }
                     }
@@ -90,8 +122,13 @@ export default {
             const quill = this.$refs.quillEditor.quill
             // 获取光标所在位置
             let length = quill.getSelection().index
-            // 插入图片
-            quill.insertEmbed(length, "image", "http://ban.bamket.com/"+res.hash)
+            // 插入图片 或 插入视频
+            if (this.uploadType === 'image') {
+              quill.insertEmbed(length, 'image', "http://ban.bamket.com/"+res.hash)
+            }
+            if (this.uploadType === 'video') {
+              quill.insertEmbed(length, 'mp4', "http://ban.bamket.com/"+res.hash)
+            }
             // 调整光标到最后
             quill.setSelection(length + 1)
 
