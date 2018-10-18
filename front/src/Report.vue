@@ -4,7 +4,7 @@
       <h2>Report</h2>
 
       <FormItem label="游戏ID">
-        <Input v-model="formItem.originId" placeholder=""></Input>
+        <Input v-model="formItem.originId" placeholder="" />
         <span>
           <a :href="'https://battlefieldtracker.com/bf1/profile/pc/' + formItem.originId">{{formItem.originId}}</a>
         </span>
@@ -37,14 +37,14 @@
         </FormItem>
 
       <FormItem label="B站链接">
-        <Input v-model="formItem.bilibiliLink" placeholder=""></Input>
+        <Input v-model="formItem.bilibiliLink" placeholder="" />
         <span>
           <a :href="formItem.bilibiliLink">{{formItem.bilibiliLink}}</a>
         </span>
       </FormItem>
 
       <FormItem label="论述">
-          <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+          <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." />
       </FormItem>
 
       <FormItem>

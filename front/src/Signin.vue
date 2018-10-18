@@ -3,11 +3,11 @@
       <h2>登录</h2>
 
       <FormItem label="用户名">
-        <Input v-model="signin.username" placeholder="用户名"></Input>
+        <Input v-model="signin.username" placeholder="用户名" />
       </FormItem>
 
       <FormItem label="密码">
-        <Input type="password" v-model="signin.password" placeholder="密码"></Input>
+        <Input type="password" v-model="signin.password" placeholder="密码" />
       </FormItem>
 
       <FormItem>

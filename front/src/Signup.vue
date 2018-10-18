@@ -3,19 +3,19 @@
       <h2>注册</h2>
 
       <FormItem label="用户名">
-        <Input v-model="signup.username" placeholder="用户名"></Input>
+        <Input v-model="signup.username" placeholder="用户名" />
       </FormItem>
 
       <FormItem label="密码">
-        <Input type="password" v-model="signup.password" placeholder="密码"></Input>
+        <Input type="password" v-model="signup.password" placeholder="密码" />
       </FormItem>
 
       <FormItem label="游戏ID">
-        <Input v-model="signup.originId" placeholder="选题"></Input>
+        <Input v-model="signup.originId" placeholder="选题" />
       </FormItem>
 
       <FormItem label="QQ">
-        <Input v-model="signup.qq" placeholder="选填"></Input>
+        <Input v-model="signup.qq" placeholder="选填" />
       </FormItem>
 
       <FormItem>
