@@ -2,10 +2,10 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 
 
+const routes = require('./routes/');
 const config = require('./config');
 
 const { port } = config;
@@ -17,17 +17,15 @@ const redisClient = require('./redis');
 // const session = require('express-session')
 // const RedisStore = require('connect-redis')(session)
 
-// csrf protection
-const csrfProtection = csrf({ cookie: true });
-
 // create express app
 const app = express();
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+// cors
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//   next();
+// });
 
 app.use(cookieParser(config.secret, {
   httpOnly: true,
@@ -71,9 +69,8 @@ app.set('view engine', 'ejs');
 // set static
 app.use('/', express.static(path.resolve(config.baseDir, 'public')));
 
-
 // routes
-app.use('/', require('./routes/'));
+app.use('/', routes);
 
 
 // error handling
