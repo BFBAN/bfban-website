@@ -61,7 +61,7 @@ const toolbarOptions = [
     ["clean"]
 ];
 export default {
-    data: function() {
+    data() {
         return {
             withCredentials: false,
             showUploadList: true,
@@ -83,7 +83,6 @@ export default {
                         handlers: {
                             image: (value)=> {
                                 if (value) {
-                                    console.log(value)
                                     this.uploadType = 'image';
                                     document.querySelector('.file-uploader input').click()
                                 } else {
@@ -94,7 +93,6 @@ export default {
 
                             video: (value) => {
                                 if (value) {
-                                    console.log(value)
                                     this.uploadType = 'video';
                                     document.querySelector('.file-uploader input').click()
                                 } else {
