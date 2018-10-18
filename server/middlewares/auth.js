@@ -20,6 +20,7 @@ function verifyJWT(req, res, next) {
 function verifyPrivilege(req, res, next) {
   const { userPrivilege } = req.user;
 
+  // root, super, admin, normal
   if (userPrivilege === 'normal') {
     res.json({
       error: 1,

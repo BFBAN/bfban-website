@@ -3,6 +3,7 @@ const csrf = require('csurf');
 
 const router = express.Router();
 
+// csrf protection
 const csrfProtection = csrf({ cookie: true });
 
 const grabYouku = require('../scraper/youku');
