@@ -27,7 +27,10 @@
         <quill-editor
         ref="quillEditor"
         :options="editorOption"
-        v-model="content">
+
+        :content="content"
+        @change="onEditorChange($event)"
+        >
         </quill-editor>
     </div>
 </template>
@@ -61,6 +64,12 @@ const toolbarOptions = [
     ["clean"]
 ];
 export default {
+    props: {
+        content: {
+            type: String,
+            default: '',
+        }
+    },
     data() {
         return {
             withCredentials: false,
@@ -106,6 +115,11 @@ export default {
         }
     },
     methods: {
+        onEditorChange({ quill, html, text }) {
+            this.$emit('change', html)
+            this.content = html
+        },
+
         handleBeforeUpload: async function(files) {
             // axios get qiniu tooken to extraData
 

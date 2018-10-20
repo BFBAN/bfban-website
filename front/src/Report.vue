@@ -1,7 +1,7 @@
 <template>
 
     <Form :label-width="80">
-      <h2>Report</h2>
+      <h2>举报作弊</h2>
 
       <FormItem label="游戏ID">
         <Input v-model="formItem.originId" placeholder="" />
@@ -44,16 +44,21 @@
       </FormItem>
 
       <FormItem label="论述">
-          <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." />
+          <!-- <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." /> -->
+          <Misc :content="formItem.description" @change="handleMiscChange" />
       </FormItem>
 
       <FormItem>
           <Button @click.prevent.stop="handleReport" type="primary">提交</Button>
       </FormItem>
+      <T name="Hello T" />
     </Form>
 </template>
 
 <script>
+import T from './T.vue'
+import Misc from './Misc.vue'
+
 export default {
   data() {
      return {
@@ -61,11 +66,17 @@ export default {
                   originId: '',
                   bilibiliLink: '',
                   checkbox: ['aimbot'],
-                  description: ''
+                  description: '请论述为什么你觉得他作弊...'
               }
             }
   },
+  components: {
+    T, Misc
+  },
   methods: {
+    handleMiscChange: function(h) {
+      this.formItem.description = h
+    },
     handleReport: function() {
       const cheatMethods = this.formItem.checkbox.join(',');
 
