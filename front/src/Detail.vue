@@ -12,7 +12,7 @@
 
     <Divider />
 
-    <div style="position: relative;">
+    <div>
       <h2 style="margin: 1rem 0;">举报经过</h2>
 
       <TimelineItem v-for="d in reports" :key="d.create_datetime">
@@ -73,7 +73,7 @@
         </TimelineItem>
       </div>
 
-      <Spin size="large" fix v-if="spinShow"></Spin>
+      <Spin size="large" v-if="spinShow"></Spin>
     </div>
 
     <div v-show="isAdmin">

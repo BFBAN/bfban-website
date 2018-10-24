@@ -19,7 +19,7 @@
 
     <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
 
-    <div style="position: relative;">
+    <div>
       <ul>
         <li>
           <span><b>游戏ID</b></span>
@@ -35,7 +35,7 @@
         </span>
         </li>
       </ul>
-      <Spin size="large" fix v-if="spinShow"></Spin>
+      <Spin size="large" v-if="spinShow"></Spin>
     </div>
   </div>
 </template>
