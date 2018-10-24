@@ -13,55 +13,61 @@
     <Divider />
 
     <div style="position: relative;">
-      <h2>举报过程:</h2>
+      <h2 style="margin: 1rem 0;">举报经过</h2>
+
       <TimelineItem v-for="d in reports" :key="d.create_datetime">
         <div class="timeline-time">
-          <Time :time="d.create_datetime" type="datetime"></Time>
+          <Time :time="d.create_datetime"></Time>
         </div>
         <div class="timeline-content">
           <p>
-            举报人 {{d.username}}
-            <Tag>
-              {{d.privilege}}
-            </Tag>
+            被
+            <b style="font-size: 1rem;">{{d.username}}</b>
+            举报
           </p>
 
           <p>
-            作弊方式 {{ d.cheat_methods }}
+            <Tag color="warning">
+              {{ d.cheat_methods }}
+            </Tag>
           </p>
-          <p>
-            b站链接
+          <p v-if="d.bilibili_link">
+            <Tag color="primary">
+              b站视频
+            </Tag>
             <a :href="d.bilibili_link" target="_blank">{{ d.bilibili_link }}</a>
           </p>
-          <div>
-            论证
-            <p v-html="d.description"></p>
+          <div v-html="d.description" style="background-color: #e4f5ff6b;
+    padding: 1rem;
+    border-radius: .4rem;
+    border: 1px solid #cccccc8c;">
           </div>
         </div>
       </TimelineItem>
 
       <div v-if="isVerified">
         <Divider />
-        <h2>
-          处理过程:
-        </h2>
+        <h2 style="margin: 1rem 0;">处理经过</h2>
+
         <TimelineItem v-for="d in verifies" :key="d.create_datetime">
           <div class="timeline-time">
-            <Time :time="d.create_datetime" type="datetime"></Time>
+            <Time :time="d.create_datetime"></Time>
           </div>
           <div class="timeline-content">
             <p>
-              处理人 {{d.username}}
-              <Tag color="primary">
-                {{d.privilege}}
-              </Tag>
+              被
+              <b style="font-size: 1rem;">{{d.username}}</b>
+              认定为
             </p>
             <p>
-              将状态处理成 {{ handleStatus(d.status) }}
+              <Tag color="warning">
+                {{ handleStatus(d.status) }}
+              </Tag>
             </p>
-            <div>
-              处理意见
-              <p v-html="d.suggestion"></p>
+            <div v-html="d.suggestion" style="background-color: #e4f5ff6b;
+    padding: 1rem;
+    border-radius: .4rem;
+    border: 1px solid #cccccc8c;">
             </div>
           </div>
         </TimelineItem>
