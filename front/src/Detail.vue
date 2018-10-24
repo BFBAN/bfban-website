@@ -11,65 +11,64 @@
     </p>
 
     <Divider />
-    <h2>
-      举报过程:
-    </h2>
 
-    <TimelineItem v-for="d in reports" :key="d.create_datetime">
-      <div class="timeline-time">
-        <Time :time="d.create_datetime" type="datetime"></Time>
-      </div>
-      <div class="timeline-content">
-        <p>
-          举报人 {{d.username}}
-          <Tag>
-            {{d.privilege}}
-          </Tag>
-        </p>
-
-        <p>
-        作弊方式 {{ d.cheat_methods }}
-        </p>
-        <p>
-          b站链接
-          <a :href="d.bilibili_link" target="_blank">{{ d.bilibili_link }}</a>
-        </p>
-        <div>
-          论证
-          <p v-html="d.description"></p>
-        </div>
-      </div>
-    </TimelineItem>
-
-    <div v-if="isVerified">
-      <Divider />
-      <h2>
-        处理过程:
-      </h2>
-      <TimelineItem v-for="d in verifies" :key="d.create_datetime">
+    <div style="position: relative;">
+      <h2>举报过程:</h2>
+      <TimelineItem v-for="d in reports" :key="d.create_datetime">
         <div class="timeline-time">
           <Time :time="d.create_datetime" type="datetime"></Time>
         </div>
         <div class="timeline-content">
           <p>
-            处理人 {{d.username}}
-            <Tag color="primary">
+            举报人 {{d.username}}
+            <Tag>
               {{d.privilege}}
             </Tag>
           </p>
+
           <p>
-            将状态处理成 {{ handleStatus(d.status) }}
+            作弊方式 {{ d.cheat_methods }}
+          </p>
+          <p>
+            b站链接
+            <a :href="d.bilibili_link" target="_blank">{{ d.bilibili_link }}</a>
           </p>
           <div>
-            处理意见
-            <p v-html="d.suggestion"></p>
+            论证
+            <p v-html="d.description"></p>
           </div>
         </div>
       </TimelineItem>
+
+      <div v-if="isVerified">
+        <Divider />
+        <h2>
+          处理过程:
+        </h2>
+        <TimelineItem v-for="d in verifies" :key="d.create_datetime">
+          <div class="timeline-time">
+            <Time :time="d.create_datetime" type="datetime"></Time>
+          </div>
+          <div class="timeline-content">
+            <p>
+              处理人 {{d.username}}
+              <Tag color="primary">
+                {{d.privilege}}
+              </Tag>
+            </p>
+            <p>
+              将状态处理成 {{ handleStatus(d.status) }}
+            </p>
+            <div>
+              处理意见
+              <p v-html="d.suggestion"></p>
+            </div>
+          </div>
+        </TimelineItem>
+      </div>
+
+      <Spin size="large" fix v-if="spinShow"></Spin>
     </div>
-
-    <Spin size="large" fix v-if="spinShow"></Spin>
-
 
     <div v-show="isAdmin">
       <Divider />
@@ -146,7 +145,7 @@ export default {
         1: "石锤",
         2: "嫌疑玩家再观察",
         3: "没有问题不是挂",
-        4: "搞乱的",
+        4: "捣乱的",
       }
 
       return statusObj[status]

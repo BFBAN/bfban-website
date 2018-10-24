@@ -6,11 +6,24 @@
     创建时间（时间段）、
     操作时间（时间段）、
     id搜索
-    <div>
+
+    <br>
+    <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
+      <Radio label=""><span>全部</span></Radio>
+      <Radio label="0"><span>未处理</span></Radio>
+      <Radio label="1"><span>石锤</span></Radio>
+      <Radio label="2"><span>嫌疑玩家再观察</span></Radio>
+      <Radio label="3"><span>没有问题不是挂</span></Radio>
+      <Radio label="4"><span>捣乱的</span></Radio>
+    </RadioGroup>
+
+    <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
+
+    <div style="position: relative;">
       <ul>
         <li>
-          <span>游戏ID</span>
-          <span>处理状态</span>
+          <span><b>游戏ID</b></span>
+          <span><b>处理状态</b></span>
           <!-- 0=> 未处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的 -->
         </li>
         <li v-for="d in data" :key="d.u_id">
@@ -35,33 +48,66 @@ export default {
     return {
       data: [
       ],
-      spinShow: true
+      spinShow: true,
+      statusGroup: ''
     }
   },
   created() {
-    axios({
-      method: 'get',
-      url: '/cheaters/',
-    })
-    .then((res) => {
-      const d = res.data;
-      this.data = d.data;
-
-      this.spinShow = false;
-    })
+    this.loadData();
+  },
+  // beforeRouteUpdate(to, from, next) {
+  //   this.loadData();
+  //   next();
+  // },
+  watch: {
+    '$route': 'loadData',
   },
   methods: {
+    loadData() {
+      const status = this.$route.query.status || '';
+
+      const config = {
+        method: 'get',
+        url: '/cheaters/',
+      };
+
+      config['params'] = {
+        status,
+      };
+      this.statusGroup = status;
+
+      axios(config)
+      .then((res) => {
+        const d = res.data;
+        this.data = d.data;
+
+        this.spinShow = false;
+      })
+    },
     handleStatus(status) {
       const statusObj = {
         0: "未处理",
         1: "石锤",
         2: "嫌疑玩家再观察",
         3: "没有问题不是挂",
-        4: "搞乱的",
+        4: "捣乱的",
       }
 
       return statusObj[status]
-    }
+    },
+    handleRefresh() {
+      this.spinShow = true;
+
+      this.loadData();
+    },
+    handleStatusChange() {
+      this.spinShow = true;
+
+      const status = this.statusGroup;
+      this.$router.push({name: 'cheaters', query: {status}});
+
+      this.loadData();
+    },
   }
 }
 </script>
