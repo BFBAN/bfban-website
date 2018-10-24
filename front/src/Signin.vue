@@ -1,13 +1,20 @@
 <template>
   <Form :label-width="80">
-      <h2>登录</h2>
+    <Divider>登录</Divider>
 
       <FormItem label="用户名">
-        <Input v-model="signin.username" placeholder="用户名" />
+        <Input type="text" v-model="signin.username" placeholder="用户名" />
       </FormItem>
 
       <FormItem label="密码">
         <Input type="password" v-model="signin.password" placeholder="密码" />
+      </FormItem>
+
+      <FormItem label="验证码">
+        <Input type="text" v-model="signin.captcha" placeholder="验证码" />
+        <a href="#" @click.stop.prevent="refreshCaptcha" title="点击刷新验证码">
+          <img src="/captcha" alt="验证码" ref="captcha">
+        </a>
       </FormItem>
 
       <FormItem>
@@ -17,19 +24,56 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data() {
     return {
       signin: {
         username: '',
-        password: ''
+        password: '',
+        captcha: '',
       }
     }
   },
   methods: {
+    refreshCaptcha: function() {
+      this.$refs.captcha.src = '/captcha?r=' + Math.random();
+    },
     handleSignin: function() {
-      const {username, password} = this.signin
-      console.log(username, password)
+      const {username, password, captcha} = this.signin;
+      console.log(username, password, captcha);
+
+      if (username && password && captcha.length === 4) {
+        axios({
+          method: 'post',
+          url: '/account/signin',
+          data: {
+            username,
+            password,
+            captcha
+          }
+        })
+        .then((res) => {
+          this.refreshCaptcha();
+
+          const d = res.data;
+          if (d.error === 1) {
+            this.$Message.error('登录失败 ' + d.msg)
+          } else {
+            this.$store.dispatch('signin', d.data)
+            .then(() => {
+
+              const rurl = this.$route.query.rurl || '/';
+
+              // redirect rurl or home
+              this.$router.push(rurl);
+            })
+          }
+        })
+      } else {
+        this.$Message.error('请填写完整')
+      }
     }
   }
 }

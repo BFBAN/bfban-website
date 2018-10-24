@@ -13,18 +13,15 @@ import 'quill/dist/quill.bubble.css';
 import FastClick from 'fastclick';
 
 import App from './App.vue';
-import routes from './routes';
+import router from './routes';
 
+import store from './store';
 
 Vue.use(VueQuillEditor);
 Vue.use(iView);
 
 Vue.use(VueRouter);
 
-const RouterConfig = {
-  routes,
-};
-const router = new VueRouter(RouterConfig);
 
 FastClick.attach(document.body);
 
@@ -33,5 +30,6 @@ document.body.appendChild(root);
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount(root);

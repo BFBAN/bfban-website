@@ -1,37 +1,68 @@
 <template>
     <div>
-        <Button @click.stop.prevent="getJwtToken">get jwt token</Button>
-        <Button @click.stop.prevent="getQiniuUploadToken">get qiniu upload token</Button>
+        <!-- <Button @click.stop.prevent="getJwtToken">get jwt token</Button> -->
+        <!-- <Button @click.stop.prevent="getQiniuUploadToken">get qiniu upload token</Button> -->
 
         <Upload
-        class="file-uploader"
+          class="file-uploader-image"
 
-        :headers="headers"
-        :data="extraData"
-        action="//up-z2.qiniu.com"
-        accept="image/*,video/mp4"
-        :format="['jpg','jpeg','png', 'gif', 'mp4']"
-        multiple
-        name="file"
+          :headers="headers"
+          :data="extraData"
+          action="//up-z2.qiniu.com"
+          accept="image/*"
+          :format="['jpg','jpeg','png', 'gif']"
+          multiple
+          name="file"
+          max-size="2014"
 
-        :with-credentials="withCredentials"
-        :show-upload-list="showUploadList"
+          :with-credentials="withCredentials"
+          :show-upload-list="showUploadList"
 
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :before-upload="handleBeforeUpload">
-            <Button icon="ios-cloud-upload-outline">Upload files</Button>
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :on-exceeded-size="handleExceededSize"
+          :before-upload="handleBeforeUpload">
+              <Button icon="ios-cloud-upload-outline">Upload files</Button>
         </Upload>
 
+        <Upload
+          class="file-uploader-video"
 
-        <quill-editor
-        ref="quillEditor"
-        :options="editorOption"
+          :headers="headers"
+          :data="extraData"
+          action="//up-z2.qiniu.com"
+          accept="video/mp4"
+          :format="['mp4']"
+          multiple
+          name="file"
+          max-size="30720"
 
-        :content="content"
-        @change="onEditorChange($event)"
-        >
-        </quill-editor>
+          :with-credentials="withCredentials"
+          :show-upload-list="showUploadList"
+
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :on-exceeded-size="handleExceededSize"
+          :before-upload="handleBeforeUpload">
+              <Button icon="ios-cloud-upload-outline">Upload files</Button>
+        </Upload>
+
+        <div>
+          <quill-editor
+          ref="quillEditor"
+          :options="editorOption"
+
+          :content="content"
+          @change="onEditorChange($event)"
+          >
+          </quill-editor>
+
+          <Spin size="large" fix v-if="spinShow">
+            <p>
+              上传中...
+            </p>
+          </Spin>
+        </div>
     </div>
 </template>
 
@@ -82,6 +113,7 @@ export default {
             },
             uploadType: '',
 
+            spinShow: false,
 
             content: '',
             editorOption: {
@@ -93,7 +125,7 @@ export default {
                             image: (value)=> {
                                 if (value) {
                                     this.uploadType = 'image';
-                                    document.querySelector('.file-uploader input').click()
+                                    document.querySelector('.file-uploader-image input').click()
                                 } else {
                                     this.quill.format("image", false)
                                 }
@@ -103,7 +135,7 @@ export default {
                             video: (value) => {
                                 if (value) {
                                     this.uploadType = 'video';
-                                    document.querySelector('.file-uploader input').click()
+                                    document.querySelector('.file-uploader-video input').click()
                                 } else {
                                     this.quill.format("video", false)
                                 }
@@ -121,8 +153,9 @@ export default {
         },
 
         handleBeforeUpload: async function(files) {
-            // axios get qiniu tooken to extraData
+          this.spinShow = true;
 
+            // axios get qiniu tooken to extraData
             let d = await this.getQiniuUploadToken()
             let token = d.data.token
 
@@ -145,11 +178,20 @@ export default {
             quill.setSelection(length + 1)
 
             console.log(quill.root.innerHTML)
+
+            this.spinShow = false
         },
         handleError: function(err, file, fileList) {
             console.log(err)
 
             this.$Message.error('upload images fail...')
+
+            this.spinShow = false
+        },
+        handleExceededSize: function(file, fileList) {
+          this.$Message.warning('超过上传最大限制，图片2M，视频30M');
+
+            this.spinShow = false
         },
 
 
@@ -208,9 +250,17 @@ export default {
 </script>
 
 
-<style>
-    .quill-editor,
-    .content {
+<style lang="scss">
+  .ql-editor {
     background-color: white;
-    }
+  }
+
+  .ql-container.ql-snow {
+    height: 20rem;
+  }
+
+  .file-uploader-image, .file-uploader-video {
+    display: none;
+  }
+
 </style>

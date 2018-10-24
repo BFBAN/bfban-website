@@ -1,12 +1,12 @@
 <template>
 
     <Form :label-width="80">
-      <h2>举报作弊</h2>
+      <Divider>举报作弊</Divider>
 
       <FormItem label="游戏ID">
         <Input v-model="formItem.originId" placeholder="" />
         <span>
-          <a :href="'https://battlefieldtracker.com/bf1/profile/pc/' + formItem.originId">{{formItem.originId}}</a>
+          <a target="_blank" :href="'https://battlefieldtracker.com/bf1/profile/pc/' + formItem.originId">{{ formItem.originId ? 'https://battlefieldtracker.com/bf1/profile/pc/' + formItem.originId : ''}}</a>
         </span>
       </FormItem>
 
@@ -37,13 +37,14 @@
         </FormItem>
 
       <FormItem label="B站链接">
-        <Input v-model="formItem.bilibiliLink" placeholder="" />
+        <Input v-model="formItem.bilibiliLink" placeholder="选填" />
         <span>
-          <a :href="formItem.bilibiliLink">{{formItem.bilibiliLink}}</a>
+          <a target="_blank" :href="formItem.bilibiliLink">{{formItem.bilibiliLink}}</a>
         </span>
       </FormItem>
 
       <FormItem label="论述">
+          <p>请论述为什么你觉得他作弊...</p>
           <!-- <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." /> -->
           <Misc :content="formItem.description" @change="handleMiscChange" />
       </FormItem>
@@ -51,13 +52,12 @@
       <FormItem>
           <Button @click.prevent.stop="handleReport" type="primary">提交</Button>
       </FormItem>
-      <T name="Hello T" />
     </Form>
 </template>
 
 <script>
-import T from './T.vue'
-import Misc from './Misc.vue'
+import Misc from './Misc.vue';
+import axios from 'axios';
 
 export default {
   data() {
@@ -66,12 +66,12 @@ export default {
                   originId: '',
                   bilibiliLink: '',
                   checkbox: ['aimbot'],
-                  description: '请论述为什么你觉得他作弊...'
+                  description: ''
               }
             }
   },
   components: {
-    T, Misc
+    Misc
   },
   methods: {
     handleMiscChange: function(h) {
@@ -83,12 +83,32 @@ export default {
       const {
         originId,
         bilibiliLink,
-        description
+        description,
       } = this.formItem;
       console.log(originId,
         bilibiliLink,
         cheatMethods,
         description)
+
+      axios({
+        method: 'post',
+        url: '/cheaters/',
+        data: {
+          originId,
+          cheatMethods,
+          bilibiliLink,
+          description,
+        }
+      }).then((res) => {
+        const d = res.data;
+        if (d.error === 0) {
+          this.$router.push({name: 'cheater', params: {uid: d.data.cheaterUId}})
+
+          this.$Message.success('提交成功');
+        } else {
+          this.$Message.error('提交失败 ' + d.msg);
+        }
+      });
     }
   }
 }

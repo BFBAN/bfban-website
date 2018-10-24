@@ -1,6 +1,6 @@
 <template>
-    <footer>
-        written by <a href="">fxodo</a>
+    <footer class="footer">
+      Written by <a href="#"></a>  &copy; 2018 联ban局. All Rights Reserved.
     </footer>
 </template>
 
@@ -9,4 +9,15 @@ export default {
     name: "Footer"
 }
 </script>
+
+
+<style>
+  .footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: white;
+
+    flex-shrink: 0;
+  }
+</style>
 

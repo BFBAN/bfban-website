@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>About</h1>
+    <Divider>关于</Divider>
       <p>
         关于 联ban 局
         加盟的私服
