@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const pino = require('pino')({prettyPrint: true});
 
 
 const routes = require('./routes/');
@@ -11,10 +12,10 @@ const config = require('./config');
 const { port } = config;
 
 // redis client
-const redisClient = require('./redis');
+// const redisClient = require('./redis');
 
 // session
-// const session = require('express-session')
+const session = require('express-session');
 // const RedisStore = require('connect-redis')(session)
 
 // create express app
@@ -37,27 +38,26 @@ app.use(cookieParser(config.secret, {
 //     // Redis session TTL (expiration) in seconds. Defaults to session.cookie.maxAge (if set), or one day.
 //     // ttl: 60 * 60 * 12,
 // }
-// app.use(session({
-//     name: config.name,
-//     secret: config.secret,
-//     resave: false,
+app.use(session({
+  secret: config.secret,
+  resave: false,
 
-//     cookie: {
-//         secure: false, // https or not
-//         httpOnly: true,
-//         maxAge: 1000 * 60 * 60 * 12, // default one day
-//     },
+  cookie: {
+    secure: false, // https or not
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 12, // default one day
+  },
 
-//     // deprecated
-//     saveUninitialized: true,
-//     // default express-session will use memoryStore
-//     // store: new RedisStore(redisOpts),
-// }))
+  // deprecated
+  saveUninitialized: true,
+  // default express-session will use memoryStore
+  // store: new RedisStore(redisOpts),
+}));
 
 
 // use middlewares
 app.use(morgan('dev', {
-  skip(req, res) { return res.statusCode < 400; },
+  // skip(req, res) { return res.statusCode < 400; },
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -73,14 +73,13 @@ app.use('/', express.static(path.resolve(config.baseDir, 'public')));
 app.use('/', routes);
 
 
-// error handling
-app.use((err, req, res, next) => {
-  console.error('Error: ', err.stack);
-  return res.sendStatus(500);
-});
-
 // 404
 app.use((req, res, next) => res.sendStatus(404));
+
+// error handling
+app.use((err, req, res, next) => {
+  pino.error(err.stack);
+});
 
 
 // mongoConnection.on('error', console.error.bind(console, 'mongodb connection error!!'));

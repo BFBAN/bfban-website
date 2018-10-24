@@ -2,15 +2,27 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const bcrypt = require('bcrypt');
+const { check, validationResult } = require('express-validator/check');
 
 const config = require('../config');
 
 const router = express.Router();
 const db = require('../mysql');
 
+const { verifyCatpcha } = require('../middlewares/captcha');
+
 
 // username, password
-router.post('/signin', async (req, res, next) => {
+router.post('/signin', [
+  check('username').not().isEmpty(),
+  check('password').not().isEmpty(),
+  check('captcha').not().isEmpty(),
+], verifyCatpcha, async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
+  }
+
   const { username, password } = req.body;
 
   const result = await db.query('select * from users where username = ?', [username])
@@ -48,7 +60,17 @@ router.post('/signin', async (req, res, next) => {
 });
 
 // username, password
-router.post('/signup', async (req, res, next) => {
+router.post('/signup', [
+  check('username').not().isEmpty(),
+  check('password').not().isEmpty(),
+  check('captcha').not().isEmpty(),
+  check('qq').optional({ checkFalsy: true }).isNumeric(),
+], verifyCatpcha, async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
+  }
+
   const {
     username, password, originId, qq,
   } = req.body;
@@ -57,18 +79,29 @@ router.post('/signup', async (req, res, next) => {
 
   const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
-  const result = await db.query('insert into users set ?', {
-    username,
-    password: hash,
-    origin_id: originId,
-    qq,
-    create_datetime: d,
-    update_datetime: d,
-  })
-    .catch(e => next(e));
+  let result;
 
-  const userPrivilege = result.privilege;
+  try {
+    result = await db.query('insert into users set ?', {
+      username,
+      password: hash,
+      origin_id: originId,
+      qq,
+      create_datetime: d,
+      update_datetime: d,
+    });
+  } catch (e) {
+    console.error(e);
+    return res.json({
+      error: 1,
+      msg: 'insert user failed',
+    });
+  }
 
+  // default 'normal'
+  const userPrivilege = 'normal';
+
+  // jwt token
   const token = jwt.sign({
     username,
     userId: result.insertId,
@@ -92,10 +125,15 @@ router.post('/signup', async (req, res, next) => {
 });
 
 //
-router.post('/logout', (req, res, next) => {
-  res.cookie('access-token', '');
+router.get('/signout', (req, res, next) => {
+  res.clearCookie('access-token');
+  res.clearCookie('up-token');
 
-  res.redirect('/');
+  // res.redirect('/');
+  res.json({
+    error: 0,
+    msg: '注销成功',
+  });
 });
 
 module.exports = router;

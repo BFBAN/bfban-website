@@ -9,6 +9,7 @@ const csrfProtection = csrf({ cookie: true });
 const grabYouku = require('../scraper/youku');
 const grabTeamliquid = require('../scraper/teamliquid');
 
+const { getCaptcha } = require('../libs/captcha');
 
 router.get('/', csrfProtection, (req, res, next) => {
   res.render('index', { title: 'Hello world', csrfToken: req.csrfToken() });
@@ -23,9 +24,12 @@ router.get('/teamliquid/*', async (req, res) => {
   res.json(await grabTeamliquid(req.params[0]));
 });
 
+router.use('/captcha', getCaptcha);
+
 
 router.use('/auth', require('./auth'));
-router.use('/upload', require('./upload'));
+
+// router.use('/upload', require('./upload'));
 
 // signin, signup, report, verify
 router.use('/account', require('./user'));
