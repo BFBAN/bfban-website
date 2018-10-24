@@ -36,10 +36,12 @@
           {{ handleStatus(d.status) }}
         </span>
         <span>
-          <Time :time="d.create_datetime" type="date" />
+          <Time v-if="d.create_datetime" :time="d.create_datetime" type="date" />
         </span>
+
+
         <span>
-          <Time :time="d.update_datetime" type="date" />
+          <Time v-if="d.update_datetime" :time="d.update_datetime" type="date" />
         </span>
         </li>
       </ul>
