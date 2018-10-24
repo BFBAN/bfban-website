@@ -19,7 +19,7 @@
 
     <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
 
-    <div>
+    <div style="position: relative;">
       <ul>
         <li>
           <span><b>游戏ID</b></span>
@@ -35,7 +35,7 @@
         </span>
         </li>
       </ul>
-      <Spin size="large" v-if="spinShow"></Spin>
+      <Spin size="large" fix v-if="spinShow"></Spin>
     </div>
   </div>
 </template>
@@ -78,10 +78,11 @@ export default {
 
       axios(config)
       .then((res) => {
+        this.spinShow = false;
+
         const d = res.data;
         this.data = d.data;
 
-        this.spinShow = false;
       })
     },
     handleStatus(status) {

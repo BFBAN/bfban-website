@@ -15,7 +15,7 @@
 
     <Divider />
 
-    <div>
+    <div style="position: relative">
       <h2 style="margin: 1rem 0;">举报经过</h2>
 
       <TimelineItem v-for="d in reports" :key="d.create_datetime">
@@ -76,7 +76,7 @@
         </TimelineItem>
       </div>
 
-      <Spin size="large" v-if="spinShow"></Spin>
+      <Spin size="large" fix v-if="spinShow"></Spin>
     </div>
 
     <div v-show="isAdmin">
@@ -130,6 +130,8 @@ export default {
       url: `/cheaters/${this.$route.params.uid}`,
     })
     .then((res) => {
+      this.spinShow = false;
+
       const d = res.data;
 
       let reports = d.data.reports;
@@ -138,13 +140,11 @@ export default {
         v.cheat_methods = this.convertCheatMethods(v.cheat_methods);
 
         return v;
-      })
+      });
 
       this.cheater = d.data.cheater[0];
       this.reports = reports;
       this.verifies = d.data.verifies;
-
-      this.spinShow = false;
     });
   },
   methods: {
