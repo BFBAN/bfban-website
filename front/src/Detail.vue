@@ -68,6 +68,8 @@
       </TimelineItem>
     </div>
 
+    <Spin size="large" fix v-if="spinShow"></Spin>
+
 
     <div v-show="isAdmin">
       <Divider />
@@ -111,6 +113,7 @@ export default {
         status: '0',
         suggestion: '',
       },
+      spinShow: true,
     }
   },
   created() {
@@ -132,6 +135,8 @@ export default {
       this.cheater = d.data.cheater[0];
       this.reports = reports;
       this.verifies = d.data.verifies;
+
+      this.spinShow = false;
     });
   },
   methods: {

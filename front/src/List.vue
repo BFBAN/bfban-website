@@ -6,21 +6,24 @@
     创建时间（时间段）、
     操作时间（时间段）、
     id搜索
-    <ul>
-      <li>
-        <span>游戏ID</span>
-        <span>处理状态</span>
-        <!-- 0=> 未处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的 -->
-      </li>
-      <li v-for="d in data" :key="d.u_id">
+    <div>
+      <ul>
+        <li>
+          <span>游戏ID</span>
+          <span>处理状态</span>
+          <!-- 0=> 未处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的 -->
+        </li>
+        <li v-for="d in data" :key="d.u_id">
         <span>
           <router-link :to="{name: 'cheater', params: { uid: `${d.u_id}` }}">{{d.origin_id}}</router-link>
         </span>
-        <span>
+          <span>
           {{ handleStatus(d.status) }}
         </span>
-      </li>
-    </ul>
+        </li>
+      </ul>
+      <Spin size="large" fix v-if="spinShow"></Spin>
+    </div>
   </div>
 </template>
 
@@ -31,7 +34,8 @@ export default {
   data() {
     return {
       data: [
-      ]
+      ],
+      spinShow: true
     }
   },
   created() {
@@ -42,6 +46,8 @@ export default {
     .then((res) => {
       const d = res.data;
       this.data = d.data;
+
+      this.spinShow = false;
     })
   },
   methods: {
