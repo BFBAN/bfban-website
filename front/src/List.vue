@@ -45,7 +45,7 @@
         </span>
         </li>
       </ul>
-      <Spin size="large" fix v-if="spinShow"></Spin>
+      <Spin size="large" fix v-show="spinShow"></Spin>
     </div>
   </div>
 </template>

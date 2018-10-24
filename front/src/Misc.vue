@@ -57,7 +57,7 @@
           >
           </quill-editor>
 
-          <Spin size="large" fix v-if="spinShow">
+          <Spin size="large" fix v-show="spinShow">
             <p>
               上传中...
             </p>

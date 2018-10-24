@@ -76,10 +76,10 @@
         </TimelineItem>
       </div>
 
-      <Spin size="large" fix v-if="spinShow"></Spin>
+      <Spin size="large" fix v-show="spinShow"></Spin>
     </div>
 
-    <div v-show="isAdmin">
+    <div v-if="isAdmin">
       <Divider />
       <h2>处理意见：</h2>
       <Form :label-width="80" ref='verifyForm'>
