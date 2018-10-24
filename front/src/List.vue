@@ -25,13 +25,21 @@
           <span><b>游戏ID</b></span>
           <span><b>处理状态</b></span>
           <!-- 0=> 未处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的 -->
+          <span><b>举报时间</b></span>
+          <span><b>处理时间</b></span>
         </li>
         <li v-for="d in data" :key="d.u_id">
         <span>
           <router-link :to="{name: 'cheater', params: { uid: `${d.u_id}` }}">{{d.origin_id}}</router-link>
         </span>
-          <span>
+        <span>
           {{ handleStatus(d.status) }}
+        </span>
+        <span>
+          <Time :time="d.create_datetime" type="date" />
+        </span>
+        <span>
+          <Time :time="d.update_datetime" type="date" />
         </span>
         </li>
       </ul>
@@ -106,8 +114,6 @@ export default {
 
       const status = this.statusGroup;
       this.$router.push({name: 'cheaters', query: {status}});
-
-      this.loadData();
     },
   }
 }
@@ -131,6 +137,16 @@ export default {
     }
     span:nth-child(2) {
       flex-grow: 1;
+    }
+    span:nth-child(3) {
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: 10%;
+    }
+    span:nth-child(4) {
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: 10%;
     }
   }
 

@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
   if (typeof status !== 'undefined' && ['0', '1', '2', '3', '4'].indexOf(status) !== -1) {
     // status
 
-    const result = await db.query('select origin_id, status, u_id from cheaters where status = ?', [status])
+    const result = await db.query('select origin_id, status, u_id, create_datetime, update_datetime from cheaters where status = ?', [status])
       .catch(e => next(e));
 
     return res.json({
@@ -26,7 +26,7 @@ router.get('/', async (req, res, next) => {
       data: result,
     });
   }
-  const result = await db.query('select origin_id, status, u_id from cheaters')
+  const result = await db.query('select origin_id, status, u_id, create_datetime, update_datetime from cheaters')
     .catch(e => next(e));
 
   return res.json({
@@ -60,7 +60,6 @@ router.get('/:uid', async (req, res, next) => {
   });
 });
 
-
 // report cheater
 // originId, cheatMethods, bilibiliLink, description
 // insert user_report_cheater db
@@ -87,12 +86,14 @@ router.post('/', verifyJWTMiddleware, [
   let cheaterUId;
 
   const uuId = uuidv4();
+  const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
   // if not in db
   if (re.length === 0) {
     await db.query('insert into cheaters set ?', {
       u_id: uuId,
       origin_id: originId,
+      create_datetime: d,
     })
       .catch(e => next(e));
 
@@ -101,7 +102,6 @@ router.post('/', verifyJWTMiddleware, [
     cheaterUId = re[0].u_id;
   }
 
-  const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
   try {
     await db.query('insert into user_report_cheater set ?', {
@@ -144,7 +144,6 @@ router.post('/verify', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
 
   const { userId } = req.user;
 
-
   const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
   await db.query('insert into user_verify_cheater set ? ', {
@@ -156,7 +155,7 @@ router.post('/verify', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
   })
     .catch(e => next(e));
 
-  await db.query('update cheaters set status = ? where u_id = ? ', [status, cheaterUId])
+  await db.query('update cheaters set status = ?, update_datetime = ? where u_id = ? ', [status, d, cheaterUId])
     .catch(e => next(e));
 
   const { username, userPrivilege } = req.user;
