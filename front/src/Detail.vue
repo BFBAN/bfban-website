@@ -1,14 +1,17 @@
 <template>
   <div>
     <Divider>Cheater Detail</Divider>
-    <p>
-      游戏ID: {{ cheater.origin_id }}
+    <div>
+      <Tag color="error">
+        {{ handleStatus(cheater.status) }}
+      </Tag>
+      <br>
+      <span style="font-size: 1.6rem;">
+        {{ cheater.origin_id }}
+      </span>
 
-      <a target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.origin_id}`">{{ cheater.origin_id }}</a>
-    </p>
-    <p>
-    处理状态: {{ handleStatus(cheater.status) }}
-    </p>
+      <a target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.origin_id}`">战绩</a>
+    </div>
 
     <Divider />
 
