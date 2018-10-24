@@ -1,11 +1,13 @@
 <template>
     <div>
-        <!-- <Button @click.stop.prevent="getJwtToken">get jwt token</Button> -->
-        <!-- <Button @click.stop.prevent="getQiniuUploadToken">get qiniu upload token</Button> -->
+      <!-- <Button @click.stop.prevent="getJwtToken">get jwt token</Button> -->
+      <!-- <Button @click.stop.prevent="getQiniuUploadToken">get qiniu upload token</Button> -->
 
+      <Modal
+        v-model="modal1"
+        title="image upload modal"
+      >
         <Upload
-          class="file-uploader-image"
-
           :headers="headers"
           :data="extraData"
           action="//up-z2.qiniu.com"
@@ -14,6 +16,7 @@
           multiple
           name="file"
           max-size="2014"
+          type="drag"
 
           :with-credentials="withCredentials"
           :show-upload-list="showUploadList"
@@ -22,12 +25,21 @@
           :on-error="handleError"
           :on-exceeded-size="handleExceededSize"
           :before-upload="handleBeforeUpload">
-              <Button icon="ios-cloud-upload-outline">Upload files</Button>
+
+          <div style="padding: 20px 0">
+            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+            <p>Click or drag files here to upload</p>
+          </div>
+
         </Upload>
+      </Modal>
 
+
+      <Modal
+        v-model="modal2"
+        title="video upload modal"
+      >
         <Upload
-          class="file-uploader-video"
-
           :headers="headers"
           :data="extraData"
           action="//up-z2.qiniu.com"
@@ -36,6 +48,7 @@
           multiple
           name="file"
           max-size="30720"
+          type="drag"
 
           :with-credentials="withCredentials"
           :show-upload-list="showUploadList"
@@ -44,10 +57,17 @@
           :on-error="handleError"
           :on-exceeded-size="handleExceededSize"
           :before-upload="handleBeforeUpload">
-              <Button icon="ios-cloud-upload-outline">Upload files</Button>
-        </Upload>
 
-        <div>
+          <div style="padding: 20px 0">
+            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+            <p>Click or drag files here to upload</p>
+          </div>
+
+        </Upload>
+      </Modal>
+
+
+      <div>
           <quill-editor
           ref="quillEditor"
           :options="editorOption"
@@ -77,7 +97,7 @@ var Embed = Quill.import('blots/embed');
 class QuillHashtag extends Embed {
   static create(value) {
     let node = super.create(value);
-    node.innerHTML = `<video width="400" controls><source src="${value}" type="video/mp4"></video>`;
+    node.innerHTML = `<video controls><source src="${value}" type="video/mp4"></video>`;
     return node;
   }
 }
@@ -102,49 +122,52 @@ export default {
         }
     },
     data() {
-        return {
-            withCredentials: false,
-            showUploadList: true,
-            headers: {
-                'x-csrf-token': '',
-            },
-            extraData: {
-                token: ''
-            },
-            uploadType: '',
+      return {
+          modal1: false,
+          modal2: false,
 
-            spinShow: false,
+          withCredentials: false,
+          showUploadList: true,
+          headers: {
+              'x-csrf-token': '',
+          },
+          extraData: {
+              token: ''
+          },
+          uploadType: '',
 
-            content: '',
-            editorOption: {
-                theme: 'snow',
-                modules: {
-                    toolbar: {
-                        container: toolbarOptions,
-                        handlers: {
-                            image: (value)=> {
-                                if (value) {
-                                    this.uploadType = 'image';
-                                    document.querySelector('.file-uploader-image input').click()
-                                } else {
-                                    this.quill.format("image", false)
-                                }
+          spinShow: false,
 
-                            },
+          content: '',
+          editorOption: {
+              theme: 'snow',
+              modules: {
+                  toolbar: {
+                      container: toolbarOptions,
+                      handlers: {
+                          image: (value)=> {
+                              if (value) {
+                                this.uploadType = 'image';
+                                this.modal1 = true;
+                              } else {
+                                this.quill.format("image", false)
+                              }
 
-                            video: (value) => {
-                                if (value) {
-                                    this.uploadType = 'video';
-                                    document.querySelector('.file-uploader-video input').click()
-                                } else {
-                                    this.quill.format("video", false)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                          },
+
+                          video: (value) => {
+                              if (value) {
+                                this.uploadType = 'video';
+                                this.modal2 = true;
+                              } else {
+                                this.quill.format("video", false)
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
     },
     methods: {
         onEditorChange({ quill, html, text }) {
@@ -153,7 +176,6 @@ export default {
         },
 
         handleBeforeUpload: async function(files) {
-          this.spinShow = true;
 
             // axios get qiniu tooken to extraData
             let d = await this.getQiniuUploadToken()
@@ -161,41 +183,37 @@ export default {
 
             this.extraData.token = token
         },
-        handleSuccess: function(res, file) {
-            console.log(res)
+        handleSuccess: function(res, file, fileList) {
+          console.log(res, file, fileList);
 
-            const quill = this.$refs.quillEditor.quill
-            // 获取光标所在位置
-            let length = quill.getSelection().index
-            // 插入图片 或 插入视频
-            if (this.uploadType === 'image') {
+          const quill = this.$refs.quillEditor.quill;
+
+          // editor focus
+          quill.focus();
+
+          // 获取光标所在位置
+          let length = quill.getSelection().index;
+          // 插入图片 或 插入视频
+          if (this.uploadType === 'image') {
               quill.insertEmbed(length, 'image', "http://ban.bamket.com/"+res.hash)
             }
             if (this.uploadType === 'video') {
               quill.insertEmbed(length, 'mp4', "http://ban.bamket.com/"+res.hash)
             }
             // 调整光标到最后
-            quill.setSelection(length + 1)
+            quill.setSelection(length + 1);
 
-            console.log(quill.root.innerHTML)
-
-            this.spinShow = false
         },
         handleError: function(err, file, fileList) {
             console.log(err)
 
             this.$Message.error('upload images fail...')
 
-            this.spinShow = false
         },
         handleExceededSize: function(file, fileList) {
           this.$Message.warning('超过上传最大限制，图片2M，视频30M');
 
-            this.spinShow = false
         },
-
-
-
 
         getCsrfToken: function() {
             return document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -258,9 +276,4 @@ export default {
   .ql-container.ql-snow {
     height: 20rem;
   }
-
-  .file-uploader-image, .file-uploader-video {
-    display: none;
-  }
-
 </style>

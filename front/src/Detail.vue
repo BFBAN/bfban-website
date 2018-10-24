@@ -40,10 +40,7 @@
             </Tag>
             <a :href="d.bilibili_link" target="_blank">{{ d.bilibili_link }}</a>
           </p>
-          <div v-html="d.description" style="background-color: #e4f5ff6b;
-    padding: 1rem;
-    border-radius: .4rem;
-    border: 1px solid #cccccc8c;">
+          <div v-html="d.description" class="report_description">
           </div>
         </div>
       </TimelineItem>
@@ -81,7 +78,8 @@
 
     <div v-if="isAdmin">
       <Divider />
-      <h2>处理意见：</h2>
+      <h2 style="margin: 1rem 0;">处理意见</h2>
+
       <Form :label-width="80" ref='verifyForm'>
           <FormItem label="Select">
             <Select v-model="verify.status">
@@ -229,6 +227,16 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+  .report_description {
+    background-color: #e4f5ff6b;
+    padding: 1rem;
+    border-radius: .4rem;
+    border: 1px solid #cccccc8c;
+
+    img, video {
+      max-width: 800px;
+    }
+  }
 </style>
 
