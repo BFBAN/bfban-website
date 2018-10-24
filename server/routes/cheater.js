@@ -66,7 +66,7 @@ router.get('/:uid', async (req, res, next) => {
 // insert user_report_cheater db
 // userId, cheaterUId, datatime
 router.post('/', verifyJWTMiddleware, [
-  check('originId').not().isEmpty(),
+  check('originId').not().isEmpty().isAscii(),
   check('cheatMethods').not().isEmpty(),
   check('bilibiliLink').optional({ checkFalsy: true }).isURL(),
 ], async (req, res, next) => {

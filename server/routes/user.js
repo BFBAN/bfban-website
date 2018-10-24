@@ -16,7 +16,7 @@ const { verifyCatpcha } = require('../middlewares/captcha');
 router.post('/signin', [
   check('username').not().isEmpty(),
   check('password').not().isEmpty(),
-  check('captcha').not().isEmpty(),
+  check('captcha').not().isEmpty().isLength({min:4, max: 4}),
 ], verifyCatpcha, async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -62,8 +62,8 @@ router.post('/signin', [
 // username, password
 router.post('/signup', [
   check('username').not().isEmpty(),
-  check('password').not().isEmpty(),
-  check('captcha').not().isEmpty(),
+  check('password').not().isEmpty().isLength({min: 6}),
+  check('captcha').not().isEmpty().isLength({min:4, max: 4}),
   check('qq').optional({ checkFalsy: true }).isNumeric(),
 ], verifyCatpcha, async (req, res, next) => {
   const errors = validationResult(req);
