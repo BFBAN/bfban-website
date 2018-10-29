@@ -1,6 +1,5 @@
 import VueRouter from 'vue-router';
 import Home from './Home.vue';
-import About from './About.vue';
 import Report from './Report.vue';
 import Misc from './Misc.vue';
 import List from './List.vue';
@@ -17,7 +16,7 @@ const routes = [
     path: '/',
     component: Home,
   },
-  { name: 'about', path: '/about', component: About },
+  // { name: 'about', path: '/about', component: About },
   {
     name: 'report',
     path: '/report',

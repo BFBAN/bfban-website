@@ -15,7 +15,7 @@ export default {
   .footer {
     text-align: center;
     padding: 1rem;
-    background-color: white;
+    background-color: rgba(252, 252, 252, 0.8);
 
     flex-shrink: 0;
   }

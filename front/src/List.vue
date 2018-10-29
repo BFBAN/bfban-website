@@ -1,13 +1,13 @@
 <template>
   <div>
     <Divider>外挂公示</Divider>
-    Filters:
-    状态checkbox、
-    创建时间（时间段）、
-    操作时间（时间段）、
-    id搜索
 
-    <br>
+    <!--Filters:-->
+    <!--状态checkbox、-->
+    <!--创建时间（时间段）、-->
+    <!--操作时间（时间段）、-->
+    <!--id搜索-->
+
     <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
       <Radio label=""><span>全部</span></Radio>
       <Radio label="0"><span>未处理</span></Radio>
@@ -46,6 +46,8 @@
         </li>
       </ul>
       <Spin size="large" fix v-show="spinShow"></Spin>
+
+      <Page :total="100" show-sizer />
     </div>
   </div>
 </template>

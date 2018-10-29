@@ -4,7 +4,7 @@
         <div class="nav">
         <router-link :to="{name: 'home'}">首页</router-link>
 
-        <router-link :to="{name: 'about'}">关于</router-link>
+        <!--<router-link :to="{name: 'about'}">关于</router-link>-->
         <router-link :to="{name: 'cheaters'}">外挂公示</router-link>
 
         <router-link :to="{name: 'report'}">举报作弊</router-link>
@@ -62,7 +62,7 @@ export default {
 
 <style lang="scss" scoped>
   .header {
-    background-color: rgba(252,252,252,0.95);
+    background-color: rgba(252,252,252,0.8);
     width: 100%;
     height: auto;
     box-shadow: 0 0 4px rgba(0,0,0,0.15);
@@ -76,7 +76,7 @@ export default {
     a {
       padding: 1rem;
       &:hover {
-        background-color: #eee;
+        background-color: rgba(251, 251, 251, 0.8);
         color: black;
       }
     }

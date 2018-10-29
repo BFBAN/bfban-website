@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import Header from './Header.vue'
-import Footer from './Footer.vue'
+import Header from './Header.vue';
+import Footer from './Footer.vue';
 
 export default {
     components: {
@@ -34,6 +34,12 @@ export default {
 
     display: flex;
     flex-direction: column;
+
+    /*background image*/
+    background: url('/assets/images/of3k9ek31gy01.png') no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
   }
   .app {
     height: 100%;
