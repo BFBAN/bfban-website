@@ -29,20 +29,21 @@
           <span><b>处理时间</b></span>
         </li>
         <li v-for="d in data" :key="d.u_id">
-        <span>
-          <router-link :to="{name: 'cheater', params: { uid: `${d.u_id}` }}">{{d.origin_id}}</router-link>
-        </span>
-        <span>
-          {{ handleStatus(d.status) }}
-        </span>
-        <span>
-          <Time v-if="d.create_datetime" :time="d.create_datetime" type="date" />
-        </span>
+          <span>
+            <router-link :to="{name: 'cheater', params: { uid: `${d.u_id}` }}">{{d.origin_id}}</router-link>
+            <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.origin_id" @click="copied"></Button>
+          </span>
+          <span>
+            {{ handleStatus(d.status) }}
+          </span>
+          <span>
+            <Time v-if="d.create_datetime" :time="d.create_datetime" type="date" />
+          </span>
 
 
-        <span>
-          <Time v-if="d.update_datetime" :time="d.update_datetime" type="date" />
-        </span>
+          <span>
+            <Time v-if="d.update_datetime" :time="d.update_datetime" type="date" />
+          </span>
         </li>
       </ul>
       <Spin size="large" fix v-show="spinShow"></Spin>
@@ -52,6 +53,9 @@
 
 <script>
 import axios from 'axios';
+
+const ClipboardJS = require('clipboard');
+new ClipboardJS('.ivu-btn');
 
 export default {
   data() {
@@ -73,6 +77,9 @@ export default {
     '$route': 'loadData',
   },
   methods: {
+    copied() {
+      this.$Message.info('copied');
+    },
     loadData() {
       const status = this.$route.query.status || '';
 
