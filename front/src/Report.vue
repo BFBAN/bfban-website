@@ -49,6 +49,14 @@
           <Misc :content="formItem.description" @change="handleMiscChange" />
       </FormItem>
 
+      <FormItem label="验证码">
+        <Input type="text" v-model="formItem.captcha" placeholder="验证码" />
+        <img ref="captcha">
+        <a href="#" @click.stop.prevent="refreshCaptcha">
+          获得验证码
+        </a>
+      </FormItem>
+
       <FormItem>
           <Button @click.prevent.stop="handleReport" type="primary">提交</Button>
       </FormItem>
@@ -63,10 +71,11 @@ export default {
   data() {
      return {
               formItem: {
-                  originId: '',
-                  bilibiliLink: '',
-                  checkbox: ['aimbot'],
-                  description: ''
+                originId: '',
+                bilibiliLink: '',
+                checkbox: ['aimbot'],
+                description: '',
+                captcha: '',
               }
             }
   },
@@ -74,6 +83,9 @@ export default {
     Misc
   },
   methods: {
+    refreshCaptcha() {
+      this.$refs.captcha.src = '/captcha?r=' + Math.random();
+    },
     handleMiscChange: function(h) {
       this.formItem.description = h
     },

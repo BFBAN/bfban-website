@@ -12,8 +12,9 @@
 
       <FormItem label="验证码">
         <Input type="text" v-model="signin.captcha" placeholder="验证码" />
-        <a href="#" @click.stop.prevent="refreshCaptcha" title="点击刷新验证码">
-          <img src="/captcha" alt="验证码" ref="captcha">
+        <img ref="captcha">
+        <a href="#" @click.stop.prevent="refreshCaptcha">
+          获得验证码
         </a>
       </FormItem>
 
@@ -33,7 +34,7 @@ export default {
         username: '',
         password: '',
         captcha: '',
-      }
+      },
     }
   },
   methods: {
@@ -64,10 +65,16 @@ export default {
             this.$store.dispatch('signin', d.data)
             .then(() => {
 
-              const rurl = this.$route.query.rurl || '/';
+              const rurl = this.$route.query.rurl;
 
               // redirect rurl or home
-              this.$router.push(rurl);
+              if (rurl) {
+                this.$router.push(rurl);
+              } else {
+                this.$router.go('-1');
+              }
+
+              this.$Message.success('登录成功');
             })
           }
         })

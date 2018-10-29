@@ -20,8 +20,9 @@
 
       <FormItem label="验证码">
         <Input type="text" v-model="signup.captcha" placeholder="验证码" />
-        <a href="#" @click.stop.prevent="refreshCaptcha" title="点击刷新验证码">
-          <img src="/captcha" alt="验证码" ref="captcha">
+        <img ref="captcha">
+        <a href="#" @click.stop.prevent="refreshCaptcha">
+          获得验证码
         </a>
       </FormItem>
 
