@@ -22,14 +22,9 @@ const routes = [
     path: '/report',
     component: Report,
     beforeEnter(to, from, next) {
-      console.log('route to: ', to);
-      console.log('route from: ', from);
-
       if (store.state.user) {
-        console.log('用户已经登录');
         next();
       } else {
-        console.log('用户未登录');
         next({ path: '/signin', query: { rurl: to.fullPath } }); // 未登录则跳转到登陆界面，query:{ Rurl: to.fullPath}表示把当前路由信息传递过去方便登录后跳转回来
       }
     },

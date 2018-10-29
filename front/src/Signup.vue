@@ -7,7 +7,7 @@
       </FormItem>
 
       <FormItem label="密码">
-        <Input type="password" v-model="signup.password" placeholder="密码" />
+        <Input type="password" v-model="signup.password" placeholder="6位以上密码" />
       </FormItem>
 
       <FormItem label="游戏ID">
@@ -34,6 +34,7 @@
 
 <script>
 import axios from 'axios';
+import _ from 'underscore';
 
 export default {
   data() {
@@ -52,10 +53,9 @@ export default {
       this.$refs.captcha.src = '/captcha?r=' + Math.random();
     },
     handleSignup: function() {
-      const {username, password, originId, qq, captcha} = this.signup
-
-      console.log(username, password, originId, qq, captcha)
-
+      let {username, password, originId, qq, captcha} = _.each(this.signup, (v, k, o) => {
+        o[k] = v.trim();
+      });
 
       if (username && password && captcha.length === 4) {
         axios({
@@ -70,8 +70,6 @@ export default {
           }
         })
         .then((res) => {
-          this.refreshCaptcha();
-
           const d = res.data;
           if (d.error === 1) {
             this.$Message.error('注册失败 ' + d.msg)
@@ -83,9 +81,13 @@ export default {
               this.$router.push('/')
             })
           }
+
+          this.refreshCaptcha();
+          this.signup.password = '';
+          this.signup.captcha = '';
         })
       } else {
-        this.$Message.error('请填写完整')
+        this.$Message.error('请填写完整');
       }
     }
   }

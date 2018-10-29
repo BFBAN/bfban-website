@@ -4,9 +4,15 @@
 
     <Divider>关于</Divider>
 
-    <h1>战地联ban局</h1>
+    <h1>联BAN调查局</h1>
     <p>
-      由大陆多个私服服主联合发起，旨在作为官方封禁的有效补充联合封杀外挂用户，为真正的玩家创造良好公平的娱乐环境。
+      是由战地几个服务器主人和战队队长及战地UP，
+      一起组建的玩家反抗外挂群体；
+    </p>
+    <p>
+      创始人是CDN战队队长，
+      联BAN局创建以来，十几个服务器加入联BAN，
+      打击了很多外挂和外挂主播。
     </p>
     <br>
     <p>
@@ -81,7 +87,6 @@ export default {
         'FATE',
         'HS',
         'SAK',
-        'SF',
         'TNT',
         'Mua',
         'More27',
@@ -94,16 +99,19 @@ export default {
         'coco',
         'WSG',
         'Lion',
-        'Lowb'
+        'Lowb',
+        'kosuzu',
       ],
       manager: [
         {
           name: 'Baidu',
-          link: 'https://www.baidu.com'
+          link: 'https://www.baidu.com',
+          desc: '我是百度',
         },
         {
           name: 'Bilibili',
-          link: ''
+          link: '',
+          desc: '',
         }
       ]
     }

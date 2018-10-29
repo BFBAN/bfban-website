@@ -46,8 +46,6 @@
         </li>
       </ul>
       <Spin size="large" fix v-show="spinShow"></Spin>
-
-      <Page :total="100" show-sizer />
     </div>
   </div>
 </template>

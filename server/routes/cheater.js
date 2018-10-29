@@ -6,6 +6,8 @@ const { check, validationResult } = require('express-validator/check');
 const { verifyJWTMiddleware, verifyPrivilegeMiddleware } = require('../middlewares/auth');
 const db = require('../mysql');
 
+const { verifyCatpcha } = require('../middlewares/captcha');
+
 const router = express.Router();
 
 // status
@@ -14,20 +16,17 @@ const router = express.Router();
 // ?status=0
 router.get('/', async (req, res, next) => {
   const { status } = req.query;
+  let result;
 
   if (typeof status !== 'undefined' && ['0', '1', '2', '3', '4'].indexOf(status) !== -1) {
     // status
 
-    const result = await db.query('select origin_id, status, u_id, create_datetime, update_datetime from cheaters where status = ?', [status])
+    result = await db.query('select origin_id, status, u_id, create_datetime, update_datetime from cheaters where status = ? order by create_datetime DESC', [status])
       .catch(e => next(e));
-
-    return res.json({
-      error: 0,
-      data: result,
-    });
+  } else {
+    result = await db.query('select origin_id, status, u_id, create_datetime, update_datetime from cheaters order by create_datetime DESC')
+      .catch(e => next(e));
   }
-  const result = await db.query('select origin_id, status, u_id, create_datetime, update_datetime from cheaters')
-    .catch(e => next(e));
 
   return res.json({
     error: 0,
@@ -68,7 +67,8 @@ router.post('/', verifyJWTMiddleware, [
   check('originId').not().isEmpty().isAscii(),
   check('cheatMethods').not().isEmpty(),
   check('bilibiliLink').optional({ checkFalsy: true }).isURL(),
-], async (req, res, next) => {
+  check('captcha').not().isEmpty().isLength({min:4, max: 4}),
+], verifyCatpcha, async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });

@@ -184,8 +184,6 @@ export default {
             this.extraData.token = token
         },
         handleSuccess: function(res, file, fileList) {
-          console.log(res, file, fileList);
-
           const quill = this.$refs.quillEditor.quill;
 
           // editor focus
@@ -205,8 +203,6 @@ export default {
 
         },
         handleError: function(err, file, fileList) {
-            console.log(err)
-
             this.$Message.error('upload images fail...')
 
         },

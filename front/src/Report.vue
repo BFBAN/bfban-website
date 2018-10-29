@@ -66,6 +66,7 @@
 <script>
 import Misc from './Misc.vue';
 import axios from 'axios';
+import _ from 'underscore';
 
 export default {
   data() {
@@ -96,11 +97,17 @@ export default {
         originId,
         bilibiliLink,
         description,
-      } = this.formItem;
+        captcha,
+      } = _.each(this.formItem, (v, k, o) => {
+        if (k = 'checkbox') return;
+        console.log(v);
+        o[k] = v.trim();
+      });
+
       console.log(originId,
         bilibiliLink,
-        cheatMethods,
-        description)
+        description,
+        captcha);
 
       axios({
         method: 'post',
@@ -110,16 +117,20 @@ export default {
           cheatMethods,
           bilibiliLink,
           description,
+          captcha,
         }
       }).then((res) => {
         const d = res.data;
         if (d.error === 0) {
-          this.$router.push({name: 'cheater', params: {uid: d.data.cheaterUId}})
+          this.$router.push({name: 'cheater', params: {uid: d.data.cheaterUId}});
 
           this.$Message.success('提交成功');
         } else {
           this.$Message.error('提交失败 ' + d.msg);
         }
+
+        this.refreshCaptcha();
+        this.formItem.captcha = '';
       });
     }
   }

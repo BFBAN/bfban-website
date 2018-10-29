@@ -188,8 +188,6 @@ export default {
         }
       })
       .then((res) => {
-        console.log(res.data.error, res.data);
-
         const d = res.data;
         if (res.data.error === 0) {
           // reset verifyForm

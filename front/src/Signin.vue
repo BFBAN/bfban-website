@@ -25,7 +25,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+import _ from 'underscore';
 
 export default {
   data() {
@@ -42,8 +43,9 @@ export default {
       this.$refs.captcha.src = '/captcha?r=' + Math.random();
     },
     handleSignin: function() {
-      const {username, password, captcha} = this.signin;
-      console.log(username, password, captcha);
+      const {username, password, captcha} = _.each(this.signin, (v, k, o) => {
+        o[k] = v.trim();
+      });
 
       if (username && password && captcha.length === 4) {
         axios({
@@ -56,8 +58,6 @@ export default {
           }
         })
         .then((res) => {
-          this.refreshCaptcha();
-
           const d = res.data;
           if (d.error === 1) {
             this.$Message.error('登录失败 ' + d.msg)
@@ -77,9 +77,13 @@ export default {
               this.$Message.success('登录成功');
             })
           }
+
+          this.refreshCaptcha();
+          this.signin.password = '';
+          this.signin.captcha = '';
         })
       } else {
-        this.$Message.error('请填写完整')
+        this.$Message.error('请填写完整');
       }
     }
   }
