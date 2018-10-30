@@ -10,6 +10,10 @@ const { verifyCatpcha } = require('../middlewares/captcha');
 
 const router = express.Router();
 
+function addOneDay(str) {
+  return moment(str).add(1, 'day').format('YYYY-MM-DD');
+}
+
 // status
 // 0=> 未处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的
 // 不带 status 为 全部
@@ -39,11 +43,11 @@ router.get('/', async (req, res, next) => {
 
     if ( cd && cd !== ',') {
     cdQuery = `and create_datetime >= ? and create_datetime <= ?`;
-      queryVal.push(cdStart, cdEnd);
+      queryVal.push(cdStart, addOneDay(cdEnd));
   }
   if (ud && ud !== ',') {
     udQuery = `and update_datetime >= ? and update_datetime <= ?`;
-    queryVal.push(udStart, udEnd);
+    queryVal.push(udStart, addOneDay(udEnd));
   }
 
   let querySql = `select origin_id, status, u_id, create_datetime, update_datetime from cheaters where 1=1 ${statusQuery} ${cdQuery} ${udQuery} order by create_datetime DESC `;
