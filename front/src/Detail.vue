@@ -227,6 +227,7 @@ export default {
     padding: 1rem;
     border-left: 2px solid #cccccc8c;
     margin-top: 1rem;
+    background-color: rgba(204, 204, 204, 0.1);
 
     img, video {
       max-width: 800px;
