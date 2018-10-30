@@ -8,16 +8,21 @@
     <!--操作时间（时间段）、-->
     <!--id搜索-->
 
-    <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
-      <Radio label=""><span>全部</span></Radio>
-      <Radio label="0"><span>未处理</span></Radio>
-      <Radio label="1"><span>石锤</span></Radio>
-      <Radio label="2"><span>嫌疑玩家再观察</span></Radio>
-      <Radio label="3"><span>没有问题不是挂</span></Radio>
-      <Radio label="4"><span>捣乱的</span></Radio>
-    </RadioGroup>
+    <div>
+      <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
+        <Radio label=""><span>全部</span></Radio>
+        <Radio label="0"><span>未处理</span></Radio>
+        <Radio label="1"><span>石锤</span></Radio>
+        <Radio label="2"><span>嫌疑玩家再观察</span></Radio>
+        <Radio label="3"><span>没有问题不是挂</span></Radio>
+        <Radio label="4"><span>捣乱的</span></Radio>
+      </RadioGroup>
 
-    <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
+      <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报日期范围" style="width: 200px"></DatePicker>
+      <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="处理日期范围" style="width: 200px"></DatePicker>
+    </div>
+
+    <Button style="margin: .4rem 0;" icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
 
     <div style="position: relative;">
       <ul>
@@ -30,7 +35,7 @@
         </li>
         <li v-for="d in data" :key="d.u_id">
           <span>
-            <router-link :to="{name: 'cheater', params: { uid: `${d.u_id}` }}">{{d.origin_id}}</router-link>
+            <router-link target="_blank" :to="{name: 'cheater', params: { uid: `${d.u_id}` }}">{{d.origin_id}}</router-link>
             <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.origin_id" @click="copied"></Button>
           </span>
           <span>
@@ -46,6 +51,10 @@
           </span>
         </li>
       </ul>
+      <br>
+
+      <Page show-total :current="page" @on-change="handlePageChange" :total="total" />
+
       <Spin size="large" fix v-show="spinShow"></Spin>
     </div>
   </div>
@@ -63,25 +72,25 @@ export default {
       data: [
       ],
       spinShow: true,
-      statusGroup: ''
+      statusGroup: '',
+      cd: ['', ''],
+      ud: ['', ''],
+      page: 1,
+      total: 0,
     }
   },
   created() {
     this.loadData();
   },
-  // beforeRouteUpdate(to, from, next) {
-  //   this.loadData();
-  //   next();
-  // },
   watch: {
     '$route': 'loadData',
   },
   methods: {
     copied() {
-      this.$Message.info('copied');
+      this.$Message.info('已复制');
     },
     loadData() {
-      const status = this.$route.query.status || '';
+      const { status = '', cd = '', ud = '', page = 1 } = this.$route.query;
 
       const config = {
         method: 'get',
@@ -90,8 +99,14 @@ export default {
 
       config['params'] = {
         status,
+        cd,
+        ud,
+        page,
       };
       this.statusGroup = status;
+      this.cd = cd.split(',');
+      this.ud = ud.split(',');
+      this.page = Number.parseInt(page);
 
       axios(config)
       .then((res) => {
@@ -99,6 +114,7 @@ export default {
 
         const d = res.data;
         this.data = d.data;
+        this.total = d.total;
 
       })
     },
@@ -118,12 +134,49 @@ export default {
 
       this.loadData();
     },
-    handleStatusChange() {
+    routerQuery() {
+      const status = this.statusGroup;
+      const cd = this.cd.join(',');
+      const ud = this.ud.join(',');
+      const page = this.page;
+
+      let o = {};
+
+      if (status) o['status'] = status;
+      if (cd !== ',') o['cd'] = cd;
+      if (ud !== ',') o['ud'] = ud;
+      if (page !== 1) o['page'] = page;
+
+      return o;
+    },
+    handleChanges() {
       this.spinShow = true;
 
-      const status = this.statusGroup;
-      this.$router.push({name: 'cheaters', query: {status}});
+      const query = this.routerQuery();
+
+      this.$router.push({name: 'cheaters', query});
     },
+    handleStatusChange() {
+      this.page = 1;
+
+      this.handleChanges();
+    },
+    handleCDatepicker(date) {
+      this.cd = date;
+      this.page = 1;
+
+      this.handleChanges();
+    },
+    handleUDatepicker(date) {
+      this.ud = date;
+      this.page = 1;
+
+      this.handleChanges();
+    },
+    handlePageChange(num) {
+      this.page = num;
+      this.handleChanges();
+    }
   }
 }
 </script>

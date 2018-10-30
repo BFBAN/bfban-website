@@ -5,7 +5,7 @@
         <router-link :to="{name: 'home'}">首页</router-link>
 
         <!--<router-link :to="{name: 'about'}">关于</router-link>-->
-        <router-link :to="{name: 'cheaters'}">外挂公示</router-link>
+        <router-link :to="{name: 'cheaters', query: { status: '1' }}">外挂公示</router-link>
 
         <router-link :to="{name: 'report'}">举报作弊</router-link>
 

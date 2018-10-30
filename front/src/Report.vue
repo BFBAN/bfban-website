@@ -100,14 +100,8 @@ export default {
         captcha,
       } = _.each(this.formItem, (v, k, o) => {
         if (k = 'checkbox') return;
-        console.log(v);
         o[k] = v.trim();
       });
-
-      console.log(originId,
-        bilibiliLink,
-        description,
-        captcha);
 
       axios({
         method: 'post',

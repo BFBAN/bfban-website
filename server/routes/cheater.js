@@ -15,22 +15,49 @@ const router = express.Router();
 // 不带 status 为 全部
 // ?status=0
 router.get('/', async (req, res, next) => {
-  const { status } = req.query;
+  const {
+    status = '',
+    cd = ',',
+    ud = ',',
+    page = 1,
+  } = req.query;
   let result;
 
-  if (typeof status !== 'undefined' && ['0', '1', '2', '3', '4'].indexOf(status) !== -1) {
-    // status
+  let [cdStart, cdEnd] = cd.split(',');
+  let [udStart, udEnd] = ud.split(',');
 
-    result = await db.query('select origin_id, status, u_id, create_datetime, update_datetime from cheaters where status = ? order by create_datetime DESC', [status])
-      .catch(e => next(e));
-  } else {
-    result = await db.query('select origin_id, status, u_id, create_datetime, update_datetime from cheaters order by create_datetime DESC')
-      .catch(e => next(e));
+  let statusQuery = '';
+  let cdQuery = '';
+  let udQuery = '';
+
+  let queryVal = [];
+
+  if (status && ['0', '1', '2', '3', '4'].indexOf(status) !== -1) {
+    statusQuery = `and status = ?`;
+    queryVal.push(status);
   }
+
+    if ( cd && cd !== ',') {
+    cdQuery = `and create_datetime >= ? and create_datetime <= ?`;
+      queryVal.push(cdStart, cdEnd);
+  }
+  if (ud && ud !== ',') {
+    udQuery = `and update_datetime >= ? and update_datetime <= ?`;
+    queryVal.push(udStart, udEnd);
+  }
+
+  let querySql = `select origin_id, status, u_id, create_datetime, update_datetime from cheaters where 1=1 ${statusQuery} ${cdQuery} ${udQuery} order by create_datetime DESC `;
+
+  result = await db.query(querySql + `limit 10 offset ${(page - 1) * 10}`, queryVal)
+    .catch(e => next(e));
+
+  const total = await db.query(querySql, queryVal)
+    .catch(e => next(e));
 
   return res.json({
     error: 0,
     data: result,
+    total: total.length,
   });
 });
 
@@ -99,7 +126,10 @@ router.post('/', verifyJWTMiddleware, [
 
     cheaterUId = uuId;
   } else {
+    // 若遇到重复举报
     cheaterUId = re[0].u_id;
+    await db.query('update cheaters set status = ? where u_id = ?', [0, cheaterUId])
+      .catch(e => next(e));
   }
 
 

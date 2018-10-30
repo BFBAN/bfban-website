@@ -12,7 +12,7 @@ const grabTeamliquid = require('../scraper/teamliquid');
 const { getCaptcha } = require('../libs/captcha');
 
 router.get('/', csrfProtection, (req, res, next) => {
-  res.render('index', { title: 'Hello world', csrfToken: req.csrfToken() });
+  res.render('index', { title: '联BAN调查局', csrfToken: req.csrfToken() });
 });
 
 router.get('/youku/:name', async (req, res) => {
