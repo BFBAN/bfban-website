@@ -64,10 +64,7 @@
                 {{ handleStatus(d.status) }}
               </Tag>
             </p>
-            <div v-html="d.suggestion" style="background-color: #e4f5ff6b;
-    padding: 1rem;
-    border-radius: .4rem;
-    border: 1px solid #cccccc8c;">
+            <div v-html="d.suggestion" class="report_description">
             </div>
           </div>
         </TimelineItem>
@@ -227,10 +224,9 @@ export default {
 
 <style lang="scss">
   .report_description {
-    background-color: #e4f5ff6b;
     padding: 1rem;
-    border-radius: .4rem;
-    border: 1px solid #cccccc8c;
+    border-left: 2px solid #cccccc8c;
+    margin-top: 1rem;
 
     img, video {
       max-width: 800px;
