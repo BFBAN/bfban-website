@@ -1,4 +1,5 @@
 const { verifyJWTToken } = require('../libs/auth');
+const db = require('../mysql');
 
 function getToken(req) {
   return req.body.token || req.query.token || req.headers['x-access-token'] || req.cookies['access-token'];
@@ -8,8 +9,15 @@ function verifyJWT(req, res, next) {
   const token = getToken(req);
 
   verifyJWTToken(token)
-    .then((decodedToken) => {
+    .then(async (decodedToken) => {
+      const { userId } = decodedToken
+      const result = await db.query('select * from users where id = ? and valid = "1"', [userId]);
+
+      if (result.length === 0) {
+        throw (new Error('invalid user'));
+      }
       req.user = decodedToken;
+
       next();
     })
     .catch((err) => {
