@@ -28,7 +28,7 @@ router.post('/signin', [
   const result = await db.query('select * from users where username = ?', [username])
     .catch(e => next(e));
 
-  if (result[0] && await bcrypt.compare(password, result[0].password)) {
+  if (result[0] && result[0].valid === '1' && await bcrypt.compare(password, result[0].password)) {
     const userPrivilege = result[0].privilege;
 
     const token = jwt.sign({
