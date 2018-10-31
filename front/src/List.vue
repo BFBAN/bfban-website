@@ -11,7 +11,7 @@
     <div>
       <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
         <Radio label=""><span>全部</span></Radio>
-        <Radio label="0"><span>未处理</span></Radio>
+        <Radio label="0"><span>待处理</span></Radio>
         <Radio label="1"><span>石锤</span></Radio>
         <Radio label="2"><span>嫌疑玩家再观察</span></Radio>
         <Radio label="3"><span>没有问题不是挂</span></Radio>
@@ -29,7 +29,9 @@
         <li>
           <span><b>游戏ID</b></span>
           <span><b>处理状态</b></span>
-          <!-- 0=> 未处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的 -->
+          <!-- 0=> 待处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的 -->
+
+          <span><b>作弊方式</b></span>
           <span><b>举报时间</b></span>
           <span><b>处理时间</b></span>
         </li>
@@ -40,6 +42,11 @@
           </span>
           <span>
             {{ handleStatus(d.status) }}
+          </span>
+          <span>
+            <Tag v-if="d.cheat_methods" color="warning">
+              {{convertCheatMethods(d.cheat_methods || '')}}
+            </Tag>
           </span>
           <span>
             <Time v-if="d.create_datetime" :time="d.create_datetime" type="date" />
@@ -120,7 +127,7 @@ export default {
     },
     handleStatus(status) {
       const statusObj = {
-        0: "未处理",
+        0: "待处理",
         1: "石锤",
         2: "嫌疑玩家再观察",
         3: "没有问题不是挂",
@@ -176,6 +183,24 @@ export default {
     handlePageChange(num) {
       this.page = num;
       this.handleChanges();
+    },
+
+    convertCheatMethods(str) {
+
+      const list = {
+        wallhack: '透视',
+        damageChange: '改伤',
+        aimbot: '自瞄',
+        oneShotKill: '秒杀',
+        gadgetModify: '改装备',
+        stealth: '隐身',
+        shootingThroughWalls: '子弹穿墙',
+      };
+
+      // return string
+      return str.split(',').map((v, i) => {
+        return list[v]
+      }).join(' ');
     }
   }
 }
@@ -213,6 +238,11 @@ export default {
       flex-basis: 10%;
     }
     span:nth-child(4) {
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: 10%;
+    }
+    span:nth-child(5) {
       flex-grow: 0;
       flex-shrink: 0;
       flex-basis: 10%;

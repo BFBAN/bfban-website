@@ -11,30 +11,30 @@
       </FormItem>
 
       <FormItem label="作弊方式">
-            <CheckboxGroup v-model="formItem.checkbox">
-                <Checkbox label="wallhack">
-                  <span>透视</span>
-                </Checkbox>
-                <Checkbox label="damageChange">
-                  <span>改伤</span>
-                </Checkbox>
-                <Checkbox label="aimbot">
-                  <span>自瞄</span>
-                </Checkbox>
-                <Checkbox label="oneShotKill">
-                  <span>秒杀</span>
-                </Checkbox>
-                <Checkbox label="gadgetModify">
-                  <span>改装备</span>
-                </Checkbox>
-                <Checkbox label="stealth">
-                  <span>隐身</span>
-                </Checkbox>
-                <Checkbox label="shootingThroughWalls">
-                  <span>子弹穿墙</span>
-                </Checkbox>
-            </CheckboxGroup>
-        </FormItem>
+        <CheckboxGroup v-model="formItem.checkbox">
+          <Checkbox label="wallhack">
+            <span>透视</span>
+          </Checkbox>
+          <Checkbox label="damageChange">
+            <span>改伤</span>
+          </Checkbox>
+          <Checkbox label="aimbot">
+            <span>自瞄</span>
+          </Checkbox>
+          <Checkbox label="oneShotKill">
+            <span>秒杀</span>
+          </Checkbox>
+          <Checkbox label="gadgetModify">
+            <span>改装备</span>
+          </Checkbox>
+          <Checkbox label="stealth">
+            <span>隐身</span>
+          </Checkbox>
+          <Checkbox label="shootingThroughWalls">
+            <span>子弹穿墙</span>
+          </Checkbox>
+        </CheckboxGroup>
+      </FormItem>
 
       <FormItem label="B站链接">
         <Input v-model="formItem.bilibiliLink" placeholder="选填" />
