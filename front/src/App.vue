@@ -1,12 +1,12 @@
 <template>
   <div class="app">
     <Header />
-    <div class="container" style="flex: 1 0 auto;">
+    <main class="container">
         <div class="content">
             <!-- component match the router will render here -->
             <router-view></router-view>
         </div>
-    </div>
+    </main>
     <Footer />
   </div>
 
@@ -50,6 +50,10 @@ export default {
     max-width: 960px;
     width: 960px;
     margin: 0 auto;
+  }
+  main {
+    flex: 1 0 auto;
+    margin-top: 4rem !important;
   }
   .content {
     background-color:#fbfbfb;

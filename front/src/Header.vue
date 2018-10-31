@@ -1,5 +1,5 @@
 <template>
-    <header class="header">
+    <header>
       <div class="container">
         <div class="nav">
         <router-link :to="{name: 'home'}">首页</router-link>
@@ -58,14 +58,32 @@ export default {
     }
   }
 }
+
+let styles = `
+   background-color: #fff;
+   box-shadow: 0 0 10px 0px #676767;
+`;
+window.addEventListener('scroll', function(e) {
+  let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+  if (scrollTop > 24) {
+    document.querySelector('header').setAttribute('style', styles);
+  } else {
+    document.querySelector('header').removeAttribute('style');
+  }
+})
+
 </script>
 
 <style lang="scss" scoped>
-  .header {
+  header {
     background-color: rgba(252,252,252,0.8);
     width: 100%;
     height: auto;
     box-shadow: 0 0 4px rgba(0,0,0,0.15);
+
+    position: fixed;
+    z-index: 1000;
   }
   .container {
     display: flex;

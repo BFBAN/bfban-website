@@ -24,7 +24,7 @@
 
     <Button style="margin: .4rem 0;" icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
 
-    <div style="position: relative;">
+    <div class="list">
       <ul>
         <li>
           <span><b>游戏ID</b></span>
@@ -182,6 +182,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .list {
+    position: relative;
+    a {
+    }
+    a:visited {
+    }
+  }
   li {
     display: flex;
     justify-content: space-around;
