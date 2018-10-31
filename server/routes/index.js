@@ -1,5 +1,6 @@
 const express = require('express');
 const csrf = require('csurf');
+const { checkGameIdExist } = require('../libs/webshot');
 
 const router = express.Router();
 
@@ -24,8 +25,17 @@ router.get('/teamliquid/*', async (req, res) => {
   res.json(await grabTeamliquid(req.params[0]));
 });
 
-router.use('/captcha', getCaptcha);
+router.post('/checkGameIdExist', async (req, res) => {
+  const { id } = req.body;
+  const idExist = await checkGameIdExist(id);
 
+  return res.json({
+    error: 0,
+    idExist,
+  });
+});
+
+router.use('/captcha', getCaptcha);
 
 router.use('/auth', require('./auth'));
 
