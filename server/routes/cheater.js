@@ -243,8 +243,9 @@ router.post('/confirm', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
   })
   .catch(e => next(e));
 
-  // update status and cheatMethods
-  await db.query('update cheaters set status = "1", cheatMethods = ? where uId = ?', [cheatMethods, cheaterUId])
+  // 石锤的 第二个 步骤
+  // update status, cheatMethods, updateDatetime
+  await db.query('update cheaters set status = "1", cheatMethods = ?, updateDatetime = ? where uId = ?', [cheatMethods, d, cheaterUId])
   .catch(e => next(e));
 
     res.json({
