@@ -35,26 +35,26 @@
           <span><b>举报时间</b></span>
           <span><b>处理时间</b></span>
         </li>
-        <li v-for="d in data" :key="d.u_id">
+        <li v-for="d in data" :key="d.uId">
           <span>
-            <router-link target="_blank" :to="{name: 'cheater', params: { uid: `${d.u_id}` }}">{{d.origin_id}}</router-link>
-            <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.origin_id" @click="copied"></Button>
+            <router-link target="_blank" :to="{name: 'cheater', params: { uid: `${d.uId}` }}">{{d.originId}}</router-link>
+            <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
           </span>
           <span>
             {{ handleStatus(d.status) }}
           </span>
           <span>
-            <Tag v-if="d.cheat_methods" color="warning">
-              {{convertCheatMethods(d.cheat_methods || '')}}
+            <Tag v-if="d.cheatMethods" color="warning">
+              {{convertCheatMethods(d.cheatMethods || '')}}
             </Tag>
           </span>
           <span>
-            <Time v-if="d.create_datetime" :time="d.create_datetime" type="date" />
+            <Time v-if="d.createDatetime" :time="d.createDatetime" />
           </span>
 
 
           <span>
-            <Time v-if="d.update_datetime" :time="d.update_datetime" type="date" />
+            <Time v-if="d.updateDatetime" :time="d.updateDatetime" />
           </span>
         </li>
       </ul>
@@ -233,7 +233,7 @@ export default {
       flex-grow: 1;
     }
     span:nth-child(3) {
-      flex-grow: 0;
+      flex-grow: 1;
       flex-shrink: 0;
       flex-basis: 10%;
     }

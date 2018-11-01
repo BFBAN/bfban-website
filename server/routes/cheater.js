@@ -15,7 +15,7 @@ function addOneDay(str) {
 }
 
 // status
-// 0=> 未处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的
+// 0=> 待处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的
 // 不带 status 为 全部
 // ?status=0
 router.get('/', async (req, res, next) => {
@@ -42,15 +42,15 @@ router.get('/', async (req, res, next) => {
   }
 
     if ( cd && cd !== ',') {
-    cdQuery = `and create_datetime >= ? and create_datetime <= ?`;
+    cdQuery = `and createDatetime >= ? and createDatetime <= ?`;
       queryVal.push(cdStart, addOneDay(cdEnd));
   }
   if (ud && ud !== ',') {
-    udQuery = `and update_datetime >= ? and update_datetime <= ?`;
+    udQuery = `and updateDatetime >= ? and updateDatetime <= ?`;
     queryVal.push(udStart, addOneDay(udEnd));
   }
 
-  let querySql = `select origin_id, status, u_id, create_datetime, update_datetime from cheaters where 1=1 ${statusQuery} ${cdQuery} ${udQuery} order by create_datetime DESC `;
+  let querySql = `select originId, status, cheatMethods, uId, createDatetime, updateDatetime from cheaters where 1=1 ${statusQuery} ${cdQuery} ${udQuery} order by createDatetime DESC `;
 
   result = await db.query(querySql + `limit 10 offset ${(page - 1) * 10}`, queryVal)
     .catch(e => next(e));
@@ -70,14 +70,17 @@ router.get('/', async (req, res, next) => {
 // who verify
 router.get('/:uid', async (req, res, next) => {
   const cheaterUId = req.params.uid;
-  const cheater = await db.query('select origin_id, status from cheaters where u_id = ?', [cheaterUId])
+  const cheater = await db.query('select originId, status from cheaters where uId = ?', [cheaterUId])
     .catch(e => next(e));
 
-  const reports = await db.query('select a.create_datetime, a.cheat_methods, a.bilibili_link, a.description, b.username, b.privilege from user_report_cheater as a left join users as b on a.user_id = b.id where a.cheater_u_id = ? and a.valid = "1"', [cheaterUId])
+  const reports = await db.query('select a.createDatetime, a.cheatMethods, a.bilibiliLink, a.description, b.username, b.privilege from user_report_cheater as a left join users as b on a.userId = b.id where a.cheaterUId = ? and a.valid = "1"', [cheaterUId])
     .catch(e => next(e));
 
 
-  const verifies = await db.query('select a.create_datetime, a.status, a.suggestion, b.username, b.privilege from user_verify_cheater as a left join users as b on a.user_id = b.id where a.cheater_u_id = ?', [cheaterUId])
+  const verifies = await db.query('select a.id, a.userId, a.createDatetime, a.status, a.suggestion, a.cheatMethods, b.username, b.privilege from user_verify_cheater as a left join users as b on a.userId = b.id where a.cheaterUId = ?', [cheaterUId])
+    .catch(e => next(e));
+
+  const confirms = await db.query('select t1.userId, t1.`userVerifyCheaterId`, t2.username, t1.createDatetime, t3.cheatMethods from `user_confirm_verify` as t1 left join users as t2 on t1.userId = t2.id left join user_verify_cheater as t3 on t1.userVerifyCheaterId = t3.id where t3.cheaterUId = ?', [cheaterUId])
     .catch(e => next(e));
 
   return res.json({
@@ -86,6 +89,7 @@ router.get('/:uid', async (req, res, next) => {
       cheater,
       reports,
       verifies,
+      confirms,
     },
   });
 });
@@ -94,12 +98,13 @@ router.get('/:uid', async (req, res, next) => {
 // originId, cheatMethods, bilibiliLink, description
 // insert user_report_cheater db
 // userId, cheaterUId, datatime
-router.post('/', verifyJWTMiddleware, [
+router.post('/', verifyJWTMiddleware, verifyCatpcha, [
   check('originId').not().isEmpty().isAscii(),
   check('cheatMethods').not().isEmpty(),
   check('bilibiliLink').optional({ checkFalsy: true }).isURL(),
   check('captcha').not().isEmpty().isLength({min:4, max: 4}),
-], verifyCatpcha, async (req, res, next) => {
+],
+  async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
@@ -111,7 +116,7 @@ router.post('/', verifyJWTMiddleware, [
 
   const { userId } = req.user;
 
-  const re = await db.query('select * from cheaters where origin_id = ?', [originId])
+  const re = await db.query('select * from cheaters where originId = ?', [originId])
     .catch(e => next(e));
 
   let cheaterUId;
@@ -122,28 +127,28 @@ router.post('/', verifyJWTMiddleware, [
   // if not in db
   if (re.length === 0) {
     await db.query('insert into cheaters set ?', {
-      u_id: uuId,
-      origin_id: originId,
-      create_datetime: d,
+      uId: uuId,
+      originId,
+      createDatetime: d,
     })
       .catch(e => next(e));
 
     cheaterUId = uuId;
   } else {
     // 若遇到重复举报
-    cheaterUId = re[0].u_id;
-    await db.query('update cheaters set status = ? where u_id = ?', [0, cheaterUId])
+    cheaterUId = re[0].uId;
+    await db.query('update cheaters set status = ? where uId = ?', [0, cheaterUId])
       .catch(e => next(e));
   }
 
 
   try {
     await db.query('insert into user_report_cheater set ?', {
-      user_id: userId,
-      cheater_u_id: cheaterUId,
-      create_datetime: d,
-      cheat_methods: cheatMethods,
-      bilibili_link: bilibiliLink,
+      userId,
+      cheaterUId,
+      createDatetime: d,
+      cheatMethods,
+      bilibiliLink,
       description,
     });
 
@@ -167,43 +172,90 @@ router.post('/', verifyJWTMiddleware, [
 router.post('/verify', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
   check('status').not().isEmpty(),
   check('suggestion').not().isEmpty(),
+  check('cheatMethods').optional({ checkFalsy: true }),
   check('cheaterUId').isUUID(),
-], async (req, res, next) => {
+],
+  async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
   }
 
-  const { status, suggestion, cheaterUId } = req.body;
+  let { status, suggestion, cheatMethods = '', cheaterUId } = req.body;
 
   const { userId } = req.user;
 
+  if (status !== '1') {
+    cheatMethods = '';
+  }
+
   const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
-  await db.query('insert into user_verify_cheater set ? ', {
+  const result = await db.query('insert into user_verify_cheater set ? ', {
     status,
     suggestion,
-    user_id: userId,
-    cheater_u_id: cheaterUId,
-    create_datetime: d,
+    userId,
+    cheaterUId,
+    cheatMethods,
+    createDatetime: d,
   })
     .catch(e => next(e));
 
-  await db.query('update cheaters set status = ?, update_datetime = ? where u_id = ? ', [status, d, cheaterUId])
+  if (status === '1') {
+    status = '0';
+  }
+
+  await db.query('update cheaters set status = ?, updateDatetime = ? where uId = ? ', [status, d, cheaterUId])
     .catch(e => next(e));
 
   const { username, userPrivilege } = req.user;
   return res.json({
     error: 0,
     data: {
+      id: result.insertId,
+      userId,
       cheaterUId,
-      create_datetime: d,
+      createDatetime: d,
       status,
       suggestion,
+      cheatMethods,
       username,
       privilege: userPrivilege,
     },
   });
+});
+
+// confirm cheater
+router.post('/confirm', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
+  check('userId').not().isEmpty(),
+  check('userVerifyCheaterId').not().isEmpty(),
+  check('cheatMethods').not().isEmpty(),
+],
+  async (req, res, next) => {
+  const d = moment().format('YYYY-MM-DD HH:mm:ss');
+
+  const { userId, userVerifyCheaterId, cheaterUId, cheatMethods } = req.body;
+
+  await db.query('insert into user_confirm_verify set ?', {
+    userId,
+    userVerifyCheaterId,
+    createDatetime: d,
+  })
+  .catch(e => next(e));
+
+  // update status and cheatMethods
+  await db.query('update cheaters set status = "1", cheatMethods = ? where uId = ?', [cheatMethods, cheaterUId])
+  .catch(e => next(e));
+
+    res.json({
+    error: 0,
+    data: {
+      userId,
+      userVerifyCheaterId,
+      createDatetime: d,
+      cheatMethods,
+    }
+  })
 });
 
 
