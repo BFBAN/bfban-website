@@ -5,6 +5,9 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
   entry: './src/index.js',
+  plugins: [
+    new VueLoaderPlugin(),
+  ],
   output: {
     path: path.resolve(__dirname, '../server/public'),
     filename: 'bundle.js',
@@ -60,9 +63,5 @@ module.exports = {
         }],
       },
     ],
-  },
-  plugins: [
-    new VueLoaderPlugin(),
-  ],
-  devtool: '#eval-source-map',
+  }
 };
