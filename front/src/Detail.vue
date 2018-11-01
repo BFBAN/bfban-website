@@ -17,15 +17,15 @@
           battlefieldtracker
         </Tag>
         <a v-show="idExist" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">在线战绩</a>
-        <!--<a>战绩截图</a>-->
-        <!--<a>武器截图</a>-->
+        <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">数据截图</a>
+        <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">武器截图</a>
 
 
         <Tag color="primary">
           bf1stats
         </Tag>
         <a v-show="idExist" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">在线战绩</a>
-        <!--<a>数据截图</a>-->
+        <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">数据截图</a>
   </div>
     </div>
 
@@ -83,7 +83,7 @@
 
           <br>
           <a href="#"
-            v-show="isAdmin && cheater.status !== '1' && l.status === '1' && currentUser.userId !== l.userId"
+            v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)"
             @click.prevent.stop="doConfirm"
             :data-user-verify-cheater-id="l.id"
             :data-cheat-methods="l.cheatMethods"
@@ -189,18 +189,9 @@ export default {
       },
       spinShow: true,
       idExist: true,
-      currentUser: {
-        userId: '',
-        username: '',
-        userPrivilege: '',
-      }
     }
   },
   created() {
-    this.currentUser.userId = this.$store.state.user.userId;
-    this.currentUser.username = this.$store.state.user.username;
-    this.currentUser.userPrivilege = this.$store.state.user.userPrivilege;
-
     axios({
       method: 'get',
       url: `/cheaters/${this.$route.params.uid}`,
@@ -371,6 +362,11 @@ export default {
           })
         }
       })
+    },
+    isSelf(id) {
+      const userId = this.$store.state.user.userId;
+
+      return (parseInt(userId) === parseInt(id))
     },
   },
   computed: {

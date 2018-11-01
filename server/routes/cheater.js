@@ -8,12 +8,15 @@ const db = require('../mysql');
 
 const { verifyCatpcha } = require('../middlewares/captcha');
 
+const { uploadToSm } = require('../libs/webshot')
+
 const router = express.Router();
 
 function addOneDay(str) {
   return moment(str).add(1, 'day').format('YYYY-MM-DD');
 }
 
+// cheater list
 // status
 // 0=> 待处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的
 // 不带 status 为 全部
@@ -65,12 +68,11 @@ router.get('/', async (req, res, next) => {
   });
 });
 
-// 具体的某个cheater
-// who report
-// who verify
+// cheater detail
+// report, verify, confirm
 router.get('/:uid', async (req, res, next) => {
   const cheaterUId = req.params.uid;
-  const cheater = await db.query('select originId, status from cheaters where uId = ?', [cheaterUId])
+  const cheater = await db.query('select originId, status, bf1statsShot, trackerShot, trackerWeaponShot from cheaters where uId = ?', [cheaterUId])
     .catch(e => next(e));
 
   const reports = await db.query('select a.createDatetime, a.cheatMethods, a.bilibiliLink, a.description, b.username, b.privilege from user_report_cheater as a left join users as b on a.userId = b.id where a.cheaterUId = ? and a.valid = "1"', [cheaterUId])
@@ -124,7 +126,7 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
   const uuId = uuidv4();
   const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
-  // if not in db
+  // 若第一次举报
   if (re.length === 0) {
     await db.query('insert into cheaters set ?', {
       uId: uuId,
@@ -134,8 +136,28 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
       .catch(e => next(e));
 
     cheaterUId = uuId;
+
+    // 抓取截图，并存入数据库（异步进行）
+    uploadToSm(`http://bf1stats.com/pc/${originId}`)
+    .then((url) => {
+      db.query('update cheaters set bf1statsShot = ? where uId = ?', [url, cheaterUId])
+      .catch(e => next(e));
+    });
+
+    uploadToSm(`https://battlefieldtracker.com/bf1/profile/pc/${originId}`)
+    .then((url) => {
+      db.query('update cheaters set trackerShot = ? where uId = ?', [url, cheaterUId])
+      .catch(e => next(e));
+    });
+
+    uploadToSm(`https://battlefieldtracker.com/bf1/profile/pc/${originId}/weapons`)
+    .then((url) => {
+      db.query('update cheaters set trackerWeaponShot = ? where uId = ?', [url, cheaterUId])
+      .catch(e => next(e));
+    });
+
   } else {
-    // 若遇到重复举报
+    // 若重复举报
     cheaterUId = re[0].uId;
     await db.query('update cheaters set status = ? where uId = ?', [0, cheaterUId])
       .catch(e => next(e));
@@ -167,7 +189,7 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
   }
 });
 
-// insert user_verify_cheater db
+// verify cheater
 // status, suggestion, userId, cheaterUId, datetime
 router.post('/verify', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
   check('status').not().isEmpty(),
@@ -178,7 +200,7 @@ router.post('/verify', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
   async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
+    return res.status(200).json({ error: 1, msg: 'verify 请规范填写', errors: errors.array() });
   }
 
   let { status, suggestion, cheatMethods = '', cheaterUId } = req.body;
@@ -232,6 +254,12 @@ router.post('/confirm', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
   check('cheatMethods').not().isEmpty(),
 ],
   async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(200).json({ error: 1, msg: 'confirm 请规范', errors: errors.array() });
+  }
+
+
   const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
   const { userId, userVerifyCheaterId, cheaterUId, cheatMethods } = req.body;

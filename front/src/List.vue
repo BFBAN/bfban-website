@@ -233,7 +233,7 @@ export default {
       flex-grow: 1;
     }
     span:nth-child(3) {
-      flex-grow: 1;
+      flex-grow: 2;
       flex-shrink: 0;
       flex-basis: 10%;
     }
