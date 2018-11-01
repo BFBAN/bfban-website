@@ -31,11 +31,12 @@ router.post('/signin', [
   if (result[0] && result[0].valid === '1' && await bcrypt.compare(password, result[0].password)) {
     const userPrivilege = result[0].privilege;
 
-    const token = jwt.sign({
+    const userPayload = {
       username,
       userId: result[0].id,
       userPrivilege,
-    }, config.secret, {
+    };
+    const token = jwt.sign(userPayload, config.secret, {
       expiresIn: '1 day',
     });
 
@@ -46,10 +47,7 @@ router.post('/signin', [
 
     res.json({
       error: 0,
-      data: {
-        username,
-        userPrivilege,
-      },
+      data: userPayload,
     });
   } else {
     res.json({
@@ -61,7 +59,7 @@ router.post('/signin', [
 
 // username, password
 router.post('/signup', [
-  check('username').not().isEmpty(),
+  check('username').not().isEmpty().isLength({min: 4}),
   check('password').not().isEmpty().isLength({min: 6}),
   check('captcha').not().isEmpty().isLength({min:4, max: 4}),
   check('qq').optional({ checkFalsy: true }).isNumeric(),
@@ -85,10 +83,10 @@ router.post('/signup', [
     result = await db.query('insert into users set ?', {
       username,
       password: hash,
-      origin_id: originId,
+      originId,
       qq,
-      create_datetime: d,
-      update_datetime: d,
+      createDatetime: d,
+      updateDatetime: d,
     });
   } catch (e) {
     console.error(e);
@@ -102,11 +100,12 @@ router.post('/signup', [
   const userPrivilege = 'normal';
 
   // jwt token
-  const token = jwt.sign({
+  const userPayload = {
     username,
     userId: result.insertId,
     userPrivilege,
-  }, config.secret, {
+  };
+  const token = jwt.sign(userPayload, config.secret, {
     expiresIn: '1 day',
   });
 
@@ -117,10 +116,7 @@ router.post('/signup', [
 
   res.json({
     error: 0,
-    data: {
-      username,
-      userPrivilege,
-    },
+    data: userPayload,
   });
 });
 

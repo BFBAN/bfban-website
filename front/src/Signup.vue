@@ -3,7 +3,7 @@
       <Divider>注册</Divider>
 
       <FormItem label="用户名">
-        <Input v-model="signup.username" placeholder="用户名" />
+        <Input v-model="signup.username" placeholder="4位以上用户名" />
       </FormItem>
 
       <FormItem label="密码">
