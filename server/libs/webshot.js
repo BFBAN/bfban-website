@@ -10,7 +10,7 @@ let tmpFileName = (new Date()).getTime() + '-' + Math.floor(Math.random() * 1000
 let tmpFileLocation = path.resolve(tmpDir, tmpFileName);
 
 async function webshot(url) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({args: ['--no-sandbox']});
   const page = await browser.newPage();
   await page.goto(url);
   await page.setViewport({width: 1220, height: 768});

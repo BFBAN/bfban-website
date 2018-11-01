@@ -81,6 +81,12 @@ app.use((err, req, res, next) => {
   pino.error(err.stack);
 });
 
+// https://thecodebarbarian.com/unhandled-promise-rejections-in-node.js.html
+process.on('unhandledRejection', error => {
+  // Will print "unhandledRejection err is not defined"
+  console.log('unhandledRejection', error.message);
+});
+
 
 // mongoConnection.on('error', console.error.bind(console, 'mongodb connection error!!'));
 // mongoConnection.once('open', () => {
