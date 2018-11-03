@@ -1,6 +1,10 @@
 const express = require('express');
 const moment = require('moment');
 const uuidv4 = require('uuid/v4');
+const { spawn } = require('child_process');
+const { baseDir } = require('../config');
+const _ = require('underscore');
+const path = require('path');
 const { check, validationResult } = require('express-validator/check');
 
 const { verifyJWTMiddleware, verifyPrivilegeMiddleware } = require('../middlewares/auth');
@@ -8,7 +12,6 @@ const db = require('../mysql');
 
 const { verifyCatpcha } = require('../middlewares/captcha');
 
-const { uploadToSm } = require('../libs/webshot')
 
 const router = express.Router();
 
@@ -136,26 +139,6 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
       .catch(e => next(e));
 
     cheaterUId = uuId;
-
-    // 抓取截图，并存入数据库（异步进行）
-    uploadToSm(`http://bf1stats.com/pc/${originId}`)
-    .then((url) => {
-      db.query('update cheaters set bf1statsShot = ? where uId = ?', [url, cheaterUId])
-      .catch(e => next(e));
-    });
-
-    uploadToSm(`https://battlefieldtracker.com/bf1/profile/pc/${originId}`)
-    .then((url) => {
-      db.query('update cheaters set trackerShot = ? where uId = ?', [url, cheaterUId])
-      .catch(e => next(e));
-    });
-
-    uploadToSm(`https://battlefieldtracker.com/bf1/profile/pc/${originId}/weapons`)
-    .then((url) => {
-      db.query('update cheaters set trackerWeaponShot = ? where uId = ?', [url, cheaterUId])
-      .catch(e => next(e));
-    });
-
   } else {
     // 若重复举报
     cheaterUId = re[0].uId;
@@ -163,8 +146,37 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
       .catch(e => next(e));
   }
 
+    // 抓取截图，并存入数据库
+    // 有io 操作， 开另一个进程
+    let o = {
+      'bf1statsShot': `http://bf1stats.com/pc/${originId}`,
+      'trackerShot': `https://battlefieldtracker.com/bf1/profile/pc/${originId}`,
+      'trackerWeaponShot': `https://battlefieldtracker.com/bf1/profile/pc/${originId}/weapons`,
+    };
+    _.each(o, (v, k, obj) => {
 
-  try {
+      console.log(`start to cpature ${v} ...`);
+
+      let cp = spawn('node', [
+        path.resolve(baseDir, 'libs/webshot.js'),
+        v,
+      ]);
+
+      let url;
+      cp.stdout.on('data', (data) => {
+        url = data.toString();
+      });
+      cp.on('close', (code) => {
+        console.log(`cpature successfully ${k}, ${v}, ${url}`);
+
+        db.query(`update cheaters set ${k} = ? where uId = ?`, [url, cheaterUId])
+        .catch(e => next(e));
+      })
+    });
+    // 抓取截图，并存入数据库
+
+
+    try {
     await db.query('insert into user_report_cheater set ?', {
       userId,
       cheaterUId,
