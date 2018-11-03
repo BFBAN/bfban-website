@@ -22,7 +22,13 @@
       <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="处理日期范围" style="width: 200px"></DatePicker>
     </div>
 
-    <Button style="margin: .4rem 0;" icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
+    <div>
+      举报时间倒序
+      处理时间倒序
+
+      <Button style="margin: .4rem 0;" icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
+    </div>
+
 
     <div class="list">
       <ul>
@@ -37,7 +43,7 @@
         </li>
         <li v-for="d in data" :key="d.uId">
           <span>
-            <router-link target="_blank" :to="{name: 'cheater', params: { uid: `${d.uId}` }}">{{d.originId}}</router-link>
+            <router-link :to="{name: 'cheater', params: { uid: `${d.uId}` }}">{{d.originId}}</router-link>
             <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
           </span>
           <span>
