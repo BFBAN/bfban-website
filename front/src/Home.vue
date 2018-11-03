@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img class="logo" src="https://bf1.likeqi.cn/images/avatar.png" alt="">
+    <img class="logo" src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png" alt="">
 
     <Divider>关于</Divider>
 

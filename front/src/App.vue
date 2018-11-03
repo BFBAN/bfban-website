@@ -36,7 +36,7 @@ export default {
     flex-direction: column;
 
     /*background image*/
-    background: url('/assets/images/of3k9ek31gy01.png') no-repeat;
+    background: url('https://i.loli.net/2018/11/03/5bdd8e97bb2be.png') no-repeat;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
