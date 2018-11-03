@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
 const config = require('../config');
 
 function verifyJWTToken(token) {
@@ -12,6 +14,15 @@ function verifyJWTToken(token) {
   }));
 }
 
+function generatePassword(p) {
+  return bcrypt.hashSync(p, 10);
+}
+
+function comparePassword(pw, hash) {
+  return bcrypt.compareSync(pw, hash);
+}
 module.exports = {
   verifyJWTToken,
+  generatePassword,
+  comparePassword,
 };

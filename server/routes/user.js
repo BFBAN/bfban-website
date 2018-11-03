@@ -1,8 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const bcrypt = require('bcrypt');
 const { check, validationResult } = require('express-validator/check');
+const { generatePassword, comparePassword } = require('../libs/auth');
 
 const config = require('../config');
 
@@ -28,7 +28,7 @@ router.post('/signin', [
   const result = await db.query('select * from users where username = ?', [username])
     .catch(e => next(e));
 
-  if (result[0] && result[0].valid === '1' && await bcrypt.compare(password, result[0].password)) {
+  if (result[0] && result[0].valid === '1' && comparePassword(password, result[0].password)) {
     const userPrivilege = result[0].privilege;
 
     const userPayload = {
@@ -73,7 +73,7 @@ router.post('/signup', [
     username, password, originId, qq,
   } = req.body;
 
-  const hash = await bcrypt.hash(password, 10);
+  const hash = generatePassword(password);
 
   const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
