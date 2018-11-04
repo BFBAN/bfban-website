@@ -90,6 +90,8 @@
             :data-user-verify-cheater-id="l.id"
             :data-cheat-methods="l.cheatMethods"
             :data-user-verify-cheater-username="l.username">
+
+            <Icon type="md-thumbs-up" />
             赞同上处理 并 石锤
           </a>
         </div>
