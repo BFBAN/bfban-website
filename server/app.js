@@ -15,7 +15,7 @@ const { port } = config;
 // const redisClient = require('./redis');
 
 // session
-const session = require('express-session');
+// const session = require('express-session');
 // const RedisStore = require('connect-redis')(session)
 
 // create express app
@@ -38,21 +38,21 @@ app.use(cookieParser(config.secret, {
 //     // Redis session TTL (expiration) in seconds. Defaults to session.cookie.maxAge (if set), or one day.
 //     // ttl: 60 * 60 * 12,
 // }
-app.use(session({
-  secret: config.secret,
-  resave: false,
-
-  cookie: {
-    secure: false, // https or not
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 12, // default one day
-  },
-
-  // deprecated
-  saveUninitialized: true,
-  // default express-session will use memoryStore
-  // store: new RedisStore(redisOpts),
-}));
+// app.use(session({
+//   secret: config.secret,
+//   resave: false,
+//
+//   cookie: {
+//     secure: false, // https or not
+//     httpOnly: true,
+//     maxAge: 1000 * 60 * 60 * 12, // default one day
+//   },
+//
+//   // deprecated
+//   saveUninitialized: true,
+//   // default express-session will use memoryStore
+//   // store: new RedisStore(redisOpts),
+// }));
 
 
 // use middlewares

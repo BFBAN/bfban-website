@@ -1,8 +1,16 @@
-function verifyCatpcha(req, res, next) {
-  const sessionCaptcha = req.session.captcha;
-  const Usercaptcha = req.body.captcha;
+const crypto = require('crypto');
+const { secret } = require('../config');
 
-  if (Usercaptcha !== sessionCaptcha) {
+function verifyCatpcha(req, res, next) {
+  const cookieCaptcha = req.cookies['encryptCaptcha'];
+  const userCaptcha = req.body.captcha;
+
+  const encryptUserCaptcha = crypto.createHmac('sha256', secret)
+    .update(userCaptcha)
+    .digest('hex');
+
+
+  if (encryptUserCaptcha !== cookieCaptcha) {
     res.json({
       error: 1,
       msg: 'wrong captcha',
