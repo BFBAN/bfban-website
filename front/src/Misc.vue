@@ -15,7 +15,7 @@
           :format="['jpg','jpeg','png', 'gif']"
           multiple
           name="file"
-          max-size="2014"
+          :max-size="imgMaxSize"
           type="drag"
 
           :with-credentials="withCredentials"
@@ -47,7 +47,7 @@
           :format="['mp4']"
           multiple
           name="file"
-          max-size="30720"
+          :max-size="vodMaxSize"
           type="drag"
 
           :with-credentials="withCredentials"
@@ -72,7 +72,7 @@
           ref="quillEditor"
           :options="editorOption"
 
-          :content="content"
+          :content="editorContent"
           @change="onEditorChange($event)"
           >
           </quill-editor>
@@ -123,6 +123,9 @@ export default {
     },
     data() {
       return {
+          imgMaxSize: 2014,
+          vodMaxSize: 30720,
+
           modal1: false,
           modal2: false,
 
@@ -138,7 +141,7 @@ export default {
 
           spinShow: false,
 
-          content: '',
+          editorContent: '',
           editorOption: {
               theme: 'snow',
               modules: {
@@ -172,7 +175,7 @@ export default {
     methods: {
         onEditorChange({ quill, html, text }) {
             this.$emit('change', html)
-            this.content = html
+            this.editorContent = html
         },
 
         handleBeforeUpload: async function(files) {
