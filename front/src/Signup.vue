@@ -1,5 +1,5 @@
 <template>
-    <Form :label-width="80">
+    <Form :label-width="80" style="position: relative;">
       <Divider>注册</Divider>
 
       <FormItem label="用户名">
@@ -29,6 +29,8 @@
       <FormItem>
           <Button @click.prevent.stop="handleSignup" type="primary">提交</Button>
       </FormItem>
+
+      <Spin size="large" fix v-show="spinShow"></Spin>
     </Form>
 </template>
 
@@ -45,14 +47,38 @@ export default {
         originId: '',
         qq: '',
         captcha: '',
-      }
+      },
+      spinShow: false,
     }
   },
   methods: {
-    refreshCaptcha: function() {
+    waitForCaptcha(e) {
+      e.target.style = "display: none;";
+      let span = document.createElement('span');
+      e.target.parentNode.insertBefore(span, e.target.nextSibling);
+
+      let n = 2;
+      span.innerText = `${n} 秒后重新获取`;
+      let si = setInterval(function() {
+        if (n > 1) {
+
+          n -= 1;
+          span.innerText = `${n} 秒后重新获取`;
+        } else {
+          e.target.style = "";
+          span.innerText = '';
+          clearInterval(si);
+        }
+      }, 1000);
+    },
+    refreshCaptcha: function(e) {
       this.$refs.captcha.src = '/captcha?r=' + Math.random();
+
+      this.waitForCaptcha(e);
     },
     handleSignup: function() {
+      this.spinShow = true;
+
       let {username, password, originId, qq, captcha} = _.each(this.signup, (v, k, o) => {
         o[k] = v.trim();
       });
@@ -70,6 +96,8 @@ export default {
           }
         })
         .then((res) => {
+          this.spinShow = false;
+
           const d = res.data;
           if (d.error === 1) {
             this.$Message.error('注册失败 ' + d.msg)

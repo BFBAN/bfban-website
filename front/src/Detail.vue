@@ -125,7 +125,7 @@
       </div>
       <h2 style="margin: 1rem 0;">处理意见</h2>
 
-      <Form :label-width="80" ref='verifyForm'>
+      <Form :label-width="80" ref='verifyForm' style="position: relative;">
         <FormItem label="意见">
           <Select v-model="verify.status">
             <!-- 0=> 待处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的 -->
@@ -171,6 +171,8 @@
         <FormItem>
             <Button type="primary" @click.stop.prevent="doVerify">提交</Button>
         </FormItem>
+
+        <Spin size="large" fix v-show="verifySpinShow"></Spin>
       </Form>
     </div>
 
@@ -193,6 +195,8 @@ export default {
       },
       spinShow: true,
       idExist: true,
+
+      verifySpinShow: false,
     }
   },
   created() {
@@ -287,6 +291,8 @@ export default {
       }).join(' ');
     },
     doVerify() {
+      this.verifySpinShow = true;
+
       const {status, suggestion} = this.verify;
       const cheaterUId = this.$route.params.uid;
       const cheatMethods = this.verify.checkbox.join(',');
@@ -302,6 +308,8 @@ export default {
         }
       })
       .then((res) => {
+        this.verifySpinShow = false;
+
         const d = res.data;
         if (res.data.error === 0) {
           // reset verifyForm

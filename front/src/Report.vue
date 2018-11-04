@@ -1,6 +1,6 @@
 <template>
 
-    <Form :label-width="80">
+    <Form :label-width="80" style="position: relative;">
       <Divider>举报作弊</Divider>
 
       <FormItem label="游戏ID">
@@ -60,6 +60,8 @@
       <FormItem>
           <Button @click.prevent.stop="handleReport" type="primary">提交</Button>
       </FormItem>
+
+      <Spin size="large" fix v-show="spinShow"></Spin>
     </Form>
 </template>
 
@@ -71,26 +73,50 @@ import _ from 'underscore';
 export default {
   data() {
      return {
-              formItem: {
-                originId: '',
-                bilibiliLink: '',
-                checkbox: ['aimbot'],
-                description: '',
-                captcha: '',
-              }
-            }
+        formItem: {
+          originId: '',
+          bilibiliLink: '',
+          checkbox: ['aimbot'],
+          description: '',
+          captcha: '',
+        },
+        spinShow: false,
+     }
   },
   components: {
     Misc
   },
   methods: {
-    refreshCaptcha() {
+    waitForCaptcha(e) {
+      e.target.style = "display: none;";
+      let span = document.createElement('span');
+      e.target.parentNode.insertBefore(span, e.target.nextSibling);
+
+      let n = 2;
+      span.innerText = `${n} 秒后重新获取`;
+      let si = setInterval(function() {
+        if (n > 1) {
+
+          n -= 1;
+          span.innerText = `${n} 秒后重新获取`;
+        } else {
+          e.target.style = "";
+          span.innerText = '';
+          clearInterval(si);
+        }
+      }, 1000);
+    },
+    refreshCaptcha(e) {
       this.$refs.captcha.src = '/captcha?r=' + Math.random();
+
+      this.waitForCaptcha(e);
     },
     handleMiscChange: function(h) {
       this.formItem.description = h
     },
     handleReport: function() {
+      this.spinShow = true;
+
       const cheatMethods = this.formItem.checkbox.join(',');
 
       const {
@@ -114,6 +140,8 @@ export default {
           captcha,
         }
       }).then((res) => {
+        this.spinShow = false;
+
         const d = res.data;
         if (d.error === 0) {
           this.$router.push({name: 'cheater', params: {uid: d.data.cheaterUId}});
