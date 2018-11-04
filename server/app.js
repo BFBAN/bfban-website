@@ -99,7 +99,7 @@ process.on('unhandledRejection', error => {
 
 
 // app start
-app.listen(port, () => console.log(`app listen on port ${port}...`));
+app.listen(port, '127.0.0.1', () => console.log(`app listen on port ${port}...`));
 
 
 module.exports = app;
