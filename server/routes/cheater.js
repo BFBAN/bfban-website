@@ -19,6 +19,37 @@ function addOneDay(str) {
   return moment(str).add(1, 'day').format('YYYY-MM-DD');
 }
 
+function capture(originId, cheaterUId) {
+  // 抓取截图，并存入数据库
+  // 有io 操作， 开另一个进程
+  let o = {
+    'bf1statsShot': `http://bf1stats.com/pc/${originId}`,
+    'trackerShot': `https://battlefieldtracker.com/bf1/profile/pc/${originId}`,
+    'trackerWeaponShot': `https://battlefieldtracker.com/bf1/profile/pc/${originId}/weapons`,
+  };
+  _.each(o, (v, k, obj) => {
+
+    console.log(`start to cpature ${v} ...`);
+
+    let cp = spawn('node', [
+      path.resolve(baseDir, 'libs/webshot.js'),
+      v,
+    ]);
+
+    let url;
+    cp.stdout.on('data', (data) => {
+      url = data.toString();
+    });
+    cp.on('close', (code) => {
+      console.log(`cpature successfully ${k}, ${v}, ${url}`);
+
+      db.query(`update cheaters set ${k} = ? where uId = ?`, [url, cheaterUId])
+      .catch(e => next(e));
+    })
+  });
+  // 抓取截图，并存入数据库
+}
+
 // cheater list
 // status
 // 0=> 待处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的
@@ -146,37 +177,10 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
       .catch(e => next(e));
   }
 
-    // 抓取截图，并存入数据库
-    // 有io 操作， 开另一个进程
-    let o = {
-      'bf1statsShot': `http://bf1stats.com/pc/${originId}`,
-      'trackerShot': `https://battlefieldtracker.com/bf1/profile/pc/${originId}`,
-      'trackerWeaponShot': `https://battlefieldtracker.com/bf1/profile/pc/${originId}/weapons`,
-    };
-    _.each(o, (v, k, obj) => {
+  // 先暂停 截图功能，太耗cpu了，导致mysql都连接不上
+  // capture(originId, cheaterUId);
 
-      console.log(`start to cpature ${v} ...`);
-
-      let cp = spawn('node', [
-        path.resolve(baseDir, 'libs/webshot.js'),
-        v,
-      ]);
-
-      let url;
-      cp.stdout.on('data', (data) => {
-        url = data.toString();
-      });
-      cp.on('close', (code) => {
-        console.log(`cpature successfully ${k}, ${v}, ${url}`);
-
-        db.query(`update cheaters set ${k} = ? where uId = ?`, [url, cheaterUId])
-        .catch(e => next(e));
-      })
-    });
-    // 抓取截图，并存入数据库
-
-
-    try {
+  try {
     await db.query('insert into user_report_cheater set ?', {
       userId,
       cheaterUId,

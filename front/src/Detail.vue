@@ -26,7 +26,9 @@
         </Tag>
         <a v-show="idExist" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">在线战绩</a>
         <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">数据截图</a>
-  </div>
+      </div>
+
+      <img style="width: 500px; margin: 1rem 0 0;" :src="`http://g.bf1stats.com/EwvWxWrq/pc/${cheater.originId}.png`"/>
     </div>
 
     <Divider />
