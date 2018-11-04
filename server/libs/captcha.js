@@ -5,10 +5,12 @@ const { secret } = require('../config');
 function getCaptcha(req, res) {
   const captcha = svgCaptcha.create({
     inverse: false,
-    fontSize: 36,
-    noise: 2,
+    ignoreChars: 'aoil',
+    color: false,
+    fontSize: 40,
+    noise: 1,
     width: 80,
-    height: 30,
+    height: 40,
   });
 
   const text = captcha.text.toLowerCase();
