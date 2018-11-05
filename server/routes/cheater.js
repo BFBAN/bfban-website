@@ -56,11 +56,12 @@ function capture(originId, cheaterUId) {
 // 不带 status 为 全部
 // ?status=0
 router.get('/', async (req, res, next) => {
-  const {
+  let {
     status = '',
     cd = ',',
     ud = ',',
     page = 1,
+    sort = '',
   } = req.query;
   let result;
 
@@ -87,7 +88,9 @@ router.get('/', async (req, res, next) => {
     queryVal.push(udStart, addOneDay(udEnd));
   }
 
-  let querySql = `select originId, status, cheatMethods, uId, createDatetime, updateDatetime from cheaters where 1=1 ${statusQuery} ${cdQuery} ${udQuery} order by createDatetime DESC `;
+  if (sort === '') sort = 'updateDatetime';
+
+  let querySql = `select originId, status, cheatMethods, uId, createDatetime, updateDatetime from cheaters where 1=1 ${statusQuery} ${cdQuery} ${udQuery} order by ${sort} DESC `;
 
   result = await db.query(querySql + `limit 10 offset ${(page - 1) * 10}`, queryVal)
     .catch(e => next(e));

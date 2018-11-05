@@ -23,8 +23,10 @@
     </div>
 
     <div>
-      举报时间倒序
-      处理时间倒序
+      排序：
+      <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
+        <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
 
       <Button style="margin: .4rem 0;" icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
     </div>
@@ -90,6 +92,18 @@ export default {
       ud: ['', ''],
       page: 1,
       total: 0,
+
+      sortBy: [
+        {
+          value: 'updateDatetime',
+          label: '处理时间倒序',
+        },
+        {
+          value: 'createDatetime',
+          label: '举报时间倒序',
+        },
+      ],
+      sortByValue: 'updateDatetime',
     }
   },
   created() {
@@ -103,7 +117,7 @@ export default {
       this.$Message.info('已复制');
     },
     loadData() {
-      const { status = '', cd = '', ud = '', page = 1 } = this.$route.query;
+      const { status = '', cd = '', ud = '', page = 1, sort='updateDatetime' } = this.$route.query;
 
       const config = {
         method: 'get',
@@ -115,6 +129,7 @@ export default {
         cd,
         ud,
         page,
+        sort,
       };
       this.statusGroup = status;
       this.cd = cd.split(',');
@@ -138,7 +153,7 @@ export default {
         2: "嫌疑玩家再观察",
         3: "没有问题不是挂",
         4: "捣乱的",
-      }
+      };
 
       return statusObj[status]
     },
@@ -152,6 +167,7 @@ export default {
       const cd = this.cd.join(',');
       const ud = this.ud.join(',');
       const page = this.page;
+      const sort = this.sortByValue;
 
       let o = {};
 
@@ -159,6 +175,7 @@ export default {
       if (cd !== ',') o['cd'] = cd;
       if (ud !== ',') o['ud'] = ud;
       if (page !== 1) o['page'] = page;
+      if (sort !== '') o['sort'] = sort;
 
       return o;
     },
@@ -207,7 +224,10 @@ export default {
       return str.split(',').map((v, i) => {
         return list[v]
       }).join(' ');
-    }
+    },
+    handleSortByChange(value) {
+      this.handleChanges();
+    },
   }
 }
 </script>

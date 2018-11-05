@@ -313,7 +313,7 @@ export default {
         const d = res.data;
         if (res.data.error === 0) {
           // reset verifyForm
-          this.verify.status = '0'
+          this.verify.status = '0';
           this.verify.suggestion = '';
           this.verify.checkbox = [];
 
