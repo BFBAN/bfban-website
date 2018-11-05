@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
+const uuidv4 = require('uuid/v4');
 const { check, validationResult } = require('express-validator/check');
 const { generatePassword, comparePassword } = require('../libs/auth');
 
@@ -30,11 +31,13 @@ router.post('/signin', [
 
   if (result[0] && result[0].valid === '1' && comparePassword(password, result[0].password)) {
     const userPrivilege = result[0].privilege;
+    const uId = result[0].uId;
 
     const userPayload = {
       username,
       userId: result[0].id,
       userPrivilege,
+      uId,
     };
     const token = jwt.sign(userPayload, config.secret, {
       expiresIn: '1 day',
@@ -77,6 +80,8 @@ router.post('/signup', [
 
   const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
+  const uId = uuidv4();
+
   let result;
 
   try {
@@ -87,6 +92,7 @@ router.post('/signup', [
       qq,
       createDatetime: d,
       updateDatetime: d,
+      uId,
     });
   } catch (e) {
     console.error(e);
@@ -104,6 +110,7 @@ router.post('/signup', [
     username,
     userId: result.insertId,
     userPrivilege,
+    uId,
   };
   const token = jwt.sign(userPayload, config.secret, {
     expiresIn: '1 day',
@@ -130,6 +137,28 @@ router.get('/signout', (req, res, next) => {
     error: 0,
     msg: '注销成功',
   });
+});
+
+router.get('/:uId', async (req, res, next) => {
+  const uId = req.params.uId;
+
+  const result = await db.query('select * from users where uId = ?', [uId])
+  .catch(e => next(e));
+
+  const {username, originId, privilege, createDatetime, id} = result[0];
+
+  const reports = await db.query('select t1.createDatetime, t2.updateDatetime, t2.uId, t2.originId, t2.status from user_report_cheater as t1 left join cheaters as t2 ' +
+    'on t1.cheaterUId = t2.uId where t1.userId = ?', [id])
+  .catch(e => next(e));
+
+  res.json({
+    error: 0,
+    data: {
+      username, originId, privilege, createDatetime,
+      reports,
+    }
+  })
+
 });
 
 module.exports = router;

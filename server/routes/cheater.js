@@ -119,7 +119,7 @@ router.get('/:uid', async (req, res, next) => {
   const verifies = await db.query('select a.id, a.userId, a.createDatetime, a.status, a.suggestion, a.cheatMethods, b.username, b.privilege from user_verify_cheater as a left join users as b on a.userId = b.id where a.cheaterUId = ?', [cheaterUId])
     .catch(e => next(e));
 
-  const confirms = await db.query('select t1.userId, t1.`userVerifyCheaterId`, t2.username, t1.createDatetime, t3.cheatMethods from `user_confirm_verify` as t1 left join users as t2 on t1.userId = t2.id left join user_verify_cheater as t3 on t1.userVerifyCheaterId = t3.id where t3.cheaterUId = ?', [cheaterUId])
+  const confirms = await db.query('select t1.userId, t1.`userVerifyCheaterId`, t2.username, t2.privilege, t1.createDatetime, t3.cheatMethods from `user_confirm_verify` as t1 left join users as t2 on t1.userId = t2.id left join user_verify_cheater as t3 on t1.userVerifyCheaterId = t3.id where t3.cheaterUId = ?', [cheaterUId])
     .catch(e => next(e));
 
   return res.json({
