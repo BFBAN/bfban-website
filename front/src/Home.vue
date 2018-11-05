@@ -121,6 +121,7 @@ export default {
         'Lion',
         'Lowb',
         'kosuzu',
+        'ROB',
       ],
       manager: [
         {
