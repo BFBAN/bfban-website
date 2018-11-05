@@ -178,13 +178,14 @@ export default {
             this.editorContent = html
         },
 
-        handleBeforeUpload: async function(files) {
+        handleBeforeUpload: async function(file) {
 
             // axios get qiniu tooken to extraData
             let d = await this.getQiniuUploadToken()
             let token = d.data.token
 
             this.extraData.token = token
+            this.extraData.key = (new Date()).getTime() + '-' + Math.round(Math.random() * 1000000) + '.' + file.name.split(".").pop()
         },
         handleSuccess: function(res, file, fileList) {
           const quill = this.$refs.quillEditor.quill;
@@ -196,10 +197,10 @@ export default {
           let length = quill.getSelection().index;
           // 插入图片 或 插入视频
           if (this.uploadType === 'image') {
-              quill.insertEmbed(length, 'image', "http://ban.bamket.com/"+res.hash)
+              quill.insertEmbed(length, 'image', "http://bfban.bamket.com/"+res.key)
             }
             if (this.uploadType === 'video') {
-              quill.insertEmbed(length, 'mp4', "http://ban.bamket.com/"+res.hash)
+              quill.insertEmbed(length, 'mp4', "http://bfban.bamket.com/"+res.key)
             }
             // 调整光标到最后
             quill.setSelection(length + 1);
