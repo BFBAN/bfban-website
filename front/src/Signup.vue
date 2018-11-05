@@ -28,6 +28,8 @@
 
       <FormItem>
           <Button @click.prevent.stop="handleSignup" type="primary">提交</Button>
+
+          <router-link :to="{name: 'signin'}">已有账号？去登录</router-link>
       </FormItem>
 
       <Spin size="large" fix v-show="spinShow"></Spin>
@@ -77,13 +79,13 @@ export default {
       this.waitForCaptcha(e);
     },
     handleSignup: function() {
-      this.spinShow = true;
-
       let {username, password, originId, qq, captcha} = _.each(this.signup, (v, k, o) => {
         o[k] = v.trim();
       });
 
       if (username && password && captcha.length === 4) {
+        this.spinShow = true;
+
         axios({
           method: 'post',
           url: '/account/signup',
@@ -110,7 +112,6 @@ export default {
             })
           }
 
-          this.refreshCaptcha();
           this.signup.password = '';
           this.signup.captcha = '';
         })

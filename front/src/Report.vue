@@ -151,7 +151,6 @@ export default {
           this.$Message.error('提交失败 ' + d.msg);
         }
 
-        this.refreshCaptcha();
         this.formItem.captcha = '';
       });
     }
