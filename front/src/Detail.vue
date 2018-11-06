@@ -13,6 +13,10 @@
           {{ handleStatus(cheater.status) }}
         </Tag>
 
+        <Tag v-if="cheater.cheatMethods" color="warning">
+          {{ convertCheatMethods(cheater.cheatMethods) }}
+        </Tag>
+
         <Tag color="primary">
           battlefieldtracker
         </Tag>
@@ -28,7 +32,7 @@
         <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">数据截图</a>
       </div>
 
-      <img style="width: 500px; margin: 1rem 0 0;" :src="`http://g.bf1stats.com/EwvWxWrq/pc/${cheater.originId}.png`"/>
+      <img class="cheater-desc" :src="`http://g.bf1stats.com/EwvWxWrq/pc/${cheater.originId}.png`"/>
     </div>
 
     <Divider />
@@ -40,9 +44,14 @@
           <Time :time="l.createDatetime"></Time>
         </div>
         <div v-if="l.type === 'report'" class="timeline-content">
-          <div style="display: flex; align-items: center;">
+          <div>
             <p>
-              <b style="font-size: 1rem;">{{l.username}}</b>
+              <a href="#">
+                <Tag v-if="l.privilege === 'admin'" color="success">
+                  管理员
+                </Tag>
+                <b>{{l.username}}</b>
+              </a>
               举报
 
               <Tag color="warning">
@@ -65,8 +74,12 @@
 
         <div v-if="l.type === 'verify'" class="timeline-content bookmark" :id="`user-verify-cheater-${l.id}`">
           <p>
-            管理员
-            <b style="font-size: 1rem;">{{l.username}}</b>
+            <a href="#">
+              <Tag v-if="l.privilege === 'admin'" color="success">
+                管理员
+              </Tag>
+              <b>{{l.username}}</b>
+            </a>
             认为
             <Tag color="warning">
               {{ handleStatus(l.status) }}
@@ -99,8 +112,12 @@
 
         <div v-if="l.type === 'confirm'" class="timeline-content">
           <p>
-            管理员
-            <b style="font-size: 1rem;">{{l.username}}</b>
+            <a href="#">
+              <Tag v-if="l.privilege === 'admin'" color="success">
+                管理员
+              </Tag>
+              <b>{{l.username}}</b>
+            </a>
             赞同了
             <a @click.stop.prevent="jumpToBookmark" :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
               # 该决定
@@ -382,7 +399,7 @@ export default {
     },
   },
   computed: {
-    isVerified: function() {
+    isVerified() {
       return this.verifies.length > 0
     },
     isAdmin() {
@@ -391,11 +408,18 @@ export default {
       const is = user ? user.userPrivilege !== 'normal' : false;
       return Boolean(is);
     },
+    isLogin() {
+      return Boolean(this.$store.state.user);
+    }
   }
 }
 </script>
 
 <style lang="scss">
+  .cheater-desc {
+    width: 100%;
+    margin: 1rem 0 0;
+  }
   .description {
     padding: 1rem;
     border-left: 2px solid #cccccc8c;
@@ -403,7 +427,7 @@ export default {
     background-color: rgba(204, 204, 204, 0.1);
 
     img, video {
-      max-width: 800px;
+      max-width: 100%;
     }
   }
 

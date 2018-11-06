@@ -46,10 +46,11 @@ export default {
     display: flex;
     flex-direction: column;
   }
+
   .container {
-    max-width: 960px;
-    width: 960px;
+    width: 100%;
     margin: 0 auto;
+    position: relative;
   }
   main {
     flex: 1 0 auto;
@@ -62,6 +63,15 @@ export default {
 
     border-top: 2px solid #57a3f3;
     box-shadow: 0px 2px 2px 0px #99999991;
+  }
+
+
+  /*mobile responsive*/
+  @media screen and (min-width: 1088px) {
+    .container {
+      max-width: 960px;
+      width: 960px;
+    }
   }
 </style>
 

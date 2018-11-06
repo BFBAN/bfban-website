@@ -109,7 +109,7 @@ router.get('/', async (req, res, next) => {
 // report, verify, confirm
 router.get('/:uid', async (req, res, next) => {
   const cheaterUId = req.params.uid;
-  const cheater = await db.query('select originId, status, bf1statsShot, trackerShot, trackerWeaponShot from cheaters where uId = ?', [cheaterUId])
+  const cheater = await db.query('select originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot from cheaters where uId = ?', [cheaterUId])
     .catch(e => next(e));
 
   const reports = await db.query('select a.createDatetime, a.cheatMethods, a.bilibiliLink, a.description, b.username, b.privilege from user_report_cheater as a left join users as b on a.userId = b.id where a.cheaterUId = ? and a.valid = "1"', [cheaterUId])

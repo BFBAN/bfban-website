@@ -1,6 +1,6 @@
 <template>
     <header>
-      <div class="container">
+      <div class="header-container container">
         <div class="nav">
         <router-link :to="{name: 'home'}">首页</router-link>
 
@@ -14,8 +14,11 @@
           <router-link v-show="!isLogin" :to="{name: 'signin'}">登录</router-link>
           <router-link v-show="!isLogin" :to="{name: 'signup'}">注册</router-link>
 
-          <span v-show="isLogin">{{ username }}</span>
-          <a v-show="isLogin" href="#" @click.stop.prevent="signout">注销</a>
+          <router-link class="nav-username" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
+            {{ currentUser.username }}
+          </router-link>
+          <a class="nav-signout" v-show="isLogin" href="#" @click.stop.prevent="signout">注销</a>
+
 
         </div>
       </div>
@@ -53,8 +56,11 @@ export default {
     isLogin() {
       return Boolean(this.$store.state.user);
     },
-    username() {
-      return this.$store.state.user ? this.$store.state.user.username : '';
+    isAdmin() {
+
+    },
+    currentUser() {
+      return this.$store.state.user;
     }
   }
 }
@@ -75,7 +81,7 @@ window.addEventListener('scroll', function(e) {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   header {
     background-color: rgba(252,252,252,0.8);
     width: 100%;
@@ -85,18 +91,34 @@ window.addEventListener('scroll', function(e) {
     position: fixed;
     z-index: 1000;
   }
-  .container {
+  .header-container {
     display: flex;
     justify-content: space-between;
-    padding: 1rem 0;
   }
   .nav {
+    display: flex;
     a {
       padding: 1rem;
       &:hover {
         background-color: rgba(251, 251, 251, 0.8);
         color: black;
       }
+    }
+  }
+  .nav-username {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 6rem;
+    flex-grow: 0;
+  }
+  .nav-signout {
+    flex-shrink: 0;
+  }
+
+  @media screen and (min-width: 1088px) {
+    .nav-username {
+      width: 100%;
     }
   }
 </style>
