@@ -176,8 +176,12 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
   } else {
     // 若重复举报
     cheaterUId = re[0].uId;
-    await db.query('update cheaters set status = ? where uId = ?', [0, cheaterUId])
+
+    // 若 已经被石锤，不更新状态
+    if (re[0].status !== '1') {
+      await db.query('update cheaters set status = ? where uId = ?', [0, cheaterUId])
       .catch(e => next(e));
+    }
   }
 
   // 先暂停 截图功能，太耗cpu了，导致mysql都连接不上
