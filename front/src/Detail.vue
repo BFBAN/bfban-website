@@ -148,9 +148,9 @@
             <!-- 0=> 待处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的 -->
             <Option value="0">待处理</Option>
             <Option value="1">石锤</Option>
-            <Option value="2">嫌疑玩家再观察</Option>
+            <Option value="2">嫌疑再观察</Option>
             <Option value="3">没有问题不是挂</Option>
-            <Option value="4">捣乱的</Option>
+            <Option value="4">回收站</Option>
 
           </Select>
         </FormItem>
@@ -283,9 +283,9 @@ export default {
       const statusObj = {
         0: "待处理",
         1: "石锤",
-        2: "嫌疑玩家再观察",
+        2: "嫌疑再观察",
         3: "没有问题不是挂",
-        4: "捣乱的",
+        4: "回收站",
       }
 
       return statusObj[status]

@@ -13,9 +13,9 @@
         <Radio label=""><span>全部</span></Radio>
         <Radio label="0"><span>待处理</span></Radio>
         <Radio label="1"><span>石锤</span></Radio>
-        <Radio label="2"><span>嫌疑玩家再观察</span></Radio>
+        <Radio label="2"><span>嫌疑再观察</span></Radio>
         <Radio label="3"><span>没有问题不是挂</span></Radio>
-        <Radio label="4"><span>捣乱的</span></Radio>
+        <Radio label="4"><span>回收站</span></Radio>
       </RadioGroup>
 
       <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报日期范围" style="width: 200px"></DatePicker>
@@ -150,9 +150,9 @@ export default {
       const statusObj = {
         0: "待处理",
         1: "石锤",
-        2: "嫌疑玩家再观察",
+        2: "嫌疑再观察",
         3: "没有问题不是挂",
-        4: "捣乱的",
+        4: "回收站",
       };
 
       return statusObj[status]
