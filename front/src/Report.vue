@@ -4,7 +4,7 @@
       <Divider>举报作弊</Divider>
 
       <FormItem label="游戏ID">
-        <Input v-model="formItem.originId" placeholder="" />
+        <Input v-model="formItem.originId" placeholder="请一次只填写一个ID" />
         <span>
           <a target="_blank" :href="'https://battlefieldtracker.com/bf1/profile/pc/' + formItem.originId">{{ formItem.originId ? 'https://battlefieldtracker.com/bf1/profile/pc/' + formItem.originId : ''}}</a>
         </span>

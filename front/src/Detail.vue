@@ -417,7 +417,8 @@ export default {
 
 <style lang="scss">
   .cheater-desc {
-    width: 100%;
+    max-width: 100%;
+    width: 34rem;
     margin: 1rem 0 0;
   }
   .description {

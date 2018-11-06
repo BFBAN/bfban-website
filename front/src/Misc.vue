@@ -5,7 +5,7 @@
 
       <Modal
         v-model="modal1"
-        title="image upload modal"
+        title="上传图片，不要超过2M"
       >
         <Upload
           :headers="headers"
@@ -37,7 +37,7 @@
 
       <Modal
         v-model="modal2"
-        title="video upload modal"
+        title="上传视频，不要超过30M"
       >
         <Upload
           :headers="headers"
@@ -110,9 +110,7 @@ Quill.register({
 });
 
 const toolbarOptions = [
-    ["bold", "italic", "underline", "strike"],
     ["link", "image", "video"],
-    ["clean"]
 ];
 export default {
     props: {
