@@ -3,7 +3,7 @@ const { secret } = require('../config');
 
 function verifyCatpcha(req, res, next) {
   const cookieCaptcha = req.cookies['encryptCaptcha'];
-  const userCaptcha = req.body.captcha;
+  const userCaptcha = req.body.captcha.toLowerCase();
 
   const encryptUserCaptcha = crypto.createHmac('sha256', secret)
     .update(userCaptcha)
