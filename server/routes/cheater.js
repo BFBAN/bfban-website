@@ -382,9 +382,17 @@ router.post('/reply', verifyJWTMiddleware, [
     const result = await db.query('insert into replies set ?', values)
     .catch(e => next(e));
 
-    const status = '5';
-    await db.query(`update ${getCheatersDB(gameName)} set status = ?, updateDatetime = ? where id = ?`, [status, d, cheaterId])
-    .catch(e=> next());
+    const re = await db.query(`select * from ${getCheatersDB(gameName)} where id = ?`, [cheaterId])
+    .catch(e => next(e));
+
+    let status;
+    if (re[0].status !== '1') {
+      status = '5';
+      await db.query(`update ${getCheatersDB(gameName)} set status = ?, updateDatetime = ? where id = ?`, [status, d, cheaterId])
+      .catch(e=> next());
+    } else {
+      status = '1'
+    }
 
     res.json({
       error: 0,
