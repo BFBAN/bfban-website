@@ -26,8 +26,13 @@ router.get('/teamliquid/*', async (req, res) => {
 });
 
 router.post('/checkGameIdExist', async (req, res) => {
-  const { id } = req.body;
-  const idExist = await checkGameIdExist(id);
+  const { id, gameName } = req.body;
+  let idExist;
+  if (gameName === 'bfv' || gameName === 'bf4') {
+    idExist = true;
+  } else {
+    idExist = await checkGameIdExist(id);
+  }
 
   return res.json({
     error: 0,

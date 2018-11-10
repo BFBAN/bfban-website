@@ -147,15 +147,27 @@ router.get('/:uId', async (req, res, next) => {
 
   const {username, originId, privilege, createDatetime, id} = result[0];
 
-  const reports = await db.query('select t1.createDatetime, t2.updateDatetime, t2.uId, t2.originId, t2.status from user_report_cheater as t1 left join cheaters as t2 ' +
-    'on t1.cheaterUId = t2.uId where t1.userId = ?', [id])
+  const bf1Reports = await db.query(`select t1.createDatetime, t2.updateDatetime, t2.uId, t2.originId, t2.status 
+    from user_report_cheater as t1
+    inner join cheaters as t2 
+    on t1.cheaterUId = t2.uId
+    where t1.userId = ? order by createDatetime DESC`, [id])
   .catch(e => next(e));
+
+  const bfvReports = await db.query(`select t1.createDatetime, t2.updateDatetime, t2.uId, t2.originId, t2.status 
+    from user_report_cheater as t1
+    inner join bfv_cheaters as t2 
+    on t1.cheaterUId = t2.uId
+    where t1.userId = ? order by createDatetime DESC`, [id])
+  .catch(e => next(e));
+
 
   res.json({
     error: 0,
     data: {
       username, originId, privilege, createDatetime,
-      reports,
+      bf1Reports,
+      bfvReports,
     }
   })
 

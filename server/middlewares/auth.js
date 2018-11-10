@@ -25,6 +25,7 @@ function verifyJWT(req, res, next) {
     });
 }
 
+// should be admin
 function verifyPrivilege(req, res, next) {
   const { userPrivilege } = req.user;
 

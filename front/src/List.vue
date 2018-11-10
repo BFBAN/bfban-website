@@ -8,28 +8,33 @@
     <!--操作时间（时间段）、-->
     <!--id搜索-->
 
-    <div>
+    <p>
+      <RadioGroup v-model="gameName" @on-change="handleChanges" type="button">
+        <Radio label="bf1"><span>战地1</span></Radio>
+        <Radio label="bfv"><span>战地v</span></Radio>
+      </RadioGroup>
+    </p>
+    <p>
       <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
         <Radio label=""><span>全部</span></Radio>
-        <Radio label="0"><span>待处理</span></Radio>
-        <Radio label="1"><span>石锤</span></Radio>
-        <Radio label="2"><span>嫌疑再观察</span></Radio>
-        <Radio label="3"><span>没有问题不是挂</span></Radio>
-        <Radio label="4"><span>回收站</span></Radio>
+        <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
+          <span>{{ status.label }}</span>
+        </Radio>
       </RadioGroup>
-
+    </p>
+    <p>
       <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报日期范围" style="width: 200px"></DatePicker>
       <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="处理日期范围" style="width: 200px"></DatePicker>
-    </div>
+    </p>
 
-    <div>
+    <p>
       排序：
       <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
         <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
 
-      <Button style="margin: .4rem 0;" icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
-    </div>
+      <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
+    </p>
 
 
     <div class="list">
@@ -37,15 +42,13 @@
         <li>
           <span><b>游戏ID</b></span>
           <span><b>处理状态</b></span>
-          <!-- 0=> 待处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的 -->
-
           <span><b>作弊方式</b></span>
           <span><b>举报时间</b></span>
           <span><b>处理时间</b></span>
         </li>
         <li v-for="d in data" :key="d.uId">
           <span>
-            <router-link :to="{name: 'cheater', params: { uid: `${d.uId}` }}">{{d.originId}}</router-link>
+            <router-link :to="{name: 'cheater', params: { game: gameName, uid: `${d.uId}` }}">{{d.originId}}</router-link>
             <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
           </span>
           <span>
@@ -68,7 +71,7 @@
       </ul>
       <br>
 
-      <Page show-total :current="page" @on-change="handlePageChange" :total="total" />
+      <Page :page-size="20" show-total :current="page" @on-change="handlePageChange" :total="total" />
 
       <Spin size="large" fix v-show="spinShow"></Spin>
     </div>
@@ -77,6 +80,7 @@
 
 <script>
 import axios from 'axios';
+import { getCheaterStatusLabel, cheaterStatus } from './common';
 
 const ClipboardJS = require('clipboard');
 new ClipboardJS('.ivu-btn');
@@ -87,6 +91,7 @@ export default {
       data: [
       ],
       spinShow: true,
+      gameName: 'bf1',
       statusGroup: '',
       cd: ['', ''],
       ud: ['', ''],
@@ -104,6 +109,8 @@ export default {
         },
       ],
       sortByValue: 'updateDatetime',
+
+      cheaterStatus: cheaterStatus,
     }
   },
   created() {
@@ -117,7 +124,8 @@ export default {
       this.$Message.info('已复制');
     },
     loadData() {
-      const { status = '', cd = '', ud = '', page = 1, sort='updateDatetime' } = this.$route.query;
+      // default values
+      const { game = 'bf1', status = '1', cd = '', ud = '', page = 1, sort='createDatetime' } = this.$route.query;
 
       const config = {
         method: 'get',
@@ -125,16 +133,19 @@ export default {
       };
 
       config['params'] = {
+        game,
         status,
         cd,
         ud,
         page,
         sort,
       };
+      this.gameName = game;
       this.statusGroup = status;
       this.cd = cd.split(',');
       this.ud = ud.split(',');
       this.page = Number.parseInt(page);
+      this.sortByValue = sort;
 
       axios(config)
       .then((res) => {
@@ -146,23 +157,14 @@ export default {
 
       })
     },
-    handleStatus(status) {
-      const statusObj = {
-        0: "待处理",
-        1: "石锤",
-        2: "嫌疑再观察",
-        3: "没有问题不是挂",
-        4: "回收站",
-      };
-
-      return statusObj[status]
-    },
+    handleStatus: getCheaterStatusLabel,
     handleRefresh() {
       this.spinShow = true;
 
       this.loadData();
     },
     routerQuery() {
+      const game = this.gameName;
       const status = this.statusGroup;
       const cd = this.cd.join(',');
       const ud = this.ud.join(',');
@@ -171,11 +173,12 @@ export default {
 
       let o = {};
 
-      if (status) o['status'] = status;
+      o['status'] = status;
       if (cd !== ',') o['cd'] = cd;
       if (ud !== ',') o['ud'] = ud;
       if (page !== 1) o['page'] = page;
       if (sort !== '') o['sort'] = sort;
+      if (game !== '') o['game'] = game;
 
       return o;
     },

@@ -1,13 +1,19 @@
 <template>
-
     <Form :label-width="80" style="position: relative;">
       <Divider>举报作弊</Divider>
 
+      <FormItem label="游戏名">
+        <span class="hint">已经支持 战地V 举报啦！</span>
+        <RadioGroup v-model="formItem.gameName" type="button">
+          <Radio label="bf1"><span>战地1</span></Radio>
+          <Radio label="bfv"><span>战地v</span></Radio>
+        </RadioGroup>
+      </FormItem>
+
+
       <FormItem label="游戏ID">
-        <Input v-model="formItem.originId" placeholder="请一次只填写一个ID" />
-        <span>
-          <a target="_blank" :href="'https://battlefieldtracker.com/bf1/profile/pc/' + formItem.originId">{{ formItem.originId ? 'https://battlefieldtracker.com/bf1/profile/pc/' + formItem.originId : ''}}</a>
-        </span>
+        <span class="hint">一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID</span>
+          <Input v-model="formItem.originId" placeholder="请一次只填写一个ID" />
       </FormItem>
 
       <FormItem label="作弊方式">
@@ -36,17 +42,15 @@
         </CheckboxGroup>
       </FormItem>
 
-      <FormItem label="B站链接">
+      <FormItem label="视频链接">
+        <span class="hint">可以是 优酷，土豆，AB站等 视频网站链接</span>
         <Input v-model="formItem.bilibiliLink" placeholder="选填" />
-        <span>
-          <a target="_blank" :href="formItem.bilibiliLink">{{formItem.bilibiliLink}}</a>
-        </span>
       </FormItem>
 
       <FormItem label="论述">
-          <p>请论述为什么你觉得他作弊...</p>
-          <!-- <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." /> -->
-          <Misc :content="formItem.description" @change="handleMiscChange" />
+        <span class="hint">请列出阐明足够的证据，编辑器支持上传图片（限制2M）、视频（限制30M）</span>
+        <!-- <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." /> -->
+        <Misc :content="formItem.description" @change="handleMiscChange" />
       </FormItem>
 
       <FormItem label="验证码">
@@ -58,7 +62,7 @@
       </FormItem>
 
       <FormItem>
-          <Button @click.prevent.stop="handleReport" type="primary">提交</Button>
+        <Button @click="doReport" type="primary">提交</Button>
       </FormItem>
 
       <Spin size="large" fix v-show="spinShow"></Spin>
@@ -70,10 +74,13 @@ import Misc from './Misc.vue';
 import axios from 'axios';
 import _ from 'underscore';
 
+import { checkIdExist, checkReportFormData } from "./common";
+
 export default {
   data() {
      return {
         formItem: {
+          gameName: '',
           originId: '',
           bilibiliLink: '',
           checkbox: ['aimbot'],
@@ -114,9 +121,34 @@ export default {
     handleMiscChange: function(h) {
       this.formItem.description = h
     },
+    doReport(e) {
+      // check form data
+      if (checkReportFormData.call(this, this.formItem) === false) return false;
+
+      this.spinShow = true;
+      checkIdExist({
+        gameName: this.formItem.gameName,
+        id: this.formItem.originId.trim()
+      })
+      .then((res) => {
+
+        const d = res.data;
+        const idExist = d.idExist;
+
+        if (idExist) {
+          this.handleReport();
+        } else {
+          this.spinShow = false;
+
+          this.$Message.error('游戏ID不存在，请检查拼写');
+          return false;
+        }
+      });
+    },
     handleReport: function() {
       this.spinShow = true;
 
+      let gameName = this.formItem.gameName;
       const cheatMethods = this.formItem.checkbox.join(',');
 
       const {
@@ -133,6 +165,7 @@ export default {
         method: 'post',
         url: '/cheaters/',
         data: {
+          gameName,
           originId,
           cheatMethods,
           bilibiliLink,
@@ -144,7 +177,7 @@ export default {
 
         const d = res.data;
         if (d.error === 0) {
-          this.$router.push({name: 'cheater', params: {uid: d.data.cheaterUId}});
+          this.$router.push({name: 'cheater', params: {game: gameName, uid: d.data.cheaterUId}});
 
           this.$Message.success('提交成功');
         } else {

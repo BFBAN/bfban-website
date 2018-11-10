@@ -1,6 +1,11 @@
 <template>
     <footer class="footer">
-      Written by <a href="#"></a>  &copy; 2018 联ban局. All Rights Reserved.
+      <p>
+        Written by <a href="#"></a>  &copy; 2018 联ban局. All Rights Reserved.
+      </p>
+      <p>
+        对网站有任何意见或想法，可以邮箱 857183210@qq.com
+      </p>
     </footer>
 </template>
 

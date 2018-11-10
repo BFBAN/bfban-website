@@ -132,15 +132,11 @@ export default {
         'Lowb',
         'kosuzu',
         'ROB',
+        'HERO',
       ],
       manager: [
         {
-          name: 'Baidu',
-          link: 'https://www.baidu.com',
-          desc: '我是百度',
-        },
-        {
-          name: 'Bilibili',
+          name: '',
           link: '',
           desc: '',
         }

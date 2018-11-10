@@ -1,11 +1,14 @@
 <template>
-  <div>
-    <Divider>Cheater Detail</Divider>
+  <div v-if="isCheaterExist">
+    <Divider>作弊信息</Divider>
     <div style="display: flex; flex-direction: column;">
 
       <span style="font-size: 1.6rem;">
+        <Tag>
+          {{ gameName }}
+        </Tag>
         {{ cheater.originId }}
-        <sub v-if="!idExist" style="font-size: .6rem; color: #ed4014;">该id已不存在</sub>
+        <sub v-if="!idExist && `${gameName}` === 'bf1'" style="font-size: .6rem; color: #ed4014;">该id已不存在</sub>
       </span>
 
       <div>
@@ -17,22 +20,22 @@
           {{ convertCheatMethods(cheater.cheatMethods) }}
         </Tag>
 
-        <Tag color="primary">
+        <Tag v-show="idExist" color="primary">
           battlefieldtracker
         </Tag>
-        <a v-show="idExist" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">在线战绩</a>
-        <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">数据截图</a>
-        <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">武器截图</a>
+        <a v-show="idExist && `${gameName}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">在线战绩</a>
+        <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
+        <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">bf1tracker武器截图</a>
 
 
-        <Tag color="primary">
+        <Tag v-show="idExist" color="primary">
           bf1stats
         </Tag>
-        <a v-show="idExist" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">在线战绩</a>
-        <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">数据截图</a>
+        <a v-show="idExist && `${gameName}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">在线战绩</a>
+        <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
       </div>
 
-      <img class="cheater-desc" :src="`http://g.bf1stats.com/EwvWxWrq/pc/${cheater.originId}.png`"/>
+      <img v-if="cheater.originId" class="cheater-desc" :src="`http://g.bf1stats.com/EwvWxWrq/pc/${cheater.originId}.png`"/>
     </div>
 
     <Divider />
@@ -46,12 +49,12 @@
         <div v-if="l.type === 'report'" class="timeline-content">
           <div>
             <p>
-              <a href="#">
+              <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
                 <Tag v-if="l.privilege === 'admin'" color="success">
                   管理员
                 </Tag>
                 <b>{{l.username}}</b>
-              </a>
+              </router-link>
               举报
 
               <Tag color="warning">
@@ -61,7 +64,7 @@
             </p>
             <p v-if="l.bilibiliLink">
               <Tag color="primary">
-                b站视频
+                视频链接
               </Tag>
               <a :href="l.bilibiliLink" target="_blank">{{ l.bilibiliLink }}</a>
             </p>
@@ -69,17 +72,22 @@
 
           <div v-if="l.description" v-html="l.description" class="description">
           </div>
+
+          <p v-if="isLogin">
+            <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+          </p>
         </div>
 
 
         <div v-if="l.type === 'verify'" class="timeline-content bookmark" :id="`user-verify-cheater-${l.id}`">
           <p>
-            <a href="#">
+            <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
               <Tag v-if="l.privilege === 'admin'" color="success">
                 管理员
               </Tag>
               <b>{{l.username}}</b>
-            </a>
+            </router-link>
+
             认为
             <Tag color="warning">
               {{ handleStatus(l.status) }}
@@ -95,29 +103,32 @@
           </p>
           <div v-html="l.suggestion" class="description"></div>
 
+          <p v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)">
+            <a href="#"
+               @click.prevent.stop="doConfirm"
+               :data-user-verify-cheater-id="l.id"
+               :data-cheat-methods="l.cheatMethods"
+               :data-user-verify-cheater-username="l.username">
 
-          <br>
-          <a href="#"
-            v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)"
-            @click.prevent.stop="doConfirm"
-            :data-user-verify-cheater-id="l.id"
-            :data-cheat-methods="l.cheatMethods"
-            :data-user-verify-cheater-username="l.username">
+              <Icon type="md-thumbs-up" />
+              赞同上处理 并 石锤
+            </a>
+          </p>
 
-            <Icon type="md-thumbs-up" />
-            赞同上处理 并 石锤
-          </a>
+          <p v-if="isLogin">
+            <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+          </p>
         </div>
 
 
         <div v-if="l.type === 'confirm'" class="timeline-content">
           <p>
-            <a href="#">
+            <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
               <Tag v-if="l.privilege === 'admin'" color="success">
                 管理员
               </Tag>
               <b>{{l.username}}</b>
-            </a>
+            </router-link>
             赞同了
             <a @click.stop.prevent="jumpToBookmark" :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
               # 该决定
@@ -127,6 +138,37 @@
               {{ convertCheatMethods(l.cheatMethods || '') }}
             </Tag>
           </p>
+
+          <p v-if="isLogin">
+            <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+          </p>
+        </div>
+
+
+        <div v-if="l.type === 'reply'" class="timeline-content">
+          <p>
+            <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
+
+              <Tag v-if="l.privilege === 'admin'" color="success">
+                管理员
+              </Tag>
+              <b>{{l.foo}}</b>
+            </router-link>
+            回复
+            <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.barUId}`}}">
+
+              <Tag v-if="l.privilege === 'admin'" color="success">
+                管理员
+              </Tag>
+              <b>{{l.bar}}</b>
+            </router-link>
+          </p>
+
+          <div v-html="l.content" class="description"></div>
+
+          <p v-if="isLogin">
+            <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+          </p>
         </div>
 
 
@@ -135,23 +177,40 @@
       <Spin size="large" fix v-show="spinShow"></Spin>
     </div>
 
-    <div v-if="isAdmin">
+    <div v-if="isLogin">
       <Divider />
-      <div class="hint">
-        Note: 管理员石锤某人后，需要有另一位管理员认同才会被 真正 石锤；期间 若有不同意见的 其它管理员 可以选择其他意见。
-      </div>
+      <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
+      <Form :label-width="80" style="position: relative;">
+        <p>
+          <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
+        </p>
+        <Button type="primary" @click.stop.prevent="doReply">回复</Button>
+
+        <Spin size="large" fix v-show="replySpinShow"></Spin>
+      </Form>
+    </div>
+
+    <div v-if="cheater.status === '1'">
+      <Divider />
+      <p class="hint">如果你对该 石锤 有所疑问，请 复制该网址，找管理员申诉</p>
+
+    </div>
+
+    <div v-if="isAdmin">
+      <Divider>管理员专区</Divider>
+      <p class="hint">若要石锤，需要至少两位管理员参与才行</p>
+      <p class="hint">不要轻易下判断，如果不能做出处理判断，就使用上方回复 参与讨论，等待举报者回复</p>
+      <p class="hint">管理员的任何处理操作都会对作弊者的 现有状态 造成改变，如果不是100%确定，请使用回复留言讨论</p>
+
       <h2 style="margin: 1rem 0;">处理意见</h2>
 
       <Form :label-width="80" ref='verifyForm' style="position: relative;">
         <FormItem label="意见">
           <Select v-model="verify.status">
-            <!-- 0=> 待处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的 -->
-            <Option value="0">待处理</Option>
             <Option value="1">石锤</Option>
             <Option value="2">嫌疑再观察</Option>
             <Option value="3">没有问题不是挂</Option>
             <Option value="4">回收站</Option>
-
           </Select>
         </FormItem>
 
@@ -182,7 +241,7 @@
         </FormItem>
 
         <FormItem label="理由">
-          <Input v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="必填" />
+          <Input v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="必填" />
         </FormItem>
 
         <FormItem>
@@ -193,20 +252,42 @@
       </Form>
     </div>
 
+
+    <Modal
+      v-model="replyModal"
+      title="回复"
+      ok-text="提交"
+      cancel-text="取消"
+      @on-ok="doReply"
+      @on-cancel="cancelReply">
+      <div v-if="isLogin">
+        <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
+        <Form :label-width="80" ref='replyForm' style="position: relative;">
+          <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
+        </Form>
+      </div>
+      <div v-else>请登录后参与回复</div>
+    </Modal>
   </div>
+  <div v-else>404 不存在</div>
+
 </template>
 
 <script>
 import axios from 'axios';
 import _ from 'underscore';
 
+import { checkIdExist, getCheaterStatusLabel } from "./common";
+
 export default {
   data() {
     return {
-      cheater: {},
+      cheater: {
+        originId: '',
+      },
       timelineList: [],
       verify: {
-        status: '0',
+        status: '1',
         checkbox: [],
         suggestion: '',
       },
@@ -214,20 +295,45 @@ export default {
       idExist: true,
 
       verifySpinShow: false,
+
+      reply: {
+        cheaterId: '',
+        userId: '',
+        content: '',
+        toFloor: '',
+        toUserId: '',
+      },
+      replySpinShow: false,
+
+      cheaterUId: '',
+      gameName: '',
+
+      isCheaterExist: true,
+
+      replyModal: false,
     }
   },
   created() {
+    const gameName = this.gameName = this.$route.params.game;
+    const cheaterUID = this.cheaterUId = this.$route.params.uid;
+
     axios({
       method: 'get',
-      url: `/cheaters/${this.$route.params.uid}`,
+      url: `/cheaters/${gameName}/${cheaterUID}`,
     })
     .then((res) => {
       this.spinShow = false;
 
       const d = res.data;
-      this.cheater = d.data.cheater[0];
+      let { cheater, reports, verifies, confirms, replies } = d.data;
 
-      let { reports, verifies, confirms } = d.data;
+      if (cheater.length === 0) {
+        this.isCheaterExist = false;
+        return false;
+      }
+
+      this.cheater = cheater[0];
+
 
       reports = _.each(reports, (v, k, l) => {
         v['type'] = 'report'
@@ -238,29 +344,33 @@ export default {
       confirms = _.each(confirms, (v, k, l) => {
         v['type'] = 'confirm'
       });
+      replies = _.each(replies, (v, k, l) => {
+        v['type'] = 'reply'
+      });
 
-      let timelineList = reports.concat(verifies, confirms);
+      let timelineList = reports.concat(verifies, confirms, replies);
 
       timelineList = _.sortBy(timelineList, (v) => {
         return (new Date(v.createDatetime)).getTime();
       });
 
+      timelineList = _.each(timelineList, (v, k) => {
+        v['floor'] = k + 1;
+      });
+
       // render timeline
       this.timelineList = timelineList;
 
-      // fetch id exist
-      axios({
-        method: 'post',
-        url: '/checkGameIdExist',
-        data: {
-          id: this.cheater.originId,
-        }
+      // check id exist
+      checkIdExist({
+        gameName: this.gameName,
+        id: this.cheater.originId,
       })
       .then((res) => {
         let d = res.data;
 
         this.idExist = d.idExist;
-      })
+      });
     });
 
   },
@@ -279,17 +389,7 @@ export default {
         el.setAttribute('style', 'transition: background 1s ease .5s;')
       }, 100);
     },
-    handleStatus(status) {
-      const statusObj = {
-        0: "待处理",
-        1: "石锤",
-        2: "嫌疑再观察",
-        3: "没有问题不是挂",
-        4: "回收站",
-      }
-
-      return statusObj[status]
-    },
+    handleStatus: getCheaterStatusLabel,
     convertCheatMethods(str) {
       let s = str || '';
       const list = {
@@ -313,6 +413,10 @@ export default {
       const {status, suggestion} = this.verify;
       const cheaterUId = this.$route.params.uid;
       const cheatMethods = this.verify.checkbox.join(',');
+
+      if (cheatMethods === ',' || suggestion.trim() === '') {
+        this.$Message.warning('请填写完整');
+      }
 
       axios({
         method: 'post',
@@ -343,7 +447,8 @@ export default {
             id,
             userId,
             createDatetime,
-            status,
+            // fix bug
+            status: status === '6' ? '1' : status,
             suggestion,
             cheatMethods,
             username,
@@ -397,6 +502,77 @@ export default {
 
       return (parseInt(userId) === parseInt(id))
     },
+    handleReply(e) {
+      const { floor, userId } = e.target.dataset;
+
+      this.reply.toFloor = floor === 'undefined' ?  '' : floor;
+      this.reply.toUserId = userId === 'undefined' ? '' : userId;
+
+      // open reply modal
+      this.replyModal = true;
+    },
+    cancelReply() {
+      this.reply = {};
+    },
+    doReply() {
+      this.replySpinShow = true;
+
+      const gameName = this.$route.params.game;
+      const cheaterId = this.cheater.id;
+      const userId = this.$store.state.user.userId;
+      const { content, toFloor, toUserId } = this.reply;
+
+      let data = {
+        gameName,
+        cheaterId,
+        userId,
+        content,
+      };
+
+      if (toFloor) {
+        data['toFloor'] = toFloor;
+      }
+      if (toUserId) {
+        data['toUserId'] = toUserId;
+      }
+
+      axios({
+        method: 'post',
+        url: '/cheaters/reply',
+        data,
+      })
+      .then((res) => {
+        this.replySpinShow = false;
+
+        const d = res.data;
+
+        if (d.error === 0) {
+          const { createDatetime, content, status } = d.data;
+          this.$Message.success('回复成功');
+
+          // reset reply
+          this.cancelReply();
+
+          const foo = this.$store.state.user.username;
+          const fooUId = this.$store.state.user.uId;
+          const bar = '';
+          const barUId = '';
+          this.timelineList.push({
+            type: 'reply',
+
+            createDatetime,
+            content,
+            foo,
+            fooUId,
+            bar,
+            barUId,
+          });
+          this.cheater.status = status;
+        } else {
+          this.$Message.error('回复失败');
+        }
+      });
+    }
   },
   computed: {
     isVerified() {

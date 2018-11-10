@@ -14,11 +14,18 @@
           <router-link v-show="!isLogin" :to="{name: 'signin'}">登录</router-link>
           <router-link v-show="!isLogin" :to="{name: 'signup'}">注册</router-link>
 
+
           <router-link class="nav-username" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
-            {{ currentUser.username }}
+            <Badge dot>
+              {{ currentUser.username }}
+            </Badge>
+
           </router-link>
           <a class="nav-signout" v-show="isLogin" href="#" @click.stop.prevent="signout">注销</a>
 
+          <router-link v-if="isAdmin" :to="{name: 'dashboard'}">
+            后台管理
+          </router-link>
 
         </div>
       </div>
@@ -120,6 +127,10 @@ window.addEventListener('scroll', function(e) {
     .nav-username {
       width: 100%;
     }
+  }
+
+  .ivu-badge-dot {
+    left: -8px;
   }
 </style>
 

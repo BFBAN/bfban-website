@@ -6,6 +6,9 @@ import List from './List.vue';
 import Detail from './Detail.vue';
 import Signin from './Signin.vue';
 import Signup from './Signup.vue';
+import Account from './Account.vue';
+import Dashboard from './Dashboard.vue';
+
 
 import store from './store';
 
@@ -32,10 +35,14 @@ const routes = [
   { name: 'misc', path: '/misc', component: Misc },
 
   { name: 'cheaters', path: '/cheaters', component: List },
-  { name: 'cheater', path: '/cheaters/:uid', component: Detail },
+  { name: 'cheater', path: '/cheaters/:game/:uid', component: Detail },
+  { path: '/cheaters/:uid', redirect: '/cheaters/bf1/:uid' },
 
   { name: 'signin', path: '/signin', component: Signin },
   { name: 'signup', path: '/signup', component: Signup },
+
+  { name: 'account', path: '/account/:uId', component: Account },
+  { name: 'dashboard', path: '/dashboard', component: Dashboard },
 
   // otherwise redirect to home
   { path: '*', redirect: '/' },
@@ -44,6 +51,9 @@ const routes = [
 
 const RouterConfig = {
   routes,
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  },
 };
 const router = new VueRouter(RouterConfig);
 

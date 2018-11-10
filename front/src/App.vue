@@ -2,10 +2,13 @@
   <div class="app">
     <Header />
     <main class="container">
-        <div class="content">
-            <!-- component match the router will render here -->
-            <router-view></router-view>
-        </div>
+      <!--<p>-->
+        <!--<Input search placeholder="游戏id" />-->
+      <!--</p>-->
+      <div class="content">
+        <!-- component match the router will render here -->
+          <router-view></router-view>
+      </div>
     </main>
     <Footer />
   </div>
@@ -17,10 +20,15 @@ import Header from './Header.vue';
 import Footer from './Footer.vue';
 
 export default {
-    components: {
-        Header,
-        Footer
+  data() {
+    return {
+
     }
+  },
+  components: {
+      Header,
+      Footer
+  }
 }
 </script>
 
@@ -63,6 +71,22 @@ export default {
 
     border-top: 2px solid #57a3f3;
     box-shadow: 0px 2px 2px 0px #99999991;
+  }
+
+  p {
+    margin: .4rem 0;
+  }
+
+  .hint {
+    display: block;
+  }
+  .hint::before {
+    display: inline-block;
+    content: '*';
+    color: red;
+    font-size: 1rem;
+    vertical-align: middle;
+    margin-right: .4rem;
   }
 
 
