@@ -73,8 +73,6 @@
 </template>
 
 <script>
-  const axios = require('axios');
-  const _ = require('underscore');
   import { getCheaterStatusLabel } from './common';
 
   export default {

@@ -1,5 +1,3 @@
-import axios from 'axios';
-import _ from 'underscore';
 
 function checkIdExist({gameName, id}) {
   return axios({

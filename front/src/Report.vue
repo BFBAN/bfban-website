@@ -71,8 +71,6 @@
 
 <script>
 import Misc from './Misc.vue';
-import axios from 'axios';
-import _ from 'underscore';
 
 import { checkIdExist, checkReportFormData } from "./common";
 

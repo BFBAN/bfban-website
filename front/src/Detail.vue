@@ -274,8 +274,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-import _ from 'underscore';
 
 import { checkIdExist, getCheaterStatusLabel } from "./common";
 

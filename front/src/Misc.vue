@@ -87,12 +87,11 @@
 </template>
 
 <script>
-import axios from 'axios'
-import qs from 'qs'
-
+// import qs from 'qs'
 // https://github.com/zenoamaro/react-quill/issues/270
 // https://codepen.io/emanuelbsilva/pen/Zpmmzv
-import Quill from 'quill'
+// import Quill from 'quill'
+
 var Embed = Quill.import('blots/embed');
 class QuillHashtag extends Embed {
   static create(value) {

@@ -1,4 +1,5 @@
-import VueRouter from 'vue-router';
+// import VueRouter from 'vue-router';
+
 import Home from './Home.vue';
 import Report from './Report.vue';
 import Misc from './Misc.vue';
@@ -8,7 +9,6 @@ import Signin from './Signin.vue';
 import Signup from './Signup.vue';
 import Account from './Account.vue';
 import Dashboard from './Dashboard.vue';
-
 
 import store from './store';
 

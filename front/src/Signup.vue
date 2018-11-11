@@ -37,8 +37,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-import _ from 'underscore';
 
 export default {
   data() {
