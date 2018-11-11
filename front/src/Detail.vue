@@ -311,68 +311,73 @@ export default {
       replyModal: false,
     }
   },
+  watch: {
+    '$route': 'loadData',
+  },
   created() {
-    const gameName = this.gameName = this.$route.params.game;
-    const cheaterUID = this.cheaterUId = this.$route.params.uid;
-
-    axios({
-      method: 'get',
-      url: `/cheaters/${gameName}/${cheaterUID}`,
-    })
-    .then((res) => {
-      this.spinShow = false;
-
-      const d = res.data;
-      let { cheater, reports, verifies, confirms, replies } = d.data;
-
-      if (cheater.length === 0) {
-        this.isCheaterExist = false;
-        return false;
-      }
-
-      this.cheater = cheater[0];
-
-
-      reports = _.each(reports, (v, k, l) => {
-        v['type'] = 'report'
-      });
-      verifies = _.each(verifies, (v, k, l) => {
-        v['type'] = 'verify'
-      });
-      confirms = _.each(confirms, (v, k, l) => {
-        v['type'] = 'confirm'
-      });
-      replies = _.each(replies, (v, k, l) => {
-        v['type'] = 'reply'
-      });
-
-      let timelineList = reports.concat(verifies, confirms, replies);
-
-      timelineList = _.sortBy(timelineList, (v) => {
-        return (new Date(v.createDatetime)).getTime();
-      });
-
-      timelineList = _.each(timelineList, (v, k) => {
-        v['floor'] = k + 1;
-      });
-
-      // render timeline
-      this.timelineList = timelineList;
-
-      // check id exist
-      checkIdExist({
-        gameName: this.gameName,
-        id: this.cheater.originId,
-      })
-      .then((res) => {
-        let d = res.data;
-
-        this.idExist = d.idExist;
-      });
-    });
-
+    this.loadData();
   },
   methods: {
+    loadData() {
+      const gameName = this.gameName = this.$route.params.game;
+      const cheaterUID = this.cheaterUId = this.$route.params.uid;
+
+      axios({
+        method: 'get',
+        url: `/cheaters/${gameName}/${cheaterUID}`,
+      })
+      .then((res) => {
+        this.spinShow = false;
+
+        const d = res.data;
+        let { cheater, reports, verifies, confirms, replies } = d.data;
+
+        if (cheater.length === 0) {
+          this.isCheaterExist = false;
+          return false;
+        }
+
+        this.cheater = cheater[0];
+
+
+        reports = _.each(reports, (v, k, l) => {
+          v['type'] = 'report'
+        });
+        verifies = _.each(verifies, (v, k, l) => {
+          v['type'] = 'verify'
+        });
+        confirms = _.each(confirms, (v, k, l) => {
+          v['type'] = 'confirm'
+        });
+        replies = _.each(replies, (v, k, l) => {
+          v['type'] = 'reply'
+        });
+
+        let timelineList = reports.concat(verifies, confirms, replies);
+
+        timelineList = _.sortBy(timelineList, (v) => {
+          return (new Date(v.createDatetime)).getTime();
+        });
+
+        timelineList = _.each(timelineList, (v, k) => {
+          v['floor'] = k + 1;
+        });
+
+        // render timeline
+        this.timelineList = timelineList;
+
+        // check id exist
+        checkIdExist({
+          gameName: this.gameName,
+          id: this.cheater.originId,
+        })
+        .then((res) => {
+          let d = res.data;
+
+          this.idExist = d.idExist;
+        });
+      });
+    },
     jumpToBookmark(e) {
       let hash = e.target.dataset.hash;
       let el = document.querySelector(hash);

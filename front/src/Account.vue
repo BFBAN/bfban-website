@@ -91,29 +91,36 @@
         }
       }
     },
+    watch: {
+      '$route': 'loadData',
+    },
     created() {
-      const { uId } = this.$route.params;
-      axios({
-        method: 'get',
-        url: `/account/${uId}`,
-      })
-      .then((res) => {
-        const d = res.data;
-
-        this.account = d.data;
-
-        let { bf1Reports, bfvReports } = d.data;
-        bf1Reports = _.each(bf1Reports, (v, k) => {
-          v['gameName'] = 'bf1';
-        });
-        bfvReports = _.each(bfvReports, (v, k) => {
-          v['gameName'] = 'bfv';
-        });
-
-        this.account.reports = [].concat(bf1Reports, bfvReports);
-      });
+      this.loadData();
     },
     methods: {
+      loadData() {
+        const { uId } = this.$route.params;
+        axios({
+          method: 'get',
+          url: `/account/${uId}`,
+        })
+        .then((res) => {
+          const d = res.data;
+
+          this.account = d.data;
+
+          let { bf1Reports, bfvReports } = d.data;
+          bf1Reports = _.each(bf1Reports, (v, k) => {
+            v['gameName'] = 'bf1';
+          });
+          bfvReports = _.each(bfvReports, (v, k) => {
+            v['gameName'] = 'bfv';
+          });
+
+          this.account.reports = [].concat(bf1Reports, bfvReports);
+        });
+
+      },
       handleStatus: getCheaterStatusLabel,
     }
   }
