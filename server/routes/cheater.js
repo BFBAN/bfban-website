@@ -2,10 +2,10 @@ const express = require('express');
 const moment = require('moment');
 const uuidv4 = require('uuid/v4');
 const { spawn } = require('child_process');
-const { baseDir } = require('../config');
 const _ = require('underscore');
 const path = require('path');
 const { check, validationResult } = require('express-validator/check');
+const { baseDir } = require('../config');
 
 const { verifyJWTMiddleware, verifyPrivilegeMiddleware } = require('../middlewares/auth');
 const db = require('../mysql');
@@ -23,16 +23,15 @@ function addOneDay(str) {
 function capture(originId, cheaterUId) {
   // 抓取截图，并存入数据库
   // 有io 操作， 开另一个进程
-  let o = {
-    'bf1statsShot': `http://bf1stats.com/pc/${originId}`,
-    'trackerShot': `https://battlefieldtracker.com/bf1/profile/pc/${originId}`,
-    'trackerWeaponShot': `https://battlefieldtracker.com/bf1/profile/pc/${originId}/weapons`,
+  const o = {
+    bf1statsShot: `http://bf1stats.com/pc/${originId}`,
+    trackerShot: `https://battlefieldtracker.com/bf1/profile/pc/${originId}`,
+    trackerWeaponShot: `https://battlefieldtracker.com/bf1/profile/pc/${originId}/weapons`,
   };
   _.each(o, (v, k, obj) => {
-
     console.log(`start to cpature ${v} ...`);
 
-    let cp = spawn('node', [
+    const cp = spawn('node', [
       path.resolve(baseDir, 'libs/webshot.js'),
       v,
     ]);
@@ -45,8 +44,8 @@ function capture(originId, cheaterUId) {
       console.log(`cpature successfully ${k}, ${v}, ${url}`);
 
       db.query(`update cheaters set ${k} = ? where uId = ?`, [url, cheaterUId])
-      .catch(e => next(e));
-    })
+        .catch(e => next(e));
+    });
   });
   // 抓取截图，并存入数据库
 }
@@ -67,47 +66,63 @@ router.get('/', async (req, res, next) => {
   } = req.query;
   let result;
 
-  let [cdStart, cdEnd] = cd.split(',');
-  let [udStart, udEnd] = ud.split(',');
+  const [cdStart, cdEnd] = cd.split(',');
+  const [udStart, udEnd] = ud.split(',');
 
   let statusQuery = '';
   let cdQuery = '';
   let udQuery = '';
 
-  let queryVal = [];
+  const statusQueryVal = [] ,
+    cdQueryVal = [],
+    udQueryVal = [];
 
-  if (status && ['0', '1', '2', '3', '4', '5', '6'].indexOf(status) !== -1) {
-    statusQuery = `and status = ?`;
-    queryVal.push(status);
-  }
+  if (status && ['0', '1', '2', '3', '4', '5', '6'].indexOf(status) !== -1) statusQuery = 'and status = ?';
+  if (cd && cd !== ',') cdQuery = 'and createDatetime >= ? and createDatetime <= ?';
+  if (ud && ud !== ',') udQuery = 'and updateDatetime >= ? and updateDatetime <= ?';
 
-    if ( cd && cd !== ',') {
-    cdQuery = `and createDatetime >= ? and createDatetime <= ?`;
-      queryVal.push(cdStart, addOneDay(cdEnd));
-  }
-  if (ud && ud !== ',') {
-    udQuery = `and updateDatetime >= ? and updateDatetime <= ?`;
-    queryVal.push(udStart, addOneDay(udEnd));
-  }
+  if (statusQuery) statusQueryVal.push(status);
+  if (cdQuery) cdQueryVal.push(cdStart, addOneDay(cdEnd));
+  if (udQuery) udQueryVal.push(udStart, addOneDay(udEnd));
 
   if (sort === '') sort = 'updateDatetime';
 
-  let querySql = `select originId, status, cheatMethods, uId, createDatetime, updateDatetime 
-    from ${getCheatersDB(game)} 
-    where 1=1 ${statusQuery} ${cdQuery} ${udQuery} 
-    order by ${sort} DESC `;
+  const queryCondition = `where 1=1 ${statusQuery} ${cdQuery} ${udQuery}`;
+  const queryOrder = `order by ${sort}`;
+  const querySql = `select originId, status, cheatMethods, uId, createDatetime, updateDatetime
+    from ${getCheatersDB(game)}
+    ${queryCondition}
+    ${queryOrder}
+    DESC
+    `;
 
-  result = await db.query(querySql + `limit 20 offset ${(page - 1) * 20}`, queryVal)
+  result = await db.query(`${querySql} limit 20 offset ${(page - 1) * 20}`, [].concat(statusQueryVal, cdQueryVal, udQueryVal))
     .catch(e => next(e));
 
-  const total = await db.query(querySql, queryVal)
+  const total = await db.query(`select count(id) as num
+    from ${getCheatersDB(game)}
+    ${queryCondition}
+    ${queryOrder}
+    DESC
+  `, [].concat(statusQueryVal, cdQueryVal, udQueryVal))
     .catch(e => next(e));
+
+
+  const sumQuery = `
+    select 
+    status, count(id) as num
+    from ${getCheatersDB(game)}
+    where 1=1 ${cdQuery} ${udQuery}
+    group by status
+  `;
+  const sum = await db.query(sumQuery, [].concat(cdQueryVal, udQueryVal));
 
   return res.json({
     error: 0,
     data: result,
     game,
-    total: total.length,
+    total: total[0].num,
+    sum,
   });
 });
 
@@ -116,36 +131,36 @@ router.get('/', async (req, res, next) => {
 router.get('/:game/:uid', async (req, res, next) => {
   const cheaterUId = req.params.uid;
   const gameName = req.params.game;
-  const cheater = await db.query(`select 
-    id, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot 
-    from ${getCheatersDB(gameName)} 
+  const cheater = await db.query(`select
+    id, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot
+    from ${getCheatersDB(gameName)}
     where uId = ?`,
-    [cheaterUId])
+  [cheaterUId])
     .catch(e => next(e));
 
-  const reports = await db.query(`select a.userId, a.createDatetime, a.cheatMethods, a.bilibiliLink, a.description, b.username, b.uId, b.privilege 
+  const reports = await db.query(`select a.userId, a.createDatetime, a.cheatMethods, a.bilibiliLink, a.description, b.username, b.uId, b.privilege
     from user_report_cheater as a
-    left join users as b 
+    left join users as b
     on a.userId = b.id
     where a.cheaterUId = ? and a.valid = "1"`, [cheaterUId])
     .catch(e => next(e));
 
 
-  const verifies = await db.query(`select a.id, a.userId, a.createDatetime, a.status, a.suggestion, a.cheatMethods, b.username, b.uId, b.privilege 
-    from user_verify_cheater as a 
-    left join users as b 
+  const verifies = await db.query(`select a.id, a.userId, a.createDatetime, a.status, a.suggestion, a.cheatMethods, b.username, b.uId, b.privilege
+    from user_verify_cheater as a
+    left join users as b
     on a.userId = b.id
     where a.cheaterUId = ?`, [cheaterUId])
     .catch(e => next(e));
 
-  const confirms = await db.query(`select t1.userId, t1.userVerifyCheaterId, t2.username, t2.uId, t2.privilege, t1.createDatetime, t3.cheatMethods 
+  const confirms = await db.query(`select t1.userId, t1.userVerifyCheaterId, t2.username, t2.uId, t2.privilege, t1.createDatetime, t3.cheatMethods
     from user_confirm_verify as t1
     left join users as t2 on t1.userId = t2.id
     left join user_verify_cheater as t3 on t1.userVerifyCheaterId = t3.id
     where t3.cheaterUId = ?`, [cheaterUId])
     .catch(e => next(e));
 
-  const replies = await db.query(`select t1.createDatetime, t3.username as foo, t3.uId as fooUId, t4.username as bar, t4.uId as barUId, t1.userId, t1.toFloor, t1.cheaterId, t1.content 
+  const replies = await db.query(`select t1.createDatetime, t3.username as foo, t3.uId as fooUId, t4.username as bar, t4.uId as barUId, t1.userId, t1.toFloor, t1.cheaterId, t1.content
     from replies as t1
     left join ${getCheatersDB(gameName)} as t2 on t1.cheaterId = t2.id
     left join users as t3 on t1.userId = t3.id
@@ -174,9 +189,9 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
   check('originId').not().isEmpty().isAscii(),
   check('cheatMethods').not().isEmpty(),
   check('bilibiliLink').optional({ checkFalsy: true }).isURL(),
-  check('captcha').not().isEmpty().isLength({min:4, max: 4}),
+  check('captcha').not().isEmpty().isLength({ min: 4, max: 4 }),
 ],
-  async (req, res, next) => {
+async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
@@ -215,7 +230,7 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
     // 若 已经被石锤，不更新状态
     if (re[0].status !== '1') {
       await db.query(`update ${cheatersDB} set status = ? where uId = ?`, [0, cheaterUId])
-      .catch(e => next(e));
+        .catch(e => next(e));
     }
   }
 
@@ -255,13 +270,15 @@ router.post('/verify', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
   check('cheatMethods').optional({ checkFalsy: true }),
   check('cheaterUId').isUUID(),
 ],
-  async (req, res, next) => {
+async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(200).json({ error: 1, msg: 'verify 请规范填写', errors: errors.array() });
   }
 
-  let { status, suggestion, cheatMethods = '', cheaterUId, gameName = '' } = req.body;
+  let {
+    status, suggestion, cheatMethods = '', cheaterUId, gameName = ''
+} = req.body;
 
   const cheatersDB = getCheatersDB(gameName);
 
@@ -313,7 +330,7 @@ router.post('/confirm', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
   check('userVerifyCheaterId').not().isEmpty(),
   check('cheatMethods').not().isEmpty(),
 ],
-  async (req, res, next) => {
+async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(200).json({ error: 1, msg: 'confirm 请规范', errors: errors.array() });
@@ -322,7 +339,9 @@ router.post('/confirm', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
 
   const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
-  const { userId, userVerifyCheaterId, cheaterUId, cheatMethods, gameName = '' } = req.body;
+  const {
+    userId, userVerifyCheaterId, cheaterUId, cheatMethods, gameName = ''
+} = req.body;
 
   const cheatersDB = getCheatersDB(gameName);
 
@@ -331,22 +350,22 @@ router.post('/confirm', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
     userVerifyCheaterId,
     createDatetime: d,
   })
-  .catch(e => next(e));
+    .catch(e => next(e));
 
   // 石锤的 第二个 步骤
   // update status, cheatMethods, updateDatetime
   await db.query(`update ${cheatersDB} set status = "1", cheatMethods = ?, updateDatetime = ? where uId = ?`, [cheatMethods, d, cheaterUId])
-  .catch(e => next(e));
+    .catch(e => next(e));
 
-    res.json({
+  res.json({
     error: 0,
     data: {
       userId,
       userVerifyCheaterId,
       createDatetime: d,
       cheatMethods,
-    }
-  })
+    },
+  });
 });
 
 router.post('/reply', verifyJWTMiddleware, [
@@ -357,52 +376,54 @@ router.post('/reply', verifyJWTMiddleware, [
 
   check('toUserId').optional().isInt(),
   check('toFloor').optional().isInt(),
-  ],
-  async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
-    }
+],
+async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
+  }
 
-    const { gameName, cheaterId, userId, toUserId, content, toFloor } = req.body;
-    const d = moment().format('YYYY-MM-DD HH:mm:ss');
+  const {
+    gameName, cheaterId, userId, toUserId, content, toFloor
+} = req.body;
+  const d = moment().format('YYYY-MM-DD HH:mm:ss');
 
-    let values = {
-      cheaterId,
-      userId,
-      content,
+  const values = {
+    cheaterId,
+    userId,
+    content,
+    createDatetime: d,
+  };
+  if (toUserId) {
+    values.toUserId = toUserId;
+  }
+  if (toFloor) {
+    values.toFloor = toFloor;
+  }
+  const result = await db.query('insert into replies set ?', values)
+    .catch(e => next(e));
+
+  const re = await db.query(`select * from ${getCheatersDB(gameName)} where id = ?`, [cheaterId])
+    .catch(e => next(e));
+
+  let status;
+  if (re[0].status !== '1') {
+    status = '5';
+    await db.query(`update ${getCheatersDB(gameName)} set status = ?, updateDatetime = ? where id = ?`, [status, d, cheaterId])
+      .catch(e => next(e));
+  } else {
+    status = '1';
+  }
+
+  res.json({
+    error: 0,
+    data: {
       createDatetime: d,
-    };
-    if (toUserId) {
-      values['toUserId'] = toUserId;
-    }
-    if (toFloor) {
-      values['toFloor'] = toFloor;
-    }
-    const result = await db.query('insert into replies set ?', values)
-    .catch(e => next(e));
-
-    const re = await db.query(`select * from ${getCheatersDB(gameName)} where id = ?`, [cheaterId])
-    .catch(e => next(e));
-
-    let status;
-    if (re[0].status !== '1') {
-      status = '5';
-      await db.query(`update ${getCheatersDB(gameName)} set status = ?, updateDatetime = ? where id = ?`, [status, d, cheaterId])
-      .catch(e=> next());
-    } else {
-      status = '1'
-    }
-
-    res.json({
-      error: 0,
-      data: {
-        createDatetime: d,
-        content,
-        status,
-      }
-    })
+      content,
+      status,
+    },
   });
+});
 
 
 module.exports = router;

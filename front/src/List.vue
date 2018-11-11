@@ -16,9 +16,9 @@
     </p>
     <p>
       <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
-        <Radio label=""><span>全部</span></Radio>
+        <Radio label=""><span>全部 ( {{getAllStatusNum}} )</span></Radio>
         <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
-          <span>{{ status.label }}</span>
+          <span>{{ status.label }} ( {{ getStatusNum(status.value) }} )</span>
         </Radio>
       </RadioGroup>
     </p>
@@ -79,7 +79,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { getCheaterStatusLabel, cheaterStatus } from './common';
 
 const ClipboardJS = require('clipboard');
@@ -97,6 +96,7 @@ export default {
       ud: ['', ''],
       page: 1,
       total: 0,
+      sum: [],
 
       sortBy: [
         {
@@ -119,7 +119,19 @@ export default {
   watch: {
     '$route': 'loadData',
   },
+  computed: {
+    getAllStatusNum() {
+      return _.sumBy(this.sum, (o) => {
+        return o ? o.num : 0;
+      })
+    }
+  },
   methods: {
+    getStatusNum(val) {
+      const target = _.find(this.sum, ['status', val]);
+
+      return target ? target.num : 0;
+    },
     copied() {
       this.$Message.info('已复制');
     },
@@ -154,6 +166,7 @@ export default {
         const d = res.data;
         this.data = d.data;
         this.total = d.total;
+        this.sum = d.sum;
 
       })
     },
