@@ -15,6 +15,9 @@ function getCheatersDB(name) {
   return dbName;
 }
 
+const gamesArr = ['bf1', 'bfv'];
+
 module.exports = {
+  gamesArr,
   getCheatersDB,
 };

@@ -44,7 +44,7 @@
           <td>
         <span>
           举报了
-          <router-link :to="{name: 'cheater', params: { game: `${report.gameName}`, uid: `${report.uId}`}}">{{report.originId}}</router-link>
+          <router-link :to="{name: 'cheater', params: { game: `${report.game}`, uid: `${report.uId}`}}">{{report.originId}}</router-link>
         </span>
           </td>
           <td>
@@ -84,9 +84,6 @@
           privilege: '',
           createDatetime: '',
 
-          bf1Reports: [],
-          bfvReports: [],
-
           reports: [],
         }
       }
@@ -109,15 +106,9 @@
 
           this.account = d.data;
 
-          let { bf1Reports, bfvReports } = d.data;
-          bf1Reports = _.each(bf1Reports, (v, k) => {
-            v['gameName'] = 'bf1';
-          });
-          bfvReports = _.each(bfvReports, (v, k) => {
-            v['gameName'] = 'bfv';
-          });
+          let { reports } = d.data;
 
-          this.account.reports = [].concat(bf1Reports, bfvReports);
+          this.account.reports = reports;
         });
 
       },

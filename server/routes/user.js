@@ -15,9 +15,9 @@ const { verifyCatpcha } = require('../middlewares/captcha');
 
 // username, password
 router.post('/signin', [
-  check('username').not().isEmpty(),
-  check('password').not().isEmpty(),
-  check('captcha').not().isEmpty().isLength({min:4, max: 4}),
+  check('username').trim().exists(),
+  check('password').trim().exists(),
+  check('captcha').trim().exists().isLength({min:4, max: 4}),
 ], verifyCatpcha, async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -62,9 +62,9 @@ router.post('/signin', [
 
 // username, password
 router.post('/signup', [
-  check('username').not().isEmpty().isLength({min: 4}),
-  check('password').not().isEmpty().isLength({min: 6}),
-  check('captcha').not().isEmpty().isLength({min:4, max: 4}),
+  check('username').trim().exists().isLength({min: 4}),
+  check('password').trim().exists().isLength({min: 6}),
+  check('captcha').trim().exists().isLength({min:4, max: 4}),
   check('qq').optional({ checkFalsy: true }).isNumeric(),
 ], verifyCatpcha, async (req, res, next) => {
   const errors = validationResult(req);
@@ -147,16 +147,9 @@ router.get('/:uId', async (req, res, next) => {
 
   const {username, originId, privilege, createDatetime, id} = result[0];
 
-  const bf1Reports = await db.query(`select t1.createDatetime, t2.updateDatetime, t2.uId, t2.originId, t2.status 
+  const reports = await db.query(`select t1.createDatetime, t2.updateDatetime, t2.uId, t2.originId, t2.status, t2.game
     from user_report_cheater as t1
     inner join cheaters as t2 
-    on t1.cheaterUId = t2.uId
-    where t1.userId = ? order by createDatetime DESC`, [id])
-  .catch(e => next(e));
-
-  const bfvReports = await db.query(`select t1.createDatetime, t2.updateDatetime, t2.uId, t2.originId, t2.status 
-    from user_report_cheater as t1
-    inner join bfv_cheaters as t2 
     on t1.cheaterUId = t2.uId
     where t1.userId = ? order by createDatetime DESC`, [id])
   .catch(e => next(e));
@@ -166,8 +159,7 @@ router.get('/:uId', async (req, res, next) => {
     error: 0,
     data: {
       username, originId, privilege, createDatetime,
-      bf1Reports,
-      bfvReports,
+      reports,
     }
   })
 
