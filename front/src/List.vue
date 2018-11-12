@@ -81,7 +81,6 @@
 <script>
 import { getCheaterStatusLabel, cheaterStatus } from './common';
 
-const ClipboardJS = require('clipboard');
 new ClipboardJS('.ivu-btn');
 
 export default {
