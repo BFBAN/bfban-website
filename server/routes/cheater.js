@@ -11,8 +11,6 @@ const { verifyJWTMiddleware, verifyPrivilegeMiddleware } = require('../middlewar
 const db = require('../mysql');
 
 const { verifyCatpcha } = require('../middlewares/captcha');
-const { getCheatersDB } = require('../libs/misc');
-
 
 const router = express.Router();
 
@@ -57,7 +55,7 @@ function capture(originId, cheaterUId) {
 // ?status=0
 router.get('/', async (req, res, next) => {
   let {
-    game = '',
+    game = 'bf1',
     status = '',
     cd = ',',
     ud = ',',
@@ -69,53 +67,57 @@ router.get('/', async (req, res, next) => {
   const [cdStart, cdEnd] = cd.split(',');
   const [udStart, udEnd] = ud.split(',');
 
+  let gameQuery = '';
   let statusQuery = '';
   let cdQuery = '';
   let udQuery = '';
 
-  const statusQueryVal = [] ,
+  const gameQueryVal = [],
+    statusQueryVal = [] ,
     cdQueryVal = [],
     udQueryVal = [];
 
+  if (game !== '') gameQuery = 'and game = ?';
   if (status && ['0', '1', '2', '3', '4', '5', '6'].indexOf(status) !== -1) statusQuery = 'and status = ?';
   if (cd && cd !== ',') cdQuery = 'and createDatetime >= ? and createDatetime <= ?';
   if (ud && ud !== ',') udQuery = 'and updateDatetime >= ? and updateDatetime <= ?';
 
+  if (gameQuery) gameQueryVal.push(game);
   if (statusQuery) statusQueryVal.push(status);
   if (cdQuery) cdQueryVal.push(cdStart, addOneDay(cdEnd));
   if (udQuery) udQueryVal.push(udStart, addOneDay(udEnd));
 
   if (sort === '') sort = 'updateDatetime';
 
-  const queryCondition = `where 1=1 ${statusQuery} ${cdQuery} ${udQuery}`;
+  const queryCondition = `where 1=1 ${gameQuery} ${statusQuery} ${cdQuery} ${udQuery}`;
   const queryOrder = `order by ${sort}`;
   const querySql = `select originId, status, cheatMethods, uId, createDatetime, updateDatetime
-    from ${getCheatersDB(game)}
+    from cheaters
     ${queryCondition}
     ${queryOrder}
     DESC
     `;
 
-  result = await db.query(`${querySql} limit 20 offset ${(page - 1) * 20}`, [].concat(statusQueryVal, cdQueryVal, udQueryVal))
+  result = await db.query(`${querySql} limit 20 offset ${(page - 1) * 20}`, [].concat(gameQueryVal, statusQueryVal, cdQueryVal, udQueryVal))
     .catch(e => next(e));
 
   const total = await db.query(`select count(id) as num
-    from ${getCheatersDB(game)}
+    from cheaters
     ${queryCondition}
     ${queryOrder}
     DESC
-  `, [].concat(statusQueryVal, cdQueryVal, udQueryVal))
+  `, [].concat(gameQueryVal, statusQueryVal, cdQueryVal, udQueryVal))
     .catch(e => next(e));
 
 
   const sumQuery = `
     select 
     status, count(id) as num
-    from ${getCheatersDB(game)}
-    where 1=1 ${cdQuery} ${udQuery}
+    from cheaters
+    where 1=1 ${gameQuery} ${cdQuery} ${udQuery}
     group by status
   `;
-  const sum = await db.query(sumQuery, [].concat(cdQueryVal, udQueryVal));
+  const sum = await db.query(sumQuery, [].concat(gameQueryVal, cdQueryVal, udQueryVal));
 
   return res.json({
     error: 0,
@@ -130,12 +132,12 @@ router.get('/', async (req, res, next) => {
 // report, verify, confirm
 router.get('/:game/:uid', async (req, res, next) => {
   const cheaterUId = req.params.uid;
-  const gameName = req.params.game;
+  const game = req.params.game;
   const cheater = await db.query(`select
     id, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot
-    from ${getCheatersDB(gameName)}
-    where uId = ?`,
-  [cheaterUId])
+    from cheaters
+    where uId = ? and game = ?`,
+  [cheaterUId, game])
     .catch(e => next(e));
 
   const reports = await db.query(`select a.userId, a.createDatetime, a.cheatMethods, a.bilibiliLink, a.description, b.username, b.uId, b.privilege
@@ -162,10 +164,10 @@ router.get('/:game/:uid', async (req, res, next) => {
 
   const replies = await db.query(`select t1.createDatetime, t3.username as foo, t3.uId as fooUId, t4.username as bar, t4.uId as barUId, t1.userId, t1.toFloor, t1.cheaterId, t1.content
     from replies as t1
-    left join ${getCheatersDB(gameName)} as t2 on t1.cheaterId = t2.id
+    left join cheaters as t2 on t1.cheaterId = t2.id
     left join users as t3 on t1.userId = t3.id
     left join users as t4 on t1.toUserId = t4.id
-    where t2.uId = ?`, [cheaterUId])
+    where t2.uId = ? and t2.game = ?`, [cheaterUId, game])
     .catch(e => next(e));
 
   return res.json({
@@ -201,11 +203,11 @@ async (req, res, next) => {
     gameName, originId, cheatMethods, bilibiliLink, description,
   } = req.body;
 
-  const cheatersDB = getCheatersDB(gameName);
+  const cheatersDB = 'cheaters';
 
   const { userId } = req.user;
 
-  const re = await db.query(`select * from ${cheatersDB} where originId = ?`, [originId])
+  const re = await db.query(`select * from ${cheatersDB} where originId = ? and game = ?`, [originId, gameName])
     .catch(e => next(e));
 
   let cheaterUId;
@@ -219,6 +221,7 @@ async (req, res, next) => {
       uId: uuId,
       originId,
       createDatetime: d,
+      game: gameName,
     })
       .catch(e => next(e));
 
@@ -280,7 +283,7 @@ async (req, res, next) => {
     status, suggestion, cheatMethods = '', cheaterUId, gameName = ''
 } = req.body;
 
-  const cheatersDB = getCheatersDB(gameName);
+  const cheatersDB = 'cheaters';
 
   const { userId } = req.user;
 
@@ -343,7 +346,7 @@ async (req, res, next) => {
     userId, userVerifyCheaterId, cheaterUId, cheatMethods, gameName = ''
 } = req.body;
 
-  const cheatersDB = getCheatersDB(gameName);
+  const cheatersDB = 'cheaters';
 
   await db.query('insert into user_confirm_verify set ?', {
     userId,
@@ -403,13 +406,13 @@ async (req, res, next) => {
   const result = await db.query('insert into replies set ?', values)
     .catch(e => next(e));
 
-  const re = await db.query(`select * from ${getCheatersDB(gameName)} where id = ?`, [cheaterId])
+  const re = await db.query(`select * from cheaters where id = ? and game = ?`, [cheaterId, gameName])
     .catch(e => next(e));
 
   let status;
   if (re[0].status !== '1') {
     status = '5';
-    await db.query(`update ${getCheatersDB(gameName)} set status = ?, updateDatetime = ? where id = ?`, [status, d, cheaterId])
+    await db.query(`update cheaters set status = ?, updateDatetime = ? where id = ? and game = ?`, [status, d, cheaterId, gameName])
       .catch(e => next(e));
   } else {
     status = '1';
