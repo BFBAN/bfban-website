@@ -41,7 +41,8 @@
         @on-ok="ok"
         @on-cancel="cancel">
         <div style="position: relative">
-          <p style="font-size: 1rem;">检索的ID为：{{searchVal}}
+          <p style="font-size: 1rem;">
+            检索的ID为：{{searchVal}}
             <span v-if="idExist">
               <sub>
                 <a target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${searchVal}`">battlefieldtracker</a>
@@ -59,6 +60,9 @@
           <div v-if="cheaters.length !== 0">
             <p v-for="cheater in cheaters">
               <router-link :to="{name: 'cheater', params: {game: `${cheater.game}`, uid: `${cheater.uId}`}}">
+                <Tag>
+                  {{ cheater.game }}
+                </Tag>
                 {{cheater.originId}}
               </router-link>
             </p>
