@@ -2,9 +2,6 @@
   <div class="app">
     <Header />
     <main class="container">
-      <!--<p>-->
-        <!--<Input search placeholder="游戏id" />-->
-      <!--</p>-->
       <div class="content">
         <!-- component match the router will render here -->
           <router-view></router-view>

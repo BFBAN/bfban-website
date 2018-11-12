@@ -2,13 +2,18 @@
     <header>
       <div class="header-container container">
         <div class="nav">
-        <router-link :to="{name: 'home'}">首页</router-link>
+          <router-link :to="{name: 'home'}">首页</router-link>
 
-        <!--<router-link :to="{name: 'about'}">关于</router-link>-->
-        <router-link :to="{name: 'cheaters', query: { status: '1' }}">外挂公示</router-link>
+          <!--<router-link :to="{name: 'about'}">关于</router-link>-->
+          <router-link :to="{name: 'cheaters', query: { status: '1' }}">外挂公示</router-link>
 
-        <router-link :to="{name: 'report'}">举报作弊</router-link>
+          <router-link :to="{name: 'report'}">举报作弊</router-link>
 
+          <router-link :to="{name: 'about'}">关于</router-link>
+
+        </div>
+        <div class="search">
+          <Input clearable search placeholder="检索" v-model="searchVal" @on-search="handleSearch" />
         </div>
         <div class="nav">
           <router-link v-show="!isLogin" :to="{name: 'signin'}">登录</router-link>
@@ -29,6 +34,41 @@
 
         </div>
       </div>
+
+      <Modal
+        v-model="searchModal"
+        title="检索"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <div style="position: relative">
+          <p style="font-size: 1rem;">检索的ID为：{{searchVal}}
+            <span v-if="idExist">
+              <sub>
+                <a target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${searchVal}`">battlefieldtracker</a>
+              </sub>
+              <sub>
+                <a target="_blank" :href="`http://bf1stats.com/pc/${searchVal}`">bf1stats</a>
+              </sub>
+            </span>
+            <sub style="font-size: 0.6rem; color: rgb(237, 64, 20);" v-if="!idExist">非法id</sub>
+          </p>
+          <br>
+          <p>
+            检索结果：
+          </p>
+          <div v-if="cheaters.length !== 0">
+            <p v-for="cheater in cheaters">
+              <router-link :to="{name: 'cheater', params: {game: `${cheater.game}`, uid: `${cheater.uId}`}}">
+                {{cheater.originId}}
+              </router-link>
+            </p>
+          </div>
+          <div v-else>无</div>
+
+          <Spin size="large" fix v-show="modalSpinShow"></Spin>
+
+        </div>
+      </Modal>
     </header>
 </template>
 
@@ -37,10 +77,40 @@
 export default {
   data() {
     return {
+      searchModal: false,
+      searchVal: '',
+      idExist: true,
+      cheaters: [],
+
+      modalSpinShow: false,
     }
   },
   methods: {
-    signout: function() {
+    handleSearch() {
+      const val = this.searchVal.trim();
+
+      if (val === '') return false;
+
+      this.searchModal = true;
+      this.modalSpinShow = true;
+
+      axios({
+        method: 'get',
+        url: `/search?id=${val}`,
+      })
+      .then((res) => {
+        this.modalSpinShow = false;
+
+        const d = res.data;
+        if (d.error === 0) {
+
+          const { idExist, cheaters } = d.data;
+          this.idExist = idExist;
+          this.cheaters = cheaters;
+        }
+      })
+    },
+    signout() {
       axios({
         method: 'get',
         url: '/account/signout'
@@ -100,6 +170,14 @@ window.addEventListener('scroll', function(e) {
   .header-container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+
+    .search {
+      display: flex;
+      flex-grow: 0;
+      flex-shrink: 1;
+      flex-basis: 30%;
+    }
   }
   .nav {
     display: flex;

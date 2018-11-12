@@ -9,6 +9,7 @@ import Signin from './Signin.vue';
 import Signup from './Signup.vue';
 import Account from './Account.vue';
 import Dashboard from './Dashboard.vue';
+import About from './About.vue';
 
 import store from './store';
 
@@ -19,7 +20,7 @@ const routes = [
     path: '/',
     component: Home,
   },
-  // { name: 'about', path: '/about', component: About },
+  { name: 'about', path: '/about', component: About },
   {
     name: 'report',
     path: '/report',

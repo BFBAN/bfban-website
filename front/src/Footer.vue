@@ -1,17 +1,19 @@
 <template>
     <footer class="footer">
       <p>
-        Written by <a href="#"></a>  &copy; 2018 联ban局. All Rights Reserved.
-      </p>
-      <p>
-        对网站有任何意见或想法，可以邮箱 857183210@qq.com
+        Written by <a href="#">mygoare</a>
+        &copy; 2018
+        <a href="http://www.bfban.com">bfban.com</a>.
+        All Rights Reserved.
       </p>
     </footer>
 </template>
 
 <script>
 export default {
-    name: "Footer"
+  data() {
+    return {}
+  }
 }
 </script>
 
