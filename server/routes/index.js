@@ -65,18 +65,35 @@ router.get('/search', async (req, res, next) => {
 
 });
 
+async function getReportNum() {
+  const tmp = await db.query(`select count(*) as num from user_report_cheater`);
+  return tmp[0].num;
+}
+
+async function getUserNum() {
+  const tmp = await db.query(`select count(*) as num from users`);
+  return tmp[0].num
+}
+
+async function getCheaterNum() {
+  const tmp = await db.query(`select count(*) as num from cheaters where status = 1`);
+  return tmp[0].num;
+}
+
 // 24h activities (reports, verifies)
 router.get('/activity', async (req, res) => {
   const d = moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss');
 
-  const reports = await db.query(`select t1.cheaterUId, t1.createDatetime, t2.username, t2.uId, t3.originId as cheaterOriginId
+  const registers = await db.query(`select username, createDatetime from users where createDatetime >= ?`, [d]);
+
+  const reports = await db.query(`select t1.cheaterUId, t1.createDatetime, t2.username, t2.uId, t3.originId as cheaterOriginId, t3.game
   from user_report_cheater as t1
   inner join users as t2 on t1.userId = t2.id
   inner join cheaters as t3 on t1.cheaterUId = t3.uId
   where t1.createDatetime >= ?`,
   [d]);
 
-  const verifies = await db.query(`select t1.status, t2.username, t2.uId, t3.originId as cheaterOriginId, t1.cheaterUId, t1.createDatetime
+  const verifies = await db.query(`select t1.status, t2.username, t2.uId, t3.game, t3.originId as cheaterOriginId, t1.cheaterUId, t1.createDatetime
   from user_verify_cheater as t1
   inner join users as t2 on t1.userId = t2.id
   inner join cheaters as t3 on t1.cheaterUId = t3.uId
@@ -86,8 +103,14 @@ router.get('/activity', async (req, res) => {
   res.json({
     error: 0,
     data: {
+      registers,
       reports,
       verifies,
+      number: {
+        user: await getUserNum(),
+        cheater: await getCheaterNum(),
+        report: await getReportNum(),
+      }
     }
   });
 });

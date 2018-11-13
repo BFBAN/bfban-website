@@ -1,39 +1,44 @@
 <template>
-    <Form :label-width="80" style="position: relative;">
-      <Divider>注册</Divider>
+  <div class="container">
+    <div class="content">
+      <Form :label-width="80" style="position: relative;">
+        <Divider>注册</Divider>
 
-      <FormItem label="用户名">
-        <Input v-model="signup.username" placeholder="4位以上用户名" />
-      </FormItem>
+        <FormItem label="用户名">
+          <Input v-model="signup.username" placeholder="4位以上用户名" />
+        </FormItem>
 
-      <FormItem label="密码">
-        <Input type="password" v-model="signup.password" placeholder="6位以上密码" />
-      </FormItem>
+        <FormItem label="密码">
+          <Input type="password" v-model="signup.password" placeholder="6位以上密码" />
+        </FormItem>
 
-      <FormItem label="游戏ID">
-        <Input v-model="signup.originId" placeholder="选题" />
-      </FormItem>
+        <FormItem label="游戏ID">
+          <Input v-model="signup.originId" placeholder="选题" />
+        </FormItem>
 
-      <FormItem label="QQ">
-        <Input v-model="signup.qq" placeholder="选填" />
-      </FormItem>
+        <FormItem label="QQ">
+          <Input v-model="signup.qq" placeholder="选填" />
+        </FormItem>
 
-      <FormItem label="验证码">
-        <Input type="text" v-model="signup.captcha" placeholder="验证码" />
-        <img ref="captcha">
-        <a href="#" @click.stop.prevent="refreshCaptcha">
-          获得验证码
-        </a>
-      </FormItem>
+        <FormItem label="验证码">
+          <Input type="text" v-model="signup.captcha" placeholder="验证码" />
+          <img ref="captcha">
+          <a href="#" @click.stop.prevent="refreshCaptcha">
+            获得验证码
+          </a>
+        </FormItem>
 
-      <FormItem>
+        <FormItem>
           <Button @click.prevent.stop="handleSignup" type="primary">提交</Button>
 
           <router-link :to="{name: 'signin'}">已有账号？去登录</router-link>
-      </FormItem>
+        </FormItem>
 
-      <Spin size="large" fix v-show="spinShow"></Spin>
-    </Form>
+        <Spin size="large" fix v-show="spinShow"></Spin>
+      </Form>
+    </div>
+  </div>
+
 </template>
 
 <script>

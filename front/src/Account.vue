@@ -1,38 +1,39 @@
 <template>
-  <div>
-    <p class="hint">我们还没有 消息系统，但可以在下方举报的状态 来得知进度</p>
-    <p class="hint">所有举报都可以 回复参与讨论</p>
-    <p class="hint">若要补充证据，可以重复举报同一ID</p>
+  <div class="container">
+    <div class="content">
+      <p class="hint">我们还没有 消息系统，但可以在下方举报的状态 来得知进度</p>
+      <p class="hint">所有举报都可以 回复参与讨论</p>
+      <p class="hint">若要补充证据，可以重复举报同一ID</p>
 
-    <Divider>用户中心</Divider>
-    <h2>个人信息</h2>
-    <p>
-      用户名：
-      {{account.username}}
-    </p>
-    <p>
-      身份：
-      <Tag v-if="account.privilege === 'admin'" color="success">
-        管理员
-      </Tag>
-      <Tag v-if="account.privilege === 'normal'">
-        普通
-      </Tag>
-    </p>
-    <p>
-      加入日期：
-      <Tag color="primary">
-        <Time v-if="account.createDatetime" :time="account.createDatetime" />
-      </Tag>
-    </p>
+      <Divider>用户中心</Divider>
+      <h2>个人信息</h2>
+      <p>
+        用户名：
+        {{account.username}}
+      </p>
+      <p>
+        身份：
+        <Tag v-if="account.privilege === 'admin'" color="success">
+          管理员
+        </Tag>
+        <Tag v-if="account.privilege === 'normal'">
+          普通
+        </Tag>
+      </p>
+      <p>
+        加入日期：
+        <Tag color="primary">
+          <Time v-if="account.createDatetime" :time="account.createDatetime" />
+        </Tag>
+      </p>
 
-    <br>
-    <h2>个人举报</h2>
-    <p v-if="account.reports.length === 0">
-      还没有任何举报
-    </p>
-    <table>
-      <tbody>
+      <br>
+      <h2>个人举报</h2>
+      <p v-if="account.reports.length === 0">
+        还没有任何举报
+      </p>
+      <table>
+        <tbody>
         <tr v-for="report in account.reports">
           <td>
             <span>
@@ -65,9 +66,10 @@
         </span>
           </td>
         </tr>
-      </tbody>
+        </tbody>
 
-    </table>
+      </table>
+    </div>
   </div>
 
 </template>

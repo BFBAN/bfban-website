@@ -74,8 +74,26 @@ const cheaterStatus = [
   },
 ];
 
+const gameName = [
+  {
+    value: 'bf1',
+    label: '战地1'
+  },
+  {
+    value: 'bfv',
+    label: '战地v',
+  }
+];
+
 function getCheaterStatusLabel(value) {
   let o = _.find(cheaterStatus, (v, k) => {
+    return v.value === value;
+  });
+  return o ? o.label : '';
+}
+
+function getGameLabel(value) {
+  let o = _.find(gameName, (v, k) => {
     return v.value === value;
   });
   return o ? o.label : '';
@@ -104,6 +122,8 @@ export {
   convertGameName,
   checkReportFormData,
   cheaterStatus,
+  gameName,
   getCheaterStatusLabel,
+  getGameLabel,
   formatTextarea,
 };

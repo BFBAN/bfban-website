@@ -1,8 +1,8 @@
 <template>
     <footer class="footer">
       <p>
-        <a href="">关于</a>
-        <a href="">举报日记</a>
+        <a href="#">关于</a>
+        <a href="#">举报日记</a>
       </p>
       <p>
         Written by mygoare

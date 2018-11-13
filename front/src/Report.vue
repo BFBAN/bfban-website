@@ -1,72 +1,77 @@
 <template>
-    <Form :label-width="80" style="position: relative;">
-      <Divider>举报作弊</Divider>
+  <div class="container">
+    <div class="content">
+      <Form :label-width="80" style="position: relative;">
+        <Divider>举报作弊</Divider>
 
-      <FormItem label="游戏名">
-        <span class="hint">已经支持 战地V 举报啦！</span>
-        <RadioGroup v-model="formItem.gameName" type="button">
-          <Radio label="bf1"><span>战地1</span></Radio>
-          <Radio label="bfv"><span>战地v</span></Radio>
-        </RadioGroup>
-      </FormItem>
+        <FormItem label="游戏名">
+          <span class="hint">已经支持 战地V 举报啦！</span>
+          <RadioGroup v-model="formItem.gameName" type="button">
+            <Radio label="bf1"><span>战地1</span></Radio>
+            <Radio label="bfv"><span>战地v</span></Radio>
+          </RadioGroup>
+        </FormItem>
 
 
-      <FormItem label="游戏ID">
-        <span class="hint">一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID</span>
+        <FormItem label="游戏ID">
+          <span class="hint">一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID</span>
           <Input v-model="formItem.originId" placeholder="请一次只填写一个ID" />
-      </FormItem>
+        </FormItem>
 
-      <FormItem label="作弊方式">
-        <CheckboxGroup v-model="formItem.checkbox">
-          <Checkbox label="wallhack">
-            <span>透视</span>
-          </Checkbox>
-          <Checkbox label="damageChange">
-            <span>改伤</span>
-          </Checkbox>
-          <Checkbox label="aimbot">
-            <span>自瞄</span>
-          </Checkbox>
-          <Checkbox label="oneShotKill">
-            <span>秒杀</span>
-          </Checkbox>
-          <Checkbox label="gadgetModify">
-            <span>改装备</span>
-          </Checkbox>
-          <Checkbox label="stealth">
-            <span>隐身</span>
-          </Checkbox>
-          <Checkbox label="shootingThroughWalls">
-            <span>子弹穿墙</span>
-          </Checkbox>
-        </CheckboxGroup>
-      </FormItem>
+        <FormItem label="作弊方式">
+          <CheckboxGroup v-model="formItem.checkbox">
+            <Checkbox label="wallhack">
+              <span>透视</span>
+            </Checkbox>
+            <Checkbox label="damageChange">
+              <span>改伤</span>
+            </Checkbox>
+            <Checkbox label="aimbot">
+              <span>自瞄</span>
+            </Checkbox>
+            <Checkbox label="oneShotKill">
+              <span>秒杀</span>
+            </Checkbox>
+            <Checkbox label="gadgetModify">
+              <span>改装备</span>
+            </Checkbox>
+            <Checkbox label="stealth">
+              <span>隐身</span>
+            </Checkbox>
+            <Checkbox label="shootingThroughWalls">
+              <span>子弹穿墙</span>
+            </Checkbox>
+          </CheckboxGroup>
+        </FormItem>
 
-      <FormItem label="视频链接">
-        <span class="hint">可以是 优酷，土豆，AB站等 视频网站链接</span>
-        <Input v-model="formItem.bilibiliLink" placeholder="选填" />
-      </FormItem>
+        <FormItem label="视频链接">
+          <span class="hint">可以是 优酷，土豆，AB站等 视频网站链接</span>
+          <Input v-model="formItem.bilibiliLink" placeholder="选填" />
+        </FormItem>
 
-      <FormItem label="论述">
-        <span class="hint">请列出阐明足够的证据，编辑器支持上传图片（限制2M）、视频（限制30M）</span>
-        <!-- <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." /> -->
-        <Misc :content="formItem.description" @change="handleMiscChange" />
-      </FormItem>
+        <FormItem label="论述">
+          <span class="hint">请列出阐明足够的证据，编辑器支持上传图片（限制2M）、视频（限制30M）</span>
+          <!-- <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." /> -->
+          <Misc :content="formItem.description" @change="handleMiscChange" />
+        </FormItem>
 
-      <FormItem label="验证码">
-        <Input type="text" v-model="formItem.captcha" placeholder="验证码" />
-        <img ref="captcha">
-        <a href="#" @click.stop.prevent="refreshCaptcha">
-          获得验证码
-        </a>
-      </FormItem>
+        <FormItem label="验证码">
+          <Input type="text" v-model="formItem.captcha" placeholder="验证码" />
+          <img ref="captcha">
+          <a href="#" @click.stop.prevent="refreshCaptcha">
+            获得验证码
+          </a>
+        </FormItem>
 
-      <FormItem>
-        <Button @click="doReport" type="primary">提交</Button>
-      </FormItem>
+        <FormItem>
+          <Button @click="doReport" type="primary">提交</Button>
+        </FormItem>
 
-      <Spin size="large" fix v-show="spinShow"></Spin>
-    </Form>
+        <Spin size="large" fix v-show="spinShow"></Spin>
+      </Form>
+    </div>
+  </div>
+
 </template>
 
 <script>

@@ -1,81 +1,84 @@
 <template>
-  <div>
-    <Divider>外挂公示</Divider>
+  <div class="container">
+    <div class="content">
+      <Divider>外挂公示</Divider>
 
-    <!--Filters:-->
-    <!--状态checkbox、-->
-    <!--创建时间（时间段）、-->
-    <!--操作时间（时间段）、-->
-    <!--id搜索-->
+      <!--Filters:-->
+      <!--状态checkbox、-->
+      <!--创建时间（时间段）、-->
+      <!--操作时间（时间段）、-->
+      <!--id搜索-->
 
-    <p>
-      <RadioGroup v-model="gameName" @on-change="handleChanges" type="button">
-        <Radio label="bf1"><span>战地1 ( {{getTotalNum('bf1')}} )</span></Radio>
-        <Radio label="bfv"><span>战地v ( {{getTotalNum('bfv')}} )</span></Radio>
-      </RadioGroup>
-    </p>
-    <p>
-      <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
-        <Radio label=""><span>全部 ( {{getAllStatusNum}} )</span></Radio>
-        <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
-          <span>{{ status.label }} ( {{ getStatusNum(status.value) }} )</span>
-        </Radio>
-      </RadioGroup>
-    </p>
-    <p>
-      <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报日期范围" style="width: 200px"></DatePicker>
-      <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="处理日期范围" style="width: 200px"></DatePicker>
-    </p>
+      <p>
+        <RadioGroup v-model="gameName" @on-change="handleChanges" type="button">
+          <Radio label="bf1"><span>战地1 ( {{getTotalNum('bf1')}} )</span></Radio>
+          <Radio label="bfv"><span>战地v ( {{getTotalNum('bfv')}} )</span></Radio>
+        </RadioGroup>
+      </p>
+      <p>
+        <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
+          <Radio label=""><span>全部 ( {{getAllStatusNum}} )</span></Radio>
+          <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
+            <span>{{ status.label }} ( {{ getStatusNum(status.value) }} )</span>
+          </Radio>
+        </RadioGroup>
+      </p>
+      <p>
+        <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报日期范围" style="width: 200px"></DatePicker>
+        <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="处理日期范围" style="width: 200px"></DatePicker>
+      </p>
 
-    <p>
-      排序：
-      <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
-        <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
+      <p>
+        排序：
+        <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
+          <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
 
-      <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
-    </p>
+        <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
+      </p>
 
 
-    <div class="list">
-      <ul>
-        <li>
-          <span><b>游戏ID</b></span>
-          <span><b>处理状态</b></span>
-          <span><b>作弊方式</b></span>
-          <span><b>举报时间</b></span>
-          <span><b>处理时间</b></span>
-        </li>
-        <li v-for="d in data" :key="d.uId">
+      <div class="list">
+        <ul>
+          <li>
+            <span><b>游戏ID</b></span>
+            <span><b>处理状态</b></span>
+            <span><b>作弊方式</b></span>
+            <span><b>举报时间</b></span>
+            <span><b>处理时间</b></span>
+          </li>
+          <li v-for="d in data" :key="d.uId">
           <span>
             <router-link :to="{name: 'cheater', params: { game: gameName, uid: `${d.uId}` }}">{{d.originId}}</router-link>
             <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
           </span>
-          <span>
+            <span>
             {{ handleStatus(d.status) }}
           </span>
-          <span>
+            <span>
             <Tag v-if="d.cheatMethods" color="warning">
               {{convertCheatMethods(d.cheatMethods || '')}}
             </Tag>
           </span>
-          <span>
+            <span>
             <Time v-if="d.createDatetime" :time="d.createDatetime" />
           </span>
 
 
-          <span>
+            <span>
             <Time v-if="d.updateDatetime" :time="d.updateDatetime" />
           </span>
-        </li>
-      </ul>
-      <br>
+          </li>
+        </ul>
+        <br>
 
-      <Page :page-size="20" show-total :current="page" @on-change="handlePageChange" :total="total" />
+        <Page :page-size="20" show-total :current="page" @on-change="handlePageChange" :total="total" />
 
-      <Spin size="large" fix v-show="spinShow"></Spin>
+        <Spin size="large" fix v-show="spinShow"></Spin>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>

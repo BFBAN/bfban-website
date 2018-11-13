@@ -1,6 +1,8 @@
 <template>
-  <div v-if="isCheaterExist">
-    <div style="display: flex; flex-direction: column;">
+  <div class="container">
+    <div class="content">
+      <div v-if="isCheaterExist">
+        <div style="display: flex; flex-direction: column;">
 
       <span style="font-size: 1.6rem;">
         <router-link :to="{name: 'cheaters', query: {game: `${gameName}`}}">
@@ -21,268 +23,271 @@
         <sub v-if="!idExist && `${gameName}` === 'bf1'" style="font-size: .6rem; color: #ed4014;">该id已不存在</sub>
       </span>
 
-      <div>
-        <Tag color="error">
-          {{ handleStatus(cheater.status) }}
-        </Tag>
-
-        <Tag v-if="cheater.cheatMethods" color="warning">
-          {{ convertCheatMethods(cheater.cheatMethods) }}
-        </Tag>
-
-        <Tag v-show="idExist" color="primary">
-          battlefieldtracker
-        </Tag>
-        <a v-show="idExist && `${gameName}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">在线战绩</a>
-        <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
-        <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">bf1tracker武器截图</a>
-
-
-        <Tag v-show="idExist" color="primary">
-          bf1stats
-        </Tag>
-        <a v-show="idExist && `${gameName}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">在线战绩</a>
-        <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
-      </div>
-
-      <p>
-        被围观了 {{ cheater.n || 0 }} 次
-      </p>
-
-      <img v-if="cheater.originId" class="cheater-desc" :src="`http://g.bf1stats.com/EwvWxWrq/pc/${cheater.originId}.png`"/>
-    </div>
-
-    <div style="position: relative">
-      <h2 style="margin: 1rem 0;">时间线</h2>
-      <TimelineItem pending v-for="l in timelineList" :key="l.createDatetime">
-
-        <div v-if="l.type === 'report'" class="timeline-content">
-          <div class="timeline-time">
-            <Time :time="l.createDatetime"></Time>
-
-            <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
-              <Tag v-if="l.privilege === 'admin'" color="success">
-                管理员
-              </Tag>
-              <b>{{l.username}}</b>
-            </router-link>
-            举报
-            <Tag color="warning">
-              {{convertCheatMethods(l.cheatMethods || '')}}
+          <div>
+            <Tag color="error">
+              {{ handleStatus(cheater.status) }}
             </Tag>
+
+            <Tag v-if="cheater.cheatMethods" color="warning">
+              {{ convertCheatMethods(cheater.cheatMethods) }}
+            </Tag>
+
+            <Tag v-show="idExist" color="primary">
+              battlefieldtracker
+            </Tag>
+            <a v-show="idExist && `${gameName}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">在线战绩</a>
+            <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
+            <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">bf1tracker武器截图</a>
+
+
+            <Tag v-show="idExist" color="primary">
+              bf1stats
+            </Tag>
+            <a v-show="idExist && `${gameName}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">在线战绩</a>
+            <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
           </div>
 
-          <p v-if="l.bilibiliLink">
-              <Tag color="primary">
-                视频链接
-              </Tag>
-              <a :href="l.bilibiliLink" target="_blank">{{ l.bilibiliLink }}</a>
-      </p>
-          <div v-if="l.description" v-html="l.description" class="description">
-          </div>
-
-          <p v-if="isLogin">
-            <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+          <p>
+            被围观了 {{ cheater.n || 0 }} 次
           </p>
+
+          <img v-if="cheater.originId" class="cheater-desc" :src="`http://g.bf1stats.com/EwvWxWrq/pc/${cheater.originId}.png`"/>
         </div>
 
+        <div style="position: relative">
+          <h2 style="margin: 1rem 0;">时间线</h2>
+          <TimelineItem pending v-for="l in timelineList" :key="l.createDatetime">
 
-        <div v-if="l.type === 'verify'" class="timeline-content bookmark" :id="`user-verify-cheater-${l.id}`">
-          <div class="timeline-time">
-            <Time :time="l.createDatetime"></Time>
-            <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
-              <Tag v-if="l.privilege === 'admin'" color="success">
-                管理员
-              </Tag>
-              <b>{{l.username}}</b>
-            </router-link>
+            <div v-if="l.type === 'report'" class="timeline-content">
+              <div class="timeline-time">
+                <Time :time="l.createDatetime"></Time>
 
-            认为
-            <Tag color="warning">
-              {{ handleStatus(l.status) }}
-            </Tag>
+                <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+                  <Tag v-if="l.privilege === 'admin'" color="success">
+                    管理员
+                  </Tag>
+                  <b>{{l.username}}</b>
+                </router-link>
+                举报
+                <Tag color="warning">
+                  {{convertCheatMethods(l.cheatMethods || '')}}
+                </Tag>
+              </div>
 
-            <span v-if="l.cheatMethods">
+              <p v-if="l.bilibiliLink">
+                <Tag color="primary">
+                  视频链接
+                </Tag>
+                <a :href="l.bilibiliLink" target="_blank">{{ l.bilibiliLink }}</a>
+              </p>
+              <div v-if="l.description" v-html="l.description" class="description">
+              </div>
+
+              <p v-if="isLogin">
+                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+              </p>
+            </div>
+
+
+            <div v-if="l.type === 'verify'" class="timeline-content bookmark" :id="`user-verify-cheater-${l.id}`">
+              <div class="timeline-time">
+                <Time :time="l.createDatetime"></Time>
+                <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+                  <Tag v-if="l.privilege === 'admin'" color="success">
+                    管理员
+                  </Tag>
+                  <b>{{l.username}}</b>
+                </router-link>
+
+                认为
+                <Tag color="warning">
+                  {{ handleStatus(l.status) }}
+                </Tag>
+
+                <span v-if="l.cheatMethods">
               ，
               作弊方式
               <Tag color="warning">
                 {{convertCheatMethods(l.cheatMethods || '')}}
               </Tag>
             </span>
-          </div>
+              </div>
 
-          <div v-html="l.suggestion" class="description"></div>
+              <div v-html="l.suggestion" class="description"></div>
 
-          <p v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)">
-            <a href="#"
-               @click.prevent.stop="doConfirm"
-               :data-user-verify-cheater-id="l.id"
-               :data-cheat-methods="l.cheatMethods"
-               :data-user-verify-cheater-username="l.username">
+              <p v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)">
+                <a href="#"
+                   @click.prevent.stop="doConfirm"
+                   :data-user-verify-cheater-id="l.id"
+                   :data-cheat-methods="l.cheatMethods"
+                   :data-user-verify-cheater-username="l.username">
 
-              <Icon type="md-thumbs-up" />
-              赞同上处理 并 石锤
-            </a>
-          </p>
+                  <Icon type="md-thumbs-up" />
+                  赞同上处理 并 石锤
+                </a>
+              </p>
 
-          <p v-if="isLogin">
-            <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
-          </p>
+              <p v-if="isLogin">
+                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+              </p>
+            </div>
+
+
+            <div v-if="l.type === 'confirm'" class="timeline-content">
+              <div class="timeline-time">
+                <Time :time="l.createDatetime"></Time>
+
+                <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+                  <Tag v-if="l.privilege === 'admin'" color="success">
+                    管理员
+                  </Tag>
+                  <b>{{l.username}}</b>
+                </router-link>
+                赞同了
+                <a @click.stop.prevent="jumpToBookmark" :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
+                  # 该决定
+                </a>
+                ，作弊方式
+                <Tag color="warning">
+                  {{ convertCheatMethods(l.cheatMethods || '') }}
+                </Tag>
+              </div>
+
+              <p v-if="isLogin">
+                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+              </p>
+            </div>
+
+
+            <div v-if="l.type === 'reply'" class="timeline-content">
+              <div class="timeline-time">
+                <Time :time="l.createDatetime"></Time>
+
+                <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
+
+                  <Tag v-if="l.privilege === 'admin'" color="success">
+                    管理员
+                  </Tag>
+                  <b>{{l.foo}}</b>
+                </router-link>
+                回复
+                <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.barUId}`}}">
+
+                  <Tag v-if="l.privilege === 'admin'" color="success">
+                    管理员
+                  </Tag>
+                  <b>{{l.bar}}</b>
+                </router-link>
+              </div>
+
+              <div v-html="l.content" class="description"></div>
+
+              <p v-if="isLogin">
+                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+              </p>
+            </div>
+
+
+          </TimelineItem>
+
+          <Spin size="large" fix v-show="spinShow"></Spin>
+        </div>
+
+        <div v-if="isLogin">
+          <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
+          <Form :label-width="80" style="position: relative;">
+            <p>
+              <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
+            </p>
+            <Button type="primary" @click.stop.prevent="doReply">回复</Button>
+
+            <Spin size="large" fix v-show="replySpinShow"></Spin>
+          </Form>
+        </div>
+
+        <div v-if="cheater.status === '1'">
+          <Divider />
+          <p class="hint">如果你对该 石锤 有所疑问，请 复制该网址，找管理员申诉</p>
+
+        </div>
+
+        <div v-if="isAdmin">
+          <Divider>管理员专区</Divider>
+          <p class="hint">若要石锤，需要至少两位管理员参与才行</p>
+          <p class="hint">不要轻易下判断，如果不能做出处理判断，就使用上方回复 参与讨论，等待举报者回复</p>
+          <p class="hint">管理员的任何处理操作都会对作弊者的 现有状态 造成改变，如果不是100%确定，请使用回复留言讨论</p>
+
+          <h2 style="margin: 1rem 0;">处理意见</h2>
+
+          <Form :label-width="80" ref='verifyForm' style="position: relative;">
+            <FormItem label="意见">
+              <Select v-model="verify.status">
+                <Option value="1">石锤</Option>
+                <Option value="2">嫌疑再观察</Option>
+                <Option value="3">没有问题不是挂</Option>
+                <Option value="4">回收站</Option>
+              </Select>
+            </FormItem>
+
+            <FormItem v-show="verify.status === '1'" label="作弊方式">
+              <CheckboxGroup v-model="verify.checkbox">
+                <Checkbox label="wallhack">
+                  <span>透视</span>
+                </Checkbox>
+                <Checkbox label="damageChange">
+                  <span>改伤</span>
+                </Checkbox>
+                <Checkbox label="aimbot">
+                  <span>自瞄</span>
+                </Checkbox>
+                <Checkbox label="oneShotKill">
+                  <span>秒杀</span>
+                </Checkbox>
+                <Checkbox label="gadgetModify">
+                  <span>改装备</span>
+                </Checkbox>
+                <Checkbox label="stealth">
+                  <span>隐身</span>
+                </Checkbox>
+                <Checkbox label="shootingThroughWalls">
+                  <span>子弹穿墙</span>
+                </Checkbox>
+              </CheckboxGroup>
+            </FormItem>
+
+            <FormItem label="理由">
+              <Input v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="必填" />
+            </FormItem>
+
+            <FormItem>
+              <Button type="primary" @click.stop.prevent="doVerify">提交</Button>
+            </FormItem>
+
+            <Spin size="large" fix v-show="verifySpinShow"></Spin>
+          </Form>
         </div>
 
 
-        <div v-if="l.type === 'confirm'" class="timeline-content">
-          <div class="timeline-time">
-            <Time :time="l.createDatetime"></Time>
-
-            <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
-              <Tag v-if="l.privilege === 'admin'" color="success">
-                管理员
-              </Tag>
-              <b>{{l.username}}</b>
-            </router-link>
-            赞同了
-            <a @click.stop.prevent="jumpToBookmark" :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
-              # 该决定
-            </a>
-            ，作弊方式
-            <Tag color="warning">
-              {{ convertCheatMethods(l.cheatMethods || '') }}
-            </Tag>
+        <Modal
+          v-model="replyModal"
+          title="回复"
+          ok-text="提交"
+          cancel-text="取消"
+          @on-ok="doReply"
+          @on-cancel="cancelReply">
+          <div v-if="isLogin">
+            <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
+            <Form :label-width="80" ref='replyForm' style="position: relative;">
+              <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
+            </Form>
           </div>
-
-          <p v-if="isLogin">
-            <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
-          </p>
-        </div>
-
-
-        <div v-if="l.type === 'reply'" class="timeline-content">
-          <div class="timeline-time">
-            <Time :time="l.createDatetime"></Time>
-
-            <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
-
-              <Tag v-if="l.privilege === 'admin'" color="success">
-                管理员
-              </Tag>
-              <b>{{l.foo}}</b>
-            </router-link>
-            回复
-            <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.barUId}`}}">
-
-              <Tag v-if="l.privilege === 'admin'" color="success">
-                管理员
-              </Tag>
-              <b>{{l.bar}}</b>
-            </router-link>
-          </div>
-
-          <div v-html="l.content" class="description"></div>
-
-          <p v-if="isLogin">
-            <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
-          </p>
-        </div>
-
-
-      </TimelineItem>
-
-      <Spin size="large" fix v-show="spinShow"></Spin>
-    </div>
-
-    <div v-if="isLogin">
-      <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
-      <Form :label-width="80" style="position: relative;">
-        <p>
-          <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
-        </p>
-        <Button type="primary" @click.stop.prevent="doReply">回复</Button>
-
-        <Spin size="large" fix v-show="replySpinShow"></Spin>
-      </Form>
-    </div>
-
-    <div v-if="cheater.status === '1'">
-      <Divider />
-      <p class="hint">如果你对该 石锤 有所疑问，请 复制该网址，找管理员申诉</p>
-
-    </div>
-
-    <div v-if="isAdmin">
-      <Divider>管理员专区</Divider>
-      <p class="hint">若要石锤，需要至少两位管理员参与才行</p>
-      <p class="hint">不要轻易下判断，如果不能做出处理判断，就使用上方回复 参与讨论，等待举报者回复</p>
-      <p class="hint">管理员的任何处理操作都会对作弊者的 现有状态 造成改变，如果不是100%确定，请使用回复留言讨论</p>
-
-      <h2 style="margin: 1rem 0;">处理意见</h2>
-
-      <Form :label-width="80" ref='verifyForm' style="position: relative;">
-        <FormItem label="意见">
-          <Select v-model="verify.status">
-            <Option value="1">石锤</Option>
-            <Option value="2">嫌疑再观察</Option>
-            <Option value="3">没有问题不是挂</Option>
-            <Option value="4">回收站</Option>
-          </Select>
-        </FormItem>
-
-        <FormItem v-show="verify.status === '1'" label="作弊方式">
-          <CheckboxGroup v-model="verify.checkbox">
-            <Checkbox label="wallhack">
-              <span>透视</span>
-            </Checkbox>
-            <Checkbox label="damageChange">
-              <span>改伤</span>
-            </Checkbox>
-            <Checkbox label="aimbot">
-              <span>自瞄</span>
-            </Checkbox>
-            <Checkbox label="oneShotKill">
-              <span>秒杀</span>
-            </Checkbox>
-            <Checkbox label="gadgetModify">
-              <span>改装备</span>
-            </Checkbox>
-            <Checkbox label="stealth">
-              <span>隐身</span>
-            </Checkbox>
-            <Checkbox label="shootingThroughWalls">
-              <span>子弹穿墙</span>
-            </Checkbox>
-          </CheckboxGroup>
-        </FormItem>
-
-        <FormItem label="理由">
-          <Input v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="必填" />
-        </FormItem>
-
-        <FormItem>
-            <Button type="primary" @click.stop.prevent="doVerify">提交</Button>
-        </FormItem>
-
-        <Spin size="large" fix v-show="verifySpinShow"></Spin>
-      </Form>
-    </div>
-
-
-    <Modal
-      v-model="replyModal"
-      title="回复"
-      ok-text="提交"
-      cancel-text="取消"
-      @on-ok="doReply"
-      @on-cancel="cancelReply">
-      <div v-if="isLogin">
-        <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
-        <Form :label-width="80" ref='replyForm' style="position: relative;">
-          <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
-        </Form>
+          <div v-else>请登录后参与回复</div>
+        </Modal>
       </div>
-      <div v-else>请登录后参与回复</div>
-    </Modal>
+      <div v-else>404 不存在</div>
+
+    </div>
   </div>
-  <div v-else>404 不存在</div>
 
 </template>
 

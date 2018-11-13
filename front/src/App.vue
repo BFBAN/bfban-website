@@ -1,11 +1,9 @@
 <template>
   <div class="app">
     <Header />
-    <main class="container">
-      <div class="content">
+    <main>
         <!-- component match the router will render here -->
-          <router-view></router-view>
-      </div>
+        <router-view></router-view>
     </main>
     <Footer />
   </div>

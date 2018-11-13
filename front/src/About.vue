@@ -1,35 +1,38 @@
 <template>
-  <div>
-    <Divider>关于</Divider>
+  <div class="container">
+    <div class="content">
+      <Divider>关于</Divider>
 
-    <img class="logo" src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png" alt="">
+      <img class="logo" src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png" alt="">
 
 
-    <h2>联BAN调查局</h2>
-    <p>
-      诞生于2018年1月29日；
-      是战地玩家一起组建的 <b>抵制外挂</b> 组织。
-    </p>
-    <p>
-      目前主要由下列力量组成：
-      <b>私服主人</b> ，<b>战队队长</b> 以及 <b>战地UP</b>；      创始人是CDN战队队长凯撒Caesar。
-    </p>
-    <p>
-      联BAN局创建以来，
-      联合诸多玩家一起抵制外挂，
-      成功打击了近500名外挂和外挂主播；
-      抵制外挂之战，不仅在游戏内，更是一场敌暗我明的幕外战争。
-    </p>
-    <br>
-    <p>
-      <b>目前加盟服务器，共 {{clan.length}} 个：</b>
-      （ 搜索 <b>LB</b> 都可以找到加入联BAN局的服务器 ）
-    </p>
+      <h2>联BAN调查局</h2>
+      <p>
+        诞生于2018年1月29日；
+        是战地玩家一起组建的 <b>抵制外挂</b> 组织。
+      </p>
+      <p>
+        目前主要由下列力量组成：
+        <b>私服主人</b> ，<b>战队队长</b> 以及 <b>战地UP</b>；      创始人是CDN战队队长凯撒Caesar。
+      </p>
+      <p>
+        联BAN局创建以来，
+        联合诸多玩家一起抵制外挂，
+        成功打击了近500名外挂和外挂主播；
+        抵制外挂之战，不仅在游戏内，更是一场敌暗我明的幕外战争。
+      </p>
+      <br>
+      <p>
+        <b>目前加盟服务器，共 {{clan.length}} 个：</b>
+        （ 搜索 <b>LB</b> 都可以找到加入联BAN局的服务器 ）
+      </p>
 
-    <div class="clan">
-      <p v-for="d in clan">{{ d }}</p>
+      <div class="clan">
+        <p v-for="d in clan">{{ d }}</p>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -65,9 +68,6 @@
 </script>
 
 <style lang="scss">
-  b {
-    font-size: 1rem;
-  }
   .logo {
     display: block;
     margin-left: auto;

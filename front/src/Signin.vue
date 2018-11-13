@@ -1,31 +1,36 @@
 <template>
-  <Form :label-width="80" style="position: relative;">
-    <Divider>登录</Divider>
+  <div class="container">
+    <div class="content">
+      <Form :label-width="80" style="position: relative;">
+        <Divider>登录</Divider>
 
-    <FormItem label="用户名">
-      <Input type="text" v-model="signin.username" placeholder="用户名" />
-    </FormItem>
+        <FormItem label="用户名">
+          <Input type="text" v-model="signin.username" placeholder="用户名" />
+        </FormItem>
 
-    <FormItem label="密码">
-      <Input type="password" v-model="signin.password" placeholder="密码" />
-    </FormItem>
+        <FormItem label="密码">
+          <Input type="password" v-model="signin.password" placeholder="密码" />
+        </FormItem>
 
-    <FormItem label="验证码">
-      <Input type="text" v-model="signin.captcha" placeholder="验证码" />
-      <img ref="captcha">
-      <a href="#" @click.stop.prevent="refreshCaptcha">
-        获得验证码
-      </a>
-    </FormItem>
+        <FormItem label="验证码">
+          <Input type="text" v-model="signin.captcha" placeholder="验证码" />
+          <img ref="captcha">
+          <a href="#" @click.stop.prevent="refreshCaptcha">
+            获得验证码
+          </a>
+        </FormItem>
 
-    <FormItem>
-        <Button @click.prevent.stop="handleSignin" type="primary">提交</Button>
+        <FormItem>
+          <Button @click.prevent.stop="handleSignin" type="primary">提交</Button>
 
-        <router-link :to="{name: 'signup'}">没有账号？去注册</router-link>
-    </FormItem>
+          <router-link :to="{name: 'signup'}">没有账号？去注册</router-link>
+        </FormItem>
 
-    <Spin size="large" fix v-show="spinShow"></Spin>
-  </Form>
+        <Spin size="large" fix v-show="spinShow"></Spin>
+      </Form>
+    </div>
+  </div>
+
 </template>
 
 <script>
