@@ -615,12 +615,18 @@ export default {
   .description {
     padding: .6rem;
     background-color: #eaeaea66;
+    color: rgba(0, 0, 0, 0.8);
+    border-left: 1px solid #cccccc8f;
+    font-size: .8rem;
 
     img, video {
       max-width: 100%;
     }
   }
 
+  .timeline-time {
+    color: #00000073;
+  }
   .ivu-time {
     margin-right: .6rem;
   }
