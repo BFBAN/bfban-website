@@ -159,6 +159,7 @@ export default {
         ud,
         page,
         sort,
+        tz: moment.tz.guess(),
       };
       this.gameName = game;
       this.statusGroup = status;

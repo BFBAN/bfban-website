@@ -19,19 +19,18 @@ function addOneDay(str) {
   return moment(str).add(1, 'day').format('YYYY-MM-DD');
 }
 
-function convertDatetimeToUserTimeZone(d) {
-  const tz = moment.tz.guess();
-  return moment(d).clone().tz(tz).format('YYYY-MM-DD HH:mm:ss');
+function convertDatetimeToTimeZone(d, tz) {
+  return moment.tz(d, tz).clone().tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
 }
 
 // depend on server's timezone
-function datetimerangeToCurrentTimeZone(datetimerange) {
+function datetimerangeToTimeZone(datetimerange, tz) {
   // receive string, return string
   return _.map(datetimerange.split(','), (v) => {
     if (v === '') {
       return ''
     } else {
-      return convertDatetimeToUserTimeZone(v)
+      return convertDatetimeToTimeZone(v, tz)
     }
   }).join(',');
 }
@@ -79,11 +78,12 @@ router.get('/', async (req, res, next) => {
     ud = ',',
     page = 1,
     sort = '',
+    tz,
   } = req.query;
   let result;
 
-  cd = datetimerangeToCurrentTimeZone(cd);
-  ud = datetimerangeToCurrentTimeZone(ud);
+  cd = datetimerangeToTimeZone(cd, tz);
+  ud = datetimerangeToTimeZone(ud, tz);
 
   const [cdStart, cdEnd] = cd.split(',');
   const [udStart, udEnd] = ud.split(',');
