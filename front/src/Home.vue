@@ -12,12 +12,11 @@
             </td>
             <td v-if="activity.type === 'report'">
               <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
-              在
+              举报了
               <Tag>
                 {{ handleGameName(activity.game) }}
               </Tag>
-              举报了
-              <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, uId: `${activity.cheaterUId}`}}">{{ activity.cheaterOriginId }}</router-link>
+              <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, uid: `${activity.cheaterUId}`}}">{{ activity.cheaterOriginId }}</router-link>
             </td>
 
             <td v-if="activity.type === 'register'">
@@ -30,7 +29,10 @@
               <Tag color="success">管理员</Tag>
               <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
               将
-              <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, uId: `${activity.cheaterUId}`}}">{{ activity.cheaterOriginId }}</router-link>
+              <Tag>
+                {{ handleGameName(activity.game) }}
+              </Tag>
+              <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, uid: `${activity.cheaterUId}`}}">{{ activity.cheaterOriginId }}</router-link>
               处理为
               <Tag color="warning">
                 {{ handleStatus(activity.status) }}
@@ -156,7 +158,7 @@ export default {
 
         activities = _.sortBy(activities, (v) => {
           return (new Date(v.createDatetime)).getTime();
-        });
+        }).reverse();
 
         this.activities = activities;
 
