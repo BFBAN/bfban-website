@@ -626,11 +626,10 @@ export default {
   }
   .timeline-content {
     position: relative;
-    top: -5px;
+    top: -.3rem;
   }
   .ivu-timeline-item-content {
-    padding: 0 0 0 .4rem;
-    margin-left: 14px;
+    padding: 0 0 0 1.2rem;
 
     &:hover {
       background-color: #eaeaea66;
