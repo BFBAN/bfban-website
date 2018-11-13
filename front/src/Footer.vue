@@ -1,9 +1,12 @@
 <template>
     <footer class="footer">
       <p>
-        Written by <a href="#">mygoare</a>
+        <a href="">关于</a>
+        <a href="">举报日记</a>
+      </p>
+      <p>
+        Written by mygoare
         &copy; 2018
-        <a href="http://www.bfban.com">bfban.com</a>.
         All Rights Reserved.
       </p>
     </footer>

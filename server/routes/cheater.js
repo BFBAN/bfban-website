@@ -120,12 +120,21 @@ router.get('/', async (req, res, next) => {
   `;
   const sum = await db.query(sumQuery, [].concat(gameQueryVal, cdQueryVal, udQueryVal));
 
+  const totalSumQuery = `
+    select
+    game, count(id) as num
+    from cheaters
+    group by game
+  `;
+  const totalSum = await db.query(totalSumQuery);
+
   return res.json({
     error: 0,
     data: result,
     game,
     total: total[0].num,
     sum,
+    totalSum,
   });
 });
 

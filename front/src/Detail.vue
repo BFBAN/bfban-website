@@ -1,13 +1,23 @@
 <template>
   <div v-if="isCheaterExist">
-    <Divider>作弊信息</Divider>
     <div style="display: flex; flex-direction: column;">
 
       <span style="font-size: 1.6rem;">
-        <Tag>
-          {{ gameName }}
-        </Tag>
-        {{ cheater.originId }}
+        <router-link :to="{name: 'cheaters', query: {game: `${gameName}`}}">
+          <Tag>
+            {{ gameName }}
+          </Tag>
+        </router-link>
+
+        <span style="    color: rgb(144, 144, 144);
+    font-size: 1.2rem;
+    margin: 0px 0.4rem 0 0;">
+          /
+        </span>
+
+        <span>
+          {{ cheater.originId }}
+        </span>
         <sub v-if="!idExist && `${gameName}` === 'bf1'" style="font-size: .6rem; color: #ed4014;">该id已不存在</sub>
       </span>
 
@@ -42,34 +52,30 @@
 
     <div style="position: relative">
       <h2 style="margin: 1rem 0;">时间线</h2>
-      <TimelineItem v-for="l in timelineList" :key="l.createDatetime">
-        <div class="timeline-time">
-          <Time :time="l.createDatetime"></Time>
-        </div>
+      <TimelineItem pending v-for="l in timelineList" :key="l.createDatetime">
+
         <div v-if="l.type === 'report'" class="timeline-content">
-          <div>
-            <p>
-              <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
-                <Tag v-if="l.privilege === 'admin'" color="success">
-                  管理员
-                </Tag>
-                <b>{{l.username}}</b>
-              </router-link>
-              举报
+          <div class="timeline-time">
+            <Time :time="l.createDatetime"></Time>
 
-              <Tag color="warning">
-                {{convertCheatMethods(l.cheatMethods || '')}}
+            <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+              <Tag v-if="l.privilege === 'admin'" color="success">
+                管理员
               </Tag>
+              <b>{{l.username}}</b>
+            </router-link>
+            举报
+            <Tag color="warning">
+              {{convertCheatMethods(l.cheatMethods || '')}}
+            </Tag>
+          </div>
 
-            </p>
-            <p v-if="l.bilibiliLink">
+          <p v-if="l.bilibiliLink">
               <Tag color="primary">
                 视频链接
               </Tag>
               <a :href="l.bilibiliLink" target="_blank">{{ l.bilibiliLink }}</a>
-            </p>
-          </div>
-
+      </p>
           <div v-if="l.description" v-html="l.description" class="description">
           </div>
 
@@ -80,7 +86,8 @@
 
 
         <div v-if="l.type === 'verify'" class="timeline-content bookmark" :id="`user-verify-cheater-${l.id}`">
-          <p>
+          <div class="timeline-time">
+            <Time :time="l.createDatetime"></Time>
             <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
               <Tag v-if="l.privilege === 'admin'" color="success">
                 管理员
@@ -100,7 +107,8 @@
                 {{convertCheatMethods(l.cheatMethods || '')}}
               </Tag>
             </span>
-          </p>
+          </div>
+
           <div v-html="l.suggestion" class="description"></div>
 
           <p v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)">
@@ -122,7 +130,9 @@
 
 
         <div v-if="l.type === 'confirm'" class="timeline-content">
-          <p>
+          <div class="timeline-time">
+            <Time :time="l.createDatetime"></Time>
+
             <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
               <Tag v-if="l.privilege === 'admin'" color="success">
                 管理员
@@ -137,7 +147,7 @@
             <Tag color="warning">
               {{ convertCheatMethods(l.cheatMethods || '') }}
             </Tag>
-          </p>
+          </div>
 
           <p v-if="isLogin">
             <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
@@ -146,7 +156,9 @@
 
 
         <div v-if="l.type === 'reply'" class="timeline-content">
-          <p>
+          <div class="timeline-time">
+            <Time :time="l.createDatetime"></Time>
+
             <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
 
               <Tag v-if="l.privilege === 'admin'" color="success">
@@ -162,7 +174,7 @@
               </Tag>
               <b>{{l.bar}}</b>
             </router-link>
-          </p>
+          </div>
 
           <div v-html="l.content" class="description"></div>
 
@@ -601,13 +613,27 @@ export default {
     margin: 1rem 0 0;
   }
   .description {
-    padding: 1rem;
-    border-left: 2px solid #cccccc8c;
-    margin-top: 1rem;
-    background-color: rgba(204, 204, 204, 0.1);
+    padding: .6rem;
+    background-color: #eaeaea66;
 
     img, video {
       max-width: 100%;
+    }
+  }
+
+  .ivu-time {
+    margin-right: .6rem;
+  }
+  .timeline-content {
+    position: relative;
+    top: -5px;
+  }
+  .ivu-timeline-item-content {
+    padding: 0 0 0 .4rem;
+    margin-left: 14px;
+
+    &:hover {
+      background-color: #eaeaea66;
     }
   }
 

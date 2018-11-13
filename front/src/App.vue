@@ -71,7 +71,7 @@ export default {
   }
 
   p {
-    margin: .4rem 0;
+    margin: .2rem 0;
   }
 
   .hint {

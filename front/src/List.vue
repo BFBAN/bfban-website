@@ -10,8 +10,8 @@
 
     <p>
       <RadioGroup v-model="gameName" @on-change="handleChanges" type="button">
-        <Radio label="bf1"><span>战地1</span></Radio>
-        <Radio label="bfv"><span>战地v</span></Radio>
+        <Radio label="bf1"><span>战地1 ( {{getTotalNum('bf1')}} )</span></Radio>
+        <Radio label="bfv"><span>战地v ( {{getTotalNum('bfv')}} )</span></Radio>
       </RadioGroup>
     </p>
     <p>
@@ -96,6 +96,7 @@ export default {
       page: 1,
       total: 0,
       sum: [],
+      totalSum: [],
 
       sortBy: [
         {
@@ -126,6 +127,11 @@ export default {
     }
   },
   methods: {
+    getTotalNum(val) {
+      const target = _.find(this.totalSum, ['game', val]);
+
+      return target ? target.num : 0;
+    },
     getStatusNum(val) {
       const target = _.find(this.sum, ['status', val]);
 
@@ -166,6 +172,7 @@ export default {
         this.data = d.data;
         this.total = d.total;
         this.sum = d.sum;
+        this.totalSum = d.totalSum;
 
       })
     },
