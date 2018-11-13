@@ -148,10 +148,14 @@ router.get('/:game/:uid', [
     return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
   }
 
+
   const cheaterUId = req.params.uid;
   const game = req.params.game;
+
+  await db.query('update cheaters set `n` = (`n`+1) where game = ? and uId = ?', [game, cheaterUId]);
+
   const cheater = await db.query(`select
-    id, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot
+    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot
     from cheaters
     where uId = ? and game = ?`,
   [cheaterUId, game])

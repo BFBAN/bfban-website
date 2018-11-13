@@ -45,10 +45,12 @@
         <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
       </div>
 
+      <p>
+        被围观了 {{ cheater.n || 0 }} 次
+      </p>
+
       <img v-if="cheater.originId" class="cheater-desc" :src="`http://g.bf1stats.com/EwvWxWrq/pc/${cheater.originId}.png`"/>
     </div>
-
-    <Divider />
 
     <div style="position: relative">
       <h2 style="margin: 1rem 0;">时间线</h2>
@@ -190,7 +192,6 @@
     </div>
 
     <div v-if="isLogin">
-      <Divider />
       <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
       <Form :label-width="80" style="position: relative;">
         <p>
@@ -616,7 +617,6 @@ export default {
   .cheater-desc {
     max-width: 100%;
     width: 34rem;
-    margin: 1rem 0 0;
   }
   .description {
     padding: .6rem;
