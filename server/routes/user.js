@@ -11,6 +11,7 @@ const router = express.Router();
 const db = require('../mysql');
 
 const { verifyCatpcha } = require('../middlewares/captcha');
+const { getDatetime } = require('../libs/misc');
 
 
 // username, password
@@ -78,7 +79,7 @@ router.post('/signup', [
 
   const hash = generatePassword(password);
 
-  const d = moment().format('YYYY-MM-DD HH:mm:ss');
+  const d = getDatetime();
 
   const uId = uuidv4();
 

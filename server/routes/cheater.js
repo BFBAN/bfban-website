@@ -19,6 +19,23 @@ function addOneDay(str) {
   return moment(str).add(1, 'day').format('YYYY-MM-DD');
 }
 
+function convertDatetimeToUserTimeZone(d) {
+  const tz = moment.tz.guess();
+  return moment(d).clone().tz(tz).format('YYYY-MM-DD HH:mm:ss');
+}
+
+// depend on server's timezone
+function datetimerangeToCurrentTimeZone(datetimerange) {
+  // receive string, return string
+  return _.map(datetimerange.split(','), (v) => {
+    if (v === '') {
+      return ''
+    } else {
+      return convertDatetimeToUserTimeZone(v)
+    }
+  }).join(',');
+}
+
 function capture(originId, cheaterUId) {
   // 抓取截图，并存入数据库
   // 有io 操作， 开另一个进程
@@ -64,6 +81,9 @@ router.get('/', async (req, res, next) => {
     sort = '',
   } = req.query;
   let result;
+
+  cd = datetimerangeToCurrentTimeZone(cd);
+  ud = datetimerangeToCurrentTimeZone(ud);
 
   const [cdStart, cdEnd] = cd.split(',');
   const [udStart, udEnd] = ud.split(',');

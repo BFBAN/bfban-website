@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 function getCheatersDB(name) {
   let dbName;
   switch (name) {
@@ -17,7 +19,12 @@ function getCheatersDB(name) {
 
 const gamesArr = ['bf1', 'bfv'];
 
+function getDatetime() {
+  return moment().format('YYYY-MM-DD HH:mm:ss')
+}
+
 module.exports = {
   gamesArr,
   getCheatersDB,
+  getDatetime,
 };

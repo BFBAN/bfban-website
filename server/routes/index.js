@@ -84,7 +84,7 @@ async function getCheaterNum() {
 router.get('/activity', async (req, res) => {
   const d = moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss');
 
-  const registers = await db.query(`select username, createDatetime from users where createDatetime >= ?`, [d]);
+  const registers = await db.query(`select uId, username, createDatetime from users where createDatetime >= ?`, [d]);
 
   const reports = await db.query(`select t1.cheaterUId, t1.createDatetime, t2.username, t2.uId, t3.originId as cheaterOriginId, t3.game
   from user_report_cheater as t1
