@@ -11,12 +11,12 @@ const { verifyJWTMiddleware, verifyPrivilegeMiddleware } = require('../middlewar
 const db = require('../mysql');
 
 const { verifyCatpcha } = require('../middlewares/captcha');
-const { gamesArr } = require('../libs/misc');
+const { gamesArr, getDatetime, getDatetimeWithTZ } = require('../libs/misc');
 
 const router = express.Router();
 
 function addOneDay(str) {
-  return moment(str).add(1, 'day').format('YYYY-MM-DD');
+  return moment(str).add(1, 'day').format('YYYY-MM-DD HH:mm:ss');
 }
 
 function convertDatetimeToTimeZone(d, tz) {
@@ -254,7 +254,7 @@ async (req, res, next) => {
   let cheaterUId;
 
   const uuId = uuidv4();
-  const d = moment().format('YYYY-MM-DD HH:mm:ss');
+  const d = getDatetime();
 
   // 若第一次举报
   if (re.length === 0) {
@@ -332,7 +332,7 @@ async (req, res, next) => {
     cheatMethods = '';
   }
 
-  const d = moment().format('YYYY-MM-DD HH:mm:ss');
+  const d = getDatetime();
 
   const result = await db.query('insert into user_verify_cheater set ? ', {
     status,
@@ -358,7 +358,7 @@ async (req, res, next) => {
       id: result.insertId,
       userId,
       cheaterUId,
-      createDatetime: d,
+      createDatetime: getDatetimeWithTZ(d),
       status,
       suggestion,
       cheatMethods,
@@ -381,7 +381,7 @@ async (req, res, next) => {
   }
 
 
-  const d = moment().format('YYYY-MM-DD HH:mm:ss');
+  const d = getDatetime();
 
   const {
     userId, userVerifyCheaterId, cheaterUId, cheatMethods, gameName = ''
@@ -406,7 +406,7 @@ async (req, res, next) => {
     data: {
       userId,
       userVerifyCheaterId,
-      createDatetime: d,
+      createDatetime: getDatetimeWithTZ(d),
       cheatMethods,
     },
   });
@@ -430,7 +430,7 @@ async (req, res, next) => {
   const {
     gameName, cheaterId, userId, toUserId, content, toFloor
 } = req.body;
-  const d = moment().format('YYYY-MM-DD HH:mm:ss');
+  const d = getDatetime();
 
   const values = {
     cheaterId,
@@ -462,7 +462,7 @@ async (req, res, next) => {
   res.json({
     error: 0,
     data: {
-      createDatetime: d,
+      createDatetime: getDatetimeWithTZ(d),
       content,
       status,
     },

@@ -1,6 +1,5 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const moment = require('moment');
 const uuidv4 = require('uuid/v4');
 const { check, validationResult } = require('express-validator/check');
 const { generatePassword, comparePassword } = require('../libs/auth');
