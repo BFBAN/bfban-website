@@ -293,7 +293,7 @@
 
 <script>
 
-import { checkIdExist, getCheaterStatusLabel, formatTextarea } from "./common";
+import { checkIdExist, getCheaterStatusLabel, formatTextarea, convertDatetimeToUserTimeZone } from "./common";
 
 export default {
   data() {
@@ -470,7 +470,7 @@ export default {
             type: 'verify',
             id,
             userId,
-            createDatetime,
+            createDatetime: convertDatetimeToUserTimeZone(createDatetime),
             // fix bug
             status: status === '6' ? '1' : status,
             suggestion,
@@ -514,7 +514,7 @@ export default {
             type: 'confirm',
             userId,
             userVerifyCheaterId,
-            createDatetime,
+            createDatetime: convertDatetimeToUserTimeZone(createDatetime),
             cheatMethods,
             username: this.$store.state.user.username,
           })
@@ -587,7 +587,7 @@ export default {
           this.timelineList.push({
             type: 'reply',
 
-            createDatetime,
+            createDatetime: convertDatetimeToUserTimeZone(createDatetime),
             content,
             foo,
             fooUId,

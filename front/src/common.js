@@ -117,6 +117,12 @@ function formatTextarea(val) {
   return str;
 }
 
+function convertDatetimeToUserTimeZone(d) {
+  const tz = moment.tz.guess();
+  return moment(d).clone().tz(tz).format('YYYY-MM-DD HH:mm:ss');
+}
+
+
 export {
   checkIdExist,
   convertGameName,
@@ -126,4 +132,5 @@ export {
   getCheaterStatusLabel,
   getGameLabel,
   formatTextarea,
+  convertDatetimeToUserTimeZone,
 };
