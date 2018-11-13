@@ -287,7 +287,7 @@
 
 <script>
 
-import { checkIdExist, getCheaterStatusLabel } from "./common";
+import { checkIdExist, getCheaterStatusLabel, formatTextarea } from "./common";
 
 export default {
   data() {
@@ -425,13 +425,16 @@ export default {
     doVerify() {
       this.verifySpinShow = true;
 
-      const {status, suggestion} = this.verify;
+      const {status} = this.verify;
+      let { suggestion } = this.verify;
       const cheaterUId = this.$route.params.uid;
       const cheatMethods = this.verify.checkbox.join(',');
 
       if (cheatMethods === ',' || suggestion.trim() === '') {
         this.$Message.warning('请填写完整');
       }
+
+      suggestion = formatTextarea(suggestion);
 
       axios({
         method: 'post',
@@ -535,7 +538,10 @@ export default {
       const gameName = this.$route.params.game;
       const cheaterId = this.cheater.id;
       const userId = this.$store.state.user.userId;
-      const { content, toFloor, toUserId } = this.reply;
+      const { toFloor, toUserId } = this.reply;
+      let {content} = this.reply;
+
+      content = formatTextarea(content);
 
       let data = {
         gameName,
@@ -614,7 +620,6 @@ export default {
   }
   .description {
     padding: .6rem;
-    background-color: #eaeaea66;
     color: rgba(0, 0, 0, 0.8);
     border-left: 1px solid #cccccc8f;
     font-size: .8rem;

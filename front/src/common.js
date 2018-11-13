@@ -81,10 +81,29 @@ function getCheaterStatusLabel(value) {
   return o ? o.label : '';
 }
 
+function formatTextarea(val) {
+  let str = val;
+
+  str = str.replace(/\r\n|\r|\n/g, "<br />");
+  // https://stackoverflow.com/a/8943487/875788
+  str =
+    str.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, function(url) {
+      let hostname = new URL(url).hostname;
+      if (hostname.indexOf('bfban.com') !== -1) {
+        return `<a href="${url}">${url}</a>`
+      } else {
+        return `<a target="_blank" href="${url}">${url}</a>`
+      }
+    });
+
+  return str;
+}
+
 export {
   checkIdExist,
   convertGameName,
   checkReportFormData,
   cheaterStatus,
   getCheaterStatusLabel,
+  formatTextarea,
 };
