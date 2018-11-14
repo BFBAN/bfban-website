@@ -77,7 +77,7 @@
 <script>
 import Misc from './Misc.vue';
 
-import { checkIdExist, checkReportFormData, formatLink } from "./common";
+import { checkIdExist, checkReportFormData } from "./common";
 
 export default {
   data() {
@@ -172,7 +172,7 @@ export default {
           originId,
           cheatMethods,
           bilibiliLink,
-          description: formatLink(description),
+          description,
           captcha,
         }
       }).then((res) => {
