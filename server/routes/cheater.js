@@ -248,7 +248,7 @@ async (req, res, next) => {
 
   const { userId } = req.user;
 
-  const re = await db.query(`select * from ${cheatersDB} where originId = ? and game = ?`, [originId, gameName])
+  const re = await db.query(`select * from ${cheatersDB} where lower(originId) = ? and game = ?`, [originId.toLowerCase(), gameName])
     .catch(e => next(e));
 
   let cheaterUId;
