@@ -623,7 +623,7 @@ export default {
     width: 34rem;
   }
   .description {
-    padding: .6rem;
+    padding: 0 .6rem;
     color: rgba(0, 0, 0, 0.8);
     border-left: 1px solid #cccccc8f;
     font-size: .8rem;

@@ -109,7 +109,7 @@ Quill.register({
 });
 
 const toolbarOptions = [
-    ["link", "image"],
+    ["image"],
 ];
 export default {
     props: {
@@ -171,17 +171,17 @@ export default {
     },
     methods: {
         onEditorChange({ quill, html, text }) {
-            this.$emit('change', html)
-            this.editorContent = html
+            this.$emit('change', html);
+            this.editorContent = html;
         },
 
         handleBeforeUpload: async function(file) {
 
             // axios get qiniu tooken to extraData
-            let d = await this.getQiniuUploadToken()
-            let token = d.data.token
+            let d = await this.getQiniuUploadToken();
+            let token = d.data.token;
 
-            this.extraData.token = token
+            this.extraData.token = token;
             this.extraData.key = (new Date()).getTime() + '-' + Math.round(Math.random() * 1000000) + '.' + file.name.split(".").pop()
         },
         handleSuccess: function(res, file, fileList) {
