@@ -109,7 +109,7 @@ Quill.register({
 });
 
 const toolbarOptions = [
-    ["link", "image", "video"],
+    ["link", "image"],
 ];
 export default {
     props: {
