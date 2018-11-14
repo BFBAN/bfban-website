@@ -80,9 +80,10 @@ async function getCheaterNum() {
   return tmp[0].num;
 }
 
-// 24h activities (reports, verifies)
+// activities (reports, verifies, registers)
 router.get('/activity', async (req, res) => {
-  const d = moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss');
+  // subtract 12 hours
+  const d = moment().subtract(12, 'hours').format('YYYY-MM-DD HH:mm:ss');
 
   const registers = await db.query(`select uId, username, createDatetime from users where createDatetime >= ?`, [d]);
 

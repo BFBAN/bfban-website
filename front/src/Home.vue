@@ -162,7 +162,6 @@ export default {
 
         this.activities = activities;
 
-        console.log(number);
         this.site = number;
       }
     })

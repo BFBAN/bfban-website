@@ -438,6 +438,7 @@ export default {
 
       if (cheatMethods === ',' || suggestion.trim() === '') {
         this.$Message.warning('请填写完整');
+        return false;
       }
 
       suggestion = formatTextarea(suggestion);
