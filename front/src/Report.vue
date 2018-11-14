@@ -154,8 +154,6 @@ export default {
       let gameName = this.formItem.gameName;
       const cheatMethods = this.formItem.checkbox.join(',');
 
-
-
       const {
         originId,
         bilibiliLink,
@@ -163,7 +161,11 @@ export default {
         captcha,
       } = _.each(this.formItem, (v, k, o) => {
         if (k === 'checkbox') return;
-        o[k] = trimAllWhitespace(v);
+        if (k === 'originId') {
+          o[k] = trimAllWhitespace(v);
+          return;
+        }
+        o[k] = v.trim();
       });
 
       axios({
