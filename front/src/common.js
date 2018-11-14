@@ -128,6 +128,13 @@ function convertDatetimeToUserTimeZone(d) {
   return moment(d).clone().tz(tz).format('YYYY-MM-DD HH:mm:ss');
 }
 
+function trimAllWhitespace(str) {
+  return str.replace(/\s+/g, '');
+}
+
+function testWhitespace(str) {
+  return /\s+/.test(str);
+}
 
 export {
   checkIdExist,
@@ -141,4 +148,6 @@ export {
   formatNewLine,
   formatLink,
   convertDatetimeToUserTimeZone,
+  trimAllWhitespace,
+  testWhitespace,
 };

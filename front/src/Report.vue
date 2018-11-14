@@ -77,7 +77,7 @@
 <script>
 import Misc from './Misc.vue';
 
-import { checkIdExist, checkReportFormData } from "./common";
+import { checkIdExist, checkReportFormData, trimAllWhitespace } from "./common";
 
 export default {
   data() {
@@ -154,14 +154,16 @@ export default {
       let gameName = this.formItem.gameName;
       const cheatMethods = this.formItem.checkbox.join(',');
 
+
+
       const {
         originId,
         bilibiliLink,
         description,
         captcha,
       } = _.each(this.formItem, (v, k, o) => {
-        if (k = 'checkbox') return;
-        o[k] = v.trim();
+        if (k === 'checkbox') return;
+        o[k] = trimAllWhitespace(v);
       });
 
       axios({

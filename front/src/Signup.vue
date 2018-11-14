@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { testWhitespace } from './common';
 
 export default {
   data() {
@@ -86,7 +87,7 @@ export default {
         o[k] = v.trim();
       });
 
-      if (username && password && captcha.length === 4) {
+      if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
         this.spinShow = true;
 
         axios({
@@ -119,7 +120,7 @@ export default {
           this.signup.captcha = '';
         })
       } else {
-        this.$Message.error('请填写完整');
+        this.$Message.error('请规范填写');
       }
     }
   }
