@@ -91,7 +91,7 @@
 
             <div v-if="l.type === 'verify'" class="timeline-content bookmark" :id="`user-verify-cheater-${l.id}`">
               <div class="timeline-time">
-                <Time :time="l.createDatetime"></Time>
+                <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
                 <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
                   <Tag v-if="l.privilege === 'admin'" color="success">
                     管理员
@@ -135,7 +135,7 @@
 
             <div v-if="l.type === 'confirm'" class="timeline-content">
               <div class="timeline-time">
-                <Time :time="l.createDatetime"></Time>
+                <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
 
                 <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
                   <Tag v-if="l.privilege === 'admin'" color="success">
@@ -161,7 +161,7 @@
 
             <div v-if="l.type === 'reply'" class="timeline-content">
               <div class="timeline-time">
-                <Time :time="l.createDatetime"></Time>
+                <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
 
                 <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
 
@@ -504,8 +504,6 @@ export default {
         let d = res.data;
 
         if (d.error === 0) {
-
-
           const { createDatetime } = d.data;
 
           this.cheater.status = '1';
@@ -642,7 +640,6 @@ export default {
   }
   .timeline-content {
     position: relative;
-    top: -.3rem;
   }
   .ivu-timeline-item-content {
     padding: 0 0 0 1.2rem;
