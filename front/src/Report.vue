@@ -15,6 +15,8 @@
 
         <FormItem label="游戏ID">
           <span class="hint">一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID</span>
+          <span class="hint">游戏ID是不区分大小写的，但请特别注意区分 字母 i I l L o O 和 数字 0 ，正确填写举报ID</span>
+          <p style="font-size: 2rem;">{{ formItem.originId }}</p>
           <Input v-model="formItem.originId" placeholder="请一次只填写一个ID" />
         </FormItem>
 
