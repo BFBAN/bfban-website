@@ -11,15 +11,15 @@
 
       <p>
         <RadioGroup v-model="gameName" @on-change="handleChanges" type="button">
-          <Radio label="bf1"><span>战地1 ( {{getTotalNum('bf1')}} )</span></Radio>
-          <Radio label="bfv"><span>战地v ( {{getTotalNum('bfv')}} )</span></Radio>
+          <Radio label="bf1"><span>战地1({{getTotalNum('bf1')}})</span></Radio>
+          <Radio label="bfv"><span>战地v({{getTotalNum('bfv')}})</span></Radio>
         </RadioGroup>
       </p>
       <p>
         <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
-          <Radio label=""><span>全部 ( {{getAllStatusNum}} )</span></Radio>
+          <Radio label=""><span>全部({{getAllStatusNum}})</span></Radio>
           <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
-            <span>{{ status.label }} ( {{ getStatusNum(status.value) }} )</span>
+            <span>{{ status.label }}({{ getStatusNum(status.value)}})</span>
           </Radio>
         </RadioGroup>
       </p>
