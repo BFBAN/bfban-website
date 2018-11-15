@@ -10,6 +10,7 @@ import Signup from './Signup.vue';
 import Account from './Account.vue';
 import Dashboard from './Dashboard.vue';
 import About from './About.vue';
+import NotFound from './NotFound.vue';
 
 import store from './store';
 
@@ -45,12 +46,15 @@ const routes = [
   { name: 'account', path: '/account/:uId', component: Account },
   { name: 'dashboard', path: '/dashboard', component: Dashboard },
 
+  { name: 'notFound', path: '/404', component: NotFound },
+
   // otherwise redirect to home
-  { path: '*', redirect: '/' },
+  { path: '*', redirect: '/404' },
 
 ];
 
 const RouterConfig = {
+  // mode: 'history',
   routes,
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }
