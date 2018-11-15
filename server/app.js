@@ -3,7 +3,12 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const pino = require('pino')({prettyPrint: true});
+const pino = require('pino')({
+  prettyPrint: {
+    colorize: true,
+    translateTime: true,
+  }
+});
 
 
 const routes = require('./routes/');
@@ -56,7 +61,7 @@ app.use(cookieParser(config.secret, {
 
 
 // use middlewares
-app.use(morgan('dev', {
+app.use(morgan(':date[clf] :status :method :url :res[content-length] :response-time ms  :remote-addr', {
   // skip(req, res) { return res.statusCode < 400; },
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
