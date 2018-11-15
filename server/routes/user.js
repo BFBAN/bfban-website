@@ -26,8 +26,7 @@ router.post('/signin', [
 
   const { username, password } = req.body;
 
-  const result = await db.query('select * from users where username = ?', [username])
-    .catch(e => next(e));
+  const result = await db.query('select * from users where username = ?', [username]);
 
   if (result[0] && result[0].valid === '1' && comparePassword(password, result[0].password)) {
     const userPrivilege = result[0].privilege;
@@ -93,9 +92,9 @@ router.post('/signup', [
       createDatetime: d,
       updateDatetime: d,
       uId,
-    });
+    })
   } catch (e) {
-    console.error(e);
+    next(e);
     return res.json({
       error: 1,
       msg: 'insert user failed',
@@ -139,11 +138,23 @@ router.get('/signout', (req, res, next) => {
   });
 });
 
-router.get('/:uId', async (req, res, next) => {
-  const uId = req.params.uId;
+router.get('/:uId', [
+  check('uId').trim().isUUID(),
+], async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
+  }
 
-  const result = await db.query('select * from users where uId = ?', [uId])
-  .catch(e => next(e));
+  const uId = req.params.uId;
+  const result = await db.query('select * from users where uId = ?', [uId]);
+
+  if (result.length === 0) {
+    return res.json({
+      error: 1,
+      msg: 'user not exists'
+    })
+  }
 
   const {username, originId, privilege, createDatetime, id} = result[0];
 

@@ -27,9 +27,19 @@ function getDatetimeWithTZ(d) {
   return moment(d).format();
 }
 
+function addOneDay(str) {
+  return moment(str).add(1, 'day').format('YYYY-MM-DD HH:mm:ss');
+}
+
+function convertDatetimeToTimeZone(d, tz) {
+  return moment.tz(d, tz).clone().tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm:ss');
+}
+
 module.exports = {
   gamesArr,
   getCheatersDB,
   getDatetime,
   getDatetimeWithTZ,
+  addOneDay,
+  convertDatetimeToTimeZone,
 };

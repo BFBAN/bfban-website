@@ -29,8 +29,7 @@ function capture(originId, cheaterUId){
     cp.on('close', (code) => {
       console.log(`cpature successfully ${k}, ${v}, ${url}`);
 
-      // db.query(`update cheaters set ${k} = ? where uId = ?`, [url, cheaterUId])
-      // .catch(e => next(e));
+      // db.query(`update cheaters set ${k} = ? where uId = ?`, [url, cheaterUId]);
     })
   });
 }

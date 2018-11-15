@@ -519,6 +519,8 @@ export default {
             cheatMethods,
             username: this.$store.state.user.username,
           })
+        } else {
+          this.$Message.warning(d.msg);
         }
       })
     },
@@ -597,7 +599,7 @@ export default {
           });
           this.cheater.status = status;
         } else {
-          this.$Message.error('回复失败');
+          this.$Message.error(d.msg);
         }
       });
     }
