@@ -5,58 +5,59 @@
       <p class="hint">所有举报都可以 回复参与讨论</p>
       <p class="hint">若要补充证据，可以重复举报同一ID</p>
 
-      <Divider>用户中心</Divider>
-      <h2>个人信息</h2>
-      <p>
-        用户名：
-        {{account.username}}
-      </p>
-      <p>
-        身份：
-        <Tag v-if="account.privilege === 'admin'" color="success">
-          管理员
-        </Tag>
-        <Tag v-if="account.privilege === 'normal'">
-          普通
-        </Tag>
-      </p>
-      <p>
-        加入日期：
-        <Tag color="primary">
-          <Time v-if="account.createDatetime" :time="account.createDatetime" />
-        </Tag>
-      </p>
+      <div v-if="account">
+        <Divider>用户中心</Divider>
+        <h2>个人信息</h2>
+        <p>
+          用户名：
+          {{account.username}}
+        </p>
+        <p>
+          身份：
+          <Tag v-if="account.privilege === 'admin'" color="success">
+            管理员
+          </Tag>
+          <Tag v-if="account.privilege === 'normal'">
+            普通
+          </Tag>
+        </p>
+        <p>
+          加入日期：
+          <Tag color="primary">
+            <Time v-if="account.createDatetime" :time="account.createDatetime" />
+          </Tag>
+        </p>
 
-      <br>
-      <h2>个人举报</h2>
-      <p v-if="account.reports.length === 0">
-        还没有任何举报
-      </p>
-      <table>
-        <tbody>
-        <tr v-for="report in account.reports">
-          <td>
+        <br>
+        <h2>个人举报</h2>
+        <p v-if="account.reports.length === 0">
+          还没有任何举报
+        </p>
+        <table>
+          <tbody>
+          <tr v-for="report in account.reports">
+            <td>
             <span>
           <Tag color="primary">
             <Time v-if="report.createDatetime" :time="report.createDatetime" />
           </Tag>
         </span>
-          </td>
-          <td>
+            </td>
+            <td>
         <span>
           举报了
           <router-link :to="{name: 'cheater', params: { game: `${report.game}`, uid: `${report.uId}`}}">{{report.originId}}</router-link>
         </span>
-          </td>
-          <td>
+            </td>
+            <td>
         <span>
           状态
           <Tag color="error">
             {{ handleStatus(report.status) }}
           </Tag>
         </span>
-          </td>
-          <td>
+            </td>
+            <td>
         <span>
           最近更新
           <Tag color="warning">
@@ -64,11 +65,12 @@
             <span v-else>无</span>
           </Tag>
         </span>
-          </td>
-        </tr>
-        </tbody>
+            </td>
+          </tr>
+          </tbody>
 
-      </table>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -106,13 +108,15 @@
         .then((res) => {
           const d = res.data;
 
-          this.account = d.data;
-
-          let { reports } = d.data;
-
-          this.account.reports = reports;
+          if (d.error === 0) {
+            this.account = d.data;
+            let { reports } = d.data;
+            this.account.reports = reports;
+          } else {
+            this.account = '';
+            this.$Message.warning(d.msg);
+          }
         });
-
       },
       handleStatus: getCheaterStatusLabel,
     }
