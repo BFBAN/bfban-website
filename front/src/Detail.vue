@@ -353,6 +353,8 @@ export default {
         if (cheater.length === 0) {
           this.isCheaterExist = false;
           return false;
+        } else {
+          this.isCheaterExist = true;
         }
 
         this.cheater = cheater[0];
