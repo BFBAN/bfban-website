@@ -104,7 +104,7 @@ router.get('/', async (req, res, next) => {
 
   const queryCondition = `where 1=1 ${gameQuery} ${statusQuery} ${cdQuery} ${udQuery}`;
   const queryOrder = `order by ${sort}`;
-  const querySql = `select originId, status, cheatMethods, uId, createDatetime, updateDatetime
+  const querySql = `select n, commentsNum, originId, status, cheatMethods, uId, createDatetime, updateDatetime
     from cheaters
     ${queryCondition}
     ${queryOrder}
@@ -246,6 +246,7 @@ async (req, res, next) => {
         uId: uuId,
         originId,
         createDatetime: d,
+        updateDatetime: d,
         game: gameName,
       });
 
@@ -256,7 +257,7 @@ async (req, res, next) => {
 
       // 若 已经被石锤，不更新状态
       if (re[0].status !== '1') {
-        await db.query(`update ${cheatersDB} set status = ? where uId = ?`, [0, cheaterUId]);
+        await db.query(`update ${cheatersDB} set status = ?, updateDatetime = ? where uId = ?`, [0, d, cheaterUId]);
       }
     }
 

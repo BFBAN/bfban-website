@@ -15,7 +15,7 @@
           <Radio label="bfv"><span>战地v({{getTotalNum('bfv')}})</span></Radio>
         </RadioGroup>
       </p>
-      <p>
+      <p class="mobile-hide">
         <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
           <Radio label=""><span>全部({{getAllStatusNum}})</span></Radio>
           <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
@@ -23,13 +23,12 @@
           </Radio>
         </RadioGroup>
       </p>
-      <p>
+      <p class="mobile-hide">
         <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报日期范围" style="width: 200px"></DatePicker>
-        <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="处理日期范围" style="width: 200px"></DatePicker>
+        <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新日期范围" style="width: 200px"></DatePicker>
       </p>
 
       <p>
-        排序：
         <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
           <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
@@ -42,37 +41,31 @@
         <ul>
           <li>
             <span><b>游戏ID</b></span>
-            <span><b>处理状态</b></span>
-            <span><b>作弊方式</b></span>
-            <span><b>举报时间</b></span>
-            <span><b>处理时间</b></span>
+            <span class="mobile-hide"><b>举报时间</b></span>
+            <span><b>最近更新</b></span>
           </li>
           <li v-for="d in data" :key="d.uId">
-          <span>
-            <router-link :to="{name: 'cheater', params: { game: gameName, uid: `${d.uId}` }}">{{d.originId}}</router-link>
-            <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
-          </span>
+          <span style="display: flex; flex-direction: column;">
+            <div style="height: 1.6rem;">
+              <router-link :to="{name: 'cheater', params: { game: gameName, uid: `${d.uId}` }}">{{d.originId}}</router-link>
+              <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
+            </div>
             <span>
-            {{ handleStatus(d.status) }}
+              <Icon type="md-eye" /> {{ d.n }}
+              <Icon type="md-chatboxes" /> {{ d.commentsNum }}
+            </span>
           </span>
-            <span>
-            <Tag v-if="d.cheatMethods" color="warning">
-              {{convertCheatMethods(d.cheatMethods || '')}}
-            </Tag>
-          </span>
-            <span>
+          <span class="mobile-hide">
             <Time v-if="d.createDatetime" :time="d.createDatetime" />
           </span>
-
-
-            <span>
+          <span>
             <Time v-if="d.updateDatetime" :time="d.updateDatetime" />
           </span>
           </li>
         </ul>
         <br>
 
-        <Page :page-size="20" show-total :current="page" @on-change="handlePageChange" :total="total" />
+        <Page :page-size="20" show-total :current="page" @on-change="handlePageChange" :total="total" simple />
 
         <Spin size="large" fix v-show="spinShow"></Spin>
       </div>
@@ -103,12 +96,12 @@ export default {
 
       sortBy: [
         {
-          value: 'updateDatetime',
-          label: '处理时间倒序',
-        },
-        {
           value: 'createDatetime',
           label: '举报时间倒序',
+        },
+        {
+          value: 'updateDatetime',
+          label: '更新时间倒序',
         },
       ],
       sortByValue: 'updateDatetime',
@@ -145,7 +138,7 @@ export default {
     },
     loadData() {
       // default values
-      const { game = 'bf1', status = '1', cd = '', ud = '', page = 1, sort='createDatetime' } = this.$route.query;
+      const { game = 'bf1', status = '0', cd = '', ud = '', page = 1, sort='createDatetime' } = this.$route.query;
 
       const config = {
         method: 'get',
@@ -270,34 +263,33 @@ export default {
     display: flex;
     justify-content: space-around;
     border-bottom: 1px solid #eaeaea;
-    padding: 1rem;
+    padding: .4rem;
+    align-items: center;
 
     &:nth-child(odd) {
       background-color: #eeeeee61;
     }
 
     span:nth-child(1) {
-      flex-grow: 0;
+      flex-grow: 1;
       flex-shrink: 0;
-      flex-basis: 30%;
+      a {
+        font-size: 1.2rem;
+      }
     }
     span:nth-child(2) {
-      flex-grow: 1;
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: 25%;
+
+      color: #6f6f6f;
     }
     span:nth-child(3) {
-      flex-grow: 2;
-      flex-shrink: 0;
-      flex-basis: 10%;
-    }
-    span:nth-child(4) {
       flex-grow: 0;
       flex-shrink: 0;
-      flex-basis: 10%;
-    }
-    span:nth-child(5) {
-      flex-grow: 0;
-      flex-shrink: 0;
-      flex-basis: 10%;
+      flex-basis: 25%;
+
+      color: #6f6f6f;
     }
   }
 

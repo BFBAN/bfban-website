@@ -7,36 +7,45 @@
       <table>
         <tbody>
           <tr v-for="activity in activities">
-            <td>
+            <td nowrap>
               <Time v-if="activity.createDatetime" :time="activity.createDatetime"></Time>
             </td>
             <td v-if="activity.type === 'report'">
-              <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
-              举报了
-              <Tag>
-                {{ handleGameName(activity.game) }}
-              </Tag>
-              <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, uid: `${activity.cheaterUId}`}}">{{ activity.cheaterOriginId }}</router-link>
+              <span>
+                <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
+                举报了
+                <Tag>
+                  {{ handleGameName(activity.game) }}
+                </Tag>
+                <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, uid: `${activity.cheaterUId}`}}">{{ activity.cheaterOriginId }}</router-link>
+              </span>
+
             </td>
 
             <td v-if="activity.type === 'register'">
-              <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
-              注册了 bfban ，
-              欢迎！
+              <span>
+                <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
+                注册了 bfban ，
+                欢迎！
+              </span>
+
             </td>
 
             <td v-if="activity.type === 'verify'">
-              <Tag color="success">管理员</Tag>
-              <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
-              将
-              <Tag>
-                {{ handleGameName(activity.game) }}
-              </Tag>
-              <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, uid: `${activity.cheaterUId}`}}">{{ activity.cheaterOriginId }}</router-link>
-              处理为
-              <Tag color="warning">
-                {{ handleStatus(activity.status) }}
-              </Tag>
+              <span>
+                <Tag color="success">管理员</Tag>
+                <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
+                将
+                <Tag>
+                  {{ handleGameName(activity.game) }}
+                </Tag>
+                <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, uid: `${activity.cheaterUId}`}}">{{ activity.cheaterOriginId }}</router-link>
+                处理为
+                <Tag color="warning">
+                  {{ handleStatus(activity.status) }}
+                </Tag>
+              </span>
+
             </td>
           </tr>
         </tbody>

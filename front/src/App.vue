@@ -86,10 +86,16 @@ export default {
 
 
   /*mobile responsive*/
-  @media screen and (min-width: 1088px) {
+  @media screen and (min-width: 1024px) {
     .container {
       max-width: 960px;
       width: 960px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .mobile-hide {
+      display: none !important;
     }
   }
 </style>

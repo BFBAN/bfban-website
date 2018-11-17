@@ -7,12 +7,12 @@
           <!--<router-link :to="{name: 'about'}">关于</router-link>-->
           <router-link :to="{name: 'cheaters', query: { status: '1' }}">外挂公示</router-link>
 
-          <router-link :to="{name: 'report'}">举报作弊</router-link>
+          <router-link class="mobile-hide" :to="{name: 'report'}">举报作弊</router-link>
 
-          <router-link :to="{name: 'about'}">关于</router-link>
+          <router-link class="mobile-hide" :to="{name: 'about'}">关于</router-link>
 
         </div>
-        <div class="search">
+        <div class="search mobile-hide">
           <Input clearable search placeholder="检索" v-model="searchVal" @on-search="handleSearch" />
         </div>
         <div class="nav">

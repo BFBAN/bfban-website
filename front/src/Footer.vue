@@ -1,8 +1,7 @@
 <template>
     <footer class="footer">
       <p>
-        <a href="#">关于</a>
-        <a href="#">举报日记</a>
+        <router-link :to="{name: 'about'}">关于</router-link>
       </p>
       <p>
         Written by mygoare
