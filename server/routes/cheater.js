@@ -217,7 +217,8 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
   check('cheatMethods').exists(),
   check('bilibiliLink').optional({ checkFalsy: true }).isURL(),
   check('captcha').exists().isLength({ min: 4, max: 4 }),
-],
+  check('description').exists(),
+  ],
 async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

@@ -122,7 +122,7 @@ export default {
       if (this.formItem.bilibiliLink || /\<img\ssrc\=\"/.test(this.formItem.description)) {
         return true;
       } else {
-        this.$Message.error('必须视频链接和图片二选一');
+        this.$Message.error('请上传图片或填写视频链接');
         return false;
       }
     },

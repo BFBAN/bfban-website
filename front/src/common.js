@@ -40,10 +40,15 @@ function checkReportFormData(form) {
   if (form.captcha.length !== 4) {
     this.$Message.error('正确填写验证码');
     return false;
+  } else
+  if (trimAllWhitespace(form.description).length === 0) {
+    this.$Message.error('论述必填');
+    return false;
   }
 }
 
 const cheaterStatus = [
+  // value 100 表示全部
   {
     value: '0',
     label: '未处理',
