@@ -218,6 +218,9 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
   check('bilibiliLink').optional({ checkFalsy: true }).isURL(),
   check('captcha').not().isEmpty().isLength({ min: 4, max: 4 }),
   check('description').not().isEmpty(),
+
+  check('originUserId').not().isEmpty(),
+  check('originPersonaId').not().isEmpty(),
   ],
 async (req, res, next) => {
   const errors = validationResult(req);
@@ -226,7 +229,7 @@ async (req, res, next) => {
   }
 
   const {
-    gameName, originId, cheatMethods, bilibiliLink, description,
+    gameName, originId, cheatMethods, bilibiliLink, description, originUserId, originPersonaId,
   } = req.body;
 
   const cheatersDB = 'cheaters';
@@ -249,12 +252,15 @@ async (req, res, next) => {
         createDatetime: d,
         updateDatetime: d,
         game: gameName,
+        originUserId,
+        originPersonaId,
       });
 
       cheaterUId = uuId;
     } else {
       // 若重复举报
       cheaterUId = re[0].uId;
+      // todo: 若重复举报, update 最新游戏id, unshift 到首位，其余为 曾用名
 
       // 若 已经被石锤，不更新状态
       if (re[0].status !== '1') {

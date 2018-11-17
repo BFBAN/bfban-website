@@ -43,15 +43,6 @@
         <div style="position: relative">
           <p style="font-size: 1rem;">
             检索的ID为：{{searchVal}}
-            <span v-if="idExist">
-              <sub>
-                <a target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${searchVal}`">battlefieldtracker</a>
-              </sub>
-              <sub>
-                <a target="_blank" :href="`http://bf1stats.com/pc/${searchVal}`">bf1stats</a>
-              </sub>
-            </span>
-            <sub style="font-size: 0.6rem; color: rgb(237, 64, 20);" v-if="!idExist">非法id</sub>
           </p>
           <br>
           <p>
@@ -83,7 +74,6 @@ export default {
     return {
       searchModal: false,
       searchVal: '',
-      idExist: true,
       cheaters: [],
 
       modalSpinShow: false,
@@ -108,8 +98,7 @@ export default {
         const d = res.data;
         if (d.error === 0) {
 
-          const { idExist, cheaters } = d.data;
-          this.idExist = idExist;
+          const { cheaters } = d.data;
           this.cheaters = cheaters;
         }
       })

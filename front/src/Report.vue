@@ -91,6 +91,9 @@ export default {
           checkbox: ['aimbot'],
           description: '',
           captcha: '',
+
+          originUserId: '',
+          originPersonaId: '',
         },
         spinShow: false,
      }
@@ -132,7 +135,7 @@ export default {
       this.waitForCaptcha(e);
     },
     handleMiscChange: function(h) {
-      this.formItem.description = h
+      this.formItem.description = h;
     },
     doReport(e) {
       // check form data
@@ -141,8 +144,7 @@ export default {
 
       this.spinShow = true;
       checkIdExist({
-        gameName: this.formItem.gameName,
-        id: this.formItem.originId.trim()
+        id: trimAllWhitespace(this.formItem.originId)
       })
       .then((res) => {
 
@@ -150,6 +152,9 @@ export default {
         const idExist = d.idExist;
 
         if (idExist) {
+          this.formItem.originUserId = d.originUserId;
+          this.formItem.originPersonaId = d.originPersonaId;
+
           this.handleReport();
         } else {
           this.spinShow = false;
@@ -162,22 +167,12 @@ export default {
     handleReport: function() {
       this.spinShow = true;
 
-      let gameName = this.formItem.gameName;
       const cheatMethods = this.formItem.checkbox.join(',');
+      const { gameName, originUserId, originPersonaId, captcha } = this.formItem;
 
-      const {
-        originId,
-        bilibiliLink,
-        description,
-        captcha,
-      } = _.each(this.formItem, (v, k, o) => {
-        if (k === 'checkbox') return;
-        if (k === 'originId') {
-          o[k] = trimAllWhitespace(v);
-          return;
-        }
-        o[k] = v.trim();
-      });
+      const originId = trimAllWhitespace(this.formItem.originId);
+      const bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
+      const description = trimAllWhitespace(this.formItem.description);
 
       axios({
         method: 'post',
@@ -189,6 +184,8 @@ export default {
           bilibiliLink,
           description,
           captcha,
+          originUserId,
+          originPersonaId,
         }
       }).then((res) => {
         this.spinShow = false;

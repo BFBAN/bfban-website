@@ -1,7 +1,10 @@
 const express = require('express');
 const csrf = require('csurf');
 const moment = require('moment');
+
 const { checkGameIdExist } = require('../libs/webshot');
+const { addOneDay, convertDatetimeToTimeZone } = require('../libs/misc');
+const { getUserInfo } = require('../libs/origin');
 
 const router = express.Router();
 
@@ -28,17 +31,19 @@ router.get('/teamliquid/*', async (req, res) => {
 });
 
 router.post('/checkGameIdExist', async (req, res) => {
-  const { id, gameName } = req.body;
+  const { id } = req.body;
   let idExist;
-  if (gameName === 'bfv' || gameName === 'bf4') {
-    idExist = true;
-  } else {
-    idExist = await checkGameIdExist(id);
-  }
+
+  let userInfo = await getUserInfo({originId: id});
+  console.log('userInfo:', userInfo);
+
+  idExist = !userInfo.error;
 
   return res.json({
     error: 0,
     idExist,
+    originUserId: userInfo.userId,
+    originPersonaId: userInfo.personaId,
   });
 });
 
@@ -50,7 +55,7 @@ router.get('/search', async (req, res, next) => {
   const { id } = req.query;
 
   // if false, invalid originId
-  const idExist = await checkGameIdExist(id);
+  // const idExist = await checkGameIdExist(id);
 
   const cheatersQueryResult = await db.query('select originId, status, uId, createDatetime, game from cheaters where originId like ?', [`%${id}%`])
   .catch(e => next(e));
@@ -58,7 +63,7 @@ router.get('/search', async (req, res, next) => {
   return res.json({
     error: 0,
     data: {
-      idExist,
+      // idExist,
       cheaters: cheatersQueryResult,
     }
   });

@@ -20,7 +20,6 @@
         <span>
           {{ cheater.originId }}
         </span>
-        <sub v-if="!idExist && `${gameName}` === 'bf1'" style="font-size: .6rem; color: #ed4014;">该id已不存在</sub>
       </span>
 
           <div>
@@ -36,6 +35,7 @@
               battlefieldtracker
             </Tag>
             <a v-show="idExist && `${gameName}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">在线战绩</a>
+            <a v-show="idExist && `${gameName}` === 'bfv'" target="_blank" :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">在线战绩</a>
             <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
             <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">bf1tracker武器截图</a>
 
@@ -51,7 +51,6 @@
             被围观了 {{ cheater.n || 0 }} 次
           </p>
 
-          <img v-if="cheater.originId" class="cheater-desc" :src="`http://g.bf1stats.com/EwvWxWrq/pc/${cheater.originId}.png`"/>
         </div>
 
         <div style="position: relative">
@@ -308,7 +307,7 @@ export default {
         suggestion: '',
       },
       spinShow: true,
-      idExist: true,
+      idExist: false,
 
       verifySpinShow: false,
 
@@ -387,15 +386,15 @@ export default {
         this.timelineList = timelineList;
 
         // check id exist
-        checkIdExist({
-          gameName: this.gameName,
-          id: this.cheater.originId,
-        })
-        .then((res) => {
-          let d = res.data;
-
-          this.idExist = d.idExist;
-        });
+        // checkIdExist({
+        //   gameName: this.gameName,
+        //   id: this.cheater.originId,
+        // })
+        // .then((res) => {
+        //   let d = res.data;
+        //
+        //   this.idExist = d.idExist;
+        // });
       });
     },
     jumpToBookmark(e) {
