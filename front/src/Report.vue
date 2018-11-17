@@ -118,6 +118,14 @@ export default {
         }
       }, 1000);
     },
+    checkVideoAndImg() {
+      if (this.formItem.bilibiliLink || /\<img\ssrc\=\"/.test(this.formItem.description)) {
+        return true;
+      } else {
+        this.$Message.error('必须视频链接和图片二选一');
+        return false;
+      }
+    },
     refreshCaptcha(e) {
       this.$refs.captcha.src = '/captcha?r=' + Math.random();
 
@@ -129,6 +137,7 @@ export default {
     doReport(e) {
       // check form data
       if (checkReportFormData.call(this, this.formItem) === false) return false;
+      if (this.checkVideoAndImg() === false) return false;
 
       this.spinShow = true;
       checkIdExist({
