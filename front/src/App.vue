@@ -91,9 +91,13 @@ export default {
       max-width: 960px;
       width: 960px;
     }
+
+    .desktop-hide {
+      display: none !important;
+    }
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1024px) {
     .mobile-hide {
       display: none !important;
     }

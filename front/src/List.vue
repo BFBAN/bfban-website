@@ -17,22 +17,31 @@
       </p>
       <p class="mobile-hide">
         <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
-          <Radio label=""><span>全部({{getAllStatusNum}})</span></Radio>
+          <Radio label="100"><span>全部({{getAllStatusNum}})</span></Radio>
           <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
             <span>{{ status.label }}({{ getStatusNum(status.value)}})</span>
           </Radio>
         </RadioGroup>
       </p>
-      <p class="mobile-hide">
-        <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报日期范围" style="width: 200px"></DatePicker>
-        <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新日期范围" style="width: 200px"></DatePicker>
-      </p>
+
 
       <p>
+        <span class="mobile-hide">
+          <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报日期范围" style="width: 200px"></DatePicker>
+          <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新日期范围" style="width: 200px"></DatePicker>
+        </span>
+
+        <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
+          <Option value="100">全部</Option>
+          <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">{{ status.label }}</Option>
+        </Select>
+
         <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
           <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
+      </p>
 
+      <p>
         <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
       </p>
 
@@ -120,7 +129,7 @@ export default {
       return _.sumBy(this.sum, (o) => {
         return o ? o.num : 0;
       })
-    }
+    },
   },
   methods: {
     getTotalNum(val) {
@@ -138,7 +147,7 @@ export default {
     },
     loadData() {
       // default values
-      const { game = 'bf1', status = '0', cd = '', ud = '', page = 1, sort='createDatetime' } = this.$route.query;
+      const { game = 'bf1', status = '100', cd = '', ud = '', page = 1, sort='createDatetime' } = this.$route.query;
 
       const config = {
         method: 'get',
