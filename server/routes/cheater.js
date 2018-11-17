@@ -151,7 +151,7 @@ router.get('/', async (req, res, next) => {
 // cheater detail
 // report, verify, confirm
 router.get('/:game/:uid', [
-  check('game', 'game property incorrect').exists().custom((val, {req}) => {return gamesArr.indexOf(val) !== -1}),
+  check('game', 'game property incorrect').not().isEmpty().custom((val, {req}) => {return gamesArr.indexOf(val) !== -1}),
 ], async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -212,12 +212,12 @@ router.get('/:game/:uid', [
 // insert user_report_cheater db
 // userId, cheaterUId, datatime
 router.post('/', verifyJWTMiddleware, verifyCatpcha, [
-  check('gameName', 'game property incorrect').exists().custom((val, {req}) => {return gamesArr.indexOf(val) !== -1}),
-  check('originId').exists().isAscii(),
-  check('cheatMethods').exists(),
+  check('gameName', 'game property incorrect').not().isEmpty().custom((val, {req}) => {return gamesArr.indexOf(val) !== -1}),
+  check('originId').not().isEmpty().isAscii(),
+  check('cheatMethods').not().isEmpty(),
   check('bilibiliLink').optional({ checkFalsy: true }).isURL(),
-  check('captcha').exists().isLength({ min: 4, max: 4 }),
-  check('description').exists(),
+  check('captcha').not().isEmpty().isLength({ min: 4, max: 4 }),
+  check('description').not().isEmpty(),
   ],
 async (req, res, next) => {
   const errors = validationResult(req);
@@ -292,8 +292,8 @@ async (req, res, next) => {
 // verify cheater
 // status, suggestion, userId, cheaterUId, datetime
 router.post('/verify', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
-  check('status').exists(),
-  check('suggestion').trim().exists(),
+  check('status').not().isEmpty(),
+  check('suggestion').trim().not().isEmpty(),
   check('cheatMethods').optional({ checkFalsy: true }),
   check('cheaterUId').isUUID(),
 ],
@@ -362,9 +362,9 @@ async (req, res, next) => {
 
 // confirm cheater
 router.post('/confirm', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
-  check('userId').exists(),
-  check('userVerifyCheaterId').exists(),
-  check('cheatMethods').exists(),
+  check('userId').not().isEmpty(),
+  check('userVerifyCheaterId').not().isEmpty(),
+  check('cheatMethods').not().isEmpty(),
 ],
 async (req, res, next) => {
   const errors = validationResult(req);
@@ -412,10 +412,10 @@ async (req, res, next) => {
 });
 
 router.post('/reply', verifyJWTMiddleware, [
-  check('gameName').exists().custom((val, {req}) => {return ['bf1', 'bfv'].indexOf(val) !== -1}),
-  check('cheaterId').exists().isInt(),
-  check('userId').exists().isInt(),
-  check('content').trim().exists(),
+  check('gameName').not().isEmpty().custom((val, {req}) => {return ['bf1', 'bfv'].indexOf(val) !== -1}),
+  check('cheaterId').not().isEmpty().isInt(),
+  check('userId').not().isEmpty().isInt(),
+  check('content').trim().not().isEmpty(),
 
   check('toUserId').optional().isInt(),
   check('toFloor').optional().isInt(),

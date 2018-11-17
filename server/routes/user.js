@@ -15,9 +15,9 @@ const { getDatetime } = require('../libs/misc');
 
 // username, password
 router.post('/signin', [
-  check('username').trim().exists(),
-  check('password').trim().exists(),
-  check('captcha').trim().exists().isLength({min:4, max: 4}),
+  check('username').trim().not().isEmpty(),
+  check('password').trim().not().isEmpty(),
+  check('captcha').trim().not().isEmpty().isLength({min:4, max: 4}),
 ], verifyCatpcha, async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -61,9 +61,9 @@ router.post('/signin', [
 
 // username, password
 router.post('/signup', [
-  check('username').trim().exists().isLength({min: 4}),
-  check('password').trim().exists().isLength({min: 6}),
-  check('captcha').trim().exists().isLength({min:4, max: 4}),
+  check('username').trim().not().isEmpty().isLength({min: 4}),
+  check('password').trim().not().isEmpty().isLength({min: 6}),
+  check('captcha').trim().not().isEmpty().isLength({min:4, max: 4}),
   check('qq').optional({ checkFalsy: true }).isNumeric(),
 ], verifyCatpcha, async (req, res, next) => {
   const errors = validationResult(req);
