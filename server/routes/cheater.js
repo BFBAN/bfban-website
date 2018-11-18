@@ -57,6 +57,10 @@ function capture(originId, cheaterUId) {
   // 抓取截图，并存入数据库
 }
 
+async function updateCommentsNum(uId) {
+  await db.query(`update cheaters set commentsNum = (commentsNum+1) where uId = ?`, [uId])
+}
+
 // cheater list
 // status
 // 0=> 待处理，1=> 石锤，2=> 嫌疑玩家再观察，3=> 没有问题不是挂，4=> 捣乱的
@@ -164,7 +168,7 @@ router.get('/:game/:uid', [
   await db.query('update cheaters set `n` = (`n`+1) where game = ? and uId = ?', [game, cheaterUId]);
 
   const cheater = await db.query(`select
-    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot, avatarLink
+    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot, avatarLink, commentsNum
     from cheaters
     where uId = ? and game = ?`,
   [cheaterUId, game]);
@@ -277,6 +281,8 @@ async (req, res, next) => {
     // 先暂停 截图功能，太耗cpu了，导致mysql都连接不上
     // capture(originId, cheaterUId);
 
+    await updateCommentsNum(cheaterUId);
+
     await db.query('insert into user_report_cheater set ?', {
       userId,
       cheaterUId,
@@ -348,6 +354,8 @@ async (req, res, next) => {
     await db.query(`update ${cheatersDB} set status = ?, updateDatetime = ? 
       where uId = ? `, [status, d, cheaterUId]);
 
+    await updateCommentsNum(cheaterUId);
+
     const { username, userPrivilege } = req.user;
     return res.json({
       error: 0,
@@ -405,6 +413,8 @@ async (req, res, next) => {
     await db.query(`update ${cheatersDB} set status = "1", cheatMethods = ?, updateDatetime = ? 
     where uId = ?`, [cheatMethods, d, cheaterUId]);
 
+    await updateCommentsNum(cheaterUId);
+
     res.json({
       error: 0,
       data: {
@@ -442,7 +452,7 @@ async (req, res, next) => {
 
   const {
     gameName, cheaterId, userId, toUserId, content, toFloor
-} = req.body;
+  } = req.body;
   const d = getDatetime();
 
   const values = {
@@ -470,6 +480,8 @@ async (req, res, next) => {
     } else {
       status = '1';
     }
+
+    await updateCommentsNum(re[0].uId);
 
     res.json({
       error: 0,

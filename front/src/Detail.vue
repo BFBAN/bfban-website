@@ -32,9 +32,11 @@
             </Tag>
 
             <span>
-              被围观了 {{ cheater.n || 0 }} 次
+              围观{{ cheater.n || 0 }}次
             </span>
-
+            <span>
+              回复{{ cheater.commentsNum || 0 }}次
+            </span>
             </div>
 
           <div v-show="cheater.originId">
