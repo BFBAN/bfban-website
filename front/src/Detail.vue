@@ -184,7 +184,7 @@
 
                 <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
 
-                  <Tag v-if="isAdmin" color="success">
+                  <Tag v-if="l.fooPrivilege === 'admin'" color="success">
                     管理员
                   </Tag>
                   <b>{{l.foo}}</b>
@@ -192,7 +192,7 @@
                 回复
                 <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.barUId}`}}">
 
-                  <Tag v-if="l.privilege === 'admin'" color="success">
+                  <Tag v-if="l.barPrivilege === 'admin'" color="success">
                     管理员
                   </Tag>
                   <b>{{l.bar}}</b>

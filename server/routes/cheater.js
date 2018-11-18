@@ -188,7 +188,11 @@ router.get('/:game/:uid', [
     left join user_verify_cheater as t3 on t1.userVerifyCheaterId = t3.id
     where t3.cheaterUId = ?`, [cheaterUId]);
 
-  const replies = await db.query(`select t1.createDatetime, t3.username as foo, t3.uId as fooUId, t4.username as bar, t4.uId as barUId, t1.userId, t1.toFloor, t1.cheaterId, t1.content
+  const replies = await db.query(`select
+    t1.createDatetime, 
+    t3.username as foo, t3.uId as fooUId, t3.privilege as fooPrivilege, 
+    t4.username as bar, t4.uId as barUId, t4.privilege as barPrivilege, 
+    t1.userId, t1.toFloor, t1.cheaterId, t1.content
     from replies as t1
     left join cheaters as t2 on t1.cheaterId = t2.id
     left join users as t3 on t1.userId = t3.id
