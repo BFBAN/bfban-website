@@ -9,47 +9,63 @@ const path = require('path');
 
 const tokenFile = path.resolve(__dirname, 'token.json');
 
+let fooToken = {};
+
 function readToken() {
-  return new Promise((resolve, reject)=> {
-    // {
-    //   expires: '',
-    //   token: '',
-    // }
-    let access_token = '';
-    fs.readFile(tokenFile, (err, data) => {
-      if (err) {
-        resolve(access_token)
-      } else {
-        let d = JSON.parse(data.toString());
-        let { expires, token } = d;
+  // return new Promise((resolve, reject)=> {
+  //   // {
+  //   //   expires: '',
+  //   //   token: '',
+  //   // }
+  //   let access_token = '';
+  //   fs.readFile(tokenFile, (err, data) => {
+  //     if (err) {
+  //       resolve(access_token)
+  //     } else {
+  //       let d = JSON.parse(data.toString());
+  //       let { expires, token } = d;
+  //
+  //       let currentDatetime = moment().format();
+  //
+  //       if (moment(currentDatetime).isBefore(expires)) {
+  //         access_token = token;
+  //       }
+  //       resolve(access_token);
+  //     }
+  //   });
+  //
+  // });
 
-        let currentDatetime = moment().format();
+  if (fooToken && fooToken.expires && fooToken.token) {
+    if (moment().isBefore(fooToken.expires)) {
+      return fooToken.token;
+    } else {
+      return ''
+    }
 
-        if (moment(currentDatetime).isBefore(expires)) {
-          access_token = token;
-        }
-        resolve(access_token);
-      }
-    });
-
-  });
+  }
 }
 
 function writeToken(token) {
   let expires = moment().add(50, 'minutes');
-  let data = {
+  // let data = {
+  //   expires,
+  //   token,
+  // };
+  // return new Promise((resolve, reject) => {
+  //   fs.writeFile(tokenFile, JSON.stringify(data), (err) => {
+  //     if (err) {
+  //       reject(err)
+  //     } else {
+  //       resolve()
+  //     }
+  //   })
+  // })
+
+  fooToken = {
     expires,
     token,
-  };
-  return new Promise((resolve, reject) => {
-    fs.writeFile(tokenFile, JSON.stringify(data), (err) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve()
-      }
-    })
-  })
+  }
 }
 
 // one hour expires (3600 expires)
