@@ -194,20 +194,23 @@ async function getUserInfo({originId='', userpid=''}) {
     })
     .then(body => {
       return new Promise((resolve, reject) => {
-        parseString(body, (err, result) => {
+        parseString(body, async (err, result) => {
           console.log(JSON.parse(JSON.stringify(result)));
           const { userId, personaId, EAID, firstName, lastName } = JSON.parse(JSON.stringify(result)).users.user[0];
 
           console.log( userId, personaId, EAID, firstName, lastName );
           console.log(JSON.parse(JSON.stringify(result)).users.user);
 
+          // it is the one
           if ( originId !== '' && originId.toLowerCase() === EAID[0].toLowerCase() ) {
+            const avatarLink = await getUserAvatar({pid, token});
             resolve({
                 userId: userId[0],
                 personaId: personaId[0],
                 EAID: EAID[0],
                 firstName: firstName ? firstName[0] : '',
                 lastName: lastName ? lastName[0] : '',
+                avatarLink,
               })
           } else {
             console.log(originId.toLowerCase(), EAID[0].toLowerCase());
@@ -287,9 +290,41 @@ function buildReportXml(comments) {
   return xml;
 }
 
+async function getUserAvatar({pid, token}) {
+  const authtoken = token ? token : await getToken();
+  const url = `https://api1.origin.com/avatar/user/${pid}/avatars?size=1`;
+
+  return request({
+    method: 'get',
+    url,
+    headers: {
+      authtoken,
+    }
+  })
+  .then(body => {
+    return new Promise((resolve, reject) => {
+      parseString(body, async (err, result) => {
+        console.log((JSON.stringify(result)));
+
+        try {
+          const avatarLink = JSON.parse(JSON.stringify(result)).users.user[0].avatar[0].link[0];
+          resolve(avatarLink);
+        } catch(e) {
+          reject(new Error('getUserAvatar can not find link'))
+        }
+      })
+    })
+  })
+  .catch(e => {
+    return {
+      error: e.message,
+    }
+  })
+}
+
 // e.g.
 //
-// getUserInfo({originId: 'DogKingF'});
+// getUserInfo({originId: 'yqewoemratnmmmmm'});
 // getUserInfo({userpid: '10026669368'});
 // getSelfInfo();
 
@@ -300,11 +335,14 @@ function buildReportXml(comments) {
 
 // report('VincentGFB');
 
+// getUserAvatar({pid: 2432777765});
+
 module.exports = {
   getToken,
   getSelfPid,
   getSelfInfo,
   getUserPid,
   getUserInfo,
+  getUserAvatar,
   report,
 };

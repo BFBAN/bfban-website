@@ -2,7 +2,7 @@ const express = require('express');
 const csrf = require('csurf');
 const moment = require('moment');
 
-const { checkGameIdExist } = require('../libs/webshot');
+// const { checkGameIdExist } = require('../libs/webshot');
 const { addOneDay, convertDatetimeToTimeZone } = require('../libs/misc');
 const { getUserInfo } = require('../libs/origin');
 
@@ -44,6 +44,7 @@ router.post('/checkGameIdExist', async (req, res) => {
     idExist,
     originUserId: userInfo.userId,
     originPersonaId: userInfo.personaId,
+    avatarLink: userInfo.avatarLink,
   });
 });
 

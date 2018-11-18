@@ -164,7 +164,7 @@ router.get('/:game/:uid', [
   await db.query('update cheaters set `n` = (`n`+1) where game = ? and uId = ?', [game, cheaterUId]);
 
   const cheater = await db.query(`select
-    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot
+    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot, avatarLink
     from cheaters
     where uId = ? and game = ?`,
   [cheaterUId, game]);
@@ -221,6 +221,7 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
 
   check('originUserId').not().isEmpty(),
   check('originPersonaId').not().isEmpty(),
+  check('avatarLink').not().isEmpty(),
   ],
 async (req, res, next) => {
   const errors = validationResult(req);
@@ -229,7 +230,7 @@ async (req, res, next) => {
   }
 
   const {
-    gameName, originId, cheatMethods, bilibiliLink, description, originUserId, originPersonaId,
+    gameName, originId, cheatMethods, bilibiliLink, description, originUserId, originPersonaId, avatarLink,
   } = req.body;
 
   const cheatersDB = 'cheaters';
@@ -254,13 +255,14 @@ async (req, res, next) => {
         game: gameName,
         originUserId,
         originPersonaId,
+        avatarLink,
       });
 
       cheaterUId = uuId;
     } else {
       // 若重复举报
       cheaterUId = re[0].uId;
-      // todo: 若重复举报, update 最新游戏id, unshift 到首位，其余为 曾用名
+      // todo: 若重复举报, update 最新游戏id, unshift 到首位 或 push 到末位，其余为 曾用名
 
       // 若 已经被石锤，不更新状态
       if (re[0].status !== '1') {
@@ -278,6 +280,8 @@ async (req, res, next) => {
       cheatMethods,
       bilibiliLink,
       description,
+      // 每次举报拥有自己的举报 record
+      cheaterGameName: originId,
     });
 
     res.json({

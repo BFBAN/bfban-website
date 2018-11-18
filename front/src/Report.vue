@@ -94,6 +94,7 @@ export default {
 
           originUserId: '',
           originPersonaId: '',
+          avatarLink: '',
         },
         spinShow: false,
      }
@@ -154,6 +155,7 @@ export default {
         if (idExist) {
           this.formItem.originUserId = d.originUserId;
           this.formItem.originPersonaId = d.originPersonaId;
+          this.formItem.avatarLink = d.avatarLink;
 
           this.handleReport();
         } else {
@@ -168,7 +170,7 @@ export default {
       this.spinShow = true;
 
       const cheatMethods = this.formItem.checkbox.join(',');
-      const { gameName, originUserId, originPersonaId, captcha } = this.formItem;
+      const { gameName, originUserId, originPersonaId, avatarLink, captcha } = this.formItem;
 
       const originId = trimAllWhitespace(this.formItem.originId);
       const bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
@@ -186,6 +188,7 @@ export default {
           captcha,
           originUserId,
           originPersonaId,
+          avatarLink,
         }
       }).then((res) => {
         this.spinShow = false;

@@ -31,24 +31,44 @@
               {{ convertCheatMethods(cheater.cheatMethods) }}
             </Tag>
 
-            <Tag v-show="idExist" color="primary">
+            <span>
+              被围观了 {{ cheater.n || 0 }} 次
+            </span>
+
+            </div>
+
+          <div v-show="cheater.originId">
+            <p>
+              <b>
+                Ta的相关战绩链接：
+              </b>
+            </p>
+            <a v-show="`${gameName}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">
               battlefieldtracker
-            </Tag>
-            <a v-show="idExist && `${gameName}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">在线战绩</a>
-            <a v-show="idExist && `${gameName}` === 'bfv'" target="_blank" :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">在线战绩</a>
+            </a>
+            <a v-show="`${gameName}` === 'bfv'" target="_blank" :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">
+              battlefieldtracker
+            </a>
             <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
             <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">bf1tracker武器截图</a>
 
-
-            <Tag v-show="idExist" color="primary">
+            <a v-show="`${gameName}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">
               bf1stats
-            </Tag>
-            <a v-show="idExist && `${gameName}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">在线战绩</a>
+            </a>
             <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
           </div>
 
-          <p>
-            被围观了 {{ cheater.n || 0 }} 次
+          <div v-show="cheater.avatarLink">
+            <p>
+              <b>
+                Ta的origin头像：
+              </b>
+            </p>
+            <img :src="cheater.avatarLink" alt="avatar" width="208" height="208">
+          </div>
+
+          <p class="hint">
+            以上 链接失效 或 该被举报人 改名了。bfban.com 有能力<b>永久追踪</b>被举报者的行踪。 功能开发中，敬请期待！
           </p>
 
         </div>
@@ -164,7 +184,7 @@
 
                 <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
 
-                  <Tag v-if="l.privilege === 'admin'" color="success">
+                  <Tag v-if="isAdmin" color="success">
                     管理员
                   </Tag>
                   <b>{{l.foo}}</b>
