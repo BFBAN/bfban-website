@@ -172,7 +172,7 @@ export default {
 
       const originId = trimAllWhitespace(this.formItem.originId);
       const bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
-      const description = trimAllWhitespace(this.formItem.description);
+      const description = this.formItem.description.trim();
 
       axios({
         method: 'post',
