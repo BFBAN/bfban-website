@@ -37,7 +37,10 @@
             <span>
               回复{{ cheater.commentsNum || 0 }}次
             </span>
-            </div>
+          </div>
+          <p>
+            <Time v-if="cheater.createDatetime" type="datetime" :time="cheater.createDatetime"></Time>被第一次举报
+          </p>
 
           <div v-show="cheater.originId">
             <p>
@@ -109,7 +112,6 @@
               </p>
             </div>
 
-
             <div v-if="l.type === 'verify'" class="timeline-content bookmark" :id="`user-verify-cheater-${l.id}`">
               <div class="timeline-time">
                 <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
@@ -153,7 +155,6 @@
               </p>
             </div>
 
-
             <div v-if="l.type === 'confirm'" class="timeline-content">
               <div class="timeline-time">
                 <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
@@ -178,7 +179,6 @@
                 <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
               </p>
             </div>
-
 
             <div v-if="l.type === 'reply'" class="timeline-content">
               <div class="timeline-time">
@@ -207,7 +207,6 @@
                 <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
               </p>
             </div>
-
 
           </TimelineItem>
 

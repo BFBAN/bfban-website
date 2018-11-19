@@ -110,7 +110,9 @@ router.get('/', async (req, res, next) => {
 
   if (sort === '') sort = 'updateDatetime';
 
-  const queryCondition = `where 1=1 ${gameQuery} ${statusQuery} ${cdQuery} ${udQuery}`;
+  const commonCondition = `1=1 and valid = '1'`;
+
+  const queryCondition = `where ${commonCondition} ${gameQuery} ${statusQuery} ${cdQuery} ${udQuery}`;
   const queryOrder = `order by ${sort}`;
   const querySql = `select n, commentsNum, avatarLink, originId, status, cheatMethods, uId, createDatetime, updateDatetime
     from cheaters
@@ -133,7 +135,7 @@ router.get('/', async (req, res, next) => {
     select 
     status, count(id) as num
     from cheaters
-    where 1=1 ${gameQuery} ${cdQuery} ${udQuery}
+    where ${commonCondition} ${gameQuery} ${cdQuery} ${udQuery}
     group by status
   `;
   const sum = await db.query(sumQuery, [].concat(gameQueryVal, cdQueryVal, udQueryVal));
@@ -172,7 +174,7 @@ router.get('/:game/:uid', [
   await db.query('update cheaters set `n` = (`n`+1) where game = ? and uId = ?', [game, cheaterUId]);
 
   const cheater = await db.query(`select
-    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot, avatarLink, commentsNum
+    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot, avatarLink, commentsNum, createDatetime
     from cheaters
     where uId = ? and game = ?`,
   [cheaterUId, game]);
