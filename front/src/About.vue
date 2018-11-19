@@ -73,6 +73,7 @@
     margin-left: auto;
     margin-right: auto;
     width: 10rem;
+    border-radius: 10rem;
   }
 
   .clan {

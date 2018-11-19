@@ -112,7 +112,7 @@ router.get('/', async (req, res, next) => {
 
   const queryCondition = `where 1=1 ${gameQuery} ${statusQuery} ${cdQuery} ${udQuery}`;
   const queryOrder = `order by ${sort}`;
-  const querySql = `select n, commentsNum, originId, status, cheatMethods, uId, createDatetime, updateDatetime
+  const querySql = `select n, commentsNum, avatarLink, originId, status, cheatMethods, uId, createDatetime, updateDatetime
     from cheaters
     ${queryCondition}
     ${queryOrder}

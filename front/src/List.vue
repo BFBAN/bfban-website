@@ -54,15 +54,23 @@
             <span><b>最近更新</b></span>
           </li>
           <li v-for="d in data" :key="d.uId">
-          <span style="display: flex; flex-direction: column;">
-            <div style="height: 1.6rem;">
-              <router-link :to="{name: 'cheater', params: { game: gameName, uid: `${d.uId}` }}">{{d.originId}}</router-link>
-              <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
-            </div>
-            <span>
+          <span style="display: flex; align-items: center;">
+            <img :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'" alt="" style="width: 2.3rem;
+            height: 2.3rem;
+            border-radius: 2.3rem;
+            margin-right: .4rem;">
+            <div style="display: flex; flex-direction: column;">
+              <div style="height: 1.6rem;">
+                <router-link :to="{name: 'cheater', params: { game: gameName, uid: `${d.uId}` }}">{{d.originId}}</router-link>
+                <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
+              </div>
+              <span>
               <Icon type="md-eye" /> {{ d.n }}
               <Icon type="md-chatboxes" /> {{ d.commentsNum }}
             </span>
+            </div>
+
+
           </span>
           <span class="mobile-hide">
             <Time v-if="d.createDatetime" :time="d.createDatetime" />
