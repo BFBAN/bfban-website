@@ -1,8 +1,12 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const csrf = require('csurf');
 const uuidv4 = require('uuid/v4');
 const { check, validationResult } = require('express-validator/check');
 const { generatePassword, comparePassword } = require('../libs/auth');
+
+// csrf protection
+const csrfProtection = csrf({ cookie: true });
 
 const config = require('../config');
 
@@ -14,7 +18,7 @@ const { getDatetime } = require('../libs/misc');
 
 
 // username, password
-router.post('/signin', [
+router.post('/signin', csrfProtection, [
   check('username').trim().not().isEmpty(),
   check('password').trim().not().isEmpty(),
   check('captcha').trim().not().isEmpty().isLength({min:4, max: 4}),
@@ -60,7 +64,7 @@ router.post('/signin', [
 });
 
 // username, password
-router.post('/signup', [
+router.post('/signup', csrfProtection, [
   check('username').trim().not().isEmpty().isLength({min: 4}),
   check('password').trim().not().isEmpty().isLength({min: 6}),
   check('captcha').trim().not().isEmpty().isLength({min:4, max: 4}),

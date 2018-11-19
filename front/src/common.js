@@ -141,6 +141,10 @@ function testWhitespace(str) {
   return /\s+/.test(str);
 }
 
+function getCsrfToken() {
+  return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
 export {
   checkIdExist,
   convertGameName,
@@ -155,4 +159,5 @@ export {
   convertDatetimeToUserTimeZone,
   trimAllWhitespace,
   testWhitespace,
+  getCsrfToken,
 };

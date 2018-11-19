@@ -79,7 +79,7 @@
 <script>
 import Misc from './Misc.vue';
 
-import { checkIdExist, checkReportFormData, trimAllWhitespace } from "./common";
+import { checkIdExist, checkReportFormData, trimAllWhitespace, getCsrfToken } from "./common";
 
 export default {
   data() {
@@ -179,6 +179,9 @@ export default {
       axios({
         method: 'post',
         url: '/cheaters/',
+        headers: {
+          'x-csrf-token': getCsrfToken(),
+        },
         data: {
           gameName,
           originId,

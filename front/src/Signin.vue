@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { getCsrfToken } from './common';
 
 export default {
   data() {
@@ -82,6 +83,9 @@ export default {
         axios({
           method: 'post',
           url: '/account/signin',
+          headers: {
+            'x-csrf-token': getCsrfToken(),
+          },
           data: {
             username,
             password,

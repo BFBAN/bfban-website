@@ -1,6 +1,7 @@
 const express = require('express');
 const moment = require('moment');
 const uuidv4 = require('uuid/v4');
+const csrf = require('csurf');
 const { spawn } = require('child_process');
 const _ = require('underscore');
 const path = require('path');
@@ -12,6 +13,9 @@ const db = require('../mysql');
 
 const { verifyCatpcha } = require('../middlewares/captcha');
 const { gamesArr, getDatetime, getDatetimeWithTZ, addOneDay, convertDatetimeToTimeZone } = require('../libs/misc');
+
+// csrf protection
+const csrfProtection = csrf({ cookie: true });
 
 const router = express.Router();
 
@@ -219,7 +223,7 @@ router.get('/:game/:uid', [
 // originId, cheatMethods, bilibiliLink, description
 // insert user_report_cheater db
 // userId, cheaterUId, datatime
-router.post('/', verifyJWTMiddleware, verifyCatpcha, [
+router.post('/', csrfProtection, verifyJWTMiddleware, verifyCatpcha, [
   check('gameName', 'game property incorrect').not().isEmpty().custom((val, {req}) => {return gamesArr.indexOf(val) !== -1}),
   check('originId').not().isEmpty().isAscii(),
   check('cheatMethods').not().isEmpty(),

@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { testWhitespace } from './common';
+import { testWhitespace, getCsrfToken } from './common';
 
 export default {
   data() {
@@ -93,6 +93,9 @@ export default {
         axios({
           method: 'post',
           url: '/account/signup',
+          headers: {
+            'x-csrf-token': getCsrfToken(),
+          },
           data: {
             username,
             password,
