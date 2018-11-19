@@ -81,6 +81,18 @@ app.use('/', routes);
 // 404
 app.use((req, res, next) => res.sendStatus(404));
 
+// csrf error handler
+app.use(function (err, req, res, next) {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err);
+
+  // handle CSRF token errors here
+  res.status(403);
+  res.json({
+    error: 1,
+    msg: 'ForbiddenError: invalid request',
+  });
+});
+
 // error handling
 app.use((err, req, res, next) => {
   pino.error(err.stack);
