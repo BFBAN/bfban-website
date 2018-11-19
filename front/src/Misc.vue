@@ -10,7 +10,7 @@
         <Upload
           :headers="headers"
           :data="extraData"
-          action="//up-z2.qiniu.com"
+          action="//upload-z2.qiniup.com"
           accept="image/*"
           :format="['jpg','jpeg','png', 'gif']"
           multiple
@@ -42,7 +42,7 @@
         <Upload
           :headers="headers"
           :data="extraData"
-          action="//up-z2.qiniu.com"
+          action="//upload-z2.qiniup.com"
           accept="video/mp4"
           :format="['mp4']"
           multiple
