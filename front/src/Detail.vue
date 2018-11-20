@@ -665,6 +665,10 @@ export default {
   }
   .timeline-content {
     position: relative;
+
+    // force to wrap
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
   .ivu-timeline-item-content {
     padding: 0 0 0 1.2rem;
