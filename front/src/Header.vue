@@ -6,7 +6,7 @@
 
           <router-link :to="{name: 'cheaters', query: { status: '100' }}">{{$t("header.cheaters")}}</router-link>
 
-          <router-link class="mobile-hide" :to="{name: 'report'}">{{$t("header.report")}}</router-link>
+          <router-link class="" :to="{name: 'report'}">{{$t("header.report")}}</router-link>
 
           <router-link class="mobile-hide" :to="{name: 'about'}">{{$t("header.about")}}</router-link>
 
@@ -172,8 +172,9 @@ window.addEventListener('scroll', function(e) {
   .nav {
     display: flex;
     align-items: center;
+    padding: 0 .4rem;
     a {
-      padding: 1rem;
+      padding: 1rem .6rem;
       &:hover {
         background-color: rgba(251, 251, 251, 0.8);
         color: black;
@@ -184,7 +185,7 @@ window.addEventListener('scroll', function(e) {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    width: 6rem;
+    /*width: 6rem;*/
     flex-grow: 0;
   }
   .nav-signout {
@@ -198,7 +199,7 @@ window.addEventListener('scroll', function(e) {
   }
 
   .ivu-badge-dot {
-    left: -8px;
+    left: -4px;
   }
 </style>
 

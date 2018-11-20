@@ -25,15 +25,13 @@
           :on-error="handleError"
           :on-exceeded-size="handleExceededSize"
           :before-upload="handleBeforeUpload">
-
-          <div style="padding: 20px 0">
+          <div>
             <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-            <p>Click or drag files here to upload</p>
+            <p class="desktop-hide">双击屏幕上传...</p>
+            <p class="mobile-hide">单击 或 拖拽 上传...</p>
           </div>
-
         </Upload>
       </Modal>
-
 
       <Modal
         v-model="modal2"
