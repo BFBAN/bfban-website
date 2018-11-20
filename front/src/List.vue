@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
-      <Divider>外挂公示</Divider>
+      <Divider>{{$t("list.title")}}</Divider>
 
       <!--Filters:-->
       <!--状态checkbox、-->
@@ -11,13 +11,13 @@
 
       <p>
         <RadioGroup v-model="gameName" @on-change="handleChanges" type="button">
-          <Radio label="bf1"><span>战地1({{getTotalNum('bf1')}})</span></Radio>
-          <Radio label="bfv"><span>战地v({{getTotalNum('bfv')}})</span></Radio>
+          <Radio label="bf1"><span>{{$t("list.filters.game.bf1")}}({{getTotalNum('bf1')}})</span></Radio>
+          <Radio label="bfv"><span>{{$t("list.filters.game.bfv")}}({{getTotalNum('bfv')}})</span></Radio>
         </RadioGroup>
       </p>
       <p class="mobile-hide">
         <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
-          <Radio label="100"><span>全部({{getAllStatusNum}})</span></Radio>
+          <Radio label="100"><span>{{$t("list.filters.status.all")}}({{getAllStatusNum}})</span></Radio>
           <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
             <span>{{ status.label }}({{ getStatusNum(status.value)}})</span>
           </Radio>
@@ -32,7 +32,7 @@
         </span>
 
         <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
-          <Option value="100">全部</Option>
+          <Option value="100">{{$t("list.filters.status.all")}}</Option>
           <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">{{ status.label }}</Option>
         </Select>
 
@@ -42,7 +42,7 @@
       </p>
 
       <p>
-        <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">刷新</Button>
+        <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">{{$t("list.filters.refresh")}}</Button>
       </p>
 
 

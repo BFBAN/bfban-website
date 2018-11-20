@@ -4,6 +4,9 @@
 
 // Vue.use(Vuex);
 
+import app from './index';
+import {SET_LANG} from './mutation-types';
+
 const store = new Vuex.Store({
   state: {
     user: undefined,
@@ -27,6 +30,9 @@ const store = new Vuex.Store({
         state.user = cookieUser;
       }
     },
+    [SET_LANG] (state, payload) {
+      app.$i18n.locale = payload;
+    }
   },
 
   // dispatch actions
@@ -36,6 +42,9 @@ const store = new Vuex.Store({
     },
     signout(context, payload) {
       context.commit('signout', payload);
+    },
+    setLang({commit}, payload) {
+      commit(SET_LANG, payload);
     },
   },
 });

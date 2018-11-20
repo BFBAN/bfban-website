@@ -2,36 +2,33 @@
     <header>
       <div class="header-container container">
         <div class="nav">
-          <router-link :to="{name: 'home'}">首页</router-link>
+          <router-link :to="{name: 'home'}">{{ $t("header.index") }}</router-link>
 
-          <!--<router-link :to="{name: 'about'}">关于</router-link>-->
-          <router-link :to="{name: 'cheaters', query: { status: '100' }}">外挂公示</router-link>
+          <router-link :to="{name: 'cheaters', query: { status: '100' }}">{{$t("header.cheaters")}}</router-link>
 
-          <router-link class="mobile-hide" :to="{name: 'report'}">举报作弊</router-link>
+          <router-link class="mobile-hide" :to="{name: 'report'}">{{$t("header.report")}}</router-link>
 
-          <router-link class="mobile-hide" :to="{name: 'about'}">关于</router-link>
+          <router-link class="mobile-hide" :to="{name: 'about'}">{{$t("header.about")}}</router-link>
+
 
         </div>
         <div class="search mobile-hide">
           <Input clearable search placeholder="检索" v-model="searchVal" @on-search="handleSearch" />
         </div>
         <div class="nav">
-          <router-link v-show="!isLogin" :to="{name: 'signin'}">登录</router-link>
-          <router-link v-show="!isLogin" :to="{name: 'signup'}">注册</router-link>
-
+          <router-link v-show="!isLogin" :to="{name: 'signin'}">{{$t("header.signin")}}</router-link>
+          <router-link v-show="!isLogin" :to="{name: 'signup'}">{{$t("header.signup")}}</router-link>
 
           <router-link class="nav-username" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
             <Badge dot>
               {{ currentUser.username }}
             </Badge>
-
           </router-link>
-          <a class="nav-signout" v-show="isLogin" href="#" @click.stop.prevent="signout">注销</a>
+          <a class="nav-signout" v-show="isLogin" href="#" @click.stop.prevent="signout">{{$t("header.signout")}}</a>
 
           <router-link v-if="isAdmin" :to="{name: 'dashboard'}">
-            后台管理
+            {{$t("header.dashboard")}}
           </router-link>
-
         </div>
       </div>
 
@@ -174,6 +171,7 @@ window.addEventListener('scroll', function(e) {
   }
   .nav {
     display: flex;
+    align-items: center;
     a {
       padding: 1rem;
       &:hover {
