@@ -32,8 +32,8 @@
         </span>
 
         <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
-          <Option value="100">{{$t("list.filters.status.all")}}</Option>
-          <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">{{ status.label }}</Option>
+          <Option value="100">{{$t("list.filters.status.all")}}({{getAllStatusNum}})</Option>
+          <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">{{ status.label }}({{ getStatusNum(status.value)}})</Option>
         </Select>
 
         <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
