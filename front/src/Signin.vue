@@ -2,28 +2,28 @@
   <div class="container">
     <div class="content">
       <Form :label-width="80" style="position: relative;">
-        <Divider>登录</Divider>
+        <Divider>{{$t("signin.title")}}</Divider>
 
-        <FormItem label="用户名">
-          <Input type="text" v-model="signin.username" placeholder="用户名" />
+        <FormItem :label="$t('signin.form.username')">
+          <Input type="text" v-model="signin.username" :placeholder="$t('signin.form.username')" />
         </FormItem>
 
-        <FormItem label="密码">
-          <Input type="password" v-model="signin.password" placeholder="密码" />
+        <FormItem :label="$t('signin.form.password')">
+          <Input type="password" v-model="signin.password" :placeholder="$t('signin.form.password')" />
         </FormItem>
 
-        <FormItem label="验证码">
-          <Input type="text" v-model="signin.captcha" placeholder="验证码" />
+        <FormItem :label="$t('signin.form.captcha')">
+          <Input type="text" v-model="signin.captcha" :placeholder="$t('signin.form.captcha')" />
           <img ref="captcha">
           <a href="#" @click.stop.prevent="refreshCaptcha">
-            获得验证码
+            {{$t('signin.form.getCaptcha')}}
           </a>
         </FormItem>
 
         <FormItem>
-          <Button @click.prevent.stop="handleSignin" type="primary">提交</Button>
+          <Button @click.prevent.stop="handleSignin" type="primary">{{$t('signin.form.submit')}}</Button>
 
-          <router-link :to="{name: 'signup'}">没有账号？去注册</router-link>
+          <router-link :to="{name: 'signup'}">{{$t('signin.form.submitHint')}}</router-link>
         </FormItem>
 
         <Spin size="large" fix v-show="spinShow"></Spin>

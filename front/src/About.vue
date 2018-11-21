@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
-      <Divider>关于</Divider>
+      <Divider>{{$t("about.title")}}</Divider>
 
       <img class="logo" src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png" alt="">
 

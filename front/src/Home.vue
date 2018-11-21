@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
-      <Divider>网站动态</Divider>
+      <Divider>{{$t("home.activity.title")}}</Divider>
 
       <p>bfban.com  于 2018年11月4日 上线，收到 <b>{{ site.report }}</b> 次举报，已石锤了 <b>{{ site.cheater }}</b> 个挂壁，感谢大家的共同努力！</p>
       <table>
@@ -53,7 +53,7 @@
 
     </div>
     <div class="content">
-      <Divider>如何使用本站</Divider>
+      <Divider>{{$t("home.howToUse.title")}}</Divider>
 
       <p>如果遇到挂，可以</p>
       <p>
@@ -89,7 +89,7 @@
       </p>
 
 
-      <h2>小工具</h2>
+      <h2>{{$t("home.howToUse.tools")}}</h2>
       <div class="tools">
         <p>
           <a target="_blank" href="https://battlefieldtracker.com/">
@@ -108,7 +108,7 @@
         </p>
       </div>
 
-      <h2>QQ群</h2>
+      <h2>{{$t("home.howToUse.qqGroup")}}</h2>
       <div class="tools">
         <p>
           <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5PEqoDb">
