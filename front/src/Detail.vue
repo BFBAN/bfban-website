@@ -455,8 +455,8 @@ export default {
       let { suggestion } = this.verify;
       const cheaterUId = this.$route.params.uid;
       const cheatMethods = this.verify.checkbox.join(',');
-
-      if (cheatMethods === ',' || suggestion.trim() === '') {
+      
+      if ( (status === '1' && cheatMethods === '') || suggestion.trim() === '') {
         this.$Message.warning('请填写完整');
         return false;
       }

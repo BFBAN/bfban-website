@@ -327,7 +327,7 @@ async (req, res, next) => {
 router.post('/verify', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
   check('status').not().isEmpty(),
   check('suggestion').trim().not().isEmpty(),
-  check('cheatMethods').optional({ checkFalsy: true }),
+  // check('cheatMethods').optional({ checkFalsy: true }),
   check('cheaterUId').isUUID(),
 ],
 async (req, res, next) => {
