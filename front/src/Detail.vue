@@ -451,8 +451,6 @@ export default {
       }).join(' ');
     },
     doVerify() {
-      this.verifySpinShow = true;
-
       const {status} = this.verify;
       let { suggestion } = this.verify;
       const cheaterUId = this.$route.params.uid;
@@ -465,6 +463,9 @@ export default {
 
       suggestion = formatTextarea(suggestion);
 
+
+      // JUST before axios
+      this.verifySpinShow = true;
       axios({
         method: 'post',
         url: '/cheaters/verify',
@@ -481,7 +482,7 @@ export default {
         const d = res.data;
         if (res.data.error === 0) {
           // reset verifyForm
-          this.verify.status = '0';
+          this.verify.status = '1';
           this.verify.suggestion = '';
           this.verify.checkbox = [];
 
