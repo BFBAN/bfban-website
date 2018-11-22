@@ -27,8 +27,8 @@
 
       <p>
         <span class="mobile-hide">
-          <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报日期范围" style="width: 200px"></DatePicker>
-          <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新日期范围" style="width: 200px"></DatePicker>
+          <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报时间范围" style="width: 200px"></DatePicker>
+          <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新时间范围" style="width: 200px"></DatePicker>
         </span>
 
         <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
@@ -51,7 +51,7 @@
           <li>
             <span><b>游戏ID</b></span>
             <span class="mobile-hide"><b>举报时间</b></span>
-            <span><b>最近更新</b></span>
+            <span><b>更新时间</b></span>
           </li>
           <li v-for="d in data" :key="d.uId">
           <span style="display: flex; align-items: center;">
@@ -155,7 +155,7 @@ export default {
     },
     loadData() {
       // default values
-      const { game = 'bf1', status = '100', cd = '', ud = '', page = 1, sort='createDatetime' } = this.$route.query;
+      const { game = 'bf1', status = '100', cd = '', ud = '', page = 1, sort='updateDatetime' } = this.$route.query;
 
       const config = {
         method: 'get',

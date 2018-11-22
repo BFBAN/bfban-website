@@ -5,7 +5,7 @@
 // Vue.use(Vuex);
 
 import app from './index';
-import {SET_LANG} from './mutation-types';
+import { SET_LANG } from './mutation-types';
 
 const store = new Vuex.Store({
   state: {
@@ -17,7 +17,7 @@ const store = new Vuex.Store({
     signin(state, payload) {
       state.user = payload;
 
-      Cookies.set('user', JSON.stringify(payload), {expires: 1});
+      Cookies.set('user', JSON.stringify(payload), { expires: 1 });
     },
     signout(state, payload) {
       state.user = undefined;
@@ -25,14 +25,14 @@ const store = new Vuex.Store({
       Cookies.remove('user');
     },
     syncLoginState(state) {
-      let cookieUser = Cookies.getJSON('user');
+      const cookieUser = Cookies.getJSON('user');
       if (cookieUser) {
         state.user = cookieUser;
       }
     },
-    [SET_LANG] (state, payload) {
+    [SET_LANG](state, payload) {
       app.$i18n.locale = payload;
-    }
+    },
   },
 
   // dispatch actions
@@ -43,7 +43,7 @@ const store = new Vuex.Store({
     signout(context, payload) {
       context.commit('signout', payload);
     },
-    setLang({commit}, payload) {
+    setLang({ commit }, payload) {
       commit(SET_LANG, payload);
     },
   },

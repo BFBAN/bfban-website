@@ -34,7 +34,7 @@ router.post('/checkGameIdExist', async (req, res) => {
   const { id } = req.body;
   let idExist;
 
-  let userInfo = await getUserInfo({originId: id});
+  let userInfo = await getUserInfo({ originId: id });
   console.log('userInfo:', userInfo);
 
   idExist = !userInfo.error;
