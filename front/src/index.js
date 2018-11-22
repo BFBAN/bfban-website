@@ -13,8 +13,10 @@
 // import FastClick from 'fastclick';
 
 import App from './App.vue';
-import router from './routes';
+import cn from './lang/cn';
+import uk from './lang/uk';
 
+import router from './routes';
 import store from './store';
 
 Vue.use(VueQuillEditor);
@@ -24,11 +26,8 @@ Vue.use(VueQuillEditor);
 
 FastClick.attach(document.body);
 
-import { cn, uk } from './lang/lang';
 
-
-// iview.lang('en-US');
-
+Vue.locale = () => {};
 const locale = 'cn';
 const messages = {
   cn: Object.assign(cn, iview.langs['zh-CN']),
