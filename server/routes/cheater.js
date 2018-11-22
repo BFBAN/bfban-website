@@ -175,7 +175,7 @@ router.get('/:game/:uid', [
   }
 
   const cheaterUId = req.params.uid;
-  const { game } = req.paramse;
+  const { game } = req.params;
 
   await db.query('update cheaters set `n` = (`n`+1) where game = ? and uId = ?', [game, cheaterUId]);
 
