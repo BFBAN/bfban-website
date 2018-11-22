@@ -15,8 +15,8 @@ function getCaptcha(req, res) {
 
   const text = captcha.text.toLowerCase();
   const hash = crypto.createHmac('sha256', secret)
-                .update(text)
-                .digest('hex');
+    .update(text)
+    .digest('hex');
 
   res.cookie('encryptCaptcha', hash, {
     httpOnly: true,

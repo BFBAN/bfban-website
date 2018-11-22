@@ -21,7 +21,8 @@ const { getDatetime } = require('../libs/misc');
 router.post('/signin', csrfProtection, [
   check('username').trim().not().isEmpty(),
   check('password').trim().not().isEmpty(),
-  check('captcha').trim().not().isEmpty().isLength({min:4, max: 4}),
+  check('captcha').trim().not().isEmpty()
+    .isLength({ min: 4, max: 4 }),
 ], verifyCatpcha, async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -34,7 +35,7 @@ router.post('/signin', csrfProtection, [
 
   if (result[0] && result[0].valid === '1' && comparePassword(password, result[0].password)) {
     const userPrivilege = result[0].privilege;
-    const uId = result[0].uId;
+    const { uId } = result[0];
 
     const userPayload = {
       username,
@@ -51,12 +52,12 @@ router.post('/signin', csrfProtection, [
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // one day
     });
 
-    res.json({
+    return res.json({
       error: 0,
       data: userPayload,
     });
   } else {
-    res.json({
+    return res.json({
       error: 1,
       msg: 'username or password wrong',
     });
@@ -65,9 +66,12 @@ router.post('/signin', csrfProtection, [
 
 // username, password
 router.post('/signup', csrfProtection, [
-  check('username').trim().not().isEmpty().isLength({min: 4}),
-  check('password').trim().not().isEmpty().isLength({min: 6}),
-  check('captcha').trim().not().isEmpty().isLength({min:4, max: 4}),
+  check('username').trim().not().isEmpty()
+    .isLength({ min: 4 }),
+  check('password').trim().not().isEmpty()
+    .isLength({ min: 6 }),
+  check('captcha').trim().not().isEmpty()
+    .isLength({ min: 4, max: 4 }),
   check('qq').optional({ checkFalsy: true }).isNumeric(),
 ], verifyCatpcha, async (req, res, next) => {
   const errors = validationResult(req);
@@ -96,7 +100,7 @@ router.post('/signup', csrfProtection, [
       createDatetime: d,
       updateDatetime: d,
       uId,
-    })
+    });
   } catch (e) {
     next(e);
     return res.json({
@@ -124,7 +128,7 @@ router.post('/signup', csrfProtection, [
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // one day
   });
 
-  res.json({
+  return res.json({
     error: 0,
     data: userPayload,
   });
@@ -150,34 +154,38 @@ router.get('/:uId', [
     return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
   }
 
-  const uId = req.params.uId;
+  const { uId } = req.params;
   const result = await db.query('select * from users where uId = ?', [uId]);
 
   if (result.length === 0) {
     return res.json({
       error: 1,
-      msg: 'user not exists'
-    })
+      msg: 'user not exists',
+    });
   }
 
-  const {username, originId, privilege, createDatetime, id} = result[0];
+  const {
+    username, originId, privilege, createDatetime, id,
+  } = result[0];
 
   const reports = await db.query(`select t1.createDatetime, t2.updateDatetime, t2.uId, t2.originId, t2.status, t2.game
     from user_report_cheater as t1
     inner join cheaters as t2 
     on t1.cheaterUId = t2.uId
     where t1.userId = ? order by createDatetime DESC`, [id])
-  .catch(e => next(e));
+    .catch(e => next(e));
 
 
-  res.json({
+  return res.json({
     error: 0,
     data: {
-      username, originId, privilege, createDatetime,
+      username,
+      originId,
+      privilege,
+      createDatetime,
       reports,
-    }
-  })
-
+    },
+  });
 });
 
 module.exports = router;

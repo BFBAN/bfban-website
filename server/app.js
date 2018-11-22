@@ -7,7 +7,7 @@ const pino = require('pino')({
   prettyPrint: {
     colorize: true,
     translateTime: true,
-  }
+  },
 });
 
 
@@ -82,12 +82,12 @@ app.use('/', routes);
 app.use((req, res, next) => res.sendStatus(404));
 
 // csrf error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   if (err.code !== 'EBADCSRFTOKEN') return next(err);
 
   // handle CSRF token errors here
   res.status(403);
-  res.json({
+  return res.json({
     error: 1,
     msg: 'ForbiddenError: invalid request',
   });
@@ -99,7 +99,7 @@ app.use((err, req, res, next) => {
 });
 
 // https://thecodebarbarian.com/unhandled-promise-rejections-in-node.js.html
-process.on('unhandledRejection', error => {
+process.on('unhandledRejection', (error) => {
   // Will print "unhandledRejection err is not defined"
   console.log('unhandledRejection', error.message);
 });

@@ -6,7 +6,7 @@ const axios = require('axios');
 const FormData = require('form-data');
 
 const tmpDir = os.tmpdir();
-const tmpFileName = `${(new Date()).getTime()  }-${  Math.floor(Math.random() * 10000)  }.jpg`;
+const tmpFileName = `${(new Date()).getTime()}-${Math.floor(Math.random() * 10000)}.jpg`;
 const tmpFileLocation = path.resolve(tmpDir, tmpFileName);
 
 async function webshot(url) {
@@ -37,8 +37,8 @@ function uploadToSm(url) {
       headers: data.getHeaders(),
       data,
     })
-      .then((res) => res.data)
-      .then((d) => d.data)
+      .then(res => res.data)
+      .then(d => d.data)
       .then((d) => {
         resolve(d.url);
       })
@@ -62,10 +62,9 @@ function checkGameIdExist(id) {
       })
         .then((res) => {
           const d = res.data;
-          let status;
 
           try {
-            status = d.locals.searchResults[0].status;
+            const { status } = d.locals.searchResults[0];
             if (status === 'done') {
               resolve(true);
             } else {
@@ -94,11 +93,11 @@ function checkGameIdExist(id) {
 //   });
 
 if (process.argv.length && process.argv.length > 2) {
-  let url = process.argv[2];
+  const url = process.argv[2];
   uploadToSm(url)
-  .then((u) => {
-    console.log(u);
-  });
+    .then((u) => {
+      console.log(u);
+    });
 }
 
 module.exports = {

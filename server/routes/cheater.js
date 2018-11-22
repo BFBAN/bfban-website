@@ -1,5 +1,4 @@
 const express = require('express');
-const moment = require('moment');
 const uuidv4 = require('uuid/v4');
 const csrf = require('csurf');
 const { spawn } = require('child_process');
@@ -12,7 +11,9 @@ const { verifyJWTMiddleware, verifyPrivilegeMiddleware } = require('../middlewar
 const db = require('../mysql');
 
 const { verifyCatpcha } = require('../middlewares/captcha');
-const { gamesArr, getDatetime, getDatetimeWithTZ, addOneDay, convertDatetimeToTimeZone } = require('../libs/misc');
+const {
+  gamesArr, getDatetime, getDatetimeWithTZ, addOneDay, convertDatetimeToTimeZone,
+} = require('../libs/misc');
 
 // csrf protection
 const csrfProtection = csrf({ cookie: true });
@@ -23,11 +24,10 @@ function datetimerangeToTimeZone(datetimerange, tz) {
   // receive string, return string
   return _.map(datetimerange.split(','), (v) => {
     if (v === '') {
-      return ''
-    } else {
-      // convert client local timezone to server's timezone
-      return convertDatetimeToTimeZone(v, tz)
+      return '';
     }
+    // convert client local timezone to server's timezone
+    return convertDatetimeToTimeZone(v, tz);
   }).join(',');
 }
 
@@ -62,7 +62,7 @@ function capture(originId, cheaterUId) {
 }
 
 async function updateCommentsNum(uId) {
-  await db.query(`update cheaters set commentsNum = (commentsNum+1) where uId = ?`, [uId])
+  await db.query('update cheaters set commentsNum = (commentsNum+1) where uId = ?', [uId]);
 }
 
 // cheater list
@@ -93,10 +93,16 @@ router.get('/', async (req, res, next) => {
   let cdQuery = '';
   let udQuery = '';
 
-  const gameQueryVal = [],
-    statusQueryVal = [] ,
-    cdQueryVal = [],
-    udQueryVal = [];
+  const gameQueryVal = [];
+
+
+  const statusQueryVal = [];
+
+
+  const cdQueryVal = [];
+
+
+  const udQueryVal = [];
 
   if (game !== '') gameQuery = 'and game = ?';
   if (status && ['0', '1', '2', '3', '4', '5', '6'].indexOf(status) !== -1) statusQuery = 'and status = ?';
@@ -110,7 +116,7 @@ router.get('/', async (req, res, next) => {
 
   if (sort === '') sort = 'updateDatetime';
 
-  const commonCondition = `1=1 and valid = '1'`;
+  const commonCondition = '1=1 and valid = \'1\'';
 
   const queryCondition = `where ${commonCondition} ${gameQuery} ${statusQuery} ${cdQuery} ${udQuery}`;
   const queryOrder = `order by ${sort}`;
@@ -161,7 +167,7 @@ router.get('/', async (req, res, next) => {
 // cheater detail
 // report, verify, confirm
 router.get('/:game/:uid', [
-  check('game', 'game property incorrect').not().isEmpty().custom((val, {req}) => {return gamesArr.indexOf(val) !== -1}),
+  check('game', 'game property incorrect').not().isEmpty().custom((val, { req }) => gamesArr.indexOf(val) !== -1),
 ], async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -169,7 +175,7 @@ router.get('/:game/:uid', [
   }
 
   const cheaterUId = req.params.uid;
-  const game = req.params.game;
+  const { game } = req.paramse;
 
   await db.query('update cheaters set `n` = (`n`+1) where game = ? and uId = ?', [game, cheaterUId]);
 
@@ -226,7 +232,7 @@ router.get('/:game/:uid', [
 // insert user_report_cheater db
 // userId, cheaterUId, datatime
 router.post('/', csrfProtection, verifyJWTMiddleware, verifyCatpcha, [
-  check('gameName', 'game property incorrect').not().isEmpty().custom((val, {req}) => {return gamesArr.indexOf(val) !== -1}),
+  check('gameName', 'game property incorrect').not().isEmpty().custom((val, { req }) => gamesArr.indexOf(val) !== -1),
   check('originId').not().isEmpty().isAscii(),
   check('cheatMethods').not().isEmpty(),
   check('bilibiliLink').optional({ checkFalsy: true }).isURL(),
@@ -236,7 +242,7 @@ router.post('/', csrfProtection, verifyJWTMiddleware, verifyCatpcha, [
   check('originUserId').not().isEmpty(),
   check('originPersonaId').not().isEmpty(),
   check('avatarLink').not().isEmpty(),
-  ],
+],
 async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -244,7 +250,8 @@ async (req, res, next) => {
   }
 
   const {
-    gameName, originId, cheatMethods, bilibiliLink, description, originUserId, originPersonaId, avatarLink,
+    gameName, originId, cheatMethods, bilibiliLink, description, originUserId,
+    originPersonaId, avatarLink,
   } = req.body;
 
   const cheatersDB = 'cheaters';
@@ -330,7 +337,7 @@ async (req, res, next) => {
   }
 
   let {
-    status, suggestion, cheatMethods = '', cheaterUId, gameName = ''
+    status, suggestion, cheatMethods = '', cheaterUId, gameName = '',
   } = req.body;
 
   const cheatersDB = 'cheaters';
@@ -377,15 +384,14 @@ async (req, res, next) => {
         privilege: userPrivilege,
       },
     });
-  } catch(e) {
+  } catch (e) {
     next(e);
 
-    res.json({
+    return res.json({
       error: 1,
-      msg: 'verify fail'
+      msg: 'verify fail',
     });
   }
-
 });
 
 // confirm cheater
@@ -402,7 +408,7 @@ async (req, res, next) => {
 
   const d = getDatetime();
   const {
-    userId, userVerifyCheaterId, cheaterUId, cheatMethods, gameName = ''
+    userId, userVerifyCheaterId, cheaterUId, cheatMethods, gameName = '',
   } = req.body;
 
   const cheatersDB = 'cheaters';
@@ -421,7 +427,7 @@ async (req, res, next) => {
 
     await updateCommentsNum(cheaterUId);
 
-    res.json({
+    return res.json({
       error: 0,
       data: {
         userId,
@@ -430,19 +436,18 @@ async (req, res, next) => {
         cheatMethods,
       },
     });
-  } catch(e) {
+  } catch (e) {
     next(e);
 
-    res.json({
+    return res.json({
       error: 1,
       msg: 'confirm fail',
     });
   }
-
 });
 
 router.post('/reply', verifyJWTMiddleware, [
-  check('gameName').not().isEmpty().custom((val, {req}) => {return ['bf1', 'bfv'].indexOf(val) !== -1}),
+  check('gameName').not().isEmpty().custom((val, { req }) => ['bf1', 'bfv'].indexOf(val) !== -1),
   check('cheaterId').not().isEmpty().isInt(),
   check('userId').not().isEmpty().isInt(),
   check('content').trim().not().isEmpty(),
@@ -457,7 +462,7 @@ async (req, res, next) => {
   }
 
   const {
-    gameName, cheaterId, userId, toUserId, content, toFloor
+    gameName, cheaterId, userId, toUserId, content, toFloor,
   } = req.body;
   const d = getDatetime();
 
@@ -477,19 +482,19 @@ async (req, res, next) => {
   try {
     const result = await db.query('insert into replies set ?', values);
 
-    const re = await db.query(`select * from cheaters where id = ? and game = ?`, [cheaterId, gameName]);
+    const re = await db.query('select * from cheaters where id = ? and game = ?', [cheaterId, gameName]);
 
     let status;
     if (re[0].status !== '1') {
       status = '5';
-      await db.query(`update cheaters set status = ?, updateDatetime = ? where id = ? and game = ?`, [status, d, cheaterId, gameName]);
+      await db.query('update cheaters set status = ?, updateDatetime = ? where id = ? and game = ?', [status, d, cheaterId, gameName]);
     } else {
       status = '1';
     }
 
     await updateCommentsNum(re[0].uId);
 
-    res.json({
+    return res.json({
       error: 0,
       data: {
         createDatetime: getDatetimeWithTZ(d),
@@ -497,15 +502,13 @@ async (req, res, next) => {
         status,
       },
     });
-  }
-  catch (e) {
+  } catch (e) {
     next(e);
-    res.json({
+    return res.json({
       error: 1,
-      msg: 'reply failed'
-    })
+      msg: 'reply failed',
+    });
   }
-
 });
 
 
