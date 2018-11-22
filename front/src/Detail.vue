@@ -568,7 +568,7 @@ export default {
       const cheaterId = this.cheater.id;
       const userId = this.$store.state.user.userId;
       const { toFloor, toUserId } = this.reply;
-      let {content} = this.reply;
+      let {content = ''} = this.reply;
 
       content = formatTextarea(content);
 
