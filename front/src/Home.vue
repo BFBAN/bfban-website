@@ -102,7 +102,7 @@
           </a>
         </p>
         <p>
-          <a target="_blank" href="http://bf1report.oss-cn-beijing.aliyuncs.com/version/BF1%E5%BF%AB%E9%80%9F%E4%B8%BE%E6%8A%A5%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90.zip">
+          <a target="_blank" href="http://bf1report.oss-cn-beijing.aliyuncs.com/version/%E6%88%98%E5%9C%B0%E8%8B%B1%E6%96%87%E4%B8%BE%E6%8A%A5%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E5%99%A8.zip">
             战地1外挂举报助手本地版
           </a>
         </p>
