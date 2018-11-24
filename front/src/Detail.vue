@@ -228,7 +228,7 @@
 
         <div v-if="cheater.status === '1'">
           <Divider />
-          <p class="hint">如果你对该 石锤 有所疑问，请 复制该网址，找管理员申诉</p>
+          <p class="hint">如果你对该 石锤 有所疑问，请复制该网址，去首页底部QQ群找管理员申诉，加群请注明为申诉</p>
 
         </div>
 

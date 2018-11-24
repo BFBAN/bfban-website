@@ -9,6 +9,8 @@ const path = require('path');
 
 const tokenFile = path.resolve(__dirname, 'token.json');
 
+const { origin } = require('../config');
+
 let fooToken = {};
 
 function readToken() {
@@ -67,12 +69,7 @@ function writeToken(token) {
 }
 
 // 60 days expires
-const rememberedCookie = `
-sid=U3R0ZkVLeTFnSm1aWDJ5M3J5YnN4a1IwR0E3djVSWWpVa2ZFUmpZakNSNERYcDU0M3pHRjJ6WnVlY01aSw.gphyM6HSUbeiG-BVuqjVJmtdF3qZIm4Od5phPcD0-XA; 
-remid=TUU6YzJBSXJZY0s3bkpMQ1B3Z01zVXdueXFVenZTd25wMHg5czR0ajdVRDoxMTE2MzAzNDU.3e5Pi0rJ1kcq3hVJREqkEOfmMR4l1exxTc8qe2do; 
-_nx_mpcid=88dcddef-0228-4ec8-89ab-094167815a11; ealocale=en-us; 
-utag_main=v_id:0165563086cf00028826445f825e03079005d07100bd0$_sn:6$_ss:0$_st:1542357932930$ses_id:1542354253832%3Bexp-session$_pn:6%3Bexp-session
-`;
+const rememberedCookie = origin.cookie;
 
 // one hour expires (3600 expires)
 async function getToken() {
