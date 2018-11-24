@@ -215,6 +215,7 @@
 
         <div v-if="isLogin">
           <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
+          <p class="hint">如果有新的证据图片或视频需要补充，可以再次举报。回复功能只能回复文本或链接。</p>
           <Form :label-width="80" style="position: relative;">
             <p>
               <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
@@ -251,26 +252,8 @@
 
             <FormItem v-show="verify.status === '1'" label="作弊方式">
               <CheckboxGroup v-model="verify.checkbox">
-                <Checkbox label="wallhack">
-                  <span>透视</span>
-                </Checkbox>
-                <Checkbox label="damageChange">
-                  <span>改伤</span>
-                </Checkbox>
-                <Checkbox label="aimbot">
-                  <span>自瞄</span>
-                </Checkbox>
-                <Checkbox label="oneShotKill">
-                  <span>秒杀</span>
-                </Checkbox>
-                <Checkbox label="gadgetModify">
-                  <span>改装备</span>
-                </Checkbox>
-                <Checkbox label="stealth">
-                  <span>隐身</span>
-                </Checkbox>
-                <Checkbox label="shootingThroughWalls">
-                  <span>子弹穿墙</span>
+                <Checkbox v-for="method in cheatMethodsGlossary" :key="method.value" :label="method.value">
+                  {{ method.label }}
                 </Checkbox>
               </CheckboxGroup>
             </FormItem>
@@ -313,7 +296,7 @@
 
 <script>
 
-import { checkIdExist, getCheaterStatusLabel, formatTextarea, convertDatetimeToUserTimeZone } from "./common";
+import { checkIdExist, getCheaterStatusLabel, formatTextarea, convertDatetimeToUserTimeZone, cheatMethodsGlossary, convertCheatMethods } from "./common";
 
 export default {
   data() {
@@ -347,6 +330,8 @@ export default {
       isCheaterExist: true,
 
       replyModal: false,
+
+      cheatMethodsGlossary,
     }
   },
   watch: {
@@ -433,29 +418,13 @@ export default {
       }, 100);
     },
     handleStatus: getCheaterStatusLabel,
-    convertCheatMethods(str) {
-      let s = str || '';
-      const list = {
-        wallhack: '透视',
-        damageChange: '改伤',
-        aimbot: '自瞄',
-        oneShotKill: '秒杀',
-        gadgetModify: '改装备',
-        stealth: '隐身',
-        shootingThroughWalls: '子弹穿墙',
-      };
-
-      // return string
-      return s.split(',').map((v, i) => {
-        return list[v]
-      }).join(' ');
-    },
+    convertCheatMethods,
     doVerify() {
       const {status} = this.verify;
       let { suggestion } = this.verify;
       const cheaterUId = this.$route.params.uid;
       const cheatMethods = this.verify.checkbox.join(',');
-      
+
       if ( (status === '1' && cheatMethods === '') || suggestion.trim() === '') {
         this.$Message.warning('请填写完整');
         return false;

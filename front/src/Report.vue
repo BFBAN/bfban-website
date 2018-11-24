@@ -22,26 +22,8 @@
 
         <FormItem label="作弊方式">
           <CheckboxGroup v-model="formItem.checkbox">
-            <Checkbox label="wallhack">
-              <span>透视</span>
-            </Checkbox>
-            <Checkbox label="damageChange">
-              <span>改伤</span>
-            </Checkbox>
-            <Checkbox label="aimbot">
-              <span>自瞄</span>
-            </Checkbox>
-            <Checkbox label="oneShotKill">
-              <span>秒杀</span>
-            </Checkbox>
-            <Checkbox label="gadgetModify">
-              <span>改装备</span>
-            </Checkbox>
-            <Checkbox label="stealth">
-              <span>隐身</span>
-            </Checkbox>
-            <Checkbox label="shootingThroughWalls">
-              <span>子弹穿墙</span>
+            <Checkbox v-for="method in cheatMethodsGlossary" :key="method.value" :label="method.value">
+              {{ method.label }}
             </Checkbox>
           </CheckboxGroup>
         </FormItem>
@@ -79,7 +61,7 @@
 <script>
 import Misc from './Misc.vue';
 
-import { checkIdExist, checkReportFormData, trimAllWhitespace, getCsrfToken } from "./common";
+import { checkIdExist, checkReportFormData, trimAllWhitespace, getCsrfToken, cheatMethodsGlossary } from "./common";
 
 export default {
   data() {
@@ -97,6 +79,8 @@ export default {
           avatarLink: '',
         },
         spinShow: false,
+
+       cheatMethodsGlossary,
      }
   },
   components: {

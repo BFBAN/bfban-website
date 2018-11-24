@@ -18,7 +18,7 @@ const { getCaptcha } = require('../libs/captcha');
 const db = require('../mysql');
 
 router.get('/', csrfProtection, (req, res, next) => {
-  res.render('index', { title: '联BAN调查局', csrfToken: req.csrfToken() });
+  res.render('index', { title: '战地风云联BAN调查局', csrfToken: req.csrfToken() });
 });
 
 router.get('/youku/:name', async (req, res) => {
