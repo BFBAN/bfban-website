@@ -14,7 +14,7 @@ const pino = require('pino')({
 const routes = require('./routes/');
 const config = require('./config');
 
-const { port } = config;
+const { port, address } = config;
 
 // redis client
 // const redisClient = require('./redis');
@@ -115,8 +115,9 @@ process.on('unhandledRejection', (error) => {
 // });
 
 
-// app start
-app.listen(port, '127.0.0.1', () => console.log(`app listen on port ${port}...`));
-
+if (!module.parent) {
+  // app start
+  app.listen(port, address, () => console.log(`app listen on address ${address} port ${port}...`));
+}
 
 module.exports = app;
