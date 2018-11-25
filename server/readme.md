@@ -45,3 +45,7 @@ mongoose 连接成功后，再启动 express app
 quill editor get html content
 https://github.com/quilljs/quill/issues/903
 quill.root.innerHTML or document.querySelector(".ql-editor").innerHTML
+
+
+// pm2.config.js
+pm2 start pm2.config.js
