@@ -309,7 +309,7 @@ async (req, res, next) => {
       originUserId,
     });
 
-    res.json({
+    return res.json({
       error: 0,
       data: {
         cheaterUId,
@@ -318,11 +318,30 @@ async (req, res, next) => {
     });
   } catch (e) {
     next(e);
-    res.status(500).json({
+    return res.status(500).json({
       error: 1,
       msg: 'report failed',
     });
   }
+});
+
+// get cheater status
+router.post('/status', async (req, res, next) => {
+  const { game, originUserId } = req.body;
+
+  const result = await db.query('select status from cheaters where game = ? and originUserId = ?', [game, originUserId]);
+
+  const exist = result.length !== 0;
+  if (exist) {
+    return res.json({
+      error: 0,
+      status: result[0].status,
+    });
+  }
+  return res.json({
+    error: 1,
+    msg: 'not found',
+  });
 });
 
 // verify cheater
@@ -340,7 +359,7 @@ async (req, res, next) => {
   }
 
   let {
-    status, suggestion, cheatMethods = '', cheaterUId, gameName = '', originUserId
+    status, suggestion, cheatMethods = '', cheaterUId, gameName = '', originUserId,
   } = req.body;
 
   const cheatersDB = 'cheaters';
@@ -466,7 +485,7 @@ async (req, res, next) => {
   }
 
   const {
-    gameName, cheaterId, userId, toUserId, content, toFloor,
+    gameName, cheaterId, userId, toUserId, content, toFloor, originUserId,
   } = req.body;
   const d = getDatetime();
 
@@ -475,6 +494,7 @@ async (req, res, next) => {
     userId,
     content,
     createDatetime: d,
+    originUserId,
   };
   if (toUserId) {
     values.toUserId = toUserId;

@@ -419,7 +419,7 @@ export default {
     },
     handleStatus: getCheaterStatusLabel,
     convertCheatMethods,
-    doVerify() {
+    async doVerify() {
       const {status} = this.verify;
       let { suggestion } = this.verify;
       const cheaterUId = this.$route.params.uid;
@@ -429,6 +429,24 @@ export default {
       if ( (status === '1' && cheatMethods === '') || suggestion.trim() === '') {
         this.$Message.warning('请填写完整');
         return false;
+      }
+
+      const {data: statusData} = await axios({
+        method: 'post',
+        url: '/cheaters/status',
+        data: {
+          game: this.$route.params.game,
+          originUserId,
+        }
+      });
+      if (statusData.error) {
+        this.$Message.error(statusData.msg);
+        return false;
+      }
+      if (statusData.error === 0 && statusData.status === '1') {
+        if (!confirm(`当前为 石锤 状态，你确定要处理成 ${getCheaterStatusLabel(status)} 吗？`)) {
+          return false;
+        }
       }
 
       suggestion = formatTextarea(suggestion);
@@ -540,6 +558,7 @@ export default {
       const cheaterId = this.cheater.id;
       const userId = this.$store.state.user.userId;
       const { toFloor, toUserId } = this.reply;
+      const { originUserId } = this.cheater;
       let {content = ''} = this.reply;
 
       content = formatTextarea(content);
@@ -549,6 +568,7 @@ export default {
         cheaterId,
         userId,
         content,
+        originUserId,
       };
 
       if (toFloor) {
