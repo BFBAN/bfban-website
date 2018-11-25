@@ -424,6 +424,7 @@ export default {
       let { suggestion } = this.verify;
       const cheaterUId = this.$route.params.uid;
       const cheatMethods = this.verify.checkbox.join(',');
+      const { originUserId } = this.cheater;
 
       if ( (status === '1' && cheatMethods === '') || suggestion.trim() === '') {
         this.$Message.warning('请填写完整');
@@ -443,6 +444,7 @@ export default {
           suggestion,
           cheatMethods,
           cheaterUId,
+          originUserId,
         }
       })
       .then((res) => {

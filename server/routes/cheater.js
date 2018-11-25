@@ -180,9 +180,9 @@ router.get('/:game/:uid', [
   await db.query('update cheaters set `n` = (`n`+1) where game = ? and uId = ?', [game, cheaterUId]);
 
   const cheater = await db.query(`select
-    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot, avatarLink, commentsNum, createDatetime
+    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot, avatarLink, commentsNum, createDatetime, originUserId
     from cheaters
-    where uId = ? and game = ?`,
+    where uId = ? and game = ? and valid='1'`,
   [cheaterUId, game]);
 
   const reports = await db.query(`select a.userId, a.createDatetime, a.cheatMethods, a.bilibiliLink, a.description, b.username, b.uId, b.privilege
@@ -305,12 +305,15 @@ async (req, res, next) => {
       description,
       // 每次举报拥有自己的举报 record
       cheaterGameName: originId,
+
+      originUserId,
     });
 
     res.json({
       error: 0,
       data: {
         cheaterUId,
+        originUserId,
       },
     });
   } catch (e) {
@@ -337,7 +340,7 @@ async (req, res, next) => {
   }
 
   let {
-    status, suggestion, cheatMethods = '', cheaterUId, gameName = '',
+    status, suggestion, cheatMethods = '', cheaterUId, gameName = '', originUserId
   } = req.body;
 
   const cheatersDB = 'cheaters';
@@ -358,6 +361,7 @@ async (req, res, next) => {
       cheaterUId,
       cheatMethods,
       createDatetime: d,
+      originUserId,
     });
 
     if (status === '1') {
