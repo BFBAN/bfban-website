@@ -182,7 +182,7 @@ export default {
 
         const d = res.data;
         if (d.error === 0) {
-          this.$router.push({name: 'cheater', params: {game: gameName, uid: d.data.cheaterUId}});
+          this.$router.push({name: 'cheater', params: {game: gameName, ouid: d.data.originUserId}});
 
           this.$Message.success('提交成功');
         } else {

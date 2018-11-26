@@ -58,7 +58,7 @@ router.get('/search', async (req, res, next) => {
   // if false, invalid originId
   // const idExist = await checkGameIdExist(id);
 
-  const cheatersQueryResult = await db.query('select originId, status, uId, createDatetime, game from cheaters where valid = \'1\' and originId like ?', [`%${id}%`])
+  const cheatersQueryResult = await db.query('select originId, status, originUserId, createDatetime, game from cheaters where valid = \'1\' and originId like ?', [`%${id}%`])
     .catch(e => next(e));
 
   return res.json({
@@ -92,14 +92,14 @@ router.get('/activity', async (req, res) => {
 
   const registers = await db.query('select uId, username, createDatetime from users where createDatetime >= ?', [d]);
 
-  const reports = await db.query(`select t1.cheaterUId, t1.createDatetime, t2.username, t2.uId, t3.originId as cheaterOriginId, t3.game
+  const reports = await db.query(`select t1.originUserId, t1.createDatetime, t2.username, t2.uId, t1.cheaterGameName as cheaterOriginId, t3.game
   from user_report_cheater as t1
   inner join users as t2 on t1.userId = t2.id
   inner join cheaters as t3 on t1.cheaterUId = t3.uId
   where t1.createDatetime >= ? and t3.valid = '1'`,
   [d]);
 
-  const verifies = await db.query(`select t1.status, t2.username, t2.uId, t3.game, t3.originId as cheaterOriginId, t1.cheaterUId, t1.createDatetime
+  const verifies = await db.query(`select t1.status, t2.username, t2.uId, t3.game, t3.originId as cheaterOriginId, t1.originUserId, t1.createDatetime
   from user_verify_cheater as t1
   inner join users as t2 on t1.userId = t2.id
   inner join cheaters as t3 on t1.cheaterUId = t3.uId

@@ -37,7 +37,7 @@ const routes = [
   { name: 'misc', path: '/misc', component: Misc },
 
   { name: 'cheaters', path: '/cheaters', component: List },
-  { name: 'cheater', path: '/cheaters/:game/:uid', component: Detail },
+  { name: 'cheater', path: '/cheaters/:game/:ouid', component: Detail },
   { path: '/cheaters/:uid', redirect: '/cheaters/bf1/:uid' },
 
   { name: 'signin', path: '/signin', component: Signin },

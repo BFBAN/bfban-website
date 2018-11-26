@@ -17,7 +17,7 @@
                 <Tag>
                   {{ handleGameName(activity.game) }}
                 </Tag>
-                <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, uid: `${activity.cheaterUId}`}}">{{ activity.cheaterOriginId }}</router-link>
+                <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, ouid: `${activity.originUserId}`}}">{{ activity.cheaterOriginId }}</router-link>
               </span>
 
             </td>
@@ -39,7 +39,7 @@
                 <Tag>
                   {{ handleGameName(activity.game) }}
                 </Tag>
-                <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, uid: `${activity.cheaterUId}`}}">{{ activity.cheaterOriginId }}</router-link>
+                <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, ouid: `${activity.originUserId}`}}">{{ activity.cheaterOriginId }}</router-link>
                 处理为
                 <Tag color="warning">
                   {{ handleStatus(activity.status) }}

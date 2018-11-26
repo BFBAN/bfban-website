@@ -53,7 +53,7 @@
             <span class="mobile-hide"><b>举报时间</b></span>
             <span><b>更新时间</b></span>
           </li>
-          <li v-for="d in data" :key="d.uId">
+          <li v-for="d in data" :key="d.originUserId">
           <span style="display: flex; align-items: center;">
             <img :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'" alt="" style="width: 2.3rem;
             height: 2.3rem;
@@ -61,7 +61,7 @@
             margin-right: .4rem;">
             <div style="display: flex; flex-direction: column;">
               <div style="height: 1.6rem;">
-                <router-link :to="{name: 'cheater', params: { game: gameName, uid: `${d.uId}` }}">{{d.originId}}</router-link>
+                <router-link :to="{name: 'cheater', params: { game: gameName, ouid: `${d.originUserId}` }}">{{d.originId}}</router-link>
                 <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
               </div>
               <span>

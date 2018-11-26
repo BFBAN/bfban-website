@@ -46,7 +46,7 @@
             <td>
         <span>
           举报了
-          <router-link :to="{name: 'cheater', params: { game: `${report.game}`, uid: `${report.uId}`}}">{{report.originId}}</router-link>
+          <router-link :to="{name: 'cheater', params: { game: `${report.game}`, ouid: `${report.originUserId}`}}">{{report.originId}}</router-link>
         </span>
             </td>
             <td>
