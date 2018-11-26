@@ -184,6 +184,27 @@ function getCsrfToken() {
   return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 }
 
+// num seconds
+function waitForAction(num) {
+  const e = this;
+  e.target.style = 'display: none;';
+  const span = document.createElement('span');
+  e.target.parentNode.insertBefore(span, e.target.nextSibling);
+
+  let n = num;
+  span.innerText = `等待 ${n} 秒后重试`;
+  const si = setInterval(() => {
+    if (n > 1) {
+      n -= 1;
+      span.innerText = `等待 ${n} 秒重试`;
+    } else {
+      e.target.style = '';
+      span.innerText = '';
+      clearInterval(si);
+    }
+  }, 1000);
+}
+
 export {
   checkIdExist,
   convertGameName,
@@ -201,4 +222,5 @@ export {
   getCsrfToken,
   cheatMethodsGlossary,
   convertCheatMethods,
+  waitForAction,
 };
