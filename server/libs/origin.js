@@ -223,7 +223,7 @@ async function getUserInfo({ originId = '', userpid = '' }) {
           console.log(JSON.parse(JSON.stringify(result)).users.user);
 
           // it is the one
-          if (originId !== '' && originId.toLowerCase() === EAID[0].toLowerCase()) {
+          if ((originId === '' && userpid !== '') || ( originId !== '' && originId.toLowerCase() === EAID[0].toLowerCase() )) {
             const avatarLink = await getUserAvatar({ pid, token });
             resolve({
               userId: userId[0],

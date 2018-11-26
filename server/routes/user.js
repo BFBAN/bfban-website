@@ -168,11 +168,12 @@ router.get('/:uId', [
     username, originId, privilege, createDatetime, id,
   } = result[0];
 
-  const reports = await db.query(`select t1.createDatetime, t2.updateDatetime, t2.uId, t2.originId, t2.status, t2.game
+  // todo:
+  const reports = await db.query(`select t1.createDatetime, t2.updateDatetime, t1.originUserId, t2.originId, t2.status, t2.game
     from user_report_cheater as t1
     inner join cheaters as t2 
-    on t1.cheaterUId = t2.uId
-    where t1.userId = ? order by createDatetime DESC`, [id])
+    on t1.originUserId = t2.originUserId
+    where t1.userId = ? and t1.valid = '1' and t2.valid = '1' order by createDatetime DESC`, [id])
     .catch(e => next(e));
 
 

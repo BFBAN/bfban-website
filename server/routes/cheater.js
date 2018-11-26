@@ -7,7 +7,7 @@ const path = require('path');
 const { check, validationResult } = require('express-validator/check');
 const { baseDir } = require('../config');
 
-const { verifyJWTMiddleware, verifyPrivilegeMiddleware } = require('../middlewares/auth');
+const { verifyJWTMiddleware, verifyAdminPrivilegeMiddleware } = require('../middlewares/auth');
 const db = require('../mysql');
 
 const { verifyCatpcha } = require('../middlewares/captcha');
@@ -154,7 +154,7 @@ router.get('/', async (req, res, next) => {
 
   const queryCondition = `where ${commonCondition} ${gameQuery} ${statusQuery} ${cdQuery} ${udQuery}`;
   const queryOrder = `order by ${sort}`;
-  const querySql = `select n, commentsNum, avatarLink, originId, status, cheatMethods, uId, createDatetime, updateDatetime
+  const querySql = `select n, commentsNum, avatarLink, originId, status, cheatMethods, originUserId, uId, createDatetime, updateDatetime
     from cheaters
     ${queryCondition}
     ${queryOrder}
@@ -200,7 +200,7 @@ router.get('/', async (req, res, next) => {
 
 // cheater detail
 // report, verify, confirm
-router.get('/:game/:uid', [
+router.get('/:game/:ouid', [
   check('game', 'game property incorrect').not().isEmpty().custom((val, { req }) => gamesArr.indexOf(val) !== -1),
 ], async (req, res, next) => {
   const errors = validationResult(req);
@@ -208,35 +208,37 @@ router.get('/:game/:uid', [
     return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
   }
 
-  const cheaterUId = req.params.uid;
+  const cheaterOUId = req.params.ouid;
   const { game } = req.params;
 
-  await db.query('update cheaters set `n` = (`n`+1) where game = ? and uId = ?', [game, cheaterUId]);
+  await db.query('update cheaters set `n` = (`n`+1) where game = ? and originUserId = ?', [game, cheaterOUId]);
 
   const cheater = await db.query(`select
-    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot, avatarLink, commentsNum, createDatetime, originUserId
+    id, n, originId, status, cheatMethods, bf1statsShot, trackerShot, trackerWeaponShot, avatarLink, commentsNum, createDatetime, updateDatetime, originUserId
     from cheaters
-    where uId = ? and game = ? and valid='1'`,
-  [cheaterUId, game]);
+    where originUserId = ? and game = ? and valid='1'`,
+  [cheaterOUId, game]);
+
+  const origins = await db.query('select * from origin where originUserId = ?', [cheaterOUId]);
 
   const reports = await db.query(`select a.userId, a.createDatetime, a.cheatMethods, a.bilibiliLink, a.description, b.username, b.uId, b.privilege
     from user_report_cheater as a
     left join users as b
     on a.userId = b.id
-    where a.cheaterUId = ? and a.valid = "1"`, [cheaterUId]);
+    where a.originUserId = ? and a.valid = "1"`, [cheaterOUId]);
 
 
   const verifies = await db.query(`select a.id, a.userId, a.createDatetime, a.status, a.suggestion, a.cheatMethods, b.username, b.uId, b.privilege
     from user_verify_cheater as a
     left join users as b
     on a.userId = b.id
-    where a.cheaterUId = ?`, [cheaterUId]);
+    where a.originUserId = ? and a.valid = '1'`, [cheaterOUId]);
 
   const confirms = await db.query(`select t1.userId, t1.userVerifyCheaterId, t2.username, t2.uId, t2.privilege, t1.createDatetime, t3.cheatMethods
     from user_confirm_verify as t1
     left join users as t2 on t1.userId = t2.id
     left join user_verify_cheater as t3 on t1.userVerifyCheaterId = t3.id
-    where t3.cheaterUId = ?`, [cheaterUId]);
+    where t3.originUserId = ? and t3.valid = '1'`, [cheaterOUId]);
 
   const replies = await db.query(`select
     t1.createDatetime, 
@@ -247,12 +249,13 @@ router.get('/:game/:uid', [
     left join cheaters as t2 on t1.cheaterId = t2.id
     left join users as t3 on t1.userId = t3.id
     left join users as t4 on t1.toUserId = t4.id
-    where t2.uId = ? and t2.game = ?`, [cheaterUId, game]);
+    where t2.originUserId = ? and t2.game = ?`, [cheaterOUId, game]);
 
   return res.json({
     error: 0,
     data: {
       cheater,
+      origins,
       reports,
       verifies,
       confirms,
@@ -380,7 +383,7 @@ router.post('/status', async (req, res, next) => {
 
 // verify cheater
 // status, suggestion, userId, cheaterUId, datetime
-router.post('/verify', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
+router.post('/verify', verifyJWTMiddleware, verifyAdminPrivilegeMiddleware, [
   check('status').not().isEmpty(),
   check('suggestion').trim().not().isEmpty(),
   // check('cheatMethods').optional({ checkFalsy: true }),
@@ -452,7 +455,7 @@ async (req, res, next) => {
 });
 
 // confirm cheater
-router.post('/confirm', verifyJWTMiddleware, verifyPrivilegeMiddleware, [
+router.post('/confirm', verifyJWTMiddleware, verifyAdminPrivilegeMiddleware, [
   check('userId').not().isEmpty(),
   check('userVerifyCheaterId').not().isEmpty(),
   check('cheatMethods').not().isEmpty(),
@@ -565,6 +568,50 @@ async (req, res, next) => {
     return res.json({
       error: 1,
       msg: 'reply failed',
+    });
+  }
+});
+
+// need sign in
+router.post('/updateCheaterInfo', verifyJWTMiddleware, verifyAdminPrivilegeMiddleware, [
+  check('originUserId').not().isEmpty(),
+], async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(200).json({ error: 1, msg: 'verify 请规范填写', errors: errors.array() });
+  }
+
+  const { originUserId } = req.body;
+  try {
+    const userInfo = await getUserInfo({ userpid: originUserId });
+
+    if (userInfo.error) {
+      return res.json({
+        error: 1,
+        msg: userInfo.error,
+      });
+    }
+
+    const d = getDatetime();
+    const originData = {
+      originUserId,
+      cheaterGameName: userInfo.EAID,
+      createDatetime: d,
+    };
+    await db.query('insert into origin set ?', originData);
+    await db.query('update cheaters set avatarLink = ?, updateDatetime = ? where originUserId = ?', [userInfo.avatarLink, d, originUserId]);
+
+    return res.json({
+      error: 0,
+      data: {
+        origin: Object.assign(originData, { avatarLink: userInfo.avatarLink }),
+      },
+    });
+  } catch (e) {
+    next(e);
+    return res.json({
+      error: 1,
+      msg: e,
     });
   }
 });

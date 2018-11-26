@@ -13,7 +13,7 @@
 
         </div>
         <div class="search mobile-hide">
-          <Input clearable search placeholder="检索" v-model="searchVal" @on-search="handleSearch" />
+          <Input clearable search placeholder="支持搜索历史ID啦..." v-model="searchVal" @on-search="handleSearch" />
         </div>
         <div class="nav">
           <router-link v-show="!isLogin" :to="{name: 'signin'}">{{$t("header.signin")}}</router-link>
