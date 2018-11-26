@@ -2,25 +2,25 @@
   <div class="container">
     <div class="content">
       <div v-if="isCheaterExist">
-        <div style="display: flex; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; position: relative;">
 
-      <span style="font-size: 1.6rem;">
-        <router-link :to="{name: 'cheaters', query: {game: `${gameName}`}}">
-          <Tag>
-            {{ gameName }}
-          </Tag>
-        </router-link>
+          <span style="font-size: 1.6rem;">
+            <router-link :to="{name: 'cheaters', query: {game: `${gameName}`}}">
+              <Tag>
+                {{ gameName }}
+              </Tag>
+            </router-link>
 
-        <span style="    color: rgb(144, 144, 144);
-    font-size: 1.2rem;
-    margin: 0px 0.4rem 0 0;">
-          /
-        </span>
+            <span style="    color: rgb(144, 144, 144);
+        font-size: 1.2rem;
+        margin: 0px 0.4rem 0 0;">
+              /
+            </span>
 
-        <span>
-          {{ cheater.originId }}
-        </span>
-      </span>
+            <span>
+              {{ cheater.originId }}
+            </span>
+          </span>
 
           <div>
             <Tag color="error">
@@ -30,24 +30,28 @@
             <Tag v-if="cheater.cheatMethods" color="warning">
               {{ convertCheatMethods(cheater.cheatMethods) }}
             </Tag>
-
-            <span>
-              围观{{ cheater.n || 0 }}次
-            </span>
-            <span>
-              回复{{ cheater.commentsNum || 0 }}次
-            </span>
           </div>
           <p>
-            <Time v-if="cheater.createDatetime" type="datetime" :time="cheater.createDatetime"></Time>被第一次举报
+            <span>
+              {{ cheater.n || 0 }}次围观
+            </span>
+            <span>
+              {{ cheater.commentsNum || 0 }}次回复
+            </span>
+          </p>
+          <p>
+            <span>
+              第一次被举报：<Time v-if="cheater.createDatetime" :time="cheater.createDatetime"></Time>
+            </span>
+            <span>
+              最近更新：<Time v-if="cheater.updateDatetime" :time="cheater.updateDatetime"></Time>
+            </span>
           </p>
 
           <div v-show="cheater.originId">
-            <p>
-              <b>
-                Ta的相关战绩链接：
-              </b>
-            </p>
+            <h2>
+              Ta的相关战绩链接：
+            </h2>
             <a v-show="`${gameName}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">
               battlefieldtracker
             </a>
@@ -64,18 +68,45 @@
           </div>
 
           <div v-show="cheater.avatarLink">
-            <p>
-              <b>
-                Ta的origin头像：
-              </b>
-            </p>
+            <h2>
+              Ta的origin头像：
+            </h2>
             <img :src="cheater.avatarLink" alt="avatar" width="208" height="208">
           </div>
 
+          <div v-show="origins.length">
+            <h2>Ta的历史ID：</h2>
+            <table>
+              <thead>
+                <tr>
+                  <td><b>更新时间</b></td>
+                  <td><b>ID</b></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="origin in origins" :key="origin.id">
+                  <td>
+                    <Time :time="origin.createDatetime"></Time>
+                  </td>
+                  <td>{{ origin.cheaterGameName }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
           <p class="hint">
-            以上 链接失效 或 该被举报人 改名了。bfban.com 有能力<b>永久追踪</b>被举报者的行踪。 功能开发中，敬请期待！
+            若发现 链接失效 或 改名，请点击
+            <a href="#" @click.prevent="updateCheaterInfo">更新资料</a>，
+            bfban.com 有能力<b>永久追踪</b>被举报者的行踪。
+          </p>
+          <p class="hint">
+            服务器也会定期抓取、更新被举报人的信息
+          </p>
+          <p class="hint">
+            历史ID也可以用来搜索
           </p>
 
+          <Spin size="large" fix v-show="updateUserInfospinShow"></Spin>
         </div>
 
         <div style="position: relative">
@@ -229,12 +260,12 @@
         <div v-if="cheater.status === '1'">
           <Divider />
           <p class="hint">如果你对该 石锤 有所疑问，请复制该网址，去首页底部QQ群找管理员申诉，加群请注明为申诉</p>
-
         </div>
+
+        <p class="hint">为了防止管理权力滥用，若要石锤，需要至少两位管理员参与才行</p>
 
         <div v-if="isAdmin">
           <Divider>管理员专区</Divider>
-          <p class="hint">若要石锤，需要至少两位管理员参与才行</p>
           <p class="hint">不要轻易下判断，如果不能做出处理判断，就使用上方回复 参与讨论，等待举报者回复</p>
           <p class="hint">管理员的任何处理操作都会对作弊者的 现有状态 造成改变，如果不是100%确定，请使用回复留言讨论</p>
 
@@ -296,7 +327,8 @@
 
 <script>
 
-import { checkIdExist, getCheaterStatusLabel, formatTextarea, convertDatetimeToUserTimeZone, cheatMethodsGlossary, convertCheatMethods } from "./common";
+import { checkIdExist, getCheaterStatusLabel, formatTextarea,
+  convertDatetimeToUserTimeZone, cheatMethodsGlossary, convertCheatMethods, waitForAction } from "./common";
 
 export default {
   data() {
@@ -304,6 +336,7 @@ export default {
       cheater: {
         originId: '',
       },
+      origins: [],
       timelineList: [],
       verify: {
         status: '1',
@@ -324,7 +357,6 @@ export default {
       },
       replySpinShow: false,
 
-      cheaterUId: '',
       gameName: '',
 
       isCheaterExist: true,
@@ -332,6 +364,8 @@ export default {
       replyModal: false,
 
       cheatMethodsGlossary,
+
+      updateUserInfospinShow: false,
     }
   },
   watch: {
@@ -343,17 +377,17 @@ export default {
   methods: {
     loadData() {
       const gameName = this.gameName = this.$route.params.game;
-      const cheaterUID = this.cheaterUId = this.$route.params.uid;
+      const originUserId = this.$route.params.ouid;
 
       axios({
         method: 'get',
-        url: `/cheaters/${gameName}/${cheaterUID}`,
+        url: `/cheaters/${gameName}/${originUserId}`,
       })
       .then((res) => {
         this.spinShow = false;
 
         const d = res.data;
-        let { cheater, reports, verifies, confirms, replies } = d.data;
+        let { cheater, origins, reports, verifies, confirms, replies } = d.data;
 
         if (cheater.length === 0) {
           this.isCheaterExist = false;
@@ -363,6 +397,7 @@ export default {
         }
 
         this.cheater = cheater[0];
+        this.origins = _.sortBy(origins, 'createDatetime').reverse();
 
 
         reports = _.each(reports, (v, k, l) => {
@@ -422,7 +457,6 @@ export default {
     async doVerify() {
       const {status} = this.verify;
       let { suggestion } = this.verify;
-      const cheaterUId = this.$route.params.uid;
       const cheatMethods = this.verify.checkbox.join(',');
       const { originUserId } = this.cheater;
 
@@ -431,6 +465,8 @@ export default {
         return false;
       }
 
+      // JUST before axios
+      this.verifySpinShow = true;
       const {data: statusData} = await axios({
         method: 'post',
         url: '/cheaters/status',
@@ -452,8 +488,6 @@ export default {
       suggestion = formatTextarea(suggestion);
 
 
-      // JUST before axios
-      this.verifySpinShow = true;
       axios({
         method: 'post',
         url: '/cheaters/verify',
@@ -461,7 +495,6 @@ export default {
           status,
           suggestion,
           cheatMethods,
-          cheaterUId,
           originUserId,
         }
       })
@@ -501,7 +534,7 @@ export default {
     doConfirm(e) {
       const { userVerifyCheaterId, userVerifyCheaterUsername, cheatMethods } = e.target.dataset;
       const { userId } = this.$store.state.user;
-      const cheaterUId = this.$route.params.uid;
+      const originUserId = this.$route.params.ouid;
 
       axios({
         method: 'post',
@@ -509,7 +542,7 @@ export default {
         data: {
           userVerifyCheaterId,
           userId,
-          cheaterUId,
+          originUserId,
           cheatMethods,
         }
       })
@@ -614,7 +647,42 @@ export default {
           this.$Message.error(d.msg);
         }
       });
-    }
+    },
+    updateCheaterInfo(e) {
+      waitForAction.call(e, 20);
+
+      if (!Boolean(this.$store.state.user)) {
+        this.$Message.error('请登录');
+        return false;
+      }
+
+      this.updateUserInfospinShow = true;
+      const { originUserId } = this.cheater;
+      axios({
+        method: 'post',
+        url: '/cheaters/updateCheaterInfo',
+        data: {
+          originUserId,
+        }
+      }).then((res) => {
+        this.updateUserInfospinShow = false;
+
+        const d = res.data;
+        if (d.error === 0) {
+          const {cheaterGameName: originId, originUserId, avatarLink} = d.data.origin;
+
+          this.cheater.originId = originId;
+          this.cheater.originUserId = originUserId;
+          this.cheater.avatarLink = avatarLink;
+
+          this.origins.unshift(d.data.origin);
+
+          this.$Message.success('更新完成');
+        } else {
+          this.$Message.error(d.msg);
+        }
+      });
+    },
   },
   computed: {
     isVerified() {
