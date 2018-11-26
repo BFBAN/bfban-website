@@ -14,6 +14,7 @@ const { verifyCatpcha } = require('../middlewares/captcha');
 const {
   gamesArr, getDatetime, getDatetimeWithTZ, addOneDay, convertDatetimeToTimeZone,
 } = require('../libs/misc');
+const { getUserInfo } = require('../libs/origin');
 
 // csrf protection
 const csrfProtection = csrf({ cookie: true });
@@ -59,6 +60,39 @@ function capture(originId, cheaterUId) {
     });
   });
   // 抓取截图，并存入数据库
+}
+
+async function verifyGameIdComplete(req, res, next) {
+  const {
+    originId, originUserId, originPersonaId, avatarLink,
+  } = req.body;
+
+  try {
+    const userInfo = await getUserInfo({ originId });
+
+    if (userInfo.error) {
+      return res.json({
+        error: 1,
+        msg: userInfo.error,
+      });
+    }
+
+    if (userInfo.userId === originUserId
+      && userInfo.personaId === originPersonaId
+      && userInfo.avatarLink === avatarLink) {
+      return next();
+    }
+    return res.json({
+      error: 1,
+      msg: 'verifyGameIdComplete not match',
+    });
+  } catch (e) {
+    next(e);
+    return res.json({
+      error: 1,
+      msg: e,
+    });
+  }
 }
 
 async function updateCommentsNum(uId) {
@@ -242,7 +276,7 @@ router.post('/', csrfProtection, verifyJWTMiddleware, verifyCatpcha, [
   check('originUserId').not().isEmpty(),
   check('originPersonaId').not().isEmpty(),
   check('avatarLink').not().isEmpty(),
-],
+], verifyGameIdComplete,
 async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
