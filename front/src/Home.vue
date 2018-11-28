@@ -36,10 +36,7 @@
                 <Tag color="success">管理员</Tag>
                 <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
                 将
-                <Tag>
-                  {{ handleGameName(activity.game) }}
-                </Tag>
-                <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, ouid: `${activity.originUserId}`}}">{{ activity.cheaterOriginId }}</router-link>
+                <router-link :to="{name: 'cheater', params: {ouid: `${activity.originUserId}`}}">{{ activity.cheaterOriginId }}</router-link>
                 处理为
                 <Tag color="warning">
                   {{ handleStatus(activity.status) }}

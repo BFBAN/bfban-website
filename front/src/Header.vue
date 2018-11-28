@@ -47,10 +47,7 @@
           </p>
           <div v-if="cheaters.length !== 0">
             <p v-for="cheater in cheaters">
-              <router-link :to="{name: 'cheater', params: {game: `${cheater.game}`, ouid: `${cheater.originUserId}`}}">
-                <Tag>
-                  {{ cheater.game }}
-                </Tag>
+              <router-link :to="{name: 'cheater', params: {ouid: `${cheater.originUserId}`}}">
                 {{cheater.originId}}
               </router-link>
             </p>
