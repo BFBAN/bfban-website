@@ -53,7 +53,7 @@
             <span class="mobile-hide"><b>举报时间</b></span>
             <span><b>更新时间</b></span>
           </li>
-          <li v-for="d in data">
+          <li v-for="d in data" :key="d.originUserId">
           <span style="display: flex; align-items: center;">
             <img :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'" alt="" style="width: 2.3rem;
             height: 2.3rem;
