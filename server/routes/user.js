@@ -169,7 +169,9 @@ router.get('/:uId', [
   } = result[0];
 
   // todo:
-  const reports = await db.query(`select t1.createDatetime, t2.updateDatetime, t1.originUserId, t2.originId, t2.status, t2.game
+  const reports = await db.query(`select 
+    t1.createDatetime, t1.game, t1.cheaterGameName as originId, t1.originUserId, 
+    t2.status, t2.updateDatetime
     from user_report_cheater as t1
     inner join cheaters as t2 
     on t1.originUserId = t2.originUserId

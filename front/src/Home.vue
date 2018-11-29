@@ -1,6 +1,9 @@
 <template>
   <div class="container">
     <div class="content">
+      <Alert type="warning">
+        bfban.com 已经可以永久追踪被举报挂壁的ID，并支持搜索挂壁的历史ID！欢迎大家积极举报，给挂壁留下案底，使他们无处遁形。
+      </Alert>
       <Divider>{{$t("home.activity.title")}}</Divider>
 
       <p>bfban.com  于 2018年11月4日 上线，收到 <b>{{ site.report }}</b> 次举报，已石锤了 <b>{{ site.cheater }}</b> 个挂壁，感谢大家的共同努力！</p>

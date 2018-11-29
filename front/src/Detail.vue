@@ -5,21 +5,7 @@
         <div style="display: flex; flex-direction: column; position: relative;">
 
           <span style="font-size: 1.6rem;">
-            <router-link :to="{name: 'cheaters', query: {game: `${gameName}`}}">
-              <Tag>
-                {{ gameName }}
-              </Tag>
-            </router-link>
-
-            <span style="    color: rgb(144, 144, 144);
-        font-size: 1.2rem;
-        margin: 0px 0.4rem 0 0;">
-              /
-            </span>
-
-            <span>
-              {{ cheater.originId }}
-            </span>
+            {{ cheater.originId }}
           </span>
 
           <div>
@@ -48,33 +34,47 @@
             </span>
           </p>
 
-          <div v-show="cheater.originId">
+          <div style="margin-top: .4rem;">
+            <h2>Ta的被举报的游戏：</h2>
+            <div>
+              <router-link v-for="g in games" :key="g.game" :to="{name: 'cheaters'}" >
+                {{ g.game }}
+              </router-link>
+            </div>
+          </div>
+
+          <div v-show="cheater.originId" style="margin-top: .4rem;">
             <h2>
               Ta的相关战绩链接：
             </h2>
-            <a v-show="`${gameName}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">
-              battlefieldtracker
-            </a>
-            <a v-show="`${gameName}` === 'bfv'" target="_blank" :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">
-              battlefieldtracker
-            </a>
+            <p v-for="g in games" :key="g.game">
+              <Tag>
+                {{g.game}}
+              </Tag>
+              <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">
+                battlefieldtracker
+              </a>
+              <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">
+                bf1stats
+              </a>
+              <a v-show="`${g.game}` === 'bfv'" target="_blank" :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">
+                battlefieldtracker
+              </a>
+            </p>
+
             <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
             <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">bf1tracker武器截图</a>
-
-            <a v-show="`${gameName}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">
-              bf1stats
-            </a>
             <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
           </div>
 
-          <div v-show="cheater.avatarLink">
+          <div v-show="cheater.avatarLink" style="margin-top: .4rem;">
             <h2>
               Ta的origin头像：
             </h2>
             <img :src="cheater.avatarLink" alt="avatar" width="208" height="208">
           </div>
 
-          <div v-show="origins.length">
+          <div v-show="origins.length" style="margin-top: .4rem;">
             <h2>Ta的历史ID：</h2>
             <table>
               <thead>
@@ -94,17 +94,19 @@
             </table>
           </div>
 
-          <p class="hint">
-            若发现 链接失效 或 改名，请点击
-            <a href="#" @click.prevent="updateCheaterInfo">更新资料</a>，
-            bfban.com 有能力<b>永久追踪</b>被举报者的行踪。
-          </p>
-          <p class="hint">
-            服务器也会定期抓取、更新被举报人的信息
-          </p>
-          <p class="hint">
-            历史ID也可以用来搜索
-          </p>
+          <div style="margin-top: .4rem;">
+            <p class="hint">
+              若发现 链接失效 或 改名，请点击
+              <a href="#" @click.prevent="updateCheaterInfo">更新资料</a>，
+              bfban.com 有能力<b>永久追踪</b>被举报者的行踪。
+            </p>
+            <p class="hint">
+              服务器也会定期抓取、更新被举报人的信息
+            </p>
+            <p class="hint">
+              历史ID也可以用来搜索
+            </p>
+          </div>
 
           <Spin size="large" fix v-show="updateUserInfospinShow"></Spin>
         </div>
@@ -124,9 +126,22 @@
                   <b>{{l.username}}</b>
                 </router-link>
                 举报
-                <Tag color="warning">
+
+                <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
+                  {{ l.cheaterGameName }}
+                </router-link>
+
+                在
+
+                <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
+                  {{l.game}}
+                </router-link>
+
+                游戏中
+
+                <b>
                   {{convertCheatMethods(l.cheatMethods || '')}}
-                </Tag>
+                </b>
               </div>
 
               <p v-if="l.bilibiliLink">
@@ -154,6 +169,7 @@
                 </router-link>
 
                 认为
+
                 <Tag color="warning">
                   {{ handleStatus(l.status) }}
                 </Tag>
@@ -161,9 +177,10 @@
                 <span v-if="l.cheatMethods">
               ，
               作弊方式
-              <Tag color="warning">
+
+              <b>
                 {{convertCheatMethods(l.cheatMethods || '')}}
-              </Tag>
+              </b>
             </span>
               </div>
 
@@ -201,9 +218,10 @@
                   # 该决定
                 </a>
                 ，作弊方式
-                <Tag color="warning">
+
+                <b>
                   {{ convertCheatMethods(l.cheatMethods || '') }}
-                </Tag>
+                </b>
               </div>
 
               <p v-if="isLogin">
@@ -246,7 +264,7 @@
 
         <div v-if="isLogin">
           <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
-          <p class="hint">如果有新的证据图片或视频需要补充，可以再次举报。回复功能只能回复文本或链接。</p>
+          <p class="hint">如果有新的证据图片或视频需要补充，可以再次举报。回复功能只能回复文本或链接。如需回复图片，请移步这里 <a href="https://sm.ms/" target="_blank">上传图片 </a>，然后复制图片链接进行回复。</p>
           <Form :label-width="80" style="position: relative;">
             <p>
               <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
@@ -337,6 +355,7 @@ export default {
         originId: '',
       },
       origins: [],
+      games: [],
       timelineList: [],
       verify: {
         status: '1',
@@ -376,18 +395,17 @@ export default {
   },
   methods: {
     loadData() {
-      const gameName = this.gameName = this.$route.params.game;
       const originUserId = this.$route.params.ouid;
 
       axios({
         method: 'get',
-        url: `/cheaters/${gameName}/${originUserId}`,
+        url: `/cheaters/${originUserId}`,
       })
       .then((res) => {
         this.spinShow = false;
 
         const d = res.data;
-        let { cheater, origins, reports, verifies, confirms, replies } = d.data;
+        let { cheater, games, origins, reports, verifies, confirms, replies } = d.data;
 
         if (cheater.length === 0) {
           this.isCheaterExist = false;
@@ -398,6 +416,7 @@ export default {
 
         this.cheater = cheater[0];
         this.origins = _.sortBy(origins, 'createDatetime').reverse();
+        this.games = _.sortBy(games, 'game');
 
 
         reports = _.each(reports, (v, k, l) => {
@@ -426,16 +445,6 @@ export default {
         // render timeline
         this.timelineList = timelineList;
 
-        // check id exist
-        // checkIdExist({
-        //   gameName: this.gameName,
-        //   id: this.cheater.originId,
-        // })
-        // .then((res) => {
-        //   let d = res.data;
-        //
-        //   this.idExist = d.idExist;
-        // });
       });
     },
     jumpToBookmark(e) {
@@ -471,7 +480,6 @@ export default {
         method: 'post',
         url: '/cheaters/status',
         data: {
-          game: this.$route.params.game,
           originUserId,
         }
       });
@@ -587,7 +595,6 @@ export default {
     doReply() {
       this.replySpinShow = true;
 
-      const gameName = this.$route.params.game;
       const cheaterId = this.cheater.id;
       const userId = this.$store.state.user.userId;
       const { toFloor, toUserId } = this.reply;
@@ -597,7 +604,6 @@ export default {
       content = formatTextarea(content);
 
       let data = {
-        gameName,
         cheaterId,
         userId,
         content,
@@ -649,7 +655,7 @@ export default {
       });
     },
     updateCheaterInfo(e) {
-      waitForAction.call(e, 20);
+      waitForAction.call(e, 60);
 
       if (!Boolean(this.$store.state.user)) {
         this.$Message.error('请登录');
