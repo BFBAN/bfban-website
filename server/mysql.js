@@ -5,6 +5,7 @@ const {
   user,
   password,
   database,
+  charset,
   connectionLimit,
 } = require('./config').mysql;
 
