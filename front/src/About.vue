@@ -61,6 +61,7 @@
           'kosuzu',
           'ROB',
           'HERO',
+          'b1br',
         ],
       }
     }
