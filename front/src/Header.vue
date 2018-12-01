@@ -2,14 +2,38 @@
     <header>
       <div class="header-container container">
         <div class="nav">
-          <router-link :to="{name: 'home'}">{{ $t("header.index") }}</router-link>
-
-          <router-link :to="{name: 'cheaters', query: { status: '100' }}">{{$t("header.cheaters")}}</router-link>
-
-          <router-link class="" :to="{name: 'report'}">{{$t("header.report")}}</router-link>
-
+          <router-link class="mobile-hide" :to="{name: 'home'}">
+            <Icon type="md-home" />
+            {{ $t("header.index") }}
+          </router-link>
+          <router-link class="mobile-hide" :to="{name: 'cheaters', query: { status: '100' }}">
+            <Icon type="md-list-box" />
+            {{$t("header.cheaters")}}
+          </router-link>
+          <router-link class="mobile-hide" :to="{name: 'report'}">
+            <Icon type="ios-megaphone" />
+            {{$t("header.report")}}
+          </router-link>
           <router-link class="mobile-hide" :to="{name: 'about'}">{{$t("header.about")}}</router-link>
 
+          <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">
+            <Icon type="md-cog" />
+            {{$t("header.dashboard")}}
+          </router-link>
+
+          <router-link class="desktop-hide" :to="{name: 'home'}">
+            <Icon size="24" type="md-home" />
+          </router-link>
+          <router-link class="desktop-hide" :to="{name: 'cheaters', query: { status: '100' }}">
+            <Icon size="24" type="md-list-box" />
+          </router-link>
+          <router-link class="desktop-hide" :to="{name: 'report'}">
+            <Icon size="24" type="ios-megaphone" />
+          </router-link>
+
+          <router-link class="desktop-hide" v-if="isAdmin" :to="{name: 'dashboard'}">
+            <Icon size="24" type="md-cog" />
+          </router-link>
 
         </div>
         <div class="search mobile-hide">
@@ -19,16 +43,19 @@
           <router-link v-show="!isLogin" :to="{name: 'signin'}">{{$t("header.signin")}}</router-link>
           <router-link v-show="!isLogin" :to="{name: 'signup'}">{{$t("header.signup")}}</router-link>
 
-          <router-link class="nav-username" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
+          <router-link class="nav-username mobile-hide" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
             <Badge dot>
+              <Icon type="md-person" />
               {{ currentUser.username }}
             </Badge>
           </router-link>
-          <a class="nav-signout" v-show="isLogin" href="#" @click.stop.prevent="signout">{{$t("header.signout")}}</a>
-
-          <router-link v-if="isAdmin" :to="{name: 'dashboard'}">
-            {{$t("header.dashboard")}}
+          <router-link class="nav-username desktop-hide" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
+            <Badge dot>
+              <Icon size="24" type="md-person" />
+            </Badge>
           </router-link>
+
+          <a class="nav-signout" v-show="isLogin" href="#" @click.stop.prevent="signout">{{$t("header.signout")}}</a>
         </div>
       </div>
 
@@ -120,7 +147,10 @@ export default {
       return Boolean(this.$store.state.user);
     },
     isAdmin() {
+      const user = this.$store.state.user;
 
+      const is = user ? user.userPrivilege !== 'normal' : false;
+      return Boolean(is);
     },
     currentUser() {
       return this.$store.state.user;
@@ -182,7 +212,7 @@ window.addEventListener('scroll', function(e) {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    /*width: 6rem;*/
+    width: 6rem;
     flex-grow: 0;
   }
   .nav-signout {
