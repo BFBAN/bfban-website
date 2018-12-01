@@ -155,7 +155,7 @@ router.get('/:uId', [
   }
 
   const { uId } = req.params;
-  const result = await db.query('select * from users where uId = ?', [uId]);
+  const result = await db.query('select * from users where uId = ? and valid = "1"', [uId]);
 
   if (result.length === 0) {
     return res.json({

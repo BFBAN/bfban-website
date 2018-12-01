@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
-      <div v-if="isCheaterExist">
+      <div v-if="isCheaterExist" style="position: relative">
         <div style="display: flex; flex-direction: column; position: relative;">
 
           <span style="font-size: 1.6rem;">
@@ -111,7 +111,7 @@
           <Spin size="large" fix v-show="updateUserInfospinShow"></Spin>
         </div>
 
-        <div style="position: relative">
+        <div>
           <h2 style="margin: 1rem 0;">时间线</h2>
           <TimelineItem pending v-for="l in timelineList" :key="l.createDatetime">
 
@@ -258,8 +258,6 @@
             </div>
 
           </TimelineItem>
-
-          <Spin size="large" fix v-show="spinShow"></Spin>
         </div>
 
         <div v-if="isLogin">
@@ -335,6 +333,8 @@
           </div>
           <div v-else>请登录后参与回复</div>
         </Modal>
+
+        <Spin size="large" fix v-show="spinShow"></Spin>
       </div>
       <div v-else>404 不存在</div>
 

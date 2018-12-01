@@ -76,6 +76,7 @@
 
         </table>
       </div>
+      <div v-else>404</div>
     </div>
   </div>
 

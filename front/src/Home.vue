@@ -2,7 +2,7 @@
   <div class="container">
     <div class="content">
       <Alert type="warning">
-        bfban.com 已经可以永久追踪被举报挂壁的ID，并支持搜索挂壁的历史ID！欢迎大家积极举报，给挂壁留下案底，使他们无处遁形。
+        bfban.com 已经可以永久追踪被举报挂壁的游戏ID，展示历史ID，并支持历史ID搜索！欢迎大家积极举报，给挂壁留下案底，使他们无处遁形。
       </Alert>
       <Divider>{{$t("home.activity.title")}}</Divider>
 
