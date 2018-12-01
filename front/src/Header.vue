@@ -15,7 +15,6 @@
             {{$t("header.report")}}
           </router-link>
           <router-link class="mobile-hide" :to="{name: 'about'}">{{$t("header.about")}}</router-link>
-
           <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">
             <Icon type="md-cog" />
             {{$t("header.dashboard")}}
@@ -30,7 +29,6 @@
           <router-link class="desktop-hide" :to="{name: 'report'}">
             <Icon size="24" type="ios-megaphone" />
           </router-link>
-
           <router-link class="desktop-hide" v-if="isAdmin" :to="{name: 'dashboard'}">
             <Icon size="24" type="md-cog" />
           </router-link>
@@ -40,8 +38,21 @@
           <Input clearable search placeholder="支持搜索历史ID啦..." v-model="searchVal" @on-search="handleSearch" />
         </div>
         <div class="nav">
-          <router-link v-show="!isLogin" :to="{name: 'signin'}">{{$t("header.signin")}}</router-link>
-          <router-link v-show="!isLogin" :to="{name: 'signup'}">{{$t("header.signup")}}</router-link>
+          <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
+            <Icon type="md-log-in" />
+            {{$t("header.signin")}}
+          </router-link>
+          <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signup'}">
+            <Icon type="md-person-add" />
+            {{$t("header.signup")}}
+          </router-link>
+
+          <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signin'}">
+            <Icon type="md-log-in" size="24" />
+          </router-link>
+          <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signup'}">
+            <Icon type="md-person-add" size="24" />
+          </router-link>
 
           <router-link class="nav-username mobile-hide" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
             <Badge dot>
@@ -55,7 +66,14 @@
             </Badge>
           </router-link>
 
-          <a class="nav-signout" v-show="isLogin" href="#" @click.stop.prevent="signout">{{$t("header.signout")}}</a>
+          <a class="nav-signout mobile-hide" v-show="isLogin" href="#" @click.stop.prevent="signout">
+            <Icon type="md-log-out"></Icon>
+            {{$t("header.signout")}}
+          </a>
+          <a class="nav-signout desktop-hide" v-show="isLogin" href="#" @click.stop.prevent="signout">
+            <Icon type="md-log-out" size="24"></Icon>
+          </a>
+
         </div>
       </div>
 
@@ -212,7 +230,7 @@ window.addEventListener('scroll', function(e) {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    width: 6rem;
+    max-width: 6rem;
     flex-grow: 0;
   }
   .nav-signout {
