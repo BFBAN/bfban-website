@@ -34,7 +34,7 @@
         </FormItem>
 
         <FormItem label="论述">
-          <span class="hint">请列出阐明足够的证据，编辑器支持上传图片（限制2M）、视频（限制30M）</span>
+          <span class="hint">请列出阐明足够的证据，编辑器支持上传图片（限制2M）</span>
           <!-- <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." /> -->
           <Misc :content="formItem.description" @change="handleMiscChange" />
         </FormItem>

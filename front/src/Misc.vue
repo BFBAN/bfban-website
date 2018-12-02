@@ -206,7 +206,7 @@ export default {
 
         },
         handleExceededSize: function(file, fileList) {
-          this.$Message.warning('超过上传最大限制，图片2M，视频30M');
+          this.$Message.warning('超过上传最大限制，图片2M');
 
         },
 
