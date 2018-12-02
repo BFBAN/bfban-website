@@ -557,10 +557,12 @@ async (req, res, next) => {
     let status;
     if (re[0].status !== '1') {
       status = '5';
-      await db.query('update cheaters set status = ?, updateDatetime = ? where id = ?', [status, d, cheaterId]);
     } else {
       status = '1';
     }
+
+    // update udpateDatetime
+    await db.query('update cheaters set status = ?, updateDatetime = ? where id = ?', [status, d, cheaterId]);
 
     await updateCommentsNum(re[0].originUserId);
 
