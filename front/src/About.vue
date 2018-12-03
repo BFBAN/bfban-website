@@ -82,7 +82,7 @@
     flex-wrap: wrap;
 
     p {
-      flex-grow: 1;
+      flex-grow: 0;
       flex-basis: 20%;
       flex-shrink: 0;
     }

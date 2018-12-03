@@ -178,7 +178,6 @@ router.get('/:uId', [
     where t1.userId = ? and t1.valid = '1' and t2.valid = '1' order by createDatetime DESC`, [id])
     .catch(e => next(e));
 
-
   return res.json({
     error: 0,
     data: {

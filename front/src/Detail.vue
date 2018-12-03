@@ -261,7 +261,6 @@
         </div>
 
         <div v-if="isLogin">
-          <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
           <p class="hint">如果有新的证据图片或视频需要补充，可以再次举报。回复功能只能回复文本或链接。如需回复图片，请移步这里 <a href="https://sm.ms/" target="_blank">上传图片 </a>，然后复制图片链接进行回复。</p>
           <Form :label-width="80" style="position: relative;">
             <p>
@@ -279,6 +278,7 @@
         </div>
 
         <p class="hint">为了防止管理权力滥用，若要石锤，需要至少两位管理员参与才行</p>
+        <p class="hint">注册登录后才可以参与讨论留言</p>
 
         <div v-if="isAdmin">
           <Divider>管理员专区</Divider>
@@ -326,7 +326,6 @@
           @on-ok="doReply"
           @on-cancel="cancelReply">
           <div v-if="isLogin">
-            <p class="hint">任何注册用户或管理员 都可以回复 参与讨论留言</p>
             <Form :label-width="80" ref='replyForm' style="position: relative;">
               <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
             </Form>
