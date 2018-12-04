@@ -250,7 +250,7 @@ router.get('/:ouid', [
     left join cheaters as t2 on t1.cheaterId = t2.id
     left join users as t3 on t1.userId = t3.id
     left join users as t4 on t1.toUserId = t4.id
-    where t2.originUserId = ?`, [cheaterOUId]);
+    where t2.originUserId = ? and t1.valid = '1'`, [cheaterOUId]);
 
   return res.json({
     error: 0,
