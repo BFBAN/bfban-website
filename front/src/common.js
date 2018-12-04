@@ -151,6 +151,7 @@ function formatNewLine(str) {
 function formatLink(str) {
   // https://stackoverflow.com/a/8943487/875788
   return str.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, (url) => {
+    if (/(jpg|jpeg|png|gif)$/ig.test(url)) return url;
     const hostname = new URL(url).hostname;
     if (hostname.indexOf('bfban.com') !== -1) {
       return `<a href="${url}">${url}</a>`;
@@ -159,11 +160,16 @@ function formatLink(str) {
   });
 }
 
+function formatImageLink(str) {
+  return str.replace(/([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))/ig, src => `<img src="${src}" />`);
+}
+
 function formatTextarea(val) {
   let str = val;
 
   str = formatNewLine(str);
   str = formatLink(str);
+  str = formatImageLink(str);
   return str;
 }
 
