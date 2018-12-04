@@ -712,10 +712,9 @@ export default {
     width: 34rem;
   }
   .description {
-    padding: 0 .6rem;
     color: rgba(0, 0, 0, 0.8);
-    border-left: 1px solid #cccccc8f;
     font-size: .8rem;
+    line-height: 1.4rem;
 
     img, video {
       max-width: 100%;
@@ -735,12 +734,17 @@ export default {
     overflow-wrap: break-word;
     word-wrap: break-word;
   }
-  .ivu-timeline-item-content {
-    padding: 0 0 0 1.2rem;
-
+  .ivu-timeline-item {
+    padding: 1rem 0;
     &:hover {
-      background-color: #eaeaea66;
+      background-color: #eaeaea9c;
     }
+  }
+  .ivu-timeline-item-content {
+    padding: 0 .6rem 0 1.2rem;
+  }
+  .ivu-timeline-item-tail {
+    top: 1rem;
   }
 
   /*https://stackoverflow.com/a/38106970/875788*/
