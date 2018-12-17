@@ -15,7 +15,7 @@
         <FormItem :label="$t('signin.form.captcha')">
           <Input type="text" v-model="signin.captcha" :placeholder="$t('signin.form.captcha')" />
           <img ref="captcha">
-          <a href="#" @click.stop.prevent="refreshCaptcha">
+          <a ref="reCaptcha" href="#" @click.stop.prevent="refreshCaptcha">
             {{$t('signin.form.getCaptcha')}}
           </a>
         </FormItem>
@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import { getCsrfToken } from './common';
+import { getCsrfToken, waitForAction } from './common';
+import ajax, { baseURL } from "./ajax";
 
 export default {
   data() {
@@ -48,29 +49,10 @@ export default {
     }
   },
   methods: {
-    waitForCaptcha(e) {
-      e.target.style = "display: none;";
-      let span = document.createElement('span');
-      e.target.parentNode.insertBefore(span, e.target.nextSibling);
+    refreshCaptcha: function() {
+      this.$refs.captcha.src = baseURL + '/captcha?r=' + Math.random();
 
-      let n = 2;
-      span.innerText = `${n} 秒后重新获取`;
-      let si = setInterval(function() {
-        if (n > 1) {
-
-          n -= 1;
-          span.innerText = `${n} 秒后重新获取`;
-        } else {
-          e.target.style = "";
-          span.innerText = '';
-          clearInterval(si);
-        }
-      }, 1000);
-    },
-    refreshCaptcha: function(e) {
-      this.$refs.captcha.src = '/captcha?r=' + Math.random();
-
-      this.waitForCaptcha(e);
+      waitForAction.call(this.$refs.reCaptcha);
     },
     handleSignin: function() {
       const {username, password, captcha} = _.each(this.signin, (v, k, o) => {
@@ -80,24 +62,28 @@ export default {
       if (username && password && captcha.length === 4) {
         this.spinShow = true;
 
-        axios({
+        ajax({
           method: 'post',
           url: '/account/signin',
           headers: {
-            'x-csrf-token': getCsrfToken(),
+            // 'x-csrf-token': getCsrfToken(),
+            // "Access-Control-Allow-Headers": "X-Requested-With",
+            // 'x-encrypt-captcha': Cookies.get('encryptCaptcha'),
           },
           data: {
             username,
             password,
-            captcha
-          }
+            captcha,
+          },
         })
         .then((res) => {
           this.spinShow = false;
 
           const d = res.data;
           if (d.error === 1) {
-            this.$Message.error('登录失败 ' + d.msg)
+            this.$Message.error('登录失败 ' + d.msg);
+
+            this.refreshCaptcha();
           } else {
             this.$store.dispatch('signin', d.data)
             .then(() => {

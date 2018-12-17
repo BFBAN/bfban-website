@@ -107,8 +107,9 @@
 </template>
 
 <script>
+  import ajax from './ajax';
 
-export default {
+  export default {
   data() {
     return {
       searchModal: false,
@@ -127,7 +128,7 @@ export default {
       this.searchModal = true;
       this.modalSpinShow = true;
 
-      axios({
+      ajax({
         method: 'get',
         url: `/search?id=${val}`,
       })
@@ -143,7 +144,7 @@ export default {
       })
     },
     signout() {
-      axios({
+      ajax({
         method: 'get',
         url: '/account/signout'
       })

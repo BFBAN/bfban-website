@@ -125,6 +125,7 @@
 
 <script>
   import { getCheaterStatusLabel, getGameLabel } from './common';
+  import ajax from './ajax';
 export default {
   data() {
     return {
@@ -144,7 +145,7 @@ export default {
     handleGameName: getGameLabel,
   },
   created() {
-    axios({
+    ajax({
       method: 'get',
       url: '/activity',
     })

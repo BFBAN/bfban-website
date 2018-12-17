@@ -42,7 +42,7 @@
         <FormItem label="验证码">
           <Input type="text" v-model="formItem.captcha" placeholder="验证码" />
           <img ref="captcha">
-          <a href="#" @click.stop.prevent="refreshCaptcha">
+          <a ref="reCaptcha" href="#" @click.stop.prevent="refreshCaptcha">
             获得验证码
           </a>
         </FormItem>
@@ -61,7 +61,8 @@
 <script>
 import Misc from './Misc.vue';
 
-import { checkIdExist, checkReportFormData, trimAllWhitespace, getCsrfToken, cheatMethodsGlossary } from "./common";
+import { checkIdExist, checkReportFormData, trimAllWhitespace, getCsrfToken, cheatMethodsGlossary, waitForAction } from "./common";
+import ajax, { baseURL } from "./ajax";
 
 export default {
   data() {
@@ -87,25 +88,6 @@ export default {
     Misc
   },
   methods: {
-    waitForCaptcha(e) {
-      e.target.style = "display: none;";
-      let span = document.createElement('span');
-      e.target.parentNode.insertBefore(span, e.target.nextSibling);
-
-      let n = 2;
-      span.innerText = `${n} 秒后重新获取`;
-      let si = setInterval(function() {
-        if (n > 1) {
-
-          n -= 1;
-          span.innerText = `${n} 秒后重新获取`;
-        } else {
-          e.target.style = "";
-          span.innerText = '';
-          clearInterval(si);
-        }
-      }, 1000);
-    },
     checkVideoAndImg() {
       if (this.formItem.bilibiliLink || /\<img\ssrc\=\"/.test(this.formItem.description)) {
         return true;
@@ -114,10 +96,10 @@ export default {
         return false;
       }
     },
-    refreshCaptcha(e) {
-      this.$refs.captcha.src = '/captcha?r=' + Math.random();
+    refreshCaptcha() {
+      this.$refs.captcha.src = baseURL + '/captcha?r=' + Math.random();
 
-      this.waitForCaptcha(e);
+      waitForAction.call(this.$refs.reCaptcha);
     },
     handleMiscChange: function(h) {
       this.formItem.description = h;
@@ -160,11 +142,11 @@ export default {
       const bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
       const description = this.formItem.description.trim();
 
-      axios({
+      ajax({
         method: 'post',
         url: '/cheaters/',
         headers: {
-          'x-csrf-token': getCsrfToken(),
+          // 'x-csrf-token': getCsrfToken(),
         },
         data: {
           gameName,

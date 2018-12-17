@@ -343,7 +343,7 @@
 </template>
 
 <script>
-
+import ajax from './ajax';
 import { checkIdExist, getCheaterStatusLabel, formatTextarea,
   convertDatetimeToUserTimeZone, cheatMethodsGlossary, convertCheatMethods, waitForAction } from "./common";
 
@@ -396,7 +396,7 @@ export default {
     loadData() {
       const originUserId = this.$route.params.ouid;
 
-      axios({
+      ajax({
         method: 'get',
         url: `/cheaters/${originUserId}`,
       })
@@ -473,9 +473,9 @@ export default {
         return false;
       }
 
-      // JUST before axios
+      // JUST before ajax
       this.verifySpinShow = true;
-      const {data: statusData} = await axios({
+      const {data: statusData} = await ajax({
         method: 'post',
         url: '/cheaters/status',
         data: {
@@ -495,7 +495,7 @@ export default {
       suggestion = formatTextarea(suggestion);
 
 
-      axios({
+      ajax({
         method: 'post',
         url: '/cheaters/verify',
         data: {
@@ -543,7 +543,7 @@ export default {
       const { userId } = this.$store.state.user;
       const originUserId = this.$route.params.ouid;
 
-      axios({
+      ajax({
         method: 'post',
         url: '/cheaters/confirm',
         data: {
@@ -616,7 +616,7 @@ export default {
         data['toUserId'] = toUserId;
       }
 
-      axios({
+      ajax({
         method: 'post',
         url: '/cheaters/reply',
         data,
@@ -654,7 +654,7 @@ export default {
       });
     },
     updateCheaterInfo(e) {
-      waitForAction.call(e, 60);
+      waitForAction.call(e.target, 60);
 
       if (!Boolean(this.$store.state.user)) {
         this.$Message.error('请登录');
@@ -663,7 +663,7 @@ export default {
 
       this.updateUserInfospinShow = true;
       const { originUserId } = this.cheater;
-      axios({
+      ajax({
         method: 'post',
         url: '/cheaters/updateCheaterInfo',
         data: {

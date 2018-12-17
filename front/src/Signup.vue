@@ -23,7 +23,7 @@
         <FormItem :label="$t('signup.form.captcha')">
           <Input type="text" v-model="signup.captcha" :placeholder="$t('signup.form.captcha')" />
           <img ref="captcha">
-          <a href="#" @click.stop.prevent="refreshCaptcha">
+          <a ref="reCaptcha" href="#" @click.stop.prevent="refreshCaptcha">
             {{$t('signup.form.getCaptcha')}}
           </a>
         </FormItem>
@@ -42,7 +42,8 @@
 </template>
 
 <script>
-import { testWhitespace, getCsrfToken } from './common';
+import { testWhitespace, getCsrfToken, waitForAction } from './common';
+import ajax, { baseURL } from "./ajax";
 
 export default {
   data() {
@@ -58,29 +59,10 @@ export default {
     }
   },
   methods: {
-    waitForCaptcha(e) {
-      e.target.style = "display: none;";
-      let span = document.createElement('span');
-      e.target.parentNode.insertBefore(span, e.target.nextSibling);
+    refreshCaptcha: function() {
+      this.$refs.captcha.src = baseURL + '/captcha?r=' + Math.random();
 
-      let n = 2;
-      span.innerText = `${n} 秒后重新获取`;
-      let si = setInterval(function() {
-        if (n > 1) {
-
-          n -= 1;
-          span.innerText = `${n} 秒后重新获取`;
-        } else {
-          e.target.style = "";
-          span.innerText = '';
-          clearInterval(si);
-        }
-      }, 1000);
-    },
-    refreshCaptcha: function(e) {
-      this.$refs.captcha.src = '/captcha?r=' + Math.random();
-
-      this.waitForCaptcha(e);
+      waitForAction.call(this.$refs.reCaptcha);
     },
     handleSignup: function() {
       let {username, password, originId, qq, captcha} = _.each(this.signup, (v, k, o) => {
@@ -90,11 +72,12 @@ export default {
       if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
         this.spinShow = true;
 
-        axios({
+        ajax({
           method: 'post',
           url: '/account/signup',
           headers: {
-            'x-csrf-token': getCsrfToken(),
+            // 'x-csrf-token': getCsrfToken(),
+            // 'x-encrypt-captcha': Cookies.get('encryptCaptcha'),
           },
           data: {
             username,
@@ -109,7 +92,9 @@ export default {
 
           const d = res.data;
           if (d.error === 1) {
-            this.$Message.error('注册失败 ' + d.msg)
+            this.$Message.error('注册失败 ' + d.msg);
+
+            this.refreshCaptcha();
           } else {
             // dispatch 异步的
             this.$store.dispatch('signin', d.data)

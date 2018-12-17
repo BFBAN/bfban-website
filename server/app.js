@@ -10,7 +10,6 @@ const pino = require('pino')({
   },
 });
 
-
 const routes = require('./routes/');
 const config = require('./config');
 
@@ -68,14 +67,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // set views and view engine
-app.set('views', path.resolve(config.baseDir, 'views'));
-app.set('view engine', 'ejs');
+// app.set('views', path.resolve(config.baseDir, 'views'));
+// app.set('view engine', 'ejs');
 
 // set static
 app.use('/', express.static(path.resolve(config.baseDir, 'public')));
 
 // routes
-app.use('/', routes);
+app.use('/api', routes);
 
 
 // 404

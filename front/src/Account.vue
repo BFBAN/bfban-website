@@ -84,6 +84,7 @@
 
 <script>
   import { getCheaterStatusLabel } from './common';
+  import ajax from './ajax';
 
   export default {
     data() {
@@ -107,7 +108,7 @@
     methods: {
       loadData() {
         const { uId } = this.$route.params;
-        axios({
+        ajax({
           method: 'get',
           url: `/account/${uId}`,
         })

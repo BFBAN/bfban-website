@@ -93,6 +93,7 @@
 
 <script>
 import { getCheaterStatusLabel, cheaterStatus } from './common';
+import ajax from './ajax'
 
 new ClipboardJS('.ivu-btn');
 
@@ -178,7 +179,7 @@ export default {
       this.page = Number.parseInt(page);
       this.sortByValue = sort;
 
-      axios(config)
+      ajax(config)
       .then((res) => {
         this.spinShow = false;
 
