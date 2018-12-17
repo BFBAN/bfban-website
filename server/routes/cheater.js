@@ -270,7 +270,7 @@ router.get('/:ouid', [
 // originId, cheatMethods, bilibiliLink, description
 // insert user_report_cheater db
 // userId, cheaterUId, datatime
-router.post('/', csrfProtection, verifyJWTMiddleware, verifyCatpcha, [
+router.post('/', verifyJWTMiddleware, verifyCatpcha, [
   check('gameName', 'game property incorrect').not().isEmpty().custom((val, { req }) => gamesArr.indexOf(val) !== -1),
   check('originId').not().isEmpty().isAscii(),
   check('cheatMethods').not().isEmpty(),
@@ -584,9 +584,9 @@ async (req, res, next) => {
 });
 
 // need sign in
-router.post('/updateCheaterInfo', verifyJWTMiddleware, [
+router.post('/updateCheaterInfo', [
   check('originUserId').not().isEmpty(),
-], async (req, res, next) => {
+], verifyJWTMiddleware, async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(200).json({ error: 1, msg: 'verify 请规范填写', errors: errors.array() });

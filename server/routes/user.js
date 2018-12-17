@@ -18,7 +18,7 @@ const { getDatetime } = require('../libs/misc');
 
 
 // username, password
-router.post('/signin', csrfProtection, [
+router.post('/signin', [
   check('username').trim().not().isEmpty(),
   check('password').trim().not().isEmpty(),
   check('captcha').trim().not().isEmpty()
@@ -55,17 +55,17 @@ router.post('/signin', csrfProtection, [
     return res.json({
       error: 0,
       data: userPayload,
-    });
-  } else {
-    return res.json({
-      error: 1,
-      msg: 'username or password wrong',
+      token,
     });
   }
+  return res.json({
+    error: 1,
+    msg: 'username or password wrong',
+  });
 });
 
 // username, password
-router.post('/signup', csrfProtection, [
+router.post('/signup', [
   check('username').trim().not().isEmpty()
     .isLength({ min: 4 }),
   check('password').trim().not().isEmpty()
@@ -131,6 +131,7 @@ router.post('/signup', csrfProtection, [
   return res.json({
     error: 0,
     data: userPayload,
+    token,
   });
 });
 

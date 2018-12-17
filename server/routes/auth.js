@@ -33,7 +33,7 @@ authRouter.post('/', (req, res) => {
   }
 });
 
-authRouter.post('/qiniu', csrfProtection, (req, res) => {
+authRouter.post('/qiniu', (req, res) => {
   let upToken = req.cookies['up-token'];
   if (upToken) {
     res.json({
