@@ -49,3 +49,6 @@ quill.root.innerHTML or document.querySelector(".ql-editor").innerHTML
 
 // pm2.config.js
 pm2 start pm2.config.js
+
+
+把数据库结构设计好，（必要时稍稍反范式）其实很多逻辑问题都迎刃而解

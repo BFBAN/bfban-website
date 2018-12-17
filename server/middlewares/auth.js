@@ -2,7 +2,7 @@ const { verifyJWTToken } = require('../libs/auth');
 const db = require('../mysql');
 
 function getToken(req) {
-  return req.body.token || req.query.token || req.headers['x-access-token'] || req.cookies['access-token'];
+  return req.body.token || req.query.token || req.cookies['access-token'] || req.headers['x-access-token'];
 }
 
 function verifyJWT(req, res, next) {
@@ -21,6 +21,7 @@ function verifyJWT(req, res, next) {
       next();
     })
     .catch((err) => {
+      next(err);
       // res.sendStatus(401);
       res.json({
         error: 1,
