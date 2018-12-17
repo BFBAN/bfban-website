@@ -8,7 +8,7 @@ module.exports = merge(common, {
     historyApiFallback: true,
     noInfo: true,
     overlay: true,
-    contentBase: '../server/public',
+    contentBase: './dist',
   },
   watchOptions: {
     ignored: /node_modules/,
