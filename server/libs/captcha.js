@@ -1,6 +1,6 @@
 const svgCaptcha = require('svg-captcha');
-const crypto = require('crypto');
 const { secret } = require('../config');
+const { encrypt } = require('./misc');
 
 function getCaptcha(req, res) {
   const captcha = svgCaptcha.create({
@@ -14,9 +14,8 @@ function getCaptcha(req, res) {
   });
 
   const text = captcha.text.toLowerCase();
-  const hash = crypto.createHmac('sha256', secret)
-    .update(text)
-    .digest('hex');
+  const content = `${text}|${Date.now()}`;
+  const hash = encrypt(content, secret);
 
   res.cookie('encryptCaptcha', hash, {
     httpOnly: true,
