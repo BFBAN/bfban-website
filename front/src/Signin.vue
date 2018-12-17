@@ -83,6 +83,8 @@ export default {
           if (d.error === 1) {
             this.$Message.error('登录失败 ' + d.msg);
 
+            this.signin.password = '';
+            this.signin.captcha = '';
             this.refreshCaptcha();
           } else {
             this.$store.dispatch('signin', d.data)
@@ -100,9 +102,6 @@ export default {
               this.$Message.success('登录成功');
             })
           }
-
-          this.signin.password = '';
-          this.signin.captcha = '';
         })
       } else {
         this.$Message.error('请规范填写');

@@ -113,7 +113,7 @@ export default {
       checkIdExist({
         id: trimAllWhitespace(this.formItem.originId)
       })
-      .then((res) => {
+      .then(async (res) => {
 
         const d = res.data;
         const idExist = d.idExist;
@@ -123,13 +123,15 @@ export default {
           this.formItem.originPersonaId = d.originPersonaId;
           this.formItem.avatarLink = d.avatarLink;
 
-          this.handleReport();
+          await this.handleReport();
         } else {
           this.spinShow = false;
 
           this.$Message.error('游戏ID不存在，请检查拼写');
-          return false;
         }
+
+        this.formItem.captcha = '';
+        this.refreshCaptcha();
       });
     },
     handleReport: function() {
@@ -170,8 +172,6 @@ export default {
         } else {
           this.$Message.error('提交失败 ' + d.msg);
         }
-
-        this.formItem.captcha = '';
       });
     }
   }
