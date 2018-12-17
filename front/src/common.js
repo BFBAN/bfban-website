@@ -1,10 +1,10 @@
+import ajax from './ajax';
 
-function checkIdExist({ gameName, id }) {
-  return axios({
+function checkIdExist({ id }) {
+  return ajax({
     method: 'post',
     url: '/checkGameIdExist',
     data: {
-      gameName,
       id,
     },
   });
@@ -29,7 +29,10 @@ function convertGameName(name) {
 }
 
 function checkReportFormData(form) {
-  if (!form.gameName) {
+  if (!trimAllWhitespace(form.originId)) {
+    this.$Message.error('请填写举报游戏ID');
+    return false;
+  } if (!form.gameName) {
     this.$Message.error('选择游戏');
     return false;
   } if (form.checkbox.length === 0) {
@@ -191,11 +194,11 @@ function getCsrfToken() {
 }
 
 // num seconds
-function waitForAction(num) {
-  const e = this;
-  e.target.style = 'display: none;';
+function waitForAction(num = 3) {
+  const el = this;
+  el.style = 'display: none;';
   const span = document.createElement('span');
-  e.target.parentNode.insertBefore(span, e.target.nextSibling);
+  el.parentNode.insertBefore(span, el.nextSibling);
 
   let n = num;
   span.innerText = `等待 ${n} 秒后重试`;
@@ -204,11 +207,19 @@ function waitForAction(num) {
       n -= 1;
       span.innerText = `等待 ${n} 秒重试`;
     } else {
-      e.target.style = '';
+      el.style = '';
       span.innerText = '';
       clearInterval(si);
     }
   }, 1000);
+}
+
+function getUTCTimeStamp() {
+  const now = new Date();
+  const utcTimeStamp = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+    now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
+
+  return utcTimeStamp;
 }
 
 export {
@@ -229,4 +240,5 @@ export {
   cheatMethodsGlossary,
   convertCheatMethods,
   waitForAction,
+  getUTCTimeStamp,
 };

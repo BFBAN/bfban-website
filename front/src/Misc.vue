@@ -85,10 +85,10 @@
 </template>
 
 <script>
-// import qs from 'qs'
 // https://github.com/zenoamaro/react-quill/issues/270
 // https://codepen.io/emanuelbsilva/pen/Zpmmzv
 // import Quill from 'quill'
+import ajax from './ajax';
 
 var Embed = Quill.import('blots/embed');
 class QuillHashtag extends Embed {
@@ -215,21 +215,15 @@ export default {
         },
 
         getJwtToken: function() {
-            const csrfToken = this.getCsrfToken()
+            // const csrfToken = this.getCsrfToken()
 
             // axios request (with credentials)
-            return axios({
+            return ajax({
                 method: 'post',
                 url: '/auth',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                transformRequest: [
-                    (data, headers)=> {
-                        headers['x-csrf-token'] = csrfToken
-                        return qs.stringify(data)
-                    }
-                ],
                 data: {
                     username: 'user',
                     password: 'pwd'
@@ -240,17 +234,17 @@ export default {
             })
         },
         getQiniuUploadToken: function() {
-            const csrfToken = this.getCsrfToken()
+            // const csrfToken = this.getCsrfToken()
 
             // axios request with credentials, it is async
-            return axios({
+            return ajax({
                 method: 'post',
                 url: '/auth/qiniu',
-                // qini up token stores at cookies
+                // qiniu up token stores at cookies
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'x-csrf-token': csrfToken,
+                    // 'x-csrf-token': csrfToken,
                 },
             })
             .catch((err)=> {
