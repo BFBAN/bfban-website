@@ -14,7 +14,7 @@ function uploadToCtfile(fileLoc) {
 
     await axios({
       method: 'post',
-      url: 'https://upload.ctfile.com/web/upload.do?userid=18944557&maxsize=2147483648&folderid=0&ctt=1544000787&limit=2&spd=23000000&key=dbc884fa6f2e14dd89b6d24e890fdd23',
+      url: 'https://upload.ctfile.com/web/upload.do?userid=18944557&maxsize=2147483648&folderid=0&ctt=1545220232&limit=2&spd=23000000&key=21a975c75a527c89da9140d44613cba8',
       headers: data.getHeaders(),
       data,
       // https://juejin.im/entry/5be280fdf265da61193b50db
@@ -40,5 +40,4 @@ function uploadToCtfile(fileLoc) {
 
 uploadToCtfile(argv.file);
 
-// node upToCtfile.js -f 'xxxxxx.jpg'
 // node upToCtfile.js --file 'xxxxxx.jpg'
