@@ -487,7 +487,8 @@ export default {
         return false;
       }
       if (statusData.error === 0 && statusData.status === '1') {
-        if (!confirm(`当前为 石锤 状态，你确定要处理成 ${getCheaterStatusLabel(status)} 吗？`)) {
+        if (!confirm(`当前是 石锤 状态，你确定要处理成 ${getCheaterStatusLabel(status)} 吗？`)) {
+          this.verifySpinShow = false;
           return false;
         }
       }
