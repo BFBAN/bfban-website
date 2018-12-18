@@ -47,6 +47,8 @@
 
 
       <div class="list">
+        <Page :page-size="20" show-total :current="page" @on-change="handlePageChange" :total="total" class="page" size="small" />
+
         <ul>
           <li>
             <span><b>游戏ID</b></span>
@@ -80,10 +82,8 @@
           </span>
           </li>
         </ul>
-        <br>
 
-        <Page :page-size="20" show-total :current="page" @on-change="handlePageChange" :total="total" simple />
-
+        <Page :page-size="20" show-total :current="page" @on-change="handlePageChange" :total="total" class="page" size="small" />
         <Spin size="large" fix v-show="spinShow"></Spin>
       </div>
     </div>
@@ -270,6 +270,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .page {
+    padding: .4rem;
+    margin: .4rem auto;
+    background: #f7f7f7;
+    display: inline-block;
+    width: 100%;
+    border-bottom: 1px solid #eaeaea;
+    border-top: 1px solid #eaeaea;
+  }
   .list {
     position: relative;
     a {
