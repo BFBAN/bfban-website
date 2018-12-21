@@ -57,7 +57,7 @@
           </li>
           <li v-for="d in data" :key="d.originUserId">
           <span style="display: flex; align-items: center;">
-            <img :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'" alt="" style="width: 2.3rem;
+            <img :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'" alt="avatar" style="width: 2.3rem;
             height: 2.3rem;
             border-radius: 2.3rem;
             margin-right: .4rem;">
