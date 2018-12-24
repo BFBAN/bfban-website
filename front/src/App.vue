@@ -102,5 +102,11 @@ export default {
       display: none !important;
     }
   }
+
+  /*iview page component bug fix*/
+  /*https://github.com/iview/iview/issues/828*/
+  .ivu-page-item-jump-next:after, .ivu-page-item-jump-prev:after {
+    content: "\2022\2022\2022";
+  }
 </style>
 
