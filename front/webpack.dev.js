@@ -1,5 +1,6 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common');
+const path = require('path');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -8,7 +9,7 @@ module.exports = merge(common, {
     historyApiFallback: true,
     noInfo: true,
     overlay: true,
-    contentBase: './dist',
+    contentBase: path.resolve(__dirname),
   },
   watchOptions: {
     ignored: /node_modules/,

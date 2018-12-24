@@ -3,15 +3,25 @@ const path = require('path');
 // https://vue-loader.vuejs.org/zh/guide/#%E6%89%8B%E5%8A%A8%E9%85%8D%E7%BD%AE
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 module.exports = {
   entry: './src/index.js',
   plugins: [
     new VueLoaderPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, 'fonts'),
+        to: 'fonts',
+      },
+    ]),
+    new HtmlWebpackPlugin({
+      title: '战地风云联BAN调查局',
+      template: 'index.html',
+      favicon: 'favicon.ico',
+    }),
   ],
-  output: {
-    path: path.resolve(__dirname, '../server/public'),
-    filename: 'bundle.js',
-  },
   module: {
     rules: [
       {
