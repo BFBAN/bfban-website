@@ -110,7 +110,7 @@ const cheaterStatus = [
   },
   {
     value: '1',
-    label: '石锤',
+    label: '认为石锤',
   },
   {
     value: '2',
@@ -118,7 +118,7 @@ const cheaterStatus = [
   },
   {
     value: '3',
-    label: '没有问题不是挂',
+    label: '认为没开挂',
   },
   {
     value: '4',
