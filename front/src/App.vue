@@ -43,6 +43,9 @@ export default {
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+
+    /*merry 2018 christmas*/
+    background-image: url('https://i.loli.net/2018/12/24/5c20cecbde3c9.jpg');
   }
   .app {
     height: 100%;
