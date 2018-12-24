@@ -57,7 +57,7 @@
           'coco',
           'WSG',
           'Lion',
-          'Lowb',
+          'LowB',
           'kosuzu',
           'ROB',
           'HERO',
