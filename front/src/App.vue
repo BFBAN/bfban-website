@@ -106,6 +106,10 @@ export default {
     }
   }
 
+  .is-size-6 {
+    font-size: 1rem !important;
+  }
+
   /*iview page component bug fix*/
   /*https://github.com/iview/iview/issues/828*/
   .ivu-page-item-jump-next:after, .ivu-page-item-jump-prev:after {

@@ -29,8 +29,9 @@
 
           <div>
             <Checkbox v-model="signup.rule">
+              我已阅读并认同
               <a href="http://note.youdao.com/noteshare?id=b3a1381e2efe2c95c776952df99f31fb" target="_blank">
-                我已阅读并认同 战地风云联BAN调查局行为准则
+                战地风云联BAN调查局行为准则
               </a>
             </Checkbox>
           </div>

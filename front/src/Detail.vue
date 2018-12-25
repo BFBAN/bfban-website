@@ -19,18 +19,24 @@
           </div>
           <p>
             <span>
-              {{ cheater.n || 0 }}次围观
+              围观
+              <span class="is-size-6">{{ cheater.n || 0 }}</span>
+              次
             </span>
             <span>
-              {{ cheater.commentsNum || 0 }}次回复
+                回复
+                <span class="is-size-6">{{ cheater.commentsNum || 0 }}</span>
+                次
             </span>
           </p>
           <p>
             <span>
-              第一次被举报：<Time v-if="cheater.createDatetime" :time="cheater.createDatetime"></Time>
+              第一次被举报:
+              <span class="is-size-6"><Time v-if="cheater.createDatetime" :time="cheater.createDatetime"></Time></span>
             </span>
             <span>
-              最近更新：<Time v-if="cheater.updateDatetime" :time="cheater.updateDatetime"></Time>
+              最近更新:
+              <span class="is-size-6"><Time v-if="cheater.updateDatetime" :time="cheater.updateDatetime"></Time></span>
             </span>
           </p>
 
