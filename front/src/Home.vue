@@ -9,7 +9,7 @@
       <p>bfban.com  于 2018年11月4日 上线，收到 <b>{{ site.report }}</b> 次举报，已石锤了 <b>{{ site.cheater }}</b> 个挂壁，感谢大家的共同努力！</p>
       <table>
         <tbody>
-          <tr v-for="activity in activities">
+          <tr v-for="activity in activities" :key="activity.id">
             <td nowrap>
               <Time v-if="activity.createDatetime" :time="activity.createDatetime"></Time>
             </td>
@@ -82,7 +82,7 @@
       <p>
         <!--<b>本站管理员：</b>-->
       </p>
-      <p v-for="m in manager">
+      <p v-for="m in manager" :key="m.name">
 
         <a v-if="m.link" target="_blank" :href="m.link">{{ m.name }}</a>
         <span v-else>{{ m.name }}</span>
@@ -93,26 +93,36 @@
       <div class="tools">
         <p>
           <a target="_blank" href="https://battlefieldtracker.com/">
-            在线战绩查询
+            battlefieldtracker.com
           </a>
+          在线战绩查询网站，可以详细查询到各类数据
+        </p>
+        <p>
+          <a target="_blank" href="http://bf1stats.com">
+            bf1stats.com
+          </a>
+          另一个战地1战绩查询站点
         </p>
         <p>
           <a target="_blank" href="https://bf1.mygoare.com/">
             战地1外挂举报助手
           </a>
+          在线生成举报文本
         </p>
         <p>
-          <a target="_blank" href="http://bf1report.oss-cn-beijing.aliyuncs.com/version/%E6%88%98%E5%9C%B0%E8%8B%B1%E6%96%87%E4%B8%BE%E6%8A%A5%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E5%99%A8.zip">
-            战地1外挂举报助手本地版
+          <a target="_blank" href="https://www.bfrep.com">
+            BFReportTools
           </a>
+          一款玩家自制的战地举报工具它可以实现一键生成举报文本，自动发送举报文本给EA等功能等
         </p>
       </div>
 
       <h2>{{$t("home.howToUse.qqGroup")}}</h2>
       <div class="tools">
         <p>
+          联ban局投诉审查处QQ群
           <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5PEqoDb">
-            联ban局投诉审查处QQ群 527565465
+            527565465
           </a>
         </p>
       </div>
