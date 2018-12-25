@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "css-loader": "^1.0.0",
     "file-loader": "^2.0.0",
     "iview-loader": "^1.2.2",
