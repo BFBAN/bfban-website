@@ -121,6 +121,14 @@ export default {
           value: 'updateDatetime',
           label: '更新时间倒序',
         },
+        {
+          value: 'n',
+          label: '围观次数倒序',
+        },
+        {
+          value: 'commentsNum',
+          label: '回复次数倒序',
+        },
       ],
       sortByValue: 'updateDatetime',
 
