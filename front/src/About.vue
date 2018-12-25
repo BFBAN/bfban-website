@@ -21,11 +21,13 @@
         成功打击了近500名外挂和外挂主播；
         抵制外挂之战，不仅在游戏内，更是一场敌暗我明的幕外战争。
       </p>
-      <p>
+      <p class="is-size-6">
         <a href="http://note.youdao.com/noteshare?id=b3a1381e2efe2c95c776952df99f31fb" target="_blank">
           战地风云联BAN调查局行为准则
         </a>
       </p>
+
+      <br>
       <p>
         <b>目前加盟服务器，共 {{clan.length}} 个：</b>
         （ 搜索 <b>LB</b> 都可以找到加入联BAN局的服务器 ）
