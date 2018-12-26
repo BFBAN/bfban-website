@@ -48,6 +48,11 @@ export default {
       spinShow: false,
     }
   },
+  beforeMount() {
+    if (this.$route.query.rurl) {
+      this.$Message.info('请先登录');
+    }
+  },
   methods: {
     refreshCaptcha: function() {
       this.$refs.captcha.src = baseURL + '/captcha?r=' + Math.random();
