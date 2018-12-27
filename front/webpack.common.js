@@ -56,11 +56,16 @@ module.exports = {
         ],
       },
       {
-        test: /\.js$/,
-        use: [
-          'babel-loader',
-        ],
-        exclude: /node_modules/,
+        test: /\.m?js$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            cacheDirectory: true,
+            plugins: ['@babel/plugin-transform-runtime'],
+          },
+        },
+        exclude: /(node_modules|bower_components)/,
       },
       {
         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
