@@ -39,25 +39,27 @@ export default {
     flex-direction: column;
 
     /*background image*/
-    background: url('https://i.loli.net/2018/11/03/5bdd8e97bb2be.png') no-repeat;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+    background-repeat: no-repeat;
+
+    /*background-image: url('https://i.loli.net/2018/11/03/5bdd8e97bb2be.png');*/
 
     /*merry 2018 christmas*/
-    background-image: url('https://i.loli.net/2018/12/24/5c20cecbde3c9.jpg');
+    /*background-image: url('https://i.loli.net/2018/12/24/5c20cecbde3c9.jpg');*/
 
 
     /*2019 yellow right bottom*/
-    background-image: url(https://i.loli.net/2018/12/28/5c25eeed25496.png);
-    background-position: right bottom;
-    background-size: 24rem;
-    background-color: #fdd94194;
+    /*background-image: url(https://i.loli.net/2018/12/28/5c25eeed25496.png);*/
+    /*background-position: right bottom;*/
+    /*background-size: 24rem;*/
+    /*background-color: #fdd94194;*/
 
     /*2019 center bottom pig pink*/
     background-image: url(https://i.loli.net/2018/12/28/5c25ed58ef2f2.png);
     background-position: center bottom;
-    background-size: 19rem;
+    background-size: 20rem;
     background-color: #ffd5d673;
   }
   .app {
