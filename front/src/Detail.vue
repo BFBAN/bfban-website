@@ -351,7 +351,9 @@
 <script>
 import ajax from './ajax';
 import { checkIdExist, getCheaterStatusLabel, formatTextarea,
-  convertDatetimeToUserTimeZone, cheatMethodsGlossary, convertCheatMethods, waitForAction } from "./common";
+  convertDatetimeToUserTimeZone, cheatMethodsGlossary,
+  convertCheatMethods, waitForAction,
+  replaceImgSrcToDataSrc } from "./common";
 
 export default {
   data() {
@@ -398,6 +400,9 @@ export default {
   created() {
     this.loadData();
   },
+  updated() {
+    new LazyLoad({})
+  },
   methods: {
     loadData() {
       const originUserId = this.$route.params.ouid;
@@ -435,6 +440,14 @@ export default {
         });
         replies = _.each(replies, (v, k, l) => {
           v['type'] = 'reply'
+        });
+
+        // img src => data-src
+        reports = _.each(reports, (v) => {
+          v['description'] = replaceImgSrcToDataSrc(v['description']);
+        });
+        replies = _.each(replies, (v, k, l) => {
+          v['content'] = replaceImgSrcToDataSrc(v['content']);
         });
 
         let timelineList = reports.concat(verifies, confirms, replies);

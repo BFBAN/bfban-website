@@ -222,7 +222,13 @@ function getUTCTimeStamp() {
   return utcTimeStamp;
 }
 
+function replaceImgSrcToDataSrc(str) {
+  const reg = /\s+(src)=/gi;
+  return str.replace(reg, ' data-src=');
+}
+
 export {
+  replaceImgSrcToDataSrc,
   checkIdExist,
   convertGameName,
   checkReportFormData,
