@@ -27,7 +27,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
   html, body {
     height: 100%;
   }
@@ -59,9 +59,13 @@ export default {
     /*2019 center bottom pig pink*/
     background-image: url(https://i.loli.net/2018/12/28/5c25ed58ef2f2.png);
     background-position: center bottom;
-    background-size: 20rem;
+    background-size: 18rem;
     background-color: #ffd5d673;
+    footer.footer {
+      margin-top: 10rem;
+    }
   }
+
   .app {
     height: 100%;
     display: flex;
