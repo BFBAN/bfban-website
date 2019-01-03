@@ -14,7 +14,7 @@
       </p>
       <p>
         {{$t('footer.author')}}
-        &copy; 2018
+        &copy; 2018-2019
         All Rights Reserved.
       </p>
     </footer>
