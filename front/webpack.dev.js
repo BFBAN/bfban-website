@@ -11,6 +11,10 @@ module.exports = merge(common, {
     overlay: true,
     contentBase: path.resolve(__dirname),
   },
+  output: {
+    path: path.resolve(__dirname),
+    filename: 'bundle.js',
+  },
   watchOptions: {
     ignored: /node_modules/,
     poll: 1000,
