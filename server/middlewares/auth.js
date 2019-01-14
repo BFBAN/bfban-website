@@ -30,18 +30,20 @@ function verifyJWT(req, res, next) {
     });
 }
 
-// should be admin
+// should be admin, super or root
 function verifyAdminPrivilege(req, res, next) {
   const { userPrivilege } = req.user;
 
+  const privilegeTitle = ['root', 'super', 'admin'];
+
   // root, super, admin, normal
-  if (userPrivilege === 'normal') {
+  if (privilegeTitle.includes(userPrivilege)) {
+    next();
+  } else {
     res.json({
       error: 1,
       msg: 'no privilege',
     });
-  } else {
-    next();
   }
 }
 

@@ -431,6 +431,11 @@ async (req, res, next) => {
 
     if (status === '1') {
       status = '6';
+
+      // if usper, status 1 instantly
+      if (req.user.userPrivilege === 'super') {
+        status = '1';
+      }
     }
 
     await db.query(`update ${cheatersDB} set status = ?, updateDatetime = ? 
