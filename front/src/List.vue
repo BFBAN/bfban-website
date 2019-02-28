@@ -188,14 +188,13 @@ export default {
       this.sortByValue = sort;
 
       ajax(config)
-      .then((res) => {
+      .then(({data: {data, total, sum, totalSum}}) => {
         this.spinShow = false;
 
-        const d = res.data;
-        this.data = d.data;
-        this.total = d.total;
-        this.sum = d.sum;
-        this.totalSum = d.totalSum;
+        this.data = data;
+        this.total = total;
+        this.sum = sum;
+        this.totalSum = totalSum;
 
       })
     },

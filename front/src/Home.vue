@@ -159,8 +159,8 @@ export default {
       method: 'get',
       url: '/activity',
     })
-    .then(res => {
-      const d = res.data;
+    .then(({data}) => {
+      const d = data;
       if (d.error === 0) {
         let { registers, reports, verifies, number } = d.data;
 
