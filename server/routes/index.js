@@ -56,12 +56,11 @@ router.post('/checkGameIdExist', [
   }
 
   const { id } = req.body;
-  let idExist;
 
   const userInfo = await getUserInfo({ originId: id });
   console.log('userInfo:', userInfo);
 
-  idExist = !userInfo.error;
+  const idExist = !userInfo.error;
 
   return res.json({
     error: 0,
