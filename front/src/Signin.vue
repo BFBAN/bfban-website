@@ -36,6 +36,7 @@
 <script>
 import { getCsrfToken, waitForAction } from './common';
 import ajax, { baseURL } from "./ajax";
+const { mapActions, mapMutations } = Vuex;
 
 export default {
   data() {
@@ -54,12 +55,18 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      'signinUser': 'signin'
+    }),
+    ...mapMutations([
+      'SIGNIN'
+    ]),
     refreshCaptcha: function() {
       this.$refs.captcha.src = baseURL + '/captcha?r=' + Math.random();
 
       waitForAction.call(this.$refs.reCaptcha);
     },
-    handleSignin: function() {
+    handleSignin() {
       const {username, password, captcha} = _.each(this.signin, (v, k, o) => {
         o[k] = v.trim();
       });
@@ -92,7 +99,7 @@ export default {
             this.signin.captcha = '';
             this.refreshCaptcha();
           } else {
-            this.$store.dispatch('signin', d.data)
+            this.signinUser(d.data)
             .then(() => {
 
               const rurl = this.$route.query.rurl;

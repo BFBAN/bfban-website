@@ -14,7 +14,7 @@ const store = new Vuex.Store({
 
   // modify state
   mutations: {
-    signin(state, payload) {
+    SIGNIN(state, payload) {
       state.user = payload;
 
       Cookies.set('user', JSON.stringify(payload), { expires: 1 });
@@ -37,8 +37,8 @@ const store = new Vuex.Store({
 
   // dispatch actions
   actions: {
-    signin(context, payload) {
-      context.commit('signin', payload);
+    signin({ commit }, payload) {
+      commit('SIGNIN', payload);
     },
     signout(context, payload) {
       context.commit('signout', payload);
