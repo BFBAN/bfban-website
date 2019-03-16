@@ -47,7 +47,7 @@
 
 
       <div class="list">
-        <Page :page-size="20" show-total :current="page" @on-change="handlePageChange" :total="total" class="page" size="small" />
+        <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange" @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small" />
 
         <ul>
           <li>
@@ -83,7 +83,7 @@
           </li>
         </ul>
 
-        <Page :page-size="20" show-total :current="page" @on-change="handlePageChange" :total="total" class="page" size="small" />
+        <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange" @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small" />
         <Spin size="large" fix v-show="spinShow"></Spin>
       </div>
     </div>
@@ -108,6 +108,7 @@ export default {
       cd: ['', ''],
       ud: ['', ''],
       page: 1,
+      limit: 20,
       total: 0,
       sum: [],
       totalSum: [],
@@ -164,7 +165,7 @@ export default {
     },
     loadData() {
       // default values
-      const { game = 'bf1', status = '100', cd = '', ud = '', page = 1, sort='updateDatetime' } = this.$route.query;
+      const { game = 'bf1', status = '100', cd = '', ud = '', page = 1, sort='updateDatetime', limit = 20 } = this.$route.query;
 
       const config = {
         method: 'get',
@@ -179,12 +180,14 @@ export default {
         page,
         sort,
         tz: moment.tz.guess(),
+        limit
       };
       this.gameName = game;
       this.statusGroup = status;
       this.cd = cd.split(',');
       this.ud = ud.split(',');
       this.page = Number.parseInt(page);
+      this.limit = Number.parseInt(limit);
       this.sortByValue = sort;
 
       ajax(config)
@@ -210,6 +213,7 @@ export default {
       const cd = this.cd.join(',');
       const ud = this.ud.join(',');
       const page = this.page;
+      const limit = this.limit;
       const sort = this.sortByValue;
 
       let o = {};
@@ -218,6 +222,7 @@ export default {
       if (cd !== ',') o['cd'] = cd;
       if (ud !== ',') o['ud'] = ud;
       if (page !== 1) o['page'] = page;
+      if (limit !== 20) o['limit'] = limit;
       if (sort !== '') o['sort'] = sort;
       if (game !== '') o['game'] = game;
 
@@ -249,6 +254,10 @@ export default {
     },
     handlePageChange(num) {
       this.page = num;
+      this.handleChanges();
+    },
+    handlePageSizeChange(num) {
+      this.limit = num;
       this.handleChanges();
     },
 

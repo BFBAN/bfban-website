@@ -55,7 +55,7 @@ function capture(originId, cheaterUId) {
     cp.on('close', (code) => {
       console.log(`cpature successfully ${k}, ${v}, ${url}`);
 
-      db.query(`update cheaters set ${k} = ? 
+      db.query(`update cheaters set ${k} = ?
       where uId = ?`, [url, cheaterUId]);
     });
   });
@@ -113,6 +113,7 @@ router.get('/', async (req, res, next) => {
     ud = ',',
     page = 1,
     sort = '',
+    limit = 20,
     tz,
   } = req.query;
 
@@ -156,7 +157,7 @@ router.get('/', async (req, res, next) => {
     DESC
     `;
 
-  const result = await db.query(`${querySql} limit 20 offset ${(page - 1) * 20}`,
+  const result = await db.query(`${querySql} limit ${limit} offset ${(page - 1) * limit}`,
     [].concat(gameQueryVal, statusQueryVal, cdQueryVal, udQueryVal));
 
   const total = await db.query(`select count(cheaters.id) as num
@@ -242,9 +243,9 @@ router.get('/:ouid', [
     where t3.originUserId = ? and t3.valid = '1'`, [cheaterOUId]);
 
   const replies = await db.query(`select
-    t1.createDatetime, 
-    t3.username as foo, t3.uId as fooUId, t3.privilege as fooPrivilege, 
-    t4.username as bar, t4.uId as barUId, t4.privilege as barPrivilege, 
+    t1.createDatetime,
+    t3.username as foo, t3.uId as fooUId, t3.privilege as fooPrivilege,
+    t4.username as bar, t4.uId as barUId, t4.privilege as barPrivilege,
     t1.userId, t1.toFloor, t1.cheaterId, t1.content
     from replies as t1
     left join cheaters as t2 on t1.cheaterId = t2.id
@@ -438,7 +439,7 @@ async (req, res, next) => {
       }
     }
 
-    await db.query(`update ${cheatersDB} set status = ?, updateDatetime = ? 
+    await db.query(`update ${cheatersDB} set status = ?, updateDatetime = ?
       where originUserId = ? `, [status, d, originUserId]);
 
     await updateCommentsNum(originUserId);
@@ -496,7 +497,7 @@ async (req, res, next) => {
 
     // 石锤的 第二个 步骤
     // update status, cheatMethods, updateDatetime
-    await db.query(`update ${cheatersDB} set status = "1", cheatMethods = ?, updateDatetime = ? 
+    await db.query(`update ${cheatersDB} set status = "1", cheatMethods = ?, updateDatetime = ?
     where originUserId = ?`, [cheatMethods, d, originUserId]);
 
     await updateCommentsNum(originUserId);
