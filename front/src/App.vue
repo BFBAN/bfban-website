@@ -57,10 +57,17 @@ export default {
     /*background-color: #fdd94194;*/
 
     /*2019 center bottom pig pink*/
-    background-image: url(https://i.loli.net/2018/12/28/5c25ed58ef2f2.png);
+    // background-image: url(https://i.loli.net/2018/12/28/5c25ed58ef2f2.png);
+    // background-position: center bottom;
+    // background-size: 18rem;
+    // background-color: #ffd5d673;
+
+    // 2019 端午
+    background-color: #f8c569;
+    background-image: url(https://i.loli.net/2019/06/02/5cf37cb12a81b19199.jpg);
     background-position: center bottom;
     background-size: 18rem;
-    background-color: #ffd5d673;
+
     footer.footer {
       margin-top: 10rem;
     }
