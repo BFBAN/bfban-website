@@ -14,6 +14,13 @@
       </p>
       <p>
         {{$t('footer.author')}}
+
+        Email: mygoare@gmail.com
+
+        Host at
+        <a href="https://aws.amazon.com">AWS</a>
+      </p>
+      <p>
         &copy; 2018-2019
         All Rights Reserved.
       </p>
