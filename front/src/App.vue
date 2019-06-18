@@ -6,6 +6,11 @@
         <router-view></router-view>
     </main>
     <Footer />
+
+    <!-- feedback -->
+    <a class="feedback" target="_blank" href="http://support.qq.com/product/64038">
+      <Icon size=24 type="ios-chatbubbles" />
+    </a>
   </div>
 
 </template>
@@ -26,6 +31,24 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.feedback {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  color: #bfbfbf;
+  background-color: #f7f7f7;
+  padding: .4rem;
+  box-shadow: 0 0 .2rem #b7b7b7;
+  border-radius: 2rem;
+
+  &:hover {
+    color: #fff;
+    background-color: #2d8cf0;
+  }
+}
+</style>
 
 <style lang="scss">
   html, body {
