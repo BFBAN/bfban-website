@@ -67,7 +67,7 @@ export default {
     background-attachment: fixed;
     background-repeat: no-repeat;
 
-    /*background-image: url('https://i.loli.net/2018/11/03/5bdd8e97bb2be.png');*/
+    background-image: url('https://i.loli.net/2018/11/03/5bdd8e97bb2be.png');
 
     /*merry 2018 christmas*/
     /*background-image: url('https://i.loli.net/2018/12/24/5c20cecbde3c9.jpg');*/
@@ -86,10 +86,10 @@ export default {
     // background-color: #ffd5d673;
 
     // 2019 端午
-    background-color: #f8c569;
-    background-image: url(https://i.loli.net/2019/06/02/5cf37cb12a81b19199.jpg);
-    background-position: center bottom;
-    background-size: 18rem;
+    // background-color: #f8c569;
+    // background-image: url(https://i.loli.net/2019/06/02/5cf37cb12a81b19199.jpg);
+    // background-position: center bottom;
+    // background-size: 18rem;
 
     footer.footer {
       margin-top: 10rem;
