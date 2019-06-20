@@ -38,7 +38,7 @@ export default {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  color: #bfbfbf;
+  color: #515a6e;
   background-color: #f7f7f7;
   padding: .4rem;
   box-shadow: 0 0 .2rem #b7b7b7;
