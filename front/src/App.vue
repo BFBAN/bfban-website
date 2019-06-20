@@ -10,6 +10,7 @@
     <!-- feedback -->
     <a class="feedback" target="_blank" href="http://support.qq.com/product/64038">
       <Icon size=24 type="ios-chatbubbles" />
+      <span>意见反馈</span>
     </a>
   </div>
 
@@ -41,7 +42,13 @@ export default {
   background-color: #f7f7f7;
   padding: .4rem;
   box-shadow: 0 0 .2rem #b7b7b7;
+
+  width: 6rem;
+  height: 2rem;
   border-radius: 2rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 
   &:hover {
     color: #fff;
