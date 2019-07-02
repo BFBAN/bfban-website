@@ -270,7 +270,7 @@
           <p class="hint">如果有新的证据图片或视频需要补充，可以再次举报。回复功能只能回复文本或链接。如需回复图片，请移步这里 <a href="https://sm.ms/" target="_blank">上传图片 </a>，然后复制图片链接进行回复。</p>
           <Form :label-width="80" style="position: relative;">
             <p>
-              <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
+              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
             </p>
             <Button type="primary" @click.stop.prevent="doReply">回复</Button>
 
@@ -312,7 +312,7 @@
             </FormItem>
 
             <FormItem label="理由">
-              <Input v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="必填" />
+              <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="必填" />
             </FormItem>
 
             <FormItem>
@@ -333,7 +333,7 @@
           @on-cancel="cancelReply">
           <div v-if="isLogin">
             <Form :label-width="80" ref='replyForm' style="position: relative;">
-              <Input v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
+              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
             </Form>
           </div>
           <div v-else>请登录后参与回复</div>
@@ -672,6 +672,18 @@ export default {
           this.$Message.error(d.msg);
         }
       });
+    },
+    handleCmdEnter(e, type) {
+      if ( (e.metaKey || e.ctrlKey) && e.keyCode == 13 )  {
+        switch(type) {
+          case 'reply':
+            this.doReply()
+            break;
+          case 'verify':
+            this.doVerify();
+            break;
+        }
+      }
     },
     updateCheaterInfo(e) {
       waitForAction.call(e.target, 60);
