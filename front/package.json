@@ -4,8 +4,8 @@
   "description": "",
   "main": ".eslintrc.js",
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "dev": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0"
+    "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack.dev.js --open --host 0.0.0.0"
   },
   "author": "",
   "license": "ISC",
@@ -28,8 +28,10 @@
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "babel-loader": "^8.0.4",
+    "cross-env": "^5.2.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
+    "mini-css-extract-plugin": "^0.7.0",
     "webpack": "^4.21.0",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10",
