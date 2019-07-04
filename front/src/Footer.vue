@@ -58,10 +58,10 @@ export default {
       display: inline-block;
     }
     .country-cn {
-      background-image: url('/assets/images/lang/cn.svg');
+      background-image: url($cdnBasePath + '/assets/images/lang/cn.svg');
     }
     .country-uk {
-      background-image: url('/assets/images/lang/uk.svg');
+      background-image: url($cdnBasePath + '/assets/images/lang/uk.svg');
     }
   }
 </style>

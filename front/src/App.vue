@@ -58,6 +58,23 @@ export default {
 </style>
 
 <style lang="scss">
+  /* ubuntu-mono-regular - latin */
+  @font-face {
+    font-family: 'Ubuntu Mono';
+    font-style: normal;
+    font-weight: 400;
+    src: url($cdnBasePath + '/assets/fonts/ubuntu-mono-v8-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local('Ubuntu Mono'), local('UbuntuMono-Regular'),
+        url($cdnBasePath + '/assets/fonts/ubuntu-mono-v8-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url($cdnBasePath + '/assets/fonts/ubuntu-mono-v8-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+        url($cdnBasePath + '/assets/fonts/ubuntu-mono-v8-latin-regular.woff') format('woff'), /* Modern Browsers */
+        url($cdnBasePath + '/assets/fonts/ubuntu-mono-v8-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+        url($cdnBasePath + '/assets/fonts/ubuntu-mono-v8-latin-regular.svg#UbuntuMono') format('svg'); /* Legacy iOS */
+  }
+  html, body {
+    font-family: 'Ubuntu Mono', monospace, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial, sans-serif;
+  }
+
   html, body {
     height: 100%;
   }

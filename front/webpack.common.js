@@ -5,6 +5,13 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+function sassLoaderData() {
+  const env = process.env.NODE_ENV
+  const cdnBasePath = env === 'production' ? 'https://bfban-static.bamket.com' : ''
+  return `$env: '${env}';$cdnBasePath: '${cdnBasePath}';`
+}
 
 module.exports = {
   entry: './src/index.js',
@@ -12,10 +19,14 @@ module.exports = {
     new VueLoaderPlugin(),
     new CopyWebpackPlugin([
       {
-        from: path.resolve(__dirname, 'fonts'),
-        to: 'fonts',
+        from: path.resolve(__dirname, 'assets'),
+        to: 'assets',
       },
     ]),
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css",
+    }),
     new HtmlWebpackPlugin({
       title: '战地风云联BAN调查局',
       template: 'index.html',
@@ -28,16 +39,14 @@ module.exports = {
         // extract-text-webpack-plugin
         test: /\.scss$/,
         use: [
-          'style-loader',
+          process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
-          'sass-loader',
-        ],
-      },
-      {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              data: sassLoaderData()
+            }
+          },
         ],
       },
       {
