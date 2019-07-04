@@ -131,20 +131,4 @@
 </script>
 
 <style lang="scss">
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-
-    td {
-      border: 1px solid #dbdbdb;
-      border-width: 0 0 1px;
-      padding: .5em .75em;
-      vertical-align: middle;
-    }
-
-    tbody tr:hover {
-      background-color: #f3f3f3bd;
-    }
-  }
 </style>
