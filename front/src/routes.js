@@ -1,16 +1,16 @@
 // import VueRouter from 'vue-router';
 
-import Home from './Home.vue';
-import Report from './Report.vue';
-import Misc from './Misc.vue';
-import List from './List.vue';
-import Detail from './Detail.vue';
-import Signin from './Signin.vue';
-import Signup from './Signup.vue';
-import Account from './Account.vue';
-import Dashboard from './Dashboard.vue';
-import About from './About.vue';
-import NotFound from './NotFound.vue';
+const Home =() => import('./Home.vue');
+const Report =() => import('./Report.vue');
+const Misc =() => import('./Misc.vue');
+const List =() => import('./List.vue');
+const Detail =() => import('./Detail.vue');
+const Signin =() => import('./Signin.vue');
+const Signup =() => import('./Signup.vue');
+const Account =() => import('./Account.vue');
+const Dashboard =() => import('./Dashboard.vue');
+const About = () =>  import('./About.vue');
+const NotFound = () => import('./NotFound.vue');
 
 import store from './store';
 
