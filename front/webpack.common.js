@@ -9,7 +9,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 function sassLoaderData() {
   const env = process.env.NODE_ENV
-  const cdnBasePath = env === 'production' ? 'https://bfban-static.bamket.com' : ''
+  const cdnBasePath = env === 'production' ? '' : ''
   return `$env: '${env}';$cdnBasePath: '${cdnBasePath}';`
 }
 

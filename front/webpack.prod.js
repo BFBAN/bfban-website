@@ -8,6 +8,6 @@ module.exports = merge(common, {
   output: {
     path: path.resolve(__dirname, '../server/public'),
     filename: 'bundle.js',
-    publicPath: 'https://bfban-static.bamket.com/',
+    // publicPath: 'https://bfban-static.bamket.com/',
   },
 });
