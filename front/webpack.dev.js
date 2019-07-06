@@ -30,7 +30,6 @@ module.exports = merge(common, {
     new HtmlWebpackPlugin({
       title: '战地风云联BAN调查局',
       template: 'index.html',
-      favicon: 'favicon.ico',
     }),
   ]
 });
