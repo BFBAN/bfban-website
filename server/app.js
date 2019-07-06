@@ -10,6 +10,8 @@ const pino = require('pino')({
   },
 });
 
+const history = require('connect-history-api-fallback');
+
 const routes = require('./routes/');
 const config = require('./config');
 
@@ -24,6 +26,8 @@ const { port, address } = config;
 
 // create express app
 const app = express();
+
+app.use(history());
 
 // cors
 // app.use((req, res, next) => {

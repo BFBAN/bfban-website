@@ -15,22 +15,24 @@ function sassLoaderData() {
 
 module.exports = {
   entry: './src/index.js',
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    }
+  },
   plugins: [
     new VueLoaderPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, 'assets'),
         to: 'assets',
+        ignore: ['.DS_Store']
       },
     ]),
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[id].css",
     }),
-    new HtmlWebpackPlugin({
-      title: '战地风云联BAN调查局',
-      template: 'index.html',
-      favicon: 'favicon.ico',
     }),
   ],
   module: {
