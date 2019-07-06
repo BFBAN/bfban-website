@@ -12,12 +12,12 @@
 
 // import FastClick from 'fastclick';
 
-import App from './App.vue';
-import cn from './lang/cn';
-import uk from './lang/uk';
+import App from '@/views/App.vue';
+import cn from '@/lang/cn';
+import uk from '@/lang/uk';
 
-import router from './routes';
-import store from './store';
+import router from '@/router';
+import store from '@/store';
 
 Vue.use(VueQuillEditor);
 // Vue.use(iView);
@@ -38,9 +38,6 @@ const i18n = new VueI18n({
   locale,
   messages,
 });
-
-const root = document.createElement('div');
-document.body.appendChild(root);
 
 const app = new Vue({
   router,
