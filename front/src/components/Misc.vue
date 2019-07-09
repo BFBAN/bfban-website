@@ -139,6 +139,7 @@ export default {
           editorContent: '',
           editorOption: {
               theme: 'snow',
+              placeholder: this.content,
               modules: {
                   toolbar: {
                       container: toolbarOptions,

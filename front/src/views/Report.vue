@@ -29,8 +29,11 @@
         </FormItem>
 
         <FormItem label="视频链接">
+          <Alert type="warning">
+            不想注册国内账号、嫌麻烦，上传视频可以前往 <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，然后地址贴在下方
+          </Alert>  
           <span class="hint">可以是 优酷，土豆，AB站等 视频网站链接</span>
-          <Input v-model="formItem.bilibiliLink" placeholder="选填" />
+          <Input v-model="formItem.bilibiliLink" placeholder="视频链接选填" />
         </FormItem>
 
         <FormItem label="论述">
@@ -78,7 +81,7 @@
             originId: '',
             bilibiliLink: '',
             checkbox: ['aimbot'],
-            description: '',
+            description: '尽可能详细的列举被举报人的作弊证据',
             captcha: '',
 
             originUserId: '',
