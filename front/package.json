@@ -5,7 +5,7 @@
   "main": ".eslintrc.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
-    "start": "cross-env NODE_ENV=development webpack-dev-server --config webpack.dev.js --open --host 0.0.0.0"
+    "start": "cross-env NODE_ENV=development BABEL_ENV=development webpack-dev-server --config webpack.dev.js --open --host 0.0.0.0"
   },
   "author": "",
   "license": "ISC",
@@ -29,6 +29,7 @@
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "babel-loader": "^8.0.4",
+    "babel-plugin-dynamic-import-node": "^2.3.0",
     "cross-env": "^5.2.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
