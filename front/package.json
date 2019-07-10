@@ -5,7 +5,7 @@
   "main": ".eslintrc.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack.dev.js --open --host 0.0.0.0"
+    "start": "cross-env NODE_ENV=development webpack-dev-server --config webpack.dev.js --open --host 0.0.0.0"
   },
   "author": "",
   "license": "ISC",
