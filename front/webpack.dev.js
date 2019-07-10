@@ -18,6 +18,7 @@ module.exports = merge(common, {
   output: {
     path: path.resolve(__dirname),
     filename: 'bundle.js',
+    publicPath: '/',
   },
   watchOptions: {
     ignored: /node_modules/,
