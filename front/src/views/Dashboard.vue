@@ -2,17 +2,17 @@
   <div class="container">
     <div class="content">
       <div v-if="isAdmin">
-        <h1>
-          管理后台
+        <h1 style="color: #ed4014; text-decoration: line-through;">
+          管理后台 （功能暂不可用！！！）
         </h1>
 
-        <h3 style="color: #ed4014;">
-          请各管理员谨慎使用管理功能，在 人人平等，言论自由 的前提下，尽量只对发动、恶意、诋毁、辱骂等内容进行删除。
+<!--        <h3 style="color: #ed4014;">-->
+<!--          请各管理员谨慎使用管理功能，在 人人平等，言论自由 的前提下，尽量只对发动、恶意、诋毁、辱骂等内容进行删除。-->
 
-        </h3>
-        <h3 style="color: #ed4014;">
-          勿滥用！！莫忘初心！！
-        </h3>
+<!--        </h3>-->
+<!--        <h3 style="color: #ed4014;">-->
+<!--          勿滥用！！莫忘初心！！-->
+<!--        </h3>-->
 
         <h2>封禁用户 uid 搜索、编辑</h2>
         <Form inline>
