@@ -275,7 +275,7 @@ router.post('/', verifyJWTMiddleware, verifyCatpcha, [
   check('gameName', 'game property incorrect').not().isEmpty().custom((val, { req }) => gamesArr.indexOf(val) !== -1),
   check('originId').not().isEmpty().isAscii(),
   check('cheatMethods').not().isEmpty(),
-  check('bilibiliLink').optional({ checkFalsy: true }).isURL(),
+  check('bilibiliLink').optional({ checkFalsy: true }).isURL({allow_protocol_relative_urls: true}),
   check('captcha').not().isEmpty().isLength({ min: 4, max: 4 }),
   check('description').not().isEmpty(),
 

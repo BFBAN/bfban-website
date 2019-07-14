@@ -10,8 +10,6 @@ const pino = require('pino')({
   },
 });
 
-const history = require('connect-history-api-fallback');
-
 const routes = require('./routes/');
 const config = require('./config');
 
@@ -26,8 +24,6 @@ const { port, address } = config;
 
 // create express app
 const app = express();
-
-app.use(history());
 
 // cors
 // app.use((req, res, next) => {
@@ -63,7 +59,9 @@ app.use(cookieParser(config.secret, {
 // }));
 
 
-// use middlewares
+// middlewares
+
+// morgan logger
 app.use(morgan(':date[clf] :status :method :url :res[content-length] :response-time ms  :remote-addr', {
   // skip(req, res) { return res.statusCode < 400; },
 }));
@@ -79,7 +77,6 @@ app.use('/', express.static(path.resolve(config.baseDir, 'public')));
 
 // routes
 app.use('/api', routes);
-
 
 // 404
 app.use((req, res, next) => res.sendStatus(404));
