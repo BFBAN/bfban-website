@@ -10,7 +10,7 @@ module.exports = merge(common, {
   // devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, '../server/public'),
-    filename: 'bundle.js',
+    filename: 'bundle.[contenthash].js',
     // publicPath: 'https://bfban.com/',
     // publicPath 会影响到请求 js 和 css 等静态资源时的路径问题
     publicPath: '/',
@@ -18,7 +18,7 @@ module.exports = merge(common, {
   // https://webpack.js.org/plugins/mini-css-extract-plugin/#minimizing-for-production
   optimization: {
     minimizer: [
-      new TerserJSPlugin({}), 
+      new TerserJSPlugin({}),
       new OptimizeCSSAssetsPlugin({})
     ]
   },
