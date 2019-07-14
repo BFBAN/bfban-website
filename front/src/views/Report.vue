@@ -150,7 +150,8 @@
         const { gameName, originUserId, originPersonaId, avatarLink, captcha } = this.formItem;
 
         const originId = trimAllWhitespace(this.formItem.originId);
-        const bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
+        let bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
+        bilibiliLink = /^https?:\/\//.test(bilibiliLink) ? bilibiliLink : '//' + bilibiliLink
         const description = this.formItem.description.trim();
 
         ajax({
