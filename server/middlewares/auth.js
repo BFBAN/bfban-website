@@ -9,7 +9,7 @@ function getToken(req) {
 function verifyJWT(req, res, next) {
   const token = getToken(req);
 
-  if (token === accessToken)
+  if (token.trim() === accessToken.trim())
     return next();
 
   verifyJWTToken(token)
