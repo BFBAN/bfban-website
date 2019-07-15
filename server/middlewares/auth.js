@@ -1,4 +1,5 @@
 const { verifyJWTToken } = require('../libs/auth');
+const { accessToken } = require('../config');
 const db = require('../mysql');
 
 function getToken(req) {
@@ -7,6 +8,9 @@ function getToken(req) {
 
 function verifyJWT(req, res, next) {
   const token = getToken(req);
+
+  if (token === accessToken)
+    return next();
 
   verifyJWTToken(token)
     .then(async (decodedToken) => {
