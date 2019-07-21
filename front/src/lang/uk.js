@@ -26,6 +26,15 @@ export default {
   about: {
     title: 'About',
   },
+  reset: {
+    title: 'Reset Password',
+    form: {
+      qq: 'QQ',
+      password: 'New Password',
+      passwordRepeat: 'Confirm Password',
+      submit: 'Submit',
+    },
+  },
   signin: {
     title: 'Sign In',
     form: {

@@ -7,6 +7,7 @@ const List      =() => import('@/views/List.vue');
 const Detail    =() => import('@/views/Detail.vue');
 const Signin    =() => import('@/views/Signin.vue');
 const Signup    =() => import('@/views/Signup.vue');
+const Reset     =() => import('@/views/Reset.vue');
 const Account   =() => import('@/views/Account.vue');
 const Dashboard =() => import('@/views/Dashboard.vue');
 const About     =() => import('@/views/About.vue');
@@ -41,6 +42,7 @@ const routes = [
 
   { name: 'signin', path: '/signin', component: Signin },
   { name: 'signup', path: '/signup', component: Signup },
+  { name: 'signup', path: '/reset', component: Reset },
 
   { name: 'account', path: '/account/:uId', component: Account },
   { name: 'dashboard', path: '/dashboard', component: Dashboard },

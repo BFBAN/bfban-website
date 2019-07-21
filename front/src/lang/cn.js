@@ -26,6 +26,15 @@ export default {
   about: {
     title: '关于',
   },
+  reset: {
+    title: '重置密码',
+    form: {
+      qq: 'QQ',
+      password: '新密码',
+      passwordRepeat: '确认密码',
+      submit: '提交',
+    },
+  },
   signin: {
     title: '登录',
     form: {

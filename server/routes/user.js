@@ -2,6 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const csrf = require('csurf');
 const uuidv4 = require('uuid/v4');
+const crypto = require('crypto');
+const moment = require('moment');
 const { check, validationResult } = require('express-validator/check');
 const { generatePassword, comparePassword } = require('../libs/auth');
 
@@ -133,6 +135,68 @@ router.post('/signup', [
     data: userPayload,
     token,
   });
+});
+
+function encodeBase64(str) {
+  return Buffer.from(str).toString('base64')
+}
+function decodeBase64(code) {
+  return Buffer.from(code, 'base64').toString('ascii')
+}
+
+router.post('/reset', [
+  check('qq').trim().isNumeric(),
+  check('token').trim().not().isEmpty(),
+  check('password').trim().not().isEmpty()
+    .isLength({ min: 6 }),
+  check('passwordRepeat').trim().not().isEmpty()
+    .isLength({ min: 6 }),
+], async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
+  }
+
+  const {
+    token, qq, password, passwordRepeat,
+  } = req.body;
+
+  try {
+    if (password.trim() !== passwordRepeat.trim())
+      throw(new Error('两次密码输入不同'))
+
+    const [uIdBase64ed, invalidDatetimeBase64ed] = token.split('-')
+    const uId = decodeBase64(uIdBase64ed)
+    const invalidDatetime = Number(decodeBase64(invalidDatetimeBase64ed))
+
+    // 2 天有效期
+    if ((moment(invalidDatetime).utc().diff(moment.utc()), 'days', true) < 0) {
+      throw(new Error('token expired'))
+    }
+
+    const result = await db.query('select * from users where uId = ? and qq = ? and valid = ?', [uId, qq, '1']);
+
+    if (result[0] && result[0].valid === '1') {
+      const hash = generatePassword(password)
+      await db.query(`update users set password = ? where uId = ?`, [hash, uId])
+
+      return res.json({
+        error: 0,
+        msg: '重置密码成功'
+      })
+    } else {
+      throw(new Error('invalid token'))
+    }
+  } catch(e) {
+    return res.json({
+      error: 1,
+      msg: e.message
+    })
+  }
+
+
+
+
 });
 
 //
