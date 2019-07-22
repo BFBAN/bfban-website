@@ -75,7 +75,7 @@
       </p>
       <p>
         期间 你可以在 个人中心 查看进度状态， 也可以翻看
-        <a href="/#/cheaters?status=1">外挂公示</a>
+        <router-link :to="{path: 'cheaters'}">外挂公示</router-link>
         。
       </p>
 

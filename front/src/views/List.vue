@@ -165,7 +165,7 @@ export default {
     },
     loadData() {
       // default values
-      const { game = 'bf1', status = '100', cd = '', ud = '', page = 1, sort='updateDatetime', limit = 20 } = this.$route.query;
+      const { game = 'bf1', status = '100', cd = '', ud = '', page = 1, sort='updateDatetime', limit = 40 } = this.$route.query;
 
       const config = {
         method: 'get',
