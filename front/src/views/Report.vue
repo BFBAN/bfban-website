@@ -98,7 +98,7 @@
     },
     methods: {
       checkVideoAndImg() {
-        if (this.formItem.bilibiliLink || /\<img\ssrc\=\"/.test(this.formItem.description)) {
+        if (trimAllWhitespace(this.formItem.bilibiliLink) || /\<img\ssrc\=\"/.test(this.formItem.description)) {
           return true;
         } else {
           this.$Message.error('请上传图片或填写视频链接');
@@ -151,7 +151,8 @@
 
         const originId = trimAllWhitespace(this.formItem.originId);
         let bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
-        bilibiliLink = /^https?:\/\//.test(bilibiliLink) ? bilibiliLink : '//' + bilibiliLink
+        if (bilibiliLink)
+          bilibiliLink = /^https?:\/\//.test(bilibiliLink) ? bilibiliLink : '//' + bilibiliLink
         const description = this.formItem.description.trim();
 
         ajax({
