@@ -31,12 +31,18 @@
         <FormItem label="视频链接">
           <Alert type="warning">
             不想注册国内账号、嫌麻烦，上传视频可以前往 <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，然后地址贴在下方
-          </Alert>  
+          </Alert>
           <span class="hint">可以是 优酷，土豆，AB站等 视频网站链接</span>
           <Input v-model="formItem.bilibiliLink" placeholder="视频链接选填" />
         </FormItem>
 
         <FormItem label="论述">
+          <Alert type="warning">
+            支持上传 png, jpg, jpeg, gif, bmp 格式的图片
+          </Alert>
+          <Alert type="warning">
+            图片大于 2M 或 上传失败，可以前往 <a target="_blank" href="https://sm.ms">https://sm.ms</a>，然后选择 Image URL 选项卡，把图片链接贴在下方
+          </Alert>
           <span class="hint">请列出阐明足够的证据，编辑器支持上传图片（限制2M）</span>
           <!-- <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." /> -->
           <Misc :content="formItem.description" @change="handleMiscChange" />
@@ -58,7 +64,6 @@
       </Form>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -98,7 +103,7 @@
     },
     methods: {
       checkVideoAndImg() {
-        if (trimAllWhitespace(this.formItem.bilibiliLink) || /\<img\ssrc\=\"/.test(this.formItem.description)) {
+        if (trimAllWhitespace(this.formItem.bilibiliLink) || /(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)/.test(this.formItem.description)) {
           return true;
         } else {
           this.$Message.error('请上传图片或填写视频链接');
@@ -152,7 +157,7 @@
         const originId = trimAllWhitespace(this.formItem.originId);
         let bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
         if (bilibiliLink)
-          bilibiliLink = /^https?:\/\//.test(bilibiliLink) ? bilibiliLink : '//' + bilibiliLink
+          bilibiliLink = /^https?:\/\//.test(bilibiliLink) ? bilibiliLink : '//' + bilibiliLink;
         const description = this.formItem.description.trim();
 
         ajax({
