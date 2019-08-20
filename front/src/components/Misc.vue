@@ -12,7 +12,6 @@
           :data="extraData"
           action="//upload-z2.qiniup.com"
           accept="image/*"
-          :format="['jpg','jpeg','png', 'gif']"
           multiple
           name="file"
           :max-size="imgMaxSize"

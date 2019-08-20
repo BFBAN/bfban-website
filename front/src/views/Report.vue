@@ -38,7 +38,7 @@
 
         <FormItem label="论述">
           <Alert type="warning">
-            支持上传 png, jpg, jpeg, gif, bmp 格式的图片
+            推荐上传 png, jpg, jpeg, gif 格式的图片
           </Alert>
           <Alert type="warning">
             图片大于 2M 或 上传失败，可以前往 <a target="_blank" href="https://sm.ms">https://sm.ms</a>，然后选择 Image URL 选项卡，把图片链接贴在下方
