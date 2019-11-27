@@ -3,13 +3,14 @@ const { accessToken } = require('../config');
 const db = require('../mysql');
 
 function getToken(req) {
-  return req.body.token || req.query.token || req.cookies['access-token'] || req.headers['x-access-token'];
+  return req.body.token || req.query.token || req.cookies['access-token'] || req.get('x-access-token');
 }
 
 function verifyJWT(req, res, next) {
   const token = getToken(req);
 
-  if (token.trim() === accessToken.trim())
+  // special token
+  if (token && token.trim() === accessToken.trim())
     return next();
 
   verifyJWTToken(token)
@@ -26,8 +27,9 @@ function verifyJWT(req, res, next) {
     })
     .catch((err) => {
       next(err);
-      // res.sendStatus(401);
-      res.json({
+      res
+        .status(401)
+        .json({
         error: 1,
         msg: 'plz sign in',
       });
