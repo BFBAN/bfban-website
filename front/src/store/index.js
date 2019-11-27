@@ -17,7 +17,7 @@ const store = new Vuex.Store({
     SIGNIN(state, payload) {
       state.user = payload;
 
-      Cookies.set('user', JSON.stringify(payload), { expires: 1 });
+      Cookies.set('user', JSON.stringify(payload), { expires: 7 });
     },
     signout(state, payload) {
       state.user = undefined;

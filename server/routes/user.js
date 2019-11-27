@@ -46,12 +46,12 @@ router.post('/signin', [
       uId,
     };
     const token = jwt.sign(userPayload, config.secret, {
-      expiresIn: '1 day',
+      expiresIn: '7 day',
     });
 
     res.cookie('access-token', token, {
       httpOnly: true,
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // one day
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 7), // 7 day
     });
 
     return res.json({
