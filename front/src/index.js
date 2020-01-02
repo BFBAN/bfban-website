@@ -3,7 +3,7 @@
 
 
 // import iView from 'iview';
-// import 'iview/dist/styles/iview.css';
+import './theme/2020-happy-new-year.less';
 
 // import VueQuillEditor from 'vue-quill-editor';
 // import 'quill/dist/quill.core.css';

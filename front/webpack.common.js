@@ -51,6 +51,19 @@ module.exports = {
         ],
       },
       {
+        test: /\.less$/,
+        use: [
+          process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+            }
+          },
+        ]
+      },
+      {
         test: /\.vue$/,
         use: [
           {
