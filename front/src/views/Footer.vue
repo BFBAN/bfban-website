@@ -21,7 +21,7 @@
         <a href="https://aws.amazon.com">AWS</a>
       </p>
       <p>
-        &copy; 2018-2019
+        &copy; 2018-2020
         All Rights Reserved.
       </p>
     </footer>
