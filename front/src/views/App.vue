@@ -94,7 +94,7 @@ export default {
     /*background-image: url('https://i.loli.net/2018/11/03/5bdd8e97bb2be.png');*/
 
     // merry 2018 christmas
-    // background-image: url('https://i.loli.net/2018/12/24/5c20cecbde3c9.jpg');
+    /*background-image: url('https://i.loli.net/2018/12/24/5c20cecbde3c9.jpg');*/
 
 
     /*2019 yellow right bottom*/
@@ -115,11 +115,23 @@ export default {
     // background-position: center bottom;
     // background-size: 18rem;
 
-    // black friday
-    background-image: url(https://i.loli.net/2019/11/28/U3sRBdYEktq7cbM.png);
-    background-size: 22rem;
-    background-position: center bottom 2rem;
-    background-color: black;
+    // 2019 black friday
+    /*background-image: url(https://i.loli.net/2019/11/28/U3sRBdYEktq7cbM.png);*/
+    /*background-size: 22rem;*/
+    /*background-position: center bottom 2rem;*/
+    /*background-color: black;*/
+
+    /*2019 merry christmas*/
+    /*background-image: url(https://i.loli.net/2020/01/02/e4MX3ulZSidcmQ1.png);*/
+    /*background-size: 12rem;*/
+    /*background-position: center bottom 8rem;*/
+    /*background-color: #99d8cf;*/
+
+    /*2020 happy new year*/
+    background-image: url(https://i.loli.net/2020/01/02/KphAXSGyIOV7Et2.png);
+    background-size: 24rem;
+    background-position: center bottom 8rem;
+    background-color: #C82839;
 
     footer.footer {
       margin-top: 10rem;
