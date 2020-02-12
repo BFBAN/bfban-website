@@ -21,7 +21,11 @@ export default {
       title: 'How to use',
       tools: 'Tools',
       qqGroup: 'QQ Group',
+      gameTogether: 'Game Together',
     },
+    bulletin: {
+      title: 'Bulletin'
+    }
   },
   about: {
     title: 'About',

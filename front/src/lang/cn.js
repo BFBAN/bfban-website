@@ -21,7 +21,11 @@ export default {
       title: '如何使用本站',
       tools: '小工具',
       qqGroup: 'QQ群',
+      gameTogether: '开黑',
     },
+    bulletin: {
+      title: '公告栏'
+    }
   },
   about: {
     title: '关于',

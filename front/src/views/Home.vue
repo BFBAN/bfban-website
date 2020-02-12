@@ -1,9 +1,7 @@
 <template>
   <div class="container">
+    <Bulletin />
     <div class="content">
-      <Alert type="warning">
-        bfban.com 已经可以永久追踪被举报挂壁的游戏ID，展示历史ID，并支持历史ID搜索！欢迎大家积极举报，给挂壁留下案底，使他们无处遁形。
-      </Alert>
       <Divider>{{$t("home.activity.title")}}</Divider>
 
       <p>bfban.com  于 2018年11月4日 上线，收到 <b>{{ site.report }}</b> 次举报，已石锤了 <b>{{ site.cheater }}</b> 个挂壁，感谢大家的共同努力！</p>
@@ -98,32 +96,28 @@
           在线战绩查询网站，可以详细查询到各类数据
         </p>
         <p>
-          <a target="_blank" href="http://bf1stats.com">
-            bf1stats.com
-          </a>
-          另一个战地1战绩查询站点
-        </p>
-        <p>
           <a target="_blank" href="https://bf1.mygoare.com/">
             战地1外挂举报助手
           </a>
           在线生成举报文本
-        </p>
-        <p>
-          <a target="_blank" href="https://www.bfrep.com">
-            BFReportTools
-          </a>
-          一款玩家自制的战地举报工具它可以实现一键生成举报文本，自动发送举报文本给EA等功能等
         </p>
       </div>
 
       <h2>{{$t("home.howToUse.qqGroup")}}</h2>
       <div class="tools">
         <p>
-          联ban局投诉审查处QQ群
           <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5PEqoDb">
             527565465
           </a>
+
+          联ban局投诉审查处QQ群
+        </p>
+      </div>
+
+      <h2>{{$t("home.howToUse.gameTogether")}}</h2>
+      <div class="tools">
+        <p>
+          <a href="https://www.kaihei.co/KfuWWb" target="_blank">战地5公开组队开黑服务器</a> 快速找到开黑小伙伴
         </p>
       </div>
     </div>
@@ -134,6 +128,7 @@
 </template>
 
 <script>
+  import Bulletin from '@/components/Bulletin.vue';
   import { getCheaterStatusLabel, getGameLabel } from '@/mixins/common';
   import ajax from '@/mixins/ajax';
   export default {
@@ -149,6 +144,9 @@
         }
       ]
     }
+  },
+  components: {
+    Bulletin,
   },
   methods: {
     handleStatus: getCheaterStatusLabel,
