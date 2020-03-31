@@ -1,21 +1,15 @@
 <template>
     <footer class="footer">
       <p>
-        <a href="#" @click.prevent="setLang('cn')">
-          <i class="icon icon-country country-cn"></i>
-        </a>
-        <a href="#" @click.prevent="setLang('uk')">
-          <i class="icon icon-country country-uk"></i>
-        </a>
-      </p>
-      <p>
-        <router-link :to="{name: 'about'}">{{$t('header.about')}}</router-link>
         <router-link :to="{name: 'report'}">{{$t('header.report')}}</router-link>
+        <router-link :to="{name: 'about'}">{{$t('header.about')}}</router-link>
+
+        <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">  
+          <Option v-for="item in languages" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
       </p>
       <p>
-        {{$t('footer.author')}}
-
-        Email: mygoare@gmail.com
+        Made with <Icon type="ios-heart" color="#ed4014" />
 
         Host at
         <a href="https://aws.amazon.com">AWS</a>
@@ -30,9 +24,18 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      currentLan: 'cn',
+      languages: [
+        {value: 'cn', label: '简体中文'},
+        {value: 'uk', label: 'English'}
+      ]
+    }
   },
   methods: {
+    switchLanguage(val) {
+      this.setLang(val);
+    },
     setLang(lang) {
       this.$store.dispatch('setLang', lang);
     }
@@ -49,19 +52,15 @@ export default {
 
     flex-shrink: 0;
 
-    .icon-country {
-      background-size: 1.4rem;
-      background-repeat: no-repeat;
-      background-position: center;
-      width: 1.6rem;
-      height: 1.6rem;
-      display: inline-block;
-    }
-    .country-cn {
-      background-image: url($cdnBasePath + '/assets/images/lang/cn.svg');
-    }
-    .country-uk {
-      background-image: url($cdnBasePath + '/assets/images/lang/uk.svg');
+    .switch-language {
+      width: 90px;
+      .ivu-select-selection {
+          border: none;
+        background-color: rgba(255, 255, 255, 0);
+      }
+      .ivu-select-selection-focused {
+        box-shadow: none;
+      }
     }
   }
 </style>
