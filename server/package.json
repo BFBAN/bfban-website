@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "http-server": "http-server"
   },
   "author": "",
   "license": "ISC",
@@ -43,6 +44,7 @@
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
+    "http-server": "^0.12.3",
     "nodemon": "^1.14.12"
   }
 }
