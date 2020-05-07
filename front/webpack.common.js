@@ -28,6 +28,10 @@ module.exports = {
         to: 'assets',
         ignore: ['.DS_Store']
       },
+      {
+        from: path.resolve(__dirname, 'favicon.ico'),
+        to: './'
+      },
     ]),
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
