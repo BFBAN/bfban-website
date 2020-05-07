@@ -278,6 +278,8 @@
             </div>
 
           </TimelineItem>
+        <Page :page-size="limit" show-total :current="page" @on-change="handlePageChange" :total="total" class="page" size="small" />
+
         </div>
 
         <div v-if="isLogin">
@@ -294,11 +296,9 @@
 
         <div v-if="cheater.status === '1'">
           <Divider />
-          <p class="hint">如果你对该 石锤 有所疑问，请复制该网址，去首页底部QQ群找管理员申诉，加群请注明为申诉</p>
         </div>
 
-        <p class="hint">为了防止管理权力滥用，若要石锤，需要至少两位管理员参与才行</p>
-        <p class="hint">注册登录后才可以参与讨论留言</p>
+        <p class="hint">注册登录后才可以参与讨论</p>
 
         <div v-if="isAdmin">
           <Divider>管理员专区</Divider>

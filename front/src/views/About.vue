@@ -12,22 +12,14 @@
         是战地玩家一起组建的 <b>抵制外挂</b> 组织。
       </p>
       <p>
-        目前主要由下列力量组成：
-        <b>私服主人</b> ，<b>战队队长</b> 以及 <b>战地UP</b>；      创始人是CDN战队队长凯撒Caesar。
-      </p>
-      <p>
-        联BAN局创建以来，
-        联合诸多玩家一起抵制外挂，
-        成功打击了近500名外挂和外挂主播；
-        抵制外挂之战，不仅在游戏内，更是一场敌暗我明的幕外战争。
-      </p>
-      <p class="is-size-6">
-        <a href="http://note.youdao.com/noteshare?id=b3a1381e2efe2c95c776952df99f31fb" target="_blank">
-          战地风云联BAN调查局行为准则
-        </a>
+        目前主要成员组成：
+        <ul style="padding: .5rem 1rem .5rem;">
+          <li>私服主</li>
+          <li>战队队长</li>
+          <li>战地UP</li>
+        </ul>
       </p>
 
-      <br>
       <p>
         <b>目前加盟服务器，共 {{clan.length}} 个：</b>
         （ 搜索 <b>LB</b> 都可以找到加入联BAN局的服务器 ）
@@ -36,6 +28,27 @@
       <div class="clan">
         <p v-for="d in clan" :key="d.id">{{ d }}</p>
       </div>
+
+      <br>
+
+      <h2>bfban.com 网站</h2>
+      <p>
+        <a href="https://bfban.com">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 mygoare 开发，于 2018年11月4日 上线‘
+      </p>
+      <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>
+
+      <br>
+      <h2>联系我们</h2>
+      <p>
+        <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5PEqoDb">
+          527565465
+        </a>
+
+        联ban局QQ群
+      </p>
+      <p>
+          mygoare@gmail.com 开发者邮箱
+      </p>
     </div>
   </div>
 

@@ -53,6 +53,10 @@
     <div class="content">
       <Divider>{{$t("home.howToUse.title")}}</Divider>
 
+      <p>
+        <a href="https://bfban.com">本站</a>可以 <b>永久追踪</b> 被举报者的游戏ID，并支持 <b>搜索历史ID</b> ！欢迎大家积极举报。
+      </p>
+
       <p>如果遇到挂，可以</p>
       <p>
         1、先使用
@@ -61,7 +65,7 @@
           战地1外挂举报助手
         </a>
 
-        给官方举报
+        给官方举报；
       </p>
       <p>
         2、自己在网站
@@ -69,12 +73,9 @@
         后，自己
         <router-link :to="{path: 'report'}">举报</router-link>
         ；
-        我们会有管理员定期审核。
       </p>
       <p>
-        期间 你可以在 个人中心 查看进度状态， 也可以翻看
-        <router-link :to="{path: 'cheaters'}">外挂公示</router-link>
-        。
+        3、举报后即会被纪录在案，即使修改了ID也能被追踪到；
       </p>
 
       <p>
@@ -87,6 +88,7 @@
       </p>
 
 
+<br>
       <h2>{{$t("home.howToUse.tools")}}</h2>
       <div class="tools">
         <p>
@@ -103,6 +105,7 @@
         </p>
       </div>
 
+<br>
       <h2>{{$t("home.howToUse.qqGroup")}}</h2>
       <div class="tools">
         <p>
@@ -110,10 +113,11 @@
             527565465
           </a>
 
-          联ban局投诉审查处QQ群
+          联ban局QQ群
         </p>
       </div>
 
+<br>
       <h2>{{$t("home.howToUse.gameTogether")}}</h2>
       <div class="tools">
         <p>

@@ -75,6 +75,7 @@
           </tbody>
 
         </table>
+        <Page :page-size="limit" show-total :current="page" @on-change="handlePageChange" :total="total" class="page" size="small" />
       </div>
       <div v-else>404</div>
     </div>

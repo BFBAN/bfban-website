@@ -26,15 +26,6 @@
           <a ref="reCaptcha" href="#" @click.stop.prevent="refreshCaptcha">
             {{$t('signup.form.getCaptcha')}}
           </a>
-
-          <div>
-            <Checkbox v-model="signup.rule">
-              我已阅读并认同
-              <a href="http://note.youdao.com/noteshare?id=b3a1381e2efe2c95c776952df99f31fb" target="_blank">
-                战地风云联BAN调查局行为准则
-              </a>
-            </Checkbox>
-          </div>
         </FormItem>
 
         <FormItem>
@@ -63,7 +54,6 @@ export default {
         originId: '',
         qq: '',
         captcha: '',
-        rule: true,
       },
       spinShow: false,
     }
@@ -75,15 +65,11 @@ export default {
       waitForAction.call(this.$refs.reCaptcha);
     },
     handleSignup: function() {
-      let { rule } = this.signup;
       let {username, password, originId, qq, captcha} = _.each(this.signup, (v, k, o) => {
-        if (k === 'rule') {
-          return true;
-        }
         o[k] = v.trim();
       });
 
-      if (rule && username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
+      if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
         this.spinShow = true;
 
         ajax({
