@@ -128,10 +128,13 @@ export default {
     /*background-color: #99d8cf;*/
 
     /*2020 happy new year*/
-    background-image: url(https://i.loli.net/2020/01/02/KphAXSGyIOV7Et2.png);
-    background-size: 24rem;
-    background-position: center bottom 8rem;
-    background-color: #C82839;
+    /*background-image: url(https://i.loli.net/2020/01/02/KphAXSGyIOV7Et2.png);*/
+    /*background-size: 24rem;*/
+    /*background-position: center bottom 8rem;*/
+    /*background-color: #C82839;*/
+
+    /*2020 july*/
+    background-image: url(https://i.loli.net/2020/07/09/vKAp56dWhVrfyzo.jpg);
 
     footer.footer {
       margin-top: 10rem;
