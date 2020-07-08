@@ -1,5 +1,5 @@
 const { verifyJWTToken } = require('../libs/auth');
-const { accessToken } = require('../config');
+const { accessToken, apiTokens } = require('../config');
 const db = require('../mysql');
 
 function getToken(req) {
@@ -12,6 +12,11 @@ function verifyJWT(req, res, next) {
   // special token
   if (token && token.trim() === accessToken.trim())
     return next();
+
+  if (token && Object.keys(apiTokens).includes(token.trim())) {
+    req.user = apiTokens[token.trim()];
+    return next();
+  }
 
   verifyJWTToken(token)
     .then(async (decodedToken) => {

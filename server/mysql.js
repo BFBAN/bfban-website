@@ -4,13 +4,14 @@ const {
   host,
   user,
   password,
+  port,
   database,
   charset,
   connectionLimit,
 } = require('./config').mysql;
 
 const pool = mysql.createPool({
-  host, user, password, database, connectionLimit,
+  host, user, password, database, connectionLimit, port,
 });
 
 
