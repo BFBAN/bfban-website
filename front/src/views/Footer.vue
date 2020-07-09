@@ -4,7 +4,7 @@
         <router-link :to="{name: 'report'}">{{$t('header.report')}}</router-link>
         <router-link :to="{name: 'about'}">{{$t('header.about')}}</router-link>
 
-        <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">  
+        <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
           <Option v-for="item in languages" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </p>
@@ -12,7 +12,7 @@
         Made with <Icon type="ios-heart" color="#ed4014" />
 
         Host at
-        <a href="https://aws.amazon.com">AWS</a>
+        <a target="_blank" href="https://battlefield.now.sh/">AWSL</a>
       </p>
       <p>
         &copy; 2018-2020
