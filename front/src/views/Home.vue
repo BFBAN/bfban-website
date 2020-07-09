@@ -128,14 +128,6 @@
           联ban局QQ群
         </p>
       </div>
-
-<br>
-      <h2>{{$t("home.howToUse.gameTogether")}}</h2>
-      <div class="tools">
-        <p>
-          <a href="https://www.kaihei.co/KfuWWb" target="_blank">战地5公开组队开黑服务器</a> 快速找到开黑小伙伴
-        </p>
-      </div>
     </div>
   </div>
 
