@@ -13,6 +13,6 @@ deploy:
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   local_dir: server/public
-  fqdn: d.bfban.com
+  fqdn: bfban.com
   on:
     branch: master
