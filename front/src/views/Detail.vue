@@ -66,6 +66,9 @@
               <a v-show="`${g.game}` === 'bfv'" target="_blank" :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">
                 battlefieldtracker
               </a>
+              <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originId}`">
+                247fairplay
+              </a>
             </p>
 
             <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>

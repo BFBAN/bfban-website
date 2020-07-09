@@ -11,14 +11,16 @@
         诞生于2018年1月29日；
         是战地玩家一起组建的 <b>抵制外挂</b> 组织。
       </p>
+
       <p>
         目前主要成员组成：
-        <ul style="padding: .5rem 1rem .5rem;">
-          <li>私服主</li>
-          <li>战队队长</li>
-          <li>战地UP</li>
-        </ul>
       </p>
+      <ul style="padding: .5rem 1rem .5rem;">
+        <li>私服主</li>
+        <li>战队队长</li>
+        <li>战地UP</li>
+      </ul>
+
 
       <p>
         <b>目前加盟服务器，共 {{clan.length}} 个：</b>
@@ -40,19 +42,12 @@
       <br>
       <h2>联系我们</h2>
       <p>
-        <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5PEqoDb">
-          527565465
-        </a>
-
-        联ban局QQ群
-      </p>
-      <p>
-               <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
+        <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
           投诉邮箱
         </a>
       </p>
-	        <p>
-               <a target="_blank" href="https://support.qq.com/products/64038">
+      <p>
+        <a target="_blank" href="https://support.qq.com/products/64038">
           意见建议
         </a>
       </p>
@@ -88,9 +83,9 @@
           'ROB',
           'HERO',
           'b1br',
-		  'awsl',
-		  'bilibili',
-		  'pcr',
+          'awsl',
+          'bilibili',
+          'pcr',
         ],
       }
     }
