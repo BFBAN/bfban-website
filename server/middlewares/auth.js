@@ -13,7 +13,7 @@ function verifyJWT(req, res, next) {
   if (token && token.trim() === accessToken.trim())
     return next();
 
-  if (token && Object.keys(apiTokens).includes(token.trim())) {
+  if (token && apiTokens && Object.keys(apiTokens).includes(token.trim())) {
     req.user = apiTokens[token.trim()];
     return next();
   }
