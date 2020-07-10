@@ -6,6 +6,17 @@ const _ = require('lodash');
 const moment = require('moment');
 const fs = require('fs');
 const path = require('path');
+const SocksProxyAgent = require('socks-proxy-agent');
+
+const requestProxy = request.defaults({
+  // using http proxy
+  // proxy: 'http://127.0.0.1:1087',
+
+  // using socks proxy
+  // https://stackoverflow.com/a/48841341/875788
+  agent: new SocksProxyAgent("socks5://127.0.0.1:1086"),
+});
+
 
 const tokenFile = path.resolve(__dirname, 'token.json');
 
@@ -84,7 +95,7 @@ async function getToken() {
     return re;
   }
 
-  return request({
+  return requestProxy({
     method: 'get',
     url,
     jar: j,
@@ -109,7 +120,7 @@ async function getToken() {
 async function getSelfPid() {
   const token = await getToken();
   const url = 'https://gateway.ea.com/proxy/identity/pids/me';
-  return request({
+  return requestProxy({
     method: 'get',
     auth: {
       bearer: token,
@@ -134,7 +145,7 @@ async function getSelfInfo() {
   const pidId = await getSelfPid();
 
   const url = `https://gateway.ea.com/proxy/identity/pids/${pidId}/personas?namespaceName=cem_ea_id`;
-  return request({
+  return requestProxy({
     method: 'get',
     url,
     auth: {
@@ -167,7 +178,7 @@ async function getUserPid(originId) {
   const token = await getToken();
 
   let pid = '';
-  return request({
+  return requestProxy({
     method: 'get',
     url,
     headers: {
@@ -205,7 +216,7 @@ async function getUserInfo({ originId = '', userpid = '' }) {
     }
 
     const url = `https://api4.origin.com/atom/users?userIds=${pid}`;
-    return request({
+    return requestProxy({
       method: 'get',
       url,
       headers: {
@@ -277,7 +288,7 @@ async function report(originId) {
   }
 
 
-  request({
+  requestProxy({
     method: 'post',
     url,
     headers: {
@@ -313,7 +324,7 @@ async function getUserAvatar({ pid, token }) {
   const authtoken = token || await getToken();
   const url = `https://api1.origin.com/avatar/user/${pid}/avatars?size=1`;
 
-  return request({
+  return requestProxy({
     method: 'get',
     url,
     headers: {
@@ -340,7 +351,7 @@ async function getUserAvatar({ pid, token }) {
 // e.g.
 //
 // getUserInfo({originId: 'yqewoemratnmmmmm'});
-// getUserInfo({userpid: '10026669368'});
+// getUserInfo({userpid: '1003529731158'});
 // getSelfInfo();
 
 // buildReportXml(`
