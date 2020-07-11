@@ -12,7 +12,7 @@
     data() {
       return {
         data: marked(`
-**网站开发**: [mygoare](https://battlefieldtracker.com/bf1/profile/pc/fxodof3ts23edfsr)
+**网站开发**: [mygoare](https://mygoare.com)
 **网站服务器提供**: [AWSL服务器](https://battlefield.now.sh/)
         `, {breaks: true, gfm: true, smartLists: true})
       }

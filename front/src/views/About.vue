@@ -35,7 +35,7 @@
 
       <h2>bfban.com 网站</h2>
       <p>
-        <a href="https://bfban.com">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target="_blank" href="https://battlefieldtracker.com/bf1/profile/pc/fxodof3ts23edfsr">mygoare</a> 开发，于 2018年11月4日 上线‘
+        <a href="https://bfban.com">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target="_blank" href="https://mygoare.com">mygoare</a> 开发，于 2018年11月4日 上线‘
       </p>
       <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>
 
