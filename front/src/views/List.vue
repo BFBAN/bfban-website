@@ -108,7 +108,7 @@ export default {
       cd: ['', ''],
       ud: ['', ''],
       page: 1,
-      limit: 20,
+      limit: 10,
       total: 0,
       sum: [],
       totalSum: [],
@@ -222,7 +222,7 @@ export default {
       if (cd !== ',') o['cd'] = cd;
       if (ud !== ',') o['ud'] = ud;
       if (page !== 1) o['page'] = page;
-      if (limit !== 20) o['limit'] = limit;
+      o['limit'] = limit;
       if (sort !== '') o['sort'] = sort;
       if (game !== '') o['game'] = game;
 
