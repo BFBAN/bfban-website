@@ -110,7 +110,7 @@
           快速查询标记当前ID在BF3、BF4中的战绩进行异常标记，查询联ban史
         </p>
         <p>
-          <a target="_blank" href="https://bfban.lanzous.com/b01hhv5jg">
+          <a target="_blank" href="https://www.notion.so/1-5-f348c539fd4f41a08878f274a37c7d81">
             【推荐】战地PC/手机战绩速查工具
           </a>
           同时支持电脑手机快速查询战绩进行标记
