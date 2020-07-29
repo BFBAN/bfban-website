@@ -37,7 +37,7 @@ export default {
 		  agreeJudgement:'Agreed and confirmed this cheater',
 		  agreeWith:'agree with',
 		  thisChoice:'This judgement',
-		  replyManual1:'If you have new picture or video evidence to be maintained,you can report one more time.Otherwise,you can only reply text or link by replying here.if you want to add picture click here',
+		  replyManual1:'If you have new picture or video evidence to be maintained,you can report one more time.Otherwise,you can only reply text or link by replying here.if you want to add picture click here ',
 		  uploadPicButton:'Upload Pictures',
 		  replyManual2:'and then copy the picture link to reply',
 		  replyManual3:'You must be a BFban member to discus with us together',
