@@ -15,6 +15,7 @@ import './theme/2020-happy-new-year.less';
 import App from '@/views/App.vue';
 import cn from '@/lang/cn';
 import uk from '@/lang/uk';
+import jp from '@/lang/jp';
 
 import router from '@/router';
 import store from '@/store';
@@ -32,6 +33,7 @@ const locale = 'cn';
 const messages = {
   cn: Object.assign(cn, iview.langs['zh-CN']),
   uk: Object.assign(uk, iview.langs['en-US']),
+  jp: Object.assign(jp, iview.langs['ja-JP']),
 };
 
 const i18n = new VueI18n({

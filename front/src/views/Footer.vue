@@ -28,7 +28,8 @@ export default {
       currentLan: 'cn',
       languages: [
         {value: 'cn', label: '简体中文'},
-        {value: 'uk', label: 'English'}
+        {value: 'uk', label: 'English'},
+        {value: 'jp', label: '日本語'},
       ]
     }
   },
@@ -53,7 +54,7 @@ export default {
     flex-shrink: 0;
 
     .switch-language {
-      width: 90px;
+      width: 100px;
       .ivu-select-selection {
           border: none;
         background-color: rgba(255, 255, 255, 0);
