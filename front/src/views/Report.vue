@@ -29,7 +29,7 @@
           </CheckboxGroup>
         </FormItem>
 
-        <FormItem label="ViodeLink">
+        <FormItem label="VideoLink">
           <Alert type="warning">
             {{ $t('report.info.uploadManual1', { msg: 'uploadManual1' })}} <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{ $t('report.info.uploadManual2', { msg: 'uploadManual2' })}}
           </Alert>
