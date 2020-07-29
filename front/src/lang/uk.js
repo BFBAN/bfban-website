@@ -65,7 +65,7 @@ export default {
 		uploadManual2:'and then paste the video link below',
 		uploadManual3:'you can offer your video by Bilibili,Youtube,Youku,Tudou and more',
 		uploadPic1:'We recomment you to upload those types of screenshot such as png, jpg, jpeg, gif',
-		uploadPic2:'picture which is larger than 2M would upload failed,you can go to',
+		uploadPic2:'picture which is larger than 2M would upload failed,you can go to ',
 		uploadPic3:'and then choose Image URL Tag，paste the image link below',
 		uploadPic4:'please make a discription for this hacker with evidence，Text editor offer image upload service（Size limits:2M）',
 		getCaptcha:'Get Captcha',
