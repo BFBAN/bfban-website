@@ -18,30 +18,35 @@
             </Tag>
           </div>
           <p>
+		  <!-- 浏览次数 -->
             <span>
-              围观
+              {{ $t('detail.info.viewTimes', { msg: 'viewTimes' })}}
               <span class="is-size-6">{{ cheater.n || 0 }}</span>
               次
             </span>
+			<!-- 回复次数 -->
             <span>
-                回复
+                {{ $t('detail.info.reply', { msg: 'reply' })}}
                 <span class="is-size-6">{{ cheater.commentsNum || 0 }}</span>
                 次
             </span>
           </p>
           <p>
             <span>
-              第一次被举报:
+			<!-- 第一次被举报时间 -->
+              <span>{{ $t('detail.info.firstReportTime', { msg: 'firstReportTime' })}}</span>
               <span class="is-size-6"><Time v-if="cheater.createDatetime" :time="cheater.createDatetime"></Time></span>
             </span>
             <span>
-              最近更新:
+			<!-- 最近更新时间 -->
+              <span>{{ $t('detail.info.recentUpdateTime', { msg: 'recentUpdateTime' })}}</span>
               <span class="is-size-6"><Time v-if="cheater.updateDatetime" :time="cheater.updateDatetime"></Time></span>
             </span>
           </p>
 
           <div style="margin-top: .4rem;">
-            <h2>Ta的被举报的游戏：</h2>
+		  <!-- 被举报的游戏 -->
+            <h2><span>{{ $t('detail.info.reportedGames', { msg: 'reportedGames' })}}</span></h2>
             <div>
               <router-link v-for="g in games" :key="g.game" :to="{name: 'cheaters'}" >
                 {{ g.game }}
@@ -50,8 +55,9 @@
           </div>
 
           <div v-show="cheater.originId" style="margin-top: .4rem;">
-            <h2>
-              Ta的相关战绩链接：
+            <!-- 战绩链接 -->
+			<h2>
+              <span>{{ $t('detail.info.gameScores', { msg: 'gameScores' })}}</span>
             </h2>
             <p v-for="g in games" :key="g.game">
               <Tag>
@@ -77,18 +83,20 @@
           </div>
 
           <div v-show="cheater.avatarLink" style="margin-top: .4rem;">
-            <h2>
-              Ta的origin头像：
+            <!-- Origin头像 -->
+			<h2>
+              <span>{{ $t('detail.info.originAvatar', { msg: 'originAvatar' })}}</span>
             </h2>
             <img :src="cheater.avatarLink" alt="avatar" width="208" height="208">
           </div>
 
           <div v-show="origins.length" style="margin-top: .4rem;">
-            <h2>Ta的历史ID：</h2>
+		  <!-- 历史ID -->
+            <h2><span>{{ $t('detail.info.historyID', { msg: 'historyID' })}}</span></h2>
             <table>
               <thead>
                 <tr>
-                  <td><b>更新时间</b></td>
+                  <td><b>Update Time</b></td>
                   <td><b>ID</b></td>
                 </tr>
               </thead>
@@ -104,12 +112,13 @@
           </div>
 
           <div style="margin-top: .4rem;">
-            <h2>管理员处理历史：</h2>
+		   <!-- 管理员处理历史 -->
+            <h2><span>{{ $t('detail.info.dealRecord', { msg: 'dealRecord' })}}</span></h2>
             <table>
               <thead>
                 <tr>
-                  <td><b>处理时间</b></td>
-                  <td><b>操作</b></td>
+                  <td><b>Operating Time</b></td>
+                  <td><b>Action</b></td>
                 </tr>
               </thead>
               <tbody>
@@ -119,15 +128,16 @@
 
           <div style="margin-top: .4rem;">
             <p class="hint">
-              若发现 链接失效 或 改名，请点击
-              <a href="#" @click.prevent="updateCheaterInfo">更新资料</a>，
-              bfban.com 有能力<b>永久追踪</b>被举报者的行踪。
+			<!-- 描述说明 -->
+              {{ $t('detail.info.discription1', { msg: 'discription1' })}}
+              <a href="#" @click.prevent="updateCheaterInfo"><span>{{ $t('detail.info.updateButton', { msg: 'updateButton' })}}</span></a>，
+              <span>{{ $t('detail.info.discription2', { msg: 'discription2' })}}</span>
             </p>
             <p class="hint">
-              服务器也会定期抓取、更新被举报人的信息
+              {{ $t('detail.info.discription3', { msg: 'discription3' })}}
             </p>
             <p class="hint">
-              历史ID也可以用来搜索
+              {{ $t('detail.info.discription4', { msg: 'discription4' })}}
             </p>
           </div>
 
@@ -135,7 +145,8 @@
         </div>
 
         <div>
-          <h2 style="margin: 1rem 0;">时间线</h2>
+		<!-- 时间线 -->
+          <h2 style="margin: 1rem 0;">{{ $t('detail.info.timeLine', { msg: 'timeLine' })}}</h2>
           <TimelineItem pending v-for="l in timelineList" :key="l.createDatetime">
 
             <div v-if="l.type === 'report'" class="timeline-content">
@@ -143,24 +154,28 @@
                 <Time :time="l.createDatetime"></Time>
 
                 <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+				<!-- 管理员 -->
                   <Tag v-if="l.privilege === 'admin'" color="success">
-                    管理员
+                    {{ $t('detail.info.administrator', { msg: 'administrator' })}}
                   </Tag>
                   <b>{{l.username}}</b>
                 </router-link>
-                举报
+				<!-- 举报 -->
+                {{ $t('detail.info.report', { msg: 'report' })}}
 
                 <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
                   {{ l.cheaterGameName }}
                 </router-link>
 
-                在
+                <!-- 在 -->
+                {{ $t('detail.info.inGame', { msg: 'inGame' })}}
 
                 <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
                   {{l.game}}
                 </router-link>
 
-                游戏中
+                <!-- 游戏中 -->
+				{{ $t('detail.info.gaming', { msg: 'gaming' })}}
 
                 <b>
                   {{convertCheatMethods(l.cheatMethods || '')}}
@@ -168,8 +183,9 @@
               </div>
 
               <p v-if="l.bilibiliLink">
+			  <!-- 游戏中 -->
                 <Tag color="primary">
-                  视频链接
+                  {{ $t('detail.info.videoLink', { msg: 'videoLink' })}}
                 </Tag>
                 <a :href="l.bilibiliLink" target="_blank">{{ l.bilibiliLink }}</a>
               </p>
@@ -177,7 +193,7 @@
               </div>
 
               <p v-if="isLogin">
-                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</a>
               </p>
             </div>
 
@@ -185,13 +201,14 @@
               <div class="timeline-time">
                 <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
                 <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+				
                   <Tag v-if="l.privilege === 'admin'" color="success">
-                    管理员
+                    {{ $t('detail.info.administrator', { msg: 'administrator' })}}
                   </Tag>
                   <b>{{l.username}}</b>
                 </router-link>
-
-                认为
+                 <!-- 认为 -->
+                {{ $t('detail.info.judge', { msg: 'judge' })}}
 
                 <Tag color="warning">
                   {{ handleStatus(l.status) }}
@@ -199,7 +216,7 @@
 
                 <span v-if="l.cheatMethods">
               ，
-              作弊方式
+              {{ $t('detail.info.cheatMethod', { msg: 'cheatMethod' })}}
 
               <b>
                 {{convertCheatMethods(l.cheatMethods || '')}}
@@ -217,12 +234,13 @@
                    :data-user-verify-cheater-username="l.username">
 
                   <Icon type="md-thumbs-up" />
-                  赞同上处理 并 石锤
+				  <!-- 同意实锤 -->
+                  {{ $t('detail.info.agreeJudgement', { msg: 'agreeJudgement' })}}
                 </a>
               </p>
 
               <p v-if="isLogin">
-                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</a>
               </p>
             </div>
 
@@ -232,15 +250,17 @@
 
                 <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
                   <Tag v-if="l.privilege === 'admin'" color="success">
-                    管理员
+                    {{ $t('detail.info.administrator', { msg: 'administrator' })}}
                   </Tag>
                   <b>{{l.username}}</b>
                 </router-link>
-                赞同了
+				<!-- 同意某人某条实锤 -->
+                {{ $t('detail.info.agreeWith', { msg: 'agreeWith' })}}
                 <a @click.stop.prevent="jumpToBookmark" :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
-                  # 该决定
+                  # {{ $t('detail.info.thisChoice', { msg: 'thisChoice' })}}
                 </a>
-                ，作弊方式
+				<!--作弊方式 -->
+                ，{{ $t('detail.info.cheatMethod', { msg: 'cheatMethod' })}}
 
                 <b>
                   {{ convertCheatMethods(l.cheatMethods || '') }}
@@ -248,7 +268,7 @@
               </div>
 
               <p v-if="isLogin">
-                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</a>
               </p>
             </div>
 
@@ -259,15 +279,15 @@
                 <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
 
                   <Tag v-if="l.fooPrivilege === 'admin'" color="success">
-                    管理员
+                    {{ $t('detail.info.administrator', { msg: 'administrator' })}}
                   </Tag>
                   <b>{{l.foo}}</b>
                 </router-link>
-                回复
+                {{ $t('detail.info.reply', { msg: 'reply' })}}
                 <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.barUId}`}}">
 
                   <Tag v-if="l.barPrivilege === 'admin'" color="success">
-                    管理员
+                    {{ $t('detail.info.administrator', { msg: 'administrator' })}}
                   </Tag>
                   <b>{{l.bar}}</b>
                 </router-link>
@@ -276,7 +296,7 @@
               <div v-html="l.content" class="description"></div>
 
               <p v-if="isLogin">
-                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">回复</a>
+                <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</a>
               </p>
             </div>
 
@@ -286,12 +306,13 @@
         </div>
 
         <div v-if="isLogin">
-          <p class="hint">如果有新的证据图片或视频需要补充，可以再次举报。回复功能只能回复文本或链接。如需回复图片，请移步这里 <a href="https://sm.ms/" target="_blank">上传图片 </a>，然后复制图片链接进行回复。</p>
+		<!-- 回复操作说明 -->
+          <p class="hint"><span>{{ $t('detail.info.replyManual1', { msg: 'replyManual1' })}}</span><a href="https://sm.ms/" target="_blank"><span>{{ $t('detail.info.uploadPicButton', { msg: 'uploadPicButton' })}}</span> </a>，<span>{{ $t('detail.info.replyManual2', { msg: 'replyManual2' })}}</span></p>
           <Form :label-width="80" style="position: relative;">
             <p>
-              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
+              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="What's your opinion?" />
             </p>
-            <Button type="primary" @click.stop.prevent="doReply">回复</Button>
+            <Button type="primary" @click.stop.prevent="doReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</Button>
 
             <Spin size="large" fix v-show="replySpinShow"></Spin>
           </Form>
@@ -301,26 +322,28 @@
           <Divider />
         </div>
 
-        <p class="hint">注册登录后才可以参与讨论</p>
+        <p class="hint">{{ $t('detail.info.replyManual3', { msg: 'replyManual3' })}}</p>
 
+         <!-- 管理员 -->
         <div v-if="isAdmin">
-          <Divider>管理员专区</Divider>
-          <p class="hint">不要轻易下判断，如果不能做出处理判断，就使用上方回复 参与讨论，等待举报者回复</p>
-          <p class="hint">管理员的任何处理操作都会对作弊者的 现有状态 造成改变，如果不是100%确定，请使用回复留言讨论</p>
+          <Divider>{{ $t('detail.info.adminConsole', { msg: 'adminConsole' })}}</Divider>
+          <p class="hint">{{ $t('detail.info.adminManual1', { msg: 'adminManual1' })}}</p>
+          <p class="hint">{{ $t('detail.info.adminManual2', { msg: 'adminManual2' })}}</p>
 
-          <h2 style="margin: 1rem 0;">处理意见</h2>
+          <h2 style="margin: 1rem 0;">{{ $t('detail.info.judgement', { msg: 'judgement' })}}</h2>
 
           <Form :label-width="80" ref='verifyForm' style="position: relative;">
-            <FormItem label="意见">
+            <FormItem label="Opinion">
               <Select v-model="verify.status">
-                <Option value="1">石锤</Option>
-                <Option value="2">嫌疑再观察</Option>
-                <Option value="3">没有问题不是挂</Option>
-                <Option value="4">回收站</Option>
+			  <!-- 判断选项 -->
+                <Option value="1">{{ $t('detail.info.choice1', { msg: 'choice1' })}}</Option>
+                <Option value="2">{{ $t('detail.info.choice2', { msg: 'choice2' })}}</Option>
+                <Option value="3">{{ $t('detail.info.choice3', { msg: 'choice3' })}}</Option>
+                <Option value="4">{{ $t('detail.info.choice4', { msg: 'choice4' })}}</Option>
               </Select>
             </FormItem>
 
-            <FormItem v-show="verify.status === '1'" label="作弊方式">
+            <FormItem v-show="verify.status === '1'" label="CheatMethod">
               <CheckboxGroup v-model="verify.checkbox">
                 <Checkbox v-for="method in cheatMethodsGlossary" :key="method.value" :label="method.value">
                   {{ method.label }}
@@ -328,32 +351,32 @@
               </CheckboxGroup>
             </FormItem>
 
-            <FormItem label="理由">
-              <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="必填" />
+            <FormItem label="Reason">
+              <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="Write something" />
             </FormItem>
 
             <FormItem>
-              <Button type="primary" @click.stop.prevent="doVerify">提交</Button>
+              <Button type="primary" @click.stop.prevent="doVerify">{{ $t('detail.info.commit', { msg: 'commit' })}}</Button>
             </FormItem>
 
             <Spin size="large" fix v-show="verifySpinShow"></Spin>
           </Form>
         </div>
 
-
+       <!-- 小回复窗口 -->
         <Modal
           v-model="replyModal"
-          title="回复"
-          ok-text="提交"
-          cancel-text="取消"
+          title="Reply"
+          ok-text="Send"
+          cancel-text="Cancel"
           @on-ok="doReply"
           @on-cancel="cancelReply">
           <div v-if="isLogin">
             <Form :label-width="80" ref='replyForm' style="position: relative;">
-              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="说点什么吧。。。" />
+              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="Say something" />
             </Form>
           </div>
-          <div v-else>请登录后参与回复</div>
+          <div v-else>{{ $t('detail.info.replyManual4', { msg: 'replyManual4' })}}</div>
         </Modal>
 
         <Spin size="large" fix v-show="spinShow"></Spin>
@@ -529,7 +552,7 @@ export default {
         return false;
       }
       if (statusData.error === 0 && statusData.status === '1') {
-        if (!confirm(`当前是 石锤 状态，你确定要处理成 ${getCheaterStatusLabel(status)} 吗？`)) {
+        if (!confirm(`当前是 confirmed hacker 状态，你确定要处理成 ${getCheaterStatusLabel(status)} 吗？`)) {
           this.verifySpinShow = false;
           return false;
         }
@@ -577,7 +600,7 @@ export default {
 
           this.$Message.success('提交成功');
         } else {
-          this.$Message.error('提交失败 ' + d.msg);
+          this.$Message.error('failed ' + d.msg);
         }
       })
     },
