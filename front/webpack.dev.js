@@ -8,6 +8,7 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
+    disableHostCheck: true,
     historyApiFallback: true,
     noInfo: true,
     overlay: true,
