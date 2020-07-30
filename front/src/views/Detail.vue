@@ -201,7 +201,7 @@
               <div class="timeline-time">
                 <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
                 <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
-				
+
                   <Tag v-if="l.privilege === 'admin'" color="success">
                     {{ $t('detail.info.administrator', { msg: 'administrator' })}}
                   </Tag>
@@ -346,7 +346,7 @@
             <FormItem v-show="verify.status === '1'" label="CheatMethod">
               <CheckboxGroup v-model="verify.checkbox">
                 <Checkbox v-for="method in cheatMethodsGlossary" :key="method.value" :label="method.value">
-                  {{ method.label }}
+                  {{$t(`cheatMethods.${method.value}`)}}
                 </Checkbox>
               </CheckboxGroup>
             </FormItem>

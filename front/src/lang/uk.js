@@ -138,4 +138,13 @@ export default {
       refresh: 'refresh',
     },
   },
+  cheatMethods: {
+    stealth: 'stealth',
+    wallhack: 'wallhack',
+    aimbot: 'aimbot',
+    oneShotKill: 'oneShotKill',
+    gadgetModify: 'gadgetModify',
+    damageChange: 'damageChange',
+    shootingThroughWalls: 'bulletThroughWalls',
+  },
 };

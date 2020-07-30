@@ -261,23 +261,6 @@ export default {
       this.handleChanges();
     },
 
-    convertCheatMethods(str) {
-
-      const list = {
-        wallhack: '透视',
-        damageChange: '改伤',
-        aimbot: '自瞄',
-        oneShotKill: '秒杀',
-        gadgetModify: '改装备',
-        stealth: '隐身',
-        shootingThroughWalls: '子弹穿墙',
-      };
-
-      // return string
-      return str.split(',').map((v, i) => {
-        return list[v]
-      }).join(' ');
-    },
     handleSortByChange(value) {
       this.handleChanges();
     },

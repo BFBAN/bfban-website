@@ -24,7 +24,7 @@
         <FormItem label="CheatMethod">
           <CheckboxGroup v-model="formItem.checkbox">
             <Checkbox v-for="method in cheatMethodsGlossary" :key="method.value" :label="method.value">
-              {{ method.label }}
+              {{$t(`cheatMethods.${method.value}`)}}
             </Checkbox>
           </CheckboxGroup>
         </FormItem>

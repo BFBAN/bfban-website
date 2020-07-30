@@ -70,7 +70,7 @@ export default {
 		uploadPic4:'请列出阐明足够的证据，编辑器支持上传图片（限制2M）',
 		getCaptcha:'获得验证码',
 		report:'举报',
-	},  
+	},
   },
   footer: {
     author: '由 mygoare 开发',
@@ -137,5 +137,14 @@ export default {
       },
       refresh: '刷新',
     },
+  },
+  cheatMethods: {
+    stealth: '隐身',
+    wallhack: '透视',
+    aimbot: '自瞄',
+    oneShotKill: '秒杀',
+    gadgetModify: '改装备',
+    damageChange: '改伤',
+    shootingThroughWalls: '子弹穿墙',
   },
 };
