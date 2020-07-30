@@ -227,6 +227,11 @@ function replaceImgSrcToDataSrc(str) {
   return str.replace(reg, ' data-src=');
 }
 
+function detectLanguage(lang) {
+  return ['zh-CN', 'en-US', 'ja-JP'].filter(el => el.indexOf(lang) !== -1)[0];
+}
+
+
 export {
   replaceImgSrcToDataSrc,
   checkIdExist,
@@ -247,4 +252,5 @@ export {
   convertCheatMethods,
   waitForAction,
   getUTCTimeStamp,
+  detectLanguage,
 };

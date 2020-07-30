@@ -19,6 +19,7 @@ import jp from '@/lang/jp';
 
 import router from '@/router';
 import store from '@/store';
+import { detectLanguage } from '@/mixins/common';
 
 Vue.use(VueQuillEditor);
 // Vue.use(iView);
@@ -37,7 +38,7 @@ const messages = {
 };
 
 const i18n = new VueI18n({
-  locale: navigator.language || navigator.userLanguage,
+  locale: navigator.language ? detectLanguage(navigator.language) : 'zh-CN',
   fallbackLocale: 'zh-CN',
   messages,
 });

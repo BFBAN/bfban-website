@@ -22,10 +22,11 @@
 </template>
 
 <script>
+import { detectLanguage } from '@/mixins/common';
 export default {
   data() {
     return {
-      currentLan: navigator.language || navigator.userLanguage || 'zh-CN',
+      currentLan: navigator.language ? detectLanguage(navigator.language) : 'zh-CN',
       languages: [
         {value: 'zh-CN', label: '简体中文'},
         {value: 'en-US', label: 'English'},
