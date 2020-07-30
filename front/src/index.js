@@ -29,15 +29,16 @@ FastClick.attach(document.body);
 
 
 Vue.locale = () => {};
-const locale = 'cn';
+const locale = 'zh-CN';
 const messages = {
-  cn: Object.assign(cn, iview.langs['zh-CN']),
-  uk: Object.assign(uk, iview.langs['en-US']),
-  jp: Object.assign(jp, iview.langs['ja-JP']),
+  'zh-CN': Object.assign(cn, iview.langs['zh-CN']),
+  'en-US': Object.assign(uk, iview.langs['en-US']),
+  'ja-JP': Object.assign(jp, iview.langs['ja-JP']),
 };
 
 const i18n = new VueI18n({
-  locale,
+  locale: navigator.language || navigator.userLanguage,
+  fallbackLocale: 'zh-CN',
   messages,
 });
 

@@ -25,11 +25,11 @@
 export default {
   data() {
     return {
-      currentLan: 'cn',
+      currentLan: navigator.language || navigator.userLanguage || 'zh-CN',
       languages: [
-        {value: 'cn', label: '简体中文'},
-        {value: 'uk', label: 'English'},
-        {value: 'jp', label: '日本語'},
+        {value: 'zh-CN', label: '简体中文'},
+        {value: 'en-US', label: 'English'},
+        {value: 'ja-JP', label: '日本語'},
       ]
     }
   },
