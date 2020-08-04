@@ -34,7 +34,7 @@
             {{ $t('report.info.uploadManual1', { msg: 'uploadManual1' })}} <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{ $t('report.info.uploadManual2', { msg: 'uploadManual2' })}}
           </Alert>
           <span class="hint">{{ $t('report.info.uploadManual3', { msg: 'uploadManual3' })}}</span>
-          <Input v-model="formItem.bilibiliLink" placeholder="Optional" />
+          <Input v-model="formItem.bilibiliLink" placeholder="Essential" />
         </FormItem>
 
         <FormItem label="Discription">
