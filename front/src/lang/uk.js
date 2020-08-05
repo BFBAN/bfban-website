@@ -46,7 +46,7 @@ export default {
       adminManual2:'any action here by admin will make a status change for this reported player，if you are not 100% confirmed,please use reply function above',
       judgement:'Judgement',
       choice1:'Confirmed hacker',
-      choice2:'Suscpicious player',
+      choice2:'Suspicious player',
       choice3:'Innocent clean player',
       choice4:'Remove to Recycle Bin',
       commit:'Confirmed',
