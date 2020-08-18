@@ -19,6 +19,8 @@ function getCaptcha(req, res) {
 
   res.cookie('encryptCaptcha', hash, {
     httpOnly: true,
+    sameSite: 'None',
+    secure: true,
   });
 
   res.type('svg');
