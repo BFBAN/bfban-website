@@ -52,6 +52,8 @@ router.post('/signin', [
     res.cookie('access-token', token, {
       httpOnly: true,
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 7), // 7 day
+      sameSite: 'None',
+      secure: true,
     });
 
     return res.json({
@@ -128,6 +130,8 @@ router.post('/signup', [
   res.cookie('access-token', token, {
     httpOnly: true,
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // one day
+    sameSite: 'None',
+    secure: true,
   });
 
   return res.json({

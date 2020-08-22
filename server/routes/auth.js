@@ -23,6 +23,8 @@ authRouter.post('/', (req, res) => {
     res.cookie('access-token', token, {
       httpOnly: true,
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // one day
+      sameSite: 'None',
+      secure: true,
     });
 
     res.status(200).send({
@@ -45,6 +47,8 @@ authRouter.post('/qiniu', (req, res) => {
     res.cookie('up-token', upToken, {
       httpOnly: true,
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // one day
+      sameSite: 'None',
+      secure: true,
     });
 
     res.status(200).json({
