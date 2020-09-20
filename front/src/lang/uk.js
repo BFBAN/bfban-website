@@ -56,7 +56,7 @@ export default {
   report:{
 	info:{
 		reportHacker:'Report hacker',
-		reportNews:'We have offer the function to report BFV hackers！',
+		reportNews:'We offer the function to report BFV hackers！',
 		bf1:'battlefield 1',
 		bfv:'battlefield 5',
 		idNotion1:'You can only report one ID one time，do not write the platoon name，do not write your ID',
