@@ -42,7 +42,7 @@ export default {
       replyManual2:'and then copy the picture link to reply',
       replyManual3:'You must be a BFban member to discuss with us together',
       adminConsole:'Master console',
-      adminManual1:'Do not judge by your will,if you can not confirmed,then use the reply function above,and waiting for more evidence',
+      adminManual1:'Do not judge by your will,if you are not confirmed,then use the reply function above,and waiting for more evidence',
       adminManual2:'any action here by admin will make a status change for this reported player，if you are not 100% confirmed,please use reply function above',
       judgement:'Judgement',
       choice1:'Confirmed hacker',
