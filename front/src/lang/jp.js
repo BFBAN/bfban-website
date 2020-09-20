@@ -10,7 +10,7 @@ export default {
     daily: '今日のBAN数',
     dashboard: 'ダッシュボード',
   },
-    detail:{
+  detail:{
 	  info:{
 		  viewTimes:'閲覧',
 		  reply:'返信',
@@ -52,7 +52,7 @@ export default {
 		  commit:'決定',
 		  replyManual4:'返信するにはログインしてください',
 	  },
-  },
+},
   report:{
 	info:{
 		reportHacker:'チーターを報告',
@@ -70,7 +70,7 @@ export default {
 		uploadPic4:'ハッカーの証拠を説明してください。画像をアップロードすることもできます（データ上限：2M）',
 		getCaptcha:'Captchaを取得',
 		report:'報告',
-	},  
+	},
   },
   footer: {
     author: 'mygoareによって書かれました',
@@ -137,5 +137,14 @@ export default {
       },
       refresh: '更新',
     },
+  },
+  cheatMethods: {
+    stealth: '透明',
+    wallhack: 'ウォールハック',
+    aimbot: 'エイムボット',
+    oneShotKill: 'ワンショット',
+    gadgetModify: 'ガジェットチート',
+    damageChange: 'ダメージ変更',
+    shootingThroughWalls: '壁抜き',
   },
 };
