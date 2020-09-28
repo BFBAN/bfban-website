@@ -14,8 +14,8 @@
         data: marked(`
 **网站开发**: [mygoare](https://mygoare.com)
 **BFBAN APP下载**: [cabbagelol](https://app.bfban.com/public/www/)
-**JapaneseTranslator**: [RiseJack](https://www.youtube.com/channel/UCptnZeaSNaurVVy9UMWzI6w)
-**EnglishTranslator**: [___4Tr1](https://live.bilibili.com/591314)
+**JapaneseContributor**: [RiseJack](https://www.youtube.com/channel/UCptnZeaSNaurVVy9UMWzI6w)**EnglishContributor**: [___4Tr1](https://live.bilibili.com/591314)
+**DomainFeeContributor**: [【14K】BoomNextDoor](https://battlefieldtracker.com/bf1/profile/pc/BoomNextDoor)
         `, {breaks: true, gfm: true, smartLists: true})
       }
     }
