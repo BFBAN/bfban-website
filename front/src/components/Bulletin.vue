@@ -15,7 +15,7 @@
 **网站开发**: [mygoare](https://mygoare.com)
 **BFBAN APP下载**: [cabbagelol](https://app.bfban.com/public/www/)
 **JapaneseContributor**: [RiseJack](https://www.youtube.com/channel/UCptnZeaSNaurVVy9UMWzI6w)**EnglishContributor**: [___4Tr1](https://live.bilibili.com/591314)
-**DomainFeeContributor**: [【14K】BoomNextDoor](https://battlefieldtracker.com/bf1/profile/pc/BoomNextDoor)
+**DomainCost**: [【14K】BoomNextDoor](https://battlefieldtracker.com/bf1/profile/pc/BoomNextDoor)
         `, {breaks: true, gfm: true, smartLists: true})
       }
     }
