@@ -271,7 +271,7 @@ router.get('/:ouid', [
 // originId, cheatMethods, bilibiliLink, description
 // insert user_report_cheater db
 // userId, cheaterUId, datatime
-router.post('/', verifyJWTMiddleware, verifyCatpcha, [
+router.post('/', verifyJWTMiddleware, [
   check('gameName', 'game property incorrect').not().isEmpty().custom((val, { req }) => gamesArr.indexOf(val) !== -1),
   check('originId').not().isEmpty().isAscii(),
   check('cheatMethods').not().isEmpty(),
