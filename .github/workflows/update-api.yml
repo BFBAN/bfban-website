@@ -29,7 +29,6 @@ jobs:
         PORT: ${{ secrets.PORT }}
         PASSWORD: ${{ secrets.PASSWORD }}
       with:
-        rm: true
         source: "."
         target: "/var/www/bfban"
 
