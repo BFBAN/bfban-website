@@ -36,7 +36,7 @@ jobs:
       with:
         author_name: Auto Builder
         author_email: actions@github.com
-        branch: gh-pages
+        branch: test
         message: "Auto building"
         path: './server/public'
         add: "."
