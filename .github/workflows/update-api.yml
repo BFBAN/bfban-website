@@ -29,6 +29,7 @@ jobs:
         PORT: ${{ secrets.PORT }}
         PASSWORD: ${{ secrets.PASSWORD }}
       with:
+        rm: true
         source: "."
         target: "/var/www/bfban"
 
@@ -52,4 +53,5 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
         script: |
           cd /var/www/bfban/server
+          cp /var/www/bfban-config/config.js /var/www/bfban/server/config.js
           docker service update --force global_bfban
