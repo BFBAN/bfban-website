@@ -38,7 +38,9 @@ jobs:
       with:
         author_name: Auto Builder
         author_email: actions@github.com
+        branch: gh-pages
         message: "Auto building"
-        add: "./server/public"
+        cwd: './server/public'
+        add: "."
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
