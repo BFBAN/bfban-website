@@ -14,7 +14,7 @@ const requestProxy = request.defaults({
 
   // using socks proxy
   // https://stackoverflow.com/a/48841341/875788
-  agent: new SocksProxyAgent("socks5://127.0.0.1:1086"),
+  //agent: new SocksProxyAgent("socks5://127.0.0.1:1086"), // removed after server mingrate
 });
 
 
