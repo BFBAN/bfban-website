@@ -26,9 +26,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
-      working-directory: ./front
     - run: ls
+      working-directory: ./front
+    - run: npm ci
       working-directory: ./front
     - run: CI=false npm run build --if-present
       working-directory: ./front
