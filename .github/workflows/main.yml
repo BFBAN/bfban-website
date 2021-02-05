@@ -26,8 +26,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: ls
-      working-directory: ./front
     - run: npm ci
       working-directory: ./front
     - run: CI=false npm run build --if-present
@@ -40,7 +38,7 @@ jobs:
         author_email: actions@github.com
         branch: gh-pages
         message: "Auto building"
-        cwd: './server/public'
+        path: './server/public'
         add: "."
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
