@@ -28,6 +28,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
       working-directory: ./front
+    - run: ls
+      working-directory: ./front
     - run: CI=false npm run build --if-present
       working-directory: ./front
 
@@ -39,4 +41,4 @@ jobs:
         message: "Auto building"
         add: "./server/public"
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
