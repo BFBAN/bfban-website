@@ -39,5 +39,6 @@ jobs:
         user_email: 'example@email.com'
         user_name: 'autobuilder'
         commit_message: 'A custom message for the commit'
+        destination_branch: 'gh-pages'
       env:
         API_TOKEN_GITHUB: ${{ secrets.TOKEN }}
