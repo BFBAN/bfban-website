@@ -32,14 +32,12 @@ jobs:
       working-directory: ./front
 
     - name: Commit changes
-      uses: EndBug/add-and-commit@v5
+      uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
       with:
-        author_name: Auto Builder
-        author_email: actions@github.com
-        branch: test
-        # gh-pages
-        message: "Auto building"
-        cwd: './server/public'
-        add: "."
+        source_file: 'server/public/*'
+        destination_repo: 'BFBAN/bfban.github.io'
+        user_email: 'example@email.com'
+        user_name: 'autobuilder'
+        commit_message: 'A custom message for the commit'
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        API_TOKEN_GITHUB: ${{ secrets.TOKEN }}
