@@ -41,7 +41,6 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
         script: |
           cd /var/www/bfban/server
-          npm install
           docker build -t "bfban:latest" .
 
     - name: Restarting the service
