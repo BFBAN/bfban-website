@@ -78,11 +78,52 @@ export default {
   home: {
     activity: {
       title: 'アクティビティ',
+      description1: 'bfban.comは2018年11月4日にオンラインになり、',
+      description2: ' 件のレポートを受け取り、',
+      description3: ' 件のレポートが報告されました。ご協力いただきありがとうございます。',
+      activities: {
+        report: '報告',
+        join: 'bfbanに登録しました、ようこそ！',
+      },
     },
     howToUse: {
       title: '使い方',
-      tools: 'ツール',
+      description: {
+        url: 'サイト',
+        text1: ' は、報告された人物のゲームIDを ',
+        boldText1: '永続的に追跡し、検索履歴ID',
+        text2: ' をサポート ',
+        boldText2: 'できます',
+        Text3: '。どなたでも積極的にご報告いただけます。',
+        bulletTitle: 'ハングアップに遭遇した場合は、',
+        bulletPoint1: '1、 公式レポートへの最初の使用 ',
+        bulletUrl1: 'バトルフィールド1プラグインレポートアシスタント',
+        bulletPoint12: ' 。',
+        bulletPoint2: '2、 それが',
+        bulletUrl2: '報告した',
+        bulletPoint21: '後の彼ら自身のウェブサイト ',
+        bulletUrl3: '登録で ;',
+        bulletPoint3: '3、レポート後に記録され、IDが変更されても追跡できます'
+      },
+      tools: {
+        main: 'ツール',
+        name: {
+          report: '【推奨】バトルフィールド1プラグインレポートアシスタント',
+          tracker: '【推奨】バトルフィールドPC /モバイル記録クイックチェックツール',
+          tools: '戦場周辺ツール',
+          bfban: '【推奨】BFBANアプリ'
+        },
+        description: {
+          bftracker: 'オンライン記録クエリWebサイトでは、さまざまなデータを詳細にクエリできます',
+          report: 'オンラインでレポートテキストを生成する',
+          fairplay: 'BF3とBF4の現在のIDのレコードをすばやく照会してマークを付け、異常にマークを付け、UnionBanの履歴を照会します',
+          tracker: '同時に、それはマークするためにコンピュータと携帯電話の記録の迅速なクエリをサポートします',
+          tools: 'ゲームプラットフォームの問題を解決するのに役立つツール',
+          bfban: 'BFBANモバイルクライアント',
+        }
+      },
       qqGroup: 'QQグループ',
+      bfbanQq: '連合禁止局QQグループ',
       gameTogether: 'Game Together',
     },
     bulletin: {

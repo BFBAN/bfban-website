@@ -4,7 +4,7 @@
     <div class="content">
       <Divider>{{$t("home.activity.title")}}</Divider>
 
-      <p>bfban.com  于 2018年11月4日 上线，收到 <b>{{ site.report }}</b> 次举报，已石锤了 <b>{{ site.cheater }}</b> 个挂壁，感谢大家的共同努力！</p>
+      <p>{{$t("home.activity.description1")}}<b>{{ site.report }}</b>{{$t("home.activity.description2")}}<b>{{ site.cheater }}</b>{{$t("home.activity.description3")}}</p>
       <table>
         <tbody>
           <tr v-for="activity in activities" :key="activity.id">
@@ -14,7 +14,7 @@
             <td v-if="activity.type === 'report'">
               <span>
                 <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
-                举报了
+                {{$t("home.activity.activities.report")}}
                 <Tag>
                   {{ handleGameName(activity.game) }}
                 </Tag>
@@ -26,8 +26,7 @@
             <td v-if="activity.type === 'register'">
               <span>
                 <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
-                注册了 bfban ，
-                欢迎！
+                {{$t("home.activity.activities.join")}}
               </span>
 
             </td>
@@ -54,28 +53,26 @@
       <Divider>{{$t("home.howToUse.title")}}</Divider>
 
       <p>
-        <a href="https://bfban.com">本站</a>可以 <b>永久追踪</b> 被举报者的游戏ID，并支持 <b>搜索历史ID</b> ！欢迎大家积极举报。
+        <a href="https://bfban.com">{{$t("home.howToUse.description.url")}}</a>{{$t("home.howToUse.description.text1")}}<b>{{$t("home.howToUse.description.boldText1")}}</b>{{$t("home.howToUse.description.text2")}}<b>{{$t("home.howToUse.description.boldText2")}}</b>{{$t("home.howToUse.description.Text3")}}
       </p>
 
-      <p>如果遇到挂，可以</p>
+      <p>{{$t("home.howToUse.description.bulletTitle")}}</p>
       <p>
-        1、先使用
+        {{$t("home.howToUse.description.bulletPoint1")}}
 
         <a target="_blank" href="https://bf1.mygoare.com/">
-          战地1外挂举报助手
+          {{$t("home.howToUse.description.bulletUrl1")}}
         </a>
-
-        给官方举报；
+        {{$t("home.howToUse.description.bulletPoint12")}};
       </p>
       <p>
-        2、自己在网站
-        <router-link :to="{path: 'signup'}">注册</router-link>
-        后，自己
-        <router-link :to="{path: 'report'}">举报</router-link>
-        ；
+        {{$t("home.howToUse.description.bulletPoint2")}}
+        <router-link :to="{path: 'signup'}">{{$t("home.howToUse.description.bulletUrl2")}}</router-link>
+        {{$t("home.howToUse.description.bulletPoint21")}}
+        <router-link :to="{path: 'report'}">{{$t("home.howToUse.description.bulletUrl3")}}</router-link>；
       </p>
       <p>
-        3、举报后即会被纪录在案，即使修改了ID也能被追踪到；
+       {{$t("home.howToUse.description.bulletPoint3")}}
       </p>
 
       <p>
@@ -89,43 +86,43 @@
 
 
 <br>
-      <h2>{{$t("home.howToUse.tools")}}</h2>
+      <h2>{{$t("home.howToUse.tools.main")}}</h2>
       <div class="tools">
         <p>
           <a target="_blank" href="https://battlefieldtracker.com/">
             battlefieldtracker.com
           </a>
-          在线战绩查询网站，可以详细查询到各类数据
+          {{$t("home.howToUse.tools.description.bftracker")}}
         </p>
         <p>
           <a target="_blank" href="https://bf1.mygoare.com/">
-            【推荐】战地1外挂举报助手
+            {{$t("home.howToUse.tools.name.report")}}
           </a>
-          在线生成举报文本
+          {{$t("home.howToUse.tools.description.report")}}
         </p>
         <p>
           <a target="_blank" href="https://www.247fairplay.com/">
             247fairplay
           </a>
-          快速查询标记当前ID在BF3、BF4中的战绩进行异常标记，查询联ban史
+          {{$t("home.howToUse.tools.description.fairplay")}}
         </p>
         <p>
           <a target="_blank" href="https://www.notion.so/1-5-f348c539fd4f41a08878f274a37c7d81">
-            【推荐】战地PC/手机战绩速查工具
+            {{$t("home.howToUse.tools.name.tracker")}}
           </a>
-          同时支持电脑手机快速查询战绩进行标记
+          {{$t("home.howToUse.tools.description.tracker")}}
         </p>
         <p>
           <a target="_blank" href="http://bfban.ys168.com/">
-            战地周边工具
+            {{$t("home.howToUse.tools.name.tools")}}
           </a>
-          帮助你解决游戏平台问题的工具
+          {{$t("home.howToUse.tools.description.tools")}}
         </p>
         <p>
           <a target="_blank" href="https://app.bfban.com/public/www/">
-            【推荐】BFBAN APP
+            {{$t("home.howToUse.tools.name.bfban")}}
           </a>
-          BFBAN手机客户端
+          {{$t("home.howToUse.tools.description.bfban")}}
         </p>
       </div>
 
@@ -136,8 +133,7 @@
           <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5PEqoDb">
             527565465
           </a>
-
-          联ban局QQ群
+          {{$t("home.howToUse.bfbanQq")}}
         </p>
       </div>
     </div>

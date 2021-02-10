@@ -78,11 +78,52 @@ export default {
   home: {
     activity: {
       title: '网站动态',
+      description1: 'bfban.com  于 2018年11月4日 上线，收到 ',
+      description2: ' 次举报，已石锤了 ',
+      description3: ' 个挂壁，感谢大家的共同努力！',
+      activities: {
+        report: '举报了',
+        join: '注册了 bfban ， 欢迎！',
+      },
     },
     howToUse: {
       title: '如何使用本站',
-      tools: '小工具',
+      description: {
+        url: '本站',
+        text1: ' 可以 ',
+        boldText1: '永久追踪',
+        text2: ' 被举报者的游戏ID，并支持 ',
+        boldText2: '搜索历史ID',
+        Text3: ' ！欢迎大家积极举报。',
+        bulletTitle: '如果遇到挂，可以',
+        bulletPoint1: '1、先使用',
+        bulletUrl1: '战地1外挂举报助手',
+        bulletPoint12: '给官方举报',
+        bulletPoint2: '2、自己在网站',
+        bulletUrl2: '注册',
+        bulletPoint21: '后，自己',
+        bulletUrl3: '举报',
+        bulletPoint3: ' 3、举报后即会被纪录在案，即使修改了ID也能被追踪到'
+      },
+      tools: {
+        main: '小工具',
+        name: {
+          report: '【推荐】战地1外挂举报助手',
+          tracker: '【推荐】战地PC/手机战绩速查工具',
+          tools: '战地周边工具',
+          bfban: '【推荐】BFBAN APP'
+        },
+        description: {
+          bftracker: '在线战绩查询网站，可以详细查询到各类数据',
+          report: '在线生成举报文本',
+          fairplay: '快速查询标记当前ID在BF3、BF4中的战绩进行异常标记，查询联ban史',
+          tracker: '同时支持电脑手机快速查询战绩进行标记',
+          tools: '帮助你解决游戏平台问题的工具',
+          bfban: 'BFBAN手机客户端',
+        }
+      },
       qqGroup: 'QQ群',
+      bfbanQq: '联ban局QQ群',
       gameTogether: '开黑',
     },
     bulletin: {

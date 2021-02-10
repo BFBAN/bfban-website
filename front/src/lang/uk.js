@@ -78,11 +78,52 @@ export default {
   home: {
     activity: {
       title: 'Activity',
+      description1: 'bfban.com was made on the 4th of november 2018 and received ',
+      description2: ' reports, and has a total of ',
+      description3: ' banned hackers. Thanks for the hard work everyone!',
+      activities: {
+        report: 'reported',
+        join: 'registered to bfban, welcome!'
+      }
     },
     howToUse: {
       title: 'How to use',
-      tools: 'Tools',
+      description: {
+        url: 'This site',
+        text1: ' can ',
+        boldText1: 'permanently track',
+        text2: ' a player\'s id, and we also support ',
+        boldText2: ' searching of the id history!',
+        Text3: ' Everyone is welcome to report hackers.',
+        bulletTitle: 'if there is a hacker you can:',
+        bulletPoint1: '1. Use',
+        bulletUrl1: ' the bf1 report assistance ',
+        bulletPoint12: 'to report hacker to dice',
+        bulletPoint2: '2.  ',
+        bulletUrl2: 'Register on the website',
+        bulletPoint21: ' and ',
+        bulletUrl3: 'report on bfban',
+        bulletPoint3: ' 3. The user id will be recorded. even if he changes his id, we can still find him'
+      },
+      tools: {
+        main: 'Tools',
+        name: {
+          report: '[Recommended] Battlefield 1 plug-in report assistant',
+          tracker: '[Recommended] Battlefield PC/mobile record quick check tool',
+          tools: 'Battlefield related tools',
+          bfban: '[Recommended] BFBAN APP'
+        },
+        description: {
+          bftracker: 'Online record query website, you can query various data in detail',
+          report: 'Generate report text online',
+          fairplay: 'quickly check if the player is already banned in bf3 and bf4',
+          tracker: 'At the same time, it supports quick query of record and mark on computer and mobile phone',
+          tools: 'Tools to help you solve game platform problems',
+          bfban: 'BFBAN mobile client',
+        }
+      },
       qqGroup: 'QQ Group',
+      bfbanQq: 'bfban qq group',
       gameTogether: 'Game Together',
     },
     bulletin: {
