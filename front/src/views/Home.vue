@@ -51,28 +51,7 @@
     </div>
     <div class="content">
       <Divider>{{$t("home.howToUse.title")}}</Divider>
-      <p>
-        <a href="https://bfban.com">{{$t("home.howToUse.description.url")}}</a>{{$t("home.howToUse.description.text1")}}<b>{{$t("home.howToUse.description.boldText1")}}</b>{{$t("home.howToUse.description.text2")}}<b>{{$t("home.howToUse.description.boldText2")}}</b>{{$t("home.howToUse.description.Text3")}}
-      </p>
-
-      <p>{{$t("home.howToUse.description.bulletTitle")}}</p>
-      <p>
-        {{$t("home.howToUse.description.bulletPoint1")}}
-
-        <a target="_blank" href="https://bf1.mygoare.com/">
-          {{$t("home.howToUse.description.bulletUrl1")}}
-        </a>
-        {{$t("home.howToUse.description.bulletPoint12")}};
-      </p>
-      <p>
-        {{$t("home.howToUse.description.bulletPoint2")}}
-        <router-link :to="{path: 'signup'}">{{$t("home.howToUse.description.bulletUrl2")}}</router-link>
-        {{$t("home.howToUse.description.bulletPoint21")}}
-        <router-link :to="{path: 'report'}">{{$t("home.howToUse.description.bulletUrl3")}}</router-link>；
-      </p>
-      <p>
-       {{$t("home.howToUse.description.bulletPoint3")}}
-      </p>
+      <p v-html="$t('home.howToUse.description')"></p>
 
       <p>
         <!--<b>本站管理员：</b>-->

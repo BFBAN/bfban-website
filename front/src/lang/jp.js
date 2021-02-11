@@ -89,23 +89,11 @@ export default {
     },
     howToUse: {
       title: '使い方',
-      description: {
-        url: 'サイト',
-        text1: ' は、報告された人物のゲームIDを ',
-        boldText1: '永続的に追跡し、検索履歴ID',
-        text2: ' をサポート ',
-        boldText2: 'できます',
-        Text3: '。どなたでも積極的にご報告いただけます。',
-        bulletTitle: 'ハングアップに遭遇した場合は、',
-        bulletPoint1: '1、 公式レポートへの最初の使用 ',
-        bulletUrl1: 'バトルフィールド1プラグインレポートアシスタント',
-        bulletPoint12: ' 。',
-        bulletPoint2: '2、 それが',
-        bulletUrl2: '報告した',
-        bulletPoint21: '後の彼ら自身のウェブサイト ',
-        bulletUrl3: '登録で ;',
-        bulletPoint3: '3、レポート後に記録され、IDが変更されても追跡できます'
-      },
+      description: `<a href="https://bfban.com">サイト</a> は、報告された人物のゲームIDを <b>永続的に追跡し、検索履歴ID</b>  をサポート  <b>できます</b> 。どなたでも積極的にご報告いただけます。
+      <p>ハングアップに遭遇した場合は、</p>
+      <p>1、 公式レポートへの最初の使用 <a target="_blank" href="https://bf1.mygoare.com/">バトルフィールド1プラグインレポートアシスタント</a>  。</p>
+      <p>2、 それが <router-link :to="{path: 'signup'}">報告した</router-link> 後の彼ら自身のウェブサイト <router-link :to="{path: 'report'}">登録で ;</router-link></p>
+      <p>3、レポート後に記録され、IDが変更されても追跡できます</p>`,
       tools: {
         main: 'ツール',
         name: {

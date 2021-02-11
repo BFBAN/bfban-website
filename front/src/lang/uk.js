@@ -89,23 +89,11 @@ export default {
     },
     howToUse: {
       title: 'How to use',
-      description: {
-        url: 'This site',
-        text1: ' can ',
-        boldText1: 'permanently track',
-        text2: ' a player\'s id, and we also support ',
-        boldText2: ' searching of the id history!',
-        Text3: ' Everyone is welcome to report hackers.',
-        bulletTitle: 'if there is a hacker you can:',
-        bulletPoint1: '1. Use',
-        bulletUrl1: ' the bf1 report assistance ',
-        bulletPoint12: 'to report hacker to dice',
-        bulletPoint2: '2.  ',
-        bulletUrl2: 'Register on the website',
-        bulletPoint21: ' and ',
-        bulletUrl3: 'report on bfban',
-        bulletPoint3: ' 3. The user id will be recorded. even if he changes his id, we can still find him'
-      },
+      description: `<a href="https://bfban.com">This site</a> can <b>permanently track</b> a player\'s id, and we also support <b>searching of the id history!</b> Everyone is welcome to report hackers.
+      <p>if there is a hacker you can:</p>
+      <p>1. Use <a target="_blank" href="https://bf1.mygoare.com/">the bf1 report assistance</a> to report hacker to dice</p>
+      <p>2. <router-link :to="{path: 'signup'}">Register on the website</router-link> and <router-link :to="{path: 'report'}">report on bfban</router-link></p>
+      <p>3. The user id will be recorded. even if he changes his id, we can still find him</p>`,
       tools: {
         main: 'Tools',
         name: {

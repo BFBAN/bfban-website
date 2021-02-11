@@ -89,23 +89,11 @@ export default {
     },
     howToUse: {
       title: '如何使用本站',
-      description: {
-        url: '本站',
-        text1: ' 可以 ',
-        boldText1: '永久追踪',
-        text2: ' 被举报者的游戏ID，并支持 ',
-        boldText2: '搜索历史ID',
-        Text3: ' ！欢迎大家积极举报。',
-        bulletTitle: '如果遇到挂，可以',
-        bulletPoint1: '1、先使用',
-        bulletUrl1: '战地1外挂举报助手',
-        bulletPoint12: '给官方举报',
-        bulletPoint2: '2、自己在网站',
-        bulletUrl2: '注册',
-        bulletPoint21: '后，自己',
-        bulletUrl3: '举报',
-        bulletPoint3: ' 3、举报后即会被纪录在案，即使修改了ID也能被追踪到'
-      },
+      description: `<a href="https://bfban.com">本站</a> 可以 <b>永久追踪</b> 被举报者的游戏ID，并支持 <b>搜索历史ID</b> ！欢迎大家积极举报。
+      <p>如果遇到挂，可以</p>
+      <p>1、先使用 <a target="_blank" href="https://bf1.mygoare.com/">战地1外挂举报助手</a> 给官方举报</p>
+      <p>2、自己在网站 <router-link :to="{path: 'signup'}">注册</router-link> 后，自己 <router-link :to="{path: 'report'}">举报</router-link></p>
+      <p>3、举报后即会被纪录在案，即使修改了ID也能被追踪到</p>`,
       tools: {
         main: '小工具',
         name: {
