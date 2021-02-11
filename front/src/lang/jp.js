@@ -78,6 +78,7 @@ export default {
   },
   footer: {
     author: 'mygoareによって書かれました',
+    feedback: 'フィードバック'
   },
   home: {
     activity: {
@@ -177,6 +178,25 @@ export default {
       submit: '送信',
     },
   },
+  account: {
+    title: 'ユーザーセンター',
+    hint1: 'メッセージングシステムはまだありませんが、以下のステータスを確認して進捗状況を確認できます',
+    hint2: 'すべてのレポートは、ディスカッションに参加するために返信できます',
+    hint3: '証拠を追加するために、同じIDを繰り返し報告できます',
+    userInfo: '個人情報',
+    username: 'ユーザー名：',
+    role: '身元：',
+    admin: '管理者',
+    normal: '普通',
+    super: 'スーパー管理者',
+    joinedAt: '参加日：',
+    reports: '个人举报',
+    noReports: '还没有任何举报',
+    reported: '举报了',
+    status: '状态',
+    recentlyUpdated: '最近更新',
+  },
+  notFound: '履歴レコードが見つからない場合は、ウェブサイトの上部にある検索機能を使用して、検索履歴IDをサポートできます。',
   signin: {
     title: 'サインイン',
     form: {

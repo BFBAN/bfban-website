@@ -10,7 +10,7 @@
     <!-- feedback -->
     <a class="feedback" target="_blank" href="http://support.qq.com/product/64038">
       <Icon size=24 type="ios-chatbubbles" />
-      <span>意见反馈</span>
+      <span>{{$t("footer.feedback")}}</span>
     </a>
   </div>
 

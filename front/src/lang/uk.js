@@ -78,6 +78,7 @@ export default {
   },
   footer: {
     author: 'Written by mygoare',
+    feedback: 'Give feedback'
   },
   home: {
     activity: {
@@ -176,6 +177,25 @@ export default {
       submit: 'Submit',
     },
   },
+  account: {
+    title: 'User info',
+    hint1: 'We dont have a message system yet, but you can use this menu to see the status of your reports.',
+    hint2: 'Everyone can post responses on the report page.',
+    hint3: 'If you have more evidence for a hacker, please report the same id twice.',
+    userInfo: 'Account info',
+    username: 'Username:',
+    role: 'Role:',
+    admin: 'Administrator',
+    normal: 'Normal user',
+    super: 'Super admin',
+    joinedAt: 'Joined at:',
+    reports: 'Personal reports',
+    noReports: 'No reports yet',
+    reported: 'Reported',
+    status: 'Status',
+    recentlyUpdated: 'Recently updated',
+  },
+  notFound: 'if you can’t find the history log use the “search” on the top of the webpage. History id tracking is supported',
   signin: {
     title: 'Sign In',
     form: {

@@ -1,37 +1,40 @@
 <template>
   <div class="container">
     <div class="content">
-      <p class="hint">我们还没有 消息系统，但可以在下方举报的状态 来得知进度</p>
-      <p class="hint">所有举报都可以 回复参与讨论</p>
-      <p class="hint">若要补充证据，可以重复举报同一ID</p>
+      <p class="hint">{{$t("account.hint1")}}</p>
+      <p class="hint">{{$t("account.hint2")}}</p>
+      <p class="hint">{{$t("account.hint3")}}</p>
 
       <div v-if="account">
-        <Divider>用户中心</Divider>
-        <h2>个人信息</h2>
+        <Divider>{{$t("account.title")}}</Divider>
+        <h2>{{$t("account.userInfo")}}</h2>
         <p>
-          用户名：
+          {{$t("account.username")}}
           {{account.username}}
         </p>
         <p>
-          身份：
+          {{$t("account.role")}}
           <Tag v-if="account.privilege === 'admin'" color="success">
-            管理员
+            {{$t("account.admin")}}
+          </Tag>
+          <Tag v-if="account.privilege === 'super'" color="error">
+            {{$t("account.super")}}
           </Tag>
           <Tag v-if="account.privilege === 'normal'">
-            普通
+            {{$t("account.normal")}}
           </Tag>
         </p>
         <p>
-          加入日期：
+          {{$t("account.joinedAt")}}
           <Tag color="primary">
             <Time v-if="account.createDatetime" :time="account.createDatetime" />
           </Tag>
         </p>
 
         <br>
-        <h2>个人举报</h2>
+        <h2>{{$t("account.reports")}}</h2>
         <p v-if="account.reports.length === 0">
-          还没有任何举报
+          {{$t("account.noReports")}}
         </p>
         <table>
           <tbody>
@@ -45,7 +48,7 @@
             </td>
             <td>
         <span>
-          举报了
+          {{$t("account.reported")}}
           <router-link :to="{name: 'cheater', params: {ouid: `${report.originUserId}`}}">
             <Tag>
               {{ report.game }}
@@ -56,7 +59,7 @@
             </td>
             <td>
         <span>
-          状态
+          {{$t("account.status")}}
           <Tag color="error">
             {{ handleStatus(report.status) }}
           </Tag>
@@ -64,7 +67,7 @@
             </td>
             <td>
         <span>
-          最近更新
+          {{$t("account.recentlyUpdated")}}
           <Tag color="warning">
             <Time v-if="report.updateDatetime" :time="report.updateDatetime" />
             <span v-else>无</span>

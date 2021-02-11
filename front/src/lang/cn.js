@@ -78,6 +78,7 @@ export default {
   },
   footer: {
     author: '由 mygoare 开发',
+    feedback: '意见反馈'
   },
   home: {
     activity: {
@@ -177,6 +178,25 @@ export default {
       submit: '提交',
     },
   },
+  account: {
+    title: '用户中心',
+    hint1: '我们还没有 消息系统，但可以在下方举报的状态 来得知进度',
+    hint2: '所有举报都可以 回复参与讨论',
+    hint3: '若要补充证据，可以重复举报同一ID',
+    userInfo: '个人信息',
+    username: '用户名：',
+    role: '身份：',
+    admin: '管理员',
+    normal: '普通',
+    super: '超级管理员',
+    joinedAt: '参加：',
+    reports: '個人レポート',
+    noReports: 'まだ報告はありません',
+    reported: '報告',
+    status: '状態',
+    recentlyUpdated: '最新のアップデート',
+  },
+  notFound: '如果历史记录找不到，可以使用网站顶部 搜索功能，支持搜索历史ID',
   signin: {
     title: '登录',
     form: {
