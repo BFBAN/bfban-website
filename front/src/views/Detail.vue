@@ -10,11 +10,11 @@
 
           <div>
             <Tag color="error">
-              {{ handleStatus(cheater.status) }}
+              {{ handleStatus(cheater.status, $i18n.locale) }}
             </Tag>
 
             <Tag v-if="cheater.cheatMethods" color="warning">
-              {{ convertCheatMethods(cheater.cheatMethods) }}
+              {{ convertCheatMethods(cheater.cheatMethods, $i18n.locale) }}
             </Tag>
           </div>
           <p>
@@ -178,7 +178,7 @@
 				{{ $t('detail.info.gaming', { msg: 'gaming' })}}
 
                 <b>
-                  {{convertCheatMethods(l.cheatMethods || '')}}
+                  {{convertCheatMethods(l.cheatMethods || '', $i18n.locale)}}
                 </b>
               </div>
 
@@ -219,7 +219,7 @@
               {{ $t('detail.info.cheatMethod', { msg: 'cheatMethod' })}}
 
               <b>
-                {{convertCheatMethods(l.cheatMethods || '')}}
+                {{convertCheatMethods(l.cheatMethods || '', $i18n.locale)}}
               </b>
             </span>
               </div>
@@ -263,7 +263,7 @@
                 ，{{ $t('detail.info.cheatMethod', { msg: 'cheatMethod' })}}
 
                 <b>
-                  {{ convertCheatMethods(l.cheatMethods || '') }}
+                  {{ convertCheatMethods(l.cheatMethods || '', $i18n.locale) }}
                 </b>
               </div>
 

@@ -19,7 +19,7 @@
         <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
           <Radio label="100"><span>{{$t("list.filters.status.all")}}({{getAllStatusNum}})</span></Radio>
           <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
-            <span>{{ status.label }}({{ getStatusNum(status.value)}})</span>
+            <span>{{ status[$i18n.locale] }}({{ getStatusNum(status.value)}})</span>
           </Radio>
         </RadioGroup>
       </p>
@@ -27,17 +27,17 @@
 
       <p>
         <span class="mobile-hide">
-          <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报时间范围" style="width: 200px"></DatePicker>
-          <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新时间范围" style="width: 200px"></DatePicker>
+          <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels :placeholder="$t('list.reportTime')" style="width: 200px"></DatePicker>
+          <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels :placeholder="$t('list.updateTime')" style="width: 200px"></DatePicker>
         </span>
 
         <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
           <Option value="100">{{$t("list.filters.status.all")}}({{getAllStatusNum}})</Option>
-          <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">{{ status.label }}({{ getStatusNum(status.value)}})</Option>
+          <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">{{ status[$i18n.locale] }}({{ getStatusNum(status.value)}})</Option>
         </Select>
 
         <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
-          <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item[$i18n.locale] }}</Option>
         </Select>
       </p>
 
@@ -51,9 +51,9 @@
 
         <ul>
           <li>
-            <span><b>游戏ID</b></span>
-            <span class="mobile-hide"><b>举报时间</b></span>
-            <span><b>更新时间</b></span>
+            <span><b>{{$t("list.colums.playerId")}}</b></span>
+            <span class="mobile-hide"><b>{{$t("list.colums.reportTime")}}</b></span>
+            <span><b>{{$t("list.colums.updateTime")}}</b></span>
           </li>
           <li v-for="d in data" :key="d.originUserId">
           <span style="display: flex; align-items: center;">
@@ -116,19 +116,27 @@ export default {
       sortBy: [
         {
           value: 'createDatetime',
-          label: '举报时间倒序',
+          "zh-CN": '举报时间倒序',
+          "en-US": 'Report time',
+          "ja-JP": '時間を逆の順序で報告します',
         },
         {
           value: 'updateDatetime',
-          label: '更新时间倒序',
+          "zh-CN": '更新时间倒序',
+          "en-US": 'Update time',
+          "ja-JP": '逆更新時間',
         },
         {
           value: 'n',
-          label: '围观次数倒序',
+          "zh-CN": '围观次数倒序',
+          "en-US": 'Number of viewers',
+          "ja-JP": '逆順の見物人',
         },
         {
           value: 'commentsNum',
-          label: '回复次数倒序',
+          "zh-CN": '回复次数倒序',
+          "en-US": 'Number of replies',
+          "ja-JP": '返信数を逆にする',
         },
       ],
       sortByValue: 'updateDatetime',

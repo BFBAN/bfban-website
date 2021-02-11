@@ -50,43 +50,57 @@ function checkReportFormData(form) {
 const cheatMethodsGlossary = [
   {
     value: 'stealth',
-    label: '隐身',
+    "zh-CN": '隐身',
+    "en-US": 'Stealth',
+    "ja-JP": 'ステルス',
   },
   {
     value: 'wallhack',
-    label: '透视',
+    "zh-CN": '透视',
+    "en-US": 'Wallhack',
+    "ja-JP": '視点',
   },
   {
     value: 'aimbot',
-    label: '自瞄',
+    "zh-CN": '自瞄',
+    "en-US": 'Aimbot',
+    "ja-JP": '自己照準',
   },
   {
     value: 'oneShotKill',
-    label: '秒杀',
+    "zh-CN": '秒杀',
+    "en-US": 'Oneshot kill',
+    "ja-JP": 'スパイク',
   },
   {
     value: 'gadgetModify',
-    label: '改装备',
+    "zh-CN": '改装备',
+    "en-US": 'Modified gadget',
+    "ja-JP": '機器の交換',
   },
   {
     value: 'damageChange',
-    label: '改伤',
+    "zh-CN": '改伤',
+    "en-US": 'Damagemodifier',
+    "ja-JP": '怪我を変える',
   },
   {
     value: 'shootingThroughWalls',
-    label: '子弹穿墙',
+    "zh-CN": '子弹穿墙',
+    "en-US": 'Shooting through walls',
+    "ja-JP": '壁を突き抜ける弾丸',
   },
 ];
 
 // return string
-function convertCheatMethods(str = '') {
+function convertCheatMethods(str = '', locale) {
   const s = str || '';
 
   const tmpArr = [];
   _.each(s.split(','), (val) => {
     _.each(cheatMethodsGlossary, (v, i) => {
       if (v.value === val) {
-        tmpArr.push(v.label);
+        tmpArr.push(v[locale]);
       }
     });
   });
@@ -98,53 +112,71 @@ const cheaterStatus = [
   // value 100 表示全部
   {
     value: '0',
-    label: '未处理',
+    "zh-CN": '未处理',
+    "en-US": 'Processing',
+    "ja-JP": '未処理',
   },
   {
     value: '5',
-    label: '回复讨论中',
+    "zh-CN": '回复讨论中',
+    "en-US": 'Under discussion',
+    "ja-JP": 'ディスカッションに返信する',
   },
   {
     value: '6',
-    label: '等待管理确认',
+    "zh-CN": '等待管理确认',
+    "en-US": 'Waiting for management cofirmation',
+    "ja-JP": '管理者の確認を待っています',
   },
   {
     value: '1',
-    label: '认为石锤',
+    "zh-CN": '认为石锤',
+    "en-US": 'Confirmed hacker',
+    "ja-JP": 'ストーンハンマーだと思う',
   },
   {
     value: '2',
-    label: '嫌疑再观察',
+    "zh-CN": '嫌疑再观察',
+    "en-US": 'Suspicious player',
+    "ja-JP": '再び容疑者',
   },
   {
     value: '3',
-    label: '认为没开挂',
+    "zh-CN": '认为没开挂',
+    "en-US": 'Innocent clean player',
+    "ja-JP": '開いていないと思う',
   },
   {
     value: '4',
-    label: '回收站',
+    "zh-CN": '回收站',
+    "en-US": 'Trash',
+    "ja-JP": 'ごみ箱',
   },
 ];
 
 const gameName = [
   {
     value: 'bf1',
-    label: '战地1',
+    "zh-CN": '战地1',
+    "en-US": 'Battlefield 1',
+    "ja-JP": 'バトルフィールド1',
   },
   {
     value: 'bfv',
-    label: '战地v',
+    "zh-CN": '战地v',
+    "en-US": 'Battlefield 5',
+    "ja-JP": 'バトルフィールドV',
   },
 ];
 
-function getCheaterStatusLabel(value) {
+function getCheaterStatusLabel(value, locale) {
   const o = _.find(cheaterStatus, (v, k) => v.value === value);
-  return o ? o.label : '';
+  return o ? o[locale] : '';
 }
 
-function getGameLabel(value) {
+function getGameLabel(value, locale) {
   const o = _.find(gameName, (v, k) => v.value === value);
-  return o ? o.label : '';
+  return o ? o[locale] : '';
 }
 
 function formatNewLine(str) {

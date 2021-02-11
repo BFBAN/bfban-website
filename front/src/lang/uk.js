@@ -55,7 +55,7 @@ export default {
   },
   report:{
 	info:{
-		reportHacker:'Report hacker',
+		reportHacker:'Report a hacker',
 		reportNews:'We offer the function to report BFV hackers！',
 		bf1:'battlefield 1',
 		bfv:'battlefield 5',
@@ -78,12 +78,13 @@ export default {
   home: {
     activity: {
       title: 'Activity',
-      description1: 'bfban.com was made on the 4th of november 2018 and received ',
-      description2: ' reports, and has a total of ',
-      description3: ' banned hackers. Thanks for the hard work everyone!',
+      description: 'bfban.com was made on the 4th of november 2018 and received <b>{report}</b> reports, and has a total of <b>{cheater}</b> banned hackers. Thanks for the hard work everyone!',
       activities: {
         report: 'reported',
-        join: 'registered to bfban, welcome!'
+        join: 'registered to bfban, welcome!',
+        admin: 'Administrator',
+        mark: 'marked',
+        as: 'as'
       }
     },
     howToUse: {
@@ -127,7 +128,12 @@ export default {
       gameTogether: 'Game Together',
     },
     bulletin: {
-      title: 'Bulletin'
+      title: 'Bulletin',
+      webDev: 'Web developer',
+      bfbanAppD: 'BFBAN app download',
+      japCon: 'Japanese translation contributor',
+      engCon: 'English translation contributor',
+      domCost: 'Domain cost',
     }
   },
   about: {
@@ -167,7 +173,7 @@ export default {
     },
   },
   list: {
-    title: 'Cheaters Show',
+    title: 'Cheaters list',
     filters: {
       game: {
         bf1: 'bf1',
@@ -178,6 +184,13 @@ export default {
       },
       refresh: 'refresh',
     },
+    reportTime: 'Report time range',
+    updateTime: 'Update time range',
+    colums: {
+      playerId: 'Player ID',
+      reportTime: 'Report time',
+      updateTime: 'Update time'
+    } 
   },
   cheatMethods: {
     stealth: 'stealth',

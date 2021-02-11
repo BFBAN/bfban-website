@@ -4,7 +4,7 @@
     <div class="content">
       <Divider>{{$t("home.activity.title")}}</Divider>
 
-      <p>{{$t("home.activity.description1")}}<b>{{ site.report }}</b>{{$t("home.activity.description2")}}<b>{{ site.cheater }}</b>{{$t("home.activity.description3")}}</p>
+      <p v-html="$t('home.activity.description', { report: site.report, cheater: site.cheater })"></p>
       <table>
         <tbody>
           <tr v-for="activity in activities" :key="activity.id">
@@ -16,7 +16,7 @@
                 <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
                 {{$t("home.activity.activities.report")}}
                 <Tag>
-                  {{ handleGameName(activity.game) }}
+                  {{ handleGameName(activity.game, $i18n.locale) }}
                 </Tag>
                 <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, ouid: `${activity.originUserId}`}}">{{ activity.cheaterOriginId }}</router-link>
               </span>
@@ -33,13 +33,13 @@
 
             <td v-if="activity.type === 'verify'">
               <span>
-                <Tag color="success">管理员</Tag>
+                <Tag color="success">{{$t("home.activity.activities.admin")}}</Tag>
                 <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
-                将
+                {{$t("home.activity.activities.mark")}}
                 <router-link :to="{name: 'cheater', params: {ouid: `${activity.originUserId}`}}">{{ activity.cheaterOriginId }}</router-link>
-                处理为
+                {{$t("home.activity.activities.as")}}
                 <Tag color="warning">
-                  {{ handleStatus(activity.status) }}
+                  {{ handleStatus(activity.status, $i18n.locale) }}
                 </Tag>
               </span>
 
@@ -51,7 +51,6 @@
     </div>
     <div class="content">
       <Divider>{{$t("home.howToUse.title")}}</Divider>
-
       <p>
         <a href="https://bfban.com">{{$t("home.howToUse.description.url")}}</a>{{$t("home.howToUse.description.text1")}}<b>{{$t("home.howToUse.description.boldText1")}}</b>{{$t("home.howToUse.description.text2")}}<b>{{$t("home.howToUse.description.boldText2")}}</b>{{$t("home.howToUse.description.Text3")}}
       </p>

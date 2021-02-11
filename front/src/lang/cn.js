@@ -78,12 +78,13 @@ export default {
   home: {
     activity: {
       title: '网站动态',
-      description1: 'bfban.com  于 2018年11月4日 上线，收到 ',
-      description2: ' 次举报，已石锤了 ',
-      description3: ' 个挂壁，感谢大家的共同努力！',
+      description: 'bfban.com  于 2018年11月4日 上线，收到 <b>{report}</b> 次举报，已石锤了 <b>{cheater}</b> 个挂壁，感谢大家的共同努力！',
       activities: {
         report: '举报了',
         join: '注册了 bfban ， 欢迎！',
+        admin: '管理员',
+        mark: '将',
+        as: '处理为'
       },
     },
     howToUse: {
@@ -127,7 +128,12 @@ export default {
       gameTogether: '开黑',
     },
     bulletin: {
-      title: '公告栏'
+      title: '公告栏',
+      webDev: '网站开发',
+      bfbanAppD: 'BFBAN APP下载',
+      japCon: '日语翻译者',
+      engCon: '英语翻译者',
+      domCost: '支付域名',
     }
   },
   about: {
@@ -178,6 +184,13 @@ export default {
       },
       refresh: '刷新',
     },
+    reportTime: '举报时间范围',
+    updateTime: '更新时间范围',
+    colums: {
+      playerId: '游戏ID',
+      reportTime: '举报时间',
+      updateTime: '更新时间'
+    } 
   },
   cheatMethods: {
     stealth: '隐身',

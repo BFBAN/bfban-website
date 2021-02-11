@@ -78,12 +78,13 @@ export default {
   home: {
     activity: {
       title: 'アクティビティ',
-      description1: 'bfban.comは2018年11月4日にオンラインになり、',
-      description2: ' 件のレポートを受け取り、',
-      description3: ' 件のレポートが報告されました。ご協力いただきありがとうございます。',
+      description: 'bfban.comは2018年11月4日にオンラインになり、 <b>{report}</b> 件のレポートを受け取り、<b>{cheater}</b> 件のレポートが報告されました。ご協力いただきありがとうございます。',
       activities: {
         report: '報告',
         join: 'bfbanに登録しました、ようこそ！',
+        admin: '管理者',
+        mark: '意志',
+        as: 'として扱われる'
       },
     },
     howToUse: {
@@ -127,7 +128,12 @@ export default {
       gameTogether: 'Game Together',
     },
     bulletin: {
-      title: 'Bulletin'
+      title: '速報',
+      webDev: 'ウェブ開発',
+      bfbanAppD: 'BFBANAPPダウンロード',
+      japCon: '日本語翻訳寄稿者',
+      engCon: '英語翻訳寄稿者',
+      domCost: 'ドメインコスト',
     }
   },
   about: {
@@ -178,6 +184,13 @@ export default {
       },
       refresh: '更新',
     },
+    reportTime: '時間範囲を報告する',
+    updateTime: '時間範囲を更新する',
+    colums: {
+      playerId: 'ゲームID',
+      reportTime: 'レポート時間',
+      updateTime: '更新時間'
+    } 
   },
   cheatMethods: {
     stealth: '透明',
