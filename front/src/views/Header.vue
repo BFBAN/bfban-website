@@ -35,7 +35,7 @@
 
         </div>
         <div class="search mobile-hide">
-          <Input clearable search placeholder="支持搜索历史ID啦..." v-model="searchVal" @on-search="handleSearch" />
+          <Input clearable search :placeholder="$t('header.searchBar')" v-model="searchVal" @on-search="handleSearch" />
         </div>
         <div class="nav">
           <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
@@ -79,16 +79,16 @@
 
       <Modal
         v-model="searchModal"
-        title="检索"
+        :title='$t("header.search")'
         @on-ok="ok"
         @on-cancel="cancel">
         <div style="position: relative">
           <p style="font-size: 1rem;">
-            检索的ID为：{{searchVal}}
+            {{$t("header.searchInfo")}}{{searchVal}}
           </p>
           <br>
           <p>
-            检索结果：
+            {{$t("header.searchResult")}}
           </p>
           <div v-if="cheaters.length !== 0">
             <p v-for="cheater in cheaters" :key="cheater.id">

@@ -9,6 +9,10 @@ export default {
     signout: '注销',
     daily: 'ban日报',
     dashboard: '管理后台',
+    searchBar: '支持搜索历史ID啦...',
+    searchInfo: '检索的ID为：',
+    searchResult: '检索结果：',
+    search: '检索'
   },
   detail:{
 	  info:{
@@ -126,6 +130,43 @@ export default {
   },
   about: {
     title: '关于',
+    description: `<h2>联BAN调查局</h2>
+    <p>
+      诞生于2018年1月29日；
+      是战地玩家一起组建的 <b>抵制外挂</b> 组织。
+    </p>
+
+    <p>
+      目前主要成员组成：
+    </p>
+    <ul style="padding: .5rem 1rem .5rem;">
+      <li>私服主</li>
+      <li>战队队长</li>
+      <li>战地UP</li>
+    </ul>`,
+    clanInfo: `
+    <p>
+      <b>目前加盟服务器，共 {clans} 个：</b>
+      （ 搜索 <b>LB</b> 都可以找到加入联BAN局的服务器 ）
+    </p>`,
+    website: `
+    <h2>bfban.com 网站</h2>
+    <p>
+      <a href="https://bfban.com">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target="_blank" href="https://mygoare.com">mygoare</a> 开发，于 2018年11月4日 上线‘
+    </p>
+    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>`,
+    contact: `
+    <h2>联系我们</h2>
+    <p>
+      <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
+        投诉邮箱
+      </a>
+    </p>
+    <p>
+      <a target="_blank" href="https://support.qq.com/products/64038">
+        意见建议
+      </a>
+    </p>`
   },
   reset: {
     title: '重置密码',

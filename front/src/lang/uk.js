@@ -9,6 +9,10 @@ export default {
     signout: 'SignOut',
     daily: 'BanDaily',
     dashboard: 'Dashboard',
+    searchBar: 'Supports searching previous id\'s...',
+    searchInfo: 'The retrieved ID\'s:',
+    searchResult: 'Search Results:',
+    search: 'Search'
   },
   detail:{
     info:{
@@ -126,6 +130,42 @@ export default {
   },
   about: {
     title: 'About',
+    description: `<h2>BFBAN</h2>
+    <p>
+    created at 2018.1.29; It is an organisation created to fight <b>against hackers</b>
+    </p>
+
+    <p>
+      Staff members in bfban include:
+    </p>
+    <ul style="padding: .5rem 1rem .5rem;">
+      <li>Server owners</li>
+      <li>Clan's leaders</li>
+      <li>Bf1 streamers</li>
+    </ul>`,
+    clanInfo: `
+    <p>
+      <b>Currently, there are {clans} clans that joined: </b>
+      (Search <b>LB</b> and you can find the server that joined bfban)
+    </p>`,
+    website: `
+    <h2>bfban.com website</h2>
+    <p>
+      <a href="https://bfban.com">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target="_blank" href="https://mygoare.com">mygoare</a> and launched on November 4, 2018
+    </p>
+    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>`,
+    contact: `
+    <h2>Contact us</h2>
+    <p>
+      <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
+        Complaint mailbox
+      </a>
+    </p>
+    <p>
+      <a target="_blank" href="https://support.qq.com/products/64038">
+        Suggestions
+      </a>
+    </p>`
   },
   reset: {
     title: 'Reset Password',

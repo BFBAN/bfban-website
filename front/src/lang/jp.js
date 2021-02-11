@@ -9,6 +9,10 @@ export default {
     signout: 'サインアウト',
     daily: '今日の報告数',
     dashboard: 'ダッシュボード',
+    searchBar: '検索履歴IDをサポート...',
+    searchInfo: '取得されたIDは次のとおりです。:',
+    searchResult: 'の検索結果：',
+    search: '探す'
   },
   detail:{
     info:{
@@ -126,6 +130,43 @@ export default {
   },
   about: {
     title: '概要',
+    description: `<h2>ユナイテッドBAN調査局</h2>
+    <p>
+      2018年1月29日生まれ。
+      これは、フィールドのプレーヤーによって形成された<b>プラグインのボイコット</ b>組織です。
+    </p>
+
+    <p>
+      主なメンバーの現在の構成：
+    </p>
+    <ul style="padding: .5rem 1rem .5rem;">
+      <li>プライベートサーバー</li>
+      <li>チームのキャプテン</li>
+      <li>バトルフィールドUP</li>
+    </ul>`,
+    clanInfo: `
+    <p>
+      <b>現在、{clans} 台のサーバーが参加しています。:</b>
+      （ <b> LB </b>を検索して、BANビューローに参加しているサーバーを見つけます ）
+    </p>`,
+    website: `
+    <h2>bfban.comのウェブサイト</h2>
+    <p>
+      <a href="https://bfban.com">bfban.com</a> ウェブサイトはユニオンBAN調査局に依存しています。元のアイデアは熱狂的なプレーヤーから生まれました。 <a target="_blank" href="https://mygoare.com">mygoare</a> 2018年11月4日に開発および発売されました‘
+    </p>
+    <p>主に、大多数のプレーヤーにレポート、リスト、検索、追跡、ディスカッションなどのサービスを提供します。</p>`,
+    contact: `
+    <h2>お問い合わせ</h2>
+    <p>
+      <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
+        苦情メールボックス
+      </a>
+    </p>
+    <p>
+      <a target="_blank" href="https://support.qq.com/products/64038">
+        提案
+      </a>
+    </p>`
   },
   reset: {
     title: 'パスワードのリセット',
