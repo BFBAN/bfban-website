@@ -12,10 +12,10 @@
         Made with <Icon type="ios-heart" color="#ed4014" />
 
         Host at
-        <a target="_blank" href="https://battlefield.now.sh/">AWSL</a>
+        <a target="_blank" href="https://bandofbrothers.site/">BoB</a>
       </p>
       <p>
-        &copy; 2018-2020
+        &copy; 2018-2021
         All Rights Reserved.
       </p>
     </footer>
