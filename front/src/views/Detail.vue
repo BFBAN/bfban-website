@@ -211,7 +211,7 @@
                 {{ $t('detail.info.judge', { msg: 'judge' })}}
 
                 <Tag color="warning">
-                  {{ handleStatus(l.status) }}
+                  {{ handleStatus(l.status, $i18n.locale) }}
                 </Tag>
 
                 <span v-if="l.cheatMethods">
