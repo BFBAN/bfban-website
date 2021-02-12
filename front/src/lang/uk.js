@@ -193,7 +193,7 @@ export default {
     noReports: 'No reports yet',
     reported: 'Reported',
     status: 'Status',
-    recentlyUpdated: 'Recently updated',
+    recentlyUpdated: 'last updated',
   },
   notFound: 'if you can’t find the history log use the “search” on the top of the webpage. History id tracking is supported',
   signin: {

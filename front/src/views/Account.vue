@@ -61,7 +61,7 @@
         <span>
           {{$t("account.status")}}
           <Tag color="error">
-            {{ handleStatus(report.status) }}
+            {{ handleStatus(report.status, $i18n.locale) }}
           </Tag>
         </span>
             </td>
