@@ -55,6 +55,10 @@ export default {
       choice4:'ゴミ箱に入れる',
       commit:'決定',
       replyManual4:'返信するにはログインしてください',
+      action: 'アクション',
+      operatingTime: '稼働時間',
+      writeSomething: '何か書いて',
+      giveOpinion: 'あなたの意見は何ですか？',
     },
   },
   report:{
@@ -74,7 +78,17 @@ export default {
       uploadPic4:'チートの証拠を説明してください。画像をアップロードすることもできます（データ上限：2M）',
       getCaptcha:'Captchaを取得',
       report:'報告',
+      description: '報告された人物の不正行為の証拠を可能な限りリストします',
+      captcha: '验证码',
+      required: '必須',
+      onlyOneId: '一度に1つのオリジンIDのみ',
     },
+    labels: {
+      cheatMethod: 'チート法',
+      hackerId: 'ハッカーのID',
+      game: 'ゲーム',
+      description: '説明',
+    }
   },
   footer: {
     author: 'mygoareによって書かれました',
@@ -207,6 +221,7 @@ export default {
       submit: '送信',
       submitHint: 'アカウントを持っていませんか？新規登録',
     },
+    success: 'ログイン成功',
   },
   signup: {
     title: '新規登録',

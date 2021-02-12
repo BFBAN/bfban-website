@@ -96,8 +96,8 @@
             <table>
               <thead>
                 <tr>
-                  <td><b>Update Time</b></td>
-                  <td><b>ID</b></td>
+                  <td><b>{{ $t('list.colums.updateTime') }}</b></td>
+                  <td><b>{{ $t('list.colums.playerId') }}</b></td>
                 </tr>
               </thead>
               <tbody>
@@ -117,8 +117,8 @@
             <table>
               <thead>
                 <tr>
-                  <td><b>Operating Time</b></td>
-                  <td><b>Action</b></td>
+                  <td><b>{{ $t('detail.info.operatingTime') }}</b></td>
+                  <td><b>{{ $t('detail.info.action') }}</b></td>
                 </tr>
               </thead>
               <tbody>
@@ -310,7 +310,7 @@
           <p class="hint"><span>{{ $t('detail.info.replyManual1', { msg: 'replyManual1' })}}</span><a href="https://sm.ms/" target="_blank"><span>{{ $t('detail.info.uploadPicButton', { msg: 'uploadPicButton' })}}</span> </a>，<span>{{ $t('detail.info.replyManual2', { msg: 'replyManual2' })}}</span></p>
           <Form :label-width="80" style="position: relative;">
             <p>
-              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="What's your opinion?" />
+              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" :placeholder="$t('detail.info.giveOpinion')" />
             </p>
             <Button type="primary" @click.stop.prevent="doReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</Button>
 
@@ -352,7 +352,7 @@
             </FormItem>
 
             <FormItem label="Reason">
-              <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="Write something" />
+              <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" :placeholder="$t('detail.info.writeSomething')" />
             </FormItem>
 
             <FormItem>
@@ -552,7 +552,7 @@ export default {
         return false;
       }
       if (statusData.error === 0 && statusData.status === '1') {
-        if (!confirm(`当前是 confirmed hacker 状态，你确定要处理成 ${getCheaterStatusLabel(status)} 吗？`)) {
+        if (!confirm(`当前是 confirmed hacker 状态，你确定要处理成 ${getCheaterStatusLabel(status, $i18n.locale)} 吗？`)) {
           this.verifySpinShow = false;
           return false;
         }
