@@ -119,7 +119,9 @@ export default {
           report: '【推奨】バトルフィールド1プラグインレポートアシスタント',
           tracker: '【推奨】バトルフィールドPC /モバイル記録クイックチェックツール',
           tools: '戦場周辺ツール',
-          bfban: '【推奨】BFBANアプリ'
+          bfban: '【推奨】BFBANアプリ',
+          apiGametools: 'top.gg/bot/714524944783900794',
+          botGametools: 'api.gametools.network',
         },
         description: {
           bftracker: 'オンライン記録クエリWebサイトでは、さまざまなデータを詳細にクエリできます',
@@ -128,6 +130,8 @@ export default {
           tracker: '同時に、それはマークするためにコンピュータと携帯電話の記録の迅速なクエリをサポートします',
           tools: 'ゲームプラットフォームの問題を解決するのに役立つツール',
           bfban: 'BFBANモバイルクライアント',
+          apiGametools: 'バトルフィールドシリーズのパブリックAPI',
+          botGametools: 'バトルフィールドシリーズの不和統計ボット',
         }
       },
       qqGroup: 'QQグループ',

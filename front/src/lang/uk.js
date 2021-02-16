@@ -119,7 +119,9 @@ export default {
           report: '[Recommended] Battlefield 1 plug-in report assistant',
           tracker: '[Recommended] Battlefield PC/mobile record quick check tool',
           tools: 'Battlefield related tools',
-          bfban: '[Recommended] BFBAN APP'
+          bfban: '[Recommended] BFBAN APP',
+          apiGametools: 'top.gg/bot/714524944783900794',
+          botGametools: 'api.gametools.network',
         },
         description: {
           bftracker: 'Online record query website, you can query various data in detail',
@@ -128,6 +130,8 @@ export default {
           tracker: 'At the same time, it supports quick query of record and mark on computer and mobile phone',
           tools: 'Tools to help you solve game platform problems',
           bfban: 'BFBAN mobile client',
+          apiGametools: 'Public api for the Battlefield series',
+          botGametools: 'Discord stats bot for the Battlefield series',
         }
       },
       qqGroup: 'QQ Group',

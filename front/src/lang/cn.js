@@ -119,7 +119,9 @@ export default {
           report: '【推荐】战地1外挂举报助手',
           tracker: '【推荐】战地PC/手机战绩速查工具',
           tools: '战地周边工具',
-          bfban: '【推荐】BFBAN APP'
+          bfban: '【推荐】BFBAN APP',
+          apiGametools: 'top.gg/bot/714524944783900794',
+          botGametools: 'api.gametools.network',
         },
         description: {
           bftracker: '在线战绩查询网站，可以详细查询到各类数据',
@@ -128,6 +130,8 @@ export default {
           tracker: '同时支持电脑手机快速查询战绩进行标记',
           tools: '帮助你解决游戏平台问题的工具',
           bfban: 'BFBAN手机客户端',
+          apiGametools: '《战地风云》系列的公共API',
+          botGametools: '《战地风云》系列的Discord统计机器人',
         }
       },
       qqGroup: 'QQ群',

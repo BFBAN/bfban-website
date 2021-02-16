@@ -102,6 +102,18 @@
           </a>
           {{$t("home.howToUse.tools.description.bfban")}}
         </p>
+        <p>
+          <a target="_blank" href="https://api.gametools.network/docs">
+            {{$t("home.howToUse.tools.name.apiGametools")}}
+          </a>
+          {{$t("home.howToUse.tools.description.apiGametools")}}
+        </p>
+        <p>
+          <a target="_blank" href="https://top.gg/bot/714524944783900794">
+            {{$t("home.howToUse.tools.name.botGametools")}}
+          </a>
+          {{$t("home.howToUse.tools.description.botGametools")}}
+        </p>
       </div>
 
 <br>
