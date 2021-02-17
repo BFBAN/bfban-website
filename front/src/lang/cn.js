@@ -12,7 +12,8 @@ export default {
     searchBar: '支持搜索历史ID啦...',
     searchInfo: '检索的ID为：',
     searchResult: '检索结果：',
-    search: '检索'
+    search: '检索',
+    none: '无'
   },
   detail:{
 	  info:{

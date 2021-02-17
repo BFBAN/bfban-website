@@ -10,9 +10,10 @@ export default {
     daily: 'BanDaily',
     dashboard: 'Dashboard',
     searchBar: 'Supports searching previous origin ID\'s...',
-    searchInfo: 'The retrieved ID\'s:',
+    searchInfo: 'The retrieved ID\'s for: ',
     searchResult: 'Search Results:',
-    search: 'Search'
+    search: 'Search',
+    none: 'nothing found.'
   },
   detail:{
     info:{

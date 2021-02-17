@@ -80,6 +80,7 @@
       <Modal
         v-model="searchModal"
         :title='$t("header.search")'
+        text="test"
         @on-ok="ok"
         @on-cancel="cancel">
         <div style="position: relative">
@@ -87,17 +88,17 @@
             {{$t("header.searchInfo")}}{{searchVal}}
           </p>
           <br>
-          <p>
+          <p style="font-size: .8rem;">
             {{$t("header.searchResult")}}
           </p>
           <div v-if="cheaters.length !== 0">
-            <p v-for="cheater in cheaters" :key="cheater.id">
+            <p v-for="cheater in cheaters" :key="cheater.id" style="font-size: .8rem;">
               <router-link :to="{name: 'cheater', params: {ouid: `${cheater.originUserId}`}}">
                 {{cheater.originId}}
               </router-link>
             </p>
           </div>
-          <div v-else>无</div>
+          <div style="font-size: .8rem;" v-else>{{$t("header.none")}}</div>
 
           <Spin size="large" fix v-show="modalSpinShow"></Spin>
 

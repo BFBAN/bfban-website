@@ -12,7 +12,8 @@ export default {
     searchBar: '検索履歴IDをサポート...',
     searchInfo: '取得されたIDは次のとおりです。:',
     searchResult: 'の検索結果：',
-    search: '探す'
+    search: '探す',
+    none: '番号'
   },
   detail:{
     info:{
