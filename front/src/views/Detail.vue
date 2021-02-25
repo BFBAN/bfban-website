@@ -552,7 +552,7 @@ export default {
         return false;
       }
       if (statusData.error === 0 && statusData.status === '1') {
-        if (!this.$confirm(`当前是 confirmed hacker 状态，你确定要处理成 ${getCheaterStatusLabel(status, $i18n.locale)} 吗？`)) {
+        if (!this.$confirm(`当前是 confirmed hacker 状态，你确定要处理成 ${getCheaterStatusLabel(status, this.$i18n.locale)} 吗？`)) {
           this.verifySpinShow = false;
           return false;
         }
