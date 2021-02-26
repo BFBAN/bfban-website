@@ -5,19 +5,19 @@
         <Divider>{{$t("signup.title")}}</Divider>
 
         <FormItem :label="$t('signup.form.username')">
-          <Input v-model="signup.username" placeholder="4位以上用户名" />
+          <Input v-model="signup.username" :placeholder="$t('signup.placeholder.username')" />
         </FormItem>
 
         <FormItem :label="$t('signup.form.password')">
-          <Input type="password" v-model="signup.password" placeholder="6位以上密码" />
+          <Input type="password" v-model="signup.password" :placeholder="$t('signup.placeholder.password')" />
         </FormItem>
 
         <FormItem :label="$t('signup.form.originId')">
-          <Input v-model="signup.originId" placeholder="选题" />
+          <Input v-model="signup.originId" :placeholder="$t('signup.placeholder.originId')" />
         </FormItem>
 
         <FormItem :label="$t('signup.form.qq')">
-          <Input v-model="signup.qq" placeholder="选填" />
+          <Input v-model="signup.qq" :placeholder="$t('signup.placeholder.qq')" />
         </FormItem>
 
         <FormItem :label="$t('signup.form.captcha')">

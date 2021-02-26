@@ -240,6 +240,12 @@ export default {
       submit: '提交',
       submitHint: '已有账号？去登录',
     },
+    placeholder: {
+      username: '4位以上用户名',
+      password: '6位以上密码',
+      originId: '选题',
+      qq: '选填',
+    },
   },
   list: {
     title: '外挂公示',

@@ -240,6 +240,12 @@ export default {
       submit: '送信',
       submitHint: '既にアカウントをお持ちですか？サインイン',
     },
+    placeholder: {
+      username: '4つ以上のユーザー名',
+      password: '6つ以上のパスワード',
+      originId: 'トピックの選択',
+      qq: 'トピックの選択',
+    },
   },
   list: {
     title: 'チーター一覧',

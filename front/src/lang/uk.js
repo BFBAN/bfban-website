@@ -239,6 +239,12 @@ export default {
       submit: 'Submit',
       submitHint: 'Hava account? Go Sign In',
     },
+    placeholder: {
+      username: 'More than 4 characters',
+      password: 'More than 6 characters',
+      originId: 'optional',
+      qq: 'optional',
+    },
   },
   list: {
     title: 'Cheaters list',
