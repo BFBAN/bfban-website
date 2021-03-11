@@ -254,6 +254,14 @@ function getUTCTimeStamp() {
   return utcTimeStamp;
 }
 
+function defaultImgProviderSrcToProxy(str) {
+  // some images cannot load under http due to default image provider we used cannot be accessed with https
+  // replace it with a https proxy
+  const proxySrc = "https://bfban.glass-panel.workers.dev/bfban.bamket";
+  const reg = /src="http:\/\/bfban.bamket.com/g;
+  return str.replace(reg, proxySrc);
+}
+
 function replaceImgSrcToDataSrc(str) {
   const reg = /\s+(src)=/gi;
   return str.replace(reg, ' data-src=');
@@ -265,6 +273,7 @@ function detectLanguage(lang) {
 
 
 export {
+  defaultImgProviderSrcToProxy,
   replaceImgSrcToDataSrc,
   checkIdExist,
   convertGameName,

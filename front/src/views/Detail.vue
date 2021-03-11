@@ -398,7 +398,8 @@ import {
   cheatMethodsGlossary,
   convertCheatMethods,
   waitForAction,
-  replaceImgSrcToDataSrc
+  replaceImgSrcToDataSrc,
+  defaultImgProviderSrcToProxy
 } from "@/mixins/common";
 
 export default {
@@ -490,9 +491,11 @@ export default {
 
         // img src => data-src
         reports = _.each(reports, (v) => {
+          v['description'] = defaultImgProviderSrcToProxy(v['description']);
           v['description'] = replaceImgSrcToDataSrc(v['description']);
         });
         replies = _.each(replies, (v, k, l) => {
+          v['content'] = defaultImgProviderSrcToProxy(v['content']);
           v['content'] = replaceImgSrcToDataSrc(v['content']);
         });
 
