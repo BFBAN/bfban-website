@@ -259,7 +259,7 @@ function defaultImgProviderSrcToProxy(str) {
   // replace it with a https proxy
   const proxySrc = "https://bfban.glass-panel.workers.dev/bfban.bamket";
   const reg = /src="http:\/\/bfban.bamket.com/g;
-  return str.replace(reg, proxySrc);
+  return str.replace(reg, "src=\""+proxySrc);
 }
 
 function replaceImgSrcToDataSrc(str) {
