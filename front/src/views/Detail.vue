@@ -537,7 +537,7 @@ export default {
       const { originUserId } = this.cheater;
 
       if ( (status === '1' && cheatMethods === '') || suggestion.trim() === '') {
-        this.$Message.warning('请填写完整');
+        this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
 
@@ -555,7 +555,7 @@ export default {
         return false;
       }
       if (statusData.error === 0 && statusData.status === '1') {
-        if (!confirm(`当前是 confirmed hacker 状态，你确定要处理成 ${getCheaterStatusLabel(status, this.$i18n.locale)} 吗？`)) {
+        if (!confirm(this.$i18n.t('detail.messages.changeHacker', { code: getCheaterStatusLabel(status, this.$i18n.locale) }))) {
           this.verifySpinShow = false;
           return false;
         }
@@ -601,7 +601,7 @@ export default {
             privilege,
           });
 
-          this.$Message.success('提交成功');
+          this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
         } else {
           this.$Message.error('failed ' + d.msg);
         }
@@ -697,7 +697,7 @@ export default {
 
         if (d.error === 0) {
           const { createDatetime, content, status } = d.data;
-          this.$Message.success('回复成功');
+          this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
 
           // reset reply
           this.cancelReply();
@@ -738,7 +738,7 @@ export default {
       waitForAction.call(e.target, 60);
 
       if (!Boolean(this.$store.state.user)) {
-        this.$Message.error('请登录');
+        this.$Message.error(this.$i18n.t('detail.messages.signIn'));
         return false;
       }
 
@@ -763,7 +763,7 @@ export default {
 
           this.origins.unshift(d.data.origin);
 
-          this.$Message.success('更新完成');
+          this.$Message.success(this.$i18n.t('detail.messages.updateComplete'));
         } else {
           this.$Message.error(d.msg);
         }

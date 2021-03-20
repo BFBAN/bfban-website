@@ -61,6 +61,14 @@ export default {
       writeSomething: '写一些东西',
       giveOpinion: '你怎么看？',
 	  },
+    messages: {
+      fillEverything: '请填写完整',
+      replySuccess: '回复成功',
+      signIn: '请登录',
+      updateComplete: '更新完成',
+      submitSuccess: '提交成功',
+      changeHacker: '当前是 confirmed hacker 状态，你确定要处理成 {code} 吗？',
+    },
   },
   report:{
 	  info:{
@@ -89,6 +97,11 @@ export default {
       hackerId: '挂逼id',
       game: '游戏',
       description: '描述',
+    },
+    error: {
+      mediaEvidence: '请上传图片或填写视频链接',
+      originId: '游戏ID不存在，请检查拼写',
+      success: '提交成功',
     }
   },
   footer: {
@@ -226,7 +239,9 @@ export default {
       submit: '提交',
       submitHint: '没有账号？去注册',
     },
+    failed: '登录失败',
     success: '登录成功',
+    loginFirst: '请先登录',
   },
   signup: {
     title: '注册',
@@ -246,6 +261,8 @@ export default {
       originId: '选题',
       qq: '选填',
     },
+    fillIn: '请规范填写',
+    failed: '注册失败',
   },
   list: {
     title: '外挂公示',
@@ -275,5 +292,18 @@ export default {
     gadgetModify: '改装备',
     damageChange: '改伤',
     shootingThroughWalls: '子弹穿墙',
+  },
+  misc: {
+    uploadImage: {
+      info: '上传图片，不要超过2M',
+      mobile: '双击屏幕上传...',
+      desktop: '单击 或 拖拽 上传...',
+      fail: '超过上传最大限制，图片2M',
+    },
+    uploadVideo: {
+      info: '上传视频，不要超过30M',
+      desktop: '單擊或拖動文件以上傳',
+    },
+    progress: '上传中...',
   },
 };

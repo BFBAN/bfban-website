@@ -61,6 +61,14 @@ export default {
       writeSomething: '何か書いて',
       giveOpinion: 'あなたの意見は何ですか？',
     },
+    messages: {
+      fillEverything: '完成してください',
+      replySuccess: '正常に返信する',
+      signIn: 'サインインしてください',
+      updateComplete: '更新が完了しました',
+      submitSuccess: '正常に送信されました',
+      changeHacker: '当前是 confirmed hacker 状态，你确定要处理成 {code} 吗？',
+    },
   },
   report:{
     info:{
@@ -89,6 +97,11 @@ export default {
       hackerId: 'ハッカーのID',
       game: 'ゲーム',
       description: '説明',
+    },
+    error: {
+      mediaEvidence: '写真をアップロードするか、ビデオリンクに記入してください',
+      originId: 'ゲームIDが存在しません。スペルを確認してください',
+      success: '正常に送信されました',
     }
   },
   footer: {
@@ -226,7 +239,9 @@ export default {
       submit: '送信',
       submitHint: 'アカウントを持っていませんか？新規登録',
     },
+    failed: 'ログインに失敗しました',
     success: 'ログイン成功',
+    loginFirst: '最初にログインしてください',
   },
   signup: {
     title: '新規登録',
@@ -246,6 +261,8 @@ export default {
       originId: 'トピックの選択',
       qq: 'トピックの選択',
     },
+    fillIn: '仕様書にご記入ください',
+    failed: '登録に失敗しました',
   },
   list: {
     title: 'チーター一覧',
@@ -275,5 +292,18 @@ export default {
     gadgetModify: 'ガジェットチート',
     damageChange: 'ダメージ変更',
     shootingThroughWalls: '壁抜き',
+  },
+  misc: {
+    uploadImage: {
+      info: '写真をアップロードする、200万以下',
+      mobile: '画面をダブルタップしてアップロードします...',
+      desktop: 'クリックまたはドラッグしてアップロード...',
+      fail: 'アップロードの上限を超えた場合、画像は2Mです',
+    },
+    uploadVideo: {
+      info: '動画のアップロード、3,000万以下',
+      desktop: 'ここでファイルをクリックまたはドラッグしてアップロードします',
+    },
+    progress: 'アップロード中...',
   },
 };

@@ -87,7 +87,7 @@
             originId: '',
             bilibiliLink: '',
             checkbox: ['aimbot'],
-            description: '尽可能详细的列举被举报人的作弊证据,write and show your opinion',
+            description: this.$i18n.t('report.info.description'),
             captcha: '',
 
             originUserId: '',
@@ -107,7 +107,7 @@
         if (trimAllWhitespace(this.formItem.bilibiliLink) || /(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)/.test(this.formItem.description)) {
           return true;
         } else {
-          this.$Message.error('请上传图片或填写视频链接');
+          this.$Message.error(this.$i18n.t('report.info.error'));
           return false;
         }
       },
@@ -142,7 +142,7 @@
           } else {
             this.spinShow = false;
 
-            this.$Message.error('游戏ID不存在，请检查拼写,ID is not exist');
+            this.$Message.error(this.$i18n.t('report.info.originId'));
           }
 
           this.formItem.captcha = '';
@@ -185,7 +185,7 @@
           if (d.error === 0) {
             this.$router.push({name: 'cheater', params: {game: gameName, ouid: d.data.originUserId}});
 
-            this.$Message.success('提交成功');
+            this.$Message.success(this.$i18n.t('report.info.success'));
           } else {
             this.$Message.error('failed ' + d.msg);
           }

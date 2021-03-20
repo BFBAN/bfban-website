@@ -61,6 +61,14 @@ export default {
       writeSomething: 'Write something',
       giveOpinion: 'What\'s your opinion?'
     },
+    messages: {
+      fillEverything: 'Please fill in everything',
+      replySuccess: 'Your reply was successfully added',
+      signIn: 'Please sign in',
+      updateComplete: 'Update completed',
+      submitSuccess: 'Submitted successfully',
+      changeHacker: 'The current person is in confirmed hacker state, are you sure you want to change it to {code} status?',
+    },
   },
   report:{
 	  info:{
@@ -89,6 +97,11 @@ export default {
       hackerId: 'Hacker\'s ID',
       game: 'Game',
       description: 'Description',
+    },
+    error: {
+      mediaEvidence: 'Please upload a picture or fill in the video link',
+      originId: 'Origin ID does not exist, please check spelling',
+      success: 'Submitted successfully',
     }
   },
   footer: {
@@ -225,7 +238,9 @@ export default {
       submit: 'Submit',
       submitHint: 'Do not have account? Go Sign up',
     },
+    failed: 'Login failed',
     success: 'login successful',
+    loginFirst: 'Please login first',
   },
   signup: {
     title: 'Sign Up',
@@ -245,6 +260,8 @@ export default {
       originId: 'optional',
       qq: 'optional',
     },
+    fillIn: 'Please fill the form',
+    failed: 'Registration failed',
   },
   list: {
     title: 'Cheaters list',
@@ -274,5 +291,18 @@ export default {
     gadgetModify: 'gadgetModify',
     damageChange: 'damageChange',
     shootingThroughWalls: 'bulletThroughWalls',
+  },
+  misc: {
+    uploadImage: {
+      info: 'Upload pictures, no more than 2MB',
+      mobile: 'Double-tap the screen to upload...',
+      desktop: 'Click or drag to upload...',
+      fail: 'Exceeded the maximum upload limit, the picture is over 2MB',
+    },
+    uploadVideo: {
+      info: 'Upload video, no more than 30MB',
+      desktop: 'Click or drag files here to upload',
+    },
+    progress: 'uploading...',
   },
 };

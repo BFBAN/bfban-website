@@ -80,7 +80,7 @@ export default {
           }
         })
       } else {
-        this.$Message.error('请规范填写');
+        this.$Message.error(this.$i18n.t('signup.fillIn'));
       }
     }
   }

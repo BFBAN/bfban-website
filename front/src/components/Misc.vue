@@ -5,7 +5,7 @@
 
       <Modal
         v-model="modal1"
-        title="上传图片，不要超过2M"
+        :title="$t('misc.uploadImage.info')"
       >
         <Upload
           :headers="headers"
@@ -26,15 +26,15 @@
           :before-upload="handleBeforeUpload">
           <div>
             <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-            <p class="desktop-hide">双击屏幕上传...</p>
-            <p class="mobile-hide">单击 或 拖拽 上传...</p>
+            <p class="desktop-hide">{{ $t('misc.uploadImage.mobile') }}</p>
+            <p class="mobile-hide">{{ $t('misc.uploadImage.desktop') }}</p>
           </div>
         </Upload>
       </Modal>
 
       <Modal
         v-model="modal2"
-        title="上传视频，不要超过30M"
+        :title="$t('misc.uploadVideo.info')"
       >
         <Upload
           :headers="headers"
@@ -57,7 +57,7 @@
 
           <div style="padding: 20px 0">
             <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-            <p>Click or drag files here to upload</p>
+            <p>{{ $t('misc.uploadVideo.desktop') }}</p>
           </div>
 
         </Upload>
@@ -76,7 +76,7 @@
 
           <Spin size="large" fix v-show="spinShow">
             <p>
-              上传中...
+              {{ $t('misc.progress') }}
             </p>
           </Spin>
         </div>
@@ -206,7 +206,7 @@ export default {
 
         },
         handleExceededSize: function(file, fileList) {
-          this.$Message.warning('超过上传最大限制，图片2M');
+          this.$Message.warning(this.$i18n.t('misc.uploadImage.fail'));
 
         },
 

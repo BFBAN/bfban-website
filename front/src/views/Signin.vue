@@ -51,7 +51,7 @@ export default {
   },
   beforeMount() {
     if (this.$route.query.rurl) {
-      this.$Message.info('请先登录');
+      this.$Message.info(this.$i18n.t('signin.loginFirst'));
     }
   },
   methods: {
@@ -93,7 +93,7 @@ export default {
 
           const d = res.data;
           if (d.error === 1) {
-            this.$Message.error('登录失败 ' + d.msg);
+            this.$Message.error(this.$i18n.t('signin.failed') + d.msg);
 
             this.signin.password = '';
             this.signin.captcha = '';
@@ -111,12 +111,12 @@ export default {
                 this.$router.go('-1');
               }
 
-              this.$Message.success('登录成功');
+              this.$Message.success(this.$i18n.t('signin.success'));
             })
           }
         })
       } else {
-        this.$Message.error('请规范填写');
+        this.$Message.error(this.$i18n.t('signin.failed'));
       }
     }
   }

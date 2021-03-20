@@ -92,7 +92,7 @@ export default {
 
           const d = res.data;
           if (d.error === 1) {
-            this.$Message.error('注册失败 ' + d.msg);
+            this.$Message.error(this.$i18n.t('signup.failed') + d.msg);
 
             this.signup.password = '';
             this.signup.captcha = '';
@@ -107,7 +107,7 @@ export default {
           }
         })
       } else {
-        this.$Message.error('请规范填写');
+        this.$Message.error(this.$i18n.t('signup.fillIn'));
       }
     }
   }
