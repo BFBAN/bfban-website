@@ -302,7 +302,7 @@ export default {
     },
     uploadVideo: {
       info: '上传视频，不要超过30M',
-      desktop: '單擊或拖動文件以上傳',
+      desktop: '点击或者拖动文件到这里上传',
     },
     progress: '上传中...',
   },
