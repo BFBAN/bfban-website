@@ -13,7 +13,8 @@ export default {
     searchInfo: 'The retrieved ID\'s for: ',
     searchResult: 'Search Results:',
     search: 'Search',
-    none: 'nothing found.'
+    none: 'nothing found.',
+    signoutSuccess: 'Signout successful',
   },
   detail:{
     info:{

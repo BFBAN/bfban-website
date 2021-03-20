@@ -30,7 +30,7 @@ module.exports = merge(common, {
       CDN_BASE_PATH: JSON.stringify('https://bfban-static.bamket.com/')
     }),
     new HtmlWebpackPlugin({
-      title: '战地风云联BAN调查局',
+      title: 'BFBAN',
       template: 'index.html',
     }),
   ]

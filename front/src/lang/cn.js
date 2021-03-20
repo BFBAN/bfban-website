@@ -13,7 +13,8 @@ export default {
     searchInfo: '检索的ID为：',
     searchResult: '检索结果：',
     search: '检索',
-    none: '无'
+    none: '无',
+    signoutSuccess: '注销成功',
   },
   detail:{
 	  info:{

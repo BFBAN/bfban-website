@@ -156,7 +156,7 @@
           this.$store.dispatch('signout').then(() => {
             this.$router.push('/');
 
-            this.$Message.success('注销成功');
+            this.$Message.success(this.$i18n.t('header.signoutSuccess'));
           })
         }
       })

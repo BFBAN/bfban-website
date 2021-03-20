@@ -24,7 +24,7 @@ module.exports = merge(common, {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: '战地风云联BAN调查局',
+      title: 'BFBAN',
       filename: 'index.html',
       template: 'index.html',
       minify: {

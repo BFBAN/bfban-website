@@ -13,7 +13,8 @@ export default {
     searchInfo: '取得されたIDは次のとおりです。:',
     searchResult: 'の検索結果：',
     search: '探す',
-    none: '番号'
+    none: '番号',
+    signoutSuccess: 'ログアウトに成功',
   },
   detail:{
     info:{
