@@ -149,8 +149,8 @@ export default {
           botGametools: 'Discord stats bot for the Battlefield series',
         }
       },
-      qqGroup: 'QQ Group',
-      bfbanQq: 'bfban qq group',
+      qqGroup: 'Discord',
+      bfbanQq: 'Contact BoB NA discord,if you were innocent and clean',
       gameTogether: 'Game Together',
     },
     bulletin: {
