@@ -39,7 +39,17 @@ const routes = [
 
   { name: 'cheaters', path: '/cheaters', component: List },
   { name: 'cheater', path: '/cheaters/:ouid', component: Detail },
-
+  { name: 'shorten', path: '/s/:hexnum', redirect: to=> {
+	try {
+	  const ouid = parseInt(to.params.hexnum, 16);
+	  if(isNaN(ouid))
+	    return '/404';
+	  return '/cheaters/'+ouid;
+	} catch {
+	  return '/404';
+	}
+  }},
+  
   { name: 'signin', path: '/signin', component: Signin },
   { name: 'signup', path: '/signup', component: Signup },
   { name: 'signup', path: '/reset', component: Reset },
