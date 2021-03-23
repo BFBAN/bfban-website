@@ -120,8 +120,8 @@
       <h2>{{$t("home.howToUse.qqGroup")}}</h2>
       <div class="tools">
         <p>
-          <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5PEqoDb">
-            527565465
+          <a target="_blank" href="https://discord.gg/2WecJJh">
+            BoB NA Discord
           </a>
           {{$t("home.howToUse.bfbanQq")}}
         </p>
