@@ -149,8 +149,8 @@ export default {
           botGametools: '《战地风云》系列的Discord统计机器人',
         }
       },
-      qqGroup: 'QQ群',
-      bfbanQq: '联ban局QQ群',
+      qqGroup: 'Discord',
+      bfbanQq: '联系BoB NA Discord处理争议',
       gameTogether: '开黑',
     },
     bulletin: {
@@ -164,7 +164,7 @@ export default {
   },
   about: {
     title: '关于',
-    description: `<h2>联BAN调查局</h2>
+    description: `<h2>BFBAN</h2>
     <p>
       诞生于2018年1月29日；
       是战地玩家一起组建的 <b>抵制外挂</b> 组织。
