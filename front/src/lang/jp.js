@@ -149,8 +149,8 @@ export default {
           botGametools: 'バトルフィールドシリーズの不和統計ボット',
         }
       },
-      qqGroup: 'QQグループ',
-      bfbanQq: '連合禁止局QQグループ',
+      qqGroup: 'Discord',
+      bfbanQq: '連合BoB NA discordグループ',
       gameTogether: 'Game Together',
     },
     bulletin: {
