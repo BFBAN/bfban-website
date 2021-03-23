@@ -150,7 +150,7 @@ export default {
         }
       },
       qqGroup: 'Discord',
-      bfbanQq: 'Contact BoB NA discord,if you were innocent and clean',
+      bfbanQq: 'Contact bob discord for ban appeals',
       gameTogether: 'Game Together',
     },
     bulletin: {
