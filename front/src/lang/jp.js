@@ -135,8 +135,8 @@ export default {
           tracker: '【推奨】バトルフィールドPC /モバイル記録クイックチェックツール',
           tools: '戦場周辺ツール',
           bfban: '【推奨】BFBANアプリ',
-          apiGametools: 'top.gg/bot/714524944783900794',
-          botGametools: 'api.gametools.network',
+          apiGametools: 'api.gametools.network',
+          botGametools: 'top.gg/bot/714524944783900794',
         },
         description: {
           bftracker: 'オンライン記録クエリWebサイトでは、さまざまなデータを詳細にクエリできます',
@@ -150,7 +150,7 @@ export default {
         }
       },
       qqGroup: 'Discord',
-      bfbanQq: '連合BoB NA discordグループ',
+      bfbanQq: '連合Community Networkグループ',
       gameTogether: 'Game Together',
     },
     bulletin: {

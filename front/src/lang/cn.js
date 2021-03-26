@@ -135,8 +135,8 @@ export default {
           tracker: '【推荐】战地PC/手机战绩速查工具',
           tools: '战地周边工具',
           bfban: '【推荐】BFBAN APP',
-          apiGametools: 'top.gg/bot/714524944783900794',
-          botGametools: 'api.gametools.network',
+          apiGametools: 'api.gametools.network',
+          botGametools: 'top.gg/bot/714524944783900794',
         },
         description: {
           bftracker: '在线战绩查询网站，可以详细查询到各类数据',
@@ -150,7 +150,7 @@ export default {
         }
       },
       qqGroup: 'Discord',
-      bfbanQq: '联系BoB NA Discord处理争议',
+      bfbanQq: '联系Community Network处理争议',
       gameTogether: '开黑',
     },
     bulletin: {

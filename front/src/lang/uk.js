@@ -135,8 +135,8 @@ export default {
           tracker: '[Recommended] Battlefield PC/mobile record quick check tool',
           tools: 'Battlefield related tools',
           bfban: '[Recommended] BFBAN APP',
-          apiGametools: 'top.gg/bot/714524944783900794',
-          botGametools: 'api.gametools.network',
+          apiGametools: 'api.gametools.network',
+          botGametools: 'top.gg/bot/714524944783900794',
         },
         description: {
           bftracker: 'Online record query website, you can query various data in detail',
@@ -150,7 +150,7 @@ export default {
         }
       },
       qqGroup: 'Discord',
-      bfbanQq: 'Contact bob discord for ban appeals',
+      bfbanQq: 'Contact Community network discord for ban appeals',
       gameTogether: 'Game Together',
     },
     bulletin: {

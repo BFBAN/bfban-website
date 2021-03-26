@@ -11,7 +11,7 @@
       <p>
         Made with <Icon type="ios-heart" color="#ed4014" />
 
-        Host at
+        Hosted at
         <a target="_blank" href="https://bandofbrothers.site/">BoB</a>
       </p>
       <p>
