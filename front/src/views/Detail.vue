@@ -323,7 +323,8 @@
         </div>
 
         <p class="hint">{{ $t('detail.info.replyManual3', { msg: 'replyManual3' })}}</p>
-
+		<p class="hint">{{ $t('detail.info.appealManual1', { msg: 'appealManual1' })}}</p>
+		
          <!-- 管理员 -->
         <div v-if="isAdmin">
           <Divider>{{ $t('detail.info.adminConsole', { msg: 'adminConsole' })}}</Divider>

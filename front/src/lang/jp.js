@@ -47,6 +47,7 @@ export default {
       uploadPicButton:'ここをクリックして画像をアップロード',
       replyManual2:'したのち、画像のリンクを貼り付けてください',
       replyManual3:'コメントするにはBFbanのメンバーになる必要があります',
+	  appealManual1:'Ban Appeals: Please send this case\'s web page link and appealing to ban-appeals@bfban.com .',
       adminConsole:'管理者コンソール',
       adminManual1:'自分の意思で判断せず、確定的ではない場合には上記の返信機能を使用して証拠が増えるのを待ってください',
       adminManual2:'管理者によるアクションは、報告されたプレイヤーの判定を変更します。100％確定されていない場合は、上記の返信機能を使用してください',
@@ -149,8 +150,8 @@ export default {
           botGametools: 'バトルフィールドシリーズの不和統計ボット',
         }
       },
-      qqGroup: 'Discord',
-      bfbanQq: '連合Community Networkグループ',
+      qqGroup: 'QQグループ/Discord',
+      bfbanQq: '連合BFBan QQグループ/Community Networkグループ',
       gameTogether: 'Game Together',
     },
     bulletin: {
@@ -190,6 +191,9 @@ export default {
     </p>
     <p>主に、大多数のプレーヤーにレポート、リスト、検索、追跡、ディスカッションなどのサービスを提供します。</p>`,
     contact: `
+    <h2>Ban Appeals</h2>
+    <p>Please send the case's web page link and appealing to ban-appeals@bfban.com .</p>
+    <br/>
     <h2>お問い合わせ</h2>
     <p>
       <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">

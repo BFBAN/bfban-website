@@ -47,6 +47,7 @@ export default {
 		  uploadPicButton:'上传图片',
 		  replyManual2:'然后复制图片链接进行回复。',
 		  replyManual3:'注册登录后才可以参与讨论',
+		  appealManual1:'误BAN申诉：如有误BAN，请将 该案件页面链接 及 详细申诉信息 发送邮件至 ban-appeals@bfban.com 管理员将会处理。',
 		  adminConsole:'管理员专区',
 		  adminManual1:'不要轻易下判断，如果不能做出处理判断，就使用上方回复 参与讨论，等待举报者回复',
 		  adminManual2:'管理员的任何处理操作都会对作弊者的 现有状态 造成改变，如果不是100%确定，请使用回复留言讨论',
@@ -149,8 +150,8 @@ export default {
           botGametools: '《战地风云》系列的Discord统计机器人',
         }
       },
-      qqGroup: 'Discord',
-      bfbanQq: '联系Community Network处理争议',
+      qqGroup: 'QQ群/Discord',
+      bfbanQq: '联系BFBan QQ/Community Network处理争议',
       gameTogether: '开黑',
     },
     bulletin: {
@@ -190,6 +191,9 @@ export default {
     </p>
     <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>`,
     contact: `
+    <h2>误BAN申诉</h2>
+    <p>如有误BAN，请将 案件页面链接 及 详细申诉信息 发送邮件至 ban-appeals@bfban.com 管理员将会处理。</p>
+    <br/>
     <h2>联系我们</h2>
     <p>
       <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">

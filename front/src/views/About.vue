@@ -45,7 +45,7 @@
           'WSG',
           'Lion',
           'LowB',
-          'kosuzu',
+          'k-0n',
           'ROB',
           'HERO',
           'b1br',

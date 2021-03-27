@@ -47,6 +47,7 @@ export default {
       uploadPicButton:'Upload Pictures',
       replyManual2:'and then copy the picture link to reply',
       replyManual3:'You must be a BFban member to discuss with us together',
+	  appealManual1:'Ban Appeals: Please send this case\'s web page link and appealing to ban-appeals@bfban.com .',
       adminConsole:'Master console',
       adminManual1:'Do not judge by your will,if you are not confirmed,then use the reply function above,and waiting for more evidence',
       adminManual2:'any action here by admin will make a status change for this reported player，if you are not 100% confirmed,please use reply function above',
@@ -149,8 +150,8 @@ export default {
           botGametools: 'Discord stats bot for the Battlefield series',
         }
       },
-      qqGroup: 'Discord',
-      bfbanQq: 'Contact Community network discord for ban appeals',
+      qqGroup: 'QQ group/Discord',
+      bfbanQq: 'Contact BFBan QQ/Community network discord for ban appeals',
       gameTogether: 'Game Together',
     },
     bulletin: {
@@ -189,6 +190,9 @@ export default {
     </p>
     <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>`,
     contact: `
+    <h2>Ban Appeals</h2>
+    <p>Please send the case's web page link and appealing to ban-appeals@bfban.com .</p>
+    <br/>
     <h2>Contact us</h2>
     <p>
       <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
