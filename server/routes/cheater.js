@@ -539,6 +539,11 @@ async (req, res, next) => {
   const {
     cheaterId, userId, toUserId, content, toFloor, originUserId,
   } = req.body;
+  
+  if (userId !== req.user) {
+    return res.status(200).json({ error: 1, msg: 'UserId is not yours!', errors: [] });
+  }
+  
   const d = getDatetime();
 
   const values = {
