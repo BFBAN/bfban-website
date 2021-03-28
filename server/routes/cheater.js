@@ -540,7 +540,7 @@ async (req, res, next) => {
     cheaterId, userId, toUserId, content, toFloor, originUserId,
   } = req.body;
   
-  if (userId !== req.user) {
+  if (userId !== req.user.userId) {
     return res.status(200).json({ error: 1, msg: 'UserId is not yours!', errors: [] });
   }
   
