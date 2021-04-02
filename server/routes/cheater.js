@@ -281,10 +281,19 @@ router.get('/pid/:pid', [
   }
 
   const cheaterPersonaId = req.params.pid;
-  cheater = await db.query(`select
-    originUserId from cheaters where originPersonaId = ? and valid='1'`,
-  [cheaterPersonaId]);
-  return getCheater(res, cheater[0]["originUserId"])
+  try {
+    cheater = await db.query(`select
+      originUserId from cheaters where originPersonaId = ? and valid='1'`,
+    [cheaterPersonaId]);
+    return getCheater(res, cheater[0]["originUserId"])
+  } catch (e) {
+    next(e);
+
+    return res.json({
+      error: 1,
+      msg: 'User not found in database',
+    });
+  }
 });
 
 // report cheater
