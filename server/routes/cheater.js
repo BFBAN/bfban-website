@@ -198,17 +198,7 @@ router.get('/', async (req, res, next) => {
   });
 });
 
-// cheater detail
-// report, verify, confirm
-router.get('/:ouid', [
-  check('ouid').not().isEmpty(),
-], async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
-  }
-
-  const cheaterOUId = req.params.ouid;
+async function getCheater(res, cheaterOUId) {
 
   await db.query('update cheaters set `n` = (`n`+1) where originUserId = ?', [cheaterOUId]);
 
@@ -265,6 +255,36 @@ router.get('/:ouid', [
       replies,
     },
   });
+}
+
+// cheater detail
+// report, verify, confirm
+router.get('/:ouid', [
+  check('ouid').not().isEmpty(),
+], async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
+  }
+
+  const cheaterOUId = req.params.ouid;
+  return getCheater(res, cheaterOUId)
+});
+
+// get cheater detail based on personaId
+router.get('/pid/:pid', [
+  check('pid').not().isEmpty(),
+], async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
+  }
+
+  const cheaterPersonaId = req.params.pid;
+  cheater = await db.query(`select
+    originUserId from cheaters where originPersonaId = ? and valid='1'`,
+  [cheaterPersonaId]);
+  return getCheater(res, cheater[0]["originUserId"])
 });
 
 // report cheater
