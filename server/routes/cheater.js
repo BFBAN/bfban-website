@@ -296,6 +296,28 @@ router.get('/pid/:pid', [
   }
 });
 
+// get cheater detail based on name (originid)
+router.get('/name/:name', [
+  check('name').not().isEmpty(),
+], async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(200).json({ error: 1, msg: '请规范填写', errors: errors.array() });
+  }
+
+  const cheaterName = req.params.name;
+  const userInfo = await getUserInfo({ originId: cheaterName });
+
+  if (userInfo.error) {
+    return res.json({
+      error: 1,
+      msg: userInfo.error,
+    });
+  }
+
+  return getCheater(res, userInfo.userId)
+});
+
 // report cheater
 // originId, cheatMethods, bilibiliLink, description
 // insert user_report_cheater db
