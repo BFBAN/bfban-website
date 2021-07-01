@@ -1,0 +1,40 @@
+import fs from "fs";
+import path from "path";
+
+const config = {
+    // security
+    secret: 'not secret',
+    captchaExpiresIn: 1000*60*20,
+    errorHelperVerbose: process.env.NODE_ENV==='production'? false : true,
+    // runtime
+    port: process.env.port || 4002,
+    address: true? '127.0.0.1' : '0.0.0.0',
+    baseDir: path.resolve('./'),
+    // database
+    mysql: {
+        host: '127.0.0.1',
+        port: 3306,
+        user: 'notroot',
+        password: 'weakpasswd',
+        database: 'bfban_2.0'
+    },
+    // github
+    github: {
+
+    },
+    mail: {
+        host: 'smtp.xxx.com',
+        port: 465,
+        secure: true,
+        user: 'accounts@xxx.com',
+        password: 'IWontShowYouThePasswordOFC'
+    }
+}
+
+/** @returns {{supportGames:string[], originAccounts:{tag: string, remid: string, sid: string}[]}} */
+function readDynamicConfig() {
+    return JSON.parse(fs.readFileSync(`${config.baseDir}/dynamic_cfg.json`));
+}
+
+export default config;
+export { readDynamicConfig };

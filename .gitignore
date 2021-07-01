@@ -3,3 +3,4 @@
 .vscode/
 node_modules
 config.js
+dynamic_cfg.json

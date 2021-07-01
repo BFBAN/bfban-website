@@ -1,0 +1,10 @@
+{
+    "supportGames": [ "bf1", "bfv" ],
+    "originAccounts": [
+        {
+            "tag":"account name", 
+            "remid":"remind me id", 
+            "sid": "session id"
+        }
+    ]
+}
