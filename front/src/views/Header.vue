@@ -34,7 +34,7 @@
           </router-link>
 
         </div>
-        <div class="search mobile-hide">
+        <div class="search">
           <Input clearable search :placeholder="$t('header.searchBar')" v-model="searchVal" @on-search="handleSearch" />
         </div>
         <div class="nav">
@@ -211,9 +211,8 @@ window.addEventListener('scroll', _.throttle(function(e) {
 
     .search {
       display: flex;
-      flex-grow: 0;
+      flex-grow: 1;
       flex-shrink: 1;
-      flex-basis: 30%;
     }
   }
   .nav {

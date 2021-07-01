@@ -12,6 +12,10 @@
       <Icon size=24 type="ios-chatbubbles" />
       <span>{{$t("footer.feedback")}}</span>
     </a>
+    <div class="version-label">
+      <p>bfban v1.9.0</p>
+      <p>DEBUG ENVIRONMENT</p>
+    </div>
   </div>
 
 </template>
@@ -49,11 +53,11 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-
   &:hover {
     color: #fff;
     background-color: #2d8cf0;
   }
+
 }
 </style>
 
@@ -181,6 +185,18 @@ export default {
     margin-right: .4rem;
   }
 
+  .version-label {
+    position: fixed;
+    bottom: 6rem;
+    right: 3rem;
+    background: transparent;
+    color: #8d8d8d;
+    pointer-events: none;
+    font-family: Consolas;
+    font-size: 18px;
+    line-height: 16px;
+    font-weight: lighter;
+  }
 
   /*mobile responsive*/
   @media screen and (min-width: 1024px) {
@@ -209,7 +225,7 @@ export default {
   .ivu-page-item-jump-next:after, .ivu-page-item-jump-prev:after {
     content: "\2022\2022\2022";
   }
-
+  
   table {
     width: 100%;
     border-collapse: collapse;

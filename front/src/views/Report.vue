@@ -147,6 +147,11 @@
 
           this.formItem.captcha = '';
           this.refreshCaptcha();
+        }).catch((err)=> {
+          console.log(err.response);
+          this.spinShow = false;
+          if(err.response.status == 401)
+            this.$Message.error('Login expired');
         });
       },
       handleReport: function() {
@@ -189,6 +194,11 @@
           } else {
             this.$Message.error('failed ' + d.msg);
           }
+        }).catch((err)=> {
+          console.log(err.response);
+          this.spinShow = false;
+          if(err.response.status == 401)
+            this.$Message.error('Login expired');
         });
       }
     }

@@ -1,0 +1,19 @@
+<html>
+    <script>
+        function getcap() {
+            let req = new XMLHttpRequest();
+            req.onload = (evt)=> {
+                let obj = JSON.parse(req.response);
+                document.querySelector('#secret').textContent = obj.data.hash;
+                document.querySelector('#svgcon').outerHTML = obj.data.content;
+            }
+            req.open('GET','http://localhost:4002/api/captcha');
+            req.send();
+        }
+        document.onreadystatechange = getcap;
+    </script>
+    <body>
+        <div id="secret" style="font-size: 36px;"></div>
+        <svg id="svgcon"></svg>
+    </body>
+</html>
