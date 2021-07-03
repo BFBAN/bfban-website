@@ -114,6 +114,7 @@ class OriginClient {
 
     /** @returns {Promise<string|null>} userId */
     async searchUserName(username, api_urls=origin_api_urls) {
+        username = encodeURIComponent(username); // avoid url injection
         const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/users?userId=${this.self_prop.userId}&searchTerm=${username}&start=0`;
         try {
             await this.checkSelfTokenValid(true);

@@ -10,6 +10,8 @@ import { generateCaptcha } from "./lib/captcha.js";
 import logger from "./logger.js";
 
 import routes_user from "./routes/user.js";
+import routes_index from "./routes/index.js";
+import { query as checkquery, validationResult } from "express-validator";
 
 const app = express();
 
@@ -19,17 +21,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use((req, res, next)=> {console.log(req.body); next();})
+
 app.use('/test', express.static('./test'));
+app.use('/api/index', routes_index);
 app.use('/api/user', routes_user);
+
 app.get('/api/captcha', (req, res, next)=>{
     res.status(200).json({success: 1, code: 'captcha.gen', data: generateCaptcha()});
 });
+
 app.get('/devRefreshConfig', (req, res, next)=> {
     origin.createAccounts();
     next();
 });
 
-app.use((req, res, next)=> { res.status(404).json({error: 1, code: 'request.404'}) });
+app.get('/is', [checkquery('is').isBoolean() ], (req, res, next)=>{
+    console.log(validationResult(req));
+    console.log();
+    res.status(200).end('sadasd');
+});
+
+app.use((req, res, next)=> { res.status(404).json({error: 1, code: 'request.404'}); });
 
 app.use((err, req, res, next)=> { // error handler
     res.status(500).json({error: 1, code:'server.error', message:misc.generateErrorHelper(err)});

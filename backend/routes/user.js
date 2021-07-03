@@ -1,6 +1,4 @@
 import express from "express";
-import moment from "moment";
-import validator from "validator";
 import jwt from "jsonwebtoken";
 import { check, body as checkbody, query as checkquery, validationResult } from "express-validator";
 
@@ -19,7 +17,7 @@ router.post('/signup', verifyCaptcha, [
     checkbody("data.username").isString().trim().isLength({min:1, max:40}),
     checkbody('data.password').isString().trim().isLength({min:1, max:40}),
     checkbody('data.originEmail').isString().trim().isEmail(),
-    checkbody('data.originName').isString().trim().notEmpty()
+    checkbody('data.originName').isString().unescape().trim().notEmpty()
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
@@ -63,8 +61,8 @@ async (req, res, next)=> {
             originEmail: originEmail,
             originUserId: originUserId,
             originPersonaId: originUserInfo.personaId,
-            expiresTime: moment(Date.now()+1000*60*60*4).format('YYYY-MM-DD HH:mm:ss'), // 4h
-            createTime: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
+            expiresTime: new Date(Date.now()+1000*60*60*4), // 4h
+            createTime: new Date()
         });
         await sendRegisterVerify(username, originName, originEmail, randomStr);
         return res.status(201).json({success: 1, code:'signup.needVerify', message: 'Verify Email to join BFBan!'});
@@ -94,7 +92,7 @@ async (req, res, next)=> {
             originUserId: registrant.originUserId,
             originPersonaId: registrant.originPersonaId,
             privilege: 'normal',
-            createTime: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+            createTime: new Date(),
         });
         await db('registers').where({uniqCode: code}).delete();
         return res.status(201).json({success: 1, code:'signup.success', message: 'Welcome to BFBan!'});
@@ -131,7 +129,7 @@ async (req, res, next)=> {
             originName: originName,
             originEmail: originEmail,
             privilege: 'normal',
-            createTime: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+            createTime: new Date(),
         });
         return res.status(201).json({success: 1, code:'signup.success', message: 'Welcome to BFBan!'});
     } catch(err) {

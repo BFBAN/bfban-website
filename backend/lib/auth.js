@@ -1,3 +1,4 @@
+import express from "express";
 import jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import config from '../config.js';
@@ -23,8 +24,17 @@ async function comparePassword(passwd, hash) {
     return await bcrypt.compare(passwd, hash);
 }
 
+/** @param {express.Request} @returns {string[]} */
+function getUserRoles(request) {
+    if(request.user) {
+        return request.user.privilege.split(',');
+    }
+    return [];
+}
+
 export {
     verifyJWTToken,
     generatePassword,
     comparePassword,
+    getUserRoles,
 }

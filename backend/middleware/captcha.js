@@ -2,22 +2,21 @@ import express from "express";
 import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import db from "../mysql.js";
-import validator from "validator";
-import moment from "moment";
+import { getUserRoles } from "../lib/auth.js";
+import { body as checkbody } from "express-validator";
 
 /** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
 async function verifyCaptcha(req, res, next) {
     try {
-        if(req.body.SKIP_CAPTCHA === true) // we allow devs and bots to skip captcha
+        if(req.body.SKIP_CAPTCHA === true && (getUserRoles(req).indexOf('bot')!=-1||getUserRoles(req).indexOf('dev')!=-1)) // we allow devs and bots to skip captcha
             return next();
-
-        const encryptCaptcha = req.body.encryptCaptcha+''; // TO STRING
-        const submitCaptcha = (req.body.captcha+'').toLowerCase();
-        if( !validator.isBase64(encryptCaptcha) || 
-            !validator.isLength(encryptCaptcha, {min:1, max:256}) ||
-            !validator.isAscii(submitCaptcha) ||
-            !validator.isLength(submitCaptcha, {min:4, max:4}) )
+        // validation
+        if( !(await checkbody('encryptCaptcha').isBase64().run(req, {dryRun: true})).isEmpty() || 
+            !(await checkbody('captcha').isAscii().isLength({min:4, max:4}).run(req, {dryRun: true})).isEmpty() )
             return res.status(400).json({ error: 1, code: 'captcha.bad' });
+
+        const encryptCaptcha = req.body.encryptCaptcha;
+        const submitCaptcha = req.body.captcha.toLowerCase();
         
         const decryptCaptcha = misc.decrypt(Buffer.from(encryptCaptcha, 'base64'), config.secret).toString('utf8'); // be warn: we might get meaningless str if the encryptCaptcha is not ours
         const [ rightCaptcha, timeStamp ] = decryptCaptcha.split(',', 2); // so .split here, the second param could be undefined or meaningless
@@ -31,7 +30,7 @@ async function verifyCaptcha(req, res, next) {
         if( (await db.select('*').from('used_captchas').where({uniqHash: encryptCaptcha})).length > 0 ) // used captcha
             return res.status(403).json({ error: 1, code: 'captcha.expired' });
 
-        await db('used_captchas').insert({uniqHash: encryptCaptcha, expiresTime: moment(new Date(timeStamp-0+config.captchaExpiresIn)).format('YYYY-MM-DD HH:mm:ss')});
+        await db('used_captchas').insert({uniqHash: encryptCaptcha, expiresTime: new Date(timeStamp-0+config.captchaExpiresIn)});
         next();
     } catch(err) {
         next(err);
