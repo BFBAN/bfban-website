@@ -28,13 +28,32 @@ const config = {
         secure: true,
         user: 'accounts@xxx.com',
         password: 'IWontShowYouThePasswordOFC'
-    }
+    },
+
+    // DYNAMIC CONFIGURE BEGIN
+    originAccounts: [
+        {tag: '', remid:'', sid:''},
+    ],
+    supportGames: [ 'bf1', 'bfv' ],
+    possibleCheateMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet', 
+    'damageChange', 'gadgetModify', 'moveImpossibly', 'attackServer'],
+    // DYNAMIC CONFIGURE END
 }
 
-/** @returns {{supportGames:string[], originAccounts:{tag: string, remid: string, sid: string}[]}} */
+const dynamic_cfg = {
+    // origin config 
+    originAccounts: [
+        {tag: '', remid:'', sid:''},
+    ],
+    // site function config
+    supportGames: [ 'bf1', 'bfv' ],
+    possibleCheateMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet', 
+    'damageChange', 'gadgetModify', 'moveImpossibly', 'attackServer'],
+}
+
 function readDynamicConfig() {
-    return JSON.parse(fs.readFileSync(`${config.baseDir}/dynamic_cfg.json`));
+    import("./config.js").then(m=> { for(let i in m.dynamic_cfg) config[i] = dynamic_cfg[i] });
 }
 
 export default config;
-export { readDynamicConfig };
+export { readDynamicConfig, dynamic_cfg };

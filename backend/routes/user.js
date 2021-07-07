@@ -21,9 +21,9 @@ router.post('/signup', verifyCaptcha, [
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
-        const errors = validationResult(req);
-        if(!errors.isEmpty())
-            return res.status(400).json({error: 1, code: 'signup.bad', message: errors.array()});
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'signup.bad', message: validateErr.array()});
         
         // all data well-formed, ready to flight
         /** @type {{username:string, password:string, originName:string, originEmail:string}} */
@@ -76,9 +76,9 @@ router.get('/signupVerify', [
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
-        const errors = validationResult(req);
-        if(!errors.isEmpty())
-            return res.status(400).json({error: 1, code: 'signup.bad', message: errors.array()});
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'signup.bad', message: validateErr.array()});
 
         const code = req.query.code;
         const registrant = (await db.select('*').from('registers').where({uniqCode: code}))[0];
@@ -109,9 +109,9 @@ router.post('/signup4dev', verifyJWT, allowPrivileges(['dev']), [
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
-        const errors = validationResult(req);
-        if(!errors.isEmpty())
-            return res.status(400).json({error: 1, code: 'signup.bad', message: errors.array()});
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'signup.bad', message: validateErr.array()});
         
         // all data well-formed, ready to flight
         /** @type {{username:string, password:string, originName:string, originEmail:string}} */
@@ -140,20 +140,20 @@ async (req, res, next)=> {
 router.post('/signin', verifyCaptcha, [
     checkbody("data.username").isString().trim().isLength({min:1, max:40}),
     checkbody('data.password').isString().trim().isLength({min:1, max:40}),
-    checkbody('data.EXPIRES_IN').optional({nullable:true}).isNumeric({no_symbols: true})
+    checkbody('data.EXPIRES_IN').optional({nullable:true}).isInt({min: 0})
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
-        const errors = validationResult(req);
-        if(!errors.isEmpty())
-            return res.status(400).json({error: 1, code: 'signin.bad', message: errors.array()});
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'signin.bad', message: validateErr.array()});
         
         const { username, password, EXPIRES_IN } = req.body.data;
         const user = (await db.select('*').from('users').where({username: username}))[0];
         
         if(user && user.valid!=0 && await comparePassword(password, user.password)) {
             let expiresIn = 1000*60*60*24*7; // 7 day
-            if(EXPIRES_IN>0 && (user.privilege.indexOf('dev')!=-1 || user.privilege.indexOf('bot')!=-1))
+            if(EXPIRES_IN>0 && (user.privilege.split(',').indexOf('dev')!=-1 || user.privilege.split(',').indexOf('bot')!=-1))
                 expiresIn = parseInt(EXPIRES_IN);
             const jwtpayload = {
                 username: username,
@@ -189,9 +189,9 @@ router.post('bindOrigin', verifyJWT, forbidPrivileges(['blacklisted']), verifyCa
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
-        const errors = validationResult(req);
-        if(!errors.isEmpty())
-            return res.status(400).json({error: 1, code: 'bindOrigin.bad', message: errors.array()});
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'bindOrigin.bad', message: validateErr.array()});
 
         const { originEmail, originName } = req.body.data;
         const originClient = originClients.getOne()
