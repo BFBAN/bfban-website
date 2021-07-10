@@ -24,17 +24,20 @@ async function comparePassword(passwd, hash) {
     return await bcrypt.compare(passwd, hash);
 }
 
-/** @param {express.Request} @returns {string[]} */
-function getUserRoles(request) {
-    if(request.user) {
-        return request.user.privilege.split(',');
+/** @param {{id:number,privilege:string|string[],username:string}|undefined} user @param {string[]} roles */
+function userHasRoles(user, roles) {
+    if(user && user.privilege) {
+        const privilege = Array.isArray(user.privilege)? user.privilege : user.privilege.split(',');
+        for(let i of privilege)
+            if(roles.indexOf(i) != -1)
+                return true;
     }
-    return [];
+    return false;
 }
 
 export {
     verifyJWTToken,
     generatePassword,
     comparePassword,
-    getUserRoles,
+    userHasRoles,
 }

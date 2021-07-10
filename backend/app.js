@@ -11,7 +11,7 @@ import logger from "./logger.js";
 
 import routes_user from "./routes/user.js";
 import routes_index from "./routes/index.js";
-import { query as checkquery, validationResult } from "express-validator";
+import { query as checkquery, validationResult, body as checkbody } from "express-validator";
 
 const app = express();
 
@@ -35,9 +35,9 @@ app.get('/devRefreshConfig', (req, res, next)=> {
     next();
 });
 
-app.get('/is', [checkquery('is').isBoolean() ], (req, res, next)=>{
+app.get('/is', [checkbody('is').trim() ], (req, res, next)=>{
     console.log(validationResult(req));
-    console.log();
+    console.log(req.body.is);
     res.status(200).end('sadasd');
 });
 

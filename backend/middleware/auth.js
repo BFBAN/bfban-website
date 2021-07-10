@@ -15,9 +15,10 @@ async function verifyJWT(req, res, next) {
         const result = await db.select('id', 'username', 'privilege', 'signoutTime').from('users').where({id: decodedToken.userId, valid: 1})[0];
         if(!result)
             return res.status(401).json({error: 1, code: 'user.invalid'});
-        if(result.signoutTime > decodedToken.expiresIn)
+        if(result.signoutTime > decodedToken.signWhen+decodedToken.expiresIn)
             return res.status(401).json({error: 1, code: 'user.tokenExpired'});
-        req.user = result[0];
+        
+        req.user = { id: result.id, username: result.username, privilege: result.privilege };
         next();
     } catch(err) {
         next(err);

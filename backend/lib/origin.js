@@ -2,7 +2,7 @@ import got from "got";
 import xmldom from "xmldom";
 import process from "process";
 import * as xpath from "xpath";
-import { readDynamicConfig } from "../config.js";
+import config, { readDynamicConfig } from "../config.js";
 
 const origin_api_urls = [
     "api1.origin.com",
@@ -270,7 +270,8 @@ class OriginClientCluster {
 
 const originClients = new  OriginClientCluster();
 async function createAccounts() {
-    const accounts = readDynamicConfig().originAccounts;
+    readDynamicConfig();
+    const accounts = config.originAccounts;
     const clients = [];
     for(let i of accounts)
         clients.push(new OriginClient({remid: i.remid, sid: i.sid}));

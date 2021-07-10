@@ -8,7 +8,7 @@ import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { sendRegisterVerify } from "../lib/mail.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
-import { generatePassword, comparePassword } from "../lib/auth.js";
+import { generatePassword, comparePassword, userHasRoles } from "../lib/auth.js";
 import { originClients } from "../lib/origin.js";
 
 const router = express.Router();
@@ -153,7 +153,7 @@ async (req, res, next)=> {
         
         if(user && user.valid!=0 && await comparePassword(password, user.password)) {
             let expiresIn = 1000*60*60*24*7; // 7 day
-            if(EXPIRES_IN>0 && (user.privilege.split(',').indexOf('dev')!=-1 || user.privilege.split(',').indexOf('bot')!=-1))
+            if(EXPIRES_IN>0 && userHasRoles(user, ['dev','bot']))
                 expiresIn = parseInt(EXPIRES_IN);
             const jwtpayload = {
                 username: username,

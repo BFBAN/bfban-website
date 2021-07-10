@@ -2,13 +2,13 @@ import express from "express";
 import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import db from "../mysql.js";
-import { getUserRoles } from "../lib/auth.js";
+import { userHasRoles } from "../lib/auth.js";
 import { body as checkbody } from "express-validator";
 
 /** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
 async function verifyCaptcha(req, res, next) {
     try {
-        if(req.body.SKIP_CAPTCHA === true && (getUserRoles(req).indexOf('bot')!=-1||getUserRoles(req).indexOf('dev')!=-1)) // we allow devs and bots to skip captcha
+        if(req.body.SKIP_CAPTCHA === true && userHasRoles(req.user, ['dev','bot']) ) // we allow devs and bots to skip captcha
             return next();
         // validation
         if( !(await checkbody('encryptCaptcha').isBase64().run(req, {dryRun: true})).isEmpty() || 
