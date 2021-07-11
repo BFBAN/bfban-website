@@ -31,6 +31,7 @@ const config = {
     },
 
     // DYNAMIC CONFIGURE BEGIN
+	personsToConfirm = 2,			 
     originAccounts: [
         {tag: '', remid:'', sid:''},
     ],
@@ -46,6 +47,7 @@ const dynamic_cfg = {
         {tag: '', remid:'', sid:''},
     ],
     // site function config
+	personsToConfirm = 2,	 
     supportGames: [ 'bf1', 'bfv' ],
     possibleCheateMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet', 
     'damageChange', 'gadgetModify', 'moveImpossibly', 'attackServer'],
