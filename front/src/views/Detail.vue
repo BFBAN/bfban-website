@@ -816,6 +816,14 @@ export default {
     overflow-wrap: break-word;
     word-wrap: break-word;
   }
+
+  .timeline-content .loading {
+    background-image: url('/assets/fonts/loading.svg');
+    background-repeat: no-repeat;
+    min-width: 100px;
+    min-height: 100px;
+  }
+
   .ivu-timeline-item {
     padding: 1rem 0;
     &:hover {

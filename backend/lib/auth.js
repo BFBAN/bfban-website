@@ -35,9 +35,21 @@ function userHasRoles(user, roles) {
     return false;
 }
 
+/** @param {{id:number,privilege:string|string[],username:string}|undefined} user @param {string[]} roles */
+function userHasNotRoles(user, roles) {
+    if(user && user.privilege) {
+        const privilege = Array.isArray(user.privilege)? user.privilege : user.privilege.split(',');
+        for(let i of privilege)
+            if(roles.indexOf(i) != -1)
+                return false;
+    }
+    return true;
+}
+
 export {
     verifyJWTToken,
     generatePassword,
     comparePassword,
     userHasRoles,
+    userHasNotRoles,
 }

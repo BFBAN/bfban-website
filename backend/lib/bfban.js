@@ -41,38 +41,67 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 5,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pre-confirm ban
     { from: 5,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
     // pre-confirm, dont handle re-report here
-    { from: 6,      to: 1,  action: 'gulit',    privilege: toConfirm }, // to confirm ban, must supported by at least $config.personsToConfirm person
+    { from: 6,      to: 1,  action: 'guilt',    privilege: toConfirm }, // to confirm ban, must supported by at least $config.personsToConfirm person
     { from: 6,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 6,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
     { from: 6,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to discuss
     { from: 6,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
-    // confirmed ban, wont change status for report, gulit, kill
+    // confirmed ban, wont change status for report, guilt, kill
     { from: 1,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 1,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
     { from: 1,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to discuss
 ];
 
-/** @param {{id:number, username:string, privilege: string[]}} user @param {{id:number,originName:string,originUserId:string,originPersonaId:string}} cheater */
+/** 
+ * @param {import("../typedef.js").Cheater} cheater 
+ * @param {import("../typedef.js").ReqUser} user */
 async function toConfirm(cheater, user) {
-    try { // iterate each judgement desc, if $config.personsToConfirm think the guy is gulity without any objection in them, then confirm
-        if(!userHasRoles(user, ['admin', 'super', 'root']))
+    try { // iterate each judgement desc, if $config.personsToConfirm people think the guy is guilty without any objection in them, then confirm
+        if(!userHasRoles(user, ['admin', 'super', 'root'])) // well, we should have check that before, but anyway
             return false; // permission not enough
         const prev = await db.select('byUserId', 'action').from('judgements').where({toCheaterId: cheater.id}).orderBy('createTime','desc')
-        const supportJudge = new Set();
+        const supportJudges = new Set();
         for(let i of prev) {
-            if(i.action!='gulity' || i.action!='kill')
-                break; // objection! exit support judgement count
+            if(i.action!='guilt' || i.action!='kill')
+                break; // objection! exit support judgements count
             else
-                supportJudge.add(i.byUserId);
+                supportJudges.add(i.byUserId);
         }
-        if(supportJudge.size > config.personsToConfirm)
-            return true;
-        return false;
+        if(supportJudges.size >= config.personsToConfirm)
+            return true; // heeeeeeeeear~
+        return false; // objection!
     } catch(err) {
         throw(err);
     }
 }
 
+/** 
+ * @param {import('../typedef.js').Cheater} cheater 
+ * @param {import('../typedef.js').ReqUser} user 
+ * @param {'report'|'suspect'|'innocent'|'trash'|'discuss'|'guilt'|'kill'} action 
+ * */
 async function stateMachine(cheater, user, action) { // write action to DB first!
-    // TODO: utilize states_map
+    for(let i of states_map) { // iterate each path
+        if(i.from == cheater.status && i.action == action) {
+            switch(true) { // if all requires are satified, then go, no second chance.
+            case Array.isArray(i.privilege):
+                if(userHasRoles(user, i.privilege))
+                    return i.to;
+                break;
+            case Array.isArray(i.notprivilege):
+                if(!userHasRoles(user, i.notprivilege)) // uer has not roles
+                    return i.to;
+                break;
+            case typeof(i.privilege)=='function':
+                if(await i.privilege(cheater, user)) // maybe async here
+                    return i.to;
+                break;
+            }
+        }
+    } // no valid path, dont go anywhere
+    return cheater.status; // no changes
+}
+
+export {
+    stateMachine,
 }
