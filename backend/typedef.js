@@ -54,11 +54,14 @@
  * @property {Date} createTime
  */
 
-
+/** 
+ * @typedef {{method:string,params:object}} SiteEvent
+ */
 
 export {
     Player,
     User,
     Judgement,
     ReqUser,
+    SiteEvent,
 }

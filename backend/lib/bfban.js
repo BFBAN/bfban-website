@@ -1,3 +1,5 @@
+import EventEmitter from "events";
+
 import config from "../config.js";
 import db from "../mysql.js";
 import { userHasNotRoles, userHasRoles } from "./auth.js";
@@ -101,6 +103,8 @@ async function stateMachine(player, user, action) { // normally we should write 
     } // no valid path, dont go anywhere
     return player.status; // no changes
 }
+
+const siteEvent = new EventEmitter();
 
 export {
     stateMachine,

@@ -20,7 +20,7 @@ USE `bfban_2.0`;
 -- 导出  表 bfban_2.0.ban_appeals 结构
 CREATE TABLE IF NOT EXISTS `ban_appeals` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `toCheaterId` int unsigned DEFAULT NULL,
+  `toPlayerId` int unsigned DEFAULT NULL,
   `byUserId` int unsigned DEFAULT NULL,
   `content` text NOT NULL,
   `valid` tinyint unsigned NOT NULL DEFAULT '1',
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `ban_appeals` (
   `status` varchar(16) DEFAULT 'open',
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `toCheaterId` (`toCheaterId`) USING BTREE
+  KEY `toCheaterId` (`toPlayerId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
@@ -56,10 +56,9 @@ CREATE TABLE IF NOT EXISTS `message` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `byUserId` int unsigned DEFAULT NULL,
   `toUserId` int unsigned DEFAULT NULL,
-  `refer` varchar(256) DEFAULT '',
   `type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
   `content` varchar(512) NOT NULL DEFAULT '',
-  `haveRead` int unsigned NOT NULL DEFAULT '0',
+  `haveRead` tinyint unsigned NOT NULL DEFAULT '0',
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `toUserId` (`toUserId`) USING BTREE,
