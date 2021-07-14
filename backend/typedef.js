@@ -1,5 +1,5 @@
 /** 
- * @typedef {Object} Cheater
+ * @typedef {Object} Player
  * @property {number} id
  * @property {string} originName
  * @property {string} originPersonaId
@@ -45,7 +45,7 @@
  * @typedef {Object} Judgement
  * @property {number} valid
  * @property {number} byUserId
- * @property {number} toCheaterId
+ * @property {number} toPlayerId
  * @property {string} toOriginUserId
  * @property {string} toOriginPersonaId
  * @property {string} cheateMethods
@@ -57,7 +57,7 @@
 
 
 export {
-    Cheater,
+    Player,
     User,
     Judgement,
     ReqUser,

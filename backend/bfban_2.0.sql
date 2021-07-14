@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `ban_appeals` (
   `toCheaterId` int unsigned DEFAULT NULL,
   `byUserId` int unsigned DEFAULT NULL,
   `content` text NOT NULL,
-  `valid` int unsigned DEFAULT '1',
+  `valid` tinyint unsigned NOT NULL DEFAULT '1',
   `viewedAdminIds` varchar(128) NOT NULL DEFAULT '',
   `status` varchar(16) DEFAULT 'open',
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -33,43 +33,20 @@ CREATE TABLE IF NOT EXISTS `ban_appeals` (
 
 -- 数据导出被取消选择。
 
--- 导出  表 bfban_2.0.cheaters 结构
-CREATE TABLE IF NOT EXISTS `cheaters` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `originName` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `originUserId` varchar(20) DEFAULT NULL,
-  `originPersonaId` varchar(20) DEFAULT NULL,
-  `avatarLink` varchar(256) DEFAULT '',
-  `viewNum` int unsigned NOT NULL DEFAULT '0',
-  `commentsNum` int unsigned NOT NULL DEFAULT '0',
-  `valid` int unsigned NOT NULL DEFAULT '0',
-  `status` int DEFAULT NULL,
-  `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updateTime` datetime DEFAULT CURRENT_TIMESTAMP,
-  `cheatMethods` varchar(400) DEFAULT '',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `originUserId` (`originUserId`) USING BTREE,
-  KEY `originPersonaId` (`originPersonaId`) USING BTREE,
-  KEY `originId` (`originName`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- 数据导出被取消选择。
-
 -- 导出  表 bfban_2.0.judgements 结构
 CREATE TABLE IF NOT EXISTS `judgements` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `valid` int unsigned NOT NULL DEFAULT '1',
+  `valid` tinyint unsigned NOT NULL DEFAULT '1',
   `byUserId` int unsigned DEFAULT NULL,
-  `toCheaterId` int unsigned NOT NULL,
+  `toPlayerId` int unsigned NOT NULL,
   `toOriginUserId` varchar(20) DEFAULT NULL,
-  `toOriginPersonaId` varchar(20) DEFAULT NULL,
   `cheatMethods` varchar(400) DEFAULT '',
-  `status` int DEFAULT NULL,
+  `action` varchar(20) DEFAULT NULL,
   `content` text,
   `createTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `toCheaterId` (`toCheaterId`) USING BTREE,
-  KEY `toOriginUserId` (`toOriginUserId`) USING BTREE
+  KEY `toOriginUserId` (`toOriginUserId`) USING BTREE,
+  KEY `toCheaterId` (`toPlayerId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
@@ -94,14 +71,37 @@ CREATE TABLE IF NOT EXISTS `message` (
 -- 导出  表 bfban_2.0.name_log 结构
 CREATE TABLE IF NOT EXISTS `name_log` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `originUserName` varchar(64) DEFAULT NULL,
+  `originName` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `originUserId` varchar(20) DEFAULT NULL,
   `originPersonaId` varchar(20) DEFAULT NULL,
   `fromTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `toTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `originUserId` (`originUserId`) USING BTREE,
-  KEY `originUserName` (`originUserName`) USING BTREE
+  KEY `originUserName` (`originName`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- 数据导出被取消选择。
+
+-- 导出  表 bfban_2.0.players 结构
+CREATE TABLE IF NOT EXISTS `players` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `originName` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `originUserId` varchar(20) DEFAULT NULL,
+  `originPersonaId` varchar(20) DEFAULT NULL,
+  `games` varchar(50) DEFAULT '',
+  `cheatMethods` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '',
+  `avatarLink` varchar(256) DEFAULT '',
+  `viewNum` int unsigned NOT NULL DEFAULT '0',
+  `commentsNum` int unsigned NOT NULL DEFAULT '0',
+  `valid` tinyint unsigned NOT NULL DEFAULT '1',
+  `status` int DEFAULT NULL COMMENT '0未处理，1实锤，2嫌疑，3清白，4无效，5讨论，6待锤',
+  `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `originUserId` (`originUserId`) USING BTREE,
+  KEY `originPersonaId` (`originPersonaId`) USING BTREE,
+  KEY `originId` (`originName`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
@@ -118,8 +118,7 @@ CREATE TABLE IF NOT EXISTS `registers` (
   `expiresTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`username`) USING BTREE,
-  UNIQUE KEY `uniq_code` (`uniqCode`) USING BTREE,
-  UNIQUE KEY `userName` (`username`) USING BTREE
+  UNIQUE KEY `uniq_code` (`uniqCode`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
@@ -141,14 +140,15 @@ DELIMITER ;
 -- 导出  表 bfban_2.0.replies 结构
 CREATE TABLE IF NOT EXISTS `replies` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `toCheaterId` int unsigned DEFAULT NULL,
+  `toPlayerId` int unsigned DEFAULT NULL,
   `byUserId` int unsigned DEFAULT NULL,
+  `toCommentType` int DEFAULT NULL,
   `toCommentId` int unsigned DEFAULT NULL,
   `content` text NOT NULL,
-  `valid` int unsigned DEFAULT '1',
+  `valid` tinyint unsigned NOT NULL DEFAULT '1',
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `toCheaterId` (`toCheaterId`) USING BTREE
+  KEY `toCheaterId` (`toPlayerId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
@@ -158,18 +158,20 @@ CREATE TABLE IF NOT EXISTS `reports` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `byUserId` int unsigned DEFAULT NULL,
   `toOriginName` varchar(64) DEFAULT NULL,
+  `toPlayerId` int unsigned DEFAULT NULL,
   `toOriginUserId` varchar(20) DEFAULT NULL,
   `toOriginPersonaId` varchar(20) DEFAULT NULL,
   `game` varchar(8) DEFAULT '',
   `cheatMethods` varchar(400) DEFAULT '',
   `videoLink` varchar(400) DEFAULT '',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `valid` int unsigned DEFAULT '1',
+  `valid` tinyint unsigned NOT NULL DEFAULT '1',
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `toOriginUserId` (`toOriginUserId`) USING BTREE,
-  KEY `toOriginPersonaId` (`toOriginPersonaId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `toOriginPersonaId` (`toOriginPersonaId`) USING BTREE,
+  KEY `toCheaterId` (`toPlayerId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -177,8 +179,7 @@ CREATE TABLE IF NOT EXISTS `reports` (
 CREATE TABLE IF NOT EXISTS `used_captchas` (
   `uniqHash` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `expiresTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`uniqHash`) USING BTREE,
-  UNIQUE KEY `unq_hash` (`uniqHash`) USING BTREE
+  PRIMARY KEY (`uniqHash`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
@@ -189,14 +190,13 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(40) NOT NULL,
   `password` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
   `introduction` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '',
-  `vaild` int NOT NULL DEFAULT '1',
+  `vaild` tinyint NOT NULL DEFAULT '1',
   `privilege` varchar(40) NOT NULL DEFAULT '',
-  `attr` json DEFAULT NULL,
+  `attr` text,
   `originName` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `originUserId` varchar(20) DEFAULT NULL,
   `originPersonaId` varchar(20) DEFAULT NULL,
   `originEmail` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `qq` varchar(20) DEFAULT NULL,
   `signoutTime` datetime DEFAULT NULL,
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
   `updateTime` datetime DEFAULT CURRENT_TIMESTAMP,

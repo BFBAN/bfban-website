@@ -12,54 +12,11 @@ import { originClients } from "../lib/origin.js"
 import { cheateMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
 import { stateMachine } from "../lib/bfban.js";
 import { json } from "body-parser";
+import { userHasRoles } from "../lib/auth.js";
 
 const router = express.Router()
 
-router.get('/cheaters', [
-    checkquery('game').optional().isIn(config.supportGames),
-    checkquery('createTime').optional().isInt({min: 0}),
-    checkquery('updateTime').optional().isInt({min: 0}),
-    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5 ]),
-    checkquery('sort').optional().isIn(['createTime','updateTime','viewNum','commentsNum']),
-    checkquery('limit').optional().isInt({min: 0, max: 100}),
-    checkquery('skip').optional().isInt({min: 0})
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
-async (req, res, next)=>{
-    try {
-        const validateErr = validationResult(req);
-        if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'cheaters.bad', message: validateErr.array()});
-        
-        const game = req.query.game? req.query.game : '';
-        const createTime = req.query.createTime? parseInt(req.query.createTime) : 0;
-        const updateTime = req.query.updateTime? parseInt(req.query.updateTime) : 0;
-        const status = (req.query.status||req.query.status=='-1')? req.query.status : '%';
-        const sort = req.query.sort? req.query.sort : 'createTime';
-        const limit = req.query.limit? parseInt(req.query.limit) : 20;
-        const skip = req.query.skip? parseInt(req.query.skip) : 0;
-
-        const result = await db.select('id','originName','originUserId','originPersonaId','games',
-        'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
-        .from('cheaters').where('games', 'like', `%${game}%`).andWhere('valid', '=', 1)
-        .andWhere('createTime', '>=', new Date(createTime))
-        .andWhere('updateTime', '>=', new Date(updateTime))
-        .andWhere('status', 'like', status)
-        .orderBy(sort, 'desc').offset(skip).limit(limit);
-        const total= (await db('cheaters').count({num: 'id'})
-        .where('games', 'like', `%${game}%`).andWhere('valid', '=', 1)
-        .andWhere('createTime', '>=', new Date(createTime))
-        .andWhere('updateTime', '>=', new Date(updateTime))
-        .andWhere('status', 'like', status))[0].num;
-
-        res.status(200).json({ success: 1, code:'cheaters.ok', data:{result: result, total: total} });
-    } catch(err) {
-        next(err);
-    }
-});
-
-router.get('/cheaters4dev');
-
-router.get('/cheater', [
+router.get('/', [
     checkquery('userId').optional().isInt({min: 0}),
     checkquery('personaId').optional().isInt({min: 0}),
     checkquery('dbId').optional().isInt({min: 0}),
@@ -69,7 +26,7 @@ async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'cheater.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'player.bad', message: validateErr.array()});
         let key = '', val='';
         switch(true) {
         case !!req.query.userId:
@@ -79,18 +36,18 @@ async (req, res, next)=>{
         case !!req.query.dbId:
             key = 'id'; val = req.query.dbId; break;
         default:
-            return res.status(400).json({error: 1, code: 'cheater.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
+            return res.status(400).json({error: 1, code: 'player.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
         }
 
         const result = (await db.select('id','originName','originUserId','originPersonaId','games',
         'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
-        .from('cheaters').where(key, '=', val))[0];
+        .from('players').where(key, '=', val))[0];
         if(!result)
-            return res.status(404).json({error: 1, code: 'cheater.notFound'});
+            return res.status(404).json({error: 1, code: 'player.notFound'});
         if(req.query.history) // that guy does exsist
             result.history =  await db.select('originName','fromTime','toTime').from('name_log').where({originUserId: result.originUserId});
         
-        res.status(200).json({success: 1, code: 'cheater.ok', data: result});
+        res.status(200).json({success: 1, code: 'player.ok', data: result});
     } catch(err) {
         next(err);
     }
@@ -118,30 +75,20 @@ async (req, res, next)=>{
         if(userInfo.username.toLowerCase() !== req.body.data.originName.toLowerCase())
             return res.status(404).json({error:1, code:'report.notFound', message:'Report user mismatch.'});
         // now the user being reported is found
-        // insert into reports db first
-        await db('reports').insert({
-            byUserId: req.user.id, 
-            toOriginName: userInfo.username,
-            toOriginUserId: userInfo.userId,
-            game: req.body.data.game,
-            cheateMethods: req.body.data.cheateMethods,
-            videoLink: req.body.data.videoLink,
-            description: handleRichTextInput(req.body.data.description),
-        });
-        /** @type {import('../typedef.js').Cheater|undefined} */
-        const reported = (await db.select('*').from('cheaters').where({originUserId: originUserId}))[0];
+        /** @type {import('../typedef.js').Player|undefined} */
+        const reported = (await db.select('*').from('players').where({originUserId: originUserId}))[0];
         const updateCol = { originName: userInfo.username };
         let avatarLink = '';
         if(reported) { // reported, re-evaluate status
-            const next = await stateMachine(reported, req.user, 'report');
+            const nextstate = await stateMachine(reported, req.user, 'report');
             updateCol.commentsNum = reported.commentsNum+1;
             updateCol.games = reported.games.split(',').indexOf(req.body.data.game)==-1? reported.games+','+req.body.data.game : reported.games;
-            if(next != reported.status)
-                updateCol.status = next; 
+            if(nextstate != reported.status)
+                updateCol.status = nextstate; 
         } else { // not reported yet, fetch more info
             avatarLink = await client.getUserAvatar(originUserId); // this step is not such important, add a catch to ignore error?
         }
-        await db('cheaters').insert({
+        const playerId = await db('players').insert({
             originName: userInfo.username,
             originUserId: userInfo.userId,
             originPersonaId: userInfo.personaId,
@@ -156,6 +103,17 @@ async (req, res, next)=>{
             updateTime: new Date()
         }).onConflict('originUserId').merge(updateCol); // insert on update
         await pushOriginNameLog(userInfo.username, userInfo.userId, userInfo.personaId);
+        // write action to db
+        await db('reports').insert({
+            byUserId: req.user.id, 
+            toPlayerId: reported? reported.id : playerId, // update may return 0 if nothing change, but we have reported then
+            toOriginName: userInfo.username,
+            toOriginUserId: userInfo.userId,
+            game: req.body.data.game,
+            cheateMethods: req.body.data.cheateMethods,
+            videoLink: req.body.data.videoLink,
+            description: handleRichTextInput(req.body.data.description),
+        });
 
         return res.status(201).json({success: 1, code:'report.success', message:'Thank you.'});
     } catch(err) {
@@ -164,22 +122,51 @@ async (req, res, next)=>{
 });
 
 router.get('/timeline', [
-    checkquery('dbId').isInt({min: 0}),
+    checkquery('dbId').optional().isInt({min: 0}),
+    checkquery('userId').optional().isInt({min: 0}),
+    checkquery('personaId').optional().isInt({min: 0}),
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'timeline.bad', message: validateErr.array()});
-
+        let dbId = 0;
+        switch(ture) {
+        case !!req.query.dbId: // check if it is exist
+            if((await db.select('id').from('players').where({id:req.query.dbId})).length > 0)
+                dbId = parseInt(req.query.dbId);
+            else
+                return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
+            break;
+        case !!req.query.userId: {
+            const tmp = (await db.select('id').from('players').where({originUserId:req.query.userId}))[0];
+            if(!tmp)
+                return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
+            dbId = tmp.id;
+            break;
+        }
+        case !!req.query.personaId: {
+            const tmp = (await db.select('id').from('players').where({originPersonaId:req.query.personaId}))[0];
+            if(!tmp)
+                return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
+            dbId = tmp.id;
+            break;
+        }
+        default:
+            return res.status(400).json({error: 1, code: 'timeline.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
+        }
+        const reports = await db.select('id','byUserId','toOriginName','game','cheatMethods','videoLink','description','createTime')
+        .from('reports').where({toPlayerId: req.query.dbId});
         const judgements = await db.select('id','byUserId','cheatMethods','action','content','createTime')
-        .from('judgements').where({toCheaterId: req.query.dbID}).orderBy('createTime', 'desc');
+        .from('judgements').where({toPlayerId: req.query.dbID}).orderBy('createTime', 'desc');
         const comments = await db.select('id','byuserId','toCommentType','toCommentId','content','createTime')
-        .from('replies').where({toCheaterId: req.query.dbID}).orderBy('createTime', 'desc');
+        .from('replies').where({toPlayerId: req.query.dbID}).orderBy('createTime', 'desc');
         const ban_appeals = await db.select('id','byUserId','content','viewedAdminIds','status','createTime')
-        .from('ban_appeals').where({toCheaterId: req.query.dbID}).orderBy('createTime', 'desc');
+        .from('ban_appeals').where({toPlayerId: req.query.dbID}).orderBy('createTime', 'desc');
 
         res.status(200).json({success: 1, code: 'timeline.success', data: {
+            reports,
             judgements,
             comments,
             ban_appeals
@@ -190,21 +177,135 @@ async (req, res, next)=>{
 });
 
 router.post('/comment', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
-    
+    checkbody('data.toPlayerId').isInt({min: 0}),
+    checkbody('data.toCommentType').optional({checkFalsy: true}).isIn([0,1,2,3]), // 0-reply 1-report 2-judgement 3-banappela
+    checkbody('data.toCommentId').optional({checkFalsy: true}).isInt({min: 0}),
+    checkbody('data.content').isString().isLength({min: 1, max:4096}),
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'comment.bad', message: validateErr.array()});
+        
+        if(req.body.data.toCommentType && req.body.data.toCommentId) { // check that comment exist
+            const dbname = ['replies', 'reports', 'judgements', 'ban_appeals'];
+            const tmp = (await db.select('toPlayerId').from(dbname).where({id: req.body.data.toCommentId}))[0].toPlayerId;
+            if(tmp != req.body.data.toPlayerId)
+            return res.status(404).json({error: 1, code: 'comment.bad', message: 'no such comment'});
+        }
+        if( (await db.select('id').from('players').where({id: req.body.data.toPlayerId}))[0] == undefined ) // no such player
+            return res.status(404).json({error: 1, code: 'comment.notFound', message: 'no such player'});
+        await db('repiles').insert({
+            toPlayerId: req.body.data.toPlayerId,
+            byUserId: req.user.id,
+            toCommentType: req.body.data.toCommentType? req.body.data.toCommentType : null,
+            toCommentId: req.body.data.toCommentId? req.body.data.toCommentId : null,
+            content: handleRichTextInput(req.body.data.content),
+            createTime: new Date(),
+        });
+        await db('players').update({
+            updateTime: new Date(), 
+        }).increment('commentsNum', 1).where({id: req.body.data.toPlayerId});
+        
+        return res.status(201).json({success: 1, code: 'comment.suceess', message: 'Reply success.'});
 
     } catch(err) {
         next(err);
     }
 });
 
-router.post('/update');
+router.post('/update', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
+    checkquery('userId').optional().isInt({min: 0}),
+    checkquery('personaId').optional().isInt({min: 0}),
+    checkquery('dbId').optional().isInt({min: 0}), 
+],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'update.bad', message: validateErr.array()});
+        let key = '', val='';
+        switch(true) {
+        case !!req.query.userId:
+            key = 'originUserId'; val = req.query.userId; break;
+        case !!req.query.personaId:
+            key = 'originPersonaId'; val = req.query.personaId; break;
+        case !!req.query.dbId:
+            key = 'id'; val = req.query.dbId; break;
+        default:
+            return res.status(400).json({error: 1, code: 'update.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
+        }
+        
+        const tmp = (await db.select('originUserId').from('players').where(key, '=', val))[0];
+        if(!tmp)
+            return res.status(404).json({error: 1, code: 'update.notFound', message: 'no such player'});
+        const originUserId = tmp.originUserId;
+        const client = originClients.getOne();
+        const userInfo = await client.getInfoByUserId(originUserId);
+        const avatarLink = await client.getUserAvatar(originUserId);
+        await db('players').update({originName: userInfo.username, avatarLink: avatarLink}).where({originUserId: originUserId});
+        await pushOriginNameLog(userInfo.username, originUserId, userInfo.personaId);
 
-router.post('/judgement');
+        return res.status(200).json({success: 1, code:'update.success', data: {
+            originName: userInfo.username,
+            originUserId: userInfo.userId,
+            originPersonaId: userInfo.personaId,
+        }});
+    } catch(err) {
+        next(err);
+    }
+});
 
-router.post('/banappeal');
+router.post('/judgement', verifyJWT, allowPrivileges(['admin','super','root']), [
+    checkbody('data.toPlayerId').isInt({min: 0}),
+    checkbody('data.cheatMethods').optional().isString().custom(cheateMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
+    checkbody('data.action').isIn(['suspect','innocent','dicuss','guilt','kill']),
+    checkbody('data.content').isString().trim(),
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'judgement.bad', message: validateErr.array()});
+        if((req.body.data.action=='kill'||req.body.data.action=='guilt') && !req.body.data.cheateMethods)
+            return res.status(400).json({error: 1, code: 'judgement.bad', message: 'must specify one cheate method.'});
+        if(req.body.data.action=='kill' && !userHasRoles(req.user, ['super','root']))
+            return res.status(403).json({error: 1, code: 'judgement.permissionDenied', message: 'permission denied.'});
+
+        /** @type {import("../typedef.js").Player|undefined} */    
+        const player = (await db.select('*').from('players').where({id: req.body.data.toPlayerId}))[0];
+        if(!player)
+            return res.status(404).json({error: 1, code: 'judgement.notFound', message: 'no such player.'});
+        // auth complete, player found, store action into db
+        await db('judgements').insert({
+            byUserId: req.user.id, 
+            toPlayerId: player.id,
+            toOriginUserId: player.originUserId,
+            cheateMethods: req.body.data.cheateMethods? req.body.data.cheateMethods : null,
+            action: req.body.data.action,
+            content: handleRichTextInput(req.body.data.content),
+            createTime: new Date(),
+        });
+        const nextstate = await stateMachine(player, req.user, req.body.data.action);
+        await db('players').update({
+            status: nextstate,
+            cheateMethods: nextstate==1? req.body.data.cheateMethods : player.cheateMethods,
+            updateTime: new Date(),
+        }).increment('commentsNum', 1).where({id: player.id});
+
+        return res.status(200).json({success: 1, code: 'judgement.success', message: 'thank you.'});
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/banappeal', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
+
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
+
+});
 
 /** @param {string} originName @param {string} originUserId @param {string} originPersonaId */
 async function pushOriginNameLog(originName, originUserId, originPersonaId) {

@@ -3,7 +3,7 @@ import db from "../mysql.js";
 import { userHasRoles } from "./auth.js";
 
 const states_map = [ // from one status to another status, by specified path:{action, privilege}, if no such path, stay still
-    // no cheater profile, report
+    // no player profile, report
     { from: null,   to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] },
     // reported, wait for process
     { from: 0,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
@@ -53,13 +53,13 @@ const states_map = [ // from one status to another status, by specified path:{ac
 ];
 
 /** 
- * @param {import("../typedef.js").Cheater} cheater 
+ * @param {import("../typedef.js").Player} player 
  * @param {import("../typedef.js").ReqUser} user */
-async function toConfirm(cheater, user) {
+async function toConfirm(player, user) {
     try { // iterate each judgement desc, if $config.personsToConfirm people think the guy is guilty without any objection in them, then confirm
         if(!userHasRoles(user, ['admin', 'super', 'root'])) // well, we should have check that before, but anyway
             return false; // permission not enough
-        const prev = await db.select('byUserId', 'action').from('judgements').where({toCheaterId: cheater.id}).orderBy('createTime','desc')
+        const prev = await db.select('byUserId', 'action').from('judgements').where({toPlayerId: player.id}).orderBy('createTime','desc')
         const supportJudges = new Set();
         for(let i of prev) {
             if(i.action!='guilt' || i.action!='kill')
@@ -76,13 +76,13 @@ async function toConfirm(cheater, user) {
 }
 
 /** 
- * @param {import('../typedef.js').Cheater} cheater 
+ * @param {import('../typedef.js').Player} player 
  * @param {import('../typedef.js').ReqUser} user 
  * @param {'report'|'suspect'|'innocent'|'trash'|'discuss'|'guilt'|'kill'} action 
  * */
-async function stateMachine(cheater, user, action) { // write action to DB first!
+async function stateMachine(player, user, action) { // normally we should write action to DB first
     for(let i of states_map) { // iterate each path
-        if(i.from == cheater.status && i.action == action) {
+        if(i.from == player.status && i.action == action) {
             switch(true) { // if all requires are satified, then go, no second chance.
             case Array.isArray(i.privilege):
                 if(userHasRoles(user, i.privilege))
@@ -93,13 +93,13 @@ async function stateMachine(cheater, user, action) { // write action to DB first
                     return i.to;
                 break;
             case typeof(i.privilege)=='function':
-                if(await i.privilege(cheater, user)) // maybe async here
+                if(await i.privilege(player, user)) // maybe async here
                     return i.to;
                 break;
             }
         }
     } // no valid path, dont go anywhere
-    return cheater.status; // no changes
+    return player.status; // no changes
 }
 
 export {
