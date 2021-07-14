@@ -1,6 +1,6 @@
 import config from "../config.js";
 import db from "../mysql.js";
-import { userHasRoles } from "./auth.js";
+import { userHasNotRoles, userHasRoles } from "./auth.js";
 
 const states_map = [ // from one status to another status, by specified path:{action, privilege}, if no such path, stay still
     // no player profile, report
@@ -89,7 +89,7 @@ async function stateMachine(player, user, action) { // normally we should write 
                     return i.to;
                 break;
             case Array.isArray(i.notprivilege):
-                if(!userHasRoles(user, i.notprivilege)) // uer has not roles
+                if(userHasNotRoles(user, i.notprivilege)) // uer has not roles
                     return i.to;
                 break;
             case typeof(i.privilege)=='function':
