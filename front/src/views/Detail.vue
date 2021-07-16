@@ -63,13 +63,28 @@
               <Tag>
                 {{g.game}}
               </Tag>
+			  <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`https://gametools.network/stats/pc/playerid/${cheater.originPersonaId}?name=${cheater.originId}&game=bf1`">
+                GameTools-Tracker
+              </a>
               <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">
                 battlefieldtracker
               </a>
-              <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">
+
+             <!-- <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">
                 bf1stats
+              </a>-->
+
+			  <a v-show="`${g.game}` === 'bfv'" target="_blank" :href="`https://gametools.network/stats/pc/playerid/${cheater.originPersonaId}?name=${cheater.originId}&game=bfv`">
+                GameTools-Tracker
               </a>
               <a v-show="`${g.game}` === 'bfv'" target="_blank" :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">
+                battlefieldtracker
+              </a>
+
+			  <a v-show="`${g.game}` === 'bf6'" target="_blank" :href="`https://gametools.network/stats/pc/playerid/${cheater.originPersonaId}?name=${cheater.originId}`">
+                GameTools-Tracker
+              </a>
+			  <a v-show="`${g.game}` === 'bf6'" target="_blank" :href="`https://battlefieldtracker.com/bf6/profile/origin/${cheater.originId}`">
                 battlefieldtracker
               </a>
               <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originId}`">
@@ -324,9 +339,9 @@
 
         <p class="hint">{{ $t('detail.info.replyManual3', { msg: 'replyManual3' })}}</p>
 		<p class="hint">{{ $t('detail.info.appealManual1', { msg: 'appealManual1' })}}</p>
-		
+
          <!-- 管理员 -->
-        <div v-if="isAdmin">
+        <div v-if="true">
           <Divider>{{ $t('detail.info.adminConsole', { msg: 'adminConsole' })}}</Divider>
           <p class="hint">{{ $t('detail.info.adminManual1', { msg: 'adminManual1' })}}</p>
           <p class="hint">{{ $t('detail.info.adminManual2', { msg: 'adminManual2' })}}</p>
@@ -354,6 +369,14 @@
 
             <FormItem label="Reason">
               <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" :placeholder="$t('detail.info.writeSomething')" />
+            </FormItem>
+
+            <FormItem v-show="verify.status === '1'" label="fastReply">
+              <CheckboxGroup v-model="fastReply.selected">
+                <Checkbox v-for="content in fastReply.content" :key='content' :label="content">
+                  {{$t(`detail.info.fastReplies.${content}`)}}
+                </Checkbox>
+              </CheckboxGroup>
             </FormItem>
 
             <FormItem>
@@ -439,11 +462,19 @@ export default {
 
       cheatMethodsGlossary,
 
+      fastReply: {
+        content: ['stats', 'evidencePic', 'evidenceVid'],
+        selected: [],
+      },
+
       updateUserInfospinShow: false,
     }
   },
   watch: {
     '$route': 'loadData',
+    'fastReply.selected': function() { 
+      this.verify.suggestion = ''+this.fastReply.selected.map(i=>this.$t(`detail.info.fastReplies.${i}`)); 
+    }
   },
   created() {
     this.loadData();
@@ -541,7 +572,14 @@ export default {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
-
+      if ( (status==='3' || status==='4') && suggestion.trim().length < 5 ) { // too short
+        this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
+        return false;
+      }
+      if( '0123456789abcedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_'.split('').indexOf(suggestion.trim()) != -1) { // one letter suggestion
+        this.$Message.warning(this.$i18n.t('detail.messages.dontDoIt')+suggestion);
+        return false;
+      }
       // JUST before ajax
       this.verifySpinShow = true;
       const {data: statusData} = await ajax({
@@ -816,14 +854,12 @@ export default {
     overflow-wrap: break-word;
     word-wrap: break-word;
   }
-
   .timeline-content .loading {
     background-image: url('/assets/fonts/loading.svg');
     background-repeat: no-repeat;
     min-width: 100px;
     min-height: 100px;
   }
-
   .ivu-timeline-item {
     padding: 1rem 0;
     &:hover {

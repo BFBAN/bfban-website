@@ -10,6 +10,7 @@
           <RadioGroup v-model="formItem.gameName" type="button">
             <Radio label="bf1"><span>{{ $t('report.info.bf1', { msg: 'bf1' })}}</span></Radio>
             <Radio label="bfv"><span>{{ $t('report.info.bfv', { msg: 'bfv' })}}</span></Radio>
+			<Radio label="bf6"><span>{{ $t('report.info.bf6', { msg: 'bf6' })}}</span></Radio>
           </RadioGroup>
         </FormItem>
 
@@ -119,7 +120,8 @@
       handleMiscChange: function(h) {
         this.formItem.description = h;
       },
-      doReport(e) {
+      doReport: function (e) {
+
         // check form data
         if (checkReportFormData.call(this, this.formItem) === false) return false;
         if (this.checkVideoAndImg() === false) return false;
@@ -129,7 +131,6 @@
           id: trimAllWhitespace(this.formItem.originId)
         })
         .then(async (res) => {
-
           const d = res.data;
           const idExist = d.idExist;
 
@@ -147,12 +148,11 @@
 
           this.formItem.captcha = '';
           this.refreshCaptcha();
-        }).catch((err)=> {
-          console.log(err.response);
+        })
+        .catch(e => {
+          this.$Message.error('Expired, plz signIn');
           this.spinShow = false;
-          if(err.response.status == 401)
-            this.$Message.error('Login expired');
-        });
+        })
       },
       handleReport: function() {
         this.spinShow = true;
@@ -194,11 +194,6 @@
           } else {
             this.$Message.error('failed ' + d.msg);
           }
-        }).catch((err)=> {
-          console.log(err.response);
-          this.spinShow = false;
-          if(err.response.status == 401)
-            this.$Message.error('Login expired');
         });
       }
     }

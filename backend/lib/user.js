@@ -8,7 +8,7 @@ function handleRichTextInput(content) {
 function cheateMethodsSanitizer(val, {req}) {
     const cheateMethods = new Set();
     for(let i of val.split(','))
-        if(config.possibleCheateMethods.indexOf(i) != -1)
+        if(config.possibleCheateMethods.includes(i))
             cheateMethods.add(i); // validate & remove duplicated
     if(cheateMethods.size == 0)
         throw new Error("No valid cheate method given.");

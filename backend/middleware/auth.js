@@ -32,7 +32,7 @@ function allowPrivileges(roles=[]) {
         /** @type {string[]} */
         const userRoles = req.user.privilege.split(',');
         for(let i of userRoles)
-            if(roles.indexOf(i) != -1)
+            if(roles.includes(i))
                 return next();
         return res.status(403).json({error: 1, code: 'user.permissionDenined'});
     }
@@ -45,7 +45,7 @@ function forbidPrivileges(roles=[]) {
         /** @type {string[]} */
         const userRoles = req.user.privilege.split(',');
         for(let i of userRoles)
-            if(roles.indexOf(i) != -1)
+            if(roles.includes(i))
                 return res.status(403).json({error: 1, code: 'user.permissionDenined'});
         return next();
     }

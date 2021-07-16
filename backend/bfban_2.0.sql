@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS `judgements` (
 
 -- 数据导出被取消选择。
 
--- 导出  表 bfban_2.0.message 结构
-CREATE TABLE IF NOT EXISTS `message` (
+-- 导出  表 bfban_2.0.messages 结构
+CREATE TABLE IF NOT EXISTS `messages` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `byUserId` int unsigned DEFAULT NULL,
   `toUserId` int unsigned DEFAULT NULL,
@@ -67,8 +67,8 @@ CREATE TABLE IF NOT EXISTS `message` (
 
 -- 数据导出被取消选择。
 
--- 导出  表 bfban_2.0.name_log 结构
-CREATE TABLE IF NOT EXISTS `name_log` (
+-- 导出  表 bfban_2.0.name_logs 结构
+CREATE TABLE IF NOT EXISTS `name_logs` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `originName` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `originUserId` varchar(20) DEFAULT NULL,

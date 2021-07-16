@@ -7,21 +7,21 @@ export default {
     signin: 'サインイン',
     signup: '新規登録',
     signout: 'サインアウト',
-    daily: '今日の報告数',
+    daily: '今日のBAN数',
     dashboard: 'ダッシュボード',
-    searchBar: '検索履歴IDをサポート...',
-    searchInfo: '取得されたIDは次のとおりです。:',
-    searchResult: 'の検索結果：',
-    search: '探す',
-    none: '番号',
-    signoutSuccess: 'ログアウトに成功',
+    searchBar: '以前のOrigin IDを含む...',
+    searchInfo: '該当するIDは次の通りです:',
+    searchResult: '検索結果：',
+    search: '検索',
+    none: '該当なし',
+    signoutSuccess: 'サインアウトしました',
   },
   detail:{
     info:{
       viewTimes:'閲覧',
       reply:'返信',
       reportedGames:'報告されたゲーム:',
-      gameScores:'TrackerLink:',
+      gameScores:'Trackerリンク:',
       firstReportTime:'最初の報告日時:',
       recentUpdateTime:'直近の更新:',
       originAvatar:'Originアバター:',
@@ -42,34 +42,41 @@ export default {
       cheatMethod:'チートの種類',
       agreeJudgement:'チーターと判定します',
       agreeWith:'agree with',
-      thisChoice:'the judgement',
-      replyManual1:'新しい画像または動画の証拠がある場合は、もう一度報告できます。それ以外の場合は、ここに返信してテキストまたはリンクのみを返信できます。画像を追加する場合は、',
-      uploadPicButton:'ここをクリックして画像をアップロード',
+      thisChoice:'this judgement',
+      replyManual1:'新しい画像または動画の証拠がある場合は、新たに報告してください。追加の証拠がある場合は、テキストまたはリンクを返信機能で追加してください。画像を追加する場合はここをクリックして',
+      uploadPicButton:'画像をアップロード',
       replyManual2:'したのち、画像のリンクを貼り付けてください',
-      replyManual3:'コメントするにはBFbanのメンバーになる必要があります',
-	  appealManual1:'Ban Appeals: Please send this case\'s web page link and appealing to ban-appeals@bfban.com .',
+      replyManual3:'コメントをするにはサインインが必要です',
+	  appealManual1:'不当なBANを申し立てるには、このページのURLと一緒にban-appeals@bfban.comまでお問い合わせください .',
       adminConsole:'管理者コンソール',
       adminManual1:'自分の意思で判断せず、確定的ではない場合には上記の返信機能を使用して証拠が増えるのを待ってください',
-      adminManual2:'管理者によるアクションは、報告されたプレイヤーの判定を変更します。100％確定されていない場合は、上記の返信機能を使用してください',
+      adminManual2:'管理者によるアクションは、報告されたプレイヤーの判定を変更します。100％確定でない場合は、上記の返信機能を使用してください',
       judgement:'判定',
       choice1:'確定的なチーター',
       choice2:'怪しいプレイヤー',
       choice3:'無実のプレイヤー',
       choice4:'ゴミ箱に入れる',
       commit:'決定',
-      replyManual4:'返信するにはログインしてください',
+      replyManual4:'返信するにはサインインが必要です',
       action: 'アクション',
-      operatingTime: '稼働時間',
-      writeSomething: '何か書いて',
-      giveOpinion: 'あなたの意見は何ですか？',
+      operatingTime: '日時',
+      writeSomething: '記入してください',
+      giveOpinion: '動画や画像のリンクを記入してください',
+      fastReplies: {
+        stats: 'Abnormal player stats',
+        evidencePic: 'As the evidence showed in the picture',
+        evidenceVid: 'As the evidence showed in the video'
+      }
     },
     messages: {
-      fillEverything: '完成してください',
-      replySuccess: '正常に返信する',
+      fillEverything: 'すべて記入してください',
+      pleaseExplain: 'Please explian your decision in details',
+      dontDoIt: 'Do not just give a ',
+      replySuccess: '返信しました',
       signIn: 'サインインしてください',
-      updateComplete: '更新が完了しました',
-      submitSuccess: '正常に送信されました',
-      changeHacker: '当前是 confirmed hacker 状态，你确定要处理成 {code} 吗？',
+      updateComplete: '更新しました',
+      submitSuccess: '送信しました',
+      changeHacker: 'このプレイヤーはチーターと判定されています。本当に{code}にしますか？',
     },
   },
   report:{
@@ -78,32 +85,33 @@ export default {
       reportNews:'私たちはチーターを報告・情報共有する機能を提供します！',
       bf1:'Battlefield 1',
       bfv:'Battlefield 5',
-      idNotion1:'一度に1つのIDのみを報告できます。小隊名を含めないでください。また、あなたのIDを記入しないでください。',
-      idNotion2:'アルファベットの文字小文字は区別されませんが、i I 1 l L o O 0に注意してください。',
+      bf6:'Battlefield 6',
+      idNotion1:'一度に1つのIDのみを報告できます。小隊名を含めないでください。また、あなたのIDを記入しないでください',
+      idNotion2:'大文字小文字は区別されませんが、i I 1 l L o O 0に注意してください。',
       uploadManual1:'BilibiliやYoutubeなどの動画サイトに登録したくない場合は→',
       uploadManual2:'動画リンクを下に貼り付けてください',
       uploadManual3:'Bilibili、Youtube、Youku、Tudouなどに対応しています',
       uploadPic1:'png、jpg、jpeg、gifなどの形式でスクリーンショットをアップロードすることをお勧めします。',
       uploadPic2:'画像データが2Mより大きい場合は→',
       uploadPic3:'画像URLタグを選択し、下に画像リンクを貼り付けます。',
-      uploadPic4:'チートの証拠を説明してください。画像をアップロードすることもできます（データ上限：2M）',
+      uploadPic4:'チートの証拠を説明してください。画像をアップロードすることもできます（データ上限：2MB）',
       getCaptcha:'Captchaを取得',
       report:'報告',
-      description: '報告された人物の不正行為の証拠を可能な限りリストします',
-      captcha: '验证码',
+      description: 'チートの証拠を記入してください',
+      captcha: 'Captcha',
       required: '必須',
-      onlyOneId: '一度に1つのオリジンIDのみ',
+      onlyOneId: '一度に1つのOrigin IDのみ',
     },
     labels: {
-      cheatMethod: 'チート法',
-      hackerId: 'ハッカーのID',
+      cheatMethod: 'チートの種類',
+      hackerId: 'チーターのID',
       game: 'ゲーム',
       description: '説明',
     },
     error: {
       mediaEvidence: '写真をアップロードするか、ビデオリンクに記入してください',
-      originId: 'ゲームIDが存在しません。スペルを確認してください',
-      success: '正常に送信されました',
+      originId: 'Origin IDが存在しません。スペルを確認してください',
+      success: '送信されました',
     }
   },
   footer: {
@@ -118,36 +126,38 @@ export default {
         report: '報告',
         join: 'bfbanに登録しました、ようこそ！',
         admin: '管理者',
-        mark: '意志',
-        as: 'として扱われる'
+        mark: 'marked',
+        as: 'as'
       },
     },
     howToUse: {
       title: '使い方',
-      description: `<a href="https://bfban.com">サイト</a> は、報告された人物のゲームIDを <b>永続的に追跡し、検索履歴ID</b>  をサポート  <b>できます</b> 。どなたでも積極的にご報告いただけます。
-      <p>ハングアップに遭遇した場合は、</p>
-      <p>1、 公式レポートへの最初の使用 <a target="_blank" href="https://bf1.mygoare.com/">バトルフィールド1プラグインレポートアシスタント</a>  。</p>
-      <p>2、 それが <router-link :to="{path: 'signup'}">報告した</router-link> 後の彼ら自身のウェブサイト <router-link :to="{path: 'report'}">登録で ;</router-link></p>
-      <p>3、レポート後に記録され、IDが変更されても追跡できます</p>`,
+      description: `<a href="https://bfban.com">このサイト</a> は、報告されたプレイヤーのOrigin IDを <b>永続的に追跡し、検索をサポートします</b> 。どなたでも簡単にご報告いただけます。
+      <p>チーターに遭遇した場合は、</p>
+      <p>1. 公式の通報機能を使用 <a target="_blank" href="https://bf1.mygoare.com/">バトルフィールド1通報支援ツール</a>  </p>
+      <p>2.  <router-link :to="{path: 'signup'}">bfbanに登録し、チーターを報告</router-link>  <router-link :to="{path: 'report'}"> </router-link></p>
+      <p>3. IDが記録され、もし変更されても追跡できます</p>`,
       tools: {
         main: 'ツール',
         name: {
-          report: '【推奨】バトルフィールド1プラグインレポートアシスタント',
+          report: '【推奨】バトルフィールド1通報支援ツール',
           tracker: '【推奨】バトルフィールドPC /モバイル記録クイックチェックツール',
           tools: '戦場周辺ツール',
           bfban: '【推奨】BFBANアプリ',
           apiGametools: 'api.gametools.network',
           botGametools: 'top.gg/bot/714524944783900794',
+          serverManager: 'manager.gametools.network',
         },
         description: {
-          bftracker: 'オンライン記録クエリWebサイトでは、さまざまなデータを詳細にクエリできます',
-          report: 'オンラインでレポートテキストを生成する',
-          fairplay: 'BF3とBF4の現在のIDのレコードをすばやく照会してマークを付け、異常にマークを付け、UnionBanの履歴を照会します',
-          tracker: '同時に、それはマークするためにコンピュータと携帯電話の記録の迅速なクエリをサポートします',
-          tools: 'ゲームプラットフォームの問題を解決するのに役立つツール',
+          bftracker: '様々なデータを詳細に閲覧できます',
+          report: '通報用のテキストを簡単に生成することができます',
+          fairplay: 'UnionBanの履歴を照会し、BF3とBF4でのBAN履歴をチェックできます',
+          tracker: 'PCと携帯で迅速にデータベースを参照できます',
+          tools: 'ゲームプラットフォームの問題を解決するのに役立ちます',
           bfban: 'BFBANモバイルクライアント',
           apiGametools: 'バトルフィールドシリーズのパブリックAPI',
-          botGametools: 'バトルフィールドシリーズの不和統計ボット',
+          botGametools: 'バトルフィールドシリーズのDiscord統計ボット',
+          serverManager: 'BF1サーバーマネージャー、このツールは、bfban.com内でチーター判定されているプレイヤーを自動でキックすることもできます',
         }
       },
       qqGroup: 'QQグループ/Discord',
@@ -160,6 +170,8 @@ export default {
       bfbanAppD: 'BFBANAPPダウンロード',
       japCon: '日本語翻訳寄稿者',
       engCon: '英語翻訳寄稿者',
+      lanCon: '翻訳寄稿者',
+      localManager: 'BF1サーバーマネージャー',
       domCost: 'ドメインコスト',
     }
   },
@@ -168,7 +180,7 @@ export default {
     description: `<h2>ユナイテッドBAN調査局</h2>
     <p>
       2018年1月29日生まれ。
-      これは、フィールドのプレーヤーによって形成された<b>プラグインのボイコット</ b>組織です。
+      これは、フィールドのプレーヤーによって形成された<b>プラグインのボイコット</ b>組織です
     </p>
 
     <p>
@@ -189,7 +201,7 @@ export default {
     <p>
       <a href="https://bfban.com">bfban.com</a> ウェブサイトはユニオンBAN調査局に依存しています。元のアイデアは熱狂的なプレーヤーから生まれました。 <a target="_blank" href="https://mygoare.com">mygoare</a> 2018年11月4日に開発および発売されました‘
     </p>
-    <p>主に、大多数のプレーヤーにレポート、リスト、検索、追跡、ディスカッションなどのサービスを提供します。</p>`,
+    <p>主に、大多数のプレーヤーにレポート、リスト、検索、追跡、ディスカッションなどのサービスを提供します</p>`,
     contact: `
     <h2>Ban Appeals</h2>
     <p>Please send the case's web page link and appealing to ban-appeals@bfban.com .</p>
@@ -217,23 +229,23 @@ export default {
   },
   account: {
     title: 'ユーザーセンター',
-    hint1: 'メッセージングシステムはまだありませんが、以下のステータスを確認して進捗状況を確認できます',
+    hint1: 'メッセージ機能はまだありませんが、以下のステータスで進捗状況を確認できます',
     hint2: 'すべてのレポートは、ディスカッションに参加するために返信できます',
-    hint3: '証拠を追加するために、同じIDを繰り返し報告できます',
-    userInfo: '個人情報',
+    hint3: '同じIDを繰り返し報告して証拠を追加できます',
+    userInfo: 'ユーザー情報',
     username: 'ユーザー名：',
-    role: '身元：',
+    role: '役職：',
     admin: '管理者',
     normal: '普通',
-    super: 'スーパー管理者',
-    joinedAt: '参加日：',
+    super: '上級管理者',
+    joinedAt: '加入日：',
     reports: '個人レポート',
     noReports: 'まだ報告はありません',
     reported: '報告',
     status: '状態',
-    recentlyUpdated: '最新のアップデート',
+    recentlyUpdated: '最近の更新',
   },
-  notFound: '履歴レコードが見つからない場合は、ウェブサイトの上部にある検索機能を使用して、検索履歴IDをサポートできます。',
+  notFound: '記録が見つからない場合は、ウェブサイトの上部にある検索機能を使用して、ID検索をサポートできます',
   signin: {
     title: 'サインイン',
     form: {
@@ -244,16 +256,16 @@ export default {
       submit: '送信',
       submitHint: 'アカウントを持っていませんか？新規登録',
     },
-    failed: 'ログインに失敗しました',
-    success: 'ログイン成功',
-    loginFirst: '最初にログインしてください',
+    failed: 'サインインに失敗しました',
+    success: 'サインインしました',
+    loginFirst: '最初にサインインしてください',
   },
   signup: {
     title: '新規登録',
     form: {
       username: 'ユーザー名',
       password: 'パスワード',
-      originId: 'OriginID',
+      originId: 'Origin ID',
       qq: 'QQ',
       captcha: 'Captcha',
       getCaptcha: 'Captchaを取得',
@@ -261,12 +273,12 @@ export default {
       submitHint: '既にアカウントをお持ちですか？サインイン',
     },
     placeholder: {
-      username: '4つ以上のユーザー名',
-      password: '6つ以上のパスワード',
-      originId: 'トピックの選択',
-      qq: 'トピックの選択',
+      username: '4文字以上のユーザー名(必須)',
+      password: '6文字以上のパスワード(必須)',
+      originId: 'Origin ID',
+      qq: 'QQグループ',
     },
-    fillIn: '仕様書にご記入ください',
+    fillIn: '必須事項を記入してください',
     failed: '登録に失敗しました',
   },
   list: {
@@ -274,20 +286,21 @@ export default {
     filters: {
       game: {
         bf1: 'BF1',
+        bf6: 'BF6',
         bfv: 'BFV',
       },
       status: {
-        all: '全て',
+        all: 'すべて',
       },
       refresh: '更新',
     },
-    reportTime: '時間範囲を報告する',
-    updateTime: '時間範囲を更新する',
+    reportTime: '報告された時間',
+    updateTime: '更新された時間',
     colums: {
       playerId: 'ゲームID',
-      reportTime: 'レポート時間',
-      updateTime: '更新時間'
-    } 
+      reportTime: '報告された時間',
+      updateTime: '更新された時間'
+    }
   },
   cheatMethods: {
     stealth: '透明',
@@ -300,14 +313,14 @@ export default {
   },
   misc: {
     uploadImage: {
-      info: '写真をアップロードする、200万以下',
-      mobile: '画面をダブルタップしてアップロードします...',
+      info: '写真をアップロードする、2MB以下',
+      mobile: '画面をダブルタップしてアップロード...',
       desktop: 'クリックまたはドラッグしてアップロード...',
-      fail: 'アップロードの上限を超えた場合、画像は2Mです',
+      fail: 'アップロードできる上限を越えています。画像の大きさは2MBまでです',
     },
     uploadVideo: {
-      info: '動画のアップロード、3,000万以下',
-      desktop: 'ここでファイルをクリックまたはドラッグしてアップロードします',
+      info: '動画のアップロード、30MB以下',
+      desktop: 'ファイルをクリックまたはドラッグしてアップロード',
     },
     progress: 'アップロード中...',
   },

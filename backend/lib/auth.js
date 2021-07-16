@@ -29,7 +29,7 @@ function userHasRoles(user, roles) {
     if(user && user.privilege) {
         const privilege = Array.isArray(user.privilege)? user.privilege : user.privilege.split(',');
         for(let i of privilege)
-            if(roles.indexOf(i) != -1)
+            if(roles.includes(i))
                 return true;
     }
     return false;
@@ -40,7 +40,7 @@ function userHasNotRoles(user, roles) {
     if(user && user.privilege) {
         const privilege = Array.isArray(user.privilege)? user.privilege : user.privilege.split(',');
         for(let i of privilege)
-            if(roles.indexOf(i) != -1)
+            if(roles.includes(i))
                 return false;
     }
     return true;

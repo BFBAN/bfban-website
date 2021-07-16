@@ -108,4 +108,5 @@ const siteEvent = new EventEmitter();
 
 export {
     stateMachine,
+    siteEvent,
 }

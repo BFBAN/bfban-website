@@ -85,7 +85,7 @@ async (req, res, next)=>{
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status)
         .orderBy(sort, 'desc').offset(skip).limit(limit);
-        const total= (await db('players').count({num: 'id'})
+        const total = (await db('players').count({num: 'id'})
         .where('games', 'like', `%${game}%`).andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
@@ -112,9 +112,9 @@ async (req, res, next)=>{
             status: i.status
         }; });
         if(req.query.history==='') {
-            const history = await db('name_log').join('players', 'name_log.originUserId', 'players.originUserId')
-            .select('name_log.originName as prevOriginName', 'players.*', 'name_log.fromTime', 'name_log.toTime')
-            .where('name_log.originName', 'like', '%'+/[A-Za-z0-9_\-]*/.exec(req.query.param)[0]+'%').andWhere({valid: 1}).limit(100);
+            const history = await db('name_logs').join('players', 'name_logs.originUserId', 'players.originUserId')
+            .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
+            .where('name_logs.originName', 'like', '%'+/[A-Za-z0-9_\-]*/.exec(req.query.param)[0]+'%').andWhere({valid: 1}).limit(100);
             result.data.history = history.map(i=> { return {
                 historyName: i.prevOriginName, 
                 currentName: i.originName,

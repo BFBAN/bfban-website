@@ -13,6 +13,7 @@
         <RadioGroup v-model="gameName" @on-change="handleChanges" type="button">
           <Radio label="bf1"><span>{{$t("list.filters.game.bf1")}}({{getTotalNum('bf1')}})</span></Radio>
           <Radio label="bfv"><span>{{$t("list.filters.game.bfv")}}({{getTotalNum('bfv')}})</span></Radio>
+		  <Radio label="bf6"><span>{{$t("list.filters.game.bf6")}}({{getTotalNum('bf6')}})</span></Radio>
         </RadioGroup>
       </p>
       <p class="mobile-hide">

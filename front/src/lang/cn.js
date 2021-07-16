@@ -62,9 +62,16 @@ export default {
       operatingTime: '工作时间',
       writeSomething: '写一些东西',
       giveOpinion: '你怎么看？',
+      fastReplies: {
+        stats: '玩家数据异常',
+        evidencePic: '证据如图所示',
+        evidenceVid: '证据如视频所示'
+      }
 	  },
     messages: {
       fillEverything: '请填写完整',
+	    pleaseExplain: '请详细解释您的裁决',
+      dontDoIt: '不准',
       replySuccess: '回复成功',
       signIn: '请登录',
       updateComplete: '更新完成',
@@ -78,6 +85,7 @@ export default {
 	  	reportNews:'已经支持 战地V 举报啦！',
 	  	bf1:'战地1',
 	  	bfv:'战地5',
+		bf6:'战地6',
 	  	idNotion1:'一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID',
 	  	idNotion2:'游戏ID是不区分大小写的，但请特别注意区分 i I 1 l L o O 0，正确填写举报ID',
 	  	uploadManual1:'不想注册国内账号、嫌麻烦，上传视频可以前往',
@@ -138,6 +146,7 @@ export default {
           bfban: '【推荐】BFBAN APP',
           apiGametools: 'api.gametools.network',
           botGametools: 'top.gg/bot/714524944783900794',
+          serverManager: 'manager.gametools.network',
         },
         description: {
           bftracker: '在线战绩查询网站，可以详细查询到各类数据',
@@ -148,6 +157,7 @@ export default {
           bfban: 'BFBAN手机客户端',
           apiGametools: '《战地风云》系列的公共API',
           botGametools: '《战地风云》系列的Discord统计机器人',
+          serverManager: 'BF1服务器管理器，此工具还可以自动踢bfban.com中标记为黑客的人',
         }
       },
       qqGroup: 'QQ群/Discord',
@@ -160,6 +170,8 @@ export default {
       bfbanAppD: 'BFBAN APP下载',
       japCon: '日语翻译者',
       engCon: '英语翻译者',
+	  lanCon: '翻译',
+	  localManager: '战地1服管工具',
       domCost: '支付域名',
     }
   },
@@ -274,7 +286,8 @@ export default {
     filters: {
       game: {
         bf1: '战地1',
-        bfv: '战地v',
+		bf6: '战地6',
+        bfv: '战地V',
       },
       status: {
         all: '全部',

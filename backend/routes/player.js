@@ -10,7 +10,7 @@ import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { originClients } from "../lib/origin.js"
 import { cheateMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
-import { stateMachine } from "../lib/bfban.js";
+import { siteEvent, stateMachine } from "../lib/bfban.js";
 import { json } from "body-parser";
 import { userHasRoles } from "../lib/auth.js";
 
@@ -45,7 +45,7 @@ async (req, res, next)=>{
         if(!result)
             return res.status(404).json({error: 1, code: 'player.notFound'});
         if(req.query.history) // that guy does exsist
-            result.history =  await db.select('originName','fromTime','toTime').from('name_log').where({originUserId: result.originUserId});
+            result.history =  await db.select('originName','fromTime','toTime').from('name_logs').where({originUserId: result.originUserId});
         
         res.status(200).json({success: 1, code: 'player.ok', data: result});
     } catch(err) {
@@ -82,13 +82,13 @@ async (req, res, next)=>{
         if(reported) { // reported, re-evaluate status
             const nextstate = await stateMachine(reported, req.user, 'report');
             updateCol.commentsNum = reported.commentsNum+1;
-            updateCol.games = reported.games.split(',').indexOf(req.body.data.game)==-1? reported.games+','+req.body.data.game : reported.games;
+            updateCol.games = reported.games.split(',').includes(req.body.data.game)? reported.games+','+req.body.data.game : reported.games;
             if(nextstate != reported.status)
                 updateCol.status = nextstate; 
         } else { // not reported yet, fetch more info
             avatarLink = await client.getUserAvatar(originUserId); // this step is not such important, add a catch to ignore error?
         }
-        const playerId = await db('players').insert({
+        const player = {
             originName: profile.username,
             originUserId: profile.userId,
             originPersonaId: profile.personaId,
@@ -101,10 +101,11 @@ async (req, res, next)=>{
             status: 0, // none
             createTime: new Date(),
             updateTime: new Date()
-        }).onConflict('originUserId').merge(updateCol); // insert on update
+        };
+        const playerId = await db('players').insert(player).onConflict('originUserId').merge(updateCol); // insert on update
         await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
         // write action to db
-        await db('reports').insert({
+        const report = {
             byUserId: req.user.id, 
             toPlayerId: reported? reported.id : playerId, // update may return 0 if nothing change, but we have reported then
             toOriginName: profile.username,
@@ -115,8 +116,10 @@ async (req, res, next)=>{
             description: handleRichTextInput(req.body.data.description),
             valid: 1,
             createTime: new Date()
-        });
+        };
+        await db('reports').insert(report);
 
+        siteEvent.emit('data', {method: 'report', params: {report, player}});
         return res.status(201).json({success: 1, code:'report.success', message:'Thank you.'});
     } catch(err) {
         next(err);
@@ -198,7 +201,7 @@ async (req, res, next)=>{
         }
         if( (await db.select('id').from('players').where({id: req.body.data.toPlayerId}))[0] == undefined ) // no such player
             return res.status(404).json({error: 1, code: 'comment.notFound', message: 'no such player'});
-        await db('repiles').insert({
+        const comment = {
             toPlayerId: req.body.data.toPlayerId,
             byUserId: req.user.id,
             toCommentType: req.body.data.toCommentType? req.body.data.toCommentType : null,
@@ -206,13 +209,14 @@ async (req, res, next)=>{
             content: handleRichTextInput(req.body.data.content),
             valid: 1,
             createTime: new Date(),
-        });
+        };
+        await db('repiles').insert(comment);
         await db('players').update({
             updateTime: new Date(), 
         }).increment('commentsNum', 1).where({id: req.body.data.toPlayerId});
         
+        siteEvent.emit('data', {method: 'comment', params: {comment}});
         return res.status(201).json({success: 1, code: 'comment.suceess', message: 'Reply success.'});
-
     } catch(err) {
         next(err);
     }
@@ -281,7 +285,7 @@ async (req, res, next)=>{
         if(!player)
             return res.status(404).json({error: 1, code: 'judgement.notFound', message: 'no such player.'});
         // auth complete, player found, store action into db
-        await db('judgements').insert({
+        const judgement = {
             byUserId: req.user.id, 
             toPlayerId: player.id,
             toOriginUserId: player.originUserId,
@@ -290,14 +294,17 @@ async (req, res, next)=>{
             content: handleRichTextInput(req.body.data.content),
             valid: 1,
             createTime: new Date(),
-        });
+        };
+        await db('judgements').insert(judgement);
         const nextstate = await stateMachine(player, req.user, req.body.data.action);
-        await db('players').update({
+        const player = {
             status: nextstate,
             cheateMethods: nextstate==1? req.body.data.cheateMethods : player.cheateMethods,
             updateTime: new Date(),
-        }).increment('commentsNum', 1).where({id: player.id});
+        };
+        await db('players').update(player).increment('commentsNum', 1).where({id: player.id});
 
+        siteEvent.emit('data', {method: 'judge', params: {judgement, player}});
         return res.status(200).json({success: 1, code: 'judgement.success', message: 'thank you.'});
     } catch(err) {
         next(err);
@@ -319,7 +326,7 @@ async (req, res, next)=>{
         if(!player)
             return res.status(404).json({success: 1, code: 'banappe.notFound', message: 'no such player'});
 
-        await db('ban_appeals').insert({
+        const ban_appeal = {
             toPlayerId: player.id,
             byUserId: req.user.id,
             content: handleRichTextInput(req.body.data.content),
@@ -327,7 +334,11 @@ async (req, res, next)=>{
             status: 'open',
             valid: 1,
             createTime: new Date()
-        })
+        };
+        await db('ban_appeals').insert(ban_appeal);
+
+        siteEvent.emit('data', {method: 'banappeal', params: {ban_appeal}});
+        return res.status(200).json({success: 1, code: 'banappeal.success', message:'thank you.'})
     } catch(err) {
         next(err);
     }
@@ -335,19 +346,22 @@ async (req, res, next)=>{
 
 /** @param {string} originName @param {string} originUserId @param {string} originPersonaId */
 async function pushOriginNameLog(originName, originUserId, originPersonaId) {
-    const last = (await db.select('*').from('name_log').where({originUserId: originUserId}).orderBy('toTime', 'desc').first())[0];
+    const last = (await db.select('*').from('name_logs').where({originUserId: originUserId}).orderBy('toTime', 'desc').first())[0];
     if(last && last.originName==originName) {
-        await db('name_log').update({toTime: new Date}).where({id: last.id});
+        await db('name_logs').update({toTime: new Date}).where({id: last.id});
         return false;
     }
     else {
-        await db('name_log').insert({
+        const name_log = {
             originName: originName, 
             originUserId: originUserId, 
             originPersonaId: originPersonaId,
             fromTime: new Date(),
             toTime: new Date()
-        });
+        };
+        await db('name_logs').insert(name_log);
+        
+        siteEvent.emit('data', {method: 'name_tracker', params: {name_log}});
         return true;
     }
 }

@@ -47,7 +47,7 @@ async (req, res, next)=> {
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
         ]) ).length != 0 )
             return res.status(400).json({error: 1, code: 'signup.originBindingExsist'});
-        if(''.concat(await originClient.getUserGames(originUserId)).indexOf('Battlefield') == -1) // does the user have battlefield?
+        if(''.concat(await originClient.getUserGames(originUserId)).includes('Battlefield') == false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'signup.gameNotOwned'});
         
         // no mistakes detected, generate a unique string for register validation
@@ -205,7 +205,7 @@ async (req, res, next)=> {
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
         ]) ).length != 0 )
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExsist'});
-        if(''.concat(await originClient.getUserGames(originUserId)).indexOf('Battlefield') == -1) // does the user have battlefield?
+        if(''.concat(await originClient.getUserGames(originUserId)).includes('Battlefield') == false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'bindOrigin.gameNotOwned'});
 
         // no mistakes detected, change db record
