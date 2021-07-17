@@ -148,21 +148,24 @@ async function sendMessage(from, to, type, content) {
     });
 }
 
-async function iGotReported(report) {
+async function iGotReported(params) {
+    const { report } = params;
     const user = (await db.select('id').from('users').where({originUserId: report.toOriginUserId}))[0];
     if(!userId) // that player being reported hasnt registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', 'You were reported by someone.');
 }
 
-async function iGotJudged(judgement) {
+async function iGotJudged(params) {
+    const { judgement } = params;
     const user = (await db.select('id').from('users').where({originUserId: judgement.toOriginUserId}))[0];
     if(!userId) // that player being reported hasnt registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', `You were judge as ${judgement.action}`);
 }
 
-async function iGotReplied(reply) { // checked that comment dose exist
+async function iGotReplied(params) { // checked that comment dose exist
+    const reply = params.comment;
     const {toCommentType, toCommentId, content} = reply;
     if(!(toCommentType && toCommentId))
         return;
@@ -171,8 +174,9 @@ async function iGotReplied(reply) { // checked that comment dose exist
     await sendMessage(reply.byUserId, toCommentUser, 'reply', content);
 }
 
-async function newBanAppeal(banappeal) {
-    await sendMessage(banappeal.byUserId, undefined, 'toAdmins', 'There is a ban appeal:'+banappeal.toPlayerId);
+async function newBanAppeal(params) {
+    const { ban_appeal } = params;
+    await sendMessage(ban_appeal.byUserId, undefined, 'toAdmins', 'There is a ban appeal:'+ban_appeal.toPlayerId);
 }
 
 export default router;

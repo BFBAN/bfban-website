@@ -11,6 +11,7 @@ import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth
 import { generatePassword, comparePassword, userHasRoles } from "../lib/auth.js";
 import { originClients } from "../lib/origin.js";
 import { parseUserAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
+import { siteEvent } from "../lib/bfban.js";
 
 const router = express.Router();
 
@@ -85,7 +86,7 @@ async (req, res, next)=> {
         const registrant = (await db.select('*').from('registers').where({uniqCode: code}))[0];
         if(!registrant)
             return res.status(404).json({error: 1, code: 'signup.notfound'});
-        await db('users').insert({
+        const data = {
             username: registrant.username,
             password: registrant.password,
             originName: registrant.originName,
@@ -94,8 +95,11 @@ async (req, res, next)=> {
             originPersonaId: registrant.originPersonaId,
             privilege: 'normal',
             createTime: new Date(),
-        });
+        };
+        await db('users').insert(data);
         await db('registers').where({uniqCode: code}).delete();
+
+        siteEvent.emit('data', {method: 'register', params: {user: data}});
         return res.status(201).json({success: 1, code:'signup.success', message: 'Welcome to BFBan!'});
     } catch(err) {
         next(err);
