@@ -1,14 +1,11 @@
 <html>
     <script>
         function getcap() {
-            let req = new XMLHttpRequest();
-            req.onload = (evt)=> {
+            fetch('http://localhost:4002/api/captcha').then(res=> {
                 let obj = JSON.parse(req.response);
                 document.querySelector('#secret').textContent = obj.data.hash;
                 document.querySelector('#svgcon').outerHTML = obj.data.content;
-            }
-            req.open('GET','http://localhost:4002/api/captcha');
-            req.send();
+            });
         }
         document.onreadystatechange = getcap;
     </script>

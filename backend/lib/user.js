@@ -19,7 +19,46 @@ function cheateMethodsSanitizer(val, {req}) {
     return true;
 }
 
+/** @param {import("../typedef").User} user */
+function parseUserAttribute(user) {
+    try {
+        const obj = JSON.parse(user.attr);
+        if(obj)
+            return obj; 
+    } catch(err) {
+        return {};
+    }
+}
+
+const userAttributes = {
+    "showOrigin": {type: "boolean", get: true, set: true},
+    "allowDM": {type: "boolean", get: true, set: true},
+    "certUser": {type: "string", get: true, set: false},
+    "freezeOfNoBinding": {type: "boolen", get: true, set: false},
+    "changeNameLeft": {type: "number", get: true, set: false, private: true}
+}
+
+function userShowAttributes(attr, private=false, force=false) {
+    const result = {};
+    for(let i of Object.keys(userAttributes))
+        if(typeof(attr[i])==userAttributes[i].type) 
+            if(( userAttributes.get && private|(!userAttributes[i].private) )|| force)
+                result[i] = attr[i];
+    return result;
+}
+
+function userSetAttributes(attr, force=false) {
+    const result = {};
+    for(let i of Object.keys(userAttributes))
+        if(typeof(attr[i])==userAttributes[i].type && (userAttributes.set || force))
+            result[i] = attr[i];
+    return result;
+}
+
 export {
     handleRichTextInput,
     cheateMethodsSanitizer,
+    parseUserAttribute,
+    userSetAttributes,
+    userShowAttributes,
 }

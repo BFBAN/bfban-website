@@ -10,10 +10,11 @@ import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { siteEvent } from "../lib/bfban.js";
 import { userHasNotRoles } from "../lib/auth.js";
+import { parseUserAttribute } from "../lib/user.js";
 
 const router = express.Router();
 
-router.get('/messages', verifyJWT, [
+router.get('/', verifyJWT, [
     checkquery('box').optional().isIn(['in','out']),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
@@ -41,7 +42,7 @@ async (req, res, next)=> {
     }
 });
 
-router.post('/message', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
+router.post('/', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toUserId').isInt({min: 0}),
     checkbody('data.type').isIn(['direct','warn','fatal','toAll','toAdmins','toNormals','command']),
     checkbody('data.content').isString().trim().notEmpty()
@@ -69,16 +70,12 @@ async (req, res, next)=> {
             await sendMessage(req.user.id, toUser.id, type, req.body.data.content); // admins can dm anyone
             break; // jump out
 
-        case ( type=='direct' ): { // normal or other user
-            if(!toUser.attr) // no user attribute given, default is block dm
-                return res.status(403).json({error: 1, code:'message.blocked', message: 'user block your message.'});
-            const attr = JSON.parse(toUser.attr);
-            if(attr && attr.allowDM) // normal user can block dm
+        case ( type=='direct' ): // normal or other user
+            if(parseUserAttribute(toUser).allowDM === true) // normal user can block dm
                 await sendMessage(req.user.id, toUser.id, 'direct', req.body.data.content);
             else
                 return res.status(403).json({error: 1, code:'message.blocked', message: 'user block your message.'});   
             break;
-        }
 
         default: // if the type and privilege did not match all the cases, then deny  
             return res.status(403).json({error: 1, code: 'message.denied', message: 'permission denied.'});
@@ -95,8 +92,20 @@ router.post('/mark', verifyJWT, [
     checkquery('type').isIn('read', 'unread', 'del')
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
-
-})
+    try {
+        let changed;
+        if(req.query.type != 'del')
+            changed = await db('messages').update({haveRead: req.query.type=='read'? 1:0}).where({toUserId: req.user.id, id: req.query.id});
+        else
+            changed = await db('messages').del().where({toUserId: req.user.id, id: req.query.id});
+        if(changed)
+            return res.status(200).json({success: 1, code: 'message.marked', data: {id: req.query.id, type: req.query.type}});
+        else
+            return res.status(404).json({success: 1, code: 'message.notFound', message: 'no such message.'});
+    } catch(err) {
+        next(err);
+    }
+});
 
 /** @param {import("../typedef.js").SiteEvent} event */
 async function messageOnSiteEvent(event) {

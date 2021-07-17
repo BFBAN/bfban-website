@@ -6,10 +6,11 @@ import db from "../mysql.js";
 import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
-import { sendRegisterVerify } from "../lib/mail.js";
+import { sendRegisterVerify, sendForgetPasswordVerify } from "../lib/mail.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { generatePassword, comparePassword, userHasRoles } from "../lib/auth.js";
 import { originClients } from "../lib/origin.js";
+import { parseUserAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
 
 const router = express.Router();
 
@@ -149,6 +150,7 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'signin.bad', message: validateErr.array()});
         
         const { username, password, EXPIRES_IN } = req.body.data;
+        /** @type {import("../typedef.js").User} */
         const user = (await db.select('*').from('users').where({username: username}))[0];
         
         if(user && user.valid!=0 && await comparePassword(password, user.password)) {
@@ -218,13 +220,222 @@ async (req, res, next)=> {
     } catch(err) {
         next(err);
     }
-})
+});
 
 
-// TODO: signout (db(logoutTime))
-// TODO: /account
-// TODO: /me
-// TODO: resetPasswd
-// TODO: setPreferrence
+router.post('/signout', verifyJWT, /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+(req, res, next)=>{
+    try {
+        await db('users').update({signoutTime: new Date()}).where({id: req.user.id});
+        return res.status(200).json({success: 1, code: 'logout.success', message: 'bye~'});
+    } catch(err) {
+        next(err);
+    }
+});
+
+/** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
+function showUserInfo(req, res, next) {
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'userInfo.bad', message: validateErr.array()});
+
+        /** @type {import("../typedef.js").User} */
+        const user = (await db.select('*').from('users').where({id: req.query.id}) )[0];
+        if(!user)
+            return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
+        const attr = parseUserAttribute(user);
+        const reportnum = (await db('reports').count({num: 'id'}).where({byUserId: user.id}) )[0].num;
+        const data = {
+            username: user.username,
+            privilege: user.privilege,
+            introduction: user.introduction,
+            joinTime: user.createTime.getTime(),
+            lastOnlineTime: user.updateTime.getTime(),
+            origin: attr.showOrigin===true || // user set it public
+                    (req.user&&userHasRoles(req.user, ['admin','super','root','dev'])) || // no limit for admin
+                    (req.user&&req.user.id===user.id)? // for self
+                        {username: user.originName,userId: user.originUserId} : null,
+            attr: userShowAttributes(attr, 
+                (req.user&&req.user.id===user.id), // self, show private info
+                (req.user&&userHasRoles(req.user, ['admin','super','root','dev'])) ), // no limit for admin
+            reportnum: reportnum,
+        };
+
+        return res.status(200).json({success: 1, code: 'userInfo.success', data: data});
+    } catch(err) {
+        next(err);
+    }
+}
+
+router.get('/info', [ checkquery('id').isInt({min: 0}) ],  showUserInfo);
+router.get('/info4admin', verifyJWT, allowPrivileges(['admin','super','root','dev']), [ 
+    checkquery('id').isInt({min: 0})
+], showUserInfo);
+router.get('/me', verifyJWT(), (req, res, next)=>{req.query.id = ''+req.user.id; next();} // hack to reuse our code qwq
+, showUserInfo);
+
+router.get('/reports', [
+    checkquery('id').isInt({min: 0}),
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+(req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'userReports.bad', message: validateErr.array()});
+
+        const skip = req.query.skip? req.query.skip : 0;
+        const limit = req.query.limit? req.query.limit : 0;
+
+        /** @type {import("../typedef.js").User} */
+        const user = (await db.select('*').from('users').where({id: req.query.id}) )[0];
+        if(!user)
+            return res.status(404).json({error: 1, code: 'userReports.notFound', message: 'no such user.'});
+        const reports = await db('reports').join('players', 'reports.toPlayerId', 'players.id')
+        .select('players.originName as originName', 'players.originUserId as originuserId',
+                    'players.originPersonaId as originPersonaId', 'players.status as status',
+                    'players.updateTime as updateTime', 'reports.createTime as createTime')
+        .where('reports.byUserId', '=', user.id).orderBy('reports.createTime', 'desc').offset(skip).limit(limit);
+
+        res.status(200).json({success: 1, code: 'userReports.success', data: reports});
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/me', verifyJWT, [
+    checkbody('data.introduction').optional({nullable: true}).isString().isLength({max: 510}),
+    checkbody('data.attr').optional({nullable: true}).isObject(),
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+(req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'me.bad', message: validateErr.array()});
+
+        const update = {};
+        if(req.body.data.introduction)
+            update.introduction = req.body.data.introduction;
+        if(req.body.data.attr)
+            update.attr = userSetAttributes(req.body.data.attr);
+        await db('users').update(update).where({id: req.user.id});
+
+        res.status(200).json({success: 1, code: 'me.success', data: update});
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/changeName', verifyJWT, verifyCaptcha, [
+    checkbody('data.newname').isString().trim().isLength({min: 1, max: 40}),
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+(req, res, next)=> {
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'changeName.bad', message: validateErr.array()});
+
+        /** @type {import("../typedef.js").User} */
+        const user = (await db.select('*').from('users').where({id: req.user.id}) )[0];
+        const attr = parseUserAttribute(user);
+        if(!attr.changeNameLeft && attr.changeNameLeft<=0)
+            return res.status(403).json({error: 1, code: 'changeName.noChance', message: 'you have used up all your change name chances.'});
+        const occupy = await db.select('id').from('user').where({username: req.body.data.newname}).union([
+            db.select('id').from('registers').where({username: req.body.data.newname})
+        ]);
+        if(occupy.length > 0)
+            return res.status(403).json({error: 1, code: 'changeName.occupied', message: 'someone already occupied your new name.'});
+        --attr.changeNameLeft;
+        await db('users').update({username: req.body.data.newname, attr: JSON.stringify(attr)}).where({id: user.id});
+        return res.status(200).json({success: 1, code: 'changeName.success', data: {
+            chancesLeft: attr.changeNameLeft
+        }});
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/changePassword', verifyJWT, [
+    checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40}),
+    checkbody('data.oldpassword').isString().trim().isLength({min: 1, max: 40})
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+(req, res, next)=> {
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'changePassword.bad', message: validateErr.array()});
+        
+        /** @type {import("../typedef.js").User} */
+        const user = (await db.select('*').from('users').where({id: req.user.id}) )[0];
+        if(!comparePassword(req.body.data.oldpassword, user.password))
+            return res.status(400).json({error: 1, code: 'changePassword.notMatch', message: 'original password incorrect.'});
+        await db('users').update({
+            password: generatePassword(req.body.data.newpassword)
+        }).where({id: user.id});
+
+        return res.status(200).json({success: 1, code: 'changePassword.success', message: 'you have successfully change your password.'});
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/forgetPassword', verifyCaptcha, [
+    checkbody('data.username').isString().trim().isLength({min: 1, max: 40}),
+    checkbody('data.originEmail').trim().isEmail()
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+(req, res, next)=> {
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: validateErr.array()});
+
+        /** @type {import("../typedef.js").User} */
+        const user = (await db.select('*').from('users').where({username: req.body.data.username}))[0];
+        if(!user || user.originEmail != req.body.data.originEmail)
+            return res.status(404).json({error: 1, code: 'forgetPassword.notFound', message: 'no such user.'});
+        const newpassword = misc.generateRandomString(16);  // what we are doing here is:
+        const code = misc.encrypt(JSON.stringify({          // generate new password for user
+            i: 'YesINeedResetMyPassword',                   // but update it into db when user confirm it by email
+            password: newpassword,                          // we do so to avoid some bay guys who know user's email address
+            userid: user.id                                 // and directly change the user password though they dont know the new one
+        }), config.secret).toString('base64');              // we send encrypted password to user, so we dont use db, like jwt
+        await sendForgetPasswordVerify(user.username, user.originEmail, code); // user verify the code->save new password into db
+        // check /forgetPasswordVerify below
+        res.status(200).json({success: 1, code: 'forgetPassword.needVerify', message: 'check your email to reset the password.'});
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.get('/forgetPasswordVerify', [
+    checkquery('code').isBase64()
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+(req, res, next)=> {
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: validateErr.array()});
+        
+        let payload = {};
+        try { // be warn: we might get meaningless obj if the code is not encrypted by us
+            payload = JSON.parse(misc.decrypt(Buffer.from(req.query.code, 'base64'), config.secret).toString('utf8'));
+            if(payload.i != 'YesINeedResetMyPassword') // if this patten match, there is no probability to have a bad payload
+                throw(new Error('bad payload'));
+        } catch(err) {
+            return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: 'no such code.'}); // bad payload
+        }
+        const passwdHash = generatePassword(payload.password);
+        await db('users').update({password: passwdHash}).where({id: payload.userid}); // store the new password into db
+
+        return res.status(200).json({success: 1, code: 'forgetPassword.success', data: {
+            newpassword: payload.password, // send new password to user, leave them change it later
+        }});
+    } catch(err) {
+        next(err);
+    }
+});
+
 
 export default router;

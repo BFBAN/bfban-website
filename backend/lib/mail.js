@@ -30,7 +30,18 @@ async function sendRegisterVerify(username, originName, address, code) {
     );
 }
 
+async function sendForgetPasswordVerify(username, address, code) {
+    await sendMail(
+        "Hello "+username+"!\n"+
+        "   You are now reseting your password for bfban.com.\n"+
+        "   Please click the link below to reset your password: \n"+
+        "       htttps://bfban.com/#/forgetPasswordVerify?code="+code,
+        config.mail.user, address, '', "BFBan Password Reset"
+    );
+}
+
 export {
     sendMail,
     sendRegisterVerify,
+    sendForgetPasswordVerify,
 }

@@ -183,8 +183,8 @@ async (req, res, next)=>{
 
 router.post('/comment', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
-    checkbody('data.toCommentType').optional({checkFalsy: true}).isIn([0,1,2,3]), // 0-reply 1-report 2-judgement 3-banappela
-    checkbody('data.toCommentId').optional({checkFalsy: true}).isInt({min: 0}),
+    checkbody('data.toCommentType').optional({nullable: true}).isIn([0,1,2,3]), // 0-reply 1-report 2-judgement 3-banappela
+    checkbody('data.toCommentId').optional({nullable: true}).isInt({min: 0}),
     checkbody('data.content').isString().trim().isLength({min: 1, max:65535}),
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
