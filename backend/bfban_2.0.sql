@@ -189,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(40) NOT NULL,
   `password` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
   `introduction` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '',
-  `vaild` tinyint NOT NULL DEFAULT '1',
+  `valid` tinyint NOT NULL DEFAULT '1',
   `privilege` varchar(40) NOT NULL DEFAULT '',
   `attr` text,
   `originName` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`) USING BTREE,
   KEY `originUserId` (`originUserId`) USING BTREE,
   KEY `originPersonaId` (`originPersonaId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 

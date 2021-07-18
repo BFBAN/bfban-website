@@ -31,7 +31,7 @@ const config = {
     },
 
     // DYNAMIC CONFIGURE BEGIN
-	personsToConfirm = 2,			 
+	personsToConfirm: 2,			 
     originAccounts: [
         {tag: '', remid:'', sid:''},
     ],
@@ -47,14 +47,14 @@ const dynamic_cfg = {
         {tag: '', remid:'', sid:''},
     ],
     // site function config
-	personsToConfirm = 2,	 
+	personsToConfirm: 2,	 
     supportGames: [ 'bf1', 'bfv' ],
     possibleCheateMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet', 
     'damageChange', 'gadgetModify', 'moveImpossibly', 'attackServer'],
 }
 
-function readDynamicConfig() {
-    import("./config.js").then(m=> { for(let i in m.dynamic_cfg) config[i] = dynamic_cfg[i] });
+async function readDynamicConfig() {
+    await import("./config.js").then(m=> { for(let i in m.dynamic_cfg) config[i] = dynamic_cfg[i] });
 }
 
 export default config;

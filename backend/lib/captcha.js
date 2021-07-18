@@ -15,6 +15,7 @@ function generateCaptcha() {
     });
     const text = captcha.text.toLowerCase();
     const hash = misc.encrypt(`${text},${Date.now()}`, config.secret).toString('base64');
+    console.log(captcha.text, hash); // DEBUG
     return {hash: hash, content: captcha.data};
 }
 

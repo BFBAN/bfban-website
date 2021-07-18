@@ -13,7 +13,9 @@ async function verifyJWT(req, res, next) {
         const decodedToken = await verifyJWTToken(token).catch((err)=> {
             res.status(401).json({ err: 1, code: 'user.tokenExpired' });
         });
-        const result = await db.select('id', 'username', 'privilege', 'signoutTime').from('users').where({id: decodedToken.userId, valid: 1})[0];
+        console.log(decodedToken); // DEBUG
+        const result = (await db.select('id', 'username', 'privilege', 'signoutTime').from('users').where({id: decodedToken.userId, valid: 1}) )[0];
+        console.log(result); // DEBUG
         if(!result)
             return res.status(401).json({error: 1, code: 'user.invalid'});
         if(result.signoutTime > decodedToken.signWhen+decodedToken.expiresIn)

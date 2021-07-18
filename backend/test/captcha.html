@@ -2,9 +2,11 @@
     <script>
         function getcap() {
             fetch('http://localhost:4002/api/captcha').then(res=> {
-                let obj = JSON.parse(req.response);
-                document.querySelector('#secret').textContent = obj.data.hash;
-                document.querySelector('#svgcon').outerHTML = obj.data.content;
+                console.log(res)
+                res.json().then(obj=> {
+                    document.querySelector('#secret').textContent = obj.data.hash;
+                    document.querySelector('#svgcon').outerHTML = obj.data.content;
+                });
             });
         }
         document.onreadystatechange = getcap;

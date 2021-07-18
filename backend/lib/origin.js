@@ -270,8 +270,9 @@ class OriginClientCluster {
 
 const originClients = new  OriginClientCluster();
 async function createAccounts() {
-    readDynamicConfig();
+    await readDynamicConfig();
     const accounts = config.originAccounts;
+    console.log(accounts);
     const clients = [];
     for(let i of accounts)
         clients.push(new OriginClient({remid: i.remid, sid: i.sid}));
@@ -279,7 +280,7 @@ async function createAccounts() {
     originClients.set(clients);
 }
 (async ()=> {
-    await createAccounts();
+    createAccounts();
 })();
 
 export {

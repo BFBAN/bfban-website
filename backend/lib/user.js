@@ -24,19 +24,22 @@ function cheateMethodsSanitizer(val, {req}) {
 function parseUserAttribute(user) {
     try {
         const obj = JSON.parse(user.attr);
-        if(obj)
-            return obj; 
+        if(obj instanceof Object)
+            return obj;
     } catch(err) {
         return {};
     }
+    return {};
 }
 
 const userAttributes = {
-    "showOrigin": {type: "boolean", get: true, set: true},
-    "allowDM": {type: "boolean", get: true, set: true},
-    "certUser": {type: "string", get: true, set: false},
-    "freezeOfNoBinding": {type: "boolen", get: true, set: false},
-    "changeNameLeft": {type: "number", get: true, set: false, isprivate: true}
+    "showOrigin": {type: "boolean", get: true, set: true, default: false},
+    "allowDM": {type: "boolean", get: true, set: true, default: false},
+    "certUser": {type: "string", get: true, set: false, default: ''},
+    "freezeOfNoBinding": {type: "boolen", get: true, set: false, default: false},
+    "changeNameLeft": {type: "number", get: true, set: false, isprivate: true, default: 3},
+    "registerIP": {type: "string", get: false, set: false, default: ''},
+    "lastSigninIP": {type: "string", get:false, set: false, default: ''},
 }
 
 function userShowAttributes(attr, isprivate=false, force=false) {

@@ -51,7 +51,7 @@ async (req, res, next)=>{
     }
 });
 
-router.post('/report', verifyCaptcha, verifyJWT, 
+router.post('/report', verifyJWT, verifyCaptcha,
     forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.game').isIn(config.supportGames),
     checkbody('data.originName').isAscii().notEmpty(),
@@ -124,7 +124,7 @@ async (req, res, next)=>{
     }
 });
 
-router.post('/reportById', verifyCaptcha, verifyJWT, 
+router.post('/reportById', verifyJWT, verifyCaptcha, 
 forbidPrivileges(['freezed','blacklisted']), [
 checkbody('data.game').isIn(config.supportGames),
 checkOneof([
