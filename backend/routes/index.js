@@ -1,6 +1,5 @@
+"use strict";
 import express, { json, urlencoded } from "express";
-import validator from "validator";
-import jwt from "jsonwebtoken";
 import { check, body as checkbody, query as checkquery, validationResult, param } from "express-validator";
 
 import db from "../mysql.js";

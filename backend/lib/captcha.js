@@ -1,3 +1,4 @@
+"use strict";
 import svgCaptcha from "svg-captcha-fixed";
 import config from "../config.js";
 import * as misc from "./misc.js";

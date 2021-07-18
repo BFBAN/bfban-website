@@ -1,6 +1,6 @@
+"use strict";
 import got from "got";
 import xmldom from "xmldom";
-import process from "process";
 import * as xpath from "xpath";
 import config, { readDynamicConfig } from "../config.js";
 

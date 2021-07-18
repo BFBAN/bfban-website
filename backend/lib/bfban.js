@@ -1,3 +1,4 @@
+"use strict";
 import EventEmitter from "events";
 
 import config from "../config.js";

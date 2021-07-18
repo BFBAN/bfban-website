@@ -1,3 +1,4 @@
+"use strict";
 import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -11,6 +12,10 @@ import logger from "./logger.js";
 
 import routes_user from "./routes/user.js";
 import routes_index from "./routes/index.js";
+import router_player from "./routes/player.js";
+import router_message from "./routes/message.js";
+//import router_services from "./routes/services.js";
+
 import { query as checkquery, validationResult, body as checkbody } from "express-validator";
 
 const app = express();
@@ -22,9 +27,11 @@ app.use(bodyParser.json());
 
 app.use((req, res, next)=> {console.log(req.body); next();})
 
-app.use('/test', express.static('./test'));
-app.use('/api/index', routes_index);
+app.use('/static', express.static('./test'));
+app.use('/api', routes_index);
 app.use('/api/user', routes_user);
+app.use('/api/player', router_player);
+app.use('/api/message', router_message);
 
 app.get('/api/captcha', (req, res, next)=>{
     res.status(200).json({success: 1, code: 'captcha.gen', data: generateCaptcha()});

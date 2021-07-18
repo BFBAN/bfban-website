@@ -1,6 +1,5 @@
+"use strict";
 import express from "express";
-import validator from "validator";
-import jwt from "jsonwebtoken";
 import { check, body as checkbody, query as checkquery, validationResult, oneOf as checkOneof } from "express-validator";
 
 import db from "../mysql.js";
@@ -11,7 +10,6 @@ import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth
 import { originClients } from "../lib/origin.js"
 import { cheateMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
 import { siteEvent, stateMachine } from "../lib/bfban.js";
-import { json } from "body-parser";
 import { userHasRoles } from "../lib/auth.js";
 
 const router = express.Router()
@@ -121,6 +119,87 @@ async (req, res, next)=>{
 
         siteEvent.emit('data', {method: 'report', params: {report, player}});
         return res.status(201).json({success: 1, code:'report.success', message:'Thank you.'});
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/reportById', verifyCaptcha, verifyJWT, 
+forbidPrivileges(['freezed','blacklisted']), [
+checkbody('data.game').isIn(config.supportGames),
+checkOneof([
+    checkbody('data.originUserId').isInt({min: 0}), 
+    checkbody('data.originPersonaId').isInt({min: 0}) // cuurently not support
+]),
+checkbody('data.cheateMethods').isString().notEmpty().custom(cheateMethodsSanitizer),
+checkbody('data.videolink').optional({checkFalsy: true}).isURL(),
+checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),  
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error:1, code:'reportById.bad', message:validateErr.array()});
+        
+        if(req.query.originPersonaId && !req.query.originUserId)
+            return res.status(500).json({error:1, code:'reportById.notSupportYet', message: 'not support yet'});
+        const originUserId = req.query.originUserId
+        const client = originClients.getOne();
+        let profile;
+        try { 
+            profile = await client.getInfoByUserId(originUserId);
+        } catch(err) {
+            if(err.message.includes('Bad Response:'))   
+                return res.status(404).json({error:1, code:'reportById.notFound', message: 'no such player.'});
+            throw(err); // unknown error, throw it
+        }
+        // now the user being reported is found
+        /** @type {import('../typedef.js').Player|undefined} */
+        const reported = (await db.select('*').from('players').where({originUserId: originUserId}))[0];
+        const updateCol = { originName: profile.username };
+        let avatarLink = '';
+        if(reported) { // reported, re-evaluate status
+            const nextstate = await stateMachine(reported, req.user, 'report');
+            updateCol.commentsNum = reported.commentsNum+1;
+            updateCol.games = reported.games.split(',').includes(req.body.data.game)? reported.games+','+req.body.data.game : reported.games;
+            if(nextstate != reported.status)
+                updateCol.status = nextstate; 
+        } else { // not reported yet, fetch more info
+            avatarLink = await client.getUserAvatar(originUserId); // this step is not such important, add a catch to ignore error?
+        }
+        const player = {
+            originName: profile.username,
+            originUserId: profile.userId,
+            originPersonaId: profile.personaId,
+            games: req.body.data.game,
+            cheateMethods: '', // cheateMethod should be decided by admin
+            avatarLink: avatarLink,
+            viewNum: 0,
+            commentsNum: 1,
+            valid: 1,
+            status: 0, // none
+            createTime: new Date(),
+            updateTime: new Date()
+        };
+        const playerId = await db('players').insert(player).onConflict('originUserId').merge(updateCol); // insert on update
+        await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
+        // write action to db
+        const report = {
+            byUserId: req.user.id, 
+            toPlayerId: reported? reported.id : playerId, // update may return 0 if nothing change, but we have reported then
+            toOriginName: profile.username,
+            toOriginUserId: profile.userId,
+            game: req.body.data.game,
+            cheateMethods: req.body.data.cheateMethods,
+            videoLink: req.body.data.videoLink,
+            description: handleRichTextInput(req.body.data.description),
+            valid: 1,
+            createTime: new Date()
+        };
+        await db('reports').insert(report);
+
+        siteEvent.emit('data', {method: 'report', params: {report, player}});
+        return res.status(201).json({success: 1, code:'reportById.success', message:'Thank you.'});
     } catch(err) {
         next(err);
     }
@@ -297,11 +376,9 @@ async (req, res, next)=>{
         };
         await db('judgements').insert(judgement);
         const nextstate = await stateMachine(player, req.user, req.body.data.action);
-        const player = {
-            status: nextstate,
-            cheateMethods: nextstate==1? req.body.data.cheateMethods : player.cheateMethods,
-            updateTime: new Date(),
-        };
+        player.status = nextstate;
+        player.cheateMethods = nextstate==1? req.body.data.cheateMethods : player.cheateMethods;
+        player.updateTime = new Date();
         await db('players').update(player).increment('commentsNum', 1).where({id: player.id});
 
         siteEvent.emit('data', {method: 'judge', params: {judgement, player}});

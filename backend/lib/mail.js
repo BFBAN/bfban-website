@@ -1,3 +1,4 @@
+"use strict";
 import { SMTPClient, Message } from "emailjs";
 import config from "../config.js";
 

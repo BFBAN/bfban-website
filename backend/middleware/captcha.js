@@ -1,3 +1,4 @@
+"use strict";
 import express from "express";
 import config from "../config.js";
 import * as misc from "../lib/misc.js";

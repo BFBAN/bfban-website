@@ -1,3 +1,4 @@
+"use strict";
 import crypto from "crypto";
 import config from "../config.js";
 const crypt_algo = 'aes256';

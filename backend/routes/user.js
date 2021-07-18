@@ -1,3 +1,4 @@
+"use strict";
 import express from "express";
 import jwt from "jsonwebtoken";
 import { check, body as checkbody, query as checkquery, validationResult } from "express-validator";
@@ -228,7 +229,7 @@ async (req, res, next)=> {
 
 
 router.post('/signout', verifyJWT, /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
-(req, res, next)=>{
+async (req, res, next)=>{
     try {
         await db('users').update({signoutTime: new Date()}).where({id: req.user.id});
         return res.status(200).json({success: 1, code: 'logout.success', message: 'bye~'});
@@ -238,7 +239,7 @@ router.post('/signout', verifyJWT, /** @type {(req:express.Request, res:express.
 });
 
 /** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
-function showUserInfo(req, res, next) {
+async function showUserInfo(req, res, next) {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
@@ -276,15 +277,16 @@ router.get('/info', [ checkquery('id').isInt({min: 0}) ],  showUserInfo);
 router.get('/info4admin', verifyJWT, allowPrivileges(['admin','super','root','dev']), [ 
     checkquery('id').isInt({min: 0})
 ], showUserInfo);
-router.get('/me', verifyJWT(), (req, res, next)=>{req.query.id = ''+req.user.id; next();} // hack to reuse our code qwq
-, showUserInfo);
+router.get('/me', verifyJWT, (req, res, next)=>{
+    req.query.id = ''+req.user.id; return next();
+}, showUserInfo);
 
 router.get('/reports', [
     checkquery('id').isInt({min: 0}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
-(req, res, next)=>{
+async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
@@ -313,7 +315,7 @@ router.post('/me', verifyJWT, [
     checkbody('data.introduction').optional({nullable: true}).isString().isLength({max: 510}),
     checkbody('data.attr').optional({nullable: true}).isObject(),
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
-(req, res, next)=>{
+async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
@@ -335,7 +337,7 @@ router.post('/me', verifyJWT, [
 router.post('/changeName', verifyJWT, verifyCaptcha, [
     checkbody('data.newname').isString().trim().isLength({min: 1, max: 40}),
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
-(req, res, next)=> {
+async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
@@ -365,7 +367,7 @@ router.post('/changePassword', verifyJWT, [
     checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.oldpassword').isString().trim().isLength({min: 1, max: 40})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
-(req, res, next)=> {
+async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
@@ -389,7 +391,7 @@ router.post('/forgetPassword', verifyCaptcha, [
     checkbody('data.username').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.originEmail').trim().isEmail()
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
-(req, res, next)=> {
+async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
@@ -416,7 +418,7 @@ router.post('/forgetPassword', verifyCaptcha, [
 router.get('/forgetPasswordVerify', [
     checkquery('code').isBase64()
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
-(req, res, next)=> {
+async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())

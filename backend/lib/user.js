@@ -1,3 +1,4 @@
+"use strict";
 import xss from "xss";
 
 /** @param {string} content */
@@ -35,14 +36,14 @@ const userAttributes = {
     "allowDM": {type: "boolean", get: true, set: true},
     "certUser": {type: "string", get: true, set: false},
     "freezeOfNoBinding": {type: "boolen", get: true, set: false},
-    "changeNameLeft": {type: "number", get: true, set: false, private: true}
+    "changeNameLeft": {type: "number", get: true, set: false, isprivate: true}
 }
 
-function userShowAttributes(attr, private=false, force=false) {
+function userShowAttributes(attr, isprivate=false, force=false) {
     const result = {};
     for(let i of Object.keys(userAttributes))
         if(typeof(attr[i])==userAttributes[i].type) 
-            if(( userAttributes.get && private|(!userAttributes[i].private) )|| force)
+            if(( userAttributes.get && isprivate|(!userAttributes[i].isprivate) )|| force)
                 result[i] = attr[i];
     return result;
 }
