@@ -23,7 +23,7 @@
  * @property {string} introduction
  * @property {number} valid
  * @property {string} privilege
- * @property {string} attr JSON in string
+ * @property {Object} attr JSON
  * @property {string} originName
  * @property {string} originUserId
  * @property {string} originPersonaId
@@ -54,6 +54,47 @@
  * @property {Date} createTime
  */
 
+/**
+ * @typedef {Object} Reply
+ * @property {number} id
+ * @property {number} toPlayerId
+ * @property {number} byUserId
+ * @property {number} toCommentType ['replies', 'reports', 'judgements', 'ban_appeals']
+ * @property {number} toCommentId
+ * @property {string} content
+ * @property {number} valid
+ * @property {Date} createTime
+ */
+
+/**
+ * @typedef {Object} Report
+ * @property {number} id
+ * @property {number} byUserId
+ * @property {string} toOriginName
+ * @property {number} toPlayerId
+ * @property {string} toOriginUserId
+ * @property {string} toOriginPersonaId
+ * @property {string} game
+ * @property {string} cheateMethods
+ * @property {string} videoLink
+ * @property {string} description
+ * @property {number} valid
+ * @property {Date} createTime
+ */
+
+/**
+ * @typedef {Object} BanAppeal
+ * @property {number} id
+ * @property {number} toPlayerId
+ * @property {number} byUserId
+ * @property {string} content
+ * @property {number} valid
+ * @property {string} viewedAdminIds
+ * @property {string} status
+ * @property {Date} createTime
+ */
+
+
 /** 
  * @typedef {{method:string,params:object}} SiteEvent
  */
@@ -64,4 +105,7 @@ export {
     Judgement,
     ReqUser,
     SiteEvent,
+    Reply,
+    Report,
+    BanAppeal,
 }

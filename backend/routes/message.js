@@ -8,15 +8,15 @@ import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { siteEvent } from "../lib/bfban.js";
-import { userHasNotRoles } from "../lib/auth.js";
-import { parseUserAttribute } from "../lib/user.js";
+import { userHasNotRoles, userHasRoles } from "../lib/auth.js";
 
 const router = express.Router();
 
 router.get('/', verifyJWT, [
-    checkquery('box').optional().isIn(['in','out']),
+    checkquery('box').optional().isIn(['in','out','announce']),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('from').optional().isInt({min: 0}),
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
@@ -26,14 +26,29 @@ async (req, res, next)=> {
         const box = req.query.box? req.query.box : 'in';
         const skip = req.query.skip? req.query.skip : 0;
         const limit = req.query.limit? req.query.limit : 0;
+        const from = req.query.from? req.query.from : 0;
         const result = {messages:[], total:0};
-        if(box=='in') {
-            result.messages = await db.select('*').from('message').where({toUserId: req.user.id}).offset(skip).limit(limit);
-            result.total = await db('messages').count({num: 'id'}).where({toUserId: req.user.id});
-        }
-        else {
-            result.messages = await db.select('*').from('message').where({byUserId: req.user.id}).offset(skip).limit(limit); 
-            result.total = await db('messages').count({num: 'id'}).where({byUserId: req.user.id});
+        switch(box) {
+        case 'in':
+            result.messages = await db.select('*').from('message').where({toUserId: req.user.id}).andWhere('createTime','>=',new Date(from)).offset(skip).limit(limit);
+            result.total = await db('messages').count({num: 'id'}).where({toUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
+            break;
+        case 'out':
+            result.messages = await db.select('*').from('message').where({byUserId: req.user.id}).andWhere('createTime','>=',new Date(from)).offset(skip).limit(limit); 
+            result.total = await db('messages').count({num: 'id'}).where({byUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
+            break;
+        case 'announce':
+            switch(true) {
+            case userHasRoles(req.user, ['admin','super','root']):
+                result.messages = await db.select('*').from('message').whereIn('type', ['banappeal','toAdmins']).andWhere('createTime','>=',new Date(from));
+                result.total += result.messages.length;
+            case userHasRoles(req.user, ['normal']):
+                result.messages = await db.select('*').from('message').whereIn('type', ['toNormal']).andWhere('createTime','>=',new Date(from));
+                result.total += result.messages.length;
+            default:
+                result.messages = await db.select('*').from('message').whereIn('type', ['toAll']).andWhere('createTime','>=',new Date(from));
+                result.total += result.messages.length;
+            }
         }
         res.status(200).json({success: 1, code: 'message.success', data: result});
     } catch(err) {
@@ -70,12 +85,14 @@ async (req, res, next)=> {
             break; // jump out
 
         case ( type=='direct' ): // normal or other user
-            if(parseUserAttribute(toUser).allowDM === true) // normal user can block dm
+            if(toUser.attr.allowDM === true) // normal user can block dm
                 await sendMessage(req.user.id, toUser.id, 'direct', req.body.data.content);
             else
                 return res.status(403).json({error: 1, code:'message.blocked', message: 'user block your message.'});   
             break;
-
+        case ( type=='command' ):
+            await handleCommand();
+            break;
         default: // if the type and privilege did not match all the cases, then deny  
             return res.status(403).json({error: 1, code: 'message.denied', message: 'permission denied.'});
         }
@@ -122,6 +139,9 @@ async function messageOnSiteEvent(event) {
         case 'banappeal':
             await newBanAppeal(event.params);
             break;
+        case 'viewBanappeal':
+            removeBanAppealNotification(event.params);
+            break;
         default:
             break;
         } 
@@ -134,7 +154,7 @@ siteEvent.on('data', messageOnSiteEvent);
 
 /** 
  * @param {number|null} from @param {number|null} to @param {string} content
- * @param {'direct'|'reply'|'info'|'warn'|'fatal'|'toAll'|'toAdmins'|'toNormals'|'command'|'...'} type 
+ * @param {'direct'|'reply'|'banappeal'|'info'|'warn'|'fatal'|'toAll'|'toAdmins'|'toNormals'|'command'|'...'} type 
  * */
 async function sendMessage(from, to, type, content) {
     await db('messages').insert({
@@ -164,18 +184,29 @@ async function iGotJudged(params) {
 }
 
 async function iGotReplied(params) { // checked that comment dose exist
-    const reply = params.comment;
-    const {toCommentType, toCommentId, content} = reply;
+    /** @type {import("../typedef.js").Reply} */
+    const reply = params.reply;
+    const {toCommentType, toCommentId, id} = reply;
     if(!(toCommentType && toCommentId))
         return;
     const dbname = ['replies', 'reports', 'judgements', 'ban_appeals'];
     const toCommentUser = (await db.select('byUserId').from(dbname[toCommentType]).where({id: toCommentId}))[0].byUserId;
-    await sendMessage(reply.byUserId, toCommentUser, 'reply', content);
+    await sendMessage(reply.byUserId, toCommentUser, 'reply', id.toString());
 }
 
 async function newBanAppeal(params) {
-    const { ban_appeal } = params;
-    await sendMessage(ban_appeal.byUserId, undefined, 'toAdmins', 'There is a ban appeal:'+ban_appeal.toPlayerId);
+    /** @type {import("../typedef.js").BanAppeal} */
+    const ban_appeal = params.ban_appeal;
+    await sendMessage(ban_appeal.byUserId, undefined, 'banappeal', ban_appeal.toPlayerId.toString());
+}
+
+async function removeBanAppealNotification(params) {
+    /** @type {import("../typedef.js").BanAppeal} */
+    const ban_appeal = params.ban_appeal;
+    await db('messages').del().where({type: 'banappeal', content: ban_appeal.toPlayerId.toString()});
 }
 
 export default router;
+export {
+    sendMessage,
+};

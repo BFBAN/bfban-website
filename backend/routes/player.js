@@ -42,7 +42,7 @@ async (req, res, next)=>{
         .from('players').where(key, '=', val))[0];
         if(!result)
             return res.status(404).json({error: 1, code: 'player.notFound'});
-        if(req.query.history) // that guy does exsist
+        if(req.query.history) // that guy does exist
             result.history =  await db.select('originName','fromTime','toTime').from('name_logs').where({originUserId: result.originUserId});
         
         res.status(200).json({success: 1, code: 'player.ok', data: result});
@@ -56,7 +56,7 @@ router.post('/report', verifyJWT, verifyCaptcha,
     checkbody('data.game').isIn(config.supportGames),
     checkbody('data.originName').isAscii().notEmpty(),
     checkbody('data.cheateMethods').isString().notEmpty().custom(cheateMethodsSanitizer),
-    checkbody('data.videolink').optional({checkFalsy: true}).isURL(),
+    checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
     checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),  
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
@@ -118,7 +118,12 @@ async (req, res, next)=>{
         await db('reports').insert(report);
 
         siteEvent.emit('data', {method: 'report', params: {report, player}});
-        return res.status(201).json({success: 1, code:'report.success', message:'Thank you.'});
+        return res.status(201).json({success: 1, code:'report.success', message:'Thank you.', data: {
+            originName: profile.username,
+            originUserId: profile.userId,
+            originPersonaId: profile.personaId,
+            dbId: report.toPlayerId
+        }});
     } catch(err) {
         next(err);
     }
@@ -132,7 +137,7 @@ checkOneof([
     checkbody('data.originPersonaId').isInt({min: 0}) // cuurently not support
 ]),
 checkbody('data.cheateMethods').isString().notEmpty().custom(cheateMethodsSanitizer),
-checkbody('data.videolink').optional({checkFalsy: true}).isURL(),
+checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
 checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),  
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
@@ -199,7 +204,12 @@ async (req, res, next)=>{
         await db('reports').insert(report);
 
         siteEvent.emit('data', {method: 'report', params: {report, player}});
-        return res.status(201).json({success: 1, code:'reportById.success', message:'Thank you.'});
+        return res.status(201).json({success: 1, code:'reportById.success', message:'Thank you.', data: {
+            originName: profile.username,
+            originUserId: profile.userId,
+            originPersonaId: profile.personaId,
+            dbId: report.toPlayerId
+        }});
     } catch(err) {
         next(err);
     }
@@ -260,9 +270,9 @@ async (req, res, next)=>{
     }
 });
 
-router.post('/comment', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
+router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
-    checkbody('data.toCommentType').optional({nullable: true}).isIn([0,1,2,3]), // 0-reply 1-report 2-judgement 3-banappela
+    checkbody('data.toCommentType').optional({nullable: true}).isIn([0,1,2,3]), // 0-reply 1-report 2-judgement 3-banappeal
     checkbody('data.toCommentId').optional({nullable: true}).isInt({min: 0}),
     checkbody('data.content').isString().trim().isLength({min: 1, max:65535}),
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
@@ -270,17 +280,17 @@ async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'comment.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});
         
         if(req.body.data.toCommentType && req.body.data.toCommentId) { // check that comment exist
             const dbname = ['replies', 'reports', 'judgements', 'ban_appeals'];
             const tmp = (await db.select('toPlayerId').from(dbname).where({id: req.body.data.toCommentId}))[0].toPlayerId;
             if(tmp != req.body.data.toPlayerId)
-            return res.status(404).json({error: 1, code: 'comment.bad', message: 'no such comment'});
+            return res.status(404).json({error: 1, code: 'reply.bad', message: 'no such comment'});
         }
         if( (await db.select('id').from('players').where({id: req.body.data.toPlayerId}))[0] == undefined ) // no such player
-            return res.status(404).json({error: 1, code: 'comment.notFound', message: 'no such player'});
-        const comment = {
+            return res.status(404).json({error: 1, code: 'reply.notFound', message: 'no such player'});
+        const reply = {
             toPlayerId: req.body.data.toPlayerId,
             byUserId: req.user.id,
             toCommentType: req.body.data.toCommentType? req.body.data.toCommentType : null,
@@ -289,13 +299,13 @@ async (req, res, next)=>{
             valid: 1,
             createTime: new Date(),
         };
-        await db('repiles').insert(comment);
+        await db('repiles').insert(reply);
         await db('players').update({
             updateTime: new Date(), 
         }).increment('commentsNum', 1).where({id: req.body.data.toPlayerId});
         
-        siteEvent.emit('data', {method: 'comment', params: {comment}});
-        return res.status(201).json({success: 1, code: 'comment.suceess', message: 'Reply success.'});
+        siteEvent.emit('data', {method: 'reply', params: {reply}});
+        return res.status(201).json({success: 1, code: 'reply.suceess', message: 'Reply success.'});
     } catch(err) {
         next(err);
     }
@@ -401,7 +411,7 @@ async (req, res, next)=>{
         /** @type {import("../typedef.js").Player|undefined} */
         const player = (await db.select('*').from('players').where({id: req.body.data.toPlayerId}))[0];
         if(!player)
-            return res.status(404).json({success: 1, code: 'banappe.notFound', message: 'no such player'});
+            return res.status(404).json({success: 1, code: 'banappeal.notFound', message: 'no such player'});
 
         const ban_appeal = {
             toPlayerId: player.id,
@@ -416,6 +426,36 @@ async (req, res, next)=>{
 
         siteEvent.emit('data', {method: 'banappeal', params: {ban_appeal}});
         return res.status(200).json({success: 1, code: 'banappeal.success', message:'thank you.'})
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/viewBanappeal', verifyJWT, allowPrivileges(['admin','super','root']), [
+    checkbody('data.id').isInt({min: 0}),
+    checkbody('data.status').isIn(['open','pending','close'])
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'banappeal.bad', message: validateErr.array()});
+        
+        /** @type {import("../typedef.js").BanAppeal} */
+        const ban_appeal = (await db.select('*').from('ban_appeals').where({id: req.body.data.id}) )[0];
+        if(!ban_appeal)
+            return res.status(404).json({success: 1, code: 'banappeal.notFound', message: 'no such ban appeal'});
+        const viewedAdminIds = new Set(ban_appeal.viewedAdminIds.split(','));
+        viewedAdminIds.add(req.user.id);
+        
+        ban_appeal.status = req.body.data.status;
+        ban_appeal.viewedAdminIds = Array.from(viewedAdminIds).slice(0,3).join(',');
+
+        await db('ban_appeals').update(ban_appeal).where({id: ban_appeal.id});
+
+        if(viewedAdminIds.size >= 3)
+            siteEvent.emit('data', {method: 'viewBanappeal', params: {ban_appeal}});
+        return res.status(200).json({success: 1, code: 'viewBanappeal.success', message: 'thank you'});
     } catch(err) {
         next(err);
     }

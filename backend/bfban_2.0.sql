@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `ban_appeals` (
   `status` varchar(16) DEFAULT 'open',
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `toCheaterId` (`toPlayerId`) USING BTREE
+  KEY `toPlayerId` (`toPlayerId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `judgements` (
   `createTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `toOriginUserId` (`toOriginUserId`) USING BTREE,
-  KEY `toCheaterId` (`toPlayerId`) USING BTREE
+  KEY `toPlayerId` (`toPlayerId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `replies` (
   `valid` tinyint unsigned NOT NULL DEFAULT '1',
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `toCheaterId` (`toPlayerId`) USING BTREE
+  KEY `toPlayerId` (`toPlayerId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
@@ -169,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `reports` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `toOriginUserId` (`toOriginUserId`) USING BTREE,
   KEY `toOriginPersonaId` (`toOriginPersonaId`) USING BTREE,
-  KEY `toCheaterId` (`toPlayerId`) USING BTREE
+  KEY `toPlayerId` (`toPlayerId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。

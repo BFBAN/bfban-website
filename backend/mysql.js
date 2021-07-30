@@ -9,7 +9,12 @@ const db = knex({
         port: config.mysql.port,
         user: config.mysql.user,
         password: config.mysql.password,
-        database: config.mysql.database
+        database: config.mysql.database,
+        typeCast: (field, next)=> {
+            if(field.type == 'JSON')
+                return JSON.parse(field.string());
+            return next();
+        }
     }
 });
 

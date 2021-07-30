@@ -24,7 +24,7 @@ async function verifyCaptcha(req, res, next) {
 
         if(!Number.isInteger(parseInt(timeStamp))) // so here we check if it can be parse as int
             return res.status(400).json({ error: 1, code: 'captcha.bad' });
-        if(Date.now() - parseInt(timeStamp) > config.captchaExpiresIn) // is cookie expired?
+        if(Date.now() - parseInt(timeStamp) > config.captchaExpiresIn) // is captcha expired?
             return res.status(403).json({ error: 1, code: 'captcha.expired' });
         if(rightCaptcha !== submitCaptcha) // wrong captcha
             return res.status(403).json({ error: 1, code: 'captcha.wrong' });

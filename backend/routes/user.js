@@ -11,7 +11,7 @@ import { sendRegisterVerify, sendForgetPasswordVerify } from "../lib/mail.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { generatePassword, comparePassword, userHasRoles } from "../lib/auth.js";
 import { originClients } from "../lib/origin.js";
-import { parseUserAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
+import { userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
 import { siteEvent } from "../lib/bfban.js";
 
 const router = express.Router();
@@ -36,7 +36,7 @@ async (req, res, next)=> {
         if( (await db.select('username').from('registers').where({username: username}).union([
             db.select('username').from('users').where({username: username})
         ]) ).length != 0 )
-            return res.status(400).json({error: 1, code: 'signup.usernameExsist'});
+            return res.status(400).json({error: 1, code: 'signup.usernameExist'});
     
         // now check the origin account user binded
         const originClient = originClients.getOne()
@@ -49,7 +49,7 @@ async (req, res, next)=> {
         if( (await db.select('originUserId').from('registers').where({originUserId: originUserId}).union([
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
         ]) ).length != 0 )
-            return res.status(400).json({error: 1, code: 'signup.originBindingExsist'});
+            return res.status(400).json({error: 1, code: 'signup.originBindingExist'});
         if(''.concat(await originClient.getUserGames(originUserId)).includes('Battlefield') == false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'signup.gameNotOwned'});
         
@@ -95,6 +95,7 @@ async (req, res, next)=> {
             originUserId: registrant.originUserId,
             originPersonaId: registrant.originPersonaId,
             privilege: 'normal',
+            attr: JSON.stringify(userDefaultAttribute(req.get('REAL-IP'))),
             createTime: new Date(),
         };
         await db('users').insert(data);
@@ -127,7 +128,7 @@ async (req, res, next)=> {
         if( (await db.select('username').from('registers').where({username: username}).union([
             db.select('username').from('users').where({username: username})
         ]) ).length != 0 )
-            return res.status(400).json({error: 1, code: 'signup.usernameExsist'});
+            return res.status(400).json({error: 1, code: 'signup.usernameExist'});
         const passwdHash = await generatePassword(password);
         await db('users').insert({
             username: username,
@@ -135,6 +136,7 @@ async (req, res, next)=> {
             originName: originName,
             originEmail: originEmail,
             privilege: 'normal',
+            attr: JSON.stringify(userDefaultAttribute()),
             createTime: new Date(),
         });
         return res.status(201).json({success: 1, code:'signup.success', message: 'Welcome to BFBan!'});
@@ -172,6 +174,8 @@ async (req, res, next)=> {
             const jwttoken = jwt.sign(jwtpayload, config.secret, {
                 expiresIn: expiresIn,
             });
+            user.attr.lastSigninIP = req.get('REAL-IP');
+            await db('users').update({updateTime: new Date(), attr: JSON.stringify(user.attr)}).where({id: user.id});
             return res.status(200).json({
                 success: 1,
                 code: 'signin.success',
@@ -211,7 +215,7 @@ async (req, res, next)=> {
         if( (await db.select('originUserId').from('registers').where({originUserId: originUserId}).union([
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
         ]) ).length != 0 )
-            return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExsist'});
+            return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
         if(''.concat(await originClient.getUserGames(originUserId)).includes('Battlefield') == false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'bindOrigin.gameNotOwned'});
 
@@ -249,7 +253,6 @@ async function showUserInfo(req, res, next) {
         const user = (await db.select('*').from('users').where({id: req.query.id}) )[0];
         if(!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
-        const attr = parseUserAttribute(user);
         const reportnum = (await db('reports').count({num: 'id'}).where({byUserId: user.id}) )[0].num;
         const data = {
             username: user.username,
@@ -257,11 +260,11 @@ async function showUserInfo(req, res, next) {
             introduction: user.introduction,
             joinTime: user.createTime.getTime(),
             lastOnlineTime: user.updateTime.getTime(),
-            origin: attr.showOrigin===true || // user set it public
+            origin: user.attr.showOrigin===true || // user set it public
                     (req.user&&userHasRoles(req.user, ['admin','super','root','dev'])) || // no limit for admin
                     (req.user&&req.user.id===user.id)? // for self
                         {username: user.originName,userId: user.originUserId} : null,
-            attr: userShowAttributes(attr, 
+            attr: userShowAttributes(user.attr, 
                 (req.user&&req.user.id===user.id), // self, show private info
                 (req.user&&userHasRoles(req.user, ['admin','super','root','dev'])) ), // no limit for admin
             reportnum: reportnum,
@@ -345,7 +348,7 @@ async (req, res, next)=> {
 
         /** @type {import("../typedef.js").User} */
         const user = (await db.select('*').from('users').where({id: req.user.id}) )[0];
-        const attr = parseUserAttribute(user);
+        const attr = user.attr;
         if(!attr.changeNameLeft && attr.changeNameLeft<=0)
             return res.status(403).json({error: 1, code: 'changeName.noChance', message: 'you have used up all your change name chances.'});
         const occupy = await db.select('id').from('user').where({username: req.body.data.newname}).union([

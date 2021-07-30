@@ -25,9 +25,13 @@ const store = new Vuex.Store({
       Cookies.remove('user');
     },
     syncLoginState(state) {
-      const cookieUser = Cookies.getJSON('user');
-      if (cookieUser) {
-        state.user = cookieUser;
+      try {
+        const cookieUser = JSON.parse(Cookies.get('user'));
+        if (cookieUser) {
+          state.user = cookieUser;
+        }
+      } catch(err) {
+        // no such cookie
       }
     },
     [SET_LANG](state, payload) {

@@ -27,6 +27,8 @@ async function comparePassword(passwd, hash) {
 
 /** @param {{id:number,privilege:string|string[],username:string}|undefined} user @param {string[]} roles */
 function userHasRoles(user, roles) {
+    if(roles[0] == '*')
+        return true;
     if(user && user.privilege) {
         const privilege = Array.isArray(user.privilege)? user.privilege : user.privilege.split(',');
         for(let i of privilege)
@@ -38,6 +40,8 @@ function userHasRoles(user, roles) {
 
 /** @param {{id:number,privilege:string|string[],username:string}|undefined} user @param {string[]} roles */
 function userHasNotRoles(user, roles) {
+    if(roles[0] == '*')
+        return false;
     if(user && user.privilege) {
         const privilege = Array.isArray(user.privilege)? user.privilege : user.privilege.split(',');
         for(let i of privilege)

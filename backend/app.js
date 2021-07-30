@@ -20,6 +20,20 @@ import { query as checkquery, validationResult, body as checkbody } from "expres
 
 const app = express();
 
+app.use((req, res, next)=> {
+    let realIP = '';
+    switch(true) {
+    case !!req.get('CF-Connecting-IP')&&config.cloudflare:
+        realIP = req.get('CF-Connecting-IP'); break;
+    case !!req.get('X-Forwarded-For')&&config.behindProxy:
+        realIP = req.get('X-Forwarded-For').split(',').reverse()[config.behindProxy]; break;
+    default:
+        realIP = req.ip; break;
+    }
+    req.headers['REAL-IP'] = realIP;
+    next();
+});
+
 app.use(cookieParser());
 app.use(morgan(':date[clf] :status :method :url :res[content-length] :response-time ms  :remote-addr'));
 app.use(bodyParser.urlencoded({ extended: false }));
