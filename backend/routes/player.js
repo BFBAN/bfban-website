@@ -1,4 +1,5 @@
 "use strict";
+import EventEmitter from "events";
 import express from "express";
 import { check, body as checkbody, query as checkquery, validationResult, oneOf as checkOneof } from "express-validator";
 
@@ -7,7 +8,7 @@ import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
-import { originClients } from "../lib/origin.js"
+import { originClients, getUserProfileByName } from "../lib/origin.js"
 import { cheateMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
 import { siteEvent, stateMachine } from "../lib/bfban.js";
 import { userHasRoles } from "../lib/auth.js";
@@ -65,26 +66,62 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error:1, code:'report.bad', message:validateErr.array()});
         
-        const client = originClients.getOne();
-        const originUserId = await client.searchUserName(req.body.data.originName); // be aware, this origin name is not case-sesitive
-        if(!originUserId)
+        const isdone = {                                    // what we are doing here:
+            successFlag: false, racer = new Set(),          // because origin api isnt good enough, 
+            winner: '',         fails: new Set(),           // we need multiple api to provide user profile by name
+            failMessages: [],   event: new EventEmitter(),  // and we want it asap, so those api need to RACE
+            // Promise.race() return or throw the first resolved or rejected Promise result, so we need to block the errors till someone done or all failed
+            successListener: (tag)=> {              // the function deal with the api get the result                 
+                isdone.racer.add(tag);              // register racer
+                return (result)=> {                 // return a custom function for handling
+                    if(isdone.successFlag) return;  // someone already done
+                    isdone.event.emit('done');      // the listener function of this event will be called next tick
+                    successFlag=true;  winner=tag;  // so no need to worry about returing competition 
+                    return result;
+                } 
+            },
+            failListener: (tag)=> {                 // the function deal with the api fail
+                isdone.racer.add(tag);              // register racer again, dosent matter because we're using Set
+                return async (error)=> {            // return a custom function for handling
+                    isdone.fails.add(tag); isdone.failMessages.push(error); // log error
+                    if(isdone.successFlag) return;  // someone finished before, so just return
+                    if(isdone.fails.size>=isdone.racer.size) { // all racer failed, throw error
+                        isdone.event.emit('done'); throw(new Error('all tries failed.'));
+                    }
+                    await new Promise((res,rej)=>isdone.event.once('done', res)); // wait for someone finishes or all fail
+                    return;
+                }
+            }
+        };
+        
+        const profile = Promise.race([ 
+            getUserProfileByName(req.body.data.originName).then(isdone.successListener('origin')).catch(isdone.failListener('origin')),
+            // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
+        ]).catch((err)=> { profile = undefined; });
+        if(!profile)
             return res.status(404).json({error:1, code:'report.notFound', message:'Report user not found.'});
-        const profile = await client.getInfoByUserId(originUserId); // use it for later db operations
-        if(profile.username.toLowerCase() !== req.body.data.originName.toLowerCase())
-            return res.status(404).json({error:1, code:'report.notFound', message:'Report user mismatch.'});
+        isdone.event.emit('done');  // terminate the unterminated promise (if exist)
+        isdone.event.removeAllListeners();  // destory
+
         // now the user being reported is found
         /** @type {import('../typedef.js').Player|undefined} */
         const reported = (await db.select('*').from('players').where({originUserId: originUserId}))[0];
         const updateCol = { originName: profile.username };
         let avatarLink = '';
+        let isStateChanged = false;
+        try {   // get/update avatar each report
+            avatarLink = await client.getUserAvatar(originUserId); // this step is not such important, set avatar to default if it fail
+        } catch(err) {
+            avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
+        }
         if(reported) { // reported, re-evaluate status
             const nextstate = await stateMachine(reported, req.user, 'report');
+            isStateChanged = nextstate==reported.status;
+            updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
             updateCol.games = reported.games.split(',').includes(req.body.data.game)? reported.games+','+req.body.data.game : reported.games;
             if(nextstate != reported.status)
                 updateCol.status = nextstate; 
-        } else { // not reported yet, fetch more info
-            avatarLink = await client.getUserAvatar(originUserId); // this step is not such important, add a catch to ignore error?
         }
         const player = {
             originName: profile.username,
@@ -117,7 +154,7 @@ async (req, res, next)=>{
         };
         await db('reports').insert(report);
 
-        siteEvent.emit('data', {method: 'report', params: {report, player}});
+        siteEvent.emit('data', {method: 'report', params: {report, player, isStateChanged}});
         return res.status(201).json({success: 1, code:'report.success', message:'Thank you.', data: {
             originName: profile.username,
             originUserId: profile.userId,
@@ -163,14 +200,18 @@ async (req, res, next)=>{
         const reported = (await db.select('*').from('players').where({originUserId: originUserId}))[0];
         const updateCol = { originName: profile.username };
         let avatarLink = '';
+        try {   // get/update avatar each report
+            avatarLink = await client.getUserAvatar(originUserId); // this step is not such important, set avatar to default if it fail
+        } catch(err) {
+            avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
+        }
         if(reported) { // reported, re-evaluate status
             const nextstate = await stateMachine(reported, req.user, 'report');
+            updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
             updateCol.games = reported.games.split(',').includes(req.body.data.game)? reported.games+','+req.body.data.game : reported.games;
             if(nextstate != reported.status)
                 updateCol.status = nextstate; 
-        } else { // not reported yet, fetch more info
-            avatarLink = await client.getUserAvatar(originUserId); // this step is not such important, add a catch to ignore error?
         }
         const player = {
             originName: profile.username,
@@ -386,12 +427,13 @@ async (req, res, next)=>{
         };
         await db('judgements').insert(judgement);
         const nextstate = await stateMachine(player, req.user, req.body.data.action);
+        const isStateChanged = nextstate==player.status;
         player.status = nextstate;
         player.cheateMethods = nextstate==1? req.body.data.cheateMethods : player.cheateMethods;
         player.updateTime = new Date();
         await db('players').update(player).increment('commentsNum', 1).where({id: player.id});
 
-        siteEvent.emit('data', {method: 'judge', params: {judgement, player}});
+        siteEvent.emit('data', {method: 'judge', params: {judgement, player, isStateChanged}});
         return res.status(200).json({success: 1, code: 'judgement.success', message: 'thank you.'});
     } catch(err) {
         next(err);

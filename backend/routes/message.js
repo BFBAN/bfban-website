@@ -9,6 +9,7 @@ import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { siteEvent } from "../lib/bfban.js";
 import { userHasNotRoles, userHasRoles } from "../lib/auth.js";
+import { handleCommand } from "../lib/command.js";
 
 const router = express.Router();
 
@@ -91,7 +92,7 @@ async (req, res, next)=> {
                 return res.status(403).json({error: 1, code:'message.blocked', message: 'user block your message.'});   
             break;
         case ( type=='command' ):
-            await handleCommand();
+            await handleCommand(req.body.data.content, req.user);
             break;
         default: // if the type and privilege did not match all the cases, then deny  
             return res.status(403).json({error: 1, code: 'message.denied', message: 'permission denied.'});

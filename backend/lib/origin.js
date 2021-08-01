@@ -268,6 +268,17 @@ class OriginClientCluster {
     }
 }
 
+async function getUserProfileByName(originName) {
+    const client = originClients.getOne();
+    const originUserId = await client.searchUserName(originName); // be aware, this origin name is not case-sesitive
+    if(!originUserId)
+        throw new Error('origin: User not found.');
+    const profile = await client.getInfoByUserId(originUserId); // use it for later db operations
+    if(profile.username.toLowerCase() !== originName.toLowerCase())
+        throw new Error('origin: Found user do not match.');
+    return profile;
+}
+
 const originClients = new  OriginClientCluster();
 async function createAccounts() {
     await readDynamicConfig();
@@ -288,4 +299,5 @@ export {
     OriginClientCluster,
     originClients,
     createAccounts,
+    getUserProfileByName,
 };

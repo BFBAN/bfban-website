@@ -5,7 +5,7 @@ import { sendMessage } from "../routes/message";
 import { userHasRoles } from "./auth";
 import { privilegeGranter, privilegeRevoker, userAttributes } from "./user";
 
-
+const webhookSupportEvent = ['stateChange', 'register'];
 const webhookSubscriber = {
     /** @type {Map<string, {url: string, event: string, userId: number, key: string}>} */
     urls: new Map(),
@@ -92,8 +92,8 @@ async function commandAttr(args, user) {
 
 /** @param {string[]} args @param {import('../typedef.js').ReqUser} user */
 async function commandComment(args, user) { // comment reply|report|judgement|banappeal id content
-    if( !!args[3] || // if args[3] exist, it must be string 
-        args[3].length>=65535 || // not too long
+    if( !!args[3] ||                            // if args[3] exist, it must be string 
+        args[3].length>=65535 ||                // not too long
         !Number.isInteger(parseInt(args[2])) || // not a valid id
         !['reply','report','judgement','banappeal'].includes(args[1]) )
         return await sendMessage(null, user.id, 'command', 'comment: incorrect params.');
@@ -151,9 +151,10 @@ async function commandWebhook(args, user) {
     case 'subscribe':                       // webhook subscribe event url key
         if(webhookSubscriber.getByUserId(user).size >= 5)
             return await sendMessage(null, user.id, 'command', 'webhook: maximum subscribe amount exceeded.');
-        if( ['stateChange', 'register'].includes(args[2]) && 
-            /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/.test(args[3]) &&
-            args[4].length <= 128 )
+        if( args.length == 5 &&                                                     // is all params provided?
+            webhookSupportEvent.includes(args[2]) &&                                // is support event?
+            /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/.test(args[3]) &&    // is valid webhook url?
+            args[4].length <= 128 )                                                 // is key length suitable?
             return await sendMessage(null, user.id, 'command', `webhook: subscribe success, id: 
                 ${webhookSubscriber.set(user.id, args[2], args[3], args[4])} .`);
         else
@@ -173,7 +174,7 @@ async function commandWebhook(args, user) {
     }
 }
 
-
+/** @param {string} command @param {import("../typedef.js").ReqUser} user */
 async function handleCommand(command, user) {
     const args = command.split(',', 50);
     if(commands[args[0]] == undefined)
@@ -183,3 +184,45 @@ async function handleCommand(command, user) {
     return await commands[args[0]].exec(args);
 }
 
+/** @type {Map<string,Array>} */
+const webhookPayload = new Map([
+    []
+]);
+
+
+async function webhookPlayerStateChange(params) {
+    /** @type {import("../typedef.js").Player} */
+    const player = params.player;
+    webhookPayload.push()
+}
+
+async function webhookOnSiteEvent(event) {
+    try {
+        switch(event.method) {
+        case 'report':
+            await iGotReported(event.params);
+            break;
+        case 'reply':
+            await iGotReplied(event.params);
+            break;
+        case 'judge':
+            await iGotJudged(event.params);
+            break;
+        case 'banappeal':
+            await newBanAppeal(event.params);
+            break;
+        case 'viewBanappeal':
+            removeBanAppealNotification(event.params);
+            break;
+        default:
+            break;
+        } 
+    } catch(err) {
+
+    }
+}
+
+export {
+    handleCommand,
+    webhookSubscriber,
+}
