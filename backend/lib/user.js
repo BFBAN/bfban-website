@@ -1,7 +1,7 @@
 "use strict";
 import xss from "xss";
 import express from "express";
-import { userHasRoles } from "./auth";
+import { userHasRoles } from "./auth.js";
 
 /** @param {string} content */
 function handleRichTextInput(content) {

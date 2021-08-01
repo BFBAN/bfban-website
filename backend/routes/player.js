@@ -67,7 +67,7 @@ async (req, res, next)=>{
             return res.status(400).json({error:1, code:'report.bad', message:validateErr.array()});
         
         const isdone = {                                    // what we are doing here:
-            successFlag: false, racer = new Set(),          // because origin api isnt good enough, 
+            successFlag: false, racer: new Set(),          // because origin api isnt good enough, 
             winner: '',         fails: new Set(),           // we need multiple api to provide user profile by name
             failMessages: [],   event: new EventEmitter(),  // and we want it asap, so those api need to RACE
             // Promise.race() return or throw the first resolved or rejected Promise result, so we need to block the errors till someone done or all failed

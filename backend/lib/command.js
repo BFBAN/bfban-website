@@ -1,9 +1,9 @@
 import got from "got";
-import uuid from "uuid";
-import db from "../mysql";
-import { sendMessage } from "../routes/message";
-import { userHasRoles } from "./auth";
-import { privilegeGranter, privilegeRevoker, userAttributes } from "./user";
+import * as uuid from "uuid";
+import db from "../mysql.js";
+import { sendMessage } from "../routes/message.js";
+import { userHasRoles } from "./auth.js";
+import { privilegeGranter, privilegeRevoker, userAttributes } from "./user.js";
 
 const webhookSupportEvent = ['stateChange', 'register'];
 const webhookSubscriber = {
