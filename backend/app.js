@@ -1,4 +1,6 @@
 "use strict";
+import fs from "fs";
+import worker_threads from "worker_threads";
 import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -18,6 +20,32 @@ import router_message from "./routes/message.js";
 
 import { query as checkquery, validationResult, body as checkbody } from "express-validator";
 
+process.on('uncaughtException', (err)=> {
+   logger.error('Uncaught Exception:', err.message, err.stack);
+});
+process.on('unhandledRejection', (err)=> {
+    logger.error('Unhandled Rejection:', err.message, err.stack);
+});
+
+fs.watchFile('./config.js', async (eventType, filename)=> { // dynamic load config
+    logger.info('Reading config...');                       // see https://github.com/nodejs/modules/issues/307#issuecomment-858729422
+    const tmpenv = new worker_threads.Worker('      \
+        const worker=require("worker_threads");     \
+        import("./config.js").then(m=>worker.parentPort.postMessage(m.default));', {eval: true});
+    tmpenv.once('message', (v)=> {
+        for(let i of Object.keys(config))
+            delete config[i];
+        for(let i of Object.keys(v))
+            config[i] = v[i];
+        logger.success('Config update success.', config);
+        origin.createAccounts();
+    });
+    tmpenv.once('error', (err)=> {
+        logger.error('Config update fail!', err.message, err.stack)
+    });
+});
+
+origin.createAccounts();
 const app = express();
 
 app.use((req, res, next)=> {
@@ -30,7 +58,7 @@ app.use((req, res, next)=> {
     default:
         realIP = req.ip; break;
     }
-    req.headers['REAL-IP'] = realIP;
+    req.REAL_IP = realIP;
     next();
 });
 
@@ -49,11 +77,6 @@ app.use('/api/message', router_message);
 
 app.get('/api/captcha', (req, res, next)=>{
     res.status(200).json({success: 1, code: 'captcha.gen', data: generateCaptcha()});
-});
-
-app.get('/devRefreshConfig', (req, res, next)=> {
-    origin.createAccounts();
-    next();
 });
 
 app.get('/is', [checkbody('is').trim() ], (req, res, next)=>{

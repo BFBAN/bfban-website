@@ -1,6 +1,7 @@
 "use strict";
 import xss from "xss";
 import express from "express";
+import config from "../config.js";
 import { userHasRoles } from "./auth.js";
 
 /** @param {string} content */
@@ -32,17 +33,17 @@ function privilegeRevoker(current, del) {
     return Array.from(tmp).join(',');
 }
 
-function cheateMethodsSanitizer(val, {req}) {
-    const cheateMethods = new Set();
+function cheatMethodsSanitizer(val, {req}) {
+    const cheatMethods = new Set();
     for(let i of val.split(','))
-        if(config.possibleCheateMethods.includes(i))
-            cheateMethods.add(i); // validate & remove duplicated
-    if(cheateMethods.size == 0)
+        if(config.possiblecheatMethods.includes(i))
+            cheatMethods.add(i); // validate & remove duplicated
+    if(cheatMethods.size == 0)
         throw new Error("No valid cheate method given.");
-    req.body.data.cheateMethods = ''; // rewrite to sanitize
-    for(let i of cheateMethods.keys())
-    req.body.data.cheateMethods += i+',';
-    req.body.data.cheateMethods = req.body.data.cheateMethods.slice(0,-1); // remove trailing comma
+    req.body.data.cheatMethods = ''; // rewrite to sanitize
+    for(let i of cheatMethods.keys())
+    req.body.data.cheatMethods += i+',';
+    req.body.data.cheatMethods = req.body.data.cheatMethods.slice(0,-1); // remove trailing comma
     return true;
 }
 
@@ -113,7 +114,7 @@ const userAttributes = {
 function userShowAttributes(attr, showprivate=false, force=false) {
     const result = {};
     for(let i of Object.keys(userAttributes))
-        if(( userAttributes.get && showprivate|(!userAttributes[i].isprivate) )|| force)
+        if(( userAttributes[i].get && showprivate|(!userAttributes[i].isprivate) )|| force)
             result[i] = attr[i];
     return result;
 }
@@ -121,7 +122,7 @@ function userShowAttributes(attr, showprivate=false, force=false) {
 function userSetAttributes(attr, force=false) {
     const result = {};
     for(let i of Object.keys(userAttributes))
-        if(typeof(attr[i])==userAttributes[i].type && (userAttributes.set || force))
+        if(typeof(attr[i])==userAttributes[i].type && (userAttributes[i].set || force))
             result[i] = attr[i];
     return result;
 }
@@ -139,7 +140,7 @@ export {
     handleRichTextInput,
     privilegeGranter,
     privilegeRevoker,
-    cheateMethodsSanitizer,
+    cheatMethodsSanitizer,
     userAttributes,
     userSetAttributes,
     userShowAttributes,

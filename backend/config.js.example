@@ -1,15 +1,17 @@
+"use strict";
 import fs from "fs";
 import path from "path";
 
 const config = {
     // security
-    secret: 'not secret',
+    secret: 'dontTellAnyOneAboutThis',
     captchaExpiresIn: 1000*60*20,
     errorHelperVerbose: process.env.NODE_ENV==='production'? false : true,
     // runtime
     port: process.env.port || 4002,
     address: true? '127.0.0.1' : '0.0.0.0',
     baseDir: path.resolve('./'),
+    behindProxy: 0,
     // database
     mysql: {
         host: '127.0.0.1',
@@ -18,44 +20,33 @@ const config = {
         password: 'weakpasswd',
         database: 'bfban_2.0'
     },
+    // using cloudflare?
+    cloudflare: true,
     // github
     github: {
 
     },
     mail: {
-        host: 'smtp.xxx.com',
+        host: 'smtp.somewhere.com',
         port: 465,
         secure: true,
-        user: 'accounts@xxx.com',
-        password: 'IWontShowYouThePasswordOFC'
+        user: 'somebody@somewhere.com',
+        password: 'notweakpassword'
     },
 
     // DYNAMIC CONFIGURE BEGIN
-	personsToConfirm: 2,			 
+    personsToConfirm: 2,
     originAccounts: [
-        {tag: '', remid:'', sid:''},
+        {
+            tag: 'whatever you want', 
+            remid:'remid', 
+            sid:'sid'
+        },
     ],
     supportGames: [ 'bf1', 'bfv' ],
-    possibleCheateMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet', 
-    'damageChange', 'gadgetModify', 'moveImpossibly', 'attackServer'],
+    possiblecheatMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet', 
+    'damageChange', 'gadgetModify', 'teleport', 'attackServer'],
     // DYNAMIC CONFIGURE END
 }
 
-const dynamic_cfg = {
-    // origin config 
-    originAccounts: [
-        {tag: '', remid:'', sid:''},
-    ],
-    // site function config
-	personsToConfirm: 2,	 
-    supportGames: [ 'bf1', 'bfv' ],
-    possibleCheateMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet', 
-    'damageChange', 'gadgetModify', 'moveImpossibly', 'attackServer'],
-}
-
-async function readDynamicConfig() {
-    await import("./config.js").then(m=> { for(let i in m.dynamic_cfg) config[i] = dynamic_cfg[i] });
-}
-
 export default config;
-export { readDynamicConfig, dynamic_cfg };

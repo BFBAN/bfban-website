@@ -13,6 +13,7 @@ import { generatePassword, comparePassword, userHasRoles } from "../lib/auth.js"
 import { originClients } from "../lib/origin.js";
 import { userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
 import { siteEvent } from "../lib/bfban.js";
+import logger from "../logger.js";
 
 const router = express.Router();
 
@@ -68,6 +69,7 @@ async (req, res, next)=> {
             createTime: new Date()
         });
         await sendRegisterVerify(username, originName, originEmail, randomStr);
+        logger.info('users.signup Success:', {username,originName,originEmail,randomStr});
         return res.status(201).json({success: 1, code:'signup.needVerify', message: 'Verify Email to join BFBan!'});
     } catch(err) {
         next(err);
@@ -95,12 +97,12 @@ async (req, res, next)=> {
             originUserId: registrant.originUserId,
             originPersonaId: registrant.originPersonaId,
             privilege: 'normal',
-            attr: JSON.stringify(userDefaultAttribute(req.get('REAL-IP'))),
+            attr: JSON.stringify(userDefaultAttribute(req.REAL_IP)),
             createTime: new Date(),
         };
         await db('users').insert(data);
         await db('registers').where({uniqCode: code}).delete();
-
+        logger.info('users.signupVerify Success:', {name: data.username});
         siteEvent.emit('data', {method: 'register', params: {user: data}});
         return res.status(201).json({success: 1, code:'signup.success', message: 'Welcome to BFBan!'});
     } catch(err) {
@@ -174,8 +176,10 @@ async (req, res, next)=> {
             const jwttoken = jwt.sign(jwtpayload, config.secret, {
                 expiresIn: expiresIn,
             });
-            user.attr.lastSigninIP = req.get('REAL-IP');
+            user.attr.lastSigninIP = req.REAL_IP;
             await db('users').update({updateTime: new Date(), attr: JSON.stringify(user.attr)}).where({id: user.id});
+            logger.info('users.login Success:',{name: user.username, ip: req.REAL_IP, token: jwttoken});
+
             return res.status(200).json({
                 success: 1,
                 code: 'signin.success',
@@ -218,7 +222,7 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
         if(''.concat(await originClient.getUserGames(originUserId)).includes('Battlefield') == false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'bindOrigin.gameNotOwned'});
-
+        logger.info('users.bindOrigin Success:', {name: req.user.username});
         // no mistakes detected, change db record
         await db('users').update({
             originName: originName,

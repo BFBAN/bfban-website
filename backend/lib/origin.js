@@ -2,7 +2,8 @@
 import got from "got";
 import xmldom from "xmldom";
 import * as xpath from "xpath";
-import config, { readDynamicConfig } from "../config.js";
+import config from "../config.js";
+import logger from "../logger.js";
 
 const origin_api_urls = [
     "api1.origin.com",
@@ -69,6 +70,7 @@ class OriginClient {
                 if(body.access_token && body.expires_in) { // reponse correct?
                     this.tokens.access_token = body.access_token;
                     this.tokens.expires_when = Date.now() + body.expires_in*1000;
+                    logger.info('originClient.getSelfAccessToken Success:', {access_token: body.access_token, expires_in: body.expires_in});
                     return {access_token: body.access_token, expires_in: body.expires_in}; // Return here
                 } // not correct->default
             case 'login_required':
@@ -107,8 +109,9 @@ class OriginClient {
             this.self_prop.username = username;
             this.self_prop.userId = selfUserId;
             this.self_prop.personaId = personaId;
+            logger.info('originClient.getSelfInfo Success:', {username, selfUserId, personaId});
         } catch(err) { 
-            throw(new Error('OriginCient.getSelfInfo() > ')+err.message); 
+            throw(new Error('OriginCient.getSelfInfo() > '+err.message)); 
         }
     }
 
@@ -281,18 +284,13 @@ async function getUserProfileByName(originName) {
 
 const originClients = new  OriginClientCluster();
 async function createAccounts() {
-    await readDynamicConfig();
     const accounts = config.originAccounts;
-    console.log(accounts);
     const clients = [];
     for(let i of accounts)
         clients.push(new OriginClient({remid: i.remid, sid: i.sid}));
     await Promise.all( clients.map(i=>{ return i.getSelfInfo() }) );
     originClients.set(clients);
 }
-(async ()=> {
-    createAccounts();
-})();
 
 export {
     OriginClient,

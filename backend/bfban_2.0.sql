@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- 主机:                           127.0.0.1
--- 服务器版本:                        8.0.23 - MySQL Community Server - GPL
+-- 服务器版本:                        8.0.26 - MySQL Community Server - GPL
 -- 服务器操作系统:                      Win64
 -- HeidiSQL 版本:                  11.3.0.6295
 -- --------------------------------------------------------
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `name_logs` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `originUserId` (`originUserId`) USING BTREE,
   KEY `originUserName` (`originName`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `players` (
   UNIQUE KEY `originUserId` (`originUserId`) USING BTREE,
   KEY `originPersonaId` (`originPersonaId`) USING BTREE,
   KEY `originId` (`originName`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `replies` (
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `toPlayerId` (`toPlayerId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `reports` (
   KEY `toOriginUserId` (`toOriginUserId`) USING BTREE,
   KEY `toOriginPersonaId` (`toOriginPersonaId`) USING BTREE,
   KEY `toPlayerId` (`toPlayerId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `introduction` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '',
   `valid` tinyint NOT NULL DEFAULT '1',
   `privilege` varchar(40) NOT NULL DEFAULT '',
-  `attr` text,
+  `attr` json DEFAULT (json_object()),
   `originName` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `originUserId` varchar(20) DEFAULT NULL,
   `originPersonaId` varchar(20) DEFAULT NULL,

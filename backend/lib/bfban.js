@@ -13,37 +13,37 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 0,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
     { from: 0,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to trash
     { from: 0,      to: 5,  action: 'dicuss',   privilege: ['admin', 'super', 'root'] }, // to discuss
-    { from: 0,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pre-confirm ban
+    { from: 0,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 0,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
     // suspect
     { from: 2,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 2,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
     { from: 2,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to trash
     { from: 2,      to: 5,  action: 'dicuss',   privilege: ['admin', 'super', 'root'] }, // to discuss
-    { from: 2,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pre-confirm ban
+    { from: 2,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 2,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
     // innocent
     { from: 3,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 3,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 3,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to trash
     { from: 3,      to: 5,  action: 'dicuss',   privilege: ['admin', 'super', 'root'] }, // to discuss
-    { from: 3,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pre-confirm ban
+    { from: 3,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 3,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
     // trash
     { from: 4,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 4,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 4,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
     { from: 4,      to: 5,  action: 'dicuss',   privilege: ['admin', 'super', 'root'] }, // to discuss
-    { from: 4,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pre-confirm ban
+    { from: 4,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 4,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
     // discuss
     { from: 5,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 5,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 5,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
     { from: 5,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to discuss
-    { from: 5,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pre-confirm ban
+    { from: 5,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 5,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
-    // pre-confirm, dont handle re-report here
+    // pending, dont handle re-report here
     { from: 6,      to: 1,  action: 'guilt',    privilege: toConfirm }, // to confirm ban, must supported by at least $config.personsToConfirm person
     { from: 6,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 6,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent

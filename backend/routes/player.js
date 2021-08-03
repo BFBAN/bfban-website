@@ -9,7 +9,7 @@ import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { originClients, getUserProfileByName } from "../lib/origin.js"
-import { cheateMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
+import { cheatMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
 import { siteEvent, stateMachine } from "../lib/bfban.js";
 import { userHasRoles } from "../lib/auth.js";
 
@@ -56,7 +56,7 @@ router.post('/report', verifyJWT, verifyCaptcha,
     forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.game').isIn(config.supportGames),
     checkbody('data.originName').isAscii().notEmpty(),
-    checkbody('data.cheateMethods').isString().notEmpty().custom(cheateMethodsSanitizer),
+    checkbody('data.cheatMethods').isString().notEmpty().custom(cheatMethodsSanitizer),
     checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
     checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),  
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
@@ -76,7 +76,7 @@ async (req, res, next)=>{
                 return (result)=> {                 // return a custom function for handling
                     if(isdone.successFlag) return;  // someone already done
                     isdone.event.emit('done');      // the listener function of this event will be called next tick
-                    successFlag=true;  winner=tag;  // so no need to worry about returing competition 
+                    isdone.successFlag=true; isdone.winner=tag;  // so no need to worry about returing competition 
                     return result;
                 } 
             },
@@ -93,11 +93,15 @@ async (req, res, next)=>{
                 }
             }
         };
-        
-        const profile = Promise.race([ 
+        /** @type {{username:string, personaId:string, userId:string}} */
+        const profile = await Promise.race([ 
             getUserProfileByName(req.body.data.originName).then(isdone.successListener('origin')).catch(isdone.failListener('origin')),
             // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
-        ]).catch((err)=> { profile = undefined; });
+        ]).catch((err)=> { 
+            console.log(err);   // DEBUG
+            console.log(isdone.failMessages);
+            return undefined; 
+        });
         if(!profile)
             return res.status(404).json({error:1, code:'report.notFound', message:'Report user not found.'});
         isdone.event.emit('done');  // terminate the unterminated promise (if exist)
@@ -105,12 +109,12 @@ async (req, res, next)=>{
 
         // now the user being reported is found
         /** @type {import('../typedef.js').Player|undefined} */
-        const reported = (await db.select('*').from('players').where({originUserId: originUserId}))[0];
+        const reported = (await db.select('*').from('players').where({originUserId: profile.userId}))[0];
         const updateCol = { originName: profile.username };
         let avatarLink = '';
         let isStateChanged = false;
         try {   // get/update avatar each report
-            avatarLink = await client.getUserAvatar(originUserId); // this step is not such important, set avatar to default if it fail
+            avatarLink = await client.getUserAvatar(profile.userId); // this step is not such important, set avatar to default if it fail
         } catch(err) {
             avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
         }
@@ -128,7 +132,7 @@ async (req, res, next)=>{
             originUserId: profile.userId,
             originPersonaId: profile.personaId,
             games: req.body.data.game,
-            cheateMethods: '', // cheateMethod should be decided by admin
+            cheatMethods: '', // cheateMethod should be decided by admin
             avatarLink: avatarLink,
             viewNum: 0,
             commentsNum: 1,
@@ -146,7 +150,7 @@ async (req, res, next)=>{
             toOriginName: profile.username,
             toOriginUserId: profile.userId,
             game: req.body.data.game,
-            cheateMethods: req.body.data.cheateMethods,
+            cheatMethods: req.body.data.cheatMethods,
             videoLink: req.body.data.videoLink,
             description: handleRichTextInput(req.body.data.description),
             valid: 1,
@@ -173,7 +177,7 @@ checkOneof([
     checkbody('data.originUserId').isInt({min: 0}), 
     checkbody('data.originPersonaId').isInt({min: 0}) // cuurently not support
 ]),
-checkbody('data.cheateMethods').isString().notEmpty().custom(cheateMethodsSanitizer),
+checkbody('data.cheatMethods').isString().notEmpty().custom(cheatMethodsSanitizer),
 checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
 checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),  
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
@@ -218,7 +222,7 @@ async (req, res, next)=>{
             originUserId: profile.userId,
             originPersonaId: profile.personaId,
             games: req.body.data.game,
-            cheateMethods: '', // cheateMethod should be decided by admin
+            cheatMethods: '', // cheateMethod should be decided by admin
             avatarLink: avatarLink,
             viewNum: 0,
             commentsNum: 1,
@@ -236,7 +240,7 @@ async (req, res, next)=>{
             toOriginName: profile.username,
             toOriginUserId: profile.userId,
             game: req.body.data.game,
-            cheateMethods: req.body.data.cheateMethods,
+            cheatMethods: req.body.data.cheatMethods,
             videoLink: req.body.data.videoLink,
             description: handleRichTextInput(req.body.data.description),
             valid: 1,
@@ -267,7 +271,7 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'timeline.bad', message: validateErr.array()});
         let dbId = 0;
-        switch(ture) {
+        switch(true) {
         case !!req.query.dbId: // check if it is exist
             if((await db.select('id').from('players').where({id:req.query.dbId})).length > 0)
                 dbId = parseInt(req.query.dbId);
@@ -292,13 +296,13 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'timeline.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
         }
         const reports = await db.select('id','byUserId','toOriginName','game','cheatMethods','videoLink','description','createTime')
-        .from('reports').where({toPlayerId: req.query.dbId, valid: 1});
+        .from('reports').where({toPlayerId: dbId, valid: 1});
         const judgements = await db.select('id','byUserId','cheatMethods','action','content','createTime')
-        .from('judgements').where({toPlayerId: req.query.dbID, valid: 1}).orderBy('createTime', 'desc');
+        .from('judgements').where({toPlayerId: dbId, valid: 1}).orderBy('createTime', 'desc');
         const comments = await db.select('id','byuserId','toCommentType','toCommentId','content','createTime')
-        .from('replies').where({toPlayerId: req.query.dbID, valid: 1}).orderBy('createTime', 'desc');
+        .from('replies').where({toPlayerId: dbId, valid: 1}).orderBy('createTime', 'desc');
         const ban_appeals = await db.select('id','byUserId','content','viewedAdminIds','status','createTime')
-        .from('ban_appeals').where({toPlayerId: req.query.dbID, valid: 1}).orderBy('createTime', 'desc');
+        .from('ban_appeals').where({toPlayerId: dbId, valid: 1}).orderBy('createTime', 'desc');
 
         res.status(200).json({success: 1, code: 'timeline.success', data: {
             reports,
@@ -323,11 +327,11 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});
         
-        if(req.body.data.toCommentType && req.body.data.toCommentId) { // check that comment exist
-            const dbname = ['replies', 'reports', 'judgements', 'ban_appeals'];
+        if(req.body.data.toCommentType && req.body.data.toCommentId) { // reply to a comment, check that comment exist
+            const dbname = ['replies', 'reports', 'judgements', 'ban_appeals'][req.body.data.toCommentType];
             const tmp = (await db.select('toPlayerId').from(dbname).where({id: req.body.data.toCommentId}))[0].toPlayerId;
-            if(tmp != req.body.data.toPlayerId)
-            return res.status(404).json({error: 1, code: 'reply.bad', message: 'no such comment'});
+            if(tmp != req.body.data.toPlayerId) // the comment and the ongoing reply is not under the same player
+                return res.status(404).json({error: 1, code: 'reply.bad', message: 'no such comment'});
         }
         if( (await db.select('id').from('players').where({id: req.body.data.toPlayerId}))[0] == undefined ) // no such player
             return res.status(404).json({error: 1, code: 'reply.notFound', message: 'no such player'});
@@ -340,7 +344,7 @@ async (req, res, next)=>{
             valid: 1,
             createTime: new Date(),
         };
-        await db('repiles').insert(reply);
+        await db('replies').insert(reply);
         await db('players').update({
             updateTime: new Date(), 
         }).increment('commentsNum', 1).where({id: req.body.data.toPlayerId});
@@ -396,7 +400,7 @@ async (req, res, next)=>{
 
 router.post('/judgement', verifyJWT, allowPrivileges(['admin','super','root']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
-    checkbody('data.cheatMethods').optional().isString().custom(cheateMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
+    checkbody('data.cheatMethods').optional().isString().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
     checkbody('data.action').isIn(['suspect','innocent','dicuss','guilt','kill']),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
@@ -405,7 +409,7 @@ async (req, res, next)=>{
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'judgement.bad', message: validateErr.array()});
-        if((req.body.data.action=='kill'||req.body.data.action=='guilt') && !req.body.data.cheateMethods)
+        if((req.body.data.action=='kill'||req.body.data.action=='guilt') && !req.body.data.cheatMethods)
             return res.status(400).json({error: 1, code: 'judgement.bad', message: 'must specify one cheate method.'});
         if(req.body.data.action=='kill' && !userHasRoles(req.user, ['super','root']))
             return res.status(403).json({error: 1, code: 'judgement.permissionDenied', message: 'permission denied.'});
@@ -419,7 +423,7 @@ async (req, res, next)=>{
             byUserId: req.user.id, 
             toPlayerId: player.id,
             toOriginUserId: player.originUserId,
-            cheateMethods: req.body.data.cheateMethods? req.body.data.cheateMethods : null,
+            cheatMethods: req.body.data.cheatMethods? req.body.data.cheatMethods : null,
             action: req.body.data.action,
             content: handleRichTextInput(req.body.data.content),
             valid: 1,
@@ -429,7 +433,7 @@ async (req, res, next)=>{
         const nextstate = await stateMachine(player, req.user, req.body.data.action);
         const isStateChanged = nextstate==player.status;
         player.status = nextstate;
-        player.cheateMethods = nextstate==1? req.body.data.cheateMethods : player.cheateMethods;
+        player.cheatMethods = nextstate==1? req.body.data.cheatMethods : player.cheatMethods;
         player.updateTime = new Date();
         await db('players').update(player).increment('commentsNum', 1).where({id: player.id});
 
@@ -505,7 +509,7 @@ async (req, res, next)=>{
 
 /** @param {string} originName @param {string} originUserId @param {string} originPersonaId */
 async function pushOriginNameLog(originName, originUserId, originPersonaId) {
-    const last = (await db.select('*').from('name_logs').where({originUserId: originUserId}).orderBy('toTime', 'desc').first())[0];
+    const last = await db.select('*').from('name_logs').where({originUserId: originUserId}).orderBy('toTime', 'desc').first();
     if(last && last.originName==originName) {
         await db('name_logs').update({toTime: new Date}).where({id: last.id});
         return false;

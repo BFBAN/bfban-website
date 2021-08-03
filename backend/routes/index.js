@@ -159,7 +159,7 @@ async (req, res, next)=>{
                 result.code = 'advSearch.foundBoth';
                 result.data.record = { currentName: record.originName, status: record.status, cheatMethods: record.cheatMethods };
             }
-            return res.status(200),json(result);
+            return res.status(200).json(result);
         } else {
             return res.status(200).json({success: 1, code:'advSearch.notFound', data:null });
         }

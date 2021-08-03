@@ -5,7 +5,7 @@
  * @property {string} originPersonaId
  * @property {string} originUserId
  * @property {string} games
- * @property {string} cheateMethods
+ * @property {string} cheatMethods
  * @property {string} avatarLink
  * @property {number} viewNum
  * @property {number} commentsNum
@@ -48,7 +48,7 @@
  * @property {number} toPlayerId
  * @property {string} toOriginUserId
  * @property {string} toOriginPersonaId
- * @property {string} cheateMethods
+ * @property {string} cheatMethods
  * @property {string} action
  * @property {string} content
  * @property {Date} createTime
@@ -75,7 +75,7 @@
  * @property {string} toOriginUserId
  * @property {string} toOriginPersonaId
  * @property {string} game
- * @property {string} cheateMethods
+ * @property {string} cheatMethods
  * @property {string} videoLink
  * @property {string} description
  * @property {number} valid
