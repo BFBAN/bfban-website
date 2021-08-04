@@ -114,18 +114,19 @@ async (req, res, next)=>{
         let avatarLink = '';
         let isStateChanged = false;
         try {   // get/update avatar each report
+            const client = originClients.getOne();
             avatarLink = await client.getUserAvatar(profile.userId); // this step is not such important, set avatar to default if it fail
         } catch(err) {
             avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
         }
         if(reported) { // reported, re-evaluate status
             const nextstate = await stateMachine(reported, req.user, 'report');
-            isStateChanged = nextstate==reported.status;
+            isStateChanged = nextstate!=reported.status;
             updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
-            updateCol.games = reported.games.split(',').includes(req.body.data.game)? reported.games+','+req.body.data.game : reported.games;
-            if(nextstate != reported.status)
-                updateCol.status = nextstate; 
+            updateCol.games = Array.from(new Set(reported.games.split(',')).add(req.body.data.game)).join(',');
+            updateCol.status = nextstate;
+            updateCol.updateTime = new Date();
         }
         const player = {
             originName: profile.username,
@@ -141,12 +142,16 @@ async (req, res, next)=>{
             createTime: new Date(),
             updateTime: new Date()
         };
-        const playerId = await db('players').insert(player).onConflict('originUserId').merge(updateCol); // insert on update
+        let playerId = 0;
+        if(reported) // update, return number
+            playerId = await db('players').update(updateCol).where({id: reported.id});
+        else // insert, return [number]
+            playerId = (await db('players').insert(player) )[0];
         await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
         // write action to db
         const report = {
             byUserId: req.user.id, 
-            toPlayerId: reported? reported.id : playerId, // update may return 0 if nothing change, but we have reported then
+            toPlayerId: playerId, // update may return 0 if nothing change, but we have reported then
             toOriginName: profile.username,
             toOriginUserId: profile.userId,
             game: req.body.data.game,
@@ -157,7 +162,8 @@ async (req, res, next)=>{
             createTime: new Date()
         };
         await db('reports').insert(report);
-
+        player.id = playerId;
+        
         siteEvent.emit('data', {method: 'report', params: {report, player, isStateChanged}});
         return res.status(201).json({success: 1, code:'report.success', message:'Thank you.', data: {
             originName: profile.username,
@@ -201,21 +207,24 @@ async (req, res, next)=>{
         }
         // now the user being reported is found
         /** @type {import('../typedef.js').Player|undefined} */
-        const reported = (await db.select('*').from('players').where({originUserId: originUserId}))[0];
+        const reported = (await db.select('*').from('players').where({originUserId: profile.userId}))[0];
         const updateCol = { originName: profile.username };
         let avatarLink = '';
+        let isStateChanged = false;
         try {   // get/update avatar each report
-            avatarLink = await client.getUserAvatar(originUserId); // this step is not such important, set avatar to default if it fail
+            const client = originClients.getOne();
+            avatarLink = await client.getUserAvatar(profile.userId); // this step is not such important, set avatar to default if it fail
         } catch(err) {
             avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
         }
         if(reported) { // reported, re-evaluate status
             const nextstate = await stateMachine(reported, req.user, 'report');
+            isStateChanged = nextstate!=reported.status;
             updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
-            updateCol.games = reported.games.split(',').includes(req.body.data.game)? reported.games+','+req.body.data.game : reported.games;
-            if(nextstate != reported.status)
-                updateCol.status = nextstate; 
+            updateCol.games = Array.from(new Set(reported.games.split(',')).add(req.body.data.game)).join(',');
+            updateCol.status = nextstate;
+            updateCol.updateTime = new Date();
         }
         const player = {
             originName: profile.username,
@@ -231,12 +240,16 @@ async (req, res, next)=>{
             createTime: new Date(),
             updateTime: new Date()
         };
-        const playerId = await db('players').insert(player).onConflict('originUserId').merge(updateCol); // insert on update
+        let playerId = 0;
+        if(reported) // update, return number
+            playerId = await db('players').update(updateCol).where({id: reported.id});
+        else // insert, return [number]
+            playerId = (await db('players').insert(player) )[0];
         await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
         // write action to db
         const report = {
             byUserId: req.user.id, 
-            toPlayerId: reported? reported.id : playerId, // update may return 0 if nothing change, but we have reported then
+            toPlayerId: playerId, // update may return 0 if nothing change, but we have reported then
             toOriginName: profile.username,
             toOriginUserId: profile.userId,
             game: req.body.data.game,
@@ -247,9 +260,10 @@ async (req, res, next)=>{
             createTime: new Date()
         };
         await db('reports').insert(report);
-
-        siteEvent.emit('data', {method: 'report', params: {report, player}});
-        return res.status(201).json({success: 1, code:'reportById.success', message:'Thank you.', data: {
+        player.id = playerId;
+        
+        siteEvent.emit('data', {method: 'report', params: {report, player, isStateChanged}});
+        return res.status(201).json({success: 1, code:'report.success', message:'Thank you.', data: {
             originName: profile.username,
             originUserId: profile.userId,
             originPersonaId: profile.personaId,

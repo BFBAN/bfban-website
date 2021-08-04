@@ -10,6 +10,7 @@ import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth
 import { siteEvent } from "../lib/bfban.js";
 import { userHasNotRoles, userHasRoles } from "../lib/auth.js";
 import { handleCommand } from "../lib/command.js";
+import logger from "../logger.js";
 
 const router = express.Router();
 
@@ -126,6 +127,7 @@ async (req, res, next)=> {
 
 /** @param {import("../typedef.js").SiteEvent} event */
 async function messageOnSiteEvent(event) {
+    logger.info('SiteEvent emitted: '+event.method, event.params);
     try {
         switch(event.method) {
         case 'report':
@@ -147,7 +149,7 @@ async function messageOnSiteEvent(event) {
             break;
         } 
     } catch(err) {
-
+        console.error('Error when handling siteEvent: '+err.message, err.stack);
     }
 }
 
@@ -171,7 +173,7 @@ async function sendMessage(from, to, type, content) {
 async function iGotReported(params) {
     const { report } = params;
     const user = (await db.select('id').from('users').where({originUserId: report.toOriginUserId}))[0];
-    if(!userId) // that player being reported hasnt registered our site
+    if(!user) // that player being reported hasnt registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', 'You were reported by someone.');
 }

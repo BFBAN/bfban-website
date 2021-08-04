@@ -13,15 +13,16 @@ const origin_api_urls = [
 ];
 
 class OriginClient {
-    /** @param {{remid:string, sid:string}} cookies */
+    /** @param {{tag:string,remid:string, sid:string}} cookies */
     constructor(cookies) {
+        this.tag = cookies.tag;
         this.cookies = cookies;
         this.cur_state = OriginClient.STATE.OK;
     }
     
     static STATE = {'UNDEFINED': 0, 'OK': 1, 'INVALID_COOKIE': 2, 'UNKNOWN_ERROR': 255, 0:'UNDEFINED', 1:'OK', 2:'INVALID_COOKIE', 255:'UNKNOWN_ERROR'};
     cur_state = 0;
-
+    tag = '';
     cookies = {
         remid: '',
         sid: ''
@@ -49,6 +50,7 @@ class OriginClient {
     /** @returns {Promise<{access_token:string, expires_in:number}> */
     async getSelfAccessToken() {
         const url = 'https://accounts.ea.com/connect/auth?client_id=ORIGIN_JS_SDK&response_type=token&redirect_uri=nucleus:rest&prompt=none&release_type=prod';
+        const t_start = Date.now();
         try {
             let body;
             try {
@@ -82,17 +84,21 @@ class OriginClient {
             }
         } catch(err) {
             throw(new Error('OriginCient.getSelfAccessToken() > '+err.message));
+        } finally {
+            logger.info(`originClient.getSelfAccessToken spent ${(Date.now()-t_start)/1000}s`);
         }
-        
     }
 
     /** @returns {Promise<{username:string, personaId:string, userId:string>}} */
     async getSelfInfo() {
+        const t_start = Date.now();
         const url = 'https://gateway.ea.com/proxy/identity/pids/me';
         try {
             await this.checkSelfTokenValid(true);
             const response = await got.get(url, {
                 throwHttpErrors: true,
+                timeout: 30000,
+                retry:  2,
                 headers: {
                     'Authorization': `Bearer ${this.tokens.access_token}`,
                     'Upgrade-Insecure-Requests': 1,
@@ -112,6 +118,8 @@ class OriginClient {
             logger.info('originClient.getSelfInfo Success:', {username, selfUserId, personaId});
         } catch(err) { 
             throw(new Error('OriginCient.getSelfInfo() > '+err.message)); 
+        } finally {
+            logger.info(`originClient.getSelfInfo spent ${(Date.now()-t_start)/1000}s`);
         }
     }
 
@@ -119,6 +127,7 @@ class OriginClient {
     async searchUserName(username, api_urls=origin_api_urls) {
         username = encodeURIComponent(username); // avoid url injection
         const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/users?userId=${this.self_prop.userId}&searchTerm=${username}&start=0`;
+        const t_start = Date.now();
         try {
             await this.checkSelfTokenValid(true);
             const response = await got.get(url, {
@@ -138,12 +147,15 @@ class OriginClient {
                 throw(new Error('Bad Response: '+response.body));
         } catch(err) {
             throw(new Error('OriginClient.searchUserName() > '+err.message));
+        } finally {
+            logger.info(`originClient.searchUserName spent ${(Date.now()-t_start)/1000}s`);
         }
     }
 
     /** @returns {Promise<string|null>} userId */
     async searchUserEmail(userEmail, api_urls=origin_api_urls) {
         const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/users?userId=${this.self_prop.userId}&start=0`;
+        const t_start = Date.now();
         try {
             await this.checkSelfTokenValid(true);
             const response = await got.post(url, {
@@ -164,12 +176,15 @@ class OriginClient {
                 throw(new Error('Bad Response: '+response.body));
         } catch(err) {
             throw(new Error('OriginClient.searchUserEmail() > '+err.message));
+        } finally {
+            logger.info(`originClient.searchUserEmail spent ${(Date.now()-t_start)/1000}s`);
         }
     }
 
     /** @returns {Promise<{username:string, personaId:string, userId:string}>} */
     async getInfoByUserId(userId, api_urls=origin_api_urls) {
         const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/atom/users?userIds=${userId}`;
+        const t_start = Date.now();
         try {
             await this.checkSelfTokenValid(true);
             const response = await got.get(url, {
@@ -189,6 +204,8 @@ class OriginClient {
             return { username, personaId, userId };
         } catch(err) {
             throw(new Error('OriginClient.getInfoByUserId() > '+err.message));
+        } finally {
+            logger.info(`originClient.getInfoByUserId spent ${(Date.now()-t_start)/1000}s`);
         }
     }
     /** @returns {Promise<void>} */
@@ -196,6 +213,7 @@ class OriginClient {
 
     /** @returns {Promise<string>} */
     async getUserAvatar(userId, api_urls=origin_api_urls) {
+        const t_start = Date.now();
         const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/avatar/user/${userId}/avatars?size=1`;
         const patten = /<link>(https?:\/\/[-A-Za-z0-9+&@#\/%?=~_|!:,.;]+[-A-Za-z0-9+&@#\/%=~_|])<\/link>/
         try {
@@ -215,10 +233,13 @@ class OriginClient {
                 throw(new Error('Bad Response: '+response.body));
         } catch(err) {
             throw(new Error('OriginClient.getUserAvatar() > '+err.message));
+        } finally {
+            logger.info(`originClient.getUserAvatar spent ${(Date.now()-t_start)/1000}s`);
         }
     }
 
     async getUserGames(userId, api_urls=origin_api_urls) {
+        const t_start = Date.now();
         try {
             const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/atom/users/${this.self_prop.userId}/other/${userId}/games`;
             const response = await got.get(url, {
@@ -236,6 +257,8 @@ class OriginClient {
             return result;
         } catch(err) {
             throw(new Error('OriginClient.getUserGames() > '+err.message));
+        } finally {
+            logger.info(`originClient.getUserGames spent ${(Date.now()-t_start)/1000}s`);
         }
     } 
 
@@ -253,8 +276,10 @@ class OriginClientCluster {
     getOne() {
         while(this.clients.length) {
             this._index %= this.clients.length // ensure the index is in the range of array
-            if(this.clients[this._index].cur_state == OriginClient.STATE.OK)
+            if(this.clients[this._index].cur_state == OriginClient.STATE.OK) {
+                logger.info('OriginClientCluster.getOne: using '+this.clients[this._index].tag)
                 return this.clients[this._index++];
+            }
             else // remove the failed one
                 this.clients = this.clients.slice(0,this._index).concat(this.clients.slice(this._index+1)); 
         } // we have ran up all the clients here
@@ -287,7 +312,7 @@ async function createAccounts() {
     const accounts = config.originAccounts;
     const clients = [];
     for(let i of accounts)
-        clients.push(new OriginClient({remid: i.remid, sid: i.sid}));
+        clients.push(new OriginClient({tag: i.tag, remid: i.remid, sid: i.sid}));
     await Promise.all( clients.map(i=>{ return i.getSelfInfo() }) );
     originClients.set(clients);
 }
