@@ -35,10 +35,7 @@
 
 /** 
  * @typedef {Object} ReqUser
- * @property {number} id
- * @property {string} username
- * @property {string} privilege
- * @property {Date} signoutTime
+ * @property {User} user
  */
 
 /** 

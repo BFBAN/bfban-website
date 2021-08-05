@@ -1,4 +1,5 @@
 "use strict";
+import process from "process";
 
 const logger = {
     success: (...msg)=>{

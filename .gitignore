@@ -5,3 +5,4 @@ node_modules
 config.js
 dynamic_cfg.json
 private/
+.eslintrc.cjs

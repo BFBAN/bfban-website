@@ -14,14 +14,16 @@ async function verifyJWT(req, res, next) {
             res.status(401).json({ err: 1, code: 'user.tokenExpired' });
         });
         console.log(decodedToken); // DEBUG
-        const result = (await db.select('id', 'username', 'privilege', 'signoutTime').from('users').where({id: decodedToken.userId, valid: 1}) )[0];
+        /** @type {import("../typedef.js").User} */
+        const result = (await db.select('*').from('users').where({id: decodedToken.userId, valid: 1}) )[0];
+        result.introduction = ''; // useless, and may take up a lot of memory
         console.log(result); // DEBUG
         if(!result)
             return res.status(401).json({error: 1, code: 'user.invalid'});
         if(result.signoutTime > decodedToken.signWhen+decodedToken.expiresIn)
             return res.status(401).json({error: 1, code: 'user.tokenExpired'});
-        
-        req.user = { id: result.id, username: result.username, privilege: result.privilege };
+        /** @type {import("../typedef.js").User} */
+        req.user = result;
         next();
     } catch(err) {
         next(err);

@@ -19,7 +19,7 @@ router.get('/', verifyJWT, [
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
     checkquery('from').optional().isInt({min: 0}),
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -27,28 +27,30 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'message.bad', message: validateErr.array()});
         const box = req.query.box? req.query.box : 'in';
         const skip = req.query.skip? req.query.skip : 0;
-        const limit = req.query.limit? req.query.limit : 0;
+        const limit = req.query.limit? req.query.limit : 20;
         const from = req.query.from? req.query.from : 0;
         const result = {messages:[], total:0};
         switch(box) {
         case 'in':
-            result.messages = await db.select('*').from('message').where({toUserId: req.user.id}).andWhere('createTime','>=',new Date(from)).offset(skip).limit(limit);
+            result.messages = await db.select('*').from('messages').where({toUserId: req.user.id}).andWhere('createTime','>=',new Date(from)).offset(skip).limit(limit);
             result.total = await db('messages').count({num: 'id'}).where({toUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
             break;
         case 'out':
-            result.messages = await db.select('*').from('message').where({byUserId: req.user.id}).andWhere('createTime','>=',new Date(from)).offset(skip).limit(limit); 
+            result.messages = await db.select('*').from('messages').where({byUserId: req.user.id}).andWhere('createTime','>=',new Date(from)).offset(skip).limit(limit); 
             result.total = await db('messages').count({num: 'id'}).where({byUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
             break;
         case 'announce':
             switch(true) {
             case userHasRoles(req.user, ['admin','super','root']):
-                result.messages = await db.select('*').from('message').whereIn('type', ['banappeal','toAdmins']).andWhere('createTime','>=',new Date(from));
+                result.messages = await db.select('*').from('messages').whereIn('type', ['banappeal','toAdmins']).andWhere('createTime','>=',new Date(from));
                 result.total += result.messages.length;
+            // eslint-disable-next-line no-fallthrough
             case userHasRoles(req.user, ['normal']):
-                result.messages = await db.select('*').from('message').whereIn('type', ['toNormal']).andWhere('createTime','>=',new Date(from));
+                result.messages = await db.select('*').from('messages').whereIn('type', ['toNormal']).andWhere('createTime','>=',new Date(from));
                 result.total += result.messages.length;
+            // eslint-disable-next-line no-fallthrough
             default:
-                result.messages = await db.select('*').from('message').whereIn('type', ['toAll']).andWhere('createTime','>=',new Date(from));
+                result.messages = await db.select('*').from('messages').whereIn('type', ['toAll']).andWhere('createTime','>=',new Date(from));
                 result.total += result.messages.length;
             }
         }
@@ -62,7 +64,7 @@ router.post('/', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toUserId').isInt({min: 0}),
     checkbody('data.type').isIn(['direct','warn','fatal','toAll','toAdmins','toNormals','command']),
     checkbody('data.content').isString().trim().notEmpty()
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -99,7 +101,7 @@ async (req, res, next)=> {
             return res.status(403).json({error: 1, code: 'message.denied', message: 'permission denied.'});
         }
 
-        res.status(200).json({success: 1, code: 'message.success', data: result});
+        res.status(200).json({success: 1, code: 'message.success', message: 'post message success'});
     } catch(err) {
         next(err);
     }
@@ -108,7 +110,7 @@ async (req, res, next)=> {
 router.post('/mark', verifyJWT, [
     checkquery('id').isInt({min: 0}),
     checkquery('type').isIn('read', 'unread', 'del')
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
         let changed;
@@ -171,7 +173,8 @@ async function sendMessage(from, to, type, content) {
 }
 
 async function iGotReported(params) {
-    const { report } = params;
+    /** @type {import("../typedef.js").Report} */
+    const report = params.report;
     const user = (await db.select('id').from('users').where({originUserId: report.toOriginUserId}))[0];
     if(!user) // that player being reported hasnt registered our site
         return;
@@ -179,9 +182,11 @@ async function iGotReported(params) {
 }
 
 async function iGotJudged(params) {
-    const { judgement } = params;
+    /** @type {import("../typedef.js").Judgement} */
+    const judgement = params.judgement;
+    /** @type {import("../typedef.js").User} */
     const user = (await db.select('id').from('users').where({originUserId: judgement.toOriginUserId}))[0];
-    if(!userId) // that player being reported hasnt registered our site
+    if(!user.id) // that player being reported hasnt registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', `You were judge as ${judgement.action}`);
 }
@@ -189,24 +194,24 @@ async function iGotJudged(params) {
 async function iGotReplied(params) { // checked that comment dose exist
     /** @type {import("../typedef.js").Reply} */
     const reply = params.reply;
-    const {toCommentType, toCommentId, id} = reply;
+    const {toCommentType, toCommentId, toPlayerId} = reply;
     if(!(toCommentType && toCommentId))
         return;
     const dbname = ['replies', 'reports', 'judgements', 'ban_appeals'];
     const toCommentUser = (await db.select('byUserId').from(dbname[toCommentType]).where({id: toCommentId}))[0].byUserId;
-    await sendMessage(reply.byUserId, toCommentUser, 'reply', id.toString());
+    await sendMessage(reply.byUserId, toCommentUser, 'reply', `You got reply under dbId:${toPlayerId}`);
 }
 
 async function newBanAppeal(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const ban_appeal = params.ban_appeal;
-    await sendMessage(ban_appeal.byUserId, undefined, 'banappeal', ban_appeal.toPlayerId.toString());
+    await sendMessage(ban_appeal.byUserId, undefined, 'banappeal', ban_appeal.toPlayerId+'');
 }
 
 async function removeBanAppealNotification(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const ban_appeal = params.ban_appeal;
-    await db('messages').del().where({type: 'banappeal', content: ban_appeal.toPlayerId.toString()});
+    await db('messages').del().where({type: 'banappeal', content: ban_appeal.toPlayerId+''});
 }
 
 export default router;

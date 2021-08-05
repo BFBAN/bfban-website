@@ -59,7 +59,7 @@ router.post('/report', verifyJWT, verifyCaptcha,
     checkbody('data.cheatMethods').isString().notEmpty().custom(cheatMethodsSanitizer),
     checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
     checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),  
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -112,7 +112,7 @@ async (req, res, next)=>{
         const reported = (await db.select('*').from('players').where({originUserId: profile.userId}))[0];
         const updateCol = { originName: profile.username };
         let avatarLink = '';
-        let isStateChanged = false;
+        let stateChange = {prev: null, next: 0};
         try {   // get/update avatar each report
             const client = originClients.getOne();
             avatarLink = await client.getUserAvatar(profile.userId); // this step is not such important, set avatar to default if it fail
@@ -121,7 +121,7 @@ async (req, res, next)=>{
         }
         if(reported) { // reported, re-evaluate status
             const nextstate = await stateMachine(reported, req.user, 'report');
-            isStateChanged = nextstate!=reported.status;
+            stateChange = {prev: reported.status, next: nextstate};
             updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
             updateCol.games = Array.from(new Set(reported.games.split(',')).add(req.body.data.game)).join(',');
@@ -143,8 +143,10 @@ async (req, res, next)=>{
             updateTime: new Date()
         };
         let playerId = 0;
-        if(reported) // update, return number
-            playerId = await db('players').update(updateCol).where({id: reported.id});
+        if(reported) {// update, return number
+            await db('players').update(updateCol).where({id: reported.id});
+            playerId = reported.id;
+        }
         else // insert, return [number]
             playerId = (await db('players').insert(player) )[0];
         await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
@@ -154,6 +156,7 @@ async (req, res, next)=>{
             toPlayerId: playerId, // update may return 0 if nothing change, but we have reported then
             toOriginName: profile.username,
             toOriginUserId: profile.userId,
+            toOriginPersonaId: profile.personaId,
             game: req.body.data.game,
             cheatMethods: req.body.data.cheatMethods,
             videoLink: req.body.data.videoLink,
@@ -164,7 +167,7 @@ async (req, res, next)=>{
         await db('reports').insert(report);
         player.id = playerId;
         
-        siteEvent.emit('data', {method: 'report', params: {report, player, isStateChanged}});
+        siteEvent.emit('data', {method: 'report', params: {report, player, stateChange}});
         return res.status(201).json({success: 1, code:'report.success', message:'Thank you.', data: {
             originName: profile.username,
             originUserId: profile.userId,
@@ -186,7 +189,7 @@ checkOneof([
 checkbody('data.cheatMethods').isString().notEmpty().custom(cheatMethodsSanitizer),
 checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
 checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),  
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -210,7 +213,7 @@ async (req, res, next)=>{
         const reported = (await db.select('*').from('players').where({originUserId: profile.userId}))[0];
         const updateCol = { originName: profile.username };
         let avatarLink = '';
-        let isStateChanged = false;
+        let stateChange = {prev: null, next: 0};
         try {   // get/update avatar each report
             const client = originClients.getOne();
             avatarLink = await client.getUserAvatar(profile.userId); // this step is not such important, set avatar to default if it fail
@@ -219,7 +222,7 @@ async (req, res, next)=>{
         }
         if(reported) { // reported, re-evaluate status
             const nextstate = await stateMachine(reported, req.user, 'report');
-            isStateChanged = nextstate!=reported.status;
+            stateChange = {prev: reported.status, next: nextstate};
             updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
             updateCol.games = Array.from(new Set(reported.games.split(',')).add(req.body.data.game)).join(',');
@@ -252,6 +255,7 @@ async (req, res, next)=>{
             toPlayerId: playerId, // update may return 0 if nothing change, but we have reported then
             toOriginName: profile.username,
             toOriginUserId: profile.userId,
+            toOriginPersonaId: profile.personaId,
             game: req.body.data.game,
             cheatMethods: req.body.data.cheatMethods,
             videoLink: req.body.data.videoLink,
@@ -262,7 +266,7 @@ async (req, res, next)=>{
         await db('reports').insert(report);
         player.id = playerId;
         
-        siteEvent.emit('data', {method: 'report', params: {report, player, isStateChanged}});
+        siteEvent.emit('data', {method: 'report', params: {report, player, stateChange}});
         return res.status(201).json({success: 1, code:'report.success', message:'Thank you.', data: {
             originName: profile.username,
             originUserId: profile.userId,
@@ -334,7 +338,7 @@ router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toCommentType').optional({nullable: true}).isIn([0,1,2,3]), // 0-reply 1-report 2-judgement 3-banappeal
     checkbody('data.toCommentId').optional({nullable: true}).isInt({min: 0}),
     checkbody('data.content').isString().trim().isLength({min: 1, max:65535}),
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -374,7 +378,7 @@ router.post('/update', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkquery('userId').optional().isInt({min: 0}),
     checkquery('personaId').optional().isInt({min: 0}),
     checkquery('dbId').optional().isInt({min: 0}), 
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -417,7 +421,7 @@ router.post('/judgement', verifyJWT, allowPrivileges(['admin','super','root']), 
     checkbody('data.cheatMethods').optional().isString().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
     checkbody('data.action').isIn(['suspect','innocent','dicuss','guilt','kill']),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -445,13 +449,13 @@ async (req, res, next)=>{
         };
         await db('judgements').insert(judgement);
         const nextstate = await stateMachine(player, req.user, req.body.data.action);
-        const isStateChanged = nextstate==player.status;
+        const stateChange = {prev: player.status, next: nextstate};
         player.status = nextstate;
         player.cheatMethods = nextstate==1? req.body.data.cheatMethods : player.cheatMethods;
         player.updateTime = new Date();
         await db('players').update(player).increment('commentsNum', 1).where({id: player.id});
 
-        siteEvent.emit('data', {method: 'judge', params: {judgement, player, isStateChanged}});
+        siteEvent.emit('data', {method: 'judge', params: {judgement, player, stateChange}});
         return res.status(200).json({success: 1, code: 'judgement.success', message: 'thank you.'});
     } catch(err) {
         next(err);
@@ -461,7 +465,7 @@ async (req, res, next)=>{
 router.post('/banappeal', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -494,7 +498,7 @@ async (req, res, next)=>{
 router.post('/viewBanappeal', verifyJWT, allowPrivileges(['admin','super','root']), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.status').isIn(['open','pending','close'])
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);

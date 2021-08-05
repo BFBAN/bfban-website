@@ -115,7 +115,7 @@ router.post('/signup4dev', verifyJWT, allowPrivileges(['dev']), [
     checkbody('data.password').isString().trim().isLength({min:1, max:40}),
     checkbody('data.originEmail').isString().trim(),
     checkbody('data.originName').isString().trim()
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -201,7 +201,7 @@ async (req, res, next)=> {
 router.post('bindOrigin', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().trim().notEmpty()
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -236,7 +236,7 @@ async (req, res, next)=> {
 });
 
 
-router.post('/signout', verifyJWT, /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+router.post('/signout', verifyJWT, /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=>{
     try {
         await db('users').update({signoutTime: new Date()}).where({id: req.user.id});
@@ -321,7 +321,7 @@ async (req, res, next)=>{
 router.post('/me', verifyJWT, [
     checkbody('data.introduction').optional({nullable: true}).isString().isLength({max: 510}),
     checkbody('data.attr').optional({nullable: true}).isObject(),
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -332,7 +332,7 @@ async (req, res, next)=>{
         if(req.body.data.introduction)
             update.introduction = req.body.data.introduction;
         if(req.body.data.attr)
-            update.attr = userSetAttributes(req.body.data.attr);
+            update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
         await db('users').update(update).where({id: req.user.id});
 
         res.status(200).json({success: 1, code: 'me.success', data: update});
@@ -343,16 +343,14 @@ async (req, res, next)=>{
 
 router.post('/changeName', verifyJWT, verifyCaptcha, [
     checkbody('data.newname').isString().trim().isLength({min: 1, max: 40}),
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'changeName.bad', message: validateErr.array()});
 
-        /** @type {import("../typedef.js").User} */
-        const user = (await db.select('*').from('users').where({id: req.user.id}) )[0];
-        const attr = user.attr;
+        const attr = req.user.attr;
         if(!attr.changeNameLeft && attr.changeNameLeft<=0)
             return res.status(403).json({error: 1, code: 'changeName.noChance', message: 'you have used up all your change name chances.'});
         const occupy = await db.select('id').from('user').where({username: req.body.data.newname}).union([
@@ -361,7 +359,7 @@ async (req, res, next)=> {
         if(occupy.length > 0)
             return res.status(403).json({error: 1, code: 'changeName.occupied', message: 'someone already occupied your new name.'});
         --attr.changeNameLeft;
-        await db('users').update({username: req.body.data.newname, attr: JSON.stringify(attr)}).where({id: user.id});
+        await db('users').update({username: req.body.data.newname, attr: JSON.stringify(attr)}).where({id: req.user.id});
         return res.status(200).json({success: 1, code: 'changeName.success', data: {
             chancesLeft: attr.changeNameLeft
         }});
@@ -373,15 +371,14 @@ async (req, res, next)=> {
 router.post('/changePassword', verifyJWT, [
     checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.oldpassword').isString().trim().isLength({min: 1, max: 40})
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'changePassword.bad', message: validateErr.array()});
         
-        /** @type {import("../typedef.js").User} */
-        const user = (await db.select('*').from('users').where({id: req.user.id}) )[0];
+        const user = req.user
         if(!comparePassword(req.body.data.oldpassword, user.password))
             return res.status(400).json({error: 1, code: 'changePassword.notMatch', message: 'original password incorrect.'});
         await db('users').update({

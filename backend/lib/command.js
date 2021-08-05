@@ -52,12 +52,12 @@ const commands = {
     "attr": { permission: ['dev','root','super'], exec: commandAttr },
 };
 
-/** @param {string[]} args @param {import('../typedef.js').ReqUser} user */
+/** @param {string[]} args @param {import('../typedef.js').User} user */
 async function commandAttr(args, user) { 
-    if(!Number.isInteger(parseInt(args[2])))
+    if(!Number.isInteger(args[2]-0))
         return await sendMessage(null, user.id, 'command', 'attr: incorrect params.');
     /** @type {import("../typedef.js").User} */
-    const target = (await db.select('*').from('users').where({id: parseInt(args[2])}) )[0];
+    const target = (await db.select('*').from('users').where({id: args[2]-0 }) )[0];
     if(!target)
         return await sendMessage(null, user.id, 'command', 'attr: user notfound.');
 
@@ -90,11 +90,11 @@ async function commandAttr(args, user) {
 }
 
 
-/** @param {string[]} args @param {import('../typedef.js').ReqUser} user */
+/** @param {string[]} args @param {import('../typedef.js').User} user */
 async function commandComment(args, user) { // comment reply|report|judgement|banappeal id content
     if( !!args[3] ||                            // if args[3] exist, it must be string 
         args[3].length>=65535 ||                // not too long
-        !Number.isInteger(parseInt(args[2])) || // not a valid id
+        !Number.isInteger(args[2]-0) ||         // not a valid id
         !['reply','report','judgement','banappeal'].includes(args[1]) )
         return await sendMessage(null, user.id, 'command', 'comment: incorrect params.');
     const dbname = {reply:'replies', report:'reports', judgement:'judgements', banappeal:'ban_appeals'}[args[1]];
@@ -106,12 +106,12 @@ async function commandComment(args, user) { // comment reply|report|judgement|ba
     return await sendMessage(null, user.id, 'command', `comment: update ${args[1]}:${args[2]} ${changed? 'success':'fail'}.`);
 }
 
-/** @param {string[]} args @param {import('../typedef.js').ReqUser} user */
+/** @param {string[]} args @param {import('../typedef.js').User} user */
 async function commandUser(args, user) {            //  [0]  [1]  [2]  [3]
-    if(!Number.isInteger(parseInt(args[2])))
+    if(!Number.isInteger(args[2]-0))
         return await sendMessage(null, user.id, 'command', 'user: incorrect params.');
     /** @type {import("../typedef.js").User} */
-    const target = (await db.select('*').from('users').where({id: parseInt(args[2])}) )[0];
+    const target = (await db.select('*').from('users').where({id: args[2]-0 }) )[0];
     if(!target)
         return await sendMessage(null, user.id, 'command', 'user: no such user.');
 
@@ -145,7 +145,7 @@ async function commandUser(args, user) {            //  [0]  [1]  [2]  [3]
 }
 
 
-/** @param {string[]} args @param {import('../typedef.js').ReqUser} user */
+/** @param {string[]} args @param {import('../typedef.js').User} user */
 async function commandWebhook(args, user) { 
     switch(args[1]) {                       //   [0]      [1]     [2]  [3] [4]
     case 'subscribe':                       // webhook subscribe event url key
@@ -153,7 +153,7 @@ async function commandWebhook(args, user) {
             return await sendMessage(null, user.id, 'command', 'webhook: maximum subscribe amount exceeded.');
         if( args.length == 5 &&                                                     // is all params provided?
             webhookSupportEvent.includes(args[2]) &&                                // is support event?
-            /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/.test(args[3]) &&    // is valid webhook url?
+            /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?/.test(args[3]) &&    // is valid webhook url?
             args[4].length <= 128 )                                                 // is key length suitable?
             return await sendMessage(null, user.id, 'command', `webhook: subscribe success, id: 
                 ${webhookSubscriber.set(user.id, args[2], args[3], args[4])} .`);
@@ -174,7 +174,7 @@ async function commandWebhook(args, user) {
     }
 }
 
-/** @param {string} command @param {import("../typedef.js").ReqUser} user */
+/** @param {string} command @param {import("../typedef.js").User} user */
 async function handleCommand(command, user) {
     const args = command.split(',', 50);
     if(commands[args[0]] == undefined)
@@ -197,29 +197,7 @@ async function webhookPlayerStateChange(params) {
 }
 
 async function webhookOnSiteEvent(event) {
-    try {
-        switch(event.method) {
-        case 'report':
-            await iGotReported(event.params);
-            break;
-        case 'reply':
-            await iGotReplied(event.params);
-            break;
-        case 'judge':
-            await iGotJudged(event.params);
-            break;
-        case 'banappeal':
-            await newBanAppeal(event.params);
-            break;
-        case 'viewBanappeal':
-            removeBanAppealNotification(event.params);
-            break;
-        default:
-            break;
-        } 
-    } catch(err) {
-
-    }
+    
 }
 
 export {

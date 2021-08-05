@@ -6,14 +6,15 @@ const crypt_algo = 'aes256';
 /** @param {Error} err */
 function generateErrorHelper(err, time=new Date()) {
 switch(config.errorHelperVerbose) {
-case true:
-    return JSON.stringify({ time: new Date(time).toString(), message: err.message, stack: err.stack }, undefined, 2);
-default:
-    const msg = Buffer.from(`${time.toUTCString()} ${err.message.slice(0,32)}`);
-    for(let i=0; i<msg.length; ++i)
-        msg.writeUInt8(msg[i]^((69+i)%0xFF), i);
-    return msg.toString('base64');
-}
+    case true:
+        return JSON.stringify({ time: new Date(time).toString(), message: err.message, stack: err.stack }, undefined, 2);
+    default: {
+        const msg = Buffer.from(`${time.toUTCString()} ${err.message.slice(0,32)}`);
+        for(let i=0; i<msg.length; ++i)
+            msg.writeUInt8(msg[i]^((69+i)%0xFF), i);
+        return msg.toString('base64');
+    }
+    }
 }
 
 /** @param {Buffer|String} content @param {Buffer|String} key */

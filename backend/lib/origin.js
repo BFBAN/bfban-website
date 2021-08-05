@@ -56,6 +56,8 @@ class OriginClient {
             try {
                 const response = await got.get(url, {
                     throwHttpErrors: false,
+                    timeout: 30000,
+                    retry: 2,
                     headers: {
                         'Upgrade-Insecure-Requests': 1,
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
@@ -74,7 +76,9 @@ class OriginClient {
                     this.tokens.expires_when = Date.now() + body.expires_in*1000;
                     logger.info('originClient.getSelfAccessToken Success:', {access_token: body.access_token, expires_in: body.expires_in});
                     return {access_token: body.access_token, expires_in: body.expires_in}; // Return here
-                } // not correct->default
+                }
+                this.cur_state = OriginClient.STATE.UNKNOWN_ERROR;
+                throw(new Error('Bad Response: '+JSON.stringify(body)));
             case 'login_required':
                 this.cur_state = OriginClient.STATE.INVALID_COOKIE;
                 throw(new Error('Cookie expired'));
@@ -98,7 +102,7 @@ class OriginClient {
             const response = await got.get(url, {
                 throwHttpErrors: true,
                 timeout: 30000,
-                retry:  2,
+                retry: 2,
                 headers: {
                     'Authorization': `Bearer ${this.tokens.access_token}`,
                     'Upgrade-Insecure-Requests': 1,
@@ -111,7 +115,7 @@ class OriginClient {
             if( !(body.pid && body.pid.externalRefValue))
                 throw(new Error('Bad Response: '+JSON.stringify(body)));
             const selfUserId = body.pid.externalRefValue;
-            const {username, personaId, userId} = await this.getInfoByUserId(selfUserId);
+            const {username, personaId} = await this.getInfoByUserId(selfUserId);
             this.self_prop.username = username;
             this.self_prop.userId = selfUserId;
             this.self_prop.personaId = personaId;
@@ -132,6 +136,8 @@ class OriginClient {
             await this.checkSelfTokenValid(true);
             const response = await got.get(url, {
                 throwHttpErrors: true,
+                timeout: 30000,
+                retry: 2,
                 headers: {
                     'authtoken': `${this.tokens.access_token}`,
                     'Upgrade-Insecure-Requests': 1,
@@ -160,6 +166,8 @@ class OriginClient {
             await this.checkSelfTokenValid(true);
             const response = await got.post(url, {
                 throwHttpErrors: true,
+                timeout: 30000,
+                retry: 2,
                 headers: {
                     'authtoken': `${this.tokens.access_token}`,
                     'Upgrade-Insecure-Requests': 1,
@@ -189,6 +197,8 @@ class OriginClient {
             await this.checkSelfTokenValid(true);
             const response = await got.get(url, {
                 throwHttpErrors: true,
+                timeout: 30000,
+                retry: 2,
                 headers: {
                     'authtoken': `${this.tokens.access_token}`,
                     'Upgrade-Insecure-Requests': 1,
@@ -215,11 +225,13 @@ class OriginClient {
     async getUserAvatar(userId, api_urls=origin_api_urls) {
         const t_start = Date.now();
         const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/avatar/user/${userId}/avatars?size=1`;
-        const patten = /<link>(https?:\/\/[-A-Za-z0-9+&@#\/%?=~_|!:,.;]+[-A-Za-z0-9+&@#\/%=~_|])<\/link>/
+        const patten = /<link>(https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])<\/link>/
         try {
             await this.checkSelfTokenValid(true);
             const response = await got.get(url, {
                 throwHttpErrors: true,
+                timeout: 30000,
+                retry: 2,
                 headers: {
                     'authtoken': `${this.tokens.access_token}`,
                     'Upgrade-Insecure-Requests': 1,
@@ -244,6 +256,8 @@ class OriginClient {
             const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/atom/users/${this.self_prop.userId}/other/${userId}/games`;
             const response = await got.get(url, {
                 throwHttpErrors: true,
+                timeout: 30000,
+                retry: 2,
                 headers: {
                     'authtoken': `${this.tokens.access_token}`,
                     'Upgrade-Insecure-Requests': 1,
@@ -262,7 +276,7 @@ class OriginClient {
         }
     } 
 
-};
+}
 
 class OriginClientCluster {
     /** @param {OriginClient[]} clients */

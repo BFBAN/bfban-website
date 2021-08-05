@@ -76,7 +76,7 @@ class userRateLimiter {
         }
         return (req, res, next)=> {
             const cur = this.store.get(req.user.id);
-            if((cur && cur>=max) || max<=0)
+            if((cur && cur>=this.max) || this.max<=0)
                 return res.status(406).json({error: 1, code: 'request.rateLimited', message: 'slow down please.'});
             
             switch(typeof(weight)) {
@@ -98,7 +98,7 @@ class userRateLimiter {
         };
     }
 
-};
+}
 
 const userAttributes = {
     "language": {type: "string", get: true, set: true, isprivate: true, default: 'en-us'},
@@ -119,8 +119,8 @@ function userShowAttributes(attr, showprivate=false, force=false) {
     return result;
 }
 
-function userSetAttributes(attr, force=false) {
-    const result = {};
+function userSetAttributes(org, attr, force=false) {
+    const result = org;
     for(let i of Object.keys(userAttributes))
         if(typeof(attr[i])==userAttributes[i].type && (userAttributes[i].set || force))
             result[i] = attr[i];

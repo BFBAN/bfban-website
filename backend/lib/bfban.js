@@ -57,30 +57,27 @@ const states_map = [ // from one status to another status, by specified path:{ac
 
 /** 
  * @param {import("../typedef.js").Player} player 
- * @param {import("../typedef.js").ReqUser} user */
+ * @param {import("../typedef.js").User} user */
 async function toConfirm(player, user) {
-    try { // iterate each judgement desc, if $config.personsToConfirm people think the guy is guilty without any objection in them, then confirm
-        if(!userHasRoles(user, ['admin', 'super', 'root'])) // well, we should have check that before, but anyway
-            return false; // permission not enough
-        const prev = await db.select('byUserId', 'action').from('judgements').where({toPlayerId: player.id}).orderBy('createTime','desc')
-        const supportJudges = new Set();
-        for(let i of prev) {
-            if(i.action!='guilt' || i.action!='kill')
-                break; // objection! exit support judgements count
-            else
-                supportJudges.add(i.byUserId);
-        }
-        if(supportJudges.size >= config.personsToConfirm)
-            return true; // heeeeeeeeear~
-        return false; // objection!
-    } catch(err) {
-        throw(err);
+    // iterate each judgement desc, if $config.personsToConfirm people think the guy is guilty without any objection in them, then confirm
+    if(!userHasRoles(user, ['admin', 'super', 'root'])) // well, we should have check that before, but anyway
+        return false; // permission not enough
+    const prev = await db.select('byUserId', 'action').from('judgements').where({toPlayerId: player.id}).orderBy('createTime','desc')
+    const supportJudges = new Set();
+    for(let i of prev) {
+        if(i.action!='guilt' || i.action!='kill')
+            break; // objection! exit support judgements count
+        else
+            supportJudges.add(i.byUserId);
     }
+    if(supportJudges.size >= config.personsToConfirm)
+        return true; // heeeeeeeeear~
+    return false; // objection!
 }
 
 /** 
  * @param {import('../typedef.js').Player} player 
- * @param {import('../typedef.js').ReqUser} user 
+ * @param {import('../typedef.js').User} user 
  * @param {'report'|'suspect'|'innocent'|'trash'|'discuss'|'guilt'|'kill'} action 
  * */
 async function stateMachine(player, user, action) { // normally we should write action to DB first
