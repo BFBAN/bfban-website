@@ -115,9 +115,13 @@ async (req, res, next)=> {
     try {
         let changed;
         if(req.query.type != 'del')
-            changed = await db('messages').update({haveRead: req.query.type=='read'? 1:0}).where({toUserId: req.user.id, id: req.query.id});
+            changed = await db('messages').update({haveRead: req.query.type=='read'? 1:0})
+            .where({toUserId: req.user.id, id: req.query.id})
+            .andWhereNot({type: 'falta'});
         else
-            changed = await db('messages').del().where({toUserId: req.user.id, id: req.query.id});
+            changed = await db('messages').del()
+            .where({toUserId: req.user.id, id: req.query.id})
+            .andWhereNot({type: 'falta'});
         if(changed)
             return res.status(200).json({success: 1, code: 'message.marked', data: {id: req.query.id, type: req.query.type}});
         else

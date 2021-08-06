@@ -126,7 +126,7 @@ async function commandWebhook(args, user) {
             return await sendMessage(null, user.id, 'command', 'webhook: no such subscription.');
     case 'ls':
         return await sendMessage(null, user.id, 'command', `webhook: current subscription:\n    
-            ${Array.from(webhookSubscriber.getByUserId(user.id)).join('\n    ')} 
+            ${webhookSubscriber.getByUrlIds(webhookSubscriber.getByUserId(user.id)).map(i=>JSON.stringify(i)).join('\n    ')} 
             .`);
     default:
         return await sendMessage(null, user.id, 'command', 'webhook: unknown operation.');

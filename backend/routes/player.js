@@ -322,7 +322,7 @@ async (req, res, next)=>{
         const ban_appeals = await db.select('id','byUserId','content','viewedAdminIds','status','createTime')
         .from('ban_appeals').where({toPlayerId: dbId, valid: 1}).orderBy('createTime', 'desc');
 
-        res.status(200).json({success: 1, code: 'timeline.success', data: {
+        res.status(200).json({success: 1, code: 'timeline.ok', data: {
             reports,
             judgements,
             comments,

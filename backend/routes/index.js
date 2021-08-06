@@ -31,7 +31,7 @@ async (req, res, next)=>{
         if(req.query.registers==='')
             data.registers = (await db('users').count({registers: 'id'}).where('createTime', '>=', new Date(from)) )[0].registers;
         if(req.query.banAppeals==='')
-            data.banAppeals = (await db('ban_appeals').count({banAppeals: 'id'}).where('createTime', '>=', new Date(from)) )[0].banAppeals;
+            data.banAppeals = (await db('ban_appeals').count({banappeals: 'id'}).where('createTime', '>=', new Date(from)) )[0].banappeals;
         if(req.query.details==='') {
             data.details = {};
             data.details.bygame = {};
@@ -134,7 +134,7 @@ async (req, res, next)=>{
                 currentName: i.originName,
                 originUserId: i.originUserId,
                 originPersonaId: i.originUserId,
-                log: { from: i.fromTime.getTime(), to: i.toTime.getTime() },
+                log: { from: i.fromTime, to: i.toTime },
                 status: i.status,
             }; });
         }
@@ -165,7 +165,7 @@ async (req, res, next)=>{
             result.data.originName = curOriginInfo.username;
             result.data.originPersonaId = curOriginInfo.personaId;
             result.data.originUserId = curOriginInfo.userId; 
-            result.data.originAvatar = curOriginAvatar; 
+            result.data.avatarLink = curOriginAvatar; 
 
             if(!record) {
                 result.code = 'advSearch.foundOrigin',
@@ -176,7 +176,7 @@ async (req, res, next)=>{
             }
             return res.status(200).json(result);
         } else {
-            return res.status(200).json({success: 1, code:'advSearch.notFound', data:null });
+            return res.status(404).json({error: 1, code:'advSearch.notFound', message:'No such player found on origin.' });
         }
     } catch(err) {
         next(err);

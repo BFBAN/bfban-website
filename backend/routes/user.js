@@ -265,12 +265,12 @@ async function showUserInfo(req, res, next) {
             username: user.username,
             privilege: user.privilege,
             introduction: user.introduction,
-            joinTime: user.createTime.getTime(),
-            lastOnlineTime: user.updateTime.getTime(),
+            joinTime: user.createTime,
+            lastOnlineTime: user.updateTime,
             origin: user.attr.showOrigin===true || // user set it public
                     (req.user&&userHasRoles(req.user, ['admin','super','root','dev'])) || // no limit for admin
                     (req.user&&req.user.id===user.id)? // for self
-                        {username: user.originName,userId: user.originUserId} : null,
+                        {originName: user.originName,originUserId: user.originUserId} : null,
             attr: userShowAttributes(user.attr, 
                 (req.user&&req.user.id===user.id), // self, show private info
                 (req.user&&userHasRoles(req.user, ['admin','super','root','dev'])) ), // no limit for admin
