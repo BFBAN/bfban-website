@@ -10,10 +10,13 @@ async function verifyJWT(req, res, next) {
     try {
         const token = req.get('x-access-token');
         /** @type {{userId:number, username:string, privilege:string, signWhen:number, expiresIn:number}} */
-        const decodedToken = await verifyJWTToken(token).catch((err)=> {
-            res.status(401).json({ err: 1, code: 'user.tokenExpired' });
-        });
-        console.log(decodedToken); // DEBUG
+        let decodedToken;
+        try {
+            decodedToken = await verifyJWTToken(token)
+        } catch(err) {
+            return res.status(401).json({ err: 1, code: 'user.tokenExpired' });
+        }
+        console.log('token:'+JSON.stringify(decodedToken)); // DEBUG
         /** @type {import("../typedef.js").User} */
         const result = (await db.select('*').from('users').where({id: decodedToken.userId, valid: 1}) )[0];
         result.introduction = ''; // useless, and may take up a lot of memory

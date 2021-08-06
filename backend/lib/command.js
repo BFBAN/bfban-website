@@ -1,49 +1,8 @@
-import got from "got";
-import * as uuid from "uuid";
 import db from "../mysql.js";
 import { sendMessage } from "../routes/message.js";
 import { userHasRoles } from "./auth.js";
 import { privilegeGranter, privilegeRevoker, userAttributes } from "./user.js";
-
-const webhookSupportEvent = ['stateChange', 'register'];
-const webhookSubscriber = {
-    /** @type {Map<string, {url: string, event: string, userId: number, key: string}>} */
-    urls: new Map(),
-    /** @type {Map<string, Set<string>>} */
-    events: new Map(),
-    /** @type {Map<number, Set<string>>} */
-    users: new Map(),
-    /** @param {string} url @param {number} userId @param {string} event @param {string} keys */
-    set(userId, event, url, key) {
-        const urlId = uuid.v4();
-        this.urls.set(urlId, {url, event, userId, key});
-        const eventSubs = this.events.get(event);
-        this.events.set(event, eventSubs? eventSubs.add(urlId) : new Set([urlId]) );
-        const userSubs = this.users.get(userId);
-        this.users.set(userId, userSubs? userSubs.add(urlId) : new Set([urlId]) );
-        return urlId;
-    },
-    /** @param {string} urlId */
-    delete(urlId) {
-        const {userId, event} = this.urls.get(urlId);
-        this.urls.delete(urlId);
-        this.events.get(event).delete(urlId);
-        this.users.get(userId).delete(urlId);
-    },
-    /** @param {string} urlId */
-    getByUrlId(urlId) {
-        return this.urls.get(urlId);
-    },
-    /** @param {number} userId */
-    getByUserId(userId) {
-        return this.users.get(userId);
-    },
-    /** @param {string} event */
-    getByEvent(event) {
-        return this.events.get(event);
-    }
-};
-
+import { webhookSubscriber, webhookSupportEvent } from "./webhook.js";
 
 const commands = {
     "webhook": { permission: ['dev', 'bot', 'root'], exec: commandWebhook },
@@ -91,14 +50,14 @@ async function commandAttr(args, user) {
 
 
 /** @param {string[]} args @param {import('../typedef.js').User} user */
-async function commandComment(args, user) { // comment reply|report|judgement|banappeal id content
+async function commandComment(args, user) { // comment reply|report|judgement|banAppeal id content
     if( !!args[3] ||                            // if args[3] exist, it must be string 
         args[3].length>=65535 ||                // not too long
         !Number.isInteger(args[2]-0) ||         // not a valid id
-        !['reply','report','judgement','banappeal'].includes(args[1]) )
+        !['reply','report','judgement','banAppeal'].includes(args[1]) )
         return await sendMessage(null, user.id, 'command', 'comment: incorrect params.');
-    const dbname = {reply:'replies', report:'reports', judgement:'judgements', banappeal:'ban_appeals'}[args[1]];
-    const contentName = {reply:'content', report:'description', judgement:'content', banappeal:'content'}[args[1]];
+    const dbname = {reply:'replies', report:'reports', judgement:'judgements', banAppeal:'ban_appeals'}[args[1]];
+    const contentName = {reply:'content', report:'description', judgement:'content', banAppeal:'content'}[args[1]];
     const updateObj = {}; updateObj[contentName] = args[3]; // set content
     if(args[1]=='report' && !!args[4] && args[4].length<256)
         updateObj['videoLink'] = args[4]; // set videolink for report if it provided
@@ -153,7 +112,7 @@ async function commandWebhook(args, user) {
             return await sendMessage(null, user.id, 'command', 'webhook: maximum subscribe amount exceeded.');
         if( args.length == 5 &&                                                     // is all params provided?
             webhookSupportEvent.includes(args[2]) &&                                // is support event?
-            /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?/.test(args[3]) &&    // is valid webhook url?
+            /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?/.test(args[3]) &&     // is valid webhook url?
             args[4].length <= 128 )                                                 // is key length suitable?
             return await sendMessage(null, user.id, 'command', `webhook: subscribe success, id: 
                 ${webhookSubscriber.set(user.id, args[2], args[3], args[4])} .`);
@@ -184,23 +143,6 @@ async function handleCommand(command, user) {
     return await commands[args[0]].exec(args);
 }
 
-/** @type {Map<string,Array>} */
-const webhookPayload = new Map([
-    []
-]);
-
-
-async function webhookPlayerStateChange(params) {
-    /** @type {import("../typedef.js").Player} */
-    const player = params.player;
-    webhookPayload.push()
-}
-
-async function webhookOnSiteEvent(event) {
-    
-}
-
 export {
     handleCommand,
-    webhookSubscriber,
 }

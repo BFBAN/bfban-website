@@ -11,7 +11,7 @@ import { sendRegisterVerify, sendForgetPasswordVerify } from "../lib/mail.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { generatePassword, comparePassword, userHasRoles } from "../lib/auth.js";
 import { originClients } from "../lib/origin.js";
-import { userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
+import { privilegeRevoker, userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
 import { siteEvent } from "../lib/bfban.js";
 import logger from "../logger.js";
 
@@ -99,10 +99,12 @@ async (req, res, next)=> {
             privilege: 'normal',
             attr: JSON.stringify(userDefaultAttribute(req.REAL_IP)),
             createTime: new Date(),
+            updateTime: new Date(),
         };
         await db('users').insert(data);
         await db('registers').where({uniqCode: code}).delete();
         logger.info('users.signupVerify Success:', {name: data.username});
+        
         siteEvent.emit('data', {method: 'register', params: {user: data}});
         return res.status(201).json({success: 1, code:'signup.success', message: 'Welcome to BFBan!'});
     } catch(err) {
@@ -229,6 +231,7 @@ async (req, res, next)=> {
             originUserId: originUserId,
             originPersonaId: originUserInfo.personaId,
             originEmail: originEmail,
+            privilege: privilegeRevoker(req.user.privilege, req.user.attr.freezeOfNoBinding? 'freezed':''),
         }).where({id: req.user.id});
     } catch(err) {
         next(err);

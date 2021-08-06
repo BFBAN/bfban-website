@@ -26,6 +26,10 @@ const config = {
     github: {
 
     },
+	webhook: {
+        senderUrl: '',	// use cloudflare worker to proxy webhook request
+        token: '',		// token it use
+    },
     mail: {
         host: 'smtp.somewhere.com',
         port: 465,

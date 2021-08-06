@@ -20,7 +20,8 @@ class OriginClient {
         this.cur_state = OriginClient.STATE.OK;
     }
     
-    static STATE = {'UNDEFINED': 0, 'OK': 1, 'INVALID_COOKIE': 2, 'UNKNOWN_ERROR': 255, 0:'UNDEFINED', 1:'OK', 2:'INVALID_COOKIE', 255:'UNKNOWN_ERROR'};
+    static STATE = {'UNDEFINED': 0, 'OK': 1, 'INVALID_COOKIE': 2, 'INITIALIZING': 3, 'UNKNOWN_ERROR': 255,
+                     0:'UNDEFINED', 1:'OK', 2:'INVALID_COOKIE', 3: 'INITIALIZING', 255:'UNKNOWN_ERROR'};
     cur_state = 0;
     tag = '';
     cookies = {

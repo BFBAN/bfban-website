@@ -47,11 +47,11 @@ function cheatMethodsSanitizer(val, {req}) {
     return true;
 }
 
-class userRateLimiter {
+class UserRateLimiter {
+    /** @param {number} windowMs @param {number} max */
     constructor(windowMs, max) {
         this.max = max;
-        this.store = new Map();
-        this.interval = setInterval(this.store.clear, windowMs);
+        this.interval = setInterval(()=>this.store.clear(), windowMs);
     }
     destroy() {
         clearInterval(this.interval);
@@ -59,7 +59,7 @@ class userRateLimiter {
 
     max = 0;
     /** @type {Map<number,number>} */
-    store = undefined;
+    store = new Map();
     /** @type {NodeJS.Timer} */
     interval = undefined;
     
@@ -145,5 +145,5 @@ export {
     userSetAttributes,
     userShowAttributes,
     userDefaultAttribute,
-    userRateLimiter,
+    UserRateLimiter,
 }

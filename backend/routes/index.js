@@ -30,8 +30,8 @@ async (req, res, next)=>{
             data.confirmed = (await db('players').count({confirmed: 'id'}).where('createTime', '>=', new Date(from)).andWhere({status: 1}).andWhere({valid: 1}) )[0].confirmed;
         if(req.query.registers==='')
             data.registers = (await db('users').count({registers: 'id'}).where('createTime', '>=', new Date(from)) )[0].registers;
-        if(req.query.banappeals==='')
-            data.banappeals = (await db('ban_appeals').count({banappeals: 'id'}).where('createTime', '>=', new Date(from)) )[0].banappeals;
+        if(req.query.banAppeals==='')
+            data.banAppeals = (await db('ban_appeals').count({banAppeals: 'id'}).where('createTime', '>=', new Date(from)) )[0].banAppeals;
         if(req.query.details==='') {
             data.details = {};
             data.details.bygame = {};
@@ -95,6 +95,21 @@ async (req, res, next)=>{
         next(err);
     }
 });
+
+router.get('/admins', async (req, res, next)=> {
+    try {
+        /** @type {import("../typedef.js").User[]} */
+        const admins = await db.select('id','username','originName','originUserId','privilege').from('users')
+        .where('privilege','like','%admin%')
+        .orWhere('privilege','like','%super%')
+        .orWhere('privilege','like','%root%');
+        
+        res.status(200).json({success: 1, code: 'getAdmins.success', data: admins});
+    } catch(err) {
+        next(err);
+    }
+})
+
 
 router.get('/search',[
     checkquery('param').isString().trim().notEmpty()

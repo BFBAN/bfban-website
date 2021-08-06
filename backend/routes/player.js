@@ -335,7 +335,7 @@ async (req, res, next)=>{
 
 router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
-    checkbody('data.toCommentType').optional({nullable: true}).isIn([0,1,2,3]), // 0-reply 1-report 2-judgement 3-banappeal
+    checkbody('data.toCommentType').optional({nullable: true}).isIn([0,1,2,3]), // 0-reply 1-report 2-judgement 3-banAppeal
     checkbody('data.toCommentId').optional({nullable: true}).isInt({min: 0}),
     checkbody('data.content').isString().trim().isLength({min: 1, max:65535}),
 ],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
@@ -406,6 +406,7 @@ async (req, res, next)=>{
         await db('players').update({originName: profile.username, avatarLink: avatarLink}).where({originUserId: originUserId});
         await pushOriginNameLog(profile.username, originUserId, profile.personaId);
 
+        siteEvent.emit('data', {method: 'playerUpdate', params: {profile}});
         return res.status(200).json({success: 1, code:'update.success', data: {
             originName: profile.username,
             originUserId: profile.userId,
@@ -462,7 +463,7 @@ async (req, res, next)=>{
     }
 });
 
-router.post('/banappeal', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
+router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
@@ -495,7 +496,7 @@ async (req, res, next)=>{
     }
 });
 
-router.post('/viewBanappeal', verifyJWT, allowPrivileges(['admin','super','root']), [
+router.post('/viewBanAppeal', verifyJWT, allowPrivileges(['admin','super','root']), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.status').isIn(['open','pending','close'])
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
@@ -518,8 +519,8 @@ async (req, res, next)=>{
         await db('ban_appeals').update(ban_appeal).where({id: ban_appeal.id});
 
         if(viewedAdminIds.size >= 3)
-            siteEvent.emit('data', {method: 'viewBanappeal', params: {ban_appeal}});
-        return res.status(200).json({success: 1, code: 'viewBanappeal.success', message: 'thank you'});
+            siteEvent.emit('data', {method: 'viewBanAppeal', params: {ban_appeal}});
+        return res.status(200).json({success: 1, code: 'viewBanAppeal.success', message: 'thank you'});
     } catch(err) {
         next(err);
     }

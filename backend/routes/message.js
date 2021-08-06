@@ -42,7 +42,7 @@ async (req, res, next)=> {
         case 'announce':
             switch(true) {
             case userHasRoles(req.user, ['admin','super','root']):
-                result.messages = await db.select('*').from('messages').whereIn('type', ['banappeal','toAdmins']).andWhere('createTime','>=',new Date(from));
+                result.messages = await db.select('*').from('messages').whereIn('type', ['banAppeal','toAdmins']).andWhere('createTime','>=',new Date(from));
                 result.total += result.messages.length;
             // eslint-disable-next-line no-fallthrough
             case userHasRoles(req.user, ['normal']):
@@ -141,17 +141,17 @@ async function messageOnSiteEvent(event) {
         case 'judge':
             await iGotJudged(event.params);
             break;
-        case 'banappeal':
+        case 'banAppeal':
             await newBanAppeal(event.params);
             break;
-        case 'viewBanappeal':
+        case 'viewBanAppeal':
             removeBanAppealNotification(event.params);
             break;
         default:
             break;
         } 
     } catch(err) {
-        console.error('Error when handling siteEvent: '+err.message, err.stack);
+        console.error('messageOnSiteEvent: '+err.message, err.stack);
     }
 }
 
@@ -159,7 +159,7 @@ siteEvent.on('data', messageOnSiteEvent);
 
 /** 
  * @param {number|null} from @param {number|null} to @param {string} content
- * @param {'direct'|'reply'|'banappeal'|'info'|'warn'|'fatal'|'toAll'|'toAdmins'|'toNormals'|'command'|'...'} type 
+ * @param {'direct'|'reply'|'banAppeal'|'info'|'warn'|'fatal'|'toAll'|'toAdmins'|'toNormals'|'command'|'...'} type 
  * */
 async function sendMessage(from, to, type, content) {
     await db('messages').insert({
@@ -205,13 +205,13 @@ async function iGotReplied(params) { // checked that comment dose exist
 async function newBanAppeal(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const ban_appeal = params.ban_appeal;
-    await sendMessage(ban_appeal.byUserId, undefined, 'banappeal', ban_appeal.toPlayerId+'');
+    await sendMessage(ban_appeal.byUserId, undefined, 'banAppeal', ban_appeal.toPlayerId+'');
 }
 
 async function removeBanAppealNotification(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const ban_appeal = params.ban_appeal;
-    await db('messages').del().where({type: 'banappeal', content: ban_appeal.toPlayerId+''});
+    await db('messages').del().where({type: 'banAppeal', content: ban_appeal.toPlayerId+''});
 }
 
 export default router;

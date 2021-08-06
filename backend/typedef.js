@@ -93,7 +93,7 @@
 
 
 /** 
- * @typedef {{method:string,params:object}} SiteEvent
+ * @typedef {{method:'report'|'reply'|'judge'|'banAppeal'|'playerUpdate'|'viewBanAppeal'|'register',params:object}} SiteEvent
  */
 
 export {

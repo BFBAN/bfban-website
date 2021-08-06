@@ -19,6 +19,8 @@ import router_message from "./routes/message.js";
 //import router_services from "./routes/services.js";
 
 import { query as checkquery, validationResult, body as checkbody } from "express-validator";
+import { UserRateLimiter } from "./lib/user.js";
+import { verifyJWT } from "./middleware/auth.js";
 
 process.on('uncaughtException', (err)=> {
    logger.error('Uncaught Exception:', err.message, err.stack);
@@ -85,15 +87,22 @@ app.get('/is', [checkbody('is').trim() ], (req, res, next)=>{
     res.status(200).end('sadasd');
 });
 
+const limiter =  new UserRateLimiter(5000, 100);
+app.get('/rate', verifyJWT ,limiter.limiter(50), (req, res, next)=> {
+    res.status(200).json({hello:'world'});
+});
+
 app.use((req, res, next)=> { res.status(404).json({error: 1, code: 'request.404'}); });
 
 app.use((err, req, res, next)=> { // error handler
+    logger.error(err.message, err.stack);
     res.status(500).json({error: 1, code:'server.error', message:misc.generateErrorHelper(err)});
-    logger.error(err.stack);
 });
 
 app.listen(config.port, config.address, ()=> {
     console.log(`App start at ${config.address}:${config.port}`);
 });
+
+
 
 export default app;
