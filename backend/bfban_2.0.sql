@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `name_logs` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `originUserId` (`originUserId`) USING BTREE,
   KEY `originUserName` (`originName`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `players` (
   UNIQUE KEY `originUserId` (`originUserId`) USING BTREE,
   KEY `originPersonaId` (`originPersonaId`) USING BTREE,
   KEY `originId` (`originName`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `replies` (
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `toPlayerId` (`toPlayerId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `reports` (
   KEY `toOriginUserId` (`toOriginUserId`) USING BTREE,
   KEY `toOriginPersonaId` (`toOriginPersonaId`) USING BTREE,
   KEY `toPlayerId` (`toPlayerId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`) USING BTREE,
   KEY `originUserId` (`originUserId`) USING BTREE,
   KEY `originPersonaId` (`originPersonaId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 

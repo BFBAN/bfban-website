@@ -635,7 +635,7 @@ RESPONSE: // TODO
 
 ##### 命令
 
-	##### 	webhook操作
+##### webhook操作
 
 ```bash
 webhook subscribe <eventName> <url> <key>		#RETURN: uuid
@@ -643,7 +643,7 @@ webhook unsubscribe <uuid>
 webhook ls										#RETURN: {url,event,userId,key}[]
 ```
 
-	##### 	用户权限修改
+##### 用户权限修改
 
 ```bash
 user grant <id> <role>
@@ -651,13 +651,13 @@ user revoke <id> <role>
 user ban <id>
 ```
 
-	##### 	评论举报等内容修改
+##### 评论举报等内容修改
 
 ```bash'
 comment <reply|report|judgement|banAppeal> <id> <content> [videolink(report)]
 ```
 
-	##### 	用户属性获取修改	
+##### 用户属性获取修改	
 
 ```bash
 attr show <id> [path]					#RETURN all keyvalue OR value of specify path

@@ -106,9 +106,10 @@ async function commandUser(args, user) {            //  [0]  [1]  [2]  [3]
 
 /** @param {string[]} args @param {import('../typedef.js').User} user */
 async function commandWebhook(args, user) { 
+    const isEmpty = !webhookSubscriber.getByUserId(user);
     switch(args[1]) {                       //   [0]      [1]     [2]  [3] [4]
     case 'subscribe':                       // webhook subscribe event url key
-        if(webhookSubscriber.getByUserId(user).size >= 5)
+        if(!isEmpty && webhookSubscriber.getByUserId(user).size >= 5)
             return await sendMessage(null, user.id, 'command', 'webhook: maximum subscribe amount exceeded.');
         if( args.length == 5 &&                                                     // is all params provided?
             webhookSupportEvent.includes(args[2]) &&                                // is support event?
@@ -119,15 +120,18 @@ async function commandWebhook(args, user) {
         else
             return await sendMessage(null, user.id, 'command', 'webhook: incorrect params.');
     case 'unsubscribe':                     // webhook unsubscribe id
-        if(webhookSubscriber.getByUserId(user.id).has(args[2])) {
+        if(!isEmpty && webhookSubscriber.getByUserId(user.id).has(args[2])) {
             webhookSubscriber.delete(args[2]);
             return await sendMessage(null, user.id, 'command', 'webhook: unsubscribe success.');
         } else 
             return await sendMessage(null, user.id, 'command', 'webhook: no such subscription.');
     case 'ls':
+        if(isEmpty)
+            return await sendMessage(null, user.id, 'command', `webhook: no subscriptions`);
         return await sendMessage(null, user.id, 'command', `webhook: current subscription:\n    
-            ${webhookSubscriber.getByUrlIds(webhookSubscriber.getByUserId(user.id)).map(i=>JSON.stringify(i)).join('\n    ')} 
-            .`);
+            ${Array.from(webhookSubscriber.getByUserId(user.id))
+                .map(i=>{return i+' '+webhookSubscriber.getByUrlId(i).url})
+                .join('\n')} .`);
     default:
         return await sendMessage(null, user.id, 'command', 'webhook: unknown operation.');
     }
@@ -135,12 +139,12 @@ async function commandWebhook(args, user) {
 
 /** @param {string} command @param {import("../typedef.js").User} user */
 async function handleCommand(command, user) {
-    const args = command.split(',', 50);
+    const args = command.split(' ', 50);
     if(commands[args[0]] == undefined)
-        return 'command.notFound';
+        return sendMessage(null, user.id, 'command', 'command Not found');
     if(!userHasRoles(user, commands[args[0]].permission))
-        return 'command.permissionDenied';
-    return await commands[args[0]].exec(args);
+        return sendMessage(null, user.id, 'command', 'permission denied');
+    return await commands[args[0]].exec(args, user);
 }
 
 export {

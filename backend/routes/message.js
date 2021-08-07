@@ -61,7 +61,7 @@ async (req, res, next)=> {
 });
 
 router.post('/', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
-    checkbody('data.toUserId').isInt({min: 0}),
+    checkbody('data.toUserId').if( checkbody('data.type').isIn(['direct','warn','fatal']) ).isInt({min: 0}),
     checkbody('data.type').isIn(['direct','warn','fatal','toAll','toAdmins','toNormals','command']),
     checkbody('data.content').isString().trim().notEmpty()
 ],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
@@ -71,21 +71,22 @@ async (req, res, next)=> {
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'message.bad', message: validateErr.array()});
         
-        /** @type {import("../typedef.js").User|undefined} */
-        const toUser = (await db.select('*').from('users').where({id: req.body.data.toUserId}) )[0];
-        if(!toUser)
-            return res.status(404).json({error: 1, code: 'message.notFound', message: 'no such user.'});
-
         /** @type {'direct'|'warn'|'fatal'|'toAll'|'toAdmins'|'toNormals'|'command'} */
         const type = req.body.data.type;
-
+        /** @type {import("../typedef.js").User|null} */
+        let toUser = null;
+        if(['direct','warn','fatal'].includes(type)) {
+            toUser = (await db.select('*').from('users').where({id: req.body.data.toUserId}) )[0];
+            if(!toUser) 
+                return res.status(404).json({error: 1, code: 'message.notFound', message: 'no such user.'});
+        }
         switch(true) {
         case ( type=='fatal' && userHasRoles(req.user, ['super','root','dev']) ):
             await sendMessage(req.user.id, toUser.id, type, req.body.data.content);
             break; // jump out
 
-        case ( ['direct','warn'].includes(type) && userHasRoles(req.user, ['admin','super','root','dev']) ):
-            await sendMessage(req.user.id, toUser.id, type, req.body.data.content); // admins can dm anyone
+        case ( ['info','warn'].includes(type) && userHasRoles(req.user, ['admin','super','root','dev']) ):
+            await sendMessage(req.user.id, toUser.id, type, req.body.data.content);
             break; // jump out
 
         case ( type=='direct' ): // normal or other user

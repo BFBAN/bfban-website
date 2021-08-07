@@ -23,7 +23,7 @@ async function verifyJWT(req, res, next) {
         console.log(result); // DEBUG
         if(!result)
             return res.status(401).json({error: 1, code: 'user.invalid'});
-        if(result.signoutTime > decodedToken.signWhen+decodedToken.expiresIn)
+        if(result.signoutTime > decodedToken.signWhen)
             return res.status(401).json({error: 1, code: 'user.tokenExpired'});
         /** @type {import("../typedef.js").User} */
         req.user = result;

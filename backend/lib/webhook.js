@@ -4,7 +4,7 @@ import config from "../config.js";
 import logger from "../logger.js";
 import { siteEvent } from "./bfban.js";
 
-const webhookSupportEvent = Object.keys(webhookPayload); // ['stateChange', 'register', 'banAppeal','playerUpdate']
+const webhookSupportEvent = ['stateChange', 'register', 'banAppeal','playerUpdate'];
 const webhookSubscriber = {
     /** @type {Map<string, {url: string, event: string, userId: number, key: string}>} */
     urls: new Map(),
@@ -35,6 +35,8 @@ const webhookSubscriber = {
     },
     /** @param {string[]|Set<string>} urlIds */
     getByUrlIds(urlIds) {
+        if(!urlIds)
+            return [];
         if(urlIds instanceof Set)
             urlIds = Array.from(urlIds);
         return urlIds.map(i=>this.getByUrlId(i));
@@ -115,7 +117,7 @@ async function webhookSender() {
     });
 }
 
-const webhookTimer = setInterval(webhookSender, 30000);
+const webhookTimer = undefined;//setInterval(webhookSender, 30000);
 
 /** @param {import("../typedef.js").SiteEvent} event */
 async function webhookOnSiteEvent(event) {
