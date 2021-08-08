@@ -1,7 +1,7 @@
 <html>
     <script>
         function getcap() {
-            fetch('http://localhost:4002/api/captcha').then(res=> {
+            fetch('/api/captcha').then(res=> {
                 console.log(res)
                 res.json().then(obj=> {
                     document.querySelector('#secret').textContent = obj.data.hash;

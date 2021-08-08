@@ -552,8 +552,11 @@ body:		{
     			data: {
                     newname: string
                 }
+    			encryptCaptcha: string(base64),
+            	captcha: string					// captcha required
 			}
 RESPONSE: // TODO
+// You are logged out after this!!!
 ```
 
 #### 	变更账号密码	/api/user/changePassword
@@ -568,6 +571,7 @@ body:		{
                 }
 			}
 RESPONSE: // TODO
+// You are logged out after this!!!
 ```
 
 #### 	忘记密码重设	/api/user/forgetPassword

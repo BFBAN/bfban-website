@@ -356,16 +356,16 @@ async (req, res, next)=> {
         const attr = req.user.attr;
         if(!attr.changeNameLeft && attr.changeNameLeft<=0)
             return res.status(403).json({error: 1, code: 'changeName.noChance', message: 'you have used up all your change name chances.'});
-        const occupy = await db.select('id').from('user').where({username: req.body.data.newname}).union([
+        const occupy = await db.select('id').from('users').where({username: req.body.data.newname}).union([
             db.select('id').from('registers').where({username: req.body.data.newname})
         ]);
         if(occupy.length > 0)
             return res.status(403).json({error: 1, code: 'changeName.occupied', message: 'someone already occupied your new name.'});
         --attr.changeNameLeft;
-        await db('users').update({username: req.body.data.newname, attr: JSON.stringify(attr)}).where({id: req.user.id});
+        await db('users').update({username: req.body.data.newname, attr: JSON.stringify(attr), signoutTime: new Date()}).where({id: req.user.id});
         return res.status(200).json({success: 1, code: 'changeName.success', data: {
             chancesLeft: attr.changeNameLeft
-        }});
+        }, message: 'You need a Re-login to finish this process' });
     } catch(err) {
         next(err);
     }
@@ -385,10 +385,11 @@ async (req, res, next)=> {
         if(!comparePassword(req.body.data.oldpassword, user.password))
             return res.status(400).json({error: 1, code: 'changePassword.notMatch', message: 'original password incorrect.'});
         await db('users').update({
-            password: generatePassword(req.body.data.newpassword)
+            password: await generatePassword(req.body.data.newpassword),
+            signoutTime: new Date()
         }).where({id: user.id});
 
-        return res.status(200).json({success: 1, code: 'changePassword.success', message: 'you have successfully change your password.'});
+        return res.status(200).json({success: 1, code: 'changePassword.success', message: 'You need a Re-login to finish this process'});
     } catch(err) {
         next(err);
     }
