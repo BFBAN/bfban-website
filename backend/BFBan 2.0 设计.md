@@ -266,9 +266,9 @@ body:	{
     		data: {
                 game: 'bf1'|'bfv',
                 originName: string,
-                cheatMethod: string,	// see {{valid_cheatMethod}}
+                cheatMethods: string,	// see {{valid_cheatMethod}}
                 videoLink:	string(url)|null,
-                description: string,
+                description: string
             },
             encryptCaptcha: string(base64),
             captcha: string				// captcha required
