@@ -11,14 +11,14 @@ import { sendRegisterVerify, sendForgetPasswordVerify } from "../lib/mail.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { generatePassword, comparePassword, userHasRoles } from "../lib/auth.js";
 import { originClients } from "../lib/origin.js";
-import { privilegeRevoker, userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
+import { handleRichTextInput, privilegeRevoker, userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
 import { siteEvent } from "../lib/bfban.js";
 import logger from "../logger.js";
 
 const router = express.Router();
 
 router.post('/signup', verifyCaptcha, [ 
-    checkbody("data.username").isString().trim().isAlphanumeric().isLength({min:1, max:40}),
+    checkbody("data.username").isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min:1, max:40}),
     checkbody('data.password').isString().trim().isLength({min:1, max:40}),
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().unescape().trim().notEmpty()
@@ -333,7 +333,7 @@ async (req, res, next)=>{
 
         const update = {};
         if(req.body.data.introduction)
-            update.introduction = req.body.data.introduction;
+            update.introduction = handleRichTextInput(req.body.data.introduction);
         if(req.body.data.attr)
             update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
         await db('users').update(update).where({id: req.user.id});
@@ -345,7 +345,7 @@ async (req, res, next)=>{
 });
 
 router.post('/changeName', verifyJWT, verifyCaptcha, [
-    checkbody('data.newname').isString().trim().isAlphanumeric().isLength({min: 1, max: 40}),
+    checkbody('data.newname').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {

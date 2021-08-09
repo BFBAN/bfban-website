@@ -293,10 +293,46 @@ body:	{
         }
 ```
 
+##### valid_cheatMethods
+
+```javascript
+['wallhack', 'aimbot', 'invisible', 'magicBullet', 'damageChange', 'gadgetModify', 'teleport', 'attackServer']
+```
+
 #### 	使用ID举报玩家	/api/player/reportById
 
 ```javascript
-// TODO
+REQUEST: HTTP POST /api/player/reportById
+headers:	x-access-token: {{access_token}}	// login required
+body:	{
+    		data: {
+                game: 'bf1'|'bfv',
+                originUserId: string,
+                cheatMethods: string,	// see {{valid_cheatMethod}}
+                videoLink:	string(url)|null,
+                description: string
+            },
+            encryptCaptcha: string(base64),
+            captcha: string				// captcha required
+		}
+RESPONSE: HTTP 201 CREATED
+body:	{
+    		success: 1,
+            code: 'report.success',
+    		data: {
+                originName: string,
+                originUserId: string,
+                originPersonaId: string,
+                dbId: number,
+            },
+            message: 'Thank you.'
+		}
+    	  HTTP 404 NOTFOUND
+        {
+            error: 1,
+            code: 'report.notFound',
+            message: 'Report user not found.'
+        }
 ```
 
 #### 	获取被举报玩家案件时间线	/api/player/timeline

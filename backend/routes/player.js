@@ -337,7 +337,7 @@ router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
     checkbody('data.toCommentType').optional({nullable: true}).isIn([0,1,2,3]), // 0-reply 1-report 2-judgement 3-banAppeal
     checkbody('data.toCommentId').optional({nullable: true}).isInt({min: 0}),
-    checkbody('data.content').isString().trim().isLength({min: 1, max:65535}),
+    checkbody('data.content').isString().trim().isLength({min: 1, max:5000}),
 ],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
