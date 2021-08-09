@@ -420,7 +420,7 @@ async (req, res, next)=>{
 router.post('/judgement', verifyJWT, allowPrivileges(['admin','super','root']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
     checkbody('data.cheatMethods').optional().isString().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
-    checkbody('data.action').isIn(['suspect','innocent','dicuss','guilt','kill']),
+    checkbody('data.action').isIn(['suspect','innocent','discuss','guilt','kill','trash']),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{

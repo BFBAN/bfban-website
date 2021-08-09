@@ -44,7 +44,6 @@
  * @property {number} byUserId
  * @property {number} toPlayerId
  * @property {string} toOriginUserId
- * @property {string} toOriginPersonaId
  * @property {string} cheatMethods
  * @property {string} action
  * @property {string} content

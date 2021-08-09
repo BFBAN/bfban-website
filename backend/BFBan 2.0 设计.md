@@ -393,7 +393,7 @@ body:		{
     			data: {
                     toPlayerId: number,
                     cheatMethod: string,	// see {{valid_cheatMethod}}
-                    action: 'suspect'|'innocent'|'dicuss'|'guilt'|'kill'// super
+                    action: 'suspect'|'innocent'|'discuss'|'guilt'|'kill'// super
                     content: string
                 }
 			}
