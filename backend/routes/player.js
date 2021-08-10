@@ -15,6 +15,18 @@ import { userHasRoles } from "../lib/auth.js";
 
 const router = express.Router()
 
+/** @param {{dbId:number, userId: string, personaId: string}} @returns {Promise<number>} dbId */
+async function getPlayerId({dbId, userId, personaId}) {
+    const key = dbId? 'id' : (userId? 'originuserId' : (personaId? 'originPersonaId':undefined) );
+    const val = dbId? dbId : (userId? userId : (personaId? personaId:undefined) );
+    if(!key || !val)
+        return -1;
+    const tmp = (await db.select('id').from('players').where(key, '=', val) )[0];
+    if(!tmp)
+        return -1;
+    return tmp.id;
+}
+
 router.get('/', [
     checkquery('userId').optional().isInt({min: 0}),
     checkquery('personaId').optional().isInt({min: 0}),
@@ -278,7 +290,7 @@ async (req, res, next)=>{
     }
 });
 
-router.get('/timeline', [
+router.get('/timeline_old', [
     checkquery('dbId').optional().isInt({min: 0}),
     checkquery('userId').optional().isInt({min: 0}),
     checkquery('personaId').optional().isInt({min: 0}),
@@ -288,31 +300,10 @@ async (req, res, next)=>{
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'timeline.bad', message: validateErr.array()});
-        let dbId = 0;
-        switch(true) {
-        case !!req.query.dbId: // check if it is exist
-            if((await db.select('id').from('players').where({id:req.query.dbId})).length > 0)
-                dbId = parseInt(req.query.dbId);
-            else
-                return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
-            break;
-        case !!req.query.userId: {
-            const tmp = (await db.select('id').from('players').where({originUserId:req.query.userId}))[0];
-            if(!tmp)
-                return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
-            dbId = tmp.id;
-            break;
-        }
-        case !!req.query.personaId: {
-            const tmp = (await db.select('id').from('players').where({originPersonaId:req.query.personaId}))[0];
-            if(!tmp)
-                return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
-            dbId = tmp.id;
-            break;
-        }
-        default:
-            return res.status(400).json({error: 1, code: 'timeline.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
-        }
+        let dbId = await getPlayerId({dbId: req.query.dbId, userId: req.query.userId, personaId: req.query.personaId});
+        if(dbId==-1)
+            return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
+        
         const reports = await db.select('id','byUserId','toOriginName','game','cheatMethods','videoLink','description','createTime')
         .from('reports').where({toPlayerId: dbId, valid: 1});
         const judgements = await db.select('id','byUserId','cheatMethods','action','content','createTime')
@@ -332,6 +323,60 @@ async (req, res, next)=>{
         next(err);
     }
 });
+
+router.get('/timeline', [
+    checkquery('dbId').optional().isInt({min: 0}),
+    checkquery('userId').optional().isInt({min: 0}),
+    checkquery('personaId').optional().isInt({min: 0}),
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('limit').optional().isInt({min: 0, max: 100})
+],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'timeline.bad', message: validateErr.array()});
+        const skip = req.query.skip!=undefined? req.query.skip : 0;
+        const limit = req.query.limit!=undefined? req.query.limit : 20;
+        const dbId = await getPlayerId({dbId: req.query.dbId, userId: req.query.userId, personaId: req.query.personaId});
+        if(dbId==-1)
+            return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
+
+        /** @type {{id:number, createTime: Date, type: 'replies'|'reports'|'judgements'|'ban_appeals'}[]} */
+        const brief = await db.select('id', 'createTime', db.raw('"replies" as "type"')).from('replies').where({toPlayerId: dbId}).union([
+            db.select('id', 'createTime', db.raw('"reports" as "type"')).from('reports').where({toPlayerId: dbId}),
+            db.select('id', 'createTime', db.raw('"judgements" as "type"')).from('judgements').where({toPlayerId: dbId}),
+            db.select('id', 'createTime', db.raw('"ban_appeals" as "type"')).from('ban_appeals').where({toPlayerId: dbId})
+        ]).orderBy('createTime', 'asc').offset(skip).limit(limit);
+        // generate a brief timeline for queries below
+        const subQueries = brief.reduce((accu, curr, indx)=>{
+            accu[curr.type].push(curr.id);  // group by type
+            accu.order[{replies:0,reports:1,judgements:2,ban_appeals:3}[curr.type]][curr.id] = indx; // index=order[type][id]
+            return accu;
+        }, {replies:[], reports:[], judgements:[], ban_appeals:[], order: [{},{},{},{}] } );
+        const result = await Promise.all([
+            subQueries.replies.length>0? db.select('id','byuserId','toCommentType','toCommentId','content','createTime')
+            .from('replies').whereIn('id',subQueries.replies) : [],
+            subQueries.reports.length>0? db.select('id','byUserId','toOriginName','game','cheatMethods','videoLink','description','createTime')
+            .from('reports').whereIn('id', subQueries.reports) : [],
+            subQueries.judgements.length>0? db.select('id','byUserId','cheatMethods','action','content','createTime')
+            .from('judgements').whereIn('id', subQueries.judgements) : [],
+            subQueries.ban_appeals.length>0? db.select('id','byUserId','content','viewedAdminIds','status','createTime')
+            .from('ban_appeals').whereIn('id', subQueries.ban_appeals) : [],
+        ]).then(r=> {   // re-sort by saved order
+            return r.reduce((accu, curr, indx)=> {
+                for(let i of curr)
+                    accu[subQueries.order[indx][i.id]] = i;
+                return accu;
+            }, []);
+        });
+
+        res.status(200).json({success: 1, code: 'timeline.ok', data: result});
+    } catch(err) {
+        next(err);
+    }
+});
+
 
 router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
