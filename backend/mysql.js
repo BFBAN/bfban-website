@@ -10,6 +10,7 @@ const db = knex({
         user: config.mysql.user,
         password: config.mysql.password,
         database: config.mysql.database,
+        charset: 'utf8mb4',
         typeCast: (field, next)=> {
             if(field.type == 'JSON')
                 return JSON.parse(field.string());

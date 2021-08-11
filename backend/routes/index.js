@@ -55,7 +55,7 @@ async (req, res, next)=>{
 });
 
 router.get('/players', [
-    checkquery('game').optional().isIn(config.supportGames),
+    checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
     checkquery('createTime').optional().isInt({min: 0}),
     checkquery('updateTime').optional().isInt({min: 0}),
     checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5 ]),
@@ -69,14 +69,14 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'players.bad', message: validateErr.array()});
         
-        const game = req.query.game? req.query.game : '';
+        const game = (req.query.game&&req.query.game!='all')? req.query.game : '';
         const createTime = req.query.createTime? req.query.createTime-0 : 0;
         const updateTime = req.query.updateTime? req.query.updateTime-0 : 0;
-        const status = (req.query.status||req.query.status=='-1')? req.query.status : '%';
+        const status = (req.query.status&&req.query.status!='-1')? req.query.status : '%';
         const sort = req.query.sort? req.query.sort : 'createTime';
         const limit = req.query.limit? req.query.limit-0 : 20;
         const skip = req.query.skip? req.query.skip-0 : 0;
-
+        
         const result = await db.select('id','originName','originUserId','originPersonaId','games',
         'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
         .from('players').where('games', 'like', `%${game}%`).andWhere('valid', '=', 1)
@@ -112,24 +112,23 @@ router.get('/admins', async (req, res, next)=> {
 
 
 router.get('/search',[
-    checkquery('param').isString().trim().notEmpty()
+    checkquery('param').isString().trim().notEmpty(),
+    checkquery('scope').optional().isIn(['current','history'])
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next)=>{
     try {
         const result = {success: 1, code: 'search.success', data: {}};
-        const current = await db.select('*').from('players').where('originName', 'like', '%'+/[A-Za-z0-9_-]*/.exec(req.query.param)[0]+'%').limit(100);
-        result.data.current = current.map(i=>{ return {
-            originName: i.originName,
-            originUserId: i.originUserId,
-            originPersonaId: i.originPersonaId,
-            avatarLink: i.avatarLink,
-            status: i.status
-        }; });
-        if(req.query.history==='') {
+        if(!req.query.scope || req.query.scope=='current')
+            result.data = await db.select('originName','originUserId','originPersonaId','avatarLink','status').from('players')
+            .where('originName', 'like', '%'+/[A-Za-z0-9_-]*/.exec(req.query.param)[0]+'%').limit(100);
+        else {
             const history = await db('name_logs').join('players', 'name_logs.originUserId', 'players.originUserId')
             .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
             .where('name_logs.originName', 'like', '%'+/[A-Za-z0-9_-]*/.exec(req.query.param)[0]+'%').andWhere({valid: 1}).limit(100);
-            result.data.history = history.map(i=> { return {
+            console.log(db('name_logs').join('players', 'name_logs.originUserId', 'players.originUserId')
+            .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
+            .where('name_logs.originName', 'like', '%'+/[A-Za-z0-9_-]*/.exec(req.query.param)[0]+'%').andWhere({valid: 1}).limit(100).toSQL())
+            result.data = history.map(i=> { return {
                 historyName: i.prevOriginName, 
                 currentName: i.originName,
                 originUserId: i.originUserId,

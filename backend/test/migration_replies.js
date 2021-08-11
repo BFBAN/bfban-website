@@ -19,8 +19,7 @@
  * @property {number} id
  * @property {number} toPlayerId
  * @property {number} byUserId
- * @property {number} toCommentType ['replies', 'reports', 'judgements', 'ban_appeals']
- * @property {number} toCommentId
+ * @property {number} toFloor
  * @property {string} content
  * @property {number} valid
  * @property {Date} createTime
@@ -91,8 +90,7 @@ const converter = new Stream.Writable({
         const obj = {
             toPlayerId: player.id,
             byUserId: chunk.userId,
-            toCommentType: null,
-            toCommentId: null,
+            toFloor: chunk.toFloor,
             content: handleRichTextInput(chunk.content),
             valid: chunk.valid,
             createTime: chunk.createDatetime

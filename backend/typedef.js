@@ -55,8 +55,7 @@
  * @property {number} id
  * @property {number} toPlayerId
  * @property {number} byUserId
- * @property {number} toCommentType ['replies', 'reports', 'judgements', 'ban_appeals']
- * @property {number} toCommentId
+ * @property {number} toFloor
  * @property {string} content
  * @property {number} valid
  * @property {Date} createTime

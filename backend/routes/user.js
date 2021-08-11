@@ -7,10 +7,10 @@ import db from "../mysql.js";
 import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
-import { sendRegisterVerify, sendForgetPasswordVerify } from "../lib/mail.js";
+import { sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify } from "../lib/mail.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { generatePassword, comparePassword, userHasRoles } from "../lib/auth.js";
-import { originClients } from "../lib/origin.js";
+import { OriginClient, originClients } from "../lib/origin.js";
 import { handleRichTextInput, privilegeRevoker, userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
 import { siteEvent } from "../lib/bfban.js";
 import logger from "../logger.js";
@@ -200,7 +200,7 @@ async (req, res, next)=> {
     }
 });
 
-router.post('bindOrigin', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
+router.post('/bindOrigin', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().trim().notEmpty()
 ],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
@@ -216,7 +216,7 @@ async (req, res, next)=> {
         if(!originUserId)
             return res.status(400).json({error: 1, code:'bindOrigin.originNotFound'});
         const originUserInfo = await originClient.getInfoByUserId(originUserId);
-        if(originUserInfo.username !== originName) // verify again
+        if(originUserInfo.username.toLowerCase() !== originName.toLowerCase()) // verify
             return res.status(400).json({error: 1, code:'bindOrigin.originNotFound'});
         if( (await db.select('originUserId').from('registers').where({originUserId: originUserId}).union([
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
@@ -224,18 +224,55 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
         if(''.concat(await originClient.getUserGames(originUserId)).includes('Battlefield') == false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'bindOrigin.gameNotOwned'});
-        logger.info('users.bindOrigin Success:', {name: req.user.username});
-        // no mistakes detected, change db record
-        await db('users').update({
-            originName: originName,
-            originUserId: originUserId,
-            originPersonaId: originUserInfo.personaId,
-            originEmail: originEmail,
-            privilege: privilegeRevoker(req.user.privilege, req.user.attr.freezeOfNoBinding? 'freezed':''),
-        }).where({id: req.user.id});
+        // no mistakes detected, generate code for verify
+        const code = misc.encrypt(JSON.stringify({      // we send encrypted payload to user by email
+            userId: req.user.id,                        // which contains userId, originEmail, originuserId
+            email: originEmail,                         // when we get this payload again, we can know who is binding which email
+            originUserId: originUserId                  // without the help of any temporary db table
+        }), config.secret).toString('base64');
+        await sendBindingOriginVerify(req.user.username, originEmail, encodeURIComponent(code));
+
+        logger.info('users.bindOrigin#1 Success:', {name: req.user.username, email: originEmail});
+        res.status(200).json({success: 1, code:'bindOrigin.needVerify', message:'check your email to complete the verification.'});
     } catch(err) {
         next(err);
     }
+});
+
+router.get('/bindOriginVerify', verifyJWT, [
+    checkquery('code').isString()
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+async (req, res, next)=> {
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'bindOrigin.bad', message: validateErr.array()});
+
+        const code = decodeURIComponent(req.query.code);
+        let payload = {};
+        try { // be warn: we might get meaningless obj if the code is not encrypted by us
+            payload = JSON.parse(misc.decrypt(Buffer.from(code, 'base64'), config.secret).toString('utf8'));
+            if(payload.userId != req.user.id)
+                throw(new Error('bad payload'));
+        } catch(err) {
+            return res.status(400).json({error: 1, code: 'bindOrigin.bad', message: 'no such code.'}); // bad payload
+        }
+        const originClient = originClients.getOne();
+        const originUserInfo = await originClient.getInfoByUserId(payload.originUserId);
+        // no mistakes detected, change db record
+        await db('users').update({
+            originName: originUserInfo.username,
+            originUserId: originUserInfo.userId,
+            originPersonaId: originUserInfo.personaId,
+            originEmail: payload.email,
+            privilege: privilegeRevoker(req.user.privilege, req.user.attr.freezeOfNoBinding? 'freezed':''),
+        }).where({id: req.user.id});
+        
+        logger.info('users.bindOrigin#2 Success:', {name: req.user.username, email: payload.email});
+        res.status(200).json({success: 1, code: 'bindOrigin.success', message:'bind origin successfully.'});
+    } catch(err) {
+        next(err);
+    } 
 });
 
 
@@ -321,7 +358,8 @@ async (req, res, next)=>{
     }
 });
 
-router.post('/me', verifyJWT, [
+router.post('/me', verifyJWT, forbidPrivileges(['blacklisted']), [
+    checkbody('data').isObject(),
     checkbody('data.introduction').optional({nullable: true}).isString().isLength({max: 510}),
     checkbody('data.attr').optional({nullable: true}).isObject(),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
@@ -337,14 +375,14 @@ async (req, res, next)=>{
         if(req.body.data.attr)
             update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
         await db('users').update(update).where({id: req.user.id});
-
+        update.attr = userSetAttributes({}, req.body.data.attr);
         res.status(200).json({success: 1, code: 'me.success', data: update});
     } catch(err) {
         next(err);
     }
 });
 
-router.post('/changeName', verifyJWT, verifyCaptcha, [
+router.post('/changeName', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
     checkbody('data.newname').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
@@ -362,10 +400,10 @@ async (req, res, next)=> {
         if(occupy.length > 0)
             return res.status(403).json({error: 1, code: 'changeName.occupied', message: 'someone already occupied your new name.'});
         --attr.changeNameLeft;
-        await db('users').update({username: req.body.data.newname, attr: JSON.stringify(attr), signoutTime: new Date()}).where({id: req.user.id});
+        await db('users').update({username: req.body.data.newname, attr: JSON.stringify(attr)}).where({id: req.user.id});
         return res.status(200).json({success: 1, code: 'changeName.success', data: {
             chancesLeft: attr.changeNameLeft
-        }, message: 'You need a Re-login to finish this process' });
+        } });
     } catch(err) {
         next(err);
     }
@@ -395,6 +433,33 @@ async (req, res, next)=> {
     }
 });
 
+/*
+router.post('/batch', [
+    checkbody('data').isArray({max: 100})
+],
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'userBatch.bad', message: validateErr.array()});
+        
+        const query = req.body.data.filter(i=>{
+            if(Number.isInteger(i-0))
+                return i-0;
+            return undefined;
+        });
+        const qres = await db.select('id','username','privilege').from('users').whereIn('id', query).andWhere({valid: 1});
+        res.status(200).json({
+            success: 1,
+            code: 'userBatch.success',
+            data: qres.map(i=>{return [i.id, i]})
+        });
+    } catch(err) {
+        next(err);
+    }
+});
+*/
+
 router.post('/forgetPassword', verifyCaptcha, [
     checkbody('data.username').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.originEmail').trim().isEmail()
@@ -407,6 +472,8 @@ async (req, res, next)=> {
 
         /** @type {import("../typedef.js").User} */
         const user = (await db.select('*').from('users').where({username: req.body.data.username}))[0];
+        if(userHasRoles(user, ['blacklisted']))
+            return res.status(403).json({error: 1, code: 'forgetPassword.permissionDenied', message: 'you are not allow to do so.'});
         if(!user || user.originEmail != req.body.data.originEmail)
             return res.status(404).json({error: 1, code: 'forgetPassword.notFound', message: 'no such user.'});
         const newpassword = misc.generateRandomString(16);  // what we are doing here is:
@@ -415,7 +482,7 @@ async (req, res, next)=> {
             password: newpassword,                          // we do so to avoid some bay guys who know user's email address
             userid: user.id                                 // and directly change the user password though they dont know the new one
         }), config.secret).toString('base64');              // we send encrypted password to user, so we dont use db, like jwt
-        await sendForgetPasswordVerify(user.username, user.originEmail, code); // user verify the code->save new password into db
+        await sendForgetPasswordVerify(user.username, user.originEmail, encodeURIComponent(code)); // user verify the code->save new password into db
         // check /forgetPasswordVerify below
         res.status(200).json({success: 1, code: 'forgetPassword.needVerify', message: 'check your email to reset the password.'});
     } catch(err) {
@@ -424,17 +491,18 @@ async (req, res, next)=> {
 });
 
 router.get('/forgetPasswordVerify', [
-    checkquery('code').isBase64()
+    checkquery('code').isString()
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: validateErr.array()});
-        
+
+        const code = decodeURIComponent(req.query.code);
         let payload = {};
         try { // be warn: we might get meaningless obj if the code is not encrypted by us
-            payload = JSON.parse(misc.decrypt(Buffer.from(req.query.code, 'base64'), config.secret).toString('utf8'));
+            payload = JSON.parse(misc.decrypt(Buffer.from(code, 'base64'), config.secret).toString('utf8'));
             if(payload.i != 'YesINeedResetMyPassword') // if this patten match, there is no probability to have a bad payload
                 throw(new Error('bad payload'));
         } catch(err) {

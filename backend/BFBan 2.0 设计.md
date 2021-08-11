@@ -155,36 +155,36 @@ body:		{
 ```javascript
 REQUEST: HTTP GET /api/search
 parameters:	param: string	// the name need to search
+			scope: 'current'|'history'	// the search scope
 RESPONSE: HTTP 200 OK
 body:		{
     			success: 1,
                 code: 'search.success',
-                data: {
-                    current: [	// current player has similar name
-                        {
-                            originName: string,
-                            originUserId: string,
-                            originPersonaId: string,
-                            avatarLink: string,
-                            status: number
-                        },
+                data: [	// current player has similar name
+                    {
+                        originName: string,
+                        originUserId: string,
+                        originPersonaId: string,
+                        avatarLink: string,
+                        status: number
+                    },
                         ...100max
-                    ],
-                    history: [	// previous player names
-                        {
-                            historyName: string,
-                            currentName: string,
-                            originUserId: string,
-                            originPersonaId: string,
-                            log: {
-                                from: string(ISODate),	// name log from
-                                to: string(ISODate)		// name log to
-                            },
-                            status: number
+                ]
+                // OR
+                [	// previous player names
+                    {
+                        historyName: string,
+                        currentName: string,
+                        originUserId: string,
+                        originPersonaId: string,
+                        log: {
+                            from: string(ISODate),	// name log from
+                            to: string(ISODate)		// name log to
                         },
+                        status: number
+                    },
                         ...100max
-                    ]
-                }
+                ]
 			}
 ```
 
@@ -335,7 +335,7 @@ body:	{
         }
 ```
 
-#### 	获取被举报玩家案件时间线	/api/player/timeline
+#### 	获取被举报玩家案件时间线_弃用	/api/player/timeline_deprecated
 
 ```javascript
 REQUEST: HTTP GET /api/player/timeline
@@ -356,6 +356,30 @@ body:		{
 			}
 ```
 
+#### 获取被举报玩家案件时间线	/api/player/timeline
+
+```javascript
+REQUEST: HTTP GET /api/player/timeline
+parameters:	OneOf [
+    		userId?: string
+			personaId?: string
+			dbId?: number ]
+			skip?: number	// skip previous n record
+            limit?: number	// limit n record, max 100
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1,
+                code: 'timeline.ok',
+                data: [
+                    { type:'report', videoLink:string(url), ... }...
+                    { type:'reply', content:string, ... }...
+                    { type:'judgement', action:string, ...}...
+                    { type:'ban_appeal', content:string, ...}...
+                     // Order by createTime, asc
+                ]
+			}
+```
+
 #### 	评论被举报玩家	/api/player/reply
 
 ```javascript
@@ -364,12 +388,16 @@ headers:	x-access-token: {{access_token}}	// login required
 body:		{
     			data: {
                     toPlayerId: number,
-                    toCommentType?: 0|1|2|3,	// 0-reply 1-report 2-judgement 3-banAppeal
-                    toCommentId?: number,
+                    toFloor: number,			// start from 1
                     content: string,
                 }
 			}
-RESPONSE: // TODO
+RESPONSE: HTTP 201 CREATED
+body:		{
+    			success: 1, 
+                code: 'reply.suceess', 
+                message: 'Reply success.'
+			}
 ```
 
 #### 	更新被举报玩家信息	/api/player/update
@@ -381,7 +409,16 @@ parameters:	OneOf [
     		userId?: string
 			personaId?: string
 			dbId?: number ]
-RESPONSE: // TODO
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1, 
+                code:'update.success', 
+                data: {
+            		originName: string,
+            		originUserId: string,
+            		originPersonaId: string,
+        		}
+            }
 ```
 
 #### 	给予被举报玩家判定	/api/player/judgement
@@ -397,7 +434,12 @@ body:		{
                     content: string
                 }
 			}
-RESPONSE: // TODO
+RESPONSE: HTTP 201 CREATED
+body:		{
+    			success: 1, 
+                code: 'judgement.success', 
+                message: 'thank you.'
+			}
 ```
 
 #### 	为被举报玩家提出申诉	/api/player/banAppeal
@@ -411,7 +453,12 @@ body:		{
                     content: string
                 }
 			}
-RESPONSE: // TODO
+RESPONSE: HTTP 201 CREATED
+body:		{
+    			success: 1, 
+                code: 'judgement.success', 
+                message: 'please wait.'
+			}
 ```
 
 #### 	网站注册	/api/user/signup
@@ -442,7 +489,12 @@ email:		'Hello ${username} ... link: htttps://xxxxx/xxx?code=${code}'
 ```javascript
 REQUEST: HTTP GET /api/user/signupVerify
 parameters:	code: string,
-RESPONSE: // TODO
+RESPONSE: HTTP 201 CREATED
+body:		{
+    			success: 1,
+                code:'signup.success', 
+                message: 'Welcome to BFBan!'
+			}
 ```
 
 #### 	网站登录	/api/user/signin
@@ -489,7 +541,27 @@ body:		{
                 encryptCaptcha: string(base64),
             	captcha: string				// captcha required
 			}
-RESPONSE: // TODO
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1,
+                code:'bindOrigin.needVerify', 
+                message:'check your email to complete the verification.'
+			}
+email:		'Hello xxx, you are now binding... click link below: htttps://xxx.xxx/xxx?code=${code}'	// code for verification
+```
+
+#### 绑定网站账号至origin账号验证
+
+```javascript
+REQUEST: HTTP GET /api/user/bindOriginVerify
+headers:	x-access-token: {{access_token}}	// login required
+parameters:	code: string
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1,
+                code: 'bindOrigin.success', 
+                message:'bind origin successfully.'
+			}
 ```
 
 #### 	网站登出	/api/user/signout
@@ -576,7 +648,16 @@ body:		{
                     }
                 }
 			}
-RESPONSE: // TODO
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'me.success', 
+               	data: {		// show updated values
+                    language?: string,
+                    showOrigin?: boolen,
+               	    allowDM?: boolen,
+                }
+			}
 ```
 
 #### 	变更账号名字	/api/user/changeName
@@ -591,8 +672,15 @@ body:		{
     			encryptCaptcha: string(base64),
             	captcha: string					// captcha required
 			}
-RESPONSE: // TODO
-// You are logged out after this!!!
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'changeName.success', 
+                data: {
+            		chancesLeft: number
+        		} 
+			}
+// You need to logout to clear the old name in jwt, but it dosent matter
 ```
 
 #### 	变更账号密码	/api/user/changePassword
@@ -606,7 +694,12 @@ body:		{
                     oldpassword: string
                 }
 			}
-RESPONSE: // TODO
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'changePassword.success', 
+                message: 'You need a Re-login to finish this process'
+			}
 // You are logged out after this!!!
 ```
 
@@ -766,6 +859,12 @@ Server->Client: 200 OK, originUserId...
 
 ​	该过程仅一次调用origin查询API，并引入了多api联合查询，同时向多方由名字查询origin数据的api发送请求，收到最快返回的即可进行下一步处理，增加了可靠性同时减少了耗时，且调用外部api方面设置了用户登录，验证码两个门槛，滥用概率大大降低。引入案件状态机，使状态处理码量降低
 
+### 网站安全
+
+##### 现
+
+​	所有路由的所有参数全部经过类型validator；实现userRateLimiter类，可限制登录用户某段时间内(window)请求数限制(可配置权重)；设计为处于反向代理后，反向代理设置基于IP的请求数限制；用户数据内记录登入/注册时IP；评论/裁决/申诉等先检查是否存在对应案件；回复评论时检查是否存在对应楼。
+
 ### origin客户端操作
 
 ##### 原
@@ -817,7 +916,7 @@ CONFIRM --> invalid_report : trash(admin)
 
 ##### 现
 
-​	加入搜索结果数量限制，查询旧名时联合`name_logs`表和`players`表，同时显示旧名新名。增加高级搜索功能，调用originAPI查询最新用户名，仅对注册用户开放，并严格控制使用频率。
+​	加入搜索结果数量限制，查询旧名时联合`name_logs`表和`players`表，控制搜索旧名新名。增加高级搜索功能，调用originAPI查询最新用户名，仅对注册用户开放，并严格控制使用频率。
 
 ### 权限系统
 

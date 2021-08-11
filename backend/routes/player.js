@@ -290,7 +290,7 @@ async (req, res, next)=>{
     }
 });
 
-router.get('/timeline_old', [
+router.get('/timeline_deprecated', [
     checkquery('dbId').optional().isInt({min: 0}),
     checkquery('userId').optional().isInt({min: 0}),
     checkquery('personaId').optional().isInt({min: 0}),
@@ -308,7 +308,7 @@ async (req, res, next)=>{
         .from('reports').where({toPlayerId: dbId, valid: 1});
         const judgements = await db.select('id','byUserId','cheatMethods','action','content','createTime')
         .from('judgements').where({toPlayerId: dbId, valid: 1}).orderBy('createTime', 'desc');
-        const comments = await db.select('id','byuserId','toCommentType','toCommentId','content','createTime')
+        const repiles = await db.select('id','byuserId','toFloor','content','createTime')
         .from('replies').where({toPlayerId: dbId, valid: 1}).orderBy('createTime', 'desc');
         const ban_appeals = await db.select('id','byUserId','content','viewedAdminIds','status','createTime')
         .from('ban_appeals').where({toPlayerId: dbId, valid: 1}).orderBy('createTime', 'desc');
@@ -316,7 +316,7 @@ async (req, res, next)=>{
         res.status(200).json({success: 1, code: 'timeline.ok', data: {
             reports,
             judgements,
-            comments,
+            repiles,
             ban_appeals
         }});
     } catch(err) {
@@ -342,31 +342,42 @@ async (req, res, next)=>{
         if(dbId==-1)
             return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
 
-        /** @type {{id:number, createTime: Date, type: 'replies'|'reports'|'judgements'|'ban_appeals'}[]} */
-        const brief = await db.select('id', 'createTime', db.raw('"replies" as "type"')).from('replies').where({toPlayerId: dbId}).union([
-            db.select('id', 'createTime', db.raw('"reports" as "type"')).from('reports').where({toPlayerId: dbId}),
-            db.select('id', 'createTime', db.raw('"judgements" as "type"')).from('judgements').where({toPlayerId: dbId}),
-            db.select('id', 'createTime', db.raw('"ban_appeals" as "type"')).from('ban_appeals').where({toPlayerId: dbId})
+        /** @type {{id:number, createTime: Date, type: 'reply'|'report'|'judgement'|'ban_appeal'}[]} */
+        const brief = await db.select('id', 'createTime', db.raw('"reply" as "type"')).from('replies').where({toPlayerId: dbId}).union([
+            db.select('id', 'createTime', db.raw('"report" as "type"')).from('reports').where({toPlayerId: dbId}),
+            db.select('id', 'createTime', db.raw('"judgement" as "type"')).from('judgements').where({toPlayerId: dbId}),
+            db.select('id', 'createTime', db.raw('"ban_appeal" as "type"')).from('ban_appeals').where({toPlayerId: dbId})
         ]).orderBy('createTime', 'asc').offset(skip).limit(limit);
         // generate a brief timeline for queries below
         const subQueries = brief.reduce((accu, curr, indx)=>{
             accu[curr.type].push(curr.id);  // group by type
-            accu.order[{replies:0,reports:1,judgements:2,ban_appeals:3}[curr.type]][curr.id] = indx; // index=order[type][id]
+            accu.order[curr.type][curr.id] = indx; // index <= order[type][id]
             return accu;
-        }, {replies:[], reports:[], judgements:[], ban_appeals:[], order: [{},{},{},{}] } );
+        }, {reply:[], report:[], judgement:[], ban_appeal:[], order: {reply:{}, report:{}, judgement:{}, ban_appeal:{}} } );
         const result = await Promise.all([
-            subQueries.replies.length>0? db.select('id','byuserId','toCommentType','toCommentId','content','createTime')
-            .from('replies').whereIn('id',subQueries.replies) : [],
-            subQueries.reports.length>0? db.select('id','byUserId','toOriginName','game','cheatMethods','videoLink','description','createTime')
-            .from('reports').whereIn('id', subQueries.reports) : [],
-            subQueries.judgements.length>0? db.select('id','byUserId','cheatMethods','action','content','createTime')
-            .from('judgements').whereIn('id', subQueries.judgements) : [],
-            subQueries.ban_appeals.length>0? db.select('id','byUserId','content','viewedAdminIds','status','createTime')
-            .from('ban_appeals').whereIn('id', subQueries.ban_appeals) : [],
+            subQueries.reply.length>0? db('replies').join('users', 'replies.byUserId', 'users.id')
+            .select('replies.id','replies.byUserId','replies.toFloor','replies.content',
+            'replies.createTime', 'users.username', 'users.privilege',db.raw('"reply" as "type"'))
+            .whereIn('replies.id',subQueries.reply) : [],
+            
+            subQueries.report.length>0? db('reports').join('users', 'reports.byUserId', 'users.id')
+            .select('reports.id','reports.byUserId','reports.toOriginName','reports.game','reports.cheatMethods',
+            'reports.videoLink','reports.description','reports.createTime', 'users.username', 'users.privilege', db.raw('"report" as "type"'))
+            .whereIn('reports.id', subQueries.report) : [],
+            
+            subQueries.judgement.length>0? db('judgements').join('users', 'judgements.byUserId', 'users.id')
+            .select('judgements.id','judgements.byUserId','judgements.cheatMethods','judgements.action',
+            'judgements.content','judgements.createTime', 'users.username', 'users.privilege', db.raw('"judgement" as "type"'))
+            .whereIn('judgements.id', subQueries.judgement) : [],
+
+            subQueries.ban_appeal.length>0? db('ban_appeals')
+            .select('ban_appeals.id','ban_appeals.byUserId','ban_appeals.content','ban_appeals.viewedAdminIds',
+            'ban_appeals.status','ban_appeals.createTime', 'users.username', 'users.privilege', db.raw('"ban_appeal" as "type"'))
+            .whereIn('ban_appeals.id', subQueries.ban_appeal) : [],
         ]).then(r=> {   // re-sort by saved order
             return r.reduce((accu, curr, indx)=> {
                 for(let i of curr)
-                    accu[subQueries.order[indx][i.id]] = i;
+                    accu[subQueries.order[i.type][i.id]] = i;
                 return accu;
             }, []);
         });
@@ -380,8 +391,7 @@ async (req, res, next)=>{
 
 router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
-    checkbody('data.toCommentType').optional({nullable: true}).isIn([0,1,2,3]), // 0-reply 1-report 2-judgement 3-banAppeal
-    checkbody('data.toCommentId').optional({nullable: true}).isInt({min: 0}),
+    checkbody('data.toFloor').optional({nullable: true}).isInt({min: 1}),
     checkbody('data.content').isString().trim().isLength({min: 1, max:5000}),
 ],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
@@ -390,19 +400,26 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});
         
-        if(req.body.data.toCommentType && req.body.data.toCommentId) { // reply to a comment, check that comment exist
-            const dbname = ['replies', 'reports', 'judgements', 'ban_appeals'][req.body.data.toCommentType];
-            const tmp = (await db.select('toPlayerId').from(dbname).where({id: req.body.data.toCommentId}))[0].toPlayerId;
-            if(tmp != req.body.data.toPlayerId) // the comment and the ongoing reply is not under the same player
-                return res.status(404).json({error: 1, code: 'reply.bad', message: 'no such comment'});
-        }
         if( (await db.select('id').from('players').where({id: req.body.data.toPlayerId}))[0] == undefined ) // no such player
             return res.status(404).json({error: 1, code: 'reply.notFound', message: 'no such player'});
+        const dbId = req.body.data.toPlayerId;
+        let toCommentType=null, toCommentId=null;
+        if(req.body.data.toFloor) { // reply to a comment, check that comment exist
+            /** @type {{id:number, createTime: Date, type: 'replies'|'reports'|'judgements'|'ban_appeals'}} */
+            const brief = await db.select('id', 'createTime', db.raw('"replies" as "type"')).from('replies').where({toPlayerId: dbId}).union([
+            db.select('id', 'createTime', db.raw('"reports" as "type"')).from('reports').where({toPlayerId: dbId}),
+            db.select('id', 'createTime', db.raw('"judgements" as "type"')).from('judgements').where({toPlayerId: dbId}),
+            db.select('id', 'createTime', db.raw('"ban_appeals" as "type"')).from('ban_appeals').where({toPlayerId: dbId})
+            ]).orderBy('createTime', 'asc').offset(req.body.data.toFloor-1).first();
+            if(!brief)
+                return res.status(404).json({error: 1, code: 'reply.notFound', message: 'no such comment'});
+            toCommentId = brief.id; toCommentType = brief.type;
+        }
+        
         const reply = {
             toPlayerId: req.body.data.toPlayerId,
             byUserId: req.user.id,
-            toCommentType: req.body.data.toCommentType? req.body.data.toCommentType : null,
-            toCommentId: req.body.data.toCommentId? req.body.data.toCommentId : null,
+            toFloor: req.body.data.toFloor? req.body.data.toFloor : null,
             content: handleRichTextInput(req.body.data.content),
             valid: 1,
             createTime: new Date(),
@@ -412,6 +429,7 @@ async (req, res, next)=>{
             updateTime: new Date(), 
         }).increment('commentsNum', 1).where({id: req.body.data.toPlayerId});
         
+        reply.toCommentId = toCommentId; reply.toCommentType = toCommentType;
         siteEvent.emit('data', {method: 'reply', params: {reply}});
         return res.status(201).json({success: 1, code: 'reply.suceess', message: 'Reply success.'});
     } catch(err) {
@@ -502,7 +520,7 @@ async (req, res, next)=>{
         await db('players').update(player).increment('commentsNum', 1).where({id: player.id});
 
         siteEvent.emit('data', {method: 'judge', params: {judgement, player, stateChange}});
-        return res.status(200).json({success: 1, code: 'judgement.success', message: 'thank you.'});
+        return res.status(201).json({success: 1, code: 'judgement.success', message: 'thank you.'});
     } catch(err) {
         next(err);
     }
@@ -535,7 +553,7 @@ async (req, res, next)=>{
         await db('ban_appeals').insert(ban_appeal);
 
         siteEvent.emit('data', {method: 'banappeal', params: {ban_appeal}});
-        return res.status(200).json({success: 1, code: 'banappeal.success', message:'thank you.'})
+        return res.status(201).json({success: 1, code: 'banappeal.success', message:'please wait.'})
     } catch(err) {
         next(err);
     }

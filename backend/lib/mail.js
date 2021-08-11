@@ -24,8 +24,8 @@ async function sendMail(content, from, to, cc, subject) {
 async function sendRegisterVerify(username, originName, address, code) {
     await sendMail(
         "Hello "+username+"!\n"+
-        "    You are now signing up for BFBan as "+originName+" in game.\n"+
-        "    Pease click the link below to complete your registration: \n"+
+        "   You are now signing up for BFBan as "+originName+" in game.\n"+
+        "   Pease click the link below to complete your registration: \n"+
         "      htttps://bfban.com/#/signupComplete?code="+code,
         config.mail.user, address, '', "BFBan Registration"
     );
@@ -36,13 +36,25 @@ async function sendForgetPasswordVerify(username, address, code) {
         "Hello "+username+"!\n"+
         "   You are now reseting your password for bfban.com.\n"+
         "   Please click the link below to reset your password: \n"+
-        "       htttps://bfban.com/#/forgetPasswordVerify?code="+code,
+        "      htttps://bfban.com/#/forgetPasswordVerify?code="+code,
         config.mail.user, address, '', "BFBan Password Reset"
     );
 }
+
+async function sendBindingOriginVerify(username, address, code) {
+    await sendMail(
+        "Hello "+username+"!\n"+
+        "   You are now binding this email to your bfban.com account.\n"+
+        "   Please click the link below to finish the verification: \n"+
+        "      htttps://bfban.com/#/bindOriginVerify?code="+code,
+        config.mail.user, address, '', "BFBan Account Binding"
+    );
+}
+
 
 export {
     sendMail,
     sendRegisterVerify,
     sendForgetPasswordVerify,
+    sendBindingOriginVerify,
 }

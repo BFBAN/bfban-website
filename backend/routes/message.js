@@ -197,13 +197,12 @@ async function iGotJudged(params) {
 }
 
 async function iGotReplied(params) { // checked that comment dose exist
-    /** @type {import("../typedef.js").Reply} */
+    /** @type {import("../typedef.js").Reply&{toCommentType:string,toCommentId:number}} */
     const reply = params.reply;
     const {toCommentType, toCommentId, toPlayerId} = reply;
     if(!(toCommentType && toCommentId))
         return;
-    const dbname = ['replies', 'reports', 'judgements', 'ban_appeals'];
-    const toCommentUser = (await db.select('byUserId').from(dbname[toCommentType]).where({id: toCommentId}))[0].byUserId;
+    const toCommentUser = (await db.select('byUserId').from(toCommentType).where({id: toCommentId}))[0].byUserId;
     await sendMessage(reply.byUserId, toCommentUser, 'reply', `You got reply under dbId:${toPlayerId}`);
 }
 
