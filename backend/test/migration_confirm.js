@@ -88,7 +88,7 @@ const converter = new Stream.Writable({
     write: async (chunk, encoding, callback)=> {
         console.log('--Now handling row:'+chunk.id);
         /** @type {Verify} */
-        const verify = (await db_src.select('*').from('user_verify_cheater').where({id: chunk.userVerifyCheaterId}))[0];
+        const verify = await db_src.select('*').from('user_verify_cheater').where({id: chunk.userVerifyCheaterId}).first();
         if(!verify) {
             console.log('Bad OriginUserId:'+JSON.stringify(chunk));
             return callback();
@@ -98,7 +98,7 @@ const converter = new Stream.Writable({
             return callback();
         }
         /** @type {import("../typedef").Player} */
-        const player = (await db_dst.select('*').from('players').where({originUserId: verify.originUserId}) )[0];
+        const player = await db_dst.select('*').from('players').where({originUserId: verify.originUserId}).first();
         if(!player) {
             console.log('Cannot find such player:'+verify.originUserId);
             return callback();

@@ -86,7 +86,7 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'signup.bad', message: validateErr.array()});
 
         const code = req.query.code;
-        const registrant = (await db.select('*').from('registers').where({uniqCode: code}))[0];
+        const registrant = await db.select('*').from('registers').where({uniqCode: code}).first();
         if(!registrant)
             return res.status(404).json({error: 1, code: 'signup.notfound'});
         const data = {
@@ -162,7 +162,7 @@ async (req, res, next)=> {
         
         const { username, password, EXPIRES_IN } = req.body.data;
         /** @type {import("../typedef.js").User} */
-        const user = (await db.select('*').from('users').where({username: username}))[0];
+        const user = await db.select('*').from('users').where({username: username}).first();
         
         if(user && user.valid!=0 && await comparePassword(password, user.password)) {
             let expiresIn = 1000*60*60*24*7; // 7 day
@@ -294,11 +294,12 @@ async function showUserInfo(req, res, next) {
             return res.status(400).json({error: 1, code: 'userInfo.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
-        const user = (await db.select('*').from('users').where({id: req.query.id}) )[0];
+        const user = await db.select('*').from('users').where({id: req.query.id}).first();
         if(!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
-        const reportnum = (await db('reports').count({num: 'id'}).where({byUserId: user.id}) )[0].num;
+        const reportnum = await db('reports').count({num: 'id'}).where({byUserId: user.id}).first().num;
         const data = {
+            id: user.id,
             username: user.username,
             privilege: user.privilege,
             introduction: user.introduction,
@@ -343,7 +344,7 @@ async (req, res, next)=>{
         const limit = req.query.limit? req.query.limit : 0;
 
         /** @type {import("../typedef.js").User} */
-        const user = (await db.select('*').from('users').where({id: req.query.id}) )[0];
+        const user = await db.select('*').from('users').where({id: req.query.id}).first();
         if(!user)
             return res.status(404).json({error: 1, code: 'userReports.notFound', message: 'no such user.'});
         const reports = await db('reports').join('players', 'reports.toPlayerId', 'players.id')
@@ -471,7 +472,7 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
-        const user = (await db.select('*').from('users').where({username: req.body.data.username}))[0];
+        const user = await db.select('*').from('users').where({username: req.body.data.username}).first();
         if(userHasRoles(user, ['blacklisted']))
             return res.status(403).json({error: 1, code: 'forgetPassword.permissionDenied', message: 'you are not allow to do so.'});
         if(!user || user.originEmail != req.body.data.originEmail)

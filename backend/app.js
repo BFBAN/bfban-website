@@ -87,6 +87,7 @@ app.get('/is', [checkbody('is').trim() ], (req, res, next)=>{
     res.status(200).end('sadasd');
 });
 
+app.get('/', (req, res, next)=>{ res.redirect('/static/SPA.html') });
 const limiter =  new UserRateLimiter(5000, 100);
 app.get('/rate', verifyJWT ,limiter.limiter(50), (req, res, next)=> {
     res.status(200).json({hello:'world'});

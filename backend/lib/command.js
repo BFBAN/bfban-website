@@ -16,7 +16,7 @@ async function commandAttr(args, user) {
     if(!Number.isInteger(args[2]-0))
         return await sendMessage(null, user.id, 'command', 'attr: incorrect params.');
     /** @type {import("../typedef.js").User} */
-    const target = (await db.select('*').from('users').where({id: args[2]-0 }) )[0];
+    const target = await db.select('*').from('users').where({id: args[2]-0 }).first();
     if(!target)
         return await sendMessage(null, user.id, 'command', 'attr: user notfound.');
 
@@ -70,7 +70,7 @@ async function commandUser(args, user) {            //  [0]  [1]  [2]  [3]
     if(!Number.isInteger(args[2]-0))
         return await sendMessage(null, user.id, 'command', 'user: incorrect params.');
     /** @type {import("../typedef.js").User} */
-    const target = (await db.select('*').from('users').where({id: args[2]-0 }) )[0];
+    const target = await db.select('*').from('users').where({id: args[2]-0 }).first();
     if(!target)
         return await sendMessage(null, user.id, 'command', 'user: no such user.');
 
@@ -106,10 +106,11 @@ async function commandUser(args, user) {            //  [0]  [1]  [2]  [3]
 
 /** @param {string[]} args @param {import('../typedef.js').User} user */
 async function commandWebhook(args, user) { 
-    const isEmpty = !webhookSubscriber.getByUserId(user);
+    console.log(user);
+    const isEmpty = !webhookSubscriber.getByUserId(user.id);
     switch(args[1]) {                       //   [0]      [1]     [2]  [3] [4]
     case 'subscribe':                       // webhook subscribe event url key
-        if(!isEmpty && webhookSubscriber.getByUserId(user).size >= 5)
+        if(!isEmpty && webhookSubscriber.getByUserId(user.id).size >= 5)
             return await sendMessage(null, user.id, 'command', 'webhook: maximum subscribe amount exceeded.');
         if( args.length == 5 &&                                                     // is all params provided?
             webhookSupportEvent.includes(args[2]) &&                                // is support event?

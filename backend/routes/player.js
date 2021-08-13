@@ -21,7 +21,7 @@ async function getPlayerId({dbId, userId, personaId}) {
     const val = dbId? dbId : (userId? userId : (personaId? personaId:undefined) );
     if(!key || !val)
         return -1;
-    const tmp = (await db.select('id').from('players').where(key, '=', val) )[0];
+    const tmp = await db.select('id').from('players').where(key, '=', val).first();
     if(!tmp)
         return -1;
     return tmp.id;
@@ -50,9 +50,9 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'player.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
         }
 
-        const result = (await db.select('id','originName','originUserId','originPersonaId','games',
+        const result = await db.select('id','originName','originUserId','originPersonaId','games',
         'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
-        .from('players').where(key, '=', val))[0];
+        .from('players').where(key, '=', val).first();
         if(!result)
             return res.status(404).json({error: 1, code: 'player.notFound'});
         if(req.query.history) // that guy does exist
@@ -121,7 +121,7 @@ async (req, res, next)=>{
 
         // now the user being reported is found
         /** @type {import('../typedef.js').Player|undefined} */
-        const reported = (await db.select('*').from('players').where({originUserId: profile.userId}))[0];
+        const reported = await db.select('*').from('players').where({originUserId: profile.userId}).first();
         const updateCol = { originName: profile.username };
         let avatarLink = '';
         let stateChange = {prev: null, next: 0};
@@ -222,7 +222,7 @@ async (req, res, next)=>{
         }
         // now the user being reported is found
         /** @type {import('../typedef.js').Player|undefined} */
-        const reported = (await db.select('*').from('players').where({originUserId: profile.userId}))[0];
+        const reported = await db.select('*').from('players').where({originUserId: profile.userId}).first();
         const updateCol = { originName: profile.username };
         let avatarLink = '';
         let stateChange = {prev: null, next: 0};
@@ -400,7 +400,7 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});
         
-        if( (await db.select('id').from('players').where({id: req.body.data.toPlayerId}))[0] == undefined ) // no such player
+        if(await db.select('id').from('players').where({id: req.body.data.toPlayerId}).first() == undefined) // no such player
             return res.status(404).json({error: 1, code: 'reply.notFound', message: 'no such player'});
         const dbId = req.body.data.toPlayerId;
         let toCommentType=null, toCommentId=null;
@@ -459,7 +459,7 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'update.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
         }
         
-        const tmp = (await db.select('originUserId').from('players').where(key, '=', val))[0];
+        const tmp = await db.select('originUserId').from('players').where(key, '=', val).first();
         if(!tmp)
             return res.status(404).json({error: 1, code: 'update.notFound', message: 'no such player'});
         const originUserId = tmp.originUserId;
@@ -497,7 +497,7 @@ async (req, res, next)=>{
             return res.status(403).json({error: 1, code: 'judgement.permissionDenied', message: 'permission denied.'});
 
         /** @type {import("../typedef.js").Player|undefined} */    
-        const player = (await db.select('*').from('players').where({id: req.body.data.toPlayerId}))[0];
+        const player = await db.select('*').from('players').where({id: req.body.data.toPlayerId}).first();
         if(!player)
             return res.status(404).json({error: 1, code: 'judgement.notFound', message: 'no such player.'});
         // auth complete, player found, store action into db
@@ -515,9 +515,10 @@ async (req, res, next)=>{
         const nextstate = await stateMachine(player, req.user, req.body.data.action);
         const stateChange = {prev: player.status, next: nextstate};
         player.status = nextstate;
-        player.cheatMethods = nextstate==1? req.body.data.cheatMethods : player.cheatMethods;
+        player.cheatMethods = nextstate==1? req.body.data.cheatMethods : '';
         player.updateTime = new Date();
-        await db('players').update(player).increment('commentsNum', 1).where({id: player.id});
+        player.commentsNum += 1;
+        await db('players').update(player).where({id: player.id});
 
         siteEvent.emit('data', {method: 'judge', params: {judgement, player, stateChange}});
         return res.status(201).json({success: 1, code: 'judgement.success', message: 'thank you.'});
@@ -537,10 +538,13 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'banappeal.bad', message: validateErr.array()});
         
         /** @type {import("../typedef.js").Player|undefined} */
-        const player = (await db.select('*').from('players').where({id: req.body.data.toPlayerId}))[0];
+        const player = await db.select('*').from('players').where({id: req.body.data.toPlayerId}).first();
         if(!player)
             return res.status(404).json({success: 1, code: 'banappeal.notFound', message: 'no such player'});
-
+        /** @type {import("../typedef.js").BanAppeal} */
+        const prev = await db.select('*').from('ban_appeals').where({id: req.body.data.toPlayerId}).orderBy('createTime', 'desc').first();
+        if(prev && prev.status=='lock')
+            return res.status(403).json({error: 1, code: 'banappeal.locked', message: 'this thread is locked'});
         const ban_appeal = {
             toPlayerId: player.id,
             byUserId: req.user.id,
@@ -561,7 +565,7 @@ async (req, res, next)=>{
 
 router.post('/viewBanAppeal', verifyJWT, allowPrivileges(['admin','super','root']), [
     checkbody('data.id').isInt({min: 0}),
-    checkbody('data.status').isIn(['open','pending','close'])
+    checkbody('data.status').optional().isIn(['open','close','lock'])
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
@@ -570,15 +574,15 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'banappeal.bad', message: validateErr.array()});
         
         /** @type {import("../typedef.js").BanAppeal} */
-        const ban_appeal = (await db.select('*').from('ban_appeals').where({id: req.body.data.id}) )[0];
+        const ban_appeal = await db.select('*').from('ban_appeals').where({id: req.body.data.id}).first();
         if(!ban_appeal)
             return res.status(404).json({success: 1, code: 'banappeal.notFound', message: 'no such ban appeal'});
         const viewedAdminIds = new Set(ban_appeal.viewedAdminIds.split(','));
         viewedAdminIds.add(req.user.id);
         
-        ban_appeal.status = req.body.data.status;
+        if(req.body.data.status)
+            ban_appeal.status = req.body.data.status;
         ban_appeal.viewedAdminIds = Array.from(viewedAdminIds).slice(0,3).join(',');
-
         await db('ban_appeals').update(ban_appeal).where({id: ban_appeal.id});
 
         if(viewedAdminIds.size >= 3)

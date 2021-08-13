@@ -429,7 +429,7 @@ headers:	x-access-token: {{access_token}}	// login required, admin privilege
 body:		{
     			data: {
                     toPlayerId: number,
-                    cheatMethod: string,	// see {{valid_cheatMethod}}
+                    cheatMethods: string,	// see {{valid_cheatMethod}}
                     action: 'suspect'|'innocent'|'discuss'|'guilt'|'kill'// super
                     content: string
                 }
@@ -458,6 +458,25 @@ body:		{
     			success: 1, 
                 code: 'judgement.success', 
                 message: 'please wait.'
+			}
+```
+
+#### 管理员处理申诉	/api/player/viewBanAppeal
+
+```javascript
+REQUEST: HTTP POST /api/player/viewBanAppeal
+headers:	x-access-token: {{access_token}}	// login required, admin only
+body:		{
+    			data: {
+                    id: number,					// the ban appeal id
+                    status: 'open'|'close'|'lock'
+                }
+			}
+RESPONSE: HTTP 201 CREATED
+body:		{
+    			success: 1, 
+                code: 'viewBanAppeal.success', 
+                message: 'thank you'
 			}
 ```
 
@@ -550,7 +569,7 @@ body:		{
 email:		'Hello xxx, you are now binding... click link below: htttps://xxx.xxx/xxx?code=${code}'	// code for verification
 ```
 
-#### 绑定网站账号至origin账号验证
+#### 绑定网站账号至origin账号验证 /api/user/bindOriginVerify
 
 ```javascript
 REQUEST: HTTP GET /api/user/bindOriginVerify

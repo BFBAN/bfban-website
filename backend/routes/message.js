@@ -32,25 +32,30 @@ async (req, res, next)=> {
         const result = {messages:[], total:0};
         switch(box) {
         case 'in':
-            result.messages = await db.select('*').from('messages').where({toUserId: req.user.id}).andWhere('createTime','>=',new Date(from)).offset(skip).limit(limit);
+            result.messages = await db.select('*').from('messages').where({toUserId: req.user.id})
+            .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit);
             result.total = await db('messages').count({num: 'id'}).where({toUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
             break;
         case 'out':
-            result.messages = await db.select('*').from('messages').where({byUserId: req.user.id}).andWhere('createTime','>=',new Date(from)).offset(skip).limit(limit); 
+            result.messages = await db.select('*').from('messages').where({byUserId: req.user.id})
+            .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit); 
             result.total = await db('messages').count({num: 'id'}).where({byUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
             break;
         case 'announce':
             switch(true) {
             case userHasRoles(req.user, ['admin','super','root']):
-                result.messages = await db.select('*').from('messages').whereIn('type', ['banAppeal','toAdmins']).andWhere('createTime','>=',new Date(from));
+                result.messages = await db.select('*').from('messages').whereIn('type', ['banAppeal','toAdmins'])
+                .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc');
                 result.total += result.messages.length;
             // eslint-disable-next-line no-fallthrough
             case userHasRoles(req.user, ['normal']):
-                result.messages = await db.select('*').from('messages').whereIn('type', ['toNormal']).andWhere('createTime','>=',new Date(from));
+                result.messages = await db.select('*').from('messages').whereIn('type', ['toNormal'])
+                .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc');
                 result.total += result.messages.length;
             // eslint-disable-next-line no-fallthrough
             default:
-                result.messages = await db.select('*').from('messages').whereIn('type', ['toAll']).andWhere('createTime','>=',new Date(from));
+                result.messages = await db.select('*').from('messages').whereIn('type', ['toAll'])
+                .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc');
                 result.total += result.messages.length;
             }
         }
@@ -76,10 +81,11 @@ async (req, res, next)=> {
         /** @type {import("../typedef.js").User|null} */
         let toUser = null;
         if(['direct','warn','fatal'].includes(type)) {
-            toUser = (await db.select('*').from('users').where({id: req.body.data.toUserId}) )[0];
+            toUser = await db.select('*').from('users').where({id: req.body.data.toUserId}).first();
             if(!toUser) 
                 return res.status(404).json({error: 1, code: 'message.notFound', message: 'no such user.'});
         }
+
         switch(true) {
         case ( type=='fatal' && userHasRoles(req.user, ['super','root','dev']) ):
             await sendMessage(req.user.id, toUser.id, type, req.body.data.content);
@@ -95,8 +101,13 @@ async (req, res, next)=> {
             else
                 return res.status(403).json({error: 1, code:'message.blocked', message: 'user block your message.'});   
             break;
+
         case ( type=='command' ):
             await handleCommand(req.body.data.content, req.user);
+            break;
+        
+        case ( ['toAll','toNormals','toAdmins'].includes(type) && userHasRoles(req.user, ['dev','super','root']) ):
+            await sendMessage(req.user.id, null, type, req.body.data.content);
             break;
         default: // if the type and privilege did not match all the cases, then deny  
             return res.status(403).json({error: 1, code: 'message.denied', message: 'permission denied.'});
@@ -180,7 +191,7 @@ async function sendMessage(from, to, type, content) {
 async function iGotReported(params) {
     /** @type {import("../typedef.js").Report} */
     const report = params.report;
-    const user = (await db.select('id').from('users').where({originUserId: report.toOriginUserId}))[0];
+    const user = await db.select('id').from('users').where({originUserId: report.toOriginUserId}).first();
     if(!user) // that player being reported hasnt registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', 'You were reported by someone.');
@@ -190,8 +201,8 @@ async function iGotJudged(params) {
     /** @type {import("../typedef.js").Judgement} */
     const judgement = params.judgement;
     /** @type {import("../typedef.js").User} */
-    const user = (await db.select('id').from('users').where({originUserId: judgement.toOriginUserId}))[0];
-    if(!user.id) // that player being reported hasnt registered our site
+    const user = await db.select('id').from('users').where({originUserId: judgement.toOriginUserId}).first();
+    if(!user) // that player being reported hasnt registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', `You were judge as ${judgement.action}`);
 }
@@ -202,7 +213,7 @@ async function iGotReplied(params) { // checked that comment dose exist
     const {toCommentType, toCommentId, toPlayerId} = reply;
     if(!(toCommentType && toCommentId))
         return;
-    const toCommentUser = (await db.select('byUserId').from(toCommentType).where({id: toCommentId}))[0].byUserId;
+    const toCommentUser = await db.select('byUserId').from(toCommentType).where({id: toCommentId}).first().byUserId;
     await sendMessage(reply.byUserId, toCommentUser, 'reply', `You got reply under dbId:${toPlayerId}`);
 }
 

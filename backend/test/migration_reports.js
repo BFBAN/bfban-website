@@ -102,7 +102,7 @@ const converter = new Stream.Writable({
             return callback();
         }
         /** @type {import("../typedef").Player} */
-        const player = (await db_dst.select('*').from('players').where({originUserId: chunk.originUserId}) )[0];
+        const player = await db_dst.select('*').from('players').where({originUserId: chunk.originUserId}).first();
         if(!player) {
             console.log('Cannot find such player:'+chunk.originUserId);
             return callback();

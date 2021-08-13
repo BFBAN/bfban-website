@@ -124,7 +124,7 @@
                         Code: <input type="text" name="register-code" id="register-code">
                     </form>
                     <button onclick="register()">Submit(captcha)</button>
-                    <span class="register-error"></span>
+                    <div class="register-error" style="width: 100%; line-break: auto;"></div>
                     <script>
                         async function register() {
                             let res = await fetch('/api/user/signup', {
@@ -145,7 +145,7 @@
                                 }
                             }).then(r=>r.json());
                             if(res.error) {
-                                $('.register-error').text(res.message);
+                                $('.register-error').text(JSON.stringify(res.message));
                                 throw('Bad Response: /api/user/signup:'+JSON.stringify(res))
                             }
                             $('.register-error').text(res.message);
@@ -154,7 +154,7 @@
                             let res = await fetch('/api/user/signupVerify?code='+$('#register-code').val())
                             .then(r=>r.json());
                             if(res.error) {
-                                $('.register-error').text(res.message);
+                                $('.register-error').text(JSON.stringify(res.message));
                                 throw('Bad Response: /api/user/signupVerify:'+JSON.stringify(res))
                             }
                             $('.register-error').text(res.message);
@@ -163,7 +163,7 @@
                     <button onclick="registerVerify()">Verify</button>
                 </div>
                 <div class="signout container block">
-                    <button>Logout</button>
+                    <button onclick="logout()">Logout</button>
                     <span class="logout-res"></span>
                     <script>
                         async function logout() {
@@ -214,6 +214,7 @@
                                 throw('Bad Response: /api/user/info:'+JSON.stringify(res));
                             }
                             $('#userprofile-name').val(res.data.username);
+                            $('#userprofile-id').val(res.data.id);
                             $('#userprofile-privilege').text(res.data.privilege);
                             $('#userprofile-introduction').val(res.data.introduction);
                             $('#userprofile-joinTime').text(new Date(res.data.joinTime).toLocaleString());
@@ -436,18 +437,61 @@
                 </form>
                 <button onclick="getPlayerInfo(); getPlayerTimeline()">submit</button>
                 <div class="playerprofile container block">
-                    <div>profile</div>
+                    <div>Profile</div>
                     <textarea name="profile-container" id="profile-container" cols="30" rows="7" style="width: 100%; padding: 10px; font-size: 16px;"></textarea>
                 </div>
                 <div class="playertimeline container block">
                     <div>
-                        <span>timeline</span> 
+                        <span>Timeline</span> 
                         <form style="display: inline-block; float: right;">
                             skip: <input type="number" name="timeline-skip" id="timeline-skip" step="10" value="0">
                             limit: <input type="number" name="timeline-limit" id="timeline-limit" value="20">
                         </form>
                     </div>
                     <div name="timeline-container" id="timeline-container" cols="30" rows="7" style="width: 100%; padding: 10px; font-size: 12px;"></div>
+                </div>
+                <div class="playerreply container block">
+                    <div>
+                        <span>Comment &nbsp;&nbsp;type:</span>
+                        <form style="display: inline-block;">
+                            <input type="radio" name="replytype" id="replytype1" value="reply" checked="checked" onclick="hideShowCommentBar()"> reply
+                            <input type="radio" name="replytype" id="replytype2" value="judgement" onclick="hideShowCommentBar()"> judgement
+                            <input type="radio" name="replytype" id="replytype3" value="ban_appeal" onclick="hideShowCommentBar()"> ban_appeal
+                        </form>
+                    </div>
+                    <form>
+                        <div class="replyto">
+                            reply to floor:<input type="text" name="replyto" id="replyto" value="0">(0 to none)
+                        </div>
+                        <div class="judgementas">
+                            judgement as:
+                            <input type="radio" name="judgementval" id="judgementval1" value="guilt"> guilty
+                            <input type="radio" name="judgementval" id="judgementval2" value="suspect"> suspect
+                            <input type="radio" name="judgementval" id="judgementval3" value="innocent"> innocent
+                            <input type="radio" name="judgementval" id="judgementval4" value="trash"> trash
+                            <input type="radio" name="judgementval" id="judgementval5" value="kill"> kill(super only)
+                            <br/>
+                            CheatMethods(xx,xx): <input type="text" name="judgementcheatMethod" id="judgementcheatMethod">
+                        </div>
+                        <div class="banappealfor">
+                            (admin)view ban appeal
+                            <input type="number" name="viewbanappealid" id="viewbanappealid"> 
+                            as:
+                            <input type="radio" name="banappealval" id="banappealval" value="open"> open
+                            <input type="radio" name="banappealval" id="banappealval2" value="close"> close
+                            <input type="radio" name="banappealval" id="banappealval3" value="lock"> lock
+                        </div>
+                    </form>
+                    <textarea name="replyinput" id="replyinput" cols="30" rows="10" style="width: 100%; padding: 10;"></textarea>
+                    <button style="width: 100%;" onclick="handleCommentSubmit()">submit</button>
+                    <script>
+                        function hideShowCommentBar() {
+                            $('#replytype1').prop('checked')? $('.replyto').show() : $('.replyto').hide();
+                            $('#replytype2').prop('checked')? $('.judgementas').show() : $('.judgementas').hide();
+                            $('#replytype3').prop('checked')? $('.banappealfor').show() : $('.banappealfor').hide();
+                        }
+                        $(document).ready(hideShowCommentBar);
+                    </script>
                 </div>
                 <script>
                     async function getPlayerInfo() {
@@ -493,25 +537,128 @@
                         }
                         $('#timeline-container').html(content);
                     }
+                    async function handleCommentSubmit() {
+                        let id = $('#playerinfo-dbid').val()-0;
+                        const type = $('input[name=replytype]:checked').val();
+                        if(type=='ban_appeal' && $('#viewbanappealid').val()!="")
+                            type = 'view_ban_appeal';
+                        switch(type) {
+                            case 'reply': {
+                                let res = await fetch('/api/player/reply', {
+                                    method: 'POST',
+                                    headers: {
+                                    'x-access-token': localStorage.token? localStorage.token:'',
+                                    'content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        data: {
+                                            toPlayerId: id,
+                                            toFloor: $('#replyto').val()!=0? $('#replyto').val()-0:null,
+                                            content: $('#replyinput').val()
+                                        }
+                                    })
+                                }).then(r=>r.json());
+                                $('#replyinput').val(JSON.stringify(res, null, 2));
+                                break;
+                            }
+                            case 'judgement': {
+                                let res = await fetch('/api/player/judgement', {
+                                    method: 'POST',
+                                    headers: {
+                                        'x-access-token': localStorage.token? localStorage.token:'',
+                                        'content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        data: {
+                                            toPlayerId: id,
+                                            cheatMethods: $('#judgementcheatMethod').val(),
+                                            action: $('input[name=judgementval]:checked').val(),
+                                            content: $('#replyinput').val()
+                                        }
+                                    })
+                                }).then(r=>r.json());
+                                $('#replyinput').val(JSON.stringify(res, null, 2));
+                                break;
+                            }
+                            case 'ban_appeal': {
+                                let res = await fetch('/api/player/banAppeal', {
+                                    method: 'POST',
+                                    headers: {
+                                        'x-access-token': localStorage.token? localStorage.token:'',
+                                        'content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        data: {
+                                            toPlayerId: id,
+                                            content: $('#replyinput').val()
+                                        }
+                                    })
+                                }).then(r=>r.json());
+                                $('#replyinput').val(JSON.stringify(res, null, 2));
+                                break;
+                            }
+                            case 'view_ban_apppeal': {
+                                let res = await fetch('/api/player/viewBanAppeal', {
+                                    method: 'POST',
+                                    headers: {
+                                        'x-access-token': localStorage.token? localStorage.token:'',
+                                        'content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        data: {
+                                            id: $('#viewbanappealid').val()-0,
+                                            content: $('input[name=banappealval]:checked').val()
+                                        }
+                                    })
+                                }).then(r=>r.json());
+                                $('#replyinput').val(JSON.stringify(res, null, 2));
+                                break;
+                            }
+                        }
+                    }
                 </script>
             </div>
             <div class="playerreport container block">
                 <span style="padding-right: 20px;">Report</span>
                 <form>
                     originName: <input type="text" name="playerreport-name" id="playerreport-name">
-                    game: <input type="radio" name="playerreport-game" id="playerreport-game1" value="bf1">BF1
+                    game: <input type="radio" name="playerreport-game" id="playerreport-game1" value="bf1" checked="checked">BF1
                     <input type="radio" name="playerreport-game" id="playerreport-game2" value="bfv">BFV
                     <br/>
-                    cheatMethods: <input type="text" name="playerreport-cheatMethods" id="playerreport-cheatMethods">
+                    cheatMethods(xx,xx): <input type="text" name="playerreport-cheatMethods" id="playerreport-cheatMethods">
                     videoLink: <input type="url" name="playerreport-videoLink" id="playerreport-videoLink">
                     <br>
                     description: 
                     <br/>
-                    <textarea name="playerreport-description" id="playerreport-description" cols="30" rows="10" style="width: 100%; height: 100px;"></textarea>
+                    <textarea name="playerreport-description" id="playerreport-description" cols="30" rows="10" style="width: 100%; height: 100px; padding: 10;"></textarea>
                 </form>
-                <button style="width: 100%;">Submit</button>
+                <button style="width: 100%;" onclick="handleReport()">Submit(captcha)</button>
                 <div>Response</div>
                 <textarea name="playerreport-res" id="playerreport-res" cols="30" rows="10" style="width: 100%; height: 50px;"></textarea>
+                <script>
+                    async function handleReport() {
+                        let res = await fetch('/api/player/report', {
+                            method: 'POST',
+                            headers: {
+                                'x-access-token': localStorage.token? localStorage.token:'',
+                                'content-type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: {
+                                    game: $('input[name=playerreport-game]:checked').val(),
+                                    originName: $('#playerreport-name').val(),
+                                    cheatMethods: $('#playerreport-cheatMethods').val(),
+                                    videoLink: $('#playerreport-videoLink').val(),
+                                    description: $('#playerreport-description').val()
+                                },
+                                encryptCaptcha: encryptCaptcha,
+                                captcha: $('#captcha').val(),
+                                SKIP_CAPTCHAA: $('#captcha-skip').prop('checked'),
+                            })
+                        }).then(r=>r.json());
+                        $('#playerreport-res').val(JSON.stringify(res, null, 2));
+                    }
+                </script>
             </div>
         </div>
         <div class="message-container container">
@@ -519,27 +666,83 @@
             <div class="inbox container block">
                 <div style="display: flex; flex-direction :row;">
                     <span>Inbox:&nbsp;</span>
-                    <button style="flex-grow: 1;">Get</button>
+                    <button style="flex-grow: 1;" onclick="getMessage()">Get</button>
                 </div>
                 <div>&nbsp;&nbsp; toPerson:</div>
                 <textarea name="messgae-toperson" id="messgae-toperson" cols="30" rows="10" style="width: 100%;"></textarea>
                 <div>&nbsp;&nbsp; announcement:</div>
                 <textarea name="messgae-announce" id="messgae-announce" cols="30" rows="10" style="width: 100%;"></textarea>
-                <div>&nbsp;&nbsp; command:</div>
-                <textarea name="messgae-command" id="messgae-command" cols="30" rows="10" style="width: 100%;"></textarea>
             </div>
+            <script>
+                async function getMessage() {
+                    let res = await fetch('/api/message?box=in&limit=100', {
+                        headers: {
+                            'x-access-token': localStorage.token? localStorage.token:'',
+                            'content-type': 'application/json'
+                        },
+                    }).then(r=>r.json());
+                    if(res.error) {
+                        $('#messgae-toperson').val(JSON.stringify(res, null, 2));
+                        throw('/api/message get Bad response: '+JSON.stringify(res));
+                    }
+                    let str = ""
+                    for(let i of res.data.messages) {
+                        str += `[${i.type}]${new Date(i.createTime).toLocaleString()} #${i.id} by:${i.byUserId}\n`+
+                        `  ${i.content}\n`;
+                    }
+                    $('#messgae-toperson').val(str);
+
+
+                    let subres = await fetch('/api/message?box=announce&limit=100', {
+                        headers: {
+                            'x-access-token': localStorage.token? localStorage.token:'',
+                            'content-type': 'application/json'
+                        },
+                    }).then(r=>r.json());
+                    if(subres.error) {
+                        $('#messgae-announce').val(JSON.stringify(subres, null, 2));
+                        throw('/api/message get Bad response: '+JSON.stringify(subres));
+                    }
+                    let substr = ""
+                    for(let i of subres.data.messages) {
+                        substr += `[${i.type}]${new Date(i.createTime).toLocaleString()} #${i.id} by:${i.byUserId}\n`+
+                        `  ${i.content}\n`;
+                    }
+                    $('#messgae-announce').val(substr);
+                }
+            </script>
             <div class="outbox container block">
+                <div>Send</div>
                 <form>
                     to: <input type="number" name="outbox-to" id="outbox-to"> <br/>
                     type:
-                    <input type="radio" name="outbox-type" id="outbox-type1" value="">DM
-                    <input type="radio" name="outbox-type" id="outbox-type2" value="">Warn
-                    <input type="radio" name="outbox-type" id="outbox-type3" value="">Fatal
-                    <input type="radio" name="outbox-type" id="outbox-type4" value="">ToAll
-                    <input type="radio" name="outbox-type" id="outbox-type5" value="">Cmd
+                    <input type="radio" name="outbox-type" id="outbox-type1" value="direct" checked="checked">DM
+                    <input type="radio" name="outbox-type" id="outbox-type2" value="warn">Warn
+                    <input type="radio" name="outbox-type" id="outbox-type3" value="fatal">Fatal
+                    <input type="radio" name="outbox-type" id="outbox-type4" value="toAll">ToAll
+                    <input type="radio" name="outbox-type" id="outbox-type5" value="command">Cmd
                     <textarea name="outbox-content" id="outbox-content" cols="30" rows="10" style="width: 100%;"></textarea>
                 </form>
-                <button>submit</button>
+                <button onclick="sendMessage()">submit</button>
+                <script>
+                    async function sendMessage() {
+                        let res = await fetch('/api/message', {
+                            method: 'POST',
+                            headers: {
+                                'x-access-token': localStorage.token? localStorage.token:'',
+                                'content-type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: {
+                                    toUserId: $('#outbox-to').val()-0,
+                                    type: $('input[name=outbox-type]:checked').val(),
+                                    content: $('#outbox-content').val()
+                                }
+                            })
+                        }).then(r=>r.json());
+                        $('#outbox-content').val(JSON.stringify(res, null, 2));
+                    }
+                </script>
             </div>
         </div>
     </body>
