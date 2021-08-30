@@ -1,7 +1,6 @@
 /**
  * 储存
  */
-import Cookies from 'js-cookie';
 
 class Storage {
 

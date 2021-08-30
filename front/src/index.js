@@ -1,7 +1,10 @@
 // import Vue from 'vue';
 // import VueRouter from 'vue-router';
+
+
 // import iView from 'iview';
 import './theme/2020-happy-new-year.less';
+
 // import VueQuillEditor from 'vue-quill-editor';
 // import 'quill/dist/quill.core.css';
 // import 'quill/dist/quill.snow.css';
@@ -18,7 +21,13 @@ import router from '@/router';
 import store from '@/store';
 import { detectLanguage } from '@/mixins/common';
 
+Vue.use(VueQuillEditor);
+// Vue.use(iView);
+
+// Vue.use(VueRouter);
+
 FastClick.attach(document.body);
+
 
 Vue.locale = () => {};
 const locale = 'zh-CN';
