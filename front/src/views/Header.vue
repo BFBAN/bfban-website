@@ -2,22 +2,17 @@
     <header>
       <div class="header-container container">
         <div class="nav">
-          <router-link class="mobile-hide" :to="{name: 'home'}">
-            <Icon type="md-home" />
+          <router-link class="mobile-hide link" :to="{name: 'home'}">
             {{ $t("header.index") }}
           </router-link>
-          <router-link class="mobile-hide" :to="{name: 'cheaters', query: { status: '100' }}">
-            <Icon type="md-list-box" />
+          <router-link class="mobile-hide link" :to="{name: 'cheaters', query: { status: '100' }}">
             {{$t("header.cheaters")}}
           </router-link>
-          <router-link class="mobile-hide" :to="{name: 'report'}">
-            <Icon type="ios-megaphone" />
+          <router-link class="mobile-hide link" :to="{name: 'report'}">
             {{$t("header.report")}}
           </router-link>
-          <router-link class="mobile-hide" :to="{name: 'about'}">{{$t("header.about")}}</router-link>
-          <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">
-            <Icon type="md-cog" />
-            {{$t("header.dashboard")}}
+          <router-link class="mobile-hide link" :to="{name: 'about'}">
+            {{$t("header.about")}}
           </router-link>
 
           <router-link class="desktop-hide" :to="{name: 'home'}">
@@ -32,37 +27,47 @@
           <router-link class="desktop-hide" v-if="isAdmin" :to="{name: 'dashboard'}">
             <Icon size="24" type="md-cog" />
           </router-link>
-
         </div>
+
         <div class="search mobile-hide">
-          <Input clearable search placeholder="支持搜索历史ID啦..." v-model="searchVal" @on-search="handleSearch" />
+          <Input clearable search size="large" placeholder="支持搜索历史ID啦..." v-model="searchVal" @on-search="handleSearch" />
         </div>
         <div class="nav">
           <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
-            <Icon type="md-log-in" />
-            {{$t("header.signin")}}
-          </router-link>
-          <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signup'}">
-            <Icon type="md-person-add" />
-            {{$t("header.signup")}}
+            <Button type="primary" shape="circle">
+              <Icon type="md-log-in" />
+              {{$t("header.signin")}}
+            </Button>
           </router-link>
 
           <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signin'}">
-            <Icon type="md-log-in" size="24" />
+            <Icon type="md-log-in" size="30" />
           </router-link>
+          <Divider type="vertical" v-show="!isLogin" />
           <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signup'}">
-            <Icon type="md-person-add" size="24" />
+            <Icon type="md-person-add" size="30" />
           </router-link>
 
-          <router-link class="nav-username mobile-hide" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
-            <Badge dot>
-              <Icon type="md-person" />
-              {{ currentUser.username }}
-            </Badge>
-          </router-link>
+          <Badge dot v-if="isLogin" >
+            <Dropdown placement="bottom-start">
+              <a href="javascript:void(0)">
+                <Avatar>{{ currentUser.username[0] }}</Avatar>
+                {{ currentUser.username }}
+              </a>
+              <DropdownMenu slot="list">
+                <DropdownItem>
+                  <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">个人中心</router-link>
+                </DropdownItem>
+                <DropdownItem>
+                  <router-link class="mobile-hide link" v-if="isAdmin" :to="{name: 'dashboard'}">{{$t("header.dashboard")}}</router-link>
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </Badge>
+          <Divider type="vertical" v-if="isLogin" />
           <router-link class="nav-username desktop-hide" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
             <Badge dot>
-              <Icon size="24" type="md-person" />
+              <Icon size="30" type="md-person" />
             </Badge>
           </router-link>
 
@@ -71,9 +76,8 @@
             {{$t("header.signout")}}
           </a>
           <a class="nav-signout desktop-hide" v-show="isLogin" href="#" @click.stop.prevent="signout">
-            <Icon type="md-log-out" size="24"></Icon>
+            <Icon type="md-log-out" size="30"></Icon>
           </a>
-
         </div>
       </div>
 
@@ -176,32 +180,16 @@
     }
   }
 }
-
-let styles = `
-   background-color: #fff;
-   box-shadow: 0 0 10px 0px #676767;
-`;
-window.addEventListener('scroll', _.throttle(function(e) {
-  let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-
-  if (scrollTop > 24) {
-    document.querySelector('header').setAttribute('style', styles);
-  } else {
-    document.querySelector('header').removeAttribute('style');
-  }
-}, 300));
-
 </script>
 
 <style lang="scss">
   header {
-    background-color: rgba(252,252,252,0.8);
     width: 100%;
     height: auto;
-    box-shadow: 0 0 4px rgba(0,0,0,0.15);
-
     position: fixed;
+    padding: 10px 0;
     z-index: 1000;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1), transparent);
   }
   .header-container {
     display: flex;
@@ -219,12 +207,10 @@ window.addEventListener('scroll', _.throttle(function(e) {
     display: flex;
     align-items: center;
     padding: 0 .4rem;
-    a {
-      padding: 1rem .6rem;
-      &:hover {
-        background-color: rgba(251, 251, 251, 0.8);
-        color: black;
-      }
+    font-weight: bold;
+
+    a.link {
+      padding: .7rem .8rem;
     }
   }
   .nav-username {

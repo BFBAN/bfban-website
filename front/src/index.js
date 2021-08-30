@@ -21,7 +21,7 @@ import router from '@/router';
 import store from '@/store';
 import { detectLanguage } from '@/mixins/common';
 
-Vue.use(VueQuillEditor);
+// Vue.use(VueQuillEditor);
 // Vue.use(iView);
 
 // Vue.use(VueRouter);

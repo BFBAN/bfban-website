@@ -1,10 +1,95 @@
 <template>
   <div class="container">
-    <Bulletin />
     <div class="content">
+      <div class="ivu-alert-with-banner home-banner" style="background-image: url('assets/images/index-bk.png')">
+        <Row>
+          <Col span="8">
+            <h1 class="title"><Icon type="md-lock" /> 联BFBAN</h1>
+            <h3>建立全球作弊玩家档案库，被世界各地服务器使用，杜绝恶意玩家:D</h3>
+            <br>
+            <p>成为我们一员 - 改变社区环境</p>
+            <Divider />
+
+            <Button type="primary" size="large">注册用户</Button>
+            <Divider type="vertical" />
+            <Button type="text" size="large"><Icon type="ios-help-circle-outline" />了解有那些社区已经加入</Button>
+
+            <Row :gutter="10" style="margin-top: 50px">
+              <Col span="12">
+                <Card>
+                  <h3>{{ site.report || 0 }}</h3>
+                  <span>已收到</span>
+                </Card>
+              </Col>
+              <Col span="12">
+                <Card>
+                  <h3>{{ site.cheater || 0 }}</h3>
+                  <span>确认作弊者</span>
+                </Card>
+              </Col>
+            </Row>
+            <p>截止2018年11月4日</p>
+
+          </Col>
+          <Col span="16">
+            <img src="" width="100%">
+          </Col>
+        </Row>
+      </div>
+
+      <Row :gutter="40">
+        <Col span="8">
+          <Card>
+            <Row>
+              <Col span="12">
+                <Icon type="md-chatboxes" size="50" color="#19be6b"/>
+              </Col>
+              <Col span="12" align="right">
+                <div>
+                  <h3>新闻</h3>
+                  <p>最新动态</p>
+                </div>
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+        <Col span="8">
+          <Card>
+            <Row>
+              <Col span="12">
+                <Icon type="ios-bookmark" size="50" color="#2d8cf0"/>
+              </Col>
+              <Col span="12" align="right">
+                <div>
+                  <h3>文档</h3>
+                  <p>对外公开Api文档</p>
+                </div>
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+        <Col span="8">
+          <router-link :to="{name: 'apps'}">
+            <Card>
+              <Row>
+                <Col span="8">
+                  <Icon type="md-apps" size="50" color="#ff9900"/>
+                </Col>
+                <Col span="16" align="right">
+                  <div>
+                    <h3>工具</h3>
+                    <p>整合BFBAN数据库第三方</p>
+                  </div>
+                </Col>
+              </Row>
+            </Card>
+          </router-link>
+        </Col>
+      </Row>
+
+      <Bulletin />
       <Divider>{{$t("home.activity.title")}}</Divider>
 
-      <p>bfban.com  于 2018年11月4日 上线，收到 <b>{{ site.report }}</b> 次举报，已石锤了 <b>{{ site.cheater }}</b> 个挂壁，感谢大家的共同努力！</p>
       <table>
         <tbody>
           <tr v-for="activity in activities" :key="activity.id">
@@ -48,103 +133,14 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <p v-for="m in manager" :key="m.name">
+      <a v-if="m.link" target="_blank" :href="m.link">{{ m.name }}</a>
+      <span v-else>{{ m.name }}</span>
+    </p>
 
     </div>
-    <div class="content">
-      <Divider>{{$t("home.howToUse.title")}}</Divider>
-
-      <p>
-        <a href="https://bfban.com">本站</a>可以 <b>永久追踪</b> 被举报者的游戏ID，并支持 <b>搜索历史ID</b> ！欢迎大家积极举报。
-      </p>
-
-      <p>如果遇到挂，可以</p>
-      <p>
-        1、先使用
-
-        <a target="_blank" href="https://bf1.mygoare.com/">
-          战地1外挂举报助手
-        </a>
-
-        给官方举报；
-      </p>
-      <p>
-        2、自己在网站
-        <router-link :to="{path: 'signup'}">注册</router-link>
-        后，自己
-        <router-link :to="{path: 'report'}">举报</router-link>
-        ；
-      </p>
-      <p>
-        3、举报后即会被纪录在案，即使修改了ID也能被追踪到；
-      </p>
-
-      <p>
-        <!--<b>本站管理员：</b>-->
-      </p>
-      <p v-for="m in manager" :key="m.name">
-
-        <a v-if="m.link" target="_blank" :href="m.link">{{ m.name }}</a>
-        <span v-else>{{ m.name }}</span>
-      </p>
-
-
-<br>
-      <h2>{{$t("home.howToUse.tools")}}</h2>
-      <div class="tools">
-        <p>
-          <a target="_blank" href="https://battlefieldtracker.com/">
-            battlefieldtracker.com
-          </a>
-          在线战绩查询网站，可以详细查询到各类数据
-        </p>
-        <p>
-          <a target="_blank" href="https://bf1.mygoare.com/">
-            【推荐】战地1外挂举报助手
-          </a>
-          在线生成举报文本
-        </p>
-        <p>
-          <a target="_blank" href="https://www.247fairplay.com/">
-            247fairplay
-          </a>
-          快速查询标记当前ID在BF3、BF4中的战绩进行异常标记，查询联ban史
-        </p>
-        <p>
-          <a target="_blank" href="https://www.notion.so/1-5-f348c539fd4f41a08878f274a37c7d81">
-            【推荐】战地PC/手机战绩速查工具
-          </a>
-          同时支持电脑手机快速查询战绩进行标记
-        </p>
-        <p>
-          <a target="_blank" href="http://bfban.ys168.com/">
-            战地周边工具
-          </a>
-          帮助你解决游戏平台问题的工具
-        </p>
-        <p>
-          <a target="_blank" href="https://app.bfban.com/public/www/">
-            【推荐】BFBAN APP
-          </a>
-          BFBAN手机客户端
-        </p>
-      </div>
-
-<br>
-      <h2>{{$t("home.howToUse.qqGroup")}}</h2>
-      <div class="tools">
-        <p>
-          <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5PEqoDb">
-            527565465
-          </a>
-
-          联ban局QQ群
-        </p>
-      </div>
-    </div>
-  </div>
-
-
-
 </template>
 
 <script>
@@ -206,4 +202,37 @@
   }
 }
 </script>
+
+<style lang="scss">
+  .home-banner {
+      min-height: 600px;
+     background-size: 500px;
+     background-repeat: no-repeat;
+     background-position:  right;
+
+    .title {
+      position: relative;
+      margin-top: 100px;
+      border-bottom: 9px solid #fff13c;
+      display: inline-flex;
+      padding-left: 20px;
+      margin-bottom: 20px;
+      font-size: 3rem;
+
+      &:after {
+        position: absolute;
+        opacity: .6;
+        border-radius: 50%;
+        z-index: -1;
+        top: -20px;
+        right: -30px;
+        display: block;
+        content: '';
+        width: 50px;
+        height: 50px;
+        background-color: #401486;
+      }
+    }
+ }
+</style>
 

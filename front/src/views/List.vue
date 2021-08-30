@@ -10,13 +10,13 @@
       <!--id搜索-->
 
       <p>
-        <RadioGroup v-model="gameName" @on-change="handleChanges" type="button">
+        <RadioGroup v-model="gameName" @on-change="handleChanges" type="button" button-style="solid">
           <Radio label="bf1"><span>{{$t("list.filters.game.bf1")}}({{getTotalNum('bf1')}})</span></Radio>
           <Radio label="bfv"><span>{{$t("list.filters.game.bfv")}}({{getTotalNum('bfv')}})</span></Radio>
         </RadioGroup>
       </p>
       <p class="mobile-hide">
-        <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button">
+        <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button" button-style="solid">
           <Radio label="100"><span>{{$t("list.filters.status.all")}}({{getAllStatusNum}})</span></Radio>
           <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
             <span>{{ status.label }}({{ getStatusNum(status.value)}})</span>

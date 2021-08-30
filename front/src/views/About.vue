@@ -40,17 +40,6 @@
       <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>
 
       <br>
-      <h2>联系我们</h2>
-      <p>
-        <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
-          投诉邮箱
-        </a>
-      </p>
-      <p>
-        <a target="_blank" href="https://support.qq.com/products/64038">
-          意见建议
-        </a>
-      </p>
     </div>
   </div>
 

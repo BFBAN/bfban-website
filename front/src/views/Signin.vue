@@ -1,33 +1,67 @@
 <template>
   <div class="container">
     <div class="content">
-      <Form :label-width="80" style="position: relative;">
-        <Divider>{{$t("signin.title")}}</Divider>
+      <Divider>{{$t("signin.title")}}</Divider>
 
-        <FormItem :label="$t('signin.form.username')">
-          <Input type="text" v-model="signin.username" :placeholder="$t('signin.form.username')" />
-        </FormItem>
+      <Row :gutter="16">
+          <Col span="13">
+<!--            <img src="//source.unsplash.com/user/erondu/600x400?d" width="100%">-->
 
-        <FormItem :label="$t('signin.form.password')">
-          <Input type="password" v-model="signin.password" :placeholder="$t('signin.form.password')" />
-        </FormItem>
+              <Divider>{{$t("home.howToUse.title")}}</Divider>
 
-        <FormItem :label="$t('signin.form.captcha')">
-          <Input type="text" v-model="signin.captcha" :placeholder="$t('signin.form.captcha')" />
-          <img ref="captcha">
-          <a ref="reCaptcha" href="#" @click.stop.prevent="refreshCaptcha">
-            {{$t('signin.form.getCaptcha')}}
-          </a>
-        </FormItem>
+              <p>
+                <a href="https://bfban.com">本站</a>可以 <b>永久追踪</b> 被举报者的游戏ID，并支持 <b>搜索历史ID</b> ！欢迎大家积极举报。
+              </p>
 
-        <FormItem>
-          <Button @click.prevent.stop="handleSignin" type="primary">{{$t('signin.form.submit')}}</Button>
+              <p>如果遇到挂，可以</p>
+              <p>
+                1、先使用
 
-          <router-link :to="{name: 'signup'}">{{$t('signin.form.submitHint')}}</router-link>
-        </FormItem>
+                <a target="_blank" href="https://bf1.mygoare.com/">
+                  战地1外挂举报助手
+                </a>
 
-        <Spin size="large" fix v-show="spinShow"></Spin>
-      </Form>
+                给官方举报；
+              </p>
+              <p>
+                2、自己在网站
+                <router-link :to="{path: 'signup'}">注册</router-link>
+                后，自己
+                <router-link :to="{path: 'report'}">举报</router-link>
+                ；
+              </p>
+              <p>
+                3、举报后即会被纪录在案，即使修改了ID也能被追踪到；
+              </p>
+          </Col>
+          <Col span="11">
+            <Form :label-position="top" style="position: relative;">
+
+              <FormItem :label="$t('signin.form.username')">
+                <Input type="text" v-model="signin.username" size="large" :placeholder="$t('signin.form.username')" />
+              </FormItem>
+
+              <FormItem :label="$t('signin.form.password')">
+                <Input type="password" v-model="signin.password" size="large" :placeholder="$t('signin.form.password')" />
+              </FormItem>
+
+              <FormItem :label="$t('signup.form.captcha')">
+                <Input type="text" v-model="signin.captcha" size="large" :placeholder="$t('signup.form.captcha')">
+                  <span slot="append">
+                    <img ref="captcha" width="40px" :src="captchaUrl" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha" />
+                  </span>
+                </Input>
+              </FormItem>
+
+              <FormItem>
+                <Button @click.prevent.stop="handleSignin" long size="large" type="primary">{{$t('signin.form.submit')}}</Button>
+                <router-link :to="{name: 'signup'}">{{$t('signin.form.submitHint')}}</router-link>
+              </FormItem>
+
+              <Spin size="large" fix v-show="spinShow"></Spin>
+            </Form>
+          </Col>
+        </Row>
     </div>
   </div>
 
@@ -46,8 +80,12 @@ export default {
         password: '',
         captcha: '',
       },
+      captchaUrl: '',
       spinShow: false,
     }
+  },
+  created() {
+    this.refreshCaptcha();
   },
   beforeMount() {
     if (this.$route.query.rurl) {
@@ -62,9 +100,9 @@ export default {
       'SIGNIN'
     ]),
     refreshCaptcha: function() {
-      this.$refs.captcha.src = baseURL + '/captcha?r=' + Math.random();
+      this.captchaUrl = baseURL + '/captcha?r=' + Math.random();
 
-      waitForAction.call(this.$refs.reCaptcha);
+      // waitForAction.call(this.$refs.reCaptcha);
     },
     handleSignin() {
       const {username, password, captcha} = _.each(this.signin, (v, k, o) => {

@@ -1,0 +1,50 @@
+{
+  "tags": [
+    {
+      "name": "官方",
+      "value": "official"
+    },
+    {
+      "name": "机器人",
+      "value": "bot"
+    },
+    {
+      "name": "移动应用",
+      "value": "app"
+    },
+    {
+      "name": "网页应用",
+      "value": "web"
+    }
+  ],
+  "list": [
+    {
+      "title": "战地1外挂举报助手",
+      "describe": "在线生成举报文本",
+      "tag": ["web"],
+      "website": "",
+      "get": "https://bf1.mygoare.com/"
+    },
+    {
+      "title": "战地PC/手机战绩速查工具",
+      "describe": "同时支持电脑手机快速查询战绩进行标记",
+      "tag": ["web", "app"],
+      "website": "https://www.notion.so/1-5-f348c539fd4f41a08878f274a37c7d81",
+      "get": ""
+    },
+    {
+      "title": "Discord统计机器人",
+      "describe": "23",
+      "tag": ["web", "bot"],
+      "website" : "《战地风云》系列的Discord统计机器人",
+      "get": "https://top.gg/bot/714524944783900794"
+    },
+    {
+      "title": "BFBAN APP",
+      "describe": "23",
+      "tag": ["app"],
+      "website": "",
+      "get": ""
+    }
+  ]
+}

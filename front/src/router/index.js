@@ -12,6 +12,7 @@ const Account   =() => import('@/views/Account.vue');
 const Dashboard =() => import('@/views/Dashboard.vue');
 const About     =() => import('@/views/About.vue');
 const NotFound  =() => import('@/views/NotFound.vue');
+const Apps  =() => import('@/views/Apps.vue');
 
 import store from '@/store';
 
@@ -39,6 +40,7 @@ const routes = [
 
   { name: 'cheaters', path: '/cheaters', component: List },
   { name: 'cheater', path: '/cheaters/:ouid', component: Detail },
+  { name: 'apps', path: '/apps', component: Apps },
 
   { name: 'signin', path: '/signin', component: Signin },
   { name: 'signup', path: '/signup', component: Signup },
@@ -48,6 +50,7 @@ const routes = [
   { name: 'dashboard', path: '/dashboard', component: Dashboard },
 
   { name: 'notFound', path: '/404', component: NotFound },
+
 
   // otherwise redirect to home
   { path: '*', redirect: '/404' },

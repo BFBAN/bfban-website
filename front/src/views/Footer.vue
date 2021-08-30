@@ -1,23 +1,72 @@
 <template>
     <footer class="footer">
-      <p>
-        <router-link :to="{name: 'report'}">{{$t('header.report')}}</router-link>
-        <router-link :to="{name: 'about'}">{{$t('header.about')}}</router-link>
+      <div class="container">
+        <Row :gutter="30">
+          <Col span="6">
+            <h4><b>社区</b></h4>
+            <ul>
+              <li>
+                <a target="_blank" href="https://discord.gg/KCBM3GAW59">
+                  Community network Discord
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href="https://kaihei.co/uoJKC0">
+                  战地中文社区
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href="https://jq.qq.com/?_wv=1027&amp;k=pC07TOvE">
+                  BFBan QQ</a>
+              </li>
+            </ul>
+          </Col>
+          <Col span="6">
+            <h4><b>功能</b></h4>
+            <ul>
+              <li>
+                <router-link :to="{name: 'report'}">{{$t('header.report')}}</router-link>
+              </li>
+              <li>
+                <router-link :to="{name: 'about'}">{{$t('header.about')}}</router-link>
+              </li>
+            </ul>
+          </Col>
+          <Col span="6">
+            <h4><b>联系方式</b></h4>
+            <ul>
+              <li>
+                <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
+                  投诉邮箱
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href="https://support.qq.com/products/64038">
+                  意见建议
+                </a>
+              </li>
+            </ul>
+          </Col>
+          <Col span="6">
+            <div>选择语言</div>
+            <Tag>
+              <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
+                <Option v-for="item in languages" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </Tag>
+            <p>
+              &copy; 2018-2020
+              All Rights Reserved.
+            </p>
+            <p>
+              Made with <Icon type="ios-heart" color="#ed4014" />
 
-        <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
-          <Option v-for="item in languages" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-      </p>
-      <p>
-        Made with <Icon type="ios-heart" color="#ed4014" />
-
-        Host at
-        <a target="_blank" href="https://battlefield.now.sh/">AWSL</a>
-      </p>
-      <p>
-        &copy; 2018-2020
-        All Rights Reserved.
-      </p>
+              Host at
+              <a target="_blank" href="https://battlefield.now.sh/">AWSL</a>
+            </p>
+          </Col>
+        </Row>
+      </div>
     </footer>
 </template>
 
@@ -48,9 +97,10 @@ export default {
 
 <style lang="scss">
   .footer {
-    text-align: center;
-    padding: 1rem;
-    background-color: rgba(252, 252, 252, 0.8);
+    text-align: left;
+    border-top: 1px solid #00000008;
+    flex-shrink: 0;
+    padding: 5rem;
 
     flex-shrink: 0;
 

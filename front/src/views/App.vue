@@ -80,7 +80,7 @@ export default {
   }
   body {
     font-size: .8rem;
-    background-color: rgb(239, 239, 239);
+    background-color: #f8f9fa;
 
     display: flex;
     flex-direction: column;
@@ -90,55 +90,6 @@ export default {
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
-
-    /*background-image: url('https://i.loli.net/2018/11/03/5bdd8e97bb2be.png');*/
-
-    // merry 2018 christmas
-    /*background-image: url('https://i.loli.net/2018/12/24/5c20cecbde3c9.jpg');*/
-
-
-    /*2019 yellow right bottom*/
-    /*background-image: url(https://i.loli.net/2018/12/28/5c25eeed25496.png);*/
-    /*background-position: right bottom;*/
-    /*background-size: 24rem;*/
-    /*background-color: #fdd94194;*/
-
-    /*2019 center bottom pig pink*/
-    // background-image: url(https://i.loli.net/2018/12/28/5c25ed58ef2f2.png);
-    // background-position: center bottom;
-    // background-size: 18rem;
-    // background-color: #ffd5d673;
-
-    // 2019 端午
-    // background-color: #f8c569;
-    // background-image: url(https://i.loli.net/2019/06/02/5cf37cb12a81b19199.jpg);
-    // background-position: center bottom;
-    // background-size: 18rem;
-
-    // 2019 black friday
-    /*background-image: url(https://i.loli.net/2019/11/28/U3sRBdYEktq7cbM.png);*/
-    /*background-size: 22rem;*/
-    /*background-position: center bottom 2rem;*/
-    /*background-color: black;*/
-
-    /*2019 merry christmas*/
-    /*background-image: url(https://i.loli.net/2020/01/02/e4MX3ulZSidcmQ1.png);*/
-    /*background-size: 12rem;*/
-    /*background-position: center bottom 8rem;*/
-    /*background-color: #99d8cf;*/
-
-    /*2020 happy new year*/
-    /*background-image: url(https://i.loli.net/2020/01/02/KphAXSGyIOV7Et2.png);*/
-    /*background-size: 24rem;*/
-    /*background-position: center bottom 8rem;*/
-    /*background-color: #C82839;*/
-
-    /*2020 july*/
-    background-image: url(https://i.loli.net/2020/07/09/vKAp56dWhVrfyzo.jpg);
-
-    footer.footer {
-      margin-top: 10rem;
-    }
   }
 
   .app {
@@ -157,12 +108,6 @@ export default {
     margin-top: 4rem !important;
   }
   .content {
-    background-color:#fbfbfb;
-    margin: 1rem 0;
-    padding: 2rem 1rem;
-
-    border-top: 2px solid #57a3f3;
-    box-shadow: 0px 2px 2px 0px #99999991;
   }
 
   p {

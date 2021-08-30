@@ -1,41 +1,66 @@
 <template>
   <div class="container">
     <div class="content">
-      <Form :label-width="80" style="position: relative;">
-        <Divider>{{$t("signup.title")}}</Divider>
+      <Divider orientation="left">{{$t("signup.title")}}</Divider>
 
-        <FormItem :label="$t('signup.form.username')">
-          <Input v-model="signup.username" placeholder="4位以上用户名" />
-        </FormItem>
+      <Row>
+          <Col span="24">
+            <Steps :current="stepsIndex">
+              <Step title="基础信息" content="账户基本"></Step>
+              <Step title="第三方" content="第三方"></Step>
+              <Step title="验证码" content="验证是否机器人"></Step>
+            </Steps>
 
-        <FormItem :label="$t('signup.form.password')">
-          <Input type="password" v-model="signup.password" placeholder="6位以上密码" />
-        </FormItem>
+            <Divider></Divider>
 
-        <FormItem :label="$t('signup.form.originId')">
-          <Input v-model="signup.originId" placeholder="选题" />
-        </FormItem>
+            <Form label-position="top" style="position: relative;">
+              <block v-if="stepsIndex == 0">
+                <FormItem :label="$t('signup.form.username')">
+                  <Input v-model="signup.username" size="large" placeholder="4位以上用户名" />
+                </FormItem>
+                <FormItem :label="$t('signup.form.password')">
+                  <Input type="password" v-model="signup.password" size="large" placeholder="6位以上密码" />
+                </FormItem>
+              </block>
 
-        <FormItem :label="$t('signup.form.qq')">
-          <Input v-model="signup.qq" placeholder="选填" />
-        </FormItem>
+              <block v-if="stepsIndex == 1">
+                <FormItem :label="$t('signup.form.originId')">
+                  <Input v-model="signup.originId" size="large" placeholder="选题" />
+                </FormItem>
+                <FormItem :label="$t('signup.form.qq')">
+                  <Input v-model="signup.qq" size="large" placeholder="选填" />
+                </FormItem>
+              </block>
 
-        <FormItem :label="$t('signup.form.captcha')">
-          <Input type="text" v-model="signup.captcha" :placeholder="$t('signup.form.captcha')" />
-          <img ref="captcha">
-          <a ref="reCaptcha" href="#" @click.stop.prevent="refreshCaptcha">
-            {{$t('signup.form.getCaptcha')}}
-          </a>
-        </FormItem>
+              <block v-if="stepsIndex == 2">
+                <FormItem :label="$t('signup.form.captcha')">
+                  <Input type="text" v-model="signup.captcha" size="large" :placeholder="$t('signup.form.captcha')">
+                  <span slot="append">
+                    <img ref="captcha" width="40px" :src="captchaUrl" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha" />
+                  </span>
+                  </Input>
+                </FormItem>
+              </block>
 
-        <FormItem>
-          <Button @click.prevent.stop="handleSignup" type="primary">{{$t('signup.form.submit')}}</Button>
+              <Divider></Divider>
 
-          <router-link :to="{name: 'signin'}">{{$t('signup.form.submitHint')}}</router-link>
-        </FormItem>
+              <Row>
+                <Col span="12">
+                  <Button v-if="stepsIndex <= 2 && stepsIndex >=0" @click.prevent.stop="stepsIndex--" size="large" type="text">{{$t('signup.prev')}}</Button>
+                  <Divider type="vertical" />
+                  <Button v-if="stepsIndex != 2  && stepsIndex >= 0" @click.prevent.stop="stepsIndex++" size="large" type="primary">{{$t('signup.next')}}</Button>
 
-        <Spin size="large" fix v-show="spinShow"></Spin>
-      </Form>
+                  <Button v-if="stepsIndex == 2" @click.prevent.stop="handleSignup" size="large" type="primary">{{$t('signup.form.submit')}}</Button>
+                </Col>
+                <Col span="12" align="right">
+                  <router-link :to="{name: 'signin'}">{{$t('signup.form.submitHint')}}</router-link>
+                </Col>
+              </Row>
+
+              <Spin size="large" fix v-show="spinShow"></Spin>
+            </Form>
+          </Col>
+        </Row>
     </div>
   </div>
 
@@ -48,6 +73,7 @@ import ajax, { baseURL } from "@/mixins/ajax";
 export default {
   data() {
     return {
+      stepsIndex: 0,
       signup: {
         username: '',
         password: '',
@@ -55,14 +81,18 @@ export default {
         qq: '',
         captcha: '',
       },
+      captchaUrl: '',
       spinShow: false,
     }
   },
+  created() {
+    this.refreshCaptcha();
+  },
   methods: {
     refreshCaptcha: function() {
-      this.$refs.captcha.src = baseURL + '/captcha?r=' + Math.random();
+      this.captchaUrl = baseURL + '/captcha?r=' + Math.random();
 
-      waitForAction.call(this.$refs.reCaptcha);
+      // waitForAction.call(this.$refs.reCaptcha);
     },
     handleSignup: function() {
       let {username, password, originId, qq, captcha} = _.each(this.signup, (v, k, o) => {

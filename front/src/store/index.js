@@ -1,6 +1,6 @@
 // import Vue from 'vue';
 // import Vuex from 'vuex';
-// import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 
 // Vue.use(Vuex);
 
@@ -17,7 +17,7 @@ const store = new Vuex.Store({
     SIGNIN(state, payload) {
       state.user = payload;
 
-      Cookies.set('user', JSON.stringify(payload), { expires: 7 });
+      // Cookies.set('user', JSON.stringify(payload), { expires: 7 });
     },
     signout(state, payload) {
       state.user = undefined;
@@ -25,10 +25,10 @@ const store = new Vuex.Store({
       Cookies.remove('user');
     },
     syncLoginState(state) {
-      const cookieUser = Cookies.getJSON('user');
-      if (cookieUser) {
-        state.user = cookieUser;
-      }
+      // const cookieUser = Cookies.getJSON('user');
+      // if (cookieUser) {
+      //   state.user = cookieUser;
+      // }
     },
     [SET_LANG](state, payload) {
       app.$i18n.locale = payload;
