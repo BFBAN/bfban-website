@@ -12,7 +12,10 @@
 
             <Button type="primary" size="large">注册用户</Button>
             <Divider type="vertical" />
-            <Button type="text" size="large"><Icon type="ios-help-circle-outline" />了解有那些社区已经加入</Button>
+            <router-link :to="{name: 'about'}">
+              <Button type="text" size="large"><Icon type="ios-help-circle-outline" />了解有那些社区已经加入</Button>
+            </router-link>
+
 
             <Row :gutter="10" style="margin-top: 50px">
               <Col span="12">

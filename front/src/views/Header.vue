@@ -59,7 +59,7 @@
                   <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">个人中心</router-link>
                 </DropdownItem>
                 <DropdownItem>
-                  <router-link class="mobile-hide link" v-if="isAdmin" :to="{name: 'dashboard'}">{{$t("header.dashboard")}}</router-link>
+                  <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">{{$t("header.dashboard")}}</router-link>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -211,6 +211,7 @@
 
     a.link {
       padding: .7rem .8rem;
+      text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0;
     }
   }
   .nav-username {

@@ -15,6 +15,18 @@
     {
       "name": "网页应用",
       "value": "web"
+    },
+    {
+      "name": "接口",
+      "value": "api"
+    },
+    {
+      "name": "书",
+      "value": "book"
+    },
+    {
+      "name": "管理员",
+      "value": "admin"
     }
   ],
   "list": [
@@ -26,6 +38,13 @@
       "get": "https://bf1.mygoare.com/"
     },
     {
+      "title": "战地1服务器的工具",
+      "describe": "BF1服务器管理器，此工具还可以自动踢bfban.com中标记为黑客的人",
+      "tag": ["web", "admin"],
+      "website": "https://manager.gametools.network/",
+      "get": ""
+    },
+    {
       "title": "战地PC/手机战绩速查工具",
       "describe": "同时支持电脑手机快速查询战绩进行标记",
       "tag": ["web", "app"],
@@ -34,17 +53,24 @@
     },
     {
       "title": "Discord统计机器人",
-      "describe": "23",
+      "describe": "《战地风云》系列的Discord统计机器人",
       "tag": ["web", "bot"],
-      "website" : "《战地风云》系列的Discord统计机器人",
+      "website" : "",
       "get": "https://top.gg/bot/714524944783900794"
     },
     {
       "title": "BFBAN APP",
-      "describe": "23",
+      "describe": "BFBAN手机客户端",
       "tag": ["app"],
-      "website": "",
+      "website": "https://app.bfban.com/public/www/",
       "get": ""
+    },
+    {
+      "title": "Stats api for the Battlefield series",
+      "describe": "《战地风云》系列的公共API",
+      "tag": ["api", "book"],
+      "website": "",
+      "get": "https://api.gametools.network/docs"
     }
   ]
 }

@@ -46,11 +46,8 @@
               </FormItem>
 
               <FormItem :label="$t('signup.form.captcha')">
-                <Input type="text" v-model="signin.captcha" size="large" :placeholder="$t('signup.form.captcha')">
-                  <span slot="append">
-                    <img ref="captcha" width="40px" :src="captchaUrl" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha" />
-                  </span>
-                </Input>
+                <Input type="text" v-model="signin.captcha" size="large" :placeholder="$t('signup.form.captcha')"></Input>
+                <img ref="captcha" :src="captchaUrl" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha" />
               </FormItem>
 
               <FormItem>

@@ -19,6 +19,9 @@
                 <a target="_blank" href="https://jq.qq.com/?_wv=1027&amp;k=pC07TOvE">
                   BFBan QQ</a>
               </li>
+              <li>
+                <a href="https://github.com/BFBAN">github BFBAN</a>
+              </li>
             </ul>
           </Col>
           <Col span="6">
