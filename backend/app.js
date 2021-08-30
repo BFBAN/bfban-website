@@ -68,6 +68,14 @@ app.use(cookieParser());
 app.use(morgan(':date[clf] :status :method :url :res[content-length] :response-time ms  :remote-addr'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+// cors options
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', req.header('Origin')); // better than wildcard *
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+    res.header('Access-Control-Allow-Credentials', true);
+    next();
+});
 
 app.use((req, res, next)=> {console.log(req.body); next();})
 

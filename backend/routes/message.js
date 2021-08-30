@@ -42,20 +42,21 @@ async (req, res, next)=> {
             result.total = await db('messages').count({num: 'id'}).where({byUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
             break;
         case 'announce':
+            result.messages = [];
             switch(true) {
             case userHasRoles(req.user, ['admin','super','root']):
-                result.messages = await db.select('*').from('messages').whereIn('type', ['banAppeal','toAdmins'])
-                .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc');
+                result.messages = result.messages.concat( await db.select('*').from('messages').whereIn('type', ['banAppeal','toAdmins'])
+                .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc') );
                 result.total += result.messages.length;
             // eslint-disable-next-line no-fallthrough
             case userHasRoles(req.user, ['normal']):
-                result.messages = await db.select('*').from('messages').whereIn('type', ['toNormal'])
-                .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc');
+                result.messages = result.messages.concat( await db.select('*').from('messages').whereIn('type', ['toNormal'])
+                .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc') );
                 result.total += result.messages.length;
             // eslint-disable-next-line no-fallthrough
             default:
-                result.messages = await db.select('*').from('messages').whereIn('type', ['toAll'])
-                .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc');
+                result.messages = result.messages.concat( await db.select('*').from('messages').whereIn('type', ['toAll'])
+                .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc') );
                 result.total += result.messages.length;
             }
         }
@@ -213,20 +214,20 @@ async function iGotReplied(params) { // checked that comment dose exist
     const {toCommentType, toCommentId, toPlayerId} = reply;
     if(!(toCommentType && toCommentId))
         return;
-    const toCommentUser = await db.select('byUserId').from(toCommentType).where({id: toCommentId}).first().byUserId;
+    const toCommentUser = await db.select('byUserId').from(toCommentType).where({id: toCommentId}).first().then(r=>r.byUserId);
     await sendMessage(reply.byUserId, toCommentUser, 'reply', `You got reply under dbId:${toPlayerId}`);
 }
 
 async function newBanAppeal(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const ban_appeal = params.ban_appeal;
-    await sendMessage(ban_appeal.byUserId, undefined, 'banAppeal', ban_appeal.toPlayerId+'');
+    await sendMessage(ban_appeal.byUserId, ban_appeal.id, 'banAppeal', 'there is a ban appeal under player dbId:'+ban_appeal.toPlayerId); // hack to store banAppeal's id
 }
 
 async function removeBanAppealNotification(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const ban_appeal = params.ban_appeal;
-    await db('messages').del().where({type: 'banAppeal', content: ban_appeal.toPlayerId+''});
+    await db('messages').del().where({type: 'banAppeal', toUserId: ban_appeal.id});
 }
 
 export default router;

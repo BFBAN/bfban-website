@@ -81,11 +81,18 @@ export default {
   },
   report:{
 	  info:{
+      notFoundHintTitle: 'We can\'t find this player',
+      notFoundHintQuestion1: 'But I\'ve just met him in game/I can find him on battlefield tracker?',
+      notFoundHintAnswer1: 'Please visit origin.com to search that player. If this player can be found but the report can\'t be made, you can send us bug report via the contact methods on the bottom of the frontpage.',
+      notFoundHintQuestion2: 'I can\'t find him on origin, what can I do?',
+      notFoundHintAnswer2: 'That is probably because EA didnot update their database in time，or their system bugged, and we are unable to help them fix that bug. If you do wish to help, you can visit \
+      https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en \
+      , the official froum to send bug report，you can describe this situation as: I can\'t search my friend by name on origin.',
 	  	reportHacker:'Report a hacker',
 	  	reportNews:'We offer the function to report BFV hackers！',
 	  	bf1:'battlefield 1',
 	  	bfv:'battlefield 5',
-		bf6:'battlefield 6',
+		  bf6:'battlefield 6',
 	  	idNotion1:'You can only report one ID one time，do not write the platoon name，do not write your ID',
 	  	idNotion2:'Origin ID has no match for lower case and upper case，but you must identify i I 1 l L o O 0，offer correct ID',
 	  	uploadManual1:'if you do not want to register video site member such as Bilibili and Youtube,you can go to',
@@ -101,6 +108,7 @@ export default {
       captcha: 'Captcha',
       required: 'Required',
       onlyOneId: 'Only one origin ID at a time',
+      loginExpired: 'Your login has expired, please re-login.',
 	  },
     labels: {
       cheatMethod: 'Cheat method',
@@ -170,9 +178,12 @@ export default {
       bfbanAppD: 'BFBAN app download',
       japCon: 'Japanese translation contributor',
       engCon: 'English translation contributor',
-	  lanCon: 'Translator',
-	  localManager: 'BF1 Server Manager',
+	    lanCon: 'Translator',
+	    localManager: 'BF1 Server Manager',
       domCost: 'Domain cost',
+    },
+    special: {
+      universityBFStats: ''
     }
   },
   about: {

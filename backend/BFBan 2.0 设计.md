@@ -83,6 +83,52 @@ body:	{
 #### 	获取网站最近活动	/api/activities
 
 ```javascript
+REQUEST: HTTP GET /api/activities
+parameters:	from?: number(unixTimeStamp)
+			limit?: number
+            // show $limit activities before $from
+RESPONSE: HTTP 200 OK
+body:	{
+    		success: 1,
+            code: 'activities.ok',
+            data: [		// sort by time
+                {
+                    id: number,
+                    byUserName: string,
+                    byUserId: number,
+                    toPlayerId: number,
+                    toPlayerName: string,
+                    createTime: string(ISODate)
+                    type: 'ban_appeal'
+                }, ...
+                {
+                    id: number,
+                    byUserName: string,
+                    byUserId: number,
+                    toPlayerId: number,
+                    toPlayerName: string,
+                    game: string,
+                    createTime: string(ISODate)
+                    type: 'report'
+                }, ...
+                {
+                    id: number,
+                    byUserName: string,
+                    byUserId: number,
+                    toPlayerId: number,
+                    toPlayerName: string,
+                    action: string
+                    createTime: string(ISODate)
+                    type: 'judgement'
+                }, ...
+                {
+                    id: number,
+                    username: string,
+                	createTime: string(ISODate)
+                    type: 'register
+                }, ...
+            ]
+		}
 ```
 
 #### 	获取网站公告 /api/announcements

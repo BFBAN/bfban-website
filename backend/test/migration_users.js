@@ -99,7 +99,7 @@ const istream = db_src.select('*').from('users').orderBy('id','asc').stream();
 istream.pipe(converter).on('error', (err)=> {
     console.log('ERROR:'+err.message+'\n'+err.stack);
 }).on('finish', async ()=> {
-    const increament = await db_src.max({i:'id'}).from('users').first().i;
+    const increament = await db_src.max({i:'id'}).from('users').first().then(r=>r.i);
     db_dst.raw('alter table users set AUTO_INCREMENT = ?', [increament+1]);
     console.log(`Increament:${increament+1}`);
     console.log('__ALL JOBS HAVE BEEN DONE__');

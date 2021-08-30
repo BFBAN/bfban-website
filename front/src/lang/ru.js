@@ -8,7 +8,7 @@ export default {
     signup: 'Зарегестрироваться',
     signout: 'Выйти',
     daily: 'BanDaily',
-    dashboard: 'Dashboard',
+    dashboard: 'Панель управления',
     searchBar: 'Поиск по Origin ID (и предыдущему ID)...',
     searchInfo: 'Результат поиска по ID для: ',
     searchResult: 'Результат поиска:',
@@ -32,36 +32,36 @@ export default {
       discription2:'bfban.com может отслеживать новый ID игрока',
       discription3:'server can update hacker who is on the list on schedule',
       discription4:'history ID which they used before can be found too',
-      timeLine:'Time line',
-      administrator:'Master',
+      timeLine:'История',
+      administrator:'Админ',
       report:'Report',
-      inGame:'in',
-      gaming:'gaming',
-      videoLink:'Video link',
-      judge:'judge as',
-      cheatMethod:'Cheat method',
-      agreeJudgement:'Agree and confirm this cheater',
-      agreeWith:'agree with',
-      thisChoice:'This judgement',
-      replyManual1:'If you have new picture or video evidence to be maintained,you can report one more time.Otherwise,you can only reply text or link by replying here.if you want to add picture click here ',
-      uploadPicButton:'Upload Pictures',
-      replyManual2:'and then copy the picture link to reply',
-      replyManual3:'You must be a BFban member to discuss with us together',
-	  appealManual1:'Ban Appeals: Please send this case\'s web page link and appealing to ban-appeals@bfban.com .',
-      adminConsole:'Master console',
-      adminManual1:'Do not judge by your will,if you are not confirmed,then use the reply function above,and waiting for more evidence',
-      adminManual2:'any action here by admin will make a status change for this reported player，if you are not 100% confirmed,please use reply function above',
-      judgement:'Judgement',
-      choice1:'Confirmed hacker',
-      choice2:'Suspicious player',
-      choice3:'Innocent clean player',
-      choice4:'Remove to Recycle Bin',
-      commit:'Confirmed',
-      replyManual4:'You must log in to reply',
-      action: 'Action',
-      operatingTime: 'Operating Time',
-      writeSomething: 'Write something',
-      giveOpinion: 'What\'s your opinion?',
+      inGame:'в',
+      gaming:'играет',
+      videoLink:'Ссылка на видео',
+      judge:'рассудить как',
+      cheatMethod:'Чит',
+      agreeJudgement:'Подтвердить статус читера',
+      agreeWith:'согласен с',
+      thisChoice:'Это решение',
+      replyManual1:'Если у вас есть новое изображение или видео доказательство необходимое россмотрения, вы можете сообщить ещё раз. Иначе, вы можете ответить только текстом или ссылкой здесь. Если вы хотите ответить изображением, нажмите здесь ',
+      uploadPicButton:'Загрузить изображения',
+      replyManual2:'и затем скопируйте ссылку на изображение для ответа',
+      replyManual3:'Вы должны быть членом BFban чтобы обсудить с нами',
+	    appealManual1:'Обжалование бана: Пожалуйста, отправьте ссылку на страницу игрока и оспорьте решение через ban-appeals@bfban.com .',
+      adminConsole:'Панель управления',
+      adminManual1:'Не судите по своему желанию, если нет доказательств, воспользуйте кнопкой ответа, и подождите доказательства',
+      adminManual2:'любое действие администратором может изменить статус игрока，если вы не уверены 100%, пожалуйства, используйте фунцию ответа выше',
+      judgement:'Решение',
+      choice1:'Подтверждённый хакер',
+      choice2:'Подозрительный игрок',
+      choice3:'Честный игрок',
+      choice4:'Удалить как мусор',
+      commit:'Подтверждён',
+      replyManual4:'Вы должны войти для ответа',
+      action: 'Действие',
+      operatingTime: 'Время операции',
+      writeSomething: 'апишите что-нибудь',
+      giveOpinion: 'Какое ваше мнение?',
       fastReplies: {
         stats: 'Abnormal player stats',
         evidencePic: 'As the evidence showed in the picture',
@@ -69,23 +69,30 @@ export default {
       }
     },
     messages: {
-      fillEverything: 'Please fill in everything',
+      fillEverything: 'Пожалуйста, заполните все поля',
+      replySuccess: 'Ваш ответ был добавлен',
       pleaseExplain: 'Please explian your decision in details',
       dontDoIt: 'Do not just give a ',
-      replySuccess: 'Your reply was successfully added',
-      signIn: 'Please sign in',
-      updateComplete: 'Update completed',
-      submitSuccess: 'Submitted successfully',
-      changeHacker: 'The current person is in confirmed hacker state, are you sure you want to change it to {code} status?',
+      signIn: 'Пожалуйста, войдите',
+      updateComplete: 'Обновление завершено',
+      submitSuccess: 'Успешно отправлено',
+      changeHacker: 'Этот игрок уже подтверждён, aвы уверены, что хотите изменить его на статус {code}?',
     },
   },
   report:{
 	  info:{
-	  	reportHacker:'Report a hacker',
-	  	reportNews:'We offer the function to report BFV hackers！',
+      notFoundHintTitle: 'We can\'t find this player',
+      notFoundHintQuestion1: 'But I\'ve just met him in game/I can find him on battlefield tracker?',
+      notFoundHintAnswer1: 'Please visit origin.com to search that player. If this player can be found but the report can\'t be made, you can send us bug report via the contact methods on the bottom of the frontpage.',
+      notFoundHintQuestion2: 'I can\'t find him on origin, what can I do?',
+      notFoundHintAnswer2: 'That is probably because EA didnot update their database in time，or their system bugged, and we are unable to help them fix that bug. If you do wish to help, you can visit \
+      https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en \
+      , the official froum to send bug report，you can describe this situation as: I can\'t search my friend by name on origin.',
+	  	reportHacker:'Сообщить о Читере',
+	  	reportNews:'Мы предлагаем ф-цию сообщения о хакерах в BFV！',
 	  	bf1:'battlefield 1',
 	  	bfv:'battlefield 5',
-		bf6:'battlefield 6',
+		  bf6:'battlefield 6',
 	  	idNotion1:'You can only report one ID one time，do not write the platoon name，do not write your ID',
 	  	idNotion2:'Origin ID has no match for lower case and upper case，but you must identify i I 1 l L o O 0，offer correct ID',
 	  	uploadManual1:'if you do not want to register video site member such as Bilibili and Youtube,you can go to',
@@ -95,39 +102,40 @@ export default {
 	  	uploadPic2:'picture which is larger than 2M would upload failed,you can go to ',
 	  	uploadPic3:'and then choose Image URL Tag，paste the image link below',
 	  	uploadPic4:'please make a discription for this hacker with evidence，Text editor offer image upload service（Size limits:2M）',
-	  	getCaptcha:'Get Captcha',
-	  	report:'Report',
-      description: 'List as much evidence as possible about the reported person',
-      captcha: 'Captcha',
-      required: 'Required',
-      onlyOneId: 'Only one origin ID at a time',
+	  	getCaptcha:'Получить капчу',
+	  	report:'Сообщить',
+      description: 'Предоставьте как можно больше доказательств',
+      captcha: 'Капча',
+      required: 'Обязательно',
+      onlyOneId: 'Только один Никнейм за раз',
+      loginExpired: 'Your login has expired, please re-login.',
 	  },
     labels: {
-      cheatMethod: 'Cheat method',
-      hackerId: 'Hacker\'s ID',
-      game: 'Game',
-      description: 'Description',
+      cheatMethod: 'Чит',
+      hackerId: 'Ник хакера',
+      game: 'Игра',
+      description: 'Описание',
     },
     error: {
-      mediaEvidence: 'Please upload a picture or fill in the video link',
-      originId: 'Origin ID does not exist, please check spelling',
-      success: 'Submitted successfully',
+      mediaEvidence: 'Пожалуйста, загрузите изображение или заполните ссылку на видео',
+      originId: 'Такого никнейма не соществует, пожалуйста, проверьте введённую строку',
+      success: 'Успешно добавлено',
     }
   },
   footer: {
-    author: 'Written by mygoare',
-    feedback: 'Give feedback'
+    author: 'Написано mygoare',
+    feedback: 'Оставьте отзыв'
   },
   home: {
     activity: {
-      title: 'Activity',
-      description: 'bfban.com was made on the 4th of november 2018 and received <b>{report}</b> reports, and has a total of <b>{cheater}</b> banned hackers. Thanks for the hard work everyone!',
+      title: 'Активность',
+      description: 'bfban.com был сделан 4 Ноября 2018 и получил <b>{report}</b> сообщений о хакерах, имеет в общем <b>{cheater}</b> забаненых читеров. Спасибо всем за тяжёлую работу!',
       activities: {
-        report: 'reported',
-        join: 'registered to bfban, welcome!',
-        admin: 'Administrator',
-        mark: 'marked',
-        as: 'as'
+        report: 'сообщил',
+        join: 'зарегистрировался в bfban, добро пожаловать!',
+        admin: 'Администратор',
+        mark: 'отметил',
+        as: 'как'
       }
     },
     howToUse: {
@@ -154,10 +162,10 @@ export default {
           fairplay: 'quickly check if the player is already banned in bf3 and bf4',
           tracker: 'At the same time, it supports quick query of record and mark on computer and mobile phone',
           tools: 'Tools to help you solve game platform problems',
-          bfban: 'BFBAN mobile client',
-          apiGametools: 'Public api for the Battlefield series',
-          botGametools: 'Discord stats bot for the Battlefield series',
-          serverManager: 'BF1 servermanager, this tool can also autokick people marked as hacker within bfban.com',
+          bfban: 'Мобильное приложение BFBAN',
+          apiGametools: 'Публичное API для серии игр Battlefield',
+          botGametools: 'Бот в Дискорде для Battlefield',
+          serverManager: 'BF1 servermanager, способен также автоматически исключать игроков с bfban.com',
         }
       },
       qqGroup: 'QQ group/Discord',
@@ -168,18 +176,21 @@ export default {
       title: 'Информация',
       webDev: 'Веб разработчик',
       bfbanAppD: 'Скачать приложение BFBAN',
-      japCon: 'Japanese translation contributor',
-      engCon: 'English translation contributor',
-	  lanCon: 'переводчик',
-	  localManager: 'Менеджер сервера BF1',
+      japCon: 'Переводчик на Японский',
+      engCon: 'Переводчик на Ангийский',
+	    lanCon: 'Другие переводчики',
+	    localManager: 'Управление серверами BF1',
       domCost: 'Оплата домена',
+    },
+    special: {
+      universityBFStats: ''
     }
   },
   about: {
     title: 'О нас',
     description: `<h2>BFBAN</h2>
     <p>
-    cсоздан 2018.1.29; Организация, созданная <b>в противовес хакерам</b>
+    Международная организация BFBan основана 1 Января 2018 года <b>для противостояния хакерам</b>, создания общёй базы читеров, а так же разработке средств противодействия хакерам
     </p>
 
     <p>
@@ -198,129 +209,129 @@ export default {
     website: `
     <h2>Сайт bfban.com</h2>
     <p>
-      <a href="https://bfban.com">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target="_blank" href="https://mygoare.com">mygoare</a> and launched on November 4, 2018
+      <a href="https://bfban.com">bfban.com</a>  основывается на Бюро Расследований bfban, изначально идея была предложена интузиастами и игроками Bdttlefield, разработана <a target="_blank" href="https://mygoare.com">mygoare</a> И запущена 4 Ноября 2018
     </p>
-    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>`,
+    <p>Bfban в основном создан для сообщения о читерах и обсуждение.</p>`,
     contact: `
-    <h2>Ban Appeals</h2>
-    <p>Please send the case's web page link and appealing to ban-appeals@bfban.com .</p>
+    <h2>Обжалование бана</h2>
+    <p>Пожалуйста, отправьте ссылку на страницу игрока и оспорьте решение через ban-appeals@bfban.com .</p>
     <br/>
-    <h2>Contact us</h2>
+    <h2>Связь с нами</h2>
     <p>
       <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
-        Complaint mailbox
+        Почта для претензий
       </a>
     </p>
     <p>
       <a target="_blank" href="https://support.qq.com/products/64038">
-        Suggestions
+        Предложения
       </a>
     </p>`
   },
   reset: {
-    title: 'Reset Password',
+    title: 'Обновить пароль',
     form: {
       qq: 'QQ',
-      password: 'New Password',
-      passwordRepeat: 'Confirm Password',
-      submit: 'Submit',
+      password: 'Новый пароль',
+      passwordRepeat: 'Подтвердите пароль',
+      submit: 'Обновить',
     },
   },
   account: {
-    title: 'User info',
-    hint1: 'We dont have a message system yet, but you can use this menu to see the status of your reports.',
-    hint2: 'Everyone can post responses on the report page.',
-    hint3: 'If you have more evidence for a hacker, please report the same id twice.',
-    userInfo: 'Account info',
-    username: 'Username:',
-    role: 'Role:',
-    admin: 'Administrator',
-    normal: 'Normal user',
-    super: 'Super admin',
-    joinedAt: 'Joined at:',
-    reports: 'Personal reports',
-    noReports: 'No reports yet',
-    reported: 'Reported',
-    status: 'Status',
-    recentlyUpdated: 'last updated',
+    title: 'Информация о пользователе',
+    hint1: 'У нас пока нет системы сообщений, но вы можете использовать это меню для того, чтобы узнать статус ваших репортов.',
+    hint2: 'Кто угодно может оставить отзыв на странице читера.',
+    hint3: 'Если у вас есть больше иформации о хакере, пожалуйста, сообщите о нём ещё раз.',
+    userInfo: 'Информация об аккаунте',
+    username: 'Имя пользователя:',
+    role: 'Роль:',
+    admin: 'Администратор',
+    normal: 'Пользователь',
+    super: 'Супер админ',
+    joinedAt: 'Присоеденился:',
+    reports: 'Сообщения о хакерах',
+    noReports: 'Пока ни о ком не сообщил',
+    reported: 'Сообщён',
+    status: 'Статус',
+    recentlyUpdated: 'последнее обновление',
   },
-  notFound: 'if you can’t find the history log use the “search” on the top of the webpage. History id tracking is supported',
+  notFound: 'если вы не можите найти историю логов используйте “поиск” сверху страницы. Отслеживание истории поддерживается',
   signin: {
-    title: 'Sign In',
+    title: 'Вход в систему',
     form: {
-      username: 'Username',
-      password: 'Password',
-      captcha: 'Captcha',
-      getCaptcha: 'getCaptcha',
-      submit: 'Submit',
-      submitHint: 'Do not have account? Go Sign up',
+      username: 'Имя пользователя',
+      password: 'Пароль',
+      captcha: 'Капча',
+      getCaptcha: 'Получить новую капчу',
+      submit: 'Войти',
+      submitHint: 'Ещё нет аккаунта? Зарегистрируйтесь',
     },
-    failed: 'Login failed',
-    success: 'login successful',
-    loginFirst: 'Please login first',
+    failed: 'Неправильные данные входа',
+    success: 'успешный вход',
+    loginFirst: 'Сначала войдите',
   },
   signup: {
-    title: 'Sign Up',
+    title: 'Зарегистрируйтесь',
     form: {
-      username: 'Username',
-      password: 'Password',
-      originId: 'originId',
+      username: 'Имя пользователя',
+      password: 'Пароль',
+      originId: 'Никнейм',
       qq: 'QQ',
-      captcha: 'Captcha',
-      getCaptcha: 'Get Captcha',
-      submit: 'Submit',
-      submitHint: 'Hava account? Go Sign In',
+      captcha: 'Капча',
+      getCaptcha: 'Получить новую капчу',
+      submit: 'Зарегистрироваться',
+      submitHint: 'Есть аккаунт? Войдите',
     },
     placeholder: {
-      username: 'More than 4 characters',
-      password: 'More than 6 characters',
-      originId: 'optional',
-      qq: 'optional',
+      username: 'Больше 4 символов',
+      password: 'Больше 6 символов',
+      originId: 'необязательно',
+      qq: 'необязательно',
     },
-    fillIn: 'Please fill the form',
-    failed: 'Registration failed',
+    fillIn: 'Пожалуйста заполните форму',
+    failed: 'Регистрация не удалась',
   },
   list: {
-    title: 'Cheaters list',
+    title: 'Список читеров',
     filters: {
       game: {
         bf1: 'BF1',
-		bf1: 'BF6',
+		    bf1: 'BF6',
         bfv: 'BFV',
       },
       status: {
-        all: 'all',
+        all: 'всё',
       },
-      refresh: 'refresh',
+      refresh: 'обновить',
     },
-    reportTime: 'Report time range',
-    updateTime: 'Update time range',
+    reportTime: 'Диапазон времени сообщения',
+    updateTime: 'Диапазон обновлений',
     colums: {
-      playerId: 'Player ID',
-      reportTime: 'Report time',
-      updateTime: 'Update time'
+      playerId: 'Никнейм',
+      reportTime: 'Время добавления',
+      updateTime: 'Последние обновление'
     } 
   },
   cheatMethods: {
-    stealth: 'stealth',
-    wallhack: 'wallhack',
-    aimbot: 'aimbot',
-    oneShotKill: 'oneShotKill',
-    gadgetModify: 'gadgetModify',
-    damageChange: 'damageChange',
-    shootingThroughWalls: 'bulletThroughWalls',
+    stealth: 'Стелс',
+    wallhack: 'Валхак',
+    aimbot: 'Аимбот',
+    oneShotKill: 'Убийство в 1 выстрел',
+    gadgetModify: 'Модификация гаджета',
+    damageChange: 'Изменённый дамаг',
+    shootingThroughWalls: 'Пули через стены',
   },
   misc: {
     uploadImage: {
-      info: 'Upload pictures, no more than 2MB',
-      mobile: 'Double-tap the screen to upload...',
-      desktop: 'Click or drag to upload...',
-      fail: 'Exceeded the maximum upload limit, the picture is over 2MB',
+      info: 'Загрузите изображения, не больше 2MB',
+      mobile: 'Кликните два раза для загрузки...',
+      desktop: 'Нажмите или перетащите для загрузки...',
+      fail: 'Превышен лимит по размеру в 2MB',
     },
     uploadVideo: {
-      info: 'Upload video, no more than 30MB',
-      desktop: 'Click or drag files here to upload',
+      info: 'Загрузите видео, не больше 30MB',
+      desktop: 'Нажмите или перетащите для загрузки',
     },
-    progress: 'uploading...',
+    progress: 'загружаем...',
   },
 };

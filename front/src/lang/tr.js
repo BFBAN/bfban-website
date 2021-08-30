@@ -81,11 +81,18 @@ export default {
   },
   report:{
 	  info:{
+      notFoundHintTitle: 'We can\'t find this player',
+      notFoundHintQuestion1: 'But I\'ve just met him in game/I can find him on battlefield tracker?',
+      notFoundHintAnswer1: 'Please visit origin.com to search that player. If this player can be found but the report can\'t be made, you can send us bug report via the contact methods on the bottom of the frontpage.',
+      notFoundHintQuestion2: 'I can\'t find him on origin, what can I do?',
+      notFoundHintAnswer2: 'That is probably because EA didnot update their database in time，or their system bugged, and we are unable to help them fix that bug. If you do wish to help, you can visit \
+      https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en \
+      , the official froum to send bug report，you can describe this situation as: I can\'t search my friend by name on origin.',
 	  	reportHacker:'Hileci bildirme formu',
 	  	reportNews:'BFV ve BF1 hilelerini bildirme işlevi sunuyoruz！',
 	  	bf1:'battlefield 1',
 	  	bfv:'battlefield 5',
-		bf6:'battlefield 6',
+		  bf6:'battlefield 6',
 	  	idNotion1:'Bir seferde yalnızca bir kimliği bildirebilirsiniz, klan adını yazmayın, kendi origin kimliğinizi yazmayın.',
 	  	idNotion2:'Orijin kimliğinin küçük harf ve büyük harf için eşleşmesi yoktur， ancak tanımlamalısınız i I 1 l L o O 0， bu karakterlere dikkat ediniz.',
 	  	uploadManual1:'Bilibili ve Youtube gibi video sitelerine üye olmak istemiyorsanız şu adrese gidebilirsiniz',
@@ -101,6 +108,7 @@ export default {
       captcha: 'Onay kodu',
       required: 'gereklidir',
       onlyOneId: 'Bir seferde tek origin kimliği',
+      loginExpired: 'Your login has expired, please re-login.',
 	  },
     labels: {
       cheatMethod: 'Hile yöntemi',
@@ -170,9 +178,12 @@ export default {
       bfbanAppD: 'BFBAN mobil uygulaması ',
       japCon: 'Japonca çeviri katkısı',
       engCon: 'İngilizce çeviri katkısı',
-	  lanCon: 'çevirmen',
-	  localManager: 'PC Sunucu Yöneticisi',
+	    lanCon: 'çevirmen',
+	    localManager: 'PC Sunucu Yöneticisi',
       domCost: 'Alan adı sağlayıcı',
+    },
+    special: {
+      universityBFStats: ''
     }
   },
   about: {

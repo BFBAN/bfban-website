@@ -81,6 +81,13 @@ export default {
   },
   report:{
     info:{
+      notFoundHintTitle: 'We can\'t find this player',
+      notFoundHintQuestion1: 'But I\'ve just met him in game/I can find him on battlefield tracker?',
+      notFoundHintAnswer1: 'Please visit origin.com to search that player. If this player can be found but the report can\'t be made, you can send us bug report via the contact methods on the bottom of the frontpage.',
+      notFoundHintQuestion2: 'I can\'t find him on origin, what can I do?',
+      notFoundHintAnswer2: 'That is probably because EA didnot update their database in time，or their system bugged, and we are unable to help them fix that bug. If you do wish to help, you can visit \
+      https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en \
+      , the official froum to send bug report，you can describe this situation as: I can\'t search my friend by name on origin.',
       reportHacker:'チーターを報告',
       reportNews:'私たちはチーターを報告・情報共有する機能を提供します！',
       bf1:'Battlefield 1',
@@ -101,6 +108,7 @@ export default {
       captcha: 'Captcha',
       required: '必須',
       onlyOneId: '一度に1つのOrigin IDのみ',
+      loginExpired: 'Your login has expired, please re-login.',
     },
     labels: {
       cheatMethod: 'チートの種類',
@@ -173,6 +181,9 @@ export default {
       lanCon: '翻訳寄稿者',
       localManager: 'BF1サーバーマネージャー',
       domCost: 'ドメインコスト',
+    },
+    special: {
+      universityBFStats: ''
     }
   },
   about: {

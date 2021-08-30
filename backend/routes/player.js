@@ -208,9 +208,9 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error:1, code:'reportById.bad', message:validateErr.array()});
         
-        if(req.query.originPersonaId && !req.query.originUserId)
+        if(req.body.data.originPersonaId && !req.body.data.originUserId)
             return res.status(500).json({error:1, code:'reportById.notSupportYet', message: 'not support yet'});
-        const originUserId = req.query.originUserId
+        const originUserId = req.body.data.originUserId
         const client = originClients.getOne();
         let profile;
         try { 
@@ -275,7 +275,8 @@ async (req, res, next)=>{
             valid: 1,
             createTime: new Date()
         };
-        await db('reports').insert(report);
+        const reportId = (await db('reports').insert(report) )[0];
+        report.id = reportId;
         player.id = playerId;
         
         siteEvent.emit('data', {method: 'report', params: {report, player, stateChange}});
@@ -348,6 +349,14 @@ async (req, res, next)=>{
             db.select('id', 'createTime', db.raw('"judgement" as "type"')).from('judgements').where({toPlayerId: dbId}),
             db.select('id', 'createTime', db.raw('"ban_appeal" as "type"')).from('ban_appeals').where({toPlayerId: dbId})
         ]).orderBy('createTime', 'asc').offset(skip).limit(limit);
+        const totals = await db.count({num: 'id'}).from('replies').where({toPlayerId: dbId}).union([
+            db.count({num: 'id'}).from('reports').where({toPlayerId: dbId}),
+            db.count({num: 'id'}).from('judgements').where({toPlayerId: dbId}),
+            db.count({num: 'id'}).from('ban_appeals').where({toPlayerId: dbId})
+        ]);
+        console.log(totals);
+        const total = totals.reduce((accu, curr)=> {return accu+curr.num}, 0);
+        console.log(total);
         // generate a brief timeline for queries below
         const subQueries = brief.reduce((accu, curr, indx)=>{
             accu[curr.type].push(curr.id);  // group by type
@@ -370,7 +379,7 @@ async (req, res, next)=>{
             'judgements.content','judgements.createTime', 'users.username', 'users.privilege', db.raw('"judgement" as "type"'))
             .whereIn('judgements.id', subQueries.judgement) : [],
 
-            subQueries.ban_appeal.length>0? db('ban_appeals')
+            subQueries.ban_appeal.length>0? db('ban_appeals').join('users', 'ban_appeals.byUserId', 'users.id')
             .select('ban_appeals.id','ban_appeals.byUserId','ban_appeals.content','ban_appeals.viewedAdminIds',
             'ban_appeals.status','ban_appeals.createTime', 'users.username', 'users.privilege', db.raw('"ban_appeal" as "type"'))
             .whereIn('ban_appeals.id', subQueries.ban_appeal) : [],
@@ -424,7 +433,8 @@ async (req, res, next)=>{
             valid: 1,
             createTime: new Date(),
         };
-        await db('replies').insert(reply);
+        const insertId = (await db('replies').insert(reply) )[0];
+        reply.id = insertId;
         await db('players').update({
             updateTime: new Date(), 
         }).increment('commentsNum', 1).where({id: req.body.data.toPlayerId});
@@ -482,7 +492,7 @@ async (req, res, next)=>{
 
 router.post('/judgement', verifyJWT, allowPrivileges(['admin','super','root']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
-    checkbody('data.cheatMethods').optional().isString().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
+    checkbody('data.cheatMethods').if(checkbody('data.toPlayerId').isIn('kill','guilt')).isString().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
     checkbody('data.action').isIn(['suspect','innocent','discuss','guilt','kill','trash']),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
@@ -511,7 +521,8 @@ async (req, res, next)=>{
             valid: 1,
             createTime: new Date(),
         };
-        await db('judgements').insert(judgement);
+        const insertId = (await db('judgements').insert(judgement) )[0];
+        judgement.id = insertId;
         const nextstate = await stateMachine(player, req.user, req.body.data.action);
         const stateChange = {prev: player.status, next: nextstate};
         player.status = nextstate;
@@ -535,16 +546,18 @@ async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'banappeal.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'banAppeal.bad', message: validateErr.array()});
         
         /** @type {import("../typedef.js").Player|undefined} */
         const player = await db.select('*').from('players').where({id: req.body.data.toPlayerId}).first();
         if(!player)
-            return res.status(404).json({success: 1, code: 'banappeal.notFound', message: 'no such player'});
+            return res.status(404).json({error: 1, code: 'banAppeal.notFound', message: 'no such player'});
+        if(player.status!=1 && player.status!=2)
+            return res.status(400).json({error: 1, code: 'banAppeal.noNeed', message: 'no need for ban appeal'});
         /** @type {import("../typedef.js").BanAppeal} */
-        const prev = await db.select('*').from('ban_appeals').where({id: req.body.data.toPlayerId}).orderBy('createTime', 'desc').first();
+        const prev = await db.select('*').from('ban_appeals').where({toPlayerId: req.body.data.toPlayerId}).orderBy('createTime', 'desc').first();
         if(prev && prev.status=='lock')
-            return res.status(403).json({error: 1, code: 'banappeal.locked', message: 'this thread is locked'});
+            return res.status(403).json({error: 1, code: 'banAppeal.locked', message: 'this thread is locked'});    
         const ban_appeal = {
             toPlayerId: player.id,
             byUserId: req.user.id,
@@ -554,10 +567,11 @@ async (req, res, next)=>{
             valid: 1,
             createTime: new Date()
         };
-        await db('ban_appeals').insert(ban_appeal);
+        const insertId = (await db('ban_appeals').insert(ban_appeal) )[0];
+        ban_appeal.id = insertId;
 
-        siteEvent.emit('data', {method: 'banappeal', params: {ban_appeal}});
-        return res.status(201).json({success: 1, code: 'banappeal.success', message:'please wait.'})
+        siteEvent.emit('data', {method: 'banAppeal', params: {ban_appeal}});
+        return res.status(201).json({success: 1, code: 'banAppeal.success', message:'please wait.'})
     } catch(err) {
         next(err);
     }
@@ -571,13 +585,13 @@ async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'banappeal.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'banAppeal.bad', message: validateErr.array()});
         
         /** @type {import("../typedef.js").BanAppeal} */
         const ban_appeal = await db.select('*').from('ban_appeals').where({id: req.body.data.id}).first();
         if(!ban_appeal)
-            return res.status(404).json({success: 1, code: 'banappeal.notFound', message: 'no such ban appeal'});
-        const viewedAdminIds = new Set(ban_appeal.viewedAdminIds.split(','));
+            return res.status(404).json({success: 1, code: 'banAppeal.notFound', message: 'no such ban appeal'});
+        const viewedAdminIds = new Set(ban_appeal.viewedAdminIds==''? undefined:ban_appeal.viewedAdminIds.split(','));
         viewedAdminIds.add(req.user.id);
         
         if(req.body.data.status)

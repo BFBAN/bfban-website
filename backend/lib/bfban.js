@@ -104,6 +104,7 @@ async function stateMachine(player, user, action) { // normally we should write 
 
 const siteEvent = new EventEmitter();
 
+1;
 export {
     stateMachine,
     siteEvent,

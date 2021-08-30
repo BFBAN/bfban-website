@@ -106,7 +106,6 @@ async function commandUser(args, user) {            //  [0]  [1]  [2]  [3]
 
 /** @param {string[]} args @param {import('../typedef.js').User} user */
 async function commandWebhook(args, user) { 
-    console.log(user);
     const isEmpty = !webhookSubscriber.getByUserId(user.id);
     switch(args[1]) {                       //   [0]      [1]     [2]  [3] [4]
     case 'subscribe':                       // webhook subscribe event url key

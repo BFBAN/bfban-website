@@ -81,11 +81,18 @@ export default {
   },
   report:{
 	  info:{
+      notFoundHintTitle: '我们无法找到该玩家',
+      notFoundHintQuestion1: '但是我刚刚在游戏里见过他/我在查战绩app上查得到他？',
+      notFoundHintAnswer1: '请至origin.com搜索该玩家，如确实能搜索到而无法举报，可至首页下方的联系方式处反馈bug',
+      notFoundHintQuestion2: 'origin上无法搜索到，这是怎么一回事？',
+      notFoundHintAnswer2: '这可能是EA数据库更新不及时，或是EA官方的bug，我们没有办法替他们解决，如果您想出一份力，可以至 \
+      https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en \
+      官方反馈论坛反馈bug，此情况可以描述为 I can\'t search my friend by name on origin',
 	  	reportHacker:'举报作弊',
 	  	reportNews:'已经支持 战地V 举报啦！',
 	  	bf1:'战地1',
 	  	bfv:'战地5',
-		bf6:'战地6',
+		  bf6:'战地6',
 	  	idNotion1:'一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID',
 	  	idNotion2:'游戏ID是不区分大小写的，但请特别注意区分 i I 1 l L o O 0，正确填写举报ID',
 	  	uploadManual1:'不想注册国内账号、嫌麻烦，上传视频可以前往',
@@ -101,6 +108,7 @@ export default {
       captcha: '验证码',
       required: '基本的',
       onlyOneId: '一次只有一个Origin ID',
+      loginExpired: '您的登录已过期，请重新登录',
 	  },
     labels: {
       cheatMethod: '作弊方法',
@@ -170,9 +178,12 @@ export default {
       bfbanAppD: 'BFBAN APP下载',
       japCon: '日语翻译者',
       engCon: '英语翻译者',
-	  lanCon: '翻译',
-	  localManager: '战地1服管工具',
+	    lanCon: '翻译',
+	    localManager: '战地1服管工具',
       domCost: '支付域名',
+    },
+    special: {
+      universityBFStats: '为你的大学争战地的光！浏览并参与各大学Battlefield 1战绩排行榜！戳：'
     }
   },
   about: {

@@ -297,7 +297,7 @@ async function showUserInfo(req, res, next) {
         const user = await db.select('*').from('users').where({id: req.query.id}).first();
         if(!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
-        const reportnum = await db('reports').count({num: 'id'}).where({byUserId: user.id}).first().num;
+        const reportnum = await db('reports').count({num: 'id'}).where({byUserId: user.id}).first().then(r=>r.num);
         const data = {
             id: user.id,
             username: user.username,

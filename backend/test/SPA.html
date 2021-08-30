@@ -392,7 +392,8 @@
                         <input type="radio" name="playerlist-status" id="playerlist-status4" value="2">Suspect
                         <input type="radio" name="playerlist-status" id="playerlist-status5" value="3">Innocent
                         <input type="radio" name="playerlist-status" id="playerlist-status6" value="4">Trash
-                        <input type="radio" name="playerlist-status" id="playerlist-status7" value="5">Processing
+                        <input type="radio" name="playerlist-status" id="playerlist-status7" value="5">Discussing
+                        <input type="radio" name="playerlist-status" id="playerlist-status8" value="6">Pending
                     </div>
                     <span>
                         skip: <input type="number" name="playerlist-skip" id="playerlist-skip" value="0" step="50" style="bottom: 0;">
@@ -419,7 +420,7 @@
                         for(let i in res.data.result) {
                             let player = res.data.result[i];
                             str += `----#${(i-0)+(skip-0)+1}-------------------------------$${player.id}------------\n`+
-                            `  ${player.originName} [${['unhandled','CONFIRMED','suspect','innocent','trash'][player.status]}]`+
+                            `  ${player.originName} [${['unhandled','CONFIRMED','suspect','innocent','trash','discussing','pending'][player.status]}]`+
                             ` Games:${player.games} CheatMethods:${player.cheatMethods} userId: ${player.originUserId} pid: ${player.originPersonaId}\n`+
                             `  avatarLink: ${player.avatarLink}\n`+
                             `  views: ${player.viewNum} comments: ${player.commentsNum} createWhen:${new Date(player.createTime).toLocaleString()} updateWhen:${new Date(player.updateTime).toLocaleString()}\n`;
@@ -539,7 +540,7 @@
                     }
                     async function handleCommentSubmit() {
                         let id = $('#playerinfo-dbid').val()-0;
-                        const type = $('input[name=replytype]:checked').val();
+                        let type = $('input[name=replytype]:checked').val();
                         if(type=='ban_appeal' && $('#viewbanappealid').val()!="")
                             type = 'view_ban_appeal';
                         switch(type) {
@@ -597,7 +598,7 @@
                                 $('#replyinput').val(JSON.stringify(res, null, 2));
                                 break;
                             }
-                            case 'view_ban_apppeal': {
+                            case 'view_ban_appeal': {
                                 let res = await fetch('/api/player/viewBanAppeal', {
                                     method: 'POST',
                                     headers: {
@@ -607,7 +608,7 @@
                                     body: JSON.stringify({
                                         data: {
                                             id: $('#viewbanappealid').val()-0,
-                                            content: $('input[name=banappealval]:checked').val()
+                                            status: $('input[name=banappealval]:checked').val()
                                         }
                                     })
                                 }).then(r=>r.json());
