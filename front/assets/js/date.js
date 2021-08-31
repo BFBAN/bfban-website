@@ -6,4 +6,4 @@ class date {
 
 }
 
-module.exports = new Date();
+export default new Date();
