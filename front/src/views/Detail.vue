@@ -4,7 +4,13 @@
       <div v-if="isCheaterExist" style="position: relative">
 
         <Row :gutter="20">
-          <Col span="18" push="6">
+          <Col :xs="{span: 22}" :lg="{span: 4}">
+            <div v-show="cheater.avatarLink" align="center">
+              <!-- Origin头像 -->
+              <img :src="cheater.avatarLink" alt="avatar" width="150" height="150" :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })">
+            </div>
+          </Col>
+          <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 20, push: 2}">
             <div>
               <h1 style="font-size: 1.6rem;">
                 {{ cheater.originId || 'user id' }}
@@ -25,6 +31,8 @@
                 </Tag>
               </h1>
 
+              <span>id:  {{ cheater.originUserId || 'id' }}</span>
+              <Divider type="vertical" />
               <Dropdown>
                 <a href="javascript:void(0)">
                   {{ $t('detail.info.historyID', { msg: 'historyID' })}}
@@ -61,28 +69,28 @@
             <br>
 
             <Row :gutter="10">
-              <Col span="6">
+              <Col :xs="{span: 12}" :lg="{span: 6}">
                 <Card>
                   <!-- 浏览次数 -->
                   <h3>{{ cheater.n || 0 }}</h3>
                   <span>{{ $t('detail.info.viewTimes', { msg: 'viewTimes' })}}</span>
                 </Card>
               </Col>
-              <Col span="6">
+              <Col :xs="{span: 12}" :lg="{span: 6}">
                 <Card>
                   <!-- 回复次数 -->
                   <h3>{{ cheater.commentsNum || 0 }}</h3>
                   <span>{{ $t('detail.info.reply', { msg: 'reply' })}}</span>
                 </Card>
               </Col>
-              <Col span="6">
+              <Col :xs="{span: 12}" :lg="{span: 6}">
                 <Card>
                   <!-- 第一次被举报时间 -->
                   <h3><Time v-if="cheater.createDatetime" :time="cheater.createDatetime"></Time></h3>
                   <span>{{ $t('detail.info.firstReportTime', { msg: 'firstReportTime' })}}</span>
                 </Card>
               </Col>
-              <Col span="6">
+              <Col :xs="{span: 12}" :lg="{span: 6}">
                 <Card>
                   <!-- 最近更新时间 -->
                   <h3><Time v-if="cheater.updateDatetime" :time="cheater.updateDatetime"></Time></h3>
@@ -90,253 +98,309 @@
                 </Card>
               </Col>
             </Row>
-
-            <div v-show="cheater.originId" style="margin-top: .4rem;">
-              <!-- 战绩链接 -->
-              <h2>
-                <span>{{ $t('detail.info.gameScores', { msg: 'gameScores' })}}</span>
-              </h2>
-              <p v-for="g in games" :key="g.game">
-                <Tag>
-                  {{g.game}}
-                </Tag>
-                <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">
-                  battlefieldtracker
-                </a>
-                <Divider type="vertical"  v-show="`${g.game}` === 'bf1'" />
-                <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">
-                  bf1stats
-                </a>
-                <Divider type="vertical"  v-show="`${g.game}` === 'bfv'" />
-                <a v-show="`${g.game}` === 'bfv'" target="_blank" :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">
-                  battlefieldtracker
-                </a>
-                <Divider type="vertical" />
-                <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originId}`">
-                  247fairplay
-                </a>
-              </p>
-
-              <div>
-                <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
-                <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">bf1tracker武器截图</a>
-                <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
-              </div>
-            </div>
-
-          </Col>
-          <Col span="6" pull="18">
-            <div v-show="cheater.avatarLink">
-              <!-- Origin头像 -->
-              <h1>
-                <span>{{ $t('detail.info.originAvatar', { msg: 'originAvatar' })}}</span>
-              </h1>
-              <img :src="cheater.avatarLink" alt="avatar" width="150" height="150">
-            </div>
           </Col>
         </Row>
 
         <Divider dashed />
 
-        <Row :gutter="20">
-          <Col span="18" push="6">
-            <div>
-              <!-- 时间线 -->
-              <h2 style="margin: 1rem 0;"><Icon type="md-time" />  {{ $t('detail.info.timeLine', { msg: 'timeLine' })}}</h2>
-              <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="l in timelineList" :key="l.createDatetime">
+        <Row :gutter="20" type="flex">
+          <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 19, push: 1}" order="2" class="tabs-style">
+            <Tabs type="card">
+              <TabPane :label="$t('detail.info.timeLine', { msg: 'timeLine' })">
+                <div>
+                  <!-- 时间线 -->
+                  <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="l in timelineList" :key="l.createDatetime">
+                    <div v-if="l.type === 'report'" class="timeline-content">
+                      <div class="timeline-time">
+                        <Time :time="l.createDatetime"></Time>
 
-                <div v-if="l.type === 'report'" class="timeline-content">
-                  <div class="timeline-time">
-                    <Time :time="l.createDatetime"></Time>
+                        <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+                          <!-- 管理员 -->
+                          <Tag v-if="l.privilege === 'admin'" color="success">
+                            {{ $t('detail.info.administrator', { msg: 'administrator' })}}
+                          </Tag>
+                          <b>{{l.username}}</b>
+                        </router-link>
+                        <!-- 举报 -->
+                        {{ $t('detail.info.report', { msg: 'report' })}}
 
-                    <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
-                      <!-- 管理员 -->
-                      <Tag v-if="l.privilege === 'admin'" color="success">
-                        {{ $t('detail.info.administrator', { msg: 'administrator' })}}
-                      </Tag>
-                      <b>{{l.username}}</b>
-                    </router-link>
-                    <!-- 举报 -->
-                    {{ $t('detail.info.report', { msg: 'report' })}}
+                        <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
+                          {{ l.cheaterGameName }}
+                        </router-link>
 
-                    <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
-                      {{ l.cheaterGameName }}
-                    </router-link>
+                        <!-- 在 -->
+                        {{ $t('detail.info.inGame', { msg: 'inGame' })}}
 
-                    <!-- 在 -->
-                    {{ $t('detail.info.inGame', { msg: 'inGame' })}}
+                        <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
+                          {{l.game}}
+                        </router-link>
 
-                    <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
-                      {{l.game}}
-                    </router-link>
+                        <!-- 游戏中 -->
+                        {{ $t('detail.info.gaming', { msg: 'gaming' })}}
 
-                    <!-- 游戏中 -->
-                    {{ $t('detail.info.gaming', { msg: 'gaming' })}}
+                        <b>
+                          {{convertCheatMethods(l.cheatMethods || '')}}
+                        </b>
+                      </div>
 
-                    <b>
-                      {{convertCheatMethods(l.cheatMethods || '')}}
-                    </b>
+                      <p v-if="l.bilibiliLink">
+                        <!-- 游戏中 -->
+                        <Tag color="primary">
+                          {{ $t('detail.info.videoLink', { msg: 'videoLink' })}}
+                        </Tag>
+                        <a :href="l.bilibiliLink" target="_blank">{{ l.bilibiliLink }}</a>
+                      </p>
+                      <div v-if="l.description" v-html="l.description" class="description">
+                      </div>
+
+                      <p v-if="isLogin">
+                        <!-- 回复 -->
+                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">
+                          {{ $t('detail.info.reply', { msg: 'reply' })}}
+                        </Button>
+                      </p>
+                    </div>
+
+                    <div v-if="l.type === 'verify'" class="timeline-content bookmark" :id="`user-verify-cheater-${l.id}`">
+                      <div class="timeline-time">
+                        <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
+                        <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+                          <Tag v-if="l.privilege === 'admin'" color="success">
+                            {{ $t('detail.info.administrator', { msg: 'administrator' })}}
+                          </Tag>
+                          <b>{{l.username}}</b>
+                        </router-link>
+                        <!-- 认为 -->
+                        {{ $t('detail.info.judge', { msg: 'judge' })}}
+
+                        <Tag color="warning">
+                          {{ handleStatus(l.status) }}
+                        </Tag>
+
+                        <span v-if="l.cheatMethods">
+                          ，
+                          {{ $t('detail.info.cheatMethod', { msg: 'cheatMethod' })}}
+
+                          <b>
+                            {{convertCheatMethods(l.cheatMethods || '')}}
+                          </b>
+                        </span>
+                      </div>
+
+                      <div v-html="l.suggestion" class="description"></div>
+
+                      <p v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)">
+                        <a href="#"
+                           @click.prevent.stop="doConfirm"
+                           :data-user-verify-cheater-id="l.id"
+                           :data-cheat-methods="l.cheatMethods"
+                           :data-user-verify-cheater-username="l.username">
+
+                          <Icon type="md-thumbs-up" />
+                          <!-- 同意实锤 -->
+                          {{ $t('detail.info.agreeJudgement', { msg: 'agreeJudgement' })}}
+                        </a>
+                      </p>
+
+                      <p v-if="isLogin">
+                        <!-- 回复 -->
+                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">
+                          {{ $t('detail.info.reply', { msg: 'reply' })}}
+                        </Button>
+                      </p>
+                    </div>
+
+                    <div v-if="l.type === 'confirm'" class="timeline-content">
+                      <div class="timeline-time">
+                        <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
+
+                        <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+                          <Tag v-if="l.privilege === 'admin'" color="success">
+                            {{ $t('detail.info.administrator', { msg: 'administrator' })}}
+                          </Tag>
+                          <b>{{l.username}}</b>
+                        </router-link>
+                        <!-- 同意某人某条实锤 -->
+                        {{ $t('detail.info.agreeWith', { msg: 'agreeWith' })}}
+                        <a @click.stop.prevent="jumpToBookmark" :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
+                          # {{ $t('detail.info.thisChoice', { msg: 'thisChoice' })}}
+                        </a>
+                        <!--作弊方式 -->
+                        ，{{ $t('detail.info.cheatMethod', { msg: 'cheatMethod' })}}
+
+                        <b>
+                          {{ convertCheatMethods(l.cheatMethods || '') }}
+                        </b>
+                      </div>
+
+                      <p v-if="isLogin">
+                        <!-- 回复 -->
+                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">
+                          {{ $t('detail.info.reply', { msg: 'reply' })}}
+                        </Button>
+                      </p>
+                    </div>
+
+                    <div v-if="l.type === 'reply'" class="timeline-content">
+                      <div class="timeline-time">
+                        <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
+
+                        <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
+                          <Tag v-if="l.fooPrivilege === 'admin'" color="success">
+                            {{ $t('detail.info.administrator', { msg: 'administrator' })}}
+                          </Tag>
+                          <b>{{l.foo}}</b>
+                        </router-link>
+                        {{ $t('detail.info.reply', { msg: 'reply' })}}
+                        <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.barUId}`}}">
+
+                          <Tag v-if="l.barPrivilege === 'admin'" color="success">
+                            {{ $t('detail.info.administrator', { msg: 'administrator' })}}
+                          </Tag>
+                          <b>{{l.bar}}</b>
+                        </router-link>
+                      </div>
+
+                      <div v-html="l.content" class="description"></div>
+
+                      <p v-if="isLogin">
+                        <!-- 回复 -->
+                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">
+                          {{ $t('detail.info.reply', { msg: 'reply' })}}
+                        </Button>
+                      </p>
+                    </div>
+
+                  </TimelineItem>
+                  <Page :page-size="limit" show-total :current="page" @on-change="handlePageChange" :total="total" class="page" size="small" />
+                  <br>
+                  <div v-if="isLogin">
+                    <!-- 回复操作说明 -->
+                    <Alert type="warning" show-icon>
+                      <span>{{ $t('detail.info.replyManual1', { msg: 'replyManual1' })}}</span>
+                      <b><a href="https://sm.ms/" target="_blank"><span>{{ $t('detail.info.uploadPicButton', { msg: 'uploadPicButton' })}}</span></a></b>，
+                      <span>{{ $t('detail.info.replyManual2', { msg: 'replyManual2' })}}</span>
+                    </Alert>
+                    <Form :label-width="80" style="position: relative;">
+                      <Input @on-keydown="handleCmdEnter($event, 'reply')"
+                             v-model="reply.content"
+                             type="textarea"
+                             :autosize="{minRows: 5}"
+                             placeholder="What's your opinion?" />
+
+                      <p align="right">
+                        <Button type="primary" :loading="replySpinShow" @click.stop.prevent="doReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</Button>
+                      </p>
+                    </Form>
                   </div>
-
-                  <p v-if="l.bilibiliLink">
-                    <!-- 游戏中 -->
-                    <Tag color="primary">
-                      {{ $t('detail.info.videoLink', { msg: 'videoLink' })}}
-                    </Tag>
-                    <a :href="l.bilibiliLink" target="_blank">{{ l.bilibiliLink }}</a>
-                  </p>
-                  <div v-if="l.description" v-html="l.description" class="description">
-                  </div>
-
-                  <p v-if="isLogin">
-                    <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</a>
-                  </p>
+                  <Alert type="warning" show-icon v-else>
+                    <template slot="desc">
+                      {{ $t('detail.info.replyManual3', { msg: 'replyManual3' })}}
+                    </template>
+                  </Alert>
                 </div>
 
-                <div v-if="l.type === 'verify'" class="timeline-content bookmark" :id="`user-verify-cheater-${l.id}`">
-                  <div class="timeline-time">
-                    <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
-                    <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+                <!-- 管理员面板 -->
+                <div v-if="isAdmin">
+                  <Divider>{{ $t('detail.info.adminConsole', { msg: 'adminConsole' })}}</Divider>
+                  <p class="hint">{{ $t('detail.info.adminManual1', { msg: 'adminManual1' })}}</p>
+                  <p class="hint">{{ $t('detail.info.adminManual2', { msg: 'adminManual2' })}}</p>
 
-                      <Tag v-if="l.privilege === 'admin'" color="success">
-                        {{ $t('detail.info.administrator', { msg: 'administrator' })}}
-                      </Tag>
-                      <b>{{l.username}}</b>
-                    </router-link>
-                    <!-- 认为 -->
-                    {{ $t('detail.info.judge', { msg: 'judge' })}}
+                  <h2 style="margin: 1rem 0;">{{ $t('detail.info.judgement', { msg: 'judgement' })}}</h2>
 
-                    <Tag color="warning">
-                      {{ handleStatus(l.status) }}
-                    </Tag>
+                  <Form :label-width="80" ref='verifyForm' style="position: relative;">
+                    <FormItem label="Opinion">
+                      <Select v-model="verify.status">
+                        <!-- 判断选项 -->
+                        <Option value="1">{{ $t('detail.info.choice1', { msg: 'choice1' })}}</Option>
+                        <Option value="2">{{ $t('detail.info.choice2', { msg: 'choice2' })}}</Option>
+                        <Option value="3">{{ $t('detail.info.choice3', { msg: 'choice3' })}}</Option>
+                        <Option value="4">{{ $t('detail.info.choice4', { msg: 'choice4' })}}</Option>
+                      </Select>
+                    </FormItem>
 
-                    <span v-if="l.cheatMethods">
-              ，
-              {{ $t('detail.info.cheatMethod', { msg: 'cheatMethod' })}}
+                    <FormItem v-show="verify.status === '1'" label="CheatMethod">
+                      <CheckboxGroup v-model="verify.checkbox">
+                        <Checkbox v-for="method in cheatMethodsGlossary" :key="method.value" :label="method.value">
+                          {{$t(`cheatMethods.${method.value}`)}}
+                        </Checkbox>
+                      </CheckboxGroup>
+                    </FormItem>
 
-              <b>
-                {{convertCheatMethods(l.cheatMethods || '')}}
-              </b>
-            </span>
+                    <FormItem label="Reason">
+                      <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="Write something" />
+                    </FormItem>
+
+                    <FormItem>
+                      <Button type="primary" @click.stop.prevent="doVerify">{{ $t('detail.info.commit', { msg: 'commit' })}}</Button>
+                    </FormItem>
+
+                    <Spin size="large" fix v-show="verifySpinShow"></Spin>
+                  </Form>
+                </div>
+
+              </TabPane>
+              <TabPane :label="$t('detail.info.dealRecord', { msg: 'dealRecord' })">
+                <!-- 管理员处理历史 -->
+                <div style="display: flex; flex-direction: column; position: relative;">
+                  <div style="margin-top: .4rem;">
+                    <table>
+                      <thead>
+                      <tr>
+                        <td><b>Operating Time</b></td>
+                        <td><b>Action</b></td>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                    </table>
                   </div>
-
-                  <div v-html="l.suggestion" class="description"></div>
-
-                  <p v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)">
-                    <a href="#"
-                       @click.prevent.stop="doConfirm"
-                       :data-user-verify-cheater-id="l.id"
-                       :data-cheat-methods="l.cheatMethods"
-                       :data-user-verify-cheater-username="l.username">
-
-                      <Icon type="md-thumbs-up" />
-                      <!-- 同意实锤 -->
-                      {{ $t('detail.info.agreeJudgement', { msg: 'agreeJudgement' })}}
+                  <Spin size="large" fix v-show="updateUserInfospinShow"></Spin>
+                </div>
+              </TabPane>
+              <TabPane :label="$t('detail.info.gameScores', { msg: 'gameScores' })">
+                <!-- 战绩链接 -->
+                <div v-show="cheater.originId">
+                  <p v-for="g in games" :key="g.game">
+                    <Tag>
+                      {{g.game}}
+                    </Tag>
+                    <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">
+                      battlefieldtracker
+                    </a>
+                    <Divider type="vertical"  v-show="`${g.game}` === 'bf1'" />
+                    <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">
+                      bf1stats
+                    </a>
+                    <Divider type="vertical"  v-show="`${g.game}` === 'bfv'" />
+                    <a v-show="`${g.game}` === 'bfv'" target="_blank" :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">
+                      battlefieldtracker
+                    </a>
+                    <Divider type="vertical" />
+                    <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originId}`">
+                      247fairplay
                     </a>
                   </p>
 
-                  <p v-if="isLogin">
-                    <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</a>
-                  </p>
-                </div>
-
-                <div v-if="l.type === 'confirm'" class="timeline-content">
-                  <div class="timeline-time">
-                    <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
-
-                    <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
-                      <Tag v-if="l.privilege === 'admin'" color="success">
-                        {{ $t('detail.info.administrator', { msg: 'administrator' })}}
-                      </Tag>
-                      <b>{{l.username}}</b>
-                    </router-link>
-                    <!-- 同意某人某条实锤 -->
-                    {{ $t('detail.info.agreeWith', { msg: 'agreeWith' })}}
-                    <a @click.stop.prevent="jumpToBookmark" :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
-                      # {{ $t('detail.info.thisChoice', { msg: 'thisChoice' })}}
-                    </a>
-                    <!--作弊方式 -->
-                    ，{{ $t('detail.info.cheatMethod', { msg: 'cheatMethod' })}}
-
-                    <b>
-                      {{ convertCheatMethods(l.cheatMethods || '') }}
-                    </b>
+                  <div>
+                    <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
+                    <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">bf1tracker武器截图</a>
+                    <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
                   </div>
-
-                  <p v-if="isLogin">
-                    <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</a>
-                  </p>
                 </div>
-
-                <div v-if="l.type === 'reply'" class="timeline-content">
-                  <div class="timeline-time">
-                    <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
-
-                    <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
-
-                      <Tag v-if="l.fooPrivilege === 'admin'" color="success">
-                        {{ $t('detail.info.administrator', { msg: 'administrator' })}}
-                      </Tag>
-                      <b>{{l.foo}}</b>
-                    </router-link>
-                    {{ $t('detail.info.reply', { msg: 'reply' })}}
-                    <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.barUId}`}}">
-
-                      <Tag v-if="l.barPrivilege === 'admin'" color="success">
-                        {{ $t('detail.info.administrator', { msg: 'administrator' })}}
-                      </Tag>
-                      <b>{{l.bar}}</b>
-                    </router-link>
-                  </div>
-
-                  <div v-html="l.content" class="description"></div>
-
-                  <p v-if="isLogin">
-                    <a href="#" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</a>
-                  </p>
-                </div>
-
-              </TimelineItem>
-              <Page :page-size="limit" show-total :current="page" @on-change="handlePageChange" :total="total" class="page" size="small" />
-            </div>
+              </TabPane>
+            </Tabs>
           </Col>
-          <Col span="6" pull="18">
-            <Affix :offset-top="50">
-              <div style="display: flex; flex-direction: column; position: relative;">
-                <div style="margin-top: .4rem;">
-                  <!-- 管理员处理历史 -->
-                  <h2 style="margin: 1rem 0;"><Icon type="md-bookmark" />{{ $t('detail.info.dealRecord', { msg: 'dealRecord' })}}</h2>
-
-                  <table>
-                    <thead>
-                    <tr>
-                      <td><b>Operating Time</b></td>
-                      <td><b>Action</b></td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                  </table>
-                </div>
-                <Spin size="large" fix v-show="updateUserInfospinShow"></Spin>
-              </div>
+          <Col :xs="{span: 24, push: 1}" :lg="{span: 5, push: 0}" order="1">
+            <Affix :offset-top="80">
+              <Steps :current="detailStepsIndex" direction="vertical">
+                <Step title="首次提交" content="首次提交作弊玩家"></Step>
+                <Step title="补充" content="补充资料"></Step>
+                <Step title="定案" content="最终结果"></Step>
+              </Steps>
             </Affix>
-
           </Col>
         </Row>
-
-        <div v-if="isLogin">
-		      <!-- 回复操作说明 -->
-          <p class="hint"><span>{{ $t('detail.info.replyManual1', { msg: 'replyManual1' })}}</span><a href="https://sm.ms/" target="_blank"><span>{{ $t('detail.info.uploadPicButton', { msg: 'uploadPicButton' })}}</span> </a>，<span>{{ $t('detail.info.replyManual2', { msg: 'replyManual2' })}}</span></p>
-          <Form :label-width="80" style="position: relative;">
-            <p>
-              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="What's your opinion?" />
-            </p>
-            <Button type="primary" @click.stop.prevent="doReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</Button>
-
-            <Spin size="large" fix v-show="replySpinShow"></Spin>
-          </Form>
-        </div>
 
         <div v-if="cheater.status === '1'">
           <Divider />
@@ -344,52 +408,7 @@
 
         <br>
 
-        <Alert type="warning" show-icon>
-          <template slot="desc">
-            {{ $t('detail.info.replyManual3', { msg: 'replyManual3' })}}
-          </template>
-        </Alert>
-
-        <!-- 管理员 -->
-        <div v-if="isAdmin">
-          <Divider>{{ $t('detail.info.adminConsole', { msg: 'adminConsole' })}}</Divider>
-          <p class="hint">{{ $t('detail.info.adminManual1', { msg: 'adminManual1' })}}</p>
-          <p class="hint">{{ $t('detail.info.adminManual2', { msg: 'adminManual2' })}}</p>
-
-          <h2 style="margin: 1rem 0;">{{ $t('detail.info.judgement', { msg: 'judgement' })}}</h2>
-
-          <Form :label-width="80" ref='verifyForm' style="position: relative;">
-            <FormItem label="Opinion">
-              <Select v-model="verify.status">
-			          <!-- 判断选项 -->
-                <Option value="1">{{ $t('detail.info.choice1', { msg: 'choice1' })}}</Option>
-                <Option value="2">{{ $t('detail.info.choice2', { msg: 'choice2' })}}</Option>
-                <Option value="3">{{ $t('detail.info.choice3', { msg: 'choice3' })}}</Option>
-                <Option value="4">{{ $t('detail.info.choice4', { msg: 'choice4' })}}</Option>
-              </Select>
-            </FormItem>
-
-            <FormItem v-show="verify.status === '1'" label="CheatMethod">
-              <CheckboxGroup v-model="verify.checkbox">
-                <Checkbox v-for="method in cheatMethodsGlossary" :key="method.value" :label="method.value">
-                  {{$t(`cheatMethods.${method.value}`)}}
-                </Checkbox>
-              </CheckboxGroup>
-            </FormItem>
-
-            <FormItem label="Reason">
-              <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="Write something" />
-            </FormItem>
-
-            <FormItem>
-              <Button type="primary" @click.stop.prevent="doVerify">{{ $t('detail.info.commit', { msg: 'commit' })}}</Button>
-            </FormItem>
-
-            <Spin size="large" fix v-show="verifySpinShow"></Spin>
-          </Form>
-        </div>
-
-       <!-- 小回复窗口 -->
+        <!-- 小回复窗口 -->
         <Modal
           v-model="replyModal"
           title="Reply"
@@ -464,6 +483,8 @@ export default {
       cheatMethodsGlossary,
 
       updateUserInfospinShow: false,
+
+      detailStepsIndex: 0
     }
   },
   watch: {
@@ -811,57 +832,45 @@ export default {
 </script>
 
 <style lang="scss">
-  .cheater-desc {
-    max-width: 100%;
-    width: 34rem;
-  }
-  .description {
-    color: rgba(0, 0, 0, 0.8);
-    font-size: .8rem;
-    line-height: 1.4rem;
+  // tabs style
+  .tabs-style {
+    .ivu-tabs-bar {
+      border-bottom: 1px solid #f2f2f2;
+      margin-bottom: 0;
+    }
+    .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab{
+      border-top: 1px solid #f2f2f2 !important;
+      border-left: 1px solid #f2f2f2 !important;
+      border-right: 1px solid #f2f2f2 !important;
+      color: #000;
+      background: transparent !important;
+    }
 
-    img, video {
+    .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active{
+      border-top: 1px solid #f2f2f2 !important;
+      border-left: 1px solid #f2f2f2 !important;
+      border-right: 1px solid #f2f2f2 !important;
+      background: #fff !important;
+    }
+
+    .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active:before{
+      content: '';
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: #fff13c;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .ivu-tabs-tabpane {
+      transform: translateX(0%) translateZ(0px);
+      background: #fff;
+      padding: 20px;
       border: 1px solid #f2f2f2;
-      max-width: 100%;
-      max-height: 200px;
-      margin-right: 10px;
-      margin-bottom: 10px;
+      border-top: 1px solid #fff !important;
     }
   }
-
-  .timeline-time {
-    color: #00000073;
-  }
-  .ivu-time {
-    margin-right: .6rem;
-  }
-  .timeline-content {
-    position: relative;
-
-    // force to wrap
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-  }
-  .ivu-timeline-item {
-    padding: 1rem 0;
-  }
-  .ivu-timeline-item-content {
-    padding: 0 .6rem 0 1.2rem;
-  }
-  .ivu-timeline-item-tail {
-    top: 1rem;
-  }
-
-  /*https://stackoverflow.com/a/38106970/875788*/
-  /*.bookmark::before {*/
-    /*display: block;*/
-    /*content: " ";*/
-    /*margin-top: -4rem;*/
-    /*height: 4rem;*/
-    /*visibility: hidden;*/
-  /*}*/
-
-  /*let element = document.querySelector('#user-verify-cheater-7')*/
-  /*element.offsetTop - element.scrollTop + element.clientTop*/
 </style>
 

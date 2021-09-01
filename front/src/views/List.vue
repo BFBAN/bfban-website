@@ -10,81 +10,109 @@
       <!--id搜索-->
 
       <p>
-        <RadioGroup v-model="gameName" @on-change="handleChanges" type="button" button-style="solid">
-          <Radio label="bf1"><span>{{$t("list.filters.game.bf1")}}({{getTotalNum('bf1')}})</span></Radio>
-          <Radio label="bfv"><span>{{$t("list.filters.game.bfv")}}({{getTotalNum('bfv')}})</span></Radio>
+        <RadioGroup v-model="gameName" @on-change="handleChanges" type="button" size="large">
+            <Radio label="bf1">
+              <Badge :count="getTotalNum('bf1')" :overflow-count="90000">
+                <span>{{$t("list.filters.game.bf1")}}</span>
+              </Badge>
+            </Radio>
+            <Radio label="bfv">
+              <Badge :count="getTotalNum('bfv')" :overflow-count="90000">
+                <span>{{$t("list.filters.game.bfv")}}</span>
+              </Badge>
+            </Radio>
         </RadioGroup>
-      </p>
-      <p class="mobile-hide">
-        <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button" button-style="solid">
-          <Radio label="100"><span>{{$t("list.filters.status.all")}}({{getAllStatusNum}})</span></Radio>
-          <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
-            <span>{{ status.label }}({{ getStatusNum(status.value)}})</span>
-          </Radio>
-        </RadioGroup>
-      </p>
-
-
-      <p>
+        <Divider type="vertical"/>
         <span class="mobile-hide">
           <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报时间范围" style="width: 200px"></DatePicker>
           <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新时间范围" style="width: 200px"></DatePicker>
         </span>
-
         <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
           <Option value="100">{{$t("list.filters.status.all")}}({{getAllStatusNum}})</Option>
           <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">{{ status.label }}({{ getStatusNum(status.value)}})</Option>
         </Select>
-
+        <Divider type="vertical"/>
         <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
           <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </p>
+      <p class="mobile-hide">
+        <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button" size="large" vertical>
+          <Radio label="100"><span>{{$t("list.filters.status.all")}}({{getAllStatusNum}})</span></Radio>
+          <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
+            <Badge :count="getStatusNum(status.value)">
+              <span>{{ status.label }}</span>
+            </Badge>
+          </Radio>
+        </RadioGroup>
 
-      <p>
-        <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">{{$t("list.filters.refresh")}}</Button>
+        <Button icon="ios-refresh" size="large" @click.prevent.stop="handleRefresh">{{$t("list.filters.refresh")}}</Button>
       </p>
 
+      <br>
 
       <div class="list">
         <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange" @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small" />
-
+        <Spin size="large" fix v-show="spinShow"></Spin>
+        <br>
         <ul>
-          <li>
-            <span><b>游戏ID</b></span>
-            <span class="mobile-hide"><b>举报时间</b></span>
-            <span><b>更新时间</b></span>
-          </li>
-          <li v-for="d in data" :key="d.originUserId">
-          <span style="display: flex; align-items: center;">
-            <img :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'" alt="avatar" style="width: 2.3rem;
-            height: 2.3rem;
-            border-radius: 2.3rem;
-            margin-right: .4rem;">
-            <div style="display: flex; flex-direction: column;">
-              <div style="height: 1.6rem;">
-                <router-link :to="{name: 'cheater', params: {ouid: `${d.originUserId}` }}">{{d.originId}}</router-link>
-                <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
-              </div>
-              <span>
-              <Icon type="md-eye" /> {{ d.n }}
-              <Icon type="md-chatboxes" /> {{ d.commentsNum }}
-            </span>
-            </div>
+<!--          <li>-->
+<!--            <span><b>游戏ID</b></span>-->
+<!--            <span class="mobile-hide"><b>举报时间</b></span>-->
+<!--            <span><b>更新时间</b></span>-->
+<!--          </li>-->
+          <Block v-for="d in data" :key="d.originUserId">
+            <Card>
+              <Row>
+                <Col span="2">
+                  <span style="display: flex; align-items: center;">
+                    <img :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'" alt="avatar" style="
+                      width: 3rem;
+                      height: 3rem;
+                      border-radius: 2.3rem;">
+                  </span>
+                </Col>
+                <Col span="18">
+                  <div style="display: flex; flex-direction: column;">
+                    <div style="height: 1.6rem;">
+                      <router-link :to="{name: 'cheater', params: {ouid: `${d.originUserId}` }}">
+                        <h2>
+                          {{d.originId}}
+                          <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
+                        </h2>
+                      </router-link>
+                    </div>
+                  </div>
 
+                  举报时间
+                  <Time v-if="d.createDatetime" :time="d.createDatetime" />
+                  <Divider type="vertical"/>
+                  更新时间
+                  <Time v-if="d.updateDatetime" :time="d.updateDatetime" />
+                </Col>
+                <Col span="3">
+                  <Row type="flex"  justify="center" align="middle" style="height: 50px">
+                    <Col span="12" align="center" class="list">
+                      <Icon type="md-eye" size="15" class="item-icon" />
+                      <span class="item-text">{{ d.n }}</span>
+                    </Col>
+                    <Col span="1" align="center">
+                      <Divider type="vertical"/>
+                    </Col>
+                    <Col span="10" align="center">
+                      <Icon type="md-chatboxes" size="15" class="item-icon" />
+                      <span class="item-text">{{ d.commentsNum }}</span>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Card>
 
-          </span>
-          <span class="mobile-hide">
-            <Time v-if="d.createDatetime" :time="d.createDatetime" />
-          </span>
-          <span>
-            <Time v-if="d.updateDatetime" :time="d.updateDatetime" />
-          </span>
-          </li>
+            <br/>
+          </Block>
         </ul>
 
         <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange" @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small" />
-        <Spin size="large" fix v-show="spinShow"></Spin>
       </div>
     </div>
   </div>

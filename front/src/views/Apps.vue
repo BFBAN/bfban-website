@@ -28,11 +28,13 @@
       <Col span="20" class="apps-list">
         <block v-for="(item, i) in appsConf.list" >
           <Card class="apps-item" v-if="appItemIsShow(i)">
-            <h2>{{item.title}}</h2>
+            <Badge :text="!!item.hot ? 'hot' : ''" :offset="[15, 20]">
+              <h2>{{item.title}}</h2>
+            </Badge>
             <div>
               <Tag color="primary" v-for="(tagitem, tagi) in item.tag">{{tagitem}}</Tag>
             </div>
-            <p>{{item.describe}}</p>
+            <p style="overflow: hidden">{{item.describe}}</p>
             <div>
               <Divider />
               <Button type="primary" :disabled="!item.get">
@@ -49,86 +51,86 @@
 </template>
 
 <script>
-export default {
-  name: "Apps",
-  data () {
-    return {
-      appsConf: {},
-      indeterminate: true,
-      checkAll: false,
-      checkAllGroup: []
-    }
-  },
-  created () {
-    this.getAppsList();
-  },
-  methods: {
-    // 获取apps列表
-    getAppsList () {
-      axios({
-        method: 'get',
-        url: 'assets/json/appslist.json',
-      })
-        .then(res => {
+  import {http} from '/assets/js/index';
+
+  export default {
+    name: "Apps",
+    data () {
+      return {
+        appsConf: {},
+        indeterminate: true,
+        checkAll: false,
+        checkAllGroup: []
+      }
+    },
+    created () {
+      this.getAppsList();
+    },
+    methods: {
+      // 获取apps列表
+      getAppsList () {
+        http.request('/assets/json/appslist.json', {
+          method: http.GET
+        }).then(res => {
           this.appsConf = res.data;
           this.checkAllGroup = this.getAppsTagValue();
         });
-    },
+      },
 
-    // 取apptags map内置值
-    getAppsTagValue (valueName = 'value') {
-      let checkAllGroup = [];
-      for (let i of this.appsConf.tags) {
-        checkAllGroup.push(i[valueName]);
-      }
-
-      return checkAllGroup;
-    },
-
-    // 是否可见
-    appItemIsShow (index) {
-      let that = this;
-      let _is = false;
-
-      for (let indexTag in this.appsConf.list[index].tag) {
-        if (that.checkAllGroup.indexOf( this.appsConf.list[index].tag[indexTag] ) >= 0) {
-          _is = true;
+      // 取apptags map内置值
+      getAppsTagValue (valueName = 'value') {
+        let checkAllGroup = [];
+        for (let i of this.appsConf.tags) {
+          checkAllGroup.push(i[valueName]);
         }
-      }
-      return _is;
-    },
 
-    // 全选
-    handleCheckAll () {
-      if (this.indeterminate) {
-        this.checkAll = false;
-      } else {
-        this.checkAll = !this.checkAll;
-      }
-      this.indeterminate = false;
+        return checkAllGroup;
+      },
 
-      if (this.checkAll) {
-        this.checkAllGroup = this.getAppsTagValue();
-      } else {
-        this.checkAllGroup = [];
-      }
-    },
+      // 是否可见
+      appItemIsShow (index) {
+        let that = this;
+        let _is = false;
 
-    // 筛选
-    checkAllGroupChange (data) {
-      if (data.length === 3) {
+        for (let indexTag in this.appsConf.list[index].tag) {
+          if (that.checkAllGroup.indexOf( this.appsConf.list[index].tag[indexTag] ) >= 0) {
+            _is = true;
+          }
+        }
+        return _is;
+      },
+
+      // 全选
+      handleCheckAll () {
+        if (this.indeterminate) {
+          this.checkAll = false;
+        } else {
+          this.checkAll = !this.checkAll;
+        }
         this.indeterminate = false;
-        this.checkAll = true;
-      } else if (data.length > 0) {
-        this.indeterminate = true;
-        this.checkAll = false;
-      } else {
-        this.indeterminate = false;
-        this.checkAll = false;
+
+        if (this.checkAll) {
+          this.checkAllGroup = this.getAppsTagValue();
+        } else {
+          this.checkAllGroup = [];
+        }
+      },
+
+      // 筛选
+      checkAllGroupChange (data) {
+        if (data.length === 3) {
+          this.indeterminate = false;
+          this.checkAll = true;
+        } else if (data.length > 0) {
+          this.indeterminate = true;
+          this.checkAll = false;
+        } else {
+          this.indeterminate = false;
+          this.checkAll = false;
+        }
       }
     }
   }
-}
 </script>
 
 <style lang="scss">

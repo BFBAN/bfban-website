@@ -43,41 +43,44 @@
           <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signin'}">
             <Icon type="md-log-in" size="30" />
           </router-link>
-          <Divider type="vertical" v-show="!isLogin" />
           <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signup'}">
             <Icon type="md-person-add" size="30" />
           </router-link>
 
-          <Badge dot v-if="isLogin" >
-            <Dropdown placement="bottom-start">
-              <a href="javascript:void(0)">
-                <Avatar>{{ currentUser.username[0] }}</Avatar>
-                {{ currentUser.username }}
-              </a>
-              <DropdownMenu slot="list">
-                <DropdownItem>
-                  <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">个人中心</router-link>
-                </DropdownItem>
-                <DropdownItem>
-                  <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">{{$t("header.dashboard")}}</router-link>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </Badge>
-          <Divider type="vertical" v-if="isLogin" />
+          <Dropdown placement="bottom-start" v-if="isLogin">
+            <a href="javascript:void(0)">
+              <Avatar>{{ currentUser.username[0] }}</Avatar>
+              {{ currentUser.username }}
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem>
+                <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">个人中心</router-link>
+              </DropdownItem>
+              <DropdownItem>
+                <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">{{$t("header.dashboard")}}</router-link>
+              </DropdownItem>
+              <Dropdown-item divided v-show="isLogin">
+                <a @click.stop.prevent="signout">
+                  <Icon type="md-log-out"></Icon>
+                  {{$t("header.signout")}}
+                </a>
+              </Dropdown-item>
+            </DropdownMenu>
+          </Dropdown>
           <router-link class="nav-username desktop-hide" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
             <Badge dot>
               <Icon size="30" type="md-person" />
             </Badge>
           </router-link>
 
-          <a class="nav-signout mobile-hide" v-show="isLogin" href="#" @click.stop.prevent="signout">
-            <Icon type="md-log-out"></Icon>
-            {{$t("header.signout")}}
-          </a>
           <a class="nav-signout desktop-hide" v-show="isLogin" href="#" @click.stop.prevent="signout">
             <Icon type="md-log-out" size="30"></Icon>
           </a>
+
+          <Divider type="vertical"/>
+          <router-link :to="{name: 'apps'}">
+            <Icon type="md-apps" size="30" />
+          </router-link>
         </div>
       </div>
 
@@ -114,72 +117,73 @@
   import ajax from '@/mixins/ajax';
 
   export default {
-  data() {
-    return {
-      searchModal: false,
-      searchVal: '',
-      cheaters: [],
+    data() {
+      return {
+        searchModal: false,
+        searchVal: '',
+        cheaters: [],
 
-      modalSpinShow: false,
-    }
-  },
-  methods: {
-    handleSearch() {
-      const val = this.searchVal.trim();
-
-      if (val === '') return false;
-
-      this.searchModal = true;
-      this.modalSpinShow = true;
-
-      ajax({
-        method: 'get',
-        url: `/search?id=${val}`,
-      })
-      .then((res) => {
-        this.modalSpinShow = false;
-
-        const d = res.data;
-        if (d.error === 0) {
-
-          const { cheaters } = d.data;
-          this.cheaters = cheaters;
-        }
-      })
+        modalSpinShow: false,
+      }
     },
-    signout() {
-      ajax({
-        method: 'get',
-        url: '/account/signout'
-      })
-      .then((res) => {
-        const d = res.data;
+    methods: {
+      handleSearch() {
+        const val = this.searchVal.trim();
 
-        if (d.error === 0) {
-          this.$store.dispatch('signout').then(() => {
-            this.$router.push('/');
+        if (val === '') return false;
 
-            this.$Message.success('注销成功');
-          })
-        }
-      })
-    }
-  },
-  computed: {
-    isLogin() {
-      return Boolean(this.$store.state.user);
+        this.searchModal = true;
+        this.modalSpinShow = true;
+
+        ajax({
+          method: 'get',
+          url: `/search?id=${val}`,
+        })
+        .then((res) => {
+          this.modalSpinShow = false;
+
+          const d = res.data;
+          if (d.error === 0) {
+
+            const { cheaters } = d.data;
+            this.cheaters = cheaters;
+          }
+        })
+      },
+      signout() {
+        ajax({
+          method: 'get',
+          url: '/account/signout'
+        })
+        .then((res) => {
+          const d = res.data;
+
+          if (d.error === 0) {
+            this.$store.dispatch('signout').then(() => {
+              this.$router.push('/');
+
+              this.$Message.success('注销成功');
+            })
+          }
+        })
+      }
     },
-    isAdmin() {
-      const user = this.$store.state.user;
+    computed: {
+      isLogin() {
+        return Boolean(this.$store.state.user);
+      },
+      isAdmin() {
+        const user = this.$store.state.user;
 
-      const is = user ? user.userPrivilege !== 'normal' : false;
-      return Boolean(is);
-    },
-    currentUser() {
-      return this.$store.state.user;
+        const is = user ? user.userPrivilege !== 'normal' : false;
+        return Boolean(is);
+      },
+      currentUser() {
+        console.log(this.$store);
+        return this.$store.state.user;
+      }
     }
   }
-}
 </script>
 
 <style lang="scss">

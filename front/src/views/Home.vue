@@ -3,19 +3,20 @@
     <div class="content">
       <div class="ivu-alert-with-banner home-banner" style="background-image: url('assets/images/index-bk.png')">
         <Row>
-          <Col span="8">
+          <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 8, offset: 0}">
             <h1 class="title"><Icon type="md-lock" /> 联BFBAN</h1>
             <h3>建立全球作弊玩家档案库，被世界各地服务器使用，杜绝恶意玩家:D</h3>
             <br>
             <p>成为我们一员 - 改变社区环境</p>
             <Divider />
 
-            <Button type="primary" size="large">注册用户</Button>
+            <router-link :to="{name: 'signup'}">
+              <Button type="primary" size="large">注册用户</Button>
+            </router-link>
             <Divider type="vertical" />
             <router-link :to="{name: 'about'}">
               <Button type="text" size="large"><Icon type="ios-help-circle-outline" />了解有那些社区已经加入</Button>
             </router-link>
-
 
             <Row :gutter="10" style="margin-top: 50px">
               <Col span="12">
@@ -31,6 +32,7 @@
                 </Card>
               </Col>
             </Row>
+            <br>
             <p>截止2018年11月4日</p>
 
           </Col>
@@ -41,7 +43,7 @@
       </div>
 
       <Row :gutter="40">
-        <Col span="8">
+        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
           <Card>
             <Row>
               <Col span="12">
@@ -56,7 +58,7 @@
             </Row>
           </Card>
         </Col>
-        <Col span="8">
+        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
           <Card>
             <Row>
               <Col span="12">
@@ -71,7 +73,7 @@
             </Row>
           </Card>
         </Col>
-        <Col span="8">
+        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
           <router-link :to="{name: 'apps'}">
             <Card>
               <Row>

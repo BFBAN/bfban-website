@@ -51,11 +51,11 @@
               </FormItem>
 
               <FormItem>
-                <Button @click.prevent.stop="handleSignin" long size="large" type="primary">{{$t('signin.form.submit')}}</Button>
+                <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">{{$t('signin.form.submit')}}</Button>
                 <router-link :to="{name: 'signup'}">{{$t('signin.form.submitHint')}}</router-link>
               </FormItem>
 
-              <Spin size="large" fix v-show="spinShow"></Spin>
+<!--              <Spin size="large" fix v-show="spinShow"></Spin>-->
             </Form>
           </Col>
         </Row>
