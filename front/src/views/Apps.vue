@@ -1,12 +1,18 @@
 <template>
   <div class="container apps">
+    <Breadcrumb>
+      <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+      <BreadcrumbItem>{{$t("home.howToUse.tools.main")}}</BreadcrumbItem>
+    </Breadcrumb>
+    <br>
+
     <div>
       <Row :gutter="30">
-        <Col span="12">
-          <h1>{{$t("home.howToUse.tools")}}</h1>
+        <Col span="20">
+          <h1>{{$t("home.howToUse.tools.main")}}</h1>
           <p>第三方集成BFBAN数据库工具</p>
         </Col>
-        <Col align="right">
+        <Col span="1" type="flex" align="right">
           <Button>提交你的应用</Button>
         </Col>
       </Row>
@@ -22,17 +28,17 @@
             @click.prevent.native="handleCheckAll">全选</Checkbox>
         </div>
         <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
-          <Checkbox :label="item.value" v-for="(item,i) in appsConf.tags"></Checkbox><br>
+          <Checkbox :label="item.value" v-for="item in appsConf.tags" :key="item.value"></Checkbox><br>
         </CheckboxGroup>
       </Col>
       <Col span="20" class="apps-list">
-        <block v-for="(item, i) in appsConf.list" >
-          <Card class="apps-item" v-if="appItemIsShow(i)">
+        <div v-for="item in appsConf.list" :key="item.title">
+          <Card class="apps-item" v-if="appItemIsShow(item)">
             <Badge :text="!!item.hot ? 'hot' : ''" :offset="[15, 20]">
               <h2>{{item.title}}</h2>
             </Badge>
             <div>
-              <Tag color="primary" v-for="(tagitem, tagi) in item.tag">{{tagitem}}</Tag>
+              <Tag color="primary" v-for="tagitem in item.tag || []" :key="tagitem.describe">{{tagitem}}</Tag>
             </div>
             <p style="overflow: hidden">{{item.describe}}</p>
             <div>
@@ -44,15 +50,13 @@
               <Button type="text" :disabled="!item.website"><a :href="item.website">网站</a></Button>
             </div>
           </Card>
-        </block>
+        </div>
       </Col>
     </Row>
   </div>
 </template>
 
 <script>
-  import {http} from '/assets/js/index';
-
   export default {
     name: "Apps",
     data () {
@@ -68,32 +72,34 @@
     },
     methods: {
       // 获取apps列表
-      getAppsList () {
-        http.request('/assets/json/appslist.json', {
-          method: http.GET
-        }).then(res => {
-          this.appsConf = res.data;
-          this.checkAllGroup = this.getAppsTagValue();
-        });
+      async getAppsList () {
+        this.appsConf = await import('/src/assets/appslist.json');
+        this.checkAllGroup = this.getAppsTagValue();
       },
 
       // 取apptags map内置值
       getAppsTagValue (valueName = 'value') {
         let checkAllGroup = [];
-        for (let i of this.appsConf.tags) {
-          checkAllGroup.push(i[valueName]);
+        for (let item of this.appsConf.tags) {
+          if (item)
+            checkAllGroup.push(item[valueName]);
         }
 
         return checkAllGroup;
       },
 
-      // 是否可见
+      /**
+       * 是否可见
+       * @param index this.appsConf
+       * @returns {boolean}
+       */
       appItemIsShow (index) {
         let that = this;
         let _is = false;
+        let list = index?.tag || [];
 
-        for (let indexTag in this.appsConf.list[index].tag) {
-          if (that.checkAllGroup.indexOf( this.appsConf.list[index].tag[indexTag] ) >= 0) {
+        for (let indexTag in list) {
+          if (that.checkAllGroup.indexOf( list[indexTag] ) >= 0) {
             _is = true;
           }
         }

@@ -1,6 +1,11 @@
 <template>
     <header>
       <div class="header-container container">
+        <img src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png"
+             width="40"
+             height="40"
+             alt="bfban logo"/>
+
         <div class="nav">
           <router-link class="mobile-hide link" :to="{name: 'home'}">
             {{ $t("header.index") }}
@@ -28,7 +33,6 @@
             <Icon size="24" type="md-cog" />
           </router-link>
         </div>
-
         <div class="search mobile-hide">
           <Input clearable search size="large" placeholder="支持搜索历史ID啦..." v-model="searchVal" @on-search="handleSearch" />
         </div>
@@ -86,9 +90,7 @@
 
       <Modal
         v-model="searchModal"
-        title="检索"
-        @on-ok="ok"
-        @on-cancel="cancel">
+        title="检索">
         <div style="position: relative">
           <p style="font-size: 1rem;">
             检索的ID为：{{searchVal}}
@@ -190,7 +192,6 @@
   header {
     width: 100%;
     height: auto;
-    position: fixed;
     padding: 10px 0;
     z-index: 1000;
     background-image: linear-gradient(rgba(0, 0, 0, 0.1), transparent);

@@ -1,35 +1,55 @@
 <template>
   <div class="container">
     <div class="content">
-      <div v-if="isCheaterExist" style="position: relative">
-
+      <Breadcrumb>
+        <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+        <BreadcrumbItem to="/cheaters">{{ $t("list.title") }}</BreadcrumbItem>
+        <BreadcrumbItem>玩家详情</BreadcrumbItem>
+      </Breadcrumb>
+      <br>
+      <Card v-if="isCheaterExist" dis-hover>
         <Row :gutter="20">
           <Col :xs="{span: 22}" :lg="{span: 4}">
             <div v-show="cheater.avatarLink" align="center">
               <!-- Origin头像 -->
-              <img :src="cheater.avatarLink" alt="avatar" width="150" height="150" :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })">
+              <Avatar shape="square" :src="cheater.avatarLink" size="150" :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })" />
             </div>
           </Col>
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 18, push: 2}">
             <div>
-              <h1 style="font-size: 1.6rem;">
-                {{ cheater.originId || 'user id' }}
+              <Row>
+                <Col span="20">
+                  <h1 style="font-size: 1.6rem;">
+                    {{ cheater.originId || 'user id' }}
 
-                <!-- 被举报的游戏 -->
-                <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })">
-                  <router-link v-for="g in games" :key="g.game" :to="{name: 'cheaters'}" >
-                    {{ g.game || 'game name' }}
-                  </router-link>
-                </Tag>
+                    <!-- 被举报的游戏 -->
+                    <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })">
+                      <router-link v-for="g in games" :key="g.game" :to="{name: 'cheaters'}" >
+                        {{ g.game || 'game name' }}
+                      </router-link>
+                    </Tag>
 
-                <Tag color="error">
-                  {{ handleStatus(cheater.status) || 'static load' }}
-                </Tag>
+                    <Tag color="error">
+                      {{ handleStatus(cheater.status) || 'static load' }}
+                    </Tag>
 
-                <Tag v-if="cheater.cheatMethods" color="warning">
-                  {{ convertCheatMethods(cheater.cheatMethods) }}
-                </Tag>
-              </h1>
+                    <Tag v-if="cheater.cheatMethods" color="warning">
+                      {{ convertCheatMethods(cheater.cheatMethods) }}
+                    </Tag>
+                  </h1>
+                </Col>
+                <Col span="4" align="right">
+                  <Poptip title="二维码" content="content" placement="right-end">
+                    <Icon type="md-qr-scanner" size="20" color="#535353"/>
+                    手机上查看
+
+                    <Alert show-icon slot="content">
+                      抱歉
+                      <template slot="desc">我们目前正在适配该功能.</template>
+                    </Alert>
+                  </Poptip>
+                </Col>
+              </Row>
 
               <span>id:  {{ cheater.originUserId || 'id' }}</span>
               <Divider type="vertical" />
@@ -47,7 +67,7 @@
               </Dropdown>
 
               <Poptip
-                @on-ok="updateCheaterInfo">
+                  @on-ok="updateCheaterInfo">
                 <div style="margin-top: .4rem;" slot="content">
                   <p class="hint">
                     <!-- 描述说明 -->
@@ -272,7 +292,7 @@
                     </div>
 
                   </TimelineItem>
-                  <Page :page-size="limit" show-total :current="page" @on-change="handlePageChange" :total="total" class="page" size="small" />
+                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small" />
                   <br>
                   <div v-if="isLogin">
                     <!-- 回复操作说明 -->
@@ -410,14 +430,15 @@
 
         <br>
 
+
         <!-- 小回复窗口 -->
         <Modal
-          v-model="replyModal"
-          title="Reply"
-          ok-text="Send"
-          cancel-text="Cancel"
-          @on-ok="doReply"
-          @on-cancel="cancelReply">
+            v-model="replyModal"
+            title="Reply"
+            ok-text="Send"
+            cancel-text="Cancel"
+            @on-ok="doReply"
+            @on-cancel="cancelReply">
           <div v-if="isLogin">
             <Form :label-width="80" ref='replyForm' style="position: relative;">
               <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="Say something" />
@@ -427,25 +448,25 @@
         </Modal>
 
         <Spin size="large" fix v-show="spinShow"></Spin>
-      </div>
+      </Card>
       <div v-else>404 不存在</div>
-
     </div>
+    <br>
   </div>
-
 </template>
 
 <script>
 import ajax from '@/mixins/ajax';
+import _ from "lodash";
 import {
-  checkIdExist,
   getCheaterStatusLabel,
   formatTextarea,
   convertDatetimeToUserTimeZone,
   cheatMethodsGlossary,
   convertCheatMethods,
   waitForAction,
-  replaceImgSrcToDataSrc
+  replaceImgSrcToDataSrc,
+  defaultImgProviderSrcToProxy
 } from "@/mixins/common";
 
 export default {
@@ -484,19 +505,25 @@ export default {
 
       cheatMethodsGlossary,
 
-      updateUserInfospinShow: false,
+      fastReply: {
+        content: ['stats', 'evidencePic', 'evidenceVid'],
+        selected: [],
+      },
 
-      detailStepsIndex: 0
+      updateUserInfospinShow: false,
     }
   },
   watch: {
     '$route': 'loadData',
+    'fastReply.selected': function() {
+      this.verify.suggestion = ''+this.fastReply.selected.map(i=>this.$t(`detail.info.fastReplies.${i}`));
+    }
   },
   created() {
     this.loadData();
   },
   updated() {
-    new LazyLoad({})
+    //new LazyLoad({})
   },
   methods: {
     loadData() {
@@ -539,9 +566,11 @@ export default {
 
         // img src => data-src
         reports = _.each(reports, (v) => {
+          v['description'] = defaultImgProviderSrcToProxy(v['description']);
           v['description'] = replaceImgSrcToDataSrc(v['description']);
         });
         replies = _.each(replies, (v, k, l) => {
+          v['content'] = defaultImgProviderSrcToProxy(v['content']);
           v['content'] = replaceImgSrcToDataSrc(v['content']);
         });
 
@@ -583,10 +612,17 @@ export default {
       const { originUserId } = this.cheater;
 
       if ( (status === '1' && cheatMethods === '') || suggestion.trim() === '') {
-        this.$Message.warning('请填写完整');
+        this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
-
+      if ( (status==='3' || status==='4') && suggestion.trim().length < 5 ) { // too short
+        this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
+        return false;
+      }
+      if( '0123456789abcedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_'.split('').indexOf(suggestion.trim()) != -1) { // one letter suggestion
+        this.$Message.warning(this.$i18n.t('detail.messages.dontDoIt')+suggestion);
+        return false;
+      }
       // JUST before ajax
       this.verifySpinShow = true;
       const {data: statusData} = await ajax({
@@ -601,7 +637,7 @@ export default {
         return false;
       }
       if (statusData.error === 0 && statusData.status === '1') {
-        if (!confirm(`当前是 confirmed hacker 状态，你确定要处理成 ${getCheaterStatusLabel(status)} 吗？`)) {
+        if (!confirm(this.$i18n.t('detail.messages.changeHacker', { code: this.$i18n.t(`basic.status[${status}]`) }))) {
           this.verifySpinShow = false;
           return false;
         }
@@ -647,7 +683,7 @@ export default {
             privilege,
           });
 
-          this.$Message.success('提交成功');
+          this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
         } else {
           this.$Message.error('failed ' + d.msg);
         }
@@ -743,7 +779,7 @@ export default {
 
         if (d.error === 0) {
           const { createDatetime, content, status } = d.data;
-          this.$Message.success('回复成功');
+          this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
 
           // reset reply
           this.cancelReply();
@@ -783,8 +819,8 @@ export default {
     updateCheaterInfo(e) {
       waitForAction.call(e.target, 60);
 
-      if (!Boolean(this.$store.state.user)) {
-        this.$Message.error('请登录');
+      if (!this.$store.state.user) {
+        this.$Message.error(this.$i18n.t('detail.messages.signIn'));
         return false;
       }
 
@@ -809,7 +845,7 @@ export default {
 
           this.origins.unshift(d.data.origin);
 
-          this.$Message.success('更新完成');
+          this.$Message.success(this.$i18n.t('detail.messages.updateComplete'));
         } else {
           this.$Message.error(d.msg);
         }
@@ -834,45 +870,47 @@ export default {
 </script>
 
 <style lang="scss">
-  // tabs style
-  .tabs-style {
-    .ivu-tabs-bar {
-      border-bottom: 1px solid #f2f2f2;
-      margin-bottom: 0;
-    }
-    .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab{
-      border-top: 1px solid #f2f2f2 !important;
-      border-left: 1px solid #f2f2f2 !important;
-      border-right: 1px solid #f2f2f2 !important;
-      color: #000;
-      background: transparent !important;
-    }
+  .cheater-desc {
+    max-width: 100%;
+    width: 34rem;
+  }
+  .description {
+    color: rgba(0, 0, 0, 0.8);
+    font-size: .8rem;
+    line-height: 1.4rem;
 
-    .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active{
-      border-top: 1px solid #f2f2f2 !important;
-      border-left: 1px solid #f2f2f2 !important;
-      border-right: 1px solid #f2f2f2 !important;
-      background: #fff !important;
+    img, video {
+      max-width: 100%;
     }
+  }
 
-    .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active:before{
-      content: '';
-      display: block;
-      width: 100%;
-      height: 1px;
-      background: #fff13c;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+  .timeline-time {
+    color: #00000073;
+  }
+  .ivu-time {
+    margin-right: .6rem;
+  }
+  .timeline-content {
+    position: relative;
 
-    .ivu-tabs-tabpane {
-      transform: translateX(0%) translateZ(0px);
-      background: #fff;
-      padding: 20px;
-      border: 1px solid #f2f2f2;
-      border-top: 1px solid #fff !important;
-    }
+    // force to wrap
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+  .timeline-content .loading {
+    background-image: url('/src/assets/fonts/loading.svg');
+    background-repeat: no-repeat;
+    min-width: 100px;
+    min-height: 100px;
+  }
+  .ivu-timeline-item {
+    padding: 1rem 0;
+  }
+  .ivu-timeline-item-content {
+    padding: 0 .6rem 0 1.2rem;
+  }
+  .ivu-timeline-item-tail {
+    top: 1rem;
   }
 </style>
 

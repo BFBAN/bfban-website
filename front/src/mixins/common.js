@@ -1,5 +1,6 @@
 import ajax from '@/mixins/ajax';
-
+import _ from "lodash";
+function moment() {}
 function checkIdExist({ id }) {
   return ajax({
     method: 'post',
@@ -8,24 +9,6 @@ function checkIdExist({ id }) {
       id,
     },
   });
-}
-
-function convertGameName(name) {
-  let gameName;
-
-  switch (name) {
-    case '战地1':
-      gameName = 'bf1';
-      break;
-    case '战地4':
-      gameName = 'bf4';
-      break;
-    case '战地v':
-      gameName = 'bfv';
-      break;
-  }
-
-  return gameName;
 }
 
 function checkReportFormData(form) {
@@ -50,43 +33,71 @@ function checkReportFormData(form) {
 const cheatMethodsGlossary = [
   {
     value: 'stealth',
-    label: '隐身',
+    "zh-CN": '隐身',
+    "en-US": 'Stealth',
+    "ja-JP": '透明',
+    "ru-RU": 'Стелс',
+    "tr-TR": 'Görünmezlik',
   },
   {
     value: 'wallhack',
-    label: '透视',
+    "zh-CN": '透视',
+    "en-US": 'Wallhack',
+    "ja-JP": 'ウォールハック',
+    "ru-RU": 'Валхак',
+    "tr-TR": 'Wallhack',
   },
   {
     value: 'aimbot',
-    label: '自瞄',
+    "zh-CN": '自瞄',
+    "en-US": 'Aimbot',
+    "ja-JP": 'エイムボット',
+    "ru-RU": 'Аимбот',
+    "tr-TR": 'Aimbot',
   },
   {
     value: 'oneShotKill',
-    label: '秒杀',
+    "zh-CN": '秒杀',
+    "en-US": 'Oneshot kill',
+    "ja-JP": 'ワンショット',
+    "ru-RU": 'Моментальное убийство',
+    "tr-TR": 'Tek vuruş öldürme',
   },
   {
     value: 'gadgetModify',
-    label: '改装备',
+    "zh-CN": '改装备',
+    "en-US": 'Modified gadget',
+    "ja-JP": 'ガジェットチート',
+    "ru-RU": 'Модифицированный гаджет',
+    "tr-TR": 'Farkli kit kullanma',
   },
   {
     value: 'damageChange',
-    label: '改伤',
+    "zh-CN": '改伤',
+    "en-US": 'Damagemodifier',
+    "ja-JP": 'ダメージ変更',
+    "ru-RU": 'Модифицированный урон',
+    "tr-TR": 'Hasarı degiştirme',
   },
   {
     value: 'shootingThroughWalls',
-    label: '子弹穿墙',
+    "zh-CN": '子弹穿墙',
+    "en-US": 'Shooting through walls',
+    "ja-JP": '壁抜き',
+    "ru-RU": 'Стреляет через стены',
+    "tr-TR": 'Duvar arkası vurma',
   },
 ];
 
 // return string
-function convertCheatMethods(str = '') {
+function convertCheatMethods(str = '', locale) {
   const s = str || '';
 
   const tmpArr = [];
   _.each(s.split(','), (val) => {
     _.each(cheatMethodsGlossary, (v, i) => {
       if (v.value === val) {
-        tmpArr.push(v.label);
+        tmpArr.push(v[locale]);
       }
     });
   });
@@ -98,53 +109,97 @@ const cheaterStatus = [
   // value 100 表示全部
   {
     value: '0',
-    label: '未处理',
+    "zh-CN": '未处理',
+    "en-US": 'Processing',
+    "ja-JP": '未処理',
+    "ru-RU": 'В процессе',
+    "tr-TR": 'İşleniyor',
   },
   {
     value: '5',
-    label: '回复讨论中',
+    "zh-CN": '回复讨论中',
+    "en-US": 'Under discussion',
+    "ja-JP": '議論中',
+    "ru-RU": 'Обсуждается',
+    "tr-TR": 'Tartışılıyor',
   },
   {
     value: '6',
-    label: '等待管理确认',
+    "zh-CN": '等待管理确认',
+    "en-US": 'Waiting for management cofirmation',
+    "ja-JP": '管理者の確認待ち',
+    "ru-RU": 'Ожидает подтверждения менаджером',
+    "tr-TR": 'Yönetici onayı bekleniyor',
   },
   {
     value: '1',
-    label: '认为石锤',
+    "zh-CN": '认为石锤',
+    "en-US": 'Confirmed hacker',
+    "ja-JP": 'チーター',
+    "ru-RU": 'Подтверждённый хакер',
+    "tr-TR": 'Onaylanmış hileci',
   },
   {
     value: '2',
-    label: '嫌疑再观察',
+    "zh-CN": '嫌疑再观察',
+    "en-US": 'Suspicious player',
+    "ja-JP": '怪しいプレイヤー',
+    "ru-RU": 'Подозрительный игрок',
+    "tr-TR": 'Şüpheli oyuncu',
   },
   {
     value: '3',
-    label: '认为没开挂',
+    "zh-CN": '认为没开挂',
+    "en-US": 'Innocent clean player',
+    "ja-JP": '無実のプレイヤー',
+    "ru-RU": 'Честный игрок',
+    "tr-TR": 'Temiz oyuncu',
   },
   {
     value: '4',
-    label: '回收站',
+    "zh-CN": '回收站',
+    "en-US": 'Recycle Bin',
+    "ja-JP": 'ごみ箱',
+    "ru-RU": 'Мусор',
+    "tr-TR": 'Çöp',
   },
 ];
 
 const gameName = [
   {
     value: 'bf1',
-    label: '战地1',
+    "zh-CN": '战地1',
+    "en-US": 'Battlefield 1',
+    "ja-JP": 'バトルフィールド1',
+    "ru-RU": 'Battlefield 1',
+    "tr-TR": 'Battlefield 1',
   },
   {
     value: 'bfv',
-    label: '战地v',
+    "zh-CN": '战地v',
+    "en-US": 'Battlefield 5',
+    "ja-JP": 'バトルフィールドV',
+    "ru-RU": 'Battlefield 5',
+    "tr-TR": 'Battlefield 5',
+  },
+    {
+    value: 'bf6',
+    "zh-CN": '战地6',
+    "en-US": 'Battlefield 6',
+    "ja-JP": 'バトルフィールド6',
+    "ru-RU": 'Battlefield 6',
+    "tr-TR": 'Battlefield 6',
   },
 ];
 
-function getCheaterStatusLabel(value) {
+function getCheaterStatusLabel(value, locale) {
   const o = _.find(cheaterStatus, (v, k) => v.value === value);
-  return o ? o.label : '';
+  return o ? o[locale] : '';
 }
 
-function getGameLabel(value) {
+function getGameLabel(value, locale) {
   const o = _.find(gameName, (v, k) => v.value === value);
-  return o ? o.label : '';
+  return o ? o[locale] : '';
 }
 
 function formatNewLine(str) {
@@ -153,7 +208,7 @@ function formatNewLine(str) {
 
 function formatLink(str) {
   // https://stackoverflow.com/a/8943487/875788
-  return str.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, (url) => {
+  return str.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig, (url) => {
     if (/(jpg|jpeg|png|gif)$/ig.test(url)) return url;
     const hostname = new URL(url).hostname;
     if (hostname.indexOf('bfban.com') !== -1) {
@@ -164,7 +219,7 @@ function formatLink(str) {
 }
 
 function formatImageLink(str) {
-  return str.replace(/([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))/ig, src => `<img src="${src}" />`);
+  return str.replace(/([a-z\-_0-9/:.]*\.(jpg|jpeg|png|gif))/ig, src => `<img src="${src}" />`);
 }
 
 function formatTextarea(val) {
@@ -222,20 +277,28 @@ function getUTCTimeStamp() {
   return utcTimeStamp;
 }
 
+function defaultImgProviderSrcToProxy(str) {
+  // some images cannot load under http due to default image provider we used cannot be accessed with https
+  // replace it with a https proxy
+  const proxySrc = "https://bfban.glass-panel.workers.dev/bfban.bamket";
+  const reg = /src="http:\/\/bfban.bamket.com/g;
+  return str.replace(reg, "src=\""+proxySrc);
+}
+
 function replaceImgSrcToDataSrc(str) {
   const reg = /\s+(src)=/gi;
   return str.replace(reg, ' data-src=');
 }
 
 function detectLanguage(lang) {
-  return ['zh-CN', 'en-US', 'ja-JP'].filter(el => el.indexOf(lang) !== -1)[0];
+  return ['zh-CN', 'en-US', 'ja-JP', 'ru-RU', 'tr-TR'].filter(el => el.indexOf(lang) !== -1)[0];
 }
 
 
 export {
+  defaultImgProviderSrcToProxy,
   replaceImgSrcToDataSrc,
   checkIdExist,
-  convertGameName,
   checkReportFormData,
   cheaterStatus,
   gameName,

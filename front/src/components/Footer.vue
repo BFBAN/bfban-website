@@ -2,7 +2,14 @@
     <footer class="footer">
       <div class="container">
         <Row :gutter="30" >
-          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 6}" span="6">
+          <Col :xs="{span: 24 ,pull: 1, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
+            <img src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png"
+                 width="40"
+                 height="40"
+                 alt="bfban logo"/>
+            <p>联BFBAN - 全球作弊玩家数据库</p>
+          </Col>
+          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
             <h4><b>社区</b></h4>
             <ul>
               <li>
@@ -17,14 +24,19 @@
               </li>
               <li>
                 <a target="_blank" href="https://jq.qq.com/?_wv=1027&amp;k=pC07TOvE">
-                  BFBan QQ</a>
+                  QQ BFBan</a>
               </li>
               <li>
                 <a href="https://github.com/BFBAN">github BFBAN</a>
               </li>
+              <li>
+                <a href="https://space.bilibili.com/387820951">
+                  bilibili BFBAN
+                </a>
+              </li>
             </ul>
           </Col>
-          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 6}" span="6">
+          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
             <h4><b>功能</b></h4>
             <ul>
               <li>
@@ -35,7 +47,7 @@
               </li>
             </ul>
           </Col>
-          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 6}" span="6">
+          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}" >
             <h4><b>联系方式</b></h4>
             <ul>
               <li>
@@ -50,7 +62,7 @@
               </li>
             </ul>
           </Col>
-          <Col :xs="{span: 22 ,pull: 1, push: 1}" :lg="{span: 6}" span="6">
+          <Col :xs="{span: 22 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
             <div>选择语言</div>
             <Tag>
               <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
@@ -102,6 +114,7 @@ export default {
   .footer {
     text-align: left;
     border-top: 1px solid #00000008;
+    //background: #f9f7ff;
     flex-shrink: 0;
     padding: 3rem 0;
 

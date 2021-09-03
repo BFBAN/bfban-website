@@ -10,6 +10,12 @@ export default class Http {
    * TODO 未写拦截，有空完成
    */
 
+  HTTP = http.create({
+    // baseURL: process.env.BASE_API,
+    timeout: 9000,
+    withCredentials: true
+  })
+
   /**
    * 请求核心
    * @param url
@@ -17,7 +23,7 @@ export default class Http {
    * @returns {Promise<AxiosResponse<any>>}
    */
   async request (url = '', requestData = {method: this.POST, data: {}, params: {}}) {
-    let result = await http({
+    let result = await this.HTTP({
       url: url,
       method: requestData.method,
       data: requestData.data,
@@ -38,7 +44,8 @@ export default class Http {
 
     let result = await this.request(_url, {
       method: this.POST,
-      data,
+      headers: data.headers,
+      data: data.data,
     });
 
     return result;

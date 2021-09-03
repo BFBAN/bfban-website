@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <div class="content">
-      <div class="ivu-alert-with-banner home-banner" style="background-image: url('assets/images/index-bk.png')">
+      <div class="ivu-alert-with-banner home-banner"
+           style="background-image: url('../assets/images/index-bk.png')">
         <Row>
           <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 8, offset: 0}">
             <h1 class="title"><Icon type="md-lock" /> 联BFBAN</h1>
@@ -11,11 +12,11 @@
             <Divider />
 
             <router-link :to="{name: 'signup'}">
-              <Button type="primary" size="large">注册用户</Button>
+              <Button type="primary">注册用户</Button>
             </router-link>
             <Divider type="vertical" />
             <router-link :to="{name: 'about'}">
-              <Button type="text" size="large"><Icon type="ios-help-circle-outline" />了解有那些社区已经加入</Button>
+              <Button type="text"><Icon type="ios-help-circle-outline" />了解有那些社区已经加入</Button>
             </router-link>
 
             <Row :gutter="10" style="margin-top: 50px">
@@ -149,14 +150,16 @@
       <span v-else>{{ m.name }}</span>
     </p>
 
-    </div>
+  </div>
 </template>
 
 <script>
-  import Bulletin from '@/components/Bulletin.vue';
-  import { getCheaterStatusLabel, getGameLabel } from '@/mixins/common';
-  import ajax from '@/mixins/ajax';
-  export default {
+import Bulletin from "@/components/Bulletin.vue";
+import { getCheaterStatusLabel, getGameLabel } from "@/mixins/common";
+import ajax from "@/mixins/ajax";
+import _ from "lodash";
+
+export default {
   data() {
     return {
       site: {},
@@ -182,66 +185,65 @@
       method: 'get',
       url: '/activity',
     })
-    .then(({data}) => {
-      const d = data;
-      if (d.error === 0) {
-        let { registers, reports, verifies, number } = d.data;
+        .then(({data}) => {
+          const d = data;
+          if (d.error === 0) {
+            let { registers, reports, verifies, number } = d.data;
 
-        reports = _.each(reports, (v, k, l) => {
-          v['type'] = 'report'
-        });
-        registers = _.each(registers, (v, k, l) => {
-          v['type'] = 'register'
-        });
-        verifies = _.each(verifies, (v, k, l) => {
-          v['type'] = 'verify'
-        });
+            reports = _.each(reports, (v, k, l) => {
+              v['type'] = 'report'
+            });
+            registers = _.each(registers, (v, k, l) => {
+              v['type'] = 'register'
+            });
+            verifies = _.each(verifies, (v, k, l) => {
+              v['type'] = 'verify'
+            });
 
-        let activities = [].concat(verifies, reports, registers);
+            let activities = [].concat(verifies, reports, registers);
 
-        activities = _.sortBy(activities, (v) => {
-          return (new Date(v.createDatetime)).getTime();
-        }).reverse();
+            activities = _.sortBy(activities, (v) => {
+              return (new Date(v.createDatetime)).getTime();
+            }).reverse();
 
-        this.activities = activities;
+            this.activities = activities;
 
-        this.site = number;
-      }
-    })
+            this.site = number;
+          }
+        })
   }
 }
 </script>
 
-<style lang="scss">
-  .home-banner {
-      min-height: 600px;
-     background-size: 500px;
-     background-repeat: no-repeat;
-     background-position:  right;
+<style lang="scss" scoped>
+.home-banner {
+  min-height: 600px;
+  background-size: 500px;
+  background-repeat: no-repeat;
+  background-position:  right;
 
-    .title {
-      position: relative;
-      margin-top: 100px;
-      border-bottom: 9px solid #fff13c;
-      display: inline-flex;
-      padding-left: 20px;
-      margin-bottom: 20px;
-      font-size: 3rem;
+  .title {
+    position: relative;
+    margin-top: 100px;
+    border-bottom: 9px solid #fff13c;
+    display: inline-flex;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    font-size: 3rem;
 
-      &:after {
-        position: absolute;
-        opacity: .6;
-        border-radius: 50%;
-        z-index: -1;
-        top: -20px;
-        right: -30px;
-        display: block;
-        content: '';
-        width: 50px;
-        height: 50px;
-        background-color: #401486;
-      }
+    &:after {
+      position: absolute;
+      opacity: .6;
+      border-radius: 50%;
+      z-index: -1;
+      top: -20px;
+      right: -30px;
+      display: block;
+      content: '';
+      width: 50px;
+      height: 50px;
+      background-color: #401486;
     }
- }
+  }
+}
 </style>
-

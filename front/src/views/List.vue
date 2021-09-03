@@ -1,7 +1,11 @@
 <template>
   <div class="container">
     <div class="content">
-      <Divider>{{$t("list.title")}}</Divider>
+      <Breadcrumb>
+        <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+        <BreadcrumbItem>{{ $t("list.title") }}</BreadcrumbItem>
+      </Breadcrumb>
+      <br>
 
       <!--Filters:-->
       <!--状态checkbox、-->
@@ -10,58 +14,83 @@
       <!--id搜索-->
 
       <p>
-        <RadioGroup v-model="gameName" @on-change="handleChanges" type="button" size="large">
-            <Radio label="bf1">
-              <Badge :count="getTotalNum('bf1')" :overflow-count="90000">
-                <span>{{$t("list.filters.game.bf1")}}</span>
-              </Badge>
-            </Radio>
-            <Radio label="bfv">
-              <Badge :count="getTotalNum('bfv')" :overflow-count="90000">
-                <span>{{$t("list.filters.game.bfv")}}</span>
-              </Badge>
-            </Radio>
+        <RadioGroup
+            v-model="gameName"
+            @on-change="handleChanges"
+            type="button">
+          <Radio label="bf1">
+            <Badge :count="getTotalNum('bf1')" :overflow-count="90000">
+              <span>{{ $t("list.filters.game.bf1") }}</span>
+            </Badge>
+          </Radio>
+          <Radio label="bfv">
+            <Badge :count="getTotalNum('bfv')" :overflow-count="90000">
+              <span>{{ $t("list.filters.game.bfv") }}</span>
+            </Badge>
+          </Radio>
+          <Radio label="bf6">
+            <Badge :count="getTotalNum('bf6')" :overflow-count="90000">
+              <span>{{ $t("list.filters.game.bf6") }}</span>
+            </Badge>
+          </Radio>
         </RadioGroup>
         <Divider type="vertical"/>
         <span class="mobile-hide">
           <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报时间范围" style="width: 200px"></DatePicker>
+          -
           <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新时间范围" style="width: 200px"></DatePicker>
         </span>
         <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
           <Option value="100">{{$t("list.filters.status.all")}}({{getAllStatusNum}})</Option>
-          <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">{{ status.label }}({{ getStatusNum(status.value)}})</Option>
+          <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">
+            {{ status.label }}({{ getStatusNum(status.value)}})
+          </Option>
         </Select>
         <Divider type="vertical"/>
         <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
-          <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.value }}</Option>
         </Select>
       </p>
+
       <p class="mobile-hide">
-        <RadioGroup v-model="statusGroup" @on-change="handleStatusChange" type="button" size="large" vertical>
-          <Radio label="100"><span>{{$t("list.filters.status.all")}}({{getAllStatusNum}})</span></Radio>
-          <Radio v-for="status in cheaterStatus" :key="status.value" :label="`${status.value}`">
+        <RadioGroup
+            v-model="statusGroup"
+            @on-change="handleStatusChange"
+            type="button">
+            <Radio label="100">
+              <Badge :count="getAllStatusNum" overflow-count="900000">
+                <span>{{ $t("list.filters.status.all") }}</span>
+              </Badge>
+            </Radio>
+          <Radio
+              v-for="status in cheaterStatus"
+              :key="status.value"
+              :label="`${status.value}`">
             <Badge :count="getStatusNum(status.value)">
-              <span>{{ status.label }}</span>
+                <span>
+                  {{ status[$i18n.locale] }}
+                </span>
             </Badge>
           </Radio>
         </RadioGroup>
-
-        <Button icon="ios-refresh" size="large" @click.prevent.stop="handleRefresh">{{$t("list.filters.refresh")}}</Button>
       </p>
 
-      <br>
+      <p>
+        <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">{{ $t("list.filters.refresh") }}
+        </Button>
+      </p>
 
       <div class="list">
         <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange" @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small" />
         <Spin size="large" fix v-show="spinShow"></Spin>
         <br>
         <ul>
-<!--          <li>-->
-<!--            <span><b>游戏ID</b></span>-->
-<!--            <span class="mobile-hide"><b>举报时间</b></span>-->
-<!--            <span><b>更新时间</b></span>-->
-<!--          </li>-->
-          <Block v-for="d in data" :key="d.originUserId">
+          <!--          <li>-->
+          <!--            <span><b>游戏ID</b></span>-->
+          <!--            <span class="mobile-hide"><b>举报时间</b></span>-->
+          <!--            <span><b>更新时间</b></span>-->
+          <!--          </li>-->
+          <div v-for="d in data" :key="d.originUserId">
             <Card>
               <Row>
                 <Col span="2">
@@ -109,32 +138,34 @@
             </Card>
 
             <br/>
-          </Block>
+          </div>
         </ul>
 
         <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange" @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small" />
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
-import { getCheaterStatusLabel, cheaterStatus } from '@/mixins/common';
-import ajax from '@/mixins/ajax'
+import {getCheaterStatusLabel, cheaterStatus} from "@/mixins/common";
+import ajax from "@/mixins/ajax";
+import _ from "lodash";
 
-new ClipboardJS('.ivu-btn');
+function moment() {
+}
+
+//new ClipboardJS(".ivu-btn");
 
 export default {
   data() {
     return {
-      data: [
-      ],
+      data: [],
       spinShow: true,
-      gameName: 'bf1',
-      statusGroup: '',
-      cd: ['', ''],
-      ud: ['', ''],
+      gameName: "bf1",
+      statusGroup: "",
+      cd: ["", ""],
+      ud: ["", ""],
       page: 1,
       limit: 10,
       total: 0,
@@ -143,91 +174,105 @@ export default {
 
       sortBy: [
         {
-          value: 'createDatetime',
-          label: '举报时间倒序',
+          value: "createDatetime",
+          "zh-CN": "举报时间倒序",
+          "en-US": "Report time",
+          "ja-JP": "時間を逆の順序で報告します",
         },
         {
-          value: 'updateDatetime',
-          label: '更新时间倒序',
+          value: "updateDatetime",
+          "zh-CN": "更新时间倒序",
+          "en-US": "Update time",
+          "ja-JP": "逆更新時間",
         },
         {
-          value: 'n',
-          label: '围观次数倒序',
+          value: "n",
+          "zh-CN": "围观次数倒序",
+          "en-US": "Number of viewers",
+          "ja-JP": "逆順の見物人",
         },
         {
-          value: 'commentsNum',
-          label: '回复次数倒序',
+          value: "commentsNum",
+          "zh-CN": "回复次数倒序",
+          "en-US": "Number of replies",
+          "ja-JP": "返信数を逆にする",
         },
       ],
-      sortByValue: 'updateDatetime',
+      sortByValue: "updateDatetime",
 
       cheaterStatus: cheaterStatus,
-    }
+    };
   },
   created() {
     this.loadData();
   },
   watch: {
-    '$route': 'loadData',
+    $route: "loadData",
   },
   computed: {
     getAllStatusNum() {
       return _.sumBy(this.sum, (o) => {
         return o ? o.num : 0;
-      })
+      });
     },
   },
   methods: {
     getTotalNum(val) {
-      const target = _.find(this.totalSum, ['game', val]);
+      const target = _.find(this.totalSum, ["game", val]);
 
       return target ? target.num : 0;
     },
     getStatusNum(val) {
-      const target = _.find(this.sum, ['status', val]);
+      const target = _.find(this.sum, ["status", val]);
 
       return target ? target.num : 0;
     },
     copied() {
-      this.$Message.info('已复制');
+      this.$Message.info("已复制");
     },
     loadData() {
       // default values
-      const { game = 'bf1', status = '100', cd = '', ud = '', page = 1, sort='updateDatetime', limit = 10 } = this.$route.query;
+      const {
+        game = "bf1",
+        status = "100",
+        cd = "",
+        ud = "",
+        page = 1,
+        sort = "updateDatetime",
+        limit = 10,
+      } = this.$route.query;
 
       const config = {
-        method: 'get',
-        url: '/cheaters/',
+        method: "get",
+        url: "/cheaters/",
       };
 
-      config['params'] = {
+      config["params"] = {
         game,
         status,
         cd,
         ud,
         page,
         sort,
-        tz: moment.tz.guess(),
-        limit
+        tz: '', // moment.tz.gutter(),
+        limit,
       };
       this.gameName = game;
       this.statusGroup = status;
-      this.cd = cd.split(',');
-      this.ud = ud.split(',');
+      this.cd = cd.split(",");
+      this.ud = ud.split(",");
       this.page = Number.parseInt(page);
       this.limit = Number.parseInt(limit);
       this.sortByValue = sort;
 
-      ajax(config)
-      .then(({data: {data, total, sum, totalSum}}) => {
+      ajax(config).then(({data: {data, total, sum, totalSum}}) => {
         this.spinShow = false;
 
         this.data = data;
         this.total = total;
         this.sum = sum;
         this.totalSum = totalSum;
-
-      })
+      });
     },
     handleStatus: getCheaterStatusLabel,
     handleRefresh() {
@@ -238,21 +283,21 @@ export default {
     routerQuery() {
       const game = this.gameName;
       const status = this.statusGroup;
-      const cd = this.cd.join(',');
-      const ud = this.ud.join(',');
+      const cd = this.cd.join(",");
+      const ud = this.ud.join(",");
       const page = this.page;
       const limit = this.limit;
       const sort = this.sortByValue;
 
       let o = {};
 
-      o['status'] = status;
-      if (cd !== ',') o['cd'] = cd;
-      if (ud !== ',') o['ud'] = ud;
-      if (page !== 1) o['page'] = page;
-      o['limit'] = limit;
-      if (sort !== '') o['sort'] = sort;
-      if (game !== '') o['game'] = game;
+      o["status"] = status;
+      if (cd !== ",") o["cd"] = cd;
+      if (ud !== ",") o["ud"] = ud;
+      if (page !== 1) o["page"] = page;
+      o["limit"] = limit;
+      if (sort !== "") o["sort"] = sort;
+      if (game !== "") o["game"] = game;
 
       return o;
     },
@@ -261,7 +306,7 @@ export default {
 
       const query = this.routerQuery();
 
-      this.$router.push({name: 'cheaters', query});
+      this.$router.push({name: "cheaters", query});
     },
     handleStatusChange() {
       this.page = 1;
@@ -292,59 +337,60 @@ export default {
     handleSortByChange(value) {
       this.handleChanges();
     },
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-  .page {
-    padding: .4rem;
-    margin: .4rem auto;
-    background: #f7f7f7;
-    display: inline-block;
-    width: 100%;
-    border-bottom: 1px solid #eaeaea;
-    border-top: 1px solid #eaeaea;
+.page {
+  padding: 0.4rem;
+  margin: 0.4rem auto;
+  background: #f7f7f7;
+  display: inline-block;
+  width: 100%;
+  border-bottom: 1px solid #eaeaea;
+  border-top: 1px solid #eaeaea;
+}
+
+.list {
+  position: relative;
+}
+
+li {
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid #eaeaea;
+  padding: 0.4rem;
+  align-items: center;
+
+  &:nth-child(odd) {
+    background-color: #eeeeee61;
   }
-  .list {
-    position: relative;
+
+  span:nth-child(1) {
+    flex-grow: 1;
+    flex-shrink: 0;
+
     a {
-    }
-    a:visited {
-    }
-  }
-  li {
-    display: flex;
-    justify-content: space-around;
-    border-bottom: 1px solid #eaeaea;
-    padding: .4rem;
-    align-items: center;
-
-    &:nth-child(odd) {
-      background-color: #eeeeee61;
-    }
-
-    span:nth-child(1) {
-      flex-grow: 1;
-      flex-shrink: 0;
-      a {
-        font-size: 1.2rem;
-      }
-    }
-    span:nth-child(2) {
-      flex-grow: 0;
-      flex-shrink: 0;
-      flex-basis: 25%;
-
-      color: #6f6f6f;
-    }
-    span:nth-child(3) {
-      flex-grow: 0;
-      flex-shrink: 0;
-      flex-basis: 25%;
-
-      color: #6f6f6f;
+      font-size: 1.2rem;
     }
   }
 
+  span:nth-child(2) {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 25%;
+
+    color: #6f6f6f;
+  }
+
+  span:nth-child(3) {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 25%;
+
+    color: #6f6f6f;
+  }
+}
 </style>
+

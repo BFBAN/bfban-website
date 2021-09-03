@@ -1,48 +1,53 @@
 <template>
   <div class="container">
+    <br>
+
     <div class="content">
-      <Divider>{{$t("signin.title")}}</Divider>
-
       <Row :gutter="16">
-          <Col span="13">
-<!--            <img src="//source.unsplash.com/user/erondu/600x400?d" width="100%">-->
+        <Col span="11">
+          <Divider>{{$t("home.howToUse.title")}}</Divider>
 
-              <Divider>{{$t("home.howToUse.title")}}</Divider>
+          <Carousel autoplay loop>
+            <CarouselItem>
+              <div class="demo-carousel">
+                <p>
+                  <a href="https://bfban.com">本站</a>可以 <b>永久追踪</b> 被举报者的游戏ID，并支持 <b>搜索历史ID</b> ！欢迎大家积极举报。
+                </p>
 
-              <p>
-                <a href="https://bfban.com">本站</a>可以 <b>永久追踪</b> 被举报者的游戏ID，并支持 <b>搜索历史ID</b> ！欢迎大家积极举报。
-              </p>
+                <p>如果遇到挂，可以</p>
+                <p>
+                  1、先使用
 
-              <p>如果遇到挂，可以</p>
-              <p>
-                1、先使用
+                  <a target="_blank" href="https://bf1.mygoare.com/">
+                    战地1外挂举报助手
+                  </a>
 
-                <a target="_blank" href="https://bf1.mygoare.com/">
-                  战地1外挂举报助手
-                </a>
-
-                给官方举报；
-              </p>
-              <p>
-                2、自己在网站
-                <router-link :to="{path: 'signup'}">注册</router-link>
-                后，自己
-                <router-link :to="{path: 'report'}">举报</router-link>
-                ；
-              </p>
-              <p>
-                3、举报后即会被纪录在案，即使修改了ID也能被追踪到；
-              </p>
-          </Col>
-          <Col span="11">
-            <Form :label-position="top" style="position: relative;">
-
+                  给官方举报；
+                </p>
+                <p>
+                  2、自己在网站
+                  <router-link :to="{path: 'signup'}">注册</router-link>
+                  后，自己
+                  <router-link :to="{path: 'report'}">举报</router-link>
+                  ；
+                </p>
+                <p>
+                  3、举报后即会被纪录在案，即使修改了ID也能被追踪到；
+                </p>
+              </div>
+            </CarouselItem>
+          </Carousel>
+        </Col>
+        <Col span="13">
+          <Card shadow>
+            <p slot="title">{{$t("signin.title")}}</p>
+            <Form>
               <FormItem :label="$t('signin.form.username')">
-                <Input type="text" v-model="signin.username" size="large" :placeholder="$t('signin.form.username')" />
+                <Input prefix="ios-contact"  type="text" v-model="signin.username" size="large" :placeholder="$t('signin.form.username')" />
               </FormItem>
 
               <FormItem :label="$t('signin.form.password')">
-                <Input type="password" v-model="signin.password" size="large" :placeholder="$t('signin.form.password')" />
+                <Input type="password" password v-model="signin.password" size="large" :placeholder="$t('signin.form.password')" />
               </FormItem>
 
               <FormItem :label="$t('signup.form.captcha')">
@@ -52,18 +57,28 @@
 
               <FormItem>
                 <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">{{$t('signin.form.submit')}}</Button>
-                <router-link :to="{name: 'signup'}">{{$t('signin.form.submitHint')}}</router-link>
+
+                <Divider>
+                  <router-link :to="{name: 'signup'}">{{$t('signin.form.submitHint')}}</router-link>
+                </Divider>
               </FormItem>
             </Form>
-          </Col>
-        </Row>
+          </Card>
+        </Col>
+      </Row>
     </div>
+
+    <br>
   </div>
 </template>
 
 <script>
-import { getCsrfToken, waitForAction } from '@/mixins/common';
+import { getCsrfToken, waitForAction } from "@/mixins/common";
+import {http, api} from '../assets/js/index'
 import ajax, { baseURL } from "@/mixins/ajax";
+import Vuex from "vuex";
+import _ from "lodash";
+
 const { mapActions, mapMutations } = Vuex;
 
 export default {
@@ -99,6 +114,7 @@ export default {
       // waitForAction.call(this.$refs.reCaptcha);
     },
     handleSignin() {
+      const that = this;
       const {username, password, captcha} = _.each(this.signin, (v, k, o) => {
         o[k] = v.trim();
       });
@@ -106,9 +122,7 @@ export default {
       if (username && password && captcha.length === 4) {
         this.spinShow = true;
 
-        ajax({
-          method: 'post',
-          url: '/account/signin',
+        http.post(api["account_signin"], {
           headers: {
             // 'x-csrf-token': getCsrfToken(),
             // "Access-Control-Allow-Headers": "X-Requested-With",
@@ -119,34 +133,30 @@ export default {
             password,
             captcha,
           },
-        })
-        .then((res) => {
-          this.spinShow = false;
+        }).then((res) => {
+              that.spinShow = false;
 
-          const d = res.data;
-          if (d.error === 1) {
-            this.$Message.error('登录失败 ' + d.msg);
-
-            this.signin.password = '';
-            this.signin.captcha = '';
-            this.refreshCaptcha();
-          } else {
-            this.signinUser(d.data)
-            .then(() => {
-
-              const rurl = this.$route.query.rurl;
-
-              // redirect rurl or home
-              if (rurl) {
-                this.$router.push(rurl);
+              const d = res.data;
+              if (d.error === 1) {
+                that.$Message.error('登录失败 ' + d.msg);
+                that.signin.password = '';
+                that.signin.captcha = '';
+                that.refreshCaptcha();
               } else {
-                this.$router.go('-1');
-              }
+                that.signinUser(d.data).then(() => {
+                  const rurl = this.$route.query.rurl;
 
-              this.$Message.success('登录成功');
+                  // redirect rurl or home
+                  if (rurl) {
+                    this.$router.push(rurl);
+                  } else {
+                    this.$router.go('-1');
+                  }
+
+                  this.$Message.success('登录成功');
+                })
+              }
             })
-          }
-        })
       } else {
         this.$Message.error('请规范填写');
       }
