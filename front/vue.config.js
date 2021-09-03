@@ -3,6 +3,8 @@ module.exports = {
 	assetsDir: 'assets',
 	filenameHashing: true,
 
+  publicPath: '/',
+
 	pwa: {
 		workboxPluginMode: 'InjectManifest',
 		name: 'bfban_2.0',
