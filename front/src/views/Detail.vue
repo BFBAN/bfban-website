@@ -10,7 +10,7 @@
               <img :src="cheater.avatarLink" alt="avatar" width="150" height="150" :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })">
             </div>
           </Col>
-          <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 20, push: 2}">
+          <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 18, push: 2}">
             <div>
               <h1 style="font-size: 1.6rem;">
                 {{ cheater.originId || 'user id' }}
@@ -104,7 +104,7 @@
         <Divider dashed />
 
         <Row :gutter="20" type="flex">
-          <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 19, push: 1}" order="2" class="tabs-style">
+          <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 18, push: 1}" order="2" class="tabs-style">
             <Tabs type="card">
               <TabPane :label="$t('detail.info.timeLine', { msg: 'timeLine' })">
                 <div>
@@ -303,8 +303,10 @@
                 <!-- 管理员面板 -->
                 <div v-if="isAdmin">
                   <Divider>{{ $t('detail.info.adminConsole', { msg: 'adminConsole' })}}</Divider>
-                  <p class="hint">{{ $t('detail.info.adminManual1', { msg: 'adminManual1' })}}</p>
-                  <p class="hint">{{ $t('detail.info.adminManual2', { msg: 'adminManual2' })}}</p>
+                  <Alert type="warning" show-icon>
+                    <p class="hint">{{ $t('detail.info.adminManual1', { msg: 'adminManual1' })}}</p>
+                    <p class="hint">{{ $t('detail.info.adminManual2', { msg: 'adminManual2' })}}</p>
+                  </Alert>
 
                   <h2 style="margin: 1rem 0;">{{ $t('detail.info.judgement', { msg: 'judgement' })}}</h2>
 
@@ -391,7 +393,7 @@
               </TabPane>
             </Tabs>
           </Col>
-          <Col :xs="{span: 24, push: 1}" :lg="{span: 5, push: 0}" order="1">
+          <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1">
             <Affix :offset-top="80">
               <Steps :current="detailStepsIndex" direction="vertical">
                 <Step title="首次提交" content="首次提交作弊玩家"></Step>

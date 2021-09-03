@@ -95,13 +95,15 @@
       <Bulletin />
       <Divider>{{$t("home.activity.title")}}</Divider>
 
-      <table>
-        <tbody>
-          <tr v-for="activity in activities" :key="activity.id">
-            <td nowrap>
-              <Time v-if="activity.createDatetime" :time="activity.createDatetime"></Time>
-            </td>
-            <td v-if="activity.type === 'report'">
+      <Row>
+        <Col :xs="{span: 22, push: 1, pull: 1}">
+          <table>
+            <tbody>
+            <tr v-for="activity in activities" :key="activity.id">
+              <td nowrap>
+                <Time v-if="activity.createDatetime" :time="activity.createDatetime"></Time>
+              </td>
+              <td v-if="activity.type === 'report'">
               <span>
                 <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
                 举报了
@@ -111,18 +113,18 @@
                 <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, ouid: `${activity.originUserId}`}}">{{ activity.cheaterOriginId }}</router-link>
               </span>
 
-            </td>
+              </td>
 
-            <td v-if="activity.type === 'register'">
+              <td v-if="activity.type === 'register'">
               <span>
                 <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
                 注册了 bfban ，
                 欢迎！
               </span>
 
-            </td>
+              </td>
 
-            <td v-if="activity.type === 'verify'">
+              <td v-if="activity.type === 'verify'">
               <span>
                 <Tag color="success">管理员</Tag>
                 <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
@@ -134,10 +136,12 @@
                 </Tag>
               </span>
 
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </Col>
+      </Row>
     </div>
 
     <p v-for="m in manager" :key="m.name">

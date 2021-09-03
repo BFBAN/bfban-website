@@ -107,8 +107,6 @@ export default {
     flex: 1 0 auto;
     margin-top: 4rem !important;
   }
-  .content {
-  }
 
   p {
     margin: .2rem 0;

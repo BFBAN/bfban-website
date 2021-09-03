@@ -60,7 +60,6 @@
         </Row>
     </div>
   </div>
-
 </template>
 
 <script>

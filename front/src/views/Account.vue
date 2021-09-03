@@ -1,12 +1,9 @@
 <template>
   <div class="container">
-    <div class="content">
-      <p class="hint">我们还没有 消息系统，但可以在下方举报的状态 来得知进度</p>
-      <p class="hint">所有举报都可以 回复参与讨论</p>
-      <p class="hint">若要补充证据，可以重复举报同一ID</p>
 
+    <div class="content">
       <div v-if="account">
-        <Divider>用户中心</Divider>
+        <Divider>用户中233心</Divider>
         <h2>个人信息</h2>
         <p>
           用户名：
@@ -28,8 +25,7 @@
           </Tag>
         </p>
 
-        <br>
-        <h2>个人举报</h2>
+        <Divider></Divider>
         <p v-if="account.reports.length === 0">
           还没有任何举报
         </p>
@@ -79,6 +75,11 @@
       </div>
       <div v-else>404</div>
     </div>
+
+    <br>
+    <p class="hint">我们还没有 消息系统，但可以在下方举报的状态 来得知进度</p>
+    <p class="hint">所有举报都可以 回复参与讨论</p>
+    <p class="hint">若要补充证据，可以重复举报同一ID</p>
   </div>
 
 </template>

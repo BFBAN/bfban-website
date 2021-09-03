@@ -1,8 +1,8 @@
 <template>
     <footer class="footer">
       <div class="container">
-        <Row :gutter="30">
-          <Col span="6">
+        <Row :gutter="30" >
+          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 6}" span="6">
             <h4><b>社区</b></h4>
             <ul>
               <li>
@@ -24,7 +24,7 @@
               </li>
             </ul>
           </Col>
-          <Col span="6">
+          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 6}" span="6">
             <h4><b>功能</b></h4>
             <ul>
               <li>
@@ -35,7 +35,7 @@
               </li>
             </ul>
           </Col>
-          <Col span="6">
+          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 6}" span="6">
             <h4><b>联系方式</b></h4>
             <ul>
               <li>
@@ -50,7 +50,7 @@
               </li>
             </ul>
           </Col>
-          <Col span="6">
+          <Col :xs="{span: 22 ,pull: 1, push: 1}" :lg="{span: 6}" span="6">
             <div>选择语言</div>
             <Tag>
               <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
@@ -103,9 +103,20 @@ export default {
     text-align: left;
     border-top: 1px solid #00000008;
     flex-shrink: 0;
-    padding: 5rem;
+    padding: 3rem 0;
 
     flex-shrink: 0;
+
+    ul {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    b {
+      font-size: 20px;
+      padding-right: 10px;
+      padding-bottom: 10px;
+    }
 
     .switch-language {
       width: 100px;
