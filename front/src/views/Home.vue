@@ -37,8 +37,11 @@
             <p>截止2018年11月4日</p>
 
           </Col>
-          <Col span="16">
-            <img src="" width="100%">
+          <Col span="16" class="mobile-hide">
+<!--            <img src="" width="100%">-->
+
+            <iframe data-v-fae5bece="" src="//player.bilibili.com/player.html?aid=884107362&amp;bvid=BV1EK4y1v7fo&amp;cid=218327849&amp;page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="allowfullscreen" style="width: calc(100% - 15%);height: 75%;margin: 15%;"></iframe>
+
           </Col>
         </Row>
       </div>

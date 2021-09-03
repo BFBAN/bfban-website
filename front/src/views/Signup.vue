@@ -17,30 +17,30 @@
             <Divider></Divider>
 
             <Form label-position="top" :rules="ruleValidate" style="position: relative;">
-              <block v-if="stepsIndex == 0">
+              <div v-if="stepsIndex == 0">
                 <FormItem :label="$t('signup.form.username')" prop="username">
                   <Input v-model="signup.username" size="large" placeholder="4位以上用户名" />
                 </FormItem>
                 <FormItem :label="$t('signup.form.password')" prop="password">
                   <Input type="password" password v-model="signup.password" size="large" placeholder="6位以上密码" />
                 </FormItem>
-              </block>
+              </div>
 
-              <block v-if="stepsIndex == 1">
+              <div v-if="stepsIndex == 1">
                 <FormItem :label="$t('signup.form.originId')" prop="originId">
                   <Input v-model="signup.originId" size="large" placeholder="选题" />
                 </FormItem>
                 <FormItem :label="$t('signup.form.qq')" prop="qq">
                   <Input v-model="signup.qq" size="large" placeholder="选填" />
                 </FormItem>
-              </block>
+              </div>
 
-              <block v-show="stepsIndex == 2">
+              <div v-show="stepsIndex == 2">
                 <FormItem :label="$t('signup.form.captcha')">
                   <Input type="text" v-model="signup.captcha" size="large" :placeholder="$t('signup.form.captcha')"></Input>
                   <img ref="captcha" :src="captchaUrl" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha" />
                 </FormItem>
-              </block>
+              </div>
 
               <Row>
                 <Col span="12">
