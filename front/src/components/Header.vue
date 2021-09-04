@@ -36,7 +36,12 @@
           </router-link>
         </div>
         <div class="search mobile-hide">
-          <Input clearable search placeholder="支持搜索历史ID啦..." v-model="searchVal" @on-search="handleSearch" />
+          <Input clearable
+                 search enter-button
+                 placeholder="支持搜索历史ID啦..."
+                 v-model="searchVal"
+                 @on-click="handleSearch"
+                 @on-search="handleSearch" />
         </div>
         <div class="nav">
           <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
@@ -92,26 +97,26 @@
 
       <Modal
         v-model="searchModal"
-        title="检索">
+        footer-hide
+        :title="searchVal + ' (' + cheaters.length + ')'">
         <div style="position: relative">
-          <p style="font-size: 1rem;">
-            检索的ID为：{{searchVal}}
-          </p>
-          <br>
-          <p>
-            检索结果：
-          </p>
           <div v-if="cheaters.length !== 0">
-            <p v-for="cheater in cheaters" :key="cheater.id">
-              <router-link :to="{name: 'cheater', params: {ouid: `${cheater.originUserId}`}}">
-                {{cheater.originId}}
-              </router-link>
-            </p>
+            <List border>
+              <ListItem v-for="cheater in cheaters" :key="cheater.id">
+                <ListItemMeta :title="cheater.originId" :description="'id:' + cheater.originUserId" />
+                <template slot="action">
+                  <li>
+                    <router-link :to="{name: 'cheater', params: {ouid: `${cheater.originUserId}`}}" @click="searchModal = false">
+                      查看
+                    </router-link>
+                  </li>
+                </template>
+              </ListItem>
+            </List>
           </div>
           <div v-else>无</div>
 
           <Spin size="large" fix v-show="modalSpinShow"></Spin>
-
         </div>
       </Modal>
     </header>
