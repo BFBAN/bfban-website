@@ -92,10 +92,12 @@ export default {
     return {
       currentLan: navigator.language ? detectLanguage(navigator.language) : 'zh-CN',
       languages: [
-        {value: 'zh-CN', label: '简体中文'},
-        {value: 'en-US', label: 'English'},
-        {value: 'ja-JP', label: '日本語'},
-      ]
+        { value: "zh-CN", label: "简体中文" },
+        { value: "en-US", label: "English" },
+        { value: "ja-JP", label: "日本語" },
+        { value: "ru-RU", label: "Русский" },
+        { value: "tr-TR", label: "Türkçe" },
+      ],
     }
   },
   methods: {
