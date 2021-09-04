@@ -20,5 +20,15 @@ module.exports = {
 			localeDir: 'lang',
 			enableInSFC: false
 		}
-	}
+	},
+
+  css: {
+    loaderOptions : {
+      less : {
+        lessOptions : {
+          javascriptEnabled : true
+        }
+      }
+    }
+  },
 }

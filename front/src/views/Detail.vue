@@ -137,7 +137,7 @@
               <TabPane :label="$t('detail.info.timeLine', { msg: 'timeLine' })">
                 <div>
                   <!-- 时间线 -->
-                  <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="l in timelineList"
+                  <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l, lindex) in timelineList"
                                 :key="l.createDatetime">
                     <div v-if="l.type === 'report'" class="timeline-content">
                       <div class="timeline-time">
@@ -306,6 +306,7 @@
                       </p>
                     </div>
 
+                    <Button @click="onTranslate(lindex)">F</Button>
                   </TimelineItem>
 <!--                  TODO PAGE SET-->
 <!--                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
@@ -382,7 +383,6 @@
                     <Spin size="large" fix v-show="verifySpinShow"></Spin>
                   </Form>
                 </div>
-
               </TabPane>
               <TabPane :label="$t('detail.info.dealRecord', { msg: 'dealRecord' })">
                 <!-- 管理员处理历史 -->
@@ -488,6 +488,7 @@
 <script>
 import {http, api} from '../assets/js/index'
 import ajax from '@/mixins/ajax';
+import translate from 'google-translate-open-api';
 import _ from "lodash";
 import {
   getCheaterStatusLabel,
@@ -878,6 +879,22 @@ export default {
         }
       });
     },
+    async onTranslate (index) {
+      let that = this;
+
+      // delete key
+      if (that.timelineList[index].description_cont) {
+        that.timelineList[index].description = that.timelineList[index].description_cont;
+        delete that.timelineList[index].description_cont;
+      }
+
+      const result = await translate(that.timelineList[index].description, {
+        to: "zh-CN",
+      });
+
+      that.timelineList[index].description_cont = that.timelineList[index].description;
+      that.timelineList[index].description_translate = result.data[0];
+    }
   },
   computed: {
     isVerified() {

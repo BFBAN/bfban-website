@@ -55,8 +55,6 @@ html, body {
 }
 body {
   font-size: .8rem;
-  background-color: #f8f9fa;
-
   display: flex;
   flex-direction: column;
 
