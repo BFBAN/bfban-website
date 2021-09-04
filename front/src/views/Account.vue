@@ -55,19 +55,20 @@
           <p class="hint">{{ $t("account.hint3") }}</p>
         </Col>
         <Col span="17" order="1">
-          <Tabs value="tag1">
-            <TabPane :label="$t('account.reports')" name="tag1">
-              <div v-if="account">
-                <p v-if="account.reports.length <= 0" align="center">
-                  <Alert type="warning" show-icon>
-                    {{$t('account.noReports')}}
-                  </Alert>
-                </p>
+          <Card dis-hover>
+            <Tabs value="tag1">
+              <TabPane :label="$t('account.reports')" name="tag1">
+                <div v-if="account">
+                  <p v-if="account.reports.length <= 0" align="center">
+                    <Alert type="warning" show-icon>
+                      {{$t('account.noReports')}}
+                    </Alert>
+                  </p>
 
-                <table>
-                  <tbody>
-                  <tr v-for="report in account.reports" :key="report.id">
-                    <td>
+                  <table>
+                    <tbody>
+                    <tr v-for="report in account.reports" :key="report.id">
+                      <td>
                       <span>
                         <Tag color="primary">
                             <Time
@@ -76,12 +77,12 @@
                             />
                         </Tag>
                       </span>
-                    </td>
-                    <td>
+                      </td>
+                      <td>
                       <span>
                           {{ $t("account.reported") }}
                           <router-link
-                              :to="{
+                            :to="{
                                   name: 'cheater',
                                   params: {
                                       ouid: `${report.originUserId}`,
@@ -94,36 +95,33 @@
                               {{ report.originId }}
                           </router-link>
                       </span>
-                    </td>
-                    <td>
+                      </td>
+                      <td>
                       <span>
                         {{ $t("account.status") }}
                         <Tag color="error">
-                            {{
-                            $t(`basic.status[${report.status}]`)
-                          }}
+                          {{$t(`basic.status[${report.status}]`) }}
                         </Tag>
                       </span>
-                    </td>
-                    <td>
+                      </td>
+                      <td>
                       <span>
                         {{ $t("account.recentlyUpdated") }}
                         <Tag color="warning">
                           <Time
                             v-if="report.updateDatetime"
-                            :time="report.updateDatetime"
-                          />
+                            :time="report.updateDatetime"/>
                           <span v-else>无</span>
                         </Tag>
                       </span>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
 
-                <br>
+                  <br>
 
-                <Page
+                  <Page
                     :page-size="limit"
                     show-total
                     :current="page"
@@ -131,15 +129,16 @@
                     :total="total"
                     class="page"
                     size="small"
-                />
-              </div>
-              <div v-else>404</div>
-            </TabPane>
-            <br>
-            <Button size="small" slot="extra">
-              {{account.reports.length || 0}}
-            </Button>
-          </Tabs>
+                  />
+                </div>
+                <div v-else>404</div>
+              </TabPane>
+              <br>
+              <Button size="small" slot="extra">
+                {{account.reports.length || 0}}
+              </Button>
+            </Tabs>
+          </Card>
         </Col>
       </Row>
     </div>

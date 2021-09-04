@@ -20,7 +20,7 @@
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 18, push: 2}">
             <div>
               <Row>
-                <Col span="20">
+                <Col :xs="{span: 24}" :lg="{span: 20}">
                   <h1 style="font-size: 1.6rem;">
                     {{ cheater.originId || 'user id' }}
 
@@ -39,35 +39,41 @@
                       {{ convertCheatMethods(cheater.cheatMethods) }}
                     </Tag>
                   </h1>
+                  <span>id:  {{ cheater.originUserId || 'id' }}</span>
+                  <Divider type="vertical"/>
+                  <Dropdown>
+                    <a href="javascript:void(0)">
+                      {{ $t('detail.info.historyID', {msg: 'historyID'}) }}
+                      <Icon type="ios-arrow-down"></Icon>
+                    </a>
+                    <DropdownMenu slot="list" v-show="origins.length">
+                      <!-- 历史ID -->
+                      <DropdownItem v-for="origin in origins" :key="origin.id">
+                        <Time :time="origin.createDatetime"></Time>
+                        | {{ origin.cheaterGameName }}
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
                 </Col>
-                <Col span="4" align="right">
-                  <Poptip title="二维码" content="content" placement="right-end">
+                <Col :xs="{span: 24}" :lg="{span: 4}" align="right">
+                  <Poptip content="content" placement="right-end" title="">
                     <Icon type="md-qr-scanner" size="20" color="#535353"/>
-                    手机上查看
+                    {{ $t('detail.info.app_qr.title') }}
 
-                    <Alert show-icon slot="content">
-                      抱歉
-                      <template slot="desc">我们目前正在适配该功能.</template>
-                    </Alert>
+                    <div slot="content" class="mobile-hide">
+                      <vue-qr :text="'{id: '+ $route.params.ouid + '}'" :size="200"></vue-qr>
+
+                      <div class="qrcode" ref="qrCodeUrl"></div>
+
+                      {{ $t('detail.info.app_qr.tip') }}
+                    </div>
+                    <div slot="content" class="desktop-hide" align="center">
+                      <Button>{{ $t('detail.info.app_qr.openApp') }}</Button>
+                      <p>{{ $t('detail.info.app_qr.openAppDescribe') }}</p>
+                    </div>
                   </Poptip>
                 </Col>
               </Row>
-
-              <span>id:  {{ cheater.originUserId || 'id' }}</span>
-              <Divider type="vertical"/>
-              <Dropdown>
-                <a href="javascript:void(0)">
-                  {{ $t('detail.info.historyID', {msg: 'historyID'}) }}
-                  <Icon type="ios-arrow-down"></Icon>
-                </a>
-                <DropdownMenu slot="list" v-show="origins.length">
-                  <!-- 历史ID -->
-                  <DropdownItem v-for="origin in origins" :key="origin.id">
-                    <Time :time="origin.createDatetime"></Time>
-                    | {{ origin.cheaterGameName }}
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
 
               <Poptip
                 @on-ok="updateCheaterInfo">
@@ -138,7 +144,7 @@
               <TabPane :label="$t('detail.info.timeLine', { msg: 'timeLine' })">
                 <div>
                   <!-- 时间线 -->
-                  <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l, lindex) in timelineList"
+                  <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l) in timelineList"
                                 :key="l.createDatetime">
                     <div v-if="l.type === 'report'" class="timeline-content">
                       <div class="timeline-time">
@@ -307,7 +313,7 @@
                       </p>
                     </div>
 
-                    <Button @click="onTranslate(lindex)">F</Button>
+<!--                    <Button @click="onTranslate(lindex)">F</Button>-->
                   </TimelineItem>
 <!--                  TODO PAGE SET-->
 <!--                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
@@ -440,7 +446,7 @@
               </TabPane>
             </Tabs>
           </Col>
-          <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1">
+          <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1" class="mobile-hide">
             <Affix :offset-top="10">
               <Steps :current="detailStepsIndex" direction="vertical">
                 <Step title="首次提交" content="首次提交作弊玩家"></Step>
@@ -490,6 +496,7 @@
 <script>
 import {http, api} from '../assets/js/index'
 import ajax from '@/mixins/ajax';
+import vueQr from 'vue-qr'
 import translate from 'google-translate-open-api';
 
 import Empty from '../components/Empty.vue'
@@ -551,7 +558,7 @@ export default {
       detailStepsIndex:0
     }
   },
-  components: { Empty },
+  components: { Empty, vueQr },
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -599,14 +606,14 @@ export default {
           });
 
           // img src => data-src
-          reports = _.each(reports, (v) => {
-            v['description'] = defaultImgProviderSrcToProxy(v['description']);
-            v['description'] = replaceImgSrcToDataSrc(v['description']);
-          });
-          replies = _.each(replies, (v, k, l) => {
-            v['content'] = defaultImgProviderSrcToProxy(v['content']);
-            v['content'] = replaceImgSrcToDataSrc(v['content']);
-          });
+          // reports = _.each(reports, (v) => {
+          //   v['description'] = defaultImgProviderSrcToProxy(v['description']);
+          //   v['description'] = replaceImgSrcToDataSrc(v['description']);
+          // });
+          // replies = _.each(replies, (v, k, l) => {
+          //   v['content'] = defaultImgProviderSrcToProxy(v['content']);
+          //   v['content'] = replaceImgSrcToDataSrc(v['content']);
+          // });
 
           let timelineList = reports.concat(verifies, confirms, replies);
 
@@ -900,7 +907,7 @@ export default {
 
       that.timelineList[index].description_cont = that.timelineList[index].description;
       that.timelineList[index].description_translate = result.data[0];
-    }
+    },
   },
   computed: {
     isVerified() {
@@ -927,8 +934,12 @@ export default {
 
 .description {
   color: rgba(0, 0, 0, 0.8);
-  font-size: .8rem;
-  line-height: 1.4rem;
+  font-size: 0.8rem;
+  line-height: 1.5rem;
+  margin: 10px 0;
+  border: 1px solid #f2f2f2;
+  background: #f8f9fa;
+  padding: 10px;
 
   img, video {
     max-width: 100%;

@@ -117,7 +117,7 @@
           <Affix :offset-top="20">
             <Card>
               <p slot="title">
-                筛选
+                {{$t('list.colums.screenTitle')}}
               </p>
 
               <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报时间范围"

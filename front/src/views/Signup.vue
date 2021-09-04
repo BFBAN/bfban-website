@@ -160,11 +160,9 @@ export default {
           this.$Message.error('Fail!');
         }
       })
-
     },
   }
 }
 </script>
 
-<style>
-</style>
+<style></style>

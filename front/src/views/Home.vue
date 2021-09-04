@@ -15,7 +15,7 @@
             <Divider/>
 
             <router-link :to="{name: 'signup'}">
-              <Button type="primary">注册用户</Button>
+              <Button type="primary">{{ $t("signup.title") }}</Button>
             </router-link>
             <Divider type="vertical"/>
             <router-link :to="{name: 'about'}">
@@ -108,13 +108,12 @@
       </Row>
     </div>
 
-
     <div class="box mobile-hide">
       <div class="container">
         <Row>
           <Col :lg="{span: 10, push: 0}">
             <h1 align="left">{{ $t("home.activity.title") }}</h1>
-            <h5 align="left" :data="{cheater}" v-html="$t('home.activity.description') || '数以千计的玩家和组织已经在他们的BFBAN中贡献与使用'"></h5>
+            <h5 align="left" v-html="$t('home.activity.description') || '数以千计的玩家和组织已经在他们的BFBAN中贡献与使用'"></h5>
           </Col>
           <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
             <router-link :to="{name: 'cheaters'}">
@@ -156,8 +155,7 @@
                 <router-link :to="{name: 'account', params: {uId: `${a_i.uId}`}}">{{
                     a_i.username
                   }}</router-link>
-                注册了 bfban ，
-                欢迎！
+                注册了 bfban ，欢迎！
               </span>
 
               <span v-if="a_i.type === 'verify'">
@@ -191,7 +189,10 @@ import _ from "lodash";
 export default {
   data() {
     return {
-      site: {},
+      site: {
+        report: 0,
+        cheater: 0
+      },
       activities: [],
       activities_l: [],
       activitySwitchType: true,

@@ -192,12 +192,12 @@ const gameName = [
   },
 ];
 
-function getCheaterStatusLabel(value, locale) {
+function getCheaterStatusLabel(value, locale = detectLanguage(navigator.language)) {
   const o = _.find(cheaterStatus, (v, k) => v.value === value);
   return o ? o[locale] : '';
 }
 
-function getGameLabel(value, locale) {
+function getGameLabel(value, locale = detectLanguage(navigator.language)) {
   const o = _.find(gameName, (v, k) => v.value === value);
   return o ? o[locale] : '';
 }
@@ -293,7 +293,6 @@ function replaceImgSrcToDataSrc(str) {
 function detectLanguage(lang) {
   return ['zh-CN', 'en-US', 'ja-JP', 'ru-RU', 'tr-TR'].filter(el => el.indexOf(lang) !== -1)[0];
 }
-
 
 export {
   defaultImgProviderSrcToProxy,

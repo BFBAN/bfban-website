@@ -3,14 +3,24 @@
       <div class="container">
         <Row :gutter="30" >
           <Col :xs="{span: 24 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
-            <img src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png"
-                 width="40"
-                 height="40"
-                 alt="bfban logo"/>
-            <p>联BFBAN - 全球作弊玩家数据库</p>
+
+            <Badge :count="logoCount" overflow-count="999999">
+              <Avatar v-if="logoCount > 10" size="40">
+                干嘛？
+                {{ getLog() }}
+              </Avatar>
+              <img v-else
+                   src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png"
+                   width="40"
+                   height="40"
+                   @click="logoCount++;"
+                   alt="bfban logo"/>
+            </Badge>
+
+            <p>{{ $t("footer.column.col1.text") }}</p>
           </Col>
           <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
-            <h4><b>社区</b></h4>
+            <h4><b>{{ $t("footer.column.col2.title") }}</b></h4>
             <ul>
               <li>
                 <a target="_blank" href="https://discord.gg/KCBM3GAW59">
@@ -38,7 +48,7 @@
             </ul>
           </Col>
           <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
-            <h4><b>功能</b></h4>
+            <h4><b>{{ $t("footer.column.col3.title") }}</b></h4>
             <ul>
               <li>
                 <router-link :to="{name: 'report'}">{{$t('header.report')}}</router-link>
@@ -49,7 +59,7 @@
             </ul>
           </Col>
           <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 4,pull: 0, push: 0}" >
-            <h4><b>联系方式</b></h4>
+            <h4><b>{{ $t("footer.column.col3.title") }}</b></h4>
             <ul>
               <li>
                 <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
@@ -72,7 +82,7 @@
             </Tag>
             <p>&copy; 2018-{{new Date().getFullYear()}} All Rights Reserved.</p>
             <p>Made with <Icon type="ios-heart" color="#ed4014" />Host at
-              <a target="_blank" href="https://battlefield.now.sh/">AWSL</a>
+              <a target="_blank" href="https://gametools.network/">GameTools-Community Network</a>
             </p>
           </Col>
         </Row>
@@ -85,6 +95,7 @@ import { detectLanguage } from '@/mixins/common';
 export default {
   data() {
     return {
+      logoCount: 0,
       currentLan: navigator.language ? detectLanguage(navigator.language) : 'zh-CN',
       languages: [
         { value: "zh-CN", label: "简体中文" },
@@ -101,6 +112,9 @@ export default {
     },
     setLang(lang) {
       this.$store.dispatch('setLang', lang);
+    },
+    getLog() {
+      console.log('怎么啦？要不让大哥哥康康？');
     }
   }
 }
@@ -108,6 +122,7 @@ export default {
 
 <style lang="scss">
   .footer {
+    backdrop-filter: blur(50px);
     text-align: left;
     border-top: 1px solid #00000008;
     //background: #f9f7ff;
@@ -134,9 +149,13 @@ export default {
     }
 
     b {
+      border-left: 3px solid #3f1388;
+      display: block;
+      margin-bottom: 10px;
+      color: #585410;
+      padding-left: 10px;
       font-size: 20px;
       padding-right: 10px;
-      padding-bottom: 10px;
     }
 
     .switch-language {

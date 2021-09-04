@@ -38,7 +38,7 @@
         <div class="search mobile-hide">
           <Input clearable
                  search enter-button
-                 placeholder="支持搜索历史ID啦..."
+                 :placeholder="$t('header.searchBar')"
                  v-model="searchVal"
                  @on-click="handleSearch"
                  @on-search="handleSearch" />
@@ -209,6 +209,9 @@
 
 <style lang="scss">
   header {
+    position: relative;
+    z-index: 1000;
+    backdrop-filter: blur(50px);
     width: 100%;
     height: auto;
     padding: 10px 0;
