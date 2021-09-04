@@ -1,167 +1,162 @@
 <template>
   <div class="container">
     <div class="content">
-      <Form :label-width="80" style="position: relative">
-        <div
-          class="notFoundHint"
-          id="notFoundHint"
-          v-show="failedOfNotFound">
-          <p style="font-size: 14px; font-weight: bold">
-            {{ $t("report.info.notFoundHintTitle") }}
-          </p>
-          <p style="font-size: 14px; margin-left: 10px">
-            {{ $t("report.info.notFoundHintQuestion1") }}
-          </p>
-          <p style="font-size: 12px; margin-left: 20px">
-            {{ $t("report.info.notFoundHintAnswer1") }}
-          </p>
-          <p style="font-size: 14px; margin-left: 10px">
-            {{ $t("report.info.notFoundHintQuestion2") }}
-          </p>
-          <p style="font-size: 12px; margin-left: 20px">
-            {{ $t("report.info.notFoundHintAnswer2") }}
-          </p>
-        </div>
-        <!--举报作弊-->
-        <Divider>{{
-            $t("report.info.reportHacker", {msg: "reportHacker"})
-          }}
-        </Divider>
+      <Breadcrumb>
+        <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+        <BreadcrumbItem>{{ $t("report.info.reportHacker", {msg: "reportHacker"}) }}</BreadcrumbItem>
+      </Breadcrumb>
+      <br>
 
-        <FormItem :label="$t('report.labels.game')">
-                    <span class="hint">{{
-                        $t("report.info.reportNews", {msg: "reportNews"})
-                      }}</span>
-          <RadioGroup v-model="formItem.gameName" type="button">
-            <Radio label="bf1"
-            ><span>{{
-                $t("report.info.bf1", {msg: "bf1"})
-              }}</span></Radio
-            >
-            <Radio label="bfv"
-            ><span>{{
-                $t("report.info.bfv", {msg: "bfv"})
-              }}</span></Radio
-            >
-            <Radio label="bf6"
-            ><span>{{
-                $t("report.info.bf6", {msg: "bf6"})
-              }}</span></Radio
-            >
-          </RadioGroup>
-        </FormItem>
+      <Card dis-hover>
+        <Form :label-width="80" label-position="left">
+          <div
+            class="notFoundHint"
+            id="notFoundHint"
+            v-show="failedOfNotFound">
+            <p style="font-size: 14px; font-weight: bold">
+              {{ $t("report.info.notFoundHintTitle") }}
+            </p>
+            <p style="font-size: 14px; margin-left: 10px">
+              {{ $t("report.info.notFoundHintQuestion1") }}
+            </p>
+            <p style="font-size: 12px; margin-left: 20px">
+              {{ $t("report.info.notFoundHintAnswer1") }}
+            </p>
+            <p style="font-size: 14px; margin-left: 10px">
+              {{ $t("report.info.notFoundHintQuestion2") }}
+            </p>
+            <p style="font-size: 12px; margin-left: 20px">
+              {{ $t("report.info.notFoundHintAnswer2") }}
+            </p>
+          </div>
+          <!--举报作弊-->
 
-        <FormItem :label="$t('report.labels.hackerId')">
-                    <span class="hint">{{
-                        $t("report.info.idNotion1", {msg: "idNotion1"})
-                      }}</span>
-          <span class="hint">{{
-              $t("report.info.idNotion2", {msg: "idNotion2"})
-            }}</span>
-          <p style="font-size: 2rem">{{ formItem.originId }}</p>
-          <Input
-            v-model="formItem.originId"
-            :placeholder="$t('report.info.onlyOneId')"
-          />
-        </FormItem>
+          <FormItem :label="$t('report.labels.game')">
+            <RadioGroup v-model="formItem.gameName" type="button">
+              <Radio label="bf1">
+                <span>{{ $t("report.info.bf1", {msg: "bf1"}) }}
+              </span>
+              </Radio>
+              <Radio label="bfv">
+                <span>{{ $t("report.info.bfv", {msg: "bfv"}) }}
+                </span>
+              </Radio>
+              <Radio label="bf6">
+                <span>{{ $t("report.info.bf6", {msg: "bf6"}) }}
+                </span>
+              </Radio>
+            </RadioGroup>
+            <span class="hint">
+              {{ $t("report.info.reportNews", {msg: "reportNews"}) }}
+            </span>
+          </FormItem>
 
-        <FormItem :label="$t('report.labels.cheatMethod')">
-          <CheckboxGroup v-model="formItem.checkbox">
-            <Checkbox
-              v-for="method in cheatMethodsGlossary"
-              :key="method.value"
-              :label="method.value"
-            >
-              {{ $t(`cheatMethods.${method.value}`) }}
-            </Checkbox>
-          </CheckboxGroup>
-        </FormItem>
+          <FormItem :label="$t('report.labels.hackerId')">
+            <p style="font-size: 2rem">{{ formItem.originId }}</p>
+            <Input
+              v-model="formItem.originId"
+              :placeholder="$t('report.info.onlyOneId')"/>
+            <span class="hint">
+              {{
+                $t("report.info.idNotion1", {msg: "idNotion1"})
+              }}
+            </span>
+            <span class="hint">
+              {{
+                $t("report.info.idNotion2", {msg: "idNotion2"})
+              }}
+            </span>
+          </FormItem>
 
-        <FormItem :label="$t('detail.info.videoLink')">
-          <Alert type="warning">
-            {{
-              $t("report.info.uploadManual1", {
-                msg: "uploadManual1",
-              })
-            }}
-            <a target="_blank" href="https://streamable.com/"
-            >https://streamable.com/</a
-            >，{{
-              $t("report.info.uploadManual2", {
-                msg: "uploadManual2",
-              })
-            }}
-          </Alert>
-          <span class="hint">{{
-              $t("report.info.uploadManual3", {
-                msg: "uploadManual3",
-              })
-            }}</span>
-          <Input
-            v-model="formItem.bilibiliLink"
-            :placeholder="$t('report.info.required')"
-          />
-        </FormItem>
+          <FormItem :label="$t('report.labels.cheatMethod')">
+            <CheckboxGroup v-model="formItem.checkbox">
+              <Checkbox
+                v-for="method in cheatMethodsGlossary"
+                :key="method.value"
+                :label="method.value">
+                {{ $t(`cheatMethods.${method.value}`) }}
+              </Checkbox>
+            </CheckboxGroup>
+          </FormItem>
 
-        <FormItem :label="$t('report.labels.description')">
-          <Alert type="warning">
-            {{
-              $t("report.info.uploadPic1", {msg: "uploadPic1"})
-            }}
-          </Alert>
-          <Alert type="warning">
-            {{
-              $t("report.info.uploadPic2", {msg: "uploadPic2"})
-            }}<a target="_blank" href="https://sm.ms"
-          >https://sm.ms</a
-          >，{{
-              $t("report.info.uploadPic3", {msg: "uploadPic3"})
-            }}
-          </Alert>
-          <span class="hint">{{
-              $t("report.info.uploadPic4", {msg: "uploadPic4"})
-            }}</span>
-          <!-- <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." /> -->
-          <!--<Misc
-              :content="$t('report.info.description')"
-              @change="handleMiscChange"
-          />-->
-        </FormItem>
+          <FormItem :label="$t('detail.info.videoLink')">
+            <Alert type="warning">
+              {{
+                $t("report.info.uploadManual1", {
+                  msg: "uploadManual1",
+                })
+              }}
+              <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
+                $t("report.info.uploadManual2", {
+                  msg: "uploadManual2",
+                })
+              }}
+            </Alert>
+            <span class="hint">
+              {{
+                $t("report.info.uploadManual3", {
+                  msg: "uploadManual3",
+                })
+              }}
+            </span>
+            <Input
+              v-model="formItem.bilibiliLink"
+              :placeholder="$t('report.info.required')"/>
+          </FormItem>
 
-        <FormItem :label="$t('report.info.captcha')">
-          <Input
-            type="text"
-            v-model="formItem.captcha"
-            :placeholder="$t('report.info.captcha')"
-          />
-          <img ref="captcha"/>
-          <a
-            ref="reCaptcha"
-            href="#"
-            @click.stop.prevent="refreshCaptcha"
-          >
-            {{
-              $t("report.info.getCaptcha", {msg: "getCaptcha"})
-            }}
-          </a>
-        </FormItem>
+          <FormItem :label="$t('report.labels.description')">
+            <Alert type="warning">
+              {{$t("report.info.uploadPic1", {msg: "uploadPic1"}) }}
+            </Alert>
+            <Alert type="warning">
+              {{$t("report.info.uploadPic2", {msg: "uploadPic2"}) }}
+              <a target="_blank" href="https://sm.ms">https://sm.ms</a>，{{$t("report.info.uploadPic3", {msg: "uploadPic3"}) }}
+            </Alert>
+            <span class="hint">{{
+                $t("report.info.uploadPic4", {msg: "uploadPic4"})
+              }}
+            </span>
 
-        <FormItem>
-          <Button @click="doReport" type="primary">{{
-              $t("report.info.report", {msg: "report"})
-            }}
-          </Button>
-        </FormItem>
+<!--            <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." />-->
+            <Edit
+                :content="$t('report.info.description')"
+                @change="handleMiscChange"/>
+          </FormItem>
 
-        <Spin size="large" fix v-show="spinShow"></Spin>
-      </Form>
+          <FormItem :label="$t('report.info.captcha')">
+            <Input
+              type="text"
+              v-model="formItem.captcha"
+              :placeholder="$t('report.info.captcha')"/>
+            <img ref="captcha"/>
+            <a
+              ref="reCaptcha"
+              href="#"
+              @click.stop.prevent="refreshCaptcha">
+              {{
+                $t("report.info.getCaptcha", {msg: "getCaptcha"})
+              }}
+            </a>
+          </FormItem>
+
+          <FormItem>
+            <Button @click="doReport" type="primary">{{
+                $t("report.info.report", {msg: "report"})
+              }}
+            </Button>
+          </FormItem>
+
+          <Spin size="large" fix v-show="spinShow"></Spin>
+        </Form>
+      </Card>
     </div>
+    <br>
   </div>
 </template>
 
 <script>
 import {http, api, conf} from '../assets/js/index'
-//import Misc from "@/components/Misc.vue";
+import Edit from "@/components/Edit.vue";
 import {
   checkIdExist,
   checkReportFormData,
@@ -192,7 +187,7 @@ export default {
     };
   },
   components: {
-//        Misc,
+       Edit,
   },
   methods: {
     checkVideoAndImg() {
@@ -289,7 +284,7 @@ export default {
           : "//" + bilibiliLink;
       const description = this.formItem.description.trim();
 
-      http.post(api["cheaters"],{
+      http.post(api["cheaters"], {
         headers: {
           // 'x-csrf-token': getCsrfToken(),
         },
@@ -335,4 +330,3 @@ export default {
   "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif;
 }
 </style>
-

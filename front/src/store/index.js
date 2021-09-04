@@ -25,7 +25,7 @@ const store = new Vuex.Store({
       Cookies.remove('user');
     },
     syncLoginState(state) {
-      const cookieUser = JSON.parse(Cookies.get('user'));
+      const cookieUser = Cookies.get('user') && JSON.parse(Cookies.get('user'));
       if (cookieUser) {
         state.user = cookieUser;
       }

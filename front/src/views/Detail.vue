@@ -456,7 +456,6 @@
 
         <br>
 
-
         <!-- 小回复窗口 -->
         <Modal
           v-model="replyModal"
@@ -479,7 +478,9 @@
           <p>ヾ(◍°∇°◍)ﾉﾞ load...</p>
         </Spin>
       </Card>
-      <div v-else>404 不存在</div>
+      <div v-else>
+        <Empty></Empty>
+      </div>
     </div>
     <br>
   </div>
@@ -489,6 +490,9 @@
 import {http, api} from '../assets/js/index'
 import ajax from '@/mixins/ajax';
 import translate from 'google-translate-open-api';
+
+import Empty from '../components/Empty.vue'
+
 import _ from "lodash";
 import {
   getCheaterStatusLabel,
@@ -546,6 +550,7 @@ export default {
       detailStepsIndex:0
     }
   },
+  components: { Empty },
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {

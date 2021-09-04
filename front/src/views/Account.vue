@@ -36,9 +36,10 @@
         </p>
       </Col>
     </Row>
+
     <div class="content">
-      <Row :gutter="8">
-        <Col span="7">
+      <Row :gutter="8" type="flex">
+        <Col span="7" order="2">
           <Card title="其他" icon="ios-options" :padding="0" shadow>
             <CellGroup>
               <Cell title="荣耀" label="查看在BFBAN成就" />
@@ -50,7 +51,7 @@
           <p class="hint">{{ $t("account.hint2") }}</p>
           <p class="hint">{{ $t("account.hint3") }}</p>
         </Col>
-        <Col span="17">
+        <Col span="17" order="1">
           <Tabs value="tag1">
             <TabPane :label="$t('account.reports')" name="tag1">
               <div v-if="account">
@@ -59,6 +60,7 @@
                     {{$t('account.noReports')}}
                   </Alert>
                 </p>
+
                 <table>
                   <tbody>
                   <tr v-for="report in account.reports" :key="report.id">
@@ -115,6 +117,9 @@
                   </tr>
                   </tbody>
                 </table>
+
+                <br>
+
                 <Page
                     :page-size="limit"
                     show-total
@@ -127,6 +132,7 @@
               </div>
               <div v-else>404</div>
             </TabPane>
+            <br>
             <Button size="small" slot="extra">
               {{account.reports.length || 0}}
             </Button>

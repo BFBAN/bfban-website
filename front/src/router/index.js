@@ -2,7 +2,7 @@
 
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
-//const Misc      =() => import('@/components/Misc.vue');
+//const Misc      =() => import('@/components/Edit.vue');
 const List = () => import('@/views/List.vue');
 const Detail = () => import('@/views/Detail.vue');
 const Signin = () => import('@/views/Signin.vue');

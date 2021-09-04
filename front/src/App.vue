@@ -23,7 +23,6 @@ import 'view-design/dist/styles/iview.css'
 </script>
 
 <style lang="scss">
-
 @font-face {
     font-family: "Ubuntu Mono";
     font-weight: 400;
@@ -48,15 +47,11 @@ import 'view-design/dist/styles/iview.css'
 
 html, body {
   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-}
-
-html, body {
   height: 100%;
-}
-body {
   font-size: .8rem;
   display: flex;
   flex-direction: column;
+  background-color: #f8f9fa !important;
 
   /*background image*/
   background-size: cover;
@@ -84,6 +79,7 @@ p {
 .hint {
   display: block;
 }
+
 .hint::before {
   display: inline-block;
   content: '*';

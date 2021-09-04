@@ -42,119 +42,134 @@
             </Badge>
           </Radio>
         </RadioGroup>
-        <Divider type="vertical"/>
-        <span class="mobile-hide">
-          <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报时间范围"
-                      style="width: 200px"></DatePicker>
-          -
-          <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新时间范围"
-                      style="width: 200px"></DatePicker>
-        </span>
-        <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
-          <Option value="100">{{ $t("list.filters.status.all") }}({{ getAllStatusNum }})</Option>
-          <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">
-            {{ status.label }}({{ getStatusNum(status.value) }})
-          </Option>
-        </Select>
-        <Divider type="vertical"/>
-        <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
-          <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.value }}</Option>
-        </Select>
       </p>
-      <br>
-      <p class="mobile-hide">
-        <RadioGroup
-          v-model="statusGroup"
-          @on-change="handleStatusChange"
-          type="button">
-          <Radio label="100">
-            <Badge :count="getAllStatusNum" overflow-count="900000">
-              <span>{{ $t("list.filters.status.all") }}</span>
-            </Badge>
-          </Radio>
-          <Radio
-            v-for="status in cheaterStatus"
-            :key="status.value"
-            :label="`${status.value}`">
-            <Badge :count="getStatusNum(status.value)">
+
+      <Row :gutter="10">
+        <Col span="17">
+          <Card dis-hover class="list">
+            <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange"
+                  @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
+            <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
+            <br>
+            <ul>
+              <!--          <li>-->
+              <!--            <span><b>游戏ID</b></span>-->
+              <!--            <span class="mobile-hide"><b>举报时间</b></span>-->
+              <!--            <span><b>更新时间</b></span>-->
+              <!--          </li>-->
+              <div v-for="d in data" :key="d.originUserId">
+                <Card>
+                  <Row>
+                    <Col span="4">
+                      <span style="display: flex; align-items: center;">
+                        <Avatar :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'"
+                                alt="avatar"
+                                size="55">
+                        </Avatar>
+                      </span>
+                    </Col>
+                    <Col span="15">
+                      <div style="display: flex; flex-direction: column;">
+                        <router-link :to="{name: 'cheater', params: {ouid: `${d.originUserId}` }}">
+                          <h2>
+                            {{ d.originId }}
+                            <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"
+                                    @click="copied"></Button>
+                          </h2>
+                        </router-link>
+                      </div>
+
+                      举报时间
+                      <Time v-if="d.createDatetime" :time="d.createDatetime"/>
+                      <Divider type="vertical"/>
+                      更新时间
+                      <Time v-if="d.updateDatetime" :time="d.updateDatetime"/>
+                    </Col>
+                    <Col span="5">
+                      <Row type="flex" justify="center" align="middle" style="height: 50px">
+                        <Col span="12" align="left" class="list">
+                          <Icon type="md-eye" size="15" class="item-icon"/>
+                          <span class="item-text">{{ d.n }}</span>
+                        </Col>
+                        <Col span="1" align="center">
+                          <Divider type="vertical"/>
+                        </Col>
+                        <Col span="11" align="right">
+                          <Icon type="md-chatboxes" size="15" class="item-icon"/>
+                          <span class="item-text">{{ d.commentsNum }}</span>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Card>
+
+                <br/>
+              </div>
+            </ul>
+
+            <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange"
+                  @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
+          </Card>
+        </Col>
+        <Col span="7">
+          <br>
+          <Affix :offset-top="20">
+            <Card>
+              <p slot="title">
+                筛选
+              </p>
+
+              <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报时间范围"
+                          style="width: 100px"></DatePicker>
+              -
+              <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新时间范围"
+                          style="width: 100px"></DatePicker>
+
+              <Divider class="desktop-hide"></Divider>
+
+              <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
+                <Option value="100">{{ $t("list.filters.status.all") }}({{ getAllStatusNum }})</Option>
+                <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">
+                  {{ status.label }}({{ getStatusNum(status.value) }})
+                </Option>
+              </Select>
+
+              <Divider></Divider>
+
+              <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
+                <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+
+              <Divider></Divider>
+
+              <RadioGroup
+                v-model="statusGroup"
+                @on-change="handleStatusChange"
+                type="button">
+                <Radio label="100">
+                  <Badge :count="getAllStatusNum" overflow-count="900000">
+                    <span>{{ $t("list.filters.status.all") }}</span>
+                  </Badge>
+                </Radio>
+                <Radio
+                  v-for="status in cheaterStatus"
+                  :key="status.value"
+                  :label="`${status.value}`">
+                  <Badge :count="getStatusNum(status.value)">
                 <span>
                   {{ status[$i18n.locale] }}
                 </span>
-            </Badge>
-          </Radio>
-        </RadioGroup>
-        <Divider type="vertical"/>
-        <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">{{ $t("list.filters.refresh") }}
-        </Button>
-      </p>
+                  </Badge>
+                </Radio>
+              </RadioGroup>
+              <Divider type="vertical"/>
 
-      <Card dis-hover class="list">
-        <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange"
-              @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
-        <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
-        <br>
-        <ul>
-          <!--          <li>-->
-          <!--            <span><b>游戏ID</b></span>-->
-          <!--            <span class="mobile-hide"><b>举报时间</b></span>-->
-          <!--            <span><b>更新时间</b></span>-->
-          <!--          </li>-->
-          <div v-for="d in data" :key="d.originUserId">
-            <Card>
-              <Row>
-                <Col span="2">
-                  <span style="display: flex; align-items: center;">
-                    <img :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'" alt="avatar"
-                         style="
-                      width: 3rem;
-                      height: 3rem;
-                      border-radius: 2.3rem;">
-                  </span>
-                </Col>
-                <Col span="18">
-                  <div style="display: flex; flex-direction: column;">
-                    <div style="height: 1.6rem;">
-                      <router-link :to="{name: 'cheater', params: {ouid: `${d.originUserId}` }}">
-                        <h2>
-                          {{ d.originId }}
-                          <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"
-                                  @click="copied"></Button>
-                        </h2>
-                      </router-link>
-                    </div>
-                  </div>
-
-                  举报时间
-                  <Time v-if="d.createDatetime" :time="d.createDatetime"/>
-                  <Divider type="vertical"/>
-                  更新时间
-                  <Time v-if="d.updateDatetime" :time="d.updateDatetime"/>
-                </Col>
-                <Col span="3">
-                  <Row type="flex" justify="center" align="middle" style="height: 50px">
-                    <Col span="12" align="center" class="list">
-                      <Icon type="md-eye" size="15" class="item-icon"/>
-                      <span class="item-text">{{ d.n }}</span>
-                    </Col>
-                    <Col span="1" align="center">
-                      <Divider type="vertical"/>
-                    </Col>
-                    <Col span="10" align="center">
-                      <Icon type="md-chatboxes" size="15" class="item-icon"/>
-                      <span class="item-text">{{ d.commentsNum }}</span>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
+              <Button slot="extra" size="small" icon="ios-refresh" @click.prevent.stop="handleRefresh">{{ $t("list.filters.refresh") }}
+              </Button>
             </Card>
-
-            <br/>
-          </div>
-        </ul>
-
-        <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange"
-              @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
-      </Card>
+          </Affix>
+        </Col>
+      </Row>
     </div>
   </div>
 </template>

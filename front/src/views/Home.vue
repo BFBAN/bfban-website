@@ -312,7 +312,7 @@ export default {
       position: absolute;
       opacity: .6;
       border-radius: 50%;
-      z-index: -1;
+      z-index: 0;
       top: -20px;
       right: -30px;
       display: block;

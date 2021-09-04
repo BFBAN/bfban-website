@@ -2,7 +2,7 @@
     <footer class="footer">
       <div class="container">
         <Row :gutter="30" >
-          <Col :xs="{span: 24 ,pull: 1, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
+          <Col :xs="{span: 24 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
             <img src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png"
                  width="40"
                  height="40"
@@ -47,7 +47,7 @@
               </li>
             </ul>
           </Col>
-          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}" >
+          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 4,pull: 0, push: 0}" >
             <h4><b>联系方式</b></h4>
             <ul>
               <li>
@@ -63,20 +63,14 @@
             </ul>
           </Col>
           <Col :xs="{span: 22 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
-            <div>选择语言</div>
+            <b>选择语言</b>
             <Tag>
               <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
                 <Option v-for="item in languages" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
             </Tag>
-            <p>
-              &copy; 2018-2020
-              All Rights Reserved.
-            </p>
-            <p>
-              Made with <Icon type="ios-heart" color="#ed4014" />
-
-              Host at
+            <p>&copy; 2018-2020 All Rights Reserved.</p>
+            <p>Made with <Icon type="ios-heart" color="#ed4014" />Host at
               <a target="_blank" href="https://battlefield.now.sh/">AWSL</a>
             </p>
           </Col>
@@ -111,7 +105,6 @@ export default {
 }
 </script>
 
-
 <style lang="scss">
   .footer {
     text-align: left;
@@ -130,6 +123,7 @@ export default {
       a {
         display: block;
         margin-bottom: 5px;
+        font-size: 12px;
       }
     }
 

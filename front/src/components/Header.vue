@@ -8,7 +8,7 @@
                alt="bfban logo"/>
         </router-link>
 
-        <div class="nav">
+        <div class="nav nav-menu">
           <router-link class="mobile-hide link" :to="{name: 'home'}">
             {{ $t("header.index") }}
           </router-link>
@@ -42,6 +42,7 @@
                  v-model="searchVal"
                  @on-click="handleSearch"
                  @on-search="handleSearch" />
+          <Divider type="vertical"/>
         </div>
         <div class="nav">
           <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
@@ -100,14 +101,21 @@
         footer-hide
         :title="searchVal + ' (' + cheaters.length + ')'">
         <div style="position: relative">
+          <Alert show-icon v-if="cheaters.length > 60">
+            庞大的数量
+            <template slot="desc">
+              啊呀！一共{{cheaters.length}}条,看起来与你搜索的关键词区配出大量数据，请尝试继续补充{{searchVal}}后续字符，如: {{searchVal}}2021、{{searchVal}}_love 让搜索更精准
+            </template>
+          </Alert>
+
           <div v-if="cheaters.length !== 0">
             <List border>
               <ListItem v-for="cheater in cheaters" :key="cheater.id">
                 <ListItemMeta :title="cheater.originId" :description="'id:' + cheater.originUserId" />
                 <template slot="action">
-                  <li>
-                    <router-link :to="{name: 'cheater', params: {ouid: `${cheater.originUserId}`}}" @click="searchModal = false">
-                      查看
+                  <li @click="searchModal = false">
+                    <router-link :to="{name: 'cheater', params: {ouid: `${cheater.originUserId}`}}" >
+                      <Icon type="ios-eye" size="20"/> 查看
                     </router-link>
                   </li>
                 </template>
@@ -225,6 +233,9 @@
       padding: .7rem .8rem;
       text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0;
     }
+  }
+  .nav-menu {
+    flex: 1;
   }
   .nav-username {
     text-overflow: ellipsis;
