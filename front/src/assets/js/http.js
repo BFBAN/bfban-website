@@ -10,6 +10,10 @@ export default class Http {
    * TODO 未写拦截，有空完成
    */
 
+  CONF = new Conf();
+  // WWWURL = process.env.NODE_ENV === 'production' ? this.CONF.requestDev : this.CONF.requestDeBug
+  WWWURL = this.CONF.requestDev
+
   HTTP = http.create({
     // baseURL: process.env.BASE_API,
     timeout: 9000,
@@ -40,7 +44,7 @@ export default class Http {
    * @returns {Promise<AxiosResponse<any>>}
    */
   async post (url, data = {data: {}}) {
-    const _url = Conf.requestDev + url;
+    const _url =  this.WWWURL + url;
 
     let result = await this.request(_url, {
       method: this.POST,
@@ -56,7 +60,7 @@ export default class Http {
    * @returns {Promise<AxiosResponse<any>>}
    */
   async get (url = '', data = {data: {}, params: {}}) {
-    const _url = Conf.requestDev + url;
+    const _url = this.WWWURL + url;
 
     let result = await this.request(_url, {
       method: this.GET,

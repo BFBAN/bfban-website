@@ -12,7 +12,8 @@
           <Col :xs="{span: 22}" :lg="{span: 4}">
             <div v-show="cheater.avatarLink" align="center">
               <!-- Origin头像 -->
-              <Avatar shape="square" :src="cheater.avatarLink" size="150" :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })" />
+              <Avatar shape="square" :src="cheater.avatarLink" size="150"
+                      :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })"/>
             </div>
           </Col>
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 18, push: 2}">
@@ -24,7 +25,7 @@
 
                     <!-- 被举报的游戏 -->
                     <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })">
-                      <router-link v-for="g in games" :key="g.game" :to="{name: 'cheaters'}" >
+                      <router-link v-for="g in games" :key="g.game" :to="{name: 'cheaters'}">
                         {{ g.game || 'game name' }}
                       </router-link>
                     </Tag>
@@ -52,37 +53,40 @@
               </Row>
 
               <span>id:  {{ cheater.originUserId || 'id' }}</span>
-              <Divider type="vertical" />
+              <Divider type="vertical"/>
               <Dropdown>
                 <a href="javascript:void(0)">
-                  {{ $t('detail.info.historyID', { msg: 'historyID' })}}
+                  {{ $t('detail.info.historyID', {msg: 'historyID'}) }}
                   <Icon type="ios-arrow-down"></Icon>
                 </a>
                 <DropdownMenu slot="list" v-show="origins.length">
                   <!-- 历史ID -->
                   <DropdownItem v-for="origin in origins" :key="origin.id">
-                    <Time :time="origin.createDatetime"></Time> | {{ origin.cheaterGameName }}
+                    <Time :time="origin.createDatetime"></Time>
+                    | {{ origin.cheaterGameName }}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
 
               <Poptip
-                  @on-ok="updateCheaterInfo">
+                @on-ok="updateCheaterInfo">
                 <div style="margin-top: .4rem;" slot="content">
                   <p class="hint">
                     <!-- 描述说明 -->
-                    {{ $t('detail.info.discription1', { msg: 'discription1' })}}
-                    <Button @click.prevent="updateCheaterInfo"><span>{{ $t('detail.info.updateButton', { msg: 'updateButton' })}}</span></Button>，
-                    <span>{{ $t('detail.info.discription2', { msg: 'discription2' })}}</span>
+                    {{ $t('detail.info.discription1', {msg: 'discription1'}) }}
+                    <Button @click.prevent="updateCheaterInfo">
+                      <span>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</span></Button>
+                    ，
+                    <span>{{ $t('detail.info.discription2', {msg: 'discription2'}) }}</span>
                   </p>
                   <p class="hint">
-                    {{ $t('detail.info.discription3', { msg: 'discription3' })}}
+                    {{ $t('detail.info.discription3', {msg: 'discription3'}) }}
                   </p>
                   <p class="hint">
-                    {{ $t('detail.info.discription4', { msg: 'discription4' })}}
+                    {{ $t('detail.info.discription4', {msg: 'discription4'}) }}
                   </p>
                 </div>
-                <a>{{ $t('detail.info.updateButton', { msg: 'updateButton' }) }}</a>
+                <a>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</a>
               </Poptip>
             </div>
 
@@ -93,35 +97,39 @@
                 <Card>
                   <!-- 浏览次数 -->
                   <h3>{{ cheater.n || 0 }}</h3>
-                  <span>{{ $t('detail.info.viewTimes', { msg: 'viewTimes' })}}</span>
+                  <span>{{ $t('detail.info.viewTimes', {msg: 'viewTimes'}) }}</span>
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
                 <Card>
                   <!-- 回复次数 -->
                   <h3>{{ cheater.commentsNum || 0 }}</h3>
-                  <span>{{ $t('detail.info.reply', { msg: 'reply' })}}</span>
+                  <span>{{ $t('detail.info.reply', {msg: 'reply'}) }}</span>
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
                 <Card>
                   <!-- 第一次被举报时间 -->
-                  <h3><Time v-if="cheater.createDatetime" :time="cheater.createDatetime"></Time></h3>
-                  <span>{{ $t('detail.info.firstReportTime', { msg: 'firstReportTime' })}}</span>
+                  <h3>
+                    <Time v-if="cheater.createDatetime" :time="cheater.createDatetime"></Time>
+                  </h3>
+                  <span>{{ $t('detail.info.firstReportTime', {msg: 'firstReportTime'}) }}</span>
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
                 <Card>
                   <!-- 最近更新时间 -->
-                  <h3><Time v-if="cheater.updateDatetime" :time="cheater.updateDatetime"></Time></h3>
-                  <span>{{ $t('detail.info.recentUpdateTime', { msg: 'recentUpdateTime' })}}</span>
+                  <h3>
+                    <Time v-if="cheater.updateDatetime" :time="cheater.updateDatetime"></Time>
+                  </h3>
+                  <span>{{ $t('detail.info.recentUpdateTime', {msg: 'recentUpdateTime'}) }}</span>
                 </Card>
               </Col>
             </Row>
           </Col>
         </Row>
 
-        <Divider dashed />
+        <Divider dashed/>
 
         <Row :gutter="20" type="flex">
           <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 18, push: 1}" order="2" class="tabs-style">
@@ -129,7 +137,8 @@
               <TabPane :label="$t('detail.info.timeLine', { msg: 'timeLine' })">
                 <div>
                   <!-- 时间线 -->
-                  <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="l in timelineList" :key="l.createDatetime">
+                  <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="l in timelineList"
+                                :key="l.createDatetime">
                     <div v-if="l.type === 'report'" class="timeline-content">
                       <div class="timeline-time">
                         <Time :time="l.createDatetime"></Time>
@@ -137,36 +146,36 @@
                         <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
                           <!-- 管理员 -->
                           <Tag v-if="l.privilege === 'admin'" color="success">
-                            {{ $t('detail.info.administrator', { msg: 'administrator' })}}
+                            {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
-                          <b>{{l.username}}</b>
+                          <b>{{ l.username }}</b>
                         </router-link>
                         <!-- 举报 -->
-                        {{ $t('detail.info.report', { msg: 'report' })}}
+                        {{ $t('detail.info.report', {msg: 'report'}) }}
 
                         <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
                           {{ l.cheaterGameName }}
                         </router-link>
 
                         <!-- 在 -->
-                        {{ $t('detail.info.inGame', { msg: 'inGame' })}}
+                        {{ $t('detail.info.inGame', {msg: 'inGame'}) }}
 
                         <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
-                          {{l.game}}
+                          {{ l.game }}
                         </router-link>
 
                         <!-- 游戏中 -->
-                        {{ $t('detail.info.gaming', { msg: 'gaming' })}}
+                        {{ $t('detail.info.gaming', {msg: 'gaming'}) }}
 
                         <b>
-                          {{convertCheatMethods(l.cheatMethods || '')}}
+                          {{ convertCheatMethods(l.cheatMethods || '') }}
                         </b>
                       </div>
 
                       <p v-if="l.bilibiliLink">
                         <!-- 游戏中 -->
                         <Tag color="primary">
-                          {{ $t('detail.info.videoLink', { msg: 'videoLink' })}}
+                          {{ $t('detail.info.videoLink', {msg: 'videoLink'}) }}
                         </Tag>
                         <a :href="l.bilibiliLink" target="_blank">{{ l.bilibiliLink }}</a>
                       </p>
@@ -175,23 +184,25 @@
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
-                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">
-                          {{ $t('detail.info.reply', { msg: 'reply' })}}
+                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`"
+                                @click.prevent="handleReply">
+                          {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
                       </p>
                     </div>
 
-                    <div v-if="l.type === 'verify'" class="timeline-content bookmark" :id="`user-verify-cheater-${l.id}`">
+                    <div v-if="l.type === 'verify'" class="timeline-content bookmark"
+                         :id="`user-verify-cheater-${l.id}`">
                       <div class="timeline-time">
                         <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
                         <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
                           <Tag v-if="l.privilege === 'admin'" color="success">
-                            {{ $t('detail.info.administrator', { msg: 'administrator' })}}
+                            {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
-                          <b>{{l.username}}</b>
+                          <b>{{ l.username }}</b>
                         </router-link>
                         <!-- 认为 -->
-                        {{ $t('detail.info.judge', { msg: 'judge' })}}
+                        {{ $t('detail.info.judge', {msg: 'judge'}) }}
 
                         <Tag color="warning">
                           {{ handleStatus(l.status) }}
@@ -199,10 +210,10 @@
 
                         <span v-if="l.cheatMethods">
                           ，
-                          {{ $t('detail.info.cheatMethod', { msg: 'cheatMethod' })}}
+                          {{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
 
                           <b>
-                            {{convertCheatMethods(l.cheatMethods || '')}}
+                            {{ convertCheatMethods(l.cheatMethods || '') }}
                           </b>
                         </span>
                       </div>
@@ -216,16 +227,17 @@
                            :data-cheat-methods="l.cheatMethods"
                            :data-user-verify-cheater-username="l.username">
 
-                          <Icon type="md-thumbs-up" />
+                          <Icon type="md-thumbs-up"/>
                           <!-- 同意实锤 -->
-                          {{ $t('detail.info.agreeJudgement', { msg: 'agreeJudgement' })}}
+                          {{ $t('detail.info.agreeJudgement', {msg: 'agreeJudgement'}) }}
                         </a>
                       </p>
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
-                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">
-                          {{ $t('detail.info.reply', { msg: 'reply' })}}
+                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`"
+                                @click.prevent="handleReply">
+                          {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
                       </p>
                     </div>
@@ -236,17 +248,18 @@
 
                         <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
                           <Tag v-if="l.privilege === 'admin'" color="success">
-                            {{ $t('detail.info.administrator', { msg: 'administrator' })}}
+                            {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
-                          <b>{{l.username}}</b>
+                          <b>{{ l.username }}</b>
                         </router-link>
                         <!-- 同意某人某条实锤 -->
-                        {{ $t('detail.info.agreeWith', { msg: 'agreeWith' })}}
-                        <a @click.stop.prevent="jumpToBookmark" :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
-                          # {{ $t('detail.info.thisChoice', { msg: 'thisChoice' })}}
+                        {{ $t('detail.info.agreeWith', {msg: 'agreeWith'}) }}
+                        <a @click.stop.prevent="jumpToBookmark"
+                           :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
+                          # {{ $t('detail.info.thisChoice', {msg: 'thisChoice'}) }}
                         </a>
                         <!--作弊方式 -->
-                        ，{{ $t('detail.info.cheatMethod', { msg: 'cheatMethod' })}}
+                        ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
 
                         <b>
                           {{ convertCheatMethods(l.cheatMethods || '') }}
@@ -255,8 +268,9 @@
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
-                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">
-                          {{ $t('detail.info.reply', { msg: 'reply' })}}
+                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`"
+                                @click.prevent="handleReply">
+                          {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
                       </p>
                     </div>
@@ -267,17 +281,17 @@
 
                         <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
                           <Tag v-if="l.fooPrivilege === 'admin'" color="success">
-                            {{ $t('detail.info.administrator', { msg: 'administrator' })}}
+                            {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
-                          <b>{{l.foo}}</b>
+                          <b>{{ l.foo }}</b>
                         </router-link>
-                        {{ $t('detail.info.reply', { msg: 'reply' })}}
+                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.barUId}`}}">
 
                           <Tag v-if="l.barPrivilege === 'admin'" color="success">
-                            {{ $t('detail.info.administrator', { msg: 'administrator' })}}
+                            {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
-                          <b>{{l.bar}}</b>
+                          <b>{{ l.bar }}</b>
                         </router-link>
                       </div>
 
@@ -285,76 +299,84 @@
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
-                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`" @click.prevent="handleReply">
-                          {{ $t('detail.info.reply', { msg: 'reply' })}}
+                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`"
+                                @click.prevent="handleReply">
+                          {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
                       </p>
                     </div>
 
                   </TimelineItem>
-                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small" />
+<!--                  TODO PAGE SET-->
+<!--                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
                   <br>
                   <div v-if="isLogin">
                     <!-- 回复操作说明 -->
                     <Alert type="warning" show-icon>
-                      <span>{{ $t('detail.info.replyManual1', { msg: 'replyManual1' })}}</span>
-                      <b><a href="https://sm.ms/" target="_blank"><span>{{ $t('detail.info.uploadPicButton', { msg: 'uploadPicButton' })}}</span></a></b>，
-                      <span>{{ $t('detail.info.replyManual2', { msg: 'replyManual2' })}}</span>
+                      <span>{{ $t('detail.info.replyManual1', {msg: 'replyManual1'}) }}</span>
+                      <b><a href="https://sm.ms/"
+                            target="_blank"><span>{{ $t('detail.info.uploadPicButton', {msg: 'uploadPicButton'}) }}</span></a></b>，
+                      <span>{{ $t('detail.info.replyManual2', {msg: 'replyManual2'}) }}</span>
                     </Alert>
                     <Form :label-width="80" style="position: relative;">
                       <Input @on-keydown="handleCmdEnter($event, 'reply')"
                              v-model="reply.content"
                              type="textarea"
                              :autosize="{minRows: 5}"
-                             placeholder="What's your opinion?" />
+                             placeholder="What's your opinion?"/>
 
                       <p align="right">
-                        <Button type="primary" :loading="replySpinShow" @click.stop.prevent="doReply">{{ $t('detail.info.reply', { msg: 'reply' })}}</Button>
+                        <Button type="primary" :loading="replySpinShow" @click.stop.prevent="doReply">
+                          {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        </Button>
                       </p>
                     </Form>
                   </div>
                   <Alert type="warning" show-icon v-else>
                     <template slot="desc">
-                      {{ $t('detail.info.replyManual3', { msg: 'replyManual3' })}}
+                      {{ $t('detail.info.replyManual3', {msg: 'replyManual3'}) }}
                     </template>
                   </Alert>
                 </div>
 
                 <!-- 管理员面板 -->
                 <div v-if="isAdmin">
-                  <Divider>{{ $t('detail.info.adminConsole', { msg: 'adminConsole' })}}</Divider>
+                  <Divider>{{ $t('detail.info.adminConsole', {msg: 'adminConsole'}) }}</Divider>
                   <Alert type="warning" show-icon>
-                    <p class="hint">{{ $t('detail.info.adminManual1', { msg: 'adminManual1' })}}</p>
-                    <p class="hint">{{ $t('detail.info.adminManual2', { msg: 'adminManual2' })}}</p>
+                    <p class="hint">{{ $t('detail.info.adminManual1', {msg: 'adminManual1'}) }}</p>
+                    <p class="hint">{{ $t('detail.info.adminManual2', {msg: 'adminManual2'}) }}</p>
                   </Alert>
 
-                  <h2 style="margin: 1rem 0;">{{ $t('detail.info.judgement', { msg: 'judgement' })}}</h2>
+                  <h2 style="margin: 1rem 0;">{{ $t('detail.info.judgement', {msg: 'judgement'}) }}</h2>
 
                   <Form :label-width="80" ref='verifyForm' style="position: relative;">
                     <FormItem label="Opinion">
                       <Select v-model="verify.status">
                         <!-- 判断选项 -->
-                        <Option value="1">{{ $t('detail.info.choice1', { msg: 'choice1' })}}</Option>
-                        <Option value="2">{{ $t('detail.info.choice2', { msg: 'choice2' })}}</Option>
-                        <Option value="3">{{ $t('detail.info.choice3', { msg: 'choice3' })}}</Option>
-                        <Option value="4">{{ $t('detail.info.choice4', { msg: 'choice4' })}}</Option>
+                        <Option value="1">{{ $t('detail.info.choice1', {msg: 'choice1'}) }}</Option>
+                        <Option value="2">{{ $t('detail.info.choice2', {msg: 'choice2'}) }}</Option>
+                        <Option value="3">{{ $t('detail.info.choice3', {msg: 'choice3'}) }}</Option>
+                        <Option value="4">{{ $t('detail.info.choice4', {msg: 'choice4'}) }}</Option>
                       </Select>
                     </FormItem>
 
                     <FormItem v-show="verify.status === '1'" label="CheatMethod">
                       <CheckboxGroup v-model="verify.checkbox">
                         <Checkbox v-for="method in cheatMethodsGlossary" :key="method.value" :label="method.value">
-                          {{$t(`cheatMethods.${method.value}`)}}
+                          {{ $t(`cheatMethods.${method.value}`) }}
                         </Checkbox>
                       </CheckboxGroup>
                     </FormItem>
 
                     <FormItem label="Reason">
-                      <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea" :autosize="{minRows: 2}" placeholder="Write something" />
+                      <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea"
+                             :autosize="{minRows: 2}" placeholder="Write something"/>
                     </FormItem>
 
                     <FormItem>
-                      <Button type="primary" @click.stop.prevent="doVerify">{{ $t('detail.info.commit', { msg: 'commit' })}}</Button>
+                      <Button type="primary" @click.stop.prevent="doVerify">
+                        {{ $t('detail.info.commit', {msg: 'commit'}) }}
+                      </Button>
                     </FormItem>
 
                     <Spin size="large" fix v-show="verifySpinShow"></Spin>
@@ -385,20 +407,23 @@
                 <div v-show="cheater.originId">
                   <p v-for="g in games" :key="g.game">
                     <Tag>
-                      {{g.game}}
+                      {{ g.game }}
                     </Tag>
-                    <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">
+                    <a v-show="`${g.game}` === 'bf1'" target="_blank"
+                       :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">
                       battlefieldtracker
                     </a>
-                    <Divider type="vertical"  v-show="`${g.game}` === 'bf1'" />
-                    <a v-show="`${g.game}` === 'bf1'" target="_blank" :href="`http://bf1stats.com/pc/${cheater.originId}`">
+                    <Divider type="vertical" v-show="`${g.game}` === 'bf1'"/>
+                    <a v-show="`${g.game}` === 'bf1'" target="_blank"
+                       :href="`http://bf1stats.com/pc/${cheater.originId}`">
                       bf1stats
                     </a>
-                    <Divider type="vertical"  v-show="`${g.game}` === 'bfv'" />
-                    <a v-show="`${g.game}` === 'bfv'" target="_blank" :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">
+                    <Divider type="vertical" v-show="`${g.game}` === 'bfv'"/>
+                    <a v-show="`${g.game}` === 'bfv'" target="_blank"
+                       :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">
                       battlefieldtracker
                     </a>
-                    <Divider type="vertical" />
+                    <Divider type="vertical"/>
                     <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originId}`">
                       247fairplay
                     </a>
@@ -406,7 +431,8 @@
 
                   <div>
                     <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
-                    <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot" target="_blank">bf1tracker武器截图</a>
+                    <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot"
+                       target="_blank">bf1tracker武器截图</a>
                     <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
                   </div>
                 </div>
@@ -414,7 +440,7 @@
             </Tabs>
           </Col>
           <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1">
-            <Affix :offset-top="80">
+            <Affix :offset-top="10">
               <Steps :current="detailStepsIndex" direction="vertical">
                 <Step title="首次提交" content="首次提交作弊玩家"></Step>
                 <Step title="补充" content="补充资料"></Step>
@@ -425,7 +451,7 @@
         </Row>
 
         <div v-if="cheater.status === '1'">
-          <Divider />
+          <Divider/>
         </div>
 
         <br>
@@ -433,21 +459,25 @@
 
         <!-- 小回复窗口 -->
         <Modal
-            v-model="replyModal"
-            title="Reply"
-            ok-text="Send"
-            cancel-text="Cancel"
-            @on-ok="doReply"
-            @on-cancel="cancelReply">
+          v-model="replyModal"
+          title="Reply"
+          ok-text="Send"
+          cancel-text="Cancel"
+          @on-ok="doReply"
+          @on-cancel="cancelReply">
           <div v-if="isLogin">
             <Form :label-width="80" ref='replyForm' style="position: relative;">
-              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea" :autosize="{minRows: 2}" placeholder="Say something" />
+              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
+                     :autosize="{minRows: 2}" placeholder="Say something"/>
             </Form>
           </div>
-          <div v-else>{{ $t('detail.info.replyManual4', { msg: 'replyManual4' })}}</div>
+          <div v-else>{{ $t('detail.info.replyManual4', {msg: 'replyManual4'}) }}</div>
         </Modal>
 
-        <Spin size="large" fix v-show="spinShow"></Spin>
+        <Spin size="large" fix v-show="spinShow">
+          <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+          <p>ヾ(◍°∇°◍)ﾉﾞ load...</p>
+        </Spin>
       </Card>
       <div v-else>404 不存在</div>
     </div>
@@ -456,6 +486,7 @@
 </template>
 
 <script>
+import {http, api} from '../assets/js/index'
 import ajax from '@/mixins/ajax';
 import _ from "lodash";
 import {
@@ -511,12 +542,13 @@ export default {
       },
 
       updateUserInfospinShow: false,
+      detailStepsIndex:0
     }
   },
   watch: {
     '$route': 'loadData',
-    'fastReply.selected': function() {
-      this.verify.suggestion = ''+this.fastReply.selected.map(i=>this.$t(`detail.info.fastReplies.${i}`));
+    'fastReply.selected': function () {
+      this.verify.suggestion = '' + this.fastReply.selected.map(i => this.$t(`detail.info.fastReplies.${i}`));
     }
   },
   created() {
@@ -529,65 +561,60 @@ export default {
     loadData() {
       const originUserId = this.$route.params.ouid;
 
-      ajax({
-        method: 'get',
-        url: `/cheaters/${originUserId}`,
-      })
-      .then((res) => {
-        this.spinShow = false;
+      http.get(`${api["cheaters"]}/${originUserId}`, {}).then((res) => {
+          this.spinShow = false;
 
-        const d = res.data;
-        let { cheater, games, origins, reports, verifies, confirms, replies } = d.data;
+          const d = res.data;
+          let {cheater, games, origins, reports, verifies, confirms, replies} = d.data;
 
-        if (cheater.length === 0) {
-          this.isCheaterExist = false;
-          return false;
-        } else {
-          this.isCheaterExist = true;
-        }
+          if (cheater.length === 0) {
+            this.isCheaterExist = false;
+            return false;
+          } else {
+            this.isCheaterExist = true;
+          }
 
-        this.cheater = cheater[0];
-        this.origins = _.sortBy(origins, 'createDatetime').reverse();
-        this.games = _.sortBy(games, 'game');
+          this.cheater = cheater[0];
+          this.origins = _.sortBy(origins, 'createDatetime').reverse();
+          this.games = _.sortBy(games, 'game');
 
+          reports = _.each(reports, (v, k, l) => {
+            v['type'] = 'report'
+          });
+          verifies = _.each(verifies, (v, k, l) => {
+            v['type'] = 'verify'
+          });
+          confirms = _.each(confirms, (v, k, l) => {
+            v['type'] = 'confirm'
+          });
+          replies = _.each(replies, (v, k, l) => {
+            v['type'] = 'reply'
+          });
 
-        reports = _.each(reports, (v, k, l) => {
-          v['type'] = 'report'
+          // img src => data-src
+          reports = _.each(reports, (v) => {
+            v['description'] = defaultImgProviderSrcToProxy(v['description']);
+            v['description'] = replaceImgSrcToDataSrc(v['description']);
+          });
+          replies = _.each(replies, (v, k, l) => {
+            v['content'] = defaultImgProviderSrcToProxy(v['content']);
+            v['content'] = replaceImgSrcToDataSrc(v['content']);
+          });
+
+          let timelineList = reports.concat(verifies, confirms, replies);
+
+          timelineList = _.sortBy(timelineList, (v) => {
+            return (new Date(v.createDatetime)).getTime();
+          });
+
+          timelineList = _.each(timelineList, (v, k) => {
+            v['floor'] = k + 1;
+          });
+
+          // render timeline
+          this.timelineList = timelineList;
+
         });
-        verifies = _.each(verifies, (v, k, l) => {
-          v['type'] = 'verify'
-        });
-        confirms = _.each(confirms, (v, k, l) => {
-          v['type'] = 'confirm'
-        });
-        replies = _.each(replies, (v, k, l) => {
-          v['type'] = 'reply'
-        });
-
-        // img src => data-src
-        reports = _.each(reports, (v) => {
-          v['description'] = defaultImgProviderSrcToProxy(v['description']);
-          v['description'] = replaceImgSrcToDataSrc(v['description']);
-        });
-        replies = _.each(replies, (v, k, l) => {
-          v['content'] = defaultImgProviderSrcToProxy(v['content']);
-          v['content'] = replaceImgSrcToDataSrc(v['content']);
-        });
-
-        let timelineList = reports.concat(verifies, confirms, replies);
-
-        timelineList = _.sortBy(timelineList, (v) => {
-          return (new Date(v.createDatetime)).getTime();
-        });
-
-        timelineList = _.each(timelineList, (v, k) => {
-          v['floor'] = k + 1;
-        });
-
-        // render timeline
-        this.timelineList = timelineList;
-
-      });
     },
     jumpToBookmark(e) {
       let hash = e.target.dataset.hash;
@@ -599,7 +626,7 @@ export default {
       document.documentElement.scrollTop = offsetY;
 
       el.setAttribute('style', 'background: rgba(255, 153, 1, 0.15)');
-      setTimeout(function() {
+      setTimeout(function () {
         el.setAttribute('style', 'transition: background 1s ease .5s;')
       }, 100);
     },
@@ -607,20 +634,20 @@ export default {
     convertCheatMethods,
     async doVerify() {
       const {status} = this.verify;
-      let { suggestion } = this.verify;
+      let {suggestion} = this.verify;
       const cheatMethods = this.verify.checkbox.join(',');
-      const { originUserId } = this.cheater;
+      const {originUserId} = this.cheater;
 
-      if ( (status === '1' && cheatMethods === '') || suggestion.trim() === '') {
+      if ((status === '1' && cheatMethods === '') || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
-      if ( (status==='3' || status==='4') && suggestion.trim().length < 5 ) { // too short
+      if ((status === '3' || status === '4') && suggestion.trim().length < 5) { // too short
         this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
         return false;
       }
-      if( '0123456789abcedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_'.split('').indexOf(suggestion.trim()) != -1) { // one letter suggestion
-        this.$Message.warning(this.$i18n.t('detail.messages.dontDoIt')+suggestion);
+      if ('0123456789abcedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_'.split('').indexOf(suggestion.trim()) != -1) { // one letter suggestion
+        this.$Message.warning(this.$i18n.t('detail.messages.dontDoIt') + suggestion);
         return false;
       }
       // JUST before ajax
@@ -637,7 +664,7 @@ export default {
         return false;
       }
       if (statusData.error === 0 && statusData.status === '1') {
-        if (!confirm(this.$i18n.t('detail.messages.changeHacker', { code: this.$i18n.t(`basic.status[${status}]`) }))) {
+        if (!confirm(this.$i18n.t('detail.messages.changeHacker', {code: this.$i18n.t(`basic.status[${status}]`)}))) {
           this.verifySpinShow = false;
           return false;
         }
@@ -656,42 +683,42 @@ export default {
           originUserId,
         }
       })
-      .then((res) => {
-        this.verifySpinShow = false;
+        .then((res) => {
+          this.verifySpinShow = false;
 
-        const d = res.data;
-        if (res.data.error === 0) {
-          // reset verifyForm
-          this.verify.status = '1';
-          this.verify.suggestion = '';
-          this.verify.checkbox = [];
+          const d = res.data;
+          if (res.data.error === 0) {
+            // reset verifyForm
+            this.verify.status = '1';
+            this.verify.suggestion = '';
+            this.verify.checkbox = [];
 
-          const { id, userId, createDatetime, status, suggestion, username, cheatMethods, privilege } = d.data;
+            const {id, userId, createDatetime, status, suggestion, username, cheatMethods, privilege} = d.data;
 
-          this.cheater.status = status;
+            this.cheater.status = status;
 
-          this.timelineList.push({
-            type: 'verify',
-            id,
-            userId,
-            createDatetime: convertDatetimeToUserTimeZone(createDatetime),
-            // fix bug
-            status: status === '6' ? '1' : status,
-            suggestion,
-            cheatMethods,
-            username,
-            privilege,
-          });
+            this.timelineList.push({
+              type: 'verify',
+              id,
+              userId,
+              createDatetime: convertDatetimeToUserTimeZone(createDatetime),
+              // fix bug
+              status: status === '6' ? '1' : status,
+              suggestion,
+              cheatMethods,
+              username,
+              privilege,
+            });
 
-          this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
-        } else {
-          this.$Message.error('failed ' + d.msg);
-        }
-      })
+            this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
+          } else {
+            this.$Message.error('failed ' + d.msg);
+          }
+        })
     },
     doConfirm(e) {
-      const { userVerifyCheaterId, userVerifyCheaterUsername, cheatMethods } = e.target.dataset;
-      const { userId } = this.$store.state.user;
+      const {userVerifyCheaterId, userVerifyCheaterUsername, cheatMethods} = e.target.dataset;
+      const {userId} = this.$store.state.user;
       const originUserId = this.$route.params.ouid;
 
       ajax({
@@ -704,26 +731,26 @@ export default {
           cheatMethods,
         }
       })
-      .then((res) => {
-        let d = res.data;
+        .then((res) => {
+          let d = res.data;
 
-        if (d.error === 0) {
-          const { createDatetime } = d.data;
+          if (d.error === 0) {
+            const {createDatetime} = d.data;
 
-          this.cheater.status = '1';
+            this.cheater.status = '1';
 
-          this.timelineList.push({
-            type: 'confirm',
-            userId,
-            userVerifyCheaterId,
-            createDatetime: convertDatetimeToUserTimeZone(createDatetime),
-            cheatMethods,
-            username: this.$store.state.user.username,
-          })
-        } else {
-          this.$Message.warning(d.msg);
-        }
-      })
+            this.timelineList.push({
+              type: 'confirm',
+              userId,
+              userVerifyCheaterId,
+              createDatetime: convertDatetimeToUserTimeZone(createDatetime),
+              cheatMethods,
+              username: this.$store.state.user.username,
+            })
+          } else {
+            this.$Message.warning(d.msg);
+          }
+        })
     },
     isSelf(id) {
       const userId = this.$store.state.user.userId;
@@ -731,9 +758,9 @@ export default {
       return (parseInt(userId) === parseInt(id))
     },
     handleReply(e) {
-      const { floor, userId } = e.target.dataset;
+      const {floor, userId} = e.target.dataset;
 
-      this.reply.toFloor = floor === 'undefined' ?  '' : floor;
+      this.reply.toFloor = floor === 'undefined' ? '' : floor;
       this.reply.toUserId = userId === 'undefined' ? '' : userId;
 
       // open reply modal
@@ -747,8 +774,8 @@ export default {
 
       const cheaterId = this.cheater.id;
       const userId = this.$store.state.user.userId;
-      const { toFloor, toUserId } = this.reply;
-      const { originUserId } = this.cheater;
+      const {toFloor, toUserId} = this.reply;
+      const {originUserId} = this.cheater;
       let {content = ''} = this.reply;
 
       content = formatTextarea(content);
@@ -772,41 +799,41 @@ export default {
         url: '/cheaters/reply',
         data,
       })
-      .then((res) => {
-        this.replySpinShow = false;
+        .then((res) => {
+          this.replySpinShow = false;
 
-        const d = res.data;
+          const d = res.data;
 
-        if (d.error === 0) {
-          const { createDatetime, content, status } = d.data;
-          this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
+          if (d.error === 0) {
+            const {createDatetime, content, status} = d.data;
+            this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
 
-          // reset reply
-          this.cancelReply();
+            // reset reply
+            this.cancelReply();
 
-          const foo = this.$store.state.user.username;
-          const fooUId = this.$store.state.user.uId;
-          const bar = '';
-          const barUId = '';
-          this.timelineList.push({
-            type: 'reply',
+            const foo = this.$store.state.user.username;
+            const fooUId = this.$store.state.user.uId;
+            const bar = '';
+            const barUId = '';
+            this.timelineList.push({
+              type: 'reply',
 
-            createDatetime: convertDatetimeToUserTimeZone(createDatetime),
-            content,
-            foo,
-            fooUId,
-            bar,
-            barUId,
-          });
-          this.cheater.status = status;
-        } else {
-          this.$Message.error(d.msg);
-        }
-      });
+              createDatetime: convertDatetimeToUserTimeZone(createDatetime),
+              content,
+              foo,
+              fooUId,
+              bar,
+              barUId,
+            });
+            this.cheater.status = status;
+          } else {
+            this.$Message.error(d.msg);
+          }
+        });
     },
     handleCmdEnter(e, type) {
-      if ( (e.metaKey || e.ctrlKey) && e.keyCode == 13 )  {
-        switch(type) {
+      if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
+        switch (type) {
           case 'reply':
             this.doReply()
             break;
@@ -825,7 +852,7 @@ export default {
       }
 
       this.updateUserInfospinShow = true;
-      const { originUserId } = this.cheater;
+      const {originUserId} = this.cheater;
       ajax({
         method: 'post',
         url: '/cheaters/updateCheaterInfo',
@@ -870,47 +897,69 @@ export default {
 </script>
 
 <style lang="scss">
-  .cheater-desc {
+.cheater-desc {
+  max-width: 100%;
+  width: 34rem;
+}
+
+.description {
+  color: rgba(0, 0, 0, 0.8);
+  font-size: .8rem;
+  line-height: 1.4rem;
+
+  img, video {
     max-width: 100%;
-    width: 34rem;
   }
-  .description {
-    color: rgba(0, 0, 0, 0.8);
-    font-size: .8rem;
-    line-height: 1.4rem;
+}
 
-    img, video {
-      max-width: 100%;
-    }
-  }
+.timeline-time {
+  color: #00000073;
+}
 
-  .timeline-time {
-    color: #00000073;
-  }
-  .ivu-time {
-    margin-right: .6rem;
-  }
-  .timeline-content {
-    position: relative;
+.ivu-time {
+  margin-right: .6rem;
+}
 
-    // force to wrap
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-  }
-  .timeline-content .loading {
-    background-image: url('/src/assets/fonts/loading.svg');
-    background-repeat: no-repeat;
-    min-width: 100px;
-    min-height: 100px;
-  }
-  .ivu-timeline-item {
-    padding: 1rem 0;
-  }
-  .ivu-timeline-item-content {
-    padding: 0 .6rem 0 1.2rem;
-  }
-  .ivu-timeline-item-tail {
-    top: 1rem;
-  }
+.timeline-content {
+  position: relative;
+
+  // force to wrap
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.timeline-content .loading {
+  background-image: url('/src/assets/fonts/loading.svg');
+  background-repeat: no-repeat;
+  min-width: 100px;
+  min-height: 100px;
+}
+
+.ivu-timeline-item {
+  padding: 1rem 0;
+}
+
+.ivu-timeline-item-content {
+  padding: 0 .6rem 0 1.2rem;
+}
+
+.ivu-timeline-item-tail {
+  top: 1rem;
+}
 </style>
 
+<style>
+.spin-icon-load{
+  animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+  from { transform: rotate(0deg);}
+  50%  { transform: rotate(180deg);}
+  to   { transform: rotate(360deg);}
+}
+.demo-spin-col{
+  height: 100px;
+  position: relative;
+  border: 1px solid #eee;
+}
+</style>

@@ -1,10 +1,12 @@
 <template>
     <header>
       <div class="header-container container">
-        <img src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png"
-             width="40"
-             height="40"
-             alt="bfban logo"/>
+        <router-link class="mobile-hide" :to="{name: 'home'}">
+          <img src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png"
+               width="40"
+               height="40"
+               alt="bfban logo"/>
+        </router-link>
 
         <div class="nav">
           <router-link class="mobile-hide link" :to="{name: 'home'}">
@@ -34,7 +36,7 @@
           </router-link>
         </div>
         <div class="search mobile-hide">
-          <Input clearable search size="large" placeholder="支持搜索历史ID啦..." v-model="searchVal" @on-search="handleSearch" />
+          <Input clearable search placeholder="支持搜索历史ID啦..." v-model="searchVal" @on-search="handleSearch" />
         </div>
         <div class="nav">
           <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
@@ -240,4 +242,3 @@
     left: -4px;
   }
 </style>
-

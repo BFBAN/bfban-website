@@ -15,35 +15,45 @@
 
       <p>
         <RadioGroup
-            v-model="gameName"
-            @on-change="handleChanges"
-            type="button">
-          <Radio label="bf1">
+          size="large"
+          class="game-type"
+          v-model="gameName"
+          @on-change="handleChanges"
+          type="button">
+          <Radio label="bf1" style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2017/01/battlefield-1-keyart-5452x3859.jpg.adapt.crop1x1.767p.jpg')">
             <Badge :count="getTotalNum('bf1')" :overflow-count="90000">
-              <span>{{ $t("list.filters.game.bf1") }}</span>
+              <Tooltip :content="$t('list.filters.game.bf1')" placement="top-start">
+                <img height="25" src="https://media.contentapi.ea.com/content/dam/gin/common/logos/layer-1.png">
+              </Tooltip>
             </Badge>
           </Radio>
-          <Radio label="bfv">
+          <Radio label="bfv" style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2018/05/bfv-campaignart-standard-large.jpg.adapt.crop1x1.767p.jpg')">
             <Badge :count="getTotalNum('bfv')" :overflow-count="90000">
-              <span>{{ $t("list.filters.game.bfv") }}</span>
+              <Tooltip :content="$t('list.filters.game.bfv')" placement="top-start">
+                <img height="25" src="https://media.contentapi.ea.com/content/dam/gin/common/logos/bfv-logo-white.png">
+              </Tooltip>
             </Badge>
           </Radio>
-          <Radio label="bf6">
+          <Radio label="bf6" style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2021/06/battlefield-2042-key-art.jpg.adapt.crop1x1.767p.jpg')">
             <Badge :count="getTotalNum('bf6')" :overflow-count="90000">
-              <span>{{ $t("list.filters.game.bf6") }}</span>
+              <Tooltip :content="$t('list.filters.game.bf6')" placement="top-start">
+                <img height="20" src="https://media.contentapi.ea.com/content/dam/gin/common/logos/battlefield-2042-mono-logo-svg.svg">
+              </Tooltip>
             </Badge>
           </Radio>
         </RadioGroup>
         <Divider type="vertical"/>
         <span class="mobile-hide">
-          <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报时间范围" style="width: 200px"></DatePicker>
+          <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报时间范围"
+                      style="width: 200px"></DatePicker>
           -
-          <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新时间范围" style="width: 200px"></DatePicker>
+          <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新时间范围"
+                      style="width: 200px"></DatePicker>
         </span>
         <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
-          <Option value="100">{{$t("list.filters.status.all")}}({{getAllStatusNum}})</Option>
+          <Option value="100">{{ $t("list.filters.status.all") }}({{ getAllStatusNum }})</Option>
           <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">
-            {{ status.label }}({{ getStatusNum(status.value)}})
+            {{ status.label }}({{ getStatusNum(status.value) }})
           </Option>
         </Select>
         <Divider type="vertical"/>
@@ -51,21 +61,21 @@
           <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.value }}</Option>
         </Select>
       </p>
-
+      <br>
       <p class="mobile-hide">
         <RadioGroup
-            v-model="statusGroup"
-            @on-change="handleStatusChange"
-            type="button">
-            <Radio label="100">
-              <Badge :count="getAllStatusNum" overflow-count="900000">
-                <span>{{ $t("list.filters.status.all") }}</span>
-              </Badge>
-            </Radio>
+          v-model="statusGroup"
+          @on-change="handleStatusChange"
+          type="button">
+          <Radio label="100">
+            <Badge :count="getAllStatusNum" overflow-count="900000">
+              <span>{{ $t("list.filters.status.all") }}</span>
+            </Badge>
+          </Radio>
           <Radio
-              v-for="status in cheaterStatus"
-              :key="status.value"
-              :label="`${status.value}`">
+            v-for="status in cheaterStatus"
+            :key="status.value"
+            :label="`${status.value}`">
             <Badge :count="getStatusNum(status.value)">
                 <span>
                   {{ status[$i18n.locale] }}
@@ -73,16 +83,15 @@
             </Badge>
           </Radio>
         </RadioGroup>
-      </p>
-
-      <p>
+        <Divider type="vertical"/>
         <Button icon="ios-refresh" @click.prevent.stop="handleRefresh">{{ $t("list.filters.refresh") }}
         </Button>
       </p>
 
-      <div class="list">
-        <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange" @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small" />
-        <Spin size="large" fix v-show="spinShow"></Spin>
+      <Card dis-hover class="list">
+        <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange"
+              @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
+        <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
         <br>
         <ul>
           <!--          <li>-->
@@ -95,7 +104,8 @@
               <Row>
                 <Col span="2">
                   <span style="display: flex; align-items: center;">
-                    <img :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'" alt="avatar" style="
+                    <img :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'" alt="avatar"
+                         style="
                       width: 3rem;
                       height: 3rem;
                       border-radius: 2.3rem;">
@@ -106,30 +116,31 @@
                     <div style="height: 1.6rem;">
                       <router-link :to="{name: 'cheater', params: {ouid: `${d.originUserId}` }}">
                         <h2>
-                          {{d.originId}}
-                          <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId" @click="copied"></Button>
+                          {{ d.originId }}
+                          <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"
+                                  @click="copied"></Button>
                         </h2>
                       </router-link>
                     </div>
                   </div>
 
                   举报时间
-                  <Time v-if="d.createDatetime" :time="d.createDatetime" />
+                  <Time v-if="d.createDatetime" :time="d.createDatetime"/>
                   <Divider type="vertical"/>
                   更新时间
-                  <Time v-if="d.updateDatetime" :time="d.updateDatetime" />
+                  <Time v-if="d.updateDatetime" :time="d.updateDatetime"/>
                 </Col>
                 <Col span="3">
-                  <Row type="flex"  justify="center" align="middle" style="height: 50px">
+                  <Row type="flex" justify="center" align="middle" style="height: 50px">
                     <Col span="12" align="center" class="list">
-                      <Icon type="md-eye" size="15" class="item-icon" />
+                      <Icon type="md-eye" size="15" class="item-icon"/>
                       <span class="item-text">{{ d.n }}</span>
                     </Col>
                     <Col span="1" align="center">
                       <Divider type="vertical"/>
                     </Col>
                     <Col span="10" align="center">
-                      <Icon type="md-chatboxes" size="15" class="item-icon" />
+                      <Icon type="md-chatboxes" size="15" class="item-icon"/>
                       <span class="item-text">{{ d.commentsNum }}</span>
                     </Col>
                   </Row>
@@ -141,8 +152,9 @@
           </div>
         </ul>
 
-        <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange" @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small" />
-      </div>
+        <Page :page-size="limit" show-sizer show-total :current="page" @on-change="handlePageChange"
+              @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
+      </Card>
     </div>
   </div>
 </template>
@@ -342,20 +354,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page {
-  padding: 0.4rem;
-  margin: 0.4rem auto;
-  background: #f7f7f7;
-  display: inline-block;
-  width: 100%;
-  border-bottom: 1px solid #eaeaea;
-  border-top: 1px solid #eaeaea;
-}
-
-.list {
-  position: relative;
-}
-
 li {
   display: flex;
   justify-content: space-around;
@@ -392,5 +390,32 @@ li {
     color: #6f6f6f;
   }
 }
-</style>
 
+.page {
+  padding: 0 16px;
+  margin: 13px -16px;
+  display: inline-block;
+  width: calc(100% + 32px);
+}
+
+.list {
+  margin: 20px 0;
+  position: relative;
+}
+
+.game-type {
+  label {
+    animation: all .25s;
+    background-size: cover;
+    background-position: center;
+
+    img {
+      margin-top: 5px;
+    }
+  }
+
+  label:hover {
+    background-size: 100%;
+  }
+}
+</style>

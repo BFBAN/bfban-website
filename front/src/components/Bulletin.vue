@@ -3,7 +3,6 @@
       <Divider>{{$t("home.bulletin.title")}}</Divider>
 
       <div class="md" v-html="data"></div>
-
   </div>
 </template>
 

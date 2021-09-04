@@ -2,22 +2,22 @@
   <div class="container">
     <div class="content">
       <Form :label-width="80" style="position: relative;">
-        <Divider>{{$t("reset.title")}}</Divider>
+        <Divider>{{ $t("reset.title") }}</Divider>
 
         <FormItem :label="$t('reset.form.qq')">
-          <Input type="text" v-model="reset.qq" :placeholder="$t('reset.form.qq')" />
+          <Input type="text" v-model="reset.qq" :placeholder="$t('reset.form.qq')"/>
         </FormItem>
 
         <FormItem :label="$t('reset.form.password')">
-          <Input type="password" v-model="reset.password" :placeholder="$t('reset.form.password')" />
+          <Input type="password" v-model="reset.password" :placeholder="$t('reset.form.password')"/>
         </FormItem>
 
         <FormItem :label="$t('reset.form.passwordRepeat')">
-          <Input type="password" v-model="reset.passwordRepeat" :placeholder="$t('reset.form.passwordRepeat')" />
+          <Input type="password" v-model="reset.passwordRepeat" :placeholder="$t('reset.form.passwordRepeat')"/>
         </FormItem>
 
         <FormItem>
-          <Button @click.prevent.stop="handleReset" type="primary">{{$t('reset.form.submit')}}</Button>
+          <Button @click.prevent.stop="handleReset" type="primary">{{ $t('reset.form.submit') }}</Button>
         </FormItem>
 
         <Spin size="large" fix v-show="spinShow"></Spin>
@@ -28,9 +28,10 @@
 </template>
 
 <script>
-import { getCsrfToken, waitForAction } from '@/mixins/common';
-import ajax, { baseURL } from "@/mixins/ajax";
-const { mapActions, mapMutations } = Vuex;
+import {http, api} from '../assets/js/index'
+import {getCsrfToken, waitForAction} from '@/mixins/common';
+
+const {mapActions, mapMutations} = Vuex;
 
 export default {
   data() {
@@ -51,22 +52,14 @@ export default {
         o[k] = v.trim();
       });
 
-      const { token } = this.$route.query
+      const {token} = this.$route.query
 
       if (qq && password && passwordRepeat && password === passwordRepeat) {
         this.spinShow = true;
 
-        ajax({
-          method: 'post',
-          url: '/account/reset',
-          data: {
-            qq,
-            token,
-            password,
-            passwordRepeat,
-          },
-        })
-        .then((res) => {
+        http.post(api["account_reset"], {
+          data: {qq, token, password, passwordRepeat,},
+        }).then((res) => {
           this.spinShow = false;
 
           const d = res.data;

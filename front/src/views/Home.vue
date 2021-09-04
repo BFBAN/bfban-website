@@ -5,29 +5,35 @@
            style="background-image: url('../assets/images/index-bk.png')">
         <Row>
           <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 8, offset: 0}">
-            <h1 class="title"><Icon type="md-lock" /> 联BFBAN</h1>
+            <h1 class="title">
+              <Icon type="md-lock"/>
+              联BFBAN
+            </h1>
             <h3>建立全球作弊玩家档案库，被世界各地服务器使用，杜绝恶意玩家:D</h3>
             <br>
             <p>成为我们一员 - 改变社区环境</p>
-            <Divider />
+            <Divider/>
 
             <router-link :to="{name: 'signup'}">
               <Button type="primary">注册用户</Button>
             </router-link>
-            <Divider type="vertical" />
+            <Divider type="vertical"/>
             <router-link :to="{name: 'about'}">
-              <Button type="text"><Icon type="ios-help-circle-outline" />了解有那些社区已经加入</Button>
+              <Button type="text">
+                <Icon type="ios-help-circle-outline"/>
+                了解有那些社区已经加入
+              </Button>
             </router-link>
 
             <Row :gutter="10" style="margin-top: 50px">
               <Col span="12">
-                <Card>
+                <Card dis-hover>
                   <h3>{{ site.report || 0 }}</h3>
                   <span>已收到</span>
                 </Card>
               </Col>
               <Col span="12">
-                <Card>
+                <Card dis-hover>
                   <h3>{{ site.cheater || 0 }}</h3>
                   <span>确认作弊者</span>
                 </Card>
@@ -37,11 +43,8 @@
             <p>截止2018年11月4日</p>
 
           </Col>
-          <Col span="16" class="mobile-hide">
-<!--            <img src="" width="100%">-->
-
-            <iframe data-v-fae5bece="" src="//player.bilibili.com/player.html?aid=884107362&amp;bvid=BV1EK4y1v7fo&amp;cid=218327849&amp;page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="allowfullscreen" style="width: calc(100% - 15%);height: 75%;margin: 15%;"></iframe>
-
+          <Col span="16" class="mobile-hide" :lg="{span: 13, push: 3}" type="flex" align="right" justify="center">
+            <img src="../assets/images/index-bk.png" width="100%" class="ivu-row-top" style="margin-top: 5rem">
           </Col>
         </Row>
       </div>
@@ -50,14 +53,22 @@
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
           <Card>
             <Row>
-              <Col span="12">
+              <Col span="5">
                 <Icon type="md-chatboxes" size="50" color="#19be6b"/>
               </Col>
-              <Col span="12" align="right">
-                <div>
-                  <h3>新闻</h3>
-                  <p>最新动态</p>
-                </div>
+              <Col span="18" align="right">
+                <Tooltip>
+                  <div>
+                    <h3>参与</h3>
+                    <p>您或组织都可以加入BFBAN</p>
+                  </div>
+                  <div slot="content" max-width="500">
+                    <p>个人用户在BFBAN注册并投递举报，</p>
+                    <p>
+                      如果您是组织代表，希望加入BFBAN可通过第三方工具申请获得服务集群管理账户
+                    </p>
+                  </div>
+                </Tooltip>
               </Col>
             </Row>
           </Card>
@@ -81,10 +92,10 @@
           <router-link :to="{name: 'apps'}">
             <Card>
               <Row>
-                <Col span="8">
+                <Col span="5">
                   <Icon type="md-apps" size="50" color="#ff9900"/>
                 </Col>
-                <Col span="16" align="right">
+                <Col span="18" align="right">
                   <div>
                     <h3>工具</h3>
                     <p>整合BFBAN数据库第三方</p>
@@ -95,71 +106,84 @@
           </router-link>
         </Col>
       </Row>
+    </div>
 
-      <Bulletin />
-      <Divider>{{$t("home.activity.title")}}</Divider>
 
-      <Row>
-        <Col :xs="{span: 22, push: 1, pull: 1}">
-          <table>
-            <tbody>
-            <tr v-for="activity in activities" :key="activity.id">
-              <td nowrap>
-                <Time v-if="activity.createDatetime" :time="activity.createDatetime"></Time>
-              </td>
-              <td v-if="activity.type === 'report'">
-              <span>
-                <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
+    <div class="box mobile-hide">
+      <div class="container">
+        <Row>
+          <Col :lg="{span: 10, push: 0}">
+            <h1 align="left">{{ $t("home.activity.title") }}</h1>
+            <h5 align="left">数以千计的玩家和组织已经在他们的BFBAN中贡献与使用</h5>
+          </Col>
+          <Col span="16" :lg="{span: 13, push: 3}" type="flex" align="right" justify="center">
+            <router-link :to="{name: 'cheaters'}">
+<!--              <i-switch v-model="activitySwitchType"/>-->
+              <Button type="dashed">查阅更多</Button>
+            </router-link>
+          </Col>
+        </Row>
+      </div>
+      <div v-if="activitySwitchType" class="lean-box">
+        <div class="wrapper" :style="'animation: rowup ' + activities.length * .8 + 's linear infinite;'">
+          <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
+            <Card class="icon" v-for="a_i in activity" :key="a_i.value">
+              <div align="center" style="margin-top: -80px">
+                <Avatar size="80">{{ a_i.username[0] }}</Avatar>
+                <p>
+                  {{ a_i.username }}
+                  <Divider type="vertical"/>
+                  <Time v-if="a_i.createDatetime" :time="a_i.createDatetime"></Time>
+                </p>
+              </div>
+              <span v-if="a_i.type === 'report'">
+                <router-link :to="{name: 'account', params: {uId: `${a_i.uId}`}}">{{
+                    a_i.username
+                  }}</router-link>
                 举报了
                 <Tag>
-                  {{ handleGameName(activity.game) }}
+                  {{ handleGameName(a_i.game) }}
                 </Tag>
-                <router-link :to="{name: 'cheater', params: {game: `${activity.game}`, ouid: `${activity.originUserId}`}}">{{ activity.cheaterOriginId }}</router-link>
+                <router-link
+                  :to="{name: 'cheater', params: {game: `${a_i.game}`, ouid: `${a_i.originUserId}`}}">{{
+                    a_i.cheaterOriginId
+                  }}</router-link>
               </span>
 
-              </td>
-
-              <td v-if="activity.type === 'register'">
-              <span>
-                <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
+              <span v-if="a_i.type === 'register'">
+                <router-link :to="{name: 'account', params: {uId: `${a_i.uId}`}}">{{
+                    a_i.username
+                  }}</router-link>
                 注册了 bfban ，
                 欢迎！
               </span>
 
-              </td>
-
-              <td v-if="activity.type === 'verify'">
-              <span>
+              <span v-if="a_i.type === 'verify'">
                 <Tag color="success">管理员</Tag>
-                <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{ activity.username }}</router-link>
+                <router-link :to="{name: 'account', params: {uId: `${a_i.uId}`}}">{{
+                    a_i.username
+                  }}</router-link>
                 将
-                <router-link :to="{name: 'cheater', params: {ouid: `${activity.originUserId}`}}">{{ activity.cheaterOriginId }}</router-link>
+                <router-link :to="{name: 'cheater', params: {ouid: `${a_i.originUserId}`}}">{{
+                    a_i.cheaterOriginId
+                  }}</router-link>
                 处理为
                 <Tag color="warning">
-                  {{ handleStatus(activity.status) }}
+                  {{ handleStatus(a_i.status) }}
                 </Tag>
               </span>
-
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </Col>
-      </Row>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <p v-for="m in manager" :key="m.name">
-      <a v-if="m.link" target="_blank" :href="m.link">{{ m.name }}</a>
-      <span v-else>{{ m.name }}</span>
-    </p>
-
   </div>
 </template>
 
 <script>
-import Bulletin from "@/components/Bulletin.vue";
-import { getCheaterStatusLabel, getGameLabel } from "@/mixins/common";
-import ajax from "@/mixins/ajax";
+import {http, api, conf} from '../assets/js/index'
+// import Bulletin from "@/components/Bulletin.vue";
+import {getCheaterStatusLabel, getGameLabel} from "@/mixins/common";
 import _ from "lodash";
 
 export default {
@@ -167,63 +191,113 @@ export default {
     return {
       site: {},
       activities: [],
-      manager: [
-        {
-          name: '',
-          link: '',
-          desc: '',
-        }
-      ]
+      activities_l: [],
+      activitySwitchType: true,
     }
   },
   components: {
-    Bulletin,
+    // Bulletin,
   },
   methods: {
     handleStatus: getCheaterStatusLabel,
     handleGameName: getGameLabel,
   },
   created() {
-    ajax({
-      method: 'get',
-      url: '/activity',
+    http.get(api["activity"], {}).then(({data}) => {
+      const d = data;
+      if (d.error === 0) {
+        let {registers, reports, verifies, number} = d.data;
+
+        reports = _.each(reports, (v, k, l) => {
+          v['type'] = 'report'
+        });
+        registers = _.each(registers, (v, k, l) => {
+          v['type'] = 'register'
+        });
+        verifies = _.each(verifies, (v, k, l) => {
+          v['type'] = 'verify'
+        });
+
+        let activities = [].concat(verifies, reports, registers);
+        let new_activities = [];
+
+        activities = _.sortBy(activities, (v) => {
+          return (new Date(v.createDatetime)).getTime();
+        }).reverse();
+
+        // slice array
+        for (let i = 0; i < activities.length; i += 3) {
+          new_activities.push(activities.slice(i, i + 3));
+        }
+
+        this.activities_l = new_activities;
+        this.activities = activities;
+
+        this.site = number;
+      }
     })
-        .then(({data}) => {
-          const d = data;
-          if (d.error === 0) {
-            let { registers, reports, verifies, number } = d.data;
-
-            reports = _.each(reports, (v, k, l) => {
-              v['type'] = 'report'
-            });
-            registers = _.each(registers, (v, k, l) => {
-              v['type'] = 'register'
-            });
-            verifies = _.each(verifies, (v, k, l) => {
-              v['type'] = 'verify'
-            });
-
-            let activities = [].concat(verifies, reports, registers);
-
-            activities = _.sortBy(activities, (v) => {
-              return (new Date(v.createDatetime)).getTime();
-            }).reverse();
-
-            this.activities = activities;
-
-            this.site = number;
-          }
-        })
   }
 }
 </script>
+
+<style>
+@keyframes rowup {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.box {
+  background: #f3edff;
+  padding-top: 100px;
+  overflow: hidden;
+  height: 800px;
+  margin: 100px -25% 0 -25%;
+  text-align: center;
+}
+
+.lean-box {
+  display: flex;
+  transform: rotate(-5deg);
+  margin-top: 50px;
+}
+
+.wrapper {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.wrapper .icon {
+  font-size: 12px;
+  width: 250px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transform: translateX(0) translateY(40px);
+}
+
+.wrapper .icon:nth-child(even) {
+  margin-top: 105px;
+  margin-left: 45px;
+  transform: translateX(45px) translateY(-10px);
+}
+
+
+</style>
 
 <style lang="scss" scoped>
 .home-banner {
   min-height: 600px;
   background-size: 500px;
   background-repeat: no-repeat;
-  background-position:  right;
+  background-position: right;
 
   .title {
     position: relative;

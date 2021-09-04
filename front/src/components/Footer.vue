@@ -123,6 +123,12 @@ export default {
     ul {
       display: block;
       margin-bottom: 10px;
+      list-style-type: none;
+
+      a {
+        display: block;
+        margin-bottom: 5px;
+      }
     }
 
     b {

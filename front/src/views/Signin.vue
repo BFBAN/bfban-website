@@ -5,7 +5,7 @@
     <div class="content">
       <Row :gutter="16">
         <Col span="11">
-          <Divider>{{$t("home.howToUse.title")}}</Divider>
+          <Divider>{{ $t("home.howToUse.title") }}</Divider>
 
           <Carousel autoplay loop>
             <CarouselItem>
@@ -40,26 +40,31 @@
         </Col>
         <Col span="13">
           <Card shadow>
-            <p slot="title">{{$t("signin.title")}}</p>
+            <p slot="title">{{ $t("signin.title") }}</p>
             <Form>
               <FormItem :label="$t('signin.form.username')">
-                <Input prefix="ios-contact"  type="text" v-model="signin.username" size="large" :placeholder="$t('signin.form.username')" />
+                <Input prefix="ios-contact" type="text" v-model="signin.username" size="large"
+                       :placeholder="$t('signin.form.username')"/>
               </FormItem>
 
               <FormItem :label="$t('signin.form.password')">
-                <Input type="password" password v-model="signin.password" size="large" :placeholder="$t('signin.form.password')" />
+                <Input type="password" password v-model="signin.password" size="large"
+                       :placeholder="$t('signin.form.password')"/>
               </FormItem>
 
               <FormItem :label="$t('signup.form.captcha')">
-                <Input type="text" v-model="signin.captcha" size="large" :placeholder="$t('signup.form.captcha')"></Input>
-                <img ref="captcha" :src="captchaUrl" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha" />
+                <Input type="text" v-model="signin.captcha" size="large"
+                       :placeholder="$t('signup.form.captcha')"></Input>
+                <img ref="captcha" :src="captchaUrl" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha"/>
               </FormItem>
 
               <FormItem>
-                <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">{{$t('signin.form.submit')}}</Button>
+                <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
+                  {{ $t('signin.form.submit') }}
+                </Button>
 
                 <Divider>
-                  <router-link :to="{name: 'signup'}">{{$t('signin.form.submitHint')}}</router-link>
+                  <router-link :to="{name: 'signup'}">{{ $t('signin.form.submitHint') }}</router-link>
                 </Divider>
               </FormItem>
             </Form>
@@ -73,13 +78,12 @@
 </template>
 
 <script>
-import { getCsrfToken, waitForAction } from "@/mixins/common";
-import {http, api} from '../assets/js/index'
-import ajax, { baseURL } from "@/mixins/ajax";
+import {getCsrfToken, waitForAction} from "@/mixins/common";
+import {http, api, conf} from '../assets/js/index'
 import Vuex from "vuex";
 import _ from "lodash";
 
-const { mapActions, mapMutations } = Vuex;
+const {mapActions, mapMutations} = Vuex;
 
 export default {
   data() {
@@ -108,8 +112,8 @@ export default {
     ...mapMutations([
       'SIGNIN'
     ]),
-    refreshCaptcha: function() {
-      this.captchaUrl = baseURL + '/captcha?r=' + Math.random();
+    refreshCaptcha: function () {
+      this.captchaUrl = conf['requestDev'] + '/captcha?r=' + Math.random();
 
       // waitForAction.call(this.$refs.reCaptcha);
     },
@@ -134,29 +138,29 @@ export default {
             captcha,
           },
         }).then((res) => {
-              that.spinShow = false;
+          that.spinShow = false;
 
-              const d = res.data;
-              if (d.error === 1) {
-                that.$Message.error('登录失败 ' + d.msg);
-                that.signin.password = '';
-                that.signin.captcha = '';
-                that.refreshCaptcha();
+          const d = res.data;
+          if (d.error === 1) {
+            that.$Message.error('登录失败 ' + d.msg);
+            that.signin.password = '';
+            that.signin.captcha = '';
+            that.refreshCaptcha();
+          } else {
+            that.signinUser(d.data).then(() => {
+              const rurl = this.$route.query.rurl;
+
+              // redirect rurl or home
+              if (rurl) {
+                this.$router.push(rurl);
               } else {
-                that.signinUser(d.data).then(() => {
-                  const rurl = this.$route.query.rurl;
-
-                  // redirect rurl or home
-                  if (rurl) {
-                    this.$router.push(rurl);
-                  } else {
-                    this.$router.go('-1');
-                  }
-
-                  this.$Message.success('登录成功');
-                })
+                this.$router.go('-1');
               }
+
+              this.$Message.success('登录成功');
             })
+          }
+        })
       } else {
         this.$Message.error('请规范填写');
       }

@@ -6,11 +6,6 @@
     </Breadcrumb>
     <br>
     <Card class="content" dis-hover>
-      <img
-        class="logo"
-        src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png"
-        alt=""/>
-
       <p v-html="$t('about.description')"></p>
       <p v-html="$t('about.clanInfo', { clans: clan.length })"></p>
 

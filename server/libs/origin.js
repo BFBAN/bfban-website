@@ -35,8 +35,8 @@ function readToken() {
   //     if (err) {
   //       resolve(access_token)
   //     } else {
-  //       let d = JSON.parse(data.toString());
-  //       let { expires, token } = d;
+  //       let d.txt = JSON.parse(data.toString());
+  //       let { expires, token } = d.txt;
   //
   //       let currentDatetime = moment().format();
   //
