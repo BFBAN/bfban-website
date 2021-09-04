@@ -57,7 +57,7 @@
                 <Icon type="md-chatboxes" size="50" color="#19be6b"/>
               </Col>
               <Col span="18" align="right">
-                <Tooltip>
+                <Tooltip class="joinBFbanTip">
                   <div>
                     <h3>参与</h3>
                     <p>您或组织都可以加入BFBAN</p>
@@ -322,5 +322,10 @@ export default {
       background-color: #401486;
     }
   }
+}
+</style>
+<style lang="scss">
+.joinBFbanTip .ivu-tooltip-inner {
+  white-space: normal;
 }
 </style>

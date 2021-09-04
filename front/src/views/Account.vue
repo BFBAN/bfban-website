@@ -6,8 +6,8 @@
     </Breadcrumb>
     <br>
 
-    <Row type="flex" align="center">
-      <Col align="center">
+    <Row type="flex" align="middle">
+      <Col align="middle">
         <br>
         <Avatar shape="square" style="background-color: yellow" size="150">{{ account.username[0] || '' }}</Avatar>
         <br>
@@ -59,59 +59,58 @@
                     {{$t('account.noReports')}}
                   </Alert>
                 </p>
-
                 <table>
                   <tbody>
                   <tr v-for="report in account.reports" :key="report.id">
                     <td>
-                                <span>
-                                    <Tag color="primary">
-                                        <Time
-                                            v-if="report.createDatetime"
-                                            :time="report.createDatetime"
-                                        />
-                                    </Tag>
-                                </span>
+                      <span>
+                        <Tag color="primary">
+                            <Time
+                              v-if="report.createDatetime"
+                              :time="report.createDatetime"
+                            />
+                        </Tag>
+                      </span>
                     </td>
                     <td>
-                                <span>
-                                    {{ $t("account.reported") }}
-                                    <router-link
-                                        :to="{
-                                            name: 'cheater',
-                                            params: {
-                                                ouid: `${report.originUserId}`,
-                                            },
-                                        }"
-                                    >
-                                        <Tag>
-                                            {{ report.game }}
-                                        </Tag>
-                                        {{ report.originId }}
-                                    </router-link>
-                                </span>
+                      <span>
+                          {{ $t("account.reported") }}
+                          <router-link
+                              :to="{
+                                  name: 'cheater',
+                                  params: {
+                                      ouid: `${report.originUserId}`,
+                                  },
+                              }"
+                          >
+                              <Tag>
+                                  {{ report.game }}
+                              </Tag>
+                              {{ report.originId }}
+                          </router-link>
+                      </span>
                     </td>
                     <td>
-                                <span>
-                                    {{ $t("account.status") }}
-                                    <Tag color="error">
-                                        {{
-                                        $t(`basic.status[${report.status}]`)
-                                      }}
-                                    </Tag>
-                                </span>
+                      <span>
+                        {{ $t("account.status") }}
+                        <Tag color="error">
+                            {{
+                            $t(`basic.status[${report.status}]`)
+                          }}
+                        </Tag>
+                      </span>
                     </td>
                     <td>
-                                <span>
-                                    {{ $t("account.recentlyUpdated") }}
-                                    <Tag color="warning">
-                                        <Time
-                                            v-if="report.updateDatetime"
-                                            :time="report.updateDatetime"
-                                        />
-                                        <span v-else>无</span>
-                                    </Tag>
-                                </span>
+                      <span>
+                        {{ $t("account.recentlyUpdated") }}
+                        <Tag color="warning">
+                          <Time
+                            v-if="report.updateDatetime"
+                            :time="report.updateDatetime"
+                          />
+                          <span v-else>无</span>
+                        </Tag>
+                      </span>
                     </td>
                   </tr>
                   </tbody>
@@ -135,7 +134,6 @@
         </Col>
       </Row>
     </div>
-
     <br>
   </div>
 </template>
@@ -151,9 +149,11 @@ export default {
         originId: "",
         privilege: "",
         createDatetime: "",
-
         reports: [],
       },
+      limit: 10,
+      page: 0,
+      total: 100
     };
   },
   watch: {
@@ -170,7 +170,6 @@ export default {
         url: `/account/${uId}`,
       }).then((res) => {
         const d = res.data;
-
         if (d.error === 0) {
           this.account = d.data;
           let {reports} = d.data;
@@ -181,6 +180,9 @@ export default {
         }
       });
     },
+    handlePageChange(e) {
+      console.log(e)
+    }
   },
 };
 </script>
