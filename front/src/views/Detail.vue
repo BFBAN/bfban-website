@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
+      <br>
       <Breadcrumb>
         <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
         <BreadcrumbItem to="/cheaters">{{ $t("list.title") }}</BreadcrumbItem>

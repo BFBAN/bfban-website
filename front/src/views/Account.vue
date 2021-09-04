@@ -1,12 +1,13 @@
 <template>
   <div class="container">
+    <br>
     <Breadcrumb>
       <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
       <BreadcrumbItem>{{ $t("account.title") }}</BreadcrumbItem>
     </Breadcrumb>
     <br>
 
-    <Row type="flex" align="middle">
+    <Row type="flex" align="center">
       <Col align="middle">
         <br>
         <Avatar shape="square" style="background-color: yellow" size="150">{{ account.username[0] || '' }}</Avatar>
@@ -36,6 +37,8 @@
         </p>
       </Col>
     </Row>
+
+    <Divider></Divider>
 
     <div class="content">
       <Row :gutter="8" type="flex">

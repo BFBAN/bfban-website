@@ -14,24 +14,25 @@
             <ul>
               <li>
                 <a target="_blank" href="https://discord.gg/KCBM3GAW59">
-                  Community network Discord
+                  Community network Discord<Icon type="ios-share" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href="https://kaihei.co/uoJKC0">
-                  战地中文社区
+                  战地中文社区<Icon type="ios-share" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href="https://jq.qq.com/?_wv=1027&amp;k=pC07TOvE">
-                  QQ BFBan</a>
+                  QQ BFBan<Icon type="ios-share" />
+                </a>
               </li>
               <li>
-                <a href="https://github.com/BFBAN">github BFBAN</a>
+                <a target="_blank" href="https://github.com/BFBAN">github BFBAN<Icon type="ios-share" /></a>
               </li>
               <li>
-                <a href="https://space.bilibili.com/387820951">
-                  bilibili BFBAN
+                <a target="_blank" href="https://space.bilibili.com/387820951">
+                  bilibili BFBAN<Icon type="ios-share" />
                 </a>
               </li>
             </ul>
@@ -52,24 +53,24 @@
             <ul>
               <li>
                 <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
-                  投诉邮箱
+                  投诉邮箱<Icon type="ios-share" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href="https://support.qq.com/products/64038">
-                  意见建议
+                  意见建议<Icon type="ios-share" />
                 </a>
               </li>
             </ul>
           </Col>
           <Col :xs="{span: 22 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
             <b>选择语言</b>
-            <Tag>
+            <Tag size="large">
               <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
                 <Option v-for="item in languages" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
             </Tag>
-            <p>&copy; 2018-2020 All Rights Reserved.</p>
+            <p>&copy; 2018-{{new Date().getFullYear()}} All Rights Reserved.</p>
             <p>Made with <Icon type="ios-heart" color="#ed4014" />Host at
               <a target="_blank" href="https://battlefield.now.sh/">AWSL</a>
             </p>
@@ -125,6 +126,11 @@ export default {
         margin-bottom: 5px;
         font-size: 12px;
       }
+
+      .ivu-icon {
+        color: #c5c5c5;
+        font-size: 15px;
+      }
     }
 
     b {
@@ -134,7 +140,7 @@ export default {
     }
 
     .switch-language {
-      width: 100px;
+
       .ivu-select-selection {
           border: none;
         background-color: rgba(255, 255, 255, 0);

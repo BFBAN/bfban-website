@@ -1,5 +1,6 @@
 <template>
   <div class="container apps">
+    <br>
     <Breadcrumb>
       <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
       <BreadcrumbItem>{{$t("home.howToUse.tools.main")}}</BreadcrumbItem>
@@ -10,10 +11,10 @@
       <Row :gutter="30">
         <Col span="20">
           <h1>{{$t("home.howToUse.tools.main")}}</h1>
-          <p>第三方集成BFBAN数据库工具</p>
+          <p>{{$t("home.howToUse.tools.describe")}}</p>
         </Col>
         <Col span="1" type="flex" align="right">
-          <Button>提交你的应用</Button>
+          <Button>{{$t("home.howToUse.tools.submit_tool_app")}}</Button>
         </Col>
       </Row>
       <Divider />
@@ -46,8 +47,8 @@
               <Button type="primary" :disabled="!item.get">
                 <a :href="item.get">获取</a>
               </Button>
-              <Divider type="vertical" v-if="item.website"/>
-              <Button type="text" :disabled="!item.website"><a :href="item.website">网站</a></Button>
+              <Divider type="vertical"/>
+              <Button type="dashed" :disabled="!item.website"><a :href="item.website">网站</a></Button>
             </div>
           </Card>
         </div>

@@ -114,12 +114,14 @@
         <Row>
           <Col :lg="{span: 10, push: 0}">
             <h1 align="left">{{ $t("home.activity.title") }}</h1>
-            <h5 align="left">数以千计的玩家和组织已经在他们的BFBAN中贡献与使用</h5>
+            <h5 align="left" :data="{cheater}" v-html="$t('home.activity.description') || '数以千计的玩家和组织已经在他们的BFBAN中贡献与使用'"></h5>
           </Col>
-          <Col span="16" :lg="{span: 13, push: 3}" type="flex" align="right" justify="center">
+          <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
             <router-link :to="{name: 'cheaters'}">
 <!--              <i-switch v-model="activitySwitchType"/>-->
-              <Button type="dashed">查阅更多</Button>
+              <Button type="dashed">
+                {{$t('home.activity.more')}}
+              </Button>
             </router-link>
           </Col>
         </Row>

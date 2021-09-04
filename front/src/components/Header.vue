@@ -66,7 +66,9 @@
             </a>
             <DropdownMenu slot="list">
               <DropdownItem>
-                <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">个人中心</router-link>
+                <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
+                  {{$t("header.userCenter")}}
+                </router-link>
               </DropdownItem>
               <DropdownItem>
                 <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">{{$t("header.dashboard")}}</router-link>
@@ -90,9 +92,11 @@
           </a>
 
           <Divider type="vertical"/>
-          <router-link :to="{name: 'apps'}">
-            <Icon type="md-apps" size="30" />
-          </router-link>
+          <Tooltip :content="$t('home.howToUse.tools.main')" placement="bottom-end">
+            <router-link :to="{name: 'apps'}">
+              <Icon type="md-apps" size="30" />
+            </router-link>
+          </Tooltip>
         </div>
       </div>
 
