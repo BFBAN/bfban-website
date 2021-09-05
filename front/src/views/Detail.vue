@@ -22,12 +22,12 @@
               <Row>
                 <Col :xs="{span: 24}" :lg="{span: 20}">
                   <h1 style="font-size: 1.6rem;">
-                    {{ cheater.originId || 'user id' }}
+                    {{ cheater.originName || 'user id' }}
 
                     <!-- 被举报的游戏 -->
                     <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })">
-                      <router-link v-for="g in games" :key="g.game" :to="{name: 'cheaters'}">
-                        {{ g.game || 'game name' }}
+                      <router-link :to="{name: 'cheaters'}">
+                        {{ cheater.games }}
                       </router-link>
                     </Tag>
 
@@ -54,6 +54,27 @@
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
+                  <Divider type="vertical"/>
+                  <Poptip
+                    @on-ok="updateCheaterInfo">
+                    <div style="margin-top: .4rem;" slot="content">
+                      <p class="hint">
+                        <!-- 描述说明 -->
+                        {{ $t('detail.info.discription1', {msg: 'discription1'}) }}
+                        <Button @click.prevent="updateCheaterInfo">
+                          <span>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</span></Button>
+                        ，
+                        <span>{{ $t('detail.info.discription2', {msg: 'discription2'}) }}</span>
+                      </p>
+                      <p class="hint">
+                        {{ $t('detail.info.discription3', {msg: 'discription3'}) }}
+                      </p>
+                      <p class="hint">
+                        {{ $t('detail.info.discription4', {msg: 'discription4'}) }}
+                      </p>
+                    </div>
+                    <a>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</a>
+                  </Poptip>
                 </Col>
                 <Col :xs="{span: 24}" :lg="{span: 4}" align="right">
                   <Poptip content="content" placement="right-end" title="">
@@ -75,26 +96,6 @@
                 </Col>
               </Row>
 
-              <Poptip
-                @on-ok="updateCheaterInfo">
-                <div style="margin-top: .4rem;" slot="content">
-                  <p class="hint">
-                    <!-- 描述说明 -->
-                    {{ $t('detail.info.discription1', {msg: 'discription1'}) }}
-                    <Button @click.prevent="updateCheaterInfo">
-                      <span>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</span></Button>
-                    ，
-                    <span>{{ $t('detail.info.discription2', {msg: 'discription2'}) }}</span>
-                  </p>
-                  <p class="hint">
-                    {{ $t('detail.info.discription3', {msg: 'discription3'}) }}
-                  </p>
-                  <p class="hint">
-                    {{ $t('detail.info.discription4', {msg: 'discription4'}) }}
-                  </p>
-                </div>
-                <a>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</a>
-              </Poptip>
             </div>
 
             <br>
@@ -103,7 +104,7 @@
               <Col :xs="{span: 12}" :lg="{span: 6}">
                 <Card>
                   <!-- 浏览次数 -->
-                  <h3>{{ cheater.n || 0 }}</h3>
+                  <h3>{{ cheater.viewNum || 0 }}</h3>
                   <span>{{ $t('detail.info.viewTimes', {msg: 'viewTimes'}) }}</span>
                 </Card>
               </Col>
@@ -118,7 +119,7 @@
                 <Card>
                   <!-- 第一次被举报时间 -->
                   <h3>
-                    <Time v-if="cheater.createDatetime" :time="cheater.createDatetime"></Time>
+                    <Time v-if="cheater.createTime" :time="cheater.createTime"></Time>
                   </h3>
                   <span>{{ $t('detail.info.firstReportTime', {msg: 'firstReportTime'}) }}</span>
                 </Card>
@@ -127,7 +128,7 @@
                 <Card>
                   <!-- 最近更新时间 -->
                   <h3>
-                    <Time v-if="cheater.updateDatetime" :time="cheater.updateDatetime"></Time>
+                    <Time v-if="cheater.updateTime" :time="cheater.updateTime"></Time>
                   </h3>
                   <span>{{ $t('detail.info.recentUpdateTime', {msg: 'recentUpdateTime'}) }}</span>
                 </Card>
@@ -573,37 +574,44 @@ export default {
   },
   methods: {
     loadData() {
-      const originUserId = this.$route.params.ouid;
+      const object_id = this.$route.params.ouid.split('.');
 
-      http.get(`${api["cheaters"]}/${originUserId}`, {}).then((res) => {
+      http.get(`${api["cheaters"]}`, {
+        params: {
+          userId: object_id[1],
+          personaId: object_id[0],
+          dbId: object_id[2],
+          history: ''
+        }
+      }).then((res) => {
           this.spinShow = false;
 
           const d = res.data;
           let {cheater, games, origins, reports, verifies, confirms, replies} = d.data;
 
-          if (cheater.length === 0) {
-            this.isCheaterExist = false;
-            return false;
-          } else {
-            this.isCheaterExist = true;
-          }
+          // if (cheater.length === 0) {
+          //   this.isCheaterExist = false;
+          //   return false;
+          // } else {
+          //   this.isCheaterExist = true;
+          // }
 
-          this.cheater = cheater[0];
-          this.origins = _.sortBy(origins, 'createDatetime').reverse();
-          this.games = _.sortBy(games, 'game');
+          this.cheater = d.data;
+          // this.origins = _.sortBy(origins, 'createDatetime').reverse();
+          // this.games = _.sortBy(games, 'game');
 
-          reports = _.each(reports, (v, k, l) => {
-            v['type'] = 'report'
-          });
-          verifies = _.each(verifies, (v, k, l) => {
-            v['type'] = 'verify'
-          });
-          confirms = _.each(confirms, (v, k, l) => {
-            v['type'] = 'confirm'
-          });
-          replies = _.each(replies, (v, k, l) => {
-            v['type'] = 'reply'
-          });
+          // reports = _.each(reports, (v, k, l) => {
+          //   v['type'] = 'report'
+          // });
+          // verifies = _.each(verifies, (v, k, l) => {
+          //   v['type'] = 'verify'
+          // });
+          // confirms = _.each(confirms, (v, k, l) => {
+          //   v['type'] = 'confirm'
+          // });
+          // replies = _.each(replies, (v, k, l) => {
+          //   v['type'] = 'reply'
+          // });
 
           // img src => data-src
           // reports = _.each(reports, (v) => {

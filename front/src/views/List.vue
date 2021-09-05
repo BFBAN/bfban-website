@@ -21,24 +21,31 @@
           v-model="gameName"
           @on-change="handleChanges"
           type="button">
-          <Radio label="bf1" style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2017/01/battlefield-1-keyart-5452x3859.jpg.adapt.crop1x1.767p.jpg')">
+          <Radio label="">
+            {{$t('list.filters.game.all')}}
+          </Radio>
+          <Radio label="bf1"
+                 style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2017/01/battlefield-1-keyart-5452x3859.jpg.adapt.crop1x1.767p.jpg')">
             <Badge :count="getTotalNum('bf1')" :overflow-count="90000">
               <Tooltip :content="$t('list.filters.game.bf1')" placement="top-start">
                 <img height="25" src="https://media.contentapi.ea.com/content/dam/gin/common/logos/layer-1.png">
               </Tooltip>
             </Badge>
           </Radio>
-          <Radio label="bfv" style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2018/05/bfv-campaignart-standard-large.jpg.adapt.crop1x1.767p.jpg')">
+          <Radio label="bfv"
+                 style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2018/05/bfv-campaignart-standard-large.jpg.adapt.crop1x1.767p.jpg')">
             <Badge :count="getTotalNum('bfv')" :overflow-count="90000">
               <Tooltip :content="$t('list.filters.game.bfv')" placement="top-start">
                 <img height="25" src="https://media.contentapi.ea.com/content/dam/gin/common/logos/bfv-logo-white.png">
               </Tooltip>
             </Badge>
           </Radio>
-          <Radio label="bf6" style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2021/06/battlefield-2042-key-art.jpg.adapt.crop1x1.767p.jpg')">
+          <Radio label="bf6"
+                 style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2021/06/battlefield-2042-key-art.jpg.adapt.crop1x1.767p.jpg')">
             <Badge :count="getTotalNum('bf6')" :overflow-count="90000">
               <Tooltip :content="$t('list.filters.game.bf6')" placement="top-start">
-                <img height="20" src="https://media.contentapi.ea.com/content/dam/gin/common/logos/battlefield-2042-mono-logo-svg.svg">
+                <img height="20"
+                     src="https://media.contentapi.ea.com/content/dam/gin/common/logos/battlefield-2042-mono-logo-svg.svg">
               </Tooltip>
             </Badge>
           </Radio>
@@ -71,9 +78,11 @@
                     </Col>
                     <Col span="15">
                       <div style="display: flex; flex-direction: column;">
-                        <router-link :to="{name: 'cheater', params: {ouid: `${d.originUserId}` }}">
+                        <router-link :to="{name: 'cheater', params: {
+                          ouid: `${d.originPersonaId}.${d.originUserId}.${d.id}`
+                        }}">
                           <h2>
-                            {{ d.originId }}
+                            {{ d.originName }}
                             <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"
                                     @click="copied"></Button>
                           </h2>
@@ -81,23 +90,23 @@
                       </div>
 
                       举报时间
-                      <Time v-if="d.createDatetime" :time="d.createDatetime"/>
+                      <Time v-if="d.createTime" :time="d.createTime"/>
                       <Divider type="vertical"/>
                       更新时间
-                      <Time v-if="d.updateDatetime" :time="d.updateDatetime"/>
+                      <Time v-if="d.updateTime" :time="d.updateTime"/>
                     </Col>
                     <Col span="5">
                       <Row type="flex" justify="center" align="middle" style="height: 50px">
                         <Col span="12" align="left" class="list">
                           <Icon type="md-eye" size="15" class="item-icon"/>
-                          <span class="item-text">{{ d.n }}</span>
+                          <span class="item-text">{{ d.viewNum || 0 }}</span>
                         </Col>
                         <Col span="1" align="center">
                           <Divider type="vertical"/>
                         </Col>
                         <Col span="11" align="right">
                           <Icon type="md-chatboxes" size="15" class="item-icon"/>
-                          <span class="item-text">{{ d.commentsNum }}</span>
+                          <span class="item-text">{{ d.commentsNum || 0 }}</span>
                         </Col>
                       </Row>
                     </Col>
@@ -117,13 +126,15 @@
           <Affix :offset-top="20">
             <Card>
               <p slot="title">
-                {{$t('list.colums.screenTitle')}}
+                {{ $t('list.colums.screenTitle') }}
               </p>
 
-              <DatePicker :value="cd" type="daterange" @on-change="handleCDatepicker" split-panels placeholder="举报时间范围"
+              <DatePicker :value="createTime" type="daterange" @on-change="handleCDatepicker" split-panels
+                          placeholder="举报时间范围"
                           style="width: 100px"></DatePicker>
               -
-              <DatePicker :value="ud" type="daterange" @on-change="handleUDatepicker" split-panels placeholder="更新时间范围"
+              <DatePicker :value="updateTime" type="daterange" @on-change="handleUDatepicker" split-panels
+                          placeholder="更新时间范围"
                           style="width: 100px"></DatePicker>
 
               <Divider class="desktop-hide"></Divider>
@@ -147,7 +158,7 @@
                 v-model="statusGroup"
                 @on-change="handleStatusChange"
                 type="button">
-                <Radio label="100">
+                <Radio label="-1">
                   <Badge :count="getAllStatusNum" overflow-count="900000">
                     <span>{{ $t("list.filters.status.all") }}</span>
                   </Badge>
@@ -165,7 +176,8 @@
               </RadioGroup>
               <Divider type="vertical"/>
 
-              <Button slot="extra" size="small" icon="ios-refresh" @click.prevent.stop="handleRefresh">{{ $t("list.filters.refresh") }}
+              <Button slot="extra" size="small" icon="ios-refresh" @click.prevent.stop="handleRefresh">
+                {{ $t("list.filters.refresh") }}
               </Button>
             </Card>
           </Affix>
@@ -176,6 +188,7 @@
 </template>
 
 <script>
+import {http, api, conf} from '../assets/js/index'
 import {getCheaterStatusLabel, cheaterStatus} from "@/mixins/common";
 import ajax from "@/mixins/ajax";
 import _ from "lodash";
@@ -192,8 +205,8 @@ export default {
       spinShow: true,
       gameName: "bf1",
       statusGroup: "",
-      cd: ["", ""],
-      ud: ["", ""],
+      createTime: ["", ""],
+      updateTime: ["", ""],
       page: 1,
       limit: 10,
       total: 0,
@@ -262,41 +275,42 @@ export default {
       // default values
       const {
         game = "bf1",
-        status = "100",
-        cd = "",
-        ud = "",
+        status = "-1",
+        createTime = "",
+        updateTime = "",
         page = 1,
-        sort = "updateDatetime",
+        sort = "updateTime",
         limit = 10,
       } = this.$route.query;
 
-      const config = {
-        method: "get",
-        url: "/cheaters/",
-      };
+      const config = {};
 
-      config["params"] = {
-        game,
-        status,
-        cd,
-        ud,
-        page,
-        sort,
-        tz: '', // moment.tz.gutter(),
-        limit,
-      };
+      config["params"] = Object.assign({
+          game,
+          status,
+          page,
+          sort,
+          tz: '', // moment.tz.gutter(),
+          limit,
+        },
+        createTime ? {
+          createTime: new Date(createTime).getTime(),
+        } : {},
+        updateTime ? {
+          updateTime: new Date(updateTime).getTime(),
+        } : {});
       this.gameName = game;
       this.statusGroup = status;
-      this.cd = cd.split(",");
-      this.ud = ud.split(",");
+      this.createTime = createTime.split(",");
+      this.updateTime = updateTime.split(",");
       this.page = Number.parseInt(page);
       this.limit = Number.parseInt(limit);
       this.sortByValue = sort;
 
-      ajax(config).then(({data: {data, total, sum, totalSum}}) => {
+      http.get(api['players'], config).then(({data: {data, total, sum, totalSum}}) => {
         this.spinShow = false;
 
-        this.data = data;
+        this.data = data.result;
         this.total = total;
         this.sum = sum;
         this.totalSum = totalSum;
@@ -311,8 +325,8 @@ export default {
     routerQuery() {
       const game = this.gameName;
       const status = this.statusGroup;
-      const cd = this.cd.join(",");
-      const ud = this.ud.join(",");
+      const createTime = this.createTime.join(",");
+      const updateTime = this.updateTime.join(",");
       const page = this.page;
       const limit = this.limit;
       const sort = this.sortByValue;
@@ -320,8 +334,8 @@ export default {
       let o = {};
 
       o["status"] = status;
-      if (cd !== ",") o["cd"] = cd;
-      if (ud !== ",") o["ud"] = ud;
+      if (createTime !== ",") o["createTime"] = createTime;
+      if (updateTime !== ",") o["updateTime"] = updateTime;
       if (page !== 1) o["page"] = page;
       o["limit"] = limit;
       if (sort !== "") o["sort"] = sort;

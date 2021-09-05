@@ -7,15 +7,15 @@
     </Breadcrumb>
     <br>
 
-    <Row type="flex" align="center">
-      <Col align="middle">
+    <Row type="flex">
+      <Col type="flex" align="middle">
         <br>
         <Avatar shape="square" style="background-color: yellow" size="150">{{ account.username[0] || '' }}</Avatar>
         <br>
 
         <h1 :title="$t('account.username')">
-          <!--          {{ $t("account.userInfo") }}-->
-          {{ account.username }}
+<!--          {{ $t("account.userInfo") }}-->
+          {{ account.username || 'username' }}
         </h1>
 
         <p>
@@ -32,7 +32,12 @@
           <Divider type="vertical"/>
           {{ $t("account.joinedAt") }}
           <Tag color="primary">
-            <Time v-if="account.createDatetime" :time="account.createDatetime  || new Date()"/>
+            <Time v-if="account.joinTime" :time="account.joinTime  || new Date()"/>
+          </Tag>
+          <Divider type="vertical"/>
+          {{ $t("account.lastOnlineTime") }}
+          <Tag color="primary">
+            <Time v-if="account.lastOnlineTime" :time="account.lastOnlineTime  || new Date()"/>
           </Tag>
         </p>
       </Col>
@@ -59,11 +64,11 @@
             <Tabs value="tag1">
               <TabPane :label="$t('account.reports')" name="tag1">
                 <div v-if="account">
-                  <p v-if="account.reports.length <= 0" align="center">
-                    <Alert type="warning" show-icon>
-                      {{$t('account.noReports')}}
-                    </Alert>
-                  </p>
+<!--                  <p v-if="account.reports.length <= 0" align="center">-->
+<!--                    <Alert type="warning" show-icon>-->
+<!--                      {{$t('account.noReports')}}-->
+<!--                    </Alert>-->
+<!--                  </p>-->
 
                   <table>
                     <tbody>
@@ -87,8 +92,7 @@
                                   params: {
                                       ouid: `${report.originUserId}`,
                                   },
-                              }"
-                          >
+                              }">
                               <Tag>
                                   {{ report.game }}
                               </Tag>
@@ -135,7 +139,7 @@
               </TabPane>
               <br>
               <Button size="small" slot="extra">
-                {{account.reports.length || 0}}
+<!--                {{account.reports.length || 0}}-->
               </Button>
             </Tabs>
           </Card>
@@ -147,6 +151,7 @@
 </template>
 
 <script>
+import {http, api, conf} from '../assets/js/index'
 import ajax from "@/mixins/ajax";
 
 export default {
@@ -173,15 +178,18 @@ export default {
   methods: {
     loadData() {
       const {uId} = this.$route.params;
-      ajax({
-        method: "get",
-        url: `/account/${uId}`,
+      http.get(api["user_info"],{
+        params: {
+          id: uId
+        }
       }).then((res) => {
         const d = res.data;
-        if (d.error === 0) {
+        if (d.success === 1) {
+
           this.account = d.data;
-          let {reports} = d.data;
-          this.account.reports = reports;
+          // let {reports} = d.data;
+          // this.account.reports = reports;
+
         } else {
           this.account = "";
           this.$Message.warning(d.msg);

@@ -264,7 +264,8 @@
     "admin": "管理员",
     "normal": "普通",
     "super": "超级管理员",
-    "joinedAt": "参加：",
+    "joinedAt": "加入时间",
+    "lastOnlineTime": "最后在线时间",
     "reports": "个人举报",
     "noReports": "还没有任何举报",
     "reported": "举报了",
@@ -313,6 +314,7 @@
     "title": "外挂公示",
     "filters": {
       "game": {
+        "all": "所有",
         "bf1": "战地1",
         "bf6": "战地6",
         "bfv": "战地V"

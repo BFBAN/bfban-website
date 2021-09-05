@@ -7,6 +7,7 @@ const List = () => import('@/views/List.vue');
 const Detail = () => import('@/views/Detail.vue');
 const Signin = () => import('@/views/Signin.vue');
 const Signup = () => import('@/views/Signup.vue');
+const SignupComplete = () => import('@/views/SignupComplete.vue');
 const Account = () => import('@/views/Account.vue');
 const About = () => import('@/views/About.vue');
 const NotFound = () => import('@/views/NotFound.vue');
@@ -57,6 +58,7 @@ const routes = [
 
 	{ name: 'signin', path: '/signin', component: Signin },
 	{ name: 'signup', path: '/signup', component: Signup },
+  { name: 'signupComplete', path: '/signupComplete/:code', component: SignupComplete },
 	//  { name: 'signup', path: '/reset', component: Reset },
 
 	{ name: 'account', path: '/account/:uId', component: Account },

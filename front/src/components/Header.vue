@@ -12,7 +12,7 @@
           <router-link class="mobile-hide link" :to="{name: 'home'}">
             {{ $t("header.index") }}
           </router-link>
-          <router-link class="mobile-hide link" :to="{name: 'cheaters', query: { status: '100' }}">
+          <router-link class="mobile-hide link" :to="{name: 'cheaters', query: { status: '-1' }}">
             {{$t("header.cheaters")}}
           </router-link>
           <router-link class="mobile-hide link" :to="{name: 'report'}">
@@ -61,12 +61,12 @@
 
           <Dropdown placement="bottom-start" v-if="isLogin">
             <a href="javascript:void(0)">
-              <Avatar>{{ currentUser.username[0] }}</Avatar>
-              {{ currentUser.username }}
+              <Avatar>{{ currentUser.userinfo.username[0] || 'Null'}}</Avatar>
+              {{ currentUser.userinfo.username }}
             </a>
             <DropdownMenu slot="list">
               <DropdownItem>
-                <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
+                <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
                   {{$t("header.userCenter")}}
                 </router-link>
               </DropdownItem>
@@ -115,7 +115,7 @@
           <div v-if="cheaters.length !== 0">
             <List border>
               <ListItem v-for="cheater in cheaters" :key="cheater.id">
-                <ListItemMeta :title="cheater.originId" :description="'id:' + cheater.originUserId" />
+                <ListItemMeta :title="cheater.currentName" :description="'uid:' + cheater.originUserId + ' 过去id: ' + cheater.historyName" />
                 <template slot="action">
                   <li @click="searchModal = false">
                     <router-link :to="{name: 'cheater', params: {ouid: `${cheater.originUserId}`}}" >
@@ -135,7 +135,8 @@
 </template>
 
 <script>
-  import ajax from '@/mixins/ajax';
+  import {http, api} from '../assets/js/index'
+  import http_token from '../assets/js/http_token'
 
   export default {
     data() {
@@ -156,27 +157,25 @@
         this.searchModal = true;
         this.modalSpinShow = true;
 
-        ajax({
-          method: 'get',
-          url: `/search?id=${val}`,
-        })
-        .then((res) => {
+        http.get(api["search"],{
+          params: {
+            param: val,
+            scope: ['current','history'],
+          }
+        }).then((res) => {
           this.modalSpinShow = false;
 
           const d = res.data;
-          if (d.error === 0) {
+          if (d.success === 1) {
 
             const { cheaters } = d.data;
-            this.cheaters = cheaters;
+            this.cheaters = d.data;
           }
         })
       },
       signout() {
-        ajax({
-          method: 'get',
-          url: '/account/signout'
-        })
-        .then((res) => {
+        let http = new http_token(this);
+        http.post(api["account_signout"], {}).then((res) => {
           const d = res.data;
 
           if (d.error === 0) {
@@ -200,7 +199,6 @@
         return Boolean(is);
       },
       currentUser() {
-        console.log(this.$store);
         return this.$store.state.user;
       }
     }

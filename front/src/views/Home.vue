@@ -24,6 +24,7 @@
                 了解有那些社区已经加入
               </Button>
             </router-link>
+            {{statistics}}
 
             <Row :gutter="10" style="margin-top: 50px">
               <Col span="12">
@@ -126,47 +127,48 @@
         </Row>
       </div>
       <div v-if="activitySwitchType" class="lean-box">
-        <div class="wrapper" :style="'animation: rowup ' + activities.length * .8 + 's linear infinite;'">
+        <div class="wrapper" :style="'animation: rowup ' + activities_l.length * .9 + 's linear infinite;'">
           <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
-            <Card class="icon" v-for="a_i in activity" :key="a_i.value">
+            <Card class="icon" v-for="a_i in activity" :key="a_i.id">
               <div align="center" style="margin-top: -80px">
-                <Avatar size="80">{{ a_i.username[0] }}</Avatar>
+                <Avatar size="80">{{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}</Avatar>
                 <p>
-                  {{ a_i.username }}
+                  <br>
+                  {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
                   <Divider type="vertical"/>
-                  <Time v-if="a_i.createDatetime" :time="a_i.createDatetime"></Time>
+                  <Time v-if="a_i.createTime" :time="a_i.createTime"></Time>
                 </p>
               </div>
               <span v-if="a_i.type === 'report'">
-                <router-link :to="{name: 'account', params: {uId: `${a_i.uId}`}}">{{
-                    a_i.username
-                  }}</router-link>
+                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  {{a_i.byUserName }}
+                </router-link>
                 举报了
                 <Tag>
                   {{ handleGameName(a_i.game) }}
                 </Tag>
                 <router-link
-                  :to="{name: 'cheater', params: {game: `${a_i.game}`, ouid: `${a_i.originUserId}`}}">{{
-                    a_i.cheaterOriginId
-                  }}</router-link>
+                  :to="{name: 'cheater', params: {game: `${a_i.game}`, ouid: `${a_i.originUserId}`}}">
+                  {{a_i.toPlayerName }}
+                </router-link>
               </span>
 
               <span v-if="a_i.type === 'register'">
-                <router-link :to="{name: 'account', params: {uId: `${a_i.uId}`}}">{{
-                    a_i.username
-                  }}</router-link>
+                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  {{a_i.byUserName }}
+                </router-link>
                 注册了 bfban ，欢迎！
               </span>
 
-              <span v-if="a_i.type === 'verify'">
+              <span v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
                 <Tag color="success">管理员</Tag>
-                <router-link :to="{name: 'account', params: {uId: `${a_i.uId}`}}">{{
-                    a_i.username
-                  }}</router-link>
+                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  {{a_i.byUserName }}
+                </router-link>
                 将
-                <router-link :to="{name: 'cheater', params: {ouid: `${a_i.originUserId}`}}">{{
-                    a_i.cheaterOriginId
-                  }}</router-link>
+                <router-link :to="{name: 'cheater', params: {ouid: `${a_i.toPlayerId}`}}">
+                  {{a_i.cheaterOriginId }}
+                </router-link>
                 处理为
                 <Tag color="warning">
                   {{ handleStatus(a_i.status) }}
@@ -195,50 +197,51 @@ export default {
       },
       activities: [],
       activities_l: [],
+      statistics: {},
       activitySwitchType: true,
     }
   },
   components: {
     // Bulletin,
   },
+  created() {
+    this.getStatisticsInfo();
+    this.getActivity();
+  },
   methods: {
     handleStatus: getCheaterStatusLabel,
     handleGameName: getGameLabel,
-  },
-  created() {
-    http.get(api["activity"], {}).then(({data}) => {
-      const d = data;
-      if (d.error === 0) {
-        let {registers, reports, verifies, number} = d.data;
+    getActivity () {
+      http.get(api["activity"], {}).then((res) => {
+        const d = res.data;
+        if (d.success === 1) {
+          let activities = d.data;
+          let new_activities = [];
 
-        reports = _.each(reports, (v, k, l) => {
-          v['type'] = 'report'
-        });
-        registers = _.each(registers, (v, k, l) => {
-          v['type'] = 'register'
-        });
-        verifies = _.each(verifies, (v, k, l) => {
-          v['type'] = 'verify'
-        });
+          // activities = _.sortBy(activities, (v) => {
+          //   return (new Date(v.createTime)).getTime();
+          // }).reverse();
 
-        let activities = [].concat(verifies, reports, registers);
-        let new_activities = [];
+          // slice array
+          for (let i = 0; i < activities.length; i += 3) {
+            new_activities.push(activities.slice(i, i + 3));
+          }
 
-        activities = _.sortBy(activities, (v) => {
-          return (new Date(v.createDatetime)).getTime();
-        }).reverse();
+          this.activities_l = new_activities;
+          // this.activities = activities;
 
-        // slice array
-        for (let i = 0; i < activities.length; i += 3) {
-          new_activities.push(activities.slice(i, i + 3));
+          // this.site = number;
         }
-
-        this.activities_l = new_activities;
-        this.activities = activities;
-
-        this.site = number;
-      }
-    })
+      })
+    },
+    getStatisticsInfo () {
+      http.get(api["statistics"], {}).then((res) => {
+        const d = res.data;
+        if (d.success === 1) {
+          this.statistics = d.data;
+        }
+      })
+    }
   }
 }
 </script>

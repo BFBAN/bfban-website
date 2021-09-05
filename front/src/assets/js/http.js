@@ -12,7 +12,7 @@ export default class Http {
 
   CONF = new Conf();
   // WWWURL = process.env.NODE_ENV === 'production' ? this.CONF.requestDev : this.CONF.requestDeBug
-  WWWURL = this.CONF.requestDev
+  WWWURL = this.CONF.requestDeBug
 
   HTTP = http.create({
     // baseURL: process.env.BASE_API,
@@ -29,6 +29,9 @@ export default class Http {
   async request (url = '', requestData = {method: this.POST, data: {}, params: {}}) {
     let result = await this.HTTP({
       url: url,
+      headers: Object.assign({
+        "content-type": "text/plain"
+      }, requestData.headers),
       method: requestData.method,
       data: requestData.data,
       params: requestData.params,

@@ -54,8 +54,15 @@
 
               <FormItem :label="$t('signup.form.captcha')">
                 <Input type="text" v-model="signin.captcha" size="large"
-                       :placeholder="$t('signup.form.captcha')"></Input>
-                <img ref="captcha" :src="captchaUrl" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha"/>
+                       :placeholder="$t('signup.form.captcha')">
+                </Input>
+                <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                  <div v-html="captchaUrl.content"></div>
+                </div>
+              </FormItem>
+
+              <FormItem>
+                <Checkbox v-model="captchaUrl.skip">跳过验证</Checkbox>
               </FormItem>
 
               <FormItem>
@@ -93,7 +100,9 @@ export default {
         password: '',
         captcha: '',
       },
-      captchaUrl: '',
+      captchaUrl: {
+        skip: false
+      },
       spinShow: false,
     }
   },
@@ -113,7 +122,15 @@ export default {
       'SIGNIN'
     ]),
     refreshCaptcha: function () {
-      this.captchaUrl = conf['requestDev'] + '/captcha?r=' + Math.random();
+      http.get(api["captcha"], {
+        params: {
+          r: Math.random()
+        }
+      }).then(res => {
+        if (res.data.success === 1) {
+          this.captchaUrl = res.data.data;
+        }
+      });
 
       // waitForAction.call(this.$refs.reCaptcha);
     },
@@ -131,16 +148,20 @@ export default {
             // 'x-csrf-token': getCsrfToken(),
             // "Access-Control-Allow-Headers": "X-Requested-With",
             // 'x-encrypt-captcha': Cookies.get('encryptCaptcha'),
+            'content-type': 'application/json'
           },
           data: {
-            username,
-            password,
+            data: {
+              username,
+              password,
+            },
+            SKIP_CAPTCHAA: this.captchaUrl.skip,
+            encryptCaptcha: this.captchaUrl.hash,
             captcha,
           },
         }).then((res) => {
-          that.spinShow = false;
-
           const d = res.data;
+
           if (d.error === 1) {
             that.$Message.error('登录失败 ' + d.msg);
             that.signin.password = '';
@@ -160,6 +181,8 @@ export default {
               this.$Message.success('登录成功');
             })
           }
+        }).finally(() => {
+          that.spinShow = false;
         })
       } else {
         this.$Message.error('请规范填写');
@@ -171,4 +194,3 @@ export default {
 
 <style>
 </style>
-
