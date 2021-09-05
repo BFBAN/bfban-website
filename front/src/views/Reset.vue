@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import {http, api} from '../assets/js/index'
+import {http, api, http_token} from '../assets/js/index'
 import {getCsrfToken, waitForAction} from '@/mixins/common';
 
 const {mapActions, mapMutations} = Vuex;
@@ -51,7 +51,8 @@ export default {
       spinShow: false,
     }
   },
-  beforeMount() {
+  created() {
+    this.http = http_token.call(this);
   },
   methods: {
     handleReset() {
@@ -64,8 +65,10 @@ export default {
       if (qq && password && passwordRepeat && password === passwordRepeat) {
         this.spinShow = true;
 
-        http.post(api["account_reset"], {
-          data: {qq, token, password, passwordRepeat,},
+        this.http.post(api["player_reset"], {
+          data: {
+            qq, token, password, passwordRepeat,
+          },
         }).then((res) => {
           this.spinShow = false;
 

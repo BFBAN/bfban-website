@@ -39,7 +39,7 @@
           </Carousel>
         </Col>
         <Col span="13">
-          <Card shadow>
+          <Card v-show="currentUser.token == ''" shadow>
             <p slot="title">{{ $t("signin.title") }}</p>
             <Form>
               <FormItem :label="$t('signin.form.username')">
@@ -75,6 +75,15 @@
                 </Divider>
               </FormItem>
             </Form>
+          </Card>
+          <Card v-show="currentUser.token != ''" shadow align="center">
+            <br>
+            <Avatar size="100">{{currentUser.userinfo.username[0]}}</Avatar>
+            <h1>
+              {{currentUser.userinfo.username}}
+            </h1>
+            <p>哎列？请先登出 (✿◡‿◡)</p>
+            <br>
           </Card>
         </Col>
       </Row>
@@ -187,6 +196,11 @@ export default {
       } else {
         this.$Message.error('请规范填写');
       }
+    }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.user;
     }
   }
 }

@@ -32,11 +32,11 @@
                     </Tag>
 
                     <Tag color="error">
-                      {{ handleStatus(cheater.status) || 'static load' }}
+                      {{ handleStatus(cheater.status, $root.$i18n.locale) }}
                     </Tag>
 
                     <Tag v-if="cheater.cheatMethods" color="warning">
-                      {{ convertCheatMethods(cheater.cheatMethods) }}
+                      {{ convertCheatMethods(cheater.cheatMethods, $root.$i18n.locale) }}
                     </Tag>
                   </h1>
                   <span>id:  {{ cheater.originUserId || 'id' }}</span>
@@ -46,11 +46,12 @@
                       {{ $t('detail.info.historyID', {msg: 'historyID'}) }}
                       <Icon type="ios-arrow-down"></Icon>
                     </a>
-                    <DropdownMenu slot="list" v-show="origins.length">
+                    <DropdownMenu slot="list" v-if="cheater && cheater.history && cheater.history.length >= 0">
                       <!-- 历史ID -->
-                      <DropdownItem v-for="origin in origins" :key="origin.id">
-                        <Time :time="origin.createDatetime"></Time>
-                        | {{ origin.cheaterGameName }}
+                      <DropdownItem v-for="origin in cheater.history" :key="origin.originName">
+                        <Time :time="origin.fromTime"></Time>
+                        <Divider type="vertical"/>
+                        {{ origin.originName }}
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
@@ -62,7 +63,8 @@
                         <!-- 描述说明 -->
                         {{ $t('detail.info.discription1', {msg: 'discription1'}) }}
                         <Button @click.prevent="updateCheaterInfo">
-                          <span>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</span></Button>
+                          <span>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</span>
+                        </Button>
                         ，
                         <span>{{ $t('detail.info.discription2', {msg: 'discription2'}) }}</span>
                       </p>
@@ -146,10 +148,10 @@
                 <div>
                   <!-- 时间线 -->
                   <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l) in timelineList"
-                                :key="l.createDatetime">
+                                :key="l.createTime">
                     <div v-if="l.type === 'report'" class="timeline-content">
                       <div class="timeline-time">
-                        <Time :time="l.createDatetime"></Time>
+                        <Time :time="l.createTime"></Time>
 
                         <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
                           <!-- 管理员 -->
@@ -176,7 +178,7 @@
                         {{ $t('detail.info.gaming', {msg: 'gaming'}) }}
 
                         <b>
-                          {{ convertCheatMethods(l.cheatMethods || '') }}
+                          {{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}
                         </b>
                       </div>
 
@@ -199,10 +201,10 @@
                       </p>
                     </div>
 
-                    <div v-if="l.type === 'verify'" class="timeline-content bookmark"
+                    <div v-if="l.type === 'verify' || l.action === 'guilt'" class="timeline-content bookmark"
                          :id="`user-verify-cheater-${l.id}`">
                       <div class="timeline-time">
-                        <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
+                        <Time v-if="l.createTime" :time="l.createTime"></Time>
                         <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
                           <Tag v-if="l.privilege === 'admin'" color="success">
                             {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
@@ -213,20 +215,16 @@
                         {{ $t('detail.info.judge', {msg: 'judge'}) }}
 
                         <Tag color="warning">
-                          {{ handleStatus(l.status) }}
+                          {{ handleStatus(l.action, $root.$i18n.locale) }}
                         </Tag>
 
                         <span v-if="l.cheatMethods">
-                          ，
-                          {{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
-
-                          <b>
-                            {{ convertCheatMethods(l.cheatMethods || '') }}
-                          </b>
+                          ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
+                          <b>{{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}</b>
                         </span>
                       </div>
 
-                      <div v-html="l.suggestion" class="description"></div>
+                      <div v-html="l.suggestion" v-if="l.suggestion" class="description"></div>
 
                       <p v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)">
                         <a href="#"
@@ -252,7 +250,7 @@
 
                     <div v-if="l.type === 'confirm'" class="timeline-content">
                       <div class="timeline-time">
-                        <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
+                        <Time v-if="l.createTime" :time="l.createTime"></Time>
 
                         <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
                           <Tag v-if="l.privilege === 'admin'" color="success">
@@ -270,7 +268,7 @@
                         ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
 
                         <b>
-                          {{ convertCheatMethods(l.cheatMethods || '') }}
+                          {{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}
                         </b>
                       </div>
 
@@ -295,7 +293,6 @@
                         </router-link>
                         {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.barUId}`}}">
-
                           <Tag v-if="l.barPrivilege === 'admin'" color="success">
                             {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
@@ -332,9 +329,9 @@
                              v-model="reply.content"
                              type="textarea"
                              :autosize="{minRows: 5}"
-                             placeholder="What's your opinion?"/>
-
+                             :placeholder="$t('detail.info.giveOpinion')"/>
                       <p align="right">
+                        <br>
                         <Button type="primary" :loading="replySpinShow" @click.stop.prevent="doReply">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
@@ -412,7 +409,7 @@
               </TabPane>
               <TabPane :label="$t('detail.info.gameScores', { msg: 'gameScores' })">
                 <!-- 战绩链接 -->
-                <div v-show="cheater.originId">
+                <div v-show="cheater.originUserId">
                   <p v-for="g in games" :key="g.game">
                     <Tag>
                       {{ g.game }}
@@ -451,7 +448,6 @@
             <Affix :offset-top="10">
               <Steps :current="detailStepsIndex" direction="vertical">
                 <Step title="首次提交" content="首次提交作弊玩家"></Step>
-                <Step title="补充" content="补充资料"></Step>
                 <Step title="定案" content="最终结果"></Step>
               </Steps>
             </Affix>
@@ -495,13 +491,11 @@
 </template>
 
 <script>
-import {http, api} from '../assets/js/index'
+import {http, api,http_token} from '../assets/js/index'
 import ajax from '@/mixins/ajax';
 import vueQr from 'vue-qr'
 import translate from 'google-translate-open-api';
-
 import Empty from '../components/Empty.vue'
-
 import _ from "lodash";
 import {
   getCheaterStatusLabel,
@@ -567,76 +561,71 @@ export default {
     }
   },
   created() {
+    // set Token Http mode
+    this.http = http_token.call(this);
+
     this.loadData();
+    this.getTimeline();
+  },
+  beforeCreate() {
   },
   updated() {
     //new LazyLoad({})
   },
   methods: {
-    loadData() {
+    /**
+     * 获取基本id信息
+     */
+    getParamsIds () {
       const object_id = this.$route.params.ouid.split('.');
-
-      http.get(`${api["cheaters"]}`, {
-        params: {
-          userId: object_id[1],
-          personaId: object_id[0],
-          dbId: object_id[2],
-          history: ''
-        }
+      return {
+        userId: object_id[1],
+        personaId: object_id[0],
+        dbId: object_id[2],
+      };
+    },
+    loadData() {
+      this.http.get(`${api["cheaters"]}`, {
+        params: Object.assign({
+          history: true
+        }, this.getParamsIds())
       }).then((res) => {
-          this.spinShow = false;
+        this.spinShow = false;
+        const d = res.data;
 
-          const d = res.data;
-          let {cheater, games, origins, reports, verifies, confirms, replies} = d.data;
-
-          // if (cheater.length === 0) {
-          //   this.isCheaterExist = false;
-          //   return false;
-          // } else {
-          //   this.isCheaterExist = true;
-          // }
-
+        if (d.success === 1) {
           this.cheater = d.data;
-          // this.origins = _.sortBy(origins, 'createDatetime').reverse();
-          // this.games = _.sortBy(games, 'game');
+          this.cheater.games.split(',').forEach(i => {
+            this.games.push({game: i});
+          })
+        }
+      });
+    },
+    getTimeline() {
+      this.http.get(`${api["account_timeline"]}`, {
+        params: Object.assign({
+          skip: 0,
+          limit: 10
+        },this.getParamsIds())
+      }).then((res) => {
+        const d = res.data;
+        if (d.success === 1) {
+          let timelineList = d.data;
+          let countNum = [0,0];
 
-          // reports = _.each(reports, (v, k, l) => {
-          //   v['type'] = 'report'
-          // });
-          // verifies = _.each(verifies, (v, k, l) => {
-          //   v['type'] = 'verify'
-          // });
-          // confirms = _.each(confirms, (v, k, l) => {
-          //   v['type'] = 'confirm'
-          // });
-          // replies = _.each(replies, (v, k, l) => {
-          //   v['type'] = 'reply'
-          // });
-
-          // img src => data-src
-          // reports = _.each(reports, (v) => {
-          //   v['description'] = defaultImgProviderSrcToProxy(v['description']);
-          //   v['description'] = replaceImgSrcToDataSrc(v['description']);
-          // });
-          // replies = _.each(replies, (v, k, l) => {
-          //   v['content'] = defaultImgProviderSrcToProxy(v['content']);
-          //   v['content'] = replaceImgSrcToDataSrc(v['content']);
-          // });
-
-          let timelineList = reports.concat(verifies, confirms, replies);
-
-          timelineList = _.sortBy(timelineList, (v) => {
-            return (new Date(v.createDatetime)).getTime();
+          timelineList.forEach(i => {
+            if (i.type == 'report')
+              countNum[0] += 1;
+            if (i.type == 'judgement')
+              countNum[1] += 1;
           });
 
-          timelineList = _.each(timelineList, (v, k) => {
-            v['floor'] = k + 1;
-          });
+          if (countNum[0] <= 1) {this.detailStepsIndex = 0;}
+          if (countNum[1] > 1) {this.detailStepsIndex = 1;}
 
-          // render timeline
           this.timelineList = timelineList;
-
-        });
+        }
+      });
     },
     jumpToBookmark(e) {
       let hash = e.target.dataset.hash;
@@ -693,7 +682,6 @@ export default {
       }
 
       suggestion = formatTextarea(suggestion);
-
 
       ajax({
         method: 'post',
@@ -791,6 +779,9 @@ export default {
     cancelReply() {
       this.reply = {};
     },
+    /**
+     * 评论 reply
+     */
     doReply() {
       this.replySpinShow = true;
 
@@ -820,8 +811,7 @@ export default {
         method: 'post',
         url: '/cheaters/reply',
         data,
-      })
-        .then((res) => {
+      }).then((res) => {
           this.replySpinShow = false;
 
           const d = res.data;
@@ -865,6 +855,12 @@ export default {
         }
       }
     },
+    /**
+     * 更新玩家信息
+     * update cheater
+     * @param e
+     * @returns {boolean}
+     */
     updateCheaterInfo(e) {
       waitForAction.call(e.target, 60);
 
@@ -875,12 +871,9 @@ export default {
 
       this.updateUserInfospinShow = true;
       const {originUserId} = this.cheater;
-      ajax({
-        method: 'post',
-        url: '/cheaters/updateCheaterInfo',
-        data: {
-          originUserId,
-        }
+
+      this.http.post(api["player_update"], {
+        data: Object.assign(this.getParamsIds())
       }).then((res) => {
         this.updateUserInfospinShow = false;
 
@@ -924,7 +917,7 @@ export default {
     isAdmin() {
       const user = this.$store.state.user;
 
-      const is = user ? user.userPrivilege !== 'normal' : false;
+      const is = user ? user.userinfo.privilege !== 'normal' : false;
       return Boolean(is);
     },
     isLogin() {

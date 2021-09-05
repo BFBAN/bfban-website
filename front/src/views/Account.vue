@@ -7,8 +7,8 @@
     </Breadcrumb>
     <br>
 
-    <Row type="flex">
-      <Col type="flex" align="middle">
+    <Row type="flex" justify="center" align="middle">
+      <Col justify="center" align="middle">
         <br>
         <Avatar shape="square" style="background-color: yellow" size="150">{{ account.username[0] || '' }}</Avatar>
         <br>

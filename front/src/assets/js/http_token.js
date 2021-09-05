@@ -13,6 +13,10 @@ export default class http_token extends http {
     this.THAT = that;
   }
 
+  call (t) {
+    return new http_token(t);
+  }
+
   setToken (data) {
     const token = this.THAT.$store.state.user.token;
     if (token) {

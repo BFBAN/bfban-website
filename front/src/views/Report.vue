@@ -7,172 +7,172 @@
         <BreadcrumbItem>{{ $t("report.info.reportHacker", {msg: "reportHacker"}) }}</BreadcrumbItem>
       </Breadcrumb>
       <br>
-      <Form :label-width="80" label-position="left">
-        <!--举报作弊-->
 
-        <div
-          class="notFoundHint"
-          id="notFoundHint"
-          v-show="failedOfNotFound">
-          <p style="font-size: 14px; font-weight: bold">
-            {{ $t("report.info.notFoundHintTitle") }}
-          </p>
-          <p style="font-size: 14px; margin-left: 10px">
-            {{ $t("report.info.notFoundHintQuestion1") }}
-          </p>
-          <p style="font-size: 12px; margin-left: 20px">
-            {{ $t("report.info.notFoundHintAnswer1") }}
-          </p>
-          <p style="font-size: 14px; margin-left: 10px">
-            {{ $t("report.info.notFoundHintQuestion2") }}
-          </p>
-          <p style="font-size: 12px; margin-left: 20px">
-            {{ $t("report.info.notFoundHintAnswer2") }}
-          </p>
-        </div>
+      <Tabs type="card" v-model="tabs.count">
+        <TabPane v-for="(tab, index) in tabs.list.length" :key="tab"
+                 :label="tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : '举报标签' + tab">
+          <Card shadow style="margin-top: -16px">
+            <Form :label-width="80" label-position="left">
+              <!--举报作弊-->
+              <div
+                class="notFoundHint"
+                id="notFoundHint"
+                v-show="failedOfNotFound">
+                <p style="font-size: 14px; font-weight: bold">
+                  {{ $t("report.info.notFoundHintTitle") }}
+                </p>
+                <p style="font-size: 14px; margin-left: 10px">
+                  {{ $t("report.info.notFoundHintQuestion1") }}
+                </p>
+                <p style="font-size: 12px; margin-left: 20px">
+                  {{ $t("report.info.notFoundHintAnswer1") }}
+                </p>
+                <p style="font-size: 14px; margin-left: 10px">
+                  {{ $t("report.info.notFoundHintQuestion2") }}
+                </p>
+                <p style="font-size: 12px; margin-left: 20px">
+                  {{ $t("report.info.notFoundHintAnswer2") }}
+                </p>
+              </div>
 
-        <Timeline>
-          <TimelineItem>
-            <Card dis-hover>
-              <FormItem :label="$t('report.labels.game')">
-                <RadioGroup v-model="formItem.gameName" type="button">
-                  <Radio label="bf1">
-                <span>{{ $t("report.info.bf1", {msg: "bf1"}) }}
-              </span>
-                  </Radio>
-                  <Radio label="bfv">
-                <span>{{ $t("report.info.bfv", {msg: "bfv"}) }}
-                </span>
-                  </Radio>
-                  <Radio label="bf6">
-                <span>{{ $t("report.info.bf6", {msg: "bf6"}) }}
-                </span>
-                  </Radio>
-                </RadioGroup>
-                <span class="hint">
-              {{ $t("report.info.reportNews", {msg: "reportNews"}) }}
-            </span>
-              </FormItem>
+              <Timeline>
+                <TimelineItem>
+                  <Card dis-hover>
+                    <FormItem :label="$t('report.labels.game')">
+                      <RadioGroup v-model="tabs.list[index].formItem.gameName" type="button">
+                        <Radio label="bf1">
+                          <span>{{ $t("report.info.bf1", {msg: "bf1"}) }}</span>
+                        </Radio>
+                        <Radio label="bfv">
+                          <span>{{ $t("report.info.bfv", {msg: "bfv"}) }}</span>
+                        </Radio>
+                        <Radio label="bf6">
+                          <span>{{ $t("report.info.bf6", {msg: "bf6"}) }}</span>
+                        </Radio>
+                      </RadioGroup>
+                      <span class="hint">{{ $t("report.info.reportNews", {msg: "reportNews"}) }}</span>
+                    </FormItem>
 
-              <FormItem :label="$t('report.labels.hackerId')">
-                <p style="font-size: 2rem">{{ formItem.originId }}</p>
-                <Input
-                  v-model="formItem.originId"
-                  :placeholder="$t('report.info.onlyOneId')"/>
-                <span class="hint">
-              {{
-                    $t("report.info.idNotion1", {msg: "idNotion1"})
-                  }}
-            </span>
-                <span class="hint">
-              {{
-                    $t("report.info.idNotion2", {msg: "idNotion2"})
-                  }}
-            </span>
-              </FormItem>
+                    <FormItem :label="$t('report.labels.hackerId')">
+                      <p style="font-size: 2rem">{{ tabs.list[index].formItem.originId }}</p>
+                      <Input
+                        v-model="tabs.list[index].formItem.originId"
+                        :placeholder="$t('report.info.onlyOneId')"/>
+                      <span class="hint">
+                      {{ $t("report.info.idNotion1", {msg: "idNotion1"}) }}
+                    </span>
+                      <span class="hint">
+                      {{ $t("report.info.idNotion2", {msg: "idNotion2"}) }}
+                    </span>
+                    </FormItem>
 
-              <FormItem :label="$t('report.labels.cheatMethod')">
-                <CheckboxGroup v-model="formItem.checkbox">
-                  <Checkbox
-                    v-for="method in cheatMethodsGlossary"
-                    :key="method.value"
-                    :label="method.value">
-                    {{ $t(`cheatMethods.${method.value}`) }}
-                  </Checkbox>
-                </CheckboxGroup>
-              </FormItem>
-            </Card>
-          </TimelineItem>
-          <TimelineItem>
-            <Card dis-hover >
-              <FormItem :label="$t('detail.info.videoLink')">
-                <Alert type="warning">
-                  {{
-                    $t("report.info.uploadManual1", {
-                      msg: "uploadManual1",
-                    })
-                  }}
-                  <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
-                    $t("report.info.uploadManual2", {
-                      msg: "uploadManual2",
-                    })
-                  }}
-                </Alert>
-                <span class="hint">
-              {{
-                    $t("report.info.uploadManual3", {
-                      msg: "uploadManual3",
-                    })
-                  }}
-            </span>
-                <Input
-                  v-model="formItem.bilibiliLink"
-                  :placeholder="$t('report.info.required')"/>
-              </FormItem>
+                    <FormItem :label="$t('report.labels.cheatMethod')">
+                      <CheckboxGroup v-model="tabs.list[index].formItem.checkbox">
+                        <Checkbox
+                          v-for="method in cheatMethodsGlossary"
+                          :key="method.value"
+                          :label="method.value">
+                          {{ $t(`cheatMethods.${method.value}`) }}
+                        </Checkbox>
+                      </CheckboxGroup>
+                    </FormItem>
+                  </Card>
+                </TimelineItem>
+                <TimelineItem>
+                  <Card dis-hover>
+                    <FormItem :label="$t('detail.info.videoLink')">
+                      <Alert type="warning">
+                        {{
+                          $t("report.info.uploadManual1", {
+                            msg: "uploadManual1",
+                          })
+                        }}
+                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
+                          $t("report.info.uploadManual2", {
+                            msg: "uploadManual2",
+                          })
+                        }}
+                      </Alert>
+                      <span class="hint">
+                      {{
+                          $t("report.info.uploadManual3", {
+                            msg: "uploadManual3",
+                          })
+                        }}
+                    </span>
+                      <Input
+                        v-model="tabs.list[index].formItem.bilibiliLink"
+                        :placeholder="$t('report.info.required')"/>
+                    </FormItem>
 
-              <FormItem :label="$t('report.labels.description')">
-                <Alert type="warning">
-                  {{ $t("report.info.uploadPic1", {msg: "uploadPic1"}) }}
-                </Alert>
-                <Alert type="warning">
-                  {{ $t("report.info.uploadPic2", {msg: "uploadPic2"}) }}
-                  <a target="_blank"
-                     href="https://sm.ms">https://sm.ms</a>，{{ $t("report.info.uploadPic3", {msg: "uploadPic3"}) }}
-                </Alert>
-                <span class="hint">{{
-                    $t("report.info.uploadPic4", {msg: "uploadPic4"})
-                  }}
-            </span>
+                    <FormItem :label="$t('report.labels.description')">
+                      <Alert type="warning">
+                        {{ $t("report.info.uploadPic1", {msg: "uploadPic1"}) }}
+                      </Alert>
+                      <Alert type="warning">
+                        {{ $t("report.info.uploadPic2", {msg: "uploadPic2"}) }}
+                        <a target="_blank"
+                           href="https://sm.ms">https://sm.ms</a>，{{
+                          $t("report.info.uploadPic3", {msg: "uploadPic3"})
+                        }}
+                      </Alert>
+                      <span class="hint">
+                      {{ $t("report.info.uploadPic4", {msg: "uploadPic4"}) }}
+                    </span>
+                      <Edit
+                        :content="$t('report.info.description')"
+                        @change="handleMiscChange"/>
+                    </FormItem>
+                  </Card>
+                </TimelineItem>
+                <TimelineItem>
+                  <Card dis-hover>
+                    <FormItem :label="$t('report.info.captcha')">
+                      <Input
+                        type="text"
+                        v-model="tabs.list[index].formItem.captcha"
+                        :placeholder="$t('report.info.captcha')"/>
+                      <img ref="captcha"/>
+                      <a
+                        ref="reCaptcha"
+                        href="#"
+                        @click.stop.prevent="refreshCaptcha">
+                        {{
+                          $t("report.info.getCaptcha", {msg: "getCaptcha"})
+                        }}
+                      </a>
+                    </FormItem>
 
-                <!--            <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." />-->
-                <Edit
-                  :content="$t('report.info.description')"
-                  @change="handleMiscChange"/>
-              </FormItem>
-            </Card>
-          </TimelineItem>
-          <TimelineItem>
-            <Card dis-hover>
-              <FormItem :label="$t('report.info.captcha')">
-                <Input
-                  type="text"
-                  v-model="formItem.captcha"
-                  :placeholder="$t('report.info.captcha')"/>
-                <img ref="captcha"/>
-                <a
-                  ref="reCaptcha"
-                  href="#"
-                  @click.stop.prevent="refreshCaptcha">
-                  {{
-                    $t("report.info.getCaptcha", {msg: "getCaptcha"})
-                  }}
-                </a>
-              </FormItem>
+                    <FormItem>
+                      <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel">
+                        {{ $t("report.info.cancel", {msg: "cancel"}) }}
+                      </Button>
+                      <Divider type="vertical"/>
+                      <Button @click="doReport(index)" type="primary" size="large">
+                        {{ $t("report.info.reportOne", {msg: "report"}) }}
+                      </Button>
+                    </FormItem>
+                  </Card>
+                </TimelineItem>
+              </Timeline>
 
-              <FormItem>
-                <router-link to="/">
-                  <Button type="dashed" size="large">
-                    {{ $t("report.info.cancel", {msg: "cancel"}) }}
-                  </Button>
-                </router-link>
-                <Divider type="vertical"/>
-                <Button @click="doReport" type="primary" size="large">
-                  {{ $t("report.info.report", {msg: "report"}) }}
-                </Button>
-              </FormItem>
-            </Card>
-          </TimelineItem>
-        </Timeline>
+              <Button @click="doReport" type="primary" size="large">
+                {{ $t("report.info.reportAll", {msg: "report"}) }}
+              </Button>
 
-        <Spin size="large" fix v-show="spinShow"></Spin>
-      </Form>
+              <Spin size="large" fix v-show="spinShow"></Spin>
+            </Form>
+          </Card>
+        </TabPane>
+        <Button @click="handleTabsAdd" size="small" slot="extra">增加</Button>
+      </Tabs>
     </div>
     <br>
   </div>
 </template>
 
 <script>
-import {http, api, conf} from '../assets/js/index'
+import {http, api, conf, http_token} from '../assets/js/index'
 import Edit from "@/components/Edit.vue";
 import {
   checkIdExist,
@@ -186,17 +186,9 @@ import {
 export default {
   data() {
     return {
-      formItem: {
-        gameName: "",
-        originId: "",
-        bilibiliLink: "",
-        checkbox: ["aimbot"],
-        description: this.$i18n.t("report.info.description"),
-        captcha: "",
-
-        originUserId: "",
-        originPersonaId: "",
-        avatarLink: "",
+      tabs: {
+        count: 0,
+        list: []
       },
       spinShow: false,
       failedOfNotFound: false,
@@ -206,7 +198,28 @@ export default {
   components: {
     Edit,
   },
+  created() {
+    this.http = http_token.call(this);
+    this.handleTabsAdd();
+  },
   methods: {
+    handleTabsAdd() {
+      let newFormData = {
+        formItem: {
+          gameName: "",
+          originId: "",
+          bilibiliLink: "",
+          checkbox: ["aimbot"],
+          description: this.$i18n.t("report.info.description"),
+          captcha: "",
+
+          originUserId: "",
+          originPersonaId: "",
+          avatarLink: "",
+        },
+      };
+      this.tabs.list.push(newFormData);
+    },
     checkVideoAndImg() {
       if (
         trimAllWhitespace(this.formItem.bilibiliLink) ||
@@ -228,62 +241,72 @@ export default {
     handleMiscChange: function (h) {
       this.formItem.description = h;
     },
-    doReport: function (e) {
+    doCancel() {
+      if (this.tabs.list.length <= 1) {
+        return;
+      }
+      this.tabs.count = 0;
+      this.tabs.list = this.tabs.list.splice(this.tabs.count, 1);
+    },
+    doReport (index) {
+      // that form
+      let formData = this.tabs.list[index];
+
       // check form data
-      if (checkReportFormData.call(this, this.formItem) === false)
+      if (checkReportFormData.call(this, formData.formItem) === false)
         return false;
       if (this.checkVideoAndImg() === false) return false;
 
       this.spinShow = true;
+
       checkIdExist({
-        id: trimAllWhitespace(this.formItem.originId),
-      })
-        .then(async (res) => {
-          const d = res.data;
-          const idExist = d.idExist;
+        id: trimAllWhitespace(formData.formItem.originId),
+      }).then(async (res) => {
+        const d = res.data;
+        const idExist = d.idExist;
 
-          if (idExist) {
-            this.formItem.originUserId = d.originUserId;
-            this.formItem.originPersonaId = d.originPersonaId;
-            this.formItem.avatarLink = d.avatarLink;
+        if (idExist) {
+          formData.formItem.originUserId = d.originUserId;
+          formData.formItem.originPersonaId = d.originPersonaId;
+          formData.formItem.avatarLink = d.avatarLink;
 
-            await this.handleReport();
-          } else {
-            this.spinShow = false;
-            this.failedOfNotFound = true;
-            setImmediate(() => {
-              document
-                .getElementById("notFoundHint")
-                .scrollIntoView({
-                  behavior: "smooth",
-                  block: "end",
-                  inline: "nearest",
-                });
-            });
-            this.$Message.error(
-              this.$i18n.t("report.info.originId")
-            );
-          }
-
-          this.formItem.captcha = "";
-          this.refreshCaptcha();
-        })
-        .catch((e) => {
-          if (e.response && e.response.status == 401)
-            this.$Message.error(
-              this.$t("report.info.loginExpired")
-            );
-          else if (e.response && e.response.status == 500)
-            this.$Message.error(
-              "An error occured in server, please try again later."
-            );
-          else this.$Message.error("Failed: Unknown error.");
+          await this.handleReport();
+        } else {
           this.spinShow = false;
-        });
+          this.failedOfNotFound = true;
+
+          setImmediate(() => {
+            document
+              .getElementById("notFoundHint")
+              .scrollIntoView({
+                behavior: "smooth",
+                block: "end",
+                inline: "nearest",
+              });
+          });
+
+          this.$Message.error(
+            this.$i18n.t("report.info.originId")
+          );
+        }
+
+        formData.formItem.captcha = "";
+        this.refreshCaptcha();
+      }).catch((e) => {
+        if (e.response && e.response.status == 401)
+          this.$Message.error(
+            this.$t("report.info.loginExpired")
+          );
+        else if (e.response && e.response.status == 500)
+          this.$Message.error(
+            "An error occured in server, please try again later."
+          );
+        else this.$Message.error("Failed: Unknown error.");
+        this.spinShow = false;
+      });
     },
     handleReport: function () {
       this.spinShow = true;
-
       const cheatMethods = this.formItem.checkbox.join(",");
       const {
         gameName,
@@ -292,7 +315,6 @@ export default {
         avatarLink,
         captcha,
       } = this.formItem;
-
       const originId = trimAllWhitespace(this.formItem.originId);
       let bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
       if (bilibiliLink)
@@ -301,11 +323,18 @@ export default {
           : "//" + bilibiliLink;
       const description = this.formItem.description.trim();
 
-      http.post(api["cheaters"], {
+      this.http.post(api["cheaters"], {
         headers: {
           // 'x-csrf-token': getCsrfToken(),
         },
         data: {
+          // data: {
+          //   game: 'bf1' | 'bfv',
+          //   originName: 'string',
+          //   cheatMethods: 'string',	// see {{valid_cheatMethod}}
+          //   videoLink: '',
+          //   description: 'string'
+          // },
           gameName,
           originId,
           cheatMethods,

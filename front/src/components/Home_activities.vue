@@ -22,7 +22,6 @@
                     activity.cheaterOriginId
                   }}</router-link>
               </span>
-
             </td>
 
             <td v-if="activity.type === 'register'">
@@ -33,22 +32,21 @@
                 注册了 bfban ，
                 欢迎！
               </span>
-
             </td>
 
             <td v-if="activity.type === 'verify'">
               <span>
                 <Tag color="success">管理员</Tag>
-                <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">{{
-                    activity.username
-                  }}</router-link>
+                <router-link :to="{name: 'account', params: {uId: `${activity.uId}`}}">
+                  {{activity.username }}
+                </router-link>
                 将
-                <router-link :to="{name: 'cheater', params: {ouid: `${activity.originUserId}`}}">{{
-                    activity.cheaterOriginId
-                  }}</router-link>
+                <router-link :to="{name: 'cheater', params: {ouid: `${activity.originUserId}`}}">
+                  {{activity.cheaterOriginId }}
+                </router-link>
                 处理为
                 <Tag color="warning">
-                  {{ handleStatus(activity.status) }}
+                  {{ handleStatus(activity.status, $root.$i18n.locale) }}
                 </Tag>
               </span>
 

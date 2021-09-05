@@ -24,18 +24,16 @@
                 了解有那些社区已经加入
               </Button>
             </router-link>
-            {{statistics}}
-
             <Row :gutter="10" style="margin-top: 50px">
               <Col span="12">
                 <Card dis-hover>
-                  <h3>{{ site.report || 0 }}</h3>
+                  <h3>{{ statistics.reports || 0 }}</h3>
                   <span>已收到</span>
                 </Card>
               </Col>
               <Col span="12">
                 <Card dis-hover>
-                  <h3>{{ site.cheater || 0 }}</h3>
+                  <h3>{{ statistics.confirmed || 0 }}</h3>
                   <span>确认作弊者</span>
                 </Card>
               </Col>
@@ -235,7 +233,17 @@ export default {
       })
     },
     getStatisticsInfo () {
-      http.get(api["statistics"], {}).then((res) => {
+      http.get(api["statistics"], {
+        params: {
+          reports : 'show', // show reports number
+          players : true,	// show players that is reported number
+          confirmed : true,	// show confirmed number
+          registers : true,	// show register number
+          banappeals : true,// show ban appeals number
+          details : true,	// show number of each game, each status
+          from : new Date('2018-01-01').getTime()
+        }
+      }).then((res) => {
         const d = res.data;
         if (d.success === 1) {
           this.statistics = d.data;

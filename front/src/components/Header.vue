@@ -118,7 +118,7 @@
                 <ListItemMeta :title="cheater.currentName" :description="'uid:' + cheater.originUserId + ' 过去id: ' + cheater.historyName" />
                 <template slot="action">
                   <li @click="searchModal = false">
-                    <router-link :to="{name: 'cheater', params: {ouid: `${cheater.originUserId}`}}" >
+                    <router-link :to="{name: 'cheater', params: {ouid: `${cheater.originPersonaId}.${cheater.originUserId}.${cheater.id}`}}" >
                       <Icon type="ios-eye" size="20"/> 查看
                     </router-link>
                   </li>

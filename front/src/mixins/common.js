@@ -1,7 +1,10 @@
 import ajax from '@/mixins/ajax';
 import _ from "lodash";
-function moment() {}
-function checkIdExist({ id }) {
+
+function moment() {
+}
+
+function checkIdExist({id}) {
   return ajax({
     method: 'post',
     url: '/checkGameIdExist',
@@ -15,16 +18,20 @@ function checkReportFormData(form) {
   if (!trimAllWhitespace(form.originId)) {
     this.$Message.error('请填写举报游戏ID');
     return false;
-  } if (!form.gameName) {
+  }
+  if (!form.gameName) {
     this.$Message.error('选择游戏');
     return false;
-  } if (form.checkbox.length === 0) {
+  }
+  if (form.checkbox.length === 0) {
     this.$Message.error('选择作弊方式');
     return false;
-  } if (form.captcha.length !== 4) {
+  }
+  if (form.captcha.length !== 4) {
     this.$Message.error('正确填写验证码');
     return false;
-  } if (trimAllWhitespace(form.description).length === 0) {
+  }
+  if (trimAllWhitespace(form.description).length === 0) {
     this.$Message.error('论述必填');
     return false;
   }
@@ -105,10 +112,13 @@ function convertCheatMethods(str = '', locale) {
   return tmpArr.sort().reverse().join(' ');
 }
 
+['wallhack', 'aimbot', 'invisable', 'magicBullet',
+  'damageChange', 'gadgetModify', 'teleport', 'attackServer']
 const cheaterStatus = [
   // value 100 表示全部
   {
-    value: '0',
+    value: 0,
+    values: ['0', 'wallhack'],
     "zh-CN": '未处理',
     "en-US": 'Processing',
     "ja-JP": '未処理',
@@ -116,7 +126,8 @@ const cheaterStatus = [
     "tr-TR": 'İşleniyor',
   },
   {
-    value: '5',
+    value: 5,
+    values: ['5', 'gadgetModify'],
     "zh-CN": '回复讨论中',
     "en-US": 'Under discussion',
     "ja-JP": '議論中',
@@ -124,7 +135,8 @@ const cheaterStatus = [
     "tr-TR": 'Tartışılıyor',
   },
   {
-    value: '6',
+    value: 6,
+    values: ['6', 'teleport'],
     "zh-CN": '等待管理确认',
     "en-US": 'Waiting for management cofirmation',
     "ja-JP": '管理者の確認待ち',
@@ -132,7 +144,8 @@ const cheaterStatus = [
     "tr-TR": 'Yönetici onayı bekleniyor',
   },
   {
-    value: '1',
+    value: 1,
+    values: ['1', 'guilt'],
     "zh-CN": '认为石锤',
     "en-US": 'Confirmed hacker',
     "ja-JP": 'チーター',
@@ -140,7 +153,8 @@ const cheaterStatus = [
     "tr-TR": 'Onaylanmış hileci',
   },
   {
-    value: '2',
+    value: 2,
+    values: ['2', 'invisable'],
     "zh-CN": '嫌疑再观察',
     "en-US": 'Suspicious player',
     "ja-JP": '怪しいプレイヤー',
@@ -148,7 +162,8 @@ const cheaterStatus = [
     "tr-TR": 'Şüpheli oyuncu',
   },
   {
-    value: '3',
+    value: 3,
+    values: [ '3', 'magicBullet'],
     "zh-CN": '认为没开挂',
     "en-US": 'Innocent clean player',
     "ja-JP": '無実のプレイヤー',
@@ -156,12 +171,22 @@ const cheaterStatus = [
     "tr-TR": 'Temiz oyuncu',
   },
   {
-    value: '4',
+    value: 4,
+    values: ['4', 'damageChange'],
     "zh-CN": '回收站',
     "en-US": 'Recycle Bin',
     "ja-JP": 'ごみ箱',
     "ru-RU": 'Мусор',
     "tr-TR": 'Çöp',
+  },
+  {
+    value: 7,
+    values: ['7', 'attackServer'],
+    "zh-CN": '攻击服务器',
+    "en-US": 'attackServer',
+    "ja-JP": 'attackServer',
+    "ru-RU": 'attackServer',
+    "tr-TR": 'attackServer',
   },
 ];
 
@@ -182,7 +207,7 @@ const gameName = [
     "ru-RU": 'Battlefield 5',
     "tr-TR": 'Battlefield 5',
   },
-    {
+  {
     value: 'bf6',
     "zh-CN": '战地6',
     "en-US": 'Battlefield 6',
@@ -193,12 +218,14 @@ const gameName = [
 ];
 
 function getCheaterStatusLabel(value, locale = detectLanguage(navigator.language)) {
-  const o = _.find(cheaterStatus, (v, k) => v.value === value);
+  const o = _.find(cheaterStatus, (v, k) => {
+    return value === v.value || v.values.indexOf(value) >= 0;
+  });
   return o ? o[locale] : '';
 }
 
 function getGameLabel(value, locale = detectLanguage(navigator.language)) {
-  const o = _.find(gameName, (v, k) => v.value === value);
+  const o = _.find(gameName, (v, k) => v.value == value);
   return o ? o[locale] : '';
 }
 
@@ -282,7 +309,7 @@ function defaultImgProviderSrcToProxy(str) {
   // replace it with a https proxy
   const proxySrc = "https://bfban.glass-panel.workers.dev/bfban.bamket";
   const reg = /src="http:\/\/bfban.bamket.com/g;
-  return str.replace(reg, "src=\""+proxySrc);
+  return str.replace(reg, "src=\"" + proxySrc);
 }
 
 function replaceImgSrcToDataSrc(str) {

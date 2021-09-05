@@ -12,9 +12,12 @@ export default class Api {
       'players': 'players',
       'user_info': 'user/info',
       'activity': 'activities',
+      'player_report': 'player/report',
+      'player_update': 'player/update',
+      'player_reset': 'reset',
+      'account_timeline': 'player/timeline',
       'account_signout': 'user/signout',
       'account_signin': 'user/signin',
-      'account_reset': 'account/reset',
       'account_signup': 'user/signup',
       'account_signupVerify': 'user/signupVerify',
     };

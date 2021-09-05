@@ -143,6 +143,8 @@
       "uploadPic4": "请列出阐明足够的证据，编辑器支持上传图片（限制2M）",
       "getCaptcha": "获得验证码",
       "report": "举报",
+      "reportOne": "举报单个",
+      "reportAll": "举报所有",
       "reset": "重置",
       "cancel": "取消",
       "description": "尽可能详细的列举被举报人的作弊证据",
@@ -260,6 +262,7 @@
     "hint3": "若要补充证据，可以重复举报同一ID",
     "userInfo": "个人信息",
     "username": "用户名：",
+    "root": "系统",
     "role": "身份：",
     "admin": "管理员",
     "normal": "普通",
@@ -322,7 +325,13 @@
       "status": {
         "all": "全部"
       },
-      "refresh": "刷新"
+      "refresh": "刷新",
+      "sortBy": {
+        "createTime": "举报时间倒序",
+        "updateTime": "更新时间倒序",
+        "viewNum": "围观次数倒序",
+        "commentNum": "回复次数倒序"
+      }
     },
     "reportTime": "举报时间范围",
     "updateTime": "更新时间范围",

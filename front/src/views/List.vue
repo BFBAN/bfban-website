@@ -22,7 +22,7 @@
           @on-change="handleChanges"
           type="button">
           <Radio label="">
-            {{$t('list.filters.game.all')}}
+            {{ $t('list.filters.game.all') }}
           </Radio>
           <Radio label="bf1"
                  style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2017/01/battlefield-1-keyart-5452x3859.jpg.adapt.crop1x1.767p.jpg')">
@@ -78,9 +78,8 @@
                     </Col>
                     <Col span="15">
                       <div style="display: flex; flex-direction: column;">
-                        <router-link :to="{name: 'cheater', params: {
-                          ouid: `${d.originPersonaId}.${d.originUserId}.${d.id}`
-                        }}">
+                        <router-link
+                          :to="{name: 'cheater', params: { ouid: `${d.originPersonaId}.${d.originUserId}.${d.id}` }}">
                           <h2>
                             {{ d.originName }}
                             <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"
@@ -140,7 +139,7 @@
               <Divider class="desktop-hide"></Divider>
 
               <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
-                <Option value="100">{{ $t("list.filters.status.all") }}({{ getAllStatusNum }})</Option>
+                <Option value="-1">{{ $t("list.filters.status.all") }}({{ getAllStatusNum }})</Option>
                 <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">
                   {{ status.label }}({{ getStatusNum(status.value) }})
                 </Option>
@@ -149,7 +148,9 @@
               <Divider></Divider>
 
               <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
-                <Option v-for="item in sortBy" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in sortBy" :value="item.value" :key="item.value">
+                  {{ $t(`list.filters.sortBy.${item.value}`) }}
+                </Option>
               </Select>
 
               <Divider></Divider>
@@ -212,32 +213,11 @@ export default {
       total: 0,
       sum: [],
       totalSum: [],
-
       sortBy: [
-        {
-          value: "createDatetime",
-          "zh-CN": "举报时间倒序",
-          "en-US": "Report time",
-          "ja-JP": "時間を逆の順序で報告します",
-        },
-        {
-          value: "updateDatetime",
-          "zh-CN": "更新时间倒序",
-          "en-US": "Update time",
-          "ja-JP": "逆更新時間",
-        },
-        {
-          value: "n",
-          "zh-CN": "围观次数倒序",
-          "en-US": "Number of viewers",
-          "ja-JP": "逆順の見物人",
-        },
-        {
-          value: "commentsNum",
-          "zh-CN": "回复次数倒序",
-          "en-US": "Number of replies",
-          "ja-JP": "返信数を逆にする",
-        },
+        {value: "createTime",},
+        {value: "updateTime",},
+        {value: "viewNum",},
+        {value: "commentNum",},
       ],
       sortByValue: "updateDatetime",
 
@@ -275,7 +255,7 @@ export default {
       // default values
       const {
         game = "bf1",
-        status = "-1",
+        status = -1,
         createTime = "",
         updateTime = "",
         page = 1,
@@ -287,18 +267,16 @@ export default {
 
       config["params"] = Object.assign({
           game,
-          status,
           page,
           sort,
+          status,
           tz: '', // moment.tz.gutter(),
           limit,
         },
-        createTime ? {
-          createTime: new Date(createTime).getTime(),
-        } : {},
-        updateTime ? {
-          updateTime: new Date(updateTime).getTime(),
-        } : {});
+        createTime ? {createTime: new Date(createTime).getTime(),} : {},
+        updateTime ? {updateTime: new Date(updateTime).getTime(),} : {}
+      );
+
       this.gameName = game;
       this.statusGroup = status;
       this.createTime = createTime.split(",");
