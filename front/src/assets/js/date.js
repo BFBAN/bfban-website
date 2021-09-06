@@ -2,8 +2,8 @@
  * 时间
  */
 
-class date {
-
+export default class Time {
+    now () {
+      return new Date().getTime();
+    }
 }
-
-export default new Date();

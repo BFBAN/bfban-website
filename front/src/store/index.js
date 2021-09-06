@@ -3,13 +3,14 @@ import Vuex from 'vuex'
 import Cookies from 'js-cookie';
 
 import app from '../main';
-import { SET_LANG } from './mutation-types';
+import { SET_LANG, SET_THEME } from './mutation-types';
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
     user: undefined,
+    $theme: 'dis',
   },
 
   // modify state
@@ -31,8 +32,16 @@ const store = new Vuex.Store({
       }
     },
     [SET_LANG](state, payload) {
-      console.log(app)
       app.$i18n.locale = payload;
+    },
+    [SET_THEME](state, pay) {
+      state.$theme = pay;
+      let theme = state.$theme;
+      if (theme == 'dis' || theme == '') {
+        require('../theme/bfban_theme.less');
+      } else if (theme == 'deep') {
+        require('../theme/bfban_deep.less');
+      }
     },
   },
 
@@ -47,6 +56,9 @@ const store = new Vuex.Store({
     setLang({ commit }, payload) {
       commit(SET_LANG, payload);
     },
+    setTheme({ commit }, payload) {
+      commit(SET_THEME, payload);
+    }
   },
 });
 

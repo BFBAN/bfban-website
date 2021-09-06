@@ -22,7 +22,8 @@ export default class http_token extends http {
     if (token) {
       data = Object.assign(data, {
         headers: {
-          'x-access-token': token
+          'token': token,
+          // 'X-Access-Token': token
         }
       })
     }

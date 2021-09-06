@@ -12,6 +12,7 @@ const Account = () => import('@/views/Account.vue');
 const About = () => import('@/views/About.vue');
 const NotFound = () => import('@/views/NotFound.vue');
 const Apps = () => import('@/views/Apps.vue');
+const Profile = () => import('@/views/account/profile.vue');
 
 import store from '@/store';
 import Vue from 'vue';
@@ -27,6 +28,8 @@ const routes = [
 	},
 	{ name: 'about', path: '/about', component: About },
 	{ name: 'apps', path: '/apps', component: Apps },
+  { name: 'profile', path: '/profile', component: Profile },
+
 	{
 		name: 'report',
 		path: '/report',

@@ -12,6 +12,7 @@ export default class Api {
       'players': 'players',
       'user_info': 'user/info',
       'activity': 'activities',
+      'player_reply': 'player/reply', // 回复
       'player_report': 'player/report',
       'player_update': 'player/update',
       'player_reset': 'reset',

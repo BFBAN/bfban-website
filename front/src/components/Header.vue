@@ -71,6 +71,12 @@
                 </router-link>
               </DropdownItem>
               <DropdownItem>
+                <router-link class="nav-username mobile-hide" :to="{name: 'profile', params: { uId: `${currentUser.userinfo.userId}` }}">
+                  {{$t("header.profile")}}
+                </router-link>
+              </DropdownItem>
+
+              <DropdownItem>
                 <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">{{$t("header.dashboard")}}</router-link>
               </DropdownItem>
               <Dropdown-item divided v-show="isLogin">
@@ -174,8 +180,12 @@
         })
       },
       signout() {
-        let http = new http_token(this);
-        http.post(api["account_signout"], {}).then((res) => {
+        // let http = new http_token(this);
+        http.post(api["account_signout"], {
+          headers: {
+            'x-access-token': this.$store.state.user.token
+          }
+        }).then((res) => {
           const d = res.data;
 
           if (d.error === 0) {

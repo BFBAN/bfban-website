@@ -17,7 +17,7 @@ export default class Http {
   HTTP = http.create({
     // baseURL: process.env.BASE_API,
     timeout: 9000,
-    withCredentials: true
+    withCredentials: false
   })
 
   /**
@@ -29,9 +29,7 @@ export default class Http {
   async request (url = '', requestData = {method: this.POST, data: {}, params: {}}) {
     let result = await this.HTTP({
       url: url,
-      headers: Object.assign({
-        "content-type": "text/plain"
-      }, requestData.headers),
+      headers: Object.assign({}, requestData.headers),
       method: requestData.method,
       data: requestData.data,
       params: requestData.params,

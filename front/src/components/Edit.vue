@@ -59,17 +59,16 @@
           <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
           <p>Click or drag files here to upload</p>
         </div>
-
       </Upload>
     </Modal>
 
 
     <div>
       <quill-editor
-                    ref="quillEditor"
-                    :content="editorContent"
-                    :options="editorOption"
-                    @change="onEditorChange($event)">
+        ref="quillEditor"
+        :content="editorContent"
+        :options="editorOption"
+        @change="onEditorChange($event)">
       </quill-editor>
 
 
@@ -111,6 +110,7 @@ const toolbarOptions = [
 ];
 export default {
   props: {
+    index: null,
     content: {
       type: String,
       default: '',
@@ -170,7 +170,7 @@ export default {
   },
   methods: {
     onEditorChange({quill, html, text}) {
-      this.$emit('change', html);
+      this.$emit('change', html, this.index);
       this.editorContent = html;
     },
 

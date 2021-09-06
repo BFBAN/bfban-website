@@ -117,11 +117,9 @@
                         }}
                       </Alert>
                       <span class="hint">
-                      {{ $t("report.info.uploadPic4", {msg: "uploadPic4"}) }}
-                    </span>
-                      <Edit
-                        :content="$t('report.info.description')"
-                        @change="handleMiscChange"/>
+                        {{ $t("report.info.uploadPic4", {msg: "uploadPic4"}) }}
+                      </span>
+                      <Edit :index="index" :content="$t('report.info.description')" @change="handleMiscChange"/>
                     </FormItem>
                   </Card>
                 </TimelineItem>
@@ -132,11 +130,11 @@
                         type="text"
                         v-model="tabs.list[index].formItem.captcha"
                         :placeholder="$t('report.info.captcha')"/>
-                      <img ref="captcha"/>
+                      <div v-html="tabs.list[index].captchaUrl.content"></div>
                       <a
                         ref="reCaptcha"
                         href="#"
-                        @click.stop.prevent="refreshCaptcha">
+                        @click.stop.prevent="refreshCaptcha(index)">
                         {{
                           $t("report.info.getCaptcha", {msg: "getCaptcha"})
                         }}
@@ -217,14 +215,15 @@ export default {
           originPersonaId: "",
           avatarLink: "",
         },
+        captchaUrl: {}
       };
       this.tabs.list.push(newFormData);
     },
-    checkVideoAndImg() {
+    checkVideoAndImg(formData) {
       if (
-        trimAllWhitespace(this.formItem.bilibiliLink) ||
+        trimAllWhitespace(formData.formItem.bilibiliLink) ||
         /(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)/.test(
-          this.formItem.description
+          formData.formItem.description
         )
       ) {
         return true;
@@ -233,13 +232,20 @@ export default {
         return false;
       }
     },
-    refreshCaptcha() {
-      this.$refs.captcha.src = conf.requestDev + "/captcha?r=" + Math.random();
-
-      waitForAction.call(this.$refs.reCaptcha);
+    refreshCaptcha(index) {
+      http.get(api["captcha"], {
+        params: {
+          r: Math.random()
+        }
+      }).then(res => {
+        if (res.data.success === 1) {
+          this.tabs.list[index].captchaUrl = res.data.data;
+        }
+      });
+      // waitForAction.call(this.$refs.reCaptcha);
     },
-    handleMiscChange: function (h) {
-      this.formItem.description = h;
+    handleMiscChange(h, index) {
+      this.tabs.list[index].formItem.description = h;
     },
     doCancel() {
       if (this.tabs.list.length <= 1) {
@@ -248,14 +254,14 @@ export default {
       this.tabs.count = 0;
       this.tabs.list = this.tabs.list.splice(this.tabs.count, 1);
     },
-    doReport (index) {
+    doReport(index) {
       // that form
       let formData = this.tabs.list[index];
 
       // check form data
       if (checkReportFormData.call(this, formData.formItem) === false)
         return false;
-      if (this.checkVideoAndImg() === false) return false;
+      if (this.checkVideoAndImg(formData) === false) return false;
 
       this.spinShow = true;
 
@@ -270,7 +276,7 @@ export default {
           formData.formItem.originPersonaId = d.originPersonaId;
           formData.formItem.avatarLink = d.avatarLink;
 
-          await this.handleReport();
+          await this.handleReport(formData);
         } else {
           this.spinShow = false;
           this.failedOfNotFound = true;
@@ -305,23 +311,23 @@ export default {
         this.spinShow = false;
       });
     },
-    handleReport: function () {
+    handleReport(formData) {
       this.spinShow = true;
-      const cheatMethods = this.formItem.checkbox.join(",");
+      const cheatMethods = formData.formItem.checkbox.join(",");
       const {
         gameName,
         originUserId,
         originPersonaId,
         avatarLink,
         captcha,
-      } = this.formItem;
-      const originId = trimAllWhitespace(this.formItem.originId);
-      let bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
+      } = formData.formItem;
+      const originId = trimAllWhitespace(formData.formItem.originId);
+      let bilibiliLink = trimAllWhitespace(formData.formItem.bilibiliLink);
       if (bilibiliLink)
         bilibiliLink = /^https?:\/\//.test(bilibiliLink)
           ? bilibiliLink
           : "//" + bilibiliLink;
-      const description = this.formItem.description.trim();
+      const description = formData.formItem.description.trim();
 
       this.http.post(api["cheaters"], {
         headers: {

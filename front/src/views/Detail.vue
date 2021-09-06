@@ -311,17 +311,19 @@
                       </p>
                     </div>
 
-<!--                    <Button @click="onTranslate(lindex)">F</Button>-->
+                    <!--                    <Button @click="onTranslate(lindex)">F</Button>-->
                   </TimelineItem>
-<!--                  TODO PAGE SET-->
-<!--                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
+                  <!--                  TODO PAGE SET-->
+                  <!--                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
                   <br>
                   <div v-if="isLogin">
                     <!-- 回复操作说明 -->
                     <Alert type="warning" show-icon>
                       <span>{{ $t('detail.info.replyManual1', {msg: 'replyManual1'}) }}</span>
                       <b><a href="https://sm.ms/"
-                            target="_blank"><span>{{ $t('detail.info.uploadPicButton', {msg: 'uploadPicButton'}) }}</span></a></b>，
+                            target="_blank"><span>{{
+                          $t('detail.info.uploadPicButton', {msg: 'uploadPicButton'})
+                        }}</span></a></b>，
                       <span>{{ $t('detail.info.replyManual2', {msg: 'replyManual2'}) }}</span>
                     </Alert>
                     <Form :label-width="80" style="position: relative;">
@@ -491,7 +493,7 @@
 </template>
 
 <script>
-import {http, api,http_token} from '../assets/js/index'
+import {http, api, http_token} from '../assets/js/index'
 import ajax from '@/mixins/ajax';
 import vueQr from 'vue-qr'
 import translate from 'google-translate-open-api';
@@ -550,10 +552,10 @@ export default {
       },
 
       updateUserInfospinShow: false,
-      detailStepsIndex:0
+      detailStepsIndex: 0
     }
   },
-  components: { Empty, vueQr },
+  components: {Empty, vueQr},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -576,7 +578,7 @@ export default {
     /**
      * 获取基本id信息
      */
-    getParamsIds () {
+    getParamsIds() {
       const object_id = this.$route.params.ouid.split('.');
       return {
         userId: object_id[1],
@@ -606,12 +608,12 @@ export default {
         params: Object.assign({
           skip: 0,
           limit: 10
-        },this.getParamsIds())
+        }, this.getParamsIds())
       }).then((res) => {
         const d = res.data;
         if (d.success === 1) {
           let timelineList = d.data;
-          let countNum = [0,0];
+          let countNum = [0, 0];
 
           timelineList.forEach(i => {
             if (i.type == 'report')
@@ -620,8 +622,12 @@ export default {
               countNum[1] += 1;
           });
 
-          if (countNum[0] <= 1) {this.detailStepsIndex = 0;}
-          if (countNum[1] > 1) {this.detailStepsIndex = 1;}
+          if (countNum[0] <= 1) {
+            this.detailStepsIndex = 0;
+          }
+          if (countNum[1] > 1) {
+            this.detailStepsIndex = 1;
+          }
 
           this.timelineList = timelineList;
         }
@@ -794,54 +800,52 @@ export default {
       content = formatTextarea(content);
 
       let data = {
-        cheaterId,
-        userId,
-        content,
-        originUserId,
+        data: {
+          toPlayerId: cheaterId,
+          content: content,
+        },
       };
 
       if (toFloor) {
-        data['toFloor'] = toFloor;
+        data.data['toFloor'] = toFloor;
       }
       if (toUserId) {
-        data['toUserId'] = toUserId;
+        data.data['toUserId'] = toUserId;
       }
 
-      ajax({
-        method: 'post',
-        url: '/cheaters/reply',
+      this.http.post(api["player_reply"], {
         data,
       }).then((res) => {
-          this.replySpinShow = false;
+        const d = res.data;
 
-          const d = res.data;
+        if (d.suceess === 1) {
+          const {createDatetime, content, status} = d.data;
+          this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
 
-          if (d.error === 0) {
-            const {createDatetime, content, status} = d.data;
-            this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
+          // reset reply
+          this.cancelReply();
 
-            // reset reply
-            this.cancelReply();
+          const foo = this.$store.state.user.username;
+          const fooUId = this.$store.state.user.uId;
+          const bar = '';
+          const barUId = '';
+          this.timelineList.push({
+            type: 'reply',
 
-            const foo = this.$store.state.user.username;
-            const fooUId = this.$store.state.user.uId;
-            const bar = '';
-            const barUId = '';
-            this.timelineList.push({
-              type: 'reply',
-
-              createDatetime: convertDatetimeToUserTimeZone(createDatetime),
-              content,
-              foo,
-              fooUId,
-              bar,
-              barUId,
-            });
-            this.cheater.status = status;
-          } else {
-            this.$Message.error(d.msg);
-          }
-        });
+            createDatetime: convertDatetimeToUserTimeZone(createDatetime),
+            content,
+            foo,
+            fooUId,
+            bar,
+            barUId,
+          });
+          this.cheater.status = status;
+        } else {
+          this.$Message.error(d.msg);
+        }
+      }).finally(() => {
+        this.replySpinShow = false;
+      });
     },
     handleCmdEnter(e, type) {
       if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
@@ -893,7 +897,7 @@ export default {
         }
       });
     },
-    async onTranslate (index) {
+    async onTranslate(index) {
       let that = this;
 
       // delete key
@@ -984,15 +988,23 @@ export default {
 </style>
 
 <style>
-.spin-icon-load{
+.spin-icon-load {
   animation: ani-demo-spin 1s linear infinite;
 }
+
 @keyframes ani-demo-spin {
-  from { transform: rotate(0deg);}
-  50%  { transform: rotate(180deg);}
-  to   { transform: rotate(360deg);}
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
-.demo-spin-col{
+
+.demo-spin-col {
   height: 100px;
   position: relative;
   border: 1px solid #eee;

@@ -10,8 +10,6 @@ import ViewUI from 'view-design';
 import VueQuillEditor from 'vue-quill-editor'
 
 // css
-import './theme/bfban_theme.less'
-// import './theme/bfban_deep.less'
 
 // quill css
 import 'quill/dist/quill.core.css'
@@ -20,7 +18,6 @@ import 'quill/dist/quill.bubble.css'
 
 // js
 import './registerServiceWorker'
-import './plugins/iview.js'
 
 Vue.use(less)
 Vue.use(ViewUI);

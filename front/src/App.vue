@@ -1,52 +1,50 @@
 <template>
-    <div id="app">
-		<Header></Header>
-		<main>
-			<router-view></router-view>
-		</main>
-		<Footer></Footer>
-    </div>
+  <div id="app">
+    <Header></Header>
+    <main>
+      <router-view></router-view>
+    </main>
+    <Footer></Footer>
+  </div>
 </template>
 
 <script>
+import {storage} from './assets/js/index';
+
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 
 export default {
-    name: "app",
-    components: {
-		Header,
-		Footer
-    },
+  name: "app",
+  components: {Header, Footer},
+  created() {
+    this.$store.dispatch('setTheme', storage.get('theme').data.value);
+  }
 };
 import 'view-design/dist/styles/iview.css'
 </script>
 
 <style lang="scss">
 @font-face {
-    font-family: "Ubuntu Mono";
-    font-weight: 400;
-    font-style: normal;
-    src: url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.eot");
-    src: url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.eot#iefix")
-            format("embedded-opentype"),
-        /* IE6-IE8 */ url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.woff2")
-            format("woff2"),
-        /* Super Modern Browsers */
-            url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.woff")
-            format("woff"),
-        /* Modern Browsers */
-            url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.ttf")
-            format("truetype"),
-        /* Safari, Android, iOS */
-            url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.svg")
-            format("svg"); /* Legacy iOS */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  font-family: "Ubuntu Mono";
+  font-weight: 400;
+  font-style: normal;
+  src: url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.eot");
+  src: url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.eot#iefix") format("embedded-opentype"),
+    /* IE6-IE8 */
+  url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.woff2") format("woff2"),
+    /* Super Modern Browsers */
+  url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.woff") format("woff"),
+    /* Modern Browsers */
+  url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.ttf") format("truetype"),
+    /* Safari, Android, iOS */
+  url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.svg") format("svg"); /* Legacy iOS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html, body {
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   height: 100%;
   font-size: .8rem;
   display: flex;

@@ -39,7 +39,7 @@
           </Carousel>
         </Col>
         <Col span="13">
-          <Card v-show="currentUser.token == ''" shadow>
+          <Card v-if="currentUser.token == ''" shadow>
             <p slot="title">{{ $t("signin.title") }}</p>
             <Form>
               <FormItem :label="$t('signin.form.username')">
@@ -76,7 +76,7 @@
               </FormItem>
             </Form>
           </Card>
-          <Card v-show="currentUser.token != ''" shadow align="center">
+          <Card v-if="currentUser.token != ''" shadow align="center">
             <br>
             <Avatar size="100">{{currentUser.userinfo.username[0]}}</Avatar>
             <h1>
@@ -200,7 +200,7 @@ export default {
   },
   computed: {
     currentUser() {
-      return this.$store.state.user;
+      return this.$store.state.user || {token: ''};
     }
   }
 }

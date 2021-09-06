@@ -31,7 +31,7 @@ async (req, res, next)=>{
         if(!!req.query.registers)
             data = Object.assign(data,await db('users').count({registers: 'id'}).where('createTime', '>=', new Date(from)).first());
         if(!!req.query.banAppeals)
-            data = Object.assign(data,await db('ban_appeals').count({banAppeals: 'id'}).where('createTime', '>=', new Date(from)).first());
+            data = Object.assign(data,await db('ban_appeals').count({banAppeals: 'id'}).where('createTime', '>=', new Date(from)).first())
 
         res.status(200).json({success: 1, code: 'statistics.success', data: data, t: req.query});
     } catch(err) {
