@@ -13,7 +13,6 @@
       <!--创建时间（时间段）、-->
       <!--操作时间（时间段）、-->
       <!--id搜索-->
-
       <p>
         <RadioGroup
           size="large"
@@ -24,28 +23,11 @@
           <Radio label="">
             {{ $t('list.filters.game.all') }}
           </Radio>
-          <Radio label="bf1"
-                 style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2017/01/battlefield-1-keyart-5452x3859.jpg.adapt.crop1x1.767p.jpg')">
+          <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" :style="'background-image: url(' + i.bk_src + ')'">
             <Badge :count="getTotalNum('bf1')" :overflow-count="90000">
-              <Tooltip :content="$t('list.filters.game.bf1')" placement="top-start">
-                <img height="25" src="https://media.contentapi.ea.com/content/dam/gin/common/logos/layer-1.png">
-              </Tooltip>
-            </Badge>
-          </Radio>
-          <Radio label="bfv"
-                 style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2018/05/bfv-campaignart-standard-large.jpg.adapt.crop1x1.767p.jpg')">
-            <Badge :count="getTotalNum('bfv')" :overflow-count="90000">
-              <Tooltip :content="$t('list.filters.game.bfv')" placement="top-start">
-                <img height="25" src="https://media.contentapi.ea.com/content/dam/gin/common/logos/bfv-logo-white.png">
-              </Tooltip>
-            </Badge>
-          </Radio>
-          <Radio label="bf6"
-                 style="background-image: url('https://media.contentapi.ea.com/content/dam/gin/images/2021/06/battlefield-2042-key-art.jpg.adapt.crop1x1.767p.jpg')">
-            <Badge :count="getTotalNum('bf6')" :overflow-count="90000">
-              <Tooltip :content="$t('list.filters.game.bf6')" placement="top-start">
-                <img height="20"
-                     src="https://media.contentapi.ea.com/content/dam/gin/common/logos/battlefield-2042-mono-logo-svg.svg">
+              <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
+                <img height="25" :src="i.logo_src" v-if="i.logo_src" />
+                <span v-else>{{i.full_name}}</span>
               </Tooltip>
             </Badge>
           </Radio>
@@ -60,59 +42,58 @@
             <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
             <br>
             <ul>
-              <!--          <li>-->
-              <!--            <span><b>游戏ID</b></span>-->
-              <!--            <span class="mobile-hide"><b>举报时间</b></span>-->
-              <!--            <span><b>更新时间</b></span>-->
-              <!--          </li>-->
-              <div v-for="d in data" :key="d.originUserId">
-                <Card>
-                  <Row>
-                    <Col span="4">
+              <div v-if="data.length > 0">
+                <div v-for="d in data" :key="d.originUserId">
+                  <Card>
+                    <Row>
+                      <Col span="4">
                       <span style="display: flex; align-items: center;">
                         <Avatar :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'"
                                 alt="avatar"
                                 size="55">
                         </Avatar>
                       </span>
-                    </Col>
-                    <Col span="15">
-                      <div style="display: flex; flex-direction: column;">
-                        <router-link
-                          :to="{name: 'cheater', params: { ouid: `${d.originPersonaId}.${d.originUserId}.${d.id}` }}">
-                          <h2>
-                            {{ d.originName }}
-                            <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"
-                                    @click="copied"></Button>
-                          </h2>
-                        </router-link>
-                      </div>
+                      </Col>
+                      <Col span="15">
+                        <div style="display: flex; flex-direction: column;">
+                          <router-link
+                            :to="{name: 'cheater', params: { ouid: `${d.originPersonaId}.${d.originUserId}.${d.id}` }}">
+                            <h2>
+                              {{ d.originName }}
+                              <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"
+                                      @click="copied"></Button>
+                            </h2>
+                          </router-link>
+                        </div>
 
-                      举报时间
-                      <Time v-if="d.createTime" :time="d.createTime"/>
-                      <Divider type="vertical"/>
-                      更新时间
-                      <Time v-if="d.updateTime" :time="d.updateTime"/>
-                    </Col>
-                    <Col span="5">
-                      <Row type="flex" justify="center" align="middle" style="height: 50px">
-                        <Col span="12" align="left" class="list">
-                          <Icon type="md-eye" size="15" class="item-icon"/>
-                          <span class="item-text">{{ d.viewNum || 0 }}</span>
-                        </Col>
-                        <Col span="1" align="center">
-                          <Divider type="vertical"/>
-                        </Col>
-                        <Col span="11" align="right">
-                          <Icon type="md-chatboxes" size="15" class="item-icon"/>
-                          <span class="item-text">{{ d.commentsNum || 0 }}</span>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </Card>
-
-                <br/>
+                        举报时间
+                        <Time v-if="d.createTime" :time="d.createTime"/>
+                        <Divider type="vertical"/>
+                        更新时间
+                        <Time v-if="d.updateTime" :time="d.updateTime"/>
+                      </Col>
+                      <Col span="5">
+                        <Row type="flex" justify="center" align="middle" style="height: 50px">
+                          <Col span="12" align="left" class="list">
+                            <Icon type="md-eye" size="15" class="item-icon"/>
+                            <span class="item-text">{{ d.viewNum || 0 }}</span>
+                          </Col>
+                          <Col span="1" align="center">
+                            <Divider type="vertical"/>
+                          </Col>
+                          <Col span="11" align="right">
+                            <Icon type="md-chatboxes" size="15" class="item-icon"/>
+                            <span class="item-text">{{ d.commentsNum || 0 }}</span>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Card>
+                  <br/>
+                </div>
+              </div>
+              <div v-else align="center">
+                (｀ﾍ´)=3 data null
               </div>
             </ul>
 
@@ -130,11 +111,11 @@
 
               <DatePicker :value="createTime" type="daterange" @on-change="handleCDatepicker" split-panels
                           placeholder="举报时间范围"
-                          style="width: 100px"></DatePicker>
+                          style="width: 110px"></DatePicker>
               -
               <DatePicker :value="updateTime" type="daterange" @on-change="handleUDatepicker" split-panels
                           placeholder="更新时间范围"
-                          style="width: 100px"></DatePicker>
+                          style="width: 110px"></DatePicker>
 
               <Divider class="desktop-hide"></Divider>
 
@@ -147,7 +128,7 @@
 
               <Divider></Divider>
 
-              <Select @on-change="handleSortByChange" v-model="sortByValue" style="width:110px">
+              <Select @on-change="handleSortByChange" v-model="sortByValue">
                 <Option v-for="item in sortBy" :value="item.value" :key="item.value">
                   {{ $t(`list.filters.sortBy.${item.value}`) }}
                 </Option>
@@ -169,9 +150,9 @@
                   :key="status.value"
                   :label="`${status.value}`">
                   <Badge :count="getStatusNum(status.value)">
-                <span>
-                  {{ status[$i18n.locale] }}
-                </span>
+                    <span>
+                      {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
+                    </span>
                   </Badge>
                 </Radio>
               </RadioGroup>
@@ -189,9 +170,8 @@
 </template>
 
 <script>
-import {http, api, conf} from '../assets/js/index'
-import {getCheaterStatusLabel, cheaterStatus} from "@/mixins/common";
-import ajax from "@/mixins/ajax";
+import {http, api, util} from '../assets/js/index'
+import {getCheaterStatusLabel, cheaterStatus, common} from "@/mixins/common";
 import _ from "lodash";
 
 //new ClipboardJS(".ivu-btn");
@@ -199,6 +179,7 @@ import _ from "lodash";
 export default {
   data() {
     return {
+      games: [],
       data: [],
       spinShow: true,
       gameName: "bf1",
@@ -216,8 +197,7 @@ export default {
         {value: "viewNum",},
         {value: "commentNum",},
       ],
-      sortByValue: "updateDatetime",
-
+      sortByValue: "createTime",
       cheaterStatus: cheaterStatus,
     };
   },
@@ -235,6 +215,7 @@ export default {
     },
   },
   methods: {
+    handleStatus: getCheaterStatusLabel,
     getTotalNum(val) {
       const target = _.find(this.totalSum, ["game", val]);
 
@@ -249,6 +230,11 @@ export default {
       this.$Message.info("已复制");
     },
     loadData() {
+      common.init().then((res) => {
+        this.cheaterStatus = res.cheaterStatus;
+        this.games = res.gameName;
+      });
+
       // default values
       const {
         game = "bf1",
@@ -282,16 +268,20 @@ export default {
       this.limit = Number.parseInt(limit);
       this.sortByValue = sort;
 
-      http.get(api['players'], config).then(({data: {data, total, sum, totalSum}}) => {
+      http.get(api['players'], config).then(res => {
+        const d = res.data;
+        if (d.success == 1) {
+          this.data = d.data.result || [];
+          this.total = d.data.total;
+          this.sum = d.data.sum;
+          this.totalSum = d.data.totalSum;
+        }
+      }).catch((res) => {
+        this.$Message.error(res.code);
+      }).finally(() => {
         this.spinShow = false;
-
-        this.data = data.result;
-        this.total = total;
-        this.sum = sum;
-        this.totalSum = totalSum;
       });
     },
-    handleStatus: getCheaterStatusLabel,
     handleRefresh() {
       this.spinShow = true;
 
@@ -350,7 +340,6 @@ export default {
       this.limit = num;
       this.handleChanges();
     },
-
     handleSortByChange(value) {
       this.handleChanges();
     },

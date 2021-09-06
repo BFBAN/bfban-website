@@ -526,13 +526,12 @@ import vueQr from 'vue-qr'
 import translate from 'google-translate-open-api';
 import Empty from '../components/Empty.vue'
 import {
+  common,
   getCheaterStatusLabel,
   formatTextarea,
   cheatMethodsGlossary,
   convertCheatMethods,
-  waitForAction,
-  replaceImgSrcToDataSrc,
-  defaultImgProviderSrcToProxy
+  waitForAction
 } from "@/mixins/common";
 
 export default {

@@ -2,43 +2,35 @@
   "child": [
     {
       "value": 0,
-      "values": ["0", "wallhack"],
-      "zh-CN": "未处理"
+      "values": ["0", "wallhack"]
     },
     {
       "value": 5,
-      "values": ["5", "gadgetModify"],
-      "zh-CN": "回复讨论中"
+      "values": ["5", "gadgetModify"]
     },
     {
       "value": 6,
-      "values": ["6", "teleport"],
-      "zh-CN": "等待管理确认"
+      "values": ["6", "teleport"]
     },
     {
       "value": 1,
-      "values": ["1", "guilt", "innocent"],
-      "zh-CN": "认为石锤"
+      "values": ["1", "guilt", "innocent"]
     },
     {
       "value": 2,
-      "values": ["2", "invisable", "discuss"],
-      "zh-CN": "嫌疑再观察"
+      "values": ["2", "invisable", "discuss"]
     },
     {
       "value": 3,
-      "values": [ "3", "magicBullet"],
-      "zh-CN": "认为没开挂"
+      "values": [ "3", "magicBullet"]
     },
     {
       "value": 4,
-      "values": ["4", "damageChange"],
-      "zh-CN": "回收站"
+      "values": ["4", "damageChange"]
     },
     {
       "value": 7,
-      "values": ["7", "attackServer"],
-      "zh-CN": "攻击服务器"
+      "values": ["7", "attackServer"]
     }
   ]
 }
