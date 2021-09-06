@@ -17,18 +17,18 @@ import logger from "../logger.js";
 
 const router = express.Router();
 
-router.post('/signup', verifyCaptcha, [ 
+router.post('/signup', verifyCaptcha, [
     checkbody("data.username").isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min:1, max:40}),
     checkbody('data.password').isString().trim().isLength({min:1, max:40}),
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().unescape().trim().notEmpty()
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'signup.bad', message: validateErr.array()});
-        
+
         // all data well-formed, ready to flight
         /** @type {{username:string, password:string, originName:string, originEmail:string}} */
         const { username, password, originName, originEmail } = req.body.data;
@@ -38,7 +38,7 @@ async (req, res, next)=> {
             db.select('username').from('users').where({username: username})
         ]) ).length != 0 )
             return res.status(400).json({error: 1, code: 'signup.usernameExist'});
-    
+
         // now check the origin account user binded
         const originClient = originClients.getOne()
         const originUserId = await originClient.searchUserEmail(originEmail);
@@ -53,14 +53,14 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'signup.originBindingExist'});
         if(''.concat(await originClient.getUserGames(originUserId)).includes('Battlefield') == false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'signup.gameNotOwned'});
-        
+
         // no mistakes detected, generate a unique string for register validation
         const randomStr = misc.generateRandomString(127);
         const passwdHash = await generatePassword(password);
         await db('registers').insert({
-            username: username, 
+            username: username,
             uniqCode: randomStr,
-            password: passwdHash, 
+            password: passwdHash,
             originName: originName,
             originEmail: originEmail,
             originUserId: originUserId,
@@ -76,9 +76,9 @@ async (req, res, next)=> {
     }
 });
 
-router.get('/signupVerify', [ 
-    checkquery("code").isString().notEmpty() 
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+router.get('/signupVerify', [
+    checkquery("code").isString().notEmpty()
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -104,7 +104,7 @@ async (req, res, next)=> {
         await db('users').insert(data);
         await db('registers').where({uniqCode: code}).delete();
         logger.info('users.signupVerify Success:', {name: data.username});
-        
+
         siteEvent.emit('data', {method: 'register', params: {user: data}});
         return res.status(201).json({success: 1, code:'signup.success', message: 'Welcome to BFBan!'});
     } catch(err) {
@@ -117,17 +117,17 @@ router.post('/signup4dev', verifyJWT, allowPrivileges(['dev']), [
     checkbody('data.password').isString().trim().isLength({min:1, max:40}),
     checkbody('data.originEmail').isString().trim(),
     checkbody('data.originName').isString().trim()
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'signup.bad', message: validateErr.array()});
-        
+
         // all data well-formed, ready to flight
         /** @type {{username:string, password:string, originName:string, originEmail:string}} */
         const { username, password, originName, originEmail } = req.body.data;
-        
+
         // does anyone occupied?
         if( (await db.select('username').from('registers').where({username: username}).union([
             db.select('username').from('users').where({username: username})
@@ -136,7 +136,7 @@ async (req, res, next)=> {
         const passwdHash = await generatePassword(password);
         await db('users').insert({
             username: username,
-            password: passwdHash, 
+            password: passwdHash,
             originName: originName,
             originEmail: originEmail,
             privilege: 'normal',
@@ -153,17 +153,17 @@ router.post('/signin', verifyCaptcha, [
     checkbody("data.username").isString().trim().isLength({min:1, max:40}),
     checkbody('data.password').isString().trim().isLength({min:1, max:40}),
     checkbody('data.EXPIRES_IN').optional({nullable:true}).isInt({min: 0})
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'signin.bad', message: validateErr.array()});
-        
+
         const { username, password, EXPIRES_IN } = req.body.data;
         /** @type {import("../typedef.js").User} */
         const user = await db.select('*').from('users').where({username: username}).first();
-        
+
         if(user && user.valid!=0 && await comparePassword(password, user.password)) {
             let expiresIn = 1000*60*60*24*7; // 7 day
             if(EXPIRES_IN>0 && userHasRoles(user, ['dev','bot']))
@@ -203,7 +203,7 @@ async (req, res, next)=> {
 router.post('/bindOrigin', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().trim().notEmpty()
-],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -241,7 +241,7 @@ async (req, res, next)=> {
 
 router.get('/bindOriginVerify', verifyJWT, [
     checkquery('code').isString()
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -267,16 +267,16 @@ async (req, res, next)=> {
             originEmail: payload.email,
             privilege: privilegeRevoker(req.user.privilege, req.user.attr.freezeOfNoBinding? 'freezed':''),
         }).where({id: req.user.id});
-        
+
         logger.info('users.bindOrigin#2 Success:', {name: req.user.username, email: payload.email});
         res.status(200).json({success: 1, code: 'bindOrigin.success', message:'bind origin successfully.'});
     } catch(err) {
         next(err);
-    } 
+    }
 });
 
 
-router.post('/signout', verifyJWT, /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+router.post('/signout', verifyJWT, /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=>{
     try {
         await db('users').update({signoutTime: new Date()}).where({id: req.user.id});
@@ -309,7 +309,7 @@ async function showUserInfo(req, res, next) {
                     (req.user&&userHasRoles(req.user, ['admin','super','root','dev'])) || // no limit for admin
                     (req.user&&req.user.id===user.id)? // for self
                         {originName: user.originName,originUserId: user.originUserId} : null,
-            attr: userShowAttributes(user.attr, 
+            attr: userShowAttributes(user.attr,
                 (req.user&&req.user.id===user.id), // self, show private info
                 (req.user&&userHasRoles(req.user, ['admin','super','root','dev'])) ), // no limit for admin
             reportnum: reportnum,
@@ -322,7 +322,7 @@ async function showUserInfo(req, res, next) {
 }
 
 router.get('/info', [ checkquery('id').isInt({min: 0}) ],  showUserInfo);
-router.get('/info4admin', verifyJWT, allowPrivileges(['admin','super','root','dev']), [ 
+router.get('/info4admin', verifyJWT, allowPrivileges(['admin','super','root','dev']), [
     checkquery('id').isInt({min: 0})
 ], showUserInfo);
 router.get('/me', verifyJWT, (req, res, next)=>{
@@ -333,7 +333,7 @@ router.get('/reports', [
     checkquery('id').isInt({min: 0}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -363,7 +363,7 @@ router.post('/me', verifyJWT, forbidPrivileges(['blacklisted']), [
     checkbody('data').isObject(),
     checkbody('data.introduction').optional({nullable: true}).isString().isLength({max: 510}),
     checkbody('data.attr').optional({nullable: true}).isObject(),
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -385,7 +385,7 @@ async (req, res, next)=>{
 
 router.post('/changeName', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
     checkbody('data.newname').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -413,13 +413,13 @@ async (req, res, next)=> {
 router.post('/changePassword', verifyJWT, [
     checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.oldpassword').isString().trim().isLength({min: 1, max: 40})
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'changePassword.bad', message: validateErr.array()});
-        
+
         const user = req.user
         if(!comparePassword(req.body.data.oldpassword, user.password))
             return res.status(400).json({error: 1, code: 'changePassword.notMatch', message: 'original password incorrect.'});
@@ -443,7 +443,7 @@ async (req, res, next)=>{
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'userBatch.bad', message: validateErr.array()});
-        
+
         const query = req.body.data.filter(i=>{
             if(Number.isInteger(i-0))
                 return i-0;
@@ -464,7 +464,7 @@ async (req, res, next)=>{
 router.post('/forgetPassword', verifyCaptcha, [
     checkbody('data.username').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.originEmail').trim().isEmail()
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -493,7 +493,7 @@ async (req, res, next)=> {
 
 router.get('/forgetPasswordVerify', [
     checkquery('code').isString()
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -509,8 +509,10 @@ async (req, res, next)=> {
         } catch(err) {
             return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: 'no such code.'}); // bad payload
         }
-        const passwdHash = generatePassword(payload.password);
-        await db('users').update({password: passwdHash}).where({id: payload.userid}); // store the new password into db
+        const passwdHash = await generatePassword(payload.password);
+        await db('users')
+          .where({id: payload.userid})
+          .update({password: passwdHash}); // store the new password into db
 
         return res.status(200).json({success: 1, code: 'forgetPassword.success', data: {
             newpassword: payload.password, // send new password to user, leave them change it later

@@ -44,7 +44,8 @@
             <Form>
               <FormItem :label="$t('signin.form.username')">
                 <Input prefix="ios-contact" type="text" v-model="signin.username" size="large"
-                       :placeholder="$t('signin.form.username')"/>
+                       :placeholder="$t('signin.form.username')">
+                </Input>
               </FormItem>
 
               <FormItem :label="$t('signin.form.password')">
@@ -72,6 +73,8 @@
 
                 <Divider>
                   <router-link :to="{name: 'signup'}">{{ $t('signin.form.submitHint') }}</router-link>
+                  <Divider type="vertical"/>
+                  <router-link :to="{name: 'forgetPassword'}">{{ $t('signin.form.forgetPasswordHint') }}</router-link>
                 </Divider>
               </FormItem>
             </Form>
@@ -94,7 +97,7 @@
 </template>
 
 <script>
-import {getCsrfToken, waitForAction} from "@/mixins/common";
+import { waitForAction} from "@/mixins/common";
 import {http, api, conf} from '../assets/js/index'
 import Vuex from "vuex";
 import _ from "lodash";
@@ -154,9 +157,6 @@ export default {
 
         http.post(api["account_signin"], {
           headers: {
-            // 'x-csrf-token': getCsrfToken(),
-            // "Access-Control-Allow-Headers": "X-Requested-With",
-            // 'x-encrypt-captcha': Cookies.get('encryptCaptcha'),
             'content-type': 'application/json'
           },
           data: {
@@ -172,7 +172,7 @@ export default {
           const d = res.data;
 
           if (d.error === 1) {
-            that.$Message.error('登录失败 ' + d.msg);
+            that.$Message.error('登录失败: ' + d.message);
             that.signin.password = '';
             that.signin.captcha = '';
             that.refreshCaptcha();
@@ -190,7 +190,7 @@ export default {
               this.$Message.success('登录成功');
             })
           }
-        }).finally(() => {
+        }).finally((res) => {
           that.spinShow = false;
         })
       } else {

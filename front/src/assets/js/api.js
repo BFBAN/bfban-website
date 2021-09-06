@@ -11,7 +11,12 @@ export default class Api {
       'statistics': 'statistics',
       'players': 'players',
       'user_info': 'user/info',
+      'user_me': 'user/me',
+      'player_judgement': 'player/judgement',
+      'user_forgetPassword': 'user/forgetPassword', // 重置请求
+      'user_forgetPasswordVerify': 'user/forgetPasswordVerify', // 重置密码验证
       'activity': 'activities',
+      'cheaters_confirm': 'cheaters/confirm', // 管理员: 同意
       'player_reply': 'player/reply', // 回复
       'player_report': 'player/report',
       'player_update': 'player/update',

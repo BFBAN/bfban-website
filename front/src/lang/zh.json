@@ -1,28 +1,5 @@
 {
   "basic": {
-    "cheatMethodsGlossary": {
-      "stealth": {
-        "title": "隐身"
-      },
-      "wallhack": {
-        "title": "透视"
-      },
-      "aimbot": {
-        "title": "自瞄"
-      },
-      "oneShotKill": {
-        "title": "秒杀"
-      },
-      "gadgetModify": {
-        "title": "改装备"
-      },
-      "damageChange": {
-        "title": "改伤"
-      },
-      "shootingThroughWalls": {
-        "title": "子弹穿墙"
-      }
-    },
     "status": [
       "未处理",
       "认为石锤",
@@ -30,7 +7,8 @@
       "认为没开挂",
       "回收站",
       "回复讨论中",
-      "等待管理确认"
+      "等待管理确认",
+      "攻击服务器"
     ]
   },
   "header": {
@@ -95,10 +73,6 @@
       "adminManual1": "不要轻易下判断，如果不能做出处理判断，就使用上方回复 参与讨论，等待举报者回复",
       "adminManual2": "管理员的任何处理操作都会对作弊者的 现有状态 造成改变，如果不是100%确定，请使用回复留言讨论",
       "judgement": "处理意见",
-      "choice1": "石锤",
-      "choice2": "嫌疑再观察",
-      "choice3": "没有问题不是挂",
-      "choice4": "回收站",
       "commit": "提交",
       "replyManual4": "请登录后参与回复",
       "action": "行动",
@@ -286,7 +260,8 @@
       "captcha": "验证码",
       "getCaptcha": "获得验证码",
       "submit": "提交",
-      "submitHint": "没有账号？去注册"
+      "submitHint": "没有账号？去注册",
+      "forgetPasswordHint": "密码忘记？"
     },
     "failed": "登录失败",
     "success": "登录成功",
@@ -304,7 +279,8 @@
       "captcha": "验证码",
       "getCaptcha": "获得验证码",
       "submit": "提交",
-      "submitHint": "已有账号？去登录"
+      "submitHint": "已有账号？去登录",
+      "forgetPasswordHint": "密码忘记？"
     },
     "placeholder": {
       "username": "4位以上用户名",
@@ -314,6 +290,9 @@
     },
     "fillIn": "请规范填写",
     "failed": "注册失败"
+  },
+  "forgetPassword": {
+    "title": "重置密码"
   },
   "list": {
     "title": "外挂公示",
@@ -345,13 +324,34 @@
     }
   },
   "cheatMethods": {
-    "stealth": "隐身",
-    "wallhack": "透视",
-    "aimbot": "自瞄",
-    "oneShotKill": "秒杀",
-    "gadgetModify": "改装备",
-    "damageChange": "改伤",
-    "shootingThroughWalls": "子弹穿墙"
+    "stealth": {
+      "title": "隐身",
+      "describe": ""
+    },
+    "wallhack": {
+      "title": "透视",
+      "describe": ""
+    },
+    "aimbot": {
+      "title": "自瞄",
+      "describe": ""
+    },
+    "oneShotKill": {
+      "title": "秒杀",
+      "describe": ""
+    },
+    "gadgetModify": {
+      "title": "改装备",
+      "describe": ""
+    },
+    "damageChange": {
+      "title": "改伤",
+      "describe": ""
+    },
+    "shootingThroughWalls": {
+      "title": "子弹穿墙",
+      "describe": ""
+    }
   },
   "misc": {
     "uploadImage": {

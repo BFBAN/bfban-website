@@ -194,9 +194,6 @@ import {getCheaterStatusLabel, cheaterStatus} from "@/mixins/common";
 import ajax from "@/mixins/ajax";
 import _ from "lodash";
 
-function moment() {
-}
-
 //new ClipboardJS(".ivu-btn");
 
 export default {

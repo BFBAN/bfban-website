@@ -50,16 +50,6 @@ fs.watchFile('./config.js', async (eventType, filename)=> { // dynamic load conf
 origin.createAccounts();
 const app = express();
 
-app.all('*', function (req, res, next) {
-  res.header("Access-Control-Allow-Orign", "*");
-  res.header("Access-Control-Allow-Headers", "content-type,application/json,text/plain, */*");
-  res.header("Access-Control-Allow-Methods", "POST,GET");
-  if (req.method.toLowerCase() == 'options')
-    res.send(200)
-  else
-    next()
-});
-
 app.use((req, res, next)=> {
     let realIP = '';
     switch(true) {
@@ -81,7 +71,7 @@ app.use(bodyParser.json());
 // cors options
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', req.header('Origin')); // better than wildcard *
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-access-token');
     res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
     res.header('Access-Control-Allow-Credentials', true);
     next();

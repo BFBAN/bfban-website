@@ -169,7 +169,6 @@
 
 <script>
   import {http, api} from '../assets/js/index'
-  import http_token from '../assets/js/http_token'
 
   export default {
     data() {
@@ -207,20 +206,18 @@
         })
       },
       signout() {
-        // let http = new http_token(this);
         http.post(api["account_signout"], {
           headers: {
             'x-access-token': this.$store.state.user.token
           }
         }).then((res) => {
           const d = res.data;
-
-          if (d.error === 0) {
+          if (d.success === 1) {
             this.$store.dispatch('signout').then(() => {
+              this.signout();
               this.$router.push('/');
-
-              this.$Message.success('注销成功');
-            })
+              this.$Message.success(d.message);
+            });
           }
         })
       }

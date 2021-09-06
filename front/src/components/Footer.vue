@@ -77,7 +77,7 @@
             <b>选择语言</b>
             <Tag size="large">
               <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
-                <Option v-for="item in languages" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in languages" :value="item.name" :key="item.name">{{ item.label }}</Option>
               </Select>
             </Tag>
             <p>&copy; 2018-{{new Date().getFullYear()}} All Rights Reserved.</p>
@@ -92,21 +92,24 @@
 
 <script>
 import { detectLanguage } from '@/mixins/common';
+
 export default {
   data() {
+
     return {
       logoCount: 0,
       currentLan: navigator.language ? detectLanguage(navigator.language) : 'zh-CN',
-      languages: [
-        { value: "zh-CN", label: "简体中文" },
-        { value: "en-US", label: "English" },
-        { value: "ja-JP", label: "日本語" },
-        { value: "ru-RU", label: "Русский" },
-        { value: "tr-TR", label: "Türkçe" },
-      ],
+      languages: [],
     }
   },
+  created() {
+    this.ready();
+  },
   methods: {
+    async ready () {
+      const languages = await import('/src/assets/languages.json');
+      this.languages = this.languages.concat(languages.child)
+    },
     switchLanguage(val) {
       this.setLang(val);
     },
@@ -116,7 +119,7 @@ export default {
     getLog() {
       console.log('怎么啦？要不让大哥哥康康？');
     }
-  }
+  },
 }
 </script>
 

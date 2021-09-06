@@ -5,7 +5,7 @@
       <Breadcrumb>
         <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
         <BreadcrumbItem to="/cheaters">{{ $t("list.title") }}</BreadcrumbItem>
-        <BreadcrumbItem>{{$t("detail.info.cheatersInfo")}}</BreadcrumbItem>
+        <BreadcrumbItem>{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
       </Breadcrumb>
       <br>
       <Card v-if="isCheaterExist" dis-hover>
@@ -97,7 +97,6 @@
                   </Poptip>
                 </Col>
               </Row>
-
             </div>
 
             <br>
@@ -144,11 +143,12 @@
         <Row :gutter="20" type="flex">
           <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 18, push: 1}" order="2" class="tabs-style">
             <Tabs type="card">
-              <TabPane :label="$t('detail.info.timeLine', { msg: 'timeLine' })">
+              <TabPane :label="$t('detail.info.timeLine', { msg: 'timeLine' })" >
                 <div>
                   <!-- 时间线 -->
                   <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l) in timelineList"
                                 :key="l.createTime">
+                    <!-- 举报 S -->
                     <div v-if="l.type === 'report'" class="timeline-content">
                       <div class="timeline-time">
                         <Time :time="l.createTime"></Time>
@@ -200,8 +200,10 @@
                         </Button>
                       </p>
                     </div>
+                    <!-- 举报 E -->
 
-                    <div v-if="l.type === 'verify' || l.action === 'guilt'" class="timeline-content bookmark"
+                    <!-- 认为 S -->
+                    <div v-if="l.type === 'verify' || l.type === 'judgement'" class="timeline-content bookmark"
                          :id="`user-verify-cheater-${l.id}`">
                       <div class="timeline-time">
                         <Time v-if="l.createTime" :time="l.createTime"></Time>
@@ -211,7 +213,6 @@
                           </Tag>
                           <b>{{ l.username }}</b>
                         </router-link>
-                        <!-- 认为 -->
                         {{ $t('detail.info.judge', {msg: 'judge'}) }}
 
                         <Tag color="warning">
@@ -224,7 +225,7 @@
                         </span>
                       </div>
 
-                      <div v-html="l.suggestion" v-if="l.suggestion" class="description"></div>
+                      <div v-html="l.content" v-if="l.content" class="description"></div>
 
                       <p v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)">
                         <a href="#"
@@ -247,7 +248,9 @@
                         </Button>
                       </p>
                     </div>
+                    <!-- 认为 E -->
 
+                    <!-- 确认:Admin S -->
                     <div v-if="l.type === 'confirm'" class="timeline-content">
                       <div class="timeline-time">
                         <Time v-if="l.createTime" :time="l.createTime"></Time>
@@ -258,18 +261,19 @@
                           </Tag>
                           <b>{{ l.username }}</b>
                         </router-link>
-                        <!-- 同意某人某条实锤 -->
+
+                        <!-- 赞同此决议 S -->
                         {{ $t('detail.info.agreeWith', {msg: 'agreeWith'}) }}
                         <a @click.stop.prevent="jumpToBookmark"
                            :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
                           # {{ $t('detail.info.thisChoice', {msg: 'thisChoice'}) }}
                         </a>
-                        <!--作弊方式 -->
-                        ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
+                        <!-- 赞同此决议 E -->
 
-                        <b>
-                          {{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}
-                        </b>
+                        <!-- 作弊方式 S -->
+                        ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
+                        <b>{{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}</b>
+                        <!-- 作弊方式 E -->
                       </div>
 
                       <p v-if="isLogin">
@@ -280,44 +284,53 @@
                         </Button>
                       </p>
                     </div>
+                    <!-- 确认:Admin E -->
 
+                    <!-- 回复:any S -->
                     <div v-if="l.type === 'reply'" class="timeline-content">
                       <div class="timeline-time">
-                        <Time v-if="l.createDatetime" :time="l.createDatetime"></Time>
+                        <Time v-if="l.createTime" :time="l.createTime"></Time>
 
-                        <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.fooUId}`}}">
-                          <Tag v-if="l.fooPrivilege === 'admin'" color="success">
+                        <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.id}`}}">
+                          <Tag v-if="l.privilege === 'admin'" type="border">
                             {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
-                          <b>{{ l.foo }}</b>
+                          <b>{{ l.username }}</b>
                         </router-link>
                         {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                        <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.barUId}`}}">
-                          <Tag v-if="l.barPrivilege === 'admin'" color="success">
+
+                        <div v-if="l.toFloor">
+                          #{{ l.toFloor }}
+                        </div>
+                        <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                          <Tag v-if="l.barPrivilege === 'admin'" type="border">
                             {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
                           <b>{{ l.bar }}</b>
                         </router-link>
                       </div>
 
-                      <div v-html="l.content" class="description"></div>
+                      <div v-html="l.content" v-if="l.content" class="description"></div>
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
-                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`"
+                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.id}`"
                                 @click.prevent="handleReply">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
                       </p>
                     </div>
+                    <!-- 回复:any E -->
 
-                    <!--                    <Button @click="onTranslate(lindex)">F</Button>-->
                   </TimelineItem>
                   <!--                  TODO PAGE SET-->
                   <!--                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
                   <br>
+                </div>
+
+                <div label="回复" >
+                  <!-- 回复 S -->
                   <div v-if="isLogin">
-                    <!-- 回复操作说明 -->
                     <Alert type="warning" show-icon>
                       <span>{{ $t('detail.info.replyManual1', {msg: 'replyManual1'}) }}</span>
                       <b><a href="https://sm.ms/"
@@ -345,11 +358,10 @@
                       {{ $t('detail.info.replyManual3', {msg: 'replyManual3'}) }}
                     </template>
                   </Alert>
+                  <!-- 回复 E -->
                 </div>
-
-                <!-- 管理员面板 -->
-                <div v-if="isAdmin">
-                  <Divider>{{ $t('detail.info.adminConsole', {msg: 'adminConsole'}) }}</Divider>
+                <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})" v-if="isAdmin">
+                  <!-- 管理员面板 S -->
                   <Alert type="warning" show-icon>
                     <p class="hint">{{ $t('detail.info.adminManual1', {msg: 'adminManual1'}) }}</p>
                     <p class="hint">{{ $t('detail.info.adminManual2', {msg: 'adminManual2'}) }}</p>
@@ -357,29 +369,38 @@
 
                   <h2 style="margin: 1rem 0;">{{ $t('detail.info.judgement', {msg: 'judgement'}) }}</h2>
 
-                  <Form :label-width="80" ref='verifyForm' style="position: relative;">
-                    <FormItem label="Opinion">
-                      <Select v-model="verify.status">
-                        <!-- 判断选项 -->
-                        <Option value="1">{{ $t('detail.info.choice1', {msg: 'choice1'}) }}</Option>
-                        <Option value="2">{{ $t('detail.info.choice2', {msg: 'choice2'}) }}</Option>
-                        <Option value="3">{{ $t('detail.info.choice3', {msg: 'choice3'}) }}</Option>
-                        <Option value="4">{{ $t('detail.info.choice4', {msg: 'choice4'}) }}</Option>
-                      </Select>
-                    </FormItem>
-
-                    <FormItem v-show="verify.status === '1'" label="CheatMethod">
-                      <CheckboxGroup v-model="verify.checkbox">
-                        <Checkbox v-for="method in cheatMethodsGlossary" :key="method.value" :label="method.value">
-                          {{ $t(`cheatMethods.${method.value}`) }}
-                        </Checkbox>
-                      </CheckboxGroup>
-                    </FormItem>
-
-                    <FormItem label="Reason">
-                      <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea"
-                             :autosize="{minRows: 2}" placeholder="Write something"/>
-                    </FormItem>
+                  <Form ref='verifyForm' label-position="top">
+                    <Row :gutter="30">
+                      <Col span="12">
+                        <FormItem label="Opinion">
+                          <Select v-model="verify.status">
+                            <!-- 判断选项 -->
+                            <Option :value="v_i.value" v-for="(v_i) in verify.choice" :key="v_i.value">
+                              {{ $t(`basic.status[${v_i.value}]`) }}
+                            </Option>
+                            <!--                                                    <Option value="1">{{ $t('detail.info.choice1', {msg: 'choice1'}) }}</Option>-->
+                            <!--                                                    <Option value="2">{{ $t('detail.info.choice2', {msg: 'choice2'}) }}</Option>-->
+                            <!--                                                    <Option value="3">{{ $t('detail.info.choice3', {msg: 'choice3'}) }}</Option>-->
+                            <!--                                                    <Option value="4">{{ $t('detail.info.choice4', {msg: 'choice4'}) }}</Option>-->
+                          </Select>
+                        </FormItem>
+                      </Col>
+                      <Col span="12">
+                        <FormItem v-show="verify.status == '1'" label="CheatMethod">
+                          <Select v-model="verify.checkbox" multiple>
+                            <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value">
+                              {{ $t(`cheatMethods.${method.value}.title`) }} | {{ $t(`cheatMethods.${method.value}.describe`) }}
+                            </Option>
+                          </Select>
+                        </FormItem>
+                      </Col>
+                      <Col span="24">
+                        <FormItem label="Reason">
+                          <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea"
+                                 :autosize="{minRows: 2}" placeholder="Write something"/>
+                        </FormItem>
+                      </Col>
+                    </Row>
 
                     <FormItem>
                       <Button type="primary" @click.stop.prevent="doVerify">
@@ -389,9 +410,11 @@
 
                     <Spin size="large" fix v-show="verifySpinShow"></Spin>
                   </Form>
+                  <!-- 管理员面板 E -->
                 </div>
+
               </TabPane>
-              <TabPane :label="$t('detail.info.dealRecord', { msg: 'dealRecord' })">
+              <TabPane :label="$t('detail.info.dealRecord', { msg: 'dealRecord' })" >
                 <!-- 管理员处理历史 -->
                 <div style="display: flex; flex-direction: column; position: relative;">
                   <div style="margin-top: .4rem;">
@@ -488,6 +511,10 @@
         <Empty></Empty>
       </div>
     </div>
+
+    <BackTop :bottom="50">
+      <div class="top">Top</div>
+    </BackTop>
     <br>
   </div>
 </template>
@@ -498,11 +525,9 @@ import ajax from '@/mixins/ajax';
 import vueQr from 'vue-qr'
 import translate from 'google-translate-open-api';
 import Empty from '../components/Empty.vue'
-import _ from "lodash";
 import {
   getCheaterStatusLabel,
   formatTextarea,
-  convertDatetimeToUserTimeZone,
   cheatMethodsGlossary,
   convertCheatMethods,
   waitForAction,
@@ -522,6 +547,7 @@ export default {
       verify: {
         status: '1',
         checkbox: [],
+        choice: [],
         suggestion: '',
       },
       spinShow: true,
@@ -563,20 +589,22 @@ export default {
     }
   },
   created() {
-    // set Token Http mode
-    this.http = http_token.call(this);
-
     this.loadData();
+    this.getCheatersInfo();
     this.getTimeline();
   },
-  beforeCreate() {
-  },
-  updated() {
-    //new LazyLoad({})
-  },
   methods: {
+    handleStatus: getCheaterStatusLabel,
+    convertCheatMethods,
+    async loadData() {
+      // set Token Http mode
+      this.http = http_token.call(this);
+
+      this.verify.choice = require('/src/assets/cheaterStatus.json').child.filter(i => (i.value >= 1 && i.value <= 4));
+    },
     /**
-     * 获取基本id信息
+     * 获取基本字段
+     * 从[url]中整理
      */
     getParamsIds() {
       const object_id = this.$route.params.ouid.split('.');
@@ -586,7 +614,11 @@ export default {
         dbId: object_id[2],
       };
     },
-    loadData() {
+    /**
+     * 获取作弊者档案
+     * 基础信息
+     */
+    getCheatersInfo() {
       this.http.get(`${api["cheaters"]}`, {
         params: Object.assign({
           history: true
@@ -603,6 +635,10 @@ export default {
         }
       });
     },
+    /**
+     * 时间轴
+     * 档案日历
+     */
     getTimeline() {
       this.http.get(`${api["account_timeline"]}`, {
         params: Object.assign({
@@ -633,6 +669,9 @@ export default {
         }
       });
     },
+    /**
+     * 赞同此决议
+     */
     jumpToBookmark(e) {
       let hash = e.target.dataset.hash;
       let el = document.querySelector(hash);
@@ -647,8 +686,6 @@ export default {
         el.setAttribute('style', 'transition: background 1s ease .5s;')
       }, 100);
     },
-    handleStatus: getCheaterStatusLabel,
-    convertCheatMethods,
     async doVerify() {
       const {status} = this.verify;
       let {suggestion} = this.verify;
@@ -689,88 +726,84 @@ export default {
 
       suggestion = formatTextarea(suggestion);
 
-      ajax({
-        method: 'post',
-        url: '/cheaters/verify',
+      let actions = await import('/src/assets/action.json');
+      this.http.post(api["player_judgement"], {
         data: {
-          status,
-          suggestion,
-          cheatMethods,
-          originUserId,
+          data: {
+            toPlayerId: this.cheater.id,
+            cheatMethods: cheatMethods,
+            action: actions.action[status].value,
+            content: suggestion,
+          },
+
+        }
+      }).then((res) => {
+        this.verifySpinShow = false;
+
+        const d = res.data;
+        if (res.data.success === 1) {
+          // reset verifyForm
+          this.verify.status = '1';
+          this.verify.suggestion = '';
+          this.verify.checkbox = [];
+
+          const {id, userId, createDatetime, status, suggestion, username, cheatMethods, privilege} = d.data;
+
+          this.cheater.status = status;
+
+          this.timelineList.push({
+            type: 'verify',
+            id,
+            userId,
+            createDatetime,
+            // fix bug
+            status: status === '6' ? '1' : status,
+            suggestion,
+            cheatMethods,
+            username,
+            privilege,
+          });
+
+          this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
+        } else {
+          this.$Message.error('failed ' + d.msg);
         }
       })
-        .then((res) => {
-          this.verifySpinShow = false;
-
-          const d = res.data;
-          if (res.data.error === 0) {
-            // reset verifyForm
-            this.verify.status = '1';
-            this.verify.suggestion = '';
-            this.verify.checkbox = [];
-
-            const {id, userId, createDatetime, status, suggestion, username, cheatMethods, privilege} = d.data;
-
-            this.cheater.status = status;
-
-            this.timelineList.push({
-              type: 'verify',
-              id,
-              userId,
-              createDatetime: convertDatetimeToUserTimeZone(createDatetime),
-              // fix bug
-              status: status === '6' ? '1' : status,
-              suggestion,
-              cheatMethods,
-              username,
-              privilege,
-            });
-
-            this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
-          } else {
-            this.$Message.error('failed ' + d.msg);
-          }
-        })
     },
     doConfirm(e) {
       const {userVerifyCheaterId, userVerifyCheaterUsername, cheatMethods} = e.target.dataset;
       const {userId} = this.$store.state.user;
       const originUserId = this.$route.params.ouid;
 
-      ajax({
-        method: 'post',
-        url: '/cheaters/confirm',
+      http.post(api["cheaters_confirm"], {
         data: {
           userVerifyCheaterId,
           userId,
           originUserId,
           cheatMethods,
         }
+      }).then((res) => {
+        const d = res.data;
+
+        if (d.error === 0) {
+          const {createDatetime} = d.data;
+
+          this.cheater.status = '1';
+          this.timelineList.push({
+            type: 'confirm',
+            userId,
+            userVerifyCheaterId,
+            createDatetime,
+            cheatMethods,
+            username: this.$store.state.user.username,
+          })
+        } else {
+          this.$Message.warning(d.msg);
+        }
       })
-        .then((res) => {
-          let d = res.data;
-
-          if (d.error === 0) {
-            const {createDatetime} = d.data;
-
-            this.cheater.status = '1';
-
-            this.timelineList.push({
-              type: 'confirm',
-              userId,
-              userVerifyCheaterId,
-              createDatetime: convertDatetimeToUserTimeZone(createDatetime),
-              cheatMethods,
-              username: this.$store.state.user.username,
-            })
-          } else {
-            this.$Message.warning(d.msg);
-          }
-        })
     },
     isSelf(id) {
       const userId = this.$store.state.user.userId;
-
       return (parseInt(userId) === parseInt(id))
     },
     handleReply(e) {
@@ -782,6 +815,10 @@ export default {
       // open reply modal
       this.replyModal = true;
     },
+    /**
+     * 评论取消
+     * 行为: 重置内容
+     */
     cancelReply() {
       this.reply = {};
     },
@@ -831,8 +868,7 @@ export default {
           const barUId = '';
           this.timelineList.push({
             type: 'reply',
-
-            createDatetime: convertDatetimeToUserTimeZone(createDatetime),
+            createDatetime,
             content,
             foo,
             fooUId,
@@ -897,6 +933,13 @@ export default {
         }
       });
     },
+    /**
+     * TODO fix
+     * 18I 翻译
+     * 引擎: google
+     * @param index
+     * @returns {Promise<void>}
+     */
     async onTranslate(index) {
       let that = this;
 
@@ -915,17 +958,17 @@ export default {
     },
   },
   computed: {
-    isVerified() {
-      return this.verifies.length > 0
-    },
     isAdmin() {
       const user = this.$store.state.user;
-
       const is = user ? user.userinfo.privilege !== 'normal' : false;
+
       return Boolean(is);
     },
     isLogin() {
-      return Boolean(this.$store.state.user);
+      return Boolean(this.$store.state.user)
+    },
+    currentUser() {
+      return this.$store.state.user
     }
   }
 }

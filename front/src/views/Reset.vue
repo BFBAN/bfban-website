@@ -36,7 +36,7 @@
 
 <script>
 import {http, api, http_token} from '../assets/js/index'
-import {getCsrfToken, waitForAction} from '@/mixins/common';
+import { waitForAction} from '@/mixins/common';
 
 const {mapActions, mapMutations} = Vuex;
 

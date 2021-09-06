@@ -210,13 +210,7 @@ export default {
 
     },
 
-    getCsrfToken: function () {
-      return document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    },
-
     getJwtToken: function () {
-      // const csrfToken = this.getCsrfToken()
-
       // axios request (with credentials)
       return ajax({
         method: 'post',
@@ -234,8 +228,6 @@ export default {
         })
     },
     getQiniuUploadToken: function () {
-      // const csrfToken = this.getCsrfToken()
-
       // axios request with credentials, it is async
       return ajax({
         method: 'post',

@@ -7,6 +7,7 @@ const List = () => import('@/views/List.vue');
 const Detail = () => import('@/views/Detail.vue');
 const Signin = () => import('@/views/Signin.vue');
 const Signup = () => import('@/views/Signup.vue');
+const ForgetPassword = () => import('@/views/forgetPassword.vue');
 const SignupComplete = () => import('@/views/SignupComplete.vue');
 const Account = () => import('@/views/Account.vue');
 const About = () => import('@/views/About.vue');
@@ -61,6 +62,13 @@ const routes = [
 
 	{ name: 'signin', path: '/signin', component: Signin },
 	{ name: 'signup', path: '/signup', component: Signup },
+  { name: 'forgetPassword', path: '/forgetPassword', component: ForgetPassword },
+  {
+    name: 'forgetPasswordVerify',
+    path: '/forgetPasswordVerify/:code',
+    component: ForgetPassword,
+  },
+
   { name: 'signupComplete', path: '/signupComplete/:code', component: SignupComplete },
 	//  { name: 'signup', path: '/reset', component: Reset },
 

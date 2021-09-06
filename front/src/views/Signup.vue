@@ -46,18 +46,7 @@
               </div>
 
               <div v-if="stepsIndex == 3">
-                <Alert type="success" show-icon>
-                  注意
-                  <template slot="desc">
-                    <p>
-                      我们向您的邮箱发送了一封验证邮件，邮箱是"{{signup.originEmail}}", 请留意标题"BFBAN"的邮件.
-                    </p>
-                    <br>
-                    <b>没有收到此邮件?</b>
-                    <p>尝试在您的邮箱面板内的垃圾桶查阅，这可能被认为是垃圾广告.</p>
-                    <p>如果无法接受邮件，请<a @click="refreshCaptcha(); stepsIndex = 0">重新注册</a>.</p>
-                  </template>
-                </Alert>
+                <EmailTip :email="signup.originEmail"></EmailTip>
               </div>
 
               <Row>
@@ -69,7 +58,6 @@
                   <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2" @click.prevent.stop="stepsIndex++" size="large"
                           type="primary">{{ $t('signup.next') }}
                   </Button>
-
                 </Col>
                 <Col span="12" align="right" type="flex">
                   <Button v-if="stepsIndex == 2" long @click.prevent.stop="handleSignup('formValidate')" :loading="spinShow"
@@ -80,6 +68,8 @@
 
               <Divider>
                 <router-link :to="{name: 'signin'}">{{ $t('signup.form.submitHint') }}</router-link>
+                <Divider type="vertical"/>
+                <router-link :to="{name: 'forgetPassword'}">{{ $t('signup.form.forgetPasswordHint') }}</router-link>
               </Divider>
             </Form>
           </Card>
@@ -92,7 +82,8 @@
 
 <script>
 import {http, api, conf} from '../assets/js/index'
-import {testWhitespace, getCsrfToken, waitForAction} from "@/mixins/common";
+import {testWhitespace, waitForAction} from "@/mixins/common";
+import EmailTip from "../components/EmailTip";
 import _ from "lodash";
 
 export default {
@@ -124,6 +115,7 @@ export default {
       spinShow: false,
     }
   },
+  components: {EmailTip},
   created() {
     this.refreshCaptcha();
   },

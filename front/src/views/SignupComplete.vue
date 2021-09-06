@@ -33,7 +33,7 @@
 
 <script>
 import {http, api, conf} from '../assets/js/index'
-import {testWhitespace, getCsrfToken, waitForAction} from "@/mixins/common";
+import {testWhitespace, waitForAction} from "@/mixins/common";
 import _ from "lodash";
 
 export default {

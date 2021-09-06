@@ -19,15 +19,13 @@ export default class http_token extends http {
 
   setToken (data) {
     const token = this.THAT.$store.state.user.token;
-    if (token) {
+    if (token != null || token != '') {
       data = Object.assign(data, {
         headers: {
-          'token': token,
-          // 'X-Access-Token': token
+          'x-access-token': token
         }
       })
     }
-
     return data;
   }
 

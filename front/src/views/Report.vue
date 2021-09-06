@@ -173,12 +173,9 @@
 import {http, api, conf, http_token} from '../assets/js/index'
 import Edit from "@/components/Edit.vue";
 import {
-  checkIdExist,
   checkReportFormData,
   trimAllWhitespace,
-  getCsrfToken,
   cheatMethodsGlossary,
-  waitForAction,
 } from "@/mixins/common";
 
 export default {
@@ -265,8 +262,10 @@ export default {
 
       this.spinShow = true;
 
-      checkIdExist({
-        id: trimAllWhitespace(formData.formItem.originId),
+      this.post('checkGameIdExist', {
+        data: {
+          id: trimAllWhitespace(formData.formItem.originId),
+        },
       }).then(async (res) => {
         const d = res.data;
         const idExist = d.idExist;
@@ -330,9 +329,6 @@ export default {
       const description = formData.formItem.description.trim();
 
       this.http.post(api["cheaters"], {
-        headers: {
-          // 'x-csrf-token': getCsrfToken(),
-        },
         data: {
           // data: {
           //   game: 'bf1' | 'bfv',

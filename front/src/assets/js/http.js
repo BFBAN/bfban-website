@@ -14,17 +14,16 @@ export default class Http {
   // WWWURL = process.env.NODE_ENV === 'production' ? this.CONF.requestDev : this.CONF.requestDeBug
   WWWURL = this.CONF.requestDeBug
 
+
+
   HTTP = http.create({
     // baseURL: process.env.BASE_API,
     timeout: 9000,
-    withCredentials: false,
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      'Access-Control-Allow-Origin': '*'
+    withCredentials: true,
+    validateStatus (status) {
+      return status < 500;
     }
   })
-
-
 
   /**
    * 请求核心
@@ -71,6 +70,7 @@ export default class Http {
 
     let result = await this.request(_url, {
       method: this.GET,
+      headers: data.headers,
       params: data.params,
       data: data.data,
     });
