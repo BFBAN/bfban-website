@@ -25,6 +25,14 @@
               <a @click="muenIndex = index">{{i.title}}</a>
             </ListItem>
           </List>
+          <br>
+          <List border size="small">
+            <ListItem>
+              <router-link :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
+                {{$t("header.userCenter")}}
+              </router-link>
+            </ListItem>
+          </List>
         </Col>
         <Col span="18">
           <account v-show="muenIndex == 0"></account>

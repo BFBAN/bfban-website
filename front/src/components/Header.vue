@@ -59,12 +59,40 @@
             <Icon type="md-person-add" size="30" />
           </router-link>
 
-          <Dropdown placement="bottom-start" v-if="isLogin">
+          <Dropdown placement="bottom-end" v-if="isLogin">
             <a href="javascript:void(0)">
               <Avatar>{{ currentUser.userinfo.username[0] || 'Null'}}</Avatar>
               {{ currentUser.userinfo.username }}
             </a>
             <DropdownMenu slot="list">
+              <div style="width: 300px;  background-color: #f2f2f2; padding: 30px">
+                <List border size="small">
+                  <ListItem>
+                    联BFBAN的基本规则
+                    <template slot="action">
+                      <li>
+                        <a href="">阅读</a>
+                      </li>
+                    </template>
+                  </ListItem>
+                  <ListItem>
+                    作为管理员，如何识别作弊玩家？
+                    <template slot="action">
+                      <li>
+                        <a href="">阅读</a>
+                      </li>
+                    </template>
+                  </ListItem>
+                  <ListItem>
+                    如何自我证明，无作弊?
+                    <template slot="action">
+                      <li>
+                        <a href="">阅读</a>
+                      </li>
+                    </template>
+                  </ListItem>
+                </List>
+              </div>
               <DropdownItem>
                 <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
                   {{$t("header.userCenter")}}
@@ -75,7 +103,6 @@
                   {{$t("header.profile")}}
                 </router-link>
               </DropdownItem>
-
               <DropdownItem>
                 <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">{{$t("header.dashboard")}}</router-link>
               </DropdownItem>

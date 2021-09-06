@@ -17,8 +17,14 @@ export default class Http {
   HTTP = http.create({
     // baseURL: process.env.BASE_API,
     timeout: 9000,
-    withCredentials: false
+    withCredentials: false,
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      'Access-Control-Allow-Origin': '*'
+    }
   })
+
+
 
   /**
    * 请求核心

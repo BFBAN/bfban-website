@@ -162,7 +162,7 @@
             </Form>
           </Card>
         </TabPane>
-        <Button @click="handleTabsAdd" size="small" slot="extra">增加</Button>
+        <Button @click="handleTabsAdd" size="small" slot="extra">+</Button>
       </Tabs>
     </div>
     <br>

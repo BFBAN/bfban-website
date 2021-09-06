@@ -14,8 +14,8 @@ module.exports = {
   },
   // devServer: {
   //   proxy: {
-  //     '/cheaters': {
-  //       target: '127.0.0.1:8080', //要转发的目标网址
+  //     '/api/user/signout': {
+  //       target: 'localhost:8080', //要转发的目标网址
   //       changeOrigin: true,
   //     }
   //   }
