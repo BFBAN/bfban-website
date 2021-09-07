@@ -95,10 +95,8 @@ import { detectLanguage } from '@/mixins/common';
 
 export default {
   data() {
-
     return {
       logoCount: 0,
-      currentLan: navigator.language ? detectLanguage(navigator.language) : 'zh-CN',
       languages: [],
     }
   },
@@ -108,6 +106,7 @@ export default {
   methods: {
     async ready () {
       const languages = await import('/src/assets/languages.json');
+
       this.languages = this.languages.concat(languages.child)
     },
     switchLanguage(val) {
@@ -120,6 +119,11 @@ export default {
       console.log('怎么啦？要不让大哥哥康康？');
     }
   },
+  computed: {
+    currentLan () {
+      return this.$root.$i18n.locale || 'zh-CN';
+    }
+  }
 }
 </script>
 

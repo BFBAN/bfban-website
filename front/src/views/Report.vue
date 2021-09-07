@@ -10,7 +10,7 @@
 
       <Tabs type="card" v-model="tabs.count">
         <TabPane v-for="(tab, index) in tabs.list.length" :key="tab"
-                 :label="tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : '举报标签' + tab">
+                 :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : '举报标签' + tab) + '[' + tabs.list[index].formItem.gameName + ']'">
           <Card shadow style="margin-top: -16px">
             <Form :label-width="80" label-position="left">
               <!--举报作弊-->
@@ -185,7 +185,6 @@ import Edit from "@/components/Edit.vue";
 import {
   checkReportFormData,
   trimAllWhitespace,
-  cheatMethodsGlossary,
   common,
 } from "@/mixins/common";
 
@@ -199,7 +198,7 @@ export default {
       },
       spinShow: false,
       failedOfNotFound: false,
-      cheatMethodsGlossary,
+      cheatMethodsGlossary: null,
     };
   },
   components: {

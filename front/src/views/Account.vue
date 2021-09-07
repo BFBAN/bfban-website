@@ -14,21 +14,27 @@
         <br>
 
         <h1 :title="$t('account.username')">
-<!--          {{ $t("account.userInfo") }}-->
+          <!--          {{ $t("account.userInfo") }}-->
           {{ account.username || 'username' }}
         </h1>
 
         <p>
           {{ $t("account.role") }}
-          <Tag type="dot" v-if="account.privilege === 'admin'" color="success">
-            {{ $t("account.admin") }}
-          </Tag>
-          <Tag type="dot" v-if="account.privilege === 'super'" color="error">
-            {{ $t("account.super") }}
-          </Tag>
-          <Tag type="dot" v-if="account.privilege === 'normal'">
-            {{ $t("account.normal") }}
-          </Tag>
+          <span v-for="(i,index) in privileges" :key="index">
+            <Tag type="dot" v-if="account.privilege == i.value"
+                 color="success">
+              {{ $t("account." + i.value) }}
+            </Tag>
+          </span>
+          <!--          <Tag type="dot" v-if="account.privilege === 'admin'" color="success">-->
+          <!--            {{ $t("account.admin") }}-->
+          <!--          </Tag>-->
+          <!--          <Tag type="dot" v-if="account.privilege === 'super'" color="error">-->
+          <!--            {{ $t("account.super") }}-->
+          <!--          </Tag>-->
+          <!--          <Tag type="dot" v-if="account.privilege === 'normal'">-->
+          <!--            {{ $t("account.normal") }}-->
+          <!--          </Tag>-->
           <Divider type="vertical"/>
           {{ $t("account.joinedAt") }}
           <Tag type="dot" color="primary">
@@ -48,9 +54,20 @@
     <div class="content">
       <Row :gutter="8" type="flex">
         <Col span="7" order="2">
+          <Card v-if="account.introduction" dis-shadow>
+            <div v-html="account.introduction"></div>
+          </Card>
+          <br v-if="account.introduction">
+
+          <Card v-if="account.origin && account.origin.originName" dis-shadow>
+            <b>origin id:</b>
+            <p>{{account.origin.originName}}</p>
+          </Card>
+          <br v-if="account.origin && account.origin.originName">
+
           <Card title="其他" icon="ios-options" :padding="0" shadow>
             <CellGroup>
-              <Cell title="荣耀" label="查看在BFBAN成就" />
+              <Cell title="荣耀" label="查看在BFBAN成就"/>
             </CellGroup>
           </Card>
 
@@ -64,11 +81,11 @@
             <Tabs value="tag1">
               <TabPane :label="$t('account.reports')" name="tag1">
                 <div v-if="account">
-<!--                  <p v-if="account.reports.length <= 0" align="center">-->
-<!--                    <Alert type="warning" show-icon>-->
-<!--                      {{$t('account.noReports')}}-->
-<!--                    </Alert>-->
-<!--                  </p>-->
+                  <!--                  <p v-if="account.reports.length <= 0" align="center">-->
+                  <!--                    <Alert type="warning" show-icon>-->
+                  <!--                      {{$t('account.noReports')}}-->
+                  <!--                    </Alert>-->
+                  <!--                  </p>-->
 
                   <table>
                     <tbody>
@@ -77,8 +94,8 @@
                       <span>
                         <Tag color="primary">
                             <Time
-                              v-if="report.createDatetime"
-                              :time="report.createDatetime"
+                                v-if="report.createDatetime"
+                                :time="report.createDatetime"
                             />
                         </Tag>
                       </span>
@@ -87,7 +104,7 @@
                       <span>
                           {{ $t("account.reported") }}
                           <router-link
-                            :to="{
+                              :to="{
                                   name: 'cheater',
                                   params: {
                                       ouid: `${report.originUserId}`,
@@ -104,7 +121,7 @@
                       <span>
                         {{ $t("account.status") }}
                         <Tag color="error">
-                          {{$t(`basic.status[${report.status}]`) }}
+                          {{ $t(`basic.status[${report.status}]`) }}
                         </Tag>
                       </span>
                       </td>
@@ -113,8 +130,8 @@
                         {{ $t("account.recentlyUpdated") }}
                         <Tag color="warning">
                           <Time
-                            v-if="report.updateDatetime"
-                            :time="report.updateDatetime"/>
+                              v-if="report.updateDatetime"
+                              :time="report.updateDatetime"/>
                           <span v-else>无</span>
                         </Tag>
                       </span>
@@ -126,20 +143,20 @@
                   <br>
 
                   <Page
-                    :page-size="limit"
-                    show-total
-                    :current="page"
-                    @on-change="handlePageChange"
-                    :total="total"
-                    class="page"
-                    size="small"
+                      :page-size="limit"
+                      show-total
+                      :current="page"
+                      @on-change="handlePageChange"
+                      :total="total"
+                      class="page"
+                      size="small"
                   />
                 </div>
                 <div v-else>404</div>
               </TabPane>
               <br>
               <Button size="small" slot="extra">
-<!--                {{account.reports.length || 0}}-->
+                <!--                {{account.reports.length || 0}}-->
               </Button>
             </Tabs>
           </Card>
@@ -157,6 +174,7 @@ import ajax from "@/mixins/ajax";
 export default {
   data() {
     return {
+      privileges: [],
       account: {
         username: "",
         originId: "",
@@ -176,9 +194,13 @@ export default {
     this.loadData();
   },
   methods: {
-    loadData() {
+    async loadData() {
       const {uId} = this.$route.params;
-      http.get(api["user_info"],{
+
+      const privileges = await import('/src/assets/privilege.json');
+      this.privileges = this.privileges.concat(privileges.child)
+
+      http.get(api["user_info"], {
         params: {
           id: uId
         }

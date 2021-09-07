@@ -137,17 +137,19 @@
             </Row>
           </Col>
         </Row>
-
-        <Divider dashed/>
-
+      </Card>
+      <br>
+      <Card style="overflow: hidden" dis-hover>
         <Row :gutter="20" type="flex">
           <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 18, push: 1}" order="2" class="tabs-style">
             <Tabs type="card">
               <TabPane :label="$t('detail.info.timeLine', { msg: 'timeLine' })">
                 <div>
                   <!-- 时间线 -->
-                  <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l) in timelineList"
-                                :key="l.createTime">
+                  <TimelineItem
+                      pending
+                      :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l, index) in timelineList"
+                      :key="l.createTime">
                     <!-- 举报 S -->
                     <div v-if="l.type === 'report'" class="timeline-content">
                       <div class="timeline-time">
@@ -207,7 +209,7 @@
                          :id="`user-verify-cheater-${l.id}`">
                       <div class="timeline-time">
                         <Time v-if="l.createTime" :time="l.createTime"></Time>
-                        <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+                        <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                           <Tag v-if="l.privilege === 'admin'" color="success">
                             {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
@@ -255,7 +257,7 @@
                       <div class="timeline-time">
                         <Time v-if="l.createTime" :time="l.createTime"></Time>
 
-                        <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+                        <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                           <Tag v-if="l.privilege === 'admin'" color="success">
                             {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
@@ -272,7 +274,7 @@
 
                         <!-- 作弊方式 S -->
                         ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
-                        <b>{{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}</b>
+                        <b>{{ convertCheatMethods(l.cheatMethods || '') }}</b>
                         <!-- 作弊方式 E -->
                       </div>
 
@@ -291,23 +293,16 @@
                       <div class="timeline-time">
                         <Time v-if="l.createTime" :time="l.createTime"></Time>
 
-                        <router-link v-if="l.foo" :to="{name: 'account', params: {uId: `${l.id}`}}">
+                        <router-link v-if="l.username" :to="{name: 'account', params: {uId: `${l.id}`}}">
                           <Tag v-if="l.privilege === 'admin'" type="border">
                             {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
                           <b>{{ l.username }}</b>
                         </router-link>
                         {{ $t('detail.info.reply', {msg: 'reply'}) }}
-
                         <div v-if="l.toFloor">
                           #{{ l.toFloor }}
                         </div>
-                        <router-link v-if="l.bar" :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
-                          <Tag v-if="l.barPrivilege === 'admin'" type="border">
-                            {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
-                          </Tag>
-                          <b>{{ l.bar }}</b>
-                        </router-link>
                       </div>
 
                       <div v-html="l.content" v-if="l.content" class="description"></div>
@@ -322,6 +317,12 @@
                     </div>
                     <!-- 回复:any E -->
 
+                    <Row class="timeline-content">
+                      <Col>
+                      </Col>
+                      <Col span="24" align="right"># {{index}}</Col>
+                    </Row>
+                    <Divider></Divider>
                   </TimelineItem>
                   <!--                  TODO PAGE SET-->
                   <!--                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
@@ -360,57 +361,6 @@
                   </Alert>
                   <!-- 回复 E -->
                 </div>
-                <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})" v-if="isAdmin">
-                  <!-- 管理员面板 S -->
-                  <Alert type="warning" show-icon>
-                    <p class="hint">{{ $t('detail.info.adminManual1', {msg: 'adminManual1'}) }}</p>
-                    <p class="hint">{{ $t('detail.info.adminManual2', {msg: 'adminManual2'}) }}</p>
-                  </Alert>
-
-                  <h2 style="margin: 1rem 0;">{{ $t('detail.info.judgement', {msg: 'judgement'}) }}</h2>
-
-                  <Form ref='verifyForm' label-position="top">
-                    <Row :gutter="30">
-                      <Col span="12">
-                        <FormItem label="Opinion">
-                          <Select v-model="verify.status">
-                            <!-- 判断选项 -->
-                            <Option :value="v_i.value" v-for="v_i in verify.choice" :key="v_i.value">
-                              {{ $t(`basic.status[${v_i.value}]`) }}
-                            </Option>
-                          </Select>
-                        </FormItem>
-                      </Col>
-                      <Col span="12">
-                        <FormItem v-show="verify.status == '1'" label="CheatMethod">
-                          <Select v-model="verify.checkbox" multiple>
-                            <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value">
-                              {{ $t(`cheatMethods.${method.value}.title`) }} |
-                              {{ $t(`cheatMethods.${method.value}.describe`) }}
-                            </Option>
-                          </Select>
-                        </FormItem>
-                      </Col>
-                      <Col span="24">
-                        <FormItem label="Reason">
-                          <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion"
-                                 type="textarea"
-                                 :autosize="{minRows: 2}" placeholder="Write something"/>
-                        </FormItem>
-                      </Col>
-                    </Row>
-
-                    <FormItem>
-                      <Button type="primary" @click.stop.prevent="doVerify">
-                        {{ $t('detail.info.commit', {msg: 'commit'}) }}
-                      </Button>
-                    </FormItem>
-
-                    <Spin size="large" fix v-show="verifySpinShow"></Spin>
-                  </Form>
-                  <!-- 管理员面板 E -->
-                </div>
-
               </TabPane>
               <TabPane :label="$t('detail.info.dealRecord', { msg: 'dealRecord' })">
                 <!-- 管理员处理历史 -->
@@ -468,6 +418,11 @@
             </Tabs>
           </Col>
           <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1" class="mobile-hide">
+            <div>
+              <Button type="primary" :disabled="!isLogin">此账户是我</Button>
+              <p><br>该举报信息存在问题,我能自证或他人协助证明清白.</p>
+              <Divider/>
+            </div>
             <Affix :offset-top="10">
               <Steps :current="detailStepsIndex" direction="vertical">
                 <Step title="首次提交" content="首次提交作弊玩家"></Step>
@@ -505,11 +460,63 @@
           <p>ヾ(◍°∇°◍)ﾉﾞ load...</p>
         </Spin>
       </Card>
-      <div v-else>
+      <br v-if="isAdmin">
+      <Card dis-hover v-if="isAdmin">
+        <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})">
+          <h2 style="margin: 1rem 0;">{{ $t('detail.info.judgement', {msg: 'judgement'}) }}</h2>
+
+          <!-- 管理员面板 S -->
+          <Alert type="warning" show-icon>
+            <p class="hint">{{ $t('detail.info.adminManual1', {msg: 'adminManual1'}) }}</p>
+            <p class="hint">{{ $t('detail.info.adminManual2', {msg: 'adminManual2'}) }}</p>
+          </Alert>
+
+          <Form ref='verifyForm' label-position="top">
+            <Row :gutter="30">
+              <Col span="12">
+                <FormItem label="Opinion">
+                  <Select v-model="verify.status">
+                    <!-- 判断选项 -->
+                    <Option :value="v_i.value" v-for="v_i in verify.choice" :key="v_i.value">
+                      {{ $t(`basic.status[${v_i.value}]`) }}
+                    </Option>
+                  </Select>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem v-show="verify.status == '1'" label="CheatMethod">
+                  <Select v-model="verify.checkbox" multiple>
+                    <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value">
+                      {{ $t(`cheatMethods.${method.value}.title`) }} |
+                      {{ $t(`cheatMethods.${method.value}.describe`) }}
+                    </Option>
+                  </Select>
+                </FormItem>
+              </Col>
+              <Col span="24">
+                <FormItem label="Reason">
+                  <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion"
+                         type="textarea"
+                         :autosize="{minRows: 2}" placeholder="Write something"/>
+                </FormItem>
+              </Col>
+            </Row>
+
+            <FormItem>
+              <Button type="primary" @click.stop.prevent="doVerify">
+                {{ $t('detail.info.commit', {msg: 'commit'}) }}
+              </Button>
+            </FormItem>
+
+            <Spin size="large" fix v-show="verifySpinShow"></Spin>
+          </Form>
+          <!-- 管理员面板 E -->
+        </div>
+      </Card>
+      <div v-if="!isCheaterExist">
         <Empty></Empty>
       </div>
     </div>
-
     <BackTop :bottom="50">
       <div class="top">Top</div>
     </BackTop>
@@ -526,7 +533,6 @@ import translate from 'google-translate-open-api';
 import Empty from '../components/Empty.vue'
 import {
   formatTextarea,
-  cheatMethodsGlossary,
   waitForAction
 } from "@/mixins/common";
 
@@ -563,7 +569,7 @@ export default new BFBAN({
 
       replyModal: false,
 
-      cheatMethodsGlossary,
+      cheatMethodsGlossary: null,
 
       fastReply: {
         content: ['stats', 'evidencePic', 'evidenceVid'],
@@ -1012,6 +1018,8 @@ export default new BFBAN({
   // force to wrap
   overflow-wrap: break-word;
   word-wrap: break-word;
+
+  margin-left: 2rem;
 }
 
 .timeline-content .loading {

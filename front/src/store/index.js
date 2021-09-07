@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import Cookies from 'js-cookie';
 
 import app from '../main';
-import { SET_LANG, SET_THEME } from './mutation-types';
+import {SET_LANG, SET_THEME, SET_USER} from './mutation-types';
 
 Vue.use(Vuex)
 
@@ -11,16 +11,17 @@ const store = new Vuex.Store({
   state: {
     user: undefined,
     $theme: 'dis',
+    $userinfo: {},
   },
 
   // modify state
   mutations: {
-    SIGNIN(state, payload) {
-      state.user = payload;
+    SIGNIN(state, data) {
+      state.user = data;
 
-      Cookies.set('user', JSON.stringify(payload), { expires: 7 });
+      Cookies.set('user', JSON.stringify(data), { expires: 7 });
     },
-    signout(state, payload) {
+    signout(state, data) {
       state.user = undefined;
 
       Cookies.remove('user');
@@ -43,6 +44,9 @@ const store = new Vuex.Store({
         require('../theme/bfban_deep.less');
       }
     },
+    [SET_USER](state, data) {
+      state.$userinfo = data;
+    },
   },
 
   // dispatch actions
@@ -58,6 +62,12 @@ const store = new Vuex.Store({
     },
     setTheme({ commit }, payload) {
       commit(SET_THEME, payload);
+    },
+    setUserInfo({ commit }, data) {
+      commit(SET_USER, data);
+    },
+    remUserInfo ({ commit }, data) {
+      commit(SET_USER, null);
     }
   },
 });

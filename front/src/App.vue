@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {storage} from './assets/js/index';
+import {api, http_token, storage} from './assets/js/index';
 
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
@@ -18,7 +18,31 @@ export default {
   name: "app",
   components: {Header, Footer},
   created() {
+    this.http = http_token.call(this);
     this.$store.dispatch('setTheme', storage.get('theme').data.value);
+
+    this.onUserinfo()
+  },
+  methods: {
+    onUserinfo () {
+      if (this.isLogin) {
+        this.http.get(api["user_me"], {}).then((res) => {
+          const d = res.data;
+
+          if (d.success === 1) {
+            // set userinfo
+            this.$store.dispatch('setUserInfo', d.data);
+            // update loac language
+            this.$store.dispatch('setLang', d.data.attr.language);
+          }
+        })
+      }
+    }
+  },
+  computed: {
+    isLogin() {
+      return Boolean(this.$store.state.user)
+    },
   }
 };
 import 'view-design/dist/styles/iview.css'

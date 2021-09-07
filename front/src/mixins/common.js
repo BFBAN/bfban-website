@@ -1,27 +1,6 @@
 import _ from "lodash";
 
 class Common {
-  cheatMethodsGlossary = {};
-  cheaterStatus = {};
-  gameName = {};
-
-  constructor() {
-    this.init();
-  }
-
-  async init() {
-    const list = {
-      cheatMethodsGlossary : await import('/src/assets/cheatMethodsGlossary.json'),
-      cheaterStatus : await import('/src/assets/cheaterStatus.json'),
-      gameName : await import('/src/assets/gameName.json')
-    }
-    this.cheaterStatus = list.cheaterStatus.child;
-    this.gameName = list.gameName.child;
-    this.cheatMethodsGlossary = list.cheatMethodsGlossary.child;
-    // console.log(this.cheatMethodsGlossary)
-    return this;
-  }
-
   checkReportFormData(form) {
     if (!trimAllWhitespace(form.originId)) {
       this.$Message.error('请填写举报游戏ID');
@@ -43,31 +22,6 @@ class Common {
       this.$Message.error('论述必填');
       return false;
     }
-  }
-
-  convertCheatMethods(str = '', locale) {
-    const s = str || '';
-    const tmpArr = [];
-    _.each(s.split(','), (val) => {
-      _.each(this.cheatMethodsGlossary, (v, i) => {
-        if (v.value === val) {
-          tmpArr.push(v[locale]);
-        }
-      });
-    });
-    return tmpArr.sort().reverse().join(' ');
-  }
-
-  getCheaterStatusLabel(value, locale = detectLanguage(navigator.language)) {
-    const o = _.find(this.cheaterStatus, (v, k) => {
-      return value === v.value || v.values.indexOf(value) >= 0;
-    });
-    return o ? o[locale] : '';
-  }
-
-  getGameLabel(value, locale = detectLanguage(navigator.language)) {
-    const o = _.find(this.gameName, (v, k) => v.value == value);
-    return o ? o[locale] : '';
   }
 
   formatNewLine(str) {

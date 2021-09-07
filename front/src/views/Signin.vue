@@ -63,10 +63,6 @@
               </FormItem>
 
               <FormItem>
-                <Checkbox v-model="captchaUrl.skip">跳过验证</Checkbox>
-              </FormItem>
-
-              <FormItem>
                 <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
                   {{ $t('signin.form.submit') }}
                 </Button>
@@ -112,9 +108,7 @@ export default {
         password: '',
         captcha: '',
       },
-      captchaUrl: {
-        skip: false
-      },
+      captchaUrl: {},
       spinShow: false,
     }
   },
@@ -164,7 +158,6 @@ export default {
               username,
               password,
             },
-            SKIP_CAPTCHAA: this.captchaUrl.skip,
             encryptCaptcha: this.captchaUrl.hash,
             captcha,
           },

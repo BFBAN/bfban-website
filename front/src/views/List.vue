@@ -170,13 +170,12 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
+
 import {http, api, util} from '../assets/js/index'
-import {getCheaterStatusLabel, cheaterStatus, common} from "@/mixins/common";
 import _ from "lodash";
 
-//new ClipboardJS(".ivu-btn");
-
-export default {
+export default new BFBAN({
   data() {
     return {
       games: [],
@@ -198,7 +197,7 @@ export default {
         {value: "commentNum",},
       ],
       sortByValue: "createTime",
-      cheaterStatus: cheaterStatus,
+      cheaterStatus: null,
     };
   },
   created() {
@@ -215,7 +214,7 @@ export default {
     },
   },
   methods: {
-    handleStatus: getCheaterStatusLabel,
+    getCheaterStatusLabel: util.getCheaterStatusLabel,
     getTotalNum(val) {
       const target = _.find(this.totalSum, ["game", val]);
 
@@ -229,9 +228,10 @@ export default {
     copied() {
       this.$Message.info("已复制");
     },
-    loadData() {
-      common.init().then((res) => {
+    async loadData() {
+      await util.initUtil().then((res) => {
         this.cheaterStatus = res.cheaterStatus;
+
         this.games = res.gameName;
       });
 
@@ -344,7 +344,7 @@ export default {
       this.handleChanges();
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

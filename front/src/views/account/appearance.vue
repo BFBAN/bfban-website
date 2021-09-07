@@ -1,7 +1,5 @@
 <template>
   <div class="theme">
-    <h1>Theme preferences</h1>
-    <Divider></Divider>
     <p>
       选择单个主题，或与系统同步，并自动在白天和夜间主题之间切换.
     </p>

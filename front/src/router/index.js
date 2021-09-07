@@ -32,7 +32,7 @@ const routes = [
     {name: 'apps', path: '/apps', component: Apps},
     {name: 'profile', path: '/profile', component: Profile},
     {name: 'search', path: '/search/:conetnt', component: Search},
-    {name: 'search', path: '/search', component: Search},
+    {name: 'search_main', path: '/search', component: Search},
 
     {
         name: 'report',
@@ -66,12 +66,8 @@ const routes = [
     {name: 'signin', path: '/signin', component: Signin},
     {name: 'signup', path: '/signup', component: Signup},
     {name: 'forgetPassword', path: '/forgetPassword', component: ForgetPassword},
-    {
-        name: 'forgetPasswordVerify',
-        path: '/forgetPasswordVerify/:code',
-        component: ForgetPassword,
-    },
-
+    {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify/:code', component: ForgetPassword,},
+    {name: 'bindOrigin', path: '/bindOrigin', component: Signup},
     {name: 'signupComplete', path: '/signupComplete/:code', component: SignupComplete},
     //  { name: 'signup', path: '/reset', component: Reset },
 

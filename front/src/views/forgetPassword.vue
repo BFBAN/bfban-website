@@ -28,12 +28,14 @@
                   <Input v-model="forgetPassword.originEmail" size="large" placeholder="origin email"/>
                 </FormItem>
                 <FormItem :label="$t('signup.form.password')" prop="password">
-                  <Input v-model="forgetPassword.password" size="large" placeholder="origin email"/>
+                  <Input v-model="forgetPassword.password" type="password" size="large" placeholder="password"/>
                 </FormItem>
               </div>
 
               <FormItem v-if="stepsIndex == 1" :label="$t('signup.form.captcha')">
-                <Input type="text" v-model="forgetPassword.captcha" size="large"
+                <Input type="text" v-model="forgetPassword.captcha"
+                       size="large"
+                       maxlength="4"
                        :placeholder="$t('signup.form.captcha')">
                 </Input>
                 <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
@@ -57,7 +59,8 @@
                           @click.prevent.stop="stepsIndex--" size="large">{{ $t('signup.prev') }}
                   </Button>
                   <Divider type="vertical"/>
-                  <Button v-if="stepsIndex != 1  && stepsIndex >= 0 && stepsIndex <= 1" @click.prevent.stop="stepsIndex++" size="large"
+                  <Button v-if="stepsIndex != 1  && stepsIndex >= 0 && stepsIndex <= 1"
+                          @click.prevent.stop="stepsIndex++" size="large"
                           type="primary">{{ $t('signup.next') }}
                   </Button>
                 </Col>
@@ -65,6 +68,7 @@
                   <Button v-if="stepsIndex == 1"
                           long
                           @click.prevent.stop="onForgetPassword"
+                          :disabled="forgetPassword.captcha == ''"
                           :loading="spinShow"
                           size="large" type="primary">
                     {{ $t('signup.form.submit') }}
@@ -99,7 +103,9 @@ export default {
       captchaUrl: {},
       spinShow: false,
 
-      verify: {},
+      verify: {
+        load: 0,
+      },
     }
   },
   components: {EmailTip},
@@ -121,10 +127,11 @@ export default {
         params: {code}
       }).then((res) => {
         const d = res.data;
-
-        if (d.success === 1) {
+        console.log(d);
+        if (d.success == 1) {
           this.verify.load = 3;
-          this.forgetPassword.password = this.d.data.newpassword;
+          this.stepsIndex = 3;
+          this.forgetPassword.password = d.data.newpassword;
         } else {
           this.$Message.error(d.msg);
           this.verify.load = -1;

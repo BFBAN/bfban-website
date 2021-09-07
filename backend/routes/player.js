@@ -50,14 +50,21 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'player.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
         }
 
-        const result = await db.select('id','originName','originUserId','originPersonaId','games',
+        const result = await db
+            .select('id','originName','originUserId','originPersonaId','games',
         'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
-        .from('players').where(key, '=', val).first();
+            .from('players')
+            .where(key, '=', val)
+            .where({})
+            .first();
+
         if(!result)
             return res.status(404).json({error: 1, code: 'player.notFound'});
         if(req.query.history) // that guy does exist
-            result.history =  await db.select('originName','fromTime','toTime').from('name_logs').where({originUserId: result.originUserId});
-        
+            result.history =  await db.select('originName','fromTime','toTime')
+                .from('name_logs')
+                .where({originUserId: result.originUserId});
+
         res.status(200).json({success: 1, code: 'player.ok', data: result});
     } catch(err) {
         next(err);

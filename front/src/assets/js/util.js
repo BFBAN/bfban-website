@@ -1,23 +1,12 @@
 import _ from "lodash";
-import {detectLanguage} from "../../mixins/common";
 
 export default class Util {
     cheatMethodsGlossary;
     cheaterStatus;
     gameName;
 
-    UTIL_CONF = {
-        'cheatMethodsGlossary': '/src/assets/cheatMethodsGlossary.json',
-        'cheaterStatus': '/src/assets/cheaterStatus.json',
-        'gameName': '/src/assets/gameName.json'
-    };
-
     constructor() {
         this.initUtil();
-    }
-
-    async loadFile (url) {
-        return await import(url);
     }
 
     async initUtil() {
@@ -32,7 +21,7 @@ export default class Util {
         return this;
     }
 
-    convertCheatMethods(str, locale) {
+    convertCheatMethods(str) {
         const s = str || '';
         const tmpArr = [];
         if (this.cheatMethodsGlossary == null) return '';
@@ -46,7 +35,7 @@ export default class Util {
         return tmpArr.sort().reverse().join(' ');
     }
 
-    getCheaterStatusLabel(value, locale = detectLanguage(navigator.language)) {
+    getCheaterStatusLabel(value) {
         if (this.cheaterStatus == null) return '';
         const o = _.find(this.cheaterStatus, (v, k) => {
             return typeof value == 'string' ? v.values.indexOf(value) >= 0 : value == v.value;
@@ -60,8 +49,11 @@ export default class Util {
      * @param locale
      * @returns {*|string}
      */
-    getGameLabel(value, locale = detectLanguage(navigator.language)) {
+    getGameLabel(value) {
+        console.log(this.gameName)
+        if (this.gameName == null) return '';
         const o = _.find(this.gameName, (v, k) => v.value == value);
-        return o ? o[locale] : '';
+        console.log(value, o);
+        return o ? this.$i18n.t("list.filters.game." + o.value) : '';
     }
 }

@@ -146,11 +146,11 @@
           }
         }).then((res) => {
           const d = res.data;
-          if (d.success === 1) {
+          if (d.success == 1) {
             this.$store.dispatch('signout').then(() => {
-              this.signout();
-              this.$router.push('/');
               this.$Message.success(d.message);
+
+              this.$router.push('/');
             });
           }
         })

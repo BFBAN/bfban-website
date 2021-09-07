@@ -9,9 +9,10 @@
               <Icon type="md-lock"/>
               联BFBAN
             </h1>
-            <h3>建立全球作弊玩家档案库，被世界各地服务器使用，杜绝恶意玩家:D</h3>
+            <h2>正守护来自全球不同battlefield服务器，在☁️中实时监控</h2>
+            <h3>建立起全球作弊玩家档案库</h3>
             <br>
-            <p>成为我们一员 - 改变社区环境</p>
+            <p>成为我们一员 - 维护社区环境</p>
             <Divider/>
 
             <router-link :to="{name: 'signup'}">
@@ -112,7 +113,7 @@
         <Row>
           <Col :lg="{span: 10, push: 0}">
             <h1 align="left">{{ $t("home.activity.title") }}</h1>
-            <h5 align="left" v-html="$t('home.activity.description') || '数以千计的玩家和组织已经在他们的BFBAN中贡献与使用'"></h5>
+            <h5 align="left" v-html="$t('home.activity.description')"></h5>
           </Col>
           <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
             <router-link :to="{name: 'cheaters'}">
@@ -143,7 +144,7 @@
                 </router-link>
                 举报了
                 <Tag>
-                  {{ handleGameName(a_i.game) }}
+                  {{ getGameLabel(a_i.game) }}
                 </Tag>
                 <router-link
                   :to="{name: 'cheater', params: {game: `${a_i.game}`, ouid: `${a_i.originUserId}`}}">
@@ -159,17 +160,18 @@
               </span>
 
               <span v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
-                <Tag color="success">管理员</Tag>
+                <Tag color="success">{{$t("account.admin")}}</Tag>
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
                   {{a_i.byUserName }}
                 </router-link>
                 将
                 <router-link :to="{name: 'cheater', params: {ouid: `${a_i.toPlayerId}`}}">
-                  {{a_i.cheaterOriginId }}
+                  {{a_i.toPlayerName }}
                 </router-link>
                 处理为
                 <Tag color="warning">
-                  {{ handleStatus(a_i.status) }}
+                  {{ $t(`basic.status[${a_i.action}]`) }}
+                  {{ getCheaterStatusLabel(a_i.action) }}
                 </Tag>
               </span>
             </Card>
@@ -181,12 +183,10 @@
 </template>
 
 <script>
-import {http, api, conf} from '../assets/js/index'
-// import Bulletin from "@/components/Bulletin.vue";
-import {getCheaterStatusLabel, getGameLabel} from "@/mixins/common";
-import _ from "lodash";
+import BFBAN from "../assets/js/bfban";
+import {http, api, conf, util} from '../assets/js/index'
 
-export default {
+export default new BFBAN( {
   data() {
     return {
       site: {
@@ -199,16 +199,25 @@ export default {
       activitySwitchType: true,
     }
   },
-  components: {
-    // Bulletin,
+  watch: {
+    '$route': 'loadData',
   },
   created() {
     this.getStatisticsInfo();
     this.getActivity();
   },
   methods: {
-    handleStatus: getCheaterStatusLabel,
-    handleGameName: getGameLabel,
+    getCheaterStatusLabel: util.getCheaterStatusLabel,
+    convertCheatMethods: util.convertCheatMethods,
+    getGameLabel: util.getGameLabel,
+    loadData() {
+      util.initUtil().then((res) => {
+        this.cheaterStatus = res.cheaterStatus;
+        this.cheatMethodsGlossary = res.cheatMethodsGlossary;
+
+        this.gameName = res.gameName;
+      });
+    },
     getActivity () {
       http.get(api["activity"], {}).then((res) => {
         const d = res.data;
@@ -251,7 +260,7 @@ export default {
       })
     }
   }
-}
+})
 </script>
 
 <style>

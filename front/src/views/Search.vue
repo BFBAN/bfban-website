@@ -29,6 +29,8 @@
         </Row>
         <div class="checkboxGroup">
           <Icon type="md-alert" /> 从BFBAN数据库检索ID
+          <Divider type="vertical"/>
+          <a href="javascript:void(0)">收藏此页面 (Ctrl+D or Command+D)</a>
         </div>
       </div>
 
@@ -43,8 +45,10 @@
       <div v-if="cheaters.length !== 0">
         <List border>
           <ListItem v-for="(cheater, index) in cheaters" :key="index">
-            <ListItemMeta :title="cheater.currentName || cheater.originName"
-                          :description="'uid:' + cheater.originUserId + ' 过去id: ' + cheater.historyName"/>
+            <ListItemMeta
+                :avatar="cheater.avatarLink"
+                :title="cheater.currentName || cheater.originName"
+                :description="`${cheater.originUserId ? 'uid:' + cheater.originUserId : ''} ${cheater.historyName ? '过去id:' + cheater.historyName: ''}`"/>
             <template slot="action">
               <li @click="searchModal = false">
                 <router-link

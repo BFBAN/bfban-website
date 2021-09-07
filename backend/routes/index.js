@@ -196,13 +196,17 @@ async (req, res, next)=>{
         const param = /[A-Za-z0-9_-]*/.exec(req.query.param)[0];
         const result = {success: 1, code: 'search.success', data: {}};
         if(!req.query.scope || req.query.scope=='current')
-            result.data = await db.select('originName','originUserId','originPersonaId','avatarLink','status').from('players')
-            .where('originName', 'like', '%'+param+'%').limit(100);
+            result.data = await db
+                .select('id', 'originName','originUserId','originPersonaId','avatarLink','status')
+                .from('players')
+                .where('originName', 'like', '%'+param+'%')
+                .limit(100);
         else {
             const history = await db('name_logs').join('players', 'name_logs.originUserId', 'players.originUserId')
             .select('name_logs.id as id','name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
             .where('name_logs.originName', 'like', '%'+param+'%').andWhere({valid: 1}).limit(100);
             result.data = history.map(i=> { return {
+                avatarLink: i.avatarLink,
                 historyName: i.prevOriginName,
                 currentName: i.originName,
                 originUserId: i.originUserId,

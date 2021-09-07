@@ -33,6 +33,8 @@
               </router-link>
             </ListItem>
           </List>
+          <br>
+          <Bulletin/>
         </Col>
         <Col span="18">
           <account v-show="muenIndex == 0"></account>
@@ -45,6 +47,8 @@
 </template>
 
 <script>
+import Bulletin from "../../components/Bulletin";
+
 import appearance from "./appearance";
 import account from "./account";
 
@@ -63,7 +67,7 @@ export default {
       }]
     }
   },
-  components: {appearance, account},
+  components: {Bulletin, appearance, account},
   computed: {
     isLogin() {
       return Boolean(this.$store.state.user);
