@@ -131,7 +131,7 @@
     },
     "labels": {
       "cheatMethod": "作弊方法",
-      "hackerId": "挂逼id",
+      "hackerId": "作弊者名称(ID)",
       "game": "游戏",
       "description": "描述"
     },
@@ -323,34 +323,41 @@
       "updateTime": "更新时间"
     }
   },
+  "search": {
+    "title": "检索",
+    "scope": {
+      "history": "过去的名字",
+      "current": "现在名称"
+    }
+  },
   "cheatMethods": {
     "stealth": {
       "title": "隐身",
-      "describe": ""
+      "describe": "角色隐身，无法看见，能追踪位置"
     },
     "wallhack": {
       "title": "透视",
-      "describe": ""
+      "describe": "无视实体查看敌人位置"
     },
     "aimbot": {
       "title": "自瞄",
-      "describe": ""
+      "describe": "自动瞄准位置，呈现出机器行为"
     },
     "oneShotKill": {
       "title": "秒杀",
-      "describe": ""
+      "describe": "快速瞄准高伤害部位，实现快速击杀"
     },
     "gadgetModify": {
       "title": "改装备",
-      "describe": ""
+      "describe": "装备出现在不可能存在场景中"
     },
     "damageChange": {
       "title": "改伤",
-      "describe": ""
+      "describe": "修改武器参数"
     },
     "shootingThroughWalls": {
       "title": "子弹穿墙",
-      "describe": ""
+      "describe": "子弹可以穿过实体"
     }
   },
   "misc": {

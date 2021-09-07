@@ -1,9 +1,9 @@
 import _ from "lodash";
 
 class Common {
-  cheatMethodsGlossary;
-  cheaterStatus;
-  gameName;
+  cheatMethodsGlossary = {};
+  cheaterStatus = {};
+  gameName = {};
 
   constructor() {
     this.init();
@@ -18,12 +18,8 @@ class Common {
     this.cheaterStatus = list.cheaterStatus.child;
     this.gameName = list.gameName.child;
     this.cheatMethodsGlossary = list.cheatMethodsGlossary.child;
-
+    // console.log(this.cheatMethodsGlossary)
     return this;
-  }
-
-  cheaterStatus () {
-    return this.cheaterStatus;
   }
 
   checkReportFormData(form) {
@@ -59,12 +55,10 @@ class Common {
         }
       });
     });
-
     return tmpArr.sort().reverse().join(' ');
   }
 
   getCheaterStatusLabel(value, locale = detectLanguage(navigator.language)) {
-    console.log(this.cheaterStatus)
     const o = _.find(this.cheaterStatus, (v, k) => {
       return value === v.value || v.values.indexOf(value) >= 0;
     });
@@ -166,7 +160,6 @@ class Common {
 }
 
 const {
-  cheaterStatus,
   defaultImgProviderSrcToProxy,
   replaceImgSrcToDataSrc,
   checkReportFormData,
@@ -187,7 +180,6 @@ const common = new Common();
 
 export {
   common,
-  cheaterStatus,
   defaultImgProviderSrcToProxy,
   replaceImgSrcToDataSrc,
   checkReportFormData,

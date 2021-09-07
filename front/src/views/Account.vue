@@ -20,23 +20,23 @@
 
         <p>
           {{ $t("account.role") }}
-          <Tag v-if="account.privilege === 'admin'" color="success">
+          <Tag type="dot" v-if="account.privilege === 'admin'" color="success">
             {{ $t("account.admin") }}
           </Tag>
-          <Tag v-if="account.privilege === 'super'" color="error">
+          <Tag type="dot" v-if="account.privilege === 'super'" color="error">
             {{ $t("account.super") }}
           </Tag>
-          <Tag v-if="account.privilege === 'normal'">
+          <Tag type="dot" v-if="account.privilege === 'normal'">
             {{ $t("account.normal") }}
           </Tag>
           <Divider type="vertical"/>
           {{ $t("account.joinedAt") }}
-          <Tag color="primary">
+          <Tag type="dot" color="primary">
             <Time v-if="account.joinTime" :time="account.joinTime  || new Date()"/>
           </Tag>
           <Divider type="vertical"/>
           {{ $t("account.lastOnlineTime") }}
-          <Tag color="primary">
+          <Tag type="dot" color="success">
             <Time v-if="account.lastOnlineTime" :time="account.lastOnlineTime  || new Date()"/>
           </Tag>
         </p>

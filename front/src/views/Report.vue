@@ -38,25 +38,29 @@
               <Timeline>
                 <TimelineItem>
                   <Card dis-hover>
+                    <!-- 游戏类型 S -->
                     <FormItem :label="$t('report.labels.game')">
-                      <RadioGroup v-model="tabs.list[index].formItem.gameName" type="button">
-                        <Radio label="bf1">
-                          <span>{{ $t("report.info.bf1", {msg: "bf1"}) }}</span>
-                        </Radio>
-                        <Radio label="bfv">
-                          <span>{{ $t("report.info.bfv", {msg: "bfv"}) }}</span>
-                        </Radio>
-                        <Radio label="bf6">
-                          <span>{{ $t("report.info.bf6", {msg: "bf6"}) }}</span>
+                      <RadioGroup
+                        size="large"
+                        class="game-type"
+                        v-model="tabs.list[index].formItem.gameName"
+                        type="button">
+                        <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" :style="'background-image: url(' + i.bk_src + ')'">
+                          <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
+                            <img height="25" :src="i.logo_src" v-if="i.logo_src" />
+                            <span v-else>{{i.full_name}}</span>
+                          </Tooltip>
                         </Radio>
                       </RadioGroup>
                       <span class="hint">{{ $t("report.info.reportNews", {msg: "reportNews"}) }}</span>
                     </FormItem>
+                    <!-- 游戏类型 E -->
 
                     <FormItem :label="$t('report.labels.hackerId')">
                       <p style="font-size: 2rem">{{ tabs.list[index].formItem.originId }}</p>
                       <Input
                         v-model="tabs.list[index].formItem.originId"
+                        size="large"
                         :placeholder="$t('report.info.onlyOneId')"/>
                       <span class="hint">
                       {{ $t("report.info.idNotion1", {msg: "idNotion1"}) }}
@@ -69,10 +73,16 @@
                     <FormItem :label="$t('report.labels.cheatMethod')">
                       <CheckboxGroup v-model="tabs.list[index].formItem.checkbox">
                         <Checkbox
+                          style="margin-bottom: 10px"
+                          size="large"
+                          border
                           v-for="method in cheatMethodsGlossary"
+                          :indeterminate="false"
                           :key="method.value"
                           :label="method.value">
-                          {{ $t(`cheatMethods.${method.value}`) }}
+                          <Tag color="primary">{{ $t(`cheatMethods.${method.value}.title`) }}</Tag>
+                          <Divider type="vertical"/>
+                          <span>{{ $t(`cheatMethods.${method.value}.describe`) }}</span>
                         </Checkbox>
                       </CheckboxGroup>
                     </FormItem>
@@ -170,17 +180,19 @@
 </template>
 
 <script>
-import {http, api, conf, http_token} from '../assets/js/index'
+import {http, api, http_token} from '../assets/js/index'
 import Edit from "@/components/Edit.vue";
 import {
   checkReportFormData,
   trimAllWhitespace,
   cheatMethodsGlossary,
+  common,
 } from "@/mixins/common";
 
 export default {
   data() {
     return {
+      games: [],
       tabs: {
         count: 0,
         list: []
@@ -196,8 +208,18 @@ export default {
   created() {
     this.http = http_token.call(this);
     this.handleTabsAdd();
+    this.loadData();
+  },
+  watch: {
+    '$route': 'loadData',
   },
   methods: {
+    loadData () {
+      common.init().then((res) => {
+        this.cheatMethodsGlossary = res.cheatMethodsGlossary;
+        this.games = res.gameName;
+      });
+    },
     handleTabsAdd() {
       let newFormData = {
         formItem: {
@@ -256,13 +278,12 @@ export default {
       let formData = this.tabs.list[index];
 
       // check form data
-      if (checkReportFormData.call(this, formData.formItem) === false)
-        return false;
+      if (checkReportFormData.call(this, formData.formItem) === false) return false;
       if (this.checkVideoAndImg(formData) === false) return false;
 
       this.spinShow = true;
 
-      this.post('checkGameIdExist', {
+      http.post('checkGameIdExist', {
         data: {
           id: trimAllWhitespace(formData.formItem.originId),
         },

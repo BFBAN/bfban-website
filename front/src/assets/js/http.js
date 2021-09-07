@@ -1,21 +1,19 @@
-import http, {AxiosRequestConfig} from 'axios';
+import http from 'axios';
 import Conf from './conf';
 
-export default class Http {
+export default class Http extends Conf {
   GET = 'get';
   POST = 'post';
   //..
 
+  constructor() {
+    super();
+    super.initConf();
+  }
+
   /**
    * TODO 未写拦截，有空完成
    */
-
-  CONF = new Conf();
-  // WWWURL = process.env.NODE_ENV === 'production' ? this.CONF.requestDev : this.CONF.requestDeBug
-  WWWURL = this.CONF.requestDeBug
-
-
-
   HTTP = http.create({
     // baseURL: process.env.BASE_API,
     timeout: 9000,
@@ -24,6 +22,10 @@ export default class Http {
       return status < 500;
     }
   })
+
+  getUrl () {
+    return this.CONF[this.CONF.requestDefault];
+  }
 
   /**
    * 请求核心
@@ -50,7 +52,7 @@ export default class Http {
    * @returns {Promise<AxiosResponse<any>>}
    */
   async post (url, data = {data: {}}) {
-    const _url =  this.WWWURL + url;
+    const _url = this.getUrl() + url;
 
     let result = await this.request(_url, {
       method: this.POST,
@@ -66,7 +68,7 @@ export default class Http {
    * @returns {Promise<AxiosResponse<any>>}
    */
   async get (url = '', data = {data: {}, params: {}}) {
-    const _url = this.WWWURL + url;
+    const _url = this.getUrl() + url;
 
     let result = await this.request(_url, {
       method: this.GET,

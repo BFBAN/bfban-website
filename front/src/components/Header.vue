@@ -35,15 +35,6 @@
             <Icon size="24" type="md-cog" />
           </router-link>
         </div>
-        <div class="search mobile-hide">
-          <Input clearable
-                 search enter-button
-                 :placeholder="$t('header.searchBar')"
-                 v-model="searchVal"
-                 @on-click="handleSearch"
-                 @on-search="handleSearch" />
-          <Divider type="vertical"/>
-        </div>
         <div class="nav">
           <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
             <Button type="primary" shape="circle">
@@ -114,6 +105,10 @@
               </Dropdown-item>
             </DropdownMenu>
           </Dropdown>
+          <Divider type="vertical"/>
+          <router-link class="mobile-hide" v-if="isLogin" :to="{name: 'search'}">
+            <Icon type="ios-search" size="28" />
+          </router-link>
           <router-link class="nav-username desktop-hide" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
             <Badge dot>
               <Icon size="30" type="md-person" />
@@ -132,38 +127,6 @@
           </Tooltip>
         </div>
       </div>
-
-      <Modal
-        v-model="searchModal"
-        footer-hide
-        :title="searchVal + ' (' + cheaters.length + ')'">
-        <div style="position: relative">
-          <Alert show-icon v-if="cheaters.length > 60">
-            庞大的数量
-            <template slot="desc">
-              啊呀！一共{{cheaters.length}}条,看起来与你搜索的关键词区配出大量数据，请尝试继续补充{{searchVal}}后续字符，如: {{searchVal}}2021、{{searchVal}}_love 让搜索更精准
-            </template>
-          </Alert>
-
-          <div v-if="cheaters.length !== 0">
-            <List border>
-              <ListItem v-for="cheater in cheaters" :key="cheater.id">
-                <ListItemMeta :title="cheater.currentName" :description="'uid:' + cheater.originUserId + ' 过去id: ' + cheater.historyName" />
-                <template slot="action">
-                  <li @click="searchModal = false">
-                    <router-link :to="{name: 'cheater', params: {ouid: `${cheater.originPersonaId}.${cheater.originUserId}.${cheater.id}`}}" >
-                      <Icon type="ios-eye" size="20"/> 查看
-                    </router-link>
-                  </li>
-                </template>
-              </ListItem>
-            </List>
-          </div>
-          <div v-else>无</div>
-
-          <Spin size="large" fix v-show="modalSpinShow"></Spin>
-        </div>
-      </Modal>
     </header>
 </template>
 
@@ -173,38 +136,9 @@
   export default {
     data() {
       return {
-        searchModal: false,
-        searchVal: '',
-        cheaters: [],
-
-        modalSpinShow: false,
       }
     },
     methods: {
-      handleSearch() {
-        const val = this.searchVal.trim();
-
-        if (val === '') return false;
-
-        this.searchModal = true;
-        this.modalSpinShow = true;
-
-        http.get(api["search"],{
-          params: {
-            param: val,
-            scope: ['current','history'],
-          }
-        }).then((res) => {
-          this.modalSpinShow = false;
-
-          const d = res.data;
-          if (d.success === 1) {
-
-            const { cheaters } = d.data;
-            this.cheaters = d.data;
-          }
-        })
-      },
       signout() {
         http.post(api["account_signout"], {
           headers: {
@@ -254,13 +188,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    .search {
-      display: flex;
-      flex-grow: 0;
-      flex-shrink: 1;
-      flex-basis: 30%;
-    }
   }
   .nav {
     display: flex;

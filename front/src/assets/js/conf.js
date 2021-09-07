@@ -3,16 +3,27 @@
  */
 
 export default class Conf {
-  constructor() {
-    return {
-      // 请求地址 [生产]
-      'requestDev': 'https://bfban.gametools.network/api/',
+  CONF = {
+    // 请求地址 [生产]
+    'requestDev': '',
 
-      // 请求地址 [测试]
-      'requestDeBug': 'http://127.0.0.1:4002/api/',
+    // 请求地址 [测试]
+    'requestDeBug': '',
 
-      // 七牛
-      'qiniuUrl': '',
-    }
+    // 七牛
+    'qiniuUrl': '',
+
+    // 默认加载参数，如果上层配置，取上层字段
+    'requestDefault': 'requestDev'
+  };
+
+  async initConf () {
+    let {requestDev, requestDeBug, requestDefault} = await import('/src/assets/requestConf.json');
+    this.CONF = Object.assign(this.CONF, {requestDev}, {requestDeBug} , {requestDefault});
+    return this.CONF;
+  }
+
+  getConf () {
+    return this.CONF;
   }
 }

@@ -32,11 +32,11 @@
                     </Tag>
 
                     <Tag color="error">
-                      {{ handleStatus(cheater.status, $root.$i18n.locale) }}
+                      {{ $t(`basic.status[${cheater.status}]`) }}
                     </Tag>
 
                     <Tag v-if="cheater.cheatMethods" color="warning">
-                      {{ convertCheatMethods(cheater.cheatMethods, $root.$i18n.locale) }}
+                      {{ convertCheatMethods(cheater.cheatMethods) }}
                     </Tag>
                   </h1>
                   <span>id:  {{ cheater.originUserId || 'id' }}</span>
@@ -57,7 +57,7 @@
                   </Dropdown>
                   <Divider type="vertical"/>
                   <Poptip
-                    @on-ok="updateCheaterInfo">
+                      @on-ok="updateCheaterInfo">
                     <div style="margin-top: .4rem;" slot="content">
                       <p class="hint">
                         <!-- 描述说明 -->
@@ -143,7 +143,7 @@
         <Row :gutter="20" type="flex">
           <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 18, push: 1}" order="2" class="tabs-style">
             <Tabs type="card">
-              <TabPane :label="$t('detail.info.timeLine', { msg: 'timeLine' })" >
+              <TabPane :label="$t('detail.info.timeLine', { msg: 'timeLine' })">
                 <div>
                   <!-- 时间线 -->
                   <TimelineItem pending :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l) in timelineList"
@@ -216,7 +216,7 @@
                         {{ $t('detail.info.judge', {msg: 'judge'}) }}
 
                         <Tag color="warning">
-                          {{ handleStatus(l.action, $root.$i18n.locale) }}
+                          {{ getCheaterStatusLabel(l.action) }}
                         </Tag>
 
                         <span v-if="l.cheatMethods">
@@ -328,7 +328,7 @@
                   <br>
                 </div>
 
-                <div label="回复" >
+                <div label="回复">
                   <!-- 回复 S -->
                   <div v-if="isLogin">
                     <Alert type="warning" show-icon>
@@ -375,13 +375,9 @@
                         <FormItem label="Opinion">
                           <Select v-model="verify.status">
                             <!-- 判断选项 -->
-                            <Option :value="v_i.value" v-for="(v_i) in verify.choice" :key="v_i.value">
+                            <Option :value="v_i.value" v-for="v_i in verify.choice" :key="v_i.value">
                               {{ $t(`basic.status[${v_i.value}]`) }}
                             </Option>
-                            <!--                                                    <Option value="1">{{ $t('detail.info.choice1', {msg: 'choice1'}) }}</Option>-->
-                            <!--                                                    <Option value="2">{{ $t('detail.info.choice2', {msg: 'choice2'}) }}</Option>-->
-                            <!--                                                    <Option value="3">{{ $t('detail.info.choice3', {msg: 'choice3'}) }}</Option>-->
-                            <!--                                                    <Option value="4">{{ $t('detail.info.choice4', {msg: 'choice4'}) }}</Option>-->
                           </Select>
                         </FormItem>
                       </Col>
@@ -389,14 +385,16 @@
                         <FormItem v-show="verify.status == '1'" label="CheatMethod">
                           <Select v-model="verify.checkbox" multiple>
                             <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value">
-                              {{ $t(`cheatMethods.${method.value}.title`) }} | {{ $t(`cheatMethods.${method.value}.describe`) }}
+                              {{ $t(`cheatMethods.${method.value}.title`) }} |
+                              {{ $t(`cheatMethods.${method.value}.describe`) }}
                             </Option>
                           </Select>
                         </FormItem>
                       </Col>
                       <Col span="24">
                         <FormItem label="Reason">
-                          <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion" type="textarea"
+                          <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion"
+                                 type="textarea"
                                  :autosize="{minRows: 2}" placeholder="Write something"/>
                         </FormItem>
                       </Col>
@@ -414,7 +412,7 @@
                 </div>
 
               </TabPane>
-              <TabPane :label="$t('detail.info.dealRecord', { msg: 'dealRecord' })" >
+              <TabPane :label="$t('detail.info.dealRecord', { msg: 'dealRecord' })">
                 <!-- 管理员处理历史 -->
                 <div style="display: flex; flex-direction: column; position: relative;">
                   <div style="margin-top: .4rem;">
@@ -487,12 +485,12 @@
 
         <!-- 小回复窗口 -->
         <Modal
-          v-model="replyModal"
-          title="Reply"
-          ok-text="Send"
-          cancel-text="Cancel"
-          @on-ok="doReply"
-          @on-cancel="cancelReply">
+            v-model="replyModal"
+            title="Reply"
+            ok-text="Send"
+            cancel-text="Cancel"
+            @on-ok="doReply"
+            @on-cancel="cancelReply">
           <div v-if="isLogin">
             <Form :label-width="80" ref='replyForm' style="position: relative;">
               <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
@@ -520,21 +518,19 @@
 </template>
 
 <script>
-import {http, api, http_token} from '../assets/js/index'
-import ajax from '@/mixins/ajax';
+import BFBAN from "../assets/js/bfban";
+
+import {http, api, http_token, util} from '../assets/js/index'
 import vueQr from 'vue-qr'
 import translate from 'google-translate-open-api';
 import Empty from '../components/Empty.vue'
 import {
-  common,
-  getCheaterStatusLabel,
   formatTextarea,
   cheatMethodsGlossary,
-  convertCheatMethods,
   waitForAction
 } from "@/mixins/common";
 
-export default {
+export default new BFBAN({
   data() {
     return {
       cheater: {
@@ -562,8 +558,6 @@ export default {
         toUserId: '',
       },
       replySpinShow: false,
-
-      gameName: '',
 
       isCheaterExist: true,
 
@@ -593,13 +587,21 @@ export default {
     this.getTimeline();
   },
   methods: {
-    handleStatus: getCheaterStatusLabel,
-    convertCheatMethods,
+    getCheaterStatusLabel: util.getCheaterStatusLabel,
+    convertCheatMethods: util.convertCheatMethods,
     async loadData() {
       // set Token Http mode
       this.http = http_token.call(this);
 
-      this.verify.choice = require('/src/assets/cheaterStatus.json').child.filter(i => (i.value >= 1 && i.value <= 4));
+      await util.initUtil().then((res) => {
+        this.cheaterStatus = res.cheaterStatus;
+
+        // 裁决结果
+        this.cheatMethodsGlossary = res.cheatMethodsGlossary;
+
+        // 裁决作弊类型
+        this.verify.choice = res.cheaterStatus.filter(i => (i.value >= 1 && i.value <= 4));
+      });
     },
     /**
      * 获取基本字段
@@ -618,7 +620,7 @@ export default {
      * 基础信息
      */
     getCheatersInfo() {
-      this.http.get(`${api["cheaters"]}`, {
+      this.http.get(api["cheaters"], {
         params: Object.assign({
           history: true
         }, this.getParamsIds())
@@ -705,13 +707,17 @@ export default {
       }
       // JUST before ajax
       this.verifySpinShow = true;
-      const {data: statusData} = await ajax({
-        method: 'post',
-        url: '/cheaters/status',
-        data: {
-          originUserId,
-        }
-      });
+
+      const {data: statusData} = await http.post('/cheaters/status', {
+        data: {originUserId}
+      })
+      // const {data: statusData} = await ajax({
+      //   method: 'post',
+      //   url: '/cheaters/status',
+      //   data: {
+      //     originUserId,
+      //   }
+      // });
       if (statusData.error) {
         this.$Message.error(statusData.msg);
         return false;
@@ -734,7 +740,6 @@ export default {
             action: actions.action[status].value,
             content: suggestion,
           },
-
         }
       }).then((res) => {
         this.verifySpinShow = false;
@@ -970,7 +975,7 @@ export default {
       return this.$store.state.user
     }
   }
-}
+})
 </script>
 
 <style lang="scss">

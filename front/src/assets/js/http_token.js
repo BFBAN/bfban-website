@@ -30,10 +30,14 @@ export default class http_token extends http {
   }
 
   async post(url, data = {data: {}}) {
+    this.CONF = await super.initConf();
+
     return super.post(url, this.setToken(data));
   }
 
   async get(url = '', data = {data: {}, params: {}}) {
+    this.CONF = await super.initConf();
+
     return super.get(url, this.setToken(data));
   }
 }

@@ -9,8 +9,7 @@ import _Storage from './storage';
 import _Time from './date';
 import _Http from './http';
 import _Http_token from './http_token'
-
-import {common} from '../../mixins/common'
+import _Util from './util';
 
 export const api = new _Api();
 export const http = new _Http();
@@ -18,5 +17,6 @@ export const http_token = new _Http_token();
 export const time = new _Time();
 export const conf = new _Conf();
 export const storage = new _Storage();
+export const util = new _Util();
 
-export default {conf, api, storage, time, http, http_token, util: common};
+export default {conf, api, storage, time, http, http_token, util};
