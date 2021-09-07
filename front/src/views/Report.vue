@@ -12,12 +12,12 @@
         <TabPane v-for="(tab, index) in tabs.list.length" :key="tab"
                  :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : '举报标签' + tab) + '[' + tabs.list[index].formItem.gameName + ']'">
           <Card shadow style="margin-top: -16px">
-            <Form :label-width="80" label-position="left">
+            <Form :label-width="150" label-position="left">
               <!--举报作弊-->
               <div
-                class="notFoundHint"
-                id="notFoundHint"
-                v-show="failedOfNotFound">
+                  class="notFoundHint"
+                  id="notFoundHint"
+                  v-show="failedOfNotFound">
                 <p style="font-size: 14px; font-weight: bold">
                   {{ $t("report.info.notFoundHintTitle") }}
                 </p>
@@ -41,14 +41,15 @@
                     <!-- 游戏类型 S -->
                     <FormItem :label="$t('report.labels.game')">
                       <RadioGroup
-                        size="large"
-                        class="game-type"
-                        v-model="tabs.list[index].formItem.gameName"
-                        type="button">
-                        <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" :style="'background-image: url(' + i.bk_src + ')'">
+                          size="large"
+                          class="game-type"
+                          v-model="tabs.list[index].formItem.gameName"
+                          type="button">
+                        <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
+                               :style="'background-image: url(' + i.bk_src + ')'">
                           <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
-                            <img height="25" :src="i.logo_src" v-if="i.logo_src" />
-                            <span v-else>{{i.full_name}}</span>
+                            <img height="25" :src="i.logo_src" v-if="i.logo_src"/>
+                            <span v-else>{{ i.full_name }}</span>
                           </Tooltip>
                         </Radio>
                       </RadioGroup>
@@ -57,29 +58,37 @@
                     <!-- 游戏类型 E -->
 
                     <FormItem :label="$t('report.labels.hackerId')">
-                      <p style="font-size: 2rem">{{ tabs.list[index].formItem.originId }}</p>
-                      <Input
-                        v-model="tabs.list[index].formItem.originId"
-                        size="large"
-                        :placeholder="$t('report.info.onlyOneId')"/>
-                      <span class="hint">
-                      {{ $t("report.info.idNotion1", {msg: "idNotion1"}) }}
-                    </span>
-                      <span class="hint">
-                      {{ $t("report.info.idNotion2", {msg: "idNotion2"}) }}
-                    </span>
+                      <Row :gutter="30">
+                        <Col span="12">
+                          <Input
+                              v-model="tabs.list[index].formItem.originId"
+                              maxlength="30"
+                              show-word-limit
+                              size="large"
+                              :placeholder="$t('report.info.onlyOneId')"/>
+                          <br>
+                          <h1>{{ tabs.list[index].formItem.originId }}</h1>
+                        </Col>
+                        <Col span="12">
+                            <span class="hint">
+                              {{ $t("report.info.idNotion1", {msg: "idNotion1"}) }}
+                            </span>
+                          <span class="hint">
+                            {{ $t("report.info.idNotion2", {msg: "idNotion2"}) }}
+                          </span>
+                        </Col>
+                      </Row>
                     </FormItem>
 
                     <FormItem :label="$t('report.labels.cheatMethod')">
                       <CheckboxGroup v-model="tabs.list[index].formItem.checkbox">
                         <Checkbox
-                          style="margin-bottom: 10px"
-                          size="large"
-                          border
-                          v-for="method in cheatMethodsGlossary"
-                          :indeterminate="false"
-                          :key="method.value"
-                          :label="method.value">
+                            style="margin-bottom: 10px"
+                            border
+                            v-for="method in cheatMethodsGlossary"
+                            :indeterminate="false"
+                            :key="method.value"
+                            :label="method.value">
                           <Tag color="primary">{{ $t(`cheatMethods.${method.value}.title`) }}</Tag>
                           <Divider type="vertical"/>
                           <span>{{ $t(`cheatMethods.${method.value}.describe`) }}</span>
@@ -104,15 +113,23 @@
                         }}
                       </Alert>
                       <span class="hint">
-                      {{
+                        {{
                           $t("report.info.uploadManual3", {
                             msg: "uploadManual3",
                           })
                         }}
-                    </span>
-                      <Input
-                        v-model="tabs.list[index].formItem.bilibiliLink"
-                        :placeholder="$t('report.info.required')"/>
+                      </span>
+                      <Row :gutter="20" v-for="(blink, blinkindex) in tabs.list[index].formItem.bilibiliLink" :key="blinkindex">
+                        <Col>
+                          <Input v-model="tabs.list[index].formItem.bilibiliLink"
+                              :placeholder="$t('report.info.required')"/>
+                        </Col>
+                        <Col>
+                          <Icon type="md-add" @click="tabs.list[index].formItem.bilibiliLink.push('')" />
+                          <Divider type="vertical"/>
+                          <Icon type="md-trash" @click="tabs.list[index].formItem.bilibiliLink.split(blinkindex, 1)"  />
+                        </Col>
+                      </Row>
                     </FormItem>
 
                     <FormItem :label="$t('report.labels.description')">
@@ -137,14 +154,14 @@
                   <Card dis-hover>
                     <FormItem :label="$t('report.info.captcha')">
                       <Input
-                        type="text"
-                        v-model="tabs.list[index].formItem.captcha"
-                        :placeholder="$t('report.info.captcha')"/>
+                          type="text"
+                          v-model="tabs.list[index].formItem.captcha"
+                          :placeholder="$t('report.info.captcha')"/>
                       <div v-html="tabs.list[index].captchaUrl.content"></div>
                       <a
-                        ref="reCaptcha"
-                        href="#"
-                        @click.stop.prevent="refreshCaptcha(index)">
+                          ref="reCaptcha"
+                          href="#"
+                          @click.stop.prevent="refreshCaptcha(index)">
                         {{
                           $t("report.info.getCaptcha", {msg: "getCaptcha"})
                         }}
@@ -180,12 +197,11 @@
 </template>
 
 <script>
-import {http, api, http_token} from '../assets/js/index'
+import {http, api, http_token, util} from '../assets/js/index'
 import Edit from "@/components/Edit.vue";
 import {
   checkReportFormData,
   trimAllWhitespace,
-  common,
 } from "@/mixins/common";
 
 export default {
@@ -198,7 +214,7 @@ export default {
       },
       spinShow: false,
       failedOfNotFound: false,
-      cheatMethodsGlossary: null,
+      cheatMethodsGlossary: [],
     };
   },
   components: {
@@ -213,8 +229,8 @@ export default {
     '$route': 'loadData',
   },
   methods: {
-    loadData () {
-      common.init().then((res) => {
+    loadData() {
+      util.initUtil().then((res) => {
         this.cheatMethodsGlossary = res.cheatMethodsGlossary;
         this.games = res.gameName;
       });
@@ -224,7 +240,7 @@ export default {
         formItem: {
           gameName: "",
           originId: "",
-          bilibiliLink: "",
+          bilibiliLink: [],
           checkbox: ["aimbot"],
           description: this.$i18n.t("report.info.description"),
           captcha: "",
@@ -239,10 +255,10 @@ export default {
     },
     checkVideoAndImg(formData) {
       if (
-        trimAllWhitespace(formData.formItem.bilibiliLink) ||
-        /(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)/.test(
-          formData.formItem.description
-        )
+          trimAllWhitespace(formData.formItem.bilibiliLink) ||
+          /(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)/.test(
+              formData.formItem.description
+          )
       ) {
         return true;
       } else {
@@ -302,16 +318,16 @@ export default {
 
           setImmediate(() => {
             document
-              .getElementById("notFoundHint")
-              .scrollIntoView({
-                behavior: "smooth",
-                block: "end",
-                inline: "nearest",
-              });
+                .getElementById("notFoundHint")
+                .scrollIntoView({
+                  behavior: "smooth",
+                  block: "end",
+                  inline: "nearest",
+                });
           });
 
           this.$Message.error(
-            this.$i18n.t("report.info.originId")
+              this.$i18n.t("report.info.originId")
           );
         }
 
@@ -320,11 +336,11 @@ export default {
       }).catch((e) => {
         if (e.response && e.response.status == 401)
           this.$Message.error(
-            this.$t("report.info.loginExpired")
+              this.$t("report.info.loginExpired")
           );
         else if (e.response && e.response.status == 500)
           this.$Message.error(
-            "An error occured in server, please try again later."
+              "An error occured in server, please try again later."
           );
         else this.$Message.error("Failed: Unknown error.");
         this.spinShow = false;
@@ -341,11 +357,13 @@ export default {
         captcha,
       } = formData.formItem;
       const originId = trimAllWhitespace(formData.formItem.originId);
-      let bilibiliLink = trimAllWhitespace(formData.formItem.bilibiliLink);
-      if (bilibiliLink)
-        bilibiliLink = /^https?:\/\//.test(bilibiliLink)
-          ? bilibiliLink
-          : "//" + bilibiliLink;
+      let bilibiliLink;
+      formData.formItem.bilibiliLink.forEach(uri => {
+        bilibiliLink = trimAllWhitespace(uri);
+        if (bilibiliLink) {
+          bilibiliLink = /^https?:\/\//.test(bilibiliLink) ? bilibiliLink : "//" + bilibiliLink;
+        }
+      })
       const description = formData.formItem.description.trim();
 
       this.http.post(api["cheaters"], {
@@ -360,7 +378,7 @@ export default {
           gameName,
           originId,
           cheatMethods,
-          bilibiliLink,
+          bilibiliLink: bilibiliLink.toString(),
           description,
           captcha,
           originUserId,
@@ -368,9 +386,8 @@ export default {
           avatarLink,
         },
       }).then((res) => {
-        this.spinShow = false;
-        this.failedOfNotFound = false;
         const d = res.data;
+
         if (d.error === 0) {
           this.$router.push({
             name: "cheater",
@@ -381,6 +398,9 @@ export default {
         } else {
           this.$Message.error("failed " + d.msg);
         }
+      }).finally(() => {
+        this.spinShow = false;
+        this.failedOfNotFound = false;
       });
     },
   },

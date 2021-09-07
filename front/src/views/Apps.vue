@@ -21,18 +21,20 @@
     </div>
 
     <Row :gutter="30">
-      <Col span="4">
-        <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
-          <Checkbox
-            :indeterminate="indeterminate"
-            :value="checkAll"
-            @click.prevent.native="handleCheckAll">全选</Checkbox>
-        </div>
-        <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
-          <Checkbox :label="item.value" v-for="item in appsConf.tags" :key="item.value"></Checkbox><br>
-        </CheckboxGroup>
+      <Col span="6">
+        <Card>
+          <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+            <Checkbox
+                :indeterminate="indeterminate"
+                :value="checkAll"
+                @click.prevent.native="handleCheckAll">全选</Checkbox>
+          </div>
+          <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
+            <Checkbox :label="item.value" v-for="item in appsConf.tags" :key="item.value" border style="margin-bottom: 10px"></Checkbox><br>
+          </CheckboxGroup>
+        </Card>
       </Col>
-      <Col span="20" class="apps-list">
+      <Col span="18" class="apps-list">
         <div v-for="item in appsConf.list" :key="item.title">
           <Card class="apps-item" v-if="appItemIsShow(item)">
             <Badge :text="!!item.hot ? 'hot' : ''" :offset="[15, 20]">

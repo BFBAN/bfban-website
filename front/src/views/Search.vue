@@ -1,5 +1,17 @@
 <template>
   <div class="container">
+
+    <div style="
+    position: fixed;
+    background-size: cover;
+    background-image: url(https://media.contentapi.ea.com/content/dam/bf/images/2018/08/bf-hero-medium-keyart-games-7x2-xl1.jpg.adapt.crop5x2.1455w.jpg);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: .15;"></div>
+
     <div class="content">
       <br>
       <Breadcrumb>

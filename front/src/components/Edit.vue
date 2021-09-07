@@ -1,28 +1,25 @@
 <template>
   <div>
-    <!-- <Button @click.stop.prevent="getJwtToken">get jwt token</Button> -->
-    <!-- <Button @click.stop.prevent="getQiniuUploadToken">get qiniu upload token</Button> -->
-
     <Modal
-      v-model="modal1"
-      title="上传图片，不要超过2M">
+        v-model="modal1"
+        title="上传图片，不要超过2M">
       <Upload
-        :headers="headers"
-        :data="extraData"
-        action="//upload-z2.qiniup.com"
-        accept="image/*"
-        multiple
-        name="file"
-        :max-size="imgMaxSize"
-        type="drag"
+          :headers="headers"
+          :data="extraData"
+          action="//upload-z2.qiniup.com"
+          accept="image/*"
+          multiple
+          name="file"
+          :max-size="imgMaxSize"
+          type="drag"
 
-        :with-credentials="withCredentials"
-        :show-upload-list="showUploadList"
+          :with-credentials="withCredentials"
+          :show-upload-list="showUploadList"
 
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :on-exceeded-size="handleExceededSize"
-        :before-upload="handleBeforeUpload">
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :on-exceeded-size="handleExceededSize"
+          :before-upload="handleBeforeUpload">
         <div>
           <br>
           <Icon type="ios-cloud-upload" size="52"></Icon>
@@ -34,26 +31,26 @@
     </Modal>
 
     <Modal
-      v-model="modal2"
-      title="上传视频，不要超过30M">
+        v-model="modal2"
+        title="上传视频，不要超过30M">
       <Upload
-        :headers="headers"
-        :data="extraData"
-        action="//upload-z2.qiniup.com"
-        accept="video/mp4"
-        :format="['mp4']"
-        multiple
-        name="file"
-        :max-size="vodMaxSize"
-        type="drag"
+          :headers="headers"
+          :data="extraData"
+          action="//upload-z2.qiniup.com"
+          accept="video/mp4"
+          :format="['mp4']"
+          multiple
+          name="file"
+          :max-size="vodMaxSize"
+          type="drag"
 
-        :with-credentials="withCredentials"
-        :show-upload-list="showUploadList"
+          :with-credentials="withCredentials"
+          :show-upload-list="showUploadList"
 
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :on-exceeded-size="handleExceededSize"
-        :before-upload="handleBeforeUpload">
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :on-exceeded-size="handleExceededSize"
+          :before-upload="handleBeforeUpload">
 
         <div style="padding: 20px 0">
           <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
@@ -62,13 +59,12 @@
       </Upload>
     </Modal>
 
-
     <div>
       <quill-editor
-        ref="quillEditor"
-        :content="editorContent"
-        :options="editorOption"
-        @change="onEditorChange($event)">
+          ref="quillEditor"
+          :content="editorContent"
+          :options="editorOption"
+          @change="onEditorChange($event)">
       </quill-editor>
 
 
@@ -85,6 +81,7 @@
 // https://github.com/zenoamaro/react-quill/issues/270
 // https://codepen.io/emanuelbsilva/pen/Zpmmzv
 // https://www.npmjs.com/package/vue-quill-editor
+import {http} from "../assets/js";
 import Quill from 'quill'
 import ajax from '@/mixins/ajax';
 import Embed from "quill/blots/embed";
@@ -153,7 +150,6 @@ export default {
                 }
 
               },
-
               video: (value) => {
                 if (value) {
                   this.uploadType = 'video';
@@ -173,7 +169,6 @@ export default {
       this.$emit('change', html, this.index);
       this.editorContent = html;
     },
-
     handleBeforeUpload: async function (file) {
       // axios get qiniu tooken to extraData
       let d = await this.getQiniuUploadToken();
@@ -199,22 +194,16 @@ export default {
       }
       // 调整光标到最后
       quill.setSelection(length + 1);
-
     },
     handleError: function (err, file, fileList) {
       this.$Message.error('upload images fail...')
-
     },
     handleExceededSize: function (file, fileList) {
       this.$Message.warning('超过上传最大限制，图片2M');
-
     },
-
-    getJwtToken: function () {
+    async getJwtToken () {
       // axios request (with credentials)
-      return ajax({
-        method: 'post',
-        url: '/auth',
+      return await http.post('/auth', {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
@@ -222,39 +211,29 @@ export default {
           username: 'user',
           password: 'pwd'
         }
+      }).catch((err) => {
+        console.log(err)
       })
-        .catch((err) => {
-          console.log(err)
-        })
     },
     getQiniuUploadToken: function () {
       // axios request with credentials, it is async
-      return ajax({
-        method: 'post',
-        url: '/auth/qiniu',
+      return http.post('/auth/qiniu', {
         // qiniu up token stores at cookies
-        withCredentials: true,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          // 'x-csrf-token': csrfToken,
+          'x-csrf-token': this.getJwtToken(),
         },
+      }).catch((err) => {
+        console.log(err)
       })
-        .catch((err) => {
-          console.log(err)
-        })
     },
-
   }
 }
 </script>
 
 
 <style lang="scss">
-.ql-editor {
-  background-color: white;
-}
-
-.ql-container.ql-snow {
-  height: 20rem;
-}
+  .ql-container.ql-snow {
+    height: 20rem;
+  }
 </style>

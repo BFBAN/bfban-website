@@ -147,6 +147,7 @@
                 <div>
                   <!-- 时间线 -->
                   <TimelineItem
+                      :id="`floor-${index}`"
                       pending
                       :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l, index) in timelineList"
                       :key="l.createTime">
@@ -196,8 +197,8 @@
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
-                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`"
-                                @click.prevent="handleReply">
+                        <Button type="dashed"
+                                @click="handleReply(l.floor || index, l.byUserId)">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
                       </p>
@@ -244,8 +245,8 @@
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
-                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`"
-                                @click.prevent="handleReply">
+                        <Button type="dashed"
+                                @click="handleReply(l.floor || index, l.byUserId)">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
                       </p>
@@ -280,8 +281,8 @@
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
-                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.userId}`"
-                                @click.prevent="handleReply">
+                        <Button type="dashed"
+                                @click="handleReply(l.floor || index, l.byUserId)">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
                       </p>
@@ -300,17 +301,17 @@
                           <b>{{ l.username }}</b>
                         </router-link>
                         {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                        <div v-if="l.toFloor">
-                          #{{ l.toFloor }}
-                        </div>
+                        <span v-if="l.toFloor">
+                          <a :href="`#floor-${l.toFloor}`">#{{ l.toFloor }}</a>
+                        </span>
                       </div>
 
                       <div v-html="l.content" v-if="l.content" class="description"></div>
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
-                        <Button type="dashed" :data-floor="`${l.floor}`" :data-user-id="`${l.id}`"
-                                @click.prevent="handleReply">
+                        <Button type="dashed"
+                                @click="handleReply(l.floor || index, l.byUserId)">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
                       </p>
@@ -320,7 +321,7 @@
                     <Row class="timeline-content">
                       <Col>
                       </Col>
-                      <Col span="24" align="right"># {{index}}</Col>
+                      <Col span="24" align="right"># {{ index }}</Col>
                     </Row>
                     <Divider></Divider>
                   </TimelineItem>
@@ -441,15 +442,14 @@
         <!-- 小回复窗口 -->
         <Modal
             v-model="replyModal"
-            title="Reply"
-            ok-text="Send"
-            cancel-text="Cancel"
+            :title="`${$t('detail.info.reply', {msg: 'reply'})} #${reply.toFloor}`"
             @on-ok="doReply"
             @on-cancel="cancelReply">
           <div v-if="isLogin">
             <Form :label-width="80" ref='replyForm' style="position: relative;">
               <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
-                     :autosize="{minRows: 2}" placeholder="Say something"/>
+                     :autosize="{minRows: 2}"
+                     :placeholder="$t('detail.info.giveOpinion')"/>
             </Form>
           </div>
           <div v-else>{{ $t('detail.info.replyManual4', {msg: 'replyManual4'}) }}</div>
@@ -639,7 +639,11 @@ export default new BFBAN({
           this.cheater.games.split(',').forEach(i => {
             this.games.push({game: i});
           })
+        } else {
+          this.$router.push({name: "notFound"});
         }
+      }).catch(() => {
+        this.$router.push({name: "notFound"});
       });
     },
     /**
@@ -650,7 +654,7 @@ export default new BFBAN({
       this.http.get(`${api["account_timeline"]}`, {
         params: Object.assign({
           skip: 0,
-          limit: 10
+          limit: 100
         }, this.getParamsIds())
       }).then((res) => {
         const d = res.data;
@@ -816,9 +820,7 @@ export default new BFBAN({
       const userId = this.$store.state.user.userId;
       return (parseInt(userId) === parseInt(id))
     },
-    handleReply(e) {
-      const {floor, userId} = e.target.dataset;
-
+    handleReply(floor, userId) {
       this.reply.toFloor = floor === 'undefined' ? '' : floor;
       this.reply.toUserId = userId === 'undefined' ? '' : userId;
 
@@ -839,9 +841,7 @@ export default new BFBAN({
       this.replySpinShow = true;
 
       const cheaterId = this.cheater.id;
-      const userId = this.$store.state.user.userId;
       const {toFloor, toUserId} = this.reply;
-      const {originUserId} = this.cheater;
       let {content = ''} = this.reply;
 
       content = formatTextarea(content);
@@ -850,6 +850,7 @@ export default new BFBAN({
         data: {
           toPlayerId: cheaterId,
           content: content,
+          toFloor: 1,
         },
       };
 
@@ -865,8 +866,9 @@ export default new BFBAN({
       }).then((res) => {
         const d = res.data;
 
-        if (d.suceess === 1) {
+        if (d.success == 1) {
           const {createDatetime, content, status} = d.data;
+
           this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
 
           // reset reply
@@ -891,6 +893,9 @@ export default new BFBAN({
         }
       }).finally(() => {
         this.replySpinShow = false;
+
+        // update timelink
+        this.getTimeline();
       });
     },
     handleCmdEnter(e, type) {
