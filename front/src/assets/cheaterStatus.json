@@ -1,0 +1,36 @@
+{
+  "child": [
+    {
+      "value": 0,
+      "values": ["0", "wallhack"]
+    },
+    {
+      "value": 5,
+      "values": ["5", "gadgetModify", "suspect", "discuss"]
+    },
+    {
+      "value": 6,
+      "values": ["6", "teleport"]
+    },
+    {
+      "value": 1,
+      "values": ["1", "guilt"]
+    },
+    {
+      "value": 2,
+      "values": ["2", "invisable", "discuss"]
+    },
+    {
+      "value": 3,
+      "values": [ "3", "magicBullet" ,"innocent"]
+    },
+    {
+      "value": 4,
+      "values": ["4", "damageChange", "trash"]
+    },
+    {
+      "value": 7,
+      "values": ["7", "attackServer"]
+    }
+  ]
+}

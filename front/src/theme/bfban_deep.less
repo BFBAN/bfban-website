@@ -1,0 +1,623 @@
+@import '~view-design/src/styles/index.less';
+
+@primary-color          : #fff23b;
+@btn-primary-color      : #000;
+
+@text-color             : rgba(255, 255, 255, 0.66);
+
+@link-color             : #fff;
+@link-active-color      : #401487;
+@link-hover-color       : @link-active-color;
+
+// 分页 - Page style
+@page-prefix-cls: ~"@{css-prefix}page";
+
+.@{page-prefix-cls} {
+  &:after {
+    content: '';
+    display: block;
+    height: 0;
+    clear: both;
+    overflow: hidden;
+    visibility: hidden;
+  }
+
+  &-item {
+    display: inline-block;
+    //float: left;
+    vertical-align: middle;
+    min-width: @btn-circle-size;
+    height: @btn-circle-size;
+    line-height: @btn-circle-size - 2px;
+    margin-right: 4px;
+    text-align: center;
+    list-style: none;
+    background-color: #3a3a3a;
+    user-select: none;
+    cursor: pointer;
+    font-family: Arial;
+    font-weight: 500;
+    border: 1px solid @border-color-base;
+    border-radius: @btn-border-radius;
+    //transition: all @transition-time @ease-in-out;
+    transition: border @transition-time @ease-in-out, color @transition-time @ease-in-out;
+
+    a {
+      margin: 0 6px;
+      text-decoration: none;
+      color: @text-color;
+      //transition: none;
+    }
+
+    &:hover {
+      border-color: @primary-color;
+      a {
+        color: @primary-color;
+      }
+    }
+
+    &-active {
+      border-color: @primary-color;
+
+      a, &:hover a {
+        color: @primary-color;
+      }
+    }
+  }
+
+  &-with-disabled &-item, &-with-disabled &-disabled{
+    cursor: @cursor-disabled;
+    background-color: @input-disabled-bg;
+    a {
+      color: #ccc;
+    }
+    &:hover {
+      border-color: @border-color-base;
+      a {
+        color: #ccc;
+        cursor: @cursor-disabled;
+      }
+    }
+    &-active {
+      background-color: @border-color-base;
+      border-color: @border-color-base;
+
+      a, &:hover a {
+        color: #fff;
+      }
+    }
+  }
+
+  &-item-jump-prev, &-item-jump-next {
+    //&:after {
+    //    content: "•••";
+    //    display: block;
+    //    letter-spacing: 1px;
+    //    color: #ccc;
+    //    text-align: center;
+    //}
+    i{
+      color: #ccc;
+    }
+    i:first-child{
+      display: none;
+    }
+
+    &:hover {
+      //&:after{
+      //    display: none;
+      //}
+      i:first-child{
+        display: inline;
+        color: @primary-color;
+      }
+      i:last-child{
+        display: none;
+      }
+    }
+  }
+
+  &-with-disabled &-item-jump-prev, &-with-disabled &-item-jump-next{
+    cursor: @cursor-disabled;
+    i{
+      color: #ccc;
+    }
+    &:hover {
+      //&:after{
+      //    display: block;
+      //}
+      i:first-child{
+        display: none;
+      }
+      i:last-child{
+        display: inline;
+      }
+    }
+  }
+
+  &-item-jump-prev:hover {
+    i:first-child:after {
+      content: "\F115";
+      margin-left: -8px;
+    }
+  }
+
+  &-item-jump-next:hover {
+    i:first-child:after {
+      content: "\F11F";
+      margin-left: -8px;
+    }
+  }
+
+  &-prev{
+    margin-right: 4px;
+  }
+
+  &-item-jump-prev,
+  &-item-jump-next{
+    margin-right: 4px;
+  }
+
+  &-prev,
+  &-next,
+  &-item-jump-prev,
+  &-item-jump-next {
+    display: inline-block;
+    vertical-align: middle;
+    user-select: none;
+    //float: left;
+    min-width: @btn-circle-size;
+    height: @btn-circle-size;
+    line-height: @btn-circle-size - 2px;
+    list-style: none;
+    text-align: center;
+    cursor: pointer;
+    color: #666;
+    font-family: Arial;
+    border: 1px solid @border-color-base;
+    border-radius: @btn-border-radius;
+    transition: all @transition-time @ease-in-out;
+  }
+  &-item-jump-prev,
+  &-item-jump-next{
+    border-color: transparent;
+  }
+
+  &-prev,
+  &-next {
+    background-color: #545454;
+
+    a {
+      color: #666;
+      font-size: 14px;
+    }
+
+    &:hover {
+      border-color: @primary-color;
+
+      a {
+        color: @primary-color;
+      }
+    }
+  }
+
+  &-disabled {
+    cursor: @cursor-disabled;
+    a {
+      color: #ccc;
+    }
+    &:hover {
+      border-color: @border-color-base;
+      a {
+        color: #ccc;
+        cursor: @cursor-disabled;
+      }
+    }
+  }
+
+  &-options {
+    display: inline-block;
+    vertical-align: middle;
+    //float: left;
+    margin-left: 15px;
+    &-sizer {
+      display: inline-block;
+      //float: left;
+      margin-right: 10px;
+    }
+
+    &-elevator {
+      display: inline-block;
+      vertical-align: middle;
+      //float: left;
+      height: @btn-circle-size;
+      line-height: @btn-circle-size;
+
+      input {
+        .input;
+        border-radius: @btn-border-radius;
+        margin: 0 8px;
+        width: 50px;
+      }
+    }
+  }
+
+  &-total {
+    display: inline-block;
+    //float: left;
+    height: @btn-circle-size;
+    line-height: @btn-circle-size;
+    margin-right: 10px;
+  }
+
+  &-simple &-prev,
+  &-simple &-next {
+    margin: 0;
+    border: 0;
+    height: 24px;
+    line-height: normal;
+    font-size: 18px;
+  }
+
+  &-simple &-simple-pager {
+    display: inline-block;
+    //float: left;
+    margin-right: 8px;
+    vertical-align: middle;
+
+    input {
+      .input;
+      width: 30px;
+      height: 24px;
+      margin: 0 8px;
+      padding: 5px 8px;
+      text-align: center;
+      box-sizing: border-box;
+      background-color: #464646;
+      outline: none;
+      border: 1px solid @border-color-base;
+      border-radius: @btn-border-radius;
+      transition: border-color @transition-time @ease-in-out;
+
+      &:hover {
+        border-color: @primary-color;
+      }
+    }
+
+    span{
+      padding: 0 8px 0 2px;
+    }
+  }
+
+  &-custom-text, &-custom-text:hover{
+    border-color: transparent;
+  }
+}
+
+.@{page-prefix-cls} {
+  &.mini &-total {
+    height: @btn-circle-size-small;
+    line-height: @btn-circle-size-small;
+  }
+
+  &.mini &-item {
+    border: 0;
+    margin: 0;
+    min-width: @btn-circle-size-small;
+    height: @btn-circle-size-small;
+    line-height: @btn-circle-size-small;
+    border-radius: @btn-border-radius-small;
+  }
+
+  &.mini &-prev,
+  &.mini &-next {
+    margin: 0;
+    min-width: @btn-circle-size-small;
+    height: @btn-circle-size-small;
+    line-height: @btn-circle-size-small - 2px;
+    border: 0;
+
+    a {
+      i:after {
+        height: @btn-circle-size-small;
+        line-height: @btn-circle-size-small;
+      }
+    }
+  }
+
+  &.mini &-item-jump-prev,
+  &.mini &-item-jump-next {
+    height: @btn-circle-size-small;
+    line-height: @btn-circle-size-small;
+    border: none;
+    margin-right: 0;
+  }
+
+  &.mini &-options {
+    margin-left: 8px;
+    &-elevator {
+      height: @btn-circle-size-small;
+      line-height: @btn-circle-size-small;
+
+      input {
+        .input-small;
+        width: 44px;
+      }
+    }
+  }
+}
+
+// 卡片 - Card style
+@card-prefix-cls: ~"@{css-prefix}card";
+
+.@{card-prefix-cls}{
+  display: block;
+  background: darken(@border-color-base, 80%);
+  border-radius: @border-radius-small;
+  font-size: @font-size-base;
+  position: relative;
+  //overflow: hidden;
+  transition: all @transition-time @ease-in-out;
+
+  &-bordered {
+    border: 1px solid darken(@border-color-base, 20%);
+    border-color: darken(@border-color-split, 80%);
+  }
+
+  &-shadow{
+    box-shadow: @shadow-card;
+  }
+
+  &:hover {
+    box-shadow: @shadow-base;
+    border-color: darken(@border-color-split, 80%);
+  }
+
+  &&-dis-hover:hover{
+    box-shadow: none;
+    border-color: transparent;
+  }
+
+  &&-dis-hover&-bordered:hover{
+    border-color: @border-color-split;
+  }
+
+  &&-shadow:hover{
+    box-shadow: @shadow-card;
+  }
+
+  &-head {
+    .content-header;
+  }
+
+  &-extra {
+    position: absolute;
+    right: 16px;
+    top: 14px;
+  }
+
+  &-body {
+    padding: 16px;
+  }
+}
+
+// 按钮样式 - Button style
+.@{radio-group-button-prefix-cls} {
+  font-size: 0;
+  -webkit-text-size-adjust:none;
+
+  .@{radio-prefix-cls}{
+    width: 0;
+    margin-right: 0;
+  }
+
+  .@{radio-prefix-cls}-wrapper {
+    display: inline-block;
+    height: @btn-circle-size;
+    line-height: @btn-circle-size - 2px;
+    margin: 0;
+    padding: 0 16px - 1px;
+    font-size: @font-size-small;
+    color: @btn-default-color;
+    transition: all @transition-time ease-in-out;
+    cursor: pointer;
+    border: 1px solid @border-color-base;
+    border-left: 0;
+    position: relative;
+
+    > span {
+      margin-left: 0;
+    }
+
+    &:before, &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 1px;
+      height: 100%;
+      left: -1px;
+      top: 0;
+      background: darken(@border-color-base, 70%);
+      //visibility: hidden;
+      transition: all @transition-time ease-in-out;
+    }
+
+    &:after{
+      height: @btn-circle-size + 4px;
+      left: -1px;
+      top: -3px;
+      background: fade(@primary-color, 20%);
+      opacity: 0;
+    }
+
+    &:first-child {
+      border-radius: @btn-border-radius 0 0 @btn-border-radius;
+      border-left: 1px solid @border-color-base;
+      &:before, &:after {
+        display: none;
+      }
+    }
+
+    &:last-child {
+      border-radius: 0 @btn-border-radius @btn-border-radius 0;
+    }
+
+    &:first-child:last-child {
+      border-radius: @btn-border-radius;
+    }
+
+    &:hover {
+      position: relative;
+      & .@{radio-prefix-cls} {
+        background-color: black;
+      }
+    }
+
+    .@{radio-prefix-cls}-inner,
+    input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    &-checked {
+      background: darken(@primary-color, 15%);
+      border-color: @primary-color;
+      color: lighten(@primary-color, 100%);
+      box-shadow: -1px 0 0 0 @primary-color;
+      z-index: 1;
+
+      &:before{
+        background: @primary-color;
+        opacity: 0.1;
+      }
+
+      &.@{radio-prefix-cls}-focus{
+        box-shadow: -1px 0 0 0 @primary-color, 0 0 0 2px fade(@primary-color, 20%);
+        transition: all @transition-time ease-in-out;
+        &:after{
+          left: -3px;
+          top: -3px;
+          opacity: 1;
+          background: fade(@primary-color, 20%);
+        }
+        &:first-child{
+          box-shadow: 0 0 0 2px fade(@primary-color, 20%);
+        }
+      }
+
+      &:first-child {
+        border-color: @primary-color;
+        box-shadow: none;
+      }
+
+      &:hover {
+        border-color: tint(@primary-color, 20%);
+        //box-shadow: -1px 0 0 0 tint(@primary-color, 20%);
+        color: tint(@primary-color, 20%);
+      }
+
+      &:active {
+        border-color: shade(@primary-color, 5%);
+        //box-shadow: -1px 0 0 0 shade(@primary-color, 5%);
+        color: shade(@primary-color, 5%);
+      }
+    }
+
+    &-disabled {
+      border-color: @border-color-base;
+      background-color: @background-color-base;
+      cursor: @cursor-disabled;
+      color: #ccc;
+
+      &:first-child,
+      &:hover {
+        border-color: @border-color-base;
+        background-color: @background-color-base;
+        color: #ccc;
+      }
+      &:first-child {
+        border-left-color: @border-color-base;
+      }
+    }
+
+    &-disabled.@{radio-prefix-cls}-wrapper-checked {
+      color: #fff;
+      background-color: #e6e6e6;
+      border-color: @border-color-base;
+      box-shadow: none!important;
+    }
+  }
+}
+
+.@{radio-group-button-prefix-cls}.@{radio-group-prefix-cls}-large .@{radio-prefix-cls}-wrapper{
+  height: @btn-circle-size-large;
+  line-height: @btn-circle-size-large - 2px;
+  font-size: @font-size-base;
+  &:after{
+    height: @btn-circle-size-large + 4px;
+  }
+}
+
+.@{radio-group-button-prefix-cls}.@{radio-group-prefix-cls}-small .@{radio-prefix-cls}-wrapper{
+  height: @btn-circle-size-small;
+  line-height: @btn-circle-size-small - 2px;
+  padding: 0 12px;
+  font-size: @font-size-small;
+
+  &:after{
+    height: @btn-circle-size-small + 4px;
+  }
+
+  &:first-child {
+    border-radius: @btn-border-radius-small 0 0 @btn-border-radius-small;
+  }
+  &:last-child {
+    border-radius: 0 @btn-border-radius-small @btn-border-radius-small 0;
+  }
+}
+
+
+// ================
+
+.ivu-divider {
+  background: #e8eaec24 !important;
+}
+
+// main
+#app {
+  backdrop-filter: brightness(0.2);
+  background-image: url(https://media.contentapi.ea.com/content/dam/battlefield/battlefield-2042/homepage/common/bf-2042-section-bg-homepage-experiences-xl.jpg.adapt.320w.jpg);
+  background-size: cover;
+
+  .title {
+    color: white;
+  }
+
+  img[data-v-fae5bece] {
+    display: none;
+  }
+}
+
+// nav
+.nav a.link {
+  padding: 0.7rem 0.8rem;
+  text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0 !important;
+}
+
+// box
+.box {
+  backdrop-filter: blur(40px);
+  background: rgba(255, 255, 255, 0.05) !important;
+
+  h1, h5 {
+    color: #fff;
+  }
+}
+
+// footer
+footer {
+  b, a, p {
+    color: white;
+  }
+}

@@ -1,0 +1,750 @@
+<html>
+    <head>
+        <script src="./gen/jquery.min.js"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                font-family: 'Courier New', Courier, monospace;
+            }
+            body {
+                width: 100%;
+                position: relative;
+                display: grid;
+                grid-template-columns: 1fr 3fr 1fr;
+            }
+            textarea { 
+                resize: vertical;
+            }
+            .container {
+                margin: 2px;
+                border: 2px solid black;
+            }
+            .block {
+                padding: 2px;
+            }
+            .playerlist input {
+                position: relative;
+                bottom: -3px;
+            }
+            #timeline-container * {
+                max-width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <div class="captcha-container container">
+                <div style="font-size: 20px; text-align: left; padding-left: 12px;">Captcha</div>
+                <div class="block">
+                    <button style="height: 36px; width: 100px;" onclick="getCaptcha()">GetCaptcha</button>
+                    <span class="svgspace" style="padding: 0;"></span>
+                    <div class="encryptCaptcha"></div>
+                    <form >
+                        Input <input type="text" name="captcha" id="captcha">
+                        <br/>
+                        SKIP <input type="checkbox" name="captcha-skip" id="captcha-skip">
+                    </form>
+                </div>
+                <script>
+                    let encryptCaptcha = "";
+                    let inputCaptcha = "";
+                    async function getCaptcha() {
+                        let res = await fetch('/api/captcha').then(r=>r.json());
+                        if(res.error)
+                            throw('Bad Response: /api/captcha:'+JSON.stringify(res));
+                        encryptCaptcha = res.data.hash;
+                        $('.svgspace').html(res.data.content);
+                    }
+                </script>
+            </div>
+            <div class="account-container container">
+                <div style="font-size: 20px; text-align: left; padding-left: 12px;">User</div>
+                <div class="login container block">
+                    <div>Login:</div>
+                    <form  class="block">
+                        Username: <input type="text" name="login-username" id="login-username">
+                        Password: <input type="text" name="login-password" id="login-password">
+                    </form>
+                    <button onclick="login()">Submit(captcha)</button>
+                    <span class="login-error"></span>
+                    <script>
+                        async function login() {
+                            let res = await fetch('/api/user/signin', {
+                                body: JSON.stringify({
+                                    data:{
+                                        username: $('#login-username').val(),
+                                        password: $('#login-password').val()
+                                    },
+                                    encryptCaptcha: encryptCaptcha,
+                                    captcha: $('#captcha').val(),
+                                    SKIP_CAPTCHAA: $('#captcha-skip').prop('checked'),
+                                }),
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json'
+                                }
+                            }).then(r=>r.json());
+                            if(res.error) {
+                                $('.login-error').text(res.message);
+                                throw('Bad Response: /api/user/signin:'+JSON.stringify(res))
+                            }
+                            $('.login-error').text(res.message);
+                            $('#login-token').val(res.data.token);
+                            localStorage.token = res.data.token;
+                            console.log(res.data.userinfo);
+                        }
+                    </script>
+                    <div>&nbsp;token:</div>
+                    <form  class="block">
+                        Enable: <input type="checkbox" name="login-enable-token" id="login-enable-token" onclick="toggleToken()" checked="checked"><br/>
+                        Token: <input type="text" name="login-token" id="login-token">
+                    </form>
+                    <script>
+                        function toggleToken() {
+                            const s = $('#login-enable-token').prop('checked');
+                            if(s && localStorage.saveToken)
+                                localStorage.token = localStorage.saveToken;
+                            if(!s && localStorage.token) {
+                                localStorage.saveToken = localStorage.token;
+                                localStorage.token = undefined;
+                            }
+                            $('#login-token').val(localStorage.token? localStorage.token:localStorage.saveToken);
+                            console.log('now token: '+localStorage.token);
+                        }
+                    </script>
+                </div>
+                <div class="register container block">
+                    <div>Register:</div>
+                    <form >
+                        Username: <input type="text" name="register-username" id="register-username">
+                        Password: <input type="text" name="register-password" id="register-password">
+                        Email: <input type="email" name="register-email" id="register-email">
+                        originID: <input type="text" name="register-originName" id="register-originName">
+                        Code: <input type="text" name="register-code" id="register-code">
+                    </form>
+                    <button onclick="register()">Submit(captcha)</button>
+                    <div class="register-error" style="width: 100%; line-break: auto;"></div>
+                    <script>
+                        async function register() {
+                            let res = await fetch('/api/user/signup', {
+                                body: JSON.stringify({
+                                    data:{
+                                        username: $('#register-username').val(),
+                                        password: $('#register-password').val(),
+                                        originEmail: $('#register-email').val(),
+                                        originName: $('#register-originName').val(),
+                                    },
+                                    encryptCaptcha: encryptCaptcha,
+                                    captcha: $('#captcha').val(),
+                                    SKIP_CAPTCHAA: $('#captcha-skip').prop('checked'),
+                                }),
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json'
+                                }
+                            }).then(r=>r.json());
+                            if(res.error) {
+                                $('.register-error').text(JSON.stringify(res.message));
+                                throw('Bad Response: /api/user/signup:'+JSON.stringify(res))
+                            }
+                            $('.register-error').text(res.message);
+                        }
+                        async function registerVerify() {
+                            let res = await fetch('/api/user/signupVerify?code='+$('#register-code').val())
+                            .then(r=>r.json());
+                            if(res.error) {
+                                $('.register-error').text(JSON.stringify(res.message));
+                                throw('Bad Response: /api/user/signupVerify:'+JSON.stringify(res))
+                            }
+                            $('.register-error').text(res.message);
+                        }
+                    </script>
+                    <button onclick="registerVerify()">Verify</button>
+                </div>
+                <div class="signout container block">
+                    <button onclick="logout()">Logout</button>
+                    <span class="logout-res"></span>
+                    <script>
+                        async function logout() {
+                            let res = await fetch('/api/user/signout', {
+                                method: 'POST',
+                                headers: {
+                                    'x-access-token': localStorage.token? localStorage.token:''
+                                }
+                            }).then(r=>r.json());
+                            if(res.error) {
+                                $('.logout-res').text(res.message);
+                                throw('Bad Response: /api/user/signout:'+JSON.stringify(res))
+                            }
+                            $('.logout-res').text(res.message);
+                        }
+                    </script>
+                </div>
+                <div class="userprofile container block">
+                    <div>Profile:</div>
+                    <form  class="block">
+                        <span style="border-bottom: 1px solid black; position: relative;">
+                            Who: 
+                            <input type="radio" name="userprofile-who" id="userprofile-who1" value="ME" checked="checked">ME
+                            <input type="radio" name="userprofile-who" id="userprofile-who2" value="ID">
+                            <input type="number" name="userprofile-id" id="userprofile-id" style="position: relative; bottom: 3px;">
+                        </span>
+                        name: <input type="text" name="userprofile-name" id="userprofile-name">
+                        privilege: <p id="userprofile-privilege" style="border-bottom: 1px dotted black;"></p>
+                        introduction: <textarea id="userprofile-introduction" id="userprofile-introduction" cols="30" rows="10" style="height: 48px; width: 100%;"></textarea>
+                        joinTime: <p id="userprofile-joinTime" style="border-bottom: 1px dotted black;"></p>
+                        lastOnlineTime: <p id="userprofile-lastOnlineTime" style="border-bottom: 1px dotted black;"></p>
+                        originName: <p id="userprofile-originName" style="border-bottom: 1px dotted black;"></p>
+                        originUserId: <p id="userprofile-originUserId" style="border-bottom: 1px dotted black;"></p>
+                        attr: <textarea name="userprofile-attr" id="userprofile-attr" cols="30" rows="10" style="height: 128px; width: 100%;"></textarea>
+                    </form>
+                    <button onclick="getUserInfo()">Get</button>
+                    <button onclick="updateMeAttr()">SetAttr</button>
+                    <button onclick="changeName()">SetName(captcha)</button>
+                    <script>
+                        async function getUserInfo() {
+                            const url = $('input[name="userprofile-who"]:checked').val()=='ME'?
+                                '/api/user/me' : '/api/user/info?id='+$('#userprofile-id').val();
+                            let res = await fetch(url, {
+                                headers: {'x-access-token': localStorage.token? localStorage.token:''}
+                            }).then(r=>r.json());
+                            if(res.error) {
+                                $('#userprofile-introduction').text(res.message);
+                                throw('Bad Response: /api/user/info:'+JSON.stringify(res));
+                            }
+                            $('#userprofile-name').val(res.data.username);
+                            $('#userprofile-id').val(res.data.id);
+                            $('#userprofile-privilege').text(res.data.privilege);
+                            $('#userprofile-introduction').val(res.data.introduction);
+                            $('#userprofile-joinTime').text(new Date(res.data.joinTime).toLocaleString());
+                            $('#userprofile-lastOnlineTime').text(new Date(res.data.lastOnlineTime).toLocaleString());
+                            if(res.data.origin) {
+                                $('#userprofile-originName').text(res.data.origin.originName);
+                                $('#userprofile-originUserId').text(res.data.origin.originUserId);
+                            }
+                            $('#userprofile-attr').val(JSON.stringify(res.data.attr, null, 2));
+                            console.log(res);
+                        }
+                        async function updateMeAttr() {
+                            let res = await fetch('/api/user/me', {
+                                method: 'POST',
+                                headers: {
+                                    'x-access-token': localStorage.token? localStorage.token:'',
+                                    'content-type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    data: {
+                                        introduction: $('#userprofile-introduction').val(),
+                                        attr: JSON.parse($('#userprofile-attr').val())
+                                    }
+                                })
+                            }).then(r=>r.json());
+                            if(res.error) {
+                                $('#userprofile-introduction').val(res.message);
+                                throw('Bad Response: POST /api/user/me:'+JSON.stringify(res));
+                            }
+                            $('#userprofile-introduction').val(JSON.stringify(res.data));
+                        }
+                        async function changeName() {
+                            let res = await fetch('/api/user/changeName', {
+                                method: 'POST',
+                                headers: {
+                                    'x-access-token': localStorage.token? localStorage.token:'',
+                                    'content-type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    data: {
+                                        newname: $('#userprofile-name').val(),
+                                    },
+                                    encryptCaptcha: encryptCaptcha,
+                                    captcha: $('#captcha').val(),
+                                    SKIP_CAPTCHAA: $('#captcha-skip').prop('checked'),
+                                })
+                            }).then(r=>r.json());
+                            if(res.error) {
+                                $('#userprofile-introduction').val(res.message);
+                                throw('Bad Response: /api/user/changeName:'+JSON.stringify(res));
+                            }
+                            $('#userprofile-introduction').val(JSON.stringify(res.data));
+                        }
+                    </script>
+                </div>
+                <div class="usersecret container block">
+                    <div>Secret:</div>
+                    <form  class="block">
+                        oldpasswd: <input type="text" name="usersecret-oldpasswd" id="usersecret-oldpasswd">
+                        newpasswd: <input type="text" name="usersecret-newpasswd" id="usersecret-newpasswd">
+                        Email: <input type="email" name="usersecret-email" id="usersecret-email">
+                        originID: <input type="text" name="usersecret-originName" id="usersecret-originName">
+                        Code: <input type="text" name="usersecret-bindcode" id="usersecret-bindcode">
+                    </form>
+                    <div class="usersecret-res"></div>
+                    <button onclick="changePassword()">ChangePasswd(logout)</button>
+                    <button onclick="changeBinding()">ChangeBinding(captcha)</button>
+                    <button onclick="changeBindingVerify()">Verify</button>
+                    <script>
+                        async function changePassword() {
+                            let res = await fetch('/api/user/changePassword', {
+                                method: 'POST',
+                                headers: {
+                                    'x-access-token': localStorage.token? localStorage.token:'',
+                                    'content-type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    data: {
+                                        newpassword: $('#usersecret-newpasswd').val(),
+                                        oldpassword: $('#usersecret-oldpasswd').val()
+                                    },
+                                })
+                            });
+                            if(res.error) {
+                                $('.usersecret-res').text(res.message);
+                                throw('Bad Response: /api/user/changePassword:'+JSON.stringify(res));
+                            }
+                            $('.usersecret-res').text(res.message);
+                        }
+                        async function changeBinding() {
+                            let res = await fetch('/api/user/bindOrigin', {
+                                method: 'POST',
+                                headers: {
+                                    'x-access-token': localStorage.token? localStorage.token:'',
+                                    'content-type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    data: {
+                                        originEmail: $('#usersecret-email').val(),
+                                        originName: $('#usersecret-originName').val(),
+                                    },
+                                    encryptCaptcha: encryptCaptcha,
+                                    captcha: $('#captcha').val(),
+                                    SKIP_CAPTCHAA: $('#captcha-skip').prop('checked'),
+                                })
+                            }).then(r=>r.json());
+                            if(res.error) {
+                                $('.usersecret-res').text(res.message);
+                                throw('Bad Response: /api/user/changeBinding:'+JSON.stringify(res));
+                            }
+                            $('.usersecret-res').text(res.message);
+                        }
+                        async function changeBindingVerify() {
+                            let res = await fetch('/api/user/bindOriginVerify?code='+$('#usersecret-bindcode').val(), {
+                                headers: {'x-access-token': localStorage.token? localStorage.token:''}
+                            }).then(r=>r.json());
+                            if(res.error) {
+                                $('.usersecret-res').text(res.message);
+                                throw('Bad Response: /api/user/changeBinding:'+JSON.stringify(res));
+                            }
+                            $('.usersecret-res').text(res.message);
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+        
+        <div class="player-container container">
+            <div style="font-size: 20px; text-align: left; padding-left: 12px;">Player</div>
+            <div class="playersearch container block">
+                <div>Search</div>
+                <form style="display: inline-block;">
+                    name: <input type="text" name="playersearch-name" id="playersearch-name">
+                    history: <input type="checkbox" name="playersearch-history" id="playersearch-history" style="position: relative; bottom: -3px;">
+                    advance: <input type="checkbox" name="playersearch-isadv" id="playersearch-isadv" style="position: relative; bottom: -3px;">
+                </form>
+                <button onclick="searchPlayer()">Search</button>
+                <textarea name="playersearch-res" id="playersearch-res" cols="30" rows="10" style="width: 100%; height: 120px;"></textarea>
+                <script>
+                    async function searchPlayer() {
+                        const isadv = $('#playersearch-isadv').prop('checked');
+                        const history = $('#playersearch-history').prop('checked')? 'history':'current';
+                        if(!isadv) {
+                            let res = await fetch(`/api/search?param=${$('#playersearch-name').val()}&scope=${history}`).then(r=>r.json());
+                            $('#playersearch-res').val(JSON.stringify(res, null, 2));
+                        } else {
+                            let res = await fetch(`/api/advanceSearch?param=${$('#playersearch-name').val()}`, {
+                                headers: { 'x-access-token': localStorage.token? localStorage.token:'' }
+                            }).then(r=>r.json());
+                            $('#playersearch-res').val(JSON.stringify(res, null, 2));
+                        }
+                    }
+                </script>
+            </div>
+            <div class="playerlist container block">
+                <div>List</div>
+                <form style="display: inline-block;">
+                    <div>
+                        game: 
+                        <input type="radio" name="playerlist-game" id="playerlist-game1" value="all" checked="checked">All
+                        <input type="radio" name="playerlist-game" id="playerlist-game2" value="bf1">BF1
+                        <input type="radio" name="playerlist-game" id="playerlist-game3" value="bfv">BFV
+                        <span style="display: inline-block; width: 10px;"></span>
+                        sort:
+                        <input type="radio" name="playerlist-sort" id="playerlist-sort1" value="createTime" checked="checked">createTime
+                        <input type="radio" name="playerlist-sort" id="playerlist-sort2" value="updateTime">updateTime
+                        <input type="radio" name="playerlist-sort" id="playerlist-sort3" value="viewNum">viewNum
+                        <input type="radio" name="playerlist-sort" id="playerlist-sort4" value="commentsNum">commentsNum
+                    </div>
+                    <div>
+                        status:
+                        <input type="radio" name="playerlist-status" id="playerlist-status1" value="-1" checked="checked">All
+                        <input type="radio" name="playerlist-status" id="playerlist-status2" value="0">Unhandled
+                        <input type="radio" name="playerlist-status" id="playerlist-status3" value="1">Confirmed
+                        <input type="radio" name="playerlist-status" id="playerlist-status4" value="2">Suspect
+                        <input type="radio" name="playerlist-status" id="playerlist-status5" value="3">Innocent
+                        <input type="radio" name="playerlist-status" id="playerlist-status6" value="4">Trash
+                        <input type="radio" name="playerlist-status" id="playerlist-status7" value="5">Discussing
+                        <input type="radio" name="playerlist-status" id="playerlist-status8" value="6">Pending
+                    </div>
+                    <span>
+                        skip: <input type="number" name="playerlist-skip" id="playerlist-skip" value="0" step="50" style="bottom: 0;">
+                        limit: <input type="number" name="playerlist-limit" id="playerlist-limit" value="50" style="bottom: 0;">
+                    </span>
+                </form>
+                <button onclick="listPlayer()">Submit</button> <span class="list-count"></span>
+                <textarea class="list-container block" style="width: 100%;"></textarea>
+                <script>
+                    async function listPlayer() {
+                        const game = $('input[name=playerlist-game]:checked').val();
+                        const sort = $('input[name=playerlist-sort]:checked').val();
+                        const status = $('input[name=playerlist-status]:checked').val();
+                        const limit = $('#playerlist-limit').val();
+                        const skip = $('#playerlist-skip').val();
+                        let res = await fetch(`/api/players?game=${game}&status=${status}&sort=${sort}&skip=${skip}&limit=${limit}`)
+                        .then(r=>r.json());
+                        if(res.error) {
+                            $('.list-container').val(res.message);
+                            throw('Bad Response: /api/players:'+JSON.stringify(res));
+                        }
+                        $('.list-count').text(res.data.total);
+                        let str = '';
+                        for(let i in res.data.result) {
+                            let player = res.data.result[i];
+                            str += `----#${(i-0)+(skip-0)+1}-------------------------------$${player.id}------------\n`+
+                            `  ${player.originName} [${['unhandled','CONFIRMED','suspect','innocent','trash','discussing','pending'][player.status]}]`+
+                            ` Games:${player.games} CheatMethods:${player.cheatMethods} userId: ${player.originUserId} pid: ${player.originPersonaId}\n`+
+                            `  avatarLink: ${player.avatarLink}\n`+
+                            `  views: ${player.viewNum} comments: ${player.commentsNum} createWhen:${new Date(player.createTime).toLocaleString()} updateWhen:${new Date(player.updateTime).toLocaleString()}\n`;
+                        }
+                        $('.list-container').val(str);
+                    }
+                </script>
+            </div>
+            <div class="playerinfo container block">
+                <span style="padding-right: 20px;">Detail</span>
+                <form style="display: inline-block;">
+                    dbId <input type="number" name="playerinfo-dbid" id="playerinfo-dbid" style="width: 100px;">
+                    userId <input type="number" name="playerinfo-userid" id="playerinfo-userid" style="width: 200px;">
+                    personaId <input type="number" name="playerinfo-personaId" id="playerinfo-personaId" style="width: 200px;">
+                </form>
+                <button onclick="getPlayerInfo(); getPlayerTimeline()">submit</button>
+                <div class="playerprofile container block">
+                    <div>Profile</div>
+                    <textarea name="profile-container" id="profile-container" cols="30" rows="7" style="width: 100%; padding: 10px; font-size: 16px;"></textarea>
+                </div>
+                <div class="playertimeline container block">
+                    <div>
+                        <span>Timeline</span> 
+                        <form style="display: inline-block; float: right;">
+                            skip: <input type="number" name="timeline-skip" id="timeline-skip" step="10" value="0">
+                            limit: <input type="number" name="timeline-limit" id="timeline-limit" value="20">
+                        </form>
+                    </div>
+                    <div name="timeline-container" id="timeline-container" cols="30" rows="7" style="width: 100%; padding: 10px; font-size: 12px;"></div>
+                </div>
+                <div class="playerreply container block">
+                    <div>
+                        <span>Comment &nbsp;&nbsp;type:</span>
+                        <form style="display: inline-block;">
+                            <input type="radio" name="replytype" id="replytype1" value="reply" checked="checked" onclick="hideShowCommentBar()"> reply
+                            <input type="radio" name="replytype" id="replytype2" value="judgement" onclick="hideShowCommentBar()"> judgement
+                            <input type="radio" name="replytype" id="replytype3" value="ban_appeal" onclick="hideShowCommentBar()"> ban_appeal
+                        </form>
+                    </div>
+                    <form>
+                        <div class="replyto">
+                            reply to floor:<input type="text" name="replyto" id="replyto" value="0">(0 to none)
+                        </div>
+                        <div class="judgementas">
+                            judgement as:
+                            <input type="radio" name="judgementval" id="judgementval1" value="guilt"> guilty
+                            <input type="radio" name="judgementval" id="judgementval2" value="suspect"> suspect
+                            <input type="radio" name="judgementval" id="judgementval3" value="innocent"> innocent
+                            <input type="radio" name="judgementval" id="judgementval4" value="trash"> trash
+                            <input type="radio" name="judgementval" id="judgementval5" value="kill"> kill(super only)
+                            <br/>
+                            CheatMethods(xx,xx): <input type="text" name="judgementcheatMethod" id="judgementcheatMethod">
+                        </div>
+                        <div class="banappealfor">
+                            (admin)view ban appeal
+                            <input type="number" name="viewbanappealid" id="viewbanappealid"> 
+                            as:
+                            <input type="radio" name="banappealval" id="banappealval" value="open"> open
+                            <input type="radio" name="banappealval" id="banappealval2" value="close"> close
+                            <input type="radio" name="banappealval" id="banappealval3" value="lock"> lock
+                        </div>
+                    </form>
+                    <textarea name="replyinput" id="replyinput" cols="30" rows="10" style="width: 100%; padding: 10;"></textarea>
+                    <button style="width: 100%;" onclick="handleCommentSubmit()">submit</button>
+                    <script>
+                        function hideShowCommentBar() {
+                            $('#replytype1').prop('checked')? $('.replyto').show() : $('.replyto').hide();
+                            $('#replytype2').prop('checked')? $('.judgementas').show() : $('.judgementas').hide();
+                            $('#replytype3').prop('checked')? $('.banappealfor').show() : $('.banappealfor').hide();
+                        }
+                        $(document).ready(hideShowCommentBar);
+                    </script>
+                </div>
+                <script>
+                    async function getPlayerInfo() {
+                        let id = $('#playerinfo-dbid').val()? 'dbId='+$('#playerinfo-dbid').val() : 
+                                    $('#playerinfo-userid').val()? 'userId='+$('#playerinfo-userid').val() :
+                                        $('#playerinfo-personaId').val()? 'personaId='+$('#playerinfo-personaId').val() : '';
+                        let res = await fetch(`/api/player/?${id}`).then(r=>r.json());
+                        if(res.error) {
+                            $('.profile-container').text(res.message);
+                            throw('Bad Response: /api/player:'+JSON.stringify(res));
+                        }
+                        $('#playerinfo-dbid').val(res.data.id);
+                        $('#playerinfo-userid').val(res.data.originUserId);
+                        $('#playerinfo-personaId').val(res.data.originPersonaId);
+                        $('#profile-container').text(
+                            `Name: ${res.data.originName}   Status: ${['unhandled','CONFIRMED','suspect','innocent','trash'][res.data.status]}\n`+
+                            `InGames: ${res.data.games} CheatMethods: ${res.data.cheatMethods}\n`+
+                            `Avatar: ${res.data.avatarLink} Views: ${res.data.viewNum} Comments: ${res.data.commentsNum}\n`+
+                            `CreateWhen: ${new Date(res.data.createTime).toLocaleString()} UpdateWhen: ${new Date(res.data.updateTime).toLocaleString()}`
+                        );
+                    }
+                    async function getPlayerTimeline() {
+                        let id = $('#playerinfo-dbid').val()? 'dbId='+$('#playerinfo-dbid').val() : 
+                                    $('#playerinfo-userid').val()? 'userId='+$('#playerinfo-userid').val() :
+                                        $('#playerinfo-personaId').val()? 'personaId='+$('#playerinfo-personaId').val() : '';
+                        let res = await fetch(`/api/player/timeline?${id}&skip=${$('#timeline-skip').val()}&limit=${$('#timeline-limit').val()}`)
+                        .then(r=>r.json());
+                        if(res.error) {
+                            $('.timeline-container').text(res.message);
+                            throw('Bad Response: /api/player/timeline:'+JSON.stringify(res));
+                        }
+                        let content = "";
+                        for(let i in res.data) {
+                            let cmt = res.data[i];
+                            let floor = ($('#timeline-skip').val()-0)+(i-0)+1;
+                            content += `-------------#${floor}---[${cmt.type}]:${cmt.id}-At ${new Date(cmt.createTime).toLocaleString()}<br/>`+
+                            `by <strong>${cmt.username}</strong> role:<strong>${cmt.privilege}</strong>`+
+                            `${cmt.type=='judgement'? ' judged as: <strong>'+cmt.action+'</strong>':''}`+
+                            ` ${cmt.toFloor? 'reply to floor:'+cmt.toFloor:''}<br/>`+
+                            `${cmt.type=='report'? 'report in: '+cmt.game+' video: '+cmt.videoLink+' cheatMethods: '+cmt.cheatMethods+'<br/>':''}`+
+                            `    ${cmt.type=='report'? cmt.description:cmt.content}<br/>`+
+                            `<br/>`;
+                        }
+                        $('#timeline-container').html(content);
+                    }
+                    async function handleCommentSubmit() {
+                        let id = $('#playerinfo-dbid').val()-0;
+                        let type = $('input[name=replytype]:checked').val();
+                        if(type=='ban_appeal' && $('#viewbanappealid').val()!="")
+                            type = 'view_ban_appeal';
+                        switch(type) {
+                            case 'reply': {
+                                let res = await fetch('/api/player/reply', {
+                                    method: 'POST',
+                                    headers: {
+                                    'x-access-token': localStorage.token? localStorage.token:'',
+                                    'content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        data: {
+                                            toPlayerId: id,
+                                            toFloor: $('#replyto').val()!=0? $('#replyto').val()-0:null,
+                                            content: $('#replyinput').val()
+                                        }
+                                    })
+                                }).then(r=>r.json());
+                                $('#replyinput').val(JSON.stringify(res, null, 2));
+                                break;
+                            }
+                            case 'judgement': {
+                                let res = await fetch('/api/player/judgement', {
+                                    method: 'POST',
+                                    headers: {
+                                        'x-access-token': localStorage.token? localStorage.token:'',
+                                        'content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        data: {
+                                            toPlayerId: id,
+                                            cheatMethods: $('#judgementcheatMethod').val(),
+                                            action: $('input[name=judgementval]:checked').val(),
+                                            content: $('#replyinput').val()
+                                        }
+                                    })
+                                }).then(r=>r.json());
+                                $('#replyinput').val(JSON.stringify(res, null, 2));
+                                break;
+                            }
+                            case 'ban_appeal': {
+                                let res = await fetch('/api/player/banAppeal', {
+                                    method: 'POST',
+                                    headers: {
+                                        'x-access-token': localStorage.token? localStorage.token:'',
+                                        'content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        data: {
+                                            toPlayerId: id,
+                                            content: $('#replyinput').val()
+                                        }
+                                    })
+                                }).then(r=>r.json());
+                                $('#replyinput').val(JSON.stringify(res, null, 2));
+                                break;
+                            }
+                            case 'view_ban_appeal': {
+                                let res = await fetch('/api/player/viewBanAppeal', {
+                                    method: 'POST',
+                                    headers: {
+                                        'x-access-token': localStorage.token? localStorage.token:'',
+                                        'content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        data: {
+                                            id: $('#viewbanappealid').val()-0,
+                                            status: $('input[name=banappealval]:checked').val()
+                                        }
+                                    })
+                                }).then(r=>r.json());
+                                $('#replyinput').val(JSON.stringify(res, null, 2));
+                                break;
+                            }
+                        }
+                    }
+                </script>
+            </div>
+            <div class="playerreport container block">
+                <span style="padding-right: 20px;">Report</span>
+                <form>
+                    originName: <input type="text" name="playerreport-name" id="playerreport-name">
+                    game: <input type="radio" name="playerreport-game" id="playerreport-game1" value="bf1" checked="checked">BF1
+                    <input type="radio" name="playerreport-game" id="playerreport-game2" value="bfv">BFV
+                    <br/>
+                    cheatMethods(xx,xx): <input type="text" name="playerreport-cheatMethods" id="playerreport-cheatMethods">
+                    videoLink: <input type="url" name="playerreport-videoLink" id="playerreport-videoLink">
+                    <br>
+                    description: 
+                    <br/>
+                    <textarea name="playerreport-description" id="playerreport-description" cols="30" rows="10" style="width: 100%; height: 100px; padding: 10;"></textarea>
+                </form>
+                <button style="width: 100%;" onclick="handleReport()">Submit(captcha)</button>
+                <div>Response</div>
+                <textarea name="playerreport-res" id="playerreport-res" cols="30" rows="10" style="width: 100%; height: 50px;"></textarea>
+                <script>
+                    async function handleReport() {
+                        let res = await fetch('/api/player/report', {
+                            method: 'POST',
+                            headers: {
+                                'x-access-token': localStorage.token? localStorage.token:'',
+                                'content-type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: {
+                                    game: $('input[name=playerreport-game]:checked').val(),
+                                    originName: $('#playerreport-name').val(),
+                                    cheatMethods: $('#playerreport-cheatMethods').val(),
+                                    videoLink: $('#playerreport-videoLink').val(),
+                                    description: $('#playerreport-description').val()
+                                },
+                                encryptCaptcha: encryptCaptcha,
+                                captcha: $('#captcha').val(),
+                                SKIP_CAPTCHAA: $('#captcha-skip').prop('checked'),
+                            })
+                        }).then(r=>r.json());
+                        $('#playerreport-res').val(JSON.stringify(res, null, 2));
+                    }
+                </script>
+            </div>
+        </div>
+        <div class="message-container container">
+            <div style="font-size: 20px; text-align: left; padding-left: 12px;">Message</div>
+            <div class="inbox container block">
+                <div style="display: flex; flex-direction :row;">
+                    <span>Inbox:&nbsp;</span>
+                    <button style="flex-grow: 1;" onclick="getMessage()">Get</button>
+                </div>
+                <div>&nbsp;&nbsp; toPerson:</div>
+                <textarea name="messgae-toperson" id="messgae-toperson" cols="30" rows="10" style="width: 100%;"></textarea>
+                <div>&nbsp;&nbsp; announcement:</div>
+                <textarea name="messgae-announce" id="messgae-announce" cols="30" rows="10" style="width: 100%;"></textarea>
+            </div>
+            <script>
+                async function getMessage() {
+                    let res = await fetch('/api/message?box=in&limit=100', {
+                        headers: {
+                            'x-access-token': localStorage.token? localStorage.token:'',
+                            'content-type': 'application/json'
+                        },
+                    }).then(r=>r.json());
+                    if(res.error) {
+                        $('#messgae-toperson').val(JSON.stringify(res, null, 2));
+                        throw('/api/message get Bad response: '+JSON.stringify(res));
+                    }
+                    let str = ""
+                    for(let i of res.data.messages) {
+                        str += `[${i.type}]${new Date(i.createTime).toLocaleString()} #${i.id} by:${i.byUserId}\n`+
+                        `  ${i.content}\n`;
+                    }
+                    $('#messgae-toperson').val(str);
+
+
+                    let subres = await fetch('/api/message?box=announce&limit=100', {
+                        headers: {
+                            'x-access-token': localStorage.token? localStorage.token:'',
+                            'content-type': 'application/json'
+                        },
+                    }).then(r=>r.json());
+                    if(subres.error) {
+                        $('#messgae-announce').val(JSON.stringify(subres, null, 2));
+                        throw('/api/message get Bad response: '+JSON.stringify(subres));
+                    }
+                    let substr = ""
+                    for(let i of subres.data.messages) {
+                        substr += `[${i.type}]${new Date(i.createTime).toLocaleString()} #${i.id} by:${i.byUserId}\n`+
+                        `  ${i.content}\n`;
+                    }
+                    $('#messgae-announce').val(substr);
+                }
+            </script>
+            <div class="outbox container block">
+                <div>Send</div>
+                <form>
+                    to: <input type="number" name="outbox-to" id="outbox-to"> <br/>
+                    type:
+                    <input type="radio" name="outbox-type" id="outbox-type1" value="direct" checked="checked">DM
+                    <input type="radio" name="outbox-type" id="outbox-type2" value="warn">Warn
+                    <input type="radio" name="outbox-type" id="outbox-type3" value="fatal">Fatal
+                    <input type="radio" name="outbox-type" id="outbox-type4" value="toAll">ToAll
+                    <input type="radio" name="outbox-type" id="outbox-type5" value="command">Cmd
+                    <textarea name="outbox-content" id="outbox-content" cols="30" rows="10" style="width: 100%;"></textarea>
+                </form>
+                <button onclick="sendMessage()">submit</button>
+                <script>
+                    async function sendMessage() {
+                        let res = await fetch('/api/message', {
+                            method: 'POST',
+                            headers: {
+                                'x-access-token': localStorage.token? localStorage.token:'',
+                                'content-type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: {
+                                    toUserId: $('#outbox-to').val()-0,
+                                    type: $('input[name=outbox-type]:checked').val(),
+                                    content: $('#outbox-content').val()
+                                }
+                            })
+                        }).then(r=>r.json());
+                        $('#outbox-content').val(JSON.stringify(res, null, 2));
+                    }
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

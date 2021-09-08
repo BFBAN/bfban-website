@@ -1,134 +1,228 @@
 <template>
   <div class="container">
-    <div class="content">
-      <p class="hint">我们还没有 消息系统，但可以在下方举报的状态 来得知进度</p>
-      <p class="hint">所有举报都可以 回复参与讨论</p>
-      <p class="hint">若要补充证据，可以重复举报同一ID</p>
+    <br>
+    <Breadcrumb>
+      <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+      <BreadcrumbItem>{{ $t("account.title") }}</BreadcrumbItem>
+    </Breadcrumb>
+    <br>
 
-      <div v-if="account">
-        <Divider>用户中心</Divider>
-        <h2>个人信息</h2>
-        <p>
-          用户名：
-          {{account.username}}
-        </p>
-        <p>
-          身份：
-          <Tag v-if="account.privilege === 'admin'" color="success">
-            管理员
-          </Tag>
-          <Tag v-if="account.privilege === 'normal'">
-            普通
-          </Tag>
-        </p>
-        <p>
-          加入日期：
-          <Tag color="primary">
-            <Time v-if="account.createDatetime" :time="account.createDatetime" />
-          </Tag>
-        </p>
-
+    <Row type="flex" justify="center" align="middle">
+      <Col justify="center" align="middle">
         <br>
-        <h2>个人举报</h2>
-        <p v-if="account.reports.length === 0">
-          还没有任何举报
-        </p>
-        <table>
-          <tbody>
-          <tr v-for="report in account.reports" :key="report.id">
-            <td>
-            <span>
-          <Tag color="primary">
-            <Time v-if="report.createDatetime" :time="report.createDatetime" />
-          </Tag>
-        </span>
-            </td>
-            <td>
-        <span>
-          举报了
-          <router-link :to="{name: 'cheater', params: {ouid: `${report.originUserId}`}}">
-            <Tag>
-              {{ report.game }}
+        <Avatar shape="square" style="background-color: yellow" size="150">{{ account.username[0] || '' }}</Avatar>
+        <br>
+
+        <h1 :title="$t('account.username')">
+          <!--          {{ $t("account.userInfo") }}-->
+          {{ account.username || 'username' }}
+        </h1>
+
+        <p>
+          {{ $t("account.role") }}
+          <span v-for="(i,index) in privileges" :key="index">
+            <Tag type="dot" v-if="account.privilege == i.value"
+                 color="success">
+              {{ $t("account." + i.value) }}
             </Tag>
-            {{report.originId}}
-          </router-link>
-        </span>
-            </td>
-            <td>
-        <span>
-          状态
-          <Tag color="error">
-            {{ handleStatus(report.status) }}
+          </span>
+          <!--          <Tag type="dot" v-if="account.privilege === 'admin'" color="success">-->
+          <!--            {{ $t("account.admin") }}-->
+          <!--          </Tag>-->
+          <!--          <Tag type="dot" v-if="account.privilege === 'super'" color="error">-->
+          <!--            {{ $t("account.super") }}-->
+          <!--          </Tag>-->
+          <!--          <Tag type="dot" v-if="account.privilege === 'normal'">-->
+          <!--            {{ $t("account.normal") }}-->
+          <!--          </Tag>-->
+          <Divider type="vertical"/>
+          {{ $t("account.joinedAt") }}
+          <Tag type="dot" color="primary">
+            <Time v-if="account.joinTime" :time="account.joinTime  || new Date()"/>
           </Tag>
-        </span>
-            </td>
-            <td>
-        <span>
-          最近更新
-          <Tag color="warning">
-            <Time v-if="report.updateDatetime" :time="report.updateDatetime" />
-            <span v-else>无</span>
+          <Divider type="vertical"/>
+          {{ $t("account.lastOnlineTime") }}
+          <Tag type="dot" color="success">
+            <Time v-if="account.lastOnlineTime" :time="account.lastOnlineTime  || new Date()"/>
           </Tag>
-        </span>
-            </td>
-          </tr>
-          </tbody>
+        </p>
+      </Col>
+    </Row>
 
-        </table>
-        <Page :page-size="limit" show-total :current="page" @on-change="handlePageChange" :total="total" class="page" size="small" />
-      </div>
-      <div v-else>404</div>
+    <Divider></Divider>
+
+    <div class="content">
+      <Row :gutter="8" type="flex">
+        <Col span="7" order="2">
+          <Card v-if="account.introduction" dis-shadow>
+            <div v-html="account.introduction"></div>
+          </Card>
+          <br v-if="account.introduction">
+
+          <Card v-if="account.origin && account.origin.originName" dis-shadow>
+            <b>origin id:</b>
+            <p>{{account.origin.originName}}</p>
+          </Card>
+          <br v-if="account.origin && account.origin.originName">
+
+          <Card title="其他" icon="ios-options" :padding="0" shadow>
+            <CellGroup>
+              <Cell title="荣耀" label="查看在BFBAN成就"/>
+            </CellGroup>
+          </Card>
+
+          <br>
+          <p class="hint">{{ $t("account.hint1") }}</p>
+          <p class="hint">{{ $t("account.hint2") }}</p>
+          <p class="hint">{{ $t("account.hint3") }}</p>
+        </Col>
+        <Col span="17" order="1">
+          <Card dis-hover>
+            <Tabs value="tag1">
+              <TabPane :label="$t('account.reports')" name="tag1">
+                <div v-if="account">
+                  <!--                  <p v-if="account.reports.length <= 0" align="center">-->
+                  <!--                    <Alert type="warning" show-icon>-->
+                  <!--                      {{$t('account.noReports')}}-->
+                  <!--                    </Alert>-->
+                  <!--                  </p>-->
+
+                  <table>
+                    <tbody>
+                    <tr v-for="report in account.reports" :key="report.id">
+                      <td>
+                      <span>
+                        <Tag color="primary">
+                            <Time
+                                v-if="report.createDatetime"
+                                :time="report.createDatetime"
+                            />
+                        </Tag>
+                      </span>
+                      </td>
+                      <td>
+                      <span>
+                          {{ $t("account.reported") }}
+                          <router-link
+                              :to="{
+                                  name: 'cheater',
+                                  params: {
+                                      ouid: `${report.originUserId}`,
+                                  },
+                              }">
+                              <Tag>
+                                  {{ report.game }}
+                              </Tag>
+                              {{ report.originId }}
+                          </router-link>
+                      </span>
+                      </td>
+                      <td>
+                      <span>
+                        {{ $t("account.status") }}
+                        <Tag color="error">
+                          {{ $t(`basic.status[${report.status}]`) }}
+                        </Tag>
+                      </span>
+                      </td>
+                      <td>
+                      <span>
+                        {{ $t("account.recentlyUpdated") }}
+                        <Tag color="warning">
+                          <Time
+                              v-if="report.updateDatetime"
+                              :time="report.updateDatetime"/>
+                          <span v-else>无</span>
+                        </Tag>
+                      </span>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+
+                  <br>
+
+                  <Page
+                      :page-size="limit"
+                      show-total
+                      :current="page"
+                      @on-change="handlePageChange"
+                      :total="total"
+                      class="page"
+                      size="small"
+                  />
+                </div>
+                <div v-else>404</div>
+              </TabPane>
+              <br>
+              <Button size="small" slot="extra">
+                <!--                {{account.reports.length || 0}}-->
+              </Button>
+            </Tabs>
+          </Card>
+        </Col>
+      </Row>
     </div>
+    <br>
   </div>
-
 </template>
 
 <script>
-  import { getCheaterStatusLabel } from '@/mixins/common';
-  import ajax from '@/mixins/ajax';
+import {http, api, conf} from '../assets/js/index'
+import ajax from "@/mixins/ajax";
 
-  export default {
-    data() {
-      return {
-        account: {
-          username: '',
-          originId: '',
-          privilege: '',
-          createDatetime: '',
-
-          reports: [],
-        }
-      }
-    },
-    watch: {
-      '$route': 'loadData',
-    },
-    created() {
-      this.loadData();
-    },
-    methods: {
-      loadData() {
-        const { uId } = this.$route.params;
-        ajax({
-          method: 'get',
-          url: `/account/${uId}`,
-        })
-        .then((res) => {
-          const d = res.data;
-
-          if (d.error === 0) {
-            this.account = d.data;
-            let { reports } = d.data;
-            this.account.reports = reports;
-          } else {
-            this.account = '';
-            this.$Message.warning(d.msg);
-          }
-        });
+export default {
+  data() {
+    return {
+      privileges: [],
+      account: {
+        username: "",
+        originId: "",
+        privilege: "",
+        createDatetime: "",
+        reports: [],
       },
-      handleStatus: getCheaterStatusLabel,
+      limit: 10,
+      page: 0,
+      total: 100
+    };
+  },
+  watch: {
+    $route: "loadData",
+  },
+  created() {
+    this.loadData();
+  },
+  methods: {
+    async loadData() {
+      const {uId} = this.$route.params;
+
+      const privileges = await import('/src/assets/privilege.json');
+      this.privileges = this.privileges.concat(privileges.child)
+
+      http.get(api["user_info"], {
+        params: {
+          id: uId
+        }
+      }).then((res) => {
+        const d = res.data;
+        if (d.success === 1) {
+
+          this.account = d.data;
+          // let {reports} = d.data;
+          // this.account.reports = reports;
+
+        } else {
+          this.account = "";
+          this.$Message.warning(d.msg);
+        }
+      });
+    },
+    handlePageChange(e) {
+      console.log(e)
     }
-  }
+  },
+};
 </script>
 
 <style lang="scss">

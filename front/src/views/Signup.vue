@@ -1,119 +1,199 @@
 <template>
   <div class="container">
+    <br>
     <div class="content">
-      <Form :label-width="80" style="position: relative;">
-        <Divider>{{$t("signup.title")}}</Divider>
+      <Row>
+        <Col span="24">
+          <Card shadow>
+            <p slot="title">{{ $t("signup.title") }}</p>
 
-        <FormItem :label="$t('signup.form.username')">
-          <Input v-model="signup.username" placeholder="4位以上用户名" />
-        </FormItem>
+            <Steps :current="stepsIndex">
+              <Step title="基础信息" content="账户基本"></Step>
+              <Step title="绑定" content="关联橘子平台"></Step>
+              <Step title="验证码" content="验证是否机器人"></Step>
+              <Step title="确认" content="邮箱验证码"></Step>
+            </Steps>
 
-        <FormItem :label="$t('signup.form.password')">
-          <Input type="password" v-model="signup.password" placeholder="6位以上密码" />
-        </FormItem>
+            <Divider></Divider>
 
-        <FormItem :label="$t('signup.form.originId')">
-          <Input v-model="signup.originId" placeholder="选题" />
-        </FormItem>
+            <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
+              <div v-if="stepsIndex == 0">
+                <FormItem :label="$t('signup.form.username')" prop="username">
+                  <Input v-model="signup.username" size="large" placeholder="4位以上用户名"/>
+                </FormItem>
+                <FormItem :label="$t('signup.form.password')" prop="password">
+                  <Input type="password" password v-model="signup.password" size="large" placeholder="6位以上密码"/>
+                </FormItem>
+              </div>
 
-        <FormItem :label="$t('signup.form.qq')">
-          <Input v-model="signup.qq" placeholder="选填" />
-        </FormItem>
+              <div v-if="stepsIndex == 1">
+                <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
+                  <Input v-model="signup.originEmail" size="large" placeholder="origin email"/>
+                </FormItem>
+                <FormItem :label="$t('signup.form.originName')" prop="originName">
+                  <Input v-model="signup.originName" size="large" placeholder="orign name"/>
+                </FormItem>
+              </div>
 
-        <FormItem :label="$t('signup.form.captcha')">
-          <Input type="text" v-model="signup.captcha" :placeholder="$t('signup.form.captcha')" />
-          <img ref="captcha">
-          <a ref="reCaptcha" href="#" @click.stop.prevent="refreshCaptcha">
-            {{$t('signup.form.getCaptcha')}}
-          </a>
-        </FormItem>
+              <div v-show="stepsIndex == 2">
+                <FormItem :label="$t('signup.form.captcha')">
+                  <Input type="text" v-model="signup.captcha" size="large"
+                         :placeholder="$t('signup.form.captcha')"></Input>
+                  <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                    <div v-html="captchaUrl.content"></div>
+                  </div>
+                </FormItem>
+              </div>
 
-        <FormItem>
-          <Button @click.prevent.stop="handleSignup" type="primary">{{$t('signup.form.submit')}}</Button>
+              <div v-if="stepsIndex == 3">
+                <EmailTip :email="signup.originEmail"></EmailTip>
+              </div>
 
-          <router-link :to="{name: 'signin'}">{{$t('signup.form.submitHint')}}</router-link>
-        </FormItem>
+              <Row>
+                <Col span="12">
+                  <Button v-if="stepsIndex >=0 && stepsIndex <= 2" :disabled="stepsIndex == 0 "
+                          @click.prevent.stop="stepsIndex--" size="large">{{ $t('signup.prev') }}
+                  </Button>
+                  <Divider type="vertical"/>
+                  <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2" @click.prevent.stop="stepsIndex++" size="large"
+                          type="primary">{{ $t('signup.next') }}
+                  </Button>
+                </Col>
+                <Col span="12" align="right" type="flex">
+                  <Button v-if="stepsIndex == 2" long @click.prevent.stop="handleSignup('formValidate')" :loading="spinShow"
+                          size="large" type="primary">{{ $t('signup.form.submit') }}
+                  </Button>
+                </Col>
+              </Row>
 
-        <Spin size="large" fix v-show="spinShow"></Spin>
-      </Form>
+              <Divider>
+                <router-link :to="{name: 'signin'}">{{ $t('signup.form.submitHint') }}</router-link>
+                <Divider type="vertical"/>
+                <router-link :to="{name: 'forgetPassword'}">{{ $t('signup.form.forgetPasswordHint') }}</router-link>
+              </Divider>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
     </div>
+    <br>
   </div>
-
 </template>
 
 <script>
-import { testWhitespace, getCsrfToken, waitForAction } from '@/mixins/common';
-import ajax, { baseURL } from "@/mixins/ajax";
+import {http, api, conf} from '../assets/js/index'
+import {testWhitespace, waitForAction} from "@/mixins/common";
+import EmailTip from "../components/EmailTip";
+import _ from "lodash";
 
 export default {
   data() {
     return {
+      stepsIndex: 0,
+      ruleValidate: {
+        username: [
+          {required: true, trigger: 'blur'}
+        ],
+        password: [
+          {required: true, trigger: 'blur'}
+        ],
+        originEmail: [
+          {required: true, trigger: 'blur'}
+        ],
+        originName: [
+          {required: true, trigger: 'blur'}
+        ],
+      },
       signup: {
         username: '',
         password: '',
-        originId: '',
-        qq: '',
+        originEmail: '',
+        originName: '',
         captcha: '',
       },
+      captchaUrl: {},
       spinShow: false,
     }
   },
+  components: {EmailTip},
+  created() {
+    this.refreshCaptcha();
+  },
   methods: {
-    refreshCaptcha: function() {
-      this.$refs.captcha.src = baseURL + '/captcha?r=' + Math.random();
-
-      waitForAction.call(this.$refs.reCaptcha);
-    },
-    handleSignup: function() {
-      let {username, password, originId, qq, captcha} = _.each(this.signup, (v, k, o) => {
-        o[k] = v.trim();
+    refreshCaptcha: function () {
+      http.get(api["captcha"], {
+        params: {
+          r: Math.random()
+        }
+      }).then(res => {
+        if (res.data.success === 1) {
+          this.captchaUrl = res.data.data;
+        }
       });
+      // waitForAction.call(this.$refs.reCaptcha);
+    },
+    handleSignup: function (name) {
+      const that = this;
 
-      if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
-        this.spinShow = true;
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          let {username, password, originEmail, originName, captcha} = _.each(this.signup, (v, k, o) => {
+            o[k] = v.trim();
+          });
 
-        ajax({
-          method: 'post',
-          url: '/account/signup',
-          headers: {
-            // 'x-csrf-token': getCsrfToken(),
-            // 'x-encrypt-captcha': Cookies.get('encryptCaptcha'),
-          },
-          data: {
-            username,
-            password,
-            captcha,
-            originId,
-            qq,
-          }
-        })
-        .then((res) => {
-          this.spinShow = false;
+          if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
+            this.spinShow = true;
 
-          const d = res.data;
-          if (d.error === 1) {
-            this.$Message.error('注册失败 ' + d.msg);
+            http.post(api["account_signup"], {
+              data: {
+                data: {
+                  username,
+                  password,
+                  originEmail,	// must match the originName below
+                  originName	// must have one of bf series game
+                },
+                encryptCaptcha: this.captchaUrl.hash,
+                captcha
+              }
+            }).finally(() => {
+              that.registerVerify(this.captchaUrl.hash);
+              this.stepsIndex += 1;
+              this.spinShow = false;
+            })
 
-            this.signup.password = '';
-            this.signup.captcha = '';
-            this.refreshCaptcha();
           } else {
-            // dispatch 异步的
-            this.$store.dispatch('signin', d.data)
+            this.$Message.error('请规范填写');
+          }
+        } else {
+          this.$Message.error('Fail!');
+        }
+      })
+    },
+    registerVerify (code) {
+      // 验证账户
+      http.get(api["account_signupVerify"], {
+        params: {code}
+      }).then((res) => {
+        const d = res.data;
+
+        if (d.success === 1) {
+          // dispatch 异步的
+          this.$store.dispatch('signin', d.data)
             .then(() => {
               // redirect
               this.$router.push('/')
             })
-          }
-        })
-      } else {
-        this.$Message.error('请规范填写');
-      }
+        } else {
+          this.$Message.error('注册失败 ' + d.msg);
+
+          this.signup.password = '';
+          this.signup.captcha = '';
+          this.refreshCaptcha();
+        }
+      })
     }
-  }
+  },
 }
 </script>
 
-<style>
-</style>
-
+<style></style>

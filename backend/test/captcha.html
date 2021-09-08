@@ -1,0 +1,18 @@
+<html>
+    <script>
+        function getcap() {
+            fetch('/api/captcha').then(res=> {
+                console.log(res)
+                res.json().then(obj=> {
+                    document.querySelector('#secret').textContent = obj.data.hash;
+                    document.querySelector('#svgcon').outerHTML = obj.data.content;
+                });
+            });
+        }
+        document.onreadystatechange = getcap;
+    </script>
+    <body>
+        <div id="secret" style="font-size: 36px;"></div>
+        <svg id="svgcon"></svg>
+    </body>
+</html>

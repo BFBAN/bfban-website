@@ -1,36 +1,44 @@
 <template>
   <div class="container">
     <div class="content">
-      <Form :label-width="80" style="position: relative;">
-        <Divider>{{$t("reset.title")}}</Divider>
+      <br>
+      <Breadcrumb>
+        <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+        <BreadcrumbItem>{{ $t("reset.title") }}</BreadcrumbItem>
+      </Breadcrumb>
+      <br>
 
-        <FormItem :label="$t('reset.form.qq')">
-          <Input type="text" v-model="reset.qq" :placeholder="$t('reset.form.qq')" />
-        </FormItem>
+      <Card dis-hover>
+        <Form :label-width="80">
+          <FormItem :label="$t('reset.form.qq')">
+            <Input type="text" v-model="reset.qq" :placeholder="$t('reset.form.qq')"/>
+          </FormItem>
 
-        <FormItem :label="$t('reset.form.password')">
-          <Input type="password" v-model="reset.password" :placeholder="$t('reset.form.password')" />
-        </FormItem>
+          <FormItem :label="$t('reset.form.password')">
+            <Input type="password" v-model="reset.password" :placeholder="$t('reset.form.password')"/>
+          </FormItem>
 
-        <FormItem :label="$t('reset.form.passwordRepeat')">
-          <Input type="password" v-model="reset.passwordRepeat" :placeholder="$t('reset.form.passwordRepeat')" />
-        </FormItem>
+          <FormItem :label="$t('reset.form.passwordRepeat')">
+            <Input type="password" v-model="reset.passwordRepeat" :placeholder="$t('reset.form.passwordRepeat')"/>
+          </FormItem>
 
-        <FormItem>
-          <Button @click.prevent.stop="handleReset" type="primary">{{$t('reset.form.submit')}}</Button>
-        </FormItem>
+          <FormItem>
+            <Button @click.prevent.stop="handleReset" type="primary">{{ $t('reset.form.submit') }}</Button>
+          </FormItem>
 
-        <Spin size="large" fix v-show="spinShow"></Spin>
-      </Form>
+          <Spin size="large" fix v-show="spinShow"></Spin>
+        </Form>
+      </Card>
     </div>
   </div>
 
 </template>
 
 <script>
-import { getCsrfToken, waitForAction } from '@/mixins/common';
-import ajax, { baseURL } from "@/mixins/ajax";
-const { mapActions, mapMutations } = Vuex;
+import {http, api, http_token} from '../assets/js/index'
+import { waitForAction} from '@/mixins/common';
+
+const {mapActions, mapMutations} = Vuex;
 
 export default {
   data() {
@@ -43,7 +51,8 @@ export default {
       spinShow: false,
     }
   },
-  beforeMount() {
+  created() {
+    this.http = http_token.call(this);
   },
   methods: {
     handleReset() {
@@ -51,22 +60,16 @@ export default {
         o[k] = v.trim();
       });
 
-      const { token } = this.$route.query
+      const {token} = this.$route.query
 
       if (qq && password && passwordRepeat && password === passwordRepeat) {
         this.spinShow = true;
 
-        ajax({
-          method: 'post',
-          url: '/account/reset',
+        this.http.post(api["player_reset"], {
           data: {
-            qq,
-            token,
-            password,
-            passwordRepeat,
+            qq, token, password, passwordRepeat,
           },
-        })
-        .then((res) => {
+        }).then((res) => {
           this.spinShow = false;
 
           const d = res.data;
@@ -89,4 +92,3 @@ export default {
 
 <style>
 </style>
-

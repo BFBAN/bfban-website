@@ -1,0 +1,57 @@
+"use strict";
+import fs from "fs";
+import path from "path";
+
+const config = {
+    // security
+    secret: 'dontTellAnyOneAboutThis',
+    captchaExpiresIn: 1000*60*20,
+    errorHelperVerbose: process.env.NODE_ENV==='production'? false : true,
+    // runtime
+    port: process.env.port || 4002,
+    address: true? '127.0.0.1' : '0.0.0.0',
+    baseDir: path.resolve('./'),
+    behindProxy: 0,
+    // database
+    mysql: {
+        host: '127.0.0.1',
+        port: 3306,
+        user: 'notroot',
+        password: 'weakpasswd',
+        database: 'bfban_2.0'
+    },
+    // using cloudflare?
+    cloudflare: true,
+    // github
+    github: {
+
+    },
+	  webhook: {
+        senderUrl: '',	// use cloudflare worker to proxy webhook request
+        token: '',		// token it use
+    },
+    mail: {
+        host: 'smtp.somewhere.com',
+        port: 465,
+        secure: true,
+        user: 'somebody@somewhere.com',
+        password: 'notweakpassword'
+    },
+
+    // DYNAMIC CONFIGURE BEGIN
+    // to [https://accounts.ea.com/connect], get Cookie, key: remid and sid
+    personsToConfirm: 2,
+    originAccounts: [
+        {
+            tag: 'whatever you want',
+            remid:'remid',
+            sid:'sid'
+        },
+    ],
+    supportGames: [ 'bf1', 'bfv' ],
+    possiblecheatMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet',
+    'damageChange', 'gadgetModify', 'teleport', 'attackServer'],
+    // DYNAMIC CONFIGURE END
+}
+
+export default config;

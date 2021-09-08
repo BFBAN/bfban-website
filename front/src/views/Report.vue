@@ -1,200 +1,400 @@
 <template>
   <div class="container">
     <div class="content">
-      <Form :label-width="80" style="position: relative;">
-	  <!--举报作弊-->
-        <Divider>{{ $t('report.info.reportHacker', { msg: 'reportHacker' })}}</Divider>
+      <br>
+      <Breadcrumb>
+        <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+        <BreadcrumbItem>{{ $t("report.info.reportHacker", {msg: "reportHacker"}) }}</BreadcrumbItem>
+      </Breadcrumb>
+      <br>
 
-        <FormItem label="Game">
-          <span class="hint">{{ $t('report.info.reportNews', { msg: 'reportNews' })}}</span>
-          <RadioGroup v-model="formItem.gameName" type="button">
-            <Radio label="bf1"><span>{{ $t('report.info.bf1', { msg: 'bf1' })}}</span></Radio>
-            <Radio label="bfv"><span>{{ $t('report.info.bfv', { msg: 'bfv' })}}</span></Radio>
-          </RadioGroup>
-        </FormItem>
+      <Tabs type="card" v-model="tabs.count">
+        <TabPane v-for="(tab, index) in tabs.list.length" :key="tab"
+                 :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : '举报标签' + tab) + '[' + tabs.list[index].formItem.gameName + ']'">
+          <Card shadow style="margin-top: -16px">
+            <Form :label-width="80" label-position="left">
+              <!--举报作弊-->
+              <div
+                class="notFoundHint"
+                id="notFoundHint"
+                v-show="failedOfNotFound">
+                <p style="font-size: 14px; font-weight: bold">
+                  {{ $t("report.info.notFoundHintTitle") }}
+                </p>
+                <p style="font-size: 14px; margin-left: 10px">
+                  {{ $t("report.info.notFoundHintQuestion1") }}
+                </p>
+                <p style="font-size: 12px; margin-left: 20px">
+                  {{ $t("report.info.notFoundHintAnswer1") }}
+                </p>
+                <p style="font-size: 14px; margin-left: 10px">
+                  {{ $t("report.info.notFoundHintQuestion2") }}
+                </p>
+                <p style="font-size: 12px; margin-left: 20px">
+                  {{ $t("report.info.notFoundHintAnswer2") }}
+                </p>
+              </div>
 
+              <Timeline>
+                <TimelineItem>
+                  <Card dis-hover>
+                    <!-- 游戏类型 S -->
+                    <FormItem :label="$t('report.labels.game')">
+                      <RadioGroup
+                        size="large"
+                        class="game-type"
+                        v-model="tabs.list[index].formItem.gameName"
+                        type="button">
+                        <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" :style="'background-image: url(' + i.bk_src + ')'">
+                          <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
+                            <img height="25" :src="i.logo_src" v-if="i.logo_src" />
+                            <span v-else>{{i.full_name}}</span>
+                          </Tooltip>
+                        </Radio>
+                      </RadioGroup>
+                      <span class="hint">{{ $t("report.info.reportNews", {msg: "reportNews"}) }}</span>
+                    </FormItem>
+                    <!-- 游戏类型 E -->
 
-        <FormItem label="Hacker's ID">
-          <span class="hint">{{ $t('report.info.idNotion1', { msg: 'idNotion1' })}}</span>
-          <span class="hint">{{ $t('report.info.idNotion2', { msg: 'idNotion2' })}}</span>
-          <p style="font-size: 2rem;">{{ formItem.originId }}</p>
-          <Input v-model="formItem.originId" placeholder="only one Origin ID in one time" />
-        </FormItem>
+                    <FormItem :label="$t('report.labels.hackerId')">
+                      <p style="font-size: 2rem">{{ tabs.list[index].formItem.originId }}</p>
+                      <Input
+                        v-model="tabs.list[index].formItem.originId"
+                        size="large"
+                        :placeholder="$t('report.info.onlyOneId')"/>
+                      <span class="hint">
+                      {{ $t("report.info.idNotion1", {msg: "idNotion1"}) }}
+                    </span>
+                      <span class="hint">
+                      {{ $t("report.info.idNotion2", {msg: "idNotion2"}) }}
+                    </span>
+                    </FormItem>
 
-        <FormItem label="CheatMethod">
-          <CheckboxGroup v-model="formItem.checkbox">
-            <Checkbox v-for="method in cheatMethodsGlossary" :key="method.value" :label="method.value">
-              {{$t(`cheatMethods.${method.value}`)}}
-            </Checkbox>
-          </CheckboxGroup>
-        </FormItem>
+                    <FormItem :label="$t('report.labels.cheatMethod')">
+                      <CheckboxGroup v-model="tabs.list[index].formItem.checkbox">
+                        <Checkbox
+                          style="margin-bottom: 10px"
+                          size="large"
+                          border
+                          v-for="method in cheatMethodsGlossary"
+                          :indeterminate="false"
+                          :key="method.value"
+                          :label="method.value">
+                          <Tag color="primary">{{ $t(`cheatMethods.${method.value}.title`) }}</Tag>
+                          <Divider type="vertical"/>
+                          <span>{{ $t(`cheatMethods.${method.value}.describe`) }}</span>
+                        </Checkbox>
+                      </CheckboxGroup>
+                    </FormItem>
+                  </Card>
+                </TimelineItem>
+                <TimelineItem>
+                  <Card dis-hover>
+                    <FormItem :label="$t('detail.info.videoLink')">
+                      <Alert type="warning">
+                        {{
+                          $t("report.info.uploadManual1", {
+                            msg: "uploadManual1",
+                          })
+                        }}
+                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
+                          $t("report.info.uploadManual2", {
+                            msg: "uploadManual2",
+                          })
+                        }}
+                      </Alert>
+                      <span class="hint">
+                      {{
+                          $t("report.info.uploadManual3", {
+                            msg: "uploadManual3",
+                          })
+                        }}
+                    </span>
+                      <Input
+                        v-model="tabs.list[index].formItem.bilibiliLink"
+                        :placeholder="$t('report.info.required')"/>
+                    </FormItem>
 
-        <FormItem label="VideoLink">
-          <Alert type="warning">
-            {{ $t('report.info.uploadManual1', { msg: 'uploadManual1' })}} <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{ $t('report.info.uploadManual2', { msg: 'uploadManual2' })}}
-          </Alert>
-          <span class="hint">{{ $t('report.info.uploadManual3', { msg: 'uploadManual3' })}}</span>
-          <Input v-model="formItem.bilibiliLink" placeholder="Essential" />
-        </FormItem>
+                    <FormItem :label="$t('report.labels.description')">
+                      <Alert type="warning">
+                        {{ $t("report.info.uploadPic1", {msg: "uploadPic1"}) }}
+                      </Alert>
+                      <Alert type="warning">
+                        {{ $t("report.info.uploadPic2", {msg: "uploadPic2"}) }}
+                        <a target="_blank"
+                           href="https://sm.ms">https://sm.ms</a>，{{
+                          $t("report.info.uploadPic3", {msg: "uploadPic3"})
+                        }}
+                      </Alert>
+                      <span class="hint">
+                        {{ $t("report.info.uploadPic4", {msg: "uploadPic4"}) }}
+                      </span>
+                      <Edit :index="index" :content="$t('report.info.description')" @change="handleMiscChange"/>
+                    </FormItem>
+                  </Card>
+                </TimelineItem>
+                <TimelineItem>
+                  <Card dis-hover>
+                    <FormItem :label="$t('report.info.captcha')">
+                      <Input
+                        type="text"
+                        v-model="tabs.list[index].formItem.captcha"
+                        :placeholder="$t('report.info.captcha')"/>
+                      <div v-html="tabs.list[index].captchaUrl.content"></div>
+                      <a
+                        ref="reCaptcha"
+                        href="#"
+                        @click.stop.prevent="refreshCaptcha(index)">
+                        {{
+                          $t("report.info.getCaptcha", {msg: "getCaptcha"})
+                        }}
+                      </a>
+                    </FormItem>
 
-        <FormItem label="Discription">
-          <Alert type="warning">
-            {{ $t('report.info.uploadPic1', { msg: 'uploadPic1' })}}
-          </Alert>
-          <Alert type="warning">
-            {{ $t('report.info.uploadPic2', { msg: 'uploadPic2' })}}<a target="_blank" href="https://sm.ms">https://sm.ms</a>，{{ $t('report.info.uploadPic3', { msg: 'uploadPic3' })}}
-          </Alert>
-          <span class="hint">{{ $t('report.info.uploadPic4', { msg: 'uploadPic4' })}}</span>
-          <!-- <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..." /> -->
-          <Misc :content="formItem.description" @change="handleMiscChange" />
-        </FormItem>
+                    <FormItem>
+                      <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel">
+                        {{ $t("report.info.cancel", {msg: "cancel"}) }}
+                      </Button>
+                      <Divider type="vertical"/>
+                      <Button @click="doReport(index)" type="primary" size="large">
+                        {{ $t("report.info.reportOne", {msg: "report"}) }}
+                      </Button>
+                    </FormItem>
+                  </Card>
+                </TimelineItem>
+              </Timeline>
 
-        <FormItem label="验证码">
-          <Input type="text" v-model="formItem.captcha" placeholder="Captcha" />
-          <img ref="captcha">
-          <a ref="reCaptcha" href="#" @click.stop.prevent="refreshCaptcha">
-            {{ $t('report.info.getCaptcha', { msg: 'getCaptcha' })}}
-          </a>
-        </FormItem>
+              <Button @click="doReport" type="primary" size="large">
+                {{ $t("report.info.reportAll", {msg: "report"}) }}
+              </Button>
 
-        <FormItem>
-          <Button @click="doReport" type="primary">{{ $t('report.info.report', { msg: 'report' })}}</Button>
-        </FormItem>
-
-        <Spin size="large" fix v-show="spinShow"></Spin>
-      </Form>
+              <Spin size="large" fix v-show="spinShow"></Spin>
+            </Form>
+          </Card>
+        </TabPane>
+        <Button @click="handleTabsAdd" size="small" slot="extra">+</Button>
+      </Tabs>
     </div>
+    <br>
   </div>
 </template>
 
 <script>
-  import Misc from '@/components/Misc.vue';
-  import {
-    checkIdExist,
-    checkReportFormData,
-    trimAllWhitespace,
-    getCsrfToken,
-    cheatMethodsGlossary,
-    waitForAction
-  } from "@/mixins/common";
-  import ajax, { baseURL } from "@/mixins/ajax";
+import {http, api, http_token} from '../assets/js/index'
+import Edit from "@/components/Edit.vue";
+import {
+  checkReportFormData,
+  trimAllWhitespace,
+  common,
+} from "@/mixins/common";
 
-  export default {
-    data() {
-       return {
-          formItem: {
-            gameName: '',
-            originId: '',
-            bilibiliLink: '',
-            checkbox: ['aimbot'],
-            description: '尽可能详细的列举被举报人的作弊证据,write and show your opinion',
-            captcha: '',
-
-            originUserId: '',
-            originPersonaId: '',
-            avatarLink: '',
-          },
-          spinShow: false,
-
-         cheatMethodsGlossary,
-       }
+export default {
+  data() {
+    return {
+      games: [],
+      tabs: {
+        count: 0,
+        list: []
+      },
+      spinShow: false,
+      failedOfNotFound: false,
+      cheatMethodsGlossary: null,
+    };
+  },
+  components: {
+    Edit,
+  },
+  created() {
+    this.http = http_token.call(this);
+    this.handleTabsAdd();
+    this.loadData();
+  },
+  watch: {
+    '$route': 'loadData',
+  },
+  methods: {
+    loadData () {
+      common.init().then((res) => {
+        this.cheatMethodsGlossary = res.cheatMethodsGlossary;
+        this.games = res.gameName;
+      });
     },
-    components: {
-      Misc
+    handleTabsAdd() {
+      let newFormData = {
+        formItem: {
+          gameName: "",
+          originId: "",
+          bilibiliLink: "",
+          checkbox: ["aimbot"],
+          description: this.$i18n.t("report.info.description"),
+          captcha: "",
+
+          originUserId: "",
+          originPersonaId: "",
+          avatarLink: "",
+        },
+        captchaUrl: {}
+      };
+      this.tabs.list.push(newFormData);
     },
-    methods: {
-      checkVideoAndImg() {
-        if (trimAllWhitespace(this.formItem.bilibiliLink) || /(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)/.test(this.formItem.description)) {
-          return true;
-        } else {
-          this.$Message.error('请上传图片或填写视频链接');
-          return false;
-        }
-      },
-      refreshCaptcha() {
-        this.$refs.captcha.src = baseURL + '/captcha?r=' + Math.random();
-
-        waitForAction.call(this.$refs.reCaptcha);
-      },
-      handleMiscChange: function(h) {
-        this.formItem.description = h;
-      },
-      doReport(e) {
-        // check form data
-        if (checkReportFormData.call(this, this.formItem) === false) return false;
-        if (this.checkVideoAndImg() === false) return false;
-
-        this.spinShow = true;
-        checkIdExist({
-          id: trimAllWhitespace(this.formItem.originId)
-        })
-        .then(async (res) => {
-
-          const d = res.data;
-          const idExist = d.idExist;
-
-          if (idExist) {
-            this.formItem.originUserId = d.originUserId;
-            this.formItem.originPersonaId = d.originPersonaId;
-            this.formItem.avatarLink = d.avatarLink;
-
-            await this.handleReport();
-          } else {
-            this.spinShow = false;
-
-            this.$Message.error('游戏ID不存在，请检查拼写,ID is not exist');
-          }
-
-          this.formItem.captcha = '';
-          this.refreshCaptcha();
-        });
-      },
-      handleReport: function() {
-        this.spinShow = true;
-
-        const cheatMethods = this.formItem.checkbox.join(',');
-        const { gameName, originUserId, originPersonaId, avatarLink, captcha } = this.formItem;
-
-        const originId = trimAllWhitespace(this.formItem.originId);
-        let bilibiliLink = trimAllWhitespace(this.formItem.bilibiliLink);
-        if (bilibiliLink)
-          bilibiliLink = /^https?:\/\//.test(bilibiliLink) ? bilibiliLink : '//' + bilibiliLink;
-        const description = this.formItem.description.trim();
-
-        ajax({
-          method: 'post',
-          url: '/cheaters/',
-          headers: {
-            // 'x-csrf-token': getCsrfToken(),
-          },
-          data: {
-            gameName,
-            originId,
-            cheatMethods,
-            bilibiliLink,
-            description,
-            captcha,
-            originUserId,
-            originPersonaId,
-            avatarLink,
-          }
-        }).then((res) => {
-          this.spinShow = false;
-
-          const d = res.data;
-          if (d.error === 0) {
-            this.$router.push({name: 'cheater', params: {game: gameName, ouid: d.data.originUserId}});
-
-            this.$Message.success('提交成功');
-          } else {
-            this.$Message.error('failed ' + d.msg);
-          }
-        });
+    checkVideoAndImg(formData) {
+      if (
+        trimAllWhitespace(formData.formItem.bilibiliLink) ||
+        /(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)/.test(
+          formData.formItem.description
+        )
+      ) {
+        return true;
+      } else {
+        this.$Message.error(this.$i18n.t("report.info.error"));
+        return false;
       }
-    }
-  }
+    },
+    refreshCaptcha(index) {
+      http.get(api["captcha"], {
+        params: {
+          r: Math.random()
+        }
+      }).then(res => {
+        if (res.data.success === 1) {
+          this.tabs.list[index].captchaUrl = res.data.data;
+        }
+      });
+      // waitForAction.call(this.$refs.reCaptcha);
+    },
+    handleMiscChange(h, index) {
+      this.tabs.list[index].formItem.description = h;
+    },
+    doCancel() {
+      if (this.tabs.list.length <= 1) {
+        return;
+      }
+      this.tabs.count = 0;
+      this.tabs.list = this.tabs.list.splice(this.tabs.count, 1);
+    },
+    doReport(index) {
+      // that form
+      let formData = this.tabs.list[index];
+
+      // check form data
+      if (checkReportFormData.call(this, formData.formItem) === false) return false;
+      if (this.checkVideoAndImg(formData) === false) return false;
+
+      this.spinShow = true;
+
+      http.post('checkGameIdExist', {
+        data: {
+          id: trimAllWhitespace(formData.formItem.originId),
+        },
+      }).then(async (res) => {
+        const d = res.data;
+        const idExist = d.idExist;
+
+        if (idExist) {
+          formData.formItem.originUserId = d.originUserId;
+          formData.formItem.originPersonaId = d.originPersonaId;
+          formData.formItem.avatarLink = d.avatarLink;
+
+          await this.handleReport(formData);
+        } else {
+          this.spinShow = false;
+          this.failedOfNotFound = true;
+
+          setImmediate(() => {
+            document
+              .getElementById("notFoundHint")
+              .scrollIntoView({
+                behavior: "smooth",
+                block: "end",
+                inline: "nearest",
+              });
+          });
+
+          this.$Message.error(
+            this.$i18n.t("report.info.originId")
+          );
+        }
+
+        formData.formItem.captcha = "";
+        this.refreshCaptcha();
+      }).catch((e) => {
+        if (e.response && e.response.status == 401)
+          this.$Message.error(
+            this.$t("report.info.loginExpired")
+          );
+        else if (e.response && e.response.status == 500)
+          this.$Message.error(
+            "An error occured in server, please try again later."
+          );
+        else this.$Message.error("Failed: Unknown error.");
+        this.spinShow = false;
+      });
+    },
+    handleReport(formData) {
+      this.spinShow = true;
+      const cheatMethods = formData.formItem.checkbox.join(",");
+      const {
+        gameName,
+        originUserId,
+        originPersonaId,
+        avatarLink,
+        captcha,
+      } = formData.formItem;
+      const originId = trimAllWhitespace(formData.formItem.originId);
+      let bilibiliLink = trimAllWhitespace(formData.formItem.bilibiliLink);
+      if (bilibiliLink)
+        bilibiliLink = /^https?:\/\//.test(bilibiliLink)
+          ? bilibiliLink
+          : "//" + bilibiliLink;
+      const description = formData.formItem.description.trim();
+
+      this.http.post(api["cheaters"], {
+        data: {
+          // data: {
+          //   game: 'bf1' | 'bfv',
+          //   originName: 'string',
+          //   cheatMethods: 'string',	// see {{valid_cheatMethod}}
+          //   videoLink: '',
+          //   description: 'string'
+          // },
+          gameName,
+          originId,
+          cheatMethods,
+          bilibiliLink,
+          description,
+          captcha,
+          originUserId,
+          originPersonaId,
+          avatarLink,
+        },
+      }).then((res) => {
+        this.spinShow = false;
+        this.failedOfNotFound = false;
+        const d = res.data;
+        if (d.error === 0) {
+          this.$router.push({
+            name: "cheater",
+            params: {game: gameName, ouid: d.data.originUserId},
+          });
+
+          this.$Message.success(this.$i18n.t("report.info.success"));
+        } else {
+          this.$Message.error("failed " + d.msg);
+        }
+      });
+    },
+  },
+};
 </script>
 
-<style>
+<style lang="scss">
+.notFoundHint {
+  background: #cc0000;
+  color: white;
+  border: 1px solid #dcdee2;
+  border-radius: 4px;
+  padding: 10px;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+  "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif;
+}
 </style>
-

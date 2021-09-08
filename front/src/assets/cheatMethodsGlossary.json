@@ -1,0 +1,11 @@
+{
+  "child": [
+    {"value": "stealth"},
+    {"value": "wallhack"},
+    {"value": "aimbot"},
+    {"value": "oneShotKill"},
+    {"value": "gadgetModify"},
+    {"value": "damageChange"},
+    {"value": "shootingThroughWalls"}
+  ]
+}
