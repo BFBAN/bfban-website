@@ -144,6 +144,9 @@
   "footer": {
     "author": "由 mygoare 开发",
     "feedback": "意见反馈",
+    "language": {
+      "members": "参与翻译成员"
+    },
     "column": {
       "col1": {
         "text": "联BFBAN - 全球作弊玩家数据库"

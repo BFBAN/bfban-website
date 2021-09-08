@@ -1,10 +1,17 @@
 <template>
   <div class="container">
     <br>
-    <Breadcrumb>
-      <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
-      <BreadcrumbItem>{{ $t("account.title") }}</BreadcrumbItem>
-    </Breadcrumb>
+    <Row>
+      <Col>
+        <Breadcrumb>
+          <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("account.title") }}</BreadcrumbItem>
+        </Breadcrumb>
+      </Col>
+      <Col span="24" align="right">
+        <Button @click="openMessage" :disabled="!account.attr.allowDM">发送消息</Button>
+      </Col>
+    </Row>
     <br>
 
     <Row type="flex" justify="center" align="middle">
@@ -26,15 +33,6 @@
               {{ $t("account." + i.value) }}
             </Tag>
           </span>
-          <!--          <Tag type="dot" v-if="account.privilege === 'admin'" color="success">-->
-          <!--            {{ $t("account.admin") }}-->
-          <!--          </Tag>-->
-          <!--          <Tag type="dot" v-if="account.privilege === 'super'" color="error">-->
-          <!--            {{ $t("account.super") }}-->
-          <!--          </Tag>-->
-          <!--          <Tag type="dot" v-if="account.privilege === 'normal'">-->
-          <!--            {{ $t("account.normal") }}-->
-          <!--          </Tag>-->
           <Divider type="vertical"/>
           {{ $t("account.joinedAt") }}
           <Tag type="dot" color="primary">
@@ -80,23 +78,22 @@
           <Card dis-hover>
             <Tabs value="tag1">
               <TabPane :label="$t('account.reports')" name="tag1">
-                <div v-if="account">
-                  <!--                  <p v-if="account.reports.length <= 0" align="center">-->
-                  <!--                    <Alert type="warning" show-icon>-->
-                  <!--                      {{$t('account.noReports')}}-->
-                  <!--                    </Alert>-->
-                  <!--                  </p>-->
+
+                <div v-if="reports">
+                  <p v-if="reports.length <= 0" align="center">
+                    <Alert type="warning" show-icon>
+                      {{$t('account.noReports')}}
+                    </Alert>
+                  </p>
 
                   <table>
                     <tbody>
-                    <tr v-for="report in account.reports" :key="report.id">
+                    <tr v-for="report in reports" :key="report.id">
                       <td>
                       <span>
                         <Tag color="primary">
-                            <Time
-                                v-if="report.createDatetime"
-                                :time="report.createDatetime"
-                            />
+                            <Time v-if="report.createTime"
+                                :time="report.createTime"/>
                         </Tag>
                       </span>
                       </td>
@@ -110,10 +107,8 @@
                                       ouid: `${report.originUserId}`,
                                   },
                               }">
-                              <Tag>
-                                  {{ report.game }}
-                              </Tag>
-                              {{ report.originId }}
+                              <Tag>{{ report.game }}</Tag>
+                              {{ report.originName }}
                           </router-link>
                       </span>
                       </td>
@@ -129,9 +124,8 @@
                       <span>
                         {{ $t("account.recentlyUpdated") }}
                         <Tag color="warning">
-                          <Time
-                              v-if="report.updateDatetime"
-                              :time="report.updateDatetime"/>
+                          <Time v-if="report.updateTime"
+                              :time="report.updateTime"/>
                           <span v-else>无</span>
                         </Tag>
                       </span>
@@ -146,7 +140,7 @@
                       :page-size="limit"
                       show-total
                       :current="page"
-                      @on-change="handlePageChange"
+                      @on-change="getReports"
                       :total="total"
                       class="page"
                       size="small"
@@ -155,20 +149,28 @@
                 <div v-else>404</div>
               </TabPane>
               <br>
-              <Button size="small" slot="extra">
-                <!--                {{account.reports.length || 0}}-->
-              </Button>
+              <Button size="small" slot="extra">{{reports.length || 0}}</Button>
             </Tabs>
           </Card>
         </Col>
       </Row>
     </div>
+
+    <Modal v-model="message.show"
+        @on-ok="setMessage">
+      <Form>
+        <FormItem label="聊天">
+          <Input v-model="message.content"
+                 type="textarea" :autosize="{minRows: 5,maxRows: 10}"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
     <br>
   </div>
 </template>
 
 <script>
-import {http, api, conf} from '../assets/js/index'
+import {http, api, http_token} from '../assets/js/index'
 import ajax from "@/mixins/ajax";
 
 export default {
@@ -180,22 +182,32 @@ export default {
         originId: "",
         privilege: "",
         createDatetime: "",
-        reports: [],
       },
-      limit: 10,
-      page: 0,
-      total: 100
+      reports: [],
+      limit: 20,
+      page: 1,
+      total: 100,
+
+      message: {
+        id: '',
+        show: false,
+        load: false,
+        content: '',
+      }
     };
   },
   watch: {
     $route: "loadData",
   },
   created() {
+    this.http = http_token.call(this);
     this.loadData();
   },
   methods: {
     async loadData() {
       const {uId} = this.$route.params;
+
+      this.getReports(uId);
 
       const privileges = await import('/src/assets/privilege.json');
       this.privileges = this.privileges.concat(privileges.child)
@@ -206,21 +218,57 @@ export default {
         }
       }).then((res) => {
         const d = res.data;
+
         if (d.success === 1) {
-
           this.account = d.data;
-          // let {reports} = d.data;
-          // this.account.reports = reports;
-
         } else {
           this.account = "";
           this.$Message.warning(d.msg);
         }
+
+        this.getReports(uId)
       });
     },
-    handlePageChange(e) {
-      console.log(e)
-    }
+    openMessage () {
+      this.message.show = true;
+    },
+    setMessage () {
+      const {uId} = this.$route.params;
+
+      this.http.post(api["user_message"], {
+        data: {
+          data: {
+            toUserId: this.message.id || uId,
+            type: 'direct',
+            content: this.message.content,
+          }
+        }
+      }).then(res => {
+        if (res.data.success == 1) {
+          this.$Message.success(res.data.message);
+        } else {
+          this.$Message.error(res.data.message);
+        }
+      }).finally(() => {
+        this.message.load = false;
+        this.message.show = false;
+      })
+    },
+    getReports(uId) {
+      http.get(api["user_reports"], {
+        params: {
+          id: uId,
+          skip: this.page,
+          limit: this.limit,
+        }
+      }).then((res) => {
+        const d = res.data;
+        if (d.success == 1) {
+          this.reports = d.data;
+          this.total = d.total;
+        }
+      });
+    },
   },
 };
 </script>

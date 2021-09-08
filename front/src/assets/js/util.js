@@ -50,10 +50,8 @@ export default class Util {
      * @returns {*|string}
      */
     getGameLabel(value) {
-        console.log(this.gameName)
         if (this.gameName == null) return '';
         const o = _.find(this.gameName, (v, k) => v.value == value);
-        console.log(value, o);
         return o ? this.$i18n.t("list.filters.game." + o.value) : '';
     }
 }

@@ -518,7 +518,7 @@
       </div>
     </div>
     <BackTop :bottom="50">
-      <div class="top">Top</div>
+      <div class="top mobile-hide">Top</div>
     </BackTop>
     <br>
   </div>
@@ -1064,9 +1064,14 @@ export default new BFBAN({
   }
 }
 
-.demo-spin-col {
-  height: 100px;
-  position: relative;
-  border: 1px solid #eee;
+.top {
+  position: fixed;
+  right: calc(50% - (960px / 2) - 44px);
+  top: 20%;
+  transform: translateY(-20%);
+  z-index: 100;
+  background-color: #ffffff;
+  border: 1px solid #f2f2f2;
+  padding: 10px;
 }
 </style>

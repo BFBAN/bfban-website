@@ -10,10 +10,10 @@
     <Card shadow>
       <Row :gutter="15">
         <Col>
-          <Avatar :size="48">{{currentUser.userinfo.username[0]}}</Avatar>
+          <Avatar :size="48">{{ currentUser.userinfo.username[0] }}</Avatar>
         </Col>
         <Col>
-          <h3>{{currentUser.userinfo.username}}</h3>
+          <h3>{{ currentUser.userinfo.username }}</h3>
           <p>欢迎来到BFBAN</p>
         </Col>
       </Row>
@@ -22,14 +22,14 @@
         <Col span="6">
           <List border size="small">
             <ListItem v-for="(i, index) in muen" :key="i.value">
-              <a @click="muenIndex = index">{{i.title}}</a>
+              <a @click="muenIndex = index">{{ i.title }}</a>
             </ListItem>
           </List>
           <br>
           <List border size="small">
             <ListItem>
               <router-link :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
-                {{$t("header.userCenter")}}
+                {{ $t("header.userCenter") }}
               </router-link>
             </ListItem>
           </List>
@@ -37,8 +37,9 @@
           <Bulletin/>
         </Col>
         <Col span="18">
-          <account v-show="muenIndex == 0"></account>
-          <appearance v-show="muenIndex == 1"></appearance>
+          <account v-if="muenIndex == 0"></account>
+          <appearance v-if="muenIndex == 1"></appearance>
+          <message v-if="muenIndex == 2"></message>
         </Col>
       </Row>
     </Card>
@@ -51,23 +52,28 @@ import Bulletin from "../../components/Bulletin";
 
 import appearance from "./appearance";
 import account from "./account";
+import message from "./message";
 
 export default {
   name: "profile",
-  data () {
+  data() {
     return {
       muenIndex: 0,
       muen: [{
         title: 'Account',
         value: '0'
+      },
+        {
+          title: 'Appearance',
+          value: '1'
         },
         {
-        title: 'Appearance',
-        value: '1'
-      }]
+          title: 'message',
+          value: '2'
+        }]
     }
   },
-  components: {Bulletin, appearance, account},
+  components: {Bulletin, appearance, account, message},
   computed: {
     isLogin() {
       return Boolean(this.$store.state.user);

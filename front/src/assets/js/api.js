@@ -16,6 +16,9 @@ export default class Api {
       'user_forgetPassword': 'user/forgetPassword', // 重置请求
       'user_forgetPasswordVerify': 'user/forgetPasswordVerify', // 重置密码验证
       'activity': 'activities',
+      'user_message': 'message',
+      'user_message_mark': 'message/mark',
+      'user_reports': 'user/reports',
       'user_changePassword': 'user/changePassword', // 修改密码
       'user_changeName': 'user/changeName', // 修改名称
       'cheaters_confirm': 'cheaters/confirm', // 管理员: 同意

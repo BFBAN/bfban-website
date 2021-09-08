@@ -33,7 +33,7 @@ const routes = [
     {name: 'profile', path: '/profile', component: Profile},
     {name: 'search', path: '/search/:conetnt', component: Search},
     {name: 'search_main', path: '/search', component: Search},
-
+    // {name: 'message', path: '/profile/message', component: Profile},
     {
         name: 'report',
         path: '/report',

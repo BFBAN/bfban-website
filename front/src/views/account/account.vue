@@ -85,7 +85,7 @@
         <Col span="12">
           <FormItem label="allowDM">
             <i-switch v-model="formItem.attr.allowDM"/>
-            <p>是否接受信息. 此功能目前测试</p>
+            <p>是否接受信息. 更多消息信息前往<router-link :to="{name: 'message'}">消息列表</router-link>查看</p>
           </FormItem>
         </Col>
       </Row>

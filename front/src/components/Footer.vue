@@ -56,6 +56,11 @@
               <li>
                 <router-link :to="{name: 'about'}">{{$t('header.about')}}</router-link>
               </li>
+              <li>
+                <router-link :to="{name: 'cheaters', query: { status: '-1' }}">
+                  {{$t("header.cheaters")}}
+                </router-link>
+              </li>
             </ul>
           </Col>
           <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 4,pull: 0, push: 0}" >
@@ -73,41 +78,55 @@
               </li>
             </ul>
           </Col>
-          <Col :xs="{span: 22 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
+          <Col :xs="{span: 22 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}" v-if="currentLan">
             <b>选择语言</b>
             <Tag size="large">
               <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
-                <Option v-for="item in languages" :value="item.name" :key="item.name">{{ item.label }}</Option>
+                <Option v-for="(item, index) in languages" :value="item.name" :key="index">{{ item.label }}</Option>
               </Select>
             </Tag>
-            <p>&copy; 2018-{{new Date().getFullYear()}} All Rights Reserved.</p>
-            <p>Made with <Icon type="ios-heart" color="#ed4014" />Host at
-              <a target="_blank" href="https://gametools.network/">GameTools-Community Network</a>
+            <p v-if="languages.length > 0">
+              <br>
+              <span>{{ $t("footer.language.members") }}</span>: <br>
+              {{ languages.filter(i => i.name == currentLan)[0]["members"].toString() || '' }}
             </p>
           </Col>
         </Row>
+      </div>
+      <Divider></Divider>
+      <div align="center">
+        <p>&copy; 2018-{{new Date().getFullYear()}} All Rights Reserved.</p>
+        <p>Made with <Icon type="ios-heart" color="#ed4014" />Host at
+          <a target="_blank" href="https://gametools.network/">GameTools-Community Network</a>
+        </p>
+        <p>v: {{infos}}</p>
       </div>
     </footer>
 </template>
 
 <script>
+import packageInfo from '../../package.json';
 import { detectLanguage } from '@/mixins/common';
 
 export default {
   data() {
     return {
+      infos: packageInfo.version,
       logoCount: 0,
       languages: [],
     }
   },
   created() {
-    this.ready();
+    this.loadData();
+  },
+  watch: {
+    $route: "loadData",
   },
   methods: {
-    async ready () {
+    async loadData () {
       const languages = await import('/src/assets/languages.json');
 
-      this.languages = this.languages.concat(languages.child)
+      this.languages = languages.child;
     },
     switchLanguage(val) {
       this.setLang(val);

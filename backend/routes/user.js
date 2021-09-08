@@ -348,12 +348,20 @@ async (req, res, next)=>{
         if(!user)
             return res.status(404).json({error: 1, code: 'userReports.notFound', message: 'no such user.'});
         const reports = await db('reports').join('players', 'reports.toPlayerId', 'players.id')
-        .select('players.originName as originName', 'players.originUserId as originuserId',
+          .select('players.originName as originName', 'players.originUserId as originuserId',
                     'players.originPersonaId as originPersonaId', 'players.status as status',
-                    'players.updateTime as updateTime', 'reports.createTime as createTime')
-        .where('reports.byUserId', '=', user.id).orderBy('reports.createTime', 'desc').offset(skip).limit(limit);
+                    'players.updateTime as updateTime', 'reports.createTime as createTime','reports.game as game')
+          .where('reports.byUserId', '=', user.id)
+          .orderBy('reports.createTime', 'desc')
+          .offset(skip)
+          .limit(limit);
 
-        res.status(200).json({success: 1, code: 'userReports.success', data: reports});
+        res.status(200).json({
+          success: 1,
+          code: 'userReports.success',
+          data: reports,
+          total: Number(reports.length / req.query.limit).toFixed(0)
+        });
     } catch(err) {
         next(err);
     }

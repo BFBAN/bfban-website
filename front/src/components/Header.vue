@@ -7,7 +7,6 @@
                height="40"
                alt="bfban logo"/>
         </router-link>
-
         <div class="nav nav-menu">
           <router-link class="mobile-hide link" :to="{name: 'home'}">
             {{ $t("header.index") }}
@@ -51,10 +50,23 @@
           </router-link>
 
           <Dropdown placement="bottom-end" v-if="isLogin">
-            <a href="javascript:void(0)">
-              <Avatar>{{ currentUser.userinfo.username[0] || 'Null'}}</Avatar>
-              {{ currentUser.userinfo.username }}
-            </a>
+            <Row :gutter="10">
+              <Col>
+                <Avatar size="50">{{ currentUser.userinfo.username[0] || 'Null'}}</Avatar>
+              </Col>
+              <Col>
+                <a href="javascript:void(0)">
+                  {{ currentUser.userinfo.username }}
+                </a>
+                <p>
+                  <span v-for="(i,index) in privileges" :key="index">
+                    <Tag ttype="border" size="medium" v-if="currentUser.userinfo.privilege == i.value">
+                      {{ $t("account." + i.value) }}
+                    </Tag>
+                  </span>
+                </p>
+              </Col>
+            </Row>
             <DropdownMenu slot="list">
               <div style="width: 300px;  background-color: #f2f2f2; padding: 30px">
                 <List border size="small">
@@ -106,7 +118,26 @@
             </DropdownMenu>
           </Dropdown>
           <Divider type="vertical"/>
-          <router-link class="mobile-hide" v-if="isLogin" :to="{name: 'search'}">
+          <Dropdown class="mobile-hide" v-show="isLogin">
+            <Badge :count="message.total[0].num || 0">
+              <Icon type="md-notifications" size="30" @click="handleOpen" />
+            </Badge>
+            <DropdownMenu slot="list" style="padding: 0 20px; width: 400px">
+              <List item-layout="vertical">
+                <ListItem v-for="(item, index) in message.messages" :key="index" v-show="message.messages.length <= 4">
+                  <ListItemMeta :title="item.content" :description="item.createTime" />
+                  <template slot="action">
+                    <li>
+                      <a href="">已阅</a>
+                    </li>
+                  </template>
+                </ListItem>
+              </List>
+              <p align="center"><router-link :to="{name: 'message'}">查看更多</router-link></p>
+            </DropdownMenu>
+          </Dropdown>
+          <Divider type="vertical"/>
+          <router-link class="mobile-hide" v-if="isLogin" :to="{name: 'search_main'}">
             <Icon type="ios-search" size="28" />
           </router-link>
           <router-link class="nav-username desktop-hide" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
@@ -114,11 +145,9 @@
               <Icon size="30" type="md-person" />
             </Badge>
           </router-link>
-
           <a class="nav-signout desktop-hide" v-show="isLogin" href="#" @click.stop.prevent="signout">
             <Icon type="md-log-out" size="30"></Icon>
           </a>
-
           <Divider type="vertical"/>
           <Tooltip :content="$t('home.howToUse.tools.main')" placement="bottom-end">
             <router-link :to="{name: 'apps'}">
@@ -131,14 +160,43 @@
 </template>
 
 <script>
-  import {http, api} from '../assets/js/index'
+  import {http, api,http_token} from '../assets/js/index'
 
   export default {
     data() {
       return {
+        privileges: [],
+        message: {
+          messages: []
+        }
       }
     },
+    watch: {
+      $route: "loadData",
+    },
+    created() {
+      this.http = http_token.call(this);
+      this.getMessage();
+    },
     methods: {
+      async loadData() {
+        const privileges = await import('/src/assets/privilege.json');
+        this.privileges = privileges.child;
+      },
+      getMessage () {
+        this.http.get(api["user_message"], {}).then(res => {
+          const d = res.data;
+          if (d.success == 1) {
+            this.message = d.data;
+          }
+        })
+      },
+      handleOpen () {
+        this.visible = true;
+      },
+      handleClose () {
+        this.visible = false;
+      },
       signout() {
         http.post(api["account_signout"], {
           headers: {
@@ -180,8 +238,7 @@
     backdrop-filter: blur(50px);
     width: 100%;
     height: auto;
-    padding: 10px 0;
-    z-index: 1000;
+    padding: 10px 0 !important;
     background-image: linear-gradient(rgba(0, 0, 0, 0.1), transparent);
   }
   .header-container {

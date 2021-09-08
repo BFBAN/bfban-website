@@ -9,7 +9,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: -1;
     opacity: .15;"></div>
 
     <div class="content">
@@ -94,6 +94,12 @@ export default {
       searchScopeValue: 'current',
       cheaters: []
     }
+  },
+  created() {
+    const {s, type} = this.$route.query;
+    this.searchScopeValue = type || this.searchScope[0];
+    this.searchVal = s || '';
+    this.handleSearch();
   },
   methods: {
     handleSearch() {
