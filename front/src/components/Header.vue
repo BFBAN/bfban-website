@@ -119,7 +119,7 @@
           </Dropdown>
           <Divider type="vertical"/>
           <Dropdown class="mobile-hide" v-show="isLogin">
-            <Badge :count="message.total[0].num || 0">
+            <Badge :count="message && message.total && message.total[0].num || 0">
               <Icon type="md-notifications" size="30" @click="handleOpen" />
             </Badge>
             <DropdownMenu slot="list" style="padding: 0 20px; width: 400px">

@@ -120,14 +120,19 @@
                         }}
                       </span>
                       <Row :gutter="20" v-for="(blink, blinkindex) in tabs.list[index].formItem.bilibiliLink" :key="blinkindex">
-                        <Col>
-                          <Input v-model="tabs.list[index].formItem.bilibiliLink"
+                        <Col span="20">
+                          <Input
+                              v-model="tabs.list[index].formItem.bilibiliLink[blinkindex]"
                               :placeholder="$t('report.info.required')"/>
                         </Col>
-                        <Col>
-                          <Icon type="md-add" @click="tabs.list[index].formItem.bilibiliLink.push('')" />
-                          <Divider type="vertical"/>
-                          <Icon type="md-trash" @click="tabs.list[index].formItem.bilibiliLink.split(blinkindex, 1)"  />
+                        <Col span="4">
+                          <Icon type="md-add"
+                                @click="tabs.list[index].formItem.bilibiliLink.splice(blinkindex + 1, 0, '')"
+                                v-if="tabs.list[index].formItem.bilibiliLink.length <= 10"/>
+                          <Divider type="vertical" v-if="tabs.list[index].formItem.bilibiliLink.length <= 10"/>
+                          <Icon type="md-trash"
+                                @click="tabs.list[index].formItem.bilibiliLink.splice(blinkindex, 1)"
+                                v-if="tabs.list[index].formItem.bilibiliLink.length > 1"/>
                         </Col>
                       </Row>
                     </FormItem>
@@ -240,7 +245,7 @@ export default {
         formItem: {
           gameName: "",
           originId: "",
-          bilibiliLink: [],
+          bilibiliLink: ['http://'],
           checkbox: ["aimbot"],
           description: this.$i18n.t("report.info.description"),
           captcha: "",

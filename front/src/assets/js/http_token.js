@@ -17,14 +17,16 @@ export default class http_token extends http {
     return new http_token(t);
   }
 
-  setToken (data) {
-    const token = this.THAT.$store.state.user.token;
-    if (token != null || token != '') {
-      data = Object.assign(data, {
-        headers: {
-          'x-access-token': token
-        }
-      })
+  setToken (data = {}) {
+    if (this.THAT.$store && this.THAT.$store.user && this.THAT.$store.user.token) {
+      const token = this.THAT.$store.state.user.token;
+      if (token != null || token != '') {
+        data = Object.assign(data, {
+          headers: {
+            'x-access-token': token
+          }
+        })
+      }
     }
     return data;
   }

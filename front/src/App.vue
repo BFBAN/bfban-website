@@ -19,11 +19,18 @@ export default {
   components: {Header, Footer},
   created() {
     this.http = http_token.call(this);
-    this.$store.dispatch('setTheme', storage.get('theme').data.value);
 
-    this.onUserinfo()
+    this.onTheme();
+    this.onUserinfo();
   },
   methods: {
+    async onTheme () {
+      let theme = await storage.get('theme');
+
+      if (theme.data && theme.data.value) {
+        await this.$store.dispatch('setTheme', theme.data.value);
+      }
+    },
     onUserinfo () {
       if (this.isLogin) {
         this.http.get(api["user_me"], {}).then((res) => {
