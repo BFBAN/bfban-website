@@ -1,25 +1,22 @@
 "use strict";
 import express from "express";
-import { check, body as checkbody, query as checkquery, validationResult } from "express-validator";
+import {body as checkbody, query as checkquery, validationResult} from "express-validator";
 
 import db from "../mysql.js";
-import config from "../config.js";
-import * as misc from "../lib/misc.js";
-import verifyCaptcha from "../middleware/captcha.js";
-import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
-import { siteEvent } from "../lib/bfban.js";
-import { userHasNotRoles, userHasRoles } from "../lib/auth.js";
-import { handleCommand } from "../lib/command.js";
+import {forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {siteEvent} from "../lib/bfban.js";
+import {userHasRoles} from "../lib/auth.js";
+import {handleCommand} from "../lib/command.js";
 import logger from "../logger.js";
 
 const router = express.Router();
 
 router.get('/', verifyJWT, [
-    checkquery('box').optional().isIn(['in','out','announce']),
+    checkquery('box').optional().isIn(['in', 'out', 'announce']),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
     checkquery('from').optional().isInt({min: 0}),
-],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -127,18 +124,26 @@ router.post('/mark', verifyJWT, [
 async (req, res, next)=> {
     try {
         let changed;
-        if(req.query.type != 'del')
-            changed = await db('messages').update({haveRead: req.query.type=='read'? 1:0})
-            .where({toUserId: req.user.id, id: req.query.id})
-            .andWhereNot({type: 'falta'});
-        else
+        if (req.query.type != 'del') {
+            changed = await db('messages')
+                .update({haveRead: req.query.type == 'read' ? 1 : 0})
+                .where({toUserId: req.user.id, id: req.query.id})
+                .andWhereNot({type: 'falta'});
+        } else {
             changed = await db('messages').del()
-            .where({toUserId: req.user.id, id: req.query.id})
-            .andWhereNot({type: 'falta'});
-        if(changed)
-            return res.status(200).json({success: 1, code: 'message.marked', data: {id: req.query.id, type: req.query.type}});
+                .where({toUserId: req.user.id, id: req.query.id})
+                .andWhereNot({type: 'falta'});
+        }
+
+        if (changed)
+            return res.status(200).json({
+                success: 1,
+                code: 'message.marked',
+                data: {id: req.query.id, type: req.query.type}
+            });
         else
             return res.status(404).json({success: 1, code: 'message.notFound', message: 'no such message.'});
+
     } catch(err) {
         next(err);
     }

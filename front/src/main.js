@@ -2,10 +2,10 @@ import 'view-design/dist/styles/iview.css'
 
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
-import store from './store'
 import i18n from './i18n'
 import less from 'less'
+import router from './router'
+import store from './store'
 import ViewUI from 'view-design';
 import VueQuillEditor from 'vue-quill-editor'
 

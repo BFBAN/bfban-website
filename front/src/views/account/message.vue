@@ -1,56 +1,55 @@
 <template>
-  <div>
-    <div>
-      <Tabs value="name1">
-        <TabPane label="消息列表" name="name1">
-          <List item-layout="vertical">
-            <ListItem v-for="(item, index) in message.messages" :key="index">
-              <ListItemMeta :title="item.content" :description="item.createTime"/>
-              <template slot="action">
-                <li>
-                  <a href="">已阅</a>
-                </li>
-              </template>
-            </ListItem>
-          </List>
-        </TabPane>
-        <TabPane label="发送" name="name2">
-          <Form>
-            <Row :gutter="30">
-              <Col span="12">
-                <FormItem label="站内ID">
-                  <Select
-                      v-model="message.id"
-                      filterable
-                      :remote-method="getPlayerList"
-                      :loading="message.load">
-                    <Option v-for="(option, index) in message.playerList" :value="option.id" :key="index">
-                      <Avatar :src="option.avatarLink"> </Avatar>
-                      <span>{{option.originName}}</span>
-                    </Option>
-                  </Select>
-                </FormItem>
-              </Col>
-              <Col span="12">
-                <FormItem label="类型">
-                  <RadioGroup v-model="message.type" type="button" button-style="solid">
-                    <Radio :label="i.title" v-for="(i, index) in message.list" :key="index" v-show="i.q.indexOf(currentUser.userinfo.privilege) >= 0">
-                      {{i.title}}
-                    </Radio>
-                  </RadioGroup>
-                </FormItem>
-              </Col>
-            </Row>
-            <FormItem label="聊天">
-              <Input v-model="message.content"
-                     type="textarea" :autosize="{minRows: 5,maxRows: 10}"></Input>
+  <Tabs :value="tagsName">
+    <TabPane label="消息列表" name="message1">
+      <List>
+        <ListItem v-for="(item, index) in message.messages" :key="index">
+          <ListItemMeta :title="item.content" :description="item.createTime"/>
+          <template slot="action">
+            <li>
+              <a href="javascript:void(0)" @click="onMessageMark(item.id, 0)">已阅</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" @click="onMessageMark(item.id, 2)">删除</a>
+            </li>
+          </template>
+        </ListItem>
+      </List>
+    </TabPane>
+    <TabPane label="发送" name="message2">
+      <Form>
+        <Row :gutter="30">
+          <Col span="12">
+            <FormItem label="站内ID">
+              <Select
+                  v-model="message.id"
+                  filterable
+                  :remote-method="getPlayerList"
+                  :loading="message.load">
+                <Option v-for="(option, index) in message.playerList" :value="option.id" :key="index">
+                  <Avatar :src="option.avatarLink"> </Avatar>
+                  <span>{{option.originName}}</span>
+                </Option>
+              </Select>
             </FormItem>
-          </Form>
-          <Button @click="setMessage">发送</Button>
-        </TabPane>
-      </Tabs>
-    </div>
-  </div>
+          </Col>
+          <Col span="12">
+            <FormItem label="类型">
+              <RadioGroup v-model="message.type" type="button" button-style="solid">
+                <Radio :label="i.title" v-for="(i, index) in message.list" :key="index" v-show="i.q.indexOf(currentUser.userinfo.privilege) >= 0">
+                  {{i.title}}
+                </Radio>
+              </RadioGroup>
+            </FormItem>
+          </Col>
+        </Row>
+        <FormItem label="聊天">
+          <Input v-model="message.content"
+                 type="textarea" :autosize="{minRows: 5,maxRows: 10}"></Input>
+        </FormItem>
+      </Form>
+      <Button @click="setMessage">发送</Button>
+    </TabPane>
+  </Tabs>
 </template>
 
 <script>
@@ -60,6 +59,7 @@ export default {
   name: "message",
   data() {
     return {
+      tagsName: 'message1',
       privileges: [],
       message: {
         list: [
@@ -86,6 +86,7 @@ export default {
               q: ['admin', 'dev']
             }
         ],
+        messages: [],
         id: '',
         playerList: [],
         show: false,
@@ -100,13 +101,21 @@ export default {
   created() {
     this.http = http_token.call(this);
 
-    this.getMessage();
     this.loadData();
+    this.getMessage();
   },
   methods: {
     async loadData() {
       const privileges = await import('/src/assets/privilege.json');
       this.privileges = privileges.child;
+    },
+    onMessageMark (id, type) {
+      this.http.post(api["user_message_mark"], {
+        params: {
+          id,
+          type: ['read', 'unread','del'][type],
+        }
+      })
     },
     getPlayerList (query) {
       if (query !== '') {
@@ -153,10 +162,10 @@ export default {
       })
     },
     getMessage() {
-      this.http.get(api["user_message"], {}).then(res => {
+      this.http.get(api["user_message"]).then(res => {
         const d = res.data;
         if (d.success == 1) {
-          this.message = Object.assign(this.message, d.data);
+          this.message.messages = d.data.messages;
         }
       })
     },

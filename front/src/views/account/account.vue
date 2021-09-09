@@ -12,6 +12,15 @@
           </FormItem>
         </Col>
         <Col span="12">
+          <FormItem label="密码">
+            <Input v-model="formItem.password" disabled type="password">
+              <a slot="append" @click="modal_changePassword.show = !modal_changePassword.show">
+                <Icon type="md-create" size="15" />
+              </a>
+            </Input>
+          </FormItem>
+        </Col>
+        <Col span="12">
           <FormItem label="身份">
             <span v-for="(i,index) in privileges" :key="index">
               <Tag type="dot" v-if="formItem.privilege == i.value"
@@ -43,7 +52,9 @@
         Orign未绑定
         <div slot="default">
           您未绑定账户，无法发布任何内容
-          <router-link to="/bindOrigin">绑定</router-link>
+          <router-link to="/bindOrigin">
+            <Button>绑定</Button>
+          </router-link>
         </div>
       </Alert>
       <Row :gutter="30">
@@ -129,7 +140,9 @@
             </FormItem>
 
             <FormItem :label="$t('signup.form.captcha')" >
-              <Input type="text" v-model="captchaUrl.value" size="large"
+              <Input type="text" v-model="captchaUrl.value"
+                     size="large"
+                     maxlength="4"
                      :placeholder="$t('signup.form.captcha')"></Input>
               <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
                 <div v-html="captchaUrl.content"></div>
@@ -156,6 +169,35 @@
         </Button>
       </div>
     </Modal>
+
+    <Modal v-model="modal_changePassword.show">
+      <p slot="header">修改密码</p>
+      <div>
+        <Form ref="formValidate" label-position="top">
+          <FormItem label="旧密码">
+            <Input v-model="modal_changePassword.oldpassword" placeholder="******" minlength="6"></Input>
+          </FormItem>
+          <FormItem label="新密码">
+            <Input v-model="modal_changePassword.newpassword" placeholder="******" minlength="6"></Input>
+          </FormItem>
+          <FormItem :label="$t('signup.form.captcha')" >
+            <Input type="text" v-model="captchaUrl.value"
+                   size="large"
+                   maxlength="4"
+                   :placeholder="$t('signup.form.captcha')"></Input>
+            <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+              <div v-html="captchaUrl.content"></div>
+            </div>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button size="large"
+                :disabled="!modal_changePassword.oldpassword && !modal_changePassword.newpassword && !captchaUrl.value"
+                :loading="modal_changePassword.load"
+                @click="handChangePassword()">修改密码</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -170,6 +212,13 @@ export default {
       privileges: [],
       languages: [],
       formLoad: false,
+
+      modal_changePassword: {
+        load: false,
+        show: false,
+        newpassword: "",
+        oldpassword: ""
+      },
 
       modal_setusername: {
         load: false,
@@ -195,6 +244,48 @@ export default {
       const privileges = await import('/src/assets/privilege.json');
       this.privileges = this.privileges.concat(privileges.child)
       this.languages = this.languages.concat(languages.child)
+    },
+    handChangePassword () {
+      const {newpassword = '', oldpassword = ''} = this.modal_changePassword;
+      this.modal_changePassword.load = true;
+      this.http.post(api["user_changePassword"], {
+        data: {
+          data: {
+            newpassword,
+            oldpassword
+          },
+          encryptCaptcha: this.captchaUrl.hash,
+          captcha: this.captchaUrl.value
+        }
+      }).then(res => {
+        const d = res.data;
+        if (d.success === 1) {
+          this.$Message.success(d.message);
+
+          this.$store.dispatch('signout').then(() => {
+            this.signout();
+          });
+
+          this.modal_changePassword.show = false;
+          return;
+        }
+
+        this.$Message.error(d.message);
+      }).finally(() => {
+        this.modal_changePassword.load = false;
+      });
+    },
+    signout() {
+      http.post(api["account_signout"], {
+        headers: {
+          'x-access-token': this.$store.state.user.token
+        }
+      }).then((res) => {
+        const d = res.data;
+        if (d.success == 1) {
+          this.$router.push('/signin');
+        }
+      })
     },
     handleIntroductionChange (val) {
       this.formItem.introduction = val;
@@ -279,6 +370,7 @@ export default {
     formItem() {
       return Object.assign({
         introduction: '',
+        password: '******',
         origin: {
           originName: '',
           originEmail: '',

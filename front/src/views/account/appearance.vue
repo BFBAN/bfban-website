@@ -4,11 +4,11 @@
       选择单个主题，或与系统同步，并自动在白天和夜间主题之间切换.
     </p>
     <br>
-    <RadioGroup v-model="theme" size="large">
-      <Radio :label="i.value" v-for="i in themes" :key="i.value" align="center">
+    <RadioGroup v-model="themeIndex" size="large">
+      <Radio :label="index" v-for="(i, index) in themes.child" :key="index" align="center">
         <Card>
           <img class="theme_img" :src="i.img">
-          <p>{{ i.title }}</p>
+          <p>{{ i.name }}</p>
         </Card>
       </Radio>
     </RadioGroup>
@@ -28,20 +28,14 @@
 
 <script>
 import {storage} from '../../assets/js/index'
+import themes from '../../assets/themes.json'
 
 export default {
   name: "appearance",
   data() {
     return {
-      themes: [{
-        img: 'https://github.githubassets.com/images/modules/settings/color_modes/light_preview.svg',
-        title: '默认', value: 'dis'
-      },
-      {
-        img: 'https://github.githubassets.com/images/modules/settings/color_modes/dark_dimmed_preview.svg',
-        title: '深色', value: 'deep'
-      }],
-      theme: '',
+      themes,
+      themeIndex: 0,
     }
   },
   created() {
@@ -52,6 +46,11 @@ export default {
       let theme = await storage.get('theme');
 
       if (theme.data && theme.data.value) {
+        this.themes.child.forEach((i, index) => {
+          if (i.name == theme.data.value.name) {
+            this.themeIndex = index;
+          }
+        });
         await this.$store.dispatch('setTheme', theme.data.value);
         return;
       }
@@ -59,7 +58,7 @@ export default {
       await this.$store.dispatch('setTheme', this.$store.state.$theme);
     },
     changeTheme(val) {
-      storage.set('theme', this.theme);
+      storage.set('theme', this.themes.child[this.themeIndex || 0]);
 
       location.reload();
     }

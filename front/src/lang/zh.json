@@ -30,7 +30,14 @@
     "none": "无",
     "signoutSuccess": "注销成功"
   },
+  "cheaters": {
+    "title": "玩家数据库"
+  },
+  "profile": {
+    "title": "个人设置"
+  },
   "detail": {
+    "title": "详情",
     "info": {
       "app_qr": {
         "title": "手机上查看",
@@ -38,6 +45,7 @@
         "openApp": "在App内查看",
         "openAppDescribe": "在BFBAN APP内查看此玩家"
       },
+      "appeal": "上诉",
       "cheatersInfo": "玩家详情",
       "viewTimes": "浏览次数",
       "reply": "回复",
@@ -97,6 +105,7 @@
     }
   },
   "report": {
+    "title": "举报",
     "info": {
       "notFoundHintTitle": "我们无法找到该玩家",
       "notFoundHintQuestion1": "但是我刚刚在游戏里见过他/我在查战绩app上查得到他？",
@@ -163,6 +172,7 @@
     }
   },
   "home": {
+    "title": "首页",
     "cover": {
       "h1": "联BFBAN",
       "h2": "正守护来自全球不同battlefield服务器，在☁️中实时监控",
@@ -343,12 +353,18 @@
       "updateTime": "更新时间"
     }
   },
+  "apps": {
+    "title": "工具"
+  },
   "search": {
     "title": "检索",
     "scope": {
       "history": "过去的名字",
       "current": "现在名称"
     }
+  },
+  "search_main": {
+    "title": "检索"
   },
   "cheatMethods": {
     "stealth": {

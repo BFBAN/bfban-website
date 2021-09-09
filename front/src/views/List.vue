@@ -395,6 +395,10 @@ li {
 .list {
   margin: 20px 0;
   position: relative;
+
+  .item-icon {
+    margin: 0 10px;
+  }
 }
 
 .game-type {

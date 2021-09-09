@@ -1,5 +1,7 @@
 // import VueRouter from 'vue-router';
 
+import i18n from "../i18n";
+
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
 //const Misc      =() => import('@/components/Edit.vue');
@@ -19,15 +21,12 @@ const Search = () => import('@/views/Search.vue');
 import store from '@/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import config from "../../package.json";
 
 Vue.use(VueRouter);
 
 const routes = [
-    {
-        name: 'home',
-        path: '/',
-        component: Home,
-    },
+    {name: 'home', path: '/', component: Home,},
     {name: 'about', path: '/about', component: About},
     {name: 'apps', path: '/apps', component: Apps},
     {name: 'profile', path: '/profile', component: Profile},
@@ -107,6 +106,8 @@ const router = new VueRouter(RouterConfig);
 
 router.beforeEach((to, from, next) => {
     store.commit('syncLoginState');
+
+    document.title = `${config.name} | ${to.meta.title || i18n.t(`${to.name}.title`) || config.name} `;
 
     next();
 });

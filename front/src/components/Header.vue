@@ -125,39 +125,39 @@ export default {
     async loadData() {
       const privileges = await import('/src/assets/privilege.json');
       this.privileges = privileges.child;
-      },
-      signout() {
-        http.post(api["account_signout"], {
-          headers: {
-            'x-access-token': this.$store.state.user.token
-          }
-        }).then((res) => {
-          const d = res.data;
-          if (d.success == 1) {
-            this.$store.dispatch('signout').then(() => {
-              this.$Message.success(d.message);
-
-              this.$router.push('/');
-            });
-          }
-        })
-      }
     },
-    computed: {
-      isLogin() {
-        return Boolean(this.$store.state.user);
-      },
-      isAdmin() {
-        const user = this.$store.state.user;
+    signout() {
+      http.post(api["account_signout"], {
+        headers: {
+          'x-access-token': this.$store.state.user.token
+        }
+      }).then((res) => {
+        const d = res.data;
+        if (d.success == 1) {
+          this.$store.dispatch('signout').then(() => {
+            this.$Message.success(d.message);
 
-        const is = user ? user.userPrivilege !== 'normal' : false;
-        return Boolean(is);
-      },
-      currentUser() {
-        return this.$store.state.user;
-      }
+            this.$router.push('/');
+          });
+        }
+      })
+    }
+  },
+  computed: {
+    isLogin() {
+      return Boolean(this.$store.state.user);
+    },
+    isAdmin() {
+      const user = this.$store.state.user;
+
+      const is = user ? user.userPrivilege !== 'normal' : false;
+      return Boolean(is);
+    },
+    currentUser() {
+      return this.$store.state.user;
     }
   }
+}
 </script>
 
 <style lang="scss">

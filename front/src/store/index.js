@@ -10,7 +10,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     user: undefined,
-    $theme: 'dis',
+    $theme: {},
     $userinfo: {},
   },
 
@@ -35,13 +35,19 @@ const store = new Vuex.Store({
     [SET_LANG](state, payload) {
       app.$i18n.locale = payload;
     },
-    [SET_THEME](state, pay) {
-      state.$theme = pay;
+    [SET_THEME](state, data) {
+      state.$theme = data;
       let theme = state.$theme;
-      if (theme == 'dis' || theme == '') {
-        require('../theme/bfban_theme.less');
-      } else if (theme == 'deep') {
-        require('../theme/bfban_deep.less');
+      switch (theme.name) {
+        case "silence":
+          import('../theme/silence.less');
+          break;
+        case "deep":
+          import('../theme/bfban_deep.less');
+          break;
+        case "default":
+          import('../theme/bfban_theme.less');
+          break;
       }
     },
     [SET_USER](state, data) {

@@ -205,6 +205,50 @@
                     </div>
                     <!-- 举报 E -->
 
+                    <!-- 上诉 S -->
+                    <div v-if="l.type === 'ban_appeal'" class="timeline-content">
+                      <div class="timeline-time">
+                        <Row>
+                          <Col flex="auto">
+                            <Time :time="l.createTime"></Time>
+
+                            <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                              <!-- 管理员 -->
+                              <Tag v-if="l.privilege === 'admin'" color="success">
+                                {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
+                              </Tag>
+                              <b>{{ l.username }}</b>
+                            </router-link>
+
+                            {{ $t('detail.info.appeal', {msg: 'appeal'}) }}
+
+                            <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
+                              {{ l.cheaterGameName }}
+                            </router-link>
+
+                            <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
+                              {{ l.game }}
+                            </router-link>
+                          </Col>
+
+                          <Col>
+                            {{l.status}}
+                          </Col>
+                        </Row>
+                      </div>
+
+                      <div v-if="l.content" v-html="l.content" class="description"></div>
+
+                      <p v-if="isLogin">
+                        <!-- 回复 -->
+                        <Button type="dashed"
+                                @click="handleReply(l.floor || index, l.byUserId)">
+                          {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        </Button>
+                      </p>
+                    </div>
+                    <!-- 上诉 E -->
+
                     <!-- 认为 S -->
                     <div v-if="l.type === 'verify' || l.type === 'judgement'" class="timeline-content bookmark"
                          :id="`user-verify-cheater-${l.id}`">
@@ -420,7 +464,9 @@
           </Col>
           <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1" class="mobile-hide">
             <div>
-              <Button type="primary" :disabled="!isLogin">此账户是我</Button>
+              <Button type="primary"
+                      @click="appeal.show = true"
+                      :disabled="!isLogin">此账户是我</Button>
               <p><br>该举报信息存在问题,我能自证或他人协助证明清白.</p>
               <Divider/>
             </div>
@@ -438,23 +484,6 @@
         </div>
 
         <br>
-
-        <!-- 小回复窗口 -->
-        <Modal
-            v-model="replyModal"
-            :title="`${$t('detail.info.reply', {msg: 'reply'})} #${reply.toFloor}`"
-            @on-ok="doReply"
-            @on-cancel="cancelReply">
-          <div v-if="isLogin">
-            <Form :label-width="80" ref='replyForm' style="position: relative;">
-              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
-                     :autosize="{minRows: 2}"
-                     :placeholder="$t('detail.info.giveOpinion')"/>
-            </Form>
-          </div>
-          <div v-else>{{ $t('detail.info.replyManual4', {msg: 'replyManual4'}) }}</div>
-        </Modal>
-
         <Spin size="large" fix v-show="spinShow">
           <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
           <p>ヾ(◍°∇°◍)ﾉﾞ load...</p>
@@ -520,6 +549,46 @@
     <BackTop :bottom="50">
       <div class="top mobile-hide">Top</div>
     </BackTop>
+
+    <!-- 小回复窗口 -->
+    <Modal
+        v-model="replyModal"
+        :title="`${$t('detail.info.reply', {msg: 'reply'})} #${reply.toFloor}`"
+        @on-ok="doReply"
+        @on-cancel="cancelReply">
+      <div v-if="isLogin">
+        <Form :label-width="80" ref='replyForm' style="position: relative;">
+          <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
+                 :autosize="{minRows: 2}"
+                 :placeholder="$t('detail.info.giveOpinion')"/>
+        </Form>
+      </div>
+      <div v-else>{{ $t('detail.info.replyManual4', {msg: 'replyManual4'}) }}</div>
+    </Modal>
+
+
+    <!-- 申诉 -->
+    <Modal v-model="appeal.show"
+        :title="`${$t('detail.info.appeal', {msg: 'appeal'})}`"
+        :loading="appeal.load"
+        @on-ok="handelAppeal">
+      <div>
+        <Form>
+          <FormItem :label="$t('detail.appeal.player')">
+            <Input type="text"
+                   :value="cheater.id"
+                   disabled
+                   size="large"
+                   :placeholder="$t('signup.placeholder.password')"/>
+          </FormItem>
+          <FormItem :label="$t('detail.appeal.content')">
+            <Input type="text"
+                   v-model="appeal.content"/>
+          </FormItem>
+        </Form>
+      </div>
+    </Modal>
+
     <br>
   </div>
 </template>
@@ -537,8 +606,15 @@ import {
 } from "@/mixins/common";
 
 export default new BFBAN({
+  title: "233",
   data() {
     return {
+      appeal: {
+        load: false,
+        show: false,
+        toPlayerId: 0,
+        content: ''
+      },
       cheater: {
         originId: '',
       },
@@ -588,6 +664,8 @@ export default new BFBAN({
     }
   },
   created() {
+    this.http = http_token.call(this);
+
     this.loadData();
     this.getCheatersInfo();
     this.getTimeline();
@@ -819,6 +897,33 @@ export default new BFBAN({
     isSelf(id) {
       const userId = this.$store.state.user.userId;
       return (parseInt(userId) === parseInt(id))
+    },
+    handelAppeal () {
+      const {toPlayerId = this.cheater.originId, content = ''} = this.appeal;
+
+      this.appeal.load = true;
+
+      this.http.post(api["player_banAppeal"], {
+        data: {
+          data: {
+            toPlayerId: this.cheater.id,
+            content
+          }
+        }
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.$Message.success(d.message);
+          return;
+        }
+
+        this.$Message.error(d.message);
+      }).finally(() => {
+        this.appeal.load = false;
+
+        this.getTimeline();
+      });
     },
     handleReply(floor, userId) {
       this.reply.toFloor = floor === 'undefined' ? '' : floor;

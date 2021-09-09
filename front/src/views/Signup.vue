@@ -37,7 +37,9 @@
 
               <div v-show="stepsIndex == 2">
                 <FormItem :label="$t('signup.form.captcha')">
-                  <Input type="text" v-model="signup.captcha" size="large"
+                  <Input type="text" v-model="signup.captcha"
+                         size="large"
+                         maxlength="4"
                          :placeholder="$t('signup.form.captcha')"></Input>
                   <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
                     <div v-html="captchaUrl.content"></div>
@@ -51,7 +53,8 @@
 
               <Row>
                 <Col span="12">
-                  <Button v-if="stepsIndex >=0 && stepsIndex <= 2" :disabled="stepsIndex == 0 "
+                  <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
+                          :disabled="stepsIndex == 0 || this.$route.name == bindOriginName"
                           @click.prevent.stop="stepsIndex--" size="large">{{ $t('signup.prev') }}
                   </Button>
                   <Divider type="vertical"/>
@@ -62,6 +65,7 @@
                 <Col span="12" align="right" type="flex">
                   <Button v-if="stepsIndex == 2" long
                           @click.prevent.stop="handleSignup('formValidate')"
+                          :disabled="!signup.captcha"
                           :loading="spinShow"
                           size="large" type="primary">{{ $t('signup.form.submit') }}
                   </Button>
@@ -128,6 +132,9 @@ export default {
 
     if (name == this.bindOriginName) {
         this.stepsIndex = 1;
+
+        delete this.ruleValidate.username;
+        delete this.ruleValidate.password;
     }
 
     this.bindOriginVerify(query.code);
@@ -155,7 +162,7 @@ export default {
           });
 
           // 截停，账户绑定
-          if (name == this.bindOriginName) {
+          if (this.$route.name == this.bindOriginName) {
             this.bindOrigin({originEmail, originName, captcha});
             return;
           }
@@ -213,8 +220,10 @@ export default {
       })
     },
     bindOrigin ({originEmail, originName, captcha}) {
+      this.spinShow = true;
+
       this.http.post(api["user_bindOrigin"], {
-        params: {
+        data: {
           data: {
             originEmail,	// must match the originName below
             originName,	// must have one of bf series game
@@ -223,16 +232,37 @@ export default {
           encryptCaptcha: this.captchaUrl.hash,
           captcha,
         }
-      })
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.stepsIndex++;
+
+          this.$Message.success(d.message);
+        } else {
+          this.$Message.error(d.code);
+        }
+      }).finally(() => {
+        this.spinShow = false;
+      });
     },
     //
     bindOriginVerify (code) {
       if (!code) { return }
 
-      http.get(api["user_bindOriginVerify"], {
+      this.http.get(api["user_bindOriginVerify"], {
         params: {code}
       }).then(res => {
         const d = res.data;
+
+        if (d.success == 1) {
+          this.stepsIndex = 3;
+          this.$Message.success(d.message);
+
+          setInterval(() => this.$router.back(), 3000);
+        } else {
+          this.$Message.error(d.code);
+        }
       }).finally(() => {
 
       })

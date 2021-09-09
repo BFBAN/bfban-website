@@ -1,0 +1,19 @@
+{
+  "title": "theme",
+  "child": [{
+    "name": "deep",
+    "value": "bfban_deep",
+    "img": "https://github.githubassets.com/images/modules/settings/color_modes/dark_dimmed_preview.svg",
+    "src": "../theme/bfban_deep.less"
+  },{
+    "name": "default",
+    "value": "bfban_theme",
+    "img": "https://github.githubassets.com/images/modules/settings/color_modes/light_preview.svg",
+    "src": "../theme/bfban_theme.less"
+  },{
+    "name": "silence",
+    "value": "silence",
+    "img": "https://github.githubassets.com/images/modules/settings/color_modes/dark_dimmed_preview.svg",
+    "src": "../theme/silence.less"
+  }]
+}

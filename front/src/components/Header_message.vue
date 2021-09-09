@@ -14,7 +14,7 @@
                   <p>{{item.createTime}}</p>
                 </Col>
                 <Col flex="200" align="right">
-                  <a>已阅读</a>
+                  <a @click="onMessageMark(item.id, 0)">已阅读</a>
                 </Col>
               </Row>
               <Divider></Divider>
@@ -27,7 +27,7 @@
           </div>
         </Tabs>
         <p align="center">
-          <router-link :to="{name: 'message'}">查看更多</router-link>
+          <router-link :to="{path: '/profile/message'}">查看更多</router-link>
         </p>
       </div>
     </DropdownMenu>
@@ -55,7 +55,15 @@ export default {
     this.getMessage();
   },
   methods: {
-    getMessage () {
+    onMessageMark(id, type) {
+      this.http.post(api["user_message_mark"], {
+        params: {
+          id,
+          type: ['read', 'unread'][type],
+        }
+      })
+    },
+    getMessage() {
       this.http.get(api["user_message"], {}).then(res => {
         const d = res.data;
         if (d.success == 1) {
@@ -67,9 +75,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .shake {
   animation: shakeAnimation .5s ease-in-out both;
+
+  &:hover, &:active {
+    animation: shakeAnimation .5s ease-in-out both;
+  }
 }
 
 @keyframes shakeAnimation {
