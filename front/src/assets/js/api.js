@@ -16,6 +16,8 @@ export default class Api {
       'user_forgetPassword': 'user/forgetPassword', // 重置请求
       'user_forgetPasswordVerify': 'user/forgetPasswordVerify', // 重置密码验证
       'activity': 'activities',
+      'user_bindOrigin': 'user/bindOrigin', // 绑定🍊
+      'user_bindOriginVerify': 'user/bindOriginVerify', // 🍊验证
       'user_message': 'message',
       'user_message_mark': 'message/mark',
       'user_reports': 'user/reports',

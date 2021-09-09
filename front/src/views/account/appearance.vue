@@ -48,8 +48,15 @@ export default {
     this.getTheme();
   },
   methods: {
-    getTheme () {
-      this.theme = storage.get('theme').data.value;
+    async getTheme () {
+      let theme = await storage.get('theme');
+
+      if (theme.data && theme.data.value) {
+        await this.$store.dispatch('setTheme', theme.data.value);
+        return;
+      }
+
+      await this.$store.dispatch('setTheme', this.$store.state.$theme);
     },
     changeTheme(val) {
       storage.set('theme', this.theme);

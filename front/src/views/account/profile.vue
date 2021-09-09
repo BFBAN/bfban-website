@@ -22,7 +22,10 @@
         <Col span="6">
           <List border size="small">
             <ListItem v-for="(i, index) in muen" :key="i.value">
-              <a @click="muenIndex = index">{{ i.title }}</a>
+              <a @click="upDateUri(index)">
+                <b v-if="muen[index].value == muenIndex">{{ i.title }}</b>
+                <span v-else>{{ i.title }}</span>
+              </a>
             </ListItem>
           </List>
           <br>
@@ -63,17 +66,41 @@ export default {
         title: 'Account',
         value: '0'
       },
-        {
-          title: 'Appearance',
-          value: '1'
-        },
-        {
-          title: 'message',
-          value: '2'
-        }]
+      {
+        title: 'Appearance',
+        value: '1'
+      },
+      {
+        title: 'message',
+        value: '2'
+      }]
     }
   },
   components: {Bulletin, appearance, account, message},
+  created() {
+    const pagename = this.$route.params.pagename;
+
+    if (pagename == undefined) {
+      this.upDateUri(0, true);
+      return;
+    }
+
+    let name = this.muen.filter(
+        i => {
+          return i.title.toLocaleLowerCase() == pagename;
+        }
+    )[0].value;
+
+    this.upDateUri(name || this.muenIndex);
+  },
+  methods: {
+    upDateUri (index, t = false) {
+      this.muenIndex = index;
+      this.$router.push({
+        path: (t ? 'profile/' : '') + this.muen[index].title.toLowerCase()
+      });
+    }
+  },
   computed: {
     isLogin() {
       return Boolean(this.$store.state.user);

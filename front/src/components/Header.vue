@@ -50,52 +50,9 @@
           </router-link>
 
           <Dropdown placement="bottom-end" v-if="isLogin">
-            <Row :gutter="10">
-              <Col>
-                <Avatar size="50">{{ currentUser.userinfo.username[0] || 'Null'}}</Avatar>
-              </Col>
-              <Col>
-                <a href="javascript:void(0)">
-                  {{ currentUser.userinfo.username }}
-                </a>
-                <p>
-                  <span v-for="(i,index) in privileges" :key="index">
-                    <Tag ttype="border" size="medium" v-if="currentUser.userinfo.privilege == i.value">
-                      {{ $t("account." + i.value) }}
-                    </Tag>
-                  </span>
-                </p>
-              </Col>
-            </Row>
+            <Avatar>{{ currentUser.userinfo.username[0] || 'Null' }}</Avatar>
+            {{ currentUser.userinfo.username }}
             <DropdownMenu slot="list">
-              <div style="width: 300px;  background-color: #f2f2f2; padding: 30px">
-                <List border size="small">
-                  <ListItem>
-                    联BFBAN的基本规则
-                    <template slot="action">
-                      <li>
-                        <a href="">阅读</a>
-                      </li>
-                    </template>
-                  </ListItem>
-                  <ListItem>
-                    作为管理员，如何识别作弊玩家？
-                    <template slot="action">
-                      <li>
-                        <a href="">阅读</a>
-                      </li>
-                    </template>
-                  </ListItem>
-                  <ListItem>
-                    如何自我证明，无作弊?
-                    <template slot="action">
-                      <li>
-                        <a href="">阅读</a>
-                      </li>
-                    </template>
-                  </ListItem>
-                </List>
-              </div>
               <DropdownItem>
                 <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
                   {{$t("header.userCenter")}}
@@ -107,42 +64,29 @@
                 </router-link>
               </DropdownItem>
               <DropdownItem>
-                <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">{{$t("header.dashboard")}}</router-link>
+                <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">{{ $t("header.dashboard") }}
+                </router-link>
               </DropdownItem>
               <Dropdown-item divided v-show="isLogin">
                 <a @click.stop.prevent="signout">
                   <Icon type="md-log-out"></Icon>
-                  {{$t("header.signout")}}
+                  {{ $t("header.signout") }}
                 </a>
               </Dropdown-item>
             </DropdownMenu>
           </Dropdown>
-          <Divider type="vertical"/>
-          <Dropdown class="mobile-hide" v-show="isLogin">
-            <Badge :count="message && message.total && message.total[0].num || 0">
-              <Icon type="md-notifications" size="30" @click="handleOpen" />
-            </Badge>
-            <DropdownMenu slot="list" style="padding: 0 20px; width: 400px">
-              <List item-layout="vertical">
-                <ListItem v-for="(item, index) in message.messages" :key="index" v-show="message.messages.length <= 4">
-                  <ListItemMeta :title="item.content" :description="item.createTime" />
-                  <template slot="action">
-                    <li>
-                      <a href="">已阅</a>
-                    </li>
-                  </template>
-                </ListItem>
-              </List>
-              <p align="center"><router-link :to="{name: 'message'}">查看更多</router-link></p>
-            </DropdownMenu>
-          </Dropdown>
-          <Divider type="vertical"/>
+          <Divider type="vertical" v-show="isLogin"/>
+          <Header_message v-show="isLogin">
+            <Icon slot="content" type="md-notifications" size="30"/>
+          </Header_message>
+          <Divider type="vertical" v-show="isLogin"/>
           <router-link class="mobile-hide" v-if="isLogin" :to="{name: 'search_main'}">
-            <Icon type="ios-search" size="28" />
+            <Icon type="ios-search" size="28"/>
           </router-link>
-          <router-link class="nav-username desktop-hide" v-if="isLogin" :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
+          <router-link class="nav-username desktop-hide" v-if="isLogin"
+                       :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
             <Badge dot>
-              <Icon size="30" type="md-person" />
+              <Icon size="30" type="md-person"/>
             </Badge>
           </router-link>
           <a class="nav-signout desktop-hide" v-show="isLogin" href="#" @click.stop.prevent="signout">
@@ -160,42 +104,27 @@
 </template>
 
 <script>
-  import {http, api,http_token} from '../assets/js/index'
+import {api, http, http_token} from '../assets/js/index'
 
-  export default {
-    data() {
-      return {
-        privileges: [],
-        message: {
-          messages: []
-        }
-      }
-    },
-    watch: {
-      $route: "loadData",
-    },
-    created() {
-      this.http = http_token.call(this);
-      this.getMessage();
-    },
-    methods: {
-      async loadData() {
-        const privileges = await import('/src/assets/privilege.json');
-        this.privileges = privileges.child;
-      },
-      getMessage () {
-        this.http.get(api["user_message"], {}).then(res => {
-          const d = res.data;
-          if (d.success == 1) {
-            this.message = d.data;
-          }
-        })
-      },
-      handleOpen () {
-        this.visible = true;
-      },
-      handleClose () {
-        this.visible = false;
+import Header_message from "./Header_message";
+
+export default {
+  data() {
+    return {
+      privileges: [],
+    }
+  },
+  components: {Header_message},
+  watch: {
+    $route: "loadData",
+  },
+  created() {
+    this.http = http_token.call(this);
+  },
+  methods: {
+    async loadData() {
+      const privileges = await import('/src/assets/privilege.json');
+      this.privileges = privileges.child;
       },
       signout() {
         http.post(api["account_signout"], {

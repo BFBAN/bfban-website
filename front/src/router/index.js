@@ -31,9 +31,10 @@ const routes = [
     {name: 'about', path: '/about', component: About},
     {name: 'apps', path: '/apps', component: Apps},
     {name: 'profile', path: '/profile', component: Profile},
+    {name: 'profile', path: '/profile/:pagename', component: Profile},
+
     {name: 'search', path: '/search/:conetnt', component: Search},
     {name: 'search_main', path: '/search', component: Search},
-    // {name: 'message', path: '/profile/message', component: Profile},
     {
         name: 'report',
         path: '/report',
@@ -65,6 +66,20 @@ const routes = [
 
     {name: 'signin', path: '/signin', component: Signin},
     {name: 'signup', path: '/signup', component: Signup},
+    {
+        name: 'bindOrigin',
+        path: '/bindOrigin',
+        component: Signup,
+        beforeEnter(to, from, next) {
+            if (store.state.user) {
+                next();
+            } else {
+                next({path: '/signin', query: {rurl: to.fullPath}});
+            }
+        },
+    },
+    {name: 'bindOriginVerify', path: '/bindOriginVerify', component: Signup},
+
     {name: 'forgetPassword', path: '/forgetPassword', component: ForgetPassword},
     {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify/:code', component: ForgetPassword,},
     {name: 'bindOrigin', path: '/bindOrigin', component: Signup},

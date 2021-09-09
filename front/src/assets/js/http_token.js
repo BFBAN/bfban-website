@@ -18,7 +18,7 @@ export default class http_token extends http {
   }
 
   setToken (data = {}) {
-    if (this.THAT.$store && this.THAT.$store.user && this.THAT.$store.user.token) {
+    if (this.THAT.$store.state.user && this.THAT.$store.state.user.token) {
       const token = this.THAT.$store.state.user.token;
       if (token != null || token != '') {
         data = Object.assign(data, {

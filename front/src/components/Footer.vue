@@ -140,7 +140,7 @@ export default {
   },
   computed: {
     currentLan () {
-      return this.$root.$i18n.locale || 'zh-CN';
+      return this.$root && this.$root.$i18n && this.$root.$i18n.locale || 'zh-CN';
     }
   }
 }

@@ -20,16 +20,19 @@ export default {
   created() {
     this.http = http_token.call(this);
 
-    this.onTheme();
+    this.onLoadTheme();
     this.onUserinfo();
   },
   methods: {
-    async onTheme () {
+    async onLoadTheme () {
       let theme = await storage.get('theme');
 
       if (theme.data && theme.data.value) {
         await this.$store.dispatch('setTheme', theme.data.value);
+        return;
       }
+
+      await this.$store.dispatch('setTheme', this.$store.state.$theme);
     },
     onUserinfo () {
       if (this.isLogin) {

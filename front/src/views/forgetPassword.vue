@@ -13,8 +13,8 @@
             <Steps :current="stepsIndex">
               <Step title="基本信息" content="核对账户"></Step>
               <Step title="验证码" content="验证是否机器人"></Step>
-              <Step title="绑定" content="关联橘子平台"></Step>
-              <Step title="完成" content="绑定成功"></Step>
+              <Step title="邮箱验证" content="查看邮箱验证链接"></Step>
+              <Step title="完成" content="重置成功"></Step>
             </Steps>
 
             <Divider></Divider>
@@ -26,9 +26,6 @@
                 </FormItem>
                 <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
                   <Input v-model="forgetPassword.originEmail" size="large" placeholder="origin email"/>
-                </FormItem>
-                <FormItem :label="$t('signup.form.password')" prop="password">
-                  <Input v-model="forgetPassword.password" type="password" size="large" placeholder="password"/>
                 </FormItem>
               </div>
 
@@ -49,8 +46,19 @@
 
               <div v-if="stepsIndex == 3" align="center">
                 <h1>恭喜完成重置 💐</h1>
-                <Tag>新密码: {{forgetPassword.password}}</Tag>
-                <p>返回<router-link to="/">{{$t("header.index")}}</router-link></p>
+                <br>
+                <Row :gutter="10">
+                  <Col >
+                    <Tag color="warning" size="large">新密码</Tag>
+                  </Col>
+                  <Col flex="auto">
+                    <Input :value="forgetPassword.password"></Input>
+                  </Col>
+                </Row>
+                <br>
+                <Alert type="warning">
+                  <p>请记住上方密码 或 在个人中心重新设置您可记忆的密码</p>
+                </Alert>
               </div>
 
               <Row>
@@ -110,7 +118,7 @@ export default {
   },
   components: {EmailTip},
   created() {
-    const code = this.$route.params.code;
+    const code = this.$route.params.code || this.$route.query.code;
     this.refreshCaptcha();
     code != null ? this.forgetPasswordVerify(code.toString()) : null;
   },
@@ -127,7 +135,7 @@ export default {
         params: {code}
       }).then((res) => {
         const d = res.data;
-        console.log(d);
+
         if (d.success == 1) {
           this.verify.load = 3;
           this.stepsIndex = 3;
@@ -157,6 +165,9 @@ export default {
     },
     onForgetPassword: function () {
       this.spinShow = true;
+
+      this.forgetPassword.lang = this.$root.$i18n.locale;
+
       http.post(api["user_forgetPassword"], {
         data: {
           data: this.forgetPassword,

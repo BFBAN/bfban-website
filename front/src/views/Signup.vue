@@ -5,7 +5,7 @@
       <Row>
         <Col span="24">
           <Card shadow>
-            <p slot="title">{{ $t("signup.title") }}</p>
+            <p slot="title">{{ this.$route.name == bindOriginName ? $t("bindOrigin.title") : $t("signup.title") }}</p>
 
             <Steps :current="stepsIndex">
               <Step title="基础信息" content="账户基本"></Step>
@@ -19,19 +19,19 @@
             <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
               <div v-if="stepsIndex == 0">
                 <FormItem :label="$t('signup.form.username')" prop="username">
-                  <Input v-model="signup.username" size="large" placeholder="4位以上用户名"/>
+                  <Input v-model="signup.username" size="large" :placeholder="$t('signup.placeholder.username')"/>
                 </FormItem>
                 <FormItem :label="$t('signup.form.password')" prop="password">
-                  <Input type="password" password v-model="signup.password" size="large" placeholder="6位以上密码"/>
+                  <Input type="password" password v-model="signup.password" size="large" :placeholder="$t('signup.placeholder.password')"/>
                 </FormItem>
               </div>
 
               <div v-if="stepsIndex == 1">
                 <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
-                  <Input v-model="signup.originEmail" size="large" placeholder="origin email"/>
+                  <Input v-model="signup.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
                 </FormItem>
                 <FormItem :label="$t('signup.form.originName')" prop="originName">
-                  <Input v-model="signup.originName" size="large" placeholder="orign name"/>
+                  <Input v-model="signup.originName" size="large" :placeholder="$t('signup.placeholder.originName')"/>
                 </FormItem>
               </div>
 
@@ -60,7 +60,9 @@
                   </Button>
                 </Col>
                 <Col span="12" align="right" type="flex">
-                  <Button v-if="stepsIndex == 2" long @click.prevent.stop="handleSignup('formValidate')" :loading="spinShow"
+                  <Button v-if="stepsIndex == 2" long
+                          @click.prevent.stop="handleSignup('formValidate')"
+                          :loading="spinShow"
                           size="large" type="primary">{{ $t('signup.form.submit') }}
                   </Button>
                 </Col>
@@ -81,7 +83,7 @@
 </template>
 
 <script>
-import {http, api, conf} from '../assets/js/index'
+import {http, api, http_token} from '../assets/js/index'
 import {testWhitespace, waitForAction} from "@/mixins/common";
 import EmailTip from "../components/EmailTip";
 import _ from "lodash";
@@ -113,10 +115,22 @@ export default {
       },
       captchaUrl: {},
       spinShow: false,
+
+      // 绑定页面名字
+      bindOriginName: 'bindOrigin',
     }
   },
   components: {EmailTip},
   created() {
+    const { query, name } = this.$route;
+
+    this.http = http_token.call(this);
+
+    if (name == this.bindOriginName) {
+        this.stepsIndex = 1;
+    }
+
+    this.bindOriginVerify(query.code);
     this.refreshCaptcha();
   },
   methods: {
@@ -132,14 +146,19 @@ export default {
       });
       // waitForAction.call(this.$refs.reCaptcha);
     },
-    handleSignup: function (name) {
+    handleSignup (name) {
       const that = this;
-
       this.$refs[name].validate((valid) => {
         if (valid) {
           let {username, password, originEmail, originName, captcha} = _.each(this.signup, (v, k, o) => {
             o[k] = v.trim();
           });
+
+          // 截停，账户绑定
+          if (name == this.bindOriginName) {
+            this.bindOrigin({originEmail, originName, captcha});
+            return;
+          }
 
           if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
             this.spinShow = true;
@@ -150,7 +169,8 @@ export default {
                   username,
                   password,
                   originEmail,	// must match the originName below
-                  originName	// must have one of bf series game
+                  originName,	// must have one of bf series game
+                  lang: this.$root.$i18n.locale
                 },
                 encryptCaptcha: this.captchaUrl.hash,
                 captcha
@@ -190,6 +210,31 @@ export default {
           this.signup.captcha = '';
           this.refreshCaptcha();
         }
+      })
+    },
+    bindOrigin ({originEmail, originName, captcha}) {
+      this.http.post(api["user_bindOrigin"], {
+        params: {
+          data: {
+            originEmail,	// must match the originName below
+            originName,	// must have one of bf series game
+            lang: this.$root.$i18n.locale
+          },
+          encryptCaptcha: this.captchaUrl.hash,
+          captcha,
+        }
+      })
+    },
+    //
+    bindOriginVerify (code) {
+      if (!code) { return }
+
+      http.get(api["user_bindOriginVerify"], {
+        params: {code}
+      }).then(res => {
+        const d = res.data;
+      }).finally(() => {
+
       })
     }
   },

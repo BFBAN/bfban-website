@@ -53,7 +53,7 @@
                    type="text"
                    disabled
                    :autosize="{minRows: 2,maxRows: 5}"
-                   placeholder="Enter something..."></Input>
+                   placeholder=""></Input>
           </FormItem>
         </Col>
         <Col span="12">
@@ -62,7 +62,7 @@
                    type="text"
                    disabled
                    :autosize="{minRows: 2,maxRows: 5}"
-                   placeholder="Enter something..."></Input>
+                   placeholder=""></Input>
           </FormItem>
         </Col>
       </Row>

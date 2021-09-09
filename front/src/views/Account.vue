@@ -2,14 +2,16 @@
   <div class="container">
     <br>
     <Row>
-      <Col>
+      <Col flex="auto">
         <Breadcrumb>
           <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
           <BreadcrumbItem>{{ $t("account.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
-      <Col span="24" align="right">
-        <Button @click="openMessage" :disabled="!account.attr.allowDM">发送消息</Button>
+      <Col align="right">
+        <Button @click="openMessage" :disabled="!account.attr.allowDM">
+          <Icon type="ios-chatbubbles" />
+        </Button>
       </Col>
     </Row>
     <br>

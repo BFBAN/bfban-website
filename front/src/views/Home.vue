@@ -7,12 +7,12 @@
           <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 8, offset: 0}">
             <h1 class="title">
               <Icon type="md-lock"/>
-              联BFBAN
+              {{ $t("home.cover.h1") }}
             </h1>
-            <h2>正守护来自全球不同battlefield服务器，在☁️中实时监控</h2>
-            <h3>建立起全球作弊玩家档案库</h3>
+            <h2>{{ $t("home.cover.h2") }}</h2>
+            <h3>{{ $t("home.cover.h3") }}</h3>
             <br>
-            <p>成为我们一员 - 维护社区环境</p>
+            <p>{{ $t("home.cover.h4") }}</p>
             <Divider/>
 
             <router-link :to="{name: 'signup'}">
@@ -22,25 +22,25 @@
             <router-link :to="{name: 'about'}">
               <Button type="text">
                 <Icon type="ios-help-circle-outline"/>
-                了解有那些社区已经加入
+                {{ $t("home.cover.subButton") }}
               </Button>
             </router-link>
             <Row :gutter="10" style="margin-top: 50px">
               <Col span="12">
                 <Card dis-hover>
                   <h3>{{ statistics.reports || 0 }}</h3>
-                  <span>已收到</span>
+                  <span>{{ $t("home.cover.dataReceived") }}</span>
                 </Card>
               </Col>
               <Col span="12">
                 <Card dis-hover>
                   <h3>{{ statistics.confirmed || 0 }}</h3>
-                  <span>确认作弊者</span>
+                  <span>{{ $t("home.cover.confirmData") }}</span>
                 </Card>
               </Col>
             </Row>
             <br>
-            <p>截止2018年11月4日</p>
+            <p>{{ $t("home.cover.endTime") }}</p>
 
           </Col>
           <Col span="16" class="mobile-hide" :lg="{span: 13, push: 3}" type="flex" align="right" justify="center">

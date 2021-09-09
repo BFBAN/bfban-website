@@ -21,7 +21,8 @@ router.post('/signup', verifyCaptcha, [
     checkbody("data.username").isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min:1, max:40}),
     checkbody('data.password').isString().trim().isLength({min:1, max:40}),
     checkbody('data.originEmail').isString().trim().isEmail(),
-    checkbody('data.originName').isString().unescape().trim().notEmpty()
+    checkbody('data.originName').isString().unescape().trim().notEmpty(),
+    checkbody('data.lang').isString()
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
@@ -31,7 +32,7 @@ async (req, res, next)=> {
 
         // all data well-formed, ready to flight
         /** @type {{username:string, password:string, originName:string, originEmail:string}} */
-        const { username, password, originName, originEmail } = req.body.data;
+        const { username, password, originName, originEmail, lang } = req.body.data;
 
         // does anyone occupied?
         if( (await db.select('username').from('registers').where({username: username}).union([
@@ -68,7 +69,7 @@ async (req, res, next)=> {
             expiresTime: new Date(Date.now()+1000*60*60*4), // 4h
             createTime: new Date()
         });
-        await sendRegisterVerify(username, originName, originEmail, randomStr);
+        await sendRegisterVerify(username, originName, originEmail, randomStr, lang);
         logger.info('users.signup Success:', {username,originName,originEmail,randomStr});
         return res.status(201).json({success: 1, code:'signup.needVerify', message: 'Verify Email to join BFBan!'});
     } catch(err) {
@@ -202,7 +203,8 @@ async (req, res, next)=> {
 
 router.post('/bindOrigin', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
     checkbody('data.originEmail').isString().trim().isEmail(),
-    checkbody('data.originName').isString().trim().notEmpty()
+    checkbody('data.originName').isString().trim().notEmpty(),
+    checkbody('data.lang').isString()
 ],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
@@ -210,7 +212,7 @@ async (req, res, next)=> {
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'bindOrigin.bad', message: validateErr.array()});
 
-        const { originEmail, originName } = req.body.data;
+        const { originEmail, originName, lang } = req.body.data;
         const originClient = originClients.getOne()
         const originUserId = await originClient.searchUserEmail(originEmail);
         if(!originUserId)
@@ -230,7 +232,7 @@ async (req, res, next)=> {
             email: originEmail,                         // when we get this payload again, we can know who is binding which email
             originUserId: originUserId                  // without the help of any temporary db table
         }), config.secret).toString('base64');
-        await sendBindingOriginVerify(req.user.username, originEmail, encodeURIComponent(code));
+        await sendBindingOriginVerify(req.user.username, originEmail, encodeURIComponent(code), lang);
 
         logger.info('users.bindOrigin#1 Success:', {name: req.user.username, email: originEmail});
         res.status(200).json({success: 1, code:'bindOrigin.needVerify', message:'check your email to complete the verification.'});
@@ -471,7 +473,8 @@ async (req, res, next)=>{
 
 router.post('/forgetPassword', verifyCaptcha, [
     checkbody('data.username').isString().trim().isLength({min: 1, max: 40}),
-    checkbody('data.originEmail').trim().isEmail()
+    checkbody('data.originEmail').trim().isEmail(),
+    checkbody('data.lang').trim()
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
@@ -491,7 +494,7 @@ async (req, res, next)=> {
             password: newpassword,                          // we do so to avoid some bay guys who know user's email address
             userid: user.id                                 // and directly change the user password though they dont know the new one
         }), config.secret).toString('base64');              // we send encrypted password to user, so we dont use db, like jwt
-        await sendForgetPasswordVerify(user.username, user.originEmail, encodeURIComponent(code)); // user verify the code->save new password into db
+        await sendForgetPasswordVerify(user.username, user.originEmail, encodeURIComponent(code), user.lang); // user verify the code->save new password into db
         // check /forgetPasswordVerify below
         res.status(200).json({success: 1, code: 'forgetPassword.needVerify', message: 'check your email to reset the password.'});
     } catch(err) {
