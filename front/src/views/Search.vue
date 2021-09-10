@@ -22,15 +22,35 @@
             </RadioGroup>
           </Col>
           <Col flex="auto" :xs="{span: 18, push: 1,pull: 1}" :lg="{push:0, pull: 0}">
-            <Input clearable
-                   search
-                   enter-button
-                   size="large"
-                   class="search-input search-input-show"
-                   :placeholder="$t('header.searchBar')"
-                   v-model="searchVal"
-                   @on-click="handleSearch"
-                   @on-search="handleSearch"/>
+            <Dropdown>
+              <Input clearable
+                     search
+                     enter-button
+                     size="large"
+                     class="search-input search-input-show"
+                     :placeholder="$t('header.searchBar')"
+                     v-model="searchVal"
+                     @on-click="handleSearch"
+                     @on-search="handleSearch"/>
+
+              <DropdownMenu slot="list" style="min-width: 300px; padding: 0 10px" >
+                <Row :gutter="0" v-if="searchHistory.list.length > 0">
+                  <Col v-for="(i, index) in searchHistory.list"
+                       :key="index"
+                       @click="handleSearchHistoryClickTag(index)">
+                    <Tag stype="border"
+                         type="dot"
+                         closable
+                         @on-close="handleSearchHistoryClose(index)">{{ i.value || '' }}
+                    </Tag>
+                  </Col>
+                </Row>
+                <div v-else align="center">
+                   🦖
+                </div>
+              </DropdownMenu>
+            </Dropdown>
+
           </Col>
         </Row>
         <div class="checkboxGroup">
@@ -75,13 +95,16 @@
 </template>
 
 <script>
-import {api, http} from "../assets/js";
+import {api, http, storage, time} from "../assets/js";
 
 export default {
   name: "search",
   data() {
     return {
       searchVal: '',
+      searchHistory: {
+        list: []
+      },
       modalSpinShow: false,
       searchScope: ['current', 'history'],
       searchScopeValue: 'current',
@@ -92,10 +115,35 @@ export default {
     const {s, type} = this.$route.query;
     this.searchScopeValue = type || this.searchScope[0];
     this.searchVal = s || '';
+
     this.handleSearch();
+    this.getSearchHistory();
   },
   methods: {
+    async getSearchHistory() {
+      let history = await storage.get('search.history');
+
+      if (history.code == -1) {
+        this.setSearchHistoryValue([]);
+      }
+
+      this.searchHistory.list = history.data.value || [];
+    },
+    async setSearchHistoryValue(val) {
+      await storage.set('search.history', val);
+    },
+    handleSearchHistoryClose(index) {
+      this.searchHistory.list.splice(index, 1);
+
+      this.setSearchHistoryValue(this.searchHistory.list);
+    },
+    handleSearchHistoryClickTag(index) {
+      this.searchVal = this.searchHistory.list[index].value;
+
+      this.handleSearch();
+    },
     handleSearch() {
+      const that = this;
       const val = this.searchVal.trim();
 
       if (val === '') return false;
@@ -109,7 +157,14 @@ export default {
           scope: this.searchScopeValue,
         }
       }).then((res) => {
-        this.modalSpinShow = false;
+        that.modalSpinShow = false;
+
+        that.setSearchHistoryValue(
+            that.searchHistory.list = that.searchHistory.list.concat([{
+              value: val,
+              time: time.now()
+            }])
+        );
 
         const d = res.data;
         if (d.success === 1) {

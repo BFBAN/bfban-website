@@ -88,11 +88,11 @@
 
                       <div class="qrcode" ref="qrCodeUrl"></div>
 
-                      {{ $t('detail.info.app_qr.tip') }}
+                      {{ $t('detail.info.app_qr.tip') }} 🦖
                     </div>
                     <div slot="content" class="desktop-hide" align="center">
                       <Button>{{ $t('detail.info.app_qr.openApp') }}</Button>
-                      <p>{{ $t('detail.info.app_qr.openAppDescribe') }}</p>
+                      <p>{{ $t('detail.info.app_qr.openAppDescribe') }} 🦖</p>
                     </div>
                   </Poptip>
                 </Col>

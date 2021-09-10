@@ -26,7 +26,7 @@ import config from "../../package.json";
 Vue.use(VueRouter);
 
 const routes = [
-    {name: 'home', path: '/', component: Home,},
+    {name: 'home', path: '/', component: Home},
     {name: 'about', path: '/about', component: About},
     {name: 'apps', path: '/apps', component: Apps},
     {name: 'profile', path: '/profile', component: Profile},
@@ -88,7 +88,7 @@ const routes = [
     {name: 'account', path: '/account/:uId', component: Account},
     //  { name: 'dashboard', path: '/dashboard', component: Dashboard },
 
-    {name: 'notFound', path: '/404', component: NotFound},
+    {name: 'notFound', path: '/404', component: NotFound, meta: {title: '🦖'}},
 
     // otherwise redirect to home
     {path: '*', redirect: '/404'},

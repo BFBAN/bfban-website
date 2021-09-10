@@ -3,7 +3,7 @@
     <br>
     <Breadcrumb>
       <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
-      <BreadcrumbItem>{{ $t("about.title") }}</BreadcrumbItem>
+      <BreadcrumbItem>{{ $t("about.title") }} 🦖</BreadcrumbItem>
     </Breadcrumb>
     <br>
     <Card class="content" dis-hover>

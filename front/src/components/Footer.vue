@@ -78,13 +78,20 @@
               </li>
             </ul>
           </Col>
-          <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" v-if="currentLan">
+          <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
             <b>选择语言</b>
-            <Tag size="large">
-              <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
-                <Option v-for="(item, index) in languages" :value="item.name" :key="index">{{ item.label }}</Option>
-              </Select>
-            </Tag>
+
+            <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large"
+                    @on-change="switchLanguage">
+              <Option v-for="(item, index) in languages" :value="item.name" :label="item.label" :key="index">
+                <span>
+                  <p size="mini" v-if="item.main">Main</p>{{ item.label }}
+                </span>
+                <span style="float:right;color:#ccc">
+                  {{item.name}}
+                </span>
+              </Option>
+            </Select>
             <p v-if="languages.length > 0">
               <br>
               <span>{{ $t("footer.language.members") }}</span>: <br>
@@ -106,7 +113,6 @@
 
 <script>
 import packageInfo from '../../package.json';
-import { detectLanguage } from '@/mixins/common';
 
 export default {
   data() {
@@ -135,7 +141,8 @@ export default {
       this.$store.dispatch('setLang', lang);
     },
     getLog() {
-      console.log('怎么啦？要不让大哥哥康康？');
+      document.getElementsByName('body').style = 'transform:rotate(98deg)'
+      console.log('怎么啦？要不让大哥哥康康?');
     }
   },
   computed: {
@@ -185,17 +192,6 @@ export default {
       padding-left: 10px;
       font-size: 20px;
       padding-right: 10px;
-    }
-
-    .switch-language {
-
-      .ivu-select-selection {
-          border: none;
-        background-color: rgba(255, 255, 255, 0);
-      }
-      .ivu-select-selection-focused {
-        box-shadow: none;
-      }
     }
   }
 </style>

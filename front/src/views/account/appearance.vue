@@ -19,7 +19,7 @@
           <Button @click="changeTheme" >确认</Button>
         </Col>
         <Col span="12" align="right">
-          需要重载页面生效
+          需要重载页面生效 🦖
         </Col>
       </Row>
     </div>

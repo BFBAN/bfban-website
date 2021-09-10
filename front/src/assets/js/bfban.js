@@ -7,7 +7,7 @@ export default class BFBAN {
     }
 
     log () {
-        console.dir(`v: ${packageInfo.version}`)
+        console.dir(`🦖 v: ${packageInfo.version}`)
         console.log('=========================================');
         console.log('你也对BFBAN感兴趣？加入BFBAN，请联系关于内邮箱📮');
         console.log('=========================================');

@@ -5,14 +5,20 @@
     "name": "index",
     "type": ["desktop","mobile"],
     "to": {
-      "name": "home"
+      "name": "home",
+      "query": {
+        "D83EDD96": "\uD83E\uDD96"
+      }
     }
   },{
     "name": "cheaters",
     "type": ["desktop","mobile"],
     "to": {
       "name": "cheaters",
-      "query": { "status": "-1" }
+      "query": {
+        "status": "-1",
+        "D83EDD96": "\uD83E\uDD96"
+      }
     }
   },{
     "name": "report",

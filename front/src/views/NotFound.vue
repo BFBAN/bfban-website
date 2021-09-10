@@ -2,7 +2,8 @@
   <div class="container">
     <div class="content notFound" align="center">
       <br>
-      <h1>4<b>0</b>4</h1>
+      <h1>404</h1>
+      <span>🦖</span>
       <h4 class="hint">{{ $t("notFound") }}</h4>
       <br>
     </div>

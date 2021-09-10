@@ -3,38 +3,16 @@
     <br>
 
     <div class="content">
-      <Row :gutter="16">
-        <Col span="11">
-          <Divider>{{ $t("home.howToUse.title") }}</Divider>
-
-          <Carousel autoplay loop>
-            <CarouselItem>
-              <div class="demo-carousel">
-                <p>
-                  <a href="https://bfban.com">本站</a>可以 <b>永久追踪</b> 被举报者的游戏ID，并支持 <b>搜索历史ID</b> ！欢迎大家积极举报。
-                </p>
-
-                <p>如果遇到挂，可以</p>
-                <p>
-                  1、先使用
-
-                  <a target="_blank" href="https://bf1.mygoare.com/">
-                    战地1外挂举报助手
-                  </a>
-
-                  给官方举报；
-                </p>
-                <p>
-                  2、自己在网站
-                  <router-link :to="{path: 'signup'}">注册</router-link>
-                  后，自己
-                  <router-link :to="{path: 'report'}">举报</router-link>
-                  ；
-                </p>
-                <p>
-                  3、举报后即会被纪录在案，即使修改了ID也能被追踪到；
-                </p>
-              </div>
+      <Row :gutter="0">
+        <Col span="11" class="mobile-hide carousel">
+          <Carousel :autoplay-speed="5000" :dots="'none'">
+            <!--            <CarouselItem v-for="i in banner" :key="i" width="440" height="548">-->
+            <!--              <img :src="i">-->
+            <!--            </CarouselItem>-->
+            <CarouselItem class="carousel-item">
+              <img src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png">
+              <h2>{{ $t("home.cover.h1") }}</h2>
+              <span>{{ $t("home.cover.h3") }}</span>
             </CarouselItem>
           </Carousel>
         </Col>
@@ -54,7 +32,7 @@
               </FormItem>
 
               <FormItem :label="$t('signup.form.captcha')">
-                <Input type="text" v-model="signin.captcha" size="large"
+                <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
                        :placeholder="$t('signup.form.captcha')">
                 </Input>
                 <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
@@ -63,7 +41,8 @@
               </FormItem>
 
               <FormItem>
-                <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
+                <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary"
+                        :disabled="!signin.captcha || !signin.password || !signin.username">
                   {{ $t('signin.form.submit') }}
                 </Button>
 
@@ -93,8 +72,7 @@
 </template>
 
 <script>
-import { waitForAction} from "@/mixins/common";
-import {http, api, conf} from '../assets/js/index'
+import {api, http} from '../assets/js/index'
 import Vuex from "vuex";
 import _ from "lodash";
 
@@ -103,6 +81,9 @@ const {mapActions, mapMutations} = Vuex;
 export default {
   data() {
     return {
+      banner: [
+        'https://hbimg.huabanimg.com/f4c3995155eb9200a231827a91aec230d31c272842a18-gKy65m_fw658/format/webp'
+      ],
       signin: {
         username: '',
         password: '',
@@ -199,5 +180,35 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.carousel {
+  border-bottom: 2px solid #f2f2f2;
+  width: 440px;
+  height: 550px;
+  overflow: hidden;
+  //background: #fff;
+  background: #401487;
+
+  > * {
+    background-image: url("https://app.bfban.com/public/svg/bk1.svg");
+    background-repeat: repeat;
+  }
+
+  .carousel-item {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 100%;
+    color: #fff;
+
+    img {
+      width: 150px;
+      height: 150px;
+      margin-top: 150px;
+      margin-bottom: 20px;
+    }
+  }
+}
 </style>

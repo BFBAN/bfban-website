@@ -27,23 +27,6 @@
                        v-for="(i, index) in headerMenu.child" :key="index">
             {{ $t("header." + i.name) }}
           </router-link>
-
-<!--    <router-link class="mobile-hide link" :to="{name: 'home'}">-->
-<!--      {{ $t("header.index") }}-->
-<!--    </router-link>-->
-
-          <!--          <router-link class="mobile-hide link" :to="{name: 'home'}">-->
-          <!--            {{ $t("header.index") }}-->
-          <!--          </router-link>-->
-          <!--          <router-link class="mobile-hide link" :to="{name: 'cheaters', query: { status: '-1' }}">-->
-          <!--            {{ $t("header.cheaters") }}-->
-          <!--          </router-link>-->
-          <!--          <router-link class="mobile-hide link" :to="{name: 'report'}">-->
-          <!--            {{ $t("header.report") }}-->
-          <!--          </router-link>-->
-          <!--          <router-link class="mobile-hide link" :to="{name: 'about'}">-->
-          <!--            {{$t("header.about")}}-->
-          <!--          </router-link>-->
         </div>
         <div class="nav">
           <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
@@ -63,7 +46,7 @@
 
           <Dropdown placement="bottom-end" v-if="isLogin">
             <Avatar>{{ currentUser.userinfo.username[0] || 'Null' }}</Avatar>
-            <span class="mobile-hide">{{ currentUser.userinfo.username }}</span>
+            <span class="mobile-hide">&emsp;{{ currentUser.userinfo.username }}</span>
             <DropdownMenu slot="list">
               <DropdownItem>
                 <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
@@ -75,8 +58,9 @@
                   {{ $t("header.profile") }}
                 </router-link>
               </DropdownItem>
-              <DropdownItem>
-                <router-link class="" v-if="isAdmin" :to="{name: 'dashboard'}">{{ $t("header.dashboard") }}
+              <DropdownItem divided v-if="isAdmin">
+                <router-link :to="{name: 'dashboard'}">
+                  {{ $t("header.dashboard") }} [beta]
                 </router-link>
               </DropdownItem>
               <Dropdown-item divided v-show="isLogin">

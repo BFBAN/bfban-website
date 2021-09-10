@@ -91,12 +91,19 @@ export default {
       })
     },
     getMessage() {
+      if (!this.isLogin) return;
+
       this.http.get(api["user_message"], {}).then(res => {
         const d = res.data;
         if (d.success == 1) {
           this.message = d.data;
         }
       })
+    },
+  },
+  computed: {
+    isLogin() {
+      return Boolean(this.$store.state.user);
     },
   }
 }
