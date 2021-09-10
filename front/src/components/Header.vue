@@ -8,31 +8,42 @@
                alt="bfban logo"/>
         </router-link>
         <div class="nav nav-menu">
-          <router-link class="mobile-hide link" :to="{name: 'home'}">
-            {{ $t("header.index") }}
-          </router-link>
-          <router-link class="mobile-hide link" :to="{name: 'cheaters', query: { status: '-1' }}">
-            {{$t("header.cheaters")}}
-          </router-link>
-          <router-link class="mobile-hide link" :to="{name: 'report'}">
-            {{$t("header.report")}}
-          </router-link>
-          <router-link class="mobile-hide link" :to="{name: 'about'}">
-            {{$t("header.about")}}
+          <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>
+          <Drawer class="desktop-hide"
+                  :title="$t($route.name + '.title')"
+                  placement="left"
+                  width="80%"
+                  :closable="true" v-model="headerMenu.show">
+            <List>
+              <ListItem @click="$router.push({name: i.name, query: i.to.query});"
+                        v-for="(i, index) in headerMenu.child" :key="index">
+                {{ $t("header." + i.name) }}
+              </ListItem>
+            </List>
+          </Drawer>
+
+          <router-link class="mobile-hide link"
+                       :to="i.to"
+                       v-for="(i, index) in headerMenu.child" :key="index">
+            {{ $t("header." + i.name) }}
           </router-link>
 
-          <router-link class="desktop-hide" :to="{name: 'home'}">
-            <Icon size="24" type="md-home" />
-          </router-link>
-          <router-link class="desktop-hide" :to="{name: 'cheaters', query: { status: '100' }}">
-            <Icon size="24" type="md-list-box" />
-          </router-link>
-          <router-link class="desktop-hide" :to="{name: 'report'}">
-            <Icon size="24" type="ios-megaphone" />
-          </router-link>
-          <router-link class="desktop-hide" v-if="isAdmin" :to="{name: 'dashboard'}">
-            <Icon size="24" type="md-cog" />
-          </router-link>
+<!--    <router-link class="mobile-hide link" :to="{name: 'home'}">-->
+<!--      {{ $t("header.index") }}-->
+<!--    </router-link>-->
+
+          <!--          <router-link class="mobile-hide link" :to="{name: 'home'}">-->
+          <!--            {{ $t("header.index") }}-->
+          <!--          </router-link>-->
+          <!--          <router-link class="mobile-hide link" :to="{name: 'cheaters', query: { status: '-1' }}">-->
+          <!--            {{ $t("header.cheaters") }}-->
+          <!--          </router-link>-->
+          <!--          <router-link class="mobile-hide link" :to="{name: 'report'}">-->
+          <!--            {{ $t("header.report") }}-->
+          <!--          </router-link>-->
+          <!--          <router-link class="mobile-hide link" :to="{name: 'about'}">-->
+          <!--            {{$t("header.about")}}-->
+          <!--          </router-link>-->
         </div>
         <div class="nav">
           <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
@@ -45,26 +56,27 @@
           <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signin'}">
             <Icon type="md-log-in" size="30" />
           </router-link>
+
           <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signup'}">
             <Icon type="md-person-add" size="30" />
           </router-link>
 
           <Dropdown placement="bottom-end" v-if="isLogin">
             <Avatar>{{ currentUser.userinfo.username[0] || 'Null' }}</Avatar>
-            {{ currentUser.userinfo.username }}
+            <span class="mobile-hide">{{ currentUser.userinfo.username }}</span>
             <DropdownMenu slot="list">
               <DropdownItem>
-                <router-link class="nav-username mobile-hide" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
-                  {{$t("header.userCenter")}}
+                <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
+                  {{ $t("header.userCenter") }}
                 </router-link>
               </DropdownItem>
               <DropdownItem>
-                <router-link class="nav-username mobile-hide" :to="{name: 'profile', params: { uId: `${currentUser.userinfo.userId}` }}">
-                  {{$t("header.profile")}}
+                <router-link class="" :to="{name: 'profile', params: { uId: `${currentUser.userinfo.userId}` }}">
+                  {{ $t("header.profile") }}
                 </router-link>
               </DropdownItem>
               <DropdownItem>
-                <router-link class="mobile-hide" v-if="isAdmin" :to="{name: 'dashboard'}">{{ $t("header.dashboard") }}
+                <router-link class="" v-if="isAdmin" :to="{name: 'dashboard'}">{{ $t("header.dashboard") }}
                 </router-link>
               </DropdownItem>
               <Dropdown-item divided v-show="isLogin">
@@ -75,27 +87,24 @@
               </Dropdown-item>
             </DropdownMenu>
           </Dropdown>
+
           <Divider type="vertical" v-show="isLogin"/>
+
           <Header_message v-show="isLogin">
             <Icon slot="content" type="md-notifications" size="30"/>
           </Header_message>
+
           <Divider type="vertical" v-show="isLogin"/>
-          <router-link class="mobile-hide" v-if="isLogin" :to="{name: 'search_main'}">
+
+          <router-link v-if="isLogin" :to="{name: 'search_main'}">
             <Icon type="ios-search" size="28"/>
           </router-link>
-          <router-link class="nav-username desktop-hide" v-if="isLogin"
-                       :to="{name: 'account', params: { uId: `${currentUser.uId}` }}">
-            <Badge dot>
-              <Icon size="30" type="md-person"/>
-            </Badge>
-          </router-link>
-          <a class="nav-signout desktop-hide" v-show="isLogin" href="#" @click.stop.prevent="signout">
-            <Icon type="md-log-out" size="30"></Icon>
-          </a>
+
           <Divider type="vertical"/>
+
           <Tooltip :content="$t('home.howToUse.tools.main')" placement="bottom-end">
             <router-link :to="{name: 'apps'}">
-              <Icon type="md-apps" size="30" />
+              <Icon type="md-apps" size="30"/>
             </router-link>
           </Tooltip>
         </div>
@@ -106,11 +115,17 @@
 <script>
 import {api, http, http_token} from '../assets/js/index'
 
+import menu from '../assets/headerMenu.json'
+
 import Header_message from "./Header_message";
 
 export default {
   data() {
     return {
+      headerMenu: {
+        show: false,
+        child: [],
+      },
       privileges: [],
     }
   },
@@ -120,6 +135,7 @@ export default {
   },
   created() {
     this.http = http_token.call(this);
+    this.headerMenu.child = menu.child;
   },
   methods: {
     async loadData() {

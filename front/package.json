@@ -6,8 +6,11 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "electron": "electron .",
+    "electron-dist": "electron-builder",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/lang/**/*.json\""
   },
+  "main": "desktop/main.js",
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
@@ -21,6 +24,7 @@
     "sass": "^1.39.0",
     "view-design": "^4.0.0",
     "vue": "^2.6.11",
+    "electron": "^14.0.0",
     "vue-i18n": "^8.25.0",
     "vue-qr": "^2.5.0",
     "vue-quill-editor": "^3.0.6",
@@ -36,6 +40,7 @@
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
     "cors": "^2.8.5",
+    "electron": "^14.0.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "lodash": "^4.17.21",
@@ -43,6 +48,7 @@
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-i18n": "~2.1.3",
     "vue-cli-plugin-iview": "~2.0.0",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "webpack-cli": "^4.8.0"
   }
 }

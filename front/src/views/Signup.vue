@@ -98,7 +98,8 @@ export default {
       stepsIndex: 0,
       ruleValidate: {
         username: [
-          {required: true, trigger: 'blur'}
+          {required: true, trigger: 'blur'},
+          {}
         ],
         password: [
           {required: true, trigger: 'blur'}

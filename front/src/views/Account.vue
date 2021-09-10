@@ -9,8 +9,11 @@
         </Breadcrumb>
       </Col>
       <Col align="right">
-        <Button @click="openMessage" :disabled="!account.attr.allowDM">
+        <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{ $t("account.message.hint.taOffChat") }} </Alert>
+        <Alert show-icon type="error" v-if="account.id == currentUser.userinfo.userId"> {{ $t("account.message.hint.selfTalk") }} </Alert>
+        <Button @click="openMessage" :disabled="!account.attr.allowDM || account.id == currentUser.userinfo.userId">
           <Icon type="ios-chatbubbles" />
+          {{ $t("account.message.chat") }}
         </Button>
       </Col>
     </Row>
@@ -249,7 +252,16 @@ export default {
         if (res.data.success == 1) {
           this.$Message.success(res.data.message);
         } else {
-          this.$Message.error(res.data.message);
+          switch (res.data.error) {
+            case 'message.denied':
+              this.$Message.error(this.$i18n.t("account.message.hint.denied"));
+              break;
+            case 'message.blocked':
+              this.$Message.error(this.$i18n.t("account.message.hint.taOffChat"));
+              break;
+            default:
+              this.$Message.error(res.data.message);
+          }
         }
       }).finally(() => {
         this.message.load = false;
@@ -272,6 +284,11 @@ export default {
       });
     },
   },
+  computed:{
+    currentUser() {
+      return this.$store.state.user || {token: ''};
+    }
+  }
 };
 </script>
 

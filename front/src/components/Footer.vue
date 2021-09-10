@@ -1,8 +1,8 @@
 <template>
     <footer class="footer">
       <div class="container">
-        <Row :gutter="30" >
-          <Col :xs="{span: 24 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
+        <Row :gutter="0">
+          <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
 
             <Badge :count="logoCount" overflow-count="999999">
               <Avatar v-if="logoCount > 10" size="40">
@@ -19,7 +19,7 @@
 
             <p>{{ $t("footer.column.col1.text") }}</p>
           </Col>
-          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
+          <Col :xs="{span: 9 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
             <h4><b>{{ $t("footer.column.col2.title") }}</b></h4>
             <ul>
               <li>
@@ -47,7 +47,7 @@
               </li>
             </ul>
           </Col>
-          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
+          <Col :xs="{span: 9 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
             <h4><b>{{ $t("footer.column.col3.title") }}</b></h4>
             <ul>
               <li>
@@ -63,7 +63,7 @@
               </li>
             </ul>
           </Col>
-          <Col :xs="{span: 10 ,pull: 1, push: 1}" :lg="{span: 4,pull: 0, push: 0}" >
+          <Col :xs="{span: 9 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}" >
             <h4><b>{{ $t("footer.column.col3.title") }}</b></h4>
             <ul>
               <li>
@@ -78,7 +78,7 @@
               </li>
             </ul>
           </Col>
-          <Col :xs="{span: 22 ,pull: 1, push: 1}" :lg="{span: 5,pull: 0, push: 0}" v-if="currentLan">
+          <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" v-if="currentLan">
             <b>选择语言</b>
             <Tag size="large">
               <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="small" placement="top-end" @on-change="switchLanguage">
@@ -139,8 +139,11 @@ export default {
     }
   },
   computed: {
-    currentLan () {
-      return this.$root && this.$root.$i18n && this.$root.$i18n.locale || 'zh-CN';
+    currentLan: {
+      set () {},
+      get () {
+        return this.$root && this.$root.$i18n && this.$root.$i18n.locale || 'zh-CN';
+      }
     }
   }
 }

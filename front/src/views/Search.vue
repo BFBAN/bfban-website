@@ -4,20 +4,24 @@
 
     <div class="content">
       <br>
-      <Breadcrumb>
-        <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
-        <BreadcrumbItem>{{ $t("search.title") }}</BreadcrumbItem>
-      </Breadcrumb>
+      <Row>
+        <Col :xs="{push: 1}" :lg="{push: 0}">
+          <Breadcrumb>
+            <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+            <BreadcrumbItem>{{ $t("search.title") }}</BreadcrumbItem>
+          </Breadcrumb>
+        </Col>
+      </Row>
       <br>
 
       <div class="search-content">
         <Row :gutter="30">
-          <Col>
+          <Col flex="auto" :xs="{span: 20, push: 1,pull: 1}" :lg="{push:0, pull: 0}">
             <RadioGroup v-model="searchScopeValue" type="button" size="large" class="search-input-show">
-              <Radio :label="i" border v-for="i in searchScope" :key="i">{{$t('search.scope.' + i)}}</Radio>
+              <Radio :label="i" border v-for="i in searchScope" :key="i">{{ $t('search.scope.' + i) }}</Radio>
             </RadioGroup>
           </Col>
-          <Col>
+          <Col flex="auto" :xs="{span: 18, push: 1,pull: 1}" :lg="{push:0, pull: 0}">
             <Input clearable
                    search
                    enter-button
@@ -63,7 +67,6 @@
           </ListItem>
         </List>
       </div>
-      <div v-else>无</div>
 
       <Spin size="large" fix v-show="modalSpinShow"></Spin>
     </div>
@@ -154,8 +157,8 @@ export default {
   }
 
   .search-input {
-    width: 40%;
-    min-width: 400px;
+    width: 100%;
+    min-width: 300px;
     border-radius: 10px;
   }
 }

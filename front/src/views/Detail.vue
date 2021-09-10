@@ -156,7 +156,7 @@
                       <div class="timeline-time">
                         <Time :time="l.createTime"></Time>
 
-                        <router-link :to="{name: 'account', params: {uId: `${l.uId}`}}">
+                        <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                           <!-- 管理员 -->
                           <Tag v-if="l.privilege === 'admin'" color="success">
                             {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
@@ -254,12 +254,14 @@
                          :id="`user-verify-cheater-${l.id}`">
                       <div class="timeline-time">
                         <Time v-if="l.createTime" :time="l.createTime"></Time>
+
                         <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                           <Tag v-if="l.privilege === 'admin'" color="success">
                             {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
                           <b>{{ l.username }}</b>
                         </router-link>
+
                         {{ $t('detail.info.judge', {msg: 'judge'}) }}
 
                         <Tag color="warning">
@@ -365,7 +367,9 @@
                     <Row class="timeline-content">
                       <Col>
                       </Col>
-                      <Col span="24" align="right"># {{ index }}</Col>
+                      <Col span="24" align="right">
+                        # {{ index }}
+                      </Col>
                     </Row>
                     <Divider></Divider>
                   </TimelineItem>
@@ -385,6 +389,7 @@
                         }}</span></a></b>，
                       <span>{{ $t('detail.info.replyManual2', {msg: 'replyManual2'}) }}</span>
                     </Alert>
+
                     <Form :label-width="80" style="position: relative;">
                       <Input @on-keydown="handleCmdEnter($event, 'reply')"
                              v-model="reply.content"
@@ -466,8 +471,10 @@
             <div>
               <Button type="primary"
                       @click="appeal.show = true"
-                      :disabled="!isLogin">此账户是我</Button>
-              <p><br>该举报信息存在问题,我能自证或他人协助证明清白.</p>
+                      :disabled="!isLogin">
+                {{ $t('detail.info.appeal') }}
+              </Button>
+              <p><br>{{ $t('detail.appeal.describe') }}</p>
               <Divider/>
             </div>
             <Affix :offset-top="10">
@@ -523,13 +530,49 @@
                 </FormItem>
               </Col>
               <Col span="24">
+                <Row :gutter="30" style="padding: 0 20px">
+                  <Col flex="1">
+                    <h3>
+                      <Icon type="md-done-all" color="#19be6b"/>
+                      合适的裁决
+                    </h3>
+                    <ol>
+                      <li>直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)</li>
+                      <li>简要，作弊特征明显，可使用下方模板统一判决</li>
+                    </ol>
+                  </Col>
+                  <Col flex="1">
+                    <h3>
+                      <Icon type="ios-alert-outline" color="red"/>
+                      不合适的裁决
+                    </h3>
+                    <ol>
+                      <li>填写如"1"、"[空位符]"、"[表情]"等这类无意义回复</li>
+                      <li>回复内容中携带人生攻击、歧视、色情、政治内容</li>
+                      <li>裁决的内容，由于游戏外因素决定，比如头像、丑</li>
+                    </ol>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span="24">
                 <FormItem label="Reason">
-                  <Input @on-keydown="handleCmdEnter($event, 'verify')" v-model="verify.suggestion"
-                         type="textarea"
-                         :autosize="{minRows: 2}" placeholder="Write something"/>
+                  <Input
+                      type="textarea"
+                      @on-keydown="handleCmdEnter($event, 'verify')"
+                      v-model="verify.suggestion"
+                      :autosize="{minRows: 2}"
+                      :placeholder="$t(`detail.info.giveOpinion`)"/>
                 </FormItem>
               </Col>
             </Row>
+
+            <FormItem v-show="verify.status === '1'" label="fastReply">
+              <CheckboxGroup v-model="fastReply.selected">
+                <Checkbox v-for="content in fastReply.content" :key='content' :label="content">
+                  {{ $t(`detail.info.fastReplies.${content}`) }}
+                </Checkbox>
+              </CheckboxGroup>
+            </FormItem>
 
             <FormItem>
               <Button type="primary" @click.stop.prevent="doVerify">
@@ -566,27 +609,99 @@
       <div v-else>{{ $t('detail.info.replyManual4', {msg: 'replyManual4'}) }}</div>
     </Modal>
 
-
     <!-- 申诉 -->
     <Modal v-model="appeal.show"
-        :title="`${$t('detail.info.appeal', {msg: 'appeal'})}`"
-        :loading="appeal.load"
-        @on-ok="handelAppeal">
-      <div>
-        <Form>
-          <FormItem :label="$t('detail.appeal.info.player')">
-            <Input type="text"
-                   :value="cheater.id"
-                   disabled
-                   size="large"
-                   :placeholder="$t('detail.placeholder.player')"/>
-          </FormItem>
-          <FormItem :label="$t('detail.appeal.info.content')">
-            <br>
-            <Edit :content="appeal.content" @change="handleMiscChange" :editorContent="$t('detail.appeal.placeholder.content')"/>
-          </FormItem>
-        </Form>
-      </div>
+           width="80%"
+           :loading="appeal.load"
+           @on-ok="handelAppeal">
+      <Row :gutter="30">
+        <Col flex="1">
+          <h2>规则</h2>
+          <br>
+          <h3>针对误BAN，本人或第三方可以协助申诉，在满足下方所有基本要求后，您的申诉内容会提交到BFBAN所有管理员，满足3位管理员确认通过才可解除</h3>
+          <br>
+          <Alert type="warning" show-icon>
+            必须注意
+            <span slot="desc">
+                申诉只有一次机会，最终结果，一旦确认结果无法再次修改，所有申诉记录被永久保存
+            </span>
+          </Alert>
+          <br>
+          <Row :gutter="60" style="padding: 0 30px">
+            <Col flex="1">
+              <ul>
+                <li>
+                  <h3>
+                    <Icon type="md-done-all" color="#19be6b"/>
+                    有效多媒体(视频、图片)证据
+                  </h3>
+                  <ol>
+                    <li>使用类似"高速目标靶心"软件，拍摄到屏幕与手、键盘录制自证</li>
+                    <li>
+                      自我辩护
+                      <Alert type="warning">谎言无限套谎言一定会被拆穿</Alert>
+                    </li>
+                  </ol>
+                </li>
+                <br>
+                <li>
+                  <h3>
+                    <Icon type="md-done-all" color="#19be6b"/>
+                    辅助证明
+                  </h3>
+                  <ol>
+                    <li>举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址，</li>
+                  </ol>
+                </li>
+              </ul>
+            </Col>
+            <Col flex="1">
+              <ul>
+                <li>
+                  <h3>
+                    <Icon type="ios-alert-outline" color="red"/>
+                    不通过的证明
+                  </h3>
+                  <ol>
+                    <li>借出、出租等形式给第三方，无论是刷数据还是朋友借用说辞，都无法证明是否本人，你必须明白账户借出无法知道通过何种手段. 一律不给与通过</li>
+                    <li>被多方玩家截取使用(不限于本人截图显示出作弊特征)或购买作弊软体多媒体</li>
+                    <li>存在前科，如上系列存在档案玩家将大大折扣通过几率</li>
+                  </ol>
+                </li>
+              </ul>
+            </Col>
+          </Row>
+          <br>
+        </Col>
+        <Col flex="1">
+          <Form>
+            <Row :gutter="30">
+              <Col flex="1">
+                <FormItem :label="$t('detail.appeal.info.player')">
+                  <Input type="text"
+                         :value="cheater.id"
+                         disabled
+                         size="large"
+                         :placeholder="$t('detail.placeholder.player')"/>
+                </FormItem>
+              </Col>
+              <Col flex="1">
+                <FormItem :label="$t('detail.appeal.info.originName')">
+                  <Input type="text"
+                         :value="cheater.originName"
+                         disabled
+                         size="large"/>
+                </FormItem>
+              </Col>
+            </Row>
+            <FormItem :label="$t('detail.appeal.info.content')">
+              <br>
+              <Edit :content="appeal.content" @change="handleMiscChange"
+                    :editorContent="$t('detail.appeal.placeholder.content')"/>
+            </FormItem>
+          </Form>
+        </Col>
+      </Row>
     </Modal>
 
     <br>
@@ -596,7 +711,7 @@
 <script>
 import BFBAN from "../assets/js/bfban";
 
-import {http, api, http_token, util} from '../assets/js/index'
+import {api, http, http_token, util} from '../assets/js/index'
 import vueQr from 'vue-qr'
 import translate from 'google-translate-open-api';
 
@@ -739,7 +854,7 @@ export default new BFBAN({
           let timelineList = d.data;
           let countNum = [0, 0];
 
-          timelineList.forEach(i => {
+          timelineList.forEach((i, index) => {
             if (i.type == 'report')
               countNum[0] += 1;
             if (i.type == 'judgement')

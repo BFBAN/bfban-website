@@ -13,26 +13,35 @@
       <!--创建时间（时间段）、-->
       <!--操作时间（时间段）、-->
       <!--id搜索-->
-      <p>
-        <RadioGroup
-          size="large"
-          class="game-type"
-          v-model="gameName"
-          @on-change="handleChanges"
-          type="button">
-          <Radio label="">
-            {{ $t('list.filters.game.all') }}
-          </Radio>
-          <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" :style="'background-image: url(' + i.bk_src + ')'">
-            <Badge :count="getTotalNum('bf1')" :overflow-count="90000">
-              <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
-                <img height="25" :src="i.logo_src" v-if="i.logo_src" />
-                <span v-else>{{i.full_name}}</span>
-              </Tooltip>
-            </Badge>
-          </Radio>
-        </RadioGroup>
-      </p>
+      <Row>
+        <Col flex="auto">
+          <RadioGroup
+              size="large"
+              class="game-type"
+              v-model="gameName"
+              @on-change="handleChanges"
+              type="button">
+            <Radio label="">
+              {{ $t('list.filters.game.all') }}
+            </Radio>
+            <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" :style="'background-image: url(' + i.bk_src + ')'">
+              <Badge :count="getTotalNum('bf1')" :overflow-count="90000">
+                <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
+                  <img height="25" :src="i.logo_src" v-if="i.logo_src" />
+                  <span v-else>{{i.full_name}}</span>
+                </Tooltip>
+              </Badge>
+            </Radio>
+          </RadioGroup>
+        </Col>
+        <Col flex="auto">
+          <i-switch v-model="bot.autoUpdate" @on-change="autoUpdateList"/>
+          <Divider type="vertical"/>
+          <Tooltip content="每隔设置时间刷新，有新的待审核桌面通知您" max-width="200">
+            <Icon type="md-help-circle" />
+          </Tooltip>
+        </Col>
+      </Row>
 
       <Row :gutter="10">
         <Col span="17">
@@ -158,7 +167,7 @@
               </RadioGroup>
               <Divider type="vertical"/>
 
-              <Button slot="extra" size="small" icon="ios-refresh" @click.prevent.stop="handleRefresh">
+              <Button slot="extra" size="small" icon="ios-refresh" @click.prevent.stop="getCheaterList">
                 {{ $t("list.filters.refresh") }}
               </Button>
             </Card>
@@ -198,6 +207,11 @@ export default new BFBAN({
       ],
       sortByValue: "createTime",
       cheaterStatus: null,
+
+      bot: {
+        autoUpdate: false,
+        time: 10000
+      }
     };
   },
   created() {
@@ -205,6 +219,7 @@ export default new BFBAN({
   },
   watch: {
     $route: "loadData",
+
   },
   computed: {
     getAllStatusNum() {
@@ -215,6 +230,19 @@ export default new BFBAN({
   },
   methods: {
     getCheaterStatusLabel: util.getCheaterStatusLabel,
+    autoUpdateList () {
+      const that = this;
+
+      console.log(that.bot.autoUpdate)
+      if (!that.bot.autoUpdate) {
+        clearInterval(this.bot.fun);
+        return;
+      }
+
+      that.bot.fun = setInterval(function () {
+        that.getCheaterList();
+      }, that.bot.time)
+    },
     getTotalNum(val) {
       const target = _.find(this.totalSum, ["game", val]);
 
@@ -235,6 +263,11 @@ export default new BFBAN({
         this.games = res.gameName;
       });
 
+      this.getCheaterList();
+    },
+    getCheaterList () {
+      this.spinShow = true;
+
       // default values
       const {
         game = "bf1",
@@ -249,15 +282,15 @@ export default new BFBAN({
       const config = {};
 
       config["params"] = Object.assign({
-          game,
-          page,
-          sort,
-          status,
-          tz: '', // moment.tz.gutter(),
-          limit,
-        },
-        createTime ? {createTime: new Date(createTime).getTime(),} : {},
-        updateTime ? {updateTime: new Date(updateTime).getTime(),} : {}
+            game,
+            page,
+            sort,
+            status,
+            tz: '', // moment.tz.gutter(),
+            limit,
+          },
+          createTime ? {createTime: new Date(createTime).getTime(),} : {},
+          updateTime ? {updateTime: new Date(updateTime).getTime(),} : {}
       );
 
       this.gameName = game;
@@ -282,11 +315,11 @@ export default new BFBAN({
         this.spinShow = false;
       });
     },
-    handleRefresh() {
-      this.spinShow = true;
-
-      this.loadData();
-    },
+    // handleRefresh() {
+    //   this.spinShow = true;
+    //
+    //   this.getCheaterList();
+    // },
     routerQuery() {
       const game = this.gameName;
       const status = this.statusGroup;

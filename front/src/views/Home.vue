@@ -9,7 +9,7 @@
               <Icon type="md-lock"/>
               {{ $t("home.cover.h1") }}
             </h1>
-            <h2>{{ $t("home.cover.h2") }}</h2>
+            <h2>{{ $t("home.cover.h2")[Math.floor(Math.random() * 2)] }}</h2>
             <h3>{{ $t("home.cover.h3") }}</h3>
             <br>
             <p>{{ $t("home.cover.h4") }}</p>
@@ -126,23 +126,27 @@
         </Row>
       </div>
       <div v-if="activitySwitchType" class="lean-box">
-        <div class="wrapper" :style="'animation: rowup ' + activities_l.length * .9 + 's linear infinite;'">
+        <div class="wrapper" :style="'animation: rowup ' + activities_l.length * .8 + 's linear infinite;'">
           <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
             <Card class="icon" v-for="a_i in activity" :key="a_i.id">
               <div align="center" style="margin-top: -80px">
                 <Avatar size="80">{{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}</Avatar>
                 <p>
                   <br>
+                  <Tag color="success" v-if="a_i.type == 'judgement'">
+                    {{$t("account.admin")}}
+                  </Tag>
                   {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
                   <Divider type="vertical"/>
                   <Time v-if="a_i.createTime" :time="a_i.createTime"></Time>
                 </p>
               </div>
+
               <span v-if="a_i.type === 'report'">
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
                   {{a_i.byUserName }}
                 </router-link>
-                举报了
+                {{$t('home.activity.activities.report', {msg: 'report'})}}
                 <Tag>
                   {{ getGameLabel(a_i.game) }}
                 </Tag>
@@ -154,25 +158,47 @@
 
               <span v-if="a_i.type === 'register'">
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                  {{a_i.byUserName }}
+                  {{ a_i.byUserName }}
                 </router-link>
-                注册了 bfban ，欢迎！
+                {{$t('home.activity.activities.join', {msg: 'join'})}}
               </span>
 
               <span v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
-                <Tag color="success">{{$t("account.admin")}}</Tag>
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                  {{a_i.byUserName }}
+                  <Tag v-if="a_i.privilege === 'admin'" color="success">
+                    {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
+                  </Tag>
+                  <b>{{ a_i.byUserName }}</b>
                 </router-link>
-                将
+
+                {{ $t('detail.info.judge', {msg: 'judge'}) }}
+
                 <router-link :to="{name: 'cheater', params: {ouid: `${a_i.toPlayerId}`}}">
                   {{a_i.toPlayerName }}
                 </router-link>
-                处理为
+
                 <Tag color="warning">
-                  {{ $t(`basic.status[${a_i.action}]`) }}
                   {{ getCheaterStatusLabel(a_i.action) }}
                 </Tag>
+
+                <span v-if="a_i.cheatMethods">
+                  ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
+                  <b>{{ convertCheatMethods(a_i.cheatMethods) }}</b>
+                </span>
+
+<!--                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">-->
+<!--                  {{a_i.byUserName }}-->
+<!--                </router-link>-->
+
+<!--                {{ $t('detail.info.judge', {msg: 'judge'}) }}-->
+
+<!--                <router-link :to="{name: 'cheater', params: {ouid: `${a_i.toPlayerId}`}}">-->
+<!--                  {{a_i.toPlayerName }}-->
+<!--                </router-link>-->
+
+<!--                <Tag color="warning">-->
+<!--                  {{a_i.action}}{{ getCheaterStatusLabel(a_i.action) }}-->
+<!--                </Tag>-->
               </span>
             </Card>
           </div>
@@ -184,7 +210,7 @@
 
 <script>
 import BFBAN from "../assets/js/bfban";
-import {http, api, conf, util} from '../assets/js/index'
+import {http, api, util} from '../assets/js/index'
 
 export default new BFBAN( {
   data() {
@@ -203,6 +229,7 @@ export default new BFBAN( {
     '$route': 'loadData',
   },
   created() {
+    this.loadData();
     this.getStatisticsInfo();
     this.getActivity();
   },
@@ -210,8 +237,8 @@ export default new BFBAN( {
     getCheaterStatusLabel: util.getCheaterStatusLabel,
     convertCheatMethods: util.convertCheatMethods,
     getGameLabel: util.getGameLabel,
-    loadData() {
-      util.initUtil().then((res) => {
+    async loadData() {
+      await util.initUtil().then((res) => {
         this.cheaterStatus = res.cheaterStatus;
         this.cheatMethodsGlossary = res.cheatMethodsGlossary;
 
@@ -311,8 +338,6 @@ export default new BFBAN( {
   margin-left: 45px;
   transform: translateX(45px) translateY(-10px);
 }
-
-
 </style>
 
 <style lang="scss" scoped>
@@ -346,8 +371,7 @@ export default new BFBAN( {
     }
   }
 }
-</style>
-<style lang="scss">
+
 .joinBFbanTip .ivu-tooltip-inner {
   white-space: normal;
 }

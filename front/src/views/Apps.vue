@@ -9,11 +9,11 @@
 
     <div>
       <Row :gutter="30">
-        <Col span="20">
+        <Col flex="auto">
           <h1>{{$t("home.howToUse.tools.main")}}</h1>
           <p>{{$t("home.howToUse.tools.describe")}}</p>
         </Col>
-        <Col span="1" type="flex" align="right">
+        <Col type="flex" align="right">
           <Button>{{$t("home.howToUse.tools.submit_tool_app")}}</Button>
         </Col>
       </Row>

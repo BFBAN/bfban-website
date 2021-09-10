@@ -8,13 +8,20 @@
     <br>
 
     <Card shadow>
-      <Row :gutter="15">
-        <Col>
-          <Avatar :size="48">{{ currentUser.userinfo.username[0] }}</Avatar>
+      <Row>
+        <Col flex="auto">
+          <Row :gutter="15">
+            <Col>
+              <Avatar :size="48">{{ currentUser.userinfo.username[0] }}</Avatar>
+            </Col>
+            <Col>
+              <h3>{{ currentUser.userinfo.username }}</h3>
+              <p>欢迎来到BFBAN</p>
+            </Col>
+          </Row>
         </Col>
         <Col>
-          <h3>{{ currentUser.userinfo.username }}</h3>
-          <p>欢迎来到BFBAN</p>
+
         </Col>
       </Row>
       <br>

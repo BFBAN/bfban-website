@@ -12,6 +12,68 @@
 @radio-inner-prefix-cls : #000;
 @radio-group-button-prefix-cls : ~"@{radio-group-prefix-cls}-button";
 
+// Card
+@list-prefix-cls: ~"@{css-prefix}list";
+
+.@{list-prefix-cls} {
+  position: relative;
+
+  &-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &-item{
+    display: flex;
+    align-items: center;
+    padding: @list-item-padding;
+    background: #fff;
+  }
+}
+
+.@{list-prefix-cls}-bordered {
+  border: 1px solid @border-color-base;
+  border-radius: @border-radius-base;
+  .@{list-prefix-cls}-header {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .@{list-prefix-cls}-footer {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .@{list-prefix-cls}-item {
+    padding-right: 24px;
+    padding-left: 24px;
+    border-bottom: 1px solid @border-color-split;
+  }
+
+  .@{list-prefix-cls}-pagination {
+    margin: 16px 24px;
+  }
+
+  &.@{list-prefix-cls}-small {
+    .@{list-prefix-cls}-item {
+      padding-right: 16px;
+      padding-left: 16px;
+    }
+    .@{list-prefix-cls}-header,
+    .@{list-prefix-cls}-footer {
+      padding: 8px 16px;
+    }
+  }
+
+  &.@{list-prefix-cls}-large {
+    .@{list-prefix-cls}-header,
+    .@{list-prefix-cls}-footer {
+      padding: 16px 24px;
+    }
+  }
+}
+
 // 按钮样式 - Button style
 .@{radio-group-button-prefix-cls} {
   font-size: 0;
