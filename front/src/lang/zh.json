@@ -38,6 +38,16 @@
   },
   "detail": {
     "title": "详情",
+    "appeal": {
+      "info": {
+        "content": "申诉内容",
+        "player": "玩家id"
+      },
+      "placeholder": {
+        "content": "请详细填写您申诉信息以便审核",
+        "player": "请填写玩家id"
+      }
+    },
     "info": {
       "app_qr": {
         "title": "手机上查看",

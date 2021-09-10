@@ -178,7 +178,9 @@
                         {{ $t("report.info.cancel", {msg: "cancel"}) }}
                       </Button>
                       <Divider type="vertical"/>
-                      <Button @click="doReport(index)" type="primary" size="large">
+                      <Button @click="doReport(index)"
+                              type="primary"
+                              size="large">
                         {{ $t("report.info.reportOne", {msg: "report"}) }}
                       </Button>
                     </FormItem>
@@ -222,11 +224,10 @@ export default {
       cheatMethodsGlossary: [],
     };
   },
-  components: {
-    Edit,
-  },
+  components: { Edit },
   created() {
     this.http = http_token.call(this);
+
     this.handleTabsAdd();
     this.loadData();
   },
@@ -259,17 +260,16 @@ export default {
       this.tabs.list.push(newFormData);
     },
     checkVideoAndImg(formData) {
-      if (
-          trimAllWhitespace(formData.formItem.bilibiliLink) ||
-          /(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)/.test(
-              formData.formItem.description
-          )
-      ) {
-        return true;
-      } else {
-        this.$Message.error(this.$i18n.t("report.info.error"));
-        return false;
-      }
+      return true;
+      // trimAllWhitespace(formData.formItem.bilibiliLink) ||
+      // if (
+      //     /(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)/.test(formData.formItem.description)
+      // ) {
+      //   return true;
+      // } else {
+      //   this.$Message.error(this.$i18n.t("report.info.error"));
+      //   return false;
+      // }
     },
     refreshCaptcha(index) {
       http.get(api["captcha"], {
@@ -303,7 +303,7 @@ export default {
 
       this.spinShow = true;
 
-      http.post('checkGameIdExist', {
+      this.http.post('checkGameIdExist', {
         data: {
           id: trimAllWhitespace(formData.formItem.originId),
         },
@@ -364,7 +364,7 @@ export default {
       const originId = trimAllWhitespace(formData.formItem.originId);
       let bilibiliLink;
       formData.formItem.bilibiliLink.forEach(uri => {
-        bilibiliLink = trimAllWhitespace(uri);
+        // bilibiliLink = trimAllWhitespace(uri);
         if (bilibiliLink) {
           bilibiliLink = /^https?:\/\//.test(bilibiliLink) ? bilibiliLink : "//" + bilibiliLink;
         }

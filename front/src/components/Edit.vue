@@ -12,7 +12,6 @@
           name="file"
           :max-size="imgMaxSize"
           type="drag"
-
           :with-credentials="withCredentials"
           :show-upload-list="showUploadList"
 

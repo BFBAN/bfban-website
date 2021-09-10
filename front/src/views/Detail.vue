@@ -574,16 +574,16 @@
         @on-ok="handelAppeal">
       <div>
         <Form>
-          <FormItem :label="$t('detail.appeal.player')">
+          <FormItem :label="$t('detail.appeal.info.player')">
             <Input type="text"
                    :value="cheater.id"
                    disabled
                    size="large"
-                   :placeholder="$t('signup.placeholder.password')"/>
+                   :placeholder="$t('detail.placeholder.player')"/>
           </FormItem>
-          <FormItem :label="$t('detail.appeal.content')">
-            <Input type="text"
-                   v-model="appeal.content"/>
+          <FormItem :label="$t('detail.appeal.info.content')">
+            <br>
+            <Edit :content="appeal.content" @change="handleMiscChange" :editorContent="$t('detail.appeal.placeholder.content')"/>
           </FormItem>
         </Form>
       </div>
@@ -599,14 +599,13 @@ import BFBAN from "../assets/js/bfban";
 import {http, api, http_token, util} from '../assets/js/index'
 import vueQr from 'vue-qr'
 import translate from 'google-translate-open-api';
+
 import Empty from '../components/Empty.vue'
-import {
-  formatTextarea,
-  waitForAction
-} from "@/mixins/common";
+import Edit from "../components/Edit";
+
+import {formatTextarea, waitForAction} from "@/mixins/common";
 
 export default new BFBAN({
-  title: "233",
   data() {
     return {
       appeal: {
@@ -656,7 +655,7 @@ export default new BFBAN({
       detailStepsIndex: 0
     }
   },
-  components: {Empty, vueQr},
+  components: {Empty, Edit, vueQr},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -897,6 +896,9 @@ export default new BFBAN({
     isSelf(id) {
       const userId = this.$store.state.user.userId;
       return (parseInt(userId) === parseInt(id))
+    },
+    handleMiscChange (val) {
+      this.appeal.content = val;
     },
     handelAppeal () {
       const {toPlayerId = this.cheater.originId, content = ''} = this.appeal;
