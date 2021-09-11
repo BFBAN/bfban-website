@@ -2,6 +2,6 @@
   "requestDefault": "requestDeBug",
   "requestDev": "https://bfban.gametools.network/api/",
   "requestDeBug": "http://127.0.0.1:4002/api/",
-  "requestDeBug2": "http://120.78.226.36:4002/api/",
+  "requestDeBug_t": "http://bfban-api.cabbagelol.net/api/",
   "qiniuUrl": ""
 }

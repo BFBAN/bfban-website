@@ -25,9 +25,11 @@
     </div>
 
     <Dropdown class="mobile-hide">
-      <Badge :count="message && message.total && message.total[0].num || 0" :class="message.messages.length > 0 ? 'shake' : ''">
-        <slot name="content"></slot>
-      </Badge>
+      <router-link :to="{path: '/profile/message'}">
+        <Badge :count="message && message.total && message.total[0].num || 0" :class="message.messages.length > 0 ? 'shake' : ''">
+          <slot name="content"></slot>
+        </Badge>
+      </router-link>
       <DropdownMenu slot="list" style="padding: 0 10px; width: 400px">
         <div v-if="message.messages.length > 0">
           <Tabs value="message">
@@ -45,15 +47,7 @@
                 <Divider></Divider>
               </div>
             </TabPane>
-            <div slot="extra" v-show="$route.path != '/profile/message'">
-              <router-link :to="{path: '/profile/message'}">
-                <Button size="small">发送消息</Button>
-              </router-link>
-            </div>
           </Tabs>
-          <p align="center">
-            <router-link :to="{path: '/profile/message'}">查看更多</router-link>
-          </p>
         </div>
       </DropdownMenu>
     </Dropdown>

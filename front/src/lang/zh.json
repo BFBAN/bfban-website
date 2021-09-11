@@ -34,7 +34,25 @@
     "title": "玩家数据库"
   },
   "profile": {
-    "title": "个人设置"
+    "title": "个人设置",
+    "message": {
+      "title": "消息"
+    },
+    "account": {
+      "title": "账户信息设置",
+      "form": {
+        "privilege": "身份",
+        "introduction": "自我介绍",
+        "showOrigin": "可见橘子信息",
+        "showOriginDescribe": "是否让你绑定的Origin在BFBAN可见",
+        "allowDM": "是否接收聊天",
+        "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
+        "language": "设置语言"
+      }
+    },
+    "appearance": {
+      "title": "皮肤"
+    }
   },
   "detail": {
     "title": "详情",
@@ -377,10 +395,31 @@
     }
   },
   "apps": {
-    "title": "工具"
+    "title": "工具",
+    "buttons": {
+      "hot": "热门",
+      "website": "网站",
+      "get": "获取"
+    },
+    "screen": {
+      "all": "所有",
+      "official": "官方",
+      "bot": "机器人",
+      "app": "应用",
+      "pc_app": "桌面应用",
+      "web": "网页",
+      "api": "接口",
+      "book": "指南",
+      "admin": "管理员",
+      "qq": "腾讯QQ",
+      "bf1": "战地风云1",
+      "bfv": "战地风云5"
+    }
   },
   "search": {
     "title": "检索",
+    "describe": "从BFBAN数据库检索ID",
+    "collectionHint": "收藏此页面 (Ctrl+D or Command+D)",
     "scope": {
       "history": "过去的名字",
       "current": "现在名称"

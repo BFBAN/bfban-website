@@ -27,7 +27,7 @@ function datetimerangeToTimeZone(datetimerange, tz) {
     if (v === '') {
       return '';
     }
-    // convert client local timezone to server's timezone
+    // convert client local timezone to server'preview.svg timezone
     return convertDatetimeToTimeZone(v, tz);
   }).join(',');
 }

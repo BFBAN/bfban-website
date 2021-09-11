@@ -907,7 +907,7 @@ export default new BFBAN({
         this.$Message.warning(this.$i18n.t('detail.messages.dontDoIt') + suggestion);
         return false;
       }
-      // JUST before ajax
+
       this.verifySpinShow = true;
 
       const {data: statusData} = await http.post('/cheaters/status', {

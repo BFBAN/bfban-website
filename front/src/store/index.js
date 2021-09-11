@@ -3,14 +3,16 @@ import Vuex from 'vuex'
 import Cookies from 'js-cookie';
 
 import app from '../main';
+import theme from '../assets/themes.json'
 import {SET_LANG, SET_THEME, SET_USER} from './mutation-types';
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    baseUrl: process.env.BASE_URL,
     user: undefined,
-    $theme: {},
+    $theme: theme.child.filter(i => i.value == theme.default)[0],
     $userinfo: {},
   },
 
@@ -36,19 +38,9 @@ const store = new Vuex.Store({
       app.$i18n.locale = payload;
     },
     [SET_THEME](state, data) {
-      state.$theme = data;
+                  state.$theme = data;
       let theme = state.$theme;
-      switch (theme.name) {
-        case "silence":
-          import('../theme/silence.less');
-          break;
-        case "deep":
-          import('../theme/bfban_deep.less');
-          break;
-        case "default":
-          import('../theme/bfban_theme.less');
-          break;
-      }
+      require(`/public/theme/${theme.name}/index.less`);
     },
     [SET_USER](state, data) {
       state.$userinfo = data;

@@ -491,7 +491,7 @@ async (req, res, next)=> {
         const newpassword = misc.generateRandomString(16);  // what we are doing here is:
         const code = misc.encrypt(JSON.stringify({          // generate new password for user
             i: 'YesINeedResetMyPassword',                   // but update it into db when user confirm it by email
-            password: newpassword,                          // we do so to avoid some bay guys who know user's email address
+            password: newpassword,                          // we do so to avoid some bay guys who know user'preview.svg email address
             userid: user.id                                 // and directly change the user password though they dont know the new one
         }), config.secret).toString('base64');              // we send encrypted password to user, so we dont use db, like jwt
         await sendForgetPasswordVerify(user.username, user.originEmail, encodeURIComponent(code), user.lang); // user verify the code->save new password into db

@@ -30,8 +30,10 @@
           <List border size="small">
             <ListItem v-for="(i, index) in muen" :key="i.value">
               <a @click="upDateUri(index)">
-                <b v-if="muen[index].value == muenIndex">{{ i.title }}</b>
-                <span v-else>{{ i.title }}</span>
+                <b v-if="muen[index].value == muenIndex">
+                  {{ $t("profile." + muen[i.value].title + ".title") }}
+                </b>
+                <span v-else>{{ $t("profile." + muen[i.value].title + ".title") }}</span>
               </a>
             </ListItem>
           </List>
@@ -70,11 +72,11 @@ export default {
     return {
       muenIndex: 0,
       muen: [{
-        title: 'Account',
+        title: 'account',
         value: '0'
       },
       {
-        title: 'Appearance',
+        title: 'appearance',
         value: '1'
       },
       {

@@ -82,7 +82,6 @@
 // https://www.npmjs.com/package/vue-quill-editor
 import {http} from "../assets/js";
 import Quill from 'quill'
-import ajax from '@/mixins/ajax';
 import Embed from "quill/blots/embed";
 
 class QuillHashtag extends Embed {

@@ -54,9 +54,9 @@
           </Col>
         </Row>
         <div class="checkboxGroup">
-          <Icon type="md-alert" /> 从BFBAN数据库检索ID
+          <Icon type="md-alert" /> {{ $t("search.describe") }}
           <Divider type="vertical"/>
-          <a href="javascript:void(0)">收藏此页面 (Ctrl+D or Command+D)</a>
+          <a href="javascript:void(0)">{{ $t("search.collectionHint") }}</a>
         </div>
       </div>
 

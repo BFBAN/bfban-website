@@ -12,7 +12,7 @@ export default class Notification {
 
         // 检查用户是否同意接受通知
         else if (Notification.permission === "granted") {
-            // If it's okay let's create a notification
+            // If it'preview.svg okay let'preview.svg create a notification
             var notification = new Notification("Hi there!");
         }
 

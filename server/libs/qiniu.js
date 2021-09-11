@@ -10,20 +10,20 @@ const qConfig = new qiniu.conf.Config();
 
 // 七牛云存储空间所对应的上传地址
 // 华东: (z0):
-//     服务器端上传地址：http(s)://up.qiniup.com
-//     客户端上传地址: http(s)://upload.qiniup.com
+//     服务器端上传地址：http(preview.svg)://up.qiniup.com
+//     客户端上传地址: http(preview.svg)://upload.qiniup.com
 // 华北: (z1):
-//     服务器端上传地址：http(s)://up-z1.qiniup.com
-//     客户端上传: http(s)://upload-z1.qiniup.com
+//     服务器端上传地址：http(preview.svg)://up-z1.qiniup.com
+//     客户端上传: http(preview.svg)://upload-z1.qiniup.com
 // 华南: (z2):
-//     服务器端上传地址：http(s)://up-z2.qiniup.com
-//     客户端上传: http(s)://upload-z2.qiniup.com
+//     服务器端上传地址：http(preview.svg)://up-z2.qiniup.com
+//     客户端上传: http(preview.svg)://upload-z2.qiniup.com
 // 北美: (na0):
-//     服务器端上传地址：http(s)://up-na0.qiniup.com
-//     客户端上传地址: http(s)://upload-na0.qiniup.com
+//     服务器端上传地址：http(preview.svg)://up-na0.qiniup.com
+//     客户端上传地址: http(preview.svg)://upload-na0.qiniup.com
 // 新加坡: (as0):
-//     服器端上传地址：http(s)://up-as0.qiniu.com
-//     客户端上传地址：http(s)://upload-as0.qiniu.com
+//     服器端上传地址：http(preview.svg)://up-as0.qiniu.com
+//     客户端上传地址：http(preview.svg)://upload-as0.qiniu.com
 
 
 // 生成 upload token

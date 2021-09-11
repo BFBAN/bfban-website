@@ -1,6 +1,8 @@
-// import VueRouter from 'vue-router';
-
 import i18n from "../i18n";
+import store from '@/store';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import config from "../../package.json";
 
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
@@ -17,11 +19,6 @@ const NotFound = () => import('@/views/NotFound.vue');
 const Apps = () => import('@/views/Apps.vue');
 const Profile = () => import('@/views/account/profile.vue');
 const Search = () => import('@/views/Search.vue');
-
-import store from '@/store';
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import config from "../../package.json";
 
 Vue.use(VueRouter);
 
@@ -51,7 +48,7 @@ const routes = [
     {name: 'cheaters', path: '/cheaters', component: List},
     {name: 'cheater', path: '/cheaters/:ouid', component: Detail},
     {
-        name: 'shorten', path: '/s/:hexnum', redirect: to => {
+        name: 'shorten', path: '/preview.svg/:hexnum', redirect: to => {
             try {
                 const ouid = parseInt(to.params.hexnum, 16);
                 if (isNaN(ouid))
@@ -94,7 +91,6 @@ const routes = [
     {path: '*', redirect: '/404'},
 
 ];
-
 const RouterConfig = {
     mode: 'history',
     routes,
@@ -102,7 +98,14 @@ const RouterConfig = {
         return {x: 0, y: 0};
     },
 };
+const originalPush = VueRouter.prototype.push;
 const router = new VueRouter(RouterConfig);
+
+VueRouter.prototype.push = function push(location) {
+
+    return originalPush.call(this, location).catch(err => err);
+
+}
 
 router.beforeEach((to, from, next) => {
     store.commit('syncLoginState');

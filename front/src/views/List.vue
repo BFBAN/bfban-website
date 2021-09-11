@@ -165,11 +165,6 @@
                   </Badge>
                 </Radio>
               </RadioGroup>
-              <Divider type="vertical"/>
-
-              <Button slot="extra" size="small" icon="ios-refresh" @click.prevent.stop="getCheaterList">
-                {{ $t("list.filters.refresh") }}
-              </Button>
             </Card>
           </Affix>
         </Col>

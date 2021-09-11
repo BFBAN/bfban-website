@@ -27,30 +27,38 @@
             <Checkbox
                 :indeterminate="indeterminate"
                 :value="checkAll"
-                @click.prevent.native="handleCheckAll">全选</Checkbox>
+                @click.prevent.native="handleCheckAll">{{ $t('apps.screen.all') }}</Checkbox>
           </div>
           <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
-            <Checkbox :label="item.value" v-for="item in appsConf.tags" :key="item.value" border style="margin-bottom: 10px"></Checkbox><br>
+            <Checkbox :label="$t('apps.screen.' + item.value)"
+                      v-for="item in appsConf.tags"
+                      :key="item.value" border style="margin-bottom: 10px"></Checkbox><br>
           </CheckboxGroup>
         </Card>
       </Col>
       <Col span="18" class="apps-list">
         <div v-for="item in appsConf.list" :key="item.title">
           <Card class="apps-item" v-if="appItemIsShow(item)">
-            <Badge :text="!!item.hot ? 'hot' : ''" :offset="[15, 20]">
+            <Badge :text="!!item.hot ? $t('apps.buttons.hot') : ''" :offset="[15, 20]">
               <h2>{{item.title}}</h2>
             </Badge>
             <div>
-              <Tag color="primary" v-for="tagitem in item.tag || []" :key="tagitem.describe">{{tagitem}}</Tag>
+              <Tag color="primary" v-for="tagitem in item.tag || []" :key="tagitem.describe">
+                {{ $t('apps.screen.' + tagitem) }}
+              </Tag>
             </div>
             <p style="overflow: hidden">{{item.describe}}</p>
             <div>
               <Divider />
               <Button type="primary" :disabled="!item.get">
-                <a :href="item.get">获取</a>
+                <a :href="item.get">{{ $t('apps.buttons.get') }}</a>
               </Button>
               <Divider type="vertical"/>
-              <Button type="dashed" :disabled="!item.website"><a :href="item.website">网站</a></Button>
+              <Button type="dashed" :disabled="!item.website">
+                <a :href="item.website">
+                  {{ $t('apps.buttons.website') }}
+                </a>
+              </Button>
             </div>
           </Card>
         </div>

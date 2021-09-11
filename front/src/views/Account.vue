@@ -176,7 +176,6 @@
 
 <script>
 import {http, api, http_token} from '../assets/js/index'
-import ajax from "@/mixins/ajax";
 
 export default {
   data() {

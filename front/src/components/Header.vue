@@ -2,7 +2,7 @@
     <header>
       <div class="header-container container">
         <router-link class="mobile-hide" :to="{name: 'home'}">
-          <img src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png"
+          <img src="../assets/images/logo.png"
                width="40"
                height="40"
                alt="bfban logo"/>

@@ -12,14 +12,7 @@ module.exports = {
       swSrc: 'src/service-worker.js'
     }
   },
-  // devServer: {
-  //   proxy: {
-  //     '/api/user/signout': {
-  //       target: 'localhost:8080', //要转发的目标网址
-  //       changeOrigin: true,
-  //     }
-  //   }
-  // },
+
   pluginOptions: {
     i18n: {
       locale: 'zh-cn',

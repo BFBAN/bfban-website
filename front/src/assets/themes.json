@@ -1,19 +1,49 @@
 {
   "title": "theme",
+  "default": "bfban_theme",
   "child": [{
+    "type": "local",
     "name": "deep",
     "value": "bfban_deep",
-    "img": "https://github.githubassets.com/images/modules/settings/color_modes/dark_dimmed_preview.svg",
-    "src": "../theme/bfban_deep.less"
+    "img": "public/theme/deep/main.png",
+    "version": "0.2",
+    "authorInfo": {
+      "authorName": "BFBAN",
+      "authorUpdate": "2021-9-11"
+    },
+    "src": ""
   },{
+    "type": "local",
     "name": "default",
-    "value": "bfban_theme",
-    "img": "https://github.githubassets.com/images/modules/settings/color_modes/light_preview.svg",
-    "src": "../theme/bfban_theme.less"
+    "value": "default",
+    "img": "public/theme/silence/main.png",
+    "version": "0.2",
+    "authorInfo": {
+      "authorName": "BFBAN",
+      "authorUpdate": "2021-9-11"
+    },
+    "src": ""
   },{
+    "type": "local",
     "name": "silence",
     "value": "silence",
-    "img": "https://github.githubassets.com/images/modules/settings/color_modes/dark_dimmed_preview.svg",
-    "src": "../theme/silence.less"
+    "img": "public/theme/silence/main.png",
+    "version": "0.1",
+    "authorInfo": {
+      "authorName": "BFBAN",
+      "authorUpdate": "2021-9-11"
+    },
+    "src": ""
+  },{
+    "type": "local",
+    "name": "blue",
+    "value": "blue",
+    "img": "public/theme/blue/main.png",
+    "version": "0.1",
+    "authorInfo": {
+      "authorName": "BFBAN",
+      "authorUpdate": "2021-9-11"
+    },
+    "src": ""
   }]
 }

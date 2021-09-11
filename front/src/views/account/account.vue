@@ -3,7 +3,7 @@
     <Form :model="formItem" label-position="top">
       <Row :gutter="30">
         <Col span="12">
-          <FormItem label="账户名称">
+          <FormItem :label="$t('signup.form.username')">
             <Input v-model="formItem.username" placeholder="" disabled>
               <a slot="append" @click="modal_setusername.show = !modal_setusername.show">
                 <Icon type="md-create" size="15" />
@@ -12,7 +12,7 @@
           </FormItem>
         </Col>
         <Col span="12">
-          <FormItem label="密码">
+          <FormItem :label="$t('signup.form.password')">
             <Input v-model="formItem.password" disabled type="password">
               <a slot="append" @click="modal_changePassword.show = !modal_changePassword.show">
                 <Icon type="md-create" size="15" />
@@ -21,7 +21,7 @@
           </FormItem>
         </Col>
         <Col span="12">
-          <FormItem label="身份">
+          <FormItem :label="$t('profile.account.form.privilege')">
             <span v-for="(i,index) in privileges" :key="index">
               <Tag type="dot" v-if="formItem.privilege == i.value"
                    color="success">
@@ -31,19 +31,23 @@
           </FormItem>
         </Col>
       </Row>
-      <FormItem label="自我介绍">
+      <FormItem :label="$t('profile.account.form.introduction')">
         <Edit :content="formItem.introduction" @change="handleIntroductionChange"/>
       </FormItem>
       <Row>
         <Col span="11">
-          <FormItem label="加入时间">
-            <Time :time="formItem.joinTime || new Date().getTime()"/>
+          <FormItem :label="$t('account.joinedAt')">
+            <Tag>
+              <Time :time="formItem.joinTime || new Date().getTime()"/>
+            </Tag>
           </FormItem>
         </Col>
         <Col span="2" style="text-align: center">-</Col>
         <Col span="11">
-          <FormItem label="最后上线时间">
-            <Time :time="formItem.lastOnlineTime || new Date().getTime()"/>
+          <FormItem :label="$t('account.lastOnlineTime')">
+            <Tag>
+              <Time :time="formItem.lastOnlineTime || new Date().getTime()"/>
+            </Tag>
           </FormItem>
         </Col>
       </Row>
@@ -59,7 +63,7 @@
       </Alert>
       <Row :gutter="30">
         <Col span="12">
-          <FormItem label="OrginName">
+          <FormItem :label="$t('signup.form.originEmail')">
             <Input v-model="formItem.origin.originName"
                    type="text"
                    disabled
@@ -68,7 +72,7 @@
           </FormItem>
         </Col>
         <Col span="12">
-          <FormItem label="OrginEmail">
+          <FormItem :label="$t('signup.form.originName')">
             <Input v-model="formItem.origin.originUserId"
                    type="text"
                    disabled
@@ -80,7 +84,7 @@
       <Divider></Divider>
       <Row :gutter="30">
         <Col span="12">
-          <FormItem label="Language">
+          <FormItem :label="$t('profile.account.form.language')">
             <Select v-model="formItem.attr.language" class="switch-language" prefix="md-globe" placement="top-end"
                     @on-change="switchLanguage">
               <Option v-for="item in languages" :value="item.name" :key="item.name">{{ item.label }}</Option>
@@ -88,15 +92,15 @@
           </FormItem>
         </Col>
         <Col span="12">
-          <FormItem label="showOrigin">
+          <FormItem :label="$t('profile.account.form.showOrigin')">
             <i-switch v-model="formItem.attr.showOrigin"/>
-            <p>是否让你绑定的Origin在BFBAN可见.</p>
+            <p>{{ $t('profile.account.form.showOriginDescribe') }}</p>
           </FormItem>
         </Col>
         <Col span="12">
-          <FormItem label="allowDM">
+          <FormItem :label="$t('profile.account.form.allowDM')">
             <i-switch v-model="formItem.attr.allowDM"/>
-            <p>是否接受信息. 更多消息信息前往<router-link :to="{name: 'message'}">消息列表</router-link>查看</p>
+            <p>{{ $t('profile.account.form.allowDMdescribe') }}</p>
           </FormItem>
         </Col>
       </Row>

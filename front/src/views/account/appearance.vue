@@ -1,16 +1,28 @@
 <template>
   <div class="theme">
     <p>
-      选择单个主题，或与系统同步，并自动在白天和夜间主题之间切换.
+      选择一个主题，改变在BFBAN的皮肤.
     </p>
     <br>
-    <RadioGroup v-model="themeIndex" size="large">
-      <Radio :label="index" v-for="(i, index) in themes.child" :key="index" align="center">
-        <Card>
-          <img class="theme_img" :src="i.img">
-          <p>{{ i.name }}</p>
+    <RadioGroup v-model="themeIndex" size="large" :button-style="'solid'">
+      <Badge :text="i.version" class="theme-card" v-for="(i, index) in themes.child" :key="index" >
+        <Card @click="themeIndex = index" dis-hovershow>
+          <img class="theme-img" :src="require('/public/theme/' + i.name + '/preview.svg')" v-if="i.type == 'local'">
+          <img class="theme-img" :src="i.img" v-else>
+          <div>
+            <span>{{ i.authorInfo.authorName }}</span>
+            <Divider type="vertical"></Divider>
+            <span>{{ i.authorInfo.authorUpdate }}</span>
+          </div>
         </Card>
-      </Radio>
+        <Row>
+          <Col flex="auto">
+            <Radio :label="index" align="center"><span>{{ i.name }}</span></Radio>
+          </Col>
+          <Col></Col>
+        </Row>
+      </Badge>
+
     </RadioGroup>
     <Divider></Divider>
     <div>
@@ -68,9 +80,23 @@ export default {
 
 <style lang="scss" scoped>
 .theme {
-  .theme_img {
+
+  .ivu-radio {
+    position: absolute !important;
+    top: 0;
+    z-index: 10;
+  }
+
+  .theme-card {
+    float: left;
+    display: block;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+
+  .theme-img {
     margin: -16px -16px 0px -16px;
-    border-bottom: 1px solid #f2f2f2;
   }
 }
 </style>

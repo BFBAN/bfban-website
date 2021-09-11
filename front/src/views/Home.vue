@@ -126,7 +126,7 @@
         </Row>
       </div>
       <div v-if="activitySwitchType" class="lean-box">
-        <div class="wrapper" :style="'animation: rowup ' + activities_l.length * .8 + 's linear infinite;'">
+        <div class="wrapper" :style="'animation: rowup ' + activities_l.length * .8 + 'preview.svg linear infinite;'">
           <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
             <Card class="icon" v-for="a_i in activity" :key="a_i.id">
               <div align="center" style="margin-top: -80px">

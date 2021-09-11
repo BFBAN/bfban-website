@@ -226,7 +226,7 @@ async function iGotReplied(params) { // checked that comment dose exist
 async function newBanAppeal(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const ban_appeal = params.ban_appeal;
-    await sendMessage(ban_appeal.byUserId, ban_appeal.id, 'banAppeal', 'there is a ban appeal under player dbId:'+ban_appeal.toPlayerId); // hack to store banAppeal's id
+    await sendMessage(ban_appeal.byUserId, ban_appeal.id, 'banAppeal', 'there is a ban appeal under player dbId:'+ban_appeal.toPlayerId); // hack to store banAppeal'preview.svg id
 }
 
 async function removeBanAppealNotification(params) {

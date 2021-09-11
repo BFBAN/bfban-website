@@ -263,7 +263,7 @@ export default {
       return true;
       // trimAllWhitespace(formData.formItem.bilibiliLink) ||
       // if (
-      //     /(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)/.test(formData.formItem.description)
+      //     /(http(preview.svg?):)([/|.|\w|\preview.svg|-])*\.(?:jpe?g|gif|png|bmp)/.test(formData.formItem.description)
       // ) {
       //   return true;
       // } else {

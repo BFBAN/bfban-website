@@ -10,7 +10,7 @@
                 {{ getLog() }}
               </Avatar>
               <img v-else
-                   src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png"
+                   src="../assets/images/logo.png"
                    width="40"
                    height="40"
                    @click="logoCount++;"
