@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <br>
-
     <div class="content">
       <Row :gutter="0">
         <Col span="11" class="mobile-hide carousel">
@@ -66,7 +65,6 @@
         </Col>
       </Row>
     </div>
-
     <br>
   </div>
 </template>
@@ -98,7 +96,7 @@ export default {
   },
   beforeMount() {
     if (this.$route.query.rurl) {
-      this.$Message.info('请先登录');
+      this.$Message.info(this.$t('signin.loginFirst'));
     }
   },
   methods: {
@@ -146,7 +144,7 @@ export default {
           const d = res.data;
 
           if (d.error === 1) {
-            that.$Message.error('登录失败: ' + d.message);
+            that.$Message.error(this.$t('signin.failed') + ': ' + d.message);
             that.signin.password = '';
             that.signin.captcha = '';
             that.refreshCaptcha();
@@ -161,14 +159,14 @@ export default {
                 this.$router.go('-1');
               }
 
-              this.$Message.success('登录成功');
+              this.$Message.success(this.$t('signin.success'));
             })
           }
         }).finally((res) => {
           that.spinShow = false;
         })
       } else {
-        this.$Message.error('请规范填写');
+        this.$Message.error(this.$t('signin.fillEverything'));
       }
     }
   },
@@ -181,34 +179,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.carousel {
-  border-bottom: 2px solid #f2f2f2;
-  width: 440px;
-  height: 550px;
-  overflow: hidden;
-  //background: #fff;
-  background: #401487;
+  .carousel {
+    border-bottom: 2px solid #f2f2f2;
+    width: 440px;
+    height: 550px;
+    overflow: hidden;
+    //background: #fff;
+    background: #401487;
 
-  > * {
-    background-image: url("https://app.bfban.com/public/svg/bk1.svg");
-    background-repeat: repeat;
-  }
+    > * {
+      background-image: url("https://app.bfban.com/public/svg/bk1.svg");
+      background-repeat: repeat;
+    }
 
-  .carousel-item {
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    height: 100%;
-    color: #fff;
+    .carousel-item {
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+      height: 100%;
+      color: #fff;
 
-    img {
-      width: 150px;
-      height: 150px;
-      margin-top: 150px;
-      margin-bottom: 20px;
+      img {
+        width: 150px;
+        height: 150px;
+        margin-top: 150px;
+        margin-bottom: 20px;
+      }
     }
   }
-}
 </style>

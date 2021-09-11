@@ -3,7 +3,7 @@
     <div class="content">
       <br>
       <Breadcrumb>
-        <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+        <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
         <BreadcrumbItem>{{ $t("list.title") }}</BreadcrumbItem>
       </Breadcrumb>
       <br>

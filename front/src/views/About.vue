@@ -2,7 +2,7 @@
   <div class="container">
     <br>
     <Breadcrumb>
-      <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+      <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
       <BreadcrumbItem>{{ $t("about.title") }} 🦖</BreadcrumbItem>
     </Breadcrumb>
     <br>

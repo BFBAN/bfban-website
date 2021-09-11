@@ -2,7 +2,7 @@
   <div class="container apps">
     <br>
     <Breadcrumb>
-      <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+      <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
       <BreadcrumbItem>{{$t("home.howToUse.tools.main")}}</BreadcrumbItem>
     </Breadcrumb>
     <br>

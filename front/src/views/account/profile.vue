@@ -2,7 +2,7 @@
   <div class="container">
     <br>
     <Breadcrumb>
-      <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+      <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
       <BreadcrumbItem>{{ $t("header.profile") }}</BreadcrumbItem>
     </Breadcrumb>
     <br>
@@ -16,7 +16,7 @@
             </Col>
             <Col>
               <h3>{{ currentUser.userinfo.username }}</h3>
-              <p>欢迎来到BFBAN</p>
+              <p>{{ $t('profile.meet') }}</p>
             </Col>
           </Row>
         </Col>

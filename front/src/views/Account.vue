@@ -4,7 +4,7 @@
     <Row>
       <Col flex="auto">
         <Breadcrumb>
-          <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
           <BreadcrumbItem>{{ $t("account.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>

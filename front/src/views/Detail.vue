@@ -3,8 +3,8 @@
     <div class="content">
       <br>
       <Breadcrumb>
-        <BreadcrumbItem to="/">{{ $t("header.index") }}</BreadcrumbItem>
-        <BreadcrumbItem to="/cheaters">{{ $t("list.title") }}</BreadcrumbItem>
+        <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+        <BreadcrumbItem :to="{name: 'cheaters'}">{{ $t("list.title") }}</BreadcrumbItem>
         <BreadcrumbItem>{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
       </Breadcrumb>
       <br>

@@ -22,12 +22,20 @@ const Search = () => import('@/views/Search.vue');
 
 Vue.use(VueRouter);
 
+const isLoginBeforeEnter = function (to, from, next) {
+    if (store.state.user) {
+        next();
+    } else {
+        next({path: '/signin', query: {rurl: to.fullPath}});
+    }
+}
+
 const routes = [
     {name: 'home', path: '/', component: Home},
     {name: 'about', path: '/about', component: About},
     {name: 'apps', path: '/apps', component: Apps},
-    {name: 'profile', path: '/profile', component: Profile},
-    {name: 'profile', path: '/profile/:pagename', component: Profile},
+    {name: 'profile', path: '/profile', component: Profile, beforeEnter: isLoginBeforeEnter},
+    {name: 'profile', path: '/profile/:pagename', component: Profile, beforeEnter: isLoginBeforeEnter},
 
     {name: 'search', path: '/search/:conetnt', component: Search},
     {name: 'search_main', path: '/search', component: Search},
@@ -35,18 +43,12 @@ const routes = [
         name: 'report',
         path: '/report',
         component: Report,
-        beforeEnter(to, from, next) {
-            if (store.state.user) {
-                next();
-            } else {
-                next({path: '/signin', query: {rurl: to.fullPath}}); // 未登录则跳转到登陆界面，query:{ Rurl: to.fullPath}表示把当前路由信息传递过去方便登录后跳转回来
-            }
-        },
+        beforeEnter: isLoginBeforeEnter
     },
     //  { name: 'misc', path: '/misc', component: Misc },
 
-    {name: 'cheaters', path: '/cheaters', component: List},
-    {name: 'cheater', path: '/cheaters/:ouid', component: Detail},
+    {name: 'cheaters', path: '/player', component: List},
+    {name: 'cheater', path: '/player/:ouid', component: Detail},
     {
         name: 'shorten', path: '/preview.svg/:hexnum', redirect: to => {
             try {
@@ -66,13 +68,7 @@ const routes = [
         name: 'bindOrigin',
         path: '/bindOrigin',
         component: Signup,
-        beforeEnter(to, from, next) {
-            if (store.state.user) {
-                next();
-            } else {
-                next({path: '/signin', query: {rurl: to.fullPath}});
-            }
-        },
+        beforeEnter: isLoginBeforeEnter
     },
     {name: 'bindOriginVerify', path: '/bindOriginVerify', component: Signup},
 
@@ -102,9 +98,7 @@ const originalPush = VueRouter.prototype.push;
 const router = new VueRouter(RouterConfig);
 
 VueRouter.prototype.push = function push(location) {
-
     return originalPush.call(this, location).catch(err => err);
-
 }
 
 router.beforeEach((to, from, next) => {

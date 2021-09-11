@@ -35,8 +35,24 @@
   },
   "profile": {
     "title": "个人设置",
+    "meet": "欢迎来到BFBAN",
     "message": {
-      "title": "消息"
+      "title": "消息",
+      "tabs": {
+        "list": {
+          "itemName": "消息列表",
+          "form": {
+            "del": "删除",
+            "read": "已阅读"
+          }
+        },
+        "send": {
+          "itemName": "发送信息",
+          "form": {
+
+          }
+        }
+      }
     },
     "account": {
       "title": "账户信息设置",
@@ -330,9 +346,10 @@
       "submitHint": "没有账号？去注册",
       "forgetPasswordHint": "密码忘记？"
     },
+    "fillEverything": "请填写规范",
     "failed": "登录失败",
     "success": "登录成功",
-    "loginFirst": "请先登录"
+    "loginFirst": "啊咧?! 请先登录"
   },
   "signup": {
     "title": "注册",
