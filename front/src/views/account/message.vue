@@ -5,6 +5,13 @@
         <ListItem v-for="(item, index) in message.messages" :key="index">
           <ListItemMeta :title="item.content" :description="item.createTime"/>
           <template slot="action">
+
+            <li v-if="item.byUserId">
+              <router-link :to="{path: '/account/' + item.byUserId, query: {repeat: true}}">
+                回复
+              </router-link>
+<!--              <a href="javascript:void(0)" @click="onMessageMark(item.id, 0)"></a>-->
+            </li>
             <li>
               <a href="javascript:void(0)" @click="onMessageMark(item.id, 0)">已阅</a>
             </li>

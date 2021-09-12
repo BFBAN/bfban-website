@@ -8,6 +8,7 @@ import router from './router'
 import store from './store'
 import ViewUI from 'view-design';
 import VueQuillEditor from 'vue-quill-editor'
+// import desktop from '../desktop/assets/js/index'
 
 // quill css
 import 'quill/dist/quill.core.css'
@@ -27,6 +28,7 @@ const app = new Vue({
   router,
   store,
   i18n,
+  // desktop,
   render: h => h(App)
 }).$mount('#app')
 

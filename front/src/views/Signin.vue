@@ -182,7 +182,6 @@ export default {
   .carousel {
     border-bottom: 2px solid #f2f2f2;
     width: 440px;
-    height: 550px;
     overflow: hidden;
     //background: #fff;
     background: #401487;

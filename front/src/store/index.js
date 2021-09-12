@@ -12,7 +12,8 @@ const store = new Vuex.Store({
   state: {
     baseUrl: process.env.BASE_URL,
     user: undefined,
-    $theme: theme.child.filter(i => i.value == theme.default)[0],
+    $desktop: {},
+    $theme: {},
     $userinfo: {},
   },
 
@@ -38,9 +39,9 @@ const store = new Vuex.Store({
       app.$i18n.locale = payload;
     },
     [SET_THEME](state, data) {
-                  state.$theme = data;
-      let theme = state.$theme;
-      require(`/public/theme/${theme.name}/index.less`);
+      state.$theme = data || theme.child.filter(i => i.name == theme.default)[0];
+
+      require(`/public/theme/${state.$theme.name}/index.less`);
     },
     [SET_USER](state, data) {
       state.$userinfo = data;

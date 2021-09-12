@@ -148,8 +148,7 @@
                       @on-change="getReports"
                       :total="total"
                       class="page"
-                      size="small"
-                  />
+                      size="small"/>
                 </div>
                 <div v-else>404</div>
               </TabPane>
@@ -186,6 +185,10 @@ export default {
         originId: "",
         privilege: "",
         createDatetime: "",
+        attr: {
+          allowDM: false,
+
+        }
       },
       reports: [],
       limit: 20,
@@ -205,6 +208,7 @@ export default {
   },
   created() {
     this.http = http_token.call(this);
+
     this.loadData();
   },
   methods: {
@@ -230,10 +234,23 @@ export default {
           this.$Message.warning(d.msg);
         }
 
+        if ( this.$route.query.repeat) {
+          this.openMessage()
+        }
+
         this.getReports(uId)
       });
     },
     openMessage () {
+      if (!this.account.attr.allowDM) {
+        this.$Message.error(this.$i18n.t("account.message.hint.taOffChat"))
+        return
+      }
+      if (this.account.id == this.currentUser.userinfo.userId) {
+        this.$Message.error(this.$i18n.t("account.message.hint.selfTalk"))
+        return
+      }
+
       this.message.show = true;
     },
     setMessage () {
@@ -278,7 +295,7 @@ export default {
         const d = res.data;
         if (d.success == 1) {
           this.reports = d.data;
-          this.total = d.total;
+          this.total = Number(d.total);
         }
       });
     },

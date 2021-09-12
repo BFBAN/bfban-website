@@ -1,10 +1,9 @@
 {
   "title": "theme",
-  "default": "bfban_theme",
+  "default": "default",
   "child": [{
     "type": "local",
     "name": "deep",
-    "value": "bfban_deep",
     "img": "public/theme/deep/main.png",
     "version": "0.2",
     "authorInfo": {
@@ -15,7 +14,6 @@
   },{
     "type": "local",
     "name": "default",
-    "value": "default",
     "img": "public/theme/silence/main.png",
     "version": "0.2",
     "authorInfo": {
@@ -26,7 +24,6 @@
   },{
     "type": "local",
     "name": "silence",
-    "value": "silence",
     "img": "public/theme/silence/main.png",
     "version": "0.1",
     "authorInfo": {

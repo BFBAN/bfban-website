@@ -74,15 +74,19 @@
 
           <Divider type="vertical" v-show="isLogin"/>
 
-          <Header_message v-show="isLogin">
-            <Icon slot="content" type="md-notifications" size="30"/>
-          </Header_message>
+          <Tooltip :content="$t('profile.message.title')" placement="bottom-end">
+            <Header_message v-show="isLogin">
+              <Icon slot="content" type="md-notifications" size="30"/>
+            </Header_message>
+          </Tooltip>
 
           <Divider type="vertical" v-show="isLogin"/>
 
-          <router-link v-if="isLogin" :to="{name: 'search_main'}">
-            <Icon type="ios-search" size="28"/>
-          </router-link>
+          <Tooltip :content="$t('search.title')" placement="bottom-end">
+            <router-link v-if="isLogin" :to="{name: 'search_main'}">
+              <Icon type="ios-search" size="28"/>
+            </router-link>
+          </Tooltip>
 
           <Divider type="vertical"/>
 
@@ -162,6 +166,7 @@ export default {
 
 <style lang="scss">
   header {
+    -webkit-app-region: drag;
     position: relative;
     z-index: 1000;
     backdrop-filter: blur(50px);

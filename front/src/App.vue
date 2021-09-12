@@ -11,6 +11,8 @@
 <script>
 import {api, http_token, storage} from './assets/js/index';
 
+import theme from "./assets/themes.json"
+
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 
@@ -32,7 +34,8 @@ export default {
         return;
       }
 
-      await this.$store.dispatch('setTheme', this.$store.state.$theme);
+      // 让它加载默认主题
+      await this.$store.dispatch('setTheme', null);
     },
     onUserinfo () {
       if (this.isLogin) {

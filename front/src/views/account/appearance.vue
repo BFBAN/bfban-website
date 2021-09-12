@@ -65,6 +65,10 @@ export default {
         });
         await this.$store.dispatch('setTheme', theme.data.value);
         return;
+      } else {
+        themes.child.filter((i, index) => {
+          if (i.name == themes.default) this.themeIndex = index
+        });
       }
 
       await this.$store.dispatch('setTheme', this.$store.state.$theme);
