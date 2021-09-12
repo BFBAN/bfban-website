@@ -57,6 +57,7 @@ export default class Http extends Conf {
     let result = await this.request(_url, {
       method: this.POST,
       headers: data.headers,
+      params: data.params,
       data: data.data,
     });
 

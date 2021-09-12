@@ -1,11 +1,35 @@
 {
   "child": [
-    {"value": "stealth"},
-    {"value": "wallhack"},
-    {"value": "aimbot"},
-    {"value": "oneShotKill"},
-    {"value": "gadgetModify"},
-    {"value": "damageChange"},
-    {"value": "shootingThroughWalls"}
+    {
+      "value": "stealth",
+      "values": ["stealth"]
+    },
+    {
+      "value": "wallhack",
+      "values": ["wallhack"]
+    },
+    {
+      "value": "aimbot",
+      "values": [
+        "invisible",
+        "aimbot"
+      ]
+    },
+    {
+      "value": "oneShotKill",
+      "values": ["oneShotKill"]
+    },
+    {
+      "value": "gadgetModify",
+      "values": ["gadgetModify"]
+    },
+    {
+      "value": "damageChange",
+      "values": ["damageChange"]
+    },
+    {
+      "value": "shootingThroughWalls",
+      "values": ["shootingThroughWalls"]
+    }
   ]
 }

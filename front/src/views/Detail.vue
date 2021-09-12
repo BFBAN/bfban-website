@@ -245,6 +245,21 @@
                                 @click="handleReply(l.floor || index, l.byUserId)">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
+                        <Divider type="vertical"/>
+                        <!-- 申诉操作 -->
+                        <Dropdown trigger="click" v-if="isAdmin" @on-click="handAdminAppeal">
+                          <a href="javascript:void(0)">
+                            <Button type="dashed">
+                              申诉操作
+                              <Icon type="ios-arrow-down"></Icon>
+                            </Button>
+                          </a>
+                          <DropdownMenu slot="list">
+                            <DropdownItem :name="`${l.id},0`">打开</DropdownItem>
+                            <DropdownItem :name="`${l.id},1`">关闭</DropdownItem>
+                            <DropdownItem :name="`${l.id},2`">锁定</DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
                       </p>
                     </div>
                     <!-- 上诉 E -->
@@ -499,7 +514,7 @@
       <br v-if="isAdmin">
       <Card dis-hover v-if="isAdmin">
         <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})">
-          <h2 style="margin: 1rem 0;">{{ $t('detail.info.judgement', {msg: 'judgement'}) }}</h2>
+          <h2 style="margin: 1rem 0;"># {{ $t('detail.info.judgement', {msg: 'judgement'}) }}</h2>
 
           <!-- 管理员面板 S -->
           <Alert type="warning" show-icon>
@@ -1042,6 +1057,32 @@ export default new BFBAN({
         this.getTimeline();
       });
     },
+    // 申诉状态操作
+    handAdminAppeal(data) {
+      if (!data) {return;}
+      const array = data.split(',');
+      console.log(array)
+      this.http.post(api["player_viewBanAppeal"], {
+        data: {
+          data: {
+            // the ban appeal id
+            id: array[0],
+            status: ['open', 'close', 'lock'][array[1]]
+          }
+        }
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.$Message.success(d.message);
+        } else {
+          this.$Message.error(d.message);
+        }
+
+        this.getTimeline();
+      })
+    },
+    // 回复
     handleReply(floor, userId) {
       this.reply.toFloor = floor === 'undefined' ? '' : floor;
       this.reply.toUserId = userId === 'undefined' ? '' : userId;

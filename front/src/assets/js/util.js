@@ -27,7 +27,7 @@ export default class Util {
         if (this.cheatMethodsGlossary == null) return '';
         _.each(s.split(','), (val) => {
             _.each(this.cheatMethodsGlossary, (v, i) => {
-                if (v.value === val) {
+                if (v.values.indexOf(val) >= 0) {
                     tmpArr.push(this.$i18n.t("cheatMethods." + v.value + ".title"));
                 }
             });

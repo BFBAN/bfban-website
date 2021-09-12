@@ -41,10 +41,11 @@
             </Row>
             <br>
             <p>{{ $t("home.cover.endTime") }}</p>
-
           </Col>
           <Col span="16" class="mobile-hide" :lg="{span: 13, push: 3}" type="flex" align="right" justify="center">
-            <img src="../assets/images/index-bk.png" width="100%" class="ivu-row-top" style="margin-top: 5rem">
+<!--            <img src="../assets/images/index-bk.png" width="100%" class="ivu-row-top" style="margin-top: 5rem">-->
+
+            <img src="../assets/images/webp.webp" width="100%" class="ivu-row-top" style="margin-top: 5rem">
           </Col>
         </Row>
       </div>

@@ -1,26 +1,31 @@
 <template>
   <Tabs :value="tagsName">
     <TabPane label="消息列表" name="message1">
-      <List>
+      <List v-if="message.messages.length > 0">
         <ListItem v-for="(item, index) in message.messages" :key="index">
           <ListItemMeta :title="item.content" :description="item.createTime"/>
           <template slot="action">
-
             <li v-if="item.byUserId">
               <router-link :to="{path: '/account/' + item.byUserId, query: {repeat: true}}">
-                回复
+                <Icon type="ios-send" size="20" />
               </router-link>
-<!--              <a href="javascript:void(0)" @click="onMessageMark(item.id, 0)"></a>-->
+            </li>
+            <li v-if="item.haveRead == 0">
+              <a href="javascript:void(0)" @click="onMessageMark(item.id, 0)">
+                <Icon type="md-eye" size="20" />
+              </a>
             </li>
             <li>
-              <a href="javascript:void(0)" @click="onMessageMark(item.id, 0)">已阅</a>
-            </li>
-            <li>
-              <a href="javascript:void(0)" @click="onMessageMark(item.id, 2)">删除</a>
+              <a href="javascript:void(0)" @click="onMessageMark(item.id, 2)">
+                <Icon type="md-trash" size="20" />
+              </a>
             </li>
           </template>
         </ListItem>
       </List>
+      <Alert type="warning" show-icon v-else>
+        {{$t('account.noReports')}}
+      </Alert>
     </TabPane>
     <TabPane label="发送" name="message2">
       <Form>
@@ -116,13 +121,15 @@ export default {
       const privileges = await import('/src/assets/privilege.json');
       this.privileges = privileges.child;
     },
-    onMessageMark (id, type) {
-      this.http.post(api["user_message_mark"], {
+    async onMessageMark (id, type) {
+      await this.http.post(api["user_message_mark"], {
         params: {
           id,
           type: ['read', 'unread','del'][type],
         }
-      })
+      });
+
+      this.getMessage();
     },
     getPlayerList (query) {
       if (query !== '') {

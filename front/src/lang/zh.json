@@ -176,6 +176,8 @@
       "report": "举报",
       "reportOne": "举报单个",
       "reportAll": "举报所有",
+      "or": "或",
+      "fromDatabaseOneId": "从数据库中选取",
       "reset": "重置",
       "cancel": "取消",
       "description": "尽可能详细的列举被举报人的作弊证据",

@@ -24,7 +24,8 @@ export default class Api {
       'user_changePassword': 'user/changePassword', // 修改密码
       'user_changeName': 'user/changeName', // 修改名称
       'cheaters_confirm': 'cheaters/confirm', // 管理员: 同意
-      'player_banAppeal': "player/banAppeal",
+      'player_banAppeal': "player/banAppeal", // 申诉
+      'player_viewBanAppeal': "player/viewBanAppeal",
       'player_reply': 'player/reply', // 回复
       'player_report': 'player/report',
       'player_update': 'player/update',

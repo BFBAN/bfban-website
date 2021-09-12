@@ -30,25 +30,23 @@
           <slot name="content"></slot>
         </Badge>
       </router-link>
-      <DropdownMenu slot="list" style="padding: 0 10px; width: 400px">
-        <div v-if="message.messages.length > 0">
-          <Tabs value="message">
-            <TabPane label="✉️" name="message">
-              <div v-for="(item, index) in message.messages" :key="index">
-                <Row v-show="message.messages.length <= 4">
-                  <Col flex="auto">
-                    <b>{{item.content}}</b>
-                    <p>{{item.createTime}}</p>
-                  </Col>
-                  <Col flex="200" align="right">
-                    <a @click="onMessageMark(item.id, 0)">已阅读</a>
-                  </Col>
-                </Row>
-                <Divider></Divider>
-              </div>
-            </TabPane>
-          </Tabs>
-        </div>
+      <DropdownMenu slot="list" style="padding: 0 10px; width: 400px" v-if="message.messages.length > 0">
+        <Tabs value="message">
+          <TabPane label="✉️" name="message">
+            <div v-for="(item, index) in message.messages" :key="index">
+              <Row v-show="message.messages.length <= 4">
+                <Col flex="auto">
+                  <b>{{item.content}}</b>
+                  <p>{{item.createTime}}</p>
+                </Col>
+                <Col flex="200" align="right">
+                  <a @click="onMessageMark(item.id, 0)">已阅读</a>
+                </Col>
+              </Row>
+              <Divider></Divider>
+            </div>
+          </TabPane>
+        </Tabs>
       </DropdownMenu>
     </Dropdown>
   </div>
