@@ -27,16 +27,18 @@
     <Row :gutter="30">
       <Col :xs="{span: 24, push: 1, pull: 1}" :lg="{span: 6,push:0,pull:0}">
         <Card>
-          <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
-            <Checkbox
-                :indeterminate="indeterminate"
-                :value="checkAll"
-                @click.prevent.native="handleCheckAll">{{ $t('apps.screen.all') }}</Checkbox>
-          </div>
+          <Checkbox
+              :indeterminate="indeterminate"
+              :value="checkAll"
+              @click.prevent.native="handleCheckAll">{{ $t('apps.screen.all') }}</Checkbox>
+          <Divider/>
           <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
-            <Checkbox :label="$t('apps.screen.' + item.value)"
+            <Checkbox :label="item.value"
                       v-for="item in appsConf.tags"
-                      :key="item.value" border style="margin-bottom: 10px"></Checkbox><br>
+                      :key="item.value"
+                      style="margin-bottom: 10px">
+              {{ $t('apps.screen.' + item.value) }}
+            </Checkbox>
           </CheckboxGroup>
         </Card>
       </Col>

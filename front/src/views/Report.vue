@@ -83,8 +83,9 @@
                       {{ $t('report.info.or') }}
                     </Col>
                     <Col flex="1">
-                      <a @click="tabs.players.show = true">{{ $t('report.info.fromDatabaseOneId') }}</a>
-
+                      <Button type="dashed" long size="large" @click="tabs.players.show = true">
+                        {{ $t('report.info.fromDatabaseOneId') }}
+                      </Button>
                       <Modal
                           v-model="tabs.players.show"
                           @on-ok="tabs.list[index].formItem.originId = tabs.list[index].formItem.originId_l; tabs.list[index].formItem.originId_l = ''"
