@@ -50,6 +50,12 @@ const routes = [
     {name: 'cheaters', path: '/player', component: List},
     {name: 'cheater', path: '/player/:ouid', component: Detail},
     {
+        name: 'cheaters_old', path: '/cheaters/:ouid', component: Detail,
+        beforeEnter (to, from, next) {
+            next({path: '/player/' + to.params.ouid, query: { oldUrl: true }});
+        }
+    },
+    {
         name: 'shorten', path: '/preview.svg/:hexnum', redirect: to => {
             try {
                 const ouid = parseInt(to.params.hexnum, 16);

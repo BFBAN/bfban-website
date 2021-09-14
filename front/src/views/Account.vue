@@ -109,7 +109,7 @@
                               :to="{
                                   name: 'cheater',
                                   params: {
-                                      ouid: `${report.originUserId}`,
+                                      ouid: `${report.originPersonaId}`,
                                   },
                               }">
                               <Tag>{{ report.game }}</Tag>

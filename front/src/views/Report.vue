@@ -14,29 +14,9 @@
             @on-tab-remove="doCancel">
         <TabPane v-for="(tab, index) in tabs.list.length" :key="tab"
                  :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab) + '[' + tabs.list[index].formItem.gameName + ']'">
-          <Card shadow style="margin-top: -16px">
+          <Card shadow v-if="tabs.list[index].statusOk == 0">
             <Form :label-width="150" label-position="left">
               <!--举报作弊-->
-              <div
-                  class="notFoundHint"
-                  id="notFoundHint"
-                  v-show="failedOfNotFound">
-                <p style="font-size: 14px; font-weight: bold">
-                  {{ $t("report.info.notFoundHintTitle") }}
-                </p>
-                <p style="font-size: 14px; margin-left: 10px">
-                  {{ $t("report.info.notFoundHintQuestion1") }}
-                </p>
-                <p style="font-size: 12px; margin-left: 20px">
-                  {{ $t("report.info.notFoundHintAnswer1") }}
-                </p>
-                <p style="font-size: 14px; margin-left: 10px">
-                  {{ $t("report.info.notFoundHintQuestion2") }}
-                </p>
-                <p style="font-size: 12px; margin-left: 20px">
-                  {{ $t("report.info.notFoundHintAnswer2") }}
-                </p>
-              </div>
 
               <Card dis-hover>
                 <!-- 游戏类型 S -->
@@ -59,6 +39,26 @@
                 <!-- 游戏类型 E -->
 
                 <FormItem :label="$t('report.labels.hackerId')">
+                  <Alert type="error"
+                         show-icon
+                         id="notFoundHint"
+                         v-show="failedOfNotFound">
+                    <b>{{ $t("report.info.notFoundHintTitle") }}</b>
+                    <span slot="desc">
+                      <p style="font-size: 14px; margin-left: 10px">
+                        Q:{{ $t("report.info.notFoundHintQuestion1") }}
+                      </p>
+                      <p style="font-size: 12px; margin-left: 20px">
+                        A:{{ $t("report.info.notFoundHintAnswer1") }}
+                      </p>
+                      <p style="font-size: 14px; margin-left: 10px">
+                        Q:{{ $t("report.info.notFoundHintQuestion2") }}
+                      </p>
+                      <p style="font-size: 12px; margin-left: 20px">
+                        A:{{ $t("report.info.notFoundHintAnswer2") }}
+                      </p>
+                    </span>
+                  </Alert>
                   <Card class="hackrid" dis-hover>
                     <h1 v-if="tabs.list[index].formItem.originId">{{ tabs.list[index].formItem.originId }}</h1>
                     <span v-else>ID</span>
@@ -135,39 +135,38 @@
               <br>
               <Card dis-hover>
                 <FormItem :label="$t('detail.info.videoLink')">
-                  <Alert type="warning">
-                    {{
-                      $t("report.info.uploadManual1", {
-                        msg: "uploadManual1",
-                      })
-                    }}
-                    <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
-                      $t("report.info.uploadManual2", {
-                        msg: "uploadManual2",
-                      })
-                    }}
-                  </Alert>
-                  <span class="hint">
-                        {{
-                      $t("report.info.uploadManual3", {
-                        msg: "uploadManual3",
-                      })
-                    }}
-                      </span>
-                  <Row :gutter="20" v-for="(blink, blinkindex) in tabs.list[index].formItem.bilibiliLink" :key="blinkindex">
-                    <Col span="20">
-                      <Input
-                          v-model="tabs.list[index].formItem.bilibiliLink[blinkindex]"
-                          :placeholder="$t('report.info.required')"/>
+                  <Row :gutter="30">
+                    <Col flex="1 1 300px">
+                      <Alert type="warning">
+                        {{$t("report.info.uploadManual1", {msg: "uploadManual1",}) }}
+                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{$t("report.info.uploadManual2", {msg: "uploadManual2",}) }}
+                      </Alert>
+                      <span class="hint">{{$t("report.info.uploadManual3", {msg: "uploadManual3",}) }}</span>
+                      <Row :gutter="20" v-for="(blink, blinkindex) in tabs.list[index].formItem.videoLink" :key="blinkindex">
+                        <Col flex="auto">
+                          <Input
+                              v-model="tabs.list[index].formItem.videoLink[blinkindex]"
+                              :placeholder="$t('report.info.required')">
+                            <span slot="prepend">http(s)://</span>
+                          </Input>
+                        </Col>
+                        <Col>
+                          <Button type="dashed"
+                                  @click="tabs.list[index].formItem.videoLink.splice(blinkindex + 1, 0, '')"
+                                  v-if="tabs.list[index].formItem.videoLink.length <= 10">
+                            <Icon type="md-add"/>
+                          </Button>
+                          <Divider type="vertical" v-if="tabs.list[index].formItem.videoLink.length <= 10"/>
+                          <Button type="dashed"
+                                  @click="tabs.list[index].formItem.videoLink.splice(blinkindex, 1)"
+                                  v-if="tabs.list[index].formItem.videoLink.length > 1">
+                            <Icon type="md-trash"/>
+                          </Button>
+                        </Col>
+                      </Row>
                     </Col>
-                    <Col span="4">
-                      <Icon type="md-add"
-                            @click="tabs.list[index].formItem.bilibiliLink.splice(blinkindex + 1, 0, '')"
-                            v-if="tabs.list[index].formItem.bilibiliLink.length <= 10"/>
-                      <Divider type="vertical" v-if="tabs.list[index].formItem.bilibiliLink.length <= 10"/>
-                      <Icon type="md-trash"
-                            @click="tabs.list[index].formItem.bilibiliLink.splice(blinkindex, 1)"
-                            v-if="tabs.list[index].formItem.bilibiliLink.length > 1"/>
+                    <Col>
+                      <img src="../assets/images/videoStyle.png" width="300">
                     </Col>
                   </Row>
                 </FormItem>
@@ -178,14 +177,9 @@
                   </Alert>
                   <Alert type="warning">
                     {{ $t("report.info.uploadPic2", {msg: "uploadPic2"}) }}
-                    <a target="_blank"
-                       href="https://sm.ms">https://sm.ms</a>，{{
-                      $t("report.info.uploadPic3", {msg: "uploadPic3"})
-                    }}
+                    <a target="_blank" href="https://sm.ms">https://sm.ms</a>，{{$t("report.info.uploadPic3", {msg: "uploadPic3"}) }}
                   </Alert>
-                  <span class="hint">
-                        {{ $t("report.info.uploadPic4", {msg: "uploadPic4"}) }}
-                      </span>
+                  <span class="hint">{{ $t("report.info.uploadPic4", {msg: "uploadPic4"}) }}</span>
                   <Edit :index="index" :content="$t('report.info.description')" @change="handleMiscChange"/>
                 </FormItem>
               </Card>
@@ -221,12 +215,22 @@
               </Card>
               <br>
 
-              <Button @click="doReport" type="primary" size="large">
-                {{ $t("report.info.reportAll", {msg: "report"}) }}
-              </Button>
+<!--              <Button @click="doReport" type="primary" size="large">-->
+<!--                {{ $t("report.info.reportAll", {msg: "report"}) }}-->
+<!--              </Button>-->
 
               <Spin size="large" fix v-show="spinShow"></Spin>
             </Form>
+          </Card>
+          <Card shadow v-else-if="tabs.list[index].statusOk == -1">
+            <Alert type="error" show-icon>
+              {{ tabs.list[index].statusMsg }}
+            </Alert>
+          </Card>
+          <Card shadow v-else-if="tabs.list[index].statusOk == 1">
+            <Alert type="success" show-icon>
+              {{ tabs.list[index].statusMsg }}
+            </Alert>
           </Card>
         </TabPane>
         <Button @click="handleTabsAdd" size="small" slot="extra">+</Button>
@@ -279,6 +283,11 @@ export default {
         this.games = res.gameName;
       });
     },
+    /**
+     * 查询作弊玩家列表
+     * 用于从BFBAN数据库中取现有id，填充名称
+     * @param query
+     */
     getPlayerList (query) {
       if (query !== '') {
         this.tabs.players.load = true;
@@ -301,27 +310,31 @@ export default {
         this.tabs.players.list = [];
       }
     },
+    /**
+     * 添加举报新标签
+     * 举报JSON格式
+     */
     handleTabsAdd() {
       let newFormData = {
         formItem: {
           gameName: gameName.child[gameName.defaultIndex].value,
           originId: "",
-          bilibiliLink: ['http://'],
+          videoLink: ['http://'],
           checkbox: ["aimbot"],
           description: this.$i18n.t("report.info.description"),
           captcha: "",
-
           originUserId: "",
           originPersonaId: "",
           avatarLink: "",
         },
+        statusOk: 0,
         captchaUrl: {}
       };
       this.tabs.list.push(newFormData);
     },
     checkVideoAndImg(formData) {
       return true;
-      // trimAllWhitespace(formData.formItem.bilibiliLink) ||
+      // trimAllWhitespace(formData.formItem.videoLink) ||
       // if (
       //     /(http(preview.svg?):)([/|.|\w|\preview.svg|-])*\.(?:jpe?g|gif|png|bmp)/.test(formData.formItem.description)
       // ) {
@@ -331,6 +344,10 @@ export default {
       //   return false;
       // }
     },
+    /**
+     * 更新或刷新验证码
+     * @param index
+     */
     refreshCaptcha(index) {
       http.get(api["captcha"], {
         params: {
@@ -341,19 +358,32 @@ export default {
           this.tabs.list[index].captchaUrl = res.data.data;
         }
       });
-      // waitForAction.call(this.$refs.reCaptcha);
     },
+    /**
+     * 单向绑定编辑器的值
+     * @param h edit value
+     * @param index tabs to index
+     */
     handleMiscChange(h, index) {
       this.tabs.list[index].formItem.description = h;
     },
+    /**
+     * 取消当前标签的举报
+     * 同删除此标签
+     */
     doCancel() {
       if (this.tabs.list.length <= 1) {
         return;
       }
       this.tabs.count = 0;
-      this.tabs.list = this.tabs.list.splice(this.tabs.count, 1);
+      this.tabs.list.splice(this.tabs.count, 1);
     },
-    doReport(index) {
+    /**
+     * 发布当前标签的举报
+     * @param index tabs index
+     * @returns {Promise<boolean>}
+     */
+    async doReport(index) {
       // that form
       let formData = this.tabs.list[index];
 
@@ -363,107 +393,109 @@ export default {
 
       this.spinShow = true;
 
-      this.http.post('checkGameIdExist', {
-        data: {
-          id: trimAllWhitespace(formData.formItem.originId),
-        },
-      }).then(async (res) => {
-        const d = res.data;
-        const idExist = d.idExist;
+      await this.handleReport(formData, index);
 
-        if (idExist) {
-          formData.formItem.originUserId = d.originUserId;
-          formData.formItem.originPersonaId = d.originPersonaId;
-          formData.formItem.avatarLink = d.avatarLink;
-
-          await this.handleReport(formData);
-        } else {
-          this.spinShow = false;
-          this.failedOfNotFound = true;
-
-          setImmediate(() => {
-            document
-                .getElementById("notFoundHint")
-                .scrollIntoView({
-                  behavior: "smooth",
-                  block: "end",
-                  inline: "nearest",
-                });
-          });
-
-          this.$Message.error(
-              this.$i18n.t("report.info.originId")
-          );
-        }
+      // http.get('checkGameIdExist', {
+      //   data: {
+      //     id: trimAllWhitespace(formData.formItem.originId),
+      //   }
+      // }).then(async (res) => {
+      //   const d = res.data;
+      //   const idExist = d.idExist;
+      //
+      //   if (idExist) {
+      //     formData.formItem.originUserId = d.originUserId;
+      //     formData.formItem.originPersonaId = d.originPersonaId;
+      //     formData.formItem.avatarLink = d.avatarLink;
+      //
+      //   } else {
+      //     this.spinShow = false;
+      //     this.failedOfNotFound = true;
+      //
+      //     setImmediate(() => {
+      //       document
+      //           .getElementById("notFoundHint")
+      //           .scrollIntoView({
+      //             behavior: "smooth",
+      //             block: "end",
+      //             inline: "nearest",
+      //           });
+      //     });
+      //
+      //     this.$Message.error(
+      //         this.$i18n.t("report.info.originId")
+      //     );
+      //   }
 
         formData.formItem.captcha = "";
         this.refreshCaptcha();
-      }).catch((e) => {
-        if (e.response && e.response.status == 401)
-          this.$Message.error(
-              this.$t("report.info.loginExpired")
-          );
-        else if (e.response && e.response.status == 500)
-          this.$Message.error(
-              "An error occured in server, please try again later."
-          );
-        else this.$Message.error("Failed: Unknown error.");
-        this.spinShow = false;
-      });
+      // }).catch((e) => {
+      //   if (e.response && e.response.status == 401)
+      //     this.$Message.error(
+      //         this.$t("report.info.loginExpired")
+      //     );
+      //   else if (e.response && e.response.status == 500)
+      //     this.$Message.error(
+      //         "An error occured in server, please try again later."
+      //     );
+      //   else this.$Message.error("Failed: Unknown error.");
+      //   this.spinShow = false;
+      // });
     },
-    handleReport(formData) {
-      this.spinShow = true;
+    /**
+     * 发布请求
+     * @param formData
+     * @param index
+     */
+    handleReport(formData, index) {
       const cheatMethods = formData.formItem.checkbox.join(",");
-      const {
-        gameName,
-        originUserId,
-        originPersonaId,
-        avatarLink,
-        captcha,
-      } = formData.formItem;
-      const originId = trimAllWhitespace(formData.formItem.originId);
-      let bilibiliLink;
-      formData.formItem.bilibiliLink.forEach(uri => {
-        // bilibiliLink = trimAllWhitespace(uri);
-        if (bilibiliLink) {
-          bilibiliLink = /^https?:\/\//.test(bilibiliLink) ? bilibiliLink : "//" + bilibiliLink;
-        }
-      })
+      const {gameName, captcha, originId} = formData.formItem;
       const description = formData.formItem.description.trim();
+      const videoLink = formData.formItem.videoLink.toString();
 
-      this.http.post(api["cheaters"], {
+      this.spinShow = true;
+      this.http.post(api["player_report"], {
         data: {
-          // data: {
-          //   game: 'bf1' | 'bfv',
-          //   originName: 'string',
-          //   cheatMethods: 'string',	// see {{valid_cheatMethod}}
-          //   videoLink: '',
-          //   description: 'string'
-          // },
-          gameName,
-          originId,
-          cheatMethods,
-          bilibiliLink: bilibiliLink.toString(),
-          description,
-          captcha,
-          originUserId,
-          originPersonaId,
-          avatarLink,
+          data: {
+            game: gameName,
+            originName: originId,
+            cheatMethods,	// see {{valid_cheatMethod}}
+            videoLink,
+            description
+          },
+          encryptCaptcha: this.tabs.list[index].captchaUrl.hash,
+          captcha
         },
       }).then((res) => {
         const d = res.data;
 
-        if (d.error === 0) {
-          this.$router.push({
-            name: "cheater",
-            params: {game: gameName, ouid: d.data.originUserId},
-          });
+        if (d.success == 1) {
+          this.tabs.list[index].statusOk = 1;
+
+          // this.$router.push({
+          //   name: "cheater",
+          //   params: {game: gameName, ouid: d.data.originUserId},
+          // });
 
           this.$Message.success(this.$i18n.t("report.info.success"));
         } else {
-          this.$Message.error("failed " + d.msg);
+          this.tabs.list[index].statusOk = -1;
+
+          switch (d.code) {
+            case 'originId':
+              this.$Message.error(
+                  this.$i18n.t("report.info.originId")
+              );
+              break;
+              default:
+                this.$Message.error("failed " + d.message);
+          }
         }
+
+        this.tabs.list[index].statusMsg = d.message;
       }).finally(() => {
+        this.tabs.list[index].statusOk = -1;
+
         this.spinShow = false;
         this.failedOfNotFound = false;
       });

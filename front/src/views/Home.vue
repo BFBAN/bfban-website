@@ -41,10 +41,9 @@
             </Row>
             <br>
             <p>{{ $t("home.cover.endTime") }}</p>
+            <br>
           </Col>
           <Col span="16" class="mobile-hide" :lg="{span: 13, push: 3}" type="flex" align="right" justify="center">
-<!--            <img src="../assets/images/index-bk.png" width="100%" class="ivu-row-top" style="margin-top: 5rem">-->
-
             <img src="../assets/images/webp.webp" width="100%" class="ivu-row-top" style="margin-top: 5rem">
           </Col>
         </Row>
@@ -52,42 +51,40 @@
 
       <Row :gutter="40">
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
-          <Card>
-            <Row>
-              <Col span="5">
-                <Icon type="md-chatboxes" size="50" color="#19be6b"/>
-              </Col>
-              <Col span="18" align="right">
-                <Tooltip class="joinBFbanTip">
-                  <div>
-                    <h3>参与</h3>
-                    <p>您或组织都可以加入BFBAN</p>
-                  </div>
-                  <div slot="content" max-width="500">
-                    <p>个人用户在BFBAN注册并投递举报，</p>
-                    <p>
-                      如果您是组织代表，希望加入BFBAN可通过第三方工具申请获得服务集群管理账户
-                    </p>
-                  </div>
-                </Tooltip>
-              </Col>
-            </Row>
-          </Card>
+          <a href="https://manager.gametools.network/" target="_blank">
+            <Card>
+              <Row>
+                <Col span="5">
+                  <Icon type="md-chatboxes" size="50" color="#19be6b"/>
+                </Col>
+                <Col span="18" align="right">
+                  <Tooltip class="joinBFbanTip" :max-width="300" content="集群服务器管理与作弊检测、监控、机器人">
+                    <div>
+                      <h3>集群管理与检测</h3>
+                      <p>Gametools & BFBan</p>
+                    </div>
+                  </Tooltip>
+                </Col>
+              </Row>
+            </Card>
+          </a>
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
-          <Card>
-            <Row>
-              <Col span="12">
-                <Icon type="ios-bookmark" size="50" color="#2d8cf0"/>
-              </Col>
-              <Col span="12" align="right">
-                <div>
-                  <h3>文档</h3>
-                  <p>对外公开Api文档</p>
-                </div>
-              </Col>
-            </Row>
-          </Card>
+          <a href="scriptjava:void(0)">
+            <Card>
+              <Row>
+                <Col span="12">
+                  <Icon type="ios-bookmark" size="50" color="#2d8cf0"/>
+                </Col>
+                <Col span="12" align="right">
+                  <div>
+                    <h3>Wiki</h3>
+                    <p>联BAN百科</p>
+                  </div>
+                </Col>
+              </Row>
+            </Card>
+          </a>
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
           <router-link :to="{name: 'apps'}">
@@ -187,19 +184,19 @@
                   <b>{{ convertCheatMethods(a_i.cheatMethods) }}</b>
                 </span>
 
-<!--                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">-->
-<!--                  {{a_i.byUserName }}-->
-<!--                </router-link>-->
+                <!--                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">-->
+                <!--                  {{a_i.byUserName }}-->
+                <!--                </router-link>-->
 
-<!--                {{ $t('detail.info.judge', {msg: 'judge'}) }}-->
+                <!--                {{ $t('detail.info.judge', {msg: 'judge'}) }}-->
 
-<!--                <router-link :to="{name: 'cheater', params: {ouid: `${a_i.toPlayerId}`}}">-->
-<!--                  {{a_i.toPlayerName }}-->
-<!--                </router-link>-->
+                <!--                <router-link :to="{name: 'cheater', params: {ouid: `${a_i.toPlayerId}`}}">-->
+                <!--                  {{a_i.toPlayerName }}-->
+                <!--                </router-link>-->
 
-<!--                <Tag color="warning">-->
-<!--                  {{a_i.action}}{{ getCheaterStatusLabel(a_i.action) }}-->
-<!--                </Tag>-->
+                <!--                <Tag color="warning">-->
+                <!--                  {{a_i.action}}{{ getCheaterStatusLabel(a_i.action) }}-->
+                <!--                </Tag>-->
               </span>
             </Card>
           </div>
@@ -207,14 +204,17 @@
       </div>
 
     </div>
+
+    <Tell></Tell>
   </div>
 </template>
 
 <script>
 import BFBAN from "../assets/js/bfban";
-import {http, api, util} from '../assets/js/index'
+import Tell from "../components/Home_tell";
+import {api, http, util} from '../assets/js/index'
 
-export default new BFBAN( {
+export default new BFBAN({
   data() {
     return {
       site: {
@@ -227,6 +227,7 @@ export default new BFBAN( {
       activitySwitchType: true,
     }
   },
+  components: {Tell},
   watch: {
     '$route': 'loadData',
   },

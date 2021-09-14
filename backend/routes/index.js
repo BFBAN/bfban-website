@@ -182,7 +182,6 @@ router.get('/admins', async (req, res, next)=> {
     }
 })
 
-
 router.get('/search',[
     checkquery('param').isString().trim().notEmpty(),
     checkquery('scope').optional().isIn(['current','history'])

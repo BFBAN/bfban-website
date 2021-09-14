@@ -13,7 +13,7 @@
           <Col :xs="{span: 22}" :lg="{span: 4}">
             <div v-show="cheater.avatarLink" align="center">
               <!-- Origin头像 -->
-              <Avatar shape="square" :src="cheater.avatarLink" size="150"
+              <Avatar shape="square" :src="cheater.avatarLink" size="180"
                       :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })"/>
             </div>
           </Col>
@@ -154,45 +154,47 @@
                     <!-- 举报 S -->
                     <div v-if="l.type === 'report'" class="timeline-content">
                       <div class="timeline-time">
-                        <Time :time="l.createTime"></Time>
+                        <Row>
+                          <Col flex="1">
+                            <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                              <!-- 管理员 -->
+                              <Tag v-if="l.privilege === 'admin'" type="border">
+                                {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
+                              </Tag>
+                              <b>{{ l.username }}</b>
+                            </router-link>
+                            <!-- 举报 -->
+                            {{ $t('detail.info.report', {msg: 'report'}) }}
+                            <a><b>{{ l.toOriginName }}</b></a>
+                            <!-- 在 -->
+                            {{ $t('detail.info.inGame', {msg: 'inGame'}) }}
+                            <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
+                              {{ l.game }}
+                            </router-link>
+                            <!-- 游戏中 -->
+                            {{ $t('detail.info.gaming', {msg: 'gaming'}) }}
 
-                        <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
-                          <!-- 管理员 -->
-                          <Tag v-if="l.privilege === 'admin'" color="success">
-                            {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
-                          </Tag>
-                          <b>{{ l.username }}</b>
-                        </router-link>
-                        <!-- 举报 -->
-                        {{ $t('detail.info.report', {msg: 'report'}) }}
-
-                        <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
-                          {{ l.cheaterGameName }}
-                        </router-link>
-
-                        <!-- 在 -->
-                        {{ $t('detail.info.inGame', {msg: 'inGame'}) }}
-
-                        <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
-                          {{ l.game }}
-                        </router-link>
-
-                        <!-- 游戏中 -->
-                        {{ $t('detail.info.gaming', {msg: 'gaming'}) }}
-
-                        <b>
-                          {{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}
-                        </b>
+                            <Tag type="border" color="orange" v-for="(methods, methodsIndex) in convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale).split(' ')" :key="methodsIndex">
+                              {{methods}}
+                            </Tag>
+                          </Col>
+                          <Col align="right">
+                            <Time :time="l.createTime"></Time>
+                          </Col>
+                        </Row>
                       </div>
 
-                      <p v-if="l.bilibiliLink">
-                        <!-- 游戏中 -->
-                        <Tag color="primary">
-                          {{ $t('detail.info.videoLink', {msg: 'videoLink'}) }}
-                        </Tag>
-                        <a :href="l.bilibiliLink" target="_blank">{{ l.bilibiliLink }}</a>
-                      </p>
-                      <div v-if="l.description" v-html="l.description" class="description">
+
+                      <div class="description">
+                        <span v-if="l.videoLink">
+                          <!-- 游戏中 -->
+                          <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex" :href="link" target="_blank">
+                            <Tag size="default" color="geekblue">{{ $t('detail.info.videoLink', {msg: 'videoLink'}) }}</Tag>
+                            {{ link }}
+                             <Divider type="vertical" />
+                          </span>
+                        </span>
+                        <div v-if="l.description" v-html="l.description"></div>
                       </div>
 
                       <p v-if="isLogin">
@@ -210,17 +212,17 @@
                       <div class="timeline-time">
                         <Row>
                           <Col flex="auto">
-                            <Time :time="l.createTime"></Time>
 
                             <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                               <!-- 管理员 -->
-                              <Tag v-if="l.privilege === 'admin'" color="success">
+                              <Tag v-if="l.privilege === 'admin'" type="border">
                                 {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                               </Tag>
                               <b>{{ l.username }}</b>
                             </router-link>
 
-                            {{ $t('detail.info.appeal', {msg: 'appeal'}) }}
+                            <teleport v-if="!isSelf(l.originUserId)">{{ $t('detail.info.assistPppeal', {msg: 'assistPppeal'}) }}</teleport>
+                            <teleport v-else>{{ $t('detail.info.appeal', {msg: 'appeal'}) }}</teleport>
 
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
                               {{ l.cheaterGameName }}
@@ -232,6 +234,8 @@
                           </Col>
 
                           <Col>
+                            <Time :time="l.createTime"></Time>
+                            <Divider type="vertical"/>
                             {{l.status}}
                           </Col>
                         </Row>
@@ -268,41 +272,33 @@
                     <div v-if="l.type === 'verify' || l.type === 'judgement'" class="timeline-content bookmark"
                          :id="`user-verify-cheater-${l.id}`">
                       <div class="timeline-time">
-                        <Time v-if="l.createTime" :time="l.createTime"></Time>
+                        <Row>
+                          <Col flex="1">
+                            <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                              <Tag v-if="l.privilege === 'admin'" type="border">
+                                {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
+                              </Tag>
+                              <b>{{ l.username }}</b>
+                            </router-link>
 
-                        <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
-                          <Tag v-if="l.privilege === 'admin'" color="success">
-                            {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
-                          </Tag>
-                          <b>{{ l.username }}</b>
-                        </router-link>
+                            {{ $t('detail.info.judge', {msg: 'judge'}) }}
 
-                        {{ $t('detail.info.judge', {msg: 'judge'}) }}
+                            <Tag color="warning">
+                              {{ getCheaterStatusLabel(l.action) }}
+                            </Tag>
 
-                        <Tag color="warning">
-                          {{ getCheaterStatusLabel(l.action) }}
-                        </Tag>
-
-                        <span v-if="l.cheatMethods">
-                          ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
-                          <b>{{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}</b>
-                        </span>
+                            <span v-if="l.cheatMethods">
+                              ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
+                              <b>{{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}</b>
+                            </span>
+                          </Col>
+                          <Col align="right">
+                            <Time v-if="l.createTime" :time="l.createTime"></Time>
+                          </Col>
+                        </Row>
                       </div>
 
                       <div v-html="l.content" v-if="l.content" class="description"></div>
-
-                      <p v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.userId)">
-                        <a href="#"
-                           @click.prevent.stop="doConfirm"
-                           :data-user-verify-cheater-id="l.id"
-                           :data-cheat-methods="l.cheatMethods"
-                           :data-user-verify-cheater-username="l.username">
-
-                          <Icon type="md-thumbs-up"/>
-                          <!-- 同意实锤 -->
-                          {{ $t('detail.info.agreeJudgement', {msg: 'agreeJudgement'}) }}
-                        </a>
-                      </p>
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
@@ -310,6 +306,19 @@
                                 @click="handleReply(l.floor || index, l.byUserId)">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
+                        <template v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.byUserId)">
+                          <Divider type="vertical"/>
+
+                          <!-- 同意实锤 -->
+                          <Button type="dashed" href="scriptjava:void(0)"
+                             @click.prevent.stop="doConfirm"
+                             :data-user-verify-cheater-id="l.id"
+                             :data-cheat-methods="l.cheatMethods"
+                             :data-user-verify-cheater-username="l.username">
+                            <Icon type="md-thumbs-up"/>
+                            {{ $t('detail.info.agreeJudgement', {msg: 'agreeJudgement'}) }}
+                          </Button>
+                        </template>
                       </p>
                     </div>
                     <!-- 认为 E -->
@@ -320,7 +329,7 @@
                         <Time v-if="l.createTime" :time="l.createTime"></Time>
 
                         <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
-                          <Tag v-if="l.privilege === 'admin'" color="success">
+                          <Tag v-if="l.privilege === 'admin'" type="border">
                             {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
                           </Tag>
                           <b>{{ l.username }}</b>
@@ -353,18 +362,23 @@
                     <!-- 回复:any S -->
                     <div v-if="l.type === 'reply'" class="timeline-content">
                       <div class="timeline-time">
-                        <Time v-if="l.createTime" :time="l.createTime"></Time>
-
-                        <router-link v-if="l.username" :to="{name: 'account', params: {uId: `${l.id}`}}">
-                          <Tag v-if="l.privilege === 'admin'" type="border">
-                            {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
-                          </Tag>
-                          <b>{{ l.username }}</b>
-                        </router-link>
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                        <span v-if="l.toFloor">
-                          <a :href="`#floor-${l.toFloor}`">#{{ l.toFloor }}</a>
-                        </span>
+                        <Row>
+                          <Col flex="1">
+                            <router-link v-if="l.username" :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                              <Tag v-if="l.privilege === 'admin'" type="border">
+                                {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
+                              </Tag>
+                              <b>{{ l.username }}</b>
+                            </router-link>
+                            {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                            <span v-if="l.toFloor">
+                              <a :href="`#floor-${l.toFloor}`">#{{ l.toFloor }}</a>
+                            </span>
+                          </Col>
+                          <Col align="right">
+                            <Time v-if="l.createTime" :time="l.createTime"></Time>
+                          </Col>
+                        </Row>
                       </div>
 
                       <div v-html="l.content" v-if="l.content" class="description"></div>
@@ -411,13 +425,19 @@
                              type="textarea"
                              :autosize="{minRows: 5}"
                              :placeholder="$t('detail.info.giveOpinion')"/>
-                      <p align="right">
-                        <br>
-                        <Button type="primary" :loading="replySpinShow" @click.stop.prevent="doReply">
+                    </Form>
+                    <br>
+                    <Row :gutter="80">
+                      <Col flex="1">
+                        如有误联BAN，请在举报页面上点[上诉] 或 邮件至ban-appeals@bfban.com管理员处理。
+                      </Col>
+                      <Col span="8">
+                        <Button type="primary" siez="large" long :loading="replySpinShow" :disabled="!reply.content"
+                                @click.stop.prevent="doReply">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
-                      </p>
-                    </Form>
+                      </Col>
+                    </Row>
                   </div>
                   <Alert type="warning" show-icon v-else>
                     <template slot="desc">
@@ -648,14 +668,11 @@
                 <li>
                   <h3>
                     <Icon type="md-done-all" color="#19be6b"/>
-                    有效多媒体(视频、图片)证据
+                    有效证据
                   </h3>
                   <ol>
-                    <li>使用类似"高速目标靶心"软件，拍摄到屏幕与手、键盘录制自证</li>
-                    <li>
-                      自我辩护
-                      <Alert type="warning">谎言无限套谎言一定会被拆穿</Alert>
-                    </li>
+                    <li>使用类似"高速目标靶心"软件，拍摄到屏幕与手、键盘录制自证.</li>
+                    <li>自我辩护，可以使用图片、视频等等材料.</li>
                   </ol>
                 </li>
                 <br>
@@ -665,7 +682,8 @@
                     辅助证明
                   </h3>
                   <ol>
-                    <li>举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址，</li>
+                    <li>举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址.</li>
+                    <li>在场玩家，提供自己id，具体服务器、时间、场此，以及您辅助申诉对象说明.</li>
                   </ol>
                 </li>
               </ul>
@@ -678,9 +696,13 @@
                     不通过的证明
                   </h3>
                   <ol>
-                    <li>借出、出租等形式给第三方，无论是刷数据还是朋友借用说辞，都无法证明是否本人，你必须明白账户借出无法知道通过何种手段. 一律不给与通过</li>
-                    <li>被多方玩家截取使用(不限于本人截图显示出作弊特征)或购买作弊软体多媒体</li>
-                    <li>存在前科，如上系列存在档案玩家将大大折扣通过几率</li>
+                    <li>
+                      借出、出租等形式给第三方，无论是刷数据还是朋友借用说辞，都无法证明是否本人，你必须明白账户借出无法知道通过何种手段. 一律不给与通过.
+                      <Alert type="warning">珍惜自己的账户</Alert>
+                    </li>
+                    <li>被多方玩家截取使用(不限于本人截图显示出作弊特征)或购买作弊软体多媒体.</li>
+                    <li>存在前科，如上系列存在档案玩家将大大折扣通过几率.</li>
+                    <li>任何誓言，诅咒.</li>
                   </ol>
                 </li>
               </ul>
@@ -820,13 +842,14 @@ export default new BFBAN({
      * 获取基本字段
      * 从[url]中整理
      */
-    getParamsIds() {
+    getParamsIds(name) {
       const object_id = this.$route.params.ouid.split('.');
-      return {
+      const object = {
         userId: object_id[1],
         personaId: object_id[0],
         dbId: object_id[2],
       };
+      return name ? object[name] : object;
     },
     /**
      * 获取作弊者档案
@@ -836,7 +859,7 @@ export default new BFBAN({
       this.http.get(api["cheaters"], {
         params: Object.assign({
           history: true
-        }, this.getParamsIds())
+        }, {personaId: this.getParamsIds('personaId')})
       }).then((res) => {
         this.spinShow = false;
         const d = res.data;
@@ -862,7 +885,7 @@ export default new BFBAN({
         params: Object.assign({
           skip: 0,
           limit: 100
-        }, this.getParamsIds())
+        }, {personaId: this.getParamsIds('personaId')})
       }).then((res) => {
         const d = res.data;
         if (d.success === 1) {
@@ -991,6 +1014,9 @@ export default new BFBAN({
         }
       })
     },
+    /**
+     * 确认、裁判
+     */
     doConfirm(e) {
       const {userVerifyCheaterId, userVerifyCheaterUsername, cheatMethods} = e.target.dataset;
       const {userId} = this.$store.state.user;
@@ -1023,14 +1049,17 @@ export default new BFBAN({
         }
       })
     },
+    /**
+     * 是否是自己
+     */
     isSelf(id) {
-      const userId = this.$store.state.user.userId;
+      const userId = this.$store.state.user.userinfo.userId;
       return (parseInt(userId) === parseInt(id))
     },
-    handleMiscChange (val) {
+    handleMiscChange(val) {
       this.appeal.content = val;
     },
-    handelAppeal () {
+    handelAppeal() {
       const {toPlayerId = this.cheater.originId, content = ''} = this.appeal;
 
       this.appeal.load = true;
@@ -1057,9 +1086,13 @@ export default new BFBAN({
         this.getTimeline();
       });
     },
-    // 申诉状态操作
+    /**
+     * 申诉状态操作
+     */
     handAdminAppeal(data) {
-      if (!data) {return;}
+      if (!data) {
+        return;
+      }
       const array = data.split(',');
       console.log(array)
       this.http.post(api["player_viewBanAppeal"], {
@@ -1082,7 +1115,9 @@ export default new BFBAN({
         this.getTimeline();
       })
     },
-    // 回复
+    /**
+     * 回复
+     */
     handleReply(floor, userId) {
       this.reply.toFloor = floor === 'undefined' ? '' : floor;
       this.reply.toUserId = userId === 'undefined' ? '' : userId;

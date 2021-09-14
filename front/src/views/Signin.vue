@@ -3,19 +3,16 @@
     <br>
     <div class="content">
       <Row :gutter="0">
-        <Col span="11" class="mobile-hide carousel">
-          <Carousel :autoplay-speed="5000" :dots="'none'">
-            <!--            <CarouselItem v-for="i in banner" :key="i" width="440" height="548">-->
-            <!--              <img :src="i">-->
-            <!--            </CarouselItem>-->
-            <CarouselItem class="carousel-item">
-              <img src="https://i.loli.net/2018/11/03/5bdd8e977b10d.png">
+        <Col :xs="{span: 24}" :lg="{span: 11}" class="mobile-hide carousel">
+          <Carousel :autoplay-speed="5000" :dots="'none'" class="carousel-item">
+            <CarouselItem >
+              <img src="../assets/images/logo.png">
               <h2>{{ $t("home.cover.h1") }}</h2>
               <span>{{ $t("home.cover.h3") }}</span>
             </CarouselItem>
           </Carousel>
         </Col>
-        <Col span="13">
+        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 13, push: 0, pull: 0}">
           <Card v-if="currentUser.token == ''" shadow>
             <p slot="title">{{ $t("signin.title") }}</p>
             <Form>
@@ -192,6 +189,7 @@ export default {
     }
 
     .carousel-item {
+      text-align: center;
       display: flex;
       flex-flow: column;
       justify-content: center;
@@ -203,8 +201,6 @@ export default {
       img {
         width: 150px;
         height: 150px;
-        margin-top: 150px;
-        margin-bottom: 20px;
       }
     }
   }

@@ -1,8 +1,8 @@
 <template>
     <footer class="footer">
       <div class="container">
-        <Row :gutter="0">
-          <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
+        <Row :gutter="10">
+          <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide">
 
             <Badge :count="logoCount" overflow-count="999999">
               <Avatar v-if="logoCount > 10" size="40">
@@ -19,73 +19,37 @@
 
             <p>{{ $t("footer.column.col1.text") }}</p>
           </Col>
-          <Col :xs="{span: 9 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
-            <h4><b>{{ $t("footer.column.col2.title") }}</b></h4>
+          <Col :xs="{span: 9 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide" v-for="(i, index) in footerNavs.row" :key="index">
+            <h4><b>{{ $t(i.text) }}</b></h4>
             <ul>
-              <li>
-                <a target="_blank" href="https://discord.gg/KCBM3GAW59">
-                  Community network Discord<Icon type="ios-share" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href="https://kaihei.co/uoJKC0">
-                  战地中文社区<Icon type="ios-share" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href="https://jq.qq.com/?_wv=1027&amp;k=pC07TOvE">
-                  QQ BFBan<Icon type="ios-share" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href="https://github.com/BFBAN">github BFBAN<Icon type="ios-share" /></a>
-              </li>
-              <li>
-                <a target="_blank" href="https://space.bilibili.com/387820951">
-                  bilibili BFBAN<Icon type="ios-share" />
-                </a>
+              <li v-for="(itemi, itemindex) in i.child" :key="itemindex" >
+                <template v-if="itemi.showLang">
+                  <template v-if="itemi.showLang.filter(e => $i18n.locale == e).length > 0">
+                    <a target="_blank" :href="itemi.src">
+                      <template v-if="itemi.textLang">{{ itemi.textLang[$i18n.locale] || itemi.text}}</template>
+                      <template v-else>{{ itemi.text }}</template>
+                      <Icon type="ios-share" />
+                    </a>
+                  </template>
+                </template>
+                <template v-else-if="itemi.insideLang">
+                  <router-link :to="{name: itemi.src}">{{ $t(itemi.text) }}</router-link>
+                </template>
+                <template v-else>
+                  <a target="_blank" :href="itemi.src">
+                    <template v-if="itemi.textLang">{{ itemi.textLang[$i18n.locale] || itemi.text}}</template>
+                    <template v-else>{{ itemi.text }}</template> <Icon type="ios-share" />
+                  </a>
+                </template>
               </li>
             </ul>
           </Col>
-          <Col :xs="{span: 9 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
-            <h4><b>{{ $t("footer.column.col3.title") }}</b></h4>
-            <ul>
-              <li>
-                <router-link :to="{name: 'report'}">{{$t('header.report')}}</router-link>
-              </li>
-              <li>
-                <router-link :to="{name: 'about'}">{{$t('header.about')}}</router-link>
-              </li>
-              <li>
-                <router-link :to="{name: 'cheaters', query: { status: '-1' }}">
-                  {{$t("header.cheaters")}}
-                </router-link>
-              </li>
-            </ul>
-          </Col>
-          <Col :xs="{span: 9 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}" >
-            <h4><b>{{ $t("footer.column.col3.title") }}</b></h4>
-            <ul>
-              <li>
-                <a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg">
-                  投诉邮箱<Icon type="ios-share" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href="https://support.qq.com/products/64038">
-                  意见建议<Icon type="ios-share" />
-                </a>
-              </li>
-            </ul>
-          </Col>
-          <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}">
-            <b>选择语言</b>
-
+          <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
             <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large"
                     @on-change="switchLanguage">
               <Option v-for="(item, index) in languages" :value="item.name" :label="item.label" :key="index">
                 <span>
-                  <p size="mini" v-if="item.main">Main</p>{{ item.label }}
+                  {{ item.label }}
                 </span>
                 <span style="float:right;color:#ccc">
                   {{item.name}}
@@ -100,8 +64,8 @@
           </Col>
         </Row>
       </div>
-      <Divider></Divider>
-      <div align="center">
+      <Divider class="mobile-hide"></Divider>
+      <div align="center" class="mobile-hide">
         <p>&copy; 2018-{{new Date().getFullYear()}} All Rights Reserved.</p>
         <p>Made with <Icon type="ios-heart" color="#ed4014" />Host at
           <a target="_blank" href="https://gametools.network/">GameTools-Community Network</a>
@@ -113,11 +77,13 @@
 
 <script>
 import packageInfo from '../../package.json';
+import footerNavs from '../assets/footerNavs.json'
 
 export default {
   data() {
     return {
       infos: packageInfo.version,
+      footerNavs: footerNavs.child,
       logoCount: 0,
       languages: [],
     }

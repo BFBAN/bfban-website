@@ -80,10 +80,10 @@
             </Header_message>
           </Tooltip>
 
-          <Divider type="vertical" v-show="isLogin"/>
+          <Divider type="vertical" />
 
           <Tooltip :content="$t('search.title')" placement="bottom-end">
-            <router-link v-if="isLogin" :to="{name: 'search_main'}">
+            <router-link :to="{name: 'search_main'}">
               <Icon type="ios-search" size="28"/>
             </router-link>
           </Tooltip>

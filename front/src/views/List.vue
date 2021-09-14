@@ -1,15 +1,8 @@
 <template>
   <div>
     <div class="list-banner" :style="`background:linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%), linear-gradient(0deg, rgb(248 249 250) 0%, rgba(31, 31, 27, 0) 30%), linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${ games.filter(i => i.value == gameName)[0].bk_src })`">
-      <Row class="container">
-        <Col flex="auto">
-          <h1>ww</h1>
-        </Col>
-        <Col>
-        </Col>
-      </Row>
-      <br>
     </div>
+
     <div class="container">
       <div class="content">
         <br>
@@ -77,7 +70,7 @@
                         <Col span="15">
                           <div style="display: flex; flex-direction: column;">
                             <router-link
-                                :to="{name: 'cheater', params: { ouid: `${d.originPersonaId}.${d.originUserId}.${d.id}` }}">
+                                :to="{name: 'cheater', params: { ouid: `${d.originPersonaId}` }}">
                               <h2>
                                 {{ d.originName }}
                                 <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"

@@ -3,18 +3,18 @@
     <br>
     <div class="content">
       <Row>
-        <Col span="24">
+        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}" >
           <Card shadow>
             <p slot="title">{{ this.$route.name == bindOriginName ? $t("bindOrigin.title") : $t("signup.title") }}</p>
 
-            <Steps :current="stepsIndex">
+            <Steps :current="stepsIndex" class="mobile-hide">
               <Step title="基础信息" content="账户基本"></Step>
               <Step title="绑定" content="关联橘子平台"></Step>
               <Step title="验证码" content="验证是否机器人"></Step>
               <Step title="确认" content="邮箱验证码"></Step>
             </Steps>
 
-            <Divider></Divider>
+            <Divider class="mobile-hide"></Divider>
 
             <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
               <div v-if="stepsIndex == 0">
@@ -52,7 +52,7 @@
               </div>
 
               <Row>
-                <Col span="12">
+                <Col flex="auto">
                   <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
                           :disabled="stepsIndex == 0 || this.$route.name == bindOriginName"
                           @click.prevent.stop="stepsIndex--" size="large">{{ $t('signup.prev') }}
@@ -62,7 +62,7 @@
                           type="primary">{{ $t('signup.next') }}
                   </Button>
                 </Col>
-                <Col span="12" align="right" type="flex">
+                <Col flex="auto" align="right" type="flex">
                   <Button v-if="stepsIndex == 2" long
                           @click.prevent.stop="handleSignup('formValidate')"
                           :disabled="!signup.captcha"

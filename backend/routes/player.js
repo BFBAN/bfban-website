@@ -76,8 +76,9 @@ router.post('/report', verifyJWT, verifyCaptcha,
     checkbody('data.game').isIn(config.supportGames),
     checkbody('data.originName').isAscii().notEmpty(),
     checkbody('data.cheatMethods').isString().notEmpty().custom(cheatMethodsSanitizer),
-    checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
-    checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),  
+    // checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
+    checkbody('data.videoLink').optional({checkFalsy: true}),
+    checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
@@ -388,7 +389,7 @@ async (req, res, next)=>{
 
             subQueries.ban_appeal.length>0? db('ban_appeals').join('users', 'ban_appeals.byUserId', 'users.id')
             .select('ban_appeals.id','ban_appeals.byUserId','ban_appeals.content','ban_appeals.viewedAdminIds',
-            'ban_appeals.status','ban_appeals.createTime', 'users.username', 'users.privilege', db.raw('"ban_appeal" as "type"'))
+            'ban_appeals.status','ban_appeals.createTime', 'users.username', 'users.privilege', 'users.originUserId', db.raw('"ban_appeal" as "type"'))
             .whereIn('ban_appeals.id', subQueries.ban_appeal) : [],
         ]).then(r=> {   // re-sort by saved order
             return r.reduce((accu, curr, indx)=> {

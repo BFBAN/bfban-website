@@ -1,27 +1,31 @@
 <template>
   <div class="container apps">
     <br>
-    <Breadcrumb>
-      <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-      <BreadcrumbItem>{{$t("home.howToUse.tools.main")}}</BreadcrumbItem>
-    </Breadcrumb>
+    <Row>
+      <Col :xs="{push: 1}" :lg="{push: 0}">
+        <Breadcrumb>
+          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{$t("home.howToUse.tools.main")}}</BreadcrumbItem>
+        </Breadcrumb>
+      </Col>
+    </Row>
     <br>
 
-    <div>
-      <Row :gutter="30">
-        <Col flex="auto">
-          <h1>{{$t("home.howToUse.tools.main")}}</h1>
-          <p>{{$t("home.howToUse.tools.describe")}}</p>
-        </Col>
-        <Col type="flex" align="right">
+    <Row :gutter="30">
+      <Col flex="auto" :xs="{span: 24, push: 1, pull: 1}">
+        <h1>{{$t("home.howToUse.tools.main")}}</h1>
+        <p>{{$t("home.howToUse.tools.describe")}}</p>
+      </Col>
+      <Col type="flex" align="right" class="mobile-hide">
+        <a href="https://github.com/BFBAN/bfban.github.io/issues">
           <Button>{{$t("home.howToUse.tools.submit_tool_app")}}</Button>
-        </Col>
-      </Row>
-      <Divider />
-    </div>
+        </a>
+      </Col>
+    </Row>
+    <Divider />
 
     <Row :gutter="30">
-      <Col span="6">
+      <Col :xs="{span: 24, push: 1, pull: 1}" :lg="{span: 6,push:0,pull:0}">
         <Card>
           <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
             <Checkbox
@@ -36,18 +40,25 @@
           </CheckboxGroup>
         </Card>
       </Col>
-      <Col span="18" class="apps-list">
+      <Col :xs="{span: 24, push: 1, pull: 0}" :lg="{span: 18,push:0,pull:0}" class="apps-list">
+        <br class="desktop-hide">
         <div v-for="item in appsConf.list" :key="item.title">
           <Card class="apps-item" v-if="appItemIsShow(item)">
             <Badge :text="!!item.hot ? $t('apps.buttons.hot') : ''" :offset="[15, 20]">
-              <h2>{{item.title}}</h2>
+              <h2 v-if="item.titleLang">
+                {{item.titleLang[$i18n.locale] || item.title}}
+              </h2>
+              <h2 v-else>{{item.title}}</h2>
             </Badge>
             <div>
               <Tag color="primary" v-for="tagitem in item.tag || []" :key="tagitem.describe">
                 {{ $t('apps.screen.' + tagitem) }}
               </Tag>
             </div>
-            <p style="overflow: hidden">{{item.describe}}</p>
+            <p style="overflow: hidden">
+              <span v-if="item.describeLang">{{ item.describeLang[$i18n.locale] || item.describe}}</span>
+              <span v-else>{{item.describe}}</span>
+            </p>
             <div>
               <Divider />
               <Button type="primary" :disabled="!item.get">
@@ -151,19 +162,15 @@
 </script>
 
 <style lang="scss">
-  .apps {
-    margin-top: 50px;
-  }
-
   .apps-list {
     display: block;
+    columns: 2;
+    column-gap: 10px;
 
     .apps-item {
-      float: left;
-      width: calc(50% - 20px);
-      height: 200px;
+      break-inside: avoid;
       overflow: hidden;
-      margin: 0 10px 20px 10px;
+      margin-bottom: 10px;
 
       > div {
         display: flex;
