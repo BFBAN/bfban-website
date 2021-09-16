@@ -6,7 +6,7 @@
     },
     {
       "value": 5,
-      "values": ["5", "gadgetModify", "suspect", "discuss"]
+      "values": ["5", "gadgetModify", "suspect"]
     },
     {
       "value": 6,
@@ -14,19 +14,23 @@
     },
     {
       "value": 1,
-      "values": ["1", "guilt"]
+      "values": ["1", "guilt"],
+      "action": "guilt"
     },
     {
       "value": 2,
-      "values": ["2", "invisable", "discuss"]
+      "values": ["2", "invisable", "discuss"],
+      "action": "discuss"
     },
     {
       "value": 3,
-      "values": [ "3", "magicBullet" ,"innocent"]
+      "values": [ "3", "magicBullet" ,"innocent"],
+      "action": "innocent"
     },
     {
       "value": 4,
-      "values": ["4", "damageChange", "trash"]
+      "values": ["4", "damageChange", "trash"],
+      "action": "suspect"
     },
     {
       "value": 7,

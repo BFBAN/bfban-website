@@ -147,8 +147,7 @@
       "replySuccess": "回复成功",
       "signIn": "请登录",
       "updateComplete": "更新完成",
-      "submitSuccess": "提交成功",
-      "changeHacker": "当前是 confirmed hacker 状态，你确定要处理成 {code} 吗？"
+      "submitSuccess": "提交成功"
     }
   },
   "report": {
@@ -238,7 +237,7 @@
     "activity": {
       "title": "网站动态",
       "more": "查阅更多",
-      "description": "bfban.com  于 2018年11月4日 上线，收到 <b>{report}</b> 次举报，已石锤了 <b>{cheater}</b> 个挂壁，感谢大家的共同努力！",
+      "description": "bfban.com于2018年11月4日上线，收到 {report} 次举报，已石锤了 {cheater} 个挂壁，感谢大家的共同努力！",
       "activities": {
         "report": "举报了",
         "join": "注册了 bfban ， 欢迎！",

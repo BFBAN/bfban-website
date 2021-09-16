@@ -111,7 +111,9 @@
         <Row>
           <Col :lg="{span: 10, push: 0}">
             <h1 align="left">{{ $t("home.activity.title") }}</h1>
-            <h5 align="left" v-html="$t('home.activity.description')"></h5>
+            <h5 align="left">
+              {{ $t('home.activity.description', {report: statistics.reports || 0, cheater: statistics.confirmed || 0}) }}
+            </h5>
           </Col>
           <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
             <router-link :to="{name: 'cheaters'}">
@@ -202,7 +204,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <Tell></Tell>

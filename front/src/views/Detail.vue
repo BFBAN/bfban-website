@@ -407,7 +407,7 @@
                   <br>
                 </div>
 
-                <div label="回复">
+                <div label="回复" id="reply">
                   <!-- 回复 S -->
                   <div v-if="isLogin">
                     <Alert type="warning" show-icon>
@@ -557,8 +557,10 @@
               <Col span="12">
                 <FormItem v-show="verify.status == '1'" label="CheatMethod">
                   <Select v-model="verify.checkbox" multiple>
-                    <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value">
-                      {{ $t(`cheatMethods.${method.value}.title`) }} |
+                    <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value"
+                            :label="$t(`cheatMethods.${method.value}.title`)">
+                      {{ $t(`cheatMethods.${method.value}.title`) }}
+                      <Divider type="vertical"/>
                       {{ $t(`cheatMethods.${method.value}.describe`) }}
                     </Option>
                   </Select>
@@ -594,8 +596,10 @@
                   <Input
                       type="textarea"
                       @on-keydown="handleCmdEnter($event, 'verify')"
+                      maxlength="65535"
+                      show-word-limit
                       v-model="verify.suggestion"
-                      :autosize="{minRows: 2}"
+                      :autosize="{minRows: 5, maxRows: 10}"
                       :placeholder="$t(`detail.info.giveOpinion`)"/>
                 </FormItem>
               </Col>
@@ -624,9 +628,17 @@
         <Empty></Empty>
       </div>
     </div>
-    <BackTop :bottom="50">
-      <div class="top mobile-hide">Top</div>
-    </BackTop>
+
+    <Affix :top="100">
+      <Card dis-show class="top mobile-hide">
+        <a href="#up">
+          <Icon type="md-arrow-round-up" size="30"/>
+        </a>
+        <a href="#reply">
+          <Icon type="md-chatboxes" size="30"/>
+        </a>
+      </Card>
+    </Affix>
 
     <!-- 小回复窗口 -->
     <Modal
@@ -773,7 +785,7 @@ export default new BFBAN({
       games: [],
       timelineList: [],
       verify: {
-        status: '1',
+        status: 0,
         checkbox: [],
         choice: [],
         suggestion: '',
@@ -836,6 +848,7 @@ export default new BFBAN({
 
         // 裁决作弊类型
         this.verify.choice = res.cheaterStatus.filter(i => (i.value >= 1 && i.value <= 4));
+        this.verify.status = this.verify.choice[0].value;
       });
     },
     /**
@@ -931,13 +944,12 @@ export default new BFBAN({
       const {status} = this.verify;
       let {suggestion} = this.verify;
       const cheatMethods = this.verify.checkbox.join(',');
-      const {originUserId} = this.cheater;
 
-      if ((status === '1' && cheatMethods === '') || suggestion.trim() === '') {
+      if ((status == '1' && cheatMethods == '') || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
-      if ((status === '3' || status === '4') && suggestion.trim().length < 5) { // too short
+      if ((status == '3' || status == '4') && suggestion.trim().length < 5) { // too short
         this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
         return false;
       }
@@ -947,71 +959,35 @@ export default new BFBAN({
       }
 
       this.verifySpinShow = true;
-
-      const {data: statusData} = await http.post('/cheaters/status', {
-        data: {originUserId}
-      })
-      // const {data: statusData} = await ajax({
-      //   method: 'post',
-      //   url: '/cheaters/status',
-      //   data: {
-      //     originUserId,
-      //   }
-      // });
-      if (statusData.error) {
-        this.$Message.error(statusData.msg);
-        return false;
-      }
-      if (statusData.error === 0 && statusData.status === '1') {
-        if (!confirm(this.$i18n.t('detail.messages.changeHacker', {code: this.$i18n.t(`basic.status[${status}]`)}))) {
-          this.verifySpinShow = false;
-          return false;
-        }
-      }
-
-      suggestion = formatTextarea(suggestion);
-
-      let actions = await import('/src/assets/action.json');
       this.http.post(api["player_judgement"], {
         data: {
           data: {
             toPlayerId: this.cheater.id,
-            cheatMethods: cheatMethods,
-            action: actions.action[status].value,
-            content: suggestion,
+            cheatMethods,
+            // await import('/src/assets/action.json');
+            action: this.verify.choice.filter(i => i.value == this.verify.status)[0].action,
+            content: formatTextarea(suggestion),
           },
         }
       }).then((res) => {
-        this.verifySpinShow = false;
-
         const d = res.data;
-        if (res.data.success === 1) {
+
+        if (d.success == 1) {
           // reset verifyForm
           this.verify.status = '1';
           this.verify.suggestion = '';
           this.verify.checkbox = [];
-
-          const {id, userId, createDatetime, status, suggestion, username, cheatMethods, privilege} = d.data;
-
           this.cheater.status = status;
-
-          this.timelineList.push({
-            type: 'verify',
-            id,
-            userId,
-            createDatetime,
-            // fix bug
-            status: status === '6' ? '1' : status,
-            suggestion,
-            cheatMethods,
-            username,
-            privilege,
-          });
 
           this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
         } else {
           this.$Message.error('failed ' + d.msg);
         }
+
+      }).finally(() => {
+        this.getTimeline();
+
+        this.verifySpinShow = false;
       })
     },
     /**
@@ -1093,8 +1069,8 @@ export default new BFBAN({
       if (!data) {
         return;
       }
+
       const array = data.split(',');
-      console.log(array)
       this.http.post(api["player_viewBanAppeal"], {
         data: {
           data: {
@@ -1345,7 +1321,7 @@ export default new BFBAN({
 }
 </style>
 
-<style>
+<style lang="scss">
 .spin-icon-load {
   animation: ani-demo-spin 1s linear infinite;
 }
@@ -1364,12 +1340,14 @@ export default new BFBAN({
 
 .top {
   position: fixed;
-  right: calc(50% - (960px / 2) - 44px);
-  top: 20%;
-  transform: translateY(-20%);
+  right: calc(50% - (960px / 2) - 85px);
+  top: 30%;
+  transform: translateY(-30%);
   z-index: 100;
-  background-color: #ffffff;
-  border: 1px solid #f2f2f2;
-  padding: 10px;
+
+  a {
+    display: block;
+    padding: 10px 5px;
+  }
 }
 </style>

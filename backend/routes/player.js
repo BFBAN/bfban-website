@@ -333,6 +333,9 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * TODO add 筛选【默认、只看申诉、只看该名玩家辩解】
+ */
 router.get('/timeline', [
     checkquery('dbId').optional().isInt({min: 0}),
     checkquery('userId').optional().isInt({min: 0}),
@@ -432,7 +435,6 @@ async (req, res, next)=>{
                 return res.status(404).json({error: 1, code: 'reply.notFound', message: 'no such comment'});
             toCommentId = brief.id; toCommentType = brief.type;
         }
-        
         const reply = {
             toPlayerId: req.body.data.toPlayerId,
             byUserId: req.user.id,
