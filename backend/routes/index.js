@@ -1,39 +1,50 @@
 "use strict";
-import express, { json, urlencoded } from "express";
-import { check, body as checkbody, query as checkquery, validationResult, param } from "express-validator";
+import express from "express";
+import {body as checkbody, query as checkquery, validationResult} from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
-import { OriginClient, originClients } from "../lib/origin.js";
-import * as misc from "../lib/misc.js";
-import verifyCaptcha from "../middleware/captcha.js";
-import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
+import {originClients} from "../lib/origin.js";
+import {forbidPrivileges, verifyJWT} from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.get('/statistics', [
     checkquery('from').optional().isInt({min: 0}),
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
-async (req, res, next)=>{
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
-        if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'statistics.bad', message:validateErr.array()});
-        const from = typeof(req.query.from)==='string'? req.query.from-0 : 0;
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'statistics.bad', message: validateErr.array()});
+        const from = typeof (req.query.from) === 'string' ? req.query.from - 0 : 0;
+        const commonCondition = '1=1 and valid = \'1\'';
 
-        let data={};
-        if(!!req.query.reports)
-            data = Object.assign(data,await db('reports').count({reports: 'id'}).where('createTime', '>=', new Date(from)).first());
-        if(!!req.query.players)
-            data = Object.assign(data,await db('players').count({players: 'id'}).where('createTime', '>=', new Date(from)).andWhere({valid: 1}).first());
-        if(!!req.query.confirmed)
-            data = Object.assign(data,await db('players').count({confirmed: 'id'}).where('createTime', '>=', new Date(from)).andWhere({status: 1}).andWhere({valid: 1}).first());
-        if(!!req.query.registers)
-            data = Object.assign(data,await db('users').count({registers: 'id'}).where('createTime', '>=', new Date(from)).first());
-        if(!!req.query.banAppeals)
-            data = Object.assign(data,await db('ban_appeals').count({banAppeals: 'id'}).where('createTime', '>=', new Date(from)).first())
+        let gameQuery = '';
+        let statusQuery = '';
+        let data = {};
 
-        res.status(200).json({success: 1, code: 'statistics.success', data: data, t: req.query});
+
+        if (req.query.game !== '') gameQuery = 'and players.game = ?';
+        if (req.query.status && ['0', '1', '2', '3', '4', '5', '6'].indexOf(status) !== -1) statusQuery = 'and status = ?';
+
+        if (!!req.query.reports)
+            data = Object.assign(data, await db('reports').count({reports: 'id'}).where('createTime', '>=', new Date(from)).first());
+        if (!!req.query.players)
+            data = Object.assign(data, await db('players').count({players: 'id'}).where('createTime', '>=', new Date(from)).andWhere({valid: 1}).first());
+        if (!!req.query.confirmed)
+            data = Object.assign(data, await db('players').count({confirmed: 'id'}).where('createTime', '>=', new Date(from)).andWhere({status: 1}).andWhere({valid: 1}).first());
+        if (!!req.query.registers)
+            data = Object.assign(data, await db('users').count({registers: 'id'}).where('createTime', '>=', new Date(from)).first());
+        if (!!req.query.banAppeals)
+            data = Object.assign(data, await db('ban_appeals').count({banAppeals: 'id'}).where('createTime', '>=', new Date(from)).first())
+
+        res.status(200).json({
+            success: 1,
+            code: 'statistics.success',
+            data: data,
+            query: req.query
+        });
     } catch(err) {
         next(err);
     }

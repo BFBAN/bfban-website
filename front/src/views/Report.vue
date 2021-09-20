@@ -13,14 +13,14 @@
             closable
             @on-tab-remove="doCancel">
         <TabPane v-for="(tab, index) in tabs.list.length" :key="tab"
-                 :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab) + '[' + tabs.list[index].formItem.gameName + ']'">
+                 :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab)">
           <Card shadow v-if="tabs.list[index].statusOk == 0">
             <Form :label-width="150" label-position="left">
               <!--举报作弊-->
 
               <Card dis-hover>
                 <!-- 游戏类型 S -->
-                <FormItem :label="$t('report.labels.game')">
+                <FormItem :label="$t('report.labels.game') + '(' + tabs.list[index].formItem.gameName + ')'">
                   <RadioGroup
                       size="large"
                       class="game-type"
@@ -142,22 +142,18 @@
                         {{$t("report.info.uploadManual1", {msg: "uploadManual1",}) }}
                         <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{$t("report.info.uploadManual2", {msg: "uploadManual2",}) }}
                       </Alert>
-                      <span class="hint">{{$t("report.info.uploadManual3", {msg: "uploadManual3",}) }}</span>
-                      <Row :gutter="20" v-for="(blink, blinkindex) in tabs.list[index].formItem.videoLink" :key="blinkindex">
+                      <Row :gutter="0" v-for="(blink, blinkindex) in tabs.list[index].formItem.videoLink"
+                           :key="blinkindex">
                         <Col flex="auto">
                           <Input
+                              style="margin-bottom: 5px"
                               v-model="tabs.list[index].formItem.videoLink[blinkindex]"
                               :placeholder="$t('report.info.required')">
                             <span slot="prepend">http(s)://</span>
                           </Input>
                         </Col>
                         <Col>
-                          <Button type="dashed"
-                                  @click="tabs.list[index].formItem.videoLink.splice(blinkindex + 1, 0, '')"
-                                  v-if="tabs.list[index].formItem.videoLink.length <= 10">
-                            <Icon type="md-add"/>
-                          </Button>
-                          <Divider type="vertical" v-if="tabs.list[index].formItem.videoLink.length <= 10"/>
+                          <Divider type="vertical" v-if="tabs.list[index].formItem.videoLink.length > 1"/>
                           <Button type="dashed"
                                   @click="tabs.list[index].formItem.videoLink.splice(blinkindex, 1)"
                                   v-if="tabs.list[index].formItem.videoLink.length > 1">
@@ -165,6 +161,13 @@
                           </Button>
                         </Col>
                       </Row>
+                      <Button type="dashed"
+                              long
+                              @click="tabs.list[index].formItem.videoLink.splice(tabs.list[index].formItem.videoLink.length + 1, 0, '')"
+                              v-if="tabs.list[index].formItem.videoLink.length < 10">
+                        <Icon type="md-add"/><span style="color: rgba(0,0,0,0.37)">&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 10)</span>
+                      </Button>
+                      <span class="hint">{{ $t("report.info.uploadManual3", {msg: "uploadManual3",}) }}</span>
                     </Col>
                     <Col>
                       <img src="../assets/images/videoStyle.png" width="300">
@@ -234,7 +237,9 @@
             </Alert>
           </Card>
         </TabPane>
-        <Button @click="handleTabsAdd" size="small" slot="extra">+</Button>
+        <Button @click="handleTabsAdd" size="small" slot="extra">
+          <Icon type="md-add" />
+        </Button>
       </Tabs>
     </div>
     <br>
@@ -243,7 +248,7 @@
 
 <script>
 import {api, http, http_token, util} from '../assets/js/index'
-import {checkReportFormData, trimAllWhitespace,} from "@/mixins/common";
+import {checkReportFormData,} from "@/mixins/common";
 
 import gameName from '../assets/gameName.json'
 

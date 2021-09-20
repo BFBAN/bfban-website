@@ -26,6 +26,7 @@ export default class Api {
       'cheaters_confirm': 'cheaters/confirm', // 管理员: 同意
       'player_banAppeal': "player/banAppeal", // 申诉
       'player_viewBanAppeal': "player/viewBanAppeal",
+      'player_unreply': 'player/unreply', // 删除回复
       'player_reply': 'player/reply', // 回复
       'player_report': 'player/report',
       'player_update': 'player/update',

@@ -149,8 +149,28 @@
                   <TimelineItem
                       :id="`floor-${index}`"
                       pending
+                      class="timeline-time-line"
                       :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l, index) in timelineList"
                       :key="l.createTime">
+                    <div v-if="l.type === 'report'" slot="dot" class="timeline-time-dot ivu-tag-warning hand">
+                      <Icon type="ios-hand" size="20"></Icon>
+                    </div>
+                    <div v-else-if="l.type === 'reply'" slot="dot" class="timeline-time-dot ivu-tag-geekblue reply">
+                      <Icon type="ios-text" size="20" class="ivu-tag-text"></Icon>
+                    </div>
+                    <div v-else-if="l.type === 'ban_appeal'" slot="dot" class="timeline-time-dot ivu-tag-magenta ban_appeal">
+                      <Icon type="md-bookmark" size="20" class="ivu-tag-text"></Icon>
+                    </div>
+                    <div v-else-if="l.type === 'judgement'" slot="dot" class="timeline-time-dot ivu-tag-primary ban_appeal">
+                      <Icon type="ios-medical" size="20" class=""></Icon>
+                    </div>
+                    <div v-else-if="l.type === 'verify'" slot="dot" class="timeline-time-dot trophy">
+                      <Icon type="ios-share-alt" size="20"></Icon>
+                    </div>
+                    <div v-else slot="dot" class="timeline-time-dot ivu-tag-border ivu-tag-text out">
+                      <Icon type="ios" size="20" class=""></Icon>
+                    </div>
+
                     <!-- 举报 S -->
                     <div v-if="l.type === 'report'" class="timeline-content">
                       <div class="timeline-time">
@@ -372,7 +392,7 @@
                             </router-link>
                             {{ $t('detail.info.reply', {msg: 'reply'}) }}
                             <span v-if="l.toFloor">
-                              <a :href="`#floor-${l.toFloor}`">#{{ l.toFloor }}</a>
+                              <a :href="`#floor-${l.toFloor}`">#{{ l.toFloor }}<Icon type="ios-undo" /></a>
                             </span>
                           </Col>
                           <Col align="right">
@@ -394,20 +414,31 @@
                     <!-- 回复:any E -->
 
                     <Row class="timeline-content">
-                      <Col>
+                      <Col flex="auto">
                       </Col>
-                      <Col span="24" align="right">
+                      <Col align="right">
+                        <Dropdown>
+                          <a href="javascript:void(0)">
+                            <Icon type="md-more" />
+                          </a>
+                          <DropdownMenu slot="list">
+                            <DropdownItem>撤销此回复</DropdownItem>
+                            <DropdownItem>编辑此消息内容</DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
                         # {{ index }}
                       </Col>
                     </Row>
-                    <Divider></Divider>
+
+                    <Divider v-if="index < timelineList.length - 1"></Divider>
                   </TimelineItem>
                   <!--                  TODO PAGE SET-->
                   <!--                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
                   <br>
                 </div>
 
-                <div label="回复" id="reply">
+                <div id="reply">
+                  <Divider></Divider>
                   <!-- 回复 S -->
                   <div v-if="isLogin">
                     <Alert type="warning" show-icon>
@@ -419,20 +450,34 @@
                       <span>{{ $t('detail.info.replyManual2', {msg: 'replyManual2'}) }}</span>
                     </Alert>
 
-                    <Form :label-width="80" style="position: relative;">
+                    <Form label-position="top">
                       <Input @on-keydown="handleCmdEnter($event, 'reply')"
                              v-model="reply.content"
                              type="textarea"
                              :autosize="{minRows: 5}"
                              :placeholder="$t('detail.info.giveOpinion')"/>
+                      <Divider/>
+                      <FormItem :label="$t('signup.form.captcha')">
+                        <Row>
+                          <Col>
+                            <Input type="text" v-model="reply.captcha" size="large" maxlength="4"
+                                   :placeholder="$t('signup.form.captcha')">
+                            </Input>
+                          </Col>
+                          <Col>
+                            <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                              <div v-html="reply.captchaUrl.content"></div>
+                            </div>
+                          </Col>
+                        </Row>
+                      </FormItem>
                     </Form>
-                    <br>
-                    <Row :gutter="80">
-                      <Col flex="1">
+                    <Row>
+                      <Col flex="1 150px">
                         如有误联BAN，请在举报页面上点[上诉] 或 邮件至ban-appeals@bfban.com管理员处理。
                       </Col>
-                      <Col span="8">
-                        <Button type="primary" siez="large" long :loading="replySpinShow" :disabled="!reply.content"
+                      <Col flex="150px">
+                        <Button type="primary" size="large" long :loading="replySpinShow" :disabled="!reply.content"
                                 @click.stop.prevent="doReply">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
@@ -613,13 +658,26 @@
               </CheckboxGroup>
             </FormItem>
 
+            <FormItem :label="$t('signup.form.captcha')">
+              <Row>
+                <Col>
+                  <Input type="text" v-model="reply.captcha" size="large" maxlength="4"
+                         :placeholder="$t('signup.form.captcha')">
+                  </Input>
+                </Col>
+                <Col>
+                  <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                    <div v-html="reply.captchaUrl.content"></div>
+                  </div>
+                </Col>
+              </Row>
+            </FormItem>
+
             <FormItem>
-              <Button type="primary" @click.stop.prevent="doVerify">
+              <Button type="primary" :loading="verifySpinShow" @click.stop.prevent="doVerify">
                 {{ $t('detail.info.commit', {msg: 'commit'}) }}
               </Button>
             </FormItem>
-
-            <Spin size="large" fix v-show="verifySpinShow"></Spin>
           </Form>
           <!-- 管理员面板 E -->
         </div>
@@ -801,6 +859,8 @@ export default new BFBAN({
         content: '',
         toFloor: '',
         toUserId: '',
+        captcha: '',
+        captchaUrl: {},
       },
       replySpinShow: false,
 
@@ -832,6 +892,7 @@ export default new BFBAN({
     this.loadData();
     this.getCheatersInfo();
     this.getTimeline();
+    this.refreshCaptcha();
   },
   methods: {
     getCheaterStatusLabel: util.getCheaterStatusLabel,
@@ -849,6 +910,19 @@ export default new BFBAN({
         // 裁决作弊类型
         this.verify.choice = res.cheaterStatus.filter(i => (i.value >= 1 && i.value <= 4));
         this.verify.status = this.verify.choice[0].value;
+      });
+    },
+    refreshCaptcha: function () {
+      this.reply.captcha = '';
+
+      http.get(api["captcha"], {
+        params: {
+          r: Math.random()
+        }
+      }).then(res => {
+        if (res.data.success === 1) {
+          this.reply.captchaUrl = res.data.data;
+        }
       });
     },
     /**
@@ -919,7 +993,7 @@ export default new BFBAN({
             this.detailStepsIndex = 1;
           }
 
-          this.timelineList = timelineList;
+          this.timelineList = d.data;
         }
       });
     },
@@ -968,6 +1042,8 @@ export default new BFBAN({
             action: this.verify.choice.filter(i => i.value == this.verify.status)[0].action,
             content: formatTextarea(suggestion),
           },
+          encryptCaptcha: this.reply.captchaUrl.hash,
+          captcha: this.reply.captcha,
         }
       }).then((res) => {
         const d = res.data;
@@ -985,6 +1061,7 @@ export default new BFBAN({
         }
 
       }).finally(() => {
+        this.getCheatersInfo();
         this.getTimeline();
 
         this.verifySpinShow = false;
@@ -1126,6 +1203,8 @@ export default new BFBAN({
           content: content,
           toFloor: 1,
         },
+        encryptCaptcha: this.reply.captchaUrl.hash,
+        captcha: this.reply.captcha,
       };
 
       if (toFloor) {
@@ -1163,11 +1242,13 @@ export default new BFBAN({
           });
           this.cheater.status = status;
         } else {
-          this.$Message.error(d.msg);
+          this.$Message.error(d.message);
         }
       }).finally(() => {
         this.replySpinShow = false;
 
+        this.refreshCaptcha();
+        this.getCheatersInfo();
         // update timelink
         this.getTimeline();
       });
@@ -1287,8 +1368,20 @@ export default new BFBAN({
   color: #00000073;
 }
 
-.ivu-time {
-  margin-right: .6rem;
+.timeline-time-line {
+  .ivu-timeline-item-tail {
+    margin-left: 15px;
+  }
+}
+
+.timeline-time-dot {
+  width: 40px;
+  margin-left: 15px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .timeline-content {
@@ -1298,7 +1391,7 @@ export default new BFBAN({
   overflow-wrap: break-word;
   word-wrap: break-word;
 
-  margin-left: 2rem;
+  margin-left: 3rem;
 }
 
 .timeline-content .loading {
@@ -1313,11 +1406,12 @@ export default new BFBAN({
 }
 
 .ivu-timeline-item-content {
-  padding: 0 .6rem 0 1.2rem;
+  padding: 0 .6rem 0 3rem;
 }
 
 .ivu-timeline-item-tail {
   top: 1rem;
+  border-width: .3rem !important;
 }
 </style>
 

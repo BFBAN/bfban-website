@@ -1,25 +1,24 @@
 "use strict";
 import EventEmitter from "events";
 import express from "express";
-import { check, body as checkbody, query as checkquery, validationResult, oneOf as checkOneof } from "express-validator";
+import {body as checkbody, oneOf as checkOneof, query as checkquery, validationResult} from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
-import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
-import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
-import { originClients, getUserProfileByName } from "../lib/origin.js"
-import { cheatMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
-import { siteEvent, stateMachine } from "../lib/bfban.js";
-import { userHasRoles } from "../lib/auth.js";
+import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {getUserProfileByName, originClients} from "../lib/origin.js"
+import {cheatMethodsSanitizer, handleRichTextInput} from "../lib/user.js";
+import {siteEvent, stateMachine} from "../lib/bfban.js";
+import {userHasRoles} from "../lib/auth.js";
 
 const router = express.Router()
 
 /** @param {{dbId:number, userId: string, personaId: string}} @returns {Promise<number>} dbId */
 async function getPlayerId({dbId, userId, personaId}) {
-    const key = dbId? 'id' : (userId? 'originuserId' : (personaId? 'originPersonaId':undefined) );
-    const val = dbId? dbId : (userId? userId : (personaId? personaId:undefined) );
-    if(!key || !val)
+    const key = dbId ? 'id' : (userId ? 'originuserId' : (personaId ? 'originPersonaId' : undefined));
+    const val = dbId ? dbId : (userId ? userId : (personaId ? personaId : undefined));
+    if (!key || !val)
         return -1;
     const tmp = await db.select('id').from('players').where(key, '=', val).first();
     if(!tmp)
@@ -334,7 +333,7 @@ async (req, res, next)=>{
 });
 
 /**
- * TODO add 筛选【默认、只看申诉、只看该名玩家辩解】
+ * TODO 待实现 筛选【默认、只看申诉、只看该名玩家辩解】
  */
 router.get('/timeline', [
     checkquery('dbId').optional().isInt({min: 0}),
@@ -408,16 +407,39 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * TODO 待实现 逻辑删除回复/撤销裁决
+ */
+router.post('/unreply', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']), [
+    checkbody('id').optional().isInt({min: 0}),
+],
+async (req, res, next) => {
+    try {
+        const repots = db('reports').join('users', 'reports.byUserId', 'users.id')
+            .select('reports.id','reports.byUserId','reports.toOriginName','reports.game','reports.cheatMethods',
+                'reports.videoLink','reports.description','reports.createTime', 'users.username', 'users.privilege', db.raw('"report" as "type"'))
+            .where('id', '=', req.body.id)
+            .where({})
+            .first();
 
-router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
+        return res.status(200).json({
+            code: 'reply.suceess',
+            message: 'Reply success.'
+        });
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'blacklisted']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
     checkbody('data.toFloor').optional({nullable: true}).isInt({min: 1}),
-    checkbody('data.content').isString().trim().isLength({min: 1, max:5000}),
-],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
-async (req, res, next)=>{
+    checkbody('data.content').isString().trim().isLength({min: 1, max: 5000}),
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
+async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
-        if(!validateErr.isEmpty())
+        if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});
         
         if(await db.select('id').from('players').where({id: req.body.data.toPlayerId}).first() == undefined) // no such player
@@ -500,16 +522,16 @@ async (req, res, next)=>{
     }
 });
 
-router.post('/judgement', verifyJWT, allowPrivileges(['admin','super','root']), [
+router.post('/judgement', verifyJWT, verifyCaptcha, allowPrivileges(['admin', 'super', 'root']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
-    checkbody('data.cheatMethods').if(checkbody('data.toPlayerId').isIn('kill','guilt')).isString().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
-    checkbody('data.action').isIn(['suspect','innocent','discuss','guilt','kill','trash']),
+    checkbody('data.cheatMethods').if(checkbody('data.toPlayerId').isIn('kill', 'guilt')).isString().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
+    checkbody('data.action').isIn(['suspect', 'innocent', 'discuss', 'guilt', 'kill', 'trash']),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
-async (req, res, next)=>{
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
+async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
-        if(!validateErr.isEmpty())
+        if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'judgement.bad', message: validateErr.array()});
         if((req.body.data.action=='kill'||req.body.data.action=='guilt') && !req.body.data.cheatMethods)
             return res.status(400).json({error: 1, code: 'judgement.bad', message: 'must specify one cheate method.'});
