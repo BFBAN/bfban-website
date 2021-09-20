@@ -38,7 +38,7 @@ const routes = [
     {name: 'profile', path: '/profile/:pagename', component: Profile, beforeEnter: isLoginBeforeEnter},
 
     {name: 'search', path: '/search/:conetnt', component: Search},
-    {name: 'search_main', path: '/search', component: Search},
+    {name: 'search_main', path: '/search', component: Search, meta: {titleValue: 'search.title'}},
     {
         name: 'report',
         path: '/report',
@@ -48,11 +48,11 @@ const routes = [
     //  { name: 'misc', path: '/misc', component: Misc },
 
     {name: 'cheaters', path: '/player', component: List},
-    {name: 'cheater', path: '/player/:ouid', component: Detail},
+    {name: 'cheater', path: '/player/:ouid', component: Detail, meta: {titleValue: 'detail.title'}},
     {
         name: 'cheaters_old', path: '/cheaters/:ouid', component: Detail,
-        beforeEnter (to, from, next) {
-            next({path: '/player/' + to.params.ouid, query: { oldUrl: true }});
+        beforeEnter(to, from, next) {
+            next({path: '/player/' + to.params.ouid, query: {oldUrl: true}});
         }
     },
     {
@@ -110,7 +110,7 @@ VueRouter.prototype.push = function push(location) {
 router.beforeEach((to, from, next) => {
     store.commit('syncLoginState');
 
-    document.title = `${config.name} | ${to.meta.title || i18n.t(`${to.name}.title`) || config.name} `;
+    document.title = `${config.name} | ${to.meta.title || i18n.t(`${to.meta.titleValue || to.name + '.title'}`) || config.name} `;
 
     next();
 });
