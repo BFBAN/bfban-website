@@ -30,7 +30,7 @@
               <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" :style="'background-image: url(' + i.bk_src + ')'">
                 <Badge :count="getTotalNum('bf1')" :overflow-count="90000">
                   <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
-                    <img height="25" :src="i.logo_src" v-if="i.logo_src" />
+                    <img height="35" :src="i.logo_src" v-if="i.logo_src" />
                     <span v-else>{{i.full_name}}</span>
                   </Tooltip>
                 </Badge>
@@ -379,48 +379,23 @@ export default new BFBAN({
 </script>
 
 <style lang="scss" scoped>
-li {
-  display: flex;
-  justify-content: space-around;
-  border-bottom: 1px solid #eaeaea;
-  padding: 0.4rem;
-  align-items: center;
-
-  &:nth-child(odd) {
-    background-color: #eeeeee61;
-  }
-
-  span:nth-child(1) {
-    flex-grow: 1;
-    flex-shrink: 0;
-
-    a {
-      font-size: 1.2rem;
-    }
-  }
-
-  span:nth-child(2) {
-    flex-grow: 0;
-    flex-shrink: 0;
-    flex-basis: 25%;
-
-    color: #6f6f6f;
-  }
-
-  span:nth-child(3) {
-    flex-grow: 0;
-    flex-shrink: 0;
-    flex-basis: 25%;
-
-    color: #6f6f6f;
-  }
-}
-
 .page {
   padding: 0 16px;
   margin: 13px -16px;
   display: inline-block;
   width: calc(100% + 32px);
+}
+
+
+.list-banner {
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  opacity: .2;
+  transform: scale(1.5);
+  position: absolute;
+  z-index: -1;
+  height: 800px;
+  width: 100%;
 }
 
 .list {
@@ -437,26 +412,10 @@ li {
     animation: all .25s;
     background-size: cover;
     background-position: center;
-
-    img {
-      margin-top: 5px;
-    }
   }
 
   label:hover {
     background-size: 100%;
   }
-}
-</style>
-
-<style>
-.list-banner {
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  opacity: .2;
-  transform: scale(1.5);
-  position: absolute;
-  height: 800px;
-  width: 100%;
 }
 </style>

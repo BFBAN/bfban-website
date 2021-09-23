@@ -31,7 +31,7 @@
                     <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
                            :style="'background-image: url(' + i.bk_src + ')'">
                       <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
-                        <img height="25" :src="i.logo_src" v-if="i.logo_src"/>
+                        <img height="35" :src="i.logo_src" v-if="i.logo_src"/>
                         <span v-else>{{ i.full_name }}</span>
                       </Tooltip>
                     </Radio>

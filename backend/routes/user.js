@@ -18,8 +18,8 @@ import logger from "../logger.js";
 const router = express.Router();
 
 router.post('/signup', verifyCaptcha, [
-    checkbody("data.username").isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min:1, max:40}),
-    checkbody('data.password').isString().trim().isLength({min:1, max:40}),
+    checkbody("data.username").isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min:4, max:40}),
+    checkbody('data.password').isString().trim().isLength({min:6, max:40}),
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().unescape().trim().notEmpty(),
     checkbody('data.lang').isString()

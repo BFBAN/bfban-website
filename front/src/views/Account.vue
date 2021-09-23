@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <div class="account-banner" v-if="Boolean(games)" :style="`background:linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%), linear-gradient(0deg, rgb(248 249 250) 0%, rgba(31, 31, 27, 0) 30%), linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${ games[2].bk_src})`"></div>
     <br>
     <Row>
       <Col flex="auto">
@@ -316,12 +315,4 @@ export default {
 </script>
 
 <style lang="scss">
-.account-banner {
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  transform: scale(1.5);
-  position: absolute;
-  height: 200px;
-  width: 100%;
-}
 </style>

@@ -16,13 +16,13 @@
 
             <Divider class="mobile-hide"></Divider>
 
-            <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
+            <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate" style="position: relative;">
               <div v-if="stepsIndex == 0">
                 <FormItem :label="$t('signup.form.username')" prop="username">
-                  <Input v-model="signup.username" size="large" :placeholder="$t('signup.placeholder.username')"/>
+                  <Input v-model="signup.username" maxlength="40" size="large" :placeholder="$t('signup.placeholder.username')"/>
                 </FormItem>
                 <FormItem :label="$t('signup.form.password')" prop="password">
-                  <Input type="password" password v-model="signup.password" size="large" :placeholder="$t('signup.placeholder.password')"/>
+                  <Input type="password" password minlength="6" v-model="signup.password" size="large" :placeholder="$t('signup.placeholder.password')"/>
                 </FormItem>
               </div>
 
@@ -98,11 +98,10 @@ export default {
       stepsIndex: 0,
       ruleValidate: {
         username: [
-          {required: true, trigger: 'blur'},
-          {}
+          {required: true, min: 4, max:40, trigger: 'blur'}
         ],
         password: [
-          {required: true, trigger: 'blur'}
+          {required: true, min: 6, max: 40, trigger: 'blur'}
         ],
         originEmail: [
           {required: true, trigger: 'blur'}
