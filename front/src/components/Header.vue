@@ -169,11 +169,10 @@ export default {
     -webkit-app-region: drag;
     position: relative;
     z-index: 1000;
-    backdrop-filter: blur(50px);
     width: 100%;
     height: auto;
     padding: 10px 0 !important;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.1), transparent);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), transparent);
   }
   .header-container {
     display: flex;

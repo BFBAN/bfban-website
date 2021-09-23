@@ -58,21 +58,18 @@
       </Upload>
     </Modal>
 
-    <div>
-      <quill-editor
-          ref="quillEditor"
-          :content="editorContent"
-          :options="editorOption"
-          @change="onEditorChange($event)">
-      </quill-editor>
+    <quill-editor
+        ref="quillEditor"
+        :content="editorContent"
+        :options="editorOption"
+        @change="onEditorChange($event)">
+    </quill-editor>
 
-
-      <Spin size="large" fix v-show="spinShow">
-        <p>
-          上传中...
-        </p>
-      </Spin>
-    </div>
+    <Spin size="large" fix v-show="spinShow">
+      <p>
+        上传中...
+      </p>
+    </Spin>
   </div>
 </template>
 
@@ -80,11 +77,18 @@
 // https://github.com/zenoamaro/react-quill/issues/270
 // https://codepen.io/emanuelbsilva/pen/Zpmmzv
 // https://www.npmjs.com/package/vue-quill-editor
-import {http} from "../assets/js";
+import {http} from "../assets/js"
 import Quill from 'quill'
-import Embed from "quill/blots/embed";
+import Embed from 'quill/blots/embed'
+import { container, ImageExtend, QuillWatch } from 'quill-image-extend-module'
+import quillEmoji from 'quill-emoji'
+import 'quill-emoji/dist/quill-emoji.css'
 
 class QuillHashtag extends Embed {
+  blotName = 'mp4';
+  className = 'ql-mp4';
+  tagName = 'div';
+
   static create(value) {
     let node = super.create(value);
     node.innerHTML = `<video controls><source src="${value}" type="video/mp4"></video>`;
@@ -92,17 +96,17 @@ class QuillHashtag extends Embed {
   }
 }
 
-QuillHashtag.blotName = 'mp4';
-QuillHashtag.className = 'ql-mp4';
-QuillHashtag.tagName = 'div';
+class EmojiBlot extends Embed {
+  blotName = 'emoji';
+  tagName = 'span';
+}
 
 Quill.register({
-  'formats/mp4': QuillHashtag
-});
+  'formats/mp4': QuillHashtag,
+  'modules/ImageExtend': ImageExtend,
+  'formats/emoji': EmojiBlot,
+}, true);
 
-const toolbarOptions = [
-  ["link", "image"],
-];
 export default {
   props: {
     index: null,
@@ -136,8 +140,10 @@ export default {
         theme: 'snow',
         placeholder: this.editorContent,
         modules: {
+          "emoji-toolbar": true,
+          "emoji-shortname": true,
           toolbar: {
-            container: toolbarOptions,
+            container: ["link", "image", "emoji"],
             handlers: {
               image: (value) => {
                 if (value) {
@@ -146,7 +152,6 @@ export default {
                 } else {
                   this.quill.format("image", false)
                 }
-
               },
               video: (value) => {
                 if (value) {
@@ -155,10 +160,10 @@ export default {
                 } else {
                   this.quill.format("video", false)
                 }
-              }
+              },
             }
           }
-        }
+        },
       }
     }
   },
@@ -228,7 +233,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="scss">
   .ql-container.ql-snow {

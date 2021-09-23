@@ -68,6 +68,9 @@
     },
     "appearance": {
       "title": "皮肤"
+    },
+    "enhance": {
+      "title": "本地增强"
     }
   },
   "detail": {
@@ -182,7 +185,7 @@
       "cancel": "取消",
       "description": "尽可能详细的列举被举报人的作弊证据",
       "captcha": "验证码",
-      "required": "基本的",
+      "required": "视频地址",
       "onlyOneId": "一次只有一个Origin ID",
       "loginExpired": "您的登录已过期，请重新登录"
     },

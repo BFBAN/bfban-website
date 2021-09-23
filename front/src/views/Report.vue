@@ -15,12 +15,14 @@
         <TabPane v-for="(tab, index) in tabs.list.length" :key="tab"
                  :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab)">
           <Card shadow v-if="tabs.list[index].statusOk == 0">
-            <Form :label-width="150" label-position="left">
+            <Form :label-width="150" ref="formValidate" :model="tabs.list[index].formItem" :rules="ruleValidate"
+                  label-position="left">
               <!--举报作弊-->
 
               <Card dis-hover>
                 <!-- 游戏类型 S -->
-                <FormItem :label="$t('report.labels.game') + '(' + tabs.list[index].formItem.gameName + ')'">
+                <FormItem prop="gameName"
+                          :label="$t('report.labels.game') + '(' + tabs.list[index].formItem.gameName + ')'">
                   <RadioGroup
                       size="large"
                       class="game-type"
@@ -38,7 +40,7 @@
                 </FormItem>
                 <!-- 游戏类型 E -->
 
-                <FormItem :label="$t('report.labels.hackerId')">
+                <FormItem prop="originId" :label="$t('report.labels.hackerId')">
                   <Alert type="error"
                          show-icon
                          id="notFoundHint"
@@ -117,7 +119,7 @@
                   </Row>
                 </FormItem>
 
-                <FormItem :label="$t('report.labels.cheatMethod')">
+                <FormItem prop="checkbox" :label="$t('report.labels.cheatMethod')">
                   <CheckboxGroup v-model="tabs.list[index].formItem.checkbox">
                     <Checkbox
                         style="margin-bottom: 10px"
@@ -149,14 +151,13 @@
                               style="margin-bottom: 5px"
                               v-model="tabs.list[index].formItem.videoLink[blinkindex]"
                               :placeholder="$t('report.info.required')">
-                            <span slot="prepend">http(s)://</span>
                           </Input>
                         </Col>
                         <Col>
-                          <Divider type="vertical" v-if="tabs.list[index].formItem.videoLink.length > 1"/>
+                          <Divider type="vertical" v-if="tabs.list[index].formItem.videoLink.length > 0"/>
                           <Button type="dashed"
                                   @click="tabs.list[index].formItem.videoLink.splice(blinkindex, 1)"
-                                  v-if="tabs.list[index].formItem.videoLink.length > 1">
+                                  v-if="tabs.list[index].formItem.videoLink.length > 0">
                             <Icon type="md-trash"/>
                           </Button>
                         </Col>
@@ -175,13 +176,14 @@
                   </Row>
                 </FormItem>
 
-                <FormItem :label="$t('report.labels.description')">
+                <FormItem prop="description" :label="$t('report.labels.description')">
                   <Alert type="warning">
                     {{ $t("report.info.uploadPic1", {msg: "uploadPic1"}) }}
                   </Alert>
                   <Alert type="warning">
                     {{ $t("report.info.uploadPic2", {msg: "uploadPic2"}) }}
-                    <a target="_blank" href="https://sm.ms">https://sm.ms</a>，{{$t("report.info.uploadPic3", {msg: "uploadPic3"}) }}
+                    <a target="_blank"
+                       href="https://sm.ms">https://sm.ms</a>，{{ $t("report.info.uploadPic3", {msg: "uploadPic3"}) }}
                   </Alert>
                   <span class="hint">{{ $t("report.info.uploadPic4", {msg: "uploadPic4"}) }}</span>
                   <Edit :index="index" :content="$t('report.info.description')" @change="handleMiscChange"/>
@@ -189,7 +191,7 @@
               </Card>
               <br>
               <Card dis-hover>
-                <FormItem :label="$t('report.info.captcha')">
+                <FormItem prop="captcha" :label="$t('report.info.captcha')">
                   <Input
                       type="text"
                       v-model="tabs.list[index].formItem.captcha"
@@ -213,16 +215,11 @@
                   <Button @click="doReport(index)"
                           type="primary"
                           size="large">
-                    {{ $t("report.info.reportOne", {msg: "report"}) }}
+                    {{ $t("report.info.report", {msg: "report"}) }}
                   </Button>
                 </FormItem>
               </Card>
               <br>
-
-<!--              <Button @click="doReport" type="primary" size="large">-->
-<!--                {{ $t("report.info.reportAll", {msg: "report"}) }}-->
-<!--              </Button>-->
-
               <Spin size="large" fix v-show="spinShow"></Spin>
             </Form>
           </Card>
@@ -270,6 +267,23 @@ export default {
       spinShow: false,
       failedOfNotFound: false,
       cheatMethodsGlossary: [],
+      ruleValidate: {
+        gameName: [
+          {required: true, trigger: 'blur'}
+        ],
+        originId: [
+          {required: true, trigger: 'blur'}
+        ],
+        checkbox: [
+          {required: true, type: 'array', min: 1, trigger: 'change'},
+        ],
+        description: [
+          {required: true, trigger: 'change'},
+        ],
+        captcha: [
+          {required: true, trigger: 'blur'}
+        ],
+      }
     };
   },
   components: { Edit },
@@ -325,7 +339,7 @@ export default {
         formItem: {
           gameName: gameName.child[gameName.defaultIndex].value,
           originId: "",
-          videoLink: ['http://'],
+          videoLink: [],
           checkbox: ["aimbot"],
           description: this.$i18n.t("report.info.description"),
           captcha: "",

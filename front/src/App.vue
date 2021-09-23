@@ -1,10 +1,23 @@
 <template>
-  <div id="app">
-    <Header></Header>
-    <main>
-      <router-view></router-view>
-    </main>
-    <Footer></Footer>
+  <div id="app" class="app app-split">
+    <Split v-model="split" :min=".5" :max=".1" mode="vertical">
+      <div slot="top" class="app-split-pane-main">
+        <Header></Header>
+        <main>
+          <Alert type="warning" class="container" closable>
+            <Bulletin/>
+          </Alert>
+
+          <router-view></router-view>
+        </main>
+        <Footer></Footer>
+      </div>
+      <div slot="bottom" class="app-split-pane" v-if="isLogin">
+        <div class="container">
+          Bottom Pane333 {{isLogin}}
+        </div>
+      </div>
+    </Split>
   </div>
 </template>
 
@@ -15,12 +28,20 @@ import theme from "./assets/themes.json"
 
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
+import Bulletin from "./components/Bulletin";
 
 export default {
   name: "app",
-  components: {Header, Footer},
+  data() {
+    return {
+      split: true ? 1 : .9
+    }
+  },
+  components: {Header, Footer, Bulletin},
   created() {
     this.http = http_token.call(this);
+
+    document.querySelectorAll('a').forEach(a => {a.onclick=(e) => {e.preventDefault()}});
 
     this.onLoadTheme();
     this.onUserinfo();
@@ -86,6 +107,7 @@ html, body {
   display: flex;
   flex-direction: column;
   background-color: #f8f9fa !important;
+  height: 100%;
 
   /*background image*/
   background-size: cover;
@@ -98,6 +120,23 @@ html, body {
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+
+  &.app-split {
+    height: 100%;
+  }
+
+  .app-split-pane-main {
+    overflow: auto;
+    height: 100%;
+  }
+
+  .app-split-pane {
+  }
+
+  .bottom-pane {
+    backdrop-filter: blur(50px);
+  }
 }
 
 .container {

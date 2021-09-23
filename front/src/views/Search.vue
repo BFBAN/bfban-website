@@ -14,7 +14,7 @@
       </Row>
       <br>
 
-      <div class="search-content">
+      <div :class="`search-content ${cheaters.length > 0 ? 'search-content-mini' : ''}`">
         <Row :gutter="30">
           <Col flex="auto" :xs="{span: 20, push: 1,pull: 1}" :lg="{push:0, pull: 0}">
             <RadioGroup v-model="searchScopeValue" type="button" size="large" class="search-input-show">
@@ -30,19 +30,21 @@
                      class="search-input search-input-show"
                      :placeholder="$t('header.searchBar')"
                      v-model="searchVal"
+                     @on-clear="searchVal = '';cheaters = []"
                      @on-click="handleSearch"
                      @on-search="handleSearch"/>
 
               <DropdownMenu slot="list" style="min-width: 300px; padding: 0 10px" >
                 <Row :gutter="0" v-if="searchHistory.list.length > 0">
                   <Col v-for="(i, index) in searchHistory.list"
-                       :key="index"
-                       @click="handleSearchHistoryClickTag(index)">
-                    <Tag stype="border"
-                         type="dot"
-                         closable
-                         @on-close="handleSearchHistoryClose(index)">{{ i.value || '' }}
-                    </Tag>
+                       :key="index">
+                      <Tag stype="border"
+                           type="dot"
+                           checkable
+                           closable
+                           @on-change="handleSearchHistoryClickTag(index)"
+                           @on-close="handleSearchHistoryClose(index)">{{ i || '' }}
+                      </Tag>
                   </Col>
                 </Row>
                 <div v-else align="center">
@@ -87,10 +89,10 @@
           </ListItem>
         </List>
       </div>
-
-      <Spin size="large" fix v-show="modalSpinShow"></Spin>
     </div>
     <br>
+
+    <Spin size="large" fix v-show="modalSpinShow"></Spin>
   </div>
 </template>
 
@@ -138,7 +140,7 @@ export default {
       this.setSearchHistoryValue(this.searchHistory.list);
     },
     handleSearchHistoryClickTag(index) {
-      this.searchVal = this.searchHistory.list[index].value;
+      this.searchVal = this.searchHistory.list[index];
 
       this.handleSearch();
     },
@@ -159,18 +161,20 @@ export default {
       }).then((res) => {
         that.modalSpinShow = false;
 
-        that.setSearchHistoryValue(
-            that.searchHistory.list = that.searchHistory.list.concat([{
-              value: val,
-              time: time.now()
-            }])
-        );
+        let hisArr = Array.from(new Set(that.searchHistory.list.concat([val])))
+            that.setSearchHistoryValue(hisArr);
+            that.searchHistory.list = hisArr;
 
         const d = res.data;
         if (d.success === 1) {
-
           const {cheaters} = d.data;
           this.cheaters = d.data;
+
+          if (d.data.length <= 0) {
+            this.$Message.error('not data')
+          }
+        } else {
+          this.$Message.error(d.message)
         }
       })
     },
@@ -197,9 +201,14 @@ export default {
   justify-content: center;
   align-items: center;
   align-content: center;
+  transition: all .25s;
   min-height: 400px;
   height: 100%;
   padding: 0 30px;
+
+  &.search-content-mini {
+    min-height: 150px !important;
+  }
 
   .checkboxGroup {
     margin-top: 50px;

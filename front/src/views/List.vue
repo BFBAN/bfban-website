@@ -1,9 +1,8 @@
 <template>
   <div>
-    <div class="list-banner" :style="`background:linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%), linear-gradient(0deg, rgb(248 249 250) 0%, rgba(31, 31, 27, 0) 30%), linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${ games.filter(i => i.value == gameName)[0].bk_src })`">
-    </div>
-
     <div class="container">
+      <div class="list-banner" v-if="Boolean(games.filter(i => i.value == gameName)[0].bk_src)" :style="`background:linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%), linear-gradient(0deg, rgb(248 249 250) 0%, rgba(31, 31, 27, 0) 30%), linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${ games.filter(i => i.value == gameName)[0].bk_src })`"></div>
+
       <div class="content">
         <br>
         <Breadcrumb>
@@ -38,11 +37,11 @@
               </Radio>
             </RadioGroup>
           </Col>
-          <Col flex="auto">
+          <Col flex="auto" v-if="statusGroup == 6 || tatusGroup == 0 && isAdmin">
             <i-switch v-model="bot.autoUpdate" @on-change="autoUpdateList"/>
             <Divider type="vertical"/>
             <Tooltip content="每隔设置时间刷新，有新的待审核桌面通知您" max-width="200">
-              <Icon type="md-help-circle" />
+              <Icon type="md-help-circle"/>
             </Tooltip>
           </Col>
         </Row>
@@ -60,12 +59,12 @@
                     <Card>
                       <Row>
                         <Col span="4">
-                      <span style="display: flex; align-items: center;">
-                        <Avatar :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'"
-                                alt="avatar"
-                                size="55">
-                        </Avatar>
-                      </span>
+                          <span style="display: flex; align-items: center;">
+                            <Avatar :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'"
+                                    alt="avatar"
+                                    size="55">
+                            </Avatar>
+                          </span>
                         </Col>
                         <Col span="15">
                           <div style="display: flex; flex-direction: column;">
@@ -87,7 +86,7 @@
                         </Col>
                         <Col span="5">
                           <Row type="flex" justify="center" align="middle" style="height: 50px">
-                            <Col span="12" align="left" class="list">
+                            <Col span="12" align="left">
                               <Icon type="md-eye" size="15" class="item-icon"/>
                               <span class="item-text">{{ d.viewNum || 0 }}</span>
                             </Col>
@@ -181,7 +180,7 @@
 <script>
 import BFBAN from "../assets/js/bfban";
 
-import {http, api, util} from '../assets/js/index'
+import {api, http, util} from '../assets/js/index'
 import _ from "lodash";
 
 export default new BFBAN({
@@ -451,7 +450,6 @@ li {
 </style>
 
 <style>
-
 .list-banner {
   background-size: cover !important;
   background-repeat: no-repeat !important;

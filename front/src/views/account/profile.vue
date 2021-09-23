@@ -46,12 +46,15 @@
             </ListItem>
           </List>
           <br>
+
+          <Divider>{{$t("home.bulletin.title")}}</Divider>
           <Bulletin/>
         </Col>
         <Col span="18">
           <account v-if="muenIndex == 0"></account>
           <appearance v-if="muenIndex == 1"></appearance>
           <message v-if="muenIndex == 2"></message>
+          <enhance v-if="muenIndex == 3"></enhance>
         </Col>
       </Row>
     </Card>
@@ -65,6 +68,7 @@ import Bulletin from "../../components/Bulletin";
 import appearance from "./appearance";
 import account from "./account";
 import message from "./message";
+import enhance from "./enhance";
 
 export default {
   name: "profile",
@@ -82,10 +86,14 @@ export default {
       {
         title: 'message',
         value: '2'
-      }]
+      },
+        {
+          title: 'enhance',
+          value: '3'
+        }]
     }
   },
-  components: {Bulletin, appearance, account, message},
+  components: {Bulletin, appearance, account, message,enhance},
   created() {
     const pagename = this.$route.params.pagename;
 

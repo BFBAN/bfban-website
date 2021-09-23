@@ -6,7 +6,14 @@
       "label": "简体中文",
       "main": true,
       "members": [
-        "Sgt-Scar","SoraKasvgano","Cabbagelol"
+        {
+          "name": "Sgt-Scar",
+          "url": "https://space.bilibili.com/44569813"
+        },
+        {
+          "name": "SoraKasvgano",
+          "url": "https://live.bilibili.com/591314"
+        }
       ]
     },
     {
