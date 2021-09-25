@@ -4,6 +4,21 @@
       <Form :label-width="80" style="position: relative;">
         <Divider>{{$t("signup.title")}}</Divider>
 
+        <FormItem>
+          <div style="padding: 10px; font-size: 14px; font-weight: bold; background: #CC0000; color: white; border: 1px solid #dcdee2; border-radius: 4px;">
+            <p>注册已暂时关闭</p>
+            <p>Register is temporarily unavaliable</p>
+            <p>如果您的确需要注册，请至 <a href="https://myaccount.ea.com/cp-ui/privacy/index">EA 隐私设定</a> 中允许按邮箱搜索开启，
+            并使用与origin账号绑定的邮箱发送需注册账号名至 <a href="mailto:register@bfban.com">register@bfban.com</a></p>
+            <p>
+              If you do need to register an account, please go to 
+              <a href="https://myaccount.ea.com/cp-ui/privacy/index">EA privacy settings</a>
+              to enable "search by email",
+              and send the username you want by that email to <a href="mailto:register@bfban.com">register@bfban.com</a>
+            </p>
+            
+          </div>
+        </FormItem>
         <FormItem :label="$t('signup.form.username')">
           <Input v-model="signup.username" :placeholder="$t('signup.placeholder.username')" />
         </FormItem>

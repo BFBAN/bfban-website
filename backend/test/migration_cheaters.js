@@ -105,7 +105,7 @@ const converter = new Stream.Writable({
         }
         const cheatMethods_dst = cheatMethodConverter(chunk.cheatMethods);
         const game_src = (await db_src.select('*').from('cheater_game').where({ouid: chunk.originUserId}) ).map(i=>i.game);
-        const game_dst = game_src.length>0? game_src.join(',') : 'bf1';
+        const game_dst = game_src.length>0? game_src.map(i=>`#${i}#`).join(',') : '#bf1#';
         const obj = {
             originName: chunk.originId,
             originPersonaId: chunk.originPersonaId,

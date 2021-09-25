@@ -172,7 +172,7 @@ async function messageOnSiteEvent(event) {
     }
 }
 
-siteEvent.on('data', messageOnSiteEvent);
+siteEvent.on('action', messageOnSiteEvent);
 
 /** 
  * @param {number|null} from @param {number|null} to @param {string} content

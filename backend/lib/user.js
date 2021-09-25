@@ -40,10 +40,7 @@ function cheatMethodsSanitizer(val, {req}) {
             cheatMethods.add(i); // validate & remove duplicated
     if(cheatMethods.size == 0)
         throw new Error("No valid cheate method given.");
-    req.body.data.cheatMethods = ''; // rewrite to sanitize
-    for(let i of cheatMethods.keys())
-    req.body.data.cheatMethods += i+',';
-    req.body.data.cheatMethods = req.body.data.cheatMethods.slice(0,-1); // remove trailing comma
+    req.body.data.cheatMethods = Array.from(cheatMethods).join(',');
     return true;
 }
 

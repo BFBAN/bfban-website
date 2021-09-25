@@ -105,7 +105,7 @@ async (req, res, next)=> {
         await db('registers').where({uniqCode: code}).delete();
         logger.info('users.signupVerify Success:', {name: data.username});
         
-        siteEvent.emit('data', {method: 'register', params: {user: data}});
+        siteEvent.emit('action', {method: 'register', params: {user: data}});
         return res.status(201).json({success: 1, code:'signup.success', message: 'Welcome to BFBan!'});
     } catch(err) {
         next(err);
@@ -509,7 +509,7 @@ async (req, res, next)=> {
         } catch(err) {
             return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: 'no such code.'}); // bad payload
         }
-        const passwdHash = generatePassword(payload.password);
+        const passwdHash = await generatePassword(payload.password);
         await db('users').update({password: passwdHash}).where({id: payload.userid}); // store the new password into db
 
         return res.status(200).json({success: 1, code: 'forgetPassword.success', data: {

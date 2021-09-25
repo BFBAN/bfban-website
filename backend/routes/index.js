@@ -8,6 +8,7 @@ import { OriginClient, originClients } from "../lib/origin.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
+import { UserRateLimiter } from "../lib/user.js";
 
 const router = express.Router();
 
@@ -61,7 +62,7 @@ async (req, res, next)=>{
             const game = i.game=='*'? '%':i.game;
             const status = i.status==-1? '%':i.status;
             const tmp = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
-            .andWhere('games', 'like', '%'+game+'%').andWhere('status', 'like', status).first().then(r=>r.num);
+            .andWhere('games', 'like', `%#${game}#%`).andWhere('status', 'like', status).first().then(r=>r.num);
             data.push(tmp);
         }
         res.status(200).json({success: 1, code: 'playerStatistics.success', data: data});
@@ -145,13 +146,15 @@ async (req, res, next)=>{
         
         const result = await db.select('id','originName','originUserId','originPersonaId','games',
         'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
-        .from('players').where('games', 'like', `%${game}%`).andWhere('valid', '=', 1)
+        .from('players').where('games', 'like', `%#${game}#%`).andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status)
         .orderBy(sort, 'desc').offset(skip).limit(limit);
+        result.games = result.games.replace(/#/g, '').split(',');   // "#bf1#,#bfv#,#bf2042#" -> ['bf1','bfv','bf2042']
+        result.cheatMethods = result.cheatMethods.replace(/#/g, '').split(',');
         const total = await db('players').count({num: 'id'})
-        .where('games', 'like', `%${game}%`).andWhere('valid', '=', 1)
+        .where('games', 'like', `%#${game}#%`).andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status).first().then(r=>r.num);
@@ -217,7 +220,10 @@ async (req, res, next)=>{
     }
 });
 
-router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted','freezed']), [
+const searchRateLimiter = new UserRateLimiter(15*1000, 1);
+
+router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted','freezed']), 
+    searchRateLimiter.limiter([{roles: ['root','super','admin','dev'], value: 0}]), [
     checkquery('param').isString().trim().notEmpty()
 ], /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)} */
 async (req, res, next)=>{
