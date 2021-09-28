@@ -32,16 +32,19 @@
         <Row :gutter="30">
           <Col span="12">
             <FormItem label="站内ID">
-              <Select
+              <AutoComplete
                   v-model="message.id"
-                  filterable
-                  :remote-method="getPlayerList"
-                  :loading="message.load">
+                  :data="message.playerList"
+                  @on-search="getPlayerList"
+                  placeholder="">
                 <Option v-for="(option, index) in message.playerList" :value="option.id" :key="index">
-                  <Avatar :src="option.avatarLink"> </Avatar>
-                  <span>{{option.originName}}</span>
+                  <Avatar :src="option.avatarLink || ''">{{option.username[0]}}</Avatar>&emsp;
+                  <span>{{ option.username }}</span>
+                  <Tag style="float: right">
+                    {{option.id}}
+                  </Tag>
                 </Option>
-              </Select>
+              </AutoComplete>
             </FormItem>
           </Col>
           <Col span="12">
@@ -131,27 +134,25 @@ export default {
 
       this.getMessage();
     },
-    getPlayerList (query) {
-      if (query !== '') {
-        this.message.load = true;
+    getPlayerList (value) {
+      this.message.load = true;
+      this.message.playerList = [];
 
-        http.get(api["search"], {
-          params: {
-            param: query || '',
-            scope: 'current',
-          }
-        }).then(res => {
-          const d = res.data;
+      if (value.length <= 2 || typeof value == 'number') return
 
-          if (d.success == 1) {
-            this.message.playerList = d.data;
-          }
+      http.get(api["users"], {
+        params: {
+          param: value.trim()
+        }
+      }).then(res => {
+        const d = res.data;
 
-          this.message.load = false;
-        })
-      } else {
-        this.message.playerList = [];
-      }
+        if (d.success == 1) {
+          this.message.playerList = d.data;
+        }
+
+        this.message.load = false;
+      })
     },
     setMessage() {
       const {uId} = this.$route.params;

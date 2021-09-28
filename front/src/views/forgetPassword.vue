@@ -2,11 +2,16 @@
   <div class="container">
     <div class="content">
       <br>
-      <Breadcrumb>
-        <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-        <BreadcrumbItem>{{ $t("forgetPassword.title") }}</BreadcrumbItem>
-      </Breadcrumb>
+      <Row>
+        <Col :xs="{push: 1}" :lg="{push: 0}">
+          <Breadcrumb>
+            <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+            <BreadcrumbItem>{{ $t("forgetPassword.title") }}</BreadcrumbItem>
+          </Breadcrumb>
+        </Col>
+      </Row>
       <br>
+
       <Row>
         <Col span="24">
           <Card shadow>

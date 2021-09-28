@@ -9,6 +9,8 @@ export default class Api {
       'cheaters': 'player',
       'captcha': 'captcha',
       'statistics': 'statistics',
+      'playerStatistics': 'playerStatistics',
+      'users':'users',
       'players': 'players',
       'user_info': 'user/info',
       'user_me': 'user/me',
@@ -23,7 +25,7 @@ export default class Api {
       'user_reports': 'user/reports',
       'user_changePassword': 'user/changePassword', // 修改密码
       'user_changeName': 'user/changeName', // 修改名称
-      'cheaters_confirm': 'cheaters/confirm', // 管理员: 同意
+        // 'cheaters_confirm': 'cheaters/confirm', // 管理员: 同意
       'player_banAppeal': "player/banAppeal", // 申诉
       'player_viewBanAppeal': "player/viewBanAppeal",
       'player_unreply': 'player/unreply', // 删除回复

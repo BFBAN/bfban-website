@@ -49,7 +49,7 @@
         </Row>
       </div>
 
-      <Row :gutter="40">
+      <Row :gutter="20">
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
           <a href="https://manager.gametools.network/" target="_blank">
             <Card>
@@ -206,7 +206,7 @@
       </div>
     </div>
 
-    <Tell></Tell>
+    <Tell class="mobile-hide"></Tell>
   </div>
 </template>
 

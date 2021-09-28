@@ -11,6 +11,7 @@ import _Http from './http';
 import _Http_token from './http_token'
 import _Util from './util';
 import _Notification from "./notification";
+import _Regular from './regular';
 
 export const api = new _Api();
 export const http = new _Http();
@@ -20,5 +21,6 @@ export const conf = new _Conf();
 export const storage = new _Storage();
 export const util = new _Util();
 export const notification = new _Notification();
+export const regular = new _Regular();
 
-export default {conf, api, storage, time, http, http_token, util, notification};
+export default {conf, api, storage, time, http, http_token, util, notification, regular};

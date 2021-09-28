@@ -193,6 +193,31 @@ router.get('/admins', async (req, res, next)=> {
     }
 })
 
+router.get('/users', [
+    checkquery('param').isString().trim().notEmpty(),
+], async (req, res, next)=> {
+    try {
+        /** @type {import("../typedef.js").User[]} */
+        let admins = await db.select('id','username','originName','originUserId','privilege', 'attr')
+            .from('users')
+            .where('privilege','like','%normal%')
+            .where('username', 'like', '%'+req.query.param+'%')
+            .limit(5);
+
+        admins = admins.map(i=>{
+            if(!i.attr.showOrigin) {
+                i.originUserId = null;
+                i.originName = null;
+            }
+            return i;
+        });
+
+        res.status(200).json({success: 1, code: 'getAdmins.success', data: admins});
+    } catch(err) {
+        next(err);
+    }
+})
+
 router.get('/search',[
     checkquery('param').isString().trim().notEmpty(),
     checkquery('scope').optional().isIn(['current','history'])

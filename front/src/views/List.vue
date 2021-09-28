@@ -1,21 +1,18 @@
 <template>
   <div>
     <div class="container">
-      <div class="list-banner" v-if="Boolean(games.filter(i => i.value == gameName)[0].bk_src)" :style="`background:linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 20%), linear-gradient(0deg, rgb(248 249 250) 0%, rgba(31, 31, 27, 0) 30%), linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(${ games.filter(i => i.value == gameName)[0].bk_src })`"></div>
-
       <div class="content">
         <br>
-        <Breadcrumb>
-          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem>{{ $t("list.title") }}</BreadcrumbItem>
-        </Breadcrumb>
+        <Row>
+          <Col :xs="{push: 1}" :lg="{push: 0}">
+            <Breadcrumb>
+              <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+              <BreadcrumbItem>{{ $t("list.title") }}</BreadcrumbItem>
+            </Breadcrumb>
+          </Col>
+        </Row>
         <br>
 
-        <!--Filters:-->
-        <!--状态checkbox、-->
-        <!--创建时间（时间段）、-->
-        <!--操作时间（时间段）、-->
-        <!--id搜索-->
         <Row>
           <Col flex="auto">
             <RadioGroup
@@ -24,20 +21,23 @@
                 v-model="gameName"
                 @on-change="handleChanges"
                 type="button">
-              <Radio label="">
-                {{ $t('list.filters.game.all') }}
+              <Radio label="all" value="all">
+                <Badge :count="getTotalNum('*')" :overflow-count="90000" type="normal">
+                  {{ $t('list.filters.game.all') }}
+                </Badge>
               </Radio>
-              <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" :style="'background-image: url(' + i.bk_src + ')'">
-                <Badge :count="getTotalNum('bf1')" :overflow-count="90000">
+              <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
+                     :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ')'">
+                <Badge :count="getTotalNum(i.value)" :overflow-count="90000" type="info">
                   <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
-                    <img height="35" :src="i.logo_src" v-if="i.logo_src" />
-                    <span v-else>{{i.full_name}}</span>
+                    <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
+                    <span v-else>{{ i.full_name }}</span>
                   </Tooltip>
                 </Badge>
               </Radio>
             </RadioGroup>
           </Col>
-          <Col flex="auto" v-if="statusGroup == 6 || tatusGroup == 0 && isAdmin">
+          <Col flex="auto" v-if="statusGroup == 6 || statusGroup == 0">
             <i-switch v-model="bot.autoUpdate" @on-change="autoUpdateList"/>
             <Divider type="vertical"/>
             <Tooltip content="每隔设置时间刷新，有新的待审核桌面通知您" max-width="200">
@@ -49,7 +49,7 @@
         <Row :gutter="10">
           <Col span="17">
             <Card dis-hover class="list">
-              <Page :page-size="limit" show-sizer show-total :current="skip" @on-change="handlePageChange"
+              <Page :page-size="limit" show-sizer show-total show-elevator :current="skip" @on-change="handlePageChange"
                     @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
               <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
               <br>
@@ -70,18 +70,21 @@
                           <div style="display: flex; flex-direction: column;">
                             <router-link
                                 :to="{name: 'cheater', params: { ouid: `${d.originPersonaId}` }}">
-                              <h2>
-                                {{ d.originName }}
-                                <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"
-                                        @click="copied"></Button>
-                              </h2>
+                              <Tooltip :content="$t('list.colums.playerId')">
+                                <h2>
+                                  {{ d.originName }}
+                                  <Button size="small" type="text" icon="ios-copy-outline"
+                                          :data-clipboard-text="d.originId"
+                                          @click="copied"></Button>
+                                </h2>
+                              </Tooltip>
                             </router-link>
                           </div>
 
-                          举报时间
+                          {{ $t('list.colums.reportTime') }}
                           <Time v-if="d.createTime" :time="d.createTime"/>
                           <Divider type="vertical"/>
-                          更新时间
+                          {{ $t('list.colums.updateTime') }}
                           <Time v-if="d.updateTime" :time="d.updateTime"/>
                         </Col>
                         <Col span="5">
@@ -109,7 +112,7 @@
                 </div>
               </ul>
 
-              <Page :page-size="limit" show-sizer show-total :current="skip" @on-change="handlePageChange"
+              <Page :page-size="limit" show-sizer show-total show-elevator :current="skip" @on-change="handlePageChange"
                     @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
             </Card>
           </Col>
@@ -121,53 +124,52 @@
                   {{ $t('list.colums.screenTitle') }}
                 </p>
 
-                <DatePicker :value="createTime" type="daterange" @on-change="handleCDatepicker" split-panels
-                            placeholder="举报时间范围"
-                            style="width: 110px"></DatePicker>
-                -
-                <DatePicker :value="updateTime" type="daterange" @on-change="handleUDatepicker" split-panels
-                            placeholder="更新时间范围"
-                            style="width: 110px"></DatePicker>
-
-                <Divider class="desktop-hide"></Divider>
-
-                <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 110px">
-                  <Option value="-1">{{ $t("list.filters.status.all") }}({{ getAllStatusNum }})</Option>
-                  <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">
-                    {{ status.label }}({{ getStatusNum(status.value) }})
-                  </Option>
-                </Select>
-
-                <Divider></Divider>
-
-                <Select @on-change="handleSortByChange" v-model="sortByValue">
-                  <Option v-for="item in sortBy" :value="item.value" :key="item.value">
-                    {{ $t(`list.filters.sortBy.${item.value}`) }}
-                  </Option>
-                </Select>
-
-                <Divider></Divider>
-
-                <RadioGroup
-                    v-model="statusGroup"
-                    @on-change="handleStatusChange"
-                    type="button">
-                  <Radio label="-1">
-                    <Badge :count="getAllStatusNum" overflow-count="900000">
-                      <span>{{ $t("list.filters.status.all") }}</span>
-                    </Badge>
-                  </Radio>
-                  <Radio
-                      v-for="status in cheaterStatus"
-                      :key="status.value"
-                      :label="`${status.value}`">
-                    <Badge :count="getStatusNum(status.value)">
-                    <span>
-                      {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
-                    </span>
-                    </Badge>
-                  </Radio>
-                </RadioGroup>
+                <Form>
+                  <FormItem>
+                    <RadioGroup
+                        v-model="statusGroup"
+                        @on-change="handleStatusChange"
+                        type="button">
+                      <Radio label="-1">
+                        <Badge :count="getAllStatusNum"
+                               :overflow-count="900000"
+                               type="info">
+                          {{ $t("list.filters.status.all") }}
+                        </Badge>
+                      </Radio>
+                      <Radio
+                          v-for="status in cheaterStatus"
+                          :key="status.value"
+                          :label="`${status.value}`">
+                        <Badge :count="getcHeaterStatusNum(status.value)" :overflow-count="900000" type="info">
+                          {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
+                        </Badge>
+                      </Radio>
+                    </RadioGroup>
+                  </FormItem>
+                  <FormItem :label="$t('list.reportTime')">
+                    <DatePicker :value="createTime" type="daterange" @on-change="handleCDatepicker" split-panels
+                                :placeholder="$t('list.reportTime')" style="width: 100%"></DatePicker>
+                  </FormItem>
+                  <FormItem :label="$t('list.updateTime')">
+                    <DatePicker :value="updateTime" type="daterange" @on-change="handleUDatepicker" split-panels
+                                :placeholder="$t('list.updateTime')" style="width: 100%"></DatePicker>
+                  </FormItem>
+                  <FormItem>
+                    <Select @on-change="handleChanges" v-model="sortByValue">
+                      <Option v-for="item in sortBy" :value="item.value" :key="item.value">
+                        {{ $t(`list.filters.sortBy.${item.value}`) }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </Form>
+                <!--                <Divider class="desktop-hide"></Divider>-->
+                <!--                <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 100%">-->
+                <!--                  <Option value="-1">{{ $t("list.filters.status.all") }}({{ getAllStatusNum }})</Option>-->
+                <!--                  <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">-->
+                <!--                    {{ status.label }}({{ getcHeaterStatusNum(status.value) }})-->
+                <!--                  </Option>-->
+                <!--                </Select>-->
               </Card>
             </Affix>
           </Col>
@@ -181,6 +183,8 @@
 import BFBAN from "../assets/js/bfban";
 
 import {api, http, util} from '../assets/js/index'
+import cheaterStatus from '../assets/cheaterStatus.json'
+import gameName from '../assets/gameName.json'
 import _ from "lodash";
 
 export default new BFBAN({
@@ -189,7 +193,7 @@ export default new BFBAN({
       games: [],
       data: [],
       spinShow: true,
-      gameName: "bf1",
+      gameName: "all",
       statusGroup: "",
       createTime: ["", ""],
       updateTime: ["", ""],
@@ -218,21 +222,12 @@ export default new BFBAN({
   },
   watch: {
     $route: "loadData",
-
-  },
-  computed: {
-    getAllStatusNum() {
-      return _.sumBy(this.sum, (o) => {
-        return o ? o.num : 0;
-      });
-    },
   },
   methods: {
     getCheaterStatusLabel: util.getCheaterStatusLabel,
     autoUpdateList () {
       const that = this;
 
-      console.log(that.bot.autoUpdate)
       if (!that.bot.autoUpdate) {
         clearInterval(this.bot.fun);
         return;
@@ -242,14 +237,25 @@ export default new BFBAN({
         that.getCheaterList();
       }, that.bot.time)
     },
+    /**
+     * 游戏数量统计
+     */
     getTotalNum(val) {
-      const target = _.find(this.totalSum, ["game", val]);
-
+      let target = {};
+      switch (val) {
+        case '*':
+          // 总数
+          target.num = _.sumBy(this.sum, (o) => {
+            return o ? o.num : 0;
+          });
+          break;
+        default:
+          target = _.find(this.sum, ["game", val]);
+      }
       return target ? target.num : 0;
     },
-    getStatusNum(val) {
-      const target = _.find(this.sum, ["status", val]);
-
+    getcHeaterStatusNum(val) {
+      let target = _.find(this.totalSum, ["status", val]);
       return target ? target.num : 0;
     },
     copied() {
@@ -263,13 +269,59 @@ export default new BFBAN({
       });
 
       this.getCheaterList();
+      this.getPlayerStatistics();
     },
-    getCheaterList () {
-      this.spinShow = true;
+    /**
+     * 取得数量统计
+     */
+    getPlayerStatistics() {
+      const that = this;
+      let data = {
+        data: []
+      };
+      let splitIndex = 0;
 
+      gameName.child.forEach(i => {
+        data.data.push({"game": i.value, "status": -1});
+        splitIndex++;
+      });
+
+      cheaterStatus.child.forEach((i, index) => {
+        data.data.push({"game": this.gameName == 'all' ? '*' : this.gameName, "status": index})
+      });
+
+      http.post(api['playerStatistics'], {
+        data,
+      }).then(res => {
+        const d = res.data;
+        let sum = [];
+        let totalSum = [];
+
+        if (d.success == 1) {
+          // game Type
+          [].concat(d.data).splice(0, splitIndex).forEach((i, index) => {
+            sum.push({game: that.games[index].value.toString(), num: Number(i)})
+          });
+          this.sum = sum;
+
+          // type methods
+          [].concat(d.data).splice(splitIndex, d.data.length - 1).forEach((i, index) => {
+            totalSum.push({status: that.cheaterStatus.filter(i => i.value == index)[0].value, num: Number(i)})
+          });
+          this.totalSum = totalSum;
+        }
+      }).catch((res) => {
+        this.$Message.error(res.message);
+      })
+    },
+    /**
+     * 取得作弊玩家列表
+     */
+    getCheaterList() {
+      this.spinShow = true;
       // default values
       const {
-        game = "bf1",
+        game = "all",
         status = -1,
         createTime = "",
         updateTime = "",
@@ -277,8 +329,8 @@ export default new BFBAN({
         sort = "updateTime",
         limit = this.limit,
       } = this.$route.query;
-
       const config = {};
+
       config["params"] = Object.assign({
             game,
             skip: (skip - 1) * limit,
@@ -301,11 +353,10 @@ export default new BFBAN({
 
       http.get(api['players'], config).then(res => {
         const d = res.data;
+
         if (d.success == 1) {
           this.data = d.data.result || [];
           this.total = d.data.total;
-          this.sum = d.data.sum;
-          this.totalSum = d.data.totalSum;
         }
       }).catch((res) => {
         this.$Message.error(res.code);
@@ -313,11 +364,6 @@ export default new BFBAN({
         this.spinShow = false;
       });
     },
-    // handleRefresh() {
-    //   this.spinShow = true;
-    //
-    //   this.getCheaterList();
-    // },
     routerQuery() {
       const game = this.gameName;
       const status = this.statusGroup;
@@ -344,7 +390,7 @@ export default new BFBAN({
 
       const query = this.routerQuery();
 
-      this.$router.push({name: "cheaters", query});
+      this.$router.push({name: this.$router.name, query});
     },
     handleStatusChange() {
       this.skip = 1;
@@ -352,13 +398,13 @@ export default new BFBAN({
       this.handleChanges();
     },
     handleCDatepicker(date) {
-      this.cd = date;
+      this.createTime = date;
       this.skip = 1;
 
       this.handleChanges();
     },
     handleUDatepicker(date) {
-      this.ud = date;
+      this.updateTime = date;
       this.skip = 1;
 
       this.handleChanges();
@@ -371,8 +417,19 @@ export default new BFBAN({
       this.limit = num;
       this.handleChanges();
     },
-    handleSortByChange(value) {
-      this.handleChanges();
+  },
+  computed: {
+    getAllStatusNum() {
+      let target = {num: 0};
+      switch (this.gameName) {
+        case 'all':
+          for (let i of this.sum)
+            target.num += i.num || 0;
+          break;
+        default:
+          target = _.find(this.sum, ["game", this.gameName]);
+      }
+      return target ? target.num : 0;
     },
   },
 });
@@ -384,18 +441,6 @@ export default new BFBAN({
   margin: 13px -16px;
   display: inline-block;
   width: calc(100% + 32px);
-}
-
-
-.list-banner {
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  opacity: .2;
-  transform: scale(1.5);
-  position: absolute;
-  z-index: -1;
-  height: 800px;
-  width: 100%;
 }
 
 .list {

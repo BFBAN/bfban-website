@@ -1,0 +1,54 @@
+{
+  "title": "link",
+  "linkWebDeveloperChild": [
+    {
+      "title": "mygoare",
+      "url": "https://mygoare.com"
+    },
+    {
+      "title": "glassPanel",
+      "url": "https://github.com/glass-panel"
+    }
+  ],
+  "linkChild": [
+    {
+      "title": "Cabbagelol",
+      "titleLang": {
+        "zh-CN": "菜萌"
+      },
+      "linkImage": "",
+      "linkUrl": "",
+      "tag": [
+        "link"
+      ]
+    }
+  ],
+  "footerChild": [
+    {
+      "title": "gametools.network",
+      "linkUrl": "https://gametools.network",
+      "describe": "Made with Hosted at GameTools-Community Network",
+      "describeLang": {
+        "zh-CN": "主机提供商"
+      },
+      "linkImageUrl": "//placeholder.idcd.com/?w=100&h=35&text=gametools.network&bgcolor=%230087FF&fontcolor=%23FFFFFF&fontsize=7&fontfamily=1",
+      "tag": [
+        "host",
+        "platinum"
+      ]
+    },
+    {
+      "title": "RBQ",
+      "linkUrl": "https://space.bilibili.com/24946604",
+      "describe": "Domain cost",
+      "describeLang": {
+        "zh-CN": "域名支持"
+      },
+      "linkImageUrl": "//placeholder.idcd.com/?w=100&h=35&text=RBQ&bgcolor=%23fb7299&fontcolor=%23FFFFFF&fontsize=7&fontfamily=1",
+      "tag": [
+        "host",
+        "platinum"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 // Color
-@primary-color          : #efe227;
-@info-color             : #6b3abb;
+@primary-color          : pink;
+@info-color             : @primary-color;
 @success-color          : #19be6b;
 @processing-color       : @primary-color;
 @warning-color          : #ff9900;
@@ -8,8 +8,8 @@
 @normal-color           : #888882;
 @link-color             : #000;
 @link-hover-color       : tint(@link-color, 10%);
-@link-active-color      : shade(#401487, 5%);
-@selected-color         : fade(#401487, 50%);
+@link-active-color      : shade(@primary-color, 5%);
+@selected-color         : fade(@primary-color, 50%);
 @tooltip-color          : #fff;
 @subsidiary-color       : #ececec;
 @rate-star-color        : #f5a623;
@@ -21,7 +21,7 @@
 @component-background   : #000;
 @font-family            : "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 @code-family            : Consolas,Menlo,Courier,monospace;
-@title-color            : #efe227;
+@title-color            : @primary-color;
 @text-color             : #3d3a42;
 @text-color-secondary: fade(@black, 45%);
 @heading-color: fade(#000, 85%);
@@ -42,8 +42,8 @@
 @padding-xs: 8px; // small items
 
 // Border color
-@border-color-base      : #dedede;  // outside
-@border-color-split     : #dedede;  // inside
+@border-color-base      : fade(@primary-color, 30%);  // outside
+@border-color-split     : fade(@primary-color, 30%);  // inside
 @border-width-base      : 1px;            // width of the border for a component
 @border-style-base      : solid;          // style of a components border
 
@@ -63,9 +63,9 @@
 @date-picker-cell-hover-bg    : fade(@primary-color, 10%);
 
 // Shadow
-@shadow-color           : rgba(0, 0, 0, .2);
+@shadow-color           : fade(@primary-color, 30%);
 @shadow-base            : @shadow-down;
-@shadow-card            : 0 1px 1px 0 rgba(0,0,0,.1);
+@shadow-card            : 0 1px 1px 0 fade(@primary-color, 30%);
 @shadow-up              : 0 -1px 6px @shadow-color;
 @shadow-down            : 0 1px 6px @shadow-color;
 @shadow-left            : -1px 0 6px @shadow-color;

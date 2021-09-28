@@ -25,11 +25,11 @@
                     {{ cheater.originName || 'user id' }}
 
                     <!-- 被举报的游戏 -->
-                    <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })">
-                      <router-link :to="{name: 'cheaters'}">
-                        {{ cheater.games }}
-                      </router-link>
-                    </Tag>
+                    <router-link :to="{name: 'cheaters'}" >
+                      <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })" v-for="(game,gameindex) in cheater.games.split(',')" :key="gameindex">
+                        {{ $t(`list.filters.game.${game}`, {game: game}) }}
+                      </Tag>
+                    </router-link>
 
                     <Tag color="error">
                       {{ $t(`basic.status[${cheater.status}]`) }}
@@ -49,7 +49,7 @@
                     <DropdownMenu slot="list" v-if="cheater && cheater.history && cheater.history.length >= 0">
                       <!-- 历史ID -->
                       <DropdownItem v-for="origin in cheater.history" :key="origin.originName">
-                        <Time :time="origin.fromTime"></Time>
+                        <Time :time="origin.fromTime" v-if="origin.fromTime"></Time>
                         <Divider type="vertical"/>
                         {{ origin.originName }}
                       </DropdownItem>
@@ -199,21 +199,24 @@
                             </Tag>
                           </Col>
                           <Col align="right">
-                            <Time :time="l.createTime"></Time>
+                            <Time :time="l.createTime" v-if="l.createTime"></Time>
                           </Col>
                         </Row>
                       </div>
 
-
-                      <div class="description">
+                      <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
                         <span v-if="l.videoLink">
                           <!-- 游戏中 -->
-                          <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex" :href="link" target="_blank">
-                            <Tag size="default" color="geekblue">{{ $t('detail.info.videoLink', {msg: 'videoLink'}) }}</Tag>
-                            {{ link }}
-                             <Divider type="vertical" />
+                          <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
+                                :href="link" target="_blank">
+                            <Tag size="default" color="geekblue">{{
+                                $t('detail.info.videoLink', {msg: 'videoLink'})
+                              }}</Tag>
+                            <a :href="link" target="_blank">{{ link }}</a>
+                            <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
                           </span>
                         </span>
+                        <br>
                         <div v-if="l.description" v-html="l.description"></div>
                       </div>
 
@@ -254,14 +257,15 @@
                           </Col>
 
                           <Col>
-                            <Time :time="l.createTime"></Time>
+                            <Time :time="l.createTime" v-if="l.createTime"></Time>
                             <Divider type="vertical"/>
                             {{l.status}}
                           </Col>
                         </Row>
                       </div>
 
-                      <div v-if="l.content" v-html="l.content" class="description"></div>
+                      <div v-if="l.content" v-html="l.content"
+                           class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
@@ -318,7 +322,8 @@
                         </Row>
                       </div>
 
-                      <div v-html="l.content" v-if="l.content" class="description"></div>
+                      <div v-html="l.content" v-if="l.content"
+                           class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
@@ -326,19 +331,6 @@
                                 @click="handleReply(l.floor || index, l.byUserId)">
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
                         </Button>
-                        <template v-show="isAdmin && cheater.status !== '1' && l.status === '1' && !isSelf(l.byUserId)">
-                          <Divider type="vertical"/>
-
-                          <!-- 同意实锤 -->
-                          <Button type="dashed" href="scriptjava:void(0)"
-                             @click.prevent.stop="doConfirm"
-                             :data-user-verify-cheater-id="l.id"
-                             :data-cheat-methods="l.cheatMethods"
-                             :data-user-verify-cheater-username="l.username">
-                            <Icon type="md-thumbs-up"/>
-                            {{ $t('detail.info.agreeJudgement', {msg: 'agreeJudgement'}) }}
-                          </Button>
-                        </template>
                       </p>
                     </div>
                     <!-- 认为 E -->
@@ -401,7 +393,8 @@
                         </Row>
                       </div>
 
-                      <div v-html="l.content" v-if="l.content" class="description"></div>
+                      <div v-html="l.content" v-if="l.content"
+                           class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
 
                       <p v-if="isLogin">
                         <!-- 回复 -->
@@ -417,29 +410,19 @@
                       <Col flex="auto">
                       </Col>
                       <Col align="right">
-                        <Dropdown>
-                          <a href="javascript:void(0)">
-                            <Icon type="md-more" />
-                          </a>
-                          <DropdownMenu slot="list">
-                            <DropdownItem>撤销此回复</DropdownItem>
-                            <DropdownItem>编辑此消息内容</DropdownItem>
-                          </DropdownMenu>
-                        </Dropdown>
                         # {{ index }}
                       </Col>
                     </Row>
 
                     <Divider v-if="index < timelineList.length - 1"></Divider>
                   </TimelineItem>
-                  <!--                  TODO PAGE SET-->
-                  <!--                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
+                  <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>
                   <br>
                 </div>
 
+                <!-- 用户回复 S -->
                 <div id="reply">
                   <Divider></Divider>
-                  <!-- 回复 S -->
                   <div v-if="isLogin">
                     <Alert type="warning" show-icon>
                       <span>{{ $t('detail.info.replyManual1', {msg: 'replyManual1'}) }}</span>
@@ -466,7 +449,7 @@
                           </Col>
                           <Col>
                             <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                              <div v-html="reply.captchaUrl.content"></div>
+                              <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>
                             </div>
                           </Col>
                         </Row>
@@ -489,8 +472,9 @@
                       {{ $t('detail.info.replyManual3', {msg: 'replyManual3'}) }}
                     </template>
                   </Alert>
-                  <!-- 回复 E -->
                 </div>
+                <!-- 用户回复 E -->
+
               </TabPane>
               <TabPane :label="$t('detail.info.dealRecord', { msg: 'dealRecord' })">
                 <!-- 管理员处理历史 -->
@@ -549,6 +533,9 @@
           </Col>
           <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1" class="mobile-hide">
             <div>
+
+            </div>
+            <Affix :offset-top="10">
               <Button type="primary"
                       @click="appeal.show = true"
                       :disabled="!isLogin">
@@ -556,12 +543,6 @@
               </Button>
               <p><br>{{ $t('detail.appeal.describe') }}</p>
               <Divider/>
-            </div>
-            <Affix :offset-top="10">
-              <Steps :current="detailStepsIndex" direction="vertical">
-                <Step title="首次提交" content="首次提交作弊玩家"></Step>
-                <Step title="定案" content="最终结果"></Step>
-              </Steps>
             </Affix>
           </Col>
         </Row>
@@ -667,7 +648,7 @@
                 </Col>
                 <Col>
                   <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                    <div v-html="reply.captchaUrl.content"></div>
+                    <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>
                   </div>
                 </Col>
               </Row>
@@ -718,7 +699,7 @@
     <Modal v-model="appeal.show"
            width="80%"
            :loading="appeal.load"
-           @on-ok="handelAppeal">
+           @on-ok="handleAppeal">
       <Row :gutter="30">
         <Col flex="1">
           <h2>规则</h2>
@@ -842,6 +823,9 @@ export default new BFBAN({
       origins: [],
       games: [],
       timelineList: [],
+      skip: 0,
+      limit: 100,
+
       verify: {
         status: 0,
         checkbox: [],
@@ -876,7 +860,6 @@ export default new BFBAN({
       },
 
       updateUserInfospinShow: false,
-      detailStepsIndex: 0
     }
   },
   components: {Empty, Edit, vueQr},
@@ -912,6 +895,9 @@ export default new BFBAN({
         this.verify.status = this.verify.choice[0].value;
       });
     },
+    /**
+     * 获取验证码
+     */
     refreshCaptcha: function () {
       this.reply.captcha = '';
 
@@ -970,29 +956,13 @@ export default new BFBAN({
     getTimeline() {
       this.http.get(`${api["account_timeline"]}`, {
         params: Object.assign({
-          skip: 0,
-          limit: 100
+          skip: this.skip,
+          limit: this.limit
         }, {personaId: this.getParamsIds('personaId')})
       }).then((res) => {
         const d = res.data;
-        if (d.success === 1) {
-          let timelineList = d.data;
-          let countNum = [0, 0];
 
-          timelineList.forEach((i, index) => {
-            if (i.type == 'report')
-              countNum[0] += 1;
-            if (i.type == 'judgement')
-              countNum[1] += 1;
-          });
-
-          if (countNum[0] <= 1) {
-            this.detailStepsIndex = 0;
-          }
-          if (countNum[1] > 1) {
-            this.detailStepsIndex = 1;
-          }
-
+        if (d.success == 1) {
           this.timelineList = d.data;
         }
       });
@@ -1014,6 +984,9 @@ export default new BFBAN({
         el.setAttribute('style', 'transition: background 1s ease .5s;')
       }, 100);
     },
+    /**
+     * 核实
+     */
     async doVerify() {
       const {status} = this.verify;
       let {suggestion} = this.verify;
@@ -1068,55 +1041,21 @@ export default new BFBAN({
       })
     },
     /**
-     * 确认、裁判
-     */
-    doConfirm(e) {
-      const {userVerifyCheaterId, userVerifyCheaterUsername, cheatMethods} = e.target.dataset;
-      const {userId} = this.$store.state.user;
-      const originUserId = this.$route.params.ouid;
-
-      http.post(api["cheaters_confirm"], {
-        data: {
-          userVerifyCheaterId,
-          userId,
-          originUserId,
-          cheatMethods,
-        }
-      }).then((res) => {
-        const d = res.data;
-
-        if (d.error === 0) {
-          const {createDatetime} = d.data;
-
-          this.cheater.status = '1';
-          this.timelineList.push({
-            type: 'confirm',
-            userId,
-            userVerifyCheaterId,
-            createDatetime,
-            cheatMethods,
-            username: this.$store.state.user.username,
-          })
-        } else {
-          this.$Message.warning(d.msg);
-        }
-      })
-    },
-    /**
      * 是否是自己
      */
     isSelf(id) {
       const userId = this.$store.state.user.userinfo.userId;
       return (parseInt(userId) === parseInt(id))
     },
-    handleMiscChange(val) {
-      this.appeal.content = val;
+    /**
+     * 富文本单选绑定
+     */
+    handleMiscChange(text) {
+      this.appeal.content = text;
     },
-    handelAppeal() {
-      const {toPlayerId = this.cheater.originId, content = ''} = this.appeal;
-
+    handleAppeal() {
+      const {content = ''} = this.appeal;
       this.appeal.load = true;
-
       this.http.post(api["player_banAppeal"], {
         data: {
           data: {
@@ -1183,7 +1122,12 @@ export default new BFBAN({
      * 行为: 重置内容
      */
     cancelReply() {
-      this.reply = {};
+      this.reply = {
+        captchaUrl: {
+          content: '',
+          hash: ''
+        }
+      };
     },
     /**
      * 评论 reply
@@ -1345,74 +1289,71 @@ export default new BFBAN({
 </script>
 
 <style lang="scss">
-.cheater-desc {
-  max-width: 100%;
-  width: 34rem;
-}
-
-.description {
-  color: rgba(0, 0, 0, 0.8);
-  font-size: 0.8rem;
-  line-height: 1.5rem;
-  margin: 10px 0;
-  border: 1px solid #f2f2f2;
-  background: #f8f9fa;
-  padding: 10px;
-
-  img, video {
+  .cheater-desc {
     max-width: 100%;
+    width: 34rem;
   }
-}
 
-.timeline-time {
-  color: #00000073;
-}
+  .description {
+    font-size: 0.8rem;
+    line-height: 1.5rem;
+    margin: 10px 0;
+    padding: 10px;
 
-.timeline-time-line {
-  .ivu-timeline-item-tail {
+    img, video {
+      max-width: 100%;
+    }
+  }
+
+  .timeline-time {
+    color: #00000073;
+  }
+
+  .timeline-time-line {
+    .ivu-timeline-item-tail {
+      margin-left: 15px;
+    }
+  }
+
+  .timeline-time-dot {
+    width: 40px;
     margin-left: 15px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-}
 
-.timeline-time-dot {
-  width: 40px;
-  margin-left: 15px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  .timeline-content {
+    position: relative;
 
-.timeline-content {
-  position: relative;
+    // force to wrap
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 
-  // force to wrap
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+    margin-left: 3rem;
+  }
 
-  margin-left: 3rem;
-}
+  .timeline-content .loading {
+    background-image: url('/src/assets/fonts/loading.svg');
+    background-repeat: no-repeat;
+    min-width: 100px;
+    min-height: 100px;
+  }
 
-.timeline-content .loading {
-  background-image: url('/src/assets/fonts/loading.svg');
-  background-repeat: no-repeat;
-  min-width: 100px;
-  min-height: 100px;
-}
+  .ivu-timeline-item {
+    padding: 1rem 0;
+  }
 
-.ivu-timeline-item {
-  padding: 1rem 0;
-}
+  .ivu-timeline-item-content {
+    padding: 0 .6rem 0 3rem;
+  }
 
-.ivu-timeline-item-content {
-  padding: 0 .6rem 0 3rem;
-}
-
-.ivu-timeline-item-tail {
-  top: 1rem;
-  border-width: .3rem !important;
-}
+  .ivu-timeline-item-tail {
+    top: 1rem;
+    border-width: .3rem !important;
+  }
 </style>
 
 <style lang="scss">

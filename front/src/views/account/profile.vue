@@ -1,10 +1,14 @@
 <template>
   <div class="container">
     <br>
-    <Breadcrumb>
-      <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-      <BreadcrumbItem>{{ $t("header.profile") }}</BreadcrumbItem>
-    </Breadcrumb>
+    <Row>
+      <Col :xs="{push: 1}" :lg="{push: 0}">
+        <Breadcrumb>
+          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("header.profile") }}</BreadcrumbItem>
+        </Breadcrumb>
+      </Col>
+    </Row>
     <br>
 
     <Card shadow>

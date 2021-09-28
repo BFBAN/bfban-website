@@ -31,10 +31,6 @@
       "value": 4,
       "values": ["4", "damageChange", "trash"],
       "action": "suspect"
-    },
-    {
-      "value": 7,
-      "values": ["7", "attackServer"]
     }
   ]
 }

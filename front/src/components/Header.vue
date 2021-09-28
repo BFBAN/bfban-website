@@ -2,10 +2,12 @@
     <header>
       <div class="header-container container">
         <router-link class="mobile-hide" :to="{name: 'home'}">
-          <img src="../assets/images/logo.png"
-               width="40"
-               height="40"
-               alt="bfban logo"/>
+          <Badge text="beta" type="normal">
+            <img src="../assets/images/logo.png"
+                 width="40"
+                 height="40"
+                 alt="bfban logo"/>
+          </Badge>
         </router-link>
         <div class="nav nav-menu">
           <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>
@@ -13,11 +15,14 @@
                   :title="$t($route.name + '.title')"
                   placement="left"
                   width="80%"
-                  :closable="true" v-model="headerMenu.show">
+                  :closable="true"
+                  v-model="headerMenu.show">
             <List>
-              <ListItem @click="$router.push({name: i.name, query: i.to.query});"
+              <ListItem @click="headerMenu.show = false;$router.push({name: i.name, query: i.to.query})"
                         v-for="(i, index) in headerMenu.child" :key="index">
-                {{ $t("header." + i.name) }}
+                <router-link :to="i.to">
+                  {{ $t("header." + i.name) }}
+                </router-link>
               </ListItem>
             </List>
           </Drawer>

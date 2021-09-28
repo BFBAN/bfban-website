@@ -1,11 +1,16 @@
 <template>
   <div class="container">
     <br>
-    <Breadcrumb>
-      <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-      <BreadcrumbItem>{{ $t("report.info.verify") }}</BreadcrumbItem>
-    </Breadcrumb>
+    <Row>
+      <Col :xs="{push: 1}" :lg="{push: 0}">
+        <Breadcrumb>
+          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("report.info.verify") }}</BreadcrumbItem>
+        </Breadcrumb>
+      </Col>
+    </Row>
     <br>
+
     <div class="content">
       <Card dis-hover>
         <div v-if="verify.iscode">

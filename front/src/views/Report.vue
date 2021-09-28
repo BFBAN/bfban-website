@@ -2,23 +2,28 @@
   <div class="container">
     <div class="content">
       <br>
-      <Breadcrumb>
-        <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-        <BreadcrumbItem>{{ $t("report.info.reportHacker", {msg: "reportHacker"}) }}</BreadcrumbItem>
-      </Breadcrumb>
+      <Row>
+        <Col :xs="{push: 1}" :lg="{push: 0}">
+          <Breadcrumb>
+            <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+            <BreadcrumbItem>{{ $t("report.info.reportHacker", {msg: "reportHacker"}) }}</BreadcrumbItem>
+          </Breadcrumb>
+        </Col>
+      </Row>
       <br>
 
       <Tabs type="card"
             v-model="tabs.count"
             closable
             @on-tab-remove="doCancel">
-        <TabPane v-for="(tab, index) in tabs.list.length" :key="tab"
-                 :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab)">
-          <Card shadow v-if="tabs.list[index].statusOk == 0">
-            <Form :label-width="150" ref="formValidate" :model="tabs.list[index].formItem" :rules="ruleValidate"
+        <TabPane v-for="(tab, index) in tabs.list.length" :key="index"
+                 :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab.toString())">
+          <Card dis-hover v-if="tabs.list[index].statusOk == 0">
+            <Form :label-width="150"
+                  :model="tabs.list[index].formItem" :rules="ruleValidate"
+                  ref="formValidate"
                   label-position="left">
-              <!--举报作弊-->
-
+              <!-- 基础信息 S -->
               <Card dis-hover>
                 <!-- 游戏类型 S -->
                 <FormItem prop="gameName"
@@ -29,9 +34,9 @@
                       v-model="tabs.list[index].formItem.gameName"
                       type="button">
                     <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
-                           :style="'background-image: url(' + i.bk_src + ')'">
+                           :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ')'">
                       <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
-                        <img height="35" :src="i.logo_src" v-if="i.logo_src"/>
+                        <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
                         <span v-else>{{ i.full_name }}</span>
                       </Tooltip>
                     </Radio>
@@ -135,7 +140,9 @@
                   </CheckboxGroup>
                 </FormItem>
               </Card>
+              <!-- 基础信息 E -->
               <br>
+              <!-- 证据 S -->
               <Card dis-hover>
                 <FormItem :label="$t('detail.info.videoLink')">
                   <Row :gutter="30">
@@ -189,7 +196,9 @@
                   <Edit :index="index" :content="$t('report.info.description')" @change="handleMiscChange"/>
                 </FormItem>
               </Card>
+              <!-- 证据 E -->
               <br>
+              <!-- 提交 S -->
               <Card dis-hover>
                 <FormItem prop="captcha" :label="$t('report.info.captcha')">
                   <Input
@@ -219,6 +228,7 @@
                   </Button>
                 </FormItem>
               </Card>
+              <!-- 提交 E -->
               <br>
               <Spin size="large" fix v-show="spinShow"></Spin>
             </Form>
@@ -244,11 +254,10 @@
 </template>
 
 <script>
-import {api, http, http_token, util} from '../assets/js/index'
-import {checkReportFormData,} from "@/mixins/common";
+import {api, http, http_token, util, regular} from '../assets/js/index'
+import {checkReportFormData} from "@/mixins/common";
 
 import gameName from '../assets/gameName.json'
-
 import Edit from "@/components/Edit.vue";
 
 export default {
@@ -340,7 +349,7 @@ export default {
           gameName: gameName.child[gameName.defaultIndex].value,
           originId: "",
           videoLink: [],
-          checkbox: ["aimbot"],
+          checkbox: [],
           description: this.$i18n.t("report.info.description"),
           captcha: "",
           originUserId: "",
@@ -353,6 +362,7 @@ export default {
       this.tabs.list.push(newFormData);
     },
     checkVideoAndImg(formData) {
+
       return true;
       // trimAllWhitespace(formData.formItem.videoLink) ||
       // if (
@@ -409,58 +419,12 @@ export default {
 
       // check form data
       if (checkReportFormData.call(this, formData.formItem) === false) return false;
-      if (this.checkVideoAndImg(formData) === false) return false;
+      // if (regular.check(regular.A, formData.formItem.description).code === -1) return false;
 
-      this.spinShow = true;
+      formData.formItem.captcha = "";
 
-      await this.handleReport(formData, index);
-
-      // http.get('checkGameIdExist', {
-      //   data: {
-      //     id: trimAllWhitespace(formData.formItem.originId),
-      //   }
-      // }).then(async (res) => {
-      //   const d = res.data;
-      //   const idExist = d.idExist;
-      //
-      //   if (idExist) {
-      //     formData.formItem.originUserId = d.originUserId;
-      //     formData.formItem.originPersonaId = d.originPersonaId;
-      //     formData.formItem.avatarLink = d.avatarLink;
-      //
-      //   } else {
-      //     this.spinShow = false;
-      //     this.failedOfNotFound = true;
-      //
-      //     setImmediate(() => {
-      //       document
-      //           .getElementById("notFoundHint")
-      //           .scrollIntoView({
-      //             behavior: "smooth",
-      //             block: "end",
-      //             inline: "nearest",
-      //           });
-      //     });
-      //
-      //     this.$Message.error(
-      //         this.$i18n.t("report.info.originId")
-      //     );
-      //   }
-
-        formData.formItem.captcha = "";
-        this.refreshCaptcha();
-      // }).catch((e) => {
-      //   if (e.response && e.response.status == 401)
-      //     this.$Message.error(
-      //         this.$t("report.info.loginExpired")
-      //     );
-      //   else if (e.response && e.response.status == 500)
-      //     this.$Message.error(
-      //         "An error occured in server, please try again later."
-      //     );
-      //   else this.$Message.error("Failed: Unknown error.");
-      //   this.spinShow = false;
-      // });
+      this.handleReport(formData, index);
+      this.refreshCaptcha();
     },
     /**
      * 发布请求
@@ -552,5 +516,11 @@ export default {
   padding: 10px;
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
   "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif;
+}
+
+.ivu-tabs-bar {
+  position: relative;
+  z-index: 1;
+  margin-bottom: -1px !important;
 }
 </style>

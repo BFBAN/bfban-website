@@ -1,9 +1,8 @@
 <template>
-    <footer class="footer">
+    <footer class="footer footer-border-top">
       <div class="container">
         <Row :gutter="10">
           <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide">
-
             <Badge :count="logoCount" overflow-count="999999">
               <Avatar v-if="logoCount > 10" size="40">
                 干嘛？
@@ -66,26 +65,42 @@
           </Col>
         </Row>
       </div>
-      <Divider class="mobile-hide"></Divider>
-      <div align="center" class="mobile-hide">
-        <p>&copy; 2018-{{new Date().getFullYear()}} All Rights Reserved.</p>
-        <p>Made with <Icon type="ios-heart" color="#ed4014" />Host at
-          <a target="_blank" href="https://gametools.network/">GameTools-Community Network</a>
-        </p>
-        <p>v: {{infos}}</p>
+      <div class="container mobile-hide footer-padding">
+        <Row>
+          <Col flex="auto">
+            <h4><b>{{$t("footer.column.sponsor.title")}}</b></h4>
+          </Col>
+          <Col>
+            <router-link :to="{name: 'about'}">
+              {{$t("footer.column.sponsor.join")}}
+            </router-link>
+          </Col>
+        </Row>
+        <Row :gutter="10" class="footer-link" type="flex">
+          <Col v-for="(link, linkindex) in links" :key="linkindex" align="center">
+            <a :href="link.linkUrl" target="_blank" class="footer-link-text">
+              <img :src="link.linkImageUrl" width="100" height="35" :alt="link.tag" :title="link.describe">
+            </a>
+          </Col>
+        </Row>
+      </div>
+      <div align="center" class="mobile-hide footer-border-top footer-padding">
+        <p>&copy; 2018-{{new Date().getFullYear()}} All Rights Reserved. v: {{infos}}</p>
       </div>
     </footer>
 </template>
 
 <script>
 import packageInfo from '../../package.json';
-import footerNavs from '../assets/footerNavs.json'
+import footerNavs from '../assets/footerNavs.json';
+import link from '../assets/link.json';
 
 export default {
   data() {
     return {
       infos: packageInfo.version,
       footerNavs: footerNavs.child,
+      links: link.footerChild,
       logoCount: 0,
       languages: [],
     }
@@ -124,16 +139,25 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="less" scoped>
+  @footer-primary-color: #fff;
+  @footer-border-color: #00000008;
+  @footer-icon-color: #c5c5c5;
+
   .footer {
     backdrop-filter: blur(50px);
     text-align: left;
-    border-top: 1px solid #00000008;
-    //background: #f9f7ff;
     flex-shrink: 0;
-    padding: 3rem 0;
+    padding: 3rem 0 0 0;
+    flex-shrink: 0;
 
-    flex-shrink: 0;
+    &.footer-border-top, .footer-border-top {
+      border-top: 1px solid @footer-border-color;
+    }
+
+    .footer-padding {
+      padding: 10px 0;
+    }
 
     ul {
       display: block;
@@ -147,19 +171,19 @@ export default {
       }
 
       .ivu-icon {
-        color: #c5c5c5;
+        color: @footer-icon-color;
         font-size: 15px;
       }
     }
 
     b {
-      border-left: 3px solid #3f1388;
       display: block;
       margin-bottom: 10px;
-      color: #585410;
-      padding-left: 10px;
       font-size: 20px;
-      padding-right: 10px;
+    }
+
+    .footer-link {
+
     }
   }
 </style>

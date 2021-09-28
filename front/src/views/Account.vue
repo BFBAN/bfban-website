@@ -2,7 +2,7 @@
   <div class="container">
     <br>
     <Row>
-      <Col flex="auto">
+      <Col flex="auto" :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
           <BreadcrumbItem>{{ $t("account.title") }}</BreadcrumbItem>
@@ -67,13 +67,6 @@
             <p>{{account.origin.originName}}</p>
           </Card>
           <br v-if="account.origin && account.origin.originName">
-
-          <Card title="其他" icon="ios-options" :padding="0" shadow>
-            <CellGroup>
-              <Cell title="荣耀" label="查看在BFBAN成就"/>
-            </CellGroup>
-          </Card>
-
           <br>
           <p class="hint">{{ $t("account.hint1") }}</p>
           <p class="hint">{{ $t("account.hint2") }}</p>

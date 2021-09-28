@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="search-background"></div>
+<!--    <div class="search-background"></div>-->
 
     <div class="content">
       <br>
@@ -204,7 +204,7 @@ export default {
   align-items: center;
   align-content: center;
   transition: all .25s;
-  min-height: 400px;
+  min-height: 600px;
   height: 100%;
   padding: 0 30px;
 

@@ -31,16 +31,28 @@
       "authorUpdate": "2021-9-11"
     },
     "src": ""
-  },{
-    "type": "local",
-    "name": "blue",
-    "value": "blue",
-    "img": "public/theme/blue/main.png",
-    "version": "0.1",
-    "authorInfo": {
-      "authorName": "BFBAN",
-      "authorUpdate": "2021-9-11"
+  },
+    {
+      "type": "local",
+      "name": "pink",
+      "img": "public/theme/pink/main.png",
+      "version": "0.1",
+      "authorInfo": {
+        "authorName": "BFBAN",
+        "authorUpdate": "2021-9-26"
+      },
+      "src": ""
     },
-    "src": ""
+    {
+      "type": "local",
+      "name": "blue",
+      "value": "blue",
+      "img": "public/theme/blue/main.png",
+      "version": "0.1",
+      "authorInfo": {
+        "authorName": "BFBAN",
+        "authorUpdate": "2021-9-11"
+      },
+      "src": ""
   }]
 }
