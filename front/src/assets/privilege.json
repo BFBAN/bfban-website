@@ -3,15 +3,15 @@
   "child": [
     {
       "value": "root",
-      "class": ""
+      "class": "primary"
     },
     {
       "value": "admin",
-      "class": ""
+      "class": "primary"
     },
     {
       "value": "super",
-      "class": ""
+      "class": "primary"
     },
     {
       "value": "normal",

@@ -11,7 +11,7 @@
     </Row>
     <br>
 
-    <Card shadow>
+    <Card dis-hover>
       <Row>
         <Col flex="auto">
           <Row :gutter="15">

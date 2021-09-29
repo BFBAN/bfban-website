@@ -27,7 +27,8 @@
                 </Badge>
               </Radio>
               <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
-                     :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ')'">
+                     :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
+                     :class="gameName == i.value ? 'gametype-select' : ''">
                 <Badge :count="getTotalNum(i.value)" :overflow-count="90000" type="info">
                   <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
                     <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
@@ -453,14 +454,47 @@ export default new BFBAN({
 }
 
 .game-type {
+  padding-top: 1rem;
+
   label {
+    text-align: center;
+    min-width: 130px;
     animation: all .25s;
     background-size: cover;
     background-position: center;
   }
 
-  label:hover {
-    background-size: 100%;
+  label:first-child {
+    min-width: inherit !important;
+  }
+
+  img {
+    margin: 5px 0;
+    height: 30px;
+    animation: all 1s;
+  }
+
+  .gametype-select {
+    position: relative;
+    animation: gameAnimation 15s infinite;
+  }
+
+  @keyframes gameAnimation {
+    0% {
+      background-position-y: 50%;
+      background-size: 150%;
+    }
+    25% {
+      background-position-y: 100%;
+      background-size: 100%;
+    }
+    75% {
+      background-position-y: 0%;
+      background-size: 150%;
+    }
+    100% {
+      background-position-y: 50%;
+    }
   }
 }
 </style>
