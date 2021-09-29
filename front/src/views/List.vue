@@ -54,65 +54,62 @@
                     @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
               <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
               <br>
-              <ul>
-                <div v-if="data.length > 0">
-                  <div v-for="d in data" :key="d.originUserId">
-                    <Card>
-                      <Row>
-                        <Col span="4">
-                          <span style="display: flex; align-items: center;">
-                            <Avatar :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'"
-                                    alt="avatar"
-                                    size="55">
-                            </Avatar>
-                          </span>
-                        </Col>
-                        <Col span="15">
-                          <div style="display: flex; flex-direction: column;">
-                            <router-link
-                                :to="{name: 'cheater', params: { ouid: `${d.originPersonaId}` }}">
-                              <Tooltip :content="$t('list.colums.playerId')">
-                                <h2>
-                                  {{ d.originName }}
-                                  <Button size="small" type="text" icon="ios-copy-outline"
-                                          :data-clipboard-text="d.originId"
-                                          @click="copied"></Button>
-                                </h2>
-                              </Tooltip>
-                            </router-link>
-                          </div>
+              <div v-for="d in data" :key="d.originUserId">
+                <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
+                  <Card>
+                    <Row :gutter="10" type="flex">
+                      <Col span="3">
+                        <Avatar :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'"
+                                alt="avatar"
+                                size="55">
+                        </Avatar>
+                      </Col>
+                      <Col span="15">
+                        <div style="display: flex; flex-direction: column;">
+                          <router-link
+                              :to="{name: 'cheater', params: { ouid: `${d.originPersonaId}` }}">
+                            <Tooltip :content="$t('list.colums.playerId')">
+                              <h2>
+                                {{ d.originName }}
+                                <Button size="small" type="text" icon="ios-copy-outline"
+                                        :data-clipboard-text="d.originId"
+                                        @click="copied"></Button>
+                              </h2>
+                            </Tooltip>
+                          </router-link>
+                        </div>
 
-                          {{ $t('list.colums.reportTime') }}
-                          <Time v-if="d.createTime" :time="d.createTime"/>
-                          <Divider type="vertical"/>
-                          {{ $t('list.colums.updateTime') }}
-                          <Time v-if="d.updateTime" :time="d.updateTime"/>
-                        </Col>
-                        <Col span="5">
-                          <Row type="flex" justify="center" align="middle" style="height: 50px">
-                            <Col span="12" align="left">
-                              <Icon type="md-eye" size="15" class="item-icon"/>
-                              <span class="item-text">{{ d.viewNum || 0 }}</span>
-                            </Col>
-                            <Col span="1" align="center">
-                              <Divider type="vertical"/>
-                            </Col>
-                            <Col span="11" align="right">
-                              <Icon type="md-chatboxes" size="15" class="item-icon"/>
-                              <span class="item-text">{{ d.commentsNum || 0 }}</span>
-                            </Col>
-                          </Row>
-                        </Col>
-                      </Row>
-                    </Card>
-                    <br/>
-                  </div>
-                </div>
-                <div v-else align="center">
-                  (｀ﾍ´)=3 data null
-                </div>
-              </ul>
-
+                        {{ $t('list.colums.reportTime') }}
+                        <Time v-if="d.createTime" :time="d.createTime"/>
+                        <Divider type="vertical"/>
+                        {{ $t('list.colums.updateTime') }}
+                        <Time v-if="d.updateTime" :time="d.updateTime"/>
+                      </Col>
+                      <Col span="4">
+                        <Row type="flex" justify="center" align="middle" style="height: 50px">
+                          <Col flex="auto" align="right">
+                            <span class="item-text">{{ d.viewNum || 0 }} </span>
+                            <Icon type="md-eye" size="17" class="item-icon"/>
+                          </Col>
+                          <Col flex="auto" align="right">
+                            <span class="item-text">{{ d.commentsNum || 0 }}</span>
+                            <Icon type="md-chatboxes" size="17" class="item-icon"/>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col span="2" align="center">
+                        <Progress vertical :percent="0" hide-info/>
+                        <Divider type="vertical"/>
+                        <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
+                      </Col>
+                    </Row>
+                  </Card>
+                  <br/>
+                </Badge>
+              </div>
+              <Card v-if="data.length <= 0" align="center">
+                (｀ﾍ´)=3=3=3=3=3=3
+              </Card>
               <Page :page-size="limit" show-sizer show-total show-elevator :current="skip" @on-change="handlePageChange"
                     @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
             </Card>

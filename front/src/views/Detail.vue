@@ -19,6 +19,9 @@
             </div>
           </Col>
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}">
+            <Tag color="error">
+              {{ $t(`basic.status[${cheater.status}]`) }}
+            </Tag>
             <Row :gutter="10" type="flex" justify="center" align="middle">
               <Col flex="auto">
                 <h1 style="font-size: 1.6rem;">
@@ -161,21 +164,21 @@
                   {{ g.game }}
                 </Tag>
                 <a v-show="`${g.game}` === 'bf1'" target="_blank"
-                   :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originId}`">
+                   :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originUserId}`">
                   battlefieldtracker
                 </a>
                 <Divider type="vertical" v-show="`${g.game}` === 'bf1'"/>
                 <a v-show="`${g.game}` === 'bf1'" target="_blank"
-                   :href="`http://bf1stats.com/pc/${cheater.originId}`">
+                   :href="`http://bf1stats.com/pc/${cheater.originUserId}`">
                   bf1stats
                 </a>
                 <Divider type="vertical" v-show="`${g.game}` === 'bfv'"/>
                 <a v-show="`${g.game}` === 'bfv'" target="_blank"
-                   :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originId}`">
+                   :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originUserId}`">
                   battlefieldtracker
                 </a>
                 <Divider type="vertical"/>
-                <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originId}`">
+                <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originUserId}`">
                   247fairplay
                 </a>
               </p>
@@ -228,7 +231,7 @@
             <div class="content">
               <!-- 时间线 -->
               <TimelineItem
-                  :id="`floor-${index}`"
+                  :id="`floor-${l.index}`"
                   pending
                   class="timeline-time-line"
                   v-show="isSeeType(index)"
@@ -288,17 +291,17 @@
                   </div>
 
                   <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
-                        <span v-if="l.videoLink">
-                          <!-- 游戏中 -->
-                          <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
-                                :href="link" target="_blank">
-                            <Tag size="default" color="geekblue">{{
-                                $t('detail.info.videoLink', {msg: 'videoLink'})
-                              }}</Tag>
-                            <a :href="link" target="_blank">{{ link }}</a>
-                            <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
-                          </span>
-                        </span>
+                    <p v-if="l.videoLink">
+                      <!-- 游戏中 -->
+                      <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
+                            :href="link" target="_blank">
+                        <Tag size="default" color="geekblue">{{
+                            $t('detail.info.videoLink', {msg: 'videoLink'})
+                          }}</Tag>
+                        <a :href="link" target="_blank">{{ link }}</a>
+                        <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
+                      </span>
+                    </p>
                     <br>
                     <div v-if="l.description" v-html="l.description"></div>
                   </div>
@@ -712,9 +715,35 @@
         @on-cancel="cancelReply">
       <div v-if="isLogin">
         <Form :label-width="80" ref='replyForm' style="position: relative;">
-          <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
-                 :autosize="{minRows: 2}"
-                 :placeholder="$t('detail.info.giveOpinion')"/>
+          <FormItem v-if="timelineList[reply.toFloor]">
+            <Tag>
+              <BusinessCard :id="timelineList[reply.toFloor].byUserId">
+                @{{ timelineList[reply.toFloor].username }}
+              </BusinessCard>
+            </Tag>
+          </FormItem>
+          <FormItem v-if="timelineList[reply.toFloor]">
+            <Card> <div v-html="timelineList[reply.toFloor].content" v-if="timelineList[reply.toFloor].content"></div> </Card>
+          </FormItem>
+          <FormItem>
+            <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
+                   :autosize="{minRows: 4}"
+                   :placeholder="$t('detail.info.giveOpinion')"/>
+          </FormItem>
+          <FormItem :label="$t('signup.form.captcha')">
+            <Row>
+              <Col>
+                <Input type="text" v-model="reply.captcha" size="large" maxlength="4"
+                       :placeholder="$t('signup.form.captcha')">
+                </Input>
+              </Col>
+              <Col>
+                <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                  <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>
+                </div>
+              </Col>
+            </Row>
+          </FormItem>
         </Form>
       </div>
       <div v-else>{{ $t('detail.info.replyManual4', {msg: 'replyManual4'}) }}</div>
@@ -1205,9 +1234,10 @@ export default new BFBAN({
      */
     cancelReply() {
       this.reply = {
+        content: '',
         captchaUrl: {
           content: '',
-          hash: ''
+          hash: '',
         }
       };
     },
@@ -1253,19 +1283,6 @@ export default new BFBAN({
           // reset reply
           this.cancelReply();
 
-          const foo = this.$store.state.user.username;
-          const fooUId = this.$store.state.user.uId;
-          const bar = '';
-          const barUId = '';
-          this.timelineList.push({
-            type: 'reply',
-            createDatetime,
-            content,
-            foo,
-            fooUId,
-            bar,
-            barUId,
-          });
           this.cheater.status = status;
         } else {
           this.$Message.error(d.message);
@@ -1384,10 +1401,6 @@ export default new BFBAN({
     img, video {
       max-width: 100%;
     }
-  }
-
-  .timeline-time {
-    color: #00000073;
   }
 
   .timeline-time-line {

@@ -68,7 +68,7 @@
           </Card>
           <br v-if="account.origin && account.origin.originName">
           <br>
-          <p class="hint">{{ $t("account.hint1") }}</p>
+<!--          <p class="hint">{{ $t("account.hint1") }}</p>-->
           <p class="hint">{{ $t("account.hint2") }}</p>
           <p class="hint">{{ $t("account.hint3") }}</p>
         </Col>
@@ -167,7 +167,7 @@
 </template>
 
 <script>
-import {http, api, http_token, util} from '../assets/js/index'
+import {api, http, http_token} from '../assets/js/index'
 
 import games from '../assets/gameName.json'
 

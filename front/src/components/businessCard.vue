@@ -1,12 +1,15 @@
 <template>
   <Poptip :width="width || 400" trigger="hover" placement="bottom" :transfer="true" @on-popper-show="getUserInfo">
     <slot></slot>
-    <div class="api" slot="content">
+    <div slot="content">
+      <div class="business">
+        <img src="@/assets/images/games/bfv/bf.jpg">
+      </div>
       <Row>
         <Col flex="auto">
           <h2>
               <span v-for="(i, index) in privilege" :key="index">
-                <Tag type="border" v-if="i.value == userInfo.privilege" :class="i.class" :color="i.class">
+                <Tag type="border" v-if="i.value == userInfo.privilege" :color="i.class">
                   {{ $t('basic.privilege.' + userInfo.privilege) }}
                 </Tag>
               </span>
@@ -55,9 +58,7 @@ export default {
   },
   methods: {
     getUserInfo() {
-      console.log(Object.keys(this.userInfo))
       if (Object.keys(this.userInfo).length > 0) return;
-      console.log(111)
 
       switch (this.type) {
         case "user":
@@ -77,3 +78,20 @@ export default {
   }
 }
 </script>
+
+<style lang="less">
+.business {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  height: 90px;
+  overflow: hidden;
+  opacity: .3;
+  border-radius: 5px 5px 0 0;
+
+  img {
+    width: 100%;
+  }
+}
+</style>
