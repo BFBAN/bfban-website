@@ -195,17 +195,28 @@ async function iGotReported(params) {
     const user = await db.select('id').from('users').where({originUserId: report.toOriginUserId}).first();
     if(!user) // that player being reported hasnt registered our site
         return;
-    await sendMessage(undefined, user.id, 'warn', 'You were reported by someone.');
+    await sendMessage(undefined, user.id, 'warn', JSON.stringify({
+        event: 'message.reported',
+        dbId: report.id,
+        createTime: report.createTime
+    }));
 }
 
 async function iGotJudged(params) {
     /** @type {import("../typedef.js").Judgement} */
     const judgement = params.judgement;
+    /** @type {import("../typedef.js").Player} */
+    const player = params.player;
     /** @type {import("../typedef.js").User} */
     const user = await db.select('id').from('users').where({originUserId: judgement.toOriginUserId}).first();
     if(!user) // that player being reported hasnt registered our site
         return;
-    await sendMessage(undefined, user.id, 'warn', `You were judge as ${judgement.action}`);
+    await sendMessage(undefined, user.id, 'warn', JSON.stringify({
+        event: 'message.judged',
+        dbId: player.id,
+        status: player.status,
+        createTime: judgement.createTime
+    }));
 }
 
 async function iGotReplied(params) { // checked that comment dose exist
@@ -215,13 +226,23 @@ async function iGotReplied(params) { // checked that comment dose exist
     if(!(toCommentType && toCommentId))
         return;
     const toCommentUser = await db.select('byUserId').from(toCommentType).where({id: toCommentId}).first().then(r=>r.byUserId);
-    await sendMessage(reply.byUserId, toCommentUser, 'reply', `You got reply under dbId:${toPlayerId}`);
+    await sendMessage(reply.byUserId, toCommentUser, 'reply', JSON.stringify({
+        replyId: reply.id,
+        toFloor: reply.toFloor,
+        toPlayerId: reply.toPlayerId,
+        content: reply.content.slice(0,32),
+        createTime: reply.createTime
+    }));
 }
 
 async function newBanAppeal(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const ban_appeal = params.ban_appeal;
-    await sendMessage(ban_appeal.byUserId, ban_appeal.id, 'banAppeal', 'there is a ban appeal under player dbId:'+ban_appeal.toPlayerId); // hack to store banAppeal's id
+    await sendMessage(ban_appeal.byUserId, ban_appeal.id, 'banAppeal', JSON.stringify({
+        toPlayerId: ban_appeal.byUserId,
+        content: ban_appeal.content.slice(0,32),
+        createTime: ban_appeal.createTime
+    })); // hack to store banAppeal's id
 }
 
 async function removeBanAppealNotification(params) {

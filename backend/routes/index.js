@@ -146,15 +146,16 @@ async (req, res, next)=>{
         
         const result = await db.select('id','originName','originUserId','originPersonaId','games',
         'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
-        .from('players').where('games', 'like', `%#${game}#%`).andWhere('valid', '=', 1)
+        .from('players').where('games', 'like', !game? "%":`%#${game}#%`).andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status)
         .orderBy(sort, 'desc').offset(skip).limit(limit);
-        result.games = result.games.replace(/#/g, '').split(',');   // "#bf1#,#bfv#,#bf2042#" -> ['bf1','bfv','bf2042']
-        result.cheatMethods = result.cheatMethods.replace(/#/g, '').split(',');
+        result.forEach(i=> {
+            i.games = i.games.replace(/#/g, '').split(',');
+        }); // "#bf1#,#bfv#,#bf2042#" -> ['bf1','bfv','bf2042']
         const total = await db('players').count({num: 'id'})
-        .where('games', 'like', `%#${game}#%`).andWhere('valid', '=', 1)
+        .where('games', 'like', !game? "%":`%#${game}#%`).andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status).first().then(r=>r.num);

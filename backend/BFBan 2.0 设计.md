@@ -180,7 +180,7 @@ body:		{
                             originName: string,
                             originUserId: string,
                             originPersonaId: string,
-                            games: string,
+                            games: string[],	// example: ["bf1","bfv"]
                             cheatMethods: string,
                             avatarlink: string,
                             viewNum: number,
@@ -282,7 +282,7 @@ body:		{
                     originName: string,
                     originPersonaId: string,
                     originUserId: string,
-                    games: string,
+                    games: string[],
                     cheatMethods: string,
                     avatarlink: string,
                     viewNum: number,
