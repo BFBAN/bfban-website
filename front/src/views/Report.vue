@@ -173,7 +173,7 @@
                               long
                               @click="tabs.list[index].formItem.videoLink.splice(tabs.list[index].formItem.videoLink.length + 1, 0, '')"
                               v-if="tabs.list[index].formItem.videoLink.length < 10">
-                        <Icon type="md-add"/><span style="color: rgba(0,0,0,0.37)">&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 10)</span>
+                        <Icon type="md-add"/><span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 10)</span>
                       </Button>
                       <span class="hint">{{ $t("report.info.uploadManual3", {msg: "uploadManual3",}) }}</span>
                     </Col>

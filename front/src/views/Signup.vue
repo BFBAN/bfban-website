@@ -40,10 +40,11 @@
                   <Input type="text" v-model="signup.captcha"
                          size="large"
                          maxlength="4"
-                         :placeholder="$t('signup.form.captcha')"></Input>
-                  <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                    <div v-html="captchaUrl.content"></div>
-                  </div>
+                         :placeholder="$t('signup.form.captcha')">
+                    <div slot="append" ref="captcha" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                      <div v-html="captchaUrl.content"></div>
+                    </div>
+                  </Input>
                 </FormItem>
               </div>
 

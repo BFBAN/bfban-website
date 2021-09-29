@@ -68,7 +68,9 @@ export default {
 import 'view-design/dist/styles/iview.css'
 </script>
 
-<style lang="scss">
+<style lang="less">
+@import "./assets/css/index.less";
+
 @font-face {
   font-family: "Ubuntu Mono";
   font-weight: 400;
@@ -133,19 +135,6 @@ p {
   margin: .2rem 0;
 }
 
-.hint {
-  display: block;
-}
-
-.hint::before {
-  display: inline-block;
-  content: '*';
-  color: red;
-  font-size: 1rem;
-  vertical-align: middle;
-  margin-right: .4rem;
-}
-
 
 /*mobile responsive*/
 @media screen and (min-width: 1024px) {
@@ -173,16 +162,5 @@ p {
 /*https://github.com/iview/iview/issues/828*/
 .ivu-page-item-jump-next:after, .ivu-page-item-jump-prev:after {
   content: "\2022\2022\2022";
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-
-  td {
-    padding: .5em .75em;
-    vertical-align: middle;
-  }
 }
 </style>

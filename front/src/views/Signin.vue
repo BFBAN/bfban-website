@@ -15,30 +15,30 @@
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 13, push: 0, pull: 0}">
           <Card v-if="currentUser.token == ''" shadow>
             <p slot="title">{{ $t("signin.title") }}</p>
-            <Form>
-              <FormItem :label="$t('signin.form.username')">
+            <Form ref="signin" :model="signin" :rules="ruleValidate">
+              <FormItem :label="$t('signin.form.username')" prop="username">
                 <Input prefix="ios-contact" type="text" v-model="signin.username" size="large"
                        :placeholder="$t('signin.form.username')">
                 </Input>
               </FormItem>
 
-              <FormItem :label="$t('signin.form.password')">
+              <FormItem :label="$t('signin.form.password')" prop="password">
                 <Input type="password" password v-model="signin.password" size="large"
                        :placeholder="$t('signin.form.password')"/>
               </FormItem>
 
-              <FormItem :label="$t('signup.form.captcha')">
+              <FormItem :label="$t('signup.form.captcha')" prop="captcha">
                 <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
                        :placeholder="$t('signup.form.captcha')">
+
+                  <div slot="append" class="captcha-input-append" ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                    <div v-html="captchaUrl.content"></div>
+                  </div>
                 </Input>
-                <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                  <div v-html="captchaUrl.content"></div>
-                </div>
               </FormItem>
 
               <FormItem>
-                <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary"
-                        :disabled="!signin.captcha || !signin.password || !signin.username">
+                <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
                   {{ $t('signin.form.submit') }}
                 </Button>
 
@@ -79,6 +79,17 @@ export default {
       banner: [
         'https://hbimg.huabanimg.com/f4c3995155eb9200a231827a91aec230d31c272842a18-gKy65m_fw658/format/webp'
       ],
+      ruleValidate: {
+        username: [
+          {required: true, trigger: 'blur'}
+        ],
+        password: [
+          {required: true, trigger: 'blur'}
+        ],
+        captcha: [
+          {required: true, max:4, trigger: 'blur'}
+        ],
+      },
       signin: {
         username: '',
         password: '',
@@ -122,49 +133,52 @@ export default {
         o[k] = v.trim();
       });
 
-      if (username && password && captcha.length === 4) {
-        this.spinShow = true;
+      this.$refs['signin'].validate((valid) => {
+        if (valid) {
+          this.spinShow = true;
 
-        http.post(api["account_signin"], {
-          headers: {
-            'content-type': 'application/json'
-          },
-          data: {
-            data: {
-              username,
-              password,
+          http.post(api["account_signin"], {
+            headers: {
+              'content-type': 'application/json'
             },
-            encryptCaptcha: this.captchaUrl.hash,
-            captcha,
-          },
-        }).then((res) => {
-          const d = res.data;
+            data: {
+              data: {
+                username,
+                password,
+              },
+              encryptCaptcha: this.captchaUrl.hash,
+              captcha,
+            },
+          }).then((res) => {
+            const d = res.data;
 
-          if (d.error === 1) {
-            that.$Message.error(this.$t('signin.failed') + ': ' + d.message);
-            that.signin.password = '';
-            that.signin.captcha = '';
-            that.refreshCaptcha();
-          } else {
-            that.signinUser(d.data).then(() => {
-              const rurl = this.$route.query.rurl;
+            if (d.error === 1) {
+              that.$Message.error(this.$t('signin.failed') + ': ' + d.message);
+              that.signin.password = '';
+              that.signin.captcha = '';
+              that.refreshCaptcha();
+            } else {
+              that.signinUser(d.data).then(() => {
+                const rurl = this.$route.query.rurl;
 
-              // redirect rurl or home
-              if (rurl) {
-                this.$router.push(rurl);
-              } else {
-                this.$router.go('-1');
-              }
+                // redirect rurl or home
+                if (rurl) {
+                  this.$router.push(rurl);
+                } else {
+                  this.$router.go('-1');
+                }
 
-              this.$Message.success(this.$t('signin.success'));
-            })
-          }
-        }).finally((res) => {
-          that.spinShow = false;
-        })
-      } else {
-        this.$Message.error(this.$t('signin.fillEverything'));
-      }
+                this.$Message.success(this.$t('signin.success'));
+              })
+            }
+          }).finally((res) => {
+            that.spinShow = false;
+          });
+
+        } else {
+          this.$Message.error(this.$t('signin.fillEverything'));
+        }
+      });
     }
   },
   computed: {
