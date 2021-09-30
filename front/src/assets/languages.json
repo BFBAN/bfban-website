@@ -1,5 +1,6 @@
 {
   "title": "Language List",
+  "default": "zh-CN",
   "child": [
     {
       "name": "zh-CN",

@@ -1,108 +1,108 @@
 <template>
-    <header>
-      <div class="header-container container">
-        <router-link class="mobile-hide" :to="{name: 'home'}">
-          <Badge text="beta" type="normal">
-            <img src="../assets/images/logo.png"
-                 width="40"
-                 height="40"
-                 alt="bfban logo"/>
-          </Badge>
+  <header v-if="!isFull">
+    <div class="header-container container">
+      <router-link class="mobile-hide" :to="{name: 'home'}">
+        <Badge text="beta" type="normal">
+          <img src="../assets/images/logo.png"
+               width="40"
+               height="40"
+               alt="bfban logo"/>
+        </Badge>
+      </router-link>
+      <div class="nav nav-menu">
+        <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>
+        <Drawer class="desktop-hide"
+                :title="$t($route.name + '.title')"
+                placement="left"
+                width="80%"
+                :closable="true"
+                v-model="headerMenu.show">
+          <List>
+            <ListItem @click="headerMenu.show = false;$router.push({name: i.name, query: i.to.query})"
+                      v-for="(i, index) in headerMenu.child" :key="index">
+              <router-link :to="i.to">
+                {{ $t("header." + i.name) }}
+              </router-link>
+            </ListItem>
+          </List>
+        </Drawer>
+
+        <router-link class="mobile-hide link"
+                     :to="i.to"
+                     v-for="(i, index) in headerMenu.child" :key="index">
+          {{ $t("header." + i.name) }}
         </router-link>
-        <div class="nav nav-menu">
-          <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>
-          <Drawer class="desktop-hide"
-                  :title="$t($route.name + '.title')"
-                  placement="left"
-                  width="80%"
-                  :closable="true"
-                  v-model="headerMenu.show">
-            <List>
-              <ListItem @click="headerMenu.show = false;$router.push({name: i.name, query: i.to.query})"
-                        v-for="(i, index) in headerMenu.child" :key="index">
-                <router-link :to="i.to">
-                  {{ $t("header." + i.name) }}
-                </router-link>
-              </ListItem>
-            </List>
-          </Drawer>
-
-          <router-link class="mobile-hide link"
-                       :to="i.to"
-                       v-for="(i, index) in headerMenu.child" :key="index">
-            {{ $t("header." + i.name) }}
-          </router-link>
-        </div>
-        <div class="nav">
-          <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
-            <Button type="primary" shape="circle">
-              <Icon type="md-log-in" />
-              {{$t("header.signin")}}
-            </Button>
-          </router-link>
-
-          <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signin'}">
-            <Icon type="md-log-in" size="30" />
-          </router-link>
-
-          <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signup'}">
-            <Icon type="md-person-add" size="30" />
-          </router-link>
-
-          <Dropdown placement="bottom-end" v-if="isLogin">
-            <Avatar>{{ currentUser.userinfo.username[0] || 'Null' }}</Avatar>
-            <span class="mobile-hide">&emsp;{{ currentUser.userinfo.username }}</span>
-            <DropdownMenu slot="list">
-              <DropdownItem>
-                <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
-                  {{ $t("header.userCenter") }}
-                </router-link>
-              </DropdownItem>
-              <DropdownItem>
-                <router-link class="" :to="{name: 'profile', params: { uId: `${currentUser.userinfo.userId}` }}">
-                  {{ $t("header.profile") }}
-                </router-link>
-              </DropdownItem>
-              <DropdownItem divided v-if="isAdmin">
-                <router-link :to="{name: 'dashboard'}">
-                  {{ $t("header.dashboard") }} [beta]
-                </router-link>
-              </DropdownItem>
-              <Dropdown-item divided v-show="isLogin">
-                <a @click.stop.prevent="signout">
-                  <Icon type="md-log-out"></Icon>
-                  {{ $t("header.signout") }}
-                </a>
-              </Dropdown-item>
-            </DropdownMenu>
-          </Dropdown>
-
-          <Divider type="vertical" v-show="isLogin"/>
-
-          <Tooltip :content="$t('profile.message.title')" placement="bottom-end">
-            <Header_message v-show="isLogin">
-              <Icon slot="content" type="md-notifications" size="30"/>
-            </Header_message>
-          </Tooltip>
-
-          <Divider type="vertical" />
-
-          <Tooltip :content="$t('search.title')" placement="bottom-end">
-            <router-link :to="{name: 'search_main'}">
-              <Icon type="ios-search" size="28"/>
-            </router-link>
-          </Tooltip>
-
-          <Divider type="vertical"/>
-
-          <Tooltip :content="$t('home.howToUse.tools.main')" placement="bottom-end">
-            <router-link :to="{name: 'apps'}">
-              <Icon type="md-apps" size="30"/>
-            </router-link>
-          </Tooltip>
-        </div>
       </div>
-    </header>
+      <div class="nav">
+        <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
+          <Button type="primary" shape="circle">
+            <Icon type="md-log-in"/>
+            {{ $t("header.signin") }}
+          </Button>
+        </router-link>
+
+        <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signin'}">
+          <Icon type="md-log-in" size="30"/>
+        </router-link>
+
+        <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signup'}">
+          <Icon type="md-person-add" size="30"/>
+        </router-link>
+
+        <Dropdown placement="bottom-end" v-if="isLogin">
+          <Avatar>{{ currentUser.userinfo.username[0] || 'Null' }}</Avatar>
+          <span class="mobile-hide">&emsp;{{ currentUser.userinfo.username }}</span>
+          <DropdownMenu slot="list">
+            <DropdownItem>
+              <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
+                {{ $t("header.userCenter") }}
+              </router-link>
+            </DropdownItem>
+            <DropdownItem>
+              <router-link class="" :to="{name: 'profile', params: { uId: `${currentUser.userinfo.userId}` }}">
+                {{ $t("header.profile") }}
+              </router-link>
+            </DropdownItem>
+            <DropdownItem divided v-if="isAdmin">
+              <router-link :to="{name: 'dashboard'}">
+                {{ $t("header.dashboard") }} [beta]
+              </router-link>
+            </DropdownItem>
+            <Dropdown-item divided v-show="isLogin">
+              <a @click.stop.prevent="signout">
+                <Icon type="md-log-out"></Icon>
+                {{ $t("header.signout") }}
+              </a>
+            </Dropdown-item>
+          </DropdownMenu>
+        </Dropdown>
+
+        <Divider type="vertical" v-show="isLogin"/>
+
+        <Tooltip :content="$t('profile.message.title')" placement="bottom-end">
+          <Header_message v-show="isLogin">
+            <Icon slot="content" type="md-notifications" size="30"/>
+          </Header_message>
+        </Tooltip>
+
+        <Divider type="vertical"/>
+
+        <Tooltip :content="$t('search.title')" placement="bottom-end">
+          <router-link :to="{name: 'search_main'}">
+            <Icon type="ios-search" size="28"/>
+          </router-link>
+        </Tooltip>
+
+        <Divider type="vertical"/>
+
+        <Tooltip :content="$t('home.howToUse.tools.main')" placement="bottom-end">
+          <router-link :to="{name: 'apps'}">
+            <Icon type="md-apps" size="30"/>
+          </router-link>
+        </Tooltip>
+      </div>
+    </div>
+  </header>
 </template>
 
 <script>
@@ -161,6 +161,9 @@ export default {
 
       const is = user ? user.userPrivilege !== 'normal' : false;
       return Boolean(is);
+    },
+    isFull() {
+      return Boolean(this.$route.query.full || false);
     },
     currentUser() {
       return this.$store.state.user;

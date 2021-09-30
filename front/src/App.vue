@@ -94,7 +94,6 @@ html, body {
   font-size: .8rem;
   display: flex;
   flex-direction: column;
-  background-color: #f8f9fa !important;
 
   /*background image*/
   background-size: cover;
@@ -134,7 +133,6 @@ html, body {
 p {
   margin: .2rem 0;
 }
-
 
 /*mobile responsive*/
 @media screen and (min-width: 1024px) {

@@ -1,13 +1,16 @@
 <template>
   <div class="container">
     <div class="content">
-      <br>
-      <Breadcrumb>
-        <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-        <BreadcrumbItem :to="{name: 'cheaters'}">{{ $t("list.title") }}</BreadcrumbItem>
-        <BreadcrumbItem>{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
-      </Breadcrumb>
-      <br>
+      <template v-if="!isFull">
+        <br>
+        <Breadcrumb>
+          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem :to="{name: 'cheaters'}">{{ $t("list.title") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
+        </Breadcrumb>
+        <br>
+      </template>
+
       <Card v-if="isCheaterExist" dis-hover>
         <Row :gutter="10">
           <Col :xs="{span: 22}" :lg="{span: 3}">
@@ -24,94 +27,141 @@
             </Tag>
             <Row :gutter="10" type="flex" justify="center" align="middle">
               <Col flex="auto">
-                <h1 style="font-size: 1.6rem;">
-                  {{ cheater.originName || 'user id' }}
+                <a :href="share.webLink" target="_blank">
+                  <h1 style="font-size: 1.6rem;">
+                    {{ cheater.originName || 'user id' }}
 
-                  <!-- 被举报的游戏 -->
-                  <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
-                    <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
-                         v-for="(game,gameindex) in cheater.games.split(',')" :key="gameindex">
-                      {{ $t(`list.filters.game.${game}`, {game: game}) }}
+                    <!-- 被举报的游戏 -->
+                    <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
+                      <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
+                           v-for="(game,gameindex) in cheater.games.split(',')" :key="gameindex">
+                        {{ $t(`list.filters.game.${game}`, {game: game}) }}
+                      </Tag>
+                    </router-link>
+
+                    <Tag v-if="cheater.cheatMethods" color="warning">
+                      {{ convertCheatMethods(cheater.cheatMethods) }}
                     </Tag>
-                  </router-link>
-
-                  <Tag v-if="cheater.cheatMethods" color="warning">
-                    {{ convertCheatMethods(cheater.cheatMethods) }}
-                  </Tag>
-                </h1>
+                  </h1>
+                </a>
               </Col>
-              <Col align="right">
-                <Poptip content="content" placement="right-end" title="">
-                  <Button>
-                    <Icon type="md-qr-scanner" size="20" color="#535353"/>
-                    {{ $t('detail.info.app_qr.title') }}
+              <template v-if="!isFull">
+                <Col align="right">
+                  <Poptip content="content" placement="right-end" title="">
+                    <Button>
+                      <Icon type="md-qr-scanner" size="20" color="#535353"/>
+                      {{ $t('detail.info.app_qr.title') }}
+                    </Button>
+                    <div slot="content" class="mobile-hide">
+                      <vue-qr :text="'{id: '+ $route.params.ouid + '}'" :size="200"></vue-qr>
+
+                      <div class="qrcode" ref="qrCodeUrl"></div>
+
+                      {{ $t('detail.info.app_qr.tip') }} 🦖
+                    </div>
+                    <div slot="content" class="desktop-hide" align="center">
+                      <Button>{{ $t('detail.info.app_qr.openApp') }}</Button>
+                      <p>{{ $t('detail.info.app_qr.openAppDescribe') }} 🦖</p>
+                    </div>
+                  </Poptip>
+                  <Divider type="vertical"/>
+                  <Button type="primary" @click="share.show = true">
+                    <Icon type="md-share" />
                   </Button>
+                  <Drawer placement="bottom" :closable="true" height="90%" v-model="share.show" @on-visible-change="onGenerateSharePicture">
+                    <Form label-position="top" :model="share" class="container">
+                      <FormItem label="web link">
+                        <Input v-model="share.webLink" />
+                      </FormItem>
+                      <Divider />
+                      <FormItem label="iframe code">
+                        <Input v-model="share.iframeLink"/>
+                      </FormItem>
+                      <Row :gutter="30">
+                        <Col>
+                          <FormItem label="">
+                            <RadioGroup v-model="share.theme" type="button" @on-change="upDataShare">
+                              <Radio :label="i.name" v-for="(i, index) in share.themeChild" :key="index">{{i.name}}</Radio>
+                            </RadioGroup>
+                          </FormItem>
+                        </Col>
+                        <Col>
+                          <FormItem label="">
+                            <RadioGroup v-model="share.languages" type="button" @on-change="upDataShare">
+                              <Radio :label="i.name" v-for="(i, index) in share.languagesChild" :key="index">{{i.label}}</Radio>
+                            </RadioGroup>
+                          </FormItem>
+                        </Col>
+                      </Row>
 
-                  <div slot="content" class="mobile-hide">
-                    <vue-qr :text="'{id: '+ $route.params.ouid + '}'" :size="200"></vue-qr>
 
-                    <div class="qrcode" ref="qrCodeUrl"></div>
 
-                    {{ $t('detail.info.app_qr.tip') }} 🦖
-                  </div>
-                  <div slot="content" class="desktop-hide" align="center">
-                    <Button>{{ $t('detail.info.app_qr.openApp') }}</Button>
-                    <p>{{ $t('detail.info.app_qr.openAppDescribe') }} 🦖</p>
-                  </div>
-                </Poptip>
+                      <FormItem label="iframe code demo">
+                        <div v-html="share.iframeLink" style="height: 240px; width: 1000px" id="getSharePicture"></div>
+                        <Spin size="large" fix v-if="share.load"></Spin>
+                      </FormItem>
+                      <Divider />
+                      <FormItem label="image card">
+                        <div id="setSharePicture"></div>
+                      </FormItem>
+                    </Form>
+                  </Drawer>
+                  <Divider type="vertical"/>
 
-                <Divider type="vertical"/>
-
-                <ButtonGroup type="button">
-                  <Button type="primary">
-                    跟踪此玩家
-                  </Button>
-                  <Button type="primary">
-                    <Icon type="md-arrow-dropdown"/>
-                  </Button>
-                </ButtonGroup>
-              </Col>
+                  <ButtonGroup type="button">
+                    <Button type="primary">
+                      跟踪此玩家
+                    </Button>
+                    <Button type="primary">
+                      <Icon type="md-arrow-dropdown"/>
+                    </Button>
+                  </ButtonGroup>
+                </Col>
+              </template>
             </Row>
             <Row>
               <Col>
                 <span>id:  {{ cheater.originUserId || 'id' }}</span>
-                <Divider type="vertical"/>
-                <Dropdown>
-                  <a href="javascript:void(0)">
-                    {{ $t('detail.info.historyID', {msg: 'historyID'}) }}
-                    <Icon type="ios-arrow-down"></Icon>
-                  </a>
-                  <DropdownMenu slot="list" v-if="cheater && cheater.history && cheater.history.length >= 0">
-                    <!-- 历史ID -->
-                    <DropdownItem v-for="origin in cheater.history" :key="origin.originName">
-                      <Time :time="origin.fromTime" v-if="origin.fromTime"></Time>
-                      <Divider type="vertical"/>
-                      {{ origin.originName }}
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-                <Divider type="vertical"/>
-                <Poptip
-                    @on-ok="updateCheaterInfo">
-                  <div style="margin-top: .4rem;" slot="content">
-                    <p class="hint">
-                      <!-- 描述说明 -->
-                      {{ $t('detail.info.discription1', {msg: 'discription1'}) }}
-                      <Button @click.prevent="updateCheaterInfo">
-                        <span>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</span>
-                      </Button>
-                      ，
-                      <span>{{ $t('detail.info.discription2', {msg: 'discription2'}) }}</span>
-                    </p>
-                    <p class="hint">
-                      {{ $t('detail.info.discription3', {msg: 'discription3'}) }}
-                    </p>
-                    <p class="hint">
-                      {{ $t('detail.info.discription4', {msg: 'discription4'}) }}
-                    </p>
-                  </div>
-                  <a>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</a>
-                </Poptip>
+
+                <template v-if="!isFull">
+                  <Divider type="vertical"/>
+                  <Dropdown>
+                    <a href="javascript:void(0)">
+                      {{ $t('detail.info.historyID', {msg: 'historyID'}) }}
+                      <Icon type="ios-arrow-down"></Icon>
+                    </a>
+                    <DropdownMenu slot="list" v-if="cheater && cheater.history && cheater.history.length >= 0">
+                      <!-- 历史ID -->
+                      <DropdownItem v-for="origin in cheater.history" :key="origin.originName">
+                        <Time :time="origin.fromTime" v-if="origin.fromTime"></Time>
+                        <Divider type="vertical"/>
+                        {{ origin.originName }}
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                  <Divider type="vertical"/>
+                  <Poptip
+                      @on-ok="updateCheaterInfo">
+                    <div style="margin-top: .4rem;" slot="content">
+                      <p class="hint">
+                        <!-- 描述说明 -->
+                        {{ $t('detail.info.discription1', {msg: 'discription1'}) }}
+                        <Button @click.prevent="updateCheaterInfo">
+                          <span>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</span>
+                        </Button>
+                        ，
+                        <span>{{ $t('detail.info.discription2', {msg: 'discription2'}) }}</span>
+                      </p>
+                      <p class="hint">
+                        {{ $t('detail.info.discription3', {msg: 'discription3'}) }}
+                      </p>
+                      <p class="hint">
+                        {{ $t('detail.info.discription4', {msg: 'discription4'}) }}
+                      </p>
+                    </div>
+                    <a>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</a>
+                  </Poptip>
+                </template>
               </Col>
             </Row>
             <br>
@@ -153,520 +203,587 @@
           </Col>
         </Row>
       </Card>
-      <br>
-      <Card dis-hover>
-        <Tabs type="card">
-          <TabPane :label="$t('detail.info.gameScores', { msg: 'gameScores' })">
-            <!-- 战绩链接 -->
-            <div v-show="cheater.originUserId">
-              <p v-for="g in games" :key="g.game">
-                <Tag>
-                  {{ g.game }}
-                </Tag>
-                <a v-show="`${g.game}` === 'bf1'" target="_blank"
-                   :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originUserId}`">
-                  battlefieldtracker
-                </a>
-                <Divider type="vertical" v-show="`${g.game}` === 'bf1'"/>
-                <a v-show="`${g.game}` === 'bf1'" target="_blank"
-                   :href="`http://bf1stats.com/pc/${cheater.originUserId}`">
-                  bf1stats
-                </a>
-                <Divider type="vertical" v-show="`${g.game}` === 'bfv'"/>
-                <a v-show="`${g.game}` === 'bfv'" target="_blank"
-                   :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originUserId}`">
-                  battlefieldtracker
-                </a>
-                <Divider type="vertical"/>
-                <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originUserId}`">
-                  247fairplay
-                </a>
-              </p>
 
-              <div>
-                <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
-                <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot"
-                   target="_blank">bf1tracker武器截图</a>
-                <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
+      <template v-if="!isFull">
+        <br>
+        <Card dis-hover>
+          <Tabs type="card">
+            <TabPane :label="$t('detail.info.gameScores', { msg: 'gameScores' })">
+              <!-- 战绩链接 -->
+              <div v-show="cheater.originUserId">
+                <p v-for="g in games" :key="g.game">
+                  <Tag>
+                    {{ g.game }}
+                  </Tag>
+                  <a v-show="`${g.game}` === 'bf1'" target="_blank"
+                     :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originUserId}`">
+                    battlefieldtracker
+                  </a>
+                  <Divider type="vertical" v-show="`${g.game}` === 'bf1'"/>
+                  <a v-show="`${g.game}` === 'bf1'" target="_blank"
+                     :href="`http://bf1stats.com/pc/${cheater.originUserId}`">
+                    bf1stats
+                  </a>
+                  <Divider type="vertical" v-show="`${g.game}` === 'bfv'"/>
+                  <a v-show="`${g.game}` === 'bfv'" target="_blank"
+                     :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originUserId}`">
+                    battlefieldtracker
+                  </a>
+                  <Divider type="vertical"/>
+                  <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originUserId}`">
+                    247fairplay
+                  </a>
+                </p>
+
+                <div>
+                  <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
+                  <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot"
+                     target="_blank">bf1tracker武器截图</a>
+                  <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
+                </div>
               </div>
-            </div>
-          </TabPane>
-        </Tabs>
-      </Card>
-      <br>
-      <Card style="overflow: hidden" dis-hover>
-        <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
-          <Col :xs="{span: 23, push: 1}" :lg="{span: 8, push: 0}">
-            {{ $t('detail.info.assistPppeal') }}
-          </Col>
-          <Col flex="auto">
-            {{ $t('detail.info.timeLine', {msg: 'timeLine'}) }}
-          </Col>
-          <Col>
-            <ButtonGroup type="button">
-              <Select v-model="timeline.seeType" size="small">
-                <Option v-for="(item, index) in timeline.seeTypeList" :value="item.value" :key="index">{{
-                    item.label
-                  }}
-                </Option>
-              </Select>
-            </ButtonGroup>
-            <Divider type="vertical"/>
-            <RadioGroup v-model="timeline.sort" @on-change="onTimeLineSort" type="button" size="small">
-              <Radio label="1">
-                <Icon type="ios-funnel"/>
-              </Radio>
-              <Radio label="2">
-                <Icon type="ios-funnel-outline"/>
-              </Radio>
-            </RadioGroup>
-            <Divider type="vertical"/>
-            <Button size="small" type="dashed" @click="getTimeline">
-              <Icon type="md-refresh"/>
-            </Button>
-          </Col>
-        </Row>
-        <Row :gutter="20" type="flex">
-          <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 18, push: 1}" order="2" class="tabs-style">
-            <div class="content">
-              <!-- 时间线 -->
-              <TimelineItem
-                  :id="`floor-${l.index}`"
-                  pending
-                  class="timeline-time-line"
-                  v-show="isSeeType(index)"
-                  :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l, index) in timelineList"
-                  :key="index">
-                <div v-if="l.type === 'report'" slot="dot" class="timeline-time-dot ivu-tag-warning hand">
-                  <Icon type="ios-hand" size="20"></Icon>
-                </div>
-                <div v-else-if="l.type === 'reply'" slot="dot" class="timeline-time-dot ivu-tag-geekblue reply">
-                  <Icon type="ios-text" size="20" class="ivu-tag-text"></Icon>
-                </div>
-                <div v-else-if="l.type === 'ban_appeal'" slot="dot"
-                     class="timeline-time-dot ivu-tag-magenta ban_appeal">
-                  <Icon type="md-bookmark" size="20" class="ivu-tag-text"></Icon>
-                </div>
-                <div v-else-if="l.type === 'judgement'" slot="dot" class="timeline-time-dot ivu-tag-primary ban_appeal">
-                  <Icon type="ios-medical" size="20" class=""></Icon>
-                </div>
-                <div v-else-if="l.type === 'verify'" slot="dot" class="timeline-time-dot trophy">
-                  <Icon type="ios-share-alt" size="20"></Icon>
-                </div>
-                <div v-else slot="dot" class="timeline-time-dot ivu-tag-border ivu-tag-text out">
-                  <Icon type="ios" size="20" class=""></Icon>
-                </div>
-
-                <!-- 举报 S -->
-                <div v-if="l.type === 'report'" class="timeline-content">
-                  <div class="timeline-time">
-                    <Row>
-                      <Col flex="1">
-                        <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
-                          <BusinessCard :id="l.byUserId">
-                            <u><b>{{ l.username }}</b></u>
-                          </BusinessCard>
-                        </router-link>
-                        <!-- 举报 -->
-                        {{ $t('detail.info.report', {msg: 'report'}) }}
-                        <a><u><b>{{ l.toOriginName }}</b></u></a>
-                        <!-- 在 -->
-                        {{ $t('detail.info.inGame', {msg: 'inGame'}) }}
-                        <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
-                          {{ l.game }}
-                        </router-link>
-                        <!-- 游戏中 -->
-                        {{ $t('detail.info.gaming', {msg: 'gaming'}) }}
-
-                        <Tag type="border" color="orange"
-                             v-for="(methods, methodsIndex) in convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale).split(' ')"
-                             :key="methodsIndex">
-                          {{ methods }}
-                        </Tag>
-                      </Col>
-                      <Col align="right">
-                        <Time :time="l.createTime" v-if="l.createTime"></Time>
-                      </Col>
-                    </Row>
+            </TabPane>
+          </Tabs>
+        </Card>
+        <br>
+        <Card style="overflow: hidden" dis-hover>
+          <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
+            <Col :xs="{span: 23, push: 1}" :lg="{span: 8, push: 0}">
+              {{ $t('detail.info.assistPppeal') }}
+            </Col>
+            <Col flex="auto">
+              {{ $t('detail.info.timeLine', {msg: 'timeLine'}) }}
+            </Col>
+            <Col>
+              <ButtonGroup type="button">
+                <Select v-model="timeline.seeType" size="small">
+                  <Option v-for="(item, index) in timeline.seeTypeList" :value="item.value" :key="index">{{
+                      item.label
+                    }}
+                  </Option>
+                </Select>
+              </ButtonGroup>
+              <Divider type="vertical"/>
+              <RadioGroup v-model="timeline.sort" @on-change="onTimeLineSort" type="button" size="small">
+                <Radio label="1">
+                  <Icon type="ios-funnel"/>
+                </Radio>
+                <Radio label="2">
+                  <Icon type="ios-funnel-outline"/>
+                </Radio>
+              </RadioGroup>
+              <Divider type="vertical"/>
+              <Button size="small" type="dashed" @click="getTimeline">
+                <Icon type="md-refresh"/>
+              </Button>
+            </Col>
+          </Row>
+          <Row :gutter="20" type="flex">
+            <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 18, push: 1}" order="2" class="tabs-style">
+              <div class="content">
+                <!-- 时间线 -->
+                <TimelineItem
+                    :id="`floor-${l.index}`"
+                    pending
+                    class="timeline-time-line"
+                    v-show="isSeeType(index)"
+                    :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l, index) in timelineList"
+                    :key="index">
+                  <div v-if="l.type === 'report'" slot="dot" class="timeline-time-dot ivu-tag-warning hand">
+                    <Icon type="ios-hand" size="20"></Icon>
+                  </div>
+                  <div v-else-if="l.type === 'reply'" slot="dot" class="timeline-time-dot ivu-tag-geekblue reply">
+                    <Icon type="ios-text" size="20" class="ivu-tag-text"></Icon>
+                  </div>
+                  <div v-else-if="l.type === 'ban_appeal'" slot="dot"
+                       class="timeline-time-dot ivu-tag-magenta ban_appeal">
+                    <Icon type="md-bookmark" size="20" class="ivu-tag-text"></Icon>
+                  </div>
+                  <div v-else-if="l.type === 'judgement'" slot="dot" class="timeline-time-dot ivu-tag-primary ban_appeal">
+                    <Icon type="ios-medical" size="20" class=""></Icon>
+                  </div>
+                  <div v-else-if="l.type === 'verify'" slot="dot" class="timeline-time-dot trophy">
+                    <Icon type="ios-share-alt" size="20"></Icon>
+                  </div>
+                  <div v-else slot="dot" class="timeline-time-dot ivu-tag-border ivu-tag-text out">
+                    <Icon type="ios" size="20" class=""></Icon>
                   </div>
 
-                  <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
-                    <p v-if="l.videoLink">
-                      <!-- 游戏中 -->
-                      <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
-                            :href="link" target="_blank">
+                  <!-- 举报 S -->
+                  <div v-if="l.type === 'report'" class="timeline-content">
+                    <div class="timeline-time">
+                      <Row>
+                        <Col flex="1">
+                          <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                            <BusinessCard :id="l.byUserId">
+                              <u><b>{{ l.username }}</b></u>
+                            </BusinessCard>
+                          </router-link>
+                          <!-- 举报 -->
+                          {{ $t('detail.info.report', {msg: 'report'}) }}
+                          <a><u><b>{{ l.toOriginName }}</b></u></a>
+                          <!-- 在 -->
+                          {{ $t('detail.info.inGame', {msg: 'inGame'}) }}
+                          <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
+                            {{ l.game }}
+                          </router-link>
+                          <!-- 游戏中 -->
+                          {{ $t('detail.info.gaming', {msg: 'gaming'}) }}
+
+                          <Tag type="border" color="orange"
+                               v-for="(methods, methodsIndex) in convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale).split(' ')"
+                               :key="methodsIndex">
+                            {{ methods }}
+                          </Tag>
+                        </Col>
+                        <Col align="right">
+                          <Time :time="l.createTime" v-if="l.createTime"></Time>
+                        </Col>
+                      </Row>
+                    </div>
+
+                    <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                      <p v-if="l.videoLink">
+                        <!-- 游戏中 -->
+                        <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
+                              :href="link" target="_blank">
                         <Tag size="default" color="geekblue">{{
                             $t('detail.info.videoLink', {msg: 'videoLink'})
                           }}</Tag>
                         <a :href="link" target="_blank">{{ link }}</a>
                         <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
                       </span>
+                      </p>
+                      <br>
+                      <div v-if="l.description" v-html="l.description"></div>
+                    </div>
+
+                    <p v-if="isLogin">
+                      <!-- 回复 -->
+                      <Button type="dashed"
+                              @click="handleReply(l.floor || index, l.byUserId)">
+                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                      </Button>
                     </p>
-                    <br>
-                    <div v-if="l.description" v-html="l.description"></div>
                   </div>
+                  <!-- 举报 E -->
 
-                  <p v-if="isLogin">
-                    <!-- 回复 -->
-                    <Button type="dashed"
-                            @click="handleReply(l.floor || index, l.byUserId)">
-                      {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                    </Button>
-                  </p>
-                </div>
-                <!-- 举报 E -->
+                  <!-- 上诉 S -->
+                  <div v-if="l.type === 'ban_appeal'" class="timeline-content">
+                    <div class="timeline-time">
+                      <Row>
+                        <Col flex="auto">
 
-                <!-- 上诉 S -->
-                <div v-if="l.type === 'ban_appeal'" class="timeline-content">
-                  <div class="timeline-time">
-                    <Row>
-                      <Col flex="auto">
-
-                        <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
-                          <BusinessCard :id="l.byUserId">
-                            <u><b>{{ l.username }}</b></u>
-                          </BusinessCard>
-                        </router-link>
-
-                        <teleport v-if="!isSelf(l.originUserId)">
-                          {{ $t('detail.info.assistPppeal', {msg: 'assistPppeal'}) }}
-                        </teleport>
-                        <teleport v-else>{{ $t('detail.info.appeal', {msg: 'appeal'}) }}</teleport>
-
-                        <BusinessCard :id="l.originUserId">
-                          <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
-                            <u>{{ l.cheaterGameName }}</u>
+                          <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                            <BusinessCard :id="l.byUserId">
+                              <u><b>{{ l.username }}</b></u>
+                            </BusinessCard>
                           </router-link>
-                        </BusinessCard>
 
-                        <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
-                          {{ l.game }}
-                        </router-link>
-                      </Col>
+                          <teleport v-if="!isSelf(l.originUserId)">
+                            {{ $t('detail.info.assistPppeal', {msg: 'assistPppeal'}) }}
+                          </teleport>
+                          <teleport v-else>{{ $t('detail.info.appeal', {msg: 'appeal'}) }}</teleport>
 
-                      <Col>
-                        <Time :time="l.createTime" v-if="l.createTime"></Time>
-                        <Divider type="vertical"/>
-                        {{ l.status }}
-                      </Col>
-                    </Row>
-                  </div>
-
-                  <div v-if="l.content" v-html="l.content"
-                       class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
-
-                  <p v-if="isLogin">
-                    <!-- 回复 -->
-                    <Button type="dashed"
-                            @click="handleReply(l.floor || index, l.byUserId)">
-                      {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                    </Button>
-                    <Divider type="vertical"/>
-                    <!-- 申诉操作 -->
-                    <Dropdown trigger="click" v-if="isAdmin" @on-click="handAdminAppeal">
-                      <a href="javascript:void(0)">
-                        <Button type="dashed">
-                          申诉操作
-                          <Icon type="ios-arrow-down"></Icon>
-                        </Button>
-                      </a>
-                      <DropdownMenu slot="list">
-                        <DropdownItem :name="`${l.id},0`">打开</DropdownItem>
-                        <DropdownItem :name="`${l.id},1`">关闭</DropdownItem>
-                        <DropdownItem :name="`${l.id},2`">锁定</DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  </p>
-                </div>
-                <!-- 上诉 E -->
-
-                <!-- 认为 S -->
-                <div v-if="l.type === 'verify' || l.type === 'judgement'" class="timeline-content bookmark"
-                     :id="`user-verify-cheater-${l.id}`">
-                  <div class="timeline-time">
-                    <Row>
-                      <Col flex="1">
-                        <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
-                          <BusinessCard :id="l.byUserId">
-                            <u><b>{{ l.username }}</b></u>
+                          <BusinessCard :id="l.originUserId">
+                            <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
+                              <u>{{ l.cheaterGameName }}</u>
+                            </router-link>
                           </BusinessCard>
-                        </router-link>
 
-                        {{ $t('detail.info.judge', {msg: 'judge'}) }}
+                          <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
+                            {{ l.game }}
+                          </router-link>
+                        </Col>
 
-                        <Tag color="warning">
-                          {{ getCheaterStatusLabel(l.action) }}
-                        </Tag>
+                        <Col>
+                          <Time :time="l.createTime" v-if="l.createTime"></Time>
+                          <Divider type="vertical"/>
+                          {{ l.status }}
+                        </Col>
+                      </Row>
+                    </div>
 
-                        <span v-if="l.cheatMethods">
+                    <div v-if="l.content" v-html="l.content"
+                         class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
+
+                    <p v-if="isLogin">
+                      <!-- 回复 -->
+                      <Button type="dashed"
+                              @click="handleReply(l.floor || index, l.byUserId)">
+                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                      </Button>
+                      <Divider type="vertical"/>
+                      <!-- 申诉操作 -->
+                      <Dropdown trigger="click" v-if="isAdmin" @on-click="handAdminAppeal">
+                        <a href="javascript:void(0)">
+                          <Button type="dashed">
+                            申诉操作
+                            <Icon type="ios-arrow-down"></Icon>
+                          </Button>
+                        </a>
+                        <DropdownMenu slot="list">
+                          <DropdownItem :name="`${l.id},0`">打开</DropdownItem>
+                          <DropdownItem :name="`${l.id},1`">关闭</DropdownItem>
+                          <DropdownItem :name="`${l.id},2`">锁定</DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </p>
+                  </div>
+                  <!-- 上诉 E -->
+
+                  <!-- 认为 S -->
+                  <div v-if="l.type === 'verify' || l.type === 'judgement'" class="timeline-content bookmark"
+                       :id="`user-verify-cheater-${l.id}`">
+                    <div class="timeline-time">
+                      <Row>
+                        <Col flex="1">
+                          <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                            <BusinessCard :id="l.byUserId">
+                              <u><b>{{ l.username }}</b></u>
+                            </BusinessCard>
+                          </router-link>
+
+                          {{ $t('detail.info.judge', {msg: 'judge'}) }}
+
+                          <Tag color="warning">
+                            {{ getCheaterStatusLabel(l.action) }}
+                          </Tag>
+
+                          <span v-if="l.cheatMethods">
                               ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
                               <b>{{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}</b>
                             </span>
-                      </Col>
-                      <Col align="right">
-                        <Time v-if="l.createTime" :time="l.createTime"></Time>
-                      </Col>
-                    </Row>
-                  </div>
+                        </Col>
+                        <Col align="right">
+                          <Time v-if="l.createTime" :time="l.createTime"></Time>
+                        </Col>
+                      </Row>
+                    </div>
 
-                  <div v-html="l.content" v-if="l.content"
-                       class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
+                    <div v-html="l.content" v-if="l.content"
+                         class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
 
-                  <p v-if="isLogin">
-                    <!-- 回复 -->
-                    <Button type="dashed"
-                            @click="handleReply(l.floor || index, l.byUserId)">
-                      {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                    </Button>
-                  </p>
-                </div>
-                <!-- 认为 E -->
-
-                <!-- 确认:Admin S -->
-                <div v-if="l.type === 'confirm'" class="timeline-content">
-                  <div class="timeline-time">
-                    <Time v-if="l.createTime" :time="l.createTime"></Time>
-
-                    <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
-                      <BusinessCard :id="l.byUserId">
-                        <u><b>{{ l.username }}</b></u>
-                      </BusinessCard>
-                    </router-link>
-
-                    <!-- 赞同此决议 S -->
-                    {{ $t('detail.info.agreeWith', {msg: 'agreeWith'}) }}
-                    <a @click.stop.prevent="jumpToBookmark"
-                       :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
-                      # {{ $t('detail.info.thisChoice', {msg: 'thisChoice'}) }}
-                    </a>
-                    <!-- 赞同此决议 E -->
-
-                    <!-- 作弊方式 S -->
-                    ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
-                    <b>{{ convertCheatMethods(l.cheatMethods || '') }}</b>
-                    <!-- 作弊方式 E -->
-                  </div>
-
-                  <p v-if="isLogin">
-                    <!-- 回复 -->
-                    <Button type="dashed"
-                            @click="handleReply(l.floor || index, l.byUserId)">
-                      {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                    </Button>
-                  </p>
-                </div>
-                <!-- 确认:Admin E -->
-
-                <!-- 回复:any S -->
-                <div v-if="l.type === 'reply'" class="timeline-content">
-                  <div class="timeline-time">
-                    <Row>
-                      <Col flex="1">
-                        <router-link v-if="l.username" :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
-                          <BusinessCard :id="l.byUserId">
-                            <u><b>{{ l.username }}</b></u>
-                          </BusinessCard>
-                        </router-link>
+                    <p v-if="isLogin">
+                      <!-- 回复 -->
+                      <Button type="dashed"
+                              @click="handleReply(l.floor || index, l.byUserId)">
                         {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                        <span v-if="l.toFloor">
+                      </Button>
+                    </p>
+                  </div>
+                  <!-- 认为 E -->
+
+                  <!-- 确认:Admin S -->
+                  <div v-if="l.type === 'confirm'" class="timeline-content">
+                    <div class="timeline-time">
+                      <Time v-if="l.createTime" :time="l.createTime"></Time>
+
+                      <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                        <BusinessCard :id="l.byUserId">
+                          <u><b>{{ l.username }}</b></u>
+                        </BusinessCard>
+                      </router-link>
+
+                      <!-- 赞同此决议 S -->
+                      {{ $t('detail.info.agreeWith', {msg: 'agreeWith'}) }}
+                      <a @click.stop.prevent="jumpToBookmark"
+                         :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
+                        # {{ $t('detail.info.thisChoice', {msg: 'thisChoice'}) }}
+                      </a>
+                      <!-- 赞同此决议 E -->
+
+                      <!-- 作弊方式 S -->
+                      ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
+                      <b>{{ convertCheatMethods(l.cheatMethods || '') }}</b>
+                      <!-- 作弊方式 E -->
+                    </div>
+
+                    <p v-if="isLogin">
+                      <!-- 回复 -->
+                      <Button type="dashed"
+                              @click="handleReply(l.floor || index, l.byUserId)">
+                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                      </Button>
+                    </p>
+                  </div>
+                  <!-- 确认:Admin E -->
+
+                  <!-- 回复:any S -->
+                  <div v-if="l.type === 'reply'" class="timeline-content">
+                    <div class="timeline-time">
+                      <Row>
+                        <Col flex="1">
+                          <router-link v-if="l.username" :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                            <BusinessCard :id="l.byUserId">
+                              <u><b>{{ l.username }}</b></u>
+                            </BusinessCard>
+                          </router-link>
+                          {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                          <span v-if="l.toFloor">
                           <a :href="`#floor-${l.toFloor}`">#{{ l.toFloor }}<Icon type="ios-undo"/></a>
                         </span>
-                      </Col>
-                      <Col align="right">
-                        <Time v-if="l.createTime" :time="l.createTime"></Time>
-                      </Col>
-                    </Row>
+                        </Col>
+                        <Col align="right">
+                          <Time v-if="l.createTime" :time="l.createTime"></Time>
+                        </Col>
+                      </Row>
+                    </div>
+
+                    <div v-html="l.content" v-if="l.content"
+                         class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
+
+                    <p v-if="isLogin">
+                      <!-- 回复 -->
+                      <Button type="dashed"
+                              @click="handleReply(l.floor || index, l.byUserId)">
+                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                      </Button>
+                    </p>
                   </div>
+                  <!-- 回复:any E -->
 
-                  <div v-html="l.content" v-if="l.content"
-                       class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
+                  <Row class="timeline-content">
+                    <Col flex="auto">
+                    </Col>
+                    <Col align="right">
+                      # {{ l.index }}
+                    </Col>
+                  </Row>
 
-                  <p v-if="isLogin">
-                    <!-- 回复 -->
-                    <Button type="dashed"
-                            @click="handleReply(l.floor || index, l.byUserId)">
-                      {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                    </Button>
-                  </p>
+                  <Divider v-if="index < timelineList.length - 1"></Divider>
+                </TimelineItem>
+                <!--              <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
+                <br>
+              </div>
+
+              <!-- 用户回复 S -->
+              <div id="reply" v-if="isLogin" class="ivu-card ivu-card-bordered">
+                <div class="ivu-card-head">
+                  <Alert type="warning" show-icon>
+                    <span>{{ $t('detail.info.replyManual1', {msg: 'replyManual1'}) }}</span>
+                    <b><a href="https://sm.ms/"
+                          target="_blank"><span>{{
+                        $t('detail.info.uploadPicButton', {msg: 'uploadPicButton'})
+                      }}</span></a></b>，
+                    <span>{{ $t('detail.info.replyManual2', {msg: 'replyManual2'}) }}</span>
+                  </Alert>
+
+                  <Form label-position="top">
+                    <FormItem>
+                      <Input @on-keydown="handleCmdEnter($event, 'reply')"
+                             v-model="reply.content"
+                             type="textarea"
+                             :autosize="{minRows: 5}"
+                             :placeholder="$t('detail.info.giveOpinion')"/>
+                    </FormItem>
+                    <FormItem :label="$t('signup.form.captcha')">
+                      <Row>
+                        <Col>
+                          <Input type="text" v-model="reply.captcha" size="large" maxlength="4"
+                                 :placeholder="$t('signup.form.captcha')">
+                          </Input>
+                        </Col>
+                        <Col>
+                          <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                            <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>
+                          </div>
+                        </Col>
+                      </Row>
+                    </FormItem>
+                  </Form>
                 </div>
-                <!-- 回复:any E -->
-
-                <Row class="timeline-content">
-                  <Col flex="auto">
-                  </Col>
-                  <Col align="right">
-                    # {{ l.index }}
-                  </Col>
-                </Row>
-
-                <Divider v-if="index < timelineList.length - 1"></Divider>
-              </TimelineItem>
-              <!--              <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
-              <br>
-            </div>
-
-            <!-- 用户回复 S -->
-            <div id="reply" v-if="isLogin" class="ivu-card ivu-card-bordered">
-              <div class="ivu-card-head">
-                <Alert type="warning" show-icon>
-                  <span>{{ $t('detail.info.replyManual1', {msg: 'replyManual1'}) }}</span>
-                  <b><a href="https://sm.ms/"
-                        target="_blank"><span>{{
-                      $t('detail.info.uploadPicButton', {msg: 'uploadPicButton'})
-                    }}</span></a></b>，
-                  <span>{{ $t('detail.info.replyManual2', {msg: 'replyManual2'}) }}</span>
-                </Alert>
-
-                <Form label-position="top">
-                  <FormItem>
-                    <Input @on-keydown="handleCmdEnter($event, 'reply')"
-                           v-model="reply.content"
-                           type="textarea"
-                           :autosize="{minRows: 5}"
-                           :placeholder="$t('detail.info.giveOpinion')"/>
-                  </FormItem>
-                  <FormItem :label="$t('signup.form.captcha')">
-                    <Row>
-                      <Col>
-                        <Input type="text" v-model="reply.captcha" size="large" maxlength="4"
-                               :placeholder="$t('signup.form.captcha')">
-                        </Input>
-                      </Col>
-                      <Col>
-                        <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                          <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>
-                        </div>
-                      </Col>
-                    </Row>
-                  </FormItem>
-                </Form>
+                <div class="ivu-card-body">
+                  <Row>
+                    <Col flex="1 150px">
+                      如有误联BAN，请在举报页面上点[上诉] 或 邮件至ban-appeals@bfban.com管理员处理。
+                    </Col>
+                    <Col flex="150px">
+                      <Button type="primary" size="large" long :loading="replySpinShow" :disabled="!reply.content"
+                              @click.stop.prevent="doReply">
+                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
               </div>
-              <div class="ivu-card-body">
-                <Row>
-                  <Col flex="1 150px">
-                    如有误联BAN，请在举报页面上点[上诉] 或 邮件至ban-appeals@bfban.com管理员处理。
-                  </Col>
-                  <Col flex="150px">
-                    <Button type="primary" size="large" long :loading="replySpinShow" :disabled="!reply.content"
-                            @click.stop.prevent="doReply">
-                      {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                    </Button>
-                  </Col>
-                </Row>
-              </div>
-            </div>
-            <Alert type="warning" show-icon v-else>
-              <template slot="desc">
-                {{ $t('detail.info.replyManual3', {msg: 'replyManual3'}) }}
-              </template>
+              <Alert type="warning" show-icon v-else>
+                <template slot="desc">
+                  {{ $t('detail.info.replyManual3', {msg: 'replyManual3'}) }}
+                </template>
+              </Alert>
+              <!-- 用户回复 E -->
+            </Col>
+            <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1" class="mobile-hide">
+              <Affix :offset-top="10">
+                <Button type="primary"
+                        @click="appeal.show = true"
+                        :disabled="!isLogin">
+                  {{ $t('detail.info.appeal') }}
+                </Button>
+                <p><br>{{ $t('detail.appeal.describe') }}</p>
+                <Divider/>
+              </Affix>
+            </Col>
+          </Row>
+
+          <div v-if="cheater.status === '1'">
+            <Divider/>
+          </div>
+
+          <br>
+          <Spin size="large" fix v-show="spinShow">
+            <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+            <p>ヾ(◍°∇°◍)ﾉﾞ load...</p>
+          </Spin>
+        </Card>
+        <br v-if="isAdmin">
+        <Card dis-hover v-if="isAdmin">
+          <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})">
+            <h2 style="margin: 1rem 0;"># {{ $t('detail.info.judgement', {msg: 'judgement'}) }}</h2>
+
+            <!-- 管理员面板 S -->
+            <Alert type="warning" show-icon>
+              <p class="hint">{{ $t('detail.info.adminManual1', {msg: 'adminManual1'}) }}</p>
+              <p class="hint">{{ $t('detail.info.adminManual2', {msg: 'adminManual2'}) }}</p>
             </Alert>
-            <!-- 用户回复 E -->
-          </Col>
-          <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1" class="mobile-hide">
-            <Affix :offset-top="10">
-              <Button type="primary"
-                      @click="appeal.show = true"
-                      :disabled="!isLogin">
-                {{ $t('detail.info.appeal') }}
-              </Button>
-              <p><br>{{ $t('detail.appeal.describe') }}</p>
-              <Divider/>
-            </Affix>
-          </Col>
-        </Row>
 
-        <div v-if="cheater.status === '1'">
-          <Divider/>
-        </div>
+            <Form ref='verifyForm' label-position="top">
+              <Row :gutter="30">
+                <Col span="12">
+                  <FormItem label="Opinion">
+                    <Select v-model="verify.status">
+                      <!-- 判断选项 -->
+                      <Option :value="v_i.value" v-for="v_i in verify.choice" :key="v_i.value">
+                        {{ $t(`basic.status[${v_i.value}]`) }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+                <Col span="12">
+                  <FormItem v-show="verify.status == '1'" label="CheatMethod">
+                    <Select v-model="verify.checkbox" multiple>
+                      <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value"
+                              :label="$t(`cheatMethods.${method.value}.title`)">
+                        {{ $t(`cheatMethods.${method.value}.title`) }}
+                        <Divider type="vertical"/>
+                        {{ $t(`cheatMethods.${method.value}.describe`) }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+                <Col span="24">
+                  <Row :gutter="30" style="padding: 0 20px">
+                    <Col flex="1">
+                      <h3>
+                        <Icon type="md-done-all" color="#19be6b"/>
+                        合适的裁决
+                      </h3>
+                      <ol>
+                        <li>直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)</li>
+                        <li>简要，作弊特征明显，可使用下方模板统一判决</li>
+                      </ol>
+                    </Col>
+                    <Col flex="1">
+                      <h3>
+                        <Icon type="ios-alert-outline" color="red"/>
+                        不合适的裁决
+                      </h3>
+                      <ol>
+                        <li>填写如"1"、"[空位符]"、"[表情]"等这类无意义回复</li>
+                        <li>回复内容中携带人生攻击、歧视、色情、政治内容</li>
+                        <li>裁决的内容，由于游戏外因素决定，比如头像、丑</li>
+                      </ol>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span="24">
+                  <FormItem label="Reason">
+                    <Input
+                        type="textarea"
+                        @on-keydown="handleCmdEnter($event, 'verify')"
+                        maxlength="65535"
+                        show-word-limit
+                        v-model="verify.suggestion"
+                        :autosize="{minRows: 5, maxRows: 10}"
+                        :placeholder="$t(`detail.info.giveOpinion`)"/>
+                  </FormItem>
+                </Col>
+              </Row>
 
-        <br>
-        <Spin size="large" fix v-show="spinShow">
-          <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
-          <p>ヾ(◍°∇°◍)ﾉﾞ load...</p>
-        </Spin>
-      </Card>
-      <br v-if="isAdmin">
-      <Card dis-hover v-if="isAdmin">
-        <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})">
-          <h2 style="margin: 1rem 0;"># {{ $t('detail.info.judgement', {msg: 'judgement'}) }}</h2>
+              <FormItem v-show="verify.status === '1'" label="fastReply">
+                <CheckboxGroup v-model="fastReply.selected">
+                  <Checkbox v-for="content in fastReply.content" :key='content' :label="content">
+                    {{ $t(`detail.info.fastReplies.${content}`) }}
+                  </Checkbox>
+                </CheckboxGroup>
+              </FormItem>
 
-          <!-- 管理员面板 S -->
-          <Alert type="warning" show-icon>
-            <p class="hint">{{ $t('detail.info.adminManual1', {msg: 'adminManual1'}) }}</p>
-            <p class="hint">{{ $t('detail.info.adminManual2', {msg: 'adminManual2'}) }}</p>
-          </Alert>
-
-          <Form ref='verifyForm' label-position="top">
-            <Row :gutter="30">
-              <Col span="12">
-                <FormItem label="Opinion">
-                  <Select v-model="verify.status">
-                    <!-- 判断选项 -->
-                    <Option :value="v_i.value" v-for="v_i in verify.choice" :key="v_i.value">
-                      {{ $t(`basic.status[${v_i.value}]`) }}
-                    </Option>
-                  </Select>
-                </FormItem>
-              </Col>
-              <Col span="12">
-                <FormItem v-show="verify.status == '1'" label="CheatMethod">
-                  <Select v-model="verify.checkbox" multiple>
-                    <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value"
-                            :label="$t(`cheatMethods.${method.value}.title`)">
-                      {{ $t(`cheatMethods.${method.value}.title`) }}
-                      <Divider type="vertical"/>
-                      {{ $t(`cheatMethods.${method.value}.describe`) }}
-                    </Option>
-                  </Select>
-                </FormItem>
-              </Col>
-              <Col span="24">
-                <Row :gutter="30" style="padding: 0 20px">
-                  <Col flex="1">
-                    <h3>
-                      <Icon type="md-done-all" color="#19be6b"/>
-                      合适的裁决
-                    </h3>
-                    <ol>
-                      <li>直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)</li>
-                      <li>简要，作弊特征明显，可使用下方模板统一判决</li>
-                    </ol>
+              <FormItem :label="$t('signup.form.captcha')">
+                <Row>
+                  <Col>
+                    <Input type="text" v-model="reply.captcha" size="large" maxlength="4"
+                           :placeholder="$t('signup.form.captcha')">
+                    </Input>
                   </Col>
-                  <Col flex="1">
-                    <h3>
-                      <Icon type="ios-alert-outline" color="red"/>
-                      不合适的裁决
-                    </h3>
-                    <ol>
-                      <li>填写如"1"、"[空位符]"、"[表情]"等这类无意义回复</li>
-                      <li>回复内容中携带人生攻击、歧视、色情、政治内容</li>
-                      <li>裁决的内容，由于游戏外因素决定，比如头像、丑</li>
-                    </ol>
+                  <Col>
+                    <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                      <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>
+                    </div>
                   </Col>
                 </Row>
-              </Col>
-              <Col span="24">
-                <FormItem label="Reason">
-                  <Input
-                      type="textarea"
-                      @on-keydown="handleCmdEnter($event, 'verify')"
-                      maxlength="65535"
-                      show-word-limit
-                      v-model="verify.suggestion"
-                      :autosize="{minRows: 5, maxRows: 10}"
-                      :placeholder="$t(`detail.info.giveOpinion`)"/>
-                </FormItem>
-              </Col>
-            </Row>
+              </FormItem>
 
-            <FormItem v-show="verify.status === '1'" label="fastReply">
-              <CheckboxGroup v-model="fastReply.selected">
-                <Checkbox v-for="content in fastReply.content" :key='content' :label="content">
-                  {{ $t(`detail.info.fastReplies.${content}`) }}
-                </Checkbox>
-              </CheckboxGroup>
+              <FormItem>
+                <Button type="primary" :loading="verifySpinShow" @click.stop.prevent="doVerify">
+                  {{ $t('detail.info.commit', {msg: 'commit'}) }}
+                </Button>
+              </FormItem>
+            </Form>
+            <!-- 管理员面板 E -->
+          </div>
+        </Card>
+        <div v-if="!isCheaterExist">
+          <Empty></Empty>
+        </div>
+      </template>
+    </div>
+
+    <template v-if="!isFull">
+      <Affix :top="100">
+        <Card dis-show class="top mobile-hide">
+          <a href="#up">
+            <Icon type="md-arrow-round-up" size="30"/>
+          </a>
+          <a href="#reply">
+            <Icon type="md-chatboxes" size="30"/>
+          </a>
+        </Card>
+      </Affix>
+
+      <!-- 小回复窗口 -->
+      <Modal
+          v-model="replyModal"
+          :title="`${$t('detail.info.reply', {msg: 'reply'})} #${reply.toFloor}`"
+          @on-ok="doReply"
+          @on-cancel="cancelReply">
+        <div v-if="isLogin">
+          <Form :label-width="80" ref='replyForm' style="position: relative;">
+            <FormItem v-if="timelineList[reply.toFloor]">
+              <Tag>
+                <BusinessCard :id="timelineList[reply.toFloor].byUserId">
+                  @{{ timelineList[reply.toFloor].username }}
+                </BusinessCard>
+              </Tag>
             </FormItem>
-
+            <FormItem v-if="timelineList[reply.toFloor]">
+              <Card> <div v-html="timelineList[reply.toFloor].content" v-if="timelineList[reply.toFloor].content"></div> </Card>
+            </FormItem>
+            <FormItem>
+              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
+                     :autosize="{minRows: 4}"
+                     :placeholder="$t('detail.info.giveOpinion')"/>
+            </FormItem>
             <FormItem :label="$t('signup.form.captcha')">
               <Row>
                 <Col>
@@ -681,181 +798,122 @@
                 </Col>
               </Row>
             </FormItem>
-
-            <FormItem>
-              <Button type="primary" :loading="verifySpinShow" @click.stop.prevent="doVerify">
-                {{ $t('detail.info.commit', {msg: 'commit'}) }}
-              </Button>
-            </FormItem>
           </Form>
-          <!-- 管理员面板 E -->
         </div>
-      </Card>
-      <div v-if="!isCheaterExist">
-        <Empty></Empty>
-      </div>
-    </div>
+        <div v-else>{{ $t('detail.info.replyManual4', {msg: 'replyManual4'}) }}</div>
+      </Modal>
 
-    <Affix :top="100">
-      <Card dis-show class="top mobile-hide">
-        <a href="#up">
-          <Icon type="md-arrow-round-up" size="30"/>
-        </a>
-        <a href="#reply">
-          <Icon type="md-chatboxes" size="30"/>
-        </a>
-      </Card>
-    </Affix>
-
-    <!-- 小回复窗口 -->
-    <Modal
-        v-model="replyModal"
-        :title="`${$t('detail.info.reply', {msg: 'reply'})} #${reply.toFloor}`"
-        @on-ok="doReply"
-        @on-cancel="cancelReply">
-      <div v-if="isLogin">
-        <Form :label-width="80" ref='replyForm' style="position: relative;">
-          <FormItem v-if="timelineList[reply.toFloor]">
-            <Tag>
-              <BusinessCard :id="timelineList[reply.toFloor].byUserId">
-                @{{ timelineList[reply.toFloor].username }}
-              </BusinessCard>
-            </Tag>
-          </FormItem>
-          <FormItem v-if="timelineList[reply.toFloor]">
-            <Card> <div v-html="timelineList[reply.toFloor].content" v-if="timelineList[reply.toFloor].content"></div> </Card>
-          </FormItem>
-          <FormItem>
-            <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
-                   :autosize="{minRows: 4}"
-                   :placeholder="$t('detail.info.giveOpinion')"/>
-          </FormItem>
-          <FormItem :label="$t('signup.form.captcha')">
-            <Row>
-              <Col>
-                <Input type="text" v-model="reply.captcha" size="large" maxlength="4"
-                       :placeholder="$t('signup.form.captcha')">
-                </Input>
+      <!-- 申诉 -->
+      <Modal v-model="appeal.show"
+             width="80%"
+             :loading="appeal.load"
+             @on-ok="handleAppeal">
+        <Row :gutter="30">
+          <Col flex="1">
+            <h2>规则</h2>
+            <br>
+            <h3>针对误BAN，本人或第三方可以协助申诉，在满足下方所有基本要求后，您的申诉内容会提交到BFBAN所有管理员，满足3位管理员确认通过才可解除</h3>
+            <br>
+            <Alert type="warning" show-icon>
+              必须注意
+              <span slot="desc">
+                  申诉只有一次机会，最终结果，一旦确认结果无法再次修改，所有申诉记录被永久保存
+              </span>
+            </Alert>
+            <br>
+            <Row :gutter="60" style="padding: 0 30px">
+              <Col flex="1">
+                <ul>
+                  <li>
+                    <h3>
+                      <Icon type="md-done-all" color="#19be6b"/>
+                      有效证据
+                    </h3>
+                    <ol>
+                      <li>使用类似"高速目标靶心"软件，拍摄到屏幕与手、键盘录制自证.</li>
+                      <li>自我辩护，可以使用图片、视频等等材料.</li>
+                    </ol>
+                  </li>
+                  <br>
+                  <li>
+                    <h3>
+                      <Icon type="md-done-all" color="#19be6b"/>
+                      辅助证明
+                    </h3>
+                    <ol>
+                      <li>举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址.</li>
+                      <li>在场玩家，提供自己id，具体服务器、时间、场此，以及您辅助申诉对象说明.</li>
+                    </ol>
+                  </li>
+                </ul>
               </Col>
-              <Col>
-                <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                  <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>
-                </div>
+              <Col flex="1">
+                <ul>
+                  <li>
+                    <h3>
+                      <Icon type="ios-alert-outline" color="red"/>
+                      不通过的证明
+                    </h3>
+                    <ol>
+                      <li>
+                        借出、出租等形式给第三方，无论是刷数据还是朋友借用说辞，都无法证明是否本人，你必须明白账户借出无法知道通过何种手段. 一律不给与通过.
+                        <Alert type="warning">珍惜自己的账户</Alert>
+                      </li>
+                      <li>被多方玩家截取使用(不限于本人截图显示出作弊特征)或购买作弊软体多媒体.</li>
+                      <li>存在前科，如上系列存在档案玩家将大大折扣通过几率.</li>
+                      <li>任何誓言，诅咒.</li>
+                    </ol>
+                  </li>
+                </ul>
               </Col>
             </Row>
-          </FormItem>
-        </Form>
-      </div>
-      <div v-else>{{ $t('detail.info.replyManual4', {msg: 'replyManual4'}) }}</div>
-    </Modal>
-
-    <!-- 申诉 -->
-    <Modal v-model="appeal.show"
-           width="80%"
-           :loading="appeal.load"
-           @on-ok="handleAppeal">
-      <Row :gutter="30">
-        <Col flex="1">
-          <h2>规则</h2>
-          <br>
-          <h3>针对误BAN，本人或第三方可以协助申诉，在满足下方所有基本要求后，您的申诉内容会提交到BFBAN所有管理员，满足3位管理员确认通过才可解除</h3>
-          <br>
-          <Alert type="warning" show-icon>
-            必须注意
-            <span slot="desc">
-                申诉只有一次机会，最终结果，一旦确认结果无法再次修改，所有申诉记录被永久保存
-            </span>
-          </Alert>
-          <br>
-          <Row :gutter="60" style="padding: 0 30px">
-            <Col flex="1">
-              <ul>
-                <li>
-                  <h3>
-                    <Icon type="md-done-all" color="#19be6b"/>
-                    有效证据
-                  </h3>
-                  <ol>
-                    <li>使用类似"高速目标靶心"软件，拍摄到屏幕与手、键盘录制自证.</li>
-                    <li>自我辩护，可以使用图片、视频等等材料.</li>
-                  </ol>
-                </li>
+            <br>
+          </Col>
+          <Col flex="1">
+            <Form>
+              <Row :gutter="30">
+                <Col flex="1">
+                  <FormItem :label="$t('detail.appeal.info.player')">
+                    <Input type="text"
+                           :value="cheater.id"
+                           disabled
+                           size="large"
+                           :placeholder="$t('detail.placeholder.player')"/>
+                  </FormItem>
+                </Col>
+                <Col flex="1">
+                  <FormItem :label="$t('detail.appeal.info.originName')">
+                    <Input type="text"
+                           :value="cheater.originName"
+                           disabled
+                           size="large"/>
+                  </FormItem>
+                </Col>
+              </Row>
+              <FormItem :label="$t('detail.appeal.info.content')">
                 <br>
-                <li>
-                  <h3>
-                    <Icon type="md-done-all" color="#19be6b"/>
-                    辅助证明
-                  </h3>
-                  <ol>
-                    <li>举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址.</li>
-                    <li>在场玩家，提供自己id，具体服务器、时间、场此，以及您辅助申诉对象说明.</li>
-                  </ol>
-                </li>
-              </ul>
-            </Col>
-            <Col flex="1">
-              <ul>
-                <li>
-                  <h3>
-                    <Icon type="ios-alert-outline" color="red"/>
-                    不通过的证明
-                  </h3>
-                  <ol>
-                    <li>
-                      借出、出租等形式给第三方，无论是刷数据还是朋友借用说辞，都无法证明是否本人，你必须明白账户借出无法知道通过何种手段. 一律不给与通过.
-                      <Alert type="warning">珍惜自己的账户</Alert>
-                    </li>
-                    <li>被多方玩家截取使用(不限于本人截图显示出作弊特征)或购买作弊软体多媒体.</li>
-                    <li>存在前科，如上系列存在档案玩家将大大折扣通过几率.</li>
-                    <li>任何誓言，诅咒.</li>
-                  </ol>
-                </li>
-              </ul>
-            </Col>
-          </Row>
-          <br>
-        </Col>
-        <Col flex="1">
-          <Form>
-            <Row :gutter="30">
-              <Col flex="1">
-                <FormItem :label="$t('detail.appeal.info.player')">
-                  <Input type="text"
-                         :value="cheater.id"
-                         disabled
-                         size="large"
-                         :placeholder="$t('detail.placeholder.player')"/>
-                </FormItem>
-              </Col>
-              <Col flex="1">
-                <FormItem :label="$t('detail.appeal.info.originName')">
-                  <Input type="text"
-                         :value="cheater.originName"
-                         disabled
-                         size="large"/>
-                </FormItem>
-              </Col>
-            </Row>
-            <FormItem :label="$t('detail.appeal.info.content')">
-              <br>
-              <Edit :content="appeal.content" @change="handleMiscChange"
-                    :editorContent="$t('detail.appeal.placeholder.content')"/>
-            </FormItem>
-          </Form>
-        </Col>
-      </Row>
-    </Modal>
+                <Edit :content="appeal.content" @change="handleMiscChange"
+                      :editorContent="$t('detail.appeal.placeholder.content')"/>
+              </FormItem>
+            </Form>
+          </Col>
+        </Row>
+      </Modal>
 
-    <br>
+      <br>
+    </template>
   </div>
 </template>
 
 <script>
 import BFBAN from "../assets/js/bfban";
+import theme from "../assets/themes.json";
+import languages from "../assets/languages.json";
 
 import {api, http, http_token, util} from '../assets/js/index'
 import vueQr from 'vue-qr'
 import translate from 'google-translate-open-api';
+import html2canvas from 'html2canvas';
 
 import Empty from '../components/Empty.vue'
 import Edit from "../components/Edit";
@@ -866,6 +924,17 @@ import {formatTextarea, waitForAction} from "@/mixins/common";
 export default new BFBAN({
   data() {
     return {
+      share: {
+        statusSharePicture: false,
+        show: false,
+        load: false,
+        themeChild: theme.child,
+        theme: theme.default,
+        languagesChild: languages.child,
+        languages: languages.default,
+        webLink: '',
+        iframeLink: ''
+      },
       appeal: {
         load: false,
         show: false,
@@ -909,10 +978,7 @@ export default new BFBAN({
         suggestion: '',
       },
       spinShow: true,
-      idExist: false,
-
       verifySpinShow: false,
-
       reply: {
         cheaterId: '',
         userId: '',
@@ -949,6 +1015,7 @@ export default new BFBAN({
     this.http = http_token.call(this);
 
     this.loadData();
+    this.upDataShare();
     this.getCheatersInfo();
     this.getTimeline();
     this.refreshCaptcha();
@@ -970,6 +1037,16 @@ export default new BFBAN({
         this.verify.choice = res.cheaterStatus.filter(i => (i.value >= 1 && i.value <= 4));
         this.verify.status = this.verify.choice[0].value;
       });
+
+      // load bfban player "full window", set theme
+      if (this.isFull) {
+        await this.$store.dispatch('setTheme', theme.child.filter(i => i.name == this.$route.query.theme)[0] || theme.child[0] );
+      }
+
+      // load lang
+      if (this.$route.query.lang) {
+        this.$store.dispatch('setLang', this.$route.query.lang);
+      }
     },
     /**
      * 获取验证码
@@ -1368,6 +1445,36 @@ export default new BFBAN({
       that.timelineList[index].description_cont = that.timelineList[index].description;
       that.timelineList[index].description_translate = result.data[0];
     },
+    /**
+     * 生成分享图片
+     */
+    onGenerateSharePicture(status) {
+      const that = this;
+      if (!status || this.share.statusSharePicture) return;
+      this.share.load = true;
+      setTimeout(function () {
+        html2canvas(document.querySelector("#getSharePicture"), {
+          allowTaint: true,
+          useCORS: true,
+          scale: 1,
+          imageTimeout: 100000,
+          proxy: 'secure.download.dm.origin.com'
+        }).then(canvas => {
+          that.share.statusSharePicture = true;
+          document.querySelector("#setSharePicture").after(canvas);
+          that.share.load = false;
+        });
+      }, 1000);
+    },
+    /**
+     * 更新 / 设置分享内容
+     */
+    upDataShare () {
+      this.share = Object.assign(this.share, {
+        webLink: window.location.origin + window.location.pathname,
+        iframeLink: `<iframe src="${window.location.href}?full=true&theme=${this.share.theme}&lang=${this.share.languages}" width="1000px" height="215px" align="center" scrolling="auto" frameborder="0" style="filter:chroma(color=#ffffff)" >`
+      });
+    }
   },
   computed: {
     isAdmin() {
@@ -1379,9 +1486,15 @@ export default new BFBAN({
     isLogin() {
       return Boolean(this.$store.state.user)
     },
+    isFull () {
+      return Boolean(this.$route.query.full || false);
+    },
     currentUser() {
       return this.$store.state.user
     },
+    currentLan () {
+      return this.$root && this.$root.$i18n && this.$root.$i18n.locale || 'zh-CN';
+    }
   }
 })
 </script>
