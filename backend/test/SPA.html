@@ -525,8 +525,8 @@
                             throw('Bad Response: /api/player/timeline:'+JSON.stringify(res));
                         }
                         let content = "";
-                        for(let i in res.data) {
-                            let cmt = res.data[i];
+                        for(let i in res.data.result) {
+                            let cmt = res.data.result[i];
                             let floor = ($('#timeline-skip').val()-0)+(i-0)+1;
                             content += `-------------#${floor}---[${cmt.type}]:${cmt.id}-At ${new Date(cmt.createTime).toLocaleString()}<br/>`+
                             `by <strong>${cmt.username}</strong> role:<strong>${cmt.privilege}</strong>`+

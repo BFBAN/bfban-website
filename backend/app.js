@@ -77,7 +77,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use((req, res, next)=> {console.log(req.body); next();})
+//app.use((req, res, next)=> {console.log(req.body); next();})
 
 app.use('/static', express.static('./test'));
 app.use('/api', routes_index);

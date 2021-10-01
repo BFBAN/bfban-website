@@ -39,6 +39,7 @@ const config = {
     },
 
     // DYNAMIC CONFIGURE BEGIN
+	supportLanguages: ['cn', 'en'],
     personsToConfirm: 2,
     originAccounts: [
         {

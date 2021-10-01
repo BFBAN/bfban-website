@@ -111,8 +111,8 @@ async (req, res, next)=>{
             getUserProfileByName(req.body.data.originName).then(isdone.successListener('origin')).catch(isdone.failListener('origin')),
             // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
         ]).catch((err)=> { 
-            console.log(err);   // DEBUG
-            console.log(isdone.failMessages);
+            //console.log(err);   // DEBUG
+            //console.log(isdone.failMessages);
             return undefined; 
         });
         if(!profile)
@@ -336,7 +336,7 @@ router.get('/timeline', [
     checkquery('personaId').optional().isInt({min: 0}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
-    checkquery('subject').optional().isIn(['', 'report', 'reply', 'judgement', 'ban_appeal'])
+    checkquery('subject').optional().isIn(['report', 'reply', 'judgement', 'ban_appeal'])
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
@@ -373,9 +373,9 @@ async (req, res, next)=>{
             totals = await db.count({num: 'id'}).from(
                 subject.endsWith('y')? 'replies':subject+'s'
             ).where({toPlayerId: dbId});
-        console.log(totals);
+        //console.log(totals);
         const total = totals.reduce((accu, curr)=> {return accu+curr.num}, 0);
-        console.log(total);
+        //console.log(total);
         // generate a brief timeline for queries below
         const subQueries = brief.reduce((accu, curr, indx)=>{
             accu[curr.type].push(curr.id);  // group by type

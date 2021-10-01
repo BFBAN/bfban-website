@@ -21,7 +21,8 @@ router.post('/signup', verifyCaptcha, [
     checkbody("data.username").isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min:1, max:40}),
     checkbody('data.password').isString().trim().isLength({min:1, max:40}),
     checkbody('data.originEmail').isString().trim().isEmail(),
-    checkbody('data.originName').isString().unescape().trim().notEmpty()
+    checkbody('data.originName').isString().unescape().trim().notEmpty(),
+    checkbody('data.language').isIn(config.supportLanguages)
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
