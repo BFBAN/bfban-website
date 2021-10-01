@@ -647,3 +647,6 @@ async function pushOriginNameLog(originName, originUserId, originPersonaId) {
 }
 
 export default router;
+export {
+    commentRateLimiter,
+};

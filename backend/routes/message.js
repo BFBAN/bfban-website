@@ -34,12 +34,14 @@ async (req, res, next)=> {
         case 'in':
             result.messages = await db.select('*').from('messages').where({toUserId: req.user.id})
             .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit);
-            result.total = await db('messages').count({num: 'id'}).where({toUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
+            result.total = await db('messages').count({num: 'id'}).where({toUserId: req.user.id})
+            .andWhere('createTime','>=',new Date(from)).first().then(r=>r.num);
             break;
         case 'out':
             result.messages = await db.select('*').from('messages').where({byUserId: req.user.id})
             .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit); 
-            result.total = await db('messages').count({num: 'id'}).where({byUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
+            result.total = await db('messages').count({num: 'id'}).where({byUserId: req.user.id})
+            .andWhere('createTime','>=',new Date(from)).first().then(r=>r.num);
             break;
         case 'announce':
             result.messages = [];

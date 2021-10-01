@@ -1,6 +1,6 @@
 "use strict";
-import express, { json, urlencoded } from "express";
-import { check, body as checkbody, query as checkquery, validationResult, param } from "express-validator";
+import express from "express";
+import { check, body as checkbody, query as checkquery, validationResult } from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
@@ -24,15 +24,15 @@ async (req, res, next)=>{
 
         let data={};
         if(req.query.reports)
-            data.reports = await db('reports').count({reports: 'id'}).where('createTime', '>=', new Date(from)).first().reports;
+            data.reports = await db('reports').count({reports: 'id'}).where('createTime', '>=', new Date(from)).first().then(r=>r.reports);
         if(req.query.players)
-            data.players = await db('players').count({players: 'id'}).where('createTime', '>=', new Date(from)).andWhere({valid: 1}).first().players;
+            data.players = await db('players').count({players: 'id'}).where('createTime', '>=', new Date(from)).andWhere({valid: 1}).first().then(r=>r.players);
         if(req.query.confirmed)
-            data.confirmed = await db('players').count({confirmed: 'id'}).where('createTime', '>=', new Date(from)).andWhere({status: 1}).andWhere({valid: 1}).first().confirmed;
+            data.confirmed = await db('players').count({confirmed: 'id'}).where('createTime', '>=', new Date(from)).andWhere({status: 1}).andWhere({valid: 1}).first().then(r=>r.confirmed);
         if(req.query.registers)
-            data.registers = await db('users').count({registers: 'id'}).where('createTime', '>=', new Date(from)).first().registers;
+            data.registers = await db('users').count({registers: 'id'}).where('createTime', '>=', new Date(from)).first().then(r=>r.registers);
         if(req.query.banAppeals)
-            data.banAppeals = await db('ban_appeals').count({banAppeals: 'id'}).where('createTime', '>=', new Date(from)).first().banAppeals;
+            data.banAppeals = await db('ban_appeals').count({banAppeals: 'id'}).where('createTime', '>=', new Date(from)).first().then(r=>r.banAppeals);
         res.status(200).json({success: 1, code: 'statistics.success', data: data});
     } catch(err) {
         next(err);
