@@ -9,9 +9,10 @@ import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { originClients, getUserProfileByName } from "../lib/origin.js"
-import { cheatMethodsSanitizer, handleRichTextInput, UserRateLimiter } from "../lib/user.js";
+import { cheatMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
 import { siteEvent, stateMachine } from "../lib/bfban.js";
 import { userHasRoles } from "../lib/auth.js";
+import { UserRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router()
 
@@ -53,7 +54,7 @@ async (req, res, next)=>{
         const result = await db.select('id','originName','originUserId','originPersonaId','games',
         'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
         .from('players').where(key, '=', val).first();
-        result.games = result.games.replace(/#/g, '').split(',');   // "#bf1#,#bfv#,#bf2042#" -> ['bf1','bfv','bf2042']
+        result.games = misc.DBstr2arr(result.games);   // "#bf1#,#bfv#,#bf2042#" -> ['bf1','bfv','bf2042']
         if(!result)
             return res.status(404).json({error: 1, code: 'player.notFound'});
         if(req.query.history) // that guy does exist
@@ -137,9 +138,9 @@ async (req, res, next)=>{
             stateChange = {prev: reported.status, next: nextstate};
             updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
-            updateCol.games = Array.from(new Set(
-                reported.games.replace(/#/g, '').split(',')
-            ).add(req.body.data.game)).map(i=>`#${i}#`).join(',');  // "#bf1#,#bfv#"->Set(['bf1','bfv']).add('bfv')->"#bf1#,#bfv#"
+            updateCol.games = misc.arr2DBstr(
+                new Set(misc.DBstr2arr(reported.games)).add(req.body.data.game)
+            );  // "#bf1#,#bfv#"->Set(['bf1','bfv']).add('bfv')->"#bf1#,#bfv#"
             updateCol.status = nextstate;
             updateCol.updateTime = new Date();
         }
@@ -240,9 +241,9 @@ async (req, res, next)=>{
             stateChange = {prev: reported.status, next: nextstate};
             updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
-            updateCol.games = Array.from(new Set(
-                reported.games.replace(/#/g, '').split(',')
-            ).add(req.body.data.game)).map(i=>`#${i}#`).join(',');
+            updateCol.games = misc.arr2DBstr(
+                new Set(misc.DBstr2arr(reported.games)).add(req.body.data.game)
+            );
             updateCol.status = nextstate;
             updateCol.updateTime = new Date();
         }

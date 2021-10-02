@@ -8,7 +8,7 @@ import { OriginClient, originClients } from "../lib/origin.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
-import { UserRateLimiter } from "../lib/user.js";
+import { UserRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -185,7 +185,6 @@ router.get('/admins', async (req, res, next)=> {
     }
 })
 
-
 router.get('/search',[
     checkquery('param').isString().trim().notEmpty(),
     checkquery('scope').optional().isIn(['current','history'])
@@ -257,6 +256,25 @@ async (req, res, next)=>{
         } else {
             return res.status(404).json({error: 1, code:'advSearch.notFound', message:'No such player found on origin.' });
         }
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.get('/trend', [
+    checkquery('limit').optional().isInt({min: 1, max:10})
+],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code:'advSearch.bad', message:validateErr.array()});
+        
+        const limit = req.query.limit? req.query.limit : 5;
+        const result = await db.count({hot: 'tmp.id'}).select('players.originName', 'tmp.toPlayerId as dbId').from(function () {
+            this.select('id', 'toPlayerId').from('replies').orderBy('id', 'desc').limit(200).as('tmp');
+        }).join('players', 'tmp.toPlayerId', 'players.id').groupBy('dbId').orderBy('hot', 'desc').limit(limit);
+        return res.status(200).json({success: 1, code: 'trend.ok', data: result});
     } catch(err) {
         next(err);
     }
