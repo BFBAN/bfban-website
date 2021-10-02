@@ -667,7 +667,11 @@
             <div class="inbox container block">
                 <div style="display: flex; flex-direction :row;">
                     <span>Inbox:&nbsp;</span>
-                    <button style="flex-grow: 1;" onclick="getMessage()">Get</button>
+                    <button style="flex-grow: 2;" onclick="getMessage()">Get</button>
+                    <span style="flex-grow: 1; padding-left: 20px;">
+                        <input style="position: relative; bottom: -3px;" type="checkbox" name="message-poll" id="message-poll" onclick="toggleMsgPolling()">
+                        <span>Polling</span>
+                    </span>
                 </div>
                 <div>&nbsp;&nbsp; toPerson:</div>
                 <textarea name="messgae-toperson" id="messgae-toperson" cols="30" rows="10" style="width: 100%;"></textarea>
@@ -675,6 +679,29 @@
                 <textarea name="messgae-announce" id="messgae-announce" cols="30" rows="10" style="width: 100%;"></textarea>
             </div>
             <script>
+                let msgPollControler = new AbortController();
+                async function toggleMsgPolling() {
+                    let ison = $('#message-poll').prop('checked');
+                    if(!ison) {
+                        msgPollControler.abort();
+                        msgPollControler = new AbortController();
+                    } else {
+                        let tmpfunc = async ()=> {
+                            while($('#message-poll').prop('checked')) {
+                                await fetch('/api/message/poll', {
+                                    headers: {
+                                    'x-access-token': localStorage.token? localStorage.token:'',
+                                    'content-type': 'application/json'
+                                    },
+                                    signal: msgPollControler.signal,
+                                }).then(r=>r.json()).then(console.log).catch(console.log);
+                            }
+                            console.log('break');
+                        }
+                        tmpfunc();
+                    }
+                }
+
                 async function getMessage() {
                     let res = await fetch('/api/message?box=in&limit=100', {
                         headers: {

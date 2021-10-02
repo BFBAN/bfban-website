@@ -12,6 +12,7 @@ const config = {
     address: true? '127.0.0.1' : '0.0.0.0',
     baseDir: path.resolve('./'),
     behindProxy: 0,
+	pollingTimeout: 90*1000,
     // database
     mysql: {
         host: '127.0.0.1',

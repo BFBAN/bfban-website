@@ -68,6 +68,36 @@ async (req, res, next)=> {
     }
 });
 
+router.get('/poll', verifyJWT, forbidPrivileges(['blacklisted']), 
+/** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+async (req, res, next)=>{
+    try {
+        const maxTimeout = config.pollingTimeout;
+        let timer;
+        let listener;
+        let data = await new Promise((res, rej)=> {
+            timer = setTimeout(()=>{
+                res(null);
+            }, maxTimeout);
+            listener = (params)=> {
+                if(params.to != req.user.id) return;
+                res(params);
+            }
+            siteEvent.addListener('message', listener);
+        }).finally(()=>{
+            siteEvent.removeListener('message', listener);
+            clearTimeout(timer);
+        });
+        return res.status(200).json({
+            success: 1, 
+            code: data? 'messagePoll.got':'messagePoll.empty',
+            data: data
+        });
+    } catch(err) {
+        next(err);
+    }
+});
+
 router.post('/', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toUserId').if( checkbody('data.type').isIn(['direct','warn','fatal']) ).isInt({min: 0}),
     checkbody('data.type').isIn(['direct','warn','fatal','toAll','toAdmins','toNormals','command']),
@@ -81,6 +111,7 @@ async (req, res, next)=> {
         
         /** @type {'direct'|'warn'|'fatal'|'toAll'|'toAdmins'|'toNormals'|'command'} */
         const type = req.body.data.type;
+        const content = req.body.data.content;
         /** @type {import("../typedef.js").User|null} */
         let toUser = null;
         if(['direct','warn','fatal'].includes(type)) {
@@ -91,26 +122,30 @@ async (req, res, next)=> {
 
         switch(true) {
         case ( type=='fatal' && userHasRoles(req.user, ['super','root','dev']) ):
-            await sendMessage(req.user.id, toUser.id, type, req.body.data.content);
+            await sendMessage(req.user.id, toUser.id, type, content);
+            siteEvent.emit('message', {from: req.user.id, to: toUser.id, type: type, content: content});
             break; // jump out
 
         case ( ['info','warn'].includes(type) && userHasRoles(req.user, ['admin','super','root','dev']) ):
-            await sendMessage(req.user.id, toUser.id, type, req.body.data.content);
+            await sendMessage(req.user.id, toUser.id, type, content);
+            siteEvent.emit('message', {from: req.user.id, to: toUser.id, type: type, content: content});
             break; // jump out
 
         case ( type=='direct' ): // normal or other user
-            if(toUser.attr.allowDM === true) // normal user can block dm
-                await sendMessage(req.user.id, toUser.id, 'direct', req.body.data.content);
-            else
+            if(toUser.attr.allowDM === true) { // normal user can block dm
+                await sendMessage(req.user.id, toUser.id, 'direct', content);
+                siteEvent.emit('message', {from: req.user.id, to: toUser.id, type: type, content: content});
+            } else
                 return res.status(403).json({error: 1, code:'message.blocked', message: 'user block your message.'});   
             break;
 
         case ( type=='command' ):
-            await handleCommand(req.body.data.content, req.user);
+            await handleCommand(content, req.user);
             break;
         
         case ( ['toAll','toNormals','toAdmins'].includes(type) && userHasRoles(req.user, ['dev','super','root']) ):
-            await sendMessage(req.user.id, null, type, req.body.data.content);
+            await sendMessage(req.user.id, null, type, content);
+            siteEvent.emit('message', {from: req.user.id, to: null, type: type, content: content});
             break;
         default: // if the type and privilege did not match all the cases, then deny  
             return res.status(403).json({error: 1, code: 'message.denied', message: 'permission denied.'});
