@@ -181,8 +181,8 @@
 import BFBAN from "../assets/js/bfban";
 
 import {api, http, util} from '../assets/js/index'
-import cheaterStatus from '../assets/cheaterStatus.json'
-import gameName from '../assets/gameName.json'
+import cheaterStatus from '/public/conf/cheaterStatus.json'
+import gameName from '/public/conf/gameName.json'
 import _ from "lodash";
 
 export default new BFBAN({

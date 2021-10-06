@@ -11,9 +11,9 @@ export default class Util {
 
     async initUtil() {
         const list = {
-            cheatMethodsGlossary : await import('/src/assets/cheatMethodsGlossary.json'),
-            cheaterStatus : await import('/src/assets/cheaterStatus.json'),
-            gameName : await import('/src/assets/gameName.json')
+            cheatMethodsGlossary : await import('/public/conf/cheatMethodsGlossary.json'),
+            cheaterStatus : await import('/public/conf/cheaterStatus.json'),
+            gameName : await import('/public/conf/gameName.json')
         }
         this.cheaterStatus = list.cheaterStatus.child;
         this.gameName = list.gameName.child;

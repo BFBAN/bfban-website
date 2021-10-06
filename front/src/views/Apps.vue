@@ -69,7 +69,7 @@
 </template>
 
 <script>
-  import appsConf from '/src/assets/appslist.json';
+  import appsConf from '/public/conf/appslist.json';
 
   export default {
     name: "Apps",

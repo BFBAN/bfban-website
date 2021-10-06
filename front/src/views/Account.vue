@@ -169,7 +169,7 @@
 <script>
 import {api, http, http_token} from '../assets/js/index'
 
-import games from '../assets/gameName.json'
+import games from '/public/conf/gameName.json'
 
 export default {
   data() {
@@ -213,7 +213,7 @@ export default {
 
       this.getReports(uId);
 
-      const privileges = await import('/src/assets/privilege.json');
+      const privileges = await import('/public/conf/privilege.json');
       this.privileges = this.privileges.concat(privileges.child)
 
       this.getUserInfo(uId);

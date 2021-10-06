@@ -25,25 +25,26 @@
             <Tag color="error">
               {{ $t(`basic.status[${cheater.status}]`) }}
             </Tag>
+            <Tag v-if="cheater.avatarLinkError" color="warning">
+              账户异常
+            </Tag>
             <Row :gutter="10" type="flex" justify="center" align="middle">
               <Col flex="auto">
-                <a :href="share.webLink" target="_blank">
-                  <h1 style="font-size: 1.6rem;">
-                    {{ cheater.originName || 'user id' }}
+                <h1 style="font-size: 1.6rem;">
+                  {{ cheater.originName || 'user id' }}
 
-                    <!-- 被举报的游戏 -->
-                    <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
-                      <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
-                           v-for="(game,gameindex) in cheater.games.split(',')" :key="gameindex">
-                        {{ $t(`list.filters.game.${game}`, {game: game}) }}
-                      </Tag>
-                    </router-link>
-
-                    <Tag v-if="cheater.cheatMethods" color="warning">
-                      {{ convertCheatMethods(cheater.cheatMethods) }}
+                  <!-- 被举报的游戏 -->
+                  <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
+                    <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
+                         v-for="(game,gameindex) in cheater.games.split(',')" :key="gameindex">
+                      {{ $t(`list.filters.game.${game}`, {game: game}) }}
                     </Tag>
-                  </h1>
-                </a>
+                  </router-link>
+
+                  <Tag v-if="cheater.cheatMethods" color="warning">
+                    {{ convertCheatMethods(cheater.cheatMethods) }}
+                  </Tag>
+                </h1>
               </Col>
               <template v-if="!isFull">
                 <Col align="right">
@@ -65,49 +66,6 @@
                     </div>
                   </Poptip>
                   <Divider type="vertical"/>
-                  <Button type="primary" @click="share.show = true">
-                    <Icon type="md-share" />
-                  </Button>
-                  <Drawer placement="bottom" :closable="true" height="90%" v-model="share.show" @on-visible-change="onGenerateSharePicture">
-                    <Form label-position="top" :model="share" class="container">
-                      <FormItem label="web link">
-                        <Input v-model="share.webLink" />
-                      </FormItem>
-                      <Divider />
-                      <FormItem label="iframe code">
-                        <Input v-model="share.iframeLink"/>
-                      </FormItem>
-                      <Row :gutter="30">
-                        <Col>
-                          <FormItem label="">
-                            <RadioGroup v-model="share.theme" type="button" @on-change="upDataShare">
-                              <Radio :label="i.name" v-for="(i, index) in share.themeChild" :key="index">{{i.name}}</Radio>
-                            </RadioGroup>
-                          </FormItem>
-                        </Col>
-                        <Col>
-                          <FormItem label="">
-                            <RadioGroup v-model="share.languages" type="button" @on-change="upDataShare">
-                              <Radio :label="i.name" v-for="(i, index) in share.languagesChild" :key="index">{{i.label}}</Radio>
-                            </RadioGroup>
-                          </FormItem>
-                        </Col>
-                      </Row>
-
-
-
-                      <FormItem label="iframe code demo">
-                        <div v-html="share.iframeLink" style="height: 240px; width: 1000px" id="getSharePicture"></div>
-                        <Spin size="large" fix v-if="share.load"></Spin>
-                      </FormItem>
-                      <Divider />
-                      <FormItem label="image card">
-                        <div id="setSharePicture"></div>
-                      </FormItem>
-                    </Form>
-                  </Drawer>
-                  <Divider type="vertical"/>
-
                   <ButtonGroup type="button">
                     <Button type="primary">
                       跟踪此玩家
@@ -116,6 +74,14 @@
                       <Icon type="md-arrow-dropdown"/>
                     </Button>
                   </ButtonGroup>
+                  <Divider type="vertical"/>
+                  <!-- 分享 share S -->
+                  <ShareDetail>
+                    <Button type="primary">
+                      <Icon type="md-share"/>
+                    </Button>
+                  </ShareDetail>
+                  <!-- 分享 share E -->
                 </Col>
               </template>
             </Row>
@@ -208,40 +174,35 @@
         <br>
         <Card dis-hover>
           <Tabs type="card">
-            <TabPane :label="$t('detail.info.gameScores', { msg: 'gameScores' })">
-              <!-- 战绩链接 -->
-              <div v-show="cheater.originUserId">
-                <p v-for="g in games" :key="g.game">
-                  <Tag>
-                    {{ g.game }}
-                  </Tag>
-                  <a v-show="`${g.game}` === 'bf1'" target="_blank"
-                     :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originUserId}`">
-                    battlefieldtracker
-                  </a>
-                  <Divider type="vertical" v-show="`${g.game}` === 'bf1'"/>
-                  <a v-show="`${g.game}` === 'bf1'" target="_blank"
-                     :href="`http://bf1stats.com/pc/${cheater.originUserId}`">
-                    bf1stats
-                  </a>
-                  <Divider type="vertical" v-show="`${g.game}` === 'bfv'"/>
-                  <a v-show="`${g.game}` === 'bfv'" target="_blank"
-                     :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originUserId}`">
-                    battlefieldtracker
-                  </a>
-                  <Divider type="vertical"/>
-                  <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originUserId}`">
-                    247fairplay
-                  </a>
-                </p>
-
-                <div>
-                  <a v-if="cheater.trackerShot" :href="cheater.trackerShot" target="_blank">bf1tracker数据截图</a>
-                  <a v-if="cheater.trackerWeaponShot" :href="cheater.trackerWeaponShot"
-                     target="_blank">bf1tracker武器截图</a>
-                  <a v-if="cheater.bf1statsShot" :href="cheater.bf1statsShot" target="_blank">bf1stats数据截图</a>
-                </div>
+            <TabPane :label="$t('detail.info.gameScores', { msg: 'gameScores' })" v-show="cheater.originUserId">
+              <!-- 战绩链接 S -->
+              <div>
+                <RecordLink :cheater="cheater"></RecordLink>
+<!--                <p v-for="g in games" :key="g.game">-->
+<!--                  <Tag>-->
+<!--                    {{ g.game }}-->
+<!--                  </Tag>-->
+<!--                  <a v-show="`${g.game}` === 'bf1'" target="_blank"-->
+<!--                     :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originUserId}`">-->
+<!--                    battlefieldtracker-->
+<!--                  </a>-->
+<!--                  <Divider type="vertical" v-show="`${g.game}` === 'bf1'"/>-->
+<!--                  <a v-show="`${g.game}` === 'bf1'" target="_blank"-->
+<!--                     :href="`http://bf1stats.com/pc/${cheater.originUserId}`">-->
+<!--                    bf1stats-->
+<!--                  </a>-->
+<!--                  <Divider type="vertical" v-show="`${g.game}` === 'bfv'"/>-->
+<!--                  <a v-show="`${g.game}` === 'bfv'" target="_blank"-->
+<!--                     :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originUserId}`">-->
+<!--                    battlefieldtracker-->
+<!--                  </a>-->
+<!--                  <Divider type="vertical"/>-->
+<!--                  <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originUserId}`">-->
+<!--                    247fairplay-->
+<!--                  </a>-->
+<!--                </p>-->
               </div>
+              <!-- 战绩链接 E -->
             </TabPane>
           </Tabs>
         </Card>
@@ -255,6 +216,7 @@
               {{ $t('detail.info.timeLine', {msg: 'timeLine'}) }}
             </Col>
             <Col>
+              <!-- 时间轴筛选 S -->
               <ButtonGroup type="button">
                 <Select v-model="timeline.seeType" size="small">
                   <Option v-for="(item, index) in timeline.seeTypeList" :value="item.value" :key="index">{{
@@ -276,6 +238,7 @@
               <Button size="small" type="dashed" @click="getTimeline">
                 <Icon type="md-refresh"/>
               </Button>
+              <!-- 时间轴筛选 E -->
             </Col>
           </Row>
           <Row :gutter="20" type="flex">
@@ -906,35 +869,24 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
-import theme from "../assets/themes.json";
-import languages from "../assets/languages.json";
+import BFBAN from "/src/assets/js/bfban";
+import theme from "/public/conf/themes.json";
 
 import {api, http, http_token, util} from '../assets/js/index'
 import vueQr from 'vue-qr'
 import translate from 'google-translate-open-api';
-import html2canvas from 'html2canvas';
 
 import Empty from '../components/Empty.vue'
 import Edit from "../components/Edit";
 import BusinessCard from "../components/businessCard.vue";
+import ShareDetail from "../components/ShareDetail.vue";
+import RecordLink from "../components/RecordLink.vue";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
 export default new BFBAN({
   data() {
     return {
-      share: {
-        statusSharePicture: false,
-        show: false,
-        load: false,
-        themeChild: theme.child,
-        theme: theme.default,
-        languagesChild: languages.child,
-        languages: languages.default,
-        webLink: '',
-        iframeLink: ''
-      },
       appeal: {
         load: false,
         show: false,
@@ -944,7 +896,15 @@ export default new BFBAN({
       cheater: {
         originId: '',
       },
-      origins: [],
+      reply: {
+        cheaterId: '',
+        userId: '',
+        content: '',
+        toFloor: '',
+        toUserId: '',
+        captcha: '',
+        captchaUrl: {},
+      },
       games: [],
       timelineList: [],
       timeline: {
@@ -970,7 +930,6 @@ export default new BFBAN({
       },
       skip: 0,
       limit: 100,
-
       verify: {
         status: 0,
         checkbox: [],
@@ -979,32 +938,18 @@ export default new BFBAN({
       },
       spinShow: true,
       verifySpinShow: false,
-      reply: {
-        cheaterId: '',
-        userId: '',
-        content: '',
-        toFloor: '',
-        toUserId: '',
-        captcha: '',
-        captchaUrl: {},
-      },
       replySpinShow: false,
-
       isCheaterExist: true,
-
       replyModal: false,
-
       cheatMethodsGlossary: null,
-
       fastReply: {
         content: ['stats', 'evidencePic', 'evidenceVid'],
         selected: [],
       },
-
       updateUserInfospinShow: false,
     }
   },
-  components: {Empty, Edit, BusinessCard, vueQr},
+  components: {Empty, Edit, BusinessCard, ShareDetail, RecordLink, vueQr},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -1015,7 +960,6 @@ export default new BFBAN({
     this.http = http_token.call(this);
 
     this.loadData();
-    this.upDataShare();
     this.getCheatersInfo();
     this.getTimeline();
     this.refreshCaptcha();
@@ -1077,6 +1021,10 @@ export default new BFBAN({
       };
       return name ? object[name] : object;
     },
+    isBan () {
+      // TODO
+      this.cheater.avatarLinkError = false;
+    },
     /**
      * 获取作弊者档案
      * 基础信息
@@ -1095,6 +1043,7 @@ export default new BFBAN({
           this.cheater.games.split(',').forEach(i => {
             this.games.push({game: i});
           })
+          this.isBan();
         } else {
           this.$router.push({name: "notFound"});
         }
@@ -1414,7 +1363,7 @@ export default new BFBAN({
           this.cheater.originUserId = originUserId;
           this.cheater.avatarLink = avatarLink;
 
-          this.origins.unshift(d.data.origin);
+          // this.origins.unshift(d.data.origin);
 
           this.$Message.success(this.$i18n.t('detail.messages.updateComplete'));
         } else {
@@ -1445,42 +1394,11 @@ export default new BFBAN({
       that.timelineList[index].description_cont = that.timelineList[index].description;
       that.timelineList[index].description_translate = result.data[0];
     },
-    /**
-     * 生成分享图片
-     */
-    onGenerateSharePicture(status) {
-      const that = this;
-      if (!status || this.share.statusSharePicture) return;
-      this.share.load = true;
-      setTimeout(function () {
-        html2canvas(document.querySelector("#getSharePicture"), {
-          allowTaint: true,
-          useCORS: true,
-          scale: 1,
-          imageTimeout: 100000,
-          proxy: 'secure.download.dm.origin.com'
-        }).then(canvas => {
-          that.share.statusSharePicture = true;
-          document.querySelector("#setSharePicture").after(canvas);
-          that.share.load = false;
-        });
-      }, 1000);
-    },
-    /**
-     * 更新 / 设置分享内容
-     */
-    upDataShare () {
-      this.share = Object.assign(this.share, {
-        webLink: window.location.origin + window.location.pathname,
-        iframeLink: `<iframe src="${window.location.href}?full=true&theme=${this.share.theme}&lang=${this.share.languages}" width="1000px" height="215px" align="center" scrolling="auto" frameborder="0" style="filter:chroma(color=#ffffff)" >`
-      });
-    }
   },
   computed: {
     isAdmin() {
       const user = this.$store.state.user;
       const is = user ? user.userinfo.privilege !== 'normal' : false;
-
       return Boolean(is);
     },
     isLogin() {

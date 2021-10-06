@@ -18,7 +18,7 @@ export default class Conf {
   };
 
   async initConf () {
-    let {requestDev, requestDeBug, requestDefault} = await import('/src/assets/requestConf.json');
+    let {requestDev, requestDeBug, requestDefault} = await import('/public/conf/requestConf.json');
     this.CONF = Object.assign(this.CONF, {requestDev}, {requestDeBug} , {requestDefault});
     return this.CONF;
   }

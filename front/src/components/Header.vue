@@ -108,7 +108,7 @@
 <script>
 import {api, http, http_token} from '../assets/js/index'
 
-import menu from '../assets/headerMenu.json'
+import menu from '/public/conf/headerMenu.json'
 
 import Header_message from "./Header_message";
 
@@ -132,7 +132,7 @@ export default {
   },
   methods: {
     async loadData() {
-      const privileges = await import('/src/assets/privilege.json');
+      const privileges = await import('/public/conf/privilege.json');
       this.privileges = privileges.child;
     },
     signout() {

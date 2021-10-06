@@ -42,7 +42,7 @@
 <script>
 import {api, http} from '../assets/js/index';
 
-import privilege from '../assets/privilege.json'
+import privilege from '/public/conf/privilege.json'
 
 export default {
   props: {

@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     async loadData() {
-      const privileges = await import('/src/assets/privilege.json');
+      const privileges = await import('/public/conf/privilege.json');
       this.privileges = privileges.child;
     },
     async onMessageMark (id, type) {

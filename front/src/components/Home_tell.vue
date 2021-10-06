@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import tell from '../assets/tells.json'
+import tell from '/public/conf/tells.json'
 
 export default {
   data() {

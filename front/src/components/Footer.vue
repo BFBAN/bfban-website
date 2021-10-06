@@ -95,8 +95,8 @@
 
 <script>
 import packageInfo from '../../package.json';
-import footerNavs from '../assets/footerNavs.json';
-import link from '../assets/link.json';
+import footerNavs from '/public/conf/footerNavs.json';
+import link from '/public/conf/link.json';
 
 export default {
   data() {
@@ -116,7 +116,7 @@ export default {
   },
   methods: {
     async loadData () {
-      const languages = await import('/src/assets/languages.json');
+      const languages = await import('/public/conf/languages.json');
 
       this.languages = languages.child;
     },

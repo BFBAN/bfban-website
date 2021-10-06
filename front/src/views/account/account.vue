@@ -244,8 +244,8 @@ export default {
   },
   methods: {
     async ready() {
-      const languages = await import('/src/assets/languages.json');
-      const privileges = await import('/src/assets/privilege.json');
+      const languages = await import('/public/conf/languages.json');
+      const privileges = await import('/public/conf/privilege.json');
       this.privileges = this.privileges.concat(privileges.child)
       this.languages = this.languages.concat(languages.child)
     },

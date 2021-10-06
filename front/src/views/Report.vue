@@ -257,7 +257,7 @@
 import {api, http, http_token, util, regular} from '../assets/js/index'
 import {checkReportFormData} from "@/mixins/common";
 
-import gameName from '../assets/gameName.json'
+import gameName from '/public/conf/gameName.json'
 import Edit from "@/components/Edit.vue";
 
 export default {

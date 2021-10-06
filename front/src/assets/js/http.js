@@ -6,11 +6,6 @@ export default class Http extends Conf {
   POST = 'post';
   //..
 
-  constructor() {
-    super();
-    super.initConf();
-  }
-
   /**
    * TODO 未写拦截，有空完成
    */
@@ -22,6 +17,11 @@ export default class Http extends Conf {
       return status < 500;
     }
   })
+
+  constructor() {
+    super();
+    super.initConf();
+  }
 
   getUrl () {
     return this.CONF[this.CONF.requestDefault];
@@ -41,6 +41,12 @@ export default class Http extends Conf {
       data: requestData.data,
       params: requestData.params,
     });
+
+    return result;
+  }
+
+  async cors (url, data = {data: {}}) {
+    let result = await this.HTTP.cors(url, data);
 
     return result;
   }

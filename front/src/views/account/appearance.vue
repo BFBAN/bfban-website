@@ -40,7 +40,7 @@
 
 <script>
 import {storage} from '../../assets/js/index'
-import themes from '../../assets/themes.json'
+import themes from '/public/conf/themes.json'
 
 export default {
   name: "appearance",
