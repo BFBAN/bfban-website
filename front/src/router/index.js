@@ -12,6 +12,7 @@ const Account   =() => import('@/views/Account.vue');
 const Dashboard =() => import('@/views/Dashboard.vue');
 const About     =() => import('@/views/About.vue');
 const NotFound  =() => import('@/views/NotFound.vue');
+const SignupV   =() => import('@/views/SignupV.vue');
 
 import store from '@/store';
 
@@ -58,7 +59,7 @@ const routes = [
   { name: 'dashboard', path: '/dashboard', component: Dashboard },
 
   { name: 'notFound', path: '/404', component: NotFound },
-
+  { name: 'signupV', path: '/signupV', component: SignupV },
   // otherwise redirect to home
   { path: '*', redirect: '/404' },
 

@@ -5,18 +5,12 @@
         <Divider>{{$t("signup.title")}}</Divider>
 
         <FormItem>
-          <div style="padding: 10px; font-size: 14px; font-weight: bold; background: #CC0000; color: white; border: 1px solid #dcdee2; border-radius: 4px;">
-            <p>注册已暂时关闭</p>
-            <p>Register is temporarily unavaliable</p>
-            <p>如果您的确需要注册，请至 <a href="https://myaccount.ea.com/cp-ui/privacy/index">EA 隐私设定</a> 中允许按邮箱搜索开启，
-            并使用与origin账号绑定的邮箱发送需注册账号名至 <a href="mailto:register@bfban.com">register@bfban.com</a></p>
-            <p>
-              If you do need to register an account, please go to 
+          <div style="padding: 10px; font-size: 14px; font-weight: bold; background: #FFFF80; color: black; border: 1px solid #dcdee2; border-radius: 4px;">
+            <p>请至 <a href="https://myaccount.ea.com/cp-ui/privacy/index">EA 隐私设定</a> 中将允许按邮箱搜索开启</p>
+            <p>Please go to 
               <a href="https://myaccount.ea.com/cp-ui/privacy/index">EA privacy settings</a>
-              to enable "search by email",
-              and send the username you want by that email to <a href="mailto:register@bfban.com">register@bfban.com</a>
+              to enable "search by email".
             </p>
-            
           </div>
         </FormItem>
         <FormItem :label="$t('signup.form.username')">
@@ -31,8 +25,8 @@
           <Input v-model="signup.originId" :placeholder="$t('signup.placeholder.originId')" />
         </FormItem>
 
-        <FormItem :label="$t('signup.form.qq')">
-          <Input v-model="signup.qq" :placeholder="$t('signup.placeholder.qq')" />
+        <FormItem :label="$t('signup.form.email')">
+          <Input v-model="signup.email" :placeholder="$t('signup.placeholder.email')" />
         </FormItem>
 
         <FormItem :label="$t('signup.form.captcha')">
@@ -67,7 +61,7 @@ export default {
         username: '',
         password: '',
         originId: '',
-        qq: '',
+        email: '',
         captcha: '',
       },
       spinShow: false,
@@ -80,7 +74,7 @@ export default {
       waitForAction.call(this.$refs.reCaptcha);
     },
     handleSignup: function() {
-      let {username, password, originId, qq, captcha} = _.each(this.signup, (v, k, o) => {
+      let {username, password, originId, email, captcha} = _.each(this.signup, (v, k, o) => {
         o[k] = v.trim();
       });
 
@@ -99,7 +93,7 @@ export default {
             password,
             captcha,
             originId,
-            qq,
+            email,
           }
         })
         .then((res) => {
@@ -107,18 +101,19 @@ export default {
 
           const d = res.data;
           if (d.error === 1) {
+            switch(d.msg) {
+            case 'username exist': d.msg = this.$t('signup.usernameExist'); break;
+            case 'player not found': d.msg = this.$t('signup.playerNotFound'); break;
+            case 'originId exist': d.msg = this.$t('signup.originIdExist'); break;
+            default: break;
+            }
             this.$Message.error(this.$i18n.t('signup.failed') + d.msg);
 
             this.signup.password = '';
             this.signup.captcha = '';
             this.refreshCaptcha();
           } else {
-            // dispatch 异步的
-            this.$store.dispatch('signin', d.data)
-            .then(() => {
-              // redirect
-              this.$router.push('/')
-            })
+            this.$Message.success(this.$t('signup.checkemail'));
           }
         })
       } else {
