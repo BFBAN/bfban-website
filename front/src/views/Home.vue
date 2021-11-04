@@ -256,10 +256,6 @@ export default new BFBAN({
           let activities = d.data;
           let new_activities = [];
 
-          // activities = _.sortBy(activities, (v) => {
-          //   return (new Date(v.createTime)).getTime();
-          // }).reverse();
-
           // slice array
           for (let i = 0; i < activities.length; i += 3) {
             new_activities.push(activities.slice(i, i + 3));
@@ -294,7 +290,7 @@ export default new BFBAN({
 })
 </script>
 
-<style>
+<style lang="less">
 @keyframes rowup {
   from {
     transform: translateX(0%);

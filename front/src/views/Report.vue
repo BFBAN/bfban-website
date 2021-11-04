@@ -20,7 +20,7 @@
                  :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab.toString())">
           <Card dis-hover v-if="tabs.list[index].statusOk == 0">
             <Form :label-width="150"
-                  :model="tabs.list[index].formItem" :rules="ruleValidate"
+                  :model="tabs.list[index].formItem" :rules="tabs.list[index].ruleValidate"
                   ref="formValidate"
                   label-position="left">
               <!-- 基础信息 S -->
@@ -151,31 +151,41 @@
                         {{$t("report.info.uploadManual1", {msg: "uploadManual1",}) }}
                         <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{$t("report.info.uploadManual2", {msg: "uploadManual2",}) }}
                       </Alert>
-                      <Row :gutter="0" v-for="(blink, blinkindex) in tabs.list[index].formItem.videoLink"
-                           :key="blinkindex">
-                        <Col flex="auto">
-                          <Input
-                              style="margin-bottom: 5px"
-                              v-model="tabs.list[index].formItem.videoLink[blinkindex]"
-                              :placeholder="$t('report.info.required')">
-                          </Input>
-                        </Col>
-                        <Col>
-                          <Divider type="vertical" v-if="tabs.list[index].formItem.videoLink.length > 0"/>
-                          <Button type="dashed"
-                                  @click="tabs.list[index].formItem.videoLink.splice(blinkindex, 1)"
-                                  v-if="tabs.list[index].formItem.videoLink.length > 0">
-                            <Icon type="md-trash"/>
-                          </Button>
-                        </Col>
-                      </Row>
-                      <Button type="dashed"
+
+                      <!-- 视频链接 S -->
+                      <FormItem 
+                        :prop="`videoLink[${blinkindex}]`"
+                        :rules="{validator: checkVideoLink, trigger: 'change'}"
+                        v-for="(blink, blinkindex) in tabs.list[index].formItem.videoLink"
+                        :key="blinkindex">
+                        <Row :gutter="0">
+                          <Col flex="auto">
+                            <Input
+                                style="margin-bottom: 5px"
+                                clearable
+                                v-model="tabs.list[index].formItem.videoLink[blinkindex]"
+                                :placeholder="$t('report.info.required')">
+                            </Input>
+                          </Col>
+                          <Col>
+                            <Divider type="vertical" v-if="tabs.list[index].formItem.videoLink.length > 0"/>
+                            <Button type="dashed"
+                                    @click="tabs.list[index].formItem.videoLink.splice(blinkindex, 1)"
+                                    v-if="tabs.list[index].formItem.videoLink.length > 0">
+                              <Icon type="md-trash"/>
+                            </Button>
+                          </Col>
+                        </Row>
+                      </FormItem>
+
+                      <Button type="primary"
                               long
-                              @click="tabs.list[index].formItem.videoLink.splice(tabs.list[index].formItem.videoLink.length + 1, 0, '')"
+                              @click="handleVideoLink"
                               v-if="tabs.list[index].formItem.videoLink.length < 10">
                         <Icon type="md-add"/><span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 10)</span>
                       </Button>
                       <span class="hint">{{ $t("report.info.uploadManual3", {msg: "uploadManual3",}) }}</span>
+                      <!-- 视频链接 E -->
                     </Col>
                     <Col>
                       <img src="../assets/images/videoStyle.png" width="300">
@@ -254,7 +264,7 @@
 </template>
 
 <script>
-import {api, http, http_token, util, regular} from '../assets/js/index'
+import {api, http, http_token, http_connect, util, regular} from '../assets/js/index'
 import {checkReportFormData} from "@/mixins/common";
 
 import gameName from '/public/conf/gameName.json'
@@ -276,23 +286,6 @@ export default {
       spinShow: false,
       failedOfNotFound: false,
       cheatMethodsGlossary: [],
-      ruleValidate: {
-        gameName: [
-          {required: true, trigger: 'blur'}
-        ],
-        originId: [
-          {required: true, trigger: 'blur'}
-        ],
-        checkbox: [
-          {required: true, type: 'array', min: 1, trigger: 'change'},
-        ],
-        description: [
-          {required: true, trigger: 'change'},
-        ],
-        captcha: [
-          {required: true, trigger: 'blur'}
-        ],
-      }
     };
   },
   components: { Edit },
@@ -345,6 +338,7 @@ export default {
      */
     handleTabsAdd() {
       let newFormData = {
+        // form data
         formItem: {
           gameName: gameName.child[gameName.defaultIndex].value,
           originId: "",
@@ -356,10 +350,66 @@ export default {
           originPersonaId: "",
           avatarLink: "",
         },
+        // form rule
+        ruleValidate: {
+          gameName: [
+            {required: true, trigger: 'blur'}
+          ],
+          originId: [
+            {required: true, trigger: 'blur'}
+          ],
+          checkbox: [
+            {required: true, type: 'array', min: 1, trigger: 'change'},
+          ],
+          description: [
+            {required: true, trigger: 'change'},
+          ],
+          captcha: [
+            {required: true, trigger: 'blur'}
+          ],
+        },
         statusOk: 0,
         captchaUrl: {}
       };
       this.tabs.list.push(newFormData);
+    },
+    /**
+     * 添加视频链接
+     */
+    handleVideoLink () {
+      const FROM = this.tabs.list[this.tabs.count];
+
+      // 添加link
+      FROM.formItem.videoLink.splice(FROM.formItem.videoLink.length + 1, 0, '');
+    },
+    /**
+     * 校验地址
+     */
+    checkVideoLink (rule, value, callback) {
+      const errorText = `bad format`;
+      const val = value;
+
+      if (!val) {
+        return callback('Cannot be empty');
+      }
+
+      // 正则校验
+      const reg = regular.check('link', val);
+      if (reg.code != 0) {
+        callback(new Error(errorText));
+        return;
+      } 
+
+      // 实体请求校验
+      http_connect.url(val, function (res) {
+        if (res.code != 0) {
+          callback(res.msg);
+          return;
+        }
+
+        // 通过
+        callback();
+      });
     },
     checkVideoAndImg(formData) {
 

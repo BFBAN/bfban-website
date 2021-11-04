@@ -176,32 +176,7 @@
           <Tabs type="card">
             <TabPane :label="$t('detail.info.gameScores', { msg: 'gameScores' })" v-show="cheater.originUserId">
               <!-- 战绩链接 S -->
-              <div>
-                <RecordLink :cheater="cheater"></RecordLink>
-<!--                <p v-for="g in games" :key="g.game">-->
-<!--                  <Tag>-->
-<!--                    {{ g.game }}-->
-<!--                  </Tag>-->
-<!--                  <a v-show="`${g.game}` === 'bf1'" target="_blank"-->
-<!--                     :href="`https://battlefieldtracker.com/bf1/profile/pc/${cheater.originUserId}`">-->
-<!--                    battlefieldtracker-->
-<!--                  </a>-->
-<!--                  <Divider type="vertical" v-show="`${g.game}` === 'bf1'"/>-->
-<!--                  <a v-show="`${g.game}` === 'bf1'" target="_blank"-->
-<!--                     :href="`http://bf1stats.com/pc/${cheater.originUserId}`">-->
-<!--                    bf1stats-->
-<!--                  </a>-->
-<!--                  <Divider type="vertical" v-show="`${g.game}` === 'bfv'"/>-->
-<!--                  <a v-show="`${g.game}` === 'bfv'" target="_blank"-->
-<!--                     :href="`https://battlefieldtracker.com/bfv/profile/origin/${cheater.originUserId}`">-->
-<!--                    battlefieldtracker-->
-<!--                  </a>-->
-<!--                  <Divider type="vertical"/>-->
-<!--                  <a target="_blank" :href="`https://www.247fairplay.com/CheatDetector/${cheater.originUserId}`">-->
-<!--                    247fairplay-->
-<!--                  </a>-->
-<!--                </p>-->
-              </div>
+              <RecordLink :cheater="cheater"></RecordLink>
               <!-- 战绩链接 E -->
             </TabPane>
           </Tabs>
@@ -535,6 +510,7 @@
                   <Form label-position="top">
                     <FormItem>
                       <Input @on-keydown="handleCmdEnter($event, 'reply')"
+                             :border="false"
                              v-model="reply.content"
                              type="textarea"
                              :autosize="{minRows: 5}"

@@ -5,7 +5,7 @@ export default class Regular {
     REGULARTYPE = {
         'link': {
             tipError: '没有',
-            v: /(http(preview.svg?):)([/|.|\w|\preview.svg|-])*\.(?:jpe?g|gif|png|bmp)/
+            v: /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-.,@?^=%&amp;:/~+#]*[\w\-@?^=%&amp;/~+#])?/
         },
         'image': {},
         'video': {},
