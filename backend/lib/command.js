@@ -70,7 +70,7 @@ async function commandUser(args, user) {            //  [0]  [1]  [2]  [3]
     if(!Number.isInteger(args[2]-0))
         return await sendMessage(null, user.id, 'command', 'user: incorrect params.');
     /** @type {import("../typedef.js").User} */
-    const target = await db.select('*').from('users').where({id: args[2]-0 }).first().then(r=>r.privilege = JSON.parse(r.privilege));
+    const target = await db.select('*').from('users').where({id: args[2]-0 }).first();
     if(!target)
         return await sendMessage(null, user.id, 'command', 'user: no such user.');
 

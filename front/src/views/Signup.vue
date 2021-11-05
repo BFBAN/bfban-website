@@ -1,129 +1,275 @@
 <template>
   <div class="container">
+    <br>
     <div class="content">
-      <Form :label-width="80" style="position: relative;">
-        <Divider>{{$t("signup.title")}}</Divider>
+      <Row>
+        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}" >
+          <Card shadow>
+            <p slot="title">{{ this.$route.name == bindOriginName ? $t("bindOrigin.title") : $t("signup.title") }}</p>
 
-        <FormItem>
-          <div style="padding: 10px; font-size: 14px; font-weight: bold; background: #FFFF80; color: black; border: 1px solid #dcdee2; border-radius: 4px;">
-            <p>请至 <a href="https://myaccount.ea.com/cp-ui/privacy/index">EA 隐私设定</a> 中将允许按邮箱搜索开启</p>
-            <p>Please go to 
-              <a href="https://myaccount.ea.com/cp-ui/privacy/index">EA privacy settings</a>
-              to enable "search by email".
-            </p>
-          </div>
-        </FormItem>
-        <FormItem :label="$t('signup.form.username')">
-          <Input v-model="signup.username" :placeholder="$t('signup.placeholder.username')" />
-        </FormItem>
+            <Steps :current="stepsIndex" class="mobile-hide">
+              <Step title="基础信息" content="账户基本"></Step>
+              <Step title="绑定" content="关联橘子平台"></Step>
+              <Step title="验证码" content="验证是否机器人"></Step>
+              <Step title="确认" content="邮箱验证码"></Step>
+            </Steps>
 
-        <FormItem :label="$t('signup.form.password')">
-          <Input type="password" v-model="signup.password" :placeholder="$t('signup.placeholder.password')" />
-        </FormItem>
+            <Divider class="mobile-hide"></Divider>
 
-        <FormItem :label="$t('signup.form.originId')">
-          <Input v-model="signup.originId" :placeholder="$t('signup.placeholder.originId')" />
-        </FormItem>
+            <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate" style="position: relative;">
+              <div v-if="stepsIndex == 0">
+                <FormItem :label="$t('signup.form.username')" prop="username">
+                  <Input v-model="signup.username" maxlength="40" size="large" :placeholder="$t('signup.placeholder.username')"/>
+                </FormItem>
+                <FormItem :label="$t('signup.form.password')" prop="password">
+                  <Input type="password" password minlength="6" v-model="signup.password" size="large" :placeholder="$t('signup.placeholder.password')"/>
+                </FormItem>
+              </div>
 
-        <FormItem :label="$t('signup.form.email')">
-          <Input v-model="signup.email" :placeholder="$t('signup.placeholder.email')" />
-        </FormItem>
+              <div v-if="stepsIndex == 1">
+                <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
+                  <Input v-model="signup.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
+                </FormItem>
+                <FormItem :label="$t('signup.form.originName')" prop="originName">
+                  <Input v-model="signup.originName" size="large" :placeholder="$t('signup.placeholder.originName')"/>
+                </FormItem>
+              </div>
 
-        <FormItem :label="$t('signup.form.captcha')">
-          <Input type="text" v-model="signup.captcha" :placeholder="$t('signup.form.captcha')" />
-          <img ref="captcha">
-          <a ref="reCaptcha" href="#" @click.stop.prevent="refreshCaptcha">
-            {{$t('signup.form.getCaptcha')}}
-          </a>
-        </FormItem>
+              <div v-show="stepsIndex == 2">
+                <FormItem :label="$t('signup.form.captcha')">
+                  <Input type="text" v-model="signup.captcha"
+                         size="large"
+                         maxlength="4"
+                         :placeholder="$t('signup.form.captcha')">
+                    <div slot="append" ref="captcha" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                      <div v-html="captchaUrl.content"></div>
+                    </div>
+                  </Input>
+                </FormItem>
+              </div>
 
-        <FormItem>
-          <Button @click.prevent.stop="handleSignup" type="primary">{{$t('signup.form.submit')}}</Button>
+              <div v-if="stepsIndex == 3">
+                <EmailTip :email="signup.originEmail"></EmailTip>
+              </div>
 
-          <router-link :to="{name: 'signin'}">{{$t('signup.form.submitHint')}}</router-link>
-        </FormItem>
+              <Row>
+                <Col flex="auto">
+                  <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
+                          :disabled="stepsIndex == 0 || this.$route.name == bindOriginName"
+                          @click.prevent.stop="stepsIndex--" size="large">{{ $t('signup.prev') }}
+                  </Button>
+                  <Divider type="vertical"/>
+                  <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2" @click.prevent.stop="stepsIndex++" size="large"
+                          type="primary">{{ $t('signup.next') }}
+                  </Button>
+                </Col>
+                <Col flex="auto" align="right" type="flex">
+                  <Button v-if="stepsIndex == 2" long
+                          @click.prevent.stop="handleSignup('formValidate')"
+                          :disabled="!signup.captcha"
+                          :loading="spinShow"
+                          size="large" type="primary">{{ $t('signup.form.submit') }}
+                  </Button>
+                </Col>
+              </Row>
 
-        <Spin size="large" fix v-show="spinShow"></Spin>
-      </Form>
+              <Divider>
+                <router-link :to="{name: 'signin'}">{{ $t('signup.form.submitHint') }}</router-link>
+                <Divider type="vertical"/>
+                <router-link :to="{name: 'forgetPassword'}">{{ $t('signup.form.forgetPasswordHint') }}</router-link>
+              </Divider>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
     </div>
+    <br>
   </div>
-
 </template>
 
 <script>
-import { testWhitespace, getCsrfToken, waitForAction } from '@/mixins/common';
-import ajax, { baseURL } from "@/mixins/ajax";
+import {http, api, http_token} from '../assets/js/index'
+import {testWhitespace, waitForAction} from "@/mixins/common";
+import EmailTip from "../components/EmailTip";
+import _ from "lodash";
 
 export default {
   data() {
     return {
+      stepsIndex: 0,
+      ruleValidate: {
+        username: [
+          {required: true, min: 4, max:40, trigger: 'blur'}
+        ],
+        password: [
+          {required: true, min: 6, max: 40, trigger: 'blur'}
+        ],
+        originEmail: [
+          {required: true, trigger: 'blur'}
+        ],
+        originName: [
+          {required: true, trigger: 'blur'}
+        ],
+      },
       signup: {
         username: '',
         password: '',
-        originId: '',
-        email: '',
+        originEmail: '',
+        originName: '',
         captcha: '',
       },
+      captchaUrl: {},
       spinShow: false,
+
+      // 绑定页面名字
+      bindOriginName: 'bindOrigin',
     }
   },
-  methods: {
-    refreshCaptcha: function() {
-      this.$refs.captcha.src = baseURL + '/captcha?r=' + Math.random();
+  components: {EmailTip},
+  created() {
+    const { query, name } = this.$route;
 
-      waitForAction.call(this.$refs.reCaptcha);
-    },
-    handleSignup: function() {
-      let {username, password, originId, email, captcha} = _.each(this.signup, (v, k, o) => {
-        o[k] = v.trim();
-      });
+    this.http = http_token.call(this);
 
-      if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
-        this.spinShow = true;
+    if (name == this.bindOriginName) {
+        this.stepsIndex = 1;
 
-        ajax({
-          method: 'post',
-          url: '/account/signup',
-          headers: {
-            // 'x-csrf-token': getCsrfToken(),
-            // 'x-encrypt-captcha': Cookies.get('encryptCaptcha'),
-          },
-          data: {
-            username,
-            password,
-            captcha,
-            originId,
-            email,
-          }
-        })
-        .then((res) => {
-          this.spinShow = false;
-
-          const d = res.data;
-          if (d.error === 1) {
-            switch(d.msg) {
-            case 'username exist': d.msg = this.$t('signup.usernameExist'); break;
-            case 'player not found': d.msg = this.$t('signup.playerNotFound'); break;
-            case 'originId exist': d.msg = this.$t('signup.originIdExist'); break;
-            default: break;
-            }
-            this.$Message.error(this.$i18n.t('signup.failed') + d.msg);
-
-            this.signup.password = '';
-            this.signup.captcha = '';
-            this.refreshCaptcha();
-          } else {
-            this.$Message.success(this.$t('signup.checkemail'));
-          }
-        })
-      } else {
-        this.$Message.error(this.$i18n.t('signup.fillIn'));
-      }
+        delete this.ruleValidate.username;
+        delete this.ruleValidate.password;
     }
-  }
+
+    this.bindOriginVerify(query.code);
+    this.refreshCaptcha();
+  },
+  methods: {
+    refreshCaptcha: function () {
+      http.get(api["captcha"], {
+        params: {
+          r: Math.random()
+        }
+      }).then(res => {
+        if (res.data.success === 1) {
+          this.captchaUrl = res.data.data;
+        }
+      });
+      // waitForAction.call(this.$refs.reCaptcha);
+    },
+    handleSignup (name) {
+      const that = this;
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          let {username, password, originEmail, originName, captcha} = _.each(this.signup, (v, k, o) => {
+            o[k] = v.trim();
+          });
+
+          // 截停，账户绑定
+          if (this.$route.name == this.bindOriginName) {
+            this.bindOrigin({originEmail, originName, captcha});
+            return;
+          }
+
+          if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
+            this.spinShow = true;
+
+            http.post(api["account_signup"], {
+              data: {
+                data: {
+                  username,
+                  password,
+                  originEmail,	// must match the originName below
+                  originName,	// must have one of bf series game
+                  lang: this.$root.$i18n.locale
+                },
+                encryptCaptcha: this.captchaUrl.hash,
+                captcha
+              }
+            }).finally(() => {
+              that.registerVerify(this.captchaUrl.hash);
+              this.stepsIndex += 1;
+              this.spinShow = false;
+            })
+
+          } else {
+            this.$Message.error('请规范填写');
+          }
+        } else {
+          this.$Message.error('Fail!');
+        }
+      })
+    },
+    registerVerify (code) {
+      // 验证账户
+      http.get(api["account_signupVerify"], {
+        params: {code}
+      }).then((res) => {
+        const d = res.data;
+
+        if (d.success === 1) {
+          // dispatch 异步的
+          this.$store.dispatch('signin', d.data)
+            .then(() => {
+              // redirect
+              this.$router.push('/')
+            })
+        } else {
+          this.$Message.error('注册失败 ' + d.msg);
+
+          this.signup.password = '';
+          this.signup.captcha = '';
+          this.refreshCaptcha();
+        }
+      })
+    },
+    bindOrigin ({originEmail, originName, captcha}) {
+      this.spinShow = true;
+
+      this.http.post(api["user_bindOrigin"], {
+        data: {
+          data: {
+            originEmail,	// must match the originName below
+            originName,	// must have one of bf series game
+            lang: this.$root.$i18n.locale
+          },
+          encryptCaptcha: this.captchaUrl.hash,
+          captcha,
+        }
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.stepsIndex++;
+
+          this.$Message.success(d.message);
+        } else {
+          this.$Message.error(d.code);
+        }
+      }).finally(() => {
+        this.spinShow = false;
+      });
+    },
+    //
+    bindOriginVerify (code) {
+      if (!code) { return }
+
+      this.http.get(api["user_bindOriginVerify"], {
+        params: {code}
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.stepsIndex = 3;
+          this.$Message.success(d.message);
+
+          setInterval(() => this.$router.back(), 3000);
+        } else {
+          this.$Message.error(d.code);
+        }
+      }).finally(() => {
+
+      })
+    }
+  },
 }
 </script>
 
-<style>
-</style>
-
+<style></style>

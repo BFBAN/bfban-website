@@ -1,0 +1,77 @@
+{
+  "title": "footer",
+  "child": {
+    "row": [
+      {
+        "text": "footer.column.col2.title",
+        "child": [
+          {
+            "text": "Community network Discord",
+            "textLang": {
+              "en-US": "Community network Discord",
+              "zh-CN": "战地外网Discord社区"
+            },
+            "src": "//discord.gg/KCBM3GAW59"
+          },
+          {
+            "text": "战地中文社区",
+            "src": "//kaihei.co/uoJKC0",
+            "showLang": ["zh-CN"]
+          },
+          {
+            "text": "QQ BFBAN",
+            "src": "//jq.qq.com/?_wv=1027&k=pC07TOvE",
+            "showLang": ["zh-CN"]
+          },
+          {
+            "text": "github BFBAN",
+            "src": "//github.com/BFBAN"
+          },
+          {
+            "text": "bilibili BFBAN",
+            "src": "//space.bilibili.com/387820951",
+            "showLang": ["zh-CN"]
+          }
+        ]
+      },
+      {
+        "text": "footer.column.col3.title",
+        "child": [
+          {
+            "text": "header.report",
+            "src": "report",
+            "insideLang": true
+          },
+          {
+            "text": "header.about",
+            "src": "about",
+            "insideLang": true
+          },
+          {
+            "text": "header.cheaters",
+            "src": "cheaters",
+            "insideLang": true
+          }
+        ]
+      },
+      {
+        "text": "footer.column.col4.title",
+        "child": [
+          {
+            "text": "complaint mailbox",
+            "textLang": {
+              "en-US": "complaint mailbox",
+              "zh-CN": "投诉邮箱"
+            },
+            "src": "//mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg"
+          },
+          {
+            "text": "意见建议(兔小巢)",
+            "src": "//support.qq.com/products/64038",
+            "showLang": ["zh-CN"]
+          }
+        ]
+      }
+    ]
+  }
+}

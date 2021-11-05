@@ -1,0 +1,57 @@
+.@{tabs-prefix-cls} {
+  color: @text-color;
+
+  &&-card > &-bar &-tab {
+    border: 1px solid transparent;
+    background: #181818 !important;
+  }
+  &&-card > &-bar &-tab-active {
+    background: transparent;
+    border-color: @primary-color;
+    color: @primary-color;
+  }
+}
+
+.@{select-dropdown-prefix-cls} {
+  background-color: #212121 !important;
+}
+
+@card-prefix-cls: ~"@{css-prefix}card";
+
+.@{card-prefix-cls}{
+  background: #181818;
+
+  &:hover {
+    border-color: #000;
+  }
+}
+
+@page-prefix-cls: ~"@{css-prefix}page";
+
+.@{page-prefix-cls} {
+  &-item {
+    background-color: #2f2f2f;
+  }
+
+  &-prev,
+  &-next {
+    background-color: #252525;
+  }
+}
+
+@tag-prefix-cls: ~"@{css-prefix}tag";
+
+.@{tag-prefix-cls} {
+  background: @background-color-base;
+
+  &-dot{
+    background: #2d2c2c !important;
+  }
+}
+
+.@{modal-prefix-cls} {
+  &-content {
+    position: relative;
+    background-color: #373838 !important;
+  }
+}

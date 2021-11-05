@@ -1,0 +1,19 @@
+{
+  "static": true,
+  "child": [
+    {
+      "name": "菜萌",
+      "avatar": "https://q1.qlogo.cn/g?b=qq&nk=1214617226&s=100&t=1384608689",
+      "identity": ["BFBAN(WEB/APP)开发者"],
+      "content": "我非常喜欢《战地风云》，但是一直因为作弊者的问题被影响正常游戏，在某个时刻我参与了BFBAN，维护不同端，或许能为BFBAN添瓦. \n\n祝愿BFBAN能守护一片无作弊者环境",
+      "showLang": ["zh-CN"]
+    },
+    {
+      "name": "摸鱼校尉弦声声",
+      "avatar": "https://i0.hdslb.com/bfs/face/b55d20e2ba53717ac0e92a6645859c016cfc6ec1.jpg",
+      "identity": ["服主","Bilibili Up"],
+      "content": "制外挂总要付出代价\n你可能会被诋毁嘲笑这毫无意义，但这件事，你不是一个人在战斗\n之前网站上有一些鉴定错误的现象\n比如不是外挂标记为实锤，或者是外挂没有实锤，大家发现都可以私信我们\n大家如果想加入联BAN可以私信联合视频的UP主\n游戏不限，只要能抵制外挂做贡献就可以，任何形式抵制外挂都欢迎，有战地的私服更好",
+      "showLang": ["zh-CN"]
+    }
+  ]
+}

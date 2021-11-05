@@ -1,26 +1,14 @@
 "use strict";
 import EventEmitter from "events";
 import express from "express";
-import { check, body as checkbody, query as checkquery, validationResult, oneOf as checkOneof } from "express-validator";
-
-import db from "../mysql.js";
-import config from "../config.js";
-import * as misc from "../lib/misc.js";
-import verifyCaptcha from "../middleware/captcha.js";
-import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
-import { originClients, getUserProfileByName } from "../lib/origin.js"
-import { cheatMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
-import { siteEvent, stateMachine } from "../lib/bfban.js";
-import { userHasRoles } from "../lib/auth.js";
-import { UserRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router()
 
 /** @param {{dbId:number, userId: string, personaId: string}} @returns {Promise<number>} dbId */
 async function getPlayerId({dbId, userId, personaId}) {
-    const key = dbId? 'id' : (userId? 'originuserId' : (personaId? 'originPersonaId':undefined) );
-    const val = dbId? dbId : (userId? userId : (personaId? personaId:undefined) );
-    if(!key || !val)
+    const key = dbId ? 'id' : (userId ? 'originuserId' : (personaId ? 'originPersonaId' : undefined));
+    const val = dbId ? dbId : (userId ? userId : (personaId ? personaId : undefined));
+    if (!key || !val)
         return -1;
     const tmp = await db.select('id').from('players').where(key, '=', val).first();
     if(!tmp)
