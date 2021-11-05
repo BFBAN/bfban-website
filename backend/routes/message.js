@@ -1,22 +1,25 @@
 "use strict";
 import express from "express";
-import {body as checkbody, query as checkquery, validationResult} from "express-validator";
+import { check, body as checkbody, query as checkquery, validationResult } from "express-validator";
 
 import db from "../mysql.js";
-import {forbidPrivileges, verifyJWT} from "../middleware/auth.js";
-import {siteEvent} from "../lib/bfban.js";
-import {userHasRoles} from "../lib/auth.js";
-import {handleCommand} from "../lib/command.js";
+import config from "../config.js";
+import * as misc from "../lib/misc.js";
+import verifyCaptcha from "../middleware/captcha.js";
+import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
+import { siteEvent } from "../lib/bfban.js";
+import { userHasNotRoles, userHasRoles } from "../lib/auth.js";
+import { handleCommand } from "../lib/command.js";
 import logger from "../logger.js";
 
 const router = express.Router();
 
 router.get('/', verifyJWT, [
-    checkquery('box').optional().isIn(['in', 'out', 'announce']),
+    checkquery('box').optional().isIn(['in','out','announce']),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
     checkquery('from').optional().isInt({min: 0}),
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -31,12 +34,14 @@ async (req, res, next)=> {
         case 'in':
             result.messages = await db.select('*').from('messages').where({toUserId: req.user.id})
             .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit);
-            result.total = await db('messages').count({num: 'id'}).where({toUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
+            result.total = await db('messages').count({num: 'id'}).where({toUserId: req.user.id})
+            .andWhere('createTime','>=',new Date(from)).first().then(r=>r.num);
             break;
         case 'out':
             result.messages = await db.select('*').from('messages').where({byUserId: req.user.id})
             .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit); 
-            result.total = await db('messages').count({num: 'id'}).where({byUserId: req.user.id}).andWhere('createTime','>=',new Date(from));
+            result.total = await db('messages').count({num: 'id'}).where({byUserId: req.user.id})
+            .andWhere('createTime','>=',new Date(from)).first().then(r=>r.num);
             break;
         case 'announce':
             result.messages = [];
@@ -63,6 +68,36 @@ async (req, res, next)=> {
     }
 });
 
+router.get('/poll', verifyJWT, forbidPrivileges(['blacklisted']), 
+/** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+async (req, res, next)=>{
+    try {
+        const maxTimeout = config.pollingTimeout;
+        let timer;
+        let listener;
+        let data = await new Promise((res, rej)=> {
+            timer = setTimeout(()=>{
+                res(null);
+            }, maxTimeout);
+            listener = (params)=> {
+                if(params.to != req.user.id) return;
+                res(params);
+            }
+            siteEvent.addListener('message', listener);
+        }).finally(()=>{
+            siteEvent.removeListener('message', listener);
+            clearTimeout(timer);
+        });
+        return res.status(200).json({
+            success: 1, 
+            code: data? 'messagePoll.got':'messagePoll.empty',
+            data: data
+        });
+    } catch(err) {
+        next(err);
+    }
+});
+
 router.post('/', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toUserId').if( checkbody('data.type').isIn(['direct','warn','fatal']) ).isInt({min: 0}),
     checkbody('data.type').isIn(['direct','warn','fatal','toAll','toAdmins','toNormals','command']),
@@ -76,6 +111,7 @@ async (req, res, next)=> {
         
         /** @type {'direct'|'warn'|'fatal'|'toAll'|'toAdmins'|'toNormals'|'command'} */
         const type = req.body.data.type;
+        const content = req.body.data.content;
         /** @type {import("../typedef.js").User|null} */
         let toUser = null;
         if(['direct','warn','fatal'].includes(type)) {
@@ -86,26 +122,30 @@ async (req, res, next)=> {
 
         switch(true) {
         case ( type=='fatal' && userHasRoles(req.user, ['super','root','dev']) ):
-            await sendMessage(req.user.id, toUser.id, type, req.body.data.content);
+            await sendMessage(req.user.id, toUser.id, type, content);
+            siteEvent.emit('message', {from: req.user.id, to: toUser.id, type: type, content: content});
             break; // jump out
 
         case ( ['info','warn'].includes(type) && userHasRoles(req.user, ['admin','super','root','dev']) ):
-            await sendMessage(req.user.id, toUser.id, type, req.body.data.content);
+            await sendMessage(req.user.id, toUser.id, type, content);
+            siteEvent.emit('message', {from: req.user.id, to: toUser.id, type: type, content: content});
             break; // jump out
 
         case ( type=='direct' ): // normal or other user
-            if(toUser.attr.allowDM === true) // normal user can block dm
-                await sendMessage(req.user.id, toUser.id, 'direct', req.body.data.content);
-            else
+            if(toUser.attr.allowDM === true) { // normal user can block dm
+                await sendMessage(req.user.id, toUser.id, 'direct', content);
+                siteEvent.emit('message', {from: req.user.id, to: toUser.id, type: type, content: content});
+            } else
                 return res.status(403).json({error: 1, code:'message.blocked', message: 'user block your message.'});   
             break;
 
         case ( type=='command' ):
-            await handleCommand(req.body.data.content, req.user);
+            await handleCommand(content, req.user);
             break;
         
         case ( ['toAll','toNormals','toAdmins'].includes(type) && userHasRoles(req.user, ['dev','super','root']) ):
-            await sendMessage(req.user.id, null, type, req.body.data.content);
+            await sendMessage(req.user.id, null, type, content);
+            siteEvent.emit('message', {from: req.user.id, to: null, type: type, content: content});
             break;
         default: // if the type and privilege did not match all the cases, then deny  
             return res.status(403).json({error: 1, code: 'message.denied', message: 'permission denied.'});
@@ -124,26 +164,18 @@ router.post('/mark', verifyJWT, [
 async (req, res, next)=> {
     try {
         let changed;
-        if (req.query.type != 'del') {
-            changed = await db('messages')
-                .update({haveRead: req.query.type == 'read' ? 1 : 0})
-                .where({toUserId: req.user.id, id: req.query.id})
-                .andWhereNot({type: 'falta'});
-        } else {
+        if(req.query.type != 'del')
+            changed = await db('messages').update({haveRead: req.query.type=='read'? 1:0})
+            .where({toUserId: req.user.id, id: req.query.id})
+            .andWhereNot({type: 'falta'});
+        else
             changed = await db('messages').del()
-                .where({toUserId: req.user.id, id: req.query.id})
-                .andWhereNot({type: 'falta'});
-        }
-
-        if (changed)
-            return res.status(200).json({
-                success: 1,
-                code: 'message.marked',
-                data: {id: req.query.id, type: req.query.type}
-            });
+            .where({toUserId: req.user.id, id: req.query.id})
+            .andWhereNot({type: 'falta'});
+        if(changed)
+            return res.status(200).json({success: 1, code: 'message.marked', data: {id: req.query.id, type: req.query.type}});
         else
             return res.status(404).json({success: 1, code: 'message.notFound', message: 'no such message.'});
-
     } catch(err) {
         next(err);
     }
@@ -177,7 +209,7 @@ async function messageOnSiteEvent(event) {
     }
 }
 
-siteEvent.on('data', messageOnSiteEvent);
+siteEvent.on('action', messageOnSiteEvent);
 
 /** 
  * @param {number|null} from @param {number|null} to @param {string} content
@@ -200,17 +232,28 @@ async function iGotReported(params) {
     const user = await db.select('id').from('users').where({originUserId: report.toOriginUserId}).first();
     if(!user) // that player being reported hasnt registered our site
         return;
-    await sendMessage(undefined, user.id, 'warn', 'You were reported by someone.');
+    await sendMessage(undefined, user.id, 'warn', JSON.stringify({
+        event: 'message.reported',
+        dbId: report.id,
+        createTime: report.createTime
+    }));
 }
 
 async function iGotJudged(params) {
     /** @type {import("../typedef.js").Judgement} */
     const judgement = params.judgement;
+    /** @type {import("../typedef.js").Player} */
+    const player = params.player;
     /** @type {import("../typedef.js").User} */
     const user = await db.select('id').from('users').where({originUserId: judgement.toOriginUserId}).first();
     if(!user) // that player being reported hasnt registered our site
         return;
-    await sendMessage(undefined, user.id, 'warn', `You were judge as ${judgement.action}`);
+    await sendMessage(undefined, user.id, 'warn', JSON.stringify({
+        event: 'message.judged',
+        dbId: player.id,
+        status: player.status,
+        createTime: judgement.createTime
+    }));
 }
 
 async function iGotReplied(params) { // checked that comment dose exist
@@ -220,13 +263,23 @@ async function iGotReplied(params) { // checked that comment dose exist
     if(!(toCommentType && toCommentId))
         return;
     const toCommentUser = await db.select('byUserId').from(toCommentType).where({id: toCommentId}).first().then(r=>r.byUserId);
-    await sendMessage(reply.byUserId, toCommentUser, 'reply', `You got reply under dbId:${toPlayerId}`);
+    await sendMessage(reply.byUserId, toCommentUser, 'reply', JSON.stringify({
+        replyId: reply.id,
+        toFloor: reply.toFloor,
+        toPlayerId: reply.toPlayerId,
+        content: reply.content.slice(0,32),
+        createTime: reply.createTime
+    }));
 }
 
 async function newBanAppeal(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const ban_appeal = params.ban_appeal;
-    await sendMessage(ban_appeal.byUserId, ban_appeal.id, 'banAppeal', 'there is a ban appeal under player dbId:'+ban_appeal.toPlayerId); // hack to store banAppeal'preview.svg id
+    await sendMessage(ban_appeal.byUserId, ban_appeal.id, 'banAppeal', JSON.stringify({
+        toPlayerId: ban_appeal.byUserId,
+        content: ban_appeal.content.slice(0,32),
+        createTime: ban_appeal.createTime
+    })); // hack to store banAppeal's id
 }
 
 async function removeBanAppealNotification(params) {

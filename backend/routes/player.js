@@ -1,16 +1,6 @@
 "use strict";
 import EventEmitter from "events";
 import express from "express";
-import {body as checkbody, oneOf as checkOneof, query as checkquery, validationResult} from "express-validator";
-
-import db from "../mysql.js";
-import config from "../config.js";
-import verifyCaptcha from "../middleware/captcha.js";
-import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
-import {getUserProfileByName, originClients} from "../lib/origin.js"
-import {cheatMethodsSanitizer, handleRichTextInput} from "../lib/user.js";
-import {siteEvent, stateMachine} from "../lib/bfban.js";
-import {userHasRoles} from "../lib/auth.js";
 
 const router = express.Router()
 
@@ -49,21 +39,15 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'player.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
         }
 
-        const result = await db
-            .select('id','originName','originUserId','originPersonaId','games',
+        const result = await db.select('id','originName','originUserId','originPersonaId','games',
         'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
-            .from('players')
-            .where(key, '=', val)
-            .where({})
-            .first();
-
+        .from('players').where(key, '=', val).first();
+        result.games = JSON.parse(result.games);
         if(!result)
             return res.status(404).json({error: 1, code: 'player.notFound'});
         if(req.query.history) // that guy does exist
-            result.history =  await db.select('originName','fromTime','toTime')
-                .from('name_logs')
-                .where({originUserId: result.originUserId});
-
+            result.history =  await db.select('originName','fromTime','toTime').from('name_logs').where({originUserId: result.originUserId});
+        
         res.status(200).json({success: 1, code: 'player.ok', data: result});
     } catch(err) {
         next(err);
@@ -75,9 +59,8 @@ router.post('/report', verifyJWT, verifyCaptcha,
     checkbody('data.game').isIn(config.supportGames),
     checkbody('data.originName').isAscii().notEmpty(),
     checkbody('data.cheatMethods').isString().notEmpty().custom(cheatMethodsSanitizer),
-    // checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
-    checkbody('data.videoLink').optional({checkFalsy: true}),
-    checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),
+    checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
+    checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),  
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
@@ -117,8 +100,8 @@ async (req, res, next)=>{
             getUserProfileByName(req.body.data.originName).then(isdone.successListener('origin')).catch(isdone.failListener('origin')),
             // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
         ]).catch((err)=> { 
-            console.log(err);   // DEBUG
-            console.log(isdone.failMessages);
+            //console.log(err);   // DEBUG
+            //console.log(isdone.failMessages);
             return undefined; 
         });
         if(!profile)
@@ -143,7 +126,9 @@ async (req, res, next)=>{
             stateChange = {prev: reported.status, next: nextstate};
             updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
-            updateCol.games = Array.from(new Set(reported.games.split(',')).add(req.body.data.game)).join(',');
+            updateCol.games =JSON.stringify(
+                new Set(JSON.parse(reported.games)).add(req.body.data.game)
+            );  // Set(['bf1','bfv']).add('bfv')->"#bf1#,#bfv#"
             updateCol.status = nextstate;
             updateCol.updateTime = new Date();
         }
@@ -186,7 +171,7 @@ async (req, res, next)=>{
         await db('reports').insert(report);
         player.id = playerId;
         
-        siteEvent.emit('data', {method: 'report', params: {report, player, stateChange}});
+        siteEvent.emit('action', {method: 'report', params: {report, player, stateChange}});
         return res.status(201).json({success: 1, code:'report.success', message:'Thank you.', data: {
             originName: profile.username,
             originUserId: profile.userId,
@@ -244,7 +229,9 @@ async (req, res, next)=>{
             stateChange = {prev: reported.status, next: nextstate};
             updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
-            updateCol.games = Array.from(new Set(reported.games.split(',')).add(req.body.data.game)).join(',');
+            updateCol.games = JSON.stringify(
+                new Set(JSON.parse(reported.games)).add(req.body.data.game)
+            );
             updateCol.status = nextstate;
             updateCol.updateTime = new Date();
         }
@@ -286,7 +273,7 @@ async (req, res, next)=>{
         report.id = reportId;
         player.id = playerId;
         
-        siteEvent.emit('data', {method: 'report', params: {report, player, stateChange}});
+        siteEvent.emit('action', {method: 'report', params: {report, player, stateChange}});
         return res.status(201).json({success: 1, code:'report.success', message:'Thank you.', data: {
             originName: profile.username,
             originUserId: profile.userId,
@@ -332,15 +319,13 @@ async (req, res, next)=>{
     }
 });
 
-/**
- * TODO 待实现 筛选【默认、只看申诉、只看该名玩家辩解】
- */
 router.get('/timeline', [
     checkquery('dbId').optional().isInt({min: 0}),
     checkquery('userId').optional().isInt({min: 0}),
     checkquery('personaId').optional().isInt({min: 0}),
     checkquery('skip').optional().isInt({min: 0}),
-    checkquery('limit').optional().isInt({min: 0, max: 100})
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('subject').optional().isIn(['report', 'reply', 'judgement', 'ban_appeal'])
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
@@ -350,30 +335,43 @@ async (req, res, next)=>{
         const skip = req.query.skip!=undefined? req.query.skip : 0;
         const limit = req.query.limit!=undefined? req.query.limit : 20;
         const dbId = await getPlayerId({dbId: req.query.dbId, userId: req.query.userId, personaId: req.query.personaId});
+        const subject = req.query.subject;
         if(dbId==-1)
             return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
 
         /** @type {{id:number, createTime: Date, type: 'reply'|'report'|'judgement'|'ban_appeal'}[]} */
-        const brief = await db.select('id', 'createTime', db.raw('"reply" as "type"')).from('replies').where({toPlayerId: dbId}).union([
-            db.select('id', 'createTime', db.raw('"report" as "type"')).from('reports').where({toPlayerId: dbId}),
-            db.select('id', 'createTime', db.raw('"judgement" as "type"')).from('judgements').where({toPlayerId: dbId}),
-            db.select('id', 'createTime', db.raw('"ban_appeal" as "type"')).from('ban_appeals').where({toPlayerId: dbId})
-        ]).orderBy('createTime', 'asc').offset(skip).limit(limit);
-        const totals = await db.count({num: 'id'}).from('replies').where({toPlayerId: dbId}).union([
-            db.count({num: 'id'}).from('reports').where({toPlayerId: dbId}),
-            db.count({num: 'id'}).from('judgements').where({toPlayerId: dbId}),
-            db.count({num: 'id'}).from('ban_appeals').where({toPlayerId: dbId})
-        ]);
-        console.log(totals);
+        let brief = {};
+        if(!subject)
+            brief = await db.select('id', 'createTime', db.raw('"reply" as "type"')).from('replies').where({toPlayerId: dbId}).union([
+                db.select('id', 'createTime', db.raw('"report" as "type"')).from('reports').where({toPlayerId: dbId}),
+                db.select('id', 'createTime', db.raw('"judgement" as "type"')).from('judgements').where({toPlayerId: dbId}),
+                db.select('id', 'createTime', db.raw('"ban_appeal" as "type"')).from('ban_appeals').where({toPlayerId: dbId})
+            ]).orderBy('createTime', 'asc').offset(skip).limit(limit);
+        else
+            brief = await db.select('id', 'createTime', db.raw(`"${subject}" as "type"`)).from(
+                subject.endsWith('y')? 'replies':subject+'s'    // word->words
+            ).where({toPlayerId: dbId});
+        let totals = [];
+        if(!subject)
+            totals = await db.count({num: 'id'}).from('replies').where({toPlayerId: dbId}).union([
+                db.count({num: 'id'}).from('reports').where({toPlayerId: dbId}),
+                db.count({num: 'id'}).from('judgements').where({toPlayerId: dbId}),
+                db.count({num: 'id'}).from('ban_appeals').where({toPlayerId: dbId})
+            ]);
+        else
+            totals = await db.count({num: 'id'}).from(
+                subject.endsWith('y')? 'replies':subject+'s'
+            ).where({toPlayerId: dbId});
+        //console.log(totals);
         const total = totals.reduce((accu, curr)=> {return accu+curr.num}, 0);
-        console.log(total);
+        //console.log(total);
         // generate a brief timeline for queries below
         const subQueries = brief.reduce((accu, curr, indx)=>{
             accu[curr.type].push(curr.id);  // group by type
-            accu.order[curr.type][curr.id] = indx; // index <= order[type][id]
             return accu;
-        }, {reply:[], report:[], judgement:[], ban_appeal:[], order: {reply:{}, report:{}, judgement:{}, ban_appeal:{}} } );
-        const result = await Promise.all([
+        }, {reply:[], report:[], judgement:[], ban_appeal:[]} );
+        // do the final query
+        const result = await Promise.all([  // here, we fetch the comments in the *only* page we need
             subQueries.reply.length>0? db('replies').join('users', 'replies.byUserId', 'users.id')
             .select('replies.id','replies.byUserId','replies.toFloor','replies.content',
             'replies.createTime', 'users.username', 'users.privilege',db.raw('"reply" as "type"'))
@@ -391,55 +389,28 @@ async (req, res, next)=>{
 
             subQueries.ban_appeal.length>0? db('ban_appeals').join('users', 'ban_appeals.byUserId', 'users.id')
             .select('ban_appeals.id','ban_appeals.byUserId','ban_appeals.content','ban_appeals.viewedAdminIds',
-            'ban_appeals.status','ban_appeals.createTime', 'users.username', 'users.privilege', 'users.originUserId', db.raw('"ban_appeal" as "type"'))
+            'ban_appeals.status','ban_appeals.createTime', 'users.username', 'users.privilege', db.raw('"ban_appeal" as "type"'))
             .whereIn('ban_appeals.id', subQueries.ban_appeal) : [],
-        ]).then(r=> {   // re-sort by saved order
-            return r.reduce((accu, curr, indx)=> {
-                for(let i of curr)
-                    accu[subQueries.order[i.type][i.id]] = i;
-                return accu;
-            }, []);
-        });
+        ]).then(r=> r.flat().sort((a, b)=> a.createTime - b.createTime).forEach(i=>i.privilege = JSON.parse(i.privilege)) ); // re-sort the result
 
-        res.status(200).json({success: 1, code: 'timeline.ok', data: result});
+        res.status(200).json({success: 1, code: 'timeline.ok', data: { result, total } });
     } catch(err) {
         next(err);
     }
 });
 
-/**
- * TODO 待实现 逻辑删除回复/撤销裁决
- */
-router.post('/unreply', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']), [
-    checkbody('id').optional().isInt({min: 0}),
-],
-async (req, res, next) => {
-    try {
-        const repots = db('reports').join('users', 'reports.byUserId', 'users.id')
-            .select('reports.id','reports.byUserId','reports.toOriginName','reports.game','reports.cheatMethods',
-                'reports.videoLink','reports.description','reports.createTime', 'users.username', 'users.privilege', db.raw('"report" as "type"'))
-            .where('id', '=', req.body.id)
-            .where({})
-            .first();
+const commentRateLimiter = new UserRateLimiter(600*1000, 10); // 10 comments per 10 minutes(allow brust comment)
 
-        return res.status(200).json({
-            code: 'reply.suceess',
-            message: 'Reply success.'
-        });
-    } catch(err) {
-        next(err);
-    }
-});
-
-router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'blacklisted']), [
+router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']),
+    commentRateLimiter.limiter([{roles: ['admin','super','root','dev','bot'], value: 0}]), [
     checkbody('data.toPlayerId').isInt({min: 0}),
     checkbody('data.toFloor').optional({nullable: true}).isInt({min: 1}),
-    checkbody('data.content').isString().trim().isLength({min: 1, max: 5000}),
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
-async (req, res, next) => {
+    checkbody('data.content').isString().trim().isLength({min: 1, max:5000}),
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
-        if (!validateErr.isEmpty())
+        if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});
         
         if(await db.select('id').from('players').where({id: req.body.data.toPlayerId}).first() == undefined) // no such player
@@ -457,6 +428,7 @@ async (req, res, next) => {
                 return res.status(404).json({error: 1, code: 'reply.notFound', message: 'no such comment'});
             toCommentId = brief.id; toCommentType = brief.type;
         }
+        
         const reply = {
             toPlayerId: req.body.data.toPlayerId,
             byUserId: req.user.id,
@@ -472,14 +444,15 @@ async (req, res, next) => {
         }).increment('commentsNum', 1).where({id: req.body.data.toPlayerId});
         
         reply.toCommentId = toCommentId; reply.toCommentType = toCommentType;
-        siteEvent.emit('data', {method: 'reply', params: {reply}});
+        siteEvent.emit('action', {method: 'reply', params: {reply}});
         return res.status(201).json({success: 1, code: 'reply.suceess', message: 'Reply success.'});
     } catch(err) {
         next(err);
     }
 });
 
-router.post('/update', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
+router.post('/update', verifyJWT, forbidPrivileges(['freezed','blacklisted']), 
+    commentRateLimiter.limiter([{roles: ['admin','super','root','dev','bot'], value: 0}]), [
     checkquery('userId').optional().isInt({min: 0}),
     checkquery('personaId').optional().isInt({min: 0}),
     checkquery('dbId').optional().isInt({min: 0}), 
@@ -511,7 +484,7 @@ async (req, res, next)=>{
         await db('players').update({originName: profile.username, avatarLink: avatarLink}).where({originUserId: originUserId});
         await pushOriginNameLog(profile.username, originUserId, profile.personaId);
 
-        siteEvent.emit('data', {method: 'playerUpdate', params: {profile}});
+        siteEvent.emit('action', {method: 'playerUpdate', params: {profile}});
         return res.status(200).json({success: 1, code:'update.success', data: {
             originName: profile.username,
             originUserId: profile.userId,
@@ -522,16 +495,16 @@ async (req, res, next)=>{
     }
 });
 
-router.post('/judgement', verifyJWT, verifyCaptcha, allowPrivileges(['admin', 'super', 'root']), [
+router.post('/judgement', verifyJWT, allowPrivileges(['admin','super','root']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
-    checkbody('data.cheatMethods').if(checkbody('data.toPlayerId').isIn('kill', 'guilt')).isString().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
-    checkbody('data.action').isIn(['suspect', 'innocent', 'discuss', 'guilt', 'kill', 'trash']),
+    checkbody('data.cheatMethods').if(checkbody('data.toPlayerId').isIn('kill','guilt')).isString().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
+    checkbody('data.action').isIn(['suspect','innocent','discuss','guilt','kill','trash']),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
-async (req, res, next) => {
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
-        if (!validateErr.isEmpty())
+        if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'judgement.bad', message: validateErr.array()});
         if((req.body.data.action=='kill'||req.body.data.action=='guilt') && !req.body.data.cheatMethods)
             return res.status(400).json({error: 1, code: 'judgement.bad', message: 'must specify one cheate method.'});
@@ -563,14 +536,15 @@ async (req, res, next) => {
         player.commentsNum += 1;
         await db('players').update(player).where({id: player.id});
 
-        siteEvent.emit('data', {method: 'judge', params: {judgement, player, stateChange}});
+        siteEvent.emit('action', {method: 'judge', params: {judgement, player, stateChange}});
         return res.status(201).json({success: 1, code: 'judgement.success', message: 'thank you.'});
     } catch(err) {
         next(err);
     }
 });
 
-router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
+router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed','blacklisted']),
+    commentRateLimiter.limiter([{roles: ['admin','super','root','dev','bot'], value: 0}]), [
     checkbody('data.toPlayerId').isInt({min: 0}),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
@@ -602,7 +576,7 @@ async (req, res, next)=>{
         const insertId = (await db('ban_appeals').insert(ban_appeal) )[0];
         ban_appeal.id = insertId;
 
-        siteEvent.emit('data', {method: 'banAppeal', params: {ban_appeal}});
+        siteEvent.emit('action', {method: 'banAppeal', params: {ban_appeal}});
         return res.status(201).json({success: 1, code: 'banAppeal.success', message:'please wait.'})
     } catch(err) {
         next(err);
@@ -631,8 +605,8 @@ async (req, res, next)=>{
         ban_appeal.viewedAdminIds = Array.from(viewedAdminIds).slice(0,3).join(',');
         await db('ban_appeals').update(ban_appeal).where({id: ban_appeal.id});
 
-        if(viewedAdminIds.size >= 3)
-            siteEvent.emit('data', {method: 'viewBanAppeal', params: {ban_appeal}});
+        if(viewedAdminIds.size >= config.personsToReview)
+            siteEvent.emit('action', {method: 'viewBanAppeal', params: {ban_appeal}});
         return res.status(200).json({success: 1, code: 'viewBanAppeal.success', message: 'thank you'});
     } catch(err) {
         next(err);
@@ -656,9 +630,12 @@ async function pushOriginNameLog(originName, originUserId, originPersonaId) {
         };
         await db('name_logs').insert(name_log);
         
-        siteEvent.emit('data', {method: 'name_tracker', params: {name_log}});
+        siteEvent.emit('action', {method: 'name_tracker', params: {name_log}});
         return true;
     }
 }
 
 export default router;
+export {
+    commentRateLimiter,
+};

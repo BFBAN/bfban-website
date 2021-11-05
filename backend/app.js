@@ -19,7 +19,7 @@ import router_message from "./routes/message.js";
 //import router_services from "./routes/services.js";
 
 import { query as checkquery, validationResult, body as checkbody } from "express-validator";
-import { UserRateLimiter } from "./lib/user.js";
+import { UserRateLimiter } from "./middleware/rateLimiter.js";
 import { verifyJWT } from "./middleware/auth.js";
 
 process.on('uncaughtException', (err)=> {
@@ -77,7 +77,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use((req, res, next)=> {console.log(req.body); next();})
+//app.use((req, res, next)=> {console.log(req.body); next();})
 
 app.use('/static', express.static('./test'));
 app.use('/api', routes_index);

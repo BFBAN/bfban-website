@@ -86,7 +86,7 @@ async function commandUser(args, user) {            //  [0]  [1]  [2]  [3]
         flag = (userHasRoles(user, ['root']) && rootCan.includes(args[3]) )? true : flag;
         if(flag) {
             target.privilege = executor(target.privilege, args[3]);
-            await db('users').update({privilege: target.privilege}).where({id: target.id});
+            await db('users').update({privilege: JSON.stringify(target.privilege)}).where({id: target.id});
             return await sendMessage(null, user.id, 'command', `user: grant ${target.username} with ${target.privilege} success`);
         } else {
             return await sendMessage(null, user.id, 'command', 'user: permission denied.');
@@ -94,7 +94,7 @@ async function commandUser(args, user) {            //  [0]  [1]  [2]  [3]
     } else if(args[1]=='ban') {
         if(userHasRoles(user, ['dev','admin','super','root'])) {
             target.privilege = privilegeRevoker(target.privilege, 'blacklisted');
-            await db('users').update({privilege: target.privilege}).where({id: target.id});
+            await db('users').update({privilege: JSON.stringify(target.privilege)}).where({id: target.id});
             return await sendMessage(null, user.id, 'command', `user: grant ${target.username} with ${target.privilege} success`);
         } else {
             return await sendMessage(null, user.id, 'command', 'user: permission denied.');

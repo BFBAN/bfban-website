@@ -139,7 +139,7 @@ async function webhookOnSiteEvent(event) {
     } 
 }
 
-siteEvent.on('data', webhookOnSiteEvent);
+siteEvent.on('action', webhookOnSiteEvent);
 
 export {
     webhookSubscriber,
