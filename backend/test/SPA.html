@@ -688,15 +688,20 @@
                     } else {
                         let tmpfunc = async ()=> {
                             while($('#message-poll').prop('checked')) {
-                                await fetch('/api/message/poll', {
+                                let res = await fetch('/api/message/poll', {
                                     headers: {
                                     'x-access-token': localStorage.token? localStorage.token:'',
                                     'content-type': 'application/json'
                                     },
                                     signal: msgPollControler.signal,
-                                }).then(r=>r.json()).then(console.log).catch(console.log);
+                                }).then(r=>r.json());
+                                if(res.code=='messagePoll.got') {
+                                    let str = `[${res.data.type}]${new Date().toLocaleString()} #Polling by:${res.data.from}\n`+
+                                    `  ${res.data.content}\n`;
+                                    $('#messgae-toperson').val($('#messgae-toperson').val()+str);
+                                    $('#messgae-toperson').scrollTop = $('#messgae-toperson').scrollHeight;
+                                }
                             }
-                            console.log('break');
                         }
                         tmpfunc();
                     }

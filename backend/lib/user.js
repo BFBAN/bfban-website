@@ -9,11 +9,11 @@ function handleRichTextInput(content) {
     return xss(content);
 }
 
-/** @param {string} current @param {string} add */
+/** @param {string[]} current @param {string} add */
 function privilegeGranter(current, add) {
     if(add=='blacklisted') // blacklisted, remove all what he got before
-        return 'blacklisted';
-    const tmp = new Set(current.split(','));
+        return ['blacklisted'];
+    const tmp = new Set(current);
     if( (tmp.has('blacklisted') || tmp.has('freezed')) && add!='freezed' ) { // unban
         tmp.delete('blacklisted');
         tmp.delete('freezed');
@@ -21,16 +21,16 @@ function privilegeGranter(current, add) {
     tmp.add(add); // for freezed and other permission
     if(['dev','admin','super','root'].includes(add))
         tmp.delete('normal');
-    return Array.from(tmp).join(',');
+    return Array.from(tmp);
 }
 
-/** @param {string} current @param {string} del */
+/** @param {string[]} current @param {string} del */
 function privilegeRevoker(current, del) {
-    const tmp = new Set(current.split(','));
+    const tmp = new Set(current);
     tmp.delete(del);
     if(tmp.size == 0)
         tmp.add('normal');
-    return Array.from(tmp).join(',');
+    return Array.from(tmp);
 }
 
 function cheatMethodsSanitizer(val, {req}) {

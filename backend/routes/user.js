@@ -97,7 +97,7 @@ async (req, res, next)=> {
             originEmail: registrant.originEmail,
             originUserId: registrant.originUserId,
             originPersonaId: registrant.originPersonaId,
-            privilege: 'normal',
+            privilege: JSON.stringify(['normal']),
             attr: JSON.stringify(userDefaultAttribute(req.REAL_IP)),
             createTime: new Date(),
             updateTime: new Date(),
@@ -140,7 +140,7 @@ async (req, res, next)=> {
             password: passwdHash, 
             originName: originName,
             originEmail: originEmail,
-            privilege: 'normal',
+            privilege: JSON.stringify(['normal']),
             attr: JSON.stringify(userDefaultAttribute()),
             createTime: new Date(),
         });
@@ -163,7 +163,7 @@ async (req, res, next)=> {
         
         const { username, password, EXPIRES_IN } = req.body.data;
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({username: username}).first();
+        const user = await db.select('*').from('users').where({username: username}).first().then(r=>r.privilege = JSON.parse(r.privilege));
         
         if(user && user.valid!=0 && await comparePassword(password, user.password)) {
             let expiresIn = 1000*60*60*24*7; // 7 day
@@ -295,7 +295,7 @@ async function showUserInfo(req, res, next) {
             return res.status(400).json({error: 1, code: 'userInfo.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({id: req.query.id}).first();
+        const user = await db.select('*').from('users').where({id: req.query.id}).first().then(r=>r.privilege = JSON.parse(r.privilege));
         if(!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
         const reportnum = await db('reports').count({num: 'id'}).where({byUserId: user.id}).first().then(r=>r.num);

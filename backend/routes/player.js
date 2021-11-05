@@ -54,7 +54,7 @@ async (req, res, next)=>{
         const result = await db.select('id','originName','originUserId','originPersonaId','games',
         'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
         .from('players').where(key, '=', val).first();
-        result.games = misc.DBstr2arr(result.games);   // "#bf1#,#bfv#,#bf2042#" -> ['bf1','bfv','bf2042']
+        result.games = JSON.parse(result.games);
         if(!result)
             return res.status(404).json({error: 1, code: 'player.notFound'});
         if(req.query.history) // that guy does exist
@@ -138,9 +138,9 @@ async (req, res, next)=>{
             stateChange = {prev: reported.status, next: nextstate};
             updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
-            updateCol.games = misc.arr2DBstr(
-                new Set(misc.DBstr2arr(reported.games)).add(req.body.data.game)
-            );  // "#bf1#,#bfv#"->Set(['bf1','bfv']).add('bfv')->"#bf1#,#bfv#"
+            updateCol.games =JSON.stringify(
+                new Set(JSON.parse(reported.games)).add(req.body.data.game)
+            );  // Set(['bf1','bfv']).add('bfv')->"#bf1#,#bfv#"
             updateCol.status = nextstate;
             updateCol.updateTime = new Date();
         }
@@ -241,8 +241,8 @@ async (req, res, next)=>{
             stateChange = {prev: reported.status, next: nextstate};
             updateCol.avatarLink = avatarLink;
             updateCol.commentsNum = reported.commentsNum+1;
-            updateCol.games = misc.arr2DBstr(
-                new Set(misc.DBstr2arr(reported.games)).add(req.body.data.game)
+            updateCol.games = JSON.stringify(
+                new Set(JSON.parse(reported.games)).add(req.body.data.game)
             );
             updateCol.status = nextstate;
             updateCol.updateTime = new Date();
@@ -403,7 +403,7 @@ async (req, res, next)=>{
             .select('ban_appeals.id','ban_appeals.byUserId','ban_appeals.content','ban_appeals.viewedAdminIds',
             'ban_appeals.status','ban_appeals.createTime', 'users.username', 'users.privilege', db.raw('"ban_appeal" as "type"'))
             .whereIn('ban_appeals.id', subQueries.ban_appeal) : [],
-        ]).then(r=> r.flat().sort((a, b)=> a.createTime - b.createTime) ); // re-sort the result
+        ]).then(r=> r.flat().sort((a, b)=> a.createTime - b.createTime).forEach(i=>i.privilege = JSON.parse(i.privilege)) ); // re-sort the result
 
         res.status(200).json({success: 1, code: 'timeline.ok', data: { result, total } });
     } catch(err) {
@@ -617,7 +617,7 @@ async (req, res, next)=>{
         ban_appeal.viewedAdminIds = Array.from(viewedAdminIds).slice(0,3).join(',');
         await db('ban_appeals').update(ban_appeal).where({id: ban_appeal.id});
 
-        if(viewedAdminIds.size >= 3)
+        if(viewedAdminIds.size >= config.personsToReview)
             siteEvent.emit('action', {method: 'viewBanAppeal', params: {ban_appeal}});
         return res.status(200).json({success: 1, code: 'viewBanAppeal.success', message: 'thank you'});
     } catch(err) {

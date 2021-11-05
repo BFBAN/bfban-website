@@ -62,7 +62,7 @@ async (req, res, next)=>{
             const game = i.game=='*'? '%':i.game;
             const status = i.status==-1? '%':i.status;
             const tmp = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
-            .andWhere('games', 'like', `%#${game}#%`).andWhere('status', 'like', status).first().then(r=>r.num);
+            .andWhere('games', 'like', `%"${game}"%`).andWhere('status', 'like', status).first().then(r=>r.num);
             data.push(tmp);
         }
         res.status(200).json({success: 1, code: 'playerStatistics.success', data: data});
@@ -146,16 +146,16 @@ async (req, res, next)=>{
         
         const result = await db.select('id','originName','originUserId','originPersonaId','games',
         'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
-        .from('players').where('games', 'like', !game? "%":`%#${game}#%`).andWhere('valid', '=', 1)
+        .from('players').where('games', 'like', !game? "%":`%"${game}"%`).andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status)
         .orderBy(sort, 'desc').offset(skip).limit(limit);
         result.forEach(i=> {
-            i.games = i.games.replace(/#/g, '').split(',');
-        }); // "#bf1#,#bfv#,#bf2042#" -> ['bf1','bfv','bf2042']
+            i.games = JSON.parse(i.games);
+        });
         const total = await db('players').count({num: 'id'})
-        .where('games', 'like', !game? "%":`%#${game}#%`).andWhere('valid', '=', 1)
+        .where('games', 'like', !game? "%":`%"${game}"%`).andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status).first().then(r=>r.num);
@@ -169,9 +169,9 @@ router.get('/admins', async (req, res, next)=> {
     try {
         /** @type {import("../typedef.js").User[]} */
         let admins = await db.select('id','username','originName','originUserId','privilege', 'attr').from('users')
-        .where('privilege','like','%admin%')
-        .orWhere('privilege','like','%super%')
-        .orWhere('privilege','like','%root%');
+        .where('privilege','like','%"admin"%')
+        .orWhere('privilege','like','%"super"%')
+        .orWhere('privilege','like','%"root"%');
         admins = admins.map(i=>{
             if(!i.attr.showOrigin) {
                 i.originUserId = null;

@@ -18,7 +18,7 @@
  * @property {string} password
  * @property {string} introduction
  * @property {number} valid
- * @property {string} privilege
+ * @property {string[]} privilege
  * @property {Object} attr JSON
  * @property {string} originName
  * @property {string} originUserId
@@ -78,7 +78,7 @@ const converter = new Stream.Writable({
             password: chunk.password,
             introduction: '',
             valid: chunk.valid,
-            privilege: chunk.privilege,
+            privilege: JSON.stringify([chunk.privilege]),
             attr: JSON.stringify(attr),
             originName: null,
             originEmail: null,

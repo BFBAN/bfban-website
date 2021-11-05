@@ -9,7 +9,7 @@ import { verifyJWTToken } from '../lib/auth.js';
 async function verifyJWT(req, res, next) {
     try {
         const token = req.get('x-access-token');
-        /** @type {{userId:number, username:string, privilege:string, signWhen:number, expiresIn:number}} */
+        /** @type {{userId:number, username:string, privilege:string[], signWhen:number, expiresIn:number}} */
         let decodedToken;
         try {
             decodedToken = await verifyJWTToken(token)
@@ -18,7 +18,7 @@ async function verifyJWT(req, res, next) {
         }
         //console.log('token:'+JSON.stringify(decodedToken)); // DEBUG
         /** @type {import("../typedef.js").User} */
-        const result = await db.select('*').from('users').where({id: decodedToken.userId, valid: 1}).first();
+        const result = await db.select('*').from('users').where({id: decodedToken.userId, valid: 1}).first().then(r=>r.privilege = JSON.stringify(r.privilege));
         result.introduction = ''; // useless, and may take up a lot of memory
         //console.log(result); // DEBUG
         if(!result)
@@ -35,10 +35,10 @@ async function verifyJWT(req, res, next) {
 
 /** @param {string[]} roles */
 function allowPrivileges(roles=[]) { 
-    /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>any} */
+    /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)=>any} */
     return function(req, res, next) { // as long as the user has one allowed role, then allow
         /** @type {string[]} */
-        const userRoles = req.user.privilege.split(',');
+        const userRoles = req.user.privilege;
         for(let i of userRoles)
             if(roles.includes(i))
                 return next();
@@ -48,10 +48,10 @@ function allowPrivileges(roles=[]) {
 
 /** @param {string[]} roles */
 function forbidPrivileges(roles=[]) {
-    /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>any} */
+    /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)=>any} */
     return function(req, res, next) { // as long as the user has one forbidden role, then forbid
         /** @type {string[]} */
-        const userRoles = req.user.privilege.split(',');
+        const userRoles = req.user.privilege;
         for(let i of userRoles)
             if(roles.includes(i))
                 return res.status(403).json({error: 1, code: 'user.permissionDenined'});

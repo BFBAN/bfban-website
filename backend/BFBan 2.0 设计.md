@@ -151,7 +151,7 @@ body:	{
                     username:string,
                     originName:string,
                     originUserId:string,
-                	privilege:string
+                	privilege:string[]
                 },
                 ...
             ]
@@ -583,7 +583,7 @@ body:		{
                     userinfo: {
                         username: string,
                         userId: number,
-                        privilege: string,
+                        privilege: string[],
                         signWhen: string(ISODate),
                        	expiresIn: number(ms)
                     },
@@ -653,7 +653,7 @@ body:		{
                 code: 'userInfo.success', 
                 data: {
             		username: string,
-            		privilege: string,
+            		privilege: string[],
             		introduction: string,
             		joinTime: string(ISODate),
             		lastOnlineTime: string(ISODate),
@@ -680,7 +680,7 @@ body:		{
                 code: 'userInfo.success', 
                 data: {
             		username: string,
-            		privilege: string,
+            		privilege: string[],
             		introduction: string,
             		joinTime: string(ISODate),
             		lastOnlineTime: string(ISODate),
