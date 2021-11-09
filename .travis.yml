@@ -7,7 +7,7 @@ cache:
 script:
   - cd front
   - npm install
-  - npm run build
+  - npm run serve
 deploy:
   provider: pages
   skip_cleanup: true
