@@ -12,6 +12,7 @@ const config = {
     address: true? '127.0.0.1' : '0.0.0.0',
     baseDir: path.resolve('./'),
     behindProxy: 0,
+	pollingTimeout: 90*1000,
     // database
     mysql: {
         host: '127.0.0.1',
@@ -26,7 +27,7 @@ const config = {
     github: {
 
     },
-	  webhook: {
+	webhook: {
         senderUrl: '',	// use cloudflare worker to proxy webhook request
         token: '',		// token it use
     },
@@ -39,17 +40,18 @@ const config = {
     },
 
     // DYNAMIC CONFIGURE BEGIN
-    // to [https://accounts.ea.com/connect], get Cookie, key: remid and sid
+	supportLanguages: ['cn', 'en'],
     personsToConfirm: 2,
+    // to [https://accounts.ea.com/connect], get Cookie, key: remid and sid
     originAccounts: [
         {
-            tag: 'whatever you want',
-            remid:'remid',
+            tag: 'whatever you want', 
+            remid:'remid', 
             sid:'sid'
         },
     ],
     supportGames: [ 'bf1', 'bfv' ],
-    possiblecheatMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet',
+    possiblecheatMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet', 
     'damageChange', 'gadgetModify', 'teleport', 'attackServer'],
     // DYNAMIC CONFIGURE END
 }

@@ -151,7 +151,7 @@ body:	{
                     username:string,
                     originName:string,
                     originUserId:string,
-                	privilege:string
+                	privilege:string[]
                 },
                 ...
             ]
@@ -180,7 +180,7 @@ body:		{
                             originName: string,
                             originUserId: string,
                             originPersonaId: string,
-                            games: string,
+                            games: string[],	// example: ["bf1","bfv"]
                             cheatMethods: string,
                             avatarlink: string,
                             viewNum: number,
@@ -282,7 +282,7 @@ body:		{
                     originName: string,
                     originPersonaId: string,
                     originUserId: string,
-                    games: string,
+                    games: string[],
                     cheatMethods: string,
                     avatarlink: string,
                     viewNum: number,
@@ -583,7 +583,7 @@ body:		{
                     userinfo: {
                         username: string,
                         userId: number,
-                        privilege: string,
+                        privilege: string[],
                         signWhen: string(ISODate),
                        	expiresIn: number(ms)
                     },
@@ -653,7 +653,7 @@ body:		{
                 code: 'userInfo.success', 
                 data: {
             		username: string,
-            		privilege: string,
+            		privilege: string[],
             		introduction: string,
             		joinTime: string(ISODate),
             		lastOnlineTime: string(ISODate),
@@ -680,7 +680,7 @@ body:		{
                 code: 'userInfo.success', 
                 data: {
             		username: string,
-            		privilege: string,
+            		privilege: string[],
             		introduction: string,
             		joinTime: string(ISODate),
             		lastOnlineTime: string(ISODate),

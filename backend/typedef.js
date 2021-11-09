@@ -22,7 +22,7 @@
  * @property {string} password
  * @property {string} introduction
  * @property {number} valid
- * @property {string} privilege
+ * @property {string[]} privilege
  * @property {Object} attr JSON
  * @property {string} originName
  * @property {string} originUserId

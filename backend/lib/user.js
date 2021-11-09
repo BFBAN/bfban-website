@@ -9,11 +9,11 @@ function handleRichTextInput(content) {
     return xss(content);
 }
 
-/** @param {string} current @param {string} add */
+/** @param {string[]} current @param {string} add */
 function privilegeGranter(current, add) {
     if(add=='blacklisted') // blacklisted, remove all what he got before
-        return 'blacklisted';
-    const tmp = new Set(current.split(','));
+        return ['blacklisted'];
+    const tmp = new Set(current);
     if( (tmp.has('blacklisted') || tmp.has('freezed')) && add!='freezed' ) { // unban
         tmp.delete('blacklisted');
         tmp.delete('freezed');
@@ -21,16 +21,16 @@ function privilegeGranter(current, add) {
     tmp.add(add); // for freezed and other permission
     if(['dev','admin','super','root'].includes(add))
         tmp.delete('normal');
-    return Array.from(tmp).join(',');
+    return Array.from(tmp);
 }
 
-/** @param {string} current @param {string} del */
+/** @param {string[]} current @param {string} del */
 function privilegeRevoker(current, del) {
-    const tmp = new Set(current.split(','));
+    const tmp = new Set(current);
     tmp.delete(del);
     if(tmp.size == 0)
         tmp.add('normal');
-    return Array.from(tmp).join(',');
+    return Array.from(tmp);
 }
 
 function cheatMethodsSanitizer(val, {req}) {
@@ -40,64 +40,8 @@ function cheatMethodsSanitizer(val, {req}) {
             cheatMethods.add(i); // validate & remove duplicated
     if(cheatMethods.size == 0)
         throw new Error("No valid cheate method given.");
-    req.body.data.cheatMethods = ''; // rewrite to sanitize
-    for(let i of cheatMethods.keys())
-    req.body.data.cheatMethods += i+',';
-    req.body.data.cheatMethods = req.body.data.cheatMethods.slice(0,-1); // remove trailing comma
+    req.body.data.cheatMethods = Array.from(cheatMethods).join(',');
     return true;
-}
-
-class UserRateLimiter {
-    /** @param {number} windowMs @param {number} max */
-    constructor(windowMs, max) {
-        this.max = max;
-        this.interval = setInterval(()=>this.store.clear(), windowMs);
-    }
-    destroy() {
-        clearInterval(this.interval);
-    }
-
-    max = 0;
-    /** @type {Map<number,number>} */
-    store = new Map();
-    /** @type {NodeJS.Timer} */
-    interval = undefined;
-    
-    /** 
-     * @param {undefined|number|{roles:string[], value:number}[]} weight
-     * @returns {(req:express.Request, res:express.Response, next: express.NextFunction)=>void}
-    **/
-    limiter(weight) {
-        if(Array.isArray(weight)) { // sort from low to high, make the weight the user get as low as possible
-            weight.sort((a, b)=> {
-                return b.value-a.value;
-            });
-            weight.push({roles: ['*'], value: 1}); // default value
-        }
-        return (req, res, next)=> {
-            const cur = this.store.get(req.user.id);
-            if((cur && cur>=this.max) || this.max<=0)
-                return res.status(406).json({error: 1, code: 'request.rateLimited', message: 'slow down please.'});
-            
-            switch(typeof(weight)) {
-            case 'number':
-                this.store.set(req.user.id, cur? cur+weight : weight);
-                break;
-            case 'object': // array
-                for(let i of weight)
-                    if(userHasRoles(req.user, i.roles)) {
-                        this.store.set(req.user.id, cur? cur+i.value : i.value);
-                        break;
-                    }
-                break;
-            default:
-                this.store.set(req.user.id, cur? cur+1 : 1);
-                break;
-            }
-            return next();
-        };
-    }
-
 }
 
 const userAttributes = {
@@ -145,5 +89,4 @@ export {
     userSetAttributes,
     userShowAttributes,
     userDefaultAttribute,
-    UserRateLimiter,
 }
