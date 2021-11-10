@@ -41,6 +41,8 @@ const store = new Vuex.Store({
     [SET_THEME](state, data) {
       state.$theme = data || theme.child.filter(i => i.name == theme.default)[0];
 
+      if (!state && !state.$theme && !state.$theme.name) return;
+
       require(`/public/theme/${state.$theme.name}/index.less`);
     },
     [SET_USER](state, data) {
