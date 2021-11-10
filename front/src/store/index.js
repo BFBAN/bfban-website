@@ -43,7 +43,7 @@ const store = new Vuex.Store({
 
       if (!state && !state.$theme && !state.$theme.name) return;
 
-      require(`/public/theme/${state.$theme.name}/index.less`);
+      import(`/public/theme/${state.$theme.name}/index.less`)
     },
     [SET_USER](state, data) {
       state.$userinfo = data;

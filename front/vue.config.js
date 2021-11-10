@@ -1,3 +1,6 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const conf = require('./package.json');
+
 module.exports = {
   outputDir: 'dist',
   assetsDir: 'assets',
@@ -31,4 +34,18 @@ module.exports = {
       }
     }
   },
+
+  // 定义资源方式
+  // configureWebpack: {
+  //   output: {
+  //     filename: `assets/js/[name].${conf.version}.js`,
+  //     chunkFilename: `assets/js/[name].${conf.version}.js`
+  //   },
+  //   plugins: [
+  //     new MiniCssExtractPlugin({
+  //       filename: `assets/css/[name].${conf.version}.css`,
+  //       chunkFilename: `assets/css/[name].${conf.version}.css`
+  //     })
+  //   ]
+  // },
 }

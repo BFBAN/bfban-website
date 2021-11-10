@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "local-serve": "serve -s front/dist",
+    "build": "vue-cli-service build --dest dist --report",
     "lint": "vue-cli-service lint",
     "electron": "electron .",
     "electron-dist": "electron-builder",
