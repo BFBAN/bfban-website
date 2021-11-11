@@ -81,7 +81,7 @@
             <template slot="action">
               <li @click="searchModal = false">
                 <router-link
-                    :to="{name: 'cheater', params: {ouid: `${cheater.originPersonaId}.${cheater.originUserId}.${cheater.id}`}}">
+                    :to="{name: 'cheater', params: {ouid: `${cheater.originPersonaId}`}}">
                   <Icon type="ios-eye" size="20"/>
                   查看
                 </router-link>
