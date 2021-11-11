@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "node app.js --experimental-modules --trace-warnings",
-    "dev": "node app.js",
-    "start": "node app.js"
+    "dev": "node app.js"
   },
   "author": "",
   "license": "ISC",
