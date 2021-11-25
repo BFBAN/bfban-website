@@ -87,7 +87,7 @@ async (req, res, next)=>{
         .join('players', 'comments.toPlayerId','players.id')
         .select('comments.id as id', 'users.username as byUserName', 'comments.byUserId as byUserId', 'comments.toPlayerId as toPlayerId'
         , 'players.originName as toPlayerName', 'comments.judgeAction as action', 'comments.createTime as createTime')
-        .where('comments.createTime', '<=', from).andWhere({type: 'judgement'}).orderBy('judgements.createTime', 'desc').limit(limit);
+        .where('comments.createTime', '<=', from).andWhere({type: 'judgement'}).orderBy('comments.createTime', 'desc').limit(limit);
         const reports = await db('comments')
         .join('users', 'comments.byUserId', 'users.id')
         .join('players', 'comments.toPlayerId', 'players.id')
