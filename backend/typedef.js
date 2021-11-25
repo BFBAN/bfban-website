@@ -4,8 +4,8 @@
  * @property {string} originName
  * @property {string} originPersonaId
  * @property {string} originUserId
- * @property {string} games
- * @property {string} cheatMethods
+ * @property {string[]} games
+ * @property {string[]} cheatMethods
  * @property {string} avatarLink
  * @property {number} viewNum
  * @property {number} commentsNum
@@ -111,6 +111,7 @@
  * @property {'report'|'judgement'|'reply'|'banAppeal'} type
  * @property {number} toPlayerId
  * @property {string} toOriginUserId
+ * @property {string} toOriginPersonaId
  * @property {number} byUserId
  * @property {string} content
  * @property {number} valid

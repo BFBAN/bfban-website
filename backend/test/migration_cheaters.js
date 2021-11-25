@@ -20,8 +20,8 @@
  * @property {string} originName
  * @property {string} originPersonaId
  * @property {string} originUserId
- * @property {string} games
- * @property {string} cheatMethods
+ * @property {string[]} games
+ * @property {string[]} cheatMethods
  * @property {string} avatarLink
  * @property {number} viewNum
  * @property {number} commentsNum
@@ -92,7 +92,7 @@ function cheatMethodConverter(str_src='') {
         default: console.log('Unrecognized cheatMethod:'+i);
         }
     }
-    return Array.from(dst).join(',');
+    return Array.from(dst);
 }
 
 const converter = new Stream.Writable({

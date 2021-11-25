@@ -107,22 +107,23 @@ const converter = new Stream.Writable({
             console.log('Cannot find such player:'+chunk.originUserId);
             return callback();
         }
-        /** @type {Report} */
+        /** @type {import("../typedef").Comment} */
         const obj = {
+            type: 'report',
             byUserId: chunk.userId,
             toOriginName: chunk.cheaterGameName,
             toPlayerId: player.id,
             toOriginUserId: player.originUserId,
             toOriginPersonaId: player.originPersonaId,
-            game: chunk.game=='bfv'? 'bfv':'bf1',
+            cheatGame: chunk.game=='bfv'? 'bfv':'bf1',
             cheatMethods: cheatMethodConverter(chunk.cheatMethods),
             videoLink: handleRichTextInput(chunk.bilibiliLink),
-            description: handleRichTextInput(chunk.description),
+            content: handleRichTextInput(chunk.description),
             valid: chunk.valid,
             createTime: chunk.createDatetime
         };
         console.log('-inserting: '+JSON.stringify(obj));
-        await db_dst('reports').insert(obj).onConflict().ignore();
+        await db_dst('comments').insert(obj).onConflict().ignore();
         return callback();
     },
     objectMode: true,
