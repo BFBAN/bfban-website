@@ -35,7 +35,7 @@ async function sendRegisterVerify(username, originName, address, language, code)
         "Hello "+username+"!\n"+
         "   You are now signing up for BFBan as "+originName+" in game.\n"+
         "   Pease click the link below to complete your registration: \n"+
-        "      htttps://bfban.com/#/signupComplete?code="+code,
+        "      htttps://bfban.com/#/signupComplete?code="+code+"&lang="+language,
         config.mail.user, address, '', subject, [
             {
                 data: html.replace(/\$\{username\}/g, username).replace(/\$\{originName\}/g, originName).replace(/\$\{code\}/g, code), 

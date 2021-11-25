@@ -87,12 +87,12 @@ async function webhookUserRegister(params) {
 
 async function webhookbanAppeal(params) {
     /** @type {import("../typedef.js").BanAppeal} */
-    const ban_appeal = params.ban_appeal;
+    const banAppeal = params.banAppeal;
     webhookPayload.banAppeal.push({
-        id: ban_appeal.id,
-        toPlayerId: ban_appeal.toPlayerId,
-        content: ban_appeal.content,
-        createTime: ban_appeal.createTime
+        id: banAppeal.id,
+        toPlayerId: banAppeal.toPlayerId,
+        content: banAppeal.content,
+        createTime: banAppeal.createTime
     });
 }
 
