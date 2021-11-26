@@ -48,7 +48,7 @@ function userSetAttributes(org, attr, force=false) {
     return result;
 }
 
-function userDefaultAttribute(registerIP='', language='en-us') {
+function userDefaultAttribute(registerIP='', language='en') {
     const result = {};
     for(let i of Object.keys(userAttributes))
         result[i] = userAttributes[i].default;

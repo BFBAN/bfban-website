@@ -91,9 +91,10 @@ async (req, res, next)=> {
         const code = req.query.code;
         const registrant = await db.select('*').from('verifications').where({uniqCode: code}).first();
         if(!registrant)
-            return res.status(404).json({error: 1, code: 'signup.notfound'});
+            return res.status(404).json({error: 1, code: 'signup.notFound'});
         if(registrant.expiresTime < new Date())
             return res.status(400).json({error: 1, code: 'signup.expired'});
+        
         const data = {
             username: registrant.username,
             password: registrant.password,
@@ -102,7 +103,7 @@ async (req, res, next)=> {
             originUserId: registrant.originUserId,
             originPersonaId: registrant.originPersonaId,
             privilege: JSON.stringify(['normal']),
-            attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.query.language)),
+            attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.query.lang)),
             createTime: new Date(),
             updateTime: new Date(),
         };
@@ -231,7 +232,7 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'bindOrigin.gameNotOwned'});
         // no mistakes detected, generate code for verify
         const code = misc.generateRandomString(127);
-        db('verifications').insert({
+        await db('verifications').insert({
             type: 'binding',
             userId: req.user.id, 
             uniqCode: code,
@@ -242,7 +243,7 @@ async (req, res, next)=> {
             expiresTime: new Date(Date.now()+1000*60*60*4), // 4h
             createTime: new Date()
         });
-        await sendBindingOriginVerify(req.user.username, originEmail, encodeURIComponent(code));
+        await sendBindingOriginVerify(req.user.username, originEmail, req.user.attr.language, encodeURIComponent(code));
 
         logger.info('users.bindOrigin#1 Success:', {name: req.user.username, email: originEmail});
         res.status(200).json({success: 1, code:'bindOrigin.needVerify', message:'check your email to complete the verification.'});
@@ -262,6 +263,8 @@ async (req, res, next)=> {
 
         const code = req.query.code;
         const binding = await db.select('*').from('verifications').where({uniqCode: code, userId: req.user.id}).first();
+        if(!binding)
+            return res.status(400).json({error:1, code: 'bindOrigin.notFound'});
         if(binding.expiresTime < new Date())
             return res.status(400).json({error:1, code: 'bindOrigin.expired'});
         
@@ -270,7 +273,7 @@ async (req, res, next)=> {
             originUserId: binding.originUserId,
             originPersonaId: binding.originPersonaId,
             originEmail: binding.originEmail,
-            privilege: privilegeRevoker(req.user.privilege, req.user.attr.freezeOfNoBinding? 'freezed':''),
+            privilege: JSON.stringify(privilegeRevoker(req.user.privilege, req.user.attr.freezeOfNoBinding? 'freezed':'')),
         }).where({id: req.user.id});
         await db('verifications').delete().where({uniqCode: code});
 
@@ -500,7 +503,7 @@ async (req, res, next)=> {
     }
 });
 
-router.get('/forgetPasswordVerify', [
+router.post('/forgetPasswordVerify', [
     checkbody('data.code').isString(),
     checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 

@@ -60,7 +60,7 @@ async (req, res, next)=>{
             const status = i.status==-1? '%' : i.status;
             const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
             .andWhere('games', 'like', game).andWhere('status', 'like', status).first().then(r=>r.num);
-            data.push({game: i.game, status, count});
+            data.push({game: i.game, status: i.status, count});
         }
         res.status(200).json({success: 1, code: 'playerStatistics.success', data: data});
     } catch(err) {
@@ -179,7 +179,7 @@ router.get('/admins', async (req, res, next)=> {
 })
 
 router.get('/search', normalSearchRateLimiter, [
-    checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 4}),
+    checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 3}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
