@@ -13,13 +13,14 @@ import { generateCaptcha } from "./lib/captcha.js";
 import logger from "./logger.js";
 
 import routes_user from "./routes/user.js";
+import router_admin from "./routes/admin.js"
 import routes_index from "./routes/index.js";
 import router_player from "./routes/player.js";
 import router_message from "./routes/message.js";
-//import router_services from "./routes/services.js";
+import router_services from "./routes/services.js";
 
 import { query as checkquery, validationResult, body as checkbody } from "express-validator";
-import { UserRateLimiter } from "./middleware/rateLimiter.js";
+import { captchaRateLimiter, UserRateLimiter } from "./middleware/rateLimiter.js";
 import { verifyJWT } from "./middleware/auth.js";
 
 process.on('uncaughtException', (err)=> {
@@ -50,6 +51,7 @@ fs.watchFile('./config.js', async (eventType, filename)=> { // dynamic load conf
 origin.createAccounts();
 const app = express();
 
+app.set('trust proxy', false);
 app.use((req, res, next)=> {
     let realIP = '';
     switch(true) {
@@ -65,7 +67,7 @@ app.use((req, res, next)=> {
 });
 
 app.use(cookieParser());
-app.use(morgan(':date[clf] :status :method :url :res[content-length] :response-time ms  :remote-addr'));
+app.use(morgan('\x1B[34m[:date[iso]]\x1B[0m [:status] :method :url :res[content-length] :response-time ms  :remote-addr'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // cors options
@@ -79,27 +81,19 @@ app.use((req, res, next) => {
 
 //app.use((req, res, next)=> {console.log(req.body); next();})
 
-app.use('/static', express.static('./test'));
+app.use('/static', express.static('./test'));   // debug only
 app.use('/api', routes_index);
 app.use('/api/user', routes_user);
+app.use('/api/admin', router_admin);
 app.use('/api/player', router_player);
 app.use('/api/message', router_message);
+app.use('/api/service', router_services);
 
-app.get('/api/captcha', (req, res, next)=>{
+app.get('/api/captcha', captchaRateLimiter, (req, res, next)=>{
     res.status(200).json({success: 1, code: 'captcha.gen', data: generateCaptcha()});
 });
 
-app.get('/is', [checkbody('is').trim() ], (req, res, next)=>{
-    console.log(validationResult(req));
-    console.log(req.body.is);
-    res.status(200).end('sadasd');
-});
-
 app.get('/', (req, res, next)=>{ res.redirect('/static/SPA.html') });
-const limiter =  new UserRateLimiter(5000, 100);
-app.get('/rate', verifyJWT ,limiter.limiter(50), (req, res, next)=> {
-    res.status(200).json({hello:'world'});
-});
 
 app.use((req, res, next)=> { res.status(404).json({error: 1, code: 'request.404'}); });
 
@@ -111,7 +105,6 @@ app.use((err, req, res, next)=> { // error handler
 app.listen(config.port, config.address, ()=> {
     console.log(`App start at ${config.address}:${config.port}`);
 });
-
 
 
 export default app;

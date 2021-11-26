@@ -1,5 +1,6 @@
 "use strict";
 import express from "express";
+import rateLimit from "express-rate-limit";
 import config from "../config.js";
 import { userHasRoles } from "../lib/auth.js";
 
@@ -21,7 +22,7 @@ class UserRateLimiter {
     
     /** 
      * @param {undefined|number|{roles:string[], value:number}[]} weight
-     * @returns {(req:express.Request, res:express.Response, next: express.NextFunction)=>void}
+     * @returns {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next: express.NextFunction)=>void}
     **/
     limiter(weight) {
         if(Array.isArray(weight)) { // sort from low to high, make the weight the user get as low as possible
@@ -55,6 +56,34 @@ class UserRateLimiter {
     }
 }
 
+const commentRateLimiter = new UserRateLimiter(600*1000, 20);   // 20 comments per 10 minutes(allow brust comment)
+const advSearchRateLimiter = new UserRateLimiter(15*1000, 1);   // 1 origin search request per 15s
+const normalSearchRateLimiter = rateLimit({                     // 5 normal search request per 1s, 100 for des/admins 
+    windowMs: 1000, 
+    max: (req, res)=>{ 
+        if(!!req.user && userHasRoles(req.user, ['dev','bot','admin','super','root']))
+            return 100;
+        else
+            return 5;
+    },
+    message: {error: 1, code: 'request.rateLimited', message: 'slow down please.'}
+});
+const viewedRateLimiter = rateLimit({                             // 20 viewed per 10s(allow brust viewed)
+    windowMs: 10000,
+    max: 20,
+    message: {error: 1, code: 'request.rateLimited', message: 'slow down please.'}
+});
+const captchaRateLimiter = rateLimit({
+    windowMs: 1000,
+    max: 5,
+    message: {error: 1, code: 'request.rateLimited', message: 'slow down please.'}
+});
+
 export {
     UserRateLimiter,
+    commentRateLimiter,
+    advSearchRateLimiter,
+    normalSearchRateLimiter,
+    viewedRateLimiter,
+    captchaRateLimiter,
 }

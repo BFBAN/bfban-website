@@ -8,7 +8,7 @@ import { OriginClient, originClients } from "../lib/origin.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
-import { UserRateLimiter } from "../middleware/rateLimiter.js";
+import { advSearchRateLimiter, normalSearchRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -56,11 +56,11 @@ async (req, res, next)=>{
         
         const data = [];
         for(let i of req.body.data) {
-            const game = i.game=='*'? '%' : `%"${i.game}"%"`;
+            const game = i.game=='*'? '%' : `%"${i.game}"%`;
             const status = i.status==-1? '%' : i.status;
             const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
             .andWhere('games', 'like', game).andWhere('status', 'like', status).first().then(r=>r.num);
-            data.push({game, status, count});
+            data.push({game: i.game, status, count});
         }
         res.status(200).json({success: 1, code: 'playerStatistics.success', data: data});
     } catch(err) {
@@ -178,9 +178,10 @@ router.get('/admins', async (req, res, next)=> {
     }
 })
 
-router.get('/search',[
-    checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).notEmpty(),
-    checkquery('scope').optional().isIn(['current','history'])
+router.get('/search', normalSearchRateLimiter, [
+    checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 4}),
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('limit').optional().isInt({min: 0, max: 100})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next)=>{
     try {
@@ -188,24 +189,30 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'search.bad', message: validateErr.array()});
 
+        const skip = req.query.skip? req.query.skip : 0;
+        const limit = req.query.limit? req.query.limit : 20;
         const param = req.query.param;
-        const result = {success: 1, code: 'search.success', data: {}};
-        if(!req.query.scope || req.query.scope=='current')
-            result.data = await db.select('originName','originUserId','originPersonaId','avatarLink','status').from('players')
-            .where('originName', 'like', '%'+param+'%').limit(100);
-        else {
-            const history = await db('name_logs').join('players', 'name_logs.originUserId', 'players.originUserId')
-            .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
-            .where('name_logs.originName', 'like', '%'+param+'%').andWhere({valid: 1}).limit(100);
-            result.data = history.map(i=> { return {
-                historyName: i.prevOriginName, 
-                currentName: i.originName,
-                originUserId: i.originUserId,
-                originPersonaId: i.originUserId,
-                log: { from: i.fromTime, to: i.toTime },
-                status: i.status,
-            }; });
-        }
+        const result = {success: 1, code: 'search.success', data: []};
+        /** @type {(import("../typedef.js").Player&{prevOriginName:string,fromTime:Date,toTime:Date})[]} */
+        const history = await db('name_logs').join('players', 'name_logs.originUserId', 'players.originUserId')
+        .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
+        .where('name_logs.originName', 'like', '%'+param+'%').andWhere({valid: 1}).offset(skip).limit(limit);
+        result.data = history.map(i=> { return {
+            historyName: i.prevOriginName, 
+            originName: i.originName,
+            dbId: i.id,
+            originUserId: i.originUserId,
+            originPersonaId: i.originUserId,
+            avatarLink: i.avatarLink,
+            status: i.status,
+            games: i.games,
+            cheatMethods: i.cheatMethods,
+            viewNum: i.viewNum,
+            commentsNum: i.commentsNum,
+            createTime: i.createTime,
+            updateTime: i.updateTime,
+            log: { from: i.fromTime, to: i.toTime },
+        }; });
         return res.status(200).json(result);
 
     } catch(err) {
@@ -213,11 +220,9 @@ async (req, res, next)=>{
     }
 });
 
-const searchRateLimiter = new UserRateLimiter(15*1000, 1);
-
 router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted','freezed']), 
-    searchRateLimiter.limiter([{roles: ['root','super','admin','dev'], value: 0}]), [
-    checkquery('param').isString().trim().notEmpty()
+    advSearchRateLimiter.limiter([{roles: ['root','super','admin','dev'], value: 0}]), [
+    checkquery('param').isAlphanumeric('en-US', {ignore: '-_'}).trim().isLength({min: 4})
 ], /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)} */
 async (req, res, next)=>{
     try {
@@ -226,7 +231,7 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code:'advSearch.bad', message:validateErr.array()});
 
         const originClient = originClients.getOne();
-        const originUserId = await originClient.searchUserName(req.query.param); // we have dealt with url unescape
+        const originUserId = await originClient.searchUserName(req.query.param);
         const result = {success: 1, code:'', data:{}};
         if(originUserId) {
             const curOriginInfo = await originClient.getInfoByUserId(originUserId);

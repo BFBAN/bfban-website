@@ -8,7 +8,7 @@ import { allowPrivileges, forbidPrivileges } from "../middleware/auth.js";
 import { commentRateLimiter } from "./player.js";
 import { sendMessage } from "./message.js";
 import { privilegeGranter, privilegeRevoker, userHasRoles } from "../lib/auth.js";
-import { userSetAttributes } from "../lib/user";
+import { userSetAttributes } from "../lib/user.js";
 
 const router = express.Router();
 

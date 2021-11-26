@@ -12,7 +12,7 @@ import { originClients, getUserProfileByName } from "../lib/origin.js"
 import { cheatMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
 import { siteEvent, stateMachine } from "../lib/bfban.js";
 import { userHasRoles } from "../lib/auth.js";
-import { UserRateLimiter } from "../middleware/rateLimiter.js";
+import { commentRateLimiter, viewedRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router()
 
@@ -60,6 +60,22 @@ async (req, res, next)=>{
             result.history =  await db.select('originName','fromTime','toTime').from('name_logs').where({originUserId: result.originUserId});
         
         res.status(200).json({success: 1, code: 'player.ok', data: result});
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/viewed', viewedRateLimiter, [
+    checkbody('data.id').isInt({min: 0})
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error:1, code:'viewed.bad', message:validateErr.array()});
+
+        await db('players').increment("viewNum", 1).where({id: req.body.data.id});
+        return res.status(200).json({success:1, code:'viewed.ok'});
     } catch(err) {
         next(err);
     }
@@ -319,7 +335,6 @@ async (req, res, next)=>{
     }
 });
 
-const commentRateLimiter = new UserRateLimiter(600*1000, 20); // 20 comments per 10 minutes(allow brust comment)
 
 router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']),
     commentRateLimiter.limiter([{roles: ['admin','super','root','dev','bot'], value: 0}]), [

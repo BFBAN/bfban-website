@@ -9,9 +9,9 @@ import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify } from "../lib/mail.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
-import { generatePassword, comparePassword, userHasRoles } from "../lib/auth.js";
+import { generatePassword, comparePassword, userHasRoles, privilegeRevoker } from "../lib/auth.js";
 import { OriginClient, originClients } from "../lib/origin.js";
-import { handleRichTextInput, privilegeRevoker, userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
+import { handleRichTextInput, userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
 import { siteEvent } from "../lib/bfban.js";
 import logger from "../logger.js";
 

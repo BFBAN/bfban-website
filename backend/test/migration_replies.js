@@ -96,7 +96,7 @@ const converter = new Stream.Writable({
             toOriginUserId: player.originUserId,
             toOriginPersonaId: player.originPersonaId,
             byUserId: chunk.userId,
-            toCommentId: chunk.toFloor? comments[chunk.toFloor-1]? comments[chunk.toFloor].id : null : null,
+            toCommentId: chunk.toFloor? comments[chunk.toFloor-1]? comments[chunk.toFloor-1].id : null : null,
             content: handleRichTextInput(chunk.content),
             valid: chunk.valid,
             createTime: chunk.createDatetime
