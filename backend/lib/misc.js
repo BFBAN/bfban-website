@@ -48,21 +48,9 @@ function generateRandomString(length=0, fromChars='0123456789abcdefghijklmnopqrs
     return str;
 }
 
-/** @param {ArrayLike} arraylike */
-function arr2DBstr(arraylike) {
-    const arr = Array.from(arraylike);
-    return arr.map(i=>`#${i}#`).join(',');
-}
-
-function DBstr2arr(str='') {
-    return str.replace(/#/g, '').split(',');
-}
-
 export {
     generateErrorHelper,
     encrypt,
     decrypt,
-    generateRandomString,
-    arr2DBstr,
-    DBstr2arr
+    generateRandomString
 };

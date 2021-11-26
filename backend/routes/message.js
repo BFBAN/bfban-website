@@ -274,18 +274,18 @@ async function iGotReplied(params) { // checked that comment dose exist
 
 async function newBanAppeal(params) {
     /** @type {import("../typedef.js").BanAppeal} */
-    const ban_appeal = params.ban_appeal;
-    await sendMessage(ban_appeal.byUserId, ban_appeal.id, 'banAppeal', JSON.stringify({
-        toPlayerId: ban_appeal.byUserId,
-        content: ban_appeal.content.slice(0,32),
-        createTime: ban_appeal.createTime
+    const banAppeal = params.banAppeal;
+    await sendMessage(banAppeal.byUserId, banAppeal.id, 'banAppeal', JSON.stringify({
+        toPlayerId: banAppeal.byUserId,
+        content: banAppeal.content.slice(0,32),
+        createTime: banAppeal.createTime
     })); // hack to store banAppeal's id
 }
 
 async function removeBanAppealNotification(params) {
     /** @type {import("../typedef.js").BanAppeal} */
-    const ban_appeal = params.ban_appeal;
-    await db('messages').del().where({type: 'banAppeal', toUserId: ban_appeal.id});
+    const banAppeal = params.banAppeal;
+    await db('messages').del().where({type: 'banAppeal', toUserId: banAppeal.id});
 }
 
 export default router;

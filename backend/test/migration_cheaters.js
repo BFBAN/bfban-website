@@ -20,8 +20,8 @@
  * @property {string} originName
  * @property {string} originPersonaId
  * @property {string} originUserId
- * @property {string} games
- * @property {string} cheatMethods
+ * @property {string[]} games
+ * @property {string[]} cheatMethods
  * @property {string} avatarLink
  * @property {number} viewNum
  * @property {number} commentsNum
@@ -89,10 +89,10 @@ function cheatMethodConverter(str_src='') {
         case 'gadgetModify': dst.add('gadgetModify'); break;
         case 'damageChange': dst.add('damageChange'); break;
         case 'shootingThroughWalls': dst.add('magicBullet'); break;
-        default: console.log('Unrecognized cheatMethod:'+i);
+        default: console.log('Unrecognized cheatMethod:'+i); dst.add('aimbot'); break;
         }
     }
-    return Array.from(dst).join(',');
+    return Array.from(dst);
 }
 
 const converter = new Stream.Writable({
@@ -111,7 +111,7 @@ const converter = new Stream.Writable({
             originPersonaId: chunk.originPersonaId,
             originUserId: chunk.originUserId,
             games: game_dst,
-            cheatMethods: cheatMethods_dst,
+            cheatMethods: JSON.stringify(cheatMethods_dst),
             avatarLink: chunk.avatarLink,
             viewNum: chunk.n,
             commentsNum: chunk.commentsNum,

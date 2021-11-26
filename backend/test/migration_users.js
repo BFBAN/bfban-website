@@ -78,7 +78,7 @@ const converter = new Stream.Writable({
             password: chunk.password,
             introduction: '',
             valid: chunk.valid,
-            privilege: JSON.stringify([chunk.privilege]),
+            privilege: JSON.stringify(chunk.valid? [chunk.privilege] : ['blacklisted']),
             attr: JSON.stringify(attr),
             originName: null,
             originEmail: null,

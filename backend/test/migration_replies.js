@@ -86,17 +86,23 @@ const converter = new Stream.Writable({
             console.log('Cannot find such player:'+chunk.originUserId);
             return callback();
         }
-        /** @type {Reply} */
+        /** @type {import("../typedef").Comment[]} */
+        const comments = await db_dst.select('*').from('comments').where({toPlayerId: player.id}).orderBy('createTime', 'asc');
+
+        /** @type {import("../typedef").Comment} */
         const obj = {
+            type: 'reply',
             toPlayerId: player.id,
+            toOriginUserId: player.originUserId,
+            toOriginPersonaId: player.originPersonaId,
             byUserId: chunk.userId,
-            toFloor: chunk.toFloor,
+            toCommentId: chunk.toFloor? comments[chunk.toFloor-1]? comments[chunk.toFloor-1].id : null : null,
             content: handleRichTextInput(chunk.content),
             valid: chunk.valid,
             createTime: chunk.createDatetime
         }
         console.log('-inserting: '+JSON.stringify(obj));
-        await db_dst('replies').insert(obj);
+        await db_dst('comments').insert(obj);
         return callback();
     },
     objectMode: true,

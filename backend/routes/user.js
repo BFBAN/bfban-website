@@ -9,16 +9,16 @@ import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify } from "../lib/mail.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
-import { generatePassword, comparePassword, userHasRoles } from "../lib/auth.js";
+import { generatePassword, comparePassword, userHasRoles, privilegeRevoker } from "../lib/auth.js";
 import { OriginClient, originClients } from "../lib/origin.js";
-import { handleRichTextInput, privilegeRevoker, userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
+import { handleRichTextInput, userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
 import { siteEvent } from "../lib/bfban.js";
 import logger from "../logger.js";
 
 const router = express.Router();
 
 router.post('/signup', verifyCaptcha, [ 
-    checkbody("data.username").isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min:1, max:40}),
+    checkbody('data.username').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min:1, max:40}),
     checkbody('data.password').isString().trim().isLength({min:1, max:40}),
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().unescape().trim().notEmpty(),
@@ -35,7 +35,7 @@ async (req, res, next)=> {
         const { username, password, originName, originEmail } = req.body.data;
 
         // does anyone occupied?
-        if( (await db.select('username').from('registers').where({username: username}).union([
+        if( (await db.select('username').from('verifications').where({username: username, type: 'register'}).union([
             db.select('username').from('users').where({username: username})
         ]) ).length != 0 )
             return res.status(400).json({error: 1, code: 'signup.usernameExist'});
@@ -48,7 +48,7 @@ async (req, res, next)=> {
         const originUserInfo = await originClient.getInfoByUserId(originUserId);
         if(originUserInfo.username !== originName) // verify again
             return res.status(400).json({error: 1, code:'signup.originNotFound'});
-        if( (await db.select('originUserId').from('registers').where({originUserId: originUserId}).union([
+        if( (await db.select('originUserId').from('verifications').where({originUserId: originUserId}).union([
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
         ]) ).length != 0 )
             return res.status(400).json({error: 1, code: 'signup.originBindingExist'});
@@ -58,7 +58,8 @@ async (req, res, next)=> {
         // no mistakes detected, generate a unique string for register validation
         const randomStr = misc.generateRandomString(127);
         const passwdHash = await generatePassword(password);
-        await db('registers').insert({
+        await db('verifications').insert({
+            type: 'register',
             username: username, 
             uniqCode: randomStr,
             password: passwdHash, 
@@ -69,7 +70,7 @@ async (req, res, next)=> {
             expiresTime: new Date(Date.now()+1000*60*60*4), // 4h
             createTime: new Date()
         });
-        await sendRegisterVerify(username, originName, originEmail, randomStr);
+        await sendRegisterVerify(username, originName, originEmail, req.body.data.language, randomStr);
         logger.info('users.signup Success:', {username,originName,originEmail,randomStr});
         return res.status(201).json({success: 1, code:'signup.needVerify', message: 'Verify Email to join BFBan!'});
     } catch(err) {
@@ -78,7 +79,8 @@ async (req, res, next)=> {
 });
 
 router.get('/signupVerify', [ 
-    checkquery("code").isString().notEmpty() 
+    checkquery('code').isString().notEmpty(),
+    checkquery('lang').isIn(config.supportLanguages)
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
@@ -87,9 +89,11 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'signup.bad', message: validateErr.array()});
 
         const code = req.query.code;
-        const registrant = await db.select('*').from('registers').where({uniqCode: code}).first();
+        const registrant = await db.select('*').from('verifications').where({uniqCode: code}).first();
         if(!registrant)
             return res.status(404).json({error: 1, code: 'signup.notfound'});
+        if(registrant.expiresTime < new Date())
+            return res.status(400).json({error: 1, code: 'signup.expired'});
         const data = {
             username: registrant.username,
             password: registrant.password,
@@ -98,12 +102,12 @@ async (req, res, next)=> {
             originUserId: registrant.originUserId,
             originPersonaId: registrant.originPersonaId,
             privilege: JSON.stringify(['normal']),
-            attr: JSON.stringify(userDefaultAttribute(req.REAL_IP)),
+            attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.query.language)),
             createTime: new Date(),
             updateTime: new Date(),
         };
         await db('users').insert(data);
-        await db('registers').where({uniqCode: code}).delete();
+        await db('verifications').where({uniqCode: code}).delete();
         logger.info('users.signupVerify Success:', {name: data.username});
         
         siteEvent.emit('action', {method: 'register', params: {user: data}});
@@ -130,7 +134,7 @@ async (req, res, next)=> {
         const { username, password, originName, originEmail } = req.body.data;
         
         // does anyone occupied?
-        if( (await db.select('username').from('registers').where({username: username}).union([
+        if( (await db.select('username').from('verifications').where({username: username, type: 'register'}).union([
             db.select('username').from('users').where({username: username})
         ]) ).length != 0 )
             return res.status(400).json({error: 1, code: 'signup.usernameExist'});
@@ -163,12 +167,12 @@ async (req, res, next)=> {
         
         const { username, password, EXPIRES_IN } = req.body.data;
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({username: username}).first().then(r=>r.privilege = JSON.parse(r.privilege));
+        const user = await db.select('*').from('users').where({username: username}).first();
         
         if(user && user.valid!=0 && await comparePassword(password, user.password)) {
-            let expiresIn = 1000*60*60*24*7; // 7 day
-            if(EXPIRES_IN>0 && userHasRoles(user, ['dev','bot']))
-                expiresIn = parseInt(EXPIRES_IN);
+            let expiresIn = config.userTokenExpiresIn;
+            if(EXPIRES_IN && userHasRoles(user, ['dev','bot']))
+                expiresIn = EXPIRES_IN-0;
             const jwtpayload = {
                 username: username,
                 userId: user.id,
@@ -219,18 +223,25 @@ async (req, res, next)=> {
         const originUserInfo = await originClient.getInfoByUserId(originUserId);
         if(originUserInfo.username.toLowerCase() !== originName.toLowerCase()) // verify
             return res.status(400).json({error: 1, code:'bindOrigin.originNotFound'});
-        if( (await db.select('originUserId').from('registers').where({originUserId: originUserId}).union([
+        if( (await db.select('originUserId').from('verifications').where({originUserId: originUserId}).union([
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
         ]) ).length != 0 )
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
         if(''.concat(await originClient.getUserGames(originUserId)).includes('Battlefield') == false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'bindOrigin.gameNotOwned'});
         // no mistakes detected, generate code for verify
-        const code = misc.encrypt(JSON.stringify({      // we send encrypted payload to user by email
-            userId: req.user.id,                        // which contains userId, originEmail, originuserId
-            email: originEmail,                         // when we get this payload again, we can know who is binding which email
-            originUserId: originUserId                  // without the help of any temporary db table
-        }), config.secret).toString('base64');
+        const code = misc.generateRandomString(127);
+        db('verifications').insert({
+            type: 'binding',
+            userId: req.user.id, 
+            uniqCode: code,
+            originName: originName,
+            originEmail: originEmail,
+            originUserId: originUserId,
+            originPersonaId: originUserInfo.personaId,
+            expiresTime: new Date(Date.now()+1000*60*60*4), // 4h
+            createTime: new Date()
+        });
         await sendBindingOriginVerify(req.user.username, originEmail, encodeURIComponent(code));
 
         logger.info('users.bindOrigin#1 Success:', {name: req.user.username, email: originEmail});
@@ -249,27 +260,21 @@ async (req, res, next)=> {
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'bindOrigin.bad', message: validateErr.array()});
 
-        const code = decodeURIComponent(req.query.code);
-        let payload = {};
-        try { // be warn: we might get meaningless obj if the code is not encrypted by us
-            payload = JSON.parse(misc.decrypt(Buffer.from(code, 'base64'), config.secret).toString('utf8'));
-            if(payload.userId != req.user.id)
-                throw(new Error('bad payload'));
-        } catch(err) {
-            return res.status(400).json({error: 1, code: 'bindOrigin.bad', message: 'no such code.'}); // bad payload
-        }
-        const originClient = originClients.getOne();
-        const originUserInfo = await originClient.getInfoByUserId(payload.originUserId);
-        // no mistakes detected, change db record
+        const code = req.query.code;
+        const binding = await db.select('*').from('verifications').where({uniqCode: code, userId: req.user.id}).first();
+        if(binding.expiresTime < new Date())
+            return res.status(400).json({error:1, code: 'bindOrigin.expired'});
+        
         await db('users').update({
-            originName: originUserInfo.username,
-            originUserId: originUserInfo.userId,
-            originPersonaId: originUserInfo.personaId,
-            originEmail: payload.email,
+            originName: binding.originName,
+            originUserId: binding.originUserId,
+            originPersonaId: binding.originPersonaId,
+            originEmail: binding.originEmail,
             privilege: privilegeRevoker(req.user.privilege, req.user.attr.freezeOfNoBinding? 'freezed':''),
         }).where({id: req.user.id});
-        
-        logger.info('users.bindOrigin#2 Success:', {name: req.user.username, email: payload.email});
+        await db('verifications').delete().where({uniqCode: code});
+
+        logger.info('users.bindOrigin#2 Success:', {name: req.user.username, email: binding.originEmail});
         res.status(200).json({success: 1, code: 'bindOrigin.success', message:'bind origin successfully.'});
     } catch(err) {
         next(err);
@@ -295,7 +300,7 @@ async function showUserInfo(req, res, next) {
             return res.status(400).json({error: 1, code: 'userInfo.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({id: req.query.id}).first().then(r=>r.privilege = JSON.parse(r.privilege));
+        const user = await db.select('*').from('users').where({id: req.query.id}).first();
         if(!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
         const reportnum = await db('reports').count({num: 'id'}).where({byUserId: user.id}).first().then(r=>r.num);
@@ -306,13 +311,13 @@ async function showUserInfo(req, res, next) {
             introduction: user.introduction,
             joinTime: user.createTime,
             lastOnlineTime: user.updateTime,
-            origin: user.attr.showOrigin===true || // user set it public
-                    (req.user&&userHasRoles(req.user, ['admin','super','root','dev'])) || // no limit for admin
-                    (req.user&&req.user.id===user.id)? // for self
+            origin: user.attr.showOrigin===true // user set it public
+                    || (req.user && userHasRoles(req.user, ['admin','super','root','dev'])) // no limit for admin
+                    || (req.user && req.user.id===user.id)? // for self
                         {originName: user.originName,originUserId: user.originUserId} : null,
             attr: userShowAttributes(user.attr, 
-                (req.user&&req.user.id===user.id), // self, show private info
-                (req.user&&userHasRoles(req.user, ['admin','super','root','dev'])) ), // no limit for admin
+                (req.user && req.user.id===user.id), // self, show private info
+                (req.user && userHasRoles(req.user, ['admin','super','root','dev'])) ), // no limit for admin
             reportnum: reportnum,
         };
 
@@ -348,11 +353,11 @@ async (req, res, next)=>{
         const user = await db.select('*').from('users').where({id: req.query.id}).first();
         if(!user)
             return res.status(404).json({error: 1, code: 'userReports.notFound', message: 'no such user.'});
-        const reports = await db('reports').join('players', 'reports.toPlayerId', 'players.id')
+        const reports = await db('comments').join('players', 'comments.toPlayerId', 'players.id')
         .select('players.originName as originName', 'players.originUserId as originuserId',
-                    'players.originPersonaId as originPersonaId', 'players.status as status',
-                    'players.updateTime as updateTime', 'reports.createTime as createTime')
-        .where('reports.byUserId', '=', user.id).orderBy('reports.createTime', 'desc').offset(skip).limit(limit);
+                'players.originPersonaId as originPersonaId', 'players.status as status',
+                'players.updateTime as updateTime', 'comments.createTime as createTime')
+        .where({'comments.byUserId': user.id, type: 'report'}).orderBy('comments.createTime', 'desc').offset(skip).limit(limit);
 
         res.status(200).json({success: 1, code: 'userReports.success', data: reports});
     } catch(err) {
@@ -477,13 +482,16 @@ async (req, res, next)=> {
         if(userHasRoles(user, ['blacklisted']))
             return res.status(403).json({error: 1, code: 'forgetPassword.permissionDenied', message: 'you are not allow to do so.'});
         if(!user || user.originEmail != req.body.data.originEmail)
-            return res.status(404).json({error: 1, code: 'forgetPassword.notFound', message: 'no such user.'});
-        const newpassword = misc.generateRandomString(16);  // what we are doing here is:
-        const code = misc.encrypt(JSON.stringify({          // generate new password for user
-            i: 'YesINeedResetMyPassword',                   // but update it into db when user confirm it by email
-            password: newpassword,                          // we do so to avoid some bay guys who know user's email address
-            userid: user.id                                 // and directly change the user password though they dont know the new one
-        }), config.secret).toString('base64');              // we send encrypted password to user, so we dont use db, like jwt
+            return res.status(404).json({error: 1, code: 'forgetPassword.notFound', message: 'no such user or you didnt bind an email.'});
+        
+        const code = misc.generateRandomString(127);
+        await db('verifications').insert({
+            type: 'reset',
+            userId: user.id,
+            uniqCode: code,
+            expiresTime: new Date(Date.now()+1000*60*60*4), // 4h
+            createTime: new Date()
+        });
         await sendForgetPasswordVerify(user.username, user.originEmail, encodeURIComponent(code)); // user verify the code->save new password into db
         // check /forgetPasswordVerify below
         res.status(200).json({success: 1, code: 'forgetPassword.needVerify', message: 'check your email to reset the password.'});
@@ -493,7 +501,8 @@ async (req, res, next)=> {
 });
 
 router.get('/forgetPasswordVerify', [
-    checkquery('code').isString()
+    checkbody('data.code').isString(),
+    checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
@@ -501,21 +510,17 @@ async (req, res, next)=> {
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: validateErr.array()});
 
-        const code = decodeURIComponent(req.query.code);
-        let payload = {};
-        try { // be warn: we might get meaningless obj if the code is not encrypted by us
-            payload = JSON.parse(misc.decrypt(Buffer.from(code, 'base64'), config.secret).toString('utf8'));
-            if(payload.i != 'YesINeedResetMyPassword') // if this patten match, there is no probability to have a bad payload
-                throw(new Error('bad payload'));
-        } catch(err) {
-            return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: 'no such code.'}); // bad payload
-        }
-        const passwdHash = await generatePassword(payload.password);
-        await db('users').update({password: passwdHash}).where({id: payload.userid}); // store the new password into db
+        const { code, newpassword } = req.body.data;
 
-        return res.status(200).json({success: 1, code: 'forgetPassword.success', data: {
-            newpassword: payload.password, // send new password to user, leave them change it later
-        }});
+        /** @type {import("../typedef").Verification} */
+        const verification = await db.select('*').from('verifications').where({uniqCode: code}).first();
+        if(!verification)
+            return res.status(400).json({error: 1, code: 'forgetPassword.bad'});
+        
+        const passwdHash = await generatePassword(newpassword);
+        await db('users').update({password: passwdHash}).where({id: verification.userId}); // store the new password into db
+
+        return res.status(200).json({success: 1, code: 'forgetPassword.success'});
     } catch(err) {
         next(err);
     }

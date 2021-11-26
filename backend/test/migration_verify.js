@@ -73,7 +73,7 @@ function cheatMethodConverter(str_src='') {
         default: console.log('Unrecognized cheatMethod:'+i);
         }
     }
-    return Array.from(dst).join(',');
+    return Array.from(dst);
 }
 
 const converter = new Stream.Writable({
@@ -90,19 +90,21 @@ const converter = new Stream.Writable({
             console.log('Cannot find such player:'+chunk.originUserId);
             return callback();
         }
-        /** @type {Judgement} */
+        /** @type {import("../typedef").Comment} */
         const obj = {
+            type: 'judgement',
             valid: chunk.valid,
             byUserId: chunk.userId,
             toPlayerId: player.id,
             toOriginUserId: player.originUserId,
-            cheatMethods: cheatMethodConverter(chunk.cheatMethods),
-            action: ['discuss', 'guilt', 'suspect','innocent','trash'][chunk.status],
-            content: chunk.suggestion,
+            toOriginPersonaId: player.originPersonaId,
+            cheatMethods: JSON.stringify(cheatMethodConverter(chunk.cheatMethods)),
+            judgeAction: ['discuss', 'guilt', 'suspect','innocent','trash'][chunk.status],
+            content: handleRichTextInput(chunk.suggestion),
             createTime: chunk.createDatetime,
         };
         console.log('-inserting: '+JSON.stringify(obj));
-        await db_dst('judgements').insert(obj);
+        await db_dst('comments').insert(obj);
         return callback();
     },
     objectMode: true,

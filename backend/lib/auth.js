@@ -51,10 +51,36 @@ function userHasNotRoles(user, roles) {
     return true;
 }
 
+/** @param {string[]} current @param {string} add */
+function privilegeGranter(current, add) {
+    if(add=='blacklisted') // blacklisted, remove all what he got before
+        return ['blacklisted'];
+    const tmp = new Set(current);
+    if( (tmp.has('blacklisted') || tmp.has('freezed')) && add!='freezed' ) { // unban
+        tmp.delete('blacklisted');
+        tmp.delete('freezed');
+    }
+    tmp.add(add); // for freezed and other permission
+    if(['dev','admin','super','root'].includes(add))
+        tmp.delete('normal');
+    return Array.from(tmp);
+}
+
+/** @param {string[]} current @param {string} del */
+function privilegeRevoker(current, del) {
+    const tmp = new Set(current);
+    tmp.delete(del);
+    if(tmp.size == 0)
+        tmp.add('normal');
+    return Array.from(tmp);
+}
+
 export {
     verifyJWTToken,
     generatePassword,
     comparePassword,
     userHasRoles,
     userHasNotRoles,
+    privilegeGranter,
+    privilegeRevoker
 }

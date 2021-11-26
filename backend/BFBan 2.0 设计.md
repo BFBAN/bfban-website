@@ -99,7 +99,7 @@ body:	{
                     toPlayerId: number,
                     toPlayerName: string,
                     createTime: string(ISODate)
-                    type: 'ban_appeal'
+                    type: 'banAppeal'
                 }, ...
                 {
                     id: number,
@@ -397,7 +397,7 @@ body:		{
                    	reports: [],
                     judgements: [],
                    	comments: [],
-                    ban_appeals: [],
+                    banAppeals: [],
                 } // TODO
 			}
 ```
@@ -420,7 +420,7 @@ body:		{
                     { type:'report', videoLink:string(url), ... }...
                     { type:'reply', content:string, ... }...
                     { type:'judgement', action:string, ...}...
-                    { type:'ban_appeal', content:string, ...}...
+                    { type:'banAppeal', content:string, ...}...
                      // Order by createTime, asc
                 ]
 			}

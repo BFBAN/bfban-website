@@ -4,31 +4,31 @@ import process from "process";
 const logger = {
     success: (...msg)=>{
         const str = prettyLogPrinter(
-            `\x1B[32m[SUCCESS] \x1B[0m`,
+            `\x1B[34m[${new Date().toLocaleString()}]\x1B[0m `+`\x1B[32m[SUCCESS] \x1B[0m`,
             msg.map(i=>typeof(i)=='object'? JSON.stringify(i,null,2):i+'').join('\n')
         );
-        console.log(`\x1B[34m[${new Date().toLocaleString()}]\x1B[0m `+str);
+        console.log(str);
     },
     info: (...msg)=>{
         const str = prettyLogPrinter(
-            `\x1B[37m[INFO] \x1B[0m`,
+            `\x1B[34m[${new Date().toLocaleString()}]\x1B[0m `+`\x1B[37m[INFO] \x1B[0m`,
             msg.map(i=>typeof(i)=='object'? JSON.stringify(i,null,2):i+'').join('\n')
         );
-        console.log(`\x1B[34m[${new Date().toLocaleString()}]\x1B[0m `+str);
+        console.log(str);
     },
     warn: (...msg)=>{
         const str = prettyLogPrinter(
-            `\x1B[33m[WARN] \x1B[0m`,
+            `\x1B[34m[${new Date().toLocaleString()}]\x1B[0m `+`\x1B[33m[WARN] \x1B[0m`,
             msg.map(i=>typeof(i)=='object'? JSON.stringify(i,null,2):i+'').join('\n')
         );
-        console.log(`\x1B[34m[${new Date().toLocaleString()}]\x1B[0m `+str);
+        console.log(str);
     },
     error: (...msg)=>{
         const str = prettyLogPrinter(
-            `\x1B[31m[ERROR] \x1B[0m`,
+            `\x1B[34m[${new Date().toLocaleString()}]\x1B[0m `+`\x1B[31m[ERROR] \x1B[0m`,
             msg.map(i=>typeof(i)=='object'? JSON.stringify(i,null,2):i+'').join('\n')
         );
-        console.log(`\x1B[34m[${new Date().toLocaleString()}]\x1B[0m `+str);
+        console.log(str);
     },
 };
 

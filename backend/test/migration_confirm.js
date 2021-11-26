@@ -103,17 +103,21 @@ const converter = new Stream.Writable({
             console.log('Cannot find such player:'+verify.originUserId);
             return callback();
         }
-        /** @type {Judgement} */
+        /** @type {import("../typedef").Comment} */
         const obj = {
+            type: 'judgement',
             valid: 1,
             byUserId: chunk.userId,
             toPlayerId: player.id,
             toOriginUserId: player.originUserId,
-            action: 'guilt',
+            toOriginPersonaId: player.originPersonaId,
+            cheatMethods: JSON.stringify(player.cheatMethods),
+            content: '',
+            judgeAction: 'guilt',
             createTime: chunk.createDatetime,
         };
         console.log('-inserting: '+JSON.stringify(obj));
-        await db_dst('judgements').insert(obj);
+        await db_dst('comments').insert(obj);
         return callback();
     },
     objectMode: true,
