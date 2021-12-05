@@ -6,6 +6,7 @@ const config = {
     // security
     secret: 'dontTellAnyOneAboutThis',
     captchaExpiresIn: 1000*60*20,
+	userTokenExpiresIn: 1000*60*60*24*7, // 7 day
     errorHelperVerbose: process.env.NODE_ENV==='production'? false : true,
     // runtime
     port: process.env.port || 4002,
@@ -42,6 +43,7 @@ const config = {
     // DYNAMIC CONFIGURE BEGIN
 	supportLanguages: ['cn', 'en'],
     personsToConfirm: 2,
+	personsToReview: 2,
     // to [https://accounts.ea.com/connect], get Cookie, key: remid and sid
     originAccounts: [
         {
