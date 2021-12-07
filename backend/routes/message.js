@@ -75,6 +75,7 @@ async (req, res, next)=>{
         const maxTimeout = config.pollingTimeout;
         let timer;
         let listener;
+        let aborter;
         let data = await new Promise((res, rej)=> {
             timer = setTimeout(()=>{
                 res(null);
@@ -82,9 +83,12 @@ async (req, res, next)=>{
             listener = (params)=> {
                 if(params.to != req.user.id) return;
                 res(params);
-            }
+            };
+            aborter = ()=> { res(null); };
+            req.on('close', aborter);
             siteEvent.addListener('message', listener);
         }).finally(()=>{
+            req.removeListener('close', aborter);
             siteEvent.removeListener('message', listener);
             clearTimeout(timer);
         });

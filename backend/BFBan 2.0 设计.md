@@ -131,6 +131,53 @@ body:	{
 		}
 ```
 
+#### 获取玩家分项目统计信息
+
+```javascript
+REQUEST HTTP POST /api/playerStatistics
+body:	{
+    		data: [
+                {
+                    game: string('bf1'|'bfv'|'*'),
+                    status: number(-1(all),0,...)
+                },
+                ... // 20 max
+            ]
+		}
+RESPONSE: HTTP 200 OK
+body:	{
+                success: 1,
+    			code: "playerStatistics.success",
+                data: [
+                	{
+                		game: string(as request),
+                        status: number(as request),
+                        count: number
+                	},
+                    ...
+            	]
+        }
+```
+
+#### 获取最近热议
+
+```javascript
+REQUEST HTTP GET /api/trend
+RESPONSE HTTP 200 OK
+body:	{
+            success: 1,
+            code: "trend.ok",
+            data: [
+                {
+                    hot: number,
+                    originName: string,
+                    dbId: number
+                },
+                ...
+            ]
+        }
+```
+
 #### 	获取网站公告 /api/announcements
 
 ```javascript
@@ -181,7 +228,7 @@ body:		{
                             originUserId: string,
                             originPersonaId: string,
                             games: string[],	// example: ["bf1","bfv"]
-                            cheatMethods: string,
+                            cheatMethods: string[],
                             avatarlink: string,
                             viewNum: number,
                             commentsNum: number,
@@ -201,33 +248,31 @@ body:		{
 ```javascript
 REQUEST: HTTP GET /api/search
 parameters:	param: string	// the name need to search
-			scope: 'current'|'history'	// the search scope
+			skip?: number
+            offset?: number
 RESPONSE: HTTP 200 OK
 body:		{
     			success: 1,
                 code: 'search.success',
-                data: [	// current player has similar name
+                data: [
                     {
+                        historyName: string,
+                        dbId: number,
                         originName: string,
                         originUserId: string,
                         originPersonaId: string,
-                        avatarLink: string,
-                        status: number
-                    },
-                        ...100max
-                ]
-                // OR
-                [	// previous player names
-                    {
-                        historyName: string,
-                        currentName: string,
-                        originUserId: string,
-                        originPersonaId: string,
+                        avatarLink: string(url),
+                        games: string[],
+                        cheatMethods: string[],
+                        viewNum: number,
+                        commentsNum: number,
+                        createTime: string(ISODate),
+                        updateTime: string(ISODate),
+                        status: number,
                         log: {
                             from: string(ISODate),	// name log from
                             to: string(ISODate)		// name log to
-                        },
-                        status: number
+                        }
                     },
                         ...100max
                 ]
@@ -283,7 +328,7 @@ body:		{
                     originPersonaId: string,
                     originUserId: string,
                     games: string[],
-                    cheatMethods: string,
+                    cheatMethods: string[],
                     avatarlink: string,
                     viewNum: number,
                     commentsNum: number,
@@ -312,7 +357,7 @@ body:	{
     		data: {
                 game: 'bf1'|'bfv',
                 originName: string,
-                cheatMethods: string,	// see {{valid_cheatMethod}}
+                cheatMethods: string[],	// see {{valid_cheatMethod}}
                 videoLink:	string(url)|null,
                 description: string
             },
@@ -354,7 +399,7 @@ body:	{
     		data: {
                 game: 'bf1'|'bfv',
                 originUserId: string,
-                cheatMethods: string,	// see {{valid_cheatMethod}}
+                cheatMethods: string[],	// see {{valid_cheatMethod}}
                 videoLink:	string(url)|null,
                 description: string
             },
@@ -381,27 +426,6 @@ body:	{
         }
 ```
 
-#### 	获取被举报玩家案件时间线_弃用	/api/player/timeline_deprecated
-
-```javascript
-REQUEST: HTTP GET /api/player/timeline
-parameters:	OneOf [
-    		userId?: string
-			personaId?: string
-			dbId?: number ]
-RESPONSE: HTTP 200 OK
-body:		{
-    			success: 1,
-                code: 'timeline.ok',
-                data: {
-                   	reports: [],
-                    judgements: [],
-                   	comments: [],
-                    banAppeals: [],
-                } // TODO
-			}
-```
-
 #### 获取被举报玩家案件时间线	/api/player/timeline
 
 ```javascript
@@ -417,10 +441,10 @@ body:		{
     			success: 1,
                 code: 'timeline.ok',
                 data: [
-                    { type:'report', videoLink:string(url), ... }...
-                    { type:'reply', content:string, ... }...
-                    { type:'judgement', action:string, ...}...
-                    { type:'banAppeal', content:string, ...}...
+                    { type:'report', id: number, videoLink:string(url), ... }...
+                    { type:'reply', id: number, content:string, ... }...
+                    { type:'judgement', id: number, action:string, ...}...
+                    { type:'banAppeal', id: number, content:string, ...}...
                      // Order by createTime, asc
                 ]
 			}
@@ -434,7 +458,7 @@ headers:	x-access-token: {{access_token}}	// login required
 body:		{
     			data: {
                     toPlayerId: number,
-                    toFloor: number,			// start from 1
+                    toCommentId?: number,		
                     content: string,
                 }
 			}
@@ -475,7 +499,7 @@ headers:	x-access-token: {{access_token}}	// login required, admin privilege
 body:		{
     			data: {
                     toPlayerId: number,
-                    cheatMethods: string,	// see {{valid_cheatMethod}}
+                    cheatMethods: string[],	// see {{valid_cheatMethod}}
                     action: 'suspect'|'innocent'|'discuss'|'guilt'|'kill'// super
                     content: string
                 }
@@ -790,15 +814,17 @@ email:		'Hello xxx, xxxx link:htttps://xxxx/xxx?code=${code}'
 #### 	忘记密码重设验证	/api/user/forgetPasswordVerify
 
 ```javascript
-REQUEST: HTTP GET /api/user/forgetPasswordVerify
-parameters:	code: string,
+REQUEST: HTTP POST /api/user/forgetPasswordVerify
+body:		{
+    			data: {
+                    code: string,
+                    newpassword: string
+                }
+			}
 RESPONSE: HTTP 200 OK
 body:		{
     			success: 1, 
                 code: 'forgetPassword.success', 
-                data: {
-            		newpassword: string
-		        }
 			}
 ```
 
@@ -812,6 +838,12 @@ parameters:	box?: 'in'|'out'|'announce'
 			limit?: number
             from?: number(unix timestamp)
 RESPONSE: // TODO
+```
+
+#### 获取消息(长轮询)
+
+```javascript
+REQUEST: HTTP GET /api/message/poll
 ```
 
 #### 	发送消息	/api/message
@@ -839,27 +871,6 @@ RESPONSE: // TODO
 webhook subscribe <eventName> <url> <key>		#RETURN: uuid
 webhook unsubscribe <uuid>
 webhook ls										#RETURN: {url,event,userId,key}[]
-```
-
-##### 用户权限修改
-
-```bash
-user grant <id> <role>
-user revoke <id> <role>
-user ban <id>
-```
-
-##### 评论举报等内容修改
-
-```bash'
-comment <reply|report|judgement|banAppeal> <id> <content> [videolink(report)]
-```
-
-##### 用户属性获取修改	
-
-```bash
-attr show <id> [path]					#RETURN all keyvalue OR value of specify path
-attr set <id> <path> [val]				# set specify path with value or clear it
 ```
 
 #### 	标记消息	/api/message/mark
@@ -1028,17 +1039,18 @@ Server->User: 201 Created
 
 ​	`users` 表新增以下相关字段 `introduction` , `attr` , `originName` 前者为用户可自定义的介绍，后者为用户绑定的origin账户名，可由 `attr` 字段代表的属性中展示开关选择是否展示，管理员强制展示，`attr` 字段为JSON字符串，可存储使用频率较低的用户附加信息，部分属性用户可读可写，如展示开关，允许私信，偏好语言(日后邮件/通知等全球化)；部分属性用户可读不可写，如官方认证，剩余改名次数；部分属性用户不可读不可写，如最近登录IP
 
-​	得益于origin账户强制绑定，我们可以拿到用户邮箱作为密码找回的方法。为了省去专门页面和数据库表(懒)，步骤如下
+​	得益于origin账户强制绑定，我们可以拿到用户邮箱作为密码找回的方法。
 
 ```sequence
 User->Server : /forgetPassword username,email,captcha
 Note left of Server: match(username,email)?
-Note left of Server: newPassword=randomBytes(16)
-Server->User : Email( link:code=Encrypt(newPassword,userId) )
-User->Server : /forgetPasswordVerify code
-Note left of Server: Decrypt(code)->DB.update(newPassword).where(id)
-Server->User : 200 OK , newPassword
-User->Server : Login with new password then reset
+Note left of Server: DB.insert(randomCode)
+Server->User : Email( link:code=randomCode )
+User->Server : /forgetPasswordVerify code, newPassword
+Note left of Server: DB.has(randomCode)?
+Note left of Server: DB.update(newPassword)
+Server->User : 200 OK
+User->Server : Login with new password
 ```
 
 该方法较直接重设并发送新密码至用户邮箱，能避免恶意者得知用户绑定邮箱后，不断触发忘记密码使用户密码不断重置，使用户无法登录
