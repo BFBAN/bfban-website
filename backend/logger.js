@@ -37,6 +37,8 @@ function prettyLogPrinter(tag, message, intent=4) {
     if(intent < 0) intent = tag.length;
     const padding = ' '.repeat(intent);
     const ttyWidth = process.stdout.columns;
+    if(ttyWidth==undefined || ttyWidth<1)
+        return tag + message;
     let paragraphs = message.split('\n');
     /** @type {string[]} */
     let lines = [];

@@ -266,7 +266,7 @@ async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code:'advSearch.bad', message:validateErr.array()});
+            return res.status(400).json({error: 1, code:'trend.bad', message:validateErr.array()});
         
         const limit = req.query.limit? req.query.limit : 5;
         const result = await db.count({hot: 'tmp.id'}).select('players.*').from(function () {
@@ -289,7 +289,7 @@ router.get('/siteStats', async (req, res, next)=>{
         const period = 10;
         const slices = [...Array(period).keys()];   // like range(0, 10) in python
 
-        const player_stats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
+        const playerStats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
         .where('createTime', '<=', tbeg).andWhere({valid: 1})
         .unionAll(slices.map(i=> {
             const t = new Date(Math.round( tbeg.getTime()+(tnow.getTime()-tbeg.getTime())/period*(i+1) ));
@@ -298,7 +298,7 @@ router.get('/siteStats', async (req, res, next)=>{
                 .where('createTime', '<=', t).andWhere({valid: 1});
         }));
 
-        const confirm_stats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
+        const confirmStats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
         .where('createTime', '<=', tbeg).andWhere({valid: 1, status: 1})
         .unionAll(slices.map(i=> {
             const t = new Date(Math.round( tbeg.getTime()+(tnow.getTime()-tbeg.getTime())/period*(i+1) ));
@@ -307,7 +307,7 @@ router.get('/siteStats', async (req, res, next)=>{
                 .where('createTime', '<=', t).andWhere({valid: 1, status: 1});
         }));
 
-        const user_stats =  await db('users').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
+        const userStats =  await db('users').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
         .where('createTime', '<=', tbeg).andWhere({valid: 1})
         .unionAll(slices.map(i=> {
             const t = new Date(Math.round( tbeg.getTime()+(tnow.getTime()-tbeg.getTime())/period*(i+1) ));
@@ -316,7 +316,7 @@ router.get('/siteStats', async (req, res, next)=>{
                 .where('createTime', '<=', t).andWhere({valid: 1});
         }));
         
-        return res.status(200).json({success: 1, code: 'trend.ok', data: { player_stats, confirm_stats, user_stats } });
+        return res.status(200).json({success: 1, code: 'siteStats.ok', data: { playerStats, confirmStats, userStats } });
     } catch(err) {
         next(err);
     }

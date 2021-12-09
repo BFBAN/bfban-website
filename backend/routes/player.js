@@ -320,7 +320,8 @@ async (req, res, next)=>{
         const total = await db.count({num: 1}).from('comments').where({toPlayerId: dbId, valid: 1})
                             .andWhere('type', 'like', subject).first().then(r=>r.num);
         /** @type {import("../typedef.js").Comment[]} */
-        const result = await db.select("*").from('comments').where({toPlayerId: dbId, valid: 1})
+        const result = await db('comments').join('users', 'comments.byUserId', 'users.id')
+                            .select('comments.*', 'users.username', 'users.privilege').where({toPlayerId: dbId, 'comments.valid': 1})
                             .andWhere('type', 'like', subject).orderBy('createTime', 'asc').offset(skip).limit(limit);
         result.forEach(i=>{     // delete those unused keys
             for(let j of Object.keys(i))
