@@ -3,7 +3,7 @@
     <br>
     <div class="content">
       <Row>
-        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}" >
+        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
           <Card shadow>
             <p slot="title">{{ this.$route.name == bindOriginName ? $t("bindOrigin.title") : $t("signup.title") }}</p>
 
@@ -16,13 +16,16 @@
 
             <Divider class="mobile-hide"></Divider>
 
-            <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate" style="position: relative;">
+            <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate"
+                  style="position: relative;">
               <div v-if="stepsIndex == 0">
                 <FormItem :label="$t('signup.form.username')" prop="username">
-                  <Input v-model="signup.username" maxlength="40" size="large" :placeholder="$t('signup.placeholder.username')"/>
+                  <Input v-model="signup.username" maxlength="40" size="large"
+                         :placeholder="$t('signup.placeholder.username')"/>
                 </FormItem>
                 <FormItem :label="$t('signup.form.password')" prop="password">
-                  <Input type="password" password minlength="6" v-model="signup.password" size="large" :placeholder="$t('signup.placeholder.password')"/>
+                  <Input type="password" password minlength="6" v-model="signup.password" size="large"
+                         :placeholder="$t('signup.placeholder.password')"/>
                 </FormItem>
               </div>
 
@@ -41,7 +44,8 @@
                          size="large"
                          maxlength="4"
                          :placeholder="$t('signup.form.captcha')">
-                    <div slot="append" ref="captcha" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                    <div slot="append" ref="captcha" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')"
+                         @click="refreshCaptcha">
                       <div v-html="captchaUrl.content"></div>
                     </div>
                   </Input>
@@ -49,7 +53,7 @@
               </div>
 
               <div v-if="stepsIndex == 3">
-                <EmailTip :email="signup.originEmail"></EmailTip>
+                <EmailTip :email="signup.originEmail" @refreshCaptcha="refreshCaptcha"></EmailTip>
               </div>
 
               <Row>
@@ -59,7 +63,8 @@
                           @click.prevent.stop="stepsIndex--" size="large">{{ $t('signup.prev') }}
                   </Button>
                   <Divider type="vertical"/>
-                  <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2" @click.prevent.stop="stepsIndex++" size="large"
+                  <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2"
+                          @click.prevent.stop="stepsIndex++" size="large"
                           type="primary">{{ $t('signup.next') }}
                   </Button>
                 </Col>
@@ -99,7 +104,7 @@ export default {
       stepsIndex: 0,
       ruleValidate: {
         username: [
-          {required: true, min: 4, max:40, trigger: 'blur'}
+          {required: true, min: 4, max: 40, trigger: 'blur'}
         ],
         password: [
           {required: true, min: 6, max: 40, trigger: 'blur'}
@@ -127,15 +132,15 @@ export default {
   },
   components: {EmailTip},
   created() {
-    const { query, name } = this.$route;
+    const {query, name} = this.$route;
 
     this.http = http_token.call(this);
 
     if (name == this.bindOriginName) {
-        this.stepsIndex = 1;
+      this.stepsIndex = 1;
 
-        delete this.ruleValidate.username;
-        delete this.ruleValidate.password;
+      delete this.ruleValidate.username;
+      delete this.ruleValidate.password;
     }
 
     this.bindOriginVerify(query.code);
@@ -154,7 +159,7 @@ export default {
       });
       // waitForAction.call(this.$refs.reCaptcha);
     },
-    handleSignup (name) {
+    handleSignup(name) {
       const that = this;
       this.$refs[name].validate((valid) => {
         if (valid) {
@@ -178,7 +183,7 @@ export default {
                   password,
                   originEmail,	// must match the originName below
                   originName,	// must have one of bf series game
-                  lang: this.$root.$i18n.locale
+                  language: this.$root.$i18n.locale
                 },
                 encryptCaptcha: this.captchaUrl.hash,
                 captcha
@@ -197,20 +202,23 @@ export default {
         }
       })
     },
-    registerVerify (code) {
+    registerVerify(code) {
       // 验证账户
       http.get(api["account_signupVerify"], {
-        params: {code}
+        params: {
+          code,
+          lang: this.$root.$i18n.locale
+        },
       }).then((res) => {
         const d = res.data;
 
         if (d.success === 1) {
           // dispatch 异步的
           this.$store.dispatch('signin', d.data)
-            .then(() => {
-              // redirect
-              this.$router.push('/')
-            })
+              .then(() => {
+                // redirect
+                this.$router.push('/')
+              })
         } else {
           this.$Message.error('注册失败 ' + d.msg);
 
@@ -220,7 +228,7 @@ export default {
         }
       })
     },
-    bindOrigin ({originEmail, originName, captcha}) {
+    bindOrigin({originEmail, originName, captcha}) {
       this.spinShow = true;
 
       this.http.post(api["user_bindOrigin"], {
@@ -228,7 +236,7 @@ export default {
           data: {
             originEmail,	// must match the originName below
             originName,	// must have one of bf series game
-            lang: this.$root.$i18n.locale
+            language: this.$root.$i18n.locale
           },
           encryptCaptcha: this.captchaUrl.hash,
           captcha,
@@ -248,8 +256,10 @@ export default {
       });
     },
     //
-    bindOriginVerify (code) {
-      if (!code) { return }
+    bindOriginVerify(code) {
+      if (!code) {
+        return
+      }
 
       this.http.get(api["user_bindOriginVerify"], {
         params: {code}

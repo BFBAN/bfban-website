@@ -24,7 +24,8 @@ export default class Http extends Conf {
   }
 
   getUrl () {
-    return this.CONF[this.CONF.requestDefault];
+    const GETURL = this.CONF.child[this.CONF.requestActionName];
+    return `${GETURL.protocol||'http'}://${GETURL.request}`;
   }
 
   /**

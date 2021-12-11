@@ -17,12 +17,31 @@
                 width="80%"
                 :closable="true"
                 v-model="headerMenu.show">
+
+          <List v-show="!isLogin">
+            <Card>
+              <Row :gutter="20">
+                <Col flex="1" >
+                  <div @click="navigatorTo({to: {name: 'signin'}})">
+                    <Icon type="md-log-in" size="20"/>
+                    {{ $t("header.signin") }}
+                  </div>
+                </Col>
+                <Col>
+                  <div  @click="navigatorTo({to: {name: 'signup'}})">
+                    <Icon type="md-person-add" size="20"/>
+                    {{ $t("header.signup") }}
+                  </div>
+                </Col>
+              </Row>
+            </Card>
+          </List>
+
           <List>
-            <ListItem @click="headerMenu.show = false;$router.push({name: i.name, query: i.to.query})"
-                      v-for="(i, index) in headerMenu.child" :key="index">
-              <router-link :to="i.to">
+            <ListItem v-for="(i, index) in headerMenu.child" :key="index">
+              <div @click.stop="navigatorTo(i)">
                 {{ $t("header." + i.name) }}
-              </router-link>
+              </div>
             </ListItem>
           </List>
         </Drawer>
@@ -39,14 +58,6 @@
             <Icon type="md-log-in"/>
             {{ $t("header.signin") }}
           </Button>
-        </router-link>
-
-        <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signin'}">
-          <Icon type="md-log-in" size="30"/>
-        </router-link>
-
-        <router-link v-show="!isLogin" class="desktop-hide" :to="{name: 'signup'}">
-          <Icon type="md-person-add" size="30"/>
         </router-link>
 
         <Dropdown placement="bottom-end" v-if="isLogin">
@@ -150,6 +161,10 @@ export default {
           });
         }
       })
+    },
+    navigatorTo(i) {
+      this.headerMenu.show = false;
+      this.$router.push({name: i.to.name, query: i.to.query});
     }
   },
   computed: {

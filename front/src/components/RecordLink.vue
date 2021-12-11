@@ -85,7 +85,7 @@ export default {
   computed: {
     getData () {
       if (!this.cheater.games) return [];
-      this.cheater.games.split(',').forEach(i => {
+      this.cheater.games.forEach(i => {
         let children = [];
 
         children = this.push(children, i);

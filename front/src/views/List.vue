@@ -13,8 +13,9 @@
         </Row>
         <br>
 
+        <!-- 游戏类型选择 S -->
         <Row>
-          <Col flex="auto">
+          <Col flex="auto" :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
             <RadioGroup
                 size="large"
                 class="game-type"
@@ -46,9 +47,10 @@
             </Tooltip>
           </Col>
         </Row>
+        <!-- 游戏类型选择 E -->
 
         <Row :gutter="10">
-          <Col span="17">
+          <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 17, push: 0, pull: 0}">
             <Card dis-hover class="list">
               <Page :page-size="limit" show-sizer show-total show-elevator :current="skip" @on-change="handlePageChange"
                     @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
@@ -58,13 +60,13 @@
                 <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
                   <Card>
                     <Row :gutter="10" type="flex">
-                      <Col span="3">
+                      <Col :xs="{span: 8, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
                         <Avatar :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'"
                                 alt="avatar"
                                 size="55">
                         </Avatar>
                       </Col>
-                      <Col span="15">
+                      <Col :xs="{span: 16, push: 0,pull:0}" :lg="{span: 15, push: 0,pull:0}">
                         <div style="display: flex; flex-direction: column;">
                           <router-link
                               :to="{name: 'cheater', params: { ouid: `${d.originPersonaId}` }}">
@@ -85,7 +87,7 @@
                         {{ $t('list.colums.updateTime') }}
                         <Time v-if="d.updateTime" :time="d.updateTime"/>
                       </Col>
-                      <Col span="4">
+                      <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 4, push: 0,pull:0}" class="mobile-hide">
                         <Row type="flex" justify="center" align="middle" style="height: 50px">
                           <Col flex="auto" align="right">
                             <span class="item-text">{{ d.viewNum || 0 }} </span>
@@ -97,7 +99,7 @@
                           </Col>
                         </Row>
                       </Col>
-                      <Col span="2" align="center">
+                      <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 2, push: 0,pull:0}" align="center" class="mobile-hide">
                         <Progress vertical :percent="0" hide-info/>
                         <Divider type="vertical"/>
                         <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
@@ -114,7 +116,7 @@
                     @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
             </Card>
           </Col>
-          <Col span="7">
+          <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 7, push: 0, pull: 0}">
             <br>
             <Affix :offset-top="20">
               <Card>
@@ -223,7 +225,7 @@ export default new BFBAN({
   },
   methods: {
     getCheaterStatusLabel: util.getCheaterStatusLabel,
-    autoUpdateList () {
+    autoUpdateList() {
       const that = this;
 
       if (!that.bot.autoUpdate) {

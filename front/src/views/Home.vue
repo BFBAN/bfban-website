@@ -106,7 +106,7 @@
       </Row>
     </div>
 
-    <div class="box mobile-hide">
+    <div class="box mobile-hide ivu-primary">
       <div class="container">
         <Row>
           <Col :lg="{span: 10, push: 0}">
@@ -126,7 +126,7 @@
         </Row>
       </div>
       <div v-if="activitySwitchType" class="lean-box">
-        <div class="wrapper" :style="'animation: rowup ' + activities_l.length * .8 + 's linear infinite;'">
+        <div class="wrapper" :style="'animation: rowup ' + activities_l.length * 2.8 + 's linear infinite;'">
           <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
             <Card class="icon" v-for="a_i in activity" :key="a_i.id">
               <div align="center" style="margin-top: -80px">
@@ -185,20 +185,6 @@
                   ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
                   <b>{{ convertCheatMethods(a_i.cheatMethods) }}</b>
                 </span>
-
-                <!--                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">-->
-                <!--                  {{a_i.byUserName }}-->
-                <!--                </router-link>-->
-
-                <!--                {{ $t('detail.info.judge', {msg: 'judge'}) }}-->
-
-                <!--                <router-link :to="{name: 'cheater', params: {ouid: `${a_i.toPlayerId}`}}">-->
-                <!--                  {{a_i.toPlayerName }}-->
-                <!--                </router-link>-->
-
-                <!--                <Tag color="warning">-->
-                <!--                  {{a_i.action}}{{ getCheaterStatusLabel(a_i.action) }}-->
-                <!--                </Tag>-->
               </span>
             </Card>
           </div>
@@ -302,7 +288,6 @@ export default new BFBAN({
 }
 
 .box {
-  background: #f3edff;
   padding-top: 100px;
   overflow: hidden;
   height: 800px;

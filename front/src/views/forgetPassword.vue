@@ -171,7 +171,7 @@ export default {
     onForgetPassword: function () {
       this.spinShow = true;
 
-      this.forgetPassword.lang = this.$root.$i18n.locale;
+      this.forgetPassword.language = this.$root.$i18n.locale;
 
       http.post(api["user_forgetPassword"], {
         data: {

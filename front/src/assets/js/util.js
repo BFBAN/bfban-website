@@ -22,10 +22,10 @@ export default class Util {
     }
 
     convertCheatMethods(str) {
-        const s = str || '';
+        const s = str || [];
         const tmpArr = [];
         if (this.cheatMethodsGlossary == null) return '';
-        _.each(s.split(','), (val) => {
+        _.each(s, (val) => {
             _.each(this.cheatMethodsGlossary, (v, i) => {
                 if (v.values.indexOf(val) >= 0) {
                     tmpArr.push(this.$i18n.t("cheatMethods." + v.value + ".title", {cheatMethods: v.value}));
@@ -36,7 +36,7 @@ export default class Util {
     }
 
     getCheaterStatusLabel(value) {
-        if (this.cheaterStatus == null) return '';
+        if (this.cheaterStatus == null || !value) return '';
         const o = _.find(this.cheaterStatus, (v, k) => {
             return typeof value == 'string' ? v.values.indexOf(value) >= 0 : value == v.value;
         });

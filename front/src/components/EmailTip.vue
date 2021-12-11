@@ -4,7 +4,7 @@
       注意
       <template slot="desc">
         <p>
-          我们向您的邮箱发送了一封验证邮件，邮箱是"{{email || 'null'}}", 请留意标题"BFBAN"的邮件.
+          我们向您的邮箱发送了一封验证邮件，邮箱是"{{email || ''}}", 请留意标题"BFBAN"的邮件.
         </p>
         <br>
         <b>没有收到此邮件?</b>
@@ -18,9 +18,14 @@
 <script>
 export default {
   name: "EmailTip",
-  popup: {
-    email: '',
+  props: {
+    email: String
   },
+  methods:{
+    refreshCaptcha () {
+      this.$emit('refreshCaptcha');
+    }
+  }
 }
 </script>
 

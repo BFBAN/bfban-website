@@ -1,7 +1,26 @@
 {
-  "requestDefault": "requestDeBug",
-  "requestDev": "https://bfban.gametools.network/api/",
-  "requestDeBug": "http://127.0.0.1:4002/api/",
-  "requestDeBug_1": "http://bfban-api.cabbagelol.net/api/",
-  "qiniuUrl": ""
+  "requestActionName": "development3",
+  "requestProductionName": "production",
+  "child": {
+    "development": {
+      "protocol": "https",
+      "request": "bfban.gametools.network/api/",
+      "qiniuUrl": ""
+    },
+    "development2": {
+      "protocol": "http",
+      "request": "bfban-api.cabbagelol.net/api/",
+      "qiniuUrl": ""
+    },
+    "development3": {
+      "protocol": "http",
+      "request": "101.43.35.41:3000/api/",
+      "qiniuUrl": ""
+    },
+    "production": {
+      "protocol": "https",
+      "request": "bfban.gametools.network/api/",
+      "qiniuUrl": ""
+    }
+  }
 }

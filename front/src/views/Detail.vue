@@ -36,7 +36,7 @@
                   <!-- 被举报的游戏 -->
                   <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
                     <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
-                         v-for="(game,gameindex) in cheater.games.split(',')" :key="gameindex">
+                         v-for="(game,gameindex) in cheater.games" :key="gameindex">
                       {{ $t(`list.filters.game.${game}`, {game: game}) }}
                     </Tag>
                   </router-link>
@@ -237,7 +237,8 @@
                        class="timeline-time-dot ivu-tag-magenta ban_appeal">
                     <Icon type="md-bookmark" size="20" class="ivu-tag-text"></Icon>
                   </div>
-                  <div v-else-if="l.type === 'judgement'" slot="dot" class="timeline-time-dot ivu-tag-primary ban_appeal">
+                  <div v-else-if="l.type === 'judgement'" slot="dot"
+                       class="timeline-time-dot ivu-tag-primary ban_appeal">
                     <Icon type="ios-medical" size="20" class=""></Icon>
                   </div>
                   <div v-else-if="l.type === 'verify'" slot="dot" class="timeline-time-dot trophy">
@@ -254,7 +255,7 @@
                         <Col flex="1">
                           <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <u><b>{{ l.username }}</b></u>
+                              <u><b>{{ l.username || l.byUserId }}</b></u>
                             </BusinessCard>
                           </router-link>
                           <!-- 举报 -->
@@ -262,8 +263,8 @@
                           <a><u><b>{{ l.toOriginName }}</b></u></a>
                           <!-- 在 -->
                           {{ $t('detail.info.inGame', {msg: 'inGame'}) }}
-                          <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
-                            {{ l.game }}
+                          <router-link :to="{name: 'cheaters', query: {game: `${l.cheatGame}`} }">
+                            {{ l.cheatGame }}
                           </router-link>
                           <!-- 游戏中 -->
                           {{ $t('detail.info.gaming', {msg: 'gaming'}) }}
@@ -281,19 +282,24 @@
                     </div>
 
                     <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
-                      <p v-if="l.videoLink">
-                        <!-- 游戏中 -->
-                        <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
-                              :href="link" target="_blank">
-                        <Tag size="default" color="geekblue">{{
-                            $t('detail.info.videoLink', {msg: 'videoLink'})
-                          }}</Tag>
-                        <a :href="link" target="_blank">{{ link }}</a>
-                        <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
-                      </span>
-                      </p>
-                      <br>
-                      <div v-if="l.description" v-html="l.description"></div>
+                      <template>
+                        <p v-if="l.videoLink">
+                          <!-- 游戏中 -->
+                          <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
+                                :href="link" target="_blank">
+                            <Tag size="default" color="geekblue">{{
+                                $t('detail.info.videoLink', {msg: 'videoLink'})
+                              }}</Tag>
+                            <a :href="link" target="_blank">{{ link }}</a>
+                            <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
+                          </span>
+                        </p>
+                        <br>
+                      </template>
+
+                      <template v-if="l.content">
+                        <div v-html="l.content"></div>
+                      </template>
                     </div>
 
                     <p v-if="isLogin">
@@ -314,7 +320,7 @@
 
                           <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <u><b>{{ l.username }}</b></u>
+                              <u><b>{{ l.username || l.byUserId }}</b></u>
                             </BusinessCard>
                           </router-link>
 
@@ -329,8 +335,8 @@
                             </router-link>
                           </BusinessCard>
 
-                          <router-link :to="{name: 'cheaters', query: {game: `${l.game}`} }">
-                            {{ l.game }}
+                          <router-link :to="{name: 'cheaters', query: {game: `${l.cheatGame}`} }">
+                            {{ l.cheatGame }}
                           </router-link>
                         </Col>
 
@@ -378,7 +384,7 @@
                         <Col flex="1">
                           <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <u><b>{{ l.username }}</b></u>
+                              <u><b>{{ l.username || l.byUserId }}</b></u>
                             </BusinessCard>
                           </router-link>
 
@@ -390,7 +396,7 @@
 
                           <span v-if="l.cheatMethods">
                               ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
-                              <b>{{ convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale) }}</b>
+                              <b>{{ convertCheatMethods(l.cheatMethods || '') }}</b>
                             </span>
                         </Col>
                         <Col align="right">
@@ -419,7 +425,7 @@
 
                       <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                         <BusinessCard :id="l.byUserId">
-                          <u><b>{{ l.username }}</b></u>
+                          <u><b>{{ l.username || l.byUserId }}</b></u>
                         </BusinessCard>
                       </router-link>
 
@@ -452,13 +458,16 @@
                     <div class="timeline-time">
                       <Row>
                         <Col flex="1">
-                          <router-link v-if="l.username" :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                          <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <u><b>{{ l.username }}</b></u>
+                              <u><b>{{ l.username || l.byUserId }}</b></u>
                             </BusinessCard>
                           </router-link>
+
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
+
                           <span v-if="l.toFloor">
+
                           <a :href="`#floor-${l.toFloor}`">#{{ l.toFloor }}<Icon type="ios-undo"/></a>
                         </span>
                         </Col>
@@ -716,7 +725,9 @@
               </Tag>
             </FormItem>
             <FormItem v-if="timelineList[reply.toFloor]">
-              <Card> <div v-html="timelineList[reply.toFloor].content" v-if="timelineList[reply.toFloor].content"></div> </Card>
+              <Card>
+                <div v-html="timelineList[reply.toFloor].content" v-if="timelineList[reply.toFloor].content"></div>
+              </Card>
             </FormItem>
             <FormItem>
               <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
@@ -960,7 +971,7 @@ export default new BFBAN({
 
       // load bfban player "full window", set theme
       if (this.isFull) {
-        await this.$store.dispatch('setTheme', theme.child.filter(i => i.name == this.$route.query.theme)[0] || theme.child[0] );
+        await this.$store.dispatch('setTheme', theme.child.filter(i => i.name == this.$route.query.theme)[0] || theme.child[0]);
       }
 
       // load lang
@@ -997,7 +1008,7 @@ export default new BFBAN({
       };
       return name ? object[name] : object;
     },
-    isBan () {
+    isBan() {
       // TODO
       this.cheater.avatarLinkError = false;
     },
@@ -1016,7 +1027,7 @@ export default new BFBAN({
 
         if (d.success === 1) {
           this.cheater = d.data;
-          this.cheater.games.split(',').forEach(i => {
+          this.cheater.games.forEach(i => {
             this.games.push({game: i});
           })
           this.isBan();
@@ -1043,11 +1054,11 @@ export default new BFBAN({
         let d = res.data;
 
         if (d.success == 1) {
-          d.data.forEach((i, index) => {
+          d.data.result.forEach((i, index) => {
             i.index = index;
             i.show = false;
           });
-          this.timelineList = d.data;
+          this.timelineList = d.data.result;
 
           // 排序
           this.onTimeLineSort();
@@ -1068,7 +1079,6 @@ export default new BFBAN({
           break;
         case 2:
           this.timelineList = this.timelineList.sort(function (x, y) {
-            console.log(x.index, y.index)
             return x.index < y.index ? 1 : -1;
           });
           break;
@@ -1380,13 +1390,13 @@ export default new BFBAN({
     isLogin() {
       return Boolean(this.$store.state.user)
     },
-    isFull () {
+    isFull() {
       return Boolean(this.$route.query.full || false);
     },
     currentUser() {
       return this.$store.state.user
     },
-    currentLan () {
+    currentLan() {
       return this.$root && this.$root.$i18n && this.$root.$i18n.locale || 'zh-CN';
     }
   }
@@ -1394,67 +1404,67 @@ export default new BFBAN({
 </script>
 
 <style lang="scss">
-  .cheater-desc {
+.cheater-desc {
+  max-width: 100%;
+  width: 34rem;
+}
+
+.description {
+  font-size: 0.8rem;
+  line-height: 1.5rem;
+  margin: 10px 0;
+  padding: 10px;
+
+  img, video {
     max-width: 100%;
-    width: 34rem;
   }
+}
 
-  .description {
-    font-size: 0.8rem;
-    line-height: 1.5rem;
-    margin: 10px 0;
-    padding: 10px;
-
-    img, video {
-      max-width: 100%;
-    }
-  }
-
-  .timeline-time-line {
-    .ivu-timeline-item-tail {
-      margin-left: 15px;
-    }
-  }
-
-  .timeline-time-dot {
-    width: 40px;
-    margin-left: 15px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .timeline-content {
-    position: relative;
-
-    // force to wrap
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-
-    margin-left: 3rem;
-  }
-
-  .timeline-content .loading {
-    background-image: url('/src/assets/fonts/loading.svg');
-    background-repeat: no-repeat;
-    min-width: 100px;
-    min-height: 100px;
-  }
-
-  .ivu-timeline-item {
-    padding: 1rem 0;
-  }
-
-  .ivu-timeline-item-content {
-    padding: 0 .6rem 0 3rem;
-  }
-
+.timeline-time-line {
   .ivu-timeline-item-tail {
-    top: 1rem;
-    border-width: .3rem !important;
+    margin-left: 15px;
   }
+}
+
+.timeline-time-dot {
+  width: 40px;
+  margin-left: 15px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.timeline-content {
+  position: relative;
+
+  // force to wrap
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  margin-left: 3rem;
+}
+
+.timeline-content .loading {
+  background-image: url('/src/assets/fonts/loading.svg');
+  background-repeat: no-repeat;
+  min-width: 100px;
+  min-height: 100px;
+}
+
+.ivu-timeline-item {
+  padding: 1rem 0;
+}
+
+.ivu-timeline-item-content {
+  padding: 0 .6rem 0 3rem;
+}
+
+.ivu-timeline-item-tail {
+  top: 1rem;
+  border-width: .3rem !important;
+}
 </style>
 
 <style lang="scss">

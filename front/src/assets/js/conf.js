@@ -3,27 +3,25 @@
  */
 
 export default class Conf {
-  CONF = {
-    // 请求地址 [生产]
-    'requestDev': '',
+    CONF = {
+        // 请求地址 [开发]
+        "requestActionName": "",
 
-    // 请求地址 [测试]
-    'requestDeBug': '',
+        // 请求地址 [生产]
+        "requestProductionName": "",
 
-    // 七牛
-    'qiniuUrl': '',
+        // 配置列表
+        "child": {
+        }
+    };
 
-    // 默认加载参数，如果上层配置，取上层字段
-    'requestDefault': 'requestDev'
-  };
+    async initConf() {
+        let {requestActionName, requestProductionName, child} = await import('/public/conf/requestConf.json');
+        this.CONF = Object.assign(this.CONF, {requestActionName}, {requestProductionName}, {child});
+        return this.CONF;
+    }
 
-  async initConf () {
-    let {requestDev, requestDeBug, requestDefault} = await import('/public/conf/requestConf.json');
-    this.CONF = Object.assign(this.CONF, {requestDev}, {requestDeBug} , {requestDefault});
-    return this.CONF;
-  }
-
-  getConf () {
-    return this.CONF;
-  }
+    getConf() {
+        return this.CONF;
+    }
 }

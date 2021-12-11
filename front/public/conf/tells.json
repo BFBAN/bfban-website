@@ -1,5 +1,5 @@
 {
-  "static": true,
+  "static": false,
   "child": [
     {
       "name": "菜萌",
