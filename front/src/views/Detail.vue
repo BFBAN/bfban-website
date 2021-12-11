@@ -270,7 +270,7 @@
                           {{ $t('detail.info.gaming', {msg: 'gaming'}) }}
 
                           <Tag type="border" color="orange"
-                               v-for="(methods, methodsIndex) in convertCheatMethods(l.cheatMethods || '', $root.$i18n.locale).split(' ')"
+                               v-for="(methods, methodsIndex) in convertCheatMethods(l.cheatMethods || '').split(' ')"
                                :key="methodsIndex">
                             {{ methods }}
                           </Tag>

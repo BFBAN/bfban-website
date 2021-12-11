@@ -15,6 +15,9 @@
       "admin": "管理员",
       "super": "超级管理员",
       "normal": "用户"
+    },
+    "tip": {
+      "notlang": "未翻译"
     }
   },
   "header": {

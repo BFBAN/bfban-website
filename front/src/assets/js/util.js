@@ -9,6 +9,10 @@ export default class Util {
         this.initUtil();
     }
 
+    /**
+     * 初始Util
+     * @returns {Promise<Util>}
+     */
     async initUtil() {
         const list = {
             cheatMethodsGlossary : await import('/public/conf/cheatMethodsGlossary.json'),
@@ -27,8 +31,10 @@ export default class Util {
         if (this.cheatMethodsGlossary == null) return '';
         _.each(s, (val) => {
             _.each(this.cheatMethodsGlossary, (v, i) => {
+                // v.values array
+                // values是数组类型，内部的值是先前兼容v1版本之前举报类型
                 if (v.values.indexOf(val) >= 0) {
-                    tmpArr.push(this.$i18n.t("cheatMethods." + v.value + ".title", {cheatMethods: v.value}));
+                    tmpArr.push(this.$i18n.t("cheatMethods." + v.value + ".title"));
                 }
             });
         });
