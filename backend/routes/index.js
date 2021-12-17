@@ -161,23 +161,27 @@ async (req, res, next)=>{
 });
 
 router.get('/banAppeals', [
-    checkquery('status').optional().isIn(['open', 'close', 'lock', 'all']).default('open'),
+    checkquery('status').optional().isIn(['open', 'close', 'lock', 'all']),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
     checkquery('skip').optional().isInt({min: 0})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
-        const status = req.query.status=='all'? '%' : req.query.status;
+        const status = req.query.status? req.query.status=='all'? '%' : req.query.status : 'open';
         const limit = req.query.limit? req.query.limit : 20;
         const skip = req.query.skip? req.query.skip : 0;
 
-        const result = await db('players').join('comments', 'players.id', 'comments.toPlayerId', 'comments.byUserId')
-        .select('players.*', 'comments.appealStatus', 'comments.createTime as appealTime').distinct('id')
-        .where('comments.type','banAppeal').andWhere('comments.appealStatus', 'like', status)
+        const result = await db('players').join('comments', 'players.id', 'comments.toPlayerId')
+        .select('players.*', 'comments.appealStatus', 'comments.createTime as appealTime', 'comments.byUserId')
+        .distinct('players.id').where('comments.type','banAppeal')
+        .andWhere('comments.appealStatus', 'like', status)
         .orderBy('appealTime', 'desc').offset(skip).limit(limit)
         .then(r=>r.map(i=>{ delete i.valid; return i }));
-        const total = await db.countDistinct({num: 'toPlayerId'}).from('comments').where('comments.type','banAppeal')
-        .andWhere('comments.appealStatus', 'like', status).first().then(r=>r.num);
+        
+        const total = await db.countDistinct({num: 'toPlayerId'})
+        .from('comments').where('comments.type','banAppeal')
+        .andWhere('comments.appealStatus', 'like', status)
+        .first().then(r=>r.num);
 
         res.status(200).json({ success: 1, code:'banAppeals.ok', data:{ result, total } });
     } catch(err) {
