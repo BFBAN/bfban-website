@@ -120,12 +120,12 @@ async (req, res, next)=>{
 
 router.get('/players', [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
-    checkquery('createTime').optional().isInt({min: 0}).default(0),
-    checkquery('updateTime').optional().isInt({min: 0}).default(0),
+    checkquery('createTime').optional().isInt({min: 0}),
+    checkquery('updateTime').optional().isInt({min: 0}),
     checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6 ]),
-    checkquery('sort').optional().isIn(['createTime','updateTime','viewNum','commentsNum']).default('createTime'),
-    checkquery('limit').optional().isInt({min: 0, max: 100}).default(20),
-    checkquery('skip').optional().isInt({min: 0}).default(0)
+    checkquery('sort').optional().isIn(['createTime','updateTime','viewNum','commentsNum']),
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('skip').optional().isInt({min: 0})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
@@ -134,57 +134,30 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'players.bad', message: validateErr.array()});
         
         const game = (req.query.game&&req.query.game!='all')? req.query.game : '';
-        const createTime = req.query.createTime;
-        const updateTime = req.query.updateTime;
-        const status = (req.query.status&&req.query.status!=-1)? req.query.status : '%';
-        const sort = req.query.sort;
-        const limit = req.query.limit;
-        const skip = req.query.skip;
-
-        const result = await db.select('*').from('players')
-        .where('games', 'like', game? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+        const createTime = req.query.createTime? req.query.createTime-0 : 0;
+        const updateTime = req.query.updateTime? req.query.updateTime-0 : 0;
+        const status = (req.query.status&&req.query.status!='-1')? req.query.status : '%';
+        const sort = req.query.sort? req.query.sort : 'createTime';
+        const limit = req.query.limit? req.query.limit-0 : 20;
+        const skip = req.query.skip? req.query.skip-0 : 0;
+        
+        const result = await db.select('id','originName','originUserId','originPersonaId','games',
+        'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
+        .from('players').where('games', 'like', game? `%"${game}"%` : "%").andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status)
-        .orderBy(sort, 'desc').offset(skip).limit(limit)
-        .then(r=>r.map(i=>{ delete i.valid; return i }));
+        .orderBy(sort, 'desc').offset(skip).limit(limit);
         const total = await db('players').count({num: 'id'})
         .where('games', 'like', game? `%"${game}"%` : "%").andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status).first().then(r=>r.num);
-
-        res.status(200).json({ success: 1, code:'players.ok', data:{ result, total } });
+        res.status(200).json({ success: 1, code:'players.ok', data:{result: result, total: total} });
     } catch(err) {
         next(err);
     }
 });
-
-router.get('/banAppeals', [
-    checkquery('status').optional().isIn(['open', 'close', 'lock', 'all']).default('open'),
-    checkquery('limit').optional().isInt({min: 0, max: 100}).default(20),
-    checkquery('skip').optional().isInt({min: 0}).default(20)
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
-async (req, res, next)=>{
-    try {
-        const status = req.query.status=='all'? '%' : req.query.status;
-        const limit = req.query.limit;
-        const skip = req.query.skip;
-
-        const result = await db('players').join('comments', 'players.id', 'comments.toPlayerId', 'comments.byUserId')
-        .select('players.*', 'comments.appealStatus', 'comments.createTime as appealTime').distinct('id')
-        .where('comments.type','banAppeal').andWhere('comments.appealStatus', 'like', status)
-        .orderBy('appealTime', 'desc').offset(skip).limit(limit)
-        .then(r=>r.map(i=>{ delete i.valid; return i }));
-        const total = await db.countDistinct({num: 'toPlayerId'}).from('comments').where('comments.type','banAppeal')
-        .andWhere('comments.appealStatus', 'like', status).first().then(r=>r.num);
-
-        res.status(200).json({ success: 1, code:'players.ok', data:{ result, total } });
-    } catch(err) {
-        next(err);
-    }
-});
-
 
 router.get('/admins', async (req, res, next)=> {
     try {
@@ -207,8 +180,8 @@ router.get('/admins', async (req, res, next)=> {
 
 router.get('/search', normalSearchRateLimiter, [
     checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 3}),
-    checkquery('skip').optional().isInt({min: 0}).default(0),
-    checkquery('limit').optional().isInt({min: 0, max: 100}).default(20)
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('limit').optional().isInt({min: 0, max: 100})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next)=>{
     try {
@@ -216,8 +189,8 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'search.bad', message: validateErr.array()});
 
-        const skip = req.query.skip;
-        const limit = req.query.limit;
+        const skip = req.query.skip? req.query.skip : 0;
+        const limit = req.query.limit? req.query.limit : 20;
         const param = req.query.param;
         const result = {success: 1, code: 'search.success', data: []};
         /** @type {(import("../typedef.js").Player&{prevOriginName:string,fromTime:Date,toTime:Date})[]} */
@@ -302,7 +275,7 @@ async (req, res, next)=>{
         .groupBy('id')
         .orderBy('hot', 'desc')
         .limit(limit)
-        .then(r=>r.map(i=>{ delete i.valid; return i; }));
+        .then(r=>{ delete r.valid; return r; });
         return res.status(200).json({success: 1, code: 'trend.ok', data: result});
     } catch(err) {
         next(err);
