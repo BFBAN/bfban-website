@@ -141,23 +141,54 @@ async (req, res, next)=>{
         const limit = req.query.limit? req.query.limit-0 : 20;
         const skip = req.query.skip? req.query.skip-0 : 0;
         
-        const result = await db.select('id','originName','originUserId','originPersonaId','games',
-        'cheatMethods','avatarLink','viewNum','commentsNum','status','createTime','updateTime')
-        .from('players').where('games', 'like', game? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+        const result = await db.select('*').from('players')
+        .where('games', 'like', game? `%"${game}"%` : "%").andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status)
-        .orderBy(sort, 'desc').offset(skip).limit(limit);
+        .orderBy(sort, 'desc').offset(skip).limit(limit)
+        .then(r=>r.map(i=>{ delete i.valid; return i }));
         const total = await db('players').count({num: 'id'})
         .where('games', 'like', game? `%"${game}"%` : "%").andWhere('valid', '=', 1)
         .andWhere('createTime', '>=', new Date(createTime))
         .andWhere('updateTime', '>=', new Date(updateTime))
         .andWhere('status', 'like', status).first().then(r=>r.num);
-        res.status(200).json({ success: 1, code:'players.ok', data:{result: result, total: total} });
+
+        res.status(200).json({ success: 1, code:'players.ok', data:{ result, total } });
     } catch(err) {
         next(err);
     }
 });
+
+router.get('/banAppeals', [
+    checkquery('status').optional().isIn(['open', 'close', 'lock', 'all']),
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('skip').optional().isInt({min: 0})
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
+    try {
+        const status = req.query.status? req.query.status=='all'? '%' : req.query.status : 'open';
+        const limit = req.query.limit? req.query.limit : 20;
+        const skip = req.query.skip? req.query.skip : 0;
+
+        const result = await db('players').join('comments', 'players.id', 'comments.toPlayerId')
+        .select('players.*', 'comments.appealStatus', 'comments.createTime as appealTime', 'comments.byUserId')
+        .distinct('players.id').where('comments.type','banAppeal')
+        .andWhere('comments.appealStatus', 'like', status)
+        .orderBy('appealTime', 'desc').offset(skip).limit(limit)
+        .then(r=>r.map(i=>{ delete i.valid; return i }));
+        
+        const total = await db.countDistinct({num: 'toPlayerId'})
+        .from('comments').where('comments.type','banAppeal')
+        .andWhere('comments.appealStatus', 'like', status)
+        .first().then(r=>r.num);
+
+        res.status(200).json({ success: 1, code:'banAppeals.ok', data:{ result, total } });
+    } catch(err) {
+        next(err);
+    }
+});
+
 
 router.get('/admins', async (req, res, next)=> {
     try {
@@ -266,7 +297,7 @@ async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code:'advSearch.bad', message:validateErr.array()});
+            return res.status(400).json({error: 1, code:'trend.bad', message:validateErr.array()});
         
         const limit = req.query.limit? req.query.limit : 5;
         const result = await db.count({hot: 'tmp.id'}).select('players.*').from(function () {
@@ -275,7 +306,7 @@ async (req, res, next)=>{
         .groupBy('id')
         .orderBy('hot', 'desc')
         .limit(limit)
-        .then(r=>{ delete r.valid; return r; });
+        .then(r=>r.map(i=>{ delete i.valid; return i; }));
         return res.status(200).json({success: 1, code: 'trend.ok', data: result});
     } catch(err) {
         next(err);
@@ -289,7 +320,7 @@ router.get('/siteStats', async (req, res, next)=>{
         const period = 10;
         const slices = [...Array(period).keys()];   // like range(0, 10) in python
 
-        const player_stats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
+        const playerStats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
         .where('createTime', '<=', tbeg).andWhere({valid: 1})
         .unionAll(slices.map(i=> {
             const t = new Date(Math.round( tbeg.getTime()+(tnow.getTime()-tbeg.getTime())/period*(i+1) ));
@@ -298,7 +329,7 @@ router.get('/siteStats', async (req, res, next)=>{
                 .where('createTime', '<=', t).andWhere({valid: 1});
         }));
 
-        const confirm_stats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
+        const confirmStats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
         .where('createTime', '<=', tbeg).andWhere({valid: 1, status: 1})
         .unionAll(slices.map(i=> {
             const t = new Date(Math.round( tbeg.getTime()+(tnow.getTime()-tbeg.getTime())/period*(i+1) ));
@@ -307,7 +338,7 @@ router.get('/siteStats', async (req, res, next)=>{
                 .where('createTime', '<=', t).andWhere({valid: 1, status: 1});
         }));
 
-        const user_stats =  await db('users').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
+        const userStats =  await db('users').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
         .where('createTime', '<=', tbeg).andWhere({valid: 1})
         .unionAll(slices.map(i=> {
             const t = new Date(Math.round( tbeg.getTime()+(tnow.getTime()-tbeg.getTime())/period*(i+1) ));
@@ -316,7 +347,7 @@ router.get('/siteStats', async (req, res, next)=>{
                 .where('createTime', '<=', t).andWhere({valid: 1});
         }));
         
-        return res.status(200).json({success: 1, code: 'trend.ok', data: { player_stats, confirm_stats, user_stats } });
+        return res.status(200).json({success: 1, code: 'siteStats.ok', data: { playerStats, confirmStats, userStats } });
     } catch(err) {
         next(err);
     }
