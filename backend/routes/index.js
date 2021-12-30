@@ -60,7 +60,7 @@ async (req, res, next)=>{
             const status = i.status==-1? '%' : i.status;
             const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
             .andWhere('games', 'like', game).andWhere('status', 'like', status).first().then(r=>r.num);
-            data.push({game: i.game, status, count});
+            data.push({game: i.game, status: i.status, count});
         }
         res.status(200).json({success: 1, code: 'playerStatistics.success', data: data});
     } catch(err) {
@@ -92,7 +92,7 @@ async (req, res, next)=>{
         .join('users', 'comments.byUserId', 'users.id')
         .join('players', 'comments.toPlayerId', 'players.id')
         .select('comments.id as id', 'users.username as byUserName', 'comments.byUserId as byUserId', 'comments.toPlayerId as toPlayerId'
-        , 'players.originName as toPlayerName', 'comments.game as game', 'comments.createTime as createTime')
+        , 'players.originName as toPlayerName', 'comments.cheatGame as game', 'comments.createTime as createTime')
         .where('comments.createTime', '<=', from).andWhere({type: 'report'}).orderBy('comments.createTime', 'desc').limit(limit);
         const banAppeals = await db('comments')
         .join('users', 'comments.byUserId', 'users.id')
@@ -179,7 +179,7 @@ router.get('/admins', async (req, res, next)=> {
 })
 
 router.get('/search', normalSearchRateLimiter, [
-    checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 4}),
+    checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 3}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
@@ -269,13 +269,57 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code:'advSearch.bad', message:validateErr.array()});
         
         const limit = req.query.limit? req.query.limit : 5;
-        const result = await db.count({hot: 'tmp.id'}).select('players.originName', 'tmp.toPlayerId as dbId').from(function () {
+        const result = await db.count({hot: 'tmp.id'}).select('players.*').from(function () {
             this.select('id', 'toPlayerId').from('comments').orderBy('id', 'desc').limit(200).as('tmp');
-        }).join('players', 'tmp.toPlayerId', 'players.id').groupBy('dbId').orderBy('hot', 'desc').limit(limit);
+        }).join('players', 'tmp.toPlayerId', 'players.id')
+        .groupBy('id')
+        .orderBy('hot', 'desc')
+        .limit(limit)
+        .then(r=>{ delete r.valid; return r; });
         return res.status(200).json({success: 1, code: 'trend.ok', data: result});
     } catch(err) {
         next(err);
     }
 });
+
+router.get('/siteStats', async (req, res, next)=>{
+    try {
+        const tbeg = new Date('2018-10-12T00:00:00.000Z');  // first commit of bfban
+        const tnow = new Date();
+        const period = 10;
+        const slices = [...Array(period).keys()];   // like range(0, 10) in python
+
+        const player_stats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
+        .where('createTime', '<=', tbeg).andWhere({valid: 1})
+        .unionAll(slices.map(i=> {
+            const t = new Date(Math.round( tbeg.getTime()+(tnow.getTime()-tbeg.getTime())/period*(i+1) ));
+            // caculate the time
+            return db('players').count({num: '*'}).select(db.raw(`"${t.toISOString()}" as time`))
+                .where('createTime', '<=', t).andWhere({valid: 1});
+        }));
+
+        const confirm_stats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
+        .where('createTime', '<=', tbeg).andWhere({valid: 1, status: 1})
+        .unionAll(slices.map(i=> {
+            const t = new Date(Math.round( tbeg.getTime()+(tnow.getTime()-tbeg.getTime())/period*(i+1) ));
+
+            return db('players').count({num: '*'}).select(db.raw(`"${t.toISOString()}" as time`))
+                .where('createTime', '<=', t).andWhere({valid: 1, status: 1});
+        }));
+
+        const user_stats =  await db('users').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
+        .where('createTime', '<=', tbeg).andWhere({valid: 1})
+        .unionAll(slices.map(i=> {
+            const t = new Date(Math.round( tbeg.getTime()+(tnow.getTime()-tbeg.getTime())/period*(i+1) ));
+
+            return db('users').count({num: '*'}).select(db.raw(`"${t.toISOString()}" as time`))
+                .where('createTime', '<=', t).andWhere({valid: 1});
+        }));
+        
+        return res.status(200).json({success: 1, code: 'trend.ok', data: { player_stats, confirm_stats, user_stats } });
+    } catch(err) {
+        next(err);
+    }
+})
 
 export default router;
