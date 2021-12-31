@@ -41,7 +41,7 @@ const config = {
     },
 
     // DYNAMIC CONFIGURE BEGIN
-	supportLanguages: ['cn', 'en'],
+	supportLanguages: ['zh-CN', 'en-US'],
     personsToConfirm: 2,
 	personsToReview: 2,
     // to [https://accounts.ea.com/connect], get Cookie, key: remid and sid

@@ -233,7 +233,7 @@ async (req, res, next)=>{
             originName: i.originName,
             dbId: i.id,
             originUserId: i.originUserId,
-            originPersonaId: i.originUserId,
+            originPersonaId: i.originPersonaId,
             avatarLink: i.avatarLink,
             status: i.status,
             games: i.games,
