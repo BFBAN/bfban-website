@@ -77,7 +77,7 @@
             <ListItemMeta
                 :avatar="cheater.avatarLink"
                 :title="cheater.currentName || cheater.originName"
-                :description="`${cheater.originUserId ? 'uid:' + cheater.originUserId : ''} ${cheater.historyName ? '过去id:' + cheater.historyName: ''}`"/>
+                :description="`${cheater.originUserId ? 'uid:' + cheater.originPersonaId : ''} ${cheater.historyName ? '过去id:' + cheater.historyName: ''}`"/>
             <template slot="action">
               <li @click="searchModal = false">
                 <router-link

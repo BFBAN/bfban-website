@@ -2,7 +2,9 @@
   "title": "menu",
   "type": [
     "desktop",
-    "mobile"
+    "desktopApp",
+    "mobile",
+    "mobileApp"
   ],
   "child": [
     {
@@ -25,7 +27,7 @@
         "mobile"
       ],
       "to": {
-        "name": "cheaters",
+        "name": "player",
         "query": {
           "status": "-1",
           "D83EDD96": "\uD83E\uDD96"

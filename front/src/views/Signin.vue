@@ -114,7 +114,8 @@ export default {
     ...mapMutations([
       'SIGNIN'
     ]),
-    refreshCaptcha: function () {
+    // 刷新验证码
+    refreshCaptcha () {
       http.get(api["captcha"], {
         params: {
           r: Math.random()
@@ -127,6 +128,8 @@ export default {
 
       // waitForAction.call(this.$refs.reCaptcha);
     },
+
+    // 登录
     handleSignin() {
       const that = this;
       const {username, password, captcha} = _.each(this.signin, (v, k, o) => {

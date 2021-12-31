@@ -8,7 +8,7 @@
           <BreadcrumbItem>{{ $t("account.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
-      <Col align="right">
+      <Col align="right" v-if="currentUser">
         <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{ $t("account.message.hint.taOffChat") }} </Alert>
         <Alert show-icon type="error" v-if="account.id == currentUser.userinfo.userId"> {{ $t("account.message.hint.selfTalk") }} </Alert>
         <Button @click="openMessage" :disabled="!account.attr.allowDM || account.id == currentUser.userinfo.userId">
@@ -105,7 +105,6 @@
                                       ouid: `${report.originPersonaId}`,
                                   },
                               }">
-                              <Tag>{{ report.game }}</Tag>
                               {{ report.originName }}
                           </router-link>
                       </span>
@@ -145,8 +144,6 @@
                 </div>
                 <div v-else>404</div>
               </TabPane>
-              <br>
-              <Button size="small" slot="extra">{{reports.length || 0}}</Button>
             </Tabs>
           </Card>
         </Col>
@@ -301,7 +298,7 @@ export default {
   },
   computed:{
     currentUser() {
-      return this.$store.state.user || {token: ''};
+      return this.$store.state.user && {token: '', userinfo: {userId: ''}};
     }
   }
 };

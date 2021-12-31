@@ -12,13 +12,14 @@
               <Step title="绑定" content="关联橘子平台"></Step>
               <Step title="验证码" content="验证是否机器人"></Step>
               <Step title="确认" content="邮箱验证码"></Step>
+              <Step title="完成" content="注册结果"></Step>
             </Steps>
 
             <Divider class="mobile-hide"></Divider>
 
             <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate"
                   style="position: relative;">
-              <div v-if="stepsIndex == 0">
+              <template v-if="stepsIndex == 0">
                 <FormItem :label="$t('signup.form.username')" prop="username">
                   <Input v-model="signup.username" maxlength="40" size="large"
                          :placeholder="$t('signup.placeholder.username')"/>
@@ -27,16 +28,16 @@
                   <Input type="password" password minlength="6" v-model="signup.password" size="large"
                          :placeholder="$t('signup.placeholder.password')"/>
                 </FormItem>
-              </div>
+              </template>
 
-              <div v-if="stepsIndex == 1">
+              <template v-if="stepsIndex == 1">
                 <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
                   <Input v-model="signup.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
                 </FormItem>
                 <FormItem :label="$t('signup.form.originName')" prop="originName">
                   <Input v-model="signup.originName" size="large" :placeholder="$t('signup.placeholder.originName')"/>
                 </FormItem>
-              </div>
+              </template>
 
               <div v-show="stepsIndex == 2">
                 <FormItem :label="$t('signup.form.captcha')">
@@ -52,9 +53,15 @@
                 </FormItem>
               </div>
 
-              <div v-if="stepsIndex == 3">
+              <template v-if="stepsIndex == 3">
                 <EmailTip :email="signup.originEmail" @refreshCaptcha="refreshCaptcha"></EmailTip>
-              </div>
+              </template>
+
+              <template v-if="stepsIndex == 4">
+                <div align="center">
+                  <Icon type="md-checkmark-circle-outline" size="180" color="#42b983"/>
+                </div>
+              </template>
 
               <Row>
                 <Col flex="auto">
@@ -78,7 +85,7 @@
                 </Col>
               </Row>
 
-              <Divider>
+              <Divider v-if="stepsIndex != 4 || stepsIndex != 3">
                 <router-link :to="{name: 'signin'}">{{ $t('signup.form.submitHint') }}</router-link>
                 <Divider type="vertical"/>
                 <router-link :to="{name: 'forgetPassword'}">{{ $t('signup.form.forgetPasswordHint') }}</router-link>
@@ -143,10 +150,13 @@ export default {
       delete this.ruleValidate.password;
     }
 
-    this.bindOriginVerify(query.code);
+    // 注册验证
+    this.registerVerify(query.code);
+    // this.bindOriginVerify(query.code);
     this.refreshCaptcha();
   },
   methods: {
+    // 刷新验证码
     refreshCaptcha: function () {
       http.get(api["captcha"], {
         params: {
@@ -159,51 +169,75 @@ export default {
       });
       // waitForAction.call(this.$refs.reCaptcha);
     },
+
+    // 注册
     handleSignup(name) {
       const that = this;
       this.$refs[name].validate((valid) => {
-        if (valid) {
-          let {username, password, originEmail, originName, captcha} = _.each(this.signup, (v, k, o) => {
-            o[k] = v.trim();
-          });
+        let {username, password, originEmail, originName, captcha} = _.each(this.signup, (v, k, o) => {
+          o[k] = v.trim();
+        });
 
-          // 截停，账户绑定
-          if (this.$route.name == this.bindOriginName) {
-            this.bindOrigin({originEmail, originName, captcha});
-            return;
-          }
-
-          if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
-            this.spinShow = true;
-
-            http.post(api["account_signup"], {
-              data: {
-                data: {
-                  username,
-                  password,
-                  originEmail,	// must match the originName below
-                  originName,	// must have one of bf series game
-                  language: this.$root.$i18n.locale
-                },
-                encryptCaptcha: this.captchaUrl.hash,
-                captcha
-              }
-            }).finally(() => {
-              that.registerVerify(this.captchaUrl.hash);
-              this.stepsIndex += 1;
-              this.spinShow = false;
-            })
-
-          } else {
-            this.$Message.error('请规范填写');
-          }
-        } else {
+        // 检查表单
+        if (!valid) {
           this.$Message.error('Fail!');
+          return;
+        }
+
+        // 截停，账户绑定
+        if (this.$route.name == this.bindOriginName) {
+          this.bindOrigin({originEmail, originName, captcha});
+          return;
+        }
+
+        if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
+          this.spinShow = true;
+
+          http.post(api["account_signup"], {
+            data: {
+              data: {
+                username,
+                password,
+                originEmail,	// must match the originName below
+                originName,	// must have one of bf series game
+                language: this.$root.$i18n.locale
+              },
+              encryptCaptcha: this.captchaUrl.hash,
+              captcha
+            }
+          })
+          .then(res => {
+            const d = res.data;
+            if (d.success === 1) {
+              that.stepsIndex += 1;
+              this.$Message.success(d.message);
+              return;
+            }
+
+            that.catch(res);
+          })
+          .catch(err => {
+            err || this.$Message.error(err.toString());
+
+            that.signup.captcha = '';
+            that.signup.originEmail = '';
+            that.signup.originName = '';
+
+            that.stepsIndex -= 1;
+          })
+          .finally(() => {
+            this.spinShow = false;
+          });
+        } else {
+          this.$Message.error('请规范填写');
         }
       })
     },
+
+    // 注册验证
     registerVerify(code) {
-      // 验证账户
+      if (!code) return;
+
       http.get(api["account_signupVerify"], {
         params: {
           code,
@@ -213,21 +247,23 @@ export default {
         const d = res.data;
 
         if (d.success === 1) {
-          // dispatch 异步的
-          this.$store.dispatch('signin', d.data)
-              .then(() => {
-                // redirect
-                this.$router.push('/')
-              })
+          this.stepsIndex = 4;
+
+          setInterval(function () {
+            this.$router.push('/signin')
+          }, 3000);
         } else {
-          this.$Message.error('注册失败 ' + d.msg);
+          this.$Message.error(d.code || d.msg);
 
           this.signup.password = '';
           this.signup.captcha = '';
+
           this.refreshCaptcha();
         }
       })
     },
+
+    // 绑定橘子账户
     bindOrigin({originEmail, originName, captcha}) {
       this.spinShow = true;
 
@@ -244,7 +280,7 @@ export default {
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.stepsIndex++;
 
           this.$Message.success(d.message);
@@ -255,7 +291,9 @@ export default {
         this.spinShow = false;
       });
     },
-    //
+
+    // 绑定橘子验证
+    // 提供旧用户需要换绑
     bindOriginVerify(code) {
       if (!code) {
         return
@@ -266,7 +304,7 @@ export default {
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.stepsIndex = 3;
           this.$Message.success(d.message);
 

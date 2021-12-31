@@ -3,17 +3,21 @@
     <div class="content">
       <template v-if="!isFull">
         <br>
-        <Breadcrumb>
-          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem :to="{name: 'cheaters'}">{{ $t("list.title") }}</BreadcrumbItem>
-          <BreadcrumbItem>{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
-        </Breadcrumb>
+        <Row>
+          <Col :xs="{push: 1}" :lg="{push: 0}">
+            <Breadcrumb>
+              <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+              <BreadcrumbItem :to="{name: 'cheaters'}">{{ $t("list.title") }}</BreadcrumbItem>
+              <BreadcrumbItem>{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
+            </Breadcrumb>
+          </Col>
+        </Row>
         <br>
       </template>
 
       <Card v-if="isCheaterExist" dis-hover>
         <Row :gutter="10">
-          <Col :xs="{span: 22}" :lg="{span: 3}">
+          <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 3, pull: 0, push: 0}">
             <div v-show="cheater.avatarLink" align="center">
               <!-- Origin头像 -->
               <Avatar shape="square" :src="cheater.avatarLink" size="180"
@@ -22,32 +26,34 @@
             </div>
           </Col>
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}">
-            <Tag color="error">
-              {{ $t(`basic.status[${cheater.status}]`) }}
-            </Tag>
-            <Tag v-if="cheater.avatarLinkError" color="warning">
-              账户异常
-            </Tag>
-            <Row :gutter="10" type="flex" justify="center" align="middle">
-              <Col flex="auto">
+            <Row :gutter="10" type="flex" justify="space-between" align="top">
+              <Col flex="1">
+                <Tag color="error">
+                  {{ $t(`basic.status[${cheater.status}]`) }}
+                </Tag>
+                <Tag v-if="cheater.avatarLinkError" color="warning">
+                  账户异常
+                </Tag>
+
+                <!-- 被举报的游戏 -->
+                <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
+                  <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
+                       v-for="(game,gameindex) in cheater.games" :key="gameindex">
+                    {{ $t(`list.filters.game.${game}`, {game: game}) }}
+                  </Tag>
+                </router-link>
+
+                <!-- 被举报的类型 -->
+                <Tag v-if="cheater.cheatMethods" color="warning">
+                  {{ convertCheatMethods(cheater.cheatMethods) }}
+                </Tag>
+
                 <h1 style="font-size: 1.6rem;">
                   {{ cheater.originName || 'user id' }}
-
-                  <!-- 被举报的游戏 -->
-                  <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
-                    <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
-                         v-for="(game,gameindex) in cheater.games" :key="gameindex">
-                      {{ $t(`list.filters.game.${game}`, {game: game}) }}
-                    </Tag>
-                  </router-link>
-
-                  <Tag v-if="cheater.cheatMethods" color="warning">
-                    {{ convertCheatMethods(cheater.cheatMethods) }}
-                  </Tag>
                 </h1>
               </Col>
               <template v-if="!isFull">
-                <Col align="right">
+                <Col class="mobile-hide">
                   <Poptip content="content" placement="right-end" title="">
                     <Button>
                       <Icon type="md-qr-scanner" size="20" color="#535353"/>
@@ -184,10 +190,10 @@
         <br>
         <Card style="overflow: hidden" dis-hover>
           <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
-            <Col :xs="{span: 23, push: 1}" :lg="{span: 8, push: 0}">
+            <Col :xs="{span: 23, push: 1}" :lg="{span: 8, push: 0}" class="mobile-hide">
               {{ $t('detail.info.assistPppeal') }}
             </Col>
-            <Col flex="auto">
+            <Col flex="auto" class="mobile-hide">
               {{ $t('detail.info.timeLine', {msg: 'timeLine'}) }}
             </Col>
             <Col>
@@ -391,13 +397,17 @@
                           {{ $t('detail.info.judge', {msg: 'judge'}) }}
 
                           <Tag color="warning">
-                            {{ getCheaterStatusLabel(l.action) }}
+                            {{ getCheaterStatusLabel(l.judgeAction) }}
                           </Tag>
 
-                          <span v-if="l.cheatMethods">
-                              ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
-                              <b>{{ convertCheatMethods(l.cheatMethods || '') }}</b>
-                            </span>
+                          <!-- 作弊方式 -->
+                          {{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
+
+                          <Tag type="border" color="orange"
+                               v-for="(methods, methodsIndex) in convertCheatMethods(l.cheatMethods || '').split(' ')"
+                               :key="methodsIndex">
+                            {{ methods }}
+                          </Tag>
                         </Col>
                         <Col align="right">
                           <Time v-if="l.createTime" :time="l.createTime"></Time>
@@ -1023,6 +1033,7 @@ export default new BFBAN({
         }, {personaId: this.getParamsIds('personaId')})
       }).then((res) => {
         this.spinShow = false;
+        this.cheater = [];
         const d = res.data;
 
         if (d.success === 1) {

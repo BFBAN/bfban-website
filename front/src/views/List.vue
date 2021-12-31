@@ -99,7 +99,8 @@
                           </Col>
                         </Row>
                       </Col>
-                      <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 2, push: 0,pull:0}" align="center" class="mobile-hide">
+                      <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 2, push: 0,pull:0}" align="center"
+                           class="mobile-hide">
                         <Progress vertical :percent="0" hide-info/>
                         <Divider type="vertical"/>
                         <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
@@ -148,11 +149,11 @@
                     </RadioGroup>
                   </FormItem>
                   <FormItem :label="$t('list.reportTime')">
-                    <DatePicker :value="createTime" type="daterange" @on-change="handleCDatepicker" split-panels
+                    <DatePicker :value="createTime" @on-change="handleCDatepicker" split-panels
                                 :placeholder="$t('list.reportTime')" style="width: 100%"></DatePicker>
                   </FormItem>
                   <FormItem :label="$t('list.updateTime')">
-                    <DatePicker :value="updateTime" type="daterange" @on-change="handleUDatepicker" split-panels
+                    <DatePicker :value="updateTime" @on-change="handleUDatepicker" split-panels
                                 :placeholder="$t('list.updateTime')" style="width: 100%"></DatePicker>
                   </FormItem>
                   <FormItem>
@@ -195,8 +196,8 @@ export default new BFBAN({
       spinShow: true,
       gameName: "all",
       statusGroup: "",
-      createTime: ["", ""],
-      updateTime: ["", ""],
+      createTime: "",
+      updateTime: "",
       skip: 1,
       limit: 10,
       total: 0,
@@ -258,9 +259,16 @@ export default new BFBAN({
       let target = _.find(this.totalSum, ["status", val]);
       return target ? target.num : 0;
     },
+    /**
+     * 复制文本
+     */
     copied() {
       this.$Message.info("已复制");
     },
+    /**
+     * 加载数据
+     * @returns {Promise<void>}
+     */
     async loadData() {
       await util.initUtil().then((res) => {
         this.cheaterStatus = res.cheaterStatus;
@@ -319,34 +327,33 @@ export default new BFBAN({
      */
     getCheaterList() {
       this.spinShow = true;
-      // default values
-      const {
-        game = "all",
-        status = -1,
-        createTime = "",
-        updateTime = "",
-        skip = this.skip,
-        sort = "updateTime",
-        limit = this.limit,
-      } = this.$route.query;
-      const config = {};
 
-      config["params"] = Object.assign({
-            game,
-            skip: (skip - 1) * limit,
-            sort,
-            status,
-            tz: '', // moment.tz.gutter(),
-            limit,
-          },
-          createTime ? {createTime: new Date(createTime).getTime(),} : {},
-          updateTime ? {updateTime: new Date(updateTime).getTime(),} : {}
-      );
+      // default values
+      const {game = "all", status = -1, createTime, updateTime, skip = this.skip, sort = "updateTime", limit = this.limit} = this.$route.query;
+
+      let config = {
+        params: {
+          game,
+          skip: (skip - 1) * limit,
+          sort,
+          status,
+          tz: '', // moment.tz.gutter(),
+          limit,
+        },
+      };
+
+      if (createTime) {
+          config["params"]["createTime"] = new Date(createTime).getTime();
+      }
+
+      if (updateTime) {
+          config["params"]["updateTime"] = new Date(updateTime).getTime();
+      }
 
       this.gameName = game;
       this.statusGroup = status;
-      this.createTime = createTime.split(",");
-      this.updateTime = updateTime.split(",");
+      this.createTime = createTime;
+      this.updateTime = updateTime;
       this.skip = Number.parseInt(skip);
       this.limit = Number.parseInt(limit);
       this.sortByValue = sort;
@@ -354,12 +361,14 @@ export default new BFBAN({
       http.get(api['players'], config).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.data = d.data.result || [];
           this.total = d.data.total;
+        } else {
+          this.catch(res);
         }
-      }).catch((res) => {
-        this.$Message.error(res.code);
+      }).catch((err) => {
+        this.$Message.error(err.code);
       }).finally(() => {
         this.spinShow = false;
       });
@@ -367,8 +376,8 @@ export default new BFBAN({
     routerQuery() {
       const game = this.gameName;
       const status = this.statusGroup;
-      const createTime = this.createTime.join(",");
-      const updateTime = this.updateTime.join(",");
+      const createTime = this.createTime; //.join(",");
+      const updateTime = this.updateTime; // .join(",");
       const skip = this.skip;
       const limit = this.limit;
       const sort = this.sortByValue;

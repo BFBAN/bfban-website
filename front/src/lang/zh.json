@@ -39,7 +39,7 @@
     "none": "无",
     "signoutSuccess": "注销成功"
   },
-  "cheaters": {
+  "player": {
     "title": "玩家数据库"
   },
   "profile": {
@@ -461,7 +461,7 @@
     }
   },
   "cheatMethods": {
-    "stealth": {
+    "invisable": {
       "title": "隐身",
       "describe": "角色隐身，无法看见，能追踪位置"
     },
@@ -485,9 +485,17 @@
       "title": "改伤",
       "describe": "修改武器参数"
     },
-    "shootingThroughWalls": {
-      "title": "子弹穿墙",
+    "magicBullet": {
+      "title": "魔法子弹",
       "describe": "子弹可以穿过实体"
+    },
+    "attackServer": {
+      "title": "攻击服务器",
+      "describe": "恶意攻击服务器"
+    },
+    "teleport": {
+      "title": "传送",
+      "describe": "传送移动"
     }
   },
   "misc": {

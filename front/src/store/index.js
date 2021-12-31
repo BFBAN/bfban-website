@@ -53,6 +53,7 @@ const store = new Vuex.Store({
   // dispatch actions
   actions: {
     signin({ commit }, payload) {
+      console.log({ commit }, payload)
       commit('SIGNIN', payload);
     },
     signout(context, payload) {

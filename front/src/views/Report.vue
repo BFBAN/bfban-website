@@ -106,13 +106,13 @@
                           <Option v-for="(option, index) in tabs.players.list" :value="option.originName" :key="index">
                             <Row>
                               <Col flex="auto">
-                                <Avatar :src="option.avatarLink"> </Avatar>
-                                <span>&emsp; {{option.originName}}</span>
+                                <Avatar :src="option.avatarLink"></Avatar>
+                                <span>&emsp; {{ option.originName }}</span>
                               </Col>
                               <Col>
                                 <router-link
                                     :to="{name: 'cheater', params: {ouid: `${option.originPersonaId}.${option.originUserId}.${option.id}`}}">
-                                  <Icon type="md-eye" size="30" />
+                                  <Icon type="md-eye" size="30"/>
                                 </router-link>
                               </Col>
                             </Row>
@@ -148,16 +148,18 @@
                   <Row :gutter="30">
                     <Col flex="1 1 300px">
                       <Alert type="warning">
-                        {{$t("report.info.uploadManual1", {msg: "uploadManual1",}) }}
-                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{$t("report.info.uploadManual2", {msg: "uploadManual2",}) }}
+                        {{ $t("report.info.uploadManual1", {msg: "uploadManual1",}) }}
+                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
+                          $t("report.info.uploadManual2", {msg: "uploadManual2",})
+                        }}
                       </Alert>
 
                       <!-- 视频链接 S -->
-                      <FormItem 
-                        :prop="`videoLink[${blinkindex}]`"
-                        :rules="{validator: checkVideoLink, trigger: 'change'}"
-                        v-for="(blink, blinkindex) in tabs.list[index].formItem.videoLink"
-                        :key="blinkindex">
+                      <FormItem
+                          :prop="`videoLink[${blinkindex}]`"
+                          :rules="{validator: checkVideoLink, trigger: 'change'}"
+                          v-for="(blink, blinkindex) in tabs.list[index].formItem.videoLink"
+                          :key="blinkindex">
                         <Row :gutter="0">
                           <Col flex="auto">
                             <Input
@@ -182,7 +184,8 @@
                               long
                               @click="handleVideoLink"
                               v-if="tabs.list[index].formItem.videoLink.length < 10">
-                        <Icon type="md-add"/><span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 10)</span>
+                        <Icon type="md-add"/>
+                        <span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 10)</span>
                       </Button>
                       <span class="hint">{{ $t("report.info.uploadManual3", {msg: "uploadManual3",}) }}</span>
                       <!-- 视频链接 E -->
@@ -255,7 +258,7 @@
           </Card>
         </TabPane>
         <Button @click="handleTabsAdd" size="small" slot="extra">
-          <Icon type="md-add" />
+          <Icon type="md-add"/>
         </Button>
       </Tabs>
     </div>
@@ -288,7 +291,7 @@ export default {
       cheatMethodsGlossary: [],
     };
   },
-  components: { Edit },
+  components: {Edit},
   created() {
     this.http = http_token.call(this);
 
@@ -310,7 +313,7 @@ export default {
      * 用于从BFBAN数据库中取现有id，填充名称
      * @param query
      */
-    getPlayerList (query) {
+    getPlayerList(query) {
       if (query !== '') {
         this.tabs.players.load = true;
 
@@ -376,7 +379,7 @@ export default {
     /**
      * 添加视频链接
      */
-    handleVideoLink () {
+    handleVideoLink() {
       const FROM = this.tabs.list[this.tabs.count];
 
       // 添加link
@@ -385,7 +388,7 @@ export default {
     /**
      * 校验地址
      */
-    checkVideoLink (rule, value, callback) {
+    checkVideoLink(rule, value, callback) {
       const errorText = `bad format`;
       const val = value;
 
@@ -398,7 +401,7 @@ export default {
       if (reg.code != 0) {
         callback(new Error(errorText));
         return;
-      } 
+      }
 
       // 实体请求校验
       http_connect.url(val, function (res) {
@@ -471,13 +474,11 @@ export default {
       if (checkReportFormData.call(this, formData.formItem) === false) return false;
       // if (regular.check(regular.A, formData.formItem.description).code === -1) return false;
 
-      formData.formItem.captcha = "";
-
       this.handleReport(formData, index);
       this.refreshCaptcha();
     },
     /**
-     * 发布请求
+     * 提交举报
      * @param formData
      * @param index
      */
@@ -498,12 +499,12 @@ export default {
             description
           },
           encryptCaptcha: this.tabs.list[index].captchaUrl.hash,
-          captcha
+          captcha,
         },
       }).then((res) => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.tabs.list[index].statusOk = 1;
 
           // this.$router.push({
@@ -513,23 +514,27 @@ export default {
 
           this.$Message.success(this.$i18n.t("report.info.success"));
         } else {
-          this.tabs.list[index].statusOk = -1;
-
           switch (d.code) {
             case 'originId':
               this.$Message.error(
                   this.$i18n.t("report.info.originId")
               );
+
+              this.tabs.list[index].statusOk = -1;
               break;
-              default:
-                this.$Message.error("failed " + d.message);
+            case 'captcha.bad':
+              this.tabs.list[index].formItem.captcha = '';
+              break;
+            default:
+              this.$Message.error("failed " + d.message);
+
+              this.tabs.list[index].statusOk = -1;
           }
         }
 
         this.tabs.list[index].statusMsg = d.message;
       }).finally(() => {
-        this.tabs.list[index].statusOk = -1;
-
+        this.tabs.list[index].formItem.captcha = '';
         this.spinShow = false;
         this.failedOfNotFound = false;
       });
@@ -548,7 +553,7 @@ export default {
   justify-content: center;
   align-items: center;
 
-  h1,span {
+  h1, span {
     font-size: 2rem;
     letter-spacing: .5rem;
   }

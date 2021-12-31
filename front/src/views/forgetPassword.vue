@@ -39,10 +39,21 @@
                        size="large"
                        maxlength="4"
                        :placeholder="$t('signup.form.captcha')">
+                  <div slot="append" ref="captcha" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')"
+                       @click="refreshCaptcha">
+                    <div v-html="captchaUrl.content"></div>
+                  </div>
                 </Input>
-                <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                  <div v-html="captchaUrl.content"></div>
-                </div>
+
+
+<!--                <Input type="text" v-model="forgetPassword.captcha"-->
+<!--                       size="large"-->
+<!--                       maxlength="4"-->
+<!--                       :placeholder="$t('signup.form.captcha')">-->
+<!--                </Input>-->
+<!--                <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">-->
+<!--                  <div v-html="captchaUrl.content"></div>-->
+<!--                </div>-->
               </FormItem>
 
               <div v-if="stepsIndex == 2">
@@ -53,7 +64,7 @@
                 <h1>恭喜完成重置 💐</h1>
                 <br>
                 <Row :gutter="10">
-                  <Col >
+                  <Col>
                     <Tag color="warning" size="large">新密码</Tag>
                   </Col>
                   <Col flex="auto">
@@ -128,6 +139,7 @@ export default {
     code != null ? this.forgetPasswordVerify(code.toString()) : null;
   },
   methods: {
+    // 重置密码验证
     forgetPasswordVerify (code) {
       if (code == '' || code == undefined || code == null) {
         this.verify.iscode = false;
@@ -141,12 +153,12 @@ export default {
       }).then((res) => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.verify.load = 3;
           this.stepsIndex = 3;
           this.forgetPassword.password = d.data.newpassword;
         } else {
-          this.$Message.error(d.msg);
+          this.$Message.error(d.message);
           this.verify.load = -1;
           this.stepsIndex = 0;
         }
@@ -157,17 +169,22 @@ export default {
         };
       })
     },
+
+    // 刷新验证码
     refreshCaptcha: function () {
       http.get(api["captcha"], {
         params: {
           r: Math.random()
         }
       }).then(res => {
-        if (res.data.success === 1) {
-          this.captchaUrl = res.data.data;
+        const d = res.data;
+        if (d.success === 1) {
+          this.captchaUrl = d.data;
         }
       });
     },
+
+    // 重置密码
     onForgetPassword: function () {
       this.spinShow = true;
 
@@ -180,9 +197,13 @@ export default {
           captcha: this.forgetPassword.captcha,
         },
       }).then(res => {
-        if (res.data.success === 1) {
+        const d = res.data;
+
+        if (d.success === 1) {
           this.stepsIndex ++;
           this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
+        } else {
+          this.$Message.error(d.message);
         }
       }).finally(() => {
         this.spinShow = false;

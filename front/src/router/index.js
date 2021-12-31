@@ -32,11 +32,18 @@ const isLoginBeforeEnter = function (to, from, next) {
 
 const routes = [
     {name: 'home', path: '/', component: Home},
+
+    // 关于
     {name: 'about', path: '/about', component: About},
+
+    // 应用名单
     {name: 'apps', path: '/apps', component: Apps},
+
+    //
     {name: 'profile', path: '/profile', component: Profile, beforeEnter: isLoginBeforeEnter},
     {name: 'profile', path: '/profile/:pagename', component: Profile, beforeEnter: isLoginBeforeEnter},
 
+    // 搜索
     {name: 'search', path: '/search/:conetnt', component: Search},
     {name: 'search_main', path: '/search', component: Search, meta: {titleValue: 'search.title'}},
     {
@@ -45,9 +52,11 @@ const routes = [
         component: Report,
         beforeEnter: isLoginBeforeEnter
     },
-    //  { name: 'misc', path: '/misc', component: Misc },
 
-    {name: 'cheaters', path: '/player', component: List},
+    // 作弊名单
+    {name: 'player', path: '/player', component: List},
+
+    // 作弊者详情
     {name: 'cheater', path: '/player/:ouid', component: Detail, meta: {titleValue: 'detail.title'}},
     {
         name: 'cheaters_old', path: '/cheaters/:ouid', component: Detail,
@@ -68,19 +77,27 @@ const routes = [
         }
     },
 
+    // 登录
     {name: 'signin', path: '/signin', component: Signin},
+
+    // 注册
     {name: 'signup', path: '/signup', component: Signup},
+
+    // 注册验证
+    {name: 'registerVerification', path: '/registerVerification', component: Signup},
+
+    // 旧账户换绑 需登录
     {
         name: 'bindOrigin',
         path: '/bindOrigin',
         component: Signup,
         beforeEnter: isLoginBeforeEnter
     },
-    {name: 'bindOriginVerify', path: '/bindOriginVerify', component: Signup},
 
+    // 重置密码
     {name: 'forgetPassword', path: '/forgetPassword', component: ForgetPassword},
     {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify/:code', component: ForgetPassword,},
-    {name: 'bindOrigin', path: '/bindOrigin', component: Signup},
+
     {name: 'signupComplete', path: '/signupComplete/:code', component: SignupComplete},
     //  { name: 'signup', path: '/reset', component: Reset },
 

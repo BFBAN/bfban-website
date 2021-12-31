@@ -45,7 +45,7 @@
             </li>
           </ul>
         </Col>
-        <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
+        <Col :xs="{span: 16 ,pull: 1, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
           <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large"
                   @on-change="switchLanguage">
             <Option v-for="(item, index) in languages" :value="item.name" :label="item.label" :key="index">
