@@ -1,0 +1,20 @@
+{
+    "address": "127.0.0.1",
+    "port": "4001",
+    "logLevel": 2,
+
+    "APP_ID": "0000000-0000-0000-0000-00000000",
+    "APP_SECRET": "shh~",
+    "APP_REDIRECT_URI": "http://localhost/you_might_call_it_auth_callback",
+    "APP_SCOPES": [
+        "Files.ReadWrite.All",
+        "Mail.ReadWrite",
+        "User.Read"
+    ],
+    "OAUTH_AUTHORITY": "https://login.microsoftonline.com/common/",
+
+    "driveId": "the drive Id you want to store files in",
+
+    "workerKey": "for upload worker",
+    "workerAddress": "https://dirty-work.workers.dev/"
+}
