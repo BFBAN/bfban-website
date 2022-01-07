@@ -1,5 +1,7 @@
 "use strict";
 import crypto from "crypto";
+import { pipeline as _pipeline, Readable, Stream } from "stream";
+import { promisify } from "util";
 import config from "../config.js";
 const crypt_algo = 'aes256';
 
@@ -44,13 +46,65 @@ function decrypt(content, key) {
 function generateRandomString(length=0, fromChars='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
     let str = '';
     for(let i=0; i<length; i++)
-        str += fromChars[Math.floor(Math.random()*fromChars.length)];
+        str += fromChars[crypto.randomInt(fromChars.length)];
     return str;
+}
+
+function validateFileName(filename='') {
+    const illegalRe = /[/?<>\\:*|"]/g;
+    // eslint-disable-next-line no-control-regex
+    const controlRe = /[\x00-\x1f\x80-\x9f]/g;
+    const reservedRe = /^\.+$/;
+    const windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
+    const windowsTrailingRe = /[. ]+$/;
+    return !( illegalRe.test(filename) 
+    || controlRe.test(filename) || reservedRe.test(filename) 
+    || windowsTrailingRe.test(filename) || windowsReservedRe.test(filename) );
+}
+
+function validatePath(path='') {
+    const santinized = '/'+path.split('/').filter(i=>i&&validateFileName(i)).join('/');
+    return santinized == path;
+}
+
+function fileSuffixByMIMEType(mimeType) {
+    switch(mimeType) {
+    case 'image/gif':
+        return '.gif';
+    case 'image/jpeg':
+        return '.jpg';
+    case 'image/png':
+        return '.png';
+    case 'image/webp':
+        return '.webp';
+    case 'video/webm':
+        return '.webm';
+    case 'video/ogg':
+        return '.ogg';
+    case 'video/mp4':
+        return '.mp4';
+    default:
+        return '';
+    }
+}
+
+/** @param {import("stream").Readable} stream */
+function readStreamTillEnd(stream) {
+    let content = Buffer.alloc(0);
+    return new Promise((res, rej)=> {
+        stream.on('data', chunk=>Buffer.concat([content, chunk? chunk:Buffer.alloc(0)]));
+        stream.on('end', chunk=>res(Buffer.concat([content, chunk? chunk:Buffer.alloc(0)])) );
+        stream.on('error', err=>rej(err));
+    });
 }
 
 export {
     generateErrorHelper,
     encrypt,
     decrypt,
-    generateRandomString
+    generateRandomString,
+    validateFileName,
+    validatePath,
+    fileSuffixByMIMEType,
+    readStreamTillEnd
 };

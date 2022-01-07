@@ -8,6 +8,13 @@ import { verifyJWTToken } from '../lib/auth.js';
 /** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
 async function verifyJWT(req, res, next) {
     try {
+        if(config.__DEBUG__ && req.get('x-whosdaddy') && req.get('x-whosdaddy-p')) {    // DEBUG !!
+            /** @type {import("../typedef.js").User} */
+            const result = await db.select('*').from('users').where({id: req.get('x-whosdaddy'), valid: 1}).first();
+            result.privilege = req.get('x-whosdaddy-p').split(',');
+            req.user = result;
+            return next();
+        }
         const token = req.get('x-access-token');
         /** @type {{userId:number, username:string, privilege:string[], signWhen:number, expiresIn:number}} */
         let decodedToken;

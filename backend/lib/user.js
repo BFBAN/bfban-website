@@ -1,6 +1,7 @@
 "use strict";
 import xss from "xss";
 import express from "express";
+import db from "../mysql.js";
 import config from "../config.js";
 import { userHasRoles } from "./auth.js";
 
@@ -57,6 +58,52 @@ function userDefaultAttribute(registerIP='', language='en') {
     return result;
 }
 
+/** @param {import("../typedef.js").User} user */
+async function initUserStorageQuota(user, totalStorageQuota, maxTrafficQuota) {
+    if(totalStorageQuota==undefined)
+        if(userHasRoles(user, ['dev', 'admin', 'super', 'root']))
+            totalStorageQuota = 10*1000*1000*1000; // 10 GB
+        else if(userHasRoles(user, ['bot']))
+            totalStorageQuota = 1*1000*1000*1000; // 1 GB
+        else if(userHasRoles(user, ['normal']))
+            totalStorageQuota = 250*1000*1000; // 250 MB
+        else
+            totalStorageQuota = 0;
+    if(maxTrafficQuota==undefined)
+        if(userHasRoles(user, ['dev', 'admin', 'super', 'root']))
+            maxTrafficQuota = 2*1000*1000*1000; // 2 GB
+        else if(userHasRoles(user, ['bot']))
+            maxTrafficQuota = 1*1000*1000*1000; // 1 GB
+        else if(userHasRoles(user, ['normal']))
+            maxTrafficQuota = 200*1000*1000; // 200 MB
+        else
+            maxTrafficQuota = 0;
+    const quota = {
+        userId: user.id, 
+        totalStorageQuota, 
+        maxTrafficQuota, 
+        todayTrafficQuota: 0, 
+        usedStorageQuota: 0, 
+        prevResetTime: new Date()
+    };
+    await db('storage_quotas').insert(quota);
+    return quota;
+}
+
+/** @param {import("../typedef.js").StorageQuota} quota */
+async function updateUserStorageQuota(quota, size) {
+    if(Date.now() - quota.prevResetTime.getTime() > 24*60*60*1000) {
+        quota.prevResetTime = Date.now();
+        quota.todayTrafficQuota = 0;
+    }
+    if(quota.todayTrafficQuota+size > quota.maxTrafficQuota 
+    || quota.usedStorageQuota+size > quota.totalStorageQuota)
+        return undefined;
+    quota.usedStorageQuota += size;
+    quota.todayTrafficQuota += size;
+    return quota;
+}
+
 export {
     handleRichTextInput,
     cheatMethodsSanitizer,
@@ -64,4 +111,6 @@ export {
     userSetAttributes,
     userShowAttributes,
     userDefaultAttribute,
+    initUserStorageQuota,
+    updateUserStorageQuota
 }

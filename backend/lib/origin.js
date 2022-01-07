@@ -1,6 +1,6 @@
 "use strict";
 import got from "got";
-import xmldom from "xmldom";
+import xmldom from "@xmldom/xmldom";
 import * as xpath from "xpath";
 import config from "../config.js";
 import logger from "../logger.js";

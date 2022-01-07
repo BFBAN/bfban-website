@@ -303,6 +303,7 @@ router.get('/timeline', [
     checkquery('personaId').optional().isInt({min: 0}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('order').optional().isIn(['asc', 'desc']),
     checkquery('subject').optional().isIn(['report', 'reply', 'judgement', 'banAppeal'])
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
@@ -313,6 +314,7 @@ async (req, res, next)=>{
         const skip = req.query.skip!=undefined? req.query.skip : 0;
         const limit = req.query.limit!=undefined? req.query.limit : 20;
         const dbId = await getPlayerId({dbId: req.query.dbId, userId: req.query.userId, personaId: req.query.personaId});
+        const order = req.query.order? req.query.order : 'asc';
         const subject = req.query.subject? req.query.subject : '%';
         if(dbId==-1)
             return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
@@ -322,7 +324,7 @@ async (req, res, next)=>{
         /** @type {import("../typedef.js").Comment[]} */
         const result = await db('comments').join('users', 'comments.byUserId', 'users.id')
                             .select('comments.*', 'users.username', 'users.privilege').where({toPlayerId: dbId, 'comments.valid': 1})
-                            .andWhere('type', 'like', subject).orderBy('createTime', 'asc').offset(skip).limit(limit);
+                            .andWhere('comments.type', 'like', subject).orderBy('comments.createTime', order).offset(skip).limit(limit);
         result.forEach(i=>{     // delete those unused keys
             for(let j of Object.keys(i))
                 if(typeof(i[j])=='undefined' || i[j]==null)
@@ -388,6 +390,7 @@ router.post('/update', verifyJWT, forbidPrivileges(['freezed','blacklisted']),
     checkquery('userId').optional().isInt({min: 0}),
     checkquery('personaId').optional().isInt({min: 0}),
     checkquery('dbId').optional().isInt({min: 0}), 
+    checkquery('blockAvatar').optional().isIn(['true', 'false'])
 ],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
@@ -405,14 +408,22 @@ async (req, res, next)=>{
         default:
             return res.status(400).json({error: 1, code: 'update.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
         }
-        
-        const tmp = await db.select('originUserId').from('players').where(key, '=', val).first();
+        /** @type {import("../typedef.js").Player} */
+        const tmp = await db.select('*').from('players').where(key, '=', val).first();
         if(!tmp)
             return res.status(404).json({error: 1, code: 'update.notFound', message: 'no such player'});
         const originUserId = tmp.originUserId;
         const client = originClients.getOne();
         const profile = await client.getInfoByUserId(originUserId);
-        const avatarLink = await client.getUserAvatar(originUserId);
+        let avatarLink = tmp.avatarLink;
+        if(userHasRoles(req.user, ['admin','super','root','dev']) && req.query.blockAvatar) {
+            if(req.query.blockAvatar=='true')
+                avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG#BLOCKED';
+            else
+                avatarLink = await client.getUserAvatar(originUserId);
+        } else if (!tmp.avatarLink.endsWith('#BLOCKED'))
+            avatarLink = await client.getUserAvatar(originUserId);
+        
         await db('players').update({originName: profile.username, avatarLink: avatarLink}).where({originUserId: originUserId});
         await pushOriginNameLog(profile.username, originUserId, profile.personaId);
 

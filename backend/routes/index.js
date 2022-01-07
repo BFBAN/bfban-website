@@ -40,8 +40,7 @@ async (req, res, next)=>{
 });
 
 router.post('/playerStatistics', [  // like graphql :)
-    checkbody('data').isArray({min: 0, max: 10}),
-    checkbody('data').custom((val, {req})=> {
+    checkbody('data').isArray({min: 0, max: 10}).custom((val, {req})=> {
         for(let i of val)
             if(!config.supportGames.concat('*').includes(i.game) || ![-1,0,1,2,3,4,5,6].includes(i.status-0))
                 throw(new Error('bad subquery format'));
@@ -80,26 +79,44 @@ async (req, res, next)=>{
         
         const from = req.query.from? new Date(req.query.from-0) : new Date();
         const limit = req.query.limit? req.query.limit-0 : 100;
+        
+        const commentsRows = [
+            'comments.id as id', 'users.username as byUserName', 
+            'comments.byUserId as byUserId', 'comments.toPlayerId as toPlayerId',
+            'comments.createTime as createTime'
+        ];
+        const toPlayerRows = [
+            'players.originName as toPlayerName', 'players.originUserId as playerOriginUserId',
+            'players.originPersonaId as playerOriginPersonaId', 'players.cheatMethods as playerCheatMethods',
+            'players.avatarLink as playerAvatarLink', 'players.games as playerGames',
+            'players.viewNum as playerViewNum', 'players.commentsNum as PlayerCommentsNum',
+            'players.createTime as playerCreateTime', 'players.updateTime as playerUpdateTime'
+        ];
+
         const registers = await db.select('id', 'username', 'createTime')
-        .from('users').where('createTime', '<=', from).orderBy('createTime', 'desc').limit(limit);
+        .from('users').where('createTime', '<=', from)
+        .orderBy('createTime', 'desc').limit(limit);
+        
         const judgements = await db('comments')
         .join('users', 'comments.byUserId', 'users.id')
         .join('players', 'comments.toPlayerId','players.id')
-        .select('comments.id as id', 'users.username as byUserName', 'comments.byUserId as byUserId', 'comments.toPlayerId as toPlayerId'
-        , 'players.originName as toPlayerName', 'comments.judgeAction as action', 'comments.createTime as createTime')
-        .where('comments.createTime', '<=', from).andWhere({type: 'judgement'}).orderBy('comments.createTime', 'desc').limit(limit);
+        .select(['comments.judgeAction as action'].concat(commentsRows, toPlayerRows))
+        .where('comments.createTime', '<=', from).andWhere({type: 'judgement'})
+        .orderBy('comments.createTime', 'desc').limit(limit);
+        
         const reports = await db('comments')
         .join('users', 'comments.byUserId', 'users.id')
         .join('players', 'comments.toPlayerId', 'players.id')
-        .select('comments.id as id', 'users.username as byUserName', 'comments.byUserId as byUserId', 'comments.toPlayerId as toPlayerId'
-        , 'players.originName as toPlayerName', 'comments.cheatGame as game', 'comments.createTime as createTime')
-        .where('comments.createTime', '<=', from).andWhere({type: 'report'}).orderBy('comments.createTime', 'desc').limit(limit);
+        .select(['comments.cheatGame as game'].concat(commentsRows, toPlayerRows))
+        .where('comments.createTime', '<=', from).andWhere({type: 'report'})
+        .orderBy('comments.createTime', 'desc').limit(limit);
+        
         const banAppeals = await db('comments')
         .join('users', 'comments.byUserId', 'users.id')
         .join('players', 'comments.toPlayerId', 'players.id')
-        .select('comments.id as id', 'users.username as byUserName', 'comments.byUserId as byUserId', 'comments.toPlayerId as toPlayerId'
-        , 'players.originName as toPlayerName', 'comments.createTime as createTime')
-        .where('comments.createTime', '<=', from).andWhere({type: 'banAppeal'}).orderBy('comments.createTime', 'desc').limit(limit);
+        .select([].concat(commentsRows, toPlayerRows))
+        .where('comments.createTime', '<=', from).andWhere({type: 'banAppeal'})
+        .orderBy('comments.createTime', 'desc').limit(limit);
         
         let total = [].concat(registers.map(i=>Object.assign(i, {type: 'register'}) ))
         .concat(judgements.map(i=>Object.assign(i, {type: 'judgement'}) ))
@@ -120,10 +137,13 @@ async (req, res, next)=>{
 
 router.get('/players', [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
-    checkquery('createTime').optional().isInt({min: 0}),
-    checkquery('updateTime').optional().isInt({min: 0}),
+    checkquery('createTimeFrom').optional().isInt({min: 0}),
+    checkquery('updateTimeFrom').optional().isInt({min: 0}),
+    checkquery('createTimeTo').optional().isInt({min: 0}),
+    checkquery('updateTimeTo').optional().isInt({min: 0}),
     checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6 ]),
-    checkquery('sort').optional().isIn(['createTime','updateTime','viewNum','commentsNum']),
+    checkquery('sortBy').optional().isIn(['createTime','updateTime','viewNum','commentsNum']),
+    checkquery('order').optional().isIn(['desc','asc']),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
     checkquery('skip').optional().isInt({min: 0})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
@@ -134,24 +154,27 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'players.bad', message: validateErr.array()});
         
         const game = (req.query.game&&req.query.game!='all')? req.query.game : '';
-        const createTime = req.query.createTime? req.query.createTime-0 : 0;
-        const updateTime = req.query.updateTime? req.query.updateTime-0 : 0;
+        const createTimeFrom = new Date(req.query.createTimeFrom? req.query.createTimeFrom-0 : 0);
+        const updateTimeFrom = new Date(req.query.updateTimeFrom? req.query.updateTimeFrom-0 : 0);
+        const createTimeTo = new Date(req.query.createTimeTo? req.query.createTimeTo-0 : Date.now());
+        const updateTimeTo = new Date(req.query.updateTimeTo? req.query.updateTimeTo-0 : Date.now());
         const status = (req.query.status&&req.query.status!='-1')? req.query.status : '%';
         const sort = req.query.sort? req.query.sort : 'createTime';
+        const order = req.query.order? req.query.order : 'desc';
         const limit = req.query.limit? req.query.limit-0 : 20;
         const skip = req.query.skip? req.query.skip-0 : 0;
         
         const result = await db.select('*').from('players')
         .where('games', 'like', game? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-        .andWhere('createTime', '>=', new Date(createTime))
-        .andWhere('updateTime', '>=', new Date(updateTime))
+        .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+        .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
         .andWhere('status', 'like', status)
-        .orderBy(sort, 'desc').offset(skip).limit(limit)
+        .orderBy(sort, order).offset(skip).limit(limit)
         .then(r=>r.map(i=>{ delete i.valid; return i }));
         const total = await db('players').count({num: 'id'})
         .where('games', 'like', game? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-        .andWhere('createTime', '>=', new Date(createTime))
-        .andWhere('updateTime', '>=', new Date(updateTime))
+        .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+        .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
         .andWhere('status', 'like', status).first().then(r=>r.num);
 
         res.status(200).json({ success: 1, code:'players.ok', data:{ result, total } });
@@ -212,7 +235,8 @@ router.get('/admins', async (req, res, next)=> {
 router.get('/search', normalSearchRateLimiter, [
     checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 3}),
     checkquery('skip').optional().isInt({min: 0}),
-    checkquery('limit').optional().isInt({min: 0, max: 100})
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery()
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next)=>{
     try {

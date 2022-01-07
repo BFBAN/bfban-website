@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <script>
+            
+            async function onSubmit() {
+                const file = document.querySelector('#uploadFile').files[0];
+                const uploadUrl = document.querySelector('#uploadUrl').value;
+                if(!file || !uploadUrl) {
+                    alert('No file or URL given!');
+                    return;
+                }
+                const fileSize = file.size;
+                document.querySelector("#fileSize").innerText = fileSize+'';
+                const sliceSize = 10485760 // 10MiB
+                const slices = [...Array(Math.ceil(fileSize/sliceSize)).keys()].map(i=>[i*sliceSize, (i+1)*sliceSize<fileSize? (i+1)*sliceSize:fileSize]);
+                for(const i of slices) {
+                    await fetch(uploadUrl, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Length': i[1]-i[0],
+                            'Content-Range': `bytes ${i[0]}-${i[1]-1}/${fileSize}`
+                        },
+                        body: file.slice(...i),
+                    }).then(async (r)=> {
+                        document.querySelector('#log').value += r.status+ ' ' + await r.text() + '\n';
+                        if(r.status > 299)
+                            throw new Error(r.statusText);
+                    }).catch(err=> {
+                        document.querySelector('#log').value += err.message + '\n' + err.stack + '\n';
+                        throw err;
+                    });
+                }
+
+            }
+            function onFileChange() {
+                const file = document.querySelector('#uploadFile').files[0];
+                const fileSize = file.size;
+                document.querySelector("#fileSize").innerText = fileSize+'';
+                const sliceSize = 10485760 // 10MiB
+                const slices = [...Array(Math.ceil(fileSize/sliceSize)).keys()].map(i=>[i*sliceSize, (i+1)*sliceSize<fileSize? (i+1)*sliceSize:fileSize]);
+                document.querySelector('#log').value += JSON.stringify(slices) + '\n';
+            }
+        </script>
+    </head>
+    <body>
+        <div>URL:</div>
+        <textarea name="uploadUrl" id="uploadUrl" cols="30" rows="10"></textarea>
+        <br/>
+        <div>FILE:</div>
+        <input type="file" name="uploadFile" id="uploadFile" onchange="onFileChange()">
+        <span>Size:</span><span id="fileSize">0</span>
+        <br>
+        <button id="submit" onclick="onSubmit()">Submit</button>
+        <br>
+        <textarea name="log" id="log" cols="30" rows="10"></textarea>
+    </body>
+</html>

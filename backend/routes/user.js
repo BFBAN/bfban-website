@@ -182,11 +182,11 @@ async (req, res, next)=> {
                 expiresIn: expiresIn,
             };
             const jwttoken = jwt.sign(jwtpayload, config.secret, {
-                expiresIn: expiresIn,
+                expiresIn: expiresIn/1000,  // second
             });
             user.attr.lastSigninIP = req.REAL_IP;
             await db('users').update({updateTime: new Date(), attr: JSON.stringify(user.attr)}).where({id: user.id});
-            logger.info('users.login Success:',{name: user.username, ip: req.REAL_IP, token: jwttoken});
+            logger.info('users.login Success:', {name: user.username, ip: req.REAL_IP, token: jwttoken});
 
             return res.status(200).json({
                 success: 1,

@@ -7,3 +7,4 @@ dynamic_cfg.json
 private/
 backend/test/gen/
 .eslintrc.cjs
+backend/services/msGraphAPI/config.json

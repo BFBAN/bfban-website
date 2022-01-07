@@ -9,6 +9,7 @@ import { commentRateLimiter } from "./player.js";
 import { sendMessage } from "./message.js";
 import { privilegeGranter, privilegeRevoker, userHasRoles } from "../lib/auth.js";
 import { userSetAttributes } from "../lib/user.js";
+import got from "got";
 
 const router = express.Router();
 
@@ -138,4 +139,53 @@ async (req, res, next)=>{
     }
 });
 
+router.get('/msGraphStatus', verifyJWT, allowPrivileges(['root']), 
+/** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next)=>{
+    try {
+        const svResponse = await got(`${config.services.msGraphAPI.url}/status`, {
+            throwHttpErrors: false,
+            resolveBodyOnly: true
+        }).json();
+        return res.status(200).json(svResponse);
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.get('/msGraphInit', verifyJWT, allowPrivileges(['root']), 
+/** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next)=>{
+    try {
+        const redirectUrl = await got(`${config.services.msGraphAPI.url}/msLogin`, {
+            followRedirect: false,
+        });
+        return res.status(200).json({success: 1, code: 'msGraphInit.redirect', data: redirectUrl.headers.location});
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/msGraphAuthCode', verifyJWT, allowPrivileges(['root']), [
+    checkbody('data.code').isString()
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'setUserAttr.bad', message: validateErr.array()});
+        
+        const svResponse = await got(`${config.services.msGraphAPI.url}/msAuthCallBack?code=${req.body.data.code}`, {
+            throwHttpErrors: false,
+            resolveBodyOnly: true,
+        }).json();
+
+        return res.status(svResponse.success? 200:500).json(svResponse);
+    } catch(err) {
+        next(err);
+    }
+});
+
+//router.post('/msGraphDeleteFile', verifyJWT, allowPrivileges(['root', 'super']));
+//router.post('/msGraphModifyLink', verifyJWT, allowPrivileges(['root', 'super']));
 export default router;
