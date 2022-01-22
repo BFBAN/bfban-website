@@ -18,7 +18,7 @@ const staticConfigerKeys = [
     "services",
 ];
 
-fs.watchFile('./config.js', async (eventType, filename)=> { // dynamic load config
+fs.watchFile('./config.js', async (curr, prev)=> { // dynamic load config
     logger.info('Reading config...');                       // see https://github.com/nodejs/modules/issues/307#issuecomment-858729422
     const tmpenv = new worker_threads.Worker('      \
         const worker=require("worker_threads");     \

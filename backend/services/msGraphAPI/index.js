@@ -7,7 +7,6 @@ import express from "express";
 import morgan from 'morgan';
 import bodyParser from "body-parser";
 import { query as checkquery, validationResult, body as checkbody, oneOf as checkOneOf, header as checkheader } from "express-validator";
-import { Transform } from "stream";
 import { Logger } from "../../logger.js";
 import { validateFileName, validatePath } from "../../lib/misc.js";
 
@@ -31,9 +30,9 @@ global.fetch = fetch;   // polyfill for msgraph client
  */
 
 /** @type {msAppConfig} */
-const appConfig = JSON.parse(fs.readFileSync("./services/msGraphAPI/config.json"));
+const svcConfig = JSON.parse(fs.readFileSync("./services/msGraphAPI/config.json"));
 
-const logger = new Logger('msGraph', appConfig.logLevel);
+const logger = new Logger('msGraph', svcConfig.logLevel);
 
 process.on('uncaughtException', (err)=> {
    logger.error('Uncaught Exception:', err.message, err.stack);
@@ -44,9 +43,9 @@ process.on('unhandledRejection', (err)=> {
 
 const msalConfig = {
     auth: {
-        clientId: appConfig.APP_ID,
-        authority: appConfig.OAUTH_AUTHORITY,
-        clientSecret: appConfig.APP_SECRET,
+        clientId: svcConfig.APP_ID,
+        authority: svcConfig.OAUTH_AUTHORITY,
+        clientSecret: svcConfig.APP_SECRET,
     },
     system: {
         loggerOptions: {
@@ -72,8 +71,8 @@ app.use(bodyParser.json());
 app.use(morgan((tokens, req, res)=>{
     const status = tokens.status(req, res);
     const base = `${tokens.status(req, res)} ${tokens.method(req, res)} ${tokens.url(req, res)} in ${tokens['response-time'](req, res)}ms`;
-    const verbose = appConfig.logLevel>=3? ` RequestBody: ${JSON.stringify(req.body)}` : '';
-    if(appConfig.logLevel<0)
+    const verbose = svcConfig.logLevel>=3? ` RequestBody: ${JSON.stringify(req.body)}` : '';
+    if(svcConfig.logLevel<0)
         return undefined;
     if(status >= 500)
         return logger.toText.error(base+verbose);
@@ -97,8 +96,8 @@ function getAuthenticatedClient(msalClient) { // Initialize Graph client
                     .getAccountByHomeId(msUserHomeId);
                 if (account) { // Attempt to get the token silently
                     const response = await msalClient.acquireTokenSilent({
-                        scopes: appConfig.APP_SCOPES,
-                        redirectUri: appConfig.APP_REDIRECT_URI,
+                        scopes: svcConfig.APP_SCOPES,
+                        redirectUri: svcConfig.APP_REDIRECT_URI,
                         account: account
                     });
                     done(null, response.accessToken);
@@ -133,8 +132,8 @@ app.get('/status', async (req, res, next)=> {
 app.get('/msLogin', async (req, res, next)=> {
     try {
         const authUrl = await msalClient.getAuthCodeUrl({
-            scopes: appConfig.APP_SCOPES,
-            redirectUri: appConfig.APP_REDIRECT_URI
+            scopes: svcConfig.APP_SCOPES,
+            redirectUri: svcConfig.APP_REDIRECT_URI
         });
         logger.info(`auth url:${authUrl}`);
         res.redirect(authUrl);
@@ -148,8 +147,8 @@ app.get('/msAuthCallback', async (req, res, next)=> {
     try {
         const msResponse = await msalClient.acquireTokenByCode({
             code: req.query.code,
-            scopes: appConfig.APP_SCOPES,
-            redirectUri: appConfig.APP_REDIRECT_URI
+            scopes: svcConfig.APP_SCOPES,
+            redirectUri: svcConfig.APP_REDIRECT_URI
         });
         if(msResponse.account)
             msUserHomeId = msResponse.account.homeAccountId;
@@ -180,7 +179,7 @@ async (req, res, next)=> {
     try {
         const fileId = req.query.id;
         const path = req.query.path;
-        const url = fileId? `/drives/${appConfig.driveId}/items/${fileId}` : `/drives/${appConfig.driveId}/root:/${path}`;
+        const url = fileId? `/drives/${svcConfig.driveId}/items/${fileId}` : `/drives/${svcConfig.driveId}/root:/${path}`;
         const msResponse = await getAuthenticatedClient(msalClient)
         .api(url)
         .get()
@@ -231,7 +230,7 @@ async (req, res, next)=> {
         const parentPath = req.query.path;
         const filename = req.query.name;
         const url = parentId? 
-            `drives/${appConfig.driveId}/items/${parentId}:/${filename}:/content`:`drives/${appConfig.driveId}/root:/${parentPath}/${filename}:/content`;
+            `drives/${svcConfig.driveId}/items/${parentId}:/${filename}:/content`:`drives/${svcConfig.driveId}/root:/${parentPath}/${filename}:/content`;
         
         const msResponse = await getAuthenticatedClient(msalClient)
         .api(url)
@@ -281,9 +280,9 @@ async (req, res, next)=> {
         const parentPath = req.body.data.path;
         const filename = req.body.data.name;
         const url = parentId? 
-            `drives/${appConfig.driveId}/items/${parentId}:/${
+            `drives/${svcConfig.driveId}/items/${parentId}:/${
                 encodeURIComponent(filename)
-            }:/createUploadSession` : `drives/${appConfig.driveId}/root:/${
+            }:/createUploadSession` : `drives/${svcConfig.driveId}/root:/${
                 encodeURIComponent(parentPath)}/${
                 encodeURIComponent(filename)
             }:/createUploadSession`
@@ -303,14 +302,14 @@ async (req, res, next)=> {
             const fileId = /\/items\/[0-9a-zA-Z]+\//.exec(msResponse.uploadUrl)[0].split('/')[2];
             const payload = JSON.stringify({size: filesize, url: msResponse.uploadUrl});
             const iv = crypto.randomBytes(16);
-            const cipher = crypto.createCipheriv('aes256', appConfig.workerKey, iv);
+            const cipher = crypto.createCipheriv('aes256', svcConfig.workerKey, iv);
             const encrypted = Buffer.concat([iv, cipher.update(payload), cipher.final()]).toString('base64');
             return res.status(200).json({success: 1, code: 'msUploadBig.ready', data: {
                 size: filesize,
                 id: fileId,
                 filename: filename,
                 expiredAt: msResponse.expirationDateTime,
-                uploadUrl: `${appConfig.workerAddress}msGraph/upload?code=${encodeURIComponent(encrypted)}`
+                uploadUrl: `${svcConfig.workerAddress}msGraph/upload?code=${encodeURIComponent(encrypted)}`
             }});
         } else 
             return res.status(msResponse.status).json({error: 1, code: 'msUploadBig.bad', message: msResponse.error.message});
@@ -327,6 +326,6 @@ app.use((err, req, res, next)=> { // error handler
     res.status(500).json({error: 1, code:'server.error', message: err.message});
 });
 
-app.listen(appConfig.port, ()=>{
-    logger.success(`Service start at ${appConfig.address}:${appConfig.port}`);
+app.listen(svcConfig.port, ()=>{
+    logger.success(`Service start at ${svcConfig.address}:${svcConfig.port}`);
 });

@@ -4,11 +4,12 @@ import { check, body as checkbody, query as checkquery, validationResult } from 
 
 import db from "../mysql.js";
 import config from "../config.js";
-import { OriginClient, originClients } from "../lib/origin.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { advSearchRateLimiter, normalSearchRateLimiter } from "../middleware/rateLimiter.js";
+import logger from "../logger.js";
+import serviceApi, { ServiceApiError } from "../lib/serviceAPI.js";
 
 const router = express.Router();
 
@@ -277,7 +278,7 @@ async (req, res, next)=>{
 
 router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted','freezed']), 
     advSearchRateLimiter.limiter([{roles: ['root','super','admin','dev'], value: 0}]), [
-    checkquery('param').isAlphanumeric('en-US', {ignore: '-_'}).trim().isLength({min: 4})
+    checkquery('param').isAlphanumeric('en-US', {ignore: '-_'}).trim().isLength({min: 4, max: 32})
 ], /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)} */
 async (req, res, next)=>{
     try {
@@ -285,31 +286,55 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code:'advSearch.bad', message:validateErr.array()});
 
-        const originClient = originClients.getOne();
-        const originUserId = await originClient.searchUserName(req.query.param);
-        const result = {success: 1, code:'', data:{}};
-        if(originUserId) {
-            const curOriginInfo = await originClient.getInfoByUserId(originUserId);
-            const curOriginAvatar = await originClient.getUserAvatar(originUserId);
-            const record = await db.select('*').from('players').where({originUserId: originUserId, valid: 1}).first();
-            
-            result.data.originName = curOriginInfo.username;
-            result.data.originPersonaId = curOriginInfo.personaId;
-            result.data.originUserId = curOriginInfo.userId; 
-            result.data.avatarLink = curOriginAvatar; 
+        const svResponses = await Promise.all([
+            serviceApi('eaAPI', '/searchUsers').query({name: encodeURIComponent(req.query.param)}).get(),
+            serviceApi('eaAPI', '/searchUsers').query({name: encodeURIComponent(req.query.param)+'*'}).get(),
+        ]);
+        /** @type {import("../typedef.js").EAUserInfo} */
+        const exact = svResponses[0].data[0];
+        /** @type {import("../typedef.js").EAUserInfo[]} */
+        const similars = svResponses[1].data.filter(i=>exact?.userId!=i.userId).slice(0, 10);
 
-            if(!record) {
-                result.code = 'advSearch.foundOrigin',
-                result.data.record = null;
-            } else {
-                result.code = 'advSearch.foundBoth';
-                result.data.record = { currentName: record.originName, status: record.status, cheatMethods: record.cheatMethods };
-            }
-            return res.status(200).json(result);
-        } else {
-            return res.status(404).json({error: 1, code:'advSearch.notFound', message:'No such player found on origin.' });
-        }
+        const result = {success: 1, code:'advanceSearch.ok', data:{}};
+        if(exact) {
+            const avatarRes = await serviceApi('eaAPI', '/userAvatar').query({userId: exact.userId}).get();
+            /** @type {import("../typedef.js").Player} */
+            const record = await db.select('*').from('players').where({originUserId: exact.userId, valid: 1}).first()
+            .then(r=>{ if(r) delete r.valid; return r; });
+            result.data.exact = {
+                originName: exact.name,
+                originPersonaId: exact.personaId,
+                originUserId: exact.userId,
+                avatarLink: avatarRes.data,
+                record: record,
+            };
+        } else
+            result.data.exact = null;
+        if(similars) {
+            /** @type {import("../typedef.js").Player[]} */
+            const records = await db.select('*').from('players').whereIn('originUserId', similars.map(i=>i.userId))
+            .then(rs=>rs.map(i=>{ delete i.valid; return i; }));
+            result.data.similars = similars.map(i=>{
+                return {
+                    originName: i.name,
+                    originPersonaId: i.personaId,
+                    originUserId: i.userId,
+                    record: records.find(j=>j.originUserId==i.userId)
+                };
+            });
+        } else
+            result.data.similars = [];
+        
+        return res.status(200).json(result);
     } catch(err) {
+        if(err instanceof ServiceApiError) {
+            logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode>0? err.stack:'');
+            return res.status(err.statusCode==501? 501:500).json({
+                error: 1, 
+                code: err.statusCode==501? 'advanceSearch.notImplement':'advanceSearch.error', 
+                message: err.message
+            });
+        }
         next(err);
     }
 });

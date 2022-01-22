@@ -72,8 +72,33 @@ async (req, res, next)=>{
     }
 });
 
+router.get('/myFiles', verifyJWT, [
+    checkquery('limit').optional().isInt({min: 0, max: 200}),
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('order').optional().isIn('asc', 'desc')
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=> {
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: '.bad', message: validateErr.array()});
+
+        const limit = req.query.limit? req.query.limit : 50;
+        const skip = req.query.skip? req.query.skip : 0;
+        const order = req.query.order? req.query.order : 'desc';
+        /** @type {import("../typedef.js").StorageItem[]} */
+        const items = await db.select('*').from('storage_items').where({byUserId: req.user.id})
+        .orderBy('createTime', order).offset(skip).limit(limit)
+        .then(r=>r.map(i=>{ delete i.fileId; delete i.byUserId; return i; }));
+
+        return res.status(200).json({success: 1, code: 'myFiles.ok', data: items});
+    } catch(err) {
+        next(err);
+    }
+})
+
 router.get('/file', [
-    checkquery('id').isUUID(),
+    checkquery('filename').isString().isLength({min: 0, max: 64}),
     checkquery('explain').optional()
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=> {
@@ -83,7 +108,7 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'file.bad', message: validateErr.array()});
         
         /** @type {import("../typedef.js").StorageItem} */
-        const fileItem = await db.select('*').from('storage_items').where({id: req.query.id}).first();
+        const fileItem = await db.select('*').from('storage_items').where({filename: req.query.filename}).first();
         if(!fileItem)
             return res.status(404).json({error: 1, code: 'file.notFound', message: 'no such file.'});
         
@@ -135,9 +160,8 @@ async (req, res, next)=> {
             quota = await initUserStorageQuota(req.user);
         if(!updateUserStorageQuota(quota, contentLength))  // update user quota while querying its stats
             return res.status(400).json({error: 1, code: 'upload.quotaExcced', message: 'You have used up all your storage space or today\'s bandwidth'});
-        
-        const uuid = crypto.randomUUID();
-        const filename = (new Date().toISOString().slice(0,10)+'_'+uuid) + fileSuffix;
+
+        const filename = (new Date().toISOString().slice(0,10)+'_'+crypto.randomUUID()) + fileSuffix;
         const passThrough = new PassThrough();
         const svResponse = await got.put(`${config.services.msGraphAPI.url}/uploadSmall?id=${config.services.msGraphAPI.baseDirId}&name=${filename}`, {
             throwHttpErrors: false,
@@ -152,7 +176,6 @@ async (req, res, next)=> {
 
         // no error occured
         await db('storage_items').insert({  // insert fileinfo into db
-            id: uuid, 
             filename: filename, 
             size: svResponse.data.size, 
             byUserId: req.user.id, 
@@ -160,7 +183,6 @@ async (req, res, next)=> {
         });
         await db('storage_quotas').update(quota).where({userId: quota.userId});  // write updated quota data back
         return res.status(201).json({success: 1, code: 'upload.success', data: {
-            id: uuid,
             name: filename,
             size: svResponse.data.size,
         }});
@@ -191,8 +213,7 @@ async (req, res, next)=> {
         if(!updateUserStorageQuota(quota, size))  // update user quota while querying its stats
             return res.status(400).json({error: 1, code: 'upload.quotaExcced', message: 'You have used up all your storage space or today\'s bandwidth'});
         
-        const uuid = crypto.randomUUID();
-        const filename = (new Date().toISOString().slice(0,10)+'_'+uuid) + fileSuffix;
+        const filename = (new Date().toISOString().slice(0,10)+'_'+crypto.randomUUID()) + fileSuffix;
 
         // ask msGraphAPI service for upload URL
         const svResponse = await got.post(`${config.services.msGraphAPI.url}/uploadBig`, {
@@ -211,7 +232,6 @@ async (req, res, next)=> {
         
         // no error occured
         await db('storage_items').insert({  // insert fileinfo into db
-            id: uuid, 
             filename: filename, 
             size: svResponse.data.size, 
             byUserId: req.user.id, 
@@ -219,7 +239,6 @@ async (req, res, next)=> {
         });
         await db('storage_quotas').update(quota).where({userId: quota.userId});  // write updated quota data back
         return res.status(201).json({success: 1, code: 'upload.success', data: {
-            id: uuid,
             name: filename,
             size: svResponse.data.size,
             uploadUrl: svResponse.data.uploadUrl,

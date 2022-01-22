@@ -151,6 +151,13 @@
  * @property {Date} createTime
  */
 
+/**
+ * @typedef {Object} EAUserInfo
+ * @property {string} name
+ * @property {number} userId
+ * @property {number} personaId
+ */
+
 /** 
  * @typedef {{method:'report'|'reply'|'judge'|'banAppeal'|'playerUpdate'|'viewBanAppeal'|'register',params:object}} SiteEvent
  */
