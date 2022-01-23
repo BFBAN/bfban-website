@@ -15,7 +15,7 @@ class Logger {
             if(this.logLevel < 0)
                 return;
             return [
-                `\x1B[34m${this.moduleName? '['+this.moduleName+'] ':''}[${new Date().toLocaleString(undefined, {hour12: false})}]\x1B[0m `+`\x1B[32m[SUCCESS] \x1B[0m`,
+                `\x1B[30m\x1B[47m${this.moduleName? '['+this.moduleName+']\x1B[0m ':'\x1B[0m'}\x1B[34m[${new Date().toLocaleString(undefined, {hour12: false})}]\x1B[0m `+`\x1B[32m[SUCCESS] \x1B[0m`,
                 ...msg.map(i=>typeof(i)!='string'? inspect(i, false, null, true) : i)
             ].join(' ');
         },
@@ -23,7 +23,7 @@ class Logger {
             if(this.logLevel < 3)
                 return;
             return [
-                `\x1B[34m${this.moduleName? '['+this.moduleName+'] ':''}[${new Date().toLocaleString(undefined, {hour12: false})}]\x1B[0m `+`\x1B[37m[VERBOSE] \x1B[0m`,
+                `\x1B[30m\x1B[47m${this.moduleName? '['+this.moduleName+']\x1B[0m ':'\x1B[0m'}\x1B[34m[${new Date().toLocaleString(undefined, {hour12: false})}]\x1B[0m `+`\x1B[37m[VERBOSE] \x1B[0m`,
                 ...msg.map(i=>typeof(i)!='string'? inspect(i, false, null, true) : i)
             ].join(' ');
         },
@@ -31,7 +31,7 @@ class Logger {
             if(this.logLevel < 2)
                 return;
             return [
-                `\x1B[34m${this.moduleName? '['+this.moduleName+'] ':''}[${new Date().toLocaleString(undefined, {hour12: false})}]\x1B[0m `+`\x1B[37m[INFO] \x1B[0m`,
+                `\x1B[30m\x1B[47m${this.moduleName? '['+this.moduleName+']\x1B[0m ':'\x1B[0m'}\x1B[34m[${new Date().toLocaleString(undefined, {hour12: false})}]\x1B[0m `+`\x1B[37m[INFO] \x1B[0m`,
                 ...msg.map(i=>typeof(i)!='string'? inspect(i, false, null, true) : i)
             ].join(' ');
         },
@@ -39,7 +39,7 @@ class Logger {
             if(this.logLevel < 1)
                 return;
             return [
-                `\x1B[34m${this.moduleName? '['+this.moduleName+'] ':''}[${new Date().toLocaleString(undefined, {hour12: false})}]\x1B[0m `+`\x1B[33m[WARN] \x1B[0m`,
+                `\x1B[30m\x1B[47m${this.moduleName? '['+this.moduleName+']\x1B[0m ':'\x1B[0m'}\x1B[34m[${new Date().toLocaleString(undefined, {hour12: false})}]\x1B[0m `+`\x1B[33m[WARN] \x1B[0m`,
                 ...msg.map(i=>typeof(i)!='string'? inspect(i, false, null, true) : i)
             ].join(' ');
         },
@@ -47,7 +47,7 @@ class Logger {
             if(this.logLevel < 0)
                 return;
             return [
-                `\x1B[34m${this.moduleName? '['+this.moduleName+'] ':''}[${new Date().toLocaleString(undefined, {hour12: false})}]\x1B[0m `+`\x1B[31m[ERROR] \x1B[0m`,
+                `\x1B[30m\x1B[47m${this.moduleName? '['+this.moduleName+']\x1B[0m ':'\x1B[0m'}\x1B[34m[${new Date().toLocaleString(undefined, {hour12: false})}]\x1B[0m `+`\x1B[31m[ERROR] \x1B[0m`,
                 ...msg.map(i=>typeof(i)!='string'? inspect(i, false, null, true) : i)
             ].join(' ');
         }

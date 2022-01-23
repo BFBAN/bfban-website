@@ -83,7 +83,7 @@ class OriginClient {
             this.tokens.expires_when = Date.now() + response.expires_in*1000;
 
             this.cur_state = 'OK';
-            logger.info('originClient.getSelfAccessToken Success:', {access_token: response.access_token, expires_in: response.expires_in});
+            logger.info('OriginClient.getSelfAccessToken Success:', {access_token: response.access_token, expires_in: response.expires_in});
             return {access_token: response.access_token, expires_in: response.expires_in};
         } catch(err) { // Handle request error or parse error
             this.cur_state = 'UNKNOWN_ERROR';
@@ -122,7 +122,7 @@ class OriginClient {
             this.self_prop.personaId = response.personas.persona[0].personaId;
             this.cur_state = 'OK';
 
-            logger.info('originClient.getSelfInfo Success:', {
+            logger.info('OriginClient.getSelfInfo Success:', {
                 username: this.self_prop.username, 
                 userId: this.self_prop.userId, 
                 personaId: this.self_prop.personaId

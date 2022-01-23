@@ -14,25 +14,32 @@ class ServiceApiError extends Error {
     body = '';
 }
 
-class serviceApiContext {
+class ServiceApiContext {
     constructor(base, path='/', exception=true) {
         this.#urlbase = base;
         this.#urlpath = path;
         this.#throwHttpErrors = exception;
     }
-    /** @type {URL} */
-    #url = {};
+    #url = '';
     #urlbase = '';
     #urlpath = '';
+    #username = '';
+    #password = '';
     #urlquery = new URLSearchParams();
     #throwHttpErrors = true;
     /** @type {'GET'|'POST'|'PUT'|'DELETE'} */
     #reqmethod = '';
     #execute(body) {
-        this.#url = new URL(this.#urlpath, this.#urlbase);
-        for(const i of this.#urlquery)
-            this.#url.searchParams.set(i[0], i[1]);
-        return got(this.#url, {method: this.#reqmethod, throwHttpErrors: this.#throwHttpErrors, body: body}).json().catch(err=> {
+        this.#url = this.#urlbase + this.#urlpath;
+        this.#url += this.#urlquery.toString()? '?'+this.#urlquery.toString() : '';
+            
+        return got(this.#url, {
+            method: this.#reqmethod, 
+            throwHttpErrors: this.#throwHttpErrors, 
+            body: body,
+            username: this.#username,
+            password: this.#password,
+        }).json().catch(err=> {
             if(err instanceof HTTPError)
                 throw new ServiceApiError(err.response.statusCode, JSON.parse(err.response.body), err);
             throw new ServiceApiError(-1, null, err);
@@ -69,7 +76,7 @@ class serviceApiContext {
 /** @param {'eaAPI'|'msGraphAPI'} svcName */
 function serviceApi(svcName, path='/', exception=true) {
     assert(config.services[svcName] && config.services[svcName].url, 'serviceAPI: Cannot find such service');
-    return new serviceApiContext(config.services[svcName].url, path, exception);
+    return new ServiceApiContext(config.services[svcName].url, path, exception);
 }
 
 export default serviceApi;

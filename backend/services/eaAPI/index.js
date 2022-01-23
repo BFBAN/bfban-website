@@ -38,15 +38,15 @@ const cluster = new OriginClientCluster();
 function initClients() {
     for(const i of clients.values()) 
         i.init().then(selfinfo=> {
-            logger.info(`originClient ${i.tag} init complete: ${selfinfo.username} uid:${selfinfo.userId} pid:${selfinfo.personaId}`);
+            logger.info(`OriginClient ${i.tag} init complete: ${selfinfo.username} uid:${selfinfo.userId} pid:${selfinfo.personaId}`);
             cluster.set(i.tag, i);
         }).catch(err=> {
             if(err instanceof EaApiError && err.message.includes('Cookies Expired'))
-                logger.warn(`originClient ${i.tag} init fail: Cookies Expired`);
+                logger.warn(`OriginClient ${i.tag} init fail: Cookies Expired`);
             else if(err instanceof EaApiError)
-                logger.error(`originClient ${i.tag} init fail: ${err.statusCode} ${err.message}`, err.body, err.statusCode>0? err.stack:'');
+                logger.error(`OriginClient ${i.tag} init fail: ${err.statusCode} ${err.message}`, err.body, err.statusCode>0? err.stack:'');
             else
-                logger.error(`originClient ${i.tag} init fail: ${err.message}`, err.stack);
+                logger.error(`OriginClient ${i.tag} init fail: ${err.message}`, err.stack);
         });
 }
 for(const i of svcConfig.accounts)    // create accounts
