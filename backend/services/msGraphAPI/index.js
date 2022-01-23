@@ -32,7 +32,7 @@ global.fetch = fetch;   // polyfill for msgraph client
 /** @type {msAppConfig} */
 const svcConfig = JSON.parse(fs.readFileSync("./services/msGraphAPI/config.json"));
 
-const logger = new Logger('msGraph', svcConfig.logLevel);
+const logger = new Logger('graph', svcConfig.logLevel);
 
 process.on('uncaughtException', (err)=> {
    logger.error('Uncaught Exception:', err.message, err.stack);

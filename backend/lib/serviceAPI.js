@@ -25,6 +25,7 @@ class ServiceApiContext {
     #urlpath = '';
     #username = '';
     #password = '';
+    #reqheaders = {};
     #urlquery = new URLSearchParams();
     #throwHttpErrors = true;
     /** @type {'GET'|'POST'|'PUT'|'DELETE'} */
@@ -36,17 +37,19 @@ class ServiceApiContext {
         return got(this.#url, {
             method: this.#reqmethod, 
             throwHttpErrors: this.#throwHttpErrors, 
-            body: body,
+            json: this.#reqmethod=='POST'||this.#reqmethod=='DELETE'? body : undefined,
+            body: this.#reqmethod=='PUT'? body : undefined,
+            headers: this.#reqheaders,
             username: this.#username,
             password: this.#password,
         }).json().catch(err=> {
             if(err instanceof HTTPError)
                 throw new ServiceApiError(err.response.statusCode, JSON.parse(err.response.body), err);
             throw new ServiceApiError(-1, null, err);
-        });/*.then(r=>{    // DEBUG
+        }).then(r=>{    // DEBUG
             console.log(JSON.stringify(r)); 
             return r;
-        });*/
+        });
     }
     get() {
         this.#reqmethod = 'GET';
@@ -70,7 +73,11 @@ class ServiceApiContext {
             this.#urlquery.set(i, qobj[i]);
         return this;
     }
-
+    /** @param {Record<string, string>} hobj */
+    header(hobj) {
+        Object.assign(this.#reqheaders, hobj);
+        return this;
+    }
 }
 
 /** @param {'eaAPI'|'msGraphAPI'} svcName */

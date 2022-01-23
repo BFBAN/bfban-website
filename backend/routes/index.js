@@ -10,6 +10,7 @@ import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth
 import { advSearchRateLimiter, normalSearchRateLimiter } from "../middleware/rateLimiter.js";
 import logger from "../logger.js";
 import serviceApi, { ServiceApiError } from "../lib/serviceAPI.js";
+import { pushOriginNameLog } from "./player.js";
 
 const router = express.Router();
 
@@ -308,6 +309,9 @@ async (req, res, next)=>{
                 avatarLink: avatarRes.data,
                 record: record,
             };
+            pushOriginNameLog(exact.name, exact.userId, exact.personaId).catch(err=>{
+                logger.warn('pushOriginNameLog: async error:', err.message, err.stack);
+            });   // whether it has been reported or not, save the namelog anyway
         } else
             result.data.exact = null;
         if(similars) {
@@ -315,6 +319,9 @@ async (req, res, next)=>{
             const records = await db.select('*').from('players').whereIn('originUserId', similars.map(i=>i.userId))
             .then(rs=>rs.map(i=>{ delete i.valid; return i; }));
             result.data.similars = similars.map(i=>{
+                pushOriginNameLog(i.name, i.userId, i.personaId).catch(err=>{
+                    logger.warn('pushOriginNameLog: async error:', err.message, err.stack);
+                });   // whether it has been reported or not, save the namelog anyway
                 return {
                     originName: i.name,
                     originPersonaId: i.personaId,

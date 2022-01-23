@@ -123,8 +123,7 @@ async (req, res, next)=>{
                 }
             }
         };
-        /** @type {{username:string, personaId:string, userId:string}} */
-        const profile = await Promise.race([ 
+        const originUserId = await Promise.race([ 
             serviceApi('eaAPI', '/searchUser').query({name: req.body.data.originName}).get().then(r=>r.data)
             .then(isdone.successListener('eaAPI')).catch(isdone.failListener('eaAPI')),
             // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
@@ -133,7 +132,9 @@ async (req, res, next)=>{
             //console.log(isdone.failMessages);
             return undefined; 
         });
-        if(!profile)
+        /** @type {{username:string, personaId:string, userId:string}} */
+        const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r=>r.data);
+        if(!profile )
             return res.status(404).json({error:1, code:'report.notFound', message:'Report user not found.'});
         isdone.event.emit('done');  // terminate the unterminated promise (if exist)
         isdone.event.removeAllListeners();  // destory
@@ -619,4 +620,5 @@ async function pushOriginNameLog(originName, originUserId, originPersonaId) {
 export default router;
 export {
     commentRateLimiter,
+    pushOriginNameLog,
 };
