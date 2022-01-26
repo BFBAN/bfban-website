@@ -7,7 +7,7 @@
           <Col :xs="{push: 1}" :lg="{push: 0}">
             <Breadcrumb>
               <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-              <BreadcrumbItem :to="{name: 'cheaters'}">{{ $t("list.title") }}</BreadcrumbItem>
+              <BreadcrumbItem :to="{name: 'player'}">{{ $t("list.title") }}</BreadcrumbItem>
               <BreadcrumbItem>{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
             </Breadcrumb>
           </Col>
@@ -531,30 +531,32 @@
                       <Input @on-keydown="handleCmdEnter($event, 'reply')"
                              :border="false"
                              v-model="reply.content"
+                             show-word-limit
+                             maxlength="1000"
                              type="textarea"
                              :autosize="{minRows: 5}"
                              :placeholder="$t('detail.info.giveOpinion')"/>
                     </FormItem>
-                    <FormItem :label="$t('signup.form.captcha')">
-                      <Row>
-                        <Col>
-                          <Input type="text" v-model="reply.captcha" size="large" maxlength="4"
-                                 :placeholder="$t('signup.form.captcha')">
-                          </Input>
-                        </Col>
-                        <Col>
-                          <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                            <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>
-                          </div>
-                        </Col>
-                      </Row>
-                    </FormItem>
+<!--                    <FormItem :label="$t('signup.form.captcha')">-->
+<!--                      <Row>-->
+<!--                        <Col>-->
+<!--                          <Input type="text" v-model="reply.captcha" size="large" maxlength="4"-->
+<!--                                 :placeholder="$t('signup.form.captcha')">-->
+<!--                          </Input>-->
+<!--                        </Col>-->
+<!--                        <Col>-->
+<!--                          <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">-->
+<!--                            <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>-->
+<!--                          </div>-->
+<!--                        </Col>-->
+<!--                      </Row>-->
+<!--                    </FormItem>-->
                   </Form>
                 </div>
                 <div class="ivu-card-body">
                   <Row>
                     <Col flex="1 150px">
-                      如有误联BAN，请在举报页面上点[上诉] 或 邮件至ban-appeals@bfban.com管理员处理。
+                      {{ $t('detail.info.appealManual1') }}
                     </Col>
                     <Col flex="150px">
                       <Button type="primary" size="large" long :loading="replySpinShow" :disabled="!reply.content"
@@ -1279,11 +1281,12 @@ export default new BFBAN({
       let data = {
         data: {
           toPlayerId: cheaterId,
+          toCommentId: cheaterId,
           content: content,
           toFloor: 1,
         },
-        encryptCaptcha: this.reply.captchaUrl.hash,
-        captcha: this.reply.captcha,
+        // encryptCaptcha: this.reply.captchaUrl.hash,
+        // captcha: this.reply.captcha,
       };
 
       if (toFloor) {

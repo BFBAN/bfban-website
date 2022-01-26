@@ -1,22 +1,21 @@
-# frontend
-lang：中文
+# BFBAN.com 前端模块
 
-## Project setup
-更新frontend的依赖
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/cabbagelol/bfbanApp)
+![GitHub All Releases](https://img.shields.io/github/downloads/cabbagelol/bfbanApp/total)
+
+该目录存放网站用户端模块，基于vue2 + vue-cli实现。
+
+1. [网站配置](./public/conf) 网站全局的配置，包含主题、判决类型等等
+2. [桌面开发](./desktop) 网站附属产品，桌面应用
+3. [主题文件](./public/theme) 主题配置文件，需同时配置`publuc/conf/theme.json`
+
+## 参与开发
+
 ```
-npm install
-```
+    1. 取得仓库
+    2. 安装依赖
+    npm install
 
-### 启动
-在frontend中包含好几部分的模块，通常启动请使用:
-```
-// 开发模式启动
-npm run serve
-
-// serve服务，需提前执行'npm i build'生成，启动本地服务来预览
-npm run local-serve 
-
-// 桌面应用启动
-// 在启动electron服务器前，必须开启serve，因为electron的内置地址是serve本身
-npm run electron 
+    3. 跑！
+    npm run serve
 ```

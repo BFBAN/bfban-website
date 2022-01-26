@@ -45,6 +45,7 @@
                 </FormItem>
                 <!-- 游戏类型 E -->
 
+                <!-- 游戏名称 S -->
                 <FormItem prop="originId" :label="$t('report.labels.hackerId')">
                   <Alert type="error"
                          show-icon
@@ -66,6 +67,31 @@
                       </p>
                     </span>
                   </Alert>
+                  <Row :gutter="30">
+                    <Col :lg="{span: 10}">
+                      <AutoComplete
+                          v-model="tabs.list[index].formItem.originId"
+                          :data="tabs.list[index].players.list"
+                          @on-search="handleSearchReportId"
+                          maxlength="80"
+                          show-word-limit
+                          icon="ios-search"
+                          size="large"
+                          :placeholder="$t('report.info.onlyOneId')">
+                        <div v-for="(option,optionIndex) in tabs.list[index].players" :key="optionIndex" >
+                          <Option :value="option.originName" v-if="option && option.originName">
+                            <Row>
+                              <Col flex="auto">
+                                <Avatar :src="option.avatarLink"></Avatar>
+                                <span>&emsp; {{ option.originName }}</span>
+                              </Col>
+                            </Row>
+                          </Option>
+                        </div>
+                      </AutoComplete>
+                    </Col>
+                  </Row>
+                  <br>
                   <Card class="hackrid" dis-hover>
                     <h1 v-if="tabs.list[index].formItem.originId">{{ tabs.list[index].formItem.originId }}</h1>
                     <span v-else>ID</span>
@@ -77,52 +103,8 @@
                       {{ $t("report.info.idNotion2", {msg: "idNotion2"}) }}
                     </p>
                   </Card>
-                  <Row :gutter="30">
-                    <Col flex="1">
-                      <Input
-                          v-model="tabs.list[index].formItem.originId"
-                          maxlength="80"
-                          show-word-limit
-                          size="large"
-                          :placeholder="$t('report.info.onlyOneId')"/>
-                    </Col>
-                    <Col>
-                      {{ $t('report.info.or') }}
-                    </Col>
-                    <Col flex="1">
-                      <Button type="dashed" long size="large" @click="tabs.players.show = true">
-                        {{ $t('report.info.fromDatabaseOneId') }}
-                      </Button>
-                      <Modal
-                          v-model="tabs.players.show"
-                          @on-ok="tabs.list[index].formItem.originId = tabs.list[index].formItem.originId_l; tabs.list[index].formItem.originId_l = ''"
-                          :styles="{top: '20px'}">
-                        <Select
-                            size="large"
-                            v-model="tabs.list[index].formItem.originId_l"
-                            filterable
-                            :remote-method="getPlayerList"
-                            :loading="tabs.players.load">
-                          <Option v-for="(option, index) in tabs.players.list" :value="option.originName" :key="index">
-                            <Row>
-                              <Col flex="auto">
-                                <Avatar :src="option.avatarLink"></Avatar>
-                                <span>&emsp; {{ option.originName }}</span>
-                              </Col>
-                              <Col>
-                                <router-link
-                                    :to="{name: 'cheater', params: {ouid: `${option.originPersonaId}.${option.originUserId}.${option.id}`}}">
-                                  <Icon type="md-eye" size="30"/>
-                                </router-link>
-                              </Col>
-                            </Row>
-                          </Option>
-                        </Select>
-                      </Modal>
-
-                    </Col>
-                  </Row>
                 </FormItem>
+                <!-- 游戏名称 S -->
 
                 <FormItem prop="checkbox" :label="$t('report.labels.cheatMethod')">
                   <CheckboxGroup v-model="tabs.list[index].formItem.checkbox">
@@ -280,11 +262,6 @@ export default {
       tabs: {
         count: 0,
         list: [],
-
-        players: {
-          show: false,
-          list: []
-        }
       },
       spinShow: false,
       failedOfNotFound: false,
@@ -313,27 +290,26 @@ export default {
      * 用于从BFBAN数据库中取现有id，填充名称
      * @param query
      */
-    getPlayerList(query) {
-      if (query !== '') {
-        this.tabs.players.load = true;
+    handleSearchReportId(query) {
+      if (!query || query.length < 3) return;
 
-        http.get(api["search"], {
-          params: {
-            param: query || '',
-            scope: 'current',
-          }
-        }).then(res => {
-          const d = res.data;
+      http.get(api["search"], {
+        params: {
+          param: query || '',
+          scope: 'current',
+        }
+      }).then(res => {
+        const d = res.data;
 
-          if (d.success == 1) {
-            this.tabs.players.list = d.data;
-          }
+        if (d.success === 1) {
+          this.tabs.list[Number(this.tabs.count)].players = d.data;
+          return;
+        }
 
-          this.tabs.players.load = false;
-        })
-      } else {
-        this.tabs.players.list = [];
-      }
+        this.catch(res);
+      }).catch(err => {
+        this.tabs.list[Number(this.tabs.count)].players = [];
+      });
     },
     /**
      * 添加举报新标签
@@ -341,6 +317,10 @@ export default {
      */
     handleTabsAdd() {
       let newFormData = {
+        // 检索列表
+        players: {
+          list: []
+        },
         // form data
         formItem: {
           gameName: gameName.child[gameName.defaultIndex].value,
@@ -374,6 +354,7 @@ export default {
         statusOk: 0,
         captchaUrl: {}
       };
+
       this.tabs.list.push(newFormData);
     },
     /**
