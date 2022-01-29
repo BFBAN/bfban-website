@@ -13,7 +13,7 @@
       "qiniuUrl": ""
     },
     "development3": {
-      "protocol": "https",
+      "protocol": "http",
       "request": "101.43.35.41:3000/api/",
       "qiniuUrl": ""
     },
