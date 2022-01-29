@@ -213,7 +213,7 @@ parameters:	game?: ''|'bf1'|'bfv'	// specify the game('' all)
 			createTime?: number	// create from when(unix timestamp)
 			updateTime?: number // update from when(unix timestamp)
             status?: -1|0|1|2|3|4|5	// the status the player is in(-1 all)
-			sort?: 'createTime'|'updateTime'|'viewNum'|'commentNum'
+			sort?: 'createTime'|'updateTime'|'viewNum'|'commentsNum'
             limit?:	number
 			skip?: number
 RESPONSE: HTTP 200 OK

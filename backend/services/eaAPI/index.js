@@ -167,6 +167,13 @@ async (req, res, next)=>{
     }
 });
 
+app.get('/status', async (req, res, next)=>{
+    const status = [];
+    for(const i of clients.entries())
+        status.push({tag: i[0], client: {status: i[1].cur_state, info: i[1].self_prop}});
+    res.status(200).json({success: 1, code: 'status.ok', data: status});
+});
+
 app.use((err, req, res, next)=>{    // error handler
     if(err instanceof EaApiError) {
         logger.error(`EaApiError: ${err.statusCode} ${err.message}`, err.body, err.stack);

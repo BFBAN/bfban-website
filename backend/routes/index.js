@@ -161,7 +161,7 @@ async (req, res, next)=>{
         const createTimeTo = new Date(req.query.createTimeTo? req.query.createTimeTo-0 : Date.now());
         const updateTimeTo = new Date(req.query.updateTimeTo? req.query.updateTimeTo-0 : Date.now());
         const status = (req.query.status&&req.query.status!='-1')? req.query.status : '%';
-        const sort = req.query.sort? req.query.sort : 'createTime';
+        const sort = req.query.sortBy? req.query.sortBy : 'createTime';
         const order = req.query.order? req.query.order : 'desc';
         const limit = req.query.limit? req.query.limit-0 : 20;
         const skip = req.query.skip? req.query.skip-0 : 0;

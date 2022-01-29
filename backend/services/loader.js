@@ -6,8 +6,12 @@ import worker_threads from "worker_threads";
 import config from "../config.js";
 import logger from "../logger.js";
 import got from "got";
+import { fileURLToPath } from "url";
 
+const isStandalone = process.argv[1]==fileURLToPath(import.meta.url);
 const services = [];
+if(isStandalone)
+    logger.success('serviceLoader: started as Standalone mode.');
 
 (async ()=>{
 
@@ -17,7 +21,7 @@ for(const serviceName of Object.keys(config.services)) {
             logger.error(`serviceLoader: cannot locate service: ${serviceName}, skipped.`);
             continue;
         }
-        const deployment = config.services[serviceName].deployment;
+        const deployment = isStandalone? 'THREAD' : config.services[serviceName].deployment;
         switch(deployment) {
         case 'THREAD': 
             services.push({
