@@ -14,6 +14,8 @@ const db = knex({
         typeCast: (field, next)=> {
             if(field.type == 'JSON')
                 return JSON.parse(field.string());
+            else if(field.type == 'BIGINT')
+                return BigInt(field.string());
             return next();
         }
     }

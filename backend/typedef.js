@@ -131,6 +131,32 @@
  * @property {number} toCommentId
  */
 
+/** 
+ * @typedef {Object} StorageQuota
+ * @property {number} userId
+ * @property {number} totalStorageQuota
+ * @property {number} usedStorageQuota
+ * @property {number} maxTrafficQuota
+ * @property {number} todayTrafficQuota
+ * @property {Date} prevResetTime
+ */
+
+/**
+ * @typedef {Object} StorageItem
+ * @property {string} id
+ * @property {string} filename
+ * @property {string} fileId
+ * @property {number} size
+ * @property {number} byUserId
+ * @property {Date} createTime
+ */
+
+/**
+ * @typedef {Object} EAUserInfo
+ * @property {string} name
+ * @property {number} userId
+ * @property {number} personaId
+ */
 
 /** 
  * @typedef {{method:'report'|'reply'|'judge'|'banAppeal'|'playerUpdate'|'viewBanAppeal'|'register',params:object}} SiteEvent

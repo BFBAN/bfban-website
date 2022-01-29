@@ -9,7 +9,7 @@ import { body as checkbody } from "express-validator";
 /** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
 async function verifyCaptcha(req, res, next) {
     try {
-        if(req.body.SKIP_CAPTCHAA === true) // DEBUG
+        if(req.body.SKIP_CAPTCHAA === true && config.__DEBUG__) // DEBUG
             return next();
         if(req.body.SKIP_CAPTCHA === true && userHasRoles(req.user, ['dev','bot']) ) // we allow devs and bots to skip captcha
             return next();

@@ -3,7 +3,6 @@
 .vscode/
 node_modules
 config.js
-dynamic_cfg.json
+config.json
 private/
 backend/test/gen/
-.eslintrc.cjs

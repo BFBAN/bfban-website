@@ -8,11 +8,12 @@ import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
-import { originClients, getUserProfileByName } from "../lib/origin.js"
 import { cheatMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
 import { siteEvent, stateMachine } from "../lib/bfban.js";
 import { userHasRoles } from "../lib/auth.js";
 import { commentRateLimiter, viewedRateLimiter } from "../middleware/rateLimiter.js";
+import serviceApi, { ServiceApiError } from "../lib/serviceAPI.js";
+import logger from "../logger.js";
 
 const router = express.Router()
 
@@ -122,16 +123,18 @@ async (req, res, next)=>{
                 }
             }
         };
-        /** @type {{username:string, personaId:string, userId:string}} */
-        const profile = await Promise.race([ 
-            getUserProfileByName(req.body.data.originName).then(isdone.successListener('origin')).catch(isdone.failListener('origin')),
+        const originUserId = await Promise.race([ 
+            serviceApi('eaAPI', '/searchUser').query({name: req.body.data.originName}).get().then(r=>r.data)
+            .then(isdone.successListener('eaAPI')).catch(isdone.failListener('eaAPI')),
             // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
-        ]).catch((err)=> { 
+        ]).catch((err)=> {
             //console.log(err);   // DEBUG
             //console.log(isdone.failMessages);
             return undefined; 
         });
-        if(!profile)
+        /** @type {{username:string, personaId:string, userId:string}} */
+        const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r=>r.data);
+        if(!profile )
             return res.status(404).json({error:1, code:'report.notFound', message:'Report user not found.'});
         isdone.event.emit('done');  // terminate the unterminated promise (if exist)
         isdone.event.removeAllListeners();  // destory
@@ -139,9 +142,9 @@ async (req, res, next)=>{
         // now the user being reported is found
         let avatarLink;
         try {   // get/update avatar each report
-            const client = originClients.getOne();
-            avatarLink = await client.getUserAvatar(profile.userId); // this step is not such important, set avatar to default if it fail
+            avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r=>r.data); // this step is not such important, set avatar to default if it fail
         } catch(err) {
+            logger.warn('/report: error while fetching user\'s avatar');
             avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
         }
         /** @type {import('../typedef.js').Player|undefined} */
@@ -197,6 +200,14 @@ async (req, res, next)=>{
             dbId: report.toPlayerId
         }});
     } catch(err) {
+        if(err instanceof ServiceApiError) {
+            logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode>0? err.stack:'');
+            return res.status(err.statusCode==501? 501:500).json({
+                error: 1, 
+                code: err.statusCode==501? 'report.notImplement':'report.error', 
+                message: err.message
+            });
+        }
         next(err);
     }
 });
@@ -221,10 +232,9 @@ async (req, res, next)=>{
         if(req.body.data.originPersonaId && !req.body.data.originUserId)
             return res.status(500).json({error:1, code:'reportById.notSupportYet', message: 'not support yet'});
         const originUserId = req.body.data.originUserId
-        const client = originClients.getOne();
         let profile;
         try { 
-            profile = await client.getInfoByUserId(originUserId);
+            profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r=>r.data);
         } catch(err) {
             if(err.message.includes('Bad Response:'))   
                 return res.status(404).json({error:1, code:'reportById.notFound', message: 'no such player.'});
@@ -234,9 +244,9 @@ async (req, res, next)=>{
         // now the user being reported is found
         let avatarLink;
         try {   // get/update avatar each report
-            const client = originClients.getOne();
-            avatarLink = await client.getUserAvatar(profile.userId); // this step is not such important, set avatar to default if it fail
+            avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r=>r.data); // this step is not such important, set avatar to default if it fail
         } catch(err) {
+            logger.warn('/reportById: error while fetching user\'s avatar');
             avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
         }
         /** @type {import('../typedef.js').Player|undefined} */
@@ -292,6 +302,14 @@ async (req, res, next)=>{
             dbId: report.toPlayerId
         }});
     } catch(err) {
+        if(err instanceof ServiceApiError) {
+            logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode>0? err.stack:'');
+            return res.status(err.statusCode==501? 501:500).json({
+                error: 1, 
+                code: err.statusCode==501? 'report.notImplement':'report.error', 
+                message: err.message
+            });
+        }
         next(err);
     }
 });
@@ -303,6 +321,7 @@ router.get('/timeline', [
     checkquery('personaId').optional().isInt({min: 0}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('order').optional().isIn(['asc', 'desc']),
     checkquery('subject').optional().isIn(['report', 'reply', 'judgement', 'banAppeal'])
 ],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
@@ -313,6 +332,7 @@ async (req, res, next)=>{
         const skip = req.query.skip!=undefined? req.query.skip : 0;
         const limit = req.query.limit!=undefined? req.query.limit : 20;
         const dbId = await getPlayerId({dbId: req.query.dbId, userId: req.query.userId, personaId: req.query.personaId});
+        const order = req.query.order? req.query.order : 'asc';
         const subject = req.query.subject? req.query.subject : '%';
         if(dbId==-1)
             return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
@@ -322,7 +342,7 @@ async (req, res, next)=>{
         /** @type {import("../typedef.js").Comment[]} */
         const result = await db('comments').join('users', 'comments.byUserId', 'users.id')
                             .select('comments.*', 'users.username', 'users.privilege').where({toPlayerId: dbId, 'comments.valid': 1})
-                            .andWhere('type', 'like', subject).orderBy('createTime', 'asc').offset(skip).limit(limit);
+                            .andWhere('comments.type', 'like', subject).orderBy('comments.createTime', order).offset(skip).limit(limit);
         result.forEach(i=>{     // delete those unused keys
             for(let j of Object.keys(i))
                 if(typeof(i[j])=='undefined' || i[j]==null)
@@ -388,6 +408,7 @@ router.post('/update', verifyJWT, forbidPrivileges(['freezed','blacklisted']),
     checkquery('userId').optional().isInt({min: 0}),
     checkquery('personaId').optional().isInt({min: 0}),
     checkquery('dbId').optional().isInt({min: 0}), 
+    checkquery('blockAvatar').optional().isIn(['true', 'false'])
 ],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
@@ -405,14 +426,25 @@ async (req, res, next)=>{
         default:
             return res.status(400).json({error: 1, code: 'update.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
         }
-        
-        const tmp = await db.select('originUserId').from('players').where(key, '=', val).first();
+        /** @type {import("../typedef.js").Player} */
+        const tmp = await db.select('*').from('players').where(key, '=', val).first();
         if(!tmp)
             return res.status(404).json({error: 1, code: 'update.notFound', message: 'no such player'});
         const originUserId = tmp.originUserId;
-        const client = originClients.getOne();
-        const profile = await client.getInfoByUserId(originUserId);
-        const avatarLink = await client.getUserAvatar(originUserId);
+        const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r=>r.data);
+        let avatarLink = tmp.avatarLink;
+        if(userHasRoles(req.user, ['admin','super','root','dev']) && req.query.blockAvatar) {
+            if(req.query.blockAvatar=='true')
+                avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG#BLOCKED';
+            else
+                avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r=>r.data);
+        } else if (!tmp.avatarLink.endsWith('#BLOCKED')) {
+            try {
+                avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r=>r.data);
+            } catch(err) {
+                logger.warn('/player/update: error while fetching user\'s avatar');
+            }
+        }
         await db('players').update({originName: profile.username, avatarLink: avatarLink}).where({originUserId: originUserId});
         await pushOriginNameLog(profile.username, originUserId, profile.personaId);
 
@@ -423,6 +455,14 @@ async (req, res, next)=>{
             originPersonaId: profile.personaId,
         }});
     } catch(err) {
+        if(err instanceof ServiceApiError) {
+            logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode>0? err.stack:'');
+            return res.status(err.statusCode==501? 501:500).json({
+                error: 1, 
+                code: err.statusCode==501? 'update.notImplement':'update.error', 
+                message: err.message
+            });
+        }
         next(err);
     }
 });
@@ -580,4 +620,5 @@ async function pushOriginNameLog(originName, originUserId, originPersonaId) {
 export default router;
 export {
     commentRateLimiter,
+    pushOriginNameLog,
 };

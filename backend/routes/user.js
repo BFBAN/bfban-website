@@ -10,10 +10,10 @@ import verifyCaptcha from "../middleware/captcha.js";
 import { sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify } from "../lib/mail.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { generatePassword, comparePassword, userHasRoles, privilegeRevoker } from "../lib/auth.js";
-import { OriginClient, originClients } from "../lib/origin.js";
 import { handleRichTextInput, userDefaultAttribute, userSetAttributes, userShowAttributes } from "../lib/user.js";
 import { siteEvent } from "../lib/bfban.js";
 import logger from "../logger.js";
+import serviceApi, { ServiceApiError } from "../lib/serviceAPI.js";
 
 const router = express.Router();
 
@@ -41,19 +41,21 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'signup.usernameExist'});
     
         // now check the origin account user binded
-        const originClient = originClients.getOne()
-        const originUserId = await originClient.searchUserEmail(originEmail);
+        const originUserId = await serviceApi('eaAPI', '/searchUser').query({email: originEmail}).get().then(r=>r.data);
         if(!originUserId)
             return res.status(400).json({error: 1, code:'signup.originNotFound'});
-        const originUserInfo = await originClient.getInfoByUserId(originUserId);
+        const originUserInfo = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r=>r.data);
         if(originUserInfo.username !== originName) // verify again
             return res.status(400).json({error: 1, code:'signup.originNotFound'});
         if( (await db.select('originUserId').from('verifications').where({originUserId: originUserId}).union([
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
         ]) ).length != 0 )
             return res.status(400).json({error: 1, code: 'signup.originBindingExist'});
-        if(''.concat(await originClient.getUserGames(originUserId)).includes('Battlefield') == false) // does the user have battlefield?
-            return res.status(400).json({error: 1, code: 'signup.gameNotOwned'});
+        // check whether the user has at least 1 battlefield game
+        /** @type {string[]} */
+        const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r=>r.data);
+        if(userGames && userGames.concat(' ').includes('Battlefield') == false)
+            return res.status(400).json({error: 1, code: 'signup.gameNotShowed'});
         
         // no mistakes detected, generate a unique string for register validation
         const randomStr = misc.generateRandomString(127);
@@ -74,6 +76,14 @@ async (req, res, next)=> {
         logger.info('users.signup Success:', {username,originName,originEmail,randomStr});
         return res.status(201).json({success: 1, code:'signup.needVerify', message: 'Verify Email to join BFBan!'});
     } catch(err) {
+        if(err instanceof ServiceApiError) {
+            logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode>0? err.stack:'');
+            return res.status(err.statusCode==501? 501:500).json({
+                error: 1, 
+                code: err.statusCode==501? 'signup.notImplement':'signup.error', 
+                message: err.message
+            });
+        }
         next(err);
     }
 });
@@ -182,11 +192,11 @@ async (req, res, next)=> {
                 expiresIn: expiresIn,
             };
             const jwttoken = jwt.sign(jwtpayload, config.secret, {
-                expiresIn: expiresIn,
+                expiresIn: expiresIn/1000,  // second
             });
             user.attr.lastSigninIP = req.REAL_IP;
             await db('users').update({updateTime: new Date(), attr: JSON.stringify(user.attr)}).where({id: user.id});
-            logger.info('users.login Success:',{name: user.username, ip: req.REAL_IP, token: jwttoken});
+            logger.info('users.login Success:', {name: user.username, ip: req.REAL_IP, token: jwttoken});
 
             return res.status(200).json({
                 success: 1,
@@ -217,19 +227,20 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'bindOrigin.bad', message: validateErr.array()});
 
         const { originEmail, originName } = req.body.data;
-        const originClient = originClients.getOne()
-        const originUserId = await originClient.searchUserEmail(originEmail);
+        const originUserId = await serviceApi('eaAPI', '/searchUser').query({email: originEmail}).get().then(r=>r.data);
         if(!originUserId)
             return res.status(400).json({error: 1, code:'bindOrigin.originNotFound'});
-        const originUserInfo = await originClient.getInfoByUserId(originUserId);
+        const originUserInfo = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r=>r.data);
         if(originUserInfo.username.toLowerCase() !== originName.toLowerCase()) // verify
             return res.status(400).json({error: 1, code:'bindOrigin.originNotFound'});
         if( (await db.select('originUserId').from('verifications').where({originUserId: originUserId}).union([
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
         ]) ).length != 0 )
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
-        if(''.concat(await originClient.getUserGames(originUserId)).includes('Battlefield') == false) // does the user have battlefield?
-            return res.status(400).json({error: 1, code: 'bindOrigin.gameNotOwned'});
+
+        const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r=>r.data);
+        if(userGames && userGames.concat(' ').includes('Battlefield') == false) // does the user have battlefield?
+            return res.status(400).json({error: 1, code: 'bindOrigin.gameNotShowed'});
         // no mistakes detected, generate code for verify
         const code = misc.generateRandomString(127);
         await db('verifications').insert({
@@ -248,6 +259,14 @@ async (req, res, next)=> {
         logger.info('users.bindOrigin#1 Success:', {name: req.user.username, email: originEmail});
         res.status(200).json({success: 1, code:'bindOrigin.needVerify', message:'check your email to complete the verification.'});
     } catch(err) {
+        if(err instanceof ServiceApiError) {
+            logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode>0? err.stack:'');
+            return res.status(err.statusCode==501? 501:500).json({
+                error: 1, 
+                code: err.statusCode==501? 'bindOrigin.notImplement':'bindOrigin.error', 
+                message: err.message
+            });
+        }
         next(err);
     }
 });
