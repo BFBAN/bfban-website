@@ -1,7 +1,7 @@
 <template>
   <footer class="footer footer-border-top" v-if="!isFull">
     <div class="container">
-      <Row :gutter="10">
+      <Row>
         <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide">
           <Badge :count="logoCount" overflow-count="999999">
             <Avatar v-if="logoCount > 10" size="40">
@@ -45,7 +45,7 @@
             </li>
           </ul>
         </Col>
-        <Col :xs="{span: 16 ,pull: 1, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
+        <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
           <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large"
                   @on-change="switchLanguage">
             <Option v-for="(item, index) in languages" :value="item.name" :label="item.label" :key="index">
@@ -79,7 +79,7 @@
           </router-link>
         </Col>
       </Row>
-      <Row :gutter="10" class="footer-link" type="flex">
+      <Row :gutter="5" class="footer-link" type="flex">
         <Col v-for="(link, linkindex) in links" :key="linkindex" align="center">
           <a :href="link.linkUrl" target="_blank" class="footer-link-text">
             <img :src="link.linkImageUrl" width="100" height="35" :alt="link.tag" :title="link.describe">
@@ -115,7 +115,7 @@ export default {
     $route: "loadData",
   },
   methods: {
-    async loadData () {
+    async loadData() {
       const languages = await import('/public/conf/languages.json');
 
       this.languages = languages.child;
@@ -147,51 +147,51 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  @footer-primary-color: #fff;
-  @footer-border-color: #00000008;
-  @footer-icon-color: #c5c5c5;
+@footer-primary-color: #fff;
+@footer-border-color: #00000008;
+@footer-icon-color: #c5c5c5;
 
-  .footer {
-    backdrop-filter: blur(50px);
-    text-align: left;
-    flex-shrink: 0;
-    padding: 3rem 0 0 0;
-    flex-shrink: 0;
+.footer {
+  backdrop-filter: blur(50px);
+  text-align: left;
+  flex-shrink: 0;
+  padding: 3rem 0 0 0;
+  flex-shrink: 0;
 
-    &.footer-border-top, .footer-border-top {
-      border-top: 1px solid @footer-border-color;
-    }
+  &.footer-border-top, .footer-border-top {
+    border-top: 1px solid @footer-border-color;
+  }
 
-    .footer-padding {
-      padding: 10px 0;
-    }
+  .footer-padding {
+    padding: 10px 0;
+  }
 
-    ul {
+  ul {
+    display: block;
+    margin-bottom: 10px;
+    list-style-type: none;
+
+    a {
       display: block;
-      margin-bottom: 10px;
-      list-style-type: none;
-
-      a {
-        display: block;
-        margin-bottom: 5px;
-        font-size: 12px;
-      }
-
-      .ivu-icon {
-        color: @footer-icon-color;
-        font-size: 15px;
-      }
+      margin-bottom: 5px;
+      font-size: 12px;
     }
 
-    b {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 20px;
-    }
-
-    .footer-link {
-
+    .ivu-icon {
+      color: @footer-icon-color;
+      font-size: 15px;
     }
   }
+
+  b {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 20px;
+  }
+
+  .footer-link {
+
+  }
+}
 </style>
 

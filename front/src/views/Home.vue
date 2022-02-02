@@ -4,9 +4,8 @@
       <div class="ivu-alert-with-banner home-banner"
            style="background-image: url('../assets/images/index-bk.png')">
         <Row>
-          <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 8, offset: 0}">
+          <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 9, offset: 0}">
             <h1 class="title">
-              <Icon type="md-lock"/>
               {{ $t("home.cover.h1") }}
             </h1>
             <h2>{{ $t("home.cover.h2")[Math.floor(Math.random() * 2)] }}</h2>
@@ -43,31 +42,30 @@
             <p>{{ $t("home.cover.endTime") }}</p>
             <br>
           </Col>
-          <Col span="16" class="mobile-hide" :lg="{span: 13, push: 3}" type="flex" align="right" justify="center">
-            <img src="../assets/images/webp.webp" width="100%" class="ivu-row-top" style="margin-top: 5rem">
+          <Col span="16" class="mobile-hide" :lg="{span: 14, push: 1}" type="flex" align="right" justify="center"
+            style="display: flex; justify-content: center; align-items: center">
+            <img src="../assets/images/index-gl.png" width="100%" class="ivu-row-top">
           </Col>
         </Row>
       </div>
 
       <Row :gutter="20">
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
-          <a href="https://manager.gametools.network/" target="_blank">
-            <Card>
-              <Row>
-                <Col span="5">
-                  <Icon type="md-chatboxes" size="50" color="#19be6b"/>
-                </Col>
-                <Col span="18" align="right">
-                  <Tooltip class="joinBFbanTip" :max-width="300" content="集群服务器管理与作弊检测、监控、机器人">
-                    <div>
-                      <h3>集群管理与检测</h3>
-                      <p>Gametools & BFBan</p>
-                    </div>
-                  </Tooltip>
-                </Col>
-              </Row>
-            </Card>
-          </a>
+          <Card>
+            <Row>
+              <Col span="5">
+                <Icon type="md-chatboxes" size="50" color="#19be6b"/>
+              </Col>
+              <Col span="18" align="right">
+                <Tooltip class="joinBFbanTip" :max-width="300" content="集群服务器管理与作弊检测、监控、机器人">
+                  <div>
+                    <h3>集群管理与检测</h3>
+                    <p>BFBan</p>
+                  </div>
+                </Tooltip>
+              </Col>
+            </Row>
+          </Card>
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
           <a href="scriptjava:void(0)">
@@ -116,7 +114,7 @@
             </h5>
           </Col>
           <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
-            <router-link :to="{name: 'cheaters'}">
+            <router-link :to="{name: 'player'}">
 <!--              <i-switch v-model="activitySwitchType"/>-->
               <Button type="dashed">
                 {{$t('home.activity.more')}}
@@ -291,7 +289,7 @@ export default new BFBAN({
   padding-top: 100px;
   overflow: hidden;
   height: 800px;
-  margin: 100px -25% 0 -25%;
+  margin: 50px -25% 0 -25%;
   text-align: center;
 }
 

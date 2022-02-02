@@ -30,7 +30,7 @@
                 </FormItem>
               </template>
 
-              <template v-if="stepsIndex == 1">
+              <template v-if="stepsIndex === 1">
                 <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
                   <Input v-model="signup.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
                 </FormItem>
@@ -39,7 +39,7 @@
                 </FormItem>
               </template>
 
-              <div v-show="stepsIndex == 2">
+              <div v-show="stepsIndex === 2">
                 <FormItem :label="$t('signup.form.captcha')">
                   <Input type="text" v-model="signup.captcha"
                          size="large"
@@ -53,11 +53,11 @@
                 </FormItem>
               </div>
 
-              <template v-if="stepsIndex == 3">
+              <template v-if="stepsIndex === 3">
                 <EmailTip :email="signup.originEmail" @refreshCaptcha="refreshCaptcha"></EmailTip>
               </template>
 
-              <template v-if="stepsIndex == 4">
+              <template v-if="stepsIndex === 4">
                 <div align="center">
                   <Icon type="md-checkmark-circle-outline" size="180" color="#42b983"/>
                 </div>
@@ -66,7 +66,7 @@
               <Row>
                 <Col flex="auto">
                   <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
-                          :disabled="stepsIndex == 0 || this.$route.name == bindOriginName"
+                          :disabled="stepsIndex === 0 || this.$route.name == bindOriginName"
                           @click.prevent.stop="stepsIndex--" size="large">{{ $t('signup.prev') }}
                   </Button>
                   <Divider type="vertical"/>
@@ -124,10 +124,10 @@ export default {
         ],
       },
       signup: {
-        username: '',
-        password: '',
-        originEmail: '',
-        originName: '',
+        username: 'cabbagelol',
+        password: 'zsezse',
+        originEmail: 'nickmiku@foxmail.com',
+        originName: 'cabbagelol_caime',
         captcha: '',
       },
       captchaUrl: {},
@@ -167,7 +167,6 @@ export default {
           this.captchaUrl = res.data.data;
         }
       });
-      // waitForAction.call(this.$refs.reCaptcha);
     },
 
     // 注册
@@ -206,28 +205,26 @@ export default {
               captcha
             }
           })
-          .then(res => {
-            const d = res.data;
-            if (d.success === 1) {
-              that.stepsIndex += 1;
-              this.$Message.success(d.message);
-              return;
-            }
+              .then(res => {
+                const d = res.data;
+                if (d.success === 1) {
+                  that.stepsIndex += 1;
+                  this.$Message.success(d.message);
+                  return;
+                }
 
-            that.catch(res);
-          })
-          .catch(err => {
-            err || this.$Message.error(err.toString());
+                that.catch(res);
+              })
+              .catch(err => {
+                this.$Message.error(err.toString());
 
-            that.signup.captcha = '';
-            that.signup.originEmail = '';
-            that.signup.originName = '';
-
-            that.stepsIndex -= 1;
-          })
-          .finally(() => {
-            this.spinShow = false;
-          });
+                that.signup.captcha = '';
+                that.signup.originEmail = '';
+                that.signup.originName = '';
+              })
+              .finally(() => {
+                this.spinShow = false;
+              });
         } else {
           this.$Message.error('请规范填写');
         }

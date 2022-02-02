@@ -1,5 +1,5 @@
 {
-  "name": "BFBAN",
+  "name": "BFBAN sites",
   "version": "2.0.1",
   "private": true,
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "main": "desktop/main.js",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.25.0",
     "core-js": "^3.6.5",
     "electron": "^14.0.0",
     "electron-vue": "0.0.1",

@@ -11,8 +11,8 @@
     </Row>
     <br>
 
-    <Row :gutter="0">
-      <Col flex="auto" :xs="{span: 24, push: 1, pull: 1}" :lg="{push: 0, pull: 0}">
+    <Row>
+      <Col flex="auto" :xs="{span: 18, push: 1, pull: 1}" :lg="{push: 0, pull: 0}">
         <h1>{{$t("home.howToUse.tools.main")}}</h1>
         <p>{{$t("home.howToUse.tools.describe")}}</p>
       </Col>
@@ -25,7 +25,7 @@
     <Divider />
 
     <Row :gutter="10">
-      <Col :xs="{span: 24, push: 1, pull: 0}" :lg="{span: 18,push:0,pull:0}" class="apps-list">
+      <Col :xs="{span: 24, push: 0, pull: 0}" :lg="{span: 18,push:0,pull:0}" class="apps-list">
         <br class="desktop-hide">
         <div v-for="item in appsConf.list" :key="item.title">
           <Card class="apps-item" v-if="appItemIsShow(item)">
@@ -59,11 +59,10 @@
           </Card>
         </div>
       </Col>
-      <Col :xs="{span: 24, push: 1, pull: 1}" :lg="{span: 6,push:0,pull:0}">
+      <Col :xs="{span: 24, push: 0, pull: 0}" :lg="{span: 6,push:0,pull:0}">
         <Tree :data="getAppsScreen" show-checkbox @on-check-change="checkAllGroupChange"></Tree>
       </Col>
     </Row>
-
     <br>
   </div>
 </template>
@@ -146,6 +145,13 @@
 </script>
 
 <style lang="scss">
+  @media screen and (max-width: 900px) {
+    .apps-list{
+      columns: 1 !important;
+      column-gap: 0 !important;
+    }
+  }
+
   .apps-list {
     display: block;
     columns: 2;

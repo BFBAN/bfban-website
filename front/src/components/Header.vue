@@ -14,14 +14,14 @@
         <Drawer class="desktop-hide"
                 :title="$t($route.name + '.title')"
                 placement="left"
-                width="80%"
+                width="300"
                 :closable="true"
                 v-model="headerMenu.show">
 
           <List v-show="!isLogin">
             <Card>
-              <Row :gutter="20">
-                <Col flex="1" >
+              <Row :gutter="10">
+                <Col flex="1">
                   <div @click="navigatorTo({to: {name: 'signin'}})">
                     <Icon type="md-log-in" size="20"/>
                     {{ $t("header.signin") }}

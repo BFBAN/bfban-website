@@ -1,9 +1,10 @@
 ## 目录
-/fonts 字体
 
-/images 媒体
+1. /fonts 字体
+2. /images 媒体
+3. /js  脚本
 
-/js  脚本
+---
 
 ## json
 

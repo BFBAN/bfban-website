@@ -5,7 +5,7 @@
       <Row :gutter="0">
         <Col :xs="{span: 24}" :lg="{span: 11}" class="mobile-hide carousel">
           <Carousel :autoplay-speed="5000" :dots="'none'" class="carousel-item">
-            <CarouselItem >
+            <CarouselItem>
               <img src="../assets/images/logo.png">
               <h2>{{ $t("home.cover.h1") }}</h2>
               <span>{{ $t("home.cover.h3") }}</span>
@@ -31,7 +31,8 @@
                 <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
                        :placeholder="$t('signup.form.captcha')">
 
-                  <div slot="append" class="captcha-input-append" ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
+                  <div slot="append" class="captcha-input-append" ref="captcha" :alt="$t('signup.form.getCaptcha')"
+                       @click="refreshCaptcha">
                     <div v-html="captchaUrl.content"></div>
                   </div>
                 </Input>
@@ -52,9 +53,9 @@
           </Card>
           <Card v-if="currentUser.token != ''" shadow align="center">
             <br>
-            <Avatar size="100">{{currentUser.userinfo.username[0]}}</Avatar>
+            <Avatar size="100">{{ currentUser.userinfo.username[0] }}</Avatar>
             <h1>
-              {{currentUser.userinfo.username}}
+              {{ currentUser.userinfo.username }}
             </h1>
             <p>哎列？请先登出 (✿◡‿◡)</p>
             <br>
@@ -87,7 +88,7 @@ export default {
           {required: true, trigger: 'blur'}
         ],
         captcha: [
-          {required: true, max:4, trigger: 'blur'}
+          {required: true, max: 4, trigger: 'blur'}
         ],
       },
       signin: {
@@ -115,7 +116,7 @@ export default {
       'SIGNIN'
     ]),
     // 刷新验证码
-    refreshCaptcha () {
+    refreshCaptcha() {
       http.get(api["captcha"], {
         params: {
           r: Math.random()
@@ -141,9 +142,6 @@ export default {
           this.spinShow = true;
 
           http.post(api["account_signin"], {
-            headers: {
-              'content-type': 'application/json'
-            },
             data: {
               data: {
                 username,
@@ -193,32 +191,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .carousel {
-    border-bottom: 2px solid #f2f2f2;
-    width: 440px;
-    overflow: hidden;
-    //background: #fff;
-    background: #401487;
+.carousel {
+  border-bottom: 2px solid #f2f2f2;
+  width: 440px;
+  overflow: hidden;
+  //background: #fff;
+  background: #401487;
 
-    > * {
-      background-image: url("https://app.bfban.com/public/svg/bk1.svg");
-      background-repeat: repeat;
-    }
+  > * {
+    background-image: url("https://app.bfban.com/public/svg/bk1.svg");
+    background-repeat: repeat;
+  }
 
-    .carousel-item {
-      text-align: center;
-      display: flex;
-      flex-flow: column;
-      justify-content: center;
-      align-items: center;
-      align-content: center;
-      height: 100%;
-      color: #fff;
+  .carousel-item {
+    text-align: center;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 100%;
+    color: #fff;
 
-      img {
-        width: 150px;
-        height: 150px;
-      }
+    img {
+      width: 150px;
+      height: 150px;
     }
   }
+}
 </style>
