@@ -4,10 +4,11 @@ import path from "path";
 
 const config = {
     // security
-    secret: 'dontTellAnyOneAboutThis',
-    captchaExpiresIn: 1000*60*20,
+    __DEBUG__: false, // WARNING: THIS WILL ENABLE NO AUTH & NO CAPTCHA FEATHURE
+    secret: 'dontTellAnyOneAboutThis',  // key to sign jwt and other thing
+    captchaExpiresIn: 1000*60*20,       // 2 minutes
 	userTokenExpiresIn: 1000*60*60*24*7, // 7 day
-    errorHelperVerbose: process.env.NODE_ENV==='production'? false : true,
+    errorHelperVerbose: process.env.NODE_ENV==='production'? false : true,  // make the error readable to client
     // runtime
     port: process.env.port || 4002,
     address: true? '127.0.0.1' : '0.0.0.0',
@@ -39,19 +40,25 @@ const config = {
         user: 'somebody@somewhere.com',
         password: 'notweakpassword'
     },
-
+    services: {
+        // deployment has 3 mode: THREAD, PROCESS, none
+        // THREAD mode will start the service as a thread
+        // PROCESS mode will check if the service has launched before, if not, start the service as a process
+        // if none is specified, service/loader.js will not launch the service script, use it when the service is not deploy locally
+        eaAPI: {
+            deployment: 'THREAD',
+            url: 'http://unix://?/pipe/bfban/eaAPI:',
+        },
+        msGraphAPI: {
+            deployment: 'PROCESS',
+            url: 'http://localhost:4001',
+            baseDirId: '',  // the onedrive directory's id you want to store files in
+        }
+    },
     // DYNAMIC CONFIGURE BEGIN
 	supportLanguages: ['cn', 'en'],
     personsToConfirm: 2,
 	personsToReview: 2,
-    // to [https://accounts.ea.com/connect], get Cookie, key: remid and sid
-    originAccounts: [
-        {
-            tag: 'whatever you want', 
-            remid:'remid', 
-            sid:'sid'
-        },
-    ],
     supportGames: [ 'bf1', 'bfv' ],
     possiblecheatMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet', 
     'damageChange', 'gadgetModify', 'teleport', 'attackServer'],
