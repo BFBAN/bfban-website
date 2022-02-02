@@ -81,7 +81,7 @@ async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: '.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'myFiles.bad', message: validateErr.array()});
 
         const limit = req.query.limit? req.query.limit : 50;
         const skip = req.query.skip? req.query.skip : 0;
