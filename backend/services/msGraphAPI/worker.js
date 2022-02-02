@@ -1,3 +1,8 @@
+/* 
+*   This script should deploy on cloudflare worker
+*   to provide big file upload task for clients
+*/
+
 /** 
  * @typedef FetchEvent
  * @property {Request} request

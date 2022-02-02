@@ -1,0 +1,12 @@
+{
+    "address": "127.0.0.1",
+    "port": "//?/pipe/bfban/eaAPI",
+    "logLevel": 2,
+    "accounts": [
+        {
+            "name": "Any name you like",
+            "remid": "remindme id on accounts.ea.com",
+            "sid": "session id on accounts.ea.com"
+        }
+    ]
+}

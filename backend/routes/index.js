@@ -237,8 +237,7 @@ router.get('/admins', async (req, res, next)=> {
 router.get('/search', normalSearchRateLimiter, [
     checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 3}),
     checkquery('skip').optional().isInt({min: 0}),
-    checkquery('limit').optional().isInt({min: 0, max: 100}),
-    checkquery()
+    checkquery('limit').optional().isInt({min: 0, max: 100})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next)=>{
     try {
@@ -384,7 +383,7 @@ router.get('/siteStats', async (req, res, next)=>{
             return db('players').count({num: '*'}).select(db.raw(`"${t.toISOString()}" as time`))
                 .where('createTime', '<=', t).andWhere({valid: 1});
         }));
-
+        
         const confirmStats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
         .where('createTime', '<=', tbeg).andWhere({valid: 1, status: 1})
         .unionAll(slices.map(i=> {
