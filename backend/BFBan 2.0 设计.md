@@ -178,6 +178,12 @@ body:	{
         }
 ```
 
+#### 获取网站历史统计数据	/api/siteStats
+
+```javascript
+REQUEST HTTP GET /api/siteStats
+```
+
 #### 	获取网站公告 /api/announcements
 
 ```javascript
@@ -210,10 +216,13 @@ body:	{
 ```javascript
 REQUEST: HTTP GET /api/players
 parameters:	game?: ''|'bf1'|'bfv'	// specify the game('' all)
-			createTime?: number	// create from when(unix timestamp)
-			updateTime?: number // update from when(unix timestamp)
+			createTimeFrom?: number	// create from when(unix timestamp)
+			updateTimeFrom?: number // update from when(unix timestamp)
+            createTimeTo?: number	// create to when(unix timestamp)
+			updateTimeTo?: number // update to when(unix timestamp)
             status?: -1|0|1|2|3|4|5	// the status the player is in(-1 all)
-			sort?: 'createTime'|'updateTime'|'viewNum'|'commentsNum'
+			sortBy?: 'createTime'|'updateTime'|'viewNum'|'commentsNum'
+            order?: 'desc'|'asc'	// sort order
             limit?:	number
 			skip?: number
 RESPONSE: HTTP 200 OK
@@ -290,23 +299,21 @@ body:		{
     			success: 1,
                 code: 'advSearch.foundOrigin'|'advSearch.foundBoth',
                 data: {
-                    originName: string,
-                    originPersonaId: string,
-                    originUserId: string,
-                    avatarLink: string,
-                    record: {	// foundBoth
-                        currentName: string,
-                        status: number,
-                        cheatMethod: string,
-                    }
+                    exact: {
+                        originName: string,
+                        originPersonaId: string,
+                        originUserId: sting,
+                        avatarLink: string(url),
+                        record: Player | null
+                    },
+                    similars: {
+                        originName: string,
+                        originPersonaId: string,
+                        originUserId: sting,
+                        record: Player | null
+                    }[]
                 }
 			}
-    	  HTTP 404 NOTFOUND
-          	{
-                error: 1,
-                code: 'advSearch.notFound',
-               	message: 'No such player found on origin.'
-            }
 ```
 
 #### 	获取被举报玩家信息	/api/player
@@ -863,16 +870,6 @@ body:		{
 RESPONSE: // TODO
 ```
 
-##### 命令
-
-##### webhook操作
-
-```bash
-webhook subscribe <eventName> <url> <key>		#RETURN: uuid
-webhook unsubscribe <uuid>
-webhook ls										#RETURN: {url,event,userId,key}[]
-```
-
 #### 	标记消息	/api/message/mark
 
 ```javascript
@@ -882,6 +879,123 @@ parameters:	id: number
 			type: 'read'|'unread'|'del'
 RESPONSE: // TODO
 ```
+
+#### 提出反馈
+
+```javascript
+REQUEST: HTTP POST /api/service/feedback
+headers:	x-access-token: {{access_token}}	// login required
+body:		{
+    			data: {
+                    content: string, // allow rich text input
+                }
+			}
+RESPONSE: HTTP 201 CREATED
+body: // TODO
+```
+
+#### 浏览反馈
+
+```javascript
+REQUEST: HTTP GET /api/service/feedbacks
+parameters:	skip: number
+    		limit: number
+            
+RESPONSE: HTTP 200 OK
+body: // TODO
+```
+
+#### 查看自身bfban云盘使用量
+
+```javascript
+REQUEST: HTTP GET /api/service/myStorageQuota
+headers:	x-access-token: {{access_token}}	// login required
+
+RESPONSE: HTTP 200
+body: // TODO
+```
+
+#### 查看自身上传至bfban网盘的文件
+
+```javascript
+REQUEST: HTTP GET /api/service/myFiles
+headers:	x-access-token: {{access_token}}	// login required
+
+RESPONSE: HTTP 200
+body: // TODO
+```
+
+#### 获取文件	/api/service/file
+
+```javascript
+REQUEST: HTTP GET /api/service/file
+headers:	x-access-token: {{access_token}}	// login required
+parameters:	filename: string
+			explain?							// get file detail instead of redirect to downloadURL
+            
+RESPONSE: HTTP 302 downloadURL					// explain=unset
+RESPONSE: HTTP 200								// explain=true
+body:		{
+    			data: {
+                    downloadURL: string(url),
+                    size: number,
+                    mimetype: string(mimetype),
+                    filename: string
+                }
+			}
+```
+
+#### 上传小文件	/api/service/upload
+
+```javascript
+REQUEST: HTTP PUT /api/service/upload
+headers:	x-access-token: {{access_token}}	// login required
+			Content-Length: {{file_size}}		// max 2MB
+			Content-Type: {{file_type}}			// mime type
+body:		{{file}}
+RESPONSE: HTTP 201 CREATED
+			{
+    			success: 1, 
+                code: 'upload.success', 
+                data: {
+            		name: {{server_generated_name}},
+            		size: {{file_size}},
+        		}
+			}
+```
+
+#### 上传大文件	/api/service/uploadBigFile
+
+```javascript
+REQUEST: HTTP POST /api/service/uploadBigFile
+headers: x-access-token: {{access_token}}	// login required
+body:		{
+    			data: {
+                    size: {{file_size}}		// max 2GB
+                    mimeType: {{file_type}}
+                }
+			}
+
+RESPONSE: HTTP 200 OK
+body:		{
+            	success: 1, 
+                code: 'upload.success', 
+                data: {
+            		name: {{server_generated_name}},
+            		size: {{file_size}},
+            		uploadUrl: {{server_generated_uploadurl}}, // the url file upload to
+            		expiredAt: {{expried_time}}		// the upload should done in {{expried_time}}s
+        		}
+			}
+
+// then upload the file by slices
+REQUEST: HTTP PUT {{server_generated_uploadurl}}
+headers:	Content-Length: {{slice_length}}		// max 32MB
+			Content-Range: bytes {{cur_start}}-{{cur_end}}/{{file_size}}	 // example bytes 0-31/64
+body:		{{file_slice}}							// must be the size specified above
+```
+
+
 
 
 
@@ -1085,6 +1199,26 @@ User->Server : Login with new password
 ##### 机器人友好
 
 ​	注册方面，`dev`开发者角色可自由创建新账号，无需进行网站账号与origin账号绑定。账号经由开发者增加了了`bot`权限后，该角色可在除登录外的过程中免除验证码，并在登陆时有定义登录有效时间的权限，可以一次登录指定过期时间2100年以实现一个access token用够终身，此外，该角色还享有较大的api调用频率容忍度，同时提供了部分api以用于大量数据的查询导出
+
+### 分服务部署
+
+​	有些额外的功能开销较大，或存在自己的状态需要一直运行，不适合集成于bfban主进程中的服务现在被独立至单独的services/文件夹内，具有自己的HTTP服务来与bfban主进程对接，这些服务由`services/loader.js`带起或已提前存在，具体管理方式由配置文件中的`deployment`字段指定
+
+| deployment | THREAD                     | PROCESS                                              | undefined |
+| ---------- | -------------------------- | ---------------------------------------------------- | --------- |
+| 效果       | 将该服务作为一个子线程启动 | 判断是否已存在对应进程，不存在则将该服务作为进程启动 | 不管      |
+
+这些服务为主进程提供的HTTP接口地址由配置文件中的`url`字段指定，支持`unix domain socket`连接。这些服务应均使用Restful风格，lib/serviceAPI.js提供了对访问这些服务API的简化和错误包装，考虑支持`HTTP basic auth`以实现跨服务器的部署
+
+目前提供的服务有：
+
+##### Origin相关
+
+​	此服务用于提供bfban查询origin/EA数据的操作，关系到网站的注册绑定，举报，更新玩家信息，高级查询等功能。`services/originAPI/private/`文件夹用于存放内部对Origin/EA无法公开的API，缺少可能会影响到站点的一小部分功能。此服务将会读取目录下config.json中的origin账号，可动态更新
+
+##### msGraph相关
+
+​	此服务用于提供bfban网盘的功能，调用微软GraphAPI实现对Onedrive的存取，关系到网站文件上传下载等功能。为使上传大文件时流量不经过主站、防OneDrive被墙及防止滥用，需要将`service/msGraphAPI/worker.js`部署至cloudflare worker上提供上传大文件的中转，配置文件中的`workerKey`即用于该服务加密文件元数据并在worker脚本中的解密，配置文件中的`workerAddress`即为worker脚本的地址。该服务需要手动初始化
 
 ### 公告系统
 
