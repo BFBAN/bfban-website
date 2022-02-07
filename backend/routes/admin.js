@@ -5,10 +5,9 @@ import db from "../mysql.js";
 import config from "../config.js";
 import { verifyJWT } from "../middleware/auth.js";
 import { allowPrivileges, forbidPrivileges } from "../middleware/auth.js";
-import { commentRateLimiter } from "./player.js";
 import { sendMessage } from "./message.js";
 import { privilegeGranter, privilegeRevoker, userHasRoles } from "../lib/auth.js";
-import { userSetAttributes } from "../lib/user.js";
+import { initUserStorageQuota, userSetAttributes } from "../lib/user.js";
 import got from "got";
 
 const router = express.Router();
@@ -90,15 +89,15 @@ async (req, res, next)=>{
                 user.privilege = privilegeGranter(user.privilege, role);    
             else
                 return res.status(403).json({error: 1, code: 'setUser.permissionDenied'});
-        } else {
-            const devCant = ['dev','admin','super','root'],
-                superCant = ['super','root','dev'],
-                rootCant  = ['root'];
+        } else {    // revoke permission
+            const devCanNot = ['dev','admin','super','root'],
+                superCanNot = ['super','root','dev'],
+                rootCanNot  = ['root'];
             let flag = false;
             // check if current user can revoke such permission
-            flag = (userHasRoles(req.user, ['dev']) && devCant.includes(role) )? flag : true;
-            flag = (userHasRoles(req.user, ['super']) && superCant.includes(role) )? flag : true;
-            flag = (userHasRoles(req.user, ['root']) && rootCant.includes(role) )? flag : true;
+            flag = (userHasRoles(req.user, ['dev']) && !devCanNot.includes(role) )? true : flag;
+            flag = (userHasRoles(req.user, ['super']) && !superCanNot.includes(role) )? true : flag;
+            flag = (userHasRoles(req.user, ['root']) && !rootCanNot.includes(role) )? true : flag;
             if(flag)
                 user.privilege = privilegeRevoker(user.privilege, role);
             else
@@ -106,7 +105,13 @@ async (req, res, next)=>{
         }
         await sendMessage(req.user.id, null, "command", JSON.stringify({action:'setUser', target: user.id, detail: `${req.body.data.action}:${role}`}));
         await db('users').update(user).where({id: user.id});
-        
+        const quota = initUserStorageQuota(user);
+        await db('storage_quotas').update({
+            totalStorageQuota: quota.totalStorageQuota,
+            maxFileNumber: quota.maxFileNumber,
+            maxTrafficQuota: quota.maxTrafficQuota
+        }).where({userId: user.id});
+
         return res.status(200).json({success: 1, code: 'setUser.ok'});
     } catch(err) {
         next(err);

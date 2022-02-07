@@ -15,7 +15,7 @@ const db = knex({
             if(field.type == 'JSON')
                 return JSON.parse(field.string());
             else if(field.type == 'BIGINT')
-                return BigInt(field.string());
+                return parseInt(field.string());    // MAX_INT is around 2^53, be awar of precision lost
             return next();
         }
     }

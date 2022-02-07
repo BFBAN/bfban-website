@@ -1,0 +1,16 @@
+{
+    "notifications": {
+        "beReported": {
+            "cn": "",
+            "en": "You were reported by someone, see https://bfban.com/player/{originUserId} for detail"
+        },
+        "beJudged": {
+            "cn": "",
+            "en": "You was judged as {status}, see https://bfban.com/player/{originUserId} for detail"
+        },
+        "beReplied": {
+            "cn": "",
+            "en": "You have an reply under {playername}'s thread, see https://bfban.com/player/{originUserId}"
+        }
+    }
+}

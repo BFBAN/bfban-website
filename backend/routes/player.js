@@ -82,6 +82,61 @@ async (req, res, next)=>{
     }
 });
 
+function raceGetOriginUserId(originName) {
+    const isdone = {                                    // what we are doing here:
+        successFlag: false, racer: new Set(),           // because origin api isnt good enough, 
+        /** @type {Map<string, [number, Error]>} */
+        result: new Map(),  
+        event: new EventEmitter(),   // we need multiple api to provide user profile by name
+        // and we want it asap, so those api need to RACE
+        // Promise.race() return or throw the first resolved or rejected Promise result, so we need to block the errors till someone done or all failed
+        successListener: (tag)=> {              // the function deal with the api get the result                 
+            isdone.racer.add(tag);              // register racer
+            return (result)=> {                 // return a custom function for handling
+                if(isdone.successFlag) return;  // someone already done
+                isdone.event.emit('done');      // the listener function of this event will be called next tick
+                isdone.successFlag=true;        // so no need to worry about returing competition
+                isdone.result.set(tag, [200, result]);
+                return result;
+            }
+        },
+        failListener: (tag)=> {                 // the function deal with the api fail
+            return async (error)=> {            // return a custom function for handling
+                isdone.result.set(tag, [        // record error
+                    error.statusCode==404? 404:500,
+                    error
+                ]);    
+                if(isdone.successFlag) return;  // someone finished before, so just return
+                if(isdone.result.size>=isdone.racer.size) { // all racer failed, throw error
+                    isdone.event.emit('done');
+                    throw(new Error('all tries failed.'));
+                }
+                await new Promise((res,rej)=>isdone.event.once('done', res)); // wait for someone finishes or all fail
+                return;
+            }
+        }
+    };
+    return Promise.race([ 
+        serviceApi('eaAPI', '/searchUser').query({name: originName}).get().then(r=>r.data)
+        .then(isdone.successListener('eaAPI')).catch(isdone.failListener('eaAPI')),
+        // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
+    ]).catch((err)=> {
+        let is404 = false;
+        for(const i of isdone.result.keys()) {
+            if(isdone.result.get(i)[0] == 404)
+                is404 = true;
+            else
+                logger.error(`/report getOriginUserId Race error ${i}`, isdone.result.get(i)[1].message, isdone.result.get(i)[1].stack);
+        }
+        if(is404)
+            return undefined;
+        throw(err);
+    }).finally(()=>{
+        isdone.event.emit('done');  // terminate the unterminated promise (if exist)
+        isdone.event.removeAllListeners();  // destory
+    });
+}
+
 router.post('/report', verifyJWT, verifyCaptcha,
     forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.game').isIn(config.supportGames),
@@ -96,48 +151,11 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error:1, code:'report.bad', message:validateErr.array()});
         
-        const isdone = {                                    // what we are doing here:
-            successFlag: false, racer: new Set(),           // because origin api isnt good enough, 
-            winner: '',         fails: new Set(),           // we need multiple api to provide user profile by name
-            failMessages: [],   event: new EventEmitter(),  // and we want it asap, so those api need to RACE
-            // Promise.race() return or throw the first resolved or rejected Promise result, so we need to block the errors till someone done or all failed
-            successListener: (tag)=> {              // the function deal with the api get the result                 
-                isdone.racer.add(tag);              // register racer
-                return (result)=> {                 // return a custom function for handling
-                    if(isdone.successFlag) return;  // someone already done
-                    isdone.event.emit('done');      // the listener function of this event will be called next tick
-                    isdone.successFlag=true; isdone.winner=tag;  // so no need to worry about returing competition 
-                    return result;
-                } 
-            },
-            failListener: (tag)=> {                 // the function deal with the api fail
-                isdone.racer.add(tag);              // register racer again, dosent matter because we're using Set
-                return async (error)=> {            // return a custom function for handling
-                    isdone.fails.add(tag); isdone.failMessages.push(error); // log error
-                    if(isdone.successFlag) return;  // someone finished before, so just return
-                    if(isdone.fails.size>=isdone.racer.size) { // all racer failed, throw error
-                        isdone.event.emit('done'); throw(new Error('all tries failed.'));
-                    }
-                    await new Promise((res,rej)=>isdone.event.once('done', res)); // wait for someone finishes or all fail
-                    return;
-                }
-            }
-        };
-        const originUserId = await Promise.race([ 
-            serviceApi('eaAPI', '/searchUser').query({name: req.body.data.originName}).get().then(r=>r.data)
-            .then(isdone.successListener('eaAPI')).catch(isdone.failListener('eaAPI')),
-            // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
-        ]).catch((err)=> {
-            //console.log(err);   // DEBUG
-            //console.log(isdone.failMessages);
-            return undefined; 
-        });
+        const originUserId = await raceGetOriginUserId(req.body.data.originName);
         if(!originUserId)
             return res.status(404).json({error:1, code:'report.notFound', message:'Report user not found.'});
         /** @type {{username:string, personaId:string, userId:string}} */
         const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r=>r.data);
-        isdone.event.emit('done');  // terminate the unterminated promise (if exist)
-        isdone.event.removeAllListeners();  // destory
 
         // now the user being reported is found
         let avatarLink;
@@ -470,7 +488,7 @@ async (req, res, next)=>{
 router.post('/judgement', verifyJWT, allowPrivileges(['admin','super','root']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
     checkbody('data.cheatMethods').optional().isArray().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
-    checkbody('data.action').isIn(['suspect','innocent','discuss','guilt','kill','trash']),
+    checkbody('data.action').isIn(['suspect','innocent','discuss','guilt','kill','invalid','more']),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
@@ -619,6 +637,5 @@ async function pushOriginNameLog(originName, originUserId, originPersonaId) {
 
 export default router;
 export {
-    commentRateLimiter,
     pushOriginNameLog,
 };

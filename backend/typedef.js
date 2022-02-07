@@ -138,6 +138,8 @@
  * @property {number} usedStorageQuota
  * @property {number} maxTrafficQuota
  * @property {number} todayTrafficQuota
+ * @property {number} maxFileNumber
+ * @property {number} todayFileNumber
  * @property {Date} prevResetTime
  */
 

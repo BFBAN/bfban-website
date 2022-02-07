@@ -11,7 +11,7 @@ import config from "../config.js";
 
 import { allowPrivileges, verifyJWT } from "../middleware/auth.js";
 import { forbidPrivileges } from "../middleware/auth.js";
-import { commentRateLimiter } from "./player.js";
+import { commentRateLimiter } from "../middleware/rateLimiter.js";
 import { sendMessage } from "./message.js";
 import { handleRichTextInput, initUserStorageQuota, updateUserStorageQuota } from "../lib/user.js";
 import { fileSuffixByMIMEType, readStreamTillEnd } from "../lib/misc.js";
@@ -63,9 +63,10 @@ async (req, res, next)=>{
     try {
         /** @type {import("../typedef.js").StorageQuota} */
         let quota = await db.select('*').from('storage_quotas').where({userId: req.user.id}).first();
-        if(!quota)  // that user hasnt used the storage before
-            quota = await initUserStorageQuota(req.user);
-
+        if(!quota) {  // that user hasnt used the storage before
+            quota = initUserStorageQuota(req.user);
+            await db('storage_quotas').insert(quota);
+        }
         return res.status(200).json({success: 1, code: 'quota.ok', data: quota});
     } catch(err) {
         next(err);
@@ -156,8 +157,10 @@ async (req, res, next)=> {
 
         /** @type {import("../typedef.js").StorageQuota} */
         let quota = await db.select('*').from('storage_quotas').where({userId: req.user.id}).first();
-        if(!quota)  // that user hasnt used the storage before
-            quota = await initUserStorageQuota(req.user);
+        if(!quota) { // that user hasnt used the storage before
+            quota = initUserStorageQuota(req.user);
+            await db('storage_quotas').insert(quota);
+        }
         if(!updateUserStorageQuota(quota, contentLength))  // update user quota while querying its stats
             return res.status(400).json({error: 1, code: 'upload.quotaExcced', message: 'You have used up all your storage space or today\'s bandwidth'});
 
@@ -208,8 +211,10 @@ async (req, res, next)=> {
 
         /** @type {import("../typedef.js").StorageQuota} */
         let quota = await db.select('*').from('storage_quotas').where({userId: req.user.id}).first();
-        if(!quota)  // that user hasnt used the storage before
-            quota = await initUserStorageQuota(req.user);
+        if(!quota) { // that user hasnt used the storage before
+            quota = initUserStorageQuota(req.user);
+            await db('storage_quotas').insert(quota);
+        }
         if(!updateUserStorageQuota(quota, size))  // update user quota while querying its stats
             return res.status(400).json({error: 1, code: 'upload.quotaExcced', message: 'You have used up all your storage space or today\'s bandwidth'});
         

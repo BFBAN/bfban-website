@@ -6,53 +6,69 @@ import db from "../mysql.js";
 import { userHasNotRoles, userHasRoles } from "./auth.js";
 
 const states_map = [ // from one status to another status, by specified path:{action, privilege}, if no such path, stay still
-    // no player profile, report
+    // [null] no player profile, report
     { from: null,   to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] },
-    // reported, wait for process
+    // [0] reported, wait for process 
     { from: 0,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 0,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
-    { from: 0,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to trash
-    { from: 0,      to: 5,  action: 'discuss',   privilege: ['admin', 'super', 'root'] }, // to discuss
+    { from: 0,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to invalid report
+    { from: 0,      to: 5,  action: 'discuss',  privilege: ['admin', 'super', 'root'] }, // to discuss
     { from: 0,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
+    { from: 0,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 0,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
-    // suspect
+    // [1] confirmed ban, wont change status for report, guilt, kill
+    { from: 1,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
+    { from: 1,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
+    { from: 1,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to invalid report
+    { from: 1,      to: 5,  action: 'discuss',  privilege: ['admin', 'super', 'root'] }, // to discuss
+    { from: 1,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
+    // [2] suspect
     { from: 2,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 2,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
-    { from: 2,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to trash
-    { from: 2,      to: 5,  action: 'discuss',   privilege: ['admin', 'super', 'root'] }, // to discuss
+    { from: 2,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to invalid report
+    { from: 2,      to: 5,  action: 'discuss',  privilege: ['admin', 'super', 'root'] }, // to discuss
     { from: 2,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
+    { from: 2,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 2,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
-    // innocent
+    // [3] innocent
     { from: 3,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 3,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
-    { from: 3,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to trash
-    { from: 3,      to: 5,  action: 'discuss',   privilege: ['admin', 'super', 'root'] }, // to discuss
+    { from: 3,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to trash
+    { from: 3,      to: 5,  action: 'discuss',  privilege: ['admin', 'super', 'root'] }, // to discuss
     { from: 3,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
+    { from: 3,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 3,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
-    // trash
+    // [4] invalid report, "trash"
     { from: 4,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 4,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 4,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
-    { from: 4,      to: 5,  action: 'discuss',   privilege: ['admin', 'super', 'root'] }, // to discuss
+    { from: 4,      to: 5,  action: 'discuss',  privilege: ['admin', 'super', 'root'] }, // to discuss
     { from: 4,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
+    { from: 4,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 4,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
-    // discuss
+    // [5] discussing
     { from: 5,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 5,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 5,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
-    { from: 5,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to discuss
+    { from: 5,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to discuss
     { from: 5,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
+    { from: 5,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 5,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
-    // pending, dont handle re-report here
+    // [6] pending, dont handle re-report here
     { from: 6,      to: 1,  action: 'guilt',    privilege: toConfirm }, // to confirm ban, must supported by at least $config.personsToConfirm person
     { from: 6,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 6,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
-    { from: 6,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to discuss
+    { from: 6,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to discuss
+    { from: 6,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 6,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
-    // confirmed ban, wont change status for report, guilt, kill
-    { from: 1,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
-    { from: 1,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
-    { from: 1,      to: 4,  action: 'trash',    privilege: ['admin', 'super', 'root'] }, // to discuss
+    // [7] lack evidence, "trash"
+    { from: 7,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
+    { from: 7,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
+    { from: 7,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
+    { from: 7,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to invalid report
+    { from: 7,      to: 5,  action: 'discuss',  privilege: ['admin', 'super', 'root'] }, // to discuss
+    { from: 7,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
+    { from: 7,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
 ];
 
 /** 
@@ -78,7 +94,7 @@ async function toConfirm(player, user) {
 /** 
  * @param {import('../typedef.js').Player} player 
  * @param {import('../typedef.js').User} user 
- * @param {'report'|'suspect'|'innocent'|'trash'|'discuss'|'guilt'|'kill'} action 
+ * @param {'report'|'suspect'|'innocent'|'invalid'|'more'|'discuss'|'guilt'|'kill'} action 
  * */
 async function stateMachine(player, user, action) { // normally we should write action to DB first
     for(let i of states_map) { // iterate each path
