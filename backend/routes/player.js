@@ -368,6 +368,22 @@ async (req, res, next)=>{
             delete i.valid;
         });
 
+        const replieIds = result.filter(i=>i.toCommentId!=undefined).map(i=>i.toCommentId);
+        /** @type {import("../typedef.js").Comment[]} */
+        const quotes = await db('comments').join('users', 'comments.byUserId', 'users.id')
+                            .select('comments.*', 'users.username', 'users.privilege')
+                            .whereIn('comments.id', replieIds).andWhere({'comments.valid': 1});
+        quotes.forEach(i=>{     // delete those unused keys
+            for(let j of Object.keys(i))
+                if(typeof(i[j])=='undefined' || i[j]==null)
+                    delete i[j];
+            delete i.valid;
+        });
+        result.forEach(i=>{     // add origin comment to those replies
+            if(i.toCommentId!=undefined)
+                i.quote = quotes.find(j=>j.id==i.toCommentId);
+        });
+
         res.status(200).json({success: 1, code: 'timeline.ok', data: { result, total } });
     } catch(err) {
         next(err);
