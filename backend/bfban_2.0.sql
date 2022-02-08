@@ -12,11 +12,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
--- 导出 bfban_2.0 的数据库结构
-CREATE DATABASE IF NOT EXISTS `bfban_2.0` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `bfban_2.0`;
-
 -- 导出  表 bfban_2.0.comments 结构
 CREATE TABLE IF NOT EXISTS `comments` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
@@ -113,6 +108,43 @@ CREATE EVENT `remove_expired_verifications` ON SCHEDULE EVERY 30 MINUTE STARTS '
 	DELETE FROM verifications WHERE `expiresTime` <= CURRENT_TIMESTAMP();
 END//
 DELIMITER ;
+
+-- 导出  事件 bfban_2.0.remove_old_messages 结构
+DELIMITER //
+CREATE EVENT `remove_old_messages` ON SCHEDULE EVERY 1 DAY STARTS '2022-02-08 13:59:09' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+	DELETE FROM messages WHERE `haveRead`=1 AND `type` IN ('direct','warn') AND TIMESTAMPDIFF(DAY, NOW(), `createTime`)>10;
+	DELETE FROM messages WHERE `type` IN ('direct','warn') AND TIMESTAMPDIFF(DAY, NOW(), `createTime`)>180;
+END//
+DELIMITER ;
+
+-- 导出  表 bfban_2.0.storage_items 结构
+CREATE TABLE IF NOT EXISTS `storage_items` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `filename` varchar(255) NOT NULL DEFAULT '',
+  `size` int unsigned NOT NULL DEFAULT '0',
+  `byUserId` int DEFAULT '0',
+  `fileId` varchar(255) DEFAULT '',
+  `createTime` datetime DEFAULT (now()),
+  PRIMARY KEY (`id`),
+  KEY `fileId` (`fileId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- 数据导出被取消选择。
+
+-- 导出  表 bfban_2.0.storage_quotas 结构
+CREATE TABLE IF NOT EXISTS `storage_quotas` (
+  `userId` int NOT NULL,
+  `totalStorageQuota` bigint unsigned DEFAULT '0',
+  `usedStorageQuota` bigint unsigned DEFAULT '0',
+  `maxTrafficQuota` int unsigned DEFAULT '0',
+  `todayTrafficQuota` int unsigned DEFAULT '0',
+  `maxFileNumber` int unsigned DEFAULT '0',
+  `todayFileNumber` int unsigned DEFAULT '0',
+  `prevResetTime` datetime NOT NULL DEFAULT (now()),
+  PRIMARY KEY (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- 数据导出被取消选择。
 
 -- 导出  表 bfban_2.0.used_captchas 结构
 CREATE TABLE IF NOT EXISTS `used_captchas` (

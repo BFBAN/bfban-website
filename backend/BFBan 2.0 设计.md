@@ -170,8 +170,7 @@ body:	{
             data: [
                 {
                     hot: number,
-                    originName: string,
-                    dbId: number
+                    Player
                 },
                 ...
             ]
@@ -182,6 +181,16 @@ body:	{
 
 ```javascript
 REQUEST HTTP GET /api/siteStats
+RESPONSE HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'siteStats.ok', 
+                data: { 
+                    playerStats: { num:number, time: string(ISOdate) }[], 
+                    confirmStats: { num:number, time: string(ISOdate) }[], 
+                   	userStats: { num:number, time: string(ISOdate) }[] 
+                }
+			}
 ```
 
 #### 	获取网站公告 /api/announcements
@@ -202,8 +211,8 @@ body:	{
                 {
                     id:number, 
                     username:string,
-                    originName:string,
-                    originUserId:string,
+                    originName?:string,
+                    originUserId?:string,
                 	privilege:string[]
                 },
                 ...
@@ -252,11 +261,57 @@ body:		{
             }
 ```
 
+#### 获取申诉列表	/api/banAppeals
+
+```javascript
+REQUEST: HTTP GET /api/players
+parameters:	game?: ''|'bf1'|'bfv'	// specify the game('' all)
+			createTimeFrom?: number	// create from when(unix timestamp)
+            createTimeTo?: number	// create to when(unix timestamp)
+            status?: 'open'|'close'|'lock'|'all'	// the status the appeal is in
+            order?: 'desc'|'asc'	// sort order
+            limit?:	number
+			skip?: number
+RESPONSE: HTTP 200 OK
+body:		{
+                success: 1,
+                code: 'banAppeals.ok',
+                data: {
+                    result: [	// the player details
+                        {
+                            id: number,
+                            originName: string,
+                            originUserId: string,
+                            originPersonaId: string,
+                            games: string[],	// example: ["bf1","bfv"]
+                            cheatMethods: string[],
+                            avatarlink: string,
+                            viewNum: number,
+                            commentsNum: number,
+                            status: number,
+                            createTime: string(ISODate),
+                            updateTime: string(ISODate),
+                            appealStatus: 'open'|'close'|'lock'，
+                            appealTime: string(ISOdate),
+                            byUserId: number
+                        },
+                        ...
+                    ],
+                    total: number	// the number of all results
+                }
+            }
+```
+
+
+
 #### 	搜索被举报玩家名字及历史名字	/api/search
 
 ```javascript
 REQUEST: HTTP GET /api/search
 parameters:	param: string	// the name need to search
+			game?: ''|'bf1'|'bfv'	// specify the game('' all)
+			createTimeFrom?: number	// create from when(unix timestamp)
+            createTimeTo?: number	// create to when(unix timestamp)
 			skip?: number
             offset?: number
 RESPONSE: HTTP 200 OK
@@ -500,6 +555,8 @@ body:		{
 
 #### 	给予被举报玩家判定	/api/player/judgement
 
+新版本细分了原来回收站的状态，原回收站改名无效举报，新增证据不足分类，效果同回收站
+
 ```javascript
 REQUEST: HTTP POST /api/player/judgement
 headers:	x-access-token: {{access_token}}	// login required, admin privilege
@@ -539,6 +596,8 @@ body:		{
 ```
 
 #### 管理员处理申诉	/api/player/viewBanAppeal
+
+lock状态可使用户无法发起新的申诉
 
 ```javascript
 REQUEST: HTTP POST /api/player/viewBanAppeal
@@ -844,7 +903,20 @@ parameters:	box?: 'in'|'out'|'announce'
 			skip?: number
 			limit?: number
             from?: number(unix timestamp)
-RESPONSE: // TODO
+RESPONSE: HTTP 200 OK
+body:		{
+    			data: {
+                    messages: {
+                        id: number,
+                        byUserId: number,
+                        toUserId: number,
+                        type: string,
+                        content: string,
+                        haveRead: number(bool),
+                        createTime: string(ISOdate)
+                    }
+                }
+			}
 ```
 
 #### 获取消息(长轮询)
@@ -867,7 +939,12 @@ body:		{
                     content: string
                 }
 			}
-RESPONSE: // TODO
+RESPONSE: HTTP 201 CREATED
+body:		{
+    			success: 1, 
+                code: 'message.success', 
+                message: 'post message success'
+			}
 ```
 
 #### 	标记消息	/api/message/mark
@@ -876,11 +953,19 @@ RESPONSE: // TODO
 REQUEST: HTTP POST /api/message/mark
 headers:	x-access-token: {{access_token}}	// login required
 parameters:	id: number
-			type: 'read'|'unread'|'del'
-RESPONSE: // TODO
+			type: 'read'|'unread'
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'message.marked', 
+                data: {
+                    id: number, 
+                    type: stirng
+                }
+			}
 ```
 
-#### 提出反馈
+#### 提出反馈	暂不决定启用
 
 ```javascript
 REQUEST: HTTP POST /api/service/feedback
@@ -894,7 +979,7 @@ RESPONSE: HTTP 201 CREATED
 body: // TODO
 ```
 
-#### 浏览反馈
+#### 浏览反馈	暂不决定启用
 
 ```javascript
 REQUEST: HTTP GET /api/service/feedbacks
@@ -911,8 +996,21 @@ body: // TODO
 REQUEST: HTTP GET /api/service/myStorageQuota
 headers:	x-access-token: {{access_token}}	// login required
 
-RESPONSE: HTTP 200
-body: // TODO
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'quota.ok', 
+                data: {
+                    userId: number,
+                    totalStorageQuota: number,
+                    usedStorageQuota: number,
+                    maxTrafficQuota: number,
+                    todayTrafficQuota: number,
+                    maxFileNumber: number,
+                    todayFileNumber: number,
+                    prevResetTime: string(ISOdate)
+                }
+			}
 ```
 
 #### 查看自身上传至bfban网盘的文件
@@ -920,9 +1018,21 @@ body: // TODO
 ```javascript
 REQUEST: HTTP GET /api/service/myFiles
 headers:	x-access-token: {{access_token}}	// login required
-
-RESPONSE: HTTP 200
-body: // TODO
+parameters:	limit?: number
+			skip?: number
+			order?: 'asc'|'desc'
+          	
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'myFiles.ok', 
+                data: {
+                    id: number,
+                    filename: string,
+                    size: number,
+                    createTime: string(ISOdate)
+                }[]
+			}
 ```
 
 #### 获取文件	/api/service/file

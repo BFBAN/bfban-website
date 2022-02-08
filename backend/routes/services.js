@@ -17,10 +17,11 @@ import { handleRichTextInput, initUserStorageQuota, updateUserStorageQuota } fro
 import { fileSuffixByMIMEType, readStreamTillEnd } from "../lib/misc.js";
 const router = express.Router();
 
+/*
 router.get('/feedbacks', [
     checkquery('skip').optional().isInt({min:0}),
     checkquery('limit').optional().isInt({min:0, max:100}),
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ /*
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -43,7 +44,7 @@ async (req, res, next)=> {
 router.post('/feedback', verifyJWT, forbidPrivileges(['blacklisted']),
     commentRateLimiter.limiter([{roles: ['admin','super','root','dev','bot'], value: 0}]), [
     checkbody('data.content').isString().trim().isLength({min: 1, max:5000}),
-],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ /*
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -55,7 +56,7 @@ async (req, res, next)=> {
     } catch(err) {
         next(err);
     }
-});
+}); */
 
 router.get('/myStorageQuota', verifyJWT, 
 /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 

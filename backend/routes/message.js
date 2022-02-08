@@ -34,15 +34,23 @@ async (req, res, next)=> {
         const result = {messages:[], total:0};
         switch(box) {
         case 'in':
-            result.messages = await db.select('*').from('messages').where({toUserId: req.user.id})
+            result.messages = await db.select('*').from('messages')
+            .whereIn('type', ['direct','warn','fatal'])
+            .andWhere({toUserId: req.user.id})
             .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit);
-            result.total = await db('messages').count({num: 'id'}).where({toUserId: req.user.id})
+            result.total = await db('messages').count({num: 'id'})
+            .whereIn('type', ['direct','warn','fatal'])
+            .andWhere({toUserId: req.user.id})
             .andWhere('createTime','>=',new Date(from)).first().then(r=>r.num);
             break;
         case 'out':
-            result.messages = await db.select('*').from('messages').where({byUserId: req.user.id})
+            result.messages = await db.select('*').from('messages')
+            .whereIn('type', ['direct','warn','fatal'])
+            .andWhere({byUserId: req.user.id})
             .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit); 
-            result.total = await db('messages').count({num: 'id'}).where({byUserId: req.user.id})
+            result.total = await db('messages').count({num: 'id'})
+            .whereIn('type', ['direct','warn','fatal'])
+            .andWhere({byUserId: req.user.id})
             .andWhere('createTime','>=',new Date(from)).first().then(r=>r.num);
             break;
         case 'announce':
@@ -157,7 +165,7 @@ async (req, res, next)=> {
             return res.status(403).json({error: 1, code: 'message.denied', message: 'permission denied.'});
         }
 
-        res.status(200).json({success: 1, code: 'message.success', message: 'post message success'});
+        res.status(201).json({success: 1, code: 'message.success', message: 'post message success'});
     } catch(err) {
         next(err);
     }
@@ -165,19 +173,13 @@ async (req, res, next)=> {
 
 router.post('/mark', verifyJWT, [
     checkquery('id').isInt({min: 0}),
-    checkquery('type').isIn('read', 'unread', 'del')
+    checkquery('type').isIn('read', 'unread')
 ],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=> {
     try {
-        let changed;
-        if(req.query.type != 'del')
-            changed = await db('messages').update({haveRead: req.query.type=='read'? 1:0})
-            .where({toUserId: req.user.id, id: req.query.id})
-            .andWhereNot({type: 'falta'});
-        else
-            changed = await db('messages').del()
-            .where({toUserId: req.user.id, id: req.query.id})
-            .andWhereNot({type: 'falta'});
+        const changed = await db('messages').update({haveRead: req.query.type=='read'? 1:0})
+            .whereIn('type', ['direct','warn'])
+            .andWhere({toUserId: req.user.id, id: req.query.id});
         if(changed)
             return res.status(200).json({success: 1, code: 'message.marked', data: {id: req.query.id, type: req.query.type}});
         else
