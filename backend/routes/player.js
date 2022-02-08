@@ -414,7 +414,7 @@ async (req, res, next)=>{
             updateTime: new Date(), 
         }).increment('commentsNum', 1).where({id: dbId});
 
-        siteEvent.emit('action', {method: 'reply', params: {reply}});
+        siteEvent.emit('action', {method: 'reply', params: {reply, player}});
         return res.status(201).json({success: 1, code: 'reply.suceess', message: 'Reply success.'});
     } catch(err) {
         next(err);
@@ -575,7 +575,7 @@ async (req, res, next)=>{
         banAppeal.id = insertId;
         banAppeal.viewedAdmins = [];
 
-        siteEvent.emit('action', {method: 'banAppeal', params: {banAppeal}});
+        siteEvent.emit('action', {method: 'banAppeal', params: {banAppeal, player}});
         return res.status(201).json({success: 1, code: 'banAppeal.success', message:'please wait.'})
     } catch(err) {
         next(err);

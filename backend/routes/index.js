@@ -186,26 +186,43 @@ async (req, res, next)=>{
 });
 
 router.get('/banAppeals', [
+    checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
+    checkquery('createTimeFrom').optional().isInt({min: 0}),
+    checkquery('createTimeTo').optional().isInt({min: 0}),
     checkquery('status').optional().isIn(['open', 'close', 'lock', 'all']),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
-    checkquery('skip').optional().isInt({min: 0})
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('order').optional().isIn(['desc','asc'])
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
+        const game = (req.query.game&&req.query.game!='all')? req.query.game : '';
+        const createTimeFrom = new Date(req.query.createTimeFrom? req.query.createTimeFrom-0 : 0);
+        const createTimeTo = new Date(req.query.createTimeTo? req.query.createTimeTo-0 : Date.now());
         const status = req.query.status? req.query.status=='all'? '%' : req.query.status : 'open';
         const limit = req.query.limit? req.query.limit : 20;
         const skip = req.query.skip? req.query.skip : 0;
+        const order = req.query.order? req.query.order : 'desc';
 
-        const result = await db('players').join('comments', 'players.id', 'comments.toPlayerId')
+        const result = await db('comments').join('players', 'players.id', 'comments.toPlayerId')
         .select('players.*', 'comments.appealStatus', 'comments.createTime as appealTime', 'comments.byUserId')
         .distinct('players.id').where('comments.type','banAppeal')
         .andWhere('comments.appealStatus', 'like', status)
-        .orderBy('appealTime', 'desc').offset(skip).limit(limit)
+        .andWhere('players.games', 'like', game? `%"${game}"%` : "%")
+        .andWhere('comments.createTime', '>=', createTimeFrom)
+        .andWhere('comments.createTime', '<=', createTimeTo)
+        .andWhere('players.valid', '=', '1')
+        .orderBy('appealTime', order).offset(skip).limit(limit)
         .then(r=>r.map(i=>{ delete i.valid; return i }));
         
-        const total = await db.countDistinct({num: 'toPlayerId'})
-        .from('comments').where('comments.type','banAppeal')
+        const total = await db('comments').join('players', 'players.id', 'comments.toPlayerId')
+        .countDistinct({num: 'toPlayerId'})
+        .where('comments.type','banAppeal')
         .andWhere('comments.appealStatus', 'like', status)
+        .andWhere('players.games', 'like', game? `%"${game}"%` : "%")
+        .andWhere('comments.createTime', '>=', createTimeFrom)
+        .andWhere('comments.createTime', '<=', createTimeTo)
+        .andWhere('players.valid', '=', '1')
         .first().then(r=>r.num);
 
         res.status(200).json({ success: 1, code:'banAppeals.ok', data:{ result, total } });
@@ -235,6 +252,9 @@ router.get('/admins', async (req, res, next)=> {
 })
 
 router.get('/search', normalSearchRateLimiter, [
+    checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
+    checkquery('createTimeFrom').optional().isInt({min: 0}),
+    checkquery('createTimeTo').optional().isInt({min: 0}),
     checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 3}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100})
@@ -245,6 +265,9 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'search.bad', message: validateErr.array()});
 
+        const game = (req.query.game&&req.query.game!='all')? req.query.game : '';
+        const createTimeFrom = new Date(req.query.createTimeFrom? req.query.createTimeFrom-0 : 0);
+        const createTimeTo = new Date(req.query.createTimeTo? req.query.createTimeTo-0 : Date.now());
         const skip = req.query.skip? req.query.skip : 0;
         const limit = req.query.limit? req.query.limit : 20;
         const param = req.query.param;
@@ -252,7 +275,11 @@ async (req, res, next)=>{
         /** @type {(import("../typedef.js").Player&{prevOriginName:string,fromTime:Date,toTime:Date})[]} */
         const history = await db('name_logs').join('players', 'name_logs.originUserId', 'players.originUserId')
         .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
-        .where('name_logs.originName', 'like', '%'+param+'%').andWhere({valid: 1}).offset(skip).limit(limit);
+        .where('name_logs.originName', 'like', '%'+param+'%')
+        .andWhere('players.games', 'like', game? `%"${game}"%` : "%")
+        .andWhere('players.createTime', '>=', createTimeFrom)
+        .andWhere('players.createTime', '<=', createTimeTo)
+        .andWhere({valid: 1}).offset(skip).limit(limit);
         result.data = history.map(i=> { return {
             historyName: i.prevOriginName, 
             originName: i.originName,
@@ -368,12 +395,16 @@ async (req, res, next)=>{
     }
 });
 
+
+const siteStatsCache = {data: undefined, time: new Date(0)};
 router.get('/siteStats', async (req, res, next)=>{
     try {
+        if(siteStatsCache.data!=undefined && Date.now()-siteStatsCache.time.getTime() < 4*60*60*1000)   // cache for 4h
+            return res.status(200).json({success: 1, code: 'siteStats.ok', data: siteStatsCache.data });
         const tbeg = new Date('2018-10-12T00:00:00.000Z');  // first commit of bfban
         const tnow = new Date();
-        const period = 10;
-        const slices = [...Array(period).keys()];   // like range(0, 10) in python
+        const period = 20;
+        const slices = [...Array(period).keys()];   // like range(0, 20) in python
 
         const playerStats = await db('players').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
         .where('createTime', '<=', tbeg).andWhere({valid: 1})
@@ -393,7 +424,7 @@ router.get('/siteStats', async (req, res, next)=>{
                 .where('createTime', '<=', t).andWhere({valid: 1, status: 1});
         }));
 
-        const userStats =  await db('users').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
+        const userStats = await db('users').count({num: '*'}).select(db.raw(`"${tbeg.toISOString()}" as time`))
         .where('createTime', '<=', tbeg).andWhere({valid: 1})
         .unionAll(slices.map(i=> {
             const t = new Date(Math.round( tbeg.getTime()+(tnow.getTime()-tbeg.getTime())/period*(i+1) ));
@@ -401,7 +432,9 @@ router.get('/siteStats', async (req, res, next)=>{
             return db('users').count({num: '*'}).select(db.raw(`"${t.toISOString()}" as time`))
                 .where('createTime', '<=', t).andWhere({valid: 1});
         }));
-        
+
+        siteStatsCache.data = { playerStats, confirmStats, userStats };
+        siteStatsCache.time = tnow;
         return res.status(200).json({success: 1, code: 'siteStats.ok', data: { playerStats, confirmStats, userStats } });
     } catch(err) {
         next(err);

@@ -1,4 +1,5 @@
 "use strict";
+import path from "path";
 import express from "express";
 import { check, body as checkbody, query as checkquery, validationResult } from "express-validator";
 
@@ -11,6 +12,7 @@ import { siteEvent } from "../lib/bfban.js";
 import { userHasNotRoles, userHasRoles } from "../lib/auth.js";
 import { handleCommand } from "../lib/command.js";
 import logger from "../logger.js";
+import { readFile } from "fs/promises";
 
 const router = express.Router();
 
@@ -187,7 +189,7 @@ async (req, res, next)=> {
 
 /** @param {import("../typedef.js").SiteEvent} event */
 async function messageOnSiteEvent(event) {
-    logger.info('SiteEvent emitted: '+event.method, event.params);
+    logger.verbose('SiteEvent emitted: '+event.method, event.params);
     try {
         switch(event.method) {
         case 'report':
@@ -230,16 +232,29 @@ async function sendMessage(from, to, type, content) {
     });
 }
 
+
+async function localeMessage(namepath='', lang='en', params) {
+    let msgs = JSON.parse(await readFile(path.resolve(config.baseDir, './media/messages.json')));
+    for(const i of namepath.split('.'))
+        msgs = msgs? msgs[i] : undefined;
+    /** @type {string} */
+    let text = msgs?.[lang]? msgs[lang] : msgs?.['en'];
+    if(text)
+        Object.keys(params).forEach(i=>{
+            text.replace(new RegExp(`{${i}}`, 'g'), params[i]);
+        });
+    return text;
+}
+
 async function iGotReported(params) {
     /** @type {import("../typedef.js").Report} */
     const report = params.report;
+    /** @type {import("../typedef.js").User} */
     const user = await db.select('id').from('users').where({originUserId: report.toOriginUserId}).first();
     if(!user) // that player being reported hasnt registered our site
         return;
-    await sendMessage(undefined, user.id, 'warn', JSON.stringify({
-        event: 'message.reported',
-        dbId: report.id,
-        createTime: report.createTime
+    await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
+        originUserId: report.toOriginUserId
     }));
 }
 
@@ -252,44 +267,43 @@ async function iGotJudged(params) {
     const user = await db.select('id').from('users').where({originUserId: judgement.toOriginUserId}).first();
     if(!user) // that player being reported hasnt registered our site
         return;
-    await sendMessage(undefined, user.id, 'warn', JSON.stringify({
-        event: 'message.judged',
-        dbId: player.id,
-        status: player.status,
-        createTime: judgement.createTime
+    await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
+        status: await localeMessage(`basic.status.${player.status}`, user.attr.language),
+        originUserId: player.originUserId
     }));
 }
 
 async function iGotReplied(params) { // checked that comment dose exist
-    /** @type {import("../typedef.js").Reply&{toCommentType:string,toCommentId:number}} */
+    /** @type {import("../typedef.js").Comment} */
     const reply = params.reply;
-    const {toCommentType, toCommentId, toPlayerId} = reply;
-    if(!(toCommentType && toCommentId))
+    /** @type {import("../typedef.js").Player} */
+    const player = params.player
+    const {toCommentId, toPlayerId} = reply;
+    if(!toCommentId)
         return;
-    const toCommentUser = await db.select('byUserId').from(toCommentType).where({id: toCommentId}).first().then(r=>r.byUserId);
-    await sendMessage(reply.byUserId, toCommentUser, 'reply', JSON.stringify({
-        replyId: reply.id,
-        toFloor: reply.toFloor,
-        toPlayerId: reply.toPlayerId,
-        content: reply.content.slice(0,32),
-        createTime: reply.createTime
+    const toCommentUser = await db.select('byUserId').from('comments').where({id: toCommentId}).first().then(r=>r.byUserId);
+    await sendMessage(reply.byUserId, toCommentUser, 'reply', await localeMessage('notifications.beReplied', toCommentUser.attr.language, {
+        playername: player.originName
     }));
 }
 
 async function newBanAppeal(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const banAppeal = params.banAppeal;
-    await sendMessage(banAppeal.byUserId, banAppeal.id, 'banAppeal', JSON.stringify({
-        toPlayerId: banAppeal.byUserId,
-        content: banAppeal.content.slice(0,32),
-        createTime: banAppeal.createTime
-    })); // hack to store banAppeal's id
+    /** @type {import("../typedef.js").Player} */
+    const player = params.player;
+    /** @type {import("../typedef.js").User} */
+    const user = await db.select('*').from('users').where({id: banAppeal.byUserId}).first();
+    await sendMessage(banAppeal.byUserId, banAppeal.id, 'banAppeal', await localeMessage('notifications.newBanAppeal', user.attr.language, {
+        playername: player.originName,
+        originUserId: player.originUserId
+    }));    // language is specified by the user who submit the banappeal 
 }
 
 async function removeBanAppealNotification(params) {
     /** @type {import("../typedef.js").BanAppeal} */
     const banAppeal = params.banAppeal;
-    await db('messages').del().where({type: 'banAppeal', toUserId: banAppeal.id});
+    await db('messages').delete().where({type: 'banAppeal', toUserId: banAppeal.id});
 }
 
 export default router;

@@ -1,16 +1,56 @@
 {
+    "basic": {
+        "status": {
+            "0": {
+                "cn": "未处理",
+                "en": "Unhandled"
+            },
+            "1": {
+                "cn": "认为实锤",
+                "en": "Confirmed ban"
+            },
+            "2": {
+                "cn": "嫌疑待观察",
+                "en": "Suspicious"
+            },
+            "3": {
+                "cn": "认为没开挂",
+                "en": "Innocent"
+            },
+            "4": {
+                "cn": "无效举报",
+                "en": "Invalid report"
+            },
+            "5": {
+                "cn": "讨论中",
+                "en": "Discussing"
+            },
+            "6": {
+                "cn": "等待实锤确认",
+                "en": "Ban pending"
+            },
+            "7": {
+                "cn": "证据不足",
+                "en": "Lack evidence"
+            }
+        }
+    },
     "notifications": {
         "beReported": {
-            "cn": "",
+            "cn": "您的游戏账号被举报了，请至 https://bfban.com/player/{originUserId} 查看详情",
             "en": "You were reported by someone, see https://bfban.com/player/{originUserId} for detail"
         },
         "beJudged": {
-            "cn": "",
-            "en": "You was judged as {status}, see https://bfban.com/player/{originUserId} for detail"
+            "cn": "您的案件被裁决为 {status} ，请至 https://bfban.com/player/{originUserId} 查看详情",
+            "en": "Your case was judged as {status}, see https://bfban.com/player/{originUserId} for detail"
         },
         "beReplied": {
-            "cn": "",
+            "cn": "您在 {playername} 的案件有新回复，请至 https://bfban.com/player/{originUserId} 查看详情",
             "en": "You have an reply under {playername}'s thread, see https://bfban.com/player/{originUserId}"
+        },
+        "newBanAppeal": {
+            "cn": "{playername} 的案件提交了申诉，请至 https://bfban.com/player/{originUserId} 查看详情",
+            "en": "{playername} has a new ban appeal, see https://bfban.com/player/{originUserId}"
         }
     }
 }

@@ -507,7 +507,7 @@ body:		{
     			data: {
                     toPlayerId: number,
                     cheatMethods: string[],	// see {{valid_cheatMethod}}
-                    action: 'suspect'|'innocent'|'discuss'|'guilt'|'kill'// super
+                    action: 'suspect'|'innocent'|'discuss'|'guilt'|'kill'|'more'|'invalid' // super
                     content: string
                 }
 			}
@@ -1081,19 +1081,23 @@ Null --> just_reported : report(normal)
 just_reported --> pending : guilt(admin)
 pending : int guiltyJudgement
 just_reported --> suspecious : suspect(admin)
-just_reported --> invalid_report : trash(admin)
+just_reported --> invalid_report : invalid(admin)
 just_reported --> innocent : innocent(admin)
+just_reported --> lack_evidence : more(admin)
 suspecious --> just_reported : report(normal)
 invalid_report --> just_reported : report(normal)
+lack_evidence --> just_reported : report(normal)
 innocent --> just_reported : report(normal)
 suspecious --> pending : guilt(admin)
 innocent --> pending : guilt(admin)
 invalid_report --> pending : guilt(admin)
+lack_evidence --> pending : guilt(admin)
 pending --> pending : guilt(admin) guiltyJudgement++
 pending --> CONFIRM : guiltyJudgement==required
 CONFIRM --> innocent : innocent(admin)
 CONFIRM --> suspecious : suspect(admin)
-CONFIRM --> invalid_report : trash(admin)
+CONFIRM --> invalid_report : invalid(admin)
+CONFIRM --> lack_evidence : more(admin)
 ```
 
 将 (当前状态，(操作，权限)) 输入进状态机，状态机则检查是否存在对应路径，存在则行动(返回下一个状态)，不存在则停留(返回当前状态)
@@ -1155,20 +1159,6 @@ Server->User: 201 Created
 
 ​	得益于origin账户强制绑定，我们可以拿到用户邮箱作为密码找回的方法。
 
-```sequence
-User->Server : /forgetPassword username,email,captcha
-Note left of Server: match(username,email)?
-Note left of Server: DB.insert(randomCode)
-Server->User : Email( link:code=randomCode )
-User->Server : /forgetPasswordVerify code, newPassword
-Note left of Server: DB.has(randomCode)?
-Note left of Server: DB.update(newPassword)
-Server->User : 200 OK
-User->Server : Login with new password
-```
-
-该方法较直接重设并发送新密码至用户邮箱，能避免恶意者得知用户绑定邮箱后，不断触发忘记密码使用户密码不断重置，使用户无法登录
-
 ### 消息系统
 
 ​	消息系统实现了简陋的通知、交流、命令功能。收发方面，考虑到实现难度和对及时性需求不高，为http的get/post，其中收在消息界面使用15s一次的轮询，在其他界面则回退至5min一次的轮询。
@@ -1218,7 +1208,7 @@ User->Server : Login with new password
 
 ##### msGraph相关
 
-​	此服务用于提供bfban网盘的功能，调用微软GraphAPI实现对Onedrive的存取，关系到网站文件上传下载等功能。为使上传大文件时流量不经过主站、防OneDrive被墙及防止滥用，需要将`service/msGraphAPI/worker.js`部署至cloudflare worker上提供上传大文件的中转，配置文件中的`workerKey`即用于该服务加密文件元数据并在worker脚本中的解密，配置文件中的`workerAddress`即为worker脚本的地址。该服务需要手动初始化
+​	此服务用于提供bfban网盘的功能，调用微软GraphAPI实现对Onedrive的存取，关系到网站文件上传下载等功能。为使上传大文件时流量不经过主站、防OneDrive被墙及防止滥用，需要将`service/msGraphAPI/worker.js`部署至cloudflare worker上提供上传大文件的中转，配置文件中的`workerKey`即用于该服务加密文件元数据并在worker脚本中的解密，配置文件中的`workerAddress`即为worker脚本的地址。该服务需要手动完成微软的登录验证以初始化
 
 ### 公告系统
 
