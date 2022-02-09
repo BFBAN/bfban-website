@@ -136,26 +136,20 @@ body:	{
 ```javascript
 REQUEST HTTP POST /api/playerStatistics
 body:	{
-    		data: [
-                {
+    		data: {
                     game: string('bf1'|'bfv'|'*'),
                     status: number(-1(all),0,...)
-                },
-                ... // 20 max
-            ]
+            }[],	// 20 max
 		}
 RESPONSE: HTTP 200 OK
 body:	{
                 success: 1,
     			code: "playerStatistics.success",
-                data: [
-                	{
+                data: {
                 		game: string(as request),
                         status: number(as request),
                         count: number
-                	},
-                    ...
-            	]
+                }[],
         }
 ```
 
@@ -167,13 +161,21 @@ RESPONSE HTTP 200 OK
 body:	{
             success: 1,
             code: "trend.ok",
-            data: [
-                {
+            data: {
                     hot: number,
-                    Player
-                },
-                ...
-            ]
+                    id: number,
+                    originName: string,
+                    originUserId: string,
+                    originPersonaId: string,
+                    games: string[],	// example: ["bf1","bfv"]
+                    cheatMethods: string[],
+                    avatarlink: string,
+                    viewNum: number,
+                    commentsNum: number,
+                    status: number,
+                    createTime: string(ISODate),
+                    updateTime: string(ISODate)
+            }[],
         }
 ```
 
@@ -207,16 +209,13 @@ REPONSE: HTTP 200 OK
 body:	{
     		success: 1,
             code: 'getAdmin.success',
-            data: [
-                {
+            data: {
                     id:number, 
                     username:string,
                     originName?:string,
                     originUserId?:string,
                 	privilege:string[]
-                },
-                ...
-            ]
+            }[],
 		}
 ```
 
@@ -239,23 +238,20 @@ body:		{
                 success: 1,
                 code: 'players.ok',
                 data: {
-                    result: [	// the player details
-                        {
-                            id: number,
-                            originName: string,
-                            originUserId: string,
-                            originPersonaId: string,
-                            games: string[],	// example: ["bf1","bfv"]
-                            cheatMethods: string[],
-                            avatarlink: string,
-                            viewNum: number,
-                            commentsNum: number,
-                            status: number,
-                            createTime: string(ISODate),
-                            updateTime: string(ISODate)
-                        },
-                        ...
-                    ],
+                    result: {	// the player details
+                    	id: number,
+                        originName: string,
+                        originUserId: string,
+                        originPersonaId: string,
+                        games: string[],	// example: ["bf1","bfv"]
+                        cheatMethods: string[],
+                        avatarlink: string,
+                        viewNum: number,
+                        commentsNum: number,
+                        status: number,
+                        createTime: string(ISODate),
+                        updateTime: string(ISODate)
+                    }[],
                     total: number	// the number of all results
                 }
             }
@@ -277,26 +273,23 @@ body:		{
                 success: 1,
                 code: 'banAppeals.ok',
                 data: {
-                    result: [	// the player details
-                        {
-                            id: number,
-                            originName: string,
-                            originUserId: string,
-                            originPersonaId: string,
-                            games: string[],	// example: ["bf1","bfv"]
-                            cheatMethods: string[],
-                            avatarlink: string,
-                            viewNum: number,
-                            commentsNum: number,
-                            status: number,
-                            createTime: string(ISODate),
-                            updateTime: string(ISODate),
-                            appealStatus: 'open'|'close'|'lock'，
-                            appealTime: string(ISOdate),
-                            byUserId: number
-                        },
-                        ...
-                    ],
+                    result: {	// the player details
+                        id: number,
+                        originName: string,
+                        originUserId: string,
+                        originPersonaId: string,
+                        games: string[],	// example: ["bf1","bfv"]
+                        cheatMethods: string[],
+                        avatarlink: string,
+                        viewNum: number,
+                        commentsNum: number,
+                        status: number,
+                        createTime: string(ISODate),
+                        updateTime: string(ISODate),
+                        appealStatus: 'open'|'close'|'lock'，
+                        appealTime: string(ISOdate),
+                        byUserId: number
+                    }[],
                     total: number	// the number of all results
                 }
             }
@@ -318,28 +311,25 @@ RESPONSE: HTTP 200 OK
 body:		{
     			success: 1,
                 code: 'search.success',
-                data: [
-                    {
-                        historyName: string,
-                        dbId: number,
-                        originName: string,
-                        originUserId: string,
-                        originPersonaId: string,
-                        avatarLink: string(url),
-                        games: string[],
-                        cheatMethods: string[],
-                        viewNum: number,
-                        commentsNum: number,
-                        createTime: string(ISODate),
-                        updateTime: string(ISODate),
-                        status: number,
-                        log: {
-                            from: string(ISODate),	// name log from
-                            to: string(ISODate)		// name log to
-                        }
-                    },
-                        ...100max
-                ]
+                data: {
+                    historyName: string,
+                    dbId: number,
+                    originName: string,
+                    originUserId: string,
+                    originPersonaId: string,
+                    avatarLink: string(url),
+                    games: string[],
+                    cheatMethods: string[],
+                    viewNum: number,
+                    commentsNum: number,
+                    createTime: string(ISODate),
+                    updateTime: string(ISODate),
+                    status: number,
+                    log: {
+                        from: string(ISODate),	// name log from
+                        to: string(ISODate)		// name log to
+                    }
+                }[]
 			}
 ```
 
@@ -397,18 +387,48 @@ body:		{
                     status: number,
                     createTime: string(ISODate),
                     updateTime: string(ISODate),
-                    history?: [
-                    	{
+                    history?: {
                     		originName: string, 
                         	fromTime: string(ISODate),
                             toTime: string(ISODate),
-                		},
-                    	...
-                   	]
+                	}[],
                 }
 			}
             
 ```
+
+#### 批量获取被举报玩家信息	/api/player/batch
+
+```javascript
+REQUEST: HTTP GET /api/player/batch
+parameters:	personaIds?: string[]	// example /api/player/batch?dbIds[]=1&dbIds[]=2 -> dbIds=[1,2]
+			originIds?: string[]	// max 128 entities
+            dbIds?: string[]
+
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1,
+                code: 'playerBatch.ok',
+                data: {
+                    id: number,
+                    originName: string,
+                    originPersonaId: string,
+                    originUserId: string,
+                    games: string[],
+                    cheatMethods: string[],
+                    avatarlink: string,
+                    viewNum: number,
+                    commentsNum: number,
+                    status: number,
+                    createTime: string(ISODate),
+                    updateTime: string(ISODate),
+                }[]
+			}
+            	
+
+```
+
+
 
 #### 	举报玩家	/api/player/report
 
@@ -744,7 +764,7 @@ body:		{
                 data: {
             		username: string,
             		privilege: string[],
-            		introduction: string,
+            		subscribes: number[],
             		joinTime: string(ISODate),
             		lastOnlineTime: string(ISODate),
             		origin: ?{originName: string, originUserId: string}, // user privacy settings allow
@@ -771,7 +791,7 @@ body:		{
                 data: {
             		username: string,
             		privilege: string[],
-            		introduction: string,
+            		subscribes: number[],
             		joinTime: string(ISODate),
             		lastOnlineTime: string(ISODate),
             		origin: {originName: string, originUserId: string},
@@ -795,8 +815,8 @@ REQUEST: HTTP POST /api/user/me
 headers:	x-access-token: {{access_token}}	// login required
 body:		{
     			data: {
-                    introduction: string,
-                    attr: {
+                    subscribes?: number[],		// 100 max
+                    attr?: {
                         language?: string,
                         showOrigin?: boolen,
                        	allowDM?: boolen,
@@ -1263,7 +1283,7 @@ Server->User: 201 Created
 
 ### 用户自定义，密码找回
 
-​	`users` 表新增以下相关字段 `introduction` , `attr` , `originName` 前者为用户可自定义的介绍，后者为用户绑定的origin账户名，可由 `attr` 字段代表的属性中展示开关选择是否展示，管理员强制展示，`attr` 字段为JSON字符串，可存储使用频率较低的用户附加信息，部分属性用户可读可写，如展示开关，允许私信，偏好语言(日后邮件/通知等全球化)；部分属性用户可读不可写，如官方认证，剩余改名次数；部分属性用户不可读不可写，如最近登录IP
+​	`users` 表新增以下相关字段 `subscribes` , `attr` , `originName` 前者为用户关注的案件id，后者为用户绑定的origin账户名，可由 `attr` 字段代表的属性中展示开关选择是否展示，管理员强制展示，`attr` 字段为JSON字符串，可存储使用频率较低的用户附加信息，部分属性用户可读可写，如展示开关，允许私信，偏好语言(日后邮件/通知等全球化)；部分属性用户可读不可写，如官方认证，剩余改名次数；部分属性用户不可读不可写，如最近登录IP
 
 ​	得益于origin账户强制绑定，我们可以拿到用户邮箱作为密码找回的方法。
 

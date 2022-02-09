@@ -314,7 +314,7 @@ async (req, res, next)=>{
     }
 });
 
-/** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
+/** @param {express.Request&import("../typedef.js").ReqUser?} req @param {express.Response} res @param {express.NextFunction} next */
 async function showUserInfo(req, res, next) {
     try {
         const validateErr = validationResult(req);
@@ -330,9 +330,9 @@ async function showUserInfo(req, res, next) {
             id: user.id,
             username: user.username,
             privilege: user.privilege,
-            introduction: user.introduction,
             joinTime: user.createTime,
             lastOnlineTime: user.updateTime,
+            subscribes: user.subscribes,
             origin: user.attr.showOrigin===true // user set it public
                     || (req.user && userHasRoles(req.user, ['admin','super','root','dev'])) // no limit for admin
                     || (req.user && req.user.id===user.id)? // for self
@@ -388,8 +388,12 @@ async (req, res, next)=>{
 });
 
 router.post('/me', verifyJWT, forbidPrivileges(['blacklisted']), [
-    checkbody('data').isObject(),
-    checkbody('data.introduction').optional({nullable: true}).isString().isLength({max: 510}),
+    checkbody('data.subscribes').optional({nullable: true}).isArray().isLength({max: 100}).custom((val)=> {
+        for(const i of val)
+            if(Number.isNaN(parseInt(i)) || parseInt(i)<0)
+                throw new Error('Bad input');
+        return true;
+    }),
     checkbody('data.attr').optional({nullable: true}).isObject(),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=>{
@@ -399,8 +403,8 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'me.bad', message: validateErr.array()});
 
         const update = {};
-        if(req.body.data.introduction)
-            update.introduction = handleRichTextInput(req.body.data.introduction);
+        if(req.body.data.subscribes)
+            update.subscribes = req.body.data.subscribes.map(i=>i-0); // to number
         if(req.body.data.attr)
             update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
         await db('users').update(update).where({id: req.user.id});

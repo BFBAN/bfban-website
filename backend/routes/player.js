@@ -66,6 +66,70 @@ async (req, res, next)=>{
     }
 });
 
+router.get('/batch', [
+    checkquery('userIds').optional().isArray({max: 128}).custom((val)=> {
+        for(const i of val)
+            if(Number.isNaN(parseInt(i)) || parseInt(i)<0)
+                throw new Error('Bad input');
+        return true;
+    }),
+    checkquery('personaIds').optional().isArray({max: 128}).custom((val)=> {
+        for(const i of val)
+            if(Number.isNaN(parseInt(i)) || parseInt(i)<0)
+                throw new Error('Bad input');
+        return true;
+    }),
+    checkquery('dbIds').optional().isArray({max: 128}).custom((val)=> {
+        for(const i of val)
+            if(Number.isNaN(parseInt(i)) || parseInt(i)<0)
+                throw new Error('Bad input');
+        return true;
+    }),
+    checkquery('*').custom((val, {req})=> {
+        let cnt = 0;
+        cnt += Array.isArray(req.query.userIds)? req.query.userIds.length : 0;
+        cnt += Array.isArray(req.query.personaIds)? req.query.personaIds.length : 0;
+        cnt += Array.isArray(req.query.dbIds)? req.query.dbIds.length : 0;
+        if(cnt > 128)
+            throw new Error('Too much entities. (max 128)');
+        return true;
+    })
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error:1, code:'playerBatch.bad', message:validateErr.array()});
+        
+        let result = [];
+        if(req.query.userIds?.length)
+            result = result.concat(await db.select('*').from('players').whereIn('originUserId', req.query.userIds)
+                .then(r=> r.map(i=> {
+                    delete i.valid;
+                    return i;
+                }))
+            );
+        if(req.query.personaIds?.length)
+            result = result.concat(await db.select('*').from('players').whereIn('originPersonaId', req.query.personaIds)
+                .then(r=> r.map(i=> {
+                    delete i.valid;
+                    return i;
+                }))
+            );
+        if(req.query.dbIds?.length)
+            result = result.concat(await db.select('*').from('players').whereIn('id', req.query.dbIds)
+                .then(r=> r.map(i=> {
+                    delete i.valid;
+                    return i;
+                }))
+            );
+    
+        return res.status(200).json({success: 1, code: 'playerBatch.ok', data: result});
+    } catch(err) {
+        next(err);
+    }
+});
+
 router.post('/viewed', viewedRateLimiter, [
     checkbody('data.id').isInt({min: 0})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
@@ -573,7 +637,7 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'banAppeal.noNeed', message: 'no need for ban appeal'});
         /** @type {import("../typedef.js").Comment} */
         const prev = await db.select('*').from('comments').where({toPlayerId: req.body.data.toPlayerId, type: 'banAppeal'}).orderBy('createTime', 'desc').first();
-        if(prev && prev.status=='lock')
+        if(prev && prev.appealStatus=='lock')
             return res.status(403).json({error: 1, code: 'banAppeal.locked', message: 'this thread is locked'});    
         const banAppeal = {
             type: 'banAppeal',
@@ -587,7 +651,7 @@ async (req, res, next)=>{
             valid: 1,
             createTime: new Date()
         };
-        const insertId = (await db('comments').insert(banAppeal) )[0];
+        const insertId = await db('comments').insert(banAppeal).then(r=>r[0]);
         banAppeal.id = insertId;
         banAppeal.viewedAdmins = [];
 
