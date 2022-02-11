@@ -16,7 +16,7 @@
  * @property {number} id
  * @property {string} username
  * @property {string} password
- * @property {string} introduction
+ * @property {number[]} subscribes
  * @property {number} valid
  * @property {string[]} privilege
  * @property {Object} attr JSON
@@ -76,7 +76,7 @@ const converter = new Stream.Writable({
             id: chunk.id,
             username: chunk.username,
             password: chunk.password,
-            introduction: '',
+            subscribes: '[]',
             valid: chunk.valid,
             privilege: JSON.stringify(chunk.valid? [chunk.privilege] : ['blacklisted']),
             attr: JSON.stringify(attr),
