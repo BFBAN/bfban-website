@@ -43,7 +43,7 @@
             <br>
           </Col>
           <Col span="16" class="mobile-hide" :lg="{span: 14, push: 1}" type="flex" align="right" justify="center"
-            style="display: flex; justify-content: center; align-items: center">
+               style="display: flex; justify-content: center; align-items: center">
             <img src="../assets/images/index-gl.png" width="100%" class="ivu-row-top">
           </Col>
         </Row>
@@ -104,20 +104,24 @@
       </Row>
     </div>
 
+    <Weekly></Weekly>
+
     <div class="box mobile-hide ivu-primary">
       <div class="container">
         <Row>
           <Col :lg="{span: 10, push: 0}">
             <h1 align="left">{{ $t("home.activity.title") }}</h1>
             <h5 align="left">
-              {{ $t('home.activity.description', {report: statistics.reports || 0, cheater: statistics.confirmed || 0}) }}
+              {{
+                $t('home.activity.description', {report: statistics.reports || 0, cheater: statistics.confirmed || 0})
+              }}
             </h5>
           </Col>
           <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
             <router-link :to="{name: 'player'}">
-<!--              <i-switch v-model="activitySwitchType"/>-->
+              <!--              <i-switch v-model="activitySwitchType"/>-->
               <Button type="dashed">
-                {{$t('home.activity.more')}}
+                {{ $t('home.activity.more') }}
               </Button>
             </router-link>
           </Col>
@@ -132,7 +136,7 @@
                 <p>
                   <br>
                   <Tag color="success" v-if="a_i.type == 'judgement'">
-                    {{$t("account.admin")}}
+                    {{ $t("account.admin") }}
                   </Tag>
                   {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
                   <Divider type="vertical"/>
@@ -142,15 +146,15 @@
 
               <span v-if="a_i.type === 'report'">
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                  {{a_i.byUserName }}
+                  {{ a_i.byUserName }}
                 </router-link>
-                {{$t('home.activity.activities.report', {msg: 'report'})}}
+                {{ $t('home.activity.activities.report', {msg: 'report'}) }}
                 <Tag>
                   {{ getGameLabel(a_i.game) }}
                 </Tag>
                 <router-link
-                  :to="{name: 'cheater', params: {game: `${a_i.game}`, ouid: `${a_i.originUserId}`}}">
-                  {{a_i.toPlayerName }}
+                    :to="{name: 'cheater', params: {game: `${a_i.game}`, ouid: `${a_i.originUserId}`}}">
+                  {{ a_i.toPlayerName }}
                 </router-link>
               </span>
 
@@ -158,7 +162,7 @@
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
                   {{ a_i.byUserName }}
                 </router-link>
-                {{$t('home.activity.activities.join', {msg: 'join'})}}
+                {{ $t('home.activity.activities.join', {msg: 'join'}) }}
               </span>
 
               <span v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
@@ -172,7 +176,7 @@
                 {{ $t('detail.info.judge', {msg: 'judge'}) }}
 
                 <router-link :to="{name: 'cheater', params: {ouid: `${a_i.toPlayerId}`}}">
-                  {{a_i.toPlayerName }}
+                  {{ a_i.toPlayerName }}
                 </router-link>
 
                 <Tag color="warning">
@@ -197,6 +201,7 @@
 <script>
 import BFBAN from "../assets/js/bfban";
 import Tell from "../components/Home_tell";
+import Weekly from "./Weekly";
 import {api, http, util} from '../assets/js/index'
 
 export default new BFBAN({
@@ -212,7 +217,7 @@ export default new BFBAN({
       activitySwitchType: true,
     }
   },
-  components: {Tell},
+  components: {Tell, Weekly},
   watch: {
     '$route': 'loadData',
   },
@@ -233,7 +238,7 @@ export default new BFBAN({
         this.gameName = res.gameName;
       });
     },
-    getActivity () {
+    getActivity() {
       http.get(api["activity"], {}).then((res) => {
         const d = res.data;
         if (d.success === 1) {
@@ -252,16 +257,16 @@ export default new BFBAN({
         }
       })
     },
-    getStatisticsInfo () {
+    getStatisticsInfo() {
       http.get(api["statistics"], {
         params: {
-          reports : 'show', // show reports number
-          players : true,	// show players that is reported number
-          confirmed : true,	// show confirmed number
-          registers : true,	// show register number
-          banappeals : true,// show ban appeals number
-          details : true,	// show number of each game, each status
-          from : new Date('2018-01-01').getTime()
+          reports: 'show', // show reports number
+          players: true,	// show players that is reported number
+          confirmed: true,	// show confirmed number
+          registers: true,	// show register number
+          banappeals: true,// show ban appeals number
+          details: true,	// show number of each game, each status
+          from: new Date('2018-01-01').getTime()
         }
       }).then((res) => {
         const d = res.data;

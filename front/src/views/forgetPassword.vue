@@ -39,21 +39,10 @@
                        size="large"
                        maxlength="4"
                        :placeholder="$t('signup.form.captcha')">
-                  <div slot="append" ref="captcha" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')"
-                       @click="refreshCaptcha">
-                    <div v-html="captchaUrl.content"></div>
+                  <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                    <Captcha ref="captcha"></Captcha>
                   </div>
                 </Input>
-
-
-<!--                <Input type="text" v-model="forgetPassword.captcha"-->
-<!--                       size="large"-->
-<!--                       maxlength="4"-->
-<!--                       :placeholder="$t('signup.form.captcha')">-->
-<!--                </Input>-->
-<!--                <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">-->
-<!--                  <div v-html="captchaUrl.content"></div>-->
-<!--                </div>-->
               </FormItem>
 
               <div v-if="stepsIndex == 2">
@@ -111,6 +100,7 @@
 <script>
 import {http, api, conf} from '../assets/js/index'
 import EmailTip from "../components/EmailTip";
+import Captcha from "../components/Captcha";
 
 export default {
   name: 'forgetPassword',
@@ -124,7 +114,6 @@ export default {
         password: '',
         captcha: '',
       },
-      captchaUrl: {},
       spinShow: false,
 
       verify: {
@@ -132,15 +121,14 @@ export default {
       },
     }
   },
-  components: {EmailTip},
+  components: {EmailTip, Captcha},
   created() {
     const code = this.$route.params.code || this.$route.query.code;
-    this.refreshCaptcha();
     code != null ? this.forgetPasswordVerify(code.toString()) : null;
   },
   methods: {
     // 重置密码验证
-    forgetPasswordVerify (code) {
+    forgetPasswordVerify(code) {
       if (code == '' || code == undefined || code == null) {
         this.verify.iscode = false;
         return;
@@ -170,20 +158,6 @@ export default {
       })
     },
 
-    // 刷新验证码
-    refreshCaptcha: function () {
-      http.get(api["captcha"], {
-        params: {
-          r: Math.random()
-        }
-      }).then(res => {
-        const d = res.data;
-        if (d.success === 1) {
-          this.captchaUrl = d.data;
-        }
-      });
-    },
-
     // 重置密码
     onForgetPassword: function () {
       this.spinShow = true;
@@ -193,14 +167,14 @@ export default {
       http.post(api["user_forgetPassword"], {
         data: {
           data: this.forgetPassword,
-          encryptCaptcha: this.captchaUrl.hash,
+          encryptCaptcha: this.$refs.captcha.hash,
           captcha: this.forgetPassword.captcha,
         },
       }).then(res => {
         const d = res.data;
 
         if (d.success === 1) {
-          this.stepsIndex ++;
+          this.stepsIndex++;
           this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
         } else {
           this.$Message.error(d.message);

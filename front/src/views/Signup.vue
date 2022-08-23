@@ -45,9 +45,8 @@
                          size="large"
                          maxlength="4"
                          :placeholder="$t('signup.form.captcha')">
-                    <div slot="append" ref="captcha" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')"
-                         @click="refreshCaptcha">
-                      <div v-html="captchaUrl.content"></div>
+                    <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                      <Captcha ref="captcha"></Captcha>
                     </div>
                   </Input>
                 </FormItem>
@@ -101,8 +100,9 @@
 
 <script>
 import {http, api, http_token} from '../assets/js/index'
-import {testWhitespace, waitForAction} from "@/mixins/common";
+import {testWhitespace} from "@/mixins/common";
 import EmailTip from "../components/EmailTip";
+import Captcha from "../components/Captcha";
 import _ from "lodash";
 
 export default {
@@ -124,20 +124,19 @@ export default {
         ],
       },
       signup: {
-        username: 'cabbagelol',
+        username: 'nickmikus',
         password: 'zsezse',
         originEmail: 'nickmiku@foxmail.com',
-        originName: 'cabbagelol_caime',
+        originName: 'Cabbagelol_Caime',
         captcha: '',
       },
-      captchaUrl: {},
       spinShow: false,
 
       // 绑定页面名字
       bindOriginName: 'bindOrigin',
     }
   },
-  components: {EmailTip},
+  components: {EmailTip, Captcha},
   created() {
     const {query, name} = this.$route;
 
@@ -153,22 +152,8 @@ export default {
     // 注册验证
     this.registerVerify(query.code);
     // this.bindOriginVerify(query.code);
-    this.refreshCaptcha();
   },
   methods: {
-    // 刷新验证码
-    refreshCaptcha: function () {
-      http.get(api["captcha"], {
-        params: {
-          r: Math.random()
-        }
-      }).then(res => {
-        if (res.data.success === 1) {
-          this.captchaUrl = res.data.data;
-        }
-      });
-    },
-
     // 注册
     handleSignup(name) {
       const that = this;
@@ -201,30 +186,26 @@ export default {
                 originName,	// must have one of bf series game
                 language: this.$root.$i18n.locale
               },
-              encryptCaptcha: this.captchaUrl.hash,
+              encryptCaptcha: this.$refs.captcha.hash,
               captcha
             }
-          })
-              .then(res => {
-                const d = res.data;
-                if (d.success === 1) {
-                  that.stepsIndex += 1;
-                  this.$Message.success(d.message);
-                  return;
-                }
+          }).then(res => {
+            const d = res.data;
+            if (d.success === 1) {
+              that.stepsIndex += 1;
+              this.$Message.success(d.message);
+              return;
+            }
+          }).catch(err => {
+            this.$Message.error(err.toString());
 
-                that.catch(res);
-              })
-              .catch(err => {
-                this.$Message.error(err.toString());
-
-                that.signup.captcha = '';
-                that.signup.originEmail = '';
-                that.signup.originName = '';
-              })
-              .finally(() => {
-                this.spinShow = false;
-              });
+            that.signup.captcha = '';
+            that.signup.originEmail = '';
+            that.signup.originName = '';
+            that.stepsIndex = 0;
+          }).finally(() => {
+            this.spinShow = false;
+          });
         } else {
           this.$Message.error('请规范填写');
         }
@@ -257,7 +238,7 @@ export default {
 
           this.refreshCaptcha();
         }
-      })
+      });
     },
 
     // 绑定橘子账户

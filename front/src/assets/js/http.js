@@ -13,6 +13,7 @@ export default class Http extends Conf {
         // baseURL: process.env.BASE_API,
         timeout: 9000,
         withCredentials: true,
+
         headers: {
             'Content-type': 'application/json',
         },
@@ -41,6 +42,7 @@ export default class Http extends Conf {
         console.log(url, requestData.headers);
         let result = await this.HTTP({
             url: url,
+            Origin: "",
             headers: Object.assign({}, requestData.headers),
             method: requestData.method,
             data: requestData.data,

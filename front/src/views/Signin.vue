@@ -30,10 +30,8 @@
               <FormItem :label="$t('signup.form.captcha')" prop="captcha">
                 <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
                        :placeholder="$t('signup.form.captcha')">
-
-                  <div slot="append" class="captcha-input-append" ref="captcha" :alt="$t('signup.form.getCaptcha')"
-                       @click="refreshCaptcha">
-                    <div v-html="captchaUrl.content"></div>
+                  <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                    <Captcha ref="captcha"></Captcha>
                   </div>
                 </Input>
               </FormItem>
@@ -69,17 +67,16 @@
 
 <script>
 import {api, http} from '../assets/js/index'
+import Captcha from "../components/Captcha";
 import Vuex from "vuex";
 import _ from "lodash";
 
 const {mapActions, mapMutations} = Vuex;
 
 export default {
+  components: {Captcha},
   data() {
     return {
-      banner: [
-        'https://hbimg.huabanimg.com/f4c3995155eb9200a231827a91aec230d31c272842a18-gKy65m_fw658/format/webp'
-      ],
       ruleValidate: {
         username: [
           {required: true, trigger: 'blur'}
@@ -96,12 +93,8 @@ export default {
         password: '',
         captcha: '',
       },
-      captchaUrl: {},
       spinShow: false,
     }
-  },
-  created() {
-    this.refreshCaptcha();
   },
   beforeMount() {
     if (this.$route.query.rurl) {
@@ -115,20 +108,6 @@ export default {
     ...mapMutations([
       'SIGNIN'
     ]),
-    // 刷新验证码
-    refreshCaptcha() {
-      http.get(api["captcha"], {
-        params: {
-          r: Math.random()
-        }
-      }).then(res => {
-        if (res.data.success === 1) {
-          this.captchaUrl = res.data.data;
-        }
-      });
-
-      // waitForAction.call(this.$refs.reCaptcha);
-    },
 
     // 登录
     handleSignin() {
@@ -147,7 +126,7 @@ export default {
                 username,
                 password,
               },
-              encryptCaptcha: this.captchaUrl.hash,
+              encryptCaptcha: this.$refs.captcha.hash,
               captcha,
             },
           }).then((res) => {

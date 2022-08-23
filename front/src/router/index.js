@@ -6,7 +6,6 @@ import config from "../../package.json";
 
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
-//const Misc      =() => import('@/components/Edit.vue');
 const List = () => import('@/views/List.vue');
 const Detail = () => import('@/views/Detail.vue');
 const Signin = () => import('@/views/Signin.vue');
@@ -126,7 +125,6 @@ VueRouter.prototype.push = function push(location) {
 
 router.beforeEach((to, from, next) => {
     store.commit('syncLoginState');
-
     document.title = `${config.name} | ${to.meta.title || i18n.t(`${to.meta.titleValue || to.name + '.title'}`) || config.name} `;
 
     next();
