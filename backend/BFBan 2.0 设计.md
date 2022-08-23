@@ -136,26 +136,20 @@ body:	{
 ```javascript
 REQUEST HTTP POST /api/playerStatistics
 body:	{
-    		data: [
-                {
+    		data: {
                     game: string('bf1'|'bfv'|'*'),
                     status: number(-1(all),0,...)
-                },
-                ... // 20 max
-            ]
+            }[],	// 20 max
 		}
 RESPONSE: HTTP 200 OK
 body:	{
                 success: 1,
     			code: "playerStatistics.success",
-                data: [
-                	{
+                data: {
                 		game: string(as request),
                         status: number(as request),
                         count: number
-                	},
-                    ...
-            	]
+                }[],
         }
 ```
 
@@ -167,14 +161,21 @@ RESPONSE HTTP 200 OK
 body:	{
             success: 1,
             code: "trend.ok",
-            data: [
-                {
+            data: {
                     hot: number,
+                    id: number,
                     originName: string,
-                    dbId: number
-                },
-                ...
-            ]
+                    originUserId: string,
+                    originPersonaId: string,
+                    games: string[],	// example: ["bf1","bfv"]
+                    cheatMethods: string[],
+                    avatarlink: string,
+                    viewNum: number,
+                    commentsNum: number,
+                    status: number,
+                    createTime: string(ISODate),
+                    updateTime: string(ISODate)
+            }[],
         }
 ```
 
@@ -182,6 +183,16 @@ body:	{
 
 ```javascript
 REQUEST HTTP GET /api/siteStats
+RESPONSE HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'siteStats.ok', 
+                data: { 
+                    playerStats: { num:number, time: string(ISOdate) }[], 
+                    confirmStats: { num:number, time: string(ISOdate) }[], 
+                   	userStats: { num:number, time: string(ISOdate) }[] 
+                }
+			}
 ```
 
 #### 	获取网站公告 /api/announcements
@@ -198,16 +209,13 @@ REPONSE: HTTP 200 OK
 body:	{
     		success: 1,
             code: 'getAdmin.success',
-            data: [
-                {
+            data: {
                     id:number, 
                     username:string,
-                    originName:string,
-                    originUserId:string,
+                    originName?:string,
+                    originUserId?:string,
                 	privilege:string[]
-                },
-                ...
-            ]
+            }[],
 		}
 ```
 
@@ -230,61 +238,98 @@ body:		{
                 success: 1,
                 code: 'players.ok',
                 data: {
-                    result: [	// the player details
-                        {
-                            id: number,
-                            originName: string,
-                            originUserId: string,
-                            originPersonaId: string,
-                            games: string[],	// example: ["bf1","bfv"]
-                            cheatMethods: string[],
-                            avatarlink: string,
-                            viewNum: number,
-                            commentsNum: number,
-                            status: number,
-                            createTime: string(ISODate),
-                            updateTime: string(ISODate)
-                        },
-                        ...
-                    ],
+                    result: {	// the player details
+                    	id: number,
+                        originName: string,
+                        originUserId: string,
+                        originPersonaId: string,
+                        games: string[],	// example: ["bf1","bfv"]
+                        cheatMethods: string[],
+                        avatarlink: string,
+                        viewNum: number,
+                        commentsNum: number,
+                        status: number,
+                        createTime: string(ISODate),
+                        updateTime: string(ISODate)
+                    }[],
                     total: number	// the number of all results
                 }
             }
 ```
+
+#### 获取申诉列表	/api/banAppeals
+
+```javascript
+REQUEST: HTTP GET /api/players
+parameters:	game?: ''|'bf1'|'bfv'	// specify the game('' all)
+			createTimeFrom?: number	// create from when(unix timestamp)
+            createTimeTo?: number	// create to when(unix timestamp)
+            status?: 'open'|'close'|'lock'|'all'	// the status the appeal is in
+            order?: 'desc'|'asc'	// sort order
+            limit?:	number
+			skip?: number
+RESPONSE: HTTP 200 OK
+body:		{
+                success: 1,
+                code: 'banAppeals.ok',
+                data: {
+                    result: {	// the player details
+                        id: number,
+                        originName: string,
+                        originUserId: string,
+                        originPersonaId: string,
+                        games: string[],	// example: ["bf1","bfv"]
+                        cheatMethods: string[],
+                        avatarlink: string,
+                        viewNum: number,
+                        commentsNum: number,
+                        status: number,
+                        createTime: string(ISODate),
+                        updateTime: string(ISODate),
+                        appealStatus: 'open'|'close'|'lock'，
+                        appealTime: string(ISOdate),
+                        byUserId: number
+                    }[],
+                    total: number	// the number of all results
+                }
+            }
+```
+
+
 
 #### 	搜索被举报玩家名字及历史名字	/api/search
 
 ```javascript
 REQUEST: HTTP GET /api/search
 parameters:	param: string	// the name need to search
+			game?: ''|'bf1'|'bfv'	// specify the game('' all)
+			createTimeFrom?: number	// create from when(unix timestamp)
+            createTimeTo?: number	// create to when(unix timestamp)
 			skip?: number
             offset?: number
 RESPONSE: HTTP 200 OK
 body:		{
     			success: 1,
                 code: 'search.success',
-                data: [
-                    {
-                        historyName: string,
-                        dbId: number,
-                        originName: string,
-                        originUserId: string,
-                        originPersonaId: string,
-                        avatarLink: string(url),
-                        games: string[],
-                        cheatMethods: string[],
-                        viewNum: number,
-                        commentsNum: number,
-                        createTime: string(ISODate),
-                        updateTime: string(ISODate),
-                        status: number,
-                        log: {
-                            from: string(ISODate),	// name log from
-                            to: string(ISODate)		// name log to
-                        }
-                    },
-                        ...100max
-                ]
+                data: {
+                    historyName: string,
+                    dbId: number,
+                    originName: string,
+                    originUserId: string,
+                    originPersonaId: string,
+                    avatarLink: string(url),
+                    games: string[],
+                    cheatMethods: string[],
+                    viewNum: number,
+                    commentsNum: number,
+                    createTime: string(ISODate),
+                    updateTime: string(ISODate),
+                    status: number,
+                    log: {
+                        from: string(ISODate),	// name log from
+                        to: string(ISODate)		// name log to
+                    }
+                }[]
 			}
 ```
 
@@ -342,18 +387,48 @@ body:		{
                     status: number,
                     createTime: string(ISODate),
                     updateTime: string(ISODate),
-                    history?: [
-                    	{
+                    history?: {
                     		originName: string, 
                         	fromTime: string(ISODate),
                             toTime: string(ISODate),
-                		},
-                    	...
-                   	]
+                	}[],
                 }
 			}
             
 ```
+
+#### 批量获取被举报玩家信息	/api/player/batch
+
+```javascript
+REQUEST: HTTP GET /api/player/batch
+parameters:	personaIds?: string[]	// example /api/player/batch?dbIds[]=1&dbIds[]=2 -> dbIds=[1,2]
+			originIds?: string[]	// max 128 entities
+            dbIds?: string[]
+
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1,
+                code: 'playerBatch.ok',
+                data: {
+                    id: number,
+                    originName: string,
+                    originPersonaId: string,
+                    originUserId: string,
+                    games: string[],
+                    cheatMethods: string[],
+                    avatarlink: string,
+                    viewNum: number,
+                    commentsNum: number,
+                    status: number,
+                    createTime: string(ISODate),
+                    updateTime: string(ISODate),
+                }[]
+			}
+            	
+
+```
+
+
 
 #### 	举报玩家	/api/player/report
 
@@ -500,6 +575,8 @@ body:		{
 
 #### 	给予被举报玩家判定	/api/player/judgement
 
+新版本细分了原来回收站的状态，原回收站改名无效举报，新增证据不足分类，效果同回收站
+
 ```javascript
 REQUEST: HTTP POST /api/player/judgement
 headers:	x-access-token: {{access_token}}	// login required, admin privilege
@@ -507,7 +584,7 @@ body:		{
     			data: {
                     toPlayerId: number,
                     cheatMethods: string[],	// see {{valid_cheatMethod}}
-                    action: 'suspect'|'innocent'|'discuss'|'guilt'|'kill'// super
+                    action: 'suspect'|'innocent'|'discuss'|'guilt'|'kill'|'more'|'invalid' // super
                     content: string
                 }
 			}
@@ -539,6 +616,8 @@ body:		{
 ```
 
 #### 管理员处理申诉	/api/player/viewBanAppeal
+
+lock状态可使用户无法发起新的申诉
 
 ```javascript
 REQUEST: HTTP POST /api/player/viewBanAppeal
@@ -685,7 +764,7 @@ body:		{
                 data: {
             		username: string,
             		privilege: string[],
-            		introduction: string,
+            		subscribes: number[],
             		joinTime: string(ISODate),
             		lastOnlineTime: string(ISODate),
             		origin: ?{originName: string, originUserId: string}, // user privacy settings allow
@@ -712,7 +791,7 @@ body:		{
                 data: {
             		username: string,
             		privilege: string[],
-            		introduction: string,
+            		subscribes: number[],
             		joinTime: string(ISODate),
             		lastOnlineTime: string(ISODate),
             		origin: {originName: string, originUserId: string},
@@ -736,8 +815,8 @@ REQUEST: HTTP POST /api/user/me
 headers:	x-access-token: {{access_token}}	// login required
 body:		{
     			data: {
-                    introduction: string,
-                    attr: {
+                    subscribes?: number[],		// 100 max
+                    attr?: {
                         language?: string,
                         showOrigin?: boolen,
                        	allowDM?: boolen,
@@ -844,7 +923,20 @@ parameters:	box?: 'in'|'out'|'announce'
 			skip?: number
 			limit?: number
             from?: number(unix timestamp)
-RESPONSE: // TODO
+RESPONSE: HTTP 200 OK
+body:		{
+    			data: {
+                    messages: {
+                        id: number,
+                        byUserId: number,
+                        toUserId: number,
+                        type: string,
+                        content: string,
+                        haveRead: number(bool),
+                        createTime: string(ISOdate)
+                    }
+                }
+			}
 ```
 
 #### 获取消息(长轮询)
@@ -867,7 +959,12 @@ body:		{
                     content: string
                 }
 			}
-RESPONSE: // TODO
+RESPONSE: HTTP 201 CREATED
+body:		{
+    			success: 1, 
+                code: 'message.success', 
+                message: 'post message success'
+			}
 ```
 
 #### 	标记消息	/api/message/mark
@@ -876,11 +973,19 @@ RESPONSE: // TODO
 REQUEST: HTTP POST /api/message/mark
 headers:	x-access-token: {{access_token}}	// login required
 parameters:	id: number
-			type: 'read'|'unread'|'del'
-RESPONSE: // TODO
+			type: 'read'|'unread'
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'message.marked', 
+                data: {
+                    id: number, 
+                    type: stirng
+                }
+			}
 ```
 
-#### 提出反馈
+#### 提出反馈	暂不决定启用
 
 ```javascript
 REQUEST: HTTP POST /api/service/feedback
@@ -894,7 +999,7 @@ RESPONSE: HTTP 201 CREATED
 body: // TODO
 ```
 
-#### 浏览反馈
+#### 浏览反馈	暂不决定启用
 
 ```javascript
 REQUEST: HTTP GET /api/service/feedbacks
@@ -911,8 +1016,21 @@ body: // TODO
 REQUEST: HTTP GET /api/service/myStorageQuota
 headers:	x-access-token: {{access_token}}	// login required
 
-RESPONSE: HTTP 200
-body: // TODO
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'quota.ok', 
+                data: {
+                    userId: number,
+                    totalStorageQuota: number,
+                    usedStorageQuota: number,
+                    maxTrafficQuota: number,
+                    todayTrafficQuota: number,
+                    maxFileNumber: number,
+                    todayFileNumber: number,
+                    prevResetTime: string(ISOdate)
+                }
+			}
 ```
 
 #### 查看自身上传至bfban网盘的文件
@@ -920,9 +1038,21 @@ body: // TODO
 ```javascript
 REQUEST: HTTP GET /api/service/myFiles
 headers:	x-access-token: {{access_token}}	// login required
-
-RESPONSE: HTTP 200
-body: // TODO
+parameters:	limit?: number
+			skip?: number
+			order?: 'asc'|'desc'
+          	
+RESPONSE: HTTP 200 OK
+body:		{
+    			success: 1, 
+                code: 'myFiles.ok', 
+                data: {
+                    id: number,
+                    filename: string,
+                    size: number,
+                    createTime: string(ISOdate)
+                }[]
+			}
 ```
 
 #### 获取文件	/api/service/file
@@ -1053,6 +1183,8 @@ Server->Client: 200 OK, originUserId...
 
 ##### 现
 
+​	**注意注意** 直接发送邮件会因邮件服务商设置不同而直接暴露服务器IP，建议使用msGraph服务中的发送邮件API以隐藏IP
+
 ​	所有路由的所有参数全部经过类型validator；实现userRateLimiter类，可限制登录用户某段时间内(window)请求数限制(可配置权重)；设计为处于反向代理后，反向代理设置基于IP的请求数限制；用户数据内记录登入/注册时IP；评论/裁决/申诉等先检查是否存在对应案件；回复评论时检查是否存在对应楼。
 
 ### origin客户端操作
@@ -1067,10 +1199,6 @@ Server->Client: 200 OK, originUserId...
 
 ### 案件状态处理逻辑
 
-##### 原
-
-​	`if else if ` 
-
 ##### 现
 
 ​	将各状态，及各状态转移条件作图，状态为点，条件为路径
@@ -1081,22 +1209,26 @@ Null --> just_reported : report(normal)
 just_reported --> pending : guilt(admin)
 pending : int guiltyJudgement
 just_reported --> suspecious : suspect(admin)
-just_reported --> invalid_report : trash(admin)
+just_reported --> invalid_report : invalid(admin)
 just_reported --> innocent : innocent(admin)
+just_reported --> lack_evidence : more(admin)
 suspecious --> just_reported : report(normal)
 invalid_report --> just_reported : report(normal)
+lack_evidence --> just_reported : report(normal)
 innocent --> just_reported : report(normal)
 suspecious --> pending : guilt(admin)
 innocent --> pending : guilt(admin)
 invalid_report --> pending : guilt(admin)
+lack_evidence --> pending : guilt(admin)
 pending --> pending : guilt(admin) guiltyJudgement++
 pending --> CONFIRM : guiltyJudgement==required
 CONFIRM --> innocent : innocent(admin)
 CONFIRM --> suspecious : suspect(admin)
-CONFIRM --> invalid_report : trash(admin)
+CONFIRM --> invalid_report : invalid(admin)
+CONFIRM --> lack_evidence : more(admin)
 ```
 
-将 (当前状态，(操作，权限)) 输入进状态机，状态机则检查是否存在对应路径，存在则行动(返回下一个状态)，不存在则停留(返回当前状态)
+将 (当前状态，(操作，权限)) 输入进状态机，状态机则检查是否存在对应路径，存在则行动(返回下一个状态)，不存在则停留(返回当前状态)，图中未画出 `清白-可疑-无效举报-证据不足` 的转移
 
 ### 搜索功能
 
@@ -1151,23 +1283,9 @@ Server->User: 201 Created
 
 ### 用户自定义，密码找回
 
-​	`users` 表新增以下相关字段 `introduction` , `attr` , `originName` 前者为用户可自定义的介绍，后者为用户绑定的origin账户名，可由 `attr` 字段代表的属性中展示开关选择是否展示，管理员强制展示，`attr` 字段为JSON字符串，可存储使用频率较低的用户附加信息，部分属性用户可读可写，如展示开关，允许私信，偏好语言(日后邮件/通知等全球化)；部分属性用户可读不可写，如官方认证，剩余改名次数；部分属性用户不可读不可写，如最近登录IP
+​	`users` 表新增以下相关字段 `subscribes` , `attr` , `originName` 前者为用户关注的案件id，后者为用户绑定的origin账户名，可由 `attr` 字段代表的属性中展示开关选择是否展示，管理员强制展示，`attr` 字段为JSON字符串，可存储使用频率较低的用户附加信息，部分属性用户可读可写，如展示开关，允许私信，偏好语言(日后邮件/通知等全球化)；部分属性用户可读不可写，如官方认证，剩余改名次数；部分属性用户不可读不可写，如最近登录IP
 
 ​	得益于origin账户强制绑定，我们可以拿到用户邮箱作为密码找回的方法。
-
-```sequence
-User->Server : /forgetPassword username,email,captcha
-Note left of Server: match(username,email)?
-Note left of Server: DB.insert(randomCode)
-Server->User : Email( link:code=randomCode )
-User->Server : /forgetPasswordVerify code, newPassword
-Note left of Server: DB.has(randomCode)?
-Note left of Server: DB.update(newPassword)
-Server->User : 200 OK
-User->Server : Login with new password
-```
-
-该方法较直接重设并发送新密码至用户邮箱，能避免恶意者得知用户绑定邮箱后，不断触发忘记密码使用户密码不断重置，使用户无法登录
 
 ### 消息系统
 
@@ -1218,7 +1336,7 @@ User->Server : Login with new password
 
 ##### msGraph相关
 
-​	此服务用于提供bfban网盘的功能，调用微软GraphAPI实现对Onedrive的存取，关系到网站文件上传下载等功能。为使上传大文件时流量不经过主站、防OneDrive被墙及防止滥用，需要将`service/msGraphAPI/worker.js`部署至cloudflare worker上提供上传大文件的中转，配置文件中的`workerKey`即用于该服务加密文件元数据并在worker脚本中的解密，配置文件中的`workerAddress`即为worker脚本的地址。该服务需要手动初始化
+​	此服务用于提供bfban网盘的功能，调用微软GraphAPI实现对Onedrive的存取，关系到网站文件上传下载等功能。为使上传大文件时流量不经过主站、防OneDrive被墙及防止滥用，需要将`service/msGraphAPI/worker.js`部署至cloudflare worker上提供上传大文件的中转，配置文件中的`workerKey`即用于该服务加密文件元数据并在worker脚本中的解密，配置文件中的`workerAddress`即为worker脚本的地址。该服务需要手动完成微软的登录验证以初始化
 
 ### 公告系统
 

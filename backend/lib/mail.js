@@ -2,6 +2,7 @@
 import { promises as fs } from "fs";
 import { SMTPClient, Message } from "emailjs";
 import config from "../config.js";
+import serviceApi from "./serviceAPI.js";
 
 const sender = new SMTPClient({
     user: config.mail.user,
@@ -21,6 +22,18 @@ async function sendMail(content, from, to, cc, subject,  attachment=undefined) {
         attachment: attachment
     });
     return await sender.sendAsync(message);
+}
+
+async function sendMail_ms(content, type, from, to, subject) {
+    return await serviceApi('msGraphAPI', '/sendMail').post({
+        data: {
+            subject,
+            type,
+            content,
+            from,
+            to
+        }
+    });
 }
 
 async function sendRegisterVerify(username, originName, address, language, code) {

@@ -11,16 +11,17 @@ import config from "../config.js";
 
 import { allowPrivileges, verifyJWT } from "../middleware/auth.js";
 import { forbidPrivileges } from "../middleware/auth.js";
-import { commentRateLimiter } from "./player.js";
+import { commentRateLimiter } from "../middleware/rateLimiter.js";
 import { sendMessage } from "./message.js";
 import { handleRichTextInput, initUserStorageQuota, updateUserStorageQuota } from "../lib/user.js";
 import { fileSuffixByMIMEType, readStreamTillEnd } from "../lib/misc.js";
 const router = express.Router();
 
+/*
 router.get('/feedbacks', [
     checkquery('skip').optional().isInt({min:0}),
     checkquery('limit').optional().isInt({min:0, max:100}),
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ /*
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -43,7 +44,7 @@ async (req, res, next)=> {
 router.post('/feedback', verifyJWT, forbidPrivileges(['blacklisted']),
     commentRateLimiter.limiter([{roles: ['admin','super','root','dev','bot'], value: 0}]), [
     checkbody('data.content').isString().trim().isLength({min: 1, max:5000}),
-],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ /*
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -55,7 +56,7 @@ async (req, res, next)=> {
     } catch(err) {
         next(err);
     }
-});
+}); */
 
 router.get('/myStorageQuota', verifyJWT, 
 /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
@@ -63,9 +64,10 @@ async (req, res, next)=>{
     try {
         /** @type {import("../typedef.js").StorageQuota} */
         let quota = await db.select('*').from('storage_quotas').where({userId: req.user.id}).first();
-        if(!quota)  // that user hasnt used the storage before
-            quota = await initUserStorageQuota(req.user);
-
+        if(!quota) {  // that user hasnt used the storage before
+            quota = initUserStorageQuota(req.user);
+            await db('storage_quotas').insert(quota);
+        }
         return res.status(200).json({success: 1, code: 'quota.ok', data: quota});
     } catch(err) {
         next(err);
@@ -156,8 +158,10 @@ async (req, res, next)=> {
 
         /** @type {import("../typedef.js").StorageQuota} */
         let quota = await db.select('*').from('storage_quotas').where({userId: req.user.id}).first();
-        if(!quota)  // that user hasnt used the storage before
-            quota = await initUserStorageQuota(req.user);
+        if(!quota) { // that user hasnt used the storage before
+            quota = initUserStorageQuota(req.user);
+            await db('storage_quotas').insert(quota);
+        }
         if(!updateUserStorageQuota(quota, contentLength))  // update user quota while querying its stats
             return res.status(400).json({error: 1, code: 'upload.quotaExcced', message: 'You have used up all your storage space or today\'s bandwidth'});
 
@@ -208,8 +212,10 @@ async (req, res, next)=> {
 
         /** @type {import("../typedef.js").StorageQuota} */
         let quota = await db.select('*').from('storage_quotas').where({userId: req.user.id}).first();
-        if(!quota)  // that user hasnt used the storage before
-            quota = await initUserStorageQuota(req.user);
+        if(!quota) { // that user hasnt used the storage before
+            quota = initUserStorageQuota(req.user);
+            await db('storage_quotas').insert(quota);
+        }
         if(!updateUserStorageQuota(quota, size))  // update user quota while querying its stats
             return res.status(400).json({error: 1, code: 'upload.quotaExcced', message: 'You have used up all your storage space or today\'s bandwidth'});
         

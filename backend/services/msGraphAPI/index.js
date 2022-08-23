@@ -198,7 +198,7 @@ async (req, res, next)=> {
                 mimeType: msResponse.file.mimeType
             }});
         else
-            return res.status(msResponse.status).json({error: 1, code: 'msGetFile.bad', message: msResponse.error});
+            return res.status(msResponse.status).json({error: 1, code: 'msGetFile.error', message: msResponse.error});
     } catch(err) {
         logger.error('getFile:', err.stack)
         res.status(500).json({error: 1, code: 'msGetFile.error', message: err.message});
@@ -312,10 +312,60 @@ async (req, res, next)=> {
                 uploadUrl: `${svcConfig.workerAddress}msGraph/upload?code=${encodeURIComponent(encrypted)}`
             }});
         } else 
-            return res.status(msResponse.status).json({error: 1, code: 'msUploadBig.bad', message: msResponse.error.message});
+            return res.status(msResponse.status).json({error: 1, code: 'msUploadBig.error', message: msResponse.error.message});
     } catch(err) {
         logger.error('msUploadBig:', err.stack)
         return res.status(500).json({error: 1, code: 'msUploadBig.error', message: err.message});
+    }
+});
+
+app.post('/sendMail', [
+    checkbody('data.type').isIn(['Text', 'HTML']),
+    checkbody('data.subject').isString(),
+    checkbody('data.content').isString(),
+    checkbody('data.to').isEmail(),
+    checkbody('data.from').optional().isEmail()
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+async (req, res, next)=> {
+    const validateErr = validationResult(req);
+    if(!validateErr.isEmpty())
+        return res.status(400).json({error: 1, code: 'msSendMail.bad', message: validateErr.array()});
+    try {
+        const { type, subject, content, to, from } = req.body.data;
+        const payload = {
+            subject: subject,
+            body: {
+                contentType: type,
+                content: content,
+            },
+            toRecipients: [{
+                emailAddress: { address: to }
+            }],
+        }
+        if(from)
+            Object.assign(payload, {
+                sender: {
+                    emailAddress: { address: from }
+                },
+                from: {
+                    emailAddress: { address: from }
+                }
+            });
+        const msResponse = await getAuthenticatedClient(msalClient)
+        .api('/me/sendMail')
+        .post(payload)
+        .catch(err=> {
+            if(!(err instanceof msgraph.GraphError) || err.statusCode <= 0)
+                throw(err);
+            return { status: err.statusCode, error: err.body};
+        });
+        if(!msResponse.error)
+            return res.status(202).json({success: 1, code: 'msSendMail.success', message: 'mail successfully sent.'});
+        else
+            return res.status(msResponse.status).json({success: 1, code: 'msSendMail.error', message: msResponse.error.message});
+    } catch(err) {
+        logger.error('msSendMail:', err.stack);
+        return res.status(500).json({error: 1, code: 'msSendMail.error', message: err.message});
     }
 });
 

@@ -66,6 +66,70 @@ async (req, res, next)=>{
     }
 });
 
+router.get('/batch', [
+    checkquery('userIds').optional().isArray({max: 128}).custom((val)=> {
+        for(const i of val)
+            if(Number.isNaN(parseInt(i)) || parseInt(i)<0)
+                throw new Error('Bad input');
+        return true;
+    }),
+    checkquery('personaIds').optional().isArray({max: 128}).custom((val)=> {
+        for(const i of val)
+            if(Number.isNaN(parseInt(i)) || parseInt(i)<0)
+                throw new Error('Bad input');
+        return true;
+    }),
+    checkquery('dbIds').optional().isArray({max: 128}).custom((val)=> {
+        for(const i of val)
+            if(Number.isNaN(parseInt(i)) || parseInt(i)<0)
+                throw new Error('Bad input');
+        return true;
+    }),
+    checkquery('*').custom((val, {req})=> {
+        let cnt = 0;
+        cnt += Array.isArray(req.query.userIds)? req.query.userIds.length : 0;
+        cnt += Array.isArray(req.query.personaIds)? req.query.personaIds.length : 0;
+        cnt += Array.isArray(req.query.dbIds)? req.query.dbIds.length : 0;
+        if(cnt > 128)
+            throw new Error('Too much entities. (max 128)');
+        return true;
+    })
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error:1, code:'playerBatch.bad', message:validateErr.array()});
+        
+        let result = [];
+        if(req.query.userIds?.length)
+            result = result.concat(await db.select('*').from('players').whereIn('originUserId', req.query.userIds)
+                .then(r=> r.map(i=> {
+                    delete i.valid;
+                    return i;
+                }))
+            );
+        if(req.query.personaIds?.length)
+            result = result.concat(await db.select('*').from('players').whereIn('originPersonaId', req.query.personaIds)
+                .then(r=> r.map(i=> {
+                    delete i.valid;
+                    return i;
+                }))
+            );
+        if(req.query.dbIds?.length)
+            result = result.concat(await db.select('*').from('players').whereIn('id', req.query.dbIds)
+                .then(r=> r.map(i=> {
+                    delete i.valid;
+                    return i;
+                }))
+            );
+    
+        return res.status(200).json({success: 1, code: 'playerBatch.ok', data: result});
+    } catch(err) {
+        next(err);
+    }
+});
+
 router.post('/viewed', viewedRateLimiter, [
     checkbody('data.id').isInt({min: 0})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
@@ -82,6 +146,61 @@ async (req, res, next)=>{
     }
 });
 
+function raceGetOriginUserId(originName) {
+    const isdone = {                                    // what we are doing here:
+        successFlag: false, racer: new Set(),           // because origin api isnt good enough, 
+        /** @type {Map<string, [number, Error]>} */
+        result: new Map(),  
+        event: new EventEmitter(),   // we need multiple api to provide user profile by name
+        // and we want it asap, so those api need to RACE
+        // Promise.race() return or throw the first resolved or rejected Promise result, so we need to block the errors till someone done or all failed
+        successListener: (tag)=> {              // the function deal with the api get the result                 
+            isdone.racer.add(tag);              // register racer
+            return (result)=> {                 // return a custom function for handling
+                if(isdone.successFlag) return;  // someone already done
+                isdone.event.emit('done');      // the listener function of this event will be called next tick
+                isdone.successFlag=true;        // so no need to worry about returing competition
+                isdone.result.set(tag, [200, result]);
+                return result;
+            }
+        },
+        failListener: (tag)=> {                 // the function deal with the api fail
+            return async (error)=> {            // return a custom function for handling
+                isdone.result.set(tag, [        // record error
+                    error.statusCode==404? 404:500,
+                    error
+                ]);    
+                if(isdone.successFlag) return;  // someone finished before, so just return
+                if(isdone.result.size>=isdone.racer.size) { // all racer failed, throw error
+                    isdone.event.emit('done');
+                    throw(new Error('all tries failed.'));
+                }
+                await new Promise((res,rej)=>isdone.event.once('done', res)); // wait for someone finishes or all fail
+                return;
+            }
+        }
+    };
+    return Promise.race([ 
+        serviceApi('eaAPI', '/searchUser').query({name: originName}).get().then(r=>r.data)
+        .then(isdone.successListener('eaAPI')).catch(isdone.failListener('eaAPI')),
+        // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
+    ]).catch((err)=> {
+        let is404 = false;
+        for(const i of isdone.result.keys()) {
+            if(isdone.result.get(i)[0] == 404)
+                is404 = true;
+            else
+                logger.error(`/report getOriginUserId Race error ${i}`, isdone.result.get(i)[1].message, isdone.result.get(i)[1].stack);
+        }
+        if(is404)
+            return undefined;
+        throw(err);
+    }).finally(()=>{
+        isdone.event.emit('done');  // terminate the unterminated promise (if exist)
+        isdone.event.removeAllListeners();  // destory
+    });
+}
+
 router.post('/report', verifyJWT, verifyCaptcha,
     forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.game').isIn(config.supportGames),
@@ -96,48 +215,11 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error:1, code:'report.bad', message:validateErr.array()});
         
-        const isdone = {                                    // what we are doing here:
-            successFlag: false, racer: new Set(),           // because origin api isnt good enough, 
-            winner: '',         fails: new Set(),           // we need multiple api to provide user profile by name
-            failMessages: [],   event: new EventEmitter(),  // and we want it asap, so those api need to RACE
-            // Promise.race() return or throw the first resolved or rejected Promise result, so we need to block the errors till someone done or all failed
-            successListener: (tag)=> {              // the function deal with the api get the result                 
-                isdone.racer.add(tag);              // register racer
-                return (result)=> {                 // return a custom function for handling
-                    if(isdone.successFlag) return;  // someone already done
-                    isdone.event.emit('done');      // the listener function of this event will be called next tick
-                    isdone.successFlag=true; isdone.winner=tag;  // so no need to worry about returing competition 
-                    return result;
-                } 
-            },
-            failListener: (tag)=> {                 // the function deal with the api fail
-                isdone.racer.add(tag);              // register racer again, dosent matter because we're using Set
-                return async (error)=> {            // return a custom function for handling
-                    isdone.fails.add(tag); isdone.failMessages.push(error); // log error
-                    if(isdone.successFlag) return;  // someone finished before, so just return
-                    if(isdone.fails.size>=isdone.racer.size) { // all racer failed, throw error
-                        isdone.event.emit('done'); throw(new Error('all tries failed.'));
-                    }
-                    await new Promise((res,rej)=>isdone.event.once('done', res)); // wait for someone finishes or all fail
-                    return;
-                }
-            }
-        };
-        const originUserId = await Promise.race([ 
-            serviceApi('eaAPI', '/searchUser').query({name: req.body.data.originName}).get().then(r=>r.data)
-            .then(isdone.successListener('eaAPI')).catch(isdone.failListener('eaAPI')),
-            // getUserProfileBySomeOtherWay(name).then(successListener()).catch(failListener()),
-        ]).catch((err)=> {
-            //console.log(err);   // DEBUG
-            //console.log(isdone.failMessages);
-            return undefined; 
-        });
+        const originUserId = await raceGetOriginUserId(req.body.data.originName);
         if(!originUserId)
             return res.status(404).json({error:1, code:'report.notFound', message:'Report user not found.'});
         /** @type {{username:string, personaId:string, userId:string}} */
         const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r=>r.data);
-        isdone.event.emit('done');  // terminate the unterminated promise (if exist)
-        isdone.event.removeAllListeners();  // destory
 
         // now the user being reported is found
         let avatarLink;
@@ -350,6 +432,22 @@ async (req, res, next)=>{
             delete i.valid;
         });
 
+        const replieIds = result.filter(i=>i.toCommentId!=undefined).map(i=>i.toCommentId);
+        /** @type {import("../typedef.js").Comment[]} */
+        const quotes = await db('comments').join('users', 'comments.byUserId', 'users.id')
+                            .select('comments.*', 'users.username', 'users.privilege')
+                            .whereIn('comments.id', replieIds).andWhere({'comments.valid': 1});
+        quotes.forEach(i=>{     // delete those unused keys
+            for(let j of Object.keys(i))
+                if(typeof(i[j])=='undefined' || i[j]==null)
+                    delete i[j];
+            delete i.valid;
+        });
+        result.forEach(i=>{     // add origin comment to those replies
+            if(i.toCommentId!=undefined)
+                i.quote = quotes.find(j=>j.id==i.toCommentId);
+        });
+
         res.status(200).json({success: 1, code: 'timeline.ok', data: { result, total } });
     } catch(err) {
         next(err);
@@ -396,7 +494,7 @@ async (req, res, next)=>{
             updateTime: new Date(), 
         }).increment('commentsNum', 1).where({id: dbId});
 
-        siteEvent.emit('action', {method: 'reply', params: {reply}});
+        siteEvent.emit('action', {method: 'reply', params: {reply, player}});
         return res.status(201).json({success: 1, code: 'reply.suceess', message: 'Reply success.'});
     } catch(err) {
         next(err);
@@ -470,7 +568,7 @@ async (req, res, next)=>{
 router.post('/judgement', verifyJWT, allowPrivileges(['admin','super','root']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
     checkbody('data.cheatMethods').optional().isArray().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
-    checkbody('data.action').isIn(['suspect','innocent','discuss','guilt','kill','trash']),
+    checkbody('data.action').isIn(['suspect','innocent','discuss','guilt','kill','invalid','more']),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
@@ -539,7 +637,7 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'banAppeal.noNeed', message: 'no need for ban appeal'});
         /** @type {import("../typedef.js").Comment} */
         const prev = await db.select('*').from('comments').where({toPlayerId: req.body.data.toPlayerId, type: 'banAppeal'}).orderBy('createTime', 'desc').first();
-        if(prev && prev.status=='lock')
+        if(prev && prev.appealStatus=='lock')
             return res.status(403).json({error: 1, code: 'banAppeal.locked', message: 'this thread is locked'});    
         const banAppeal = {
             type: 'banAppeal',
@@ -553,11 +651,11 @@ async (req, res, next)=>{
             valid: 1,
             createTime: new Date()
         };
-        const insertId = (await db('comments').insert(banAppeal) )[0];
+        const insertId = await db('comments').insert(banAppeal).then(r=>r[0]);
         banAppeal.id = insertId;
         banAppeal.viewedAdmins = [];
 
-        siteEvent.emit('action', {method: 'banAppeal', params: {banAppeal}});
+        siteEvent.emit('action', {method: 'banAppeal', params: {banAppeal, player}});
         return res.status(201).json({success: 1, code: 'banAppeal.success', message:'please wait.'})
     } catch(err) {
         next(err);
@@ -619,6 +717,5 @@ async function pushOriginNameLog(originName, originUserId, originPersonaId) {
 
 export default router;
 export {
-    commentRateLimiter,
     pushOriginNameLog,
 };

@@ -20,7 +20,7 @@
  * @property {number} id
  * @property {string} username
  * @property {string} password
- * @property {string} introduction
+ * @property {string[]} subscribes dbIds
  * @property {number} valid
  * @property {string[]} privilege
  * @property {Object} attr JSON
@@ -138,6 +138,8 @@
  * @property {number} usedStorageQuota
  * @property {number} maxTrafficQuota
  * @property {number} todayTrafficQuota
+ * @property {number} maxFileNumber
+ * @property {number} todayFileNumber
  * @property {Date} prevResetTime
  */
 

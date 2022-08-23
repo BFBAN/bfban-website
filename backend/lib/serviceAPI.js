@@ -15,10 +15,12 @@ class ServiceApiError extends Error {
 }
 
 class ServiceApiContext {
-    constructor(base, path='/', exception=true) {
+    constructor(base, path='/', {exception=false, username=undefined, password=undefined}) {
         this.#urlbase = base;
         this.#urlpath = path;
         this.#throwHttpErrors = exception;
+        this.#username = username;
+        this.#password = password;
     }
     #url = '';
     #urlbase = '';
@@ -81,9 +83,13 @@ class ServiceApiContext {
 }
 
 /** @param {'eaAPI'|'msGraphAPI'} svcName */
-function serviceApi(svcName, path='/', exception=true) {
+function serviceApi(svcName, path='/', exception=true, auth=false) {
     assert(config.services[svcName] && config.services[svcName].url, 'serviceAPI: Cannot find such service');
-    return new ServiceApiContext(config.services[svcName].url, path, exception);
+    return new ServiceApiContext(config.services[svcName].url, path, {
+        exception,
+        username: auth? config.services[svcName].username : undefined,
+        password: auth? config.services[svcName].password : undefined
+    });
 }
 
 export default serviceApi;
