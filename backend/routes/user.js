@@ -497,8 +497,9 @@ async (req, res, next)=>{
 
 router.post('/forgetPassword', verifyCaptcha, [
     checkbody('data.username').isString().trim().isLength({min: 1, max: 40}),
-    checkbody('data.originEmail').trim().isEmail()
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */ 
+    checkbody('data.originEmail').trim().isEmail(),
+    checkbody('data.language').isIn(config.supportLanguages)
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
@@ -520,7 +521,7 @@ async (req, res, next)=> {
             expiresTime: new Date(Date.now()+1000*60*60*4), // 4h
             createTime: new Date()
         });
-        await sendForgetPasswordVerify(user.username, user.originEmail, encodeURIComponent(code)); // user verify the code->save new password into db
+        await sendForgetPasswordVerify(user.username, user.originEmail, req.body.data.language, encodeURIComponent(code)); // user verify the code->save new password into db
         // check /forgetPasswordVerify below
         res.status(200).json({success: 1, code: 'forgetPassword.needVerify', message: 'check your email to reset the password.'});
     } catch(err) {
@@ -546,7 +547,10 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'forgetPassword.bad'});
         
         const passwdHash = await generatePassword(newpassword);
+
         await db('users').update({password: passwdHash}).where({id: verification.userId}); // store the new password into db
+
+        // TODO 移除重置的密匙
 
         return res.status(200).json({success: 1, code: 'forgetPassword.success'});
     } catch(err) {

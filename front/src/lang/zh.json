@@ -403,7 +403,8 @@
   },
 
   "forgetPassword": {
-    "title": "重置密码"
+    "title": "重置密码",
+    "resetSuccess": "恭喜完成重置 \uD83D\uDC90"
   },
   "list": {
     "title": "外挂公示",

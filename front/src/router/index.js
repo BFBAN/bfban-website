@@ -95,7 +95,7 @@ const routes = [
 
     // 重置密码
     {name: 'forgetPassword', path: '/forgetPassword', component: ForgetPassword},
-    {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify/:code', component: ForgetPassword,},
+    {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify', component: ForgetPassword},
 
     {name: 'signupComplete', path: '/signupComplete/:code', component: SignupComplete},
     //  { name: 'signup', path: '/reset', component: Reset },

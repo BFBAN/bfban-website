@@ -74,11 +74,7 @@
                 {{ $t("header.profile") }}
               </router-link>
             </DropdownItem>
-            <DropdownItem divided v-if="isAdmin">
-              <router-link :to="{name: 'dashboard'}">
-                {{ $t("header.dashboard") }} [beta]
-              </router-link>
-            </DropdownItem>
+
             <Dropdown-item divided v-show="isLogin">
               <a @click.stop.prevent="signout">
                 <Icon type="md-log-out"></Icon>

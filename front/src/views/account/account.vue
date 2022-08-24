@@ -273,6 +273,8 @@ export default {
           });
 
           this.modal_changePassword.show = false;
+
+          this.$router.push({name: "signin"});
           return;
         }
 
@@ -296,7 +298,7 @@ export default {
     handleIntroductionChange (val) {
       this.formItem.introduction = val;
     },
-    refreshCaptcha: function () {
+    refreshCaptcha () {
       http.get(api["captcha"], {
         params: {
           r: Math.random()

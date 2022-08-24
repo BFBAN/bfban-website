@@ -19,6 +19,7 @@
               <Step title="基本信息" content="核对账户"></Step>
               <Step title="验证码" content="验证是否机器人"></Step>
               <Step title="邮箱验证" content="查看邮箱验证链接"></Step>
+              <Step title="设置密码" content="重置您的密码"></Step>
               <Step title="完成" content="重置成功"></Step>
             </Steps>
 
@@ -49,38 +50,36 @@
                 <EmailTip :email="forgetPassword.originEmail"></EmailTip>
               </div>
 
-              <div v-if="stepsIndex == 3" align="center">
-                <h1>恭喜完成重置 💐</h1>
-                <br>
-                <Row :gutter="10">
-                  <Col>
-                    <Tag color="warning" size="large">新密码</Tag>
-                  </Col>
-                  <Col flex="auto">
-                    <Input :value="forgetPassword.password"></Input>
-                  </Col>
-                </Row>
-                <br>
-                <Alert type="warning">
-                  <p>请记住上方密码 或 在个人中心重新设置您可记忆的密码</p>
-                </Alert>
+              <div v-if="stepsIndex == 3">
+                <FormItem :label="$t('signup.form.password')" prop="password">
+                  <Input type="password" password minlength="6" v-model="forgetPassword.password" size="large"
+                         :placeholder="$t('signup.placeholder.password')"/>
+                </FormItem>
               </div>
+
+              <!-- 重置成功 S -->
+              <div v-if="stepsIndex == 4" align="center">
+                <h1>{{ $t('forgetPassword.resetSuccess') }}</h1>
+              </div>
+              <!-- 重置成功 E -->
 
               <Row>
                 <Col span="12">
-                  <Button v-if="stepsIndex >=0 && stepsIndex <= 1" :disabled="stepsIndex == 0 "
-                          @click.prevent.stop="stepsIndex--" size="large">{{ $t('signup.prev') }}
+                  <Button v-if="button.prev"
+                          :disabled="button.prevShow"
+                          @click.prevent.stop="stepsIndex--; onStepsIndex();" size="large">{{ $t('signup.prev') }}
                   </Button>
                   <Divider type="vertical"/>
-                  <Button v-if="stepsIndex != 1  && stepsIndex >= 0 && stepsIndex <= 1"
-                          @click.prevent.stop="stepsIndex++" size="large"
+                  <Button v-if="button.next"
+                          :disabled="button.nextShow"
+                          @click.prevent.stop="stepsIndex++; onStepsIndex();" size="large"
                           type="primary">{{ $t('signup.next') }}
                   </Button>
                 </Col>
                 <Col span="12" align="right" type="flex">
-                  <Button v-if="stepsIndex == 1"
+                  <Button v-if="button.submit"
                           long
-                          @click.prevent.stop="onForgetPassword"
+                          @click.prevent.stop="onSubmit"
                           :disabled="forgetPassword.captcha == ''"
                           :loading="spinShow"
                           size="large" type="primary">
@@ -106,13 +105,19 @@ export default {
   name: 'forgetPassword',
   data() {
     return {
+      button: {
+        next: true,
+        nextShow: false,
+        prev: true,
+        prevShow: true,
+        submit: false
+      },
       stepsIndex: 0,
       ruleValidate: {},
       forgetPassword: {
         username: '',
         originEmail: '',
         password: '',
-        captcha: '',
       },
       spinShow: false,
 
@@ -123,12 +128,69 @@ export default {
   },
   components: {EmailTip, Captcha},
   created() {
-    const code = this.$route.params.code || this.$route.query.code;
-    code != null ? this.forgetPasswordVerify(code.toString()) : null;
+    const {code} = this.$route.query;
+    if (code) {
+      this.stepsIndex = 3;
+      this.onStepsIndex();
+    }
   },
   methods: {
-    // 重置密码验证
-    forgetPasswordVerify(code) {
+    onStepsIndex () {
+      let stepsIndex = this.stepsIndex;
+      this.button.submit = false;
+
+      switch (stepsIndex) {
+        case 0:
+          this.button.prev = true;
+          this.button.prevShow = true;
+          this.button.next = true;
+          break;
+        case 1:
+          this.button.prev = true;
+          this.button.prevShow = false;
+          this.button.next = false;
+          this.button.submit = true;
+          break;
+        case 2:
+          this.button.prev = false;
+          this.button.next = false;
+          break;
+        case 3:
+          this.button.prev = false;
+          this.button.next = false;
+          this.button.submit = true;
+          break;
+        case 4:
+          this.button = {};
+          break;
+      }
+
+      return this.stepsIndex;
+    },
+
+    /**
+     * 提交
+     */
+    onSubmit () {
+      switch (this.stepsIndex) {
+        case 1:
+          this.onForgetPassword();
+          break;
+        case 3:
+          this.forgetPasswordVerify();
+          break;
+      }
+    },
+
+    /**
+     * 重置密码 key验证
+     * @param code
+     */
+    forgetPasswordVerify() {
+      const {code} = this.$route.query;
+      const newpassword = this.forgetPassword.password;
+      this.spinShow = true;
+
       if (code == '' || code == undefined || code == null) {
         this.verify.iscode = false;
         return;
@@ -136,30 +198,39 @@ export default {
       this.verify.iscode = true;
       this.verify.load = 0;
 
-      http.get(api["user_forgetPasswordVerify"], {
-        params: {code}
+      http.post(api["user_forgetPasswordVerify"], {
+        data: {
+          data: {
+            code,
+            newpassword
+          }
+        }
       }).then((res) => {
         const d = res.data;
 
         if (d.success === 1) {
           this.verify.load = 3;
-          this.stepsIndex = 3;
-          this.forgetPassword.password = d.data.newpassword;
+          this.stepsIndex = 4;
+          // this.forgetPassword.password = d.data.newpassword;
         } else {
           this.$Message.error(d.message);
           this.verify.load = -1;
-          this.stepsIndex = 0;
         }
       }).catch((e) => {
         this.verify = {
           load: -1,
           msg: e.toString(),
         };
-      })
+      }).finally(() => {
+        this.spinShow = false;
+        this.onStepsIndex();
+      });
     },
 
-    // 重置密码
-    onForgetPassword: function () {
+    /**
+     * 提交 重置密码
+     */
+    onForgetPassword () {
       this.spinShow = true;
 
       this.forgetPassword.language = this.$root.$i18n.locale;
@@ -180,6 +251,7 @@ export default {
           this.$Message.error(d.message);
         }
       }).finally(() => {
+        this.onStepsIndex();
         this.spinShow = false;
       });
     },
