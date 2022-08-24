@@ -464,7 +464,7 @@ export default {
      * @param index
      */
     handleReport(formData, index) {
-      const cheatMethods = formData.formItem.checkbox.join(",");
+      const cheatMethods = formData.formItem.checkbox; // .join(",");
       const {gameName, captcha, originId} = formData.formItem;
       const description = formData.formItem.description.trim();
       const videoLink = formData.formItem.videoLink.toString();

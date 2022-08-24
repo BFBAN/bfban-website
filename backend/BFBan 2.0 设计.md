@@ -583,7 +583,7 @@ headers:	x-access-token: {{access_token}}	// login required, admin privilege
 body:		{
     			data: {
                     toPlayerId: number,
-                    cheatMethods: string[],	// see {{valid_cheatMethod}}
+                    cheatMethods: array[],	// see {{valid_cheatMethod}}
                     action: 'suspect'|'innocent'|'discuss'|'guilt'|'kill'|'more'|'invalid' // super
                     content: string
                 }

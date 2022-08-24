@@ -598,9 +598,16 @@
           </Spin>
         </Card>
         <br v-if="isAdmin">
+
+        <!-- 裁判 S -->
         <Card dis-hover v-if="isAdmin">
           <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})">
-            <h2 style="margin: 1rem 0;"># {{ $t('detail.info.judgement', {msg: 'judgement'}) }}</h2>
+            <h2 style="margin: 1rem 0;">
+              # {{ $t('detail.info.judgement', {msg: 'judgement'}) }}
+              <Tag color="success">
+                {{ $t("account.admin") }}
+              </Tag>
+            </h2>
 
             <!-- 管理员面板 S -->
             <Alert type="warning" show-icon>
@@ -696,13 +703,15 @@
 
               <FormItem>
                 <Button type="primary" :loading="verifySpinShow" @click.stop.prevent="doVerify">
-                  {{ $t('detail.info.commit', {msg: 'commit'}) }}
+                  {{ $t('basic.button.submit', {msg: 'submit'}) }}
                 </Button>
               </FormItem>
             </Form>
             <!-- 管理员面板 E -->
           </div>
         </Card>
+        <!-- 裁判 E -->
+
         <div v-if="!isCheaterExist">
           <Empty></Empty>
         </div>
@@ -886,6 +895,7 @@ import {formatTextarea, waitForAction} from "@/mixins/common";
 export default new BFBAN({
   data() {
     return {
+      getGameLabel: util.getGameLabel,
       appeal: {
         load: false,
         show: false,
@@ -1126,7 +1136,7 @@ export default new BFBAN({
     async doVerify() {
       const {status} = this.verify;
       let {suggestion} = this.verify;
-      const cheatMethods = this.verify.checkbox.join(',');
+      const cheatMethods = this.verify.checkbox; // .join(',');
 
       if ((status == '1' && cheatMethods == '') || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
@@ -1281,7 +1291,7 @@ export default new BFBAN({
       let data = {
         data: {
           toPlayerId: cheaterId,
-          toCommentId: cheaterId,
+          toCommentId: null,
           content: content,
         },
         // encryptCaptcha: this.reply.captchaUrl.hash,

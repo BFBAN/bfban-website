@@ -20,6 +20,7 @@
       "notlang": "未翻译"
     },
     "button": {
+      "commit": "提交",
       "save": "保存",
       "submit": "确认"
     }
@@ -144,7 +145,6 @@
       "adminManual1": "不要轻易下判断，如果不能做出处理判断，就使用上方回复 参与讨论，等待举报者回复",
       "adminManual2": "管理员的任何处理操作都会对作弊者的 现有状态 造成改变，如果不是100%确定，请使用回复留言讨论",
       "judgement": "处理意见",
-      "commit": "提交",
       "replyManual4": "请登录后参与回复",
       "action": "行动",
       "operatingTime": "工作时间",
@@ -158,7 +158,7 @@
     },
     "messages": {
       "fillEverything": "请填写完整",
-      "pleaseExplain": "请详细解释您的裁决",
+      "pleaseExplain": "请更加详细的描述您的裁决内容",
       "dontDoIt": "不准",
       "replySuccess": "回复成功",
       "signIn": "请登录",
