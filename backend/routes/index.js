@@ -1,6 +1,7 @@
 "use strict";
 import express from "express";
 import { check, body as checkbody, query as checkquery, validationResult } from "express-validator";
+import { Transform } from "stream";
 
 import db from "../mysql.js";
 import config from "../config.js";
@@ -181,6 +182,70 @@ async (req, res, next)=>{
 
         res.status(200).json({ success: 1, code:'players.ok', data:{ result, total } });
     } catch(err) {
+        next(err);
+    }
+});
+
+router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'dev', 'root']), [
+    checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
+    checkquery('createTimeFrom').optional().isInt({min: 0}),
+    checkquery('updateTimeFrom').optional().isInt({min: 0}),
+    checkquery('createTimeTo').optional().isInt({min: 0}),
+    checkquery('updateTimeTo').optional().isInt({min: 0}),
+    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6 ]),
+    checkquery('sortBy').optional().isIn(['createTime','updateTime','viewNum','commentsNum']),
+    checkquery('order').optional().isIn(['desc','asc']),
+    checkquery('limit').optional().isInt({min: 0}),
+    checkquery('skip').optional().isInt({min: 0})
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
+async function (req, res, next) {
+    try {
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'players.bad', message: validateErr.array()});
+        
+        const game = (req.query.game&&req.query.game!='all')? req.query.game : '';
+        const createTimeFrom = new Date(req.query.createTimeFrom? req.query.createTimeFrom-0 : 0);
+        const updateTimeFrom = new Date(req.query.updateTimeFrom? req.query.updateTimeFrom-0 : 0);
+        const createTimeTo = new Date(req.query.createTimeTo? req.query.createTimeTo-0 : Date.now());
+        const updateTimeTo = new Date(req.query.updateTimeTo? req.query.updateTimeTo-0 : Date.now());
+        const status = (req.query.status&&req.query.status!='-1')? req.query.status : '%';
+        const sort = req.query.sortBy? req.query.sortBy : 'createTime';
+        const order = req.query.order? req.query.order : 'desc';
+        const limit = req.query.limit? req.query.limit-0 : 20;
+        const skip = req.query.skip? req.query.skip-0 : 0;
+
+        const resultStream = db.select('*').from('players')
+        .where('games', 'like', game? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+        .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+        .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+        .andWhere('status', 'like', status)
+        .orderBy(sort, order).offset(skip).limit(limit).stream();
+
+        let first = true;
+        const formatter = new Transform({
+            objectMode: true,
+            transform(chunk, encoding, callback) {
+                delete chunk.valid;
+                let data;
+                if(first)
+                    data = '[' + JSON.stringify(chunk);
+                else
+                    data = ',' + JSON.stringify(chunk);
+                first = false;
+                callback(null, data);
+            },
+            flush(callback) {
+                callback(null, ']');
+            }
+        });
+        req.on('close', ()=>{ resultStream.end(); });
+        res.status(200).set('Content-Type', 'application/json');
+        formatter.pipe(res);    // the pipeline will break express.Response's life cycle, then hanging the next request 
+        await misc.pipeline(resultStream, formatter).catch(err=>{ logger.error('/players/stream Stream error: ', err); });
+        res.end();
+    } 
+    catch(err) {
         next(err);
     }
 });
