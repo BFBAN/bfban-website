@@ -444,7 +444,7 @@ async (req, res, next)=>{
             delete i.valid;
         });
         result.forEach(i=>{     // add origin comment to those replies
-            if(i.toCommentId!=undefined)
+            if(i.toCommentId)
                 i.quote = quotes.find(j=>j.id==i.toCommentId);
         });
 
@@ -473,7 +473,11 @@ async (req, res, next)=>{
         const player = await db.select('*').from('players').where({id: dbId}).first();
         if(!player) // no such player
             return res.status(404).json({error: 1, code: 'reply.notFound', message: 'no such player'});
-        if(await db.select('toPlayerId').from('comments').where({id: toCommentId}).first().then(r=>r? r.toPlayerId : -1) != dbId)
+        if( toCommentId && await db.select('toPlayerId')    // check whether the comment that user want to reply exists
+            .from('comments')
+            .where({id: toCommentId})
+            .limit(1)
+            .first().then(r=>r? r.toPlayerId : -1) != dbId)
             return res.status(404).json({error: 1, code: 'reply.notFound', message: 'no such comment'});
         
         const reply = {

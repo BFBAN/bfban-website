@@ -98,6 +98,8 @@ function readStreamTillEnd(stream) {
     });
 }
 
+const pipeline = promisify(_pipeline);
+
 export {
     generateErrorHelper,
     encrypt,
@@ -106,5 +108,6 @@ export {
     validateFileName,
     validatePath,
     fileSuffixByMIMEType,
-    readStreamTillEnd
+    readStreamTillEnd,
+    pipeline,
 };

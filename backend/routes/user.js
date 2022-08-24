@@ -325,8 +325,7 @@ async function showUserInfo(req, res, next) {
         const user = await db.select('*').from('users').where({id: req.query.id}).first();
         if(!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
-        const reportnum = await db('players').count({num: 'id'})
-            .first().then(r=>r.num);
+        const reportnum = await db('reports').count({num: 'id'}).where({byUserId: user.id}).first().then(r=>r.num);
         const data = {
             id: user.id,
             username: user.username,
@@ -376,14 +375,11 @@ async (req, res, next)=>{
         const user = await db.select('*').from('users').where({id: req.query.id}).first();
         if(!user)
             return res.status(404).json({error: 1, code: 'userReports.notFound', message: 'no such user.'});
-
         const reports = await db('comments').join('players', 'comments.toPlayerId', 'players.id')
-            .select('players.originName as originName', 'players.originUserId as originuserId',
-                    'players.originPersonaId as originPersonaId', 'players.status as status',
-                    'players.updateTime as updateTime', 'comments.createTime as createTime')
-            .where({'comments.byUserId': user.id, type: 'report'})
-            .orderBy('comments.createTime', 'desc')
-            .offset(skip).limit(limit);
+        .select('players.originName as originName', 'players.originUserId as originuserId',
+                'players.originPersonaId as originPersonaId', 'players.status as status',
+                'players.updateTime as updateTime', 'comments.createTime as createTime')
+        .where({'comments.byUserId': user.id, type: 'report'}).orderBy('comments.createTime', 'desc').offset(skip).limit(limit);
 
         res.status(200).json({success: 1, code: 'userReports.success', data: reports});
     } catch(err) {
