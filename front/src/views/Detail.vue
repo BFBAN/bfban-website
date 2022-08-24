@@ -1408,7 +1408,7 @@ export default new BFBAN({
   computed: {
     isAdmin() {
       const user = this.$store.state.user;
-      const is = user ? user.userinfo.privilege !== 'normal' : false;
+      const is = user ? user.userinfo.privilege.concat("").includes("admin") : false;
       return Boolean(is);
     },
     isLogin() {
