@@ -11,7 +11,7 @@ export default class Http extends Conf {
      */
     HTTP = http.create({
         // baseURL: process.env.BASE_API,
-        timeout: 9000,
+        timeout: 600000,
         withCredentials: true,
 
         headers: {

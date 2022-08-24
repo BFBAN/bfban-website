@@ -18,6 +18,10 @@
     },
     "tip": {
       "notlang": "未翻译"
+    },
+    "button": {
+      "save": "保存",
+      "submit": "确认"
     }
   },
   "header": {
@@ -372,6 +376,7 @@
     "title": "注册",
     "prev": "上一步",
     "next": "下一步",
+    "registerVerification": "验证账户",
     "form": {
       "username": "用户名",
       "password": "密码",
@@ -396,6 +401,7 @@
     "fillIn": "请规范填写",
     "failed": "注册失败"
   },
+
   "forgetPassword": {
     "title": "重置密码"
   },

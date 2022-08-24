@@ -1283,7 +1283,6 @@ export default new BFBAN({
           toPlayerId: cheaterId,
           toCommentId: cheaterId,
           content: content,
-          toFloor: 1,
         },
         // encryptCaptcha: this.reply.captchaUrl.hash,
         // captcha: this.reply.captcha,
@@ -1310,6 +1309,7 @@ export default new BFBAN({
           this.cancelReply();
 
           this.cheater.status = status;
+          this.reply = "";
         } else {
           this.$Message.error(d.message);
         }

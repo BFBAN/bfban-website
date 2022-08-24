@@ -1,5 +1,5 @@
 {
-  "requestActionName": "development3",
+  "requestActionName": "development4",
   "requestProductionName": "production",
   "child": {
     "development": {
@@ -19,7 +19,7 @@
     },
     "development4": {
       "protocol": "http",
-      "request": "localhost:4002/api/",
+      "request": "localhost:3000/api/",
       "qiniuUrl": ""
     },
     "production": {

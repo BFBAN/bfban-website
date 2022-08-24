@@ -83,7 +83,7 @@ const routes = [
     {name: 'signup', path: '/signup', component: Signup},
 
     // 注册验证
-    {name: 'registerVerification', path: '/registerVerification', component: Signup},
+    {name: 'registerVerification', path: '/registerVerification', component: SignupComplete},
 
     // 旧账户换绑 需登录
     {

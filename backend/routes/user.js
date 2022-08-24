@@ -41,7 +41,7 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'signup.usernameExist'});
     
         // now check the origin account user binded
-        const originUserId = await serviceApi('eaAPI', '/searchUser').query({email: originEmail}).get().then(r=>r.data);
+        var originUserId = await serviceApi('eaAPI', '/searchUser').query({email: originEmail}).get().then(r=>r.data);
         if(!originUserId)
             return res.status(400).json({error: 1, code:'signup.originNotFound'});
         const originUserInfo = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r=>r.data);
@@ -54,7 +54,9 @@ async (req, res, next)=> {
         // check whether the user has at least 1 battlefield game
         /** @type {string[]} */
         const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r=>r.data);
-        if(userGames && userGames.concat(' ').includes('Battlefield') == false)
+
+        // 检查库存中含有Battlefield系列游戏
+        if(userGames && userGames.indexOf("Battlefield").length >= 0)
             return res.status(400).json({error: 1, code: 'signup.gameNotShowed'});
         
         // no mistakes detected, generate a unique string for register validation

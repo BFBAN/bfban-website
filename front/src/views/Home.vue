@@ -153,7 +153,7 @@
                   {{ getGameLabel(a_i.game) }}
                 </Tag>
                 <router-link
-                    :to="{name: 'cheater', params: {game: `${a_i.game}`, ouid: `${a_i.originUserId}`}}">
+                    :to="{name: 'cheater', params: {game: `${a_i.game}`, ouid: `${a_i.playerOriginPersonaId}`}}">
                   {{ a_i.toPlayerName }}
                 </router-link>
               </span>
@@ -175,7 +175,7 @@
 
                 {{ $t('detail.info.judge', {msg: 'judge'}) }}
 
-                <router-link :to="{name: 'cheater', params: {ouid: `${a_i.toPlayerId}`}}">
+                <router-link :to="{name: 'cheater', params: {ouid: `${a_i.playerOriginPersonaId}`}}">
                   {{ a_i.toPlayerName }}
                 </router-link>
 

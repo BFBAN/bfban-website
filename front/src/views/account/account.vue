@@ -108,7 +108,9 @@
       <Divider></Divider>
 
       <FormItem>
-        <Button type="primary" :loading="formLoad" @click="onSave">Submit</Button>
+        <Button type="primary" :loading="formLoad" @click="onSave">
+          {{ $t("basic.button.save") }}
+        </Button>
       </FormItem>
     </Form>
 
@@ -366,6 +368,8 @@ export default {
 
         if (d.success === 1) {
           this.$store.dispatch('setUserInfo', d.data);
+
+          this.formItem = d.data;
         }
       })
     }

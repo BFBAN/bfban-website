@@ -5,7 +5,7 @@
       <Col :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem>{{ $t("report.info.verify") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("signup.registerVerification") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
     </Row>
@@ -55,8 +55,7 @@ export default {
   },
   methods: {
     registerVerify () {
-      const code = this.$route.params.code;
-
+      const {code} = this.$route.query;
       if (code == '' || code == undefined || code == null) {
         this.verify.iscode = false;
         return;
@@ -66,7 +65,10 @@ export default {
 
       // 验证账户
       http.get(api["account_signupVerify"], {
-        params: {code}
+        params: {
+          code,
+          lang: this.$root.$i18n.locale
+        }
       }).then((res) => {
         const d = res.data;
 

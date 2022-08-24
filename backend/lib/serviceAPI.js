@@ -87,8 +87,8 @@ function serviceApi(svcName, path='/', exception=true, auth=false) {
     assert(config.services[svcName] && config.services[svcName].url, 'serviceAPI: Cannot find such service');
     return new ServiceApiContext(config.services[svcName].url, path, {
         exception,
-        username: auth? config.services[svcName].username : undefined,
-        password: auth? config.services[svcName].password : undefined
+        username: auth? config.services[svcName].username : '',
+        password: auth? config.services[svcName].password : ''
     });
 }
 
