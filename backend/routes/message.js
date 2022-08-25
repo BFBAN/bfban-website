@@ -78,40 +78,6 @@ async (req, res, next)=> {
     }
 });
 
-router.get('/poll', verifyJWT, forbidPrivileges(['blacklisted']), 
-/** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
-async (req, res, next)=>{
-    try {
-        const maxTimeout = config.pollingTimeout;
-        let timer;
-        let listener;
-        let aborter;
-        let data = await new Promise((res, rej)=> {
-            timer = setTimeout(()=>{
-                res(null);
-            }, maxTimeout);
-            listener = (params)=> {
-                if(params.to != req.user.id) return;
-                res(params);
-            };
-            aborter = ()=> { res(null); };
-            req.on('close', aborter);
-            siteEvent.addListener('message', listener);
-        }).finally(()=>{
-            req.removeListener('close', aborter);
-            siteEvent.removeListener('message', listener);
-            clearTimeout(timer);
-        });
-        return res.status(200).json({
-            success: 1, 
-            code: data? 'messagePoll.got':'messagePoll.empty',
-            data: data
-        });
-    } catch(err) {
-        next(err);
-    }
-});
-
 router.post('/', verifyJWT, forbidPrivileges(['freezed','blacklisted']), [
     checkbody('data.toUserId').if( checkbody('data.type').isIn(['direct','warn','fatal']) ).isInt({min: 0}),
     checkbody('data.type').isIn(['direct','warn','fatal','toAll','toAdmins','toNormals','command']),

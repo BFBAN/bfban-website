@@ -7,3 +7,4 @@ config.json
 private/
 backend/test/gen/
 package-lock.json
+backend/package-lock.json
