@@ -13,7 +13,6 @@ export default class Http extends Conf {
         // baseURL: process.env.BASE_API,
         timeout: 600000,
         withCredentials: true,
-
         headers: {
             'Content-type': 'application/json',
         },
@@ -48,12 +47,6 @@ export default class Http extends Conf {
             data: requestData.data,
             params: requestData.params,
         });
-
-        return result;
-    }
-
-    async cors(url, data = {data: {}}) {
-        let result = await this.HTTP.cors(url, data);
 
         return result;
     }

@@ -44,9 +44,11 @@
                 </router-link>
 
                 <!-- 被举报的类型 E -->
-                <Tag v-if="cheater.cheatMethods" color="warning">
-                  {{ convertCheatMethods(cheater.cheatMethods) }}
-                </Tag>
+                <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0" >
+                  <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
+                    {{ $t("cheatMethods." + method_item + ".title") }}
+                  </Tag>
+                </template>
 
                 <h1 style="font-size: 1.6rem;">
                   {{ cheater.originName || 'user id' }}
@@ -238,7 +240,7 @@
                   <div v-else-if="l.type === 'reply'" slot="dot" class="timeline-time-dot ivu-tag-geekblue reply">
                     <Icon type="ios-text" size="20" class="ivu-tag-text"></Icon>
                   </div>
-                  <div v-else-if="l.type === 'ban_appeal'" slot="dot"
+                  <div v-else-if="l.type === 'banAppeal'" slot="dot"
                        class="timeline-time-dot ivu-tag-magenta ban_appeal">
                     <Icon type="md-bookmark" size="20" class="ivu-tag-text"></Icon>
                   </div>
@@ -253,8 +255,8 @@
                     <Icon type="ios" size="20" class=""></Icon>
                   </div>
 
-                  <!-- 举报 S -->
-                  <div v-if="l.type === 'report'" class="timeline-content">
+                  <!-- 举报:any S -->
+                  <div :id="`floor-${l.id}`" v-if="l.type === 'report'" class="timeline-content">
                     <div class="timeline-time">
                       <Row>
                         <Col flex="1">
@@ -264,20 +266,23 @@
                             </BusinessCard>
                           </router-link>
                           <!-- 举报 -->
-                          {{ $t('detail.info.report', {msg: 'report'}) }}
+                          {{ $t('detail.info.report') }}
                           <a><u><b>{{ l.toOriginName }}</b></u></a>
+
                           <!-- 在 -->
-                          {{ $t('detail.info.inGame', {msg: 'inGame'}) }}
-                          <router-link :to="{name: 'cheaters', query: {game: `${l.cheatGame}`} }">
+                          {{ $t('detail.info.inGame') }}
+
+                          <router-link :to="{name: 'player', query: {game: `${l.cheatGame}`} }">
                             {{ l.cheatGame }}
                           </router-link>
+
                           <!-- 游戏中 -->
-                          {{ $t('detail.info.gaming', {msg: 'gaming'}) }}
+                          {{ $t('detail.info.gaming') }}
 
                           <Tag type="border" color="orange"
-                               v-for="(methods, methodsIndex) in convertCheatMethods(l.cheatMethods || '').split(' ')"
+                               v-for="(methods, methodsIndex) in l.cheatMethods"
                                :key="methodsIndex">
-                            {{ methods }}
+                            {{$t("cheatMethods." + methods + ".title")}}
                           </Tag>
                         </Col>
                         <Col align="right">
@@ -315,24 +320,23 @@
                       </Button>
                     </p>
                   </div>
-                  <!-- 举报 E -->
+                  <!-- 举报:any E -->
 
-                  <!-- 上诉 S -->
-                  <div v-if="l.type === 'ban_appeal'" class="timeline-content">
+                  <!-- 申诉:any S -->
+                  <div :id="`floor-${l.id}`" v-if="l.type === 'banAppeal'" class="timeline-content">
                     <div class="timeline-time">
                       <Row>
                         <Col flex="auto">
-
                           <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
                               <u><b>{{ l.username || l.byUserId }}</b></u>
                             </BusinessCard>
                           </router-link>
 
-                          <teleport v-if="!isSelf(l.originUserId)">
-                            {{ $t('detail.info.assistPppeal', {msg: 'assistPppeal'}) }}
-                          </teleport>
-                          <teleport v-else>{{ $t('detail.info.appeal', {msg: 'appeal'}) }}</teleport>
+                          <template v-if="!isSelf(l.originUserId)">
+                            {{ $t('detail.info.assistPppeal') }}
+                          </template>
+                          <template v-else>{{ $t('detail.info.appeal') }}</template>
 
                           <BusinessCard :id="l.originUserId">
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
@@ -348,7 +352,7 @@
                         <Col>
                           <Time :time="l.createTime" v-if="l.createTime"></Time>
                           <Divider type="vertical"/>
-                          {{ l.status }}
+                          <Tag>{{ l.appealStatus }}</Tag>
                         </Col>
                       </Row>
                     </div>
@@ -379,11 +383,10 @@
                       </Dropdown>
                     </p>
                   </div>
-                  <!-- 上诉 E -->
+                  <!-- 申诉:any E -->
 
-                  <!-- 认为 S -->
-                  <div v-if="l.type === 'verify' || l.type === 'judgement'" class="timeline-content bookmark"
-                       :id="`user-verify-cheater-${l.id}`">
+                  <!-- 认为:any S -->
+                  <div :id="`floor-${l.id}`" v-if="l.type === 'verify' || l.type === 'judgement'" class="timeline-content bookmark">
                     <div class="timeline-time">
                       <Row>
                         <Col flex="1">
@@ -393,20 +396,24 @@
                             </BusinessCard>
                           </router-link>
 
-                          {{ $t('detail.info.judge', {msg: 'judge'}) }}
+                          {{ $t('detail.info.judge') }}
 
-                          <Tag color="warning">
-                            {{ getCheaterStatusLabel(l.judgeAction) }}
-                          </Tag>
+                          <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${l.judgeAction}.describe`)">
+                            <Tag color="warning">
+                              {{ getCheaterStatusLabel(l.judgeAction) }}
+                            </Tag>
+                          </Poptip>
 
                           <!-- 作弊方式 -->
-                          {{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
+                          <template v-if="l.cheatMethods && l.cheatMethods.length > 0">
+                            {{ $t('detail.info.cheatMethod') }}
 
-                          <Tag type="border" color="orange"
-                               v-for="(methods, methodsIndex) in convertCheatMethods(l.cheatMethods || '').split(' ')"
-                               :key="methodsIndex">
-                            {{ methods }}
-                          </Tag>
+                            <Tag type="border" color="orange"
+                                 v-for="(methods, methodsIndex) in l.cheatMethods"
+                                 :key="methodsIndex">
+                              {{$t("cheatMethods." + methods + ".title")}}
+                            </Tag>
+                          </template>
                         </Col>
                         <Col align="right">
                           <Time v-if="l.createTime" :time="l.createTime"></Time>
@@ -425,45 +432,10 @@
                       </Button>
                     </p>
                   </div>
-                  <!-- 认为 E -->
-
-                  <!-- 确认:Admin S -->
-                  <div v-if="l.type === 'confirm'" class="timeline-content">
-                    <div class="timeline-time">
-                      <Time v-if="l.createTime" :time="l.createTime"></Time>
-
-                      <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
-                        <BusinessCard :id="l.byUserId">
-                          <u><b>{{ l.username || l.byUserId }}</b></u>
-                        </BusinessCard>
-                      </router-link>
-
-                      <!-- 赞同此决议 S -->
-                      {{ $t('detail.info.agreeWith', {msg: 'agreeWith'}) }}
-                      <a @click.stop.prevent="jumpToBookmark"
-                         :data-hash="`#user-verify-cheater-${l.userVerifyCheaterId}`">
-                        # {{ $t('detail.info.thisChoice', {msg: 'thisChoice'}) }}
-                      </a>
-                      <!-- 赞同此决议 E -->
-
-                      <!-- 作弊方式 S -->
-                      ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
-                      <b>{{ convertCheatMethods(l.cheatMethods || '') }}</b>
-                      <!-- 作弊方式 E -->
-                    </div>
-
-                    <p v-if="isLogin">
-                      <!-- 回复 -->
-                      <Button type="dashed"
-                              @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
-                      </Button>
-                    </p>
-                  </div>
-                  <!-- 确认:Admin E -->
+                  <!-- 认为:any E -->
 
                   <!-- 回复:any S -->
-                  <div v-if="l.type === 'reply'" class="timeline-content">
+                  <div :id="`floor-${l.id}`" v-if="l.type === 'reply'" class="timeline-content">
                     <div class="timeline-time">
                       <Row>
                         <Col flex="1">
@@ -475,10 +447,11 @@
 
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
 
-                          <span v-if="l.toFloor">
-
-                          <a :href="`#floor-${l.toFloor}`">#{{ l.toFloor }}<Icon type="ios-undo"/></a>
-                        </span>
+                          <template v-if="l.quote">
+                            <a :href="`#floor-${l.quote.id}`" >
+                              #{{ l.quote.username }}<Icon type="ios-undo"/>
+                            </a>
+                          </template>
                         </Col>
                         <Col align="right">
                           <Time v-if="l.createTime" :time="l.createTime"></Time>
@@ -607,7 +580,7 @@
                       <!-- 判断选项 -->
                       <Option :value="v_i.value" v-for="v_i in verify.choice" :key="v_i.value">
                         {{ $t(`basic.action.${v_i.value}.text`) }}
-                        <Poptip trigger="hover" transfer="true" word-wrap width="200" :content="$t(`basic.action.${v_i.value}.describe`)">
+                        <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${v_i.value}.describe`)">
                           <Icon type="md-help-circle" size="20"/>
                         </Poptip>
                       </Option>
@@ -652,7 +625,7 @@
                   </Row>
                 </Col>
                 <Col span="24">
-                  <FormItem label="Reason">
+                  <FormItem :label="$t(`detail.judgement.content`)">
                     <Input
                         type="textarea"
                         @on-keydown="handleCmdEnter($event, 'verify')"
@@ -714,10 +687,10 @@
         </Card>
       </Affix>
 
-      <!-- 小回复窗口 -->
+      <!-- 小窗口回复 S -->
       <Modal
           v-model="replyModal"
-          :title="`${$t('detail.info.reply', {msg: 'reply'})} #${reply.toFloor}`"
+          :title="`${$t('detail.info.reply')} #${reply.toFloor}`"
           @on-ok="doReply"
           @on-cancel="cancelReply">
         <div v-if="isLogin">
@@ -754,8 +727,9 @@
         </div>
         <div v-else>{{ $t('detail.info.replyManual4', {msg: 'replyManual4'}) }}</div>
       </Modal>
+      <!-- 小窗口回复 E -->
 
-      <!-- 申诉 -->
+      <!-- 小窗口申诉 S -->
       <Modal v-model="appeal.show"
              width="80%"
              :loading="appeal.load"
@@ -851,6 +825,7 @@
           </Col>
         </Row>
       </Modal>
+      <!-- 小窗口申诉 E -->
 
       <br>
     </template>
@@ -905,7 +880,7 @@ export default new BFBAN({
           {
             label: '所有',
             value: 1,
-            item: ['report', 'reply', 'ban_appeal', 'judgement', 'verify'],
+            item: ['report', 'reply', 'ban_appeal', 'judgement', 'verify', 'banAppeal'],
           },
           {
             label: '仅查看判决',
@@ -915,7 +890,7 @@ export default new BFBAN({
           {
             label: '仅查看申诉',
             value: 3,
-            item: ['ban_appeal'],
+            item: ['banAppeal'],
           }
         ]
       },
@@ -1004,13 +979,13 @@ export default new BFBAN({
      * 基础信息
      */
     getCheatersInfo() {
+      this.cheater = [];
       this.http.get(api["cheaters"], {
         params: Object.assign({
           history: true
         }, {personaId: this.getParamsIds('personaId')})
       }).then((res) => {
         this.spinShow = false;
-        this.cheater = [];
         const d = res.data;
 
         if (d.success === 1) {
@@ -1133,9 +1108,10 @@ export default new BFBAN({
 
         if (d.success == 1) {
           // reset verifyForm
-          this.verify.status = '1';
+          this.verify.status = '';
           this.verify.suggestion = '';
           this.verify.checkbox = [];
+          this.reply.captcha = '';
           this.cheater.status = status;
 
           this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
@@ -1255,7 +1231,8 @@ export default new BFBAN({
       let data = {
         data: {
           toPlayerId: cheaterId,
-          toCommentId: null,
+          // 小窗口回复展开，则存在回复楼层
+          toCommentId: this.timelineList[this.reply.toFloor].id ?? null,
           content: content,
         },
         // encryptCaptcha: this.reply.captchaUrl.hash,
@@ -1283,6 +1260,7 @@ export default new BFBAN({
           this.cancelReply();
 
           this.cheater.status = status;
+          this.reply.toFloor = "";
           this.reply = "";
         } else {
           this.$Message.error(d.message);

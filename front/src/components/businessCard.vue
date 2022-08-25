@@ -10,9 +10,11 @@
           <Col flex="auto">
             <h2>
               <span v-for="(i, index) in privilege" :key="index">
-                <Tag type="border" v-if="i.value == userInfo.privilege" :color="i.class">
-                  {{ $t('basic.privilege.' + userInfo.privilege) }}
-                </Tag>
+                <span v-for="(p, pi) in userInfo.privilege" :key="pi">
+                  <Tag type="border" v-if="i.value == p" :color="i.class">
+                    {{ $t('basic.privilege.' + p) }}
+                  </Tag>
+                </span>
               </span>
               {{ userInfo.username }}
             </h2>

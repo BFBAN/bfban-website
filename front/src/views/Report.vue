@@ -14,13 +14,14 @@
 
       <Tabs type="card"
             v-model="tabs.count"
-            closable
             @on-tab-remove="doCancel">
         <TabPane v-for="(tab, index) in tabs.list.length" :key="index"
+                 disabled
                  :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab.toString())">
           <Card dis-hover v-if="tabs.list[index].statusOk == 0">
             <Form :label-width="150"
-                  :model="tabs.list[index].formItem" :rules="tabs.list[index].ruleValidate"
+                  :model="tabs.list[index].formItem"
+                  :rules="tabs.list[index].ruleValidate"
                   ref="formValidate"
                   label-position="left">
               <!-- 基础信息 S -->
@@ -73,21 +74,25 @@
                           v-model="tabs.list[index].formItem.originId"
                           :data="tabs.list[index].players.list"
                           @on-search="handleSearchReportId"
-                          maxlength="80"
+                          maxlength="280"
+                          clearable
+                          :transfer="true"
                           show-word-limit
                           icon="ios-search"
                           size="large"
                           :placeholder="$t('report.info.onlyOneId')">
-                        <div v-for="(option,optionIndex) in tabs.list[index].players" :key="optionIndex" >
-                          <Option :value="option.originName" v-if="option && option.originName">
-                            <Row>
-                              <Col flex="auto">
-                                <Avatar :src="option.avatarLink"></Avatar>
-                                <span>&emsp; {{ option.originName }}</span>
-                              </Col>
-                            </Row>
-                          </Option>
-                        </div>
+                        <template v-if="tabs.list && tabs.list[index].players.length > 0">
+                          <div v-for="(option,optionIndex) in tabs.list[index].players" :key="optionIndex" >
+                            <Option :value="option.originName" v-if="option && option.originName">
+                              <Row>
+                                <Col flex="auto">
+                                  <Avatar :src="option.avatarLink"></Avatar>
+                                  <span>&emsp; {{ option.originName }}</span>
+                                </Col>
+                              </Row>
+                            </Option>
+                          </div>
+                        </template>
                       </AutoComplete>
                     </Col>
                   </Row>
@@ -195,32 +200,19 @@
               <br>
               <!-- 提交 S -->
               <Card dis-hover>
-                <FormItem :label="$t('report.info.captcha')">
-                  <Input type="text" v-model="tabs.list[index].formItem.captcha"
-                         size="large"
-                         maxlength="4"
-                         :placeholder="$t('report.info.captcha')">
-                    <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
-                      <Captcha ref="captcha"></Captcha>
-                    </div>
-                  </Input>
+                <FormItem prop="captcha" :label="$t('report.info.captcha')">
+                  <Input
+                      type="text"
+                      v-model="tabs.list[index].formItem.captcha"
+                      :placeholder="$t('report.info.captcha')"/>
+                  <div v-html="tabs.list[index].captchaUrl.content"></div>
+                  <a
+                      ref="reCaptcha"
+                      href="#"
+                      @click.stop.prevent="refreshCaptcha(index)">
+                    {{ $t("report.info.getCaptcha") }}
+                  </a>
                 </FormItem>
-
-<!--                <FormItem prop="captcha" :label="$t('report.info.captcha')">-->
-<!--                  <Input-->
-<!--                      type="text"-->
-<!--                      v-model="tabs.list[index].formItem.captcha"-->
-<!--                      :placeholder="$t('report.info.captcha')"/>-->
-<!--                  <div v-html="tabs.list[index].captchaUrl.content"></div>-->
-<!--                  <a-->
-<!--                      ref="reCaptcha"-->
-<!--                      href="#"-->
-<!--                      @click.stop.prevent="refreshCaptcha(index)">-->
-<!--                    {{-->
-<!--                      $t("report.info.getCaptcha", {msg: "getCaptcha"})-->
-<!--                    }}-->
-<!--                  </a>-->
-<!--                </FormItem>-->
 
                 <FormItem>
                   <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel">
@@ -250,7 +242,7 @@
             </Alert>
           </Card>
         </TabPane>
-        <Button @click="handleTabsAdd" size="small" slot="extra">
+        <Button @click="handleTabsAdd" size="small" slot="extra" disabled>
           <Icon type="md-add"/>
         </Button>
       </Tabs>
@@ -265,7 +257,6 @@ import {checkReportFormData} from "@/mixins/common";
 
 import gameName from '/public/conf/gameName.json'
 import Edit from "@/components/Edit.vue";
-import Captcha from "../components/Captcha";
 
 export default {
   data() {
@@ -280,7 +271,7 @@ export default {
       cheatMethodsGlossary: [],
     };
   },
-  components: {Edit, Captcha},
+  components: {Edit},
   created() {
     this.http = http_token.call(this);
 
@@ -303,12 +294,13 @@ export default {
      * @param query
      */
     handleSearchReportId(query) {
-      if (!query || query.length < 3) return;
+      if (!query || query.length < 4) return;
 
       http.get(api["search"], {
         params: {
-          param: query || '',
+          param: query,
           scope: 'current',
+          limit: '6'
         }
       }).then(res => {
         const d = res.data;
@@ -351,7 +343,7 @@ export default {
             {required: true, trigger: 'blur'}
           ],
           originId: [
-            {required: true, trigger: 'blur'}
+            {required: true, trigger: 'blur',error: '233'}
           ],
           checkbox: [
             {required: true, type: 'array', min: 1, trigger: 'change'},
@@ -382,29 +374,44 @@ export default {
      * 校验地址
      */
     checkVideoLink(rule, value, callback) {
-      const errorText = `bad format`;
+      const errorText = this.$i18n.t('report.error.voideBadFormat');
       const val = value;
 
       if (!val) {
-        return callback('Cannot be empty');
+        return callback(this.$i18n.t('report.error.voideEmpty'));
       }
 
       // 正则校验
       const reg = regular.check('link', val);
       if (reg.code != 0) {
-        callback(new Error(errorText));
+        callback(new Error(this.$i18n.t(errorText)));
         return;
       }
 
-      // 实体请求校验
-      http_connect.url(val, function (res) {
-        if (res.code != 0) {
-          callback(res.msg);
-          return;
+      callback();
+      // // 实体请求校验
+      // http_connect.url(val, function (res) {
+      //   if (res.code != 0) {
+      //     callback(res.msg);
+      //     return;
+      //   }
+      //   // 通过
+      //   callback();
+      // });
+    },
+    /**
+     * 更新或刷新验证码
+     * @param index
+     */
+    refreshCaptcha(index) {
+      http.get(api["captcha"], {
+        params: {
+          r: Math.random()
         }
-
-        // 通过
-        callback();
+      }).then(res => {
+        if (res.data.success === 1) {
+          this.tabs.list[index].captchaUrl = res.data.data;
+        }
       });
     },
     /**
@@ -472,14 +479,25 @@ export default {
         if (d.success === 1) {
           this.tabs.list[index].statusOk = 1;
 
-          // this.$router.push({
-          //   name: "cheater",
-          //   params: {game: gameName, ouid: d.data.originUserId},
-          // });
+          this.$Message.success(this.$i18n.t("report.info.success")).then(() => {
 
-          this.$Message.success(this.$i18n.t("report.info.success"));
+            this.$router.push({
+              name: "cheater",
+              params: { ouid: d.data.originPersonaId },
+            });
+
+          });
         } else {
           switch (d.code) {
+            case 'judgement.notFound':
+              this.$Message.error(this.$i18n.t('report.error.originId'));
+
+              // no such player
+              this.failedOfNotFound = true;
+              break;
+            case 'judgement.permissionDenied':
+              this.$Message.error(this.$i18n.t('report.error.permissionDenied'));
+              break;
             case 'originId':
               this.$Message.error(
                   this.$i18n.t("report.info.originId")
@@ -501,7 +519,6 @@ export default {
       }).finally(() => {
         this.tabs.list[index].formItem.captcha = '';
         this.spinShow = false;
-        this.failedOfNotFound = false;
       });
     },
   },

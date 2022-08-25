@@ -40,15 +40,16 @@ export default class Util {
                 }
             });
         });
-        return tmpArr.sort().reverse().join(' ');
+        return tmpArr;
     }
 
     getCheaterStatusLabel(value) {
-        if (this.cheaterStatus == null || !value) return '';
-        const o = _.find(this.cheaterStatus, (v, k) => {
-            return typeof value == 'string' ? v.values.indexOf(value) >= 0 : value == v.value;
-        });
-        return o.value ? this.$i18n.t("basic.status[" + o.value + "]") : '';
+        // if (this.cheaterStatus == null || !value) return '';
+        // const o = _.find(this.cheaterStatus, (v, k) => {
+        //     return typeof value == 'string' ? v.values.indexOf(value) >= 0 : value == v.value;
+        // });
+        // return o.value ? this.$i18n.t("basic.status[" + o.value + "]") : '';
+        return this.$i18n.t("basic.action." + value + ".text");
     }
 
     /**

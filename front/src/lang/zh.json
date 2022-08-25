@@ -10,7 +10,7 @@
         "describe": "证明材料中，有足够信息能确定没有作弊行为"
       },
       "discuss": {
-        "text": "讨论",
+        "text": "待讨论",
         "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为"
       },
       "guilt": {
@@ -35,14 +35,14 @@
       "石锤",
       "嫌疑再观察",
       "无作弊",
-      "回收站",
+      "无效举报",
       "回复讨论中",
-      "等待管理确认",
+      "需更多管理投票",
       "攻击服务器"
     ],
     "privilege": {
       "root": "系统",
-      "admin": "管理员",
+      "admin": "社区管理",
       "super": "超级管理员",
       "normal": "用户"
     },
@@ -188,7 +188,8 @@
     },
     "judgement": {
       "behavior": "判决类型",
-      "methods": "作弊的方法"
+      "methods": "作弊的方法",
+      "content": "判决说明"
     },
     "messages": {
       "fillEverything": "请填写完整",
@@ -244,7 +245,10 @@
     "error": {
       "mediaEvidence": "请上传图片或填写视频链接",
       "originId": "游戏ID不存在，请检查拼写",
-      "success": "提交成功"
+      "success": "提交成功",
+      "permissionDenied": "无权限",
+      "voideBadFormat": "格式错误",
+      "voideEmpty": "空的视频地址"
     }
   },
   "footer": {
@@ -294,7 +298,7 @@
       "activities": {
         "report": "举报了",
         "join": "注册了 bfban ， 欢迎！",
-        "admin": "管理员",
+        "admin": "社区管理",
         "mark": "将",
         "as": "处理为"
       }
@@ -367,7 +371,7 @@
     "username": "用户名：",
     "root": "系统",
     "role": "身份：",
-    "admin": "管理员",
+    "admin": "社区管理",
     "normal": "普通",
     "super": "超级管理员",
     "joinedAt": "加入时间",
@@ -485,7 +489,7 @@
       "web": "网页",
       "api": "接口",
       "book": "指南",
-      "admin": "管理员",
+      "admin": "社区管理",
       "qq": "腾讯QQ",
       "bf1": "战地风云1",
       "bfv": "战地风云5"
