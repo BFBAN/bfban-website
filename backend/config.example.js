@@ -56,7 +56,7 @@ const config = {
         }
     },
     // DYNAMIC CONFIGURE BEGIN
-	supportLanguages: ['zh-CN', 'en-US'],
+	supportLanguages: ['zh', 'en'],
     personsToConfirm: 2,
 	personsToReview: 2,
     supportGames: [ 'bf1', 'bfv' ],

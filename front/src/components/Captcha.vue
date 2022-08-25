@@ -1,20 +1,20 @@
 <template>
   <div class="captcha-view" @click="refreshCaptcha">
     <span v-if="!content" class="tip">Click me</span>
-    <div v-else v-html="content"></div>
+    <div v-else v-html="content" :style="captchaTime.count <= 0 ? 'opacity: .3' : ''"></div>
     <div class="count" v-show="captchaTime.lock">{{ captchaTime.count }}s</div>
   </div>
 </template>
 
 <script>
-import {http, api} from '../assets/js/index'
-
+import {http, api, storage} from '../assets/js/index'
 export default {
   name: "Captcha",
   data() {
     return {
       hash: "",
       content: "",
+      capthcaHash: {},
       captchaTime: {
         fun: null,
         count: 0,
@@ -23,30 +23,55 @@ export default {
     }
   },
   created() {
-    // this.refreshCaptcha();
+    let captcha = storage.get('captcha');
+    if (captcha) {
+      this.capthcaHash = captcha.data;
+    } else {
+      storage.set(`captcha`, {});
+    }
   },
   destroyed() {
     clearInterval(this.captchaTime.fun);
     this.captchaTime.fun = null;
   },
   methods: {
-    // 刷新验证码
-    refreshCaptcha() {
+    /**
+     * 刷新验证码
+     */
+    async refreshCaptcha() {
+      let captcha = await storage.get('captcha');
+      let that = this;
+
       if (this.captchaTime.count > 0) return;
 
       http.get(api["captcha"], {
         params: {
           t: Math.random()
         }
-      }).then(res => {
+      }).then((res) => {
         if (res.data.success === 1) {
+          // 储存验证码hash
+          that.capthcaHash = Object.assign({
+            [that.$route.name] : 0
+          });
+
           this.hash = res.data.data["hash"];
           this.content = res.data.data["content"];
         }
       }).finally((res) => {
-        this.capthcaTimeout(60);
+        console.log(captcha.data.value);
+        if (Object.keys(captcha.data.value).indexOf(this.$route.name) >= 0) {
+          // 会话持久对应时间加载
+          this.captchaTime.count = captcha.data.value[this.$route.name];
+        }
+
+        this.capthcaTimeout(this.captchaTime.count || 60);
       });
     },
+    /**
+     * 计时器
+     * @param num
+     */
     capthcaTimeout(num) {
       const that = this;
       let fun;
@@ -59,6 +84,11 @@ export default {
           return;
         }
         that.captchaTime.count -= 1;
+
+        that.capthcaHash = Object.assign({
+          [that.$route.name] : that.captchaTime.count
+        });
+        storage.set("captcha", that.capthcaHash);
       }, 1000);
       that.captchaTime.lock = true;
     }
@@ -76,6 +106,7 @@ export default {
 .captcha-view {
   overflow: hidden;
   position: relative;
+  animation: all .4s;
 
   .count {
     display: flex;

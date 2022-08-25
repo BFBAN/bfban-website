@@ -12,7 +12,7 @@ export default class Regular {
     };
 
     check(regularType = '', value, regularConf = {tipError: ''}) {
-        if (regularType) true;
+        if (!regularType) return;
         let res = this.REGULARTYPE[regularType].v.test(value);
 
         if (res) {
