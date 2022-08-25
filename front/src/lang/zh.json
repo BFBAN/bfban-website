@@ -1,5 +1,14 @@
 {
   "basic": {
+    "action": {
+      "suspect": "可疑",
+      "innocent": "清白",
+      "discuss": "讨论",
+      "guilt": "投一票石锤",
+      "kill": "石锤",
+      "invalid": "无效举报",
+      "more":"需要更多证据"
+    },
     "status": [
       "未处理",
       "石锤",

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Table row-key="name" :columns="detailLink.th" :data="getData" border></Table>
+    <Table row-key="name" :columns="detailLink.th" :data="getData" border>
+    </Table>
   </div>
 </template>
 
@@ -12,9 +13,26 @@ export default {
   },
   data() {
     return {
+      site: {
+        'Battlefield Tracker': {
+          "mainUrl":"https://tracker.gg",
+          "icon": "https://tracker.gg/public/icons/icon192.png"
+        },
+        'Bf1 Stats': {
+          "mainUrl":"http://bf1stats.com",
+          "icon": "https://endof.p-stats.com/favicon.ico"
+        },
+        'Gametools Network': {
+          "mainUrl":"https://gametools.network",
+          "icon": "https://gametools.network/favicon.ico"
+        },
+        '247 Fairplay': {
+          "mainUrl":"https://www.247fairplay.com",
+        },
+      },
       links: {
         'bf1': {
-          'Battlefieldv Tracker': `https://battlefieldtracker.com/bf1/profile/pc/{name}`,
+          'Battlefield Tracker': `https://battlefieldtracker.com/bf1/profile/pc/{name}`,
           'Bf1 Stats': `http://bf1stats.com/pc/{id}`,
           'Gametools Network': 'https://gametools.network/stats/pc/playerid/{id}?name={name}&game=bf1'
         },
@@ -31,7 +49,35 @@ export default {
           {
             title: 'name',
             key: 'name',
-            tree: true
+            tree: true,
+            render: (h, params) => {
+              if (params.row.link) {
+                return h('Row', {
+                  props: {
+                    gutter: 10,
+                    type:"flex" ,
+                    align:"middle",
+                  }
+                },  [
+                  h('Avatar', {
+                    props: {
+                      shape: 'square',
+                      src: this.site[params.row.name].icon
+                    },
+                    style: {
+
+                    }
+                  }),
+                  h('p', {}, `${params.row.name}`),
+                ]);
+              }
+
+              return h('Tag', {
+                props: {
+                  color: 'primary'
+                }
+              }, params.row.name);
+            }
           },
           {
             title: 'link',

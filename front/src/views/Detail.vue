@@ -35,7 +35,7 @@
                   账户异常
                 </Tag>
 
-                <!-- 被举报的游戏 -->
+                <!-- 被举报的游戏 S -->
                 <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
                   <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
                        v-for="(game,gameindex) in cheater.games" :key="gameindex">
@@ -43,7 +43,7 @@
                   </Tag>
                 </router-link>
 
-                <!-- 被举报的类型 -->
+                <!-- 被举报的类型 E -->
                 <Tag v-if="cheater.cheatMethods" color="warning">
                   {{ convertCheatMethods(cheater.cheatMethods) }}
                 </Tag>
@@ -71,15 +71,15 @@
                       <p>{{ $t('detail.info.app_qr.openAppDescribe') }} 🦖</p>
                     </div>
                   </Poptip>
-                  <Divider type="vertical"/>
-                  <ButtonGroup type="button">
-                    <Button type="primary">
-                      跟踪此玩家
-                    </Button>
-                    <Button type="primary">
-                      <Icon type="md-arrow-dropdown"/>
-                    </Button>
-                  </ButtonGroup>
+<!--                  <Divider type="vertical"/>-->
+<!--                  <ButtonGroup type="button">-->
+<!--                    <Button type="primary">-->
+<!--                      跟踪此玩家-->
+<!--                    </Button>-->
+<!--                    <Button type="primary">-->
+<!--                      <Icon type="md-arrow-dropdown"/>-->
+<!--                    </Button>-->
+<!--                  </ButtonGroup>-->
                   <Divider type="vertical"/>
                   <!-- 分享 share S -->
                   <ShareDetail>
@@ -112,8 +112,7 @@
                     </DropdownMenu>
                   </Dropdown>
                   <Divider type="vertical"/>
-                  <Poptip
-                      @on-ok="updateCheaterInfo">
+                  <Poptip @on-ok="updateCheaterInfo">
                     <div style="margin-top: .4rem;" slot="content">
                       <p class="hint">
                         <!-- 描述说明 -->
@@ -537,20 +536,6 @@
                              :autosize="{minRows: 5}"
                              :placeholder="$t('detail.info.giveOpinion')"/>
                     </FormItem>
-<!--                    <FormItem :label="$t('signup.form.captcha')">-->
-<!--                      <Row>-->
-<!--                        <Col>-->
-<!--                          <Input type="text" v-model="reply.captcha" size="large" maxlength="4"-->
-<!--                                 :placeholder="$t('signup.form.captcha')">-->
-<!--                          </Input>-->
-<!--                        </Col>-->
-<!--                        <Col>-->
-<!--                          <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">-->
-<!--                            <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>-->
-<!--                          </div>-->
-<!--                        </Col>-->
-<!--                      </Row>-->
-<!--                    </FormItem>-->
                   </Form>
                 </div>
                 <div class="ivu-card-body">
@@ -599,7 +584,7 @@
         </Card>
         <br v-if="isAdmin">
 
-        <!-- 裁判 S -->
+        <!-- 管理员裁判 S -->
         <Card dis-hover v-if="isAdmin">
           <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})">
             <h2 style="margin: 1rem 0;">
@@ -609,7 +594,6 @@
               </Tag>
             </h2>
 
-            <!-- 管理员面板 S -->
             <Alert type="warning" show-icon>
               <p class="hint">{{ $t('detail.info.adminManual1', {msg: 'adminManual1'}) }}</p>
               <p class="hint">{{ $t('detail.info.adminManual2', {msg: 'adminManual2'}) }}</p>
@@ -622,13 +606,13 @@
                     <Select v-model="verify.status">
                       <!-- 判断选项 -->
                       <Option :value="v_i.value" v-for="v_i in verify.choice" :key="v_i.value">
-                        {{ $t(`basic.status[${v_i.value}]`) }}
+                        {{ $t(`basic.action.${v_i.value}`) }}
                       </Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col span="12">
-                  <FormItem v-show="verify.status == '1'" label="CheatMethod">
+                  <FormItem v-show="['kill','guilt'].includes(verify.status)" label="CheatMethod">
                     <Select v-model="verify.checkbox" multiple>
                       <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value"
                               :label="$t(`cheatMethods.${method.value}.title`)">
@@ -689,28 +673,25 @@
               <FormItem :label="$t('signup.form.captcha')">
                 <Row>
                   <Col>
-                    <Input type="text" v-model="reply.captcha" size="large" maxlength="4"
+                    <Input type="text" v-model="reply.captcha"
+                           size="large"
+                           maxlength="4"
                            :placeholder="$t('signup.form.captcha')">
+                      <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                        <Captcha ref="captcha"></Captcha>
+                      </div>
                     </Input>
-                  </Col>
-                  <Col>
-                    <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                      <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>
-                    </div>
                   </Col>
                 </Row>
               </FormItem>
-
-              <FormItem>
-                <Button type="primary" :loading="verifySpinShow" @click.stop.prevent="doVerify">
-                  {{ $t('basic.button.submit', {msg: 'submit'}) }}
-                </Button>
-              </FormItem>
             </Form>
-            <!-- 管理员面板 E -->
+
+            <Button type="primary" :loading="verifySpinShow" @click.stop.prevent="doVerify">
+              {{ $t('basic.button.submit', {msg: 'submit'}) }}
+            </Button>
           </div>
         </Card>
-        <!-- 裁判 E -->
+        <!-- 管理员裁判 E -->
 
         <div v-if="!isCheaterExist">
           <Empty></Empty>
@@ -755,19 +736,16 @@
                      :autosize="{minRows: 4}"
                      :placeholder="$t('detail.info.giveOpinion')"/>
             </FormItem>
+
             <FormItem :label="$t('signup.form.captcha')">
-              <Row>
-                <Col>
-                  <Input type="text" v-model="reply.captcha" size="large" maxlength="4"
-                         :placeholder="$t('signup.form.captcha')">
-                  </Input>
-                </Col>
-                <Col>
-                  <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                    <div v-html="reply.captchaUrl.content" v-if="reply.captchaUrl.content"></div>
-                  </div>
-                </Col>
-              </Row>
+              <Input type="text" v-model="reply.captcha"
+                     size="large"
+                     maxlength="4"
+                     :placeholder="$t('signup.form.captcha')">
+                <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                  <Captcha ref="captcha"></Captcha>
+                </div>
+              </Input>
             </FormItem>
           </Form>
         </div>
@@ -889,6 +867,7 @@ import Edit from "../components/Edit";
 import BusinessCard from "../components/businessCard.vue";
 import ShareDetail from "../components/ShareDetail.vue";
 import RecordLink from "../components/RecordLink.vue";
+import Captcha from "../components/Captcha";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
@@ -958,7 +937,7 @@ export default new BFBAN({
       updateUserInfospinShow: false,
     }
   },
-  components: {Empty, Edit, BusinessCard, ShareDetail, RecordLink, vueQr},
+  components: {Empty, Edit, BusinessCard, ShareDetail, RecordLink, vueQr,Captcha},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -971,7 +950,6 @@ export default new BFBAN({
     this.loadData();
     this.getCheatersInfo();
     this.getTimeline();
-    this.refreshCaptcha();
   },
   methods: {
     getCheaterStatusLabel: util.getCheaterStatusLabel,
@@ -987,7 +965,7 @@ export default new BFBAN({
         this.cheatMethodsGlossary = res.cheatMethodsGlossary;
 
         // 裁决作弊类型
-        this.verify.choice = res.cheaterStatus.filter(i => (i.value >= 1 && i.value <= 4));
+        this.verify.choice = res.action;
         this.verify.status = this.verify.choice[0].value;
       });
 
@@ -1000,22 +978,6 @@ export default new BFBAN({
       if (this.$route.query.lang) {
         this.$store.dispatch('setLang', this.$route.query.lang);
       }
-    },
-    /**
-     * 获取验证码
-     */
-    refreshCaptcha: function () {
-      this.reply.captcha = '';
-
-      http.get(api["captcha"], {
-        params: {
-          r: Math.random()
-        }
-      }).then(res => {
-        if (res.data.success === 1) {
-          this.reply.captchaUrl = res.data.data;
-        }
-      });
     },
     /**
      * 获取基本字段
@@ -1131,21 +1093,21 @@ export default new BFBAN({
       }, 100);
     },
     /**
-     * 核实
+     * 提交判决
      */
     async doVerify() {
       const {status} = this.verify;
       let {suggestion} = this.verify;
-      const cheatMethods = this.verify.checkbox; // .join(',');
+      const cheatMethods = this.verify.checkbox;
 
-      if ((status == '1' && cheatMethods == '') || suggestion.trim() === '') {
+      if ((['kill','guilt'].includes(status) && cheatMethods == '') || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
-      if ((status == '3' || status == '4') && suggestion.trim().length < 5) { // too short
-        this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
-        return false;
-      }
+      // if ((status == '3' || status == '4') && suggestion.trim().length < 5) { // too short
+      //   this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
+      //   return false;
+      // }
       if ('0123456789abcedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_'.split('').indexOf(suggestion.trim()) != -1) { // one letter suggestion
         this.$Message.warning(this.$i18n.t('detail.messages.dontDoIt') + suggestion);
         return false;
@@ -1156,9 +1118,8 @@ export default new BFBAN({
         data: {
           data: {
             toPlayerId: this.cheater.id,
-            cheatMethods,
-            // await import('/src/assets/action.json');
-            action: this.verify.choice.filter(i => i.value == this.verify.status)[0].action,
+            cheatMethods: ['kill','guilt'].includes(this.verify.status) ? cheatMethods : null,
+            action: this.verify.status,
             content: formatTextarea(suggestion),
           },
           encryptCaptcha: this.reply.captchaUrl.hash,
@@ -1326,7 +1287,6 @@ export default new BFBAN({
       }).finally(() => {
         this.replySpinShow = false;
 
-        this.refreshCaptcha();
         this.getCheatersInfo();
         // update timelink
         this.getTimeline();
