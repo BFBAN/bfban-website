@@ -4,6 +4,6 @@
 node_modules
 config.js
 config.json
-private/
+# private/
 backend/test/gen/
 package-lock.json
