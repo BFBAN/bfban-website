@@ -35,11 +35,11 @@ async (req, res, next)=> {
         switch(box) {
         case 'in':
             result.messages = await db.select('*').from('messages')
-            .whereIn('type', ['direct','warn','fatal'])
+            .whereIn('type', ['reply','info','direct','warn','fatal'])
             .andWhere({toUserId: req.user.id})
             .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit);
             result.total = await db('messages').count({num: 'id'})
-            .whereIn('type', ['direct','warn','fatal'])
+            .whereIn('type', ['reply','info','direct','warn','fatal'])
             .andWhere({toUserId: req.user.id})
             .andWhere('createTime','>=',new Date(from)).first().then(r=>r.num);
             break;
@@ -243,7 +243,7 @@ async function localeMessage(namepath='', lang='en', params) {
     let text = msgs?.[lang]? msgs[lang] : msgs?.['en'];
     if(text)
         Object.keys(params).forEach(i=>{
-            text.replace(new RegExp(`{${i}}`, 'g'), params[i]);
+            text = text.replace(new RegExp(`{${i}}`, 'g'), params[i]);
         });
     return text;
 }
@@ -252,7 +252,7 @@ async function iGotReported(params) {
     /** @type {import("../typedef.js").Report} */
     const report = params.report;
     /** @type {import("../typedef.js").User} */
-    const user = await db.select('id').from('users').where({originUserId: report.toOriginUserId}).first();
+    const user = await db.select('*').from('users').where({originUserId: report.toOriginUserId}).first();
     if(!user) // that player being reported hasnt registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
@@ -266,7 +266,7 @@ async function iGotJudged(params) {
     /** @type {import("../typedef.js").Player} */
     const player = params.player;
     /** @type {import("../typedef.js").User} */
-    const user = await db.select('id').from('users').where({originUserId: judgement.toOriginUserId}).first();
+    const user = await db.select('*').from('users').where({originUserId: judgement.toOriginUserId}).first();
     if(!user) // that player being reported hasnt registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
@@ -283,9 +283,11 @@ async function iGotReplied(params) { // checked that comment dose exist
     const {toCommentId, toPlayerId} = reply;
     if(!toCommentId)
         return;
-    const toCommentUser = await db.select('byUserId').from('comments').where({id: toCommentId}).first().then(r=>r.byUserId);
-    await sendMessage(reply.byUserId, toCommentUser, 'reply', await localeMessage('notifications.beReplied', toCommentUser.attr.language, {
-        playername: player.originName
+    const toCommentUserId = await db.select('byUserId').from('comments').where({id: toCommentId}).first().then(r=>r.byUserId);
+    const toCommentUser = await db.select('*').from('users').where({id: toCommentUserId}).first();
+    await sendMessage(reply.byUserId, toCommentUserId, 'reply', await localeMessage('notifications.beReplied', toCommentUser.attr.language, {
+        playername: player.originName,
+        originUserId: player.originUserId
     }));
 }
 
