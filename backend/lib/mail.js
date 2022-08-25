@@ -38,8 +38,8 @@ async function sendMail_ms(content, type, from, to, subject) {
 
 async function sendRegisterVerify(username, originName, address, language, code) {
     let subject = {
-        'zh-CN': 'BFBan注册',
-        'en-US': 'BFBan Registration',
+        'zh': 'BFBan注册',
+        'en': 'BFBan Registration',
     }[language];
     subject = subject? subject : 'BFBan Registration';
     const html = await fs.readFile(`./media/mail_register_${language}.html`).then(buf=>buf.toString());
@@ -60,8 +60,8 @@ async function sendRegisterVerify(username, originName, address, language, code)
 
 async function sendForgetPasswordVerify(username, address, language, code) {
     let subject = {
-        'zh-CN': 'BFBan密码重置',
-        'en-US': 'BFBan Password Reset',
+        'zh': 'BFBan密码重置',
+        'en': 'BFBan Password Reset',
     }[language];
     subject = subject? subject : 'BFBan Password Reset';
     const html = await fs.readFile(`./media/mail_forgetPasswordVerify_${language}.html`).then(buf=>buf.toString());
@@ -82,8 +82,8 @@ async function sendForgetPasswordVerify(username, address, language, code) {
 
 async function sendBindingOriginVerify(username, address, language, code) {
     let subject = {
-        'zh-CN': 'BFBan账户绑定',
-        'en-US': 'BFBan Account Binding',
+        'zh': 'BFBan账户绑定',
+        'en': 'BFBan Account Binding',
     }[language];
     subject = subject? subject : 'BFBan Account Binding';
     const html = await fs.readFile(`./media/mail_bindEmail_${language}.html`).then(buf=>buf.toString());
