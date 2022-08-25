@@ -602,17 +602,20 @@
             <Form ref='verifyForm' label-position="top">
               <Row :gutter="30">
                 <Col span="12">
-                  <FormItem label="Opinion">
+                  <FormItem :label="$t(`detail.judgement.behavior`)">
                     <Select v-model="verify.status">
                       <!-- 判断选项 -->
                       <Option :value="v_i.value" v-for="v_i in verify.choice" :key="v_i.value">
-                        {{ $t(`basic.action.${v_i.value}`) }}
+                        {{ $t(`basic.action.${v_i.value}.text`) }}
+                        <Poptip trigger="hover" transfer="true" word-wrap width="200" :content="$t(`basic.action.${v_i.value}.describe`)">
+                          <Icon type="md-help-circle" size="20"/>
+                        </Poptip>
                       </Option>
                     </Select>
                   </FormItem>
                 </Col>
                 <Col span="12">
-                  <FormItem v-show="['kill','guilt'].includes(verify.status)" label="CheatMethod">
+                  <FormItem v-show="['kill','guilt'].includes(verify.status)" :label="$t(`detail.judgement.methods`)">
                     <Select v-model="verify.checkbox" multiple>
                       <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value"
                               :label="$t(`cheatMethods.${method.value}.title`)">

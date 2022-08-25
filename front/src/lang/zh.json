@@ -1,13 +1,34 @@
 {
   "basic": {
     "action": {
-      "suspect": "可疑",
-      "innocent": "清白",
-      "discuss": "讨论",
-      "guilt": "投一票石锤",
-      "kill": "石锤",
-      "invalid": "无效举报",
-      "more":"需要更多证据"
+      "suspect": {
+        "text": "可疑",
+        "describe": "从提交的证明中，不足以确定作弊行为，但以上证据存在可疑地方，如果有足够证明材料可更改石锤"
+      },
+      "innocent": {
+        "text": "清白",
+        "describe": "证明材料中，有足够信息能确定没有作弊行为"
+      },
+      "discuss": {
+        "text": "讨论",
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为"
+      },
+      "guilt": {
+        "text": "投一票石锤",
+        "describe": "管理员认为作弊，投一票，满足条件系统将确认玩家状态"
+      },
+      "kill": {
+        "text": "石锤",
+        "describe": "管理员判断石锤"
+      },
+      "invalid": {
+        "text": "无效举报",
+        "describe": "举报材料不全或举报错误ID等行为"
+      },
+      "more":{
+        "text": "需要更多证据",
+        "describe": "需要补充更多有力的证据"
+      }
     },
     "status": [
       "未处理",
@@ -164,6 +185,10 @@
         "evidencePic": "证据如图所示",
         "evidenceVid": "证据如视频所示"
       }
+    },
+    "judgement": {
+      "behavior": "判决类型",
+      "methods": "作弊的方法"
     },
     "messages": {
       "fillEverything": "请填写完整",

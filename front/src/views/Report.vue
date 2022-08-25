@@ -195,21 +195,32 @@
               <br>
               <!-- 提交 S -->
               <Card dis-hover>
-                <FormItem prop="captcha" :label="$t('report.info.captcha')">
-                  <Input
-                      type="text"
-                      v-model="tabs.list[index].formItem.captcha"
-                      :placeholder="$t('report.info.captcha')"/>
-                  <div v-html="tabs.list[index].captchaUrl.content"></div>
-                  <a
-                      ref="reCaptcha"
-                      href="#"
-                      @click.stop.prevent="refreshCaptcha(index)">
-                    {{
-                      $t("report.info.getCaptcha", {msg: "getCaptcha"})
-                    }}
-                  </a>
+                <FormItem :label="$t('report.info.captcha')">
+                  <Input type="text" v-model="tabs.list[index].formItem.captcha"
+                         size="large"
+                         maxlength="4"
+                         :placeholder="$t('report.info.captcha')">
+                    <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                      <Captcha ref="captcha"></Captcha>
+                    </div>
+                  </Input>
                 </FormItem>
+
+<!--                <FormItem prop="captcha" :label="$t('report.info.captcha')">-->
+<!--                  <Input-->
+<!--                      type="text"-->
+<!--                      v-model="tabs.list[index].formItem.captcha"-->
+<!--                      :placeholder="$t('report.info.captcha')"/>-->
+<!--                  <div v-html="tabs.list[index].captchaUrl.content"></div>-->
+<!--                  <a-->
+<!--                      ref="reCaptcha"-->
+<!--                      href="#"-->
+<!--                      @click.stop.prevent="refreshCaptcha(index)">-->
+<!--                    {{-->
+<!--                      $t("report.info.getCaptcha", {msg: "getCaptcha"})-->
+<!--                    }}-->
+<!--                  </a>-->
+<!--                </FormItem>-->
 
                 <FormItem>
                   <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel">
@@ -254,6 +265,7 @@ import {checkReportFormData} from "@/mixins/common";
 
 import gameName from '/public/conf/gameName.json'
 import Edit from "@/components/Edit.vue";
+import Captcha from "../components/Captcha";
 
 export default {
   data() {
@@ -268,7 +280,7 @@ export default {
       cheatMethodsGlossary: [],
     };
   },
-  components: {Edit},
+  components: {Edit, Captcha},
   created() {
     this.http = http_token.call(this);
 
@@ -393,34 +405,6 @@ export default {
 
         // 通过
         callback();
-      });
-    },
-    checkVideoAndImg(formData) {
-
-      return true;
-      // trimAllWhitespace(formData.formItem.videoLink) ||
-      // if (
-      //     /(http(preview.svg?):)([/|.|\w|\preview.svg|-])*\.(?:jpe?g|gif|png|bmp)/.test(formData.formItem.description)
-      // ) {
-      //   return true;
-      // } else {
-      //   this.$Message.error(this.$i18n.t("report.info.error"));
-      //   return false;
-      // }
-    },
-    /**
-     * 更新或刷新验证码
-     * @param index
-     */
-    refreshCaptcha(index) {
-      http.get(api["captcha"], {
-        params: {
-          r: Math.random()
-        }
-      }).then(res => {
-        if (res.data.success === 1) {
-          this.tabs.list[index].captchaUrl = res.data.data;
-        }
       });
     },
     /**
