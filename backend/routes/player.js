@@ -610,7 +610,12 @@ async (req, res, next)=>{
         player.cheatMethods = nextstate==1? JSON.stringify(req.body.data.cheatMethods) : '[]';
         player.updateTime = new Date();
         player.commentsNum += 1;
-        await db('players').update(player).where({id: player.id});
+        await db('players').update({
+            status: player.status, 
+            cheatMethods: player.cheatMethods,
+            updateTime: player.updateTime,
+            commentsNum: player.commentsNum
+        }).where({id: player.id});
 
         judgement.cheatMethods = req.body.data.cheatMethods? req.body.data.cheatMethods : [];
         player.cheatMethods = nextstate==1? req.body.data.cheatMethods : [];
