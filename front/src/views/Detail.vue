@@ -446,12 +446,6 @@
                           </router-link>
 
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
-
-                          <template v-if="l.quote">
-                            <a :href="`#floor-${l.quote.id}`" >
-                              #{{ l.quote.username }}<Icon type="ios-undo"/>
-                            </a>
-                          </template>
                         </Col>
                         <Col align="right">
                           <Time v-if="l.createTime" :time="l.createTime"></Time>
@@ -459,8 +453,17 @@
                       </Row>
                     </div>
 
-                    <div v-html="l.content" v-if="l.content"
-                         class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
+                    <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                      <template v-if="l.quote">
+                        <a :href="`#floor-${l.quote.id}`" >
+                          <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                              <b>{{ l.quote.username }}</b> :
+                            <div v-html="l.quote.content" ></div>
+                          </div>
+                        </a>
+                      </template>
+                      <div v-html="l.content" v-if="l.content"></div>
+                    </div>
 
                     <p v-if="isLogin">
                       <!-- 回复 -->

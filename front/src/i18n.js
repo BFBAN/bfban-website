@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import { detectLanguage } from './mixins/common'
+import {storage} from "../src/assets/js";
 
 import en from 'view-design/dist/locale/en-US';
 import zh from 'view-design/dist/locale/zh-CN';
@@ -42,11 +43,8 @@ function loadLocaleMessages () {
 }
 
 export default new VueI18n({
-  locale: detectLanguage(navigator.language) || 'zh-CN',
-
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'zh-CN',
-
+  locale: detectLanguage(navigator.language),
+  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE,
   messages: _messages , // loadLocaleMessages(),
-
   silentTranslationWarn: true,
 })

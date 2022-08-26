@@ -124,7 +124,7 @@
             <Affix :offset-top="20">
               <Card>
                 <p slot="title">
-                  {{ $t('list.colums.screenTitle') }}
+                  <Icon type="md-funnel" /> {{ $t('list.colums.screenTitle') }}
                 </p>
 
                 <Form>

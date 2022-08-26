@@ -30,6 +30,6 @@ const app = new Vue({
   i18n,
   // desktop,
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
 
 export default app;
