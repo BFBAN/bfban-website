@@ -107,7 +107,8 @@
         "showOriginDescribe": "是否让你绑定的Origin在BFBAN可见",
         "allowDM": "是否接收聊天",
         "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
-        "language": "设置语言"
+        "language": "设置语言",
+        "languageSyncDescribe": "设置此处选项，在登录后同步程序本地语言，如果退出登录将回退到本地程序所持久保存的语言"
       }
     },
     "appearance": {
@@ -356,6 +357,8 @@
   "reset": {
     "title": "重置密码",
     "form": {
+      "oldPassword": "旧密码",
+      "newPassword": "新密码",
       "qq": "QQ",
       "password": "新密码",
       "passwordRepeat": "确认密码",
