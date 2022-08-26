@@ -49,6 +49,29 @@
         </Row>
         <!-- 游戏类型选择 E -->
 
+        <RadioGroup
+            style="margin-top: 6px"
+            v-model="statusGroup"
+            @on-change="handleStatusChange"
+            size="small"
+            type="button">
+          <Radio label="-1">
+            <Badge :count="getAllStatusNum"
+                   :overflow-count="900000"
+                   type="info">
+              {{ $t("list.filters.status.all") }}
+            </Badge>
+          </Radio>
+          <Radio
+              v-for="status in cheaterStatus"
+              :key="status.value"
+              :label="`${status.value}`">
+            <Badge :count="getcHeaterStatusNum(status.value)" :overflow-count="900000" type="info">
+              {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
+            </Badge>
+          </Radio>
+        </RadioGroup>
+
         <Row :gutter="10">
           <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 17, push: 0, pull: 0}">
             <Card dis-hover class="list">
@@ -128,28 +151,6 @@
                 </p>
 
                 <Form>
-                  <FormItem>
-                    <RadioGroup
-                        v-model="statusGroup"
-                        @on-change="handleStatusChange"
-                        type="button">
-                      <Radio label="-1">
-                        <Badge :count="getAllStatusNum"
-                               :overflow-count="900000"
-                               type="info">
-                          {{ $t("list.filters.status.all") }}
-                        </Badge>
-                      </Radio>
-                      <Radio
-                          v-for="status in cheaterStatus"
-                          :key="status.value"
-                          :label="`${status.value}`">
-                        <Badge :count="getcHeaterStatusNum(status.value)" :overflow-count="900000" type="info">
-                          {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
-                        </Badge>
-                      </Radio>
-                    </RadioGroup>
-                  </FormItem>
                   <FormItem :label="$t('list.reportTime')">
                     <DatePicker :value="createTime" @on-change="handleCDatepicker" split-panels
                                 :placeholder="$t('list.reportTime')" style="width: 100%"></DatePicker>

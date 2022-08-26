@@ -28,20 +28,24 @@ export default {
         },
         '247 Fairplay': {
           "mainUrl":"https://www.247fairplay.com",
+          "icon":""
         },
       },
       links: {
         'bf1': {
           'Battlefield Tracker': `https://battlefieldtracker.com/bf1/profile/pc/{name}`,
           'Bf1 Stats': `http://bf1stats.com/pc/{id}`,
-          'Gametools Network': 'https://gametools.network/stats/pc/playerid/{id}?name={name}&game=bf1'
+          'Gametools Network': 'https://gametools.network/stats/pc/playerid/{id}?name={name}&game=bf1',
+          '247 Fairplay': 'https://www.247fairplay.com/CheatDetector/{id}'
         },
         'bfv': {
           'Battlefield Tracker': 'https://battlefieldtracker.com/bfv/profile/origin/{name}',
-          'Gametools Network': 'https://gametools.network/stats/pc/playerid/{id}?name={name}&game=bfv'
+          'Gametools Network': 'https://gametools.network/stats/pc/playerid/{id}?name={name}&game=bfv',
+          '247 Fairplay': 'https://www.247fairplay.com/CheatDetector/{id}'
+        },
+        'bf6': {
         },
         '*': {
-          '247 Fairplay': 'https://www.247fairplay.com/CheatDetector/{id}'
         }
       },
       detailLink: {
@@ -117,6 +121,8 @@ export default {
   methods: {
     push (children = [], name) {
       for (let link in this.links[name]) {
+        if (!this.cheater) return ;
+
         children.push({
           name: link,
           link: this.links[name][link]
@@ -130,6 +136,7 @@ export default {
   },
   computed: {
     getData () {
+      if (this.cheater.length <= 0) return ;
       if (!this.cheater.games) return [];
       this.cheater.games.forEach(i => {
         let children = [];

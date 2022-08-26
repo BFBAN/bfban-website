@@ -333,11 +333,6 @@
                             </BusinessCard>
                           </router-link>
 
-                          <template v-if="!isSelf(l.originUserId)">
-                            {{ $t('detail.info.assistPppeal') }}
-                          </template>
-                          <template v-else>{{ $t('detail.info.appeal') }}</template>
-
                           <BusinessCard :id="l.originUserId">
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
                               <u>{{ l.cheaterGameName }}</u>
@@ -982,7 +977,7 @@ export default new BFBAN({
      * 基础信息
      */
     getCheatersInfo() {
-      this.cheater = [];
+      this.cheater = {};
       this.http.get(api["cheaters"], {
         params: Object.assign({
           history: true
@@ -1128,13 +1123,6 @@ export default new BFBAN({
 
         this.verifySpinShow = false;
       })
-    },
-    /**
-     * 是否是自己
-     */
-    isSelf(id) {
-      const userId = this.$store.state.user.userinfo.userId;
-      return (parseInt(userId) === parseInt(id))
     },
     /**
      * 富文本单选绑定

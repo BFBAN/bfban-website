@@ -19,7 +19,9 @@ import 'quill/dist/quill.bubble.css'
 import './registerServiceWorker'
 
 Vue.use(less)
-Vue.use(ViewUI);
+Vue.use(ViewUI, {
+  i18n: (key, value) => i18n.t(key,value)
+});
 Vue.use(VueQuillEditor, /* { default global options } */)
 
 Vue.config.productionTip = false

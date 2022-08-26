@@ -119,7 +119,7 @@ export default {
       const languages = await import('/public/conf/languages.json');
 
       this.languages = languages.child;
-      this.loadLanguages();
+      // this.loadLanguages();
     },
     async loadLanguages () {
       let that = this;
@@ -140,6 +140,8 @@ export default {
         this.$store.dispatch('setLang', lang);
         // 本地持久语言
         storage.set('language', lang);
+        // 网页语言
+        document.getElementsByTagName('html')[0].lang = lang;
       },
       get() {
         const localAppLanguages = this.$root && this.$root.$i18n && this.$root.$i18n.locale;
