@@ -531,7 +531,6 @@
               <!-- 用户回复 E -->
             </Col>
             <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1" class="mobile-hide">
-              <Affix :offset-top="10">
                 <Button type="primary"
                         @click="appeal.show = true"
                         :disabled="!isLogin">
@@ -539,7 +538,6 @@
                 </Button>
                 <p><br>{{ $t('detail.appeal.describe') }}</p>
                 <Divider/>
-              </Affix>
             </Col>
           </Row>
 
@@ -675,7 +673,7 @@
 
     <template v-if="!isFull">
       <Affix :top="100">
-        <Card dis-show class="top mobile-hide">
+        <Card dis-show class="detila-affix mobile-hide">
           <a href="#up">
             <Icon type="md-arrow-round-up" size="30"/>
           </a>
@@ -1440,7 +1438,7 @@ export default new BFBAN({
   }
 }
 
-.top {
+.detila-affix {
   position: fixed;
   right: calc(50% - (960px / 2) - 85px);
   top: 30%;
@@ -1450,6 +1448,12 @@ export default new BFBAN({
   a {
     display: block;
     padding: 10px 5px;
+  }
+}
+
+@media screen and (max-width: 1180px) {
+  .detila-affix {
+    display: none !important;
   }
 }
 </style>
