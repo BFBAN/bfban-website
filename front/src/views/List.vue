@@ -50,14 +50,13 @@
         <!-- 游戏类型选择 E -->
 
         <RadioGroup
-            style="margin-top: 6px"
+            style="margin-top: 12px"
             v-model="statusGroup"
             @on-change="handleStatusChange"
-            size="small"
             type="button">
           <Radio label="-1">
-            <Badge :count="getAllStatusNum"
-                   :overflow-count="900000"
+            <Badge :overflow-count="900000"
+                   size="small"
                    type="info">
               {{ $t("list.filters.status.all") }}
             </Badge>
@@ -204,7 +203,7 @@ export default new BFBAN({
       skip: 1,
       limit: 10,
       total: 0,
-      sum: [],
+      gameSum: [],
       totalSum: [],
       sortBy: [
         {value: "createTime",},
@@ -249,12 +248,12 @@ export default new BFBAN({
       switch (val) {
         case '*':
           // 总数
-          target.num = _.sumBy(this.sum, (o) => {
-            return o ? o.num : 0;
+          this.gameSum.forEach(i => {
+            return target.num += (i.count);
           });
           break;
         default:
-          target = _.find(this.sum, ["game", val]);
+          target = _.find(this.gameSum, ["game", val]);
       }
       return target ? target.num : 0;
     },
@@ -305,19 +304,19 @@ export default new BFBAN({
         data,
       }).then(res => {
         const d = res.data;
-        let sum = [];
+        let gameSum = [];
         let totalSum = [];
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           // game Type
           [].concat(d.data).splice(0, splitIndex).forEach((i, index) => {
-            sum.push({game: that.games[index].value.toString(), num: Number(i)})
+            gameSum.push({game: that.games[index].value.toString(), num: Number(i.count)})
           });
-          this.sum = sum;
+          this.gameSum = gameSum;
 
           // type methods
           [].concat(d.data).splice(splitIndex, d.data.length - 1).forEach((i, index) => {
-            totalSum.push({status: that.cheaterStatus.filter(i => i.value == index)[0].value, num: Number(i)})
+            totalSum.push({status: that.cheaterStatus.filter(i => i.value == index)[0].value, num: Number(i.count)})
           });
           this.totalSum = totalSum;
         }
@@ -435,11 +434,11 @@ export default new BFBAN({
       let target = {num: 0};
       switch (this.gameName) {
         case 'all':
-          for (let i of this.sum)
+          for (let i of this.gameSum)
             target.num += i.num || 0;
           break;
         default:
-          target = _.find(this.sum, ["game", this.gameName]);
+          target = _.find(this.gameSum, ["game", this.gameName]);
       }
       return target ? target.num : 0;
     },
