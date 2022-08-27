@@ -216,13 +216,13 @@
 
                 <FormItem>
                   <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel">
-                    {{ $t("report.info.cancel", {msg: "cancel"}) }}
+                    {{ $t("basic.button.cancel") }}
                   </Button>
                   <Divider type="vertical"/>
                   <Button @click="doReport(index)"
                           type="primary"
                           size="large">
-                    {{ $t("report.info.report", {msg: "report"}) }}
+                    {{ $t("basic.button.report") }}
                   </Button>
                 </FormItem>
               </Card>

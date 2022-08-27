@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Table row-key="name" :columns="detailLink.th" :data="getData" border>
+    <Table row-key="name" :span-method="handleSpan" :show-header="false" :columns="detailLink.th" :data="getData" border>
     </Table>
   </div>
 </template>
@@ -132,6 +132,11 @@ export default {
       }
 
       return children;
+    },
+    handleSpan ({ row, column, rowIndex, columnIndex }) {
+      if (row.link == "") {
+        return { colspan: 3 };
+      }
     }
   },
   computed: {
