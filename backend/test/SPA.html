@@ -531,10 +531,10 @@
                             let floor = ($('#timeline-skip').val()-0)+(i-0)+1;
                             content += `-------------#${floor}---[${cmt.type}]:${cmt.id}-At ${new Date(cmt.createTime).toLocaleString()}<br/>`+
                             `by <strong>${cmt.username}</strong> role:<strong>${cmt.privilege}</strong>`+
-                            `${cmt.type=='judgement'? ' judged as: <strong>'+cmt.action+'</strong>':''}`+
+                            `${cmt.type=='judgement'? ' judged as: <strong>'+cmt.judgeAction+'</strong>':''}`+
                             ` ${cmt.toFloor? 'reply to floor:'+cmt.toFloor:''}<br/>`+
-                            `${cmt.type=='report'? 'report in: '+cmt.game+' video: '+cmt.videoLink+' cheatMethods: '+cmt.cheatMethods+'<br/>':''}`+
-                            `    ${cmt.type=='report'? cmt.description:cmt.content}<br/>`+
+                            `${cmt.type=='report'? 'report in: '+cmt.cheatGame+' video: '+cmt.videoLink+' cheatMethods: '+cmt.cheatMethods+'<br/>':''}`+
+                            `    ${cmt.content}<br/>`+
                             `<br/>`;
                         }
                         $('#timeline-container').html(content);
@@ -573,7 +573,7 @@
                                     body: JSON.stringify({
                                         data: {
                                             toPlayerId: id,
-                                            cheatMethods: $('#judgementcheatMethod').val(),
+                                            cheatMethods: $('#judgementcheatMethod').val().split(','),
                                             action: $('input[name=judgementval]:checked').val(),
                                             content: $('#replyinput').val()
                                         }
@@ -649,7 +649,7 @@
                                 data: {
                                     game: $('input[name=playerreport-game]:checked').val(),
                                     originName: $('#playerreport-name').val(),
-                                    cheatMethods: $('#playerreport-cheatMethods').val(),
+                                    cheatMethods: $('#playerreport-cheatMethods').val().split(','),
                                     videoLink: $('#playerreport-videoLink').val(),
                                     description: $('#playerreport-description').val()
                                 },

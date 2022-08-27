@@ -571,7 +571,7 @@ async (req, res, next)=>{
 
 router.post('/judgement', verifyJWT, allowPrivileges(['admin','super','root']), [
     checkbody('data.toPlayerId').isInt({min: 0}),
-    checkbody('data.cheatMethods').optional().isArray().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
+    checkbody('data.cheatMethods').optional({nullable: true}).isArray().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
     checkbody('data.action').isIn(['suspect','innocent','discuss','guilt','kill','invalid','more']),
     checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
@@ -610,7 +610,12 @@ async (req, res, next)=>{
         player.cheatMethods = nextstate==1? JSON.stringify(req.body.data.cheatMethods) : '[]';
         player.updateTime = new Date();
         player.commentsNum += 1;
-        await db('players').update(player).where({id: player.id});
+        await db('players').update({
+            status: player.status, 
+            cheatMethods: player.cheatMethods,
+            updateTime: player.updateTime,
+            commentsNum: player.commentsNum
+        }).where({id: player.id});
 
         judgement.cheatMethods = req.body.data.cheatMethods? req.body.data.cheatMethods : [];
         player.cheatMethods = nextstate==1? req.body.data.cheatMethods : [];

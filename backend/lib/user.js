@@ -22,7 +22,7 @@ function cheatMethodsSanitizer(val, {req}) {
 }
 
 const userAttributes = {
-    "language": {type: "string", get: true, set: true, isprivate: true, default: 'en-us'},
+    "language": {type: "string", get: true, set: true, isprivate: true, default: 'en'},
     "showOrigin": {type: "boolean", get: true, set: true, default: false},
     "allowDM": {type: "boolean", get: true, set: true, default: false},     // allow direct message?
     "certUser": {type: "string", get: true, set: false, default: ''},

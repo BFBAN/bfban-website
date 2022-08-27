@@ -17,10 +17,12 @@ export default class Util {
         const list = {
             cheatMethodsGlossary : await import('/public/conf/cheatMethodsGlossary.json'),
             cheaterStatus : await import('/public/conf/cheaterStatus.json'),
+            action: await import('/public/conf/action.json'),
             gameName : await import('/public/conf/gameName.json')
         }
         this.cheaterStatus = list.cheaterStatus.child;
         this.gameName = list.gameName.child;
+        this.action = list.action.child;
         this.cheatMethodsGlossary = list.cheatMethodsGlossary.child;
         return this;
     }
@@ -38,15 +40,16 @@ export default class Util {
                 }
             });
         });
-        return tmpArr.sort().reverse().join(' ');
+        return tmpArr;
     }
 
     getCheaterStatusLabel(value) {
-        if (this.cheaterStatus == null || !value) return '';
-        const o = _.find(this.cheaterStatus, (v, k) => {
-            return typeof value == 'string' ? v.values.indexOf(value) >= 0 : value == v.value;
-        });
-        return o.value ? this.$i18n.t("basic.status[" + o.value + "]") : '';
+        // if (this.cheaterStatus == null || !value) return '';
+        // const o = _.find(this.cheaterStatus, (v, k) => {
+        //     return typeof value == 'string' ? v.values.indexOf(value) >= 0 : value == v.value;
+        // });
+        // return o.value ? this.$i18n.t("basic.status[" + o.value + "]") : '';
+        return this.$i18n.t("basic.action." + value + ".text");
     }
 
     /**

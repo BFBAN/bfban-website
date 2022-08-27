@@ -104,8 +104,6 @@
       </Row>
     </div>
 
-    <Weekly></Weekly>
-
     <div class="box mobile-hide ivu-primary">
       <div class="container">
         <Row>
