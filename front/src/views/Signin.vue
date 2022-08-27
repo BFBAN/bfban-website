@@ -27,10 +27,10 @@
                        :placeholder="$t('signin.form.password')"/>
               </FormItem>
 
-              <FormItem :label="$t('signup.form.captcha')" prop="captcha">
+              <FormItem :label="$t('captcha.title')" prop="captcha">
                 <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
-                       :placeholder="$t('signup.form.captcha')">
-                  <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                       :placeholder="$t('captcha.title')">
+                  <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
                     <Captcha ref="captcha"></Captcha>
                   </div>
                 </Input>

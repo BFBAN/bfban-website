@@ -30,6 +30,7 @@ const isLoginBeforeEnter = function (to, from, next) {
 }
 
 const routes = [
+    // 主页
     {name: 'home', path: '/', component: Home},
 
     // 关于
@@ -97,6 +98,7 @@ const routes = [
     {name: 'forgetPassword', path: '/forgetPassword', component: ForgetPassword},
     {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify', component: ForgetPassword},
 
+    // 账户验证
     {name: 'signupComplete', path: '/signupComplete/:code', component: SignupComplete},
     //  { name: 'signup', path: '/reset', component: Reset },
 

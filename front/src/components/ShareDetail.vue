@@ -3,7 +3,7 @@
     <span @click="share.show = true">
       <slot></slot>
     </span>
-    <Modal :title="$t('share.title')" v-model="share.show" :fullscreen="false" :scrollable="true" width="80%">
+    <Modal :title="$t('share.title')" v-model="share.show" :fullscreen="false" :footer-hide="true" :scrollable="true" width="80%">
       <template v-if="share.collapse == 1">
         <div style="min-height: 500px;width: 100%;display: flex;justify-content: center;align-items: center">
           <Icon type="md-share"/>&emsp;<a :href="share.webLink" target="_blank">{{ share.webLinkText }}</a>
@@ -163,7 +163,7 @@ export default {
       this.share.load = true;
       this.share = Object.assign(this.share, {
         webLink: _webLink,
-        webLinkText: `${that.$i18n.t('share.textLinkContent', { webname: 'BFBAN', url: _webLink })}`,
+        webLinkText: `${that.$i18n.t('share.link.textLinkContent', { webname: 'BFBAN', url: _webLink })}`,
         webLinkHtml: `<a href="${url}?lang=${share.languages}" target="_blank">${ share.webLinkText }</a>`,
         iframeLink: `<iframe src="${window.location.href}?full=true&theme=${share.theme}&lang=${share.languages}"  scrolling="auto" frameborder="0" seamless style="filter:chroma(color=#ffffff);${shareSize.w ? `width:${shareSize.w}px;` : 'width:100%;'} ${shareSize.h ? `height:${shareSize.h}px;` : 'height:100%;'}"><a href="${url}" target="_blank">${url}</a></iframe>`.trim().replaceAll(/\r\n/g, '')
       });
