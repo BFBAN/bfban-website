@@ -22,11 +22,12 @@
         </Col>
         <Col span="12">
           <FormItem :label="$t('profile.account.form.privilege')">
-            <span v-for="(i,index) in privileges" :key="index">
-              <Tag type="dot" v-if="formItem.privilege == i.value"
-                   color="success">
-                {{ $t("account." + i.value) }}
-              </Tag>
+            <span v-for="(i, index) in privileges" :key="index">
+              <span v-for="(p, pi) in formItem.privilege" :key="pi">
+                <Tag type="border" :color="i.class"  v-if="p == i.value">
+                  {{ $t('basic.privilege.' + i.value) }}
+                </Tag>
+              </span>
             </span>
           </FormItem>
         </Col>
@@ -35,15 +36,14 @@
         <Edit :content="formItem.introduction" @change="handleIntroductionChange"/>
       </FormItem>
       <Row>
-        <Col span="11">
+        <Col flex="1">
           <FormItem :label="$t('account.joinedAt')">
             <Tag>
               <Time :time="formItem.joinTime || new Date().getTime()"/>
             </Tag>
           </FormItem>
         </Col>
-        <Col span="2" style="text-align: center">-</Col>
-        <Col span="11">
+        <Col flex="1">
           <FormItem :label="$t('account.lastOnlineTime')">
             <Tag>
               <Time :time="formItem.lastOnlineTime || new Date().getTime()"/>
@@ -62,7 +62,7 @@
         </div>
       </Alert>
       <Row :gutter="30">
-        <Col span="12">
+        <Col flex="1">
           <FormItem :label="$t('signup.form.originEmail')">
             <Input v-model="formItem.origin.originName"
                    type="text"
@@ -71,7 +71,7 @@
                    placeholder=""></Input>
           </FormItem>
         </Col>
-        <Col span="12">
+        <Col flex="1">
           <FormItem :label="$t('signup.form.originName')">
             <Input v-model="formItem.origin.originUserId"
                    type="text"
@@ -89,6 +89,7 @@
                     @on-change="switchLanguage">
               <Option v-for="item in languages" :value="item.name" :key="item.name">{{ item.label }}</Option>
             </Select>
+            <Alert show-icon>{{$t('profile.account.form.languageSyncDescribe')}}</Alert>
           </FormItem>
         </Col>
         <Col span="12">
@@ -177,13 +178,13 @@
     </Modal>
 
     <Modal v-model="modal_changePassword.show">
-      <p slot="header">修改密码</p>
+      <p slot="header">{{ $t("reset.title") }}</p>
       <div>
         <Form ref="formValidate" label-position="top">
-          <FormItem label="旧密码">
+          <FormItem :label="$t('reset.oldPassword')">
             <Input v-model="modal_changePassword.oldpassword" placeholder="******" minlength="6"></Input>
           </FormItem>
-          <FormItem label="新密码">
+          <FormItem :label="$t('reset.newPassword')">
             <Input v-model="modal_changePassword.newpassword" placeholder="******" minlength="6"></Input>
           </FormItem>
           <FormItem :label="$t('signup.form.captcha')" >

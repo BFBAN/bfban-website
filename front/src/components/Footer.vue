@@ -6,7 +6,6 @@
           <Badge :count="logoCount" overflow-count="999999">
             <Avatar v-if="logoCount > 10" size="40">
               干嘛？
-              {{ getLog() }}
             </Avatar>
             <img v-else
                  src="../assets/images/logo.png"
@@ -46,8 +45,7 @@
           </ul>
         </Col>
         <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
-          <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large"
-                  @on-change="switchLanguage">
+          <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large">
             <Option v-for="(item, index) in languages" :value="item.name" :label="item.label" :key="index">
                   <span>
                     {{ item.label }}
@@ -94,6 +92,8 @@
 </template>
 
 <script>
+import {storage} from "../assets/js";
+
 import packageInfo from '../../package.json';
 import footerNavs from '/public/conf/footerNavs.json';
 import link from '/public/conf/link.json';
@@ -119,16 +119,14 @@ export default {
       const languages = await import('/public/conf/languages.json');
 
       this.languages = languages.child;
+      // this.loadLanguages();
     },
-    switchLanguage(val) {
-      this.setLang(val);
-    },
-    setLang(lang) {
-      this.$store.dispatch('setLang', lang);
-    },
-    getLog() {
-      document.getElementsByName('body').style = 'transform:rotate(98deg)'
-      console.log('怎么啦？要不让大哥哥康康?');
+    async loadLanguages () {
+      let that = this;
+      let lang = this.currentLan;
+      setTimeout(function () {
+        that.$store.dispatch('setLang', lang);
+      }, 200)
     }
   },
   computed: {
@@ -136,10 +134,21 @@ export default {
       return Boolean(this.$route.query.full || false);
     },
     currentLan: {
-      set() {
+      set(val) {
+        const lang = val;
+        // 路由语言
+        this.$store.dispatch('setLang', lang);
+        // 本地持久语言
+        storage.set('language', lang);
+        // 网页语言
+        document.getElementsByTagName('html')[0].lang = lang;
       },
       get() {
-        return this.$root && this.$root.$i18n && this.$root.$i18n.locale || 'zh-CN';
+        const localAppLanguages = this.$root && this.$root.$i18n && this.$root.$i18n.locale;
+        const localSroeageLanguage = storage.get('language')?.data?.value;
+        const loaclWebLanguage = this.$route.query.lang
+
+        return loaclWebLanguage || localSroeageLanguage || localAppLanguages || 'zh-CN';
       }
     }
   }

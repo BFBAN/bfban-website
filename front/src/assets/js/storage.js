@@ -15,7 +15,7 @@ export default  class Storage{
   /**
    * 设置
    */
-  async set (name, value) {
+  set (name, value) {
     let data = {value, time: this.DATE.now()}
     localStorage.setItem(this.STORAGENAME + name, JSON.stringify(data));
 
@@ -25,7 +25,7 @@ export default  class Storage{
   /**
    * 获取
    */
-  async get (name) {
+  get (name) {
     let data = JSON.parse(
         localStorage.getItem(this.STORAGENAME + name)
     );

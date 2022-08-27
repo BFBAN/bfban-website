@@ -333,11 +333,6 @@
                             </BusinessCard>
                           </router-link>
 
-                          <template v-if="!isSelf(l.originUserId)">
-                            {{ $t('detail.info.assistPppeal') }}
-                          </template>
-                          <template v-else>{{ $t('detail.info.appeal') }}</template>
-
                           <BusinessCard :id="l.originUserId">
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
                               <u>{{ l.cheaterGameName }}</u>
@@ -446,12 +441,6 @@
                           </router-link>
 
                           {{ $t('detail.info.reply', {msg: 'reply'}) }}
-
-                          <template v-if="l.quote">
-                            <a :href="`#floor-${l.quote.id}`" >
-                              #{{ l.quote.username }}<Icon type="ios-undo"/>
-                            </a>
-                          </template>
                         </Col>
                         <Col align="right">
                           <Time v-if="l.createTime" :time="l.createTime"></Time>
@@ -459,8 +448,17 @@
                       </Row>
                     </div>
 
-                    <div v-html="l.content" v-if="l.content"
-                         class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
+                    <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                      <template v-if="l.quote">
+                        <a :href="`#floor-${l.quote.id}`" >
+                          <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                              <b>{{ l.quote.username }}</b> :
+                            <div v-html="l.quote.content" ></div>
+                          </div>
+                        </a>
+                      </template>
+                      <div v-html="l.content" v-if="l.content"></div>
+                    </div>
 
                     <p v-if="isLogin">
                       <!-- 回复 -->
@@ -979,7 +977,7 @@ export default new BFBAN({
      * 基础信息
      */
     getCheatersInfo() {
-      this.cheater = [];
+      this.cheater = {};
       this.http.get(api["cheaters"], {
         params: Object.assign({
           history: true
@@ -1125,13 +1123,6 @@ export default new BFBAN({
 
         this.verifySpinShow = false;
       })
-    },
-    /**
-     * 是否是自己
-     */
-    isSelf(id) {
-      const userId = this.$store.state.user.userinfo.userId;
-      return (parseInt(userId) === parseInt(id))
     },
     /**
      * 富文本单选绑定

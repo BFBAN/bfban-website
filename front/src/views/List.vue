@@ -49,6 +49,28 @@
         </Row>
         <!-- 游戏类型选择 E -->
 
+        <RadioGroup
+            style="margin-top: 12px"
+            v-model="statusGroup"
+            @on-change="handleStatusChange"
+            type="button">
+          <Radio label="-1">
+            <Badge :overflow-count="900000"
+                   size="small"
+                   type="info">
+              {{ $t("list.filters.status.all") }}
+            </Badge>
+          </Radio>
+          <Radio
+              v-for="status in cheaterStatus"
+              :key="status.value"
+              :label="`${status.value}`">
+            <Badge :count="getcHeaterStatusNum(status.value)" :overflow-count="900000" type="info">
+              {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
+            </Badge>
+          </Radio>
+        </RadioGroup>
+
         <Row :gutter="10">
           <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 17, push: 0, pull: 0}">
             <Card dis-hover class="list">
@@ -124,32 +146,10 @@
             <Affix :offset-top="20">
               <Card>
                 <p slot="title">
-                  {{ $t('list.colums.screenTitle') }}
+                  <Icon type="md-funnel" /> {{ $t('list.colums.screenTitle') }}
                 </p>
 
                 <Form>
-                  <FormItem>
-                    <RadioGroup
-                        v-model="statusGroup"
-                        @on-change="handleStatusChange"
-                        type="button">
-                      <Radio label="-1">
-                        <Badge :count="getAllStatusNum"
-                               :overflow-count="900000"
-                               type="info">
-                          {{ $t("list.filters.status.all") }}
-                        </Badge>
-                      </Radio>
-                      <Radio
-                          v-for="status in cheaterStatus"
-                          :key="status.value"
-                          :label="`${status.value}`">
-                        <Badge :count="getcHeaterStatusNum(status.value)" :overflow-count="900000" type="info">
-                          {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
-                        </Badge>
-                      </Radio>
-                    </RadioGroup>
-                  </FormItem>
                   <FormItem :label="$t('list.reportTime')">
                     <DatePicker :value="createTime" @on-change="handleCDatepicker" split-panels
                                 :placeholder="$t('list.reportTime')" style="width: 100%"></DatePicker>
@@ -203,7 +203,7 @@ export default new BFBAN({
       skip: 1,
       limit: 10,
       total: 0,
-      sum: [],
+      gameSum: [],
       totalSum: [],
       sortBy: [
         {value: "createTime",},
@@ -248,12 +248,12 @@ export default new BFBAN({
       switch (val) {
         case '*':
           // 总数
-          target.num = _.sumBy(this.sum, (o) => {
-            return o ? o.num : 0;
+          this.gameSum.forEach(i => {
+            return target.num += (i.count);
           });
           break;
         default:
-          target = _.find(this.sum, ["game", val]);
+          target = _.find(this.gameSum, ["game", val]);
       }
       return target ? target.num : 0;
     },
@@ -304,19 +304,19 @@ export default new BFBAN({
         data,
       }).then(res => {
         const d = res.data;
-        let sum = [];
+        let gameSum = [];
         let totalSum = [];
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           // game Type
           [].concat(d.data).splice(0, splitIndex).forEach((i, index) => {
-            sum.push({game: that.games[index].value.toString(), num: Number(i)})
+            gameSum.push({game: that.games[index].value.toString(), num: Number(i.count)})
           });
-          this.sum = sum;
+          this.gameSum = gameSum;
 
           // type methods
           [].concat(d.data).splice(splitIndex, d.data.length - 1).forEach((i, index) => {
-            totalSum.push({status: that.cheaterStatus.filter(i => i.value == index)[0].value, num: Number(i)})
+            totalSum.push({status: that.cheaterStatus.filter(i => i.value == index)[0].value, num: Number(i.count)})
           });
           this.totalSum = totalSum;
         }
@@ -434,11 +434,11 @@ export default new BFBAN({
       let target = {num: 0};
       switch (this.gameName) {
         case 'all':
-          for (let i of this.sum)
+          for (let i of this.gameSum)
             target.num += i.num || 0;
           break;
         default:
-          target = _.find(this.sum, ["game", this.gameName]);
+          target = _.find(this.gameSum, ["game", this.gameName]);
       }
       return target ? target.num : 0;
     },

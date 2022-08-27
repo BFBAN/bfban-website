@@ -124,8 +124,8 @@ export default {
     this.getSearchHistory();
   },
   methods: {
-    async getSearchHistory() {
-      let history = await storage.get('search.history');
+    getSearchHistory() {
+      let history = storage.get('search.history');
 
       if (history.code == -1) {
         this.setSearchHistoryValue([]);
