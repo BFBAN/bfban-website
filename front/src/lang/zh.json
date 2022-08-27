@@ -52,7 +52,9 @@
     "button": {
       "commit": "提交",
       "save": "保存",
-      "submit": "确认"
+      "submit": "确认",
+      "reset": "重置",
+      "cancel": "取消"
     }
   },
   "header": {
@@ -229,8 +231,6 @@
       "reportOne": "举报单个",
       "reportAll": "举报所有",
       "fromDatabaseOneId": "从联BAN数据库中选取",
-      "reset": "重置",
-      "cancel": "取消",
       "description": "尽可能详细的列举被举报人的作弊证据",
       "captcha": "验证码",
       "required": "视频地址",
@@ -442,7 +442,6 @@
     "fillIn": "请规范填写",
     "failed": "注册失败"
   },
-
   "forgetPassword": {
     "title": "重置密码",
     "resetSuccess": "恭喜完成重置 \uD83D\uDC90"
@@ -557,5 +556,26 @@
       "desktop": "点击或者拖动文件到这里上传"
     },
     "progress": "上传中..."
+  },
+  "share": {
+    "title": "分享",
+    "link": {
+      "name": "链接形式",
+      "linkUrl": "超链接",
+      "textLink": "文本地址",
+      "textLinkContent": "【{webname}】分享了一位玩家，地址:{url}",
+      "webHtmlLink": "网络代码"
+    },
+    "iframe": {
+      "name": "网站嵌入式",
+      "theme": "主题",
+      "size": "大小",
+      "code": "嵌入代码"
+    },
+    "image": {
+      "name": "图片",
+      "generate": "生成图片",
+      "describe": "生成一张举报信息截图"
+    }
   }
 }

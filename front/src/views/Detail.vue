@@ -15,7 +15,7 @@
         <br>
       </template>
 
-      <Card v-if="isCheaterExist" dis-hover>
+      <Card id="getSharePicture" v-if="isCheaterExist" dis-hover>
         <Row :gutter="10">
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 3, pull: 0, push: 0}">
             <div v-show="cheater.avatarLink" align="center">
@@ -55,7 +55,7 @@
                 </h1>
               </Col>
               <template v-if="!isFull">
-                <Col class="mobile-hide">
+                <Col class="mobile-hide html2canvas-ignore">
                   <Poptip content="content" placement="right-end" title="">
                     <Button>
                       <Icon type="md-qr-scanner" size="20" color="#535353"/>
@@ -114,26 +114,47 @@
                     </DropdownMenu>
                   </Dropdown>
                   <Divider type="vertical"/>
-                  <Poptip @on-ok="updateCheaterInfo">
-                    <div style="margin-top: .4rem;" slot="content">
+                  <a @click="updateCheaterModal = true;"><Icon type="md-cloud" /> {{ $t('detail.info.updateButton') }}</a>
+
+                  <Modal v-model="updateCheaterModal">
+                    <div>
+                      <Card style="margin: 2.5rem 0 1rem 0;" dis-hover>
+                        <Row :gutter="16" type="flex" justify="center" align="middle">
+                          <Col>
+                            <Icon type="md-cloud" color="#535353" size="40" />
+                          </Col>
+                          <Col>
+                            <Icon type="md-code-working" color="#aaa" size="20" />
+                          </Col>
+                          <Col>
+                            <Icon type="ios-albums" color="#535353" size="40" />
+                          </Col>
+                        </Row>
+                      </Card>
+                      <br/>
                       <p class="hint">
-                        <!-- 描述说明 -->
-                        {{ $t('detail.info.discription1', {msg: 'discription1'}) }}
-                        <Button @click.prevent="updateCheaterInfo">
-                          <span>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</span>
-                        </Button>
-                        ，
-                        <span>{{ $t('detail.info.discription2', {msg: 'discription2'}) }}</span>
+                        {{ $t('detail.info.discription1') }}，
+                        <Tag>{{ $t('detail.info.updateButton') }}</Tag>
+                        <span>{{ $t('detail.info.discription2') }}</span>
                       </p>
-                      <p class="hint">
-                        {{ $t('detail.info.discription3', {msg: 'discription3'}) }}
-                      </p>
-                      <p class="hint">
-                        {{ $t('detail.info.discription4', {msg: 'discription4'}) }}
-                      </p>
+                      <p class="hint"> {{ $t('detail.info.discription3') }} </p>
+                      <p class="hint"> {{ $t('detail.info.discription4') }} </p>
                     </div>
-                    <a>{{ $t('detail.info.updateButton', {msg: 'updateButton'}) }}</a>
-                  </Poptip>
+                    <div slot="footer">
+                      <Row :gutter="16">
+                        <Col>
+                          <Button type="dashed" size="large" long @click.prevent="updateCheaterModal = false;">
+                            <span>{{ $t('basic.button.cancel') }}</span>
+                          </Button>
+                        </Col>
+                        <Col flex="1">
+                          <Button type="primary" size="large" long @click.prevent="updateCheaterInfo">
+                            <span>{{ $t('detail.info.updateButton') }}</span>
+                          </Button>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Modal>
                 </template>
               </Col>
             </Row>
@@ -506,6 +527,8 @@
                              type="textarea"
                              :autosize="{minRows: 5}"
                              :placeholder="$t('detail.info.giveOpinion')"/>
+
+<!--                      <Textarea :content="reply.content"></Textarea>-->
                     </FormItem>
                   </Form>
                 </div>
@@ -838,6 +861,7 @@ import translate from 'google-translate-open-api';
 
 import Empty from '../components/Empty.vue'
 import Edit from "../components/Edit";
+import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
 import ShareDetail from "../components/ShareDetail.vue";
 import RecordLink from "../components/RecordLink.vue";
@@ -909,9 +933,10 @@ export default new BFBAN({
         selected: [],
       },
       updateUserInfospinShow: false,
+      updateCheaterModal: false,
     }
   },
-  components: {Empty, Edit, BusinessCard, ShareDetail, RecordLink, vueQr,Captcha},
+  components: {Empty, Edit, Textarea, BusinessCard, ShareDetail, RecordLink, vueQr,Captcha},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -1358,102 +1383,102 @@ export default new BFBAN({
 </script>
 
 <style lang="scss">
-.cheater-desc {
-  max-width: 100%;
-  width: 34rem;
-}
-
-.description {
-  font-size: 0.8rem;
-  line-height: 1.5rem;
-  margin: 10px 0;
-  padding: 10px;
-
-  img, video {
+  .cheater-desc {
     max-width: 100%;
+    width: 34rem;
   }
-}
 
-.timeline-time-line {
-  .ivu-timeline-item-tail {
+  .description {
+    font-size: 0.8rem;
+    line-height: 1.5rem;
+    margin: 10px 0;
+    padding: 10px;
+
+    img, video {
+      max-width: 100%;
+    }
+  }
+
+  .timeline-time-line {
+    .ivu-timeline-item-tail {
+      margin-left: 15px;
+    }
+  }
+
+  .timeline-time-dot {
+    width: 40px;
     margin-left: 15px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-}
 
-.timeline-time-dot {
-  width: 40px;
-  margin-left: 15px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  .timeline-content {
+    position: relative;
 
-.timeline-content {
-  position: relative;
+    // force to wrap
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 
-  // force to wrap
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+    margin-left: 3rem;
+  }
 
-  margin-left: 3rem;
-}
+  .timeline-content .loading {
+    background-image: url('/src/assets/fonts/loading.svg');
+    background-repeat: no-repeat;
+    min-width: 100px;
+    min-height: 100px;
+  }
 
-.timeline-content .loading {
-  background-image: url('/src/assets/fonts/loading.svg');
-  background-repeat: no-repeat;
-  min-width: 100px;
-  min-height: 100px;
-}
+  .ivu-timeline-item {
+    padding: 1rem 0;
+  }
 
-.ivu-timeline-item {
-  padding: 1rem 0;
-}
+  .ivu-timeline-item-content {
+    padding: 0 .6rem 0 3rem;
+  }
 
-.ivu-timeline-item-content {
-  padding: 0 .6rem 0 3rem;
-}
-
-.ivu-timeline-item-tail {
-  top: 1rem;
-  border-width: .3rem !important;
-}
+  .ivu-timeline-item-tail {
+    top: 1rem;
+    border-width: .3rem !important;
+  }
 </style>
 
 <style lang="scss">
-.spin-icon-load {
-  animation: ani-demo-spin 1s linear infinite;
-}
-
-@keyframes ani-demo-spin {
-  from {
-    transform: rotate(0deg);
+  .spin-icon-load {
+    animation: ani-demo-spin 1s linear infinite;
   }
-  50% {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
-.detila-affix {
-  position: fixed;
-  right: calc(50% - (960px / 2) - 85px);
-  top: 30%;
-  transform: translateY(-30%);
-  z-index: 100;
-
-  a {
-    display: block;
-    padding: 10px 5px;
+  @keyframes ani-demo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
-}
 
-@media screen and (max-width: 1180px) {
   .detila-affix {
-    display: none !important;
+    position: fixed;
+    right: calc(50% - (960px / 2) - 85px);
+    top: 30%;
+    transform: translateY(-30%);
+    z-index: 100;
+
+    a {
+      display: block;
+      padding: 10px 5px;
+    }
   }
-}
+
+  @media screen and (max-width: 1180px) {
+    .detila-affix {
+      display: none !important;
+    }
+  }
 </style>
