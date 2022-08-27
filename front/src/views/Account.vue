@@ -215,6 +215,9 @@ export default {
 
       this.getUserInfo(uId);
     },
+    /**
+     * 获取用户信息
+     */
     getUserInfo (uId) {
       http.get(api["user_info"], {
         params: {
@@ -237,6 +240,9 @@ export default {
         this.getReports(uId)
       });
     },
+    /**
+     * 打开消息
+     */
     openMessage () {
       if (!this.account.attr.allowDM) {
         this.$Message.error(this.$i18n.t("account.message.hint.taOffChat"))
@@ -249,6 +255,9 @@ export default {
 
       this.message.show = true;
     },
+    /**
+     * 发送消息
+     */
     setMessage () {
       const {uId} = this.$route.params;
 
@@ -284,14 +293,14 @@ export default {
       http.get(api["user_reports"], {
         params: {
           id: uId,
-          skip: this.page,
+          skip: this.page - 1,
           limit: this.limit,
         }
       }).then((res) => {
         const d = res.data;
         if (d.success == 1) {
           this.reports = d.data;
-          this.total = Number(d.total);
+          this.total = Number(this.account.reportnum);
         }
       });
     },

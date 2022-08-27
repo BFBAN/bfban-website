@@ -103,7 +103,7 @@ function initUserStorageQuota(user, totalStorageQuota, maxTrafficQuota, maxFileN
 /** @param {import("../typedef.js").StorageQuota} quota */
 async function updateUserStorageQuota(quota, size) {
     if(Date.now() - quota.prevResetTime.getTime() > 24*60*60*1000) {
-        quota.prevResetTime = Date.now();
+        quota.prevResetTime = new Date();
         quota.todayTrafficQuota = 0;
         quota.todayFileNumber = 0;
     }

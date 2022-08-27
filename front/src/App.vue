@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     async onLoadTheme () {
-      let theme = await storage.get('theme');
+      let theme = storage.get('theme');
 
       if (theme.data && theme.data.value) {
         await this.$store.dispatch('setTheme', theme.data.value);
@@ -94,6 +94,8 @@ html, body {
   font-size: .8rem;
   display: flex;
   flex-direction: column;
+  scroll-behavior: smooth;
+  scroll-padding-top: 10%;
 
   /*background image*/
   background-size: cover;
