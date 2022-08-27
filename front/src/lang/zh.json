@@ -1,18 +1,48 @@
 {
   "basic": {
+    "action": {
+      "suspect": {
+        "text": "可疑",
+        "describe": "从提交的证明中，不足以确定作弊行为，但以上证据存在可疑地方，如果有足够证明材料可更改石锤"
+      },
+      "innocent": {
+        "text": "清白",
+        "describe": "证明材料中，有足够信息能确定没有作弊行为"
+      },
+      "discuss": {
+        "text": "待讨论",
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为"
+      },
+      "guilt": {
+        "text": "投一票石锤",
+        "describe": "管理员认为作弊，投一票，满足条件系统将确认玩家状态"
+      },
+      "kill": {
+        "text": "石锤",
+        "describe": "管理员判断石锤"
+      },
+      "invalid": {
+        "text": "无效举报",
+        "describe": "举报材料不全或举报错误ID等行为"
+      },
+      "more":{
+        "text": "需要更多证据",
+        "describe": "需要补充更多有力的证据"
+      }
+    },
     "status": [
       "未处理",
       "石锤",
       "嫌疑再观察",
       "无作弊",
-      "回收站",
+      "无效举报",
       "回复讨论中",
-      "等待管理确认",
+      "需更多管理投票",
       "攻击服务器"
     ],
     "privilege": {
       "root": "系统",
-      "admin": "管理员",
+      "admin": "社区管理",
       "super": "超级管理员",
       "normal": "用户"
     },
@@ -77,7 +107,8 @@
         "showOriginDescribe": "是否让你绑定的Origin在BFBAN可见",
         "allowDM": "是否接收聊天",
         "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
-        "language": "设置语言"
+        "language": "设置语言",
+        "languageSyncDescribe": "设置此处选项，在登录后同步程序本地语言，如果退出登录将回退到本地程序所持久保存的语言"
       }
     },
     "appearance": {
@@ -156,6 +187,11 @@
         "evidenceVid": "证据如视频所示"
       }
     },
+    "judgement": {
+      "behavior": "判决类型",
+      "methods": "作弊的方法",
+      "content": "判决说明"
+    },
     "messages": {
       "fillEverything": "请填写完整",
       "pleaseExplain": "请更加详细的描述您的裁决内容",
@@ -210,7 +246,10 @@
     "error": {
       "mediaEvidence": "请上传图片或填写视频链接",
       "originId": "游戏ID不存在，请检查拼写",
-      "success": "提交成功"
+      "success": "提交成功",
+      "permissionDenied": "无权限",
+      "voideBadFormat": "格式错误",
+      "voideEmpty": "空的视频地址"
     }
   },
   "footer": {
@@ -260,7 +299,7 @@
       "activities": {
         "report": "举报了",
         "join": "注册了 bfban ， 欢迎！",
-        "admin": "管理员",
+        "admin": "社区管理",
         "mark": "将",
         "as": "处理为"
       }
@@ -318,6 +357,8 @@
   "reset": {
     "title": "重置密码",
     "form": {
+      "oldPassword": "旧密码",
+      "newPassword": "新密码",
       "qq": "QQ",
       "password": "新密码",
       "passwordRepeat": "确认密码",
@@ -333,7 +374,7 @@
     "username": "用户名：",
     "root": "系统",
     "role": "身份：",
-    "admin": "管理员",
+    "admin": "社区管理",
     "normal": "普通",
     "super": "超级管理员",
     "joinedAt": "加入时间",
@@ -451,7 +492,7 @@
       "web": "网页",
       "api": "接口",
       "book": "指南",
-      "admin": "管理员",
+      "admin": "社区管理",
       "qq": "腾讯QQ",
       "bf1": "战地风云1",
       "bfv": "战地风云5"

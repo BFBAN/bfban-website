@@ -1,18 +1,24 @@
 {
-  "action": [{
+  "child": [{
     "t": "可疑",
     "value": "suspect"
   },{
-    "t": "无辜",
+    "t": "无辜，清白",
     "value": "innocent"
   },{
     "t": "讨论",
     "value": "discuss"
   },{
-    "t": "有罪",
+    "t": "投一票石锤",
     "value": "guilt"
   },{
-    "t": "杀死",
+    "t": "石锤",
     "value": "kill"
+  },{
+    "t": "无效举报",
+    "value": "invalid"
+  },{
+    "t": "需要更多证据",
+    "value": "more"
   }]
 }

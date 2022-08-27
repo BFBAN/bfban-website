@@ -26,7 +26,7 @@
 
     <Dropdown class="mobile-hide">
       <router-link :to="{path: '/profile/message'}">
-        <Badge :count="message && message.total && message.total[0].num || 0" :class="message.messages.length > 0 ? 'shake' : ''">
+        <Badge :count="message && message.total && message.total || 0" :class="message.messages.length > 0 ? 'shake' : ''">
           <slot name="content"></slot>
         </Badge>
       </router-link>
@@ -61,7 +61,8 @@ export default {
     return {
       message: {
         show: false,
-        messages: []
+        messages: [],
+        total: 0
       }
     }
   },

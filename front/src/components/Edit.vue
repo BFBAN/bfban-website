@@ -143,7 +143,7 @@ export default {
           "emoji-toolbar": true,
           "emoji-shortname": true,
           toolbar: {
-            container: ["link", "image", "emoji"],
+            container: ["link"], //  "image",
             handlers: {
               image: (value) => {
                 if (value) {

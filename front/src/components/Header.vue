@@ -149,14 +149,19 @@ export default {
         }
       }).then((res) => {
         const d = res.data;
-        if (d.success == 1) {
-          this.$store.dispatch('signout').then(() => {
-            this.$Message.success(d.message);
-
-            this.$router.push('/');
-          });
+        if (d.success === 1) {
+          this.$Message.success(d.message);
+          return;
         }
-      })
+
+        this.cache(res);
+      }).catch((e) => {
+        this.$Message.error(e.toString());
+      }).finally(() => {
+        this.$store.dispatch('signout').then(() => {
+          this.$router.push('/');
+        });
+      });
     },
     navigatorTo(i) {
       this.headerMenu.show = false;

@@ -103,7 +103,7 @@ const routes = [
     {name: 'account', path: '/account/:uId', component: Account},
     //  { name: 'dashboard', path: '/dashboard', component: Dashboard },
 
-    {name: 'notFound', path: '/404', component: NotFound, meta: {title: '🦖'}},
+    {name: 'notFound', path: '/404', component: NotFound},
 
     // otherwise redirect to home
     {path: '*', redirect: '/404'},
