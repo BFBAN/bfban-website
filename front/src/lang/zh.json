@@ -47,7 +47,8 @@
       "normal": "用户"
     },
     "tip": {
-      "notlang": "未翻译"
+      "notlang": "未翻译",
+      "notcontent": "无内容"
     },
     "button": {
       "commit": "提交",
@@ -87,7 +88,7 @@
   },
   "profile": {
     "title": "个人设置",
-    "meet": "欢迎来到BFBAN",
+    "meet": "欢迎回来{name}!",
     "message": {
       "title": "消息",
       "tabs": {
@@ -117,6 +118,17 @@
         "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
         "language": "设置语言",
         "languageSyncDescribe": "设置此处选项，在登录后同步程序本地语言，如果退出登录将回退到本地程序所持久保存的语言"
+      },
+      "modifyName": {
+        "title": "修改名称",
+        "specification1": "你正在修改您的账户名称，这代表网站内看见都会更变，并且同时<b>登录的ID</b>同时变动,如果您不小心忘记新账户id，可能无法找回此账户，影响绑定的orgin账户，你需要通过非常长的人工审核.",
+        "specification2": "你明白以上说明了吗?",
+        "residueDegree": "目前剩余修改名称{changeNameLeft}次数",
+        "steps": {
+          "0": { "title": "提示" },
+          "1": { "title": "填写" },
+          "2": { "title": "完成" }
+        }
       }
     },
     "appearance": {
