@@ -16,11 +16,11 @@
         <Col span="24">
           <Card shadow>
             <Steps :current="stepsIndex">
-              <Step title="基本信息" content="核对账户"></Step>
-              <Step title="验证码" content="验证是否机器人"></Step>
-              <Step title="邮箱验证" content="查看邮箱验证链接"></Step>
-              <Step title="设置密码" content="重置您的密码"></Step>
-              <Step title="完成" content="重置成功"></Step>
+              <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].title')"></Step>
+              <Step :title="$t('signup.steps[1].title')" :content="$t('signup.steps[1].title')"></Step>
+              <Step :title="$t('signup.steps[2].title')" :content="$t('signup.steps[2].title')"></Step>
+              <Step :title="$t('signup.steps[3].title')" :content="$t('signup.steps[3].title')"></Step>
+              <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
             </Steps>
 
             <Divider></Divider>
@@ -28,10 +28,10 @@
             <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
               <div v-if="stepsIndex == 0">
                 <FormItem :label="$t('signup.form.username')" prop="username">
-                  <Input v-model="forgetPassword.username" size="large" placeholder="4位以上用户名"/>
+                  <Input v-model="forgetPassword.username" size="large" :placeholder="$t('signup.placeholder.username')"/>
                 </FormItem>
                 <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
-                  <Input v-model="forgetPassword.originEmail" size="large" placeholder="origin email"/>
+                  <Input v-model="forgetPassword.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
                 </FormItem>
               </div>
 
@@ -67,13 +67,13 @@
                 <Col span="12">
                   <Button v-if="button.prev"
                           :disabled="button.prevShow"
-                          @click.prevent.stop="stepsIndex--; onStepsIndex();" size="large">{{ $t('signup.prev') }}
+                          @click.prevent.stop="stepsIndex--; onStepsIndex();" size="large">{{ $t('basic.button.prev') }}
                   </Button>
                   <Divider type="vertical"/>
                   <Button v-if="button.next"
                           :disabled="button.nextShow"
                           @click.prevent.stop="stepsIndex++; onStepsIndex();" size="large"
-                          type="primary">{{ $t('signup.next') }}
+                          type="primary">{{ $t('basic.button.next') }}
                   </Button>
                 </Col>
                 <Col span="12" align="right" type="flex">

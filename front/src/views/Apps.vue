@@ -46,12 +46,12 @@
             </p>
             <div>
               <Divider />
-              <Button type="primary" :disabled="!item.get">
-                <a :href="item.get">{{ $t('apps.buttons.get') }}</a>
+              <Button type="primary" :disabled="!item.get" v-if="item.get">
+                <a :href="item.get" target="_new">{{ $t('apps.buttons.get') }}</a>
               </Button>
-              <Divider type="vertical"/>
-              <Button type="dashed" :disabled="!item.website">
-                <a :href="item.website">
+              <Divider type="vertical" v-if="(!item.get || item.website) && (item.get || !item.website)"/>
+              <Button type="dashed" :disabled="!item.website" v-if="item.website">
+                <a :href="item.website" target="_new">
                   {{ $t('apps.buttons.website') }}
                 </a>
               </Button>

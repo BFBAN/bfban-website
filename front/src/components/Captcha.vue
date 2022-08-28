@@ -1,6 +1,8 @@
 <template>
-  <div class="captcha-view" @click="refreshCaptcha">
-    <span v-if="!content" class="tip">Click me</span>
+  <div class="captcha-view" @click="refreshCaptcha" :style="`cursor: ${captchaTime.count <= 0 ? 'pointer' : 'not-allowed'};`">
+    <span v-if="!content" class="tip">
+      {{ $t('captcha.get') }}
+    </span>
     <div v-else v-html="content" :style="captchaTime.count <= 0 ? 'opacity: .3' : ''"></div>
     <div class="count" v-show="captchaTime.lock">{{ captchaTime.count }}s</div>
   </div>
@@ -27,7 +29,9 @@ export default {
     if (captcha) {
       this.capthcaHash = captcha.data;
     } else {
-      storage.set(`captcha`, {});
+      storage.set(`captcha`, {
+        [this.$route.name]: 30
+      });
     }
   },
   destroyed() {
@@ -41,6 +45,14 @@ export default {
     async refreshCaptcha() {
       let captcha = await storage.get('captcha');
       let that = this;
+
+      if (captcha.code <= 0) {
+        captcha = {
+          data: {
+            value: 30,
+          }
+        }
+      }
 
       if (this.captchaTime.count > 0) return;
 
@@ -59,13 +71,12 @@ export default {
           this.content = res.data.data["content"];
         }
       }).finally((res) => {
-        console.log(captcha.data.value);
         if (Object.keys(captcha.data.value).indexOf(this.$route.name) >= 0) {
           // 会话持久对应时间加载
           this.captchaTime.count = captcha.data.value[this.$route.name];
         }
 
-        this.capthcaTimeout(this.captchaTime.count || 60);
+        this.capthcaTimeout(this.captchaTime.count || 30);
       });
     },
     /**

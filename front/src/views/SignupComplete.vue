@@ -5,7 +5,7 @@
       <Col :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem>{{ $t("signup.registerVerification") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("signup.registerVerification.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
     </Row>
@@ -15,20 +15,24 @@
       <Card dis-hover>
         <div v-if="verify.iscode">
           <div v-if="verify.load == 0">
-            验证账户中
+            <!-- 验证中 -->
+            {{ $t("signup.registerVerification.validation") }}
           </div>
           <div v-else-if="verify.load == 1">
-            验证成功！
+            <!-- 验证成功 -->
+            {{ $t("signup.registerVerification.successful") }}
             <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
-              {{$t("header.signin")}}
+              {{ $t("header.signin") }}
             </router-link>！
           </div>
           <div v-else-if="verify.load == -1">
-            错误: {{verify.msg}}
+            <!-- 错误: -->
+            {{ $t("signup.registerVerification.error") }} : {{ verify.msg }}
           </div>
         </div>
         <div v-else>
-          错误的验证地址，请检查验证码是否正确
+          <!-- 格式不正确 -->
+          {{ $t("signup.registerVerification.failure") }}
         </div>
       </Card>
     </div>

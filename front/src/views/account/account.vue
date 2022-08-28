@@ -6,7 +6,7 @@
           <FormItem :label="$t('signup.form.username')">
             <Input v-model="formItem.username" placeholder="" disabled>
               <a slot="append" @click="modal_setusername.show = !modal_setusername.show">
-                <Icon type="md-create" size="15" />
+                <Icon type="md-create" size="15"/>
               </a>
             </Input>
           </FormItem>
@@ -15,7 +15,7 @@
           <FormItem :label="$t('signup.form.password')">
             <Input v-model="formItem.password" disabled type="password">
               <a slot="append" @click="modal_changePassword.show = !modal_changePassword.show">
-                <Icon type="md-create" size="15" />
+                <Icon type="md-create" size="15"/>
               </a>
             </Input>
           </FormItem>
@@ -24,7 +24,7 @@
           <FormItem :label="$t('profile.account.form.privilege')">
             <span v-for="(i, index) in privileges" :key="index">
               <span v-for="(p, pi) in formItem.privilege" :key="pi">
-                <Tag type="border" :color="i.class"  v-if="p == i.value">
+                <Tag type="border" :color="i.class" v-if="p == i.value">
                   {{ $t('basic.privilege.' + i.value) }}
                 </Tag>
               </span>
@@ -89,7 +89,7 @@
                     @on-change="switchLanguage">
               <Option v-for="item in languages" :value="item.name" :key="item.name">{{ item.label }}</Option>
             </Select>
-            <Alert show-icon>{{$t('profile.account.form.languageSyncDescribe')}}</Alert>
+            <Alert show-icon>{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
           </FormItem>
         </Col>
         <Col span="12">
@@ -115,25 +115,28 @@
       </FormItem>
     </Form>
 
+    <!-- 修改名称 S -->
     <Modal v-model="modal_setusername.show" @on-cancel="modal_setusername.index = 0">
       <p slot="header">
         <Icon type="ios-information-circle"></Icon>
-        <span>修改名称</span>
+        <span>{{ $t('profile.account.modifyName.title') }}</span>
       </p>
       <div>
         <Steps :current="modal_setusername.index" size="small">
-          <Step title="提示"></Step>
-          <Step title="填写"></Step>
-          <Step title="完成"></Step>
+          <Step :title="$t('profile.account.modifyName.steps[0].title')"></Step>
+          <Step :title="$t('profile.account.modifyName.steps[1].title')"></Step>
+          <Step :title="$t('profile.account.modifyName.steps[2].title')"></Step>
         </Steps>
         <Form ref="formValidate" label-position="top">
           <div v-if="modal_setusername.index == 0">
             <br>
             <Alert type="warning">
               <template slot="desc">
-                <p>你正在修改您的账户名称，这代表网站内看见都会更变，并且同时<b>登录的ID</b>同时变动,如果您不小心忘记新账户id，可能无法找回此账户，影响绑定的orgin账户，你需要通过非常长的人工审核.</p>
-                <p>目前剩余修改名称{{formItem.changeNameLeft - 1 || 0}}次数</p>
-                <b>你明白以上说明了吗?</b>
+                <p> {{ $t('profile.account.modifyName.specification1') }} </p>
+                <p> {{
+                    $t('profile.account.modifyName.residueDegree', {changeNameLeft: formItem.changeNameLeft - 1 || 0})
+                  }}</p>
+                <b> {{ $t('profile.account.modifyName.specification2') }}</b>
               </template>
             </Alert>
           </div>
@@ -146,19 +149,18 @@
               <Input v-model="formItem.newname" size="large" placeholder="new name"/>
             </FormItem>
 
-            <FormItem :label="$t('signup.form.captcha')" >
-              <Input type="text" v-model="captchaUrl.value"
-                     size="large"
-                     maxlength="4"
-                     :placeholder="$t('signup.form.captcha')"></Input>
-              <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-                <div v-html="captchaUrl.content"></div>
-              </div>
+            <FormItem :label="$t('captcha.title')" prop="captcha">
+              <Input type="text" v-model="captchaUrl.value" size="large" maxlength="4"
+                     :placeholder="$t('captcha.title')">
+                <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
+                  <Captcha ref="captcha"></Captcha>
+                </div>
+              </Input>
             </FormItem>
           </div>
           <div v-if="modal_setusername.index == 2" align="center">
             <br>
-            <Icon type="ios-cloud-done" size="200" color="#19be6b" />
+            <Icon type="ios-cloud-done" size="200" color="#19be6b"/>
             <br>
           </div>
         </Form>
@@ -167,7 +169,9 @@
         <Button size="large"
                 :disabled="formItem.newname == ''"
                 :loading="modal_setusername.load"
-                v-if="modal_setusername.index > 0 && modal_setusername.index <= 1" @click="modal_setusername.index = 1 ? setUserName() : null">下一步</Button>
+                v-if="modal_setusername.index > 0 && modal_setusername.index <= 1"
+                @click="modal_setusername.index = 1 ? setUserName() : null">下一步
+        </Button>
         <Button type="warning"
                 size="large"
                 v-if="modal_setusername.index <= 0"
@@ -176,25 +180,27 @@
         </Button>
       </div>
     </Modal>
+    <!-- 修改名称 E -->
 
+    <!-- 修改密码 S -->
     <Modal v-model="modal_changePassword.show">
       <p slot="header">{{ $t("reset.title") }}</p>
       <div>
         <Form ref="formValidate" label-position="top">
-          <FormItem :label="$t('reset.oldPassword')">
+          <FormItem :label="$t('reset.form.oldPassword')">
             <Input v-model="modal_changePassword.oldpassword" placeholder="******" minlength="6"></Input>
           </FormItem>
-          <FormItem :label="$t('reset.newPassword')">
+          <FormItem :label="$t('reset.form.newPassword')">
             <Input v-model="modal_changePassword.newpassword" placeholder="******" minlength="6"></Input>
           </FormItem>
-          <FormItem :label="$t('signup.form.captcha')" >
-            <Input type="text" v-model="captchaUrl.value"
-                   size="large"
-                   maxlength="4"
-                   :placeholder="$t('signup.form.captcha')"></Input>
-            <div ref="captcha" :alt="$t('signup.form.getCaptcha')" @click="refreshCaptcha">
-              <div v-html="captchaUrl.content"></div>
-            </div>
+
+          <FormItem :label="$t('captcha.title')" prop="captcha">
+            <Input type="text" v-model="captchaUrl.value" size="large" maxlength="4"
+                   :placeholder="$t('captcha.title')">
+              <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
+                <Captcha ref="captcha"></Captcha>
+              </div>
+            </Input>
           </FormItem>
         </Form>
       </div>
@@ -202,14 +208,20 @@
         <Button size="large"
                 :disabled="!modal_changePassword.oldpassword && !modal_changePassword.newpassword && !captchaUrl.value"
                 :loading="modal_changePassword.load"
-                @click="handChangePassword()">修改密码</Button>
+                @click="handChangePassword()">
+          {{ $t('reset.title') }}
+        </Button>
       </div>
     </Modal>
+    <!-- 修改密码 E -->
+
   </div>
 </template>
 
 <script>
 import Edit from "@/components/Edit.vue";
+import Captcha from "../../components/Captcha";
+
 import {api, http, http_token} from "../../assets/js";
 
 export default {
@@ -239,11 +251,10 @@ export default {
       },
     }
   },
-  components: {Edit},
+  components: {Edit, Captcha},
   created() {
     this.http = http_token.call(this);
     this.ready();
-    this.refreshCaptcha();
   },
   methods: {
     async ready() {
@@ -252,7 +263,10 @@ export default {
       this.privileges = this.privileges.concat(privileges.child)
       this.languages = this.languages.concat(languages.child)
     },
-    handChangePassword () {
+    /**
+     * 修改密码
+     */
+    handChangePassword() {
       const {newpassword = '', oldpassword = ''} = this.modal_changePassword;
       this.modal_changePassword.load = true;
       this.http.post(api["user_changePassword"], {
@@ -284,6 +298,9 @@ export default {
         this.modal_changePassword.load = false;
       });
     },
+    /**
+     * 注销
+     */
     signout() {
       http.post(api["account_signout"], {
         headers: {
@@ -296,25 +313,24 @@ export default {
         }
       })
     },
-    handleIntroductionChange (val) {
+    handleIntroductionChange(val) {
       this.formItem.introduction = val;
     },
-    refreshCaptcha () {
-      http.get(api["captcha"], {
-        params: {
-          r: Math.random()
-        }
-      }).then(res => {
-        if (res.data.success === 1) {
-          this.captchaUrl = res.data.data;
-        }
-      });
-    },
+    /**
+     * 切换语言
+     * @param lang
+     */
     switchLanguage(lang) {
       this.formItem.attr.language = lang;
     },
+    /**
+     * 修改名字
+     */
     setUserName() {
       this.modal_setusername.load = true;
+
+      if (!this.formItem.newname) return;
+
       this.http.post(api["user_changeName"], {
         data: {
           data: {
@@ -327,7 +343,7 @@ export default {
         const d = res.data;
 
         if (d.success === 1) {
-          this.modal_setusername.index +=1;
+          this.modal_setusername.index += 1;
 
           this.getUserinfo();
 
@@ -339,6 +355,9 @@ export default {
         this.modal_setusername.load = false;
       })
     },
+    /**
+     * 保存表单
+     */
     onSave() {
       const {
         introduction,
@@ -365,7 +384,10 @@ export default {
         this.formLoad = false;
       })
     },
-    getUserinfo () {
+    /**
+     * 获取用户信息
+     */
+    getUserinfo() {
       this.http.get(api["user_me"], {}).then((res) => {
         const d = res.data;
 

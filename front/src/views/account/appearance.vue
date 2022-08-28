@@ -1,9 +1,5 @@
 <template>
   <div class="theme">
-    <p>
-      选择一个主题，改变在BFBAN的皮肤.
-    </p>
-    <br>
     <RadioGroup v-model="themeIndex" size="large" :button-style="'solid'">
       <Badge :text="i.version" class="theme-card" v-for="(i, index) in themes.child" :key="index" >
         <Card @click="themeIndex = index" dis-hovershow>
@@ -22,16 +18,15 @@
           <Col></Col>
         </Row>
       </Badge>
-
     </RadioGroup>
     <Divider></Divider>
     <div>
       <Row>
         <Col span="12">
-          <Button @click="changeTheme" >确认</Button>
+          <Button @click="changeTheme">{{ $t('basic.button.save') }}</Button>
         </Col>
         <Col span="12" align="right">
-          需要重载页面生效 🦖
+          🦖
         </Col>
       </Row>
     </div>
@@ -84,7 +79,6 @@ export default {
 
 <style lang="scss" scoped>
 .theme {
-
   .ivu-radio {
     position: absolute !important;
     top: 0;
@@ -92,6 +86,7 @@ export default {
   }
 
   .theme-card {
+    width: 30%;
     float: left;
     display: block;
     margin-right: 20px;
@@ -100,6 +95,7 @@ export default {
   }
 
   .theme-img {
+    width: calc(100% + 32px) !important;
     margin: -16px -16px 0px -16px;
   }
 }
