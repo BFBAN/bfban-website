@@ -20,7 +20,7 @@
             </Col>
             <Col>
               <h3>{{ currentUser.userinfo.username }}</h3>
-              <p>{{ $t('profile.meet') }}</p>
+              <p>{{ $t('profile.meet', {name: currentUser.userinfo.username}) }}</p>
             </Col>
           </Row>
         </Col>

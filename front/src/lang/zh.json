@@ -36,7 +36,7 @@
       "嫌疑再观察",
       "无作弊",
       "无效举报",
-      "回复讨论中",
+      "讨论中",
       "需更多管理投票",
       "攻击服务器"
     ],
@@ -47,15 +47,22 @@
       "normal": "用户"
     },
     "tip": {
-      "notlang": "未翻译"
+      "notlang": "未翻译",
+      "notcontent": "无内容"
     },
     "button": {
       "commit": "提交",
       "save": "保存",
       "submit": "确认",
       "reset": "重置",
-      "cancel": "取消"
+      "cancel": "取消",
+      "prev": "上一步",
+      "next": "下一步"
     }
+  },
+  "captcha": {
+    "get": "获得验证码",
+    "title": "验证码"
   },
   "header": {
     "index": "首页",
@@ -81,7 +88,7 @@
   },
   "profile": {
     "title": "个人设置",
-    "meet": "欢迎来到BFBAN",
+    "meet": "欢迎回来{name}!",
     "message": {
       "title": "消息",
       "tabs": {
@@ -111,6 +118,17 @@
         "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
         "language": "设置语言",
         "languageSyncDescribe": "设置此处选项，在登录后同步程序本地语言，如果退出登录将回退到本地程序所持久保存的语言"
+      },
+      "modifyName": {
+        "title": "修改名称",
+        "specification1": "你正在修改您的账户名称，这代表网站内看见都会更变，并且同时<b>登录的ID</b>同时变动,如果您不小心忘记新账户id，可能无法找回此账户，影响绑定的orgin账户，你需要通过非常长的人工审核.",
+        "specification2": "你明白以上说明了吗?",
+        "residueDegree": "目前剩余修改名称{changeNameLeft}次数",
+        "steps": {
+          "0": { "title": "提示" },
+          "1": { "title": "填写" },
+          "2": { "title": "完成" }
+        }
       }
     },
     "appearance": {
@@ -226,13 +244,11 @@
       "uploadPic2": "图片大于 2M 或 上传失败，可以前往",
       "uploadPic3": "然后选择 Image URL 选项卡，把图片链接贴在下方",
       "uploadPic4": "请列出阐明足够的证据，编辑器支持上传图片（限制2M）",
-      "getCaptcha": "获得验证码",
       "report": "举报",
       "reportOne": "举报单个",
       "reportAll": "举报所有",
       "fromDatabaseOneId": "从联BAN数据库中选取",
       "description": "尽可能详细的列举被举报人的作弊证据",
-      "captcha": "验证码",
       "required": "视频地址",
       "onlyOneId": "一次只有一个Origin ID",
       "loginExpired": "您的登录已过期，请重新登录"
@@ -349,10 +365,9 @@
   },
   "about": {
     "title": "关于",
-    "description": "<h2>BFBAN</h2>\n    <p>\n      诞生于2018年1月29日；\n      是战地玩家一起组建的 <b>抵制外挂</b> 组织。\n    </p>\n\n    <p>\n      目前主要成员组成：\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>私服主</li>\n      <li>战队队长</li>\n      <li>战地UP</li>\n    </ul>",
-    "clanInfo": "\n    <p>\n      <b>目前加盟服务器，共 {clans} 个：</b>\n      （ 搜索 <b>LB</b> 都可以找到加入联BAN局的服务器 ）\n    </p>",
-    "website": "\n    <h2>bfban.com 网站</h2>\n    <p>\n      <a href=\"https://bfban.com\">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> 开发，于 2018年11月4日 上线‘\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>",
-    "contact": "\n    <h2>误BAN申诉</h2>\n    <p>如有误BAN，请将 案件页面链接 及 详细申诉信息 发送邮件至 ban-appeals@bfban.com 管理员将会处理。</p>\n    <br/>\n    <h2>联系我们</h2>\n    <p>\n      <a target=\"_blank\" href=\"http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg\">\n        投诉邮箱\n      </a>\n    </p>\n    <p>\n      <a target=\"_blank\" href=\"https://support.qq.com/products/64038\">\n        意见建议\n      </a>\n    </p>"
+    "description": "<h2>BFBAN</h2>\n<p>\n诞生于2018年1月29日；\n是战地玩家一起组建的 <b>抵制外挂</b> 组织。\n </p>",
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> 开发，于 2018年11月4日 上线‘\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>",
+    "privacy": "\n<h2>隐私政策</h2>\n它是开源的。您可以通过 GitHub 发布问题并提出更改/改进建议。社区网络提供的 API 并开放供公众使用。"
   },
   "reset": {
     "title": "重置密码",
@@ -402,8 +417,6 @@
     "form": {
       "username": "用户名",
       "password": "密码",
-      "captcha": "验证码",
-      "getCaptcha": "获得验证码",
       "submit": "提交",
       "submitHint": "没有账号？去注册",
       "forgetPasswordHint": "密码忘记？"
@@ -415,9 +428,35 @@
   },
   "signup": {
     "title": "注册",
-    "prev": "上一步",
-    "next": "下一步",
-    "registerVerification": "验证账户",
+    "registerVerification": {
+      "title": "验证账户",
+      "validation": "验证中",
+      "successful": "验证成功!，账户已解锁，既可前往登录",
+      "failure": "错误的验证地址，请检查验证码是否正确",
+      "error": "错误"
+    },
+    "steps": {
+      "0": {
+        "title": "基础信息",
+        "supplement": "账户基本"
+      },
+      "1": {
+        "title": "绑定",
+        "supplement": "关联橘子平台"
+      },
+      "2": {
+        "title": "验证码",
+        "supplement": "验证是否机器人"
+      },
+      "3": {
+        "title": "确认",
+        "supplement": "邮箱验证码"
+      },
+      "4": {
+        "title": "完成",
+        "supplement": "注册结果"
+      }
+    },
     "form": {
       "username": "用户名",
       "password": "密码",
@@ -425,8 +464,6 @@
       "originEmail": "🍊 橘子邮箱",
       "originName": "🍊 橘子名字",
       "qq": "QQ",
-      "captcha": "验证码",
-      "getCaptcha": "获得验证码",
       "submit": "提交",
       "submitHint": "已有账号？去登录",
       "forgetPasswordHint": "密码忘记？"
@@ -444,6 +481,28 @@
   },
   "forgetPassword": {
     "title": "重置密码",
+    "steps": {
+      "0": {
+        "title": "基础信息",
+        "supplement": "核对账户"
+      },
+      "1": {
+        "title": "验证码",
+        "supplement": "验证是否机器人"
+      },
+      "2": {
+        "title": "邮箱验证",
+        "supplement": "查看邮箱验证链接"
+      },
+      "3": {
+        "title": "设置密码",
+        "supplement": "重置您的密码"
+      },
+      "4": {
+        "title": "完成",
+        "supplement": "重置成功"
+      }
+    },
     "resetSuccess": "恭喜完成重置 \uD83D\uDC90"
   },
   "list": {
@@ -494,7 +553,8 @@
       "admin": "社区管理",
       "qq": "腾讯QQ",
       "bf1": "战地风云1",
-      "bfv": "战地风云5"
+      "bfv": "战地风云5",
+      "bf6": "战地风云2042"
     }
   },
   "search": {

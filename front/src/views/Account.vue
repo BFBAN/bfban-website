@@ -80,7 +80,7 @@
                 <div v-if="reports">
                   <p v-if="reports.length <= 0" align="center">
                     <Alert type="warning" show-icon>
-                      {{$t('account.noReports')}}
+                      {{ $t('account.noReports') }}
                     </Alert>
                   </p>
 
@@ -123,7 +123,10 @@
                         <Tag color="warning">
                           <Time v-if="report.updateTime"
                               :time="report.updateTime"/>
-                          <span v-else>无</span>
+                          <span v-else>
+                            <!-- 无 -->
+                            {{ $t("basic.tip.notcontent") }}
+                          </span>
                         </Tag>
                       </span>
                       </td>

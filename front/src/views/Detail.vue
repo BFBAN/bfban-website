@@ -857,7 +857,6 @@ import theme from "/public/conf/themes.json";
 
 import {api, http, http_token, util} from '../assets/js/index'
 import vueQr from 'vue-qr'
-import translate from 'google-translate-open-api';
 
 import Empty from '../components/Empty.vue'
 import Edit from "../components/Edit";
@@ -1335,29 +1334,6 @@ export default new BFBAN({
           this.$Message.error(d.msg);
         }
       });
-    },
-    /**
-     * TODO fix
-     * 18I 翻译
-     * 引擎: google
-     * @param index
-     * @returns {Promise<void>}
-     */
-    async onTranslate(index) {
-      let that = this;
-
-      // delete key
-      if (that.timelineList[index].description_cont) {
-        that.timelineList[index].description = that.timelineList[index].description_cont;
-        delete that.timelineList[index].description_cont;
-      }
-
-      const result = await translate(that.timelineList[index].description, {
-        to: "zh-CN",
-      });
-
-      that.timelineList[index].description_cont = that.timelineList[index].description;
-      that.timelineList[index].description_translate = result.data[0];
     },
   },
   computed: {

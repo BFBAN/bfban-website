@@ -8,11 +8,11 @@
             <p slot="title">{{ this.$route.name == bindOriginName ? $t("bindOrigin.title") : $t("signup.title") }}</p>
 
             <Steps :current="stepsIndex" class="mobile-hide">
-              <Step title="基础信息" content="账户基本"></Step>
-              <Step title="绑定" content="关联橘子平台"></Step>
-              <Step title="验证码" content="验证是否机器人"></Step>
-              <Step title="确认" content="邮箱验证码"></Step>
-              <Step title="完成" content="注册结果"></Step>
+              <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].supplement')"></Step>
+              <Step :title="$t('signup.steps[1].title')" :content="$t('signup.steps[1].title')"></Step>
+              <Step :title="$t('signup.steps[2].title')" :content="$t('signup.steps[2].title')"></Step>
+              <Step :title="$t('signup.steps[3].title')" :content="$t('signup.steps[3].title')"></Step>
+              <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
             </Steps>
 
             <Divider class="mobile-hide"></Divider>
@@ -40,12 +40,12 @@
               </template>
 
               <div v-show="stepsIndex === 2">
-                <FormItem :label="$t('signup.form.captcha')">
+                <FormItem :label="$t('captcha.title')">
                   <Input type="text" v-model="signup.captcha"
                          size="large"
                          maxlength="4"
-                         :placeholder="$t('signup.form.captcha')">
-                    <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                         :placeholder="$t('captcha.title')">
+                    <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
                       <Captcha ref="captcha"></Captcha>
                     </div>
                   </Input>

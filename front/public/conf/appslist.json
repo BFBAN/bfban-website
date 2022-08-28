@@ -43,49 +43,42 @@
     {
       "name": "BFV",
       "value": "bfv"
+    },
+    {
+      "name": "BF2042",
+      "value": "bf6"
     }
   ],
   "hots": [2],
   "list": [
     {
-      "title": "战地1外挂举报助手",
-      "id": "1",
-      "describe": "在线生成举报文本",
-      "tag": ["web"],
-      "website": "",
-      "get": "https://bf1.mygoare.com"
-    },
-    {
-      "title": "Battlefield - University/College Ranking",
-      "id": "2",
+      "title": "GameTools",
       "titleLang": {
-        "zh-CN": "BF1大学排行榜"
+        "zh-CN": "Gametools 服务器管理工具",
+        "en-US": "GameTools.network"
       },
-      "describe": "BF1 University LeaderBoard",
-      "describeLang": {
-        "zh-CN": "为你的大学战地的光！浏览并参与各大学战地1战绩排行榜！"
-      },
-      "tag": ["web"],
-      "website": "",
-      "get": "https://status.k-0n.org"
-    },
-    {
-      "title": "战地1服务器工具",
       "id": "3",
-      "describe": "【web面板】BF1服务器管理器，此工具还可以自动踢bfban.com中标记为黑客的人",
+      "describe": "",
+      "describeLang": {
+        "zh-CN": "服务器管理器，此工具还可以自动踢Bfban中标记为黑客的人"
+      },
       "tag": ["web", "admin","bf1"],
       "website": "https://manager.gametools.network",
       "get": "",
       "hot": true
     },
     {
-      "title": "战地1私人服务器管理员工具",
+      "title": "BFVTW ",
       "id": "4",
-      "describe": "【window版】BF1服务器管理器，此工具还可以自动踢bfban.com中标记为黑客的人",
-      "tag": ["pc_app", "admin", "bf1"],
-      "website": "https://docs.qq.com/doc/DZFVocWxyTE5tR1lT",
+      "describe": "",
+      "describeLang": {
+        "zh-CN": "台湾社区作弊名单系统",
+        "en-US": "Taiwan Community cheat list system"
+      },
+      "tag": ["web"],
+      "website": "https://rogeraabbccdd.github.io",
       "get": "",
-      "hot": true
+      "hot": false
     },
     {
       "title": "战地PC/手机战绩速查工具",
@@ -94,13 +87,17 @@
       "tag": ["web", "app"],
       "website": "https://www.notion.so/1-5-f348c539fd4f41a08878f274a37c7d81",
       "get": "",
-      "hot": true
+      "hot": false
     },
     {
-      "title": "Discord统计机器人",
+      "title": "Discord Bot",
+      "titleLang": {
+        "zh-CN": "Discord 统计机器人",
+        "en-US": "Discord bot"
+      },
       "id": "6",
       "describe": "《战地风云》系列的Discord统计机器人",
-      "tag": ["web", "bot"],
+      "tag": ["web", "bot", "bf1", "bfv", "bf6"],
       "website" : "",
       "get": "https://top.gg/bot/714524944783900794"
     },
@@ -108,7 +105,7 @@
       "title": "QQ机器人",
       "id": "7",
       "describe": "腾讯群机器人",
-      "tag": ["qq", "bot"],
+      "tag": ["qq", "bot", "bf1", "bfv"],
       "website" : "",
       "get": "https://www.superwatergod.xyz/bf-bot"
     },
@@ -116,24 +113,18 @@
       "title": "BFBAN APP",
       "id": "8",
       "titleLang": {
-        "zh-CN": "联BAN应用"
+        "zh-CN": "联BAN应用",
+        "en-US": "BFBAN app mobile"
       },
-      "describe": "Mobile bfban based on bfban database development",
+      "describe": "",
       "describeLang": {
-        "zh-CN": "基础bfban数据库开发的手机bfban"
+        "zh-CN": "基础bfban数据库开发的手机bfban",
+        "en-US": "Mobile bfban based on bfban database development"
       },
       "tag": ["app"],
       "website": "https://bfban-app.cabbagelol.net",
       "get": "",
-      "hot": true
-    },
-    {
-      "title": "Stats api for the Battlefield series",
-      "id": "9",
-      "describe": "《战地风云》系列的公共API",
-      "tag": ["api", "book"],
-      "website": "",
-      "get": "https://api.gametools.network/docs"
+      "hot": false
     }
   ]
 }

@@ -200,17 +200,17 @@
               <br>
               <!-- 提交 S -->
               <Card dis-hover>
-                <FormItem prop="captcha" :label="$t('report.info.captcha')">
+                <FormItem prop="captcha" :label="$t('captcha.title')">
                   <Input
                       type="text"
                       v-model="tabs.list[index].formItem.captcha"
-                      :placeholder="$t('report.info.captcha')"/>
+                      :placeholder="$t('captcha.title')"/>
                   <div v-html="tabs.list[index].captchaUrl.content"></div>
                   <a
                       ref="reCaptcha"
                       href="#"
                       @click.stop.prevent="refreshCaptcha(index)">
-                    {{ $t("report.info.getCaptcha") }}
+                    {{ $t("captcha.get") }}
                   </a>
                 </FormItem>
 
