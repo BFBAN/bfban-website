@@ -17,21 +17,25 @@ export default class http_token extends http {
     return new http_token(t);
   }
 
+  /**
+   * token
+   * @param data
+   * @returns {{}}
+   */
   setToken (data = {}) {
     if (this.THAT.$store.state.user && this.THAT.$store.state.user.token) {
       const token = this.THAT.$store.state.user.token;
       if (token != null || token != '') {
-        data = Object.assign(data, {
-          headers: {
-            'x-access-token': token
-          }
+        if (!data.headers) data.headers = {};
+        data.headers = Object.assign(data.headers, {
+          'x-access-token': token
         })
       }
     }
     return data;
   }
 
-  async post(url, data = {data: {}}) {
+  async post(url = '', data = {data: {}}) {
     this.CONF = await super.initConf();
 
     return super.post(url, this.setToken(data));
@@ -41,5 +45,11 @@ export default class http_token extends http {
     this.CONF = await super.initConf();
 
     return super.get(url, this.setToken(data));
+  }
+
+  async put(url = '', data = {data: {}, params: {}}) {
+    this.CONF = await super.initConf();
+
+    return super.put(url, this.setToken(data));
   }
 }

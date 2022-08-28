@@ -127,6 +127,7 @@ VueRouter.prototype.push = function push(location) {
 
 router.beforeEach((to, from, next) => {
     store.commit('syncLoginState');
+
     document.title = `${config.name} | ${to.meta.title || i18n.t(`${to.meta.titleValue || to.name + '.title'}`) || config.name} `;
 
     next();

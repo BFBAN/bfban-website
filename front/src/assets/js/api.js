@@ -25,7 +25,6 @@ export default class Api {
       'user_reports': 'user/reports',
       'user_changePassword': 'user/changePassword', // 修改密码
       'user_changeName': 'user/changeName', // 修改名称
-        // 'cheaters_confirm': 'cheaters/confirm', // 管理员: 同意
       'player_banAppeal': "player/banAppeal", // 申诉
       'player_viewBanAppeal': "player/viewBanAppeal",
       'player_unreply': 'player/unreply', // 删除回复
@@ -38,6 +37,11 @@ export default class Api {
       'account_signin': 'user/signin',
       'account_signup': 'user/signup',
       'account_signupVerify': 'user/signupVerify',
+      'service_myStorageQuota': 'service/myStorageQuota',
+      'service_myFiles':'service/myFiles',
+      'service_file':'service/file',
+      'service_upload':'service/upload',
+      'service_uploadBigFile':'service/uploadBigFile'
     };
   }
 }

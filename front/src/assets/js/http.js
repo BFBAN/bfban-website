@@ -4,6 +4,7 @@ import Conf from './conf';
 export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
+    PUT = 'put';
     //..
 
     /**
@@ -14,7 +15,7 @@ export default class Http extends Conf {
         timeout: 600000,
         withCredentials: true,
         headers: {
-            'Content-type': 'application/json',
+            // 'Content-type': 'application/json',
         },
         validateStatus(status) {
             return status < 500;
@@ -38,7 +39,7 @@ export default class Http extends Conf {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async request(url = '', requestData = {method: this.POST, data: {}, params: {}}) {
-        console.log(url, requestData.headers);
+        console.log(url, Object.assign({}, requestData.headers));
         let result = await this.HTTP({
             url: url,
             Origin: "",
@@ -86,5 +87,32 @@ export default class Http extends Conf {
 
         return result;
     }
+
+    /**
+     * put 请求
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    async put(url = '', data = {data: {}, params: {}}) {
+        const _url = this.getUrl() + url;
+
+        this.HTTP.headers = {...this.HTTP.headers, ...data.headers};
+
+        let result = await this.HTTP({
+            url:_url,
+            method: this.PUT,
+            headers: data.headers,
+            params: data.params,
+            data: data.data,
+        })
+        // let result = await this.request(_url, {
+        //     method: this.PUT,
+        //     headers: data.headers,
+        //     params: data.params,
+        //     data: data.data,
+        // });
+
+        return result;
+    }
+
 }
 
