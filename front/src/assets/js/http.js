@@ -1,25 +1,35 @@
 import http from 'axios';
 import Conf from './conf';
+const HTTP = http.create({
+  // baseURL: process.env.BASE_API,
+  timeout: 600000,
+  withCredentials: true,
+  headers: {
+      'Content-type': 'application/json',
+  },
+  validateStatus(status) {
+      return status < 500;
+  }
+});
+
+
+HTTP.interceptors.request.use(config => {
+  return config
+}, error=> {
+  // 对请求错误做些什么
+  return Promise.reject(error)
+})
 
 export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
+    PUT = 'put'
     //..
 
     /**
      * TODO 未写拦截，有空完成
      */
-    HTTP = http.create({
-        // baseURL: process.env.BASE_API,
-        timeout: 600000,
-        withCredentials: true,
-        headers: {
-            'Content-type': 'application/json',
-        },
-        validateStatus(status) {
-            return status < 500;
-        }
-    });
+    HTTP = HTTP
 
     constructor() {
         super();
@@ -37,7 +47,7 @@ export default class Http extends Conf {
      * @param requestData
      * @returns {Promise<AxiosResponse<any>>}
      */
-    async request(url = '', requestData = {method: this.POST, data: {}, params: {}}) {
+    async request(url = '', requestData = {method: this.POST, data: {}, params: {}, body: {}}) {
         console.log(url, requestData.headers);
         let result = await this.HTTP({
             url: url,
@@ -46,6 +56,7 @@ export default class Http extends Conf {
             method: requestData.method,
             data: requestData.data,
             params: requestData.params,
+            body: requestData.body
         });
 
         return result;
@@ -86,5 +97,26 @@ export default class Http extends Conf {
 
         return result;
     }
+
+    
+
+    /**
+     * put 请求
+     * @param url
+     * @param data
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+     async put(url, data = {data: {}, params: {}}) {
+      const _url = this.getUrl() + url;
+      let result = await this.request(_url, {
+          method: this.PUT,
+          headers: data.headers,
+          params: data.params,
+          data: data.data,
+          body: data.body
+      });
+
+      return result;
+  }
 }
 

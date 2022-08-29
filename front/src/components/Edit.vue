@@ -6,7 +6,7 @@
       <Upload
           :headers="headers"
           :data="extraData"
-          action="//upload-z2.qiniup.com"
+          action="http://127.0.0.1:3000/api/service/upload"
           accept="image/*"
           multiple
           name="file"
@@ -14,7 +14,6 @@
           type="drag"
           :with-credentials="withCredentials"
           :show-upload-list="showUploadList"
-
           :on-success="handleSuccess"
           :on-error="handleError"
           :on-exceeded-size="handleExceededSize"
@@ -77,7 +76,7 @@
 // https://github.com/zenoamaro/react-quill/issues/270
 // https://codepen.io/emanuelbsilva/pen/Zpmmzv
 // https://www.npmjs.com/package/vue-quill-editor
-import {http} from "../assets/js"
+import {http, api, http_token} from "../assets/js"
 import Quill from 'quill'
 import Embed from 'quill/blots/embed'
 import { container, ImageExtend, QuillWatch } from 'quill-image-extend-module'
@@ -143,9 +142,10 @@ export default {
           "emoji-toolbar": true,
           "emoji-shortname": true,
           toolbar: {
-            container: ["link"], //  "image",
+            container: ["link", "image"], //  "image",
             handlers: {
               image: (value) => {
+                console.log(value)
                 if (value) {
                   this.uploadType = 'image';
                   this.modal1 = true;
@@ -174,11 +174,32 @@ export default {
     },
     handleBeforeUpload: async function (file) {
       // axios get qiniu tooken to extraData
-      let d = await this.getQiniuUploadToken();
-      let token = d.data.token;
+      // let d = await this.getQiniuUploadToken();
+      // let token = d.data.token;
 
-      this.extraData.token = token;
-      this.extraData.key = (new Date()).getTime() + '-' + Math.round(Math.random() * 1000000) + '.' + file.name.split(".").pop()
+      // this.extraData.token = token;
+      // this.extraData.key = (new Date()).getTime() + '-' + Math.round(Math.random() * 1000000) + '.' + file.name.split(".").pop()
+      // this.headers["Content-Type"] = file.type
+      // this.headers["Content-Length"] = file.size
+      return fetch('http://127.0.0.1:3000/api/service/upload', {
+        method: 'PUT',
+        headers: {
+          ["Content-Type"]: file.type,
+          ["Content-Length"]: file.size,
+          'x-access-token': this.$store.state.user.token
+        },
+        body: file,
+      }).then(res => {
+        console.log(1111)
+      })
+      // return this.http.put(api["upload"], {
+      //   headers: {
+      //     ["Content-Type"]: file.type
+      //   },
+      //   body: file
+      // }).then(res => {
+      //   console.log(1111)
+      // })
     },
     handleSuccess: function (res, file, fileList) {
       const quill = this.$refs.quillEditor.quill;
@@ -230,7 +251,10 @@ export default {
         console.log(err)
       })
     },
-  }
+  },
+  created() {
+    this.http = http_token.call(this);
+  },
 }
 </script>
 
