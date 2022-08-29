@@ -114,10 +114,9 @@ export default {
 
       this.http.put(api["service_upload"], {
         body: this.file,
-        // headers: {
-        //   'content-type': this.file.type,
-        //   'content-length': this.file.size,
-        // }
+        headers: {
+          'Content-Range': this.file.size,
+        }
       }).then(res => {
         const d = res.data;
         if (d.success === 1) {

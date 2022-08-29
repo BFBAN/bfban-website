@@ -52,7 +52,9 @@ const config = {
         msGraphAPI: {
             deployment: 'PROCESS',
             url: 'http://localhost:4001',
-            baseDirId: '',  // the onedrive directory's id you want to store files in
+            // the onedrive directory's id you want to store files in
+            // https://developer.microsoft.com/zh-cn/graph/graph-explorer
+            baseDirId: '',
         }
     },
     // DYNAMIC CONFIGURE BEGIN

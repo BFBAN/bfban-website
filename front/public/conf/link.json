@@ -8,19 +8,22 @@
     {
       "title": "glassPanel",
       "url": "https://github.com/glass-panel"
+    },
+    {
+      "title": "lirunrun",
+      "url": "https://github.com/lirunrun"
+    },
+    {
+      "title": "cabbagelol",
+      "url": "https://github.com/cabbagelol"
     }
   ],
   "linkChild": [
     {
-      "title": "Cabbagelol test",
-      "titleLang": {
-        "zh-CN": "菜萌 测试"
-      },
+      "title": "2042 BiliBili WIKI",
       "linkImage": "",
-      "linkUrl": "",
-      "tag": [
-        "link"
-      ]
+      "linkUrl": "https://wiki.biligame.com/zhandi2042/",
+      "tag": ["link"]
     }
   ],
   "footerChild": [

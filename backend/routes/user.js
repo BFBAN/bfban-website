@@ -343,6 +343,7 @@ async function showUserInfo(req, res, next) {
                 (req.user && req.user.id===user.id), // self, show private info
                 (req.user && userHasRoles(req.user, ['admin','super','root','dev'])) ), // no limit for admin
             reportnum: reportnum,
+            introduction: user.introduction,
         };
 
         return res.status(200).json({success: 1, code: 'userInfo.success', data: data});
@@ -405,10 +406,12 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'me.bad', message: validateErr.array()});
 
         const update = {};
+
         if(req.body.data.subscribes)
             update.subscribes = req.body.data.subscribes.map(i=>i-0); // to number
         if(req.body.data.attr)
             update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
+
         await db('users').update(update).where({id: req.user.id});
         update.attr = userSetAttributes({}, req.body.data.attr);
         res.status(200).json({success: 1, code: 'me.success', data: update});

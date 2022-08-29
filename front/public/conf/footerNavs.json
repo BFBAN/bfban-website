@@ -19,17 +19,17 @@
             "showLang": ["zh-CN"]
           },
           {
-            "text": "QQ BFBAN",
-            "src": "//jq.qq.com/?_wv=1027&k=FY8TCpCV",
-            "showLang": ["zh-CN"]
-          },
-          {
             "text": "github BFBAN",
             "src": "//github.com/BFBAN"
           },
           {
             "text": "bilibili BFBAN",
             "src": "//space.bilibili.com/387820951",
+            "showLang": ["zh-CN"]
+          },
+          {
+            "text": "2042 BiliBili WIKI",
+            "src": "//https://wiki.biligame.com/zhandi2042/",
             "showLang": ["zh-CN"]
           }
         ]
@@ -45,6 +45,11 @@
           {
             "text": "header.about",
             "src": "about",
+            "insideLang": true
+          },
+          {
+            "text": "link.title",
+            "src": "link",
             "insideLang": true
           },
           {
@@ -66,8 +71,8 @@
             "src": "//mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg"
           },
           {
-            "text": "意见建议(兔小巢)",
-            "src": "//support.qq.com/products/64038",
+            "text": "QQ交流群",
+            "src": "//jq.qq.com/?_wv=1027&k=FY8TCpCV",
             "showLang": ["zh-CN"]
           }
         ]

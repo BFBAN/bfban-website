@@ -363,7 +363,7 @@ export default {
     onSave() {
       const {
         introduction,
-        attr = {language: this.$root.$i18n.locale, showOrigin: false, allowDM: false}
+        attr = { language: this.$root.$i18n.locale, showOrigin: false, allowDM: false }
       } = this.formItem;
 
       this.formLoad = true;
@@ -377,7 +377,7 @@ export default {
       }).then((res) => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.$store.dispatch('setLang', d.data.attr.language);
 
           this.$Message.success(d.code);
