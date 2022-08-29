@@ -45,7 +45,7 @@
           </ul>
         </Col>
         <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
-          <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large">
+          <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large" :disabled="isLogin">
             <Option v-for="(item, index) in languages" :value="item.name" :label="item.label" :key="index">
                   <span>
                     {{ item.label }}
@@ -130,6 +130,9 @@ export default {
     }
   },
   computed: {
+    isLogin() {
+      return Boolean(this.$store.state.user)
+    },
     isFull() {
       return Boolean(this.$route.query.full || false);
     },

@@ -19,40 +19,47 @@
     </Row>
     <br>
 
-    <Row type="flex" justify="center" align="middle">
-      <Col justify="center" align="middle">
-        <br>
-        <Avatar shape="square" style="background-color: yellow" size="150">{{ account.username[0] || '' }}</Avatar>
-        <br>
+    <div dis-hover	bordered>
+      <Row type="flex" justify="center" align="middle">
+        <Col justify="center" align="middle">
+          <br>
+          <Avatar shape="square" style="background-color: yellow" size="150">{{ account.username[0] || '' }}</Avatar>
 
-        <h1 :title="$t('account.username')">
-          <!--          {{ $t("account.userInfo") }}-->
-          {{ account.username || 'username' }}
-        </h1>
+          <h1 :title="$t('account.username')" class="account-username">
+            {{ account.username || 'username' }}
+          </h1>
 
-        <p>
-          {{ $t("account.role") }}
-          <span v-for="(i,index) in privileges" :key="index">
-            <Tag type="dot" v-if="account.privilege == i.value"
-                 color="success">
-              {{ $t("account." + i.value) }}
-            </Tag>
-          </span>
-          <Divider type="vertical"/>
-          {{ $t("account.joinedAt") }}
-          <Tag type="dot" color="primary">
-            <Time v-if="account.joinTime" :time="account.joinTime  || new Date()"/>
-          </Tag>
-          <Divider type="vertical"/>
-          {{ $t("account.lastOnlineTime") }}
-          <Tag type="dot" color="success">
-            <Time v-if="account.lastOnlineTime" :time="account.lastOnlineTime  || new Date()"/>
-          </Tag>
-        </p>
-      </Col>
-    </Row>
+          <Row :gutter="20" type="flex" justify="center" align="middle">
+            <Col>
+              <span v-for="(i,index) in privileges" :key="index">
+                <span v-for="(p, pi) in account.privilege" :key="pi">
+                  <Tag type="border" size="large" :color="i.class" v-if="p == i.value">
+                    {{ $t("account." + i.value) }}
+                  </Tag>
+                </span>
+              </span>
+              <p class="account-info-p">{{ $t("account.role") }}</p>
+            </Col>
+            <Divider type="vertical"/>
+            <Col>
+              <Tag type="border" size="large" color="primary">
+                <Time v-if="account.joinTime" :time="account.joinTime  || new Date()"/>
+              </Tag>
+              <p class="account-info-p">{{ $t("account.joinedAt") }}</p>
+            </Col>
+            <Divider type="vertical"/>
+            <Col>
+              <Tag type="border" size="large" color="success">
+                <Time v-if="account.lastOnlineTime" :time="account.lastOnlineTime  || new Date()"/>
+              </Tag>
+              <p class="account-info-p">{{ $t("account.lastOnlineTime") }}</p>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </div>
 
-    <Divider></Divider>
+    <br/>
 
     <div class="content">
       <Row :gutter="8" type="flex">
@@ -68,84 +75,33 @@
           </Card>
           <br v-if="account.origin && account.origin.originName">
           <br>
-<!--          <p class="hint">{{ $t("account.hint1") }}</p>-->
           <p class="hint">{{ $t("account.hint2") }}</p>
           <p class="hint">{{ $t("account.hint3") }}</p>
         </Col>
         <Col span="17" order="1">
-          <Card dis-hover>
-            <Tabs value="tag1">
-              <TabPane :label="$t('account.reports')" name="tag1">
+          <Card dis-hover :padding="0">
+            <p v-if="report.data.length <= 0" align="center">
+              <Alert type="warning" show-icon>
+                {{ $t('account.noReports') }}
+              </Alert>
+            </p>
 
-                <div v-if="reports">
-                  <p v-if="reports.length <= 0" align="center">
-                    <Alert type="warning" show-icon>
-                      {{$t('account.noReports')}}
-                    </Alert>
-                  </p>
-
-                  <table>
-                    <tbody>
-                    <tr v-for="report in reports" :key="report.id">
-                      <td>
-                      <span>
-                        <Tag color="primary">
-                            <Time v-if="report.createTime"
-                                :time="report.createTime"/>
-                        </Tag>
-                      </span>
-                      </td>
-                      <td>
-                      <span>
-                          {{ $t("account.reported") }}
-                          <router-link
-                              :to="{
-                                  name: 'cheater',
-                                  params: {
-                                      ouid: `${report.originPersonaId}`,
-                                  },
-                              }">
-                              {{ report.originName }}
-                          </router-link>
-                      </span>
-                      </td>
-                      <td>
-                      <span>
-                        {{ $t("account.status") }}
-                        <Tag color="error">
-                          {{ $t(`basic.status[${report.status}]`) }}
-                        </Tag>
-                      </span>
-                      </td>
-                      <td>
-                      <span>
-                        {{ $t("account.recentlyUpdated") }}
-                        <Tag color="warning">
-                          <Time v-if="report.updateTime"
-                              :time="report.updateTime"/>
-                          <span v-else>无</span>
-                        </Tag>
-                      </span>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-
-                  <br>
-
-                  <Page
-                      :page-size="limit"
-                      show-total
-                      :current="page"
-                      @on-change="getReports"
-                      :total="total"
-                      class="page"
-                      size="small"/>
-                </div>
-                <div v-else>404</div>
-              </TabPane>
-            </Tabs>
+            <Table show-header
+                   :border="false"
+                   :no-data-text="$t('basic.tip.notcontent')"
+                   :columns="report.columns"
+                   :data="report.data"></Table>
           </Card>
+
+          <br/>
+          <Page
+              :page-size="limit"
+              show-total
+              :current="page"
+              @on-change="getReports"
+              :total="total"
+              class="page"
+              size="small"/>
         </Col>
       </Row>
     </div>
@@ -183,7 +139,83 @@ export default {
 
         }
       },
-      reports: [],
+      report: {
+        columns: [
+          {
+            title: " ",
+            key: 'createTime',
+            sortable: true,
+            fixed: "left",
+            render: (h, params) => {
+              return h('Tag', {
+                props: {
+                  color: 'primary'
+                }
+              }, [
+                h('Time', {
+                  props: {
+                    time: params.row.createTime
+                  }
+                })
+              ]);
+            }
+          },
+          {
+            title: this.$i18n.t("account.reported"),
+            key: 'originName',
+            ellipsis: true,
+            tooltip: true,
+            render: (h, params) => {
+              return h('div', [
+                h('a', {
+                  href: '/player/' + params.row.originPersonaId
+                }, params.row.originName)
+              ]);
+            }
+          },
+          {
+            title: "ID",
+            key: 'originPersonaId',
+            ellipsis: true,
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('p', params.row.originPersonaId)
+              ]);
+            }
+          },
+          {
+            title: this.$i18n.t("account.status"),
+            key: 'status',
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('Tag', {
+                  props: {
+                    color: 'error'
+                  }
+                }, `${this.$i18n.t(`basic.status[${params.row.status}]`)}`)
+              ]);
+            }
+          },
+          {
+            title: this.$i18n.t("account.recentlyUpdated"),
+            key: 'updateTime',
+            align: 'center',
+            sortable: true,
+            render: (h, params) => {
+              return h('div', [
+                h('Tag', {
+                  props: {
+                    color: 'warning'
+                  }
+                }, `${params.row.updateTime}`)
+              ]);
+            }
+          }
+        ],
+        data: []
+      },
       limit: 20,
       page: 1,
       total: 100,
@@ -298,8 +330,19 @@ export default {
         }
       }).then((res) => {
         const d = res.data;
-        if (d.success == 1) {
-          this.reports = d.data;
+        let reportData = this.report.data;
+
+        if (d.success === 1) {
+          d.data.forEach(i => {
+            reportData.push({
+              createTime: i.createTime,
+              originName: i.originName,
+              originPersonaId: i.originPersonaId,
+              status: i.status,
+              updateTime: i.updateTime
+            });
+          });
+
           this.total = Number(this.account.reportnum);
         }
       });
@@ -314,4 +357,13 @@ export default {
 </script>
 
 <style lang="scss">
+ .account-username {
+   margin: 2rem 0 2rem 0;
+ }
+
+ .account-info-p {
+   margin: .2rem;
+   font-size: 12px;
+   opacity: .6;
+ }
 </style>

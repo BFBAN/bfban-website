@@ -44,17 +44,6 @@
         "name": "report",
         "query": {}
       }
-    },
-    {
-      "name": "about",
-      "type": [
-        "desktop",
-        "mobile"
-      ],
-      "to": {
-        "name": "about",
-        "query": {}
-      }
     }
   ]
 }
