@@ -142,7 +142,7 @@ async (req, res, next)=> {
 
 router.put('/upload', verifyJWT, forbidPrivileges(['blacklisted', 'freezed']), [
     checkheader('Content-Length').isInt({min: 0, max: 2048*1024}),
-    checkheader('Content-Range').isMimeType()
+    checkheader('Content-Type').isMimeType()
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=> {
     try {
