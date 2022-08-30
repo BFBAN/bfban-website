@@ -91,6 +91,10 @@
     "meet": "欢迎回来{name}!",
     "message": {
       "title": "消息",
+      "look": "查看",
+      "type": {
+        "warn": "系统提醒"
+      },
       "tabs": {
         "list": {
           "itemName": "消息列表",
