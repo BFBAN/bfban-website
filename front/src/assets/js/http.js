@@ -38,8 +38,6 @@ export default class Http extends Conf {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async request(url = '', requestData = {method: this.POST, data: {}, params: {}}) {
-        console.log(url, Object.assign({}, requestData.headers));
-        console.log(this.HTTP);
         let result = await this.HTTP({
             url: url,
             Origin: "",
