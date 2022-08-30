@@ -303,7 +303,7 @@
                           <Tag type="border" color="orange"
                                v-for="(methods, methodsIndex) in l.cheatMethods"
                                :key="methodsIndex">
-                            {{$t("cheatMethods." + methods + ".title")}}
+                            {{ $t("cheatMethods." + methods + ".title") }}
                           </Tag>
                         </Col>
                         <Col align="right">

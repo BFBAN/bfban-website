@@ -72,7 +72,7 @@
           <h4><b>{{ $t("footer.column.sponsor.title") }}</b></h4>
         </Col>
         <Col>
-          <router-link :to="{name: 'about'}">
+          <router-link :to="{name: 'link'}">
             {{ $t("footer.column.sponsor.join") }}
           </router-link>
         </Col>
