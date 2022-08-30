@@ -4,12 +4,15 @@
       <TabPane :label="$t('profile.message.tabs.list.itemName')" name="message0">
         <Card dis-hover :padding="0">
           <p slot="title"></p>
-          <a href="#" slot="extra" @click.prevent="changeLimit">
-            <Button type="primary" size="small" :loading="messageLoad" @click="getMessage">{{
-                $t('profile.message.load')
-              }}
+          <div slot="extra">
+            <Button size="small" :disabled="!selectWindow"  @click="setMessageEdit">
+              {{ $t('profile.message.control') }}
             </Button>
-          </a>
+            <Divider type="vertical" />
+            <Button type="primary" size="small" :loading="messageLoad" @click="getMessage">
+              {{ $t('profile.message.load') }}
+            </Button>
+          </div>
           <Row>
             <Col class="message-user">
               <template>
@@ -38,8 +41,32 @@
             </Col>
             <Col flex="1" class="message-content">
               <template v-if="messageList[selectWindow]">
+                <!-- 编辑 S -->
+                <Row class="message-content-control"  v-if="control.open">
+                  <Col>
+                    <Checkbox v-model="control.all" @on-change="onBatchAll"></Checkbox>
+                    <Divider type="vertical" />
+                  </Col>
+                  <Col flex="1">
+                    <Select v-model="control.model" size="small" style="width:200px">
+                      <Option v-for="item in control.list" :value="item.value" :key="item.value">
+                        {{ $t('profile.message.tabs.list.form.' + item.label) }}
+                      </Option>
+                    </Select>
+                  </Col>
+                  <Col>
+                    <Button size="small" @click="onBatchOperation" :disabled="control.model < 0" :loading="control.load">
+                      {{ $t('basic.button.submit') }}
+                    </Button>
+                  </Col>
+                </Row>
+                <!-- 编辑 E -->
+
                 <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index">
                   <Row :gutter="5">
+                    <Col v-if="control.open">
+                      <Checkbox v-model="child.choose"></Checkbox>
+                    </Col>
                     <Col>
                       <Avatar src="/assets/img/logo.75abcc53.png"></Avatar>
                     </Col>
@@ -177,7 +204,23 @@ export default {
         content: '',
       },
       messageUser: [],
-      messageList: {}
+      messageList: {},
+      control: {
+        load: false,
+        open: false,
+        all: false,
+        model: -1,
+        list: [
+          {
+            value: 0,
+            label: 'read'
+          },
+          {
+            value: 2,
+            label: 'del'
+          },
+        ]
+      }
     }
   },
   watch: {
@@ -198,6 +241,43 @@ export default {
       if (this.messageUser.length > 0) {
         this.selectWindow = this.messageUser[0].value;
       }
+    },
+    /**
+     * 批量选择框
+     */
+    onBatchAll () {
+      this.messageList[this.selectWindow].child.forEach(i => {
+        i.choose = this.control.all;
+      })
+    },
+    /**
+     * 批量操作
+     */
+    onBatchOperation () {
+      let onFun = [];
+      this.messageList[this.selectWindow].child.forEach(i => {
+         if (i.choose) {
+           switch (this.control.model) {
+             case 0:
+               // 0: 批量已读时，检查下方的消息是否已读，如果是则跳过
+               if (i.haveRead == 0) {
+                 onFun.push(this.onMessageMark(i.id, this.control.model));
+               }
+               break;
+             case 1:
+               // 删除
+               onFun.push(this.onMessageMark(i.id, this.control.model));
+               break;
+           }
+         }
+      })
+
+      this.control.load = true;
+      new Promise.all(onFun,() => {
+
+      }).finally(() => {
+        this.control.load = false;
+      })
     },
     async onMessageMark(id, type) {
       await this.http.post(api["user_message_mark"], {
@@ -251,13 +331,16 @@ export default {
         this.message.show = false;
       })
     },
+    setMessageEdit() {
+      this.control.open = !this.control.open
+    },
     /**
      * 获取消息列表
      */
-    getMessage() {
+    async getMessage() {
       this.messageLoad = true;
 
-      this.http.get(api["user_message"]).then(res => {
+      await this.http.get(api["user_message"]).then(res => {
         const d = res.data;
 
         if (d.success == 1) {
@@ -309,6 +392,7 @@ export default {
             messageList[val].child.push(Object.assign({
               time: i.createTime,
               content: i.content,
+              choose: false,
             }, i));
             messageList[val].type = i.type;
             messageList[val].num = messageList[val].child.length || 0;
@@ -320,6 +404,8 @@ export default {
       }).finally(() => {
         this.messageLoad = false;
       });
+
+      return true;
     },
   },
   computed: {
@@ -351,6 +437,10 @@ export default {
   overflow: auto;
   padding: 10px;
   background-color: rgb(0 0 0 / 2%);
+}
+
+.message-content-control {
+  padding-bottom: 10px;
 }
 
 .message-content-footer {

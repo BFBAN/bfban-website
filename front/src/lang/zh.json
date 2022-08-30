@@ -93,6 +93,7 @@
       "title": "消息",
       "look": "查看",
       "load": "刷新",
+      "control": "批量编辑",
       "type": {
         "warn": "系统提醒"
       },
