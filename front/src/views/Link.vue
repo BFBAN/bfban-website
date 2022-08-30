@@ -19,9 +19,9 @@
             <h1><b>{{ $t("link.sponsor") }}</b></h1>
           </Col>
           <Col>
-            <router-link :to="{name: 'about'}">
+            <a href="https://kook.top/1G13TM" target="_blank">
               {{ $t("link.join") }}
-            </router-link>
+            </a>
           </Col>
         </Row>
         <Row :gutter="5" class="footer-link" type="flex">

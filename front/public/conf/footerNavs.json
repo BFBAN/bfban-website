@@ -9,13 +9,22 @@
             "text": "Community network Discord",
             "textLang": {
               "en-US": "Community network Discord",
-              "zh-CN": "战地外网Discord社区"
+              "zh-CN": "Gametool Discord社区"
             },
             "src": "//discord.gg/KCBM3GAW59"
           },
           {
-            "text": "战地中文社区",
+            "text": "战地中文kook社区",
+            "textLang": {
+              "en-US": "chning network kook",
+              "zh-CN": "战地中文kook社区"
+            },
             "src": "//kaihei.co/uoJKC0",
+            "showLang": ["zh-CN"]
+          },
+          {
+            "text": "bfban开发者kook社区",
+            "src": "//kaihei.co/rn6gUK",
             "showLang": ["zh-CN"]
           },
           {
@@ -25,11 +34,6 @@
           {
             "text": "bilibili BFBAN",
             "src": "//space.bilibili.com/387820951",
-            "showLang": ["zh-CN"]
-          },
-          {
-            "text": "2042 BiliBili WIKI",
-            "src": "//https://wiki.biligame.com/zhandi2042/",
             "showLang": ["zh-CN"]
           }
         ]

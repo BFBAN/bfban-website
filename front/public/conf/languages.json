@@ -21,21 +21,6 @@
       "name": "en-US",
       "label": "English",
       "members": []
-    },
-    {
-      "name": "ja-JP",
-      "label": "日本語",
-      "members": []
-    },
-    {
-      "name": "ru-RU",
-      "label": "Русский",
-      "members": []
-    },
-    {
-      "name": "tr-TR",
-      "label": "Türkçe",
-      "members": []
     }
   ]
 }
