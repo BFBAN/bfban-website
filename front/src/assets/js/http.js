@@ -20,16 +20,18 @@ export default class Http extends Conf {
         validateStatus(status) {
             return status < 500;
         }
-    }).interceptors.request.use(config => {
-        return config
-    }, error=> {
-        // 对请求错误做些什么
-        return Promise.reject(error)
     });
 
-constructor() {
+    constructor() {
         super();
         super.initConf();
+
+        this.HTTP.interceptors.request.use(config => {
+            return config
+        }, error=> {
+            // 对请求错误做些什么
+            return Promise.reject(error)
+        })
     }
 
     getUrl() {
