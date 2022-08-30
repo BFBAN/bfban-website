@@ -1,8 +1,15 @@
 <template>
   <div>
     <Tabs :value="tagsName">
-      <TabPane label="消息" name="message0">
+      <TabPane :label="$t('profile.message.tabs.list.itemName')" name="message0">
         <Card dis-hover :padding="0">
+          <p slot="title"></p>
+          <a href="#" slot="extra" @click.prevent="changeLimit">
+            <Button type="primary" size="small" :loading="messageLoad" @click="getMessage">{{
+                $t('profile.message.load')
+              }}
+            </Button>
+          </a>
           <Row>
             <Col class="message-user">
               <template>
@@ -84,7 +91,7 @@
           </Row>
         </Card>
       </TabPane>
-      <TabPane label="发送" name="message2" v-if="isAdmin">
+      <TabPane :label="$t('profile.message.tabs.send.itemName')" name="message2" v-if="isAdmin">
         <Form>
           <Row :gutter="30">
             <Col span="12">
@@ -120,7 +127,7 @@
                    type="textarea" :autosize="{minRows: 5,maxRows: 10}"></Input>
           </FormItem>
         </Form>
-        <Button @click="setMessage">发送</Button>
+        <Button @click="setMessage">{{ $t('basic.button.commit') }}</Button>
       </TabPane>
     </Tabs>
   </div>
@@ -135,6 +142,7 @@ export default {
     return {
       tagsName: 'message0',
       privileges: [],
+      messageLoad: false,
       selectWindow: '',
       message: {
         list: [
@@ -247,20 +255,23 @@ export default {
      * 获取消息列表
      */
     getMessage() {
+      this.messageLoad = true;
+
       this.http.get(api["user_message"]).then(res => {
         const d = res.data;
+
         if (d.success == 1) {
           this.message.messages = d.data.messages;
           let messageUser = [];
           let messageList = {};
 
           d.data.messages.forEach(i => {
+            let numUser = 0;
             let num = 0;
 
             switch (i.type) {
               case 'warn':
                 // 系统通知类
-
                 messageUser.forEach(t => {
                   t.type == i.type ? num += 1 : null
                 });
@@ -273,10 +284,12 @@ export default {
                   });
                 }
                 break;
+              case "reply":
               case "direct":
+
                 // 用户通知类
                 messageUser.forEach(t => {
-                  t.byUserId == i.byUserId ? num += 1 : null
+                  if (t.value == i.byUserId) num += 1;
                 });
 
                 if (num <= 0) {
@@ -289,14 +302,13 @@ export default {
                 break;
             }
 
-            let val = i.type == 'direct' ? i.byUserId : i.type;
+            let val = i.type == 'warn' ? i.type : i.byUserId;
             if (!messageList[val]) {
               messageList[val] = {child: [], num: 0}
             }
             messageList[val].child.push(Object.assign({
               time: i.createTime,
               content: i.content,
-              uri: ''
             }, i));
             messageList[val].type = i.type;
             messageList[val].num = messageList[val].child.length || 0;
@@ -305,6 +317,8 @@ export default {
           this.messageList = messageList;
           this.messageUser = messageUser;
         }
+      }).finally(() => {
+        this.messageLoad = false;
       });
     },
   },
@@ -336,7 +350,7 @@ export default {
   max-height: 1000px;
   overflow: auto;
   padding: 10px;
-  background-color: #f2f2f2;
+  background-color: rgb(0 0 0 / 2%);
 }
 
 .message-content-footer {

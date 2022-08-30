@@ -115,7 +115,7 @@ export default {
       this.http.put(api["service_upload"], {
         body: this.file,
         headers: {
-          'Content-Range': this.file.size,
+          'Content-Type': this.file.size,
         }
       }).then(res => {
         const d = res.data;
