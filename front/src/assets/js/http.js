@@ -1,6 +1,13 @@
 import http from 'axios';
 import Conf from './conf';
 
+HTTP.interceptors.request.use(config => {
+  return config
+}, error=> {
+  // 对请求错误做些什么
+  return Promise.reject(error)
+})
+
 export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
@@ -47,6 +54,7 @@ export default class Http extends Conf {
             method: requestData.method,
             data: requestData.data,
             params: requestData.params,
+            body: requestData.body
         });
 
         return result;
@@ -113,6 +121,5 @@ export default class Http extends Conf {
 
         return result;
     }
-
 }
 
