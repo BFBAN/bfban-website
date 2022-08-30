@@ -7,7 +7,8 @@
   "scripts": {
     "test": "node app.js --experimental-modules --trace-warnings",
     "dev": "node app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+	"services": "node services/loader.js"
   },
   "author": "",
   "license": "ISC",
