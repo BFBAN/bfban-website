@@ -372,13 +372,6 @@
     "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> 开发，于 2018年11月4日 上线‘\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>",
     "privacy": "\n<h2>隐私政策</h2>\n它是开源的。您可以通过 GitHub 发布问题并提出更改/改进建议。社区网络提供的 API 并开放供公众使用。"
   },
-  "link": {
-    "title": "友链详情",
-    "links": "友链",
-    "sponsor": "合作伙伴",
-    "linkWebDeveloperChild": "杰出贡献开发成员",
-    "join": "加入合作伙伴"
-  },
   "reset": {
     "title": "重置密码",
     "form": {

@@ -28,7 +28,7 @@
                   </div>
                 </Col>
                 <Col>
-                  <div  @click="navigatorTo({to: {name: 'signup'}})">
+                  <div @click="navigatorTo({to: {name: 'signup'}})">
                     <Icon type="md-person-add" size="20"/>
                     {{ $t("header.signup") }}
                   </div>
@@ -60,22 +60,28 @@
           </Button>
         </router-link>
 
-        <Dropdown placement="bottom-end" v-if="isLogin">
-          <Avatar>{{ currentUser.userinfo.username[0] || 'Null' }}</Avatar>
+        <Dropdown placement="bottom-end" v-if="isLogin" :padding="0">
+          <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
+            <Avatar>{{ currentUser.userinfo.username[0] || 'Null' }}</Avatar>
+          </router-link>
           <span class="mobile-hide">&emsp;{{ currentUser.userinfo.username }}</span>
-          <DropdownMenu slot="list">
-            <DropdownItem>
-              <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
+          <DropdownMenu slot="list" style="min-width: 260px;">
+            <router-link :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
+              <DropdownItem>
                 {{ $t("header.userCenter") }}
-              </router-link>
-            </DropdownItem>
-            <DropdownItem>
-              <router-link class="" :to="{name: 'profile', params: { uId: `${currentUser.userinfo.userId}` }}">
+              </DropdownItem>
+            </router-link>
+            <router-link :to="{name: 'report'}">
+              <DropdownItem>
+                {{ $t("header.report") }}
+              </DropdownItem>
+            </router-link>
+            <router-link :to="{name: 'profile', params: { uId: `${currentUser.userinfo.userId}` }}">
+              <DropdownItem>
                 {{ $t("header.profile") }}
-              </router-link>
-            </DropdownItem>
-
-            <Dropdown-item divided v-show="isLogin">
+              </DropdownItem>
+            </router-link>
+            <Dropdown-item divided v-show="isLogin" @click="signout">
               <a @click.stop.prevent="signout">
                 <Icon type="md-log-out"></Icon>
                 {{ $t("header.signout") }}
@@ -189,52 +195,57 @@ export default {
 </script>
 
 <style lang="scss">
-  header {
-    -webkit-app-region: drag;
-    position: relative;
-    z-index: 1000;
-    width: 100%;
-    height: auto;
-    padding: 10px 0 !important;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), transparent);
-  }
-  .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .nav {
-    display: flex;
-    align-items: center;
-    padding: 0 .4rem;
-    font-weight: bold;
+header {
+  -webkit-app-region: drag;
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+  height: auto;
+  padding: 10px 0 !important;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), transparent);
+}
 
-    a.link {
-      padding: .7rem .8rem;
-      text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0;
-    }
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  padding: 0 .4rem;
+  font-weight: bold;
+
+  a.link {
+    padding: .7rem .8rem;
+    text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0;
   }
-  .nav-menu {
-    flex: 1;
-  }
+}
+
+.nav-menu {
+  flex: 1;
+}
+
+.nav-username {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 6rem;
+  flex-grow: 0;
+}
+
+.nav-signout {
+  flex-shrink: 0;
+}
+
+@media screen and (min-width: 1088px) {
   .nav-username {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 6rem;
-    flex-grow: 0;
+    width: 100%;
   }
-  .nav-signout {
-    flex-shrink: 0;
-  }
+}
 
-  @media screen and (min-width: 1088px) {
-    .nav-username {
-      width: 100%;
-    }
-  }
-
-  .ivu-badge-dot {
-    left: -4px;
-  }
+.ivu-badge-dot {
+  left: -4px;
+}
 </style>

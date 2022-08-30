@@ -33,7 +33,7 @@
         <Col span="6">
           <List border size="small">
             <ListItem v-for="(i, index) in muen" :key="i.value">
-              <a @click="upDateUri(index)">
+              <a @click="upDateUri(muen[index].value)">
                 <b v-if="muen[index].value == muenIndex">
                   {{ $t("profile." + muen[i.value].title + ".title") }}
                 </b>
@@ -44,14 +44,15 @@
           <br>
           <List border size="small">
             <ListItem>
-              <router-link :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
+              <router-link :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId }` }}">
                 {{ $t("header.userCenter") }}
+                <Icon type="ios-link"/>
               </router-link>
             </ListItem>
           </List>
           <br>
 
-          <Divider>{{$t("home.bulletin.title")}}</Divider>
+          <Divider>{{ $t("home.bulletin.title") }}</Divider>
           <Bulletin/>
         </Col>
         <Col span="18">
@@ -59,6 +60,7 @@
           <appearance v-if="muenIndex == 1"></appearance>
           <message v-if="muenIndex == 2"></message>
           <enhance v-if="muenIndex == 3"></enhance>
+          <media v-if="muenIndex == 4"></media>
         </Col>
       </Row>
     </Card>
@@ -73,6 +75,7 @@ import appearance from "./appearance";
 import account from "./account";
 import message from "./message";
 import enhance from "./enhance";
+import media from "./media";
 
 export default {
   name: "profile",
@@ -80,24 +83,28 @@ export default {
     return {
       muenIndex: 0,
       muen: [{
-        title: 'account',
-        value: '0'
-      },
-      {
-        title: 'appearance',
-        value: '1'
-      },
-      {
-        title: 'message',
-        value: '2'
-      },
+          title: 'account',
+          value: '0'
+        }, {
+          title: 'appearance',
+          value: '1'
+        },
+        {
+          title: 'message',
+          value: '2'
+        },
         {
           title: 'enhance',
           value: '3'
-        }]
+        },
+        {
+          title: 'media',
+          value: '4'
+        },
+      ]
     }
   },
-  components: {Bulletin, appearance, account, message,enhance},
+  components: {Bulletin, appearance, account, message, enhance, media},
   created() {
     const pagename = this.$route.params.pagename;
 
@@ -115,7 +122,7 @@ export default {
     this.upDateUri(name || this.muenIndex);
   },
   methods: {
-    upDateUri (index, t = false) {
+    upDateUri(index, t = false) {
       this.muenIndex = index;
       this.$router.push({
         path: (t ? 'profile/' : '') + this.muen[index].title.toLowerCase()

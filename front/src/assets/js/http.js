@@ -1,17 +1,5 @@
 import http from 'axios';
 import Conf from './conf';
-const HTTP = http.create({
-  // baseURL: process.env.BASE_API,
-  timeout: 600000,
-  withCredentials: true,
-  headers: {
-      'Content-type': 'application/json',
-  },
-  validateStatus(status) {
-      return status < 500;
-  }
-});
-
 
 HTTP.interceptors.request.use(config => {
   return config
@@ -23,13 +11,23 @@ HTTP.interceptors.request.use(config => {
 export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
-    PUT = 'put'
+    PUT = 'put';
     //..
 
     /**
      * TODO 未写拦截，有空完成
      */
-    HTTP = HTTP
+    HTTP = http.create({
+        // baseURL: process.env.BASE_API,
+        timeout: 600000,
+        withCredentials: true,
+        headers: {
+            // 'Content-type': 'application/json',
+        },
+        validateStatus(status) {
+            return status < 500;
+        }
+    });
 
     constructor() {
         super();
@@ -47,8 +45,8 @@ export default class Http extends Conf {
      * @param requestData
      * @returns {Promise<AxiosResponse<any>>}
      */
-    async request(url = '', requestData = {method: this.POST, data: {}, params: {}, body: {}}) {
-        console.log(url, requestData.headers);
+    async request(url = '', requestData = {method: this.POST, data: {}, params: {}}) {
+        console.log(url, Object.assign({}, requestData.headers));
         let result = await this.HTTP({
             url: url,
             Origin: "",
@@ -98,25 +96,30 @@ export default class Http extends Conf {
         return result;
     }
 
-    
-
     /**
      * put 请求
-     * @param url
-     * @param data
      * @returns {Promise<AxiosResponse<any>>}
      */
-     async put(url, data = {data: {}, params: {}}) {
-      const _url = this.getUrl() + url;
-      let result = await this.request(_url, {
-          method: this.PUT,
-          headers: data.headers,
-          params: data.params,
-          data: data.data,
-          body: data.body
-      });
+    async put(url = '', data = {data: {}, params: {}}) {
+        const _url = this.getUrl() + url;
 
-      return result;
-  }
+        this.HTTP.headers = {...this.HTTP.headers, ...data.headers};
+
+        let result = await this.HTTP({
+            url:_url,
+            method: this.PUT,
+            headers: data.headers,
+            params: data.params,
+            data: data.data,
+        })
+        // let result = await this.request(_url, {
+        //     method: this.PUT,
+        //     headers: data.headers,
+        //     params: data.params,
+        //     data: data.data,
+        // });
+
+        return result;
+    }
 }
 

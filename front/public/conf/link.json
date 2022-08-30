@@ -8,19 +8,22 @@
     {
       "title": "glassPanel",
       "url": "https://github.com/glass-panel"
+    },
+    {
+      "title": "lirunrun",
+      "url": "https://github.com/lirunrun"
+    },
+    {
+      "title": "cabbagelol",
+      "url": "https://github.com/cabbagelol"
     }
   ],
   "linkChild": [
     {
-      "title": "Cabbagelol test",
-      "titleLang": {
-        "zh-CN": "菜萌 测试"
-      },
+      "title": "2042 BiliBili WIKI",
       "linkImage": "",
-      "linkUrl": "",
-      "tag": [
-        "link"
-      ]
+      "linkUrl": "https://wiki.biligame.com/zhandi2042/",
+      "tag": ["link"]
     }
   ],
   "footerChild": [
@@ -32,19 +35,6 @@
         "zh-CN": "主机提供商"
       },
       "linkImageUrl": "https://i.loli.net/2021/09/30/F4hedSaYV96BsOg.png",
-      "tag": [
-        "host",
-        "platinum"
-      ]
-    },
-    {
-      "title": "bilibili RBQ",
-      "linkUrl": "https://space.bilibili.com/24946604",
-      "describe": "Domain cost",
-      "describeLang": {
-        "zh-CN": "域名支持"
-      },
-      "linkImageUrl": "http://iph.href.lu/100x35?text=bilibili RBQ&fg=ffffff&bg=fb7299",
       "tag": [
         "host",
         "platinum"

@@ -14,6 +14,7 @@ const ForgetPassword = () => import('@/views/forgetPassword.vue');
 const SignupComplete = () => import('@/views/SignupComplete.vue');
 const Account = () => import('@/views/Account.vue');
 const About = () => import('@/views/About.vue');
+const Link = () => import('@/views/Link.vue');
 const NotFound = () => import('@/views/NotFound.vue');
 const Apps = () => import('@/views/Apps.vue');
 const Profile = () => import('@/views/account/profile.vue');
@@ -35,6 +36,9 @@ const routes = [
 
     // 关于
     {name: 'about', path: '/about', component: About},
+
+    // 友链
+    {name: 'link', path: '/link', component: Link},
 
     // 应用名单
     {name: 'apps', path: '/apps', component: Apps},
@@ -127,6 +131,7 @@ VueRouter.prototype.push = function push(location) {
 
 router.beforeEach((to, from, next) => {
     store.commit('syncLoginState');
+
     document.title = `${config.name} | ${to.meta.title || i18n.t(`${to.meta.titleValue || to.name + '.title'}`) || config.name} `;
 
     next();

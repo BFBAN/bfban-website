@@ -9,18 +9,22 @@
             "text": "Community network Discord",
             "textLang": {
               "en-US": "Community network Discord",
-              "zh-CN": "战地外网Discord社区"
+              "zh-CN": "Gametool Discord社区"
             },
             "src": "//discord.gg/KCBM3GAW59"
           },
           {
-            "text": "战地中文社区",
+            "text": "战地中文kook社区",
+            "textLang": {
+              "en-US": "chning network kook",
+              "zh-CN": "战地中文kook社区"
+            },
             "src": "//kaihei.co/uoJKC0",
             "showLang": ["zh-CN"]
           },
           {
-            "text": "QQ BFBAN",
-            "src": "//jq.qq.com/?_wv=1027&k=FY8TCpCV",
+            "text": "bfban开发者kook社区",
+            "src": "//kaihei.co/rn6gUK",
             "showLang": ["zh-CN"]
           },
           {
@@ -48,6 +52,11 @@
             "insideLang": true
           },
           {
+            "text": "link.title",
+            "src": "link",
+            "insideLang": true
+          },
+          {
             "text": "header.cheaters",
             "src": "cheaters",
             "insideLang": true
@@ -66,8 +75,8 @@
             "src": "//mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg"
           },
           {
-            "text": "意见建议(兔小巢)",
-            "src": "//support.qq.com/products/64038",
+            "text": "QQ交流群",
+            "src": "//jq.qq.com/?_wv=1027&k=FY8TCpCV",
             "showLang": ["zh-CN"]
           }
         ]

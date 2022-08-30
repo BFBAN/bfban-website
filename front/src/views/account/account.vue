@@ -3,7 +3,8 @@
     <Form :model="formItem" label-position="top">
       <Row :gutter="30">
         <Col span="12">
-          <FormItem :label="$t('signup.form.username')">
+          <FormItem>
+            <div slot="label"><Icon type="md-key" /> {{ $t('signup.form.username') }}</div>
             <Input v-model="formItem.username" placeholder="" disabled>
               <a slot="append" @click="modal_setusername.show = !modal_setusername.show">
                 <Icon type="md-create" size="15"/>
@@ -12,7 +13,8 @@
           </FormItem>
         </Col>
         <Col span="12">
-          <FormItem :label="$t('signup.form.password')">
+          <FormItem >
+            <div slot="label"><Icon type="md-lock" /> {{ $t('signup.form.password') }}</div>
             <Input v-model="formItem.password" disabled type="password">
               <a slot="append" @click="modal_changePassword.show = !modal_changePassword.show">
                 <Icon type="md-create" size="15"/>
@@ -361,7 +363,7 @@ export default {
     onSave() {
       const {
         introduction,
-        attr = {language: this.$root.$i18n.locale, showOrigin: false, allowDM: false}
+        attr = { language: this.$root.$i18n.locale, showOrigin: false, allowDM: false }
       } = this.formItem;
 
       this.formLoad = true;
@@ -375,7 +377,7 @@ export default {
       }).then((res) => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.$store.dispatch('setLang', d.data.attr.language);
 
           this.$Message.success(d.code);
