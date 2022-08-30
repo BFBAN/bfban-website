@@ -1,24 +1,31 @@
 {
   "child": [{
     "t": "可疑",
-    "value": "suspect"
+    "value": "suspect",
+    "privilege": ["admin"]
   },{
     "t": "无辜，清白",
-    "value": "innocent"
+    "value": "innocent",
+    "privilege": ["admin"]
   },{
     "t": "讨论",
-    "value": "discuss"
+    "value": "discuss",
+    "privilege": ["admin"]
   },{
     "t": "投一票石锤",
-    "value": "guilt"
+    "value": "guilt",
+    "privilege": ["admin"]
   },{
     "t": "石锤",
-    "value": "kill"
+    "value": "kill",
+    "privilege": ["super"]
   },{
     "t": "无效举报",
-    "value": "invalid"
+    "value": "invalid",
+    "privilege": ["admin"]
   },{
     "t": "需要更多证据",
-    "value": "more"
+    "value": "more",
+    "privilege": ["admin"]
   }]
 }

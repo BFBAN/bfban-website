@@ -599,9 +599,23 @@
                       <!-- 判断选项 -->
                       <Option :value="v_i.value" v-for="v_i in verify.choice" :key="v_i.value">
                         {{ $t(`basic.action.${v_i.value}.text`) }}
-                        <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${v_i.value}.describe`)">
-                          <Icon type="md-help-circle" size="20"/>
-                        </Poptip>
+
+                        <Row>
+                          <Col flex="1">
+                            <span v-for="(privileges_item, privileges_index) in privileges" :key="privileges_index">
+                              <span v-for="(p, pi) in v_i.privilege" :key="pi">
+                                <Tag type="border" :color="privileges_item.class" v-if="p == privileges_item.value">
+                                  {{ $t('basic.privilege.' + p) }}
+                                </Tag>
+                              </span>
+                            </span>
+                          </Col>
+                          <Col>
+                            <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${v_i.value}.describe`)">
+                              <Icon type="md-help-circle" size="20"/>
+                            </Poptip>
+                          </Col>
+                        </Row>
                       </Option>
                     </Select>
                   </FormItem>
@@ -872,6 +886,7 @@ export default new BFBAN({
   data() {
     return {
       getGameLabel: util.getGameLabel,
+      privileges: [],
       appeal: {
         load: false,
         show: false,
@@ -956,7 +971,11 @@ export default new BFBAN({
       // set Token Http mode
       this.http = http_token.call(this);
 
+      const privileges = await import('/public/conf/privilege.json');
+      this.privileges = this.privileges.concat(privileges.child);
+
       await util.initUtil().then((res) => {
+
         this.cheaterStatus = res.cheaterStatus;
 
         // 裁决结果
