@@ -32,8 +32,13 @@ if (isStandalone)
                 case 'PROCESS':
                     if (await got.get(config.services[serviceName].url, {
                         throwHttpErrors: false,
-                        timeout: 5000,
-                    }).then(r => true).catch(e => false))  // already running?
+                    }).then(r => {
+                        logger.success(`serviceLoader: service ${serviceName} is already running.`);
+                        return true;
+                    }).catch(e => { 
+                        logger.info(`serviceLoader: service ${serviceName} is not found, starting it.`);
+                        return false;
+                    }))  // already running?
                         services.push({
                             name: serviceName,
                             deployment: 'PROCESS',
