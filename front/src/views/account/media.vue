@@ -1,7 +1,5 @@
 <template>
   <div>
-    媒体库
-    <Button disabled>上传</Button>
     <!-- MIN FILE <2MB OR MAX FILE >2MB -->
     <Upload
         multiple
@@ -115,7 +113,8 @@ export default {
       this.http.put(api["service_upload"], {
         body: this.file,
         headers: {
-          'Content-Range': this.file.size,
+          'Content-Size': this.file.size,
+          'Content-Type': this.file.type,
         }
       }).then(res => {
         const d = res.data;

@@ -8,9 +8,11 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
+
 import {api, http, util} from '../assets/js/index'
 
-export default {
+export default new BFBAN({
   name: "Weekly",
   data() {
     return {
@@ -36,7 +38,7 @@ export default {
       });
     }
   }
-}
+});
 </script>
 
 <style scoped>

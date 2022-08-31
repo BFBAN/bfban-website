@@ -97,11 +97,12 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
 import {http, api, conf} from '../assets/js/index'
 import EmailTip from "../components/EmailTip";
 import Captcha from "../components/Captcha";
 
-export default {
+export default new BFBAN({
   name: 'forgetPassword',
   data() {
     return {
@@ -261,7 +262,7 @@ export default {
       return this.$store.state.user || {token: ''};
     }
   }
-}
+});
 </script>
 
 <style scoped>

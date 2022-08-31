@@ -9,6 +9,7 @@ export default class Http extends Conf {
     /**
      * TODO 未写拦截，有空完成
      */
+<<<<<<< HEAD
      HTTP = http.create({
       // baseURL: process.env.BASE_API,
       timeout: 600000,
@@ -20,10 +21,30 @@ export default class Http extends Conf {
           return status < 500;
       }
     })
+=======
+    HTTP = http.create({
+        // baseURL: process.env.BASE_API,
+        timeout: 600000,
+        withCredentials: true,
+        headers: {
+            // 'Content-type': 'application/json',
+        },
+        validateStatus(status) {
+            return status < 500;
+        }
+    });
+>>>>>>> b74e94f1303793122455328f13352cfa00b002b8
 
     constructor() {
         super();
         super.initConf();
+
+        this.HTTP.interceptors.request.use(config => {
+            return config
+        }, error=> {
+            // 对请求错误做些什么
+            return Promise.reject(error)
+        })
     }
 
     getUrl() {

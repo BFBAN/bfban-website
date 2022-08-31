@@ -8,7 +8,7 @@ import logger from "../logger.js";
 import got from "got";
 import {fileURLToPath} from "url";
 
-const isStandalone = process.argv[1] == fileURLToPath(import.meta.url);
+const isStandalone = process.argv[1] == fileURLToPath(import.meta.url) || process.argv[2] == "-standalone";
 const services = [];
 if (isStandalone)
     logger.success('serviceLoader: started as Standalone mode.');

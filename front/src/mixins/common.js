@@ -1,3 +1,9 @@
+/**
+ * 公共函数
+ * TODO v1 遗留方法，大部分迁移到[assets/js/util.js]下
+ */
+
+
 import _ from "lodash";
 
 function checkReportFormData(form) {

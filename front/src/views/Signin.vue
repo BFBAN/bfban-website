@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
+
 import {api, http} from '../assets/js/index'
 import Captcha from "../components/Captcha";
 import Vuex from "vuex";
@@ -73,7 +75,7 @@ import _ from "lodash";
 
 const {mapActions, mapMutations} = Vuex;
 
-export default {
+export default new BFBAN({
   components: {Captcha},
   data() {
     return {
@@ -166,7 +168,7 @@ export default {
       return this.$store.state.user || {token: ''};
     }
   }
-}
+});
 </script>
 
 <style lang="scss" scoped>
