@@ -378,7 +378,11 @@ export default {
         const d = res.data;
 
         if (d.success === 1) {
-          this.$store.dispatch('setLang', d.data.attr.language);
+
+          // 同步本地语言
+          if (d.data.attr.language) {
+            this.$store.dispatch('setLang', d.data.attr.language);
+          }
 
           this.$Message.success(d.code);
         }

@@ -4,11 +4,19 @@
       <br>
       <h1>404</h1>
       <span>🦖</span>
-      <h4 class="hint">{{ $t("notFound") }}</h4>
+      <h4 class="hint">{{ $t("basic.tip.notFound") }}</h4>
       <br>
     </div>
   </div>
 </template>
+
+<script>
+import BFBAN from "../assets/js/bfban";
+
+export default new BFBAN({
+  data() {}
+});
+</script>
 
 <style>
   .notFound {

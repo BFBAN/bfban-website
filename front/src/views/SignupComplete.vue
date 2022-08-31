@@ -41,11 +41,11 @@
 </template>
 
 <script>
-import {http, api, conf} from '../assets/js/index'
-import {testWhitespace, waitForAction} from "@/mixins/common";
-import _ from "lodash";
+import BFBAN from "../assets/js/bfban";
 
-export default {
+import {http, api, conf} from '../assets/js/index'
+
+export default new BFBAN({
   data() {
     return {
       verify: {
@@ -100,7 +100,7 @@ export default {
       })
     }
   }
-}
+});
 </script>
 
 <style></style>

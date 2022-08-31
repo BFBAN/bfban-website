@@ -3,8 +3,8 @@
     <RadioGroup v-model="themeIndex" size="large" :button-style="'solid'">
       <Badge :text="i.version" class="theme-card" v-for="(i, index) in themes.child" :key="index" >
         <Card @click="themeIndex = index" dis-hovershow>
-          <img class="theme-img" :src="require('/public/theme/' + i.name + '/preview.svg')" v-if="i.type == 'local'">
-          <img class="theme-img" :src="i.img" v-else>
+<!--          <img class="theme-img" :src="require('/public/theme/' + i.name + '/preview.svg')" v-if="i.type == 'local'">-->
+<!--          <img class="theme-img" :src="i.img" v-else>-->
           <div>
             <span>{{ i.authorInfo.authorName }}</span>
             <Divider type="vertical"></Divider>

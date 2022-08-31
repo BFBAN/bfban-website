@@ -48,9 +48,11 @@
     },
     "tip": {
       "notlang": "未翻译",
-      "notcontent": "无内容"
+      "notcontent": "无内容",
+      "notFound": "哎列，访问地址似乎走失"
     },
     "button": {
+      "report": "举报",
       "commit": "提交",
       "save": "保存",
       "submit": "确认",
@@ -91,20 +93,31 @@
     "meet": "欢迎回来{name}!",
     "message": {
       "title": "消息",
-      "tabs": {
-        "list": {
-          "itemName": "消息列表",
-          "form": {
-            "del": "删除",
-            "read": "已阅读"
-          }
-        },
-        "send": {
-          "itemName": "发送信息",
-          "form": {
-
-          }
+      "look": "查看",
+      "load": "刷新",
+      "control": "批量编辑",
+      "placeholder": "填写发送的消息",
+      "types": {
+        "direct": "聊天",
+        "warn": "系统",
+        "fatal": "确定",
+        "toAll": "所有人",
+        "toAdmins": "所有管理员",
+        "toNormals": "正常用户",
+        "command": "命令"
+      },
+      "tabsList": {
+        "itemName": "消息列表",
+        "form": {
+          "del": "删除",
+          "read": "已阅读"
         }
+      },
+      "tabsSend": {
+        "itemName": "推送",
+        "messageMethod": "类型",
+        "messageID": "站内ID",
+        "content": "内容"
       }
     },
     "account": {
@@ -247,7 +260,6 @@
       "uploadPic2": "图片大于 2M 或 上传失败，可以前往",
       "uploadPic3": "然后选择 Image URL 选项卡，把图片链接贴在下方",
       "uploadPic4": "请列出阐明足够的证据，编辑器支持上传图片（限制2M）",
-      "report": "举报",
       "reportOne": "举报单个",
       "reportAll": "举报所有",
       "fromDatabaseOneId": "从联BAN数据库中选取",

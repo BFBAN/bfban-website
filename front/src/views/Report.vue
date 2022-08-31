@@ -252,13 +252,15 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
+
 import {api, http, http_token, http_connect, util, regular} from '../assets/js/index'
 import {checkReportFormData} from "@/mixins/common";
 
 import gameName from '/public/conf/gameName.json'
 import Edit from "@/components/Edit.vue";
 
-export default {
+export default new BFBAN({
   data() {
     return {
       games: [],
@@ -522,7 +524,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

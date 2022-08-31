@@ -26,6 +26,8 @@ headerMenu.json 导航菜单
 
 link.json 链接配置，被不同页面使用
 
+message.json 消息配置
+
 privilege.json 身份配置，翻译在/lang下
 
 requestConf.json 根请求配置文件

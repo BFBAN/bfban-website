@@ -1059,7 +1059,6 @@ body:		{
 
 ```javascript
 REQUEST: HTTP GET /api/service/file
-headers:	x-access-token: {{access_token}}	// login required
 parameters:	filename: string
 			explain?							// get file detail instead of redirect to downloadURL
             

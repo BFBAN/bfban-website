@@ -120,11 +120,12 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
 import {api, http, http_token} from '../assets/js/index'
 
 import games from '/public/conf/gameName.json'
 
-export default {
+export default new BFBAN({
   data() {
     return {
       games: games.child,
@@ -240,8 +241,6 @@ export default {
     async loadData() {
       const {uId} = this.$route.params;
 
-      this.getReports(uId);
-
       const privileges = await import('/public/conf/privilege.json');
       this.privileges = this.privileges.concat(privileges.child)
 
@@ -269,7 +268,7 @@ export default {
           this.openMessage()
         }
 
-        this.getReports(uId)
+        this.getReports()
       });
     },
     /**
@@ -321,17 +320,22 @@ export default {
         this.message.show = false;
       })
     },
-    getReports(uId) {
+    /**
+     * 获取举报信息
+     * @param uId
+     */
+    getReports(pageNum) {
+      const {uId} = this.$route.params;
+
       http.get(api["user_reports"], {
         params: {
           id: uId,
-          skip: this.page - 1,
+          skip: (pageNum || 1) - 1,
           limit: this.limit,
         }
       }).then((res) => {
         const d = res.data;
-        let reportData = this.report.data;
-
+        let reportData = [];
         if (d.success === 1) {
           d.data.forEach(i => {
             reportData.push({
@@ -343,6 +347,7 @@ export default {
             });
           });
 
+          this.report.data = reportData;
           this.total = Number(this.account.reportnum);
         }
       });
@@ -353,7 +358,7 @@ export default {
       return this.$store.state.user && {token: '', userinfo: {userId: ''}};
     }
   }
-};
+});
 </script>
 
 <style lang="scss">

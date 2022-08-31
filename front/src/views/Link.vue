@@ -59,15 +59,16 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
 import link from "../../public/conf/link.json";
 
-export default {
+export default new BFBAN({
   data() {
     return {
       link: link
     };
   },
-};
+});
 </script>
 
 <style lang="scss">
