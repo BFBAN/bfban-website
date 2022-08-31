@@ -42,7 +42,6 @@
                       </Tooltip>
                     </Radio>
                   </RadioGroup>
-                  <span class="hint">{{ $t("report.info.reportNews", {msg: "reportNews"}) }}</span>
                 </FormItem>
                 <!-- 游戏类型 E -->
 
