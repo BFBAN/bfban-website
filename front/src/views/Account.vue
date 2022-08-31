@@ -120,11 +120,12 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
 import {api, http, http_token} from '../assets/js/index'
 
 import games from '/public/conf/gameName.json'
 
-export default {
+export default new BFBAN({
   data() {
     return {
       games: games.child,
@@ -357,7 +358,7 @@ export default {
       return this.$store.state.user && {token: '', userinfo: {userId: ''}};
     }
   }
-};
+});
 </script>
 
 <style lang="scss">

@@ -39,4 +39,29 @@
 
     3. 启动服务
     npm run serve
+    
+    4. 打包
+    # 生成的静态文件在front/dist目录下
+    npm run build
 ```
+
+# 开发页面
+
+## 基本目录
+* desktop 桌面开发目录
+* public 公共目录，不被编译
+* src 网站本体
+  * assets 资源
+  * components 组件
+  * lang 语言
+  * mixins 遗留
+  * router 路由
+  * store 状态机
+  * views 视图，所有页面
+
+## 新建页面
+依照vue，需要路由，在`src/router`上
+
+## 开发页面
+
+呃，不用我说的吧..

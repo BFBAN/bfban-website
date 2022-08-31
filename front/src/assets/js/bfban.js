@@ -1,20 +1,11 @@
 import packageInfo from '../../../package.json';
+import Print from './print';
 
-export default class BFBAN {
-    BFBANLOG = 0;
+export default class BFBAN extends Print{
+    BFBANLOG = window.BFBANLOG;
 
     constructor(data) {
-        this.log();
+        super();
         return data;
-    }
-
-    log () {
-        if (window.BFBANLOG >= 1) return;
-
-        this.BFBANLOG+=1;
-        console.dir(`🦖 v: ${packageInfo.version}`)
-        console.log('=========================================');
-        console.log('你也对BFBAN感兴趣？加入BFBAN，请联系关于内邮箱📮');
-        console.log('=========================================');
     }
 }

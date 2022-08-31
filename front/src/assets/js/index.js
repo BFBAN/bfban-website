@@ -13,6 +13,7 @@ import _Http_Connect from './http_connect';
 import _Util from './util';
 import _Notification from "./notification";
 import _Regular from './regular';
+import _Print from './print';
 
 export const api = new _Api();
 export const http = new _Http();
@@ -24,5 +25,10 @@ export const storage = new _Storage();
 export const util = new _Util();
 export const notification = new _Notification();
 export const regular = new _Regular();
+export const print = new _Print();
 
-export default {conf, api, storage, time, http, http_token, http_connect, util, notification, regular};
+export default {
+    conf, api, storage, time,
+    http, http_token, http_connect,
+    util, notification, regular, print
+};

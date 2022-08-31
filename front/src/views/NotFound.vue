@@ -10,6 +10,14 @@
   </div>
 </template>
 
+<script>
+import BFBAN from "../assets/js/bfban";
+
+export default new BFBAN({
+  data() {}
+});
+</script>
+
 <style>
   .notFound {
     min-height: 500px;

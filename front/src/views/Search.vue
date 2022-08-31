@@ -99,9 +99,11 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
+
 import {api, http, storage, time} from "../assets/js";
 
-export default {
+export default new BFBAN({
   name: "search",
   data() {
     return {
@@ -181,7 +183,7 @@ export default {
       })
     },
   }
-}
+});
 </script>
 
 <style scoped lang="less">

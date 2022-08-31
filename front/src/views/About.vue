@@ -24,12 +24,14 @@
 </template>
 
 <script>
-export default {
+import BFBAN from "../assets/js/bfban";
+
+export default new BFBAN({
   data() {
     return {
     };
   },
-};
+});
 </script>
 
 <style lang="scss">
