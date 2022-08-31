@@ -1,7 +1,7 @@
 <template>
   <div>
     <Tabs :value="tagsName">
-      <TabPane :label="$t('profile.message.tabs.list.itemName')" name="message0">
+      <TabPane :label="$t('profile.message.tabsList.itemName')" name="message0">
         <Card dis-hover :padding="0">
           <p slot="title"></p>
           <div slot="extra">
@@ -118,43 +118,58 @@
           </Row>
         </Card>
       </TabPane>
-      <TabPane :label="$t('profile.message.tabs.send.itemName')" name="message2" v-if="isAdmin">
-        <Form>
-          <Row :gutter="30">
-            <Col span="12">
-              <FormItem label="站内ID">
-                <AutoComplete
-                    v-model="message.id"
-                    :data="message.playerList"
-                    @on-search="getPlayerList"
-                    placeholder="">
-                  <Option v-for="(option, index) in message.playerList" :value="option.id" :key="index">
-                    <Avatar :src="option.avatarLink || ''">{{ option.username[0] }}</Avatar>&emsp;
-                    <span>{{ option.username }}</span>
-                    <Tag style="float: right">
-                      {{ option.id }}
-                    </Tag>
-                  </Option>
-                </AutoComplete>
-              </FormItem>
+      <TabPane :label="$t('profile.message.tabsSend.itemName')" name="message1" v-if="isAdmin">
+        <Card>
+          <Form slot="title">
+            <Row :gutter="30">
+              <Col span="12">
+                <FormItem :label="$t('profile.message.tabsSend.messageMethod')">
+                  <Select v-model="message.type" :transfer="true">
+                    <Option v-for="(item, item_index) in message.list" :value="item.title" :key="item_index">
+                      {{ $t('profile.message.types.' + item.title ) }}
+                    </Option>
+                  </Select>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem :label="$t('profile.message.tabsSend.messageID')">
+                  <AutoComplete
+                      v-model="message.id"
+                      :data="message.playerList"
+                      placeholder="">
+                    <Option v-for="(option, index) in message.playerList" :value="option.id" :key="index">
+                      <Avatar :src="option.avatarLink || ''">{{ option.username[0] }}</Avatar>&emsp;
+                      <span>{{ option.username }}</span>
+                      <Tag style="float: right">
+                        {{ option.id }}
+                      </Tag>
+                    </Option>
+                  </AutoComplete>
+                </FormItem>
+              </Col>
+            </Row>
+            <FormItem :label="$t('profile.message.tabsSend.content')">
+              <Input v-model="message.content"
+                     show-word-limit
+                     type="textarea"
+                     :placeholder="$t('profile.message.placeholder')"
+                     :maxlength="1000"
+                     :autosize="{minRows: 5,maxRows: 10}"></Input>
+            </FormItem>
+          </Form>
+          <Row :gutter="10">
+            <Col flex="1">
+              <Tag color="success">
+                {{ $t("account.admin") }}
+              </Tag>
             </Col>
-            <Col span="12">
-              <FormItem label="类型">
-                <RadioGroup v-model="message.type" type="button" button-style="solid">
-                  <Radio :label="i.title" v-for="(i, index) in message.list" :key="index"
-                         v-show="i.q.indexOf(currentUser.userinfo.privilege) >= 0">
-                    {{ i.title }}
-                  </Radio>
-                </RadioGroup>
-              </FormItem>
+            <Col>
+              <Button type="primary"
+                      :disabled="!message.type || !message.id || !message.content"
+                      @click="putMessage">{{ $t('basic.button.commit') }}</Button>
             </Col>
           </Row>
-          <FormItem label="聊天">
-            <Input v-model="message.content"
-                   type="textarea" :autosize="{minRows: 5,maxRows: 10}"></Input>
-          </FormItem>
-        </Form>
-        <Button @click="setMessage">{{ $t('basic.button.commit') }}</Button>
+        </Card>
       </TabPane>
     </Tabs>
   </div>
@@ -167,7 +182,7 @@ export default {
   name: "message",
   data() {
     return {
-      tagsName: 'message0',
+      tagsName: 'message1',
       privileges: [],
       messageLoad: false,
       selectWindow: '',
@@ -279,6 +294,10 @@ export default {
         this.control.load = false;
       })
     },
+    /**
+     * 设置消息状态
+     * 已读，未读，删除
+     */
     async onMessageMark(id, type) {
       await this.http.post(api["user_message_mark"], {
         params: {
@@ -309,7 +328,10 @@ export default {
         this.message.load = false;
       })
     },
-    setMessage() {
+    /**
+     * 发送消息
+     */
+    putMessage() {
       const {uId} = this.$route.params;
 
       this.http.post(api["user_message"], {
@@ -331,6 +353,9 @@ export default {
         this.message.show = false;
       })
     },
+    /**
+     * 编辑消息
+     */
     setMessageEdit() {
       this.control.open = !this.control.open
     },

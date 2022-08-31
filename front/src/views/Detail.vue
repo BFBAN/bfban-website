@@ -222,9 +222,8 @@
               <!-- 时间轴筛选 S -->
               <ButtonGroup type="button">
                 <Select v-model="timeline.seeType" size="small">
-                  <Option v-for="(item, index) in timeline.seeTypeList" :value="item.value" :key="index">{{
-                      item.label
-                    }}
+                  <Option v-for="(item, index) in timeline.seeTypeList" :value="item.value" :key="index">
+                    {{item.label}}
                   </Option>
                 </Select>
               </ButtonGroup>
