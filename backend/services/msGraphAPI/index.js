@@ -41,11 +41,23 @@ process.on('unhandledRejection', (err)=> {
     logger.error('Unhandled Rejection:', err.message, err.stack);
 });
 
+const tokenCachePath = './services/msGraphAPI/tokenCache.json';
 const msalConfig = {
     auth: {
         clientId: svcConfig.APP_ID,
         authority: svcConfig.OAUTH_AUTHORITY,
         clientSecret: svcConfig.APP_SECRET,
+    },
+    cache: {
+        cachePlugin: {
+            beforeCacheAccess: async (context) => {
+                context.tokenCache.deserialize(await fs.promises.readFile(tokenCachePath).catch((err)=>""));
+            },
+            afterCacheAccess : async (context) => {
+                if(context.cacheHasChanged)
+                    await fs.promises.writeFile(tokenCachePath, context.tokenCache.serialize());
+            }
+        }
     },
     system: {
         loggerOptions: {
@@ -82,18 +94,15 @@ app.use(morgan((tokens, req, res)=>{
         return logger.toText.info(base+verbose);
 }));
 const msalClient = new msal.ConfidentialClientApplication(msalConfig);
-let msUserHomeId = undefined;
+//let msUserHomeId = undefined;
 
 /** @param {msal.ConfidentialClientApplication} msalClient */
 function getAuthenticatedClient(msalClient) { // Initialize Graph client
     const client = msgraph.Client.init({ // Implement an auth provider that gets a token
         authProvider: async (done) => {
             try { // Get the user's account
-                if(msUserHomeId==undefined)
-                    throw new Error('getAuthenticatedClient: msUserHomeId undefined');
                 const account = await msalClient
-                    .getTokenCache()
-                    .getAccountByHomeId(msUserHomeId);
+                    .getTokenCache().getAllAccounts().then(r=>r[0]);
                 if (account) { // Attempt to get the token silently
                     const response = await msalClient.acquireTokenSilent({
                         scopes: svcConfig.APP_SCOPES,
@@ -102,6 +111,8 @@ function getAuthenticatedClient(msalClient) { // Initialize Graph client
                     });
                     done(null, response.accessToken);
                 }
+                else
+                    throw new Error("GraphAPI: No logged in msal account found");
             } catch (err) {
                 done(err, null);
             }
@@ -112,9 +123,6 @@ function getAuthenticatedClient(msalClient) { // Initialize Graph client
 
 app.get('/status', async (req, res, next)=> {
     try {
-        if(msUserHomeId==undefined)
-            return res.status(200).json({success: 1, code: 'status.notInitiated'});
-        
         const msResponse = await getAuthenticatedClient(msalClient).api('/me').get().then((res)=>{
             return { code: 'status.success', data: { user: res.displayName } };
         }).catch((err)=> {
@@ -150,6 +158,7 @@ app.get('/msAuthCallback', async (req, res, next)=> {
             scopes: svcConfig.APP_SCOPES,
             redirectUri: svcConfig.APP_REDIRECT_URI
         });
+        let msUserHomeId;
         if(msResponse.account)
             msUserHomeId = msResponse.account.homeAccountId;
         else

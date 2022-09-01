@@ -29,17 +29,14 @@
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col flex="1">
                 <Tag color="error">
-                  {{ $t(`basic.status[${cheater.status}]`) }}
-                </Tag>
-                <Tag v-if="cheater.avatarLinkError" color="warning">
-                  账户异常
+                  {{ $t(`basic.status.${cheater.status}`) }}
                 </Tag>
 
                 <!-- 被举报的游戏 S -->
                 <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
                   <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
                        v-for="(game,gameindex) in cheater.games" :key="gameindex">
-                    {{ $t(`list.filters.game.${game}`, {game: game}) }}
+                    {{ $t(`basic.games.${game}`, {game: game}) }}
                   </Tag>
                 </router-link>
 

@@ -34,7 +34,7 @@
               <span v-for="(i,index) in privileges" :key="index">
                 <span v-for="(p, pi) in account.privilege" :key="pi">
                   <Tag type="border" size="large" :color="i.class" v-if="p == i.value">
-                    {{ $t("account." + i.value) }}
+                    {{ $t("basic.privilege." + i.value) }}
                   </Tag>
                 </span>
               </span>
@@ -82,7 +82,7 @@
           <Card dis-hover :padding="0">
             <p v-if="report.data.length <= 0" align="center">
               <Alert type="warning" show-icon>
-                {{ $t('account.noReports') }}
+                {{ $t('basic.tip.noReports') }}
               </Alert>
             </p>
 

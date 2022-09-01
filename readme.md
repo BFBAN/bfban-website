@@ -3,9 +3,10 @@
 ![GitHub closed issues](https://img.shields.io/github/issues-closed/bfban/bfban-website)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/bfban)
 
-[网站](https://bfban.com) | 
+[网站](https://www.bfban.com) | 
 [中文社区](https://www.kookapp.cn/app/invite/uoJKC0) |
-[EN社区](https://discord.gametools.network)
+[EN社区](https://discord.gametools.network) |
+[github wiki](/wiki)
 
 ----
 

@@ -1,27 +1,7 @@
 <template>
   <div>
-    <!-- MIN FILE <2MB OR MAX FILE >2MB -->
-    <Upload
-        multiple
-        type="drag"
-        @on-success="getMediaList"
-        :before-upload="handleUpload"
-        :format="['jpg','png']"
-        :max-size="2000"
-        :action="service_upload">
-      <div style="padding: 20px 0">
-        <Icon type="ios-cloud-upload" size="52" ></Icon>
-        <p>Click or drag files here to upload</p>
-      </div>
-    </Upload>
-
-    <div v-if="file !== null">
-      Upload file: {{ file.name }} {{file.type}}
-      <Button type="text" @click="onMediaUpdata" :loading="loadingStatus">{{ loadingStatus ? 'Uploading' : 'Click to upload' }}</Button>
-    </div>
-
-    <Card :padding="10">
-      <Row>
+    <Card :padding="0" dis-hover>
+      <Row slot="title">
         <Col flex="1">
           {{ media.data.todayFileNumber || 0 }}份文件
         </Col>
@@ -30,18 +10,21 @@
           <Progress :percent="media.data.usedStorageQuota || 0" :max="media.data.totalStorageQuota || 0" />
         </Col>
       </Row>
+
+      <Table :border="false"
+             :load-data="handleLoadData"
+             :columns="media.columns"
+             :data="media.list"
+             class="media-content"></Table>
     </Card>
 
-    <div>
-      <Card v-for="(i, index) in media.list" :key="index">
-
-      </Card>
-    </div>
+    <br>
+    <Page :total="100" />
   </div>
 </template>
 
 <script>
-import {api, http, http_token} from "../../assets/js";
+import {api, http, http_token, upload} from "../../assets/js";
 
 export default {
   data() {
@@ -50,6 +33,40 @@ export default {
       loadingStatus: false,
       service_upload: api['service_upload'],
       media: {
+        columns: [
+          {
+            title: 'Name',
+            key: 'filename',
+            minWidth: 300
+          },
+          {
+            title: 'size',
+            key: 'size',
+            sortable: true
+          },
+          {
+            title: 'createTime',
+            key: 'createTime',
+            // fixed: 'right',
+            render: (h, params) => {
+              console.log(params.row.createTime)
+              return h('Time', {
+                props: {
+                  time: params.row.createTime
+                }
+              });
+            }
+          }
+        ],
+        selectFileId: '',
+        detail: {
+          '2022-08-31_6afa241a-7d33-4036-a539-ba813af34aee.png': {
+            downloadURL: 'url',
+            size: 0,
+            mimetype: 'string',
+            filename: 'string'
+          }
+        },
         data: {},
         list: [],
       }
@@ -61,6 +78,25 @@ export default {
     this.getMediaList();
   },
   methods: {
+    handleLoadData (item, callback) {
+      setTimeout(() => {
+        const data = [
+          {
+            id: '10100',
+            name: 'John Brown',
+            age: 18,
+            address: 'New York No. 1 Lake Park'
+          },
+          {
+            id: '10101',
+            name: 'Joe Blackn',
+            age: 30,
+            address: 'Sydney No. 1 Lake Park'
+          }
+        ];
+        callback(data);
+      }, 2000);
+    },
     /**
      * 查询媒体信息
      */
@@ -85,6 +121,11 @@ export default {
       }).then(res => {
         const d = res.data;
         if (d.success === 1) {
+          d.data.map(i => i = Object.assign(i, {
+            _loading: false,
+            children: []
+          }));
+
           this.media.list = d.data;
         }
       }).finally(() => {
@@ -93,44 +134,43 @@ export default {
     /**
      * 查询文件详情
      */
-    queryMediaDetail () {
-      this.http.get(api["service_file"], {}).then(res => {
-        const d = res.data;
-        if (d.success === 1) {
-          this.media.list = d;
-        }
-      }).finally(() => {
-      });
-    },
-    /**
-     * 上传
-     */
-    onMediaUpdata () {
-      if (!this.file) return;
+    queryMediaDetail (name) {
+      this.media.selectFileId = name;
 
-      this.loadingStatus = true;
+      this.media.detail[name].load = true;
 
-      this.http.put(api["service_upload"], {
-        body: this.file,
-        headers: {
-          'Content-Size': this.file.size,
-          'Content-Type': this.file.type,
+      http.get(api["service_file"], {
+        params: {
+          filename: name
         }
       }).then(res => {
         const d = res.data;
         if (d.success === 1) {
-          this.file = null;
-          this.loadingStatus = false;
-          this.$Message.success('Success')
+          this.media.detail[this.media.selectFileId] = d;
+        } else {
+          this.media.detail[this.media.selectFileId] = {
+            type: 'error'
+          };
         }
       }).finally(() => {
+        this.media.detail[name].load = false;
       });
     },
-    handleUpload (file) {
-      this.file = file;
-      console.log(file)
-      return false;
-    }
   }
 }
 </script>
+
+<style lang="less">
+.media-content {
+  background-color: rgb(0 0 0 / 2%);
+}
+
+.media-file-detila {
+  height: 200px;
+  width: 100%;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

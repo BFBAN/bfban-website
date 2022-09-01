@@ -6,7 +6,7 @@
       <Upload
           :headers="headers"
           :data="extraData"
-          action="http://127.0.0.1:3000/api/service/upload"
+          action=""
           accept="image/*"
           multiple
           name="file"
@@ -82,6 +82,7 @@ import Embed from 'quill/blots/embed'
 import { container, ImageExtend, QuillWatch } from 'quill-image-extend-module'
 import quillEmoji from 'quill-emoji'
 import 'quill-emoji/dist/quill-emoji.css'
+import { upload } from '@/assets/js/tools'
 
 class QuillHashtag extends Embed {
   blotName = 'mp4';
@@ -181,17 +182,10 @@ export default {
       // this.extraData.key = (new Date()).getTime() + '-' + Math.round(Math.random() * 1000000) + '.' + file.name.split(".").pop()
       // this.headers["Content-Type"] = file.type
       // this.headers["Content-Length"] = file.size
-      return fetch('http://127.0.0.1:3000/api/service/upload', {
-        method: 'PUT',
-        headers: {
-          ["Content-Type"]: file.type,
-          ["Content-Length"]: file.size,
-          'x-access-token': this.$store.state.user.token
-        },
-        body: file,
-      }).then(res => {
-        console.log(1111)
+      upload(file).then(res => {
+        console.log(res)
       })
+      return false
       // return this.http.put(api["upload"], {
       //   headers: {
       //     ["Content-Type"]: file.type

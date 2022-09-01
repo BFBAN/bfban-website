@@ -160,7 +160,7 @@
           <Row :gutter="10">
             <Col flex="1">
               <Tag color="success">
-                {{ $t("account.admin") }}
+                {{ $t("basic.privilege.admin") }}
               </Tag>
             </Col>
             <Col>
@@ -182,7 +182,7 @@ export default {
   name: "message",
   data() {
     return {
-      tagsName: 'message1',
+      tagsName: 'message0',
       privileges: [],
       messageLoad: false,
       selectWindow: '',

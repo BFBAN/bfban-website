@@ -104,7 +104,7 @@
       </Row>
     </div>
 
-    <div class="box mobile-hide ivu-primary">
+    <div class="home-box mobile-hide ivu-primary">
       <div class="container">
         <Row>
           <Col :lg="{span: 10, push: 0}">
@@ -117,7 +117,6 @@
           </Col>
           <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
             <router-link :to="{name: 'player'}">
-              <!--              <i-switch v-model="activitySwitchType"/>-->
               <Button type="dashed">
                 {{ $t('home.activity.more') }}
               </Button>
@@ -125,16 +124,18 @@
           </Col>
         </Row>
       </div>
-      <div v-if="activitySwitchType" class="lean-box">
+      <div class="lean-box">
         <div class="wrapper" :style="'animation: rowup ' + activities_l.length * 2.8 + 's linear infinite;'">
           <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
             <Card class="icon" v-for="a_i in activity" :key="a_i.id">
               <div align="center" style="margin-top: -80px">
-                <Avatar size="80">{{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}</Avatar>
+                <Avatar size="80" :src="a_i.playerAvatarLink">
+                  {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
+                </Avatar>
                 <p>
                   <br>
                   <Tag color="success" v-if="a_i.type == 'judgement'">
-                    {{ $t("account.admin") }}
+                    {{ $t("basic.privilege.admin") }}
                   </Tag>
                   {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
                   <Divider type="vertical"/>
@@ -146,9 +147,9 @@
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
                   {{ a_i.byUserName }}
                 </router-link>
-                {{ $t('home.activity.activities.report', {msg: 'report'}) }}
+                {{ $t('home.activity.activities.report') }}
                 <Tag>
-                  {{ getGameLabel(a_i.game) }}
+                  {{ $t('basic.games.' + a_i.game) }}
                 </Tag>
                 <router-link
                     :to="{name: 'cheater', params: {game: `${a_i.game}`, ouid: `${a_i.playerOriginPersonaId}`}}">
@@ -160,29 +161,29 @@
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
                   {{ a_i.byUserName }}
                 </router-link>
-                {{ $t('home.activity.activities.join', {msg: 'join'}) }}
+                {{ $t('home.activity.activities.join') }}
               </span>
 
               <span v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
                   <Tag v-if="a_i.privilege === 'admin'" color="success">
-                    {{ $t('detail.info.administrator', {msg: 'administrator'}) }}
+                    {{ $t('basic.privilege.admin') }}
                   </Tag>
                   <b>{{ a_i.byUserName }}</b>
                 </router-link>
 
-                {{ $t('detail.info.judge', {msg: 'judge'}) }}
+                {{ $t('detail.info.judge') }}
 
                 <router-link :to="{name: 'cheater', params: {ouid: `${a_i.playerOriginPersonaId}`}}">
                   {{ a_i.toPlayerName }}
                 </router-link>
 
                 <Tag color="warning">
-                  {{ getCheaterStatusLabel(a_i.action) }}
+                  {{ $t(`basic.action.${a_i.action}.text`) }}
                 </Tag>
 
                 <span v-if="a_i.cheatMethods">
-                  ，{{ $t('detail.info.cheatMethod', {msg: 'cheatMethod'}) }}
+                  ，{{ $t('detail.info.cheatMethod') }}
                   <b>{{ convertCheatMethods(a_i.cheatMethods) }}</b>
                 </span>
               </span>
@@ -212,7 +213,6 @@ export default new BFBAN({
       activities: [],
       activities_l: [],
       statistics: {},
-      activitySwitchType: true,
     }
   },
   components: {Tell, Weekly},
@@ -288,10 +288,11 @@ export default new BFBAN({
   }
 }
 
-.box {
+.home-box {
   padding-top: 100px;
   overflow: hidden;
-  height: 800px;
+  min-height: 850px;
+  max-height: 1000px;
   margin: 50px -25% 0 -25%;
   text-align: center;
 }

@@ -4,6 +4,7 @@
  */
 
 import http from './http';
+import store from '@/store'
 
 export default class http_token extends http {
   THAT;
@@ -23,8 +24,8 @@ export default class http_token extends http {
    * @returns {{}}
    */
   setToken (data = {}) {
-    if (this.THAT.$store.state.user && this.THAT.$store.state.user.token) {
-      const token = this.THAT.$store.state.user.token;
+    if (store.state.user && store.state.user.token) {
+      const token = store.state.user.token;
       if (token != null || token != '') {
         const headers = data.headers || {}
         data = Object.assign(data, {
