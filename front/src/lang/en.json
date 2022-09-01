@@ -50,7 +50,8 @@
 		"tip": {
 			"notlang": "未翻译",
 			"notcontent": "无内容",
-			"notFound": "哎列，访问地址似乎走失"
+			"notFound": "哎列，访问地址似乎走失",
+			"noReports": "No reports yet"
 		},
 		"games": {
 			"all": "battlefield All",
@@ -78,16 +79,11 @@
 		"about": "About",
 		"cheaters": "Cheaters",
 		"report": "Report",
+		"profile": "个人设置",
 		"signin": "SignIn",
 		"signup": "SignUp",
 		"signout": "SignOut",
-		"daily": "BanDaily",
-		"dashboard": "Dashboard",
-		"searchBar": "Supports searching previous origin ID's...",
-		"searchInfo": "The retrieved ID's for: ",
-		"searchResult": "Search Results:",
-		"search": "Search",
-		"none": "nothing found.",
+		"userCenter": "我的展示页",
 		"signoutSuccess": "Signout successful"
 	},
 	"player": {
@@ -335,6 +331,9 @@
 				"mark": "marked",
 				"as": "as"
 			}
+		},
+		"bulletin": {
+			"title": "Bulletin"
 		}
 	},
 	"about": {
@@ -362,19 +361,15 @@
 	},
 	"account": {
 		"title": "User info",
-		"hint1": "We dont have a message system yet, but you can use this menu to see the status of your reports.",
 		"hint2": "Everyone can post responses on the report page.",
 		"hint3": "If you have more evidence for a hacker, please report the same id twice.",
 		"userInfo": "Account info",
 		"username": "Username",
 		"root": "系统",
 		"role": "Role",
-		"admin": "Administrator",
-		"normal": "Normal user",
-		"super": "Super admin",
-		"joinedAt": "Joined at:",
+		"joinedAt": "Joined at",
+		"lastOnlineTime": "最后在线时间",
 		"reports": "Personal reports",
-		"noReports": "No reports yet",
 		"reported": "Reported",
 		"status": "Status",
 		"recentlyUpdated": "last updated",

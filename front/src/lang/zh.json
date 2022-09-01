@@ -50,7 +50,8 @@
     "tip": {
       "notlang": "未翻译",
       "notcontent": "无内容",
-      "notFound": "哎列，访问地址似乎走失"
+      "notFound": "哎列，访问地址似乎走失",
+      "noReports": "还没有任何举报"
     },
     "games": {
       "all": "所有",
@@ -82,14 +83,7 @@
     "signin": "登录",
     "signup": "注册",
     "signout": "注销",
-    "daily": "ban日报",
-    "dashboard": "管理后台",
     "userCenter": "我的展示页",
-    "searchBar": "支持搜索历史ID啦...",
-    "searchInfo": "检索的ID为：",
-    "searchResult": "检索结果：",
-    "search": "检索",
-    "none": "无",
     "signoutSuccess": "注销成功"
   },
   "player": {
@@ -339,6 +333,9 @@
         "mark": "将",
         "as": "处理为"
       }
+    },
+    "bulletin": {
+      "title": "公告"
     }
   },
   "about": {
@@ -366,20 +363,15 @@
   },
   "account": {
     "title": "用户展示页",
-    "hint1": "我们还没有 消息系统，但可以在下方举报的状态 来得知进度",
     "hint2": "所有举报都可以 回复参与讨论",
     "hint3": "若要补充证据，可以重复举报同一ID",
     "userInfo": "个人信息",
     "username": "用户名",
     "root": "系统",
     "role": "身份",
-    "admin": "社区管理",
-    "normal": "普通",
-    "super": "超级管理员",
     "joinedAt": "加入时间",
     "lastOnlineTime": "最后在线时间",
     "reports": "个人举报",
-    "noReports": "还没有任何举报",
     "reported": "举报了",
     "status": "状态",
     "recentlyUpdated": "最近更新",
