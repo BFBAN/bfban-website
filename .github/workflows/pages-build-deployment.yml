@@ -29,9 +29,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
+    - run: npm install
       working-directory: ./front
-    - run: CI=false npm run build --if-present
+    - run: npm run build --if-present
       working-directory: ./front
 
     - name: Commit changes
