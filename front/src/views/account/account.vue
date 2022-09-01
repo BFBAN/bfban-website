@@ -23,7 +23,8 @@
           </FormItem>
         </Col>
         <Col span="12">
-          <FormItem :label="$t('profile.account.form.privilege')">
+          <Card dis-hover	>
+            <FormItem :label="$t('profile.account.form.privilege')">
             <span v-for="(i, index) in privileges" :key="index">
               <span v-for="(p, pi) in formItem.privilege" :key="pi">
                 <Tag type="border" :color="i.class" v-if="p == i.value">
@@ -31,59 +32,74 @@
                 </Tag>
               </span>
             </span>
-          </FormItem>
+            </FormItem>
+          </Card>
+        </Col>
+        <Col span="6">
+          <Card dis-hover	>
+            <FormItem :label="$t('account.joinedAt')">
+              <Tag>
+                <Time :time="formItem.joinTime || new Date().getTime()"/>
+              </Tag>
+            </FormItem>
+          </Card>
+        </Col>
+        <Col span="6">
+          <Card dis-hover	>
+            <FormItem :label="$t('account.lastOnlineTime')">
+              <Tag>
+                <Time :time="formItem.lastOnlineTime || new Date().getTime()"/>
+              </Tag>
+            </FormItem>
+          </Card>
         </Col>
       </Row>
+
+      <Divider dashed></Divider>
+
       <FormItem :label="$t('profile.account.form.introduction')">
         <Edit :content="formItem.introduction" @change="handleIntroductionChange"/>
       </FormItem>
-      <Row>
-        <Col flex="1">
-          <FormItem :label="$t('account.joinedAt')">
-            <Tag>
-              <Time :time="formItem.joinTime || new Date().getTime()"/>
-            </Tag>
-          </FormItem>
-        </Col>
-        <Col flex="1">
-          <FormItem :label="$t('account.lastOnlineTime')">
-            <Tag>
-              <Time :time="formItem.lastOnlineTime || new Date().getTime()"/>
-            </Tag>
-          </FormItem>
-        </Col>
-      </Row>
-      <Divider></Divider>
-      <Alert show-icon type="warning" v-if="formItem.origin.originName == null || formItem.origin.originUserId == null">
-        Orign未绑定
-        <div slot="default">
-          您未绑定账户，无法发布任何内容
-          <router-link to="/bindOrigin">
-            <Button>绑定</Button>
-          </router-link>
-        </div>
-      </Alert>
-      <Row :gutter="30">
-        <Col flex="1">
-          <FormItem :label="$t('signup.form.originEmail')">
-            <Input v-model="formItem.origin.originName"
-                   type="text"
-                   disabled
-                   :autosize="{minRows: 2,maxRows: 5}"
-                   placeholder=""></Input>
-          </FormItem>
-        </Col>
-        <Col flex="1">
-          <FormItem :label="$t('signup.form.originName')">
-            <Input v-model="formItem.origin.originUserId"
-                   type="text"
-                   disabled
-                   :autosize="{minRows: 2,maxRows: 5}"
-                   placeholder=""></Input>
-          </FormItem>
-        </Col>
-      </Row>
-      <Divider></Divider>
+
+      <Divider dashed></Divider>
+
+      <template v-if="formItem.origin.originName == null || formItem.origin.originUserId == null">
+        <Alert show-icon type="error">
+          未绑定 {{ $t('signup.form.originEmail') }}
+          <Icon type="ios-bulb-outline" slot="icon"></Icon>
+          <template slot="desc">
+            <p>BFBAN需要您绑定origin账户，以便账户申诉、找回等功能；未绑定origin前，您的账户会被锁定，无法提交任何内容</p><br>
+            <router-link to="/bindOrigin">
+              <Button>好的，前往绑定账户</Button>
+            </router-link>
+          </template>
+        </Alert>
+      </template>
+      <template v-else>
+        <Row :gutter="30">
+          <Col flex="1">
+            <FormItem :label="$t('signup.form.originEmail')">
+              <Input v-model="formItem.origin.originName"
+                     type="text"
+                     disabled
+                     :autosize="{minRows: 2,maxRows: 5}"
+                     placeholder=""></Input>
+            </FormItem>
+          </Col>
+          <Col flex="1">
+            <FormItem :label="$t('signup.form.originName')">
+              <Input v-model="formItem.origin.originUserId"
+                     type="text"
+                     disabled
+                     :autosize="{minRows: 2,maxRows: 5}"
+                     placeholder=""></Input>
+            </FormItem>
+          </Col>
+        </Row>
+      </template>
+
+      <Divider dashed></Divider>
+
       <Row :gutter="30">
         <Col span="12">
           <FormItem :label="$t('profile.account.form.language')">
@@ -108,13 +124,19 @@
         </Col>
       </Row>
 
-      <Divider></Divider>
-
-      <FormItem>
-        <Button type="primary" :loading="formLoad" @click="onSave">
-          {{ $t("basic.button.save") }}
-        </Button>
-      </FormItem>
+      <Affix :offset-bottom="5">
+        <Card :padding="10">
+          <Row>
+            <Col flex="1">
+            </Col>
+            <Col>
+              <Button type="primary" :loading="formLoad" @click="onSave">
+                {{ $t("basic.button.save") }}
+              </Button>
+            </Col>
+          </Row>
+        </Card>
+      </Affix>
     </Form>
 
     <!-- 修改名称 S -->

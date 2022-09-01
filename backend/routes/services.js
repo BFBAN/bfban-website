@@ -91,7 +91,11 @@ async (req, res, next)=> {
         /** @type {import("../typedef.js").StorageItem[]} */
         const items = await db.select('*').from('storage_items').where({byUserId: req.user.id})
         .orderBy('createTime', order).offset(skip).limit(limit)
-        .then(r=>r.map(i=>{ delete i.fileId; delete i.byUserId; return i; }));
+        .then(r=>
+            r.map(i=>{
+                delete i.fileId; delete i.byUserId; return i;
+            })
+        );
 
         return res.status(200).json({success: 1, code: 'myFiles.ok', data: items});
     } catch(err) {
