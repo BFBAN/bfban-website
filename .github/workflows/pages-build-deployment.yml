@@ -40,8 +40,10 @@ jobs:
     - name: Commit changes
       uses: JamesIves/github-pages-deploy-action@v4.3.3
       with:
-        branch: gh-pages # The branch the action should deploy to.
-        folder: 'server/public/'
+        # 分支
+        # The branch the action should deploy to.
+        branch: gh-pages
+        folder: '/'
         target-folder: '/'
-        commit-message: 'A custom message for the commit'
+        commit-message: 'build front'
         ssh-key: ${{ secrets.GITHUB_TOKEN }}
