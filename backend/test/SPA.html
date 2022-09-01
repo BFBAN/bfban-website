@@ -509,7 +509,7 @@
                         $('#playerinfo-userid').val(res.data.originUserId);
                         $('#playerinfo-personaId').val(res.data.originPersonaId);
                         $('#profile-container').text(
-                            `Name: ${res.data.originName}   Status: ${['unhandled','CONFIRMED','suspect','innocent','trash'][res.data.status]}\n`+
+                            `Name: ${res.data.originName}   Status: ${['unhandled','CONFIRMED','suspect','innocent','trash','discussing','pending'][res.data.status]}\n`+
                             `InGames: ${res.data.games} CheatMethods: ${res.data.cheatMethods}\n`+
                             `Avatar: ${res.data.avatarLink} Views: ${res.data.viewNum} Comments: ${res.data.commentsNum}\n`+
                             `CreateWhen: ${new Date(res.data.createTime).toLocaleString()} UpdateWhen: ${new Date(res.data.updateTime).toLocaleString()}`
