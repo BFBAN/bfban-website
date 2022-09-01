@@ -28,7 +28,7 @@
                      enter-button
                      size="large"
                      class="search-input search-input-show"
-                     :placeholder="$t('header.searchBar')"
+                     :placeholder="$t('search.placeholder')"
                      v-model="searchVal"
                      @on-clear="searchVal = '';cheaters = []"
                      @on-click="handleSearch"

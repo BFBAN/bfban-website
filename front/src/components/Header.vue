@@ -108,7 +108,7 @@
 
         <Divider type="vertical"/>
 
-        <Tooltip :content="$t('home.howToUse.tools.main')" placement="bottom-end">
+        <Tooltip :content="$t('apps.title')" placement="bottom-end">
           <router-link :to="{name: 'apps'}">
             <Icon type="md-apps" size="30"/>
           </router-link>

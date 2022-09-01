@@ -33,8 +33,8 @@
                 </Tag>
 
                 <!-- 被举报的游戏 S -->
-                <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
-                  <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
+                <router-link :to="{name: 'cheaters', params: { game: cheater.game }}" v-if="cheater.games">
+                  <Tag color="gold" :alt="$t('detail.info.reportedGames')"
                        v-for="(game,gameindex) in cheater.games" :key="gameindex">
                     {{ $t(`basic.games.${game}`, {game: game}) }}
                   </Tag>
@@ -220,7 +220,7 @@
               <ButtonGroup type="button">
                 <Select v-model="timeline.seeType" size="small">
                   <Option v-for="(item, index) in timeline.seeTypeList" :value="item.value" :key="index">
-                    {{item.label}}
+                    {{ $t('detail.timeline.' + item.label) }}
                   </Option>
                 </Select>
               </ButtonGroup>
@@ -908,17 +908,17 @@ export default new BFBAN({
         seeType: 1,
         seeTypeList: [
           {
-            label: '所有',
+            label: 'all',
             value: 1,
             item: ['report', 'reply', 'ban_appeal', 'judgement', 'verify', 'banAppeal'],
           },
           {
-            label: '仅查看判决',
+            label: 'verify',
             value: 2,
             item: ['judgement', 'verify'],
           },
           {
-            label: '仅查看申诉',
+            label: 'banAppeal',
             value: 3,
             item: ['banAppeal'],
           }

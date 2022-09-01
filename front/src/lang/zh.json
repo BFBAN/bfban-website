@@ -57,7 +57,7 @@
       "all": "所有",
       "bf1": "battlefield 1",
       "bfv": "battlefield 5",
-      "bf2042": "battlefield 2042"
+      "bf6": "battlefield 2042"
     },
     "button": {
       "report": "举报",
@@ -157,6 +157,11 @@
   },
   "detail": {
     "title": "详情",
+    "timeline": {
+      "all": "所有",
+      "verify": "仅查看判决",
+      "banAppeal": "仅查看申诉"
+    },
     "appeal": {
       "describe": "该举报信息存在问题,我能自证或他人协助证明清白.",
       "info": {
@@ -382,6 +387,11 @@
         "selfTalk": "无法跟自己说话！",
         "taOffChat": "对方关闭了聊天选项"
       }
+    },
+    "bindOrigin": {
+      "title": "未绑定账户",
+      "content": "BFBAN需要您绑定origin账户，以便账户申诉、找回等功能；未绑定origin前，您的账户会被锁定，无法提交任何内容",
+      "travel": "好的，前往绑定账户"
     }
   },
   "bindOrigin": {
@@ -500,6 +510,8 @@
   },
   "apps": {
     "title": "工具",
+    "describe": "第三方集成BFBAN数据库工具",
+    "submit_tool_app": "提交工具",
     "buttons": {
       "hot": "热门",
       "website": "网站",
@@ -524,6 +536,7 @@
   "search": {
     "title": "检索",
     "describe": "从BFBAN数据库检索ID",
+    "placeholder": "搜索点什么呢,啊,就是您了！",
     "collectionHint": "收藏此页面 (Ctrl+D or Command+D)",
     "scope": {
       "history": "过去的名字",

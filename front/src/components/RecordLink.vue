@@ -150,7 +150,7 @@ export default {
         children = this.push(children, '*');
 
         this.detailLink.data.push({
-          name: this.$i18n.t(`list.filters.game.${i}`),
+          name: this.$i18n.t(`basic.games.${i}`),
           link: '',
           children,
         })

@@ -5,7 +5,7 @@
       <Col :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem>{{ $t("home.howToUse.tools.main") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("apps.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
     </Row>
@@ -13,12 +13,12 @@
 
     <Row>
       <Col flex="auto" :xs="{span: 18, push: 1, pull: 1}" :lg="{push: 0, pull: 0}">
-        <h1>{{ $t("home.howToUse.tools.main") }}</h1>
-        <p>{{ $t("home.howToUse.tools.describe") }}</p>
+        <h1>{{ $t("apps.title") }}</h1>
+        <p>{{ $t("apps.describe") }}</p>
       </Col>
       <Col type="flex" align="right" class="mobile-hide">
-        <a href="https://github.com/BFBAN/bfban.github.io/issues">
-          <Button>{{ $t("home.howToUse.tools.submit_tool_app") }}</Button>
+        <a href="https://kook.top/Jlo8x6" target="_blank">
+          <Button>{{ $t("apps.submit_tool_app") }}</Button>
         </a>
       </Col>
     </Row>
