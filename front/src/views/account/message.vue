@@ -182,7 +182,7 @@ export default {
   name: "message",
   data() {
     return {
-      tagsName: 'message1',
+      tagsName: 'message0',
       privileges: [],
       messageLoad: false,
       selectWindow: '',
