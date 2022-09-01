@@ -66,12 +66,12 @@
                 <Col flex="auto">
                   <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
                           :disabled="stepsIndex === 0 || this.$route.name == bindOriginName"
-                          @click.prevent.stop="stepsIndex--" size="large">{{ $t('signup.prev') }}
+                          @click.prevent.stop="stepsIndex--" size="large">{{ $t('basic.button.prev') }}
                   </Button>
                   <Divider type="vertical"/>
                   <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2"
                           @click.prevent.stop="stepsIndex++" size="large"
-                          type="primary">{{ $t('signup.next') }}
+                          type="primary">{{ $t('basic.button.next') }}
                   </Button>
                 </Col>
                 <Col flex="auto" align="right" type="flex">
@@ -79,7 +79,7 @@
                           @click.prevent.stop="handleSignup('formValidate')"
                           :disabled="!signup.captcha"
                           :loading="spinShow"
-                          size="large" type="primary">{{ $t('signup.form.submit') }}
+                          size="large" type="primary">{{ $t('basic.button.submit') }}
                   </Button>
                 </Col>
               </Row>
