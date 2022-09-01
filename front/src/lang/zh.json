@@ -25,21 +25,21 @@
         "text": "无效举报",
         "describe": "举报材料不全或举报错误ID等行为"
       },
-      "more":{
+      "more": {
         "text": "需要更多证据",
         "describe": "需要补充更多有力的证据"
       }
     },
     "status": {
       "all": "全部",
-      "0":"未处理",
-      "1":"石锤",
-      "2":"嫌疑再观察",
-      "3":"无作弊",
-      "4":"无效举报",
-      "5":"讨论中",
-      "6":"需更多管理投票",
-      "7":"超级石锤"
+      "0": "未处理",
+      "1": "石锤",
+      "2": "嫌疑再观察",
+      "3": "无作弊",
+      "4": "无效举报",
+      "5": "讨论中",
+      "6": "需更多管理投票",
+      "7": "超级石锤"
     },
     "privilege": {
       "root": "系统",
@@ -55,9 +55,9 @@
     },
     "games": {
       "all": "所有",
-      "bf1": "battlefield 1",
-      "bfv": "battlefield 5",
-      "bf6": "battlefield 2042"
+      "bf1": "战地风云 1",
+      "bfv": "战地风云 5",
+      "bf6": "战地风云 2042"
     },
     "button": {
       "report": "举报",
@@ -139,9 +139,15 @@
         "specification2": "你明白以上说明了吗?",
         "residueDegree": "目前剩余修改名称{changeNameLeft}次数",
         "steps": {
-          "0": { "title": "提示" },
-          "1": { "title": "填写" },
-          "2": { "title": "完成" }
+          "0": {
+            "title": "提示"
+          },
+          "1": {
+            "title": "填写"
+          },
+          "2": {
+            "title": "完成"
+          }
         }
       }
     },
@@ -276,9 +282,6 @@
       "notFoundHintAnswer2": "这可能是EA数据库更新不及时，或是EA官方的bug，我们没有办法替他们解决，如果您想出一份力，可以至       https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en       官方反馈论坛反馈bug，此情况可以描述为 I can't search my friend by name on origin",
       "reportHacker": "举报作弊",
       "reportNews": "已经支持 战地V 举报啦！",
-      "bf1": "战地1",
-      "bfv": "战地5",
-      "bf6": "战地6",
       "idNotion1": "一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID",
       "idNotion2": "游戏ID是不区分大小写的，但请特别注意区分 i I 1 l L o O 0，正确填写举报ID",
       "uploadManual1": "不想注册国内账号、嫌麻烦，上传视频可以前往",
@@ -394,7 +397,6 @@
     "hint3": "若要补充证据，可以重复举报同一ID",
     "userInfo": "个人信息",
     "username": "用户名",
-    "root": "系统",
     "role": "身份",
     "joinedAt": "加入时间",
     "lastOnlineTime": "最后在线时间",
@@ -513,7 +515,6 @@
   "list": {
     "title": "外挂公示",
     "filters": {
-      "refresh": "刷新",
       "sortBy": {
         "createTime": "举报时间倒序",
         "updateTime": "更新时间倒序",

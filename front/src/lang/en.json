@@ -25,7 +25,7 @@
 				"text": "Invalid report",
 				"describe": "Invild evidence or wrong player ID"
 			},
-			"more": {
+			"more":{
 				"text": "Need more evidence",
 				"describe": "Need stronger evidence"
 			}
@@ -54,7 +54,7 @@
 			"noReports": "No reports yet"
 		},
 		"games": {
-			"all": "battlefield All",
+			"all": "所有",
 			"bf1": "battlefield 1",
 			"bfv": "battlefield 5",
 			"bf6": "battlefield 2042"
@@ -118,7 +118,13 @@
 				"itemName": "Recommanded",
 				"messageMethod": "type",
 				"messageID": "Website ID",
-				"content": "content"
+				"content": "content",
+				"send": {
+					"itemName": "Send message",
+					"form": {
+
+					}
+				}
 			}
 		},
 		"account": {
@@ -139,15 +145,9 @@
 				"specification2": "Do you understand the instructions above?",
 				"residueDegree": "You still have {changeNameLeft}chance to change name",
 				"steps": {
-					"0": {
-						"title": "hint"
-					},
-					"1": {
-						"title": "fill in"
-					},
-					"2": {
-						"title": "complete"
-					}
+					"0": { "title": "hint" },
+					"1": { "title": "fill in" },
+					"2": { "title": "complete" }
 				}
 			}
 		},
@@ -163,8 +163,13 @@
 	},
 	"detail": {
 		"title": "Detail",
+		"timeline": {
+			"all": "所有",
+			"verify": "仅查看判决",
+			"banAppeal": "仅查看申诉"
+		},
 		"appeal": {
-			"describe": "该举报信息存在问题,我能自证或他人协助证明清白.",
+			"describe": "This report has problem. I can prove myself or help other to prove innocence.",
 			"modal": {
 				"modalTitle": "规则",
 				"describe": "针对误BAN，本人或第三方可以协助申诉，在满足下方所有基本要求后，您的申诉内容会提交到BFBAN所有管理员，管理员确认通过才可解除",
@@ -277,9 +282,6 @@
 			"notFoundHintAnswer2": "That is probably because EA didnot update their database in time，or their system bugged, and we are unable to help them fix that bug. If you do wish to help, you can visit       https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en       , the official froum to send bug report，you can describe this situation as: I can't search my friend by name on origin.",
 			"reportHacker": "Report a hacker",
 			"reportNews": "We offer the function to report BFV hackers!",
-			"bf1": "Battlefield 1",
-			"bfv": "Battlefield 5",
-			"bf6": "Battlefield 6",
 			"idNotion1": "You can only report one ID at a time， do not include the platoon name and do not fill in your own ID",
 			"idNotion2": "Origin ID has no match for lower case and upper case，but you must identify i I 1 l L o O 0 in order to offer correct ID",
 			"uploadManual1": "if you do not want to register video-site member such as Bilibili and Youtube, you can go to",
@@ -289,8 +291,6 @@
 			"uploadPic2": "picture larger than 2M will fail to upload ,you can go to ",
 			"uploadPic3": "and then choose Image URL Tag，paste the image link below",
 			"uploadPic4": "please list your evidence here，Text editor offer image upload service（Size limits:2M）",
-			"getCaptcha": "Get Captcha",
-			"report": "Report",
 			"reportOne": "Report one",
 			"reportAll": "Report all",
 			"fromDatabaseOneId": "Select from BFBAN's database",
@@ -308,7 +308,10 @@
 		"error": {
 			"mediaEvidence": "Please upload a picture or fill in the video link",
 			"originId": "Origin ID does not exist, please check spelling",
-			"success": "Submitted successfully"
+			"success": "Submitted successfully",
+			"permissionDenied": "",
+			"voideBadFormat": "Invild format",
+			"voideEmpty": "Invild video link"
 		}
 	},
 	"footer": {
@@ -332,320 +335,307 @@
 				"title": "Sponsor",
 				"join": "Join sponsor"
 			}
+		}
+	},
+	"home": {
+		"title": "Home",
+		"cover": {
+			"h1": "BFBAN",
+			"h2": [
+				"Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world ",
+				"Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheater "
+			],
+			"h3": "establish a global database for cheater",
+			"h4": "Become one of us - Improve our community",
+			"subButton": "Find out which communities have joined",
+			"dataReceived": "Recieved",
+			"confirmData": "Confirmed cheater",
+			"endTime": "As for 2018/11/4"
 		},
-		"home": {
-			"title": "Home",
-			"cover": {
-				"h1": "BFBAN",
-				"h2": [
-					"Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world ",
-					"Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheater "
-				],
-				"h3": "establish a global database for cheater",
-				"h4": "Become one of us - Improve our community",
-				"subButton": "Find out which communities have joined",
-				"dataReceived": "Recieved",
-				"confirmData": "Confirmed cheater",
-				"endTime": "As for 2018/11/4"
-			},
-			"activity": {
-				"title": "Activity",
-				"more": "search for more",
-				"description": "bfban.com was made on the 4th of november 2018 and received <b>{report}</b> reports, and has a total of <b>{cheater}</b> banned hackers. Thanks for the hard work everyone!",
-				"activities": {
-					"report": "reported",
-					"join": "Welcome to BFBAN",
-					"admin": "Administrator",
-					"mark": "marked",
-					"as": "as"
-				}
-			},
-			"bulletin": {
-				"title": "Bulletin"
+		"activity": {
+			"title": "Activity",
+			"more": "search for more",
+			"description": "bfban.com was made on the 4th of november 2018 and received <b>{report}</b> reports, and has a total of <b>{cheater}</b> banned hackers. Thanks for the hard work everyone!",
+			"activities": {
+				"report": "reported",
+				"join": "Welcome to BFBAN",
+				"admin": "Administrator",
+				"mark": "marked",
+				"as": "as"
 			}
 		},
-		"about": {
-			"title": "About",
-			"description": "<h2>BFBAN</h2>\n    <p>\n    created at 2018.1.29; It is an organisation created to fight <b>against hackers</b>\n    </p>\n\n    <p>\n      Staff members in bfban include:\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>Server owners</li>\n      <li>Clan's leaders</li>\n      <li>Bf1 streamers</li>\n    </ul>",
-			"website": "\n    <h2>bfban.com website</h2>\n    <p>\n      <a href=\"https://bfban.com\">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> and launched on November 4, 2018\n    </p>\n    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>",
-			"privacy": "\n<h2>Privacy policy</h2>\nIt is open-sourced. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use."
-		},
-		"link": {
-			"title": "Partners' link",
-			"links": "Partners' link",
-			"sponsor": "Partners",
-			"linkWebDeveloperChild": "Significant contributoir and developer",
-			"join": "Join partner"
-		},
-		"reset": {
-			"title": "Rest paasword",
-			"form": {
-				"oldPassword": "Old password",
-				"newPassword": "New Password",
-				"qq": "QQ",
-				"password": "New password",
-				"passwordRepeat": "Comfirm password",
-				"submit": "Submit"
-			}
-		},
-		"account": {
-			"title": "User info",
-			"hint1": "We dont have a message system yet, but you can use this menu to see the status of your reports.",
-			"hint2": "Everyone can post responses on the report page.",
-			"hint3": "If you have more evidence for a hacker, please report the same id twice.",
-			"userInfo": "Account info",
-			"username": "Username:",
-			"root": "System",
-			"role": "Role:",
-			"admin": "Admin",
-			"normal": "Normal user",
-			"super": "Super admin",
-			"joinedAt": "Join time",
-			"lastOnlineTime": "Last online time",
-			"reports": "Personal reports",
-			"noReports": "No report yet",
-			"reported": "Reported",
-			"status": "Status",
-			"recentlyUpdated": "last updated",
-			"message": {
-				"chat": "Chat",
-				"hint": {
-					"denied": "Your hav been blocked.",
-					"selfTalk": "You can't chat with yourself！",
-					"taOffChat": "This User has turned off the chat option"
-				}
+		"bulletin": {
+			"title": "Bulletin"
+		}
+	},
+	"about": {
+		"title": "About",
+		"description": "<h2>BFBAN</h2>\n    <p>\n    created at 2018.1.29; It is an organisation created to fight <b>against hackers</b>\n    </p>\n\n    <p>\n      Staff members in bfban include:\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>Server owners</li>\n      <li>Clan's leaders</li>\n      <li>Bf1 streamers</li>\n    </ul>",
+		"website": "\n    <h2>bfban.com website</h2>\n    <p>\n      <a href=\"https://bfban.com\">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> and launched on November 4, 2018\n    </p>\n    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>",
+		"privacy": "\n<h2>Privacy policy</h2>\nIt is open-sourced. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use."
+	},
+	"link": {
+		"title": "Partners' link",
+		"links": "Partners' link",
+		"sponsor": "Partners",
+		"linkWebDeveloperChild": "Significant contributoir and developer",
+		"join": "Join partner"
+	},
+	"reset": {
+		"title": "Rest paasword",
+		"form": {
+			"oldPassword": "Old password",
+			"newPassword": "New Password",
+			"qq": "QQ",
+			"password": "New password",
+			"passwordRepeat": "Comfirm password"
+		}
+	},
+	"account": {
+		"title": "User info",
+		"hint2": "Everyone can post responses on the report page.",
+		"hint3": "If you have more evidence for a hacker, please report the same id twice.",
+		"userInfo": "Account info",
+		"username": "Username:",
+		"role": "Role",
+		"joinedAt": "Join time",
+		"lastOnlineTime": "Last online time",
+		"reports": "Personal reports",
+		"reported": "Reported",
+		"status": "Status",
+		"recentlyUpdated": "last updated",
+		"message": {
+			"chat": "Chat",
+			"hint": {
+				"denied": "Your hav been blocked.",
+				"selfTalk": "You can't chat with yourself！",
+				"taOffChat": "This User has turned off the chat option"
 			}
 		},
 		"bindOrigin": {
-			"title": "blind origin account",
+			"title": "未绑定账户",
 			"content": "BFBAN需要您绑定origin账户，以便账户申诉、找回等功能；未绑定origin前，您的账户会被锁定，无法提交任何内容",
 			"travel": "好的，前往绑定账户"
+		}
+	},
+	"bindOrigin": {
+		"title": "blind origin account"
+	},
+	"signin": {
+		"title": "Sign In",
+		"form": {
+			"username": "Username",
+			"password": "Password",
+			"submitHint": "Do not have account? Go Sign up",
+			"forgetPasswordHint": "Forgot your password？"
 		},
-		"signin": {
-			"title": "Sign In",
-			"form": {
-				"username": "Username",
-				"password": "Password",
-				"submitHint": "Do not have account? Go Sign up",
-				"forgetPasswordHint": "Forgot your password？"
-			},
-			"fillEverything": "Please fill in everything",
-			"failed": "Login failed",
-			"success": "Login sucessful",
-			"loginFirst": "Please login first"
+		"fillEverything": "Please fill in everything",
+		"failed": "Login failed",
+		"success": "Login sucessful",
+		"loginFirst": "Please login first"
+	},
+	"signup": {
+		"title": "Register",
+		"registerVerification": {
+			"title": "Verify account",
+			"validation": "Verifying",
+			"successful": "Verify successful!，Account is now unlocked, you are free to login",
+			"failure": "Wrong verify link，pleas check your Captcha",
+			"error": "error"
 		},
-		"signup": {
-			"title": "Register",
-			"registerVerification": {
-				"title": "Verify account",
-				"validation": "Verifying",
-				"successful": "Verify successful!，Account is now unlocked, you are free to login",
-				"failure": "Wrong verify link，pleas check your Captcha",
-				"error": "error"
+		"steps": {
+			"0": {
+				"title": "Basic infomation",
+				"supplement": "Basic account infomation"
 			},
-			"steps": {
-				"0": {
-					"title": "Basic infomation",
-					"supplement": "Basic account infomation"
-				},
-				"1": {
-					"title": "Blinding",
-					"supplement": "Blind your origin account"
-				},
-				"2": {
-					"title": "Captcha",
-					"supplement": "Verify you are not a robot"
-				},
-				"3": {
-					"title": "comfirm",
-					"supplement": "Email security code"
-				},
-				"4": {
-					"title": "Finish",
-					"supplement": "Registration result"
-				}
+			"1": {
+				"title": "Blinding",
+				"supplement": "Blind your origin account"
 			},
-			"form": {
-				"username": "Username",
-				"password": "Password",
-				"originId": "Origin ID",
-				"originEmail": "🍊 Origin email",
-				"originName": "🍊 Origin username",
-				"qq": "QQ",
-				"submit": "Submit",
-				"submitHint": "Already have a account? Go Sign In",
-				"forgetPasswordHint": "Forgot your password？"
+			"2": {
+				"title": "Captcha",
+				"supplement": "Verify you are not a robot"
 			},
-			"placeholder": {
-				"originEmail": "Enter your Origin email",
-				"originName": "Enter your origin ID",
-				"username": "More than 4 characters",
-				"password": "More than 6 characters",
-				"originId": "optional",
-				"qq": "optional"
+			"3": {
+				"title": "comfirm",
+				"supplement": "Email security code"
 			},
-			"fillIn": "Please fill the form",
-			"failed": "Registration failed"
-		},
-		"forgetPassword": {
-			"title": "Reset password",
-			"steps": {
-				"0": {
-					"title": "Basic information",
-					"supplement": "Account name"
-				},
-				"1": {
-					"title": "Captcha",
-					"supplement": "Verity you are not a robot"
-				},
-				"2": {
-					"title": "Email verification",
-					"supplement": "Check verification link in your email"
-				},
-				"3": {
-					"title": "Reset password",
-					"supplement": "Reset your password"
-				},
-				"4": {
-					"title": "Submit",
-					"supplement": "Reset sucessful"
-				}
-			},
-			"resetSuccess": "Reset sucessful \uD83D\uDC90"
-		},
-		"list": {
-			"title": "Cheater list",
-			"filters": {
-				"game": {
-					"all": "All",
-					"bf1": "BF1",
-					"bf6": "BF2024",
-					"bfv": "BFV"
-				},
-				"status": {
-					"all": "All"
-				},
-				"refresh": "Refresh",
-				"sortBy": {
-					"createTime": "Report time in reverse order",
-					"updateTime": "Update time in reverse order",
-					"viewNum": "View time in reverse order",
-					"commentNum": "Reply time in reverse order"
-				}
-			},
-			"reportTime": "Report time range",
-			"updateTime": "Update time range",
-			"colums": {
-				"screenTitle": "Fillter",
-				"playerId": "ID",
-				"reportTime": "Report time",
-				"updateTime": "Update time"
+			"4": {
+				"title": "Finish",
+				"supplement": "Registration result"
 			}
 		},
-		"apps": {
-			"title": "Tools",
-			"buttons": {
-				"hot": "Popular",
-				"website": "Website",
-				"get": "Aquire"
+		"form": {
+			"username": "Username",
+			"password": "Password",
+			"originId": "Origin ID",
+			"originEmail": "🍊 Origin email",
+			"originName": "🍊 Origin username",
+			"qq": "QQ",
+			"submitHint": "Already have a account? Go Sign In",
+			"forgetPasswordHint": "Forgot your password？"
+		},
+		"placeholder": {
+			"originEmail": "Enter your Origin email",
+			"originName": "Enter your origin ID",
+			"username": "More than 4 characters",
+			"password": "More than 6 characters",
+			"originId": "optional",
+			"qq": "optional"
+		},
+		"fillIn": "Please fill the form",
+		"failed": "Registration failed"
+	},
+	"forgetPassword": {
+		"title": "Reset password",
+		"steps": {
+			"0": {
+				"title": "Basic information",
+				"supplement": "Account name"
 			},
-			"screen": {
-				"all": "All",
-				"official": "Official",
-				"bot": "Bot",
-				"app": "App",
-				"pc_app": "Desktop app",
-				"web": "Website",
-				"api": "API",
-				"book": "Guide",
-				"admin": "Community management",
-				"qq": "Tecent QQ",
-				"bf1": "Battlefield 1",
-				"bfv": "Battlefield V",
-				"bf6": "Battlefield 2042"
+			"1": {
+				"title": "Captcha",
+				"supplement": "Verity you are not a robot"
+			},
+			"2": {
+				"title": "Email verification",
+				"supplement": "Check verification link in your email"
+			},
+			"3": {
+				"title": "Reset password",
+				"supplement": "Reset your password"
+			},
+			"4": {
+				"title": "Submit",
+				"supplement": "Reset sucessful"
 			}
 		},
-		"search": {
-			"title": "Search",
-			"describe": "Search player ID from BFBAN database",
-			"placeholder": "搜索点什么呢,啊,就是您了！",
-			"collectionHint": "Mark this page (Ctrl+D or Command+D)",
-			"scope": {
-				"history": "Historical ID",
-				"current": "Present ID"
+		"resetSuccess": "Reset sucessful \uD83D\uDC90"
+	},
+	"list": {
+		"title": "Cheater list",
+		"filters": {
+			"sortBy": {
+				"createTime": "Report time in reverse order",
+				"updateTime": "Update time in reverse order",
+				"viewNum": "View time in reverse order",
+				"commentNum": "Reply time in reverse order"
 			}
 		},
-		"cheatMethods": {
-			"invisable": {
-				"title": "Steath",
-				"describe": "Player character is invisable. "
-			},
-			"wallhack": {
-				"title": "Wallhack",
-				"describe": "View enemy position though wall, structure or terrain"
-			},
-			"aimbot": {
-				"title": "Aimbot",
-				"describe": "Automatic aim, shown mechanic behaviour"
-			},
-			"oneShotKill": {
-				"title": "Instant kill",
-				"describe": "Quickly aim to body part that deal high damge to achive instant kill"
-			},
-			"gadgetModify": {
-				"title": "Gadget Modify",
-				"describe": "Gadget appears in scenario that is impossible"
-			},
-			"damageChange": {
-				"title": "Damage modify",
-				"describe": "Moditfy weapon's damage profile"
-			},
-			"magicBullet": {
-				"title": "Magical bullet",
-				"describe": "Bullet can be shot through wall, structure or terrain."
-			},
-			"attackServer": {
-				"title": "Attack server",
-				"describe": "Attack battlefield server using method such as DDOS attack"
-			},
-			"teleport": {
-				"title": "Teleportation",
-				"describe": "Player can teleport"
-			}
+		"reportTime": "Report time range",
+		"updateTime": "Update time range",
+		"colums": {
+			"screenTitle": "Fillter",
+			"playerId": "ID",
+			"reportTime": "Report time",
+			"updateTime": "Update time"
+		}
+	},
+	"apps": {
+		"title": "Tools",
+		"describe": "第三方集成BFBAN数据库工具",
+		"submit_tool_app": "提交工具",
+		"buttons": {
+			"hot": "Popular",
+			"website": "Website",
+			"get": "Aquire"
 		},
-		"misc": {
-			"uploadImage": {
-				"info": "Upload pictures, no more than 2MB",
-				"mobile": "Double-tap the screen to upload...",
-				"desktop": "click or drag to upload...",
-				"fail": "Exceeded the maximum upload limit, the picture is over 2MB"
-			},
-			"uploadVideo": {
-				"info": "Upload video, no more than 30MB",
-				"desktop": "Click or drag files here to upload"
-			},
-			"progress": "Uploading..."
+		"screen": {
+			"all": "All",
+			"official": "Official",
+			"bot": "Bot",
+			"app": "App",
+			"pc_app": "Desktop app",
+			"web": "Website",
+			"api": "API",
+			"book": "Guide",
+			"admin": "Community management",
+			"qq": "Tecent QQ",
+			"bf1": "Battlefield 1",
+			"bfv": "Battlefield V",
+			"bf6": "Battlefield 2042"
+		}
+	},
+	"search": {
+		"title": "Search",
+		"describe": "Search player ID from BFBAN database",
+		"placeholder": "搜索点什么呢,啊,就是您了！",
+		"collectionHint": "Mark this page (Ctrl+D or Command+D)",
+		"scope": {
+			"history": "Historical ID",
+			"current": "Present ID"
+		}
+	},
+	"cheatMethods": {
+		"invisable": {
+			"title": "Steath",
+			"describe": "Player character is invisable. "
 		},
-		"share": {
-			"title": "Share",
-			"link": {
-				"name": "Link type",
-				"linkUrl": "Url",
-				"textLink": "Link text",
-				"textLinkContent": "【{webname}】shared a player，link:{url}",
-				"webHtmlLink": "web code"
-			},
-			"iframe": {
-				"name": "embedded website",
-				"theme": "theme",
-				"size": "size",
-				"code": "embedded code"
-			},
-			"image": {
-				"name": "image",
-				"generate": "Generate a image",
-				"describe": "Generate a report evidence screenshot"
-			}
+		"wallhack": {
+			"title": "Wallhack",
+			"describe": "View enemy position though wall, structure or terrain"
+		},
+		"aimbot": {
+			"title": "Aimbot",
+			"describe": "Automatic aim, shown mechanic behaviour"
+		},
+		"oneShotKill": {
+			"title": "Instant kill",
+			"describe": "Quickly aim to body part that deal high damge to achive instant kill"
+		},
+		"gadgetModify": {
+			"title": "Gadget Modify",
+			"describe": "Gadget appears in scenario that is impossible"
+		},
+		"damageChange": {
+			"title": "Damage modify",
+			"describe": "Moditfy weapon's damage profile"
+		},
+		"magicBullet": {
+			"title": "Magical bullet",
+			"describe": "Bullet can be shot through wall, structure or terrain."
+		},
+		"attackServer": {
+			"title": "Attack server",
+			"describe": "Attack battlefield server using method such as DDOS attack"
+		},
+		"teleport": {
+			"title": "Teleportation",
+			"describe": "Player can teleport"
+		}
+	},
+	"misc": {
+		"uploadImage": {
+			"info": "Upload pictures, no more than 2MB",
+			"mobile": "Double-tap the screen to upload...",
+			"desktop": "click or drag to upload...",
+			"fail": "Exceeded the maximum upload limit, the picture is over 2MB"
+		},
+		"uploadVideo": {
+			"info": "Upload video, no more than 30MB",
+			"desktop": "Click or drag files here to upload"
+		},
+		"progress": "Uploading..."
+	},
+	"share": {
+		"title": "Share",
+		"link": {
+			"name": "Link type",
+			"linkUrl": "Url",
+			"textLink": "Link text",
+			"textLinkContent": "【{webname}】shared a player，link:{url}",
+			"webHtmlLink": "web code"
+		},
+		"iframe": {
+			"name": "embedded website",
+			"theme": "theme",
+			"size": "size",
+			"code": "embedded code"
+		},
+		"image": {
+			"name": "image",
+			"generate": "Generate a image",
+			"describe": "Generate a report evidence screenshot"
 		}
 	}
 }
