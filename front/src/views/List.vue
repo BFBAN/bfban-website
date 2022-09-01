@@ -24,14 +24,14 @@
                 type="button">
               <Radio label="all" value="all">
                 <Badge :count="getTotalNum('*')" :overflow-count="90000" type="normal">
-                  {{ $t('list.filters.game.all') }}
+                  {{ $t('basic.games.all') }}
                 </Badge>
               </Radio>
               <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
                      :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
                      :class="gameName == i.value ? 'gametype-select' : ''">
                 <Badge :count="getTotalNum(i.value)" :overflow-count="90000" type="info">
-                  <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
+                  <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
                     <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
                     <span v-else>{{ i.full_name }}</span>
                   </Tooltip>
@@ -58,7 +58,7 @@
             <Badge :overflow-count="900000"
                    size="small"
                    type="info">
-              {{ $t("list.filters.status.all") }}
+              {{ $t("basic.status.all") }}
             </Badge>
           </Radio>
           <Radio
