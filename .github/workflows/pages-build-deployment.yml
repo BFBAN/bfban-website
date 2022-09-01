@@ -14,13 +14,16 @@ on:
   
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
+    # 该项目请使用指定的node
+    # Use the specified node for this project
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [14.17.6]
 
+    # 构建流程
+    # steps
     steps:
     - uses: actions/checkout@v2
       with:
