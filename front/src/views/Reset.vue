@@ -39,12 +39,14 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
+
 import {http, api, http_token} from '../assets/js/index'
 import { waitForAction} from '@/mixins/common';
 
 const {mapActions, mapMutations} = Vuex;
 
-export default {
+export default new BFBAN({
   data() {
     return {
       reset: {
@@ -91,7 +93,7 @@ export default {
       }
     }
   }
-}
+});
 </script>
 
 <style>

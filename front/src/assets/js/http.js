@@ -1,6 +1,5 @@
 import http from 'axios';
 import Conf from './conf';
-
 export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
@@ -10,26 +9,28 @@ export default class Http extends Conf {
     /**
      * TODO 未写拦截，有空完成
      */
-    HTTP = http.create({
-        // baseURL: process.env.BASE_API,
-        timeout: 600000,
-        withCredentials: true,
-        headers: {
-            // 'Content-type': 'application/json',
-        },
-        validateStatus(status) {
-            return status < 500;
-        }
-    }).interceptors.request.use(config => {
-        return config
-    }, error=> {
-        // 对请求错误做些什么
-        return Promise.reject(error)
-    });
+     HTTP = http.create({
+      // baseURL: process.env.BASE_API,
+      timeout: 600000,
+      withCredentials: true,
+      headers: {
+          // 'Content-type': 'application/json',
+      },
+      validateStatus(status) {
+          return status < 500;
+      }
+    })
 
-constructor() {
+    constructor() {
         super();
         super.initConf();
+
+        this.HTTP.interceptors.request.use(config => {
+            return config
+        }, error=> {
+            // 对请求错误做些什么
+            return Promise.reject(error)
+        })
     }
 
     getUrl() {
@@ -44,7 +45,6 @@ constructor() {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async request(url = '', requestData = {method: this.POST, data: {}, params: {}}) {
-        console.log(url, Object.assign({}, requestData.headers));
         let result = await this.HTTP({
             url: url,
             Origin: "",

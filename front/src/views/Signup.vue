@@ -99,6 +99,8 @@
 </template>
 
 <script>
+import BFBAN from "../assets/js/bfban";
+
 import {http, api, http_token} from '../assets/js/index'
 import {testWhitespace} from "@/mixins/common";
 
@@ -107,7 +109,7 @@ import Captcha from "../components/Captcha";
 
 import _ from "lodash";
 
-export default {
+export default new BFBAN({
   data() {
     return {
       stepsIndex: 0,
@@ -297,7 +299,7 @@ export default {
       })
     }
   },
-}
+});
 </script>
 
 <style></style>
