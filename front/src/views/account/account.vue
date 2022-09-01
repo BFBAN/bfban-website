@@ -24,19 +24,6 @@
         </Col>
         <Col span="12">
           <Card dis-hover	>
-            <FormItem :label="$t('profile.account.form.privilege')">
-            <span v-for="(i, index) in privileges" :key="index">
-              <span v-for="(p, pi) in formItem.privilege" :key="pi">
-                <Tag type="border" :color="i.class" v-if="p == i.value">
-                  {{ $t('basic.privilege.' + i.value) }}
-                </Tag>
-              </span>
-            </span>
-            </FormItem>
-          </Card>
-        </Col>
-        <Col span="6">
-          <Card dis-hover	>
             <FormItem :label="$t('account.joinedAt')">
               <Tag>
                 <Time :time="formItem.joinTime || new Date().getTime()"/>
@@ -44,7 +31,7 @@
             </FormItem>
           </Card>
         </Col>
-        <Col span="6">
+        <Col span="12">
           <Card dis-hover	>
             <FormItem :label="$t('account.lastOnlineTime')">
               <Tag>

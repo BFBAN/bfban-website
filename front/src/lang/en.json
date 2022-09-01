@@ -43,8 +43,8 @@
 		},
 		"privilege": {
 			"root": "System",
-			"admin": "Administrator",
-			"super": "Super admin",
+			"admin": "Community Admin",
+			"super": "Super Administrator",
 			"normal": "Normal user"
 		},
 		"tip": {
@@ -260,7 +260,18 @@
 		"judgement": {
 			"behavior": "Judgement type",
 			"methods": "Cheat method",
-			"content": "Judgement discription"
+			"content": "Judgement discription",
+			"appropriateVerdict": {
+				"title": "",
+				"1": "直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)",
+				"2": "简要，作弊特征明显，可使用下方模板统一判决"
+			},
+			"inappropriateRuling": {
+				"title": "不合适的裁决",
+				"1": "填写如\"1\"、\"[空位符]\"、\"[表情]\"等这类无意义回复",
+				"2": "回复内容中携带人生攻击、歧视、色情、政治内容",
+				"3": "由于游戏外因素决定，比如头像、丑"
+			}
 		},
 		"messages": {
 			"fillEverything": "Please fill in everything",

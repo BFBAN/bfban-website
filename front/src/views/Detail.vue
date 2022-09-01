@@ -637,22 +637,22 @@
                     <Col flex="1">
                       <h3>
                         <Icon type="md-done-all" color="#19be6b"/>
-                        合适的裁决
+                        {{ $t('detail.judgement.appropriateVerdict.title') }}
                       </h3>
                       <ol>
-                        <li>直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)</li>
-                        <li>简要，作弊特征明显，可使用下方模板统一判决</li>
+                        <li>{{ $t('detail.judgement.appropriateVerdict.1') }}</li>
+                        <li>{{ $t('detail.judgement.appropriateVerdict.2') }}</li>
                       </ol>
                     </Col>
                     <Col flex="1">
                       <h3>
                         <Icon type="ios-alert-outline" color="red"/>
-                        不合适的裁决
+                        {{ $t('detail.judgement.inappropriateRuling.title') }}
                       </h3>
                       <ol>
-                        <li>填写如"1"、"[空位符]"、"[表情]"等这类无意义回复</li>
-                        <li>回复内容中携带人生攻击、歧视、色情、政治内容</li>
-                        <li>裁决的内容，由于游戏外因素决定，比如头像、丑</li>
+                        <li>{{ $t('detail.judgement.inappropriateRuling.1') }}</li>
+                        <li>{{ $t('detail.judgement.inappropriateRuling.2') }}</li>
+                        <li>{{ $t('detail.judgement.inappropriateRuling.3') }}</li>
                       </ol>
                     </Col>
                   </Row>
@@ -696,7 +696,7 @@
             </Form>
 
             <Button type="primary" :loading="verifySpinShow" @click.stop.prevent="doVerify">
-              {{ $t('basic.button.submit', {msg: 'submit'}) }}
+              {{ $t('basic.button.submit') }}
             </Button>
           </div>
         </Card>

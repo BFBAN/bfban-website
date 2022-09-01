@@ -50,7 +50,7 @@
                   <Col flex="1">
                     <Select v-model="control.model" size="small" style="width:200px">
                       <Option v-for="item in control.list" :value="item.value" :key="item.value">
-                        {{ $t('profile.message.tabs.list.form.' + item.label) }}
+                        {{ $t('profile.message.tabsList.form.' + item.label) }}
                       </Option>
                     </Select>
                   </Col>
@@ -62,7 +62,7 @@
                 </Row>
                 <!-- 编辑 E -->
 
-                <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index">
+                <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index" class="message-content-item">
                   <Row :gutter="5">
                     <Col v-if="control.open">
                       <Checkbox v-model="child.choose"></Checkbox>
@@ -88,7 +88,7 @@
                     </Col>
                   </Row>
 
-                  <divider></divider>
+                  <divider :size="'small'"></divider>
                 </div>
 
                 <!--            <Row :gutter="5">-->
@@ -104,7 +104,7 @@
                 <!--            </Row>-->
 
                 <div class="message-content-footer" v-if="messageList[selectWindow].type == 'direct'">
-                  <Button long>
+                  <Button long type="primary">
                     <router-link :to="{path: '/account/' + selectWindow, query: {repeat: true}}">
                       <Icon type="ios-send" size="20"/>
                     </router-link>
@@ -460,8 +460,16 @@ export default {
   min-height: 300px;
   max-height: 1000px;
   overflow: auto;
-  padding: 10px;
   background-color: rgb(0 0 0 / 2%);
+}
+
+.message-content-item > .ivu-row {
+  padding: 10px !important;
+}
+
+.message-content-item > .ivu-divider {
+  margin: 0 !important;
+  opacity: .3;
 }
 
 .message-content-control {
@@ -469,6 +477,6 @@ export default {
 }
 
 .message-content-footer {
-  padding-top: 10px;
+  padding: 10px 20px;
 }
 </style>
