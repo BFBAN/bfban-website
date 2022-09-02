@@ -13,7 +13,7 @@
           </Carousel>
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 13, push: 0, pull: 0}">
-          <Card v-if="currentUser.token == ''" shadow>
+          <Card v-if="currentUser.token == ''" :padding="50" shadow>
             <p slot="title">{{ $t("signin.title") }}</p>
             <Form ref="signin" :model="signin" :rules="ruleValidate">
               <FormItem :label="$t('signin.form.username')" prop="username">
@@ -38,7 +38,7 @@
 
               <FormItem>
                 <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
-                  {{ $t('signin.form.submit') }}
+                  {{ $t('basic.button.submit') }}
                 </Button>
 
                 <Divider>
@@ -55,7 +55,7 @@
             <h1>
               {{ currentUser.userinfo.username }}
             </h1>
-            <p>哎列？请先登出 (✿◡‿◡)</p>
+            <p> {{ $t('signin.loggedIn') }} </p>
             <br>
           </Card>
         </Col>

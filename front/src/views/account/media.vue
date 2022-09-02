@@ -3,10 +3,10 @@
     <Card :padding="0" dis-hover>
       <Row slot="title">
         <Col flex="1">
-          {{ media.data.todayFileNumber || 0 }}份文件
+          {{ $t('profile.media.fileNum', {num: media.data.todayFileNumber || 0}) }}
         </Col>
         <Col span="8">
-          容量
+          {{ $t('profile.media.capacity') }}
           <Progress :percent="media.data.usedStorageQuota || 0" :max="media.data.totalStorageQuota || 0" />
         </Col>
       </Row>
@@ -19,7 +19,7 @@
     </Card>
 
     <br>
-    <Page :total="100" />
+<!--    <Page :total="100" />-->
   </div>
 </template>
 
@@ -37,7 +37,7 @@ export default {
           {
             title: 'Name',
             key: 'filename',
-            minWidth: 300
+            minWidth: 260
           },
           {
             title: 'size',
@@ -47,7 +47,7 @@ export default {
           {
             title: 'createTime',
             key: 'createTime',
-            // fixed: 'right',
+            fixed: 'right',
             render: (h, params) => {
               console.log(params.row.createTime)
               return h('Time', {
@@ -59,14 +59,6 @@ export default {
           }
         ],
         selectFileId: '',
-        detail: {
-          '2022-08-31_6afa241a-7d33-4036-a539-ba813af34aee.png': {
-            downloadURL: 'url',
-            size: 0,
-            mimetype: 'string',
-            filename: 'string'
-          }
-        },
         data: {},
         list: [],
       }

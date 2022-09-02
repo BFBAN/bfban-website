@@ -386,7 +386,7 @@ export default {
 
                 if (num <= 0) {
                   messageUser.push({
-                    text: "@" + this.$i18n.t('profile.message.type.' + i.type),
+                    text: "@" + this.$i18n.t('profile.message.types.' + i.type),
                     value: i.type,
                     type: i.type
                   });
