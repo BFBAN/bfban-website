@@ -159,6 +159,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "src/assets/css/footer";
+
 @footer-primary-color: #fff;
 @footer-border-color: #00000008;
 @footer-icon-color: #c5c5c5;

@@ -8,6 +8,9 @@ const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
 const List = () => import('@/views/List.vue');
 const Detail = () => import('@/views/Detail.vue');
+const DetailShare = () => import('@/views/DetailShare.vue');
+const DetailApp = () => import('@/views/DetailApp.vue');
+const DetailCard = () => import('@/components/SharePlayerCell.vue');
 const Signin = () => import('@/views/Signin.vue');
 const Signup = () => import('@/views/Signup.vue');
 const ForgetPassword = () => import('@/views/forgetPassword.vue');
@@ -43,13 +46,15 @@ const routes = [
     // 应用名单
     {name: 'apps', path: '/apps', component: Apps},
 
-    //
-    {name: 'profile', path: '/profile', component: Profile, beforeEnter: isLoginBeforeEnter},
+    // 个人中心
+    {name: 'profile_home', path: '/profile', component: Profile, beforeEnter: isLoginBeforeEnter},
     {name: 'profile', path: '/profile/:pagename', component: Profile, beforeEnter: isLoginBeforeEnter},
 
     // 搜索
     {name: 'search', path: '/search/:conetnt', component: Search},
     {name: 'search_main', path: '/search', component: Search, meta: {titleValue: 'search.title'}},
+
+    // 举报
     {
         name: 'report',
         path: '/report',
@@ -61,23 +66,24 @@ const routes = [
     {name: 'player', path: '/player', component: List},
 
     // 作弊者详情
-    {name: 'cheater', path: '/player/:ouid', component: Detail, meta: {titleValue: 'detail.title'}},
+    {name: 'cheater', path: '/player/:ouid', component: Detail},
+
+    // 作弊者分享面板
+    {name: 'cheater_share', path: '/player/:ouid/share', component: DetailShare},
+
+    // 唤起应用面板
+    {name: 'cheater_app', path: '/player/:ouid/app', component: DetailApp},
+
+    // 作弊者卡片
+    {name: 'cheater_share_card', path: '/player/:ouid/share/card', component: DetailCard},
+
+    // 兼容旧url跳转
     {
         name: 'cheaters_old', path: '/cheaters/:ouid', component: Detail,
         beforeEnter(to, from, next) {
-            next({path: '/player/' + to.params.ouid, query: {oldUrl: true}});
-        }
-    },
-    {
-        name: 'shorten', path: '/preview.svg/:hexnum', redirect: to => {
-            try {
-                const ouid = parseInt(to.params.hexnum, 16);
-                if (isNaN(ouid))
-                    return '/404';
-                return '/cheaters/' + ouid;
-            } catch {
-                return '/404';
-            }
+            next({
+                path: `/player/${to.params.ouid}`, query: {oldUrl: true}
+            });
         }
     },
 
@@ -107,7 +113,6 @@ const routes = [
     //  { name: 'signup', path: '/reset', component: Reset },
 
     {name: 'account', path: '/account/:uId', component: Account},
-    //  { name: 'dashboard', path: '/dashboard', component: Dashboard },
 
     {name: 'notFound', path: '/404', component: NotFound},
 

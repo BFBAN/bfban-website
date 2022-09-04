@@ -33,7 +33,7 @@
                 </Tag>
 
                 <!-- 被举报的游戏 S -->
-                <router-link :to="{name: 'cheaters', params: { game: cheater.game }}" v-if="cheater.games">
+                <router-link :to="{name: 'cheater', params: { game: cheater.game }}" v-if="cheater.games">
                   <Tag color="gold" :alt="$t('detail.info.reportedGames')"
                        v-for="(game,gameindex) in cheater.games" :key="gameindex">
                     {{ $t(`basic.games.${game}`, {game: game}) }}
@@ -53,23 +53,14 @@
               </Col>
               <template v-if="!isFull">
                 <Col class="mobile-hide html2canvas-ignore">
-                  <Poptip content="content" placement="right-end" title="">
-                    <Button>
-                      <Icon type="md-qr-scanner" size="20" color="#535353"/>
-                      {{ $t('detail.info.app_qr.title') }}
-                    </Button>
-                    <div slot="content" class="mobile-hide">
-                      <vue-qr :text="'{id: '+ $route.params.ouid + '}'" :size="200"></vue-qr>
-
-                      <div class="qrcode" ref="qrCodeUrl"></div>
-
-                      {{ $t('detail.info.app_qr.tip') }} 🦖
-                    </div>
-                    <div slot="content" class="desktop-hide" align="center">
-                      <Button>{{ $t('detail.info.app_qr.openApp') }}</Button>
-                      <p>{{ $t('detail.info.app_qr.openAppDescribe') }} 🦖</p>
-                    </div>
-                  </Poptip>
+                  <!-- App S -->
+                  <router-link :to="{name: 'cheater_app'}">
+                      <Button>
+                        <Icon type="md-qr-scanner" size="20" color="#535353"/>
+                        {{ $t('detail.info.app_qr.title') }}
+                      </Button>
+                  </router-link>
+                  <!-- App E -->
 <!--                  <Divider type="vertical"/>-->
 <!--                  <ButtonGroup type="button">-->
 <!--                    <Button>-->
@@ -81,11 +72,11 @@
 <!--                  </ButtonGroup>-->
                   <Divider type="vertical"/>
                   <!-- 分享 share S -->
-                  <ShareDetail>
+                  <router-link :to="{name: 'cheater_share'}">
                     <Button type="primary">
                       <Icon type="md-share"/>
                     </Button>
-                  </ShareDetail>
+                  </router-link>
                   <!-- 分享 share E -->
                 </Col>
               </template>
@@ -356,7 +347,7 @@
                             </router-link>
                           </BusinessCard>
 
-                          <router-link :to="{name: 'cheaters', query: {game: `${l.cheatGame}`} }">
+                          <router-link :to="{name: 'cheater', query: {game: `${l.cheatGame}`} }">
                             {{ l.cheatGame }}
                           </router-link>
                         </Col>
@@ -861,13 +852,11 @@ import BFBAN from "/src/assets/js/bfban";
 import theme from "/public/conf/themes.json";
 
 import {api, http, http_token, util} from '../assets/js/index'
-import vueQr from 'vue-qr'
 
 import Empty from '../components/Empty.vue'
 import Edit from "../components/Edit";
 import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
-import ShareDetail from "../components/ShareDetail.vue";
 import RecordLink from "../components/RecordLink.vue";
 import Captcha from "../components/Captcha";
 
@@ -901,6 +890,8 @@ export default new BFBAN({
       timeline: {
         sort: '1',
         seeType: 1,
+        skip: 0,
+        limit: 100,
         seeTypeList: [
           {
             label: 'all',
@@ -919,8 +910,6 @@ export default new BFBAN({
           }
         ]
       },
-      skip: 0,
-      limit: 100,
       verify: {
         status: 0,
         checkbox: [],
@@ -932,16 +921,16 @@ export default new BFBAN({
       replySpinShow: false,
       isCheaterExist: true,
       replyModal: false,
+      updateUserInfospinShow: false,
+      updateCheaterModal: false,
       cheatMethodsGlossary: null,
       fastReply: {
         content: ['stats', 'evidencePic', 'evidenceVid'],
         selected: [],
       },
-      updateUserInfospinShow: false,
-      updateCheaterModal: false,
     }
   },
-  components: {Empty, Edit, Textarea, BusinessCard, ShareDetail, RecordLink, vueQr,Captcha},
+  components: {Empty, Edit, Textarea, BusinessCard, RecordLink, Captcha},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -957,7 +946,6 @@ export default new BFBAN({
   },
   methods: {
     getCheaterStatusLabel: util.getCheaterStatusLabel,
-    convertCheatMethods: util.convertCheatMethods,
     async loadData() {
       // set Token Http mode
       this.http = http_token.call(this);
@@ -977,15 +965,6 @@ export default new BFBAN({
         this.verify.status = this.verify.choice[0].value;
       });
 
-      // load bfban player "full window", set theme
-      if (this.isFull) {
-        await this.$store.dispatch('setTheme', theme.child.filter(i => i.name == this.$route.query.theme)[0] || theme.child[0]);
-      }
-
-      // load lang
-      if (this.$route.query.lang) {
-        this.$store.dispatch('setLang', this.$route.query.lang);
-      }
     },
     /**
      * 获取基本字段
@@ -1000,20 +979,18 @@ export default new BFBAN({
       };
       return name ? object[name] : object;
     },
-    isBan() {
-      // TODO
-      this.cheater.avatarLinkError = false;
-    },
     /**
      * 获取作弊者档案
-     * 基础信息
      */
     getCheatersInfo() {
       this.cheater = {};
+
       this.http.get(api["cheaters"], {
         params: Object.assign({
           history: true
-        }, {personaId: this.getParamsIds('personaId')})
+        }, {
+          personaId: this.getParamsIds('personaId')
+        })
       }).then((res) => {
         this.spinShow = false;
         const d = res.data;
@@ -1023,9 +1000,8 @@ export default new BFBAN({
           this.cheater.games.forEach(i => {
             this.games.push({game: i});
           })
-          this.isBan();
         } else {
-          this.$router.push({name: "notFound"});
+          this.catch(res);
         }
       }).catch(() => {
         this.$router.push({name: "notFound"});
@@ -1040,8 +1016,8 @@ export default new BFBAN({
 
       this.http.get(`${api["account_timeline"]}`, {
         params: Object.assign({
-          skip: this.skip,
-          limit: this.limit
+          skip: this.timeline.skip,
+          limit: this.timeline.limit
         }, {personaId: this.getParamsIds('personaId')})
       }).then((res) => {
         let d = res.data;
@@ -1162,9 +1138,14 @@ export default new BFBAN({
     handleMiscChange(text) {
       this.appeal.content = text;
     },
+    /**
+     * 申诉
+     */
     handleAppeal() {
       const {content = ''} = this.appeal;
+
       this.appeal.load = true;
+
       this.http.post(api["player_banAppeal"], {
         data: {
           data: {
@@ -1191,11 +1172,10 @@ export default new BFBAN({
      * 申诉状态操作
      */
     handAdminAppeal(data) {
-      if (!data) {
-        return;
-      }
+      if (!data) return;
 
       const array = data.split(',');
+
       this.http.post(api["player_viewBanAppeal"], {
         data: {
           data: {
@@ -1218,6 +1198,7 @@ export default new BFBAN({
     },
     /**
      * 回复
+     * 1. 对举报的回复 2. 对回复的回复
      */
     handleReply(floor, userId) {
       this.reply.toFloor = floor === 'undefined' ? '' : floor;
@@ -1227,8 +1208,8 @@ export default new BFBAN({
       this.replyModal = true;
     },
     /**
-     * 评论取消
-     * 行为: 重置内容
+     * 触发评论取消时
+     * 重置前端评论内容值
      */
     cancelReply() {
       this.reply = {
@@ -1325,7 +1306,7 @@ export default new BFBAN({
       this.updateUserInfospinShow = true;
 
       this.http.post(api["player_update"], {
-        data: Object.assign(this.getParamsIds())
+        data: this.getParamsIds()
       }).then((res) => {
         this.updateUserInfospinShow = false;
 

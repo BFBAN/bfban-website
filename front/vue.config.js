@@ -44,10 +44,6 @@ module.exports = {
       chunkFilename: `assets/js/[name].${conf.version}.js`
     },
     plugins: [
-      new MiniCssExtractPlugin({
-        filename: `assets/css/[name].${conf.version}.css`,
-        chunkFilename: `assets/css/[name].${conf.version}.css`
-      }),
       new CopyWebpaackPlugin([{
         from: 'src/lang/*.json',
         to: 'public/lang/*.json'
