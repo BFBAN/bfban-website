@@ -2,52 +2,27 @@
   "title": "link",
   "linkWebDeveloperChild": [
     {
-      "title": "mygoare",
-      "url": "https://mygoare.com"
-    },
-    {
-      "title": "glassPanel",
-      "url": "https://github.com/glass-panel"
-    },
-    {
-      "title": "lirunrun",
-      "url": "https://github.com/lirunrun"
-    },
-    {
-      "title": "cabbagelol",
-      "url": "https://github.com/cabbagelol"
+      "title": "exmaple",
+      "url": "//exmaple.com"
     }
   ],
   "linkChild": [
     {
-      "title": "2042 BiliBili WIKI",
+      "title": "exmaple",
       "linkImage": "",
-      "linkUrl": "https://wiki.biligame.com/zhandi2042/",
+      "linkUrl": "https://exmaple.com",
       "tag": ["link"]
     }
   ],
   "footerChild": [
     {
-      "title": "gametools.network",
-      "linkUrl": "https://gametools.network",
-      "describe": "Made with Hosted at GameTools-Community Network",
+      "title": "exmaple",
+      "linkUrl": "exmaple.com",
+      "describe": "exmaple describe",
       "describeLang": {
-        "zh-CN": "主机提供商"
+        "zh-CN": "exmaple zh-CN"
       },
-      "linkImageUrl": "https://i.loli.net/2021/09/30/F4hedSaYV96BsOg.png",
-      "tag": [
-        "host",
-        "platinum"
-      ]
-    },
-    {
-      "title": "evolution host",
-      "linkUrl": "https://evolution-host.com/blog/ssd-vps-hosting.php",
-      "describe": "Powered by an SSD VPS from Evolution Host",
-      "describeLang": {
-        "zh-CN": "服务器由evolution host供应商支持"
-      },
-      "linkImageUrl": "http://iph.href.lu/100x35?text=evolution host&fg=ffffff&bg=0b3cac",
+      "linkImageUrl": "exmaple.com",
       "tag": [
         "host",
         "platinum"

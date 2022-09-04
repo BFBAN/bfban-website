@@ -1,10 +1,7 @@
 .DS_Store
 node_modules
 /dist
-tells.json
-requestConf.json
-link.json
-footerNavs.json
+/public/lang/*.json
 
 # local env files
 .env.local

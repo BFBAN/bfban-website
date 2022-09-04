@@ -29,17 +29,14 @@
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col flex="1">
                 <Tag color="error">
-                  {{ $t(`basic.status[${cheater.status}]`) }}
-                </Tag>
-                <Tag v-if="cheater.avatarLinkError" color="warning">
-                  账户异常
+                  {{ $t(`basic.status.${cheater.status}`) }}
                 </Tag>
 
                 <!-- 被举报的游戏 S -->
-                <router-link :to="{name: 'cheaters'}" v-if="cheater.games">
-                  <Tag color="gold" :alt="$t('detail.info.reportedGames', { msg: 'reportedGames' })"
+                <router-link :to="{name: 'cheaters', params: { game: cheater.game }}" v-if="cheater.games">
+                  <Tag color="gold" :alt="$t('detail.info.reportedGames')"
                        v-for="(game,gameindex) in cheater.games" :key="gameindex">
-                    {{ $t(`list.filters.game.${game}`, {game: game}) }}
+                    {{ $t(`basic.games.${game}`, {game: game}) }}
                   </Tag>
                 </router-link>
 
@@ -75,10 +72,10 @@
                   </Poptip>
 <!--                  <Divider type="vertical"/>-->
 <!--                  <ButtonGroup type="button">-->
-<!--                    <Button type="primary">-->
-<!--                      跟踪此玩家-->
+<!--                    <Button>-->
+<!--                      跟踪-->
 <!--                    </Button>-->
-<!--                    <Button type="primary">-->
+<!--                    <Button>-->
 <!--                      <Icon type="md-arrow-dropdown"/>-->
 <!--                    </Button>-->
 <!--                  </ButtonGroup>-->
@@ -223,7 +220,7 @@
               <ButtonGroup type="button">
                 <Select v-model="timeline.seeType" size="small">
                   <Option v-for="(item, index) in timeline.seeTypeList" :value="item.value" :key="index">
-                    {{item.label}}
+                    {{ $t('detail.timeline.' + item.label) }}
                   </Option>
                 </Select>
               </ButtonGroup>
@@ -537,9 +534,13 @@
                       {{ $t('detail.info.appealManual1') }}
                     </Col>
                     <Col flex="150px">
-                      <Button type="primary" size="large" long :loading="replySpinShow" :disabled="!reply.content"
+                      <Button type="primary"
+                              size="large"
+                              long
+                              :loading="replySpinShow"
+                              :disabled="!reply.content || reply.start != 0"
                               @click.stop.prevent="doReply">
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        {{ $t('detail.info.reply') }}
                       </Button>
                     </Col>
                   </Row>
@@ -555,7 +556,7 @@
             <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1" class="mobile-hide">
                 <Button type="primary"
                         @click="appeal.show = true"
-                        :disabled="!isLogin">
+                        :disabled="!isLogin || cheater.status != 1">
                   {{ $t('detail.info.appeal') }}
                 </Button>
                 <p><br>{{ $t('detail.appeal.describe') }}</p>
@@ -581,7 +582,7 @@
             <h2 style="margin: 1rem 0;">
               # {{ $t('detail.info.judgement', {msg: 'judgement'}) }}
               <Tag color="success">
-                {{ $t("account.admin") }}
+                {{ $t("basic.privilege.admin") }}
               </Tag>
             </h2>
 
@@ -636,22 +637,22 @@
                     <Col flex="1">
                       <h3>
                         <Icon type="md-done-all" color="#19be6b"/>
-                        合适的裁决
+                        {{ $t('detail.judgement.appropriateVerdict.title') }}
                       </h3>
                       <ol>
-                        <li>直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)</li>
-                        <li>简要，作弊特征明显，可使用下方模板统一判决</li>
+                        <li>{{ $t('detail.judgement.appropriateVerdict.1') }}</li>
+                        <li>{{ $t('detail.judgement.appropriateVerdict.2') }}</li>
                       </ol>
                     </Col>
                     <Col flex="1">
                       <h3>
                         <Icon type="ios-alert-outline" color="red"/>
-                        不合适的裁决
+                        {{ $t('detail.judgement.inappropriateRuling.title') }}
                       </h3>
                       <ol>
-                        <li>填写如"1"、"[空位符]"、"[表情]"等这类无意义回复</li>
-                        <li>回复内容中携带人生攻击、歧视、色情、政治内容</li>
-                        <li>裁决的内容，由于游戏外因素决定，比如头像、丑</li>
+                        <li>{{ $t('detail.judgement.inappropriateRuling.1') }}</li>
+                        <li>{{ $t('detail.judgement.inappropriateRuling.2') }}</li>
+                        <li>{{ $t('detail.judgement.inappropriateRuling.3') }}</li>
                       </ol>
                     </Col>
                   </Row>
@@ -678,14 +679,14 @@
                 </CheckboxGroup>
               </FormItem>
 
-              <FormItem :label="$t('signup.form.captcha')">
+              <FormItem :label="$t('captcha.title')">
                 <Row>
                   <Col>
                     <Input type="text" v-model="reply.captcha"
                            size="large"
                            maxlength="4"
-                           :placeholder="$t('signup.form.captcha')">
-                      <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                           :placeholder="$t('captcha.title')">
+                      <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
                         <Captcha ref="captcha"></Captcha>
                       </div>
                     </Input>
@@ -695,7 +696,7 @@
             </Form>
 
             <Button type="primary" :loading="verifySpinShow" @click.stop.prevent="doVerify">
-              {{ $t('basic.button.submit', {msg: 'submit'}) }}
+              {{ $t('basic.button.submit') }}
             </Button>
           </div>
         </Card>
@@ -745,12 +746,12 @@
                      :placeholder="$t('detail.info.giveOpinion')"/>
             </FormItem>
 
-            <FormItem :label="$t('signup.form.captcha')">
+            <FormItem :label="$t('captcha.title')">
               <Input type="text" v-model="reply.captcha"
                      size="large"
                      maxlength="4"
-                     :placeholder="$t('signup.form.captcha')">
-                <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                     :placeholder="$t('captcha.title')">
+                <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
                   <Captcha ref="captcha"></Captcha>
                 </div>
               </Input>
@@ -768,16 +769,9 @@
              @on-ok="handleAppeal">
         <Row :gutter="30">
           <Col flex="1">
-            <h2>规则</h2>
+            <h2> {{ $t('detail.appeal.modal.modalTitle') }} </h2>
             <br>
-            <h3>针对误BAN，本人或第三方可以协助申诉，在满足下方所有基本要求后，您的申诉内容会提交到BFBAN所有管理员，满足3位管理员确认通过才可解除</h3>
-            <br>
-            <Alert type="warning" show-icon>
-              必须注意
-              <span slot="desc">
-                  申诉只有一次机会，最终结果，一旦确认结果无法再次修改，所有申诉记录被永久保存
-              </span>
-            </Alert>
+            <h3> {{ $t('detail.appeal.modal.describe') }} </h3>
             <br>
             <Row :gutter="60" style="padding: 0 30px">
               <Col flex="1">
@@ -785,22 +779,23 @@
                   <li>
                     <h3>
                       <Icon type="md-done-all" color="#19be6b"/>
-                      有效证据
+                      {{ $t('detail.appeal.modal.effectiveEvidence.title') }}
                     </h3>
                     <ol>
-                      <li>使用类似"高速目标靶心"软件，拍摄到屏幕与手、键盘录制自证.</li>
-                      <li>自我辩护，可以使用图片、视频等等材料.</li>
+                      <li>{{ $t('detail.appeal.modal.effectiveEvidence.1') }}</li>
+                      <li>{{ $t('detail.appeal.modal.effectiveEvidence.2') }}</li>
+                      <li>{{ $t('detail.appeal.modal.effectiveEvidence.3') }}</li>
                     </ol>
                   </li>
                   <br>
                   <li>
                     <h3>
                       <Icon type="md-done-all" color="#19be6b"/>
-                      辅助证明
+                      {{ $t('detail.appeal.modal.auxiliaryProof.title') }}
                     </h3>
                     <ol>
-                      <li>举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址.</li>
-                      <li>在场玩家，提供自己id，具体服务器、时间、场此，以及您辅助申诉对象说明.</li>
+                      <li>{{ $t('detail.appeal.modal.auxiliaryProof.1') }}</li>
+                      <li>{{ $t('detail.appeal.modal.auxiliaryProof.2') }}</li>
                     </ol>
                   </li>
                 </ul>
@@ -810,16 +805,13 @@
                   <li>
                     <h3>
                       <Icon type="ios-alert-outline" color="red"/>
-                      不通过的证明
+                      {{ $t('detail.appeal.modal.evidenceInvalid.title') }}
                     </h3>
                     <ol>
-                      <li>
-                        借出、出租等形式给第三方，无论是刷数据还是朋友借用说辞，都无法证明是否本人，你必须明白账户借出无法知道通过何种手段. 一律不给与通过.
-                        <Alert type="warning">珍惜自己的账户</Alert>
-                      </li>
-                      <li>被多方玩家截取使用(不限于本人截图显示出作弊特征)或购买作弊软体多媒体.</li>
-                      <li>存在前科，如上系列存在档案玩家将大大折扣通过几率.</li>
-                      <li>任何誓言，诅咒.</li>
+                      <li>{{ $t('detail.appeal.modal.evidenceInvalid.1') }}</li>
+                      <li>{{ $t('detail.appeal.modal.evidenceInvalid.2') }}</li>
+                      <li>{{ $t('detail.appeal.modal.evidenceInvalid.3') }}</li>
+                      <li>{{ $t('detail.appeal.modal.evidenceInvalid.4') }}</li>
                     </ol>
                   </li>
                 </ul>
@@ -911,17 +903,17 @@ export default new BFBAN({
         seeType: 1,
         seeTypeList: [
           {
-            label: '所有',
+            label: 'all',
             value: 1,
             item: ['report', 'reply', 'ban_appeal', 'judgement', 'verify', 'banAppeal'],
           },
           {
-            label: '仅查看判决',
+            label: 'verify',
             value: 2,
             item: ['judgement', 'verify'],
           },
           {
-            label: '仅查看申诉',
+            label: 'banAppeal',
             value: 3,
             item: ['banAppeal'],
           }

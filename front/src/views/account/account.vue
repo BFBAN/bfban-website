@@ -24,19 +24,6 @@
         </Col>
         <Col span="12">
           <Card dis-hover	>
-            <FormItem :label="$t('profile.account.form.privilege')">
-            <span v-for="(i, index) in privileges" :key="index">
-              <span v-for="(p, pi) in formItem.privilege" :key="pi">
-                <Tag type="border" :color="i.class" v-if="p == i.value">
-                  {{ $t('basic.privilege.' + i.value) }}
-                </Tag>
-              </span>
-            </span>
-            </FormItem>
-          </Card>
-        </Col>
-        <Col span="6">
-          <Card dis-hover	>
             <FormItem :label="$t('account.joinedAt')">
               <Tag>
                 <Time :time="formItem.joinTime || new Date().getTime()"/>
@@ -44,7 +31,7 @@
             </FormItem>
           </Card>
         </Col>
-        <Col span="6">
+        <Col span="12">
           <Card dis-hover	>
             <FormItem :label="$t('account.lastOnlineTime')">
               <Tag>
@@ -65,12 +52,12 @@
 
       <template v-if="formItem.origin.originName == null || formItem.origin.originUserId == null">
         <Alert show-icon type="error">
-          未绑定 {{ $t('signup.form.originEmail') }}
+          {{ $t('account.bindOrigin.title') }}
           <Icon type="ios-bulb-outline" slot="icon"></Icon>
           <template slot="desc">
-            <p>BFBAN需要您绑定origin账户，以便账户申诉、找回等功能；未绑定origin前，您的账户会被锁定，无法提交任何内容</p><br>
+            <p>{{ $t('account.bindOrigin.content') }}</p><br>
             <router-link to="/bindOrigin">
-              <Button>好的，前往绑定账户</Button>
+              <Button>{{ $t('account.bindOrigin.travel') }}</Button>
             </router-link>
           </template>
         </Alert>

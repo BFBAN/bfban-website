@@ -78,10 +78,10 @@ async function toConfirm(player, user) {
     // iterate each judgement desc, if $config.personsToConfirm people think the guy is guilty without any objection in them, then confirm
     if(!userHasRoles(user, ['admin', 'super', 'root'])) // well, we should have check that before, but anyway
         return false; // permission not enough
-    const prev = await db.select('byUserId', 'action').from('comments').where({toPlayerId: player.id, type: 'judgement'}).orderBy('createTime','desc')
+    const prev = await db.select('byUserId', 'judgeAction').from('comments').where({toPlayerId: player.id, type: 'judgement'}).orderBy('createTime','desc')
     const supportJudges = new Set();
     for(let i of prev) {
-        if(i.action!='guilt' || i.action!='kill')
+        if(i.judgeAction!='guilt' && i.judgeAction!='kill')
             break; // objection! exit support judgements count
         else
             supportJudges.add(i.byUserId);

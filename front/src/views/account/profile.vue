@@ -18,9 +18,24 @@
             <Col>
               <Avatar :size="48">{{ currentUser.userinfo.username[0] }}</Avatar>
             </Col>
-            <Col>
-              <h3>{{ currentUser.userinfo.username }}</h3>
+            <Col flex="1">
+              <h3>
+                {{ currentUser.userinfo.username }}
+              </h3>
               <p>{{ $t('profile.meet', {name: currentUser.userinfo.username}) }}</p>
+            </Col>
+            <Col v-if="currentUser.userinfo.privilege">
+              <Form label-position="top">
+                <FormItem :label="$t('profile.account.form.privilege')">
+                <span v-for="(privileges_item, privileges_index) in privileges" :key="privileges_index">
+                  <span v-for="(p, pi) in currentUser.userinfo.privilege" :key="pi">
+                    <Tag type="border" :color="privileges_item.class" v-if="p == privileges_item.value">
+                      {{ $t('basic.privilege.' + p) }}
+                    </Tag>
+                  </span>
+                </span>
+                </FormItem>
+              </Form>
             </Col>
           </Row>
         </Col>
@@ -81,6 +96,7 @@ export default {
   name: "profile",
   data() {
     return {
+      privileges: [],
       muenIndex: 0,
       muen: [{
           title: 'account',
@@ -120,8 +136,13 @@ export default {
     )[0].value;
 
     this.upDateUri(name || this.muenIndex);
+    this.loadData();
   },
   methods: {
+    async loadData() {
+      const privileges = await import('/public/conf/privilege.json');
+      this.privileges = this.privileges.concat(privileges.child);
+    },
     upDateUri(index, t = false) {
       this.muenIndex = index;
       this.$router.push({

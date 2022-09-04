@@ -25,21 +25,22 @@
         "text": "无效举报",
         "describe": "举报材料不全或举报错误ID等行为"
       },
-      "more":{
+      "more": {
         "text": "需要更多证据",
         "describe": "需要补充更多有力的证据"
       }
     },
-    "status": [
-      "未处理",
-      "石锤",
-      "嫌疑再观察",
-      "无作弊",
-      "无效举报",
-      "讨论中",
-      "需更多管理投票",
-      "攻击服务器"
-    ],
+    "status": {
+      "all": "全部",
+      "0": "未处理",
+      "1": "石锤",
+      "2": "嫌疑再观察",
+      "3": "无作弊",
+      "4": "无效举报",
+      "5": "讨论中",
+      "6": "需更多管理投票",
+      "7": "超级石锤"
+    },
     "privilege": {
       "root": "系统",
       "admin": "社区管理",
@@ -49,7 +50,14 @@
     "tip": {
       "notlang": "未翻译",
       "notcontent": "无内容",
-      "notFound": "哎列，访问地址似乎走失"
+      "notFound": "哎列，访问地址似乎走失",
+      "noReports": "还没有任何举报"
+    },
+    "games": {
+      "all": "所有",
+      "bf1": "战地风云 1",
+      "bfv": "战地风云 5",
+      "bf6": "战地风云 2042"
     },
     "button": {
       "report": "举报",
@@ -75,14 +83,7 @@
     "signin": "登录",
     "signup": "注册",
     "signout": "注销",
-    "daily": "ban日报",
-    "dashboard": "管理后台",
     "userCenter": "我的展示页",
-    "searchBar": "支持搜索历史ID啦...",
-    "searchInfo": "检索的ID为：",
-    "searchResult": "检索结果：",
-    "search": "检索",
-    "none": "无",
     "signoutSuccess": "注销成功"
   },
   "player": {
@@ -138,9 +139,15 @@
         "specification2": "你明白以上说明了吗?",
         "residueDegree": "目前剩余修改名称{changeNameLeft}次数",
         "steps": {
-          "0": { "title": "提示" },
-          "1": { "title": "填写" },
-          "2": { "title": "完成" }
+          "0": {
+            "title": "提示"
+          },
+          "1": {
+            "title": "填写"
+          },
+          "2": {
+            "title": "完成"
+          }
         }
       }
     },
@@ -156,8 +163,35 @@
   },
   "detail": {
     "title": "详情",
+    "timeline": {
+      "all": "所有",
+      "verify": "仅查看判决",
+      "banAppeal": "仅查看申诉"
+    },
     "appeal": {
       "describe": "该举报信息存在问题,我能自证或他人协助证明清白.",
+      "modal": {
+        "modalTitle": "规则",
+        "describe": "针对误BAN，本人或第三方可以协助申诉，在满足下方所有基本要求后，您的申诉内容会提交到BFBAN所有管理员，管理员确认通过才可解除",
+        "effectiveEvidence": {
+          "title": "有效证据",
+          "1": "使用类似\"高速目标靶心\"软件、Moss软件，拍摄到屏幕与手、键盘录制自证.",
+          "2": "自我辩护，可以使用图片、视频等等材料.",
+          "3": "有些地方所提供的要求不同，可以咨询地区BFBAN管理，索要申诉材料."
+        },
+        "evidenceInvalid": {
+          "title": "不通过的证明",
+          "1": "借出、出租等形式给第三方，无论是刷数据还是朋友借用说辞，都无法证明是否本人，你必须明白账户借出无法知道通过何种手段. 一律不给与通过.",
+          "2": "被多方玩家截取使用(不限于本人截图显示出作弊特征)或购买作弊软体多媒体.",
+          "3": "存在前科，如上系列存在档案玩家将大大折扣通过几率.",
+          "4": "任何誓言，诅咒."
+        },
+        "auxiliaryProof": {
+          "title": "辅助证明",
+          "1": "举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址.",
+          "2": "在场玩家，提供自己id，具体服务器、时间、场此，以及您辅助申诉对象说明."
+        }
+      },
       "info": {
         "content": "申诉内容",
         "player": "玩家id",
@@ -226,7 +260,18 @@
     "judgement": {
       "behavior": "判决类型",
       "methods": "作弊的方法",
-      "content": "判决说明"
+      "content": "判决说明",
+      "appropriateVerdict": {
+        "title": "",
+        "1": "直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)",
+        "2": "简要，作弊特征明显，可使用下方模板统一判决"
+      },
+      "inappropriateRuling": {
+        "title": "不合适的裁决",
+        "1": "填写如\"1\"、\"[空位符]\"、\"[表情]\"等这类无意义回复",
+        "2": "回复内容中携带人生攻击、歧视、色情、政治内容",
+        "3": "由于游戏外因素决定，比如头像、丑"
+      }
     },
     "messages": {
       "fillEverything": "请填写完整",
@@ -248,9 +293,6 @@
       "notFoundHintAnswer2": "这可能是EA数据库更新不及时，或是EA官方的bug，我们没有办法替他们解决，如果您想出一份力，可以至       https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en       官方反馈论坛反馈bug，此情况可以描述为 I can't search my friend by name on origin",
       "reportHacker": "举报作弊",
       "reportNews": "已经支持 战地V 举报啦！",
-      "bf1": "战地1",
-      "bfv": "战地5",
-      "bf6": "战地6",
       "idNotion1": "一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID",
       "idNotion2": "游戏ID是不区分大小写的，但请特别注意区分 i I 1 l L o O 0，正确填写举报ID",
       "uploadManual1": "不想注册国内账号、嫌麻烦，上传视频可以前往",
@@ -284,8 +326,6 @@
     }
   },
   "footer": {
-    "author": "由 mygoare 开发",
-    "feedback": "意见反馈",
     "language": {
       "members": "参与翻译成员"
     },
@@ -335,47 +375,8 @@
         "as": "处理为"
       }
     },
-    "howToUse": {
-      "title": "如何使用本站",
-      "description": "<a href=\"https://bfban.com\">本站</a> 可以 <b>永久追踪</b> 被举报者的游戏ID，并支持 <b>搜索历史ID</b> ！欢迎大家积极举报。\n      <p>如果遇到挂，可以</p>\n      <p>1、先使用 <a target=\"_blank\" href=\"https://bf1.mygoare.com/\">战地1外挂举报助手</a> 给官方举报</p>\n      <p>2、自己在网站 <router-link :to=\"{path: 'signup'}\">注册</router-link> 后，自己 <router-link :to=\"{path: 'report'}\">举报</router-link></p>\n      <p>3、举报后即会被纪录在案，即使修改了ID也能被追踪到</p>",
-      "tools": {
-        "main": "小工具",
-        "describe": "第三方集成BFBAN数据库工具",
-        "submit_tool_app": "提交你的应用",
-        "name": {
-          "report": "【推荐】战地1外挂举报助手",
-          "tracker": "【推荐】战地PC/手机战绩速查工具",
-          "tools": "战地周边工具",
-          "bfban": "【推荐】BFBAN APP",
-          "apiGametools": "api.gametools.network",
-          "botGametools": "top.gg/bot/714524944783900794",
-          "serverManager": "manager.gametools.network"
-        },
-        "description": {
-          "bftracker": "在线战绩查询网站，可以详细查询到各类数据",
-          "report": "在线生成举报文本",
-          "fairplay": "快速查询标记当前ID在BF3、BF4中的战绩进行异常标记，查询联ban史",
-          "tracker": "同时支持电脑手机快速查询战绩进行标记",
-          "tools": "帮助你解决游戏平台问题的工具",
-          "bfban": "BFBAN手机客户端",
-          "apiGametools": "《战地风云》系列的公共API",
-          "botGametools": "《战地风云》系列的Discord统计机器人",
-          "serverManager": "BF1服务器管理器，此工具还可以自动踢bfban.com中标记为黑客的人"
-        }
-      },
-      "qqGroup": "QQ群/Discord",
-      "bfbanQq": "联系BFBan QQ/Community Network处理争议",
-      "gameTogether": "开黑"
-    },
     "bulletin": {
-      "title": "公告栏",
-      "webDev": "网站开发",
-      "bfbanAppD": "BFBAN APP下载",
-      "japCon": "日语翻译者",
-      "engCon": "英语翻译者",
-      "lanCon": "翻译",
-      "localManager": "战地1服管工具",
-      "domCost": "支付域名"
+      "title": "公告"
     }
   },
   "about": {
@@ -398,26 +399,19 @@
       "newPassword": "新密码",
       "qq": "QQ",
       "password": "新密码",
-      "passwordRepeat": "确认密码",
-      "submit": "提交"
+      "passwordRepeat": "确认密码"
     }
   },
   "account": {
     "title": "用户展示页",
-    "hint1": "我们还没有 消息系统，但可以在下方举报的状态 来得知进度",
     "hint2": "所有举报都可以 回复参与讨论",
     "hint3": "若要补充证据，可以重复举报同一ID",
     "userInfo": "个人信息",
-    "username": "用户名：",
-    "root": "系统",
+    "username": "用户名",
     "role": "身份",
-    "admin": "社区管理",
-    "normal": "普通",
-    "super": "超级管理员",
     "joinedAt": "加入时间",
     "lastOnlineTime": "最后在线时间",
     "reports": "个人举报",
-    "noReports": "还没有任何举报",
     "reported": "举报了",
     "status": "状态",
     "recentlyUpdated": "最近更新",
@@ -428,9 +422,13 @@
         "selfTalk": "无法跟自己说话！",
         "taOffChat": "对方关闭了聊天选项"
       }
+    },
+    "bindOrigin": {
+      "title": "未绑定账户",
+      "content": "BFBAN需要您绑定origin账户，以便账户申诉、找回等功能；未绑定origin前，您的账户会被锁定，无法提交任何内容",
+      "travel": "好的，前往绑定账户"
     }
   },
-  "notFound": "如果历史记录找不到，可以使用网站顶部 搜索功能，支持搜索历史ID",
   "bindOrigin": {
     "title": "绑定Origin账户"
   },
@@ -439,7 +437,6 @@
     "form": {
       "username": "用户名",
       "password": "密码",
-      "submit": "提交",
       "submitHint": "没有账号？去注册",
       "forgetPasswordHint": "密码忘记？"
     },
@@ -486,7 +483,6 @@
       "originEmail": "🍊 橘子邮箱",
       "originName": "🍊 橘子名字",
       "qq": "QQ",
-      "submit": "提交",
       "submitHint": "已有账号？去登录",
       "forgetPasswordHint": "密码忘记？"
     },
@@ -530,16 +526,6 @@
   "list": {
     "title": "外挂公示",
     "filters": {
-      "game": {
-        "all": "所有",
-        "bf1": "战地1",
-        "bf6": "战地2024",
-        "bfv": "战地V"
-      },
-      "status": {
-        "all": "全部"
-      },
-      "refresh": "刷新",
       "sortBy": {
         "createTime": "举报时间倒序",
         "updateTime": "更新时间倒序",
@@ -558,6 +544,8 @@
   },
   "apps": {
     "title": "工具",
+    "describe": "第三方集成BFBAN数据库工具",
+    "submit_tool_app": "提交工具",
     "buttons": {
       "hot": "热门",
       "website": "网站",
@@ -582,6 +570,7 @@
   "search": {
     "title": "检索",
     "describe": "从BFBAN数据库检索ID",
+    "placeholder": "搜索点什么呢,啊,就是您了！",
     "collectionHint": "收藏此页面 (Ctrl+D or Command+D)",
     "scope": {
       "history": "过去的名字",
