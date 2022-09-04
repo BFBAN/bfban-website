@@ -46,4 +46,4 @@ jobs:
         folder: '/'
         target-folder: '/'
         commit-message: 'build front'
-        ssh-key: ${{ secrets.GITHUB_TOKEN }}
+        ssh-key: ${{ secrets.TOKEN }}
