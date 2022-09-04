@@ -22,8 +22,6 @@ jobs:
       matrix:
         node-version: [14.17.6]
 
-    # 构建流程
-    # steps
     steps:
     - uses: actions/checkout@v2
       with:
@@ -40,9 +38,7 @@ jobs:
     - name: Commit changes
       uses: JamesIves/github-pages-deploy-action@v4.3.3
       with:
-        # 分支
-        # The branch the action should deploy to.
-        branch: gh-pages
-        folder: '/'
-        target-folder: '/'
+        branch: gh-pages # The branch the action should deploy to.
+        folder: 'dist'
         commit-message: 'build front'
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
