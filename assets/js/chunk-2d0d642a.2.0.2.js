@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0d642a"],{7292:function(a){a.exports=JSON.parse('{"title":"privilege","child":[{"value":"root","class":"primary"},{"value":"admin","class":"magenta"},{"value":"super","class":"primary"},{"value":"normal","class":"success"}]}')}}]);
+//# sourceMappingURL=chunk-2d0d642a.2.0.2.js.map

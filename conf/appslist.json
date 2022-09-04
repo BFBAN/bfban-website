@@ -1,0 +1,130 @@
+{
+  "tags": [
+    {
+      "name": "官方",
+      "value": "official"
+    },
+    {
+      "name": "机器人",
+      "value": "bot"
+    },
+    {
+      "name": "移动应用",
+      "value": "app"
+    },
+    {
+      "name": "桌面程序",
+      "value": "pc_app"
+    },
+    {
+      "name": "网页应用",
+      "value": "web"
+    },
+    {
+      "name": "接口",
+      "value": "api"
+    },
+    {
+      "name": "书",
+      "value": "book"
+    },
+    {
+      "name": "管理员",
+      "value": "admin"
+    },
+    {
+      "name": "腾讯QQ",
+      "value": "qq"
+    },
+    {
+      "name": "BF1",
+      "value": "bf1"
+    },
+    {
+      "name": "BFV",
+      "value": "bfv"
+    },
+    {
+      "name": "BF2042",
+      "value": "bf6"
+    }
+  ],
+  "hots": [2],
+  "list": [
+    {
+      "title": "GameTools",
+      "titleLang": {
+        "zh-CN": "Gametools 服务器管理工具",
+        "en-US": "GameTools.network"
+      },
+      "id": "3",
+      "describe": "",
+      "describeLang": {
+        "zh-CN": "服务器管理器，此工具还可以自动踢Bfban中标记为黑客的人"
+      },
+      "tag": ["web", "admin","bf1"],
+      "website": "https://manager.gametools.network",
+      "get": "",
+      "hot": true
+    },
+    {
+      "title": "BFVTW ",
+      "id": "4",
+      "describe": "",
+      "describeLang": {
+        "zh-CN": "台湾社区作弊名单系统",
+        "en-US": "Taiwan Community cheat list system"
+      },
+      "tag": ["web"],
+      "website": "https://rogeraabbccdd.github.io/BFVTW-Hackers/",
+      "get": "",
+      "hot": false
+    },
+    {
+      "title": "战地PC/手机战绩速查工具",
+      "id": "5",
+      "describe": "同时支持电脑手机快速查询战绩进行标记",
+      "tag": ["web", "app"],
+      "website": "https://www.notion.so/1-5-f348c539fd4f41a08878f274a37c7d81",
+      "get": "",
+      "hot": false
+    },
+    {
+      "title": "Discord Bot",
+      "titleLang": {
+        "zh-CN": "Discord 统计机器人",
+        "en-US": "Discord bot"
+      },
+      "id": "6",
+      "describe": "《战地风云》系列的Discord统计机器人",
+      "tag": ["web", "bot", "bf1", "bfv", "bf6"],
+      "website" : "",
+      "get": "https://top.gg/bot/714524944783900794"
+    },
+    {
+      "title": "QQ机器人",
+      "id": "7",
+      "describe": "腾讯群机器人",
+      "tag": ["qq", "bot", "bf1", "bfv"],
+      "website" : "",
+      "get": "https://www.superwatergod.xyz/bf-bot"
+    },
+    {
+      "title": "BFBAN APP",
+      "id": "8",
+      "titleLang": {
+        "zh-CN": "联BAN应用",
+        "en-US": "BFBAN app mobile"
+      },
+      "describe": "",
+      "describeLang": {
+        "zh-CN": "基础bfban数据库开发的手机bfban",
+        "en-US": "Mobile bfban based on bfban database development"
+      },
+      "tag": ["app"],
+      "website": "https://bfban-app.cabbagelol.net",
+      "get": "",
+      "hot": false
+    }
+  ]
+}

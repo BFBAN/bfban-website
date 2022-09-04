@@ -1,0 +1,12 @@
+{
+  "static": false,
+  "child": [
+    {
+      "name": "user name",
+      "avatar": "exmaple.com",
+      "identity": ["tag 1","tag 2"],
+      "content": "user content",
+      "showLang": ["zh-CN"]
+    }
+  ]
+}

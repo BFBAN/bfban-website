@@ -1,0 +1,49 @@
+{
+  "title": "menu",
+  "type": [
+    "desktop",
+    "desktopApp",
+    "mobile",
+    "mobileApp"
+  ],
+  "child": [
+    {
+      "name": "index",
+      "type": [
+        "desktop",
+        "mobile"
+      ],
+      "to": {
+        "name": "home",
+        "query": {
+          "D83EDD96": "\uD83E\uDD96"
+        }
+      }
+    },
+    {
+      "name": "cheaters",
+      "type": [
+        "desktop",
+        "mobile"
+      ],
+      "to": {
+        "name": "player",
+        "query": {
+          "status": "-1",
+          "D83EDD96": "\uD83E\uDD96"
+        }
+      }
+    },
+    {
+      "name": "report",
+      "type": [
+        "desktop",
+        "mobile"
+      ],
+      "to": {
+        "name": "report",
+        "query": {}
+      }
+    }
+  ]
+}

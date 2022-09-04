@@ -1,0 +1,21 @@
+{
+  "title": "privilege",
+  "child": [
+    {
+      "value": "root",
+      "class": "primary"
+    },
+    {
+      "value": "admin",
+      "class": "magenta"
+    },
+    {
+      "value": "super",
+      "class": "primary"
+    },
+    {
+      "value": "normal",
+      "class": "success"
+    }
+  ]
+}
