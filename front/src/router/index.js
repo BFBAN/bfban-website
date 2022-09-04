@@ -63,10 +63,10 @@ const routes = [
     },
 
     // 作弊名单
-    {name: 'player', path: '/player', component: List},
+    {name: 'player_list', path: '/player', component: List},
 
     // 作弊者详情
-    {name: 'cheater', path: '/player/:ouid', component: Detail},
+    {name: 'player', path: '/player/:ouid', component: Detail},
 
     // 作弊者分享面板
     {name: 'cheater_share', path: '/player/:ouid/share', component: DetailShare},

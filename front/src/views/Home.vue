@@ -116,7 +116,7 @@
             </h5>
           </Col>
           <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
-            <router-link :to="{name: 'player'}">
+            <router-link :to="{name: 'player_list'}">
               <Button type="dashed">
                 {{ $t('home.activity.more') }}
               </Button>
