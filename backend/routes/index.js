@@ -18,25 +18,44 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/statistics?reports={reports}&players={players}:
+ * /api/statistics:
  *   get:
  *     tags:
  *       - 统计
+ *     summary: 获取简单统计信息
  *     description: 取得统计, 支持reports、players、confirmed、registers、banappeals、details
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: reports
- *         type: bool
- *         in: path
+ *         type: boolean
+ *         in: query
  *         value: true
  *       - name: players
- *         type: bool
- *         in: path
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *       - name: confirmed
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *       - name: registers
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *       - name: banappeals
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *       - name: details
+ *         type: boolean
+ *         in: query
  *         value: true
  *     responses:
  *       200:
- *         description: 返回from
+ *         description: statistics.ok
+ *       400:
+ *         description: statistics.bad
  */
 router.get('/statistics', [
     checkquery('from').optional().isInt({min: 0}),
@@ -65,6 +84,23 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/playerStatistics:
+ *   post:
+ *     tags:
+ *       - 统计
+ *     summary: 获取游戏类型、游戏作弊方式统计
+ *     description: 像graphql一样
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: playerStatistics.success
+ *       400:
+ *         description: playerStatistics.bad
+ */
 router.post('/playerStatistics', [  // like graphql :)
     checkbody('data').isArray({min: 0, max: 10}).custom((val, {req})=> {
         for(let i of val)
@@ -93,6 +129,21 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/activities:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     summary: 获取网站动态
+ *     description: 取得网站近期操作动态，包含注册、举报、回复、申诉内容
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: activities.ok
+ */
 router.get('/activities', [
     checkquery('from').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100})
@@ -161,6 +212,60 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/players:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     summary: 玩家列表
+ *     description: 获取玩家列表
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: game
+ *         description: 游戏类型，['bf1', 'bfv', 'bf6']
+ *         type: string
+ *         in: query
+ *         value: bf1
+ *       - name: createTimeFrom
+ *         description: 举报创建时间
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: updateTimeFrom
+ *         description: 最近更新时间
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: createTimeTo
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: updateTimeTo
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: status
+ *         description: 案件状态类型
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: sortBy
+ *         description: 筛选方式,['createTime','updateTime','viewNum','commentsNum']
+ *         type: string
+ *         in: query
+ *         value: commentsNum
+ *       - name: order
+ *         description: 顺序方式，['desc','asc']
+ *         type: string
+ *         in: query
+ *         value: desc
+ *     responses:
+ *       200: players.ok
+ *         description: activities.ok
+ *       400: players.bad
+ */
 router.get('/players', [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
@@ -273,6 +378,45 @@ async function (req, res, next) {
     }
 });
 
+/**
+ * @swagger
+ * /api/banAppeals:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     summary: 申诉
+ *     description: 在石锤状态下，提交申诉
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: game
+ *         description: 游戏类型，['bf1', 'bfv', 'bf6']
+ *         type: string
+ *         in: query
+ *         value: bf1
+ *       - name: createTimeFrom
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: createTimeTo
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: status
+ *         description: 案件状态类型
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: order
+ *         description: 顺序方式，['desc','asc']
+ *         type: string
+ *         in: query
+ *         value: desc
+ *     responses:
+ *       200: players.ok
+ *         description: activities.ok
+ *       400: players.bad
+ */
 router.get('/banAppeals', [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
@@ -325,11 +469,12 @@ async (req, res, next)=>{
  *   get:
  *     tags:
  *       - 统计
- *     description: 获取所有管理员
+ *     summary: 获取所有管理员
+ *     description: 获取所有管理员, 包含admin/super/root身份
  *     produces:
  *       - application/json
  *     responses:
- *       200:
+ *       200: getAdmins.success
  */
 router.get('/admins', async (req, res, next)=> {
     try {

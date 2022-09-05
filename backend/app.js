@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
 import config from "./config.js";
+import docs_config from "./docs-config.js"
 import "./lib/configLoader.js"; // to dynamic update config
 import * as misc from "./lib/misc.js";
 import {generateCaptcha} from "./lib/captcha.js";
@@ -39,7 +40,7 @@ const app = express();
 // see swagger docs [https://swagger.io/specification/]
 const swaggerSpec = swaggerJsDoc({
     // import swaggerDefinitions
-    swaggerDefinition: config.docs,
+    swaggerDefinition: docs_config,
     // path to the API docs
     apis: ['./routes/*.js'],
 });
