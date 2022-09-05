@@ -3,6 +3,10 @@ CACHE MANIFEST
 
 CACHE:
 # 需要缓存的列表
+# public/
+# public/conf
+# public/lang
+# public/theme
 
 NETWORK:
 # 不需要缓存的
