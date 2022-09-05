@@ -396,7 +396,6 @@ async (req, res, next)=>{
     }
 });
 
-
 router.get('/timeline', [
     checkquery('dbId').optional().isInt({min: 0}),
     checkquery('userId').optional().isInt({min: 0}),

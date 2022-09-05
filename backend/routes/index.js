@@ -1,5 +1,6 @@
 "use strict";
 import express from "express";
+
 import { check, body as checkbody, query as checkquery, validationResult } from "express-validator";
 import { Transform } from "stream";
 
@@ -15,9 +16,31 @@ import { pushOriginNameLog } from "./player.js";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/statistics?reports={reports}&players={players}:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     description: 取得统计, 支持reports、players、confirmed、registers、banappeals、details
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: reports
+ *         type: bool
+ *         in: path
+ *         value: true
+ *       - name: players
+ *         type: bool
+ *         in: path
+ *         value: true
+ *     responses:
+ *       200:
+ *         description: 返回from
+ */
 router.get('/statistics', [
     checkquery('from').optional().isInt({min: 0}),
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+],
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -296,7 +319,18 @@ async (req, res, next)=>{
     }
 });
 
-
+/**
+ * @swagger
+ * /api/admins:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     description: 获取所有管理员
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ */
 router.get('/admins', async (req, res, next)=> {
     try {
         /** @type {import("../typedef.js").User[]} */
@@ -316,6 +350,33 @@ router.get('/admins', async (req, res, next)=> {
     }
 })
 
+/**
+ * @swagger
+ * /api/search?game={game}&createTimeFrom={createTimeFrom}&createTimeTo={createTimeTo}:
+ *   get:
+ *     tags:
+ *       - 查询
+ *     description: 查询举报玩家
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: game
+ *         type: string
+ *         in: path
+ *         value: bf1
+ *       - name: createTimeFrom
+ *         description: 创建时间,时间戳
+ *         type: num
+ *         in: path
+ *         value: 1544313600000
+ *       - name: createTimeTo
+ *         description: 结束时间,时间戳
+ *         type: num
+ *         in: path
+ *         value: 1670544000000
+ *     responses:
+ *       200:
+ */
 router.get('/search', normalSearchRateLimiter, [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
@@ -368,6 +429,22 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/advanceSearch:
+ *   get:
+ *     tags:
+ *       - 查询
+ *     description: 历史举报玩家名称
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: param
+ *         in: path
+ *         value:
+ *     responses:
+ *       200:
+ */
 router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted','freezed']), 
     advSearchRateLimiter.limiter([{roles: ['root','super','admin','dev'], value: 0}]), [
     checkquery('param').isAlphanumeric('en-US', {ignore: '-_'}).trim().isLength({min: 4, max: 32})
@@ -460,7 +537,18 @@ async (req, res, next)=>{
     }
 });
 
-
+/**
+ * @swagger
+ * /api/siteStats:
+ *   get:
+ *     tags:
+ *       - 查询
+ *     description: 网站基本数据统计
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ */
 const siteStatsCache = {data: undefined, time: new Date(0)};
 router.get('/siteStats', async (req, res, next)=>{
     try {

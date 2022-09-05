@@ -32,6 +32,8 @@
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "svg-captcha-fixed": "^1.5.2",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.5.0",
     "uuid": "^8.3.2",
     "validator": "^13.7.0",
     "xml": "^1.0.1",

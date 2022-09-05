@@ -1,5 +1,7 @@
 "use strict";
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+import swaggerJsDoc from "swagger-jsdoc";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
@@ -23,6 +25,7 @@ import {verifyJWT} from "./middleware/auth.js";
 
 import "./services/loader.js"; // load services
 
+// process
 process.on('uncaughtException', (err) => {
     logger.error('Uncaught Exception:', err.message, err.stack);
 });
@@ -31,6 +34,17 @@ process.on('unhandledRejection', (err) => {
 });
 
 const app = express();
+
+// initialize swagger-jsdoc
+// see swagger docs [https://swagger.io/specification/]
+const swaggerSpec = swaggerJsDoc({
+    // import swaggerDefinitions
+    swaggerDefinition: config.docs,
+    // path to the API docs
+    apis: ['./routes/*.js'],
+});
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.set('trust proxy', false);
 app.use((req, res, next) => {
@@ -66,6 +80,7 @@ app.use(morgan((tokens, req, res) => {
 }));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
 // cors options
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', req.header('Origin')); // better than wildcard *

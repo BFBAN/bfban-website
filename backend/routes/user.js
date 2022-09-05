@@ -305,7 +305,6 @@ async (req, res, next)=> {
     } 
 });
 
-
 router.post('/signout', verifyJWT, /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=>{
     try {
@@ -560,6 +559,5 @@ async (req, res, next)=> {
         next(err);
     }
 });
-
 
 export default router;
