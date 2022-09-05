@@ -262,7 +262,7 @@ async (req, res, next)=>{
  *         in: query
  *         value: desc
  *     responses:
- *       200: players.ok
+ *       200:
  *         description: activities.ok
  *       400: players.bad
  */
@@ -413,8 +413,7 @@ async function (req, res, next) {
  *         in: query
  *         value: desc
  *     responses:
- *       200: players.ok
- *         description: activities.ok
+ *       200: activities.ok
  *       400: players.bad
  */
 router.get('/banAppeals', [
@@ -521,6 +520,7 @@ router.get('/admins', async (req, res, next)=> {
  *         value: 1670544000000
  *     responses:
  *       200:
+ *       400: search.bad
  */
 router.get('/search', normalSearchRateLimiter, [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
@@ -588,7 +588,10 @@ async (req, res, next)=>{
  *         in: path
  *         value:
  *     responses:
- *       200:
+ *       200: data
+ *       400: advSearch.bad
+ *       500: advanceSearch.error
+ *       501: advSearch.bad
  */
 router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted','freezed']), 
     advSearchRateLimiter.limiter([{roles: ['root','super','admin','dev'], value: 0}]), [
@@ -651,7 +654,7 @@ async (req, res, next)=>{
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode>0? err.stack:'');
             return res.status(err.statusCode==501? 501:500).json({
                 error: 1, 
-                code: err.statusCode==501? 'advanceSearch.notImplement':'advanceSearch.error', 
+                code: err.statusCode==501? 'advSearch.bad':'advanceSearch.error',
                 message: err.message
             });
         }
