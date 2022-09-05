@@ -655,5 +655,14 @@
       "generate": "生成图片",
       "describe": "生成一张举报信息截图"
     }
+  },
+  "sitestats": {
+    "title": "统计",
+    "reports": "社区共计已举报",
+    "confirmed": "已处理案件",
+    "banAppeals": "已上诉",
+    "registers": "社区管理已处理案件",
+    "players": "现有举报案件",
+    "admins": "总共管理员数"
   }
 }

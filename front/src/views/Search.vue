@@ -16,16 +16,16 @@
 
       <div :class="`search-content ${cheaters.length > 0 ? 'search-content-mini' : ''}`">
         <Row :gutter="30">
-          <Col flex="auto" :xs="{span: 20, push: 1,pull: 1}" :lg="{push:0, pull: 0}">
+          <Col :xs="{span: 24, push: 1,pull: 1}" :lg="{span: 10, push:0, pull: 0}">
             <RadioGroup v-model="searchScopeValue" type="button" size="large" class="search-input-show">
               <Radio :label="i" border v-for="i in searchScope" :key="i">{{ $t('search.scope.' + i) }}</Radio>
             </RadioGroup>
           </Col>
-          <Col flex="auto" :xs="{span: 18, push: 1,pull: 1}" :lg="{push:0, pull: 0}">
+          <Col :xs="{span: 24, push: 1,pull: 1}" :lg="{span: 14, push:0, pull: 0}">
             <Dropdown>
               <Input clearable
-                     search
                      enter-button
+                     search
                      size="large"
                      class="search-input search-input-show"
                      :placeholder="$t('search.placeholder')"
@@ -81,7 +81,7 @@
             <template slot="action">
               <li @click="searchModal = false">
                 <router-link
-                    :to="{name: 'cheater', params: {ouid: `${cheater.originPersonaId}`}}">
+                    :to="{name: 'player', params: {ouid: `${cheater.originPersonaId}`}}">
                   <Icon type="ios-eye" size="20"/>
                   查看
                 </router-link>
@@ -152,7 +152,7 @@ export default new BFBAN({
       const that = this;
       const val = this.searchVal.trim();
 
-      if (val === '') return false;
+      if (val === '' && val.length <= 3) return false;
 
       this.searchModal = true;
       this.modalSpinShow = true;
@@ -225,7 +225,7 @@ export default new BFBAN({
   }
 
   .search-input {
-    width: 100%;
+    width: 100% !important;
     min-width: 300px;
     border-radius: 10px;
   }

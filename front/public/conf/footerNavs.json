@@ -58,7 +58,12 @@
           },
           {
             "text": "header.cheaters",
-            "src": "cheaters",
+            "src": "player_list",
+            "insideLang": true
+          },
+          {
+            "text": "sitestats.title",
+            "src": "site_stats",
             "insideLang": true
           }
         ]

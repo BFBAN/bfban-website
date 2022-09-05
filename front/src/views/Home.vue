@@ -1,107 +1,61 @@
 <template>
-  <div class="container">
-    <div class="content">
-      <div class="ivu-alert-with-banner home-banner"
-           style="background-image: url('../assets/images/index-bk.png')">
-        <Row>
-          <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 9, offset: 0}">
-            <h1 class="title">
-              {{ $t("home.cover.h1") }}
-            </h1>
-            <h2>{{ $t("home.cover.h2")[Math.floor(Math.random() * 2)] }}</h2>
-            <h3>{{ $t("home.cover.h3") }}</h3>
-            <br>
-            <p>{{ $t("home.cover.h4") }}</p>
-            <Divider/>
+  <div>
+    <div class="container">
+      <div class="content">
+        <div class="ivu-alert-with-banner home-banner"
+             style="background-image: url('../assets/images/index-bk.png')">
+          <Row>
+            <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 9, offset: 0}">
+              <h1 class="title">
+                {{ $t("home.cover.h1") }}
+              </h1>
+              <h2>{{ $t("home.cover.h2")[Math.floor(Math.random() * 2)] }}</h2>
+              <h3>{{ $t("home.cover.h3") }}</h3>
+              <br>
+              <p>{{ $t("home.cover.h4") }}</p>
 
-            <router-link :to="{name: 'signup'}">
-              <Button type="primary">{{ $t("signup.title") }}</Button>
-            </router-link>
-            <Divider type="vertical"/>
-            <router-link :to="{name: 'about'}">
-              <Button type="text">
-                <Icon type="ios-help-circle-outline"/>
-                {{ $t("home.cover.subButton") }}
-              </Button>
-            </router-link>
-            <Row :gutter="10" style="margin-top: 50px">
-              <Col span="12">
-                <Card dis-hover>
-                  <h3>{{ statistics.reports || 0 }}</h3>
-                  <span>{{ $t("home.cover.dataReceived") }}</span>
-                </Card>
-              </Col>
-              <Col span="12">
-                <Card dis-hover>
-                  <h3>{{ statistics.confirmed || 0 }}</h3>
-                  <span>{{ $t("home.cover.confirmData") }}</span>
-                </Card>
-              </Col>
-            </Row>
-            <br>
-            <p>{{ $t("home.cover.endTime") }}</p>
-            <br>
-          </Col>
-          <Col span="16" class="mobile-hide" :lg="{span: 14, push: 1}" type="flex" align="right" justify="center"
-               style="display: flex; justify-content: center; align-items: center">
-            <img src="../assets/images/index-gl.png" width="100%" class="ivu-row-top">
-          </Col>
-        </Row>
-      </div>
+              <Divider/>
 
-      <Row :gutter="20">
-        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
-          <Card>
-            <Row>
-              <Col span="5">
-                <Icon type="md-chatboxes" size="50" color="#19be6b"/>
-              </Col>
-              <Col span="18" align="right">
-                <Tooltip class="joinBFbanTip" :max-width="300" content="集群服务器管理与作弊检测、监控、机器人">
-                  <div>
-                    <h3>集群管理与检测</h3>
-                    <p>BFBan</p>
-                  </div>
-                </Tooltip>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
-          <a href="scriptjava:void(0)">
-            <Card>
-              <Row>
+              <router-link :to="{name: 'signup'}">
+                <Button type="primary">{{ $t("signup.title") }}</Button>
+              </router-link>
+              <Divider type="vertical"/>
+              <router-link :to="{name: 'about'}">
+                <Button type="text">
+                  <Icon type="ios-help-circle-outline"/>
+                  {{ $t("home.cover.subButton") }}
+                </Button>
+              </router-link>
+
+              <Row :gutter="10" style="margin-top: 50px">
                 <Col span="12">
-                  <Icon type="ios-bookmark" size="50" color="#2d8cf0"/>
+                  <router-link :to="{name: 'site_stats'}">
+                    <Card dis-hover>
+                      <h3>{{ statistics.reports || 0 }}</h3>
+                      <span>{{ $t("home.cover.dataReceived") }}</span>
+                    </Card>
+                  </router-link>
                 </Col>
-                <Col span="12" align="right">
-                  <div>
-                    <h3>Wiki</h3>
-                    <p>联BAN百科</p>
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </a>
-        </Col>
-        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 8, push: 0, pull: 0}">
-          <router-link :to="{name: 'apps'}">
-            <Card>
-              <Row>
-                <Col span="5">
-                  <Icon type="md-apps" size="50" color="#ff9900"/>
-                </Col>
-                <Col span="18" align="right">
-                  <div>
-                    <h3>工具</h3>
-                    <p>整合BFBAN数据库第三方</p>
-                  </div>
+                <Col span="12">
+                  <router-link :to="{name: 'site_stats'}">
+                    <Card dis-hover>
+                      <h3>{{ statistics.confirmed || 0 }}</h3>
+                      <span>{{ $t("home.cover.confirmData") }}</span>
+                    </Card>
+                  </router-link>
                 </Col>
               </Row>
-            </Card>
-          </router-link>
-        </Col>
-      </Row>
+              <br>
+              <p>{{ $t("home.cover.endTime") }}</p>
+              <br>
+            </Col>
+            <Col span="16" class="mobile-hide" :lg="{span: 14, push: 1}" type="flex" align="right" justify="center"
+                 style="display: flex; justify-content: center; align-items: center">
+              <img src="../assets/images/index-gl.png" width="100%" class="ivu-row-top">
+            </Col>
+          </Row>
+        </div>
+      </div>
     </div>
 
     <div class="home-box mobile-hide ivu-primary">
@@ -152,7 +106,7 @@
                   {{ $t('basic.games.' + a_i.game) }}
                 </Tag>
                 <router-link
-                    :to="{name: 'cheater', params: {game: `${a_i.game}`, ouid: `${a_i.playerOriginPersonaId}`}}">
+                    :to="{name: 'player', params: {game: `${a_i.game}`, ouid: `${a_i.playerOriginPersonaId}`}}">
                   {{ a_i.toPlayerName }}
                 </router-link>
               </span>
@@ -174,7 +128,7 @@
 
                 {{ $t('detail.info.judge') }}
 
-                <router-link :to="{name: 'cheater', params: {ouid: `${a_i.playerOriginPersonaId}`}}">
+                <router-link :to="{name: 'player', params: {ouid: `${a_i.playerOriginPersonaId}`}}">
                   {{ a_i.toPlayerName }}
                 </router-link>
 
@@ -193,7 +147,9 @@
       </div>
     </div>
 
-    <Tell class="mobile-hide"></Tell>
+    <div class="container">
+      <Tell class="mobile-hide content"></Tell>
+    </div>
   </div>
 </template>
 
@@ -236,6 +192,9 @@ export default new BFBAN({
         this.gameName = res.gameName;
       });
     },
+    /**
+     * 获取动态
+     */
     getActivity() {
       http.get(api["activity"], {}).then((res) => {
         const d = res.data;
@@ -255,6 +214,9 @@ export default new BFBAN({
         }
       })
     },
+    /**
+     * 获取统计
+     */
     getStatisticsInfo() {
       http.get(api["statistics"], {
         params: {
@@ -293,7 +255,7 @@ export default new BFBAN({
   overflow: hidden;
   min-height: 850px;
   max-height: 1000px;
-  margin: 50px -25% 0 -25%;
+  margin: 50px -25% -20px -25%;
   text-align: center;
 }
 

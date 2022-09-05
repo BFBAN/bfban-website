@@ -655,5 +655,14 @@
 			"generate": "Generate a image",
 			"describe": "Generate a report evidence screenshot"
 		}
+	},
+	"sitestats": {
+		"title": "Website statistics",
+		"reports": "Has been reported",
+		"confirmed": "Cases dealt with",
+		"banAppeals": "Have appealed",
+		"registers": "Community management has handled the case",
+		"players": "Existing reported cases",
+		"admins": "Total Number of administrators"
 	}
 }

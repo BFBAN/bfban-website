@@ -5,6 +5,8 @@
 export default class Api {
   constructor() {
     return {
+      'siteStats': 'siteStats',
+      'admins': 'admins',
       'search': 'search',
       'cheaters': 'player',
       'captcha': 'captcha',
