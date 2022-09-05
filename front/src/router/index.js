@@ -15,6 +15,7 @@ const Signin = () => import('@/views/Signin.vue');
 const Signup = () => import('@/views/Signup.vue');
 const ForgetPassword = () => import('@/views/forgetPassword.vue');
 const SignupComplete = () => import('@/views/SignupComplete.vue');
+const SiteStats = () => import('@/views/SiteStats.vue');
 const Account = () => import('@/views/Account.vue');
 const About = () => import('@/views/About.vue');
 const Link = () => import('@/views/Link.vue');
@@ -111,6 +112,9 @@ const routes = [
     // 账户验证
     {name: 'signupComplete', path: '/signupComplete/:code', component: SignupComplete},
     //  { name: 'signup', path: '/reset', component: Reset },
+
+    // 网站统计
+    {name: 'site_stats', path: '/sitestats', component: SiteStats},
 
     {name: 'account', path: '/account/:uId', component: Account},
 

@@ -9,7 +9,16 @@ import store from './store'
 import ViewUI from 'view-design';
 import VueQuillEditor from 'vue-quill-editor'
 import Vue2Editor from "vue2-editor";
+import ECharts from 'vue-echarts'
 // import desktop from '../desktop/assets/js/index'
+
+// echarts
+import { use } from 'echarts/core'
+import {CanvasRenderer} from 'echarts/renderers'
+import {BarChart} from 'echarts/charts'
+import {GridComponent, TooltipComponent} from 'echarts/components'
+use([CanvasRenderer, BarChart, GridComponent, TooltipComponent]);
+Vue.component('v-chart', ECharts);
 
 // quill css
 import 'quill/dist/quill.core.css'

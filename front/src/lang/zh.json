@@ -47,7 +47,9 @@
       "super": "超级管理员",
       "normal": "用户",
       "blacklisted": "黑名单",
-      "test": "测试账户"
+      "test": "测试账户",
+      "dev": "开发组",
+      "bot": "机器人"
     },
     "tip": {
       "notlang": "未翻译",

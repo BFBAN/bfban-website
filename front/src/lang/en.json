@@ -47,7 +47,9 @@
 			"super": "Super Administrator",
 			"normal": "Normal user",
 			"blacklisted": "blacklisted user",
-			"test": "test account"
+			"test": "test account",
+			"dev": "DEV",
+			"bot": "Bot"
 		},
 		"tip": {
 			"notlang": "untranslated",
