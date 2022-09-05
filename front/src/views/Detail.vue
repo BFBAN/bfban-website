@@ -851,7 +851,7 @@
 import BFBAN from "/src/assets/js/bfban";
 import theme from "/public/conf/themes.json";
 
-import {api, http, http_token, util} from '../assets/js/index'
+import {api, http, http_token, util, storage} from '../assets/js/index'
 
 import Empty from '../components/Empty.vue'
 import Edit from "../components/Edit";
@@ -967,6 +967,28 @@ export default new BFBAN({
 
     },
     /**
+     * 更新游览值
+     */
+    onViewed () {
+      const viewed = storage.get('viewed');
+      const id = this.cheater.id;
+
+      if (!id) return;
+
+      // 在持久下存在此id，则不请求
+      if (viewed.code == 0 && viewed.data.value[id]) {
+        return;
+      }
+
+      http.post(api["player_viewed"], {
+        data: {
+          data: { id }
+        }
+      }).then((res) => {
+        storage.set('viewed', {...viewed.data.value, [id]: true});
+      });
+    },
+    /**
      * 获取基本字段
      * 从[url]中整理
      */
@@ -992,7 +1014,6 @@ export default new BFBAN({
           personaId: this.getParamsIds('personaId')
         })
       }).then((res) => {
-        this.spinShow = false;
         const d = res.data;
 
         if (d.success === 1) {
@@ -1005,6 +1026,9 @@ export default new BFBAN({
         }
       }).catch(() => {
         this.$router.push({name: "notFound"});
+      }).finally(() => {
+        this.onViewed();
+        this.spinShow = false;
       });
     },
     /**

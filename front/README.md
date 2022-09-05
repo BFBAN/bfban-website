@@ -1,4 +1,4 @@
-# BFBAN.com 前端模块
+# BFBAN 前端模块
 
 该目录存放网站用户端模块，基于vue2 + vue-cli实现。
 
@@ -10,5 +10,7 @@
 
 ## 参与开发
 
-* 网站开发，请阅读 docs/[启动Front.md](docs/启动Front.md)
-* 桌面混合开发，请阅读 docs/[桌面应用.md](docs/桌面应用.md)
+* /front ,网站开发，请阅读 /front/docs/[启动Front.md](docs/启动Front.md)
+* /front ,桌面混合开发，请阅读 /front/docs/[桌面应用.md](docs/桌面应用.md)
+* /backend , 后端开发，请阅读 /backend/docs下的md
+* /backend ,执行`npm run start`后，访问[文档(127.0.0.1:3000/docs)](127.0.0.1:3000/docs)查阅testing
