@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2fdcb948857ef38f9db1",
+    "revision": "0906a89281eca22b7ef4",
     "url": "/assets/css/app.49282504.css"
   },
   {
@@ -171,7 +171,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/img/videoStyle.b2be5bfa.png"
   },
   {
-    "revision": "2fdcb948857ef38f9db1",
+    "revision": "0906a89281eca22b7ef4",
     "url": "/assets/js/app.2.0.2.js"
   },
   {
@@ -395,7 +395,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/conf/themes.json"
   },
   {
-    "revision": "82261343a75af7c0452e06fd263acd96",
+    "revision": "2897ed28d9571c3a896fb92b6cdec145",
     "url": "/index.html"
   },
   {
@@ -403,7 +403,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/lang/README.md"
   },
   {
-    "revision": "25a2d07569e798085805cbf8a6df1f0f",
+    "revision": "db58a5408665c5b1877a7097ed008af2",
     "url": "/manifest.json"
   },
   {
