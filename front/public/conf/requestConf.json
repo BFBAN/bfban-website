@@ -8,8 +8,8 @@
       "qiniuUrl": ""
     },
     "development2": {
-      "protocol": "http",
-      "request": "101.43.35.41:3000/api/",
+      "protocol": "https",
+      "request": "seeding.linrunrun.online/api/",
       "qiniuUrl": ""
     },
     "development3": {
@@ -19,7 +19,7 @@
     },
     "production": {
       "protocol": "https",
-      "request": "bfban.gametools.network/api/",
+      "request": "seeding.linrunrun.online/api/",
       "qiniuUrl": ""
     }
   }
