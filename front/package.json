@@ -3,9 +3,9 @@
   "version": "2.0.2",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --mode development",
     "local-serve": "serve -s front/dist",
-    "build": "vue-cli-service build --dest dist --report",
+    "build": "vue-cli-service build --dest dist --report --mode production",
     "lint": "vue-cli-service lint",
     "electron": "electron .",
     "electron-dist": "electron-builder",

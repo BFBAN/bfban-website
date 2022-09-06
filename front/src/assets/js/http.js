@@ -34,7 +34,17 @@ export default class Http extends Conf {
     }
 
     getUrl() {
-        const GETURL = this.CONF.child[this.CONF.requestActionName];
+        let GETURL;
+        console.log(process.env.NODE_ENV);
+         switch (process.env.NODE_ENV) {
+             case 'development': // 开发
+                 GETURL = this.CONF.child[this.CONF.requestActionName];
+                 break;
+             case 'production': // 生产
+             default:
+                 GETURL = this.CONF.child[this.CONF.requestProductionName]
+                 break;
+         }
         return `${GETURL.protocol || 'http'}://${GETURL.request}`;
     }
 

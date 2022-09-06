@@ -1,7 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpaackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const conf = require('./package.json');
-
 
 module.exports = {
   outputDir: 'dist',
@@ -12,7 +11,7 @@ module.exports = {
 
   pwa: {
     workboxPluginMode: 'InjectManifest',
-    name: 'bfban_2.0',
+    name: 'BFBAN',
     workboxOptions: {
       swSrc: 'src/service-worker.js'
     }
@@ -44,10 +43,16 @@ module.exports = {
       chunkFilename: `assets/js/[name].${conf.version}.js`
     },
     plugins: [
-      new CopyWebpaackPlugin([{
-        from: 'src/lang/*.json',
-        to: 'public/lang/*.json'
-      }])
-    ]
+      new CopyWebpackPlugin(
+          [{
+            from: `src/lang`,
+            to: `lang`
+          }],
+          {
+            // 无论是否修改，全部复制
+            copyUnmodified: true
+          }
+      ),
+    ],
   },
 }
