@@ -9,9 +9,11 @@ module.exports = {
 
   publicPath: '/',
 
+  // PWA
+  // https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa
   pwa: {
-    workboxPluginMode: 'InjectManifest',
     name: 'BFBAN',
+    workboxPluginMode: 'InjectManifest',
     workboxOptions: {
       swSrc: 'src/service-worker.js'
     }

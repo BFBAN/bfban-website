@@ -5,6 +5,7 @@
 import time from "./date";
 
 export default  class Storage{
+  THAT = this;
   STORAGENAME = 'bfban.';
   DATE = new time();
 
@@ -12,8 +13,37 @@ export default  class Storage{
     this.STORAGENAME = data.name;
   }
 
+  session () {
+    return {
+      set: (name, value) => {
+        let data = {value, time: this.DATE.now()}
+        sessionStorage.setItem(this.STORAGENAME + name, JSON.stringify(data));
+
+        return {code: 0, data};
+      },
+      get: (name) => {
+        let data = JSON.parse(
+            sessionStorage.getItem(this.STORAGENAME + name)
+        );
+        let result = {code: 0, data};
+        if (data == null || data == '' || data == undefined) {
+          result = {code: -1}
+        }
+        return result;
+      }
+    }
+  }
+
+  local () {
+    return {
+      set: this.set,
+      get: this.get,
+      rem: this.rem
+    }
+  }
+
   /**
-   * 设置
+   * 写入
    */
   set (name, value) {
     let data = {value, time: this.DATE.now()}
@@ -23,7 +53,7 @@ export default  class Storage{
   }
 
   /**
-   * 获取
+   * 读取
    */
   get (name) {
     let data = JSON.parse(
