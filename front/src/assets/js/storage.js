@@ -13,25 +13,24 @@ export default  class Storage{
     this.STORAGENAME = data.name;
   }
 
-  session () {
-    return {
-      set: (name, value) => {
-        let data = {value, time: this.DATE.now()}
-        sessionStorage.setItem(this.STORAGENAME + name, JSON.stringify(data));
-
-        return {code: 0, data};
-      },
-      get: (name) => {
-        let data = JSON.parse(
-            sessionStorage.getItem(this.STORAGENAME + name)
-        );
-        let result = {code: 0, data};
-        if (data == null || data == '' || data == undefined) {
-          result = {code: -1}
+  session ()  {
+      return {
+        set: (name, value) => {
+          let data = {value, time: this.DATE.now()};
+          sessionStorage.setItem(this.STORAGENAME + name, JSON.stringify(data));
+          return {code: 0, data};
+        },
+        get: (name) => {
+          let data = JSON.parse(
+              sessionStorage.getItem(this.STORAGENAME + name)
+          );
+          let result = {code: 0, data};
+          if (data == null || data == '' || data == undefined) {
+            result = {code: -1}
+          }
+          return result;
         }
-        return result;
       }
-    }
   }
 
   local () {

@@ -164,7 +164,16 @@
 		"media": {
 			"title": "Media library",
 			"capacity": "Capacity",
-			"fileNum": "{num} file"
+			"fileNum": "{num} file",
+			"steps": {
+				"0": "选择文件",
+				"1": "编辑",
+				"2": "查看"
+			},
+			"types": {
+				"0": "图片链接",
+				"1": "上传到图床"
+			}
 		}
 	},
 	"detail": {

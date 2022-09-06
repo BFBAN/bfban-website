@@ -964,19 +964,18 @@ export default new BFBAN({
         this.verify.choice = res.action;
         this.verify.status = this.verify.choice[0].value;
       });
-
     },
     /**
      * 更新游览值
      */
     onViewed () {
-      const viewed = storage.get('viewed');
+      const viewed = storage.session().get('viewed');
       const id = this.cheater.id;
 
       if (!id) return;
 
       // 在持久下存在此id，则不请求
-      if (viewed.code == 0 && viewed.data.value[id]) {
+      if (viewed.code <= 0 || viewed?.data?.value[id]) {
         return;
       }
 
@@ -985,7 +984,7 @@ export default new BFBAN({
           data: { id }
         }
       }).then((res) => {
-        storage.set('viewed', {...viewed.data.value, [id]: true});
+        storage.session().set('viewed', {...viewed.data.value, [id]: true});
       });
     },
     /**

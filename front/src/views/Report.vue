@@ -183,16 +183,8 @@
                 </FormItem>
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
-                  <Alert type="warning">
-                    {{ $t("report.info.uploadPic1", {msg: "uploadPic1"}) }}
-                  </Alert>
-                  <Alert type="warning">
-                    {{ $t("report.info.uploadPic2", {msg: "uploadPic2"}) }}
-                    <a target="_blank"
-                       href="https://sm.ms">https://sm.ms</a>，{{ $t("report.info.uploadPic3", {msg: "uploadPic3"}) }}
-                  </Alert>
-                  <span class="hint">{{ $t("report.info.uploadPic4", {msg: "uploadPic4"}) }}</span>
-                  <Edit :index="index" :content="$t('report.info.description')" @change="handleMiscChange"/>
+<!--                  <Edit :index="index" :content="$t('report.info.description')" @change="handleMiscChange"/>-->
+                  <Textarea id="edit" :placeholder="$t('report.info.description')"></Textarea>
                 </FormItem>
               </Card>
               <!-- 证据 E -->
@@ -258,6 +250,7 @@ import {checkReportFormData} from "@/mixins/common";
 
 import gameName from '/public/conf/gameName.json'
 import Edit from "@/components/Edit.vue";
+import Textarea from "@/components/Textarea.vue";
 
 export default new BFBAN({
   data() {
@@ -272,7 +265,7 @@ export default new BFBAN({
       cheatMethodsGlossary: [],
     };
   },
-  components: {Edit},
+  components: {Edit, Textarea},
   created() {
     this.http = http_token.call(this);
 
