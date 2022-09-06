@@ -164,7 +164,16 @@
     "media": {
       "title": "媒体库",
       "capacity": "容量",
-      "fileNum": "{num}份文件"
+      "fileNum": "{num}份文件",
+      "steps": {
+        "0": "选择文件",
+        "1": "编辑",
+        "2": "查看"
+      },
+      "types": {
+        "0": "图片链接",
+        "1": "上传到图床"
+      }
     }
   },
   "detail": {
@@ -311,7 +320,7 @@
       "reportOne": "举报单个",
       "reportAll": "举报所有",
       "fromDatabaseOneId": "从联BAN数据库中选取",
-      "description": "尽可能详细的列举被举报人的作弊证据",
+      "description": "请清晰描述举报者行为、特点、发生地点、时间，列出他的作弊举止，给出最后为何举报",
       "required": "视频地址",
       "onlyOneId": "一次只有一个Origin ID",
       "loginExpired": "您的登录已过期，请重新登录"
