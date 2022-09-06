@@ -35,7 +35,6 @@ export default class Http extends Conf {
 
     getUrl() {
         let GETURL;
-        console.log(process.env.NODE_ENV);
          switch (process.env.NODE_ENV) {
              case 'development': // 开发
                  GETURL = this.CONF.child[this.CONF.requestActionName];
