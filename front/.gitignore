@@ -1,4 +1,6 @@
 .DS_Store
+.browserslistrc
+.env
 node_modules
 /dist
 /public/lang/*.json

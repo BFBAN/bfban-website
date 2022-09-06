@@ -49,27 +49,33 @@
         </Row>
         <!-- 游戏类型选择 E -->
 
-        <RadioGroup
-            style="margin-top: 12px"
-            v-model="statusGroup"
-            @on-change="handleStatusChange"
-            type="button">
-          <Radio label="-1">
-            <Badge :overflow-count="900000"
-                   size="small"
-                   type="info">
-              {{ $t("basic.status.all") }}
-            </Badge>
-          </Radio>
-          <Radio
-              v-for="status in cheaterStatus"
-              :key="status.value"
-              :label="`${status.value}`">
-            <Badge :count="getcHeaterStatusNum(status.value)" :overflow-count="900000" type="info">
-              {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
-            </Badge>
-          </Radio>
-        </RadioGroup>
+        <!-- 状态类型 S -->
+        <Row>
+          <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
+            <RadioGroup
+                style="margin-top: 12px"
+                v-model="statusGroup"
+                @on-change="handleStatusChange"
+                type="button">
+              <Radio label="-1">
+                <Badge :overflow-count="900000"
+                       size="small"
+                       type="info">
+                  {{ $t("basic.status.all") }}
+                </Badge>
+              </Radio>
+              <Radio
+                  v-for="status in cheaterStatus"
+                  :key="status.value"
+                  :label="`${status.value}`">
+                <Badge :count="getcHeaterStatusNum(status.value)" :overflow-count="900000" type="info">
+                  {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
+                </Badge>
+              </Radio>
+            </RadioGroup>
+          </Col>
+        </Row>
+        <!-- 状态类型 E -->
 
         <Row :gutter="10">
           <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 17, push: 0, pull: 0}">
@@ -84,16 +90,16 @@
                     <Row :gutter="10" type="flex">
                       <Col :xs="{span: 8, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
                         <!-- 头像 S -->
-                        <Avatar :src="d.avatarLink || '//bfban-static.bamket.com/assets/images/avatar.png'"
+                        <Avatar :src="d.avatarLink"
                                 alt="avatar"
-                                size="55">
+                                size="55"
+                                v-if="d.avatarLink">
                         </Avatar>
                         <!-- 头像 E -->
                       </Col>
                       <Col :xs="{span: 16, push: 0,pull:0}" :lg="{span: 15, push: 0,pull:0}">
                         <div style="display: flex; flex-direction: column;">
-                          <router-link
-                              :to="{name: 'cheater', params: { ouid: `${d.originPersonaId}` }}">
+                          <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}">
                             <Tooltip :content="$t('list.colums.playerId')">
                               <h2>
                                 {{ d.originName }}

@@ -1,10 +1,10 @@
 <template>
   <div id="app" class="app ">
-    <Header></Header>
+    <Header v-if="!isFull"></Header>
     <main>
       <router-view></router-view>
     </main>
-    <Footer></Footer>
+    <Footer v-if="!isFull"></Footer>
   </div>
 </template>
 
@@ -20,6 +20,7 @@ export default {
   name: "app",
   data() {
     return {
+      isFull: false,
       split: true ? 1 : .9
     }
   },
@@ -27,12 +28,16 @@ export default {
   created() {
     this.http = http_token.call(this);
 
-    document.querySelectorAll('a').forEach(a => {a.onclick=(e) => {e.preventDefault()}});
+    this.isFull = this.$route.query.full || false;
 
     this.onLoadTheme();
     this.onUserinfo();
   },
   methods: {
+    /**
+     * 加载主题
+     * @returns {Promise<void>}
+     */
     async onLoadTheme () {
       let theme = storage.get('theme');
 
@@ -44,6 +49,24 @@ export default {
       // 让它加载默认主题
       await this.$store.dispatch('setTheme', null);
     },
+    /**
+     * 加载语言
+     * @returns {Promise<void>}
+     */
+    async onLoadLang () {
+      let selectLang = null;
+
+      if (this.$route.query.lang) {
+        selectLang = this.$route.query.lang;
+      }
+
+      // load lang
+      if (!selectLang) return ;
+      this.$store.dispatch('setLang', selectLang);
+    },
+    /**
+     * 处理用户信息
+     */
     onUserinfo () {
       if (this.isLogin) {
         this.http.get(api["user_me"], {}).then((res) => {
@@ -52,7 +75,6 @@ export default {
           if (d.success === 1) {
             // set userinfo
             this.$store.dispatch('setUserInfo', d.data);
-            // update loac language
             this.$store.dispatch('setLang', d.data.attr.language);
           }
         })

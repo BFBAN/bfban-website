@@ -45,7 +45,11 @@
 			"root": "System",
 			"admin": "Community Admin",
 			"super": "Super Administrator",
-			"normal": "Normal user"
+			"normal": "Normal user",
+			"blacklisted": "blacklisted user",
+			"test": "test account",
+			"dev": "DEV",
+			"bot": "Bot"
 		},
 		"tip": {
 			"notlang": "untranslated",
@@ -54,7 +58,7 @@
 			"noReports": "No reports yet"
 		},
 		"games": {
-			"all": "所有",
+			"all": "battlefield All",
 			"bf1": "battlefield 1",
 			"bfv": "battlefield 5",
 			"bf6": "battlefield 2042"
@@ -158,7 +162,9 @@
 			"title": "Local enhancement"
 		},
 		"media": {
-			"title": "Media library"
+			"title": "Media library",
+			"capacity": "Capacity",
+			"fileNum": "{num} file"
 		}
 	},
 	"detail": {
@@ -262,7 +268,7 @@
 			"methods": "Cheat method",
 			"content": "Judgement discription",
 			"appropriateVerdict": {
-				"title": "",
+				"title": "合适的裁决",
 				"1": "直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)",
 				"2": "简要，作弊特征明显，可使用下方模板统一判决"
 			},
@@ -443,7 +449,8 @@
 		"fillEverything": "Please fill in everything",
 		"failed": "Login failed",
 		"success": "Login sucessful",
-		"loginFirst": "Please login first"
+		"loginFirst": "Please login first",
+		"loggedIn": "哎列？请先登出 (✿◡‿◡)"
 	},
 	"signup": {
 		"title": "Register",
@@ -648,5 +655,14 @@
 			"generate": "Generate a image",
 			"describe": "Generate a report evidence screenshot"
 		}
+	},
+	"sitestats": {
+		"title": "Website statistics",
+		"reports": "Has been reported",
+		"confirmed": "Cases dealt with",
+		"banAppeals": "Have appealed",
+		"registers": "Community management has handled the case",
+		"players": "Existing reported cases",
+		"admins": "Total Number of administrators"
 	}
 }

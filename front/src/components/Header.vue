@@ -2,12 +2,10 @@
   <header v-if="!isFull">
     <div class="header-container container">
       <router-link class="mobile-hide" :to="{name: 'home'}">
-        <Badge text="beta" type="normal">
-          <img src="../assets/images/logo.png"
-               width="40"
-               height="40"
-               alt="bfban logo"/>
-        </Badge>
+        <img src="../assets/images/logo.png"
+             width="40"
+             height="40"
+             alt="bfban logo"/>
       </router-link>
       <div class="nav nav-menu">
         <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>

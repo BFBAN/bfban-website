@@ -40,6 +40,15 @@ const config = {
         user: 'somebody@somewhere.com',
         password: 'notweakpassword'
     },
+    docs: {
+        info: {
+            title: 'BFBAN V2 DOCS',
+            version: '2.0.0',
+            description: '',
+        },
+        host: '127.0.0.1:3000',
+        basePath: '/',
+    },
     services: {
         // deployment has 3 mode: THREAD, PROCESS, none
         // THREAD mode will start the service as a thread

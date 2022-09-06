@@ -29,6 +29,45 @@ async function getPlayerId({dbId, userId, personaId}) {
     return tmp.id;
 }
 
+/**
+ * @swagger
+ * /api/player:
+ *   get:
+ *     tags:
+ *       - 玩家
+ *     summary: 举报玩家详情信息
+ *     description: 获取举报玩家详情信息
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: userId
+ *         description: user ID
+ *         type: num
+ *         in: query
+ *       - name: personaId
+ *         description: persona ID
+ *         required: true
+ *         type: integer
+ *         in: query
+ *         value: 1003377988190
+ *       - name: dbId
+ *         description: db ID
+ *         type: num
+ *         in: query
+ *       - name: history
+ *         description: 历史是否存在
+ *         required: true
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *     responses:
+ *       200:
+ *         description: viewed.ok
+ *       400:
+ *         description: viewed.bad
+ *       404:
+ *         description: player.notFound
+ */
 router.get('/', [
     checkquery('userId').optional().isInt({min: 0}),
     checkquery('personaId').optional().isInt({min: 0}),
@@ -130,6 +169,28 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/player/viewed:
+ *   post:
+ *     tags:
+ *       - 玩家
+ *     summary: 游览量
+ *     description: 增加举报者游览量，请做本地缓存
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: data.id
+ *         description: player的DB id，不是橘子id
+ *         type: num
+ *         in: path
+ *         value: 1
+ *     responses:
+ *       200:
+ *         description: viewed.ok
+ *       400:
+ *         description: viewed.bad
+ */
 router.post('/viewed', viewedRateLimiter, [
     checkbody('data.id').isInt({min: 0})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */ 
@@ -396,7 +457,51 @@ async (req, res, next)=>{
     }
 });
 
-
+/**
+ * @swagger
+ * /api/player/timeline:
+ *   get:
+ *     tags:
+ *       - 玩家
+ *     summary: 时间轴
+ *     description: 玩家抽线，包含评论、举报、回复、申诉内容
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: dbId
+ *         description: db Id
+ *         required: true
+ *         type: num
+ *         in: query
+ *         value: 1
+ *       - name: userId
+ *         description: user Id
+ *         required: true
+ *         type: num
+ *         in: query
+ *         value: 1
+ *       - name: personaId
+ *         description: persona Id
+ *         required: true
+ *         type: num
+ *         in: query
+ *         value: 1
+ *       - name: order
+ *         description: 顺序，['asc', 'desc']
+ *         type: string
+ *         in: query
+ *         value: desc
+ *       - name: subject
+ *         description: 类型，['report', 'reply', 'judgement', 'banAppeal']
+ *         type: string
+ *         in: query
+ *         value: null
+ *     responses:
+ *       200:
+ *         description: viewed.ok
+ *       400:
+ *         description: viewed.bad
+ */
 router.get('/timeline', [
     checkquery('dbId').optional().isInt({min: 0}),
     checkquery('userId').optional().isInt({min: 0}),
@@ -454,7 +559,44 @@ async (req, res, next)=>{
     }
 });
 
-
+/**
+ * @swagger
+ * /api/player/reply:
+ *   post:
+ *     tags:
+ *       - 玩家
+ *     summary: 回复
+ *     description: 回复内容
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: data.toPlayerId
+ *         description: 玩家id
+ *         required: true
+ *         type: num
+ *         in: path
+ *         value: 1
+ *       - name: data.toCommentId
+ *         description: 评论、回复、申诉id
+ *         type: num
+ *         in: path
+ *         value: 1
+ *       - name: data.content
+ *         description: 内容
+ *         required: true
+ *         type: string
+ *         in: path
+ *         value: 填写举报内容
+ *     responses:
+ *       200:
+ *         description: ok
+ *       201:
+ *         description: reply.suceess
+ *       404:
+ *         description: reply.notFound
+ *       400:
+ *         description: viewed.bad
+ */
 router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']),
     commentRateLimiter.limiter([{roles: ['admin','super','root','dev','bot'], value: 0}]), [
     checkbody('data.toPlayerId').isInt({min: 0}),
@@ -505,6 +647,43 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/player/update:
+ *   post:
+ *     tags:
+ *       - 玩家
+ *     summary: 更新历史名称
+ *     description: 主动更新举报玩家新的名称
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: userId
+ *         description: 用户 id
+ *         required: true
+ *         type: num
+ *         in: path
+ *       - name: personaId
+ *         description: persona Id
+ *         required: true
+ *         type: num
+ *         in: path
+ *       - name: dbId
+ *         description: db id
+ *         required: true
+ *         type: num
+ *         in: path
+ *         value: 1
+ *     responses:
+ *       200:
+ *         description: update.success
+ *       400:
+ *         description: update.bad
+ *       404:
+ *         description: update.notFound
+ *       501:
+ *         description: update.notImplement OR update.error
+ */
 router.post('/update', verifyJWT, forbidPrivileges(['freezed','blacklisted']), 
     commentRateLimiter.limiter([{roles: ['admin','super','root','dev','bot'], value: 0}]), [
     checkquery('userId').optional().isInt({min: 0}),

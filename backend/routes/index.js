@@ -1,5 +1,6 @@
 "use strict";
 import express from "express";
+
 import { check, body as checkbody, query as checkquery, validationResult } from "express-validator";
 import { Transform } from "stream";
 
@@ -15,9 +16,50 @@ import { pushOriginNameLog } from "./player.js";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/statistics:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     summary: 获取简单统计信息
+ *     description: 取得统计, 支持reports、players、confirmed、registers、banappeals、details
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: reports
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *       - name: players
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *       - name: confirmed
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *       - name: registers
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *       - name: banappeals
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *       - name: details
+ *         type: boolean
+ *         in: query
+ *         value: true
+ *     responses:
+ *       200:
+ *         description: statistics.ok
+ *       400:
+ *         description: statistics.bad
+ */
 router.get('/statistics', [
     checkquery('from').optional().isInt({min: 0}),
-],  /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+],
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
@@ -42,6 +84,23 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/playerStatistics:
+ *   post:
+ *     tags:
+ *       - 统计
+ *     summary: 获取游戏类型、游戏作弊方式统计
+ *     description: 像graphql一样
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: playerStatistics.success
+ *       400:
+ *         description: playerStatistics.bad
+ */
 router.post('/playerStatistics', [  // like graphql :)
     checkbody('data').isArray({min: 0, max: 10}).custom((val, {req})=> {
         for(let i of val)
@@ -70,6 +129,21 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/activities:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     summary: 获取网站动态
+ *     description: 取得网站近期操作动态，包含注册、举报、回复、申诉内容
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: activities.ok
+ */
 router.get('/activities', [
     checkquery('from').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100})
@@ -138,6 +212,60 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/players:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     summary: 玩家列表
+ *     description: 获取玩家列表
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: game
+ *         description: 游戏类型，['bf1', 'bfv', 'bf6']
+ *         type: string
+ *         in: query
+ *         value: bf1
+ *       - name: createTimeFrom
+ *         description: 举报创建时间
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: updateTimeFrom
+ *         description: 最近更新时间
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: createTimeTo
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: updateTimeTo
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: status
+ *         description: 案件状态类型
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: sortBy
+ *         description: 筛选方式,['createTime','updateTime','viewNum','commentsNum']
+ *         type: string
+ *         in: query
+ *         value: commentsNum
+ *       - name: order
+ *         description: 顺序方式，['desc','asc']
+ *         type: string
+ *         in: query
+ *         value: desc
+ *     responses:
+ *       200:
+ *         description: activities.ok
+ *       400: players.bad
+ */
 router.get('/players', [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
@@ -250,6 +378,44 @@ async function (req, res, next) {
     }
 });
 
+/**
+ * @swagger
+ * /api/banAppeals:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     summary: 申诉
+ *     description: 在石锤状态下，提交申诉
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: game
+ *         description: 游戏类型，['bf1', 'bfv', 'bf6']
+ *         type: string
+ *         in: query
+ *         value: bf1
+ *       - name: createTimeFrom
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: createTimeTo
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: status
+ *         description: 案件状态类型
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: order
+ *         description: 顺序方式，['desc','asc']
+ *         type: string
+ *         in: query
+ *         value: desc
+ *     responses:
+ *       200: activities.ok
+ *       400: players.bad
+ */
 router.get('/banAppeals', [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
@@ -296,7 +462,19 @@ async (req, res, next)=>{
     }
 });
 
-
+/**
+ * @swagger
+ * /api/admins:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     summary: 获取所有管理员
+ *     description: 获取所有管理员, 包含admin/super/root身份
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200: getAdmins.success
+ */
 router.get('/admins', async (req, res, next)=> {
     try {
         /** @type {import("../typedef.js").User[]} */
@@ -316,6 +494,34 @@ router.get('/admins', async (req, res, next)=> {
     }
 })
 
+/**
+ * @swagger
+ * /api/search?game={game}&createTimeFrom={createTimeFrom}&createTimeTo={createTimeTo}:
+ *   get:
+ *     tags:
+ *       - 查询
+ *     description: 查询举报玩家
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: game
+ *         type: string
+ *         in: path
+ *         value: bf1
+ *       - name: createTimeFrom
+ *         description: 创建时间,时间戳
+ *         type: num
+ *         in: path
+ *         value: 1544313600000
+ *       - name: createTimeTo
+ *         description: 结束时间,时间戳
+ *         type: num
+ *         in: path
+ *         value: 1670544000000
+ *     responses:
+ *       200:
+ *       400: search.bad
+ */
 router.get('/search', normalSearchRateLimiter, [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
@@ -368,6 +574,25 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/advanceSearch:
+ *   get:
+ *     tags:
+ *       - 查询
+ *     description: 历史举报玩家名称
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: param
+ *         in: path
+ *         value:
+ *     responses:
+ *       200: data
+ *       400: advSearch.bad
+ *       500: advanceSearch.error
+ *       501: advSearch.bad
+ */
 router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted','freezed']), 
     advSearchRateLimiter.limiter([{roles: ['root','super','admin','dev'], value: 0}]), [
     checkquery('param').isAlphanumeric('en-US', {ignore: '-_'}).trim().isLength({min: 4, max: 32})
@@ -429,7 +654,7 @@ async (req, res, next)=>{
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode>0? err.stack:'');
             return res.status(err.statusCode==501? 501:500).json({
                 error: 1, 
-                code: err.statusCode==501? 'advanceSearch.notImplement':'advanceSearch.error', 
+                code: err.statusCode==501? 'advSearch.bad':'advanceSearch.error',
                 message: err.message
             });
         }
@@ -460,7 +685,18 @@ async (req, res, next)=>{
     }
 });
 
-
+/**
+ * @swagger
+ * /api/siteStats:
+ *   get:
+ *     tags:
+ *       - 查询
+ *     description: 网站基本数据统计
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ */
 const siteStatsCache = {data: undefined, time: new Date(0)};
 router.get('/siteStats', async (req, res, next)=>{
     try {

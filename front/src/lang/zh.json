@@ -45,7 +45,11 @@
       "root": "系统",
       "admin": "社区管理",
       "super": "超级管理员",
-      "normal": "用户"
+      "normal": "用户",
+      "blacklisted": "黑名单",
+      "test": "测试账户",
+      "dev": "开发组",
+      "bot": "机器人"
     },
     "tip": {
       "notlang": "未翻译",
@@ -158,7 +162,9 @@
       "title": "本地增强"
     },
     "media": {
-      "title": "媒体库"
+      "title": "媒体库",
+      "capacity": "容量",
+      "fileNum": "{num}份文件"
     }
   },
   "detail": {
@@ -262,7 +268,7 @@
       "methods": "作弊的方法",
       "content": "判决说明",
       "appropriateVerdict": {
-        "title": "",
+        "title": "合适的裁决",
         "1": "直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)",
         "2": "简要，作弊特征明显，可使用下方模板统一判决"
       },
@@ -443,7 +449,8 @@
     "fillEverything": "请填写规范",
     "failed": "登录失败",
     "success": "登录成功",
-    "loginFirst": "啊咧?! 请先登录"
+    "loginFirst": "啊咧?! 请先登录",
+    "loggedIn": "哎列？请先登出 (✿◡‿◡)"
   },
   "signup": {
     "title": "注册",
@@ -648,5 +655,14 @@
       "generate": "生成图片",
       "describe": "生成一张举报信息截图"
     }
+  },
+  "sitestats": {
+    "title": "统计",
+    "reports": "社区共计已举报",
+    "confirmed": "已处理案件",
+    "banAppeals": "已上诉",
+    "registers": "社区管理已处理案件",
+    "players": "现有举报案件",
+    "admins": "总共管理员数"
   }
 }

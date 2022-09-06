@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <br>
     <div class="content">
       <Row>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">

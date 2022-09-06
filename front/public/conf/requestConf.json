@@ -1,5 +1,5 @@
 {
-  "requestActionName": "development4",
+  "requestActionName": "development2",
   "requestProductionName": "production",
   "child": {
     "development": {
@@ -9,17 +9,12 @@
     },
     "development2": {
       "protocol": "http",
-      "request": "bfban-api.cabbagelol.net/api/",
+      "request": "101.43.35.41:3000/api/",
       "qiniuUrl": ""
     },
     "development3": {
       "protocol": "http",
-      "request": "101.43.35.41:3000/api/",
-      "qiniuUrl": ""
-    },
-    "development4": {
-      "protocol": "http",
-      "request": "localhost:3000/api/",
+      "request": "127.0.0.1:3000/api/",
       "qiniuUrl": ""
     },
     "production": {

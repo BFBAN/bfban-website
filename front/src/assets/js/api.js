@@ -5,6 +5,8 @@
 export default class Api {
   constructor() {
     return {
+      'siteStats': 'siteStats',
+      'admins': 'admins',
       'search': 'search',
       'cheaters': 'player',
       'captcha': 'captcha',
@@ -32,6 +34,7 @@ export default class Api {
       'player_report': 'player/report',
       'player_update': 'player/update',
       'player_reset': 'reset',
+      'player_viewed': 'player/viewed',
       'account_timeline': 'player/timeline',
       'account_signout': 'user/signout',
       'account_signin': 'user/signin',

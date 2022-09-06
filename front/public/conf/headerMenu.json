@@ -27,7 +27,7 @@
         "mobile"
       ],
       "to": {
-        "name": "player",
+        "name": "player_list",
         "query": {
           "status": "-1",
           "D83EDD96": "\uD83E\uDD96"
