@@ -8,7 +8,6 @@ import router from './router'
 import store from './store'
 import ViewUI from 'view-design';
 import VueQuillEditor from 'vue-quill-editor'
-import Vue2Editor from "vue2-editor";
 import ECharts from 'vue-echarts'
 // import desktop from '../desktop/assets/js/index'
 
@@ -33,7 +32,6 @@ Vue.use(ViewUI, {
   i18n: (key, value) => i18n.t(key,value)
 });
 Vue.use(VueQuillEditor, /* { default global options } */)
-Vue.use(Vue2Editor);
 
 Vue.config.productionTip = false
 

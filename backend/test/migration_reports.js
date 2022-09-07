@@ -30,15 +30,12 @@
 import knex from "knex";
 import { Stream } from "stream";
 import { handleRichTextInput } from "../lib/user.js";
+import config from "../config.js";
 
 const db_src = knex({
     client: 'mysql',
     connection: {
-        host: 'localhost',
-        port: 3306,
-        user: 'root',
-        password: '123456',
-        database: 'bfban',
+      ...config.mysql,
         typeCast: (field, next)=> {
             if(field.type == 'JSON')
                 return JSON.parse(field.string());
@@ -50,11 +47,7 @@ const db_src = knex({
 const db_dst = knex({
     client: 'mysql',
     connection: {
-        host: 'localhost',
-        port: 3306,
-        user: 'root',
-        password: '123456',
-        database: 'bfban_2.0_test',
+      ...config.newMysql,
         typeCast: (field, next)=> {
             if(field.type == 'JSON')
                 return JSON.parse(field.string());

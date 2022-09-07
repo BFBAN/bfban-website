@@ -9,6 +9,7 @@
   "background_color": "#401487",
   "theme_color": "#1b2740",
   "dir": "auto",
+  "permissions": ["notifications"],
   "icons": [
     {
       "src": "img/icons/android-chrome-192x192.png",
@@ -16,10 +17,16 @@
       "type": "image/png"
     }
   ],
+  "background": {
+    "scripts": [
+      "pwa/background-script.js"
+    ],
+    "persistent": true
+  },
   "related_applications": [
     {
       "platform": "BFBAN APP",
-      "url": "https://app.bfban.com/public/www",
+      "url": "https://bfban-app.cabbagelol.net",
       "id": "com.cabbagelol.bfban"
     }
   ]

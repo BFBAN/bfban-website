@@ -25,11 +25,11 @@ export default {
     }
   },
   created() {
-    let captcha = storage.get('captcha');
+    let captcha = storage.session().get('captcha');
     if (captcha) {
       this.capthcaHash = captcha.data;
     } else {
-      storage.set(`captcha`, {
+      storage.session().set(`captcha`, {
         [this.$route.name]: 30
       });
     }
@@ -43,7 +43,7 @@ export default {
      * 刷新验证码
      */
     async refreshCaptcha() {
-      let captcha = await storage.get('captcha');
+      let captcha = await storage.session().get('captcha');
       let that = this;
 
       if (captcha.code <= 0) {
@@ -99,7 +99,7 @@ export default {
         that.capthcaHash = Object.assign({
           [that.$route.name] : that.captchaTime.count
         });
-        storage.set("captcha", that.capthcaHash);
+        storage.session().set("captcha", that.capthcaHash);
       }, 1000);
       that.captchaTime.lock = true;
     }

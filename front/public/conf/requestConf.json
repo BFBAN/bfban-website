@@ -4,8 +4,7 @@
   "child": {
     "development": {
       "protocol": "https",
-      "request": "bfban.gametools.network/api/",
-      "qiniuUrl": ""
+      "request": "bfban.gametools.network/api/"
     },
     "development2": {
       "protocol": "https",
@@ -14,8 +13,7 @@
     },
     "development3": {
       "protocol": "http",
-      "request": "127.0.0.1:3000/api/",
-      "qiniuUrl": ""
+      "request": "127.0.0.1:3000/api/"
     },
     "production": {
       "protocol": "https",
