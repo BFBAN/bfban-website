@@ -74,17 +74,36 @@
                 {{ $t("header.report") }}
               </DropdownItem>
             </router-link>
-            <router-link :to="{name: 'profile', params: { uId: `${currentUser.userinfo.userId}` }}">
+            <router-link :to="{name: 'profile', params: {pagename: 'account'}}">
               <DropdownItem>
                 {{ $t("header.profile") }}
               </DropdownItem>
             </router-link>
-            <Dropdown-item divided v-show="isLogin" @click="signout">
-              <a @click.stop.prevent="signout">
-                <Icon type="md-log-out"></Icon>
-                {{ $t("header.signout") }}
-              </a>
-            </Dropdown-item>
+            <Dropdown placement="right-start">
+              <DropdownItem divided>
+                {{ $t("profile.appearance.title") }}
+                <Icon type="ios-arrow-forward"></Icon>
+              </DropdownItem>
+              <DropdownMenu slot="list">
+                <div v-for="(i, theme_index) in themes.child" :key="theme_index">
+                  <div @click="changeTheme(theme_index)">
+                    <DropdownItem :name="i.name" :selected="themeIndex == theme_index">
+                      <Row>
+                        <Col flex="1">
+                          <div class="hedaer-theme-color" :style="`background-color: ${i.showColor}`"></div>
+                        </Col>
+                        <Col>{{ i.name }}</Col>
+                      </Row>
+                    </DropdownItem>
+                  </div>
+                </div>
+              </DropdownMenu>
+            </Dropdown>
+            <div @click="signout">
+              <Dropdown-item divided v-show="isLogin">
+                  <Icon type="md-log-out"></Icon> {{ $t("header.signout") }}
+              </Dropdown-item>
+            </div>
           </DropdownMenu>
         </Dropdown>
 
@@ -118,7 +137,8 @@
 
 <script>
 import {api, http, http_token} from '../assets/js/index'
-
+import {storage} from '../assets/js/index'
+import themes from '/public/conf/themes.json'
 import menu from '/public/conf/headerMenu.json'
 
 import Header_message from "./Header_message";
@@ -126,6 +146,8 @@ import Header_message from "./Header_message";
 export default {
   data() {
     return {
+      themes,
+      themeIndex: 0,
       headerMenu: {
         show: false,
         child: [],
@@ -145,7 +167,12 @@ export default {
     async loadData() {
       const privileges = await import('/public/conf/privilege.json');
       this.privileges = privileges.child;
+
+      this.getTheme();
     },
+    /**
+     * 表头注销
+     */
     signout() {
       http.post(api["account_signout"], {
         headers: {
@@ -166,6 +193,39 @@ export default {
           this.$router.push('/');
         });
       });
+    },
+    /**
+     * 获取主题
+     * @returns {Promise<void>}
+     */
+    async getTheme () {
+      let theme = await storage.get('theme');
+
+      if (theme.data && theme.data.value) {
+        this.themes.child.forEach((i, index) => {
+          if (i.name == theme.data.value.name) {
+            this.themeIndex = index;
+          }
+        });
+        await this.$store.dispatch('setTheme', theme.data.value);
+        return;
+      } else {
+        themes.child.filter((i, index) => {
+          if (i.name == themes.default) this.themeIndex = index
+        });
+      }
+
+      await this.$store.dispatch('setTheme', this.$store.state.$theme);
+    },
+    /**
+     * 改变主题
+     * @param val
+     */
+    changeTheme(val) {
+      this.themeIndex = val;
+      storage.set('theme', this.themes.child[this.themeIndex || 0]);
+
+      location.reload();
     },
     navigatorTo(i) {
       this.headerMenu.show = false;
@@ -207,6 +267,14 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.hedaer-theme-color {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  border-radius: 8px;
+  margin-right: 10px;
 }
 
 .nav {

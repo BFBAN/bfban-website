@@ -12,6 +12,12 @@
 import {http, api, storage} from '../assets/js/index'
 export default {
   name: "Captcha",
+  props: {
+    id: {
+      type: String,
+      default: '0',
+    }
+  },
   data() {
     return {
       hash: "",
@@ -30,7 +36,7 @@ export default {
       this.capthcaHash = captcha.data;
     } else {
       storage.session().set(`captcha`, {
-        [this.$route.name]: 30
+        [`${this.id}_this.$route.name`]: 30
       });
     }
   },

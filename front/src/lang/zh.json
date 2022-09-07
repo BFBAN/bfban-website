@@ -103,13 +103,34 @@
       "control": "批量编辑",
       "placeholder": "填写发送的消息",
       "types": {
-        "direct": "聊天",
-        "warn": "系统",
-        "fatal": "确定",
-        "toAll": "所有人",
-        "toAdmins": "所有管理员",
-        "toNormals": "正常用户",
-        "command": "命令"
+        "direct": {
+          "text": "聊天",
+          "describe": "给用户发送'聊天'"
+        },
+        "warn": {
+          "text": "系统",
+          "describe": "推送系统消息"
+        },
+        "fatal": {
+          "text": "确定",
+          "describe": "?"
+        },
+        "toAll": {
+          "text": "所有人",
+          "describe": "给站内所有人推送内容"
+        },
+        "toAdmins": {
+          "text": "所有管理员",
+          "describe": "给站内所有管理员发送信息"
+        },
+        "toNormals": {
+          "text": "正常用户",
+          "describe": "给所有普通权限用户发送信息"
+        },
+        "command": {
+          "text": "命令",
+          "describe": "自定义服务指令"
+        }
       },
       "tabsList": {
         "itemName": "消息列表",

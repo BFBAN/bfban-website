@@ -45,10 +45,10 @@
 			"root": "System",
 			"admin": "Community Admin",
 			"super": "Super Administrator",
-			"normal": "Normal user",
-			"blacklisted": "blacklisted user",
-			"test": "test account",
-			"dev": "DEV",
+			"normal": "Normal User",
+			"blacklisted": "Blacklisted user",
+			"test": "Test Account",
+			"dev": "DEV Account",
 			"bot": "Bot"
 		},
 		"tip": {
@@ -103,13 +103,34 @@
 			"control": "Batch editing",
 			"placeholder": "Type your message",
 			"types": {
-				"direct": "Chat",
-				"warn": "system",
-				"fatal": "confirm",
-				"toAll": "All",
-				"toAdmins": "Admin",
-				"toNormals": "Normal user",
-				"command": "command"
+				"direct": {
+					"text": "Chat",
+					"describe": "Chat"
+				},
+				"warn": {
+					"text": "system",
+					"describe": "system"
+				},
+				"fatal": {
+					"text": "confirm",
+					"describe": "confirm"
+				},
+				"toAll": {
+					"text": "All",
+					"describe": "All"
+				},
+				"toAdmins": {
+					"text": "Admin",
+					"describe": "Admin"
+				},
+				"toNormals": {
+					"text": "Normal user",
+					"describe": "Normal user"
+				},
+				"command": {
+					"text": "command",
+					"describe": ""
+				}
 			},
 			"tabsList": {
 				"itemName": "Message list",

@@ -33,7 +33,7 @@
                 </Tag>
 
                 <!-- 被举报的游戏 S -->
-                <router-link :to="{name: 'cheater', params: { game: cheater.game }}" v-if="cheater.games">
+                <router-link :to="{name: 'player_list', query: { game: cheater.games }}" v-if="cheater.games">
                   <Tag color="gold" :alt="$t('detail.info.reportedGames')"
                        v-for="(game,gameindex) in cheater.games" :key="gameindex">
                     {{ $t(`basic.games.${game}`, {game: game}) }}

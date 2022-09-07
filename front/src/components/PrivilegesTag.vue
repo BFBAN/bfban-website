@@ -1,0 +1,35 @@
+<template>
+    <div>
+      <span v-for="(p_item, p_index) in tags" :key="p_index">
+          <Tag :type="tagType" :color="p_item.class">
+            {{ $t('basic.privilege.' + p_item.value) }}
+          </Tag>
+      </span>
+    </div>
+</template>
+
+<script>
+import privileges from "/public/conf/privilege.json";
+
+export default {
+  props: {
+    data: [],
+    tagType: {
+      type: String,
+      default: 'border'
+    }
+  },
+  data () {
+    return {
+      privileges: privileges.child,
+      tags: []
+    }
+  },
+  created () {
+    const that = this;
+    this.tags = that.privileges.filter(i => {
+      return that.data.includes(i.value);
+    });
+  },
+}
+</script>

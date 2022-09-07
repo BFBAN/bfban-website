@@ -12,37 +12,21 @@
     <br>
 
     <Card dis-hover>
-      <Row>
-        <Col flex="auto">
-          <Row :gutter="15">
-            <Col>
-              <Avatar :size="48">{{ currentUser.userinfo.username[0] }}</Avatar>
-            </Col>
-            <Col flex="1">
-              <h3>
-                {{ currentUser.userinfo.username }}
-              </h3>
-              <p>{{ $t('profile.meet', {name: currentUser.userinfo.username}) }}</p>
-            </Col>
-            <Col v-if="currentUser.userinfo.privilege">
-              <Form label-position="top">
-                <FormItem :label="$t('profile.account.form.privilege')">
-                <span v-for="(privileges_item, privileges_index) in privileges" :key="privileges_index">
-                  <span v-for="(p, pi) in currentUser.userinfo.privilege" :key="pi">
-                    <Tag type="border" :color="privileges_item.class" v-if="p == privileges_item.value">
-                      {{ $t('basic.privilege.' + p) }}
-                    </Tag>
-                  </span>
-                </span>
-                </FormItem>
-              </Form>
-            </Col>
-          </Row>
-        </Col>
-        <Col>
-
-        </Col>
-      </Row>
+      <Form label-position="top">
+        <Row :gutter="15">
+          <Col>
+            <Avatar :size="48">{{ currentUser.userinfo.username[0] }}</Avatar>
+          </Col>
+          <Col flex="1">
+            <h3> {{ currentUser.userinfo.username }} </h3>
+            <p>{{ $t('profile.meet', {name: currentUser.userinfo.username}) }} ({{ currentUser.userinfo.userId }})</p>
+          </Col>
+          <Col v-if="currentUser.userinfo.privilege">
+            <p><b>{{ $t('profile.account.form.privilege') }}</b></p>
+            <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
+          </Col>
+        </Row>
+      </Form>
       <br>
       <Row :gutter="30">
         <Col span="6">
@@ -85,6 +69,7 @@
 
 <script>
 import Bulletin from "../../components/Bulletin";
+import PrivilegesTag from "/src/components/PrivilegesTag";
 
 import appearance from "./appearance";
 import account from "./account";
@@ -120,7 +105,7 @@ export default {
       ]
     }
   },
-  components: {Bulletin, appearance, account, message, enhance, media},
+  components: {Bulletin, appearance, account, message, enhance, media, PrivilegesTag},
   created() {
     const pagename = this.$route.params.pagename;
 
@@ -136,13 +121,8 @@ export default {
     )[0].value;
 
     this.upDateUri(name || this.muenIndex);
-    this.loadData();
   },
   methods: {
-    async loadData() {
-      const privileges = await import('/public/conf/privilege.json');
-      this.privileges = this.privileges.concat(privileges.child);
-    },
     upDateUri(index, t = false) {
       this.muenIndex = index;
       this.$router.push({
