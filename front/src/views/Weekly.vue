@@ -24,7 +24,7 @@ export default new BFBAN({
   },
   methods: {
     getWeekly() {
-      http.request("http://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history", {
+      http.request("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history", {
         headers: {
           "Origin": "api.vc.bilibili.com"
         },
