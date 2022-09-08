@@ -59,9 +59,9 @@
 		},
 		"games": {
 			"all": "All games",
-			"bf1": "battlefield 1",
-			"bfv": "battlefield 5",
-			"bf6": "battlefield 2042"
+			"bf1": "Battlefield 1",
+			"bfv": "Battlefield 5",
+			"bf6": "Battlefield 2042"
 		},
 		"button": {
 			"report": "Report user",
@@ -390,14 +390,14 @@
 			"h1": "BFBAN",
 			"h2": [
 				"Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world ",
-				"Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheater "
+				"Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheaters "
 			],
-			"h3": "establish a global database for cheater",
+			"h3": "A global database of cheaters",
 			"h4": "Become one of us - Improve our community",
 			"subButton": "Find out which communities have joined",
 			"dataReceived": "Recieved",
 			"confirmData": "Confirmed cheater",
-			"endTime": "As for 2018/11/4"
+			"endTime": "As of nov. 4th 2018"
 		},
 		"activity": {
 			"title": "Activity",
@@ -422,8 +422,8 @@
 		"privacy": "\n<h2>Privacy policy</h2>\nIt is open-sourced. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use."
 	},
 	"link": {
-		"title": "Partners' link",
-		"links": "Partners' link",
+		"title": "Partner links",
+		"links": "Partner links",
 		"sponsor": "Partners",
 		"linkWebDeveloperChild": "Significant contributoir and developer",
 		"join": "Join partner"
@@ -474,7 +474,7 @@
 		"form": {
 			"username": "Username",
 			"password": "Password",
-			"submitHint": "Do not have account? Go Sign up",
+			"submitHint": "Don't have account? Sign up",
 			"forgetPasswordHint": "Forgot your password？"
 		},
 		"fillEverything": "Please fill in everything",
@@ -498,15 +498,15 @@
 				"supplement": "Basic account infomation"
 			},
 			"1": {
-				"title": "Blinding",
-				"supplement": "Blind your origin account"
+				"title": "Binding account",
+				"supplement": "Bind your origin account"
 			},
 			"2": {
 				"title": "Captcha",
 				"supplement": "Verify you are not a robot"
 			},
 			"3": {
-				"title": "comfirm",
+				"title": "Comfirm",
 				"supplement": "Email security code"
 			},
 			"4": {
@@ -521,8 +521,8 @@
 			"originId": "Origin ID",
 			"originEmail": "🍊 Origin email",
 			"originName": "🍊 Origin username",
-			"qq": "QQ",
-			"submitHint": "Already have a account? Go Sign In",
+			"qq": "QQ account",
+			"submitHint": "Already have a account? Sign In",
 			"forgetPasswordHint": "Forgot your password？"
 		},
 		"placeholder": {
@@ -566,19 +566,19 @@
 		"title": "Cheater list",
 		"filters": {
 			"sortBy": {
-				"createTime": "Report time in reverse order",
-				"updateTime": "Update time in reverse order",
-				"viewNum": "View time in reverse order",
-				"commentNum": "Reply time in reverse order"
+				"createTime": "Sort by report time",
+				"updateTime": "Sort by Update time",
+				"viewNum": "Sort by View time",
+				"commentNum": "Sort by Reply time"
 			}
 		},
-		"reportTime": "Report time range",
-		"updateTime": "Update time range",
+		"reportTime": "Report time",
+		"updateTime": "Update time",
 		"colums": {
 			"screenTitle": "Filter",
 			"playerId": "ID",
-			"reportTime": "Report time",
-			"updateTime": "Update time"
+			"reportTime": "Reported",
+			"updateTime": "Updated"
 		}
 	},
 	"apps": {

@@ -1,5 +1,5 @@
 {
-  "requestActionName": "development2",
+  "requestActionName": "production",
   "requestProductionName": "production",
   "child": {
     "development": {
