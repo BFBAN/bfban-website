@@ -7,16 +7,18 @@
       "request": "bfban.gametools.network/api/"
     },
     "development2": {
-      "protocol": "http",
-      "request": "101.43.35.41:3000/api/"
+      "protocol": "https",
+      "request": "seeding.linrunrun.online/api/",
+      "qiniuUrl": ""
     },
     "development3": {
       "protocol": "http",
       "request": "127.0.0.1:3000/api/"
     },
     "production": {
-      "protocol": "http",
-      "request": "ban.linrunrun.online:3000/api/"
+      "protocol": "https",
+      "request": "seeding.linrunrun.online/api/",
+      "qiniuUrl": ""
     }
   }
 }
