@@ -40,17 +40,6 @@ export default {
             }
           }
         },
-        'Bf1 Stats': {
-          "mainUrl":"http://bf1stats.com",
-          "icon": "https://endof.p-stats.com/favicon.ico",
-          platform: {
-            "pc": {
-              "bf1": `http://bf1stats.com/pc/{id}`
-            },
-            "xbox": {},
-            "ps": {}
-          }
-        },
         'Gametools Network': {
           mainUrl:"https://gametools.network",
           icon: "https://gametools.network/favicon.ico",
