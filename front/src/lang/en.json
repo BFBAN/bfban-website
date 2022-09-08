@@ -31,52 +31,52 @@
 			}
 		},
 		"status": {
-			"all": "Method All",
+			"all": "All methods",
 			"0": "Unprocessed",
 			"1": "Confirmed hacker",
 			"2": "Suspicious",
 			"3": "Clean",
 			"4": "Invalid report",
 			"5": "Under discussion",
-			"6": "Need more vote",
+			"6": "Needs more votes",
 			"7": "Ultra-confirmed hacker"
 		},
 		"privilege": {
 			"root": "System",
 			"admin": "Community Admin",
-			"super": "Super Administrator",
+			"super": "Super Admin",
 			"normal": "Normal User",
 			"blacklisted": "Blacklisted user",
-			"test": "Test Account",
-			"dev": "DEV Account",
+			"test": "Testing Account",
+			"dev": "Development Account",
 			"bot": "Bot"
 		},
 		"tip": {
 			"notlang": "untranslated",
 			"notcontent": "no content",
-			"notFound": "Oh no, address has not been found",
+			"notFound": "We cant find the page your looking for.",
 			"noReports": "No reports yet"
 		},
 		"games": {
-			"all": "battlefield All",
+			"all": "All games",
 			"bf1": "battlefield 1",
 			"bfv": "battlefield 5",
 			"bf6": "battlefield 2042"
 		},
 		"button": {
-			"report": "Reportuser",
-			"commit": "commit",
-			"save": "save",
-			"submit": "submit",
-			"reset": "reset",
-			"cancel": "cancel",
-			"prev": "previous step",
-			"next": "next step"
+			"report": "Report user",
+			"commit": "Commit",
+			"save": "Save",
+			"submit": "Submit",
+			"reset": "Reset",
+			"cancel": "Cancel",
+			"prev": "Previous step",
+			"next": "Next step"
 		}
 	},
 	"captcha": {
-		"get": "get captcha",
-		"title": "captcha"
+		"get": "Get captcha",
+		"title": "Captcha"
 	},
 	"header": {
 		"index": "Home",
@@ -84,11 +84,11 @@
 		"cheaters": "Cheaters",
 		"report": "Report",
 		"profile": "Personal settings",
-		"signin": "SignIn",
+		"signin": "Sign in",
 		"signup": "Signup",
-		"signout": "SignOut",
+		"signout": "Logout",
 		"userCenter": "Homepage",
-		"signoutSuccess": "Signout successful"
+		"signoutSuccess": "Logout successful"
 	},
 	"player": {
 		"title": "Player database"
@@ -97,7 +97,7 @@
 		"title": "Personal settings",
 		"meet": "welcome back {name}! ",
 		"message": {
-			"title": "Message",
+			"title": "Messages",
 			"look": "Check",
 			"load": "Refresh",
 			"control": "Batch editing",
@@ -153,10 +153,10 @@
 			}
 		},
 		"account": {
-			"title": "Account information setting",
+			"title": "Account information",
 			"form": {
 				"privilege": "Indentity",
-				"introduction": "Self-introduction",
+				"introduction": "About me",
 				"showOrigin": "Show Orgin info",
 				"showOriginDescribe": "Allow your binded orgin account to be shown on BFBAN",
 				"allowDM": "Allow DM",

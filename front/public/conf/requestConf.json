@@ -17,7 +17,7 @@
     },
     "production": {
       "protocol": "https",
-      "request": "seeding.linrunrun.online/api/",
+      "request": "bfban-testing.gametools.network/api/",
       "qiniuUrl": ""
     }
   }
