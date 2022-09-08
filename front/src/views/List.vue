@@ -1,195 +1,193 @@
 <template>
-  <div>
-    <div class="container">
-      <div class="content">
-        <br>
-        <Row>
-          <Col :xs="{push: 1}" :lg="{push: 0}">
-            <Breadcrumb>
-              <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-              <BreadcrumbItem>{{ $t("list.title") }}</BreadcrumbItem>
-            </Breadcrumb>
-          </Col>
-        </Row>
-        <br>
+  <div class="container">
+    <div class="content">
+      <br>
+      <Row>
+        <Col :xs="{push: 1}" :lg="{push: 0}">
+          <Breadcrumb>
+            <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+            <BreadcrumbItem>{{ $t("list.title") }}</BreadcrumbItem>
+          </Breadcrumb>
+        </Col>
+      </Row>
+      <br>
 
-        <!-- 游戏类型选择 S -->
-        <Row>
-          <Col flex="auto" :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
-            <RadioGroup
-                size="large"
-                class="game-type"
-                v-model="gameName"
-                @on-change="handleChanges"
-                type="button">
-              <Radio label="all" value="all">
-                <Badge :count="getTotalNum('*')" :overflow-count="90000" type="normal">
-                  {{ $t('basic.games.all') }}
-                </Badge>
-              </Radio>
-              <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
-                     :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
-                     :class="gameName == i.value ? 'gametype-select' : ''">
-                <Badge :count="getTotalNum(i.value)" :overflow-count="90000" type="info">
-                  <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
-                    <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
-                    <span v-else>{{ i.full_name }}</span>
-                  </Tooltip>
-                </Badge>
-              </Radio>
-            </RadioGroup>
-          </Col>
-          <Col flex="auto" v-if="statusGroup == 6 || statusGroup == 0">
-            <i-switch v-model="bot.autoUpdate" @on-change="autoUpdateList"/>
-            <Divider type="vertical"/>
-            <Tooltip content="每隔设置时间刷新，有新的待审核桌面通知您" max-width="200">
-              <Icon type="md-help-circle"/>
-            </Tooltip>
-          </Col>
-        </Row>
-        <!-- 游戏类型选择 E -->
+      <!-- 游戏类型选择 S -->
+      <Row>
+        <Col flex="auto" :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
+          <RadioGroup
+              size="large"
+              class="game-type"
+              v-model="gameName"
+              @on-change="handleChanges"
+              type="button">
+            <Radio label="all" value="all">
+              <Badge :count="getTotalNum('*')" :overflow-count="90000" type="normal">
+                {{ $t('basic.games.all') }}
+              </Badge>
+            </Radio>
+            <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
+                   :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
+                   :class="gameName == i.value ? 'gametype-select' : ''">
+              <Badge :count="getTotalNum(i.value)" :overflow-count="90000" type="info">
+                <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
+                  <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
+                  <span v-else>{{ i.full_name }}</span>
+                </Tooltip>
+              </Badge>
+            </Radio>
+          </RadioGroup>
+        </Col>
+        <Col flex="auto" v-if="statusGroup == 6 || statusGroup == 0">
+          <i-switch v-model="bot.autoUpdate" @on-change="autoUpdateList"/>
+          <Divider type="vertical"/>
+          <Tooltip content="每隔设置时间刷新，有新的待审核桌面通知您" max-width="200">
+            <Icon type="md-help-circle"/>
+          </Tooltip>
+        </Col>
+      </Row>
+      <!-- 游戏类型选择 E -->
 
-        <!-- 状态类型 S -->
-        <Row>
-          <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
-            <RadioGroup
-                style="margin-top: 12px"
-                v-model="statusGroup"
-                @on-change="handleStatusChange"
-                type="button">
-              <Radio label="-1">
-                <Badge :overflow-count="900000"
-                       size="small"
-                       type="info">
-                  {{ $t("basic.status.all") }}
-                </Badge>
-              </Radio>
-              <Radio
-                  v-for="status in cheaterStatus"
-                  :key="status.value"
-                  :label="`${status.value}`">
-                <Badge :count="getcHeaterStatusNum(status.value)" :overflow-count="900000" type="info">
-                  {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
-                </Badge>
-              </Radio>
-            </RadioGroup>
-          </Col>
-        </Row>
-        <!-- 状态类型 E -->
+      <!-- 状态类型 S -->
+      <Row>
+        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
+          <RadioGroup
+              style="margin-top: 12px"
+              v-model="statusGroup"
+              @on-change="handleStatusChange"
+              type="button">
+            <Radio label="-1">
+              <Badge :overflow-count="900000"
+                     size="small"
+                     type="info">
+                {{ $t("basic.status.all") }}
+              </Badge>
+            </Radio>
+            <Radio
+                v-for="status in cheaterStatus"
+                :key="status.value"
+                :label="`${status.value}`">
+              <Badge :count="getcHeaterStatusNum(status.value)" :overflow-count="900000" type="info">
+                {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
+              </Badge>
+            </Radio>
+          </RadioGroup>
+        </Col>
+      </Row>
+      <!-- 状态类型 E -->
 
-        <Row :gutter="10">
-          <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 17, push: 0, pull: 0}">
-            <Card dis-hover class="list">
-              <Page :page-size="limit" show-sizer show-total show-elevator :current="skip" @on-change="handlePageChange"
-                    @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
-              <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
-              <br>
-              <div v-for="(d, d_index) in data" :key="d.originUserId">
-                <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
-                  <Card>
-                    <Row :gutter="10" type="flex">
-                      <Col :xs="{span: 8, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
-                        <!-- 头像 S -->
-                        <Avatar :src="d.avatarLink"
-                                @on-error="onAvatarError(d_index)"
-                                alt="avatar"
-                                size="55"
-                                v-if="d.avatarLink">
-                        </Avatar>
-                        <template v-else>
-                          <Avatar icon="ios-person"
-                                  size="55"
-                                  style="background-color: rgba(255,0,0,0.37)"></Avatar>
-                        </template>
-                        <!-- 头像 E -->
-                      </Col>
-                      <Col :xs="{span: 16, push: 0,pull:0}" :lg="{span: 16, push: 0,pull:0}">
-                        <div style="display: flex; flex-direction: column;">
-                            <Tooltip :content="$t('list.colums.playerId')">
-                              <h2>
-                                <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}"
-                                             :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
-                                  {{ d.originName }}
-                                </router-link>
-                                <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"></Button>
-                              </h2>
-                            </Tooltip>
-                        </div>
-
-                        <div>
-                          {{ $t('list.colums.reportTime') }}
-                          <Time v-if="d.createTime" :time="d.createTime"/>
-                          <Divider type="vertical"/>
-                          {{ $t('list.colums.updateTime') }}
-                          <Time v-if="d.updateTime" :time="d.updateTime"/>
-                        </div>
-                      </Col>
-                      <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 4, push: 0,pull:0}" class="mobile-hide">
-                        <Row type="flex" justify="center" align="middle" style="height: 50px">
-                          <Col flex="auto" align="right">
-                            <span class="item-text">{{ d.viewNum || 0 }}</span>
-                            <Icon type="md-eye" size="17" class="item-icon"/>
-                          </Col>
-                          <Col flex="auto" align="right">
-                            <span class="item-text">{{ d.commentsNum || 0 }}</span>
-                            <Icon type="md-chatboxes" size="17" class="item-icon"/>
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 1, push: 0,pull:0}"
-                           align="center"
-                           class="mobile-hide">
-                        <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
-                      </Col>
-                    </Row>
-                  </Card>
-                  <br/>
-                </Badge>
-              </div>
-              <Card v-if="data.length <= 0" align="center">
-                (｀ﾍ´)=3=3=3=3=3=3
-              </Card>
-              <Page :page-size="limit" show-sizer show-total show-elevator :current="skip" @on-change="handlePageChange"
-                    @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
-            </Card>
-          </Col>
-          <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 7, push: 0, pull: 0}">
+      <Row :gutter="10">
+        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 17, push: 0, pull: 0}">
+          <Card dis-hover class="list">
+            <Page :page-size="limit" show-sizer show-total show-elevator :current="skip" @on-change="handlePageChange"
+                  @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
+            <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
             <br>
-            <Affix :offset-top="20">
-              <Card>
-                <p slot="title">
-                  <Icon type="md-funnel" /> {{ $t('list.colums.screenTitle') }}
-                </p>
+            <div v-for="(d, d_index) in data" :key="d.originUserId">
+              <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
+                <Card>
+                  <Row :gutter="10" type="flex">
+                    <Col :xs="{span: 8, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
+                      <!-- 头像 S -->
+                      <Avatar :src="d.avatarLink"
+                              @on-error="onAvatarError(d_index)"
+                              alt="avatar"
+                              size="55"
+                              v-if="d.avatarLink">
+                      </Avatar>
+                      <template v-else>
+                        <Avatar icon="ios-person"
+                                size="55"
+                                style="background-color: rgba(255,0,0,0.37)"></Avatar>
+                      </template>
+                      <!-- 头像 E -->
+                    </Col>
+                    <Col :xs="{span: 16, push: 0,pull:0}" :lg="{span: 16, push: 0,pull:0}">
+                      <div style="display: flex; flex-direction: column;">
+                        <Tooltip :content="$t('list.colums.playerId')">
+                          <h2>
+                            <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}"
+                                         :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
+                              {{ d.originName }}
+                            </router-link>
+                            <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"></Button>
+                          </h2>
+                        </Tooltip>
+                      </div>
 
-                <Form>
-                  <FormItem :label="$t('list.reportTime')">
-                    <DatePicker :value="createTime" @on-change="handleCDatepicker" split-panels
-                                :placeholder="$t('list.reportTime')" style="width: 100%"></DatePicker>
-                  </FormItem>
-                  <FormItem :label="$t('list.updateTime')">
-                    <DatePicker :value="updateTime" @on-change="handleUDatepicker" split-panels
-                                :placeholder="$t('list.updateTime')" style="width: 100%"></DatePicker>
-                  </FormItem>
-                  <FormItem>
-                    <Select @on-change="handleChanges" v-model="sortByValue">
-                      <Option v-for="item in sortBy" :value="item.value" :key="item.value">
-                        {{ $t(`list.filters.sortBy.${item.value}`) }}
-                      </Option>
-                    </Select>
-                  </FormItem>
-                </Form>
-                <!--                <Divider class="desktop-hide"></Divider>-->
-                <!--                <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 100%">-->
-                <!--                  <Option value="-1">{{ $t("list.filters.status.all") }}({{ getAllStatusNum }})</Option>-->
-                <!--                  <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">-->
-                <!--                    {{ status.label }}({{ getcHeaterStatusNum(status.value) }})-->
-                <!--                  </Option>-->
-                <!--                </Select>-->
-              </Card>
-            </Affix>
-          </Col>
-        </Row>
-      </div>
+                      <div>
+                        {{ $t('list.colums.reportTime') }}
+                        <Time v-if="d.createTime" :time="d.createTime"/>
+                        <Divider type="vertical"/>
+                        {{ $t('list.colums.updateTime') }}
+                        <Time v-if="d.updateTime" :time="d.updateTime"/>
+                      </div>
+                    </Col>
+                    <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 4, push: 0,pull:0}" class="mobile-hide">
+                      <Row type="flex" justify="center" align="middle" style="height: 50px">
+                        <Col flex="auto" align="right">
+                          <span class="item-text">{{ d.viewNum || 0 }}</span>
+                          <Icon type="md-eye" size="17" class="item-icon"/>
+                        </Col>
+                        <Col flex="auto" align="right">
+                          <span class="item-text">{{ d.commentsNum || 0 }}</span>
+                          <Icon type="md-chatboxes" size="17" class="item-icon"/>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 1, push: 0,pull:0}"
+                         align="center"
+                         class="mobile-hide">
+                      <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
+                    </Col>
+                  </Row>
+                </Card>
+                <br/>
+              </Badge>
+            </div>
+            <Card v-if="data.length <= 0" align="center">
+              (｀ﾍ´)=3=3=3=3=3=3
+            </Card>
+            <Page :page-size="limit" show-sizer show-total show-elevator :current="skip" @on-change="handlePageChange"
+                  @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
+          </Card>
+        </Col>
+        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 7, push: 0, pull: 0}">
+          <br>
+          <Affix :offset-top="20">
+            <Card>
+              <p slot="title">
+                <Icon type="md-funnel" /> {{ $t('list.colums.screenTitle') }}
+              </p>
+
+              <Form>
+                <FormItem :label="$t('list.reportTime')">
+                  <DatePicker :value="createTime" @on-change="handleCDatepicker" split-panels
+                              :placeholder="$t('list.reportTime')" style="width: 100%"></DatePicker>
+                </FormItem>
+                <FormItem :label="$t('list.updateTime')">
+                  <DatePicker :value="updateTime" @on-change="handleUDatepicker" split-panels
+                              :placeholder="$t('list.updateTime')" style="width: 100%"></DatePicker>
+                </FormItem>
+                <FormItem>
+                  <Select @on-change="handleChanges" v-model="sortByValue">
+                    <Option v-for="item in sortBy" :value="item.value" :key="item.value">
+                      {{ $t(`list.filters.sortBy.${item.value}`) }}
+                    </Option>
+                  </Select>
+                </FormItem>
+              </Form>
+              <!--                <Divider class="desktop-hide"></Divider>-->
+              <!--                <Select class="desktop-hide" @on-change="handleChanges" v-model="statusGroup" style="width: 100%">-->
+              <!--                  <Option value="-1">{{ $t("list.filters.status.all") }}({{ getAllStatusNum }})</Option>-->
+              <!--                  <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">-->
+              <!--                    {{ status.label }}({{ getcHeaterStatusNum(status.value) }})-->
+              <!--                  </Option>-->
+              <!--                </Select>-->
+            </Card>
+          </Affix>
+        </Col>
+      </Row>
     </div>
   </div>
 </template>

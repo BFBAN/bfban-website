@@ -1,4 +1,3 @@
-<script src="../../../../../../Downloads/config.js"></script>
 <template>
   <div class="container">
     <div class="content">
