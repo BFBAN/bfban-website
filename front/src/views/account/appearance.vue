@@ -49,6 +49,10 @@ export default {
     this.getTheme();
   },
   methods: {
+    /**
+     * 获取主题
+     * @returns {Promise<void>}
+     */
     async getTheme () {
       let theme = await storage.get('theme');
 
@@ -68,6 +72,10 @@ export default {
 
       await this.$store.dispatch('setTheme', this.$store.state.$theme);
     },
+    /**
+     * 改变主题
+     * @param val
+     */
     changeTheme(val) {
       storage.set('theme', this.themes.child[this.themeIndex || 0]);
 

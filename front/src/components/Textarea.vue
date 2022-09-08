@@ -3,8 +3,9 @@
     <quill-editor
         class="editor"
         ref="myTextEditor"
-        :content="content"
+        :content="editorContent"
         :options="editorOption"
+        @change="onEditorChange"
         useCustomImageHandler />
 
     <Modal v-model="updataPlane" width="60%">
@@ -140,10 +141,6 @@ import { VueCropper }  from 'vue-cropper'
 
 import MediaPage from "../../src/views/account/media";
 
-// import theme style
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.bubble.css'
-
 export default {
   props: {
     index: null,
@@ -162,7 +159,7 @@ export default {
       currentindex: 0,
       currentFileType: '',
       currentType: '1',
-      insertValue: 'http://ban.linrunrun.online/assets/img/logo.75abcc53.png',
+      insertValue: '',
       updataIcon: false,
 
       // view updata
@@ -281,9 +278,9 @@ export default {
      * @param html
      * @param text
      */
-    onEditorChange({quill, html, text}) {
-      this.$emit('change', html, this.index);
-      this.editorContent = html;
+    onEditorChange(data) {
+      this.$emit('change', data.html, this.index);
+      this.editorContent = data.html;
     },
     /**
      * util

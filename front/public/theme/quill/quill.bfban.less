@@ -1,0 +1,39 @@
+@edit-color: tint(@primary-color, 90%);
+@edit-tools-active: @primary-color;
+@edit-icon-color: @link-color;
+@edit-text-color: @link-color;
+
+.ql-snow .ql-stroke {
+  stroke: @edit-icon-color !important;
+}
+
+.ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill {
+  fill: @edit-icon-color !important;
+}
+
+.ql-editor.ql-blank::before {
+  color: @edit-text-color !important;
+}
+
+.quill-editor {
+  background-color: @edit-color;
+  border-radius: 5px;
+}
+
+.ql-toolbar.ql-snow {
+  background-color: @edit-color;
+}
+
+.ql-active {
+  background-color: @edit-tools-active !important;
+  border-radius: 5px;
+}
+
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow{
+  border: none !important;
+}
+
+.ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:focus, .ql-snow .ql-toolbar button:focus, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+  color:  inherit !important;
+}

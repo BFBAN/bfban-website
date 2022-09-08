@@ -25,9 +25,7 @@
                       <Badge :count="messageList[i.type]['num'] || 0" v-if="messageList[i.type]">
                         <Avatar icon="md-notifications"></Avatar>
                       </Badge>
-                      <Avatar icon="md-notifications" v-else>
-                        {{ i.text[0] }}
-                      </Avatar>
+                      <Avatar icon="md-notifications" v-else> {{ i.text[0] }} </Avatar>
                     </Col>
                     <Col flex="1">
                       <p><b>{{ i.text.toString() }}</b></p>
@@ -42,7 +40,7 @@
             <Col flex="1" class="message-content">
               <template v-if="messageList[selectWindow]">
                 <!-- 编辑 S -->
-                <Row class="message-content-control"  v-if="control.open">
+                <Row class="message-content-control" v-if="control.open">
                   <Col>
                     <Checkbox v-model="control.all" @on-change="onBatchAll"></Checkbox>
                     <Divider type="vertical" />
@@ -63,7 +61,7 @@
                 <!-- 编辑 E -->
 
                 <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index" class="message-content-item">
-                  <Row :gutter="5">
+                  <Row :gutter="18">
                     <Col v-if="control.open">
                       <Checkbox v-model="child.choose"></Checkbox>
                     </Col>
@@ -119,24 +117,32 @@
         </Card>
       </TabPane>
       <TabPane :label="$t('profile.message.tabsSend.itemName')" name="message1" v-if="isAdmin">
-        <Card>
-          <Form slot="title">
+        <Card dis-hover>
+          <Form slot="title" :model="message" :rules="message.ruleValidate">
             <Row :gutter="30">
               <Col span="12">
-                <FormItem :label="$t('profile.message.tabsSend.messageMethod')">
+                <FormItem :label="$t('profile.message.tabsSend.messageMethod')" prop="type">
                   <Select v-model="message.type" :transfer="true">
-                    <Option v-for="(item, item_index) in message.list" :value="item.title" :key="item_index">
-                      {{ $t('profile.message.types.' + item.title ) }}
+                    <Option v-for="(item, item_index) in message.list"
+                            v-show="item.privilege.filter(p => currentUser.userinfo.privilege.includes(p) ).length"
+                            :value="item.title"
+                            :label="$t('profile.message.types.' + item.title + '.text' )"
+                            :key="item_index">
+                      {{ $t('profile.message.types.' + item.title + '.text' ) }}
+                      <p style="margin: 5px 0; font-size: 10px">
+                        {{ $t('profile.message.types.' + item.title + '.describe' ) }}
+                      </p>
+                      <PrivilegesTag :data="item.privilege"></PrivilegesTag>
                     </Option>
                   </Select>
                 </FormItem>
               </Col>
-              <Col span="12">
-                <FormItem :label="$t('profile.message.tabsSend.messageID')">
+              <Col span="12" v-if="message.typeDictionary.includes(message.type)">
+                <FormItem :label="$t('profile.message.tabsSend.messageID')" prop="id">
                   <AutoComplete
                       v-model="message.id"
                       :data="message.playerList"
-                      placeholder="">
+                      :placeholder="$t('profile.message.tabsSend.messageID')">
                     <Option v-for="(option, index) in message.playerList" :value="option.id" :key="index">
                       <Avatar :src="option.avatarLink || ''">{{ option.username[0] }}</Avatar>&emsp;
                       <span>{{ option.username }}</span>
@@ -148,7 +154,7 @@
                 </FormItem>
               </Col>
             </Row>
-            <FormItem :label="$t('profile.message.tabsSend.content')">
+            <FormItem :label="$t('profile.message.tabsSend.content')" prop="content">
               <Input v-model="message.content"
                      show-word-limit
                      type="textarea"
@@ -158,14 +164,11 @@
             </FormItem>
           </Form>
           <Row :gutter="10">
-            <Col flex="1">
-              <Tag color="success">
-                {{ $t("basic.privilege.admin") }}
-              </Tag>
-            </Col>
+            <Col flex="1"></Col>
             <Col>
               <Button type="primary"
-                      :disabled="!message.type || !message.id || !message.content"
+                      :loading="message.load"
+                      :disabled="!message.type || !message.content"
                       @click="putMessage">{{ $t('basic.button.commit') }}</Button>
             </Col>
           </Row>
@@ -176,46 +179,43 @@
 </template>
 
 <script>
+import BFBAN from "/src/assets/js/bfban";
+
 import {api, http, http_token} from "../../assets/js";
 
-export default {
+import PrivilegesTag from "/src/components/PrivilegesTag";
+import messageConf from "/public/conf/message.json";
+
+export default new BFBAN({
   name: "message",
   data() {
     return {
+      that: this,
       tagsName: 'message0',
-      privileges: [],
       messageLoad: false,
       selectWindow: '',
       message: {
-        list: [
-          {
-            title: 'direct',
-            q: ['normal', 'admin', 'root', 'super']
-          }, {
-            title: 'warn',
-            q: ['admin']
-          }, {
-            title: 'fatal',
-            q: ['super']
-          }, {
-            title: 'toAll',
-            q: ['super']
-          }, {
-            title: 'toAdmins',
-            q: ['super', 'admin']
-          }, {
-            title: 'toNormals',
-            q: ['super', 'admin']
-          }, {
-            title: 'command',
-            q: ['admin', 'dev']
-          }
-        ],
+        list: messageConf.sendTypes,
+        typeDictionary: messageConf.typeDictionary,
+        ruleValidate: {
+          type: [
+            { required: true, trigger: 'blur' }
+          ],
+          id: [
+            { required: true, trigger: 'blur' }
+          ],
+          content: [
+            { required: true, trigger: 'blur' }
+          ],
+        },
         messages: [],
         playerList: [],
-        id: '',
         show: false,
         load: false,
+
+        // message from value
+        type: "",
+        id: '',
         content: '',
       },
       messageUser: [],
@@ -238,6 +238,7 @@ export default {
       }
     }
   },
+  components: { PrivilegesTag },
   watch: {
     $route: "loadData",
   },
@@ -248,14 +249,21 @@ export default {
   },
   methods: {
     async loadData() {
-      const privileges = await import('/public/conf/privilege.json');
-      this.privileges = privileges.child;
-
       await this.getMessage();
+
+      this.message.type = this.message.list[0].title;
 
       if (this.messageUser.length > 0) {
         this.selectWindow = this.messageUser[0].value;
       }
+    },
+    /**
+     * 重置推送表单
+     */
+    resetMessageFrom () {
+      this.message.id = '';
+      this.message.content = '';
+      this.message.type = this.message.list[0].title;
     },
     /**
      * 批量选择框
@@ -271,20 +279,20 @@ export default {
     onBatchOperation () {
       let onFun = [];
       this.messageList[this.selectWindow].child.forEach(i => {
-         if (i.choose) {
-           switch (this.control.model) {
-             case 0:
-               // 0: 批量已读时，检查下方的消息是否已读，如果是则跳过
-               if (i.haveRead == 0) {
-                 onFun.push(this.onMessageMark(i.id, this.control.model));
-               }
-               break;
-             case 1:
-               // 删除
-               onFun.push(this.onMessageMark(i.id, this.control.model));
-               break;
-           }
-         }
+        if (i.choose) {
+          switch (this.control.model) {
+            case 0:
+              // 0: 批量已读时，检查下方的消息是否已读，如果是则跳过
+              if (i.haveRead == 0) {
+                onFun.push(this.onMessageMark(i.id, this.control.model));
+              }
+              break;
+            case 1:
+              // 删除
+              onFun.push(this.onMessageMark(i.id, this.control.model));
+              break;
+          }
+        }
       })
 
       this.control.load = true;
@@ -308,6 +316,9 @@ export default {
 
       this.getMessage();
     },
+    /**
+     * 获取玩家
+     */
     getPlayerList(value) {
       this.message.load = true;
       this.message.playerList = [];
@@ -349,6 +360,8 @@ export default {
           this.$Message.error(res.data.message);
         }
       }).finally(() => {
+        this.resetMessageFrom();
+
         this.message.load = false;
         this.message.show = false;
       })
@@ -443,13 +456,17 @@ export default {
       return this.$store.state.user;
     },
   }
-}
+});
 </script>
 
 <style scoped>
 .message-user {
-  width: 200px;
-  padding: 10px;
+  width: 230px;
+}
+
+.message-user > div {
+  padding: 10px 15px 2px 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .message-user-item {
@@ -464,7 +481,7 @@ export default {
 }
 
 .message-content-item > .ivu-row {
-  padding: 10px !important;
+  padding: 15px 20px !important;
 }
 
 .message-content-item > .ivu-divider {
@@ -473,7 +490,8 @@ export default {
 }
 
 .message-content-control {
-  padding-bottom: 10px;
+  background-color: rgba(0, 0, 0, 0.02);
+  padding: 10px 18px;
 }
 
 .message-content-footer {

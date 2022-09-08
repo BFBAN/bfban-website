@@ -16,6 +16,18 @@
     {
       "value": "normal",
       "class": "success"
+    },
+    {
+      "value": "dev",
+      "class": "blue"
+    },
+    {
+      "value": "test",
+      "class": "geekblue"
+    },
+    {
+      "value": "bot",
+      "class": "purple"
     }
   ]
 }

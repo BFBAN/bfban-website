@@ -99,14 +99,14 @@
         </Col>
         <Col span="12">
           <FormItem :label="$t('profile.account.form.showOrigin')">
+            <Alert show-icon>{{ $t('profile.account.form.showOriginDescribe') }}</Alert>
             <i-switch v-model="formItem.attr.showOrigin"/>
-            <p>{{ $t('profile.account.form.showOriginDescribe') }}</p>
           </FormItem>
         </Col>
         <Col span="12">
           <FormItem :label="$t('profile.account.form.allowDM')">
+            <Alert show-icon>{{ $t('profile.account.form.allowDMdescribe') }}</Alert>
             <i-switch v-model="formItem.attr.allowDM"/>
-            <p>{{ $t('profile.account.form.allowDMdescribe') }}</p>
           </FormItem>
         </Col>
       </Row>
@@ -144,9 +144,12 @@
             <Alert type="warning">
               <template slot="desc">
                 <p> {{ $t('profile.account.modifyName.specification1') }} </p>
-                <p> {{
-                    $t('profile.account.modifyName.residueDegree', {changeNameLeft: formItem.changeNameLeft - 1 || 0})
-                  }}</p>
+                <p>
+                  {{
+                    $t('profile.account.modifyName.residueDegree', {changeNameLeft: formItem.attr.changeNameLeft || 0})
+                  }}
+                </p>
+                <br>
                 <b> {{ $t('profile.account.modifyName.specification2') }}</b>
               </template>
             </Alert>
@@ -156,8 +159,8 @@
             <FormItem :label="$t('signup.form.username')">
               <Input v-model="formItem.username" size="large" disabled/>
             </FormItem>
-            <FormItem :label="$t('signup.form.newusername')">
-              <Input v-model="formItem.newname" size="large" placeholder="new name"/>
+            <FormItem :label="$t('signup.form.newUsername')">
+              <Input v-model="formItem.newname" size="large" :placeholder="$t('signup.form.newUsername')"/>
             </FormItem>
 
             <FormItem :label="$t('captcha.title')" prop="captcha">
@@ -186,7 +189,7 @@
         <Button type="warning"
                 size="large"
                 v-if="modal_setusername.index <= 0"
-                :disabled="(formItem.changeNameLeft - 1) != 0"
+                :disabled="formItem.attr.changeNameLeft == 0"
                 @click="modal_setusername.index = 1">是的，更变账户名称
         </Button>
       </div>
