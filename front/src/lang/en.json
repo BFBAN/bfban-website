@@ -367,7 +367,7 @@
 		},
 		"column": {
 			"col1": {
-				"text": "BFBAN-Globle Cheater database"
+				"text": "BFBAN - Global cheater database"
 			},
 			"col2": {
 				"title": "Community"
@@ -545,11 +545,11 @@
 			},
 			"1": {
 				"title": "Captcha",
-				"supplement": "Verity you are not a robot"
+				"supplement": "Verity that you are not a robot"
 			},
 			"2": {
 				"title": "Email verification",
-				"supplement": "Check verification link in your email"
+				"supplement": "Check your email for a verification link"
 			},
 			"3": {
 				"title": "Reset password",
@@ -557,10 +557,10 @@
 			},
 			"4": {
 				"title": "Submit",
-				"supplement": "Reset sucessful"
+				"supplement": "The password reset is successful"
 			}
 		},
-		"resetSuccess": "Reset sucessful \uD83D\uDC90"
+		"resetSuccess": "The password reset is successful! \uD83D\uDC90"
 	},
 	"list": {
 		"title": "Cheater list",
@@ -575,7 +575,7 @@
 		"reportTime": "Report time range",
 		"updateTime": "Update time range",
 		"colums": {
-			"screenTitle": "Fillter",
+			"screenTitle": "Filter",
 			"playerId": "ID",
 			"reportTime": "Report time",
 			"updateTime": "Update time"
@@ -583,12 +583,12 @@
 	},
 	"apps": {
 		"title": "Tools",
-		"describe": "第三方集成BFBAN数据库工具",
-		"submit_tool_app": "提交工具",
+		"describe": "3rd party tools that use the BFBan database",
+		"submit_tool_app": "Submit your own tool",
 		"buttons": {
 			"hot": "Popular",
 			"website": "Website",
-			"get": "Aquire"
+			"get": "Learn more"
 		},
 		"screen": {
 			"all": "All",
@@ -608,17 +608,17 @@
 	},
 	"search": {
 		"title": "Search",
-		"describe": "Search player ID from BFBAN database",
-		"placeholder": "搜索点什么呢,啊,就是您了！",
-		"collectionHint": "Mark this page (Ctrl+D or Command+D)",
+		"describe": "Search a playername from the BFBAN database",
+		"placeholder": "Search for something",
+		"collectionHint": "Bookmark this page (Ctrl+D or Command+D)",
 		"scope": {
 			"history": "Historical ID",
-			"current": "Present ID"
+			"current": "Current ID"
 		}
 	},
 	"cheatMethods": {
 		"invisable": {
-			"title": "Steath",
+			"title": "Stealth",
 			"describe": "Player character is invisable. "
 		},
 		"wallhack": {
@@ -630,7 +630,7 @@
 			"describe": "Automatic aim, shown mechanic behaviour"
 		},
 		"oneShotKill": {
-			"title": "Instant kill",
+			"title": "Insta-kill",
 			"describe": "Quickly aim to body part that deal high damge to achive instant kill"
 		},
 		"gadgetModify": {
@@ -646,7 +646,7 @@
 			"describe": "Bullet can be shot through wall, structure or terrain."
 		},
 		"attackServer": {
-			"title": "Attack server",
+			"title": "Attacking server",
 			"describe": "Attack battlefield server using method such as DDOS attack"
 		},
 		"teleport": {
@@ -690,11 +690,11 @@
 	},
 	"sitestats": {
 		"title": "Website statistics",
-		"reports": "Has been reported",
-		"confirmed": "Cases dealt with",
+		"reports": "Reports",
+		"confirmed": "Confirmed cheaters",
 		"banAppeals": "Have appealed",
-		"registers": "Community management has handled the case",
-		"players": "Existing reported cases",
-		"admins": "Total Number of administrators"
+		"registers": "Handled cases",
+		"players": "Existing reports",
+		"admins": "Total number of administrators"
 	}
 }
