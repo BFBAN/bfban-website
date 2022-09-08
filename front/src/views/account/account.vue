@@ -143,7 +143,7 @@
             <br>
             <Alert type="warning">
               <template slot="desc">
-                <p> {{ $t('profile.account.modifyName.specification1') }} </p>
+                <p v-html="$t('profile.account.modifyName.specification1')"></p>
                 <p>
                   {{
                     $t('profile.account.modifyName.residueDegree', {changeNameLeft: formItem.attr.changeNameLeft || 0})
