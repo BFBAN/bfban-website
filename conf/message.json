@@ -1,0 +1,27 @@
+{
+  "sendTypes": [
+    {
+      "title": "direct",
+      "privilege": ["normal", "admin", "root", "super"]
+    }, {
+      "title": "warn",
+      "privilege": ["super"]
+    }, {
+      "title": "fatal",
+      "privilege": ["super"]
+    }, {
+      "title": "toAll",
+      "privilege": ["super"]
+    }, {
+      "title": "toAdmins",
+      "privilege": ["super", "admin"]
+    }, {
+      "title": "toNormals",
+      "privilege": ["super", "admin"]
+    }, {
+      "title": "command",
+      "privilege": ["root", "dev"]
+    }
+  ],
+  "typeDictionary" : ["direct", "warn", "fatal"]
+}

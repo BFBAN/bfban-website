@@ -45,10 +45,10 @@
 			"root": "System",
 			"admin": "Community Admin",
 			"super": "Super Administrator",
-			"normal": "Normal user",
-			"blacklisted": "blacklisted user",
-			"test": "test account",
-			"dev": "DEV",
+			"normal": "Normal User",
+			"blacklisted": "Blacklisted user",
+			"test": "Test Account",
+			"dev": "DEV Account",
 			"bot": "Bot"
 		},
 		"tip": {
@@ -64,7 +64,7 @@
 			"bf6": "battlefield 2042"
 		},
 		"button": {
-			"report": "Report",
+			"report": "Reportuser",
 			"commit": "commit",
 			"save": "save",
 			"submit": "submit",
@@ -95,7 +95,7 @@
 	},
 	"profile": {
 		"title": "Personal settings",
-		"meet": "welcome back{name}! ",
+		"meet": "welcome back {name}! ",
 		"message": {
 			"title": "Message",
 			"look": "Check",
@@ -103,13 +103,34 @@
 			"control": "Batch editing",
 			"placeholder": "Type your message",
 			"types": {
-				"direct": "Chat",
-				"warn": "system",
-				"fatal": "confirm",
-				"toAll": "All",
-				"toAdmins": "Admin",
-				"toNormals": "Normal user",
-				"command": "command"
+				"direct": {
+					"text": "Chat",
+					"describe": "Chat"
+				},
+				"warn": {
+					"text": "system",
+					"describe": "system"
+				},
+				"fatal": {
+					"text": "confirm",
+					"describe": "confirm"
+				},
+				"toAll": {
+					"text": "All",
+					"describe": "All"
+				},
+				"toAdmins": {
+					"text": "Admin",
+					"describe": "Admin"
+				},
+				"toNormals": {
+					"text": "Normal user",
+					"describe": "Normal user"
+				},
+				"command": {
+					"text": "command",
+					"describe": ""
+				}
 			},
 			"tabsList": {
 				"itemName": "Message list",
@@ -229,12 +250,12 @@
 			"cheatersInfo": "Player detail",
 			"viewTimes": "Views",
 			"reply": "Reply",
-			"reportedGames": "Reported game:",
-			"gameScores": "Score track link:",
-			"firstReportTime": "Firstly reported date:",
-			"recentUpdateTime": "Recent update time:",
-			"originAvatar": "Origin avatar:",
-			"historyID": "Historical ID:",
+			"reportedGames": "Reported game",
+			"gameScores": "Score track link",
+			"firstReportTime": "Firstly reported date",
+			"recentUpdateTime": "Recent update time",
+			"originAvatar": "Origin avatar",
+			"historyID": "Historical ID",
 			"dealRecord": "Admin's operational records：",
 			"discription1": "If you found could not visit battlefieldtracker or he changed Origin ID,please Click",
 			"updateButton": "Update",
@@ -419,10 +440,11 @@
 	},
 	"account": {
 		"title": "User info",
+		"reportnum": "Report Num",
 		"hint2": "Everyone can post responses on the report page.",
 		"hint3": "If you have more evidence for a hacker, please report the same id twice.",
 		"userInfo": "Account info",
-		"username": "Username:",
+		"username": "Username",
 		"role": "Role",
 		"joinedAt": "Join time",
 		"lastOnlineTime": "Last online time",
@@ -494,6 +516,7 @@
 		},
 		"form": {
 			"username": "Username",
+			"newUsername": "New username",
 			"password": "Password",
 			"originId": "Origin ID",
 			"originEmail": "🍊 Origin email",
