@@ -516,6 +516,7 @@
 		},
 		"form": {
 			"username": "Username",
+			"newUsername": "New username",
 			"password": "Password",
 			"originId": "Origin ID",
 			"originEmail": "🍊 Origin email",

@@ -60,14 +60,15 @@
 
         <Dropdown placement="bottom-end" v-if="isLogin" :padding="0">
           <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
-            <Avatar>{{ currentUser.userinfo.username[0] || 'Null' }}</Avatar>
+            <Avatar icon="ios-person"></Avatar>
           </router-link>
           <span class="mobile-hide">&emsp;{{ currentUser.userinfo.username }}</span>
           <DropdownMenu slot="list" style="min-width: 260px;">
             <div class="header-dropdown-avatar">
               <div>
-                <Avatar size="60">{{ currentUser.userinfo.username[0] || 'Null' }}</Avatar>
+                <Avatar icon="ios-person" size="60"></Avatar>
                 <p class="header-dropdown-name">{{ currentUser.userinfo.username}}</p>
+                <p class="header-dropdown-id">{{ currentUser.userinfo.userId }}</p>
               </div>
               <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
             </div>
@@ -167,7 +168,6 @@ export default {
         show: false,
         child: [],
       },
-      privileges: [],
     }
   },
   components: {Header_message,PrivilegesTag},
@@ -180,9 +180,6 @@ export default {
   },
   methods: {
     async loadData() {
-      const privileges = await import('/public/conf/privilege.json');
-      this.privileges = privileges.child;
-
       this.getTheme();
     },
     /**
@@ -302,8 +299,15 @@ header {
   text-align: center;
 
   .header-dropdown-name {
-    margin: 5px 0;
+    margin: 5px 0 2px 0;
     font-size: 1.5rem;
+  }
+
+  .header-dropdown-id {
+    font-weight: 400;
+    margin: 0 0 5px 0;
+    font-size: 10px;
+    opacity: .5;
   }
 }
 

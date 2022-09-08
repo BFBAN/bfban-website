@@ -516,6 +516,7 @@
     },
     "form": {
       "username": "用户名",
+      "newUsername": "新用户名",
       "password": "密码",
       "originId": "橘子ID",
       "originEmail": "🍊 橘子邮箱",
