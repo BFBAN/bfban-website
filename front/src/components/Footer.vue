@@ -3,18 +3,17 @@
     <div class="container">
       <Row>
         <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide">
-          <Badge :count="logoCount" overflow-count="999999">
-            <Avatar v-if="logoCount > 10" size="40">
-              :)
+          <Badge :count="logoCount" overflow-count="999999" :class="logoCount >= 10 ? 'shake active_infinite' : ''">
+            <Avatar v-if="logoCount >= 5" size="40">
+              <router-link :to="{name: 'home', query:{ '': '❤'}}">😊</router-link>
             </Avatar>
             <img v-else
                  src="../assets/images/logo.png"
                  width="40"
                  height="40"
-                 @click="logoCount++;"
+                 @click="logoCount += 1;"
                  alt="bfban logo"/>
           </Badge>
-
           <p>{{ $t("footer.column.col1.text") }}</p>
         </Col>
         <Col :xs="{span: 9 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide"
@@ -208,4 +207,3 @@ export default {
   }
 }
 </style>
-

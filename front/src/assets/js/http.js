@@ -1,5 +1,6 @@
 import http from 'axios';
 import Conf from './conf';
+
 export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
@@ -17,7 +18,7 @@ export default class Http extends Conf {
           // 'Content-type': 'application/json',
       },
       validateStatus(status) {
-          return status < 500;
+          return status <= 600;
       }
     })
 

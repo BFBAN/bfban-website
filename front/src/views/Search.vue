@@ -1,7 +1,5 @@
 <template>
   <div class="container">
-<!--    <div class="search-background"></div>-->
-
     <div class="content">
       <br>
       <Row>
@@ -15,16 +13,15 @@
       <br>
 
       <div :class="`search-content ${cheaters.length > 0 ? 'search-content-mini' : ''}`">
-        <Row :gutter="30">
-          <Col :xs="{span: 24, push: 1,pull: 1}" :lg="{span: 10, push:0, pull: 0}">
+        <Row :gutter="50" style="width: 100%;">
+          <Col>
             <RadioGroup v-model="searchScopeValue" type="button" size="large" class="search-input-show">
               <Radio :label="i" border v-for="i in searchScope" :key="i">{{ $t('search.scope.' + i) }}</Radio>
             </RadioGroup>
           </Col>
-          <Col :xs="{span: 24, push: 1,pull: 1}" :lg="{span: 14, push:0, pull: 0}">
-            <Dropdown>
-              <Input clearable
-                     enter-button
+          <Col flex="1">
+            <Dropdown style="width: 100%">
+              <Input enter-button
                      search
                      size="large"
                      class="search-input search-input-show"
@@ -32,27 +29,26 @@
                      v-model="searchVal"
                      @on-clear="searchVal = '';cheaters = []"
                      @on-click="handleSearch"
-                     @on-search="handleSearch"/>
-
-              <DropdownMenu slot="list" style="min-width: 300px; padding: 0 10px" >
-                <Row :gutter="0" v-if="searchHistory.list.length > 0">
+                     @on-search="handleSearch">
+              </Input>
+              <div transfer slot="list">
+                <Row :gutter="5" v-if="searchHistory.list.length > 0" style="padding: 10px">
                   <Col v-for="(i, index) in searchHistory.list"
                        :key="index">
-                      <Tag stype="border"
-                           type="dot"
-                           checkable
-                           closable
-                           @on-change="handleSearchHistoryClickTag(index)"
-                           @on-close="handleSearchHistoryClose(index)">{{ i || '' }}
-                      </Tag>
+                    <Tag stype="border"
+                         type="dot"
+                         checkable
+                         closable
+                         @on-change="handleSearchHistoryClickTag(index)"
+                         @on-close="handleSearchHistoryClose(index)">{{ i || '' }}
+                    </Tag>
                   </Col>
                 </Row>
                 <div v-else align="center">
-                   🦖
+                  🦖
                 </div>
-              </DropdownMenu>
+              </div>
             </Dropdown>
-
           </Col>
         </Row>
         <div class="checkboxGroup">
@@ -226,7 +222,6 @@ export default new BFBAN({
 
   .search-input {
     width: 100% !important;
-    min-width: 300px;
     border-radius: 10px;
   }
 }

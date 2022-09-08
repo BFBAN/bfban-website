@@ -84,43 +84,50 @@
                     @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
               <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
               <br>
-              <div v-for="d in data" :key="d.originUserId">
+              <div v-for="(d, d_index) in data" :key="d.originUserId">
                 <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
                   <Card>
                     <Row :gutter="10" type="flex">
                       <Col :xs="{span: 8, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
                         <!-- 头像 S -->
                         <Avatar :src="d.avatarLink"
+                                @on-error="onAvatarError(d_index)"
                                 alt="avatar"
                                 size="55"
                                 v-if="d.avatarLink">
                         </Avatar>
+                        <template v-else>
+                          <Avatar icon="ios-person"
+                                  size="55"
+                                  style="background-color: rgba(255,0,0,0.37)"></Avatar>
+                        </template>
                         <!-- 头像 E -->
                       </Col>
-                      <Col :xs="{span: 16, push: 0,pull:0}" :lg="{span: 15, push: 0,pull:0}">
+                      <Col :xs="{span: 16, push: 0,pull:0}" :lg="{span: 16, push: 0,pull:0}">
                         <div style="display: flex; flex-direction: column;">
-                          <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}">
                             <Tooltip :content="$t('list.colums.playerId')">
                               <h2>
-                                {{ d.originName }}
-                                <Button size="small" type="text" icon="ios-copy-outline"
-                                        :data-clipboard-text="d.originId"
-                                        @click="copied"></Button>
+                                <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}"
+                                             :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
+                                  {{ d.originName }}
+                                </router-link>
+                                <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"></Button>
                               </h2>
                             </Tooltip>
-                          </router-link>
                         </div>
 
-                        {{ $t('list.colums.reportTime') }}
-                        <Time v-if="d.createTime" :time="d.createTime"/>
-                        <Divider type="vertical"/>
-                        {{ $t('list.colums.updateTime') }}
-                        <Time v-if="d.updateTime" :time="d.updateTime"/>
+                        <div>
+                          {{ $t('list.colums.reportTime') }}
+                          <Time v-if="d.createTime" :time="d.createTime"/>
+                          <Divider type="vertical"/>
+                          {{ $t('list.colums.updateTime') }}
+                          <Time v-if="d.updateTime" :time="d.updateTime"/>
+                        </div>
                       </Col>
                       <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 4, push: 0,pull:0}" class="mobile-hide">
                         <Row type="flex" justify="center" align="middle" style="height: 50px">
                           <Col flex="auto" align="right">
-                            <span class="item-text">{{ d.viewNum || 0 }} </span>
+                            <span class="item-text">{{ d.viewNum || 0 }}</span>
                             <Icon type="md-eye" size="17" class="item-icon"/>
                           </Col>
                           <Col flex="auto" align="right">
@@ -129,10 +136,9 @@
                           </Col>
                         </Row>
                       </Col>
-                      <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 2, push: 0,pull:0}" align="center"
+                      <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 1, push: 0,pull:0}"
+                           align="center"
                            class="mobile-hide">
-                        <Progress vertical :percent="0" hide-info/>
-                        <Divider type="vertical"/>
                         <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
                       </Col>
                     </Row>
@@ -268,12 +274,6 @@ export default new BFBAN({
       return target ? target.num : 0;
     },
     /**
-     * 复制文本
-     */
-    copied() {
-      this.$Message.info("已复制");
-    },
-    /**
      * 加载数据
      * @returns {Promise<void>}
      */
@@ -382,28 +382,29 @@ export default new BFBAN({
       });
     },
     routerQuery() {
-      const game = this.gameName;
-      const status = this.statusGroup;
-      const createTime = this.createTime; //.join(",");
-      const updateTime = this.updateTime; // .join(",");
-      const skip = this.skip;
-      const limit = this.limit;
-      const sort = this.sortByValue;
+      const _game = this.gameName;
+      const _status = this.statusGroup;
+      const _createTime = this.createTime;
+      const _updateTime = this.updateTime;
+      const _skip = this.skip;
+      const _limit = this.limit;
+      const _sort = this.sortByValue;
 
       let o = {};
 
-      o["status"] = status;
-      if (createTime !== ",") o["createTime"] = createTime;
-      if (updateTime !== ",") o["updateTime"] = updateTime;
-      if (skip !== 1) o["skip"] = skip;
-      o["limit"] = limit;
-      if (sort !== "") o["sort"] = sort;
-      if (game !== "") o["game"] = game;
+      o["status"] = _status;
+      if (_createTime !== ",") o["createTime"] = _createTime;
+      if (_updateTime !== ",") o["updateTime"] = _updateTime;
+      if (_skip !== 1) o["skip"] = _skip;
+      o["limit"] = _limit;
+      if (_sort !== "") o["sort"] = _sort;
+      if (_game !== "") o["game"] = _game;
 
       return o;
     },
     handleChanges() {
       this.spinShow = true;
+      this.skip = 1;
 
       const query = this.routerQuery();
 
@@ -434,6 +435,9 @@ export default new BFBAN({
       this.limit = num;
       this.handleChanges();
     },
+    onAvatarError (index) {
+      this.data[index].avatarLink = ""
+    }
   },
   computed: {
     getAllStatusNum() {
@@ -452,7 +456,9 @@ export default new BFBAN({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="less">
+@import "./src/assets/css/radio.less";
+
 .page {
   padding: 0 16px;
   margin: 13px -16px;
@@ -466,51 +472,6 @@ export default new BFBAN({
 
   .item-icon {
     margin: 0 10px;
-  }
-}
-
-.game-type {
-  padding-top: 1rem;
-
-  label {
-    text-align: center;
-    min-width: 130px;
-    animation: all .25s;
-    background-size: cover;
-    background-position: center;
-  }
-
-  label:first-child {
-    min-width: inherit !important;
-  }
-
-  img {
-    margin: 5px 0;
-    height: 30px;
-    animation: all 1s;
-  }
-
-  .gametype-select {
-    position: relative;
-    animation: gameAnimation 15s infinite;
-  }
-
-  @keyframes gameAnimation {
-    0% {
-      background-position-y: 50%;
-      background-size: 150%;
-    }
-    25% {
-      background-position-y: 100%;
-      background-size: 100%;
-    }
-    75% {
-      background-position-y: 0%;
-      background-size: 150%;
-    }
-    100% {
-      background-position-y: 50%;
-    }
   }
 }
 </style>

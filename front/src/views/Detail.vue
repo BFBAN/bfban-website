@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="detailLoad">
     <div class="content">
       <template v-if="!isFull">
         <br>
@@ -18,11 +18,23 @@
       <Card id="getSharePicture" v-if="isCheaterExist" dis-hover>
         <Row :gutter="10">
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 3, pull: 0, push: 0}">
-            <div v-show="cheater.avatarLink" align="center">
-              <!-- Origin头像 -->
-              <Avatar shape="square" :src="cheater.avatarLink" size="180"
-                      :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })">
+            <div align="center">
+              <!-- Origin头像 S -->
+              <Avatar shape="square"
+                      @on-error="onAvatarError"
+                      :src="cheater.avatarLink"
+                      :size="180"
+                      :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })"
+                      v-if="cheater.avatarLink">
               </Avatar>
+              <template v-else>
+                <Avatar shape="square"
+                        icon="ios-person"
+                        size="180"
+                        style="background-color: rgba(255,0,0,0.37)">
+                </Avatar>
+              </template>
+              <!-- Origin头像 E -->
             </div>
           </Col>
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}">
@@ -47,7 +59,7 @@
                   </Tag>
                 </template>
 
-                <h1 style="font-size: 1.6rem;">
+                <h1 :style="`font-size: 1.6rem;${cheater.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''}`">
                   {{ cheater.originName || 'user id' }}
                 </h1>
               </Col>
@@ -105,6 +117,9 @@
                   <a @click="updateCheaterModal = true;"><Icon type="md-cloud" /> {{ $t('detail.info.updateButton') }}</a>
 
                   <Modal v-model="updateCheaterModal">
+                    <div sort="title">
+                      <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
+                    </div>
                     <div>
                       <Card style="margin: 2.5rem 0 1rem 0;" dis-hover>
                         <Row :gutter="16" type="flex" justify="center" align="middle">
@@ -132,12 +147,13 @@
                       <Row :gutter="16">
                         <Col>
                           <Button type="dashed" size="large" long @click.prevent="updateCheaterModal = false;">
-                            <span>{{ $t('basic.button.cancel') }}</span>
+                            {{ $t('basic.button.cancel') }}
                           </Button>
                         </Col>
                         <Col flex="1">
-                          <Button type="primary" size="large" long @click.prevent="updateCheaterInfo">
-                            <span>{{ $t('detail.info.updateButton') }}</span>
+                          <Button type="primary" size="large"
+                                  long @click.prevent="updateCheaterInfo">
+                            {{ $t('detail.info.updateButton') }}
                           </Button>
                         </Col>
                       </Row>
@@ -459,8 +475,9 @@
                       <template v-if="l.quote">
                         <a :href="`#floor-${l.quote.id}`" >
                           <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
-                              <b>{{ l.quote.username }}</b> :
-                            <div v-html="l.quote.content" ></div>
+                            <b>{{ l.quote.username }}</b> :
+                            <div v-html="l.quote.content.substr(0, 80)" ></div>
+                            ...
                           </div>
                         </a>
                       </template>
@@ -567,10 +584,14 @@
         <Card dis-hover v-if="isAdmin">
           <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})">
             <h2 style="margin: 1rem 0;">
-              # {{ $t('detail.info.judgement', {msg: 'judgement'}) }}
-              <Tag color="success">
-                {{ $t("basic.privilege.admin") }}
-              </Tag>
+              <Row>
+                <Col flex="1">
+                  # {{ $t('detail.info.judgement', {msg: 'judgement'}) }}
+                </Col>
+                <Col>
+                  <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
+                </Col>
+              </Row>
             </h2>
 
             <Alert type="warning" show-icon>
@@ -855,6 +876,7 @@ import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
 import RecordLink from "../components/RecordLink.vue";
 import Captcha from "../components/Captcha";
+import PrivilegesTag from "/src/components/PrivilegesTag";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
@@ -862,6 +884,7 @@ export default new BFBAN({
   data() {
     return {
       getGameLabel: util.getGameLabel,
+      detailLoad: true,
       privileges: [],
       appeal: {
         load: false,
@@ -926,7 +949,7 @@ export default new BFBAN({
       },
     }
   },
-  components: {Empty, Edit, Textarea, BusinessCard, RecordLink, Captcha},
+  components: {Empty, Edit, Textarea, BusinessCard, RecordLink, Captcha, PrivilegesTag},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -960,6 +983,9 @@ export default new BFBAN({
         this.verify.choice = res.action;
         this.verify.status = this.verify.choice[0].value;
       });
+    },
+    onAvatarError () {
+      this.cheater.avatarLink = "";
     },
     /**
      * 更新游览值
@@ -1017,6 +1043,8 @@ export default new BFBAN({
             this.games.push({game: i});
           })
         } else {
+          this.$Message.info(this.$t('basic.tip.notFound'));
+          this.$router.push({name: 'player_list'})
           this.catch(res);
         }
       }).finally(() => {

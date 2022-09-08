@@ -35,7 +35,8 @@
                       v-model="tabs.list[index].formItem.gameName"
                       type="button">
                     <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
-                           :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ')'">
+                           :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ')'"
+                           :class="tabs.list[index].formItem.gameName == i.value ? 'gametype-select' : ''">
                       <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
                         <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
                         <span v-else>{{ i.full_name }}</span>
@@ -182,9 +183,11 @@
                 </FormItem>
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
-                  <Textarea :placeholder="$t('report.info.description')"
-                            :index="index"
-                            @change="handleMiscChange"></Textarea>
+                  <Card :padding="0" dis-hover>
+                    <Textarea :placeholder="$t('report.info.description')"
+                              :index="index"
+                              @change="handleMiscChange"></Textarea>
+                  </Card>
                 </FormItem>
               </Card>
               <!-- 证据 E -->
@@ -546,7 +549,9 @@ export default new BFBAN({
 });
 </script>
 
-<style lang="scss">
+<style lang="less">
+@import "./src/assets/css/radio.less";
+
 .report-hackrid {
   margin-top: 20px;
 

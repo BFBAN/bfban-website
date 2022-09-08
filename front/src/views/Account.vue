@@ -130,7 +130,6 @@ export default new BFBAN({
         createDatetime: "",
         attr: {
           allowDM: false,
-
         }
       },
       report: {
@@ -160,9 +159,20 @@ export default new BFBAN({
             ellipsis: true,
             tooltip: true,
             render: (h, params) => {
+              const that = this;
               return h('div', [
                 h('a', {
-                  href: '/player/' + params.row.originPersonaId
+                  href: '/player/' + params.row.originPersonaId,
+                  on: {
+                    click () {
+                      that.$router.push({
+                        name: 'player',
+                        params: {
+                          ouid: params.row.originPersonaId
+                        }
+                      })
+                    }
+                  }
                 }, params.row.originName)
               ]);
             }

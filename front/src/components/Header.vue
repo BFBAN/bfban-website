@@ -264,10 +264,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
+@import "src/assets/css/index";
+
 header {
   -webkit-app-region: drag;
-  position: relative;
   z-index: 1000;
   width: 100%;
   height: auto;

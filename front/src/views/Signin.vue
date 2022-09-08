@@ -14,7 +14,6 @@
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 13, push: 0, pull: 0}">
           <Card v-if="currentUser.token == ''" :padding="50" shadow>
-            <p slot="title">{{ $t("signin.title") }}</p>
             <Form ref="signin" :model="signin" :rules="ruleValidate">
               <Alert type="error" show-icon v-if="signinBackMsg">
                 <b>{{ $t('signin.failed') }} :</b>
@@ -36,7 +35,7 @@
                 <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
                        :placeholder="$t('captcha.title')">
                   <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                    <Captcha ref="captcha"></Captcha>
+                    <Captcha ref="captcha" :seconds="15"></Captcha>
                   </div>
                 </Input>
               </FormItem>
