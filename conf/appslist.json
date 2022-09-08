@@ -96,7 +96,11 @@
         "en-US": "Discord bot"
       },
       "id": "6",
-      "describe": "《战地风云》系列的Discord统计机器人",
+      "describe": "",
+      "describeLang": {
+        "zh-CN": "《战地风云》系列的Discord统计机器人",
+        "en-US": "The Discord bot for Battlefield"
+      },
       "tag": ["web", "bot", "bf1", "bfv", "bf6"],
       "website" : "",
       "get": "https://top.gg/bot/714524944783900794"
