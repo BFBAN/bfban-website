@@ -1,9 +1,11 @@
 <template>
-  <div class="captcha-view" @click="refreshCaptcha" :style="`cursor: ${captchaTime.count <= 0 ? 'pointer' : 'not-allowed'};`">
+  <div class="captcha-view"
+       @click="refreshCaptcha"
+       :style="`cursor: ${captchaTime.count <= 0 ? 'pointer' : 'not-allowed'};height: ${height}`">
     <span v-if="!content" class="tip">
       {{ $t('captcha.get') }}
     </span>
-    <div v-else v-html="content" :style="captchaTime.count <= 0 ? 'opacity: .3' : ''"></div>
+    <div v-else v-html="content" :style="captchaTime.count < 0 ? 'opacity: .3' : ''"></div>
     <div class="count" v-show="captchaTime.lock">{{ captchaTime.count }}s</div>
   </div>
 </template>
@@ -16,6 +18,14 @@ export default {
     id: {
       type: String,
       default: '0',
+    },
+    seconds: {
+      type: Number,
+      default: 15
+    },
+    height: {
+      type: String,
+      default: '40px'
     }
   },
   data() {
@@ -36,7 +46,7 @@ export default {
       this.capthcaHash = captcha.data;
     } else {
       storage.session().set(`captcha`, {
-        [`${this.id}_this.$route.name`]: 30
+        [`${this.id}_this.$route.name`]: this.seconds
       });
     }
   },
@@ -55,7 +65,7 @@ export default {
       if (captcha.code <= 0) {
         captcha = {
           data: {
-            value: 30,
+            value: this.seconds,
           }
         }
       }
@@ -82,7 +92,7 @@ export default {
           this.captchaTime.count = captcha.data.value[this.$route.name];
         }
 
-        this.capthcaTimeout(this.captchaTime.count || 30);
+        this.capthcaTimeout(this.captchaTime.count || this.seconds);
       });
     },
     /**
@@ -123,7 +133,11 @@ export default {
 .captcha-view {
   overflow: hidden;
   position: relative;
+  display: flex;
+  justify-items: center;
+  align-items: center;
   animation: all .4s;
+  margin: 0 5px;
 
   .count {
     display: flex;

@@ -189,13 +189,11 @@
       <template v-if="!isFull">
         <br>
         <Card dis-hover>
-          <Tabs type="card">
-            <TabPane :label="$t('detail.info.gameScores', { msg: 'gameScores' })" v-show="cheater.originUserId">
-              <!-- 战绩链接 S -->
-              <RecordLink :cheater="cheater"></RecordLink>
-              <!-- 战绩链接 E -->
-            </TabPane>
-          </Tabs>
+          <h2># {{ $t('detail.info.gameScores') }}</h2>
+          <br>
+          <!-- 战绩链接 S -->
+          <RecordLink :cheater="cheater" v-show="cheater.originUserId"></RecordLink>
+          <!-- 战绩链接 E -->
         </Card>
         <br>
         <Card style="overflow: hidden" dis-hover>
@@ -204,7 +202,7 @@
               {{ $t('detail.info.assistPppeal') }}
             </Col>
             <Col flex="auto" class="mobile-hide">
-              {{ $t('detail.info.timeLine', {msg: 'timeLine'}) }}
+              {{ $t('detail.info.timeLine') }}
             </Col>
             <Col>
               <!-- 时间轴筛选 S -->
@@ -232,7 +230,7 @@
             </Col>
           </Row>
           <Row :gutter="20" type="flex">
-            <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 18, push: 1}" order="2" class="tabs-style">
+            <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 17, push: 1}" order="2" class="tabs-style">
               <div class="content">
                 <!-- 时间线 -->
                 <TimelineItem
@@ -240,7 +238,8 @@
                     pending
                     class="timeline-time-line"
                     v-show="isSeeType(index)"
-                    :color="l.privilege === 'admin' ? 'red' : 'green'" v-for="(l, index) in timelineList"
+                    :color="l.privilege === 'admin' ? 'red' : 'green'"
+                    v-for="(l, index) in timelineList"
                     :key="index">
                   <div v-if="l.type === 'report'" slot="dot" class="timeline-time-dot ivu-tag-warning hand">
                     <Icon type="ios-hand" size="20"></Icon>
@@ -496,12 +495,9 @@
               <div id="reply" v-if="isLogin" class="ivu-card ivu-card-bordered">
                 <div class="ivu-card-head">
                   <Alert type="warning" show-icon>
-                    <span>{{ $t('detail.info.replyManual1', {msg: 'replyManual1'}) }}</span>
-                    <b><a href="https://sm.ms/"
-                          target="_blank"><span>{{
-                        $t('detail.info.uploadPicButton', {msg: 'uploadPicButton'})
-                      }}</span></a></b>，
-                    <span>{{ $t('detail.info.replyManual2', {msg: 'replyManual2'}) }}</span>
+                    <span>{{ $t('detail.info.replyManual1') }}</span>
+                    <b><a href="https://sm.ms/" target="_blank">{{ $t('detail.info.uploadPicButton') }}</a></b>，
+                    <span>{{ $t('detail.info.replyManual2') }}</span>
                   </Alert>
 
                   <Form label-position="top">
@@ -539,19 +535,19 @@
               </div>
               <Alert type="warning" show-icon v-else>
                 <template slot="desc">
-                  {{ $t('detail.info.replyManual3', {msg: 'replyManual3'}) }}
+                  {{ $t('detail.info.replyManual3') }}
                 </template>
               </Alert>
               <!-- 用户回复 E -->
             </Col>
-            <Col :xs="{span: 23, push: 1}" :lg="{span: 5, push: 0}" order="1" class="mobile-hide">
+
+            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide">
                 <Button type="primary"
                         @click="appeal.show = true"
                         :disabled="!isLogin || cheater.status != 1">
                   {{ $t('detail.info.appeal') }}
                 </Button>
                 <p><br>{{ $t('detail.appeal.describe') }}</p>
-                <Divider/>
             </Col>
           </Row>
 
@@ -1023,8 +1019,6 @@ export default new BFBAN({
         } else {
           this.catch(res);
         }
-      }).catch(() => {
-        this.$router.push({name: "notFound"});
       }).finally(() => {
         this.onViewed();
         this.spinShow = false;
@@ -1390,8 +1384,14 @@ export default new BFBAN({
   }
 
   .timeline-time-line {
+    padding-top: 10px !important;
+
     .ivu-timeline-item-tail {
       margin-left: 15px;
+    }
+
+    .ivu-timeline-item-head {
+      margin-top: 10px !important;
     }
   }
 

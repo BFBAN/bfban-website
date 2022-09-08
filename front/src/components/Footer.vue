@@ -5,7 +5,7 @@
         <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide">
           <Badge :count="logoCount" overflow-count="999999">
             <Avatar v-if="logoCount > 10" size="40">
-              干嘛？
+              :)
             </Avatar>
             <img v-else
                  src="../assets/images/logo.png"

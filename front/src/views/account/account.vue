@@ -99,14 +99,14 @@
         </Col>
         <Col span="12">
           <FormItem :label="$t('profile.account.form.showOrigin')">
+            <Alert show-icon>{{ $t('profile.account.form.showOriginDescribe') }}</Alert>
             <i-switch v-model="formItem.attr.showOrigin"/>
-            <p>{{ $t('profile.account.form.showOriginDescribe') }}</p>
           </FormItem>
         </Col>
         <Col span="12">
           <FormItem :label="$t('profile.account.form.allowDM')">
+            <Alert show-icon>{{ $t('profile.account.form.allowDMdescribe') }}</Alert>
             <i-switch v-model="formItem.attr.allowDM"/>
-            <p>{{ $t('profile.account.form.allowDMdescribe') }}</p>
           </FormItem>
         </Col>
       </Row>

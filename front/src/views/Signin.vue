@@ -16,6 +16,11 @@
           <Card v-if="currentUser.token == ''" :padding="50" shadow>
             <p slot="title">{{ $t("signin.title") }}</p>
             <Form ref="signin" :model="signin" :rules="ruleValidate">
+              <Alert type="error" show-icon v-if="signinBackMsg">
+                <b>{{ $t('signin.failed') }} :</b>
+                {{ signinBackMsg }}
+              </Alert>
+
               <FormItem :label="$t('signin.form.username')" prop="username">
                 <Input prefix="ios-contact" type="text" v-model="signin.username" size="large"
                        :placeholder="$t('signin.form.username')">
@@ -40,13 +45,20 @@
                 <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
                   {{ $t('basic.button.submit') }}
                 </Button>
-
-                <Divider>
-                  <router-link :to="{name: 'signup'}">{{ $t('signin.form.submitHint') }}</router-link>
-                  <Divider type="vertical"/>
-                  <router-link :to="{name: 'forgetPassword'}">{{ $t('signin.form.forgetPasswordHint') }}</router-link>
-                </Divider>
               </FormItem>
+
+              <Row type="flex" justify="center" align="middle">
+                <Col>
+                  <router-link :to="{name: 'signup'}">
+                    <Icon type="md-mail" />
+                    {{ $t('signin.form.submitHint') }}
+                  </router-link>
+                </Col>
+                <Divider type="vertical"/>
+                <Col>
+                  <router-link :to="{name: 'forgetPassword'}">{{ $t('signin.form.forgetPasswordHint') }}</router-link>
+                </Col>
+              </Row>
             </Form>
           </Card>
           <Card v-if="currentUser.token != ''" shadow align="center">
@@ -76,7 +88,7 @@ import _ from "lodash";
 const {mapActions, mapMutations} = Vuex;
 
 export default new BFBAN({
-  components: {Captcha},
+  components: { Captcha },
   data() {
     return {
       ruleValidate: {
@@ -87,9 +99,10 @@ export default new BFBAN({
           {required: true, trigger: 'blur'}
         ],
         captcha: [
-          {required: true, max: 4, trigger: 'blur'}
+          {required: true, min: 4, max: 4, trigger: 'change'}
         ],
       },
+      signinBackMsg: '',
       signin: {
         username: '',
         password: '',
@@ -111,7 +124,9 @@ export default new BFBAN({
       'SIGNIN'
     ]),
 
-    // 登录
+    /**
+     * 登录
+     */
     handleSignin() {
       const that = this;
       const {username, password, captcha} = _.each(this.signin, (v, k, o) => {
@@ -135,17 +150,16 @@ export default new BFBAN({
             const d = res.data;
 
             if (d.error === 1) {
-              that.$Message.error(this.$t('signin.failed') + ': ' + d.message);
               that.signin.password = '';
               that.signin.captcha = '';
-              that.refreshCaptcha();
+              that.signinBackMsg = d.message;
             } else {
               that.signinUser(d.data).then(() => {
-                const rurl = this.$route.query.rurl;
+                const backurl = this.$route.query.backurl;
 
                 // redirect rurl or home
-                if (rurl) {
-                  this.$router.push(rurl);
+                if (backurl) {
+                  this.$router.push({ path: backurl });
                 } else {
                   this.$router.go('-1');
                 }

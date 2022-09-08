@@ -31,28 +31,27 @@
 
           <Row :gutter="20" type="flex" justify="center" align="middle">
             <Col>
-              <span v-for="(i,index) in privileges" :key="index">
-                <span v-for="(p, pi) in account.privilege" :key="pi">
-                  <Tag type="border" size="large" :color="i.class" v-if="p == i.value">
-                    {{ $t("basic.privilege." + i.value) }}
-                  </Tag>
-                </span>
-              </span>
+              <PrivilegesTag :data="account.privilege" v-if="account.privilege"></PrivilegesTag>
               <p class="account-info-p">{{ $t("account.role") }}</p>
             </Col>
             <Divider type="vertical"/>
             <Col>
               <Tag type="border" size="large" color="primary">
-                <Time v-if="account.joinTime" :time="account.joinTime  || new Date()"/>
+                <Time v-if="account.joinTime" :time="account.joinTime || new Date()"/>
               </Tag>
               <p class="account-info-p">{{ $t("account.joinedAt") }}</p>
             </Col>
             <Divider type="vertical"/>
             <Col>
-              <Tag type="border" size="large" color="success">
-                <Time v-if="account.lastOnlineTime" :time="account.lastOnlineTime  || new Date()"/>
+              <Tag type="border" size="large" color="#df22ff">
+                <Time v-if="account.lastOnlineTime" :time="account.lastOnlineTime || new Date()"/>
               </Tag>
               <p class="account-info-p">{{ $t("account.lastOnlineTime") }}</p>
+            </Col>
+            <Divider type="vertical"/>
+            <Col>
+              <h3>{{ account.reportnum }}</h3>
+              <p class="account-info-p">{{ $t("account.reportnum") }}</p>
             </Col>
           </Row>
         </Col>
@@ -80,15 +79,9 @@
         </Col>
         <Col span="17" order="1">
           <Card dis-hover :padding="0">
-            <p v-if="report.data.length <= 0" align="center">
-              <Alert type="warning" show-icon>
-                {{ $t('basic.tip.noReports') }}
-              </Alert>
-            </p>
-
             <Table show-header
                    :border="false"
-                   :no-data-text="$t('basic.tip.notcontent')"
+                   :no-data-text="$t('basic.tip.noReports')"
                    :columns="report.columns"
                    :data="report.data"></Table>
           </Card>
@@ -122,13 +115,14 @@
 import BFBAN from "../assets/js/bfban";
 import {api, http, http_token} from '../assets/js/index'
 
+import PrivilegesTag from "/src/components/PrivilegesTag";
+
 import games from '/public/conf/gameName.json'
 
 export default new BFBAN({
   data() {
     return {
       games: games.child,
-      privileges: [],
       account: {
         username: "",
         originId: "",
@@ -231,6 +225,7 @@ export default new BFBAN({
   watch: {
     $route: "loadData",
   },
+  components: { PrivilegesTag },
   created() {
     this.http = http_token.call(this);
 
@@ -239,9 +234,6 @@ export default new BFBAN({
   methods: {
     async loadData() {
       const {uId} = this.$route.params;
-
-      const privileges = await import('/public/conf/privilege.json');
-      this.privileges = this.privileges.concat(privileges.child)
 
       this.getUserInfo(uId);
     },

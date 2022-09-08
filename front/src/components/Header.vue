@@ -64,8 +64,15 @@
           </router-link>
           <span class="mobile-hide">&emsp;{{ currentUser.userinfo.username }}</span>
           <DropdownMenu slot="list" style="min-width: 260px;">
+            <div class="header-dropdown-avatar">
+              <div>
+                <Avatar size="60">{{ currentUser.userinfo.username[0] || 'Null' }}</Avatar>
+                <p class="header-dropdown-name">{{ currentUser.userinfo.username}}</p>
+              </div>
+              <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
+            </div>
             <router-link :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
-              <DropdownItem>
+              <DropdownItem divided>
                 {{ $t("header.userCenter") }}
               </DropdownItem>
             </router-link>
@@ -101,7 +108,14 @@
             </Dropdown>
             <div @click="signout">
               <Dropdown-item divided v-show="isLogin">
-                  <Icon type="md-log-out"></Icon> {{ $t("header.signout") }}
+                <Row>
+                  <Col flex="1">
+                    {{ $t("header.signout") }}
+                  </Col>
+                  <Col>
+                    <Icon type="md-log-out"></Icon>
+                  </Col>
+                </Row>
               </Dropdown-item>
             </div>
           </DropdownMenu>
@@ -142,6 +156,7 @@ import themes from '/public/conf/themes.json'
 import menu from '/public/conf/headerMenu.json'
 
 import Header_message from "./Header_message";
+import PrivilegesTag from "/src/components/PrivilegesTag";
 
 export default {
   data() {
@@ -155,7 +170,7 @@ export default {
       privileges: [],
     }
   },
-  components: {Header_message},
+  components: {Header_message,PrivilegesTag},
   watch: {
     $route: "loadData",
   },
@@ -275,6 +290,21 @@ header {
   height: 20px;
   border-radius: 8px;
   margin-right: 10px;
+}
+
+.header-dropdown-avatar {
+  width: 100%;
+  line-height: normal;
+  padding: 15px 16px;
+  clear: both;
+  font-size: 14px !important;
+  white-space: nowrap;
+  text-align: center;
+
+  .header-dropdown-name {
+    margin: 5px 0;
+    font-size: 1.5rem;
+  }
 }
 
 .nav {
