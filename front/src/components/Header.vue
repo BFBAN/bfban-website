@@ -51,7 +51,8 @@
         </router-link>
       </div>
       <div class="nav">
-        <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
+        <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
+                     v-if="$route.name != 'signin'">
           <Button type="primary" shape="circle">
             <Icon type="md-log-in"/>
             {{ $t("header.signin") }}
@@ -264,10 +265,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
+@import "src/assets/css/index";
+
 header {
   -webkit-app-region: drag;
-  position: relative;
   z-index: 1000;
   width: 100%;
   height: auto;

@@ -15,13 +15,17 @@ export default class Conf {
         }
     };
 
+    // 初始配置
     async initConf() {
-        let {requestActionName, requestProductionName, child} = await import('/public/conf/requestConf.json');
-        this.CONF = Object.assign(this.CONF, {requestActionName}, {requestProductionName}, {child});
+        let confs = await import('/public/conf/requestConf.json');
+        this.CONF = Object.assign(
+            this.CONF,
+            {...confs}
+        );
         return this.CONF;
     }
 
-    getConf() {
+    get getConf() {
         return this.CONF;
     }
 }

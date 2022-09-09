@@ -49,9 +49,9 @@
               <p>{{ $t("home.cover.endTime") }}</p>
               <br>
             </Col>
-            <Col span="16" class="mobile-hide" :lg="{span: 14, push: 1}" type="flex" align="right" justify="center"
+            <Col span="16" class="mobile-hide" :lg="{span: 14, push: 1}" type="flex" align="center" justify="center"
                  style="display: flex; justify-content: center; align-items: center">
-              <img src="../assets/images/index-gl.png" width="100%" class="ivu-row-top">
+              <img :src="require(`../assets/images/index-gl_${$i18n.locale || 'en-US'}.png`)" width="100%" class="ivu-row-top">
             </Col>
           </Row>
         </div>
@@ -251,7 +251,7 @@ export default new BFBAN({
   overflow: hidden;
   min-height: 850px;
   max-height: 1000px;
-  margin: 50px -25% -20px -25%;
+  margin: 50px 0 -20px 0;
   text-align: center;
 }
 
@@ -269,13 +269,19 @@ export default new BFBAN({
 
 .wrapper .icon {
   font-size: 12px;
-  width: 250px;
-  height: 150px;
+  width: 280px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   transform: translateX(0) translateY(40px);
+  opacity: .6;
+  transition: all 1s;
+}
+
+.wrapper .icon:hover {
+  opacity: 1;
 }
 
 .wrapper .icon:nth-child(even) {

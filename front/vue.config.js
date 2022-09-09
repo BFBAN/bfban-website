@@ -1,5 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const { InjectManifest } = require("workbox-webpack-plugin")
 const conf = require('./package.json');
 
 module.exports = {
@@ -45,6 +46,9 @@ module.exports = {
       chunkFilename: `assets/js/[name].${conf.version}.js`
     },
     plugins: [
+      new InjectManifest({
+        swSrc: "src/service-worker.js",
+      }),
       new CopyWebpackPlugin(
           [{
             from: `src/lang`,

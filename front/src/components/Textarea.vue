@@ -3,9 +3,12 @@
     <quill-editor
         class="editor"
         ref="myTextEditor"
+        :style="`height:${height}`"
         :content="editorContent"
         :options="editorOption"
         @change="onEditorChange"
+        @blur="onEditorBlur"
+        @ready="onEditorReady"
         useCustomImageHandler />
 
     <Modal v-model="updataPlane" width="60%">
@@ -144,6 +147,10 @@ import MediaPage from "../../src/views/account/media";
 export default {
   props: {
     index: null,
+    height: {
+      type: String,
+      default: '200px'
+    },
     placeholder: {
       type: String,
       default: ""
@@ -151,7 +158,8 @@ export default {
     content: {
       type: String,
       default: "",
-    }
+    },
+    toolbar: null
   },
   components: { quillEditor, VueCropper, MediaPage },
   data() {
@@ -189,8 +197,12 @@ export default {
       editorOption: {
         placeholder: this.placeholder,
         modules: {
+          'history': {          // Enable with custom configurations
+            'delay': 2500,
+            'userOnly': true
+          },
           toolbar: {
-            container: [[{ 'list': 'ordered' }, { 'list': 'bullet' }], ['bold'], ["link", "image"]],
+            container: this.toolbar || [[{ 'list': 'ordered' }, { 'list': 'bullet' }], ['bold'], ["link", "image"]],
             handlers: {
               image: () => {
                 this.updataPlane = true;
@@ -273,14 +285,21 @@ export default {
       return false;
     },
     /**
+     * 编辑器初始
+     */
+    onEditorReady () {
+    },
+    /**
      * 编辑器触发事件
      * @param quill
      * @param html
      * @param text
      */
     onEditorChange(data) {
-      this.$emit('change', data.html, this.index);
       this.editorContent = data.html;
+    },
+    onEditorBlur (data) {
+      this.$emit("input", this.editorContent);
     },
     /**
      * util
@@ -319,6 +338,10 @@ export default {
 </script>
 
 <style lang="less">
+.editor .ql-container.ql-snow {
+  height: calc(100% - 45px) !important;
+}
+
 .upload-mode {
   margin: 20px 0;
   width: 100%;

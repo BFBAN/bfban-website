@@ -1,11 +1,20 @@
 <template>
   <div class="container">
     <div class="content">
+      <br>
+      <Row>
+        <Col :xs="{push: 1}" :lg="{push: 0}">
+          <Breadcrumb>
+            <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+            <BreadcrumbItem>{{ this.$route.name == bindOriginName ? $t("bindOrigin.title") : $t("signup.title") }}</BreadcrumbItem>
+          </Breadcrumb>
+        </Col>
+      </Row>
+      <br>
+
       <Row>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
           <Card shadow>
-            <p slot="title">{{ this.$route.name == bindOriginName ? $t("bindOrigin.title") : $t("signup.title") }}</p>
-
             <Steps :current="stepsIndex" class="mobile-hide">
               <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].supplement')"></Step>
               <Step :title="$t('signup.steps[1].title')" :content="$t('signup.steps[1].title')"></Step>
@@ -14,86 +23,117 @@
               <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
             </Steps>
 
-            <Divider class="mobile-hide"></Divider>
+            <Divider dashed class="mobile-hide"></Divider>
 
-            <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate"
-                  style="position: relative;">
-              <template v-if="stepsIndex == 0">
-                <FormItem :label="$t('signup.form.username')" prop="username">
-                  <Input v-model="signup.username" maxlength="40" size="large"
-                         :placeholder="$t('signup.placeholder.username')"/>
-                </FormItem>
-                <FormItem :label="$t('signup.form.password')" prop="password">
-                  <Input type="password" password minlength="6" v-model="signup.password" size="large"
-                         :placeholder="$t('signup.placeholder.password')"/>
-                </FormItem>
-              </template>
+            <Card dis-hover :padding="50">
+              <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate">
+                <Alert type="error" show-icon v-if="backBindOriginMsg">
+                  <b>{{ $t('signup.failed') }} :</b>
+                  {{ backBindOriginMsg }}
+                </Alert>
 
-              <template v-if="stepsIndex === 1">
-                <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
-                  <Input v-model="signup.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
-                </FormItem>
-                <FormItem :label="$t('signup.form.originName')" prop="originName">
-                  <Input v-model="signup.originName" size="large" :placeholder="$t('signup.placeholder.originName')"/>
-                </FormItem>
-              </template>
+                <template>
+                  <Alert type="info" show-icon>
+                    <div v-html="$t('signup.eaPrivacy')"></div>
+                    {{ $t('signup.checkAllEmail') }}
+                  </Alert>
+                  <br>
+                </template>
 
-              <div v-show="stepsIndex === 2">
-                <FormItem :label="$t('captcha.title')">
-                  <Input type="text" v-model="signup.captcha"
-                         size="large"
-                         maxlength="4"
-                         :placeholder="$t('captcha.title')">
-                    <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                      <Captcha ref="captcha"></Captcha>
-                    </div>
-                  </Input>
-                </FormItem>
-              </div>
+                <template v-if="stepsIndex == 0">
+                  <FormItem :label="$t('signup.form.username')" prop="username">
+                    <Input v-model="signup.username" maxlength="40" size="large"
+                           :placeholder="$t('signup.placeholder.username')"/>
+                  </FormItem>
+                  <FormItem :label="$t('signup.form.password')" prop="password">
+                    <Input type="password" password minlength="6" v-model="signup.password" size="large"
+                           :placeholder="$t('signup.placeholder.password')"/>
+                  </FormItem>
+                </template>
 
-              <template v-if="stepsIndex === 3">
-                <EmailTip :email="signup.originEmail" @refreshCaptcha="refreshCaptcha"></EmailTip>
-              </template>
+                <template v-if="stepsIndex === 1">
+                  <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
+                    <Input v-model="signup.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
+                  </FormItem>
+                  <FormItem :label="$t('signup.form.originName')" prop="originName">
+                    <Input v-model="signup.originName" size="large" :placeholder="$t('signup.placeholder.originName')"/>
+                  </FormItem>
+                </template>
 
-              <template v-if="stepsIndex === 4">
-                <div align="center">
-                  <Icon type="md-checkmark-circle-outline" size="180" color="#42b983"/>
+                <div v-show="stepsIndex === 2">
+                  <FormItem :label="$t('captcha.title')">
+                    <Input type="text" v-model="signup.captcha"
+                           size="large"
+                           maxlength="4"
+                           :placeholder="$t('captcha.title')">
+                      <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
+                        <Captcha ref="captcha"></Captcha>
+                      </div>
+                    </Input>
+                  </FormItem>
                 </div>
-              </template>
 
-              <Row>
-                <Col flex="auto">
-                  <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
-                          :disabled="stepsIndex === 0 || this.$route.name == bindOriginName"
-                          @click.prevent.stop="stepsIndex--" size="large">{{ $t('basic.button.prev') }}
-                  </Button>
-                  <Divider type="vertical"/>
-                  <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2"
-                          @click.prevent.stop="stepsIndex++" size="large"
-                          type="primary">{{ $t('basic.button.next') }}
-                  </Button>
-                </Col>
-                <Col flex="auto" align="right" type="flex">
-                  <Button v-if="stepsIndex == 2" long
-                          @click.prevent.stop="handleSignup('formValidate')"
+                <template v-if="stepsIndex === 3">
+                  <EmailTip :email="signup.originEmail" @refreshCaptcha="$refs.captcha.refreshCaptcha"></EmailTip>
+                </template>
+
+                <template v-if="stepsIndex === 4">
+                  <div align="center">
+                    <Icon type="md-checkmark-circle-outline" size="180" color="#42b983"/>
+                  </div>
+                </template>
+
+                <Row>
+                  <Col flex="auto">
+                    <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
+                            :disabled="this.$route.name == bindOriginName ? stepsIndex <= 1 : stepsIndex == 0"
+                            @click.prevent.stop="stepsIndex--" size="large">{{ $t('basic.button.prev') }}
+                    </Button>
+                    <Divider type="vertical"/>
+                    <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2"
+                            @click.prevent.stop="stepsIndex++" size="large"
+                            type="primary">{{ $t('basic.button.next') }}
+                    </Button>
+                  </Col>
+                  <Col flex="auto" align="right" type="flex">
+                    <!-- 注册 -->
+                    <template v-if="stepsIndex == 2 && $route.name != bindOriginName">
+                      <Button
+                          long
+                          @click="handleSignup('formValidate')"
                           :disabled="!signup.captcha"
                           :loading="spinShow"
                           size="large" type="primary">{{ $t('basic.button.submit') }}
-                  </Button>
-                </Col>
-              </Row>
+                      </Button>
+                    </template>
+                    <!-- 绑定 -->
+                    <template v-else-if="stepsIndex == 2 && $route.name == bindOriginName">
+                      <Button long
+                              @click="bindOrigin"
+                              :disabled="!signup.captcha"
+                              :loading="spinShow"
+                              size="large" type="primary">{{ $t('basic.button.submit') }}
+                      </Button>
+                    </template>
+                  </Col>
+                </Row>
+              </Form>
+            </Card>
 
-              <Divider v-if="stepsIndex != 4 || stepsIndex != 3">
+            <br>
+            <Row type="flex" justify="center" align="middle" v-if="stepsIndex != 4 || stepsIndex != 3">
+              <Col>
                 <router-link :to="{name: 'signin'}">{{ $t('signup.form.submitHint') }}</router-link>
-                <Divider type="vertical"/>
+              </Col>
+              <Divider type="vertical"/>
+              <Col>
                 <router-link :to="{name: 'forgetPassword'}">{{ $t('signup.form.forgetPasswordHint') }}</router-link>
-              </Divider>
-            </Form>
+              </Col>
+            </Row>
           </Card>
         </Col>
       </Row>
     </div>
-    <br>
   </div>
 </template>
 
@@ -133,6 +173,7 @@ export default new BFBAN({
         originName: '',
         captcha: '',
       },
+      backBindOriginMsg: '',
       spinShow: false,
 
       // 绑定页面名字
@@ -154,7 +195,6 @@ export default new BFBAN({
 
     // 注册验证
     this.registerVerify(query.code);
-    // this.bindOriginVerify(query.code);
   },
   methods: {
     // 注册
@@ -168,12 +208,6 @@ export default new BFBAN({
         // 检查表单
         if (!valid) {
           this.$Message.error('Fail!');
-          return;
-        }
-
-        // 截停，账户绑定
-        if (this.$route.name == this.bindOriginName) {
-          this.bindOrigin({originEmail, originName, captcha});
           return;
         }
 
@@ -194,20 +228,25 @@ export default new BFBAN({
             }
           }).then(res => {
             const d = res.data;
-            if (d.success === 1) {
+
+            if (d.success == 1) {
               that.stepsIndex += 1;
-              this.$Message.success(d.message);
+              that.$Message.success(d.message);
               return;
             }
+
+            that.backBindOriginMsg = res.message;
           }).catch(err => {
-            this.$Message.error(err.toString());
+            that.$Message.error(err);
 
             that.signup.captcha = '';
             that.signup.originEmail = '';
             that.signup.originName = '';
             that.stepsIndex = 0;
+
           }).finally(() => {
             this.spinShow = false;
+            this.$refs.captcha.refreshCaptcha();
           });
         } else {
           this.$Message.error('请规范填写');
@@ -216,7 +255,7 @@ export default new BFBAN({
     },
 
     // 注册验证
-    registerVerify(code) {
+    async registerVerify(code) {
       if (!code) return;
 
       http.get(api["account_signupVerify"], {
@@ -239,38 +278,70 @@ export default new BFBAN({
           this.signup.password = '';
           this.signup.captcha = '';
 
-          this.refreshCaptcha();
+          this.$refs['captcha'].refreshCaptcha();
         }
       });
     },
 
     // 绑定橘子账户
-    bindOrigin({originEmail, originName, captcha}) {
-      this.spinShow = true;
+    bindOrigin() {
+      const that = this;
+      let {originEmail, originName, captcha} = this.signup;
 
-      this.http.post(api["user_bindOrigin"], {
-        data: {
+      that.$refs['formValidate'].validate((valid) => {
+        // 检查表单
+        if (!valid) { return; }
+
+        that.spinShow = true;
+
+        that.http.post(api["user_bindOrigin"], {
           data: {
-            originEmail,	// must match the originName below
-            originName,	// must have one of bf series game
-            language: this.$root.$i18n.locale
-          },
-          encryptCaptcha: this.captchaUrl.hash,
-          captcha,
-        }
-      }).then(res => {
-        const d = res.data;
+            data: {
+              originEmail,
+              originName,
+              language: that.$i18n.locale
+            },
+            encryptCaptcha: this.$refs.captcha.hash,
+            captcha,
+          }
+        }).then((res) => {
+          const d = res.data;
 
-        if (d.success === 1) {
-          this.stepsIndex++;
+          if (d.success == 1) {
+            that.stepsIndex++;
+            that.$Message.success(d.message);
 
-          this.$Message.success(d.message);
-        } else {
-          this.$Message.error(d.code);
-        }
-      }).finally(() => {
-        this.spinShow = false;
-      });
+            return;
+          }
+
+          if (typeof d.code == 'string') {
+            switch (d.code) {
+              case "bindOrigin.gameNotShowed":
+                that.$Message.error(this.$i18n.t('signup.gameNotShowed'));
+                break;
+              case "bindOrigin.originNotFound":
+                that.$Message.error(this.$i18n.t('signup.playerNotFound'));
+                break;
+              case "bindOrigin.originBindingExist":
+                that.$Message.error(this.$i18n.t('signup.originIdExist'));
+                break;
+              case "bindOrigin.bad":
+                that.$Message.error(this.$i18n.t('signup.failed'));
+                break;
+              default:
+                that.$Message.error(d.code);
+                break;
+            }
+            that.backBindOriginMsg = `${d.code} / ${d.message}`;
+          }
+
+        }).catch(err => {
+          that.backBindOriginMsg = this.$i18n.t('signup.failed');
+        }).finally(() => {
+          that.$refs.captcha.refreshCaptcha();
+          that.spinShow = false;
+        });
+      })
     },
 
     // 绑定橘子验证
@@ -296,7 +367,7 @@ export default new BFBAN({
       }).finally(() => {
 
       })
-    }
+    },
   },
 });
 </script>

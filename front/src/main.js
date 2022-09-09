@@ -1,4 +1,5 @@
 import 'view-design/dist/styles/iview.css'
+import './registerServiceWorker';
 
 import Vue from 'vue'
 import App from './App.vue'
