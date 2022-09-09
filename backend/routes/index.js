@@ -123,7 +123,7 @@ async (req, res, next)=>{
             .andWhere('games', 'like', game).andWhere('status', 'like', status).first().then(r=>r.num);
             data.push({game: i.game, status: i.status, count});
         }
-        res.status(200).json({success: 1, code: 'playerStatistics.success', data: data});
+        res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'playerStatistics.success', data: data});
     } catch(err) {
         next(err);
     }
@@ -206,7 +206,7 @@ async (req, res, next)=>{
                 return 1;
         });
         
-        res.status(200).json({success: 1, code: 'activities.ok', data: total.slice(0, limit) });
+        res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'activities.ok', data: total.slice(0, limit) });
     } catch(err) {
         next(err);
     }
@@ -736,7 +736,7 @@ router.get('/siteStats', async (req, res, next)=>{
 
         siteStatsCache.data = { playerStats, confirmStats, userStats };
         siteStatsCache.time = tnow;
-        return res.status(200).json({success: 1, code: 'siteStats.ok', data: { playerStats, confirmStats, userStats } });
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'siteStats.ok', data: { playerStats, confirmStats, userStats } });
     } catch(err) {
         next(err);
     }

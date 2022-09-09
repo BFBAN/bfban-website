@@ -28,7 +28,7 @@
             "showLang": ["zh-CN"]
           },
           {
-            "text": "github BFBAN",
+            "text": "GitHub BFBAN",
             "src": "//github.com/BFBAN"
           },
           {
@@ -72,12 +72,12 @@
         "text": "footer.column.col4.title",
         "child": [
           {
-            "text": "complaint mailbox",
+            "text": "Complaint mailbox",
             "textLang": {
-              "en-US": "complaint mailbox",
+              "en-US": "Complaint mailbox",
               "zh-CN": "投诉邮箱"
             },
-            "src": "//mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-5GQjZqPk4bOv52ZnZ6R0ZyQkg"
+            "src": "mailto:ban-appeals@bfban.com"
           },
           {
             "text": "QQ交流群",

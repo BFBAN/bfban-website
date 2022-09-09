@@ -35,12 +35,12 @@
                 </FormItem>
               </div>
 
-              <FormItem v-if="stepsIndex == 1" :label="$t('signup.form.captcha')">
+              <FormItem v-if="stepsIndex == 1" :label="$t('captcha.title')">
                 <Input type="text" v-model="forgetPassword.captcha"
                        size="large"
                        maxlength="4"
-                       :placeholder="$t('signup.form.captcha')">
-                  <div slot="append" class="captcha-input-append" :alt="$t('signup.form.getCaptcha')">
+                       :placeholder="$t('captcha.title')">
+                  <div slot="append" class="captcha-input-append">
                     <Captcha ref="captcha"></Captcha>
                   </div>
                 </Input>
@@ -83,7 +83,7 @@
                           :disabled="forgetPassword.captcha == ''"
                           :loading="spinShow"
                           size="large" type="primary">
-                    {{ $t('signup.form.submit') }}
+                    {{ $t('basic.button.submit') }}
                   </Button>
                 </Col>
               </Row>
@@ -92,7 +92,6 @@
         </Col>
       </Row>
     </div>
-    <br>
   </div>
 </template>
 

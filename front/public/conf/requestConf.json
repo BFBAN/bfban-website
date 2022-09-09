@@ -1,5 +1,5 @@
 {
-  "requestActionName": "development2",
+  "requestActionName": "production",
   "requestProductionName": "production",
   "child": {
     "development": {
@@ -16,7 +16,7 @@
       "request": "127.0.0.1:3000/api/"
     },
     "production": {
-      "protocol": " https",
+      "protocol": "https",
       "request": "bfban-testing.gametools.network/api/",
       "qiniuUrl": ""
     }

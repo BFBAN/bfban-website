@@ -30,7 +30,7 @@ const isLoginBeforeEnter = function (to, from, next) {
     if (store.state.user) {
         next();
     } else {
-        next({path: '/signin', query: {rurl: to.fullPath}});
+        next({path: '/signin', query: { backurl: to.fullPath }});
     }
 }
 

@@ -18,14 +18,14 @@
         <TabPane v-for="(tab, index) in tabs.list.length" :key="index"
                  disabled
                  :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab.toString())">
-          <Card dis-hover v-if="tabs.list[index].statusOk == 0">
+          <template dis-hover shadow v-if="tabs.list[index].statusOk == 0">
             <Form :label-width="150"
                   :model="tabs.list[index].formItem"
                   :rules="tabs.list[index].ruleValidate"
                   ref="formValidate"
                   label-position="left">
               <!-- 基础信息 S -->
-              <Card dis-hover>
+              <Card dis-hover :padding="50">
                 <!-- 游戏类型 S -->
                 <FormItem prop="gameName"
                           :label="$t('report.labels.game') + '(' + tabs.list[index].formItem.gameName + ')'">
@@ -49,7 +49,7 @@
                 <FormItem prop="originId" :label="$t('report.labels.hackerId')">
                   <Alert type="error"
                          show-icon
-                         id="notFoundHint"
+                         class="notFoundHint"
                          v-show="failedOfNotFound">
                     <b>{{ $t("report.info.notFoundHintTitle") }}</b>
                     <span slot="desc">
@@ -67,6 +67,7 @@
                       </p>
                     </span>
                   </Alert>
+
                   <Row :gutter="30">
                     <Col :lg="{span: 10}">
                       <AutoComplete
@@ -95,11 +96,12 @@
                       </AutoComplete>
                     </Col>
                   </Row>
-                  <br>
-                  <Card class="hackrid" dis-hover>
-                    <h1 v-if="tabs.list[index].formItem.originId">{{ tabs.list[index].formItem.originId }}</h1>
-                    <span v-else>ID</span>
-                    <br>
+
+                  <Card class="report-hackrid" dis-hover>
+                    <div slot="title">
+                      <h1 v-if="tabs.list[index].formItem.originId">{{ tabs.list[index].formItem.originId }}</h1>
+                      <span v-else>ID</span>
+                    </div>
                     <p class="hint">
                       {{ $t("report.info.idNotion1", {msg: "idNotion1"}) }}
                     </p>
@@ -129,10 +131,10 @@
               <!-- 基础信息 E -->
               <br>
               <!-- 证据 S -->
-              <Card dis-hover>
+              <Card dis-hover :padding="50">
                 <FormItem :label="$t('detail.info.videoLink')">
                   <Row :gutter="30">
-                    <Col flex="1 1 300px">
+                    <Col span="12">
                       <Alert type="warning">
                         {{ $t("report.info.uploadManual1", {msg: "uploadManual1",}) }}
                         <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
@@ -176,21 +178,19 @@
                       <span class="hint">{{ $t("report.info.uploadManual3", {msg: "uploadManual3",}) }}</span>
                       <!-- 视频链接 E -->
                     </Col>
-                    <Col>
-                      <img src="../assets/images/videoStyle.png" width="300">
-                    </Col>
                   </Row>
                 </FormItem>
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
-<!--                  <Edit :index="index" :content="$t('report.info.description')" @change="handleMiscChange"/>-->
-                  <Textarea id="edit" :placeholder="$t('report.info.description')"></Textarea>
+                  <Textarea :placeholder="$t('report.info.description')"
+                            :index="index"
+                            @change="handleMiscChange"></Textarea>
                 </FormItem>
               </Card>
               <!-- 证据 E -->
               <br>
               <!-- 提交 S -->
-              <Card dis-hover>
+              <Card dis-hover :padding="50">
                 <FormItem prop="captcha" :label="$t('captcha.title')">
                   <Input
                       type="text"
@@ -221,24 +221,51 @@
               <br>
               <Spin size="large" fix v-show="spinShow"></Spin>
             </Form>
-          </Card>
-          <Card shadow v-else-if="tabs.list[index].statusOk == -1">
-            <Alert type="error" show-icon>
-              {{ tabs.list[index].statusMsg }}
-            </Alert>
-          </Card>
-          <Card shadow v-else-if="tabs.list[index].statusOk == 1">
-            <Alert type="success" show-icon>
-              {{ tabs.list[index].statusMsg }}
-            </Alert>
-          </Card>
+          </template>
+
+          <!-- 举报结果 S -->
+          <div shadow class="ivu-alert-error" v-else-if="tabs.list[index].statusOk == -1">
+            <div class="report-done">
+              <Icon type="md-bug" size="200" color="error" />
+              <h1 class="tip">失败</h1>
+              <p class="tip">{{ tabs.list[index].statusMsg || ':(' }}</p>
+              <Divider dashed />
+              <Row :gutter="10" type="flex" justify="center" align="middle">
+                <Col>
+                  <router-link :to="{name: 'home'}">
+                    <Button>离开</Button>
+                  </router-link>
+                </Col>
+              </Row>
+            </div>
+          </div>
+          <div shadow class="ivu-alert-success" v-else-if="tabs.list[index].statusOk == 1">
+            <div class="report-done">
+              <Icon type="md-cloud-done" size="200" color="success" />
+              <h1 class="tip">成功</h1>
+              <p class="tip">感谢您的举报</p>
+              <Divider dashed />
+              <Row :gutter="10" type="flex" justify="center" align="middle">
+                <Col>
+                  <router-link :to="{path: '/report', params: { t: new Date().getTime() }}">
+                    <Button>继续</Button>
+                  </router-link>
+                </Col>
+                <Col>
+                  <router-link :to="{name: 'home'}">
+                    <Button type="primary">离开</Button>
+                  </router-link>
+                </Col>
+              </Row>
+            </div>
+          </div>
+          <!-- 举报结果 E -->
         </TabPane>
         <Button @click="handleTabsAdd" size="small" slot="extra" disabled>
           <Icon type="md-add"/>
         </Button>
       </Tabs>
     </div>
-    <br>
   </div>
 </template>
 
@@ -520,38 +547,22 @@ export default new BFBAN({
 </script>
 
 <style lang="scss">
-.hackrid {
-  text-align: center;
-  padding: 2rem 0;
-  margin-bottom: 20px;
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
+.report-hackrid {
+  margin-top: 20px;
 
   h1, span {
     font-size: 2rem;
-    letter-spacing: .5rem;
-  }
-
-  span {
-    color: rgba(0, 0, 0, 0.43);
+    letter-spacing: .2rem;
   }
 }
 
-.notFoundHint {
-  background: #cc0000;
-  color: white;
-  border: 1px solid #dcdee2;
-  border-radius: 4px;
-  padding: 10px;
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
-  "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif;
+.report-done {
+  padding: 30px 0;
+  text-align: center;
 }
 
-.ivu-tabs-bar {
-  position: relative;
-  z-index: 1;
-  margin-bottom: -1px !important;
+.report-done .tip {
+  margin: 10px 0;
+  text-align: center;
 }
 </style>

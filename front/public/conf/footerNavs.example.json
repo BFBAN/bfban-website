@@ -45,9 +45,9 @@
         "text": "footer.column.col4.title",
         "child": [
           {
-            "text": "complaint mailbox",
+            "text": "Complaint mailbox",
             "textLang": {
-              "en-US": "complaint mailbox",
+              "en-US": "Complaint mailbox",
               "zh-CN": "投诉邮箱"
             },
             "src": "//exmaple.com"

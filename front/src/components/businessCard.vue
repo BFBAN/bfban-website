@@ -1,23 +1,20 @@
 <template>
-  <Poptip :width="width || 400" trigger="hover" placement="bottom" :transfer="true" @on-popper-show="getUserInfo">
+  <Poptip :padding="padding"
+          :width="width"
+          trigger="hover"
+          placement="bottom"
+          :transfer="true"
+          @on-popper-show="getUserInfo">
     <slot></slot>
-    <div slot="content">
+    <div slot="content" class="business">
       <template v-if="!loadErr">
-        <div class="business">
+        <div class="business-img">
           <img src="@/assets/images/games/bfv/bf.jpg">
         </div>
         <Row>
-          <Col flex="auto">
-            <h2>
-              <span v-for="(i, index) in privilege" :key="index">
-                <span v-for="(p, pi) in userInfo.privilege" :key="pi">
-                  <Tag type="border" v-if="i.value == p" :color="i.class">
-                    {{ $t('basic.privilege.' + p) }}
-                  </Tag>
-                </span>
-              </span>
-              {{ userInfo.username }}
-            </h2>
+          <Col flex="1">
+            <h2> {{ userInfo.username }} </h2>
+            <PrivilegesTag :data="userInfo.privilege" v-if="userInfo.privilege"></PrivilegesTag>
           </Col>
           <Col>
             # {{ userInfo.id }}
@@ -56,28 +53,54 @@
 </template>
 
 <script>
-import {api, http} from '../assets/js/index';
+import {api, http, storage} from '../assets/js/index';
 
-import privilege from '/public/conf/privilege.json'
+import PrivilegesTag from "/src/components/PrivilegesTag";
 
 export default {
   props: {
-    width: Number,
-    id: Number
+    width: {
+      type: Number,
+      default: 400
+    },
+    id: Number,
+    padding: {
+      type: String,
+      default: '0'
+    }
   },
   data() {
     return {
+      localBusinessMap: {},
+      userInfo: {},
       spinShow: false,
       loadErr: false,
-      privilege: privilege.child,
       type: 'user',
-      userInfo: {}
     }
   },
+  components: { PrivilegesTag },
   methods: {
+    /**
+     * 获取用户信息
+     */
     getUserInfo() {
+      const name = 'business';
+      let localBusinessCardData = storage.session().get(name);
+
+      // 本地持久取
+      if (localBusinessCardData.code == 0) {
+        this.localBusinessMap = localBusinessCardData.data.value;
+
+        if (this.localBusinessMap[this.id])
+          this.userInfo = this.localBusinessMap[this.id];
+      }
+
+      // 防止重复获取
       if (Object.keys(this.userInfo).length > 0) return;
+
+      // 从服务器获取
       this.spinShow = true;
+
       switch (this.type) {
         case "user":
           http.get(api["user_info"], {
@@ -88,6 +111,10 @@ export default {
             const d = res.data;
             if (d.success == 1) {
               this.userInfo = d.data;
+
+              this.localBusinessMap[this.userInfo.id] = this.userInfo;
+
+              storage.session().set(name, this.localBusinessMap);
             } else {
               this.catch();
             }
@@ -105,11 +132,16 @@ export default {
 
 <style lang="less">
 .business {
+  padding: 20px;
+  position: relative;
+}
+
+.business-img {
   position: absolute;
-  top: 10px;
+  top: 0;
   left: 0;
   right: 0;
-  height: 90px;
+  height: calc(50% + 10px);
   overflow: hidden;
   opacity: .3;
   border-radius: 5px 5px 0 0;
