@@ -13,4 +13,4 @@ EXPOSE 8080
 CMD [ "npm", "run", "serve" ] 
 
 # docker build . -t bfban-testing
-# docker run  --mount type=bind,source=$PWD/src,target=/usr/src/app/src --network host bfban-testing
+# docker run  --mount type=bind,source=$PWD/src,target=/usr/src/app/src --mount type=bind,source=$PWD/public,target=/usr/src/app/public --network host bfban-testing
