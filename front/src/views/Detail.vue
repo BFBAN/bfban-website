@@ -15,6 +15,8 @@
         <br>
       </template>
 
+      <div v-html="`<Card>2</Card>`"></div>
+
       <Card id="getSharePicture" v-if="isCheaterExist" dis-hover>
         <Row :gutter="10">
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 3, pull: 0, push: 0}">
@@ -320,7 +322,7 @@
                         <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
                               :href="link" target="_blank">
                             <Tag size="default" color="geekblue">{{  $t('detail.info.videoLink') }}</Tag>
-                            <a :href="link" target="_blank">{{ link }}</a>
+                            <a :href="link" target="_blank">{{ link.substr(0, 20) }}{{ link.length >= 20 ? '...' : '' }}</a>
                             <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
                           </span>
                       </p>

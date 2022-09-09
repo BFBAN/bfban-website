@@ -22,7 +22,7 @@
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 13, push: 0, pull: 0}">
           <Card v-if="currentUser.token == ''" :padding="50" shadow>
-            <Form ref="signin" :model="signin" :rules="ruleValidate">
+            <Form ref="signin" :model="signin" :rules="ruleValidate" label-position="top">
               <Alert type="error" show-icon v-if="signinBackMsg">
                 <b>{{ $t('signin.failed') }} :</b>
                 {{ signinBackMsg }}
@@ -39,14 +39,18 @@
                        :placeholder="$t('signin.form.password')"/>
               </FormItem>
 
-              <FormItem :label="$t('captcha.title')" prop="captcha">
-                <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
-                       :placeholder="$t('captcha.title')">
-                  <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                    <Captcha ref="captcha" :seconds="15"></Captcha>
-                  </div>
-                </Input>
-              </FormItem>
+              <Row :gutter="30" type="flex" justify="space-between" align="middle">
+                <Col span="15">
+                  <FormItem :label="$t('captcha.title')" prop="captcha">
+                    <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
+                           :placeholder="$t('captcha.title')">
+                      <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
+                        <Captcha ref="captcha" :seconds="15" :disable="!(!!signin.password  && !!signin.username)"></Captcha>
+                      </div>
+                    </Input>
+                  </FormItem>
+                </Col>
+              </Row>
 
               <FormItem>
                 <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">

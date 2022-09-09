@@ -13,13 +13,14 @@
       <br>
 
       <div :class="`search-content ${cheaters.length > 0 ? 'search-content-mini' : ''}`">
-        <Row :gutter="50" style="width: 100%;">
-          <Col>
-            <RadioGroup v-model="searchScopeValue" type="button" size="large" class="search-input-show">
-              <Radio :label="i" border v-for="i in searchScope" :key="i">{{ $t('search.scope.' + i) }}</Radio>
+        <Row type="flex" justify="center" :gutter="0" style="width: 100%;">
+          <Col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 7}">
+            <RadioGroup v-model="searchScopeValue" type="button" size="large">
+              <Radio :label="i" border v-for="i in searchScope" :key="i" class="search-input-show">{{ $t('search.scope.' + i) }}</Radio>
             </RadioGroup>
           </Col>
-          <Col flex="1">
+          <Col class="desktop-hide" :xs="{span: 24}">&thinsp;</Col>
+          <Col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}">
             <Dropdown style="width: 100%">
               <Input enter-button
                      search
@@ -51,11 +52,17 @@
             </Dropdown>
           </Col>
         </Row>
-        <div class="checkboxGroup">
-          <Icon type="md-alert" /> {{ $t("search.describe") }}
-          <Divider type="vertical"/>
-          <a href="javascript:void(0)">{{ $t("search.collectionHint") }}</a>
-        </div>
+        <Row type="flex" justify="center" class="checkboxGroup">
+          <Col :xs="{span: 24}" :lg="{span: 11}" align="center">
+            <Icon type="md-alert" /> {{ $t("search.describe") }}
+          </Col>
+          <Col :xs="{span: 0}" :lg="{span: 1}">
+            <Divider type="vertical"/>
+          </Col>
+          <Col :xs="{span: 24}" :lg="{span: 11}" align="center">
+            <a href="javascript:void(0)">{{ $t("search.collectionHint") }}</a>
+          </Col>
+        </Row>
       </div>
 
       <Alert type="warning" show-icon v-if="cheaters.length > 60">

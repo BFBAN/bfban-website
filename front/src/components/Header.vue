@@ -60,6 +60,7 @@
         </router-link>
 
         <Dropdown placement="bottom-end" v-if="isLogin" :padding="0">
+
           <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
             <Avatar icon="ios-person"></Avatar>
           </router-link>
