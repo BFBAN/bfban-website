@@ -186,7 +186,9 @@
                   <Card :padding="0" dis-hover>
                     <Textarea :placeholder="$t('report.info.description')"
                               :index="index"
-                              @change="handleMiscChange"></Textarea>
+                              v-model="tabs.list[index].formItem.description">
+                              @change="handleMiscChange"
+                    </Textarea>
                   </Card>
                 </FormItem>
               </Card>

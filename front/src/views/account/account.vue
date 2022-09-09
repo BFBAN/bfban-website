@@ -45,7 +45,11 @@
       <Divider dashed></Divider>
 
       <FormItem :label="$t('profile.account.form.introduction')">
-        <Edit :content="formItem.introduction" @change="handleIntroductionChange"/>
+        <Card dis-hover :padding="0">
+          <Textarea v-model="formItem.introduction"
+                    :toolbar="[[{ 'list': 'ordered' }, { 'list': 'bullet' }], ['bold']]"
+                    :height="'200px'"></Textarea>
+        </Card>
       </FormItem>
 
       <Divider dashed></Divider>
@@ -233,7 +237,7 @@
 </template>
 
 <script>
-import Edit from "@/components/Edit.vue";
+import Textarea from "@/components/Textarea";
 import Captcha from "../../components/Captcha";
 
 import {api, http, http_token} from "../../assets/js";
@@ -265,7 +269,7 @@ export default {
       },
     }
   },
-  components: {Edit, Captcha},
+  components: {Textarea, Captcha},
   created() {
     this.http = http_token.call(this);
     this.ready();
@@ -326,9 +330,6 @@ export default {
           this.$router.push('/signin');
         }
       })
-    },
-    handleIntroductionChange(val) {
-      this.formItem.introduction = val;
     },
     /**
      * 切换语言

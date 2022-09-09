@@ -75,10 +75,21 @@
       <Row :gutter="10">
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 17, push: 0, pull: 0}">
           <Card dis-hover class="list">
-            <Page :page-size="limit" show-sizer show-total show-elevator :current="skip" @on-change="handlePageChange"
-                  @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
+            <Page class="page"
+                  size="small"
+                  show-sizer
+                  show-total
+                  show-elevator
+                  @on-change="handlePageChange"
+                  @on-page-size-change="handlePageSizeChange"
+                  :page-size="limit"
+                  :current="skip"
+                  :total="total" />
+
             <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
+
             <br>
+
             <div v-for="(d, d_index) in data" :key="d.originUserId">
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
                 <Card>
@@ -144,8 +155,16 @@
             <Card v-if="data.length <= 0" align="center">
               (｀ﾍ´)=3=3=3=3=3=3
             </Card>
-            <Page :page-size="limit" show-sizer show-total show-elevator :current="skip" @on-change="handlePageChange"
-                  @on-page-size-change="handlePageSizeChange" :total="total" class="page" size="small"/>
+            <Page class="page"
+                  size="small"
+                  show-sizer
+                  show-total
+                  show-elevator
+                  :page-size="limit"
+                  :current="skip"
+                  :total="total"
+                  @on-change="handlePageChange"
+                  @on-page-size-change="handlePageSizeChange"/>
           </Card>
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 7, push: 0, pull: 0}">
@@ -328,8 +347,6 @@ export default new BFBAN({
      * 取得作弊玩家列表
      */
     getCheaterList() {
-      this.spinShow = true;
-
       // default values
       const {game = "all", status = -1, createTime, updateTime, skip = this.skip, sort = "updateTime", limit = this.limit} = this.$route.query;
 
@@ -339,7 +356,7 @@ export default new BFBAN({
           skip: (skip - 1) * limit,
           sort,
           status,
-          tz: '', // moment.tz.gutter(),
+          tz: '',
           limit,
         },
       };
@@ -352,6 +369,8 @@ export default new BFBAN({
           config["params"]["updateTime"] = new Date(updateTime).getTime();
       }
 
+      // 设置筛选参
+      // 更新widget对应选择器的值
       this.gameName = game;
       this.statusGroup = status;
       this.createTime = createTime;
@@ -359,6 +378,8 @@ export default new BFBAN({
       this.skip = Number.parseInt(skip);
       this.limit = Number.parseInt(limit);
       this.sortByValue = sort;
+
+      this.spinShow = true;
 
       http.get(api['players'], config).then(res => {
         const d = res.data;
@@ -397,12 +418,11 @@ export default new BFBAN({
       return o;
     },
     handleChanges() {
-      this.spinShow = true;
-      this.skip = 1;
-
       const query = this.routerQuery();
-
-      this.$router.push({name: this.$router.name, query});
+      this.$router.push({
+        name: this.$router.name,
+        query
+      });
     },
     handleStatusChange() {
       this.skip = 1;
@@ -423,6 +443,7 @@ export default new BFBAN({
     },
     handlePageChange(num) {
       this.skip = num;
+
       this.handleChanges();
     },
     handlePageSizeChange(num) {

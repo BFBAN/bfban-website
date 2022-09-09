@@ -19,7 +19,7 @@
     </Row>
     <br>
 
-    <div dis-hover	bordered>
+    <div dis-hover bordered>
       <Row type="flex" justify="center" align="middle">
         <Col justify="center" align="middle">
           <br>

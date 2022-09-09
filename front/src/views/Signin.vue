@@ -156,10 +156,12 @@ export default new BFBAN({
           }).then((res) => {
             const d = res.data;
 
-            if (d.error === 1) {
+            if (d.error == 1) {
+
               that.signin.password = '';
               that.signin.captcha = '';
               that.signinBackMsg = d.message;
+
             } else {
               that.signinUser(d.data).then(() => {
                 const backurl = this.$route.query.backurl;
