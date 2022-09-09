@@ -19,6 +19,11 @@
       "protocol": "https",
       "request": "bfban-testing.gametools.network/api/",
       "qiniuUrl": ""
+    },
+    "production1": {
+      "protocol": "https",
+      "request": "bfban-testing.gametools.network/api/",
+      "qiniuUrl": ""
     }
   }
 }
