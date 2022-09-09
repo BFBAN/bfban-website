@@ -16,8 +16,8 @@
       "request": "127.0.0.1:3000/api/"
     },
     "production": {
-      "protocol": "https",
-      "request": "seeding.linrunrun.online/api/",
+      "protocol": " https",
+      "request": "bfban-testing.gametools.network/api/",
       "qiniuUrl": ""
     }
   }
