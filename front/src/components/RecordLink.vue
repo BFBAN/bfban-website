@@ -20,7 +20,7 @@ export default {
     return {
       site: {
         'Battlefield Tracker': {
-          mainUrl:"https://battlefieldtracker.com",
+          webSite:"https://battlefieldtracker.com",
           icon: "https://battlefieldtracker.com/public/icons/icon192.png",
           platform: {
             "origin": {
@@ -41,39 +41,35 @@ export default {
           }
         },
         'Gametools Network': {
-          mainUrl:"https://gametools.network",
+          webSite:"https://gametools.network",
           icon: "https://gametools.network/favicon.ico",
           platform: {
             "origin": {
               "bf1": '/stats/pc/playerid/{id}?name={name}&game=bf1',
               "bfv": '/stats/pc/playerid/{id}?name={name}&game=bfv'
             },
-            "xbox": {
+            "xboxone": {
               "bf1": '/stats/xboxone/name/{name}?game=bf1',
               "bfv": '/stats/xboxone/name/{name}?game=bfv'
             },
-            "ps": {}
+            "xbox": {
+              "bf1": '/stats/xbox/name/{name}?game=bf1',
+              "bfv": '/stats/xbox/name/{name}?game=bfv'
+            },
           }
         },
         '247 Fairplay': {
-          mainUrl:"https://www.247fairplay.com",
+          webSite:"https://www.247fairplay.com",
           icon:"https://endof.p-stats.com/favicon.ico",
           platform: {
             "origin": {
               "bf1": `https://bf1stats.com/pc/{id}`
             },
-            "xbox": {},
-            "ps": {}
           }
         },
       },
-      platform: {
-        "origin": "Origin",
-        "xbox": "Xbox",
-        "ps": "PlayStation"
-      },
       links: {
-        'bf1': ['Battlefield Tracker','Bf1 Stats','Gametools Network','247 Fairplay'],
+        'bf1': ['Battlefield Tracker','Gametools Network','247 Fairplay'],
         'bfv': ['Battlefield Tracker','Gametools Network'],
         'bf6': ['Battlefield Tracker'],
         '*':[]
@@ -167,8 +163,12 @@ export default {
       this.links[gamename].forEach(platformName => {
         // 确认存在配置标签
         // 平台支持不同游戏类型
-        if (this.site[platformName].platform[platformSelect] && this.site[platformName].platform[platformSelect][gamename]) {
-          let url = this.site[platformName].mainUrl + this.site[platformName].platform[platformSelect][gamename];
+        if (
+            this.site[platformName].platform &&
+            this.site[platformName].platform[platformSelect] &&
+            this.site[platformName].platform[platformSelect][gamename]
+        ) {
+          let url = this.site[platformName].webSite + this.site[platformName].platform[platformSelect][gamename];
           let gameplatform = [];
 
           // 处理游戏平台

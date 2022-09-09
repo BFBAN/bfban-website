@@ -8,19 +8,17 @@
     },
     "development2": {
       "protocol": "https",
-      "request": "seeding.linrunrun.online/api/",
-      "qiniuUrl": ""
+      "request": "seeding.linrunrun.online/api/"
     },
     "development3": {
+      "protocol": "https",
+      "request": "bfban-testing.gametools.network/api/"
+    },
+    "development4": {
       "protocol": "http",
       "request": "127.0.0.1:3000/api/"
     },
     "production": {
-      "protocol": "https",
-      "request": "bfban-testing.gametools.network/api/",
-      "qiniuUrl": ""
-    },
-    "production1": {
       "protocol": "https",
       "request": "bfban-testing.gametools.network/api/",
       "qiniuUrl": ""

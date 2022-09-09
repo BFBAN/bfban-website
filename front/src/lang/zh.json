@@ -63,6 +63,15 @@
       "bfv": "战地风云 5",
       "bf6": "战地风云 2042"
     },
+    "gameplatforms": {
+      "pc": "Pc",
+      "origin": "Origin",
+      "xbox": "Xbox",
+      "xboxone": "Xbox One",
+      "ps": "PlayStation",
+      "ps3": "PlayStation 3",
+      "ps4": "PlayStation 4"
+    },
     "button": {
       "report": "举报",
       "commit": "提交",
