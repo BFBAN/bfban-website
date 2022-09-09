@@ -8,6 +8,7 @@ export default class Http extends Conf {
     //..
 
     GETURL = { protocol: '', request: '' };
+    NODE;
 
     HTTP = http.create({
       timeout: 600000,
@@ -21,6 +22,7 @@ export default class Http extends Conf {
         super();
         super.initConf();
 
+        this.NODE = process.env.NODE_ENV || 'development';
         this.HTTP.interceptors.request.use(config => {
             return config
         }, error=> {
@@ -31,16 +33,15 @@ export default class Http extends Conf {
 
     // 获取全局地址
     getGlobalUrl() {
-        const NODE = process.env.NODE_ENV || 'development';
-        switch (NODE) {
+        switch (this.NODE) {
             case 'production': // 生产
                 super.GETURL = this.CONF.child[this.CONF.requestProductionName];
                 break;
             case 'development': // 开发
+            default:
                 super.GETURL = this.CONF.child[this.CONF.requestDevelopmentName];
                 break;
         }
-        console.log(this.GETURL)
         return `${this.GETURL.protocol || 'http'}://${this.GETURL.request}`;
     }
 

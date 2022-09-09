@@ -38,12 +38,8 @@
             </Radio>
           </RadioGroup>
         </Col>
-        <Col flex="auto" v-if="statusGroup == 6 || statusGroup == 0">
+        <Col v-if="statusGroup == 6 || statusGroup == 0">
           <i-switch v-model="bot.autoUpdate" @on-change="autoUpdateList"/>
-          <Divider type="vertical"/>
-          <Tooltip content="每隔设置时间刷新，有新的待审核桌面通知您" max-width="200">
-            <Icon type="md-help-circle"/>
-          </Tooltip>
         </Col>
       </Row>
       <!-- 游戏类型选择 E -->

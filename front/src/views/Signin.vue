@@ -1,16 +1,24 @@
 <template>
   <div class="container">
     <br>
+    <Row>
+      <Col :xs="{push: 1}" :lg="{push: 0}">
+        <Breadcrumb>
+          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("signin.title") }}</BreadcrumbItem>
+        </Breadcrumb>
+      </Col>
+    </Row>
+    <br>
+
     <div class="content">
       <Row :gutter="0">
         <Col :xs="{span: 24}" :lg="{span: 11}" class="mobile-hide carousel">
-          <Carousel :autoplay-speed="5000" :dots="'none'" class="carousel-item">
-            <CarouselItem>
-              <img src="../assets/images/logo.png">
-              <h2>{{ $t("home.cover.h1") }}</h2>
-              <span>{{ $t("home.cover.h3") }}</span>
-            </CarouselItem>
-          </Carousel>
+          <div class="carousel-item">
+            <img src="../assets/images/logo.png">
+            <h2>{{ $t("home.cover.h1") }}</h2>
+            <span>{{ $t("home.cover.h3") }}</span>
+          </div>
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 13, push: 0, pull: 0}">
           <Card v-if="currentUser.token == ''" :padding="50" shadow>

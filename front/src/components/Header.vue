@@ -51,7 +51,8 @@
         </router-link>
       </div>
       <div class="nav">
-        <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
+        <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
+                     v-if="$route.name != 'signin'">
           <Button type="primary" shape="circle">
             <Icon type="md-log-in"/>
             {{ $t("header.signin") }}

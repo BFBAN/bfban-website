@@ -33,7 +33,7 @@ export default {
               "bfv": `/bfv/profile/xbl/{name}`,
               "bf6": `/bf2042/profile/xbl/{name}`
             },
-            "ps": {
+            "psn": {
               "bf1": `/bf1/profile/psn/{name}`,
               "bfv": `/bfv/profile/psn/{name}`,
               "bf6": `/bf2042/profile/psn/{name}`
@@ -175,7 +175,7 @@ export default {
           for (const gameplatformKey in this.site[platformName].platform) {
             if (this.site[platformName].platform[gameplatformKey][gamename])
               gameplatform.push({
-                title: gameplatformKey,
+                title: this.$i18n.t('basic.gamePlatforms.' + gameplatformKey),
                 url: url
                     .replaceAll('{id}', this.cheater.originUserId)
                     .replaceAll('{name}', this.cheater.originName)
