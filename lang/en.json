@@ -63,6 +63,15 @@
 			"bfv": "Battlefield 5",
 			"bf6": "Battlefield 2042"
 		},
+		"gamePlatforms": {
+			"pc": "Pc",
+			"origin": "Origin",
+			"xbox": "Xbox",
+			"xboxone": "Xbox One",
+			"psn": "PlayStation",
+			"ps3": "PlayStation 3",
+			"ps4": "PlayStation 4"
+		},
 		"button": {
 			"report": "Report user",
 			"commit": "Commit",
@@ -521,7 +530,6 @@
 			"originId": "Origin ID",
 			"originEmail": "🍊 Origin email",
 			"originName": "🍊 Origin username",
-			"qq": "QQ account",
 			"submitHint": "Already have a account? Sign In",
 			"forgetPasswordHint": "Forgot your password？"
 		},
@@ -530,9 +538,14 @@
 			"originName": "Enter your origin ID",
 			"username": "More than 4 characters",
 			"password": "More than 6 characters",
-			"originId": "optional",
-			"qq": "optional"
+			"originId": "optional"
 		},
+		"eaPrivacy": "Please go to \\\n      <a href=\"https://myaccount.ea.com/cp-ui/privacy/index\">EA privacy settings</a>\\\n      to enable \"search by email\".",
+		"checkAllEmail": "The verification email needs a while(about 1 minute) to deliver to your mail box, please wait patiently and remember to check the trash box",
+		"usernameExist": "this username has been registered",
+		"gameNotShowed": "该邮箱下的账户不包含游戏",
+		"playerNotFound": "Origin account not found(Please ensure that you have followed the guide above)'",
+		"originIdExist": "this origin account has been binded",
 		"fillIn": "Please fill the form",
 		"failed": "Registration failed"
 	},

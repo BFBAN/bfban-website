@@ -63,6 +63,15 @@
       "bfv": "战地风云 5",
       "bf6": "战地风云 2042"
     },
+    "gamePlatforms": {
+      "pc": "电脑",
+      "origin": "橘子",
+      "xbox": "Xbox",
+      "xboxone": "Xbox One",
+      "psn": "索尼",
+      "ps3": "索尼主机3",
+      "ps4": "索尼主机4"
+    },
     "button": {
       "report": "举报",
       "commit": "提交",
@@ -521,18 +530,22 @@
       "originId": "橘子ID",
       "originEmail": "🍊 橘子邮箱",
       "originName": "🍊 橘子名字",
-      "qq": "QQ",
       "submitHint": "已有账号？去登录",
       "forgetPasswordHint": "密码忘记？"
     },
     "placeholder": {
       "originEmail": "输入您的橘子邮箱",
       "originName": "输入您的橘子名字",
-      "username": "4位以上用户名",
+      "username": "4位以上用户名 仅限英文、数字、下划线、减号",
       "password": "6位以上密码",
-      "originId": "选题",
-      "qq": "选填"
+      "originId": "选题"
     },
+    "eaPrivacy": "请至 <a href=\"https://myaccount.ea.com/cp-ui/privacy/index\">EA 隐私设定</a> 中将允许按邮箱搜索开启",
+    "checkAllEmail": "验证邮件需要一段时间(大约1分钟)才能到达您的邮箱，请等待并记得检查垃圾箱",
+    "usernameExist": "该用户名已被注册",
+    "gameNotShowed": "该邮箱下的账户不包含游戏",
+    "playerNotFound": "找不到该玩家(请确认已允许按邮箱搜索)",
+    "originIdExist": "该origin账号已被绑定",
     "fillIn": "请规范填写",
     "failed": "注册失败"
   },
