@@ -211,7 +211,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-2d0cfb23.2.0.2.js"
   },
   {
-    "revision": "38f9620db42e458ae857",
+    "revision": "490ea40e85a2ca8851b3",
     "url": "/assets/js/chunk-2d0e24d8.2.0.2.js"
   },
   {
@@ -383,7 +383,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/conf/requestConf.example.json"
   },
   {
-    "revision": "0b4c08433d2d28351b493d06a9d86621",
+    "revision": "7acad9413985175b1b17de531f19a13c",
     "url": "/conf/requestConf.json"
   },
   {
@@ -399,6 +399,42 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/conf/themes.json"
   },
   {
+    "revision": "dc6e1ecf422c612af2289ca26bde7116",
+    "url": "/favicon.ico"
+  },
+  {
+    "revision": "aa5be6e877f60ad2dbb7b404958dd8bb",
+    "url": "/img/icons/android-chrome-192x192.png"
+  },
+  {
+    "revision": "6a625b8de3699ee19b8eeba576e30747",
+    "url": "/img/icons/android-chrome-512x512.png"
+  },
+  {
+    "revision": "684ef4b9fc15afe9eceb9efa042f55a6",
+    "url": "/img/icons/android-chrome-maskable-192x192.png"
+  },
+  {
+    "revision": "0c92d695010c3ac6093517a5ecc3e616",
+    "url": "/img/icons/android-chrome-maskable-512x512.png"
+  },
+  {
+    "revision": "9e927e78d487f0ba77034d56b0e0a9e4",
+    "url": "/img/icons/apple-touch-icon-152x152.png"
+  },
+  {
+    "revision": "57125dc481c2824ffd9edb2839da4b96",
+    "url": "/img/icons/apple-touch-icon-180x180.png"
+  },
+  {
+    "revision": "cb88eeb9484de9ee1696284020688217",
+    "url": "/img/icons/favicon-16x16.png"
+  },
+  {
+    "revision": "674c9eecd208bfaceaf98fe0161ae278",
+    "url": "/img/icons/favicon-32x32.png"
+  },
+  {
     "revision": "30df4353b94b8136ec9fe705a85ccf45",
     "url": "/index.html"
   },
@@ -411,8 +447,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/manifest.json"
   },
   {
+    "url": "/precache-manifest.d19f18b6e0e0df84657e51ece9f76074.js"
+  },
+  {
     "revision": "b6216d61c03e6ce0c9aea6ca7808f7ca",
     "url": "/robots.txt"
+  },
+  {
+    "revision": "9580da5486f1c29f986b8140a63a966f",
+    "url": "/service-worker.js"
   },
   {
     "revision": "056be6e2ba7569d01fd87734b69601f9",
