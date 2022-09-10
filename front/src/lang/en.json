@@ -208,6 +208,12 @@
 	},
 	"detail": {
 		"title": "Detail",
+		"subscribes": {
+			"tracking": "追踪",
+			"trackingDescribe": "追踪此玩家，在更新动态时通知您",
+			"cancelTrack": "取消追踪",
+			"cancelTrackDescribe": "不在跟踪此玩家"
+		},
 		"timeline": {
 			"all": "所有",
 			"verify": "仅查看判决",
