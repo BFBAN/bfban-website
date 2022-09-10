@@ -59,12 +59,12 @@
           </Button>
         </router-link>
 
-        <Dropdown placement="bottom-end" v-if="isLogin" :padding="0">
+        <Dropdown v-if="isLogin" placement="bottom-end" :padding="0" transfer>
           <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
             <Avatar icon="ios-person"></Avatar>
           </router-link>
           <span class="mobile-hide">&emsp;{{ currentUser.userinfo.username }}</span>
-          <DropdownMenu slot="list" style="min-width: 260px;">
+          <DropdownMenu slot="list" class="header-dropdown">
             <div class="header-dropdown-avatar">
               <div>
                 <Avatar icon="ios-person" size="60"></Avatar>
@@ -291,10 +291,14 @@ header {
   margin-right: 10px;
 }
 
+.header-dropdown {
+  min-width: 280px !important;
+}
+
 .header-dropdown-avatar {
   width: 100%;
   line-height: normal;
-  padding: 15px 16px;
+  padding: 30px 16px;
   clear: both;
   font-size: 14px !important;
   white-space: nowrap;

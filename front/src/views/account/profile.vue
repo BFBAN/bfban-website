@@ -29,7 +29,7 @@
       </Form>
       <br>
       <Row :gutter="30">
-        <Col span="6">
+        <Col :xs="{span: 24}" :sm="{span: 6}">
           <List border size="small">
             <ListItem v-for="(i, index) in muen" :key="i.value">
               <a @click="upDateUri(muen[index].value)">
@@ -54,7 +54,7 @@
           <Divider>{{ $t("home.bulletin.title") }}</Divider>
           <Bulletin/>
         </Col>
-        <Col span="18">
+        <Col :xs="{span: 24}" :sm="{span: 18}">
           <account v-if="muenIndex == 0"></account>
           <appearance v-if="muenIndex == 1"></appearance>
           <message v-if="muenIndex == 2"></message>

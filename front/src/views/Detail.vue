@@ -320,7 +320,7 @@
                         <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
                               :href="link" target="_blank">
                             <Tag size="default" color="geekblue">{{  $t('detail.info.videoLink') }}</Tag>
-                            <a :href="link" target="_blank">{{ link }}</a>
+                            <a :href="link" target="_blank">{{ link.substr(0, 20) }}{{ link.length >= 20 ? '...' : '' }}</a>
                             <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
                           </span>
                       </p>

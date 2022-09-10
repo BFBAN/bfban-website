@@ -3,10 +3,23 @@
        @click="refreshCaptcha"
        :style="`cursor: ${captchaTime.count <= 0 ? 'pointer' : 'not-allowed'};height: ${height}`">
     <span v-if="!content" class="tip">
-      {{ $t('captcha.get') }}
+      <template v-if="!disable">
+        {{ $t('captcha.get') }}
+      </template>
+      <div v-else style="min-width: 80px">
+        <Icon type="md-close" size="20" />
+      </div>
     </span>
-    <div v-else v-html="content" :style="captchaTime.count < 0 ? 'opacity: .3' : ''"></div>
-    <div class="count" v-show="captchaTime.lock">{{ captchaTime.count }}s</div>
+    <div v-else v-html="content"
+         :class="`${captchaTime.count <= 0 ? 'disable': ''}`">
+    </div>
+    <transition name="fade">
+      <div v-show="content && captchaTime.count <= 0" class="captcha-view-icon">
+        <Icon v-if="disable" type="md-close" size="20" />
+        <Icon v-else type="md-refresh" size="20" />
+      </div>
+    </transition>
+    <div class="count" v-show="captchaTime.count > 0">{{ captchaTime.count }}s</div>
   </div>
 </template>
 
@@ -19,9 +32,13 @@ export default {
       type: String,
       default: '0',
     },
+    disable: {
+      type: Boolean,
+      default: false,
+    },
     seconds: {
       type: Number,
-      default: 15
+      default: 60
     },
     height: {
       type: String,
@@ -30,6 +47,7 @@ export default {
   },
   data() {
     return {
+      postload: false,
       hash: "",
       content: "",
       capthcaHash: {},
@@ -46,7 +64,7 @@ export default {
       this.capthcaHash = captcha.data;
     } else {
       storage.session().set(`captcha`, {
-        [`${this.id}_this.$route.name`]: this.seconds
+        [`${this.id}_${this.$route.name}`]: this.seconds
       });
     }
   },
@@ -70,7 +88,10 @@ export default {
         }
       }
 
+      if (this.disable || this.postload) return;
       if (this.captchaTime.count > 0) return;
+
+      this.postload = true;
 
       http.get(api["captcha"], {
         params: {
@@ -87,6 +108,10 @@ export default {
           this.content = res.data.data["content"];
         }
       }).finally((res) => {
+        setTimeout(function () {
+          that.postload = false;
+        }, 800)
+
         if (Object.keys(captcha.data.value).indexOf(this.$route.name) >= 0) {
           // 会话持久对应时间加载
           this.captchaTime.count = captcha.data.value[this.$route.name];
@@ -113,10 +138,11 @@ export default {
         that.captchaTime.count -= 1;
 
         that.capthcaHash = Object.assign({
-          [that.$route.name] : that.captchaTime.count
+          [`${that.id}_${that.$route.name}`] : that.captchaTime.count
         });
         storage.session().set("captcha", that.capthcaHash);
       }, 1000);
+
       that.captchaTime.lock = true;
     }
   },
@@ -129,15 +155,30 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 .captcha-view {
   overflow: hidden;
   position: relative;
   display: flex;
   justify-items: center;
   align-items: center;
-  animation: all .4s;
   margin: 0 5px;
+
+  .captcha-view-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .disable {
+    filter: blur(2px);
+    transition: all .24s;
+    opacity: .4;
+  }
 
   .count {
     display: flex;

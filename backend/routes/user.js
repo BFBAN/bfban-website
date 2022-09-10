@@ -241,7 +241,7 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
 
         const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r=>r.data);
-        if(userGames && userGames.concat(' ').includes('Battlefield') == false) // does the user have battlefield?
+        if(userGames && userGames.concat(' ').indexOf('Battlefield') == false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'bindOrigin.gameNotShowed'});
         // no mistakes detected, generate code for verify
         const code = misc.generateRandomString(127);
