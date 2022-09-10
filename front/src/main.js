@@ -6,11 +6,12 @@ import App from './App.vue'
 import i18n from './i18n'
 import less from 'less'
 import router from './router'
+import MetaInfo from './router/meta'
 import store from './store'
-import ViewUI from 'view-design';
+import ViewUI from 'view-design'
 import VueQuillEditor from 'vue-quill-editor'
 import ECharts from 'vue-echarts'
-// import desktop from '../desktop/assets/js/index'
+import VueMeta from 'vue-meta'
 
 // echarts
 import { use } from 'echarts/core'
@@ -28,6 +29,7 @@ import 'quill/dist/quill.bubble.css'
 // js
 import './registerServiceWorker'
 
+Vue.use(VueMeta)
 Vue.use(less)
 Vue.use(ViewUI, {
   i18n: (key, value) => i18n.t(key,value)
@@ -40,7 +42,20 @@ const app = new Vue({
   router,
   store,
   i18n,
-  // desktop,
+  metaInfo () {
+    return {
+      title: this.$store.state.metaInfo.title,
+      meta: [
+        {
+          name: "keywords",
+          content: this.$store.state.metaInfo.keywords
+        }, {
+          name: "description",
+          content: this.$store.state.metaInfo.description
+        }
+      ]
+    }
+  },
   render: h => h(App)
 }).$mount('#app');
 

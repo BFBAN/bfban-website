@@ -35,52 +35,65 @@ const isLoginBeforeEnter = function (to, from, next) {
 }
 
 const routes = [
+    // exp:
+    // {name: 'test', path: '/', meta: {
+    //         value: 'test.title',
+    //         metaInfo : {
+    //             title: 'test',
+    //             description: 'test description'
+    //         }
+    //     }, component: test},
+
+
     // 主页
-    {name: 'home', path: '/', component: Home},
+    {name: 'home', path: '/', meta: {
+        value: 'home.title',
+    }, component: Home},
 
     // 关于
-    {name: 'about', path: '/about', component: About},
+    {name: 'about', path: '/about', meta: {value: 'about.title'}, component: About},
 
     // 友链
-    {name: 'link', path: '/link', component: Link},
+    {name: 'link', path: '/link', meta: {value: 'link.title'}, component: Link},
 
     // 应用名单
-    {name: 'apps', path: '/apps', component: Apps},
+    {name: 'apps', path: '/apps',meta: {value: 'apps.title'}, component: Apps},
 
     // 个人中心
-    {name: 'profile_home', path: '/profile', component: Profile, beforeEnter: isLoginBeforeEnter},
-    {name: 'profile', path: '/profile/:pagename', component: Profile, beforeEnter: isLoginBeforeEnter},
+    {name: 'profile_home', path: '/profile', meta: {value: 'profile.title'}, component: Profile, beforeEnter: isLoginBeforeEnter},
+    {name: 'profile', path: '/profile/:pagename', meta: {value: 'profile.title'}, component: Profile, beforeEnter: isLoginBeforeEnter},
 
     // 搜索
-    {name: 'search', path: '/search/:conetnt', component: Search},
-    {name: 'search_main', path: '/search', component: Search, meta: {titleValue: 'search.title'}},
+    {name: 'search', path: '/search/:conetnt', meta: {value: 'search.title'}, component: Search},
+    {name: 'search_main', path: '/search', meta: {value: 'search.title'}, component: Search},
 
     // 举报
     {
         name: 'report',
         path: '/report',
+        meta: { value: 'report.title'},
         component: Report,
         beforeEnter: isLoginBeforeEnter
     },
 
     // 作弊名单
-    {name: 'player_list', path: '/player', component: List},
+    {name: 'player_list', path: '/player', meta: {value: 'player_list.title'}, component: List},
 
     // 作弊者详情
-    {name: 'player', path: '/player/:ouid', component: Detail},
+    {name: 'player', path: '/player/:ouid', meta: {value: 'detail.title'}, component: Detail},
 
     // 作弊者分享面板
-    {name: 'cheater_share', path: '/player/:ouid/share', component: DetailShare},
+    {name: 'cheater_share', path: '/player/:ouid/share', meta: {value: 'cheater_share.title'}, component: DetailShare},
 
     // 唤起应用面板
-    {name: 'cheater_app', path: '/player/:ouid/app', component: DetailApp},
+    {name: 'cheater_app', path: '/player/:ouid/app', meta:{value: 'cheater_app.title'}, component: DetailApp},
 
     // 作弊者卡片
-    {name: 'cheater_share_card', path: '/player/:ouid/share/card', component: DetailCard},
+    {name: 'cheater_share_card', path: '/player/:ouid/share/card', meta:{value: 'cheater_share_card.title'}, component: DetailCard},
 
     // 兼容旧url跳转
     {
-        name: 'cheaters_old', path: '/cheaters/:ouid', component: Detail,
+        name: 'cheaters_old', path: '/cheaters/:ouid' ,meta: {value: 'detail.title'}, component: Detail,
         beforeEnter(to, from, next) {
             next({
                 path: `/player/${to.params.ouid}`, query: {oldUrl: true}
@@ -89,40 +102,39 @@ const routes = [
     },
 
     // 登录
-    {name: 'signin', path: '/signin', component: Signin},
+    {name: 'signin', path: '/signin', meta: {value: 'signin.title'}, component: Signin},
 
     // 注册
-    {name: 'signup', path: '/signup', component: Signup},
+    {name: 'signup', path: '/signup',meta: {value: 'signup.title'}, component: Signup},
 
     // 注册验证
-    {name: 'registerVerification', path: '/registerVerification', component: SignupComplete},
+    {name: 'registerVerification', path: '/registerVerification', meta: {value: 'registerVerification.title'}, component: SignupComplete},
 
     // 旧账户换绑 需登录
     {
         name: 'bindOrigin',
         path: '/bindOrigin',
+        meta: { value: 'bindOrigin.title'},
         component: Signup,
         beforeEnter: isLoginBeforeEnter
     },
 
     // 重置密码
-    {name: 'forgetPassword', path: '/forgetPassword', component: ForgetPassword},
-    {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify', component: ForgetPassword},
+    {name: 'forgetPassword', path: '/forgetPassword', meta:{value: 'forgetPassword.title'}, component: ForgetPassword},
+    {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify', meta: {value: 'forgetPasswordVerify.title'}, component: ForgetPassword},
 
     // 账户验证
-    {name: 'signupComplete', path: '/signupComplete/:code', component: SignupComplete},
-    //  { name: 'signup', path: '/reset', component: Reset },
+    {name: 'signupComplete', path: '/signupComplete/:code', meta:{value: 'signupComplete.title'}, component: SignupComplete},
 
     // 网站统计
-    {name: 'site_stats', path: '/sitestats', component: SiteStats},
+    {name: 'site_stats', path: '/sitestats', meta: {value: 'sitestats.title'}, component: SiteStats},
 
-    {name: 'account', path: '/account/:uId', component: Account},
+    {name: 'account', path: '/account/:uId', meta: {value: 'account.title'}, component: Account},
 
-    {name: 'notFound', path: '/404', component: NotFound},
+    {name: 'notFound', path: '/404', meta: {value: 'basic.tip.notFound'}, component: NotFound},
 
     // otherwise redirect to home
     {path: '*', redirect: '/404'},
-
 ];
 const RouterConfig = {
     mode: 'history',
@@ -139,9 +151,13 @@ VueRouter.prototype.push = function push(location) {
 }
 
 router.beforeEach((to, from, next) => {
+    if (to.meta.metaInfo) {
+        store.commit("CHANGE_META_INFO", to.meta.metaInfo)
+    }
+
     store.commit('syncLoginState');
 
-    document.title = `${config.name} | ${to.meta.title || i18n.t(`${to.meta.titleValue || to.name + '.title'}`) || config.name} `;
+    document.title = `${config.name} | ${i18n.t(to.meta.value)}`;
 
     next();
 });

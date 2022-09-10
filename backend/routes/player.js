@@ -1,6 +1,8 @@
 "use strict";
 import EventEmitter from "events";
 import express from "express";
+import webshot from "node-webshot";
+import fs from 'fs';
 import { check, body as checkbody, query as checkquery, validationResult, oneOf as checkOneof } from "express-validator";
 
 import db from "../mysql.js";
@@ -876,6 +878,46 @@ async (req, res, next)=>{
         if(viewedAdmins.size >= config.personsToReview)
             siteEvent.emit('action', {method: 'viewBanAppeal', params: {banAppeal: banAppeal}});
         return res.status(200).json({success: 1, code: 'viewBanAppeal.success', message: 'thank you'});
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.get('/widget', verifyJWT, allowPrivileges(['admin','super','root', 'bot']), [
+    checkbody('id').optional().isString(),
+    checkbody('uri').optional().isString(),
+],
+async (req, res, next)=>{
+    try {
+        var url = "";
+        const validateErr = validationResult(req);
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'widget.bad', message: validateErr.array()});
+
+        if (req.query.url)
+            url = req.query.url;
+
+        var renderStream = webshot(
+            url,
+            {
+                screenSize: {
+                    width: 300,
+                    height: 450
+                },
+                siteType: 'url',
+                quality: 70,
+                renderDelay: 20000,
+            }
+        );
+
+        renderStream.on('data', function(data) {
+            const uint8ToBase64 = Buffer.from(data).toString('base64');
+
+            return res.status(200).json({
+                success: 1,
+                data: 'data:image/png;base64,' + uint8ToBase64
+            });
+        });
     } catch(err) {
         next(err);
     }

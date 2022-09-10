@@ -38,12 +38,9 @@
       <Divider dashed />
 
       <h2><b>{{ $t("link.links") }}</b></h2>
-      <a v-for="(i, index) in link.linkChild"
-           :key="index"
-           :href="i.linkUrl"
-            target="_parent">
-          {{i.title}}
-      </a>
+      <div v-for="(i, link_index) in link.linkChild" :key="i.linkUrl">
+        <a :href="i.linkUrl" target="_blank">{{i.title}} {{link_index}}</a>
+      </div>
 
       <Divider dashed />
 

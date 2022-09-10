@@ -99,7 +99,7 @@
 		"userCenter": "Homepage",
 		"signoutSuccess": "Logout successful"
 	},
-	"player": {
+	"player_list": {
 		"title": "Player database"
 	},
 	"profile": {
@@ -204,6 +204,12 @@
 				"0": "图片链接",
 				"1": "上传到图床"
 			}
+		},
+		"history": {
+			"title": "历史"
+		},
+		"subscribes": {
+			"title": "追踪"
 		}
 	},
 	"detail": {
