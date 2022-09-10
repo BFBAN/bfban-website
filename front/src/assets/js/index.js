@@ -15,6 +15,7 @@ import _Notification from "./notification";
 import _Regular from './regular';
 import _Print from './print';
 import _Upload from './upload';
+import _AccountStorage from './account_storage';
 
 export const api = new _Api();
 export const http = new _Http();
@@ -28,10 +29,11 @@ export const notification = new _Notification();
 export const regular = new _Regular();
 export const print = new _Print();
 export const upload = new _Upload();
+export const account_storage = new _AccountStorage();
 
 export default {
     conf, api, storage, time,
     http, http_token, http_connect,
     util, notification, regular, print,
-    upload
+    upload, account_storage
 };
