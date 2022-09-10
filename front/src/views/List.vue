@@ -469,7 +469,7 @@ export default new BFBAN({
 });
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import "./src/assets/css/radio.less";
 
 .page {

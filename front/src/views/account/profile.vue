@@ -60,6 +60,8 @@
           <message v-if="muenIndex == 2"></message>
           <enhance v-if="muenIndex == 3"></enhance>
           <media v-if="muenIndex == 4"></media>
+          <history v-if="muenIndex == 5"></history>
+          <subscribes v-if="muenIndex == 6"></subscribes>
         </Col>
       </Row>
     </Card>
@@ -76,6 +78,8 @@ import account from "./account";
 import message from "./message";
 import enhance from "./enhance";
 import media from "./media";
+import history from "./history";
+import subscribes from "./subscribes"
 
 export default {
   name: "profile",
@@ -102,10 +106,18 @@ export default {
           title: 'media',
           value: '4'
         },
+        {
+          title: 'history',
+          value: '5'
+        },
+        {
+          title: 'subscribes',
+          value: '6'
+        }
       ]
     }
   },
-  components: {Bulletin, appearance, account, message, enhance, media, PrivilegesTag},
+  components: {Bulletin, appearance, account, message, enhance, media, history, subscribes, PrivilegesTag},
   created() {
     const pagename = this.$route.params.pagename;
 

@@ -1063,14 +1063,21 @@ export default new BFBAN({
      * 更新游览值
      */
     onViewed () {
-      const viewed = storage.session().get('viewed');
+      let viewed = storage.get("viewed");
       const id = this.cheater.id;
 
       if (!id) return;
 
       // 在持久下存在此id，则不请求
-      if (viewed.code <= 0 || viewed?.data?.value[id]) {
+      if (viewed && viewed.data &&  viewed.data.value[id]) {
         return;
+      }
+
+      // 实例object
+      if (!(viewed && viewed.data && viewed.data.value)) {
+        viewed = {
+          data: { value: {} }
+        }
       }
 
       http.post(api["player_viewed"], {
@@ -1078,7 +1085,7 @@ export default new BFBAN({
           data: { id }
         }
       }).then((res) => {
-        storage.session().set('viewed', {...viewed.data.value, [id]: true});
+        storage.set("viewed", {...viewed.data.value, [id]: true});
       });
     },
     /**
