@@ -182,6 +182,7 @@ export default new BFBAN({
             }
           }).finally((res) => {
             that.spinShow = false;
+            that.$refs.captcha.refreshCaptcha();
           });
 
         } else {

@@ -73,15 +73,30 @@
                       </Button>
                   </router-link>
                   <!-- App E -->
-<!--                  <Divider type="vertical"/>-->
-<!--                  <ButtonGroup type="button">-->
-<!--                    <Button>-->
-<!--                      跟踪-->
-<!--                    </Button>-->
-<!--                    <Button>-->
-<!--                      <Icon type="md-arrow-dropdown"/>-->
-<!--                    </Button>-->
-<!--                  </ButtonGroup>-->
+                  <template v-if="isLogin">
+                    <Divider type="vertical"/>
+                    <Dropdown placement="bottom-end">
+                      <ButtonGroup type="button">
+                        <Button @click="onSubscribes" :loading="subscribes.load">
+                          <template v-if="subscribes.static"><Icon type="md-notifications-off" size="20" />取消跟踪</template>
+                          <template v-else><Icon type="md-notifications-outline" size="20" />跟踪</template>
+                        </Button>
+                        <Button>
+                          <Icon type="ios-arrow-down"></Icon>
+                        </Button>
+                      </ButtonGroup>
+                      <DropdownMenu slot="list">
+                        <DropdownItem :selected="!subscribes.static">
+                          <h4><Icon type="md-notifications-outline"/> {{ $t('detail.subscribes.tracking') }}</h4>
+                          <p>{{ $t('detail.subscribes.trackingDescribe') }}</p>
+                        </DropdownItem>
+                        <DropdownItem :selected="subscribes.static">
+                          <h4><Icon type="md-notifications-off" />{{ $t('detail.subscribes.cancelTrack') }}</h4>
+                          <p>{{ $t('detail.subscribes.cancelTrackDescribe') }}</p>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </template>
                   <Divider type="vertical"/>
                   <!-- 分享 share S -->
                   <router-link :to="{name: 'cheater_share'}">
@@ -889,6 +904,10 @@ export default new BFBAN({
         toPlayerId: 0,
         content: ''
       },
+      subscribes:{
+        load: false,
+        static: false
+      },
       cheater: {
         originId: '',
       },
@@ -985,6 +1004,62 @@ export default new BFBAN({
       this.cheater.avatarLink = "";
     },
     /**
+     * 追踪此玩家
+     */
+    onSubscribes () {
+      let subscribesLocal = storage.get('user.subscribes');
+      let subscribesArray = [];
+      let isSubscribes = false;
+
+      if (subscribesLocal.code < 0) {
+        subscribesLocal = { data: { value: [] } };
+      }
+
+      let localdata = subscribesLocal.data.value;
+          subscribesArray = subscribesArray.concat(localdata);
+
+      // 校对本地是否已订阅
+      if (
+          subscribesLocal.code == 0 &&
+          localdata &&
+          localdata.includes(this.cheater.id)
+      ){
+        console.log('rem', this.cheater.id)
+        // 若存在触发相同，则移除
+        isSubscribes = false;
+        localdata.splice(localdata.indexOf(this.cheater.id), 1);
+      } else {
+        console.log('add', this.cheater.id)
+        // 添加
+        isSubscribes = true;
+        subscribesArray.push(this.cheater.id);
+      }
+
+      this.http.post(api["user_me"], {
+        data: {
+          data: { subscribes: subscribesArray }
+        }
+      }).then((res) => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          storage.set('user.subscribes', subscribesArray);
+        }
+      }).finally(() => {
+        this.subscribes.static = isSubscribes;
+      });
+    },
+    checkPlayerSubscribes () {
+      const subscribesLocal = storage.get('user.subscribes');
+      if (subscribesLocal.code < 0) return false;
+
+      subscribesLocal.data.value.filter(i => {
+        if (i == this.cheater.id) {
+          this.subscribes.static = true;
+        }
+      });
+    },
+    /**
      * 更新游览值
      */
     onViewed () {
@@ -1046,6 +1121,7 @@ export default new BFBAN({
         }
       }).finally(() => {
         this.onViewed();
+        this.checkPlayerSubscribes();
         this.spinShow = false;
       });
     },
@@ -1387,7 +1463,7 @@ export default new BFBAN({
     },
     currentLan() {
       return this.$root && this.$root.$i18n && this.$root.$i18n.locale || 'zh-CN';
-    }
+    },
   }
 })
 </script>

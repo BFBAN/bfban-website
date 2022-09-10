@@ -4,13 +4,14 @@
 
 import time from "./date";
 
-export default  class Storage{
+export default class Storage{
   THAT = this;
   STORAGENAME = 'bfban.';
   DATE = new time();
 
   constructor(data = {name}) {
-    this.STORAGENAME = data.name;
+    if (data.name)
+      this.STORAGENAME = data.name;
   }
 
   session ()  {
@@ -29,6 +30,9 @@ export default  class Storage{
             result = {code: -1}
           }
           return result;
+        },
+        rem: (name) => {
+          sessionStorage.removeItem(this.STORAGENAME + name)
         }
       }
   }

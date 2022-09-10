@@ -88,11 +88,9 @@
 
             <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
 
-            <br>
-
-            <div v-for="(d, d_index) in data" :key="d.originUserId">
+            <div v-for="(d, d_index) in data" :key="d.originUserId" class="item-card">
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
-                <Card>
+                <Card dis-hover :padding="10">
                   <Row :gutter="10" type="flex">
                     <Col :xs="{span: 8, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
                       <!-- 头像 S -->
@@ -109,7 +107,7 @@
                       </template>
                       <!-- 头像 E -->
                     </Col>
-                    <Col :xs="{span: 16, push: 0,pull:0}" :lg="{span: 16, push: 0,pull:0}">
+                    <Col :xs="{span: 17, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
                       <div style="display: flex; flex-direction: column;">
                         <Tooltip :content="$t('list.colums.playerId')">
                           <h2>
@@ -130,14 +128,14 @@
                         <Time v-if="d.updateTime" :time="d.updateTime"/>
                       </div>
                     </Col>
-                    <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 4, push: 0,pull:0}" class="mobile-hide">
-                      <Row type="flex" justify="center" align="middle" style="height: 50px">
-                        <Col flex="auto" align="right">
-                          <span class="item-text">{{ d.viewNum || 0 }}</span>
+                    <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}" class="mobile-hide">
+                      <Row type="flex" justify="end" align="middle" style="height: 100%">
+                        <Col flex="auto" align="right" class="item-text">
+                          <span>{{ d.viewNum || 0 }}</span>
                           <Icon type="md-eye" size="17" class="item-icon"/>
                         </Col>
-                        <Col flex="auto" align="right">
-                          <span class="item-text">{{ d.commentsNum || 0 }}</span>
+                        <Col flex="auto" align="right" class="item-text">
+                          <span>{{ d.commentsNum || 0 }}</span>
                           <Icon type="md-chatboxes" size="17" class="item-icon"/>
                         </Col>
                       </Row>
@@ -149,12 +147,12 @@
                     </Col>
                   </Row>
                 </Card>
-                <br/>
               </Badge>
             </div>
-            <Card v-if="data.length <= 0" align="center">
+            <Card dis-hover :padding="10" v-if="data.length <= 0" align="center">
               (｀ﾍ´)=3=3=3=3=3=3
             </Card>
+
             <Page class="page"
                   size="small"
                   show-sizer
@@ -482,11 +480,21 @@ export default new BFBAN({
 }
 
 .list {
-  margin: 20px 0;
+  margin: 20px 0 0 0;
   position: relative;
 
+  .item-card {
+    margin-bottom: 10px;
+  }
+
+  .item-text {
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
   .item-icon {
-    margin: 0 10px;
+    margin: 0 20px 0 5px;
   }
 }
 </style>
