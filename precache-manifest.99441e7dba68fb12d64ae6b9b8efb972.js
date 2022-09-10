@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "960513310c6a935faae1",
+    "revision": "506e3fb5d17dec99e633",
     "url": "/assets/css/app.9d8ed243.css"
   },
   {
@@ -175,7 +175,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/img/ubuntu-mono-v8-latin-regular.28524211.svg"
   },
   {
-    "revision": "960513310c6a935faae1",
+    "revision": "506e3fb5d17dec99e633",
     "url": "/assets/js/app.2.0.2.js"
   },
   {
