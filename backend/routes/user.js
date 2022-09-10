@@ -407,12 +407,13 @@ async (req, res, next)=>{
         const update = {};
 
         if(req.body.data.subscribes)
-            update.subscribes = req.body.data.subscribes.map(i=>i-0); // to number
+            update.subscribes = JSON.stringify(req.body.data.subscribes.map(i=>i-0)); // to number
         if(req.body.data.attr)
             update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
 
         await db('users').update(update).where({id: req.user.id});
-        update.attr = userSetAttributes({}, req.body.data.attr);
+        if (req.body.data.attr)
+            update.attr = userSetAttributes({}, req.body.data.attr);
         res.status(200).json({success: 1, code: 'me.success', data: update});
     } catch(err) {
         next(err);
