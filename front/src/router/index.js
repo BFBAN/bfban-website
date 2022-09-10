@@ -44,56 +44,184 @@ const routes = [
     //         }
     //     }, component: test},
 
-
     // 主页
     {name: 'home', path: '/', meta: {
         value: 'home.title',
+        metaInfo : {
+            title: 'home.title',
+            keywords: "home,bfban",
+            description: 'home.description'
+        }
     }, component: Home},
 
     // 关于
-    {name: 'about', path: '/about', meta: {value: 'about.title'}, component: About},
+    {name: 'about', path: '/about',
+        meta: {
+            metaInfo : {
+                title: 'about.title',
+                keywords: "about",
+                description: 'about.description'
+            }
+        },
+        component: About
+    },
 
     // 友链
-    {name: 'link', path: '/link', meta: {value: 'link.title'}, component: Link},
+    {name: 'link', path: '/link',
+        meta: {
+            metaInfo : {
+                title: 'link.title',
+                keywords: "link",
+                description: 'link.description'
+            }
+        },
+        component: Link
+    },
 
     // 应用名单
-    {name: 'apps', path: '/apps',meta: {value: 'apps.title'}, component: Apps},
+    {name: 'apps', path: '/apps',
+        meta: {
+            metaInfo : {
+                title: 'apps.title',
+                keywords: "apps,bfban,app",
+                description: 'apps.description'
+            }
+        },
+        component: Apps
+    },
 
     // 个人中心
-    {name: 'profile_home', path: '/profile', meta: {value: 'profile.title'}, component: Profile, beforeEnter: isLoginBeforeEnter},
-    {name: 'profile', path: '/profile/:pagename', meta: {value: 'profile.title'}, component: Profile, beforeEnter: isLoginBeforeEnter},
+    {name: 'profile_home', path: '/profile',
+        meta: {
+            metaInfo : {
+                title: 'profile.title',
+                keywords: "profile",
+                description: 'profiledescription'
+            }
+        },
+        component: Profile,
+        beforeEnter: isLoginBeforeEnter
+    },
+    {name: 'profile', path: '/profile/:pagename',
+        meta: {
+            metaInfo : {
+                title: 'profile.title',
+                keywords: "profile",
+                description: 'profile.description'
+            }
+        },
+        component: Profile,
+        beforeEnter: isLoginBeforeEnter
+    },
 
     // 搜索
-    {name: 'search', path: '/search/:conetnt', meta: {value: 'search.title'}, component: Search},
-    {name: 'search_main', path: '/search', meta: {value: 'search.title'}, component: Search},
+    {name: 'search', path: '/search/:conetnt',
+        meta: {
+            metaInfo : {
+                title: 'search.title',
+                keywords: "search",
+                description: 'search.description'
+            }
+        },
+        component: Search
+    },
+    {name: 'search_main', path: '/search',
+        meta: {
+            metaInfo : {
+                title: 'search.title',
+                keywords: "search",
+                description: 'search.description'
+            }
+        },
+        component: Search
+    },
 
     // 举报
     {
         name: 'report',
         path: '/report',
-        meta: { value: 'report.title'},
+        meta: {
+            metaInfo : {
+                title: 'report.title',
+                keywords: "report",
+                description: 'report.description'
+            }
+        },
         component: Report,
         beforeEnter: isLoginBeforeEnter
     },
 
     // 作弊名单
-    {name: 'player_list', path: '/player', meta: {value: 'player_list.title'}, component: List},
+    {name: 'player_list', path: '/player',
+        meta: {
+            metaInfo : {
+                title: 'player_list.title',
+                keywords: "player list",
+                description: 'player_list.description'
+            }
+        },
+        component: List
+    },
 
     // 作弊者详情
-    {name: 'player', path: '/player/:ouid', meta: {value: 'detail.title'}, component: Detail},
+    {name: 'player', path: '/player/:ouid',
+        meta: {
+            metaInfo : {
+                title: 'detail.title',
+                keywords: "detail, detail player",
+                description: 'detail.description'
+            }
+        },
+        component: Detail
+    },
 
     // 作弊者分享面板
-    {name: 'cheater_share', path: '/player/:ouid/share', meta: {value: 'cheater_share.title'}, component: DetailShare},
+    {name: 'cheater_share', path: '/player/:ouid/share',
+        meta: {
+            metaInfo : {
+                title: 'cheater_share.title',
+                keywords: "cheater,share,card,player",
+                description: 'cheater_share.description'
+            }
+        },
+        component: DetailShare
+    },
 
     // 唤起应用面板
-    {name: 'cheater_app', path: '/player/:ouid/app', meta:{value: 'cheater_app.title'}, component: DetailApp},
+    {name: 'cheater_app', path: '/player/:ouid/app',
+        meta:{
+            metaInfo : {
+                title: 'cheater_app.title',
+                keywords: "app ios android",
+                description: 'cheater_app.description'
+            }
+        },
+        component: DetailApp
+    },
 
     // 作弊者卡片
-    {name: 'cheater_share_card', path: '/player/:ouid/share/card', meta:{value: 'cheater_share_card.title'}, component: DetailCard},
+    {name: 'cheater_share_card', path: '/player/:ouid/share/card',
+        meta:{
+            metaInfo : {
+                title: 'cheater_share_card.title',
+                keywords: "cheater,share,card",
+                description: 'cheater_share_card.description'
+            }
+        },
+        component: DetailCard
+    },
 
     // 兼容旧url跳转
     {
-        name: 'cheaters_old', path: '/cheaters/:ouid' ,meta: {value: 'detail.title'}, component: Detail,
+        name: 'cheaters_old', path: '/cheaters/:ouid',
+        meta: {
+            metaInfo : {
+                title: 'detail.title',
+                keywords: "player detail",
+                description: 'detail.description'
+            }
+        },
+        component: Detail,
         beforeEnter(to, from, next) {
             next({
                 path: `/player/${to.params.ouid}`, query: {oldUrl: true}
@@ -102,36 +230,123 @@ const routes = [
     },
 
     // 登录
-    {name: 'signin', path: '/signin', meta: {value: 'signin.title'}, component: Signin},
+    {name: 'signin', path: '/signin',
+        meta: {
+            metaInfo : {
+                title: 'signin.title',
+                keywords: "signin",
+                description: 'signin.description'
+            }
+        },
+        component: Signin
+    },
 
     // 注册
-    {name: 'signup', path: '/signup',meta: {value: 'signup.title'}, component: Signup},
+    {name: 'signup', path: '/signup',
+        meta: {
+            metaInfo : {
+                title: 'signup.title',
+                keywords: "signup",
+                description: 'signup.description'
+            }
+        },
+        component: Signup
+    },
 
     // 注册验证
-    {name: 'registerVerification', path: '/registerVerification', meta: {value: 'registerVerification.title'}, component: SignupComplete},
+    {name: 'registerVerification', path: '/registerVerification',
+        meta: {
+            metaInfo : {
+                title: 'registerVerification.title',
+                keywords: "register Verification",
+                description: 'registerVerification.description'
+            }
+        },
+        component: SignupComplete
+    },
 
     // 旧账户换绑 需登录
     {
         name: 'bindOrigin',
         path: '/bindOrigin',
-        meta: { value: 'bindOrigin.title'},
+        meta: {
+            metaInfo : {
+                title: 'bindOrigin.title',
+                keywords: "bind Origin",
+                description: 'bindOrigin.description'
+            }
+        },
         component: Signup,
         beforeEnter: isLoginBeforeEnter
     },
 
     // 重置密码
-    {name: 'forgetPassword', path: '/forgetPassword', meta:{value: 'forgetPassword.title'}, component: ForgetPassword},
-    {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify', meta: {value: 'forgetPasswordVerify.title'}, component: ForgetPassword},
+    {name: 'forgetPassword', path: '/forgetPassword',
+        meta:{
+            metaInfo : {
+                title: 'forgetPassword.title',
+                keywords: "forget Password",
+                description: 'forgetPassword.description'
+            }
+        },
+        component: ForgetPassword
+    },
+
+    {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify',
+        meta: {
+            metaInfo : {
+                title: 'forgetPasswordVerify.title',
+                keywords: "forget Password Verify",
+                description: 'forgetPasswordVerify.description'
+            }
+        },
+        component: ForgetPassword
+    },
 
     // 账户验证
-    {name: 'signupComplete', path: '/signupComplete/:code', meta:{value: 'signupComplete.title'}, component: SignupComplete},
+    {name: 'signupComplete', path: '/signupComplete/:code',
+        meta:{
+            metaInfo : {
+                title: 'signupComplete.title',
+                keywords: "signupComplete",
+                description: 'signupComplete.description'
+            }
+        },
+        component: SignupComplete
+    },
 
     // 网站统计
-    {name: 'site_stats', path: '/sitestats', meta: {value: 'sitestats.title'}, component: SiteStats},
+    {name: 'site_stats', path: '/sitestats',
+        meta: {
+            metaInfo : {
+                title: 'sitestats.title',
+                keywords: "sitestats",
+                description: 'sitestats.description'
+            }
+        },
+        component: SiteStats
+    },
 
-    {name: 'account', path: '/account/:uId', meta: {value: 'account.title'}, component: Account},
+    {name: 'account', path: '/account/:uId',
+        meta: {
+            metaInfo : {
+                title: 'account.title',
+                keywords: "account",
+                description: 'account.description'
+            }
+        },
+        component: Account
+    },
 
-    {name: 'notFound', path: '/404', meta: {value: 'basic.tip.notFound'}, component: NotFound},
+    {name: 'notFound', path: '/404', meta: {
+            metaInfo : {
+                title: 'basic.tip.notFound',
+                keywords: "notFound",
+                description: 'basic.tip.notFound'
+            }
+        },
+        component: NotFound
+    },
 
     // otherwise redirect to home
     {path: '*', redirect: '/404'},
@@ -152,12 +367,15 @@ VueRouter.prototype.push = function push(location) {
 
 router.beforeEach((to, from, next) => {
     if (to.meta.metaInfo) {
-        store.commit("CHANGE_META_INFO", to.meta.metaInfo)
+        let metainfo = to.meta.metaInfo;
+            metainfo.title = i18n.t(metainfo.title);
+            metainfo.description = i18n.t(metainfo.description);
+        store.commit("CHANGE_META_INFO", metainfo)
     }
 
     store.commit('syncLoginState');
 
-    document.title = `${config.name} | ${i18n.t(to.meta.value)}`;
+    // document.title = `${config.name} | ${i18n.t(to.meta.value)}`;
 
     next();
 });
