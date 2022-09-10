@@ -33,6 +33,7 @@
     "vue-echarts": "^6.2.3",
     "vue-electron": "^1.0.6",
     "vue-i18n": "^8.25.0",
+    "vue-meta": "^2.4.0",
     "vue-qr": "^2.5.0",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.2.0",

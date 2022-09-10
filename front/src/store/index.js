@@ -12,6 +12,12 @@ const store = new Vuex.Store({
   state: {
     baseUrl: process.env.BASE_URL,
     user: undefined,
+    namespaced: true,
+    metaInfo: {
+      title: "",
+      keywords: "",
+      description: ""
+    },
     $desktop: {},
     $theme: {},
     $userinfo: {},
@@ -19,6 +25,9 @@ const store = new Vuex.Store({
 
   // modify state
   mutations: {
+    CHANGE_META_INFO(state, metaInfo) {
+      state.metaInfo = metaInfo;
+    },
     SIGNIN(state, data) {
       state.user = data;
 
