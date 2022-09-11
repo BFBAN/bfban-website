@@ -5,7 +5,7 @@
 export default class Conf {
     CONF = {
         // 请求地址 [开发]
-        "requestActionName": "",
+        "requestDevelopmentName": "",
 
         // 请求地址 [生产]
         "requestProductionName": "",

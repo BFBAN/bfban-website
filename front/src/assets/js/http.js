@@ -31,8 +31,12 @@ export default class Http extends Conf {
         })
     }
 
+    location = () => {
+        return new URL(this.globalUrl());
+    }
+
     // 获取全局地址
-    getGlobalUrl() {
+    globalUrl() {
         switch (this.NODE) {
             case 'production': // 生产
                 super.GETURL = this.CONF.child[this.CONF.requestProductionName];
@@ -42,7 +46,7 @@ export default class Http extends Conf {
                 super.GETURL = this.CONF.child[this.CONF.requestDevelopmentName];
                 break;
         }
-        return `${this.GETURL.protocol || 'http'}://${this.GETURL.request}`;
+        return `${this.GETURL.protocol || 'http'}://${this.GETURL.host}${this.GETURL.pathname}`;
     }
 
     // 配置全局协议头
@@ -78,7 +82,7 @@ export default class Http extends Conf {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async post(url, data = {data: {}, params: {}}) {
-        const _url = this.getGlobalUrl() + url;
+        const _url = this.globalUrl() + url;
 
         let result = await this.request(_url, {
             method: this.POST,
@@ -95,7 +99,7 @@ export default class Http extends Conf {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async get(url = '', data = {data: {}, params: {}}) {
-        const _url = this.getGlobalUrl() + url;
+        const _url = this.globalUrl() + url;
 
         let result = await this.request(_url, {
             method: this.GET,
@@ -112,7 +116,7 @@ export default class Http extends Conf {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async put(url = '', data = {data: {}, params: {}}) {
-        const _url = this.getGlobalUrl() + url;
+        const _url = this.globalUrl() + url;
 
         this.HTTP.headers = {...this.HTTP.headers, ...data.headers};
 

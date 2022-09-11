@@ -1,5 +1,6 @@
 import 'view-design/dist/styles/iview.css'
-import './registerServiceWorker';
+import './registerServiceWorker'
+import config from "../package.json"
 
 import Vue from 'vue'
 import App from './App.vue'
@@ -15,9 +16,10 @@ import VueMeta from 'vue-meta'
 
 // echarts
 import { use } from 'echarts/core'
-import {CanvasRenderer} from 'echarts/renderers'
-import {BarChart} from 'echarts/charts'
-import {GridComponent, TooltipComponent} from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+import { BarChart } from 'echarts/charts'
+import { GridComponent, TooltipComponent } from 'echarts/components'
+
 use([CanvasRenderer, BarChart, GridComponent, TooltipComponent]);
 Vue.component('v-chart', ECharts);
 
@@ -33,8 +35,8 @@ Vue.use(VueMeta)
 Vue.use(less)
 Vue.use(ViewUI, {
   i18n: (key, value) => i18n.t(key,value)
-});
-Vue.use(VueQuillEditor, /* { default global options } */)
+})
+Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false
 
@@ -43,18 +45,13 @@ const app = new Vue({
   store,
   i18n,
   metaInfo () {
-    return {
-      title: this.$store.state.metaInfo.title,
-      meta: [
-        {
-          name: "keywords",
-          content: this.$store.state.metaInfo.keywords
-        }, {
-          name: "description",
-          content: this.$store.state.metaInfo.description
-        }
-      ]
-    }
+    return Object.assign({
+      titleTemplate: config.name + ' / %s',
+      htmlAttrs: {
+        lang: this.$i18n.locale,
+        amp: true
+      },
+    }, this.$store.state.metaInfo)
   },
   render: h => h(App)
 }).$mount('#app');
