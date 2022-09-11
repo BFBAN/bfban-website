@@ -16,6 +16,12 @@
         <br>
       </template>
 
+      <Modal v-model="share.modeShow" footer-hide width="960">
+        <div class="shareImage" style="text-align: center">
+          <div id="setSharePicture"></div>
+        </div>
+      </Modal>
+
       <Row :gutter="10">
         <Col flex="1">
           <Card :padding="20" dis-hover class="share">
@@ -24,15 +30,14 @@
                 <Icon type="md-share"/>&emsp;<a :href="share.webLink" target="_blank">{{ share.webLinkText }}</a>
               </div>
             </template>
-            <template v-else-if="share.collapse == 2 || share.collapse == 3">
-              <div v-html="share.iframeLink" style="height: 800px; width: 100%"></div>
-              <template if="share.collapse == 3">
-                <div class="shareImage">
-                  <div id="setSharePicture"></div>
-                </div>
-              </template>
+            <template v-else-if="share.collapse == 2">
+              <div v-html="share.iframeLink" style="height: 800px; width: 100%" id="getSharePicture_window"></div>
             </template>
-
+            <template v-else-if="share.collapse == 3">
+              <div style="position: relative; overflow: hidden">
+                <SharePlayerCell ref="sharePlayerWidget" id="getSharePicture_window" :lang="share.languages"></SharePlayerCell>
+              </div>
+            </template>
             <template v-else>
               <div style="min-height: 500px;width: 100%;display: flex;justify-content: center;align-items: center">
                 (✿◡‿◡) 🦖
@@ -59,14 +64,14 @@
                 {{ $t('share.link.name') }}
                 <div slot="content">
                   <FormItem :label="$t('share.link.linkUrl')">
-                    <Input v-model="share.webLink"/>
+                    <Input v-model="share.webLink" readonly/>
                   </FormItem>
                   <FormItem :label="$t('share.link.textLink')">
-                    <Input v-model="share.webLinkText" @on-change="upDataShare"/>
+                    <Input v-model="share.webLinkText" @on-change="upDataShare" readonly/>
                   </FormItem>
                   <FormItem :label="$t('share.link.webHtmlLink')">
                     <Input v-model="share.webLinkHtml" type="textarea" :autosize="{minRows: 4,maxRows: 8}"
-                           placeholder=""></Input>
+                           placeholder="" readonly></Input>
                   </FormItem>
                 </div>
               </Panel>
@@ -85,7 +90,7 @@
                   </FormItem>
                   <FormItem :label="$t('share.iframe.code')">
                     <Input v-model="share.iframeLink" type="textarea" :autosize="{minRows: 4,maxRows: 8}"
-                           placeholder=""></Input>
+                           placeholder="" readonly></Input>
                   </FormItem>
                 </div>
               </Panel>
@@ -94,7 +99,7 @@
                 <div slot="content">
                   <Alert show-icon>{{ $t('share.image.describe') }}</Alert>
                   <br/>
-                  <Button long @click="onGenerateSharePicture" :disabled="share.statusSharePicture" :load="!share.statusSharePicture">
+                  <Button long @click="onGenerateSharePicture" :disabled="share.statusSharePicture" :loading="share.statusSharePicture">
                     {{ $t('share.image.generate') }}
                   </Button>
                 </div>
@@ -125,17 +130,9 @@ import {formatTextarea, waitForAction} from "@/mixins/common";
 export default new BFBAN({
   data() {
     return {
-      getGameLabel: util.getGameLabel,
-      privileges: [],
-      isCheaterExist: true,
-      cheater: {
-        originId: '',
-      },
-      games: [],
-      spinShow: true,
-      updateUserInfospinShow: false,
-      updateCheaterModal: false,
       share: {
+        modeShow: false,
+        imagebase64: "",
         collapse: "1",
         statusSharePicture: false,
         show: true,
@@ -230,6 +227,12 @@ export default new BFBAN({
 
       let _webLink = `${url}?lang=${share.languages}`;
 
+      if (this.$refs.sharePlayerWidget){
+        this.$refs.sharePlayerWidget.onLoadLang(share.languages);
+        // this.$refs.sharePlayerWidget.onLoadTheme();
+      }
+
+
       this.share.load = true;
       this.share = Object.assign(this.share, {
         webLink: _webLink,
@@ -244,7 +247,7 @@ export default new BFBAN({
      */
     onGenerateSharePicture() {
       const that = this;
-      const dom = document.querySelector("#getSharePicture .ivu-col.ivu-col-span-xs-22.ivu-col-xs-pull-1.ivu-col-xs-push-1.ivu-col-span-lg-19.ivu-col-lg-push-2");
+      const dom = document.querySelector("#getSharePicture_window");
 
       if (this.share.statusSharePicture) return;
 
@@ -270,11 +273,25 @@ export default new BFBAN({
         }).then(canvas => {
           document.querySelector("#setSharePicture").after(canvas);
           that.share.statusSharePicture = false;
+          that.share.modeShow = true;
+        }).catch(err => {
+          console.log(err)
         }).finally(() => {
           that.share.statusSharePicture = false;
         });
       }, 1000);
     },
+    onGenerateShareOll () {
+      this.http.get('player/widget', {
+        params: { id: 1005842631970, url: 'ban.linrunrun.online' }
+      }).then(res => {
+        const d = res.data;
+        console.log(d)
+        if (d.success == 1) {
+          this.share.imagebase64 = d.data;
+        }
+      });
+    }
   },
   computed: {
 

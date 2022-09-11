@@ -19,7 +19,7 @@
     </Row>
     <br>
 
-    <div dis-hover	bordered>
+    <div dis-hover bordered>
       <Row type="flex" justify="center" align="middle">
         <Col justify="center" align="middle">
           <br>
@@ -61,8 +61,8 @@
     <br/>
 
     <div class="content">
-      <Row :gutter="8" type="flex">
-        <Col span="7" order="2">
+      <Row :gutter="8">
+        <Col :xm="{span: 24, order: 2}" :sm="{span: 7, order: 2}">
           <Card v-if="account.introduction" dis-shadow>
             <div v-html="account.introduction"></div>
           </Card>
@@ -77,7 +77,7 @@
           <p class="hint">{{ $t("account.hint2") }}</p>
           <p class="hint">{{ $t("account.hint3") }}</p>
         </Col>
-        <Col span="17" order="1">
+        <Col :xm="{span: 24, order: 1}" :sm="{span: 17, order: 1}">
           <Card dis-hover :padding="0">
             <Table show-header
                    :border="false"
@@ -99,8 +99,7 @@
       </Row>
     </div>
 
-    <Modal v-model="message.show"
-        @on-ok="setMessage">
+    <Modal v-model="message.show"  @on-ok="setMessage">
       <Form>
         <FormItem label="聊天">
           <Input v-model="message.content"
@@ -130,7 +129,6 @@ export default new BFBAN({
         createDatetime: "",
         attr: {
           allowDM: false,
-
         }
       },
       report: {
@@ -160,9 +158,20 @@ export default new BFBAN({
             ellipsis: true,
             tooltip: true,
             render: (h, params) => {
+              const that = this;
               return h('div', [
                 h('a', {
-                  href: '/player/' + params.row.originPersonaId
+                  href: '/player/' + params.row.originPersonaId,
+                  on: {
+                    click () {
+                      that.$router.push({
+                        name: 'player',
+                        params: {
+                          ouid: params.row.originPersonaId
+                        }
+                      })
+                    }
+                  }
                 }, params.row.originName)
               ]);
             }

@@ -4,13 +4,6 @@
       <div slot="title">
         <img class="share-logo" src="../assets/images/logo.png">
         <br>
-        <div v-show="cheater.avatarLink" align="center">
-          <!-- Origin头像 -->
-          <Avatar :src="cheater.avatarLink" size="80"
-                  :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })">
-          </Avatar>
-        </div>
-        <br>
         <div style="text-align: center;">
           <h1>
             {{ cheater.originName }}
@@ -18,39 +11,40 @@
           <h5>{{ cheater.originUserId }}</h5>
         </div>
         <br>
-        <Row :gutter="20" type="flex" justify="center" align="middle">
+        <Row :gutter="20" type="flex" justify="center" align="middle" class="share-info">
           <Col>
-            <Tag color="error">
-              {{ $t(`basic.status.${cheater.status}`) }}
-            </Tag>
+            <Tag color="error">{{ $t(`basic.status.${cheater.status}`) }}</Tag>
+            <span class="share-info-p">{{ $t("account.status") }}</span>
           </Col>
           <Divider type="vertical"/>
           <Col>
-            <!-- 被举报的游戏 S -->
             <router-link :to="{name: 'cheater', params: { game: cheater.game }}" v-if="cheater.games">
               <Tag color="gold" :alt="$t('detail.info.reportedGames')"
                    v-for="(game,gameindex) in cheater.games" :key="gameindex">
                 {{ $t(`basic.games.${game}`, {game: game}) }}
               </Tag>
             </router-link>
+            <span class="share-info-p">{{ $t("report.labels.game") }}</span>
           </Col>
           <Divider type="vertical"/>
           <Col>
-            <!-- 被举报的类型 E -->
             <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0" >
               <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
                 {{ $t("cheatMethods." + method_item + ".title") }}
               </Tag>
+              <span class="share-info-p">{{ $t("detail.info.cheatMethod") }}</span>
             </template>
           </Col>
         </Row>
-
       </div>
       <div>
         <Row>
-          <Col flex="1"> {{ href }} </Col>
+          <Col flex="1">
+            <p>{{ href }} </p>
+            <p>@BFBAN 2018-{{new Date().getFullYear()}}</p>
+          </Col>
           <Col>
-            <vue-qr :text="href" :size="60" :margin="5"></vue-qr>
+            <vue-qr :text="href" :size="70" :margin="3"></vue-qr>
           </Col>
         </Row>
       </div>
@@ -69,30 +63,17 @@ export default {
   data() {
     return {
       isFull: true,
-      href: window.location.origin,
+      href: window.location.href + '/card',
       cheater: {},
     }
   },
   created() {
     this.getCheatersInfo();
-    this.onLoadTheme();
+    // this.onLoadTheme();
     this.onLoadLang();
   },
   components: {vueQr},
   methods: {
-     SetCwinHeight() {
-      var cwin = document.getElementById("cwin");
-      if (document.getElementById)
-      {
-        if (cwin && !window.opera)
-        {
-          if (cwin.contentDocument && cwin.contentDocument.body.offsetHeight)
-            cwin.height = cwin.contentDocument.body.offsetHeight;
-          else if(cwin.Document && cwin.Document.body.scrollHeight)
-            cwin.height = cwin.Document.body.scrollHeight;
-        }
-      }
-    },
     /**
      * 加载主题
      * @returns {Promise<void>}
@@ -105,7 +86,12 @@ export default {
     /**
      * 加载语言
      */
-    async onLoadLang () {
+    async onLoadLang (lang) {
+      if (lang) {
+        await this.$store.dispatch('setLang', lang)
+        return ;
+      }
+
       // load lang
       if (this.$route.query.lang) {
         this.$store.dispatch('setLang', this.$route.query.lang);
@@ -129,9 +115,6 @@ export default {
 
         if (d.success === 1) {
           this.cheater = d.data;
-          // this.cheater.games.forEach(i => {
-          //   this.games.push({game: i});
-          // })
         }
       });
     },
@@ -139,14 +122,30 @@ export default {
 }
 </script>
 
-<style>
-.share-logo {
-  width: 300px;
-  height: 300px;
-  position: fixed;
-  opacity: .05;
-  left: -50px;
-  top: -110px;
-  border-radius: 50%;
-}
+<style scoped>
+  #getSharePicture {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .share-logo {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    opacity: .05;
+    left: -50px;
+    top: -110px;
+    border-radius: 50%;
+  }
+
+  .share-info {
+    text-align: center;
+  }
+
+  .share-info-p {
+    display: block;
+    margin: .5rem;
+    font-size: 12px;
+    opacity: .6;
+  }
 </style>

@@ -1,0 +1,42 @@
+.game-type {
+
+  label {
+    text-align: center;
+    min-width: 130px;
+    animation: all .25s;
+    background-size: cover;
+    background-position: center;
+  }
+
+  label:first-child {
+    min-width: inherit !important;
+  }
+
+  img {
+    margin: 5px 0;
+    height: 30px;
+    animation: all 1s;
+  }
+
+  .ivu-radio-group-item {
+    background-size: 100%;
+  }
+
+  .ivu-radio-group-item.gametype-select {
+    position: relative;
+    animation: gameAnimation 15s infinite;
+  }
+
+  @keyframes gameAnimation {
+    0% {
+      background-position-y: 50%;
+    }
+    50% {
+      background-position-y: 0%;
+      background-size: 120% !important;
+    }
+    100% {
+      background-position-y: 50%;
+    }
+  }
+}

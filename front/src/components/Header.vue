@@ -51,19 +51,20 @@
         </router-link>
       </div>
       <div class="nav">
-        <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
+        <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
+                     v-if="$route.name != 'signin'">
           <Button type="primary" shape="circle">
             <Icon type="md-log-in"/>
             {{ $t("header.signin") }}
           </Button>
         </router-link>
 
-        <Dropdown placement="bottom-end" v-if="isLogin" :padding="0">
+        <Dropdown v-if="isLogin" placement="bottom-end" :padding="0">
           <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
             <Avatar icon="ios-person"></Avatar>
+            <span class="mobile-hide">&emsp;{{ currentUser.userinfo.username }}</span>
           </router-link>
-          <span class="mobile-hide">&emsp;{{ currentUser.userinfo.username }}</span>
-          <DropdownMenu slot="list" style="min-width: 260px;">
+          <DropdownMenu slot="list" class="header-dropdown-menu">
             <div class="header-dropdown-avatar">
               <div>
                 <Avatar icon="ios-person" size="60"></Avatar>
@@ -151,7 +152,7 @@
 </template>
 
 <script>
-import {api, http, http_token} from '../assets/js/index'
+import {api, http, http_token, account_storage} from '../assets/js/index'
 import {storage} from '../assets/js/index'
 import themes from '/public/conf/themes.json'
 import menu from '/public/conf/headerMenu.json'
@@ -183,7 +184,7 @@ export default {
       this.getTheme();
     },
     /**
-     * 表头注销
+     * 表头账户注销
      */
     signout() {
       http.post(api["account_signout"], {
@@ -192,6 +193,7 @@ export default {
         }
       }).then((res) => {
         const d = res.data;
+
         if (d.success === 1) {
           this.$Message.success(d.message);
           return;
@@ -201,6 +203,9 @@ export default {
       }).catch((e) => {
         this.$Message.error(e.toString());
       }).finally(() => {
+        // 清除与账户相关的数据
+        account_storage.clearAll();
+
         this.$store.dispatch('signout').then(() => {
           this.$router.push('/');
         });
@@ -264,10 +269,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
+@import "src/assets/css/index";
+
 header {
   -webkit-app-region: drag;
-  position: relative;
   z-index: 1000;
   width: 100%;
   height: auto;
@@ -289,10 +295,13 @@ header {
   margin-right: 10px;
 }
 
+.header-dropdown-menu {
+  min-width: 280px !important;
+}
+
 .header-dropdown-avatar {
   width: 100%;
-  line-height: normal;
-  padding: 15px 16px;
+  padding: 30px 16px;
   clear: both;
   font-size: 14px !important;
   white-space: nowrap;

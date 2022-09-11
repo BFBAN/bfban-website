@@ -1,12 +1,17 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const conf = require('./package.json');
+const { InjectManifest } = require("workbox-webpack-plugin")
+const SitemapPlugin = require('sitemap-webpack-plugin').default
+
+const packageConf = require('./package.json')
+const requestConf = require('./public/conf/requestConf.json')
+
+const url = requestConf.child[requestConf.requestProductionName];
 
 module.exports = {
   outputDir: 'dist',
   assetsDir: 'assets',
   filenameHashing: true,
-
   publicPath: '/',
 
   // PWA
@@ -41,10 +46,24 @@ module.exports = {
   // 定义资源方式
   configureWebpack: {
     output: {
-      filename: `assets/js/[name].${conf.version}.js`,
-      chunkFilename: `assets/js/[name].${conf.version}.js`
+      filename: `assets/js/[name].${packageConf.version}.js`,
+      chunkFilename: `assets/js/[name].${packageConf.version}.js`
     },
     plugins: [
+      new SitemapPlugin({
+        // Production Url
+        base: url.protocol + '://' + url.host,
+        paths: ['/', '/player', '/sitestats', '/search'],
+        options:{
+          filename: 'sitemap.xml',
+          lastmod: true,
+          changefreq: 'hourly',
+          priority: .7
+        }
+      }),
+      new InjectManifest({
+        swSrc: "src/service-worker.js",
+      }),
       new CopyWebpackPlugin(
           [{
             from: `src/lang`,

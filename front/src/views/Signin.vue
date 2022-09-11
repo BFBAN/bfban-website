@@ -1,21 +1,28 @@
 <template>
   <div class="container">
     <br>
+    <Row>
+      <Col :xs="{push: 1}" :lg="{push: 0}">
+        <Breadcrumb>
+          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("signin.title") }}</BreadcrumbItem>
+        </Breadcrumb>
+      </Col>
+    </Row>
+    <br>
+
     <div class="content">
       <Row :gutter="0">
         <Col :xs="{span: 24}" :lg="{span: 11}" class="mobile-hide carousel">
-          <Carousel :autoplay-speed="5000" :dots="'none'" class="carousel-item">
-            <CarouselItem>
-              <img src="../assets/images/logo.png">
-              <h2>{{ $t("home.cover.h1") }}</h2>
-              <span>{{ $t("home.cover.h3") }}</span>
-            </CarouselItem>
-          </Carousel>
+          <div class="carousel-item">
+            <img src="../assets/images/logo.png">
+            <h2>{{ $t("home.cover.h1") }}</h2>
+            <span>{{ $t("home.cover.h3") }}</span>
+          </div>
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 13, push: 0, pull: 0}">
           <Card v-if="currentUser.token == ''" :padding="50" shadow>
-            <p slot="title">{{ $t("signin.title") }}</p>
-            <Form ref="signin" :model="signin" :rules="ruleValidate">
+            <Form ref="signin" :model="signin" :rules="ruleValidate" label-position="top">
               <Alert type="error" show-icon v-if="signinBackMsg">
                 <b>{{ $t('signin.failed') }} :</b>
                 {{ signinBackMsg }}
@@ -32,14 +39,18 @@
                        :placeholder="$t('signin.form.password')"/>
               </FormItem>
 
-              <FormItem :label="$t('captcha.title')" prop="captcha">
-                <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
-                       :placeholder="$t('captcha.title')">
-                  <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                    <Captcha ref="captcha"></Captcha>
-                  </div>
-                </Input>
-              </FormItem>
+              <Row :gutter="30" type="flex" justify="space-between" align="middle">
+                <Col span="15">
+                  <FormItem :label="$t('captcha.title')" prop="captcha">
+                    <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
+                           :placeholder="$t('captcha.title')">
+                      <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
+                        <Captcha ref="captcha" :seconds="15" :disable="!(!!signin.password  && !!signin.username)"></Captcha>
+                      </div>
+                    </Input>
+                  </FormItem>
+                </Col>
+              </Row>
 
               <FormItem>
                 <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
@@ -149,10 +160,12 @@ export default new BFBAN({
           }).then((res) => {
             const d = res.data;
 
-            if (d.error === 1) {
+            if (d.error == 1) {
+
               that.signin.password = '';
               that.signin.captcha = '';
               that.signinBackMsg = d.message;
+
             } else {
               that.signinUser(d.data).then(() => {
                 const backurl = this.$route.query.backurl;
@@ -169,6 +182,7 @@ export default new BFBAN({
             }
           }).finally((res) => {
             that.spinShow = false;
+            that.$refs.captcha.refreshCaptcha();
           });
 
         } else {

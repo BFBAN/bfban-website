@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="detailLoad">
     <div class="content">
       <template v-if="!isFull">
         <br>
@@ -18,11 +18,23 @@
       <Card id="getSharePicture" v-if="isCheaterExist" dis-hover>
         <Row :gutter="10">
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 3, pull: 0, push: 0}">
-            <div v-show="cheater.avatarLink" align="center">
-              <!-- Origin头像 -->
-              <Avatar shape="square" :src="cheater.avatarLink" size="180"
-                      :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })">
+            <div align="center">
+              <!-- Origin头像 S -->
+              <Avatar shape="square"
+                      @on-error="onAvatarError"
+                      :src="cheater.avatarLink"
+                      :size="180"
+                      :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })"
+                      v-if="cheater.avatarLink">
               </Avatar>
+              <template v-else>
+                <Avatar shape="square"
+                        icon="ios-person"
+                        size="180"
+                        style="background-color: rgba(255,0,0,0.37)">
+                </Avatar>
+              </template>
+              <!-- Origin头像 E -->
             </div>
           </Col>
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}">
@@ -47,7 +59,7 @@
                   </Tag>
                 </template>
 
-                <h1 style="font-size: 1.6rem;">
+                <h1 :style="`font-size: 1.6rem;${cheater.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''}`">
                   {{ cheater.originName || 'user id' }}
                 </h1>
               </Col>
@@ -61,15 +73,30 @@
                       </Button>
                   </router-link>
                   <!-- App E -->
-<!--                  <Divider type="vertical"/>-->
-<!--                  <ButtonGroup type="button">-->
-<!--                    <Button>-->
-<!--                      跟踪-->
-<!--                    </Button>-->
-<!--                    <Button>-->
-<!--                      <Icon type="md-arrow-dropdown"/>-->
-<!--                    </Button>-->
-<!--                  </ButtonGroup>-->
+                  <template v-if="isLogin">
+                    <Divider type="vertical"/>
+                    <Dropdown placement="bottom-end">
+                      <ButtonGroup type="button">
+                        <Button @click="onSubscribes" :loading="subscribes.load">
+                          <template v-if="subscribes.static"><Icon type="md-notifications-off" size="20" />取消跟踪</template>
+                          <template v-else><Icon type="md-notifications-outline" size="20" />跟踪</template>
+                        </Button>
+                        <Button>
+                          <Icon type="ios-arrow-down"></Icon>
+                        </Button>
+                      </ButtonGroup>
+                      <DropdownMenu slot="list">
+                        <DropdownItem :selected="!subscribes.static">
+                          <h4><Icon type="md-notifications-outline"/> {{ $t('detail.subscribes.tracking') }}</h4>
+                          <p>{{ $t('detail.subscribes.trackingDescribe') }}</p>
+                        </DropdownItem>
+                        <DropdownItem :selected="subscribes.static">
+                          <h4><Icon type="md-notifications-off" />{{ $t('detail.subscribes.cancelTrack') }}</h4>
+                          <p>{{ $t('detail.subscribes.cancelTrackDescribe') }}</p>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </template>
                   <Divider type="vertical"/>
                   <!-- 分享 share S -->
                   <router-link :to="{name: 'cheater_share'}">
@@ -105,6 +132,9 @@
                   <a @click="updateCheaterModal = true;"><Icon type="md-cloud" /> {{ $t('detail.info.updateButton') }}</a>
 
                   <Modal v-model="updateCheaterModal">
+                    <div sort="title">
+                      <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
+                    </div>
                     <div>
                       <Card style="margin: 2.5rem 0 1rem 0;" dis-hover>
                         <Row :gutter="16" type="flex" justify="center" align="middle">
@@ -132,12 +162,13 @@
                       <Row :gutter="16">
                         <Col>
                           <Button type="dashed" size="large" long @click.prevent="updateCheaterModal = false;">
-                            <span>{{ $t('basic.button.cancel') }}</span>
+                            {{ $t('basic.button.cancel') }}
                           </Button>
                         </Col>
                         <Col flex="1">
-                          <Button type="primary" size="large" long @click.prevent="updateCheaterInfo">
-                            <span>{{ $t('detail.info.updateButton') }}</span>
+                          <Button type="primary" size="large"
+                                  long @click.prevent="updateCheaterInfo">
+                            {{ $t('detail.info.updateButton') }}
                           </Button>
                         </Col>
                       </Row>
@@ -298,22 +329,19 @@
                       </Row>
                     </div>
 
-                    <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
-                      <template>
-                        <p v-if="l.videoLink">
-                          <!-- 游戏中 -->
-                          <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
-                                :href="link" target="_blank">
-                            <Tag size="default" color="geekblue">{{
-                                $t('detail.info.videoLink', {msg: 'videoLink'})
-                              }}</Tag>
-                            <a :href="link" target="_blank">{{ link }}</a>
+                    <template>
+                      <p v-if="l.videoLink">
+                        <!-- 游戏中 -->
+                        <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
+                              :href="link" target="_blank">
+                            <Tag size="default" color="geekblue">{{  $t('detail.info.videoLink') }}</Tag>
+                            <a :href="link" target="_blank">{{ link.substr(0, 20) }}{{ link.length >= 20 ? '...' : '' }}</a>
                             <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
                           </span>
-                        </p>
-                        <br>
-                      </template>
+                      </p>
+                    </template>
 
+                    <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
                       <template v-if="l.content">
                         <div v-html="l.content"></div>
                       </template>
@@ -459,8 +487,9 @@
                       <template v-if="l.quote">
                         <a :href="`#floor-${l.quote.id}`" >
                           <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
-                              <b>{{ l.quote.username }}</b> :
-                            <div v-html="l.quote.content" ></div>
+                            <b>{{ l.quote.username }}</b> :
+                            <div v-html="l.quote.content.substr(0, 80)" ></div>
+                            ...
                           </div>
                         </a>
                       </template>
@@ -492,47 +521,36 @@
               </div>
 
               <!-- 用户回复 S -->
-              <div id="reply" v-if="isLogin" class="ivu-card ivu-card-bordered">
-                <div class="ivu-card-head">
-                  <Alert type="warning" show-icon>
-                    <span>{{ $t('detail.info.replyManual1') }}</span>
-                    <b><a href="https://sm.ms/" target="_blank">{{ $t('detail.info.uploadPicButton') }}</a></b>，
-                    <span>{{ $t('detail.info.replyManual2') }}</span>
-                  </Alert>
-
-                  <Form label-position="top">
-                    <FormItem>
-                      <Input @on-keydown="handleCmdEnter($event, 'reply')"
-                             :border="false"
-                             v-model="reply.content"
-                             show-word-limit
-                             maxlength="1000"
-                             type="textarea"
-                             :autosize="{minRows: 5}"
-                             :placeholder="$t('detail.info.giveOpinion')"/>
-
-<!--                      <Textarea :content="reply.content"></Textarea>-->
-                    </FormItem>
-                  </Form>
-                </div>
-                <div class="ivu-card-body">
-                  <Row>
+              <Card dis-hover :padding="0" id="reply" v-if="isLogin">
+                <div slot="title" >
+                  <Row :gutter="10">
                     <Col flex="1 150px">
                       {{ $t('detail.info.appealManual1') }}
                     </Col>
                     <Col flex="150px">
-                      <Button type="primary"
-                              size="large"
-                              long
-                              :loading="replySpinShow"
-                              :disabled="!reply.content || reply.start != 0"
-                              @click.stop.prevent="doReply">
-                        {{ $t('detail.info.reply') }}
-                      </Button>
+                      <Poptip word-wrap width="280" trigger="hover" transfer>
+                        <Button type="primary"
+                                size="large"
+                                style="width:150px"
+                                long
+                                :loading="replySpinShow"
+                                :disabled="!reply.content"
+                                @click.stop.prevent="doReply">
+                          {{ $t('detail.info.reply') }}
+                        </Button>
+                        <div slot="content">
+                          <span>{{ $t('detail.info.replyManual1') }}</span>
+                          <b><a href="https://sm.ms/" target="_blank">{{ $t('detail.info.uploadPicButton') }}</a></b>，
+                          <span>{{ $t('detail.info.replyManual2') }}</span>
+                        </div>
+                      </Poptip>
                     </Col>
                   </Row>
                 </div>
-              </div>
+                <Textarea v-model="reply.content"
+                          :height="'120px'"
+                          :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+              </Card>
               <Alert type="warning" show-icon v-else>
                 <template slot="desc">
                   {{ $t('detail.info.replyManual3') }}
@@ -567,16 +585,15 @@
         <Card dis-hover v-if="isAdmin">
           <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})">
             <h2 style="margin: 1rem 0;">
-              # {{ $t('detail.info.judgement', {msg: 'judgement'}) }}
-              <Tag color="success">
-                {{ $t("basic.privilege.admin") }}
-              </Tag>
+              <Row>
+                <Col flex="1">
+                  # {{ $t('detail.info.judgement', {msg: 'judgement'}) }}
+                </Col>
+                <Col>
+                  <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
+                </Col>
+              </Row>
             </h2>
-
-            <Alert type="warning" show-icon>
-              <p class="hint">{{ $t('detail.info.adminManual1', {msg: 'adminManual1'}) }}</p>
-              <p class="hint">{{ $t('detail.info.adminManual2', {msg: 'adminManual2'}) }}</p>
-            </Alert>
 
             <Form ref='verifyForm' label-position="top">
               <Row :gutter="30">
@@ -584,18 +601,12 @@
                   <FormItem :label="$t(`detail.judgement.behavior`)">
                     <Select v-model="verify.status">
                       <!-- 判断选项 -->
-                      <Option :value="v_i.value" v-for="v_i in verify.choice" :key="v_i.value">
-                        {{ $t(`basic.action.${v_i.value}.text`) }}
-
+                      <Option :value="v_i.value"
+                              :label="$t(`basic.action.${v_i.value}.text`)"
+                              v-for="v_i in verify.choice" :key="v_i.value">
                         <Row>
                           <Col flex="1">
-                            <span v-for="(privileges_item, privileges_index) in privileges" :key="privileges_index">
-                              <span v-for="(p, pi) in v_i.privilege" :key="pi">
-                                <Tag type="border" :color="privileges_item.class" v-if="p == privileges_item.value">
-                                  {{ $t('basic.privilege.' + p) }}
-                                </Tag>
-                              </span>
-                            </span>
+                            {{ $t(`basic.action.${v_i.value}.text`) }}
                           </Col>
                           <Col>
                             <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${v_i.value}.describe`)">
@@ -603,6 +614,7 @@
                             </Poptip>
                           </Col>
                         </Row>
+                        <PrivilegesTag :data="v_i.privilege"></PrivilegesTag>
                       </Option>
                     </Select>
                   </FormItem>
@@ -610,9 +622,10 @@
                 <Col span="12">
                   <FormItem v-show="['kill','guilt'].includes(verify.status)" :label="$t(`detail.judgement.methods`)">
                     <Select v-model="verify.checkbox" multiple>
-                      <Option v-for="method in cheatMethodsGlossary" :key="method.value" :value="method.value"
+                      <Option v-for="method in cheatMethodsGlossary" :key="method.value"
+                              :value="method.value"
                               :label="$t(`cheatMethods.${method.value}.title`)">
-                        {{ $t(`cheatMethods.${method.value}.title`) }}
+                        <Tag>{{ $t(`cheatMethods.${method.value}.title`) }}</Tag>
                         <Divider type="vertical"/>
                         {{ $t(`cheatMethods.${method.value}.describe`) }}
                       </Option>
@@ -620,40 +633,59 @@
                   </FormItem>
                 </Col>
                 <Col span="24">
-                  <Row :gutter="30" style="padding: 0 20px">
-                    <Col flex="1">
-                      <h3>
-                        <Icon type="md-done-all" color="#19be6b"/>
-                        {{ $t('detail.judgement.appropriateVerdict.title') }}
-                      </h3>
-                      <ol>
-                        <li>{{ $t('detail.judgement.appropriateVerdict.1') }}</li>
-                        <li>{{ $t('detail.judgement.appropriateVerdict.2') }}</li>
-                      </ol>
-                    </Col>
-                    <Col flex="1">
-                      <h3>
-                        <Icon type="ios-alert-outline" color="red"/>
-                        {{ $t('detail.judgement.inappropriateRuling.title') }}
-                      </h3>
-                      <ol>
-                        <li>{{ $t('detail.judgement.inappropriateRuling.1') }}</li>
-                        <li>{{ $t('detail.judgement.inappropriateRuling.2') }}</li>
-                        <li>{{ $t('detail.judgement.inappropriateRuling.3') }}</li>
-                      </ol>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col span="24">
-                  <FormItem :label="$t(`detail.judgement.content`)">
-                    <Input
-                        type="textarea"
-                        @on-keydown="handleCmdEnter($event, 'verify')"
-                        maxlength="65535"
-                        show-word-limit
-                        v-model="verify.suggestion"
-                        :autosize="{minRows: 5, maxRows: 10}"
-                        :placeholder="$t(`detail.info.giveOpinion`)"/>
+                  <FormItem>
+                    <div slot="label">
+                      {{ $t(`detail.judgement.content`) }}
+                      <Poptip trigger="hover" word-wrap placement="right-end" :padding="'20px 30px'">
+                        <Button type="dashed" size="small">
+                          <Icon type="ios-help-buoy" />
+                        </Button>
+
+                        <div slot="content" span="24">
+                          <Row :gutter="60">
+                            <Col flex="1">
+                              <h3>
+                                <Icon type="md-done-all" color="#19be6b"/>
+                                {{ $t('detail.judgement.appropriateVerdict.title') }}
+                              </h3>
+                              <ol>
+                                <li>{{ $t('detail.judgement.appropriateVerdict.1') }}</li>
+                                <li>{{ $t('detail.judgement.appropriateVerdict.2') }}</li>
+                              </ol>
+                            </Col>
+                            <Col flex="1">
+                              <h3>
+                                <Icon type="ios-alert-outline" color="red"/>
+                                {{ $t('detail.judgement.inappropriateRuling.title') }}
+                              </h3>
+                              <ol>
+                                <li>{{ $t('detail.judgement.inappropriateRuling.1') }}</li>
+                                <li>{{ $t('detail.judgement.inappropriateRuling.2') }}</li>
+                                <li>{{ $t('detail.judgement.inappropriateRuling.3') }}</li>
+                              </ol>
+                            </Col>
+                          </Row>
+                        </div>
+                      </Poptip>
+                    </div>
+
+                    <Row :gutter="15">
+                      <Col span="24">
+                        <Card :padding="0" dis-hover>
+                          <Textarea v-model="verify.suggestion"
+                                    :height="'250px'"
+                                    :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+                        </Card>
+                      </Col>
+                      <Col span="24">
+                        <Alert>
+                          <template slot="desc">
+                            <p class="hint">{{ $t('detail.info.adminManual1', {msg: 'adminManual1'}) }}</p>
+                            <p class="hint">{{ $t('detail.info.adminManual2', {msg: 'adminManual2'}) }}</p>
+                          </template>
+                        </Alert>
+                      </Col>
+                    </Row>
                   </FormItem>
                 </Col>
               </Row>
@@ -678,13 +710,14 @@
                       </div>
                     </Input>
                   </Col>
+                  <Col flex="1" align="right">
+                    <Button type="primary" size="large" :loading="verifySpinShow" @click.stop.prevent="doVerify">
+                      {{ $t('basic.button.submit') }}
+                    </Button>
+                  </Col>
                 </Row>
               </FormItem>
             </Form>
-
-            <Button type="primary" :loading="verifySpinShow" @click.stop.prevent="doVerify">
-              {{ $t('basic.button.submit') }}
-            </Button>
           </div>
         </Card>
         <!-- 管理员裁判 E -->
@@ -855,6 +888,7 @@ import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
 import RecordLink from "../components/RecordLink.vue";
 import Captcha from "../components/Captcha";
+import PrivilegesTag from "/src/components/PrivilegesTag";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
@@ -862,12 +896,17 @@ export default new BFBAN({
   data() {
     return {
       getGameLabel: util.getGameLabel,
+      detailLoad: true,
       privileges: [],
       appeal: {
         load: false,
         show: false,
         toPlayerId: 0,
         content: ''
+      },
+      subscribes:{
+        load: false,
+        static: false
       },
       cheater: {
         originId: '',
@@ -926,7 +965,7 @@ export default new BFBAN({
       },
     }
   },
-  components: {Empty, Edit, Textarea, BusinessCard, RecordLink, Captcha},
+  components: {Empty, Edit, Textarea, BusinessCard, RecordLink, Captcha, PrivilegesTag},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -961,18 +1000,84 @@ export default new BFBAN({
         this.verify.status = this.verify.choice[0].value;
       });
     },
+    onAvatarError () {
+      this.cheater.avatarLink = "";
+    },
+    /**
+     * 追踪此玩家
+     */
+    onSubscribes () {
+      let subscribesLocal = storage.get('user.subscribes');
+      let subscribesArray = [];
+      let isSubscribes = false;
+
+      if (subscribesLocal.code < 0) {
+        subscribesLocal = { data: { value: [] } };
+      }
+
+      let localdata = subscribesLocal.data.value;
+          subscribesArray = subscribesArray.concat(localdata);
+
+      // 校对本地是否已订阅
+      if (
+          subscribesLocal.code == 0 &&
+          localdata &&
+          localdata.includes(this.cheater.id)
+      ){
+        console.log('rem', this.cheater.id)
+        // 若存在触发相同，则移除
+        isSubscribes = false;
+        localdata.splice(localdata.indexOf(this.cheater.id), 1);
+      } else {
+        console.log('add', this.cheater.id)
+        // 添加
+        isSubscribes = true;
+        subscribesArray.push(this.cheater.id);
+      }
+
+      this.http.post(api["user_me"], {
+        data: {
+          data: { subscribes: subscribesArray }
+        }
+      }).then((res) => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          storage.set('user.subscribes', subscribesArray);
+        }
+      }).finally(() => {
+        this.subscribes.static = isSubscribes;
+      });
+    },
+    checkPlayerSubscribes () {
+      const subscribesLocal = storage.get('user.subscribes');
+      if (subscribesLocal.code < 0) return false;
+
+      subscribesLocal.data.value.filter(i => {
+        if (i == this.cheater.id) {
+          this.subscribes.static = true;
+        }
+      });
+    },
     /**
      * 更新游览值
      */
     onViewed () {
-      const viewed = storage.session().get('viewed');
+      let viewed = storage.get("viewed");
       const id = this.cheater.id;
 
       if (!id) return;
 
       // 在持久下存在此id，则不请求
-      if (viewed.code <= 0 || viewed?.data?.value[id]) {
+      if (viewed && viewed.data &&  viewed.data.value[id]) {
         return;
+      }
+
+      // 实例object
+      if (!(viewed && viewed.data && viewed.data.value)) {
+        viewed = {
+          data: { value: {} }
+        }
       }
 
       http.post(api["player_viewed"], {
@@ -980,7 +1085,7 @@ export default new BFBAN({
           data: { id }
         }
       }).then((res) => {
-        storage.session().set('viewed', {...viewed.data.value, [id]: true});
+        storage.set("viewed", {...viewed.data.value, [id]: true});
       });
     },
     /**
@@ -1017,10 +1122,13 @@ export default new BFBAN({
             this.games.push({game: i});
           })
         } else {
+          this.$Message.info(this.$t('basic.tip.notFound'));
+          this.$router.push({name: 'player_list'})
           this.catch(res);
         }
       }).finally(() => {
         this.onViewed();
+        this.checkPlayerSubscribes();
         this.spinShow = false;
       });
     },
@@ -1295,6 +1403,7 @@ export default new BFBAN({
       });
     },
     handleCmdEnter(e, type) {
+      console.log(e, type);
       if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
         switch (type) {
           case 'reply':
@@ -1361,7 +1470,7 @@ export default new BFBAN({
     },
     currentLan() {
       return this.$root && this.$root.$i18n && this.$root.$i18n.locale || 'zh-CN';
-    }
+    },
   }
 })
 </script>
@@ -1379,7 +1488,21 @@ export default new BFBAN({
     padding: 10px;
 
     img, video {
-      max-width: 100%;
+      width: calc(100% + 20px);
+      margin: 10px -10px 10px -10px;
+    }
+
+    a[href] {
+      position: relative;
+      text-decoration: underline;
+      cursor: default;
+    }
+
+    a[href]::after {
+      content: attr(href);
+      display: block;
+      opacity: .3;
+      font-size: .2rem !important;
     }
   }
 
@@ -1455,9 +1578,9 @@ export default new BFBAN({
 
   .detila-affix {
     position: fixed;
-    right: calc(50% - (960px / 2) - 85px);
-    top: 30%;
-    transform: translateY(-30%);
+    right: calc(50% - (960px / 2) - 85px) !important;
+    top: 30% !important;;
+    transform: translateY(-30%) !important;;
     z-index: 100;
 
     a {
@@ -1466,7 +1589,7 @@ export default new BFBAN({
     }
   }
 
-  @media screen and (max-width: 1180px) {
+  @media screen and (min-width: 1180px) {
     .detila-affix {
       display: none !important;
     }

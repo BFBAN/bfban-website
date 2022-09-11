@@ -241,7 +241,7 @@ async (req, res, next)=> {
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
 
         const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r=>r.data);
-        if(userGames && userGames.concat(' ').includes('Battlefield') == false) // does the user have battlefield?
+        if(userGames && userGames.concat(' ').indexOf('Battlefield') == false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'bindOrigin.gameNotShowed'});
         // no mistakes detected, generate code for verify
         const code = misc.generateRandomString(127);
@@ -407,12 +407,13 @@ async (req, res, next)=>{
         const update = {};
 
         if(req.body.data.subscribes)
-            update.subscribes = req.body.data.subscribes.map(i=>i-0); // to number
+            update.subscribes = JSON.stringify(req.body.data.subscribes.map(i=>i-0)); // to number
         if(req.body.data.attr)
             update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
 
         await db('users').update(update).where({id: req.user.id});
-        update.attr = userSetAttributes({}, req.body.data.attr);
+        if (req.body.data.attr)
+            update.attr = userSetAttributes({}, req.body.data.attr);
         res.status(200).json({success: 1, code: 'me.success', data: update});
     } catch(err) {
         next(err);

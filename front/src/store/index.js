@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
 
-import app from '../main';
+import app from '../main'
 import theme from '/public/conf/themes.json'
 import {SET_LANG, SET_THEME, SET_USER} from './mutation-types';
 
@@ -12,6 +12,16 @@ const store = new Vuex.Store({
   state: {
     baseUrl: process.env.BASE_URL,
     user: undefined,
+    namespaced: true,
+
+    // https://vue-meta.nuxtjs.org/api
+    metaInfo: {
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+      ]
+    },
+
     $desktop: {},
     $theme: {},
     $userinfo: {},
@@ -19,6 +29,9 @@ const store = new Vuex.Store({
 
   // modify state
   mutations: {
+    CHANGE_META_INFO(state, metaInfo) {
+      state.metaInfo = metaInfo;
+    },
     SIGNIN(state, data) {
       state.user = data;
 
@@ -53,7 +66,6 @@ const store = new Vuex.Store({
   // dispatch actions
   actions: {
     signin({ commit }, payload) {
-      console.log({ commit }, payload)
       commit('SIGNIN', payload);
     },
     signout(context, payload) {

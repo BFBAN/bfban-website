@@ -23,71 +23,73 @@
               <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
             </Steps>
 
-            <Divider></Divider>
+            <Divider dashed></Divider>
 
-            <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
-              <div v-if="stepsIndex == 0">
-                <FormItem :label="$t('signup.form.username')" prop="username">
-                  <Input v-model="forgetPassword.username" size="large" :placeholder="$t('signup.placeholder.username')"/>
+            <Card dis-hover :padding="50">
+              <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
+                <div v-if="stepsIndex == 0">
+                  <FormItem :label="$t('signup.form.username')" prop="username">
+                    <Input v-model="forgetPassword.username" size="large" :placeholder="$t('signup.placeholder.username')"/>
+                  </FormItem>
+                  <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
+                    <Input v-model="forgetPassword.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
+                  </FormItem>
+                </div>
+
+                <FormItem v-if="stepsIndex == 1" :label="$t('captcha.title')">
+                  <Input type="text" v-model="forgetPassword.captcha"
+                         size="large"
+                         maxlength="4"
+                         :placeholder="$t('captcha.title')">
+                    <div slot="append" class="captcha-input-append">
+                      <Captcha ref="captcha"></Captcha>
+                    </div>
+                  </Input>
                 </FormItem>
-                <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
-                  <Input v-model="forgetPassword.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
-                </FormItem>
-              </div>
 
-              <FormItem v-if="stepsIndex == 1" :label="$t('captcha.title')">
-                <Input type="text" v-model="forgetPassword.captcha"
-                       size="large"
-                       maxlength="4"
-                       :placeholder="$t('captcha.title')">
-                  <div slot="append" class="captcha-input-append">
-                    <Captcha ref="captcha"></Captcha>
-                  </div>
-                </Input>
-              </FormItem>
+                <div v-if="stepsIndex == 2">
+                  <EmailTip :email="forgetPassword.originEmail"></EmailTip>
+                </div>
 
-              <div v-if="stepsIndex == 2">
-                <EmailTip :email="forgetPassword.originEmail"></EmailTip>
-              </div>
+                <div v-if="stepsIndex == 3">
+                  <FormItem :label="$t('signup.form.password')" prop="password">
+                    <Input type="password" password minlength="6" v-model="forgetPassword.password" size="large"
+                           :placeholder="$t('signup.placeholder.password')"/>
+                  </FormItem>
+                </div>
 
-              <div v-if="stepsIndex == 3">
-                <FormItem :label="$t('signup.form.password')" prop="password">
-                  <Input type="password" password minlength="6" v-model="forgetPassword.password" size="large"
-                         :placeholder="$t('signup.placeholder.password')"/>
-                </FormItem>
-              </div>
+                <!-- 重置成功 S -->
+                <div v-if="stepsIndex == 4" align="center">
+                  <h1>{{ $t('forgetPassword.resetSuccess') }}</h1>
+                </div>
+                <!-- 重置成功 E -->
 
-              <!-- 重置成功 S -->
-              <div v-if="stepsIndex == 4" align="center">
-                <h1>{{ $t('forgetPassword.resetSuccess') }}</h1>
-              </div>
-              <!-- 重置成功 E -->
-
-              <Row>
-                <Col span="12">
-                  <Button v-if="button.prev"
-                          :disabled="button.prevShow"
-                          @click.prevent.stop="stepsIndex--; onStepsIndex();" size="large">{{ $t('basic.button.prev') }}
-                  </Button>
-                  <Divider type="vertical"/>
-                  <Button v-if="button.next"
-                          :disabled="button.nextShow"
-                          @click.prevent.stop="stepsIndex++; onStepsIndex();" size="large"
-                          type="primary">{{ $t('basic.button.next') }}
-                  </Button>
-                </Col>
-                <Col span="12" align="right" type="flex">
-                  <Button v-if="button.submit"
-                          long
-                          @click.prevent.stop="onSubmit"
-                          :disabled="forgetPassword.captcha == ''"
-                          :loading="spinShow"
-                          size="large" type="primary">
-                    {{ $t('basic.button.submit') }}
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
+                <Row>
+                  <Col span="12">
+                    <Button v-if="button.prev"
+                            :disabled="button.prevShow"
+                            @click.prevent.stop="stepsIndex--; onStepsIndex();" size="large">{{ $t('basic.button.prev') }}
+                    </Button>
+                    <Divider type="vertical"/>
+                    <Button v-if="button.next"
+                            :disabled="button.nextShow"
+                            @click.prevent.stop="stepsIndex++; onStepsIndex();" size="large"
+                            type="primary">{{ $t('basic.button.next') }}
+                    </Button>
+                  </Col>
+                  <Col span="12" align="right" type="flex">
+                    <Button v-if="button.submit"
+                            long
+                            @click.prevent.stop="onSubmit"
+                            :disabled="forgetPassword.captcha == ''"
+                            :loading="spinShow"
+                            size="large" type="primary">
+                      {{ $t('basic.button.submit') }}
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            </Card>
           </Card>
         </Col>
       </Row>

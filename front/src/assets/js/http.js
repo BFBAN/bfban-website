@@ -1,30 +1,28 @@
 import http from 'axios';
 import Conf from './conf';
+
 export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
     PUT = 'put';
     //..
 
-    /**
-     * TODO 未写拦截，有空完成
-     */
-     HTTP = http.create({
-      // baseURL: process.env.BASE_API,
+    GETURL = { protocol: '', request: '' };
+    NODE;
+
+    HTTP = http.create({
       timeout: 600000,
       withCredentials: true,
       headers: {
           // 'Content-type': 'application/json',
       },
-      validateStatus(status) {
-          return status < 500;
-      }
     })
 
     constructor() {
         super();
         super.initConf();
 
+        this.NODE = process.env.NODE_ENV || 'development';
         this.HTTP.interceptors.request.use(config => {
             return config
         }, error=> {
@@ -33,18 +31,28 @@ export default class Http extends Conf {
         })
     }
 
-    getUrl() {
-        let GETURL;
-         switch (process.env.NODE_ENV) {
-             case 'development': // 开发
-                 GETURL = this.CONF.child[this.CONF.requestActionName];
-                 break;
-             case 'production': // 生产
-             default:
-                 GETURL = this.CONF.child[this.CONF.requestProductionName]
-                 break;
-         }
-        return `${GETURL.protocol || 'http'}://${GETURL.request}`;
+    location = () => {
+        return new URL(this.globalUrl());
+    }
+
+    // 获取全局地址
+    globalUrl() {
+        switch (this.NODE) {
+            case 'production': // 生产
+                super.GETURL = this.CONF.child[this.CONF.requestProductionName];
+                break;
+            case 'development': // 开发
+            default:
+                super.GETURL = this.CONF.child[this.CONF.requestDevelopmentName];
+                break;
+        }
+        return `${this.GETURL.protocol || 'http'}://${this.GETURL.host}${this.GETURL.pathname}`;
+    }
+
+    // 配置全局协议头
+    setGlobalHeader (headers) {
+        if (!headers) return;
+        this.HTTP.headers = {...this.HTTP.headers, ...headers};
     }
 
     /**
@@ -74,7 +82,7 @@ export default class Http extends Conf {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async post(url, data = {data: {}, params: {}}) {
-        const _url = this.getUrl() + url;
+        const _url = this.globalUrl() + url;
 
         let result = await this.request(_url, {
             method: this.POST,
@@ -91,7 +99,7 @@ export default class Http extends Conf {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async get(url = '', data = {data: {}, params: {}}) {
-        const _url = this.getUrl() + url;
+        const _url = this.globalUrl() + url;
 
         let result = await this.request(_url, {
             method: this.GET,
@@ -108,7 +116,7 @@ export default class Http extends Conf {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async put(url = '', data = {data: {}, params: {}}) {
-        const _url = this.getUrl() + url;
+        const _url = this.globalUrl() + url;
 
         this.HTTP.headers = {...this.HTTP.headers, ...data.headers};
 
@@ -119,12 +127,6 @@ export default class Http extends Conf {
             params: data.params,
             data: data.data,
         })
-        // let result = await this.request(_url, {
-        //     method: this.PUT,
-        //     headers: data.headers,
-        //     params: data.params,
-        //     data: data.data,
-        // });
 
         return result;
     }
