@@ -4,29 +4,33 @@
   "child": {
     "development": {
       "protocol": "https",
-      "request": "bfban.gametools.network/api/"
+      "host": "bfban.gametools.network",
+      "pathname": "/api/"
     },
     "development2": {
       "protocol": "https",
-      "request": "seeding.linrunrun.online/api/"
+      "host": "seeding.linrunrun.online",
+      "pathname": "/api/"
     },
     "development3": {
       "protocol": "https",
-      "request": "bfban-testing.gametools.network/api/"
+      "host": "bfban-testing.gametools.network",
+      "pathname": "/api/"
     },
     "development4": {
       "protocol": "http",
-      "request": "127.0.0.1:3000/api/"
+      "host": "127.0.0.1:3000",
+      "pathname": "/api/"
     },
     "production": {
       "protocol": "https",
-      "request": "bfban-testing.gametools.network/api/",
-      "qiniuUrl": ""
+      "host": "bfban-testing.gametools.network",
+      "pathname": "/api/"
     },
     "production1": {
       "protocol": "https",
-      "request": "bfban-testing.gametools.network/api/",
-      "qiniuUrl": ""
+      "host": "bfban-testing.gametools.network",
+      "pathname": "/api/"
     }
   }
 }

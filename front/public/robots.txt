@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /api
+Disallow: /account?
+Disallow: /account/
+Allow:
+
+Sitemap: /sitemap.xml
