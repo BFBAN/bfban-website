@@ -30,10 +30,15 @@ export default {
     }
   },
   created () {
-    const that = this;
-    this.tags = that.privileges.filter(i => {
-      return that.data.includes(i.value);
-    });
+    this.update();
   },
+  methods: {
+    update (privilegeArray) {
+      const that = this;
+      this.tags = that.privileges.filter(i => {
+        return privilegeArray ? privilegeArray.includes(i.value) : that.data.includes(i.value);
+      });
+    }
+  }
 }
 </script>

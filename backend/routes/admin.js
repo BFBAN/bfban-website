@@ -21,7 +21,8 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
         
-        const result = await db.select('*').from('users').where('username', 'like', `%${req.query.name}%`).limit(20);
+        const result = await db.select('*').from('users').where('username', 'like', `%${req.query.name}%`)
+            .limit(20);
         
         return res.status(200).json({success: 1, code: 'searchUser.ok', data: result});
     } catch(err) {

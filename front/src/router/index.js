@@ -22,6 +22,7 @@ const Link = () => import('@/views/Link.vue');
 const NotFound = () => import('@/views/NotFound.vue');
 const Apps = () => import('@/views/Apps.vue');
 const Profile = () => import('@/views/account/profile.vue');
+const Admin = () => import('@/views/admin/index.vue');
 const Search = () => import('@/views/Search.vue');
 
 Vue.use(VueRouter);
@@ -31,6 +32,24 @@ const isLoginBeforeEnter = function (to, from, next) {
         next();
     } else {
         next({path: '/signin', query: { backurl: to.fullPath }});
+    }
+}
+
+const isAdminBefore = (to, from, next) => {
+    let checkAdmin = false;
+
+    isLoginBeforeEnter(to, from, next);
+
+    console.log(store.state.user.userinfo.privilege)
+    if (store.state.user)
+        for (const i of store.state.user.userinfo.privilege) {
+            if (['admin', 'root',''].includes(i)) checkAdmin = true;
+        }
+
+    if (checkAdmin) {
+        next();
+    } else {
+        next({path: '/signin'});
     }
 }
 
@@ -113,6 +132,20 @@ const routes = [
         component: Profile,
         beforeEnter: isLoginBeforeEnter
     },
+    {
+        name: 'admin',
+        path: '/admin',
+        meta: {
+            metaInfo : {
+                title: 'profile.admin.title',
+                keywords: "profile,admin",
+                description: 'profile.admin.title'
+            }
+        },
+        component: Admin,
+        beforeEnter: isAdminBefore
+    },
+
 
     // 搜索
     {name: 'search', path: '/search/:conetnt',
