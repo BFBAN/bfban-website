@@ -78,8 +78,8 @@
                     <Dropdown placement="bottom-end">
                       <ButtonGroup type="button">
                         <Button @click="onSubscribes" :loading="subscribes.load">
-                          <template v-if="subscribes.static"><Icon type="md-notifications-off" size="20" />取消跟踪</template>
-                          <template v-else><Icon type="md-notifications-outline" size="20" />跟踪</template>
+                          <template v-if="subscribes.static"><Icon type="md-notifications-off" size="20" />{{ $t('detail.subscribes.cancelTrack') }}</template>
+                          <template v-else><Icon type="md-notifications-outline" size="20" />{{ $t('detail.subscribes.tracking') }}</template>
                         </Button>
                         <Button>
                           <Icon type="ios-arrow-down"></Icon>
@@ -430,7 +430,7 @@
 
                           <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${l.judgeAction}.describe`)">
                             <Tag color="warning">
-                              {{ getCheaterStatusLabel(l.judgeAction) }}
+                              {{ $t(`basic.action.${l.judgeAction}.text`) }}
                             </Tag>
                           </Poptip>
 
@@ -871,15 +871,12 @@
         </Row>
       </Modal>
       <!-- 小窗口申诉 E -->
-
-      <br>
     </template>
   </div>
 </template>
 
 <script>
 import BFBAN from "/src/assets/js/bfban";
-import theme from "/public/conf/themes.json";
 
 import {api, http, http_token, util, storage} from '../assets/js/index'
 
@@ -898,7 +895,6 @@ export default new BFBAN({
     return {
       getGameLabel: util.getGameLabel,
       detailLoad: true,
-      privileges: [],
       appeal: {
         load: false,
         show: false,
@@ -981,16 +977,11 @@ export default new BFBAN({
     this.getTimeline();
   },
   methods: {
-    getCheaterStatusLabel: util.getCheaterStatusLabel,
     async loadData() {
       // set Token Http mode
       this.http = http_token.call(this);
 
-      const privileges = await import('/public/conf/privilege.json');
-      this.privileges = this.privileges.concat(privileges.child);
-
       await util.initUtil().then((res) => {
-
         this.cheaterStatus = res.cheaterStatus;
 
         // 裁决结果
@@ -1022,15 +1013,13 @@ export default new BFBAN({
       // 校对本地是否已订阅
       if (
           subscribesLocal.code == 0 &&
-          localdata &&
+          localdata.length >= 0 &&
           localdata.includes(this.cheater.id)
       ){
-        console.log('rem', this.cheater.id)
         // 若存在触发相同，则移除
-        isSubscribes = false;
         localdata.splice(localdata.indexOf(this.cheater.id), 1);
+        isSubscribes = false;
       } else {
-        console.log('add', this.cheater.id)
         // 添加
         isSubscribes = true;
         subscribesArray.push(this.cheater.id);
@@ -1050,6 +1039,9 @@ export default new BFBAN({
         this.subscribes.static = isSubscribes;
       });
     },
+    /**
+     * 检查用户对玩家订阅状态
+     */
     checkPlayerSubscribes () {
       const subscribesLocal = storage.get('user.subscribes');
       if (subscribesLocal.code < 0) return false;
@@ -1192,23 +1184,6 @@ export default new BFBAN({
       const list = this.timeline.seeTypeList;
 
       return list.filter(i => Number(that.timeline.seeType) == i.value)[0].item.indexOf(this.timelineList[index].type) >= 0;
-    },
-    /**
-     * 赞同此决议
-     */
-    jumpToBookmark(e) {
-      let hash = e.target.dataset.hash;
-      let el = document.querySelector(hash);
-
-      // offset top 一层层 依次累加
-      let offsetY = el.offsetParent.offsetTop + el.offsetParent.offsetParent.offsetTop + el.offsetParent.offsetParent.offsetParent.offsetTop - document.querySelector('header').offsetHeight;
-
-      document.documentElement.scrollTop = offsetY;
-
-      el.setAttribute('style', 'background: rgba(255, 153, 1, 0.15)');
-      setTimeout(function () {
-        el.setAttribute('style', 'transition: background 1s ease .5s;')
-      }, 100);
     },
     /**
      * 提交判决
@@ -1428,7 +1403,6 @@ export default new BFBAN({
      * 更新玩家信息
      * update cheater
      * @param e
-     * @returns {boolean}
      */
     updateCheaterInfo(e) {
       waitForAction.call(e.target, 60);

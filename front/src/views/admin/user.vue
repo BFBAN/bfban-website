@@ -5,7 +5,7 @@
         <Input v-model="userValue" placeholder="Enter ..." />
       </Col>
       <Col>
-        <Button @click="onSearchUser">{{ $t('basic.button.submit') }}</Button>
+        <Button @click="onSearchUser" :loading="load">{{ $t('basic.button.submit') }}</Button>
       </Col>
     </Row>
     <br>
@@ -140,6 +140,7 @@ import PrivilegesTag from "/src/components/PrivilegesTag";
 export default {
   data() {
     return {
+      load: false,
       userValue: '',
       userListData: [],
       editUserData: {
@@ -157,8 +158,7 @@ export default {
         action: ['grant', 'revoke'],
       },
       userModel: false,
-      languages: languages.child,
-      // privileges: privilege.child
+      languages: languages.child
     }
   },
   components: {PrivilegesTag},
@@ -176,13 +176,20 @@ export default {
       await this.setUserAttr();
 
       // 处理用户身份权限
+      console.log(this.editUserData);
       for (const key in this.editUserData.temporaryPrivilege) {
-        if (this.editUserData.id && key && this.editUserData.temporaryPrivilege[key]) {
-          await this.setUser(this.editUserData.id, this.editUserData.temporaryPrivilege[key], key);
+        console.log(this.editUserData);
+        if (this.editUserData.id) {
+          console.log(this.editUserData);
+          // await this.setUser(
+          //     this.editUserData.id,
+          //     this.editUserData.temporaryPrivilege[key],
+          //     key
+          // );
         }
       }
 
-      this.onSearchUser();
+      await this.onSearchUser();
       this.load = false;
     },
     /**
@@ -220,19 +227,30 @@ export default {
     /**
      * 站内用户搜索
      */
-    onSearchUser () {
+    async onSearchUser () {
+      const that = this;
       if (!this.userValue) return;
 
-      this.http.get("admin/searchUser", {
-        params: {
-          name: this.userValue
-        }
-      }).then(res => {
-        const d = res.data;
+      return new Promise((resolve, reject) => {
+        that.load = true;
 
-        if (d.success == 1) {
-          this.userListData = d.data;
-        }
+        that.http.get("admin/searchUser", {
+          params: {
+            name: this.userValue
+          }
+        }).then(res => {
+          const d = res.data;
+
+          if (d.success == 1) {
+            that.userListData = d.data;
+            return;
+          }
+
+          that.$Message.error(d.code);
+        }).finally(() => {
+          that.load = false;
+          resolve();
+        });
       })
     },
     onEditUser (index) {
@@ -265,7 +283,7 @@ export default {
      * 修改用户属性
      */
     async setUserAttr () {
-      return await this.http.post("admin/setUser", {
+      await this.http.post("admin/setUserAttr", {
         data: {
           data: {
             id: this.editPrivilegesForm.id,

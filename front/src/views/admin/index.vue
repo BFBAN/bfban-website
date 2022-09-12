@@ -6,7 +6,7 @@
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
           <BreadcrumbItem :to="{name: 'profile', params: {pagename: 'account'}}">{{ $t("header.profile") }}</BreadcrumbItem>
-          <BreadcrumbItem>{{ $t("admin.title") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("profile.admin.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
     </Row>
@@ -16,9 +16,9 @@
       <Row :gutter="0">
         <Col :xs="{span: 24}" :sm="{span: 6}">
           <Menu class="admin-menu" :open-names="openMuen" :active-name="adminMenuValue" @on-select="onMenuActive">
-            <MenuGroup :title="i.title" v-for="(i, index) in adminMuen" :key="index">
+            <MenuGroup :title="$t('profile.admin.menu.' + i.title)" v-for="(i, index) in adminMuen" :key="index">
               <MenuItem :name="j.value" v-for="(j, j_index) in i.child" :key="j_index">
-                <Icon :type="j.icon" v-if="j.icon" />  {{j.title}}
+                <Icon :type="j.icon" v-if="j.icon" />  {{ $t('profile.admin.menu.' + j.title)}}
               </MenuItem>
             </MenuGroup>
           </Menu>
@@ -49,11 +49,11 @@ export default {
         {
           title: 'management',
           child: [{
-            title: 'User',
+            title: 'user',
             value:'user',
           },
           {
-            title: 'Comment',
+            title: 'comment',
             value: 'comment',
             // icon: 'ios-paper'
           }]
@@ -63,7 +63,7 @@ export default {
           icon: 'ios-paper',
           child: [
             {
-              title: 'admin log',
+              title: 'adminLog',
               value: 'admin_log'
             }
           ]
@@ -72,15 +72,6 @@ export default {
     }
   },
   components: {user, comment , log},
-  created() {
-    const pagename = this.$route.params.pagename;
-
-    // let name = this.muen.filter(
-    //     i => {
-    //       return i.title.toLocaleLowerCase() == pagename;
-    //     }
-    // )[0].value;
-  },
   methods: {
     onMenuActive(name) {
       this.adminMenuValue = name;

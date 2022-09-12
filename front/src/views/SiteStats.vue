@@ -28,12 +28,14 @@
       <Card dis-hover>
         <Row type="flex" justify="space-between" align="middle">
           <Col span="3">
-            <h2>{{ statistics.reports || 0 }}</h2>
+            <h2>
+              {{ statistics.reports || 0 }}
+            </h2>
             <span>{{ $t('sitestats.reports') }}</span>
           </Col>
           <Divider type="vertical" />
           <Col span="3">
-            <h2>{{ statistics.players || 0 }}</h2>
+            <h2><Badge :color="chart.stats.color[0]" />{{ statistics.players || 0 }}</h2>
             {{ $t('sitestats.players') }}
           </Col>
           <Divider type="vertical" />
@@ -43,12 +45,12 @@
           </Col>
           <Divider type="vertical" />
           <Col span="3">
-            <h2>{{ statistics.registers || 0 }}</h2>
+            <h2><Badge :color="chart.stats.color[2]" />{{ statistics.registers || 0 }}</h2>
             <span>{{ $t('sitestats.registers') }}</span>
           </Col>
           <Divider type="vertical" />
           <Col span="3">
-            <h2>{{ statistics.confirmed || 0 }}</h2>
+            <h2><Badge :color="chart.stats.color[1]" />{{ statistics.confirmed || 0 }}</h2>
             <span>{{ $t('sitestats.confirmed') }}</span>
           </Col>
           <Divider type="vertical" />
@@ -76,6 +78,7 @@ export default new BFBAN({
       admins: 0,
       chart: {
         'stats': {
+          color: ['#fff13c', '#401486', '#ed4014'],
           tooltip: {
             trigger: 'axis',
             axisPointer: {
@@ -106,13 +109,16 @@ export default new BFBAN({
       },
       chartConf: {
         array: [{
-          name: 'playerStats',
+          name: "players",
+          valName: 'playerStats',
           lineColor: '#fff13c'
         }, {
-          name: 'confirmStats',
+          name: "confirmed",
+          valName: 'confirmStats',
           lineColor: '#401486'
         }, {
-          name: 'userStats',
+          name: "registers",
+          valName: 'userStats',
           lineColor: '#ed4014'
         }],
       }
@@ -139,7 +145,8 @@ export default new BFBAN({
 
       this.chartConf.array.map(i=>{
         this.chart['stats'].series.push({
-          name: i.name,
+          name: this.$i18n.t(`sitestats.${i.name}`),
+          valName: i.valName,
           type: 'line',
           smooth: true,
           symbol: 'none',
@@ -173,7 +180,7 @@ export default new BFBAN({
         if (d.success == 1) {
           for (const dKey in d.data) {
             this.chart['stats'].series.filter(i => {
-              if (i.name == dKey) {
+              if (i.valName == dKey) {
                 d.data[dKey].forEach(t => {
                   i.data.push([t.time, t.num]);
                 })

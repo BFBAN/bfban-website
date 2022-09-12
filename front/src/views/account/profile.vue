@@ -50,7 +50,7 @@
             </ListItem>
             <ListItem v-if="isAdmin">
               <router-link :to="{name: 'admin'}">
-                {{ $t("admin.title") }}
+                {{ $t("profile.admin.title") }}
                 <Icon type="ios-link"/>
               </router-link>
             </ListItem>

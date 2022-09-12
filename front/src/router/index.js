@@ -134,7 +134,7 @@ const routes = [
     },
     {
         name: 'admin',
-        path: '/admin',
+        path: '/admin/:pagename',
         meta: {
             metaInfo : {
                 title: 'profile.admin.title',
