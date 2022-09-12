@@ -52,10 +52,10 @@ export default {
               "bf1": '/stats/xboxone/name/{name}?game=bf1',
               "bfv": '/stats/xboxone/name/{name}?game=bfv'
             },
-            "xbox": {
-              "bf1": '/stats/xbox/name/{name}?game=bf1',
-              "bfv": '/stats/xbox/name/{name}?game=bfv'
-            },
+            "ps4": {
+              "bf1": '/stats/ps4/name/{name}?game=bf1',
+              "bfv": '/stats/ps4/name/{name}?game=bfv'
+            }
           }
         },
         '247 Fairplay': {

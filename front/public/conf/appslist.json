@@ -60,10 +60,11 @@
       "id": "3",
       "describe": "",
       "describeLang": {
-        "zh-CN": "服务器管理器，此工具还可以自动踢Bfban中标记为黑客的人"
+        "zh-CN": "查看你的战地1、5、4、3、2、硬仗的个人数据， 观看实时游戏记录追踪，使用我们的API接口，Discord Bots，BF1服务器管理和保护工具。.",
+        "en-US": "See your Battlefield 1, V, 4, 3, 2, HL stats! Watch live game statistics, get our Battlefield APIs, Discord Bots, BF1 Server administrating and protection tools."
       },
-      "tag": ["web", "admin","bf1"],
-      "website": "https://manager.gametools.network",
+      "tag": ["web", "admin", "bf1", "bfv", "bf6"],
+      "website": "https://gametools.network",
       "get": "",
       "hot": true
     },
@@ -82,8 +83,16 @@
     },
     {
       "title": "战地PC/手机战绩速查工具",
+      "titleLang": {
+        "zh-CN": "战地PC/手机战绩速查工具",
+        "en-US": "Battlefield PC/Mobile Stats check tool"
+      },
       "id": "5",
       "describe": "同时支持电脑手机快速查询战绩进行标记",
+      "describeLang": {
+        "zh-CN": "同时支持电脑手机快速查询战绩进行标记",
+        "en-US": "It supports both pc and mobile to quickly check stats."
+      },
       "tag": ["web", "app"],
       "website": "https://www.notion.so/1-5-f348c539fd4f41a08878f274a37c7d81",
       "get": "",
@@ -101,14 +110,22 @@
         "zh-CN": "《战地风云》系列的Discord统计机器人",
         "en-US": "The Discord bot for Battlefield"
       },
-      "tag": ["web", "bot", "bf1", "bfv", "bf6"],
+      "tag": ["bot", "bf1", "bfv", "bf6"],
       "website" : "",
       "get": "https://top.gg/bot/714524944783900794"
     },
     {
       "title": "QQ机器人",
+      "titleLang": {
+        "zh-CN": "QQ机器人",
+        "en-US": "QQ bot"
+      },
       "id": "7",
       "describe": "腾讯群机器人",
+      "describeLang": {
+        "zh-CN": "腾讯群机器人",
+        "en-US": "Bf1/5 stats and management bot for QQ"
+      },
       "tag": ["qq", "bot", "bf1", "bfv"],
       "website" : "",
       "get": "https://www.superwatergod.xyz/bf-bot"
