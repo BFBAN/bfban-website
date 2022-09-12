@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d737ac877a7320b7d2e1",
+    "revision": "018f149e7861ea6833b6",
     "url": "/assets/css/app.b1546555.css"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/css/chunk-06280e21.7e506c13.css"
   },
   {
-    "revision": "08999c910e7e9472b77c",
+    "revision": "b06b1c8186f891eb1b50",
     "url": "/assets/css/chunk-0a1fa7c4.9e4a2b7f.css"
   },
   {
@@ -40,7 +40,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/css/chunk-545a1d6e.a21c59db.css"
   },
   {
-    "revision": "37667bf6ae264f1f2816",
+    "revision": "06d4b79c72d0cadde36f",
     "url": "/assets/css/chunk-625530f6.a09a1872.css"
   },
   {
@@ -175,7 +175,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/img/ubuntu-mono-v8-latin-regular.28524211.svg"
   },
   {
-    "revision": "d737ac877a7320b7d2e1",
+    "revision": "018f149e7861ea6833b6",
     "url": "/assets/js/app.2.6.0.js"
   },
   {
@@ -183,7 +183,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-06280e21.2.6.0.js"
   },
   {
-    "revision": "08999c910e7e9472b77c",
+    "revision": "b06b1c8186f891eb1b50",
     "url": "/assets/js/chunk-0a1fa7c4.2.6.0.js"
   },
   {
@@ -251,7 +251,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-5a0f34b2.2.6.0.js"
   },
   {
-    "revision": "37667bf6ae264f1f2816",
+    "revision": "06d4b79c72d0cadde36f",
     "url": "/assets/js/chunk-625530f6.2.6.0.js"
   },
   {
@@ -335,7 +335,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/conf/action.json"
   },
   {
-    "revision": "ff5025c2a5a7c1e84ad37ed8e7bc334d",
+    "revision": "b35df553d015343206fb63eff063f0e1",
     "url": "/conf/appslist.json"
   },
   {
@@ -403,6 +403,42 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/conf/themes.json"
   },
   {
+    "revision": "dc6e1ecf422c612af2289ca26bde7116",
+    "url": "/favicon.ico"
+  },
+  {
+    "revision": "aa5be6e877f60ad2dbb7b404958dd8bb",
+    "url": "/img/icons/android-chrome-192x192.png"
+  },
+  {
+    "revision": "6a625b8de3699ee19b8eeba576e30747",
+    "url": "/img/icons/android-chrome-512x512.png"
+  },
+  {
+    "revision": "684ef4b9fc15afe9eceb9efa042f55a6",
+    "url": "/img/icons/android-chrome-maskable-192x192.png"
+  },
+  {
+    "revision": "0c92d695010c3ac6093517a5ecc3e616",
+    "url": "/img/icons/android-chrome-maskable-512x512.png"
+  },
+  {
+    "revision": "9e927e78d487f0ba77034d56b0e0a9e4",
+    "url": "/img/icons/apple-touch-icon-152x152.png"
+  },
+  {
+    "revision": "57125dc481c2824ffd9edb2839da4b96",
+    "url": "/img/icons/apple-touch-icon-180x180.png"
+  },
+  {
+    "revision": "cb88eeb9484de9ee1696284020688217",
+    "url": "/img/icons/favicon-16x16.png"
+  },
+  {
+    "revision": "674c9eecd208bfaceaf98fe0161ae278",
+    "url": "/img/icons/favicon-32x32.png"
+  },
+  {
     "revision": "9ab9b2a196484528e303e6cacaab3614",
     "url": "/index.html"
   },
@@ -415,8 +451,23 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/manifest.json"
   },
   {
+    "url": "/precache-manifest.16c9fc2e55f7453188e0425307dbcef7.js"
+  },
+  {
     "revision": "038bdc3bd76d45725a3efc25dad869e5",
     "url": "/robots.txt"
+  },
+  {
+    "revision": "8eb503f0752c1799f700691a5bbc5c74",
+    "url": "/service-worker.js"
+  },
+  {
+    "revision": "b6f6712cd980638229d5785344468b63",
+    "url": "/sitemap.xml"
+  },
+  {
+    "revision": "4d3d7e05868e2cdd96a451a887be2a3b",
+    "url": "/sitemap.xml.gz"
   },
   {
     "revision": "056be6e2ba7569d01fd87734b69601f9",
