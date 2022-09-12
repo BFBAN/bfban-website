@@ -12,10 +12,10 @@
     </Row>
     <br>
 
-    <Card dis-hover :padding="0">
+    <Card dis-hover :padding="0" class="admin">
       <Row :gutter="0">
         <Col :xs="{span: 24}" :sm="{span: 6}">
-          <Menu :open-names="openMuen" :active-name="adminMenuValue" @on-select="onMenuActive">
+          <Menu class="admin-menu" :open-names="openMuen" :active-name="adminMenuValue" @on-select="onMenuActive">
             <MenuGroup :title="i.title" v-for="(i, index) in adminMuen" :key="index">
               <MenuItem :name="j.value" v-for="(j, j_index) in i.child" :key="j_index">
                 <Icon :type="j.icon" v-if="j.icon" />  {{j.title}}
@@ -34,8 +34,6 @@
 </template>
 
 <script>
-// import PrivilegesTag from "/src/components/PrivilegesTag";
-
 import user from "./user"
 import comment from "./comment"
 import log from "./log"
@@ -106,4 +104,12 @@ export default {
 
 <style scoped>
 
+.admin-menu,
+.admin {
+  min-height: 500px;
+}
+
+.admin-menu {
+  height: 100%;
+}
 </style>

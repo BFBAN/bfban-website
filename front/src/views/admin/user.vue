@@ -5,22 +5,24 @@
         <Input v-model="userValue" placeholder="Enter ..." />
       </Col>
       <Col>
-        <Button @click="onSearchUser">搜索</Button>
+        <Button @click="onSearchUser">{{ $t('basic.button.submit') }}</Button>
       </Col>
     </Row>
     <br>
 
-    <Card dis-hover v-for="(i, index) in userListData" :key="index">
-      <Row :gutter="10">
+    <Card dis-hover v-for="(i, index) in userListData" :key="index" class="admin-user">
+      <Row :gutter="10" type="flex" justify="center" align="middle">
         <Col flex="1">
-          <h1>{{i.username}}</h1>
-          <span>{{i.id}}</span>
+          <b>{{i.username}}</b>
+          <p>id: {{i.id}}</p>
         </Col>
         <Col>
           <PrivilegesTag :data="i.privilege"></PrivilegesTag>
         </Col>
         <Col>
-          <Button @click="onEditUser(index)" type="dashed">SET</Button>
+          <Button @click="onEditUser(index)" type="dashed" size="small">
+            <Icon type="ios-create" />
+          </Button>
         </Col>
       </Row>
     </Card>
@@ -103,21 +105,21 @@
             <Col span="24">
                 <Row :gutter="10">
                   <Col>
-                    <Select v-model="editPrivilegesForm.activeName" style="width: 120px">
+                    <Select v-model="editPrivilegesForm.activeName" style="width: 160px">
                       <Option v-for="(i, index) in editPrivilegesForm.action" :value="i" :key="index">
                         {{ i }}
                       </Option>
                     </Select>
                   </Col>
-                  <Col>
-                    <Select v-model="editPrivilegesForm.roleName" style="width: 120px">
+                  <Col flex="1">
+                    <Select v-model="editPrivilegesForm.roleName">
                       <Option v-for="(i, index) in editPrivilegesForm.role" :value="i" :key="index">
-                        {{ i }}
+                        {{ $t('basic.privilege.' + i) }}
                       </Option>
                     </Select>
                   </Col>
                   <Col>
-                    <Button @click="onEditPrivileges">ok</Button>
+                    <Button @click="onEditPrivileges">{{ $t('basic.button.commit') }}</Button>
                   </Col>
                 </Row>
             </Col>
@@ -174,11 +176,13 @@ export default {
       await this.setUserAttr();
 
       // 处理用户身份权限
-      for (const key in this.editPrivilegesForm) {
-        if (this.editUserData.id && key && this.editPrivilegesForm[key])
-          await this.setUser(this.editUserData.id, key, this.editPrivilegesForm[key]);
+      for (const key in this.editUserData.temporaryPrivilege) {
+        if (this.editUserData.id && key && this.editUserData.temporaryPrivilege[key]) {
+          await this.setUser(this.editUserData.id, this.editUserData.temporaryPrivilege[key], key);
+        }
       }
 
+      this.onSearchUser();
       this.load = false;
     },
     /**
@@ -217,6 +221,8 @@ export default {
      * 站内用户搜索
      */
     onSearchUser () {
+      if (!this.userValue) return;
+
       this.http.get("admin/searchUser", {
         params: {
           name: this.userValue
@@ -240,16 +246,19 @@ export default {
      * 修改用户身份
      */
     async setUser (id, action, role) {
-      return await this.http.post("admin/setUser", {
+      await this.http.post("admin/setUser", {
         data: {
-          data: { id, action, role }
+          data: { id, action, role },
         }
       }).then(res => {
         const d = res.data;
 
         if (d.success == 1) {
           // TODO
+          return;
         }
+
+        this.$Message.error(d.code);
       })
     },
     /**
@@ -268,8 +277,10 @@ export default {
         const d = res.data;
 
         if (d.success == 1) {
-          // TODO
+          return;
         }
+
+        this.$Message.error(d.code);
       })
     }
   },
@@ -280,5 +291,7 @@ export default {
 </script>
 
 <style scoped>
-
+.admin-user {
+  margin-bottom: 10px;
+}
 </style>
