@@ -51,3 +51,15 @@ jobs:
           echo VERSION=$VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+
+  deploy:
+    needs: push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Restart service in docker
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: ${{ secrets.UPDATE_URL }}
+          method: 'POST'
+          timeout: 90000
