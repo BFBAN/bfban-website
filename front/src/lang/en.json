@@ -14,7 +14,7 @@
 				"describe": "More discussion bettween admins and player is needed, currently uncertain."
 			},
 			"guilt": {
-				"text": "vote for comfirmed cheater",
+				"text": "Voted for comfirmed cheater",
 				"describe": "A admin has judged that player is a cheater. The result will be pubished when more admins enter the vote."
 			},
 			"kill": {
@@ -215,23 +215,23 @@
 	"detail": {
 		"title": "Detail",
 		"subscribes": {
-			"tracking": "追踪",
-			"trackingDescribe": "追踪此玩家，在更新动态时通知您",
-			"cancelTrack": "取消追踪",
-			"cancelTrackDescribe": "不在跟踪此玩家"
+			"tracking": "Tracking",
+			"trackingDescribe": "Track this player and notify me for updates",
+			"cancelTrack": "Not tracking",
+			"cancelTrackDescribe": "Stop tracking this player"
 		},
 		"timeline": {
-			"all": "所有",
-			"verify": "仅查看判决",
-			"banAppeal": "仅查看申诉"
+			"all": "All",
+			"verify": "Only verified",
+			"banAppeal": "Only appeals"
 		},
 		"appeal": {
-			"describe": "This report has problem. I can prove myself or help other to prove innocence.",
+			"describe": "This report has a problem. I can prove that me or the player mentioned is innocent.",
 			"modal": {
-				"modalTitle": "规则",
+				"modalTitle": "Rules",
 				"describe": "针对误BAN，本人或第三方可以协助申诉，在满足下方所有基本要求后，您的申诉内容会提交到BFBAN所有管理员，管理员确认通过才可解除",
 				"effectiveEvidence": {
-					"title": "有效证据",
+					"title": "Valid evidence",
 					"1": "使用类似\"高速目标靶心\"软件、Moss软件，拍摄到屏幕与手、键盘录制自证.",
 					"2": "自我辩护，可以使用图片、视频等等材料.",
 					"3": "有些地方所提供的要求不同，可以咨询地区BFBAN管理，索要申诉材料."
@@ -244,13 +244,13 @@
 					"4": "任何誓言，诅咒."
 				},
 				"auxiliaryProof": {
-					"title": "辅助证明",
+					"title": "Extra proof",
 					"1": "举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址.",
 					"2": "在场玩家，提供自己id，具体服务器、时间、场此，以及您辅助申诉对象说明."
 				}
 			},
 			"info": {
-				"content": "Appeal detail",
+				"content": "Appeal details",
 				"player": "Player's ID",
 				"originName": "Player's current ID"
 			},
@@ -261,10 +261,10 @@
 		},
 		"info": {
 			"app_qr": {
-				"title": "View on phone",
-				"tip": "Scan this QR code in BFBAN APP ",
+				"title": "View on mobile app",
+				"tip": "Scan this QR to open in the BfBan App",
 				"openApp": "View in APP",
-				"openAppDescribe": "View this player in BFBAN APP"
+				"openAppDescribe": "View this player on the BfBan App"
 			},
 			"assistPppeal": "Helping appeal",
 			"appeal": "Appeal",
@@ -278,19 +278,19 @@
 			"originAvatar": "Origin avatar",
 			"historyID": "Historical ID",
 			"dealRecord": "Admin's operational records：",
-			"discription1": "If you found could not visit battlefieldtracker or he changed Origin ID,please Click",
+			"discription1": "If you cant find the player on battlefieldtracker or you think he changed Origin ID,please Click",
 			"updateButton": "Update",
 			"discription2": "bfban.com can track hackers' newest ID",
 			"discription3": "Server can update hacker who is on the list periodically",
 			"discription4": "Historical ID which they used before can be found too",
 			"timeLine": "Timeline",
 			"administrator": "Admin",
-			"report": "Report",
+			"report": "reported",
 			"inGame": "in",
-			"gaming": "Gaming",
+			"gaming": "for",
 			"videoLink": "Video link",
-			"judge": "Judge as",
-			"cheatMethod": "Cheat method",
+			"judge": "has",
+			"cheatMethod": "via",
 			"agreeJudgement": "Agree and confirm this player is a cheater",
 			"agreeWith": "Agree with",
 			"thisChoice": "This judgement",
@@ -628,7 +628,7 @@
 			"api": "API",
 			"book": "Guide",
 			"admin": "Community management",
-			"qq": "Tecent QQ",
+			"qq": "Tencent QQ",
 			"bf1": "Battlefield 1",
 			"bfv": "Battlefield V",
 			"bf6": "Battlefield 2042"

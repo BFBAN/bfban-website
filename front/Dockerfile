@@ -10,7 +10,7 @@ RUN npm install && npm cache clean --force
 
 EXPOSE 8080
 
-CMD [ "npm", "run", "serve" ] 
+CMD [ "npm", "run", "serve:development" ] 
 
 # docker build . -t bfban-testing
 # docker run  --mount type=bind,source=$PWD/src,target=/usr/src/app/src --network host bfban-testing
