@@ -11,6 +11,7 @@
         @ready="onEditorReady"
         useCustomImageHandler />
 
+
     <Modal v-model="updataPlane" width="60%">
       <br>
       <Steps :current="currentindex" v-if="currentindex != -5">
@@ -197,10 +198,6 @@ export default {
       editorOption: {
         placeholder: this.placeholder,
         modules: {
-          'history': {          // Enable with custom configurations
-            'delay': 2500,
-            'userOnly': true
-          },
           toolbar: {
             container: this.toolbar || [[{ 'list': 'ordered' }, { 'list': 'bullet' }], ['bold'], ["link", "image"]],
             handlers: {
@@ -288,6 +285,7 @@ export default {
      * 编辑器初始
      */
     onEditorReady () {
+
     },
     /**
      * 编辑器触发事件
@@ -339,7 +337,47 @@ export default {
 
 <style lang="less">
 .editor .ql-container.ql-snow {
+  font-family: "Ionicons";
   height: calc(100% - 45px) !important;
+}
+
+.ql-snow .ql-tooltip.ql-editing a {
+  opacity: .9;
+}
+
+.ql-snow .ql-tooltip.ql-editing a,
+.ql-snow .ql-tooltip.ql-editing a:hover {
+  color: initial;
+}
+
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+  font-size: 18px;
+  content: "\f374";
+}
+
+.ql-snow .ql-tooltip a.ql-action::after {
+  font-size: 18px;
+  content: "\f374";
+}
+
+.ql-snow .ql-tooltip a.ql-remove::before {
+  font-size: 20px;
+  content: "\F448";
+}
+
+.ql-snow .ql-tooltip input[type=text] {
+  border: none;
+  outline: none;
+}
+
+.ql-snow .ql-tooltip::before,
+.ql-snow .ql-tooltip[data-mode=link]::before {
+  display: none !important;
+}
+
+.ql-editor.ql-blank::before {
+  opacity: .1;
+  font-style: normal;
 }
 
 .upload-mode {

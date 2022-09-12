@@ -40,8 +40,8 @@
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col flex="1">
-                <Tag color="error">
-                  {{ $t(`basic.status.${cheater.status}`) }}
+                <Tag color="error" v-if="cheater.status">
+                  {{ $t(`basic.status.${cheater.status || 0}`) }}
                 </Tag>
 
                 <!-- 被举报的游戏 S -->
@@ -184,14 +184,14 @@
                 <Card>
                   <!-- 浏览次数 -->
                   <h3>{{ cheater.viewNum || 0 }}</h3>
-                  <span>{{ $t('detail.info.viewTimes', {msg: 'viewTimes'}) }}</span>
+                  <span>{{ $t('detail.info.viewTimes') }}</span>
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
                 <Card>
                   <!-- 回复次数 -->
                   <h3>{{ cheater.commentsNum || 0 }}</h3>
-                  <span>{{ $t('detail.info.reply', {msg: 'reply'}) }}</span>
+                  <span>{{ $t('detail.info.reply') }}</span>
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
@@ -200,7 +200,7 @@
                   <h3>
                     <Time v-if="cheater.createTime" :time="cheater.createTime"></Time>
                   </h3>
-                  <span>{{ $t('detail.info.firstReportTime', {msg: 'firstReportTime'}) }}</span>
+                  <span>{{ $t('detail.info.firstReportTime') }}</span>
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
@@ -209,7 +209,7 @@
                   <h3>
                     <Time v-if="cheater.updateTime" :time="cheater.updateTime"></Time>
                   </h3>
-                  <span>{{ $t('detail.info.recentUpdateTime', {msg: 'recentUpdateTime'}) }}</span>
+                  <span>{{ $t('detail.info.recentUpdateTime') }}</span>
                 </Card>
               </Col>
             </Row>
@@ -548,6 +548,7 @@
                   </Row>
                 </div>
                 <Textarea v-model="reply.content"
+                          :toolbar="['bold', 'link']"
                           :height="'120px'"
                           :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
               </Card>
@@ -1084,8 +1085,8 @@ export default new BFBAN({
         data: {
           data: { id }
         }
-      }).then((res) => {
-        storage.set("viewed", {...viewed.data.value, [id]: true});
+      }).then(res => {
+        storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
       });
     },
     /**
@@ -1121,11 +1122,19 @@ export default new BFBAN({
           this.cheater.games.forEach(i => {
             this.games.push({game: i});
           })
-        } else {
-          this.$Message.info(this.$t('basic.tip.notFound'));
-          this.$router.push({name: 'player_list'})
-          this.catch(res);
+          return;
         }
+
+        switch (d.code) {
+          case "player.bad":
+          case "player.notFound":
+            this.$router.push({name: 'player_list'})
+            break;
+        }
+
+        this.$Message.info(this.$t('basic.tip.notFound'));
+
+        this.catch(res);
       }).finally(() => {
         this.onViewed();
         this.checkPlayerSubscribes();

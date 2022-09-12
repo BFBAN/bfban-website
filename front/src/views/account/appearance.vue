@@ -1,32 +1,38 @@
 <template>
-  <div class="theme">
-    <RadioGroup v-model="themeIndex" size="large" :button-style="'solid'">
-      <Badge :text="i.version" class="theme-card" v-for="(i, index) in themes.child" :key="index" >
-        <Card @click="themeIndex = index" dis-hovershow>
-<!--          <img class="theme-img" :src="require('/public/theme/' + i.name + '/preview.svg')" v-if="i.type == 'local'">-->
-<!--          <img class="theme-img" :src="i.img" v-else>-->
-          <div>
-            <span>{{ i.authorInfo.authorName }}</span>
-            <Divider type="vertical"></Divider>
-            <span>{{ i.authorInfo.authorUpdate }}</span>
-          </div>
+  <div class="theme ivu-radio-group-button">
+    <RadioGroup v-model="themeIndex" size="large" :button-style="'solid'" class="theme-card-content">
+      <Card dis-hover
+            v-for="(i, index) in themes.child" :key="index"
+            :class="`${index == themeIndex ? 'ivu-radio-wrapper-checked' : ''}`">
+        <!--          <img class="theme-img" :src="require('/public/theme/' + i.name + '/preview.svg')" v-if="i.type == 'local'">-->
+        <!--          <img class="theme-img" :src="i.img" v-else>-->
+        <div @click="themeIndex = index">
+          <div class="theme-color" :style="`background-color: ${i.showColor}`"></div>
+          <h1>
+            <b>{{ i.name }}</b>
+            <Badge class="theme-badge" :text="i.version"></Badge>
+          </h1>
+        </div>
+        <div>
+          <span>{{ i.authorInfo.authorName }}</span>
+          <Divider type="vertical"></Divider>
+          <span>{{ i.authorInfo.authorUpdate }}</span>
+        </div>
+      </Card>
+      <a href="//github.com/BFBAN/bfban-website/tree/master/front/public/theme" target="_blank">
+        <Card dis-hover class="theme-card theme-card-not">
+          <Icon type="md-add" size="30" />
         </Card>
-        <Row>
-          <Col flex="auto">
-            <Radio :label="index" align="center"><span>{{ i.name }}</span></Radio>
-          </Col>
-          <Col></Col>
-        </Row>
-      </Badge>
+      </a>
     </RadioGroup>
-    <Divider></Divider>
+    <Divider dashed></Divider>
     <div>
-      <Row>
-        <Col span="12">
-          <Button @click="changeTheme">{{ $t('basic.button.save') }}</Button>
+      <Row :gutter="10" type="flex" align="middle" justify="end">
+        <Col>
+          <Button type="primary" @click="changeTheme"> {{ $t('basic.button.save') }} </Button>
         </Col>
-        <Col span="12" align="right">
-          🦖
+        <Col>
+          <div class="theme-color" :style="`background-color: ${themes.child[themeIndex].showColor}`"></div>
         </Col>
       </Row>
     </div>
@@ -93,13 +99,35 @@ export default {
     z-index: 10;
   }
 
+  .theme-badge {
+    margin-left: 10px;
+  }
+
+  .theme-card-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    grid-auto-rows: minmax(100px, auto);
+  }
+
+  .theme-card-not {
+    opacity: 0.8;
+    height: 100%;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+  }
+
   .theme-card {
-    width: 30%;
-    float: left;
-    display: block;
-    margin-right: 20px;
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-bottom: 10px !important;
+  }
+
+  .theme-color {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,.08);
   }
 
   .theme-img {

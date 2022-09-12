@@ -1,7 +1,9 @@
 "use strict";
 
 const docs_config = {
-    "openapi": "3.0.3",
+    openapi: "3.0.3",
+    basePath: '/',
+    schemes: ['http', 'https'],
     info: {
         title: 'BFBAN V2 DOCS',
         version: '2.0.0',
@@ -11,7 +13,7 @@ const docs_config = {
             url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
         }
     },
-    "servers": [
+    servers: [
         { "url": "http://127.0.0.1:3000/api" },
         { "url": "http://101.43.35.41:3000/api" },
         { "url": "https://bfban.com/api" },
@@ -32,7 +34,7 @@ const docs_config = {
             description: '玩家一类信息'
         }
     ],
-    "components": {
+    components: {
         "securitySchemes": {
             "api_key": {
                 "type": "apiKey",

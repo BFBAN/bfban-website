@@ -32,25 +32,28 @@
           <Row :gutter="20" type="flex" justify="center" align="middle">
             <Col>
               <PrivilegesTag :data="account.privilege" v-if="account.privilege"></PrivilegesTag>
+              <p v-else>-</p>
               <p class="account-info-p">{{ $t("account.role") }}</p>
             </Col>
             <Divider type="vertical"/>
             <Col>
-              <Tag type="border" size="large" color="primary">
-                <Time v-if="account.joinTime" :time="account.joinTime || new Date()"/>
+              <Tag type="border" size="large" color="primary" v-if="account.joinTime">
+                <Time :time="account.joinTime || new Date()"/>
               </Tag>
+              <p v-else>-</p>
               <p class="account-info-p">{{ $t("account.joinedAt") }}</p>
             </Col>
             <Divider type="vertical"/>
             <Col>
-              <Tag type="border" size="large" color="#df22ff">
-                <Time v-if="account.lastOnlineTime" :time="account.lastOnlineTime || new Date()"/>
+              <Tag type="border" size="large" color="#df22ff" v-if="account.lastOnlineTime" >
+                <Time :time="account.lastOnlineTime || new Date()"/>
               </Tag>
+              <p v-else>-</p>
               <p class="account-info-p">{{ $t("account.lastOnlineTime") }}</p>
             </Col>
             <Divider type="vertical"/>
             <Col>
-              <h3>{{ account.reportnum }}</h3>
+              <h3>{{ account.reportnum || '-'}}</h3>
               <p class="account-info-p">{{ $t("account.reportnum") }}</p>
             </Col>
           </Row>
@@ -146,7 +149,8 @@ export default new BFBAN({
               }, [
                 h('Time', {
                   props: {
-                    time: params.row.createTime
+                    time: params.row.createTime,
+                    type: 'datetime'
                   }
                 })
               ]);

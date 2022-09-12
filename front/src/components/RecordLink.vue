@@ -139,7 +139,6 @@ export default {
                   )
                 });
               }
-              // console.log(widgetTag)
               return h('Row', {
                 props: {
                   gutter: 10,

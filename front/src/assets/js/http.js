@@ -11,11 +11,14 @@ export default class Http extends Conf {
     NODE;
 
     HTTP = http.create({
-      timeout: 600000,
-      withCredentials: true,
-      headers: {
+        timeout: 600000,
+        withCredentials: true,
+        headers: {
           // 'Content-type': 'application/json',
-      },
+        },
+        validateStatus(status) {
+            return status <= 1000;
+        }
     })
 
     constructor() {
