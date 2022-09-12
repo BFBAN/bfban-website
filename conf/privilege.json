@@ -28,6 +28,14 @@
     {
       "value": "bot",
       "class": "purple"
+    },
+    {
+      "value": "blacklisted",
+      "class": ""
+    },
+    {
+      "value": "freezed",
+      "class": ""
     }
   ]
 }
