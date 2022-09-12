@@ -53,7 +53,7 @@
 		},
 		"tip": {
 			"notlang": "untranslated",
-			"notcontent": "no content",
+			"notcontent": "Nothing found",
 			"notFound": "We cant find the page your looking for.",
 			"noReports": "No reports yet"
 		},
@@ -142,14 +142,14 @@
 				}
 			},
 			"tabsList": {
-				"itemName": "Message list",
+				"itemName": "Messages",
 				"form": {
 					"del": "Delete",
 					"read": "Read"
 				}
 			},
 			"tabsSend": {
-				"itemName": "Recommanded",
+				"itemName": "Recommended",
 				"messageMethod": "type",
 				"messageID": "Website ID",
 				"content": "content",
@@ -391,13 +391,13 @@
 				"text": "BFBAN - Global cheater database"
 			},
 			"col2": {
-				"title": "Community"
+				"title": "Communities"
 			},
 			"col3": {
-				"title": "Feature"
+				"title": "Features"
 			},
 			"col4": {
-				"title": "Contact"
+				"title": "Contact us"
 			},
 			"sponsor": {
 				"title": "Sponsor",
