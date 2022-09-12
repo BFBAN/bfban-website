@@ -47,7 +47,7 @@
     <br>
 
     <div class="list">
-      <div v-for="(d, d_index) in list" :key="d.originUserId" class="item-card">
+      <div v-for="(d, d_index) in list" :key="d_index" class="item-card">
         <Row :gutter="10" type="flex" justify="center" align="middle">
           <Col>
             <Checkbox v-model="d.checkbox"></Checkbox>
@@ -58,16 +58,10 @@
                 <Col :xs="{span: 8, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
                   <!-- 头像 S -->
                   <Avatar :src="d.avatarLink"
-                          @on-error="onAvatarError(d_index)"
                           alt="avatar"
                           size="55"
                           v-if="d.avatarLink">
                   </Avatar>
-                  <template v-else>
-                    <Avatar icon="ios-person"
-                            size="55"
-                            style="background-color: rgba(255,0,0,0.37)"></Avatar>
-                  </template>
                   <!-- 头像 E -->
                 </Col>
                 <Col :xs="{span: 17, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
@@ -78,7 +72,6 @@
                                      :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
                           {{ d.originName }}
                         </router-link>
-                        <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"></Button>
                       </h2>
                     </Tooltip>
                   </div>

@@ -115,7 +115,6 @@
                                          :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
                               {{ d.originName }}
                             </router-link>
-                            <Button size="small" type="text" icon="ios-copy-outline" :data-clipboard-text="d.originId"></Button>
                           </h2>
                         </Tooltip>
                       </div>

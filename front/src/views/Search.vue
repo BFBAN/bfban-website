@@ -65,15 +65,6 @@
         </Row>
       </div>
 
-      <Alert type="warning" show-icon v-if="cheaters.length > 60">
-        庞大的数量
-        <template slot="desc">
-          啊呀！一共{{ cheaters.length }}条,看起来与你搜索的关键词区配出大量数据，请尝试继续补充{{ searchVal }}后续字符，如:
-          <a :href="'?s=' + searchVal + '2021'">{{ searchVal }}2021</a>、<a :href="'?s=' + searchVal + '_love'">{{ searchVal }}2021</a> 让搜索更精准
-        </template>
-      </Alert>
-
-
       <div v-if="cheaters.length !== 0">
         <List border class="content">
           <ListItem v-for="(cheater, index) in cheaters" :key="index">

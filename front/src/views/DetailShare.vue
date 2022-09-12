@@ -27,7 +27,11 @@
           <Card :padding="20" dis-hover class="share">
             <template v-if="share.collapse == 1">
               <div style="min-height: 500px;width: 100%;display: flex;justify-content: center;align-items: center">
-                <Icon type="md-share"/>&emsp;<a :href="share.webLink" target="_blank">{{ share.webLinkText }}</a>
+                <a :href="share.webLink" v-t="{
+                  path: 'share.link.textLinkContent',
+                  args: { webname: 'BFBAN', url: share.webLink },
+                  locale: share.languages
+                }" target="_blank"></a>
               </div>
             </template>
             <template v-else-if="share.collapse == 2">
@@ -50,7 +54,7 @@
           <Form label-position="top" :model="share" @on-visible-change="onGenerateSharePicture">
             <Row :gutter="30">
               <Col>
-                <FormItem label="">
+                <FormItem>
                   <RadioGroup v-model="share.languages" type="button" @on-change="upDataShare">
                     <Radio :label="i.name" v-for="(i, index) in share.languagesChild" :key="index">
                       {{ i.label }}
@@ -99,9 +103,18 @@
                 <div slot="content">
                   <Alert show-icon>{{ $t('share.image.describe') }}</Alert>
                   <br/>
-                  <Button long @click="onGenerateSharePicture" :disabled="share.statusSharePicture" :loading="share.statusSharePicture">
-                    {{ $t('share.image.generate') }}
-                  </Button>
+                  <FormItem>
+                    <Select v-model="share.fileValue">
+                      <Option v-for="(i, index) in share.fileType" :key="index" :value="i.format" :label="i.name">
+                        {{i.name}}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                  <FormItem>
+                    <Button long @click="onGenerateSharePicture" :disabled="share.statusSharePicture" :loading="share.statusSharePicture">
+                      {{ $t('share.image.generate') }}
+                    </Button>
+                  </FormItem>
                 </div>
               </Panel>
             </Collapse>
@@ -160,7 +173,9 @@ export default new BFBAN({
         webLink: '',
         webLinkText: '',
         webLinkHtml: '',
-        iframeLink: ''
+        iframeLink: '',
+        fileValue: 'jpg',
+        fileType: [{name: 'image/jpg', format: 'jpg'}, {name: 'image/png', format: 'png'}]
       },
     }
   },
@@ -226,17 +241,19 @@ export default new BFBAN({
       const shareSize = share.sizeChild.filter(i => i.id == this.share.size)[0].value || {};
 
       let _webLink = `${url}?lang=${share.languages}`;
+      this.share.webLink = _webLink;
 
       if (this.$refs.sharePlayerWidget){
         this.$refs.sharePlayerWidget.onLoadLang(share.languages);
-        // this.$refs.sharePlayerWidget.onLoadTheme();
       }
-
 
       this.share.load = true;
       this.share = Object.assign(this.share, {
         webLink: _webLink,
-        webLinkText: `${that.$i18n.t('share.link.textLinkContent', { webname: 'BFBAN', url: _webLink })}`,
+        webLinkText: `${that.$i18n.t(
+            'share.link.textLinkContent',
+            { webname: 'BFBAN', url: _webLink }
+        )}`,
         webLinkHtml: `<a href="${url}?lang=${share.languages}" target="_blank">${ share.webLinkText }</a>`,
         iframeLink: `<iframe src="${window.location.href}/card?full=true&theme=${share.theme}&lang=${share.languages}" scrolling="auto" frameborder="0" seamless style="filter:chroma(color=#ffffff);${shareSize.w ? `width:${shareSize.w}px;` : 'width:100%;'} ${shareSize.h ? `height:${shareSize.h}px;` : 'height:100%;'}"><a href="${url}" target="_blank">${url}</a></iframe>`.trim().replaceAll(/\r\n/g, '')
       });
@@ -263,7 +280,7 @@ export default new BFBAN({
           allowTaint: false,
           useCORS: true,
           logging: true,
-          scale: .9,
+          scale: 1,
           imageTimeout: 100000,
           ignoreElements : (element) => {
             if (element.className && element.className.toString().indexOf('html2canvas-ignore') >= 0) {
@@ -272,8 +289,11 @@ export default new BFBAN({
           },
         }).then(canvas => {
           document.querySelector("#setSharePicture").after(canvas);
+
           that.share.statusSharePicture = false;
           that.share.modeShow = true;
+
+          that.onDownload(canvas);
         }).catch(err => {
           console.log(err)
         }).finally(() => {
@@ -281,9 +301,28 @@ export default new BFBAN({
         });
       }, 1000);
     },
-    onGenerateShareOll () {
+    onDownload (canvas) {
+      let link = document.createElement("a");
+      let imgData = canvas.toDataURL({
+        format: this.share.fileValue,
+        quality:1
+      });
+
+      link.download = "grid1.png";
+      link.href = URL.createObjectURL( this.dataURLtoBlob(imgData) );
+      link.click();
+    },
+    dataURLtoBlob(dataurl) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], {type:mime});
+    },
+    onGenerateShareOnline () {
       this.http.get('player/widget', {
-        params: { id: 1005842631970, url: 'ban.linrunrun.online' }
+        params: { id: 1005842631970, url: this.location.href += '/card' }
       }).then(res => {
         const d = res.data;
         console.log(d)
