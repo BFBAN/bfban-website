@@ -1,21 +1,31 @@
 .game-type {
-
-  label {
+  label[aria-radio] {
     text-align: center;
-    min-width: 130px;
+    min-width: 130px !important;
     animation: all .25s;
     background-size: cover;
     background-position: center;
   }
 
   label:first-child {
-    min-width: inherit !important;
+    min-width: inherit;
   }
 
-  img {
-    margin: 5px 0;
-    height: 30px;
+  .ivu-badge-count {
+    top: -15px;
+    right: -20px;
+  }
+
+  // large
+  .ivu-radio-large img {
+    margin-top: 5px !important;
     animation: all 1s;
+    height: 16px;
+  }
+
+  .ivu-radio-default img {
+    margin-top: 2px !important;
+    height: 13px;
   }
 
   .ivu-radio-group-item {

@@ -1084,8 +1084,8 @@ export default new BFBAN({
         data: {
           data: { id }
         }
-      }).then((res) => {
-        storage.set("viewed", {...viewed.data.value, [id]: true});
+      }).then(res => {
+        storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
       });
     },
     /**

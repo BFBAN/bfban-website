@@ -34,10 +34,10 @@
                       class="game-type"
                       v-model="tabs.list[index].formItem.gameName"
                       type="button">
-                    <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
+                    <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
                            :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ')'"
                            :class="tabs.list[index].formItem.gameName == i.value ? 'gametype-select' : ''">
-                      <Tooltip :content="$t('list.filters.game.' + i.value)" placement="top-start">
+                      <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
                         <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
                         <span v-else>{{ i.full_name }}</span>
                       </Tooltip>

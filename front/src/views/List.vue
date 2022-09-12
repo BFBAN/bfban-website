@@ -26,7 +26,7 @@
                 {{ $t('basic.games.all') }}
               </Badge>
             </Radio>
-            <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value"
+            <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
                    :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
                    :class="gameName == i.value ? 'gametype-select' : ''">
               <Badge :count="getTotalNum(i.value)" :overflow-count="90000" type="info">

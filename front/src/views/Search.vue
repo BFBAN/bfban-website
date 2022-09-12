@@ -80,24 +80,18 @@
             <ListItemMeta
                 :avatar="cheater.avatarLink"
                 :title="cheater.currentName || cheater.originName"
-                :description="`${cheater.originUserId ? 'uid:' + cheater.originPersonaId : ''} ${cheater.historyName ? '过去id:' + cheater.historyName: ''}`"/>
-            <template slot="action">
-              <li @click="searchModal = false">
-                <router-link
-                    :to="{name: 'player', params: {ouid: `${cheater.originPersonaId}`}}">
-                  <Icon type="ios-eye" size="20"/>
-                  查看
-                </router-link>
-              </li>
-            </template>
+                :description="`${cheater.originUserId ? 'uid:' + cheater.originPersonaId : ''} ${cheater.historyName ? $t('search.scope.history') + ':' + cheater.historyName: ''}`"/>
+            <router-link :to="{name: 'player', params: {ouid: `${cheater.originPersonaId}`}}" slot="action">
+              <div @click="searchModal = false">
+                <Icon type="ios-eye" size="30"/>
+              </div>
+            </router-link>
           </ListItem>
-
 
           <Spin size="large" fix v-show="modalSpinShow"></Spin>
         </List>
       </div>
     </div>
-    <br>
   </div>
 </template>
 
