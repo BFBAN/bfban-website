@@ -24,8 +24,12 @@
           },
           {
             "text": "bfban开发者kook社区",
+            "textLang": {
+              "en-US": "Kook Community of developers",
+              "zh-CN": "bfban 开发者kook社区"
+            },
             "src": "//kook.top/wHwxhw",
-            "showLang": ["zh-CN"]
+            "showLang": ["zh-CN", "en-US"]
           },
           {
             "text": "GitHub BFBAN",

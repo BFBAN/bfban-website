@@ -12,6 +12,10 @@
           "url": "https://space.bilibili.com/44569813"
         },
         {
+          "name": "___4Tr1",
+          "url": "https://live.bilibili.com/591314"
+        },
+        {
           "name": "SoraKasvgano",
           "url": "https://live.bilibili.com/591314"
         }
@@ -26,6 +30,16 @@
       }, {
         "name": "iiTzArcur",
         "url": "//gametools.network"
+      }]
+    }
+  ],
+  "TODO": [
+    {
+      "name": "ja-JP",
+      "label": "日本语",
+      "members": [{
+        "name": "RiseJack",
+        "url": "https://www.youtube.com/channel/UCptnZeaSNaurVVy9UMWzI6w"
       }]
     }
   ]

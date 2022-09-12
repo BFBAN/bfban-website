@@ -210,6 +210,16 @@
     },
     "subscribes": {
       "title": "追踪"
+    },
+    "admin": {
+      "title": "管理后台",
+      "menu": {
+        "management": "内容",
+        "user": "用户管理",
+        "comment": "评论管理",
+        "log": "日志",
+        "adminLog": "管理日志"
+      }
     }
   },
   "detail": {
@@ -721,7 +731,7 @@
     "reports": "社区共计已举报",
     "confirmed": "已处理案件",
     "banAppeals": "已上诉",
-    "registers": "社区管理已处理案件",
+    "registers": "注册用户",
     "players": "现有举报案件",
     "admins": "总共管理员数"
   }

@@ -206,10 +206,20 @@
 			}
 		},
 		"history": {
-			"title": "历史"
+			"title": "History log"
 		},
 		"subscribes": {
-			"title": "追踪"
+			"title": "User Subscribes"
+		},
+		"admin": {
+			"title": "back-end management",
+			"menu": {
+				"management": "content",
+				"user": "user management",
+				"comment": "Comments on the management",
+				"log": "log",
+				"adminLog": "Admin log"
+			}
 		}
 	},
 	"detail": {
@@ -485,9 +495,9 @@
 			}
 		},
 		"bindOrigin": {
-			"title": "未绑定账户",
-			"content": "BFBAN需要您绑定origin账户，以便账户申诉、找回等功能；未绑定origin前，您的账户会被锁定，无法提交任何内容",
-			"travel": "好的，前往绑定账户"
+			"title": "Unbound account",
+			"content": "BFBAN requires you to bind your Origin account for account appeal and retrieval. Without Origin, your account will be locked and you will not be able to submit anything",
+			"travel": "All right, head over to the binding account"
 		}
 	},
 	"bindOrigin": {

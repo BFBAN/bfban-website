@@ -1,7 +1,6 @@
 {
   "child": [
     {
-      "t": "隐身",
       "value": "invisable",
       "values": [
         "invisable",
@@ -9,38 +8,32 @@
       ]
     },
     {
-      "t": "透视",
       "value": "wallhack",
       "values": ["wallhack"]
     },
     {
-      "t": "自动瞄准",
       "value": "aimbot",
       "values": [
         "aimbot"
       ]
     },
     {
-      "t": "传送",
       "value": "teleport",
       "values": [
         "teleport"
       ]
     },
     {
-      "t": "魔法子弹",
       "value": "magicBullet",
       "values": [
         "magicBullet"
       ]
     },
     {
-      "t": "改装备",
       "value": "gadgetModify",
       "values": ["gadgetModify"]
     },
     {
-      "t": "改伤",
       "value": "damageChange",
       "values": ["damageChange"]
     }
