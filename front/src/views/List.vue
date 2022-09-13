@@ -249,7 +249,6 @@ export default new BFBAN({
     $route: "loadData",
   },
   methods: {
-    getCheaterStatusLabel: util.getCheaterStatusLabel,
     autoUpdateList() {
       const that = this;
 

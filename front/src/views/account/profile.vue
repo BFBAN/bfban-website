@@ -11,8 +11,8 @@
     </Row>
     <br>
 
-    <Card dis-hover>
-      <Form label-position="top">
+    <Card dis-hover :padding="0">
+      <Form label-position="top" class="profile-header">
         <Row :gutter="15">
           <Col>
             <Avatar :size="48">{{ currentUser.userinfo.username[0] }}</Avatar>
@@ -27,47 +27,34 @@
           </Col>
         </Row>
       </Form>
-      <br>
-      <Row :gutter="30">
+      <Row>
         <Col :xs="{span: 24}" :sm="{span: 6}">
-          <List border size="small">
-            <ListItem v-for="(i, index) in muen" :key="i.value">
-              <a @click="upDateUri(muen[index].value)">
-                <b v-if="muen[index].value == muenIndex">
-                  {{ $t("profile." + muen[i.value].title + ".title") }}
-                </b>
-                <span v-else>{{ $t("profile." + muen[i.value].title + ".title") }}</span>
-              </a>
-            </ListItem>
-          </List>
-          <br>
-          <List border size="small">
-            <ListItem>
-              <router-link :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId }` }}">
-                {{ $t("header.userCenter") }}
-                <Icon type="ios-link"/>
-              </router-link>
-            </ListItem>
-            <ListItem v-if="isAdmin">
-              <router-link :to="{name: 'admin'}">
-                {{ $t("profile.admin.title") }}
-                <Icon type="ios-link"/>
-              </router-link>
-            </ListItem>
-          </List>
-          <br>
-
-          <Divider>{{ $t("home.bulletin.title") }}</Divider>
-          <Bulletin/>
+          <Menu class="profile-menu" :open-names="openMuen" :active-name="menuValue" @on-select="onMenuActive">
+            <div v-for="(i, index) in menu" :key="index">
+              <MenuItem :name="j.name" v-for="(j, j_index) in i.child" :key="j_index">
+                <Icon :type="j.icon" v-if="j.icon" />  {{ $t(`profile.${j.title}.title`)}}
+              </MenuItem>
+            </div>
+            <MenuGroup>
+              <MenuItem name="userCenter" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId }` }}">
+                  {{ $t("header.userCenter") }}
+                  <Icon type="ios-link"/>
+              </MenuItem>
+              <MenuItem name="admin" v-if="isAdmin" :to="{name: 'admin'}">
+                  {{ $t("profile.admin.title") }}
+                  <Icon type="ios-link"/>
+              </MenuItem>
+            </MenuGroup>
+          </Menu>
         </Col>
-        <Col :xs="{span: 24}" :sm="{span: 18}">
-          <account v-if="muenIndex == 0"></account>
-          <appearance v-if="muenIndex == 1"></appearance>
-          <message v-if="muenIndex == 2"></message>
-          <enhance v-if="muenIndex == 3"></enhance>
-          <media v-if="muenIndex == 4"></media>
-          <history v-if="muenIndex == 5"></history>
-          <subscribes v-if="muenIndex == 6"></subscribes>
+        <Col :xs="{span: 24}" :sm="{span: 18}" class="profile-right-content">
+          <account v-if="menuValue == 'account'"></account>
+          <appearance v-if="menuValue == 'appearance'"></appearance>
+          <message v-if="menuValue == 'message'"></message>
+          <enhance v-if="menuValue == 'enhance'"></enhance>
+          <media v-if="menuValue == 'media'"></media>
+          <history v-if="menuValue == 'history'"></history>
+          <subscribes v-if="menuValue == 'subscribes'"></subscribes>
         </Col>
       </Row>
     </Card>
@@ -75,7 +62,6 @@
 </template>
 
 <script>
-import Bulletin from "../../components/Bulletin";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 
 import appearance from "./appearance";
@@ -91,61 +77,58 @@ export default {
   data() {
     return {
       privileges: [],
-      muenIndex: 0,
-      muen: [{
-          title: 'account',
-          value: '0'
-        }, {
-          title: 'appearance',
-          value: '1'
-        },
+      openMuen: ['0'],
+      menuValue: 'account',
+      menu: [
         {
-          title: 'message',
-          value: '2'
+          title: "基础",
+          name: "0",
+          child: [{
+            title: 'account',
+            name: 'account',
+          }, {
+            title: 'appearance',
+            name: 'appearance'
+          },
+          {
+            title: 'message',
+            name: 'message'
+          },
+          {
+            title: 'enhance',
+            name: 'enhance'
+          },
+          {
+            title: 'media',
+            name: 'media'
+          },
+          {
+            title: 'history',
+            name: 'history'
+          },
+          {
+            title: 'subscribes',
+            name: 'subscribes'
+          }]
         },
-        {
-          title: 'enhance',
-          value: '3'
-        },
-        {
-          title: 'media',
-          value: '4'
-        },
-        {
-          title: 'history',
-          value: '5'
-        },
-        {
-          title: 'subscribes',
-          value: '6'
-        }
       ]
     }
   },
-  components: {Bulletin, appearance, account, message, enhance, media, history, subscribes, PrivilegesTag},
+  components: {appearance, account, message, enhance, media, history, subscribes, PrivilegesTag},
   created() {
-    const pagename = this.$route.params.pagename;
+    const {pagename} = this.$route.params;
 
     if (pagename == undefined) {
-      this.upDateUri(0, true);
+      this.onMenuActive('account');
       return;
     }
 
-    let name = this.muen.filter(
-        i => {
-          return i.title.toLocaleLowerCase() == pagename;
-        }
-    )[0].value;
-
-    this.upDateUri(name || this.muenIndex);
+    this.onMenuActive(pagename);
   },
   methods: {
-    upDateUri(index, t = false) {
-      this.muenIndex = index;
-      this.$router.push({
-        path: (t ? 'profile/' : '') + this.muen[index].title.toLowerCase()
-      });
-    }
+    onMenuActive (val) {
+      this.menuValue = val;
+    },
   },
   computed: {
     isLogin() {
@@ -164,5 +147,16 @@ export default {
 </script>
 
 <style scoped>
+ .profile-menu {
+   height: 100%;
+   min-height: 300px;
+ }
 
+ .profile-header {
+   padding: 15px 20px;
+ }
+
+ .profile-right-content {
+   padding: 10px 20px;
+ }
 </style>

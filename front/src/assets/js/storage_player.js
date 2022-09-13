@@ -21,15 +21,28 @@ export default class PlayerStorage extends Storage {
         }
     }
 
+    /**
+     * 更新
+     */
     updataStorage () {
         super.set(this.NAME, this.PLAYERDATA);
     }
 
+    /**
+     * 插入
+     * @param key
+     * @param val
+     */
     push (key, val) {
         this.PLAYERDATA[key] = val;
         this.updataStorage();
     }
 
+    /**
+     * 查询
+     * @param key
+     * @returns {Promise<{}|*>}
+     */
     async query (key) {
         if (this.PLAYERDATA[key]) {
             return this.PLAYERDATA[key];

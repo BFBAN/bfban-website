@@ -77,6 +77,11 @@ export default class AccountStorage extends Storage {
         super.set(this.NAME , data.data.value)
     }
 
+    /**
+     * 取得attr的值
+     * @param key
+     * @returns {*|boolean}
+     */
     getConfiguration (key) {
         let data = super.get(this.NAME);
         return key in data.data.value ? data.data.value[key] : false;

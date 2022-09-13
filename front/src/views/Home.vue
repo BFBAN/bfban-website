@@ -177,9 +177,6 @@ export default new BFBAN({
     this.getActivity();
   },
   methods: {
-    getCheaterStatusLabel: util.getCheaterStatusLabel,
-    convertCheatMethods: util.convertCheatMethods,
-    getGameLabel: util.getGameLabel,
     async loadData() {
       await util.initUtil().then((res) => {
         this.cheaterStatus = res.cheaterStatus;

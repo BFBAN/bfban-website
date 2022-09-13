@@ -11,6 +11,13 @@ export default class Regular {
         'video': {},
     };
 
+    /**
+     * 正则校验
+     * @param regularType
+     * @param value
+     * @param regularConf
+     * @returns {{msg: (string|*), code: number}|{code: number}}
+     */
     check(regularType = '', value, regularConf = {tipError: ''}) {
         if (!regularType) return;
         let res = this.REGULARTYPE[regularType].v.test(value);
@@ -26,4 +33,10 @@ export default class Regular {
             msg: regularConf.tipError || res.tipError
         }
     }
+
+    /**
+     * TODO
+     * AUTH
+     * 对校验文件资源校验，get请求资源是否存在
+     */
 }
