@@ -380,6 +380,10 @@ export default {
   font-style: normal;
 }
 
+.ql-toolbar.ql-snow, .quill-editor {
+  background-color: inherit !important;
+}
+
 .upload-mode {
   margin: 20px 0;
   width: 100%;
