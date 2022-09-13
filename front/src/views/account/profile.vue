@@ -162,8 +162,9 @@ export default {
     },
     isAdmin() {
       const user = this.$store.state.user;
-      const is = user ? user.userinfo.privilege.concat("").includes("admin") : false;
-      return Boolean(is);
+      const privilege = user ? user.userinfo.privilege : []
+      return privilege.some(item => ['admin', 'super', 'dev'].includes(item))
+      // return Boolean(is);
     },
     isMobile() {
       let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)

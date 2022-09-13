@@ -280,13 +280,10 @@ export default {
      * 修改用户属性
      */
     async setUserAttr () {
+      const { id, attr, username } = this.editUserData
       await this.http.post("admin/setUserAttr", {
         data: {
-          data: {
-            id: this.editPrivilegesForm.id,
-            attr: this.editUserData.attr,
-            username: this.editUserData.username,
-          }
+          data: { id, attr, username }
         }
       }).then(res => {
         const d = res.data;

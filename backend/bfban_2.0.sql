@@ -204,3 +204,23 @@ CREATE TABLE IF NOT EXISTS `verifications` (
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+
+--
+-- Tabelstructuur voor tabel `super_user_log`
+--
+
+-- 管理员操作日志
+
+CREATE TABLE `super_user_log` (
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `admin_username` varchar(40) DEFAULT NULL,
+  `username` varchar(40) DEFAULT NULL,
+  `admin_uId` varchar(200) DEFAULT NULL,
+  `uId` varchar(200) DEFAULT NULL,
+  `change_type` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `super_user_log`
+--

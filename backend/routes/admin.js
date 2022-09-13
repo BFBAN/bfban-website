@@ -20,7 +20,7 @@ async (req, res, next)=>{
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
-        
+
         const result = await db.select('*').from('users').where('username', 'like', `%${req.query.name}%`)
             .limit(20);
         
@@ -46,6 +46,7 @@ async (req, res, next)=>{
 
         const result = await db('comments')
             .join('users', 'comments.byUserId', 'users.id')
+            // .join('users', 'comments.byUserId', 'users.id')
             .select('comments.*', 'users.username', 'users.privilege')
             .where('type', `judgement`)
             .orderBy('comments.createTime', order)
@@ -110,11 +111,11 @@ async (req, res, next)=>{
                 rootCan  = ['normal','admin','bot','super','dev','blacklisted','freezed'];
             let flag = false;
             // check if current user can grant such permission
-            flag = (userHasRoles(req.user, ['dev']) && devCan.includes(role) )? true : flag;
+            flag = (userHasRoles(req.user, ['dev']) && devCan.includes(role))? true : flag;
             flag = (userHasRoles(req.user, ['super']) && superCan.includes(role) )? true : flag;
             flag = (userHasRoles(req.user, ['root']) && rootCan.includes(role) )? true : flag;
             // check if user trying to grant 'blacklisted' or 'freezed' role to someone who have higher permission
-            flag = (['blacklisted','freezed'].includes(role) && user.privilege.filter(i=>['admin','super','dev','root'].includes(i)).length==0)? flag : false;
+            flag = (['blacklisted','freezed'].includes(role) && user.privilege.filter(i=>['admin','super','dev','root'].includes(i)).length==0)? false : flag;
             if(flag)
                 user.privilege = privilegeGranter(user.privilege, role);    
             else
@@ -148,6 +149,36 @@ async (req, res, next)=>{
     }
 });
 
+// router.get('/getUserOperationLogs', verifyJWT, allowPrivileges(["super","root","dev"]), 
+// /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+// async (req, res, next)=>{
+//   try {
+//       const result = await db('comments')
+//             .join('users', 'comments.byUserId', 'users.id')
+//             .select('comments.*', 'users.username', 'users.privilege')
+//             .where('type', `judgement`)
+//             .orderBy('comments.createTime', order)
+//             .offset(skip).limit(limit);
+//   } catch(err) {
+//       next(err);
+//   }
+// });
+
+router.get('/getUserOperationLogs', 
+/** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next)=>{
+  try {
+      const result = await db('messages')
+            .join('users', 'messages.byUserId', 'users.id')
+            .select('messages.*', 'users.username')
+            // .join('users', 'messages.toUserId', 'users.id')
+            .where('content', 'like', `%"setUser"%`)
+            return res.status(200).json({success: 1, code: 'log.ok', data: result});
+  } catch(err) {
+      next(err);
+  }
+});
+
 router.post('/setUserAttr', verifyJWT, allowPrivileges(["root","dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.attr').isObject()
@@ -159,14 +190,17 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'setUserAttr.bad', message: validateErr.array()});
         
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({id: req.body.data.id});
+        const user = await db.select('*').from('users').where({id: req.body.data.id}).first();
         if(!user)
             return res.status(404).json({error: 1, code: 'setUserAttr.notFound'});
         
         user.attr = userSetAttributes(user.attr, req.body.data.attr, true);
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action:'setUserAttr', target: user.id}));
-        await db('users').update(user).where({id: user.id});
+        user.attr = JSON.stringify(user.attr)
+        user.privilege = JSON.stringify(user.privilege)
+        user.subscribes = JSON.stringify(user.subscribes)
+        await db('users').where({id: user.id}).update(user);
         
         return res.status(200).json({success: 1, code: 'setUserAttr.ok'});
     } catch(err) {
