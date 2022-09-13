@@ -1,21 +1,35 @@
 header {
   background-image: linear-gradient(rgb(0 0 0 / 90%), transparent) !important;
+  background-color: rgba(24, 24, 24, 0.9);
+  backdrop-filter: blur(5px);
+  position: fixed;
+  top: 0;
 }
 
 // main
 #app {
-  background-color: #000;
-  background-image: url(https://media.contentapi.ea.com/content/dam/battlefield/battlefield-2042/homepage/common/bf-2042-section-bg-homepage-experiences-xl.jpg.adapt.320w.jpg);
+  background-color: #101010;
+  //background-image: url(https://media.contentapi.ea.com/content/dam/battlefield/battlefield-2042/homepage/common/bf-2042-section-bg-homepage-experiences-xl.jpg.adapt.320w.jpg);
   background-size: cover;
   background-repeat: no-repeat;
-  background-position-y: -250px;
+  background-position-y: -350px;
 }
 
+#app main {
+  padding-top: 68px;
+}
 
 // nav
 .nav a.link {
   padding: 0.7rem 0.8rem;
   text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0 !important;
+}
+
+.home-banner h1,
+.home-banner h2,
+.home-banner h3,
+.home-banner p {
+  text-shadow: #000002 1px 0 0, #000000 0 1px 0, #000000 -1px 0 0, #000000 0 -1px 0, #000000 2px 0 47px;
 }
 
 // box

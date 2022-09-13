@@ -51,7 +51,9 @@
             </Col>
             <Col span="16" class="mobile-hide" :lg="{span: 14, push: 1}" type="flex" align="center" justify="center"
                  style="display: flex; justify-content: center; align-items: center">
-              <img :src="require(`../assets/images/index-gl_${$i18n.locale || 'en-US'}.png`)" width="100%" class="ivu-row-top">
+              <Card dis-hover :padding="0">
+                <img :src="require(`../assets/images/index-gl_${$i18n.locale || 'en-US'}.png`)" width="100%" class="ivu-row-top" style="margin-bottom: -10px;border-radius: 5px;">
+              </Card>
             </Col>
           </Row>
         </div>
