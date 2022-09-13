@@ -584,7 +584,7 @@
 
         <!-- 管理员裁判 S -->
         <Card dis-hover v-if="isAdmin">
-          <div :label="$t('detail.info.adminConsole', {msg: 'adminConsole'})">
+          <div :label="$t('detail.info.adminConsole')">
             <h2 style="margin: 1rem 0;">
               <Row>
                 <Col flex="1">
@@ -670,23 +670,11 @@
                       </Poptip>
                     </div>
 
-                    <Row :gutter="15">
-                      <Col span="24">
-                        <Card :padding="0" dis-hover>
-                          <Textarea v-model="verify.suggestion"
-                                    :height="'250px'"
-                                    :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
-                        </Card>
-                      </Col>
-                      <Col span="24">
-                        <Alert>
-                          <template slot="desc">
-                            <p class="hint">{{ $t('detail.info.adminManual1', {msg: 'adminManual1'}) }}</p>
-                            <p class="hint">{{ $t('detail.info.adminManual2', {msg: 'adminManual2'}) }}</p>
-                          </template>
-                        </Alert>
-                      </Col>
-                    </Row>
+                    <Card :padding="0" dis-hover>
+                      <Textarea v-model="verify.suggestion"
+                                :height="'250px'"
+                                :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+                    </Card>
                   </FormItem>
                 </Col>
               </Row>
@@ -720,6 +708,21 @@
               </FormItem>
             </Form>
           </div>
+
+          <Spin fix v-if="judgementLock">
+            <div class="loader">
+              <Icon type="md-lock" size="80" style="margin-bottom: 20px" />
+
+              <Alert>
+                <template slot="desc">
+                  <p class="hint">{{ $t('detail.info.adminManual1') }}</p>
+                  <p class="hint">{{ $t('detail.info.adminManual2') }}</p>
+                </template>
+              </Alert>
+              <br>
+              <Button @click="onJudgementLock">{{ $t('basic.button.submit') }}</Button>
+            </div>
+          </Spin>
         </Card>
         <!-- 管理员裁判 E -->
 
@@ -863,8 +866,12 @@
               </Row>
               <FormItem :label="$t('detail.appeal.info.content')">
                 <br>
-                <Edit :content="appeal.content" @change="handleMiscChange"
-                      :editorContent="$t('detail.appeal.placeholder.content')"/>
+                <Card dis-hover :padding="0">
+                  <Textarea v-model="appeal.content"
+                            :toolbar="['bold', 'link']"
+                            :height="'420px'"
+                            :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
+                </Card>
               </FormItem>
             </Form>
           </Col>
@@ -878,7 +885,7 @@
 <script>
 import BFBAN from "/src/assets/js/bfban";
 
-import {api, http, http_token, util, storage} from '../assets/js/index'
+import {api, http, http_token, util, storage, account_storage} from '../assets/js/index'
 
 import Empty from '../components/Empty.vue'
 import Edit from "../components/Edit";
@@ -893,8 +900,8 @@ import {formatTextarea, waitForAction} from "@/mixins/common";
 export default new BFBAN({
   data() {
     return {
-      getGameLabel: util.getGameLabel,
       detailLoad: true,
+      judgementLock: false,
       appeal: {
         load: false,
         show: false,
@@ -972,6 +979,7 @@ export default new BFBAN({
   created() {
     this.http = http_token.call(this);
 
+    this.checkJudgementLock();
     this.loadData();
     this.getCheatersInfo();
     this.getTimeline();
@@ -1242,12 +1250,6 @@ export default new BFBAN({
       })
     },
     /**
-     * 富文本单选绑定
-     */
-    handleMiscChange(text) {
-      this.appeal.content = text;
-    },
-    /**
      * 申诉
      */
     handleAppeal() {
@@ -1435,6 +1437,16 @@ export default new BFBAN({
         }
       });
     },
+    /**
+     * 管理裁判提示锁
+     */
+    onJudgementLock () {
+      account_storage.updateConfiguration('judgementTip', true);
+      this.judgementLock = false;
+    },
+    checkJudgementLock () {
+      this.judgementLock  = !account_storage.getConfiguration('judgementTip');
+    }
   },
   computed: {
     isAdmin() {

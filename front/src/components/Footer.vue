@@ -44,7 +44,7 @@
           </ul>
         </Col>
         <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
-          <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large" :disabled="isLogin">
+          <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large" :disabled="langLoaclSync">
             <Option v-for="(item, index) in languages" :value="item.name" :label="item.label" :key="index">
                   <span>
                     {{ item.label }}
@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import {storage} from "../assets/js";
+import {storage, account_storage} from "../assets/js";
 
 import packageInfo from '../../package.json';
 import footerNavs from '/public/conf/footerNavs.json';
@@ -104,6 +104,7 @@ export default {
       footerNavs: footerNavs.child,
       links: link.footerChild,
       logoCount: 0,
+      langLoaclSync: false,
       languages: [],
     }
   },
@@ -117,6 +118,7 @@ export default {
     async loadData() {
       const languages = await import('/public/conf/languages.json');
 
+      this.langLoaclSync = account_storage.getConfiguration('langLoaclSync');
       this.languages = languages.child;
       // this.loadLanguages();
     },
@@ -124,7 +126,8 @@ export default {
       let that = this;
       let lang = this.currentLan;
       setTimeout(function () {
-        that.$store.dispatch('setLang', lang);
+        if (this.langLoaclSync)
+          that.$store.dispatch('setLang', lang);
       }, 200)
     }
   },
@@ -139,7 +142,8 @@ export default {
       set(val) {
         const lang = val;
         // 路由语言
-        this.$store.dispatch('setLang', lang);
+        if (this.langLoaclSync)
+          this.$store.dispatch('setLang', lang);
         // 本地持久语言
         storage.set('language', lang);
         // 网页语言

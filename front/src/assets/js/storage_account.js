@@ -30,6 +30,10 @@ export default class AccountStorage extends Storage {
         name: 'user.subscribes'
     },
     {
+        type: 'local',
+        name: 'user.configuration'
+    },
+    {
         type: 'session',
         name: 'captcha'
     },
@@ -37,6 +41,8 @@ export default class AccountStorage extends Storage {
         type: 'session',
         name: 'business'
     }];
+
+    NAME = 'user.configuration';
 
     // 清除数据
     clearAll () {
@@ -50,5 +56,29 @@ export default class AccountStorage extends Storage {
                     break;
             }
         })
+    }
+
+    /**
+     * 用户一类 本地配置
+     * - 是否本地语言同步
+     * - 判决提示
+     * @param key
+     * @param value
+     * @constructor
+     */
+    updateConfiguration (key, value) {
+        let data = super.get(this.NAME);
+
+        if (data.code < 0) {
+            data = { data: { value: {} } }
+        }
+
+        data.data.value[key] = value;
+        super.set(this.NAME , data.data.value)
+    }
+
+    getConfiguration (key) {
+        let data = super.get(this.NAME);
+        return key in data.data.value ? data.data.value[key] : false;
     }
 }

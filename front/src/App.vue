@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {api, http_token, storage} from './assets/js/index';
+import {api, http_token, storage, account_storage} from './assets/js/index';
 
 import theme from "/public/conf/themes.json"
 
@@ -61,8 +61,8 @@ export default {
       }
 
       // load lang
-      if (!selectLang) return ;
-      this.$store.dispatch('setLang', selectLang);
+      if (!selectLang && account_storage.getConfiguration('langLoaclSync')) return ;
+        this.$store.dispatch('setLang', selectLang);
     },
     /**
      * 处理用户信息
@@ -75,7 +75,8 @@ export default {
           if (d.success === 1) {
             // set userinfo
             this.$store.dispatch('setUserInfo', d.data);
-            this.$store.dispatch('setLang', d.data.attr.language);
+            if (account_storage.getConfiguration('langLoaclSync'))
+              this.$store.dispatch('setLang', d.data.attr.language);
           }
         })
       }

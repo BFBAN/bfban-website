@@ -94,11 +94,22 @@
       <Row :gutter="30">
         <Col span="12">
           <FormItem :label="$t('profile.account.form.language')">
-            <Select v-model="formItem.attr.language" class="switch-language" prefix="md-globe" placement="top-end"
-                    @on-change="switchLanguage">
-              <Option v-for="item in languages" :value="item.name" :key="item.name">{{ item.label }}</Option>
-            </Select>
-            <Alert show-icon>{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
+            <Row>
+              <Col>
+                <Checkbox v-model="langLoaclSync" @on-change="switchLangLocalSync"></Checkbox>
+              </Col>
+              <Col flex="1">
+                <Select v-model="formItem.attr.language"
+                        class="switch-language"
+                        prefix="md-globe"
+                        placement="top-end"
+                        :disabled="!langLoaclSync"
+                        @on-change="switchLanguage">
+                  <Option v-for="item in languages" :value="item.name" :key="item.name">{{ item.label }}</Option>
+                </Select>
+              </Col>
+            </Row>
+            <Alert show-icon v-if="langLoaclSync">{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
           </FormItem>
         </Col>
         <Col span="12">
@@ -149,9 +160,10 @@
               <template slot="desc">
                 <p v-html="$t('profile.account.modifyName.specification1')"></p>
                 <p>
-                  {{
-                    $t('profile.account.modifyName.residueDegree', {changeNameLeft: formItem.attr.changeNameLeft || 0})
-                  }}
+                  {{$t(
+                    'profile.account.modifyName.residueDegree',
+                    {changeNameLeft: formItem.attr.changeNameLeft || 0}
+                  )}}
                 </p>
                 <br>
                 <b> {{ $t('profile.account.modifyName.specification2') }}</b>
@@ -240,7 +252,7 @@
 import Textarea from "@/components/Textarea";
 import Captcha from "../../components/Captcha";
 
-import {api, http, http_token} from "../../assets/js";
+import {api, http, http_token, account_storage} from "../../assets/js";
 
 export default {
   name: "account",
@@ -249,6 +261,7 @@ export default {
       privileges: [],
       languages: [],
       formLoad: false,
+      langLoaclSync: false,
 
       modal_changePassword: {
         load: false,
@@ -272,6 +285,7 @@ export default {
   components: {Textarea, Captcha},
   created() {
     this.http = http_token.call(this);
+
     this.ready();
   },
   methods: {
@@ -415,11 +429,25 @@ export default {
 
           this.formItem = d.data;
         }
+      }).finally(() => {
+        this.checkLangLocalSync();
       })
+    },
+    /**
+     * 切换本地同步
+     * 是否同步再登录后同步语言
+     */
+    switchLangLocalSync(val) {
+      account_storage.updateConfiguration('langLoaclSync', this.langLoaclSync);
+    },
+    checkLangLocalSync () {
+      this.langLoaclSync  = account_storage.getConfiguration('langLoaclSync');
+      console.log(this.langLoaclSync)
     }
   },
   computed: {
     formItem() {
+      this.checkLangLocalSync();
       return Object.assign({
         introduction: '',
         password: '******',
