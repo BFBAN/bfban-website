@@ -164,20 +164,20 @@ async (req, res, next)=>{
 //   }
 // });
 
-router.get('/getUserOperationLogs', 
-/** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
-async (req, res, next)=>{
-  try {
-      const result = await db('messages')
-            .join('users', 'messages.byUserId', 'users.id')
-            .select('messages.*', 'users.username')
-            // .join('users', 'messages.toUserId', 'users.id')
-            .where('content', 'like', `%"setUser"%`)
-            return res.status(200).json({success: 1, code: 'log.ok', data: result});
-  } catch(err) {
-      next(err);
-  }
-});
+// router.get('/getUserOperationLogs', 
+// /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+// async (req, res, next)=>{
+//   try {
+//       const result = await db('messages')
+//             .join('users', 'messages.byUserId', 'users.id')
+//             .select('messages.*', 'users.username')
+//             // .join('users', 'messages.toUserId', 'users.id')
+//             .where('content', 'like', `%"setUser"%`)
+//             return res.status(200).json({success: 1, code: 'log.ok', data: result});
+//   } catch(err) {
+//       next(err);
+//   }
+// });
 
 router.post('/setUserAttr', verifyJWT, allowPrivileges(["root","dev"]), [
     checkbody('data.id').isInt({min: 0}),
