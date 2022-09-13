@@ -92,7 +92,7 @@ async function sendBindingOriginVerify(username, address, language, code) {
         "Hello "+username+"!\n"+
         "   You are now binding this email to your bfban.com account.\n"+
         "   Please click the link below to finish the verification: \n"+
-        "      htttps://bfban.com/#/bindOriginVerify?code="+code,
+        "   https://bfban.com/#/bindOrigin?code="+code,
         config.mail.user, address, '', subject, [
             {
                 data: html.replace(/\$\{username\}/g, username).replace(/\$\{code\}/g, code), 
