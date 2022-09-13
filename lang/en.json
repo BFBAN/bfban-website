@@ -218,7 +218,8 @@
 				"user": "user management",
 				"comment": "Comments on the management",
 				"log": "log",
-				"adminLog": "Admin log"
+				"adminLog": "Admin log",
+				"judgementLog": "Judgement log"
 			}
 		}
 	},
