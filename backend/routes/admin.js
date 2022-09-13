@@ -30,6 +30,33 @@ async (req, res, next)=>{
     }
 });
 
+router.get('/judgementLog', verifyJWT, allowPrivileges(["super","root","dev"]), [
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('order').optional().isIn(['asc', 'desc']),
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next)=>{
+    try {
+        const skip = req.query.skip!=undefined? req.query.skip : 0;
+        const limit = req.query.limit!=undefined? req.query.limit : 20;
+        const order = req.query.order ? req.query.order : 'desc';
+
+        const total = await db.count({num: 1}).from('comments')
+            .andWhere('type', 'judgement').first().then(r=>r.num);
+
+        const result = await db('comments')
+            .join('users', 'comments.byUserId', 'users.id')
+            .select('comments.*', 'users.username', 'users.privilege')
+            .where('type', `judgement`)
+            .orderBy('comments.createTime', order)
+            .offset(skip).limit(limit);
+
+        return res.status(200).json({success: 1, code: 'log.ok', data: result, total});
+    } catch(err) {
+        next(err);
+    }
+});
+
 router.post('/setComment', verifyJWT, allowPrivileges(["super","root","dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.content').isString().isLength({max: 65535}),

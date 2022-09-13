@@ -396,6 +396,7 @@ router.post('/me', verifyJWT, forbidPrivileges(['blacklisted']), [
                 throw new Error('Bad input');
         return true;
     }),
+    checkbody('data.introduction').optional({nullable: true}).isString().isLength({min: 0, max: 100}),
     checkbody('data.attr').optional({nullable: true}).isObject(),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=>{
@@ -408,6 +409,8 @@ async (req, res, next)=>{
 
         if(req.body.data.subscribes)
             update.subscribes = JSON.stringify(req.body.data.subscribes.map(i=>i-0)); // to number
+        if(req.body.data.introduction)
+            req.body.data.attr.introduction = req.body.data.introduction;
         if(req.body.data.attr)
             update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
 

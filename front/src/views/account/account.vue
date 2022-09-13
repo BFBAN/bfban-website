@@ -46,7 +46,10 @@
 
       <FormItem :label="$t('profile.account.form.introduction')">
         <Card dis-hover :padding="0">
-          <Textarea v-model="formItem.introduction"
+          <Textarea v-model="formItem.attr.introduction"
+                    ref="Introduction"
+                    :content="formItem.attr.introduction"
+                    :maxlength="100"
                     :toolbar="[[{ 'list': 'ordered' }, { 'list': 'bullet' }], ['bold']]"
                     :height="'200px'"></Textarea>
         </Card>
@@ -389,15 +392,14 @@ export default {
      */
     onSave() {
       const {
-        introduction,
-        attr = { language: this.$root.$i18n.locale, showOrigin: false, allowDM: false }
+        attr = { language: this.$root.$i18n.locale, showOrigin: false, allowDM: false, introduction: '' }
       } = this.formItem;
 
       this.formLoad = true;
       this.http.post(api["user_me"], {
         data: {
           data: {
-            introduction,
+            introduction: attr.introduction,
             attr,
           }
         }
@@ -447,8 +449,7 @@ export default {
   computed: {
     formItem() {
       this.checkLangLocalSync();
-      return Object.assign({
-        introduction: '',
+      let data = Object.assign({
         password: '******',
         origin: {
           originName: '',
@@ -457,10 +458,15 @@ export default {
         newname: '',
         username: '',
         attr: {
+          introduction: '',
           language: ''
         }
       }, this.$store.state.$userinfo);
-    },
+
+      if (data.attr.introduction && this.$refs.Introduction)
+        this.$refs.Introduction.updateContent(data.attr.introduction);
+      return data;
+      },
     currentUser() {
       return this.$store.state.user || {token: ''};
     }

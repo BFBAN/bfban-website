@@ -27,6 +27,7 @@
           <user v-if="adminMenuValue == 'user'"></user>
           <comment v-else-if="adminMenuValue == 'comment'"></comment>
           <log v-else-if="adminMenuValue == 'admin_log'"></log>
+          <judgementLog v-else-if="adminMenuValue == 'judgement_log'"></judgementLog>
         </Col>
       </Row>
     </Card>
@@ -37,6 +38,7 @@
 import user from "./user"
 import comment from "./comment"
 import log from "./log"
+import judgementLog from "@/views/admin/judgementLog";
 
 export default {
   name: "profile",
@@ -65,16 +67,21 @@ export default {
             {
               title: 'adminLog',
               value: 'admin_log'
+            },
+            {
+              title: 'judgementLog',
+              value: 'judgement_log'
             }
           ]
         }
       ]
     }
   },
-  components: {user, comment , log},
+  components: {user, comment , log,judgementLog},
   methods: {
     onMenuActive(name) {
       this.adminMenuValue = name;
+      this.$router.push({name: 'admin', params: {pagename: name}})
     }
   },
   computed: {

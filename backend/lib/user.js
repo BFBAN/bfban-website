@@ -31,6 +31,7 @@ const userAttributes = {
     "registerIP": {type: "string", get: false, set: false, default: ''},
     "lastSigninIP": {type: "string", get: false, set: false, default: ''},
     "avatar": {type: "string", get: true, set: false, default: ''},
+    "introduction": {type: "string", get: true, set: true, default: ''}
 }
 
 function userShowAttributes(attr, showprivate=false, force=false) {

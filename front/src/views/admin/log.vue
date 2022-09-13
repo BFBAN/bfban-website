@@ -1,6 +1,6 @@
 <template>
   <div>
-    under construction
+
   </div>
 </template>
 
@@ -15,6 +15,7 @@ export default {
     this.http = http_token.call(this);
   },
   methods: {
+
   }
 }
 </script>

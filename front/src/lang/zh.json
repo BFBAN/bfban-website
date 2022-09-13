@@ -218,7 +218,8 @@
         "user": "用户管理",
         "comment": "评论管理",
         "log": "日志",
-        "adminLog": "管理日志"
+        "adminLog": "管理日志",
+        "judgementLog": "判决日志"
       }
     }
   },

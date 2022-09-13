@@ -66,10 +66,10 @@
     <div class="content">
       <Row :gutter="8">
         <Col :xm="{span: 24, order: 2}" :sm="{span: 7, order: 2}">
-          <Card v-if="account.introduction" dis-shadow>
-            <div v-html="account.introduction"></div>
+          <Card v-if="account.attr.introduction" dis-shadow>
+            <div v-html="account.attr.introduction"></div>
           </Card>
-          <br v-if="account.introduction">
+          <br v-if="account.attr.introduction">
 
           <Card v-if="account.origin && account.origin.originName" dis-shadow>
             <b>origin id:</b>

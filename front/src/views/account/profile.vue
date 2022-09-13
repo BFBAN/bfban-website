@@ -150,6 +150,7 @@ export default {
   methods: {
     onMenuActive (val) {
       this.menuValue = val;
+      this.$router.push({name: 'profile', params: {pagename: val}})
     },
     switchAttr(key, val) {
       account_storage.updateConfiguration(key, val);

@@ -6,10 +6,13 @@
         :style="`height:${height}`"
         :content="editorContent"
         :options="editorOption"
+        :disabled="disabled"
+        :maxlength="maxlength"
         @change="onEditorChange"
         @blur="onEditorBlur"
         @ready="onEditorReady"
         useCustomImageHandler />
+    <p style="text-align: right; padding-right: 10px" v-if="maxlength">{{editorContent.length || 0}}/{{maxlength}}</p>
 
 
     <Modal v-model="updataPlane" width="60%">
@@ -148,6 +151,10 @@ import MediaPage from "../../src/views/account/media";
 export default {
   props: {
     index: null,
+    maxlength: {
+      type: Number,
+      default:0
+    },
     height: {
       type: String,
       default: '200px'
@@ -156,6 +163,10 @@ export default {
       type: String,
       default: ""
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     content: {
       type: String,
       default: "",
@@ -163,6 +174,10 @@ export default {
     toolbar: null
   },
   components: { quillEditor, VueCropper, MediaPage },
+  created() {
+    if (this.content)
+      this.editorContent = this.content;
+  },
   data() {
     return {
       currentindex: 0,
@@ -214,6 +229,10 @@ export default {
     }
   },
   methods: {
+    updateContent(val) {
+      if (val && val.length < this.maxlength)
+        this.editorContent = val;
+    },
     /**
      * 插入
      */
@@ -294,10 +313,12 @@ export default {
      * @param text
      */
     onEditorChange(data) {
-      this.editorContent = data.html;
+      if (data.html && data.html.length < this.maxlength && !this.disabled)
+        this.editorContent = data.html;
     },
     onEditorBlur (data) {
-      this.$emit("input", this.editorContent);
+      if (data.html && data.html.length < this.maxlength && !this.disabled)
+        this.$emit("input", this.editorContent);
     },
     /**
      * util
@@ -320,7 +341,7 @@ export default {
      * 临时作用
      * @returns {*}
      */
-    filename (blob) {
+    filename () {
       return `${new Date().getTime()}${Math.floor(Math.random() * new Date().getTime())}`;
     }
   },
