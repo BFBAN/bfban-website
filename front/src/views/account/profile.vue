@@ -30,7 +30,7 @@
       <div class="profile-header-divider ivu-divider ivu-divider-horizontal"></div>
       <Row>
         <Col :xs="{span: 24}" :sm="{span: 6}">
-          <Menu class="profile-menu" :open-names="openMuen" :active-name="menuValue" @on-select="onMenuActive">
+          <Menu class="profile-menu" :mode="isMobile ? 'horizontal' : 'vertical'" :open-names="openMuen" :active-name="menuValue" @on-select="onMenuActive">
             <div v-for="(i, index) in menu" :key="index">
               <MenuItem :name="j.name" v-for="(j, j_index) in i.child" :key="j_index">
                 <Row :gutter="10">
@@ -164,9 +164,13 @@ export default {
       const is = user ? user.userinfo.privilege.concat("").includes("admin") : false;
       return Boolean(is);
     },
+    isMobile() {
+      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+      return !!flag;
+    },
     currentUser() {
       return this.$store.state.user;
-    }
+    },
   }
 }
 </script>
@@ -174,7 +178,6 @@ export default {
 <style lang="less" scoped>
  .profile-menu {
    height: 100%;
-   min-height: 300px;
 
    .ivu-icon {
       opacity: .6;

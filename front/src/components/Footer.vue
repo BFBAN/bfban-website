@@ -46,12 +46,10 @@
         <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
           <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large" :disabled="langLoaclSync">
             <Option v-for="(item, index) in languages" :value="item.name" :label="item.label" :key="index">
-                  <span>
-                    {{ item.label }}
-                  </span>
+              <span>{{ item.label }}</span>
               <span style="float:right;color:#ccc">
-                    {{ item.name }}
-                  </span>
+                {{ item.name }}
+              </span>
             </Option>
           </Select>
           <p v-if="languages.length > 0">
@@ -142,8 +140,7 @@ export default {
       set(val) {
         const lang = val;
         // 路由语言
-        if (this.langLoaclSync)
-          this.$store.dispatch('setLang', lang);
+        this.$store.dispatch('setLang', lang);
         // 本地持久语言
         storage.set('language', lang);
         // 网页语言
