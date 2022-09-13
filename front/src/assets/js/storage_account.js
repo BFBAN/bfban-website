@@ -3,6 +3,7 @@
  */
 
 import Storage from './storage';
+import store from "@/store";
 
 export default class AccountStorage extends Storage {
     ACCOUNTDATA = [{
@@ -58,6 +59,14 @@ export default class AccountStorage extends Storage {
         })
     }
 
+    constructor() {
+        super();
+
+        const conf = super.get(this.NAME);
+        if (conf.code >= 0)
+            store.commit("syncLoaclConfiguration", conf.data.value)
+    }
+
     /**
      * 用户一类 本地配置
      * - 是否本地语言同步
@@ -74,6 +83,7 @@ export default class AccountStorage extends Storage {
         }
 
         data.data.value[key] = value;
+        store.commit("syncLoaclConfiguration", data.data.value)
         super.set(this.NAME , data.data.value)
     }
 
@@ -84,6 +94,8 @@ export default class AccountStorage extends Storage {
      */
     getConfiguration (key) {
         let data = super.get(this.NAME);
+
+        if (data.code <= 0) return false;
         return key in data.data.value ? data.data.value[key] : false;
     }
 }

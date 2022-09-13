@@ -77,11 +77,11 @@
                     <Divider type="vertical"/>
                     <Dropdown placement="bottom-end">
                       <ButtonGroup type="button">
-                        <Button @click="onSubscribes" :loading="subscribes.load">
+                        <Button @click="onSubscribes" :loading="subscribes.load" :disabled="!$store.state.configuration.subscribes">
                           <template v-if="subscribes.static"><Icon type="md-notifications-off" size="20" />{{ $t('detail.subscribes.cancelTrack') }}</template>
                           <template v-else><Icon type="md-notifications-outline" size="20" />{{ $t('detail.subscribes.tracking') }}</template>
                         </Button>
-                        <Button>
+                        <Button :disabled="!$store.state.configuration.subscribes">
                           <Icon type="ios-arrow-down"></Icon>
                         </Button>
                       </ButtonGroup>
@@ -709,7 +709,7 @@
             </Form>
           </div>
 
-          <Spin fix v-if="judgementLock">
+          <Spin fix v-if="$store.state.configuration.judgementTip == false">
             <div class="loader">
               <Icon type="md-lock" size="80" style="margin-bottom: 20px" />
 
@@ -901,7 +901,6 @@ export default new BFBAN({
   data() {
     return {
       detailLoad: true,
-      judgementLock: false,
       appeal: {
         load: false,
         show: false,
@@ -979,7 +978,6 @@ export default new BFBAN({
   created() {
     this.http = http_token.call(this);
 
-    this.checkJudgementLock();
     this.loadData();
     this.getCheatersInfo();
     this.getTimeline();
@@ -1389,7 +1387,6 @@ export default new BFBAN({
       });
     },
     handleCmdEnter(e, type) {
-      console.log(e, type);
       if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
         switch (type) {
           case 'reply':
@@ -1442,10 +1439,6 @@ export default new BFBAN({
      */
     onJudgementLock () {
       account_storage.updateConfiguration('judgementTip', true);
-      this.judgementLock = false;
-    },
-    checkJudgementLock () {
-      this.judgementLock  = !account_storage.getConfiguration('judgementTip');
     }
   },
   computed: {

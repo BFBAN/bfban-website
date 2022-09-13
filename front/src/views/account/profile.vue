@@ -27,12 +27,22 @@
           </Col>
         </Row>
       </Form>
+      <div class="profile-header-divider ivu-divider ivu-divider-horizontal"></div>
       <Row>
         <Col :xs="{span: 24}" :sm="{span: 6}">
           <Menu class="profile-menu" :open-names="openMuen" :active-name="menuValue" @on-select="onMenuActive">
             <div v-for="(i, index) in menu" :key="index">
               <MenuItem :name="j.name" v-for="(j, j_index) in i.child" :key="j_index">
-                <Icon :type="j.icon" v-if="j.icon" />  {{ $t(`profile.${j.title}.title`)}}
+                <Row :gutter="10">
+                  <Col flex="1" :style="j.configurationKey ? `opacity:${!j.configurationValue ? '.3' : '1'}` : ''">
+                    <Icon :type="j.icon" v-if="j.icon" size="20" /> {{ $t(`profile.${j.title}.title`)}}
+                  </Col>
+                  <Col>
+                    <Checkbox @on-change="switchAttr(j.configurationKey, j.configurationValue)"
+                              v-model="j.configurationValue"
+                              v-if="j.configurationKey"></Checkbox>
+                  </Col>
+                </Row>
               </MenuItem>
             </div>
             <MenuGroup>
@@ -71,6 +81,7 @@ import enhance from "./enhance";
 import media from "./media";
 import history from "./history";
 import subscribes from "./subscribes"
+import {account_storage} from "@/assets/js";
 
 export default {
   name: "profile",
@@ -86,29 +97,40 @@ export default {
           child: [{
             title: 'account',
             name: 'account',
+            icon: 'md-person'
           }, {
             title: 'appearance',
-            name: 'appearance'
+            name: 'appearance',
+            icon: 'ios-color-palette'
           },
           {
             title: 'message',
-            name: 'message'
+            name: 'message',
+            icon: 'md-mail'
           },
           {
             title: 'enhance',
-            name: 'enhance'
+            name: 'enhance',
+            icon: 'md-code-download'
           },
           {
             title: 'media',
-            name: 'media'
+            name: 'media',
+            icon: 'ios-videocam'
           },
           {
             title: 'history',
-            name: 'history'
+            name: 'history',
+            icon: 'md-filing',
+            configurationKey: 'history',
+            configurationValue: this.$store.state.configuration.history || false,
           },
           {
             title: 'subscribes',
-            name: 'subscribes'
+            name: 'subscribes',
+            icon: 'md-notifications',
+            configurationKey: 'subscribes',
+            configurationValue: this.$store.state.configuration.subscribes || false,
           }]
         },
       ]
@@ -129,6 +151,9 @@ export default {
     onMenuActive (val) {
       this.menuValue = val;
     },
+    switchAttr(key, val) {
+      account_storage.updateConfiguration(key, val);
+    }
   },
   computed: {
     isLogin() {
@@ -146,14 +171,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
  .profile-menu {
    height: 100%;
    min-height: 300px;
+
+   .ivu-icon {
+      opacity: .6;
+   }
  }
 
  .profile-header {
    padding: 15px 20px;
+ }
+
+ .profile-header-divider {
+   margin: 0 !important;
+   opacity: .2;
  }
 
  .profile-right-content {

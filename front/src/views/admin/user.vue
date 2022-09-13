@@ -176,16 +176,13 @@ export default {
       await this.setUserAttr();
 
       // 处理用户身份权限
-      console.log(this.editUserData);
       for (const key in this.editUserData.temporaryPrivilege) {
-        console.log(this.editUserData);
         if (this.editUserData.id) {
-          console.log(this.editUserData);
-          // await this.setUser(
-          //     this.editUserData.id,
-          //     this.editUserData.temporaryPrivilege[key],
-          //     key
-          // );
+          await this.setUser(
+              this.editUserData.id,
+              this.editUserData.temporaryPrivilege[key],
+              key
+          );
         }
       }
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$store.state.configuration.subscribes">
     <Row :gutter="20">
       <Col flex="auto" >
         <RadioGroup
@@ -105,6 +105,9 @@
 
     <div v-if="list.length <= 0">{{ $t('basic.tip.notcontent') }}</div>
   </div>
+  <div v-else>
+    Disable Component
+  </div>
 </template>
 
 <script>
@@ -136,6 +139,8 @@ export default {
      */
     getSubscribes () {
       let loaclData = storage.get('user.subscribes');
+
+      if (!this.$store.state.configuration.subscribes) return;
 
       if (loaclData.code >= 0) {
         loaclData.data.value.forEach(async i => {

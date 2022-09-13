@@ -325,7 +325,6 @@ export default new BFBAN({
         params: { id: 1005842631970, url: this.location.href += '/card' }
       }).then(res => {
         const d = res.data;
-        console.log(d)
         if (d.success == 1) {
           this.share.imagebase64 = d.data;
         }

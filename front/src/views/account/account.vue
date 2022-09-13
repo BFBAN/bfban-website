@@ -442,7 +442,6 @@ export default {
     },
     checkLangLocalSync () {
       this.langLoaclSync  = account_storage.getConfiguration('langLoaclSync');
-      console.log(this.langLoaclSync)
     }
   },
   computed: {

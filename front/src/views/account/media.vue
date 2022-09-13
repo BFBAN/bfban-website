@@ -49,7 +49,6 @@ export default {
             key: 'createTime',
             fixed: 'right',
             render: (h, params) => {
-              console.log(params.row.createTime)
               return h('Time', {
                 props: {
                   time: params.row.createTime

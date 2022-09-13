@@ -49,7 +49,6 @@ class ServiceApiContext {
                 throw new ServiceApiError(err.response.statusCode, JSON.parse(err.response.body), err);
             throw new ServiceApiError(-1, null, err);
         }).then(r=>{    // DEBUG
-            console.log(JSON.stringify(r)); 
             return r;
         });
     }

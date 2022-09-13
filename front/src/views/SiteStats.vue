@@ -27,34 +27,34 @@
 
       <Card dis-hover>
         <Row type="flex" justify="space-between" align="middle">
-          <Col span="3">
+          <Col :xs="{span: 12}" :lg="{span: 3}">
             <h2>
               {{ statistics.reports || 0 }}
             </h2>
             <span>{{ $t('sitestats.reports') }}</span>
           </Col>
-          <Divider type="vertical" />
-          <Col span="3">
+          <Divider type="vertical" class="mobile-hide" />
+          <Col :xs="{span: 12}" :lg="{span: 3}">
             <h2><Badge :color="chart.stats.color[0]" />{{ statistics.players || 0 }}</h2>
             {{ $t('sitestats.players') }}
           </Col>
-          <Divider type="vertical" />
-          <Col span="3">
+          <Divider type="vertical" class="mobile-hide"/>
+          <Col :xs="{span: 12}" :lg="{span: 3}">
             <h2>{{ statistics.banAppeals || 0 }}</h2>
             {{ $t('sitestats.banAppeals') }}
           </Col>
-          <Divider type="vertical" />
-          <Col span="3">
+          <Divider type="vertical" class="mobile-hide"/>
+          <Col :xs="{span: 12}" :lg="{span: 3}">
             <h2><Badge :color="chart.stats.color[2]" />{{ statistics.registers || 0 }}</h2>
             <span>{{ $t('sitestats.registers') }}</span>
           </Col>
-          <Divider type="vertical" />
-          <Col span="3">
+          <Divider type="vertical" class="mobile-hide"/>
+          <Col :xs="{span: 12}" :lg="{span: 3}">
             <h2><Badge :color="chart.stats.color[1]" />{{ statistics.confirmed || 0 }}</h2>
             <span>{{ $t('sitestats.confirmed') }}</span>
           </Col>
-          <Divider type="vertical" />
-          <Col span="3" v-if="admins">
+          <Divider type="vertical" class="mobile-hide"/>
+          <Col :xs="{span: 12}" :lg="{span: 3}" v-if="admins">
             <h2>{{ admins || 0 }}</h2>
             {{ $t('sitestats.admins') }}
           </Col>

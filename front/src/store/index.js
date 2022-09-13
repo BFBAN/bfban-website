@@ -14,6 +14,13 @@ const store = new Vuex.Store({
     user: undefined,
     namespaced: true,
 
+    // storage_account.js
+    configuration: {
+      history: false,
+      subscribes: false,
+      judgementTip: false
+    },
+
     // https://vue-meta.nuxtjs.org/api
     metaInfo: {
       meta: [
@@ -41,6 +48,9 @@ const store = new Vuex.Store({
       state.user = undefined;
 
       Cookies.remove('user');
+    },
+    syncLoaclConfiguration (state, data) {
+      state.configuration = Object.assign(state.configuration, data);
     },
     syncLoginState(state) {
       const cookieUser = Cookies.get('user') && JSON.parse(Cookies.get('user'));

@@ -1,123 +1,125 @@
 <template>
   <div>
-    <Row :gutter="20">
-      <Col flex="auto" >
-        <RadioGroup
-            class="game-type"
-            v-model="gameName"
-            type="button">
-          <Radio label="all" value="all">
-            {{ $t('basic.games.all') }}
-          </Radio>
-          <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
-                 :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
-                 :class="gameName == i.value ? 'gametype-select' : ''">
-            <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
-            <span v-else>{{ i.full_name }}</span>
-          </Radio>
-        </RadioGroup>
-      </Col>
-    </Row>
-    <Row :gutter="10" class="history-buttons" type="flex" justify="center">
-      <Col flex="1">
-        <Checkbox v-model="checkboxAll" :disabled="list.length <= 0" @on-change="onCheckboxAll"></Checkbox>
-        <Divider type="vertical" />
-        <Button @click="onDelete" :disabled="list.length <= 0" size="small">
-          <Icon type="md-trash" />
-        </Button>
-      </Col>
-      <Col>
-        <Select size="small" v-model="statusName" style="width: 150px">
-          <Option value="-1">
-            {{ $t("basic.status.all") }}
-          </Option>
-          <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">
-            {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
-          </Option>
-        </Select>
-        <Divider type="vertical" />
-        <Button @click="onForcedUpdate" size="small" :loading="load">
-          <Icon type="md-refresh" />
-        </Button>
-      </Col>
-    </Row>
+    <template v-if="$store.state.configuration.history">
+      <Row :gutter="20">
+        <Col flex="auto" >
+          <RadioGroup
+              class="game-type"
+              v-model="gameName"
+              type="button">
+            <Radio label="all" value="all">
+              {{ $t('basic.games.all') }}
+            </Radio>
+            <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
+                   :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
+                   :class="gameName == i.value ? 'gametype-select' : ''">
+              <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
+              <span v-else>{{ i.full_name }}</span>
+            </Radio>
+          </RadioGroup>
+        </Col>
+      </Row>
+      <Row :gutter="10" class="history-buttons" type="flex" justify="center">
+        <Col flex="1">
+          <Checkbox v-model="checkboxAll" :disabled="list.length <= 0" @on-change="onCheckboxAll"></Checkbox>
+          <Divider type="vertical" />
+          <Button @click="onDelete" :disabled="list.length <= 0" size="small">
+            <Icon type="md-trash" />
+          </Button>
+        </Col>
+        <Col>
+          <Select size="small" v-model="statusName" style="width: 150px">
+            <Option value="-1">
+              {{ $t("basic.status.all") }}
+            </Option>
+            <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">
+              {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
+            </Option>
+          </Select>
+          <Divider type="vertical" />
+          <Button @click="onForcedUpdate" size="small" :loading="load">
+            <Icon type="md-refresh" />
+          </Button>
+        </Col>
+      </Row>
 
-    <br>
+      <br>
 
-    <div class="list">
-      <div v-for="(i, i_index) in list" :key="i_index">
-        <Divider v-if="i.time && i_index > 0" dashed></Divider>
-        <div v-for="(d, d_index) in i.data" :key="d_index"
-             v-show="onScreening(i_index, d_index)"
-             class="item-card">
-          <Row :gutter="10" type="flex" justify="center" align="middle">
-            <Col>
-              <Checkbox v-model="d.checkbox"></Checkbox>
-            </Col>
-            <Col flex="1">
+      <div class="list">
+        <div v-for="(i, i_index) in list" :key="i_index">
+          <Divider v-if="i.time && i_index > 0" dashed></Divider>
+          <div v-for="(d, d_index) in i.data" :key="d_index"
+               v-show="onScreening(i_index, d_index)"
+               class="item-card">
+            <Row :gutter="10" type="flex" justify="center" align="middle">
+              <Col>
+                <Checkbox v-model="d.checkbox"></Checkbox>
+              </Col>
+              <Col flex="1">
 
-              <Card dis-hover :padding="10">
-                <Row :gutter="10" type="flex">
-                  <Col :xs="{span: 8, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
-                    <!-- 头像 S -->
-                    <Avatar :src="d.avatarLink"
-                            alt="avatar"
-                            size="55"
-                            v-if="d.avatarLink">
-                    </Avatar>
-                    <!-- 头像 E -->
-                  </Col>
-                  <Col :xs="{span: 17, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
-                    <div style="display: flex; flex-direction: column;">
-                      <Tooltip :content="$t('list.colums.playerId')">
-                        <h2>
-                          <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}"
-                                       :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
-                            {{ d.originName }}
-                          </router-link>
-                        </h2>
-                      </Tooltip>
-                    </div>
+                <Card dis-hover :padding="10">
+                  <Row :gutter="10" type="flex">
+                    <Col :xs="{span: 8, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
+                      <!-- 头像 S -->
+                      <Avatar :src="d.avatarLink"
+                              alt="avatar"
+                              size="55"
+                              v-if="d.avatarLink">
+                      </Avatar>
+                      <!-- 头像 E -->
+                    </Col>
+                    <Col :xs="{span: 17, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
+                      <div style="display: flex; flex-direction: column;">
+                        <Tooltip :content="$t('list.colums.playerId')">
+                          <h2>
+                            <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}"
+                                         :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
+                              {{ d.originName }}
+                            </router-link>
+                          </h2>
+                        </Tooltip>
+                      </div>
 
-                    <div>
-                      {{ $t('list.colums.reportTime') }}
-                      <Time v-if="d.createTime" :time="d.createTime"/>
-                      <Divider type="vertical"/>
-                      {{ $t('list.colums.updateTime') }}
-                      <Time v-if="d.updateTime" :time="d.updateTime"/>
-                    </div>
-                  </Col>
-                  <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 4, push: 0,pull:0}" class="mobile-hide">
-                    <Row type="flex" justify="end" align="middle" style="height: 100%">
-                      <Col flex="auto" align="right" class="item-text">
-                        <span>{{ d.viewNum || 0 }}</span>
-                        <Icon type="md-eye" size="17" class="item-icon"/>
-                      </Col>
-                      <Col flex="auto" align="right" class="item-text">
-                        <span>{{ d.commentsNum || 0 }}</span>
-                        <Icon type="md-chatboxes" size="17" class="item-icon"/>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Card>
+                      <div>
+                        {{ $t('list.colums.reportTime') }}
+                        <Time v-if="d.createTime" :time="d.createTime"/>
+                        <Divider type="vertical"/>
+                        {{ $t('list.colums.updateTime') }}
+                        <Time v-if="d.updateTime" :time="d.updateTime"/>
+                      </div>
+                    </Col>
+                    <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 4, push: 0,pull:0}" class="mobile-hide">
+                      <Row type="flex" justify="end" align="middle" style="height: 100%">
+                        <Col flex="auto" align="right" class="item-text">
+                          <span>{{ d.viewNum || 0 }}</span>
+                          <Icon type="md-eye" size="17" class="item-icon"/>
+                        </Col>
+                        <Col flex="auto" align="right" class="item-text">
+                          <span>{{ d.commentsNum || 0 }}</span>
+                          <Icon type="md-chatboxes" size="17" class="item-icon"/>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Card>
 
-            </Col>
-          </Row>
+              </Col>
+            </Row>
+          </div>
+        </div>
+        <div v-if="list.length <= 0" align="center">
+          <br>
+          {{ $t('basic.tip.notcontent') }}
+          <br>
         </div>
       </div>
-      <div v-if="list.length <= 0" align="center">
-        <br>
-        {{ $t('basic.tip.notcontent') }}
-        <br>
-      </div>
-    </div>
-
+    </template>
+    <div v-else>Disable Component</div>
   </div>
 </template>
 
 <script>
-import {http_token, storage, player_storage} from "../../assets/js";
+import {http_token, storage, player_storage, account_storage} from "../../assets/js";
 
 import cheaterStatus from '/public/conf/cheaterStatus.json'
 import gameName from '/public/conf/gameName.json'
@@ -125,6 +127,7 @@ import gameName from '/public/conf/gameName.json'
 export default {
   data() {
     return {
+      disable: false,
       gameName: "all",
       games: gameName.child,
       statusName: "-1",
@@ -137,7 +140,7 @@ export default {
   created() {
     this.http = http_token.call(this);
 
-    this.getHisory();
+    this.getHisory()
   },
   methods: {
     /**
@@ -146,6 +149,8 @@ export default {
     async getHisory () {
       let loaclData = storage.get('viewed');
       this.list = [{ time: 0, data: [] }, { time: 0, data: [] }];
+
+      if (!this.$store.state.configuration.history) return;
 
       if (loaclData.code >= 0) {
         for (const key in loaclData.data.value) {

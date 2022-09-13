@@ -40,7 +40,6 @@ const isAdminBefore = (to, from, next) => {
 
     isLoginBeforeEnter(to, from, next);
 
-    console.log(store.state.user.userinfo.privilege)
     if (store.state.user)
         for (const i of store.state.user.userinfo.privilege) {
             if (['admin', 'root',''].includes(i)) checkAdmin = true;
