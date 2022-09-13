@@ -1,11 +1,26 @@
 <template>
   <div>
-    <Row :gutter="10">
+    <Row :gutter="10" type="flex" align="middle">
+      <Col>
+        <Button @click="addUserModel = true"><Icon type="md-add" /></Button>
+      </Col>
       <Col flex="1">
-        <Input v-model="userValue" placeholder="Enter ..." />
       </Col>
       <Col>
-        <Button @click="onSearchUser" :loading="load">{{ $t('basic.button.submit') }}</Button>
+        <div v-show="load">
+          <Icon type="ios-loading"></Icon>
+        </div>
+      </Col>
+      <Col>
+        <Input v-model="userValue"
+               type="text"
+               search
+               enter-button
+               @on-enter="onSearchUser"
+               @on-search="onSearchUser"
+               placeholder="input user name"
+               style="width: 280px" >
+        </Input>
       </Col>
     </Row>
     <br>
@@ -13,23 +28,34 @@
     <Card dis-hover v-for="(i, index) in userListData" :key="index" class="admin-user">
       <Row :gutter="10" type="flex" justify="center" align="middle">
         <Col flex="1">
-          <b>{{i.username}}</b>
-          <p>id: {{i.id}}</p>
+          <BusinessCard :id="i.id">
+            <b>{{i.username}}</b>
+          </BusinessCard>
+          <div>
+            Id:{{i.id}}
+            <divider type="vertical"></divider>
+            Valid:{{ i.valid }}
+          </div>
         </Col>
         <Col>
           <PrivilegesTag :data="i.privilege"></PrivilegesTag>
         </Col>
         <Col>
-          <Button @click="onEditUser(index)" type="dashed" size="small">
+          <Button @click="onEditUser(index)" type="dashed" size="small" :disabled="!isAdmin">
             <Icon type="ios-create" />
+          </Button>
+          <Divider type="vertical"></Divider>
+          <Button @click="openDelUserModel(index)" type="error" size="small" :disabled="!isAdmin">
+            <Icon type="md-trash" />
           </Button>
         </Col>
       </Row>
     </Card>
-    <div v-if="userListData.length <= 0">:(</div>
+    <Card dis-hover align="center" v-if="userListData.length <= 0">:(</Card>
 
-    <Modal v-model="userModel"
-           @on-ok="onSubmit"
+    <!-- 编辑用户 S -->
+    <Modal v-model="userEditModel"
+           @on-ok="onEditUserSubmit"
            :title="editUserData.username">
       <Form :model="editUserData"
             ref="formValidate"
@@ -127,6 +153,74 @@
         </FormItem>
       </Form>
     </Modal>
+    <!-- 编辑用户 E -->
+
+    <!-- 新增用户 S -->
+    <Modal v-model="addUserModel"
+           :loading="addUserLoad">
+      <Form :model="addUserData"
+            :rules="addUserRuleValidate"
+            ref="addUserFormValidate"
+            label-position="top">
+
+        <Alert type="info" icon="info">
+          添加未绑定用户
+          <template slot="desc">
+            在当前添加的用户，无法操作任何评论、判决、回复等操作，因为他未通过origin的邮箱绑定，需要用户登录账户完成最后平台绑定。
+          </template>
+        </Alert>
+
+        <Row :gutter="10">
+          <Col span="24">
+            <FormItem :label="$t('signup.form.username')" prop="username">
+              <Input v-model="addUserData.username" :placeholder="$t('signup.placeholder.username')"/>
+            </FormItem>
+          </Col>
+          <Col span="24">
+            <FormItem :label="$t('signup.form.password')" prop="password">
+              <Input v-model="addUserData.password"
+                     password
+                     minlength="6"
+                     :placeholder="$t('signup.placeholder.password')"/>
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+      <div slot="footer">
+        <Button @click="onAddUserSubmit" :loading="addUserLoad">{{ $t('basic.button.submit') }}</Button>
+      </div>
+    </Modal>
+    <!-- 新增用户 E -->
+
+    <!-- 删除用户 S -->
+    <Modal v-model="delUserModel"
+           :loading="delUserLoad"
+           width="360">
+      <p slot="header" style="color:#f60;text-align:center">
+        <Icon type="ios-information-circle"></Icon>
+        <span>Delete User Account</span>
+      </p>
+      <Card dis-hover align="center">
+        <BusinessCard :id="editUserData.id">
+          <h2><a href="javascript:void(0)"><b>{{ editUserData.username }}</b></a></h2>
+        </BusinessCard>
+        <p>{{editUserData.id}}</p>
+      </Card>
+      <div slot="footer">
+        <Row type="flex" align="middle">
+          <Col>
+            <Select v-model="delTypeValue" style="width: 150px">
+              <Option v-for="(i, index) in delTypes" :key="index" :value="i"> {{i}} </Option>
+            </Select>
+          </Col>
+          <Divider type="vertical"></Divider>
+          <Col flex="2">
+            <Button @click="onDeleteUser" type="error" long :loading="delUserLoad">{{ $t('basic.button.submit') }}</Button>
+          </Col>
+        </Row>
+      </div>
+    </Modal>
+    <!-- 删除用户 E -->
   </div>
 </template>
 
@@ -135,12 +229,21 @@ import {api, http, http_token} from "../../assets/js";
 
 import languages from "/public/conf/languages.json";
 
+import BusinessCard from "@/components/businessCard";
 import PrivilegesTag from "/src/components/PrivilegesTag";
+import _ from "lodash";
 
 export default {
   data() {
     return {
+      delUserModel: false,
+      delUserLoad: false,
+      delTypes: ['logic', 'real', 'restore'],
+      delTypeValue: 'logic',
+
+      addUserLoad: false,
       load: false,
+
       userValue: '',
       userListData: [],
       editUserData: {
@@ -157,11 +260,24 @@ export default {
         activeName: 'grant',
         action: ['grant', 'revoke'],
       },
-      userModel: false,
+      addUserData: {
+        username: '',
+        password: ''
+      },
+      addUserRuleValidate: {
+        username: [
+          {required: true, min: 4, max: 40, trigger: 'blur'}
+        ],
+        password: [
+          {required: true, min: 6, max: 40, trigger: 'blur'}
+        ],
+      },
+      userEditModel: false,
+      addUserModel: false,
       languages: languages.child
     }
   },
-  components: {PrivilegesTag},
+  components: {PrivilegesTag, BusinessCard},
   created() {
     this.http = http_token.call(this);
   },
@@ -169,7 +285,7 @@ export default {
     /**
      * 提交修改表单
      */
-    async onSubmit () {
+    async onEditUserSubmit () {
       this.load = true;
 
       // 处理用户属性
@@ -188,6 +304,81 @@ export default {
 
       await this.onSearchUser();
       this.load = false;
+    },
+    /**
+     * 管理员增加用户
+     */
+    onAddUserSubmit () {
+      const {username, password} = this.addUserData;
+
+      this.$refs.addUserFormValidate.validate((valid) => {
+        // 检查表单
+        if (!valid) {
+          this.$Message.error('Fail!');
+          return;
+        }
+
+        this.addUserLoad = true;
+
+        this.http.post(api["admin_addUser"], {
+          data: {
+            data: {
+              username,
+              password,
+              language: this.$i18n.locale
+            }
+          }
+        }).then(res => {
+          const d = res.data;
+
+          if (d.success == 1) {
+            this.$Message.success(d.code);
+            return
+          }
+
+          this.$Message.error(d.code);
+        }).finally(() => {
+          this.addUserLoad = false;
+          this.addUserModel = false;
+        });
+      })
+    },
+    /**
+     * 管理员删除用户
+     */
+    onDeleteUser () {
+      const { id } = this.editUserData;
+
+      this.delUserLoad = true;
+      this.http.post(api["admin_delUser"], {
+        data: {
+          data: {
+            type: this.delTypeValue,
+            id,
+          }
+        }
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.$Message.success(d.code);
+          return
+        }
+
+        this.$Message.error(d.code);
+      }).finally(() => {
+        this.onSearchUser();
+
+        this.delUserLoad = false;
+        this.delUserModel = false;
+      });
+    },
+    /**
+     * 打开删除面板Mode
+     */
+    openDelUserModel (index) {
+      this.editUserData = this.userListData[index];
+      this.delUserModel = true;
     },
     /**
      * 处理表单内用户权限增加与删除
@@ -251,7 +442,7 @@ export default {
       })
     },
     onEditUser (index) {
-      this.userModel = true;
+      this.userEditModel = true;
       this.editUserData = Object.assign(this.editUserData, this.userListData[index]);
 
       if(this.$refs.privilegesTag)
@@ -300,7 +491,18 @@ export default {
     }
   },
   computed: {
-
+    isAdmin() {
+      let isBool = false;
+      const user = this.$store.state.user.userinfo;
+      const adminGroup = ['root', 'admin', 'super', 'dev']
+      for (const i of adminGroup) {
+        for (const j of user.privilege){
+          if (j == i)
+            isBool = true;
+        }
+      }
+      return Boolean(isBool);
+    }
   }
 }
 </script>

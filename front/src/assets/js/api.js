@@ -57,7 +57,9 @@ export default class Api {
       'admin_msGraphStatus': 'admin/msGraphStatus',
       'admin_msGraphInit': 'admin/msGraphInit',
       'admin_msGraphAuthCode': 'admin/msGraphAuthCode',
-      'admin_judgementLog': 'admin/judgementLog'
+      'admin_judgementLog': 'admin/judgementLog',
+      'admin_addUser': 'admin/addUser',
+      'admin_delUser': 'admin/delUser'
     };
   }
 }

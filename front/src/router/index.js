@@ -48,7 +48,7 @@ const isAdminBefore = (to, from, next) => {
     if (checkAdmin) {
         next();
     } else {
-        next({path: '/signin'});
+        next({path: '/profile/account'});
     }
 }
 

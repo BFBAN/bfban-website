@@ -1443,9 +1443,16 @@ export default new BFBAN({
   },
   computed: {
     isAdmin() {
-      const user = this.$store.state.user;
-      const is = user ? user.userinfo.privilege.concat("").includes("admin") : false;
-      return Boolean(is);
+      let isBool = false;
+      const user = this.$store.state.user.userinfo;
+      const adminGroup = ['root', 'admin', 'super', 'dev']
+      for (const i of adminGroup) {
+        for (const j of user.privilege){
+          if (j == i)
+            isBool = true;
+        }
+      }
+      return Boolean(isBool);
     },
     isLogin() {
       return Boolean(this.$store.state.user)
