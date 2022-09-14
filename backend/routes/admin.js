@@ -19,33 +19,33 @@ import {siteEvent} from "../lib/bfban.js";
 const router = express.Router();
 
 router.get('/searchUser', verifyJWT, allowPrivileges(["super","root","dev"]), [
-    checkquery('name').isString(),
-    checkquery('skip').optional().isInt({min: 0}),
-    checkquery('limit').optional().isInt({min: 0, max: 100}),
-    checkquery('order').optional().isIn(['asc', 'desc']),
+  checkquery('name').isString(),
+  checkquery('skip').optional().isInt({min: 0}),
+  checkquery('limit').optional().isInt({min: 0, max: 100}),
+  checkquery('order').optional().isIn(['asc', 'desc']),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next)=>{
-    try {
-        const validateErr = validationResult(req);
-        if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
+  try {
+      const validateErr = validationResult(req);
+      if(!validateErr.isEmpty())
+          return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
 
-        const skip = req.query.skip!=undefined? req.query.skip : 0;
-        const limit = req.query.limit!=undefined? req.query.limit : 20;
-        const order = req.query.order ? req.query.order : 'desc';
+      const skip = req.query.skip!=undefined? req.query.skip : 0;
+      const limit = req.query.limit!=undefined? req.query.limit : 20;
+      const order = req.query.order ? req.query.order : 'desc';
 
-        const total = await db.count({num: 1}).from('users').first().then(r=>r.num);
+      const total = await db.count({num: 1}).from('users').first().then(r=>r.num);
 
-        const result = await db.select('*')
-            .from('users')
-            .where('username', 'like', `%${req.query.name}%`)
-            .orderBy('users.createTime', order)
-            .offset(skip).limit(limit);
-        
-        return res.status(200).json({success: 1, code: 'searchUser.ok', data: result, total});
-    } catch(err) {
-        next(err);
-    }
+      const result = await db.select('*')
+          .from('users')
+          .where('username', 'like', `%${req.query.name}%`)
+          .orderBy('users.createTime', order)
+          .offset(skip).limit(limit);
+      
+      return res.status(200).json({success: 1, code: 'searchUser.ok', data: result, total});
+  } catch(err) {
+      next(err);
+  }
 });
 
 router.get('/judgementLog', verifyJWT, allowPrivileges(["super","root","dev"]), [
@@ -64,6 +64,7 @@ async (req, res, next)=>{
 
         const result = await db('comments')
             .join('users', 'comments.byUserId', 'users.id')
+            // .join('users', 'comments.byUserId', 'users.id')
             .select('comments.*', 'users.username', 'users.privilege')
             .where('type', `judgement`)
             .orderBy('comments.createTime', order)
@@ -158,7 +159,7 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'setComment.bad', message: validateErr.array()});
         
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({id: req.body.data.id});
+        const user = await db.select('*').from('users').where({id: req.body.data.id}).first();
         if(!user)
             return res.status(404).json({error: 1, code: 'setUser.notFound'});
         const role = req.body.data.role;
@@ -168,11 +169,11 @@ async (req, res, next)=>{
                 rootCan  = ['normal','admin','bot','super','dev','blacklisted','freezed'];
             let flag = false;
             // check if current user can grant such permission
-            flag = (userHasRoles(req.user, ['dev']) && devCan.includes(role) )? true : flag;
+            flag = (userHasRoles(req.user, ['dev']) && devCan.includes(role))? true : flag;
             flag = (userHasRoles(req.user, ['super']) && superCan.includes(role) )? true : flag;
             flag = (userHasRoles(req.user, ['root']) && rootCan.includes(role) )? true : flag;
             // check if user trying to grant 'blacklisted' or 'freezed' role to someone who have higher permission
-            flag = (['blacklisted','freezed'].includes(role) && user.privilege.filter(i=>['admin','super','dev','root'].includes(i)).length==0)? flag : false;
+            flag = (['blacklisted','freezed'].includes(role) && user.privilege.filter(i=>['admin','super','dev','root'].includes(i)).length==0)? false : flag;
             if(flag)
                 user.privilege = privilegeGranter(user.privilege, role);    
             else
@@ -192,6 +193,10 @@ async (req, res, next)=>{
                 return res.status(403).json({error: 1, code: 'setUser.permissionDenied'});
         }
         await sendMessage(req.user.id, null, "command", JSON.stringify({action:'setUser', target: user.id, detail: `${req.body.data.action}:${role}`}));
+        console.log(user)
+        user.attr = JSON.stringify(user.attr)
+        user.subscribes = JSON.stringify(user.subscribes)
+        user.privilege = JSON.stringify(user.privilege)
         await db('users').update(user).where({id: user.id});
         const quota = initUserStorageQuota(user);
         await db('storage_quotas').update({
@@ -199,11 +204,33 @@ async (req, res, next)=>{
             maxFileNumber: quota.maxFileNumber,
             maxTrafficQuota: quota.maxTrafficQuota
         }).where({userId: user.id});
-
+        const { id, action } = req.body.data
+        await db('operation_log').insert({
+          byUserId: req.user.id,
+          toUserId: id,
+          action,
+          role: req.body.data.role,
+          createTime: new Date()
+        });
         return res.status(200).json({success: 1, code: 'setUser.ok'});
     } catch(err) {
         next(err);
     }
+});
+
+router.get('/getUserOperationLogs', 
+/** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next)=>{
+  try {
+    const result =  await db.select('useTab1.username as adminName', 'useTab2.username as userName', 'operation_log.action', 'operation_log.role', 'operation_log.byUserId', 'operation_log.toUserId', 'operation_log.createTime')
+      .from('operation_log')
+      .leftJoin('users as useTab1', 'operation_log.byUserId', 'useTab1.id')
+      .leftJoin('users as useTab2', 'operation_log.toUserId', 'useTab2.id')
+      .where('useTab2.userName', 'like', `%${req.query.name}%`)
+      return res.status(200).json({success: 1, code: 'log.ok', data: result});
+  } catch(err) {
+      next(err);
+  }
 });
 
 router.post('/setUserAttr', verifyJWT, allowPrivileges(["root","dev"]), [
@@ -218,15 +245,10 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'setUserAttr.bad', message: validateErr.array()});
         
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*')
-            .from('users')
-            .where({id: req.body.data.id});
-        if(!user)
+        const userData = await db.select('*').from('users').where({id: req.body.data.id}).first();
+        if(!userData)
             return res.status(404).json({error: 1, code: 'setUserAttr.notUser'});
-
-        let userData = user[0];
         let doEditUserData = {};
-
         doEditUserData.attr = JSON.stringify(userSetAttributes(userData.attr, req.body.data.attr, true));
 
         // change UserName
@@ -306,7 +328,13 @@ async (req, res, next)=> {
 
         logger.info('admin.addUser.signupNoVerify Success:', {name: userData.username});
         siteEvent.emit('action', {method: 'register', params: {user: userData}});
-
+        await db('operation_log').insert({
+          byUserId: req.user.id,
+          toUserId: userData.id,
+          action: 'add',
+          role: 'user',
+          createTime: new Date()
+        });
         return res.status(201).json({success: 1, code:'admin.addUser.success', message: 'add User Success!'});
     } catch(err) {
         if(err instanceof ServiceApiError) {
@@ -353,6 +381,13 @@ async (req, res, next)=> {
                 await userDb.where({id: id}).delete();
                 break;
         }
+        await db('operation_log').insert({
+          byUserId: req.user.id,
+          toUserId: id,
+          action: 'delete',
+          role: 'user',
+          createTime: new Date()
+        });
 
         return res.status(201).json({success: 1, code:'admin.delUser.success', message: 'success'});
     } catch(err) {

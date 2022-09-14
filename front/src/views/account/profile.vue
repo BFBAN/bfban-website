@@ -161,16 +161,10 @@ export default {
       return Boolean(this.$store.state.user);
     },
     isAdmin() {
-      let isBool = false;
-      const user = this.$store.state.user.userinfo;
-      const adminGroup = ['root', 'admin', 'super', 'dev']
-      for (const i of adminGroup) {
-        for (const j of user.privilege){
-          if (j == i)
-            isBool = true;
-        }
-      }
-      return Boolean(isBool);
+      const user = this.$store.state.user;
+      const privilege = user ? user.userinfo.privilege : []
+      return privilege.some(item => ['admin', 'super', 'dev'].includes(item))
+      // return Boolean(is);
     },
     isMobile() {
       let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
