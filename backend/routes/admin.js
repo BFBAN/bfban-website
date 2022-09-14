@@ -19,24 +19,33 @@ import {siteEvent} from "../lib/bfban.js";
 const router = express.Router();
 
 router.get('/searchUser', verifyJWT, allowPrivileges(["super","root","dev"]), [
-    checkquery('name').isString(),
-    checkquery('skip').optional().isInt({min: 0}),
-    checkquery('limit').optional().isInt({min: 0, max: 100}),
-    checkquery('order').optional().isIn(['asc', 'desc']),
+  checkquery('name').isString(),
+  checkquery('skip').optional().isInt({min: 0}),
+  checkquery('limit').optional().isInt({min: 0, max: 100}),
+  checkquery('order').optional().isIn(['asc', 'desc']),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next)=>{
-    try {
-        const validateErr = validationResult(req);
-        if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
+  try {
+      const validateErr = validationResult(req);
+      if(!validateErr.isEmpty())
+          return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
 
-        const result = await db.select('*').from('users').where('username', 'like', `%${req.query.name}%`)
-            .limit(20);
-        
-        return res.status(200).json({success: 1, code: 'searchUser.ok', data: result});
-    } catch(err) {
-        next(err);
-    }
+      const skip = req.query.skip!=undefined? req.query.skip : 0;
+      const limit = req.query.limit!=undefined? req.query.limit : 20;
+      const order = req.query.order ? req.query.order : 'desc';
+
+      const total = await db.count({num: 1}).from('users').first().then(r=>r.num);
+
+      const result = await db.select('*')
+          .from('users')
+          .where('username', 'like', `%${req.query.name}%`)
+          .orderBy('users.createTime', order)
+          .offset(skip).limit(limit);
+      
+      return res.status(200).json({success: 1, code: 'searchUser.ok', data: result, total});
+  } catch(err) {
+      next(err);
+  }
 });
 
 router.get('/judgementLog', verifyJWT, allowPrivileges(["super","root","dev"]), [
@@ -150,7 +159,7 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'setComment.bad', message: validateErr.array()});
         
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({id: req.body.data.id});
+        const user = await db.select('*').from('users').where({id: req.body.data.id}).first();
         if(!user)
             return res.status(404).json({error: 1, code: 'setUser.notFound'});
         const role = req.body.data.role;
@@ -235,11 +244,11 @@ router.get('/getUserOperationLogs',
 /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next)=>{
   try {
-    const result =  await db.select('useTab1.username as adminName', 'useTab2.username as userName', 'messages.content', 'messages.byUserId', 'messages.toUserId', 'messages.createTime')
-      .from('messages')
-      .leftJoin('users as useTab1', 'messages.byUserId', 'useTab1.id')
-      .leftJoin('users as useTab2', 'messages.toUserId', 'useTab2.id')
-      .where('content', 'like', `%"setUser"%`)
+    const result =  await db.select('useTab1.username as adminName', 'useTab2.username as userName', 'operation_log.action', 'operation_log.role', 'operation_log.byUserId', 'operation_log.toUserId', 'operation_log.createTime')
+      .from('operation_log')
+      .leftJoin('users as useTab1', 'operation_log.byUserId', 'useTab1.id')
+      .leftJoin('users as useTab2', 'operation_log.toUserId', 'useTab2.id')
+      .where('useTab2.userName', 'like', `%${req.query.name}%`)
       return res.status(200).json({success: 1, code: 'log.ok', data: result});
   } catch(err) {
       next(err);
