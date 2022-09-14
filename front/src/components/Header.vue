@@ -254,10 +254,16 @@ export default {
       return Boolean(this.$store.state.user);
     },
     isAdmin() {
-      const user = this.$store.state.user;
-
-      const is = user ? user.userPrivilege !== 'normal' : false;
-      return Boolean(is);
+      let isBool = false;
+      const user = this.$store.state.user.userinfo;
+      const adminGroup = ['root', 'admin', 'super', 'dev']
+      for (const i of adminGroup) {
+        for (const j of user.privilege){
+          if (j == i)
+            isBool = true;
+        }
+      }
+      return Boolean(isBool);
     },
     isFull() {
       return Boolean(this.$route.query.full || false);

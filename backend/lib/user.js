@@ -22,7 +22,7 @@ function cheatMethodsSanitizer(val, {req}) {
 }
 
 const userAttributes = {
-    "language": {type: "string", get: true, set: true, isprivate: true, default: 'en'},
+    "language": {type: "string", get: true, set: true, isprivate: true, default: 'en-US'},
     "showOrigin": {type: "boolean", get: true, set: true, default: false},
     "allowDM": {type: "boolean", get: true, set: true, default: false},     // allow direct message?
     "certUser": {type: "string", get: true, set: false, default: ''},
@@ -45,7 +45,7 @@ function userShowAttributes(attr, showprivate=false, force=false) {
 function userSetAttributes(org, attr, force=false) {
     const result = org;
     for(let i of Object.keys(userAttributes))
-        if(typeof(attr[i])==userAttributes[i].type && (userAttributes[i].set || force))
+        if(typeof(attr[i])==userAttributes[i].type && (userAttributes[i].set || force) && attr[i] && result[i])
             result[i] = attr[i];
     return result;
 }

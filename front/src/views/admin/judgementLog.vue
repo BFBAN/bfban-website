@@ -28,18 +28,18 @@
             </Col>
             <Col flex="1">
               <div>
-                <Time :time="i.createTime"></Time>:
+                <Time :time="i.createTime" type="date"></Time>:
                 <BusinessCard :id="i.byUserId">
                   <b>{{i.username}}</b>
                 </BusinessCard>
-                ->
-                <span>{{ $t(`basic.action.${i.judgeAction}.text`) }}</span>->
-                <span>{{i.toOriginPersonaId}}</span>
+                <span> {{ $t('detail.info.judge') }} </span>
+                <a href="javascript:void(0)">{{i.toOriginPersonaId}}</a>
+                <span> {{i.cheatMethods.toString()}} {{ $t(`basic.action.${i.judgeAction}.text`) }} </span>
               </div>
             </Col>
             <Col>
               <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
-                <Icon type="ios-eye" size="30"/>
+                <Icon type="ios-eye" size="25"/>
               </router-link>
             </Col>
           </Row>

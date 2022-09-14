@@ -29,6 +29,7 @@ export default class Api {
       'user_reports': 'user/reports',
       'user_changePassword': 'user/changePassword', // 修改密码
       'user_changeName': 'user/changeName', // 修改名称
+
       'account_signout': 'user/signout',
       'account_signin': 'user/signin',
       'account_signup': 'user/signup',
@@ -52,12 +53,15 @@ export default class Api {
 
       'admin_searchUser': 'admin/searchUser',
       'admin_setComment': 'admin/setComment',
+      'admin_commentAll': 'admin/commentAll',
       'admin_setUser': 'admin/setUser',
       'admin_setUserAttr': 'admin/setUserAttr',
       'admin_msGraphStatus': 'admin/msGraphStatus',
       'admin_msGraphInit': 'admin/msGraphInit',
       'admin_msGraphAuthCode': 'admin/msGraphAuthCode',
-      'admin_judgementLog': 'admin/judgementLog'
+      'admin_judgementLog': 'admin/judgementLog',
+      'admin_addUser': 'admin/addUser',
+      'admin_delUser': 'admin/delUser'
     };
   }
 }
