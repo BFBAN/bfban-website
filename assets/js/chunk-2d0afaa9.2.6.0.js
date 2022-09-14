@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0afaa9"],{"0efd":function(a){a.exports=JSON.parse('{"child":[{"value":0,"values":["0","wallhack"]},{"value":5,"values":["5","gadgetModify","suspect"]},{"value":6,"values":["6","teleport"]},{"value":1,"values":["1","guilt"],"action":"guilt"},{"value":2,"values":["2","invisable","discuss"],"action":"discuss"},{"value":3,"values":["3","magicBullet","innocent"],"action":"innocent"},{"value":4,"values":["4","damageChange","trash"],"action":"suspect"}]}')}}]);
-//# sourceMappingURL=chunk-2d0afaa9.2.6.0.js.map
