@@ -135,6 +135,10 @@ async (req, res, next)=>{
                 return res.status(403).json({error: 1, code: 'setUser.permissionDenied'});
         }
         await sendMessage(req.user.id, null, "command", JSON.stringify({action:'setUser', target: user.id, detail: `${req.body.data.action}:${role}`}));
+        console.log(user)
+        user.attr = JSON.stringify(user.attr)
+        user.subscribes = JSON.stringify(user.subscribes)
+        user.privilege = JSON.stringify(user.privilege)
         await db('users').update(user).where({id: user.id});
         const quota = initUserStorageQuota(user);
         await db('storage_quotas').update({
@@ -142,7 +146,21 @@ async (req, res, next)=>{
             maxFileNumber: quota.maxFileNumber,
             maxTrafficQuota: quota.maxTrafficQuota
         }).where({userId: user.id});
-
+        // const { id, action } = req.body.data
+        // console.log({
+        //   byUserId: req.user.id,
+        //   toUserId: id,
+        //   action,
+        //   role: req.body.data.role,
+        //   createTime: new Date()
+        // })
+        await db('operation_log').insert({
+          byUserId: req.user.id,
+          toUserId: id,
+          action,
+          role: req.body.data.role,
+          createTime: new Date()
+        });
         return res.status(200).json({success: 1, code: 'setUser.ok'});
     } catch(err) {
         next(err);
@@ -164,20 +182,20 @@ async (req, res, next)=>{
 //   }
 // });
 
-// router.get('/getUserOperationLogs', 
-// /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
-// async (req, res, next)=>{
-//   try {
-//       const result = await db('messages')
-//             .join('users', 'messages.byUserId', 'users.id')
-//             .select('messages.*', 'users.username')
-//             // .join('users', 'messages.toUserId', 'users.id')
-//             .where('content', 'like', `%"setUser"%`)
-//             return res.status(200).json({success: 1, code: 'log.ok', data: result});
-//   } catch(err) {
-//       next(err);
-//   }
-// });
+router.get('/getUserOperationLogs', 
+/** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next)=>{
+  try {
+    const result =  await db.select('useTab1.username as adminName', 'useTab2.username as userName', 'messages.content', 'messages.byUserId', 'messages.toUserId', 'messages.createTime')
+      .from('messages')
+      .leftJoin('users as useTab1', 'messages.byUserId', 'useTab1.id')
+      .leftJoin('users as useTab2', 'messages.toUserId', 'useTab2.id')
+      .where('content', 'like', `%"setUser"%`)
+      return res.status(200).json({success: 1, code: 'log.ok', data: result});
+  } catch(err) {
+      next(err);
+  }
+});
 
 router.post('/setUserAttr', verifyJWT, allowPrivileges(["root","dev"]), [
     checkbody('data.id').isInt({min: 0}),
