@@ -205,13 +205,6 @@ async (req, res, next)=>{
             maxTrafficQuota: quota.maxTrafficQuota
         }).where({userId: user.id});
         const { id, action } = req.body.data
-        // console.log({
-        //   byUserId: req.user.id,
-        //   toUserId: id,
-        //   action,
-        //   role: req.body.data.role,
-        //   createTime: new Date()
-        // })
         await db('operation_log').insert({
           byUserId: req.user.id,
           toUserId: id,
@@ -224,21 +217,6 @@ async (req, res, next)=>{
         next(err);
     }
 });
-
-// router.get('/getUserOperationLogs', verifyJWT, allowPrivileges(["super","root","dev"]), 
-// /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
-// async (req, res, next)=>{
-//   try {
-//       const result = await db('comments')
-//             .join('users', 'comments.byUserId', 'users.id')
-//             .select('comments.*', 'users.username', 'users.privilege')
-//             .where('type', `judgement`)
-//             .orderBy('comments.createTime', order)
-//             .offset(skip).limit(limit);
-//   } catch(err) {
-//       next(err);
-//   }
-// });
 
 router.get('/getUserOperationLogs', 
 /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
@@ -350,7 +328,13 @@ async (req, res, next)=> {
 
         logger.info('admin.addUser.signupNoVerify Success:', {name: userData.username});
         siteEvent.emit('action', {method: 'register', params: {user: userData}});
-
+        await db('operation_log').insert({
+          byUserId: req.user.id,
+          toUserId: userData.id,
+          action: 'add',
+          role: 'user',
+          createTime: new Date()
+        });
         return res.status(201).json({success: 1, code:'admin.addUser.success', message: 'add User Success!'});
     } catch(err) {
         if(err instanceof ServiceApiError) {
@@ -397,6 +381,13 @@ async (req, res, next)=> {
                 await userDb.where({id: id}).delete();
                 break;
         }
+        await db('operation_log').insert({
+          byUserId: req.user.id,
+          toUserId: id,
+          action: 'delete',
+          role: 'user',
+          createTime: new Date()
+        });
 
         return res.status(201).json({success: 1, code:'admin.delUser.success', message: 'success'});
     } catch(err) {
