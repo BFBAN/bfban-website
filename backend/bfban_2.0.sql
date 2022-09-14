@@ -211,15 +211,15 @@ CREATE TABLE IF NOT EXISTS `verifications` (
 --
 
 -- 管理员操作日志
-
-CREATE TABLE `super_user_log` (
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `admin_username` varchar(40) DEFAULT NULL,
-  `username` varchar(40) DEFAULT NULL,
-  `admin_uId` varchar(200) DEFAULT NULL,
-  `uId` varchar(200) DEFAULT NULL,
-  `change_type` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `operation_log` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `byUserId` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `toUserId` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `action` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `role` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `super_user_log`
