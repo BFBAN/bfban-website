@@ -25,6 +25,18 @@
     </Row>
     <br>
 
+    <Page class="page"
+          size="small"
+          show-sizer
+          show-total
+          show-elevator
+          @on-change="handlePageChange"
+          @on-page-size-change="handlePageSizeChange"
+          :page-size="limit"
+          :current="skip"
+          :total="total" />
+    <br>
+
     <Card dis-hover v-for="(i, index) in userListData" :key="index" class="admin-user">
       <Row :gutter="10" type="flex" justify="center" align="middle">
         <Col flex="1">
@@ -55,102 +67,142 @@
 
     <!-- 编辑用户 S -->
     <Modal v-model="userEditModel"
+           width="980"
            @on-ok="onEditUserSubmit"
            :title="editUserData.username">
       <Form :model="editUserData"
             ref="formValidate"
             label-position="top">
 
-        <Row :gutter="10">
-          <Col span="24">
-            <FormItem prop="username">
-              <Input v-model="editUserData.username" />
-            </FormItem>
-          </Col>
+        <Row :gutter="20">
           <Col span="12">
-            <FormItem prop="username" label="password">
-              <Input v-model="editUserData.password" readonly disabled />
-            </FormItem>
-          </Col>
-          <Col span="12">
-            <FormItem prop="username" label="avatar">
-              <Input v-model="editUserData.avatar" />
-            </FormItem>
-          </Col>
-          <Col span="12">
-            <FormItem label="lastSigninIP" prop="username">
-              <Input v-model="editUserData.attr.lastSigninIP" readonly disabled/>
-            </FormItem>
-          </Col>
-          <Col span="12">
-            <FormItem label="registerIP" prop="">
-              <Input v-model="editUserData.attr.registerIP" readonly disabled/>
-            </FormItem>
-          </Col>
-          <Col span="12">
-            <FormItem label="createTime" prop="">
-              <Input v-model="editUserData.createTime" readonly disabled/>
-            </FormItem>
-          </Col>
-          <Col span="12">
-            <FormItem label="signoutTime" prop="">
-              <Input v-model="editUserData.signoutTime" readonly disabled/>
-            </FormItem>
-          </Col>
+            <Row :gutter="10">
+              <Col span="24">
+                <Row :gutter="10">
+                  <Col span="6">
+                    <FormItem prop="id">
+                      <Input v-model="editUserData.id" readonly />
+                    </FormItem>
+                  </Col>
+                  <Col span="18">
+                    <FormItem prop="username">
+                      <Input v-model="editUserData.username" maxlength="40"/>
+                    </FormItem>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span="24">
+                <FormItem prop="username" label="password">
+                  <Input v-model="editUserData.password" readonly disabled />
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="lastSigninIP" prop="username">
+                  <Input v-model="editUserData.attr.lastSigninIP" readonly disabled/>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="registerIP" prop="">
+                  <Input v-model="editUserData.attr.registerIP" readonly disabled/>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="createTime" prop="">
+                  <Input v-model="editUserData.createTime" readonly disabled/>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="signoutTime" prop="">
+                  <Input v-model="editUserData.signoutTime" readonly disabled/>
+                </FormItem>
+              </Col>
 
-          <Col span="12">
-            <FormItem label="change Name Left">
-              <InputNumber :max="5" :min="0" v-model="editUserData.attr.changeNameLeft"></InputNumber>
-            </FormItem>
+              <Col span="12">
+                <FormItem label="originEmail">
+                  <Input v-model="editUserData.originEmail" readonly></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="originName">
+                  <Input v-model="editUserData.originName" readonly></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="originPersonaId">
+                  <Input v-model="editUserData.originPersonaId" readonly></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="originUserId">
+                  <Input v-model="editUserData.originUserId" readonly></Input>
+                </FormItem>
+              </Col>
+            </Row>
           </Col>
           <Col span="12">
-            <FormItem :label="$t('profile.account.form.language')">
-              <Select v-model="editUserData.attr.language" class="switch-language" prefix="md-globe" placement="top-end">
-                <Option v-for="item in languages" :value="item.name" :key="item.name">
-                  {{ item.label }}
-                </Option>
-              </Select>
+            <Row :gutter="10">
+              <Col span="12">
+                <FormItem label="change Name Left">
+                  <InputNumber :max="5" :min="0" v-model="editUserData.attr.changeNameLeft"></InputNumber>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem :label="$t('profile.account.form.language')">
+                  <Select v-model="editUserData.attr.language" class="switch-language" prefix="md-globe" placement="top-end">
+                    <Option v-for="item in languages" :value="item.name" :key="item.name">
+                      {{ item.label }}
+                    </Option>
+                  </Select>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem :label="$t('profile.account.form.showOrigin')">
+                  <i-switch v-model="editUserData.attr.showOrigin"/>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem :label="$t('profile.account.form.allowDM')">
+                  <i-switch v-model="editUserData.attr.allowDM"/>
+                </FormItem>
+              </Col>
+            </Row>
+
+            <FormItem label="privileges" prop="privileges">
+              <Row :gutter="10">
+                <Col span="24">
+                  <PrivilegesTag ref="privilegesTag" :data="editUserData.privilege"></PrivilegesTag>
+                </Col>
+                <Col span="24">
+                  <Row :gutter="10">
+                    <Col>
+                      <Select v-model="editPrivilegesForm.activeName" style="width: 160px">
+                        <Option v-for="(i, index) in editPrivilegesForm.action" :value="i" :key="index">
+                          {{ i }}
+                        </Option>
+                      </Select>
+                    </Col>
+                    <Col flex="1">
+                      <Select v-model="editPrivilegesForm.roleName">
+                        <Option v-for="(i, index) in editPrivilegesForm.role" :value="i" :key="index">
+                          {{ $t('basic.privilege.' + i) }}
+                        </Option>
+                      </Select>
+                    </Col>
+                    <Col>
+                      <Button @click="onEditPrivileges">{{ $t('basic.button.commit') }}</Button>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
             </FormItem>
-          </Col>
-          <Col span="12">
-            <FormItem :label="$t('profile.account.form.showOrigin')">
-              <i-switch v-model="editUserData.attr.showOrigin"/>
-            </FormItem>
-          </Col>
-          <Col span="12">
-            <FormItem :label="$t('profile.account.form.allowDM')">
-              <i-switch v-model="editUserData.attr.allowDM"/>
+
+            <FormItem label="introduction" prop="introduction">
+              <Card dis-hover :padding="0">
+                <Textarea ref="userIntroductionTextarea" :content="editUserData.attr.introduction"></Textarea>
+              </Card>
             </FormItem>
           </Col>
         </Row>
-        <FormItem label="privileges" prop="privileges">
-          <Row :gutter="10">
-            <Col span="24">
-              <PrivilegesTag ref="privilegesTag" :data="editUserData.privilege"></PrivilegesTag>
-            </Col>
-            <Col span="24">
-                <Row :gutter="10">
-                  <Col>
-                    <Select v-model="editPrivilegesForm.activeName" style="width: 160px">
-                      <Option v-for="(i, index) in editPrivilegesForm.action" :value="i" :key="index">
-                        {{ i }}
-                      </Option>
-                    </Select>
-                  </Col>
-                  <Col flex="1">
-                    <Select v-model="editPrivilegesForm.roleName">
-                      <Option v-for="(i, index) in editPrivilegesForm.role" :value="i" :key="index">
-                        {{ $t('basic.privilege.' + i) }}
-                      </Option>
-                    </Select>
-                  </Col>
-                  <Col>
-                    <Button @click="onEditPrivileges">{{ $t('basic.button.commit') }}</Button>
-                  </Col>
-                </Row>
-            </Col>
-          </Row>
-        </FormItem>
       </Form>
     </Modal>
     <!-- 编辑用户 E -->
@@ -173,7 +225,9 @@
         <Row :gutter="10">
           <Col span="24">
             <FormItem :label="$t('signup.form.username')" prop="username">
-              <Input v-model="addUserData.username" :placeholder="$t('signup.placeholder.username')"/>
+              <Input v-model="addUserData.username"
+                     maxlength="40"
+                     :placeholder="$t('signup.placeholder.username')"/>
             </FormItem>
           </Col>
           <Col span="24">
@@ -232,6 +286,7 @@ import languages from "/public/conf/languages.json";
 import BusinessCard from "@/components/businessCard";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import _ from "lodash";
+import Textarea from "@/components/Textarea";
 
 export default {
   data() {
@@ -248,7 +303,8 @@ export default {
       userListData: [],
       editUserData: {
         attr: {
-          language: ''
+          language: '',
+          introduction: ''
         },
         temporaryPrivilege: {},
         privilege: []
@@ -274,12 +330,19 @@ export default {
       },
       userEditModel: false,
       addUserModel: false,
-      languages: languages.child
+      languages: languages.child,
+
+      skip: 1,
+      limit: 20,
+      order: 'desc',
+      total: 0,
     }
   },
-  components: {PrivilegesTag, BusinessCard},
+  components: {Textarea, PrivilegesTag, BusinessCard},
   created() {
     this.http = http_token.call(this);
+
+    this.onSearchUser();
   },
   methods: {
     /**
@@ -417,20 +480,24 @@ export default {
      */
     async onSearchUser () {
       const that = this;
-      if (!this.userValue) return;
+      let params = { name: '', skip: this.skip - 1, limit: this.limit };
 
       return new Promise((resolve, reject) => {
         that.load = true;
 
+        if (this.userValue)
+          params.name = this.userValue;
+
+        this.onReset();
+
         that.http.get("admin/searchUser", {
-          params: {
-            name: this.userValue
-          }
+          params,
         }).then(res => {
           const d = res.data;
 
           if (d.success == 1) {
             that.userListData = d.data;
+            that.total = d.total;
             return;
           }
 
@@ -447,6 +514,8 @@ export default {
 
       if(this.$refs.privilegesTag)
         this.$refs.privilegesTag.update(this.editUserData.privilege);
+      if(this.$refs.userIntroductionTextarea)
+        this.$refs.userIntroductionTextarea.updateContent(this.editUserData.attr.introduction);
     },
     /**
      * 修改用户身份
@@ -472,12 +541,20 @@ export default {
      */
     async setUserAttr () {
       return new Promise( (resolve, reject)  => {
+        let attr = this.editUserData.attr;
+
+        delete attr.valid;
+        delete attr.language;
+        delete attr.registerIP;
+        delete attr.lastSigninIP;
+        delete attr.freezeOfNoBinding;
+
         this.http.post("admin/setUserAttr", {
           data: {
             data: {
               id: this.editUserData.id,
-              attr: this.editUserData.attr,
-              // username: this.editUserData.username,
+              username: this.editUserData.username,
+              attr,
             }
           }
         }).then(res => {
@@ -492,6 +569,20 @@ export default {
           reject();
         })
       })
+    },
+    handlePageChange (val) {
+       this.skip = val;
+       this.onSearchUser();
+    },
+    handlePageSizeChange(val) {
+      this.skip = val;
+      this.onSearchUser();
+    },
+    onReset () {
+      this.skip = 1;
+      this.limit= 20;
+      this.order= 'desc';
+      this.total= 0;
     }
   },
   computed: {

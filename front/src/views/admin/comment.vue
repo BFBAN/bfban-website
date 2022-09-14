@@ -113,7 +113,6 @@
         <Row :gutter="10">
           <Col span="24">
             <FormItem prop="content">
-              {{editCommentFrom}}
               <Card dis-hover :padding="0">
                 <Textarea ref="commentTextarea" :maxlength="65535" v-model="editCommentFrom.content"></Textarea>
               </Card>

@@ -19,18 +19,30 @@ import {siteEvent} from "../lib/bfban.js";
 const router = express.Router();
 
 router.get('/searchUser', verifyJWT, allowPrivileges(["super","root","dev"]), [
-    checkquery('name').isString()
+    checkquery('name').isString(),
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('order').optional().isIn(['asc', 'desc']),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next)=>{
     try {
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
+
+        const skip = req.query.skip!=undefined? req.query.skip : 0;
+        const limit = req.query.limit!=undefined? req.query.limit : 20;
+        const order = req.query.order ? req.query.order : 'desc';
+
+        const total = await db.count({num: 1}).from('users').first().then(r=>r.num);
+
+        const result = await db.select('*')
+            .from('users')
+            .where('username', 'like', `%${req.query.name}%`)
+            .orderBy('users.createTime', order)
+            .offset(skip).limit(limit);
         
-        const result = await db.select('*').from('users').where('username', 'like', `%${req.query.name}%`)
-            .limit(20);
-        
-        return res.status(200).json({success: 1, code: 'searchUser.ok', data: result});
+        return res.status(200).json({success: 1, code: 'searchUser.ok', data: result, total});
     } catch(err) {
         next(err);
     }
@@ -196,7 +208,8 @@ async (req, res, next)=>{
 
 router.post('/setUserAttr', verifyJWT, allowPrivileges(["root","dev"]), [
     checkbody('data.id').isInt({min: 0}),
-    checkbody('data.attr').isObject()
+    checkbody('data.attr').isObject(),
+    checkbody('data.username').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min:1, max:40})
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next)=>{
     try {
@@ -212,10 +225,16 @@ async (req, res, next)=>{
             return res.status(404).json({error: 1, code: 'setUserAttr.notUser'});
 
         let userData = user[0];
-        userData.attr = userSetAttributes(userData.attr, req.body.data.attr, true);
+        let doEditUserData = {};
+
+        doEditUserData.attr = JSON.stringify(userSetAttributes(userData.attr, req.body.data.attr, true));
+
+        // change UserName
+        if(req.body.data.username != undefined)
+            doEditUserData.username = req.body.data.username;
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action:'setUserAttr', target: userData.id}));
-        await db('users').update(userData).where({id: req.user.id});
+        await db('users').update(doEditUserData).where({id: userData.id});
 
         return res.status(200).json({success: 1, code: 'setUserAttr.ok'});
     } catch(err) {
