@@ -15,7 +15,7 @@
     <Card dis-hover :padding="0" class="admin">
       <Row :gutter="0">
         <Col :xs="{span: 24}" :sm="{span: 6}">
-          <Menu class="admin-menu" :open-names="openMuen" :active-name="adminMenuValue" @on-select="onMenuActive">
+          <Menu class="admin-menu" :mode="isMobile ? 'horizontal' : 'vertical'" :open-names="openMuen" :active-name="adminMenuValue" @on-select="onMenuActive">
             <MenuGroup :title="$t('profile.admin.menu.' + i.title)" v-for="(i, index) in adminMuen" :key="index">
               <MenuItem :name="j.value" v-for="(j, j_index) in i.child" :key="j_index">
                 <Icon :type="j.icon" v-if="j.icon" />  {{ $t('profile.admin.menu.' + j.title)}}
@@ -84,6 +84,16 @@ export default {
       this.$router.push({name: 'admin', params: {pagename: name}})
     }
   },
+  created() {
+    const {pagename} = this.$route.params;
+
+    if (pagename == undefined) {
+      this.onMenuActive('account');
+      return;
+    }
+
+    this.onMenuActive(pagename);
+  },
   computed: {
     isLogin() {
       return Boolean(this.$store.state.user);
@@ -99,6 +109,10 @@ export default {
         }
       }
       return Boolean(isBool);
+    },
+    isMobile() {
+      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+      return !!flag;
     },
     currentUser() {
       return this.$store.state.user;

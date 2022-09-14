@@ -585,10 +585,10 @@
         <!-- 管理员裁判 S -->
         <Card dis-hover v-if="isAdmin">
           <div :label="$t('detail.info.adminConsole')">
-            <h2 style="margin: 1rem 0;">
+            <h2 style="margin: 0 0 1rem 0;">
               <Row>
                 <Col flex="1">
-                  # {{ $t('detail.info.judgement', {msg: 'judgement'}) }}
+                  # {{ $t('detail.info.judgement') }}
                 </Col>
                 <Col>
                   <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
@@ -672,20 +672,38 @@
 
                     <Card :padding="0" dis-hover>
                       <Textarea v-model="verify.suggestion"
-                                :height="'250px'"
-                                :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+                               ref="judgementTextarea"
+                               :height="'250px'"
+                               :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+                      <Row :gutter="20" style="padding: 5px 15px">
+                        <Col flex="1">
+                          <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
+                            <Checkbox :label="i.content" v-for="(i, index) in fastReply.content" :key="index">
+                              {{ $t('detail.info.fastReplies.' + i.text) }}
+                            </Checkbox>
+                          </CheckboxGroup>
+                        </Col>
+                        <Col>
+                          <a href="javascript:void(0)" @click="fastReply.mode = true">
+                            <Icon type="md-settings" size="18" />
+                          </a>
+                          <Drawer :closable="fastReply.mode" v-model="fastReply.mode" width="40%">
+                            <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
+                              <div v-for="(i, index) in fastReply.content" :key="index">
+                                <Checkbox :label="i.content" style="width: 100%">
+                                  <b>{{ $t('detail.info.fastReplies.' + i.text) }}</b>
+                                  <Input v-model="i.content" maxlength="100" :rows="4" show-word-limit type="textarea"></Input>
+                                </Checkbox>
+                                <Divider></Divider>
+                              </div>
+                            </CheckboxGroup>
+                          </Drawer>
+                        </Col>
+                      </Row>
                     </Card>
                   </FormItem>
                 </Col>
               </Row>
-
-              <FormItem v-show="verify.status === '1'" label="fastReply">
-                <CheckboxGroup v-model="fastReply.selected">
-                  <Checkbox v-for="content in fastReply.content" :key='content' :label="content">
-                    {{ $t(`detail.info.fastReplies.${content}`) }}
-                  </Checkbox>
-                </CheckboxGroup>
-              </FormItem>
 
               <FormItem :label="$t('captcha.title')">
                 <Row>
@@ -745,44 +763,41 @@
       </Affix>
 
       <!-- 小窗口回复 S -->
-      <Modal
-          v-model="replyModal"
-          :title="`${$t('detail.info.reply')} #${reply.toFloor}`"
-          @on-ok="doReply"
-          @on-cancel="cancelReply">
+      <Modal v-model="replyModal">
+        <div slot="header">
+          {{ `${$t('detail.info.reply')}` }}
+          <BusinessCard :id="timelineList[reply.toFloor].byUserId" v-if="timelineList[reply.toFloor]">
+            <b>{{ timelineList[reply.toFloor].username }}</b>({{reply.toFloor}})
+          </BusinessCard>
+        </div>
         <div v-if="isLogin">
-          <Form :label-width="80" ref='replyForm' style="position: relative;">
-            <FormItem v-if="timelineList[reply.toFloor]">
-              <Tag>
-                <BusinessCard :id="timelineList[reply.toFloor].byUserId">
-                  @{{ timelineList[reply.toFloor].username }}
-                </BusinessCard>
-              </Tag>
-            </FormItem>
-            <FormItem v-if="timelineList[reply.toFloor]">
-              <Card>
-                <div v-html="timelineList[reply.toFloor].content" v-if="timelineList[reply.toFloor].content"></div>
-              </Card>
-            </FormItem>
-            <FormItem>
-              <Input @on-keydown="handleCmdEnter($event, 'reply')" v-model="reply.content" type="textarea"
-                     :autosize="{minRows: 4}"
-                     :placeholder="$t('detail.info.giveOpinion')"/>
-            </FormItem>
+          <Form ref="replyForm">
+            <Textarea v-model="reply.content"
+                     :toolbar="['bold', 'link']"
+                     :height="'320px'"
+                     :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
 
-            <FormItem :label="$t('captcha.title')">
+          </Form>
+        </div>
+        <div v-else>{{ $t('detail.info.replyManual4') }}</div>
+
+        <div slot="footer">
+          <Row :gutter="30">
+            <Col flex="1">
               <Input type="text" v-model="reply.captcha"
-                     size="large"
                      maxlength="4"
                      :placeholder="$t('captcha.title')">
                 <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
                   <Captcha ref="captcha"></Captcha>
                 </div>
               </Input>
-            </FormItem>
-          </Form>
+            </Col>
+            <Col>
+              <Button @click="cancelReply">{{ $t('basic.button.cancel') }}</Button>
+              <Button @click="doReply" type="primary">{{ $t('basic.button.submit') }}</Button>
+            </Col>
+          </Row>
         </div>
-        <div v-else>{{ $t('detail.info.replyManual4', {msg: 'replyManual4'}) }}</div>
       </Modal>
       <!-- 小窗口回复 E -->
 
@@ -900,7 +915,6 @@ import {formatTextarea, waitForAction} from "@/mixins/common";
 export default new BFBAN({
   data() {
     return {
-      detailLoad: true,
       appeal: {
         load: false,
         show: false,
@@ -922,6 +936,26 @@ export default new BFBAN({
         toUserId: '',
         captcha: '',
         captchaUrl: {},
+      },
+      fastReply: {
+        content: [{
+          text: 'stats',
+          content: this.$i18n.t('detail.info.fastReplies.stats')
+        },{
+          text: 'evidencePic',
+          content: this.$i18n.t('detail.info.fastReplies.evidencePic')
+        },{
+          text: 'evidenceVid',
+          content: this.$i18n.t('detail.info.fastReplies.evidenceVid')
+        }],
+        mode: false,
+        selected: [],
+      },
+      verify: {
+        status: 0,
+        checkbox: [],
+        choice: [],
+        suggestion: '',
       },
       games: [],
       timelineList: [],
@@ -948,12 +982,8 @@ export default new BFBAN({
           }
         ]
       },
-      verify: {
-        status: 0,
-        checkbox: [],
-        choice: [],
-        suggestion: '',
-      },
+
+      detailLoad: true,
       spinShow: true,
       verifySpinShow: false,
       replySpinShow: false,
@@ -962,10 +992,6 @@ export default new BFBAN({
       updateUserInfospinShow: false,
       updateCheaterModal: false,
       cheatMethodsGlossary: null,
-      fastReply: {
-        content: ['stats', 'evidencePic', 'evidenceVid'],
-        selected: [],
-      },
     }
   },
   components: {Empty, Edit, Textarea, BusinessCard, RecordLink, Captcha, PrivilegesTag},
@@ -1369,34 +1395,24 @@ export default new BFBAN({
 
           this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
 
-          // reset reply
-          this.cancelReply();
-
           this.cheater.status = status;
           this.reply.toFloor = "";
           this.reply = "";
-        } else {
-          this.$Message.error(d.message);
+          return;
         }
+
+        this.$Message.error(d.code);
       }).finally(() => {
         this.replySpinShow = false;
+        this.replyModal = false;
+
+        // reset reply
+        this.cancelReply();
 
         this.getCheatersInfo();
         // update timelink
         this.getTimeline();
       });
-    },
-    handleCmdEnter(e, type) {
-      if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
-        switch (type) {
-          case 'reply':
-            this.doReply()
-            break;
-          case 'verify':
-            this.doVerify();
-            break;
-        }
-      }
     },
     /**
      * 更新玩家信息
@@ -1439,6 +1455,14 @@ export default new BFBAN({
      */
     onJudgementLock () {
       account_storage.updateConfiguration('judgementTip', true);
+    },
+    /**
+     * 判决快速模板
+     */
+    onFastReply () {
+      if (this.$refs.judgementTextarea && this.fastReply.selected.length > 0) {
+        this.$refs.judgementTextarea.updateContent(this.fastReply.selected.toString());
+      }
     }
   },
   computed: {
