@@ -471,22 +471,26 @@ export default {
      * 修改用户属性
      */
     async setUserAttr () {
-      await this.http.post("admin/setUserAttr", {
-        data: {
+      return new Promise( (resolve, reject)  => {
+        this.http.post("admin/setUserAttr", {
           data: {
-            id: this.editPrivilegesForm.id,
-            attr: this.editUserData.attr,
-            username: this.editUserData.username,
+            data: {
+              id: this.editUserData.id,
+              attr: this.editUserData.attr,
+              // username: this.editUserData.username,
+            }
           }
-        }
-      }).then(res => {
-        const d = res.data;
+        }).then(res => {
+          const d = res.data;
 
-        if (d.success == 1) {
-          return;
-        }
+          if (d.success == 1) {
+            resolve()
+            return;
+          }
 
-        this.$Message.error(d.code);
+          this.$Message.error(d.code);
+          reject();
+        })
       })
     }
   },

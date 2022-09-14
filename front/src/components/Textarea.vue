@@ -230,7 +230,7 @@ export default {
   },
   methods: {
     updateContent(val) {
-      if (val && val.length < this.maxlength)
+      if (val && this.maxlength ? val.length < this.maxlength : true)
         this.editorContent = val;
     },
     /**
@@ -313,11 +313,21 @@ export default {
      * @param text
      */
     onEditorChange(data) {
-      if (data.html && data.html.length < this.maxlength && !this.disabled)
+      const maxlength = this.maxlength;
+      if (
+          data.html &&
+          maxlength  ? data.html.length < maxlength : true &&
+          !this.disabled
+      )
         this.editorContent = data.html;
     },
     onEditorBlur (data) {
-      if (data.html && data.html.length < this.maxlength && !this.disabled)
+      const maxlength = this.maxlength;
+      if (
+          data.html &&
+          maxlength  ? data.html.length < maxlength : true &&
+          !this.disabled
+      )
         this.$emit("input", this.editorContent);
     },
     /**

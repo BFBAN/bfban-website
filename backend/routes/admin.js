@@ -64,8 +64,8 @@ async (req, res, next)=>{
 });
 
 router.get('/commentAll', verifyJWT, allowPrivileges(["super","root","dev"]), [
-    checkbody('data.game').optional().isIn(config.supportGames),
-    checkbody('data.type').optional().isString().isInt(['report', 'reply', 'judgement', 'banAppeal']),
+    checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
+    checkbody('type').optional().isString().isInt(['report', 'reply', 'judgement', 'banAppeal']),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
     checkquery('order').optional().isIn(['asc', 'desc']),
@@ -80,16 +80,19 @@ async (req, res, next)=>{
         const limit = req.query.limit!==undefined? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
 
-        const {type,game} = req.query.data;
+        let type = req.query.type;
+        const game = (req.query.game&&req.query.game!='all')? req.query.game : '';
 
         const total = await db.count({num: 1}).from('comments').first().then(r=>r.num);
 
-        const result = await db('comments')
+        const result = await db.from('comments')
             .join('users', 'comments.byUserId', 'users.id')
             .select('comments.*', 'users.username', 'users.privilege')
-            .where('type', type).where('game', game)
+            .where('cheatGame', 'like', game? `%"${game}"%` : "%")
+            .andWhere({type: type})
             .orderBy('comments.createTime', order)
-            .offset(skip).limit(limit);
+            .offset(skip).limit(limit)
+            .then(r=>r.map(i=>{ delete i.valid; return i }));
 
         return res.status(200).json({success: 1, code: 'comment.ok', data: result, total});
     } catch(err) {
@@ -119,7 +122,10 @@ async (req, res, next)=>{
         else {
             comment.content = req.body.data.content;
             comment.videoLink = comment.type=='report'? (req.body.data.videoLink? req.body.data.videoLink : comment.videoLink) : undefined;
-            await db('comments').update(comment).where({id: comment.id});
+            await db('comments').update({
+                content: comment.content,
+                videoLink: comment.videoLink
+            }).where({id: comment.id});
         }
 
         return res.status(200).json({success: 1, code: 'setComment.ok'});
@@ -199,15 +205,18 @@ async (req, res, next)=>{
             return res.status(400).json({error: 1, code: 'setUserAttr.bad', message: validateErr.array()});
         
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({id: req.body.data.id});
+        const user = await db.select('*')
+            .from('users')
+            .where({id: req.body.data.id});
         if(!user)
-            return res.status(404).json({error: 1, code: 'setUserAttr.notFound'});
-        
-        user.attr = userSetAttributes(user.attr, req.body.data.attr, true);
+            return res.status(404).json({error: 1, code: 'setUserAttr.notUser'});
 
-        await sendMessage(req.user.id, null, "command", JSON.stringify({action:'setUserAttr', target: user.id}));
-        await db('users').update(user).where({id: user.id});
-        
+        let userData = user[0];
+        userData.attr = userSetAttributes(userData.attr, req.body.data.attr, true);
+
+        await sendMessage(req.user.id, null, "command", JSON.stringify({action:'setUserAttr', target: userData.id}));
+        await db('users').update(userData).where({id: req.user.id});
+
         return res.status(200).json({success: 1, code: 'setUserAttr.ok'});
     } catch(err) {
         next(err);

@@ -45,7 +45,7 @@ function userShowAttributes(attr, showprivate=false, force=false) {
 function userSetAttributes(org, attr, force=false) {
     const result = org;
     for(let i of Object.keys(userAttributes))
-        if(typeof(attr[i])==userAttributes[i].type && (userAttributes[i].set || force))
+        if(typeof(attr[i])==userAttributes[i].type && (userAttributes[i].set || force) && attr[i] && result[i])
             result[i] = attr[i];
     return result;
 }
