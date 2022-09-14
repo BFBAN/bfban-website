@@ -8,8 +8,8 @@
       "pathname": "/api/"
     },
     "development2": {
-      "protocol": "https",
-      "host": "seeding.linrunrun.online",
+      "protocol": "http",
+      "host": "101.43.35.41:3000",
       "pathname": "/api/"
     },
     "development3": {
@@ -23,11 +23,6 @@
       "pathname": "/api/"
     },
     "production": {
-      "protocol": "https",
-      "host": "bfban-testing.gametools.network",
-      "pathname": "/api/"
-    },
-    "production1": {
       "protocol": "https",
       "host": "bfban-testing.gametools.network",
       "pathname": "/api/"
