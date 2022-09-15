@@ -903,7 +903,6 @@ import BFBAN from "/src/assets/js/bfban";
 import {api, http, http_token, util, storage, account_storage} from '../assets/js/index'
 
 import Empty from '../components/Empty.vue'
-import Edit from "../components/Edit";
 import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
 import RecordLink from "../components/RecordLink.vue";
@@ -994,7 +993,7 @@ export default new BFBAN({
       cheatMethodsGlossary: null,
     }
   },
-  components: {Empty, Edit, Textarea, BusinessCard, RecordLink, Captcha, PrivilegesTag},
+  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, PrivilegesTag},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -1466,30 +1465,7 @@ export default new BFBAN({
     }
   },
   computed: {
-    isAdmin() {
-      let isBool = false;
-      const user = this.$store.state.user.userinfo;
-      const adminGroup = ['root', 'admin', 'super', 'dev']
-      for (const i of adminGroup) {
-        for (const j of user.privilege){
-          if (j == i)
-            isBool = true;
-        }
-      }
-      return Boolean(isBool);
-    },
-    isLogin() {
-      return Boolean(this.$store.state.user)
-    },
-    isFull() {
-      return Boolean(this.$route.query.full || false);
-    },
-    currentUser() {
-      return this.$store.state.user
-    },
-    currentLan() {
-      return this.$root && this.$root.$i18n && this.$root.$i18n.locale || 'zh-CN';
-    },
+
   }
 })
 </script>

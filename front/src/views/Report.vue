@@ -281,7 +281,6 @@ import {api, http, http_token, http_connect, util, regular} from '../assets/js/i
 import {checkReportFormData} from "@/mixins/common";
 
 import gameName from '/public/conf/gameName.json'
-import Edit from "@/components/Edit.vue";
 import Textarea from "@/components/Textarea.vue";
 
 export default new BFBAN({
@@ -297,7 +296,7 @@ export default new BFBAN({
       cheatMethodsGlossary: [],
     };
   },
-  components: {Edit, Textarea},
+  components: {Textarea},
   created() {
     this.http = http_token.call(this);
 
@@ -414,16 +413,7 @@ export default new BFBAN({
         return;
       }
 
-      callback();
-      // // 实体请求校验
-      // http_connect.url(val, function (res) {
-      //   if (res.code != 0) {
-      //     callback(res.msg);
-      //     return;
-      //   }
-      //   // 通过
-      //   callback();
-      // });
+      callback()
     },
     /**
      * 更新或刷新验证码
@@ -439,14 +429,6 @@ export default new BFBAN({
           this.tabs.list[index].captchaUrl = res.data.data;
         }
       });
-    },
-    /**
-     * 单向绑定编辑器的值
-     * @param h edit value
-     * @param index tabs to index
-     */
-    handleMiscChange(h, index) {
-      this.tabs.list[index].formItem.description = h;
     },
     /**
      * 取消当前标签的举报

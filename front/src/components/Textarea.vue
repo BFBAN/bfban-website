@@ -130,6 +130,7 @@
             <Button @click="currentindex = 0">重置</Button>
             <Button type="primary"
                     @click="onInsert"
+                    :loading="insertLoad"
                     :disabled="!insertValue">插入</Button>
           </Col>
         </Row>
@@ -140,8 +141,7 @@
 </template>
 
 <script>
-import { http } from "../assets/js"
-import { upload } from '@/assets/js/tools'
+import { http, regular, upload } from "../assets/js"
 
 import MediaPage from "../../src/views/account/media";
 
@@ -216,6 +216,7 @@ export default {
         autoCrop: true
       },
       updataPlane: false,
+      insertLoad: false,
       ignore: false,
 
       // editorContent
@@ -226,17 +227,8 @@ export default {
           // https://github.com/merrylmr/quill-mention-people
           // atPeople:{
           //   list:[
-          //     {id:1,name:'Cabbagelol'},
-          //     {id:2,name:'merry'},
-          //     {id:3,name:'box'},
-          //     {id:4,name:'Carry'},
-          //     {id:5,name:'Jony'},
-          //     {id:6,name:'merry'},
-          //     {id:7,name:'lala'},
-          //     {id:8,name:'xiaoxiong'},
-          //     {id:9,name:'herry'},
-          //     {id:10,name:'jerry'},
-          //     {id:11,name:'jackson'}
+          //     {id:1,name:'admin'},
+          //     {id:2,name:'test'},
           //   ],
           //   atOneMemberAction (item) {
           //     console.log(item);
@@ -262,10 +254,14 @@ export default {
             }
           }
         },
-      }
+      },
     }
   },
   methods: {
+    /**
+     * 更新富文本
+     * @param val
+     */
     updateContent(val) {
       if (val && this.maxlength ? val.length < this.maxlength : true)
         this.editorContent = val;
@@ -273,14 +269,22 @@ export default {
     /**
      * 插入
      */
-    onInsert () {
+    async onInsert () {
       const quill = this.quill;
       const range = quill.getSelection(true);
+
+      this.insertLoad = true;
+
+      if (await regular.authImage(this.insertValue) == false) {
+        this.$Message.error('Image unavailable :(');
+        return;
+      }
 
       quill.insertEmbed(range.index, this.currentFileType, this.insertValue);
 
       // 关闭mode
       this.updataPlane = false;
+      this.insertLoad = false;
 
       // 调整光标到最后
       quill.setSelection(range.index + 1);
@@ -309,7 +313,7 @@ export default {
       }
 
       // 上传
-      this.insertValue = await upload(file).then(() => {
+      this.insertValue = await upload.on(file).then(() => {
         this.currentindex += 1;
       }).catch(() => {
         this.currentindex = 0;

@@ -207,7 +207,7 @@
 <script>
 import BFBAN from "../assets/js/bfban";
 
-import {api, http, util} from '../assets/js/index'
+import {account_storage, api, http, util} from '../assets/js/index'
 import cheaterStatus from '/public/conf/cheaterStatus.json'
 import gameName from '/public/conf/gameName.json'
 import _ from "lodash";
@@ -251,6 +251,8 @@ export default new BFBAN({
   methods: {
     autoUpdateList() {
       const that = this;
+
+      account_storage.updateConfiguration('autoUpdatePlayerList', this.bot.autoUpdate);
 
       if (!that.bot.autoUpdate) {
         clearInterval(this.bot.fun);
