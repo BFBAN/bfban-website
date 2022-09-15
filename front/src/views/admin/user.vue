@@ -91,11 +91,6 @@
                   </Col>
                 </Row>
               </Col>
-              <Col span="24">
-                <FormItem prop="username" label="password">
-                  <Input v-model="editUserData.password" readonly disabled />
-                </FormItem>
-              </Col>
               <Col span="12">
                 <FormItem label="lastSigninIP" prop="username">
                   <Input v-model="editUserData.attr.lastSigninIP" readonly disabled/>
