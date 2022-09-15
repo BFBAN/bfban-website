@@ -19,7 +19,9 @@ const store = new Vuex.Store({
       history: false,
       subscribes: false,
       judgementTip: false,
-      enhance: false
+      enhance: false,
+      autoUpdatePlayerList: false,
+      desktopNotifiction: false
     },
 
     // https://vue-meta.nuxtjs.org/api
@@ -30,7 +32,13 @@ const store = new Vuex.Store({
       ]
     },
 
-    $desktop: {},
+    $desktop: {
+      // 查询待处理
+      autoUpdatePlayerList: {
+        result: [],
+        total: 0
+      }
+    },
     $theme: {},
     $userinfo: {},
   },

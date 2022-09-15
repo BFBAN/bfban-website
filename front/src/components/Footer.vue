@@ -94,8 +94,9 @@ import {storage, account_storage} from "../assets/js";
 import packageInfo from '../../package.json';
 import footerNavs from '/public/conf/footerNavs.json';
 import link from '/public/conf/link.json';
+import BFBAN from "@/assets/js/bfban";
 
-export default {
+export default new BFBAN({
   data() {
     return {
       infos: packageInfo.version,
@@ -130,12 +131,6 @@ export default {
     }
   },
   computed: {
-    isLogin() {
-      return Boolean(this.$store.state.user)
-    },
-    isFull() {
-      return Boolean(this.$route.query.full || false);
-    },
     currentLan: {
       set(val) {
         const lang = val;
@@ -155,7 +150,7 @@ export default {
       }
     }
   }
-}
+})
 </script>
 
 <style lang="less" scoped>
@@ -166,7 +161,7 @@ export default {
 @footer-icon-color: #c5c5c5;
 
 .footer {
-  backdrop-filter: blur(50px);
+  //backdrop-filter: blur(50px);
   text-align: left;
   flex-shrink: 0;
   padding: 3rem 0 0 0;

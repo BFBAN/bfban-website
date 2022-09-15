@@ -4,6 +4,7 @@
     <main>
       <router-view></router-view>
     </main>
+    <FooterBox></FooterBox>
     <Footer v-if="!isFull"></Footer>
   </div>
 </template>
@@ -15,6 +16,7 @@ import theme from "/public/conf/themes.json"
 
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
+import FooterBox from "@/components/footerBox";
 
 export default {
   name: "app",
@@ -24,7 +26,7 @@ export default {
       split: true ? 1 : .9
     }
   },
-  components: {Header, Footer},
+  components: {Header, Footer, FooterBox},
   created() {
     this.http = http_token.call(this);
 
@@ -83,9 +85,7 @@ export default {
     }
   },
   computed: {
-    isLogin() {
-      return Boolean(this.$store.state.user)
-    },
+
   }
 };
 import 'view-design/dist/styles/iview.css'

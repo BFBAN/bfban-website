@@ -31,15 +31,40 @@
         "name": "iiTzArcur",
         "url": "//gametools.network"
       }]
+    },
+    {
+      "name": "ja-JP",
+      "label": "日本语(bot)",
+      "members": [{
+        "name": "Baidu Bot",
+        "url": "//bfban.com"
+      }]
+    },
+    {
+      "name": "kor-KOR",
+      "label": "한국어(bot)",
+      "members": [{
+        "name": "Baidu Bot",
+        "url": "//bfban.com"
+      }]
+    },
+    {
+      "name": "ru-RU",
+      "label": "Русский(bot)",
+      "members": [{
+        "name": "Baidu Bot",
+        "url": "//baidu.com"
+      }
+      ]
     }
   ],
   "TODO": [
     {
-      "name": "ja-JP",
-      "label": "日本语",
+      "name": "tr-TR",
+      "label": "Türkçe",
       "members": [{
-        "name": "RiseJack",
-        "url": "https://www.youtube.com/channel/UCptnZeaSNaurVVy9UMWzI6w"
+        "name": "Baidu Bot",
+        "url": "//baidu.com"
       }]
     }
   ]

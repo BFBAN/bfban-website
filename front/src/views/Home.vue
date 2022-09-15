@@ -52,7 +52,8 @@
             <Col span="16" class="mobile-hide" :lg="{span: 14, push: 1}" type="flex" align="center" justify="center"
                  style="display: flex; justify-content: center; align-items: center">
               <Card dis-hover :padding="0">
-                <img :src="require(`../assets/images/index-gl_${$i18n.locale || 'en-US'}.png`)" width="100%" class="ivu-row-top" style="margin-bottom: -10px;border-radius: 5px;">
+                <img :src="bannerImage"
+                     width="100%" class="ivu-row-top" style="margin-bottom: -10px;border-radius: 5px;">
               </Card>
             </Col>
           </Row>
@@ -155,7 +156,7 @@
 import BFBAN from "../assets/js/bfban";
 import Tell from "../components/Home_tell";
 import Weekly from "./Weekly";
-import {api, http, util} from '../assets/js/index'
+import {api, http, util, regular} from '../assets/js/index'
 
 export default new BFBAN({
   data() {
@@ -164,6 +165,7 @@ export default new BFBAN({
         report: 0,
         cheater: 0
       },
+      bannerImage: '',
       activities: [],
       activities_l: [],
       statistics: {},
@@ -186,6 +188,12 @@ export default new BFBAN({
 
         this.gameName = res.gameName;
       });
+
+      try {
+        this.bannerImage = require(`../assets/images/index-gl_${this.$i18n.locale || 'en-US'}.png`);
+      } catch (e) {
+        this.bannerImage = require(`../assets/images/index-gl_en-US.png`);
+      }
     },
     /**
      * 获取动态

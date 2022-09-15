@@ -95,7 +95,7 @@ export default class AccountStorage extends Storage {
     getConfiguration (key) {
         let data = super.get(this.NAME);
 
-        if (data.code <= 0) return false;
+        if (data.code < 0) return false;
         return key in data.data.value ? data.data.value[key] : false;
     }
 }

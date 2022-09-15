@@ -1004,8 +1004,6 @@ export default new BFBAN({
     this.http = http_token.call(this);
 
     this.loadData();
-    this.getCheatersInfo();
-    this.getTimeline();
   },
   methods: {
     async loadData() {
@@ -1022,6 +1020,9 @@ export default new BFBAN({
         this.verify.choice = res.action;
         this.verify.status = this.verify.choice[0].value;
       });
+
+      this.getCheatersInfo();
+      this.getTimeline();
     },
     onAvatarError () {
       this.cheater.avatarLink = "";

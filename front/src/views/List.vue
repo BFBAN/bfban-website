@@ -344,7 +344,7 @@ export default new BFBAN({
     /**
      * 取得作弊玩家列表
      */
-    getCheaterList() {
+    async getCheaterList() {
       // default values
       const {game = "all", status = -1, createTime, updateTime, skip = this.skip, sort = "updateTime", limit = this.limit} = this.$route.query;
 
@@ -379,20 +379,25 @@ export default new BFBAN({
 
       this.spinShow = true;
 
-      http.get(api['players'], config).then(res => {
-        const d = res.data;
+      return new Promise((resolve, reject) => {
+        http.get(api['players'], config).then(res => {
+          const d = res.data;
 
-        if (d.success === 1) {
-          this.data = d.data.result || [];
-          this.total = d.data.total;
-        } else {
-          this.catch(res);
-        }
-      }).catch((err) => {
-        this.$Message.error(err.code);
-      }).finally(() => {
-        this.spinShow = false;
-      });
+          if (d.success === 1) {
+            this.data = d.data.result || [];
+            this.total = d.data.total;
+
+            resolve(d);
+          } else {
+            this.catch(res);
+          }
+        }).catch((err) => {
+          this.$Message.error(err.code);
+          reject(err);
+        }).finally(() => {
+          this.spinShow = false;
+        });
+      })
     },
     routerQuery() {
       const _game = this.gameName;

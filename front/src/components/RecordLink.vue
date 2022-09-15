@@ -4,7 +4,7 @@
            :span-method="handleSpan"
            :show-header="false"
            :columns="detailLink.th"
-           :data="getData"
+           :data="detailLink.data"
            border>
     </Table>
   </div>
@@ -152,8 +152,17 @@ export default {
     }
   },
   created() {
+    // console.log(this.cheater, this.cheater.originName)
+    // this.getData(this.cheater)
+  },
+  watch: {
+    'cheater': 'loadData'
   },
   methods: {
+    loadData () {
+      this.detailLink.data = [];
+      this.getData(this.cheater)
+    },
     push (children = [], gamename) {
       const platformSelect = 'origin';
       if (!this.cheater) return ;
@@ -190,22 +199,14 @@ export default {
 
       return children;
     },
-    handleSpan ({ row, column, rowIndex, columnIndex }) {
-      if (row.link == "") {
-        return { colspan: 2 };
-      }
-    }
-  },
-  computed: {
-    getData () {
+    getData (data) {
       if (this.cheater.length <= 0) return ;
       if (!this.cheater.games) return [];
 
-      this.cheater.games.forEach(i => {
+      (data || this.cheater).games.forEach(i => {
         let children = [];
 
         children = this.push(children, i);
-        // children = this.push(children, '*');
 
         // 游戏类型一行
         this.detailLink.data.push({
@@ -215,8 +216,15 @@ export default {
         })
       })
 
-      return this.detailLink.data;
-    }
+      // return this.detailLink.data;
+    },
+    handleSpan ({ row, column, rowIndex, columnIndex }) {
+      if (row.link == "") {
+        return { colspan: 2 };
+      }
+    },
+  },
+  computed: {
   }
 }
 </script>

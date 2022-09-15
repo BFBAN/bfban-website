@@ -9,13 +9,13 @@ export default class BFBAN extends Print {
         super();
 
         data.computed = {
-            ...data.computed,
             isAdmin: this.isAdmin,
             isLogin: this.isLogin,
             isFull: this.isFull,
             isMobile: this.isMobile,
             currentUser: this.currentUser,
             currentLan: this.currentLan,
+            ...data.computed,
         }
 
         return data;
