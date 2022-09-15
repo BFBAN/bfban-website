@@ -15,9 +15,9 @@ const docs_config = {
     },
     servers: [
         { "url": "http://127.0.0.1:3000/api" },
-        { "url": "http://101.43.35.41:3000/api" },
         { "url": "https://bfban.com/api" },
         { "url": "https://bfban.gametools.network/api" },
+        { "url": "https://bfban-testing.gametools.network/api" },
         { "url": "https://api.bfban.com/api" }
     ],
     tags: [
@@ -36,11 +36,6 @@ const docs_config = {
     ],
     components: {
         "securitySchemes": {
-            "api_key": {
-                "type": "apiKey",
-                "name": "api_key",
-                "in": "header"
-            },
             "x-access-token": {
                 'type': "apiKey",
                 'name': "x-access-token",
