@@ -61,7 +61,8 @@ export default class Api {
       'admin_msGraphAuthCode': 'admin/msGraphAuthCode',
       'admin_judgementLog': 'admin/judgementLog',
       'admin_addUser': 'admin/addUser',
-      'admin_delUser': 'admin/delUser'
+      'admin_delUser': 'admin/delUser',
+      'getUserOperationLogs': 'admin/getUserOperationLogs'
     };
   }
 }
