@@ -159,8 +159,9 @@ import menu from '/public/conf/headerMenu.json'
 
 import Header_message from "./Header_message";
 import PrivilegesTag from "/src/components/PrivilegesTag";
+import BFBAN from "@/assets/js/bfban";
 
-export default {
+export default new BFBAN({
   data() {
     return {
       themes,
@@ -250,29 +251,9 @@ export default {
     }
   },
   computed: {
-    isLogin() {
-      return Boolean(this.$store.state.user);
-    },
-    isAdmin() {
-      let isBool = false;
-      const user = this.$store.state.user.userinfo;
-      const adminGroup = ['root', 'admin', 'super', 'dev']
-      for (const i of adminGroup) {
-        for (const j of user.privilege){
-          if (j == i)
-            isBool = true;
-        }
-      }
-      return Boolean(isBool);
-    },
-    isFull() {
-      return Boolean(this.$route.query.full || false);
-    },
-    currentUser() {
-      return this.$store.state.user;
-    }
+
   }
-}
+})
 </script>
 
 <style lang="less">

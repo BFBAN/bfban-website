@@ -445,21 +445,7 @@ export default new BFBAN({
     },
   },
   computed: {
-    isAdmin() {
-      let isBool = false;
-      const user = this.$store.state.user.userinfo;
-      const adminGroup = ['root', 'admin', 'super', 'dev']
-      for (const i of adminGroup) {
-        for (const j of user.privilege){
-          if (j == i)
-            isBool = true;
-        }
-      }
-      return Boolean(isBool);
-    },
-    currentUser() {
-      return this.$store.state.user;
-    },
+
   }
 });
 </script>

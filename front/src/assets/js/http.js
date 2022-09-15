@@ -5,6 +5,7 @@ export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
     PUT = 'put';
+    DEL = 'del';
     //..
 
     GETURL = { protocol: '', request: '' };

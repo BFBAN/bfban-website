@@ -14,6 +14,7 @@ class Enhance extends AccountStorage {
      */
     on ({
         footerBar = false,
+        autoUpdatePlayerList = false,
         playerListToAdminNotification = false,
         desktopNotifiction = false,
         reportTags = false,

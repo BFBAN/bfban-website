@@ -38,26 +38,6 @@ export default {
           value: false,
         },
         {
-          name: "多标签举报",
-          dis: "允许同页面上，创建多个举报表单",
-          value: true,
-        },
-        {
-          name: "同步语言",
-          dis: "个人信息的语言同步客户端",
-          value: false,
-        },
-        {
-          name: "游览标记",
-          dis: "记录访问过玩家，并在列表中标记它，如果同时启动[未处理提醒]会标记自动刷新出现的新玩家",
-          value: false,
-        },
-        {
-          name: "历史",
-          dis: "记录访问过玩家，在历史列表中可以再次访问",
-          value: false,
-        },
-        {
           name: "交互声音",
           dis: "不同交互提供不同的声音",
           value: false,

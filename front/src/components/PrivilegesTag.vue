@@ -32,6 +32,11 @@ export default {
   created () {
     this.update();
   },
+  watch: {
+    'data': function (val, old) {
+      this.update(val);
+    }
+  },
   methods: {
     update (privilegeArray) {
       const that = this;

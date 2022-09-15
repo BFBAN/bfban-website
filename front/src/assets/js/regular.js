@@ -1,4 +1,3 @@
-
 export default class Regular {
     A = 'a';
 
@@ -9,6 +8,9 @@ export default class Regular {
         },
         'image': {},
         'video': {},
+        'mobile': {
+            v: /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+        }
     };
 
     /**
@@ -24,7 +26,8 @@ export default class Regular {
 
         if (res) {
             return {
-                code: 0
+                code: 0,
+                res,
             };
         }
 
@@ -39,4 +42,19 @@ export default class Regular {
      * AUTH
      * 对校验文件资源校验，get请求资源是否存在
      */
+
+    // 图片验证
+    authImage (url) {
+        if (!url) return false;
+        return new Promise(function (resolve, reject) {
+            let img = new Image()
+                img.src = url;
+            img.onload = function (res) {
+                resolve(true);
+            }
+            img.onerror = function () {
+                resolve(false)
+            }
+        })
+    }
 }

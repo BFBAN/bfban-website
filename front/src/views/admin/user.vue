@@ -50,7 +50,7 @@
           </div>
         </Col>
         <Col>
-          <PrivilegesTag :data="i.privilege"></PrivilegesTag>
+          <PrivilegesTag :ref="`tag_${i.id}_privilegesTag`" :data="i.privilege" v-if="i.privilege"></PrivilegesTag>
         </Col>
         <Col>
           <Button @click="onEditUser(index)" type="dashed" size="small" :disabled="!isAdmin">
@@ -287,8 +287,9 @@ import BusinessCard from "@/components/businessCard";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import _ from "lodash";
 import Textarea from "@/components/Textarea";
+import BFBAN from "@/assets/js/bfban";
 
-export default {
+export default new BFBAN({
   data() {
     return {
       delUserModel: false,
@@ -571,8 +572,8 @@ export default {
       })
     },
     handlePageChange (val) {
-       this.skip = val;
-       this.onSearchUser();
+      this.skip = val;
+      this.onSearchUser();
     },
     handlePageSizeChange(val) {
       this.skip = val;
@@ -586,20 +587,9 @@ export default {
     }
   },
   computed: {
-    isAdmin() {
-      let isBool = false;
-      const user = this.$store.state.user.userinfo;
-      const adminGroup = ['root', 'admin', 'super', 'dev']
-      for (const i of adminGroup) {
-        for (const j of user.privilege){
-          if (j == i)
-            isBool = true;
-        }
-      }
-      return Boolean(isBool);
-    }
+
   }
-}
+})
 </script>
 
 <style scoped>

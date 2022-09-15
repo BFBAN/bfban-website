@@ -39,8 +39,9 @@ import user from "./user"
 import comment from "./comment"
 import log from "./log"
 import judgementLog from "@/views/admin/judgementLog";
+import BFBAN from "@/assets/js/bfban";
 
-export default {
+export default new BFBAN({
   name: "profile",
   data() {
     return {
@@ -54,11 +55,11 @@ export default {
             title: 'user',
             value:'user',
           },
-          {
-            title: 'comment',
-            value: 'comment',
-            // icon: 'ios-paper'
-          }]
+            {
+              title: 'comment',
+              value: 'comment',
+              // icon: 'ios-paper'
+            }]
         },
         {
           title: 'log',
@@ -95,30 +96,9 @@ export default {
     this.onMenuActive(pagename);
   },
   computed: {
-    isLogin() {
-      return Boolean(this.$store.state.user);
-    },
-    isAdmin() {
-      let isBool = false;
-      const user = this.$store.state.user.userinfo;
-      const adminGroup = ['root', 'admin', 'super', 'dev']
-      for (const i of adminGroup) {
-        for (const j of user.privilege){
-          if (j == i)
-            isBool = true;
-        }
-      }
-      return Boolean(isBool);
-    },
-    isMobile() {
-      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
-      return !!flag;
-    },
-    currentUser() {
-      return this.$store.state.user;
-    }
+
   }
-}
+})
 </script>
 
 <style scoped>

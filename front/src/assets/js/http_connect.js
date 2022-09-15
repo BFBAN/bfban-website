@@ -17,13 +17,13 @@ export default class Http_Connect {
      */
     async url (u = '', callback) {
         this.HTTP.request(u,{
-            method: 'HEAD',
+            method: 'get',
         }).then(res => {
             console.log(res);
-            if (res.status <= 200)
+            if (res.status < 500)
                 return callback( this.STATUS.success() );
-            else
-                this.catch();
+
+            callback(this.STATUS.error({ msg: res.toString() }));
         })
         .catch((err) => {
             return callback(  this.STATUS.error({ msg: err.toString() }) );

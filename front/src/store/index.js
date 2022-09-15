@@ -18,7 +18,8 @@ const store = new Vuex.Store({
     configuration: {
       history: false,
       subscribes: false,
-      judgementTip: false
+      judgementTip: false,
+      enhance: false
     },
 
     // https://vue-meta.nuxtjs.org/api

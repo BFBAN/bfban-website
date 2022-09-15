@@ -40,6 +40,7 @@
                   <Col>
                     <Checkbox @on-change="switchAttr(j.configurationKey, j.configurationValue)"
                               v-model="j.configurationValue"
+                              :disabled="j.disabled"
                               v-if="j.configurationKey"></Checkbox>
                   </Col>
                 </Row>
@@ -82,8 +83,9 @@ import media from "./media";
 import history from "./history";
 import subscribes from "./subscribes"
 import {account_storage} from "@/assets/js";
+import BFBAN from "@/assets/js/bfban";
 
-export default {
+export default new BFBAN({
   name: "profile",
   data() {
     return {
@@ -103,35 +105,38 @@ export default {
             name: 'appearance',
             icon: 'ios-color-palette'
           },
-          {
-            title: 'message',
-            name: 'message',
-            icon: 'md-mail'
-          },
-          {
-            title: 'enhance',
-            name: 'enhance',
-            icon: 'md-code-download'
-          },
-          {
-            title: 'media',
-            name: 'media',
-            icon: 'ios-videocam'
-          },
-          {
-            title: 'history',
-            name: 'history',
-            icon: 'md-filing',
-            configurationKey: 'history',
-            configurationValue: this.$store.state.configuration.history || false,
-          },
-          {
-            title: 'subscribes',
-            name: 'subscribes',
-            icon: 'md-notifications',
-            configurationKey: 'subscribes',
-            configurationValue: this.$store.state.configuration.subscribes || false,
-          }]
+            {
+              title: 'message',
+              name: 'message',
+              icon: 'md-mail'
+            },
+            {
+              title: 'media',
+              name: 'media',
+              icon: 'ios-videocam'
+            },
+            {
+              title: 'history',
+              name: 'history',
+              icon: 'md-filing',
+              configurationKey: 'history',
+              configurationValue: this.$store.state.configuration.history || false,
+            },
+            {
+              title: 'subscribes',
+              name: 'subscribes',
+              icon: 'md-notifications',
+              configurationKey: 'subscribes',
+              configurationValue: this.$store.state.configuration.subscribes || false,
+            },
+            {
+              title: 'enhance',
+              name: 'enhance',
+              icon: 'md-code-download',
+              configurationKey: 'enhance',
+              configurationValue: this.$store.state.configuration.enhance || false,
+              disabled: true
+            }]
         },
       ]
     }
@@ -157,24 +162,9 @@ export default {
     }
   },
   computed: {
-    isLogin() {
-      return Boolean(this.$store.state.user);
-    },
-    isAdmin() {
-      const user = this.$store.state.user;
-      const privilege = user ? user.userinfo.privilege : []
-      return privilege.some(item => ['admin', 'super', 'dev'].includes(item))
-      // return Boolean(is);
-    },
-    isMobile() {
-      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
-      return !!flag;
-    },
-    currentUser() {
-      return this.$store.state.user;
-    },
+
   }
-}
+})
 </script>
 
 <style lang="less" scoped>
