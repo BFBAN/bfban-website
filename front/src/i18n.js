@@ -18,6 +18,7 @@ import kor_bot_bfban from './lang/kor_bot.json' // 韩语 - 机翻
 // import tr_bot_bfban from './lang/tr_bot.json' // 土耳其 - 机翻
 import ru_bot_bfban from './lang/ru_bot.json' // 俄语 - 机翻
 import zh_bfban from './lang/zh.json' // 中文
+import zh_miao_bfban from './lang/zh_Miao.json' // 简体喵文
 
 Vue.use(VueI18n)
 Vue.locale = () => {};
@@ -32,6 +33,7 @@ const i18n = new VueI18n({
     // 'tr-TR': Object.assign(tr, tr_bot_bfban), // 土耳其
     'ru-RU': Object.assign(ru, ru_bot_bfban), // 俄语
     'zh-CN': Object.assign(zh, zh_bfban), // 中文
+    'zh-MIAO': Object.assign(zh_miao_bfban) // 简体喵文
   },
   silentTranslationWarn: true,
 });

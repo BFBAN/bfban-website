@@ -108,7 +108,7 @@
                         placement="top-end"
                         :disabled="!langLoaclSync"
                         @on-change="switchLanguage">
-                  <Option v-for="item in languages" :value="item.name" :key="item.name">{{ item.label }}</Option>
+                  <Option v-for="item in languages" :value="item.name" :key="item.name" :disabled="item.ignoreSave">{{ item.label }}</Option>
                 </Select>
               </Col>
             </Row>

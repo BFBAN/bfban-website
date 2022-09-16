@@ -22,6 +22,17 @@
       ]
     },
     {
+      "name": "zh-MIAO",
+      "label": "简体喵文",
+      "ignoreSave": true,
+      "members": [
+        {
+          "name": "Cat",
+          "url": ""
+        }
+      ]
+    },
+    {
       "name": "en-US",
       "label": "English",
       "members": [{
