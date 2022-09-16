@@ -96,7 +96,7 @@
 		"signin": "Sign in",
 		"signup": "Signup",
 		"signout": "Logout",
-		"userCenter": "Homepage",
+		"userCenter": "Public profile",
 		"signoutSuccess": "Logout successful"
 	},
 	"player_list": {
@@ -167,11 +167,11 @@
 				"privilege": "Indentity",
 				"introduction": "About me",
 				"showOrigin": "Show Orgin info",
-				"showOriginDescribe": "Allow your binded orgin account to be shown on BFBAN",
-				"allowDM": "Allow DM",
-				"allowDMdescribe": "Allow recieving DM from another people. For more massage please go to [Massage list] ",
+				"showOriginDescribe": "Allow your connected orgin account to be shown on BFBAN",
+				"allowDM": "Allow DMs",
+				"allowDMdescribe": "Receive DMs from other people.",
 				"language": "Languages",
-				"languageSyncDescribe": "This option enable website to synchronise your system's local language after logging in and will revert to the local program's persistent language if you log out"
+				"languageSyncDescribe": "It will use the selected language until you logout"
 			},
 			"modifyName": {
 				"title": "Change name",
@@ -209,15 +209,15 @@
 			"title": "History log"
 		},
 		"subscribes": {
-			"title": "User Subscribes"
+			"title": "Tracked cheaters"
 		},
 		"admin": {
-			"title": "back-end management",
+			"title": "Backend management",
 			"menu": {
 				"management": "content",
 				"user": "user management",
 				"comment": "Comments on the management",
-				"log": "log",
+				"log": "Logs",
 				"adminLog": "Admin log",
 				"judgementLog": "Judgement log"
 			}
@@ -226,9 +226,9 @@
 	"detail": {
 		"title": "Detail",
 		"subscribes": {
-			"tracking": "Tracking",
+			"tracking": "Track",
 			"trackingDescribe": "Track this player and notify me for updates",
-			"cancelTrack": "Not tracking",
+			"cancelTrack": "Stop tracking",
 			"cancelTrackDescribe": "Stop tracking this player"
 		},
 		"timeline": {
@@ -470,9 +470,9 @@
 	},
 	"account": {
 		"title": "User info",
-		"reportnum": "Report Num",
+		"reportnum": "Reports",
 		"hint2": "Everyone can post responses on the report page.",
-		"hint3": "If you have more evidence for a hacker, please report the same id twice.",
+		"hint3": "If you have more evidence for a hacker, please report the same user twice.",
 		"userInfo": "Account info",
 		"username": "Username",
 		"role": "Role",
@@ -610,7 +610,7 @@
 		"updateTime": "Update time",
 		"colums": {
 			"screenTitle": "Filter",
-			"playerId": "ID",
+			"playerId": "player ID",
 			"reportTime": "Reported",
 			"updateTime": "Updated"
 		}
