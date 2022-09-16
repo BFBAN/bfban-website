@@ -559,7 +559,7 @@
 			"originName": "Enter your Origin account name",
 			"username": "At least 4 characters",
 			"password": "At least 6 characters",
-			"originId": "optional"
+			"originId": "Optional"
 		},
 		"eaPrivacy": "Please go to your \\\n      <a href=\"https://myaccount.ea.com/cp-ui/privacy/index\">EA privacy settings</a>      \\\n      to enable \"search by email\".",
 		"checkAllEmail": "The verification email takes a while (about 1 minute) to deliver to your mail box, please wait patiently and remember to check your spam",
@@ -643,7 +643,7 @@
 	"search": {
 		"title": "Search",
 		"describe": "Search a playername from the BFBAN database",
-		"placeholder": "Search for something",
+		"placeholder": "Search for a player",
 		"collectionHint": "Bookmark this page (Ctrl+D or Command+D)",
 		"scope": {
 			"history": "Historical ID",
