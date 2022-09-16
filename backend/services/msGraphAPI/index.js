@@ -369,7 +369,7 @@ async (req, res, next)=> {
             return { status: err.statusCode, error: err.body};
         });
         if(!msResponse.error)
-            return res.status(202).json({success: 1, code: 'msSendMail.success', message: 'mail successfully sent.'});
+            return res.status(202).json({success: 1, code: 'msSendMail.success', message: 'mail.json successfully sent.'});
         else
             return res.status(msResponse.status).json({success: 1, code: 'msSendMail.error', message: msResponse.error.message});
     } catch(err) {

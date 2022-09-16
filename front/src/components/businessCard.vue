@@ -134,6 +134,7 @@ export default {
 .business {
   padding: 20px;
   position: relative;
+  user-select: none;
 }
 
 .business-img {

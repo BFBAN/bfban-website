@@ -43,7 +43,7 @@
 <script>
 import BFBAN from "../assets/js/bfban";
 
-import {http, api, conf} from '../assets/js/index'
+import {http, api, conf, mail} from '../assets/js/index'
 
 export default new BFBAN({
   data() {
@@ -71,7 +71,7 @@ export default new BFBAN({
       http.get(api["account_signupVerify"], {
         params: {
           code,
-          lang: this.$root.$i18n.locale
+          lang: mail.exchangeLangField(this.$root.$i18n.locale)
         }
       }).then((res) => {
         const d = res.data;

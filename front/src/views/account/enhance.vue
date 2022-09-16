@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.configuration.enhance">
+  <div v-if="$store.state.configuration.enhance && webMode == 'standalone'">
     <div v-for="(i, index) in enhance" :key="index">
       <Card>
         <Row>
@@ -14,6 +14,10 @@
       </Card>
       <br>
     </div>
+  </div>
+  <div v-else-if="$store.state.configuration.enhance && webMode != 'standalone'" align="center" class="enhance-notApp-content">
+    <h1>No application was detected</h1>
+    <p>The BFBAN WEB APP is not installed</p>
   </div>
   <div v-else>Disable Component</div>
 </template>
@@ -48,6 +52,7 @@ export default {
     }
   },
   created() {
+
   },
   methods: {
     /**
@@ -64,7 +69,7 @@ export default {
     webMode () {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       if (document.referrer.startsWith('android-app://')) {
-        return 'twa';
+        return 'browsertab';
       } else if (navigator.standalone || isStandalone) {
         return 'standalone';
       }
@@ -73,3 +78,15 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.enhance-notApp-content {
+  height: 100%;
+  padding: 20px 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+</style>

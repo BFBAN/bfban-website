@@ -209,7 +209,9 @@ async function localeMessage(namepath='', lang='en', params) {
     let text = msgs?.[lang]? msgs[lang] : msgs?.['en'];
     if(text)
         Object.keys(params).forEach(i=>{
-            text = text.replace(new RegExp(`{${i}}`, 'g'), params[i]);
+            text = text
+                .replace(new RegExp(`{${i}}`, 'g'), params[i])
+                .replaceAll(/\{website\}/g, config.mail.origin);
         });
     return text;
 }

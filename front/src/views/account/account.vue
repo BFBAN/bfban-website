@@ -297,6 +297,8 @@ export default {
       const privileges = await import('/public/conf/privilege.json');
       this.privileges = this.privileges.concat(privileges.child)
       this.languages = this.languages.concat(languages.child)
+
+      this.getUserinfo();
     },
     /**
      * 修改密码

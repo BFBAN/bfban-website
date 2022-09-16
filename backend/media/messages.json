@@ -37,20 +37,20 @@
     },
     "notifications": {
         "beReported": {
-            "cn": "您的游戏账号被举报了，请至 https://bfban.com/player/{originUserId} 查看详情",
-            "en": "You were reported by someone, see https://bfban.com/player/{originUserId} for detail"
+            "cn": "您的游戏账号被举报了，请至 {website}/player/{originUserId} 查看详情",
+            "en": "You were reported by someone, see {website}/player/{originUserId} for detail"
         },
         "beJudged": {
-            "cn": "您的案件被裁决为 {status} ，请至 https://bfban.com/player/{originUserId} 查看详情",
-            "en": "Your case was judged as {status}, see https://bfban.com/player/{originUserId} for detail"
+            "cn": "您的案件被裁决为 {status} ，请至 {website}/player/{originUserId} 查看详情",
+            "en": "Your case was judged as {status}, see {website}/player/{originUserId} for detail"
         },
         "beReplied": {
-            "cn": "您在 {playername} 的案件有新回复，请至 https://bfban.com/player/{originUserId} 查看详情",
-            "en": "You have an reply under {playername}'s thread, see https://bfban.com/player/{originUserId}"
+            "cn": "您在 {playername} 的案件有新回复，请至 {website}/player/{originUserId} 查看详情",
+            "en": "You have an reply under {playername}'s thread, see {website}/player/{originUserId}"
         },
         "newBanAppeal": {
-            "cn": "{playername} 的案件提交了申诉，请至 https://bfban.com/player/{originUserId} 查看详情",
-            "en": "{playername} has a new ban appeal, see https://bfban.com/player/{originUserId}"
+            "cn": "{playername} 的案件提交了申诉，请至 {website}/player/{originUserId} 查看详情",
+            "en": "{playername} has a new ban appeal, see {website}/player/{originUserId}"
         }
     }
 }

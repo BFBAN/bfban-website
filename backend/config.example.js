@@ -38,7 +38,10 @@ const config = {
         port: 465,
         secure: true,
         user: 'somebody@somewhere.com',
-        password: 'notweakpassword'
+        password: 'notweakpassword',
+        domain: {
+            origin: 'you website domain'
+        },
     },
     docs: {
         info: {
