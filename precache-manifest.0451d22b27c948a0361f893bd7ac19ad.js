@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "5df0687894ce7f4412f8",
+    "revision": "82630dd24f4a52a20098",
     "url": "/assets/css/app.b239fa4b.css"
   },
   {
@@ -176,7 +176,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/img/ubuntu-mono-v8-latin-regular.28524211.svg"
   },
   {
-    "revision": "5df0687894ce7f4412f8",
+    "revision": "82630dd24f4a52a20098",
     "url": "/assets/js/app.2.7.0.js"
   },
   {
@@ -212,7 +212,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-2d0de6d6.2.7.0.js"
   },
   {
-    "revision": "411bcc87dcc5e3e6711e",
+    "revision": "ea57291ff81d8eca602f",
     "url": "/assets/js/chunk-2d0e24d8.2.7.0.js"
   },
   {
@@ -392,7 +392,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/conf/requestConf.example.json"
   },
   {
-    "revision": "fe2dcc6b1a2dfb219119f40e3e2ff416",
+    "revision": "4fd8efe2cb794ecfaca57eef67d0e4cd",
     "url": "/conf/requestConf.json"
   },
   {
@@ -408,6 +408,46 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/conf/themes.json"
   },
   {
+    "revision": "dc6e1ecf422c612af2289ca26bde7116",
+    "url": "/favicon.ico"
+  },
+  {
+    "revision": "cb88eeb9484de9ee1696284020688217",
+    "url": "/img/icons/favicon-16x16.png"
+  },
+  {
+    "revision": "674c9eecd208bfaceaf98fe0161ae278",
+    "url": "/img/icons/favicon-32x32.png"
+  },
+  {
+    "revision": "edce9e2e9c928024cfaa656dd30d6d7b",
+    "url": "/img/icons/maskable_icon_x128.png"
+  },
+  {
+    "revision": "2890dc3ef96165a8b9555e65800b719b",
+    "url": "/img/icons/maskable_icon_x192.png"
+  },
+  {
+    "revision": "0a6b12000c42aa0b71bc73975202c1ac",
+    "url": "/img/icons/maskable_icon_x384.png"
+  },
+  {
+    "revision": "081bd5487aea25e346b84d523c5c47b9",
+    "url": "/img/icons/maskable_icon_x48.png"
+  },
+  {
+    "revision": "93112efb832c69d814e9d90d9ea23b17",
+    "url": "/img/icons/maskable_icon_x512.png"
+  },
+  {
+    "revision": "e37926e8d519be7715113aab853d1faa",
+    "url": "/img/icons/maskable_icon_x72.png"
+  },
+  {
+    "revision": "bf8943388d1c323f969b2f304ef9bb22",
+    "url": "/img/icons/maskable_icon_x96.png"
+  },
+  {
     "revision": "b4d07805ec61efa9f09c63e2abdb872f",
     "url": "/index.html"
   },
@@ -420,8 +460,23 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/manifest.json"
   },
   {
+    "url": "/precache-manifest.e5d2aaa79ebdb782cc5cb12fae26b845.js"
+  },
+  {
     "revision": "038bdc3bd76d45725a3efc25dad869e5",
     "url": "/robots.txt"
+  },
+  {
+    "revision": "853a08ba07e04c537af5bd889e2ac38c",
+    "url": "/service-worker.js"
+  },
+  {
+    "revision": "21e1bd35f9c58f4eca5d50a593debcca",
+    "url": "/sitemap.xml"
+  },
+  {
+    "revision": "1acc284767dc6565c4e59a9e71554fc7",
+    "url": "/sitemap.xml.gz"
   },
   {
     "revision": "056be6e2ba7569d01fd87734b69601f9",
