@@ -96,7 +96,7 @@
 		"signin": "Sign in",
 		"signup": "Signup",
 		"signout": "Logout",
-		"userCenter": "Homepage",
+		"userCenter": "Public profile",
 		"signoutSuccess": "Logout successful"
 	},
 	"player_list": {
@@ -167,11 +167,11 @@
 				"privilege": "Indentity",
 				"introduction": "About me",
 				"showOrigin": "Show Orgin info",
-				"showOriginDescribe": "Allow your binded orgin account to be shown on BFBAN",
-				"allowDM": "Allow DM",
-				"allowDMdescribe": "Allow recieving DM from another people. For more massage please go to [Massage list] ",
+				"showOriginDescribe": "Allow your connected orgin account to be shown on BFBAN",
+				"allowDM": "Allow DMs",
+				"allowDMdescribe": "Receive DMs from other people.",
 				"language": "Languages",
-				"languageSyncDescribe": "This option enable website to synchronise your system's local language after logging in and will revert to the local program's persistent language if you log out"
+				"languageSyncDescribe": "It will use the selected language until you logout"
 			},
 			"modifyName": {
 				"title": "Change name",
@@ -186,7 +186,7 @@
 			}
 		},
 		"appearance": {
-			"title": "Skin"
+			"title": "Theme"
 		},
 		"enhance": {
 			"title": "Local enhancement"
@@ -209,15 +209,15 @@
 			"title": "History log"
 		},
 		"subscribes": {
-			"title": "User Subscribes"
+			"title": "Tracked cheaters"
 		},
 		"admin": {
-			"title": "back-end management",
+			"title": "Backend management",
 			"menu": {
 				"management": "content",
 				"user": "user management",
 				"comment": "Comments on the management",
-				"log": "log",
+				"log": "Logs",
 				"adminLog": "Admin log",
 				"judgementLog": "Judgement log"
 			}
@@ -226,9 +226,9 @@
 	"detail": {
 		"title": "Detail",
 		"subscribes": {
-			"tracking": "Tracking",
+			"tracking": "Track",
 			"trackingDescribe": "Track this player and notify me for updates",
-			"cancelTrack": "Not tracking",
+			"cancelTrack": "Stop tracking",
 			"cancelTrackDescribe": "Stop tracking this player"
 		},
 		"timeline": {
@@ -289,7 +289,7 @@
 			"originAvatar": "Origin avatar",
 			"historyID": "Historical ID",
 			"dealRecord": "Admin's operational records：",
-			"discription1": "If you cant find the player on battlefieldtracker or you think he changed Origin ID,please Click",
+			"discription1": "If you cant find the player on battlefieldtracker or you think he changed Origin account name,please Click",
 			"updateButton": "Update",
 			"discription2": "bfban.com can track hackers' newest ID",
 			"discription3": "Server can update hacker who is on the list periodically",
@@ -357,7 +357,7 @@
 			"reportHacker": "Report a hacker",
 			"reportNews": "We offer the function to report BFV hackers!",
 			"idNotion1": "You can only report one ID at a time， do not include the platoon name and do not fill in your own ID",
-			"idNotion2": "Origin ID has no match for lower case and upper case，but you must identify i I 1 l L o O 0 in order to offer correct ID",
+			"idNotion2": "Origin name has no match for lower case and upper case，but you must identify i I 1 l L o O 0 in order to offer correct ID",
 			"uploadManual1": "if you do not want to register video-site member such as Bilibili and Youtube, you can go to",
 			"uploadManual2": "and then paste the video link below",
 			"uploadManual3": "you can offer your video by Bilibili,Youtube,Youku,Tudou and more",
@@ -370,7 +370,7 @@
 			"fromDatabaseOneId": "Select from BFBAN's database",
 			"description": "List as much evidence as possible about the person being reported",
 			"required": "video link",
-			"onlyOneId": "Only one origin ID at a time",
+			"onlyOneId": "Only one origin account at a time",
 			"loginExpired": "Your login has expired, please re-login."
 		},
 		"labels": {
@@ -381,7 +381,7 @@
 		},
 		"error": {
 			"mediaEvidence": "Please upload a picture or fill in the video link",
-			"originId": "Origin ID does not exist, please check spelling",
+			"originId": "Origin account doesn't exist, please check the spelling",
 			"success": "Submitted successfully",
 			"permissionDenied": "",
 			"voideBadFormat": "Invild format",
@@ -452,11 +452,11 @@
 		"title": "Partner links",
 		"links": "Partner links",
 		"sponsor": "Partners",
-		"linkWebDeveloperChild": "Significant contributoir and developer",
-		"linkWebDeveloperDescribe": "特此表彰那些无偿参与BFBAN程序开发的成员, 作为BFBAN基石开拓先锋",
-		"languageMembers": "杰出贡献翻译",
-		"languageMembersDescribe": "特此表彰那些无偿贡献翻译文本成员，愿付出时间校对本地化语言",
-		"join": "Join partner"
+		"linkWebDeveloperChild": "Significant contributors and developers",
+		"linkWebDeveloperDescribe": "The members who participated in the development of the BFBAN program for free, as the pioneers of the cornerstone of BFBAN",
+		"languageMembers": "Translators",
+		"languageMembersDescribe": "The members who have contributed to the translation for free, who are willing to spend time proofreading localized translations",
+		"join": "Join as partner"
 	},
 	"reset": {
 		"title": "Rest paasword",
@@ -470,14 +470,14 @@
 	},
 	"account": {
 		"title": "User info",
-		"reportnum": "Report Num",
+		"reportnum": "Reports",
 		"hint2": "Everyone can post responses on the report page.",
-		"hint3": "If you have more evidence for a hacker, please report the same id twice.",
+		"hint3": "If you have more evidence for a hacker, please report the same user twice.",
 		"userInfo": "Account info",
 		"username": "Username",
 		"role": "Role",
-		"joinedAt": "Join time",
-		"lastOnlineTime": "Last online time",
+		"joinedAt": "Joined at",
+		"lastOnlineTime": "Last online",
 		"reports": "Personal reports",
 		"reported": "Reported",
 		"status": "Status",
@@ -491,13 +491,13 @@
 			}
 		},
 		"bindOrigin": {
-			"title": "Unbound account",
-			"content": "BFBAN requires you to bind your Origin account for account appeal and retrieval. Without Origin, your account will be locked and you will not be able to submit anything",
-			"travel": "All right, head over to the binding account"
+			"title": "This account not connected to a Origin account!",
+			"content": "BfBan requires you to connect your Origin account in order to appeal. Your account will be locked and you will not be able to submit anything if you dont connect your Orgin first.",
+			"travel": "All right, Connect to my Origin account"
 		}
 	},
 	"bindOrigin": {
-		"title": "blind origin account"
+		"title": "Connect your origin account"
 	},
 	"signin": {
 		"title": "Sign In",
@@ -511,7 +511,7 @@
 		"failed": "Login failed",
 		"success": "Login sucessful",
 		"loginFirst": "Please login first",
-		"loggedIn": "哎列？请先登出 (✿◡‿◡)"
+		"loggedIn": "Please log out first (✿◡‿◡)"
 	},
 	"signup": {
 		"title": "Register",
@@ -548,33 +548,33 @@
 			"username": "Username",
 			"newUsername": "New username",
 			"password": "Password",
-			"originId": "Origin ID",
+			"originId": "Origin account",
 			"originEmail": "🍊 Origin email",
 			"originName": "🍊 Origin username",
 			"submitHint": "Already have a account? Sign In",
 			"forgetPasswordHint": "Forgot your password？"
 		},
 		"placeholder": {
-			"originEmail": "Enter your Origin email",
-			"originName": "Enter your origin ID",
-			"username": "More than 4 characters",
-			"password": "More than 6 characters",
-			"originId": "optional"
+			"originEmail": "Enter your Origin e-mail address",
+			"originName": "Enter your Origin account name",
+			"username": "At least 4 characters",
+			"password": "At least 6 characters",
+			"originId": "Optional"
 		},
-		"eaPrivacy": "Please go to \\\n      <a href=\"https://myaccount.ea.com/cp-ui/privacy/index\">EA privacy settings</a>\\\n      to enable \"search by email\".",
-		"checkAllEmail": "The verification email needs a while(about 1 minute) to deliver to your mail box, please wait patiently and remember to check the trash box",
-		"usernameExist": "this username has been registered",
-		"gameNotShowed": "该邮箱下的账户不包含游戏",
-		"playerNotFound": "Origin account not found(Please ensure that you have followed the guide above)'",
-		"originIdExist": "this origin account has been binded",
-		"fillIn": "Please fill the form",
+		"eaPrivacy": "Please go to your \\\n      <a href=\"https://myaccount.ea.com/cp-ui/privacy/index\">EA privacy settings</a>      \\\n      to enable \"search by email\".",
+		"checkAllEmail": "The verification email takes a while (about 1 minute) to deliver to your mail box, please wait patiently and remember to check your spam",
+		"usernameExist": "This username is already exists!",
+		"gameNotShowed": "The account under this email does not contain any games!",
+		"playerNotFound": "Origin account not found (Please ensure that you have followed the guide above)",
+		"originIdExist": "This Origin account has already been used",
+		"fillIn": "Please fill in the form",
 		"failed": "Registration failed"
 	},
 	"forgetPassword": {
 		"title": "Reset password",
 		"steps": {
 			"0": {
-				"title": "Basic information",
+				"title": "Basic account information",
 				"supplement": "Account name"
 			},
 			"1": {
@@ -610,7 +610,7 @@
 		"updateTime": "Update time",
 		"colums": {
 			"screenTitle": "Filter",
-			"playerId": "ID",
+			"playerId": "player ID",
 			"reportTime": "Reported",
 			"updateTime": "Updated"
 		}
@@ -643,7 +643,7 @@
 	"search": {
 		"title": "Search",
 		"describe": "Search a playername from the BFBAN database",
-		"placeholder": "Search for something",
+		"placeholder": "Search for a player",
 		"collectionHint": "Bookmark this page (Ctrl+D or Command+D)",
 		"scope": {
 			"history": "Historical ID",
