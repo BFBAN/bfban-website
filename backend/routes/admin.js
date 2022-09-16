@@ -39,10 +39,13 @@ async (req, res, next)=>{
       const result = await db.select('*')
           .from('users')
           .where('username', 'like', `%${req.query.name}%`)
+          .select('users.*', 'users.username', 'users.privilege')
           .orderBy('users.createTime', order)
-          .offset(skip).limit(limit)
-          .first().then(r => delete r.password);
-      
+          .offset(skip).limit(limit);
+
+      if (result)
+        result.forEach(i => { delete i.password; delete i.subscribes; return i; });
+
       return res.status(200).json({success: 1, code: 'searchUser.ok', data: result, total});
   } catch(err) {
       next(err);
@@ -139,8 +142,16 @@ async (req, res, next)=>{
             await db('comments').update({
                 content: comment.content,
                 videoLink: comment.videoLink
-            }).where({id: comment.id});
+            }).where({ id: comment.id });
         }
+
+        await db('operation_log').insert({
+            byUserId: req.user.id,
+            toUserId: comment.toPlayerId,
+            action: 'edit',
+            role: 'comment',
+            createTime: new Date()
+        });
 
         return res.status(200).json({success: 1, code: 'setComment.ok'});
     } catch(err) {
@@ -194,10 +205,11 @@ async (req, res, next)=>{
                 return res.status(403).json({error: 1, code: 'setUser.permissionDenied'});
         }
         await sendMessage(req.user.id, null, "command", JSON.stringify({action:'setUser', target: user.id, detail: `${req.body.data.action}:${role}`}));
-        console.log(user)
+
         user.attr = JSON.stringify(user.attr)
         user.subscribes = JSON.stringify(user.subscribes)
         user.privilege = JSON.stringify(user.privilege)
+
         await db('users').update(user).where({id: user.id});
         const quota = initUserStorageQuota(user);
         await db('storage_quotas').update({
@@ -219,7 +231,7 @@ async (req, res, next)=>{
     }
 });
 
-router.get('/getUserOperationLogs', 
+router.get('/getUserOperationLogs', verifyJWT, allowPrivileges(["super","root","dev"]), [],
 /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next)=>{
   try {
@@ -258,6 +270,13 @@ async (req, res, next)=>{
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action:'setUserAttr', target: userData.id}));
         await db('users').update(doEditUserData).where({id: userData.id});
+        await db('operation_log').insert({
+            byUserId: req.user.id,
+            toUserId: userData.id,
+            action: 'edit',
+            role: 'user',
+            createTime: new Date()
+        });
 
         return res.status(200).json({success: 1, code: 'setUserAttr.ok'});
     } catch(err) {
@@ -382,10 +401,11 @@ async (req, res, next)=> {
                 await userDb.where({id: id}).delete();
                 break;
         }
+
         await db('operation_log').insert({
           byUserId: req.user.id,
           toUserId: id,
-          action: 'delete',
+          action: `edit_${req.body.data.type}`,
           role: 'user',
           createTime: new Date()
         });

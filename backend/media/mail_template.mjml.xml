@@ -8,10 +8,10 @@
         <mj-spacer height="20px"></mj-spacer>
         <mj-text align="left" padding-left="20px" font-size="24px">Hello ${username}!</mj-text>
         <mj-text align="left" padding-left="40px" font-size="18px">You are now binding this email to your bfban.com account. Please click the link below to finish the verification:</mj-text>
-        <mj-button background-color="#5D1CC5" font-size="16px" href="https://bfban.com/bindOrigin?code=${code}">Bind Email!</mj-button>
+        <mj-button background-color="#5D1CC5" font-size="16px" href="${website}/bindOrigin?code=${code}">Bind Email!</mj-button>
         <mj-spacer height="20px"></mj-spacer>
         <mj-text align="center" padding-bottom="0px">The button dosen't work? Visit the link below to finish the binding:</mj-text>
-        <mj-text align="center" color="blue">https://bfban.com/bindOrigin?code=${code}</mj-text>
+        <mj-text align="center" color="blue">${website}/bindOrigin?code=${code}</mj-text>
       </mj-column>
       <mj-column background-color="#5D1CC5" width="100%" border-top="1px solid grey">
         <mj-text color="white" align="center" height="20px">© 2021 BFBan</mj-text>
