@@ -452,11 +452,11 @@
 		"title": "Partner links",
 		"links": "Partner links",
 		"sponsor": "Partners",
-		"linkWebDeveloperChild": "Significant contributoir and developer",
-		"linkWebDeveloperDescribe": "特此表彰那些无偿参与BFBAN程序开发的成员, 作为BFBAN基石开拓先锋",
-		"languageMembers": "杰出贡献翻译",
-		"languageMembersDescribe": "特此表彰那些无偿贡献翻译文本成员，愿付出时间校对本地化语言",
-		"join": "Join partner"
+		"linkWebDeveloperChild": "Significant contributors and developers",
+		"linkWebDeveloperDescribe": "The members who participated in the development of the BFBAN program for free, as the pioneers of the cornerstone of BFBAN",
+		"languageMembers": "Translators",
+		"languageMembersDescribe": "The members who have contributed to the translation for free, who are willing to spend time proofreading localized translations",
+		"join": "Join as partner"
 	},
 	"reset": {
 		"title": "Rest paasword",
