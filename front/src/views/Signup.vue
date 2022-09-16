@@ -140,7 +140,7 @@
 <script>
 import BFBAN from "../assets/js/bfban";
 
-import {http, api, http_token} from '../assets/js/index'
+import {http, api, http_token, mail} from '../assets/js/index'
 import {testWhitespace} from "@/mixins/common";
 
 import EmailTip from "../components/EmailTip";
@@ -221,7 +221,7 @@ export default new BFBAN({
                 password,
                 originEmail,	// must match the originName below
                 originName,	// must have one of bf series game
-                language: this.$root.$i18n.locale
+                language: mail.exchangeLangField(this.$root.$i18n.locale)
               },
               encryptCaptcha: this.$refs.captcha.hash,
               captcha
@@ -231,10 +231,11 @@ export default new BFBAN({
 
             if (d.success == 1) {
               that.stepsIndex += 1;
-              that.$Message.success(d.message);
+              that.$Message.success(d.code);
               return;
             }
 
+            that.$Message.error(d.code);
             that.backBindOriginMsg = res.message;
           }).catch(err => {
             that.$Message.error(err);
@@ -299,7 +300,7 @@ export default new BFBAN({
             data: {
               originEmail,
               originName,
-              language: that.$i18n.locale
+              language: mail.exchangeLangField(that.$i18n.locale)
             },
             encryptCaptcha: this.$refs.captcha.hash,
             captcha,
@@ -332,13 +333,14 @@ export default new BFBAN({
                 that.$Message.error(d.code);
                 break;
             }
+
             that.backBindOriginMsg = `${d.code} / ${d.message}`;
+            that.$refs.captcha.refreshCaptcha();
           }
 
         }).catch(err => {
           that.backBindOriginMsg = this.$i18n.t('signup.failed');
         }).finally(() => {
-          that.$refs.captcha.refreshCaptcha();
           that.spinShow = false;
         });
       })

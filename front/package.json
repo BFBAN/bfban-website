@@ -33,7 +33,6 @@
     "vue": "^2.6.11",
     "vue-cropper": "^0.5.8",
     "vue-echarts": "^6.2.3",
-    "vue-electron": "^1.0.6",
     "vue-i18n": "^8.25.0",
     "vue-meta": "^2.4.0",
     "vue-qr": "^2.5.0",

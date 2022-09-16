@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="privilege-tagbox">
       <span v-for="(p_item, p_index) in tags" :key="p_index">
-        <Tag :type="tagType" :color="p_item.class">
+        <Tag :type="tagType" :color="p_item.class" class="tag" :title="$t('basic.privilege.' + p_item.value)">
           {{ $t('basic.privilege.' + p_item.value) }}
         </Tag>
       </span>
@@ -47,3 +47,13 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.privilege-tagbox {
+  user-select: none;
+
+  .tag {
+    cursor: pointer;
+  }
+}
+</style>

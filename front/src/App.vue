@@ -4,7 +4,7 @@
     <main>
       <router-view></router-view>
     </main>
-    <FooterBox></FooterBox>
+    <FooterPublicBox v-if="!isFull"></FooterPublicBox>
     <Footer v-if="!isFull"></Footer>
   </div>
 </template>
@@ -16,7 +16,7 @@ import theme from "/public/conf/themes.json"
 
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
-import FooterBox from "@/components/footerBox";
+import FooterPublicBox from "@/components/footerPublicBox";
 
 export default {
   name: "app",
@@ -26,7 +26,7 @@ export default {
       split: true ? 1 : .9
     }
   },
-  components: {Header, Footer, FooterBox},
+  components: {Header, Footer, FooterPublicBox},
   created() {
     this.http = http_token.call(this);
 

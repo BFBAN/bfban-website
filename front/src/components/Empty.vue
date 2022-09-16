@@ -1,6 +1,6 @@
 <template>
   <div>
-    404 不存在
+    {{ $t('basic.tip.notcontent') }}
   </div>
 </template>
 

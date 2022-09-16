@@ -104,9 +104,11 @@ async (req, res, next)=> {
         const registrant = await db.select('*').from('verifications').where({uniqCode: code}).first();
         if(!registrant)
             return res.status(404).json({error: 1, code: 'signup.notFound'});
-        if(registrant.expiresTime < new Date())
+        if(registrant.expiresTime < new Date()) {
+            await db('verifications').where({uniqCode: code}).delete();
             return res.status(400).json({error: 1, code: 'signup.expired'});
-        
+        }
+
         const data = {
             username: registrant.username,
             password: registrant.password,
@@ -221,7 +223,7 @@ async (req, res, next)=> {
 router.post('/bindOrigin', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().trim().notEmpty()
-],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
+],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);

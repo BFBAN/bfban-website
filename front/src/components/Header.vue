@@ -5,7 +5,7 @@
         <img src="../assets/images/logo.png"
              width="40"
              height="40"
-             alt="bfban logo"/>
+             alt="BFBAN logo"/>
       </router-link>
       <div class="nav nav-menu">
         <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>
@@ -192,7 +192,7 @@ export default new BFBAN({
         headers: {
           'x-access-token': this.$store.state.user.token
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
         if (d.success === 1) {
@@ -200,8 +200,8 @@ export default new BFBAN({
           return;
         }
 
-        this.cache(res);
-      }).catch((e) => {
+        this.$Message.error(d.code);
+      }).catch(e => {
         this.$Message.error(e.toString());
       }).finally(() => {
         // 清除与账户相关的数据

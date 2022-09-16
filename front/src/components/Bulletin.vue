@@ -1,6 +1,5 @@
 <template>
   <div class="content">
-
       <div class="md" v-html="data"></div>
   </div>
 </template>
@@ -9,7 +8,7 @@
   export default {
     data() {
       return {
-        data: `⛑`
+        data: ``
       }
     }
   }
