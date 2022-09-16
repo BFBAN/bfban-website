@@ -144,6 +144,7 @@
           </div>
         </div>
       </div>
+      <Spin size="large" fix v-if="activityLoad"></Spin>
     </div>
 
     <div class="container">
@@ -161,13 +162,12 @@ import {api, http, util, regular} from '../assets/js/index'
 export default new BFBAN({
   data() {
     return {
-      site: {
-        report: 0,
-        cheater: 0
-      },
       bannerImage: '',
+
+      activityLoad: false,
       activities: [],
       activities_l: [],
+
       statistics: {},
     }
   },
@@ -199,6 +199,8 @@ export default new BFBAN({
      * 获取动态
      */
     getActivity() {
+      this.activityLoad = true;
+
       http.get(api["activity"], {}).then((res) => {
         const d = res.data;
         if (d.success === 1) {
@@ -211,10 +213,9 @@ export default new BFBAN({
           }
 
           this.activities_l = new_activities;
-          // this.activities = activities;
-
-          // this.site = number;
         }
+      }).finally(() => {
+        this.activityLoad = false;
       })
     },
     /**
@@ -233,6 +234,7 @@ export default new BFBAN({
         }
       }).then((res) => {
         const d = res.data;
+
         if (d.success === 1) {
           this.statistics = d.data;
         }
@@ -254,51 +256,21 @@ export default new BFBAN({
 }
 
 .home-box {
+  position: relative;
   padding-top: 100px;
   overflow: hidden;
   min-height: 850px;
   max-height: 1000px;
   margin: 50px 0 -20px 0;
   text-align: center;
+
+  .lean-box {
+    display: flex;
+    transform: rotate(-5deg);
+    margin-top: 50px;
+  }
 }
 
-.lean-box {
-  display: flex;
-  transform: rotate(-5deg);
-  margin-top: 50px;
-}
-
-.wrapper {
-  margin-top: 40px;
-  display: flex;
-  flex-wrap: nowrap;
-}
-
-.wrapper .icon {
-  font-size: 12px;
-  width: 280px;
-  height: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  transform: translateX(0) translateY(40px);
-  opacity: .6;
-  transition: all 1s;
-}
-
-.wrapper .icon:hover {
-  opacity: 1;
-}
-
-.wrapper .icon:nth-child(even) {
-  margin-top: 105px;
-  margin-left: 45px;
-  transform: translateX(45px) translateY(-10px);
-}
-</style>
-
-<style lang="scss" scoped>
 .home-banner {
   min-height: 600px;
   background-size: 500px;
@@ -330,7 +302,32 @@ export default new BFBAN({
   }
 }
 
-.joinBFbanTip .ivu-tooltip-inner {
-  white-space: normal;
+.wrapper {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: nowrap;
+
+  .icon {
+    font-size: 12px;
+    width: 280px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transform: translateX(0) translateY(40px);
+    opacity: .6;
+    transition: all 1s;
+  }
+
+  .icon:hover {
+    opacity: 1;
+  }
+
+  .icon:nth-child(even) {
+    margin-top: 105px;
+    margin-left: 45px;
+    transform: translateX(45px) translateY(-10px);
+  }
 }
 </style>

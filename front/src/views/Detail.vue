@@ -265,13 +265,13 @@
               <div class="content">
                 <!-- 时间线 -->
                 <TimelineItem
-                    :id="`floor-${l.index}`"
                     pending
                     class="timeline-time-line"
-                    v-show="isSeeType(index)"
-                    :color="l.privilege === 'admin' ? 'red' : 'green'"
+                    v-show="filtrateTimelineItem(index)"
                     v-for="(l, index) in timelineList"
-                    :key="index">
+                    :key="index"
+                    :color="l.privilege === 'admin' ? 'red' : 'green'"
+                    :id="`floor-${l.index}`">
                   <div v-if="l.type === 'report'" slot="dot" class="timeline-time-dot ivu-tag-warning hand">
                     <Icon type="ios-hand" size="20"></Icon>
                   </div>
@@ -341,7 +341,7 @@
                       </p>
                     </template>
 
-                    <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                    <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                       <template v-if="l.content">
                         <div v-html="l.content"></div>
                       </template>
@@ -388,7 +388,7 @@
                     </div>
 
                     <div v-if="l.content" v-html="l.content"
-                         class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
+                         class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
 
                     <p v-if="isLogin">
                       <!-- 回复 -->
@@ -452,7 +452,7 @@
                     </div>
 
                     <div v-html="l.content" v-if="l.content"
-                         class="description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
+                         class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
 
                     <p v-if="isLogin">
                       <!-- 回复 -->
@@ -483,10 +483,10 @@
                       </Row>
                     </div>
 
-                    <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                    <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                       <template v-if="l.quote">
                         <a :href="`#floor-${l.quote.id}`" >
-                          <div class="description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                          <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                             <b>{{ l.quote.username }}</b> :
                             <div v-html="l.quote.content.substr(0, 80)" ></div>
                             ...
@@ -516,7 +516,11 @@
 
                   <Divider v-if="index < timelineList.length - 1"></Divider>
                 </TimelineItem>
-                <!--              <Page :page-size="limit" show-total :current="page" :total="total" class="page" size="small"/>-->
+
+                <Page :page-size="timeline.limit" :current="timeline.page" :total="timeline.total"
+                      show-total
+                      class="page"
+                      size="small"/>
                 <br>
               </div>
 
@@ -535,7 +539,7 @@
                                 long
                                 :loading="replySpinShow"
                                 :disabled="!reply.content"
-                                @click.stop.prevent="doReply">
+                                @click.stop.prevent="onReply">
                           {{ $t('detail.info.reply') }}
                         </Button>
                         <div slot="content">
@@ -794,7 +798,7 @@
             </Col>
             <Col>
               <Button @click="cancelReply">{{ $t('basic.button.cancel') }}</Button>
-              <Button @click="doReply" type="primary">{{ $t('basic.button.submit') }}</Button>
+              <Button @click="onReply" type="primary">{{ $t('basic.button.submit') }}</Button>
             </Col>
           </Row>
         </div>
@@ -914,15 +918,16 @@ import {formatTextarea, waitForAction} from "@/mixins/common";
 export default new BFBAN({
   data() {
     return {
+      subscribes:{
+        load: false,
+        static: false
+      },
+
       appeal: {
         load: false,
         show: false,
         toPlayerId: 0,
         content: ''
-      },
-      subscribes:{
-        load: false,
-        static: false
       },
       cheater: {
         originId: '',
@@ -956,13 +961,14 @@ export default new BFBAN({
         choice: [],
         suggestion: '',
       },
-      games: [],
+
       timelineList: [],
       timeline: {
         sort: '1',
-        seeType: 1,
         skip: 0,
         limit: 100,
+        total: 0,
+        seeType: 1,
         seeTypeList: [
           {
             label: 'all',
@@ -1143,9 +1149,6 @@ export default new BFBAN({
 
         if (d.success === 1) {
           this.cheater = d.data;
-          this.cheater.games.forEach(i => {
-            this.games.push({game: i});
-          })
           return;
         }
 
@@ -1157,8 +1160,6 @@ export default new BFBAN({
         }
 
         this.$Message.info(this.$t('basic.tip.notFound'));
-
-        this.catch(res);
       }).finally(() => {
         this.onViewed();
         this.checkPlayerSubscribes();
@@ -1166,18 +1167,17 @@ export default new BFBAN({
       });
     },
     /**
-     * 时间轴
-     * 档案日历
+     * 获取举报玩家时间轴
      */
     getTimeline() {
       this.spinShow = true;
 
-      this.http.get(`${api["account_timeline"]}`, {
+      this.http.get(api["account_timeline"], {
         params: Object.assign({
           skip: this.timeline.skip,
           limit: this.timeline.limit
         }, {personaId: this.getParamsIds('personaId')})
-      }).then((res) => {
+      }).then(res => {
         let d = res.data;
 
         if (d.success == 1) {
@@ -1185,6 +1185,7 @@ export default new BFBAN({
             i.index = index;
             i.show = false;
           });
+
           this.timelineList = d.data.result;
 
           // 排序
@@ -1211,11 +1212,19 @@ export default new BFBAN({
           break;
       }
     },
-    isSeeType(index) {
+    /**
+     * 时间轴筛选
+     * 依次条件筛选
+     * @param index
+     * @returns {boolean}
+     */
+    filtrateTimelineItem(index) {
       const that = this;
       const list = this.timeline.seeTypeList;
 
-      return list.filter(i => Number(that.timeline.seeType) == i.value)[0].item.indexOf(this.timelineList[index].type) >= 0;
+      return list
+          .filter(i => Number(that.timeline.seeType) == i.value)[0].item
+          .indexOf(this.timelineList[index].type) >= 0;
     },
     /**
      * 提交判决
@@ -1229,10 +1238,11 @@ export default new BFBAN({
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
-      // if ((status == '3' || status == '4') && suggestion.trim().length < 5) { // too short
-      //   this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
-      //   return false;
-      // }
+      if (suggestion.trim().length < 5) {
+        // too short
+        this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
+        return false;
+      }
       if ('0123456789abcedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_'.split('').indexOf(suggestion.trim()) != -1) { // one letter suggestion
         this.$Message.warning(this.$i18n.t('detail.messages.dontDoIt') + suggestion);
         return false;
@@ -1262,10 +1272,10 @@ export default new BFBAN({
           this.cheater.status = status;
 
           this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
-        } else {
-          this.$Message.error('failed ' + d.msg);
+          return;
         }
 
+        this.$Message.error('failed ' + d.code);
       }).finally(() => {
         this.getCheatersInfo();
         this.getTimeline();
@@ -1328,6 +1338,7 @@ export default new BFBAN({
           this.$Message.error(d.message);
         }
 
+      }).finally(() => {
         this.getTimeline();
       })
     },
@@ -1356,26 +1367,25 @@ export default new BFBAN({
       };
     },
     /**
-     * 评论 reply
+     * 评论
      */
-    doReply() {
+    onReply() {
       this.replySpinShow = true;
 
       const cheaterId = this.cheater.id;
-      const {toFloor, toUserId} = this.reply;
-      let {content = ''} = this.reply;
+      let {toFloor, toUserId, content = ''} = this.reply;
 
       content = formatTextarea(content);
 
       let data = {
         data: {
           toPlayerId: cheaterId,
-          // 小窗口回复展开，则存在回复楼层
+          // 回复 评论dbID
           toCommentId: this.timelineList[this.reply.toFloor].id ?? null,
           content: content,
         },
-        // encryptCaptcha: this.reply.captchaUrl.hash,
-        // captcha: this.reply.captcha,
+        encryptCaptcha: this.reply.captchaUrl.hash,
+        captcha: this.reply.captcha,
       };
 
       if (toFloor) {
@@ -1385,9 +1395,7 @@ export default new BFBAN({
         data.data['toUserId'] = toUserId;
       }
 
-      this.http.post(api["player_reply"], {
-        data,
-      }).then((res) => {
+      this.http.post(api["player_reply"], { data }).then((res) => {
         const d = res.data;
 
         if (d.success == 1) {
@@ -1410,6 +1418,7 @@ export default new BFBAN({
         this.cancelReply();
 
         this.getCheatersInfo();
+
         // update timelink
         this.getTimeline();
       });
@@ -1417,10 +1426,10 @@ export default new BFBAN({
     /**
      * 更新玩家信息
      * update cheater
-     * @param e
+     * @param event $event
      */
-    updateCheaterInfo(e) {
-      waitForAction.call(e.target, 60);
+    updateCheaterInfo(event) {
+      waitForAction.call(event.target, 60);
 
       if (!this.$store.state.user) {
         this.$Message.error(this.$i18n.t('detail.messages.signIn'));
@@ -1442,19 +1451,20 @@ export default new BFBAN({
           this.cheater.originUserId = originUserId;
           this.cheater.avatarLink = avatarLink;
 
-          // this.origins.unshift(d.data.origin);
-
           this.$Message.success(this.$i18n.t('detail.messages.updateComplete'));
-        } else {
-          this.$Message.error(d.msg);
+
+          return;
         }
+
+        this.$Message.error(d.code);
       });
     },
     /**
      * 管理裁判提示锁
      */
     onJudgementLock () {
-      account_storage.updateConfiguration('judgementTip', true);
+      if (this.isLogin)
+        account_storage.updateConfiguration('judgementTip', true);
     },
     /**
      * 判决快速模板
@@ -1471,13 +1481,32 @@ export default new BFBAN({
 })
 </script>
 
-<style lang="scss">
-  .cheater-desc {
-    max-width: 100%;
-    width: 34rem;
+<style lang="less" >
+  @import "@/assets/css/icon.less";
+
+  .timeline-time-line {
+    padding-top: 10px !important;
+
+    .ivu-timeline-item-tail {
+      margin-left: 15px;
+    }
+
+    .ivu-timeline-item-head {
+      margin-top: 10px !important;
+    }
   }
 
-  .description {
+  .timeline-time-dot {
+    width: 40px;
+    margin-left: 15px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .timeline-description {
     font-size: 0.8rem;
     line-height: 1.5rem;
     margin: 10px 0;
@@ -1502,35 +1531,12 @@ export default new BFBAN({
     }
   }
 
-  .timeline-time-line {
-    padding-top: 10px !important;
-
-    .ivu-timeline-item-tail {
-      margin-left: 15px;
-    }
-
-    .ivu-timeline-item-head {
-      margin-top: 10px !important;
-    }
-  }
-
-  .timeline-time-dot {
-    width: 40px;
-    margin-left: 15px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   .timeline-content {
     position: relative;
 
     // force to wrap
     overflow-wrap: break-word;
     word-wrap: break-word;
-
     margin-left: 3rem;
   }
 
@@ -1552,24 +1558,6 @@ export default new BFBAN({
   .ivu-timeline-item-tail {
     top: 1rem;
     border-width: .3rem !important;
-  }
-</style>
-
-<style lang="scss">
-  .spin-icon-load {
-    animation: ani-demo-spin 1s linear infinite;
-  }
-
-  @keyframes ani-demo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    50% {
-      transform: rotate(180deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
   }
 
   .detila-affix {

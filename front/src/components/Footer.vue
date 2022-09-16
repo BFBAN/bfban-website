@@ -63,7 +63,7 @@
         </Col>
       </Row>
     </div>
-    <div class="container mobile-hide footer-padding">
+    <div class="container mobile-hide footer-padding" v-if="links.footerStatic">
       <Row>
         <Col flex="auto">
           <h4><b>{{ $t("footer.column.sponsor.title") }}</b></h4>
@@ -74,8 +74,8 @@
           </router-link>
         </Col>
       </Row>
-      <Row :gutter="5" class="footer-link" type="flex">
-        <Col v-for="(link, linkindex) in links" :key="linkindex" align="center">
+      <Row :gutter="5" class="footer-link" type="flex" v-if="links.footerStatic">
+        <Col v-for="(link, linkindex) in links.footerChild" :key="linkindex" align="center">
           <a :href="link.linkUrl" target="_blank" class="footer-link-text">
             <img :src="link.linkImageUrl" width="100" height="35" :alt="link.tag" :title="link.describe">
           </a>
@@ -101,7 +101,7 @@ export default new BFBAN({
     return {
       infos: packageInfo.version,
       footerNavs: footerNavs.child,
-      links: link.footerChild,
+      links: link,
       logoCount: 0,
       langLoaclSync: false,
       languages: [],

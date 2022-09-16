@@ -24,7 +24,7 @@
             </a>
           </Col>
         </Row>
-        <Row :gutter="5" class="footer-link" type="flex">
+        <Row :gutter="5" class="footer-link" type="flex" v-if="link.footerStatic">
           <Col v-for="(link, linkindex) in link.footerChild" :key="linkindex" align="center">
             <a :href="link.linkUrl" target="_blank" class="footer-link-text">
               <Card dis-hover :padding="0">

@@ -40,7 +40,8 @@ async (req, res, next)=>{
           .from('users')
           .where('username', 'like', `%${req.query.name}%`)
           .orderBy('users.createTime', order)
-          .offset(skip).limit(limit);
+          .offset(skip).limit(limit)
+          .first().then(r => delete r.password);
       
       return res.status(200).json({success: 1, code: 'searchUser.ok', data: result, total});
   } catch(err) {
@@ -233,7 +234,7 @@ async (req, res, next)=>{
   }
 });
 
-router.post('/setUserAttr', verifyJWT, allowPrivileges(["root","dev"]), [
+router.post('/setUserAttr', verifyJWT, allowPrivileges(["super","root","dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.attr').isObject(),
     checkbody('data.username').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min:1, max:40})
@@ -349,7 +350,7 @@ async (req, res, next)=> {
     }
 });
 
-router.post('/delUser', verifyJWT, allowPrivileges(["super","root","dev"]), [
+router.post('/delUser', verifyJWT, allowPrivileges(["root","dev"]), [
     checkbody('data.id').optional().isInt(),
     checkbody('data.type').isIn(['logic', 'real', 'restore'])
 ],

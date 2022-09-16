@@ -34,6 +34,7 @@
       "tag": ["link"]
     }
   ],
+  "footerStatic": false,
   "footerChild": [
     {
       "title": "gametools.network",
