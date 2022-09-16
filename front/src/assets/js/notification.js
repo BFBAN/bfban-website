@@ -39,8 +39,7 @@ export default class NotificationApp {
             let message;
 
             if (!store.state.configuration.desktopNotifiction) {
-                console.log("Bfban: Desktop notification is not enabled")
-                reject()
+                reject("Bfban: Desktop notification is not enabled")
                 return;
             }
 

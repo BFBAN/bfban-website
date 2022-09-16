@@ -110,6 +110,12 @@ export default {
     grid-auto-rows: minmax(100px, auto);
   }
 
+  @media screen and (max-width: 1024px) {
+    .theme-card-content {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
   .theme-card-not {
     opacity: 0.8;
     height: 100%;

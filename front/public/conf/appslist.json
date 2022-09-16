@@ -134,6 +134,41 @@
       "website": "https://bfban-app.cabbagelol.net",
       "get": "",
       "hot": false
+    },
+    {
+      "title": "BFV Server OCR",
+      "id": "9",
+      "titleLang": {
+        "zh-CN": "战地风云5 服务器OCR识别",
+        "en-US": "BFV Server OCR"
+      },
+      "describe": "BFV Server OCR",
+      "describeLang": {
+        "zh-CN": "在被称为BattleField的游戏中，该工具可以抓取加入服务器的用户名。名字是OCR。\n\n假设使用对象是服务器的管理者。在战地V中，为了响应想要保持BAN信息，制作了的工具。",
+        "en-US": "In a game called BattleField, the tool grabs the username that joins the server. The name is OCR.\n\nAssume that the use object is the manager of the server. In Battlefield V, in response to the desire to preserve BAN information, a tool was created",
+        "jp-JP": "BattleFieldと呼ばれるゲームにおいて、サーバに参加しているユーザ名をす取得るツールです。名前は、OCRでしています。\n\n想定使用対象者は、サーバの管理者です。 战地Vにおいて、BAN情报を保持しておきたいというに応えて、作ったツールになります。"
+      },
+      "tag": ["bfv", "admin"],
+      "website": "https://github.com/link1345/BFV_ServerOCR",
+      "get": "",
+      "hot": false
+    },
+    {
+      "title": "BattleField V Robot",
+      "id": "10",
+      "titleLang": {
+        "zh-CN": "战地风云5 Robot机器人",
+        "en-US": "BattleField V Robot"
+      },
+      "describe": "BFV Robot主要用于战地5中社区服务器管理使用，通过软件可以达到自动喊话，反作弊等功能，以达到改善房间内游戏环境的效果，同时将大部分甄别工作交给机器人来解放管理员，使社区服更容易满足24小时开服的要求。",
+      "describeLang": {
+        "zh-CN": "BFV Robot主要用于战地5中社区服务器管理使用，通过软件可以达到自动喊话，反作弊等功能，以达到改善房间内游戏环境的效果，同时将大部分甄别工作交给机器人来解放管理员，使社区服更容易满足24小时开服的要求。",
+        "en-US": "BFV Robot is mainly used in battlefield 5 community server management, through the software can achieve automatic propaganda, anti-cheating and other functions, in order to improve the effect of the game environment in the room, while most of the screening work to the Robot to liberate the administrator, so that the community service is easier to meet the requirements of 24 hours open service."
+      },
+      "tag": ["bfv", "admin"],
+      "website": "https://zth.ink/?p=393",
+      "get": "",
+      "hot": false
     }
   ]
 }

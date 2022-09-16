@@ -29,6 +29,8 @@ export default {
         {
           name: "底部工具栏",
           dis: "网站顶部附属的工具栏，为用户提供玩家持续关注等功能",
+          enhanceName: 'footerBar',
+          value: this.$store.state.configuration?.footerBar || false,
         },
         {
           name: "未处理提醒",
@@ -41,14 +43,11 @@ export default {
           dis: "需要安装客户端，桌面级提醒通知",
           enhanceName: 'desktopNotifiction',
           value: this.$store.state.configuration?.desktopNotifiction || false,
-        },
-        {
-          name: "交互声音",
-          dis: "不同交互提供不同的声音",
-          value: false,
         }
       ]
     }
+  },
+  created() {
   },
   methods: {
     /**
@@ -60,6 +59,17 @@ export default {
       if (!key) return;
         account_storage.updateConfiguration(key, val);
     }
+  },
+  computed: {
+    webMode () {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      if (document.referrer.startsWith('android-app://')) {
+        return 'twa';
+      } else if (navigator.standalone || isStandalone) {
+        return 'standalone';
+      }
+      return 'browser';
+    },
   }
 }
 </script>

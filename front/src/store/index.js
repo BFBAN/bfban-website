@@ -21,7 +21,8 @@ const store = new Vuex.Store({
       judgementTip: false,
       enhance: false,
       autoUpdatePlayerList: false,
-      desktopNotifiction: false
+      desktopNotifiction: false,
+      footerBar: false
     },
 
     // https://vue-meta.nuxtjs.org/api

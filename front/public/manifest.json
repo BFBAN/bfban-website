@@ -1,7 +1,7 @@
 {
-  "name": "BFBAN",
+  "name": "Battlefield BAN",
+  "short_name": "BFBAN",
   "description": "全球战地风云作弊者数据库",
-  "short_name": "BFBan",
   "lang": "zh-CH",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -9,7 +9,7 @@
   "background_color": "#401487",
   "theme_color": "#1b2740",
   "dir": "auto",
-  "permissions": ["notifications"],
+  "permissions": ["notifications", "cookies", "background", "downloads", "downloads.open"],
   "icons": [
     {
       "src": "img/icons/maskable_icon_x48.png",

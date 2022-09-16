@@ -4,7 +4,7 @@ import store from "@/store";
 
 let _oldPlayerLength = 0;
 let _playerListInterval;
-let _intervalTime = 10000; // 10s
+let _intervalTime = 1 * 60 * 1000; // 2m
 let _notification;
 
 export default class PwaApp {
@@ -17,7 +17,7 @@ export default class PwaApp {
         const autoUpdatePlayerList = account_storage.getConfiguration('autoUpdatePlayerList');
 
         if (autoUpdatePlayerList) {
-            this.listeningPlayerList().then(async (backres) => {
+            this.listeningPlayerList().then(async backres => {
                 store.state.$desktop.autoUpdatePlayerList = backres.data;
 
                 _playerListInterval = setInterval(async function () {

@@ -38,9 +38,6 @@
             </Radio>
           </RadioGroup>
         </Col>
-        <Col v-if="statusGroup == 6 || statusGroup == 0">
-          <i-switch v-model="bot.autoUpdate" @on-change="autoUpdateList"/>
-        </Col>
       </Row>
       <!-- 游戏类型选择 E -->
 
@@ -73,7 +70,7 @@
       <!-- 状态类型 E -->
 
       <Row :gutter="10">
-        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 17, push: 0, pull: 0}">
+        <Col :xs="{span: 24, push: 0, pull: 0}" :lg="{span: 17, push: 0, pull: 0}">
           <Card dis-hover class="list">
             <Page class="page"
                   size="small"
@@ -235,11 +232,6 @@ export default new BFBAN({
       ],
       sortByValue: "createTime",
       cheaterStatus: null,
-
-      bot: {
-        autoUpdate: false,
-        time: 10000
-      }
     };
   },
   created() {
@@ -249,20 +241,6 @@ export default new BFBAN({
     $route: "loadData",
   },
   methods: {
-    autoUpdateList() {
-      const that = this;
-
-      account_storage.updateConfiguration('autoUpdatePlayerList', this.bot.autoUpdate);
-
-      if (!that.bot.autoUpdate) {
-        clearInterval(this.bot.fun);
-        return;
-      }
-
-      that.bot.fun = setInterval(function () {
-        that.getCheaterList();
-      }, that.bot.time)
-    },
     /**
      * 游戏数量统计
      */
