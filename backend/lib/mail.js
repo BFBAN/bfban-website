@@ -83,15 +83,15 @@ async function sendForgetPasswordVerify(username, address, language, code) {
 async function sendBindingOriginVerify(username, address, language, code) {
     let subject = {
         'zh': 'BFBan账户绑定',
-        'en': 'BFBan Account Binding',
+        'en': 'BFBan - Connecting your e-mail address',
     }[language];
-    subject = subject? subject : 'BFBan Account Binding';
+    subject = subject? subject : 'BFBan - Connecting your e-mail address';
     const html = await fs.readFile(`./media/mail_bindEmail_${language}.html`).then(buf=>buf.toString());
 
     await sendMail(
         "Hello "+username+"!\n"+
-        "   You are now binding this email to your bfban.com account.\n"+
-        "   Please click the link below to finish the verification: \n"+
+        "   To connect the e-mail address to your account,\n"+
+        "   click the link below to finish the verification process: \n"+
         "   https://bfban.com/#/bindOrigin?code="+code,
         config.mail.user, address, '', subject, [
             {
