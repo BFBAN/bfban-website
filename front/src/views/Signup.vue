@@ -274,7 +274,10 @@ export default new BFBAN({
             this.$router.push('/signin')
           }, 3000);
         } else {
-          this.$Message.error(d.code || d.msg);
+          this.$Message.error({
+            content: d.code || d.msg,
+            duration: 3
+          });
 
           this.signup.password = '';
           this.signup.captcha = '';
