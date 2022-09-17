@@ -1,6 +1,30 @@
 import http from 'axios';
 import Conf from './conf';
-
+import { account_storage} from "@/assets/js";
+import Cookies from 'js-cookie'
+import store  from '@/store';
+const HTTP_ = http.create({
+  timeout: 600000,
+  withCredentials: true,
+  headers: {
+    // 'Content-type': 'application/json',
+  },
+  validateStatus(status) {
+      return status <= 1000;
+  }
+})
+HTTP_.interceptors.response.use(response => {
+  const { data = {} } = response
+  console.log(data.code)
+  if(data.code == "user.tokenExpired") {
+    account_storage.clearAll();
+    store.dispatch('signout')
+  }
+  return response
+}, error => {
+  
+  throw error
+})
 export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
@@ -11,16 +35,7 @@ export default class Http extends Conf {
     GETURL = { protocol: '', request: '' };
     NODE;
 
-    HTTP = http.create({
-        timeout: 600000,
-        withCredentials: true,
-        headers: {
-          // 'Content-type': 'application/json',
-        },
-        validateStatus(status) {
-            return status <= 1000;
-        }
-    })
+    HTTP = HTTP_
 
     constructor() {
         super();

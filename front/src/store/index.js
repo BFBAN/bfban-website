@@ -56,7 +56,6 @@ const store = new Vuex.Store({
     },
     signout(state, data) {
       state.user = undefined;
-
       Cookies.remove('user');
     },
     syncLoaclConfiguration (state, data) {
