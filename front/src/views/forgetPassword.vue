@@ -250,9 +250,13 @@ export default new BFBAN({
         if (d.success === 1) {
           this.stepsIndex++;
           this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
-        } else {
-          this.$Message.error(d.message);
+
+          return;
         }
+
+        this.$Message.error(d.code);
+      }).catch(err => {
+        this.$Message.error(err.toString());
       }).finally(() => {
         this.onStepsIndex();
         this.spinShow = false;
