@@ -205,9 +205,50 @@
 import BFBAN from "../assets/js/bfban";
 
 import {account_storage, api, http, util} from '../assets/js/index'
-import cheaterStatus from '/public/conf/cheaterStatus.json'
+// import cheaterStatus from '/public/conf/cheaterStatus.json'
 import gameName from '/public/conf/gameName.json'
 import _ from "lodash";
+const cheaterStatus = {
+  "child": [
+    {
+      "value": 0,
+      "values": ["0", "wallhack"]
+    },
+    {
+      "value": 5,
+      "values": ["5", "gadgetModify", "suspect"]
+    },
+    {
+      "value": 6,
+      "values": ["6", "teleport"]
+    },
+    {
+      "value": 1,
+      "values": ["1", "guilt"],
+      "action": "guilt"
+    },
+    {
+      "value": 2,
+      "values": ["2", "invisable", "discuss"],
+      "action": "discuss"
+    },
+    {
+      "value": 3,
+      "values": [ "3", "magicBullet" ,"innocent"],
+      "action": "innocent"
+    },
+    {
+      "value": 4,
+      "values": ["4", "damageChange", "trash"],
+      "action": "suspect"
+    },
+    {
+      "value": 8,
+      "values": [ "8" ,"farm"],
+      "action": "farm"
+    }
+  ]
+}
 
 export default new BFBAN({
   data() {
