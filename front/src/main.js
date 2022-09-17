@@ -41,6 +41,7 @@ Vue.config.productionTip = false
 
 let cookieUser = Cookies.get('user') && JSON.parse(Cookies.get('user'));
 cookieUser = cookieUser || {}
+console.log('cookieUser---------', cookieUser)
 if(!cookieUser.token) {
   Cookies.remove('user');
 }
