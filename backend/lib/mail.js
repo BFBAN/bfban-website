@@ -54,7 +54,7 @@ async function sendRegisterVerify(username, originName, address, language, code)
                 data: html
                         .replace(/\$\{username\}/g, username)
                         .replace(/\$\{originName\}/g, originName)
-                        .replaceAll(/\$\{website\}/g, config.mail.origin)
+                        .replaceAll(/\$\{website\}/g, config.mail.domain.origin)
                         .replace(/\$\{code\}/g, code),
                 alternative: true
             }
@@ -79,7 +79,7 @@ async function sendForgetPasswordVerify(username, address, language, code) {
             {
                 data: html
                         .replace(/\$\{username\}/g, username)
-                        .replaceAll(/\$\{website\}/g, config.mail.origin)
+                        .replaceAll(/\$\{website\}/g, config.mail.domain.origin)
                         .replace(/\$\{code\}/g, code),
                 alternative: true
             }
@@ -104,7 +104,7 @@ async function sendBindingOriginVerify(username, address, language, code) {
             {
                 data: html
                         .replace(/\$\{username\}/g, username)
-                        .replaceAll(/\$\{website\}/g, config.mail.origin)
+                        .replaceAll(/\$\{website\}/g, config.mail.domain.origin)
                         .replace(/\$\{code\}/g, code),
                 alternative: true
             }
