@@ -61,4 +61,4 @@ jobs:
         port: ${{ secrets.PORT }}
         key: ${{ secrets.KEY }}
         source: "."
-        target: "/var/www/bfban-testing"
+        target: "/var/www/bfban"

@@ -60,20 +60,20 @@
         </router-link>
 
         <Dropdown v-if="isLogin" placement="bottom-end" :padding="0">
-          <router-link class="" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
+          <router-link class="" :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
             <Avatar icon="ios-person"></Avatar>
-            <span class="mobile-hide">&emsp;{{ currentUser.userinfo.username }}</span>
+            <span class="mobile-hide">&emsp;{{ userinfo.username }}</span>
           </router-link>
           <DropdownMenu slot="list" class="header-dropdown-menu">
             <div class="header-dropdown-avatar">
               <div>
                 <Avatar icon="ios-person" size="60"></Avatar>
-                <p class="header-dropdown-name">{{ currentUser.userinfo.username}}</p>
-                <p class="header-dropdown-id">{{ currentUser.userinfo.userId }}</p>
+                <p class="header-dropdown-name">{{ userinfo.username}}</p>
+                <p class="header-dropdown-id">{{ userinfo.userId }}</p>
               </div>
-              <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
+              <PrivilegesTag :data="userinfo.privilege"></PrivilegesTag>
             </div>
-            <router-link :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId}` }}">
+            <router-link :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
               <DropdownItem divided>
                 {{ $t("header.userCenter") }}
               </DropdownItem>
@@ -251,7 +251,9 @@ export default new BFBAN({
     }
   },
   computed: {
-
+    userinfo() {
+      return this.currentUser.userinfo || {}
+    }
   }
 })
 </script>

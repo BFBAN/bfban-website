@@ -12,6 +12,7 @@ import ViewUI from 'view-design'
 import VueQuillEditor from 'vue-quill-editor'
 import ECharts from 'vue-echarts'
 import VueMeta from 'vue-meta'
+import Cookies from 'js-cookie'
 
 // echarts
 import { use } from 'echarts/core'
@@ -37,6 +38,13 @@ Vue.use(ViewUI, {
 Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false
+
+let cookieUser = Cookies.get('user') && JSON.parse(Cookies.get('user'));
+cookieUser = cookieUser || {}
+console.log('cookieUser---------', cookieUser)
+if(cookieUser && !cookieUser.token) {
+  Cookies.remove('user');
+}
 
 const app = new Vue({
   router,
