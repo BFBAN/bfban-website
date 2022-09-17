@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import {api, http_token} from "../assets/js";
+import {api, http_token, account_storage} from "../assets/js";
 
 export default {
   name: "Header_message",
@@ -70,6 +70,11 @@ export default {
 
       this.http.get(api["user_message"], {}).then(res => {
         const d = res.data;
+        console.log(res)
+        if(d.code == 'user.tokenExpired') {
+          account_storage.clearAll();
+          return
+        }
         if (d.success == 1) {
           this.message = d.data;
         }
