@@ -15,15 +15,15 @@
       <Form label-position="top" class="profile-header">
         <Row :gutter="15">
           <Col>
-            <Avatar :size="48">{{ currentUser.userinfo.username[0] }}</Avatar>
+            <Avatar :size="48">{{ userinfo.username[0] }}</Avatar>
           </Col>
           <Col flex="1">
-            <h3> {{ currentUser.userinfo.username }} </h3>
-            <p>{{ $t('profile.meet', {name: currentUser.userinfo.username}) }} ({{ currentUser.userinfo.userId }})</p>
+            <h3> {{ userinfo.username }} </h3>
+            <p>{{ $t('profile.meet', {name: userinfo.username}) }} ({{ userinfo.userId }})</p>
           </Col>
-          <Col v-if="currentUser.userinfo.privilege">
+          <Col v-if="userinfo.privilege">
             <p><b>{{ $t('profile.account.form.privilege') }}</b></p>
-            <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
+            <PrivilegesTag :data="userinfo.privilege"></PrivilegesTag>
           </Col>
         </Row>
       </Form>
@@ -47,7 +47,7 @@
               </MenuItem>
             </div>
             <MenuGroup>
-              <MenuItem name="userCenter" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId }` }}">
+              <MenuItem name="userCenter" :to="{name: 'account', params: { uId: `${userinfo.userId }` }}">
                   {{ $t("header.userCenter") }}
                   <Icon type="ios-link"/>
               </MenuItem>
@@ -162,7 +162,9 @@ export default new BFBAN({
     }
   },
   computed: {
-
+    userinfo() {
+      return this.currentUser.userinfo || {}
+    }
   }
 })
 </script>
