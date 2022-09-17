@@ -311,7 +311,7 @@ export default new BFBAN({
 
           // type methods
           [].concat(d.data).splice(splitIndex, d.data.length - 1).forEach((i, index) => {
-            totalSum.push({status: that.cheaterStatus.filter(i => i.value == index)[0].value, num: Number(i.count)})
+            totalSum.push({status: that.cheaterStatus.filter(item => item.value == i.status)[0].value, num: Number(i.count)})
           });
           this.totalSum = totalSum;
         }
