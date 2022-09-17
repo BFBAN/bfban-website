@@ -272,7 +272,7 @@ router.get('/players', [
     checkquery('updateTimeFrom').optional().isInt({min: 0}),
     checkquery('createTimeTo').optional().isInt({min: 0}),
     checkquery('updateTimeTo').optional().isInt({min: 0}),
-    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6 ]),
+    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8 ]),
     checkquery('sortBy').optional().isIn(['createTime','updateTime','viewNum','commentsNum']),
     checkquery('order').optional().isIn(['desc','asc']),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
