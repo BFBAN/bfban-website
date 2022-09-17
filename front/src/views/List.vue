@@ -292,7 +292,7 @@ export default new BFBAN({
       });
 
       cheaterStatus.child.forEach((i, index) => {
-        data.data.push({"game": this.gameName == 'all' ? '*' : this.gameName, "status": index})
+        data.data.push({"game": this.gameName == 'all' ? '*' : this.gameName, "status": i.value})
       });
 
       http.post(api['playerStatistics'], {
