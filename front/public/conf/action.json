@@ -10,10 +10,10 @@
     "privilege": ["admin", "super","dev"]
   },{
     "value": "guilt",
-    "privilege": ["admin", "super","dev", "bot"]
+    "privilege": ["admin", "super", "dev", "bot"]
   },{
     "value": "kill",
-    "privilege": ["super"]
+    "privilege": ["super","dev", "bot"]
   },{
     "value": "invalid",
     "privilege": ["admin", "super","dev"]

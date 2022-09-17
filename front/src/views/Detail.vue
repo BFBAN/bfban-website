@@ -517,11 +517,15 @@
                   <Divider v-if="index < timelineList.length - 1"></Divider>
                 </TimelineItem>
 
-                <Page :page-size="timeline.limit" :current="timeline.page" :total="timeline.total"
-                      show-total
-                      class="page"
-                      size="small"/>
-                <br>
+                <div align="center">
+                  <Page :page-size="timeline.limit"
+                        :current="timeline.page"
+                        :total="timeline.total"
+                        simple
+                        class="page"
+                        size="small"/>
+                  <br>
+                </div>
               </div>
 
               <!-- 用户回复 S -->
