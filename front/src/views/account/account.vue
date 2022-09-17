@@ -397,13 +397,12 @@ export default {
         attr = { language: this.$root.$i18n.locale, showOrigin: false, allowDM: false, introduction: '' }
       } = this.formItem;
 
+      console.log(this.formItem)
+
       this.formLoad = true;
       this.http.post(api["user_me"], {
         data: {
-          data: {
-            introduction: attr.introduction,
-            attr,
-          }
+          data: { attr }
         }
       }).then((res) => {
         const d = res.data;
@@ -449,28 +448,30 @@ export default {
     }
   },
   computed: {
-    formItem() {
-      this.checkLangLocalSync();
-      let data = Object.assign({
-        password: '******',
-        origin: {
-          originName: '',
-          originEmail: '',
-        },
-        newname: '',
-        username: '',
-        attr: {
-          introduction: '',
-          language: ''
-        }
-      }, this.$store.state.$userinfo);
-
-      if (data.attr.introduction && this.$refs.Introduction)
-        this.$refs.Introduction.updateContent(data.attr.introduction);
-      return data;
+    formItem: {
+      set (val) {
+        return val;
       },
-    currentUser() {
-      return this.$store.state.user || {token: ''};
+      get () {
+        this.checkLangLocalSync();
+        let data = Object.assign({
+          password: '******',
+          origin: {
+            originName: '',
+            originEmail: '',
+          },
+          newname: '',
+          username: '',
+          attr: {
+            introduction: '',
+            language: ''
+          }
+        }, this.$store.state.$userinfo);
+
+        if (data.attr.introduction && this.$refs.Introduction)
+          this.$refs.Introduction.updateContent(data.attr.introduction);
+        return data;
+      }
     }
   }
 }

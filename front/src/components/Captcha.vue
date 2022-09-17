@@ -106,18 +106,21 @@ export default {
 
           this.hash = res.data.data["hash"];
           this.content = res.data.data["content"];
+
+          if (Object.keys(captcha.data.value).indexOf(this.$route.name) >= 0) {
+            // 会话持久对应时间加载
+            this.captchaTime.count = captcha.data.value[this.$route.name];
+          }
+
+          this.capthcaTimeout(this.captchaTime.count || this.seconds);
+          return;
         }
+
+        this.$Message.error(res.data.code);
       }).finally((res) => {
         setTimeout(function () {
           that.postload = false;
         }, 800)
-
-        if (Object.keys(captcha.data.value).indexOf(this.$route.name) >= 0) {
-          // 会话持久对应时间加载
-          this.captchaTime.count = captcha.data.value[this.$route.name];
-        }
-
-        this.capthcaTimeout(this.captchaTime.count || this.seconds);
       });
     },
     /**
