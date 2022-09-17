@@ -6,8 +6,8 @@
 				"describe": "The information provided is insuffient to justify that player is cheating. However, there is still unordinary activity lies inside it. The player status will be changed to comfirmed cheater if more evidence is provided.   "
 			},
 			"innocent": {
-				"text": "Clean",
-				"describe": "From infromation provided, there is enough evidence to prove that player is not cheating."
+				"text": "MOSS Proof",
+				"describe": "Cleared by way of video of reported information."
 			},
 			"discuss": {
 				"text": "Under discussion",
@@ -28,7 +28,11 @@
 			"more":{
 				"text": "Need more evidence",
 				"describe": "Need stronger evidence"
-			}
+			},
+      "farm": {
+        "text": "farm weapons",
+        "describe": "Submit a gun record to clean the actual hammer due to weapon data anomalies"
+      }
 		},
 		"status": {
 			"all": "All methods",
@@ -39,7 +43,8 @@
 			"4": "Invalid report",
 			"5": "Under discussion",
 			"6": "Needs more votes",
-			"7": "Ultra-confirmed hacker"
+			"7": "Ultra-confirmed hacker",
+      "8": "farm weapons"
 		},
 		"privilege": {
 			"root": "System",

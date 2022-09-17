@@ -16,12 +16,14 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 0,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 0,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 0,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
+    { from: 0,      to: 8,  action: 'farm',  privilege: ['admin', 'super', 'root'] }, // to farm
     // [1] confirmed ban, wont change status for report, guilt, kill
     { from: 1,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 1,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
     { from: 1,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to invalid report
     { from: 1,      to: 5,  action: 'discuss',  privilege: ['admin', 'super', 'root'] }, // to discuss
     { from: 1,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
+    { from: 1,      to: 8,  action: 'farm',  privilege: ['admin', 'super', 'root'] }, // to farm
     // [2] suspect
     { from: 2,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 2,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
@@ -30,6 +32,7 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 2,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 2,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 2,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
+    { from: 2,      to: 8,  action: 'farm',  privilege: ['admin', 'super', 'root'] }, // to farm
     // [3] innocent
     { from: 3,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 3,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
@@ -38,6 +41,7 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 3,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 3,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 3,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
+    { from: 3,      to: 8,  action: 'farm',  privilege: ['admin', 'super', 'root'] }, // to farm
     // [4] invalid report, "trash"
     { from: 4,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 4,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
@@ -46,6 +50,7 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 4,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 4,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 4,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
+    { from: 4,      to: 8,  action: 'farm',  privilege: ['admin', 'super', 'root'] }, // to farm
     // [5] discussing
     { from: 5,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 5,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
@@ -54,6 +59,7 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 5,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 5,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 5,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
+    { from: 5,      to: 8,  action: 'farm',  privilege: ['admin', 'super', 'root'] }, // to farm
     // [6] pending, dont handle re-report here
     { from: 6,      to: 1,  action: 'guilt',    privilege: toConfirm }, // to confirm ban, must supported by at least $config.personsToConfirm person
     { from: 6,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
@@ -61,6 +67,7 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 6,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to discuss
     { from: 6,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
     { from: 6,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
+    { from: 6,      to: 8,  action: 'farm',  privilege: ['admin', 'super', 'root'] }, // to farm
     // [7] lack evidence, "trash"
     { from: 7,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 7,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
@@ -69,6 +76,17 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 7,      to: 5,  action: 'discuss',  privilege: ['admin', 'super', 'root'] }, // to discuss
     { from: 7,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 7,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
+    { from: 7,      to: 8,  action: 'farm',  privilege: ['admin', 'super', 'root'] }, // to farm
+    
+    // [8] farm
+    { from: 8,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
+    { from: 8,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
+    { from: 8,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
+    { from: 8,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to invalid report
+    { from: 8,      to: 5,  action: 'discuss',  privilege: ['admin', 'super', 'root'] }, // to discuss
+    { from: 8,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
+    { from: 8,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
+    { from: 8,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
 ];
 
 /** 
