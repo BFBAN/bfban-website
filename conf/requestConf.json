@@ -14,7 +14,7 @@
     },
     "development3": {
       "protocol": "https",
-      "host": "bfban-testing.gametools.network",
+      "host": "bfban.gametools.network",
       "pathname": "/api/"
     },
     "development4": {
@@ -24,7 +24,7 @@
     },
     "production": {
       "protocol": "https",
-      "host": "bfban-testing.gametools.network",
+      "host": "bfban.gametools.network",
       "pathname": "/api/"
     }
   }
