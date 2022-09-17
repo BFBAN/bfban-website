@@ -364,12 +364,14 @@ export default {
     },
     onEditorBlur (data) {
       const maxlength = this.maxlength;
+
       if (
           data.html &&
           maxlength  ? data.html.length < maxlength : true &&
           !this.disabled
-      )
+      ) {
         this.$emit("input", this.editorContent);
+      }
     },
     /**
      * util

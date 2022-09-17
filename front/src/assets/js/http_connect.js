@@ -19,7 +19,6 @@ export default class Http_Connect {
         this.HTTP.request(u,{
             method: 'get',
         }).then(res => {
-            console.log(res);
             if (res.status < 500)
                 return callback( this.STATUS.success() );
 

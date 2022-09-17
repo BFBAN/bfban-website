@@ -15,7 +15,6 @@ const HTTP_ = http.create({
 })
 HTTP_.interceptors.response.use(response => {
   const { data = {} } = response
-  console.log(data.code)
   if(data.code == "user.tokenExpired") {
     account_storage.clearAll();
     store.dispatch('signout')

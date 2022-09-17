@@ -4,6 +4,7 @@
 
 import Storage from './storage';
 import store from "@/store";
+import jsCookie from "js-cookie";
 
 export default class AccountStorage extends Storage {
     ACCOUNTDATA = [{
@@ -45,15 +46,15 @@ export default class AccountStorage extends Storage {
 
     NAME = 'user.configuration';
 
-    // 清除数据
+    // 清除与账户相关数据
     clearAll () {
         this.ACCOUNTDATA.forEach(i => {
             switch (i.type) {
                 case 'session':
-                    super.session().rem(super.STORAGENAME + i.name);
+                    super.session().rem(i.name);
                     break;
                 case 'local':
-                    super.local().rem(super.STORAGENAME + i.name);
+                    super.local().rem(i.name);
                     break;
             }
         })

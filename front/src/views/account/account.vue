@@ -44,19 +44,6 @@
 
       <Divider dashed></Divider>
 
-      <FormItem :label="$t('profile.account.form.introduction')">
-        <Card dis-hover :padding="0">
-          <Textarea v-model="formItem.attr.introduction"
-                    ref="Introduction"
-                    :content="formItem.attr.introduction"
-                    :maxlength="100"
-                    :toolbar="[[{ 'list': 'ordered' }, { 'list': 'bullet' }], ['bold']]"
-                    :height="'200px'"></Textarea>
-        </Card>
-      </FormItem>
-
-      <Divider dashed></Divider>
-
       <template v-if="formItem.origin.originName == null || formItem.origin.originUserId == null">
         <Alert show-icon type="error">
           {{ $t('account.bindOrigin.title') }}
@@ -129,13 +116,13 @@
         </Col>
       </Row>
 
-      <Affix :offset-bottom="5">
-        <Card :padding="10">
+      <Affix :offset-bottom="0">
+        <Card dis-hover :padding="8">
           <Row>
-            <Col flex="1">
+            <Col :xs="{span: 0}" :lg="{span: 20}">
             </Col>
-            <Col>
-              <Button type="primary" :loading="formLoad" @click="onSave">
+            <Col :xs="{span: 24}" :lg="{span: 4}">
+              <Button type="primary" long :loading="formLoad" @click="onSave">
                 {{ $t("basic.button.save") }}
               </Button>
             </Col>
@@ -252,7 +239,6 @@
 </template>
 
 <script>
-import Textarea from "@/components/Textarea";
 import Captcha from "../../components/Captcha";
 
 import {api, http, http_token, account_storage} from "../../assets/js";
@@ -285,7 +271,7 @@ export default {
       },
     }
   },
-  components: {Textarea, Captcha},
+  components: {Captcha},
   created() {
     this.http = http_token.call(this);
 
@@ -394,16 +380,13 @@ export default {
      */
     onSave() {
       const {
-        attr = { language: this.$root.$i18n.locale, showOrigin: false, allowDM: false, introduction: '' }
+        attr = { language: this.$root.$i18n.locale, showOrigin: false, allowDM: false }
       } = this.formItem;
 
       this.formLoad = true;
       this.http.post(api["user_me"], {
         data: {
-          data: {
-            introduction: attr.introduction,
-            attr,
-          }
+          data: { attr }
         }
       }).then((res) => {
         const d = res.data;
@@ -449,28 +432,23 @@ export default {
     }
   },
   computed: {
-    formItem() {
-      this.checkLangLocalSync();
-      let data = Object.assign({
-        password: '******',
-        origin: {
-          originName: '',
-          originEmail: '',
-        },
-        newname: '',
-        username: '',
-        attr: {
-          introduction: '',
-          language: ''
-        }
-      }, this.$store.state.$userinfo);
-
-      if (data.attr.introduction && this.$refs.Introduction)
-        this.$refs.Introduction.updateContent(data.attr.introduction);
-      return data;
-      },
-    currentUser() {
-      return this.$store.state.user || {token: ''};
+    formItem: {
+      get () {
+        this.checkLangLocalSync();
+        let data = Object.assign({
+          password: '******',
+          origin: {
+            originName: '',
+            originEmail: '',
+          },
+          newname: '',
+          username: '',
+          attr: {
+            language: ''
+          }
+        }, this.$store.state.$userinfo);
+        return data;
+      }
     }
   }
 }

@@ -176,7 +176,7 @@
 				"allowDM": "Allow DMs",
 				"allowDMdescribe": "Receive DMs from other people.",
 				"language": "Languages",
-				"languageSyncDescribe": "It will use the selected language until you logout"
+				"languageSyncDescribe": "It will use the selected language while your logged in"
 			},
 			"modifyName": {
 				"title": "Change name",

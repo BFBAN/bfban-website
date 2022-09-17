@@ -517,11 +517,15 @@
                   <Divider v-if="index < timelineList.length - 1"></Divider>
                 </TimelineItem>
 
-                <Page :page-size="timeline.limit" :current="timeline.page" :total="timeline.total"
-                      show-total
-                      class="page"
-                      size="small"/>
-                <br>
+                <div align="center">
+                  <Page :page-size="timeline.limit"
+                        :current="timeline.page"
+                        :total="timeline.total"
+                        simple
+                        class="page"
+                        size="small"/>
+                  <br>
+                </div>
               </div>
 
               <!-- 用户回复 S -->
@@ -1027,7 +1031,7 @@ export default new BFBAN({
         this.verify.status = this.verify.choice[0].value;
       });
 
-      this.getCheatersInfo();
+      this.getPlayerInfo();
       this.getTimeline();
     },
     onAvatarError () {
@@ -1133,18 +1137,28 @@ export default new BFBAN({
       return name ? object[name] : object;
     },
     /**
-     * 获取作弊者档案
+     * 获取举报玩家档案
      */
-    getCheatersInfo() {
-      this.cheater = {};
+    getPlayerInfo() {
+      let params = Object.assign({
+        history: true
+      }, {
+        personaId: this.$route.params.ouid
+      });
 
-      this.http.get(api["cheaters"], {
-        params: Object.assign({
+      // 旧网站URL, 兼容
+      if (this.$route.query.oldUrl && this.$route.params.ouid) {
+        params = Object.assign({
           history: true
         }, {
-          personaId: this.getParamsIds('personaId')
-        })
-      }).then((res) => {
+          userId: this.$route.params.ouid
+        });
+        delete params.personaId;
+      }
+
+      this.cheater = {};
+
+      this.http.get(api["cheaters"], { params }).then(res => {
         const d = res.data;
 
         if (d.success === 1) {
@@ -1277,7 +1291,7 @@ export default new BFBAN({
 
         this.$Message.error('failed ' + d.code);
       }).finally(() => {
-        this.getCheatersInfo();
+        this.getPlayerInfo();
         this.getTimeline();
 
         this.verifySpinShow = false;
@@ -1417,7 +1431,7 @@ export default new BFBAN({
         // reset reply
         this.cancelReply();
 
-        this.getCheatersInfo();
+        this.getPlayerInfo();
 
         // update timelink
         this.getTimeline();
