@@ -39,8 +39,8 @@ Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false
 
-const cookieUser = Cookies.get('user') && JSON.parse(Cookies.get('user'));
-console.log(cookieUser)
+let cookieUser = Cookies.get('user') && JSON.parse(Cookies.get('user'));
+cookieUser = cookieUser || {}
 if(!cookieUser.token) {
   Cookies.remove('user');
 }
