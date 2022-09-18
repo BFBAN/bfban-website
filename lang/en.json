@@ -60,7 +60,8 @@
 			"notlang": "untranslated",
 			"notcontent": "Nothing found",
 			"notFound": "We cant find the page your looking for.",
-			"noReports": "No reports yet"
+			"noReports": "No reports yet",
+			"noAccess": "Have no right to access"
 		},
 		"games": {
 			"all": "All games",
@@ -219,8 +220,10 @@
 		"admin": {
 			"title": "Backend management",
 			"menu": {
+				"home": "Home",
 				"management": "content",
 				"user": "user management",
+				"message": "user message",
 				"comment": "Comments on the management",
 				"log": "Logs",
 				"adminLog": "Admin log",
