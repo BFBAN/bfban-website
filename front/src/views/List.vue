@@ -205,9 +205,50 @@
 import BFBAN from "../assets/js/bfban";
 
 import {account_storage, api, http, util} from '../assets/js/index'
-import cheaterStatus from '/public/conf/cheaterStatus.json'
+// import cheaterStatus from '/public/conf/cheaterStatus.json'
 import gameName from '/public/conf/gameName.json'
 import _ from "lodash";
+const cheaterStatus = {
+  "child": [
+    {
+      "value": 0,
+      "values": ["0", "wallhack"]
+    },
+    {
+      "value": 5,
+      "values": ["5", "gadgetModify", "suspect"]
+    },
+    {
+      "value": 6,
+      "values": ["6", "teleport"]
+    },
+    {
+      "value": 1,
+      "values": ["1", "guilt"],
+      "action": "guilt"
+    },
+    {
+      "value": 2,
+      "values": ["2", "invisable", "discuss"],
+      "action": "discuss"
+    },
+    {
+      "value": 3,
+      "values": [ "3", "magicBullet" ,"innocent"],
+      "action": "innocent"
+    },
+    {
+      "value": 4,
+      "values": ["4", "damageChange", "trash"],
+      "action": "suspect"
+    },
+    {
+      "value": 8,
+      "values": [ "8" ,"farm"],
+      "action": "farm"
+    }
+  ]
+}
 
 export default new BFBAN({
   data() {
@@ -292,7 +333,7 @@ export default new BFBAN({
       });
 
       cheaterStatus.child.forEach((i, index) => {
-        data.data.push({"game": this.gameName == 'all' ? '*' : this.gameName, "status": index})
+        data.data.push({"game": this.gameName == 'all' ? '*' : this.gameName, "status": i.value})
       });
 
       http.post(api['playerStatistics'], {
@@ -311,7 +352,7 @@ export default new BFBAN({
 
           // type methods
           [].concat(d.data).splice(splitIndex, d.data.length - 1).forEach((i, index) => {
-            totalSum.push({status: that.cheaterStatus.filter(i => i.value == index)[0].value, num: Number(i.count)})
+            totalSum.push({status: that.cheaterStatus.filter(item => item.value == i.status)[0].value, num: Number(i.count)})
           });
           this.totalSum = totalSum;
         }

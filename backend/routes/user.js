@@ -108,20 +108,32 @@ async (req, res, next)=> {
             await db('verifications').where({uniqCode: code}).delete();
             return res.status(400).json({error: 1, code: 'signup.expired'});
         }
-
-        const data = {
-            username: registrant.username,
-            password: registrant.password,
-            originName: registrant.originName,
-            originEmail: registrant.originEmail,
-            originUserId: registrant.originUserId,
-            originPersonaId: registrant.originPersonaId,
-            privilege: JSON.stringify(['normal']),
-            attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.query.lang)),
-            createTime: new Date(),
-            updateTime: new Date(),
-        };
-        await db('users').insert(data);
+        let data 
+        if(registrant.userId) {
+          data = {
+              originName: registrant.originName,
+              originEmail: registrant.originEmail,
+              originUserId: registrant.originUserId,
+              originPersonaId: registrant.originPersonaId,
+              updateTime: new Date()
+          };
+          await db('users').update(data).where({ id: registrant.userId });
+        }else {
+          data = {
+              username: registrant.username,
+              password: registrant.password,
+              originName: registrant.originName,
+              originEmail: registrant.originEmail,
+              originUserId: registrant.originUserId,
+              originPersonaId: registrant.originPersonaId,
+              privilege: JSON.stringify(['normal']),
+              attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.query.lang)),
+              createTime: new Date(),
+              updateTime: new Date(),
+          };
+          await db('users').insert(data);
+        }
+        
         await db('verifications').where({uniqCode: code}).delete();
         logger.info('users.signupVerify Success:', {name: data.username});
         

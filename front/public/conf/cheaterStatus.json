@@ -31,6 +31,11 @@
       "value": 4,
       "values": ["4", "damageChange", "trash"],
       "action": "suspect"
+    },
+    {
+      "value": 8,
+      "values": [ "8" ,"farm"],
+      "action": "farm"
     }
   ]
 }

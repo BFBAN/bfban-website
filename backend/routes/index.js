@@ -102,9 +102,9 @@ async (req, res, next)=>{
  *         description: playerStatistics.bad
  */
 router.post('/playerStatistics', [  // like graphql :)
-    checkbody('data').isArray({min: 0, max: 10}).custom((val, {req})=> {
+    checkbody('data').isArray({min: 0, max: 11}).custom((val, {req})=> {
         for(let i of val)
-            if(!config.supportGames.concat('*').includes(i.game) || ![-1,0,1,2,3,4,5,6].includes(i.status-0))
+            if(!config.supportGames.concat('*').includes(i.game) || ![-1,0,1,2,3,4,5,6,8].includes(i.status-0))
                 throw(new Error('bad subquery format'));
         return true;
     })
@@ -272,7 +272,7 @@ router.get('/players', [
     checkquery('updateTimeFrom').optional().isInt({min: 0}),
     checkquery('createTimeTo').optional().isInt({min: 0}),
     checkquery('updateTimeTo').optional().isInt({min: 0}),
-    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6 ]),
+    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8 ]),
     checkquery('sortBy').optional().isIn(['createTime','updateTime','viewNum','commentsNum']),
     checkquery('order').optional().isIn(['desc','asc']),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
@@ -320,7 +320,7 @@ router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'dev', 'root'])
     checkquery('updateTimeFrom').optional().isInt({min: 0}),
     checkquery('createTimeTo').optional().isInt({min: 0}),
     checkquery('updateTimeTo').optional().isInt({min: 0}),
-    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6 ]),
+    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8 ]),
     checkquery('sortBy').optional().isIn(['createTime','updateTime','viewNum','commentsNum']),
     checkquery('order').optional().isIn(['desc','asc']),
     checkquery('limit').optional().isInt({min: 0}),

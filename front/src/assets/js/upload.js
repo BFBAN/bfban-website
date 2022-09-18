@@ -11,7 +11,7 @@ export default class Upload extends Print {
     FILESIZE = 2*1024*1024;
 
     async on (file) {
-        return new Promise(function (resolve, reject) {
+        return new Promise( (resolve, reject)=>{
             resolve(file.size <= this.FILESIZE ? this.upDatesmallFile(file) : this.upDateLargeFile(file))
         });
     }
@@ -23,8 +23,8 @@ export default class Upload extends Print {
     upDatesmallFile (file) {
         try {
             if (!file) return;
-
-            fetch(http.getUrl() + api["service_upload"], {
+            console.log(http)
+            fetch(http.location() + api["service_upload"], {
                 method: 'PUT',
                 headers: {
                     ["Content-Type"]: file.type,
@@ -48,7 +48,7 @@ export default class Upload extends Print {
         try {
             if (!file) return;
 
-            fetch(http.getUrl() + api["service_uploadBigFile"], {
+            fetch(http.location() + api["service_uploadBigFile"], {
                 method: 'POST',
                 data: {
                     "size": file.type,
