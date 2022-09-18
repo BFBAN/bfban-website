@@ -36,7 +36,7 @@
         <Select v-model="currentType" style="margin: 40px 0 0 0">
           <Option value="0">{{ $t('textarea.type.url') }}</Option>
           <Option value="1">{{ $t('textarea.type.upload') }}</Option>
-          <Option value="2">{{ $t('textarea.type.media') }}</Option>
+          <Option value="2" disabled>{{ $t('textarea.type.media') }}</Option>
         </Select>
 
         <template v-if="currentType == '0'">
