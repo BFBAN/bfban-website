@@ -1,4 +1,4 @@
-importScripts("/precache-manifest.992eb06078c3e72879d999ed20152bd3.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/precache-manifest.5793edd3df86fa1f2e6c86e276449a3f.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 self.addEventListener('fetch', function (event) {
   console.log(event);
