@@ -16,9 +16,9 @@
         <br>
       </template>
 
-      <Card dis-hover>
+      <Card dis-hover class="detail-app">
         <div class="mobile-hide" align="center">
-          <vue-qr :text="'{id: '+ $route.params.ouid + '}'" :size="200"></vue-qr>
+          <vue-qr :text="'{id: '+ $route.params.ouid + '}'" :size="250"></vue-qr>
 
           <div class="qrcode" ref="qrCodeUrl"></div>
 
@@ -57,6 +57,13 @@ export default new BFBAN({
 })
 </script>
 
-<style lang="scss">
-
+<style lang="scss" scoped>
+@media screen and (min-width: 1024px) {
+  .detail-app {
+    justify-content: center;
+    display: flex;
+    min-height: 400px;
+    flex-direction: column;
+  }
+}
 </style>

@@ -1,11 +1,14 @@
 <template>
   <footer class="footer footer-border-top" v-if="!isFull">
+    <template v-if="$route.query['love'] == '❤'">
+      <Divider align="center">❤️❤️❤️❤️❤️</Divider>
+    </template>
     <div class="container">
       <Row>
         <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide">
           <Badge :count="logoCount" overflow-count="999999" :class="logoCount >= 10 ? 'shake active_infinite' : ''">
             <Avatar v-if="logoCount >= 5" size="40">
-              <router-link :to="{name: 'home', query:{ '': '❤'}}">😊</router-link>
+              <router-link :to="{name: 'home', query:{ 'love': '❤'}}">😊</router-link>
             </Avatar>
             <img v-else
                  src="../assets/images/logo.png"

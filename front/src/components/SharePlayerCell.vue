@@ -32,8 +32,11 @@
               <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
                 {{ $t("cheatMethods." + method_item + ".title") }}
               </Tag>
-              <span class="share-info-p">{{ $t("detail.info.cheatMethod") }}</span>
             </template>
+            <template v-else>
+              <Tag color="warning">N/A</Tag>
+            </template>
+            <span class="share-info-p">{{ $t("detail.info.cheatMethod") }}</span>
           </Col>
         </Row>
       </div>
@@ -63,7 +66,7 @@ export default {
   data() {
     return {
       isFull: true,
-      href: window.location.href + '/card',
+      href: window.location.href.replaceAll('/share', ''),
       cheater: {},
     }
   },

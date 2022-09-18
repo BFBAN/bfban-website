@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="app ">
+  <div id="app" class="app">
     <Header v-if="!isFull"></Header>
     <main>
       <router-view></router-view>

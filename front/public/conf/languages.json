@@ -62,10 +62,15 @@
     {
       "name": "ru-RU",
       "label": "Русский(bot)",
-      "members": [{
-        "name": "Baidu Bot",
-        "url": "//baidu.com"
-      }
+      "members": [
+        {
+          "name": "Baidu Bot",
+          "url": "//baidu.com"
+        },
+        {
+          "name": "Artem",
+          "url": "//github.com/nicoth-in"
+        }
       ]
     }
   ],

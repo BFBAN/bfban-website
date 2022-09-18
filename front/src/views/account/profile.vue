@@ -108,7 +108,7 @@ export default new BFBAN({
             {
               title: 'message',
               name: 'message',
-              icon: 'md-mail.json'
+              icon: 'md-mail'
             },
             {
               title: 'media',

@@ -59,7 +59,7 @@
       <template v-else>
         <Row :gutter="30">
           <Col flex="1">
-            <FormItem :label="$t('signup.form.originEmail')">
+            <FormItem :label="$t('signup.form.originName')">
               <Input v-model="formItem.origin.originName"
                      type="text"
                      disabled
@@ -68,7 +68,7 @@
             </FormItem>
           </Col>
           <Col flex="1">
-            <FormItem :label="$t('signup.form.originName')">
+            <FormItem :label="$t('signup.form.originId')">
               <Input v-model="formItem.origin.originUserId"
                      type="text"
                      disabled

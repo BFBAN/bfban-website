@@ -76,9 +76,9 @@
                         <a href="javascript:void(0)" v-if="child.haveRead == 0" @click="onMessageMark(child.id, 0)">
                           <Icon type="md-eye" size="20"/>
                         </a>
-                        <a href="javascript:void(0)" @click="onMessageMark(child.id, 2)">
-                          <Icon type="md-trash" color="red" size="20"/>
-                        </a>
+<!--                        <a href="javascript:void(0)" @click="onMessageMark(child.id, 2)">-->
+<!--                          <Icon type="md-trash" color="red" size="20"/>-->
+<!--                        </a>-->
                       </Col>
                     </Row>
                     <Card dis-hover :padding="5">{{ child.content }}</Card>

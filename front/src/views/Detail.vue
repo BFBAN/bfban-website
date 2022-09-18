@@ -37,7 +37,7 @@
               <!-- Origin头像 E -->
             </div>
           </Col>
-          <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}">
+          <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col flex="1">
                 <Tag color="error" v-if="cheater.status >= 0">
@@ -59,8 +59,8 @@
                   </Tag>
                 </template>
 
-                <h1 :style="`font-size: 1.6rem;${cheater.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''}`">
-                  {{ cheater.originName || 'user id' }}
+                <h1 :style="`${cheater.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''}`">
+                  {{ cheater.originName || 'User Name' }}
                 </h1>
               </Col>
               <template v-if="!isFull">
@@ -85,7 +85,7 @@
                           <Icon type="ios-arrow-down"></Icon>
                         </Button>
                       </ButtonGroup>
-                      <DropdownMenu slot="list">
+                      <DropdownMenu slot="list" v-if="$store.state.configuration.subscribes">
                         <DropdownItem :selected="!subscribes.static">
                           <h4><Icon type="md-notifications-outline"/> {{ $t('detail.subscribes.tracking') }}</h4>
                           <p>{{ $t('detail.subscribes.trackingDescribe') }}</p>
@@ -110,8 +110,7 @@
             </Row>
             <Row>
               <Col>
-                <span>id:  {{ cheater.originUserId || 'id' }}</span>
-
+                <span>Origin id:  {{ cheater.originUserId || 'id' }}</span>
                 <template v-if="!isFull">
                   <Divider type="vertical"/>
                   <Dropdown>
@@ -119,18 +118,20 @@
                       {{ $t('detail.info.historyID', {msg: 'historyID'}) }}
                       <Icon type="ios-arrow-down"></Icon>
                     </a>
-                    <DropdownMenu slot="list" v-if="cheater && cheater.history && cheater.history.length >= 0">
+                    <DropdownMenu slot="list" style="min-width: 230px" v-if="cheater && cheater.history && cheater.history.length >= 0">
                       <!-- 历史ID -->
                       <DropdownItem v-for="origin in cheater.history" :key="origin.originName">
-                        <Time :time="origin.fromTime" v-if="origin.fromTime"></Time>
-                        <Divider type="vertical"/>
-                        {{ origin.originName }}
+                        <Row>
+                          <Col flex="1"><Time :time="origin.fromTime" v-if="origin.fromTime"></Time></Col>
+                          <Col>{{ origin.originName }}</Col>
+                        </Row>
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
-                  <Divider type="vertical"/>
-                  <a @click="updateCheaterModal = true;"><Icon type="md-cloud" /> {{ $t('detail.info.updateButton') }}</a>
 
+                  <Divider type="vertical"/>
+
+                  <a @click="updateCheaterModal = true;"><Icon type="md-cloud" /> {{ $t('detail.info.updateButton') }}</a>
                   <Modal v-model="updateCheaterModal">
                     <div sort="title">
                       <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
@@ -181,21 +182,21 @@
 
             <Row :gutter="10">
               <Col :xs="{span: 12}" :lg="{span: 6}">
-                <Card>
+                <Card :padding="10" dis-hover>
                   <!-- 浏览次数 -->
                   <h3>{{ cheater.viewNum || 0 }}</h3>
                   <span>{{ $t('detail.info.viewTimes') }}</span>
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
-                <Card>
+                <Card :padding="10" dis-hover>
                   <!-- 回复次数 -->
                   <h3>{{ cheater.commentsNum || 0 }}</h3>
                   <span>{{ $t('detail.info.reply') }}</span>
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
-                <Card>
+                <Card :padding="10" dis-hover>
                   <!-- 第一次被举报时间 -->
                   <h3>
                     <Time v-if="cheater.createTime" :time="cheater.createTime"></Time>
@@ -204,7 +205,7 @@
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
-                <Card>
+                <Card :padding="10" dis-hover>
                   <!-- 最近更新时间 -->
                   <h3>
                     <Time v-if="cheater.updateTime" :time="cheater.updateTime"></Time>
@@ -721,7 +722,7 @@
                            maxlength="4"
                            :placeholder="$t('captcha.title')">
                       <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                        <Captcha ref="captcha"></Captcha>
+                        <Captcha ref="captcha" :seconds="5"></Captcha>
                       </div>
                     </Input>
                   </Col>
@@ -760,7 +761,7 @@
 
     <template v-if="!isFull">
       <Affix :top="100">
-        <Card dis-show class="detila-affix mobile-hide">
+        <Card dis-show class="detail-affix mobile-hide">
           <a href="#up">
             <Icon type="md-arrow-round-up" size="30"/>
           </a>
@@ -1069,6 +1070,7 @@ export default new BFBAN({
         subscribesArray.push(this.cheater.id);
       }
 
+      this.subscribes.load = true;
       this.http.post(api["user_me"], {
         data: {
           data: { subscribes: subscribesArray }
@@ -1080,6 +1082,7 @@ export default new BFBAN({
           storage.set('user.subscribes', subscribesArray);
         }
       }).finally(() => {
+        this.subscribes.load = false;
         this.subscribes.static = isSubscribes;
       });
     },
@@ -1250,6 +1253,7 @@ export default new BFBAN({
       let {suggestion} = this.verify;
       const cheatMethods = this.verify.checkbox;
 
+      if (this.verifySpinShow) return;
       if ((['kill','guilt'].includes(status) && cheatMethods == '') || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
@@ -1291,7 +1295,7 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error('failed ' + d.code);
+        this.$Message.error(d.code);
       }).finally(() => {
         this.getPlayerInfo();
         this.getTimeline();
@@ -1576,7 +1580,18 @@ export default new BFBAN({
     border-width: .3rem !important;
   }
 
-  .detila-affix {
+  .detail-userinfo-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+
+    h1 {
+      font-size: 2.2rem;
+    }
+  }
+
+  .detail-affix {
     position: fixed;
     right: calc(50% - (960px / 2) - 85px) !important;
     top: 30% !important;;
@@ -1590,7 +1605,7 @@ export default new BFBAN({
   }
 
   @media screen and (min-width: 1180px) {
-    .detila-affix {
+    .detail-affix {
       display: none !important;
     }
   }
