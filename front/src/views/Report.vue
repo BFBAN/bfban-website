@@ -28,7 +28,7 @@
               <Card dis-hover :padding="50">
                 <!-- 游戏类型 S -->
                 <FormItem prop="gameName"
-                          :label="$t('report.labels.game') + '(' + tabs.list[index].formItem.gameName + ')'">
+                          :label="`${ $t('report.labels.game') }`">
                   <RadioGroup
                       size="large"
                       class="game-type"
@@ -43,6 +43,7 @@
                       </Tooltip>
                     </Radio>
                   </RadioGroup>
+                  <p>{{ $t('basic.games.' + tabs.list[index].formItem.gameName) }}</p>
                 </FormItem>
                 <!-- 游戏类型 E -->
 
@@ -176,7 +177,7 @@
                         <Icon type="md-add"/>
                         <span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 10)</span>
                       </Button>
-                      <span class="hint">{{ $t("report.info.uploadManual3") }}</span>
+                      <span>{{ $t("report.info.uploadManual3") }}</span>
                       <!-- 视频链接 E -->
                     </Col>
                   </Row>
@@ -186,6 +187,7 @@
                   <Card :padding="0" dis-hover>
                     <Textarea :placeholder="$t('report.info.description')"
                               :index="index"
+                              :height="'520px'"
                               v-model="tabs.list[index].formItem.description">
                               @change="handleMiscChange"
                     </Textarea>
@@ -374,7 +376,7 @@ export default new BFBAN({
             {required: true, type: 'array', min: 1, trigger: 'change'},
           ],
           description: [
-            {required: true, trigger: 'change'},
+            {required: true, trigger: 'blur'},
           ],
           captcha: [
             {required: true, trigger: 'blur'}

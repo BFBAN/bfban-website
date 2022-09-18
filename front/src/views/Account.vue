@@ -8,7 +8,7 @@
           <BreadcrumbItem>{{ $t("account.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
-      <Col align="right" v-if="currentUser.userinfo">
+      <Col align="right" v-if="currentUser && currentUser.userinfo">
         <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{ $t("account.message.hint.taOffChat") }} </Alert>
         <Alert show-icon type="error" v-if="account.id == currentUser.userinfo.userId"> {{ $t("account.message.hint.selfTalk") }} </Alert>
         <Button @click="openMessage" :disabled="!account.attr.allowDM || account.id == currentUser.userinfo.userId">
@@ -19,102 +19,110 @@
     </Row>
     <br>
 
-    <div dis-hover bordered>
-      <Row type="flex" justify="center" align="middle">
-        <Col justify="center" align="middle">
-          <br>
-          <Avatar shape="square" style="background-color: yellow" size="150">{{ account.username[0] || '' }}</Avatar>
+    <template v-if="account">
+      <div dis-hover bordered>
+        <Row type="flex" justify="center" align="middle">
+          <Col justify="center" align="middle">
+            <br>
+            <Avatar shape="square" style="background-color: yellow" size="150">{{ account.username[0] || '' }}</Avatar>
 
-          <h1 :title="$t('account.username')" class="account-username">
-            {{ account.username || 'username' }}
-          </h1>
+            <h1 :title="$t('account.username')" class="account-username">
+              {{ account.username || 'username' }}
+            </h1>
 
-          <Row :gutter="20" type="flex" justify="center" align="middle">
-            <Col>
-              <PrivilegesTag :data="account.privilege" v-if="account.privilege"></PrivilegesTag>
-              <p v-else>-</p>
-              <p class="account-info-p">{{ $t("account.role") }}</p>
-            </Col>
-            <Divider type="vertical"/>
-            <Col>
-              <Tag type="border" size="large" color="primary" v-if="account.joinTime">
-                <Time :time="account.joinTime || new Date()"/>
-              </Tag>
-              <p v-else>-</p>
-              <p class="account-info-p">{{ $t("account.joinedAt") }}</p>
-            </Col>
-            <Divider type="vertical"/>
-            <Col>
-              <Tag type="border" size="large" color="#df22ff" v-if="account.lastOnlineTime" >
-                <Time :time="account.lastOnlineTime || new Date()"/>
-              </Tag>
-              <p v-else>-</p>
-              <p class="account-info-p">{{ $t("account.lastOnlineTime") }}</p>
-            </Col>
-            <Divider type="vertical"/>
-            <Col>
-              <h3>{{ account.reportnum || '-'}}</h3>
-              <p class="account-info-p">{{ $t("account.reportnum") }}</p>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </div>
+            <Row :gutter="20" type="flex" justify="center" align="middle">
+              <Col>
+                <PrivilegesTag :data="account.privilege" v-if="account.privilege"></PrivilegesTag>
+                <p v-else>-</p>
+                <p class="account-info-p">{{ $t("account.role") }}</p>
+              </Col>
+              <Divider type="vertical"/>
+              <Col>
+                <Tag type="border" size="large" color="primary" v-if="account.joinTime">
+                  <Time :time="account.joinTime || new Date()"/>
+                </Tag>
+                <p v-else>-</p>
+                <p class="account-info-p">{{ $t("account.joinedAt") }}</p>
+              </Col>
+              <Divider type="vertical"/>
+              <Col>
+                <Tag type="border" size="large" color="#df22ff" v-if="account.lastOnlineTime" >
+                  <Time :time="account.lastOnlineTime || new Date()"/>
+                </Tag>
+                <p v-else>-</p>
+                <p class="account-info-p">{{ $t("account.lastOnlineTime") }}</p>
+              </Col>
+              <Divider type="vertical"/>
+              <Col>
+                <h3>{{ account.reportnum || '-'}}</h3>
+                <p class="account-info-p">{{ $t("account.reportnum") }}</p>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </div>
 
-    <br/>
+      <br/>
 
-    <div class="content">
-      <Row :gutter="8">
-        <Col :xm="{span: 24, order: 2}" :sm="{span: 7, order: 2}">
-          <Card v-if="account.attr.introduction" dis-shadow>
-            <div v-html="account.attr.introduction"></div>
-          </Card>
-          <br v-if="account.attr.introduction">
+      <div class="content">
+        <Row :gutter="8">
+          <Col :xm="{span: 24, order: 2}" :sm="{span: 7, order: 2}">
+            <Card v-if="account.attr.introduction" dis-shadow>
+              <div v-html="account.attr.introduction"></div>
+            </Card>
+            <br v-if="account.attr.introduction">
 
-          <Card v-if="account.origin && account.origin.originName" dis-shadow>
-            <b>origin id:</b>
-            <p>{{account.origin.originName}}</p>
-          </Card>
-          <br v-if="account.origin && account.origin.originName">
-          <br>
-          <p class="hint">{{ $t("account.hint2") }}</p>
-          <p class="hint">{{ $t("account.hint3") }}</p>
-        </Col>
-        <Col :xm="{span: 24, order: 1}" :sm="{span: 17, order: 1}">
-          <Card dis-hover :padding="0">
-            <Table show-header
-                   :border="false"
-                   :no-data-text="$t('basic.tip.noReports')"
-                   :columns="report.columns"
-                   :data="report.data"></Table>
-          </Card>
+            <Card v-if="account.origin && account.origin.originName" dis-shadow>
+              <b>origin id:</b>
+              <p>{{account.origin.originName}}</p>
+            </Card>
+            <br v-if="account.origin && account.origin.originName">
+            <br>
+            <p class="hint">{{ $t("account.hint2") }}</p>
+            <p class="hint">{{ $t("account.hint3") }}</p>
+          </Col>
+          <Col :xm="{span: 24, order: 1}" :sm="{span: 17, order: 1}">
+            <Card dis-hover :padding="0">
+              <Table show-header
+                     :border="false"
+                     :no-data-text="$t('basic.tip.noReports')"
+                     :columns="report.columns"
+                     :data="report.data"></Table>
+            </Card>
 
-          <br/>
-          <Page
-              :page-size="limit"
-              show-total
-              :current="page"
-              @on-change="getReports"
-              :total="total"
-              class="page"
-              size="small"/>
-        </Col>
-      </Row>
-    </div>
+            <br/>
+            <Page
+                :page-size="limit"
+                show-total
+                :current="page"
+                @on-change="getReports"
+                :total="total"
+                class="page"
+                size="small"/>
+          </Col>
+        </Row>
+      </div>
 
-    <Modal v-model="message.show"  @on-ok="setMessage">
-      <Form>
-        <FormItem label="聊天">
-          <Input v-model="message.content"
-                 type="textarea" :autosize="{minRows: 5,maxRows: 10}"></Input>
-        </FormItem>
-      </Form>
-    </Modal>
+      <Modal v-model="message.show"  @on-ok="setMessage">
+        <Form>
+          <FormItem label="聊天">
+            <Input v-model="message.content"
+                   type="textarea" :autosize="{minRows: 5,maxRows: 10}"></Input>
+          </FormItem>
+        </Form>
+      </Modal>
+    </template>
+    <template v-else>
+      <div align="center">
+        <Empty></Empty>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
 import BFBAN from "../assets/js/bfban";
+import Empty from "@/components/Empty";
 import {api, http, http_token} from '../assets/js/index'
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
@@ -238,7 +246,7 @@ export default new BFBAN({
   watch: {
     $route: "loadData",
   },
-  components: { PrivilegesTag },
+  components: { PrivilegesTag,Empty },
   created() {
     this.http = http_token.call(this);
 
@@ -254,6 +262,8 @@ export default new BFBAN({
      * 获取用户信息
      */
     getUserInfo (uId) {
+      this.$Loading.start();
+
       http.get(api["user_info"], {
         params: {
           id: uId
@@ -261,17 +271,21 @@ export default new BFBAN({
       }).then((res) => {
         const d = res.data;
 
-        if (d.success === 1) {
-          this.account = d.data;
-        } else {
-          this.account = "";
-          this.$Message.warning(d.msg);
-        }
-
-        if ( this.$route.query.repeat) {
+        if (this.$route.query.repeat) {
           this.openMessage()
         }
 
+        if (d.success === 1) {
+          this.account = d.data;
+          return;
+        }
+
+        this.account = "";
+        this.$Message.warning(d.code);
+
+      }).catch(err => {
+        this.$Loading.error();
+      }).finally(() =>{
         this.getReports()
       });
     },
@@ -354,6 +368,8 @@ export default new BFBAN({
           this.report.data = reportData;
           this.total = Number(this.account.reportnum);
         }
+      }).finally(() => {
+        this.$Loading.finish();
       });
     },
   },

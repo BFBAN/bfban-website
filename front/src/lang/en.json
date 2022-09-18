@@ -83,6 +83,7 @@
 			"commit": "Commit",
 			"save": "Save",
 			"submit": "Submit",
+			"insert": "Insert",
 			"reset": "Reset",
 			"cancel": "Cancel",
 			"prev": "Previous step",
@@ -92,6 +93,29 @@
 	"captcha": {
 		"get": "Get captcha",
 		"title": "Captcha"
+	},
+	"textarea": {
+		"originalImage": "The original image",
+		"type": {
+			"upload": "Upload to the chart bed",
+			"url": "Image links",
+			"media": "Media library"
+		},
+		"steps": {
+			"upload": {
+				"0": "Select the file",
+				"1": "Editor",
+				"2": "To view"
+			},
+			"url": {
+				"0": "Fill in the picture address",
+				"1": "To view"
+			},
+			"media": {
+				"0": "Select",
+				"1": "To view"
+			}
+		}
 	},
 	"header": {
 		"index": "Home",
@@ -200,16 +224,7 @@
 		"media": {
 			"title": "Media library",
 			"capacity": "Capacity",
-			"fileNum": "{num} file",
-			"steps": {
-				"0": "选择文件",
-				"1": "编辑",
-				"2": "查看"
-			},
-			"types": {
-				"0": "图片链接",
-				"1": "上传到图床"
-			}
+			"fileNum": "{num} file"
 		},
 		"history": {
 			"title": "History log"

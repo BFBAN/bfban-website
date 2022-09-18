@@ -14,7 +14,8 @@ export default class Print {
     ];
 
     log (v) {
-        var that = this;
+        const that = this;
+        if ( (process.env.NODE_ENV || 'development') == 'development') return;
         console.log('%c' + v, that.styles.join(';') );
     }
 }

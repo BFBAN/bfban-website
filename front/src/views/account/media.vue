@@ -105,7 +105,7 @@ export default {
      */
     getMediaList() {
       this.http.get(api["service_myFiles"], {
-        par: {
+        params: {
           limit: 0,
           skip: 0,
         }
@@ -132,7 +132,8 @@ export default {
 
       http.get(api["service_file"], {
         params: {
-          filename: name
+          filename: name,
+          explain: true
         }
       }).then(res => {
         const d = res.data;

@@ -1379,6 +1379,7 @@ export default new BFBAN({
      * 重置前端评论内容值
      */
     cancelReply() {
+      this.replyModal = false;
       this.reply = {
         content: '',
         captchaUrl: {

@@ -14,20 +14,29 @@
         useCustomImageHandler />
     <p style="text-align: right; padding-right: 10px" v-if="maxlength">{{editorContent.length || 0}}/{{maxlength}}</p>
 
-
     <Modal v-model="updataPlane" width="60%">
       <br>
       <Steps :current="currentindex" v-if="currentindex != -5">
-        <Step :title="$t('profile.media.steps.0')"></Step>
-        <Step :title="$t('profile.media.steps.1')" v-if="currentType == 1"></Step>
-        <Step :title="$t('profile.media.steps.2')"></Step>
+        <template v-if="currentType == 0">
+          <Step :title="$t('textarea.steps.url.0')"></Step>
+          <Step :title="$t('textarea.steps.url.1')"></Step>
+        </template>
+        <template v-else-if="currentType == 1">
+          <Step :title="$t('textarea.steps.upload.0')"></Step>
+          <Step :title="$t('textarea.steps.upload.1')"></Step>
+          <Step :title="$t('textarea.steps.upload.2')"></Step>
+        </template>
+        <template v-else-if="currentType == 2">
+          <Step :title="$t('textarea.steps.upload.0')"></Step>
+          <Step :title="$t('textarea.steps.upload.1')"></Step>
+        </template>
       </Steps>
 
       <div v-show="currentindex == 0">
         <Select v-model="currentType" style="margin: 40px 0 0 0">
-          <Option value="0">{{ $t('profile.media.types.0') }}</Option>
-          <Option value="1">{{ $t('profile.media.types.1') }}</Option>
-<!--          <Option value="2">{{ $t('profile.media.title') }}</Option>-->
+          <Option value="0">{{ $t('textarea.type.url') }}</Option>
+          <Option value="1">{{ $t('textarea.type.upload') }}</Option>
+          <Option value="2">{{ $t('textarea.type.media') }}</Option>
         </Select>
 
         <template v-if="currentType == '0'">
@@ -64,7 +73,20 @@
         </template>
 
         <template v-if="currentType == '2'">
-          <MediaPage></MediaPage>
+          <Card dis-hover class="media-card" style="height: 300px">
+            <template v-if="media.data.length > 0">
+              <Row v-for="(file, file_index) in media.data" :key="file_index">
+                <Col flex="1">
+                  {{ file.name }}
+                </Col>
+                <Col>
+                  <a href="javascript:void(0)" @click="selectMediaFile(file_index)">{{ $t('basic.button.insert') }}</a>
+                </Col>
+              </Row>
+            </template>
+            <Empty v-else></Empty>
+            <Spin size="large" fix v-show="media.load"></Spin>
+          </Card>
         </template>
       </div>
 
@@ -102,36 +124,36 @@
 
       <!-- 操作面板 S -->
       <div slot="footer">
-        <Row type="flex" align="middle">
+        <Row :gutter="20" type="flex" align="middle">
           <Col>
-              <Button @click="updataPlane = false">取消</Button>
+              <Button @click="updataPlane = false">{{ $t('basic.button.cancel') }}</Button>
           </Col>
           <template v-if="currentindex == 0">
             <Col flex="1">
               <Button @click="currentindex = 2; currentFileType = 'image'"
                       type="primary"
-                      v-if="currentType == 0 || currentType == 2"
-                      :disabled="!insertValue">下一步</Button>
+                      v-if="currentType == 0"
+                      :disabled="!insertValue">{{ $t('basic.button.next') }}</Button>
             </Col>
           </template>
           <template v-if="currentindex == 1">
             <Col flex="1">
-              <Checkbox v-model="ignore">原图</Checkbox>
+              <Checkbox v-model="ignore">{{ $t('textarea.originalImage') }}</Checkbox>
             </Col>
             <Col>
-              <Button @click="currentindex-=1">上一步</Button>
+              <Button @click="currentindex-=1">{{ $t('basic.button.prev') }}</Button>
               <Button @click="onUpload"
                       type="primary"
                       :loading="updataIcon"
-                      :disabled="updataIcon">下一步</Button>
+                      :disabled="updataIcon">{{ $t('basic.button.next') }}</Button>
             </Col>
           </template>
           <Col flex="1" v-else-if="currentindex == 2 || currentindex == -5">
-            <Button @click="currentindex = 0">重置</Button>
+            <Button @click="currentindex = 0">{{ $t('basic.button.reset') }}</Button>
             <Button type="primary"
                     @click="onInsert"
                     :loading="insertLoad"
-                    :disabled="!insertValue">插入</Button>
+                    :disabled="!insertValue">{{ $t('basic.button.commit') }}</Button>
           </Col>
         </Row>
       </div>
@@ -141,15 +163,14 @@
 </template>
 
 <script>
-import { http, regular, upload } from "../assets/js"
-
-import MediaPage from "../../src/views/account/media";
+import {http, regular, upload, print, api, http_token} from "../assets/js"
 
 import Quill from "quill";
 import { quillEditor } from 'vue-quill-editor'
 import { VueCropper }  from 'vue-cropper'
 import atPeople from 'quill-mention-people';
 import getPlaceholderModule from 'quill-placeholder-module'
+import Empty from "@/components/Empty";
 
 import 'quill-mention-people/index.css'
 
@@ -178,8 +199,10 @@ export default {
     },
     toolbar: null
   },
-  components: { quillEditor, VueCropper, MediaPage },
+  components: {Empty, quillEditor, VueCropper },
   created() {
+    this.http = http_token.call(this);
+
     if (this.content)
       this.editorContent = this.content;
 
@@ -187,6 +210,15 @@ export default {
     //   className: 'ql-placeholder-content'  // default
     // }))
     // Quill.register('modules/atPeople',atPeople);
+  },
+  watch: {
+    'currentType': {
+      handler (val, olVal) {
+        if (val == 2)
+          this.getMediaList()
+      },
+      deep: true,
+    }
   },
   data() {
     return {
@@ -255,6 +287,13 @@ export default {
           }
         },
       },
+
+      // media
+      media: {
+        load: false,
+        detail: {},
+        data: []
+      }
     }
   },
   methods: {
@@ -277,6 +316,7 @@ export default {
 
       if (await regular.authImage(this.insertValue) == false) {
         this.$Message.error('Image unavailable :(');
+        this.insertLoad = false;
         return;
       }
 
@@ -298,7 +338,7 @@ export default {
 
       if (this.ignore) {
         // 原图
-        file = that.dataURLtoFile(this.vueCropper.img, this.filename());
+        file = await that.dataURLtoFile(this.vueCropper.img, this.filename());
       } else {
         // 裁剪
         this.$refs.cropper.getCropBlob(async blob => {
@@ -312,11 +352,19 @@ export default {
         });
       }
 
+      this.updataIcon = true;
       // 上传
-      this.insertValue = await upload.on(file).then(() => {
-        this.currentindex += 1;
-      }).catch(() => {
+      this.insertValue = await upload.on(file).then(res => {
+        if (res && res.code && res.code >= 1) {
+          this.currentindex += 1;
+          return;
+        }
+
         this.currentindex = 0;
+        this.$Message.error(res.message)
+      }).catch(err => {
+        this.currentindex = 0;
+        this.$Message.error(err.message)
       }).finally(() => {
         this.updataIcon = false;
       });
@@ -396,6 +444,52 @@ export default {
      */
     filename () {
       return `${new Date().getTime()}${Math.floor(Math.random() * new Date().getTime())}`;
+    },
+    /**
+     * 获取媒体列表
+     */
+    getMediaList () {
+      this.http.get(api["service_myFiles"], {
+        params: {
+          limit: 0,
+          skip: 0,
+        }
+      }).then(res => {
+        const d = res.data;
+        if (d.success === 1) {
+          this.media.data = d.data;
+        }
+      });
+    },
+    /**
+     * 查询文件详情
+     */
+    queryMediaDetail (name) {
+      this.media.load = true;
+      let res = http.get(api["service_file"], {
+        params: {
+          filename: name,
+          explain: true
+        }
+      });
+      this.media.load = false;
+      return res;
+    },
+    /**
+     * 从媒体库插入
+     * @param index
+     */
+    async selectMediaFile (index) {
+      let res = await this.queryMediaDetail(this.media.data[index].name);
+
+      if (res.data.success == 1) {
+        this.insertValue = this.media.data[index].name;
+        this.currentindex += 1;
+        return;
+      }
+
+      this.currentindex = 0;
+      this.$Message.error(res.data.code);
     }
   },
   computed: {
@@ -458,17 +552,21 @@ export default {
   background-color: inherit !important;
 }
 
+.media-card {
+  margin-top: 10px;
+}
+
 .upload-mode {
   margin: 20px 0;
   width: 100%;
   height: 100%;
-}
 
-.upload-mode .upload-mode-content {
-  min-height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  .upload-mode-content {
+    min-height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .cropper-mode {
@@ -485,15 +583,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
-.see-mode img {
-  height: 100%;
-  padding: 20px 0;
-}
+  img {
+    height: 100%;
+    padding: 20px 0;
+  }
 
-.see-mode input {
-  width: calc(100% - 120px) !important;
-  margin: 0 60px;
+  input {
+    width: calc(100% - 120px) !important;
+    margin: 0 60px;
+  }
 }
 </style>
