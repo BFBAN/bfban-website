@@ -45,7 +45,7 @@
                 </Tag>
 
                 <!-- 被举报的游戏 S -->
-                <router-link :to="{name: 'player_list', query: { game: cheater.games }}" v-if="cheater.games">
+                <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}" v-if="cheater.games">
                   <Tag color="gold" :alt="$t('detail.info.reportedGames')"
                        v-for="(game,gameindex) in cheater.games" :key="gameindex">
                     {{ $t(`basic.games.${game}`, {game: game}) }}
@@ -311,7 +311,7 @@
                           <!-- 在 -->
                           {{ $t('detail.info.inGame') }}
 
-                          <router-link :to="{name: 'player', query: {game: `${l.cheatGame}`} }">
+                          <router-link :to="{name: 'player', query: {game: l.cheatGame, status: -1 } }">
                             {{ l.cheatGame }}
                           </router-link>
 
@@ -1021,6 +1021,8 @@ export default new BFBAN({
   },
   methods: {
     async loadData() {
+      this.$Loading.start();
+
       // set Token Http mode
       this.http = http_token.call(this);
 
@@ -1035,8 +1037,14 @@ export default new BFBAN({
         this.verify.status = this.verify.choice[0].value;
       });
 
-      this.getPlayerInfo();
-      this.getTimeline();
+      Promise.all([
+        this.getPlayerInfo(),
+        this.getTimeline()
+      ]).then(_ => {
+        this.$Loading.finish();
+      }).catch(err => {
+        this.$Loading.error();
+      });
     },
     onAvatarError () {
       this.cheater.avatarLink = "";

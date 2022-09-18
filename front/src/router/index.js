@@ -212,9 +212,9 @@ const routes = [
     {name: 'cheater_share', path: '/player/:ouid/share',
         meta: {
             metaInfo : {
-                title: 'cheater_share.title',
+                title: 'share.title',
                 keywords: "cheater,share,card,player",
-                description: 'cheater_share.description'
+                description: 'share.title'
             }
         },
         component: DetailShare
@@ -224,9 +224,9 @@ const routes = [
     {name: 'cheater_app', path: '/player/:ouid/app',
         meta:{
             metaInfo : {
-                title: 'cheater_app.title',
+                title: 'detail.info.app_qr.title',
                 keywords: "app ios android",
-                description: 'cheater_app.description'
+                description: 'detail.info.app_qr.title'
             }
         },
         component: DetailApp
@@ -236,9 +236,9 @@ const routes = [
     {name: 'cheater_share_card', path: '/player/:ouid/share/card',
         meta:{
             metaInfo : {
-                title: 'cheater_share_card.title',
+                title: 'detail.info.app_qr.title',
                 keywords: "cheater,share,card",
-                description: 'cheater_share_card.description'
+                description: 'detail.info.app_qr.title'
             }
         },
         component: DetailCard
