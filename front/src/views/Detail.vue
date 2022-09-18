@@ -557,6 +557,7 @@
                   </Row>
                 </div>
                 <Textarea v-model="reply.content"
+                          ref="replyTextarea"
                           :toolbar="['bold', 'link']"
                           :height="'120px'"
                           :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
@@ -1400,13 +1401,16 @@ export default new BFBAN({
       let data = {
         data: {
           toPlayerId: cheaterId,
-          // 回复 评论dbID
-          toCommentId: this.timelineList[this.reply.toFloor].id ?? null,
+          toCommentId: null,
           content: content,
         },
         encryptCaptcha: this.reply.captchaUrl.hash,
         captcha: this.reply.captcha,
       };
+
+      // 回复 评论dbID
+      if (this.reply.toFloor)
+        data.data.toCommentId = this.timelineList[this.reply.toFloor].id;
 
       if (toFloor) {
         data.data['toFloor'] = toFloor;
@@ -1426,6 +1430,10 @@ export default new BFBAN({
           this.cheater.status = status;
           this.reply.toFloor = "";
           this.reply = "";
+
+          // Actively update text
+          if (this.$refs.replyTextarea)
+            this.$refs.replyTextarea.updateContent('');
           return;
         }
 
