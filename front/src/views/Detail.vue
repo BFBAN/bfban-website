@@ -40,7 +40,7 @@
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col flex="1">
-                <Tag color="error" v-if="cheater.status">
+                <Tag color="error" v-if="cheater.status >= 0">
                   {{ $t(`basic.status.${cheater.status || 0}`) }}
                 </Tag>
 
@@ -908,7 +908,7 @@
 <script>
 import BFBAN from "/src/assets/js/bfban";
 
-import {api, http, http_token, util, storage, account_storage} from '../assets/js/index'
+import {api, http, http_token, util, time, storage, account_storage} from '../assets/js/index'
 
 import Empty from '../components/Empty.vue'
 import Textarea from "../components/Textarea";
@@ -935,6 +935,8 @@ export default new BFBAN({
       },
       cheater: {
         originId: '',
+        createTime: time.appStart(),
+        updateTime: time.appStart()
       },
       reply: {
         cheaterId: '',

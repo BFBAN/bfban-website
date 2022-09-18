@@ -46,7 +46,7 @@
                 </Col>
               </Row>
               <br>
-              <p>{{ $t("home.cover.endTime") }}</p>
+              <p>{{ $t("home.cover.endTime", {time: bannerTime }) }}</p>
               <br>
             </Col>
             <Col span="16" class="mobile-hide" :lg="{span: 14, push: 1}" type="flex" align="center" justify="center"
@@ -157,12 +157,13 @@
 import BFBAN from "../assets/js/bfban";
 import Tell from "../components/Home_tell";
 import Weekly from "./Weekly";
-import {api, http, util, regular} from '../assets/js/index'
+import {api, http, util, time, regular} from '../assets/js/index'
 
 export default new BFBAN({
   data() {
     return {
       bannerImage: '',
+      bannerTime: time.appStart(),
 
       activityLoad: false,
       activities: [],

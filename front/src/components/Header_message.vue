@@ -70,7 +70,6 @@ export default {
 
       this.http.get(api["user_message"], {}).then(res => {
         const d = res.data;
-        console.log(res)
         if(d.code == 'user.tokenExpired') {
           account_storage.clearAll();
           return

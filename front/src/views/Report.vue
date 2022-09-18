@@ -104,10 +104,10 @@
                       <span v-else>ID</span>
                     </div>
                     <p class="hint">
-                      {{ $t("report.info.idNotion1", {msg: "idNotion1"}) }}
+                      {{ $t("report.info.idNotion1") }}
                     </p>
                     <p class="hint">
-                      {{ $t("report.info.idNotion2", {msg: "idNotion2"}) }}
+                      {{ $t("report.info.idNotion2") }}
                     </p>
                   </Card>
                 </FormItem>
@@ -137,9 +137,9 @@
                   <Row :gutter="30">
                     <Col span="12">
                       <Alert type="warning">
-                        {{ $t("report.info.uploadManual1", {msg: "uploadManual1",}) }}
+                        {{ $t("report.info.uploadManual1") }}
                         <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
-                          $t("report.info.uploadManual2", {msg: "uploadManual2",})
+                          $t("report.info.uploadManual2")
                         }}
                       </Alert>
 
@@ -176,7 +176,7 @@
                         <Icon type="md-add"/>
                         <span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 10)</span>
                       </Button>
-                      <span class="hint">{{ $t("report.info.uploadManual3", {msg: "uploadManual3",}) }}</span>
+                      <span class="hint">{{ $t("report.info.uploadManual3") }}</span>
                       <!-- 视频链接 E -->
                     </Col>
                   </Row>
