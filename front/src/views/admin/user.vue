@@ -7,21 +7,37 @@
       <Col flex="1">
       </Col>
       <Col>
-        <div v-show="load">
-          <Icon type="ios-loading"></Icon>
-        </div>
+        <Select v-model="userOrder.value" @on-change="getUserList">
+          <Option :value="i.value" v-for="(i,index) in userOrder.list" :key="index">
+            {{i.title}}
+          </Option>
+        </Select>
       </Col>
       <Col>
-        <Input v-model="userValue"
-               type="text"
-               search
-               enter-button
-               @on-enter="onSearchUser"
-               @on-search="onSearchUser"
-               placeholder="input user name"
-               style="width: 280px" >
-        </Input>
+        <Select v-model="userType.value" @on-change="getUserList">
+          <Option :value="i.value" v-for="(i,index) in userType.list" :key="index">
+            {{i.title}}
+          </Option>
+        </Select>
       </Col>
+      <template v-if="userType.value == 'all'">
+        <Col>
+          <div v-show="load">
+            <Icon type="ios-loading"></Icon>
+          </div>
+        </Col>
+        <Col>
+          <Input v-model="userValue"
+                 type="text"
+                 search
+                 enter-button
+                 @on-enter="onSearchUser"
+                 @on-search="onSearchUser"
+                 placeholder="input user name"
+                 style="width: 280px" >
+          </Input>
+        </Col>
+      </template>
     </Row>
     <br>
 
@@ -274,7 +290,7 @@
 </template>
 
 <script>
-import {api, http, http_token} from "../../assets/js";
+import {account_storage, api, http, http_token} from "../../assets/js";
 
 import languages from "/public/conf/languages.json";
 
@@ -291,6 +307,15 @@ export default new BFBAN({
       delUserLoad: false,
       delTypes: ['logic', 'real', 'restore'],
       delTypeValue: 'logic',
+
+      userType: {
+        value: 'all',
+        list: [{title: 'All', value: 'all'}, {title: 'Admin`s', value: 'admin'}]
+      },
+      userOrder: {
+        value: 'desc',
+        list: [{title:'Asc', value: 'asc'}, {title: 'Desc', value: 'desc'}]
+      },
 
       addUserLoad: false,
       load: false,
@@ -329,7 +354,7 @@ export default new BFBAN({
       languages: languages.child,
 
       skip: 1,
-      limit: 20,
+      limit: 40,
       order: 'desc',
       total: 0,
     }
@@ -338,7 +363,7 @@ export default new BFBAN({
   created() {
     this.http = http_token.call(this);
 
-    this.onSearchUser();
+    this.getUserList();
   },
   methods: {
     /**
@@ -369,6 +394,13 @@ export default new BFBAN({
      */
     onAddUserSubmit () {
       const {username, password} = this.addUserData;
+
+      if (
+          !account_storage.checkPrivilegeGroup(  this.currentUser.userinfo, ['super', 'root', 'dev'] )
+      ) {
+        this.$Message.error(this.$i18n.t('basic.tip.noAccess'))
+        return;
+      }
 
       this.$refs.addUserFormValidate.validate((valid) => {
         // 检查表单
@@ -426,7 +458,7 @@ export default new BFBAN({
 
         this.$Message.error(d.code);
       }).finally(() => {
-        this.onSearchUser();
+        this.getUserList();
 
         this.delUserLoad = false;
         this.delUserModel = false;
@@ -472,9 +504,17 @@ export default new BFBAN({
         this.$refs.privilegesTag.update();
     },
     /**
+     * 精准名称搜索
+     */
+    onSearchUser () {
+      this.getUserList().finally(() => {
+        this.onReset()
+      });
+    },
+    /**
      * 站内用户搜索
      */
-    async onSearchUser () {
+    async getUserList () {
       const that = this;
       let params = { name: '', skip: this.skip - 1, limit: this.limit };
 
@@ -483,10 +523,12 @@ export default new BFBAN({
 
         if (this.userValue)
           params.name = this.userValue;
+        if (this.userType.value)
+          params.type = this.userType.value;
+        if (this.userOrder.value)
+          params.order = this.userOrder.value
 
-        this.onReset();
-
-        that.http.get("admin/searchUser", {
+        that.http.get(api["admin_searchUser"], {
           params,
         }).then(res => {
           const d = res.data;
@@ -500,10 +542,15 @@ export default new BFBAN({
           that.$Message.error(d.code);
         }).finally(() => {
           that.load = false;
+
           resolve();
         });
       })
     },
+    /**
+     * 编辑用户
+     * @param index
+     */
     onEditUser (index) {
       this.userEditModel = true;
       this.editUserData = Object.assign(this.editUserData, this.userListData[index]);
@@ -566,13 +613,13 @@ export default new BFBAN({
         })
       })
     },
-    handlePageChange (val) {
-      this.skip = val;
-      this.onSearchUser();
+    handlePageChange (num) {
+      this.skip = num;
+      this.getUserList();
     },
-    handlePageSizeChange(val) {
-      this.skip = val;
-      this.onSearchUser();
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getUserList();
     },
     onReset () {
       this.skip = 1;

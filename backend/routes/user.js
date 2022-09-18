@@ -270,6 +270,7 @@ async (req, res, next)=> {
             expiresTime: new Date(Date.now()+1000*60*60*4), // 4h
             createTime: new Date()
         });
+
         await sendBindingOriginVerify(req.user.username, originEmail, req.user.attr.language, encodeURIComponent(code));
 
         logger.info('users.bindOrigin#1 Success:', {name: req.user.username, email: originEmail});
@@ -410,7 +411,6 @@ router.post('/me', verifyJWT, forbidPrivileges(['blacklisted']), [
                 throw new Error('Bad input');
         return true;
     }),
-    checkbody('data.introduction').optional({nullable: true}).isString().isLength({min: 0, max: 100}),
     checkbody('data.attr').optional({nullable: true}).isObject(),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */ 
 async (req, res, next)=>{
@@ -423,14 +423,14 @@ async (req, res, next)=>{
 
         if(req.body.data.subscribes)
             update.subscribes = JSON.stringify(req.body.data.subscribes.map(i=>i-0)); // to number
-        if(req.body.data.introduction)
-            req.body.data.attr.introduction = req.body.data.introduction;
         if(req.body.data.attr)
             update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
 
         await db('users').update(update).where({id: req.user.id});
+
         if (req.body.data.attr)
             update.attr = userSetAttributes({}, req.body.data.attr);
+
         res.status(200).json({success: 1, code: 'me.success', data: update});
     } catch(err) {
         next(err);

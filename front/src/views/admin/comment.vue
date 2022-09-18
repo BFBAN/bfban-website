@@ -141,12 +141,13 @@
 </template>
 
 <script>
-import {api, http, http_token, util} from "../../assets/js";
+import {account_storage, api, http, http_token, util} from "../../assets/js";
 
 import BusinessCard from "@/components/businessCard";
 import Textarea from "@/components/Textarea";
+import BFBAN from "@/assets/js/bfban";
 
-export default {
+export default new BFBAN({
   data () {
     return {
       commentEditModel: false,
@@ -199,6 +200,13 @@ export default {
       this.getCommentList();
     },
     openCommentMode (index) {
+      if (
+          !account_storage.checkPrivilegeGroup(  this.currentUser.userinfo, ['super', 'root', 'dev'] )
+      ) {
+        this.$Message.error(this.$i18n.t('basic.tip.noAccess'))
+        return;
+      }
+
       this.editCommentFrom = this.commentList[index];
 
       if (this.$refs.commentTextarea)
@@ -222,6 +230,13 @@ export default {
      */
     commentSubmit () {
       if (!this.editCommentFrom.id || !this.editCommentFrom.content || !this.editCommentFrom.videoLink) return;
+
+      if (
+          !account_storage.checkPrivilegeGroup(  this.currentUser.userinfo, ['super', 'root', 'dev'] )
+      ) {
+        this.$Message.error(this.$i18n.t('basic.tip.noAccess'))
+        return;
+      }
 
       this.http.post(api['admin_setComment'], {
         data: {
@@ -276,5 +291,5 @@ export default {
       })
     },
   }
-}
+})
 </script>

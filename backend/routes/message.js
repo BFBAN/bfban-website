@@ -34,24 +34,31 @@ async (req, res, next)=> {
         const result = {messages:[], total:0};
         switch(box) {
         case 'in':
-            result.messages = await db.select('*').from('messages')
-            .whereIn('type', ['reply','info','direct','warn','fatal'])
-            .andWhere({toUserId: req.user.id})
-            .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit);
+            result.messages = await db('messages')
+                .join('users', 'messages.byUserId', 'users.id')
+                .select('messages.*', 'users.username')
+                .whereIn('type', ['reply','info','direct','warn','fatal'])
+                .andWhere({toUserId: req.user.id})
+                .andWhere('messages.createTime','>=',new Date(from))
+                .orderBy('id', 'desc')
+                .offset(skip).limit(limit);
+
             result.total = await db('messages').count({num: 'id'})
-            .whereIn('type', ['reply','info','direct','warn','fatal'])
-            .andWhere({toUserId: req.user.id})
-            .andWhere('createTime','>=',new Date(from)).first().then(r=>r.num);
+                .whereIn('type', ['reply','info','direct','warn','fatal'])
+                .andWhere({toUserId: req.user.id})
+                .andWhere('createTime','>=',new Date(from)).first()
+                .then(r=>r.num);
             break;
         case 'out':
             result.messages = await db.select('*').from('messages')
-            .whereIn('type', ['direct','warn','fatal'])
-            .andWhere({byUserId: req.user.id})
-            .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit); 
+                .whereIn('type', ['direct','warn','fatal'])
+                .andWhere({byUserId: req.user.id})
+                .andWhere('createTime','>=',new Date(from)).orderBy('id', 'desc').offset(skip).limit(limit);
+
             result.total = await db('messages').count({num: 'id'})
-            .whereIn('type', ['direct','warn','fatal'])
-            .andWhere({byUserId: req.user.id})
-            .andWhere('createTime','>=',new Date(from)).first().then(r=>r.num);
+                .whereIn('type', ['direct','warn','fatal'])
+                .andWhere({byUserId: req.user.id})
+                .andWhere('createTime','>=',new Date(from)).first().then(r=>r.num);
             break;
         case 'announce':
             result.messages = [];
@@ -200,7 +207,6 @@ async function sendMessage(from, to, type, content) {
     });
 }
 
-
 async function localeMessage(namepath='', lang='en', params) {
     let msgs = JSON.parse(await readFile(path.resolve(config.baseDir, './media/messages.json')));
     for(const i of namepath.split('.'))
@@ -211,7 +217,7 @@ async function localeMessage(namepath='', lang='en', params) {
         Object.keys(params).forEach(i=>{
             text = text
                 .replace(new RegExp(`{${i}}`, 'g'), params[i])
-                .replaceAll(/\{website\}/g, config.mail.origin);
+                .replaceAll(/\{website\}/g, config.mail.domain.origin);
         });
     return text;
 }

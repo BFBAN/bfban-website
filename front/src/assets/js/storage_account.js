@@ -99,4 +99,22 @@ export default class AccountStorage extends Storage {
         if (data.code < 0) return false;
         return key in data.data.value ? data.data.value[key] : false;
     }
+
+    /**
+     * 检查权限组
+     * @param currentGroup 当前身份租
+     * @param adminGroup 检查是否包含的身份
+     * @returns {boolean}
+     */
+    checkPrivilegeGroup (currentGroup, adminGroup = ['root', 'admin', 'super', 'dev']) {
+        let isBool = false;
+        const user = currentGroup;
+        if (!user) return false;
+        for (const i of adminGroup) {
+            for (const j of user?.privilege){
+                if (j == i) isBool = true;
+            }
+        }
+        return Boolean(isBool);
+    }
 }

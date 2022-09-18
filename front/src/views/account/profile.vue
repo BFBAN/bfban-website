@@ -51,7 +51,7 @@
                   {{ $t("header.userCenter") }}
                   <Icon type="ios-link"/>
               </MenuItem>
-              <MenuItem name="admin" v-if="isAdmin" :to="{name: 'admin', params: { pagename: 'user' }}">
+              <MenuItem name="admin" v-if="isAdmin" :to="{name: 'admin', params: { pagename: 'home' }}">
                   {{ $t("profile.admin.title") }}
                   <Icon type="ios-link"/>
               </MenuItem>

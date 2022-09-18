@@ -55,8 +55,9 @@
     "tip": {
       "notlang": "未翻译",
       "notcontent": "无内容",
-      "notFound": "哎列，访问地址似乎走失",
-      "noReports": "还没有任何举报"
+      "notFound": "哎列, 访问地址似乎走失",
+      "noReports": "还没有任何举报",
+      "noAccess": "当前账户, 无权限"
     },
     "games": {
       "all": "所有",
@@ -215,8 +216,10 @@
     "admin": {
       "title": "管理后台",
       "menu": {
+        "home": "管理主页",
         "management": "内容",
         "user": "用户管理",
+        "message": "消息",
         "comment": "评论管理",
         "log": "日志",
         "adminLog": "管理日志",
@@ -425,7 +428,7 @@
       "subButton": "了解有那些社区已经加入",
       "dataReceived": "已收到",
       "confirmData": "确认作弊者",
-      "endTime": "截止2018年11月4日"
+      "endTime": "截止 {time}"
     },
     "activity": {
       "title": "网站动态",

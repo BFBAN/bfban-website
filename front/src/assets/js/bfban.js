@@ -1,6 +1,7 @@
 import packageInfo from '../../../package.json';
 import Print from './print';
 import Regular from "@/assets/js/regular";
+import {storage, account_storage} from "@/assets/js/index";
 
 export default class BFBAN extends Print {
     BFBANLOG = window.BFBANLOG;
@@ -22,16 +23,10 @@ export default class BFBAN extends Print {
     }
 
     isAdmin () {
-        let isBool = false;
-        const user = this.$store.state?.user?.userinfo;
-        const adminGroup = ['root', 'admin', 'super', 'dev'];
-        if (!user) return false;
-        for (const i of adminGroup) {
-            for (const j of user?.privilege){
-                if (j == i) isBool = true;
-            }
-        }
-        return Boolean(isBool);
+        return account_storage.checkPrivilegeGroup(
+            this.$store.state?.user?.userinfo,
+            ['root', 'admin', 'super', 'dev']
+        );
     }
 
     isLogin() {
@@ -43,7 +38,7 @@ export default class BFBAN extends Print {
     }
 
     currentUser() {
-        return this.$store.state.user|| {token: ''}
+        return this.$store.state.user || {token: ''}
     }
 
     currentLan() {

@@ -25,7 +25,7 @@
                       <Badge :count="messageList[i.type]['num'] || 0" v-if="messageList[i.type]">
                         <Avatar icon="md-notifications"></Avatar>
                       </Badge>
-                      <Avatar icon="md-notifications" v-else> {{ i.text[0] }} </Avatar>
+                      <Avatar icon="md-notifications" v-else> {{ i.text[0] }}</Avatar>
                     </Col>
                     <Col flex="1">
                       <p><b>{{ i.text.toString() }}</b></p>
@@ -413,7 +413,7 @@ export default new BFBAN({
 
                 if (num <= 0) {
                   messageUser.push({
-                    text: i.byUserId,
+                    text: i.username || i.byUserId,
                     value: i.byUserId,
                     type: i.type
                   });

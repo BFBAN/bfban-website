@@ -16,18 +16,41 @@
       <Row :gutter="0">
         <Col :xs="{span: 24}" :sm="{span: 6}">
           <Menu class="admin-menu" :mode="isMobile ? 'horizontal' : 'vertical'" :open-names="openMuen" :active-name="adminMenuValue" @on-select="onMenuActive">
+            <MenuItem name="home">
+              {{ $t('profile.admin.menu.home')}}
+            </MenuItem>
+
             <MenuGroup :title="$t('profile.admin.menu.' + i.title)" v-for="(i, index) in adminMuen" :key="index">
-              <MenuItem :name="j.value" v-for="(j, j_index) in i.child" :key="j_index">
-                <Icon :type="j.icon" v-if="j.icon" />  {{ $t('profile.admin.menu.' + j.title)}}
+              <MenuItem :name="j.value" v-for="(j, j_index) in i.child" :key="j_index" v-show="j.disabled">
+                <Row>
+                  <Col flex="1">
+                    <Icon :type="j.icon" v-if="j.icon" />  {{ $t('profile.admin.menu.' + j.title)}}
+                  </Col>
+                  <Col v-if="!j.ignore">
+                    <Poptip trigger="hover" transfer>
+                      <Icon type="md-help-circle" />
+                      <PrivilegesTag :data="j.privilege" slot="content"></PrivilegesTag>
+                    </Poptip>
+                  </Col>
+                </Row>
               </MenuItem>
             </MenuGroup>
           </Menu>
         </Col>
         <Col :xs="{span: 24}" :sm="{span: 18}" style="padding: 20px">
-          <user v-if="adminMenuValue == 'user'"></user>
+          <div v-if="adminMenuValue == 'home'" class="admin-content">
+            <h1>{{ currentUser.userinfo.username }}</h1>
+            <p>({{ currentUser.userinfo.userId }})</p>
+            <br>
+            <p>
+              <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
+            </p>
+          </div>
+          <user v-else-if="adminMenuValue == 'user'"></user>
           <comment v-else-if="adminMenuValue == 'comment'"></comment>
           <log v-else-if="adminMenuValue == 'admin_log'"></log>
           <judgementLog v-else-if="adminMenuValue == 'judgement_log'"></judgementLog>
+          <messageLog v-else-if="adminMenuValue == 'message_Log'"></messageLog>
         </Col>
       </Row>
     </Card>
@@ -39,7 +62,11 @@ import user from "./user"
 import comment from "./comment"
 import log from "./log"
 import judgementLog from "@/views/admin/judgementLog";
+import messageLog from "@/views/admin/messageLog";
 import BFBAN from "@/assets/js/bfban";
+import PrivilegesTag from "@/components/PrivilegesTag";
+
+import {account_storage} from "@/assets/js";
 
 export default new BFBAN({
   name: "profile",
@@ -47,19 +74,34 @@ export default new BFBAN({
     return {
       privileges: [],
       openMuen: ['comment','comm', 'log'],
-      adminMenuValue: 'user',
+      adminMenuValue: 'home',
       adminMuen: [
+        // {
+        //   title: 'welcome',
+        //   child: [
+        //     {
+        //       title: 'home',
+        //       value: 'home',
+        //       ignore: true
+        //     }
+        //   ]
+        // },
         {
           title: 'management',
-          child: [{
-            title: 'user',
-            value:'user',
-          },
+          child: [
+            {
+              title: 'user',
+              value:'user',
+              disabled: false,
+              privilege: ['super', 'root', 'dev'],
+            },
             {
               title: 'comment',
               value: 'comment',
-              // icon: 'ios-paper'
-            }]
+              disabled: false,
+              privilege: ['super', 'root', 'dev'],
+            }
+          ]
         },
         {
           title: 'log',
@@ -67,24 +109,28 @@ export default new BFBAN({
           child: [
             {
               title: 'adminLog',
-              value: 'admin_log'
+              value: 'admin_log',
+              disabled: false,
+              privilege: ['admin','super', 'root', 'dev'],
             },
             {
               title: 'judgementLog',
-              value: 'judgement_log'
+              value: 'judgement_log',
+              disabled: false,
+              privilege: ['admin','super', 'root', 'dev'],
+            },
+            {
+              title: 'message',
+              value: 'message_Log',
+              disabled: false,
+              privilege: ['super', 'root', 'dev'],
             }
           ]
         }
       ]
     }
   },
-  components: {user, comment , log,judgementLog},
-  methods: {
-    onMenuActive(name) {
-      this.adminMenuValue = name;
-      this.$router.push({name: 'admin', params: {pagename: name}})
-    }
-  },
+  components: { user,comment,log,judgementLog,messageLog,PrivilegesTag },
   created() {
     const {pagename} = this.$route.params;
 
@@ -93,7 +139,25 @@ export default new BFBAN({
       return;
     }
 
+    for (let i = 0; i < this.adminMuen.length; i++) {
+      if (this.adminMuen[i].child)
+      for (let j = 0; j < this.adminMuen[i].child.length; j++) {
+        if (!this.adminMuen[i].ignore)
+        this.adminMuen[i].child[j].disabled = account_storage.checkPrivilegeGroup(
+            this.currentUser.userinfo,
+            this.adminMuen[i].child[j].privilege
+        )
+      }
+    }
+
+
     this.onMenuActive(pagename);
+  },
+  methods: {
+    onMenuActive(name) {
+      this.adminMenuValue = name;
+      this.$router.push({name: 'admin', params: {pagename: name}})
+    }
   },
   computed: {
 
@@ -101,8 +165,7 @@ export default new BFBAN({
 })
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
 .admin-menu,
 .admin {
   min-height: 500px;
@@ -110,5 +173,15 @@ export default new BFBAN({
 
 .admin-menu {
   height: 100%;
+}
+
+.admin-content {
+  height: 100%;
+  padding: 20px 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>

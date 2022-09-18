@@ -3,39 +3,48 @@
   "child": [
     {
       "value": "root",
-      "class": "primary"
+      "class": "primary",
+      "weight": 200
     },
     {
       "value": "admin",
-      "class": "magenta"
+      "class": "magenta",
+      "weight": 40
     },
     {
       "value": "super",
-      "class": "primary"
+      "class": "primary",
+      "weight": 85
     },
     {
       "value": "normal",
-      "class": "success"
+      "class": "success",
+      "weight": 5
     },
     {
       "value": "dev",
-      "class": "blue"
+      "class": "blue",
+      "weight": 20
     },
     {
       "value": "test",
-      "class": "geekblue"
+      "class": "geekblue",
+      "weight": 15
     },
     {
       "value": "bot",
-      "class": "purple"
+      "class": "purple",
+      "weight": 5
     },
     {
       "value": "blacklisted",
-      "class": ""
+      "class": "",
+      "weight": 0
     },
     {
       "value": "freezed",
-      "class": ""
+      "class": "",
+      "weight": 0
     }
   ]
 }
