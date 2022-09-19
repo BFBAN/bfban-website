@@ -1,8 +1,6 @@
 "use strict";
 import EventEmitter from "events";
 import express from "express";
-import webshot from "node-webshot";
-import fs from 'fs';
 import { check, body as checkbody, query as checkquery, validationResult, oneOf as checkOneof } from "express-validator";
 
 import db from "../mysql.js";
@@ -13,6 +11,7 @@ import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth
 import { cheatMethodsSanitizer, handleRichTextInput } from "../lib/user.js";
 import { siteEvent, stateMachine } from "../lib/bfban.js";
 import { userHasRoles } from "../lib/auth.js";
+import { playerWidget } from "../lib/widget.js";
 import { commentRateLimiter, viewedRateLimiter } from "../middleware/rateLimiter.js";
 import serviceApi, { ServiceApiError } from "../lib/serviceAPI.js";
 import logger from "../logger.js";
@@ -883,40 +882,20 @@ async (req, res, next)=>{
     }
 });
 
-router.get('/widget', verifyJWT, allowPrivileges(['admin','super','root', 'bot']), [
+router.get('/widget',verifyJWT, allowPrivileges(['admin','super','root', 'bot']), [
     checkbody('id').optional().isString(),
-    checkbody('uri').optional().isString(),
 ],
 async (req, res, next)=>{
     try {
-        var url = "";
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'widget.bad', message: validateErr.array()});
 
-        if (req.query.url)
-            url = req.query.url;
-
-        var renderStream = webshot(
-            url,
-            {
-                screenSize: {
-                    width: 300,
-                    height: 450
-                },
-                siteType: 'url',
-                quality: 70,
-                renderDelay: 20000,
-            }
-        );
+        let renderStream = await playerWidget(req.query.id);
 
         renderStream.on('data', function(data) {
-            const uint8ToBase64 = Buffer.from(data).toString('base64');
-
-            return res.status(200).json({
-                success: 1,
-                data: 'data:image/png;base64,' + uint8ToBase64
-            });
+            res.writeHead('200', {'Content-Type': 'image/jpeg'});    //写http头部信息
+            res.end(data,'binary');
         });
     } catch(err) {
         next(err);
