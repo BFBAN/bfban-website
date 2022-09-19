@@ -4,7 +4,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/css/app.659b6064.css"
   },
   {
-    "revision": "5c11d53e9aef98e5f189",
+    "revision": "afba3b58337e99db0824",
     "url": "/assets/css/chunk-0219b290.b1bb722a.css"
   },
   {
@@ -184,7 +184,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/app.2.7.0.js"
   },
   {
-    "revision": "5c11d53e9aef98e5f189",
+    "revision": "afba3b58337e99db0824",
     "url": "/assets/js/chunk-0219b290.2.7.0.js"
   },
   {
@@ -460,14 +460,14 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/manifest.json"
   },
   {
-    "url": "/precache-manifest.d0dbbc379afeb97a949270174d41b030.js"
+    "url": "/precache-manifest.1356da8cf973bac4a1c902d4683da705.js"
   },
   {
     "revision": "038bdc3bd76d45725a3efc25dad869e5",
     "url": "/robots.txt"
   },
   {
-    "revision": "d07525123a1ac0b417f33dd19fdd6992",
+    "revision": "afe979fb04cf607fec468bdd7bc62811",
     "url": "/service-worker.js"
   },
   {
