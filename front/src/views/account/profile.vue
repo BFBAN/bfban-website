@@ -64,6 +64,7 @@
           <message v-if="menuValue == 'message'"></message>
           <enhance v-if="menuValue == 'enhance'"></enhance>
           <media v-if="menuValue == 'media'"></media>
+          <voice v-if="menuValue == 'voice'"></voice>
           <history v-if="menuValue == 'history'"></history>
           <subscribes v-if="menuValue == 'subscribes'"></subscribes>
         </Col>
@@ -80,6 +81,7 @@ import account from "./account";
 import message from "./message";
 import enhance from "./enhance";
 import media from "./media";
+import voice from "./voice";
 import history from "./history";
 import subscribes from "./subscribes"
 import {account_storage} from "@/assets/js";
@@ -116,6 +118,11 @@ export default new BFBAN({
               icon: 'ios-videocam'
             },
             {
+              title: 'voice',
+              name: 'voice',
+              icon: 'md-musical-note'
+            },
+            {
               title: 'history',
               name: 'history',
               icon: 'md-filing',
@@ -141,7 +148,7 @@ export default new BFBAN({
       ]
     }
   },
-  components: {appearance, account, message, enhance, media, history, subscribes, PrivilegesTag},
+  components: {appearance, account, message, enhance, media,voice, history, subscribes, PrivilegesTag},
   created() {
     const {pagename} = this.$route.params;
 

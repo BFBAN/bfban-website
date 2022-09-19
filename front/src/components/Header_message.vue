@@ -35,9 +35,10 @@
 </template>
 
 <script>
-import {api, http_token, account_storage} from "../assets/js";
+import {api, http_token, account_storage, message, voice} from "../assets/js";
+import BFBAN from "@/assets/js/bfban";
 
-export default {
+export default new BFBAN({
   name: "Header_message",
   data () {
     return {
@@ -53,6 +54,9 @@ export default {
   },
   created() {
     this.http = http_token.call(this);
+
+    if (this.unReadCount >= 0)
+      message.playMessageVoice()
 
     this.getMessage();
   },
@@ -79,9 +83,6 @@ export default {
       this.message.messages.forEach(i => { if (i.haveRead == 0) num+=1; return i })
       return num;
     },
-    isLogin() {
-      return Boolean(this.$store.state.user);
-    },
   }
-}
+})
 </script>

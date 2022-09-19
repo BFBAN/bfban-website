@@ -46,7 +46,17 @@ export default class AccountStorage extends Storage {
 
     NAME = 'user.configuration';
 
-    // 清除与账户相关数据
+    constructor() {
+        super();
+
+        const conf = super.get(this.NAME);
+        if (conf.code >= 0)
+            store.commit("syncLoaclConfiguration", conf.data.value)
+    }
+
+    /**
+     * 清除与账户相关数据
+     */
     clearAll () {
         this.ACCOUNTDATA.forEach(i => {
             switch (i.type) {
@@ -58,14 +68,6 @@ export default class AccountStorage extends Storage {
                     break;
             }
         })
-    }
-
-    constructor() {
-        super();
-
-        const conf = super.get(this.NAME);
-        if (conf.code >= 0)
-            store.commit("syncLoaclConfiguration", conf.data.value)
     }
 
     /**

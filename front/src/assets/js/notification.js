@@ -1,5 +1,6 @@
 import {NoticeConfig} from "view-design";
 import store from "@/store";
+import message from "@/views/account/message";
 
 export default class NotificationApp {
     constructor() {
@@ -42,6 +43,10 @@ export default class NotificationApp {
                 reject("Bfban: Desktop notification is not enabled")
                 return;
             }
+
+            // 播放声音
+            if (store.state.configuration['voice_message'].state)
+                message.playMessageVoice();
 
             this.init()
                 .then(() => {
