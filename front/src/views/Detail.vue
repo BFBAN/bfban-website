@@ -312,7 +312,7 @@
                           {{ $t('detail.info.inGame') }}
 
                           <router-link :to="{name: 'player', query: {game: l.cheatGame, status: -1 } }">
-                            {{ l.cheatGame }}
+                            {{ $t('basic.games.' + l.cheatGame) }}
                           </router-link>
 
                           <!-- 游戏中 -->
@@ -429,9 +429,9 @@
 
                           {{ $t('detail.info.judge') }}
 
-                          <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${l.judgeAction}.describe`)">
+                          <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${util.queryAction(l.judgeAction)}.describe`)">
                             <Tag color="warning">
-                              {{ $t(`basic.action.${l.judgeAction == 'trash' ? 'invalid' : l.judgeAction}.text`) }}
+                              {{ $t(`basic.action.${util.queryAction(l.judgeAction)}.text`) }}
                             </Tag>
                           </Poptip>
 
@@ -924,6 +924,8 @@ import {formatTextarea, waitForAction} from "@/mixins/common";
 export default new BFBAN({
   data() {
     return {
+      util,
+
       subscribes:{
         load: false,
         static: false

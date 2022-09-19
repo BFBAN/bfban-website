@@ -27,4 +27,31 @@ export default class Util {
         this.cheatMethodsGlossary = list.cheatMethodsGlossary.child;
         return this;
     }
+
+    queryAction (key) {
+        let _key = key;
+        if (this.action.length > 0)
+            for (let i = 0; i < this.action.length; i++) {
+                if (this.action[i].values.includes(key)) _key = this.action[i].value;
+            }
+        return _key;
+    }
+
+    queryCheaterStatus (key) {
+        let _key = key;
+        if (this.cheaterStatus.length > 0)
+            for (let i = 0; i < this.cheaterStatus.length; i++) {
+                if (this.cheaterStatus[i].values.includes(key)) _key = this.cheaterStatus[i].value;
+            }
+        return _key;
+    }
+
+    queryCheatMethodsGlossary (key) {
+        let _key = key;
+        if (this.cheatMethodsGlossary.length > 0)
+            for (let i = 0; i < this.cheatMethodsGlossary.length; i++) {
+                if (this.cheatMethodsGlossary[i].values.includes(key)) _key = this.cheatMethodsGlossary[i].value;
+            }
+        return _key;
+    }
 }

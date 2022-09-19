@@ -34,7 +34,7 @@
                 </BusinessCard>
                 <span> {{ $t('detail.info.judge') }} </span>
                 <a href="javascript:void(0)">{{i.toOriginPersonaId}}</a>
-                <span> {{i.cheatMethods.toString()}} {{ $t(`basic.action.${i.judgeAction}.text`) }} </span>
+                <span> {{i.cheatMethods.toString()}} {{ $t(`basic.action.${util.queryAction(l.judgeAction)}.text`) }} </span>
               </div>
             </Col>
             <Col>
@@ -65,13 +65,15 @@
 </template>
 
 <script>
-import {api, http, http_token} from "../../assets/js";
+import {api, util, http, http_token} from "../../assets/js";
 
 import BusinessCard from "@/components/businessCard";
 
 export default {
   data () {
     return {
+      util,
+
       load: false,
       judgementLog: [],
       limit: 100,

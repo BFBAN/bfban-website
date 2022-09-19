@@ -1,11 +1,9 @@
 {
+  "title": "cheatMethodsGlossary",
   "child": [
     {
       "value": "invisable",
-      "values": [
-        "invisable",
-        "stealth"
-      ]
+      "values": ["invisable","stealth"]
     },
     {
       "value": "wallhack",
@@ -13,21 +11,15 @@
     },
     {
       "value": "aimbot",
-      "values": [
-        "aimbot"
-      ]
+      "values": ["aimbot"]
     },
     {
       "value": "teleport",
-      "values": [
-        "teleport"
-      ]
+      "values": ["teleport"]
     },
     {
       "value": "magicBullet",
-      "values": [
-        "magicBullet"
-      ]
+      "values": ["magicBullet"]
     },
     {
       "value": "gadgetModify",

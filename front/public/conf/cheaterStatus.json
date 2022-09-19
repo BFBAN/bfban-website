@@ -1,41 +1,37 @@
 {
+  "title": "cheaterStatus",
   "child": [
     {
       "value": 0,
-      "values": ["0", "wallhack"]
+      "values": ["0"]
     },
     {
       "value": 5,
-      "values": ["5", "gadgetModify", "suspect"]
+      "values": ["5"]
     },
     {
       "value": 6,
-      "values": ["6", "teleport"]
+      "values": ["6"]
     },
     {
       "value": 1,
-      "values": ["1", "guilt"],
-      "action": "guilt"
+      "values": ["1"]
     },
     {
       "value": 2,
-      "values": ["2", "invisable", "discuss"],
-      "action": "discuss"
+      "values": ["2"]
     },
     {
       "value": 3,
-      "values": [ "3", "magicBullet" ,"innocent"],
-      "action": "innocent"
+      "values": ["3"]
     },
     {
       "value": 4,
-      "values": ["4", "damageChange", "trash"],
-      "action": "suspect"
+      "values": ["4"]
     },
     {
       "value": 8,
-      "values": [ "8" ,"farm"],
-      "action": "farm"
+      "values": ["8"]
     }
   ]
 }

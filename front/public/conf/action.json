@@ -1,24 +1,32 @@
 {
+  "title": "action",
   "child": [{
     "value": "suspect",
-    "privilege": ["admin", "super","dev"]
+    "values": ["suspect"],
+    "privilege": ["admin","super","dev"]
   },{
     "value": "innocent",
-    "privilege": ["admin", "super","dev"]
+    "values": ["innocent"],
+    "privilege": ["admin","super","dev"]
   },{
     "value": "discuss",
-    "privilege": ["admin", "super","dev"]
+    "values": ["discuss"],
+    "privilege": ["admin","super","dev"]
   },{
     "value": "guilt",
-    "privilege": ["admin", "super", "dev", "bot"]
+    "values": ["guilt"],
+    "privilege": ["admin","super","dev","bot"]
   },{
     "value": "kill",
+    "values": ["kill"],
     "privilege": ["super","dev", "bot"]
   },{
     "value": "invalid",
-    "privilege": ["admin", "super","dev"]
+    "values": ["invalid", "trash"],
+    "privilege": ["admin","super","dev"]
   },{
     "value": "farm",
-    "privilege": ["admin", "super","dev"]
+    "values": ["farm"],
+    "privilege": ["admin","super","dev"]
   }]
 }
