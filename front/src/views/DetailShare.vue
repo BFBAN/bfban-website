@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <div class="content">
-      <img src="http://127.0.0.1:3000/api/player/widget?id=1005842631970" width="100px">
       <template>
         <br>
         <Row>
