@@ -1,15 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f0635d445d64be479b0f",
-    "url": "/assets/css/app.48d6e029.css"
+    "revision": "53a853238f633f4a71b4",
+    "url": "/assets/css/app.659b6064.css"
   },
   {
-    "revision": "b0d43bb2fcc245ac79c6",
-    "url": "/assets/css/chunk-0246838f.6111853d.css"
-  },
-  {
-    "revision": "263339590f3c39e1d16c",
-    "url": "/assets/css/chunk-2093d52c.fa829202.css"
+    "revision": "5c11d53e9aef98e5f189",
+    "url": "/assets/css/chunk-0219b290.b1bb722a.css"
   },
   {
     "revision": "c17fb4d0dac5c42d1cba",
@@ -30,10 +26,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "29ebd743bbea3f25e17e",
     "url": "/assets/css/chunk-593d1776.2fcdd884.css"
-  },
-  {
-    "revision": "be67ef491ab52154ae15",
-    "url": "/assets/css/chunk-5b29514a.2b1fdb14.css"
   },
   {
     "revision": "b110ff70874a46b9611b",
@@ -72,8 +64,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/css/chunk-772e97bc.a2d302b6.css"
   },
   {
-    "revision": "ab3c3c6ba82a2fef0b23",
-    "url": "/assets/css/chunk-a553e8a0.76a88df9.css"
+    "revision": "2ccdf3e0002fa253d215",
+    "url": "/assets/css/chunk-7a151331.2b1fdb14.css"
+  },
+  {
+    "revision": "4b391f8d89aa922ed16c",
+    "url": "/assets/css/chunk-8ee5d172.63c3edbc.css"
   },
   {
     "revision": "8dee1600d5419aec24a2",
@@ -82,6 +78,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "92b01ba897e83d1e25cd",
     "url": "/assets/css/chunk-cbf1d182.24f1533f.css"
+  },
+  {
+    "revision": "cc47cc4cc7f8dd7af64e",
+    "url": "/assets/css/chunk-d85cc776.1a3834f3.css"
   },
   {
     "revision": "219f0635fb17c0bd495c",
@@ -180,16 +180,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/img/ubuntu-mono-v8-latin-regular.28524211.svg"
   },
   {
-    "revision": "f0635d445d64be479b0f",
+    "revision": "53a853238f633f4a71b4",
     "url": "/assets/js/app.2.7.0.js"
   },
   {
-    "revision": "b0d43bb2fcc245ac79c6",
-    "url": "/assets/js/chunk-0246838f.2.7.0.js"
-  },
-  {
-    "revision": "263339590f3c39e1d16c",
-    "url": "/assets/js/chunk-2093d52c.2.7.0.js"
+    "revision": "5c11d53e9aef98e5f189",
+    "url": "/assets/js/chunk-0219b290.2.7.0.js"
   },
   {
     "revision": "675527754dc6fdfd0255",
@@ -212,7 +208,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-2d0e24d8.2.7.0.js"
   },
   {
-    "revision": "af438d3ccc3de270b9b0",
+    "revision": "b50be8d5b15266f68512",
     "url": "/assets/js/chunk-2d21a33a.2.7.0.js"
   },
   {
@@ -246,10 +242,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "29ebd743bbea3f25e17e",
     "url": "/assets/js/chunk-593d1776.2.7.0.js"
-  },
-  {
-    "revision": "be67ef491ab52154ae15",
-    "url": "/assets/js/chunk-5b29514a.2.7.0.js"
   },
   {
     "revision": "b110ff70874a46b9611b",
@@ -288,8 +280,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-772e97bc.2.7.0.js"
   },
   {
-    "revision": "ab3c3c6ba82a2fef0b23",
-    "url": "/assets/js/chunk-a553e8a0.2.7.0.js"
+    "revision": "2ccdf3e0002fa253d215",
+    "url": "/assets/js/chunk-7a151331.2.7.0.js"
+  },
+  {
+    "revision": "4b391f8d89aa922ed16c",
+    "url": "/assets/js/chunk-8ee5d172.2.7.0.js"
   },
   {
     "revision": "8dee1600d5419aec24a2",
@@ -298,6 +294,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "92b01ba897e83d1e25cd",
     "url": "/assets/js/chunk-cbf1d182.2.7.0.js"
+  },
+  {
+    "revision": "cc47cc4cc7f8dd7af64e",
+    "url": "/assets/js/chunk-d85cc776.2.7.0.js"
   },
   {
     "revision": "219f0635fb17c0bd495c",
@@ -340,7 +340,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/conf/appslist.json"
   },
   {
-    "revision": "683d17785bd8f52ec5086c0037a8fd9e",
+    "revision": "fbc8b1e2408bfcdf76d435e12d5e0358",
     "url": "/conf/cheatMethodsGlossary.json"
   },
   {
@@ -408,7 +408,47 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/conf/themes.json"
   },
   {
-    "revision": "40fac15abc74aabdf1307f2b206eee4c",
+    "revision": "dc6e1ecf422c612af2289ca26bde7116",
+    "url": "/favicon.ico"
+  },
+  {
+    "revision": "cb88eeb9484de9ee1696284020688217",
+    "url": "/img/icons/favicon-16x16.png"
+  },
+  {
+    "revision": "674c9eecd208bfaceaf98fe0161ae278",
+    "url": "/img/icons/favicon-32x32.png"
+  },
+  {
+    "revision": "edce9e2e9c928024cfaa656dd30d6d7b",
+    "url": "/img/icons/maskable_icon_x128.png"
+  },
+  {
+    "revision": "2890dc3ef96165a8b9555e65800b719b",
+    "url": "/img/icons/maskable_icon_x192.png"
+  },
+  {
+    "revision": "0a6b12000c42aa0b71bc73975202c1ac",
+    "url": "/img/icons/maskable_icon_x384.png"
+  },
+  {
+    "revision": "081bd5487aea25e346b84d523c5c47b9",
+    "url": "/img/icons/maskable_icon_x48.png"
+  },
+  {
+    "revision": "93112efb832c69d814e9d90d9ea23b17",
+    "url": "/img/icons/maskable_icon_x512.png"
+  },
+  {
+    "revision": "e37926e8d519be7715113aab853d1faa",
+    "url": "/img/icons/maskable_icon_x72.png"
+  },
+  {
+    "revision": "bf8943388d1c323f969b2f304ef9bb22",
+    "url": "/img/icons/maskable_icon_x96.png"
+  },
+  {
+    "revision": "7cf25caaed72046144924a3d01d1ca93",
     "url": "/index.html"
   },
   {
@@ -420,8 +460,23 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/manifest.json"
   },
   {
+    "url": "/precache-manifest.d0dbbc379afeb97a949270174d41b030.js"
+  },
+  {
     "revision": "038bdc3bd76d45725a3efc25dad869e5",
     "url": "/robots.txt"
+  },
+  {
+    "revision": "d07525123a1ac0b417f33dd19fdd6992",
+    "url": "/service-worker.js"
+  },
+  {
+    "revision": "859337c1307a8a915ab0121a9f760d41",
+    "url": "/sitemap.xml"
+  },
+  {
+    "revision": "ea81724420a914d0b357b6c72aa0e1af",
+    "url": "/sitemap.xml.gz"
   },
   {
     "revision": "056be6e2ba7569d01fd87734b69601f9",

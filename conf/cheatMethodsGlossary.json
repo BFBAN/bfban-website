@@ -3,7 +3,7 @@
   "child": [
     {
       "value": "invisable",
-      "values": ["invisable","stealth"]
+      "values": ["invisable", "invisible","stealth"]
     },
     {
       "value": "wallhack",
