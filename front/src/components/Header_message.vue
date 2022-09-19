@@ -26,7 +26,7 @@
 
     <Dropdown class="mobile-hide">
       <router-link :to="{path: '/profile/message'}">
-        <Badge :count="message && message.total && message.total || 0" :class="message.messages.length > 0 ? 'shake' : ''">
+        <Badge :count="unReadCount" :class="message.messages.length > 0 ? 'shake' : ''">
           <slot name="content"></slot>
         </Badge>
       </router-link>
@@ -57,19 +57,12 @@ export default {
     this.getMessage();
   },
   methods: {
-    onMessageMark(id, type) {
-      this.http.post(api["user_message_mark"], {
-        params: {
-          id,
-          type: ['read', 'unread'][type],
-        }
-      })
-    },
     getMessage() {
       if (!this.isLogin) return;
 
       this.http.get(api["user_message"], {}).then(res => {
         const d = res.data;
+
         if(d.code == 'user.tokenExpired') {
           account_storage.clearAll();
           return
@@ -81,6 +74,11 @@ export default {
     },
   },
   computed: {
+    unReadCount () {
+      let num = 0;
+      this.message.messages.forEach(i => { if (i.haveRead == 0) num+=1; return i })
+      return num;
+    },
     isLogin() {
       return Boolean(this.$store.state.user);
     },

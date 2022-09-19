@@ -175,6 +175,7 @@
 				"itemName": "Messages",
 				"form": {
 					"del": "Delete",
+					"unread": "Unread",
 					"read": "Read"
 				}
 			},

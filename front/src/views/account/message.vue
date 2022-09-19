@@ -229,8 +229,8 @@ export default new BFBAN({
             label: 'read'
           },
           {
-            value: 2,
-            label: 'del'
+            value: 1,
+            label: 'unread'
           },
         ]
       }
@@ -294,9 +294,7 @@ export default new BFBAN({
       })
 
       this.control.load = true;
-      new Promise.all(onFun,() => {
-
-      }).finally(() => {
+      Promise.all(onFun).finally(() => {
         this.control.load = false;
       })
     },
