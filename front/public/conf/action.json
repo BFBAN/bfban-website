@@ -18,9 +18,6 @@
     "value": "invalid",
     "privilege": ["admin", "super","dev"]
   },{
-    "value": "more",
-    "privilege": ["admin", "super","dev"]
-  },{
     "value": "farm",
     "privilege": ["admin", "super","dev"]
   }]

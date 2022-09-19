@@ -431,7 +431,7 @@
 
                           <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${l.judgeAction}.describe`)">
                             <Tag color="warning">
-                              {{ $t(`basic.action.${l.judgeAction}.text`) }}
+                              {{ $t(`basic.action.${l.judgeAction == 'trash' ? 'invalid' : l.judgeAction}.text`) }}
                             </Tag>
                           </Poptip>
 
