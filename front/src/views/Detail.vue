@@ -55,7 +55,7 @@
                 <!-- 被举报的类型 E -->
                 <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0" >
                   <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
-                    {{ $t("cheatMethods." + method_item + ".title") }}
+                    {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
                   </Tag>
                 </template>
 
@@ -321,7 +321,7 @@
                           <Tag type="border" color="orange"
                                v-for="(methods, methodsIndex) in l.cheatMethods"
                                :key="methodsIndex">
-                            {{ $t("cheatMethods." + methods + ".title") }}
+                            {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
                           </Tag>
                         </Col>
                         <Col align="right">
@@ -442,7 +442,7 @@
                             <Tag type="border" color="orange"
                                  v-for="(methods, methodsIndex) in l.cheatMethods"
                                  :key="methodsIndex">
-                              {{$t("cheatMethods." + methods + ".title")}}
+                              {{$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title")}}
                             </Tag>
                           </template>
                         </Col>

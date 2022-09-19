@@ -58,9 +58,9 @@
           <p v-if="languages.length > 0">
             <br>
             <span>{{ $t("footer.language.members") }}</span>: <br>
-            <a v-for='(i, index) in languages.filter(i => i.name == currentLan)[0]["members"]' :key="index"
-               :href="i.url" target="_blank">
+            <a :href="i.url" target="_blank" v-for='(i, index) in languages.filter(i => i.name == currentLan)[0]["members"]' :key="index">
               {{ i.name }}
+              <Divider type="vertical" v-if="index + 1 < (languages.filter(i => i.name == currentLan)[0]['members'].length)"></Divider>
             </a>
           </p>
         </Col>

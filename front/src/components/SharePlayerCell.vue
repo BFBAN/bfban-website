@@ -62,6 +62,9 @@ import languages from "/public/conf/languages.json";
 
 import vueQr from 'vue-qr'
 
+if (window.callPhantom)
+  window.callPhantom('takeShot');
+
 export default {
   data() {
     return {
@@ -119,6 +122,7 @@ export default {
         if (d.success === 1) {
           this.cheater = d.data;
         }
+      }).finally(() => {
       });
     },
   }
