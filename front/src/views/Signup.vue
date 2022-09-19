@@ -338,7 +338,8 @@ export default new BFBAN({
             }
 
             that.backBindOriginMsg = `${d.code} / ${d.message}`;
-            that.$refs.captcha.refreshCaptcha();
+            if (that.$refs.captcha)
+              that.$refs.captcha.refreshCaptcha();
           }
 
         }).catch(err => {

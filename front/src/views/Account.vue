@@ -65,8 +65,32 @@
       <br/>
 
       <div class="content">
-        <Row :gutter="8">
-          <Col :xm="{span: 24, order: 2}" :sm="{span: 7, order: 2}">
+        <Row :gutter="15">
+          <Col :xm="{span: 24}" :sm="{span: 17}"
+               style="width: 100%">
+            <Card dis-hover :padding="0">
+              <Table show-header
+                     :border="false"
+                     :no-data-text="$t('basic.tip.noReports')"
+                     :columns="report.columns"
+                     :data="report.data"></Table>
+            </Card>
+
+            <br/>
+            <Row>
+              <Col :xs="{span: 23, push: 1}" :lg="{span: 24, push: 0}">
+                <Page
+                    show-total
+                    @on-change="getReports"
+                    :page-size="limit"
+                    :current="page"
+                    :total="total"
+                    class="page"
+                    size="small"/>
+              </Col>
+            </Row>
+          </Col>
+          <Col :xm="{span: 22, push: 2}" :sm="{span: 7, push: 0}">
             <Card v-if="account.attr.introduction" dis-shadow>
               <div v-html="account.attr.introduction"></div>
             </Card>
@@ -80,25 +104,6 @@
             <br>
             <p class="hint">{{ $t("account.hint2") }}</p>
             <p class="hint">{{ $t("account.hint3") }}</p>
-          </Col>
-          <Col :xm="{span: 24, order: 1}" :sm="{span: 17, order: 1}">
-            <Card dis-hover :padding="0">
-              <Table show-header
-                     :border="false"
-                     :no-data-text="$t('basic.tip.noReports')"
-                     :columns="report.columns"
-                     :data="report.data"></Table>
-            </Card>
-
-            <br/>
-            <Page
-                :page-size="limit"
-                show-total
-                :current="page"
-                @on-change="getReports"
-                :total="total"
-                class="page"
-                size="small"/>
           </Col>
         </Row>
       </div>
@@ -149,6 +154,7 @@ export default new BFBAN({
             key: 'createTime',
             sortable: true,
             fixed: "left",
+            minWidth: 150,
             render: (h, params) => {
               return h('Tag', {
                 props: {
@@ -167,6 +173,7 @@ export default new BFBAN({
           {
             title: this.$i18n.t("account.reported"),
             key: 'originName',
+            width: 200,
             ellipsis: true,
             tooltip: true,
             render: (h, params) => {
@@ -192,6 +199,7 @@ export default new BFBAN({
             title: "ID",
             key: 'originPersonaId',
             ellipsis: true,
+            width: 200,
             align: 'center',
             render: (h, params) => {
               return h('div', [
@@ -202,6 +210,7 @@ export default new BFBAN({
           {
             title: this.$i18n.t("account.status"),
             key: 'status',
+            width: 200,
             align: 'center',
             render: (h, params) => {
               return h('div', [
@@ -217,6 +226,7 @@ export default new BFBAN({
             title: this.$i18n.t("account.recentlyUpdated"),
             key: 'updateTime',
             align: 'center',
+            width: 200,
             sortable: true,
             render: (h, params) => {
               return h('div', [
