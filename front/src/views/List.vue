@@ -39,6 +39,13 @@
             </Radio>
           </RadioGroup>
         </Col>
+        <Col v-if="isLogin">
+          <router-link :to="{name: 'profile', params: {pagename: 'voice'}}">
+            <Button type="text" shape="circle">
+              <Icon type="md-musical-notes" size="20" />
+            </Button>
+          </router-link>
+        </Col>
       </Row>
       <!-- 游戏类型选择 E -->
 
@@ -199,10 +206,11 @@
 <script>
 import BFBAN from "../assets/js/bfban";
 
-import {account_storage, api, http, util} from '../assets/js/index'
+import {account_storage, api, http, util, voice} from '../assets/js/index'
 import cheaterStatus from '/public/conf/cheaterStatus.json'
 import gameName from '/public/conf/gameName.json'
 import _ from "lodash";
+import store from "@/store";
 
 export default new BFBAN({
   data() {
@@ -234,6 +242,18 @@ export default new BFBAN({
   },
   watch: {
     $route: "loadData",
+    gameName: function (val,oldVal) {
+      if (val &&
+          val != 'all' &&
+          store.state.configuration.voice &&
+          store.state.configuration['voice_backgroundMusic'].state
+      ) {
+        voice.onStopAll();
+        setTimeout(function () {
+          voice.play(val);
+        }, 800)
+      }
+    }
   },
   methods: {
     /**
@@ -267,6 +287,23 @@ export default new BFBAN({
 
         this.games = res.gameName;
       });
+
+      const backgroundMusic = store.state.configuration['voice_backgroundMusic'];
+      voice.addVoice('bf1', voice.voiceData({
+        src: [require('@/assets/voice/bf1_mian_theme.mp3')],
+        volume: (backgroundMusic && backgroundMusic.value) || 1,
+        pool: true
+      }))
+      voice.addVoice('bfv', voice.voiceData({
+        src: [require('@/assets/voice/bfv_mian_theme.mp3')],
+        volume: (backgroundMusic && backgroundMusic.value) || 1,
+        pool: true
+      }))
+      voice.addVoice('bf6', voice.voiceData({
+        src: [require('@/assets/voice/bf2042_mian_theme.mp3')],
+        volume: (backgroundMusic && backgroundMusic.value) || 1,
+        pool: true
+      }))
 
       this.getCheaterList();
       this.getPlayerStatistics();
@@ -395,6 +432,7 @@ export default new BFBAN({
     },
     handleChanges() {
       const query = this.routerQuery();
+
       this.$router.push({
         name: this.$router.name,
         query

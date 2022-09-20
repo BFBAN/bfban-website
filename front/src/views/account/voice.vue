@@ -19,12 +19,14 @@
                   :disabled="!i.state"
                   @on-change="switchVoiceAttr(i.loaclValue,  i)"></Slider>
         </Col>
-        <Divider type="vertical"></Divider>
-        <Col>
-          <Select v-model="i.voiceFileName">
-            <Option v-for="(file, fileIndex) in voiceFiles" :key="fileIndex" :value="file.name">{{file.name}}.mp4</Option>
-          </Select>
-        </Col>
+        <template v-if="i.voiceFileName">
+          <Divider type="vertical"></Divider>
+          <Col>
+            <Select v-model="i.voiceFileName">
+              <Option v-for="(file, fileIndex) in voiceFiles" :key="fileIndex" :value="file.name">{{file.name}}.mp4</Option>
+            </Select>
+          </Col>
+        </template>
       </Row>
       <div class="voice-divider ivu-divider ivu-divider-horizontal"></div>
     </div>
@@ -60,7 +62,6 @@ export default {
           name: 'profile.voice.interaction',
           describe: 'profile.voice.interactionDescribe',
           loaclValue: 'voice_interaction',
-          voiceFileName: 'dinDon',
           value: 40,
           min: 0,
           max: 150,
@@ -70,7 +71,6 @@ export default {
           name: 'profile.voice.backgroundMusic',
           describe: 'profile.voice.backgroundMusicDescribe',
           loaclValue: 'voice_backgroundMusic',
-          voiceFileName: 'dinDon',
           value: 60,
           min: 0,
           max: 150,
@@ -80,7 +80,6 @@ export default {
           name: 'profile.voice.video',
           describe: 'profile.voice.videoDescribe',
           loaclValue: 'video_mp4',
-          voiceFileName: 'dinDon',
           value: 80,
           min: 0,
           max: 150,

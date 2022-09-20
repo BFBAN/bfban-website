@@ -52,11 +52,14 @@ export default new BFBAN({
   props: {
     data: {},
   },
+  watch: {
+    unReadCount: function (val) {
+      if (val >= 0)
+        message.playMessageVoice()
+    }
+  },
   created() {
     this.http = http_token.call(this);
-
-    if (this.unReadCount >= 0)
-      message.playMessageVoice()
 
     this.getMessage();
   },

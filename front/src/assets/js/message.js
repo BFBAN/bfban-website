@@ -31,7 +31,8 @@ export default class appMessage {
      * 播放消息通知声音
      */
     playMessageVoice () {
-        if (store.state.configuration['voice_message'] && store.state.configuration['voice_message'].state)
+        if (store.state.configuration['voice_message'] && store.state.configuration['voice_message'].state) {
             this.VoiceManagement.play('open');
+        }
     }
 }

@@ -61,6 +61,22 @@ class Voice extends Print {
         })
     }
 
+    isPlaying (key) {
+        if (!key) return;
+        return this.VOICEDATA[key].playing();
+    }
+
+    onStop (key) {
+        if (!key) return;
+        return this.VOICEDATA[key].stop([key]);
+    }
+
+    onStopAll () {
+        for (let key in this.VOICEDATA) {
+            this.VOICEDATA[key].stop();
+        }
+    }
+
     voiceData (data) {
         return new Howl(data);
     }
