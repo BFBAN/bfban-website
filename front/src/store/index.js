@@ -23,7 +23,7 @@ const store = new Vuex.Store({
       autoUpdatePlayerList: false,
       desktopNotifiction: false,
       footerBar: false,
-      voice: true
+      voice: false
     },
 
     // https://vue-meta.nuxtjs.org/api

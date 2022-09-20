@@ -188,8 +188,6 @@ export default new BFBAN({
 
     this.loadData();
     this.upDataShare();
-
-    this.onGenerateShareOnline();
   },
   methods: {
     async loadData() {

@@ -11,6 +11,7 @@
               <router-link :to="{name: 'home', query:{ 'love': '❤'}}">😊</router-link>
             </Avatar>
             <img v-else
+                 v-saknan
                  src="../assets/images/logo.png"
                  width="40"
                  height="40"
