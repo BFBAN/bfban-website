@@ -13,7 +13,7 @@
         </div>
         <Row>
           <Col flex="1">
-            <h2> {{ userInfo.username }} </h2>
+            <h2> <a :href="`/account/${userInfo.id}`" target="_blank">{{ userInfo.username }}</a> </h2>
             <PrivilegesTag :data="userInfo.privilege" v-if="userInfo.privilege"></PrivilegesTag>
           </Col>
           <Col>
