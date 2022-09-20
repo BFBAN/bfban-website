@@ -28,7 +28,9 @@
                       <Avatar icon="md-notifications" v-else> {{ i.text[0] }}</Avatar>
                     </Col>
                     <Col flex="1">
-                      <p><b>{{ i.text.toString() }}</b></p>
+                      <businessCard :id="i.id">
+                        <p><b>{{ i.text.toString() }}</b></p>
+                      </businessCard>
                     </Col>
                     <Col>
                       <a @click="selectWindow = i.value">{{ $t('profile.message.look') }}</a>
@@ -59,33 +61,32 @@
               </Row>
               <!-- 编辑 E -->
 
-              <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index" class="message-content-item">
-                <Row :gutter="18">
-                  <Col v-if="control.open">
-                    <Checkbox v-model="child.choose"></Checkbox>
-                  </Col>
-                  <Col>
-                    <Avatar src="/assets/img/logo.75abcc53.png"></Avatar>
-                  </Col>
-                  <Col flex="1">
-                    <Row>
-                      <Col flex="1">
-                        <Time :time="child.time"/>
-                      </Col>
-                      <Col>
-                        <a href="javascript:void(0)" v-if="child.haveRead == 0" @click="onMessageMark(child.id, 0)">
-                          <Icon type="md-eye" size="20"/>
-                        </a>
-<!--                        <a href="javascript:void(0)" @click="onMessageMark(child.id, 2)">-->
-<!--                          <Icon type="md-trash" color="red" size="20"/>-->
-<!--                        </a>-->
-                      </Col>
-                    </Row>
-                    <Card dis-hover :padding="5">{{ child.content }}</Card>
-                  </Col>
-                </Row>
+              <div class="message-content-box">
+                <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index" class="message-content-item">
+                  <Row :gutter="18">
+                    <Col v-if="control.open">
+                      <Checkbox v-model="child.choose"></Checkbox>
+                    </Col>
+                    <Col flex="1">
+                      <Row>
+                        <Col flex="1">
+                          <Time :time="child.time"/>
+                        </Col>
+                        <Col>
+                          <a href="javascript:void(0)" v-if="child.haveRead == 0" @click="onMessageMark(child.id, 0)">
+                            <Icon type="md-eye" size="20"/>
+                          </a>
+                          <!--                        <a href="javascript:void(0)" @click="onMessageMark(child.id, 2)">-->
+                          <!--                          <Icon type="md-trash" color="red" size="20"/>-->
+                          <!--                        </a>-->
+                        </Col>
+                      </Row>
+                      <Card dis-hover :padding="5">{{ child.content }}</Card>
+                    </Col>
+                  </Row>
 
-                <divider :size="'small'"></divider>
+                  <divider :size="'small'"></divider>
+                </div>
               </div>
 
               <!--            <Row :gutter="5">-->
@@ -101,12 +102,12 @@
               <!--            </Row>-->
 
               <div class="message-content-footer" v-if="messageList[selectWindow].type == 'direct'">
+                <router-link :to="{name: 'account',params: {uId: selectWindow}, query: {repeat: true}}">
                   <Button long type="primary">
-                    <router-link :to="{path: '/account/' + selectWindow, query: {repeat: true}}">
                       <Icon type="ios-send" size="20"/>
-                    </router-link>
                   </Button>
-                </div>
+                </router-link>
+              </div>
             </Col>
           </Row>
           <template v-else>
@@ -179,8 +180,9 @@
 <script>
 import BFBAN from "/src/assets/js/bfban";
 
-import {api, http, http_token} from "../../assets/js";
+import {api, http, http_token, message} from "../../assets/js";
 
+import BusinessCard from "/src/components/businessCard.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import messageConf from "/public/conf/message.json";
 
@@ -236,7 +238,7 @@ export default new BFBAN({
       }
     }
   },
-  components: { PrivilegesTag },
+  components: { BusinessCard, PrivilegesTag },
   watch: {
     $route: "loadData",
   },
@@ -358,6 +360,8 @@ export default new BFBAN({
       }).finally(() => {
         this.resetMessageFrom();
 
+        message.playSendVoice();
+
         this.message.load = false;
         this.message.show = false;
       })
@@ -396,6 +400,7 @@ export default new BFBAN({
                 if (num <= 0) {
                   messageUser.push({
                     text: "@" + this.$i18n.t('profile.message.types.' + i.type),
+                    id: i.byUserId,
                     value: i.type,
                     type: i.type
                   });
@@ -412,6 +417,7 @@ export default new BFBAN({
                 if (num <= 0) {
                   messageUser.push({
                     text: i.username || i.byUserId,
+                    id: i.byUserId,
                     value: i.byUserId,
                     type: i.type
                   });
@@ -463,10 +469,17 @@ export default new BFBAN({
 }
 
 .message-content {
-  min-height: 300px;
-  max-height: 1000px;
-  overflow: auto;
+  display: flex;
   background-color: rgb(0 0 0 / 2%);
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.message-content-box {
+  overflow: auto;
+  min-height: 350px;
+  max-height: 400px;
+  height: 100%;
 }
 
 .message-content-item > .ivu-row {
