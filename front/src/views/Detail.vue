@@ -100,7 +100,7 @@
                   <Divider type="vertical"/>
                   <!-- 分享 share S -->
                   <router-link :to="{name: 'cheater_share'}">
-                    <Button type="primary">
+                    <Button type="primary" v-voice-button>
                       <Icon type="md-share"/>
                     </Button>
                   </router-link>
@@ -168,6 +168,7 @@
                         </Col>
                         <Col flex="1">
                           <Button type="primary" size="large"
+                                  v-voice-button
                                   long @click.prevent="updateCheaterInfo">
                             {{ $t('detail.info.updateButton') }}
                           </Button>
@@ -351,6 +352,7 @@
                     <p v-if="isLogin">
                       <!-- 回复 -->
                       <Button type="dashed"
+                              v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
                         {{ $t('detail.info.reply', {msg: 'reply'}) }}
                       </Button>
@@ -394,6 +396,7 @@
                     <p v-if="isLogin">
                       <!-- 回复 -->
                       <Button type="dashed"
+                              v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
                         {{ $t('detail.info.reply', {msg: 'reply'}) }}
                       </Button>
@@ -458,6 +461,7 @@
                     <p v-if="isLogin">
                       <!-- 回复 -->
                       <Button type="dashed"
+                              v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
                         {{ $t('detail.info.reply', {msg: 'reply'}) }}
                       </Button>
@@ -500,6 +504,7 @@
                     <p v-if="isLogin">
                       <!-- 回复 -->
                       <Button type="dashed"
+                              v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
                         {{ $t('detail.info.reply', {msg: 'reply'}) }}
                       </Button>
@@ -542,6 +547,7 @@
                                 size="large"
                                 style="width:150px"
                                 long
+                                v-voice-button
                                 :loading="replySpinShow"
                                 :disabled="!reply.content"
                                 @click.stop.prevent="onReply">
@@ -572,6 +578,7 @@
 
             <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide">
                 <Button type="primary"
+                        v-voice-button
                         @click="appeal.show = true"
                         :disabled="!isLogin || cheater.status != 1">
                   {{ $t('detail.info.appeal') }}
@@ -728,7 +735,7 @@
                     </Input>
                   </Col>
                   <Col flex="1" align="right">
-                    <Button type="primary" size="large" :loading="verifySpinShow" @click.stop.prevent="doVerify">
+                    <Button type="primary" size="large" v-voice-button :loading="verifySpinShow" @click.stop.prevent="doVerify">
                       {{ $t('basic.button.submit') }}
                     </Button>
                   </Col>
@@ -748,7 +755,7 @@
                 </template>
               </Alert>
               <br>
-              <Button @click="onJudgementLock">{{ $t('basic.button.submit') }}</Button>
+              <Button @click="onJudgementLock" v-voice-button>{{ $t('basic.button.submit') }}</Button>
             </div>
           </Spin>
         </Card>
@@ -803,8 +810,8 @@
               </Input>
             </Col>
             <Col>
-              <Button @click="cancelReply">{{ $t('basic.button.cancel') }}</Button>
-              <Button @click="onReply" type="primary">{{ $t('basic.button.submit') }}</Button>
+              <Button @click="cancelReply" v-voice-button>{{ $t('basic.button.cancel') }}</Button>
+              <Button @click="onReply" type="primary" v-voice-button>{{ $t('basic.button.submit') }}</Button>
             </Col>
           </Row>
         </div>

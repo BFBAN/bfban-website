@@ -5,6 +5,7 @@
 
 import {Howl, Howler} from 'howler';
 import Print from "@/assets/js/print";
+import store from "@/store";
 
 class Voice extends Print {
     VOICEDATA = {};
@@ -30,7 +31,7 @@ class Voice extends Print {
      */
     play (key) {
         const that = this;
-        if (!key) return ;
+        if (!key && !store.state.configuration.voice) return;
         return new Promise((resolve, reject) => {
             if (!this.VOICEDATA[key]) {
                 reject({

@@ -17,11 +17,11 @@
               <Divider/>
 
               <router-link :to="{name: 'signup'}">
-                <Button type="primary">{{ $t("signup.title") }}</Button>
+                <Button type="primary" v-voice-button>{{ $t("signup.title") }}</Button>
               </router-link>
               <Divider type="vertical"/>
               <router-link :to="{name: 'about'}">
-                <Button type="text">
+                <Button type="text" v-voice-button>
                   <Icon type="ios-help-circle-outline"/>
                   {{ $t("home.cover.subButton") }}
                 </Button>
@@ -70,7 +70,7 @@
           </Col>
           <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
             <router-link :to="{name: 'player_list'}">
-              <Button type="dashed">
+              <Button type="dashed" v-voice-button>
                 {{ $t('home.activity.more') }}
               </Button>
             </router-link>

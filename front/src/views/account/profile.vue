@@ -120,7 +120,9 @@ export default new BFBAN({
             {
               title: 'voice',
               name: 'voice',
-              icon: 'md-musical-note'
+              icon: 'md-musical-note',
+              configurationKey: 'voice',
+              configurationValue: this.$store.state.configuration.voice || false,
             },
             {
               title: 'history',

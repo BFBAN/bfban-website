@@ -8,11 +8,15 @@ import i18n from './i18n'
 import less from 'less'
 import router from './router'
 import store from './store'
+import Directive  from './directive.js';
 import ViewUI from 'view-design'
 import VueQuillEditor from 'vue-quill-editor'
 import ECharts from 'vue-echarts'
 import VueMeta from 'vue-meta'
 import Cookies from 'js-cookie'
+
+// vue directive, [https://v2.cn.vuejs.org/v2/guide/custom-directive.html]
+Directive(Vue);
 
 // echarts
 import { use } from 'echarts/core'

@@ -223,6 +223,17 @@
       "capacity": "容量",
       "fileNum": "{num}份文件"
     },
+    "voice": {
+      "title": "声音",
+      "message": "消息通知声音",
+      "messageDescribe": "与站内消息相关的通知声音",
+      "interaction": "交互声音",
+      "interactionDescribe": "网站一些交互声音",
+      "backgroundMusic": "背景声音",
+      "backgroundMusicDescribe": "背景音乐",
+      "video": "视频",
+      "videoDescribe": "网站视频声音"
+    },
     "history": {
       "title": "历史"
     },

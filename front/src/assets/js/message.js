@@ -13,20 +13,25 @@ export default class appMessage {
         this.VoiceManagement.addVoice(
             'open',
             this.VoiceManagement.voiceData({
-                src: [
-                    require('@/assets/voice/dinDon.mp3'),
-                    require('@/assets/voice/send.mp3')
-                ],
+                src: [require('@/assets/voice/dinDon.mp3')],
                 volume: (message && message.value) || 1
             })
-        )
+        );
+
+        this.VoiceManagement.addVoice(
+            'send',
+            this.VoiceManagement.voiceData({
+                src: [require('@/assets/voice/send.mp3')],
+                volume: (message && message.value) || 1
+            })
+        );
     }
 
     /**
      * 播放消息通知声音
      */
     playMessageVoice () {
-        if (store.state.configuration['voice_message'].state)
+        if (store.state.configuration['voice_message'] && store.state.configuration['voice_message'].state)
             this.VoiceManagement.play('open');
     }
 }

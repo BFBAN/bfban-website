@@ -16,6 +16,7 @@
       <Row>
         <Col flex="auto" :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
           <RadioGroup
+              v-voice-button
               size="large"
               class="game-type"
               v-model="gameName"
@@ -45,6 +46,7 @@
       <Row>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
           <RadioGroup
+              v-voice-button
               style="margin-top: 12px"
               v-model="statusGroup"
               @on-change="handleStatusChange"
@@ -85,7 +87,7 @@
 
             <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
 
-            <div v-for="(d, d_index) in data" :key="d.originUserId" class="item-card">
+            <div v-for="(d, d_index) in data" :key="d.originUserId" class="item-card" v-voice-button>
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
                 <Card dis-hover :padding="10">
                   <Row :gutter="10" type="flex">

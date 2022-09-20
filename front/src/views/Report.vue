@@ -163,6 +163,7 @@
                             <Divider type="vertical" v-if="tabs.list[index].formItem.videoLink.length > 0"/>
                             <Button type="dashed"
                                     @click="tabs.list[index].formItem.videoLink.splice(blinkindex, 1)"
+                                    v-voice-button
                                     v-if="tabs.list[index].formItem.videoLink.length > 0">
                               <Icon type="md-trash"/>
                             </Button>
@@ -172,6 +173,7 @@
 
                       <Button type="primary"
                               long
+                              v-voice-button
                               @click="handleVideoLink"
                               v-if="tabs.list[index].formItem.videoLink.length < 10">
                         <Icon type="md-add"/>
@@ -213,11 +215,12 @@
                 </FormItem>
 
                 <FormItem>
-                  <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel">
+                  <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel" v-voice-button>
                     {{ $t("basic.button.cancel") }}
                   </Button>
                   <Divider type="vertical"/>
                   <Button @click="doReport(index)"
+                          v-voice-button
                           type="primary"
                           size="large">
                     {{ $t("basic.button.report") }}
@@ -240,7 +243,7 @@
               <Row :gutter="10" type="flex" justify="center" align="middle">
                 <Col>
                   <router-link :to="{name: 'home'}">
-                    <Button>离开</Button>
+                    <Button v-voice-button>离开</Button>
                   </router-link>
                 </Col>
               </Row>
@@ -255,12 +258,12 @@
               <Row :gutter="10" type="flex" justify="center" align="middle">
                 <Col>
                   <router-link :to="{path: '/report', params: { t: new Date().getTime() }}">
-                    <Button>继续</Button>
+                    <Button v-voice-button>继续</Button>
                   </router-link>
                 </Col>
                 <Col>
                   <router-link :to="{name: 'home'}">
-                    <Button type="primary">离开</Button>
+                    <Button v-voice-button type="primary">离开</Button>
                   </router-link>
                 </Col>
               </Row>
@@ -268,7 +271,7 @@
           </div>
           <!-- 举报结果 E -->
         </TabPane>
-        <Button @click="handleTabsAdd" size="small" slot="extra" disabled>
+        <Button @click="handleTabsAdd" size="small" slot="extra" disabled v-voice-button>
           <Icon type="md-add"/>
         </Button>
       </Tabs>
@@ -279,15 +282,17 @@
 <script>
 import BFBAN from "../assets/js/bfban";
 
-import {api, http, http_token, http_connect, util, regular} from '../assets/js/index'
+import {api, http, http_token, voice, util, regular} from '../assets/js/index'
 import {checkReportFormData} from "@/mixins/common";
 
 import gameName from '/public/conf/gameName.json'
 import Textarea from "@/components/Textarea.vue";
+import store from "@/store";
 
 export default new BFBAN({
   data() {
     return {
+      voiceReportManagement: voice,
       games: [],
       tabs: {
         count: 0,
@@ -300,7 +305,18 @@ export default new BFBAN({
   },
   components: {Textarea},
   created() {
+    const message = store.state.configuration['voice_message']
+
     this.http = http_token.call(this);
+    this.voiceReportManagement.addVoice(
+        'success',
+        this.voiceReportManagement.voiceData({
+          src: [
+              require('@/assets/voice/dinDon.mp3')
+          ],
+          volume: (message && message.value) || 1
+        })
+    );
 
     this.handleTabsAdd();
     this.loadData();
@@ -489,13 +505,13 @@ export default new BFBAN({
         if (d.success === 1) {
           this.tabs.list[index].statusOk = 1;
 
-          this.$Message.success(this.$i18n.t("report.info.success")).then(() => {
+          this.voiceReportManagement.play('success');
 
+          this.$Message.success(this.$i18n.t("report.info.success")).then(() => {
             this.$router.push({
               name: "cheater",
               params: { ouid: d.data.originPersonaId },
             });
-
           });
         } else {
           switch (d.code) {
