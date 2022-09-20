@@ -151,7 +151,7 @@ router.post('/mark', verifyJWT, [
 async (req, res, next)=> {
     try {
         const changed = await db('messages').update({haveRead: req.query.type=='read'? 1:0})
-            .whereIn('type', ['direct','warn'])
+            .whereIn('type', ['direct','warn', 'reply'])
             .andWhere({toUserId: req.user.id, id: req.query.id});
         if(changed)
             return res.status(200).json({success: 1, code: 'message.marked', data: {id: req.query.id, type: req.query.type}});
@@ -207,12 +207,12 @@ async function sendMessage(from, to, type, content) {
     });
 }
 
-async function localeMessage(namepath='', lang='en', params) {
+async function localeMessage(namepath='', lang='en-US', params) {
     let msgs = JSON.parse(await readFile(path.resolve(config.baseDir, './media/messages.json')));
     for(const i of namepath.split('.'))
         msgs = msgs? msgs[i] : undefined;
     /** @type {string} */
-    let text = msgs?.[lang]? msgs[lang] : msgs?.['en'];
+    let text = msgs?.[lang]? msgs[lang] : msgs?.['en-US'];
     if(text)
         Object.keys(params).forEach(i=>{
             text = text
@@ -230,7 +230,7 @@ async function iGotReported(params) {
     if(!user) // that player being reported hasnt registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
-        originUserId: report.toOriginUserId
+        originPersonaId: report.originPersonaId
     }));
 }
 
@@ -245,7 +245,7 @@ async function iGotJudged(params) {
         return;
     await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
         status: await localeMessage(`basic.status.${player.status}`, user.attr.language),
-        originUserId: player.originUserId
+        originPersonaId: player.originPersonaId
     }));
 }
 
@@ -261,7 +261,7 @@ async function iGotReplied(params) { // checked that comment dose exist
     const toCommentUser = await db.select('*').from('users').where({id: toCommentUserId}).first();
     await sendMessage(reply.byUserId, toCommentUserId, 'reply', await localeMessage('notifications.beReplied', toCommentUser.attr.language, {
         playername: player.originName,
-        originUserId: player.originUserId
+        originPersonaId: player.originPersonaId
     }));
 }
 
@@ -274,8 +274,9 @@ async function newBanAppeal(params) {
     const user = await db.select('*').from('users').where({id: banAppeal.byUserId}).first();
     await sendMessage(banAppeal.byUserId, banAppeal.id, 'banAppeal', await localeMessage('notifications.newBanAppeal', user.attr.language, {
         playername: player.originName,
-        originUserId: player.originUserId
-    }));    // language is specified by the user who submit the banappeal 
+        originPersonaId: player.originPersonaId
+    }));
+    // language is specified by the user who submit the banappeal
 }
 
 async function removeBanAppealNotification(params) {

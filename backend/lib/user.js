@@ -50,7 +50,7 @@ function userSetAttributes(org, attr, force=false) {
     return result;
 }
 
-function userDefaultAttribute(registerIP='', language='en') {
+function userDefaultAttribute(registerIP='', language='en-US') {
     const result = {};
     for(let i of Object.keys(userAttributes))
         result[i] = userAttributes[i].default;
