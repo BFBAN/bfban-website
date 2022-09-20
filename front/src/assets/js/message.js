@@ -9,7 +9,7 @@ export default class appMessage {
 
     constructor() {
         this.VoiceManagement = new Voice();
-
+        const message = store.state.configuration['voice_message']
         this.VoiceManagement.addVoice(
             'open',
             this.VoiceManagement.voiceData({
@@ -17,7 +17,7 @@ export default class appMessage {
                     require('@/assets/voice/dinDon.mp3'),
                     require('@/assets/voice/send.mp3')
                 ],
-                volume: store.state.configuration['voice_message'].value || 1
+                volume: (message && message.value) || 1
             })
         )
     }
