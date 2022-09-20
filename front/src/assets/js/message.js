@@ -35,4 +35,13 @@ export default class appMessage {
             this.VoiceManagement.play('open');
         }
     }
+
+    /**
+     * 发送文本声音
+     */
+    playSendVoice () {
+        if (store.state.configuration['voice_message'] && store.state.configuration['voice_message'].state) {
+            this.VoiceManagement.play('send');
+        }
+    }
 }

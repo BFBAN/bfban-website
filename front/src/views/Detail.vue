@@ -45,7 +45,8 @@
                 </Tag>
 
                 <!-- 被举报的游戏 S -->
-                <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}" v-if="cheater.games">
+                <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
+                             v-if="cheater.games">
                   <Tag color="gold" :alt="$t('detail.info.reportedGames')"
                        v-for="(game,gameindex) in cheater.games" :key="gameindex">
                     {{ $t(`basic.games.${game}`, {game: game}) }}
@@ -53,7 +54,7 @@
                 </router-link>
 
                 <!-- 被举报的类型 E -->
-                <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0" >
+                <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">
                   <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
                     {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
                   </Tag>
@@ -67,19 +68,26 @@
                 <Col class="mobile-hide html2canvas-ignore">
                   <!-- App S -->
                   <router-link :to="{name: 'cheater_app'}">
-                      <Button>
-                        <Icon type="md-qr-scanner" size="20" color="#535353"/>
-                        {{ $t('detail.info.app_qr.title') }}
-                      </Button>
+                    <Button>
+                      <Icon type="md-qr-scanner" size="20" color="#535353"/>
+                      {{ $t('detail.info.app_qr.title') }}
+                    </Button>
                   </router-link>
                   <!-- App E -->
                   <template v-if="isLogin">
                     <Divider type="vertical"/>
                     <Dropdown placement="bottom-end">
                       <ButtonGroup type="button">
-                        <Button @click="onSubscribes" :loading="subscribes.load" :disabled="!$store.state.configuration.subscribes">
-                          <template v-if="subscribes.static"><Icon type="md-notifications-off" size="20" />{{ $t('detail.subscribes.cancelTrack') }}</template>
-                          <template v-else><Icon type="md-notifications-outline" size="20" />{{ $t('detail.subscribes.tracking') }}</template>
+                        <Button @click="onSubscribes" :loading="subscribes.load"
+                                :disabled="!$store.state.configuration.subscribes">
+                          <template v-if="subscribes.static">
+                            <Icon type="md-notifications-off" size="20"/>
+                            {{ $t('detail.subscribes.cancelTrack') }}
+                          </template>
+                          <template v-else>
+                            <Icon type="md-notifications-outline" size="20"/>
+                            {{ $t('detail.subscribes.tracking') }}
+                          </template>
                         </Button>
                         <Button :disabled="!$store.state.configuration.subscribes">
                           <Icon type="ios-arrow-down"></Icon>
@@ -87,11 +95,17 @@
                       </ButtonGroup>
                       <DropdownMenu slot="list" v-if="$store.state.configuration.subscribes">
                         <DropdownItem :selected="!subscribes.static">
-                          <h4><Icon type="md-notifications-outline"/> {{ $t('detail.subscribes.tracking') }}</h4>
+                          <h4>
+                            <Icon type="md-notifications-outline"/>
+                            {{ $t('detail.subscribes.tracking') }}
+                          </h4>
                           <p>{{ $t('detail.subscribes.trackingDescribe') }}</p>
                         </DropdownItem>
                         <DropdownItem :selected="subscribes.static">
-                          <h4><Icon type="md-notifications-off" />{{ $t('detail.subscribes.cancelTrack') }}</h4>
+                          <h4>
+                            <Icon type="md-notifications-off"/>
+                            {{ $t('detail.subscribes.cancelTrack') }}
+                          </h4>
                           <p>{{ $t('detail.subscribes.cancelTrackDescribe') }}</p>
                         </DropdownItem>
                       </DropdownMenu>
@@ -118,11 +132,14 @@
                       {{ $t('detail.info.historyID', {msg: 'historyID'}) }}
                       <Icon type="ios-arrow-down"></Icon>
                     </a>
-                    <DropdownMenu slot="list" style="min-width: 230px" v-if="cheater && cheater.history && cheater.history.length >= 0">
+                    <DropdownMenu slot="list" style="min-width: 230px"
+                                  v-if="cheater && cheater.history && cheater.history.length >= 0">
                       <!-- 历史ID -->
                       <DropdownItem v-for="origin in cheater.history" :key="origin.originName">
                         <Row>
-                          <Col flex="1"><Time :time="origin.fromTime" v-if="origin.fromTime"></Time></Col>
+                          <Col flex="1">
+                            <Time :time="origin.fromTime" v-if="origin.fromTime"></Time>
+                          </Col>
                           <Col>{{ origin.originName }}</Col>
                         </Row>
                       </DropdownItem>
@@ -131,7 +148,9 @@
 
                   <Divider type="vertical"/>
 
-                  <a @click="updateCheaterModal = true;"><Icon type="md-cloud" /> {{ $t('detail.info.updateButton') }}</a>
+                  <a @click="updateCheaterModal = true;">
+                    <Icon type="md-cloud"/>
+                    {{ $t('detail.info.updateButton') }}</a>
                   <Modal v-model="updateCheaterModal">
                     <div sort="title">
                       <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
@@ -140,13 +159,13 @@
                       <Card style="margin: 2.5rem 0 1rem 0;" dis-hover>
                         <Row :gutter="16" type="flex" justify="center" align="middle">
                           <Col>
-                            <Icon type="md-cloud" color="#535353" size="40" />
+                            <Icon type="md-cloud" color="#535353" size="40"/>
                           </Col>
                           <Col>
-                            <Icon type="md-code-working" color="#aaa" size="20" />
+                            <Icon type="md-code-working" color="#aaa" size="20"/>
                           </Col>
                           <Col>
-                            <Icon type="ios-albums" color="#535353" size="40" />
+                            <Icon type="ios-albums" color="#535353" size="40"/>
                           </Col>
                         </Row>
                       </Card>
@@ -336,8 +355,10 @@
                         <!-- 游戏中 -->
                         <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
                               :href="link" target="_blank">
-                            <Tag size="default" color="geekblue">{{  $t('detail.info.videoLink') }}</Tag>
-                            <a :href="link" target="_blank">{{ link.substr(0, 20) }}{{ link.length >= 20 ? '...' : '' }}</a>
+                            <Tag size="default" color="geekblue">{{ $t('detail.info.videoLink') }}</Tag>
+                            <a :href="link" target="_blank">{{ link.substr(0, 20) }}{{
+                                link.length >= 20 ? '...' : ''
+                              }}</a>
                             <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
                           </span>
                       </p>
@@ -420,7 +441,8 @@
                   <!-- 申诉:any E -->
 
                   <!-- 认为:any S -->
-                  <div :id="`floor-${l.id}`" v-if="l.type === 'verify' || l.type === 'judgement'" class="timeline-content bookmark">
+                  <div :id="`floor-${l.id}`" v-if="l.type === 'verify' || l.type === 'judgement'"
+                       class="timeline-content bookmark">
                     <div class="timeline-time">
                       <Row>
                         <Col flex="1">
@@ -432,7 +454,8 @@
 
                           {{ $t('detail.info.judge') }}
 
-                          <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${util.queryAction(l.judgeAction)}.describe`)">
+                          <Poptip trigger="hover" :transfer="true" word-wrap width="200"
+                                  :content="$t(`basic.action.${util.queryAction(l.judgeAction)}.describe`)">
                             <Tag color="warning">
                               {{ $t(`basic.action.${util.queryAction(l.judgeAction)}.text`) }}
                             </Tag>
@@ -445,7 +468,7 @@
                             <Tag type="border" color="orange"
                                  v-for="(methods, methodsIndex) in l.cheatMethods"
                                  :key="methodsIndex">
-                              {{$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title")}}
+                              {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
                             </Tag>
                           </template>
                         </Col>
@@ -490,10 +513,10 @@
 
                     <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                       <template v-if="l.quote">
-                        <a :href="`#floor-${l.quote.id}`" >
+                        <a :href="`#floor-${l.quote.id}`">
                           <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                             <b>{{ l.quote.username }}</b> :
-                            <div v-html="l.quote.content.substr(0, 80)" ></div>
+                            <div v-html="l.quote.content.substr(0, 80)"></div>
                             ...
                           </div>
                         </a>
@@ -536,7 +559,7 @@
 
               <!-- 用户回复 S -->
               <Card dis-hover :padding="0" id="reply" v-if="isLogin">
-                <div slot="title" >
+                <div slot="title">
                   <Row :gutter="10">
                     <Col flex="1 150px">
                       {{ $t('detail.info.appealManual1') }}
@@ -577,13 +600,13 @@
             </Col>
 
             <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide">
-                <Button type="primary"
-                        v-voice-button
-                        @click="appeal.show = true"
-                        :disabled="!isLogin || cheater.status != 1">
-                  {{ $t('detail.info.appeal') }}
-                </Button>
-                <p><br>{{ $t('detail.appeal.describe') }}</p>
+              <Button type="primary"
+                      v-voice-button
+                      @click="appeal.show = true"
+                      :disabled="!isLogin || cheater.status != 1">
+                {{ $t('detail.info.appeal') }}
+              </Button>
+              <p><br>{{ $t('detail.appeal.describe') }}</p>
             </Col>
           </Row>
 
@@ -627,7 +650,8 @@
                             {{ $t(`basic.action.${v_i.value}.text`) }}
                           </Col>
                           <Col>
-                            <Poptip trigger="hover" :transfer="true" word-wrap width="200" :content="$t(`basic.action.${v_i.value}.describe`)">
+                            <Poptip trigger="hover" :transfer="true" word-wrap width="200"
+                                    :content="$t(`basic.action.${v_i.value}.describe`)">
                               <Icon type="md-help-circle" size="20"/>
                             </Poptip>
                           </Col>
@@ -656,7 +680,7 @@
                       {{ $t(`detail.judgement.content`) }}
                       <Poptip trigger="hover" word-wrap placement="right-end" :padding="'20px 30px'">
                         <Button type="dashed" size="small">
-                          <Icon type="ios-help-buoy" />
+                          <Icon type="ios-help-buoy"/>
                         </Button>
 
                         <div slot="content" span="24">
@@ -689,9 +713,9 @@
 
                     <Card :padding="0" dis-hover>
                       <Textarea v-model="verify.suggestion"
-                               ref="judgementTextarea"
-                               :height="'250px'"
-                               :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+                                ref="judgementTextarea"
+                                :height="'250px'"
+                                :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
                       <Row :gutter="20" style="padding: 5px 15px">
                         <Col flex="1">
                           <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
@@ -702,14 +726,15 @@
                         </Col>
                         <Col>
                           <a href="javascript:void(0)" @click="fastReply.mode = true">
-                            <Icon type="md-settings" size="18" />
+                            <Icon type="md-settings" size="18"/>
                           </a>
                           <Drawer :closable="fastReply.mode" v-model="fastReply.mode" width="40%">
                             <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
                               <div v-for="(i, index) in fastReply.content" :key="index">
                                 <Checkbox :label="i.content" style="width: 100%">
                                   <b>{{ $t('detail.info.fastReplies.' + i.text) }}</b>
-                                  <Input v-model="i.content" maxlength="100" :rows="4" show-word-limit type="textarea"></Input>
+                                  <Input v-model="i.content" maxlength="100" :rows="4" show-word-limit
+                                         type="textarea"></Input>
                                 </Checkbox>
                                 <Divider></Divider>
                               </div>
@@ -735,7 +760,8 @@
                     </Input>
                   </Col>
                   <Col flex="1" align="right">
-                    <Button type="primary" size="large" v-voice-button :loading="verifySpinShow" @click.stop.prevent="doVerify">
+                    <Button type="primary" size="large" v-voice-button :loading="verifySpinShow"
+                            @click.stop.prevent="doVerify">
                       {{ $t('basic.button.submit') }}
                     </Button>
                   </Col>
@@ -746,7 +772,7 @@
 
           <Spin fix v-if="$store.state.configuration.judgementTip == false">
             <div class="loader">
-              <Icon type="md-lock" size="80" style="margin-bottom: 20px" />
+              <Icon type="md-lock" size="80" style="margin-bottom: 20px"/>
 
               <Alert>
                 <template slot="desc">
@@ -784,15 +810,15 @@
         <div slot="header">
           {{ `${$t('detail.info.reply')}` }}
           <BusinessCard :id="timelineList[reply.toFloor].byUserId" v-if="timelineList[reply.toFloor]">
-            <b>{{ timelineList[reply.toFloor].username }}</b>({{reply.toFloor}})
+            <b>{{ timelineList[reply.toFloor].username }}</b>({{ reply.toFloor }})
           </BusinessCard>
         </div>
         <div v-if="isLogin">
           <Form ref="replyForm">
             <Textarea v-model="reply.content"
-                     :toolbar="['bold', 'link']"
-                     :height="'320px'"
-                     :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+                      :toolbar="['bold', 'link']"
+                      :height="'320px'"
+                      :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
 
           </Form>
         </div>
@@ -811,7 +837,7 @@
             </Col>
             <Col>
               <Button @click="cancelReply" v-voice-button>{{ $t('basic.button.cancel') }}</Button>
-              <Button @click="onReply" type="primary" v-voice-button>{{ $t('basic.button.submit') }}</Button>
+              <Button @click="onReply" type="primary" :disabled="!reply.content" v-voice-button>{{ $t('basic.button.submit') }}</Button>
             </Col>
           </Row>
         </div>
@@ -917,7 +943,7 @@
 <script>
 import BFBAN from "/src/assets/js/bfban";
 
-import {api, http, http_token, util, time, storage, account_storage} from '../assets/js/index'
+import {api, http, http_token, util, message, time, storage, account_storage} from '../assets/js/index'
 
 import Empty from '../components/Empty.vue'
 import Textarea from "../components/Textarea";
@@ -933,7 +959,7 @@ export default new BFBAN({
     return {
       util,
 
-      subscribes:{
+      subscribes: {
         load: false,
         static: false
       },
@@ -962,10 +988,10 @@ export default new BFBAN({
         content: [{
           text: 'stats',
           content: this.$i18n.t('detail.info.fastReplies.stats')
-        },{
+        }, {
           text: 'evidencePic',
           content: this.$i18n.t('detail.info.fastReplies.evidencePic')
-        },{
+        }, {
           text: 'evidenceVid',
           content: this.$i18n.t('detail.info.fastReplies.evidenceVid')
         }],
@@ -1055,30 +1081,30 @@ export default new BFBAN({
         this.$Loading.error();
       });
     },
-    onAvatarError () {
+    onAvatarError() {
       this.cheater.avatarLink = "";
     },
     /**
      * 追踪此玩家
      */
-    onSubscribes () {
+    onSubscribes() {
       let subscribesLocal = storage.get('user.subscribes');
       let subscribesArray = [];
       let isSubscribes = false;
 
       if (subscribesLocal.code < 0) {
-        subscribesLocal = { data: { value: [] } };
+        subscribesLocal = {data: {value: []}};
       }
 
       let localdata = subscribesLocal.data.value;
-          subscribesArray = subscribesArray.concat(localdata);
+      subscribesArray = subscribesArray.concat(localdata);
 
       // 校对本地是否已订阅
       if (
           subscribesLocal.code == 0 &&
           localdata.length >= 0 &&
           localdata.includes(this.cheater.id)
-      ){
+      ) {
         // 若存在触发相同，则移除
         localdata.splice(localdata.indexOf(this.cheater.id), 1);
         isSubscribes = false;
@@ -1091,7 +1117,7 @@ export default new BFBAN({
       this.subscribes.load = true;
       this.http.post(api["user_me"], {
         data: {
-          data: { subscribes: subscribesArray }
+          data: {subscribes: subscribesArray}
         }
       }).then((res) => {
         const d = res.data;
@@ -1107,7 +1133,7 @@ export default new BFBAN({
     /**
      * 检查用户对玩家订阅状态
      */
-    checkPlayerSubscribes () {
+    checkPlayerSubscribes() {
       const subscribesLocal = storage.get('user.subscribes');
       if (subscribesLocal.code < 0) return false;
 
@@ -1120,27 +1146,27 @@ export default new BFBAN({
     /**
      * 更新游览值
      */
-    onViewed () {
+    onViewed() {
       let viewed = storage.get("viewed");
       const id = this.cheater.id;
 
       if (!id) return;
 
       // 在持久下存在此id，则不请求
-      if (viewed && viewed.data &&  viewed.data.value[id]) {
+      if (viewed && viewed.data && viewed.data.value[id]) {
         return;
       }
 
       // 实例object
       if (!(viewed && viewed.data && viewed.data.value)) {
         viewed = {
-          data: { value: {} }
+          data: {value: {}}
         }
       }
 
       http.post(api["player_viewed"], {
         data: {
-          data: { id }
+          data: {id}
         }
       }).then(res => {
         storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
@@ -1181,7 +1207,7 @@ export default new BFBAN({
 
       this.cheater = {};
 
-      this.http.get(api["cheaters"], { params }).then(res => {
+      this.http.get(api["cheaters"], {params}).then(res => {
         const d = res.data;
 
         if (d.success === 1) {
@@ -1272,7 +1298,7 @@ export default new BFBAN({
       const cheatMethods = this.verify.checkbox;
 
       if (this.verifySpinShow) return;
-      if ((['kill','guilt'].includes(status) && cheatMethods == '') || suggestion.trim() === '') {
+      if ((['kill', 'guilt'].includes(status) && cheatMethods == '') || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
@@ -1291,7 +1317,7 @@ export default new BFBAN({
         data: {
           data: {
             toPlayerId: this.cheater.id,
-            cheatMethods: ['kill','guilt'].includes(this.verify.status) ? cheatMethods : null,
+            cheatMethods: ['kill', 'guilt'].includes(this.verify.status) ? cheatMethods : null,
             action: this.verify.status,
             content: formatTextarea(suggestion),
           },
@@ -1318,11 +1344,13 @@ export default new BFBAN({
         this.getPlayerInfo();
         this.getTimeline();
 
+        message.playSendVoice();
+
         this.verifySpinShow = false;
       })
     },
     /**
-     * 申诉
+     * 发布申诉
      */
     handleAppeal() {
       const {content = ''} = this.appeal;
@@ -1347,7 +1375,7 @@ export default new BFBAN({
         this.$Message.error(d.message);
       }).finally(() => {
         this.appeal.load = false;
-
+        message.playSendVoice();
         this.getTimeline();
       });
     },
@@ -1437,7 +1465,7 @@ export default new BFBAN({
         data.data['toUserId'] = toUserId;
       }
 
-      this.http.post(api["player_reply"], { data }).then((res) => {
+      this.http.post(api["player_reply"], {data}).then((res) => {
         const d = res.data;
 
         if (d.success == 1) {
@@ -1459,6 +1487,7 @@ export default new BFBAN({
       }).finally(() => {
         this.replySpinShow = false;
         this.replyModal = false;
+        message.playSendVoice();
 
         // reset reply
         this.cancelReply();
@@ -1508,131 +1537,129 @@ export default new BFBAN({
     /**
      * 管理裁判提示锁
      */
-    onJudgementLock () {
+    onJudgementLock() {
       if (this.isLogin)
         account_storage.updateConfiguration('judgementTip', true);
     },
     /**
      * 判决快速模板
      */
-    onFastReply () {
+    onFastReply() {
       if (this.$refs.judgementTextarea && this.fastReply.selected.length > 0) {
         this.$refs.judgementTextarea.updateContent(this.fastReply.selected.toString());
       }
     }
   },
-  computed: {
-
-  }
+  computed: {}
 })
 </script>
 
-<style lang="less" >
-  @import "@/assets/css/icon.less";
+<style lang="less">
+@import "@/assets/css/icon.less";
 
-  .timeline-time-line {
-    padding-top: 10px !important;
-
-    .ivu-timeline-item-tail {
-      margin-left: 15px;
-    }
-
-    .ivu-timeline-item-head {
-      margin-top: 10px !important;
-    }
-  }
-
-  .timeline-time-dot {
-    width: 40px;
-    margin-left: 15px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .timeline-description {
-    font-size: 0.8rem;
-    line-height: 1.5rem;
-    margin: 10px 0;
-    padding: 10px;
-
-    img, video {
-      width: calc(100% + 20px);
-      margin: 10px -10px 10px -10px;
-    }
-
-    a[href] {
-      position: relative;
-      text-decoration: underline;
-      cursor: default;
-    }
-
-    a[href]::after {
-      content: attr(href);
-      display: block;
-      opacity: .3;
-      font-size: .2rem !important;
-    }
-  }
-
-  .timeline-content {
-    position: relative;
-
-    // force to wrap
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    margin-left: 3rem;
-  }
-
-  .timeline-content .loading {
-    background-image: url('/src/assets/fonts/loading.svg');
-    background-repeat: no-repeat;
-    min-width: 100px;
-    min-height: 100px;
-  }
-
-  .ivu-timeline-item {
-    padding: 1rem 0;
-  }
-
-  .ivu-timeline-item-content {
-    padding: 0 .6rem 0 3rem;
-  }
+.timeline-time-line {
+  padding-top: 10px !important;
 
   .ivu-timeline-item-tail {
-    top: 1rem;
-    border-width: .3rem !important;
+    margin-left: 15px;
   }
 
-  .detail-userinfo-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: stretch;
+  .ivu-timeline-item-head {
+    margin-top: 10px !important;
+  }
+}
 
-    h1 {
-      font-size: 2.2rem;
-    }
+.timeline-time-dot {
+  width: 40px;
+  margin-left: 15px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.timeline-description {
+  font-size: 0.8rem;
+  line-height: 1.5rem;
+  margin: 10px 0;
+  padding: 10px;
+
+  img, video {
+    width: calc(100% + 20px);
+    margin: 10px -10px 10px -10px;
   }
 
+  a[href] {
+    position: relative;
+    text-decoration: underline;
+    cursor: default;
+  }
+
+  a[href]::after {
+    content: attr(href);
+    display: block;
+    opacity: .3;
+    font-size: .2rem !important;
+  }
+}
+
+.timeline-content {
+  position: relative;
+
+  // force to wrap
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  margin-left: 3rem;
+}
+
+.timeline-content .loading {
+  background-image: url('/src/assets/fonts/loading.svg');
+  background-repeat: no-repeat;
+  min-width: 100px;
+  min-height: 100px;
+}
+
+.ivu-timeline-item {
+  padding: 1rem 0;
+}
+
+.ivu-timeline-item-content {
+  padding: 0 .6rem 0 3rem;
+}
+
+.ivu-timeline-item-tail {
+  top: 1rem;
+  border-width: .3rem !important;
+}
+
+.detail-userinfo-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+
+  h1 {
+    font-size: 2.2rem;
+  }
+}
+
+.detail-affix {
+  position: fixed;
+  right: calc(50% - (960px / 2) - 85px) !important;
+  top: 30% !important;;
+  transform: translateY(-30%) !important;;
+  z-index: 100;
+
+  a {
+    display: block;
+    padding: 10px 5px;
+  }
+}
+
+@media screen and (min-width: 1180px) {
   .detail-affix {
-    position: fixed;
-    right: calc(50% - (960px / 2) - 85px) !important;
-    top: 30% !important;;
-    transform: translateY(-30%) !important;;
-    z-index: 100;
-
-    a {
-      display: block;
-      padding: 10px 5px;
-    }
+    display: none !important;
   }
-
-  @media screen and (min-width: 1180px) {
-    .detail-affix {
-      display: none !important;
-    }
-  }
+}
 </style>
