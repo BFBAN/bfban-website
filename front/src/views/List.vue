@@ -362,7 +362,7 @@ export default new BFBAN({
         params: {
           game,
           skip: (skip - 1) * limit,
-          sort,
+          sortBy: sort,
           status,
           tz: '',
           limit,
