@@ -256,6 +256,10 @@ export default {
       editorOption: {
         placeholder: this.placeholder,
         modules: {
+          clipboard: {
+            // 粘贴版，处理粘贴时候带图片
+            matchers: [[Node.ELEMENT_NODE, this.handleCustomMatcher]],
+          },
           // https://github.com/merrylmr/quill-mention-people
           // atPeople:{
           //   list:[
@@ -297,6 +301,18 @@ export default {
     }
   },
   methods: {
+    handleCustomMatcher(node, Delta) {
+      let ops = []
+      Delta.ops.forEach(op => {
+        if (op.insert && typeof op.insert === 'string') {// 如果粘贴了图片，这里会是一个对象，所以可以这样处理
+          ops.push({
+            insert: op.insert,
+          })
+        }
+      })
+      Delta.ops = ops
+      return Delta
+    },
     /**
      * 更新富文本
      * @param val

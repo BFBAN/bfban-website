@@ -5,11 +5,11 @@
         <Card dis-hover :padding="0">
           <p slot="title"></p>
           <div slot="extra">
-            <Button size="small" :disabled="!selectWindow"  @click="setMessageEdit">
+            <Button size="small" :disabled="!selectWindow"  @click="setMessageEdit" v-voice-button>
               {{ $t('profile.message.control') }}
             </Button>
             <Divider type="vertical" />
-            <Button type="primary" size="small" :loading="messageLoad" @click="getMessage">
+            <Button type="primary" size="small" :loading="messageLoad" @click="getMessage" v-voice-button>
               {{ $t('profile.message.load') }}
             </Button>
           </div>
@@ -33,7 +33,7 @@
                       </businessCard>
                     </Col>
                     <Col>
-                      <a @click="selectWindow = i.value">{{ $t('profile.message.look') }}</a>
+                      <a @click="openMessageDetail(i)" v-voice-button>{{ $t('profile.message.look') }}</a>
                     </Col>
                   </Row>
                 </div>
@@ -54,7 +54,7 @@
                   </Select>
                 </Col>
                 <Col>
-                  <Button size="small" @click="onBatchOperation" :disabled="control.model < 0" :loading="control.load">
+                  <Button size="small" @click="onBatchOperation" :disabled="control.model < 0" :loading="control.load" v-voice-button>
                     {{ $t('basic.button.submit') }}
                   </Button>
                 </Col>
@@ -103,7 +103,7 @@
 
               <div class="message-content-footer" v-if="messageList[selectWindow].type == 'direct'">
                 <router-link :to="{name: 'account',params: {uId: selectWindow}, query: {repeat: true}}">
-                  <Button long type="primary">
+                  <Button long type="primary" v-voice-button>
                       <Icon type="ios-send" size="20"/>
                   </Button>
                 </router-link>
@@ -166,6 +166,7 @@
             <Col flex="1"></Col>
             <Col>
               <Button type="primary"
+                      v-voice-button
                       :loading="message.load"
                       :disabled="!message.type || !message.content"
                       @click="putMessage">{{ $t('basic.button.commit') }}</Button>
@@ -266,6 +267,24 @@ export default new BFBAN({
       this.message.type = this.message.list[0].title;
     },
     /**
+     * 打开聊天框详情
+     */
+    async openMessageDetail (i) {
+      this.selectWindow = i.value;
+
+      // 标记未读
+      for (let j = 0; j < this.messageList[this.selectWindow].child.length; j++) {
+        if (this.messageList[this.selectWindow].child[j].haveRead == 0)
+          this.messageList[this.selectWindow].child[j].choose = true;
+      }
+
+      this.control.model = 0;
+
+      await this.onBatchOperation();
+
+      this.control.model = null;
+    },
+    /**
      * 批量选择框
      */
     onBatchAll () {
@@ -276,7 +295,7 @@ export default new BFBAN({
     /**
      * 批量操作
      */
-    onBatchOperation () {
+    async onBatchOperation () {
       let onFun = [];
       this.messageList[this.selectWindow].child.forEach(i => {
         if (i.choose) {
@@ -298,7 +317,9 @@ export default new BFBAN({
       this.control.load = true;
       Promise.all(onFun).finally(() => {
         this.control.load = false;
-      })
+      });
+
+      return true;
     },
     /**
      * 设置消息状态

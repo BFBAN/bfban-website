@@ -216,8 +216,7 @@ async function localeMessage(namepath='', lang='en-US', params) {
     if(text)
         Object.keys(params).forEach(i=>{
             text = text
-                .replace(new RegExp(`{${i}}`, 'g'), params[i])
-                .replaceAll(/\{website\}/g, config.mail.domain.origin);
+                .replace(new RegExp(`{${i}}`, 'g'), params[i]);
         });
     return text;
 }
@@ -230,7 +229,8 @@ async function iGotReported(params) {
     if(!user) // that player being reported hasnt registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
-        originPersonaId: report.originPersonaId
+        originPersonaId: report.originPersonaId,
+        website: config.mail.domain.origin
     }));
 }
 
@@ -245,7 +245,8 @@ async function iGotJudged(params) {
         return;
     await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
         status: await localeMessage(`basic.status.${player.status}`, user.attr.language),
-        originPersonaId: player.originPersonaId
+        originPersonaId: player.originPersonaId,
+        website: config.mail.domain.origin
     }));
 }
 
@@ -261,7 +262,8 @@ async function iGotReplied(params) { // checked that comment dose exist
     const toCommentUser = await db.select('*').from('users').where({id: toCommentUserId}).first();
     await sendMessage(reply.byUserId, toCommentUserId, 'reply', await localeMessage('notifications.beReplied', toCommentUser.attr.language, {
         playername: player.originName,
-        originPersonaId: player.originPersonaId
+        originPersonaId: player.originPersonaId,
+        website: config.mail.domain.origin
     }));
 }
 
@@ -274,7 +276,8 @@ async function newBanAppeal(params) {
     const user = await db.select('*').from('users').where({id: banAppeal.byUserId}).first();
     await sendMessage(banAppeal.byUserId, banAppeal.id, 'banAppeal', await localeMessage('notifications.newBanAppeal', user.attr.language, {
         playername: player.originName,
-        originPersonaId: player.originPersonaId
+        originPersonaId: player.originPersonaId,
+        website: config.mail.domain.origin
     }));
     // language is specified by the user who submit the banappeal
 }

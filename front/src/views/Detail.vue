@@ -560,11 +560,27 @@
               <!-- 用户回复 S -->
               <Card dis-hover :padding="0" id="reply" v-if="isLogin">
                 <div slot="title">
+                  <Alert show-icon>{{ $t('detail.info.appealManual1') }}</Alert>
+                  <Textarea v-model="reply.content"
+                            style="margin: 0 -16px;"
+                            ref="replyTextarea"
+                            :toolbar="['bold', 'link']"
+                            :height="'120px'"
+                            :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+                </div>
+                <div style="padding: 10px 16px">
                   <Row :gutter="10">
-                    <Col flex="1 150px">
-                      {{ $t('detail.info.appealManual1') }}
+                    <Col>
+                      <Input type="text" size="large" v-model="reply.captcha"
+                             maxlength="4"
+                             :placeholder="$t('captcha.title')">
+                        <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
+                          <Captcha :id="'replyPlayerCaptcha'" ref="replyPlayerCaptcha"></Captcha>
+                        </div>
+                      </Input>
                     </Col>
-                    <Col flex="150px">
+                    <Col flex="1"></Col>
+                    <Col>
                       <Poptip word-wrap width="280" trigger="hover" transfer>
                         <Button type="primary"
                                 size="large"
@@ -585,11 +601,6 @@
                     </Col>
                   </Row>
                 </div>
-                <Textarea v-model="reply.content"
-                          ref="replyTextarea"
-                          :toolbar="['bold', 'link']"
-                          :height="'120px'"
-                          :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
               </Card>
               <Alert type="warning" show-icon v-else>
                 <template slot="desc">
@@ -819,7 +830,6 @@
                       :toolbar="['bold', 'link']"
                       :height="'320px'"
                       :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
-
           </Form>
         </div>
         <div v-else>{{ $t('detail.info.replyManual4') }}</div>
@@ -831,13 +841,19 @@
                      maxlength="4"
                      :placeholder="$t('captcha.title')">
                 <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                  <Captcha ref="captcha"></Captcha>
+                  <Captcha :id="'replyCommentsCaptcha'" ref="replyCommentsCaptcha"></Captcha>
                 </div>
               </Input>
             </Col>
             <Col>
               <Button @click="cancelReply" v-voice-button>{{ $t('basic.button.cancel') }}</Button>
-              <Button @click="onReply" type="primary" :disabled="!reply.content" v-voice-button>{{ $t('basic.button.submit') }}</Button>
+              <Button @click="onReply"
+                      type="primary"
+                      :disabled="(!reply.content || !reply.captcha) || false"
+                      :loading="replySpinShow"
+                      v-voice-button>
+                {{ $t('basic.button.submit') }}
+              </Button>
             </Col>
           </Row>
         </div>
@@ -941,10 +957,9 @@
 </template>
 
 <script>
-import BFBAN from "/src/assets/js/bfban";
-
 import {api, http, http_token, util, message, time, storage, account_storage} from '../assets/js/index'
 
+import BFBAN from "/src/assets/js/bfban";
 import Empty from '../components/Empty.vue'
 import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
@@ -952,7 +967,7 @@ import RecordLink from "../components/RecordLink.vue";
 import Captcha from "../components/Captcha";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 
-import {formatTextarea, waitForAction} from "@/mixins/common";
+import { formatTextarea, waitForAction } from "@/mixins/common";
 
 export default new BFBAN({
   data() {
@@ -998,6 +1013,7 @@ export default new BFBAN({
         mode: false,
         selected: [],
       },
+
       verify: {
         status: 0,
         checkbox: [],
@@ -1434,11 +1450,9 @@ export default new BFBAN({
       };
     },
     /**
-     * 评论
+     * 用户评论/回复
      */
-    onReply() {
-      this.replySpinShow = true;
-
+    onReply () {
       const cheaterId = this.cheater.id;
       let {toFloor, toUserId, content = ''} = this.reply;
 
@@ -1450,30 +1464,32 @@ export default new BFBAN({
           toCommentId: null,
           content: content,
         },
-        encryptCaptcha: this.reply.captchaUrl.hash,
+        encryptCaptcha: this.$refs.replyPlayerCaptcha.hash,
         captcha: this.reply.captcha,
       };
 
+      // 楼中楼
       // 回复 评论dbID
-      if (this.reply.toFloor)
+      if (this.reply.toFloor && Number(this.reply.toFloor) >= 0) {
         data.data.toCommentId = this.timelineList[this.reply.toFloor].id;
+        data.encryptCaptcha = this.$refs.replyCommentsCaptcha.hash;
+      }
 
-      if (toFloor) {
+      if (toFloor && Number(toFloor) >= 0) {
         data.data['toFloor'] = toFloor;
       }
-      if (toUserId) {
+      if (toUserId && Number(toUserId) >= 0) {
         data.data['toUserId'] = toUserId;
       }
 
-      this.http.post(api["player_reply"], {data}).then((res) => {
+      this.replySpinShow = true;
+      this.http.post(api["player_reply"], { data }).then((res) => {
         const d = res.data;
 
         if (d.success == 1) {
-          const {createDatetime, content, status} = d.data;
-
           this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
 
-          this.cheater.status = status;
+          this.replyModal = false;
           this.reply.toFloor = "";
           this.reply = "";
 
@@ -1486,15 +1502,11 @@ export default new BFBAN({
         this.$Message.error(d.code);
       }).finally(() => {
         this.replySpinShow = false;
-        this.replyModal = false;
+
         message.playSendVoice();
 
-        // reset reply
         this.cancelReply();
-
         this.getPlayerInfo();
-
-        // update timelink
         this.getTimeline();
       });
     },
@@ -1515,10 +1527,9 @@ export default new BFBAN({
 
       this.http.post(api["player_update"], {
         data: this.getParamsIds()
-      }).then((res) => {
-        this.updateUserInfospinShow = false;
-
+      }).then(res => {
         const d = res.data;
+
         if (d.error === 0) {
           const {cheaterGameName: originId, originUserId, avatarLink} = d.data.origin;
 
@@ -1527,11 +1538,12 @@ export default new BFBAN({
           this.cheater.avatarLink = avatarLink;
 
           this.$Message.success(this.$i18n.t('detail.messages.updateComplete'));
-
           return;
         }
 
         this.$Message.error(d.code);
+      }).finally(() => {
+        this.updateUserInfospinShow = false;
       });
     },
     /**
@@ -1550,7 +1562,6 @@ export default new BFBAN({
       }
     }
   },
-  computed: {}
 })
 </script>
 

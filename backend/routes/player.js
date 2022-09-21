@@ -598,7 +598,7 @@ async (req, res, next)=>{
  *       400:
  *         description: viewed.bad
  */
-router.post('/reply', verifyJWT, forbidPrivileges(['freezed','blacklisted']),
+router.post('/reply', verifyCaptcha, verifyJWT, forbidPrivileges(['freezed','blacklisted']),
     commentRateLimiter.limiter([{roles: ['admin','super','root','dev','bot'], value: 0}]), [
     checkbody('data.toPlayerId').isInt({min: 0}),
     checkbody('data.toCommentId').optional({nullable: true}).isInt({min: 1}),

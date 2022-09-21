@@ -153,7 +153,6 @@ export default new BFBAN({
             title: " ",
             key: 'createTime',
             sortable: true,
-            fixed: "left",
             minWidth: 150,
             render: (h, params) => {
               return h('Tag', {
@@ -173,7 +172,9 @@ export default new BFBAN({
           {
             title: this.$i18n.t("account.reported"),
             key: 'originName',
-            width: 200,
+            fixed: "left",
+            minWidth: 150,
+            maxWidth: 200,
             ellipsis: true,
             tooltip: true,
             render: (h, params) => {

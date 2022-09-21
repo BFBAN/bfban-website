@@ -2,22 +2,22 @@
   "sendTypes": [
     {
       "title": "direct",
-      "privilege": ["normal", "admin", "root", "super"]
+      "privilege": ["normal","admin","root","super","dev"]
     }, {
       "title": "warn",
-      "privilege": ["super"]
+      "privilege": ["root","super","dev"]
     }, {
       "title": "fatal",
-      "privilege": ["super"]
+      "privilege": ["root","super","dev"]
     }, {
       "title": "toAll",
-      "privilege": ["super"]
+      "privilege": ["root","super","dev"]
     }, {
       "title": "toAdmins",
-      "privilege": ["super", "admin"]
+      "privilege": ["super","admin","dev"]
     }, {
       "title": "toNormals",
-      "privilege": ["super", "admin"]
+      "privilege": ["super","admin"]
     }, {
       "title": "command",
       "privilege": ["root", "dev"]

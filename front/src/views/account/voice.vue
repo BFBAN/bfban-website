@@ -91,8 +91,8 @@ export default {
   created() {
     for (let key in this.voiceType) {
       let _i = account_storage.getConfiguration(this.voiceType[key].loaclValue);
-      this.voiceType[key].state = _i != null ? _i.state : this.voiceType[key].state;
-      this.voiceType[key].value = _i != null ? _i.value * 100 : this.voiceType[key].value;
+      this.voiceType[key].state = _i ? _i.state : this.voiceType[key].state;
+      this.voiceType[key].value = _i ? _i.value * 100 : this.voiceType[key].value;
     }
   },
   methods: {

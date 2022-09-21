@@ -433,6 +433,7 @@ export default {
   },
   computed: {
     formItem: {
+      set () { return true },
       get () {
         this.checkLangLocalSync();
         let data = Object.assign({
