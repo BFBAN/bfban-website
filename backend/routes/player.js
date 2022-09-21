@@ -698,16 +698,23 @@ async (req, res, next)=>{
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'update.bad', message: validateErr.array()});
         let key = '', val='';
-        switch(true) {
-        case !!req.query.userId:
-            key = 'originUserId'; val = req.query.userId; break;
-        case !!req.query.personaId:
-            key = 'originPersonaId'; val = req.query.personaId; break;
-        case !!req.query.dbId:
-            key = 'id'; val = req.query.dbId; break;
-        default:
+
+        if (req.body.userId) {
+            key = 'originUserId';
+            val = req.body.userId;
+        }
+        else if (req.body.personaId) {
+            key = 'originPersonaId';
+            val = req.body.personaId;
+        }
+        else if (req.body.dbId) {
+            key = 'id';
+            val = req.body.dbId;
+        }
+        else {
             return res.status(400).json({error: 1, code: 'update.bad', message: 'Must specify one param from "originUserId","originPersonaId","dbId"'});
         }
+
         /** @type {import("../typedef.js").Player} */
         const tmp = await db.select('*').from('players').where(key, '=', val).first();
         if(!tmp)

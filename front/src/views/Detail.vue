@@ -1525,8 +1525,12 @@ export default new BFBAN({
 
       this.updateUserInfospinShow = true;
 
+      console.log(this.cheater)
+
       this.http.post(api["player_update"], {
-        data: this.getParamsIds()
+        data: {
+          personaId: this.cheater.originPersonaId
+        }
       }).then(res => {
         const d = res.data;
 
