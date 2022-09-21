@@ -180,12 +180,24 @@
 
               <Form>
                 <FormItem :label="$t('list.reportTime')">
-                  <DatePicker :value="createTime" @on-change="handleCDatepicker" split-panels
-                              :placeholder="$t('list.reportTime')" style="width: 100%"></DatePicker>
+                  <DatePicker type="daterange"
+                              placement="bottom-end"
+                              split-panels
+                              @on-change="handleCDatepicker"
+                              :options="timeOptions"
+                              :value="createTime"
+                              :placeholder="$t('list.reportTime')"
+                              style="width: 100%"></DatePicker>
                 </FormItem>
                 <FormItem :label="$t('list.updateTime')">
-                  <DatePicker :value="updateTime" @on-change="handleUDatepicker" split-panels
-                              :placeholder="$t('list.updateTime')" style="width: 100%"></DatePicker>
+                  <DatePicker type="daterange"
+                              placement="bottom-end"
+                              split-panels
+                              @on-change="handleUDatepicker"
+                              :options="timeOptions"
+                              :value="updateTime"
+                              :placeholder="$t('list.updateTime')"
+                              style="width: 100%"></DatePicker>
                 </FormItem>
                 <FormItem>
                   <Select @on-change="handleChanges" v-model="sortByValue">
@@ -220,8 +232,42 @@ export default new BFBAN({
       spinShow: true,
       gameName: "all",
       statusGroup: "-1",
-      createTime: "",
-      updateTime: "",
+      timeOptions: {
+        disabledDate (date) {
+          return date && date.valueOf() > Date.now();
+        },
+        shortcuts: [
+          {
+            text: '1 week',
+            value () {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              return [start, end];
+            }
+          },
+          {
+            text: '1 month',
+            value () {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              return [start, end];
+            }
+          },
+          {
+            text: '3 months',
+            value () {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              return [start, end];
+            }
+          }
+        ]
+      },
+      createTime: [],
+      updateTime: [],
       skip: 1,
       limit: 10,
       total: 0,
@@ -364,25 +410,34 @@ export default new BFBAN({
           skip: (skip - 1) * limit,
           sortBy: sort,
           status,
-          tz: '',
           limit,
         },
       };
 
       if (createTime) {
-          config["params"]["createTime"] = new Date(createTime).getTime();
+        const _time = createTime.split(",");
+        const _starttime = new Date(_time[0]).getTime();
+        const _endtime = new Date(_time[1]).getTime();
+
+        config["params"]["createTimeFrom"] = _starttime;
+        config["params"]["createTimeTo"] = _endtime;
       }
 
       if (updateTime) {
-          config["params"]["updateTime"] = new Date(updateTime).getTime();
+        const _time = updateTime.split(",");
+        const _starttime = new Date(_time[0]).getTime() * 1000;
+        const _endtime = new Date(_time[1]).getTime() * 1000;
+
+        config["params"]["updateTimeFrom"] = _starttime;
+        config["params"]["updateTimeTo"] = _endtime;
       }
 
       // 设置筛选参
       // 更新widget对应选择器的值
       this.gameName = game;
       this.statusGroup = status;
-      this.createTime = createTime;
-      this.updateTime = updateTime;
+      if (createTime) this.createTime = createTime.split(",");
+      if (updateTime) this.updateTime = updateTime.split(",");
       this.skip = Number.parseInt(skip);
       this.limit = Number.parseInt(limit);
       this.sortByValue = sort;
@@ -412,8 +467,8 @@ export default new BFBAN({
     routerQuery() {
       const _game = this.gameName;
       const _status = this.statusGroup;
-      const _createTime = this.createTime;
-      const _updateTime = this.updateTime;
+      const _createTime = this.createTime ? this.createTime.toString() : '';
+      const _updateTime = this.updateTime ? this.updateTime.toString() : '';
       const _skip = this.skip;
       const _limit = this.limit;
       const _sort = this.sortByValue;
