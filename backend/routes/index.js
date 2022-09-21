@@ -314,6 +314,68 @@ async (req, res, next)=>{
     }
 });
 
+/**
+ * @swagger
+ * /api/players/stream:
+ *   get:
+ *     tags:
+ *       - 统计
+ *     summary: 玩家列表流 BOT 账号用
+ *     description: 获取大批量玩家列表数据
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: game
+ *         description: 游戏类型，['bf1', 'bfv', 'bf6']
+ *         type: string
+ *         in: query
+ *         value: bf1
+ *       - name: createTimeFrom
+ *         description: 根据当前创建时间开始查询
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: updateTimeFrom
+ *         description: 根据当前更新时间开始查询
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: createTimeTo
+ *         description: 根据当前创建时间开结束查询
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: updateTimeTo
+ *         description: 根据当前更新时间开结束查询
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: status
+ *         description: 案件状态类型
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *       - name: sortBy
+ *         description: 筛选方式,['createTime','updateTime','viewNum','commentsNum']
+ *         type: string
+ *         in: query
+ *         value: commentsNum
+ *       - name: order
+ *         description: 顺序方式，['desc','asc']
+ *         type: string
+ *         in: query
+ *         value: desc
+ *       - name: limit
+ *         description: 查询数量
+ *         type: num
+ *         in: query
+ *         value: 10
+ *     responses:
+ *       200:
+ *         description: activities.ok
+ *       400: players.bad
+ */
+
 router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'dev', 'root']), [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
@@ -462,19 +524,6 @@ async (req, res, next)=>{
     }
 });
 
-/**
- * @swagger
- * /api/admins:
- *   get:
- *     tags:
- *       - 统计
- *     summary: 获取所有管理员
- *     description: 获取所有管理员, 包含admin/super/root身份
- *     produces:
- *       - application/json
- *     responses:
- *       200: getAdmins.success
- */
 router.get('/admins', async (req, res, next)=> {
     try {
         /** @type {import("../typedef.js").User[]} */

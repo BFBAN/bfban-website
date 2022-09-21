@@ -36,7 +36,7 @@ async function getPlayerId({dbId, userId, personaId}) {
  *   get:
  *     tags:
  *       - 玩家
- *     summary: 举报玩家详情信息
+ *     summary: 获取举报玩家详情信息
  *     description: 获取举报玩家详情信息
  *     produces:
  *       - application/json
@@ -262,6 +262,48 @@ function raceGetOriginUserId(originName) {
         isdone.event.removeAllListeners();  // destory
     });
 }
+
+/**
+ * @swagger
+ * /api/player/report:
+ *   post:
+ *     tags:
+ *       - 举报
+ *     summary: 举报玩家
+ *     description: 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: game
+ *         description: 举报的游戏类型
+ *         type: num
+ *         in: query
+ *       - name: originName: 
+ *         description: Origin游戏ID
+ *         required: true
+ *         type: integer
+ *         in: query
+ *       - name: cheatMethods
+ *         description: 举报的外挂类型 ['wallhack', 'aimbot', 'invisable', 'magicBullet', 'damageChange', 'gadgetModify', 'teleport', 'attackServer']
+ *         type: array
+ *         in: query
+ *       - name: videoLink
+ *         description: 视频连接
+ *         type: integer
+ *         in: query
+ *       - name: description
+ *         description: 补充说明
+ *         required: true
+ *         type: integer
+ *         in: query
+ *     responses:
+ *       200:
+ *         description: viewed.ok
+ *       400:
+ *         description: viewed.bad
+ *       404:
+ *         description: player.notFound
+ */
 
 router.post('/report', verifyJWT, verifyCaptcha,
     forbidPrivileges(['freezed','blacklisted']), [
