@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "aaf2ccf8a22c10861ebf",
+    "revision": "6eb905c972363fa48b8e",
     "url": "/assets/css/app.972c4e31.css"
   },
   {
-    "revision": "cb80ac86587da1d3cabc",
-    "url": "/assets/css/chunk-18a0fb98.bd602673.css"
+    "revision": "7ce16043b7d3193503d4",
+    "url": "/assets/css/chunk-280c2186.77e3517c.css"
   },
   {
     "revision": "6aee4d3502b50a11361b",
@@ -72,16 +72,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/css/chunk-7b75e3bc.c855d6d1.css"
   },
   {
-    "revision": "24b7349950138624029e",
-    "url": "/assets/css/chunk-7cb30e07.b4d0c853.css"
-  },
-  {
     "revision": "d85933d28f1abecdf3b0",
     "url": "/assets/css/chunk-8bd4c64c.63c3edbc.css"
   },
   {
     "revision": "dfc958e2965093ecd4a0",
     "url": "/assets/css/chunk-8ee5d172.63c3edbc.css"
+  },
+  {
+    "revision": "3eed5293b1188d76017a",
+    "url": "/assets/css/chunk-9cf2ebb8.b4d0c853.css"
   },
   {
     "revision": "e9c259de8ce9fc55847c",
@@ -180,12 +180,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/img/ubuntu-mono-v8-latin-regular.28524211.svg"
   },
   {
-    "revision": "aaf2ccf8a22c10861ebf",
+    "revision": "6eb905c972363fa48b8e",
     "url": "/assets/js/app.2.7.0.js"
   },
   {
-    "revision": "cb80ac86587da1d3cabc",
-    "url": "/assets/js/chunk-18a0fb98.2.7.0.js"
+    "revision": "7ce16043b7d3193503d4",
+    "url": "/assets/js/chunk-280c2186.2.7.0.js"
   },
   {
     "revision": "6aee4d3502b50a11361b",
@@ -288,16 +288,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-7b75e3bc.2.7.0.js"
   },
   {
-    "revision": "24b7349950138624029e",
-    "url": "/assets/js/chunk-7cb30e07.2.7.0.js"
-  },
-  {
     "revision": "d85933d28f1abecdf3b0",
     "url": "/assets/js/chunk-8bd4c64c.2.7.0.js"
   },
   {
     "revision": "dfc958e2965093ecd4a0",
     "url": "/assets/js/chunk-8ee5d172.2.7.0.js"
+  },
+  {
+    "revision": "3eed5293b1188d76017a",
+    "url": "/assets/js/chunk-9cf2ebb8.2.7.0.js"
   },
   {
     "revision": "e9c259de8ce9fc55847c",
@@ -472,7 +472,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/icons/maskable_icon_x96.png"
   },
   {
-    "revision": "288638ad56f6c2c4d4ba146030705d90",
+    "revision": "6057f73362c08e8a59d8ee5a3dc1bce8",
     "url": "/index.html"
   },
   {
@@ -484,14 +484,14 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/manifest.json"
   },
   {
-    "url": "/precache-manifest.cbd76881531c46ac62aa2275e88dd9ce.js"
+    "url": "/precache-manifest.cf85edc1bf17f022ee4527bc692c8a1a.js"
   },
   {
     "revision": "038bdc3bd76d45725a3efc25dad869e5",
     "url": "/robots.txt"
   },
   {
-    "revision": "099fd1a640f820e2898b6fd96b8d576e",
+    "revision": "b2817d2303ed76f095d4f9f35160eaff",
     "url": "/service-worker.js"
   },
   {
