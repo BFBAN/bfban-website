@@ -85,6 +85,89 @@ async (req, res, next)=>{
 });
 
 /**
+ * 日活
+ */
+router.get('/activeStatistical', [
+    checkquery('isBot').optional().isBoolean(),
+    checkquery('report').optional().isBoolean(),
+    checkquery('community').optional().isBoolean(),
+    checkquery('time').optional().isIn(['daily','weekly','monthly'])
+],
+async (req, res, next)=>{
+    try {
+        const validateErr = validationResult(req);
+
+        if(!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'statistics.bad', message:validateErr.array()});
+
+        const time = {
+            'daily': new Date(new Date().getTime() - 1 * 24 * 3600 * 1000),
+            'weekly': new Date(new Date().getTime() - 7 * 24 * 3600 * 1000),
+            'monthly': new Date(new Date().getTime() - 24 * 24 * 3600 * 1000)
+        }
+
+        // 社区参与度
+        // Community Engagement
+        let data = { community: [], report: [] };
+        if(req.query.community) {
+            let communityMap = {};
+            let array = await db('comments')
+                .join('users','comments.byUserId', 'users.id')
+                .select('comments.createTime','comments.content','comments.type', 'users.createTime', 'users.username', 'users.id')
+                .where('comments.createTime', '>=', time[req.query.time] || time.weekly);
+
+            for (const i of array) {
+                if (communityMap[i.id] != null) {
+                    switch (array.type) {
+                        case 'reply':
+                        case 'report':
+                            communityMap[i.id].total += .2
+                            break;
+                        case 'judgement':
+                            communityMap[i.id].total += .5
+                            break;
+                        case 'banAppeal':
+                            communityMap[i.id].total += 0
+                            break;
+                        default:
+                            communityMap[i.id].total += .1
+                            break;
+                    }
+                }
+                else communityMap[i.id] = { total: .1, id: i.id, username: i.username };
+            }
+            for (const i in communityMap) data.community.push(communityMap[i]);
+
+            data.community = data.community.sort((a ,b) => { return a.total - b.total }).reverse().slice(0, 10)
+        }
+
+        // 举报统计
+        // 7内时间 + 高判决
+        if (req.query.report) {
+            let reportMap = {};
+            const reportArray = await db('comments')
+                .join('users','comments.byUserId', 'users.id')
+                .select('comments.createTime','comments.content','comments.type', 'users.createTime', 'users.username', 'users.id')
+                .where('comments.createTime', '>=', time[req.query.time] || time.weekly)
+                .andWhere('comments.type', 'report')
+
+            for (const i of reportArray) {
+                if (reportMap[i.id] != null) reportMap[i.id].total += 1
+                else reportMap[i.id] = { total: 1, id: i.id, username: i.username };
+            }
+            for (const i in reportMap) data.report.push(reportMap[i]);
+
+            data.report = data.report.sort((a ,b) => { return a.total - b.total }).reverse().slice(0, 10)
+        }
+
+
+        res.status(200).json({success: 1, code: 'statistics.ok', data: data});
+    } catch(err) {
+        next(err);
+    }
+});
+
+/**
  * @swagger
  * /api/playerStatistics:
  *   post:

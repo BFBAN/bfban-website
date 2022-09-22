@@ -60,13 +60,71 @@
           </Col>
         </Row>
       </Card>
+      <br>
+
+      <div>
+        <Row :gutter="20">
+          <Col>
+            <RadioGroup size="small" type="button" v-voice-button v-model="timeRange" @on-change="getActiveStatistical">
+              <Radio v-for="(i, index) in timeArray" :key="index" :label="i.name" :value="i.value">{{ $t('sitestats.timeRange.' + i.name) }}</Radio>
+            </RadioGroup>
+          </Col>
+        </Row>
+      </div>
+      <br>
+
+      <Row :gutter="20">
+        <Col :x="{span: 24}" :lg="{span: 8}">
+          <Card dis-hover>
+            <div slot="title">{{ $t('sitestats.communityParticipation') }}</div>
+            <ol class="sitestats-ul" v-if="active.community.length > 0">
+              <li v-for="(i, index) in active.community" :key="index">
+                <Row>
+                  <Col flex="1">
+                    <businessCard :id="i.id">
+                      <router-link :to="{name:'account', params: { uId: i.id }}">{{i.username}}</router-link>
+                    </businessCard>
+                  </Col>
+                  <Col>{{i.total.toFixed(2) || 0}}</Col>
+                </Row>
+              </li>
+            </ol>
+            <Empty v-else></Empty>
+            <Spin size="large" fix v-show="active.load">
+              <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+            </Spin>
+          </Card>
+        </Col>
+        <Col :x="{span: 24}" :lg="{span: 8}">
+          <Card dis-hover>
+            <div slot="title">{{ $t('sitestats.reportRanking') }}</div>
+            <ol class="sitestats-ul" v-if="active.report.length > 0">
+              <li v-for="(i, index) in active.report" :key="index">
+                <Row>
+                  <Col flex="1">
+                    <businessCard :id="i.id">
+                      <router-link :to="{name:'account', params: { uId: i.id }}">{{i.username}}</router-link>
+                    </businessCard>
+                  </Col>
+                  <Col>{{i.total.toFixed(0) || 0}}</Col>
+                </Row>
+              </li>
+            </ol>
+            <Empty v-else></Empty>
+            <Spin size="large" fix v-show="active.load">
+              <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+            </Spin>
+          </Card>
+        </Col>
+      </Row>
     </div>
   </div>
 </template>
 
 <script>
 import BFBAN from "../assets/js/bfban";
-import * as echarts from  "echarts";
+import Empty from "@/components/Empty"
+import businessCard from "@/components/businessCard";
 
 import {http, api, conf} from '../assets/js/index'
 
@@ -121,9 +179,21 @@ export default new BFBAN({
           valName: 'userStats',
           lineColor: '#ed4014'
         }],
+      },
+
+      timeArray: [
+        {name: 'daily', value: 'daily'},
+        {name: 'weekly', value: 'weekly'},
+        {name: 'monthly', value: 'monthly'},
+      ],
+      timeRange: 'weekly',
+      isIncludingRobots: true,
+      active: {
+        load: true
       }
     }
   },
+  components: { businessCard,Empty },
   created () {
     this.loadData();
   },
@@ -135,6 +205,7 @@ export default new BFBAN({
 
       await this.getSiteStats();
       await this.getStatisticsInfo();
+      await this.getActiveStatistical();
 
       setTimeout(() => {
         this.load = false;
@@ -168,6 +239,25 @@ export default new BFBAN({
           data: []
         });
       })
+    },
+    getActiveStatistical () {
+      this.active.load = true;
+      http.get('/activeStatistical', {
+        params: {
+          isBot: this.isIncludingRobots,
+          time: this.timeRange,
+          report: true,
+          community: true
+        }
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.active = Object.assign(this.active, d.data);
+        }
+      }).finally(() => {
+        this.active.load = false;
+      });
     },
     /**
      * 统计信息
@@ -206,7 +296,7 @@ export default new BFBAN({
           registers: true,
           banAppeals: true,
           admins: true,
-          from: new Date('2018-01-01').getTime()
+          from: 1514764800000
         }
       }).then((res) => {
         const d = res.data;
@@ -235,9 +325,35 @@ export default new BFBAN({
 });
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+@import "@/assets/css/icon.less";
+
 .chart {
   height: 300px;
+}
+
+.sitestats-ul {
+  padding-left: 25px;
+
+  li {
+    padding-left: 5px;
+  }
+
+  li:nth-child(1)::marker,
+  li:nth-child(2)::marker,
+  li:nth-child(3)::marker {
+    font-size: 20px;
+  }
+
+  li:nth-child(3) {
+    margin-bottom: 5px;
+  }
+
+  li::marker {
+    font-size: 16px;
+    display: block;
+    padding-left: 20px;
+  }
 }
 
 .sitestats-loading {

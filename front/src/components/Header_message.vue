@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="desktop-hide" >
+    <div class="desktop-hide">
       <div @click="message.show = true">
         <slot name="content"></slot>
       </div>

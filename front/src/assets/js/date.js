@@ -13,6 +13,6 @@ export default class Time {
      * 程序启动时间
      */
     appStart () {
-        return new Date('2018 11-04').toJSON().replaceAll('Z', '');
+        return new Date(1514764800000);
     }
 }

@@ -36,6 +36,7 @@
               </template>
               <!-- Origin头像 E -->
             </div>
+            <br class="desktop-hide">
           </Col>
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
@@ -248,7 +249,7 @@
           <!-- 战绩链接 E -->
         </Card>
         <br>
-        <Card style="overflow: hidden" dis-hover>
+        <Card style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
           <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
             <Col :xs="{span: 23, push: 1}" :lg="{span: 8, push: 0}" class="mobile-hide">
               {{ $t('detail.info.assistPppeal') }}
@@ -282,7 +283,7 @@
             </Col>
           </Row>
           <Row :gutter="20" type="flex">
-            <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 17, push: 1}" order="2" class="tabs-style">
+            <Col :xs="{span: 24, push: 0, pull: 0}" :lg="{span: 17, push: 1}" order="2" class="tabs-style">
               <div class="content">
                 <!-- 时间线 -->
                 <TimelineItem
@@ -294,24 +295,24 @@
                     :color="l.privilege === 'admin' ? 'red' : 'green'"
                     :id="`floor-${l.index}`">
                   <div v-if="l.type === 'report'" slot="dot" class="timeline-time-dot ivu-tag-warning hand">
-                    <Icon type="ios-hand" size="20"></Icon>
+                    <Icon type="ios-hand" :size="isMobile ? 10 : 20"></Icon>
                   </div>
                   <div v-else-if="l.type === 'reply'" slot="dot" class="timeline-time-dot ivu-tag-geekblue reply">
-                    <Icon type="ios-text" size="20" class="ivu-tag-text"></Icon>
+                    <Icon type="ios-text" :size="isMobile ? 10 : 20" class="ivu-tag-text"></Icon>
                   </div>
                   <div v-else-if="l.type === 'banAppeal'" slot="dot"
                        class="timeline-time-dot ivu-tag-magenta ban_appeal">
-                    <Icon type="md-bookmark" size="20" class="ivu-tag-text"></Icon>
+                    <Icon type="md-bookmark" :size="isMobile ? 10 : 20" class="ivu-tag-text"></Icon>
                   </div>
                   <div v-else-if="l.type === 'judgement'" slot="dot"
                        class="timeline-time-dot ivu-tag-primary ban_appeal">
-                    <Icon type="ios-medical" size="20" class=""></Icon>
+                    <Icon type="ios-medical" :size="isMobile ? 10 : 20" class=""></Icon>
                   </div>
                   <div v-else-if="l.type === 'verify'" slot="dot" class="timeline-time-dot trophy">
-                    <Icon type="ios-share-alt" size="20"></Icon>
+                    <Icon type="ios-share-alt" :size="isMobile ? 10 : 20"></Icon>
                   </div>
                   <div v-else slot="dot" class="timeline-time-dot ivu-tag-border ivu-tag-text out">
-                    <Icon type="ios" size="20" class=""></Icon>
+                    <Icon type="ios" :size="isMobile ? 10 : 20" class=""></Icon>
                   </div>
 
                   <!-- 举报:any S -->
@@ -558,8 +559,8 @@
               </div>
 
               <!-- 用户回复 S -->
-              <Card dis-hover :padding="0" id="reply" v-if="isLogin">
-                <div slot="title">
+              <div class="ivu-card ivu-card-bordered ivu-card-dis-hover" id="reply" v-if="isLogin">
+                <div class="ivu-card-body">
                   <Alert show-icon>{{ $t('detail.info.appealManual1') }}</Alert>
                   <Textarea v-model="reply.content"
                             style="margin: 0 -16px;"
@@ -568,9 +569,9 @@
                             :height="'120px'"
                             :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
                 </div>
-                <div style="padding: 10px 16px">
+                <div class="ivu-card-body">
                   <Row :gutter="10">
-                    <Col>
+                    <Col :xs="{span: 24}" :lg="{span: 12}">
                       <Input type="text" size="large" v-model="reply.captcha"
                              maxlength="4"
                              :placeholder="$t('captcha.title')">
@@ -579,29 +580,32 @@
                         </div>
                       </Input>
                     </Col>
-                    <Col flex="1"></Col>
-                    <Col>
-                      <Poptip word-wrap width="280" trigger="hover" transfer>
+                    <Col :xs="{span: 24, push: 0}" :lg="{span: 8, push: 7}">
+                      <ButtonGroup>
                         <Button type="primary"
                                 size="large"
-                                style="width:150px"
-                                long
                                 v-voice-button
+                                :long="isMobile"
                                 :loading="replySpinShow"
                                 :disabled="!reply.content"
                                 @click.stop.prevent="onReply">
                           {{ $t('detail.info.reply') }}
                         </Button>
-                        <div slot="content">
-                          <span>{{ $t('detail.info.replyManual1') }}</span>
-                          <b><a href="https://sm.ms/" target="_blank">{{ $t('detail.info.uploadPicButton') }}</a></b>，
-                          <span>{{ $t('detail.info.replyManual2') }}</span>
-                        </div>
-                      </Poptip>
+                        <Button size="large" type="dashed">
+                          <Poptip word-wrap width="280" trigger="hover" transfer>
+                            <Icon type="ios-help-buoy"/>
+                            <div slot="content">
+                              <span>{{ $t('detail.info.replyManual1') }}</span>
+                              <b><a href="https://sm.ms/" target="_blank">{{ $t('detail.info.uploadPicButton') }}</a></b>，
+                              <span>{{ $t('detail.info.replyManual2') }}</span>
+                            </div>
+                          </Poptip>
+                        </Button>
+                      </ButtonGroup>
                     </Col>
                   </Row>
                 </div>
-              </Card>
+              </div>
               <Alert type="warning" show-icon v-else>
                 <template slot="desc">
                   {{ $t('detail.info.replyManual3') }}
@@ -628,7 +632,6 @@
           <br>
           <Spin size="large" fix v-show="spinShow">
             <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
-            <p>ヾ(◍°∇°◍)ﾉﾞ load...</p>
           </Spin>
         </Card>
         <br v-if="isAdmin">
@@ -641,7 +644,7 @@
                 <Col flex="1">
                   # {{ $t('detail.info.judgement') }}
                 </Col>
-                <Col>
+                <Col class="mobile-hide">
                   <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
                 </Col>
               </Row>
@@ -649,7 +652,7 @@
 
             <Form ref='verifyForm' label-position="top">
               <Row :gutter="30">
-                <Col span="12">
+                <Col :xs="{span:24}" :lg="{span: 12}">
                   <FormItem :label="$t(`detail.judgement.behavior`)">
                     <Select v-model="verify.status">
                       <!-- 判断选项 -->
@@ -672,7 +675,7 @@
                     </Select>
                   </FormItem>
                 </Col>
-                <Col span="12">
+                <Col :xs="{span:24}" :lg="{span: 12}">
                   <FormItem v-show="['kill','guilt'].includes(verify.status)" :label="$t(`detail.judgement.methods`)">
                     <Select v-model="verify.checkbox" multiple>
                       <Option v-for="method in cheatMethodsGlossary" :key="method.value"
@@ -759,8 +762,8 @@
               </Row>
 
               <FormItem :label="$t('captcha.title')">
-                <Row>
-                  <Col>
+                <Row :gutter="50">
+                  <Col :xs="{span:24}" :lg="{span: 8, flex: 1}">
                     <Input type="text" v-model="reply.captcha"
                            size="large"
                            maxlength="4"
@@ -770,8 +773,12 @@
                       </div>
                     </Input>
                   </Col>
-                  <Col flex="1" align="right">
-                    <Button type="primary" size="large" v-voice-button :loading="verifySpinShow"
+                  <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
+                    <br class="desktop-hide">
+                    <Button type="primary"
+                            size="large"
+                            :long="isMobile"
+                            v-voice-button :loading="verifySpinShow"
                             @click.stop.prevent="doVerify">
                       {{ $t('basic.button.submit') }}
                     </Button>
@@ -1582,6 +1589,36 @@ export default new BFBAN({
   .ivu-timeline-item-head {
     margin-top: 10px !important;
   }
+
+
+  .timeline-content {
+    position: relative;
+
+    // force to wrap
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    margin-left: 3rem;
+  }
+
+  .timeline-content .loading {
+    background-image: url('/src/assets/fonts/loading.svg');
+    background-repeat: no-repeat;
+    min-width: 100px;
+    min-height: 100px;
+  }
+
+  .ivu-timeline-item {
+    padding: 1rem 0;
+  }
+
+  .ivu-timeline-item-content {
+    padding: 0 .6rem 0 3rem;
+  }
+
+  .ivu-timeline-item-tail {
+    top: 1rem;
+    border-width: .3rem !important;
+  }
 }
 
 .timeline-time-dot {
@@ -1592,6 +1629,32 @@ export default new BFBAN({
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media screen and (max-width: 980px){
+  .timeline-time-dot {
+    width: 25px;
+    height: 25px;
+    margin-left: 5px;
+  }
+
+  .timeline-time-line {
+    .ivu-timeline-item-tail {
+      margin-left: -2px;
+    }
+
+    .timeline-content {
+      margin-left: 35px;
+    }
+
+    .ivu-timeline-item-head {
+      margin-top: 5px !important;
+    }
+
+    .ivu-timeline-item-content {
+      padding: 0 4px;
+    }
+  }
 }
 
 .timeline-description {
@@ -1617,35 +1680,6 @@ export default new BFBAN({
     opacity: .3;
     font-size: .2rem !important;
   }
-}
-
-.timeline-content {
-  position: relative;
-
-  // force to wrap
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  margin-left: 3rem;
-}
-
-.timeline-content .loading {
-  background-image: url('/src/assets/fonts/loading.svg');
-  background-repeat: no-repeat;
-  min-width: 100px;
-  min-height: 100px;
-}
-
-.ivu-timeline-item {
-  padding: 1rem 0;
-}
-
-.ivu-timeline-item-content {
-  padding: 0 .6rem 0 3rem;
-}
-
-.ivu-timeline-item-tail {
-  top: 1rem;
-  border-width: .3rem !important;
 }
 
 .detail-userinfo-card {

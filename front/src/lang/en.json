@@ -29,10 +29,10 @@
 				"text": "Need more evidence",
 				"describe": "Need stronger evidence"
 			},
-      "farm": {
-        "text": "farm weapons",
-        "describe": "Submit a gun record to clean the actual hammer due to weapon data anomalies"
-      }
+			"farm": {
+				"text": "farm weapons",
+				"describe": "Submit a gun record to clean the actual hammer due to weapon data anomalies"
+			}
 		},
 		"status": {
 			"all": "All methods",
@@ -44,7 +44,7 @@
 			"5": "Under discussion",
 			"6": "Needs more votes",
 			"7": "Ultra-confirmed hacker",
-      "8": "farm weapons"
+      		"8": "farm weapons"
 		},
 		"privilege": {
 			"root": "System",
@@ -753,6 +753,13 @@
 		"banAppeals": "Have appealed",
 		"registers": "Handled cases",
 		"players": "Existing reports",
-		"admins": "Total number of administrators"
+		"admins": "Total number of administrators",
+		"communityParticipation": "用户社区参与排行",
+		"reportRanking": "举报排行",
+		"timeRange": {
+			"daily": "昨天",
+			"weekly": "一周",
+			"monthly": "一年"
+		}
 	}
 }

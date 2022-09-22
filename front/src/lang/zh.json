@@ -28,6 +28,10 @@
       "more": {
         "text": "需要更多证据",
         "describe": "需要补充更多有力的证据"
+      },
+      "farm": {
+        "text": "武器刷级",
+        "describe": "由于武器数据异常，提交枪械记录以清理实际锤"
       }
     },
     "status": {
@@ -760,6 +764,13 @@
     "banAppeals": "已上诉",
     "registers": "注册用户",
     "players": "现有举报案件",
-    "admins": "总共管理员数"
+    "admins": "总共管理员数",
+    "communityParticipation": "用户社区参与排行",
+    "reportRanking": "举报排行",
+    "timeRange": {
+      "daily": "昨天",
+      "weekly": "一周",
+      "monthly": "一年"
+    }
   }
 }

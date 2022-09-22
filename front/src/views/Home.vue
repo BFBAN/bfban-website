@@ -2,10 +2,9 @@
   <div>
     <div class="container">
       <div class="content">
-        <div class="ivu-alert-with-banner home-banner"
-             style="background-image: url('../assets/images/index-bk.png')">
-          <Row>
-            <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 9, offset: 0}">
+        <div class="ivu-alert-with-banner home-banner">
+          <Row :gutter="30">
+            <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 11, offset: 0}">
               <h1 class="title">
                 {{ $t("home.cover.h1") }}
               </h1>
@@ -49,9 +48,9 @@
               <p>{{ $t("home.cover.endTime", {time: bannerTime }) }}</p>
               <br>
             </Col>
-            <Col span="16" class="mobile-hide" :lg="{span: 14, push: 1}" type="flex" align="center" justify="center"
+            <Col class="mobile-hide" :lg="{span: 13, push: 1}" type="flex" align="center" justify="center"
                  style="display: flex; justify-content: center; align-items: center">
-              <Card dis-hover :padding="0">
+              <Card dis-hover :padding="0" v-if="bannerImage">
                 <img :src="bannerImage"
                      width="100%" class="ivu-row-top" style="margin-bottom: -10px;border-radius: 5px;">
               </Card>
@@ -154,25 +153,28 @@
 </template>
 
 <script>
+import {api, http, util, time, regular} from '../assets/js/index'
+
 import BFBAN from "../assets/js/bfban";
 import Tell from "../components/Home_tell";
-import Weekly from "./Weekly";
-import {api, http, util, time, regular} from '../assets/js/index'
 
 export default new BFBAN({
   data() {
     return {
       bannerImage: '',
-      bannerTime: time.appStart(),
+      bannerTime: '',
 
       activityLoad: false,
       activities: [],
       activities_l: [],
 
-      statistics: {},
+      statistics: {
+        reports: 0,
+        confirmed: 0,
+      },
     }
   },
-  components: {Tell, Weekly},
+  components: {Tell},
   watch: {
     '$route': 'loadData',
   },
@@ -189,6 +191,8 @@ export default new BFBAN({
 
         this.gameName = res.gameName;
       });
+
+      this.bannerTime = time.appStart();
 
       try {
         this.bannerImage = require(`../assets/images/index-gl_${this.$i18n.locale || 'en-US'}.png`);
@@ -231,12 +235,12 @@ export default new BFBAN({
           registers: true,	// show register number
           banappeals: true,// show ban appeals number
           details: true,	// show number of each game, each status
-          from: new Date('2018-01-01').getTime()
+          from: 1514764800000
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
-        if (d.success === 1) {
+        if (d.success == 1) {
           this.statistics = d.data;
         }
       })
@@ -280,26 +284,13 @@ export default new BFBAN({
 
   .title {
     position: relative;
-    margin-top: 100px;
-    border-bottom: 9px solid #fff13c;
+    border-bottom: 5px solid #fff13c;
     display: inline-flex;
-    padding-left: 20px;
-    margin-bottom: 20px;
-    font-size: 3rem;
-
-    &:after {
-      position: absolute;
-      opacity: .6;
-      border-radius: 50%;
-      z-index: 0;
-      top: -20px;
-      right: -30px;
-      display: block;
-      content: '';
-      width: 50px;
-      height: 50px;
-      background-color: #401486;
-    }
+    padding: 0 20px 0 0;
+    margin-top: 80px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 70px;
   }
 }
 
