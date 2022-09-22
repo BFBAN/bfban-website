@@ -18,9 +18,7 @@
             <Icon type="ios-loading" />
           </Button>
           <v-chart class="chart" :option="chart.stats" />
-
         </Card>
-
         <Spin size="large" fix v-if="load"></Spin>
       </Col>
       <br>
@@ -74,28 +72,35 @@
       <br>
 
       <Row :gutter="20">
-        <Col :x="{span: 24}" :lg="{span: 8}">
+        <Col :x="{span: 24}" :lg="{span: 12}">
           <Card dis-hover>
             <div slot="title">{{ $t('sitestats.communityParticipation') }}</div>
-            <ol class="sitestats-ul" v-if="active.community.length > 0">
-              <li v-for="(i, index) in active.community" :key="index">
-                <Row>
-                  <Col flex="1">
-                    <businessCard :id="i.id">
-                      <router-link :to="{name:'account', params: { uId: i.id }}">{{i.username}}</router-link>
-                    </businessCard>
-                  </Col>
-                  <Col>{{i.total.toFixed(2) || 0}}</Col>
-                </Row>
-              </li>
-            </ol>
-            <Empty v-else></Empty>
+            <Row :gutter="5">
+              <Col span="12">
+                <ol class="sitestats-ul" v-if="active.community.length > 0">
+                  <li v-for="(i, index) in active.community" :key="index">
+                    <Row>
+                      <Col flex="1">
+                        <businessCard :id="i.id">
+                          <router-link :to="{name:'account', params: { uId: i.id }}">{{i.username}}</router-link>
+                        </businessCard>
+                      </Col>
+                      <Col>{{i.total.toFixed(2) || 0}}</Col>
+                    </Row>
+                  </li>
+                </ol>
+                <Empty v-else></Empty>
+              </Col>
+              <Col span="12">
+                <v-chart class="chart chart-min" :option="active.communityConf" />
+              </Col>
+            </Row>
             <Spin size="large" fix v-show="active.load">
               <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
             </Spin>
           </Card>
         </Col>
-        <Col :x="{span: 24}" :lg="{span: 8}">
+        <Col :x="{span: 24}" :lg="{span: 6}">
           <Card dis-hover>
             <div slot="title">{{ $t('sitestats.reportRanking') }}</div>
             <ol class="sitestats-ul" v-if="active.report.length > 0">
@@ -125,6 +130,7 @@
 import BFBAN from "../assets/js/bfban";
 import Empty from "@/components/Empty"
 import businessCard from "@/components/businessCard";
+import * as echarts from  "echarts";
 
 import {http, api, conf} from '../assets/js/index'
 
@@ -189,7 +195,28 @@ export default new BFBAN({
       timeRange: 'weekly',
       isIncludingRobots: true,
       active: {
-        load: true
+        load: true,
+        communityConf: {
+          tooltip: {
+            trigger: 'item'
+          },
+          series: [
+            {
+              type: 'pie',
+              itemStyle: {
+                borderRadius: 5,
+                borderWidth: 3,
+              },
+              radius: ['50%', '70%'],
+              avoidLabelOverlap: false,
+              label: {show: false, position: 'center'},
+              labelLine: {show: false},
+              data: []
+            }
+          ]
+        },
+        community: [],
+        report: [],
       }
     }
   },
@@ -254,6 +281,11 @@ export default new BFBAN({
 
         if (d.success == 1) {
           this.active = Object.assign(this.active, d.data);
+
+          this.active.communityConf.series[0].data = [];
+          d.data.community.forEach(i => {
+            this.active.communityConf.series[0].data.push({ value: i.total.toFixed(2), name: i.username })
+          })
         }
       }).finally(() => {
         this.active.load = false;
@@ -330,6 +362,11 @@ export default new BFBAN({
 
 .chart {
   height: 300px;
+}
+
+.chart-min {
+  width: 100%;
+  height: 250px;
 }
 
 .sitestats-ul {

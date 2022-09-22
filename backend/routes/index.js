@@ -103,7 +103,7 @@ async (req, res, next)=>{
         const time = {
             'daily': new Date(new Date().getTime() - 1 * 24 * 3600 * 1000),
             'weekly': new Date(new Date().getTime() - 7 * 24 * 3600 * 1000),
-            'monthly': new Date(new Date().getTime() - 24 * 24 * 3600 * 1000)
+            'monthly': new Date(new Date().getTime() - 360 * 24 * 3600 * 1000)
         }
 
         // 社区参与度

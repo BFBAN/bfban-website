@@ -754,12 +754,12 @@
 		"registers": "Handled cases",
 		"players": "Existing reports",
 		"admins": "Total number of administrators",
-		"communityParticipation": "用户社区参与排行",
-		"reportRanking": "举报排行",
+		"communityParticipation": "User community participation ranking",
+		"reportRanking": "Report ranking",
 		"timeRange": {
-			"daily": "昨天",
-			"weekly": "一周",
-			"monthly": "一年"
+			"daily": "Daily",
+			"weekly": "Weekly",
+			"monthly": "Monthly"
 		}
 	}
 }
