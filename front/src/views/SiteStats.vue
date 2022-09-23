@@ -60,68 +60,76 @@
       </Card>
       <br>
 
-      <div>
+      <!-- 排行统计 S -->
+      <template v-if="isLogin">
+        <div>
+          <Row :gutter="20">
+            <Col>
+              <RadioGroup size="small" type="button" v-voice-button v-model="timeRange" @on-change="getActiveStatistical">
+                <Radio v-for="(i, index) in timeArray" :key="index"
+                       v-show="i.show"
+                       :label="i.value"
+                       :value="i.value">{{ $t(i.name) }}</Radio>
+              </RadioGroup>
+            </Col>
+          </Row>
+        </div>
+        <br>
+
         <Row :gutter="20">
-          <Col>
-            <RadioGroup size="small" type="button" v-voice-button v-model="timeRange" @on-change="getActiveStatistical">
-              <Radio v-for="(i, index) in timeArray" :key="index" :label="i.name" :value="i.value">{{ $t('sitestats.timeRange.' + i.name) }}</Radio>
-            </RadioGroup>
+          <Col :xs="{span: 24}" :lg="{span: 12}">
+            <Card dis-hover>
+              <div slot="title">{{ $t('sitestats.communityParticipation') }}</div>
+              <Row :gutter="5">
+                <Col span="12">
+                  <ol class="sitestats-ul" v-if="active.community.length > 0">
+                    <li v-for="(i, index) in active.community" :key="index">
+                      <Row>
+                        <Col flex="1">
+                          <businessCard :id="i.id">
+                            <router-link :to="{name:'account', params: { uId: i.id }}">{{i.username}}</router-link>
+                          </businessCard>
+                        </Col>
+                        <Col>{{i.total.toFixed(2) || 0}}</Col>
+                      </Row>
+                    </li>
+                  </ol>
+                  <Empty v-else></Empty>
+                </Col>
+                <Col span="12">
+                  <v-chart class="chart chart-min" :option="active.communityConf" />
+                </Col>
+              </Row>
+              <Spin size="large" fix v-show="active.load">
+                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+              </Spin>
+            </Card>
+          </Col>
+          <Col :xs="{span: 24}" :lg="{span: 6}">
+            <Card dis-hover>
+              <div slot="title">{{ $t('sitestats.reportRanking') }}</div>
+              <ol class="sitestats-ul" v-if="active.report.length > 0">
+                <li v-for="(i, index) in active.report" :key="index">
+                  <Row>
+                    <Col flex="1">
+                      <businessCard :id="i.id">
+                        <router-link :to="{name:'account', params: { uId: i.id }}">{{i.username}}</router-link>
+                      </businessCard>
+                    </Col>
+                    <Col>{{i.total.toFixed(0) || 0}}</Col>
+                  </Row>
+                </li>
+              </ol>
+              <Empty v-else></Empty>
+              <Spin size="large" fix v-show="active.load">
+                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+              </Spin>
+            </Card>
           </Col>
         </Row>
-      </div>
-      <br>
+      </template>
+      <!-- 排行统计 E -->
 
-      <Row :gutter="20">
-        <Col :x="{span: 24}" :lg="{span: 12}">
-          <Card dis-hover>
-            <div slot="title">{{ $t('sitestats.communityParticipation') }}</div>
-            <Row :gutter="5">
-              <Col span="12">
-                <ol class="sitestats-ul" v-if="active.community.length > 0">
-                  <li v-for="(i, index) in active.community" :key="index">
-                    <Row>
-                      <Col flex="1">
-                        <businessCard :id="i.id">
-                          <router-link :to="{name:'account', params: { uId: i.id }}">{{i.username}}</router-link>
-                        </businessCard>
-                      </Col>
-                      <Col>{{i.total.toFixed(2) || 0}}</Col>
-                    </Row>
-                  </li>
-                </ol>
-                <Empty v-else></Empty>
-              </Col>
-              <Col span="12">
-                <v-chart class="chart chart-min" :option="active.communityConf" />
-              </Col>
-            </Row>
-            <Spin size="large" fix v-show="active.load">
-              <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
-            </Spin>
-          </Card>
-        </Col>
-        <Col :x="{span: 24}" :lg="{span: 6}">
-          <Card dis-hover>
-            <div slot="title">{{ $t('sitestats.reportRanking') }}</div>
-            <ol class="sitestats-ul" v-if="active.report.length > 0">
-              <li v-for="(i, index) in active.report" :key="index">
-                <Row>
-                  <Col flex="1">
-                    <businessCard :id="i.id">
-                      <router-link :to="{name:'account', params: { uId: i.id }}">{{i.username}}</router-link>
-                    </businessCard>
-                  </Col>
-                  <Col>{{i.total.toFixed(0) || 0}}</Col>
-                </Row>
-              </li>
-            </ol>
-            <Empty v-else></Empty>
-            <Spin size="large" fix v-show="active.load">
-              <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
-            </Spin>
-          </Card>
-        </Col>
-      </Row>
     </div>
   </div>
 </template>
@@ -132,7 +140,7 @@ import Empty from "@/components/Empty"
 import businessCard from "@/components/businessCard";
 import * as echarts from  "echarts";
 
-import {http, api, conf} from '../assets/js/index'
+import {http, api, conf,account_storage} from '../assets/js/index'
 
 export default new BFBAN({
   data () {
@@ -188,9 +196,10 @@ export default new BFBAN({
       },
 
       timeArray: [
-        {name: 'daily', value: 'daily'},
-        {name: 'weekly', value: 'weekly'},
-        {name: 'monthly', value: 'monthly'},
+        {name: 'sitestats.timeRange.daily', value: 'daily', show: false},
+        {name: 'sitestats.timeRange.weekly', value: 'weekly', show: false},
+        {name: 'sitestats.timeRange.monthly', value: 'monthly', show: false, privileges: ['admin', 'spuer', 'root', 'dev']},
+        {name: 'sitestats.timeRange.yearly', value: 'yearly', show: false, privileges: ['admin', 'spuer', 'root', 'dev']}
       ],
       timeRange: 'weekly',
       isIncludingRobots: true,
@@ -241,7 +250,7 @@ export default new BFBAN({
     init () {
       this.chart['stats'].series = [];
 
-      this.chartConf.array.map(i=>{
+      this.chartConf.array.map(i => {
         this.chart['stats'].series.push({
           name: this.$i18n.t(`sitestats.${i.name}`),
           valName: i.valName,
@@ -265,14 +274,25 @@ export default new BFBAN({
           },
           data: []
         });
+      });
+
+      this.timeArray.map(i => {
+        i.show = account_storage.checkPrivilegeGroup(this.currentUser.userinfo, i.privileges);
       })
     },
     getActiveStatistical () {
+      if (
+          !this.isLogin &&
+          !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, this.timeRange.privileges)
+      ) return;
+
       this.active.load = true;
+
+      let selectTime = this.timeArray.filter(i => i.value == this.timeRange)[0].value;
       http.get('/activeStatistical', {
         params: {
           isBot: this.isIncludingRobots,
-          time: this.timeRange,
+          time: selectTime,
           report: true,
           community: true
         }

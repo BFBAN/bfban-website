@@ -91,7 +91,7 @@ router.get('/activeStatistical', [
     checkquery('isBot').optional().isBoolean(),
     checkquery('report').optional().isBoolean(),
     checkquery('community').optional().isBoolean(),
-    checkquery('time').optional().isIn(['daily','weekly','monthly'])
+    checkquery('time').optional().isIn(['daily','weekly','monthly', 'yearly'])
 ],
 async (req, res, next)=>{
     try {
@@ -103,7 +103,8 @@ async (req, res, next)=>{
         const time = {
             'daily': new Date(new Date().getTime() - 1 * 24 * 3600 * 1000),
             'weekly': new Date(new Date().getTime() - 7 * 24 * 3600 * 1000),
-            'monthly': new Date(new Date().getTime() - 360 * 24 * 3600 * 1000)
+            'monthly': new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
+            'yearly': new Date(new Date().getTime() - 360 * 24 * 3600 * 1000)
         }
 
         // 社区参与度

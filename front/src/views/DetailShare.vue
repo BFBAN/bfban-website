@@ -52,17 +52,13 @@
         </Col>
         <Col span="8">
           <Form label-position="top" :model="share" @on-visible-change="onGenerateSharePicture">
-            <Row :gutter="30">
-              <Col>
-                <FormItem>
-                  <RadioGroup v-model="share.languages" type="button" @on-change="upDataShare">
-                    <Radio :label="i.name" v-for="(i, index) in share.languagesChild" :key="index">
-                      {{ i.label }}
-                    </Radio>
-                  </RadioGroup>
-                </FormItem>
-              </Col>
-            </Row>
+            <FormItem :title="$t('footer.languages')">
+              <Select v-model="share.languages" @on-change="upDataShare" size="large">
+                <Option :value="i.name" v-for="(i, index) in share.languagesChild" :key="index" v-show="!i.ignoreSave">
+                  {{ i.label }}
+                </Option>
+              </Select>
+            </FormItem>
             <Collapse v-model="share.collapse" accordion hide-arrow>
               <Panel name="1">
                 {{ $t('share.link.name') }}

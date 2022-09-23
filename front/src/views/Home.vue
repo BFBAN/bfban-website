@@ -4,7 +4,7 @@
       <div class="content">
         <div class="ivu-alert-with-banner home-banner">
           <Row :gutter="30">
-            <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 11, offset: 0}">
+            <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 10, offset: 0}">
               <h1 class="title">
                 {{ $t("home.cover.h1") }}
               </h1>

@@ -34,7 +34,7 @@
                 </BusinessCard>
                 <span> {{ $t('detail.info.judge') }} </span>
                 <a href="javascript:void(0)">{{i.toOriginPersonaId}}</a>
-                <span> {{i.cheatMethods.toString()}} {{ $t(`basic.action.${util.queryAction(l.judgeAction)}.text`) }} </span>
+                <span> {{i.cheatMethods.toString()}} {{ $t(`basic.action.${util.queryAction(i.judgeAction)}.text`) }}</span>
               </div>
             </Col>
             <Col>

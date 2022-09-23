@@ -1532,8 +1532,6 @@ export default new BFBAN({
 
       this.updateUserInfospinShow = true;
 
-      console.log(this.cheater)
-
       this.http.post(api["player_update"], {
         data: {
           personaId: this.cheater.originPersonaId
@@ -1541,20 +1539,21 @@ export default new BFBAN({
       }).then(res => {
         const d = res.data;
 
-        if (d.error === 0) {
+        if (d.error == 0) {
           const {cheaterGameName: originId, originUserId, avatarLink} = d.data.origin;
 
           this.cheater.originId = originId;
           this.cheater.originUserId = originUserId;
           this.cheater.avatarLink = avatarLink;
 
-          this.$Message.success(this.$i18n.t('detail.messages.updateComplete'));
+          this.$Message.error(this.$i18n.t('detail.messages.updateComplete'));
           return;
         }
 
-        this.$Message.error(d.code);
+        this.$Message.success(d.code);
       }).finally(() => {
         this.updateUserInfospinShow = false;
+        this.updateCheaterModal = false;
       });
     },
     /**

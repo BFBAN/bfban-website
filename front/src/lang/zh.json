@@ -770,7 +770,8 @@
     "timeRange": {
       "daily": "昨天",
       "weekly": "一周",
-      "monthly": "一年"
+      "monthly": "30天",
+      "yearly": "一年"
     }
   }
 }
