@@ -3,7 +3,8 @@ import { promises as fs } from "fs";
 import { SMTPClient, Message } from "emailjs";
 import config from "../config.js";
 import serviceApi from "./serviceAPI.js";
-const domain = 'https://bfban.gametools.network/'
+
+const domain = config.mail.domain.origin;
 /*
 * https://bfban.com/
 * https://bfban.gametools.network/ 
