@@ -19,13 +19,13 @@
                  disabled
                  :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab.toString())">
           <template dis-hover shadow v-if="tabs.list[index].statusOk == 0">
-            <Form :label-width="150"
+            <Form :label-width="isMobile ? null : 150"
                   :model="tabs.list[index].formItem"
                   :rules="tabs.list[index].ruleValidate"
-                  ref="formValidate"
-                  label-position="left">
+                  :label-position="isMobile ? 'top' : 'left'"
+                  ref="formValidate">
               <!-- 基础信息 S -->
-              <Card dis-hover :padding="50">
+              <Card dis-hover :padding="isMobile ? 20 : 50">
                 <!-- 游戏类型 S -->
                 <FormItem prop="gameName"
                           :label="`${ $t('report.labels.game') }`">
@@ -71,7 +71,7 @@
                   </Alert>
 
                   <Row :gutter="30">
-                    <Col :lg="{span: 10}">
+                    <Col :xs="{span:24}" :lg="{span: 10}">
                       <AutoComplete
                           v-model="tabs.list[index].formItem.originId"
                           :data="tabs.list[index].players.list"
@@ -133,10 +133,10 @@
               <!-- 基础信息 E -->
               <br>
               <!-- 证据 S -->
-              <Card dis-hover :padding="50">
+              <Card dis-hover :padding="isMobile ? 20 : 50">
                 <FormItem :label="$t('detail.info.videoLink')">
                   <Row :gutter="30">
-                    <Col span="12">
+                    <Col :xs="{span: 24}" :lg="{span:12}">
                       <Alert type="warning">
                         {{ $t("report.info.uploadManual1") }}
                         <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
@@ -199,7 +199,7 @@
               <!-- 证据 E -->
               <br>
               <!-- 提交 S -->
-              <Card dis-hover :padding="50">
+              <Card dis-hover :padding="isMobile ? 20 : 50">
                 <FormItem prop="captcha" :label="$t('captcha.title')">
                   <Input
                       type="text"

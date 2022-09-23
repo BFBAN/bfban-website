@@ -22,8 +22,8 @@
           <Col class="desktop-hide" :xs="{span: 24}">&thinsp;</Col>
           <Col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}">
             <Dropdown style="width: 100%">
-              <Input enter-button
-                     search
+              <Input :enter-button="searchVal.length >= 3"
+                     :search="searchVal.length >= 3"
                      size="large"
                      class="search-input search-input-show"
                      :placeholder="$t('search.placeholder')"
@@ -52,14 +52,14 @@
             </Dropdown>
           </Col>
         </Row>
-        <Row type="flex" justify="center" class="checkboxGroup">
-          <Col :xs="{span: 24}" :lg="{span: 11}" align="center">
+        <Row type="flex" justify="center" align="middle" class="checkboxGroup" v-if="cheaters.length <= 0">
+          <Col :xs="{span: 24}" :lg="{span: 6}" align="center">
             <Icon type="md-alert" /> {{ $t("search.describe") }}
           </Col>
           <Col :xs="{span: 0}" :lg="{span: 1}">
             <Divider type="vertical"/>
           </Col>
-          <Col :xs="{span: 24}" :lg="{span: 11}" align="center">
+          <Col :xs="{span: 24}" :lg="{span: 6}" align="center">
             <a href="javascript:void(0)">{{ $t("search.collectionHint") }}</a>
           </Col>
         </Row>
@@ -124,7 +124,14 @@ export default new BFBAN({
       this.searchHistory.list = history.data.value || [];
     },
     async setSearchHistoryValue(val) {
-      await storage.set('search.history', val);
+      let maxHistory = 10;
+      let hostoryList = val;
+
+      for (let i = 0; i < hostoryList.length; i++) {
+        if (hostoryList.length > maxHistory) hostoryList.pop();
+      }
+
+      storage.set('search.history', hostoryList);
     },
     handleSearchHistoryClose(index) {
       this.searchHistory.list.splice(index, 1);
@@ -140,7 +147,9 @@ export default new BFBAN({
       const that = this;
       const val = this.searchVal.trim();
 
-      if (val === '' && val.length <= 3) return false;
+      if (val == '' || val.length <= 3 || !this.searchScopeValue) {
+        return;
+      }
 
       this.searchModal = true;
       this.modalSpinShow = true;
@@ -150,24 +159,26 @@ export default new BFBAN({
           param: val,
           scope: this.searchScopeValue,
         }
-      }).then((res) => {
-        that.modalSpinShow = false;
+      }).then(res => {
 
         let hisArr = Array.from(new Set(that.searchHistory.list.concat([val])))
             that.setSearchHistoryValue(hisArr);
             that.searchHistory.list = hisArr;
 
         const d = res.data;
+
         if (d.success === 1) {
-          const {cheaters} = d.data;
           this.cheaters = d.data;
 
           if (d.data.length <= 0) {
-            this.$Message.error('not data')
+            this.$Message.info('The player is not found in the database')
           }
-        } else {
-          this.$Message.error(d.message)
+          return;
         }
+
+        this.$Message.error(d.code)
+      }).finally(() => {
+        that.modalSpinShow = false;
       })
     },
   }
@@ -203,6 +214,8 @@ export default new BFBAN({
   }
 
   .checkboxGroup {
+    width: 100%;
+    margin-bottom: 5px;
     margin-top: 50px;
     font-size: 1rem;
     color: #a8a8a8;

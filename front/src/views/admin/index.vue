@@ -111,13 +111,13 @@ export default new BFBAN({
               title: 'adminLog',
               value: 'admin_log',
               disabled: false,
-              privilege: ['admin','super', 'root', 'dev'],
+              privilege: ['super', 'root', 'dev'],
             },
             {
               title: 'judgementLog',
               value: 'judgement_log',
               disabled: false,
-              privilege: ['admin','super', 'root', 'dev'],
+              privilege: ['super', 'root', 'dev'],
             },
             {
               title: 'message',
