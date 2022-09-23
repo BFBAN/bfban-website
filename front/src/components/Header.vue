@@ -10,12 +10,11 @@
       <div class="nav nav-menu">
         <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>
         <Drawer class="desktop-hide"
-                :title="$t($route.name + '.title')"
                 placement="left"
-                width="300"
+                width="80%"
+                :title="$t($route.name + '.title')"
                 :closable="true"
                 v-model="headerMenu.show">
-
           <List v-show="!isLogin">
             <Card>
               <Row :gutter="10">
@@ -59,8 +58,8 @@
           </Button>
         </router-link>
 
-        <Dropdown v-if="isLogin" placement="bottom-end" :padding="0">
-          <router-link class="" :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
+        <Dropdown v-if="isLogin" :trigger="isMobile ? 'click' : 'hover'"  :placement="isMobile ? 'center' : 'bottom-end'" :padding="0">
+          <router-link :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
             <Avatar icon="ios-person"></Avatar>
             <span class="mobile-hide">&emsp;{{ userinfo.username }}</span>
           </router-link>

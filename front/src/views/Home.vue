@@ -277,6 +277,7 @@ export default new BFBAN({
 }
 
 .home-banner {
+  overflow: hidden;
   min-height: 600px;
   background-size: 500px;
   background-repeat: no-repeat;
