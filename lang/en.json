@@ -759,7 +759,8 @@
 		"timeRange": {
 			"daily": "Daily",
 			"weekly": "Weekly",
-			"monthly": "Monthly"
+			"monthly": "Monthly",
+			"yearly": "Yearly"
 		}
 	}
 }
