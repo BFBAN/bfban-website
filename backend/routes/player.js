@@ -278,7 +278,7 @@ function raceGetOriginUserId(originName) {
  *         description: 举报的游戏类型
  *         type: num
  *         in: query
- *       - name: originName: 
+ *       - name: originName
  *         description: Origin游戏ID
  *         required: true
  *         type: integer
