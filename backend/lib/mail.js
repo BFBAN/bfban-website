@@ -48,7 +48,7 @@ async function sendRegisterVerify(username, originName, address, language, code)
         "Hello "+username+"!\n"+
         "   You are now signing up for BFBan as "+originName+" in game.\n"+
         "   Pease click the link below to complete your registration: \n"+
-        "       https://bfban.com/#/signupComplete?code="+code+"&lang="+language,
+        "       https://bfban.com/signupComplete?code="+code+"&lang="+language,
         config.mail.user, address, '', subject, [
             {
                 data: html
@@ -74,7 +74,7 @@ async function sendForgetPasswordVerify(username, address, language, code) {
         "Hello "+username+"!\n"+
         "   You are now reseting your password for bfban.com.\n"+
         "   Please click the link below to reset your password: \n"+
-        "      https://bfban.com/#/forgetPasswordVerify?code="+code,
+        "      https://bfban.com/forgetPasswordVerify?code="+code,
         config.mail.user, address, '', subject, [
             {
                 data: html
@@ -99,7 +99,7 @@ async function sendBindingOriginVerify(username, address, language, code) {
         "Hello "+username+"!\n"+
         "   You are now binding this email to your bfban.com account.\n"+
         "   Please click the link below to finish the verification: \n"+
-        "       https://bfban.com/#/bindOrigin?code="+code,
+        "       https://bfban.com/bindOrigin?code="+code,
         config.mail.user, address, '', subject, [
             {
                 data: html
