@@ -187,8 +187,7 @@
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
                   <Card :padding="0" dis-hover>
-                    {{ tabs.list[index].formItem.description }}
-                    <Textarea :placeholder="$t('report.info.description') + '1222'"
+                    <Textarea :placeholder="$t('report.info.description')"
                               :index="index"
                               :height="'520px'"
                               v-model="tabs.list[index].formItem.description">
@@ -238,13 +237,13 @@
           <div shadow class="ivu-alert-error" v-else-if="tabs.list[index].statusOk == -1">
             <div class="report-done">
               <Icon type="md-bug" size="200" color="error" />
-              <h1 class="tip">失败</h1>
-              <p class="tip">{{ tabs.list[index].statusMsg || ':(' }}</p>
+              <h1 class="tip">{{ $t('report.messages.failureTitle') }}</h1>
+              <p class="tip">{{ $t('report.messages.failureSubtitle', {msg: tabs.list[index].statusMsg || ':(' }) }}</p>
               <Divider dashed />
               <Row :gutter="10" type="flex" justify="center" align="middle">
                 <Col>
                   <router-link :to="{name: 'home'}">
-                    <Button v-voice-button>离开</Button>
+                    <Button v-voice-button>{{ $t('report.button.leave') }}</Button>
                   </router-link>
                 </Col>
               </Row>
@@ -253,18 +252,18 @@
           <div shadow class="ivu-alert-success" v-else-if="tabs.list[index].statusOk == 1">
             <div class="report-done">
               <Icon type="md-cloud-done" size="200" color="success" />
-              <h1 class="tip">成功</h1>
-              <p class="tip">感谢您的举报</p>
+              <h1 class="tip">{{ $t('report.messages.successTitle') }}</h1>
+              <p class="tip">{{ $t('report.messages.successSubtitle') }}</p>
               <Divider dashed />
               <Row :gutter="10" type="flex" justify="center" align="middle">
                 <Col>
                   <router-link :to="{path: '/report', params: { t: new Date().getTime() }}">
-                    <Button v-voice-button>继续</Button>
+                    <Button v-voice-button>{{ $t('report.button.continue') }}</Button>
                   </router-link>
                 </Col>
                 <Col>
                   <router-link :to="{name: 'home'}">
-                    <Button v-voice-button type="primary">离开</Button>
+                    <Button v-voice-button type="primary">{{ $t('report.button.leave') }}</Button>
                   </router-link>
                 </Col>
               </Row>
@@ -418,11 +417,11 @@ export default new BFBAN({
      * 校验地址
      */
     checkVideoLink(rule, value, callback) {
-      const errorText = this.$i18n.t('report.error.voideBadFormat');
+      const errorText = this.$i18n.t('report.messages.videoBadFormat');
       const val = value;
 
       if (!val) {
-        return callback(this.$i18n.t('report.error.voideEmpty'));
+        return callback(this.$i18n.t('report.messages.videoEmpty'));
       }
 
       // 正则校验
@@ -517,13 +516,12 @@ export default new BFBAN({
         } else {
           switch (d.code) {
             case 'judgement.notFound':
-              this.$Message.error(this.$i18n.t('report.error.originId'));
-
+              this.$Message.error(this.$i18n.t('report.messages.originIdNotExist'));
               // no such player
               this.failedOfNotFound = true;
               break;
             case 'judgement.permissionDenied':
-              this.$Message.error(this.$i18n.t('report.error.permissionDenied'));
+              this.$Message.error(this.$i18n.t('report.messages.permissionDenied'));
               break;
             case 'originId':
               this.$Message.error(

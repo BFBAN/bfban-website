@@ -378,13 +378,21 @@
       "game": "ゲーム",
       "description": "説明"
     },
-    "error": {
+    "messages": {
       "mediaEvidence": "画像をアップロードするか、ビデオリンクを記入してください",
-      "originId": "ゲームIDは存在しません。スペルをチェックしてください",
+      "originIdNotExist": "ゲームIDは存在しません。スペルをチェックしてください",
       "success": "コミット成功",
       "permissionDenied": "権限なし",
-      "voideBadFormat": "フォーマットエラー",
-      "voideEmpty": "空のビデオアドレス"
+      "videoBadFormat": "フォーマットエラー",
+      "videoEmpty": "空のビデオアドレス",
+      "successTitle": "提交成功",
+      "successSubtitle": "感谢您的举报",
+      "failureTitle": "失败",
+      "failureSubtitle": "举报失败，{msg}"
+    },
+    "button": {
+      "continue": "继续",
+      "leave": "离开"
     }
   },
   "footer": {

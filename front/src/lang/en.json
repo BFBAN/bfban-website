@@ -402,13 +402,21 @@
 			"game": "Game",
 			"description": "Description"
 		},
-		"error": {
+		"messages": {
 			"mediaEvidence": "Please upload a picture or fill in the video link",
-			"originId": "Origin account doesn't exist, please check the spelling",
+			"originIdNotExist": "Origin account doesn't exist, please check the spelling",
 			"success": "Submitted successfully",
 			"permissionDenied": "",
-			"voideBadFormat": "Invild format",
-			"voideEmpty": "Invild video link"
+			"videoBadFormat": "Invild format",
+			"videoEmpty": "Invild video link",
+			"successTitle": "提交成功",
+			"successSubtitle": "感谢您的举报",
+			"failureTitle": "失败",
+			"failureSubtitle": "举报失败，{msg}"
+		},
+		"button": {
+			"continue": "继续",
+			"leave": "离开"
 		}
 	},
 	"footer": {
