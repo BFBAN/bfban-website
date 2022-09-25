@@ -619,6 +619,7 @@ router.get('/admins', async (req, res, next)=> {
                 i.originUserId = null;
                 i.originName = null;
             }
+            delete i.attr;
         });
         res.status(200).json({success: 1, code: 'getAdmins.success', data: admins});
     } catch(err) {
