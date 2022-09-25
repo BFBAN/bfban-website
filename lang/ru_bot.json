@@ -378,13 +378,21 @@
       "game": "игра",
       "description": "описание"
     },
-    "error": {
+    "messages": {
       "mediaEvidence": "Пожалуйста, выложите фото или заполните видео ссылки",
-      "originId": "Идентификатор игры не существует, проверьте правописание",
+      "originIdNotExist": "Идентификатор игры не существует, проверьте правописание",
       "success": "передача успешно завершена",
       "permissionDenied": "нет прав",
-      "voideBadFormat": "ошибка формата",
-      "voideEmpty": "пустой видео адрес"
+      "videoBadFormat": "ошибка формата",
+      "videoEmpty": "пустой видео адрес",
+      "successTitle": "提交成功",
+      "successSubtitle": "感谢您的举报",
+      "failureTitle": "失败",
+      "failureSubtitle": "举报失败，{msg}"
+    },
+    "button": {
+      "continue": "继续",
+      "leave": "离开"
     }
   },
   "footer": {

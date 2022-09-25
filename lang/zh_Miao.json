@@ -378,13 +378,21 @@
       "game": "喵喵 ",
       "description": "喵喵 喵喵 喵喵 "
     },
-    "error": {
+    "messages": {
       "mediaEvidence": "喵喵喵喵喵喵喵喵喵 喵喵喵喵喵",
-      "originId": "喵喵喵喵喵喵",
+      "originIdNotExist": "喵喵喵喵喵喵",
       "success": "喵喵 喵 喵喵",
       "permissionDenied": "喵喵喵喵喵喵喵喵喵 喵喵喵 喵 喵",
-      "voideBadFormat": "喵喵喵喵 喵喵 喵喵 喵 喵 ",
-      "voideEmpty": "喵喵 喵喵喵 "
+      "videoBadFormat": "喵喵喵喵 喵喵 喵喵 喵 喵 ",
+      "videoEmpty": "喵喵 喵喵喵 ",
+      "successTitle": "喵喵 喵喵",
+      "successSubtitle": "喵喵 喵 喵喵",
+      "failureTitle": "喵喵 喵喵喵 喵喵喵喵喵 喵 喵喵",
+      "failureSubtitle": "喵喵 喵 喵，{msg}"
+    },
+    "button": {
+      "continue": "喵 喵喵",
+      "leave": "喵喵 喵"
     }
   },
   "footer": {

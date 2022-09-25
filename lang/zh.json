@@ -413,13 +413,20 @@
       "game": "游戏",
       "description": "描述"
     },
-    "error": {
+    "messages": {
       "mediaEvidence": "请上传图片或填写视频链接",
-      "originId": "游戏ID不存在，请检查拼写",
-      "success": "提交成功",
+      "originIdNotExist": "游戏ID不存在，请检查拼写",
       "permissionDenied": "无权限",
-      "voideBadFormat": "格式错误",
-      "voideEmpty": "空的视频地址"
+      "videoBadFormat": "格式错误",
+      "videoEmpty": "空的视频地址",
+      "successTitle": "提交成功",
+      "successSubtitle": "感谢您的举报",
+      "failureTitle": "失败",
+      "failureSubtitle": "举报失败，{msg}"
+    },
+    "button": {
+      "continue": "继续",
+      "leave": "离开"
     }
   },
   "footer": {
