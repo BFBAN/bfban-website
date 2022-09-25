@@ -58,7 +58,10 @@
           </Button>
         </router-link>
 
-        <Dropdown v-if="isLogin" :trigger="isMobile ? 'click' : 'hover'"  :placement="isMobile ? 'center' : 'bottom-end'" :padding="0">
+        <Dropdown v-if="isLogin"
+                  :trigger="isMobile ? 'click' : 'hover'"
+                  :placement="isMobile ? 'bottom' : 'bottom-end'"
+                  :padding="0">
           <router-link :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
             <Avatar icon="ios-person"></Avatar>
             <span class="mobile-hide">&emsp;{{ userinfo.username }}</span>

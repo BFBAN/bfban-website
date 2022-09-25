@@ -64,7 +64,7 @@
       <template v-if="isLogin">
         <div>
           <Row :gutter="20">
-            <Col>
+            <Col :xs="{span: 23, push: 1}" :lg="{push: 0}">
               <RadioGroup size="small" type="button" v-voice-button v-model="timeRange" @on-change="getActiveStatistical">
                 <Radio v-for="(i, index) in timeArray" :key="index"
                        v-show="i.show"

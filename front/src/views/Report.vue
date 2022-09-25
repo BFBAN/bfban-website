@@ -187,7 +187,8 @@
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
                   <Card :padding="0" dis-hover>
-                    <Textarea :placeholder="$t('report.info.description')"
+                    {{ tabs.list[index].formItem.description }}
+                    <Textarea :placeholder="$t('report.info.description') + '1222'"
                               :index="index"
                               :height="'520px'"
                               v-model="tabs.list[index].formItem.description">
@@ -374,7 +375,7 @@ export default new BFBAN({
           originId: "",
           videoLink: [],
           checkbox: [],
-          description: this.$i18n.t("report.info.description"),
+          description: "",
           captcha: "",
           originUserId: "",
           originPersonaId: "",
