@@ -491,7 +491,7 @@ export default new BFBAN({
           break;
         case "revoke":
           // 剥夺
-          if (roleName) {
+          if (roleName >= 0) {
             this.editUserData.privilege.splice(roleName,1);
             this.editUserData.temporaryPrivilege[this.editPrivilegesForm.roleName] = "revoke";
           }
