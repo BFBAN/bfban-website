@@ -450,7 +450,7 @@ async (req, res, next)=> {
         if(!attr.changeNameLeft && attr.changeNameLeft<=0)
             return res.status(403).json({error: 1, code: 'changeName.noChance', message: 'you have used up all your change name chances.'});
         const occupy = await db.select('createTime').from('users').where({username: req.body.data.newname}).union([
-            db.select('createTime').from('registers').where({username: req.body.data.newname})
+            db.select('createTime').from('users').where({username: req.body.data.newname})
         ]);
         if(occupy.length > 0)
             return res.status(403).json({error: 1, code: 'changeName.occupied', message: 'someone already occupied your new name.'});

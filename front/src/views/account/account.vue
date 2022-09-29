@@ -132,9 +132,8 @@
     </Form>
 
     <!-- 修改名称 S -->
-    <Modal v-model="modal_setusername.show" @on-cancel="modal_setusername.index = 0">
+    <Modal v-model="modal_setusername.show" @on-cancel="modal_setusername.index = 0" :footer-hide="modal_setusername.index >= 2">
       <p slot="header">
-        <Icon type="ios-information-circle"></Icon>
         <span>{{ $t('profile.account.modifyName.title') }}</span>
       </p>
       <div>
@@ -170,10 +169,10 @@
             </FormItem>
 
             <FormItem :label="$t('captcha.title')" prop="captcha">
-              <Input type="text" v-model="captchaUrl.value" size="large" maxlength="4"
+              <Input type="text" v-model="usernameCaptcha" size="large" maxlength="4"
                      :placeholder="$t('captcha.title')">
                 <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                  <Captcha ref="captcha"></Captcha>
+                  <Captcha id="usernameCaptcha" ref="usernameCaptcha"></Captcha>
                 </div>
               </Input>
             </FormItem>
@@ -190,13 +189,15 @@
                 :disabled="formItem.newname == ''"
                 :loading="modal_setusername.load"
                 v-if="modal_setusername.index > 0 && modal_setusername.index <= 1"
-                @click="modal_setusername.index = 1 ? setUserName() : null">下一步
+                @click="modal_setusername.index = 1 ? setUserName() : null">
+          {{ $t('basic.button.next') }}
         </Button>
         <Button type="warning"
                 size="large"
                 v-if="modal_setusername.index <= 0"
                 :disabled="formItem.attr.changeNameLeft == 0"
-                @click="modal_setusername.index = 1">是的，更变账户名称
+                @click="modal_setusername.index = 1">
+          {{ $t('basic.button.submit') }}
         </Button>
       </div>
     </Modal>
@@ -215,10 +216,10 @@
           </FormItem>
 
           <FormItem :label="$t('captcha.title')" prop="captcha">
-            <Input type="text" v-model="captchaUrl.value" size="large" maxlength="4"
+            <Input type="text" v-model="passwordCaptcha" size="large" maxlength="4"
                    :placeholder="$t('captcha.title')">
               <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                <Captcha ref="captcha"></Captcha>
+                <Captcha id="passwordCaptcha" ref="passwordCaptcha"></Captcha>
               </div>
             </Input>
           </FormItem>
@@ -226,7 +227,7 @@
       </div>
       <div slot="footer">
         <Button size="large"
-                :disabled="!modal_changePassword.oldpassword && !modal_changePassword.newpassword && !captchaUrl.value"
+                :disabled="!modal_changePassword.oldpassword && !modal_changePassword.newpassword && !passwordCaptcha"
                 :loading="modal_changePassword.load"
                 @click="handChangePassword()">
           {{ $t('reset.title') }}
@@ -265,10 +266,8 @@ export default {
         index: 0
       },
 
-      captchaUrl: {
-        value: '',
-        content: ''
-      },
+      usernameCaptcha: "",
+      passwordCaptcha: "",
     }
   },
   components: {Captcha},
@@ -284,7 +283,7 @@ export default {
       this.privileges = this.privileges.concat(privileges.child)
       this.languages = this.languages.concat(languages.child)
 
-      this.getUserinfo();
+      await this.getUserinfo();
     },
     /**
      * 修改密码
@@ -298,8 +297,8 @@ export default {
             newpassword,
             oldpassword
           },
-          encryptCaptcha: this.captchaUrl.hash,
-          captcha: this.captchaUrl.value
+          encryptCaptcha: this.$refs.passwordCaptcha.hash,
+          captcha: this.passwordCaptcha
         }
       }).then(res => {
         const d = res.data;
@@ -347,32 +346,34 @@ export default {
      * 修改名字
      */
     setUserName() {
-      this.modal_setusername.load = true;
-
       if (!this.formItem.newname) return;
+
+      this.modal_setusername.load = true;
 
       this.http.post(api["user_changeName"], {
         data: {
           data: {
             newname: this.formItem.newname,
           },
-          encryptCaptcha: this.captchaUrl.hash,
-          captcha: this.captchaUrl.value
+          encryptCaptcha: this.$refs.usernameCaptcha.hash,
+          captcha: this.usernameCaptcha
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
-        if (d.success === 1) {
-          this.modal_setusername.index += 1;
-
-          this.getUserinfo();
-
+        if (d.success == 1) {
+          this.modal_setusername.index = 2;
           this.$Message.success(d.code);
-        } else {
-          this.$Message.error(d.message);
+          return;
         }
-      }).finally(() => {
+
+        this.modal_setusername.index = 0;
+        this.$Message.error(d.code);
+      }).finally(async () => {
         this.modal_setusername.load = false;
+        this.usernameCaptcha = "";
+
+        await this.getUserinfo();
       })
     },
     /**
@@ -407,17 +408,20 @@ export default {
     /**
      * 获取用户信息
      */
-    getUserinfo() {
-      this.http.get(api["user_me"], {}).then((res) => {
-        const d = res.data;
+    async getUserinfo() {
+      return new Promise(resolve => {
+        this.http.get(api["user_me"], {}).then((res) => {
+          const d = res.data;
 
-        if (d.success === 1) {
-          this.$store.dispatch('setUserInfo', d.data);
+          if (d.success === 1) {
+            this.$store.dispatch('setUserInfo', d.data);
 
-          this.formItem = d.data;
-        }
-      }).finally(() => {
-        this.checkLangLocalSync();
+            this.formItem = d.data;
+          }
+        }).finally(() => {
+          this.checkLangLocalSync();
+          resolve();
+        })
       })
     },
     /**
