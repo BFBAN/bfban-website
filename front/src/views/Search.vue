@@ -67,7 +67,7 @@
 
       <div v-if="cheaters.length !== 0">
         <List border class="content">
-          <ListItem v-for="(cheater, index) in cheaters" :key="index">
+          <ListItem v-for="(cheater, index) in cheaters" :key="index" @click.native="$router.push({name: 'player', params: {ouid: cheater.originPersonaId}})">
             <ListItemMeta
                 :avatar="cheater.avatarLink"
                 :title="cheater.currentName || cheater.originName"

@@ -22,7 +22,7 @@
     <Card dis-hover :padding="5">
       <template v-if="judgementLog.length > 0" >
         <div v-for="(i, index) in judgementLog" :key="index">
-          <Row type="flex" align="middle">
+          <Row type="flex" align="middle" @click.native="$router.push({name: 'player', params: {ouid: i.toOriginPersonaId}})">
             <Col>
               <Tag>Log</Tag>
             </Col>
