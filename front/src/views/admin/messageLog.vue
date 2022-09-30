@@ -111,11 +111,11 @@ export default {
     },
     handlePageSizeChange (val) {
       this.limit = val;
-      this.getAdminjudgementLog();
+      this.getAdminMessageLog();
     },
     handlePageChange (val) {
       this.skip = val;
-      this.getAdminjudgementLog();
+      this.getAdminMessageLog();
     }
   }
 }

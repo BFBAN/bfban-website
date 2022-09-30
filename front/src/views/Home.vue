@@ -1,7 +1,7 @@
 <template>
   <div>
-    <!-- <input type="file" @onChange="onChange" /> -->
     <div class="container">
+      <!-- <input type="file" @change="onChange" /> -->
       <div class="content">
         <div class="ivu-alert-with-banner home-banner">
           <Row :gutter="30">
@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import {api, http, util, time, regular} from '../assets/js/index'
+import {api, http, util, time, regular, upload} from '../assets/js/index'
 
 import BFBAN from "../assets/js/bfban";
 import Tell from "../components/Home_tell";
@@ -185,8 +185,12 @@ export default new BFBAN({
     this.getActivity();
   },
   methods: {
+    // for test upload
     onChange(e) {
       console.log(e)
+      upload.on(e.target.files[0]).then(res => {
+        console.log(res)
+      })
     },  
     async loadData() {
       await util.initUtil().then((res) => {
