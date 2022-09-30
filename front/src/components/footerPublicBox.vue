@@ -42,7 +42,7 @@
                       <a href="javascript:void(0)" @click="openDetail(i)"><b>{{i.originName}}</b></a>
                     </Col>
                     <Col>
-                      <Tag>{{i.games.toString()}}</Tag>
+                      <Tag type="border">{{ $t('basic.games.' + i.games) }}</Tag>
                     </Col>
                   </Row>
                 </Card>
@@ -136,7 +136,7 @@ export default {
         transform: scale(1);
       }
       95% {
-        transform: scale(1.5);
+        transform: scale(1.1);
       }
       100% {
         bottom: 15px;

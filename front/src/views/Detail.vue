@@ -24,7 +24,7 @@
                       @on-error="onAvatarError"
                       :src="cheater.avatarLink"
                       :size="180"
-                      :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })"
+                      :title="$t('detail.info.originAvatar')"
                       v-if="cheater.avatarLink">
               </Avatar>
               <template v-else>
@@ -213,7 +213,7 @@
                 <Card :padding="10" dis-hover>
                   <!-- 回复次数 -->
                   <h3>{{ cheater.commentsNum || 0 }}</h3>
-                  <span>{{ $t('detail.info.reply') }}</span>
+                  <span>{{ $t('basic.button.reply') }}</span>
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
@@ -376,7 +376,7 @@
                       <Button type="dashed"
                               v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        {{ $t('basic.button.reply') }}
                       </Button>
                     </p>
                   </div>
@@ -420,7 +420,7 @@
                       <Button type="dashed"
                               v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        {{ $t('basic.button.reply') }}
                       </Button>
                       <Divider type="vertical"/>
                       <!-- 申诉操作 -->
@@ -487,7 +487,7 @@
                       <Button type="dashed"
                               v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        {{ $t('basic.button.reply') }}
                       </Button>
                     </p>
                   </div>
@@ -504,7 +504,7 @@
                             </BusinessCard>
                           </router-link>
 
-                          {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                          {{ $t('basic.button.reply') }}
                         </Col>
                         <Col align="right">
                           <Time v-if="l.createTime" :time="l.createTime"></Time>
@@ -530,7 +530,7 @@
                       <Button type="dashed"
                               v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        {{ $t('basic.button.reply') }}
                       </Button>
                     </p>
                   </div>
@@ -589,7 +589,7 @@
                                 :loading="replySpinShow"
                                 :disabled="!reply.content"
                                 @click.stop.prevent="onReply">
-                          {{ $t('detail.info.reply') }}
+                          {{ $t('basic.button.reply') }}
                         </Button>
                         <Button size="large" type="dashed">
                           <Poptip word-wrap width="280" trigger="hover" transfer>
@@ -729,7 +729,7 @@
                       <Textarea v-model="verify.suggestion"
                                 ref="judgementTextarea"
                                 :height="'250px'"
-                                :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+                                :placeholder="$t(`detail.info.writeSomething`)"></Textarea>
                       <Row :gutter="20" style="padding: 5px 15px">
                         <Col flex="1">
                           <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
@@ -826,7 +826,7 @@
       <!-- 小窗口回复 S -->
       <Modal v-model="replyModal">
         <div slot="header">
-          {{ `${$t('detail.info.reply')}` }}
+          {{ `${$t('basic.button.reply')}` }}
           <BusinessCard :id="timelineList[reply.toFloor].byUserId" v-if="timelineList[reply.toFloor]">
             <b>{{ timelineList[reply.toFloor].username }}</b>({{ reply.toFloor }})
           </BusinessCard>

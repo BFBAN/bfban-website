@@ -144,7 +144,6 @@ export default new BFBAN({
               icon: 'md-code-download',
               configurationKey: 'enhance',
               configurationValue: this.$store.state.configuration.enhance || false,
-              disabled: true
             }]
         },
       ]

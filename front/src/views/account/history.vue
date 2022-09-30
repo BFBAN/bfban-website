@@ -2,7 +2,7 @@
   <div>
     <template v-if="$store.state.configuration.history">
       <Row :gutter="20">
-        <Col flex="auto" >
+        <Col flex="auto">
           <RadioGroup
               class="game-type"
               v-model="gameName"
