@@ -51,6 +51,7 @@
           <log v-else-if="adminMenuValue == 'admin_log'"></log>
           <judgementLog v-else-if="adminMenuValue == 'judgement_log'"></judgementLog>
           <messageLog v-else-if="adminMenuValue == 'message_Log'"></messageLog>
+          <adminOperation v-else-if="adminMenuValue == 'adminOperation'"></adminOperation>
         </Col>
       </Row>
     </Card>
@@ -62,6 +63,7 @@ import user from "./user"
 import comment from "./comment"
 import log from "./log"
 import judgementLog from "@/views/admin/judgementLog";
+import adminOperation from "@/views/admin/adminOperation";
 import messageLog from "@/views/admin/messageLog";
 import BFBAN from "@/assets/js/bfban";
 import PrivilegesTag from "@/components/PrivilegesTag";
@@ -124,13 +126,19 @@ export default new BFBAN({
               value: 'message_Log',
               disabled: false,
               privilege: ['super', 'root', 'dev'],
+            },
+            {
+              title: 'adminOperation',
+              value: 'adminOperation',
+              disabled: false,
+              privilege: ['super', 'root', 'dev'],
             }
           ]
         }
       ]
     }
   },
-  components: { user,comment,log,judgementLog,messageLog,PrivilegesTag },
+  components: { user,comment,log,judgementLog,messageLog,PrivilegesTag, adminOperation },
   created() {
     const {pagename} = this.$route.params;
 

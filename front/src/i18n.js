@@ -14,6 +14,7 @@ import zh from 'view-design/dist/locale/zh-CN';
 
 import en_bfban from './lang/en.json' // 英语
 import ja_bot_bfban from './lang/jp_bot.json' // 日语 - 机翻
+import ja_bfban from './lang/jp.json' // 日语
 import kor_bot_bfban from './lang/kor_bot.json' // 韩语 - 机翻
 // import tr_bot_bfban from './lang/tr_bot.json' // 土耳其 - 机翻
 import ru_bot_bfban from './lang/ru_bot.json' // 俄语 - 机翻
@@ -28,7 +29,7 @@ const i18n = new VueI18n({
   fallbackLocale: lang.default,
   messages:{
     'en-US': Object.assign(en, en_bfban), // 英语
-    'ja-JP': Object.assign(ja, ja_bot_bfban), // 日语
+    'ja-JP': Object.assign(ja, ja_bfban), // 日语
     'kor-KOR': Object.assign(kor, kor_bot_bfban), // 韩语
     // 'tr-TR': Object.assign(tr, tr_bot_bfban), // 土耳其
     'ru-RU': Object.assign(ru, ru_bot_bfban), // 俄语

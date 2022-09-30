@@ -28,10 +28,6 @@
       "more": {
         "text": "需要更多证据",
         "describe": "需要补充更多有力的证据"
-      },
-      "farm": {
-        "text": "武器刷级",
-        "describe": "由于武器数据异常，提交枪械记录以清理实际锤"
       }
     },
     "status": {
@@ -254,7 +250,8 @@
         "comment": "评论管理",
         "log": "日志",
         "adminLog": "管理日志",
-        "judgementLog": "判决日志"
+        "judgementLog": "判决日志",
+        "adminOperation": "管理操作日志"
       }
     }
   },
@@ -390,6 +387,7 @@
       "notFoundHintQuestion2": "origin上无法搜索到，这是怎么一回事？",
       "notFoundHintAnswer2": "这可能是EA数据库更新不及时，或是EA官方的bug，我们没有办法替他们解决，如果您想出一份力，可以至       https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en       官方反馈论坛反馈bug，此情况可以描述为 I can't search my friend by name on origin",
       "reportHacker": "举报作弊",
+      "reportNews": "已经支持 战地V 举报啦！",
       "idNotion1": "一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID",
       "idNotion2": "游戏ID是不区分大小写的，但请特别注意区分 i I 1 l L o O 0，正确填写举报ID",
       "uploadManual1": "不想注册国内账号、嫌麻烦，上传视频可以前往",
@@ -413,20 +411,13 @@
       "game": "游戏",
       "description": "描述"
     },
-    "messages": {
+    "error": {
       "mediaEvidence": "请上传图片或填写视频链接",
-      "originIdNotExist": "游戏ID不存在，请检查拼写",
+      "originId": "游戏ID不存在，请检查拼写",
+      "success": "提交成功",
       "permissionDenied": "无权限",
-      "videoBadFormat": "格式错误",
-      "videoEmpty": "空的视频地址",
-      "successTitle": "提交成功",
-      "successSubtitle": "感谢您的举报",
-      "failureTitle": "失败",
-      "failureSubtitle": "举报失败，{msg}"
-    },
-    "button": {
-      "continue": "继续",
-      "leave": "离开"
+      "voideBadFormat": "格式错误",
+      "voideEmpty": "空的视频地址"
     }
   },
   "footer": {
@@ -770,14 +761,6 @@
     "banAppeals": "已上诉",
     "registers": "注册用户",
     "players": "现有举报案件",
-    "admins": "总共管理员数",
-    "communityParticipation": "用户社区参与排行",
-    "reportRanking": "举报排行",
-    "timeRange": {
-      "daily": "昨天",
-      "weekly": "一周",
-      "monthly": "30天",
-      "yearly": "一年"
-    }
+    "admins": "总共管理员数"
   }
 }
