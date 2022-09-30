@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <input type="file" @onChange="onChange" /> -->
     <div class="container">
       <div class="content">
         <div class="ivu-alert-with-banner home-banner">
@@ -15,10 +16,10 @@
 
               <Divider/>
 
-              <router-link v-if="!$store.state.user.token" :to="{name: 'signup'}">
+              <router-link v-if="!user.token" :to="{name: 'signup'}">
                 <Button type="primary" v-voice-button>{{ $t("signup.title") }}</Button>
               </router-link>
-              <Divider v-if="!$store.state.user.token" type="vertical" />
+              <Divider v-if="!user.token" type="vertical" />
               <router-link :to="{name: 'about'}">
                 <Button type="text" v-voice-button>
                   <Icon type="ios-help-circle-outline"/>
@@ -184,6 +185,9 @@ export default new BFBAN({
     this.getActivity();
   },
   methods: {
+    onChange(e) {
+      console.log(e)
+    },  
     async loadData() {
       await util.initUtil().then((res) => {
         this.cheaterStatus = res.cheaterStatus;
@@ -245,7 +249,12 @@ export default new BFBAN({
         }
       })
     }
-  }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user || {}
+    }
+  },
 })
 </script>
 
