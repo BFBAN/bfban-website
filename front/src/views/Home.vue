@@ -15,10 +15,10 @@
 
               <Divider/>
 
-              <router-link :to="{name: 'signup'}">
+              <router-link v-if="!$store.state.user.token" :to="{name: 'signup'}">
                 <Button type="primary" v-voice-button>{{ $t("signup.title") }}</Button>
               </router-link>
-              <Divider type="vertical"/>
+              <Divider v-if="!$store.state.user.token" type="vertical" />
               <router-link :to="{name: 'about'}">
                 <Button type="text" v-voice-button>
                   <Icon type="ios-help-circle-outline"/>
