@@ -253,6 +253,27 @@ async (req, res, next)=>{
     }
 });
 
+router.get('/adminLog', verifyJWT, allowPrivileges(["super","root","dev"]), [
+  checkquery('createTimeFrom').optional().isInt({min: 0}),
+  checkquery('createTimeto').optional().isInt({min: 0}),
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next)=>{
+  try {
+    
+      const createTimeFrom = new Date(req.query.createTimeFrom);
+      const createTimeto = new Date(req.query.createTimeto);
+      const result = await db('comments')
+          .join('users', 'comments.byUserId', 'users.id')
+          .where('type', '!=', `report`).andWhere('type', '!=', `reply`)
+          .select('comments.*', 'users.username', 'users.privilege')
+          .andWhere("comments.createTime", ">=", createTimeFrom)
+          .andWhere("comments.createTime", "<=", createTimeto)
+      return res.status(200).json({success: 1, code: 'log.ok', data: result });
+  } catch(err) {
+      next(err);
+  }
+});
+
 router.get('/messageLog', verifyJWT, allowPrivileges(["super","root","dev"]), [
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),

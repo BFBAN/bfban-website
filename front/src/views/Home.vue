@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="container">
+      <!-- <input type="file" @change="onChange" /> -->
       <div class="content">
         <div class="ivu-alert-with-banner home-banner">
           <Row :gutter="30">
@@ -15,10 +16,10 @@
 
               <Divider/>
 
-              <router-link :to="{name: 'signup'}">
+              <router-link v-if="!user.token" :to="{name: 'signup'}">
                 <Button type="primary" v-voice-button>{{ $t("signup.title") }}</Button>
               </router-link>
-              <Divider type="vertical"/>
+              <Divider v-if="!user.token" type="vertical" />
               <router-link :to="{name: 'about'}">
                 <Button type="text" v-voice-button>
                   <Icon type="ios-help-circle-outline"/>
@@ -153,7 +154,7 @@
 </template>
 
 <script>
-import {api, http, util, time, regular} from '../assets/js/index'
+import {api, http, util, time, regular, upload} from '../assets/js/index'
 
 import BFBAN from "../assets/js/bfban";
 import Tell from "../components/Home_tell";
@@ -184,6 +185,13 @@ export default new BFBAN({
     this.getActivity();
   },
   methods: {
+    // for test upload
+    onChange(e) {
+      console.log(e)
+      upload.on(e.target.files[0]).then(res => {
+        console.log(res)
+      })
+    },  
     async loadData() {
       await util.initUtil().then((res) => {
         this.cheaterStatus = res.cheaterStatus;
@@ -245,7 +253,12 @@ export default new BFBAN({
         }
       })
     }
-  }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user || {}
+    }
+  },
 })
 </script>
 
