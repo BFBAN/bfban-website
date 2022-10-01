@@ -73,6 +73,7 @@
       "ps4": "ソニー本体4"
     },
     "button": {
+      "reply": "返信",
       "report": "通報する",
       "commit": "送信",
       "save": "保存＃ホゾン＃",
@@ -281,7 +282,6 @@
       "appeal": "上訴する",
       "cheatersInfo": "プレイヤー詳細",
       "viewTimes": "ブラウズ回数",
-      "reply": "返信",
       "reportedGames": "告発されたゲーム",
       "gameScores": "戦績リンク",
       "firstReportTime": "第1回通報された時間",

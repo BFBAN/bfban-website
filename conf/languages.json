@@ -46,9 +46,10 @@
     {
       "name": "ja-JP",
       "label": "日本语(bot)",
-      "members": [{
-        "name": "Baidu Bot",
-        "url": "//bfban.com"
+      "members": [
+      {
+        "name": "咸驴さんRaidenBlade",
+        "url": ""
       }]
     },
     {

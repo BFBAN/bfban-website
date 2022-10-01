@@ -73,6 +73,7 @@
       "ps4": "소니 호스트 4"
     },
     "button": {
+      "reply": "답장",
       "report": "고발",
       "commit": "제출",
       "save": "보존",
@@ -281,7 +282,6 @@
       "appeal": "上诉",
       "cheatersInfo": "플레이어 상세 정보",
       "viewTimes": "조회 횟수",
-      "reply": "답장",
       "reportedGames": "신고된 게임",
       "gameScores": "战绩链接",
       "firstReportTime": "최초 신고 시간",

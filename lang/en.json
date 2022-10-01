@@ -79,6 +79,7 @@
 			"ps4": "PlayStation 4"
 		},
 		"button": {
+			"reply": "Reply",
 			"report": "Report user",
 			"commit": "Commit",
 			"save": "Save",
@@ -220,7 +221,21 @@
 			"title": "Theme"
 		},
 		"enhance": {
-			"title": "Local enhancement"
+			"title": "Local enhancement",
+			"public": {
+				"footerBar": {
+					"name": "底部工具栏",
+					"describe": "网站顶部附属的工具栏，为用户提供玩家持续关注等功能"
+				},
+				"autoUpdatePlayerList": {
+					"name": "未处理提醒",
+					"describe": "为管理员提供自动刷新，关注未处理玩家做出站内提醒"
+				},
+				"desktopNotifiction": {
+					"name": "桌面通知",
+					"describe": "在系统窗口内弹窗通知"
+				}
+			}
 		},
 		"media": {
 			"title": "Media library",
@@ -305,7 +320,6 @@
 			"appeal": "Appeal",
 			"cheatersInfo": "Player detail",
 			"viewTimes": "Views",
-			"reply": "Reply",
 			"reportedGames": "Reported game",
 			"gameScores": "Score track link",
 			"firstReportTime": "Firstly reported date",
