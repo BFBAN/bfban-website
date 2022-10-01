@@ -566,7 +566,7 @@ export default {
 }
 
 .ql-editor.ql-blank::before {
-  opacity: .1;
+  opacity: .6;
   font-style: normal;
 }
 
