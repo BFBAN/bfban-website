@@ -23,7 +23,8 @@ module.exports = {
     manifestPath: 'manifest.json',
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      exclude: [/\.(?:png|jpg|jpeg|svg)$/]
+      exclude: [/\.(?:png|jpg|jpeg|svg)$/],
+      swSrc: "src/registerServiceWorker.js"
     }
   },
 
