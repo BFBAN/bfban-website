@@ -1461,7 +1461,7 @@ export default new BFBAN({
      */
     onReply () {
       const cheaterId = this.cheater.id;
-      let {toFloor, toUserId, content = ''} = this.reply;
+      let {content = ''} = this.reply;
 
       content = formatTextarea(content);
 
@@ -1480,13 +1480,6 @@ export default new BFBAN({
       if (this.reply.toFloor && Number(this.reply.toFloor) >= 0) {
         data.data.toCommentId = this.timelineList[this.reply.toFloor].id;
         data.encryptCaptcha = this.$refs.replyCommentsCaptcha.hash;
-      }
-
-      if (toFloor && Number(toFloor) >= 0) {
-        data.data['toFloor'] = toFloor;
-      }
-      if (toUserId && Number(toUserId) >= 0) {
-        data.data['toUserId'] = toUserId;
       }
 
       this.replySpinShow = true;

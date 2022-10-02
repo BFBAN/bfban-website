@@ -644,6 +644,7 @@
 	"list": {
 		"title": "Cheater list",
 		"filters": {
+			"sortByTitle": "Sort Type",
 			"sortBy": {
 				"createTime": "Sort by report time",
 				"updateTime": "Sort by Update time",

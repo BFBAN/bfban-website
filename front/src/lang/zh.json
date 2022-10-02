@@ -645,6 +645,7 @@
   "list": {
     "title": "外挂公示",
     "filters": {
+      "sortByTitle": "排序方式",
       "sortBy": {
         "createTime": "举报时间倒序",
         "updateTime": "更新时间倒序",
