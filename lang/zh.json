@@ -28,6 +28,10 @@
       "more": {
         "text": "需要更多证据",
         "describe": "需要补充更多有力的证据"
+      },
+      "farm": {
+        "text": "刷枪",
+        "describe": "刷枪"
       }
     },
     "status": {
@@ -645,6 +649,7 @@
   "list": {
     "title": "外挂公示",
     "filters": {
+      "sortByTitle": "排序方式",
       "sortBy": {
         "createTime": "举报时间倒序",
         "updateTime": "更新时间倒序",
