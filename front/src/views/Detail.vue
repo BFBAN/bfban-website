@@ -779,7 +779,7 @@
                             size="large"
                             :long="isMobile"
                             v-voice-button :loading="verifySpinShow"
-                            @click.stop.prevent="doVerify">
+                            @click.stop.prevent="onJudgement">
                       {{ $t('basic.button.submit') }}
                     </Button>
                   </Col>
@@ -1315,9 +1315,8 @@ export default new BFBAN({
     /**
      * 提交判决
      */
-    async doVerify() {
-      const {status} = this.verify;
-      let {suggestion} = this.verify;
+    async onJudgement() {
+      let {suggestion, status} = this.verify;
       const cheatMethods = this.verify.checkbox;
 
       if (this.verifySpinShow) return;
