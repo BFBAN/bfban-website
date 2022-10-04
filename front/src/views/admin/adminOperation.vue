@@ -6,10 +6,29 @@
       <Col flex="auto" :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
         <RadioGroup
             class="game-type"
+            v-model="gameName"
+            type="button">
+          <Radio label="bf1">
+            bf1
+          </Radio>
+          <Radio label="bfv">
+            bfv
+          </Radio>
+          <Radio label="bf6">
+            bf2042
+          </Radio>
+        </RadioGroup>
+      </Col>
+    </Row>
+    <br />
+    <Row type="flex" align="middle">
+      <Col flex="auto" :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
+        <RadioGroup
+            class="game-type"
             v-model="adminId"
             type="button">
-          <Radio v-for="i in admin" :key="i.byUserId" :label="i.byUserId">
-            {{ i.username }}({{i.times}})
+          <Radio v-for="i in adminTab" :key="i.byUserId" :label="i.byUserId">
+            {{ i.username }} - [{{i[gameName]}}] - ({{i.scale}}%) 
           </Radio>
         </RadioGroup>
       </Col>
@@ -61,7 +80,8 @@ export default new BFBAN({
       admin: [],
       adminId: '',
       date: [],
-      util
+      util,
+      gameName: 'bf1'
     }
   },
   components: {BusinessCard},
@@ -70,8 +90,17 @@ export default new BFBAN({
   },
   computed: {
     adminLogs() {
-      console.log(this.log.filter(item => item.byUserId == this.adminId))
-      return this.log.filter(item => item.byUserId == this.adminId)
+      return this.currentlog.filter(item => item.byUserId == this.adminId)
+    },
+    currentlog() {
+      return this.log.filter(item => item.games[0] == this.gameName)
+    },
+    adminTab() {
+      let { admin, currentlog, gameName } = this
+      const length = currentlog.length
+      return admin.sort((a, b) => b[gameName] - a[gameName]).map(item => {
+        return { ...item, scale: parseInt(item[gameName] * 100 / length) }
+      }).filter(item => item.scale > 5)
     }
   },
   methods: {
@@ -81,18 +110,22 @@ export default new BFBAN({
           createTimeFrom, createTimeto
         }
       }).then(res => {
+        const { data } = res.data
         const admin = []
-        const log = res.data.data.filter(item => !item.privilege.includes('super'))
+        const log = data.filter(item => !item.privilege.includes('super'))
         log.forEach(item => {
           const index = admin.findIndex(i => i.byUserId == item.byUserId)
+          const game = item.games[0]
           if(index == -1) {
-            admin.push({ ...item, username: item.username, byUserId: item.byUserId, times: 1})
-          }else {
-            admin[index].times++
+            admin.push({ ...item, username: item.username, byUserId: item.byUserId, [game]: 1})
+          } else if(!admin[index][game]) {
+            admin[index][game] = 1
+          } else {
+            admin[index][game]++
           }
         })
-        this.admin = admin.filter(item => item.times > 5)
-        this.log = res.data.data
+        this.admin = admin
+        this.log = log
         this.adminId = this.admin[0] ? this.admin[0].byUserId : 0
       })
     },
@@ -101,7 +134,6 @@ export default new BFBAN({
       const [start, end] = this.date
       const startTime = new Date(start)
       const endTime = new Date(end)
-      
       const createTimeFrom = `${startTime.getFullYear()}-${startTime.getMonth() + 1}-${startTime.getDate()}`
       const createTimeto = `${endTime.getFullYear()}-${endTime.getMonth() + 1}-${endTime.getDate()}`
       this.loadData({ createTimeFrom, createTimeto })

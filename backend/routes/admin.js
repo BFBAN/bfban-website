@@ -264,8 +264,9 @@ async (req, res, next)=>{
       const createTimeto = new Date(req.query.createTimeto);
       const result = await db('comments')
           .join('users', 'comments.byUserId', 'users.id')
+          .join('players', 'comments.toOriginPersonaId', 'players.originPersonaId')
           .where('type', '!=', `report`).andWhere('type', '!=', `reply`)
-          .select('comments.*', 'users.username', 'users.privilege')
+          .select('comments.*', 'users.username', 'users.privilege', 'players.games')
           .andWhere("comments.createTime", ">=", createTimeFrom)
           .andWhere("comments.createTime", "<=", createTimeto)
       return res.status(200).json({success: 1, code: 'log.ok', data: result });
