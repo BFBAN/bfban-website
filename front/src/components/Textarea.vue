@@ -258,7 +258,7 @@ export default {
         modules: {
           clipboard: {
             // 粘贴版，处理粘贴时候带图片
-            matchers: [[Node.ELEMENT_NODE, this.handleCustomMatcher]],
+            matchers: [[Node.ELEMENT_NODE, this.handlePaste]],
           },
           // https://github.com/merrylmr/quill-mention-people
           // atPeople:{
@@ -301,17 +301,23 @@ export default {
     }
   },
   methods: {
-    handleCustomMatcher(node, Delta) {
+    handlePaste(node, Delta) {
       let ops = []
       Delta.ops.forEach(op => {
-        if (op.insert && typeof op.insert === 'string') {// 如果粘贴了图片，这里会是一个对象，所以可以这样处理
+        // 如果粘贴了图片，这里会是一个对象，所以可以这样处理
+        if (op.attributes && typeof op.attributes.link === 'string') {
+          ops.push({
+            insert: op.attributes.link,
+          })
+        }
+        else if (op.insert && typeof op.insert === 'string') {
           ops.push({
             insert: op.insert,
           })
         }
       })
-      Delta.ops = ops
-      return Delta
+      Delta.ops = ops;
+      return Delta;
     },
     /**
      * 更新富文本
@@ -560,7 +566,7 @@ export default {
 }
 
 .ql-editor.ql-blank::before {
-  opacity: .1;
+  opacity: .6;
   font-style: normal;
 }
 

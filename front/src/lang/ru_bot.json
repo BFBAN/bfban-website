@@ -73,6 +73,7 @@
       "ps4": "PlayStation 4"
     },
     "button": {
+      "reply": "ответ",
       "report": "Репорт",
       "commit": "Отправить",
       "save": "Сохранить",
@@ -281,7 +282,6 @@
       "appeal": "апелляция",
       "cheatersInfo": "玩家详情",
       "viewTimes": "количество просмотров",
-      "reply": "ответ",
       "reportedGames": "被举报的游戏",
       "gameScores": "связь результатов",
       "firstReportTime": "время первого сообщения",

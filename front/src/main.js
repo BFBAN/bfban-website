@@ -1,5 +1,4 @@
 import 'view-design/dist/styles/iview.css'
-import './registerServiceWorker'
 import config from "../package.json"
 
 import Vue from 'vue'
@@ -31,7 +30,7 @@ Vue.component('v-chart', ECharts);
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 
-// js
+// pwa js
 import './registerServiceWorker'
 
 Vue.use(VueMeta)

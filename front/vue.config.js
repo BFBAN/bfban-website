@@ -18,9 +18,13 @@ module.exports = {
   // https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa
   pwa: {
     name: 'BFBAN',
+    themeColor: '#ffd802',
+    msTileColor: '#fff',
+    manifestPath: 'manifest.json',
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      swSrc: 'src/service-worker.js'
+      exclude: [/\.(?:png|jpg|jpeg|svg)$/],
+      swSrc: "src/registerServiceWorker.js"
     }
   },
 
@@ -60,9 +64,6 @@ module.exports = {
           changefreq: 'hourly',
           priority: .7
         }
-      }),
-      new InjectManifest({
-        swSrc: "src/service-worker.js",
       }),
       new CopyWebpackPlugin(
           [{

@@ -28,6 +28,10 @@
       "more": {
         "text": "需要更多证据",
         "describe": "需要补充更多有力的证据"
+      },
+      "farm": {
+        "text": "刷枪",
+        "describe": "刷枪"
       }
     },
     "status": {
@@ -75,6 +79,7 @@
       "ps4": "索尼主机4"
     },
     "button": {
+      "reply": "回复",
       "report": "举报",
       "commit": "提交",
       "save": "保存",
@@ -216,7 +221,21 @@
       "title": "皮肤"
     },
     "enhance": {
-      "title": "本地增强"
+      "title": "本地增强",
+      "public": {
+        "footerBar": {
+          "name": "底部工具栏",
+          "describe": "网站顶部附属的工具栏，为用户提供玩家持续关注等功能"
+        },
+        "autoUpdatePlayerList": {
+          "name": "未处理提醒",
+          "describe": "为管理员提供自动刷新，关注未处理玩家做出站内提醒"
+        },
+        "desktopNotifiction": {
+          "name": "桌面通知",
+          "describe": "在系统窗口内弹窗通知"
+        }
+      }
     },
     "media": {
       "title": "媒体库",
@@ -313,7 +332,6 @@
       "appeal": "上诉",
       "cheatersInfo": "玩家详情",
       "viewTimes": "浏览次数",
-      "reply": "回复",
       "reportedGames": "被举报的游戏",
       "gameScores": "战绩链接",
       "firstReportTime": "第一次被举报时间",
@@ -345,7 +363,7 @@
       "replyManual4": "请登录后参与回复",
       "action": "行动",
       "writeSomething": "写一些东西",
-      "giveOpinion": "你怎么看？",
+      "giveOpinion": "您怎么看?",
       "fastReplies": {
         "stats": "玩家数据异常",
         "evidencePic": "证据如图所示",
@@ -371,7 +389,7 @@
     "messages": {
       "fillEverything": "请填写完整",
       "pleaseExplain": "请更加详细的描述您的裁决内容",
-      "dontDoIt": "不准",
+      "dontDoIt": "不允许",
       "replySuccess": "回复成功",
       "signIn": "请登录",
       "updateComplete": "更新完成",
@@ -631,6 +649,7 @@
   "list": {
     "title": "外挂公示",
     "filters": {
+      "sortByTitle": "排序方式",
       "sortBy": {
         "createTime": "举报时间倒序",
         "updateTime": "更新时间倒序",

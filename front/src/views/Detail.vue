@@ -24,7 +24,7 @@
                       @on-error="onAvatarError"
                       :src="cheater.avatarLink"
                       :size="180"
-                      :title="$t('detail.info.originAvatar', { msg: 'originAvatar' })"
+                      :title="$t('detail.info.originAvatar')"
                       v-if="cheater.avatarLink">
               </Avatar>
               <template v-else>
@@ -213,7 +213,7 @@
                 <Card :padding="10" dis-hover>
                   <!-- 回复次数 -->
                   <h3>{{ cheater.commentsNum || 0 }}</h3>
-                  <span>{{ $t('detail.info.reply') }}</span>
+                  <span>{{ $t('basic.button.reply') }}</span>
                 </Card>
               </Col>
               <Col :xs="{span: 12}" :lg="{span: 6}">
@@ -376,7 +376,7 @@
                       <Button type="dashed"
                               v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        {{ $t('basic.button.reply') }}
                       </Button>
                     </p>
                   </div>
@@ -420,7 +420,7 @@
                       <Button type="dashed"
                               v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        {{ $t('basic.button.reply') }}
                       </Button>
                       <Divider type="vertical"/>
                       <!-- 申诉操作 -->
@@ -487,7 +487,7 @@
                       <Button type="dashed"
                               v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        {{ $t('basic.button.reply') }}
                       </Button>
                     </p>
                   </div>
@@ -504,7 +504,7 @@
                             </BusinessCard>
                           </router-link>
 
-                          {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                          {{ $t('basic.button.reply') }}
                         </Col>
                         <Col align="right">
                           <Time v-if="l.createTime" :time="l.createTime"></Time>
@@ -530,7 +530,7 @@
                       <Button type="dashed"
                               v-voice-button
                               @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('detail.info.reply', {msg: 'reply'}) }}
+                        {{ $t('basic.button.reply') }}
                       </Button>
                     </p>
                   </div>
@@ -589,7 +589,7 @@
                                 :loading="replySpinShow"
                                 :disabled="!reply.content"
                                 @click.stop.prevent="onReply">
-                          {{ $t('detail.info.reply') }}
+                          {{ $t('basic.button.reply') }}
                         </Button>
                         <Button size="large" type="dashed">
                           <Poptip word-wrap width="280" trigger="hover" transfer>
@@ -729,7 +729,7 @@
                       <Textarea v-model="verify.suggestion"
                                 ref="judgementTextarea"
                                 :height="'250px'"
-                                :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+                                :placeholder="$t(`detail.info.writeSomething`)"></Textarea>
                       <Row :gutter="20" style="padding: 5px 15px">
                         <Col flex="1">
                           <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
@@ -779,7 +779,7 @@
                             size="large"
                             :long="isMobile"
                             v-voice-button :loading="verifySpinShow"
-                            @click.stop.prevent="doVerify">
+                            @click.stop.prevent="onJudgement">
                       {{ $t('basic.button.submit') }}
                     </Button>
                   </Col>
@@ -826,7 +826,7 @@
       <!-- 小窗口回复 S -->
       <Modal v-model="replyModal">
         <div slot="header">
-          {{ `${$t('detail.info.reply')}` }}
+          {{ `${$t('basic.button.reply')}` }}
           <BusinessCard :id="timelineList[reply.toFloor].byUserId" v-if="timelineList[reply.toFloor]">
             <b>{{ timelineList[reply.toFloor].username }}</b>({{ reply.toFloor }})
           </BusinessCard>
@@ -1315,9 +1315,8 @@ export default new BFBAN({
     /**
      * 提交判决
      */
-    async doVerify() {
-      const {status} = this.verify;
-      let {suggestion} = this.verify;
+    async onJudgement() {
+      let {suggestion, status} = this.verify;
       const cheatMethods = this.verify.checkbox;
 
       if (this.verifySpinShow) return;
@@ -1461,7 +1460,7 @@ export default new BFBAN({
      */
     onReply () {
       const cheaterId = this.cheater.id;
-      let {toFloor, toUserId, content = ''} = this.reply;
+      let {content = ''} = this.reply;
 
       content = formatTextarea(content);
 
@@ -1480,13 +1479,6 @@ export default new BFBAN({
       if (this.reply.toFloor && Number(this.reply.toFloor) >= 0) {
         data.data.toCommentId = this.timelineList[this.reply.toFloor].id;
         data.encryptCaptcha = this.$refs.replyCommentsCaptcha.hash;
-      }
-
-      if (toFloor && Number(toFloor) >= 0) {
-        data.data['toFloor'] = toFloor;
-      }
-      if (toUserId && Number(toUserId) >= 0) {
-        data.data['toUserId'] = toUserId;
       }
 
       this.replySpinShow = true;

@@ -632,8 +632,6 @@ async (req, res, next)=>{
  *         value: 填写举报内容
  *     responses:
  *       200:
- *         description: ok
- *       201:
  *         description: reply.suceess
  *       404:
  *         description: reply.notFound
@@ -684,7 +682,7 @@ async (req, res, next)=>{
         }).increment('commentsNum', 1).where({id: dbId});
 
         siteEvent.emit('action', {method: 'reply', params: {reply, player}});
-        return res.status(201).json({success: 1, code: 'reply.suceess', message: 'Reply success.'});
+        return res.status(200).json({success: 1, code: 'reply.suceess', message: 'Reply success.'});
     } catch(err) {
         next(err);
     }

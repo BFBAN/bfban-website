@@ -11,7 +11,6 @@
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/lang/**/*.json\""
   },
-  "main": "../desktop/main.js",
   "dependencies": {
     "axios": "^0.25.0",
     "core-js": "^3.6.5",
