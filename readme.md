@@ -34,7 +34,3 @@ bfban目前由中文社区与gametool社区参与审核与管理工作，包含�
 bfban公开接口，允许第三方接入bfban数据库，[BFBan 2.0 设计](backend/)
 
 ----
-
-### 捐助
-
-暂无
