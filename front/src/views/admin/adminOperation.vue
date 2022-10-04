@@ -48,7 +48,7 @@
                   <b>{{i.username}}</b>
                 </BusinessCard>
                 <span> {{ $t('detail.info.judge') }} </span>
-                <a href="javascript:void(0)">{{i.toOriginPersonaId}}</a>
+                <a href="javascript:void(0)">{{i.originName}}</a>
                 <span> {{i.cheatMethods.toString()}} {{ $t(`basic.action.${util.queryAction(i.judgeAction)}.text`) }}</span>
               </div>
             </Col>
