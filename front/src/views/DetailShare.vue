@@ -50,7 +50,8 @@
             <Spin size="large" fix v-if="share.load"></Spin>
           </Card>
         </Col>
-        <Col span="8">
+        <Col class="desktop-hide" span="24"><br></Col>
+        <Col span="8" :xs="{span: 24}" :lg="{span: 8}">
           <Form label-position="top" :model="share" @on-visible-change="onGenerateSharePicture">
             <FormItem :title="$t('footer.languages')">
               <Select v-model="share.languages" @on-change="upDataShare" size="large">

@@ -8,6 +8,7 @@ import {api, http} from "./index";
 
 export default class PlayerStorage extends Storage {
     NAME = 'user.player';
+    MAXCOUNT = 50;
 
     PLAYERDATA = {};
 
@@ -24,7 +25,17 @@ export default class PlayerStorage extends Storage {
     /**
      * 更新
      */
-    updataStorage () {
+    updateStorage () {
+        let data = Object.keys(this.PLAYERDATA);
+        let count = data.length;
+        let executionsNumber = count - this.MAXCOUNT;
+
+        if (count >= this.MAXCOUNT) {
+            for (let i = 0; i < executionsNumber; i++) {
+                delete data[i];
+            }
+        }
+
         super.set(this.NAME, this.PLAYERDATA);
     }
 
@@ -35,7 +46,7 @@ export default class PlayerStorage extends Storage {
      */
     push (key, val) {
         this.PLAYERDATA[key] = val;
-        this.updataStorage();
+        this.updateStorage();
     }
 
     /**
@@ -60,7 +71,7 @@ export default class PlayerStorage extends Storage {
                     this.PLAYERDATA[argumentsKey] = await this.getCheatersInfo(argumentsKey);
             }
 
-            this.updataStorage();
+            this.updateStorage();
         }
     }
 
@@ -81,7 +92,7 @@ export default class PlayerStorage extends Storage {
         delete d.data.history;
 
         this.PLAYERDATA[d.data.id] = d.data;
-        this.updataStorage();
+        this.updateStorage();
         return d.data;
     }
 }

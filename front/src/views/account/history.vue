@@ -53,7 +53,7 @@
                class="item-card">
             <Row :gutter="10" type="flex" justify="center" align="middle">
               <Col>
-                <Checkbox v-model="d.checkbox"></Checkbox>
+                <Checkbox v-model="i.checkbox"></Checkbox>
               </Col>
               <Col flex="1">
 
@@ -180,7 +180,7 @@ export default {
       let _static = false;
 
       if ( this.gameName == 'all' || this.statusMethods == '-1' ) { _static = true; }
-      if ( this.list[i_1].data[i_2].games.includes(this.gameName)  ) { _static = true; }
+      if ( this.list[i_1].data[i_2].games && this.list[i_1].data[i_2].games.includes(this.gameName)  ) { _static = true; }
       if ( this.list[i_1].data[i_2].status == this.statusName ) { _static = true; }
 
       return _static;
@@ -191,7 +191,7 @@ export default {
     onCheckboxAll () {
       let array = this.list;
       for (let i = 0; i < array.length; i++) {
-        this.list[i]['checkbox'] = this.checkboxAll
+        array[i]["checkbox"] = this.checkboxAll;
       }
     },
     /**
@@ -201,19 +201,20 @@ export default {
       let array = this.list;
       let _storage = storage.get('viewed');
 
-      if (_storage.data && Object.keys(_storage.data.value) <= 0) {
+      if (_storage.code != 0 && _storage.data && Object.keys(_storage.data.value) <= 0) {
         _storage = { data: {value: {}} }
       }
 
+      // 查询删除
       for (let i = 0; i < array.length; i++) {
         for (let j = 0; j < this.list[i].data.length; j++) {
-          if (this.list[i].data[j]['checkbox']) {
-            delete _storage.data.value[this.list[i].data[j].id]
+          if (this.list[i].data[j]["checkbox"]) {
+            delete _storage.data.value[this.list[i].data[j]["id"]];
           }
         }
       }
 
-      if (Object.keys(_storage.data.value) > 0) {
+      if (Object.keys(_storage.data.value).length > 0) {
         storage.set('viewed', _storage.data.value);
         this.getHisory();
       }
