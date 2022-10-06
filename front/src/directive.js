@@ -19,6 +19,13 @@ export default (vue) => {
       }
     })
 
+    // vue.directive('handle-html', function (el) {
+    //   const links = el.querySelectorAll('a');
+    //   // links.forEach(link => {
+    //   //   console.log(link)
+    //   // })
+    // })
+
     /**
      * egg
      */

@@ -365,11 +365,8 @@
                       </p>
                     </template>
 
-                    <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
-                      <template v-if="l.content">
-                        <div v-html="l.content"></div>
-                      </template>
-                    </div>
+                    <Html :html="l.content" v-if="l.content"
+                          class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></Html>
 
                     <p v-if="isLogin">
                       <!-- 回复 -->
@@ -412,8 +409,8 @@
                       </Row>
                     </div>
 
-                    <div v-if="l.content" v-html="l.content"
-                         class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
+                    <Html :html="l.content" v-if="l.content"
+                          class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></Html>
 
                     <p v-if="isLogin">
                       <!-- 回复 -->
@@ -479,8 +476,8 @@
                       </Row>
                     </div>
 
-                    <div v-html="l.content" v-if="l.content"
-                         class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></div>
+                    <Html :html="l.content" v-if="l.content"
+                          class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></Html>
 
                     <p v-if="isLogin">
                       <!-- 回复 -->
@@ -522,7 +519,8 @@
                           </div>
                         </a>
                       </template>
-                      <div v-html="l.content" v-if="l.content"></div>
+
+                      <Html :html="l.content" v-if="l.content"></Html>
                     </div>
 
                     <p v-if="isLogin">
@@ -596,7 +594,9 @@
                             <Icon type="ios-help-buoy"/>
                             <div slot="content">
                               <span>{{ $t('detail.info.replyManual1') }}</span>
-                              <b><a href="https://sm.ms/" target="_blank">{{ $t('detail.info.uploadPicButton') }}</a></b>，
+                              <b><a href="https://sm.ms/" target="_blank">{{
+                                  $t('detail.info.uploadPicButton')
+                                }}</a></b>，
                               <span>{{ $t('detail.info.replyManual2') }}</span>
                             </div>
                           </Poptip>
@@ -972,9 +972,10 @@ import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
 import RecordLink from "../components/RecordLink.vue";
 import Captcha from "../components/Captcha";
+import Html from "../components/Html";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 
-import { formatTextarea, waitForAction } from "@/mixins/common";
+import {formatTextarea, waitForAction} from "@/mixins/common";
 
 export default new BFBAN({
   data() {
@@ -1065,7 +1066,7 @@ export default new BFBAN({
       cheatMethodsGlossary: null,
     }
   },
-  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, PrivilegesTag},
+  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, PrivilegesTag},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -1458,7 +1459,7 @@ export default new BFBAN({
     /**
      * 用户评论/回复
      */
-    onReply () {
+    onReply() {
       const cheaterId = this.cheater.id;
       let {content = ''} = this.reply;
 
@@ -1482,7 +1483,7 @@ export default new BFBAN({
       }
 
       this.replySpinShow = true;
-      this.http.post(api["player_reply"], { data }).then((res) => {
+      this.http.post(api["player_reply"], {data}).then((res) => {
         const d = res.data;
 
         if (d.success == 1) {
@@ -1568,7 +1569,7 @@ export default new BFBAN({
     isOnlySuper() {
       return account_storage.checkPrivilegeGroup(
           this.$store.state?.user?.userinfo,
-          ['root','super','dev']
+          ['root', 'super', 'dev']
       );
     }
   }
@@ -1630,7 +1631,7 @@ export default new BFBAN({
   align-items: center;
 }
 
-@media screen and (max-width: 980px){
+@media screen and (max-width: 980px) {
   .timeline-time-dot {
     width: 25px;
     height: 25px;
@@ -1661,24 +1662,6 @@ export default new BFBAN({
   line-height: 1.5rem;
   margin: 10px 0;
   padding: 10px;
-
-  img, video {
-    width: calc(100% + 20px);
-    margin: 10px -10px 10px -10px;
-  }
-
-  a[href] {
-    position: relative;
-    text-decoration: underline;
-    cursor: default;
-  }
-
-  a[href]::after {
-    content: attr(href);
-    display: block;
-    opacity: .3;
-    font-size: .2rem !important;
-  }
 }
 
 .detail-userinfo-card {
