@@ -462,10 +462,6 @@ async (req, res, next)=>{
 
 router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'dev', 'root']), [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
-    checkquery('createTimeFrom').optional().isInt({min: 0}),
-    checkquery('updateTimeFrom').optional().isInt({min: 0}),
-    checkquery('createTimeTo').optional().isInt({min: 0}),
-    checkquery('updateTimeTo').optional().isInt({min: 0}),
     checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8 ]),
     checkquery('sortBy').optional().isIn(['createTime','updateTime','viewNum','commentsNum']),
     checkquery('order').optional().isIn(['desc','asc']),
@@ -479,10 +475,10 @@ async function (req, res, next) {
             return res.status(400).json({error: 1, code: 'players.bad', message: validateErr.array()});
         
         const game = (req.query.game&&req.query.game!='all')? req.query.game : '';
-        const createTimeFrom = new Date(req.query.createTimeFrom? req.query.createTimeFrom-0 : 0);
-        const updateTimeFrom = new Date(req.query.updateTimeFrom? req.query.updateTimeFrom-0 : 0);
-        const createTimeTo = new Date(req.query.createTimeTo? req.query.createTimeTo-0 : Date.now());
-        const updateTimeTo = new Date(req.query.updateTimeTo? req.query.updateTimeTo-0 : Date.now());
+        const createTimeFrom = new Date(req.query.createTimeFrom || 0);
+        const updateTimeFrom = new Date(req.query.updateTimeFrom || 0);
+        const createTimeTo = new Date(req.query.createTimeTo || Date.now());
+        const updateTimeTo = new Date(req.query.updateTimeTo || Date.now());
         const status = (req.query.status&&req.query.status!='-1')? req.query.status : '%';
         const sort = req.query.sortBy? req.query.sortBy : 'createTime';
         const order = req.query.order? req.query.order : 'desc';

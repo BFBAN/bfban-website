@@ -19,7 +19,7 @@
 任何人都可以在bfban上翻译文本，无论是增加新的语言还是修正本地化，网站社区都欢迎所有人参与。只需要准备github账户，叉出此仓库到个人，修改并给主支仓库提交合并请求！
 
 
-- [翻译配置](bfban-website/tree/master/front/public/conf)
+- [翻译配置](https://github.com/BFBAN/bfban-website/tree/master/front/src/lang)
 
 - [在线翻译程序](https://github.com/BFBAN/bfban-translation)
 
@@ -34,7 +34,3 @@ bfban目前由中文社区与gametool社区参与审核与管理工作，包含�
 bfban公开接口，允许第三方接入bfban数据库，[BFBan 2.0 设计](backend/)
 
 ----
-
-### 捐助
-
-暂无

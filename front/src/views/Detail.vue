@@ -424,7 +424,7 @@
                       </Button>
                       <Divider type="vertical"/>
                       <!-- 申诉操作 -->
-                      <Dropdown trigger="click" v-if="isAdmin" @on-click="handAdminAppeal">
+                      <Dropdown trigger="click" v-if="isAdmin && !isOnlySuper" @on-click="handAdminAppeal">
                         <a href="javascript:void(0)">
                           <Button type="dashed">
                             申诉操作
@@ -634,10 +634,10 @@
             <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
           </Spin>
         </Card>
-        <br v-if="isAdmin">
+        <br v-if="isAdmin && !isOnlySuper">
 
         <!-- 管理员裁判 S -->
-        <Card dis-hover v-if="isAdmin">
+        <Card dis-hover v-if="isAdmin && !isOnlySuper">
           <div :label="$t('detail.info.adminConsole')">
             <h2 style="margin: 0 0 1rem 0;">
               <Row>
@@ -1564,6 +1564,13 @@ export default new BFBAN({
       }
     }
   },
+  computed: {
+    isOnlySuper() {
+      const { userinfo } = this.$store.state.user || {}
+      const { privilege = [] } = userinfo
+      return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
+    }
+  }
 })
 </script>
 
