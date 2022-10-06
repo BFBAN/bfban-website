@@ -29,7 +29,7 @@
       <Col>
         {{ list.length }} / 100
         <Divider type="vertical" />
-        <Select size="small" v-model="statusName" style="width: 150px">
+        <Select size="small" v-model="statusName" :disabled="listCalcStatistics <= 0" style="width: 150px">
           <Option value="-1">
             {{ $t("basic.status.all") }}
           </Option>
@@ -187,6 +187,13 @@ export default {
 
       if (_storage.data.value)
         storage.set('viewed', _storage.data.value);
+    }
+  },
+  computed: {
+    listCalcStatistics () {
+      let count = 0;
+      this.list.forEach(i => i.data.forEach(j => count+=1));
+      return count;
     }
   }
 }

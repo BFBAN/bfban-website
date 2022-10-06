@@ -21,14 +21,14 @@
       </Row>
       <Row :gutter="10" class="history-buttons" type="flex" justify="center">
         <Col flex="1">
-          <Checkbox v-model="checkboxAll" :disabled="list.length <= 0" @on-change="onCheckboxAll"></Checkbox>
+          <Checkbox v-model="checkboxAll" :disabled="listCalcStatistics <= 0" @on-change="onCheckboxAll"></Checkbox>
           <Divider type="vertical" />
-          <Button @click="onDelete" :disabled="list.length <= 0" size="small">
+          <Button @click="onDelete" :disabled="listCalcStatistics <= 0" size="small">
             <Icon type="md-trash" />
           </Button>
         </Col>
         <Col>
-          <Select size="small" v-model="statusName" style="width: 150px">
+          <Select size="small" v-model="statusName" :disabled="listCalcStatistics <= 0" style="width: 150px">
             <Option value="-1">
               {{ $t("basic.status.all") }}
             </Option>
@@ -53,7 +53,7 @@
                class="item-card">
             <Row :gutter="10" type="flex" justify="center" align="middle">
               <Col>
-                <Checkbox v-model="i.checkbox"></Checkbox>
+                <Checkbox v-model="d.checkbox"></Checkbox>
               </Col>
               <Col flex="1">
 
@@ -191,7 +191,9 @@ export default {
     onCheckboxAll () {
       let array = this.list;
       for (let i = 0; i < array.length; i++) {
-        array[i]["checkbox"] = this.checkboxAll;
+        for (let j = 0; j < array[i].data.length; j++) {
+          array[i].data[j]["checkbox"] = this.checkboxAll;
+        }
       }
     },
     /**
@@ -207,17 +209,24 @@ export default {
 
       // 查询删除
       for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < this.list[i].data.length; j++) {
-          if (this.list[i].data[j]["checkbox"]) {
-            delete _storage.data.value[this.list[i].data[j]["id"]];
+        for (let j = 0; j < array[i].data.length; j++) {
+          if (array[i].data[j]["checkbox"]) {
+            delete _storage.data.value[array[i].data[j]["id"]];
           }
         }
       }
 
-      if (Object.keys(_storage.data.value).length > 0) {
+      if (Object.keys(_storage.data.value).length >= 0) {
         storage.set('viewed', _storage.data.value);
         this.getHisory();
       }
+    }
+  },
+  computed: {
+    listCalcStatistics () {
+      let count = 0;
+      this.list.forEach(i => i.data.forEach(j => count+=1));
+      return count;
     }
   }
 }
