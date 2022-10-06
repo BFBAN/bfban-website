@@ -6,7 +6,7 @@ import time from "./date";
 
 export default class Storage{
   THAT = this;
-  STORAGENAME = 'bfban.';
+  STORAGENAME = `bfban.${process.env.NODE_ENV}:`;
   DATE = new time();
 
   constructor(data = {name}) {
