@@ -131,7 +131,11 @@
     "signoutSuccess": "Logout successful"
   },
   "player_list": {
-    "title": "Player database"
+    "title": "Player database",
+    "seo": {
+      "description": "Player list, which contains user reports on player dossiers",
+      "keywords": "Player list,list"
+    }
   },
   "profile": {
     "title": "Personal settings",
@@ -269,6 +273,10 @@
   },
   "detail": {
     "title": "Detail",
+    "seo": {
+      "description": "Player Detail",
+      "keywords": "bfban,BFBAN"
+    },
     "subscribes": {
       "tracking": "Track",
       "trackingDescribe": "Track this player and notify me for updates",
@@ -391,6 +399,10 @@
   },
   "report": {
     "title": "Report",
+    "seo": {
+      "description": "Player Report",
+      "keywords": "bfban,BFBAN"
+    },
     "info": {
       "notFoundHintTitle": "We can't find this player",
       "notFoundHintQuestion1": "But I've just met him in game/I can find him on battlefield tracker?",
@@ -463,6 +475,10 @@
   },
   "home": {
     "title": "Home",
+    "seo": {
+      "description": "BFBAN Official",
+      "keywords": "bfban,BFBAN"
+    },
     "cover": {
       "h1": "BFBAN",
       "h2": [

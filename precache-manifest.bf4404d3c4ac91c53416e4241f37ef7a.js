@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "aa32fcf6dca1a0e6cb16",
+    "revision": "cb587068798cdb19f7d0",
     "url": "/assets/css/app.578576db.css"
   },
   {
-    "revision": "aa32fcf6dca1a0e6cb16",
+    "revision": "cb587068798cdb19f7d0",
     "url": "/assets/css/app.578576db.css.map"
   },
   {
@@ -244,11 +244,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ubuntu-mono-v8-latin-regular.e8562176.ttf"
   },
   {
-    "revision": "aa32fcf6dca1a0e6cb16",
+    "revision": "cb587068798cdb19f7d0",
     "url": "/assets/js/app.2.7.1.js"
   },
   {
-    "revision": "aa32fcf6dca1a0e6cb16",
+    "revision": "cb587068798cdb19f7d0",
     "url": "/assets/js/app.2.7.1.js.map"
   },
   {
