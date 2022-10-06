@@ -3,31 +3,47 @@
   "child": [
     {
       "value": "invisable",
-      "values": ["invisable", "invisible","stealth"]
+      "values": [
+        "invisable",
+        "invisible",
+        "stealth"
+      ]
     },
     {
       "value": "wallhack",
-      "values": ["wallhack"]
+      "values": [
+        "wallhack"
+      ]
     },
     {
       "value": "aimbot",
-      "values": ["aimbot"]
+      "values": [
+        "aimbot"
+      ]
     },
     {
       "value": "teleport",
-      "values": ["teleport"]
+      "values": [
+        "teleport"
+      ]
     },
     {
       "value": "magicBullet",
-      "values": ["magicBullet"]
+      "values": [
+        "magicBullet"
+      ]
     },
     {
       "value": "gadgetModify",
-      "values": ["gadgetModify"]
+      "values": [
+        "gadgetModify"
+      ]
     },
     {
       "value": "damageChange",
-      "values": ["damageChange"]
+      "values": [
+        "damageChange"
+      ]
     }
   ]
 }

@@ -61,7 +61,7 @@
         </div>
       </template>
       <template v-else>
-        {{ $t('basic.tip.notcontent') }}
+        {{ $t('basic.tip.notContent') }}
       </template>
     </Card>
   </div>

@@ -109,7 +109,7 @@
         </div>
         <div v-if="list.length <= 0" align="center">
           <br>
-          {{ $t('basic.tip.notcontent') }}
+          {{ $t('basic.tip.notContent') }}
           <br>
         </div>
       </div>

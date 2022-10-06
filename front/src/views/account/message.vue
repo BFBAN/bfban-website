@@ -111,7 +111,7 @@
             </Col>
           </Row>
           <template v-else>
-            <div class="message-content-not">{{ $t('basic.tip.notcontent') }}</div>
+            <div class="message-content-not">{{ $t('basic.tip.notContent') }}</div>
           </template>
         </Card>
       </TabPane>

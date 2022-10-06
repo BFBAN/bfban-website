@@ -88,7 +88,7 @@
       </div>
     </Card>
     <Card dis-hover v-else>
-      {{ $t('basic.tip.notcontent') }}
+      {{ $t('basic.tip.notContent') }}
     </Card>
 
     <br>

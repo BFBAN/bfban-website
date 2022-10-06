@@ -52,8 +52,8 @@
       "bot": "로봇"
     },
     "tip": {
-      "notlang": "번역되지 않음",
-      "notcontent": "내용 없음",
+      "notLang": "번역되지 않음",
+      "notContent": "내용 없음",
       "notFound": "哎列，访问地址似乎走失",
       "noReports": "아직 아무런 제보도 없습니다."
     },

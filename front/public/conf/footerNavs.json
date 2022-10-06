@@ -20,7 +20,9 @@
               "zh-CN": "战地中文kook社区"
             },
             "src": "//kaihei.co/uoJKC0",
-            "showLang": ["zh-CN"]
+            "showLang": [
+              "zh-CN"
+            ]
           },
           {
             "text": "bfban开发者kook社区",
@@ -29,7 +31,10 @@
               "zh-CN": "bfban 开发者kook社区"
             },
             "src": "//kook.top/wHwxhw",
-            "showLang": ["zh-CN", "en-US"]
+            "showLang": [
+              "zh-CN",
+              "en-US"
+            ]
           },
           {
             "text": "GitHub BFBAN",
@@ -38,7 +43,9 @@
           {
             "text": "bilibili BFBAN",
             "src": "//space.bilibili.com/387820951",
-            "showLang": ["zh-CN"]
+            "showLang": [
+              "zh-CN"
+            ]
           }
         ]
       },
@@ -86,7 +93,9 @@
           {
             "text": "QQ交流群",
             "src": "//jq.qq.com/?_wv=1027&k=FY8TCpCV",
-            "showLang": ["zh-CN"]
+            "showLang": [
+              "zh-CN"
+            ]
           }
         ]
       }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ $t('basic.tip.notcontent') }}
+    {{ $t('basic.tip.notContent') }}
   </div>
 </template>
 

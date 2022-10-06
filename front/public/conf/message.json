@@ -2,26 +2,64 @@
   "sendTypes": [
     {
       "title": "direct",
-      "privilege": ["normal","admin","root","super","dev"]
-    }, {
+      "privilege": [
+        "normal",
+        "admin",
+        "root",
+        "super",
+        "dev"
+      ]
+    },
+    {
       "title": "warn",
-      "privilege": ["root","super","dev"]
-    }, {
+      "privilege": [
+        "root",
+        "super",
+        "dev"
+      ]
+    },
+    {
       "title": "fatal",
-      "privilege": ["root","super","dev"]
-    }, {
+      "privilege": [
+        "root",
+        "super",
+        "dev"
+      ]
+    },
+    {
       "title": "toAll",
-      "privilege": ["root","super","dev"]
-    }, {
+      "privilege": [
+        "root",
+        "super",
+        "dev"
+      ]
+    },
+    {
       "title": "toAdmins",
-      "privilege": ["super","admin","dev"]
-    }, {
+      "privilege": [
+        "super",
+        "admin",
+        "dev"
+      ]
+    },
+    {
       "title": "toNormals",
-      "privilege": ["super","admin"]
-    }, {
+      "privilege": [
+        "super",
+        "admin"
+      ]
+    },
+    {
       "title": "command",
-      "privilege": ["root", "dev"]
+      "privilege": [
+        "root",
+        "dev"
+      ]
     }
   ],
-  "typeDictionary" : ["direct", "warn", "fatal"]
+  "typeDictionary": [
+    "direct",
+    "warn",
+    "fatal"
+  ]
 }

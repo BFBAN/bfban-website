@@ -37,7 +37,9 @@
       "value": "bf6"
     }
   ],
-  "hots": [2],
+  "hots": [
+    2
+  ],
   "list": [
     {
       "title": "GameTools",
@@ -51,7 +53,13 @@
         "zh-CN": "查看你的战地1、5、4、3、2、硬仗的个人数据， 观看实时游戏记录追踪，使用我们的API接口，Discord Bots，BF1服务器管理和保护工具。.",
         "en-US": "See your Battlefield 1, V, 4, 3, 2, HL stats! Watch live game statistics, get our Battlefield APIs, Discord Bots, BF1 Server administrating and protection tools."
       },
-      "tag": ["web", "admin", "bf1", "bfv", "bf6"],
+      "tag": [
+        "web",
+        "admin",
+        "bf1",
+        "bfv",
+        "bf6"
+      ],
       "website": "https://gametools.network",
       "get": "",
       "hot": true
@@ -64,7 +72,9 @@
         "zh-CN": "台湾社区作弊名单系统",
         "en-US": "Taiwan Community cheat list system"
       },
-      "tag": ["web"],
+      "tag": [
+        "web"
+      ],
       "website": "https://rogeraabbccdd.github.io/BFVTW-Hackers/",
       "get": "",
       "hot": false
@@ -81,7 +91,10 @@
         "zh-CN": "同时支持电脑手机快速查询战绩进行标记",
         "en-US": "It supports both pc and mobile to quickly check stats."
       },
-      "tag": ["web", "app"],
+      "tag": [
+        "web",
+        "app"
+      ],
       "website": "https://www.notion.so/1-5-f348c539fd4f41a08878f274a37c7d81",
       "get": "",
       "hot": false
@@ -98,8 +111,13 @@
         "zh-CN": "《战地风云》系列的Discord统计机器人",
         "en-US": "The Discord bot for Battlefield"
       },
-      "tag": ["bot", "bf1", "bfv", "bf6"],
-      "website" : "",
+      "tag": [
+        "bot",
+        "bf1",
+        "bfv",
+        "bf6"
+      ],
+      "website": "",
       "get": "https://top.gg/bot/714524944783900794"
     },
     {
@@ -114,8 +132,13 @@
         "zh-CN": "腾讯群机器人",
         "en-US": "Bf1/5 stats and management bot for QQ"
       },
-      "tag": ["qq", "bot", "bf1", "bfv"],
-      "website" : "",
+      "tag": [
+        "qq",
+        "bot",
+        "bf1",
+        "bfv"
+      ],
+      "website": "",
       "get": "https://www.superwatergod.xyz/bf-bot"
     },
     {
@@ -130,7 +153,9 @@
         "zh-CN": "基础bfban数据库开发的手机bfban",
         "en-US": "Mobile bfban based on bfban database development"
       },
-      "tag": ["app"],
+      "tag": [
+        "app"
+      ],
       "website": "https://bfban-app.cabbagelol.net",
       "get": "",
       "hot": false
@@ -148,7 +173,10 @@
         "en-US": "In a game called BattleField, the tool grabs the username that joins the server. The name is OCR.\n\nAssume that the use object is the manager of the server. In Battlefield V, in response to the desire to preserve BAN information, a tool was created",
         "jp-JP": "BattleFieldと呼ばれるゲームにおいて、サーバに参加しているユーザ名をす取得るツールです。名前は、OCRでしています。\n\n想定使用対象者は、サーバの管理者です。 战地Vにおいて、BAN情报を保持しておきたいというに応えて、作ったツールになります。"
       },
-      "tag": ["bfv", "admin"],
+      "tag": [
+        "bfv",
+        "admin"
+      ],
       "website": "https://github.com/link1345/BFV_ServerOCR",
       "get": "",
       "hot": false
@@ -165,7 +193,10 @@
         "zh-CN": "BFV Robot主要用于战地5中社区服务器管理使用，通过软件可以达到自动喊话，反作弊等功能，以达到改善房间内游戏环境的效果，同时将大部分甄别工作交给机器人来解放管理员，使社区服更容易满足24小时开服的要求。",
         "en-US": "BFV Robot is mainly used in battlefield 5 community server management, through the software can achieve automatic propaganda, anti-cheating and other functions, in order to improve the effect of the game environment in the room, while most of the screening work to the Robot to liberate the administrator, so that the community service is easier to meet the requirements of 24 hours open service."
       },
-      "tag": ["bfv", "admin"],
+      "tag": [
+        "bfv",
+        "admin"
+      ],
       "website": "https://zth.ink/?p=393",
       "get": "",
       "hot": false

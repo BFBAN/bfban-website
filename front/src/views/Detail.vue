@@ -1566,9 +1566,10 @@ export default new BFBAN({
   },
   computed: {
     isOnlySuper() {
-      const { userinfo } = this.$store.state.user || {}
-      const { privilege = [] } = userinfo
-      return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
+      return account_storage.checkPrivilegeGroup(
+          this.$store.state?.user?.userinfo,
+          ['root','super','dev']
+      );
     }
   }
 })

@@ -103,7 +103,7 @@
       </div>
     </div>
 
-    <div v-if="list.length <= 0">{{ $t('basic.tip.notcontent') }}</div>
+    <div v-if="list.length <= 0">{{ $t('basic.tip.notContent') }}</div>
   </div>
   <div v-else>
     Disable Component
