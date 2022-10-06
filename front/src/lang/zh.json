@@ -131,7 +131,11 @@
     "signoutSuccess": "注销成功"
   },
   "player_list": {
-    "title": "玩家数据库"
+    "title": "玩家数据库",
+    "seo": {
+      "description": "玩家列表,这里包含用户举报玩家档案",
+      "keywords": "玩家列表,列表"
+    }
   },
   "profile": {
     "title": "个人设置",
@@ -276,6 +280,10 @@
   },
   "detail": {
     "title": "详情",
+    "seo": {
+      "description": "举报玩家详情信息",
+      "keywords": "玩家详情,玩家"
+    },
     "subscribes": {
       "tracking": "追踪",
       "trackingDescribe": "追踪此玩家，在更新动态时通知您",
@@ -398,6 +406,10 @@
   },
   "report": {
     "title": "举报",
+    "seo": {
+      "description": "玩家举报",
+      "keywords": "联ban,联办,战地风云,战地"
+    },
     "info": {
       "notFoundHintTitle": "我们无法找到该玩家",
       "notFoundHintQuestion1": "但是我刚刚在游戏里见过他/我在查战绩app上查得到他？",
@@ -463,6 +475,10 @@
   },
   "home": {
     "title": "首页",
+    "seo": {
+      "description": "联ban官网,建立起全球作弊玩家档案库,成为我们一员维护社区环境",
+      "keywords": "联ban,联办,战地风云,战地"
+    },
     "cover": {
       "h1": "BFBAN",
       "h2": [

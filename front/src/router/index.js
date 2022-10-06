@@ -2,6 +2,7 @@ import i18n from "../i18n";
 import store from '@/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VueMeta from 'vue-meta'
 import config from "../../package.json";
 
 const Home = () => import('@/views/Home.vue');
@@ -26,6 +27,10 @@ const Admin = () => import('@/views/admin/index.vue');
 const Search = () => import('@/views/Search.vue');
 
 Vue.use(VueRouter);
+Vue.use(VueMeta, {
+    keyName: 'metaInfo',
+    attribute: 'data-vue-meta',
+});
 
 const isLoginBeforeEnter = function (to, from, next) {
     if (store.state.user) {
@@ -68,8 +73,8 @@ const routes = [
         value: 'home.title',
         metaInfo : {
             title: 'home.title',
-            keywords: "home,bfban",
-            description: 'home.description'
+            keywords: "home.seo.keywords",
+            description: 'home.seo.description'
         }
     }, component: Home},
 
@@ -78,7 +83,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'about.title',
-                keywords: "about",
+                keywords: "about.seo.keywords",
                 description: 'about.description'
             }
         },
@@ -90,7 +95,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'link.title',
-                keywords: "link",
+                keywords: "link.seo.keywords",
                 description: 'link.description'
             }
         },
@@ -102,7 +107,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'apps.title',
-                keywords: "apps,bfban,app",
+                keywords: "apps.seo.keywords",
                 description: 'apps.description'
             }
         },
@@ -114,7 +119,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'profile.title',
-                keywords: "profile",
+                keywords: "profile.seo.keywords",
                 description: 'profiledescription'
             }
         },
@@ -125,7 +130,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'profile.title',
-                keywords: "profile",
+                keywords: "profile.seo.keywords",
                 description: 'profile.description'
             }
         },
@@ -138,7 +143,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'profile.admin.title',
-                keywords: "profile,admin",
+                keywords: "profile.seo.keywords",
                 description: 'profile.admin.title'
             }
         },
@@ -152,7 +157,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'search.title',
-                keywords: "search",
+                keywords: "search.seo.keywords",
                 description: 'search.description'
             }
         },
@@ -162,7 +167,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'search.title',
-                keywords: "search",
+                keywords: "search.seo.keywords",
                 description: 'search.description'
             }
         },
@@ -176,7 +181,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'report.title',
-                keywords: "report",
+                keywords: "report.seo.keywords",
                 description: 'report.description'
             }
         },
@@ -189,7 +194,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'player_list.title',
-                keywords: "player list",
+                keywords: "player.seo.keywords",
                 description: 'player_list.description'
             }
         },
@@ -201,7 +206,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'detail.title',
-                keywords: "detail, detail player",
+                keywords: "detail.seo.keywords",
                 description: 'detail.description'
             }
         },
@@ -213,7 +218,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'share.title',
-                keywords: "cheater,share,card,player",
+                keywords: "share.seo.keywords",
                 description: 'share.title'
             }
         },
@@ -225,7 +230,7 @@ const routes = [
         meta:{
             metaInfo : {
                 title: 'detail.info.app_qr.title',
-                keywords: "app ios android",
+                keywords: "detail.seo.keywords",
                 description: 'detail.info.app_qr.title'
             }
         },
@@ -237,7 +242,7 @@ const routes = [
         meta:{
             metaInfo : {
                 title: 'detail.info.app_qr.title',
-                keywords: "cheater,share,card",
+                keywords: "detail.seo.keywords",
                 description: 'detail.info.app_qr.title'
             }
         },
@@ -250,7 +255,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'detail.title',
-                keywords: "player detail",
+                keywords: "detail.seo.keywords",
                 description: 'detail.description'
             }
         },
@@ -267,7 +272,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'signin.title',
-                keywords: "signin",
+                keywords: "signin.seo.keywords",
                 description: 'signin.description'
             }
         },
@@ -279,7 +284,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'signup.title',
-                keywords: "signup",
+                keywords: "signup.seo.keywords",
                 description: 'signup.description'
             }
         },
@@ -291,7 +296,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'registerVerification.title',
-                keywords: "register Verification",
+                keywords: "registerVerification.seo.keywords",
                 description: 'registerVerification.description'
             }
         },
@@ -305,7 +310,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'bindOrigin.title',
-                keywords: "bind Origin",
+                keywords: "bindOrigin.seo.keywords",
                 description: 'bindOrigin.description'
             }
         },
@@ -318,7 +323,7 @@ const routes = [
         meta:{
             metaInfo : {
                 title: 'forgetPassword.title',
-                keywords: "forget Password",
+                keywords: "forgetPassword.seo.keywords",
                 description: 'forgetPassword.description'
             }
         },
@@ -329,7 +334,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'forgetPasswordVerify.title',
-                keywords: "forget Password Verify",
+                keywords: "forgetPasswordVerify.seo.keywords",
                 description: 'forgetPasswordVerify.description'
             }
         },
@@ -341,7 +346,7 @@ const routes = [
         meta:{
             metaInfo : {
                 title: 'signupComplete.title',
-                keywords: "signupComplete",
+                keywords: "signupComplete.seo.keywords",
                 description: 'signupComplete.description'
             }
         },
@@ -353,7 +358,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'sitestats.title',
-                keywords: "sitestats",
+                keywords: "sitestats.seo.keywords",
                 description: 'sitestats.description'
             }
         },
@@ -364,7 +369,7 @@ const routes = [
         meta: {
             metaInfo : {
                 title: 'account.title',
-                keywords: "account",
+                keywords: "account.seo.keywords",
                 description: 'account.description'
             }
         },
@@ -374,7 +379,7 @@ const routes = [
     {name: 'notFound', path: '/404', meta: {
             metaInfo : {
                 title: 'basic.tip.notFound',
-                keywords: "notFound",
+                keywords: "basic.tip.notFound",
                 description: 'basic.tip.notFound'
             }
         },
@@ -401,8 +406,12 @@ VueRouter.prototype.push = function push(location) {
 router.beforeEach((to, from, next) => {
     if (to.meta.metaInfo) {
         let metainfo = to.meta.metaInfo;
-            metainfo.title = i18n.t(metainfo.title);
-            metainfo.description = i18n.t(metainfo.description);
+            if (metainfo.keywords && i18n.t(metainfo.keywords) != metainfo.keywords) metainfo.keywords = "bfban,BFBAN," + i18n.t(metainfo.keywords);
+            else metainfo.keywords = "bfban,BFBAN";
+            if (metainfo.title) metainfo.title = i18n.t(metainfo.title);
+            else metainfo.title = "";
+            if (metainfo.description && i18n.t(metainfo.description) != metainfo.description) metainfo.description = i18n.t(metainfo.description);
+            else metainfo.description = "";
         store.commit("CHANGE_META_INFO", metainfo)
     }
 

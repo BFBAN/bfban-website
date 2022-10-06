@@ -11,7 +11,6 @@ import Directive  from './directive.js';
 import ViewUI from 'view-design'
 import VueQuillEditor from 'vue-quill-editor'
 import ECharts from 'vue-echarts'
-import VueMeta from 'vue-meta'
 import Cookies from 'js-cookie'
 
 // vue directive, [https://v2.cn.vuejs.org/v2/guide/custom-directive.html]
@@ -33,7 +32,6 @@ import 'quill/dist/quill.snow.css'
 // pwa js
 import './registerServiceWorker'
 
-Vue.use(VueMeta)
 Vue.use(less)
 Vue.use(ViewUI, {
   i18n: (key, value) => i18n.t(key,value)
@@ -53,12 +51,18 @@ const app = new Vue({
   store,
   i18n,
   metaInfo () {
+    let meta = [];
+    for (let metaInfoKey in this.$store.state.metaInfo) {
+      if (this.$store.state.metaInfo[metaInfoKey] != "")
+        meta.push({name: metaInfoKey, content: this.$store.state.metaInfo[metaInfoKey]})
+    }
     return Object.assign({
       titleTemplate: config.name + ' / %s',
       htmlAttrs: {
         lang: this.$i18n.locale,
         amp: true
       },
+      meta: meta,
     }, this.$store.state.metaInfo)
   },
   render: h => h(App)
