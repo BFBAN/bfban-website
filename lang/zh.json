@@ -57,11 +57,11 @@
       "bot": "机器人"
     },
     "tip": {
-      "notlang": "未翻译",
-      "notcontent": "无内容",
+      "notLang": "未翻译",
+      "notContent": "无内容",
       "notFound": "哎列, 访问地址似乎走失",
       "noReports": "还没有任何举报",
-      "noAccess": "当前账户, 无权限"
+      "noAccess": "当前账户,无权限"
     },
     "games": {
       "all": "所有",

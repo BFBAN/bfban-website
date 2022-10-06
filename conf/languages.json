@@ -35,30 +35,36 @@
     {
       "name": "en-US",
       "label": "English",
-      "members": [{
-        "name": "redswordman",
-        "url": "//github.com/redswordman"
-      }, {
-        "name": "iiTzArcur",
-        "url": "//gametools.network"
-      }]
+      "members": [
+        {
+          "name": "redswordman",
+          "url": "//github.com/redswordman"
+        },
+        {
+          "name": "iiTzArcur",
+          "url": "//gametools.network"
+        }
+      ]
     },
     {
       "name": "ja-JP",
       "label": "日本语(bot)",
       "members": [
-      {
-        "name": "咸驴さんRaidenBlade",
-        "url": ""
-      }]
+        {
+          "name": "Baidu Bot",
+          "url": "//bfban.com"
+        }
+      ]
     },
     {
       "name": "kor-KOR",
       "label": "한국어(bot)",
-      "members": [{
-        "name": "Baidu Bot",
-        "url": "//bfban.com"
-      }]
+      "members": [
+        {
+          "name": "Baidu Bot",
+          "url": "//bfban.com"
+        }
+      ]
     },
     {
       "name": "ru-RU",
@@ -79,10 +85,12 @@
     {
       "name": "tr-TR",
       "label": "Türkçe",
-      "members": [{
-        "name": "Baidu Bot",
-        "url": "//baidu.com"
-      }]
+      "members": [
+        {
+          "name": "Baidu Bot",
+          "url": "//baidu.com"
+        }
+      ]
     }
   ]
 }

@@ -52,8 +52,8 @@
       "bot": "ロボット"
     },
     "tip": {
-      "notlang": "未翻訳",
-      "notcontent": "コンテンツなし",
+      "notLang": "未翻訳",
+      "notContent": "コンテンツなし",
       "notFound": "おや列、アクセス先が失われているようです",
       "noReports": "まだ何の通報もありません"
     },

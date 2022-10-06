@@ -1,7 +1,8 @@
 {
   "title": "theme",
   "default": "default",
-  "child": [{
+  "child": [
+    {
       "type": "local",
       "name": "deep",
       "img": "public/theme/deep/main.png",
@@ -12,7 +13,8 @@
         "authorUpdate": "2021-9-11"
       },
       "src": ""
-    },{
+    },
+    {
       "type": "local",
       "name": "default",
       "img": "public/theme/silence/main.png",
@@ -23,7 +25,8 @@
         "authorUpdate": "2021-9-11"
       },
       "src": ""
-    },{
+    },
+    {
       "type": "local",
       "name": "silence",
       "img": "public/theme/silence/main.png",
@@ -34,7 +37,8 @@
         "authorUpdate": "2021-9-11"
       },
       "src": ""
-    }, {
+    },
+    {
       "type": "local",
       "name": "pink",
       "img": "public/theme/pink/main.png",
@@ -45,7 +49,8 @@
         "authorUpdate": "2021-9-26"
       },
       "src": ""
-    }, {
+    },
+    {
       "type": "local",
       "name": "blue",
       "value": "blue",
@@ -57,5 +62,6 @@
         "authorUpdate": "2021-9-11"
       },
       "src": ""
-  }]
+    }
+  ]
 }

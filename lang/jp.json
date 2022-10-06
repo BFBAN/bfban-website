@@ -1,1 +1,764 @@
-{"basic":{"action":{"suspect":{"text":"不審","describe":"提出された証明は不正行為として認定しにくいが、以上の証明は不審なところが存在する。もし十分な疎明資料があればそれを動かぬ証拠として不正行為だと認定される"},"innocent":{"text":"MOSS　自己証明","describe":"ビデオあるいは動画を通じて通報された内容について身の潔白を晴らす"},"discuss":{"text":"検討中","describe":"以上の証拠はまだより多くの管理人とプレーヤーが検討して決定するのが必要であり、不確定行為とする"},"guilt":{"text":"動かぬ証拠として投票する","describe":"管理人は不正行為と見なして投票する、条件が満たすればシステムはプレーヤーの状態確認を行う"},"kill":{"text":"動かぬ証拠","describe":"管理人が動かぬ証拠と判断する"},"invalid":{"text":"無効通報","describe":"通報資料が不十分もしくは通報対象のIDを間違えるなどの行為"},"more":{"text":"より多くの証拠が必要である","describe":"より多くの証拠固めが必要である"}},"status":["未処理","動かぬ証拠","容疑者を再観察する","MOSS自己証明","無効通報","検討中","より多くの管理人からの投票が必要である","データ異常のため自動的に動かぬ証拠として認定される","武器レベルを異常ランクアップする行為"],"privilege":{"root":"システム","admin":"コミュニティー管理","super":"スーパー管理人","normal":"ユーザー","blacklisted":"ブラックリスト","test":"アカウントテスト","dev":"開発組","bot":"ロボット"},"tip":{"notlang":"未訳","notcontent":"内容なし","notFound":"ウェブページにアクセスできない","noReports":"まだ何らの通報もない","noAccess":"当アカウントは無権限者である"},"games":{"all":"すべて","bf1":"バトルフィールド　1","bfv":"バトルフィールド　5","bf6":"バトルフィールド　2042"},"gamePlatforms":{"pc":"パソコン","origin":"オリジン","xbox":"Xbox","xboxone":"Xbox One","psn":"ソニー","ps3":"PS3","ps4":"PS4"},"button":{"report":"通報","commit":"提出","save":"保存","submit":"確認","insert":"インサート","reset":"リセット","cancel":"キャンセル","prev":"前のステップ","next":"次のステップ"}},"captcha":{"get":"確認コードを取得する","title":"確認コード"},"textarea":{"originalImage":"オリジナル画像","type":{"upload":"ピクチャーホストにアップロードする","url":"画像リンク先","media":"メディアライブラリ"},"steps":{"upload":["ファイルを選択する","編集","検索"],"url":["アクセスを入力する","検索"],"media":["選択","検索"]}},"header":{"index":"ホームページ","about":"関する","cheaters":"プレーヤーデータベース","report":"不正行為を通報する","profile":"個人設定","signin":"登録","signup":"ログイン","signout":"ログアウト","userCenter":"マイページ","signoutSuccess":"ログアウト成功"},"player_list":{"title":"プレーヤーデータベース"},"profile":{"title":"個人設定","meet":"おかえりなさい{name}！","message":{"title":"メッセージ","look":"チェック","load":"更新","control":"バッチ編集","placeholder":"メッセージを記入する","types":{"direct":{"text":"チャット","describe":"アカウントとチャットする"},"warn":{"text":"システム","describe":"システムプッシュ通知"},"fatal":{"text":"確定","describe":"ん？"},"toAll":{"text":"全員","describe":"コミュニティー内の全員にプッシュ通知する"},"toAdmins":{"text":"管理人全員","describe":"コミュニティー内の管理人全員にメッセージングする"},"toNormals":{"text":"ノーマルユーザー","describe":"普通権限を持つユーザー全員にメッセージングする"},"command":{"text":"命令","describe":"カスタムサービスコマンド"}},"tabsList":{"itemName":"メッセージリスト","form":{"del":"削除","unread":"未読","read":"既読"}},"tabsSend":{"itemName":"プッシュ","messageMethod":"タイプ","messageID":"ウェブサイト内のID","content":"内容"}},"account":{"title":"アカウント情報設定","form":{"privilege":"身分","introduction":"自己紹介","showOrigin":"可視なオリジン情報","showOriginDescribe":"バインディングしたオリジンアカウントをBFBANに可視するかどうか","allowDM":"チャット申請を許可するかどうか","allowDMdescribe":"メッセージを受けるかどうか、ほかのメッセージはメッセージリストにチェックしてください","language":"言語設定","languageSyncDescribe":"この選択肢を設定して、登録後ロケール言語のシンクロナスを開始する。もしログアウトしたらロケールルーティンから保存された言語に戻る"},"modifyName":{"title":"ネームチェンジ","specification1":"あなたのユーザー名は今修正されている。修正によるコミュニティー内のユーザー名も変更される。同時に<b>に登録したID</b>も変更される。もし不注意で新たなアカウントIDを忘れたら、元のアカウントを取り戻せない可能性があり、紐づけたオリジンアカウントも影響される。そのため非常に長い人工考査が必要になる","specification2":"以上の説明はわかりましたか","residueDegree":"現在ネームチェンジ可能な回数の残り{changeNameLeft}の回数","steps":[{"title":"ヒント"},{"title":"入力"},{"title":"完成"}]}},"appearance":{"title":"スキン"},"enhance":{"title":"ロケール補強"},"media":{"title":"メディアライブラリ","capacity":"キャパシティ","fileNum":"{num}ファイル"},"voice":{"title":"ボイス","message":"メッセージ通知サウンド","messageDescribe":"コミュニティー内のメッセージに関する通知サウンド","interaction":"インタアクティブサウンド","interactionDescribe":"何らかのウェブサイト内のインタアクティブサウンド","backgroundMusic":"バックグラウンドサウンド","backgroundMusicDescribe":"ビージーエム","video":"ビデオ","videoDescribe":"ウェブビデオサウンド"},"history":{"title":"歴史"},"subscribes":{"title":"追跡"},"admin":{"title":"バックグラウンド管理","menu":{"home":"ホームページの管理","management":"内容","user":"ユーザー管理","message":"メッセージ","comment":"コメント管理","log":"ログ","adminLog":"ログ管理","judgementLog":"判決ログ"}}},"detail":{"title":"詳細","subscribes":{"tracking":"追跡","trackingDescribe":"当プレーヤーを追跡して、更新した時あなたに知らせる","cancelTrack":"追跡キャンセル","cancelTrackDescribe":"当プレーヤーへの追跡をやめる"},"timeline":{"all":"すべて","verify":"判決だけに見る","banAppeal":"申し出でだけに見る"},"appeal":{"describe":"当通報資料には問題が存在している。自己証明あるいは他人からの協力で潔白を晴らすことができる","modal":{"modalTitle":"ルール","describe":"間違えた通報に対して、本人もしくは第三者からの協力で申し立てられる。基本要求に満たすれば、あなたの申し出で内容がすべてのBFBANの管理人に提出され、管理人の許可をもらう前に通報が解除できません","effectiveEvidence":[null,"高速ターゲット図星とMOSSのようなアプリを使用して、スクリーンとキーボードと両手を撮れるように自己証明のビデオを撮ってください","自己弁護は画像とビデオなどの資料が使える","一部のコミュニティーが提供した要求が違う場合は、当地域のBFBAN管理人に相談して申し出での資料をもらってください"],"evidenceInvalid":[null,"アカウントを第三者に貸す場合、いかなる理由があっても一切通過しません","多数のプレーヤーにキャプチャーされて使用する（本人のキャプチャーから表した不正行為の特徴に限らず）あるいはカンニングアプリメディアを購入するとか","前科があるユーザーに対して通報解除の可能性が非常に低くなる","何らの誓い、呪い"],"auxiliaryProof":[null,"通報した1試合あたりの戦局のほかのプレーヤー（敵と味方の視点）。そして長さは１０分以上、自分でビデオアクセスを提供する","この場にいるプレーヤー、自分のIDを提供し、具体的なサーバー、時間、場所、そしてあなたが補佐した申し出で対象への説明"]},"info":{"content":"申し出での内容","player":"プレーヤーのID","originName":"現在当プレーヤーのネーム"},"placeholder":{"content":"考査しやすいように、詳しい申し出での内容を入力してください","player":"プレーヤーのIDを入力してください"}},"info":{"app_qr":{"title":"スマホで見る","tip":"BFBANのアプリでこのQRコードをスキャンしてください","openApp":"アプリの中で見る","openAppDescribe":"BFBANのアプリで当プレーヤーを見る"},"assistPppeal":"控訴に協力する","appeal":"控訴","cheatersInfo":"プレーヤー詳細","viewTimes":"インプレッション","reply":"返信","reportedGames":"通報されたゲーム","gameScores":"戦績リンク先","firstReportTime":"最初に通報された時間","recentUpdateTime":"最新の更新日時","originAvatar":"オリジンのトプ画","historyID":"履歴名","dealRecord":"管理人の処理記録","discription1":"もしリンク先が失効になるもしくはリンク先が変更されたなどの問題があったら、ここをクリックしてください","updateButton":"資料の更新","discription2":"bfban.comは通報されたアカウントの行方を永久的に追跡できる","discription3":"サーバも定期的に通報されたアカウントの情報を更新する","discription4":"履歴IDも捜索に使える","timeLine":"タイムライン","report":"通報","inGame":"いる","gaming":"ゲーム中","videoLink":"ビデオのリンク先","judge":"見なす","cheatMethod":"不正行為の方式","replyManual1":"もし新たな証拠になる画像やビデオの補充が需要なら、再び通報できるようになれる。返信機能はテキストとリンク先だけに返信できる。もし画像の返信をするならここへ移動してください","uploadPicButton":"画像をアップロード","replyManual2":"画像のリンク先をコピーして返信する","replyManual3":"検討はログインして登録した後にできる","appealManual1":"間違えた通報に対しての申し出でがあれば、管理人がそれを処理するから、当事件のリンク再及び申し出での詳細情報をban-appeals@bfban.comに送ってください。","adminConsole":"管理人コーナー","adminManual1":"速断しないこと。もし判断が下せない時、返信機能を使って検討して通報されたアカウントの返信を待ってください","adminManual2":"管理人からの処理は通報されたアカウントの既存状態を変更させることができ、もし百パーセント決まっていない時、返信機能を使って検討してください。","judgement":"アドバイス処理","replyManual4":"返信機能は登録後に使用可能","action":"行動","writeSomething":"何か書く","giveOpinion":"あなたはどう思いますか","fastReplies":{"stats":"プレーヤーデータ異常","evidencePic":"証拠は参照の図のように","evidenceVid":"証拠は参照のビデオのように"}},"judgement":{"behavior":"判決のタイプ","methods":"不正行為のやり方","content":"判決説明","appropriateVerdict":[null,"直観的に裁決の原因を提出する。例えばある行為で判決の結果が決められる。以下の要因により（省略）","要約すること。不正行為の特徴ははっきりしている場合、下のテンプレートを使って統一判決できる"],"inappropriateRuling":[null,"“１”、“［スペースキー］”、“［顔文字］”などの無意味な返信を入力しないでください","返信内容は人身攻撃、差別語、色情、政治内容などに関する","ゲーム中以外の要因で決められる。例えばトプ画とか"]},"messages":{"fillEverything":"ちゃんと入力してくださいね","pleaseExplain":"裁決内容をもっと詳しく入力してください","dontDoIt":"不正確","replySuccess":"返信完了","signIn":"登録してください","updateComplete":"アップデート完了","submitSuccess":"提出完了"}},"report":{"title":"通報","info":{"notFoundHintTitle":"当プレーヤーの情報をサーチできません","notFoundHintQuestion1":"しかし先のゲームでその人を見た記憶がある／戦績サーチのアプリでその人の戦績をサーチできる？","notFoundHintAnswer1":"origin.comに当プレーヤーをサーチしてください。もし確実に当プレーヤーの情報をサーチできるが通報できない場合、ホームページの下にある連絡先にbugをフィードバックしてください","notFoundHintQuestion2":"オリジンでサーチできない。どういうことでしょうか","notFoundHintAnswer2":"これはEAのデータベースがまだ更新されていない可能性が高い。もしくはEA公式からのbug。故にBFBANはそれを解決できません。もし力を貸してくれたいなら、https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-enにフィードバックしてください。この場合はI can't search my friend by name on origin.を入力してください","reportHacker":"不正行為を通報する","reportNews":"バトルフィールド５の通報機能はすでに使用可能だよ","idNotion1":"一度には一つのIDしか入力できません。チーム名を入力しないでください。自分のIDを入力しないでください","idNotion2":"ゲーム中のIDは大文字と小文字の区別はないけど、 i I 1 l L o O 0のような文字は特に注意してください。通報するIDを正確に入力してください","uploadManual1":"面倒だから国内のアカウントをログインしたくない。ビデオをアップロードしたら移動可能になる","uploadManual2":"そしてアクセスは下にある","uploadManual3":"优酷，土豆，AB站などのアプリのビデオリンク先が使用可能","uploadPic1":"おすすめの画像アップロードフォーマットはpng, jpg, jpeg, gif ","uploadPic2":"画像の大きさは２Mに越えるまたはアップロードできない場合、ここへ移動してください","uploadPic3":"そのあとImage URL を選んで、画像のリンク先を下に張り付いてください","uploadPic4":"十分な証拠を出してください。エディタ内は画像アップロードできる（２Mに限る）","reportOne":"シングル通報","reportAll":"すべてを通報","fromDatabaseOneId":"BFBANのデータベースから選ぶ","description":"通報されたアカウントの行為、特徴、場所、時間、不正行為の方式を詳しく書いてください。どうして通報するのかの理由を書いてください","required":"ビデオリンク先","onlyOneId":"一度には一つのオリジンIDだけがある","loginExpired":"登録は期限切れです。再登録してください"},"labels":{"cheatMethod":"不正行為のやり方","hackerId":"不正プレーヤーのID","game":"ゲーム","description":"説明"},"error":{"mediaEvidence":"画像をアップロードしてください。あるいはビデオリンク先を入力してください","originId":"オリジンIDが存在していない、スペルチェックしてください","success":"提出完了","permissionDenied":"無権限","voideBadFormat":"フォーマットエラー","voideEmpty":"無効なビデオリンク先"}},"footer":{"language":{"members":"翻訳者たち"},"column":{"col1":{"text":"BFBAN　-　世界不正プレーヤーデータベース"},"col2":{"title":"コミュニティー"},"col3":{"title":"機能"},"col4":{"title":"連絡先"},"sponsor":{"title":"スポンサー","join":"スポンサーに加入する"}}},"home":{"title":"ホームページ","cover":{"h1":"BFBAN","h2":["提供したデータベースにより、世界中のすべてのBattlefieldサーバがプレーヤーの情報をモニタリングでき、問題が存在しているプレーヤーをサーバから蹴出すことができる","BF１からBF2042まで問題が存在しているプレーヤーへのサーチすることができ、そのため、世界中のすべてのBattlefieldサーバがプレーヤーをモニタリングできる"],"h3":"世界不正プレーヤーデータベースを構築する","h4":"私たちの一員になって、良いコミュニティーの環境を作ろう","subButton":"すでに参加しているコミュニティーをクエリする","dataReceived":"受信済み","confirmData":"確認された不正プレーヤー","endTime":"締め切り｛time｝"},"activity":{"title":"ウェブ投稿","more":"詳細を見る","description":"bfban.comは2018年11月4日に登場。{report}回数の通報を受け取りました。そして{cheater}の不正プレーヤーが通報されました。皆様のご努力のおかげで、ありがとうございました！","activities":{"report":"通報するぞ","join":"ようこそBFBANへ、いらっしゃいませ！","admin":"コミュニティー管理人","mark":"を","as":"に処理する"}},"bulletin":{"title":"公告"}},"about":{"title":"について","description":"<h2>BFBAN</h2>\n    <p>は2018年1月29日に誕生した。BFのプレーヤーたちがともに結成した<b>不正プレーヤーを排斥する</b>組織</p>","website":"<p>\n      <a href=\"https://bfban.com\">bfban.com</a>はBFBANに依存する。最初のアイディアの起源は熱心なプレーヤーからです。<a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a>により開発され、2018年11月4日にオンライン登場。‘\n    </p>\n    <p>は主にプレーヤーたちへの通報、列挙、サーチ、追跡、検討などのサービスが提供されます。</p>","privacy":"<h2>プライバシー政策</h2>はオープンソースであり、GitHubを通じて質問とアドバイスを提出できます。コミュニティーネットワークが提供したAPIは公衆も使えるためオープンされています"},"link":{"title":"ホットリンク詳細","links":"ホットリンク","sponsor":"パートナー","linkWebDeveloperChild":"優れた貢献開発者","linkWebDeveloperDescribe":"BFBAN礎石開拓の先鋒","languageMembers":"優れた貢献翻訳者","languageMembersDescribe":"ここでは、時間をかけてロケール言語を校正し、無償で翻訳に貢献した翻訳者たちに表彰します。","join":"パートナーに加入する"},"reset":{"title":"パスワードリセット","form":{"oldPassword":"元のパスワード","newPassword":"新パスワード","qq":"QQ","password":"新パスワード","passwordRepeat":"パスワード確認"}},"account":{"title":"ユーザーホームページ","reportnum":"総通報回数","hint2":"すべての通報が返信可能、検討可能","hint3":"もし証拠を補充するなら、再び同じのIDを通報することができる","userInfo":"個人情報","username":"ユーザー名","role":"身分","joinedAt":"加入時間","lastOnlineTime":"最後のオンライン時間","reports":"個人通報","reported":"通報するぞ","status":"状態状態","recentlyUpdated":"最新の更新","message":{"chat":"チャット","hint":{"denied":"チャット機能は禁止されました","selfTalk":"自分とチャットできません","taOffChat":"相手はチャット機能を閉じました"}},"bindOrigin":{"title":"紐付けないアカウント","content":"アカウントの申し出で、取り戻すなどの機能はBFBANにあなたのオリジンアカウントを紐付けることが必要である。紐付ける前には、あなたのアカウントはロックされ、何にも提出できなくなる","travel":"わかりました、今からアカウントを紐付けます"}},"bindOrigin":{"title":"オリジンアカウントを紐付ける"},"signin":{"title":"登録","form":{"username":"ユーザー名","password":"パスワード","submitHint":"アカウントがない？\nログインしてくださいね","forgetPasswordHint":"パスワードを忘れたの？"},"fillEverything":"ちゃんと入力してね","failed":"登録エラー","success":"登録完了","loginFirst":"あれ？まずは登録してね","loggedIn":"あれ？まずはログアウトしてね(✿◡‿◡)"},"signup":{"title":"ログイン","registerVerification":{"title":"アカウント検証","validation":"検証中","successful":"検証完了！当アカウントのロックは解除されました、すでに登録可能になりました","failure":"検証アクセスエラー。確認コードをチェックしてください","error":"エラー"},"steps":[{"title":"基礎情報","supplement":"基本アカウント"},{"title":"バインディング","supplement":"オリジンに紐付けられる"},{"title":"確認コード","supplement":"ロボットかどうかを検証する"},{"title":"確認","supplement":"メール確認コード"},{"title":"完成","supplement":"ログイン結果"}],"form":{"username":"ユーザー名","newUsername":"新ユーザー名","password":"パスワード","originId":"オリジンID","originEmail":"🍊オリジンメールアドレス","originName":"🍊オリジンユーザー名","submitHint":"すでにアカウントを持っている？登録してね","forgetPasswordHint":"パスワードを忘れたの？"},"placeholder":{"originEmail":"あなたのオリジンメールアドレスを入力してください","originName":"あなたのオリジンIDを入力してください","username":"４桁以上のユーザー名は英語、数字、アンダーバー、減号に限る","password":"６桁以上のパスワード","originId":"オプション"},"eaPrivacy":"<a href=\"https://myaccount.ea.com/cp-ui/privacy/index\">EA のプライバシー設定まで</a>の中でメール捜索機能を許可してください","checkAllEmail":"メールの検証は時間がかかるので（およそ一分ぐらい）その前に待ってください。そしてメールごみ箱もチェックしてください","usernameExist":"当ユーザー名は既にログインされました","gameNotShowed":"当メールアドレスのアカウントにはゲームが含まれておりません","playerNotFound":"当プレーヤーをサーチできません（メールアドレスで捜索可能の許可したかどうかチェックしてください）","originIdExist":"当オリジンアカウントは既に紐付けられました","fillIn":"ちゃんと入力してね","failed":"ログインエラー"},"forgetPassword":{"title":"パスワードリセット","steps":[{"title":"基礎情報","supplement":"アカウントチェック"},{"title":"確認コード","supplement":"ロボットかどうかを検証する"},{"title":"メールアドレス検証","supplement":"メールアドレスの検証リンクを見る"},{"title":"パスワード設置","supplement":"あなたのパスワードをリセットする"},{"title":"完成","supplement":"リセット完了"}],"resetSuccess":"リセット完了おめでとうございます！"},"list":{"title":"不正プレーヤーリスト","filters":{"sortBy":{"createTime":"通報時間の逆順序","updateTime":"更新時間の逆順序","viewNum":"環視回数の逆順序","commentNum":"返信回数の逆順序"}},"reportTime":"通報時間の範囲","updateTime":"更新時間の範囲","colums":{"screenTitle":"スクリーニング","playerId":"プレーヤーID","reportTime":"通報時間","updateTime":"更新時間"}},"apps":{"title":"工具","describe":"第三者からのBFBANデータベース工具","submit_tool_app":"提出工具","buttons":{"hot":"人気がある","website":"ウェブサイト","get":"取得"},"screen":{"all":"すべて","official":"オフィシャル","bot":"ロボット","app":"アプリ","pc_app":"デスクトップアプリ","web":"ウェブサイト","api":"インタフェース","book":"ガイド","admin":"コミュニティー管理","qq":"テンセント　QQ","bf1":"バトルフィールド１","bfv":"バトルフィールド５","bf6":"バトルフィールド2042"}},"search":{"title":"サーチ","describe":"BFBANデータベースからIDをサーチする","placeholder":"何をサーチするかな。あ、君だ！","collectionHint":"本ページをコレクションする(Ctrl+D or Command+D)","scope":{"history":"元のネーム","current":"今のネーム"}},"cheatMethods":{"invisable":{"title":"身を潜める","describe":"当ユーザーは身を潜めたため、観察できませんが、追跡位置できる"},"wallhack":{"title":"透視","describe":"実体を無視して敵の位置を観察する"},"aimbot":{"title":"オートエイム","describe":"自動的にある位置に狙う。ロボットのような行為を現す"},"oneShotKill":{"title":"秒殺","describe":"ダメージの高い部位に快速狙うにより、快速打ち殺すのような行為"},"gadgetModify":{"title":"装備チェンジ","describe":"存在すべきではない場所に出現した装備"},"damageChange":{"title":"ダメージチェンジ","describe":"武器パラメータチェンジ"},"magicBullet":{"title":"魔法弾丸","describe":"弾が実体を貫ける"},"attackServer":{"title":"サーバアタック","describe":"悪意のあるサーバアタック"},"teleport":{"title":"伝送","describe":"伝送移動"}},"misc":{"uploadImage":{"info":"画像アップロード、大きさは２Mを超えないように","mobile":"スクリーンをダブルクリックしてアップロードする","desktop":"クリックまたはドラッグしてアップロードする","fail":"最大制限を超えました。画像２M"},"uploadVideo":{"info":"ビデオをアップロードする。30Mを超えないように","desktop":"ファイルをクリックしてまたはここへドラッグしてアップロードする"},"progress":"アップロード中"},"share":{"title":"シェア","link":{"name":"リンクタイプ","linkUrl":"ハイパーリンク","textLink":"テキストリンク","textLinkContent":"【{webname}】一名のプレーヤーをシェアしました。アドレス:{url}","webHtmlLink":"ウェブコード"},"iframe":{"name":"ウェブエンベデッド","theme":"テーマ","size":"サイズ","code":"エンベデッドコード"},"image":{"name":"画像","generate":"画像を生成","describe":"通報情報のスクリーンショットを生成する"}},"sitestats":{"title":"統計","reports":"コミュニティ内の総通報回数","confirmed":"既に処理した案件","banAppeals":"すでに控訴しました","registers":"アカウントをログインする","players":"現在の通報案件数","admins":"すべての管理人の人数"}}
+{
+  "basic": {
+    "action": {
+      "suspect": {
+        "text": "不審",
+        "describe": "提出された証明は不正行為として認定しにくいが、以上の証明は不審なところが存在する。もし十分な疎明資料があればそれを動かぬ証拠として不正行為だと認定される"
+      },
+      "innocent": {
+        "text": "MOSS　自己証明",
+        "describe": "ビデオあるいは動画を通じて通報された内容について身の潔白を晴らす"
+      },
+      "discuss": {
+        "text": "検討中",
+        "describe": "以上の証拠はまだより多くの管理人とプレーヤーが検討して決定するのが必要であり、不確定行為とする"
+      },
+      "guilt": {
+        "text": "動かぬ証拠として投票する",
+        "describe": "管理人は不正行為と見なして投票する、条件が満たすればシステムはプレーヤーの状態確認を行う"
+      },
+      "kill": {
+        "text": "動かぬ証拠",
+        "describe": "管理人が動かぬ証拠と判断する"
+      },
+      "invalid": {
+        "text": "無効通報",
+        "describe": "通報資料が不十分もしくは通報対象のIDを間違えるなどの行為"
+      },
+      "more": {
+        "text": "より多くの証拠が必要である",
+        "describe": "より多くの証拠固めが必要である"
+      }
+    },
+    "status": [
+      "未処理",
+      "動かぬ証拠",
+      "容疑者を再観察する",
+      "MOSS自己証明",
+      "無効通報",
+      "検討中",
+      "より多くの管理人からの投票が必要である",
+      "データ異常のため自動的に動かぬ証拠として認定される",
+      "武器レベルを異常ランクアップする行為"
+    ],
+    "privilege": {
+      "root": "システム",
+      "admin": "コミュニティー管理",
+      "super": "スーパー管理人",
+      "normal": "ユーザー",
+      "blacklisted": "ブラックリスト",
+      "test": "アカウントテスト",
+      "dev": "開発組",
+      "bot": "ロボット"
+    },
+    "tip": {
+      "notLang": "未訳",
+      "notContent": "内容なし",
+      "notFound": "ウェブページにアクセスできない",
+      "noReports": "まだ何らの通報もない",
+      "noAccess": "当アカウントは無権限者である"
+    },
+    "games": {
+      "all": "すべて",
+      "bf1": "バトルフィールド　1",
+      "bfv": "バトルフィールド　5",
+      "bf6": "バトルフィールド　2042"
+    },
+    "gamePlatforms": {
+      "pc": "パソコン",
+      "origin": "オリジン",
+      "xbox": "Xbox",
+      "xboxone": "Xbox One",
+      "psn": "ソニー",
+      "ps3": "PS3",
+      "ps4": "PS4"
+    },
+    "button": {
+      "report": "通報",
+      "commit": "提出",
+      "save": "保存",
+      "submit": "確認",
+      "insert": "インサート",
+      "reset": "リセット",
+      "cancel": "キャンセル",
+      "prev": "前のステップ",
+      "next": "次のステップ"
+    }
+  },
+  "captcha": {
+    "get": "確認コードを取得する",
+    "title": "確認コード"
+  },
+  "textarea": {
+    "originalImage": "オリジナル画像",
+    "type": {
+      "upload": "ピクチャーホストにアップロードする",
+      "url": "画像リンク先",
+      "media": "メディアライブラリ"
+    },
+    "steps": {
+      "upload": [
+        "ファイルを選択する",
+        "編集",
+        "検索"
+      ],
+      "url": [
+        "アクセスを入力する",
+        "検索"
+      ],
+      "media": [
+        "選択",
+        "検索"
+      ]
+    }
+  },
+  "header": {
+    "index": "ホームページ",
+    "about": "関する",
+    "cheaters": "プレーヤーデータベース",
+    "report": "不正行為を通報する",
+    "profile": "個人設定",
+    "signin": "登録",
+    "signup": "ログイン",
+    "signout": "ログアウト",
+    "userCenter": "マイページ",
+    "signoutSuccess": "ログアウト成功"
+  },
+  "player_list": {
+    "title": "プレーヤーデータベース"
+  },
+  "profile": {
+    "title": "個人設定",
+    "meet": "おかえりなさい{name}！",
+    "message": {
+      "title": "メッセージ",
+      "look": "チェック",
+      "load": "更新",
+      "control": "バッチ編集",
+      "placeholder": "メッセージを記入する",
+      "types": {
+        "direct": {
+          "text": "チャット",
+          "describe": "アカウントとチャットする"
+        },
+        "warn": {
+          "text": "システム",
+          "describe": "システムプッシュ通知"
+        },
+        "fatal": {
+          "text": "確定",
+          "describe": "ん？"
+        },
+        "toAll": {
+          "text": "全員",
+          "describe": "コミュニティー内の全員にプッシュ通知する"
+        },
+        "toAdmins": {
+          "text": "管理人全員",
+          "describe": "コミュニティー内の管理人全員にメッセージングする"
+        },
+        "toNormals": {
+          "text": "ノーマルユーザー",
+          "describe": "普通権限を持つユーザー全員にメッセージングする"
+        },
+        "command": {
+          "text": "命令",
+          "describe": "カスタムサービスコマンド"
+        }
+      },
+      "tabsList": {
+        "itemName": "メッセージリスト",
+        "form": {
+          "del": "削除",
+          "unread": "未読",
+          "read": "既読"
+        }
+      },
+      "tabsSend": {
+        "itemName": "プッシュ",
+        "messageMethod": "タイプ",
+        "messageID": "ウェブサイト内のID",
+        "content": "内容"
+      }
+    },
+    "account": {
+      "title": "アカウント情報設定",
+      "form": {
+        "privilege": "身分",
+        "introduction": "自己紹介",
+        "showOrigin": "可視なオリジン情報",
+        "showOriginDescribe": "バインディングしたオリジンアカウントをBFBANに可視するかどうか",
+        "allowDM": "チャット申請を許可するかどうか",
+        "allowDMdescribe": "メッセージを受けるかどうか、ほかのメッセージはメッセージリストにチェックしてください",
+        "language": "言語設定",
+        "languageSyncDescribe": "この選択肢を設定して、登録後ロケール言語のシンクロナスを開始する。もしログアウトしたらロケールルーティンから保存された言語に戻る"
+      },
+      "modifyName": {
+        "title": "ネームチェンジ",
+        "specification1": "あなたのユーザー名は今修正されている。修正によるコミュニティー内のユーザー名も変更される。同時に<b>に登録したID</b>も変更される。もし不注意で新たなアカウントIDを忘れたら、元のアカウントを取り戻せない可能性があり、紐づけたオリジンアカウントも影響される。そのため非常に長い人工考査が必要になる",
+        "specification2": "以上の説明はわかりましたか",
+        "residueDegree": "現在ネームチェンジ可能な回数の残り{changeNameLeft}の回数",
+        "steps": [
+          {
+            "title": "ヒント"
+          },
+          {
+            "title": "入力"
+          },
+          {
+            "title": "完成"
+          }
+        ]
+      }
+    },
+    "appearance": {
+      "title": "スキン"
+    },
+    "enhance": {
+      "title": "ロケール補強"
+    },
+    "media": {
+      "title": "メディアライブラリ",
+      "capacity": "キャパシティ",
+      "fileNum": "{num}ファイル"
+    },
+    "voice": {
+      "title": "ボイス",
+      "message": "メッセージ通知サウンド",
+      "messageDescribe": "コミュニティー内のメッセージに関する通知サウンド",
+      "interaction": "インタアクティブサウンド",
+      "interactionDescribe": "何らかのウェブサイト内のインタアクティブサウンド",
+      "backgroundMusic": "バックグラウンドサウンド",
+      "backgroundMusicDescribe": "ビージーエム",
+      "video": "ビデオ",
+      "videoDescribe": "ウェブビデオサウンド"
+    },
+    "history": {
+      "title": "歴史"
+    },
+    "subscribes": {
+      "title": "追跡"
+    },
+    "admin": {
+      "title": "バックグラウンド管理",
+      "menu": {
+        "home": "ホームページの管理",
+        "management": "内容",
+        "user": "ユーザー管理",
+        "message": "メッセージ",
+        "comment": "コメント管理",
+        "log": "ログ",
+        "adminLog": "ログ管理",
+        "judgementLog": "判決ログ"
+      }
+    }
+  },
+  "detail": {
+    "title": "詳細",
+    "subscribes": {
+      "tracking": "追跡",
+      "trackingDescribe": "当プレーヤーを追跡して、更新した時あなたに知らせる",
+      "cancelTrack": "追跡キャンセル",
+      "cancelTrackDescribe": "当プレーヤーへの追跡をやめる"
+    },
+    "timeline": {
+      "all": "すべて",
+      "verify": "判決だけに見る",
+      "banAppeal": "申し出でだけに見る"
+    },
+    "appeal": {
+      "describe": "当通報資料には問題が存在している。自己証明あるいは他人からの協力で潔白を晴らすことができる",
+      "modal": {
+        "modalTitle": "ルール",
+        "describe": "間違えた通報に対して、本人もしくは第三者からの協力で申し立てられる。基本要求に満たすれば、あなたの申し出で内容がすべてのBFBANの管理人に提出され、管理人の許可をもらう前に通報が解除できません",
+        "effectiveEvidence": [
+          null,
+          "高速ターゲット図星とMOSSのようなアプリを使用して、スクリーンとキーボードと両手を撮れるように自己証明のビデオを撮ってください",
+          "自己弁護は画像とビデオなどの資料が使える",
+          "一部のコミュニティーが提供した要求が違う場合は、当地域のBFBAN管理人に相談して申し出での資料をもらってください"
+        ],
+        "evidenceInvalid": [
+          null,
+          "アカウントを第三者に貸す場合、いかなる理由があっても一切通過しません",
+          "多数のプレーヤーにキャプチャーされて使用する（本人のキャプチャーから表した不正行為の特徴に限らず）あるいはカンニングアプリメディアを購入するとか",
+          "前科があるユーザーに対して通報解除の可能性が非常に低くなる",
+          "何らの誓い、呪い"
+        ],
+        "auxiliaryProof": [
+          null,
+          "通報した1試合あたりの戦局のほかのプレーヤー（敵と味方の視点）。そして長さは１０分以上、自分でビデオアクセスを提供する",
+          "この場にいるプレーヤー、自分のIDを提供し、具体的なサーバー、時間、場所、そしてあなたが補佐した申し出で対象への説明"
+        ]
+      },
+      "info": {
+        "content": "申し出での内容",
+        "player": "プレーヤーのID",
+        "originName": "現在当プレーヤーのネーム"
+      },
+      "placeholder": {
+        "content": "考査しやすいように、詳しい申し出での内容を入力してください",
+        "player": "プレーヤーのIDを入力してください"
+      }
+    },
+    "info": {
+      "app_qr": {
+        "title": "スマホで見る",
+        "tip": "BFBANのアプリでこのQRコードをスキャンしてください",
+        "openApp": "アプリの中で見る",
+        "openAppDescribe": "BFBANのアプリで当プレーヤーを見る"
+      },
+      "assistPppeal": "控訴に協力する",
+      "appeal": "控訴",
+      "cheatersInfo": "プレーヤー詳細",
+      "viewTimes": "インプレッション",
+      "reply": "返信",
+      "reportedGames": "通報されたゲーム",
+      "gameScores": "戦績リンク先",
+      "firstReportTime": "最初に通報された時間",
+      "recentUpdateTime": "最新の更新日時",
+      "originAvatar": "オリジンのトプ画",
+      "historyID": "履歴名",
+      "dealRecord": "管理人の処理記録",
+      "discription1": "もしリンク先が失効になるもしくはリンク先が変更されたなどの問題があったら、ここをクリックしてください",
+      "updateButton": "資料の更新",
+      "discription2": "bfban.comは通報されたアカウントの行方を永久的に追跡できる",
+      "discription3": "サーバも定期的に通報されたアカウントの情報を更新する",
+      "discription4": "履歴IDも捜索に使える",
+      "timeLine": "タイムライン",
+      "report": "通報",
+      "inGame": "いる",
+      "gaming": "ゲーム中",
+      "videoLink": "ビデオのリンク先",
+      "judge": "見なす",
+      "cheatMethod": "不正行為の方式",
+      "replyManual1": "もし新たな証拠になる画像やビデオの補充が需要なら、再び通報できるようになれる。返信機能はテキストとリンク先だけに返信できる。もし画像の返信をするならここへ移動してください",
+      "uploadPicButton": "画像をアップロード",
+      "replyManual2": "画像のリンク先をコピーして返信する",
+      "replyManual3": "検討はログインして登録した後にできる",
+      "appealManual1": "間違えた通報に対しての申し出でがあれば、管理人がそれを処理するから、当事件のリンク再及び申し出での詳細情報をban-appeals@bfban.comに送ってください。",
+      "adminConsole": "管理人コーナー",
+      "adminManual1": "速断しないこと。もし判断が下せない時、返信機能を使って検討して通報されたアカウントの返信を待ってください",
+      "adminManual2": "管理人からの処理は通報されたアカウントの既存状態を変更させることができ、もし百パーセント決まっていない時、返信機能を使って検討してください。",
+      "judgement": "アドバイス処理",
+      "replyManual4": "返信機能は登録後に使用可能",
+      "action": "行動",
+      "writeSomething": "何か書く",
+      "giveOpinion": "あなたはどう思いますか",
+      "fastReplies": {
+        "stats": "プレーヤーデータ異常",
+        "evidencePic": "証拠は参照の図のように",
+        "evidenceVid": "証拠は参照のビデオのように"
+      }
+    },
+    "judgement": {
+      "behavior": "判決のタイプ",
+      "methods": "不正行為のやり方",
+      "content": "判決説明",
+      "appropriateVerdict": [
+        null,
+        "直観的に裁決の原因を提出する。例えばある行為で判決の結果が決められる。以下の要因により（省略）",
+        "要約すること。不正行為の特徴ははっきりしている場合、下のテンプレートを使って統一判決できる"
+      ],
+      "inappropriateRuling": [
+        null,
+        "“１”、“［スペースキー］”、“［顔文字］”などの無意味な返信を入力しないでください",
+        "返信内容は人身攻撃、差別語、色情、政治内容などに関する",
+        "ゲーム中以外の要因で決められる。例えばトプ画とか"
+      ]
+    },
+    "messages": {
+      "fillEverything": "ちゃんと入力してくださいね",
+      "pleaseExplain": "裁決内容をもっと詳しく入力してください",
+      "dontDoIt": "不正確",
+      "replySuccess": "返信完了",
+      "signIn": "登録してください",
+      "updateComplete": "アップデート完了",
+      "submitSuccess": "提出完了"
+    }
+  },
+  "report": {
+    "title": "通報",
+    "info": {
+      "notFoundHintTitle": "当プレーヤーの情報をサーチできません",
+      "notFoundHintQuestion1": "しかし先のゲームでその人を見た記憶がある／戦績サーチのアプリでその人の戦績をサーチできる？",
+      "notFoundHintAnswer1": "origin.comに当プレーヤーをサーチしてください。もし確実に当プレーヤーの情報をサーチできるが通報できない場合、ホームページの下にある連絡先にbugをフィードバックしてください",
+      "notFoundHintQuestion2": "オリジンでサーチできない。どういうことでしょうか",
+      "notFoundHintAnswer2": "これはEAのデータベースがまだ更新されていない可能性が高い。もしくはEA公式からのbug。故にBFBANはそれを解決できません。もし力を貸してくれたいなら、https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-enにフィードバックしてください。この場合はI can't search my friend by name on origin.を入力してください",
+      "reportHacker": "不正行為を通報する",
+      "reportNews": "バトルフィールド５の通報機能はすでに使用可能だよ",
+      "idNotion1": "一度には一つのIDしか入力できません。チーム名を入力しないでください。自分のIDを入力しないでください",
+      "idNotion2": "ゲーム中のIDは大文字と小文字の区別はないけど、 i I 1 l L o O 0のような文字は特に注意してください。通報するIDを正確に入力してください",
+      "uploadManual1": "面倒だから国内のアカウントをログインしたくない。ビデオをアップロードしたら移動可能になる",
+      "uploadManual2": "そしてアクセスは下にある",
+      "uploadManual3": "优酷，土豆，AB站などのアプリのビデオリンク先が使用可能",
+      "uploadPic1": "おすすめの画像アップロードフォーマットはpng, jpg, jpeg, gif ",
+      "uploadPic2": "画像の大きさは２Mに越えるまたはアップロードできない場合、ここへ移動してください",
+      "uploadPic3": "そのあとImage URL を選んで、画像のリンク先を下に張り付いてください",
+      "uploadPic4": "十分な証拠を出してください。エディタ内は画像アップロードできる（２Mに限る）",
+      "reportOne": "シングル通報",
+      "reportAll": "すべてを通報",
+      "fromDatabaseOneId": "BFBANのデータベースから選ぶ",
+      "description": "通報されたアカウントの行為、特徴、場所、時間、不正行為の方式を詳しく書いてください。どうして通報するのかの理由を書いてください",
+      "required": "ビデオリンク先",
+      "onlyOneId": "一度には一つのオリジンIDだけがある",
+      "loginExpired": "登録は期限切れです。再登録してください"
+    },
+    "labels": {
+      "cheatMethod": "不正行為のやり方",
+      "hackerId": "不正プレーヤーのID",
+      "game": "ゲーム",
+      "description": "説明"
+    },
+    "error": {
+      "mediaEvidence": "画像をアップロードしてください。あるいはビデオリンク先を入力してください",
+      "originId": "オリジンIDが存在していない、スペルチェックしてください",
+      "success": "提出完了",
+      "permissionDenied": "無権限",
+      "voideBadFormat": "フォーマットエラー",
+      "voideEmpty": "無効なビデオリンク先"
+    }
+  },
+  "footer": {
+    "language": {
+      "members": "翻訳者たち"
+    },
+    "column": {
+      "col1": {
+        "text": "BFBAN　-　世界不正プレーヤーデータベース"
+      },
+      "col2": {
+        "title": "コミュニティー"
+      },
+      "col3": {
+        "title": "機能"
+      },
+      "col4": {
+        "title": "連絡先"
+      },
+      "sponsor": {
+        "title": "スポンサー",
+        "join": "スポンサーに加入する"
+      }
+    }
+  },
+  "home": {
+    "title": "ホームページ",
+    "cover": {
+      "h1": "BFBAN",
+      "h2": [
+        "提供したデータベースにより、世界中のすべてのBattlefieldサーバがプレーヤーの情報をモニタリングでき、問題が存在しているプレーヤーをサーバから蹴出すことができる",
+        "BF１からBF2042まで問題が存在しているプレーヤーへのサーチすることができ、そのため、世界中のすべてのBattlefieldサーバがプレーヤーをモニタリングできる"
+      ],
+      "h3": "世界不正プレーヤーデータベースを構築する",
+      "h4": "私たちの一員になって、良いコミュニティーの環境を作ろう",
+      "subButton": "すでに参加しているコミュニティーをクエリする",
+      "dataReceived": "受信済み",
+      "confirmData": "確認された不正プレーヤー",
+      "endTime": "締め切り｛time｝"
+    },
+    "activity": {
+      "title": "ウェブ投稿",
+      "more": "詳細を見る",
+      "description": "bfban.comは2018年11月4日に登場。{report}回数の通報を受け取りました。そして{cheater}の不正プレーヤーが通報されました。皆様のご努力のおかげで、ありがとうございました！",
+      "activities": {
+        "report": "通報するぞ",
+        "join": "ようこそBFBANへ、いらっしゃいませ！",
+        "admin": "コミュニティー管理人",
+        "mark": "を",
+        "as": "に処理する"
+      }
+    },
+    "bulletin": {
+      "title": "公告"
+    }
+  },
+  "about": {
+    "title": "について",
+    "description": "<h2>BFBAN</h2>\n    <p>は2018年1月29日に誕生した。BFのプレーヤーたちがともに結成した<b>不正プレーヤーを排斥する</b>組織</p>",
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a>はBFBANに依存する。最初のアイディアの起源は熱心なプレーヤーからです。<a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a>により開発され、2018年11月4日にオンライン登場。‘\n    </p>\n    <p>は主にプレーヤーたちへの通報、列挙、サーチ、追跡、検討などのサービスが提供されます。</p>",
+    "privacy": "<h2>プライバシー政策</h2>はオープンソースであり、GitHubを通じて質問とアドバイスを提出できます。コミュニティーネットワークが提供したAPIは公衆も使えるためオープンされています"
+  },
+  "link": {
+    "title": "ホットリンク詳細",
+    "links": "ホットリンク",
+    "sponsor": "パートナー",
+    "linkWebDeveloperChild": "優れた貢献開発者",
+    "linkWebDeveloperDescribe": "BFBAN礎石開拓の先鋒",
+    "languageMembers": "優れた貢献翻訳者",
+    "languageMembersDescribe": "ここでは、時間をかけてロケール言語を校正し、無償で翻訳に貢献した翻訳者たちに表彰します。",
+    "join": "パートナーに加入する"
+  },
+  "reset": {
+    "title": "パスワードリセット",
+    "form": {
+      "oldPassword": "元のパスワード",
+      "newPassword": "新パスワード",
+      "qq": "QQ",
+      "password": "新パスワード",
+      "passwordRepeat": "パスワード確認"
+    }
+  },
+  "account": {
+    "title": "ユーザーホームページ",
+    "reportnum": "総通報回数",
+    "hint2": "すべての通報が返信可能、検討可能",
+    "hint3": "もし証拠を補充するなら、再び同じのIDを通報することができる",
+    "userInfo": "個人情報",
+    "username": "ユーザー名",
+    "role": "身分",
+    "joinedAt": "加入時間",
+    "lastOnlineTime": "最後のオンライン時間",
+    "reports": "個人通報",
+    "reported": "通報するぞ",
+    "status": "状態状態",
+    "recentlyUpdated": "最新の更新",
+    "message": {
+      "chat": "チャット",
+      "hint": {
+        "denied": "チャット機能は禁止されました",
+        "selfTalk": "自分とチャットできません",
+        "taOffChat": "相手はチャット機能を閉じました"
+      }
+    },
+    "bindOrigin": {
+      "title": "紐付けないアカウント",
+      "content": "アカウントの申し出で、取り戻すなどの機能はBFBANにあなたのオリジンアカウントを紐付けることが必要である。紐付ける前には、あなたのアカウントはロックされ、何にも提出できなくなる",
+      "travel": "わかりました、今からアカウントを紐付けます"
+    }
+  },
+  "bindOrigin": {
+    "title": "オリジンアカウントを紐付ける"
+  },
+  "signin": {
+    "title": "登録",
+    "form": {
+      "username": "ユーザー名",
+      "password": "パスワード",
+      "submitHint": "アカウントがない？\nログインしてくださいね",
+      "forgetPasswordHint": "パスワードを忘れたの？"
+    },
+    "fillEverything": "ちゃんと入力してね",
+    "failed": "登録エラー",
+    "success": "登録完了",
+    "loginFirst": "あれ？まずは登録してね",
+    "loggedIn": "あれ？まずはログアウトしてね(✿◡‿◡)"
+  },
+  "signup": {
+    "title": "ログイン",
+    "registerVerification": {
+      "title": "アカウント検証",
+      "validation": "検証中",
+      "successful": "検証完了！当アカウントのロックは解除されました、すでに登録可能になりました",
+      "failure": "検証アクセスエラー。確認コードをチェックしてください",
+      "error": "エラー"
+    },
+    "steps": [
+      {
+        "title": "基礎情報",
+        "supplement": "基本アカウント"
+      },
+      {
+        "title": "バインディング",
+        "supplement": "オリジンに紐付けられる"
+      },
+      {
+        "title": "確認コード",
+        "supplement": "ロボットかどうかを検証する"
+      },
+      {
+        "title": "確認",
+        "supplement": "メール確認コード"
+      },
+      {
+        "title": "完成",
+        "supplement": "ログイン結果"
+      }
+    ],
+    "form": {
+      "username": "ユーザー名",
+      "newUsername": "新ユーザー名",
+      "password": "パスワード",
+      "originId": "オリジンID",
+      "originEmail": "🍊オリジンメールアドレス",
+      "originName": "🍊オリジンユーザー名",
+      "submitHint": "すでにアカウントを持っている？登録してね",
+      "forgetPasswordHint": "パスワードを忘れたの？"
+    },
+    "placeholder": {
+      "originEmail": "あなたのオリジンメールアドレスを入力してください",
+      "originName": "あなたのオリジンIDを入力してください",
+      "username": "４桁以上のユーザー名は英語、数字、アンダーバー、減号に限る",
+      "password": "６桁以上のパスワード",
+      "originId": "オプション"
+    },
+    "eaPrivacy": "<a href=\"https://myaccount.ea.com/cp-ui/privacy/index\">EA のプライバシー設定まで</a>の中でメール捜索機能を許可してください",
+    "checkAllEmail": "メールの検証は時間がかかるので（およそ一分ぐらい）その前に待ってください。そしてメールごみ箱もチェックしてください",
+    "usernameExist": "当ユーザー名は既にログインされました",
+    "gameNotShowed": "当メールアドレスのアカウントにはゲームが含まれておりません",
+    "playerNotFound": "当プレーヤーをサーチできません（メールアドレスで捜索可能の許可したかどうかチェックしてください）",
+    "originIdExist": "当オリジンアカウントは既に紐付けられました",
+    "fillIn": "ちゃんと入力してね",
+    "failed": "ログインエラー"
+  },
+  "forgetPassword": {
+    "title": "パスワードリセット",
+    "steps": [
+      {
+        "title": "基礎情報",
+        "supplement": "アカウントチェック"
+      },
+      {
+        "title": "確認コード",
+        "supplement": "ロボットかどうかを検証する"
+      },
+      {
+        "title": "メールアドレス検証",
+        "supplement": "メールアドレスの検証リンクを見る"
+      },
+      {
+        "title": "パスワード設置",
+        "supplement": "あなたのパスワードをリセットする"
+      },
+      {
+        "title": "完成",
+        "supplement": "リセット完了"
+      }
+    ],
+    "resetSuccess": "リセット完了おめでとうございます！"
+  },
+  "list": {
+    "title": "不正プレーヤーリスト",
+    "filters": {
+      "sortBy": {
+        "createTime": "通報時間の逆順序",
+        "updateTime": "更新時間の逆順序",
+        "viewNum": "環視回数の逆順序",
+        "commentNum": "返信回数の逆順序"
+      }
+    },
+    "reportTime": "通報時間の範囲",
+    "updateTime": "更新時間の範囲",
+    "colums": {
+      "screenTitle": "スクリーニング",
+      "playerId": "プレーヤーID",
+      "reportTime": "通報時間",
+      "updateTime": "更新時間"
+    }
+  },
+  "apps": {
+    "title": "工具",
+    "describe": "第三者からのBFBANデータベース工具",
+    "submit_tool_app": "提出工具",
+    "buttons": {
+      "hot": "人気がある",
+      "website": "ウェブサイト",
+      "get": "取得"
+    },
+    "screen": {
+      "all": "すべて",
+      "official": "オフィシャル",
+      "bot": "ロボット",
+      "app": "アプリ",
+      "pc_app": "デスクトップアプリ",
+      "web": "ウェブサイト",
+      "api": "インタフェース",
+      "book": "ガイド",
+      "admin": "コミュニティー管理",
+      "qq": "テンセント　QQ",
+      "bf1": "バトルフィールド１",
+      "bfv": "バトルフィールド５",
+      "bf6": "バトルフィールド2042"
+    }
+  },
+  "search": {
+    "title": "サーチ",
+    "describe": "BFBANデータベースからIDをサーチする",
+    "placeholder": "何をサーチするかな。あ、君だ！",
+    "collectionHint": "本ページをコレクションする(Ctrl+D or Command+D)",
+    "scope": {
+      "history": "元のネーム",
+      "current": "今のネーム"
+    }
+  },
+  "cheatMethods": {
+    "invisable": {
+      "title": "身を潜める",
+      "describe": "当ユーザーは身を潜めたため、観察できませんが、追跡位置できる"
+    },
+    "wallhack": {
+      "title": "透視",
+      "describe": "実体を無視して敵の位置を観察する"
+    },
+    "aimbot": {
+      "title": "オートエイム",
+      "describe": "自動的にある位置に狙う。ロボットのような行為を現す"
+    },
+    "oneShotKill": {
+      "title": "秒殺",
+      "describe": "ダメージの高い部位に快速狙うにより、快速打ち殺すのような行為"
+    },
+    "gadgetModify": {
+      "title": "装備チェンジ",
+      "describe": "存在すべきではない場所に出現した装備"
+    },
+    "damageChange": {
+      "title": "ダメージチェンジ",
+      "describe": "武器パラメータチェンジ"
+    },
+    "magicBullet": {
+      "title": "魔法弾丸",
+      "describe": "弾が実体を貫ける"
+    },
+    "attackServer": {
+      "title": "サーバアタック",
+      "describe": "悪意のあるサーバアタック"
+    },
+    "teleport": {
+      "title": "伝送",
+      "describe": "伝送移動"
+    }
+  },
+  "misc": {
+    "uploadImage": {
+      "info": "画像アップロード、大きさは２Mを超えないように",
+      "mobile": "スクリーンをダブルクリックしてアップロードする",
+      "desktop": "クリックまたはドラッグしてアップロードする",
+      "fail": "最大制限を超えました。画像２M"
+    },
+    "uploadVideo": {
+      "info": "ビデオをアップロードする。30Mを超えないように",
+      "desktop": "ファイルをクリックしてまたはここへドラッグしてアップロードする"
+    },
+    "progress": "アップロード中"
+  },
+  "share": {
+    "title": "シェア",
+    "link": {
+      "name": "リンクタイプ",
+      "linkUrl": "ハイパーリンク",
+      "textLink": "テキストリンク",
+      "textLinkContent": "【{webname}】一名のプレーヤーをシェアしました。アドレス:{url}",
+      "webHtmlLink": "ウェブコード"
+    },
+    "iframe": {
+      "name": "ウェブエンベデッド",
+      "theme": "テーマ",
+      "size": "サイズ",
+      "code": "エンベデッドコード"
+    },
+    "image": {
+      "name": "画像",
+      "generate": "画像を生成",
+      "describe": "通報情報のスクリーンショットを生成する"
+    }
+  },
+  "sitestats": {
+    "title": "統計",
+    "reports": "コミュニティ内の総通報回数",
+    "confirmed": "既に処理した案件",
+    "banAppeals": "すでに控訴しました",
+    "registers": "アカウントをログインする",
+    "players": "現在の通報案件数",
+    "admins": "すべての管理人の人数"
+  }
+}
