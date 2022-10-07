@@ -82,7 +82,7 @@ export default {
 
 .img {
   position: relative;
-  user-select: none;
+  //user-select: none;
 
   .img-error {
     text-align: center;
