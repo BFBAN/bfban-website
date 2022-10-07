@@ -14,12 +14,12 @@
       <iframe class="iframe video-box" :src="src"></iframe>
     </template>
     <template v-else-if="imageStatus == -1">
-      <div class="video-error" @click="openUrl">
+      <div class="video-error video-box" @click="openUrl">
         <Badge>
           <Icon type="md-alert" slot="count" size="20" />
           <Icon type="ios-videocam" size="50" />
         </Badge>
-        <p>{{src}}</p>
+        <p v-if="src">{{src}}</p>
       </div>
     </template>
   </div>
@@ -29,26 +29,29 @@
 export default {
   name: "HtmlVideo",
   props: {
-    // src: {
-    //   type: String,
-    //   default: ""
-    // },
+    src: {
+      type: String,
+      default: ""
+    },
   },
   data () {
     return {
       imageStatus: 0,
-      src: "https://media.geeksp4"
     }
   },
   methods: {
     onLoad (event) {
-      this.imageStatus = 1;
+      if (this.src != "")
+        this.imageStatus = 1;
+      else if (this.src == "")
+        this.imageStatus = -1;
     },
     onError (event) {
       this.imageStatus = -1;
     },
     openUrl() {
-      window.open(this.src);
+      if (this.src)
+        window.open(this.src);
     },
   }
 }
