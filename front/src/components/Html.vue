@@ -1,79 +1,99 @@
-<template>
-  <div v-html="processedHtml"></div>
-</template>
-
 <script>
+import VueWithCompiler from "vue/dist/vue";
+
+import htmlimage from "./HtmlImage";
+import htmllink from "./HtmlLink";
+
 export default {
   name: "Html",
   props: {
     html: {
       type: String,
-      default: ""
+      default: "<p></p>"
     }
   },
   data() {
     return {
-      msg: 'hello'
-    }
+      templateRender: undefined,
+      options: {
+        url: 'src'
+      }
+    };
   },
-  computed: {
-    processedHtml() {
-      let el = new DOMParser().parseFromString(this.html, "text/html"),
-          imgs = el.getElementsByTagName("img"),
-          links = el.getElementsByTagName("a"),
-          p = el.getElementsByTagName("p"),
-          br = el.getElementsByTagName("br");
+  components: { htmlimage, htmllink },
+  watch: {
+    html: {
+      handler (val, olVal) {
+        this.updateRender(val);
+      },
+      deep: true,
+    },
+  },
+  created() {
+    this.updateRender( this.packagingRender( this.html) );
+  },
+  methods: {
+    updateRender(nodes) {
+      const compiled = VueWithCompiler.compile( nodes );
+
+      this.templateRender = compiled.render;
+      this.$options.staticRenderFns = [];
+
+      for (const staticRenderFunction of compiled.staticRenderFns) {
+        this.$options.staticRenderFns.push(staticRenderFunction);
+      }
+    },
+    /**
+     * 包装HTML
+     * 并且在渲染前对预制dom进行编译
+     * @param html
+     * @returns {*|string}
+     */
+    packagingRender (html) {
+      let _html = `<div>${html}</div>`;
+
+      const vDom = new DOMParser().parseFromString(_html, "text/html"),
+          imgs = vDom.getElementsByTagName("img"),
+          links = vDom.getElementsByTagName("a"),
+          p = vDom.getElementsByTagName("p"),
+          br = vDom.getElementsByTagName("br");
+
+      // ==================== 处理自定义HTML
 
       if (imgs && imgs.length > 0) {
         for (let i = 0; i < imgs.length; i++) {
-          let eleImg = document.createElement('a');
-              eleImg.className = "img";
-              eleImg.target = "_new";
-              eleImg.href = imgs[i].src;
-          let lable = imgs[i];
+          let eleImg = document.createElement('htmlimage');
+          eleImg.setAttribute("src", imgs[i].src);
 
-          imgs[i].title = imgs[i].src;
-
-          lable.parentNode.replaceChild(eleImg, lable)
-          eleImg.appendChild(lable)
-
-          imgs[i].onerror = function () {
-            imgs[i] = require("@/assets/images/logo.png")
-          }
+          imgs[i].parentNode.replaceChild(eleImg, imgs[i]);
         }
       }
 
-
       if (links && links.length > 0) {
-        for (let i = 0; i < links.length; i++) {
-          let eleLink = document.createElement('u');
-          let lable = links[i];
+        let _links = Array.from(links); // deep copy
+        for (let i = 0; i < _links.length; i++) {
+          let eleLink = document.createElement('htmllink');
+          eleLink.setAttribute("text", _links[i].innerText);
+          eleLink.setAttribute("href", _links[i].href);
 
-          lable.style = "padding: 0 1px";
-          lable.title = lable.href;
-
-          lable.parentNode.replaceChild(eleLink, lable)
-          eleLink.appendChild(lable)
+          _links[i].parentNode.replaceChild(eleLink,_links[i]);
         }
       }
 
       if (p && p.length > 0) {
-        for (let i = 0; i < p.length; i++) {
-          // 移除空白分段
-          if (p[i].innerText.length <= 0 || p[i].innerHTML.length <= 0)
-            p[i].remove();
-
+        let _p = Array.from(p); // deep copy
+        for (let i = 0; i < _p.length; i++) {
           // 解析HR, 分割线
           let calcStringCount = 0;
 
-          for (let j = 0; j < p[i].innerText.length; j++) {
-            if (p[i].innerText[j] == "-") {
-              calcStringCount+=1;
+          for (let j = 0; j < _p[i].innerText.length; j++) {
+            if (_p[i].innerText[j] == "-" || _p[i].innerText[j] == "=") {
+              calcStringCount += 1;
             }
           }
 
-          if (calcStringCount == p[i].innerText.length)
-            p[i].innerHTML = `<div class="hr ivu-divider ivu-divider-horizontal"></div>`;
+          if (calcStringCount == _p[i].innerText.length && calcStringCount >= 4)
+            _p[i].innerHTML = `<div class="hr ivu-divider ivu-divider-horizontal"></div>`;
         }
       }
 
@@ -82,8 +102,14 @@ export default {
           // br[i].remove();
         }
 
-      return el.body.innerHTML;
+      // ==================== 拼接标签
+      let vDomString = vDom.getElementsByTagName("body")[0]?.innerHTML ?? "";
+
+      return vDomString;
     },
+  },
+  render() {
+    return this.templateRender();
   },
 }
 </script>
@@ -94,6 +120,7 @@ export default {
   p:last-child {
     margin: 0;
   }
+
   p {
     margin: 3px 0;
   }
@@ -111,13 +138,14 @@ export default {
 
   hr, .hr {
     opacity: .5;
-    margin: 20px 0;
+    width: calc(100% + 20px);
     margin: 10px -10px 10px -10px;
   }
 
   a {
     opacity: .6;
   }
+
   a:hover {
     opacity: 1;
     border-radius: 3px;
