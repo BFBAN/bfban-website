@@ -6,7 +6,7 @@
           <Icon type="md-refresh" class="spin-icon-load" slot="count" size="20" />
           <Icon type="md-images" size="50" />
         </Badge>
-        <img :src="src" @error="onError" @load="onLoad"/>
+        <img style="display: none" :src="src" @error="onError" @load="onLoad"/>
         <p>{{src}}</p>
       </div>
     </template>

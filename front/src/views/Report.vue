@@ -139,9 +139,7 @@
                     <Col :xs="{span: 24}" :lg="{span:12}">
                       <Alert type="warning">
                         {{ $t("report.info.uploadManual1") }}
-                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
-                          $t("report.info.uploadManual2")
-                        }}
+                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{$t("report.info.uploadManual2") }}
                       </Alert>
 
                       <!-- 视频链接 S -->
@@ -193,6 +191,16 @@
                               v-model="tabs.list[index].formItem.description">
                               @change="handleMiscChange"
                     </Textarea>
+                  </Card>
+                  <br>
+                  <Card :padding="10" dis-hover class="timeline-description" v-if="tabs.list[index].formItem.description">
+                    <keep-alive>
+                      <Html :html="tabs.list[index].formItem.description" :data="{
+                      'videoLink': tabs.list[index].formItem.videoLink,
+                      'selfUserName': 'selfUserName',
+                      'playerUserName': 'playerUserName'
+                    }"></Html>
+                    </keep-alive>
                   </Card>
                 </FormItem>
               </Card>
@@ -281,6 +289,7 @@
 
 <script>
 import BFBAN from "../assets/js/bfban";
+import Html from "@/components/Html";
 
 import {api, http, http_token, voice, util, regular} from '../assets/js/index'
 import {checkReportFormData} from "@/mixins/common";
@@ -303,7 +312,7 @@ export default new BFBAN({
       cheatMethodsGlossary: [],
     };
   },
-  components: {Textarea},
+  components: {Textarea, Html},
   created() {
     const message = store.state.configuration['voice_message']
 

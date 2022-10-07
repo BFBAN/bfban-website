@@ -66,6 +66,12 @@ if (window.callPhantom)
   window.callPhantom('takeShot');
 
 export default {
+  props: {
+    id: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
       isFull: true,
@@ -113,7 +119,7 @@ export default {
         params: Object.assign({
           history: true
         }, {
-          personaId: this.$route.params.ouid
+          personaId: this.id || this.$route.params.ouid
         })
       }).then((res) => {
         this.spinShow = false;

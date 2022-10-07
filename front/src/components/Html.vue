@@ -1,17 +1,20 @@
 <script>
 import VueWithCompiler from "vue/dist/vue";
+import Vue from "vue";
 
 import htmlimage from "./HtmlImage";
 import htmllink from "./HtmlLink";
 import htmlvideo from "./HtmlVideo";
+import htmlplayercard from "./HtmlPlayerCard";
 
 export default {
   name: "Html",
   props: {
     html: {
       type: String,
-      default: "<p></p>"
-    }
+      default: ""
+    },
+    data: Object
   },
   data() {
     return {
@@ -21,21 +24,24 @@ export default {
       }
     };
   },
-  components: { htmlimage, htmllink, htmlvideo },
+  components: {htmlimage, htmllink, htmlvideo, htmlplayercard},
   watch: {
     html: {
-      handler (val, olVal) {
-        this.updateRender(val);
+      handler(val, olVal) {
+        for (const dataKey in this.data) {
+          this[dataKey] = this.data[dataKey];
+        }
+        this.updateRender(this.packagingRender(val));
       },
-      deep: true,
+      deep: false,
     },
   },
   created() {
-    this.updateRender( this.packagingRender( this.html) );
+    this.updateRender(this.packagingRender(this.html));
   },
   methods: {
     updateRender(nodes) {
-      const compiled = VueWithCompiler.compile( nodes );
+      const compiled = VueWithCompiler.compile(nodes);
 
       this.templateRender = compiled.render;
       this.$options.staticRenderFns = [];
@@ -50,7 +56,7 @@ export default {
      * @param html
      * @returns {*|string}
      */
-    packagingRender (html) {
+    packagingRender(html) {
       let _html = `<div>${html}</div>`;
 
       const vDom = new DOMParser().parseFromString(_html, "text/html"),
@@ -86,34 +92,58 @@ export default {
         let _links = Array.from(links); // deep copy
         for (let i = 0; i < _links.length; i++) {
           let eleLink = document.createElement('htmllink');
-          eleLink.setAttribute("text", _links[i].innerText);
+          let _data = this.data;
+          let _linkExtend = Vue.component("HtmlLinkCom", {
+            template: _links[i].innerText,
+            data () { return _data }
+          });
+
+          eleLink.setAttribute("text", new _linkExtend().$options.template);
           eleLink.setAttribute("href", _links[i].href);
 
-          _links[i].parentNode.replaceChild(eleLink,_links[i]);
+          _links[i].parentNode.replaceChild(eleLink, _links[i]);
         }
       }
 
       if (p && p.length > 0) {
         let _p = Array.from(p); // deep copy
         for (let i = 0; i < _p.length; i++) {
+          // souyu
+          if (_p[i] && _p[i].innerText && _p[i].innerText.match(/{(\S*)\}/)) {
+            let str = _p[i].innerText.match(/{(\S*)\}/)[1];
+            let p_data = str.split(':');
+            if (p_data[0])
+              switch (p_data[0]) {
+                case "player":
+                  _p[i].innerHTML = `<htmlplayercard :id="${p_data[1].toString()}"></htmlplayercard>`;
+                  break;
+                case "router":
+                  _p[i].innerHTML = _p[i].innerHTML
+                      .replaceAll(`{${str}}`, `<u><router-link :to="{path: '${p_data[1]}'}">${ p_data[1] }</router-link></u>`)
+                  // _p[i].innerHTML = ;
+                  break;
+                case "floor":
+                  var p_key = p_data[0];
+                  var p_value = p_data[1];
+                  _p[i].innerHTML = `<Card dis-hover><a href='#floor-${p_value}'>${p_value}</a></Card>`;
+                  break;
+              }
+          }
+
+
           // 解析HR, 分割线
           let calcStringCount = 0;
 
           for (let j = 0; j < _p[i].innerText.length; j++) {
-            if (_p[i].innerText[j] == "-" || _p[i].innerText[j] == "=") {
+            if (_p[i].innerText[j] == "-") {
               calcStringCount += 1;
             }
           }
 
           if (calcStringCount == _p[i].innerText.length && calcStringCount >= 4)
-            _p[i].innerHTML = `<div class="hr ivu-divider ivu-divider-horizontal"></div>`;
+            _p[i].innerHTML = `<Divider class="hr" dashed />`;
         }
       }
-
-      if (br && br.length > 0)
-        for (let i = 0; i < br.length; i++) {
-          // br[i].remove();
-        }
 
       // ==================== 拼接标签
       let vDomString = vDom.getElementsByTagName("body")[0]?.innerHTML ?? "";
@@ -135,6 +165,7 @@ export default {
   }
 
   p {
+    line-height: initial;
     margin: 3px 0;
   }
 
@@ -151,8 +182,8 @@ export default {
 
   hr, .hr {
     opacity: .5;
-    width: calc(100% + 20px);
-    margin: 10px -10px 10px -10px;
+    width: calc(100% + 20px) !important;
+    margin: 10px -10px 10px -10px !important;
   }
 
   a {
