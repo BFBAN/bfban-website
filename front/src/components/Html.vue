@@ -3,6 +3,7 @@ import VueWithCompiler from "vue/dist/vue";
 
 import htmlimage from "./HtmlImage";
 import htmllink from "./HtmlLink";
+import htmlvideo from "./HtmlVideo";
 
 export default {
   name: "Html",
@@ -20,7 +21,7 @@ export default {
       }
     };
   },
-  components: { htmlimage, htmllink },
+  components: { htmlimage, htmllink, htmlvideo },
   watch: {
     html: {
       handler (val, olVal) {
@@ -53,6 +54,7 @@ export default {
       let _html = `<div>${html}</div>`;
 
       const vDom = new DOMParser().parseFromString(_html, "text/html"),
+          video = vDom.getElementsByTagName("video"),
           imgs = vDom.getElementsByTagName("img"),
           links = vDom.getElementsByTagName("a"),
           p = vDom.getElementsByTagName("p"),
@@ -61,11 +63,22 @@ export default {
       // ==================== 处理自定义HTML
 
       if (imgs && imgs.length > 0) {
-        for (let i = 0; i < imgs.length; i++) {
+        let _imgs = Array.from(imgs); // deep copy
+        for (let i = 0; i < _imgs.length; i++) {
           let eleImg = document.createElement('htmlimage');
-          eleImg.setAttribute("src", imgs[i].src);
+          eleImg.setAttribute("src", _imgs[i].src);
 
-          imgs[i].parentNode.replaceChild(eleImg, imgs[i]);
+          _imgs[i].parentNode.replaceChild(eleImg, _imgs[i]);
+        }
+      }
+
+      if (video && video.length > 0) {
+        let _video = Array.from(video); // deep copy
+        for (let i = 0; i < _video.length; i++) {
+          let eleImg = document.createElement('htmlvideo');
+          eleImg.setAttribute("src", _video[i].src);
+
+          _video[i].parentNode.replaceChild(eleImg, _video[i]);
         }
       }
 

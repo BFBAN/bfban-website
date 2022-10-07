@@ -251,8 +251,18 @@
         <br>
         <Card style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
           <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
-            <Col :xs="{span: 23, push: 1}" :lg="{span: 8, push: 0}" class="mobile-hide">
-              {{ $t('detail.info.assistPppeal') }}
+            <Col :xs="{span: 23, push: 1}" :lg="appeal.disable ? {span: 7, push: 0} : {span: 1, push: 0}" class="mobile-hide">
+              <template v-if="appeal.disable">
+                <Button @click="onLeftAppealPlan" size="small">
+                  <Icon type="md-contract" />
+                </Button>
+                {{ $t('detail.info.assistPppeal') }}
+              </template>
+              <template v-else>
+                <Button @click="onLeftAppealPlan" size="small">
+                  <Icon type="md-expand" />
+                </Button>
+              </template>
             </Col>
             <Col flex="auto" class="mobile-hide">
               {{ $t('detail.info.timeLine') }}
@@ -283,7 +293,7 @@
             </Col>
           </Row>
           <Row :gutter="20" type="flex">
-            <Col :xs="{span: 24, push: 0, pull: 0}" :lg="{span: 17, push: 1}" order="2" class="tabs-style">
+            <Col :xs="{span: 24, push: 0, pull: 0}" :lg="appeal.disable ? {span: 17, push: 1} : {span: 24, push: 0} " order="2" class="tabs-style">
               <div class="content">
                 <!-- 时间线 -->
                 <TimelineItem
@@ -614,7 +624,8 @@
               <!-- 用户回复 E -->
             </Col>
 
-            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide">
+            <!-- 申诉按钮 -->
+            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide" v-if="appeal.disable">
               <Button type="primary"
                       v-voice-button
                       @click="appeal.show = true"
@@ -990,6 +1001,7 @@ export default new BFBAN({
       appeal: {
         load: false,
         show: false,
+        disable: this.$store.state.configuration.detailLeftAppealPanel ?? false,
         toPlayerId: 0,
         content: ''
       },
@@ -1563,6 +1575,14 @@ export default new BFBAN({
       if (this.$refs.judgementTextarea && this.fastReply.selected.length > 0) {
         this.$refs.judgementTextarea.updateContent(this.fastReply.selected.toString());
       }
+    },
+    /**
+     * 左侧申诉面板开关
+     */
+    onLeftAppealPlan () {
+      this.appeal.disable = !this.appeal.disable;
+
+      account_storage.updateConfiguration("detailLeftAppealPanel", this.appeal.disable);
     }
   },
   computed: {
