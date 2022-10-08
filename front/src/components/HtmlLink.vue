@@ -19,7 +19,8 @@
             </Badge>
           </div>
         </template>
-        <iframe :src="disableIframe ? '' : href" v-show="!linkLoad"></iframe>
+        <iframe :src="disableIframe ? '' : href" v-show="!linkLoad"
+                sandbox="allow-scripts allow-forms"></iframe>
       </div>
     </template>
   </Poptip>
@@ -42,7 +43,7 @@ export default {
   },
   data () {
     return {
-      disableIframe: false,
+      disableIframe: true,
       linkLoad: true,
       linkTime: null
     }
