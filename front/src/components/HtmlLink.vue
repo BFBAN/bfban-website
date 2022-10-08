@@ -1,5 +1,5 @@
 <template>
-  <Poptip :padding="'0'" max-width="300" trigger="hover" @on-popper-show="onPoptipShow(false)" @on-popper-hide="onPoptipShow(true)">
+  <Poptip :padding="'0'" max-width="300" trigger="hover" transfer @on-popper-show="onPoptipShow(false)" @on-popper-hide="onPoptipShow(true)">
     <span class="html-link">
       <template v-if="getProtocol == 'http:' || getProtocol == 'https:'">
         <Icon type="md-link"/>
