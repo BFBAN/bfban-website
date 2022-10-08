@@ -1,11 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1ab21282fdc5a1c838e9",
+    "revision": "ce8ddc0a76673e4ed442",
     "url": "/assets/css/app.578576db.css"
   },
   {
-    "revision": "1ab21282fdc5a1c838e9",
+    "revision": "ce8ddc0a76673e4ed442",
     "url": "/assets/css/app.578576db.css.map"
+  },
+  {
+    "revision": "08237ec0a6a724271fae",
+    "url": "/assets/css/chunk-05f225ac.2e423f8d.css"
+  },
+  {
+    "revision": "08237ec0a6a724271fae",
+    "url": "/assets/css/chunk-05f225ac.2e423f8d.css.map"
   },
   {
     "revision": "c03bc1fa76fca737ff8b",
@@ -46,14 +54,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "415707e339b52ef97357",
     "url": "/assets/css/chunk-361c6f60.046e97b7.css.map"
-  },
-  {
-    "revision": "426b8f8cf22306892d97",
-    "url": "/assets/css/chunk-3dc79998.2e423f8d.css"
-  },
-  {
-    "revision": "426b8f8cf22306892d97",
-    "url": "/assets/css/chunk-3dc79998.2e423f8d.css.map"
   },
   {
     "revision": "a386f7f38d43a324afcd",
@@ -252,12 +252,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ubuntu-mono-v8-latin-regular.e8562176.ttf"
   },
   {
-    "revision": "1ab21282fdc5a1c838e9",
+    "revision": "ce8ddc0a76673e4ed442",
     "url": "/assets/js/app.2.7.2.js"
   },
   {
-    "revision": "1ab21282fdc5a1c838e9",
+    "revision": "ce8ddc0a76673e4ed442",
     "url": "/assets/js/app.2.7.2.js.map"
+  },
+  {
+    "revision": "08237ec0a6a724271fae",
+    "url": "/assets/js/chunk-05f225ac.2.7.2.js"
+  },
+  {
+    "revision": "08237ec0a6a724271fae",
+    "url": "/assets/js/chunk-05f225ac.2.7.2.js.map"
   },
   {
     "revision": "c03bc1fa76fca737ff8b",
@@ -386,14 +394,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "415707e339b52ef97357",
     "url": "/assets/js/chunk-361c6f60.2.7.2.js.map"
-  },
-  {
-    "revision": "426b8f8cf22306892d97",
-    "url": "/assets/js/chunk-3dc79998.2.7.2.js"
-  },
-  {
-    "revision": "426b8f8cf22306892d97",
-    "url": "/assets/js/chunk-3dc79998.2.7.2.js.map"
   },
   {
     "revision": "a386f7f38d43a324afcd",
@@ -676,7 +676,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/favicon.ico"
   },
   {
-    "revision": "463aa53b4c9804235bda8516efe82903",
+    "revision": "808c8ac7d5a80e585dd83f76161ca08d",
     "url": "/index.html"
   },
   {
