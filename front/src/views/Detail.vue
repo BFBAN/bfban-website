@@ -521,11 +521,10 @@
 
                     <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                       <template v-if="l.quote">
-                        <a :href="`#floor-${l.quote.id}`">
+                        <a :href="`#floor-${l.quote.id}`" target="_self">
                           <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                             <b>{{ l.quote.username }}</b> :
-                            <div v-html="l.quote.content.substr(0, 80)"></div>
-                            ...
+                            <Html :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
                           </div>
                         </a>
                       </template>

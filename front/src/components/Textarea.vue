@@ -169,7 +169,7 @@ import Quill from "quill";
 import { quillEditor } from 'vue-quill-editor'
 import { VueCropper }  from 'vue-cropper'
 import atPeople from 'quill-mention-people';
-import getPlaceholderModule from 'quill-placeholder-module'
+
 import Empty from "@/components/Empty";
 
 import 'quill-mention-people/index.css'
@@ -200,17 +200,6 @@ export default {
     toolbar: null
   },
   components: {Empty, quillEditor, VueCropper },
-  created() {
-    this.http = http_token.call(this);
-
-    if (this.content)
-      this.editorContent = this.content;
-
-    // Quill.register('modules/placeholder', getPlaceholderModule(Quill, {
-    //   className: 'ql-placeholder-content'  // default
-    // }))
-    // Quill.register('modules/atPeople',atPeople);
-  },
   watch: {
     'currentType': {
       handler (val, olVal) {
@@ -270,14 +259,6 @@ export default {
           //     console.log(item);
           //   }
           // },
-          // https://github.com/jspaine/quill-placeholder-module
-          // placeholder: {
-          //   delimiters: [':', ':'],  // default
-          //   placeholders: [
-          //     {id: '1', label: 'Test', required: true},
-          //     {id: '2', label: 'Test', required: true},
-          //   ]
-          // },
           toolbar: {
             container: this.toolbar || [[{ 'list': 'ordered' }, { 'list': 'bullet' }], ['bold'], ["link", "image"]],
             handlers: {
@@ -299,6 +280,14 @@ export default {
         data: []
       }
     }
+  },
+  created() {
+    this.http = http_token.call(this);
+
+    if (this.content)
+      this.editorContent = this.content;
+
+    // Quill.register('modules/atPeople',atPeople);
   },
   methods: {
     handlePaste(node, Delta) {

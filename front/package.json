@@ -1,6 +1,6 @@
 {
   "name": "BFBAN",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "private": true,
   "scripts": {
     "serve:development": "vue-cli-service serve --mode development",
@@ -26,6 +26,7 @@
     "quill-emoji": "^0.2.0",
     "quill-image-extend-module": "^1.1.2",
     "quill-mention-people": "^1.0.5",
+    "quill-placeholder-autocomplete-module": "^1.2.0",
     "quill-placeholder-module": "^0.3.1",
     "register-service-worker": "^1.7.1",
     "sass": "^1.54.8",

@@ -4,7 +4,7 @@ export default class Regular {
     REGULARTYPE = {
         'link': {
             tipError: '没有',
-            v: /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-.,@?^=%&amp;:/~+#]*[\w\-@?^=%&amp;/~+#])?/
+            v: /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-.,@?^=%&amp;:/~+#]*[\w\-@?^=%&amp;/~+#])?/g
         },
         'image': {},
         'video': {},
@@ -35,6 +35,12 @@ export default class Regular {
             code: -1,
             msg: regularConf.tipError || res.tipError
         }
+    }
+
+    getCheckText (regularType = '', value) {
+        if (!regularType || !value) return;
+        let res = value.match(this.REGULARTYPE[regularType].v);
+        return res;
     }
 
     /**

@@ -6,6 +6,7 @@ import htmlimage from "./HtmlImage";
 import htmllink from "./HtmlLink";
 import htmlvideo from "./HtmlVideo";
 import htmlplayercard from "./HtmlPlayerCard";
+import {regular} from "@/assets/js";
 
 export default {
   name: "Html",
@@ -64,7 +65,8 @@ export default {
           imgs = vDom.getElementsByTagName("img"),
           links = vDom.getElementsByTagName("a"),
           p = vDom.getElementsByTagName("p"),
-          br = vDom.getElementsByTagName("br");
+          br = vDom.getElementsByTagName("br"),
+          pres = vDom.getElementsByTagName("pre");
 
       // ==================== 处理自定义HTML
 
@@ -88,6 +90,17 @@ export default {
         }
       }
 
+      if (pres && pres.length > 0) {
+        let _pres = Array.from(pres); // deep copy
+        for (let i = 0; i < _pres.length; i++) {
+          let elePre = document.createElement('p');
+          elePre.innerHTML = _pres[i].innerHTML;
+
+          _pres[i].after(elePre);
+          _pres[i].remove();
+        }
+      }
+
       if (links && links.length > 0) {
         let _links = Array.from(links); // deep copy
         for (let i = 0; i < _links.length; i++) {
@@ -95,7 +108,9 @@ export default {
           let _data = this.data;
           let _linkExtend = Vue.component("HtmlLinkCom", {
             template: _links[i].innerText,
-            data () { return _data }
+            data() {
+              return _data
+            }
           });
 
           eleLink.setAttribute("text", new _linkExtend().$options.template);
@@ -108,7 +123,7 @@ export default {
       if (p && p.length > 0) {
         let _p = Array.from(p); // deep copy
         for (let i = 0; i < _p.length; i++) {
-          // souyu
+          // 缩语
           if (_p[i] && _p[i].innerText && _p[i].innerText.match(/{(\S*)\}/)) {
             let str = _p[i].innerText.match(/{(\S*)\}/)[1];
             let p_data = str.split(':');
@@ -119,7 +134,7 @@ export default {
                   break;
                 case "router":
                   _p[i].innerHTML = _p[i].innerHTML
-                      .replaceAll(`{${str}}`, `<u><router-link :to="{path: '${p_data[1]}'}">${ p_data[1] }</router-link></u>`)
+                      .replaceAll(`{${str}}`, `<u><router-link :to="{path: '${p_data[1]}'}">${p_data[1]}</router-link></u>`)
                   // _p[i].innerHTML = ;
                   break;
                 case "floor":
@@ -130,6 +145,18 @@ export default {
               }
           }
 
+          // 可疑链接
+          // 将可疑的文本链接转换为链接widget
+          if (_p[i] && _p[i].innerText) {
+            if (regular.check("link", _p[i].innerHTML).code == 0) {
+              _p[i].innerHTML = _p[i].innerHTML.replaceAll('\n', '\n\b');
+
+              let p_textToLinkArray = regular.getCheckText("link", _p[i].innerText);
+              for (let j = 0; j < p_textToLinkArray.length; j++) {
+                _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${p_textToLinkArray[j]}" href="${p_textToLinkArray[j]}"></htmllink>`)
+              }
+            }
+          }
 
           // 解析HR, 分割线
           let calcStringCount = 0;
@@ -159,12 +186,14 @@ export default {
 
 <style lang="less">
 .timeline-description {
+  word-break: break-all;
+
   p:first-child,
   p:last-child {
     margin: 0;
   }
 
-  p {
+  span, p, h1, h2, h3, h4, h5, h6 {
     line-height: initial;
     margin: 3px 0;
   }
@@ -184,15 +213,6 @@ export default {
     opacity: .5;
     width: calc(100% + 20px) !important;
     margin: 10px -10px 10px -10px !important;
-  }
-
-  a {
-    opacity: .6;
-  }
-
-  a:hover {
-    opacity: 1;
-    border-radius: 3px;
   }
 }
 </style>

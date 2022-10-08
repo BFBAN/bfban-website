@@ -15,9 +15,7 @@
       ],
       "to": {
         "name": "home",
-        "query": {
-          "D83EDD96": "\uD83E\uDD96"
-        }
+        "query": {}
       }
     },
     {
@@ -30,7 +28,7 @@
         "name": "player_list",
         "query": {
           "status": "-1",
-          "D83EDD96": "\uD83E\uDD96"
+          "game": "all"
         }
       }
     },
