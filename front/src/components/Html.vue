@@ -152,23 +152,27 @@ export default {
               _p[i].innerHTML = _p[i].innerHTML.replaceAll('\n', '\n\b');
 
               let p_textToLinkArray = regular.getCheckText("link", _p[i].innerText);
-              for (let j = 0; j < p_textToLinkArray.length; j++) {
-                _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${p_textToLinkArray[j]}" href="${p_textToLinkArray[j]}"></htmllink>`)
-              }
+
+              if (p_textToLinkArray)
+                for (let j = 0; j < p_textToLinkArray.length; j++) {
+                  _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${p_textToLinkArray[j]}" href="${p_textToLinkArray[j]}"></htmllink>`)
+                }
             }
           }
 
           // 解析HR, 分割线
-          let calcStringCount = 0;
+          if (_p[i] && _p[i].innerText) {
+            let calcStringCount = 0;
 
-          for (let j = 0; j < _p[i].innerText.length; j++) {
-            if (_p[i].innerText[j] == "-") {
-              calcStringCount += 1;
+            for (let j = 0; j < _p[i].innerText.length; j++) {
+              if (_p[i].innerText[j] == "-") {
+                calcStringCount += 1;
+              }
             }
-          }
 
-          if (calcStringCount == _p[i].innerText.length && calcStringCount >= 4)
-            _p[i].innerHTML = `<Divider class="hr" dashed />`;
+            if (calcStringCount == _p[i].innerText.length && calcStringCount >= 4)
+              _p[i].innerHTML = `<Divider class="hr" dashed />`;
+          }
         }
       }
 
