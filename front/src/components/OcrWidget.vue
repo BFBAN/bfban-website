@@ -144,8 +144,8 @@ export default {
       await this.worker.load();
       // Ocr Mode https://tessdata.projectnaptha.com
       // https://github.com/naptha/tessdata/tree/gh-pages/3.02
-      await this.worker.loadLanguage('eng');
-      await this.worker.initialize('eng');
+      await this.worker.loadLanguage('eng+chi_sim+chi_tra');
+      await this.worker.initialize('eng+chi_sim+chi_tra');
       await this.worker.setParameters({
         tessjs_create_box: '1',
       });
