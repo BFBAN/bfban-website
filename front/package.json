@@ -6,7 +6,7 @@
     "serve:development": "vue-cli-service serve --mode development",
     "serve:production": "vue-cli-service serve --mode production",
     "build:development": "vue-cli-service build --dest dist --report --mode development",
-    "build:production": "vue-cli-service build --dest dist --report --mode production",
+    "build:production": "vue-cli-service build --dest dist --mode production",
     "local-serve": "serve -s front/dist",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/lang/**/*.json\""

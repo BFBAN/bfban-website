@@ -26,7 +26,7 @@
 
     <Dropdown class="mobile-hide">
       <router-link :to="{path: '/profile/message'}">
-        <Badge :count="unReadCount" :class="message.messages.length > 0 ? 'shake' : ''">
+        <Badge :count="unReadCount" :class="unReadCount > 0 ? 'shake' : ''">
           <slot name="content"></slot>
         </Badge>
       </router-link>
