@@ -6,6 +6,7 @@ import htmlimage from "./HtmlImage";
 import htmllink from "./HtmlLink";
 import htmlvideo from "./HtmlVideo";
 import htmlplayercard from "./HtmlPlayerCard";
+import privilegestag from "@/components/PrivilegesTag";
 import {regular} from "@/assets/js";
 
 export default {
@@ -25,7 +26,7 @@ export default {
       }
     };
   },
-  components: {htmlimage, htmllink, htmlvideo, htmlplayercard},
+  components: {htmlimage, htmllink, htmlvideo, htmlplayercard, privilegestag},
   watch: {
     html: {
       handler(val, olVal) {
@@ -58,7 +59,7 @@ export default {
      * @returns {*|string}
      */
     packagingRender(html) {
-      let _html = `<div>${html}</div>`;
+      let _html = `<div class="ql-editor">${html}</div>`;
 
       const vDom = new DOMParser().parseFromString(_html, "text/html"),
           video = vDom.getElementsByTagName("video"),
@@ -127,20 +128,38 @@ export default {
           if (_p[i] && _p[i].innerText && _p[i].innerText.match(/{(\S*)\}/)) {
             let str = _p[i].innerText.match(/{(\S*)\}/)[1];
             let p_data = str.split(':');
+
             if (p_data[0])
               switch (p_data[0]) {
+                case "user":
+                  _p[i].innerHTML = `<span><a href="/account/${p_data[1]}">@${p_data[1]}</a></span>`;
+                  break;
                 case "player":
                   _p[i].innerHTML = `<htmlplayercard :id="${p_data[1].toString()}"></htmlplayercard>`;
                   break;
                 case "router":
                   _p[i].innerHTML = _p[i].innerHTML
-                      .replaceAll(`{${str}}`, `<u><router-link :to="{path: '${p_data[1]}'}">${p_data[1]}</router-link></u>`)
-                  // _p[i].innerHTML = ;
+                      .replaceAll(`{${str}}`, `<u><router-link :to="{path: '${p_data[1]}'}">${p_data[1]}</router-link></u>`);
                   break;
                 case "floor":
-                  var p_key = p_data[0];
                   var p_value = p_data[1];
                   _p[i].innerHTML = `<Card dis-hover><a href='#floor-${p_value}'>${p_value}</a></Card>`;
+                  break;
+                case "privilege":
+                  var p_value_privileges = p_data[1].split(',').toString();
+                  if (p_data[1])
+                    _p[i].innerHTML = _p[i].innerHTML
+                      .replaceAll(`{${str}}`, `<privilegestag data="${p_value_privileges}"></privilegestag>`);
+                  break;
+                case "icon":
+                  if (p_data[1]) {
+                    _p[i].innerHTML = _p[i].innerHTML
+                        .replaceAll(`{${str}}`, `<Icon type='${p_data[1]}'></Icon>`);
+                  }
+                  break;
+                case "egg":
+                  _p[i].innerHTML = _p[i].innerHTML
+                      .replaceAll(`{${str}}`, `<Icon type='md-egg'></Icon>`);
                   break;
               }
           }

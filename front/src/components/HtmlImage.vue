@@ -13,7 +13,6 @@
     <template v-else-if="imageStatus == 1">
       <div class="img-box">
         <img :src="src" class="img-tag"/>
-        <img :src="src" style="visibility: hidden"/>
         <div class="img-hover ivu-card" @click="show">
           <Icon type="ios-search" size="50" />
         </div>
@@ -88,16 +87,7 @@ export default {
   overflow: hidden;
   position: relative;
   min-height: 80px;
-  max-height: 250px;
   //user-select: none;
-
-  .img-tag {
-    position: absolute;
-    transform: translateY(-50%) translateX(-50%);
-    top: 50%;
-    left: 50%;
-    z-index: 0;
-  }
 
   .img-error {
     text-align: center;

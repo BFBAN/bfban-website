@@ -46,6 +46,14 @@
             "showLang": [
               "zh-CN"
             ]
+          },
+          {
+            "text": "BFBAN WebSite Public Api Docs",
+            "textLang": {
+              "en-US": "BFBAN WebSite Public Api Docs",
+              "zh-CN": "联BAN网站公开API文档"
+            },
+            "src": "https://bfban.gametools.network/docs"
           }
         ]
       },

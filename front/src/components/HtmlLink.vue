@@ -100,6 +100,7 @@ export default {
 }
 
 .link-iframe {
+  border-radius: 3px;
   overflow: hidden;
   margin-bottom: -10px;
   position: relative;

@@ -84,7 +84,7 @@
                           size="large"
                           :placeholder="$t('report.info.onlyOneId')">
                         <template v-if="tabs.list && tabs.list[index].players.length > 0">
-                          <div v-for="(option,optionIndex) in tabs.list[index].players" :key="optionIndex" >
+                          <div v-for="(option,optionIndex) in tabs.list[index].players" :key="optionIndex">
                             <Option :value="option.originName" v-if="option && option.originName">
                               <Row>
                                 <Col flex="auto">
@@ -97,6 +97,11 @@
                         </template>
                       </AutoComplete>
                     </Col>
+                    <OcrWidget :data="{index}" @ok="onOcrOutput">
+                      <Button size="large">
+                        <Icon type="md-qr-scanner" /> ORC
+                      </Button>
+                    </OcrWidget>
                   </Row>
 
                   <Card class="report-hackrid" dis-hover>
@@ -139,7 +144,9 @@
                     <Col :xs="{span: 24}" :lg="{span:12}">
                       <Alert type="warning">
                         {{ $t("report.info.uploadManual1") }}
-                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{$t("report.info.uploadManual2") }}
+                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
+                          $t("report.info.uploadManual2")
+                        }}
                       </Alert>
 
                       <!-- 视频链接 S -->
@@ -183,26 +190,25 @@
                   </Row>
                 </FormItem>
 
-                <FormItem prop="description" :label="$t('report.labels.description')">
-                  <Card :padding="0" dis-hover>
-                    <Textarea :placeholder="$t('report.info.description')"
-                              :index="index"
-                              :height="'520px'"
-                              v-model="tabs.list[index].formItem.description">
-                              @change="handleMiscChange"
-                    </Textarea>
-                  </Card>
-                  <br>
-                  <Card :padding="10" dis-hover class="timeline-description" v-if="tabs.list[index].formItem.description">
-                    <keep-alive>
-                      <Html :html="tabs.list[index].formItem.description" :data="{
-                      'videoLink': tabs.list[index].formItem.videoLink,
-                      'selfUserName': 'selfUserName',
-                      'playerUserName': 'playerUserName'
-                    }"></Html>
-                    </keep-alive>
-                  </Card>
-                </FormItem>
+                <FormItem prop="description" :label="$t('report.labels.description')"></FormItem>
+                <Card :padding="0" dis-hover>
+                        <Textarea :placeholder="$t('report.info.description')"
+                                  :index="index"
+                                  :height="'520px'"
+                                  v-model="tabs.list[index].formItem.description">
+                          @change="handleMiscChange"
+                        </Textarea>
+                </Card>
+
+                <br>
+
+                <Card :padding="0" dis-hover class="timeline-description" v-if="tabs.list[index].formItem.description">
+                  <Html :html="tabs.list[index].formItem.description" :data="{
+                              'videoLink': tabs.list[index].formItem.videoLink,
+                              'selfUserName': 'selfUserName',
+                              'playerUserName': 'playerUserName'
+                            }"></Html>
+                </Card>
               </Card>
               <!-- 证据 E -->
               <br>
@@ -244,10 +250,10 @@
           <!-- 举报结果 S -->
           <div shadow class="ivu-alert-error" v-else-if="tabs.list[index].statusOk == -1">
             <div class="report-done">
-              <Icon type="md-bug" size="200" color="error" />
+              <Icon type="md-bug" size="200" color="error"/>
               <h1 class="tip">{{ $t('report.messages.failureTitle') }}</h1>
-              <p class="tip">{{ $t('report.messages.failureSubtitle', {msg: tabs.list[index].statusMsg || ':(' }) }}</p>
-              <Divider dashed />
+              <p class="tip">{{ $t('report.messages.failureSubtitle', {msg: tabs.list[index].statusMsg || ':('}) }}</p>
+              <Divider dashed/>
               <Row :gutter="10" type="flex" justify="center" align="middle">
                 <Col>
                   <router-link :to="{name: 'home'}">
@@ -259,10 +265,10 @@
           </div>
           <div shadow class="ivu-alert-success" v-else-if="tabs.list[index].statusOk == 1">
             <div class="report-done">
-              <Icon type="md-cloud-done" size="200" color="success" />
+              <Icon type="md-cloud-done" size="200" color="success"/>
               <h1 class="tip">{{ $t('report.messages.successTitle') }}</h1>
               <p class="tip">{{ $t('report.messages.successSubtitle') }}</p>
-              <Divider dashed />
+              <Divider dashed/>
               <Row :gutter="10" type="flex" justify="center" align="middle">
                 <Col>
                   <router-link :to="{path: '/report', params: { t: new Date().getTime() }}">
@@ -296,6 +302,7 @@ import {checkReportFormData} from "@/mixins/common";
 
 import gameName from '/public/conf/gameName.json'
 import Textarea from "@/components/Textarea.vue";
+import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";
 
 export default new BFBAN({
@@ -312,7 +319,7 @@ export default new BFBAN({
       cheatMethodsGlossary: [],
     };
   },
-  components: {Textarea, Html},
+  components: {Textarea, Html, OcrWidget},
   created() {
     const message = store.state.configuration['voice_message']
 
@@ -321,7 +328,7 @@ export default new BFBAN({
         'success',
         this.voiceReportManagement.voiceData({
           src: [
-              require('@/assets/voice/dinDon.mp3')
+            require('@/assets/voice/dinDon.mp3')
           ],
           volume: (message && message.value) || 1
         })
@@ -395,7 +402,7 @@ export default new BFBAN({
             {required: true, trigger: 'blur'}
           ],
           originId: [
-            {required: true, trigger: 'blur',error: '233'}
+            {required: true, trigger: 'blur', error: '233'}
           ],
           checkbox: [
             {required: true, type: 'array', min: 1, trigger: 'change'},
@@ -519,7 +526,7 @@ export default new BFBAN({
           this.$Message.success(this.$i18n.t("report.info.success")).then(() => {
             this.$router.push({
               name: "cheater",
-              params: { ouid: d.data.originPersonaId },
+              params: {ouid: d.data.originPersonaId},
             });
           });
         } else {
@@ -555,12 +562,28 @@ export default new BFBAN({
         this.spinShow = false;
       });
     },
+    /**
+     * ocr Widget 输出
+     */
+    onOcrOutput (data) {
+      if (!data.value) return;
+        this.tabs.list[data.index].formItem.originId = data.value;
+    }
   },
 });
 </script>
 
 <style lang="less">
 @import "./src/assets/css/radio.less";
+
+.report-description-box {
+  display: block;
+  height: 520px !important;
+
+  .ivu-split-pane {
+    padding: 0 5px;
+  }
+}
 
 .report-hackrid {
   margin-top: 20px;
