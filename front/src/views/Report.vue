@@ -99,7 +99,7 @@
                     </Col>
                     <OcrWidget :data="{index}" @ok="onOcrOutput">
                       <Button size="large">
-                        <Icon type="md-qr-scanner" /> ORC
+                        <Icon type="md-qr-scanner" /> OCR
                       </Button>
                     </OcrWidget>
                   </Row>
