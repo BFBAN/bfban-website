@@ -1,51 +1,61 @@
 <template>
-  <div>
-    <Upload type="select" action="" :before-upload="onSelect">
+  <div class="ocr-widget">
+    <Upload type="select" action="" accept="image/*" :before-upload="onSelect">
       <slot></slot>
     </Upload>
     <Modal title="OCR"
            footer-hide
            v-model="ocrModal.show"
-           :styles="{top: '20px'}">
+           :styles="{top: '50%', transform: 'translateY(-50%)'}">
       <Steps :current="ocrModal.Steps" size="small">
         <Step></Step>
         <Step></Step>
       </Steps>
-      <template v-if="ocrModal.Steps == 0">
-        <vue-Cropper
-            class="orc-cropper-mode"
-            ref="cropper"
-            :img="ocrModal.image"
-            :outputSize="vueCropper.size"
-            :outputType="vueCropper.outputType"
-            :autoCrop="vueCropper.autoCrop"
-        ></vue-Cropper>
+      <template>
+        <div style="position: relative">
+          <vue-Cropper
+              class="orc-cropper-mode"
+              ref="cropper"
+              :canScale="ocrModal.Steps == 0"
+              :canMove="ocrModal.Steps == 0"
+              :canMoveBox="ocrModal.Steps == 0"
+              :fixedBox="ocrModal.Steps == 1"
+              :centerBox="true"
+              :mode="'cover'"
+              :info="false"
+              :img="ocrModal.image"
+              :outputSize="vueCropper.size"
+              :outputType="vueCropper.outputType"
+              :autoCrop="vueCropper.autoCrop"
+          ></vue-Cropper>
 
-        <Spin fix v-if="ocrModal.readOrcLoad">
-          <p>{{ (ocrModal.logger.progress * 100).toFixed(0) }}%</p>
-        </Spin>
+          <Spin fix v-if="ocrModal.readOrcLoad" class="ocr-readLoad">
+            <p v-if="ocrModal.logger.status">{{ ocrModal.logger.status }}</p>
+            <Progress :percent="ocrModal.logger.progress * 100" :stroke-width="10" style="width: 300px"/>
+          </Spin>
+        </div>
 
-        <Row>
+        <Row v-show="ocrModal.Steps == 0">
           <Col flex="1"></Col>
           <Col>
-            <Button @click="fs">{{ $t('basic.button.next') }}</Button>
+            <Button @click="fs" :loading="ocrModal.readOrcLoad">{{ $t('basic.button.next') }}</Button>
           </Col>
         </Row>
       </template>
 
-      <template v-else-if="ocrModal.Steps == 1">
-        <div class="ocr-edit-string" v-if="ocrModal.value.length > 0">
+      <template v-if="ocrModal.Steps == 1">
+        <Card :padding="0" dis-hover class="ocr-edit-string" v-if="ocrModal.value.length > 0">
           <span v-for="(i, index) in ocrModal.value" :key="index">{{ i }}</span>
-        </div>
-        <div class="ocr-edit-string" v-else>
+        </Card>
+        <Card :padding="0" dis-hover class="ocr-edit-string" v-else>
           <span>Not Name</span>
-        </div>
+        </Card>
 
         <Input v-model="ocrModal.value"></Input>
 
         <Row style="margin-top: 15px">
           <Col flex="1">
-            <Button @click="ocrModal.Steps -= 1">{{ $t('basic.button.prev') }}</Button>
+            <Button @click="ocrModal.Steps -= 1" :disabled="ocrModal.readOrcLoad">{{ $t('basic.button.prev') }}</Button>
           </Col>
           <Col>
             <Button @click="onSubmit" :disabled="ocrModal.value.length <= 0">{{ $t('basic.button.commit') }}</Button>
@@ -57,7 +67,7 @@
 </template>
 
 <script>
-import {createWorker} from 'tesseract.js';
+import {createWorker,PSM} from 'tesseract.js';
 import {VueCropper} from 'vue-cropper'
 
 export default {
@@ -82,7 +92,7 @@ export default {
         readOrcLoad: false,
         file: null,
         value: "",
-        logger: {progress: 0},
+        logger: {progress: .4, status: "read load"},
         image: ""
       },
       worker: null,
@@ -97,17 +107,18 @@ export default {
         this.onClear();
       },
       logger: m => {
-        if (m.progress <= 0) this.readOrcLoad = true;
-        if (m.progress >= .80) this.readOrcLoad = false;
         that.ocrModal.logger = m;
       }
     });
   },
   methods: {
-    onClear () {
+    onClear(config = {show: true, image: true}) {
       this.ocrModal.Steps = 0;
       this.ocrModal.value = "";
-      this.ocrModal.show = false;
+      if (config.image)
+        this.ocrModal.image = "";
+      if (config.show)
+        this.ocrModal.show = false;
     },
     onSelect(file) {
       const that = this;
@@ -127,42 +138,68 @@ export default {
       this.onClear();
     },
     async fs() {
+      const that = this;
+      this.ocrModal.readOrcLoad = true;
+
       await this.worker.load();
+      // Ocr Mode https://tessdata.projectnaptha.com
+      // https://github.com/naptha/tessdata/tree/gh-pages/3.02
       await this.worker.loadLanguage('eng');
       await this.worker.initialize('eng');
-      this.$refs.cropper.getCropData(async base64 => {
-        const {data: {text}} = await this.worker.recognize(base64);
-        console.log(text);
+      await this.worker.setParameters({
+        tessjs_create_box: '1',
+      });
 
-        if (text.length <= 0) {
-          this.$Message.error("Failed to recognize anything");
+      this.$refs.cropper.getCropData(async base64 => {
+        const data = await that.worker.recognize(base64);
+
+        if (data.data.text.toString().length <= 0) {
+          that.$Message.error("Failed to recognize anything");
+          that.ocrModal.readOrcLoad = false;
+          that.ocrModal.Steps = 0;
           return;
         }
 
-        this.ocrModal.value = text;
-        this.ocrModal.Steps += 1;
+        setTimeout(function () {
+          that.ocrModal.value = data.data.text ?? '';
+          that.ocrModal.Steps += 1;
+
+          that.ocrModal.readOrcLoad = false;
+        }, 1000);
       });
-    }
+    },
   }
 }
 </script>
 
 <style lang="less" scoped>
+.ocr-widget {
+  user-select: none;
+}
+
+.ocr-readLoad {
+  margin: 0 -16px !important;
+  width: calc(100% + 16px * 2) !important;
+}
+
 .orc-cropper-mode {
   margin: 15px -16px 15px -16px;
-  width: calc(100% + 16px * 2);
-  height: 150px;
+  width: calc(100% + 16px * 2) !important;
+  height: 180px !important;
+
+  .crop-info {
+    display: none !important;
+  }
 }
 
 .ocr-edit-string {
   text-align: center;
   margin-top: 20px;
   margin-bottom: 10px;
-  background: #f2f2f2;
   padding: 10px 10px 8px 10px;
   border-radius: 3px;
 
-  > span {
+  span {
     font-size: 2rem;
     padding-bottom: 10px;
     padding-top: 10px;

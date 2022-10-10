@@ -75,7 +75,7 @@ export default new BFBAN({
           data: {
             qq, token, password, passwordRepeat,
           },
-        }).then((res) => {
+        }).then(res => {
           this.spinShow = false;
 
           const d = res.data;
@@ -96,5 +96,5 @@ export default new BFBAN({
 });
 </script>
 
-<style>
+<style lang="less">
 </style>

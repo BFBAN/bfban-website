@@ -342,7 +342,7 @@ export default new BFBAN({
   },
   methods: {
     loadData() {
-      util.initUtil().then((res) => {
+      util.initUtil().then(res => {
         this.cheatMethodsGlossary = res.cheatMethodsGlossary;
         this.games = res.gameName;
       });
@@ -500,7 +500,7 @@ export default new BFBAN({
       const cheatMethods = formData.formItem.checkbox; // .join(",");
       const {gameName, captcha, originId} = formData.formItem;
       const description = formData.formItem.description.trim();
-      const videoLink = formData.formItem.videoLink.toString();
+      const videoLink = formData.formItem.videoLink.filter(i => i != '' || i != undefined || i != null).toString().trim();
 
       this.spinShow = true;
       this.http.post(api["player_report"], {
@@ -515,7 +515,7 @@ export default new BFBAN({
           encryptCaptcha: this.tabs.list[index].captchaUrl.hash,
           captcha,
         },
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
         if (d.success === 1) {
@@ -573,7 +573,7 @@ export default new BFBAN({
 });
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import "./src/assets/css/radio.less";
 
 .report-description-box {

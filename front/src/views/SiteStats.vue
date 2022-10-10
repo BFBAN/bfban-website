@@ -330,7 +330,7 @@ export default new BFBAN({
             })
           }
         }
-      }).catch((res) => {
+      }).catch(res => {
         this.$Message.error(res.message);
       });
 
@@ -350,7 +350,7 @@ export default new BFBAN({
           admins: true,
           from: 1514764800000
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
         if (d.success == 1) {
           this.statistics = d.data;
@@ -365,7 +365,7 @@ export default new BFBAN({
      * 管理
      */
     getAdmins() {
-      http.get(api["admins"], {}).then((res) => {
+      http.get(api["admins"], {}).then(res => {
         const d = res.data;
 
         if (d.success == 1) {

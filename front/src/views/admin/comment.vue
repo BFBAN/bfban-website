@@ -193,7 +193,7 @@ export default new BFBAN({
      * @returns {Promise<void>}
      */
     async loadData() {
-      await util.initUtil().then((res) => {
+      await util.initUtil().then(res => {
         this.games = res.gameName;
       });
 

@@ -279,7 +279,7 @@ export default new BFBAN({
         params: {
           id: uId
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
         if (this.$route.query.repeat) {
@@ -362,7 +362,7 @@ export default new BFBAN({
           skip: (pageNum || 1) - 1,
           limit: this.limit,
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
         let reportData = [];
         if (d.success === 1) {

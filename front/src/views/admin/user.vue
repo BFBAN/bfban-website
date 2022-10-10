@@ -634,7 +634,7 @@ export default new BFBAN({
 })
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .admin-user {
   margin-bottom: 10px;
 }

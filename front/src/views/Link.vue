@@ -105,5 +105,5 @@ export default new BFBAN({
 });
 </script>
 
-<style lang="scss">
+<style lang="less" scoped>
 </style>

@@ -97,7 +97,7 @@ export default {
         params: {
           t: Math.random()
         }
-      }).then((res) => {
+      }).then(res => {
         if (res.data.success === 1) {
           // 储存验证码hash
           that.capthcaHash = Object.assign({
@@ -117,7 +117,7 @@ export default {
         }
 
         this.$Message.error(res.data.code);
-      }).finally((res) => {
+      }).finally(res => {
         setTimeout(function () {
           that.postload = false;
         }, 800)

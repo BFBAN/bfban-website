@@ -209,7 +209,7 @@ export default new BFBAN({
 
       this.http.post(api["player_update"], {
         data: Object.assign(this.getParamsIds())
-      }).then((res) => {
+      }).then(res => {
         this.updateUserInfospinShow = false;
 
         const d = res.data;

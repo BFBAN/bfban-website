@@ -328,7 +328,7 @@ export default new BFBAN({
      * @returns {Promise<void>}
      */
     async loadData() {
-      await util.initUtil().then((res) => {
+      await util.initUtil().then(res => {
         this.cheaterStatus = res.cheaterStatus;
 
         this.games = res.gameName;
@@ -393,7 +393,7 @@ export default new BFBAN({
           });
           this.totalSum = totalSum;
         }
-      }).catch((res) => {
+      }).catch(res => {
         this.$Message.error(res.message);
       })
     },

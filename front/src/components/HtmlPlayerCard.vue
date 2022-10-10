@@ -21,7 +21,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .player-card {
   user-select: none;
   margin: 10px 0;

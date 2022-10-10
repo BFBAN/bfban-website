@@ -71,7 +71,7 @@ export default {
      */
     onUserinfo () {
       if (this.isLogin) {
-        this.http.get(api["user_me"], {}).then((res) => {
+        this.http.get(api["user_me"], {}).then(res => {
           const d = res.data;
 
           if (d.success === 1) {

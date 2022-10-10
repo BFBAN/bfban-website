@@ -121,7 +121,7 @@ export default {
         }, {
           personaId: this.id || this.$route.params.ouid
         })
-      }).then((res) => {
+      }).then(res => {
         this.spinShow = false;
         const d = res.data;
 
@@ -135,7 +135,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   #getSharePicture {
     position: relative;
     overflow: hidden;

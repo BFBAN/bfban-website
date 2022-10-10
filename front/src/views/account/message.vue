@@ -475,7 +475,7 @@ export default new BFBAN({
 });
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .message-user {
   width: 230px;
 }

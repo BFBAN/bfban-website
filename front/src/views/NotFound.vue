@@ -14,24 +14,25 @@
 import BFBAN from "../assets/js/bfban";
 
 export default new BFBAN({
-  data() {}
+  data() {
+  }
 });
 </script>
 
-<style>
-  .notFound {
-    min-height: 500px;
-    height: 100%;
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-  }
+<style lang="less" scoped>
+.notFound {
+  min-height: 500px;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
 
-  .notFound h1 {
+  h1 {
     font-size: 15rem;
     color: #8f8f8f;
     margin: 20px 0;
   }
+}
 </style>

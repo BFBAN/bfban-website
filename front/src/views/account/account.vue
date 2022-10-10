@@ -328,7 +328,7 @@ export default {
         headers: {
           'x-access-token': this.$store.state.user.token
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
         if (d.success == 1) {
           this.$router.push('/signin');
@@ -389,7 +389,7 @@ export default {
         data: {
           data: { attr }
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
         if (d.success === 1) {
@@ -410,7 +410,7 @@ export default {
      */
     async getUserinfo() {
       return new Promise(resolve => {
-        this.http.get(api["user_me"], {}).then((res) => {
+        this.http.get(api["user_me"], {}).then(res => {
           const d = res.data;
 
           if (d.success === 1) {
@@ -459,6 +459,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
 </style>

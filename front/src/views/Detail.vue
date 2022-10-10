@@ -1096,7 +1096,7 @@ export default new BFBAN({
       // set Token Http mode
       this.http = http_token.call(this);
 
-      await util.initUtil().then((res) => {
+      await util.initUtil().then(res => {
         this.cheaterStatus = res.cheaterStatus;
 
         // 裁决结果
@@ -1154,7 +1154,7 @@ export default new BFBAN({
         data: {
           data: {subscribes: subscribesArray}
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
         if (d.success == 1) {
@@ -1358,7 +1358,7 @@ export default new BFBAN({
           encryptCaptcha: this.reply.captchaUrl.hash,
           captcha: this.reply.captcha,
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
         if (d.success == 1) {
@@ -1494,7 +1494,7 @@ export default new BFBAN({
       }
 
       this.replySpinShow = true;
-      this.http.post(api["player_reply"], {data}).then((res) => {
+      this.http.post(api["player_reply"], {data}).then(res => {
         const d = res.data;
 
         if (d.success == 1) {

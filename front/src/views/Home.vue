@@ -193,7 +193,7 @@ export default new BFBAN({
       })
     },  
     async loadData() {
-      await util.initUtil().then((res) => {
+      await util.initUtil().then(res => {
         this.cheaterStatus = res.cheaterStatus;
         this.cheatMethodsGlossary = res.cheatMethodsGlossary;
 
@@ -214,7 +214,7 @@ export default new BFBAN({
     getActivity() {
       this.activityLoad = true;
 
-      http.get(api["activity"], {}).then((res) => {
+      http.get(api["activity"], {}).then(res => {
         const d = res.data;
         if (d.success === 1) {
           let activities = d.data;

@@ -73,7 +73,7 @@ export default new BFBAN({
           code,
           lang: mail.exchangeLangField(this.$root.$i18n.locale)
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
         if (d.error !== 1) {
@@ -103,4 +103,4 @@ export default new BFBAN({
 });
 </script>
 
-<style></style>
+<style lang="less"></style>

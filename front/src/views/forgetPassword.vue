@@ -207,7 +207,7 @@ export default new BFBAN({
             newpassword
           }
         }
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
         if (d.success === 1) {
@@ -271,6 +271,6 @@ export default new BFBAN({
 });
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
 </style>

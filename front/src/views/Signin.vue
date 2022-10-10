@@ -157,7 +157,7 @@ export default new BFBAN({
               encryptCaptcha: this.$refs.captcha.hash,
               captcha,
             },
-          }).then((res) => {
+          }).then(res => {
             const d = res.data;
 
             if (d.error == 1) {
@@ -180,7 +180,7 @@ export default new BFBAN({
                 this.$Message.success(this.$t('signin.success'));
               })
             }
-          }).finally((res) => {
+          }).finally(res => {
             that.spinShow = false;
             if (that.$refs.captcha)
               that.$refs.captcha.refreshCaptcha();

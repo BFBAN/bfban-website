@@ -264,7 +264,7 @@ export default new BFBAN({
           code,
           lang: this.$root.$i18n.locale
         },
-      }).then((res) => {
+      }).then(res => {
         const d = res.data;
 
         if (d.success === 1) {
@@ -308,7 +308,7 @@ export default new BFBAN({
             encryptCaptcha: this.$refs.captcha.hash,
             captcha,
           }
-        }).then((res) => {
+        }).then(res => {
           const d = res.data;
 
           if (d.success == 1) {
@@ -378,4 +378,4 @@ export default new BFBAN({
 });
 </script>
 
-<style></style>
+<style lang="less"></style>
