@@ -11,8 +11,9 @@
         @change="onEditorChange"
         @blur="onEditorBlur"
         @ready="onEditorReady"
-        useCustomImageHandler />
-    <p style="text-align: right; padding-right: 10px" v-if="maxlength">{{editorContent.length || 0}}/{{maxlength}}</p>
+        useCustomImageHandler/>
+    <p style="text-align: right; padding-right: 10px" v-if="maxlength">
+      {{ editorContent.length || 0 }}/{{ maxlength }}</p>
 
     <Modal v-model="updataPlane" width="60%">
       <br>
@@ -36,7 +37,7 @@
         <Select v-model="currentType" style="margin: 40px 0 0 0">
           <Option value="0">{{ $t('textarea.type.url') }}</Option>
           <Option value="1">{{ $t('textarea.type.upload') }}</Option>
-          <Option value="2" disabled>{{ $t('textarea.type.media') }}</Option>
+          <Option value="2">{{ $t('textarea.type.media') }}</Option>
         </Select>
 
         <template v-if="currentType == '0'">
@@ -65,7 +66,7 @@
 
           <Alert type="warning">
             {{ $t("report.info.uploadPic2") }}
-            <a target="_blank"  href="https://sm.ms">https://sm.ms</a>，{{ $t("report.info.uploadPic3") }}
+            <a target="_blank" href="https://sm.ms">https://sm.ms</a>，{{ $t("report.info.uploadPic3") }}
           </Alert>
 
           <span class="hint">{{ $t("report.info.uploadPic1") }}</span>
@@ -73,26 +74,42 @@
         </template>
 
         <template v-if="currentType == '2'">
-          <Card dis-hover class="media-card" style="height: 300px">
+          <div class="media-card">
             <template v-if="media.data.length > 0">
-              <Row v-for="(file, file_index) in media.data" :key="file_index">
-                <Col flex="1">
-                  {{ file.name }}
-                </Col>
-                <Col>
-                  <a href="javascript:void(0)" @click="selectMediaFile(file_index)">{{ $t('basic.button.insert') }}</a>
-                </Col>
-              </Row>
+              <Form label-position="top">
+                <Card dis-hover v-for="(file, file_index) in media.data" :key="file_index" style="margin-bottom: 10px">
+                  <Row :gutter="30">
+                    <Col flex="1">
+                      <Row>
+                        <Col span="12">
+                          {{ file.filename }}
+                        </Col>
+                        <Col span="6">
+                          {{ file.size }}
+                        </Col>
+                        <Col span="6">
+                          <Time :time="file.createTime"></Time>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col>
+                      <Button href="javascript:void(0)" @click="selectMediaFile(file_index)" :loading="file.load">
+                        {{ $t('basic.button.insert') }}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Card>
+              </Form>
             </template>
             <Empty v-else></Empty>
             <Spin size="large" fix v-show="media.load"></Spin>
-          </Card>
+          </div>
         </template>
       </div>
 
       <div v-show="currentindex == 1">
         <template v-if="currentFileType.indexOf('image') >= 0">
-          <div class="see-mode" v-if="ignore" >
+          <div class="see-mode" v-if="ignore">
             <img :src="vueCropper.img">
           </div>
           <vue-Cropper
@@ -115,11 +132,11 @@
       </div>
 
       <div v-if="currentindex == 2">
-        <div class="see-mode" v-if="currentFileType.indexOf('image') >= 0" >
-          <img :src="insertValue" height="100%" />
+        <div class="see-mode" v-if="currentFileType.indexOf('image') >= 0">
+          <img :src="insertValue" height="100%"/>
         </div>
         <div class="see-mode" v-else>
-          <div>{{currentFileType}}</div>
+          <div>{{ currentFileType }}</div>
           <p><a :href="insertValue" target="_blank">{{ insertValue }}</a></p>
         </div>
       </div>
@@ -128,14 +145,15 @@
       <div slot="footer">
         <Row :gutter="20" type="flex" align="middle">
           <Col>
-              <Button @click="updataPlane = false">{{ $t('basic.button.cancel') }}</Button>
+            <Button @click="updataPlane = false">{{ $t('basic.button.cancel') }}</Button>
           </Col>
           <template v-if="currentindex == 0">
             <Col flex="1">
               <Button @click="currentindex = 2; currentFileType = 'image'"
                       type="primary"
                       v-if="currentType == 0"
-                      :disabled="!insertValue">{{ $t('basic.button.next') }}</Button>
+                      :disabled="!insertValue">{{ $t('basic.button.next') }}
+              </Button>
             </Col>
           </template>
           <template v-if="currentindex == 1">
@@ -147,7 +165,8 @@
               <Button @click="onBeforeUpload"
                       type="primary"
                       :loading="updataIcon"
-                      :disabled="updataIcon">{{ $t('basic.button.next') }}</Button>
+                      :disabled="updataIcon">{{ $t('basic.button.next') }}
+              </Button>
             </Col>
           </template>
           <Col flex="1" v-else-if="currentindex == 2 || currentindex == -5">
@@ -155,7 +174,8 @@
             <Button type="primary"
                     @click="onInsert"
                     :loading="insertLoad"
-                    :disabled="!insertValue">{{ $t('basic.button.commit') }}</Button>
+                    :disabled="!insertValue">{{ $t('basic.button.commit') }}
+            </Button>
           </Col>
         </Row>
       </div>
@@ -168,8 +188,8 @@
 import {http, regular, upload, print, api, http_token} from "../assets/js"
 
 import Quill from "quill";
-import { quillEditor } from 'vue-quill-editor'
-import { VueCropper }  from 'vue-cropper'
+import {quillEditor} from 'vue-quill-editor'
+import {VueCropper} from 'vue-cropper'
 import atPeople from 'quill-mention-people';
 
 import Empty from "@/components/Empty";
@@ -181,7 +201,7 @@ export default {
     index: null,
     maxlength: {
       type: Number,
-      default:0
+      default: 0
     },
     height: {
       type: String,
@@ -201,10 +221,10 @@ export default {
     },
     toolbar: null
   },
-  components: {Empty, quillEditor, VueCropper },
+  components: {Empty, quillEditor, VueCropper},
   watch: {
     'currentType': {
-      handler (val, olVal) {
+      handler(val, olVal) {
         if (val == 2)
           this.getMediaList()
       },
@@ -243,7 +263,7 @@ export default {
       ignore: false,
 
       // editorContent
-      editorContent : "",
+      editorContent: "",
       editorOption: {
         placeholder: this.placeholder,
         modules: {
@@ -262,7 +282,7 @@ export default {
           //   }
           // },
           toolbar: {
-            container: this.toolbar || [[{ 'list': 'ordered' }, { 'list': 'bullet' }], ['bold'], ["link", "image"]],
+            container: this.toolbar || [[{'list': 'ordered'}, {'list': 'bullet'}], ['bold'], ["link", "image"]],
             handlers: {
               image: () => {
                 this.updataPlane = true;
@@ -279,7 +299,9 @@ export default {
       media: {
         load: false,
         detail: {},
-        data: []
+        data: [],
+        limit: 40,
+        skip: 1
       }
     }
   },
@@ -300,8 +322,7 @@ export default {
           ops.push({
             insert: op.attributes.link,
           })
-        }
-        else if (op.insert && typeof op.insert === 'string') {
+        } else if (op.insert && typeof op.insert === 'string') {
           ops.push({
             insert: op.insert,
           })
@@ -321,7 +342,7 @@ export default {
     /**
      * 插入
      */
-    async onInsert () {
+    async onInsert() {
       try {
         const quill = this.quill;
         const range = quill.getSelection(true);
@@ -353,7 +374,7 @@ export default {
      * 上传
      * 之前处理
      */
-    async onBeforeUpload () {
+    async onBeforeUpload() {
       const that = this;
       let file;
 
@@ -383,7 +404,7 @@ export default {
      * @param file
      * @returns {Promise<void>}
      */
-    async onAfterUpload (file) {
+    async onAfterUpload(file) {
       const that = this;
       this.updataIcon = true;
 
@@ -404,17 +425,17 @@ export default {
      * 选择文件
      * @file type is new File
      */
-    async handleBeforeSelectFile (file) {
+    async handleBeforeSelectFile(file) {
       const that = this;
       let reader = new FileReader();
-          reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
 
       this.currentFileType = file.type;
 
       // file() -> blob()
       reader.addEventListener('loadend', function () {
         that.vueCropper.img = reader.result;
-        that.currentindex +=1;
+        that.currentindex += 1;
       });
 
       // 不使用upload组件的内置上传
@@ -423,7 +444,7 @@ export default {
     /**
      * 编辑器初始
      */
-    onEditorReady () {
+    onEditorReady() {
 
     },
     /**
@@ -436,18 +457,18 @@ export default {
       const maxlength = this.maxlength;
       if (
           data.html &&
-          maxlength  ? data.html.length < maxlength : true &&
-          !this.disabled
+          maxlength ? data.html.length < maxlength : true &&
+              !this.disabled
       )
         this.editorContent = data.html;
     },
-    onEditorBlur (data) {
+    onEditorBlur(data) {
       const maxlength = this.maxlength;
 
       if (
           data.html &&
-          maxlength  ? data.html.length < maxlength : true &&
-          !this.disabled
+          maxlength ? data.html.length < maxlength : true &&
+              !this.disabled
       ) {
         this.$emit("input", this.editorContent);
       }
@@ -462,10 +483,10 @@ export default {
     async dataURLtoFile(dataurl, filename) {
       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
           bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-      while(n--){
+      while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
       }
-      return new File([u8arr], filename, {type:mime});
+      return new File([u8arr], filename, {type: mime});
     },
     /**
      * util
@@ -473,17 +494,17 @@ export default {
      * 临时作用
      * @returns {*}
      */
-    filename () {
+    filename() {
       return `${new Date().getTime()}${Math.floor(Math.random() * new Date().getTime())}`;
     },
     /**
      * 获取媒体列表
      */
-    getMediaList () {
+    getMediaList() {
       this.http.get(api["service_myFiles"], {
         params: {
-          limit: 0,
-          skip: 0,
+          limit: this.media.limit,
+          skip: this.media.skip - 1,
         }
       }).then(res => {
         const d = res.data;
@@ -495,14 +516,15 @@ export default {
     /**
      * 查询文件详情
      */
-    queryMediaDetail (name) {
+    async queryMediaDetail(name) {
       this.media.load = true;
-      let res = http.get(api["service_file"], {
+      let res = await http.get(api["service_file"], {
         params: {
           filename: name,
           explain: true
         }
       });
+      this.currentFileType = res.data.data.mimeType;
       this.media.load = false;
       return res;
     },
@@ -510,15 +532,20 @@ export default {
      * 从媒体库插入
      * @param index
      */
-    async selectMediaFile (index) {
-      let res = await this.queryMediaDetail(this.media.data[index].name);
+    async selectMediaFile(index) {
+      if (this.media.data[index].load) return;
+
+      this.media.data[index].load = true;
+      let res = await this.queryMediaDetail(this.media.data[index].filename);
 
       if (res.data.success == 1) {
-        this.insertValue = this.media.data[index].name;
-        this.currentindex += 1;
+        this.insertValue = res.data.data.downloadURL;
+        this.currentindex = 2;
+        this.media.data[index].load = false;
         return;
       }
 
+      this.media.data[index].load = false;
       this.currentindex = 0;
       this.$Message.error(res.data.code);
     }
@@ -585,6 +612,8 @@ export default {
 
 .media-card {
   margin-top: 10px;
+  height: 300px;
+  overflow: auto
 }
 
 .upload-mode {
@@ -608,7 +637,7 @@ export default {
 
 .see-mode {
   overflow: hidden;
-  background-color: rgba(0,0,0, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
   margin: 10px -16px -16px -16px;
   height: 300px;
   display: flex;
