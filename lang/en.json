@@ -267,7 +267,10 @@
         "comment": "Comments on the management",
         "log": "Logs",
         "adminLog": "Admin log",
-        "judgementLog": "Judgement log"
+        "judgementLog": "Judgement log",
+        "messageManagement": "Message Management",
+        "messagePush": "Message Push",
+        "messageList": "Message log"
       }
     }
   },

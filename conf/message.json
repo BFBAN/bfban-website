@@ -1,4 +1,5 @@
 {
+  "name": "messgae",
   "sendTypes": [
     {
       "title": "direct",

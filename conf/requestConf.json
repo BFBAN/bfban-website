@@ -1,6 +1,7 @@
 {
-  "requestDevelopmentName": "development4",
+  "requestDevelopmentName": "production",
   "requestProductionName": "production",
+  "requestUploadName": "upload",
   "child": {
     "development": {
       "protocol": "https",
@@ -20,6 +21,11 @@
     "development4": {
       "protocol": "http",
       "host": "127.0.0.1:3000",
+      "pathname": "/api/"
+    },
+    "upload": {
+      "protocol": "https",
+      "host": "bfban.gametools.network",
       "pathname": "/api/"
     },
     "production": {
