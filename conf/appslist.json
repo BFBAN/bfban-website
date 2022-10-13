@@ -143,7 +143,7 @@
     },
     {
       "title": "BFBAN APP",
-      "id": "8",
+      "id": "8/1",
       "titleLang": {
         "zh-CN": "联BAN应用",
         "en-US": "BFBAN app mobile"
@@ -157,6 +157,29 @@
         "app"
       ],
       "website": "https://bfban-app.cabbagelol.net",
+      "get": "",
+      "hot": false
+    },
+    {
+      "title": "BFBAN Desktop",
+      "id": "8/2",
+      "titleLang": {
+        "zh-CN": "联BAN桌面应用",
+        "en-US": "BFBAN for Desktop"
+      },
+      "describe": "",
+      "describeLang": {
+        "zh-CN": "围绕bfban开源开发的bfban桌面版，适合window、mac系统，专门为用户提供举报；内置录制、屏幕截图、OCR识别",
+        "en-US": "bfban desktop version, developed around bfban open source, is suitable for Windows and mac systems, and provides reports for users. Built-in recording, screen capture, OCR recognition"
+      },
+      "tag": [
+        "app",
+        "pc_app",
+        "admin",
+        "window",
+        "mac"
+      ],
+      "website": "https://github.com/BFBAN/bfban-desktop",
       "get": "",
       "hot": false
     },
