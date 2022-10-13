@@ -99,6 +99,8 @@
               v-else
               class="cropper-mode"
               ref="cropper"
+              :centerBox="true"
+              :mode="'cover'"
               :img="vueCropper.img"
               :outputSize="vueCropper.size"
               :outputType="vueCropper.outputType"
@@ -114,7 +116,7 @@
 
       <div v-if="currentindex == 2">
         <div class="see-mode" v-if="currentFileType.indexOf('image') >= 0" >
-          <img :src="insertValue">
+          <img :src="insertValue" height="100%" />
         </div>
         <div class="see-mode" v-else>
           <div>{{currentFileType}}</div>
@@ -142,7 +144,7 @@
             </Col>
             <Col>
               <Button @click="currentindex-=1">{{ $t('basic.button.prev') }}</Button>
-              <Button @click="onUpload"
+              <Button @click="onBeforeUpload"
                       type="primary"
                       :loading="updataIcon"
                       :disabled="updataIcon">{{ $t('basic.button.next') }}</Button>
@@ -320,36 +322,46 @@ export default {
      * 插入
      */
     async onInsert () {
-      const quill = this.quill;
-      const range = quill.getSelection(true);
+      try {
+        const quill = this.quill;
+        const range = quill.getSelection(true);
 
-      this.insertLoad = true;
+        this.insertLoad = true;
 
-      if (await regular.authImage(this.insertValue) == false) {
-        this.$Message.error('Image unavailable :(');
+        if (await regular.authImage(this.insertValue) == false) {
+          this.$Message.error('Image unavailable :(');
+          this.insertLoad = false;
+          return;
+        }
+
+        quill.insertEmbed(range.index, 'image' ?? this.currentFileType, this.insertValue);
+
+        // 关闭mode
+        this.updataPlane = false;
         this.insertLoad = false;
-        return;
+
+        // 调整光标到最后
+        quill.setSelection(range.index + 1);
+      } catch (err) {
+        console.log(err);
+        this.$Message.error(err);
+        this.updataIcon = false;
+        this.insertLoad = false;
       }
-
-      quill.insertEmbed(range.index, this.currentFileType, this.insertValue);
-
-      // 关闭mode
-      this.updataPlane = false;
-      this.insertLoad = false;
-
-      // 调整光标到最后
-      quill.setSelection(range.index + 1);
     },
     /**
      * 上传
+     * 之前处理
      */
-    async onUpload () {
+    async onBeforeUpload () {
       const that = this;
       let file;
 
       if (this.ignore) {
         // 原图
         file = await that.dataURLtoFile(this.vueCropper.img, this.filename());
+
+        await that.onAfterUpload(file);
       } else {
         // 裁剪
         this.$refs.cropper.getCropBlob(async blob => {
@@ -360,24 +372,32 @@ export default {
           file = new File([blob], that.currentFileType, {
             type: blob.type
           });
+
+          await that.onAfterUpload(file);
         });
       }
-
+    },
+    /**
+     * 上传
+     * 之后上传
+     * @param file
+     * @returns {Promise<void>}
+     */
+    async onAfterUpload (file) {
+      const that = this;
       this.updataIcon = true;
-      // 上传
-      this.insertValue = await upload.on(file).then(res => {
-        if (res && res.code && res.code >= 1) {
-          this.currentindex += 1;
-          return;
-        }
 
-        this.currentindex = 0;
-        this.$Message.error(res.message)
+      // 上传
+      await upload.on(file).then(res => {
+        if (res && res.code >= 1) {
+          this.currentindex += 1;
+          this.insertValue = res.url;
+        }
       }).catch(err => {
-        this.currentindex = 0;
-        this.$Message.error(err.message)
+        that.currentindex = 0;
+        that.$Message.error(err.message)
       }).finally(() => {
-        this.updataIcon = false;
+        that.updataIcon = false;
       });
     },
     /**

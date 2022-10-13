@@ -187,7 +187,6 @@ export default new BFBAN({
   methods: {
     // for test upload
     onChange(e) {
-      console.log(e)
       upload.on(e.target.files[0]).then(res => {
         console.log(res)
       })

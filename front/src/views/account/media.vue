@@ -5,9 +5,9 @@
         <Col flex="1">
           {{ $t('profile.media.fileNum', {num: media.data.todayFileNumber || 0}) }}
         </Col>
-        <Col span="8">
-          {{ $t('profile.media.capacity') }}
-          <Progress :percent="media.data.usedStorageQuota || 0" :max="media.data.totalStorageQuota || 0" />
+        <Col span="8" v-if="media.data.usedStorageQuota && media.data.totalStorageQuota">
+          {{ $t('profile.media.capacity') }}<span>{{media.data.usedStorageQuota}}/{{media.data.totalStorageQuota}}</span>
+          <Progress :percent="percentValue" />
         </Col>
       </Row>
 
@@ -19,12 +19,26 @@
     </Card>
 
     <br>
-<!--    <Page :total="100" />-->
+    <Page class="page"
+          show-sizer
+          show-total
+          show-elevator
+          @on-change="handlePageChange"
+          @on-page-size-change="handlePageSizeChange"
+          :page-size="media.limit"
+          :current="media.skip" />
   </div>
 </template>
 
 <script>
+import 'viewerjs/dist/viewer.css'
+
 import {api, http, http_token, upload} from "../../assets/js";
+
+import VueViewer from 'v-viewer'
+import Vue from "vue";
+
+Vue.use(VueViewer);
 
 export default {
   data() {
@@ -37,7 +51,8 @@ export default {
           {
             title: 'Name',
             key: 'filename',
-            minWidth: 260
+            minWidth: 200,
+            maxWidth: 400,
           },
           {
             title: 'size',
@@ -47,19 +62,39 @@ export default {
           {
             title: 'createTime',
             key: 'createTime',
-            fixed: 'right',
             render: (h, params) => {
               return h('Time', {
                 props: {
-                  time: params.row.createTime
+                  time: params.row.createTime,
+                  type: "datetime"
                 }
               });
             }
+          },
+          {
+            key: 'btn',
+            render: (h, params) => {
+              return h('Button', {
+                props: {
+                  loading: params.row.load
+                },
+                on: {
+                  click: () => {
+                    if (params.row.load) return;
+
+                    this.queryMediaDetail(params.row.filename);
+                  }
+                }
+              }, this.$i18n.t('profile.message.look'));
+            }
           }
         ],
+        images: {},
         selectFileId: '',
         data: {},
         list: [],
+        limit: 40,
+        skip: 1
       }
     }
   },
@@ -88,6 +123,32 @@ export default {
         callback(data);
       }, 2000);
     },
+    handlePageChange (val) {
+      this.media.skip = val;
+      this.getMedia();
+    },
+    handlePageSizeChange (val) {
+      this.media.limit = val;
+      this.getMedia();
+    },
+    /**
+     * 全屏查看图片
+     * @param image
+     */
+    openViewImage (name, url) {
+      let img_array = [];
+      this.media.images[name] = url;
+      for (const imagesKey in this.media.images) {
+        img_array.push(this.media.images[imagesKey])
+      }
+      this.$viewerApi({
+        options: {
+          keyboard: false,
+          fullscreen: true
+        },
+        images: img_array,
+      })
+    },
     /**
      * 查询媒体信息
      */
@@ -95,7 +156,7 @@ export default {
       this.http.get(api["service_myStorageQuota"], {}).then(res => {
         const d = res.data;
         if (d.success === 1) {
-          this.media.data = d;
+          this.media.data = d.data;
         }
       }).finally(() => {
       });
@@ -106,14 +167,15 @@ export default {
     getMediaList() {
       this.http.get(api["service_myFiles"], {
         params: {
-          limit: 0,
-          skip: 0,
+          limit: this.media.limit,
+          skip: this.media.skip - 1,
         }
       }).then(res => {
         const d = res.data;
         if (d.success === 1) {
           d.data.map(i => i = Object.assign(i, {
             _loading: false,
+            load: false,
             children: []
           }));
 
@@ -128,7 +190,10 @@ export default {
     queryMediaDetail (name) {
       this.media.selectFileId = name;
 
-      this.media.detail[name].load = true;
+      for (let i = 0; i < this.media.list.length; i++) {
+        if (this.media.list[i].filename == name)
+          this.media.list[i].load = true
+      }
 
       http.get(api["service_file"], {
         params: {
@@ -137,17 +202,28 @@ export default {
         }
       }).then(res => {
         const d = res.data;
-        if (d.success === 1) {
-          this.media.detail[this.media.selectFileId] = d;
-        } else {
-          this.media.detail[this.media.selectFileId] = {
-            type: 'error'
-          };
+
+        if (d.success == 1) {
+          for (let i = 0; i < this.media.list.length; i++) {
+            if (this.media.list[i].filename == name) {
+              this.media.list[i].detail = d.data;
+              this.openViewImage(this.media.list[i].filename, d.data.downloadURL);
+            }
+          }
+
         }
       }).finally(() => {
-        this.media.detail[name].load = false;
+        for (let i = 0; i < this.media.list.length; i++) {
+          if (this.media.list[i].filename == name)
+            this.media.list[i].load = false
+        }
       });
     },
+  },
+  computed: {
+    percentValue () {
+      return Number(((this.media.data.usedStorageQuota / this.media.data.totalStorageQuota) * 100).toFixed(2));
+    }
   }
 }
 </script>

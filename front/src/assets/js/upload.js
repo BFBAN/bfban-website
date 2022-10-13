@@ -4,24 +4,41 @@
  */
 
 import Print from "./print"
-import { http, api, http_token} from "./index"
+import {conf, http, api, http_token} from "./index"
 import store from '@/store'
+import Conf from "@/assets/js/conf";
 
-export default class Upload extends Print {
-    FILESIZE = 2*1024*1024;
+export default class Upload extends (Print, Conf) {
+    FILESIZE = 2 * 1024 * 1024;
+
+    GETURL = {}
+
+    constructor(props) {
+        super(props);
+        super.initConf();
+    }
+
+    /**
+     * 重写Http类的location指向配置环境
+     * 由于上传在本地服务启动繁琐，选择使用线上
+     * 需要走本地测试，启动上传服务，请查看backend/docs/msGraphHowTo.md文档
+     * @returns {URL}
+     */
+    location = () => {
+        this.GETURL = this.CONF.child[this.CONF.requestUploadName]
+        return `${this.GETURL.protocol || 'http'}://${this.GETURL.host}${this.GETURL.pathname}`;
+    }
 
     /**
      * On
      * @param file File
      * @returns {Promise<Object>}
      */
-    async on (file) {
+    async on(file) {
         try {
             if (!file) throw 'not file';
-
-            return new Promise(  (resolve, reject)  => {
-                if (file.size <= this.FILESIZE)
-                {
+            return new Promise((resolve, reject) => {
+                if (file.size <= this.FILESIZE) {
                     this.upDatesmallFile(file).then(res => {
                         if (res.code >= 1) {
                             resolve({
@@ -31,13 +48,11 @@ export default class Upload extends Print {
                             return;
                         }
 
-                        reject({ code: res.code, message: res.message })
+                        reject({code: res.code, message: res.message})
                     }).catch(err => {
-                        reject({ code: -1, message: err.message })
+                        reject({code: -1, message: err.message})
                     })
-                }
-                else
-                {
+                } else {
                     this.upDateLargeFile(file).then(res => {
                         if (res.code >= 1) {
                             resolve({
@@ -47,9 +62,9 @@ export default class Upload extends Print {
                             return;
                         }
 
-                        reject({ code: res.code, message: res.message })
+                        reject({code: res.code, message: res.message})
                     }).catch(err => {
-                        reject({ code: -1, message: err.message })
+                        reject({code: -1, message: err.message})
                     });
                 }
             });
@@ -64,15 +79,14 @@ export default class Upload extends Print {
      * @param file new File
      * @returns {Promise<Object>}
      */
-    upDatesmallFile (file) {
+    upDatesmallFile(file) {
         return new Promise((resolve, reject) => {
             try {
                 if (!file) {
-                    reject({ code: -1, message: 'Missing parameter' })
+                    reject({code: -1, message: 'Missing parameter'})
                     throw 'Missing parameter';
                 }
-                super.log(http);
-                fetch(http.location() + api["service_upload"], {
+                fetch(this.location() + api["service_upload"], {
                     method: 'PUT',
                     headers: {
                         ["Content-Type"]: file.type,
@@ -86,10 +100,10 @@ export default class Upload extends Print {
                             if (file_detail) {
                                 resolve({
                                     code: 1,
-                                    url:file_detail
+                                    url: file_detail.data.downloadURL
                                 })
                             } else {
-                                resolve({  code: -1 })
+                                resolve({code: -1})
                             }
                         })
                         .catch(err => reject({code: -1, message: err.message}));
@@ -109,15 +123,15 @@ export default class Upload extends Print {
      * @param file new File
      * @returns {Promise<String>}
      */
-    upDateLargeFile (file) {
+    upDateLargeFile(file) {
         return new Promise((resolve, reject) => {
             try {
                 if (!file) {
-                    reject({ code: -1, message: 'Missing parameter' })
+                    reject({code: -1, message: 'Missing parameter'})
                     throw 'Missing parameter';
                 }
 
-                fetch(http.location() + api["service_uploadBigFile"], {
+                fetch(this.location() + api["service_uploadBigFile"], {
                     method: 'POST',
                     data: {
                         "size": file.type,
@@ -133,10 +147,10 @@ export default class Upload extends Print {
                             if (file_detail) {
                                 resolve({
                                     code: 1,
-                                    url:file_detail
+                                    url: file_detail
                                 })
                             } else {
-                                resolve({ code: -1 })
+                                resolve({code: -1})
                             }
                         })
                         .catch(err => reject({code: -1, message: err.message}));
@@ -157,6 +171,7 @@ export default class Upload extends Print {
      */
     async service_file(res) {
         try {
+            const that = this;
             return new Promise(function (resolve, reject) {
                 if (!res && !res.data || res.error == 1) {
                     reject({
@@ -171,11 +186,10 @@ export default class Upload extends Print {
                         filename: res.data.name,
                         explain: true
                     }
-                }).then(res => {
+                }).then(detailRes => {
                     resolve({
                         code: 1,
-                        url: res.data.data.downloadURL,
-                        data: res.data.data
+                        data: detailRes.data.data
                     });
                 }).catch(err => {
                     reject({
