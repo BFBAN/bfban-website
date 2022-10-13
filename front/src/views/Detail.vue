@@ -1692,10 +1692,6 @@ export default new BFBAN({
 }
 
 .timeline-description {
-  font-size: 0.8rem;
-  line-height: 1.5rem;
-  margin: 10px 0;
-
   .timeline-reply-description {
     margin: 10px 10px 0 10px;
 

@@ -274,7 +274,10 @@
         "log": "日志",
         "adminLog": "管理日志",
         "judgementLog": "判决日志",
-        "adminOperation": "管理操作日志"
+        "adminOperation": "管理操作日志",
+        "messageManagement": "消息",
+        "messagePush": "推送",
+        "messageList": "消息内容"
       }
     }
   },

@@ -209,14 +209,20 @@ export default {
 
 <style lang="less">
 .timeline-description {
+  line-height: initial;
   word-break: break-all;
+  margin: 10px 0;
 
   p:first-child,
   p:last-child {
     margin: 0;
   }
 
-  span, p, h1, h2, h3, h4, h5, h6 {
+  p {
+    font-size: 12px;
+  }
+
+  span, p, a, h1, h2, h3, h4, h5, h6 {
     line-height: initial;
     margin: 3px 0;
   }

@@ -1,29 +1,6 @@
 import http from 'axios';
 import Conf from './conf';
-import { account_storage} from "@/assets/js";
-import Cookies from 'js-cookie'
-import store  from '@/store';
-const HTTP_ = http.create({
-  timeout: 600000,
-  withCredentials: true,
-  headers: {
-    // 'Content-type': 'application/json',
-  },
-  validateStatus(status) {
-      return status <= 1000;
-  }
-})
-HTTP_.interceptors.response.use(response => {
-  const { data = {} } = response
-  if(data.code == "user.tokenExpired") {
-    account_storage.clearAll();
-    store.dispatch('signout')
-  }
-  return response
-}, error => {
-  
-  throw error
-})
+
 export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
@@ -31,10 +8,19 @@ export default class Http extends Conf {
     DEL = 'del';
     //..
 
-    GETURL = { protocol: '', request: '' };
+    GETURL = {protocol: '', request: ''};
     NODE;
 
-    HTTP = HTTP_
+    HTTP = http.create({
+        timeout: 600000,
+        withCredentials: true,
+        headers: {
+            // 'Content-type': 'application/json',
+        },
+        validateStatus(status) {
+            return status <= 1000;
+        }
+    })
 
     constructor() {
         super();
@@ -43,8 +29,7 @@ export default class Http extends Conf {
         this.NODE = process.env.NODE_ENV || 'development';
         this.HTTP.interceptors.request.use(config => {
             return config
-        }, error=> {
-            // 对请求错误做些什么
+        }, error => {
             return Promise.reject(error)
         })
     }
@@ -68,7 +53,7 @@ export default class Http extends Conf {
     }
 
     // 配置全局协议头
-    setGlobalHeader (headers) {
+    setGlobalHeader(headers) {
         if (!headers) return;
         this.HTTP.headers = {...this.HTTP.headers, ...headers};
     }
@@ -139,7 +124,7 @@ export default class Http extends Conf {
         this.HTTP.headers = {...this.HTTP.headers, ...data.headers};
 
         let result = await this.HTTP({
-            url:_url,
+            url: _url,
             method: this.PUT,
             headers: data.headers,
             params: data.params,
@@ -149,4 +134,3 @@ export default class Http extends Conf {
         return result;
     }
 }
-

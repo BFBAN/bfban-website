@@ -5,7 +5,10 @@
       <Col :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem :to="{name: 'profile', params: {pagename: 'account'}}">{{ $t("header.profile") }}</BreadcrumbItem>
+          <BreadcrumbItem :to="{name: 'profile', params: {pagename: 'account'}}">{{
+              $t("header.profile")
+            }}
+          </BreadcrumbItem>
           <BreadcrumbItem>{{ $t("profile.admin.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
@@ -15,20 +18,22 @@
     <Card dis-hover :padding="0" class="admin">
       <Row :gutter="0">
         <Col :xs="{span: 24}" :sm="{span: 6}">
-          <Menu class="admin-menu" :mode="isMobile ? 'horizontal' : 'vertical'" :open-names="openMuen" :active-name="adminMenuValue" @on-select="onMenuActive">
+          <Menu class="admin-menu" :mode="isMobile ? 'horizontal' : 'vertical'" :open-names="openMuen"
+                :active-name="adminMenuValue" @on-select="onMenuActive">
             <MenuItem name="home">
-              {{ $t('profile.admin.menu.home')}}
+              {{ $t('profile.admin.menu.home') }}
             </MenuItem>
 
             <MenuGroup :title="$t('profile.admin.menu.' + i.title)" v-for="(i, index) in adminMuen" :key="index">
               <MenuItem :name="j.value" v-for="(j, j_index) in i.child" :key="j_index" v-show="j.disabled">
                 <Row>
                   <Col flex="1">
-                    <Icon :type="j.icon" v-if="j.icon" />  {{ $t('profile.admin.menu.' + j.title)}}
+                    <Icon :type="j.icon" v-if="j.icon"/>
+                    {{ $t('profile.admin.menu.' + j.title) }}
                   </Col>
                   <Col v-if="!j.ignore">
                     <Poptip trigger="hover" transfer>
-                      <Icon type="md-help-circle" />
+                      <Icon type="md-help-circle"/>
                       <PrivilegesTag :data="j.privilege" slot="content"></PrivilegesTag>
                     </Poptip>
                   </Col>
@@ -38,20 +43,23 @@
           </Menu>
         </Col>
         <Col :xs="{span: 24}" :sm="{span: 18}" style="padding: 20px">
-          <div v-if="adminMenuValue == 'home'" class="admin-content">
-            <h1>{{ currentUser.userinfo.username }}</h1>
-            <p>({{ currentUser.userinfo.userId }})</p>
-            <br>
-            <p>
-              <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
-            </p>
-          </div>
-          <user v-else-if="adminMenuValue == 'user'"></user>
-          <comment v-else-if="adminMenuValue == 'comment'"></comment>
-          <log v-else-if="adminMenuValue == 'admin_log'"></log>
-          <judgementLog v-else-if="adminMenuValue == 'judgement_log'"></judgementLog>
-          <messageLog v-else-if="adminMenuValue == 'message_Log'"></messageLog>
-          <adminOperation v-else-if="adminMenuValue == 'adminOperation'"></adminOperation>
+          <keep-alive>
+            <div v-if="adminMenuValue == 'home'" class="admin-content">
+              <h1>{{ currentUser.userinfo.username }}</h1>
+              <p>({{ currentUser.userinfo.userId }})</p>
+              <br>
+              <p>
+                <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
+              </p>
+            </div>
+            <user v-else-if="adminMenuValue == 'user'"></user>
+            <comment v-else-if="adminMenuValue == 'comment'"></comment>
+            <log v-else-if="adminMenuValue == 'admin_log'"></log>
+            <messageLog v-else-if="adminMenuValue == 'message_Log'"></messageLog>
+            <adminOperation v-else-if="adminMenuValue == 'adminOperation'"></adminOperation>
+            <messagePush v-else-if="adminMenuValue == 'message_push'"></messagePush>
+            <messageList v-else-if="adminMenuValue == 'message_list'"></messageList>
+          </keep-alive>
         </Col>
       </Row>
     </Card>
@@ -59,13 +67,15 @@
 </template>
 
 <script>
+import BFBAN from "@/assets/js/bfban";
+
 import user from "./user"
 import comment from "./comment"
 import log from "./log"
 import judgementLog from "@/views/admin/judgementLog";
 import adminOperation from "@/views/admin/adminOperation";
-import messageLog from "@/views/admin/messageLog";
-import BFBAN from "@/assets/js/bfban";
+import messagePush from "@/views/admin/messagePush";
+import messageList from "@/views/admin/messageList";
 import PrivilegesTag from "@/components/PrivilegesTag";
 
 import {account_storage} from "@/assets/js";
@@ -75,7 +85,7 @@ export default new BFBAN({
   data() {
     return {
       privileges: [],
-      openMuen: ['comment','comm', 'log'],
+      openMuen: ['comment', 'comm', 'log'],
       adminMenuValue: 'home',
       adminMuen: [
         // {
@@ -93,13 +103,30 @@ export default new BFBAN({
           child: [
             {
               title: 'user',
-              value:'user',
+              value: 'user',
               disabled: false,
               privilege: ['super', 'root', 'dev'],
             },
             {
               title: 'comment',
               value: 'comment',
+              disabled: false,
+              privilege: ['super', 'root', 'dev'],
+            }
+          ]
+        },
+        {
+          title: 'messageManagement',
+          child: [
+            {
+              title: 'messagePush',
+              value: 'message_push',
+              disabled: false,
+              privilege: ['super', 'root', 'dev'],
+            },
+            {
+              title: 'messageList',
+              value: 'message_list',
               disabled: false,
               privilege: ['super', 'root', 'dev'],
             }
@@ -122,12 +149,6 @@ export default new BFBAN({
               privilege: ['super', 'root', 'dev'],
             },
             {
-              title: 'message',
-              value: 'message_Log',
-              disabled: false,
-              privilege: ['super', 'root', 'dev'],
-            },
-            {
               title: 'adminOperation',
               value: 'adminOperation',
               disabled: false,
@@ -138,7 +159,7 @@ export default new BFBAN({
       ]
     }
   },
-  components: { user,comment,log,judgementLog,messageLog,PrivilegesTag, adminOperation },
+  components: {user, comment, log, judgementLog, messagePush, messageList, PrivilegesTag, adminOperation},
   created() {
     const {pagename} = this.$route.params;
 
@@ -149,13 +170,13 @@ export default new BFBAN({
 
     for (let i = 0; i < this.adminMuen.length; i++) {
       if (this.adminMuen[i].child)
-      for (let j = 0; j < this.adminMuen[i].child.length; j++) {
-        if (!this.adminMuen[i].ignore)
-        this.adminMuen[i].child[j].disabled = account_storage.checkPrivilegeGroup(
-            this.currentUser.userinfo,
-            this.adminMuen[i].child[j].privilege
-        )
-      }
+        for (let j = 0; j < this.adminMuen[i].child.length; j++) {
+          if (!this.adminMuen[i].ignore)
+            this.adminMuen[i].child[j].disabled = account_storage.checkPrivilegeGroup(
+                this.currentUser.userinfo,
+                this.adminMuen[i].child[j].privilege
+            )
+        }
     }
 
 
@@ -167,9 +188,7 @@ export default new BFBAN({
       this.$router.push({name: 'admin', params: {pagename: name}})
     }
   },
-  computed: {
-
-  }
+  computed: {}
 })
 </script>
 
