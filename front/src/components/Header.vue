@@ -3,9 +3,10 @@
     <div class="header-container container">
       <router-link class="mobile-hide" :to="{name: 'home'}">
         <img src="../assets/images/logo.png"
+             style="border-radius: 50%"
              width="40"
              height="40"
-             alt="BFBAN logo"/>
+             alt="logo"/>
       </router-link>
       <div class="nav nav-menu">
         <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>
@@ -70,7 +71,7 @@
             <div class="header-dropdown-avatar">
               <div>
                 <Avatar icon="ios-person" size="60"></Avatar>
-                <p class="header-dropdown-name">{{ userinfo.username}}</p>
+                <p class="header-dropdown-name">{{ userinfo.username }}</p>
                 <p class="header-dropdown-id">{{ userinfo.userId }}</p>
               </div>
               <PrivilegesTag :data="userinfo.privilege"></PrivilegesTag>
@@ -174,7 +175,7 @@ export default new BFBAN({
       },
     }
   },
-  components: {Header_message,PrivilegesTag},
+  components: {Header_message, PrivilegesTag},
   watch: {
     $route: "loadData",
   },
@@ -218,7 +219,7 @@ export default new BFBAN({
      * 获取主题
      * @returns {Promise<void>}
      */
-    async getTheme () {
+    async getTheme() {
       let theme = await storage.get('theme');
 
       if (theme.data && theme.data.value) {

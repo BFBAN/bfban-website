@@ -25,7 +25,7 @@
 
             <Divider dashed></Divider>
 
-            <Card dis-hover :padding="50">
+            <Card dis-hover :padding="isMobile ? 20 : 50">
               <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
                 <div v-if="stepsIndex == 0">
                   <FormItem :label="$t('signup.form.username')" prop="username">

@@ -9,10 +9,12 @@
         </Breadcrumb>
       </Col>
       <Col align="right" v-if="currentUser && currentUser.userinfo">
-        <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{ $t("account.message.hint.taOffChat") }} </Alert>
-        <Alert show-icon type="error" v-if="account.id == currentUser.userinfo.userId"> {{ $t("account.message.hint.selfTalk") }} </Alert>
+        <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{ $t("account.message.hint.taOffChat") }}</Alert>
+        <Alert show-icon type="error" v-if="account.id == currentUser.userinfo.userId">
+          {{ $t("account.message.hint.selfTalk") }}
+        </Alert>
         <Button @click="openMessage" :disabled="!account.attr.allowDM || account.id == currentUser.userinfo.userId">
-          <Icon type="ios-chatbubbles" />
+          <Icon type="ios-chatbubbles"/>
           {{ $t("account.message.chat") }}
         </Button>
       </Col>
@@ -46,7 +48,7 @@
               </Col>
               <Divider type="vertical"/>
               <Col>
-                <Tag type="border" size="large" color="#df22ff" v-if="account.lastOnlineTime" >
+                <Tag type="border" size="large" color="#df22ff" v-if="account.lastOnlineTime">
                   <Time :time="account.lastOnlineTime || new Date()"/>
                 </Tag>
                 <p v-else>-</p>
@@ -54,7 +56,7 @@
               </Col>
               <Divider type="vertical"/>
               <Col>
-                <h3>{{ account.reportnum || '-'}}</h3>
+                <h3>{{ account.reportnum || '-' }}</h3>
                 <p class="account-info-p">{{ $t("account.reportnum") }}</p>
               </Col>
             </Row>
@@ -65,8 +67,8 @@
       <br/>
 
       <div class="content">
-        <Row :gutter="15">
-          <Col :xm="{span: 24}" :sm="{span: 17}"
+        <Row :gutter="isAttachedContent ? 0 : 15">
+          <Col :xm="{span: 24}" :lg="isAttachedContent ? {span: 24} : {span: 17}"
                style="width: 100%">
             <Card dis-hover :padding="0">
               <Table show-header
@@ -90,7 +92,7 @@
               </Col>
             </Row>
           </Col>
-          <Col :xm="{span: 22, push: 2}" :sm="{span: 7, push: 0}">
+          <Col :xm="{span: 22, push: 2}" :lg="isAttachedContent ? {span: 0, push: 0} : {span: 7, push: 0}">
             <Card v-if="account.attr.introduction" dis-shadow>
               <div v-html="account.attr.introduction"></div>
             </Card>
@@ -98,17 +100,14 @@
 
             <Card v-if="account.origin && account.origin.originName" dis-shadow>
               <b>origin id:</b>
-              <p>{{account.origin.originName}}</p>
+              <p>{{ account.origin.originName }}</p>
             </Card>
             <br v-if="account.origin && account.origin.originName">
-            <br>
-            <p class="hint">{{ $t("account.hint2") }}</p>
-            <p class="hint">{{ $t("account.hint3") }}</p>
           </Col>
         </Row>
       </div>
 
-      <Modal v-model="message.show"  @on-ok="setMessage">
+      <Modal v-model="message.show" @on-ok="setMessage">
         <Form>
           <FormItem label="聊天">
             <Input v-model="message.content"
@@ -150,54 +149,50 @@ export default new BFBAN({
       report: {
         columns: [
           {
-            title: " ",
-            key: 'createTime',
-            sortable: true,
-            minWidth: 150,
-            render: (h, params) => {
-              return h('Tag', {
-                props: {
-                  color: 'primary'
-                }
-              }, [
-                h('Time', {
-                  props: {
-                    time: params.row.createTime,
-                    type: 'datetime'
-                  }
-                })
-              ]);
-            }
-          },
-          {
             title: this.$i18n.t("account.reported"),
             key: 'originName',
             fixed: "left",
-            minWidth: 150,
-            maxWidth: 200,
+            minWidth: 200,
+            maxWidth: 300,
             ellipsis: true,
             tooltip: true,
             render: (h, params) => {
               const that = this;
-              return h('div', [
-                h('a', {
-                  href: '/player/' + params.row.originPersonaId,
-                  on: {
-                    click () {
-                      that.$router.push({
-                        name: 'player',
-                        params: {
-                          ouid: params.row.originPersonaId
-                        }
-                      })
+              return h('row', {
+                props: {
+                  type: 'flex',
+                  align: 'middle',
+                }
+              }, [
+                h('col', [
+                  h('Avatar', {
+                    props: {
+                      src: params.row.avatarLink
+                    },
+                    style: {
+                      margin: '0 10px 0 0'
                     }
-                  }
-                }, params.row.originName)
+                  })
+                ]),
+                h('col', [
+                  h('a', {
+                    on: {
+                      click() {
+                        that.$router.push({
+                          name: 'player',
+                          params: {
+                            ouid: params.row.originPersonaId
+                          }
+                        })
+                      }
+                    }
+                  }, params.row.originName)
+                ])
               ]);
             }
           },
           {
-            title: "ID",
+            title: this.$i18n.t('signup.form.originId'),
             key: 'originPersonaId',
             ellipsis: true,
             width: 200,
@@ -224,18 +219,42 @@ export default new BFBAN({
             }
           },
           {
-            title: this.$i18n.t("account.recentlyUpdated"),
+            title: this.$i18n.t("list.colums.reportTime"),
+            key: 'createTime',
+            sortable: true,
+            minWidth: 150,
+            render: (h, params) => {
+              return h('Tag', {
+                props: {
+                  color: 'primary'
+                }
+              }, [
+                h('Time', {
+                  props: {
+                    time: params.row.createTime,
+                    type: 'datetime'
+                  }
+                })
+              ]);
+            }
+          },
+          {
+            title: this.$i18n.t("list.colums.updateTime"),
             key: 'updateTime',
             align: 'center',
             width: 200,
             sortable: true,
             render: (h, params) => {
-              return h('div', [
-                h('Tag', {
+              return h('tag', {
+                props: {
+                  color: "primary"
+                }
+              } ,[
+                h('Time', {
                   props: {
-                    color: 'warning'
+                    time: params.row.updateTime
                   }
-                }, `${params.row.updateTime}`)
+                })
               ]);
             }
           }
@@ -257,7 +276,7 @@ export default new BFBAN({
   watch: {
     $route: "loadData",
   },
-  components: { PrivilegesTag,Empty },
+  components: {PrivilegesTag, Empty},
   created() {
     this.http = http_token.call(this);
 
@@ -272,7 +291,7 @@ export default new BFBAN({
     /**
      * 获取用户信息
      */
-    getUserInfo (uId) {
+    getUserInfo(uId) {
       this.$Loading.start();
 
       http.get(api["user_info"], {
@@ -296,14 +315,14 @@ export default new BFBAN({
 
       }).catch(err => {
         this.$Loading.error();
-      }).finally(() =>{
+      }).finally(() => {
         this.getReports()
       });
     },
     /**
      * 打开消息
      */
-    openMessage () {
+    openMessage() {
       if (!this.account.attr.allowDM) {
         this.$Message.error(this.$i18n.t("account.message.hint.taOffChat"))
         return
@@ -318,7 +337,7 @@ export default new BFBAN({
     /**
      * 发送消息
      */
-    setMessage () {
+    setMessage() {
       const {uId} = this.$route.params;
 
       this.http.post(api["user_message"], {
@@ -367,13 +386,7 @@ export default new BFBAN({
         let reportData = [];
         if (d.success === 1) {
           d.data.forEach(i => {
-            reportData.push({
-              createTime: i.createTime,
-              originName: i.originName,
-              originPersonaId: i.originPersonaId,
-              status: i.status,
-              updateTime: i.updateTime
-            });
+            reportData.push(i);
           });
 
           this.report.data = reportData;
@@ -384,22 +397,27 @@ export default new BFBAN({
       });
     },
   },
-  computed:{
-    currentUser() {
-      return this.$store.state.user && {token: '', userinfo: {userId: ''}};
+  computed: {
+    /**
+     * 是否包含用户附带的额外内容
+     * 如果自我描述以及attr特定属性不显示，则关闭右侧一栏
+     * @returns {boolean}
+     */
+    isAttachedContent () {
+      return !this.account.attr.introduction && !this.account.origin;
     }
   }
 });
 </script>
 
 <style lang="scss">
- .account-username {
-   margin: 2rem 0 2rem 0;
- }
+.account-username {
+  margin: 2rem 0 2rem 0;
+}
 
- .account-info-p {
-   margin: .2rem;
-   font-size: 12px;
-   opacity: .6;
- }
+.account-info-p {
+  margin: .2rem;
+  font-size: 12px;
+  opacity: .6;
+}
 </style>

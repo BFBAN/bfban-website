@@ -6,29 +6,6 @@
 
 import _ from "lodash";
 
-function checkReportFormData(form) {
-  if (!trimAllWhitespace(form.originId)) {
-    this.$Message.error('请填写举报游戏ID');
-    return false;
-  }
-  if (!form.gameName) {
-    this.$Message.error('选择游戏');
-    return false;
-  }
-  if (form.checkbox.length === 0) {
-    this.$Message.error('选择作弊方式');
-    return false;
-  }
-  if (form.captcha.length !== 4) {
-    this.$Message.error('正确填写验证码');
-    return false;
-  }
-  if (trimAllWhitespace(form.description).length === 0) {
-    this.$Message.error('论述必填');
-    return false;
-  }
-}
-
 function formatNewLine(str) {
   return str.replace(/\r\n|\r|\n/g, '<br />');
 }
@@ -120,7 +97,6 @@ function detectLanguage(lang) {
 export {
   defaultImgProviderSrcToProxy,
   replaceImgSrcToDataSrc,
-  checkReportFormData,
   formatTextarea,
   formatNewLine,
   formatLink,

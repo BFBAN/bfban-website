@@ -21,7 +21,7 @@
           </div>
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 13, push: 0, pull: 0}">
-          <Card v-if="currentUser.token == ''" :padding="50" shadow>
+          <Card v-if="currentUser.token == ''" :padding="isMobile ? 20 : 50" shadow>
             <Form ref="signin" :model="signin" :rules="ruleValidate" label-position="top">
               <Alert type="error" show-icon v-if="signinBackMsg">
                 <b>{{ $t('signin.failed') }} :</b>
@@ -84,7 +84,6 @@
         </Col>
       </Row>
     </div>
-    <br>
   </div>
 </template>
 

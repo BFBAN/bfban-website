@@ -251,16 +251,17 @@
         <br>
         <Card style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
           <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
-            <Col :xs="{span: 23, push: 1}" :lg="appeal.disable ? {span: 7, push: 0} : {span: 1, push: 0}" class="mobile-hide">
+            <Col :xs="{span: 23, push: 1}" :lg="appeal.disable ? {span: 7, push: 0} : {span: 1, push: 0}"
+                 class="mobile-hide">
               <template v-if="appeal.disable">
                 <Button @click="onLeftAppealPlan" size="small">
-                  <Icon type="md-contract" />
+                  <Icon type="md-contract"/>
                 </Button>
                 {{ $t('detail.info.assistPppeal') }}
               </template>
               <template v-else>
                 <Button @click="onLeftAppealPlan" size="small">
-                  <Icon type="md-expand" />
+                  <Icon type="md-expand"/>
                 </Button>
               </template>
             </Col>
@@ -293,7 +294,8 @@
             </Col>
           </Row>
           <Row :gutter="20" type="flex">
-            <Col :xs="{span: 24, push: 0, pull: 0}" :lg="appeal.disable ? {span: 17, push: 1} : {span: 24, push: 0} " order="2" class="tabs-style">
+            <Col :xs="{span: 24, push: 0, pull: 0}" :lg="appeal.disable ? {span: 17, push: 1} : {span: 24, push: 0} "
+                 order="2" class="tabs-style">
               <div class="content">
                 <!-- 时间线 -->
                 <TimelineItem
@@ -399,6 +401,8 @@
                               <u><b>{{ l.username || l.byUserId }}</b></u>
                             </BusinessCard>
                           </router-link>
+
+                          {{ $t('detail.appeal.info.content') }}
 
                           <BusinessCard :id="l.originUserId">
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
@@ -522,8 +526,19 @@
                     <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                       <template v-if="l.quote">
                         <a :href="`#floor-${l.quote.id}`" target="_self">
-                          <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
-                            <b>{{ l.quote.username }}</b> :
+                          <div class="timeline-description timeline-reply-description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                            <Row type="flex" align="middle" class="timeline-reply-description-title">
+                              <Col flex="1">
+                                <BusinessCard :id="l.quote.id">
+                                  <p>
+                                    <b>{{ l.quote.username }}</b>
+                                  </p>
+                                </BusinessCard>:
+                              </Col>
+                              <Col>
+                                <Time :time="l.quote.createTime"></Time>
+                              </Col>
+                            </Row>
                             <Html :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
                           </div>
                         </a>
@@ -1578,7 +1593,7 @@ export default new BFBAN({
     /**
      * 左侧申诉面板开关
      */
-    onLeftAppealPlan () {
+    onLeftAppealPlan() {
       this.appeal.disable = !this.appeal.disable;
 
       account_storage.updateConfiguration("detailLeftAppealPanel", this.appeal.disable);
@@ -1680,7 +1695,14 @@ export default new BFBAN({
   font-size: 0.8rem;
   line-height: 1.5rem;
   margin: 10px 0;
-  padding: 10px;
+
+  .timeline-reply-description {
+    margin: 10px 10px 0 10px;
+
+    .timeline-reply-description-title {
+      margin: 10px 15px 0 15px;
+    }
+  }
 }
 
 .detail-userinfo-card {

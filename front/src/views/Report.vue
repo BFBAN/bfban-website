@@ -23,12 +23,11 @@
                   :model="tabs.list[index].formItem"
                   :rules="tabs.list[index].ruleValidate"
                   :label-position="isMobile ? 'top' : 'left'"
-                  ref="formValidate">
+                  :ref="`formValidate_${index}`">
               <!-- 基础信息 S -->
               <Card dis-hover :padding="isMobile ? 20 : 50">
                 <!-- 游戏类型 S -->
-                <FormItem prop="gameName"
-                          :label="`${ $t('report.labels.game') }`">
+                <FormItem prop="gameName" :label="`${ $t('report.labels.game') }`">
                   <RadioGroup
                       size="large"
                       class="game-type"
@@ -43,7 +42,8 @@
                       </Tooltip>
                     </Radio>
                   </RadioGroup>
-                  <p>{{ $t('basic.games.' + tabs.list[index].formItem.gameName) }}</p>
+                  <p v-if="tabs.list[index].formItem.gameName">
+                    {{ $t('basic.games.' + tabs.list[index].formItem.gameName) }}</p>
                 </FormItem>
                 <!-- 游戏类型 E -->
 
@@ -69,9 +69,8 @@
                       </p>
                     </span>
                   </Alert>
-
                   <Row :gutter="30">
-                    <Col :xs="{span:24}" :lg="{span: 10}">
+                    <Col :xs="{span:16}" :lg="{span: 10}">
                       <AutoComplete
                           v-model="tabs.list[index].formItem.originId"
                           :data="tabs.list[index].players.list"
@@ -97,11 +96,14 @@
                         </template>
                       </AutoComplete>
                     </Col>
-                    <OcrWidget :data="{index}" @ok="onOcrOutput">
-                      <Button size="large">
-                        <Icon type="md-qr-scanner" /> OCR
-                      </Button>
-                    </OcrWidget>
+                    <Col :xs="{span: 8}" :lg="{span: 14}">
+                      <OcrWidget :data="{index}" @ok="onOcrOutput">
+                        <Button size="large">
+                          <Icon type="md-qr-scanner"/>
+                          OCR
+                        </Button>
+                      </OcrWidget>
+                    </Col>
                   </Row>
 
                   <Card class="report-hackrid" dis-hover>
@@ -190,25 +192,27 @@
                   </Row>
                 </FormItem>
 
-                <FormItem prop="description" :label="$t('report.labels.description')"></FormItem>
-                <Card :padding="0" dis-hover>
+                <FormItem prop="description" :label="$t('report.labels.description')">
+                  <Card :padding="0" dis-hover>
                         <Textarea :placeholder="$t('report.info.description')"
                                   :index="index"
                                   :height="'520px'"
                                   v-model="tabs.list[index].formItem.description">
                           @change="handleMiscChange"
                         </Textarea>
-                </Card>
+                  </Card>
 
-                <br>
+                  <br>
 
-                <Card :padding="0" dis-hover class="timeline-description" v-if="tabs.list[index].formItem.description">
-                  <Html :html="tabs.list[index].formItem.description" :data="{
+                  <Card :padding="0" dis-hover class="timeline-description"
+                        v-if="tabs.list[index].formItem.description">
+                    <Html :html="tabs.list[index].formItem.description" :data="{
                               'videoLink': tabs.list[index].formItem.videoLink,
                               'selfUserName': 'selfUserName',
                               'playerUserName': 'playerUserName'
                             }"></Html>
-                </Card>
+                  </Card>
+                </FormItem>
               </Card>
               <!-- 证据 E -->
               <br>
@@ -218,14 +222,18 @@
                   <Input
                       type="text"
                       v-model="tabs.list[index].formItem.captcha"
-                      :placeholder="$t('captcha.title')"/>
-                  <div v-html="tabs.list[index].captchaUrl.content"></div>
-                  <a
-                      ref="reCaptcha"
-                      href="#"
-                      @click.stop.prevent="refreshCaptcha(index)">
-                    {{ $t("captcha.get") }}
-                  </a>
+                      :placeholder="$t('captcha.title')">
+                    <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
+                      <Captcha :ref="`report_${index}`" :id="`report_${index}`"></Captcha>
+                    </div>
+                  </Input>
+                  <!--                  <div v-html="tabs.list[index].captchaUrl.content"></div>-->
+                  <!--                  <a-->
+                  <!--                      ref="reCaptcha"-->
+                  <!--                      href="#"-->
+                  <!--                      @click.stop.prevent="refreshCaptcha(index)">-->
+                  <!--                    {{ $t("captcha.get") }}-->
+                  <!--                  </a>-->
                 </FormItem>
 
                 <FormItem>
@@ -296,9 +304,9 @@
 <script>
 import BFBAN from "../assets/js/bfban";
 import Html from "@/components/Html";
+import Captcha from "@/components/Captcha";
 
 import {api, http, http_token, voice, util, regular} from '../assets/js/index'
-import {checkReportFormData} from "@/mixins/common";
 
 import gameName from '/public/conf/gameName.json'
 import Textarea from "@/components/Textarea.vue";
@@ -319,7 +327,7 @@ export default new BFBAN({
       cheatMethodsGlossary: [],
     };
   },
-  components: {Textarea, Html, OcrWidget},
+  components: {Textarea, Html, OcrWidget, Captcha},
   created() {
     const message = store.state.configuration['voice_message']
 
@@ -386,7 +394,7 @@ export default new BFBAN({
         },
         // form data
         formItem: {
-          gameName: gameName.child[gameName.defaultIndex].value,
+          gameName: "",
           originId: "",
           videoLink: [],
           checkbox: [],
@@ -399,10 +407,10 @@ export default new BFBAN({
         // form rule
         ruleValidate: {
           gameName: [
-            {required: true, trigger: 'blur'}
+            {required: true, trigger: 'change'}
           ],
           originId: [
-            {required: true, trigger: 'blur', error: '233'}
+            {required: true, trigger: 'blur'}
           ],
           checkbox: [
             {required: true, type: 'array', min: 1, trigger: 'change'},
@@ -450,21 +458,6 @@ export default new BFBAN({
       callback()
     },
     /**
-     * 更新或刷新验证码
-     * @param index
-     */
-    refreshCaptcha(index) {
-      http.get(api["captcha"], {
-        params: {
-          r: Math.random()
-        }
-      }).then(res => {
-        if (res.data.success === 1) {
-          this.tabs.list[index].captchaUrl = res.data.data;
-        }
-      });
-    },
-    /**
      * 取消当前标签的举报
      * 同删除此标签
      */
@@ -485,11 +478,13 @@ export default new BFBAN({
       let formData = this.tabs.list[index];
 
       // check form data
-      if (checkReportFormData.call(this, formData.formItem) === false) return false;
-      // if (regular.check(regular.A, formData.formItem.description).code === -1) return false;
-
-      this.handleReport(formData, index);
-      this.refreshCaptcha();
+      if (this.$refs['formValidate_' + index][0])
+        this.$refs['formValidate_' + index][0].validate((valid) => {
+          if (valid) {
+            this.handleReport(formData, index);
+            this.refreshCaptcha();
+          }
+        })
     },
     /**
      * 提交举报
@@ -497,12 +492,13 @@ export default new BFBAN({
      * @param index
      */
     handleReport(formData, index) {
-      const cheatMethods = formData.formItem.checkbox; // .join(",");
+      const cheatMethods = formData.formItem.checkbox;
       const {gameName, captcha, originId} = formData.formItem;
       const description = formData.formItem.description.trim();
       const videoLink = formData.formItem.videoLink.filter(i => i != '' || i != undefined || i != null).toString().trim();
 
       this.spinShow = true;
+
       this.http.post(api["player_report"], {
         data: {
           data: {
@@ -512,7 +508,7 @@ export default new BFBAN({
             videoLink,
             description
           },
-          encryptCaptcha: this.tabs.list[index].captchaUrl.hash,
+          encryptCaptcha: this.$refs[`report_${index}`][0].hash,
           captcha,
         },
       }).then(res => {
@@ -565,9 +561,9 @@ export default new BFBAN({
     /**
      * ocr Widget 输出
      */
-    onOcrOutput (data) {
+    onOcrOutput(data) {
       if (!data.value) return;
-        this.tabs.list[data.index].formItem.originId = data.value;
+      this.tabs.list[data.index].formItem.originId = data.value;
     }
   },
 });

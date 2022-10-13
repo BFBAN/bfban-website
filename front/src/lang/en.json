@@ -537,8 +537,6 @@
   "account": {
     "title": "User info",
     "reportnum": "Reports",
-    "hint2": "Everyone can post responses on the report page.",
-    "hint3": "If you have more evidence for a hacker, please report the same user twice.",
     "userInfo": "Account info",
     "username": "Username",
     "role": "Role",

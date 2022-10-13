@@ -395,7 +395,8 @@ async (req, res, next)=>{
         const reports = await db('comments').join('players', 'comments.toPlayerId', 'players.id')
         .select('players.originName as originName', 'players.originUserId as originuserId',
                 'players.originPersonaId as originPersonaId', 'players.status as status',
-                'players.updateTime as updateTime', 'comments.createTime as createTime')
+                'players.updateTime as updateTime', 'comments.createTime as createTime',
+                'players.avatarLink as avatarLink')
         .where({'comments.byUserId': user.id, type: 'report'}).orderBy('comments.createTime', 'desc').offset(skip).limit(limit);
 
         res.status(200).json({success: 1, code: 'userReports.success', data: reports});
