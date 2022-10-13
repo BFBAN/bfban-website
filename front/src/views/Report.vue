@@ -194,12 +194,11 @@
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
                   <Card :padding="0" dis-hover>
-                        <Textarea :placeholder="$t('report.info.description')"
-                                  :index="index"
-                                  :height="'520px'"
-                                  v-model="tabs.list[index].formItem.description">
-                          @change="handleMiscChange"
-                        </Textarea>
+                      <Textarea :placeholder="$t('report.info.description')"
+                                :index="index"
+                                :height="'520px'"
+                                v-model="tabs.list[index].formItem.description">
+                      </Textarea>
                   </Card>
 
                   <br>
@@ -207,10 +206,10 @@
                   <Card :padding="0" dis-hover class="timeline-description"
                         v-if="tabs.list[index].formItem.description">
                     <Html :html="tabs.list[index].formItem.description" :data="{
-                              'videoLink': tabs.list[index].formItem.videoLink,
-                              'selfUserName': 'selfUserName',
-                              'playerUserName': 'playerUserName'
-                            }"></Html>
+                      'videoLink': tabs.list[index].formItem.videoLink,
+                      'selfUserName': 'selfUserName',
+                      'playerUserName': 'playerUserName'
+                    }"></Html>
                   </Card>
                 </FormItem>
               </Card>
@@ -416,7 +415,7 @@ export default new BFBAN({
             {required: true, type: 'array', min: 1, trigger: 'change'},
           ],
           description: [
-            {required: true, trigger: 'blur'},
+            {required: true, type: 'string', min: 5, trigger: 'change'},
           ],
           captcha: [
             {required: true, trigger: 'blur'}

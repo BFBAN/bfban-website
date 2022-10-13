@@ -1,7 +1,7 @@
 <template>
   <div>
     <keep-alive>
-      <SharePlayerCell class="player-card" :id="id"></SharePlayerCell>
+      <SharePlayerCell class="player-card" :id="id" type="card"></SharePlayerCell>
     </keep-alive>
   </div>
 </template>

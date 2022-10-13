@@ -20,7 +20,7 @@ export default {
     return {
       site: {
         'Battlefield Tracker': {
-          webSite:"https://battlefieldtracker.com",
+          webSite: "https://battlefieldtracker.com",
           icon: "https://battlefieldtracker.com/public/icons/icon192.png",
           platform: {
             "origin": {
@@ -41,7 +41,7 @@ export default {
           }
         },
         'Gametools Network': {
-          webSite:"https://gametools.network",
+          webSite: "https://gametools.network",
           icon: "https://gametools.network/favicon.ico",
           platform: {
             "origin": {
@@ -59,8 +59,8 @@ export default {
           }
         },
         '247 Fairplay': {
-          webSite:"https://www.247fairplay.com",
-          icon:"https://endof.p-stats.com/favicon.ico",
+          webSite: "https://www.247fairplay.com",
+          icon: "https://endof.p-stats.com/favicon.ico",
           platform: {
             "origin": {
               "bf1": `https://bf1stats.com/pc/{id}`
@@ -69,16 +69,15 @@ export default {
         },
       },
       links: {
-        'bf1': ['Battlefield Tracker','Gametools Network','247 Fairplay'],
-        'bfv': ['Battlefield Tracker','Gametools Network'],
+        'bf1': ['Battlefield Tracker', 'Gametools Network', '247 Fairplay'],
+        'bfv': ['Battlefield Tracker', 'Gametools Network'],
         'bf6': ['Battlefield Tracker'],
-        '*':[]
+        '*': []
       },
       detailLink: {
         th: [
           {
-            title: 'name',
-            key: 'name',
+            key: 'platformName',
             minWidth: 100,
             maxWidth: 300,
             tree: true,
@@ -86,25 +85,26 @@ export default {
               if (params.row.platform) {
                 return h('Row', {
                   props: {
-                    gutter: 10,
+                    gutter: 20,
                     type: "flex",
                     align: "middle"
                   },
-                } ,[
-                  h('Col', {}, [ h('Avatar', {
-                    props: {
-                      shape: 'square',
-                      src: this.site[params.row.name].icon
-                    },
-                  }) ]),
+                }, [
+                  h('Col', {}, [
+                    h('Avatar', {
+                      props: {
+                        shape: 'square',
+                        src: this.site[params.row.name].icon
+                      },
+                    }),
+                  ]),
                   h('Col', {
                     props: {
                       flex: 1
                     }
-                  }, [ h('p', {}, `${params.row.name}`) ]),
+                  }, [h('p', {}, `${params.row.name}`)]),
                 ]);
               }
-
               return h('Tag', {
                 props: {
                   color: 'primary'
@@ -151,21 +151,17 @@ export default {
       },
     }
   },
-  created() {
-    // console.log(this.cheater, this.cheater.originName)
-    // this.getData(this.cheater)
-  },
   watch: {
     'cheater': 'loadData'
   },
   methods: {
-    loadData () {
+    loadData() {
       this.detailLink.data = [];
       this.getData(this.cheater)
     },
-    push (children = [], gamename) {
+    push(children = [], gamename) {
       const platformSelect = 'origin';
-      if (!this.cheater) return ;
+      if (!this.cheater) return;
 
       // 对应游戏类型配置下平台
       this.links[gamename].forEach(platformName => {
@@ -199,8 +195,8 @@ export default {
 
       return children;
     },
-    getData (data) {
-      if (this.cheater.length <= 0) return ;
+    getData(data) {
+      if (this.cheater.length <= 0) return;
       if (!this.cheater.games) return [];
 
       (data || this.cheater).games.forEach(i => {
@@ -218,13 +214,12 @@ export default {
 
       // return this.detailLink.data;
     },
-    handleSpan ({ row, column, rowIndex, columnIndex }) {
+    handleSpan({row, column, rowIndex, columnIndex}) {
       if (row.link == "") {
-        return { colspan: 2 };
+        return {colspan: 2};
       }
     },
   },
-  computed: {
-  }
+  computed: {}
 }
 </script>

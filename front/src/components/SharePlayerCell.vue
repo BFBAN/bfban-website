@@ -19,10 +19,15 @@
           <Divider type="vertical"/>
           <Col>
             <router-link :to="{name: 'cheater', params: { game: cheater.game }}" v-if="cheater.games">
-              <Tag color="gold" :alt="$t('detail.info.reportedGames')"
-                   v-for="(game,gameindex) in cheater.games" :key="gameindex">
-                {{ $t(`basic.games.${game}`, {game: game}) }}
-              </Tag>
+              <template v-if="cheater.games.length > 0">
+                <Tag color="gold" :alt="$t('detail.info.reportedGames')"
+                     v-for="(game,gameindex) in cheater.games" :key="gameindex">
+                  {{ $t(`basic.games.${game}`, {game: game}) }}
+                </Tag>
+              </template>
+              <template v-else>
+                <Tag color="warning">N/A</Tag>
+              </template>
             </router-link>
             <span class="share-info-p">{{ $t("report.labels.game") }}</span>
           </Col>
@@ -40,7 +45,7 @@
           </Col>
         </Row>
       </div>
-      <div>
+      <div v-if="type == 'none'">
         <Row>
           <Col flex="1">
             <p>{{ href }} </p>
@@ -70,6 +75,10 @@ export default {
     id: {
       type: Number,
       default: 0
+    },
+    type: {
+      type: String,
+      default: 'none'
     }
   },
   data() {
