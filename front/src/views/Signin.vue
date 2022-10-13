@@ -40,7 +40,7 @@
               </FormItem>
 
               <Row :gutter="30" type="flex" justify="space-between" align="middle">
-                <Col span="15">
+                <Col :span="isMobile ? 24 : 15">
                   <FormItem :label="$t('captcha.title')" prop="captcha">
                     <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
                            :placeholder="$t('captcha.title')">

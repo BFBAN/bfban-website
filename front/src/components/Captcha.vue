@@ -5,6 +5,9 @@
     <span v-if="!content" class="tip">
       <template v-if="!disable">
         {{ $t('captcha.get') }}
+        <span v-if="postload">
+          <Icon type="md-refresh spin-icon-load" size="20" />
+        </span>
       </template>
       <div v-else style="min-width: 80px">
         <Icon type="md-close" size="20" />
@@ -16,7 +19,9 @@
     <transition name="fade">
       <div v-show="content && captchaTime.count <= 0" class="captcha-view-icon">
         <Icon v-if="disable" type="md-close" size="20" />
-        <Icon v-else type="md-refresh" size="20" />
+        <Icon v-else type="md-refresh" size="20" :class="[
+            postload ? 'spin-icon-load' : ''
+        ]" />
       </div>
     </transition>
     <div class="count" v-show="captchaTime.count > 0">{{ captchaTime.count }}s</div>
@@ -159,6 +164,8 @@ export default {
 </script>
 
 <style lang="less">
+@import "@/assets/css/icon.less";
+
 .captcha-view {
   overflow: hidden;
   position: relative;

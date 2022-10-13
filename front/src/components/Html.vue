@@ -223,8 +223,8 @@ export default {
 
   .img {
     position: relative;
-    width: calc(100% + 20px);
-    margin: 10px -10px 10px -10px;
+    width: calc(100% + 30px);
+    margin: 10px -15px 10px -15px;
     overflow: hidden;
 
     img {
@@ -234,8 +234,8 @@ export default {
 
   hr, .hr {
     opacity: .5;
-    width: calc(100% + 20px) !important;
-    margin: 10px -10px 10px -10px !important;
+    width: calc(100% + 30px) !important;
+    margin: 10px -15px 10px -15px !important;
   }
 }
 </style>
