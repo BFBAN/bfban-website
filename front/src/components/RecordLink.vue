@@ -192,7 +192,6 @@ export default {
           })
         }
       })
-
       return children;
     },
     getData(data) {

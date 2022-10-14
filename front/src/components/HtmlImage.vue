@@ -46,12 +46,29 @@ export default {
       type: String,
       default: ""
     },
+    images: {
+      type: String,
+      default: ""
+    }
   },
   data () {
     return {
       load: false,
-      imageStatus: 0
+      imageStatus: 0,
+      viewImages: [],
     }
+  },
+  watch: {
+    images: {
+      handler (val, oldVal) {
+        console.log(val)
+        this.viewImages = val.split(",");
+      },
+      deep: true
+    }
+  },
+  created() {
+    this.viewImages = this.images.split(",");
   },
   methods: {
     onLoad () {
@@ -69,11 +86,11 @@ export default {
       this.$viewerApi({
         options: {
           toolbar: false,
-          navbar: false,
+          navbar: true,
           keyboard: false,
           fullscreen: true
         },
-        images: [this.src],
+        images: this.viewImages,
       })
     }
   }
