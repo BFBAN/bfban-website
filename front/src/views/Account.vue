@@ -176,6 +176,16 @@ export default new BFBAN({
                 ]),
                 h('col', [
                   h('a', {
+                    attr: {
+                      title: params.row.originName
+                    },
+                    style: {
+                      "overflow": "hidden",
+                      "display": "block",
+                      "width": "100px",
+                      "text-overflow": "ellipsis",
+                      "white-space": "nowrap"
+                    },
                     on: {
                       click() {
                         that.$router.push({

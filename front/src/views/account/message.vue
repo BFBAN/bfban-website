@@ -5,10 +5,10 @@
         <Card dis-hover :padding="0">
           <p slot="title"></p>
           <div slot="extra">
-            <Button size="small" :disabled="!selectWindow"  @click="setMessageEdit" v-voice-button>
+            <Button size="small" :disabled="!selectWindow" @click="setMessageEdit" v-voice-button>
               {{ $t('profile.message.control') }}
             </Button>
-            <Divider type="vertical" />
+            <Divider type="vertical"/>
             <Button type="primary" size="small" :loading="messageLoad" @click="getMessage" v-voice-button>
               {{ $t('profile.message.load') }}
             </Button>
@@ -44,7 +44,7 @@
               <Row class="message-content-control" v-if="control.open">
                 <Col>
                   <Checkbox v-model="control.all" @on-change="onBatchAll"></Checkbox>
-                  <Divider type="vertical" />
+                  <Divider type="vertical"/>
                 </Col>
                 <Col flex="1">
                   <Select v-model="control.model" size="small" style="width:200px">
@@ -54,7 +54,8 @@
                   </Select>
                 </Col>
                 <Col>
-                  <Button size="small" @click="onBatchOperation" :disabled="control.model < 0" :loading="control.load" v-voice-button>
+                  <Button size="small" @click="onBatchOperation" :disabled="control.model < 0" :loading="control.load"
+                          v-voice-button>
                     {{ $t('basic.button.submit') }}
                   </Button>
                 </Col>
@@ -62,12 +63,13 @@
               <!-- 编辑 E -->
 
               <div class="message-content-box">
-                <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index" class="message-content-item">
+                <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index"
+                     class="message-content-item">
                   <Row :gutter="18">
-                    <Col v-if="control.open">
+                    <Col span="2" v-if="control.open">
                       <Checkbox v-model="child.choose"></Checkbox>
                     </Col>
-                    <Col flex="1">
+                    <Col :span="control.open ? 22 : 24">
                       <Row>
                         <Col flex="1">
                           <Time :time="child.time"/>
@@ -76,12 +78,11 @@
                           <a href="javascript:void(0)" v-if="child.haveRead == 0" @click="onMessageMark(child.id, 0)">
                             <Icon type="md-eye" size="20"/>
                           </a>
-                          <!--                        <a href="javascript:void(0)" @click="onMessageMark(child.id, 2)">-->
-                          <!--                          <Icon type="md-trash" color="red" size="20"/>-->
-                          <!--                        </a>-->
                         </Col>
                       </Row>
-                      <Card dis-hover :padding="5">{{ child.content }}</Card>
+                      <Card dis-hover :padding="0">
+                        <Html :html="child.content"></Html>
+                      </Card>
                     </Col>
                   </Row>
 
@@ -104,7 +105,7 @@
               <div class="message-content-footer" v-if="messageList[selectWindow].type == 'direct'">
                 <router-link :to="{name: 'account',params: {uId: selectWindow}, query: {repeat: true}}">
                   <Button long type="primary" v-voice-button>
-                      <Icon type="ios-send" size="20"/>
+                    <Icon type="ios-send" size="20"/>
                   </Button>
                 </router-link>
               </div>
@@ -121,6 +122,7 @@
 
 <script>
 import BFBAN from "/src/assets/js/bfban";
+import Html from "@/components/Html";
 
 import {api, http, http_token, message} from "../../assets/js";
 
@@ -141,13 +143,13 @@ export default new BFBAN({
         typeDictionary: messageConf.typeDictionary,
         ruleValidate: {
           type: [
-            { required: true, trigger: 'blur' }
+            {required: true, trigger: 'blur'}
           ],
           id: [
-            { required: true, trigger: 'blur' }
+            {required: true, trigger: 'blur'}
           ],
           content: [
-            { required: true, trigger: 'blur' }
+            {required: true, trigger: 'blur'}
           ],
         },
         messages: [],
@@ -180,7 +182,7 @@ export default new BFBAN({
       }
     }
   },
-  components: { BusinessCard, PrivilegesTag },
+  components: {BusinessCard, PrivilegesTag, Html},
   watch: {
     $route: "loadData",
   },
@@ -202,7 +204,7 @@ export default new BFBAN({
     /**
      * 重置推送表单
      */
-    resetMessageFrom () {
+    resetMessageFrom() {
       this.message.id = '';
       this.message.content = '';
       this.message.type = this.message.list[0].title;
@@ -210,7 +212,7 @@ export default new BFBAN({
     /**
      * 打开聊天框详情
      */
-    async openMessageDetail (i) {
+    async openMessageDetail(i) {
       this.selectWindow = i.value;
 
       // 标记未读
@@ -228,7 +230,7 @@ export default new BFBAN({
     /**
      * 批量选择框
      */
-    onBatchAll () {
+    onBatchAll() {
       this.messageList[this.selectWindow].child.forEach(i => {
         i.choose = this.control.all;
       })
@@ -236,7 +238,7 @@ export default new BFBAN({
     /**
      * 批量操作
      */
-    async onBatchOperation () {
+    async onBatchOperation() {
       let onFun = [];
       this.messageList[this.selectWindow].child.forEach(i => {
         if (i.choose) {
@@ -300,6 +302,12 @@ export default new BFBAN({
       })
     },
     /**
+     * 编辑消息
+     */
+    setMessageEdit() {
+      this.control.open = !this.control.open
+    },
+    /**
      * 获取消息列表
      */
     async getMessage() {
@@ -356,11 +364,11 @@ export default new BFBAN({
             if (!messageList[val]) {
               messageList[val] = {child: [], num: 0}
             }
-            messageList[val].child.push(Object.assign({
+            messageList[val].child.push(Object.assign(i,{
               time: i.createTime,
-              content: i.content,
+              content: `<p>${i.content}</p>`,
               choose: false,
-            }, i));
+            }));
             messageList[val].type = i.type;
             messageList[val].num = messageList[val].child.length || 0;
           });
@@ -394,7 +402,7 @@ export default new BFBAN({
 
 .message-content {
   display: flex;
-  background-color: rgb(0 0 0 / 2%);
+  background-color: rgba(0, 0, 0, .02);
   flex-direction: column;
   justify-content: space-between;
 }
@@ -408,6 +416,7 @@ export default new BFBAN({
 
 .message-content-item > .ivu-row {
   padding: 15px 20px !important;
+  width: calc(100% + 9px);
 }
 
 .message-content-item > .ivu-divider {
