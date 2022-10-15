@@ -270,7 +270,14 @@ export default {
 
     img {
       width: 100%;
+      display: block;
     }
+  }
+
+  hr:last-child,
+  .hr:last-child,
+  .img:last-child {
+    margin-bottom: 0 !important;
   }
 
   hr, .hr {

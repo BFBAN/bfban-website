@@ -590,7 +590,6 @@
                   <Textarea v-model="reply.content"
                             style="margin: 0 -16px;"
                             ref="replyTextarea"
-                            :toolbar="['bold', 'link']"
                             :height="'120px'"
                             :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
                 </div>

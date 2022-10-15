@@ -20,6 +20,12 @@
           </div>
         </template>
         <iframe :src="disableIframe ? '' : href" v-show="!linkLoad"
+                allowTransparency="true"
+                frameborder="no"
+                border="0"
+                marginwidth="0"
+                marginheight="0"
+                scrolling="no"
                 sandbox="allow-scripts allow-forms"></iframe>
       </div>
     </template>
@@ -108,7 +114,7 @@ export default {
   width: 100%;
 
   iframe {
-    overflow: hidden;
+    overflow: hidden !important;
     position: relative;
     outline: 0;
     border: 0;
@@ -116,6 +122,10 @@ export default {
     height: 400%;
     transform: scale(0.25);
     transform-origin: top left;
+
+    body {
+      overflow:hidden
+    }
   }
 
   &::after {
