@@ -377,8 +377,8 @@
                       </p>
                     </template>
 
-                    <Html :html="l.content" v-if="l.content"
-                          class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></Html>
+                    <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
+                                :html="l.content" v-if="l.content"></HtmlWidget>
 
                     <p v-if="isLogin">
                       <!-- 回复 -->
@@ -423,8 +423,8 @@
                       </Row>
                     </div>
 
-                    <Html :html="l.content" v-if="l.content"
-                          class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></Html>
+                    <HtmlWidget :html="l.content" v-if="l.content"
+                                class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
 
                     <p v-if="isLogin">
                       <!-- 回复 -->
@@ -490,8 +490,8 @@
                       </Row>
                     </div>
 
-                    <Html :html="l.content" v-if="l.content"
-                          class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></Html>
+                    <HtmlWidget :html="l.content" v-if="l.content"
+                                class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
 
                     <p v-if="isLogin">
                       <!-- 回复 -->
@@ -526,25 +526,28 @@
                     <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                       <template v-if="l.quote">
                         <a :href="`#floor-${l.quote.id}`" target="_self">
-                          <div class="timeline-description timeline-reply-description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                          <div
+                              class="timeline-description timeline-reply-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                             <Row type="flex" align="middle" class="timeline-reply-description-title">
                               <Col flex="1">
                                 <BusinessCard :id="l.quote.id">
                                   <p>
                                     <b>{{ l.quote.username }}</b>
                                   </p>
-                                </BusinessCard>:
+                                </BusinessCard>
+                                :
                               </Col>
                               <Col>
                                 <Time :time="l.quote.createTime"></Time>
                               </Col>
                             </Row>
-                            <Html :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
+                            <Html
+                                :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
                           </div>
                         </a>
                       </template>
 
-                      <Html :html="l.content" v-if="l.content"></Html>
+                      <HtmlWidget :html="l.content" v-if="l.content"></HtmlWidget>
                     </div>
 
                     <p v-if="isLogin">
@@ -997,7 +1000,8 @@ import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
 import RecordLink from "../components/RecordLink.vue";
 import Captcha from "../components/Captcha";
-import Html from "../components/Html";
+import Html from "@/components/Html";
+import HtmlWidget from "../components/HtmlWidget";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
@@ -1092,7 +1096,7 @@ export default new BFBAN({
       cheatMethodsGlossary: null,
     }
   },
-  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, PrivilegesTag},
+  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, HtmlWidget, PrivilegesTag},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {

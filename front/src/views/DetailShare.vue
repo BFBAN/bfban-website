@@ -35,11 +35,11 @@
               </div>
             </template>
             <template v-else-if="share.collapse == 2">
-              <div v-html="share.iframeLink" style="height: 800px; width: 100%" id="getSharePicture_window"></div>
+              <div v-html="share.iframeLink" style="height: 800px; width: 100%"></div>
             </template>
             <template v-else-if="share.collapse == 3">
               <div style="position: relative; overflow: hidden">
-                <SharePlayerCell ref="sharePlayerWidget" id="getSharePicture_window" :lang="share.languages"></SharePlayerCell>
+                <SharePlayerCell ref="sharePlayerWidget" id="getSharePicture_window" :personaId="$route.params.ouid" :lang="share.languages"></SharePlayerCell>
               </div>
             </template>
             <template v-else>
@@ -192,43 +192,6 @@ export default new BFBAN({
       this.http = http_token.call(this);
     },
     /**
-     * 更新玩家信息
-     * update cheater
-     * @param e
-     * @returns {boolean}
-     */
-    updateCheaterInfo(e) {
-      waitForAction.call(e.target, 60);
-
-      if (!this.$store.state.user) {
-        this.$Message.error(this.$i18n.t('detail.messages.signIn'));
-        return false;
-      }
-
-      this.updateUserInfospinShow = true;
-
-      this.http.post(api["player_update"], {
-        data: Object.assign(this.getParamsIds())
-      }).then(res => {
-        this.updateUserInfospinShow = false;
-
-        const d = res.data;
-        if (d.error === 0) {
-          const {cheaterGameName: originId, originUserId, avatarLink} = d.data.origin;
-
-          this.cheater.originId = originId;
-          this.cheater.originUserId = originUserId;
-          this.cheater.avatarLink = avatarLink;
-
-          // this.origins.unshift(d.data.origin);
-
-          this.$Message.success(this.$i18n.t('detail.messages.updateComplete'));
-        } else {
-          this.$Message.error(d.msg);
-        }
-      });
-    },
-    /**
      * 更新 / 设置分享内容
      */
     upDataShare() {
@@ -298,6 +261,10 @@ export default new BFBAN({
         });
       }, 1000);
     },
+    /**
+     * 生产下载
+     * @param canvas
+     */
     onDownload (canvas) {
       let link = document.createElement("a");
       let imgData = canvas.toDataURL({
@@ -309,6 +276,11 @@ export default new BFBAN({
       link.href = URL.createObjectURL( this.dataURLtoBlob(imgData) );
       link.click();
     },
+    /**
+     * dataUrl 转 blob
+     * @param dataurl
+     * @returns {Blob}
+     */
     dataURLtoBlob(dataurl) {
       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
           bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);

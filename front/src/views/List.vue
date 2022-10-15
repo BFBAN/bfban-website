@@ -269,7 +269,7 @@ export default new BFBAN({
       createTime: [],
       updateTime: [],
       skip: 1,
-      limit: 10,
+      limit: 20,
       total: 0,
       gameSum: [],
       totalSum: [],

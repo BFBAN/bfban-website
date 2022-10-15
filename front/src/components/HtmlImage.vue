@@ -24,7 +24,7 @@
           <Icon type="md-alert" slot="count" size="20" />
           <Icon type="md-images" size="50" />
         </Badge>
-        <p>{{src}}</p>
+        <p class="img-box-url">{{src}}</p>
       </div>
     </template>
   </div>
@@ -104,7 +104,15 @@ export default {
   overflow: hidden;
   position: relative;
   min-height: 80px;
-  //user-select: none;
+  cursor: pointer;
+
+  .img-box-url {
+    padding: 0 15px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    line-clamp: 2;
+  }
 
   .img-error {
     text-align: center;

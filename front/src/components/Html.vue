@@ -16,11 +16,16 @@ export default {
       type: String,
       default: ""
     },
-    data: Object
+    extensionData: Object,
+    mode: {
+      type: String,
+      default: "renderer"
+    }
   },
   data() {
     return {
       templateRender: undefined,
+      templateRenderWorkProgress: false,
       images: [],
       options: {
         url: 'src'
@@ -30,14 +35,21 @@ export default {
   components: {htmlimage, htmllink, htmlvideo, htmlplayercard, privilegestag},
   watch: {
     html: {
-      handler(val, olVal) {
-        for (const dataKey in this.data) {
-          this[dataKey] = this.data[dataKey];
+      handler(val) {
+        for (const dataKey in this.extensionData) {
+          this[dataKey] = this.extensionData[dataKey];
         }
         this.updateRender(this.packagingRender(val));
       },
       deep: false,
     },
+    mode: {
+      handler(val) {
+        if (this.templateRender && this.templateRender == undefined) return;
+        this.updateRender(this.packagingRender(this.html));
+      }
+    },
+    deep: true,
   },
   created() {
     this.updateRender(this.packagingRender(this.html));
@@ -61,7 +73,7 @@ export default {
      */
     packagingRender(html) {
       let _html = `<div class="ql-editor">${html}</div>`;
-
+      let vDomString;
       const vDom = new DOMParser().parseFromString(_html, "text/html"),
           video = vDom.getElementsByTagName("video"),
           imgs = vDom.getElementsByTagName("img"),
@@ -70,141 +82,156 @@ export default {
           br = vDom.getElementsByTagName("br"),
           pres = vDom.getElementsByTagName("pre");
 
-      // ==================== 处理自定义HTML
+      this.templateRenderWorkProgress = true;
 
-      if (imgs && imgs.length > 0) {
-        let _imgs = Array.from(imgs); // deep copy
-        for (let i = 0; i < _imgs.length; i++) {
-          let eleImg = document.createElement('htmlimage');
-          eleImg.setAttribute("src", _imgs[i].src);
-          this.images.push(_imgs[i].src);
+      switch (this.mode) {
+        case "code":
+          vDomString = `<div><Input style="margin: -1px; width: calc(100% + 2px)" readonly type="textarea" :autosize="true" :value="this.html"></Input></div>`;
+          break;
+        case "text":
+          vDomString = `<div class="ql-editor"><p>${vDom.getElementsByTagName("body")[0]?.innerText}</p></div>`;
+          break;
+        case "renderer":
+        default:
+          // ==================== 处理自定义HTML
 
-          _imgs[i].parentNode.replaceChild(eleImg, _imgs[i]);
-        }
+          if (imgs && imgs.length > 0) {
+            let _imgs = Array.from(imgs); // deep copy
+            for (let i = 0; i < _imgs.length; i++) {
+              let eleImg = document.createElement('htmlimage');
+              eleImg.setAttribute("src", _imgs[i].src);
+              this.images.push(_imgs[i].src);
 
-        // upDate attr images
-        let _htmlimage = vDom.getElementsByTagName("htmlimage");
-        for (let i = 0; i < _htmlimage.length; i++) {
-          _htmlimage[i].setAttribute("images", this.images);
-        }
-      }
-
-      if (video && video.length > 0) {
-        let _video = Array.from(video); // deep copy
-        for (let i = 0; i < _video.length; i++) {
-          let eleImg = document.createElement('htmlvideo');
-          eleImg.setAttribute("src", _video[i].src);
-
-          _video[i].parentNode.replaceChild(eleImg, _video[i]);
-        }
-      }
-
-      if (pres && pres.length > 0) {
-        let _pres = Array.from(pres); // deep copy
-        for (let i = 0; i < _pres.length; i++) {
-          let elePre = document.createElement('p');
-          elePre.innerHTML = _pres[i].innerHTML;
-
-          _pres[i].after(elePre);
-          _pres[i].remove();
-        }
-      }
-
-      if (links && links.length > 0) {
-        let _links = Array.from(links); // deep copy
-        for (let i = 0; i < _links.length; i++) {
-          let eleLink = document.createElement('htmllink');
-          let _data = this.data;
-          let _linkExtend = Vue.component("HtmlLinkCom", {
-            template: _links[i].innerText,
-            data() {
-              return _data
+              _imgs[i].parentNode.replaceChild(eleImg, _imgs[i]);
             }
-          });
 
-          eleLink.setAttribute("text", new _linkExtend().$options.template);
-          eleLink.setAttribute("href", _links[i].href);
+            // upDate attr images
+            let _htmlimage = vDom.getElementsByTagName("htmlimage");
+            for (let i = 0; i < _htmlimage.length; i++) {
+              _htmlimage[i].setAttribute("images", this.images);
+            }
+          }
 
-          _links[i].parentNode.replaceChild(eleLink, _links[i]);
-        }
-      }
+          if (video && video.length > 0) {
+            let _video = Array.from(video); // deep copy
+            for (let i = 0; i < _video.length; i++) {
+              let eleImg = document.createElement('htmlvideo');
+              eleImg.setAttribute("src", _video[i].src);
 
-      if (p && p.length > 0) {
-        let _p = Array.from(p); // deep copy
-        for (let i = 0; i < _p.length; i++) {
-          // 缩语
-          if (_p[i] && _p[i].innerText && _p[i].innerText.match(/{(\S*)\}/)) {
-            let str = _p[i].innerText.match(/{(\S*)\}/)[1];
-            let p_data = str.split(':');
+              _video[i].parentNode.replaceChild(eleImg, _video[i]);
+            }
+          }
 
-            if (p_data[0])
-              switch (p_data[0]) {
-                case "user":
-                  _p[i].innerHTML = `<span><a href="/account/${p_data[1]}">@${p_data[1]}</a></span>`;
-                  break;
-                case "player":
-                  _p[i].innerHTML = `<htmlplayercard :id="${p_data[1].toString()}"></htmlplayercard>`;
-                  break;
-                case "router":
-                  _p[i].innerHTML = _p[i].innerHTML
-                      .replaceAll(`{${str}}`, `<u><router-link :to="{path: '${p_data[1]}'}">${p_data[1]}</router-link></u>`);
-                  break;
-                case "floor":
-                  var p_value = p_data[1];
-                  _p[i].innerHTML = `<Card dis-hover><a href='#floor-${p_value}'>${p_value}</a></Card>`;
-                  break;
-                case "privilege":
-                  var p_value_privileges = p_data[1].split(',').toString();
-                  if (p_data[1])
-                    _p[i].innerHTML = _p[i].innerHTML
-                      .replaceAll(`{${str}}`, `<privilegestag data="${p_value_privileges}"></privilegestag>`);
-                  break;
-                case "icon":
-                  if (p_data[1]) {
-                    _p[i].innerHTML = _p[i].innerHTML
-                        .replaceAll(`{${str}}`, `<Icon type='${p_data[1]}'></Icon>`);
+          if (pres && pres.length > 0) {
+            let _pres = Array.from(pres); // deep copy
+            for (let i = 0; i < _pres.length; i++) {
+              let elePre = document.createElement('p');
+              elePre.innerHTML = _pres[i].innerHTML;
+
+              _pres[i].after(elePre);
+              _pres[i].remove();
+            }
+          }
+
+          if (links && links.length > 0) {
+            let _links = Array.from(links); // deep copy
+            for (let i = 0; i < _links.length; i++) {
+              let eleLink = document.createElement('htmllink');
+              let _linkExtend = Vue.component("HtmlLinkCom", {
+                template: _links[i].innerText,
+                // data () {
+                //   return this.extensionData;
+                // }
+              });
+
+              eleLink.setAttribute("text", new _linkExtend().$options.template);
+              eleLink.setAttribute("href", _links[i].href);
+
+              _links[i].parentNode.replaceChild(eleLink, _links[i]);
+            }
+          }
+
+          if (p && p.length > 0) {
+            let _p = Array.from(p); // deep copy
+            for (let i = 0; i < _p.length; i++) {
+              // 缩语
+              if (_p[i] && _p[i].innerText && _p[i].innerText.match(/{(\S*)\}/)) {
+                let str = _p[i].innerText.match(/{(\S*)\}/)[1];
+                let p_data = str.split(':');
+
+                if (p_data[0])
+                  switch (p_data[0]) {
+                    case "user":
+                      _p[i].innerHTML = `<span><a href="/account/${p_data[1]}">@${p_data[1]}</a></span>`;
+                      break;
+                    case "player":
+                      _p[i].innerHTML = `<htmlplayercard :id="${p_data[1].toString()}"></htmlplayercard>`;
+                      break;
+                    case "router":
+                      _p[i].innerHTML = _p[i].innerHTML
+                          .replaceAll(`{${str}}`, `<u><router-link :to="{path: '${p_data[1]}'}">${p_data[1]}</router-link></u>`);
+                      break;
+                    case "floor":
+                      var p_value = p_data[1];
+                      _p[i].innerHTML = `<Card dis-hover><a href='#floor-${p_value}'>${p_value}</a></Card>`;
+                      break;
+                    case "privilege":
+                      var p_value_privileges = p_data[1].split(',').toString();
+                      if (p_data[1])
+                        _p[i].innerHTML = _p[i].innerHTML
+                            .replaceAll(`{${str}}`, `<privilegestag data="${p_value_privileges}"></privilegestag>`);
+                      break;
+                    case "icon":
+                      if (p_data[1]) {
+                        _p[i].innerHTML = _p[i].innerHTML
+                            .replaceAll(`{${str}}`, `<Icon type='${p_data[1]}'></Icon>`);
+                      }
+                      break;
+                    case "egg":
+                      _p[i].innerHTML = _p[i].innerHTML
+                          .replaceAll(`{${str}}`, `<Icon type='md-egg'></Icon>`);
+                      break;
                   }
-                  break;
-                case "egg":
-                  _p[i].innerHTML = _p[i].innerHTML
-                      .replaceAll(`{${str}}`, `<Icon type='md-egg'></Icon>`);
-                  break;
               }
-          }
 
-          // 可疑链接
-          // 将可疑的文本链接转换为链接widget
-          if (_p[i] && _p[i].innerText) {
-            if (regular.check("link", _p[i].innerHTML).code == 0) {
-              _p[i].innerHTML = _p[i].innerHTML.replaceAll('\n', '\n\b');
+              // 可疑链接
+              // 将可疑的文本链接转换为链接widget
+              if (_p[i] && _p[i].innerText) {
+                if (regular.check("link", _p[i].innerHTML).code == 0) {
+                  _p[i].innerHTML = _p[i].innerHTML.replaceAll('\n', '\n\b');
 
-              let p_textToLinkArray = regular.getCheckText("link", _p[i].innerText);
+                  let p_textToLinkArray = regular.getCheckText("link", _p[i].innerText);
 
-              if (p_textToLinkArray)
-                for (let j = 0; j < p_textToLinkArray.length; j++) {
-                  _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${p_textToLinkArray[j]}" href="${p_textToLinkArray[j]}"></htmllink>`)
+                  if (p_textToLinkArray)
+                    for (let j = 0; j < p_textToLinkArray.length; j++) {
+                      _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${p_textToLinkArray[j]}" href="${p_textToLinkArray[j]}"></htmllink>`)
+                    }
                 }
-            }
-          }
+              }
 
-          // 解析HR, 分割线
-          if (_p[i] && _p[i].innerText) {
-            let calcStringCount = 0;
+              // 解析HR, 分割线
+              if (_p[i] && _p[i].innerText) {
+                let calcStringCount = 0;
 
-            for (let j = 0; j < _p[i].innerText.length; j++) {
-              if (_p[i].innerText[j] == "-") {
-                calcStringCount += 1;
+                for (let j = 0; j < _p[i].innerText.length; j++) {
+                  if (_p[i].innerText[j] == "-") {
+                    calcStringCount += 1;
+                  }
+                }
+
+                if (calcStringCount == _p[i].innerText.length && calcStringCount >= 4)
+                  _p[i].innerHTML = `<Divider class="hr" dashed />`;
               }
             }
-
-            if (calcStringCount == _p[i].innerText.length && calcStringCount >= 4)
-              _p[i].innerHTML = `<Divider class="hr" dashed />`;
           }
-        }
+
+          vDomString = vDom.getElementsByTagName("body")[0]?.innerHTML ?? "";
+          break;
       }
 
       // ==================== 拼接标签
-      let vDomString = vDom.getElementsByTagName("body")[0]?.innerHTML ?? "";
+
+      this.templateRenderWorkProgress = false;
 
       return vDomString;
     },

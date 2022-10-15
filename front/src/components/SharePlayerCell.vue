@@ -72,9 +72,9 @@ if (window.callPhantom)
 
 export default {
   props: {
-    id: {
-      type: Number,
-      default: 0
+    personaId: {
+      type: String,
+      default: ""
     },
     type: {
       type: String,
@@ -124,11 +124,13 @@ export default {
     getCheatersInfo() {
       this.cheater = {};
 
+      if (!this.personaId) return;
+
       http.get(api["cheaters"], {
         params: Object.assign({
           history: true
         }, {
-          personaId: this.id || this.$route.params.ouid
+          personaId: this.personaId || this.$route.params.ouid
         })
       }).then(res => {
         this.spinShow = false;
