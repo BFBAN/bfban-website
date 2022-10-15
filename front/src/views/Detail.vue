@@ -1099,7 +1099,7 @@ export default new BFBAN({
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
-      this.verify.suggestion = '' + this.fastReply.selected.map(i => this.$t(`detail.info.fastReplies.${i}`));
+      this.verify.suggestion = '' + this.fastReply.selected.map(i => i);
     }
   },
   created() {
@@ -1604,10 +1604,11 @@ export default new BFBAN({
   },
   computed: {
     isOnlySuper() {
-      return account_storage.checkPrivilegeGroup(
-          this.$store.state?.user?.userinfo,
-          ['root', 'super', 'dev']
-      );
+      return false;
+      // return account_storage.checkPrivilegeGroup(
+      //     this.$store.state?.user?.userinfo,
+      //     ['root', 'super', 'dev']
+      // );
     }
   }
 })
