@@ -485,7 +485,7 @@
                     <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                       <template v-if="l.quote">
                         <div @click="onFloor(`floor-${l.quote.id}`)"
-                             class="timeline-description timeline-reply-description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                             class="timeline-description timeline-reply-description user-select-none ivu-card ivu-card-bordered ivu-card-dis-hover">
                           <Row type="flex" align="middle" class="timeline-reply-description-title">
                             <Col flex="1">
                               <BusinessCard :id="l.quote.byUserId">
@@ -499,8 +499,7 @@
                               <Time :time="l.quote.createTime"></Time>
                             </Col>
                           </Row>
-                          <Html
-                              :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
+                          <Html :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
                         </div>
                       </template>
 
@@ -509,7 +508,7 @@
                   </div>
                   <!-- 回复:any E -->
 
-                  <Row class="timeline-content-footer">
+                  <Row class="timeline-content-footer" type="flex" align="middle">
                     <Col flex="auto">
                       <template v-if="isLogin">
                         <!-- 回复 -->
@@ -540,15 +539,20 @@
                         <Divider type="vertical"/>
                         <Poptip width="400">
                           <Button size="small" v-voice-button>
-                            <Icon type="md-share"/>
+                            <Icon type="md-share" />
                           </Button>
                           <div slot="content">
                             <Form :label-width="40" label-position="left">
                               <FormItem label="Url">
-                                <Input :value="getShareFloor(l.id)" readonly v-if="l.id"></Input>
+                                <Input :value="getShareFloor(l.id)" :autosize="{minRows: 1,maxRows: 2}" type="textarea" readonly v-if="l.id"></Input>
                               </FormItem>
                               <FormItem label="Code">
                                 <Input :value="`{floor:${l.id}}`" readonly v-if="l.id"></Input>
+                              </FormItem>
+                              <FormItem label="" v-if="l.id" >
+                                <Card dis-hover :padding="5">
+                                  <Html :html="`<p>{floor:${l.id}}</p>`" v-if="l.id" />
+                                </Card>
                               </FormItem>
                             </Form>
                           </div>
@@ -556,7 +560,7 @@
 
                       </template>
                     </Col>
-                    <Col align="right">
+                    <Col align="right" class="user-select-none">
                       # {{ l.index }}-<span style="opacity: .4">{{ l.id }}</span>
                     </Col>
                   </Row>

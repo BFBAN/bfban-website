@@ -112,18 +112,19 @@ export default {
   .html-widget-toolbar {
     user-select: none;
     overflow: hidden;
-    padding: 0 10px;
+    padding: 0 5px;
+    font-size: 12px;
     transition: all .25s;
-    margin: 0 -1px -1px -1px;
-    height: 27px;
+    margin: -1px -1px 0 -1px;
+    height: 20px;
     //visibility: hidden;
   }
 
   &:hover .html-widget-toolbar,
   &:active .html-widget-toolbar{
     overflow: initial !important;
-    padding: 2px 10px;
-    height: 27px;
+    padding: 0 5px;
+    height: 20px;
     visibility: visible;
   }
 }

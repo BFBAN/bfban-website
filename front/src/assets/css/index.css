@@ -2,6 +2,9 @@ body,
 html {
   overscroll-behavior-y: contain;
 }
+body .user-select-none {
+  user-select: none;
+}
 header,
 .header {
   user-select: none;
