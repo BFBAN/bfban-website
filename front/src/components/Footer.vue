@@ -18,7 +18,7 @@
                  @click="logoCount += 1;"
                  alt="bfban logo"/>
           </Badge>
-          <p>{{ $t("footer.column.col1.text") }}</p>
+          <p style="margin-right: 10px">{{ $t("footer.column.col1.text") }}</p>
         </Col>
         <Col :xs="{span: 9 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide"
              v-for="(i, index) in footerNavs.row" :key="index">

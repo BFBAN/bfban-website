@@ -1604,11 +1604,10 @@ export default new BFBAN({
   },
   computed: {
     isOnlySuper() {
-      return false;
-      // return account_storage.checkPrivilegeGroup(
-      //     this.$store.state?.user?.userinfo,
-      //     ['root', 'super', 'dev']
-      // );
+      return account_storage.checkPrivilegeGroup(
+          this.$store.state?.user?.userinfo,
+          ['root', 'super', 'dev']
+      );
     }
   }
 })
@@ -1628,7 +1627,6 @@ export default new BFBAN({
     margin-top: 10px !important;
   }
 
-
   .timeline-content {
     position: relative;
 
@@ -1636,13 +1634,6 @@ export default new BFBAN({
     overflow-wrap: break-word;
     word-wrap: break-word;
     margin-left: 3rem;
-  }
-
-  .timeline-content .loading {
-    background-image: url('/src/assets/fonts/loading.svg');
-    background-repeat: no-repeat;
-    min-width: 100px;
-    min-height: 100px;
   }
 
   .ivu-timeline-item {
