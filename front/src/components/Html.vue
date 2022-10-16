@@ -7,6 +7,7 @@ import htmllink from "./HtmlLink";
 import htmllinkcard from "./HtmlLinkCard";
 import htmlvideo from "./HtmlVideo";
 import htmlplayercard from "./HtmlPlayerCard";
+import htmlfloor from "@/components/htmlFloor";
 import privilegestag from "./PrivilegesTag";
 import {regular} from "@/assets/js";
 
@@ -33,7 +34,7 @@ export default {
       }
     };
   },
-  components: {htmlimage, htmllink, htmllinkcard, htmlvideo, htmlplayercard, privilegestag},
+  components: {htmlimage, htmllink, htmllinkcard, htmlvideo, htmlplayercard, htmlfloor, privilegestag},
   watch: {
     html: {
       handler(val) {
@@ -187,7 +188,7 @@ export default {
                       break;
                     case "floor":
                       var p_value = p_data[1];
-                      _p[i].innerHTML = `<Card dis-hover><a href='#floor-${p_value}'>${p_value}</a></Card>`;
+                      _p[i].innerHTML = `<htmlfloor id="${p_value}"></htmlfloor>`;
                       break;
                     case "privilege":
                       var p_value_privileges = p_data[1].split(',').toString();

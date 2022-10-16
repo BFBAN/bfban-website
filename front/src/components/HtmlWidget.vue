@@ -110,6 +110,7 @@ export default {
 
   &:focus .html-widget-toolbar,
   .html-widget-toolbar {
+    user-select: none;
     overflow: hidden;
     padding: 0 10px;
     transition: all .25s;

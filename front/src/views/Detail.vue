@@ -305,6 +305,7 @@
                     v-for="(l, index) in timelineList"
                     :key="index"
                     :color="l.privilege === 'admin' ? 'red' : 'green'"
+                    :ref="`floor-${l.index}`"
                     :id="`floor-${l.index}`">
                   <div v-if="l.type === 'report'" slot="dot" class="timeline-time-dot ivu-tag-warning hand">
                     <Icon type="ios-hand" :size="isMobile ? 10 : 20"></Icon>
@@ -379,15 +380,6 @@
 
                     <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
                                 :html="l.content" v-if="l.content"></HtmlWidget>
-
-                    <p v-if="isLogin">
-                      <!-- 回复 -->
-                      <Button type="dashed"
-                              v-voice-button
-                              @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('basic.button.reply') }}
-                      </Button>
-                    </p>
                   </div>
                   <!-- 举报:any E -->
 
@@ -418,37 +410,13 @@
                         <Col>
                           <Time :time="l.createTime" v-if="l.createTime"></Time>
                           <Divider type="vertical"/>
-                          <Tag>{{ l.appealStatus }}</Tag>
+                          <Tag type="border" color="primary">{{ l.appealStatus }}</Tag>
                         </Col>
                       </Row>
                     </div>
 
                     <HtmlWidget :html="l.content" v-if="l.content"
                                 class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
-
-                    <p v-if="isLogin">
-                      <!-- 回复 -->
-                      <Button type="dashed"
-                              v-voice-button
-                              @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('basic.button.reply') }}
-                      </Button>
-                      <Divider type="vertical"/>
-                      <!-- 申诉操作 -->
-                      <Dropdown trigger="click" v-if="isAdmin && !isOnlySuper" @on-click="handAdminAppeal">
-                        <a href="javascript:void(0)">
-                          <Button type="dashed">
-                            申诉操作
-                            <Icon type="ios-arrow-down"></Icon>
-                          </Button>
-                        </a>
-                        <DropdownMenu slot="list">
-                          <DropdownItem :name="`${l.id},0`">打开</DropdownItem>
-                          <DropdownItem :name="`${l.id},1`">关闭</DropdownItem>
-                          <DropdownItem :name="`${l.id},2`">锁定</DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-                    </p>
                   </div>
                   <!-- 申诉:any E -->
 
@@ -492,15 +460,6 @@
 
                     <HtmlWidget :html="l.content" v-if="l.content"
                                 class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
-
-                    <p v-if="isLogin">
-                      <!-- 回复 -->
-                      <Button type="dashed"
-                              v-voice-button
-                              @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('basic.button.reply') }}
-                      </Button>
-                    </p>
                   </div>
                   <!-- 认为:any E -->
 
@@ -525,62 +484,95 @@
 
                     <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
                       <template v-if="l.quote">
-                        <a :href="`#floor-${l.quote.id}`" target="_self">
-                          <div
-                              class="timeline-description timeline-reply-description ivu-card ivu-card-bordered ivu-card-dis-hover">
-                            <Row type="flex" align="middle" class="timeline-reply-description-title">
-                              <Col flex="1">
-                                <BusinessCard :id="l.quote.id">
-                                  <p>
-                                    <b>{{ l.quote.username }}</b>
-                                  </p>
-                                </BusinessCard>
-                                :
-                              </Col>
-                              <Col>
-                                <Time :time="l.quote.createTime"></Time>
-                              </Col>
-                            </Row>
-                            <Html
-                                :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
-                          </div>
-                        </a>
+                        <div @click="onFloor(`floor-${l.quote.id}`)"
+                             class="timeline-description timeline-reply-description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                          <Row type="flex" align="middle" class="timeline-reply-description-title">
+                            <Col flex="1">
+                              <BusinessCard :id="l.quote.byUserId">
+                                <p>
+                                  <u><b>{{ l.quote.username }}</b></u>
+                                </p>
+                              </BusinessCard>
+                              :
+                            </Col>
+                            <Col>
+                              <Time :time="l.quote.createTime"></Time>
+                            </Col>
+                          </Row>
+                          <Html
+                              :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
+                        </div>
                       </template>
 
                       <HtmlWidget :html="l.content" v-if="l.content"></HtmlWidget>
                     </div>
-
-                    <p v-if="isLogin">
-                      <!-- 回复 -->
-                      <Button type="dashed"
-                              v-voice-button
-                              @click="handleReply(l.floor || index, l.byUserId)">
-                        {{ $t('basic.button.reply') }}
-                      </Button>
-                    </p>
                   </div>
                   <!-- 回复:any E -->
 
-                  <Row class="timeline-content">
+                  <Row class="timeline-content-footer">
                     <Col flex="auto">
+                      <template v-if="isLogin">
+                        <!-- 回复 -->
+                        <Button size="small"
+                                v-voice-button
+                                @click="handleReply(l.floor || index, l.byUserId)">
+                          {{ $t('basic.button.reply') }}
+                        </Button>
+
+                        <!-- 申诉操作 -->
+                        <template v-if="isAdmin && l.type === 'banAppeal'">
+                          <Divider type="vertical"/>
+                          <Dropdown trigger="click" @on-click="handAdminAppeal">
+                            <a href="javascript:void(0)">
+                              <Button size="small">
+                                申诉操作
+                                <Icon type="ios-arrow-down"></Icon>
+                              </Button>
+                            </a>
+                            <DropdownMenu slot="list">
+                              <DropdownItem :name="`${l.id},0`">打开</DropdownItem>
+                              <DropdownItem :name="`${l.id},1`">关闭</DropdownItem>
+                              <DropdownItem :name="`${l.id},2`">锁定</DropdownItem>
+                            </DropdownMenu>
+                          </Dropdown>
+                        </template>
+
+                        <Divider type="vertical"/>
+                        <Poptip width="400">
+                          <Button size="small" v-voice-button>
+                            <Icon type="md-share"/>
+                          </Button>
+                          <div slot="content">
+                            <Form :label-width="40" label-position="left">
+                              <FormItem label="Url">
+                                <Input :value="getShareFloor(l.id)" readonly v-if="l.id"></Input>
+                              </FormItem>
+                              <FormItem label="Code">
+                                <Input :value="`{floor:${l.id}}`" readonly v-if="l.id"></Input>
+                              </FormItem>
+                            </Form>
+                          </div>
+                        </Poptip>
+
+                      </template>
                     </Col>
                     <Col align="right">
-                      # {{ l.index }}
+                      # {{ l.index }}-<span style="opacity: .4">{{ l.id }}</span>
                     </Col>
                   </Row>
 
                   <Divider v-if="index < timelineList.length - 1"></Divider>
                 </TimelineItem>
+              </div>
 
-                <div align="center">
-                  <Page :page-size="timeline.limit"
-                        :current="timeline.page"
-                        :total="timeline.total"
-                        simple
-                        class="page"
-                        size="small"/>
-                  <br>
-                </div>
+              <div align="center">
+                <Page :page-size="timeline.limit"
+                      :current="timeline.page"
+                      :total="timeline.total"
+                      simple
+                      class="page"
+                      size="small"/>
+                <br>
               </div>
 
               <!-- 用户回复 S -->
@@ -957,9 +949,9 @@
                 <Col flex="1">
                   <FormItem :label="$t('detail.appeal.info.player')">
                     <Input type="text"
-                           :value="cheater.id"
                            disabled
                            size="large"
+                           :value="cheater.id"
                            :placeholder="$t('detail.placeholder.player')"/>
                   </FormItem>
                 </Col>
@@ -976,6 +968,7 @@
                 <br>
                 <Card dis-hover :padding="0">
                   <Textarea v-model="appeal.content"
+                            ref="textareaAppealContent"
                             :toolbar="['bold', 'link']"
                             :height="'420px'"
                             :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
@@ -1286,6 +1279,7 @@ export default new BFBAN({
      * 获取举报玩家时间轴
      */
     getTimeline() {
+      const that = this;
       this.spinShow = true;
 
       this.http.get(api["account_timeline"], {
@@ -1308,8 +1302,41 @@ export default new BFBAN({
           this.onTimeLineSort();
         }
       }).finally(() => {
+        this.onFloor();
+
         this.spinShow = false;
       })
+    },
+    /**
+     * 滚动至楼层位置
+     * @param id
+     */
+    onFloor(id) {
+      const that = this;
+      // 锚点
+      that.url = new URL(window.location.href);
+      if (that.url.hash || id) {
+        let urlOffsetTop = document.getElementById(
+            (id || that.url.hash).replaceAll('#', '')
+        );
+        let className = urlOffsetTop.offsetParent.className;
+        urlOffsetTop.offsetParent.className = className + " timeline-scroll-floor";
+        setInterval(function () {
+          if (urlOffsetTop.offsetParent)
+            urlOffsetTop.offsetParent.className = className;
+        }, 10000);
+
+        document.documentElement.scrollTop = urlOffsetTop.offsetParent.offsetParent.offsetTop;
+      }
+    },
+    /**
+     * 分享楼层
+     */
+    getShareFloor(id) {
+      let _url = new URL(window.location.href);
+      if (!id) return _url;
+      _url.hash = "#floor-" + id;
+      return _url.toString() || "";
     },
     /**
      * 时间轴排序
@@ -1354,7 +1381,7 @@ export default new BFBAN({
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
-      if (suggestion.trim().length < 5) {
+      if (suggestion.trim().length < 5 || suggestion == '') {
         // too short
         this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
         return false;
@@ -1405,7 +1432,9 @@ export default new BFBAN({
      * 发布申诉
      */
     handleAppeal() {
-      const {content = ''} = this.appeal;
+      const content = this.appeal.content || this.$refs.textareaAppealContent.editorContent;
+
+      if (!content) return;
 
       this.appeal.load = true;
 
@@ -1424,7 +1453,7 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error(d.message);
+        this.$Message.error(d.code);
       }).finally(() => {
         this.appeal.load = false;
         message.playSendVoice();
@@ -1452,12 +1481,13 @@ export default new BFBAN({
 
         if (d.success == 1) {
           this.$Message.success(d.message);
-        } else {
-          this.$Message.error(d.message);
+          this.getTimeline();
+          return;
         }
 
-      }).finally(() => {
-        this.getTimeline();
+        this.$Message.error(d.code);
+      }).catch(err => {
+        this.$Message.error(err);
       })
     },
     /**
@@ -1619,12 +1649,20 @@ export default new BFBAN({
 .timeline-time-line {
   padding-top: 10px !important;
 
-  .ivu-timeline-item-tail {
-    margin-left: 15px;
+  .timeline-scroll-floor {
+    animation: scrollFloor 1s infinite;
   }
 
-  .ivu-timeline-item-head {
-    margin-top: 10px !important;
+  @keyframes scrollFloor {
+    0% {
+      background: hsla(yellow, 10%);
+    }
+    50% {
+      background: transparent;
+    }
+    100% {
+      background: hsla(yellow, 10%);
+    }
   }
 
   .timeline-content {
@@ -1636,12 +1674,25 @@ export default new BFBAN({
     margin-left: 3rem;
   }
 
+  .timeline-content-footer {
+    margin-left: 3rem;
+    margin-top: 10px;
+  }
+
+  .ivu-timeline-item-tail {
+    margin-left: 15px;
+  }
+
+  .ivu-timeline-item-head {
+    margin-top: 10px !important;
+  }
+
   .ivu-timeline-item {
     padding: 1rem 0;
   }
 
   .ivu-timeline-item-content {
-    padding: 0 .6rem 0 3rem;
+    padding: 0 0 0 24px;
   }
 
   .ivu-timeline-item-tail {
