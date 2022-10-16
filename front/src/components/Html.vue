@@ -4,9 +4,10 @@ import Vue from "vue";
 
 import htmlimage from "./HtmlImage";
 import htmllink from "./HtmlLink";
+import htmllinkcard from "./HtmlLinkCard";
 import htmlvideo from "./HtmlVideo";
 import htmlplayercard from "./HtmlPlayerCard";
-import privilegestag from "@/components/PrivilegesTag";
+import privilegestag from "./PrivilegesTag";
 import {regular} from "@/assets/js";
 
 export default {
@@ -32,7 +33,7 @@ export default {
       }
     };
   },
-  components: {htmlimage, htmllink, htmlvideo, htmlplayercard, privilegestag},
+  components: {htmlimage, htmllink, htmllinkcard, htmlvideo, htmlplayercard, privilegestag},
   watch: {
     html: {
       handler(val) {
@@ -136,16 +137,29 @@ export default {
           if (links && links.length > 0) {
             let _links = Array.from(links); // deep copy
             for (let i = 0; i < _links.length; i++) {
-              let eleLink = document.createElement('htmllink');
-              let _linkExtend = Vue.component("HtmlLinkCom", {
-                template: _links[i].innerText,
-                // data () {
-                //   return this.extensionData;
-                // }
-              });
+              let hrefString = new URL(_links[i].href)
+              let eleLink;
 
-              eleLink.setAttribute("text", new _linkExtend().$options.template);
-              eleLink.setAttribute("href", _links[i].href);
+              if (
+                  hrefString.searchParams.getAll('isWidget')[0] &&
+                  (hrefString.protocol.indexOf('http') || hrefString.protocol.indexOf('https'))
+              ) {
+                /// 卡片 =>
+                eleLink = document.createElement('htmllinkcard');
+                eleLink.setAttribute("href", unescape(hrefString));
+              } else {
+                /// 标准 =>
+                eleLink = document.createElement('htmllink');
+                let _linkExtend = Vue.component("HtmlLinkCom", {
+                  template: _links[i].innerText,
+                  // data () {
+                  //   return this.extensionData;
+                  // }
+                });
+
+                eleLink.setAttribute("text", new _linkExtend().$options.template);
+                eleLink.setAttribute("href", _links[i].href);
+              }
 
               _links[i].parentNode.replaceChild(eleLink, _links[i]);
             }
@@ -204,7 +218,18 @@ export default {
 
                   if (p_textToLinkArray)
                     for (let j = 0; j < p_textToLinkArray.length; j++) {
-                      _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${p_textToLinkArray[j]}" href="${p_textToLinkArray[j]}"></htmllink>`)
+                      let p_textToLinkItemURL = new URL(p_textToLinkArray[j]);
+
+                      if (
+                          p_textToLinkItemURL.searchParams.getAll("isWidget")[0] &&
+                          (p_textToLinkItemURL.protocol.indexOf('http') || p_textToLinkItemURL.protocol.indexOf('https'))
+                      ) {
+                        /// 卡片 =>
+                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${escape(p_textToLinkArray[j])}"></htmllinkcard>`)
+                      } else {
+                        /// 链接 =>
+                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${p_textToLinkArray[j]}" href="${p_textToLinkArray[j]}"></htmllink>`)
+                      }
                     }
                 }
               }
@@ -272,12 +297,6 @@ export default {
       width: 100%;
       display: block;
     }
-  }
-
-  hr:last-child,
-  .hr:last-child,
-  .img:last-child {
-    margin-bottom: 0 !important;
   }
 
   hr, .hr {

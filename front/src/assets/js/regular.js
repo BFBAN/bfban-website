@@ -3,7 +3,6 @@ export default class Regular {
 
     REGULARTYPE = {
         'link': {
-            tipError: '没有',
             v: /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-.,@?^=%&amp;:/~+#]*[\w\-@?^=%&amp;/~+#])?/g
         },
         'image': {},

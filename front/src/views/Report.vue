@@ -154,7 +154,7 @@
                       <!-- 视频链接 S -->
                       <FormItem
                           :prop="`videoLink[${blinkindex}]`"
-                          :rules="{validator: checkVideoLink, trigger: 'change'}"
+                          :rules="{validator: checkVideoLink, trigger: 'blur'}"
                           v-for="(blink, blinkindex) in tabs.list[index].formItem.videoLink"
                           :key="blinkindex">
                         <Row :gutter="0">
@@ -449,6 +449,7 @@ export default new BFBAN({
 
       // 正则校验
       const reg = regular.check('link', val);
+
       if (reg.code != 0) {
         callback(new Error(this.$i18n.t(errorText)));
         return;
