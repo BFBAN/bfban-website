@@ -561,7 +561,7 @@
                       </template>
                     </Col>
                     <Col align="right" class="user-select-none">
-                      # {{ l.index }}-<span style="opacity: .4">{{ l.id }}</span>
+                      # {{ l.index }}-<u><span style="opacity: .4">{{ l.id }}</span></u>
                     </Col>
                   </Row>
 
