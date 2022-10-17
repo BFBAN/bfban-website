@@ -10,8 +10,8 @@
                 "en-US": "Confirmed ban"
             },
             "2": {
-                "zh-CN": "嫌疑待观察",
-                "en-US": "Suspicious"
+                "zh-CN": "待自证",
+                "en-US": "To be self-certified"
             },
             "3": {
                 "zh-CN": "认为没开挂",
