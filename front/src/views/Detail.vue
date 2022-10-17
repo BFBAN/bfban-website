@@ -1525,54 +1525,51 @@ export default new BFBAN({
     onReply() {
       const cheaterId = this.cheater.id;
       let {content = ''} = this.reply;
-      console.log(content)
       content = formatTextarea(encodeURI(content));
-      console.log(content)
-      return
-      // let data = {
-      //   data: {
-      //     toPlayerId: cheaterId,
-      //     toCommentId: null,
-      //     content: content,
-      //   },
-      //   encryptCaptcha: this.$refs.replyPlayerCaptcha.hash,
-      //   captcha: this.reply.captcha,
-      // };
+      let data = {
+        data: {
+          toPlayerId: cheaterId,
+          toCommentId: null,
+          content: content,
+        },
+        encryptCaptcha: this.$refs.replyPlayerCaptcha.hash,
+        captcha: this.reply.captcha,
+      };
 
-      // // 楼中楼
-      // // 回复 评论dbID
-      // if (this.reply.toFloor && Number(this.reply.toFloor) >= 0) {
-      //   data.data.toCommentId = this.timelineList[this.reply.toFloor].id;
-      //   data.encryptCaptcha = this.$refs.replyCommentsCaptcha.hash;
-      // }
+      // 楼中楼
+      // 回复 评论dbID
+      if (this.reply.toFloor && Number(this.reply.toFloor) >= 0) {
+        data.data.toCommentId = this.timelineList[this.reply.toFloor].id;
+        data.encryptCaptcha = this.$refs.replyCommentsCaptcha.hash;
+      }
 
-      // this.replySpinShow = true;
-      // this.http.post(api["player_reply"], {data}).then(res => {
-      //   const d = res.data;
+      this.replySpinShow = true;
+      this.http.post(api["player_reply"], {data}).then(res => {
+        const d = res.data;
 
-      //   if (d.success == 1) {
-      //     this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
+        if (d.success == 1) {
+          this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
 
-      //     this.replyModal = false;
-      //     this.reply.toFloor = "";
-      //     this.reply = "";
+          this.replyModal = false;
+          this.reply.toFloor = "";
+          this.reply = "";
 
-      //     // Actively update text
-      //     if (this.$refs.replyTextarea)
-      //       this.$refs.replyTextarea.updateContent('');
-      //     return;
-      //   }
+          // Actively update text
+          if (this.$refs.replyTextarea)
+            this.$refs.replyTextarea.updateContent('');
+          return;
+        }
 
-      //   this.$Message.error(d.code);
-      // }).finally(() => {
-      //   this.replySpinShow = false;
+        this.$Message.error(d.code);
+      }).finally(() => {
+        this.replySpinShow = false;
 
-      //   message.playSendVoice();
+        message.playSendVoice();
 
-      //   this.cancelReply();
-      //   this.getPlayerInfo();
-      //   this.getTimeline();
-      // });
+        this.cancelReply();
+        this.getPlayerInfo();
+        this.getTimeline();
+      });
     },
     /**
      * 更新玩家信息
