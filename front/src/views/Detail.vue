@@ -1525,7 +1525,7 @@ export default new BFBAN({
     onReply() {
       const cheaterId = this.cheater.id;
       let {content = ''} = this.reply;
-      content = formatTextarea(encodeURI(content));
+      content = formatTextarea(content);
       let data = {
         data: {
           toPlayerId: cheaterId,
