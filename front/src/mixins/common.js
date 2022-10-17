@@ -31,7 +31,7 @@ function formatTextarea(val) {
 
   str = formatNewLine(str);
   str = formatLink(str);
-  str = formatImageLink(str);
+  // str = formatImageLink(str);
   return str;
 }
 
