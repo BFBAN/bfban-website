@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `players` (
   `viewNum` int unsigned NOT NULL DEFAULT '0',
   `commentsNum` int unsigned NOT NULL DEFAULT '0',
   `valid` tinyint unsigned NOT NULL DEFAULT '1',
-  `status` int DEFAULT NULL COMMENT '0未处理，1实锤，2嫌疑，3清白，4无效，5讨论，6待锤',
+  `status` int DEFAULT NULL COMMENT '0未处理，1实锤，2待自证，3清白，4无效，5讨论，6待锤'，'8刷枪',
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
   `updateTime` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,

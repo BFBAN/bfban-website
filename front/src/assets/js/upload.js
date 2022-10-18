@@ -95,18 +95,23 @@ export default class Upload extends (Print, Conf) {
                     },
                     body: file.slice(0, file.length)
                 }).then(res => res.json()).then(res => {
-                    this.service_file(res)
-                        .then(file_detail => {
-                            if (file_detail) {
-                                resolve({
-                                    code: 1,
-                                    url: file_detail.data.downloadURL
-                                })
-                            } else {
-                                resolve({code: -1})
-                            }
-                        })
-                        .catch(err => reject({code: -1, message: err.message}));
+                    resolve({
+                        code: 1,
+                        url:  `${this.location()}service/file?filename=${res.data.name}`
+                    })
+                    // this.service_file(res)
+                    //     .then(file_detail => {
+                    //         if (file_detail) {
+                    //             resolve({
+                    //                 code: 1,
+                    //                 url: file_detail.data.downloadURL
+                    //             })
+                    //         } else {
+                    //             resolve({code: -1})
+                    //         }
+                    //     })
+                    //     .catch(err => reject({code: -1, message: err.message}));
+                    
                 })
             } catch (e) {
                 resolve({
@@ -180,7 +185,9 @@ export default class Upload extends (Print, Conf) {
                     })
                     throw res;
                 }
+                resolve({
 
+                })
                 http.get(api["service_file"], {
                     params: {
                         filename: res.data.name,

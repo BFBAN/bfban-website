@@ -1525,9 +1525,7 @@ export default new BFBAN({
     onReply() {
       const cheaterId = this.cheater.id;
       let {content = ''} = this.reply;
-
       content = formatTextarea(content);
-
       let data = {
         data: {
           toPlayerId: cheaterId,
@@ -1637,11 +1635,10 @@ export default new BFBAN({
     }
   },
   computed: {
-    isOnlySuper() {
-      return account_storage.checkPrivilegeGroup(
-          this.$store.state?.user?.userinfo,
-          ['root', 'super', 'dev']
-      );
+    iisOnlySuper() {
+      const { userinfo } = this.$store.state.user || {}
+      const { privilege = [] } = userinfo
+      return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
     }
   }
 })
