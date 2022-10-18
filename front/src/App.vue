@@ -26,6 +26,12 @@ export default {
       split: true ? 1 : .9
     }
   },
+  beforeCreate() {
+    console.log(window.location)
+    if(window.location.hash) {
+      location.replace(window.location.hash.replace('#', ''));
+    }
+  },
   components: {Header, Footer, FooterPublicBox},
   created() {
     this.http = http_token.call(this);
