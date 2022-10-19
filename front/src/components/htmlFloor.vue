@@ -72,7 +72,8 @@ export default {
           urlOffsetTop.offsetParent.className = className;
       }, 10000);
 
-      document.documentElement.scrollTop = urlOffsetTop.offsetParent.offsetParent.offsetTop;
+      document.documentElement.scrollTop =
+          urlOffsetTop.offsetParent.offsetParent.offsetTop + urlOffsetTop.offsetParent.offsetParent.offsetHeight;
     },
   }
 }

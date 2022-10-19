@@ -538,7 +538,7 @@
                         <Divider type="vertical"/>
                       </template>
 
-                      <Poptip width="400">
+                      <Poptip width="400" transfer>
                         <Button size="small" v-voice-button>
                           <Icon type="md-share" />
                         </Button>
