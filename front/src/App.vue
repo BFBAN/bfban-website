@@ -27,7 +27,6 @@ export default {
     }
   },
   beforeCreate() {
-    console.log(window.location)
     if(window.location.hash) {
       location.replace(window.location.hash.replace('#', ''));
     }

@@ -13,7 +13,19 @@
         </div>
         <Row>
           <Col flex="1">
-            <h2> <a :href="`/account/${userInfo.id}`" target="_blank">{{ userInfo.username }}</a> </h2>
+            <h2>
+              <Row :gutter="10">
+                <Col v-if="userInfo.userAvatar">
+                  <Avatar shape="square"
+                          size="20"
+                          icon="ios-person"
+                          :src="`${userInfo.userAvatar}`"></Avatar>
+                </Col>
+                <Col flex="1">
+                  <a :href="`/account/${userInfo.id}`" target="_blank">{{ userInfo.username }}</a>
+                </Col>
+              </Row>
+            </h2>
             <PrivilegesTag :data="userInfo.privilege" v-if="userInfo.privilege"></PrivilegesTag>
           </Col>
           <Col>
