@@ -416,7 +416,7 @@ export default {
           if (d.success === 1) {
             this.$store.dispatch('setUserInfo', d.data);
 
-            this.formItem = d.data;
+            this.formItem = Object.assign(this.formItem, d.data);
           }
         }).finally(() => {
           this.checkLangLocalSync();
@@ -446,6 +446,7 @@ export default {
             originName: '',
             originEmail: '',
           },
+          userAvatar: '',
           newname: '',
           username: '',
           attr: {

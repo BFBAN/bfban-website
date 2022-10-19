@@ -15,7 +15,9 @@
       <Form label-position="top" class="profile-header">
         <Row :gutter="15">
           <Col>
-            <Avatar :size="48">{{ userinfo.username[0] }}</Avatar>
+            <a href="https://gravatar.com" target="_blank">
+              <Avatar icon="ios-person" :size="48" :src="userinfo.userAvatar"></Avatar>
+            </a>
           </Col>
           <Col flex="1">
             <h3> {{ userinfo.username }} </h3>

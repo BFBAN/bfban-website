@@ -7,6 +7,7 @@ import db from "../mysql.js";
 import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
+import { getGravatarAvatar } from "../lib/gravatar.js";
 import { sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify } from "../lib/mail.js";
 import { allowPrivileges, forbidPrivileges, verifyJWT } from "../middleware/auth.js";
 import { generatePassword, comparePassword, userHasRoles, privilegeRevoker } from "../lib/auth.js";
@@ -202,6 +203,7 @@ async (req, res, next)=> {
                 expiresIn = EXPIRES_IN-0;
             const jwtpayload = {
                 username: username,
+                userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
                 userId: user.id,
                 privilege: user.privilege,
                 signWhen: Date.now(),
@@ -344,6 +346,7 @@ async function showUserInfo(req, res, next) {
         const reportnum = await db('comments').count({num: 'id'}).where({byUserId: user.id, type: 'report'}).distinct('toPlayerId').first().then(r=>r.num);
         const data = {
             id: user.id,
+            userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
             username: user.username,
             privilege: user.privilege,
             joinTime: user.createTime,

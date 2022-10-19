@@ -64,13 +64,13 @@
                   :placement="isMobile ? 'bottom' : 'bottom-end'"
                   :padding="0">
           <router-link :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
-            <Avatar icon="ios-person"></Avatar>
+            <Avatar icon="ios-person" :src="userinfo.userAvatar"></Avatar>
             <span class="mobile-hide">&emsp;{{ userinfo.username }}</span>
           </router-link>
           <DropdownMenu slot="list" class="header-dropdown-menu">
             <div class="header-dropdown-avatar">
               <div>
-                <Avatar icon="ios-person" size="60"></Avatar>
+                <Avatar icon="ios-person" size="60" :src="userinfo.userAvatar"></Avatar>
                 <p class="header-dropdown-name">{{ userinfo.username }}</p>
                 <p class="header-dropdown-id">{{ userinfo.userId }}</p>
               </div>
