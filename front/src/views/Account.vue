@@ -26,7 +26,11 @@
         <Row type="flex" justify="center" align="middle">
           <Col justify="center" align="middle">
             <br>
-            <Avatar shape="square" style="background-color: yellow" size="150">{{ account.username[0] || '' }}</Avatar>
+            <Avatar shape="square"
+                    style="background-color: yellow"
+                    size="150"
+                    icon="ios-person"
+                    :src="`${account.userAvatar}?s=150`"></Avatar>
 
             <h1 :title="$t('account.username')" class="account-username">
               {{ account.username || 'username' }}

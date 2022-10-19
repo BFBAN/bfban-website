@@ -29,6 +29,10 @@ const config = {
     github: {
 
     },
+    // gravatar
+    gravatar: {
+        domain: 'https://www.gravatar.com'
+    },
 	webhook: {
         senderUrl: '',	// use cloudflare worker to proxy webhook request
         token: '',		// token it use
