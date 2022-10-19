@@ -13,25 +13,43 @@
       <br>
 
       <div :class="`search-content ${cheaters.length > 0 ? 'search-content-mini' : ''}`">
-        <Row type="flex" justify="center" :gutter="0" style="width: 100%;">
+        <Row type="flex" justify="center" :gutter="20" style="width: 100%;">
           <Col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 7}">
-            <RadioGroup v-model="searchScopeValue" type="button" size="large">
-              <Radio :label="i" border v-for="i in searchScope" :key="i" class="search-input-show">{{ $t('search.scope.' + i) }}</Radio>
-            </RadioGroup>
+            <Select v-model="searchScopeValue" size="large" class="search-input-show">
+              <Icon type="ios-funnel" slot="prefix" style="margin-left: 10px; margin-right: 5px; opacity: .6" />
+              <Option v-for="i in searchScope" :value="i" :key="i">{{ $t('search.scope.' + i) }}</Option>
+            </Select>
           </Col>
           <Col class="desktop-hide" :xs="{span: 24}">&thinsp;</Col>
           <Col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}">
             <Dropdown style="width: 100%">
-              <Input :enter-button="searchVal.length >= 3"
-                     :search="searchVal.length >= 3"
-                     size="large"
-                     class="search-input search-input-show"
-                     :placeholder="$t('search.placeholder')"
-                     v-model="searchVal"
-                     @on-clear="searchVal = '';cheaters = []"
-                     @on-click="handleSearch"
-                     @on-search="handleSearch">
-              </Input>
+              <div class="search-input search-input-show ivu-input ivu-input-large">
+                <Row :gutter="10">
+                  <Col flex="1">
+                    <Input
+                        size="small"
+                        v-model="searchVal"
+                        :border="false"
+                        :placeholder="$t('search.placeholder')"
+                        @on-search="handleSearch">
+                    </Input>
+                  </Col>
+                  <Col>
+                    <OcrWidget :data="{}" @ok="onOcrOutput">
+                      <Tooltip content="OCR">
+                        <a href="javascript:void(0)">
+                          <Icon type="md-qr-scanner"/>
+                        </a>
+                      </Tooltip>
+                    </OcrWidget>
+                  </Col>
+                  <Col>
+                    <Button type="primary" size="small" @click="handleSearch">
+                      <Icon type="ios-search"/>
+                    </Button>
+                  </Col>
+                </Row>
+              </div>
               <div transfer slot="list">
                 <Row :gutter="5" v-if="searchHistory.list.length > 0" style="padding: 10px">
                   <Col v-for="(i, index) in searchHistory.list"
@@ -54,7 +72,8 @@
         </Row>
         <Row type="flex" justify="center" align="middle" class="checkboxGroup" v-if="cheaters.length <= 0">
           <Col :xs="{span: 24}" :lg="{span: 6}" align="center">
-            <Icon type="md-alert" /> {{ $t("search.describe") }}
+            <Icon type="md-alert"/>
+            {{ $t("search.describe") }}
           </Col>
           <Col :xs="{span: 0}" :lg="{span: 1}">
             <Divider type="vertical"/>
@@ -67,7 +86,8 @@
 
       <div v-if="cheaters.length !== 0">
         <List border class="content">
-          <ListItem v-for="(cheater, index) in cheaters" :key="index" @click.native="$router.push({name: 'player', params: {ouid: cheater.originPersonaId}})">
+          <ListItem v-for="(cheater, index) in cheaters" :key="index"
+                    @click.native="$router.push({name: 'player', params: {ouid: cheater.originPersonaId}})">
             <ListItemMeta
                 :avatar="cheater.avatarLink"
                 :title="cheater.currentName || cheater.originName"
@@ -88,6 +108,7 @@
 
 <script>
 import BFBAN from "../assets/js/bfban";
+import OcrWidget from "@/components/OcrWidget";
 
 import {api, http, storage, time} from "../assets/js";
 
@@ -105,6 +126,7 @@ export default new BFBAN({
       cheaters: []
     }
   },
+  components: {OcrWidget},
   created() {
     const {s, type} = this.$route.query;
     this.searchScopeValue = type || this.searchScope[0];
@@ -143,11 +165,23 @@ export default new BFBAN({
 
       this.handleSearch();
     },
+    /**
+     * Ocr输出
+     * @param val
+     */
+    onOcrOutput(data) {
+      this.searchVal = data.value;
+
+      this.handleSearch();
+    },
+    /**
+     * 搜索
+     */
     handleSearch() {
       const that = this;
       const val = this.searchVal.trim();
 
-      if (val == '' || val.length <= 3 || !this.searchScopeValue) {
+      if (val == '' || val.length <= 2 || !this.searchScopeValue) {
         return;
       }
 
@@ -162,8 +196,8 @@ export default new BFBAN({
       }).then(res => {
 
         let hisArr = Array.from(new Set(that.searchHistory.list.concat([val])))
-            that.setSearchHistoryValue(hisArr);
-            that.searchHistory.list = hisArr;
+        that.setSearchHistoryValue(hisArr);
+        that.searchHistory.list = hisArr;
 
         const d = res.data;
 
@@ -227,7 +261,6 @@ export default new BFBAN({
 
   .search-input {
     width: 100% !important;
-    border-radius: 10px;
   }
 }
 </style>

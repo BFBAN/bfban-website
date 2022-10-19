@@ -7,7 +7,7 @@
           <Icon type="md-images" size="50" />
         </Badge>
         <img style="display: none" :src="src" @error="onError" @load="onLoad"/>
-        <p>{{src}}</p>
+        <p class="img-box-url">{{src}}</p>
       </div>
     </template>
     <template v-else-if="imageStatus == 1">
@@ -46,6 +46,10 @@ export default {
       type: String,
       default: ""
     },
+    index: {
+      type: String,
+      default: "0"
+    },
     images: {
       type: String,
       default: ""
@@ -60,12 +64,11 @@ export default {
   },
   watch: {
     images: {
-      handler (val, oldVal) {
-        console.log(val)
+      handler (val) {
         this.viewImages = val.split(",");
       },
       deep: true
-    }
+    },
   },
   created() {
     this.viewImages = this.images.split(",");
@@ -78,7 +81,8 @@ export default {
       this.imageStatus = -1;
     },
     openUrl() {
-      window.open(this.src);
+      if (this.src)
+        window.open(this.src);
     },
     show () {
       if (this.imageStatus <= 0) return;
@@ -88,7 +92,8 @@ export default {
           toolbar: false,
           navbar: true,
           keyboard: false,
-          fullscreen: true
+          fullscreen: true,
+          initialViewIndex: Number(this.index),
         },
         images: this.viewImages,
       })

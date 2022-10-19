@@ -102,6 +102,7 @@ export default {
             for (let i = 0; i < _imgs.length; i++) {
               let eleImg = document.createElement('htmlimage');
               eleImg.setAttribute("src", _imgs[i].src);
+
               this.images.push(_imgs[i].src);
 
               _imgs[i].parentNode.replaceChild(eleImg, _imgs[i]);
@@ -111,6 +112,7 @@ export default {
             let _htmlimage = vDom.getElementsByTagName("htmlimage");
             for (let i = 0; i < _htmlimage.length; i++) {
               _htmlimage[i].setAttribute("images", this.images);
+              _htmlimage[i].setAttribute("index", i);
             }
           }
 

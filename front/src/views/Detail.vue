@@ -517,48 +517,47 @@
                                 @click="handleReply(l.floor || index, l.byUserId)">
                           {{ $t('basic.button.reply') }}
                         </Button>
-
-                        <!-- 申诉操作 -->
-                        <template v-if="isAdmin && l.type === 'banAppeal'">
-                          <Divider type="vertical"/>
-                          <Dropdown trigger="click" @on-click="handAdminAppeal">
-                            <a href="javascript:void(0)">
-                              <Button size="small">
-                                申诉操作
-                                <Icon type="ios-arrow-down"></Icon>
-                              </Button>
-                            </a>
-                            <DropdownMenu slot="list">
-                              <DropdownItem :name="`${l.id},0`">打开</DropdownItem>
-                              <DropdownItem :name="`${l.id},1`">关闭</DropdownItem>
-                              <DropdownItem :name="`${l.id},2`">锁定</DropdownItem>
-                            </DropdownMenu>
-                          </Dropdown>
-                        </template>
-
                         <Divider type="vertical"/>
-                        <Poptip width="400">
-                          <Button size="small" v-voice-button>
-                            <Icon type="md-share" />
-                          </Button>
-                          <div slot="content">
-                            <Form :label-width="40" label-position="left">
-                              <FormItem label="Url">
-                                <Input :value="getShareFloor(l.id)" :autosize="{minRows: 1,maxRows: 2}" type="textarea" readonly v-if="l.id"></Input>
-                              </FormItem>
-                              <FormItem label="Code">
-                                <Input :value="`{floor:${l.id}}`" readonly v-if="l.id"></Input>
-                              </FormItem>
-                              <FormItem label="" v-if="l.id" >
-                                <Card dis-hover :padding="5">
-                                  <Html :html="`<p>{floor:${l.id}}</p>`" v-if="l.id" />
-                                </Card>
-                              </FormItem>
-                            </Form>
-                          </div>
-                        </Poptip>
-
                       </template>
+
+                      <!-- 申诉操作 -->
+                      <template v-if="isLogin && isAdmin && l.type === 'banAppeal'">
+                        <Dropdown trigger="click" @on-click="handAdminAppeal">
+                          <a href="javascript:void(0)">
+                            <Button size="small">
+                              申诉操作
+                              <Icon type="ios-arrow-down"></Icon>
+                            </Button>
+                          </a>
+                          <DropdownMenu slot="list">
+                            <DropdownItem :name="`${l.id},0`">打开</DropdownItem>
+                            <DropdownItem :name="`${l.id},1`">关闭</DropdownItem>
+                            <DropdownItem :name="`${l.id},2`">锁定</DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
+                        <Divider type="vertical"/>
+                      </template>
+
+                      <Poptip width="400">
+                        <Button size="small" v-voice-button>
+                          <Icon type="md-share" />
+                        </Button>
+                        <div slot="content">
+                          <Form :label-width="40" label-position="left">
+                            <FormItem label="Url">
+                              <Input :value="getShareFloor(l.id)" :autosize="{minRows: 2,maxRows: 2}" type="textarea" readonly v-if="l.id"></Input>
+                            </FormItem>
+                            <FormItem label="Code">
+                              <Input :value="`{floor:${l.id}}`" readonly v-if="l.id"></Input>
+                            </FormItem>
+                            <FormItem label="" v-if="l.id" >
+                              <Card dis-hover :padding="5">
+                                <Html :html="`<p>{floor:${l.id}}</p>`" v-if="l.id" />
+                              </Card>
+                            </FormItem>
+                          </Form>
+                        </div>
+                      </Poptip>
                     </Col>
                     <Col align="right" class="user-select-none">
                       # {{ l.index }}-<u><span style="opacity: .4">{{ l.id }}</span></u>

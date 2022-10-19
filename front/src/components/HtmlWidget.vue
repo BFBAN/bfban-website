@@ -5,7 +5,7 @@
     <Row class="html-widget-toolbar" type="flex" justify="center" align="middle">
       <Col flex="1"></Col>
       <Col>
-        <Dropdown @on-click="changeSize">
+        <Dropdown trigger="click" @on-click="changeSize">
           <a href="javascript:void(0)">
             {{htmlSize}}
             <Icon type="ios-arrow-down"></Icon>
@@ -17,7 +17,7 @@
           </DropdownMenu>
         </Dropdown>
         <Divider type="vertical"></Divider>
-        <Dropdown @on-click="changeMode">
+        <Dropdown trigger="click" @on-click="changeMode">
           <a href="javascript:void(0)">
             {{htmlShowMode}}
             <Icon type="ios-arrow-down"></Icon>
