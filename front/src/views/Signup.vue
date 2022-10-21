@@ -187,9 +187,7 @@ export default new BFBAN({
     onSignup() {
       const that = this;
       this.$refs['formValidate'].validate(valid => {
-        let {username, password, originEmail, originName, captcha} = _.each(this.signup, (v, k, o) => {
-          o[k] = v.trim();
-        });
+        let {username, password, originEmail, originName, captcha} = this.signup;
 
         // 检查表单
         if (!valid) {
@@ -197,46 +195,45 @@ export default new BFBAN({
           return;
         }
 
-        if (username && !testWhitespace(username) && password && !testWhitespace(password) && captcha.length === 4) {
-          this.spinShow = true;
+        this.spinShow = true;
 
-          http.post(api["account_signup"], {
+        http.post(api["account_signup"], {
+          data: {
             data: {
-              data: {
-                username,
-                password,
-                originEmail,	// must match the originName below
-                originName,	// must have one of bf series game
-                language: mail.exchangeLangField(this.$root.$i18n.locale)
-              },
-              encryptCaptcha: this.$refs.captcha.hash,
-              captcha
-            }
-          }).then(res => {
-            const d = res.data;
+              username,
+              password,
+              originEmail,	// must match the originName below
+              originName,	// must have one of bf series game
+              language: mail.exchangeLangField(this.$root.$i18n.locale)
+            },
+            encryptCaptcha: this.$refs.captcha.hash,
+            captcha
+          }
+        }).then(res => {
+          const d = res.data;
 
-            if (d.success == 1) {
-              that.stepsIndex += 1;
-              that.$Message.success(d.code);
-              return;
-            }
+          if (d.success === 1) {
+            that.stepsIndex += 1;
+            that.$Message.success({
+              content: this.$i18n.t('signup.needVerify'),
+              duration: 10
+            });
+            return;
+          }
 
-            this.callbackMessage(d);
-            this.onCleanSignupForm({originEmail: false, originName: false, stepsIndex: false})
-          }).catch(err => {
-            this.$Message.error(err);
-            this.backServiceMsg = this.$i18n.t('signup.failed');
+          this.callbackMessage(d);
+          this.onCleanSignupForm({originEmail: false, originName: false, stepsIndex: false})
+        }).catch(err => {
+          this.$Message.error(err);
+          this.backServiceMsg = this.$i18n.t('signup.failed');
 
-            this.onCleanSignupForm();
-          }).finally(() => {
-            this.spinShow = false;
+          this.onCleanSignupForm();
+        }).finally(() => {
+          this.spinShow = false;
 
-            if (this.$refs.captcha)
-              this.$refs.captcha.refreshCaptcha();
-          });
-        } else {
-          this.$Message.error(this.$i18n.t('signup.fillIn'));
-        }
+          if (this.$refs.captcha)
+            this.$refs.captcha.refreshCaptcha();
+        });
       })
     },
 
@@ -273,8 +270,7 @@ export default new BFBAN({
           duration: 3
         });
 
-        this.signup.password = '';
-        this.signup.captcha = '';
+        this.onCleanSignupForm({})
       }).finally(() => {
         if (this.$refs.captcha)
           this.$refs.captcha.refreshCaptcha();

@@ -139,7 +139,7 @@
                       <DropdownItem v-for="origin in cheater.history" :key="origin.originName">
                         <Row>
                           <Col flex="1">
-                            <Time :time="origin.fromTime" v-if="origin.fromTime"></Time>
+                            <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
                           </Col>
                           <Col>{{ origin.originName }}</Col>
                         </Row>
@@ -220,7 +220,7 @@
                 <Card :padding="10" dis-hover>
                   <!-- 第一次被举报时间 -->
                   <h3>
-                    <Time v-if="cheater.createTime" :time="cheater.createTime"></Time>
+                    <Time v-if="cheater.createTime" :time="cheater.createTime" type="datetime"></Time>
                   </h3>
                   <span>{{ $t('detail.info.firstReportTime') }}</span>
                 </Card>
@@ -229,7 +229,7 @@
                 <Card :padding="10" dis-hover>
                   <!-- 最近更新时间 -->
                   <h3>
-                    <Time v-if="cheater.updateTime" :time="cheater.updateTime"></Time>
+                    <Time v-if="cheater.updateTime" :time="cheater.updateTime" type="datetime"></Time>
                   </h3>
                   <span>{{ $t('detail.info.recentUpdateTime') }}</span>
                 </Card>
@@ -359,7 +359,7 @@
                           </Tag>
                         </Col>
                         <Col align="right">
-                          <Time :time="l.createTime" v-if="l.createTime"></Time>
+                          <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
                         </Col>
                       </Row>
                     </div>
@@ -408,7 +408,7 @@
                         </Col>
 
                         <Col>
-                          <Time :time="l.createTime" v-if="l.createTime"></Time>
+                          <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
                           <Divider type="vertical"/>
                           <Tag type="border" color="primary">{{ l.appealStatus }}</Tag>
                         </Col>
@@ -453,7 +453,7 @@
                           </template>
                         </Col>
                         <Col align="right">
-                          <Time v-if="l.createTime" :time="l.createTime"></Time>
+                          <Time v-if="l.createTime" :time="l.createTime" type="datetime"></Time>
                         </Col>
                       </Row>
                     </div>
@@ -477,7 +477,7 @@
                           {{ $t('basic.button.reply') }}
                         </Col>
                         <Col align="right">
-                          <Time v-if="l.createTime" :time="l.createTime"></Time>
+                          <Time v-if="l.createTime" :time="l.createTime" type="datetime"></Time>
                         </Col>
                       </Row>
                     </div>
@@ -496,7 +496,7 @@
                               :
                             </Col>
                             <Col>
-                              <Time :time="l.quote.createTime"></Time>
+                              <Time :time="l.quote.createTime" type="datetime"></Time>
                             </Col>
                           </Row>
                           <Html :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
