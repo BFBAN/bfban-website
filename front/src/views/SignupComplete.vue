@@ -58,6 +58,7 @@ export default new BFBAN({
     this.registerVerify();
   },
   methods: {
+    // 注册验证账户
     registerVerify () {
       const {code} = this.$route.query;
       if (code == '' || code == undefined || code == null) {
@@ -67,7 +68,6 @@ export default new BFBAN({
       this.verify.iscode = true;
       this.verify.load = 0;
 
-      // 验证账户
       http.get(api["account_signupVerify"], {
         params: {
           code,

@@ -111,9 +111,9 @@
         </Row>
       </div>
 
-      <Modal v-model="message.show" @on-ok="setMessage">
+      <Modal v-model="message.show" @on-ok="onPushMessage">
         <Form>
-          <FormItem label="聊天">
+          <FormItem :label="$i18n.t('account.message.chat')">
             <Input v-model="message.content"
                    type="textarea" :autosize="{minRows: 5,maxRows: 10}"></Input>
           </FormItem>
@@ -351,8 +351,10 @@ export default new BFBAN({
     /**
      * 发送消息
      */
-    setMessage() {
+    onPushMessage() {
       const {uId} = this.$route.params;
+
+      if (!uId) return;
 
       this.http.post(api["user_message"], {
         data: {
@@ -365,17 +367,19 @@ export default new BFBAN({
       }).then(res => {
         if (res.data.success == 1) {
           this.$Message.success(res.data.message);
-        } else {
-          switch (res.data.error) {
-            case 'message.denied':
-              this.$Message.error(this.$i18n.t("account.message.hint.denied"));
-              break;
-            case 'message.blocked':
-              this.$Message.error(this.$i18n.t("account.message.hint.taOffChat"));
-              break;
-            default:
-              this.$Message.error(res.data.message);
-          }
+
+          return;
+        }
+
+        switch (res.data.error) {
+          case 'message.denied':
+            this.$Message.error(this.$i18n.t("account.message.hint.denied"));
+            break;
+          case 'message.blocked':
+            this.$Message.error(this.$i18n.t("account.message.hint.taOffChat"));
+            break;
+          default:
+            this.$Message.error(res.data.message);
         }
       }).finally(() => {
         this.message.load = false;
@@ -389,6 +393,8 @@ export default new BFBAN({
     getReports(pageNum) {
       const {uId} = this.$route.params;
 
+      if (!uId) return;
+
       http.get(api["user_reports"], {
         params: {
           id: uId,
@@ -398,6 +404,7 @@ export default new BFBAN({
       }).then(res => {
         const d = res.data;
         let reportData = [];
+
         if (d.success === 1) {
           d.data.forEach(i => {
             reportData.push(i);

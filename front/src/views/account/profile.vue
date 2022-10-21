@@ -32,12 +32,14 @@
       <div class="profile-header-divider ivu-divider ivu-divider-horizontal"></div>
       <Row>
         <Col :xs="{span: 24}" :sm="{span: 6}">
-          <Menu class="profile-menu" :mode="isMobile ? 'horizontal' : 'vertical'" :open-names="openMuen" :active-name="menuValue" @on-select="onMenuActive">
+          <Menu class="profile-menu" :mode="isMobile ? 'horizontal' : 'vertical'" :open-names="openMuen"
+                :active-name="menuValue" @on-select="onMenuActive">
             <div v-for="(i, index) in menu" :key="index">
               <MenuItem :name="j.name" v-for="(j, j_index) in i.child" :key="j_index">
                 <Row :gutter="10">
                   <Col flex="1" :style="j.configurationKey ? `opacity:${!j.configurationValue ? '.3' : '1'}` : ''">
-                    <Icon :type="j.icon" v-if="j.icon" size="20" /> {{ $t(`profile.${j.title}.title`)}}
+                    <Icon :type="j.icon" v-if="j.icon" size="20"/>
+                    {{ $t(`profile.${j.title}.title`) }}
                   </Col>
                   <Col>
                     <Checkbox @on-change="switchAttr(j.configurationKey, j.configurationValue)"
@@ -50,18 +52,18 @@
             </div>
             <MenuGroup>
               <MenuItem name="userCenter" :to="{name: 'account', params: { uId: `${userinfo.userId }` }}">
-                  {{ $t("header.userCenter") }}
-                  <Icon type="ios-link"/>
+                {{ $t("header.userCenter") }}
+                <Icon type="ios-link"/>
               </MenuItem>
               <MenuItem name="admin" v-if="isAdmin" :to="{name: 'admin', params: { pagename: 'home' }}">
-                  {{ $t("profile.admin.title") }}
-                  <Icon type="ios-link"/>
+                {{ $t("profile.admin.title") }}
+                <Icon type="ios-link"/>
               </MenuItem>
             </MenuGroup>
           </Menu>
         </Col>
         <Col :xs="{span: 24}" :sm="{span: 18}" class="profile-right-content">
-          <account v-if="menuValue == 'account'"></account>
+          <information v-if="menuValue == 'information'"></information>
           <appearance v-if="menuValue == 'appearance'"></appearance>
           <message v-if="menuValue == 'message'"></message>
           <enhance v-if="menuValue == 'enhance'"></enhance>
@@ -79,7 +81,7 @@
 import PrivilegesTag from "/src/components/PrivilegesTag";
 
 import appearance from "./appearance";
-import account from "./account";
+import information from "./information";
 import message from "./message";
 import enhance from "./enhance";
 import media from "./media";
@@ -102,7 +104,7 @@ export default new BFBAN({
           name: "0",
           child: [{
             title: 'account',
-            name: 'account',
+            name: 'information',
             icon: 'md-person'
           }, {
             title: 'appearance',
@@ -151,7 +153,7 @@ export default new BFBAN({
       ]
     }
   },
-  components: {appearance, account, message, enhance, media,voice, history, subscribes, PrivilegesTag},
+  components: {appearance, information, message, enhance, media, voice, history, subscribes, PrivilegesTag},
   created() {
     const {pagename} = this.$route.params;
 
@@ -163,7 +165,7 @@ export default new BFBAN({
     this.onMenuActive(pagename);
   },
   methods: {
-    onMenuActive (val) {
+    onMenuActive(val) {
       this.menuValue = val;
       this.$router.push({name: 'profile', params: {pagename: val}})
     },
@@ -180,24 +182,24 @@ export default new BFBAN({
 </script>
 
 <style lang="less" scoped>
- .profile-menu {
-   height: 100%;
+.profile-menu {
+  height: 100%;
 
-   .ivu-icon {
-      opacity: .6;
-   }
- }
+  .ivu-icon {
+    opacity: .6;
+  }
+}
 
- .profile-header {
-   padding: 15px 20px;
- }
+.profile-header {
+  padding: 15px 20px;
+}
 
- .profile-header-divider {
-   margin: 0 !important;
-   opacity: .2;
- }
+.profile-header-divider {
+  margin: 0 !important;
+  opacity: .2;
+}
 
- .profile-right-content {
-   padding: 10px 20px;
- }
+.profile-right-content {
+  padding: 10px 20px;
+}
 </style>

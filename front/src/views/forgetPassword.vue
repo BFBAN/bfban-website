@@ -14,8 +14,8 @@
 
       <Row>
         <Col span="24">
-          <Card shadow>
-            <Steps :current="stepsIndex">
+          <Card dis-hover>
+            <Steps :current="stepsIndex" slot="title">
               <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].title')"></Step>
               <Step :title="$t('signup.steps[1].title')" :content="$t('signup.steps[1].title')"></Step>
               <Step :title="$t('signup.steps[2].title')" :content="$t('signup.steps[2].title')"></Step>
@@ -23,9 +23,7 @@
               <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
             </Steps>
 
-            <Divider dashed></Divider>
-
-            <Card dis-hover :padding="isMobile ? 20 : 50">
+            <div>
               <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
                 <div v-if="stepsIndex == 0">
                   <FormItem :label="$t('signup.form.username')" prop="username">
@@ -89,7 +87,7 @@
                   </Col>
                 </Row>
               </Form>
-            </Card>
+            </div>
           </Card>
         </Col>
       </Row>

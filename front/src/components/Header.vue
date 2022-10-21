@@ -86,7 +86,7 @@
                 {{ $t("header.report") }}
               </DropdownItem>
             </router-link>
-            <router-link :to="{name: 'profile', params: {pagename: 'account'}}">
+            <router-link :to="{name: 'profile', params: {pagename: 'information'}}">
               <DropdownItem>
                 {{ $t("header.profile") }}
               </DropdownItem>

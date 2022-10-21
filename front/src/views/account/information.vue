@@ -44,7 +44,7 @@
 
       <Divider dashed></Divider>
 
-      <template v-if="formItem.origin.originName == null || formItem.origin.originUserId == null">
+      <template v-if="!formItem.origin && formItem.origin.originName == null || formItem.origin.originUserId == null">
         <Alert show-icon type="error">
           {{ $t('account.bindOrigin.title') }}
           <Icon type="ios-bulb-outline" slot="icon"></Icon>

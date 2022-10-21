@@ -25,6 +25,7 @@ const Apps = () => import('@/views/Apps.vue');
 const Profile = () => import('@/views/account/profile.vue');
 const Admin = () => import('@/views/admin/index.vue');
 const Search = () => import('@/views/Search.vue');
+import bindOrigin from "@/views/bindOrigin";
 
 Vue.use(VueRouter);
 Vue.use(VueMeta, {
@@ -54,7 +55,7 @@ const isAdminBefore = (to, from, next) => {
     if (checkAdmin) {
         next();
     } else {
-        next({path: '/profile/account'});
+        next({path: '/profile/information'});
     }
 }
 
@@ -314,7 +315,7 @@ const routes = [
                 description: 'bindOrigin.description'
             }
         },
-        component: Signup,
+        component: bindOrigin,
         beforeEnter: isLoginBeforeEnter
     },
 
