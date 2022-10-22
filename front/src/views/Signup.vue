@@ -12,122 +12,127 @@
       </Row>
       <br>
 
-      <Row>
-        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
-          <Card dis-hover>
-            <Steps :current="stepsIndex" slot="title" v-if="!isMobile">
-              <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].supplement')"></Step>
-              <Step :title="$t('signup.steps[1].title')" :content="$t('signup.steps[1].title')"></Step>
-              <Step :title="$t('signup.steps[2].title')" :content="$t('signup.steps[2].title')"></Step>
-              <Step :title="$t('signup.steps[3].title')" :content="$t('signup.steps[3].title')"></Step>
-              <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
-            </Steps>
+      <Card dis-hover>
+        <Steps :current="stepsIndex" slot="title" v-if="!isMobile">
+          <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].supplement')"></Step>
+          <Step :title="$t('signup.steps[1].title')" :content="$t('signup.steps[1].title')"></Step>
+          <Step :title="$t('signup.steps[2].title')" :content="$t('signup.steps[2].title')"></Step>
+          <Step :title="$t('signup.steps[3].title')" :content="$t('signup.steps[3].title')"></Step>
+          <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
+        </Steps>
 
-            <Row :gutter="isMobile ? 0 : 30">
-              <Col :xs="{span:24, order: 1}" :lg="{span:12, order: 0}">
-                <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate">
-                  <div v-show="stepsIndex == 0">
-                    <FormItem :label="$t('signup.form.username')" prop="username">
-                      <Input v-model="signup.username" maxlength="40" size="large"
-                             :placeholder="$t('signup.placeholder.username')"/>
-                    </FormItem>
-                    <FormItem :label="$t('signup.form.password')" prop="password">
-                      <Input type="password" password minlength="6" v-model="signup.password" size="large"
-                             :placeholder="$t('signup.placeholder.password')"/>
-                    </FormItem>
-                  </div>
+        <Row :gutter="isMobile ? 0 : 30">
+          <Col span="24">
+            <template v-if="stepsIndex == 0">
+              <Alert type="info" show-icon>
+                <div v-html="$t('signup.eaPrivacy')"></div>
+                {{ $t('signup.checkAllEmail') }}
+              </Alert>
+              <br>
+            </template>
+            <Alert type="error" show-icon v-if="backServiceMsg">
+              <b>{{ $t('signup.failed') }} :</b>
+              {{ backServiceMsg }}
+            </Alert>
 
-                  <div v-show="stepsIndex === 1">
-                    <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
-                      <Input v-model="signup.originEmail" size="large"
-                             :placeholder="$t('signup.placeholder.originEmail')"/>
-                    </FormItem>
-                    <FormItem :label="$t('signup.form.originName')" prop="originName">
-                      <Input v-model="signup.originName" size="large"
-                             :placeholder="$t('signup.placeholder.originName')"/>
-                    </FormItem>
-                  </div>
+            <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate">
+              <div v-show="stepsIndex == 0">
+                <FormItem :label="$t('signup.form.username')" prop="username">
+                  <Input v-model="signup.username" maxlength="40" size="large"
+                         :placeholder="$t('signup.placeholder.username')"/>
+                </FormItem>
+                <FormItem :label="$t('signup.form.password')" prop="password">
+                  <Input type="password" password minlength="6" v-model="signup.password" size="large"
+                         :placeholder="$t('signup.placeholder.password')"/>
+                </FormItem>
+              </div>
 
-                  <div v-show="stepsIndex === 2">
-                    <FormItem :label="$t('captcha.title')" prop="captcha">
-                      <Input type="text" v-model="signup.captcha"
-                             size="large"
-                             maxlength="4"
-                             :placeholder="$t('captcha.title')">
-                        <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                          <Captcha ref="captcha"></Captcha>
-                        </div>
-                      </Input>
-                    </FormItem>
-                  </div>
+              <div v-show="stepsIndex === 1">
+                <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
+                  <Input v-model="signup.originEmail" size="large"
+                         :placeholder="$t('signup.placeholder.originEmail')"/>
+                </FormItem>
+                <FormItem :label="$t('signup.form.originName')" prop="originName">
+                  <Input v-model="signup.originName" size="large"
+                         :placeholder="$t('signup.placeholder.originName')"/>
+                </FormItem>
+              </div>
 
-                  <div v-show="stepsIndex === 3">
-                    <EmailTip :email="signup.originEmail" @refreshCaptcha="$refs.captcha.refreshCaptcha"></EmailTip>
-                  </div>
-
-                  <div v-show="stepsIndex === 4">
-                    <div align="center">
-                      <Icon type="md-checkmark-circle-outline" size="180" color="#42b983"/>
+              <div v-show="stepsIndex === 2">
+                <FormItem :label="$t('captcha.title')" prop="captcha">
+                  <Input type="text" v-model="signup.captcha"
+                         size="large"
+                         maxlength="4"
+                         :placeholder="$t('captcha.title')">
+                    <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
+                      <Captcha ref="captcha"></Captcha>
                     </div>
-                  </div>
+                  </Input>
+                </FormItem>
+              </div>
 
-                  <Row>
-                    <Col flex="auto">
-                      <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
-                              :disabled="stepsIndex == 0"
-                              @click.prevent.stop="stepsIndex--" size="large">{{ $t('basic.button.prev') }}
-                      </Button>
-                      <Divider type="vertical"/>
-                      <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2"
-                              @click.prevent.stop="stepsIndex++" size="large"
-                              type="primary">{{ $t('basic.button.next') }}
-                      </Button>
+              <div v-show="stepsIndex === 3">
+                <Card dis-hover>
+                  <Row :gutter="16" type="flex" justify="center" align="middle">
+                    <Col>
+                      <Icon type="md-cloud" color="#535353" size="80"/>
                     </Col>
-                    <Col flex="auto" align="right" type="flex">
-                      <!-- 账户注册-未验证 -->
-                      <template v-if="stepsIndex == 2">
-                        <Button
-                            @click="onSignup"
-                            :disabled="!signup.captcha"
-                            :loading="spinShow"
-                            long
-                            size="large"
-                            type="primary">
-                          {{ $t('basic.button.submit') }}
-                        </Button>
-                      </template>
+                    <Col>
+                      <Icon type="md-return-right" color="#aaa" size="30"/>
+                    </Col>
+                    <Col>
+                      <Icon type="md-mail" color="#535353" size="80"/>
                     </Col>
                   </Row>
-                </Form>
-              </Col>
-              <Col :xs="{span:24, order: 0}" :lg="{span:12, order: 1}">
-                <template>
-                  <Alert type="info" show-icon>
-                    <div v-html="$t('signup.eaPrivacy')"></div>
-                    {{ $t('signup.checkAllEmail') }}
-                  </Alert>
-                  <br>
-                </template>
-                <Alert type="error" show-icon v-if="backServiceMsg">
-                  <b>{{ $t('signup.failed') }} :</b>
-                  {{ backServiceMsg }}
-                </Alert>
-              </Col>
-            </Row>
+                </Card>
+                <br>
+                <Alert type="success" show-icon>{{ $t('signup.needVerify') }}</Alert>
+              </div>
 
-            <br>
-            <Row type="flex" justify="center" align="middle" v-if="stepsIndex != 4 || stepsIndex != 3">
-              <Col>
-                <router-link :to="{name: 'signin'}">{{ $t('signup.form.submitHint') }}</router-link>
-              </Col>
-              <Divider type="vertical"/>
-              <Col>
-                <router-link :to="{name: 'forgetPassword'}">{{ $t('signup.form.forgetPasswordHint') }}</router-link>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-      </Row>
+              <Row v-show="stepsIndex <= 2">
+                <Col flex="auto">
+                  <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
+                          :disabled="stepsIndex == 0"
+                          @click.prevent.stop="stepsIndex--" size="large">{{ $t('basic.button.prev') }}
+                  </Button>
+                  <Divider type="vertical"/>
+                  <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2"
+                          @click.prevent.stop="stepsIndex++" size="large"
+                          type="primary">{{ $t('basic.button.next') }}
+                  </Button>
+                </Col>
+                <Col flex="auto" align="right" type="flex">
+                  <!-- 账户注册-未验证 -->
+                  <template v-if="stepsIndex == 2">
+                    <Button
+                        @click="onSignup"
+                        :disabled="!signup.captcha"
+                        :loading="spinShow"
+                        long
+                        size="large"
+                        type="primary">
+                      {{ $t('basic.button.submit') }}
+                    </Button>
+                  </template>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+        </Row>
+
+        <template v-if="stepsIndex <= 2">
+          <br>
+          <Row type="flex" justify="center" align="middle" >
+            <Col>
+              <router-link :to="{name: 'signin'}">{{ $t('signup.form.submitHint') }}</router-link>
+            </Col>
+            <Divider type="vertical"/>
+            <Col>
+              <router-link :to="{name: 'forgetPassword'}">{{ $t('signup.form.forgetPasswordHint') }}</router-link>
+            </Col>
+          </Row>
+        </template>
+      </Card>
     </div>
   </div>
 </template>
@@ -178,9 +183,6 @@ export default new BFBAN({
   components: {EmailTip, Captcha},
   created() {
     this.http = http_token.call(this);
-
-    // 注册验证
-    this.onSignupVerify();
   },
   methods: {
     // 提交注册信息
@@ -235,46 +237,6 @@ export default new BFBAN({
             this.$refs.captcha.refreshCaptcha();
         });
       })
-    },
-
-    // 注册验证
-    onSignupVerify() {
-      const {query} = this.$route;
-      const code = query.code;
-
-      if (!code) {
-        this.$Message.info(this.$i18n.t('signup.failed'));
-        return;
-      }
-
-      http.get(api["account_signupVerify"], {
-        params: {
-          code,
-          lang: this.$root.$i18n.locale
-        },
-      }).then(res => {
-        const d = res.data;
-
-        if (d.success === 1) {
-          this.stepsIndex = 4;
-
-          setInterval(function () {
-            this.$router.push('/signin')
-          }, 3000);
-
-          return;
-        }
-
-        this.$Message.error({
-          content: d.code || d.message,
-          duration: 3
-        });
-
-        this.onCleanSignupForm({})
-      }).finally(() => {
-        if (this.$refs.captcha)
-          this.$refs.captcha.refreshCaptcha();
-      });
     },
 
     // 清理表单字段

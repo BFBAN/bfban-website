@@ -13,26 +13,41 @@
 
     <div class="content">
       <Card dis-hover>
-        <div v-if="verify.iscode">
-          <div v-if="verify.load == 0">
-            <!-- 验证中 -->
-            {{ $t("signup.registerVerification.validation") }}
+        <Steps :current="stepsIndex" slot="title" v-if="!isMobile">
+          <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].supplement')"></Step>
+          <Step :title="$t('signup.steps[1].title')" :content="$t('signup.steps[1].title')"></Step>
+          <Step :title="$t('signup.steps[2].title')" :content="$t('signup.steps[2].title')"></Step>
+          <Step :title="$t('signup.steps[3].title')" :content="$t('signup.steps[3].title')"></Step>
+          <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
+        </Steps>
+
+        <div>
+          <div align="center">
+            <template v-if="verify.state == 0">
+              <Icon type="md-refresh spin-icon-load" size="180"/>
+              <p> {{ $t("signup.registerVerification.validation") }}</p>
+            </template>
+            <template v-else-if="verify.state == -1">
+              <Icon type="md-alert" size="180" color="red"/>
+              <p><b>{{ $t("signup.registerVerification.error") }}</b></p>
+              <p>{{ $t("signup.registerVerification.failure") }}{{ verify.msg }}</p>
+              <br>
+              <Row type="flex" justify="center">
+                <Col>
+                  <Button :to="{name: 'signup'}">{{ $t('basic.button.reset') }}</Button>
+                </Col>
+              </Row>
+            </template>
+            <template v-else-if="verify.state == 1">
+              <Icon type="md-checkmark-circle-outline" size="180" color="#42b983"/>
+              <p>
+                {{ $t("signup.registerVerification.successful") }}
+                <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
+                  {{ $t("header.signin") }}
+                </router-link>
+              </p>
+            </template>
           </div>
-          <div v-else-if="verify.load == 1">
-            <!-- 验证成功 -->
-            {{ $t("signup.registerVerification.successful") }}
-            <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}">
-              {{ $t("header.signin") }}
-            </router-link>！
-          </div>
-          <div v-else-if="verify.load == -1">
-            <!-- 错误: -->
-            {{ $t("signup.registerVerification.error") }} : {{ verify.msg }}
-          </div>
-        </div>
-        <div v-else>
-          <!-- 格式不正确 -->
-          {{ $t("signup.registerVerification.failure") }}
         </div>
       </Card>
     </div>
@@ -48,9 +63,10 @@ import {http, api, conf, mail} from '../assets/js/index'
 export default new BFBAN({
   data() {
     return {
+      stepsIndex: 4,
       verify: {
-        load: 0,
-        iscode: false,
+        load: false,
+        state: 0,
       }
     }
   },
@@ -59,14 +75,17 @@ export default new BFBAN({
   },
   methods: {
     // 注册验证账户
-    registerVerify () {
+    registerVerify() {
       const {code} = this.$route.query;
+
       if (code == '' || code == undefined || code == null) {
-        this.verify.iscode = false;
+        this.$Message.info(this.$i18n.t('signup.failed'));
+        this.verify.load = false;
+        this.verify.state = -1;
         return;
       }
-      this.verify.iscode = true;
-      this.verify.load = 0;
+
+      this.verify.load = true;
 
       http.get(api["account_signupVerify"], {
         params: {
@@ -76,28 +95,56 @@ export default new BFBAN({
       }).then(res => {
         const d = res.data;
 
-        if (d.error !== 1) {
-          this.verify.load = 1;
-          setInterval(function () {
-            // dispatch 异步的
-            this.$store.dispatch('signin', d.data)
-              .then(() => {
-                // redirect
-                this.$router.push('/')
-              })
-          }, 10000);
-        } else {
-          this.$Message.error('注册失败 ' + d.msg);
-          this.verify.load = -1;
-          this.verify.msg = d.msg;
-          // this.refreshCaptcha();
+        if (d.success === 1) {
+          this.verify.state = 1;
+
+          // setInterval(function () {
+          //   // dispatch 异步的
+          //   this.$store.dispatch('signin', d.data)
+          //     .then(() => {
+          //       // redirect
+          //       this.$router.push('/')
+          //     })
+          // }, 10000);
+
+          return;
         }
-      }).catch((e) => {
-        this.verify = {
-          load: -1,
-          msg: e.toString(),
-        };
+
+        this.verify.state = -1;
+        this.callbackMessage(d);
+      }).catch(err => {
+        this.verify.state = -1;
+      }).finally(() => {
+        this.verify.load = false;
       })
+    },
+    // 注册[SignupVerify]类请求回调
+    // 消息国际化
+    callbackMessage(data) {
+      const that = this;
+
+      // 基础
+      switch (data.code) {
+        case "signup.notFound": // 验证账户
+          that.$Message.info(this.$i18n.t('signup.notFound'));
+          break;
+        case "signup.bad":
+        case "signup.error":
+        default:
+          this.$Message.error(data.message || data.code);
+          this.verify.load = -1;
+          this.verify.msg = data.message || data.code;
+          break;
+      }
+
+      // 验证码
+      if (data.code.indexOf('captcha') >= 0) {
+        let captcha_code = data.code.split('.')[1];
+        let captcha_text = this.$i18n.t(`captcha.messages.${captcha_code}`);
+        if (captcha_code == 'gan') return;
+        that.$Message.error({content: captcha_text, duration: 6});
+        that.backServiceMsg += `,${captcha_text}`;
+      }
     }
   }
 });
