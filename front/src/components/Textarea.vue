@@ -235,7 +235,7 @@ export default {
     return {
       currentindex: 0,
       currentFileType: '',
-      currentType: '1',
+      currentType: '0',
       insertValue: '',
       updataIcon: false,
 

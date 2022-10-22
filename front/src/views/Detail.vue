@@ -499,7 +499,8 @@
                               <Time :time="l.quote.createTime" type="datetime"></Time>
                             </Col>
                           </Row>
-                          <Html :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
+                          <Html
+                              :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
                         </div>
                       </template>
 
@@ -540,19 +541,20 @@
 
                       <Poptip width="400" transfer>
                         <Button size="small" v-voice-button>
-                          <Icon type="md-share" />
+                          <Icon type="md-share"/>
                         </Button>
                         <div slot="content">
                           <Form :label-width="40" label-position="left">
                             <FormItem label="Url">
-                              <Input :value="getShareFloor(l.id)" :autosize="{minRows: 2,maxRows: 2}" type="textarea" readonly v-if="l.id"></Input>
+                              <Input :value="getShareFloor(l.id)" :autosize="{minRows: 2,maxRows: 2}" type="textarea"
+                                     readonly v-if="l.id"></Input>
                             </FormItem>
                             <FormItem label="Code">
                               <Input :value="`{floor:${l.id}}`" readonly v-if="l.id"></Input>
                             </FormItem>
-                            <FormItem label="" v-if="l.id" >
+                            <FormItem label="" v-if="l.id">
                               <Card dis-hover :padding="5">
-                                <Html :html="`<p>{floor:${l.id}}</p>`" v-if="l.id" />
+                                <Html :html="`<p>{floor:${l.id}}</p>`" v-if="l.id"/>
                               </Card>
                             </FormItem>
                           </Form>
@@ -1635,8 +1637,8 @@ export default new BFBAN({
   },
   computed: {
     iisOnlySuper() {
-      const { userinfo } = this.$store.state.user || {}
-      const { privilege = [] } = userinfo
+      const {userinfo} = this.$store.state.user || {}
+      const {privilege = []} = userinfo
       return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
     }
   }

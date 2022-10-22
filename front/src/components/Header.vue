@@ -64,8 +64,7 @@
                   :placement="isMobile ? 'bottom' : 'bottom-end'"
                   :padding="0">
           <router-link :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
-            <Avatar icon="ios-person" :src="userinfo.userAvatar"></Avatar>
-            <span class="mobile-hide">&emsp;{{ userinfo.username }}</span>
+            <Avatar icon="ios-person" :src="userinfo.userAvatar">{{ userinfo.username }}</Avatar>
           </router-link>
           <DropdownMenu slot="list" class="header-dropdown-menu">
             <div class="header-dropdown-avatar">
@@ -111,7 +110,7 @@
                 </div>
               </DropdownMenu>
             </Dropdown>
-            <div @click="signout">
+            <div @click="onSignout">
               <Dropdown-item divided v-show="isLogin">
                 <Row>
                   <Col flex="1">
@@ -190,7 +189,12 @@ export default new BFBAN({
     /**
      * 表头账户注销
      */
-    signout() {
+    onSignout() {
+      const signout_msg = this.$Message.loading({
+        content: this.$i18n.t("header.signout"),
+        duration: 0
+      });
+
       http.post(api["account_signout"], {
         headers: {
           'x-access-token': this.$store.state.user.token
@@ -209,6 +213,8 @@ export default new BFBAN({
       }).finally(() => {
         // 清除与账户相关的数据
         account_storage.clearAll();
+
+        signout_msg();
 
         this.$store.dispatch('signout').then(() => {
           this.$router.push('/');

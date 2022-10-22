@@ -823,7 +823,7 @@
     "timeRange": {
       "daily": "昨天",
       "weekly": "一周",
-      "monthly": "30天",
+      "monthly": "一个月",
       "yearly": "一年"
     }
   }

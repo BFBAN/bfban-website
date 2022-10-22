@@ -2,21 +2,25 @@
   <div class="container">
     <br>
     <Row>
-      <Col flex="auto" :xs="{push: 1}" :lg="{push: 0}">
+      <Col flex="1" :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
           <BreadcrumbItem>{{ $t("account.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
-      <Col align="right" v-if="currentUser && currentUser.userinfo">
-        <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{ $t("account.message.hint.taOffChat") }}</Alert>
-        <Alert show-icon type="error" v-if="account.id == currentUser.userinfo.userId">
-          {{ $t("account.message.hint.selfTalk") }}
-        </Alert>
-        <Button @click="openMessage" :disabled="!account.attr.allowDM || account.id == currentUser.userinfo.userId">
-          <Icon type="ios-chatbubbles"/>
-          {{ $t("account.message.chat") }}
-        </Button>
+      <Col v-if="currentUser && currentUser.userinfo">
+        <Poptip trigger="hover">
+          <Button @click="openMessage" :disabled="!account.attr.allowDM || account.id == currentUser.userinfo.userId">
+            <Icon type="ios-chatbubbles"/>
+            {{ $t("account.message.chat") }}
+          </Button>
+          <div slot="content">
+            <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{ $t("account.message.hint.taOffChat") }}</Alert>
+            <Alert show-icon type="error" v-if="account.id == currentUser.userinfo.userId">
+              {{ $t("account.message.hint.selfTalk") }}
+            </Alert>
+          </div>
+        </Poptip>
       </Col>
     </Row>
     <br>

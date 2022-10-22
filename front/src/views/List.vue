@@ -238,7 +238,16 @@ export default new BFBAN({
         },
         shortcuts: [
           {
-            text: '1 week',
+            text: this.$i18n.t('sitestats.timeRange.daily'),
+            value () {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24);
+              return [start, end];
+            }
+          },
+          {
+            text: this.$i18n.t('sitestats.timeRange.weekly'),
             value () {
               const end = new Date();
               const start = new Date();
@@ -247,7 +256,7 @@ export default new BFBAN({
             }
           },
           {
-            text: '1 month',
+            text: this.$i18n.t('sitestats.timeRange.monthly'),
             value () {
               const end = new Date();
               const start = new Date();
@@ -256,11 +265,11 @@ export default new BFBAN({
             }
           },
           {
-            text: '3 months',
+            text: this.$i18n.t('sitestats.timeRange.yearly'),
             value () {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 12);
               return [start, end];
             }
           }

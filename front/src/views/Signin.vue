@@ -1,67 +1,71 @@
 <template>
   <div class="container">
-    <br>
-    <Row>
-      <Col :xs="{push: 1}" :lg="{push: 0}">
-        <Breadcrumb>
-          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem>{{ $t("signin.title") }}</BreadcrumbItem>
-        </Breadcrumb>
-      </Col>
-    </Row>
-    <br>
-
     <div class="content">
-      <Row :gutter="0">
-        <Col :xs="{span: 24}" :lg="{span: 11}" class="mobile-hide carousel">
-          <div class="carousel-item">
-            <img src="../assets/images/logo.png">
-            <h2>{{ $t("home.cover.h1") }}</h2>
-            <span>{{ $t("home.cover.h3") }}</span>
-          </div>
-        </Col>
-        <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 13, push: 0, pull: 0}">
-          <Card v-if="currentUser.token == ''" :padding="isMobile ? 20 : 50" shadow>
-            <Form ref="signin" :model="signin" :rules="ruleValidate" label-position="top">
-              <Alert type="error" show-icon v-if="signinBackMsg">
-                <b>{{ $t('signin.failed') }} :</b>
-                {{ signinBackMsg }}
-              </Alert>
+      <div dis-hover :padding="0">
+        <Row :gutter="0" type="flex" justify="center">
+          <Col style="width: 500px">
+            <br>
+            <Row>
+              <Col :xs="{push: 1}" :lg="{push: 0}">
+                <Breadcrumb>
+                  <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+                  <BreadcrumbItem>{{ $t("signin.title") }}</BreadcrumbItem>
+                </Breadcrumb>
+              </Col>
+            </Row>
+            <br>
 
-              <FormItem :label="$t('signin.form.username')" prop="username">
-                <Input prefix="ios-contact" type="text" v-model="signin.username" size="large"
-                       :placeholder="$t('signin.form.username')">
-                </Input>
-              </FormItem>
+            <Card v-if="!isLogin" :padding="isMobile ? 20 : 50" dis-hover>
+              <div align="center" class="signin-logo">
+                <img src="../assets/images/logo.png" width="80" height="80"/>
+              </div>
 
-              <FormItem :label="$t('signin.form.password')" prop="password">
-                <Input type="password" password v-model="signin.password" size="large"
-                       :placeholder="$t('signin.form.password')"/>
-              </FormItem>
+              <Form ref="signin" :model="signin" :rules="ruleValidate" label-position="top">
+                <Alert type="error" show-icon v-if="signinBackMsg">
+                  <b>{{ $t('signin.failed') }} :</b>
+                  {{ signinBackMsg }}
+                </Alert>
 
-              <Row :gutter="30" type="flex" justify="space-between" align="middle">
-                <Col :span="isMobile ? 24 : 15">
-                  <FormItem :label="$t('captcha.title')" prop="captcha">
-                    <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
-                           :placeholder="$t('captcha.title')">
-                      <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                        <Captcha ref="captcha" :seconds="15" :disable="!(!!signin.password  && !!signin.username)"></Captcha>
-                      </div>
-                    </Input>
-                  </FormItem>
-                </Col>
-              </Row>
+                <FormItem :label="$t('signin.form.username')" prop="username">
+                  <Input prefix="ios-contact" type="text" v-model="signin.username" size="large"
+                         :placeholder="$t('signin.form.username')">
+                  </Input>
+                </FormItem>
 
-              <FormItem>
-                <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
-                  {{ $t('basic.button.submit') }}
-                </Button>
-              </FormItem>
+                <FormItem :label="$t('signin.form.password')" prop="password">
+                  <Input type="password" password v-model="signin.password" size="large"
+                         :placeholder="$t('signin.form.password')"/>
+                </FormItem>
+
+                <Row :gutter="30" type="flex" justify="space-between" align="middle">
+                  <Col :span="isMobile ? 24 : 15">
+                    <FormItem :label="$t('captcha.title')" prop="captcha">
+                      <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
+                             :placeholder="$t('captcha.title')">
+                        <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
+                          <Captcha ref="captcha" :seconds="15"
+                                   :disable="!(!!signin.password  && !!signin.username)"></Captcha>
+                        </div>
+                      </Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+
+                <FormItem>
+                  <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
+                    {{ $t('basic.button.submit') }}
+                  </Button>
+                </FormItem>
+
+                <spin fix v-if="spinShow">
+                  <Icon type="md-refresh spin-icon-load" size="30"></Icon>
+                </spin>
+              </Form>
 
               <Row type="flex" justify="center" align="middle">
                 <Col>
                   <router-link :to="{name: 'signup'}">
-                    <Icon type="md-mail" />
+                    <Icon type="md-mail"/>
                     {{ $t('signin.form.submitHint') }}
                   </router-link>
                 </Col>
@@ -70,19 +74,19 @@
                   <router-link :to="{name: 'forgetPassword'}">{{ $t('signin.form.forgetPasswordHint') }}</router-link>
                 </Col>
               </Row>
-            </Form>
-          </Card>
-          <Card v-if="currentUser.token != ''" shadow align="center">
-            <br>
-            <Avatar size="100">{{ currentUser.userinfo.username[0] }}</Avatar>
-            <h1>
-              {{ currentUser.userinfo.username }}
-            </h1>
-            <p> {{ $t('signin.loggedIn') }} </p>
-            <br>
-          </Card>
-        </Col>
-      </Row>
+            </Card>
+            <Card v-if="isLogin" shadow align="center" :padding="isMobile ? 20 : 50">
+              <Avatar icon="ios-person" size="100" :src="currentUser.userinfo.userAvatar"></Avatar>
+              <h1>
+                <router-link :to="{name:'profile', params: {pagename:'information'}}">
+                  {{ currentUser.userinfo.username }}
+                </router-link>
+              </h1>
+              <p> {{ $t('signin.loggedIn') }} </p>
+            </Card>
+          </Col>
+        </Row>
+      </div>
     </div>
   </div>
 </template>
@@ -98,7 +102,7 @@ import _ from "lodash";
 const {mapActions, mapMutations} = Vuex;
 
 export default new BFBAN({
-  components: { Captcha },
+  components: {Captcha},
   data() {
     return {
       ruleValidate: {
@@ -171,7 +175,7 @@ export default new BFBAN({
 
                 // redirect rurl or home
                 if (backurl) {
-                  this.$router.push({ path: backurl });
+                  this.$router.push({path: backurl});
                 } else {
                   this.$router.go('-1');
                 }
@@ -199,33 +203,14 @@ export default new BFBAN({
 });
 </script>
 
-<style lang="scss" scoped>
-.carousel {
-  border-bottom: 2px solid #f2f2f2;
-  width: 440px;
-  overflow: hidden;
-  //background: #fff;
-  background: #401487;
+<style lang="less" scoped>
+@import "../assets/css/icon.less";
 
-  > * {
-    background-image: url("https://app.bfban.com/public/svg/bk1.svg");
-    background-repeat: repeat;
-  }
+.signin-logo {
+  margin-bottom: 30px;
 
-  .carousel-item {
-    text-align: center;
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    height: 100%;
-    color: #fff;
-
-    img {
-      width: 150px;
-      height: 150px;
-    }
+  img {
+    border-radius: 3px;
   }
 }
 </style>

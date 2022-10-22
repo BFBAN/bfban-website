@@ -18,14 +18,15 @@
             <Steps :current="stepsIndex" class="mobile-hide" slot="title">
               <Step :title="$t('signup.steps[1].title')" :content="$t('signup.steps[1].title')"></Step>
               <Step :title="$t('signup.steps[2].title')" :content="$t('signup.steps[2].title')"></Step>
+              <Step :title="$t('signup.steps[3].title')" :content="$t('signup.steps[3].title')"></Step>
               <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
             </Steps>
 
             <div dis-hover :padding="50">
               <Form ref="bindOriginFormValidate" label-position="top" :model="signup" :rules="ruleValidate">
-                <Alert type="error" show-icon v-if="backServiceMsg">
+                <Alert type="error" show-icon v-if="bindOrigin.backServiceMsg">
                   <b>{{ $t('signup.failed') }} :</b>
-                  {{ backServiceMsg }}
+                  {{ bindOrigin.backServiceMsg }}
                 </Alert>
 
                 <div v-show="stepsIndex === 0">
@@ -52,14 +53,49 @@
                 </div>
 
                 <template v-if="stepsIndex === 2">
+                  <Card dis-hover>
+                    <Row :gutter="16" type="flex" justify="center" align="middle">
+                      <Col>
+                        <Icon type="md-cloud" color="#535353" size="80"/>
+                      </Col>
+                      <Col>
+                        <Icon type="md-return-right" color="#aaa" size="30"/>
+                      </Col>
+                      <Col>
+                        <Icon type="md-mail" color="#535353" size="80"/>
+                      </Col>
+                    </Row>
+                  </Card>
+                  <br>
+                  <Alert type="success" show-icon>{{ $t('signup.needVerify') }}</Alert>
+                </template>
+
+                <template v-if="stepsIndex === 3">
                   <div align="center">
-                    <Icon type="md-checkmark-circle-outline" size="180" color="#42b983"/>
+                    <template v-if="bindOriginVerify.state == 0">
+                      <Icon type="md-refresh spin-icon-load" size="180"/>
+                    </template>
+                    <template v-else-if="bindOriginVerify.state == -1">
+                      <Icon type="md-alert" size="180" color="red"/>
+                      <p>{{ bindOriginVerify.backServiceMsg }}</p>
+                      <br>
+                      <Row type="flex" justify="center">
+                        <Col>
+                          <Button :to="{name: 'bindOrigin'}">{{ $t('basic.button.reset') }}</Button>
+                        </Col>
+                      </Row>
+                      <br>
+                      <Input :value="$route.query.code || ''" type="textarea" :autosize="true"></Input>
+                    </template>
+                    <template v-else-if="bindOriginVerify.state == 1">
+                      <Icon type="md-checkmark-circle-outline" size="180" color="#42b983"/>
+                    </template>
                   </div>
                 </template>
               </Form>
             </div>
 
-            <Row slot="default">
+            <Row slot="default" v-if="stepsIndex < 2">
               <Col flex="auto">
                 <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
                         :disabled="stepsIndex == 0"
@@ -77,9 +113,9 @@
               <Col flex="auto" align="right" type="flex">
                 <!-- 账户绑定-验证 -->
                 <template v-if="stepsIndex == 1">
-                  <Button @click="bindOrigin"
+                  <Button @click="onBindOrigin"
                           :disabled="!signup.captcha"
-                          :loading="spinShow"
+                          :loading="bindOrigin.load"
                           long
                           size="large"
                           type="primary">
@@ -121,20 +157,34 @@ export default {
         captcha: '',
       },
 
-      spinShow: false,
-      backServiceMsg: ''
+      bindOrigin: {
+        load: false,
+        backServiceMsg: ''
+      },
+      bindOriginVerify: {
+        load: false,
+        state: 0,
+        backServiceMsg: ""
+      },
+    }
+  },
+  watch: {
+    '$route': function (val) {
+      if (val.name == 'bindOrigin' && !val.query.code) {
+        this.stepsIndex = 0;
+      }
     }
   },
   created() {
     this.http = http_token.call(this);
 
-    this.bindOriginVerify();
+    this.onBindOriginVerify();
   },
   components: {Captcha},
   methods: {
     // 绑定橘子账户
     // 发送邮件
-    bindOrigin() {
+    onBindOrigin() {
       const that = this;
       let {originEmail, originName, captcha} = this.signup;
 
@@ -145,7 +195,7 @@ export default {
           return;
         }
 
-        that.spinShow = true;
+        that.bindOrigin.load = true;
 
         that.http.post(api["user_bindOrigin"], {
           data: {
@@ -169,9 +219,9 @@ export default {
 
           this.callbackMessage(d)
         }).catch(err => {
-          that.backServiceMsg = this.$i18n.t('signup.failed');
+          that.bindOrigin.backServiceMsg = this.$i18n.t('signup.failed');
         }).finally(() => {
-          that.spinShow = false;
+          that.bindOrigin.load = false;
 
           if (that.$refs.captcha)
             that.$refs.captcha.refreshCaptcha();
@@ -181,13 +231,14 @@ export default {
 
     // 绑定橘子验证
     // 提供旧用户需要换绑
-    bindOriginVerify() {
+    onBindOriginVerify() {
       const {query} = this.$route;
       const code = query.code;
 
       if (!code) return
 
-      this.spinShow = true;
+      this.stepsIndex = 3;
+      this.bindOriginVerify.load = true;
 
       this.http.get(api["user_bindOriginVerify"], {
         params: {code}
@@ -196,15 +247,17 @@ export default {
 
         if (d.success === 1) {
           this.stepsIndex = 2;
+          this.bindOriginVerify.state = 1;
           this.$Message.success('bindOrigin.messages.success');
 
           setInterval(() => this.$router.back(), 3000);
           return;
         }
 
-        this.callbackMessage(d)
+        this.callbackMessage(d);
+        this.bindOriginVerify.state = -1;
       }).finally(() => {
-        this.spinShow = false;
+        this.bindOriginVerify.load = false;
       })
     },
 
@@ -216,18 +269,26 @@ export default {
       // 基础
       switch (data.code) {
         case "bindOrigin.originBindingExist":
-          that.$Message.info(this.$i18n.t('bindOrigin.messages.expired'));
+          var originBindingExist_text = this.$i18n.t('bindOrigin.messages.originBindingExist');
+          this.bindOriginVerify.backServiceMsg = originBindingExist_text;
+          that.$Message.info(originBindingExist_text);
           break;
         case "bindOrigin.expired":
-          that.$Message.info(this.$i18n.t('bindOrigin.messages.expired'));
+          var expired_text = this.$i18n.t('bindOrigin.messages.expired');
+          this.bindOriginVerify.backServiceMsg = expired_text;
+          that.$Message.info(expired_text);
           break;
         case "bindOrigin.notFound":
-          that.$Message.info(this.$i18n.t('bindOrigin.messages.notFound'));
+          var notFound_text = this.$i18n.t('bindOrigin.messages.notFound');
+          this.bindOriginVerify.backServiceMsg = notFound_text;
+          that.$Message.info(notFound_text);
           break;
         case "bindOrigin.bad":
         default:
-          that.$Message.error(data.code);
-          that.backServiceMsg = data.message || data.code;
+          var error_text = data.message || data.code;
+          this.$Message.error(error_text);
+          this.bindOriginVerify.backServiceMsg = error_text;
+          this.bindOrigin.backServiceMsg = error_text;
           break;
       }
 
@@ -237,7 +298,7 @@ export default {
         let captcha_text = this.$i18n.t(`captcha.messages.${captcha_code}`);
         if (captcha_code == 'gan') return;
         that.$Message.error({content: captcha_text, duration: 6});
-        that.backServiceMsg += `,${captcha_text}`;
+        that.bindOrigin.backServiceMsg += `,${captcha_text}`;
       }
     }
   },
@@ -245,5 +306,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+@import "@/assets/css/icon.less";
 </style>
