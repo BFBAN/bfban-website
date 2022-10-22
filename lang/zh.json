@@ -93,7 +93,13 @@
   },
   "captcha": {
     "get": "获得验证码",
-    "title": "验证码"
+    "title": "验证码",
+    "messages": {
+      "wrong": "验证码错误",
+      "expired": "验证码已过期",
+      "gen": "获取成功",
+      "bad": "验证码错误，请联系管理员"
+    }
   },
   "textarea": {
     "originalImage": "原始图片",
@@ -570,7 +576,13 @@
     }
   },
   "bindOrigin": {
-    "title": "绑定Origin账户"
+    "title": "绑定Origin账户",
+    "messages": {
+      "notFound": "未找到绑定验证代码",
+      "expired": "绑定的验证代码过期，请重新提交绑定",
+      "success": "账户与橘子平台绑定成功",
+      "bad": "错误绑定，请联系管理员"
+    }
   },
   "signin": {
     "title": "登录",
@@ -593,7 +605,7 @@
       "validation": "验证中",
       "successful": "验证成功!，账户已解锁，既可前往登录",
       "failure": "错误的验证地址，请检查验证码是否正确",
-      "error": "错误"
+      "error": "验证账户错误"
     },
     "steps": {
       "0": {
@@ -629,17 +641,19 @@
     },
     "placeholder": {
       "originEmail": "输入您的橘子邮箱",
-      "originName": "输入您的橘子名字",
+      "originName": "输入您的橘子名字, 注意大小写",
       "username": "4位以上用户名 仅限英文、数字、下划线、减号",
       "password": "6位以上密码",
-      "originId": "选题"
+      "originId": "选填"
     },
-    "eaPrivacy": "请至 <a href=\"https://myaccount.ea.com/cp-ui/privacy/index\">EA 隐私设定</a> 中将允许按邮箱搜索开启",
+    "eaPrivacy": "请至 <a href='https://myaccount.ea.com/cp-ui/privacy/index'>EA 隐私设定</a> 中将允许按邮箱搜索开启",
     "checkAllEmail": "验证邮件需要一段时间(大约1分钟)才能到达您的邮箱，请等待并记得检查垃圾箱",
+    "needVerify": "请前往邮箱验证账户",
     "usernameExist": "该用户名已被注册",
     "gameNotShowed": "该邮箱下的账户不包含游戏",
     "playerNotFound": "找不到该玩家(请确认已允许按邮箱搜索)",
-    "originIdExist": "该origin账号已被绑定",
+    "originBindingExist": "该origin账号已被绑定",
+    "originNotFound": "未找到此邮箱在origin下账户",
     "fillIn": "请规范填写",
     "failed": "注册失败"
   },
@@ -809,7 +823,7 @@
     "timeRange": {
       "daily": "昨天",
       "weekly": "一周",
-      "monthly": "30天",
+      "monthly": "一个月",
       "yearly": "一年"
     }
   }
