@@ -1,25 +1,41 @@
 <template>
   <div class="ocr-widget">
-    <Upload type="select" action="" accept="image/*" :before-upload="onSelect">
+    <span @click="ocrModal.show = true">
       <slot></slot>
-    </Upload>
+    </span>
     <Modal title="OCR"
            footer-hide
            v-model="ocrModal.show"
+           :mask-closable="false"
            :styles="{top: '50%', transform: 'translateY(-50%)'}">
       <Steps :current="ocrModal.Steps" size="small">
         <Step></Step>
         <Step></Step>
+        <Step></Step>
       </Steps>
-      <template>
+
+      <template v-if="ocrModal.Steps == 0">
+        <br>
+        <Upload  multiple
+                 type="drag"
+                 action=""
+                 accept="image/*"
+                 :before-upload="onSelect">
+          <div style="padding: 20px 0">
+            <Icon type="md-document" size="52"></Icon>
+          </div>
+        </Upload>
+      </template>
+
+      <template v-if="ocrModal.Steps >= 1">
         <div style="position: relative">
           <vue-Cropper
               class="orc-cropper-mode"
               ref="cropper"
-              :canScale="ocrModal.Steps == 0"
-              :canMove="ocrModal.Steps == 0"
-              :canMoveBox="ocrModal.Steps == 0"
-              :fixedBox="ocrModal.Steps == 1"
+              :canScale="ocrModal.Steps == 1"
+              :canMove="ocrModal.Steps == 1"
+              :canMoveBox="ocrModal.Steps == 1"
+              :fixedBox="ocrModal.Steps == 2"
               :centerBox="true"
               :mode="'cover'"
               :info="false"
@@ -31,19 +47,23 @@
 
           <Spin fix v-if="ocrModal.readOrcLoad" class="ocr-readLoad">
             <p v-if="ocrModal.logger.status">{{ ocrModal.logger.status }}</p>
-            <Progress :percent="ocrModal.logger.progress * 100" :stroke-width="10" style="width: 300px"/>
+            <Progress :percent="ocrModal.logger.progress * 100" :stroke-width="20" text-inside style="width: 300px"/>
           </Spin>
         </div>
+      </template>
 
-        <Row v-show="ocrModal.Steps == 0">
-          <Col flex="1"></Col>
+      <template v-if="ocrModal.Steps == 1">
+        <Row>
+          <Col flex="1">
+            <Button @click="ocrModal.Steps -= 1">{{ $t('basic.button.prev') }}</Button>
+          </Col>
           <Col>
             <Button @click="fs" :loading="ocrModal.readOrcLoad">{{ $t('basic.button.next') }}</Button>
           </Col>
         </Row>
       </template>
 
-      <template v-if="ocrModal.Steps == 1">
+      <template v-if="ocrModal.Steps == 2">
         <Card :padding="0" dis-hover class="ocr-edit-string" v-if="ocrModal.value.length > 0">
           <span v-for="(i, index) in ocrModal.value" :key="index">{{ i }}</span>
         </Card>
@@ -67,7 +87,7 @@
 </template>
 
 <script>
-import {createWorker,PSM} from 'tesseract.js';
+import {createWorker, PSM} from 'tesseract.js';
 import {VueCropper} from 'vue-cropper'
 
 export default {
@@ -123,6 +143,7 @@ export default {
     },
     onSelect(file) {
       const that = this;
+
       this.onClear();
       this.ocrModal.file = file;
 
@@ -132,6 +153,9 @@ export default {
         that.ocrModal.show = true;
       };
       reader.readAsDataURL(this.ocrModal.file);
+
+      this.ocrModal.Steps += 1;
+
       return false;
     },
     onSubmit() {

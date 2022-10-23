@@ -16,16 +16,16 @@
         <Row type="flex" justify="center" :gutter="20" style="width: 100%;">
           <Col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 7}">
             <Select v-model="searchScopeValue" size="large" class="search-input-show">
-              <Icon type="ios-funnel" slot="prefix" style="margin-left: 10px; margin-right: 5px; opacity: .6" />
+              <Icon type="ios-funnel" slot="prefix" style="margin-left: 10px; margin-right: 5px; opacity: .6"/>
               <Option v-for="i in searchScope" :value="i" :key="i">{{ $t('search.scope.' + i) }}</Option>
             </Select>
           </Col>
           <Col class="desktop-hide" :xs="{span: 24}">&thinsp;</Col>
           <Col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}">
-            <Dropdown style="width: 100%">
-              <div class="search-input search-input-show ivu-input ivu-input-large">
-                <Row :gutter="10">
-                  <Col flex="1">
+            <div class="search-input search-input-show ivu-input ivu-input-large">
+              <Row :gutter="10">
+                <Col flex="1">
+                  <Dropdown style="width: 100%">
                     <Input
                         size="small"
                         v-model="searchVal"
@@ -33,41 +33,46 @@
                         :placeholder="$t('search.placeholder')"
                         @on-search="handleSearch">
                     </Input>
-                  </Col>
-                  <Col>
-                    <OcrWidget :data="{}" @ok="onOcrOutput">
-                      <Tooltip content="OCR">
-                        <a href="javascript:void(0)">
-                          <Icon type="md-qr-scanner"/>
-                        </a>
-                      </Tooltip>
-                    </OcrWidget>
-                  </Col>
-                  <Col>
-                    <Button type="primary" size="small" @click="handleSearch">
-                      <Icon type="ios-search"/>
-                    </Button>
-                  </Col>
-                </Row>
-              </div>
-              <div transfer slot="list">
-                <Row :gutter="5" v-if="searchHistory.list.length > 0" style="padding: 10px">
-                  <Col v-for="(i, index) in searchHistory.list"
-                       :key="index">
-                    <Tag stype="border"
-                         type="dot"
-                         checkable
-                         closable
-                         @on-change="handleSearchHistoryClickTag(index)"
-                         @on-close="handleSearchHistoryClose(index)">{{ i || '' }}
-                    </Tag>
-                  </Col>
-                </Row>
-                <div v-else align="center">
-                  🦖
-                </div>
-              </div>
-            </Dropdown>
+
+                    <!-- Search history S -->
+                    <div transfer slot="list">
+                      <Row :gutter="5" v-if="searchHistory.list.length > 0" style="padding: 10px">
+                        <Col v-for="(i, index) in searchHistory.list"
+                             :key="index">
+                          <Tag stype="border"
+                               type="dot"
+                               checkable
+                               closable
+                               @on-change="handleSearchHistoryClickTag(index)"
+                               @on-close="handleSearchHistoryClose(index)">{{ i || '' }}
+                          </Tag>
+                        </Col>
+                      </Row>
+                      <div v-else align="center">
+                        🦖
+                      </div>
+                    </div>
+                    <!-- Search history E -->
+
+                  </Dropdown>
+                </Col>
+                <Col>
+                  <OcrWidget :data="{}" @ok="onOcrOutput">
+                    <Tooltip content="OCR">
+                      <a href="javascript:void(0)">
+                        <Icon type="md-qr-scanner"/>
+                      </a>
+                    </Tooltip>
+                  </OcrWidget>
+                </Col>
+                <Col>
+                  <Button type="primary" size="small" @click="handleSearch">
+                    <Icon type="ios-search" v-if="!modalSpinShow"/>
+                    <Icon type="md-refresh spin-icon-load" v-else/>
+                  </Button>
+                </Col>
+              </Row>
+            </div>
           </Col>
         </Row>
         <Row type="flex" justify="center" align="middle" class="checkboxGroup" v-if="cheaters.length <= 0">
@@ -93,7 +98,7 @@
                 :title="cheater.currentName || cheater.originName"
                 :description="`${cheater.originUserId ? 'uid:' + cheater.originPersonaId : ''} ${cheater.historyName ? $t('search.scope.history') + ':' + cheater.historyName: ''}`"/>
             <router-link :to="{name: 'player', params: {ouid: `${cheater.originPersonaId}`}}" slot="action">
-              <div @click="searchModal = false">
+              <div>
                 <Icon type="ios-eye" size="30"/>
               </div>
             </router-link>
@@ -161,6 +166,8 @@ export default new BFBAN({
       this.setSearchHistoryValue(this.searchHistory.list);
     },
     handleSearchHistoryClickTag(index) {
+      if (this.modalSpinShow) return;
+
       this.searchVal = this.searchHistory.list[index];
 
       this.handleSearch();
@@ -181,11 +188,10 @@ export default new BFBAN({
       const that = this;
       const val = this.searchVal.trim();
 
-      if (val == '' || val.length <= 2 || !this.searchScopeValue) {
+      if (val == '' || val.length <= 2 || !this.searchScopeValue || this.modalSpinShow) {
         return;
       }
 
-      this.searchModal = true;
       this.modalSpinShow = true;
 
       http.get(api["search"], {
@@ -220,10 +226,11 @@ export default new BFBAN({
 </script>
 
 <style scoped lang="less">
+@import "@/assets/css/icon.less";
+
 .search-background {
   position: fixed;
   background-size: cover;
-  background-image: url(https://media.contentapi.ea.com/content/dam/bf/images/2018/08/bf-hero-medium-keyart-games-7x2-xl1.jpg.adapt.crop5x2.1455w.jpg);
   top: 0;
   left: 0;
   width: 100%;
