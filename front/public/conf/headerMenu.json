@@ -42,6 +42,17 @@
         "name": "report",
         "query": {}
       }
+    },
+    {
+      "name": "site_stats",
+      "type": [
+        "desktop",
+        "mobile"
+      ],
+      "to": {
+        "name": "site_stats",
+        "query": {}
+      }
     }
   ]
 }
