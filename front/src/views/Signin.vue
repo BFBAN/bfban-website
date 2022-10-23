@@ -15,11 +15,7 @@
             </Row>
             <br>
 
-            <Card v-if="!isLogin" :padding="isMobile ? 20 : 50" dis-hover>
-              <div align="center" class="signin-logo">
-                <img src="../assets/images/logo.png" width="80" height="80"/>
-              </div>
-
+            <Card v-if="!isLogin" class="signin-box" :padding="isMobile ? 20 : 50" dis-hover>
               <Form ref="signin" :model="signin" :rules="ruleValidate" label-position="top">
                 <Alert type="error" show-icon v-if="signinBackMsg">
                   <b>{{ $t('signin.failed') }} :</b>
@@ -51,6 +47,8 @@
                   </Col>
                 </Row>
 
+                <br>
+
                 <FormItem>
                   <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
                     {{ $t('basic.button.submit') }}
@@ -61,6 +59,8 @@
                   <Icon type="md-refresh spin-icon-load" size="30"></Icon>
                 </spin>
               </Form>
+
+              <Divider dashed :style="`margin:40px -${isMobile ? 20 : 50}px;width:calc(100% + ${isMobile ? 20 * 2 : 50 * 2}px)`"/>
 
               <Row type="flex" justify="center" align="middle">
                 <Col>
@@ -206,11 +206,7 @@ export default new BFBAN({
 <style lang="less" scoped>
 @import "../assets/css/icon.less";
 
-.signin-logo {
-  margin-bottom: 30px;
-
-  img {
-    border-radius: 3px;
-  }
+.signin-box {
+  overflow: hidden;
 }
 </style>
