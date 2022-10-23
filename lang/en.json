@@ -128,7 +128,8 @@
     "signup": "Signup",
     "signout": "Logout",
     "userCenter": "Public profile",
-    "signoutSuccess": "Logout successful"
+    "signoutSuccess": "Logout successful",
+    "site_stats": "Website statistics"
   },
   "player_list": {
     "title": "Player database",
