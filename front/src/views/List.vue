@@ -173,7 +173,7 @@
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 7, push: 0, pull: 0}">
           <br>
           <Affix :offset-top="20">
-            <Card>
+            <Card dis-hover>
               <p slot="title">
                 <Icon type="md-funnel" /> {{ $t('list.colums.screenTitle') }}
               </p>
