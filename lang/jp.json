@@ -130,7 +130,7 @@
   "profile": {
     "title": "個人設定",
     "meet": "おかえりなさい{name}！",
-    "message": {
+    "chat": {
       "title": "メッセージ",
       "look": "チェック",
       "load": "更新",
