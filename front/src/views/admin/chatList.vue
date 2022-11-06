@@ -11,47 +11,45 @@
               @on-page-size-change="handlePageSizeChange"
               :page-size="limit"
               :current="skip"
-              :total="total" />
+              :total="total"/>
       </Col>
       <Col>
-        <Button size="small" @click="getAdminMessageLog" :loading="load">
-          <Icon type="md-refresh" />
+        <Button size="small" @click="getChatLog">
+          <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
         </Button>
       </Col>
     </Row>
     <br>
 
-    <Card dis-hover :padding="5">
-      <template v-if="messageLog.length > 0" >
-        <div v-for="(i, index) in messageLog" :key="index">
-          <Row type="flex">
-            <Col>
-              <Tag>Msg</Tag>
-              <Tag>{{i.type}}</Tag>
-            </Col>
-            <Col flex="1">
-              <div>
-                <Time :time="i.createTime" type="date"></Time>:
-                <BusinessCard :id="i.byUserId">
-                  <b>{{i.byUserId || 'N/A'}}</b>
-                </BusinessCard>
-                ->
-                <BusinessCard :id="i.byUserId">
-                  <b>{{i.toUserId || 'N/A'}}</b>
-                </BusinessCard>
-                <span> haveRead:{{i.haveRead}} </span>
+    <div>
+      <template v-if="chatList.length > 0">
+        <div v-for="(i, index) in chatList" :key="index">
+          <div class="ivu-card ivu-card-bordered ivu-card-dis-hover">
+            <div class="ivu-card-head">
+              <Tag>Log</Tag>
+              <Tag>{{ i.type }}</Tag>
+              <Time :time="i.createTime" type="date"></Time>
+              :
+              <BusinessCard :id="i.byUserId">
+                <b>{{ i.byUserId || 'N/A' }}</b>
+              </BusinessCard>
+              ->
+              <BusinessCard :id="i.byUserId">
+                <b>{{ i.toUserId || 'N/A' }}</b>
+              </BusinessCard>
+              <div class="ivu-card-extra">
+                {{ $t(`profile.chat.tabsList.form.${i.haveRead == 1 ? 'read' : 'unread'}`) }}
               </div>
-            </Col>
-            <Col>
-              <div>{{i.content}}</div>
-            </Col>
-          </Row>
+            </div>
+            <Html :html="i.content"></Html>
+          </div>
+          <br>
         </div>
       </template>
       <template v-else>
         {{ $t('basic.tip.notContent') }}
       </template>
-    </Card>
+    </div>
 
     <br>
     <Page class="page"
@@ -63,37 +61,39 @@
           @on-page-size-change="handlePageSizeChange"
           :page-size="limit"
           :current="skip"
-          :total="total" />
+          :total="total"/>
   </div>
 </template>
 
 <script>
 import BusinessCard from "@/components/businessCard";
+import Html from "@/components/Html"
 import {api, http_token} from "@/assets/js";
 
 export default {
-  name: "messageLog",
-  data () {
+  name: "chat",
+  data() {
     return {
       load: false,
-      messageLog: [],
+      chatList: [],
       limit: 20,
       skip: 1,
       total: 0,
     }
   },
-  components: {BusinessCard},
+  components: {BusinessCard, Html},
   created() {
     this.http = http_token.call(this);
 
-    this.getAdminMessageLog();
+    this.getChatLog();
   },
   methods: {
-    getAdminMessageLog () {
+    // 获取全站聊天
+    getChatLog() {
       if (this.load) return;
       this.load = true;
 
-      this.http.get(api['admin_messageLog'], {
+      this.http.get(api['admin_chatLog'], {
         params: {
           limit: this.limit,
           skip: this.skip,
@@ -101,21 +101,27 @@ export default {
         }
       }).then(res => {
         const d = res.data;
+
         if (d.success == 1) {
-          this.messageLog = d.data;
+          d.data.forEach(i => i.content = `<p>${i.content }</p>`)
+
+          this.chatList = d.data;
           this.total = d.total;
+          return;
         }
+
+        this.$Message.error(d);
       }).finally(() => {
         this.load = false;
       });
     },
-    handlePageSizeChange (val) {
+    handlePageSizeChange(val) {
       this.limit = val;
-      this.getAdminMessageLog();
+      this.getChatLog();
     },
-    handlePageChange (val) {
+    handlePageChange(val) {
       this.skip = val;
-      this.getAdminMessageLog();
+      this.getChatLog();
     }
   }
 }

@@ -1,6 +1,6 @@
 import {NoticeConfig} from "view-design";
 import store from "@/store";
-import message from "@/views/account/message";
+import message from "@/views/account/chat";
 
 export default class NotificationApp {
     constructor() {

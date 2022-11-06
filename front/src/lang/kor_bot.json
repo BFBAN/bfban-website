@@ -106,7 +106,7 @@
   "profile": {
     "title": "개인 설정",
     "meet": "어서 오세요 {name}!",
-    "message": {
+    "chat": {
       "title": "소식",
       "look": "보기",
       "load": "새로 고침",

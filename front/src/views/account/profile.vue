@@ -32,7 +32,7 @@
       <div class="profile-header-divider ivu-divider ivu-divider-horizontal"></div>
       <Row>
         <Col :xs="{span: 24}" :sm="{span: 6}">
-          <Menu class="profile-menu" :mode="isMobile ? 'horizontal' : 'vertical'" :open-names="openMuen"
+          <Menu class="profile-menu" :mode="isMobile ? 'horizontal' : 'vertical'"
                 :active-name="menuValue" @on-select="onMenuActive">
             <div v-for="(i, index) in menu" :key="index">
               <MenuItem :name="j.name" v-for="(j, j_index) in i.child" :key="j_index">
@@ -65,7 +65,7 @@
         <Col :xs="{span: 24}" :sm="{span: 18}" class="profile-right-content">
           <information v-if="menuValue == 'information'"></information>
           <appearance v-if="menuValue == 'appearance'"></appearance>
-          <message v-if="menuValue == 'message'"></message>
+          <chat v-if="menuValue == 'chat'"></chat>
           <enhance v-if="menuValue == 'enhance'"></enhance>
           <media v-if="menuValue == 'media'"></media>
           <voice v-if="menuValue == 'voice'"></voice>
@@ -82,7 +82,7 @@ import PrivilegesTag from "/src/components/PrivilegesTag";
 
 import appearance from "./appearance";
 import information from "./information";
-import message from "./message";
+import chat from "./chat";
 import enhance from "./enhance";
 import media from "./media";
 import voice from "./voice";
@@ -96,7 +96,6 @@ export default new BFBAN({
   data() {
     return {
       privileges: [],
-      openMuen: ['0'],
       menuValue: 'account',
       menu: [
         {
@@ -112,8 +111,8 @@ export default new BFBAN({
             icon: 'ios-color-palette'
           },
             {
-              title: 'message',
-              name: 'message',
+              title: 'chat',
+              name: 'chat',
               icon: 'md-mail'
             },
             {
@@ -153,7 +152,7 @@ export default new BFBAN({
       ]
     }
   },
-  components: {appearance, information, message, enhance, media, voice, history, subscribes, PrivilegesTag},
+  components: {appearance, information, chat, enhance, media, voice, history, subscribes, PrivilegesTag},
   created() {
     const {pagename} = this.$route.params;
 

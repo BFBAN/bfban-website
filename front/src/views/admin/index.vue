@@ -18,13 +18,17 @@
     <Card dis-hover :padding="0" class="admin">
       <Row :gutter="0">
         <Col :xs="{span: 24}" :sm="{span: 6}">
-          <Menu class="admin-menu" :mode="isMobile ? 'horizontal' : 'vertical'" :open-names="openMuen"
+          <Menu class="admin-menu"
+                :mode="isMobile ? 'horizontal' : 'vertical'"
+                :width="isMobile ? null : '100%'"
+                :open-names="openMuen"
                 :active-name="adminMenuValue" @on-select="onMenuActive">
+
             <MenuItem name="home">
               {{ $t('profile.admin.menu.home') }}
             </MenuItem>
 
-            <MenuGroup :title="$t('profile.admin.menu.' + i.title)" v-for="(i, index) in adminMuen" :key="index">
+            <MenuGroup :title="isMobile ? null : $t('profile.admin.menu.' + i.title)" v-for="(i, index) in adminMuen" :key="index">
               <MenuItem :name="j.value" v-for="(j, j_index) in i.child" :key="j_index" v-show="j.disabled">
                 <Row>
                   <Col flex="1">
@@ -54,11 +58,14 @@
             </div>
             <user v-else-if="adminMenuValue == 'user'"></user>
             <comment v-else-if="adminMenuValue == 'comment'"></comment>
-            <log v-else-if="adminMenuValue == 'admin_log'"></log>
+
+            <chatPush v-else-if="adminMenuValue == 'chat_push'"></chatPush>
+            <chatList v-else-if="adminMenuValue == 'chat_list'"></chatList>
+
+            <adminOperationLog v-else-if="adminMenuValue == 'admin_operation_log'"></adminOperationLog>
             <messageLog v-else-if="adminMenuValue == 'message_Log'"></messageLog>
             <adminOperation v-else-if="adminMenuValue == 'adminOperation'"></adminOperation>
-            <messagePush v-else-if="adminMenuValue == 'message_push'"></messagePush>
-            <messageList v-else-if="adminMenuValue == 'message_list'"></messageList>
+            <judgementLog v-else-if="adminMenuValue == 'judgement_log'"></judgementLog>
           </keep-alive>
         </Col>
       </Row>
@@ -71,11 +78,11 @@ import BFBAN from "@/assets/js/bfban";
 
 import user from "./user"
 import comment from "./comment"
-import log from "./log"
+import adminOperationLog from "./adminSystemOperationLog"
 import judgementLog from "@/views/admin/judgementLog";
-import adminOperation from "@/views/admin/adminOperation";
-import messagePush from "@/views/admin/messagePush";
-import messageList from "@/views/admin/messageList";
+import adminOperation from "@/views/admin/adminCommentOperationLog";
+import chatPush from "@/views/admin/chatPush";
+import chatList from "@/views/admin/chatList";
 import PrivilegesTag from "@/components/PrivilegesTag";
 
 import {account_storage} from "@/assets/js";
@@ -120,13 +127,13 @@ export default new BFBAN({
           child: [
             {
               title: 'messagePush',
-              value: 'message_push',
+              value: 'chat_push',
               disabled: false,
               privilege: ['super', 'root', 'dev'],
             },
             {
               title: 'messageList',
-              value: 'message_list',
+              value: 'chat_list',
               disabled: false,
               privilege: ['super', 'root', 'dev'],
             }
@@ -137,14 +144,14 @@ export default new BFBAN({
           icon: 'ios-paper',
           child: [
             {
-              title: 'adminLog',
-              value: 'admin_log',
+              title: 'judgementLog',
+              value: 'judgement_log',
               disabled: false,
               privilege: ['super', 'root', 'dev'],
             },
             {
-              title: 'judgementLog',
-              value: 'judgement_log',
+              title: 'adminOperationLog',
+              value: 'admin_operation_log',
               disabled: false,
               privilege: ['super', 'root', 'dev'],
             },
@@ -159,7 +166,7 @@ export default new BFBAN({
       ]
     }
   },
-  components: {user, comment, log, judgementLog, messagePush, messageList, PrivilegesTag, adminOperation},
+  components: {user, comment, adminOperationLog, judgementLog, chatPush, chatList, PrivilegesTag, adminOperation},
   created() {
     const {pagename} = this.$route.params;
 
@@ -193,13 +200,15 @@ export default new BFBAN({
 </script>
 
 <style lang="less" scoped>
-.admin-menu,
-.admin {
-  min-height: 500px;
-}
+@media screen and (min-width: 980px){
+  .admin-menu,
+  .admin {
+    min-height: 500px;
+  }
 
-.admin-menu {
-  height: 100%;
+  .admin-menu {
+    height: 100%;
+  }
 }
 
 .admin-content {

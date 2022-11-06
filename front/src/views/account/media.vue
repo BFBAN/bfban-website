@@ -85,7 +85,7 @@ export default {
                     this.queryMediaDetail(params.row.filename);
                   }
                 }
-              }, this.$i18n.t('profile.message.look'));
+              }, this.$i18n.t('profile.chat.look'));
             }
           }
         ],

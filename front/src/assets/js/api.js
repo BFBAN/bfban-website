@@ -62,7 +62,7 @@ export default class Api {
       'admin_addUser': 'admin/addUser',
       'admin_delUser': 'admin/delUser',
       'admin_judgementLog': 'admin/judgementLog',
-      'admin_messageLog': 'admin/messageLog',
+      'admin_chatLog': 'admin/chatLog',
       'getUserOperationLogs': 'admin/getUserOperationLogs',
       'adminLog': 'admin/adminLog'
     };

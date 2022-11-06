@@ -13,7 +13,6 @@
         <Drawer class="desktop-hide"
                 placement="left"
                 width="80%"
-                :title="$t($route.name + '.title')"
                 :closable="true"
                 v-model="headerMenu.show">
           <List v-show="!isLogin">
@@ -63,9 +62,8 @@
                   :trigger="isMobile ? 'click' : 'hover'"
                   :placement="isMobile ? 'bottom' : 'bottom-end'"
                   :padding="0">
-          <router-link :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
-            <Avatar icon="ios-person" :src="userinfo.userAvatar">{{ userinfo.username }}</Avatar>
-          </router-link>
+          <Avatar icon="ios-person" :src="userinfo.userAvatar">{{ userinfo.username }}</Avatar>
+
           <DropdownMenu slot="list" class="header-dropdown-menu">
             <div class="header-dropdown-avatar">
               <div>
@@ -88,6 +86,11 @@
             <router-link :to="{name: 'profile', params: {pagename: 'information'}}">
               <DropdownItem>
                 {{ $t("header.profile") }}
+              </DropdownItem>
+            </router-link>
+            <router-link :to="{name: 'admin', params: {pagename: 'home'}}" v-if="isAdmin">
+              <DropdownItem>
+                {{ $t("profile.admin.title") }}
               </DropdownItem>
             </router-link>
             <Dropdown placement="right-start">
@@ -127,7 +130,7 @@
 
         <Divider type="vertical" v-show="isLogin"/>
 
-        <Tooltip :content="$t('profile.message.title')" placement="bottom-end">
+        <Tooltip :content="$t('profile.chat.title')" placement="bottom-end">
           <Header_message v-show="isLogin">
             <Icon slot="content" type="md-notifications" size="30"/>
           </Header_message>

@@ -1636,7 +1636,7 @@ export default new BFBAN({
     }
   },
   computed: {
-    iisOnlySuper() {
+    isOnlySuper() {
       const {userinfo} = this.$store.state.user || {}
       const {privilege = []} = userinfo
       return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))

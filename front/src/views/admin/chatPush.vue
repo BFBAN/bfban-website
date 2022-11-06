@@ -1,20 +1,20 @@
 <template>
   <Tabs :value="tagsName">
-    <TabPane :label="$t('profile.message.tabsSend.itemName')" name="message0" v-if="isAdmin">
+    <TabPane :label="$t('profile.chat.tabsSend.itemName')" name="message0" v-if="isAdmin">
       <Card dis-hover>
         <Form slot="title" :model="message" :rules="message.ruleValidate">
           <Row :gutter="30">
             <Col span="12">
-              <FormItem :label="$t('profile.message.tabsSend.messageMethod')" prop="type">
+              <FormItem :label="$t('profile.chat.tabsSend.messageMethod')" prop="type">
                 <Select v-model="message.type" :transfer="true">
                   <Option v-for="(item, item_index) in message.list"
                           v-show="item.privilege.filter(p => currentUser.userinfo.privilege.includes(p) ).length"
                           :value="item.title"
-                          :label="$t('profile.message.types.' + item.title + '.text' )"
+                          :label="$t('profile.chat.types.' + item.title + '.text' )"
                           :key="item_index">
-                    {{ $t('profile.message.types.' + item.title + '.text' ) }}
+                    {{ $t('profile.chat.types.' + item.title + '.text' ) }}
                     <p style="margin: 5px 0; font-size: 10px">
-                      {{ $t('profile.message.types.' + item.title + '.describe' ) }}
+                      {{ $t('profile.chat.types.' + item.title + '.describe' ) }}
                     </p>
                     <PrivilegesTag :data="item.privilege"></PrivilegesTag>
                   </Option>
@@ -22,11 +22,11 @@
               </FormItem>
             </Col>
             <Col span="12" v-if="message.typeDictionary.includes(message.type)">
-              <FormItem :label="$t('profile.message.tabsSend.messageID')" prop="id">
+              <FormItem :label="$t('profile.chat.tabsSend.messageID')" prop="id">
                 <AutoComplete
                     v-model="message.id"
                     :data="message.playerList"
-                    :placeholder="$t('profile.message.tabsSend.messageID')">
+                    :placeholder="$t('profile.chat.tabsSend.messageID')">
                   <Option v-for="(option, index) in message.playerList" :value="option.id" :key="index">
                     <Avatar :src="option.avatarLink || ''">{{ option.username[0] }}</Avatar>&emsp;
                     <span>{{ option.username }}</span>
@@ -38,11 +38,11 @@
               </FormItem>
             </Col>
           </Row>
-          <FormItem :label="$t('profile.message.tabsSend.content')" prop="content">
+          <FormItem :label="$t('profile.chat.tabsSend.content')" prop="content">
             <Input v-model="message.content"
                    show-word-limit
                    type="textarea"
-                   :placeholder="$t('profile.message.placeholder')"
+                   :placeholder="$t('profile.chat.placeholder')"
                    :maxlength="1000"
                    :autosize="{minRows: 5,maxRows: 10}"></Input>
           </FormItem>

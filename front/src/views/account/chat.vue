@@ -1,16 +1,16 @@
 <template>
   <div>
     <Tabs :value="tagsName">
-      <TabPane :label="$t('profile.message.tabsList.itemName')" name="message0">
+      <TabPane :label="$t('profile.chat.tabsList.itemName')" name="message0">
         <Card dis-hover :padding="0">
           <p slot="title"></p>
           <div slot="extra">
             <Button size="small" :disabled="!selectWindow" @click="setMessageEdit" v-voice-button>
-              {{ $t('profile.message.control') }}
+              {{ $t('profile.chat.control') }}
             </Button>
             <Divider type="vertical"/>
             <Button type="primary" size="small" :loading="messageLoad" @click="getMessage" v-voice-button>
-              {{ $t('profile.message.load') }}
+              {{ $t('profile.chat.load') }}
             </Button>
           </div>
           <Row v-if="messageList[selectWindow]">
@@ -33,7 +33,7 @@
                       </businessCard>
                     </Col>
                     <Col>
-                      <a @click="openMessageDetail(i)" v-voice-button>{{ $t('profile.message.look') }}</a>
+                      <a @click="openMessageDetail(i)" v-voice-button>{{ $t('profile.chat.look') }}</a>
                     </Col>
                   </Row>
                 </div>
@@ -49,7 +49,7 @@
                 <Col flex="1">
                   <Select v-model="control.model" size="small" style="width:200px">
                     <Option v-for="item in control.list" :value="item.value" :key="item.value">
-                      {{ $t('profile.message.tabsList.form.' + item.label) }}
+                      {{ $t('profile.chat.tabsList.form.' + item.label) }}
                     </Option>
                   </Select>
                 </Col>
@@ -334,7 +334,7 @@ export default new BFBAN({
 
                 if (num <= 0) {
                   messageUser.push({
-                    text: "@" + this.$i18n.t('profile.message.types.' + i.type),
+                    text: "@" + this.$i18n.t('profile.chat.types.' + i.type),
                     id: i.byUserId,
                     value: i.type,
                     type: i.type

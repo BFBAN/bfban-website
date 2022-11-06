@@ -22,71 +22,73 @@
       </Col>
       <Col>
         <Select v-model="typeValue">
-          <Option v-for="(i, index) in typeArray" :key="index" :value="i">{{i}}</Option>
+          <Option v-for="(i, index) in typeArray" :key="index" :value="i">{{ i }}</Option>
         </Select>
       </Col>
-      <Divider type="vertical"></Divider>
+    </Row>
+
+    <br>
+
+    <Row>
+      <Col flex="1">
+        <Page class="page"
+              size="small"
+              show-sizer
+              show-total
+              show-elevator
+              @on-change="handlePageChange"
+              @on-page-size-change="handlePageSizeChange"
+              :page-size="limit"
+              :current="skip"
+              :total="total"/>
+      </Col>
       <Col>
-        <Button @click="getCommentList" :loading="load">
-          <Icon type="ios-loading"></Icon>
+        <Button size="small" @click="getCommentList">
+          <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
         </Button>
       </Col>
     </Row>
 
     <br>
 
-    <Page class="page"
-          size="small"
-          show-sizer
-          show-total
-          show-elevator
-          @on-change="handlePageChange"
-          @on-page-size-change="handlePageSizeChange"
-          :page-size="limit"
-          :current="skip"
-          :total="total" />
-
-    <br>
-
-    <Card dis-hover :padding="5" v-if="commentList.length > 0">
+    <div v-if="commentList.length > 0">
       <div v-for="(i,index) in commentList" :key="index">
-        <Row type="flex" align="middle">
-          <Col>
+        <Card :padding="0" dis-hover>
+          <div slot="title">
             <Tag>COMMENT</Tag>
-          </Col>
-          <Col flex="1">
-            <div>
-              <Time :time="i.createTime" type="date"></Time>:
-              <BusinessCard :id="i.byUserId">
-                <a href="javascript:void(0)"><b>{{i.username}}</b></a>
-              </BusinessCard>
-              {{ $t(`detail.info.reply`) }}
-              <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
-                <span>{{ i.toOriginName }}</span>
-              </router-link>
-              ({{i.cheatGame}})
-            </div>
-          </Col>
-          <Col>
-            <Dropdown placement="bottom-end">
-              <a href="javascript:void(0)">
-                <Icon type="ios-eye" size="25"/>
-              </a>
-              <DropdownMenu slot="list">
-                <DropdownItem>
-                  <div @click="openCommentMode(index)">
-                    Edit Comment
-                  </div>
-                </DropdownItem>
-                <DropdownItem :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
-                  Open Player Page
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </Col>
-        </Row>
+            <Time :time="i.createTime" type="date"></Time>
+            :
+            <BusinessCard :id="i.byUserId">
+              <a href="javascript:void(0)"><b>{{ i.username }}</b></a>
+            </BusinessCard>
+            {{ $t(`basic.button.reply`) }}
+            <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
+              <span>{{ i.toOriginName }}</span>
+            </router-link>
+            ({{ i.cheatGame }})
+          </div>
+          <div slot="extra">
+            <a href="javascript:void(0)">
+              <Tooltip content="Edit Comment">
+                <Button size="small" type="primary" @click="openCommentMode(index)">
+                  <Icon type="md-create"/>
+                </Button>
+              </Tooltip>
+            </a>
+            <Divider type="vertical"></Divider>
+            <a href="javascript:void(0)">
+              <Tooltip content="Open Player Page">
+                <Button size="small" :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
+                  <Icon type="ios-eye"/>
+                </Button>
+              </Tooltip>
+            </a>
+          </div>
+          <HtmlWidget class="comment-html" :html="i.content"></HtmlWidget>
+        </Card>
+        <br>
       </div>
-    </Card>
+    </div>
     <Card dis-hover v-else>
       {{ $t('basic.tip.notContent') }}
     </Card>
@@ -102,7 +104,7 @@
           @on-page-size-change="handlePageSizeChange"
           :page-size="limit"
           :current="skip"
-          :total="total" />
+          :total="total"/>
 
     <!-- 编辑评论 S -->
     <Modal v-model="commentEditModel" footer-hide>
@@ -146,9 +148,10 @@ import {account_storage, api, http, http_token, util} from "../../assets/js";
 import BusinessCard from "@/components/businessCard";
 import Textarea from "@/components/Textarea";
 import BFBAN from "@/assets/js/bfban";
+import HtmlWidget from "@/components/HtmlWidget";
 
 export default new BFBAN({
-  data () {
+  data() {
     return {
       commentEditModel: false,
       commentEditLoad: false,
@@ -178,7 +181,7 @@ export default new BFBAN({
       total: 0,
     }
   },
-  components: {BusinessCard, Textarea},
+  components: {BusinessCard, HtmlWidget, Textarea},
   created() {
     this.http = http_token.call(this);
 
@@ -199,9 +202,9 @@ export default new BFBAN({
 
       this.getCommentList();
     },
-    openCommentMode (index) {
+    openCommentMode(index) {
       if (
-          !account_storage.checkPrivilegeGroup(  this.currentUser.userinfo, ['super', 'root', 'dev'] )
+          !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ['super', 'root', 'dev'])
       ) {
         this.$Message.error(this.$i18n.t('basic.tip.noAccess'))
         return;
@@ -214,11 +217,11 @@ export default new BFBAN({
 
       this.commentEditModel = true;
     },
-    handlePageChange (val) {
+    handlePageChange(val) {
       this.skip = val;
       this.getCommentList();
     },
-    handlePageSizeChange (val) {
+    handlePageSizeChange(val) {
       this.limit = val;
       this.getCommentList();
     },
@@ -228,11 +231,11 @@ export default new BFBAN({
     /**
      * 编辑评论、回复、判决
      */
-    commentSubmit () {
+    commentSubmit() {
       if (!this.editCommentFrom.id || !this.editCommentFrom.content || !this.editCommentFrom.videoLink) return;
 
       if (
-          !account_storage.checkPrivilegeGroup(  this.currentUser.userinfo, ['super', 'root', 'dev'] )
+          !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ['super', 'root', 'dev'])
       ) {
         this.$Message.error(this.$i18n.t('basic.tip.noAccess'))
         return;
@@ -265,7 +268,7 @@ export default new BFBAN({
     /**
      * 取得评论列表
      */
-    getCommentList () {
+    getCommentList() {
       this.load = true;
 
       this.http.get(api['admin_commentAll'], {
@@ -293,3 +296,9 @@ export default new BFBAN({
   }
 })
 </script>
+
+<style lang="less" scoped>
+.comment-html {
+  overflow: hidden;
+}
+</style>

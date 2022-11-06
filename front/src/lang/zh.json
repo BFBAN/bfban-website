@@ -147,7 +147,7 @@
   "profile": {
     "title": "个人设置",
     "meet": "欢迎回来{name}!",
-    "message": {
+    "chat": {
       "title": "消息",
       "look": "查看",
       "load": "刷新",
@@ -281,7 +281,8 @@
         "log": "日志",
         "adminLog": "管理日志",
         "judgementLog": "判决日志",
-        "adminOperation": "管理操作日志",
+        "adminOperationLog": "管理员网站操作日志",
+        "adminOperation": "管理案件操作日志",
         "messageManagement": "消息",
         "messagePush": "推送",
         "messageList": "消息内容"

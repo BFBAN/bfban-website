@@ -2,21 +2,25 @@
   <div>
     <Row :gutter="10" type="flex" align="middle">
       <Col>
-        <Button @click="addUserModel = true"><Icon type="md-add" /></Button>
+        <Button
+            @click="addUserModel = true"
+            :disabled="isAddUserExecutable">
+          <Icon type="md-add"/>
+        </Button>
       </Col>
       <Col flex="1">
       </Col>
       <Col>
         <Select v-model="userOrder.value" @on-change="getUserList">
           <Option :value="i.value" v-for="(i,index) in userOrder.list" :key="index">
-            {{i.title}}
+            {{ i.title }}
           </Option>
         </Select>
       </Col>
       <Col>
         <Select v-model="userType.value" @on-change="getUserList">
           <Option :value="i.value" v-for="(i,index) in userType.list" :key="index">
-            {{i.title}}
+            {{ i.title }}
           </Option>
         </Select>
       </Col>
@@ -33,34 +37,42 @@
                  enter-button
                  @on-enter="onSearchUser"
                  @on-search="onSearchUser"
-                 placeholder="input user name"
-                 style="width: 280px" >
+                 style="width: 280px">
           </Input>
         </Col>
       </template>
     </Row>
     <br>
 
-    <Page class="page"
-          size="small"
-          show-sizer
-          show-total
-          show-elevator
-          @on-change="handlePageChange"
-          @on-page-size-change="handlePageSizeChange"
-          :page-size="limit"
-          :current="skip"
-          :total="total" />
+    <Row :gutter="20">
+      <Col flex="1">
+        <Page class="page"
+              size="small"
+              show-sizer
+              show-total
+              show-elevator
+              @on-change="handlePageChange"
+              @on-page-size-change="handlePageSizeChange"
+              :page-size="limit"
+              :current="skip"
+              :total="total"/>
+      </Col>
+      <Col>
+        <Button size="small" @click="getUserList">
+          <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
+        </Button>
+      </Col>
+    </Row>
     <br>
 
     <Card dis-hover v-for="(i, index) in userListData" :key="index" class="admin-user">
       <Row :gutter="10" type="flex" justify="center" align="middle">
         <Col flex="1">
           <BusinessCard :id="i.id">
-            <b>{{i.username}}</b>
+            <b>{{ i.username }}</b>
           </BusinessCard>
           <div>
-            Id:{{i.id}}
+            Id:{{ i.id }}
             <divider type="vertical"></divider>
             Valid:{{ i.valid }}
           </div>
@@ -70,16 +82,18 @@
         </Col>
         <Col>
           <Button @click="onEditUser(index)" type="dashed" size="small" :disabled="!isAdmin">
-            <Icon type="ios-create" />
+            <Icon type="ios-create"/>
           </Button>
           <Divider type="vertical"></Divider>
-          <Button @click="openDelUserModel(index)" type="error" size="small" :disabled="!isAdmin">
-            <Icon type="md-trash" />
+          <Button @click="openDelUserModel(index)" type="error" size="small" :disabled="isDeleteExecutable">
+            <Icon type="md-trash"/>
           </Button>
         </Col>
       </Row>
     </Card>
-    <Card dis-hover align="center" v-if="userListData.length <= 0">:(</Card>
+    <Card dis-hover align="center" v-if="userListData.length <= 0">
+      {{ $t('basic.tip.notContent') }}
+    </Card>
 
     <!-- 编辑用户 S -->
     <Modal v-model="userEditModel"
@@ -97,7 +111,7 @@
                 <Row :gutter="10">
                   <Col span="6">
                     <FormItem prop="id">
-                      <Input v-model="editUserData.id" readonly />
+                      <Input v-model="editUserData.id" readonly/>
                     </FormItem>
                   </Col>
                   <Col span="18">
@@ -159,7 +173,8 @@
               </Col>
               <Col span="12">
                 <FormItem :label="$t('profile.account.form.language')">
-                  <Select v-model="editUserData.attr.language" class="switch-language" prefix="md-globe" placement="top-end">
+                  <Select v-model="editUserData.attr.language" class="switch-language" prefix="md-globe"
+                          placement="top-end">
                     <Option v-for="item in languages" :value="item.name" :key="item.name">
                       {{ item.label }}
                     </Option>
@@ -269,18 +284,21 @@
         <BusinessCard :id="editUserData.id">
           <h2><a href="javascript:void(0)"><b>{{ editUserData.username }}</b></a></h2>
         </BusinessCard>
-        <p>{{editUserData.id}}</p>
+        <p>{{ editUserData.id }}</p>
       </Card>
       <div slot="footer">
         <Row type="flex" align="middle">
           <Col>
             <Select v-model="delTypeValue" style="width: 150px">
-              <Option v-for="(i, index) in delTypes" :key="index" :value="i"> {{i}} </Option>
+              <Option v-for="(i, index) in delTypes" :key="index" :value="i"> {{ i }}</Option>
             </Select>
           </Col>
           <Divider type="vertical"></Divider>
           <Col flex="2">
-            <Button @click="onDeleteUser" type="error" long :loading="delUserLoad">{{ $t('basic.button.submit') }}</Button>
+            <Button @click="onDeleteUser" type="error" long :loading="delUserLoad">{{
+                $t('basic.button.submit')
+              }}
+            </Button>
           </Col>
         </Row>
       </div>
@@ -314,7 +332,7 @@ export default new BFBAN({
       },
       userOrder: {
         value: 'desc',
-        list: [{title:'Asc', value: 'asc'}, {title: 'Desc', value: 'desc'}]
+        list: [{title: 'Asc', value: 'asc'}, {title: 'Desc', value: 'desc'}]
       },
 
       addUserLoad: false,
@@ -333,7 +351,7 @@ export default new BFBAN({
       editPrivilegesForm: {
         id: '',
         roleName: '',
-        role: ['normal','admin','bot','super','dev','blacklisted','freezed'],
+        role: ['normal', 'admin', 'bot', 'super', 'dev', 'blacklisted', 'freezed'],
         activeName: 'grant',
         action: ['grant', 'revoke'],
       },
@@ -369,7 +387,7 @@ export default new BFBAN({
     /**
      * 提交修改表单
      */
-    async onEditUserSubmit () {
+    async onEditUserSubmit() {
       this.load = true;
 
       // 处理用户属性
@@ -392,11 +410,11 @@ export default new BFBAN({
     /**
      * 管理员增加用户
      */
-    onAddUserSubmit () {
+    onAddUserSubmit() {
       const {username, password} = this.addUserData;
 
       if (
-          !account_storage.checkPrivilegeGroup(  this.currentUser.userinfo, ['super', 'root', 'dev'] )
+          !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ['super', 'root', 'dev'])
       ) {
         this.$Message.error(this.$i18n.t('basic.tip.noAccess'))
         return;
@@ -437,8 +455,8 @@ export default new BFBAN({
     /**
      * 管理员删除用户
      */
-    onDeleteUser () {
-      const { id } = this.editUserData;
+    onDeleteUser() {
+      const {id} = this.editUserData;
 
       this.delUserLoad = true;
       this.http.post(api["admin_delUser"], {
@@ -467,14 +485,14 @@ export default new BFBAN({
     /**
      * 打开删除面板Mode
      */
-    openDelUserModel (index) {
+    openDelUserModel(index) {
       this.editUserData = this.userListData[index];
       this.delUserModel = true;
     },
     /**
      * 处理表单内用户权限增加与删除
      */
-    onEditPrivileges () {
+    onEditPrivileges() {
       if (!this.editPrivilegesForm.roleName || !this.editUserData.privilege) return;
 
       const roleName = this.editUserData.privilege.indexOf(this.editPrivilegesForm.roleName);
@@ -492,21 +510,20 @@ export default new BFBAN({
         case "revoke":
           // 剥夺
           if (roleName >= 0) {
-            this.editUserData.privilege.splice(roleName,1);
+            this.editUserData.privilege.splice(roleName, 1);
             this.editUserData.temporaryPrivilege[this.editPrivilegesForm.roleName] = "revoke";
-          }
-          else
+          } else
             this.$Message.error('not role');
           break;
       }
 
-      if(this.$refs.privilegesTag)
+      if (this.$refs.privilegesTag)
         this.$refs.privilegesTag.update();
     },
     /**
      * 精准名称搜索
      */
-    onSearchUser () {
+    onSearchUser() {
       this.getUserList().finally(() => {
         this.onReset()
       });
@@ -514,9 +531,11 @@ export default new BFBAN({
     /**
      * 站内用户搜索
      */
-    async getUserList () {
+    async getUserList() {
       const that = this;
-      let params = { name: '', skip: this.skip - 1, limit: this.limit };
+      let params = {name: '', skip: this.skip - 1, limit: this.limit};
+
+      if (!this.load) return ;
 
       return new Promise((resolve, reject) => {
         that.load = true;
@@ -551,22 +570,22 @@ export default new BFBAN({
      * 编辑用户
      * @param index
      */
-    onEditUser (index) {
+    onEditUser(index) {
       this.userEditModel = true;
       this.editUserData = Object.assign(this.editUserData, this.userListData[index]);
 
-      if(this.$refs.privilegesTag)
+      if (this.$refs.privilegesTag)
         this.$refs.privilegesTag.update(this.editUserData.privilege);
-      if(this.$refs.userIntroductionTextarea)
+      if (this.$refs.userIntroductionTextarea)
         this.$refs.userIntroductionTextarea.updateContent(this.editUserData.attr.introduction);
     },
     /**
      * 修改用户身份
      */
-    async setUser (id, action, role) {
+    async setUser(id, action, role) {
       await this.http.post("admin/setUser", {
         data: {
-          data: { id, action, role },
+          data: {id, action, role},
         }
       }).then(res => {
         const d = res.data;
@@ -582,8 +601,8 @@ export default new BFBAN({
     /**
      * 修改用户属性
      */
-    async setUserAttr () {
-      return new Promise( (resolve, reject)  => {
+    async setUserAttr() {
+      return new Promise((resolve, reject) => {
         let attr = this.editUserData.attr;
 
         delete attr.valid;
@@ -613,7 +632,7 @@ export default new BFBAN({
         })
       })
     },
-    handlePageChange (num) {
+    handlePageChange(num) {
       this.skip = num;
       this.getUserList();
     },
@@ -621,15 +640,20 @@ export default new BFBAN({
       this.limit = num;
       this.getUserList();
     },
-    onReset () {
+    onReset() {
       this.skip = 1;
-      this.limit= 20;
-      this.order= 'desc';
-      this.total= 0;
+      this.limit = 20;
+      this.order = 'desc';
+      this.total = 0;
     }
   },
   computed: {
-
+    isDeleteExecutable() {
+      return !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ['root', 'dev']);
+    },
+    isAddUserExecutable() {
+      return !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ["super", "root", "dev"]);
+    }
   }
 })
 </script>

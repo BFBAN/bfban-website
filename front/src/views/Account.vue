@@ -34,7 +34,7 @@
                     style="background-color: yellow"
                     size="150"
                     icon="ios-person"
-                    :src="`${account.userAvatar}?s=150`"></Avatar>
+                    :src="account.userAvatar ? `${account.userAvatar}?s=150` : false"></Avatar>
 
             <h1 :title="$t('account.username')" class="account-username">
               {{ account.username || 'username' }}
@@ -145,6 +145,7 @@ export default new BFBAN({
   data() {
     return {
       games: games.child,
+      load: false,
       account: {
         username: "",
         originId: "",
@@ -399,6 +400,8 @@ export default new BFBAN({
 
       if (!uId) return;
 
+      this.load = true;
+
       http.get(api["user_reports"], {
         params: {
           id: uId,
@@ -419,6 +422,7 @@ export default new BFBAN({
         }
       }).finally(() => {
         this.$Loading.finish();
+        this.load = false;
       });
     },
   },

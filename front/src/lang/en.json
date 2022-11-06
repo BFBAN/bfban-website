@@ -141,8 +141,8 @@
   "profile": {
     "title": "Personal settings",
     "meet": "welcome back {name}! ",
-    "message": {
-      "title": "Messages",
+    "chat": {
+      "title": "Chat",
       "look": "Check",
       "load": "Refresh",
       "control": "Batch editing",

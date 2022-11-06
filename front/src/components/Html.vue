@@ -290,18 +290,6 @@ export default {
     margin: 3px 0;
   }
 
-  .img {
-    position: relative;
-    width: calc(100% + 30px);
-    margin: 10px -15px 10px -15px;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      display: block;
-    }
-  }
-
   hr, .hr {
     opacity: .5;
     width: calc(100% + 30px) !important;
