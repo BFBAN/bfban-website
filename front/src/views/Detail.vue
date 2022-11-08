@@ -61,9 +61,43 @@
                   </Tag>
                 </template>
 
-                <h1 :style="`${cheater.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''}`">
-                  {{ cheater.originName || 'User Name' }}
-                </h1>
+                <div>
+                  <Dropdown :transfer="isMobile" placement="bottom-start">
+                    <h1> {{ cheater.originName || 'User Name' }} </h1>
+
+                    <!-- 历史ID -->
+                    <DropdownMenu slot="list"
+                                  :style="isMobile ? '' : 'min-width: 630px'"
+                                  v-if="cheater && cheater.history && cheater.history.length >= 0">
+                      <Row style="margin: 5px 18px">
+                        <Col flex="1">
+                          <b>{{ $t('detail.info.historyID') }}</b>
+                        </Col>
+                        <Col>
+                          <Button size="small" @click="updateCheaterModal = true;">
+                            {{ $t('detail.info.updateButton') }}
+                          </Button>
+                        </Col>
+                      </Row>
+                      <div style="overflow: auto; max-height: 80vh">
+                        <div v-for="(origin, origin_index) in cheater.history" :key="origin_index">
+                          <Row :gutter="5" type="flex" align="middle"
+                               style="padding: 0 16px;margin: 10px 0 ; width:100%">
+                            <Col class="mobile-hide">
+                              <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
+                              -
+                              <Time :time="origin.toTime" v-if="origin.toTime" type="datetime"></Time>
+                            </Col>
+                            <Col flex="1" class="mobile-hide">
+                              <Divider dashed style="margin: 0"/>
+                            </Col>
+                            <Col>{{ origin.originName }}</Col>
+                          </Row>
+                        </div>
+                      </div>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
               </Col>
               <template v-if="!isFull">
                 <Col class="mobile-hide html2canvas-ignore">
@@ -128,30 +162,11 @@
                 <span>Origin id:  {{ cheater.originUserId || 'id' }}</span>
                 <template v-if="!isFull">
                   <Divider type="vertical"/>
-                  <Dropdown>
-                    <a href="javascript:void(0)">
-                      {{ $t('detail.info.historyID', {msg: 'historyID'}) }}
-                      <Icon type="ios-arrow-down"></Icon>
-                    </a>
-                    <DropdownMenu slot="list" style="min-width: 230px"
-                                  v-if="cheater && cheater.history && cheater.history.length >= 0">
-                      <!-- 历史ID -->
-                      <DropdownItem v-for="origin in cheater.history" :key="origin.originName">
-                        <Row>
-                          <Col flex="1">
-                            <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
-                          </Col>
-                          <Col>{{ origin.originName }}</Col>
-                        </Row>
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-
-                  <Divider type="vertical"/>
 
                   <a @click="updateCheaterModal = true;">
                     <Icon type="md-cloud"/>
-                    {{ $t('detail.info.updateButton') }}</a>
+                    {{ $t('detail.info.updateButton') }}
+                  </a>
                   <Modal v-model="updateCheaterModal">
                     <div sort="title">
                       <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
