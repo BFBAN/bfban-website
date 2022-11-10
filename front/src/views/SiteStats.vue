@@ -140,6 +140,10 @@
         </Row>
 
         <Spin size="large" fix v-show="!isLogin">
+          <div>
+            <Icon type="md-lock" size="100" />
+          </div>
+          <br>
           <Button :to="{name: 'signin'}">{{ $t("header.signin") }}</Button>
         </Spin>
       </div>
@@ -313,12 +317,14 @@ export default new BFBAN({
         // 例子
         let exp = [
           {username: 'Tom', total: 10},
-          {username: 'Axis', total: 5},
-          {username: 'Davie', total: 5.1},
-          {username: 'Sun', total: 3},
-          {username: 'Dr.Ming', total: 1},
-          {username: 'Coffs', total: 1}
+          {username: 'Rudi', total: 5},
+          {username: 'まどか', total: 3},
+          {username: 'David', total: 5.1},
+          {username: '张小明', total: 2.4},
+          {username: 'Auston', total: 1},
+          {username: 'Marcia', total: 1}
         ];
+        this.active.report = exp;
         this.active.community = exp;
         this.active.community.forEach(i => {
           this.active.communityConf.series[0].data.push({value: i.total.toFixed(2), name: i.username})
