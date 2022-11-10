@@ -2,11 +2,11 @@
   <Card dis-hover :padding="0" class="img">
     <template v-if="imageStatus == 0">
       <div class="img-error img-box">
-        <Badge>
+        <Badge class="user-select-none">
           <Icon type="md-refresh" class="spin-icon-load" slot="count" size="20"/>
           <Icon type="md-images" size="50"/>
         </Badge>
-        <img style="display: none" :src="src" @error="onError" @load="onLoad"/>
+        <img class="user-select-none" style="display: none" :src="src" @error="onError" @load="onLoad"/>
         <p class="img-box-url">{{ src }}</p>
       </div>
     </template>
@@ -15,22 +15,22 @@
         <div class="img-toolbar">
           <Row>
             <Col>
-              <a size="small" type="dashed" href="javascript:void(0)" @click="onRotating(-90)">
+              <a class="user-select-none" size="small" type="dashed" href="javascript:void(0)" @click="onRotating(-90)">
                 <Icon type="md-redo" size="15" style="transform: rotate(-180deg)"/>
               </a>
               <Divider type="vertical"></Divider>
-              <a size="small" type="dashed" href="javascript:void(0)" @click="onRotating(90)">
+              <a class="user-select-none" size="small" type="dashed" href="javascript:void(0)" @click="onRotating(90)">
                 <Icon type="md-redo" size="15"/>
               </a>
-              <Divider type="vertical"></Divider>
-              <a size="small" type="dashed" href="javascript:void(0)" @click="onRotating(0)">
+              <Divider type="vertical" v-if="rotateValue != 0"></Divider>
+              <a v-if="rotateValue != 0" class="user-select-none" size="small" type="dashed" href="javascript:void(0)" @click="onRotating(0)">
                 <Icon type="md-refresh" size="15"/>
               </a>
             </Col>
             <Col flex="1" class="img-title">
               <span>{{ src }}</span>
             </Col>
-            <Col v-if="src">
+            <Col v-if="src" class="user-select-none">
               <a size="small" type="dashed" :href="src" target="_new">
                 <Icon type="md-link"/>
               </a>
@@ -38,15 +38,15 @@
           </Row>
         </div>
 
-        <img :src="src" class="img-tag" :style="`transform: rotate(${rotateValue}deg)`"/>
-        <div class="img-hover ivu-card" @click="show">
+        <img :src="src" class="img-tag user-select-none" :style="`transform: rotate(${rotateValue}deg)`"/>
+        <div class="img-hover ivu-card user-select-none" @click="show">
           <Icon type="ios-search" size="50"/>
         </div>
       </div>
     </template>
     <template v-else-if="imageStatus == -1">
       <div class="img-error img-box" @click="openUrl">
-        <Badge>
+        <Badge class="user-select-none">
           <Icon type="md-alert" slot="count" size="20"/>
           <Icon type="md-images" size="50"/>
         </Badge>

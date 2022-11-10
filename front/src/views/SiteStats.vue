@@ -15,9 +15,9 @@
       <Col>
         <Card :padding="0" dis-hover>
           <Button @click="loadData" class="sitestats-loading">
-            <Icon type="ios-loading" />
+            <Icon type="md-refresh" :class="[load ? 'spin-icon-load' :'']"/>
           </Button>
-          <v-chart class="chart" :option="chart.stats" />
+          <v-chart class="chart" :option="chart.stats"/>
         </Card>
         <Spin size="large" fix v-if="load"></Spin>
       </Col>
@@ -31,9 +31,12 @@
             </h2>
             <span>{{ $t('sitestats.reports') }}</span>
           </Col>
-          <Divider type="vertical" class="mobile-hide" />
+          <Divider type="vertical" class="mobile-hide"/>
           <Col :xs="{span: 12}" :lg="{span: 3}">
-            <h2><Badge :color="chart.stats.color[0]" />{{ statistics.players || 0 }}</h2>
+            <h2>
+              <Badge :color="chart.stats.color[0]"/>
+              {{ statistics.players || 0 }}
+            </h2>
             {{ $t('sitestats.players') }}
           </Col>
           <Divider type="vertical" class="mobile-hide"/>
@@ -43,12 +46,18 @@
           </Col>
           <Divider type="vertical" class="mobile-hide"/>
           <Col :xs="{span: 12}" :lg="{span: 3}">
-            <h2><Badge :color="chart.stats.color[2]" />{{ statistics.registers || 0 }}</h2>
+            <h2>
+              <Badge :color="chart.stats.color[2]"/>
+              {{ statistics.registers || 0 }}
+            </h2>
             <span>{{ $t('sitestats.registers') }}</span>
           </Col>
           <Divider type="vertical" class="mobile-hide"/>
           <Col :xs="{span: 12}" :lg="{span: 3}">
-            <h2><Badge :color="chart.stats.color[1]" />{{ statistics.confirmed || 0 }}</h2>
+            <h2>
+              <Badge :color="chart.stats.color[1]"/>
+              {{ statistics.confirmed || 0 }}
+            </h2>
             <span>{{ $t('sitestats.confirmed') }}</span>
           </Col>
           <Divider type="vertical" class="mobile-hide"/>
@@ -61,15 +70,17 @@
       <br>
 
       <!-- 排行统计 S -->
-      <template v-if="isLogin">
+      <div style="position: relative">
         <div>
           <Row :gutter="20">
             <Col :xs="{span: 23, push: 1}" :lg="{push: 0}">
-              <RadioGroup size="small" type="button" v-voice-button v-model="timeRange" @on-change="getActiveStatistical">
+              <RadioGroup size="small" type="button" v-voice-button v-model="timeRange"
+                          @on-change="getActiveStatistical">
                 <Radio v-for="(i, index) in timeArray" :key="index"
-                       v-show="i.show"
+                       :disabled="!isLogin && !show"
                        :label="i.value"
-                       :value="i.value">{{ $t(i.name) }}</Radio>
+                       :value="i.value">{{ $t(i.name) }}
+                </Radio>
               </RadioGroup>
             </Col>
           </Row>
@@ -87,17 +98,17 @@
                       <Row>
                         <Col flex="1">
                           <businessCard :id="i.id">
-                            <router-link :to="{name:'account', params: { uId: i.id }}">{{i.username}}</router-link>
+                            <router-link :to="{name:'account', params: { uId: i.id }}">{{ i.username }}</router-link>
                           </businessCard>
                         </Col>
-                        <Col>{{i.total.toFixed(2) || 0}}</Col>
+                        <Col>{{ i.total.toFixed(2) || 0 }}</Col>
                       </Row>
                     </li>
                   </ol>
                   <Empty v-else></Empty>
                 </Col>
                 <Col span="12">
-                  <v-chart class="chart chart-min" :option="active.communityConf" />
+                  <v-chart class="chart chart-min" :option="active.communityConf"/>
                 </Col>
               </Row>
               <Spin size="large" fix v-show="active.load">
@@ -113,10 +124,10 @@
                   <Row>
                     <Col flex="1">
                       <businessCard :id="i.id">
-                        <router-link :to="{name:'account', params: { uId: i.id }}">{{i.username}}</router-link>
+                        <router-link :to="{name:'account', params: { uId: i.id }}">{{ i.username }}</router-link>
                       </businessCard>
                     </Col>
-                    <Col>{{i.total.toFixed(0) || 0}}</Col>
+                    <Col>{{ i.total.toFixed(0) || 0 }}</Col>
                   </Row>
                 </li>
               </ol>
@@ -127,7 +138,11 @@
             </Card>
           </Col>
         </Row>
-      </template>
+
+        <Spin size="large" fix v-show="!isLogin">
+          <Button :to="{name: 'signin'}">{{ $t("header.signin") }}</Button>
+        </Spin>
+      </div>
       <!-- 排行统计 E -->
 
     </div>
@@ -138,15 +153,15 @@
 import BFBAN from "../assets/js/bfban";
 import Empty from "@/components/Empty"
 import businessCard from "@/components/businessCard";
-import * as echarts from  "echarts";
+import * as echarts from "echarts";
 
-import {http, api, conf,account_storage} from '../assets/js/index'
+import {http, api, conf, account_storage} from '../assets/js/index'
 
 export default new BFBAN({
-  data () {
+  data() {
     return {
-      load: true,
-      statistics: { },
+      load: false,
+      statistics: {},
       admins: 0,
       chart: {
         'stats': {
@@ -176,7 +191,7 @@ export default new BFBAN({
             }
           },
           series: [],
-          grid: { x: -1, y: -1, x2: 0, y2: 30 },
+          grid: {x: -1, y: -1, x2: 0, y2: 30},
         },
       },
       chartConf: {
@@ -198,13 +213,23 @@ export default new BFBAN({
       timeArray: [
         {name: 'sitestats.timeRange.daily', value: 'daily', show: false},
         {name: 'sitestats.timeRange.weekly', value: 'weekly', show: false},
-        {name: 'sitestats.timeRange.monthly', value: 'monthly', show: false, privileges: ['admin', 'spuer', 'root', 'dev']},
-        {name: 'sitestats.timeRange.yearly', value: 'yearly', show: false, privileges: ['admin', 'spuer', 'root', 'dev']}
+        {
+          name: 'sitestats.timeRange.monthly',
+          value: 'monthly',
+          show: false,
+          privileges: ['admin', 'spuer', 'root', 'dev']
+        },
+        {
+          name: 'sitestats.timeRange.yearly',
+          value: 'yearly',
+          show: false,
+          privileges: ['admin', 'spuer', 'root', 'dev']
+        }
       ],
       timeRange: 'weekly',
       isIncludingRobots: true,
       active: {
-        load: true,
+        load: false,
         communityConf: {
           tooltip: {
             trigger: 'item'
@@ -229,12 +254,12 @@ export default new BFBAN({
       }
     }
   },
-  components: { businessCard,Empty },
-  created () {
+  components: {businessCard, Empty},
+  created() {
     this.loadData();
   },
   methods: {
-    async loadData () {
+    async loadData() {
       this.init();
 
       this.load = true;
@@ -247,7 +272,7 @@ export default new BFBAN({
         this.load = false;
       }, 1000);
     },
-    init () {
+    init() {
       this.chart['stats'].series = [];
 
       this.chartConf.array.map(i => {
@@ -265,8 +290,8 @@ export default new BFBAN({
           },
           markLine: {
             symbol: ['none', 'none'],
-            label: { show: false },
-            data: [{ xAxis: 1 }, { xAxis: 3 }, { xAxis: 5 }, { xAxis: 7 }]
+            label: {show: false},
+            data: [{xAxis: 1}, {xAxis: 3}, {xAxis: 5}, {xAxis: 7}]
           },
           areaStyle: {
             opacity: 1,
@@ -280,11 +305,26 @@ export default new BFBAN({
         i.show = account_storage.checkPrivilegeGroup(this.currentUser.userinfo, i.privileges);
       })
     },
-    getActiveStatistical () {
+    getActiveStatistical() {
       if (
           !this.isLogin &&
           !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, this.timeRange.privileges)
-      ) return;
+      ) {
+        // 例子
+        let exp = [
+          {username: 'Tom', total: 10},
+          {username: 'Axis', total: 5},
+          {username: 'Davie', total: 5.1},
+          {username: 'Sun', total: 3},
+          {username: 'Dr.Ming', total: 1},
+          {username: 'Coffs', total: 1}
+        ];
+        this.active.community = exp;
+        this.active.community.forEach(i => {
+          this.active.communityConf.series[0].data.push({value: i.total.toFixed(2), name: i.username})
+        })
+        return;
+      }
 
       this.active.load = true;
 
@@ -304,7 +344,7 @@ export default new BFBAN({
 
           this.active.communityConf.series[0].data = [];
           d.data.community.forEach(i => {
-            this.active.communityConf.series[0].data.push({ value: i.total.toFixed(2), name: i.username })
+            this.active.communityConf.series[0].data.push({value: i.total.toFixed(2), name: i.username})
           })
         }
       }).finally(() => {
@@ -315,7 +355,7 @@ export default new BFBAN({
      * 统计信息
      * api/siteStats
      */
-    async getSiteStats () {
+    async getSiteStats() {
       http.get(api['siteStats'], {}).then(res => {
         const d = res.data;
 
@@ -373,7 +413,7 @@ export default new BFBAN({
         }
       })
     }
-  }
+  },
 });
 </script>
 

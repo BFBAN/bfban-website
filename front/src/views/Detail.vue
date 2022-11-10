@@ -379,18 +379,27 @@
                       </Row>
                     </div>
 
-                    <template>
-                      <p v-if="l.videoLink">
-                        <!-- 游戏中 -->
-                        <span size="large" v-for="(link, linkindex) in l.videoLink.split(',')" :key="linkindex"
-                              :href="link" target="_blank">
-                            <Tag size="default" color="geekblue">{{ $t('detail.info.videoLink') }}</Tag>
-                            <a :href="link" target="_blank">{{ link.substr(0, 20) }}{{
-                                link.length >= 20 ? '...' : ''
-                              }}</a>
-                            <Divider type="vertical" v-if="linkindex < l.videoLink.split(',').length - 1"/>
+                    <template v-if="l.videoLink">
+                      <Row :gutter="10" type="flex" align="middle" v-for="(link, linkindex) in l.videoLink"
+                           :key="linkindex">
+                        <Col class="user-select-none">
+                          <Tag size="default" color="geekblue">{{ $t('detail.info.videoLink') }}</Tag>
+                        </Col>
+                        <Col style="max-width: 60%">
+                          <span style="display: block;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
+                            <a :href="link.href" target="_blank">
+                              <span :style="link.protocol.indexOf('https') >= 0 ? 'color: green' : ''" v-if="link">{{ link.protocol }}</span>
+                              <span style="opacity: .8" v-if="link">{{ link.href.replace(link.protocol, '') }}</span>
+                            </a>
                           </span>
-                      </p>
+                        </Col>
+                        <Col flex="1">
+                          <Divider dashed style="margin: 0;min-width: 100px"></Divider>
+                        </Col>
+                        <Col class="user-select-none">
+                          {{ linkindex + 1 }}
+                        </Col>
+                      </Row>
                     </template>
 
                     <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
@@ -1312,6 +1321,16 @@ export default new BFBAN({
 
         if (d.success == 1) {
           d.data.result.forEach((i, index) => {
+            if (i.videoLink) {
+              let videoLink = i.videoLink.split(',');
+              if (videoLink instanceof Array) {
+                for (let j = 0; j < videoLink.length; j++) {
+                  videoLink[j] = new URL(videoLink[j]);
+                }
+              }
+              i.videoLink = videoLink;
+            }
+
             i.index = index;
             i.show = false;
           });
