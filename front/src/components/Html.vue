@@ -29,6 +29,24 @@ export default {
       templateRender: undefined,
       templateRenderWorkProgress: false,
       images: [],
+      targetNames: {
+        'body': 0,
+        'html': 0,
+        'video': 0,
+        'div': 0,
+        'img': 0,
+        'a': 0,
+        'pre':0,
+        'p': 0,
+        'b': 0,
+        'br': 0,
+        'strong': 0,
+        'code': 0,
+        'h1': 0,
+        'h2': 0,
+        'h3': 0,
+        'q': 0
+      },
       options: {
         url: 'src'
       }
@@ -83,6 +101,14 @@ export default {
           p = vDom.getElementsByTagName("p"),
           br = vDom.getElementsByTagName("br"),
           pres = vDom.getElementsByTagName("pre");
+
+      // 过滤标签
+      for (let i = 0; i < vDom.getElementsByTagName('*').length; i++) {
+        let target = vDom.getElementsByTagName('*')[i];
+        if (this.targetNames[target.tagName.toLowerCase()] != 0) {
+          target.remove()
+        }
+      }
 
       this.templateRenderWorkProgress = true;
 
