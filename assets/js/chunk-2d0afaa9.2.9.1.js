@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0afaa9"],{"0efd":function(a){a.exports=JSON.parse('{"title":"cheaterStatus","child":[{"value":0,"values":["0"]},{"value":5,"values":["5"]},{"value":6,"values":["6"]},{"value":1,"values":["1"]},{"value":2,"values":["2"]},{"value":3,"values":["3"]},{"value":4,"values":["4"]},{"value":8,"values":["8"]}]}')}}]);
+//# sourceMappingURL=chunk-2d0afaa9.2.9.1.js.map
