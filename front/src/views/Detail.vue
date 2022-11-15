@@ -85,8 +85,6 @@
                                style="padding: 0 16px;margin: 10px 0 ; width:100%">
                             <Col class="mobile-hide">
                               <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
-                              -
-                              <Time :time="origin.toTime" v-if="origin.toTime" type="datetime"></Time>
                             </Col>
                             <Col flex="1" class="mobile-hide">
                               <Divider dashed style="margin: 0"/>
@@ -339,9 +337,77 @@
                   <div v-else-if="l.type === 'verify'" slot="dot" class="timeline-time-dot trophy">
                     <Icon type="ios-share-alt" :size="isMobile ? 10 : 20"></Icon>
                   </div>
+                  <div v-else-if="l.type === 'historyUsername'" slot="dot"
+                       class="timeline-time-dot ivu-tag-geekblue">
+                    <Icon type="ios-time" :size="isMobile ? 10 : 20" class="ivu-tag-text"></Icon>
+                  </div>
                   <div v-else slot="dot" class="timeline-time-dot ivu-tag-border ivu-tag-text out">
                     <Icon type="ios" :size="isMobile ? 10 : 20" class=""></Icon>
                   </div>
+
+                  <!-- 历史名称 S -->
+                  <div v-if="l.type === 'historyUsername'" class="timeline-content">
+                    <div class="timeline-time">
+                      <Row>
+                        <Col flex="1">
+                          {{ $t('detail.appeal.info.changeName') }}
+                        </Col>
+                        <Col align="right">
+                          <Time :time="l.fromTime" v-if="l.fromTime" type="datetime"></Time>
+                        </Col>
+                      </Row>
+                    </div>
+                    <Card :padding="0" dis-hover
+                          class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
+                          style="padding: 15px 0">
+                      <Dropdown :transfer="isMobile" placement="bottom-start" style="width: 100%">
+                        <Row :gutter="16" type="flex" justify="center" align="middle">
+                          <Col>
+                            {{ l.beforeUsername }}
+                          </Col>
+                          <Col>
+                            <Icon type="md-arrow-round-forward" size="20" style="opacity: .6"/>
+                          </Col>
+                          <Col>
+                            <b>{{ l.nextUsername }}</b>
+                          </Col>
+                        </Row>
+
+                        <!-- 历史ID -->
+                        <DropdownMenu slot="list"
+                                      style="width: 100%"
+                                      v-if="cheater && cheater.history && cheater.history.length >= 0">
+                          <Row style="margin: 5px 18px">
+                            <Col flex="1">
+                              <b>{{ $t('detail.info.historyID') }}</b>
+                            </Col>
+                          </Row>
+                          <div style="overflow: auto; max-height: 80vh">
+                            <div v-for="(origin, origin_index) in cheater.history" :key="origin_index">
+                              <Row :gutter="5" type="flex" align="middle"
+                                   style="padding: 0 16px;margin: 10px 0 ; width:100%">
+                                <Col class="mobile-hide">
+                                  <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
+                                </Col>
+                                <Col flex="1" class="mobile-hide">
+                                  <Divider dashed style="margin: 0"/>
+                                </Col>
+                                <Col>
+                                  <template v-if="l.fromTime == origin.fromTime">
+                                    <Tag color="primary">{{ origin.originName }}</Tag>
+                                  </template>
+                                  <template v-else>
+                                    {{ origin.originName }}
+                                  </template>
+                                </Col>
+                              </Row>
+                            </div>
+                          </div>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </Card>
+                  </div>
+                  <!-- 历史名称 E -->
 
                   <!-- 举报:any S -->
                   <div :id="`floor-${l.id}`" v-if="l.type === 'report'" class="timeline-content">
@@ -388,8 +454,9 @@
                         <Col style="max-width: 60%">
                           <span style="display: block;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
                             <a :href="link.href" target="_blank">
-                              <span :style="link.protocol.indexOf('https') >= 0 ? 'color: green' : ''" v-if="link">{{ link.protocol }}</span>
-                              <span style="opacity: .8" v-if="link">{{ link.href.replace(link.protocol, '') }}</span>
+                              <span style="opacity: .8" v-if="link">
+                                 {{ link.href }}
+                              </span>
                             </a>
                           </span>
                         </Col>
@@ -585,7 +652,7 @@
                         </div>
                       </Poptip>
                     </Col>
-                    <Col align="right" class="user-select-none">
+                    <Col align="right" class="user-select-none" v-if="l.type != 'historyUsername'">
                       # {{ l.index }}-<u><span style="opacity: .4">{{ l.id }}</span></u>
                     </Col>
                   </Row>
@@ -1091,7 +1158,7 @@ export default new BFBAN({
           {
             label: 'all',
             value: 1,
-            item: ['report', 'reply', 'ban_appeal', 'judgement', 'verify', 'banAppeal'],
+            item: ['report', 'reply', 'ban_appeal', 'judgement', 'verify', 'banAppeal', 'historyUsername'],
           },
           {
             label: 'verify',
@@ -1147,14 +1214,61 @@ export default new BFBAN({
         this.verify.status = this.verify.choice[0].value;
       });
 
-      Promise.all([
-        this.getPlayerInfo(),
-        this.getTimeline()
-      ]).then(_ => {
-        this.$Loading.finish();
-      }).catch(err => {
-        this.$Loading.error();
-      });
+      await this.getPlayerInfo()
+      await this.getTimeline()
+
+
+      let _timelineList = new Array().concat(this.timelineList);
+      // 处理历史名称，放置对应对应位置
+      for (let hisrotyIndex = 0; hisrotyIndex < this.cheater.history.length; hisrotyIndex++) {
+        let nameHistoryTime = new Date(this.cheater.history[hisrotyIndex].fromTime).getTime();
+        let prevNameTimeListTime = 0;
+        let nameTimeListTime = 0;
+
+        for (let timeLineIndex = 0; timeLineIndex < _timelineList.length; timeLineIndex++) {
+          if (this.timelineList[timeLineIndex - 1] && _timelineList[timeLineIndex - 1].createTime) {
+            prevNameTimeListTime = new Date(_timelineList[timeLineIndex - 1].createTime).getTime();
+          }
+          nameTimeListTime = new Date(_timelineList[timeLineIndex].createTime).getTime();
+
+          // console.log(hisrotyIndex,
+          //     this.cheater.history[hisrotyIndex].originName,
+          //     `nameHistoryTime >= prevNameTimeListTime ${nameHistoryTime >= prevNameTimeListTime}`,
+          //     `nameHistoryTime <= nameTimeListTime ${nameHistoryTime <= nameTimeListTime}`)
+          // console.log(`nameHistoryTime ${nameHistoryTime}`, `上一个 ${prevNameTimeListTime}`, `当前 ${nameTimeListTime}`)
+
+          // 历史名称的记录大于1，history内表示举报提交时初始名称，不应当放进timeline中
+          // 索引自身历史修改日期位置，放入timeline中
+          if (
+              hisrotyIndex >= 1 &&
+              _timelineList[timeLineIndex].type != 'historyUsername' &&
+              nameHistoryTime >= prevNameTimeListTime &&
+              nameHistoryTime <= nameTimeListTime) {
+            _timelineList.splice(timeLineIndex, 0, {
+              type: 'historyUsername',
+              beforeUsername: this.cheater.history[hisrotyIndex - 1].originName,
+              nextUsername: this.cheater.history[hisrotyIndex].originName,
+              fromTime: this.cheater.history[hisrotyIndex].fromTime
+            });
+            break;
+          } else if (
+              hisrotyIndex == this.cheater.history.length - 1 &&
+              _timelineList[timeLineIndex].type != 'historyUsername' &&
+              nameHistoryTime >= nameTimeListTime
+          ) {
+            _timelineList.push({
+              type: 'historyUsername',
+              beforeUsername: this.cheater.history[hisrotyIndex - 1].originName,
+              nextUsername: this.cheater.history[hisrotyIndex].originName,
+              fromTime: this.cheater.history[hisrotyIndex].fromTime
+            })
+            break;
+          }
+        }
+      }
+      this.timelineList = _timelineList;
+
+      this.$Loading.finish();
     },
     onAvatarError() {
       this.cheater.avatarLink = "";
@@ -1263,87 +1377,95 @@ export default new BFBAN({
     /**
      * 获取举报玩家档案
      */
-    getPlayerInfo() {
-      let params = Object.assign({
-        history: true
-      }, {
-        personaId: this.$route.params.ouid
-      });
-
-      // 旧网站URL, 兼容
-      if (this.$route.query.oldUrl && this.$route.params.ouid) {
-        params = Object.assign({
+    async getPlayerInfo() {
+      return new Promise(resolve => {
+        let params = Object.assign({
           history: true
         }, {
-          userId: this.$route.params.ouid
+          personaId: this.$route.params.ouid
         });
-        delete params.personaId;
-      }
 
-      this.cheater = {};
-
-      this.http.get(api["cheaters"], {params}).then(res => {
-        const d = res.data;
-
-        if (d.success === 1) {
-          this.cheater = d.data;
-          return;
+        // 旧网站URL, 兼容
+        if (this.$route.query.oldUrl && this.$route.params.ouid) {
+          params = Object.assign({
+            history: true
+          }, {
+            userId: this.$route.params.ouid
+          });
+          delete params.personaId;
         }
 
-        switch (d.code) {
-          case "player.bad":
-          case "player.notFound":
-            this.$router.push({name: 'player_list'})
-            break;
-        }
+        this.cheater = {};
 
-        this.$Message.info(this.$t('basic.tip.notFound'));
-      }).finally(() => {
-        this.onViewed();
-        this.checkPlayerSubscribes();
-        this.spinShow = false;
-      });
+        this.http.get(api["cheaters"], {params}).then(res => {
+          const d = res.data;
+
+          if (d.success === 1) {
+            this.cheater = d.data;
+            return;
+          }
+
+          switch (d.code) {
+            case "player.bad":
+            case "player.notFound":
+              this.$router.push({name: 'player_list'})
+              break;
+          }
+
+          this.$Message.info(this.$t('basic.tip.notFound'));
+        }).finally(() => {
+          this.onViewed();
+          this.checkPlayerSubscribes();
+          this.spinShow = false;
+
+          resolve()
+        });
+      })
     },
     /**
      * 获取举报玩家时间轴
      */
-    getTimeline() {
-      const that = this;
-      this.spinShow = true;
+    async getTimeline() {
+      return new Promise(resolve => {
+        const that = this;
+        this.spinShow = true;
 
-      this.http.get(api["account_timeline"], {
-        params: Object.assign({
-          skip: this.timeline.skip,
-          limit: this.timeline.limit
-        }, {personaId: this.getParamsIds('personaId')})
-      }).then(res => {
-        let d = res.data;
+        this.http.get(api["account_timeline"], {
+          params: Object.assign({
+            skip: this.timeline.skip,
+            limit: this.timeline.limit
+          }, {personaId: this.getParamsIds('personaId')})
+        }).then(res => {
+          let d = res.data;
 
-        if (d.success == 1) {
-          d.data.result.forEach((i, index) => {
-            if (i.videoLink) {
-              let videoLink = i.videoLink.split(',');
-              if (videoLink instanceof Array) {
-                for (let j = 0; j < videoLink.length; j++) {
-                  videoLink[j] = new URL(videoLink[j]);
+          if (d.success == 1) {
+            d.data.result.forEach((i, index) => {
+              if (i.videoLink) {
+                let videoLink = i.videoLink.split(',');
+                if (videoLink instanceof Array) {
+                  for (let j = 0; j < videoLink.length; j++) {
+                    if (videoLink[j].indexOf('http') >= 0) videoLink[j] = new URL(videoLink[j]);
+                  }
                 }
+                i.videoLink = videoLink;
               }
-              i.videoLink = videoLink;
-            }
 
-            i.index = index;
-            i.show = false;
-          });
+              i.index = index;
+              i.show = false;
+            });
 
-          this.timelineList = d.data.result;
+            this.timelineList = d.data.result;
 
-          // 排序
-          this.onTimeLineSort();
-        }
-      }).finally(() => {
-        this.onFloor();
+            // 排序
+            this.onTimeLineSort();
+          }
+        }).finally(() => {
+          this.onFloor();
 
-        this.spinShow = false;
+          this.spinShow = false;
+
+          resolve();
+        })
       })
     },
     /**

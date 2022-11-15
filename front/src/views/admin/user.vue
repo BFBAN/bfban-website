@@ -175,7 +175,7 @@
                 <FormItem :label="$t('profile.account.form.language')">
                   <Select v-model="editUserData.attr.language" class="switch-language" prefix="md-globe"
                           placement="top-end">
-                    <Option v-for="item in languages" :value="item.name" :key="item.name">
+                    <Option v-for="item in languages" :value="item.name" :disabled="item.ignoreSave" :key="item.name">
                       {{ item.label }}
                     </Option>
                   </Select>
@@ -535,7 +535,7 @@ export default new BFBAN({
       const that = this;
       let params = {name: '', skip: this.skip - 1, limit: this.limit};
 
-      if (!this.load) return ;
+      if (this.load) return;
 
       return new Promise((resolve, reject) => {
         that.load = true;
