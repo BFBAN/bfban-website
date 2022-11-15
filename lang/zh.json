@@ -333,6 +333,7 @@
       "info": {
         "content": "申诉内容",
         "player": "玩家id",
+        "changeName": "名称变动",
         "originName": "玩家现在名称"
       },
       "placeholder": {

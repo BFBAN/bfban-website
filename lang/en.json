@@ -319,6 +319,7 @@
       "info": {
         "content": "Appeal details",
         "player": "Player's ID",
+        "changeName": "Change for Player name",
         "originName": "Player's current ID"
       },
       "placeholder": {
