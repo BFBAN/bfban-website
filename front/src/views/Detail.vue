@@ -21,7 +21,6 @@
             <div align="center">
               <!-- Origin头像 S -->
               <Avatar shape="square"
-                      @on-error="onAvatarError"
                       :src="cheater.avatarLink"
                       :size="180"
                       :title="$t('detail.info.originAvatar')"
@@ -338,7 +337,7 @@
                     <Icon type="ios-share-alt" :size="isMobile ? 10 : 20"></Icon>
                   </div>
                   <div v-else-if="l.type === 'historyUsername'" slot="dot"
-                       class="timeline-time-dot ivu-tag-geekblue">
+                       class="timeline-time-dot ivu-tag-gold">
                     <Icon type="ios-time" :size="isMobile ? 10 : 20" class="ivu-tag-text"></Icon>
                   </div>
                   <div v-else slot="dot" class="timeline-time-dot ivu-tag-border ivu-tag-text out">
@@ -387,7 +386,10 @@
                               <Row :gutter="5" type="flex" align="middle"
                                    style="padding: 0 16px;margin: 10px 0 ; width:100%">
                                 <Col class="mobile-hide">
-                                  <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
+                                  <Time :time="origin.fromTime" v-if="origin.fromTime && l.fromTime != origin.fromTime" type="datetime"></Time>
+                                  <b v-else>
+                                    <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
+                                  </b>
                                 </Col>
                                 <Col flex="1" class="mobile-hide">
                                   <Divider dashed style="margin: 0"/>
@@ -601,7 +603,7 @@
                   <!-- 回复:any E -->
 
                   <Row class="timeline-content-footer" type="flex" align="middle">
-                    <Col flex="auto">
+                    <Col flex="auto" v-if="l.type != 'historyUsername'">
                       <template v-if="isLogin">
                         <!-- 回复 -->
                         <Button size="small"
@@ -1217,7 +1219,14 @@ export default new BFBAN({
       await this.getPlayerInfo()
       await this.getTimeline()
 
+      this.onMergeHistoryName()
 
+      this.$Loading.finish();
+    },
+    /**
+     * 合并时间轴历史名称
+     */
+    onMergeHistoryName() {
       let _timelineList = new Array().concat(this.timelineList);
       // 处理历史名称，放置对应对应位置
       for (let hisrotyIndex = 0; hisrotyIndex < this.cheater.history.length; hisrotyIndex++) {
@@ -1230,12 +1239,6 @@ export default new BFBAN({
             prevNameTimeListTime = new Date(_timelineList[timeLineIndex - 1].createTime).getTime();
           }
           nameTimeListTime = new Date(_timelineList[timeLineIndex].createTime).getTime();
-
-          // console.log(hisrotyIndex,
-          //     this.cheater.history[hisrotyIndex].originName,
-          //     `nameHistoryTime >= prevNameTimeListTime ${nameHistoryTime >= prevNameTimeListTime}`,
-          //     `nameHistoryTime <= nameTimeListTime ${nameHistoryTime <= nameTimeListTime}`)
-          // console.log(`nameHistoryTime ${nameHistoryTime}`, `上一个 ${prevNameTimeListTime}`, `当前 ${nameTimeListTime}`)
 
           // 历史名称的记录大于1，history内表示举报提交时初始名称，不应当放进timeline中
           // 索引自身历史修改日期位置，放入timeline中
@@ -1267,11 +1270,6 @@ export default new BFBAN({
         }
       }
       this.timelineList = _timelineList;
-
-      this.$Loading.finish();
-    },
-    onAvatarError() {
-      this.cheater.avatarLink = "";
     },
     /**
      * 追踪此玩家
@@ -1747,7 +1745,7 @@ export default new BFBAN({
         data: {
           personaId: this.cheater.originPersonaId
         }
-      }).then(res => {
+      }).then(async res => {
         const d = res.data;
 
         if (d.error == 0) {
@@ -1761,6 +1759,10 @@ export default new BFBAN({
           return;
         }
 
+        await this.getPlayerInfo()
+        await this.getTimeline()
+
+        this.onMergeHistoryName()
         this.$Message.success(d.code);
       }).finally(() => {
         this.updateUserInfospinShow = false;
