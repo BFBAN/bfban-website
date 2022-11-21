@@ -1,6 +1,6 @@
 {
   "name": "BFBAN",
-  "version": "2.9.2",
+  "version": "2.9.3",
   "private": true,
   "scripts": {
     "serve:development": "vue-cli-service serve --mode development",
