@@ -284,7 +284,9 @@
               <!-- 时间轴筛选 S -->
               <ButtonGroup type="button">
                 <Select v-model="timeline.seeType" size="small" @on-change="onUpdataSeeType">
-                  <Option v-for="(item, index) in timeline.seeTypeList" :value="item.value" :key="index">
+                  <Option v-for="(item, index) in timeline.seeTypeList"
+                          :value="item.value"
+                          :key="index">
                     {{ $t('detail.timeline.' + item.label) }}
                   </Option>
                 </Select>
@@ -1552,7 +1554,7 @@ export default new BFBAN({
       const list = this.timeline.seeTypeList;
 
       return list
-          .filter(i => Number(that.timeline.seeType) == i.value)[0].item
+          .filter(i => Number(that.timeline.seeType) == i.value)[0]?.item
           .indexOf(this.timelineList[index].type) >= 0;
     },
     /**
@@ -1562,7 +1564,9 @@ export default new BFBAN({
       account_storage.updateConfiguration("timelineSeeType", this.timeline.seeType);
     },
     getSeeType() {
-      return account_storage.getConfiguration("timelineSeeType");
+      let value = account_storage.getConfiguration("timelineSeeType");
+      if (typeof value == 'boolean' && !value) value = this.timeline.seeType;
+      return value;
     },
     /**
      * 提交判决
