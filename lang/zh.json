@@ -303,8 +303,10 @@
     },
     "timeline": {
       "all": "所有",
+      "coreComment": "主要内容",
       "verify": "仅查看判决",
-      "banAppeal": "仅查看申诉"
+      "banAppeal": "仅查看申诉",
+      "historyName": "历史玩家变动名称"
     },
     "appeal": {
       "describe": "该举报信息存在问题,我能自证或他人协助证明清白.",
