@@ -10,8 +10,8 @@
             <div v-for="(item, index) in message.messages" :key="index">
               <Row v-show="message.messages.length <= 4">
                 <Col flex="auto">
-                  <b>{{item.content}}</b>
-                  <p>{{item.createTime}}</p>
+                  <b>{{ item.content }}</b>
+                  <p>{{ item.createTime }}</p>
                 </Col>
                 <Col flex="200" align="right">
                   <a @click="onMessageMark(item.id, 0)">已阅读</a>
@@ -25,7 +25,7 @@
     </div>
 
     <Dropdown class="mobile-hide">
-      <router-link :to="{path: '/profile/message'}">
+      <router-link :to="{name: 'profile', params: {pagename: 'chat'}}">
         <Badge :count="unReadCount" :class="unReadCount > 0 ? 'shake' : ''">
           <slot name="content"></slot>
         </Badge>
@@ -40,7 +40,7 @@ import BFBAN from "@/assets/js/bfban";
 
 export default new BFBAN({
   name: "Header_message",
-  data () {
+  data() {
     return {
       message: {
         show: false,
@@ -70,7 +70,7 @@ export default new BFBAN({
       this.http.get(api["user_message"], {}).then(res => {
         const d = res.data;
 
-        if(d.code == 'user.tokenExpired') {
+        if (d.code == 'user.tokenExpired') {
           account_storage.clearAll();
           return
         }
@@ -81,9 +81,12 @@ export default new BFBAN({
     },
   },
   computed: {
-    unReadCount () {
+    unReadCount() {
       let num = 0;
-      this.message.messages.forEach(i => { if (i.haveRead == 0) num+=1; return i })
+      this.message.messages.forEach(i => {
+        if (i.haveRead == 0) num += 1;
+        return i
+      })
       return num;
     },
   }

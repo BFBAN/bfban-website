@@ -289,8 +289,10 @@
     },
     "timeline": {
       "all": "All",
+      "coreComment": "Main Contents",
       "verify": "Only verified",
-      "banAppeal": "Only appeals"
+      "banAppeal": "Only appeals",
+      "historyName": "History Player Name"
     },
     "appeal": {
       "describe": "This report has a problem. I can prove that me or the player mentioned is innocent.",

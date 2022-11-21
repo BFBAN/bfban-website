@@ -283,7 +283,7 @@
             <Col>
               <!-- 时间轴筛选 S -->
               <ButtonGroup type="button">
-                <Select v-model="timeline.seeType" size="small">
+                <Select v-model="timeline.seeType" size="small" @on-change="onUpdataSeeType">
                   <Option v-for="(item, index) in timeline.seeTypeList" :value="item.value" :key="index">
                     {{ $t('detail.timeline.' + item.label) }}
                   </Option>
@@ -320,28 +320,28 @@
                     :ref="`floor-${l.index}`"
                     :id="`floor-${l.index}`">
                   <div v-if="l.type === 'report'" slot="dot" class="timeline-time-dot ivu-tag-warning hand">
-                    <Icon type="ios-hand" :size="isMobile ? 10 : 20"></Icon>
+                    <Icon type="ios-hand" :size="isMobile ? 13 : 20"></Icon>
                   </div>
                   <div v-else-if="l.type === 'reply'" slot="dot" class="timeline-time-dot ivu-tag-geekblue reply">
-                    <Icon type="ios-text" :size="isMobile ? 10 : 20" class="ivu-tag-text"></Icon>
+                    <Icon type="ios-text" :size="isMobile ? 13 : 20" class="ivu-tag-text"></Icon>
                   </div>
                   <div v-else-if="l.type === 'banAppeal'" slot="dot"
                        class="timeline-time-dot ivu-tag-magenta ban_appeal">
-                    <Icon type="md-bookmark" :size="isMobile ? 10 : 20" class="ivu-tag-text"></Icon>
+                    <Icon type="md-bookmark" :size="isMobile ? 13 : 20" class="ivu-tag-text"></Icon>
                   </div>
                   <div v-else-if="l.type === 'judgement'" slot="dot"
                        class="timeline-time-dot ivu-tag-primary ban_appeal">
-                    <Icon type="ios-medical" :size="isMobile ? 10 : 20" class=""></Icon>
+                    <Icon type="ios-medical" :size="isMobile ? 13 : 20" class=""></Icon>
                   </div>
                   <div v-else-if="l.type === 'verify'" slot="dot" class="timeline-time-dot trophy">
-                    <Icon type="ios-share-alt" :size="isMobile ? 10 : 20"></Icon>
+                    <Icon type="ios-share-alt" :size="isMobile ? 13 : 20"></Icon>
                   </div>
                   <div v-else-if="l.type === 'historyUsername'" slot="dot"
                        class="timeline-time-dot ivu-tag-gold">
-                    <Icon type="ios-time" :size="isMobile ? 10 : 20" class="ivu-tag-text"></Icon>
+                    <Icon type="ios-time" :size="isMobile ? 13 : 20" class="ivu-tag-text"></Icon>
                   </div>
                   <div v-else slot="dot" class="timeline-time-dot ivu-tag-border ivu-tag-text out">
-                    <Icon type="ios" :size="isMobile ? 10 : 20" class=""></Icon>
+                    <Icon type="ios" :size="isMobile ? 13 : 20" class=""></Icon>
                   </div>
 
                   <!-- 历史名称 S -->
@@ -364,8 +364,11 @@
                           <Col>
                             {{ l.beforeUsername }}
                           </Col>
-                          <Col>
+                          <Col class="mobile-hide">
                             <Icon type="md-arrow-round-forward" size="20" style="opacity: .6"/>
+                          </Col>
+                          <Col class="desktop-hide" align="center" :xs="{span: 24}">
+                            <Icon type="md-arrow-round-forward" size="20" style="opacity: .6;transform: rotate(90deg)"/>
                           </Col>
                           <Col>
                             <b>{{ l.nextUsername }}</b>
@@ -385,13 +388,14 @@
                             <div v-for="(origin, origin_index) in cheater.history" :key="origin_index">
                               <Row :gutter="5" type="flex" align="middle"
                                    style="padding: 0 16px;margin: 10px 0 ; width:100%">
-                                <Col class="mobile-hide">
-                                  <Time :time="origin.fromTime" v-if="origin.fromTime && l.fromTime != origin.fromTime" type="datetime"></Time>
+                                <Col>
+                                  <Time :time="origin.fromTime"
+                                        v-if="origin.fromTime && l.fromTime != origin.fromTime"></Time>
                                   <b v-else>
-                                    <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
+                                    <Time :time="origin.fromTime" v-if="origin.fromTime"></Time>
                                   </b>
                                 </Col>
-                                <Col flex="1" class="mobile-hide">
+                                <Col flex="1">
                                   <Divider dashed style="margin: 0"/>
                                 </Col>
                                 <Col>
@@ -408,6 +412,16 @@
                         </DropdownMenu>
                       </Dropdown>
                     </Card>
+
+                    <Row type="flex" align="middle">
+                      <Col flex="auto">
+                        <template v-if="isLogin">
+                          <Button size="small" @click="updateCheaterModal = true;">
+                            {{ $t('detail.info.updateButton') }}
+                          </Button>
+                        </template>
+                      </Col>
+                    </Row>
                   </div>
                   <!-- 历史名称 E -->
 
@@ -1163,6 +1177,11 @@ export default new BFBAN({
             item: ['report', 'reply', 'ban_appeal', 'judgement', 'verify', 'banAppeal', 'historyUsername'],
           },
           {
+            label: 'coreComment',
+            value: 4,
+            item: ['report', 'reply', 'ban_appeal', 'judgement', 'verify', 'banAppeal'],
+          },
+          {
             label: 'verify',
             value: 2,
             item: ['judgement', 'verify'],
@@ -1171,6 +1190,11 @@ export default new BFBAN({
             label: 'banAppeal',
             value: 3,
             item: ['banAppeal'],
+          },
+          {
+            label: 'historyName',
+            value: 5,
+            item: ['historyUsername'],
           }
         ]
       },
@@ -1204,6 +1228,8 @@ export default new BFBAN({
 
       // set Token Http mode
       this.http = http_token.call(this);
+
+      this.timeline.seeType = this.getSeeType();
 
       await util.initUtil().then(res => {
         this.cheaterStatus = res.cheaterStatus;
@@ -1527,6 +1553,15 @@ export default new BFBAN({
       return list
           .filter(i => Number(that.timeline.seeType) == i.value)[0].item
           .indexOf(this.timelineList[index].type) >= 0;
+    },
+    /**
+     * 时间轴更新状态
+     */
+    onUpdataSeeType() {
+      account_storage.updateConfiguration("timelineSeeType", this.timeline.seeType);
+    },
+    getSeeType() {
+      return account_storage.getConfiguration("timelineSeeType");
     },
     /**
      * 提交判决
