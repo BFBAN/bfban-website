@@ -1275,20 +1275,21 @@ export default new BFBAN({
               nameHistoryTime <= nameTimeListTime) {
             _timelineList.splice(timeLineIndex, 0, {
               type: 'historyUsername',
-              beforeUsername: this.cheater.history[hisrotyIndex - 1].originName,
-              nextUsername: this.cheater.history[hisrotyIndex].originName,
+              beforeUsername: this.cheater.history[hisrotyIndex - 1]?.originName,
+              nextUsername: this.cheater.history[hisrotyIndex]?.originName,
               fromTime: this.cheater.history[hisrotyIndex].fromTime
             });
             break;
           } else if (
+              hisrotyIndex >= 1 &&
               hisrotyIndex == this.cheater.history.length - 1 &&
               _timelineList[timeLineIndex].type != 'historyUsername' &&
               nameHistoryTime >= nameTimeListTime
           ) {
             _timelineList.push({
               type: 'historyUsername',
-              beforeUsername: this.cheater.history[hisrotyIndex - 1].originName,
-              nextUsername: this.cheater.history[hisrotyIndex].originName,
+              beforeUsername: this.cheater.history[hisrotyIndex - 1]?.originName,
+              nextUsername: this.cheater.history[hisrotyIndex]?.originName,
               fromTime: this.cheater.history[hisrotyIndex].fromTime
             })
             break;
