@@ -1,5 +1,5 @@
 {
-  "requestDevelopmentName": "development4",
+  "requestDevelopmentName": "production",
   "requestProductionName": "production",
   "requestUploadName": "upload",
   "child": {
