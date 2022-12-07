@@ -158,12 +158,12 @@ export default new BFBAN({
         this.games = res.gameName;
       });
 
-      this.getAdminLog()
+      // this.getAdminLog()
     },
-    getAdminLog({createTimeto, createTimeFrom}) {
+    getAdminLog({createTimeto, createTimeFrom} = {}) {
       let _params = {};
 
-      if (!this.load) return;
+      // if (!this.load) return;
       this.load = true;
 
       if (createTimeto) _params['createTimeto'] = createTimeto;

@@ -287,7 +287,7 @@ async (req, res, next) => {
             .andWhere("comments.createTime", ">=", createTimeFrom)
             .andWhere("comments.createTime", "<=", createTimeto)
             .orderBy('users.createTime', order)
-            .offset(skip).limit(limit);
+            // .offset(skip).limit(limit);
 
         return res.status(200).json({success: 1, code: 'log.ok', data: result});
     } catch (err) {
