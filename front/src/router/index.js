@@ -376,7 +376,27 @@ const routes = [
         },
         component: Account
     },
-
+    {name: 'announcement', path: '/announcement',
+        // meta: {
+        //     metaInfo : {
+        //         title: 'account.title',
+        //         keywords: "account.seo.keywords",
+        //         description: 'account.description'
+        //     }
+        // },
+        component: () => import('@/views/announcement/list.vue')
+    },
+    {name: 'announcementDetails', path: '/announcement/details',
+        // meta: {
+        //     metaInfo : {
+        //         title: 'account.title',
+        //         keywords: "account.seo.keywords",
+        //         description: 'account.description'
+        //     }
+        // },
+        component: () => import('@/views/announcement/details.vue')
+    },
+    
     {name: 'notFound', path: '/404', meta: {
             metaInfo : {
                 title: 'basic.tip.notFound',

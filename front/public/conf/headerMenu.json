@@ -53,6 +53,17 @@
         "name": "site_stats",
         "query": {}
       }
+    },
+    {
+      "name": "announcement",
+      "type": [
+        "desktop",
+        "mobile"
+      ],
+      "to": {
+        "name": "announcement",
+        "query": {}
+      }
     }
   ]
 }
