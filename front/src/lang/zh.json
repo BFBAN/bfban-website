@@ -135,7 +135,8 @@
     "signout": "注销",
     "userCenter": "我的展示页",
     "signoutSuccess": "注销成功",
-    "site_stats": "统计"
+    "site_stats": "统计",
+    "announcement": "公告"
   },
   "player_list": {
     "title": "玩家数据库",
