@@ -13,7 +13,7 @@
 
 <script>
 import item from './components/item.vue'
-import config from './config'
+// import config from './config'
 export default {
   components: { item },
   data() {
