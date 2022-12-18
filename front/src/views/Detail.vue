@@ -55,9 +55,13 @@
 
                 <!-- 被举报的类型 E -->
                 <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">
-                  <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
-                    {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
-                  </Tag>
+                    <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods"
+                         :key="method_index">
+                      <Poptip trigger="hover" :transfer="true" word-wrap width="200"
+                              :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".describe")'>
+                        {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
+                      </Poptip>
+                    </Tag>
                 </template>
 
                 <div>
@@ -454,7 +458,10 @@
                           <Tag type="border" color="orange"
                                v-for="(methods, methodsIndex) in l.cheatMethods"
                                :key="methodsIndex">
-                            {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
+                            <Poptip trigger="hover" :transfer="true" word-wrap width="200"
+                                    :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>
+                              {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
+                            </Poptip>
                           </Tag>
                         </Col>
                         <Col align="right">
@@ -557,7 +564,10 @@
                             <Tag type="border" color="orange"
                                  v-for="(methods, methodsIndex) in l.cheatMethods"
                                  :key="methodsIndex">
-                              {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
+                              <Poptip trigger="hover" :transfer="true" word-wrap width="200"
+                                      :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>
+                                {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
+                              </Poptip>
                             </Tag>
                           </template>
                         </Col>
