@@ -411,7 +411,7 @@ async (req, res, next) => {
             .where({
                 'comments.byUserId': user.id,
                 type: 'report'
-            }).orderBy('comments.createTime', 'desc').offset(skip).limit(limit);
+            }).orderBy('comments.createTime', 'desc').offset(skip * limit).limit(limit);
 
         res.status(200).json({success: 1, code: 'userReports.success', data: reports});
     } catch (err) {
