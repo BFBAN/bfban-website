@@ -7,7 +7,7 @@
       <template v-else-if="getProtocol == 'mailto:'">
         <Icon type="ios-mail-outline" />
       </template>
-      <a :href="href" target="_blank">{{ text }}</a>
+      <a :href="afterData.href" target="_blank">{{ afterData.text }}</a>
     </span>
     <template v-if="isIframeShow">
       <div class="link-iframe" slot="content">
@@ -19,7 +19,7 @@
             </Badge>
           </div>
         </template>
-        <iframe :src="disableIframe ? '' : href" v-show="!linkLoad"
+        <iframe :src="disableIframe ? '' : afterData.href" v-show="!linkLoad"
                 allowTransparency="true"
                 frameborder="no"
                 border="0"
@@ -51,10 +51,16 @@ export default {
     return {
       disableIframe: true,
       linkLoad: true,
-      linkTime: null
+      linkTime: null,
+      afterData: {
+        href: '',
+        text: ''
+      }
     }
   },
   created() {
+    this.afterData.href = unescape(this.href);
+    this.afterData.text = unescape(this.text);
     // this.onIframeLoad();
   },
   methods: {
@@ -81,11 +87,12 @@ export default {
   computed: {
     isIframeShow () {
       // TODO 正则
-      let url = new URL(this.href);
+      let url = new URL(this.afterData.href);
       return url.protocol.indexOf('http:') >= 0 || url.protocol.indexOf('https:') >= 0;
     },
     getProtocol () {
-      let url = new URL(this.href);
+      if (!this.afterData.href) return '';
+      let url = new URL(this.afterData.href);
       return url.protocol;
     }
   }

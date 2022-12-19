@@ -19,7 +19,7 @@
               <router-link v-if="!user.token" :to="{name: 'signup'}">
                 <Button type="primary" v-voice-button>{{ $t("signup.title") }}</Button>
               </router-link>
-              <Divider v-if="!user.token" type="vertical" />
+              <Divider v-if="!user.token" type="vertical"/>
               <router-link :to="{name: 'about'}">
                 <Button type="text" v-voice-button>
                   <Icon type="ios-help-circle-outline"/>
@@ -46,13 +46,14 @@
                 </Col>
               </Row>
               <br>
-              <p>{{ $t("home.cover.endTime", {time: bannerTime }) }}</p>
+              <p>{{ $t("home.cover.endTime", {time: bannerTime}) }}</p>
               <br>
             </Col>
             <Col class="mobile-hide" :lg="{span: 13, push: 1}" type="flex" align="center" justify="center"
                  style="display: flex; justify-content: center; align-items: center">
               <Card dis-hover :padding="0" v-if="bannerImage">
                 <img :src="bannerImage"
+                     @click="openBannerWindowBox"
                      width="100%" class="ivu-row-top" style="margin-bottom: -10px;border-radius: 5px;">
               </Card>
             </Col>
@@ -66,7 +67,8 @@
         <Row>
           <Col :lg="{span: 10, push: 0}">
             <h1 align="left">{{ $t("home.activity.title") }}</h1>
-            <h5 align="left" v-html="$t('home.activity.description', {report: statistics.reports || 0, cheater: statistics.confirmed || 0})"></h5>
+            <h5 align="left"
+                v-html="$t('home.activity.description', {report: statistics.reports || 0, cheater: statistics.confirmed || 0})"></h5>
           </Col>
           <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
             <router-link :to="{name: 'player_list'}">
@@ -190,7 +192,7 @@ export default new BFBAN({
       upload.on(e.target.files[0]).then(res => {
         console.log(res)
       })
-    },  
+    },
     async loadData() {
       await util.initUtil().then(res => {
         this.cheaterStatus = res.cheaterStatus;
@@ -206,6 +208,20 @@ export default new BFBAN({
       } catch (e) {
         this.bannerImage = require(`../assets/images/index-gl_en-US.png`);
       }
+    },
+    /**
+     * 查看首页介绍图片
+     */
+    openBannerWindowBox() {
+      this.$viewerApi({
+        options: {
+          toolbar: false,
+          navbar: false,
+          keyboard: false,
+          fullscreen: true,
+        },
+        images: [this.bannerImage],
+      })
     },
     /**
      * 获取动态

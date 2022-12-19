@@ -260,7 +260,7 @@ export default {
                         _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${escape(p_textToLinkArray[j])}"></htmllinkcard>`)
                       } else {
                         /// 链接 =>
-                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${p_textToLinkArray[j]}" href="${p_textToLinkArray[j]}"></htmllink>`)
+                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${escape(p_textToLinkArray[j])}" href="${escape(p_textToLinkArray[j])}"></htmllink>`)
                       }
                     }
                 }
