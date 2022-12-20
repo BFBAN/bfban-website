@@ -3,7 +3,16 @@
     <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-${htmlSize}`"></Html>
     <div class="html-widget-box-divider ivu-divider ivu-divider-horizontal"></div>
     <Row class="html-widget-toolbar" type="flex" justify="center" align="middle">
-      <Col flex="1"></Col>
+      <Col flex="1">
+        <a @click="openFullScreenView"><Icon type="md-expand" /></a>
+        <Modal v-model="fullScreenStatus" fullscreen footer-hide :scrollable="true">
+          <div class="container">
+            <Card class="content">
+              <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-${htmlSize}`"></Html>
+            </Card>
+          </div>
+        </Modal>
+      </Col>
       <Col>
         <Dropdown trigger="click" @on-click="changeSize">
           <a href="javascript:void(0)">
@@ -47,11 +56,15 @@ export default {
   data () {
     return {
       htmlSize: "default",
-      htmlShowMode: "renderer"
+      htmlShowMode: "renderer",
+      fullScreenStatus: false,
     }
   },
   components: {Html},
   methods: {
+    openFullScreenView () {
+      this.fullScreenStatus = true;
+    },
     changeMode (name) {
       this.htmlShowMode = name;
     },

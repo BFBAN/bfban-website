@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="container">
-      <!-- <input type="file" @change="onChange" /> -->
       <div class="content">
         <div class="ivu-alert-with-banner home-banner">
           <Row :gutter="30">
@@ -62,106 +61,118 @@
       </div>
     </div>
 
-    <div class="home-box mobile-hide ivu-primary">
-      <div class="container">
-        <Row>
-          <Col :lg="{span: 10, push: 0}">
-            <h1 align="left">{{ $t("home.activity.title") }} <Icon type="md-megaphone" /></h1>
-            <h5 align="left"
-                v-html="$t('home.activity.description', {report: statistics.reports || 0, cheater: statistics.confirmed || 0})"></h5>
-          </Col>
-          <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
-            <router-link :to="{name: 'player_list'}">
-              <Button type="dashed" v-voice-button>
-                {{ $t('home.activity.more') }}
-              </Button>
-            </router-link>
-          </Col>
-        </Row>
-      </div>
-      <div class="lean-box">
-        <div class="wrapper" :style="'animation: rowup ' + activities_l.length * 5.8 + 's linear infinite;'">
-          <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
-            <Card class="icon" v-for="a_i in activity" :key="a_i.id" :padding="10">
-              <div slot="title" class="wrapper-title">
-                <Row type="flex" align="middle" :gutter="5">
-                  <Col>
-                    <Avatar size="28" :src="a_i.playerAvatarLink">
-                      {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
-                    </Avatar>
-                  </Col>
-                  <Col flex="1" align="left">
-                    <BusinessCard :id="a_i.byUserId">
-                      {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
-                    </BusinessCard>
-                  </Col>
-                  <Col>
-                    <Time v-if="a_i.createTime" :time="a_i.createTime"></Time>
-                  </Col>
-                </Row>
+    <div class="home-activities-box mobile-hide ivu-primary container">
+      <Row>
+        <Col :lg="{span: 10, push: 0}">
+          <h1 align="left">{{ $t("home.activity.title") }}
+            <Icon type="md-megaphone"/>
+          </h1>
+          <h5 align="left"
+              v-html="$t('home.activity.description', {report: statistics.reports || 0, cheater: statistics.confirmed || 0})"></h5>
+        </Col>
+        <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
+          <router-link :to="{name: 'player_list'}">
+            <Button type="dashed" v-voice-button>
+              {{ $t('home.activity.more') }}
+            </Button>
+          </router-link>
+        </Col>
+      </Row>
+
+      <div class="home-activities-wrapper">
+        <div class="home-activities-item" v-for="a_i in activities" :key="a_i.id">
+          <Card class="icon" dis-hover>
+            <div slot="title" class="wrapper-title">
+              <div class="home-activities-item-title-avatar">
+                <Avatar size="80" :src="a_i.playerAvatarLink">
+                  {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
+                </Avatar>
               </div>
 
-              <div class="wrapper-content">
-                <div v-if="a_i.type === 'report'">
-                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                    <BusinessCard :id="a_i.byUserId"></BusinessCard>
-                    <u>{{ a_i.byUserName }}</u>
-                  </router-link>
+              <Row type="flex" align="middle" :gutter="5">
+                <Col flex="1" align="left">
+                  <BusinessCard :id="a_i.byUserId || a_i.id">
+                    <u><b>{{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}</b></u>
+                  </BusinessCard>
+                </Col>
+                <Col>
+                  <Time v-if="a_i.createTime" :time="a_i.createTime"></Time>
+                </Col>
+              </Row>
+            </div>
 
-                  {{ $t('home.activity.activities.report') }}
+            <div class="wrapper-content">
+              <div v-if="a_i.type === 'report'">
+                {{ $t('home.activity.activities.report') }}
 
-                  <Tooltip :content="$t('basic.games.' + a_i.game)">
-                    <Tag type="border">
-                      <img height="12"
-                           :src="require('/src/assets/images/games/' + a_i.game + '/logo.png')"/>
-                    </Tag>
-                  </Tooltip>
-
-                  <router-link
-                      :to="{name: 'player', params: {game: `${a_i.game}`, ouid: `${a_i.playerOriginPersonaId}`}}">
-                    <u>{{ a_i.toPlayerName }}</u>
-                  </router-link>
-                </div>
-
-                <div v-if="a_i.type === 'register'">
-                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                    <u>{{ a_i.byUserName }}</u>
-                  </router-link>
-                  {{ $t('home.activity.activities.join') }}
-                </div>
-
-                <div v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
-                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                    <BusinessCard :id="a_i.byUserId">
-                      <u>{{ a_i.byUserName }}</u>
-                    </BusinessCard>
-                  </router-link>
-
-                  {{ $t('detail.info.judge') }}
-
-                  <router-link :to="{name: 'player', params: {ouid: `${a_i.playerOriginPersonaId}`}}">
-                    <u>{{ a_i.toPlayerName }}</u>
-                  </router-link>
-
-                  &diamond;
-
-                  <Tag color="warning" v-if="a_i.action">
-                    {{ $t(`basic.action.${util.queryAction(a_i.action)}.text`) }}
+                <Tooltip :content="$t('basic.games.' + a_i.game)" v-if="a_i.game && typeof a_i.game != 'number'">
+                  <Tag type="border">
+                    <img height="12"
+                         :src="require('/src/assets/images/games/' + a_i.game + '/logo.png')"/>
                   </Tag>
+                </Tooltip>
 
-                  {{ $t('detail.info.cheatMethod') }}
-                  <Tag type="border" color="orange"
-                       v-for="(methods, methodsIndex) in a_i.playerCheatMethods"
-                       :key="methodsIndex">
-                    <Poptip trigger="hover" :transfer="true" word-wrap width="200"
-                            :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>
-                      {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
-                    </Poptip>
-                  </Tag>
-                </div>
+                <router-link
+                    :to="{name: 'player', params: {game: `${a_i.game}`, ouid: `${a_i.playerOriginPersonaId}`}}">
+                  <u>{{ a_i.toPlayerName }}</u>
+                </router-link>
               </div>
-            </Card>
-          </div>
+
+              <div v-if="a_i.type === 'register'">
+                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  <u>{{ a_i.byUserName }}</u>
+                </router-link>
+                {{ $t('home.activity.activities.join') }}
+              </div>
+
+              <div v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
+                {{ $t('detail.info.judge') }}
+
+                <router-link :to="{name: 'player', params: {ouid: `${a_i.playerOriginPersonaId}`}}">
+                  <u>{{ a_i.toPlayerName }}</u>
+                </router-link>
+
+                &emsp;
+
+                <Tag color="warning" v-if="a_i.action">
+                  {{ $t(`basic.action.${util.queryAction(a_i.action)}.text`) }}
+                </Tag>
+
+                ,{{ $t('detail.info.cheatMethod') }}
+
+                <template v-if="a_i.playerCheatMethods">
+                  <div v-for="(value, key) in a_i.playerCheatMethods" :key="key">
+                    <Tooltip :content="$t('basic.games.' + key)" v-if="typeof key != 'number'">
+                      <Tag type="border">
+                        <img height="12"
+                             :src="require('/src/assets/images/games/' + key + '/logo.png')"/>
+                      </Tag>
+                    </Tooltip>
+
+                    <template v-if="typeof key != 'number'">
+                      <Tag type="border" color="orange"
+                           v-for="(methods, methodsIndex) in a_i.playerCheatMethods[key]"
+                           :key="methodsIndex">
+                        <Poptip trigger="hover" :transfer="true" word-wrap width="200"
+                                :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>
+                          {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
+                        </Poptip>
+                      </Tag>
+                    </template>
+                  </div>
+                </template>
+
+                <!--                  <Tag type="border" color="orange"-->
+                <!--                       v-for="(methods, methodsIndex) in a_i.playerCheatMethods"-->
+                <!--                       :key="methodsIndex">-->
+                <!--                    <Poptip trigger="hover" :transfer="true" word-wrap width="200"-->
+                <!--                            :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>-->
+                <!--                      {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}-->
+                <!--                    </Poptip>-->
+                <!--                  </Tag>-->
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
       <Spin size="large" fix v-if="activityLoad"></Spin>
@@ -254,15 +265,15 @@ export default new BFBAN({
       http.get(api["activity"], {}).then(res => {
         const d = res.data;
         if (d.success === 1) {
-          let activities = d.data;
-          let new_activities = [];
+          this.activities = d.data;
+          // let new_activities = [];
 
           // slice array
-          for (let i = 0; i < activities.length; i += 3) {
-            new_activities.push(activities.slice(i, i + 3));
-          }
-
-          this.activities_l = new_activities;
+          // for (let i = 0; i < activities.length; i += 3) {
+          //   new_activities.push(activities.slice(i, i + 3));
+          // }
+          //
+          // this.activities_l = new_activities;
         }
       }).finally(() => {
         this.activityLoad = false;
@@ -310,25 +321,10 @@ export default new BFBAN({
   }
 }
 
-.home-box {
-  position: relative;
-  padding-top: 100px;
-  overflow: hidden;
-  min-height: 850px;
-  max-height: 1000px;
-  margin: 50px 0 -20px 0;
-  text-align: center;
-
-  .lean-box {
-    display: flex;
-    transform: rotate(-5deg);
-    margin-top: 50px;
-  }
-}
-
 .home-banner {
   overflow: hidden;
   min-height: 600px;
+  margin-bottom: 20px;
   background-size: 500px;
   background-repeat: no-repeat;
   background-position: right;
@@ -345,36 +341,28 @@ export default new BFBAN({
   }
 }
 
-.wrapper {
-  margin-top: 40px;
-  display: flex;
-  flex-wrap: nowrap;
+.home-activities-box {
+  position: relative;
+  padding-top: 100px;
+  overflow: hidden;
+  margin: 0px auto -20px auto;
 
-  .wrapper-content {
-    height: 100%;
-    text-align: left;
+  .home-activities-wrapper {
+    margin: 50px auto;
+    flex-flow:  wrap;
+    column-count: 3;
+    column-gap: 20px;
   }
 
-  .wrapper-title {
-    font-weight: bold;
+  .home-activities-item {
+    display: inline-grid;
+    width: 100%;
+    margin: 30px 0 20px 0;
   }
 
-  .icon {
-    width: 280px;
-    height: 160px;
-    transform: translateX(0) translateY(40px);
-    opacity: .6;
-  }
-
-  .icon:hover {
-    z-index: 10;
-    opacity: 1;
-  }
-
-  .icon:nth-child(even) {
-    margin-top: 105px;
-    margin-left: 45px;
-    transform: translateX(40px) translateY(-10px);
+  .home-activities-item-title-avatar {
+    text-align: center;
+    margin: -50px 0 20px 0;
   }
 }
 </style>
