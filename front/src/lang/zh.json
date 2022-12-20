@@ -395,6 +395,7 @@
     },
     "judgement": {
       "behavior": "判决类型",
+      "game": "所属游戏",
       "methods": "作弊的方法",
       "content": "判决说明",
       "appropriateVerdict": {

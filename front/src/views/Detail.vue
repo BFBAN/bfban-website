@@ -40,29 +40,101 @@
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col flex="1">
-                <Tag color="error" v-if="cheater.status >= 0">
-                  {{ $t(`basic.status.${cheater.status || 0}`) }}
-                </Tag>
-
                 <!-- 被举报的游戏 S -->
-                <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
-                             v-if="cheater.games">
-                  <Tag color="gold" :alt="$t('detail.info.reportedGames')"
-                       v-for="(game,gameindex) in cheater.games" :key="gameindex">
-                    {{ $t(`basic.games.${game}`, {game: game}) }}
-                  </Tag>
-                </router-link>
-
-                <!-- 被举报的类型 E -->
-                <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">
-                    <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods"
-                         :key="method_index">
-                      <Poptip trigger="hover" :transfer="true" word-wrap width="200"
-                              :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".describe")'>
-                        {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
-                      </Poptip>
+                <Dropdown :transfer="isMobile" placement="top-start">
+                  <template>
+                    <Tag color="error">{{ $t(`basic.status.${throughSentryRank || 0}`) }}
+                      <Icon type="md-arrow-dropdown"/>
                     </Tag>
-                </template>
+                  </template>
+
+                  <DropdownMenu slot="list" style="margin: 5px 15px">
+                    <Row :gutter="0" style="margin: 5px 0;">
+                      <Col flex="1">
+                        <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
+                                     v-if="cheater.games">
+                          <template v-if="cheater.cheatStatus == null">
+                            <Tag color="error">{{ $t(`basic.status.${cheater.status || 0}`) }}</Tag>
+                          </template>
+
+                          <template v-else>
+                            <div v-for="(status_item, status_name) in cheater.cheatStatus" :key="status_name">
+                              <Tag color="gold" :alt="$t('detail.info.reportedGames')">
+                                {{ $t(`basic.games.${status_name}`) }}
+                              </Tag>
+                              <Tag color="error">{{ $t(`basic.status.${status_item || 0}`) }}</Tag>
+
+                              <!-- 被举报的类型 S -->
+                              <template v-if="cheater.cheatMethods">
+                                <span
+                                    v-for="(methods_game_item, methods_game_name) in cheater.cheatMethods[status_name]"
+                                    :key="methods_game_name">
+                                  <Tag color="warning"
+                                       v-for="(method_type_item, method_type_index) in cheater.cheatMethods"
+                                       :key="method_type_index">
+                                    <Poptip trigger="hover" :transfer="true" word-wrap width="200"
+                                            :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods_game_item) + ".describe")'>
+                                      {{
+                                        $t("cheatMethods." + util.queryCheatMethodsGlossary(methods_game_item) + ".title")
+                                      }}
+                                    </Poptip>
+                                  </Tag>
+                                </span>
+                              </template>
+
+                              <!--                      <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">-->
+                              <!--                        <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods"-->
+                              <!--                             :key="method_index">-->
+                              <!--                          <Poptip trigger="hover" :transfer="true" word-wrap width="200"-->
+                              <!--                                  :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".describe")'>-->
+                              <!--                            {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}-->
+                              <!--                          </Poptip>-->
+                              <!--                        </Tag>-->
+                              <!--                      </template>-->
+                              <!-- 被举报的类型 S -->
+
+                            </div>
+                          </template>
+                        </router-link>
+                      </Col>
+                    </Row>
+
+                    <Divider dashed style="margin: 10px -16px; width: calc(100% + 32px)"></Divider>
+
+                    <div>
+                      <Card style="margin: 0rem 0 1rem 0;" dis-hover>
+                        <Row :gutter="16" type="flex" justify="center" align="middle">
+                          <Col>
+                            <Icon type="md-ionitron" color="#535353" size="40"/>
+                          </Col>
+                          <Col>
+                            <Icon type="md-code-working" color="#aaa" size="20"/>
+                          </Col>
+                          <Col>
+                            <Icon type="md-cloud" color="#535353" size="40"/>
+                          </Col>
+                        </Row>
+                        <Card style="margin: 20px 0 0 0" :padding="0" dis-hover>
+                          <Slider v-model="cheater.sentryRank" :marks="cheater.sentryRankMarks" :step="1" :min="1"
+                                  :max="3" show-stops style="margin: 0 60px 35px 60px"></Slider>
+                        </Card>
+                      </Card>
+                      <div style="font-size: 12px">
+                        <Row>
+                          <Col flex="1">
+                            <h3>哨兵 ({{ cheater.sentryRank }} Level)</h3>
+                          </Col>
+                          <Col>
+                            <Tag>beta</Tag>
+                          </Col>
+                        </Row>
+                        <p class="hint">
+                          这是一个提供给监管者对作弊玩家容忍度等级开关，从任意到严格，在默认情况下仅仅内部审查，同系列连责；在严格模式，它会尝试检查该名玩家是否被任意第三方作弊封禁记录，给予第三方意见。这些建议最终由监管者来决定是否踢出社区。</p>
+                        <p class="hint">请查阅bfban api文档中judgmentResult接口</p>
+                      </div>
+                    </div>
+                  </DropdownMenu>
+                </Dropdown>
 
                 <div>
                   <Dropdown :transfer="isMobile" placement="bottom-start">
@@ -445,12 +517,19 @@
                           {{ $t('detail.info.report') }}
                           <a><u><b>{{ l.toOriginName }}</b></u></a>
 
-                          <!-- 在 -->
-                          {{ $t('detail.info.inGame') }}
+                          <template v-if="l.cheatGame">
+                            <!-- 在 -->
+                            {{ $t('detail.info.inGame') }}
 
-                          <router-link :to="{name: 'player', query: {game: l.cheatGame, status: -1 } }">
-                            {{ $t('basic.games.' + l.cheatGame) }}
-                          </router-link>
+                            <router-link :to="{name: 'player', query: {game: l.cheatGame, status: -1 } }">
+                              <Tooltip :content="$t('basic.games.' + l.cheatGame)">
+                                <Tag type="border">
+                                  <img height="12"
+                                       :src="require('/src/assets/images/games/' + l.cheatGame + '/logo.png')"/>
+                                </Tag>
+                              </Tooltip>
+                            </router-link>
+                          </template>
 
                           <!-- 游戏中 -->
                           {{ $t('detail.info.gaming') }}
@@ -518,8 +597,13 @@
                             </router-link>
                           </BusinessCard>
 
-                          <router-link :to="{name: 'cheater', query: {game: `${l.cheatGame}`} }">
-                            {{ l.cheatGame }}
+                          <router-link :to="{name: 'cheater', query: {game: `${l.cheatGame}`} }" v-if="l.cheatGame">
+                            <Tooltip :content="$t('basic.games.' + l.cheatGame)">
+                              <Tag type="border">
+                                <img height="12"
+                                     :src="require('/src/assets/images/games/' + l.cheatGame + '/logo.png')"/>
+                              </Tag>
+                            </Tooltip>
                           </router-link>
                         </Col>
 
@@ -556,6 +640,18 @@
                               {{ $t(`basic.action.${util.queryAction(l.judgeAction)}.text`) }}
                             </Tag>
                           </Poptip>
+
+                          <template v-if="l.cheatGame">
+                            <!-- 在 -->
+                            {{ $t('detail.info.inGame') }}
+
+                            <Tooltip :content="$t('basic.games.' + l.cheatGame)">
+                              <Tag type="border">
+                                <img height="12"
+                                     :src="require('/src/assets/images/games/' + l.cheatGame + '/logo.png')"/>
+                              </Tag>
+                            </Tooltip>
+                          </template>
 
                           <!-- 作弊方式 -->
                           <template v-if="l.cheatMethods && l.cheatMethods.length > 0">
@@ -796,6 +892,30 @@
             <Form ref='verifyForm' label-position="top">
               <Row :gutter="30">
                 <Col :xs="{span:24}" :lg="{span: 12}">
+                  <FormItem :label="$t(`detail.judgement.game`)">
+                    <Select v-model="verify.game">
+                      <Option :value="c_i"
+                              :label="$t(`basic.games.${c_i}`)"
+                              v-for="c_i in cheater.games" :key="c_i.value">
+                        <Row :gutter="10" type="flex" align="middle">
+                          <Col flex="1">
+                            <Tooltip :content="$t('basic.games.' + c_i)">
+                              <Tag type="border">
+                                <img height="12" :src="require('/src/assets/images/games/' + c_i + '/logo.png')"/>
+                              </Tag>
+                            </Tooltip>
+                          </Col>
+                          <Col>
+                            {{ $t(`basic.games.${c_i}`) }}
+                          </Col>
+                        </Row>
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row :gutter="30">
+                <Col :xs="{span:24}" :lg="{span: 12}">
                   <FormItem :label="$t(`detail.judgement.behavior`)">
                     <Select v-model="verify.status">
                       <!-- 判断选项 -->
@@ -819,8 +939,8 @@
                   </FormItem>
                 </Col>
                 <Col :xs="{span:24}" :lg="{span: 12}">
-                  <FormItem v-show="['kill','guilt'].includes(verify.status)" :label="$t(`detail.judgement.methods`)">
-                    <Select v-model="verify.checkbox" multiple>
+                  <FormItem :label="$t(`detail.judgement.methods`)">
+                    <Select v-model="verify.checkbox" multiple :disabled="!['kill','guilt'].includes(verify.status)">
                       <Option v-for="method in cheatMethodsGlossary" :key="method.value"
                               :value="method.value"
                               :label="$t(`cheatMethods.${method.value}.title`)">
@@ -1140,6 +1260,7 @@ export default new BFBAN({
         content: ''
       },
       cheater: {
+        sentryRank: 1,
         originId: '',
         createTime: time.appStart(),
         updateTime: time.appStart()
@@ -1170,6 +1291,7 @@ export default new BFBAN({
 
       verify: {
         status: 0,
+        game: '',
         checkbox: [],
         choice: [],
         suggestion: '',
@@ -1254,6 +1376,7 @@ export default new BFBAN({
         this.verify.status = this.verify.choice[0].value;
       });
 
+      await this.getJudgmentResult()
       await this.getPlayerInfo()
       await this.getTimeline()
 
@@ -1399,6 +1522,20 @@ export default new BFBAN({
       });
     },
     /**
+     * 判决结果
+     */
+    async getJudgmentResult() {
+      const id = this.$route.params.ouid;
+
+      return await new Promise(resolve => {
+        http.get(api["player_judgmentResult"], {
+          params: {
+            personaId: id
+          }
+        }).finally(() => resolve());
+      })
+    },
+    /**
      * 获取基本字段
      * 从[url]中整理
      */
@@ -1438,7 +1575,24 @@ export default new BFBAN({
           const d = res.data;
 
           if (d.success === 1) {
-            this.cheater = d.data;
+            this.cheater = Object.assign({
+              sentryRank: 2, sentryRankMarks: {
+                1: {
+                  label: this.$createElement('strong', 'lower')
+                },
+                2: {
+                  label: this.$createElement('strong', 'medium')
+                },
+                3: {
+                  label: this.$createElement('strong', 'higher')
+                }
+              }
+            }, d.data);
+
+            // 初始判决游戏
+            if (d.data.games.length == 1) {
+              this.verify.game = d.data.games[0];
+            }
             return;
           }
 
@@ -1586,6 +1740,10 @@ export default new BFBAN({
       const cheatMethods = this.verify.checkbox;
 
       if (this.verifySpinShow) return;
+      if (!this.verify.game) {
+        this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
+        return false;
+      }
       if ((['kill', 'guilt'].includes(status) && cheatMethods == '') || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
@@ -1605,6 +1763,7 @@ export default new BFBAN({
         data: {
           data: {
             toPlayerId: this.cheater.id,
+            cheatGame: this.verify.game,
             cheatMethods: ['kill', 'guilt'].includes(this.verify.status) ? cheatMethods : null,
             action: this.verify.status,
             content: formatTextarea(suggestion),
@@ -1848,6 +2007,17 @@ export default new BFBAN({
       const {userinfo} = this.$store.state.user || {}
       const {privilege = []} = userinfo
       return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
+    },
+    throughSentryRank() {
+      let status = this.cheater.status || 0;
+      if (this.cheater.sentryRank >= 2) {
+        for (const cheatStatusKey in this.cheater.cheatStatus) {
+          if (this.cheater.cheatStatus[cheatStatusKey] == 1) status = 1;
+        }
+      } else if (this.cheater.sentryRank == 1 && this.cheater.cheatStatus) {
+        status = Math.max(...Object.values(this.cheater.cheatStatus));
+      }
+      return status;
     }
   }
 })

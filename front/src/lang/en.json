@@ -380,6 +380,7 @@
     },
     "judgement": {
       "behavior": "Judgement type",
+      "game": "Judgement Game",
       "methods": "Cheat method",
       "content": "Judgement discription",
       "appropriateVerdict": {
