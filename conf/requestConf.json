@@ -1,5 +1,5 @@
 {
-  "requestDevelopmentName": "production",
+  "requestDevelopmentName": "development4",
   "requestProductionName": "production",
   "requestUploadName": "upload",
   "child": {
@@ -10,7 +10,7 @@
     },
     "development2": {
       "protocol": "http",
-      "host": "101.43.35.41:3000",
+      "host": "114.132.153.50:9990",
       "pathname": "/api/"
     },
     "development3": {
