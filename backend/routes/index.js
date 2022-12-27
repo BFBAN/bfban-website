@@ -392,7 +392,7 @@ async (req, res, next)=>{
         .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
         .andWhere('status', 'like', status).first().then(r=>r.num);
 
-        res.status(200).json({ success: 1, code:'players.ok', data:{ result, total } });
+        res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({ success: 1, code:'players.ok', data:{ result, total } });
     } catch(err) {
         next(err);
     }
