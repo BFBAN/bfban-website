@@ -347,10 +347,10 @@ async function showUserInfo(req, res, next) {
         const user = await db.select('*').from('users').where({id: req.query.id}).first();
         if (!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
-        const reportnum = await db('comments').count({num: 'id'}).where({
-            byUserId: user.id,
-            type: 'report'
-        }).distinct('toPlayerId').first().then(r => r.num);
+        const reportnum = await db('comments')
+            .countDistinct({num: 'id'})
+            .where({byUserId: user.id, type: 'report'})
+            .first().then(r=>r.num);
         const data = {
             id: user.id,
             userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
