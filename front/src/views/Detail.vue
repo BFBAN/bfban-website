@@ -1718,6 +1718,18 @@ export default new BFBAN({
      * 用户评论/回复
      */
     onReply() {
+      
+      if(this.$store.state.$userinfo && this.$store.state.$userinfo.origin.originUserId) {
+        console.log("")
+      } else {
+        this.$Message.error({content: this.$i18n.t("detail.messages.tipBind"), duration: 3});
+        setTimeout(() => {
+          this.$router.push({
+            path: '/profile/information'
+          })
+        }, 3000)
+        return
+      }
       const cheaterId = this.cheater.id;
       let {content = ''} = this.reply;
       content = formatTextarea(content);

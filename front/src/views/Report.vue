@@ -474,17 +474,27 @@ export default new BFBAN({
      * @returns {Promise<boolean>}
      */
     async doReport(index) {
-      // that form
-      let formData = this.tabs.list[index];
-
-      // check form data
-      if (this.$refs['formValidate_' + index][0])
-        this.$refs['formValidate_' + index][0].validate((valid) => {
-          if (valid) {
-            this.handleReport(formData, index);
-            this.refreshCaptcha();
-          }
-        })
+      if(this.$store.state.$userinfo && this.$store.state.$userinfo.origin.originUserId) {
+      // if(false) {
+        // that form
+        let formData = this.tabs.list[index];
+        // check form data
+        if (this.$refs['formValidate_' + index][0]) {
+          this.$refs['formValidate_' + index][0].validate((valid) => {
+            if (valid) {
+              this.handleReport(formData, index);
+              this.refreshCaptcha();
+            }
+          })
+        } 
+      }else {
+        this.$Message.error({content: this.$i18n.t("report.messages.tipBind"), duration: 3});
+        setTimeout(() => {
+          this.$router.push({
+            path: '/profile/information'
+          })
+        }, 3000)
+      }
     },
     /**
      * 提交举报

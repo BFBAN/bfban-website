@@ -75,18 +75,19 @@ export default {
      * 处理用户信息
      */
     onUserinfo () {
-      if (this.isLogin) {
+      console.log(this.$store.state.user)
+      if(this.$store.state.user) {
         this.http.get(api["user_me"], {}).then(res => {
           const d = res.data;
-
           if (d.success === 1) {
             // set userinfo
             this.$store.dispatch('setUserInfo', d.data);
             if (account_storage.getConfiguration('langLoaclSync'))
               this.$store.dispatch('setLang', d.data.attr.language);
-          }
+            }
         })
       }
+      
     }
   },
   computed: {

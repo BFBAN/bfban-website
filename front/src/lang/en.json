@@ -401,7 +401,8 @@
       "replySuccess": "Your reply was successfully added",
       "signIn": "Please sign in",
       "updateComplete": "Update completed",
-      "submitSuccess": "Submition successful"
+      "submitSuccess": "Submition successful",
+      "tipBind": "Please bind your Orange account and then reply"
     }
   },
   "report": {
@@ -447,10 +448,11 @@
       "permissionDenied": "",
       "videoBadFormat": "Invild format",
       "videoEmpty": "Invild video link",
-      "successTitle": "提交成功",
-      "successSubtitle": "感谢您的举报",
-      "failureTitle": "失败",
-      "failureSubtitle": "举报失败，{msg}"
+      "successTitle": "successfully",
+      "successSubtitle": "Thanks for your report",
+      "failureTitle": "Failure",
+      "failureSubtitle": "Failure，{msg}",
+      "tipBind": "Please bind your orange account and then report"
     },
     "button": {
       "continue": "继续",

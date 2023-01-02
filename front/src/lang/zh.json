@@ -416,7 +416,8 @@
       "replySuccess": "回复成功",
       "signIn": "请登录",
       "updateComplete": "更新完成",
-      "submitSuccess": "提交成功"
+      "submitSuccess": "提交成功",
+      "tipBind": "请绑定你的橘子账号以后在回复"
     }
   },
   "report": {
@@ -464,7 +465,8 @@
       "successTitle": "提交成功",
       "successSubtitle": "感谢您的举报",
       "failureTitle": "失败",
-      "failureSubtitle": "举报失败，{msg}"
+      "failureSubtitle": "举报失败，{msg}",
+      "tipBind": "请绑定你的橘子账号以后在提交举报"
     },
     "button": {
       "continue": "继续",
