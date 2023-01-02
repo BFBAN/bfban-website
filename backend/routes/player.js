@@ -570,9 +570,20 @@ async (req, res, next)=>{
         const total = await db.count({num: 1}).from('comments').where({toPlayerId: dbId, valid: 1})
                             .andWhere('type', 'like', subject).first().then(r=>r.num);
         /** @type {import("../typedef.js").Comment[]} */
-        const result = await db('comments').join('users', 'comments.byUserId', 'users.id')
-                            .select('comments.*', 'users.username', 'users.privilege').where({toPlayerId: dbId, 'comments.valid': 1})
+        let result = await db('comments').join('users', 'comments.byUserId', 'users.id')
+                            .select('comments.*', 'users.username', 'users.privilege', 'users.attr').where({toPlayerId: dbId, 'comments.valid': 1})
                             .andWhere('comments.type', 'like', subject).orderBy('comments.createTime', order).offset(skip).limit(limit);
+        const now = new Date()
+        result = result.map(item => {
+          if(item.attr.mute) {
+            const date = new Date(item.attr.mute)
+            if(date - now > 0) {
+              item.isMute = true
+            }
+          }
+          delete item.attr
+          return item
+        })
         result.forEach(i=>{     // delete those unused keys
             for(let j of Object.keys(i))
                 if(typeof(i[j])=='undefined' || i[j]==null)
@@ -646,6 +657,14 @@ router.post('/reply', verifyCaptcha, verifyJWT, forbidPrivileges(['freezed','bla
 ],  /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
+        if(req.user.attr.mute) {
+          const date = new Date(req.user.attr.mute)
+          const now = new Date()
+          if(date - now > 0) {
+            res.status(400).json({error: 1, code: `reply.bad`, message: `You have been disable to reply, ${req.user.attr.mute} end of disable`});
+            return
+          }
+        }
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});

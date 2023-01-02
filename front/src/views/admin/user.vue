@@ -81,6 +81,13 @@
           <PrivilegesTag :ref="`tag_${i.id}_privilegesTag`" :data="i.privilege" v-if="i.privilege"></PrivilegesTag>
         </Col>
         <Col>
+          <Button @click="muteUser('remove', i.id)" type="dashed" v-if="i.isMute" size="small" :disabled="!isAdmin">
+            removue mute
+          </Button>
+          <Button @click="showMuteAlert(i.id)" type="dashed" v-else size="small" :disabled="!isAdmin">
+            mute user
+          </Button>
+          <Divider type="vertical"></Divider>
           <Button @click="onEditUser(index)" type="dashed" size="small" :disabled="!isAdmin">
             <Icon type="ios-create"/>
           </Button>
@@ -304,6 +311,36 @@
       </div>
     </Modal>
     <!-- 删除用户 E -->
+
+    <!-- 禁言 -->
+    <Modal
+        v-model="mute.show"
+        @on-ok="modalOk"
+        @on-cancel="mute.show = false">
+          <p slot="header" style="color:#333; text-align:center">
+            <span>Select the time duration for mute</span>
+          </p>
+          <RadioGroup v-model="mute.value">
+            <Radio label="0">
+              <span>10mins</span>
+            </Radio>
+            <Radio label="1">
+              <span>1hr</span>
+            </Radio>
+            <Radio label="2">
+              <span>12hrs</span>
+            </Radio>
+            <Radio label="3">
+              <span>1day</span>
+            </Radio>
+            <Radio label="4">
+              <span>1week</span>
+            </Radio>
+            <Radio label="5">
+              <span>1month</span>
+            </Radio>
+          </RadioGroup>
+    </Modal>
   </div>
 </template>
 
@@ -321,11 +358,14 @@ import BFBAN from "@/assets/js/bfban";
 export default new BFBAN({
   data() {
     return {
+      mute: {
+        value: '0', id: '', show: false
+      },
       delUserModel: false,
       delUserLoad: false,
       delTypes: ['logic', 'real', 'restore'],
       delTypeValue: 'logic',
-
+      
       userType: {
         value: 'all',
         list: [{title: 'All', value: 'all'}, {title: 'Admin`s', value: 'admin'}]
@@ -384,6 +424,28 @@ export default new BFBAN({
     this.getUserList();
   },
   methods: {
+    showMuteAlert(id) {
+      this.mute.id = id
+      this.mute.show = true
+    },
+    modalOk() {
+      this.muteUser('add', this.mute.id, this.mute.value)
+    },
+    muteUser(type, id, value = 0) {
+      this.http.post(api["mute_user"], {
+        data: {
+          type, id, value
+        }
+      }).then(res => {
+        const d = res.data;
+        if (d.success == 1) {
+          this.onSearchUser();
+          this.$Message.success({content: d.message || d.code, duration: 3});
+          return;
+        }
+        this.$Message.error({content: d.message || d.code, duration: 3});
+      })
+    },
     /**
      * 提交修改表单
      */
@@ -445,7 +507,7 @@ export default new BFBAN({
             return
           }
 
-          this.$Message.error(d.code);
+          this.$Message.error(d.message || d.code);
         }).finally(() => {
           this.addUserLoad = false;
           this.addUserModel = false;
@@ -474,7 +536,7 @@ export default new BFBAN({
           return
         }
 
-        this.$Message.error(d.code);
+        this.$Message.error(d.message || d.code);
       }).finally(() => {
         this.getUserList();
 
@@ -558,7 +620,7 @@ export default new BFBAN({
             return;
           }
 
-          that.$Message.error(d.code);
+          that.$Message.error(d.message || d.code);
         }).finally(() => {
           that.load = false;
 
@@ -595,7 +657,7 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error(d.code);
+        this.$Message.error(d.message || d.code);
       })
     },
     /**
@@ -627,7 +689,7 @@ export default new BFBAN({
             return;
           }
 
-          this.$Message.error(d.code);
+          this.$Message.error(d.message || d.code);
           reject();
         })
       })

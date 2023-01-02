@@ -621,6 +621,17 @@
                   <Row class="timeline-content-footer" type="flex" align="middle">
                     <Col flex="auto" v-if="l.type != 'historyUsername'">
                       <template v-if="isLogin">
+                        <!-- 禁言 -->
+                        <template v-if="isSuper">
+                          <Tooltip placement="top" v-if="!l.isMute">
+                            <Button size="small" @click.native="showMuteAlert(l.byUserId)">mute user</Button>
+                            <div slot="content">
+                              disable permission to reply
+                            </div>
+                          </Tooltip>
+                          <Button size="small" v-else @click.native="muteUser('remove', l.byUserId)">remove mute</Button>
+                          <Divider type="vertical"/>
+                        </template>
                         <!-- 回复 -->
                         <Button size="small"
                                 v-voice-button
@@ -1094,6 +1105,35 @@
       </Modal>
       <!-- 小窗口申诉 E -->
     </template>
+    <!-- 禁言 -->
+    <Modal
+        v-model="mute.show"
+        @on-ok="modalOk"
+        @on-cancel="mute.show = false">
+          <p slot="header" style="color:#333; text-align:center">
+            <span>Select the time duration for mute</span>
+          </p>
+          <RadioGroup v-model="mute.value">
+            <Radio label="0">
+              <span>10mins</span>
+            </Radio>
+            <Radio label="1">
+              <span>1hr</span>
+            </Radio>
+            <Radio label="2">
+              <span>12hrs</span>
+            </Radio>
+            <Radio label="3">
+              <span>1day</span>
+            </Radio>
+            <Radio label="4">
+              <span>1week</span>
+            </Radio>
+            <Radio label="5">
+              <span>1month</span>
+            </Radio>
+          </RadioGroup>
+    </Modal>
   </div>
 </template>
 
@@ -1116,7 +1156,9 @@ export default new BFBAN({
   data() {
     return {
       util,
-
+      mute: {
+        value: '0', id: '', show: false
+      },
       subscribes: {
         load: false,
         static: false
@@ -1221,10 +1263,31 @@ export default new BFBAN({
   },
   created() {
     this.http = http_token.call(this);
-
     this.loadData();
   },
   methods: {
+    showMuteAlert(id) {
+      this.mute.id = id
+      this.mute.show = true
+    },
+    modalOk() {
+      this.muteUser('add', this.mute.id, this.mute.value)
+    },
+    muteUser(type, id, value = 0) {
+      this.http.post(api["mute_user"], {
+        data: {
+          type, id, value
+        }
+      }).then(res => {
+        const d = res.data;
+        if (d.success == 1) {
+          this.getTimeline();
+          this.$Message.success({content: d.message || d.code, duration: 3});
+          return;
+        }
+        this.$Message.error({content: d.message || d.code, duration: 3});
+      })
+    },
     async loadData() {
       this.$Loading.start();
 
@@ -1617,7 +1680,7 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error(d.code);
+        this.$Message.error(d.message || d.code);
       }).finally(() => {
         this.getPlayerInfo();
         this.getTimeline();
@@ -1652,7 +1715,7 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error(d.code);
+        this.$Message.error(d.message || d.code);
       }).finally(() => {
         this.appeal.load = false;
         message.playSendVoice();
@@ -1684,7 +1747,7 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error(d.code);
+        this.$Message.error(d.message || d.code);
       }).catch(err => {
         this.$Message.error(err);
       })
@@ -1718,17 +1781,16 @@ export default new BFBAN({
      * 用户评论/回复
      */
     onReply() {
-      
-      if(this.$store.state.$userinfo && this.$store.state.$userinfo.origin.originUserId) {
-        console.log("")
-      } else {
-        this.$Message.error({content: this.$i18n.t("detail.messages.tipBind"), duration: 3});
-        setTimeout(() => {
-          this.$router.push({
-            path: '/profile/information'
-          })
-        }, 3000)
-        return
+      if(this.$store.state.$userinfo) {
+        if(!(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
+          this.$Message.error({content: this.$i18n.t("detail.messages.tipBind"), duration: 3});
+          setTimeout(() => {
+            this.$router.push({
+              path: '/profile/information'
+            })
+          }, 3000)
+          return
+        }
       }
       const cheaterId = this.cheater.id;
       let {content = ''} = this.reply;
@@ -1767,7 +1829,7 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error(d.code);
+        this.$Message.error({content: d.message || d.code, duration: 3});
       }).finally(() => {
         this.replySpinShow = false;
 
@@ -1850,6 +1912,11 @@ export default new BFBAN({
       const {userinfo} = this.$store.state.user || {}
       const {privilege = []} = userinfo
       return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
+    },
+    isSuper() {
+      const {userinfo} = this.$store.state.user || {}
+      const {privilege = []} = userinfo
+      return privilege.includes('super') || privilege.includes('root') || privilege.includes('dev')
     }
   }
 })
