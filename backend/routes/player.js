@@ -315,6 +315,14 @@ router.post('/report', verifyJWT, verifyCaptcha,
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */ 
 async (req, res, next)=>{
     try {
+        if(req.user.attr.mute) {
+          const date = new Date(req.user.attr.mute)
+          const now = new Date()
+          if(date - now > 0) {
+            res.status(400).json({error: 1, code: `reply.bad`, message: `You have been disable to reply, ${req.user.attr.mute} end of disable`});
+            return
+          }
+        }
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error:1, code:'report.bad', message:validateErr.array()});
