@@ -1158,6 +1158,10 @@
           </div>
           <Button @click.native="AddNewCustomReply">add</Button>
         </div>
+        <div slot="footer">
+            <Button size="large" @click="customReply.show = false">cancel</Button>
+            <Button size="large" type="primary" @click="editCustomReplyComfrim">confirm</Button>
+        </div>
     </Modal>
   </div>
 </template>
