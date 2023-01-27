@@ -257,7 +257,7 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error(d.code);
+        this.$Message.error(d.message || d.code);
       }).finally(() => {
         this.commentEditModel = false;
         this.load = false;
@@ -288,7 +288,7 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error(d.code);
+        this.$Message.error(d.message || d.code);
       }).finally(() => {
         this.load = false;
       })

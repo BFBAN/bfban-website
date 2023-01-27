@@ -368,7 +368,7 @@ export default {
         }
 
         this.modal_setusername.index = 0;
-        this.$Message.error(d.code);
+        this.$Message.error(d.message || d.code);
       }).finally(async () => {
         this.modal_setusername.load = false;
         this.usernameCaptcha = "";

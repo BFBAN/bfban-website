@@ -65,7 +65,8 @@ export default class Api {
       'admin_judgementLog': 'admin/judgementLog',
       'admin_chatLog': 'admin/chatLog',
       'getUserOperationLogs': 'admin/getUserOperationLogs',
-      'adminLog': 'admin/adminLog'
+      'adminLog': 'admin/adminLog',
+      'mute_user': 'admin/muteUser'
     };
   }
 }

@@ -1,4 +1,5 @@
 import express from "express";
+import moment from "moment"
 import {check, body as checkbody, query as checkquery, validationResult} from "express-validator";
 
 import db from "../mysql.js";
@@ -65,14 +66,22 @@ async (req, res, next) => {
                 total = await db.count({num: 1}).from('users').first().then(r => r.num);
                 break;
         }
-
-        if (result)
-            result.forEach(i => {
-                delete i.password;
-                delete i.subscribes;
-                return i;
-            });
-
+        
+        if (result) {
+          const now = new Date()
+          result.forEach(i => {
+            delete i.password;
+            delete i.subscribes;
+            if(i.attr.mute) {
+              const date = new Date(i.attr.mute)
+              if(date - now > 0) {
+                i.isMute = true
+              }
+            }
+            return i;
+          });
+        }
+            
         return res.status(200).json({success: 1, code: 'searchUser.ok', data: result, total});
     } catch (err) {
         next(err);
@@ -470,6 +479,56 @@ router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
             next(err);
         }
     });
+
+router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super"]), [
+      checkbody('data.id').optional().isInt(),
+      checkbody('data.value').optional().isIn()
+  ],
+  async (req, res, next) => {
+      try {
+          const validateErr = validationResult(req);
+          if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'admin.ban.bad', message: validateErr.array()});
+          if (req.body.value == undefined)
+            return res.status(401).json({error: 1, code: 'admin.ban.bad', message: '"value" cannot be missing'});
+          if (req.body.type === undefined)
+            return res.status(401).json({error: 1, code: 'admin.ban.bad', message: '"type" cannot be missing'});
+          const { id } = req.body;
+          const userData = await db.select('*').from('users').where({id}).first();
+          const disableOperateUser = ['super', 'dev', 'root', 'admin']
+          const itemUser = disableOperateUser.some(item => userData.privilege.includes(item))
+          if(itemUser) {
+            return res.status(401).json({error: 1, code: 'admin.ban.bad', message: `this user cannot operate`});
+          }
+          let doEditUserData = {};
+          switch(req.body.type) {
+            case 'add': {
+              const min = 1000 * 60, hours = min * 60, day = hours * 24, month = day * 30
+              const type = [ min * 10, hours * 1, 12 * hours, 1 * day, 7 * day, 1 * month]
+              const time = +(new Date()) + type[req.body.value]
+              const banTime = moment(time).format('YYYY-MM-DD HH:mm:ss')
+              userData.attr.mute = banTime
+              break
+            }
+            case 'remove': {
+              userData.attr.mute = ''
+              break
+            }
+          }
+          doEditUserData.attr = JSON.stringify(userSetAttributes(userData.attr, userData.attr, true));
+          await db('users').update(doEditUserData).where({id: userData.id});
+          await db('operation_log').insert({
+              byUserId: req.user.id,
+              toUserId: userData.id,
+              action: req.body.type,
+              role: 'mute',
+              createTime: new Date()
+          });
+          return res.status(200).json({ success: 1, code: 'muteUser.ok' });
+      } catch (err) {
+          next(err);
+      }
+  });
 
 router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
         checkbody('data.id').optional().isInt(),

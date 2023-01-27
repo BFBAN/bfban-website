@@ -3,7 +3,7 @@
     <div class="list">
       <Card class="item" v-for="item in list" :key="item.label">
         <template #title><span class="ruleName">{{item.name}}</span></template>
-        <!-- <p class="ruleDesc">{{item.desc}}</p> -->
+        <p class="ruleDesc">{{item.desc.cn}}</p>
         <Divider orientation="left" size="small" class="divider">版本</Divider>
         <div class="version">
           <div v-for="(i, index) in item.list" :key="i" @click="jump(item.route, i)">
@@ -28,19 +28,25 @@ export default {
         {
           name: 'BFBAN人事规则',
           route: 'personnel',
-          desc: 'BFBAN人事规则BFBAN人事规则BFBAN人事规则BFBAN人事规则BFBAN人事规则BFBAN人事规则BFBAN人事规则BFBAN人事规则BFBAN人事规则',
+          desc: {
+            cn: 'BFBAN团队的人事招新规则，成员的结构以及不同成员的权利和义务和要求说明'
+          },
           list: personnel.keys().map(key => this.splitFileName(key).replace('./', ''))
         },
         {
           name: 'BFBAN反作弊规则',
           route: 'antiCheat',
-          desc: 'BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则',
+          desc: {
+            cn: 'BFBAN团队对不同案件的处理标准，按照最新的标准来对案件进行处理'
+          },
           list: antiCheat.keys().map(key => this.splitFileName(key).replace('./', ''))
         },
         {
           name: 'BFBAN行为规则',
           route: 'conduct',
-          desc: 'BFBAN行为规则BFBAN行为规则BFBAN行为规则BFBAN行为规则BFBAN行为规则BFBAN行为规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则BFBAN反作弊规则',
+          desc: {
+            cn: 'BFBAN团队的成员在日常工作中的行为规范'
+          },
           list: conduct.keys().map(key => this.splitFileName(key).replace('./', ''))
         }
       ]

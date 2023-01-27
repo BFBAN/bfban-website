@@ -53,7 +53,6 @@ const store = new Vuex.Store({
     },
     SIGNIN(state, data) {
       state.user = data;
-
       Cookies.set('user', JSON.stringify(data), { expires: 7 });
     },
     signout(state, data) {

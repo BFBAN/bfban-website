@@ -252,7 +252,7 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error(d.code);
+        this.$Message.error(d.message || d.code);
       }).catch(err => {
         this.$Message.error(err.toString());
       }).finally(() => {
