@@ -14,11 +14,11 @@ const docs_config = {
         }
     },
     servers: [
-        { "url": "http://127.0.0.1:3000/api" },
-        { "url": "https://bfban.com/api" },
-        { "url": "https://bfban.gametools.network/api" },
-        { "url": "https://bfban-testing.gametools.network/api" },
-        { "url": "https://api.bfban.com/api" }
+        { "url": "http://127.0.0.1:3000" },
+        { "url": "https://bfban.com" },
+        { "url": "https://bfban.gametools.network" },
+        { "url": "https://bfban-testing.gametools.network" },
+        { "url": "https://api.bfban.com" }
     ],
     tags: [
         {

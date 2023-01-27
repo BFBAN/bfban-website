@@ -36,6 +36,7 @@ export default class Api {
       'account_signupVerify': 'user/signupVerify',
 
       'player_judgement': 'player/judgement',
+      'player_judgmentResult': 'player/judgmentResult',
       'player_banAppeal': "player/banAppeal", // 申诉
       'player_viewBanAppeal': "player/viewBanAppeal",
       'player_unreply': 'player/unreply', // 删除回复
