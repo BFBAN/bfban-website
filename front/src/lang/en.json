@@ -44,7 +44,7 @@
       "5": "Under discussion",
       "6": "Needs more votes",
       "7": "Ultra-confirmed hacker",
-      "8": "Weapon Farm"
+      "8": "farm weapons"
     },
     "privilege": {
       "root": "System",
@@ -120,7 +120,6 @@
   },
   "header": {
     "index": "Home",
-    "announcement": "Announcement",
     "about": "About",
     "cheaters": "Cheaters",
     "report": "Report",
@@ -498,14 +497,14 @@
       ],
       "h3": "A global database of cheaters",
       "h4": "Become one of us - Improve our community",
-      "subButton": "Joined communities",
-      "dataReceived": "Reported",
-      "confirmData": "Confirmed",
+      "subButton": "Find out which communities have joined",
+      "dataReceived": "Recieved",
+      "confirmData": "Confirmed cheater",
       "endTime": "As of nov. 4th 2018"
     },
     "activity": {
       "title": "Activity",
-      "more": "Search for more",
+      "more": "search for more",
       "description": "bfban.com was made on the 4th of november 2018 and received <b>{report}</b> reports, and has a total of <b>{cheater}</b> banned hackers. Thanks for the hard work everyone!",
       "activities": {
         "report": "reported",
