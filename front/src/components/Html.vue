@@ -300,6 +300,10 @@ export default {
 </script>
 
 <style lang="less">
+.html-widget-toolbar {
+  line-height: 1 !important;
+}
+
 .timeline-description {
   line-height: initial;
   word-break: break-all;

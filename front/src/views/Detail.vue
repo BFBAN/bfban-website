@@ -129,7 +129,7 @@
                           </Col>
                         </Row>
                         <p class="hint">
-                          这是一个提供给监管者对作弊玩家容忍度等级开关，从任意到严格，在默认情况下仅仅内部审查，同系列连责；在严格模式，它会尝试检查该名玩家是否被任意第三方作弊封禁记录，给予第三方意见。这些建议最终由监管者来决定是否踢出社区。</p>
+                          提供给服务管理者对作弊玩家容忍度等级标尺，从任意到严格，在默认情况下仅仅内部审查，同系列连责；在严格模式，它会尝试检查该名玩家是否被任意第三方作弊封禁记录，给予第三方意见。这些建议最终由监管者来决定是否踢出社区。</p>
                         <p class="hint">请查阅bfban api文档中judgmentResult接口</p>
                       </div>
                     </div>
@@ -728,14 +728,15 @@
                     <Col flex="auto" v-if="l.type != 'historyUsername'">
                       <template v-if="isLogin">
                         <!-- 禁言 -->
-                        <template v-if="isSuper">
+                        <template v-if="isOnlySuper">
                           <Tooltip placement="top" v-if="!l.isMute">
                             <Button size="small" @click.native="showMuteAlert(l.byUserId)">mute user</Button>
                             <div slot="content">
                               disable permission to reply
                             </div>
                           </Tooltip>
-                          <Button size="small" v-else @click.native="muteUser('remove', l.byUserId)">remove mute</Button>
+                          <Button size="small" v-else @click.native="muteUser('remove', l.byUserId)">remove mute
+                          </Button>
                           <Divider type="vertical"/>
                         </template>
                         <!-- 回复 -->
@@ -1004,41 +1005,12 @@
                                 ref="judgementTextarea"
                                 :height="'250px'"
                                 :placeholder="$t(`detail.info.writeSomething`)"></Textarea>
-                      <Divider content-position="left"><span style="color: #3d3a42">Fast Reply</span></Divider>
-                      <Row :gutter="20" style="padding: 5px 15px">
-                        <Col flex="1">
-                          <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
-                            <Checkbox :label="i.content" v-for="(i, index) in fastReply.content" :key="index">
-                              {{ $t('detail.info.fastReplies.' + i.text) }}
-                            </Checkbox>
-                          </CheckboxGroup>
-                        </Col>
-                        <Col>
-                          <a href="javascript:void(0)" @click="fastReply.mode = true">
-                            <Icon type="md-settings" size="18"/>
-                          </a>
-                          <Drawer :closable="fastReply.mode" v-model="fastReply.mode" width="40%">
-                            <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
-                              <div v-for="(i, index) in fastReply.content" :key="index">
-                                <Checkbox :label="i.content" style="width: 100%">
-                                  <b>{{ $t('detail.info.fastReplies.' + i.text) }}</b>
-                                  <Input v-model="i.content" maxlength="100" :rows="4" show-word-limit type="textarea"></Input>
-                                </Checkbox>
-                                <Divider></Divider>
-                              </div>
-                            </CheckboxGroup>
-                          </Drawer>
-                        </Col>
-                      </Row>
-                      <Divider content-position="left"><span style="color: #3d3a42">Custom Fast Reply</span></Divider>
-                      <div class="customReply">
-                        <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
-                          <Checkbox :label="i" v-for="(i, index) in customReply.list" :key="index">
-                            {{ i }}
-                          </Checkbox>
-                        </CheckboxGroup>
-                        <Button size="small" @click.native="showEditCustomReply">Edit Custom Fast Reply{{ customReply.show }}</Button>
-                      </div>
+
+                      <!-- Fast Reply S -->
+                      <Divider content-position="left" style="margin: 0"><span style="color: #3d3a42">Fast Reply</span></Divider>
+                      <FastReply ref="fastReply" @on-change="watchFastReplyData"></FastReply>
+                      <!-- Fast Reply E -->
+
                     </Card>
                   </FormItem>
                 </Col>
@@ -1249,49 +1221,29 @@
         v-model="mute.show"
         @on-ok="modalOk"
         @on-cancel="mute.show = false">
-          <p slot="header" style="color:#333; text-align:center">
-            <span>Select the time duration for mute</span>
-          </p>
-          <RadioGroup v-model="mute.value">
-            <Radio label="0">
-              <span>10mins</span>
-            </Radio>
-            <Radio label="1">
-              <span>1hr</span>
-            </Radio>
-            <Radio label="2">
-              <span>12hrs</span>
-            </Radio>
-            <Radio label="3">
-              <span>1day</span>
-            </Radio>
-            <Radio label="4">
-              <span>1week</span>
-            </Radio>
-            <Radio label="5">
-              <span>1month</span>
-            </Radio>
-          </RadioGroup>
-    </Modal>
-    <Modal
-        v-model="customReply.show"
-        @on-ok="editCustomReplyComfrim"
-        @on-cancel="customReply.show = false">
-        <div class="addCustomReplyContent">
-          <Checkbox-group v-model="customReply.addValue">
-            <div class="replyItem" v-for="item in customReply.addList" :key="item">
-              <Checkbox :label="item">{{item}}</Checkbox>
-            </div>
-          </Checkbox-group>
-          <div class="addCustomReply">
-            <textarea v-model="customReply.new" />
-          </div>
-          <Button @click.native="AddNewCustomReply">add</Button>
-        </div>
-        <div slot="footer">
-            <Button size="large" @click="customReply.show = false">cancel</Button>
-            <Button size="large" type="primary" @click="editCustomReplyComfrim">confirm</Button>
-        </div>
+      <p slot="header" style="color:#333; text-align:center">
+        <span>Select the time duration for mute</span>
+      </p>
+      <RadioGroup v-model="mute.value">
+        <Radio label="0">
+          <span>10mins</span>
+        </Radio>
+        <Radio label="1">
+          <span>1hr</span>
+        </Radio>
+        <Radio label="2">
+          <span>12hrs</span>
+        </Radio>
+        <Radio label="3">
+          <span>1day</span>
+        </Radio>
+        <Radio label="4">
+          <span>1week</span>
+        </Radio>
+        <Radio label="5">
+          <span>1month</span>
+        </Radio>
+      </RadioGroup>
     </Modal>
   </div>
 </template>
@@ -1308,6 +1260,7 @@ import Captcha from "../components/Captcha";
 import Html from "@/components/Html";
 import HtmlWidget from "../components/HtmlWidget";
 import PrivilegesTag from "/src/components/PrivilegesTag";
+import FastReply from "@/components/FastReply";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
@@ -1344,20 +1297,6 @@ export default new BFBAN({
         toUserId: '',
         captcha: '',
         captchaUrl: {},
-      },
-      fastReply: {
-        content: [{
-          text: 'stats',
-          content: this.$i18n.t('detail.info.fastReplies.stats')
-        }, {
-          text: 'evidencePic',
-          content: this.$i18n.t('detail.info.fastReplies.evidencePic')
-        }, {
-          text: 'evidenceVid',
-          content: this.$i18n.t('detail.info.fastReplies.evidenceVid')
-        }],
-        mode: false,
-        selected: [],
       },
 
       verify: {
@@ -1404,6 +1343,10 @@ export default new BFBAN({
         ]
       },
 
+      fastReply: {
+        selected: []
+      },
+
       detailLoad: true,
       spinShow: true,
       verifySpinShow: false,
@@ -1422,61 +1365,19 @@ export default new BFBAN({
       }
     }
   },
-  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, HtmlWidget, PrivilegesTag},
+  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, HtmlWidget, PrivilegesTag, FastReply},
   watch: {
-    '$route': 'loadData',
-    'fastReply.selected': function () {
-      this.verify.suggestion = '' + this.fastReply.selected.map(i => i);
-    }
+    '$route': 'loadData'
   },
   created() {
     this.http = http_token.call(this);
     this.loadData();
+
     let customReply = localStorage.getItem('customReply')
     customReply = customReply ? customReply.split('&') : []
     this.customReply.list = customReply
   },
   methods: {
-    AddNewCustomReply() {
-      const newValue = this.customReply.new
-      this.customReply.addList.push(newValue)
-      this.customReply.addValue.push(newValue)
-      this.customReply.new = ''
-      console.log(this.customReply.addList)
-      console.log(this.customReply.addValue)
-    },
-    showEditCustomReply() {
-      this.customReply.addList = [...this.customReply.list]
-      this.customReply.addValue = [...this.customReply.list]
-      this.customReply.show = true
-    },
-    editCustomReplyComfrim() {
-      this.customReply.list = [...this.customReply.addValue]
-      this.customReply.show = false
-      localStorage.setItem('customReply', this.customReply.list.join('&'))
-    },
-    showMuteAlert(id) {
-      this.mute.id = id
-      this.mute.show = true
-    },
-    modalOk() {
-      this.muteUser('add', this.mute.id, this.mute.value)
-    },
-    muteUser(type, id, value = 0) {
-      this.http.post(api["mute_user"], {
-        data: {
-          type, id, value
-        }
-      }).then(res => {
-        const d = res.data;
-        if (d.success == 1) {
-          this.getTimeline();
-          this.$Message.success({content: d.message || d.code, duration: 3});
-          return;
-        }
-        this.$Message.error({content: d.message || d.code, duration: 3});
-      })
-    },
     async loadData() {
       this.$Loading.start();
 
@@ -1504,11 +1405,38 @@ export default new BFBAN({
 
       this.$Loading.finish();
     },
+    modalOk() {
+      this.muteUser('add', this.mute.id, this.mute.value)
+    },
+    muteUser(type, id, value = 0) {
+      this.http.post(api["mute_user"], {
+        data: {
+          type, id, value
+        }
+      }).then(res => {
+        const d = res.data;
+        if (d.success == 1) {
+          this.getTimeline();
+          this.$Message.success({content: d.message || d.code, duration: 3});
+          return;
+        }
+        this.$Message.error({content: d.message || d.code, duration: 3});
+      })
+    },
+    /**
+     * 管理员回复自定义模板更改事件
+     * @param data Array
+     */
+    watchFastReplyData (data) {
+      console.log(data)
+      this.verify.suggestion = data;
+    },
     /**
      * 合并时间轴历史名称
      */
     onMergeHistoryName() {
       let _timelineList = new Array().concat(this.timelineList);
+
       // 处理历史名称，放置对应对应位置
       for (let hisrotyIndex = 0; hisrotyIndex < this.cheater.history.length; hisrotyIndex++) {
         let nameHistoryTime = new Date(this.cheater.history[hisrotyIndex].fromTime).getTime();
@@ -1555,6 +1483,7 @@ export default new BFBAN({
     },
     /**
      * 追踪此玩家
+     * 此项操作会存进账户配置字段内
      */
     onSubscribes() {
       let subscribesLocal = storage.get('user.subscribes');
@@ -1621,12 +1550,15 @@ export default new BFBAN({
 
       if (!id) return;
 
-      // 在持久下存在此id，则不请求
-      if (viewed && viewed.data && viewed.data.value[id]) {
+      // 校验,含id且1天内，则不更新游览值
+      if (viewed &&
+          viewed.data &&
+          viewed.data.value[id] < viewed.data.value[id] + 24 * 60 * 60 * 1000
+      ) {
         return;
       }
 
-      // 实例object
+      // 创建完整 Object
       if (!(viewed && viewed.data && viewed.data.value)) {
         viewed = {
           data: {value: {}}
@@ -1639,6 +1571,7 @@ export default new BFBAN({
         }
       }).then(res => {
         storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
+        this.cheater.viewNum++;
       });
     },
     /**
@@ -2007,8 +1940,8 @@ export default new BFBAN({
      * 用户评论/回复
      */
     onReply() {
-      if(this.$store.state.$userinfo) {
-        if(!(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
+      if (this.$store.state.$userinfo) {
+        if (!(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
           this.$Message.error({content: this.$i18n.t("detail.messages.tipBind"), duration: 3});
           setTimeout(() => {
             this.$router.push({
@@ -2156,16 +2089,20 @@ export default new BFBAN({
 
 <style lang="less">
 @import "@/assets/css/icon.less";
+
 .customReply {
   padding: 0 10px 20px;
 }
+
 .replyItem {
   margin-bottom: 10px;
 }
+
 .addCustomReply {
   display: flex;
   margin-bottom: 10px;
   margin-top: 10px;
+
   textarea {
     flex: 1;
     border: 1px solid #ed4014;
@@ -2174,9 +2111,11 @@ export default new BFBAN({
     height: 100px;
   }
 }
+
 .addCustomReplyContent {
   padding-top: 30px;
 }
+
 .timeline-time-line {
   padding-top: 10px !important;
 
