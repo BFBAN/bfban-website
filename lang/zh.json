@@ -498,7 +498,7 @@
     }
   },
   "home": {
-    "title": "官网",
+    "title": "首页",
     "seo": {
       "description": "联ban官网,建立起全球作弊玩家档案库,成为我们一员维护社区环境",
       "keywords": "联ban,联办,联办局,联ban局,战地风云,战地"
@@ -750,31 +750,31 @@
   "cheatMethods": {
     "invisable": {
       "title": "隐身",
-      "describe": "玩家角色隐身"
+      "describe": "角色隐身，无法看见，能追踪位置"
     },
     "wallhack": {
       "title": "透视",
-      "describe": "在存在遮挡物情况下，提前穿透击杀或表现出已知敌人位置行为(无视实体查看敌人位置)"
+      "describe": "无视实体查看敌人位置"
     },
     "aimbot": {
       "title": "自瞄",
-      "describe": "自动纠正瞄准位置，呈现出快速平移、跳跃到玩家身上(如头、腰部)"
+      "describe": "自动瞄准位置，呈现出机器行为"
     },
     "oneShotKill": {
       "title": "秒杀",
-      "describe": "瞄准任意部位，击中后立即死亡、摧毁"
+      "describe": "快速瞄准高伤害部位，实现快速击杀"
     },
     "gadgetModify": {
       "title": "改装备",
-      "describe": "装备出现在不可能存在场景中(如：使用未被实装，通过其他手段调出物品)"
+      "describe": "装备出现在不可能存在场景中"
     },
     "damageChange": {
       "title": "改伤",
-      "describe": "与官方公开武器或载具数据伤害、下坠距离、射速等呈现不一致，修改武器参数"
+      "describe": "修改武器参数"
     },
     "magicBullet": {
       "title": "魔法子弹",
-      "describe": "无视地形、距离，子弹可以穿过任意物体"
+      "describe": "子弹可以穿过实体"
     },
     "attackServer": {
       "title": "攻击服务器",
@@ -782,7 +782,7 @@
     },
     "teleport": {
       "title": "传送",
-      "describe": "传送玩家或加速移动"
+      "describe": "传送移动"
     }
   },
   "misc": {
