@@ -40,101 +40,25 @@
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col flex="1">
+                <Tag color="error" v-if="cheater.status >= 0">
+                  {{ $t(`basic.status.${cheater.status || 0}`) }}
+                </Tag>
+
                 <!-- 被举报的游戏 S -->
-                <Dropdown :transfer="isMobile" placement="top-start">
-                  <template>
-                    <Tag color="error">{{ $t(`basic.status.${throughSentryRank || 0}`) }}
-                      <Icon type="md-arrow-dropdown"/>
-                    </Tag>
-                  </template>
+                <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
+                             v-if="cheater.games">
+                  <Tag color="gold" :alt="$t('detail.info.reportedGames')"
+                       v-for="(game,gameindex) in cheater.games" :key="gameindex">
+                    {{ $t(`basic.games.${game}`, {game: game}) }}
+                  </Tag>
+                </router-link>
 
-                  <DropdownMenu slot="list" style="margin: 5px 15px">
-                    <Row :gutter="0" style="margin: 5px 0;">
-                      <Col flex="1">
-                        <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
-                                     v-if="cheater.games">
-                          <template v-if="cheater.cheatStatus == null">
-                            <Tag color="error">{{ $t(`basic.status.${cheater.status || 0}`) }}</Tag>
-                          </template>
-
-                          <template v-else>
-                            <div v-for="(status_item, status_name) in cheater.cheatStatus" :key="status_name">
-                              <Tag color="gold" :alt="$t('detail.info.reportedGames')">
-                                {{ $t(`basic.games.${status_name}`) }}
-                              </Tag>
-                              <Tag color="error">{{ $t(`basic.status.${status_item || 0}`) }}</Tag>
-
-                              <!-- 被举报的类型 S -->
-                              <template v-if="cheater.cheatMethods">
-                                <span
-                                    v-for="(methods_game_item, methods_game_name) in cheater.cheatMethods[status_name]"
-                                    :key="methods_game_name">
-                                  <Tag color="warning"
-                                       v-for="(method_type_item, method_type_index) in cheater.cheatMethods"
-                                       :key="method_type_index">
-                                    <Poptip trigger="hover" :transfer="true" word-wrap width="200"
-                                            :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods_game_item) + ".describe")'>
-                                      {{
-                                        $t("cheatMethods." + util.queryCheatMethodsGlossary(methods_game_item) + ".title")
-                                      }}
-                                    </Poptip>
-                                  </Tag>
-                                </span>
-                              </template>
-
-                              <!--                      <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">-->
-                              <!--                        <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods"-->
-                              <!--                             :key="method_index">-->
-                              <!--                          <Poptip trigger="hover" :transfer="true" word-wrap width="200"-->
-                              <!--                                  :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".describe")'>-->
-                              <!--                            {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}-->
-                              <!--                          </Poptip>-->
-                              <!--                        </Tag>-->
-                              <!--                      </template>-->
-                              <!-- 被举报的类型 S -->
-
-                            </div>
-                          </template>
-                        </router-link>
-                      </Col>
-                    </Row>
-
-                    <Divider dashed style="margin: 10px -16px; width: calc(100% + 32px)"></Divider>
-
-                    <div>
-                      <Card style="margin: 0rem 0 1rem 0;" dis-hover>
-                        <Row :gutter="16" type="flex" justify="center" align="middle">
-                          <Col>
-                            <Icon type="md-ionitron" color="#535353" size="40"/>
-                          </Col>
-                          <Col>
-                            <Icon type="md-code-working" color="#aaa" size="20"/>
-                          </Col>
-                          <Col>
-                            <Icon type="md-cloud" color="#535353" size="40"/>
-                          </Col>
-                        </Row>
-                        <Card style="margin: 20px 0 0 0" :padding="0" dis-hover>
-                          <Slider v-model="cheater.sentryRank" :marks="cheater.sentryRankMarks" :step="1" :min="1"
-                                  :max="3" show-stops style="margin: 0 60px 35px 60px"></Slider>
-                        </Card>
-                      </Card>
-                      <div style="font-size: 12px">
-                        <Row>
-                          <Col flex="1">
-                            <h3>哨兵 ({{ cheater.sentryRank }} Level)</h3>
-                          </Col>
-                          <Col>
-                            <Tag>beta</Tag>
-                          </Col>
-                        </Row>
-                        <p class="hint">
-                          提供给服务管理者对作弊玩家容忍度等级标尺，从任意到严格，在默认情况下仅仅内部审查，同系列连责；在严格模式，它会尝试检查该名玩家是否被任意第三方作弊封禁记录，给予第三方意见。这些建议最终由监管者来决定是否踢出社区。</p>
-                        <p class="hint">请查阅bfban api文档中judgmentResult接口</p>
-                      </div>
-                    </div>
-                  </DropdownMenu>
-                </Dropdown>
+                <!-- 被举报的类型 E -->
+                <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">
+                  <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
+                    {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
+                  </Tag>
+                </template>
 
                 <div>
                   <Dropdown :transfer="isMobile" placement="bottom-start">
@@ -728,7 +652,7 @@
                     <Col flex="auto" v-if="l.type != 'historyUsername'">
                       <template v-if="isLogin">
                         <!-- 禁言 -->
-                        <template v-if="isOnlySuper">
+                        <template v-if="isSuper">
                           <Tooltip placement="top" v-if="!l.isMute">
                             <Button size="small" @click.native="showMuteAlert(l.byUserId)">mute user</Button>
                             <div slot="content">
@@ -904,30 +828,6 @@
             <Form ref='verifyForm' label-position="top">
               <Row :gutter="30">
                 <Col :xs="{span:24}" :lg="{span: 12}">
-                  <FormItem :label="$t(`detail.judgement.game`)">
-                    <Select v-model="verify.game">
-                      <Option :value="c_i"
-                              :label="$t(`basic.games.${c_i}`)"
-                              v-for="c_i in cheater.games" :key="c_i.value">
-                        <Row :gutter="10" type="flex" align="middle">
-                          <Col flex="1">
-                            <Tooltip :content="$t('basic.games.' + c_i)">
-                              <Tag type="border">
-                                <img height="12" :src="require('/src/assets/images/games/' + c_i + '/logo.png')"/>
-                              </Tag>
-                            </Tooltip>
-                          </Col>
-                          <Col>
-                            {{ $t(`basic.games.${c_i}`) }}
-                          </Col>
-                        </Row>
-                      </Option>
-                    </Select>
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row :gutter="30">
-                <Col :xs="{span:24}" :lg="{span: 12}">
                   <FormItem :label="$t(`detail.judgement.behavior`)">
                     <Select v-model="verify.status">
                       <!-- 判断选项 -->
@@ -951,8 +851,8 @@
                   </FormItem>
                 </Col>
                 <Col :xs="{span:24}" :lg="{span: 12}">
-                  <FormItem :label="$t(`detail.judgement.methods`)">
-                    <Select v-model="verify.checkbox" multiple :disabled="!['kill','guilt'].includes(verify.status)">
+                  <FormItem v-show="['kill','guilt'].includes(verify.status)" :label="$t(`detail.judgement.methods`)">
+                    <Select v-model="verify.checkbox" multiple>
                       <Option v-for="method in cheatMethodsGlossary" :key="method.value"
                               :value="method.value"
                               :label="$t(`cheatMethods.${method.value}.title`)">
@@ -1007,8 +907,8 @@
                                 :placeholder="$t(`detail.info.writeSomething`)"></Textarea>
 
                       <!-- Fast Reply S -->
-                      <Divider content-position="left" style="margin: 0"><span style="color: #3d3a42">Fast Reply</span></Divider>
-                      <FastReply ref="fastReply" @on-change="watchFastReplyData"></FastReply>
+                      <Divider content-position="left" style="margin: 0"></Divider>
+                      <FastReply ref="fastReply" @change="onFastReply"></FastReply>
                       <!-- Fast Reply E -->
 
                     </Card>
@@ -1245,6 +1145,26 @@
         </Radio>
       </RadioGroup>
     </Modal>
+    <Modal
+        v-model="customReply.show"
+        @on-ok="editCustomReplyComfrim"
+        @on-cancel="customReply.show = false">
+      <div class="addCustomReplyContent">
+        <Checkbox-group v-model="customReply.addValue">
+          <div class="replyItem" v-for="item in customReply.addList" :key="item">
+            <Checkbox :label="item">{{ item }}</Checkbox>
+          </div>
+        </Checkbox-group>
+        <div class="addCustomReply">
+          <textarea v-model="customReply.new"/>
+        </div>
+        <Button @click.native="AddNewCustomReply">add</Button>
+      </div>
+      <div slot="footer">
+        <Button size="large" @click="customReply.show = false">cancel</Button>
+        <Button size="large" type="primary" @click="editCustomReplyComfrim">confirm</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -1284,7 +1204,6 @@ export default new BFBAN({
         content: ''
       },
       cheater: {
-        sentryRank: 1,
         originId: '',
         createTime: time.appStart(),
         updateTime: time.appStart()
@@ -1298,10 +1217,12 @@ export default new BFBAN({
         captcha: '',
         captchaUrl: {},
       },
+      fastReply: {
+        selected: [],
+      },
 
       verify: {
         status: 0,
-        game: '',
         checkbox: [],
         choice: [],
         suggestion: '',
@@ -1343,10 +1264,6 @@ export default new BFBAN({
         ]
       },
 
-      fastReply: {
-        selected: []
-      },
-
       detailLoad: true,
       spinShow: true,
       verifySpinShow: false,
@@ -1367,15 +1284,14 @@ export default new BFBAN({
   },
   components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, HtmlWidget, PrivilegesTag, FastReply},
   watch: {
-    '$route': 'loadData'
+    '$route': 'loadData',
+    'fastReply.selected': function () {
+      this.verify.suggestion = '' + this.fastReply.selected.map(i => i);
+    }
   },
   created() {
     this.http = http_token.call(this);
     this.loadData();
-
-    let customReply = localStorage.getItem('customReply')
-    customReply = customReply ? customReply.split('&') : []
-    this.customReply.list = customReply
   },
   methods: {
     async loadData() {
@@ -1397,13 +1313,16 @@ export default new BFBAN({
         this.verify.status = this.verify.choice[0].value;
       });
 
-      await this.getJudgmentResult()
       await this.getPlayerInfo()
       await this.getTimeline()
 
       this.onMergeHistoryName()
 
       this.$Loading.finish();
+    },
+    showMuteAlert(id) {
+      this.mute.id = id
+      this.mute.show = true
     },
     modalOk() {
       this.muteUser('add', this.mute.id, this.mute.value)
@@ -1424,19 +1343,10 @@ export default new BFBAN({
       })
     },
     /**
-     * 管理员回复自定义模板更改事件
-     * @param data Array
-     */
-    watchFastReplyData (data) {
-      console.log(data)
-      this.verify.suggestion = data;
-    },
-    /**
      * 合并时间轴历史名称
      */
     onMergeHistoryName() {
       let _timelineList = new Array().concat(this.timelineList);
-
       // 处理历史名称，放置对应对应位置
       for (let hisrotyIndex = 0; hisrotyIndex < this.cheater.history.length; hisrotyIndex++) {
         let nameHistoryTime = new Date(this.cheater.history[hisrotyIndex].fromTime).getTime();
@@ -1550,15 +1460,12 @@ export default new BFBAN({
 
       if (!id) return;
 
-      // 校验,含id且1天内，则不更新游览值
-      if (viewed &&
-          viewed.data &&
-          viewed.data.value[id] < viewed.data.value[id] + 24 * 60 * 60 * 1000
-      ) {
+      // 在持久下存在此id，则不请求
+      if (viewed && viewed.data && viewed.data.value[id]) {
         return;
       }
 
-      // 创建完整 Object
+      // 实例object
       if (!(viewed && viewed.data && viewed.data.value)) {
         viewed = {
           data: {value: {}}
@@ -1571,22 +1478,7 @@ export default new BFBAN({
         }
       }).then(res => {
         storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
-        this.cheater.viewNum++;
       });
-    },
-    /**
-     * 判决结果
-     */
-    async getJudgmentResult() {
-      const id = this.$route.params.ouid;
-
-      return await new Promise(resolve => {
-        http.get(api["player_judgmentResult"], {
-          params: {
-            personaId: id
-          }
-        }).finally(() => resolve());
-      })
     },
     /**
      * 获取基本字段
@@ -1628,24 +1520,7 @@ export default new BFBAN({
           const d = res.data;
 
           if (d.success === 1) {
-            this.cheater = Object.assign({
-              sentryRank: 2, sentryRankMarks: {
-                1: {
-                  label: this.$createElement('strong', 'lower')
-                },
-                2: {
-                  label: this.$createElement('strong', 'medium')
-                },
-                3: {
-                  label: this.$createElement('strong', 'higher')
-                }
-              }
-            }, d.data);
-
-            // 初始判决游戏
-            if (d.data.games.length == 1) {
-              this.verify.game = d.data.games[0];
-            }
+            this.cheater = d.data;
             return;
           }
 
@@ -1793,10 +1668,6 @@ export default new BFBAN({
       const cheatMethods = this.verify.checkbox;
 
       if (this.verifySpinShow) return;
-      if (!this.verify.game) {
-        this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
-        return false;
-      }
       if ((['kill', 'guilt'].includes(status) && cheatMethods == '') || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
@@ -1816,7 +1687,6 @@ export default new BFBAN({
         data: {
           data: {
             toPlayerId: this.cheater.id,
-            cheatGame: this.verify.game,
             cheatMethods: ['kill', 'guilt'].includes(this.verify.status) ? cheatMethods : null,
             action: this.verify.status,
             content: formatTextarea(suggestion),
@@ -2052,10 +1922,14 @@ export default new BFBAN({
     /**
      * 判决快速模板
      */
-    onFastReply() {
+    onFastReply(data) {
+      this.fastReply.selected = data;
+
       if (this.$refs.judgementTextarea && this.fastReply.selected.length > 0) {
         this.$refs.judgementTextarea.updateContent(this.fastReply.selected.toString());
       }
+
+      if (data.length == 0) this.$refs.judgementTextarea.updateContent('');
     },
     /**
      * 左侧申诉面板开关
@@ -2072,16 +1946,10 @@ export default new BFBAN({
       const {privilege = []} = userinfo
       return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
     },
-    throughSentryRank() {
-      let status = this.cheater.status || 0;
-      if (this.cheater.sentryRank >= 2) {
-        for (const cheatStatusKey in this.cheater.cheatStatus) {
-          if (this.cheater.cheatStatus[cheatStatusKey] == 1) status = 1;
-        }
-      } else if (this.cheater.sentryRank == 1 && this.cheater.cheatStatus) {
-        status = Math.max(...Object.values(this.cheater.cheatStatus));
-      }
-      return status;
+    isSuper() {
+      const {userinfo} = this.$store.state.user || {}
+      const {privilege = []} = userinfo
+      return privilege.includes('super') || privilege.includes('root') || privilege.includes('dev')
     }
   }
 })

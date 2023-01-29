@@ -61,7 +61,7 @@
             <span>{{ $t('sitestats.confirmed') }}</span>
           </Col>
           <Divider type="vertical" class="mobile-hide"/>
-          <Col :xs="{span: 12}" :lg="{span: 3}">
+          <Col :xs="{span: 12}" :lg="{span: 3}" v-if="admins">
             <h2>{{ admins || 0 }}</h2>
             {{ $t('sitestats.admins') }}
           </Col>
@@ -167,8 +167,6 @@ export default new BFBAN({
       load: false,
       statistics: {},
       admins: 0,
-      show: false,
-
       chart: {
         'stats': {
           color: ['#fff13c', '#401486', '#ed4014'],
