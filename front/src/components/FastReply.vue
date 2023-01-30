@@ -3,7 +3,7 @@
     <Row :gutter="20" style="padding: 5px 15px">
       <Col flex="1">
         <CheckboxGroup v-model="fastReply.selected">
-          <Checkbox :label="i.text" v-for="(i, index) in fastReply.content" :key="index">
+          <Checkbox :label="i.content" v-for="(i, index) in fastReply.content" :key="index">
             <template v-if="i.template">
               <Card dis-hover :padding="0"><HtmlWidget :html="i.content"></HtmlWidget></Card>
             </template>
@@ -296,7 +296,8 @@ export default {
     fastReplyAdd() {
       const tmpTitle = this.fastReply.add.text;
       const tmpContent = this.fastReply.add.content;
-
+      console.log(tmpTitle)
+      console.log(tmpContent)
       if (!tmpContent || !tmpTitle) {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return;
