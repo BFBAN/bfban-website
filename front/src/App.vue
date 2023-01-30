@@ -75,7 +75,6 @@ export default {
      * 处理用户信息
      */
     onUserinfo () {
-      console.log(this.$store.state.user)
       if(this.$store.state.user) {
         this.http.get(api["user_me"], {}).then(res => {
           const d = res.data;

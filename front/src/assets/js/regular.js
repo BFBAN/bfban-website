@@ -3,7 +3,7 @@ export default class Regular {
 
     REGULARTYPE = {
         'link': {
-            v: /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-.,@?^=%&amp;:/~+#]*[\w\-@?^=%&amp;/~+#])?/g
+            v: /^(ftp|http|https):\/\/[^ "]+$/g
         },
         'image': {},
         'video': {},
@@ -25,18 +25,18 @@ export default class Regular {
      */
     check(regularType = '', value, regularConf = {tipError: ''}) {
         if (!regularType) return;
-        let res = this.REGULARTYPE[regularType].v.test(value);
+        const checkRes = new RegExp(this.REGULARTYPE[regularType].v).test(value);
 
-        if (res) {
+        if (checkRes) {
             return {
                 code: 0,
-                res,
+                checkRes,
             };
         }
 
         return {
             code: -1,
-            msg: regularConf.tipError || res.tipError
+            msg: regularConf.tipError || checkRes.tipError
         }
     }
 

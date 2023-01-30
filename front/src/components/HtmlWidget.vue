@@ -2,7 +2,7 @@
   <div class="html-widget-box">
     <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-${htmlSize}`"></Html>
     <div class="html-widget-box-divider ivu-divider ivu-divider-horizontal"></div>
-    <Row class="html-widget-toolbar" type="flex" justify="center" align="middle">
+    <Row class="html-widget-toolbar" type="flex" justify="center" align="middle" :gutter="5">
       <Col flex="1">
         <a @click="openFullScreenView"><Icon type="md-expand" /></a>
         <Modal v-model="fullScreenStatus" fullscreen footer-hide :scrollable="true">

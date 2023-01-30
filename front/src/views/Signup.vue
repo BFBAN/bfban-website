@@ -65,7 +65,7 @@
                          maxlength="4"
                          :placeholder="$t('captcha.title')">
                     <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                      <Captcha ref="captcha"></Captcha>
+                      <Captcha ref="captcha" :seconds="15"></Captcha>
                     </div>
                   </Input>
                 </FormItem>
@@ -185,7 +185,9 @@ export default new BFBAN({
     this.http = http_token.call(this);
   },
   methods: {
-    // 提交注册信息
+    /**
+     * 提交注册信息
+     */
     onSignup() {
       const that = this;
       this.$refs['formValidate'].validate(valid => {
@@ -229,7 +231,7 @@ export default new BFBAN({
           this.$Message.error(err);
           this.backServiceMsg = this.$i18n.t('signup.failed');
 
-          this.onCleanSignupForm();
+          this.onCleanSignupForm({originEmail: false, originName: false, stepsIndex: false})
         }).finally(() => {
           this.spinShow = false;
 

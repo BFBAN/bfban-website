@@ -35,8 +35,6 @@
               <Row>
                 <Col flex="1"></Col>
                 <Col>
-                  系统模板
-                  <Divider type="vertical"></Divider>
                   <Dropdown trigger="click">
                     <Icon type="ios-more"/>
                     <DropdownMenu slot="list">

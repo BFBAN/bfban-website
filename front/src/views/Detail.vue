@@ -1115,56 +1115,38 @@
         </Row>
       </Modal>
       <!-- 小窗口申诉 E -->
+
+      <!-- 禁言 S -->
+      <Modal
+          v-model="mute.show"
+          @on-ok="modalOk"
+          @on-cancel="mute.show = false">
+        <p slot="header" style="color:#333; text-align:center">
+          <span>Select the time duration for mute</span>
+        </p>
+        <RadioGroup v-model="mute.value">
+          <Radio label="0">
+            <span>10mins</span>
+          </Radio>
+          <Radio label="1">
+            <span>1hr</span>
+          </Radio>
+          <Radio label="2">
+            <span>12hrs</span>
+          </Radio>
+          <Radio label="3">
+            <span>1day</span>
+          </Radio>
+          <Radio label="4">
+            <span>1week</span>
+          </Radio>
+          <Radio label="5">
+            <span>1month</span>
+          </Radio>
+        </RadioGroup>
+      </Modal>
+      <!-- 禁言 E -->
     </template>
-    <!-- 禁言 -->
-    <Modal
-        v-model="mute.show"
-        @on-ok="modalOk"
-        @on-cancel="mute.show = false">
-      <p slot="header" style="color:#333; text-align:center">
-        <span>Select the time duration for mute</span>
-      </p>
-      <RadioGroup v-model="mute.value">
-        <Radio label="0">
-          <span>10mins</span>
-        </Radio>
-        <Radio label="1">
-          <span>1hr</span>
-        </Radio>
-        <Radio label="2">
-          <span>12hrs</span>
-        </Radio>
-        <Radio label="3">
-          <span>1day</span>
-        </Radio>
-        <Radio label="4">
-          <span>1week</span>
-        </Radio>
-        <Radio label="5">
-          <span>1month</span>
-        </Radio>
-      </RadioGroup>
-    </Modal>
-    <Modal
-        v-model="customReply.show"
-        @on-ok="editCustomReplyComfrim"
-        @on-cancel="customReply.show = false">
-      <div class="addCustomReplyContent">
-        <Checkbox-group v-model="customReply.addValue">
-          <div class="replyItem" v-for="item in customReply.addList" :key="item">
-            <Checkbox :label="item">{{ item }}</Checkbox>
-          </div>
-        </Checkbox-group>
-        <div class="addCustomReply">
-          <textarea v-model="customReply.new"/>
-        </div>
-        <Button @click.native="AddNewCustomReply">add</Button>
-      </div>
-      <div slot="footer">
-        <Button size="large" @click="customReply.show = false">cancel</Button>
-        <Button size="large" type="primary" @click="editCustomReplyComfrim">confirm</Button>
-      </div>
-    </Modal>
   </div>
 </template>
 
@@ -1460,12 +1442,15 @@ export default new BFBAN({
 
       if (!id) return;
 
-      // 在持久下存在此id，则不请求
-      if (viewed && viewed.data && viewed.data.value[id]) {
+      // 校验,含id且1天内，则不更新游览值
+      if (viewed &&
+          viewed.data &&
+          viewed.data.value[id] < viewed.data.value[id] + 24 * 60 * 60 * 1000
+      ) {
         return;
       }
 
-      // 实例object
+      // 创建完整 Object
       if (!(viewed && viewed.data && viewed.data.value)) {
         viewed = {
           data: {value: {}}
@@ -1478,6 +1463,7 @@ export default new BFBAN({
         }
       }).then(res => {
         storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
+        this.cheater.viewNum++;
       });
     },
     /**

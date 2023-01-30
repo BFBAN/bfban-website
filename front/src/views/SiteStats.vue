@@ -61,7 +61,7 @@
             <span>{{ $t('sitestats.confirmed') }}</span>
           </Col>
           <Divider type="vertical" class="mobile-hide"/>
-          <Col :xs="{span: 12}" :lg="{span: 3}" v-if="admins">
+          <Col :xs="{span: 12}" :lg="{span: 3}">
             <h2>{{ admins || 0 }}</h2>
             {{ $t('sitestats.admins') }}
           </Col>
