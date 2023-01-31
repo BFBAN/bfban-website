@@ -659,7 +659,8 @@
                               disable permission to reply
                             </div>
                           </Tooltip>
-                          <Button size="small" v-else @click.native="muteUser('remove', l.byUserId)">remove mute
+                          <Button size="small" v-else @click.native="muteUser('remove', l.byUserId)">
+                            remove mute
                           </Button>
                           <Divider type="vertical"/>
                         </template>
@@ -1121,29 +1122,30 @@
           v-model="mute.show"
           @on-ok="modalOk"
           @on-cancel="mute.show = false">
-        <p slot="header" style="color:#333; text-align:center">
+        <p slot="header" style="text-align:center">
           <span>Select the time duration for mute</span>
         </p>
-        <RadioGroup v-model="mute.value">
-          <Radio label="0">
-            <span>10mins</span>
-          </Radio>
-          <Radio label="1">
-            <span>1hr</span>
-          </Radio>
-          <Radio label="2">
-            <span>12hrs</span>
-          </Radio>
-          <Radio label="3">
-            <span>1day</span>
-          </Radio>
-          <Radio label="4">
-            <span>1week</span>
-          </Radio>
-          <Radio label="5">
-            <span>1month</span>
-          </Radio>
-        </RadioGroup>
+        <Form>
+          <FormItem>
+            <Select v-model="mute.value">
+              <Option v-for="item in [
+              {value: 0, text: '10mins'},
+              {value: 1, text: '1hr'},
+              {value: 2, text: '12hrs'},
+              {value: 3, text: '1day'},
+              {value: 4, text: '1week'},
+              {value: 5, text: '1month'}]"
+                      :value="item.value"
+                      :key="item.value">
+                {{ item.text }}
+              </Option>
+            </Select>
+          </FormItem>
+
+          <FormItem>
+            <Checkbox v-model="mute.isNoticeIntraStationUser">是否将此禁令通知玩家？</Checkbox>
+          </FormItem>
+        </Form>
       </Modal>
       <!-- 禁言 E -->
     </template>
@@ -1151,7 +1153,7 @@
 </template>
 
 <script>
-import {api, http, http_token, util, message, time, storage, account_storage} from '../assets/js/index'
+import {api, http, http_token, util, message, time, storage, account_storage, mail} from '../assets/js/index'
 
 import BFBAN from "/src/assets/js/bfban";
 import Empty from '../components/Empty.vue'
@@ -1171,7 +1173,10 @@ export default new BFBAN({
     return {
       util,
       mute: {
-        value: '0', id: '', show: false
+        value: '0',
+        id: '',
+        isNoticeIntraStationUser: false,
+        show: false
       },
       subscribes: {
         load: false,
@@ -1309,19 +1314,40 @@ export default new BFBAN({
     modalOk() {
       this.muteUser('add', this.mute.id, this.mute.value)
     },
-    muteUser(type, id, value = 0) {
+    /**
+     * 禁言
+     * @param type 禁言or移除
+     * @param id user id
+     * @param muteTime 时间
+     * @returns {boolean}
+     */
+    muteUser(type, id, muteTime = 0) {
+      const {isNoticeIntraStationUser} = this.mute;
+
+      if (!muteTime && !id && !type) return false;
+
       this.http.post(api["mute_user"], {
         data: {
-          type, id, value
-        }
+          data: {
+            type,
+            id,
+            value: muteTime,
+          },
+          isNotice: isNoticeIntraStationUser,
+          language: mail.exchangeLangField(this.$root.$i18n.locale)
+        },
       }).then(res => {
         const d = res.data;
+
         if (d.success == 1) {
           this.getTimeline();
           this.$Message.success({content: d.message || d.code, duration: 3});
           return;
         }
+
         this.$Message.error({content: d.message || d.code, duration: 3});
+      }).catch(err => {
+        this.$Message.error(err.code);
       })
     },
     /**

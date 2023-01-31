@@ -291,4 +291,5 @@ async function removeBanAppealNotification(params) {
 export default router;
 export {
     sendMessage,
+    localeMessage
 };

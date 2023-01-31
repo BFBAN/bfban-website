@@ -6,7 +6,7 @@ import db from "../mysql.js";
 import config from "../config.js";
 import {verifyJWT} from "../middleware/auth.js";
 import {allowPrivileges, forbidPrivileges} from "../middleware/auth.js";
-import {sendMessage} from "./message.js";
+import {localeMessage, sendMessage} from "./message.js";
 import {generatePassword, privilegeGranter, privilegeRevoker, userHasRoles} from "../lib/auth.js";
 import {initUserStorageQuota, userDefaultAttribute, userSetAttributes} from "../lib/user.js";
 import got from "got";
@@ -66,22 +66,22 @@ async (req, res, next) => {
                 total = await db.count({num: 1}).from('users').first().then(r => r.num);
                 break;
         }
-        
+
         if (result) {
-          const now = new Date()
-          result.forEach(i => {
-            delete i.password;
-            delete i.subscribes;
-            if(i.attr.mute) {
-              const date = new Date(i.attr.mute)
-              if(date - now > 0) {
-                i.isMute = true
-              }
-            }
-            return i;
-          });
+            const now = new Date()
+            result.forEach(i => {
+                delete i.password;
+                delete i.subscribes;
+                if (i.attr.mute) {
+                    const date = new Date(i.attr.mute)
+                    if (date - now > 0) {
+                        i.isMute = true
+                    }
+                }
+                return i;
+            });
         }
-            
+
         return res.status(200).json({success: 1, code: 'searchUser.ok', data: result, total});
     } catch (err) {
         next(err);
@@ -296,7 +296,7 @@ async (req, res, next) => {
             .andWhere("comments.createTime", ">=", createTimeFrom)
             .andWhere("comments.createTime", "<=", createTimeto)
             .orderBy('users.createTime', order)
-            // .offset(skip).limit(limit);
+        // .offset(skip).limit(limit);
 
         return res.status(200).json({success: 1, code: 'log.ok', data: result});
     } catch (err) {
@@ -480,55 +480,74 @@ router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         }
     });
 
-router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super"]), [
-      checkbody('data.id').optional().isInt(),
-      checkbody('data.value').optional().isIn()
-  ],
-  async (req, res, next) => {
-      try {
-          const validateErr = validationResult(req);
-          if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'admin.ban.bad', message: validateErr.array()});
-          if (req.body.value == undefined)
-            return res.status(401).json({error: 1, code: 'admin.ban.bad', message: '"value" cannot be missing'});
-          if (req.body.type === undefined)
-            return res.status(401).json({error: 1, code: 'admin.ban.bad', message: '"type" cannot be missing'});
-          const { id } = req.body;
-          const userData = await db.select('*').from('users').where({id}).first();
-          const disableOperateUser = ['super', 'dev', 'root', 'admin']
-          const itemUser = disableOperateUser.some(item => userData.privilege.includes(item))
-          if(itemUser) {
-            return res.status(401).json({error: 1, code: 'admin.ban.bad', message: `this user cannot operate`});
-          }
-          let doEditUserData = {};
-          switch(req.body.type) {
-            case 'add': {
-              const min = 1000 * 60, hours = min * 60, day = hours * 24, month = day * 30
-              const type = [ min * 10, hours * 1, 12 * hours, 1 * day, 7 * day, 1 * month]
-              const time = +(new Date()) + type[req.body.value]
-              const banTime = moment(time).format('YYYY-MM-DD HH:mm:ss')
-              userData.attr.mute = banTime
-              break
+router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "admin"]), [
+        checkbody('data.id').optional().isInt(),
+        checkbody('data.value').optional().isInt(),
+        checkbody('isNotice').optional().isBoolean(),
+        checkbody('language').isIn(config.supportLanguages)
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'muteUser.ban.bad', message: validateErr.array()});
+            if (req.body.data.value == undefined)
+                return res.status(401).json({error: 1, code: 'muteUser.ban.bad', message: '"value" cannot be missing'});
+            if (req.body.data.type === undefined)
+                return res.status(401).json({error: 1, code: 'muteUser.ban.bad', message: '"type" cannot be missing'});
+            if (req.body.isNotice === undefined)
+                return res.status(401).json({
+                    error: 1,
+                    code: 'muteUser.ban.bad',
+                    message: '"isNotice" cannot be missing'
+                });
+
+            const {id} = req.body.data;
+            const userData = await db.select('*').from('users').where({id}).first();
+            const disableOperateUser = ['super', 'dev', 'root', 'admin'] // Please be consistent with 'allowPrivileges' above
+            const itemUser = disableOperateUser.some(item => userData.privilege.includes(item))
+
+            // Check User authority
+            if (!itemUser) {
+                return res.status(402).json({error: 1, code: 'muteUser.ban.userUnauthorized', message: `this user cannot operate`});
             }
-            case 'remove': {
-              userData.attr.mute = ''
-              break
+
+            let doEditUserData = {};
+            switch (req.body.data.type) {
+                case 'add': {
+                    const min = 1000 * 60, hours = min * 60, day = hours * 24, month = day * 30
+                    const type = [min * 10, hours * 1, 12 * hours, 1 * day, 7 * day, 1 * month]
+                    const time = +(new Date()) + type[req.body.data.value]
+                    const banTime = moment(time).format('YYYY-MM-DD HH:mm:ss')
+                    userData.attr.mute = banTime
+
+                    // Send notification or not
+                    if (req.body.isNotice && req.body.language)
+                        await sendMessage(req.user.id, id, 'warn', await localeMessage('notifications.beMuteUser', req.body.language, {}));
+                    break
+                }
+                case 'remove': {
+                    userData.attr.mute = ''
+                    break
+                }
             }
-          }
-          doEditUserData.attr = JSON.stringify(userSetAttributes(userData.attr, userData.attr, true));
-          await db('users').update(doEditUserData).where({id: userData.id});
-          await db('operation_log').insert({
-              byUserId: req.user.id,
-              toUserId: userData.id,
-              action: req.body.type,
-              role: 'mute',
-              createTime: new Date()
-          });
-          return res.status(200).json({ success: 1, code: 'muteUser.ok' });
-      } catch (err) {
-          next(err);
-      }
-  });
+
+            doEditUserData.attr = JSON.stringify(userSetAttributes(userData.attr, userData.attr, true));
+
+            await db('users').update(doEditUserData).where({id: userData.id});
+            await db('operation_log').insert({
+                byUserId: req.user.id,
+                toUserId: userData.id,
+                action: req.body.data.type,
+                role: 'mute',
+                createTime: new Date()
+            });
+
+            return res.status(200).json({success: 1, message: 'Successful operation', code: 'muteUser.ok'});
+        } catch (err) {
+            next(err);
+        }
+    });
 
 router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
         checkbody('data.id').optional().isInt(),
@@ -537,13 +556,13 @@ router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
     async (req, res, next) => {
         try {
             const validateErr = validationResult(req);
+
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'admin.delUser.bad', message: validateErr.array()});
             if (req.body.data.type == undefined)
                 return res.status(401).json({error: 1, code: 'admin.delUser.bad', message: '"type" cannot be missing'});
 
             const {id} = req.body.data;
-
             const userDb = db('users');
 
             // TODO 验证账户

@@ -228,7 +228,7 @@ export default {
       if (data) {
         for (let index = 0; index < this.fastReply.content.length; index++) {
           let item = this.fastReply.content[index];
-          console.log(item.text, name)
+
           if (item.text === name) {
             this.fastReply.temporaryEditor.text = item.text;
             this.fastReply.temporaryEditor.content = item.content;
@@ -294,8 +294,7 @@ export default {
     fastReplyAdd() {
       const tmpTitle = this.fastReply.add.text;
       const tmpContent = this.fastReply.add.content;
-      console.log(tmpTitle)
-      console.log(tmpContent)
+
       if (!tmpContent || !tmpTitle) {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return;

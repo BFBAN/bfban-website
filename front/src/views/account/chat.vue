@@ -326,6 +326,7 @@ export default new BFBAN({
             let num = 0;
 
             switch (i.type) {
+              case 'fatal':
               case 'warn':
                 // 系统通知类
                 messageUser.forEach(t => {
@@ -334,13 +335,14 @@ export default new BFBAN({
 
                 if (num <= 0) {
                   messageUser.push({
-                    text: "@" + this.$i18n.t('profile.chat.types.' + i.type),
+                    text: "@" + this.$i18n.t('profile.chat.types.' + i.type + '.text'),
                     id: i.byUserId,
                     value: i.type,
                     type: i.type
                   });
                 }
                 break;
+              case 'info':
               case "reply":
               case "direct":
 
