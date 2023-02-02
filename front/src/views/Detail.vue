@@ -654,13 +654,15 @@
                         <!-- 禁言 -->
                         <template v-if="isSuper">
                           <Tooltip placement="top" v-if="!l.isMute">
-                            <Button size="small" @click.native="showMuteAlert(l.byUserId)">mute user</Button>
+                            <Button size="small" @click.native="showMuteAlert(l.byUserId)">
+                              <Icon type="md-mic" title="mute user" />
+                            </Button>
                             <div slot="content">
                               disable permission to reply
                             </div>
                           </Tooltip>
                           <Button size="small" v-else @click.native="muteUser('remove', l.byUserId)">
-                            remove mute
+                            <Icon type="md-mic-off" title="remove mute" />
                           </Button>
                           <Divider type="vertical"/>
                         </template>
@@ -1129,12 +1131,12 @@
           <FormItem>
             <Select v-model="mute.value">
               <Option v-for="item in [
-              {value: 0, text: '10mins'},
-              {value: 1, text: '1hr'},
-              {value: 2, text: '12hrs'},
-              {value: 3, text: '1day'},
-              {value: 4, text: '1week'},
-              {value: 5, text: '1month'}]"
+              {value: 0, text: '10 mins'},
+              {value: 1, text: '1 hr'},
+              {value: 2, text: '12 hrs'},
+              {value: 3, text: '1 day'},
+              {value: 4, text: '1 week'},
+              {value: 5, text: '1 month'}]"
                       :value="item.value"
                       :key="item.value">
                 {{ item.text }}
@@ -1173,7 +1175,7 @@ export default new BFBAN({
     return {
       util,
       mute: {
-        value: '0',
+        value: 0,
         id: '',
         isNoticeIntraStationUser: false,
         show: false

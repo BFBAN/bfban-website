@@ -270,6 +270,7 @@ export default {
      */
     loadFastReplyData() {
       const replyData = storage.get('customReply');
+
       if (replyData.code == -1) return;
 
       this.fastReply.content = this.fastReply.content.concat(replyData.data.value);

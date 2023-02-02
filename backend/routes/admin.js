@@ -16,6 +16,7 @@ import * as misc from "../lib/misc.js";
 import {sendRegisterVerify} from "../lib/mail.js";
 import logger from "../logger.js";
 import {siteEvent} from "../lib/bfban.js";
+import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 const router = express.Router();
 
@@ -508,9 +509,8 @@ router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "ad
             const itemUser = disableOperateUser.some(item => userData.privilege.includes(item))
 
             // Check User authority
-            if (!itemUser) {
-                return res.status(402).json({error: 1, code: 'muteUser.ban.userUnauthorized', message: `this user cannot operate`});
-            }
+            if (!itemUser) return res.status(402).json({error: 1, code: 'muteUser.ban.userUnauthorized', message: `this user cannot operate`});
+            if (req.user.id === id) res.status(402).json({error: 1, code: 'muteUser.ban.userUnauthorized', message: `You can't shut yourself down`});
 
             let doEditUserData = {};
             switch (req.body.data.type) {
