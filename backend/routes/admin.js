@@ -509,7 +509,7 @@ router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "ad
             const itemUser = disableOperateUser.some(item => userData.privilege.includes(item))
 
             // Check User authority
-            if (!itemUser) return res.status(402).json({error: 1, code: 'muteUser.ban.userUnauthorized', message: `this user cannot operate`});
+            if (itemUser) return res.status(402).json({error: 1, code: 'muteUser.ban.userUnauthorized', message: `this user cannot operate`});
             if (req.user.id === id) res.status(402).json({error: 1, code: 'muteUser.ban.userUnauthorized', message: `You can't shut yourself down`});
 
             let doEditUserData = {};
