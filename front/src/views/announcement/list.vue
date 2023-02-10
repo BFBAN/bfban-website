@@ -62,7 +62,7 @@ export default {
         },
         {
           name: this.$i18n.t("announcement.conduct.name"),
-          route: 'conduct',
+          route: 'conduct', 
           desc: {
             cn: this.$i18n.t("announcement.conduct.intro")
           },
