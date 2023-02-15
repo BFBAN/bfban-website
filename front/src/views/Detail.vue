@@ -933,7 +933,7 @@
                   </Col>
                   <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
                     <br class="desktop-hide">
-                    <Poptip trigger="hover" content="content" placement="left-start" padding="20" offset="8">
+                    <Poptip trigger="hover" content="content" placement="left-start" padding="30" offset="2">
                       <Button type="primary"
                               size="large"
                               :long="isMobile"
@@ -946,7 +946,7 @@
                           <Checkbox v-model="verify.isUpdateinformation">{{ $t('detail.info.updateButton') }}</Checkbox>
                         </div>
                         <div>
-                          <Checkbox v-model="verify.isSubscribeTrace">{{ $t('detail.subscribes.tracking') }}</Checkbox>
+                          <Checkbox v-model="verify.isSubscribeTrace" :disabled="!$store.state.configuration.subscribes">{{ $t('detail.subscribes.tracking') }}</Checkbox>
                         </div>
                       </div>
                     </Poptip>
