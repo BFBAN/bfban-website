@@ -608,7 +608,7 @@
         "createTime": "А что?",
         "updateTime": "инверсия времени обновления",
         "viewNum": "инверсия окружности",
-        "commentNum": "回复次数倒序"
+        "commentsNum": "回复次数倒序"
       }
     },
     "reportTime": "срок знакомства",

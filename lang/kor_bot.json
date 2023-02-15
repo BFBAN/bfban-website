@@ -608,7 +608,7 @@
         "createTime": "신고 시간 역순",
         "updateTime": "업데이트 시간 역순",
         "viewNum": "구경 횟수 역순",
-        "commentNum": "회신 횟수 역순"
+        "commentsNum": "회신 횟수 역순"
       }
     },
     "reportTime": "신고 시간 범위",
