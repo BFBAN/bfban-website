@@ -13,7 +13,6 @@ import ru from 'view-design/dist/locale/ru-RU';
 import zh from 'view-design/dist/locale/zh-CN';
 
 import en_bfban from './lang/en.json' // 英语
-import ja_bot_bfban from './lang/jp_bot.json' // 日语 - 机翻
 import ja_bfban from './lang/jp.json' // 日语
 import kor_bot_bfban from './lang/kor_bot.json' // 韩语 - 机翻
 // import tr_bot_bfban from './lang/tr_bot.json' // 土耳其 - 机翻
