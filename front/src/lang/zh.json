@@ -700,7 +700,7 @@
         "createTime": "举报时间倒序",
         "updateTime": "更新时间倒序",
         "viewNum": "围观次数倒序",
-        "commentNum": "回复次数倒序"
+        "commentsNum": "回复次数倒序"
       }
     },
     "reportTime": "举报时间范围",

@@ -608,7 +608,7 @@
         "createTime": "通報時間の順序変更",
         "updateTime": "更新時間の順序",
         "viewNum": "ルックアップ回数の順序変更",
-        "commentNum": "回復回数の順序"
+        "commentsNum": "回復回数の順序"
       }
     },
     "reportTime": "通報時間範囲",

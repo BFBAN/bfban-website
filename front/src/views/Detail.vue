@@ -655,14 +655,14 @@
                         <template v-if="isSuper">
                           <Tooltip placement="top" v-if="!l.isMute">
                             <Button size="small" @click.native="showMuteAlert(l.byUserId)">
-                              <Icon type="md-mic" title="mute user" />
+                              <Icon type="md-mic" title="mute user"/>
                             </Button>
                             <div slot="content">
                               disable permission to reply
                             </div>
                           </Tooltip>
                           <Button size="small" v-else @click.native="muteUser('remove', l.byUserId)">
-                            <Icon type="md-mic-off" title="remove mute" />
+                            <Icon type="md-mic-off" title="remove mute"/>
                           </Button>
                           <Divider type="vertical"/>
                         </template>
@@ -933,13 +933,24 @@
                   </Col>
                   <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
                     <br class="desktop-hide">
-                    <Button type="primary"
-                            size="large"
-                            :long="isMobile"
-                            v-voice-button :loading="verifySpinShow"
-                            @click.stop.prevent="onJudgement">
-                      {{ $t('basic.button.submit') }}
-                    </Button>
+                    <Poptip trigger="hover" content="content" placement="left-start" padding="20" offset="8">
+                      <Button type="primary"
+                              size="large"
+                              :long="isMobile"
+                              v-voice-button :loading="verifySpinShow"
+                              @click.stop.prevent="onJudgement">
+                        {{ $t('basic.button.submit') }}
+                      </Button>
+                      <div slot="content" align="left">
+                        <div>
+                          <Checkbox v-model="verify.isUpdateinformation">{{ $t('detail.info.updateButton') }}</Checkbox>
+                        </div>
+                        <div>
+                          <Checkbox v-model="verify.isSubscribeTrace">{{ $t('detail.subscribes.tracking') }}</Checkbox>
+                        </div>
+                      </div>
+                    </Poptip>
+
                   </Col>
                 </Row>
               </FormItem>
@@ -971,11 +982,11 @@
 
     <template v-if="!isFull">
       <Affix :top="100">
-        <Card dis-show class="detail-affix mobile-hide">
-          <a href="#up">
+        <Card dis-hover class="detail-affix mobile-hide">
+          <a href="javascript:void(0)" @click="onRollingNode(0)">
             <Icon type="md-arrow-round-up" size="30"/>
           </a>
-          <a href="#reply">
+          <a href="javascript:void(0)" v-if="isLogin" @click="onRollingComment">
             <Icon type="md-chatboxes" size="30"/>
           </a>
         </Card>
@@ -1211,6 +1222,8 @@ export default new BFBAN({
       },
 
       verify: {
+        isSubscribeTrace: false,
+        isUpdateinformation: false,
         status: 0,
         checkbox: [],
         choice: [],
@@ -1261,14 +1274,7 @@ export default new BFBAN({
       replyModal: false,
       updateUserInfospinShow: false,
       updateCheaterModal: false,
-      cheatMethodsGlossary: null,
-      customReply: {
-        list: [],
-        show: false,
-        addList: [],
-        addValue: [],
-        new: ''
-      }
+      cheatMethodsGlossary: null
     }
   },
   components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, HtmlWidget, PrivilegesTag, FastReply},
@@ -1620,8 +1626,23 @@ export default new BFBAN({
             urlOffsetTop.offsetParent.className = className;
         }, 10000);
 
-        document.documentElement.scrollTop = urlOffsetTop.offsetParent.offsetParent.offsetTop;
+        this.onRollingNode(urlOffsetTop.offsetParent.offsetParent.offsetTop);
       }
+    },
+    /**
+     * 滚动到评论区
+     */
+    onRollingComment () {
+      const commentNode = document.getElementById('reply');
+
+      this.onRollingNode(commentNode.offsetTop + commentNode.offsetHeight);
+    },
+    /**
+     * 滚动位置
+     * @param scrollTopNumber
+     */
+    onRollingNode (scrollTopNumber) {
+      document.documentElement.scrollTop = scrollTopNumber;
     },
     /**
      * 分享楼层
@@ -1696,6 +1717,15 @@ export default new BFBAN({
         return false;
       }
 
+      // 额外事件
+      if (this.verify.isUpdateinformation) {
+        this.updateCheaterInfo()
+      }
+      if (this.verify.isSubscribeTrace) {
+        this.onSubscribes()
+      }
+
+      // 判决处理
       this.verifySpinShow = true;
       this.http.post(api["player_judgement"], {
         data: {
@@ -1731,6 +1761,8 @@ export default new BFBAN({
         message.playSendVoice();
 
         this.verifySpinShow = false;
+        this.verify.isSubscribeTrace = !this.verify.isSubscribeTrace;
+        this.verify.isUpdateinformation = !this.verify.isUpdateinformation;
       })
     },
     /**
@@ -1798,6 +1830,8 @@ export default new BFBAN({
     /**
      * 回复
      * 1. 对举报的回复 2. 对回复的回复
+     * @param floor string 楼层
+     * @param userId string 回复id
      */
     handleReply(floor, userId) {
       this.reply.toFloor = floor === 'undefined' ? '' : floor;
@@ -1886,11 +1920,8 @@ export default new BFBAN({
     /**
      * 更新玩家信息
      * update cheater
-     * @param event $event
      */
-    updateCheaterInfo(event) {
-      waitForAction.call(event.target, 60);
-
+    updateCheaterInfo() {
       if (!this.$store.state.user) {
         this.$Message.error(this.$i18n.t('detail.messages.signIn'));
         return false;
@@ -1971,32 +2002,6 @@ export default new BFBAN({
 
 <style lang="less">
 @import "@/assets/css/icon.less";
-
-.customReply {
-  padding: 0 10px 20px;
-}
-
-.replyItem {
-  margin-bottom: 10px;
-}
-
-.addCustomReply {
-  display: flex;
-  margin-bottom: 10px;
-  margin-top: 10px;
-
-  textarea {
-    flex: 1;
-    border: 1px solid #ed4014;
-    border-radius: 4px;
-    padding: 10px;
-    height: 100px;
-  }
-}
-
-.addCustomReplyContent {
-  padding-top: 30px;
-}
 
 .timeline-time-line {
   padding-top: 10px !important;
@@ -2111,7 +2116,7 @@ export default new BFBAN({
 }
 
 .detail-affix {
-  position: fixed;
+  position: fixed !important;
   right: calc(50% - (960px / 2) - 85px) !important;
   top: 30% !important;;
   transform: translateY(-30%) !important;;
@@ -2123,8 +2128,9 @@ export default new BFBAN({
   }
 }
 
-@media screen and (min-width: 1180px) {
+@media screen and (max-width: 1080px) {
   .detail-affix {
+    opacity: .2;
     display: none !important;
   }
 }

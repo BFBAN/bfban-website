@@ -286,7 +286,7 @@ export default new BFBAN({
         {value: "createTime",},
         {value: "updateTime",},
         {value: "viewNum",},
-        {value: "commentNum",},
+        {value: "commentsNum",},
       ],
       sortByValue: "createTime",
       cheaterStatus: null,

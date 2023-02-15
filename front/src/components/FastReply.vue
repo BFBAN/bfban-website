@@ -54,14 +54,16 @@
               <Row>
                 <Col flex="1">
                   <b>{{ i.text }}</b>
+                  <template v-if="i.language">
+                    [{{ i.language }}]
+                  </template>
                 </Col>
                 <Col>
                   <template v-if="i.updateTime === 0">
-                    创建时间:
                     <Time :time="i.creationTime"></Time>
                   </template>
                   <template v-else>
-                    更新时间:
+                    {{ $t('list.colums.updateTime') }}:
                     <Time :time="i.updateTime"></Time>
                   </template>
                   <Divider type="vertical"></Divider>
@@ -199,6 +201,22 @@ export default {
   watch: {
     'fastReply.selected': function () {
       this.$emit("change", this.fastReply.selected.map(i => i));
+    },
+    '$i18n.locale': function () {
+      this.fastReply.content = [{
+        text: 'stats',
+        template: true,
+        content: this.$i18n.t('detail.info.fastReplies.stats')
+      }, {
+        text: 'evidencePic',
+        template: true,
+        content: this.$i18n.t('detail.info.fastReplies.evidencePic')
+      }, {
+        text: 'evidenceVid',
+        template: true,
+        content: this.$i18n.t('detail.info.fastReplies.evidenceVid')
+      }];
+      this.loadFastReplyData();
     }
   },
   methods: {
@@ -252,6 +270,7 @@ export default {
           this.fastReply.content[index].text = temporaryEditorData.text;
           this.fastReply.content[index].content = temporaryEditorData.content;
           this.fastReply.content[index].updateTime = new Date().getTime();
+          this.fastReply.content[index].language = this.$i18n.locale;
         }
       }
 
@@ -313,6 +332,7 @@ export default {
         template: false,
         creationTime: new Date().getTime(),
         updateTime: 0,
+        language: this.$i18n.locale,
         text: tmpTitle,
         content: tmpContent
       });
