@@ -1,16 +1,20 @@
 @import '~view-design/src/styles/index.less';
 
+@import "page/body";
 @import "page/html";
 @import "page/cropper";
 
 @import "../quill/quill.bfban";
 
-#app * {
-  -webkit-filter: grayscale(100%);
-  -moz-filter: grayscale(100%);
-  -ms-filter: gray(100%);
-  -o-filter: grayscale(100%);
-  filter: grayscale(100%);
-  filter: progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);
-  filter: grayscale(1);
+#app {
+  // Don't change everything
+  p, b, card, i, icon, a, span, label, input, textarea, checkbox, radio, form {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: gray(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);
+    filter: grayscale(1);
+  }
 }

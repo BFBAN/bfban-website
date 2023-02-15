@@ -740,11 +740,18 @@
   "search": {
     "title": "检索",
     "describe": "从BFBAN数据库检索ID",
-    "placeholder": "搜索点什么呢,啊,就是您了！",
+    "placeholder": "你想搜索什么?",
     "collectionHint": "收藏此页面 (Ctrl+D or Command+D)",
-    "scope": {
-      "history": "过去的名字",
-      "current": "现在名称"
+    "notUserExist": "喵呜~，在数据库里找不到此玩家",
+    "tabs": {
+      "player": "案件",
+      "user": "用户"
+    },
+    "sort": {
+      "default": "默认",
+      "latest": "最新",
+      "mostViewed": "观看最高",
+      "mostComments": "评论最多"
     }
   },
   "cheatMethods": {

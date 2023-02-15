@@ -23,7 +23,7 @@ const store = new Vuex.Store({
       autoUpdatePlayerList: false,
       desktopNotifiction: false,
       footerBar: false,
-      voice: false,
+      voice: true,
       detailLeftAppealPanel: true,
     },
 

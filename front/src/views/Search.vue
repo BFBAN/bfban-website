@@ -11,17 +11,18 @@
         </Col>
       </Row>
       <br>
+      <div class="styles_herosection user-select-none">
+        <div class="styles_bg"></div>
+        <img class="styles_bg_img" src="../assets/images/hero-grid-overlay.png"/>
+      </div>
+      <div
+          :class="`search-content ${searchVal ? 'search-content-mini' : ''}`">
+        <Row type="flex" justify="center" :gutter="20" style="width: 100%">
+          <Col :xs="{span: 24}" :sm="{span: 18}" :md="{span: 18}">
 
-      <div :class="`search-content ${cheaters.length > 0 ? 'search-content-mini' : ''}`">
-        <Row type="flex" justify="center" :gutter="20" style="width: 100%;">
-          <Col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 7}">
-            <Select v-model="searchScopeValue" size="large" class="search-input-show">
-              <Icon type="ios-funnel" slot="prefix" style="margin-left: 10px; margin-right: 5px; opacity: .6"/>
-              <Option v-for="i in searchScope" :value="i" :key="i">{{ $t('search.scope.' + i) }}</Option>
-            </Select>
-          </Col>
-          <Col class="desktop-hide" :xs="{span: 24}">&thinsp;</Col>
-          <Col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}">
+            <!-- egg 📢 -->
+            <div class="user-select-none search-egg">🦖</div>
+
             <div class="search-input search-input-show ivu-input ivu-input-large">
               <Row :gutter="10">
                 <Col flex="1">
@@ -41,10 +42,12 @@
                              :key="index">
                           <Tag stype="border"
                                type="dot"
+                               :color="i.count > 0 ? 'success' : 'default'"
                                checkable
                                closable
                                @on-change="handleSearchHistoryClickTag(index)"
-                               @on-close="handleSearchHistoryClose(index)">{{ i || '' }}
+                               @on-close="handleSearchHistoryClose(index)">
+                            {{ $t('search.tabs.' + i.type) || '' }}:{{ i.keyword }}
                           </Tag>
                         </Col>
                       </Row>
@@ -75,7 +78,7 @@
             </div>
           </Col>
         </Row>
-        <Row type="flex" justify="center" align="middle" class="checkboxGroup" v-if="cheaters.length <= 0">
+        <Row type="flex" justify="center" align="middle" class="checkboxGroup" v-if="searchVal.length <= 0">
           <Col :xs="{span: 24}" :lg="{span: 6}" align="center">
             <Icon type="md-alert"/>
             {{ $t("search.describe") }}
@@ -89,24 +92,171 @@
         </Row>
       </div>
 
-      <div v-if="cheaters.length !== 0">
-        <List border class="content">
-          <ListItem v-for="(cheater, index) in cheaters" :key="index"
-                    @click.native="$router.push({name: 'player', params: {ouid: cheater.originPersonaId}})">
-            <ListItemMeta
-                :avatar="cheater.avatarLink"
-                :title="cheater.currentName || cheater.originName"
-                :description="`${cheater.originUserId ? 'uid:' + cheater.originPersonaId : ''} ${cheater.historyName ? $t('search.scope.history') + ':' + cheater.historyName: ''}`"/>
-            <router-link :to="{name: 'player', params: {ouid: `${cheater.originPersonaId}`}}" slot="action">
-              <div>
-                <Icon type="ios-eye" size="30"/>
-              </div>
-            </router-link>
-          </ListItem>
+      <Tabs v-model="searchTypeValue" @on-click="onTabClick" v-if="searchVal">
+        <div slot="extra">
+          <Button size="small" @click="handleSearch">
+            <Icon type="md-refresh" :class="modalSpinShow ? 'spin-icon-load' : ''"/>
+          </Button>
+        </div>
 
-          <Spin size="large" fix v-show="modalSpinShow"></Spin>
-        </List>
-      </div>
+        <TabPane name="player" :label="$t('search.tabs.player')"></TabPane>
+        <TabPane name="user" :label="$t('search.tabs.user')"></TabPane>
+      </Tabs>
+
+      <template v-if="searchTypeValue == 'player'">
+        <Row>
+          <Col flex="1">
+            <RadioGroup v-model="searchGameSort" type="button" @on-change="handleSearch">
+              <Radio label="default">{{ $t('search.sort.default') }}</Radio>
+              <Radio label="latest">{{ $t('search.sort.latest') }}</Radio>
+              <Radio label="mostViewed">{{ $t('search.sort.mostViewed') }}</Radio>
+              <Radio label="mostComments">{{ $t('search.sort.mostComments') }}</Radio>
+            </RadioGroup>
+          </Col>
+          <Col>
+            <Select v-model="searchGameValue" :transfer="true" class="search-input-show" @on-change="handleSearch">
+              <Icon type="ios-funnel" slot="prefix" style="margin-left: 10px; margin-right: 5px; opacity: .6"/>
+              <Option v-for="i in searchGameList" :value="i.value" :key="i.value">
+                {{ $t('basic.games.' + i.value) }}
+              </Option>
+            </Select>
+          </Col>
+        </Row>
+        <Card dis-hover class="list">
+          <div v-for="(d, d_index) in result.player" :key="d_index" class="item-card" v-voice-button>
+            <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
+              <Card dis-hover :padding="10">
+                <Row :gutter="10" type="flex">
+                  <Col :xs="{span: 5, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
+                    <!-- 头像 S -->
+                    <Avatar :src="d.avatarLink"
+                            alt="avatar"
+                            size="55"
+                            v-if="d.avatarLink">
+                    </Avatar>
+                    <template v-else>
+                      <Avatar icon="ios-person"
+                              size="55"
+                              style="background-color: rgba(255,0,0,0.37)"></Avatar>
+                    </template>
+                    <!-- 头像 E -->
+                  </Col>
+                  <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
+                    <div style="display: flex; flex-direction: column;">
+                      <Tooltip :content="$t('list.colums.playerId')">
+                        <h2>
+                          <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}">
+                            {{ d.historyName }}
+                          </router-link>
+                        </h2>
+                      </Tooltip>
+                    </div>
+
+                    <div>
+                      {{ $t('list.colums.reportTime') }}
+                      <Time v-if="d.createTime" :time="d.createTime"/>
+                      <Divider type="vertical"/>
+                      {{ $t('list.colums.updateTime') }}
+                      <Time v-if="d.updateTime" :time="d.updateTime"/>
+                    </div>
+                  </Col>
+                  <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}" class="mobile-hide">
+                    <Row type="flex" justify="end" align="middle" style="height: 100%">
+                      <Col flex="auto" align="right" class="item-text">
+                        <span>{{ d.viewNum || 0 }}</span>
+                        <Icon type="md-eye" size="17" class="item-icon"/>
+                      </Col>
+                      <Col flex="auto" align="right" class="item-text">
+                        <span>{{ d.commentsNum || 0 }}</span>
+                        <Icon type="md-chatboxes" size="17" class="item-icon"/>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 1, push: 0,pull:0}"
+                       align="center"
+                       class="mobile-hide">
+                    <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge>
+          </div>
+
+          <Page class="page"
+                size="small"
+                show-sizer
+                show-total
+                show-elevator
+                @on-change="handlePageChange"
+                @on-page-size-change="handlePageSizeChange"
+                :page-size="limit.player"
+                :current="skip.player"
+                :total="total.player"/>
+        </Card>
+      </template>
+      <template v-if="searchTypeValue == 'user'">
+        <Row>
+          <Col flex="1">
+            <RadioGroup v-model="searchUserSort" type="button" @on-change="handleSearch">
+              <Radio label="default">{{ $t('search.sort.default') }}</Radio>
+              <Radio label="joinedAt">{{ $t("account.joinedAt") }}</Radio>
+              <Radio label="lastOnlineTime">{{ $t("account.lastOnlineTime") }}</Radio>
+            </RadioGroup>
+          </Col>
+        </Row>
+        <Card dis-hover class="list" v-if="result.user.length !== 0">
+          <div v-for="(user, user_index) in result.user" :key="user_index" class="item-card" v-voice-button>
+            <Card dis-hover :padding="10" @click.native="$router.push({path: '/account/' + user.dbId})">
+              <Row :gutter="10" type="flex">
+                <Col :xs="{span: 5, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
+                  <!-- 头像 S -->
+                  <Avatar :src="user.userAvatar"
+                          alt="avatar"
+                          size="55"
+                          v-if="user.userAvatar">
+                  </Avatar>
+                  <Avatar alt="avatar"
+                          size="55"
+                          v-else> {{ user.username }}
+                  </Avatar>
+                  <!-- 头像 E -->
+                </Col>
+                <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
+                  <div style="display: flex; flex-direction: column;">
+                    <Tooltip :content="$t('list.colums.playerId')">
+                      <h2>
+                        {{ user.username }}
+                      </h2>
+                    </Tooltip>
+                  </div>
+
+                  <div>
+                    {{ $t("account.joinedAt") }}
+                    <Time v-if="user.joinTime" :time="user.joinTime"/>
+                    <Divider type="vertical"/>
+                    {{ $t("account.lastOnlineTime") }}
+                    <Time v-if="user.signoutTime" :time="user.signoutTime"/>
+                  </div>
+                </Col>
+                <Col :xs="{span: 4, push: 0,pull:0}" align="right">
+                  <PrivilegesTag :data="user.privilege"></PrivilegesTag>
+                </Col>
+              </Row>
+            </Card>
+          </div>
+
+          <Page class="page"
+                size="small"
+                show-sizer
+                show-total
+                show-elevator
+                @on-change="handlePageChange"
+                @on-page-size-change="handlePageSizeChange"
+                :page-size="limit.user"
+                :current="skip.user"
+                :total="total.user"/>
+        </Card>
+      </template>
     </div>
   </div>
 </template>
@@ -114,6 +264,9 @@
 <script>
 import BFBAN from "../assets/js/bfban";
 import OcrWidget from "@/components/OcrWidget";
+import PrivilegesTag from "@/components/PrivilegesTag";
+
+import game from '../../public/conf/gameName.json';
 
 import {api, http, storage, time} from "../assets/js";
 
@@ -121,22 +274,45 @@ export default new BFBAN({
   name: "search",
   data() {
     return {
+      modalSpinShow: false,
+      // 搜索框+搜索历史
       searchVal: '',
       searchHistory: {
         list: []
       },
-      modalSpinShow: false,
-      searchScope: ['current', 'history'],
-      searchScopeValue: 'current',
-      cheaters: []
+      // 搜索方式, player 搜索案例玩家，user 搜索站内用户
+      searchTypes: ['player', 'user'],
+      searchTypeValue: 'player',
+      // 搜索游戏，在searchTypes字段为player时使用
+      searchGameList: [{value: 'all'}].concat(game.child),
+      searchGameValue: 'all',
+      searchGameSort: 'default',
+      searchUserSort: 'default',
+
+      result: {
+        player: [],
+        user: []
+      },
+      skip: {
+        player: 1,
+        user: 1,
+      },
+      limit: {
+        player: 40,
+        user: 20,
+      },
+      total: {
+        player: 0,
+        user: 0,
+      }
     }
   },
-  components: {OcrWidget},
+  components: {OcrWidget, PrivilegesTag},
   created() {
-    const {s, type} = this.$route.query;
-    this.searchScopeValue = type || this.searchScope[0];
-    this.searchVal = s || '';
-
+    const {keyword, type, game} = this.$route.query;
+    this.searchVal = keyword || '';
+    this.searchTypeValue = type || 'player';
+    this.searchGameValue = game || 'all'
     this.handleSearch();
     this.getSearchHistory();
   },
@@ -168,8 +344,16 @@ export default new BFBAN({
     handleSearchHistoryClickTag(index) {
       if (this.modalSpinShow) return;
 
-      this.searchVal = this.searchHistory.list[index];
-
+      this.searchVal = this.searchHistory.list[index].keyword;
+      this.searchTypeValue = this.searchHistory.list[index].type;
+      this.handleSearch();
+    },
+    handlePageChange(num) {
+      this.skip[this.searchTypeValue] = num;
+      this.handleSearch();
+    },
+    handlePageSizeChange(num) {
+      this.limit[this.searchTypeValue] = num;
       this.handleSearch();
     },
     /**
@@ -178,7 +362,14 @@ export default new BFBAN({
      */
     onOcrOutput(data) {
       this.searchVal = data.value;
-
+      this.handleSearch();
+    },
+    /**
+     * tabs 标签单击触发
+     * @param tagName
+     */
+    onTabClick(tagName) {
+      this.searchTypeValue = tagName;
       this.handleSearch();
     },
     /**
@@ -186,32 +377,62 @@ export default new BFBAN({
      */
     handleSearch() {
       const that = this;
-      const val = this.searchVal.trim();
+      const keyword = this.searchVal.trim();
+      const data = Object.assign({
+            keyword,
+            type: this.searchTypeValue,
+          },
+          this.searchTypeValue == 'player' ? {
+            game: this.searchGameValue,
+            gameSort: this.searchGameSort,
+            skip: (this.skip.player - 1) * this.limit.player,
+            limit: this.limit.player,
+          } : {
+            skip: (this.skip.user - 1) * this.limit.user,
+            limit: this.limit.user,
+            gameSort: this.searchUserSort,
+          })
 
-      if (val == '' || val.length <= 2 || !this.searchScopeValue || this.modalSpinShow) {
+      // restriction
+      if (keyword == '' || keyword.length <= 2 || this.modalSpinShow) {
         return;
       }
 
       this.modalSpinShow = true;
-
+      this.$router.push({
+        name: this.$router.name,
+        query: data
+      });
+      data.param = data.keyword;
       http.get(api["search"], {
-        params: {
-          param: val,
-          scope: this.searchScopeValue,
-        }
+        params: data
       }).then(res => {
-
-        let hisArr = Array.from(new Set(that.searchHistory.list.concat([val])))
-        that.setSearchHistoryValue(hisArr);
-        that.searchHistory.list = hisArr;
-
         const d = res.data;
+        let notRepeat = false;
+        for (let index = 0; index < that.searchHistory.list.length; index++) {
+          let i = that.searchHistory.list[index];
+          if (i.keyword == keyword && i.type == this.searchTypeValue) {
+            notRepeat = true;
+          }
+        }
+        if (!notRepeat) {
+          that.searchHistory.list.push({
+            keyword,
+            type: this.searchTypeValue,
+            count: d.data.length || 0
+          })
+        }
+
+        that.setSearchHistoryValue(this.searchHistory.list);
+        // that.searchHistory.list = hisArr;
 
         if (d.success === 1) {
-          this.cheaters = d.data;
+          this.result[this.searchTypeValue] = d.data;
+          this.total[this.searchTypeValue] = d.total;
 
           if (d.data.length <= 0) {
-            this.$Message.info('The player is not found in the database')
+            this.$Message.info(this.$i18n.t('search.notUserExist'))
+            return;
           }
           return;
         }
@@ -226,6 +447,7 @@ export default new BFBAN({
 </script>
 
 <style scoped lang="less">
+@import "./src/assets/css/radio.less";
 @import "@/assets/css/icon.less";
 
 .search-background {
@@ -268,6 +490,38 @@ export default new BFBAN({
 
   .search-input {
     width: 100% !important;
+  }
+}
+
+.search-egg {
+  position: absolute;
+  top: -22px;
+  right: 80px;
+  font-size: 20px;
+  transition: all .25s;
+}
+
+.search-egg:hover,
+.search-egg:active {
+  top: -12px;
+}
+
+.list {
+  margin: 20px 0 0 0;
+  position: relative;
+
+  .item-card {
+    margin-bottom: 10px;
+  }
+
+  .item-text {
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .item-icon {
+    margin: 0 20px 0 5px;
   }
 }
 </style>

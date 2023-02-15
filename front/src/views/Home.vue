@@ -1,7 +1,12 @@
 <template>
   <div>
     <div class="container">
-      <!-- <input type="file" @change="onChange" /> -->
+
+      <div class="styles_herosection user-select-none">
+        <div class="styles_bg"></div>
+        <img class="styles_bg_img" src="../assets/images/hero-grid-overlay.png"/>
+      </div>
+
       <div class="content">
         <div class="ivu-alert-with-banner home-banner">
           <Row :gutter="30">
@@ -51,11 +56,13 @@
             </Col>
             <Col class="mobile-hide" :lg="{span: 13, push: 1}" type="flex" align="center" justify="center"
                  style="display: flex; justify-content: center; align-items: center">
+
               <Card dis-hover :padding="0" v-if="bannerImage">
                 <img :src="bannerImage"
                      @click="openBannerWindowBox"
                      width="100%" class="ivu-row-top" style="margin-bottom: -10px;border-radius: 5px;">
               </Card>
+
             </Col>
           </Row>
         </div>
