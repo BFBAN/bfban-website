@@ -18,13 +18,13 @@ export default {
   components: { item },
   data() {
     return {
-      config: []
     }
   },
-  created() {
-    const { route, date } = this.$route.query
-    const data = require(`./data/${route}/${date}.json`)
-    this.config = data
+  computed: {
+    config() {
+      const { route, date } = this.$route.query
+      return require(`./data/${this.$i18n.locale == "zh-CN" ? "CN" : "US"}/${route}/${date}.json`)
+    }
   },
 }
 </script>
