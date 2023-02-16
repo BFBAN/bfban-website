@@ -742,10 +742,11 @@
     "describe": "从BFBAN数据库检索ID",
     "placeholder": "你想搜索什么?",
     "collectionHint": "收藏此页面 (Ctrl+D or Command+D)",
-    "notUserExist": "喵呜~，在数据库里找不到此玩家",
+    "notUserExist": "喵呜~，在数据库里找不到此信息",
     "tabs": {
       "player": "案件",
-      "user": "用户"
+      "user": "用户",
+      "comment": "评论"
     },
     "sort": {
       "default": "默认",

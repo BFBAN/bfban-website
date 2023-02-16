@@ -16,7 +16,7 @@
         <img class="styles_bg_img" src="../assets/images/hero-grid-overlay.png"/>
       </div>
       <div
-          :class="`search-content ${searchVal ? 'search-content-mini' : ''}`">
+          :class="`search-content ${(searchVal.length > 3 && searchPosting) ? 'search-content-mini' : ''}`">
         <Row type="flex" justify="center" :gutter="20" style="width: 100%">
           <Col :xs="{span: 24}" :sm="{span: 18}" :md="{span: 18}">
 
@@ -27,13 +27,19 @@
               <Row :gutter="10">
                 <Col flex="1">
                   <Dropdown style="width: 100%">
-                    <Input
-                        size="small"
-                        v-model="searchVal"
-                        :border="false"
-                        :placeholder="$t('search.placeholder')"
-                        @on-search="handleSearch">
-                    </Input>
+                    <Form :inline="false" style="margin-top: -5px">
+                      <FormItem :hide-required-mark="false" :show-message="false" :label-width="0"
+                                :rules="{type: 'string',min: 2,max: 100,trigger: 'change'}">
+                        <Input
+                            size="small"
+                            clearable
+                            v-model="searchVal"
+                            :border="false"
+                            :placeholder="$t('search.placeholder')"
+                            @on-search="handleSearch">
+                        </Input>
+                      </FormItem>
+                    </Form>
 
                     <!-- Search history S -->
                     <div transfer slot="list">
@@ -75,10 +81,11 @@
                   </Button>
                 </Col>
               </Row>
+
             </div>
           </Col>
         </Row>
-        <Row type="flex" justify="center" align="middle" class="checkboxGroup" v-if="searchVal.length <= 0">
+        <Row type="flex" justify="center" align="middle" class="checkboxGroup">
           <Col :xs="{span: 24}" :lg="{span: 6}" align="center">
             <Icon type="md-alert"/>
             {{ $t("search.describe") }}
@@ -92,171 +99,223 @@
         </Row>
       </div>
 
-      <Tabs v-model="searchTypeValue" @on-click="onTabClick" v-if="searchVal">
-        <div slot="extra">
-          <Button size="small" @click="handleSearch">
-            <Icon type="md-refresh" :class="modalSpinShow ? 'spin-icon-load' : ''"/>
-          </Button>
-        </div>
+      <template v-if="searchVal.length >= 3 && searchPosting">
+        <Tabs v-model="searchTypeValue" @on-click="onTabClick">
+          <div slot="extra">
+            <Button size="small" @click="handleSearch">
+              <Icon type="md-refresh" :class="modalSpinShow ? 'spin-icon-load' : ''"/>
+            </Button>
+          </div>
 
-        <TabPane name="player" :label="$t('search.tabs.player')"></TabPane>
-        <TabPane name="user" :label="$t('search.tabs.user')"></TabPane>
-      </Tabs>
+          <TabPane name="player" :label="$t('search.tabs.player')"></TabPane>
+          <TabPane name="user" :label="$t('search.tabs.user')"></TabPane>
+          <TabPane name="comment" :label="$t('search.tabs.comment')"></TabPane>
+        </Tabs>
 
-      <template v-if="searchTypeValue == 'player'">
-        <Row>
-          <Col flex="1">
-            <RadioGroup v-model="searchGameSort" type="button" @on-change="handleSearch">
-              <Radio label="default">{{ $t('search.sort.default') }}</Radio>
-              <Radio label="latest">{{ $t('search.sort.latest') }}</Radio>
-              <Radio label="mostViewed">{{ $t('search.sort.mostViewed') }}</Radio>
-              <Radio label="mostComments">{{ $t('search.sort.mostComments') }}</Radio>
-            </RadioGroup>
-          </Col>
-          <Col>
-            <Select v-model="searchGameValue" :transfer="true" class="search-input-show" @on-change="handleSearch">
-              <Icon type="ios-funnel" slot="prefix" style="margin-left: 10px; margin-right: 5px; opacity: .6"/>
-              <Option v-for="i in searchGameList" :value="i.value" :key="i.value">
-                {{ $t('basic.games.' + i.value) }}
-              </Option>
-            </Select>
-          </Col>
-        </Row>
-        <Card dis-hover class="list">
-          <div v-for="(d, d_index) in result.player" :key="d_index" class="item-card" v-voice-button>
-            <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
-              <Card dis-hover :padding="10">
+        <template v-if="searchTypeValue == 'player'">
+          <Row>
+            <Col flex="1">
+              <RadioGroup v-model="searchGameSort" type="button" @on-change="handleSearch">
+                <Radio label="default">{{ $t('search.sort.default') }}</Radio>
+                <Radio label="latest">{{ $t('search.sort.latest') }}</Radio>
+                <Radio label="mostViewed">{{ $t('search.sort.mostViewed') }}</Radio>
+                <Radio label="mostComments">{{ $t('search.sort.mostComments') }}</Radio>
+              </RadioGroup>
+            </Col>
+            <Col>
+              <Select v-model="searchGameValue" :transfer="true" class="search-input-show" @on-change="handleSearch">
+                <Icon type="ios-funnel" slot="prefix" style="margin-left: 10px; margin-right: 5px; opacity: .6"/>
+                <Option v-for="i in searchGameList" :value="i.value" :key="i.value">
+                  {{ $t('basic.games.' + i.value) }}
+                </Option>
+              </Select>
+            </Col>
+          </Row>
+          <Card dis-hover class="list" v-if="result.player.length > 0">
+            <div v-for="(d, d_index) in result.player" :key="d_index" class="item-card" v-voice-button>
+              <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
+                <Card dis-hover :padding="10">
+                  <Row :gutter="10" type="flex">
+                    <Col :xs="{span: 5, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
+                      <!-- 头像 S -->
+                      <Avatar :src="d.avatarLink"
+                              alt="avatar"
+                              size="55"
+                              v-if="d.avatarLink">
+                      </Avatar>
+                      <template v-else>
+                        <Avatar icon="ios-person"
+                                size="55"
+                                style="background-color: rgba(255,0,0,0.37)"></Avatar>
+                      </template>
+                      <!-- 头像 E -->
+                    </Col>
+                    <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
+                      <div style="display: flex; flex-direction: column;">
+                        <Tooltip :content="$t('list.colums.playerId')">
+                          <h2>
+                            <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}">
+                              {{ d.historyName }}
+                            </router-link>
+                          </h2>
+                        </Tooltip>
+                      </div>
+
+                      <div>
+                        {{ $t('list.colums.reportTime') }}
+                        <Time v-if="d.createTime" :time="d.createTime"/>
+                        <Divider type="vertical"/>
+                        {{ $t('list.colums.updateTime') }}
+                        <Time v-if="d.updateTime" :time="d.updateTime"/>
+                      </div>
+                    </Col>
+                    <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}" class="mobile-hide">
+                      <Row type="flex" justify="end" align="middle" style="height: 100%">
+                        <Col flex="auto" align="right" class="item-text">
+                          <span>{{ d.viewNum || 0 }}</span>
+                          <Icon type="md-eye" size="17" class="item-icon"/>
+                        </Col>
+                        <Col flex="auto" align="right" class="item-text">
+                          <span>{{ d.commentsNum || 0 }}</span>
+                          <Icon type="md-chatboxes" size="17" class="item-icon"/>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 1, push: 0,pull:0}"
+                         align="center"
+                         class="mobile-hide">
+                      <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
+                    </Col>
+                  </Row>
+                </Card>
+              </Badge>
+            </div>
+
+            <Page class="page"
+                  size="small"
+                  show-sizer
+                  show-total
+                  show-elevator
+                  @on-change="handlePageChange"
+                  @on-page-size-change="handlePageSizeChange"
+                  :page-size="limit.player"
+                  :current="skip.player"
+                  :total="total.player"/>
+          </Card>
+          <Card dis-hover :padding="10" v-else align="center">
+            <Empty></Empty>
+          </Card>
+        </template>
+        <template v-if="searchTypeValue == 'user'">
+          <Row>
+            <Col flex="1">
+              <RadioGroup v-model="searchUserSort" type="button" @on-change="handleSearch">
+                <Radio label="default">{{ $t('search.sort.default') }}</Radio>
+                <Radio label="joinedAt">{{ $t("account.joinedAt") }}</Radio>
+                <Radio label="lastOnlineTime">{{ $t("account.lastOnlineTime") }}</Radio>
+              </RadioGroup>
+            </Col>
+          </Row>
+          <Card dis-hover class="list" v-if="result.user.length > 0">
+            <div v-for="(user, user_index) in result.user" :key="user_index" class="item-card" v-voice-button>
+              <Card dis-hover :padding="10" @click.native="$router.push({path: '/account/' + user.dbId})">
                 <Row :gutter="10" type="flex">
                   <Col :xs="{span: 5, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
                     <!-- 头像 S -->
-                    <Avatar :src="d.avatarLink"
+                    <Avatar :src="user.userAvatar"
                             alt="avatar"
                             size="55"
-                            v-if="d.avatarLink">
+                            v-if="user.userAvatar">
                     </Avatar>
-                    <template v-else>
-                      <Avatar icon="ios-person"
-                              size="55"
-                              style="background-color: rgba(255,0,0,0.37)"></Avatar>
-                    </template>
+                    <Avatar alt="avatar"
+                            size="55"
+                            v-else> {{ user.username }}
+                    </Avatar>
                     <!-- 头像 E -->
                   </Col>
                   <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
                     <div style="display: flex; flex-direction: column;">
                       <Tooltip :content="$t('list.colums.playerId')">
                         <h2>
-                          <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}">
-                            {{ d.historyName }}
-                          </router-link>
+                          {{ user.username }}
                         </h2>
                       </Tooltip>
                     </div>
 
                     <div>
-                      {{ $t('list.colums.reportTime') }}
-                      <Time v-if="d.createTime" :time="d.createTime"/>
+                      {{ $t("account.joinedAt") }}
+                      <Time v-if="user.joinTime" :time="user.joinTime"/>
                       <Divider type="vertical"/>
-                      {{ $t('list.colums.updateTime') }}
-                      <Time v-if="d.updateTime" :time="d.updateTime"/>
+                      {{ $t("account.lastOnlineTime") }}
+                      <Time v-if="user.signoutTime" :time="user.signoutTime"/>
                     </div>
                   </Col>
-                  <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}" class="mobile-hide">
-                    <Row type="flex" justify="end" align="middle" style="height: 100%">
-                      <Col flex="auto" align="right" class="item-text">
-                        <span>{{ d.viewNum || 0 }}</span>
-                        <Icon type="md-eye" size="17" class="item-icon"/>
-                      </Col>
-                      <Col flex="auto" align="right" class="item-text">
-                        <span>{{ d.commentsNum || 0 }}</span>
-                        <Icon type="md-chatboxes" size="17" class="item-icon"/>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 1, push: 0,pull:0}"
-                       align="center"
-                       class="mobile-hide">
-                    <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
+                  <Col :xs="{span: 4, push: 0,pull:0}" align="right">
+                    <PrivilegesTag :data="user.privilege"></PrivilegesTag>
                   </Col>
                 </Row>
               </Card>
-            </Badge>
-          </div>
+            </div>
 
-          <Page class="page"
-                size="small"
-                show-sizer
-                show-total
-                show-elevator
-                @on-change="handlePageChange"
-                @on-page-size-change="handlePageSizeChange"
-                :page-size="limit.player"
-                :current="skip.player"
-                :total="total.player"/>
-        </Card>
+            <Page class="page"
+                  size="small"
+                  show-sizer
+                  show-total
+                  show-elevator
+                  @on-change="handlePageChange"
+                  @on-page-size-change="handlePageSizeChange"
+                  :page-size="limit.user"
+                  :current="skip.user"
+                  :total="total.user"/>
+          </Card>
+          <Card dis-hover :padding="10" v-else align="center">
+            <Empty></Empty>
+          </Card>
+        </template>
+        <template v-if="searchTypeValue == 'comment'">
+          <Card dis-hover v-if="result.comment.length > 0">
+            <div v-for="(comment, comment_index) in result.comment" :key="comment_index" class="timeline-content">
+              <div class="timeline-time">
+                <Row>
+                  <Col flex="1">
+                    <router-link :to="{name: 'account', params: {uId: `${comment.byUserId}`}}">
+                      <BusinessCard :id="comment.byUserId">
+                        <u><b>{{ comment.username || comment.byUserId }}</b></u>
+                      </BusinessCard>
+                    </router-link>
+
+                    {{ $t('basic.button.reply') }}
+                  </Col>
+                  <Col align="right">
+                    <Time v-if="comment.createTime" :time="comment.createTime" type="datetime"></Time>
+                  </Col>
+                </Row>
+              </div>
+              <Card dis-hover :padding="0"
+                    class="item-card" v-voice-button>
+
+                <HtmlWidget :html="comment.content"></HtmlWidget>
+              </Card>
+              <br>
+            </div>
+
+            <Page class="page"
+                  size="small"
+                  show-sizer
+                  show-total
+                  show-elevator
+                  @on-change="handlePageChange"
+                  @on-page-size-change="handlePageSizeChange"
+                  :page-size="limit.comment"
+                  :current="skip.comment"
+                  :total="total.comment"/>
+          </Card>
+          <Card dis-hover :padding="10" v-else align="center">
+            <Empty></Empty>
+          </Card>
+        </template>
       </template>
-      <template v-if="searchTypeValue == 'user'">
-        <Row>
-          <Col flex="1">
-            <RadioGroup v-model="searchUserSort" type="button" @on-change="handleSearch">
-              <Radio label="default">{{ $t('search.sort.default') }}</Radio>
-              <Radio label="joinedAt">{{ $t("account.joinedAt") }}</Radio>
-              <Radio label="lastOnlineTime">{{ $t("account.lastOnlineTime") }}</Radio>
-            </RadioGroup>
-          </Col>
-        </Row>
-        <Card dis-hover class="list" v-if="result.user.length !== 0">
-          <div v-for="(user, user_index) in result.user" :key="user_index" class="item-card" v-voice-button>
-            <Card dis-hover :padding="10" @click.native="$router.push({path: '/account/' + user.dbId})">
-              <Row :gutter="10" type="flex">
-                <Col :xs="{span: 5, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
-                  <!-- 头像 S -->
-                  <Avatar :src="user.userAvatar"
-                          alt="avatar"
-                          size="55"
-                          v-if="user.userAvatar">
-                  </Avatar>
-                  <Avatar alt="avatar"
-                          size="55"
-                          v-else> {{ user.username }}
-                  </Avatar>
-                  <!-- 头像 E -->
-                </Col>
-                <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
-                  <div style="display: flex; flex-direction: column;">
-                    <Tooltip :content="$t('list.colums.playerId')">
-                      <h2>
-                        {{ user.username }}
-                      </h2>
-                    </Tooltip>
-                  </div>
 
-                  <div>
-                    {{ $t("account.joinedAt") }}
-                    <Time v-if="user.joinTime" :time="user.joinTime"/>
-                    <Divider type="vertical"/>
-                    {{ $t("account.lastOnlineTime") }}
-                    <Time v-if="user.signoutTime" :time="user.signoutTime"/>
-                  </div>
-                </Col>
-                <Col :xs="{span: 4, push: 0,pull:0}" align="right">
-                  <PrivilegesTag :data="user.privilege"></PrivilegesTag>
-                </Col>
-              </Row>
-            </Card>
-          </div>
-
-          <Page class="page"
-                size="small"
-                show-sizer
-                show-total
-                show-elevator
-                @on-change="handlePageChange"
-                @on-page-size-change="handlePageSizeChange"
-                :page-size="limit.user"
-                :current="skip.user"
-                :total="total.user"/>
-        </Card>
-      </template>
     </div>
   </div>
 </template>
@@ -265,6 +324,9 @@
 import BFBAN from "../assets/js/bfban";
 import OcrWidget from "@/components/OcrWidget";
 import PrivilegesTag from "@/components/PrivilegesTag";
+import HtmlWidget from "@/components/HtmlWidget";
+import BusinessCard from "@/components/businessCard";
+import Empty from "@/components/Empty";
 
 import game from '../../public/conf/gameName.json';
 
@@ -275,13 +337,14 @@ export default new BFBAN({
   data() {
     return {
       modalSpinShow: false,
+      searchPosting: false,
       // 搜索框+搜索历史
       searchVal: '',
       searchHistory: {
         list: []
       },
       // 搜索方式, player 搜索案例玩家，user 搜索站内用户
-      searchTypes: ['player', 'user'],
+      searchTypes: ['player', 'user', 'comment'],
       searchTypeValue: 'player',
       // 搜索游戏，在searchTypes字段为player时使用
       searchGameList: [{value: 'all'}].concat(game.child),
@@ -291,29 +354,33 @@ export default new BFBAN({
 
       result: {
         player: [],
-        user: []
+        user: [],
+        comment: []
       },
       skip: {
         player: 1,
         user: 1,
+        comment: 1,
       },
       limit: {
         player: 40,
         user: 20,
+        comment: 10,
       },
       total: {
         player: 0,
         user: 0,
+        comment: 0,
       }
     }
   },
-  components: {OcrWidget, PrivilegesTag},
+  components: {OcrWidget, PrivilegesTag, HtmlWidget, BusinessCard, Empty},
   created() {
     const {keyword, type, game} = this.$route.query;
     this.searchVal = keyword || '';
     this.searchTypeValue = type || 'player';
-    this.searchGameValue = game || 'all'
-    this.handleSearch();
+    this.searchGameValue = game || 'all';
+
     this.getSearchHistory();
   },
   methods: {
@@ -378,23 +445,41 @@ export default new BFBAN({
     handleSearch() {
       const that = this;
       const keyword = this.searchVal.trim();
-      const data = Object.assign({
-            keyword,
-            type: this.searchTypeValue,
-          },
-          this.searchTypeValue == 'player' ? {
+      let data = {
+        keyword,
+        type: this.searchTypeValue,
+      };
+
+      this.searchPosting = false;
+
+      switch (this.searchTypeValue) {
+        case 'player':
+          data = Object.assign({
             game: this.searchGameValue,
             gameSort: this.searchGameSort,
             skip: (this.skip.player - 1) * this.limit.player,
             limit: this.limit.player,
-          } : {
+          }, data)
+          break;
+        case 'user':
+          data = Object.assign({
             skip: (this.skip.user - 1) * this.limit.user,
             limit: this.limit.user,
             gameSort: this.searchUserSort,
-          })
+          }, data)
+          break;
+        case 'comment':
+          data = Object.assign({
+            skip: (this.skip.comment - 1) * this.limit.comment,
+            limit: this.limit.comment,
+          }, data)
+          break;
+      }
 
       // restriction
       if (keyword == '' || keyword.length <= 2 || this.modalSpinShow) {
+        this.$Message.info(this.$i18n.t('signin.fillEverything'))
+        this.modalSpinShow = false;
         return;
       }
 
@@ -409,12 +494,14 @@ export default new BFBAN({
       }).then(res => {
         const d = res.data;
         let notRepeat = false;
+
         for (let index = 0; index < that.searchHistory.list.length; index++) {
           let i = that.searchHistory.list[index];
           if (i.keyword == keyword && i.type == this.searchTypeValue) {
             notRepeat = true;
           }
         }
+
         if (!notRepeat) {
           that.searchHistory.list.push({
             keyword,
@@ -424,7 +511,6 @@ export default new BFBAN({
         }
 
         that.setSearchHistoryValue(this.searchHistory.list);
-        // that.searchHistory.list = hisArr;
 
         if (d.success === 1) {
           this.result[this.searchTypeValue] = d.data;
@@ -437,9 +523,12 @@ export default new BFBAN({
           return;
         }
 
-        this.$Message.error(d.message || d.code)
+        this.$Message.error(d.message || d.data.code)
+      }).catch(err => {
+        this.$Message.error(err)
       }).finally(() => {
         that.modalSpinShow = false;
+        that.searchPosting = true;
       })
     },
   }
@@ -447,8 +536,9 @@ export default new BFBAN({
 </script>
 
 <style scoped lang="less">
-@import "./src/assets/css/radio.less";
+@import "@/assets/css/radio.less";
 @import "@/assets/css/icon.less";
+@import "@/assets/css/timeline.less";
 
 .search-background {
   position: fixed;

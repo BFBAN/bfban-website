@@ -155,7 +155,7 @@
               </Badge>
             </div>
             <Card dis-hover :padding="10" v-if="data.length <= 0" align="center">
-              (｀ﾍ´)=3=3=3=3=3=3
+              <Empty></Empty>
             </Card>
 
             <Page class="page"
@@ -217,6 +217,8 @@
 
 <script>
 import BFBAN from "../assets/js/bfban";
+
+import Empty from "@/components/Empty";
 
 import {account_storage, api, http, util, voice} from '../assets/js/index'
 import cheaterStatus from '/public/conf/cheaterStatus.json'
@@ -292,9 +294,7 @@ export default new BFBAN({
       cheaterStatus: null,
     };
   },
-  created() {
-    this.loadData();
-  },
+  components: {Empty},
   watch: {
     $route: "loadData",
     gameName: function (val,oldVal) {
@@ -309,6 +309,9 @@ export default new BFBAN({
         }, 800)
       }
     }
+  },
+  created() {
+    this.loadData();
   },
   methods: {
     /**

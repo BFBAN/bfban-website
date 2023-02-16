@@ -34,7 +34,7 @@
                     style="background-color: yellow"
                     size="150"
                     icon="ios-person"
-                    :src="account.userAvatar ? `${account.userAvatar}?s=150` : false"></Avatar>
+                    :src="account.userAvatar ? `${account.userAvatar}?s=150` : ''"></Avatar>
 
             <h1 :title="$t('account.username')" class="account-username">
               {{ account.username || 'username' }}

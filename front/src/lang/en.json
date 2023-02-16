@@ -751,7 +751,8 @@
     "notUserExist": "This player cannot be found in the database",
     "tabs": {
       "player": "Report",
-      "user": "User"
+      "user": "User",
+      "comment": "Comment"
     },
     "sort": {
       "default": "default",

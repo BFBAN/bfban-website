@@ -681,9 +681,9 @@ router.get('/admins', async (req, res, next) => {
  *       400: search.bad
  */
 router.get('/search', normalSearchRateLimiter, [
-    checkquery('type').optional().isIn(['player', 'user']),
+    checkquery('type').optional().isIn(['player', 'user', 'comment']),
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
-    checkquery('gameSort').optional().isIn(['default', 'latest', 'mostViewed', 'mostComments','joinedAt','lastOnlineTime']),
+    checkquery('gameSort').optional().isIn(['default', 'latest', 'mostViewed', 'mostComments', 'joinedAt', 'lastOnlineTime']),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
     checkquery('createTimeTo').optional().isInt({min: 0}),
     checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 3}),
@@ -793,6 +793,26 @@ async (req, res, next) => {
                 }
             })
             result.total = userTotal;
+        } else if (type == 'comment') {
+            const commentTotal = await db('comments').count({num: 1})
+                .where('comments.content', 'like', '%' + param + '%')
+                .andWhere('comments.videoLink', 'like', '%' + param + '%')
+                .andWhere('comments.createTime', '>=', createTimeFrom)
+                .andWhere('comments.createTime', '<=', createTimeTo)
+                .first().then(r => r.num);
+
+            const comment = await db('comments')
+                .join('users', 'users.id', 'comments.byUserId')
+                .select('comments.*', 'users.username', 'users.valid')
+                .where('comments.content', 'like', '%' + param + '%')
+                .andWhere('comments.videoLink', 'like', '%' + param + '%')
+                .andWhere('comments.createTime', '>=', createTimeFrom)
+                .andWhere('comments.createTime', '<=', createTimeTo)
+                .andWhere({"users.valid": 1})
+                .offset(skip).limit(limit);
+
+            result.data = comment;
+            result.total = commentTotal;
         }
 
         return res.status(200).json(result);
