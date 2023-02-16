@@ -748,9 +748,17 @@
     "describe": "Search a playername from the BFBAN database",
     "placeholder": "Search for a player",
     "collectionHint": "Bookmark this page (Ctrl+D or Command+D)",
-    "scope": {
-      "history": "Historical ID",
-      "current": "Current ID"
+    "notUserExist": "This player cannot be found in the database",
+    "tabs": {
+      "player": "Report",
+      "user": "User",
+      "comment": "Comment"
+    },
+    "sort": {
+      "default": "default",
+      "latest": "latest",
+      "mostViewed": "most viewed",
+      "mostComments": "most comments"
     }
   },
   "cheatMethods": {
