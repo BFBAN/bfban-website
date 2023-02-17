@@ -2017,7 +2017,6 @@ export default new BFBAN({
 
 <style lang="less">
 @import "@/assets/css/icon.less";
-@import "@/assets/css/timeline.less";
 
 .detail-userinfo-card {
   display: flex;
