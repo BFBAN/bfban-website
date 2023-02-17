@@ -22,6 +22,10 @@ const docs_config = {
     ],
     tags: [
         {
+            name: 'message',
+            description: 'Notification class'
+        },
+        {
             name: '统计',
             description: '网站统计'
         },
