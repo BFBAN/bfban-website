@@ -572,15 +572,20 @@ async (req, res, next)=>{
         const dbId = await getPlayerId({dbId: req.query.dbId, userId: req.query.userId, personaId: req.query.personaId});
         const order = req.query.order? req.query.order : 'asc';
         const subject = req.query.subject? req.query.subject : '%';
+
         if(dbId==-1)
             return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
 
         const total = await db.count({num: 1}).from('comments').where({toPlayerId: dbId, valid: 1})
             .andWhere('type', 'like', subject).first().then(r=>r.num);
+
         /** @type {import("../typedef.js").Comment[]} */
         let result = await db('comments').join('users', 'comments.byUserId', 'users.id')
             .select('comments.*', 'users.username', 'users.privilege', 'users.attr').where({toPlayerId: dbId, 'comments.valid': 1})
-            .andWhere('comments.type', 'like', subject).orderBy('comments.createTime', order).offset(skip).limit(limit);
+            .andWhere('comments.type', 'like', subject)
+            .orderBy('comments.createTime', order)
+            .offset(skip).limit(limit);
+
         const now = new Date()
         result = result.map(item => {
             if(item.attr.mute) {

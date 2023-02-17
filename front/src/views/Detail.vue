@@ -261,7 +261,7 @@
           <!-- 战绩链接 E -->
         </Card>
         <br>
-        <Card style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
+        <Card id="timeline" style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
           <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
             <Col :xs="{span: 23, push: 1}" :lg="appeal.disable ? {span: 7, push: 0} : {span: 1, push: 0}"
                  class="mobile-hide">
@@ -278,7 +278,7 @@
               </template>
             </Col>
             <Col flex="auto" class="mobile-hide">
-              {{ $t('detail.info.timeLine') }}
+              {{ $t('detail.info.timeLine') }} <Tag v-if="timeline.total">{{ timeline.total || 0 }}</Tag>
             </Col>
             <Col>
               <!-- 时间轴筛选 S -->
@@ -728,6 +728,7 @@
                 <Page :page-size="timeline.limit"
                       :current="timeline.page"
                       :total="timeline.total"
+                      @on-change="handlePageChange"
                       simple
                       class="page"
                       size="small"/>
@@ -946,7 +947,10 @@
                           <Checkbox v-model="verify.isUpdateinformation">{{ $t('detail.info.updateButton') }}</Checkbox>
                         </div>
                         <div>
-                          <Checkbox v-model="verify.isSubscribeTrace" :disabled="!$store.state.configuration.subscribes">{{ $t('detail.subscribes.tracking') }}</Checkbox>
+                          <Checkbox v-model="verify.isSubscribeTrace"
+                                    :disabled="!$store.state.configuration.subscribes">
+                            {{ $t('detail.subscribes.tracking') }}
+                          </Checkbox>
                         </div>
                       </div>
                     </Poptip>
@@ -1233,8 +1237,8 @@ export default new BFBAN({
       timelineList: [],
       timeline: {
         sort: '1',
-        skip: 0,
-        limit: 100,
+        skip: 1,
+        limit: 20,
         total: 0,
         seeType: 1,
         seeTypeList: [
@@ -1314,6 +1318,16 @@ export default new BFBAN({
       this.onMergeHistoryName()
 
       this.$Loading.finish();
+    },
+    /**
+     * 时间轴分页事件
+     */
+    handlePageChange(num) {
+      this.timeline.skip = num;
+      this.getTimeline();
+
+      const commentNode = document.getElementById('timeline');
+      this.onRollingNode(commentNode.offsetTop);
     },
     showMuteAlert(id) {
       this.mute.id = id
@@ -1571,7 +1585,7 @@ export default new BFBAN({
 
         this.http.get(api["account_timeline"], {
           params: Object.assign({
-            skip: this.timeline.skip,
+            skip: (this.timeline.skip - 1) * this.timeline.limit,
             limit: this.timeline.limit
           }, {personaId: this.getParamsIds('personaId')})
         }).then(res => {
@@ -1594,6 +1608,7 @@ export default new BFBAN({
             });
 
             this.timelineList = d.data.result;
+            this.timeline.total = d.data.total;
 
             // 排序
             this.onTimeLineSort();
@@ -1632,7 +1647,7 @@ export default new BFBAN({
     /**
      * 滚动到评论区
      */
-    onRollingComment () {
+    onRollingComment() {
       const commentNode = document.getElementById('reply');
 
       this.onRollingNode(commentNode.offsetTop + commentNode.offsetHeight);
@@ -1641,7 +1656,7 @@ export default new BFBAN({
      * 滚动位置
      * @param scrollTopNumber
      */
-    onRollingNode (scrollTopNumber) {
+    onRollingNode(scrollTopNumber) {
       document.documentElement.scrollTop = scrollTopNumber;
     },
     /**

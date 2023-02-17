@@ -42,21 +42,33 @@
                     </Form>
 
                     <!-- Search history S -->
-                    <div transfer slot="list">
-                      <Row :gutter="5" v-if="searchHistory.list.length > 0" style="padding: 10px">
-                        <Col v-for="(i, index) in searchHistory.list"
-                             :key="index">
-                          <Tag stype="border"
-                               type="dot"
-                               :color="i.count > 0 ? 'success' : 'default'"
-                               checkable
-                               closable
-                               @on-change="handleSearchHistoryClickTag(index)"
-                               @on-close="handleSearchHistoryClose(index)">
-                            {{ $t('search.tabs.' + i.type) || '' }}:{{ i.keyword }}
-                          </Tag>
+                    <div transfer slot="list" style="padding: 10px">
+                      <Row :gutter="5" v-if="searchHistory.list.length > 0">
+                        <Col flex="1">
+                          <h5><b>{{ searchHistory.list.length }}</b><span>/10</span></h5>
+                        </Col>
+                        <Col>
+                          <Button size="small" type="primary" @click="deleSearchHistoryAll">
+                            <Icon type="md-trash"/>
+                          </Button>
                         </Col>
                       </Row>
+                      <template v-if="searchHistory.list.length > 0">
+                        <Row :gutter="5">
+                          <Col v-for="(i, index) in searchHistory.list"
+                               :key="index">
+                            <Tag stype="border"
+                                 type="dot"
+                                 :color="i.count > 0 ? 'success' : 'default'"
+                                 checkable
+                                 closable
+                                 @on-change="handleSearchHistoryClickTag(index)"
+                                 @on-close="handleSearchHistoryClose(index)">
+                              {{ $t('search.tabs.' + i.type) || '' }}:{{ i.keyword }}
+                            </Tag>
+                          </Col>
+                        </Row>
+                      </template>
                       <div v-else align="center">
                         🦖
                       </div>
@@ -273,7 +285,7 @@
           </Card>
         </template>
         <template v-if="searchTypeValue == 'comment'">
-          <Card dis-hover v-if="result.comment.length > 0">
+          <Card dis-hover class="list" v-if="result.comment.length > 0">
             <div v-for="(comment, comment_index) in result.comment" :key="comment_index" class="timeline-content">
               <div class="timeline-time">
                 <Row>
@@ -430,6 +442,13 @@ export default new BFBAN({
     onOcrOutput(data) {
       this.searchVal = data.value;
       this.handleSearch();
+    },
+    /**
+     * 删除历史记录
+     */
+    deleSearchHistoryAll() {
+      storage.rem('search.history');
+      this.searchHistory.list = [];
     },
     /**
      * tabs 标签单击触发

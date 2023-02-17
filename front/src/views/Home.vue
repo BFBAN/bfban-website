@@ -38,6 +38,7 @@
                     <Card dis-hover>
                       <h3>{{ statistics.reports || 0 }}</h3>
                       <span>{{ $t("home.cover.dataReceived") }}</span>
+                      <Spin size="large" fix v-if="activityLoad"></Spin>
                     </Card>
                   </router-link>
                 </Col>
@@ -46,6 +47,7 @@
                     <Card dis-hover>
                       <h3>{{ statistics.confirmed || 0 }}</h3>
                       <span>{{ $t("home.cover.confirmData") }}</span>
+                      <Spin size="large" fix v-if="activityLoad"></Spin>
                     </Card>
                   </router-link>
                 </Col>

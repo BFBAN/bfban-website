@@ -642,7 +642,7 @@ router.get('/admins', async (req, res, next) => {
             }
             delete i.attr;
         });
-        res.status(200).json({success: 1, code: 'getAdmins.success', data: admins});
+        res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'getAdmins.success', data: admins});
     } catch (err) {
         next(err);
     }
@@ -659,13 +659,22 @@ router.get('/admins', async (req, res, next) => {
  *       - application/json
  *     parameters:
  *       - name: type
- *         description: player or user
+ *         description: 搜索类型, ['player', 'user', 'comment'] -> ['案件玩家','站内用户','评论']
  *         type: string
  *         value: player
  *       - name: game
  *         type: string
  *         in: path
  *         value: bf1
+ *       - name: gameSort
+ *         description: 排序方式 ['default', 'latest', 'mostViewed', 'mostComments', 'joinedAt', 'lastOnlineTime']
+ *         type: string
+ *         in: path
+ *         value: default
+ *       - name: param
+ *         description: 搜索值
+ *         type: string
+ *         value:
  *       - name: createTimeFrom
  *         description: 创建时间,时间戳
  *         type: num
@@ -681,7 +690,7 @@ router.get('/admins', async (req, res, next) => {
  *       400: search.bad
  */
 router.get('/search', normalSearchRateLimiter, [
-    checkquery('type').optional().isIn(['player', 'user', 'comment']),
+    checkquery('type').isIn(['player', 'user', 'comment']),
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
     checkquery('gameSort').optional().isIn(['default', 'latest', 'mostViewed', 'mostComments', 'joinedAt', 'lastOnlineTime']),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
@@ -707,24 +716,18 @@ async (req, res, next) => {
         const result = {success: 1, code: 'search.success', data: [], total: 0};
 
         if (type === 'player') {
-            const playerTotal = await db('name_logs').count({num: 1}).join('players', 'name_logs.originUserId', 'players.originUserId')
-                .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
-                .where('name_logs.originName', 'like', '%' + param + '%')
-                .andWhere('players.games', 'like', game ? `%"${game}"%` : "%")
-                .andWhere('players.createTime', '>=', createTimeFrom)
-                .andWhere('players.createTime', '<=', createTimeTo)
-                .andWhere({valid: 1}).first().then(r => r.num);
-
             /** @type {(import("../typedef.js").Player&{prevOriginName:string,fromTime:Date,toTime:Date})[]} */
-            const history = await db('name_logs').join('players', 'name_logs.originUserId', 'players.originUserId')
-                .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
-                .where('name_logs.originName', 'like', '%' + param + '%')
-                .andWhere('players.games', 'like', game ? `%"${game}"%` : "%")
-                .andWhere('players.createTime', '>=', createTimeFrom)
-                .andWhere('players.createTime', '<=', createTimeTo)
-                .andWhere({valid: 1}).offset(skip).limit(limit);
+            const history = db('name_logs').join('players', 'name_logs.originUserId', 'players.originUserId')
+                    .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
+                    .where('name_logs.originName', 'like', '%' + param + '%')
+                    .andWhere('players.games', 'like', game ? `%"${game}"%` : "%")
+                    .andWhere('players.createTime', '>=', createTimeFrom)
+                    .andWhere('players.createTime', '<=', createTimeTo)
+                    .andWhere({valid: 1}),
+                playerArray = await history.offset(skip).limit(limit),
+                playerTotal = await history.count({num: 1}).first().then(r => r.num);
 
-            result.data = history.map(i => {
+            result.data = playerArray.map(i => {
                 return {
                     historyName: i.prevOriginName,
                     originName: i.originName,
@@ -741,9 +744,7 @@ async (req, res, next) => {
                     updateTime: i.updateTime,
                     log: {from: i.fromTime, to: i.toTime},
                 };
-            });
-
-            result.data = result.data.sort((a, b) => {
+            }).sort((a, b) => {
                 switch (gameSort) {
                     case 'latest':
                         return new Date(a.updateTime).getTime() - new Date(b.updateTime).getTime();
@@ -757,20 +758,15 @@ async (req, res, next) => {
             })
             result.total = playerTotal;
         } else if (type === 'user') {
-            const userTotal = await db('users').count({num: 1})
-                .where('users.username', 'like', '%' + param + '%')
-                .andWhere('users.createTime', '>=', createTimeFrom)
-                .andWhere('users.createTime', '<=', createTimeTo)
-                .andWhere({valid: 1}).first().then(r => r.num);
+            const user = db('users')
+                    .where('users.username', 'like', '%' + param + '%')
+                    .andWhere('users.createTime', '>=', createTimeFrom)
+                    .andWhere('users.createTime', '<=', createTimeTo)
+                    .andWhere({valid: 1}),
+                userArray = await user.offset(skip).limit(limit),
+                userTotal = await user.count({num: 1}).first().then(r => r.num);
 
-            const user = await db('users')
-                .select('users.*')
-                .where('users.username', 'like', '%' + param + '%')
-                .andWhere('users.createTime', '>=', createTimeFrom)
-                .andWhere('users.createTime', '<=', createTimeTo)
-                .andWhere({valid: 1}).offset(skip).limit(limit);
-
-            result.data = user.map(i => {
+            result.data = userArray.map(i => {
                 return {
                     username: i.username,
                     dbId: i.id,
@@ -780,9 +776,7 @@ async (req, res, next) => {
                     signoutTime: i.signoutTime,
                     privilege: i.privilege,
                 };
-            });
-
-            result.data = result.data.sort((a, b) => {
+            }).sort((a, b) => {
                 switch (gameSort) {
                     case 'joinedAt':
                         return new Date(a.joinTime).getTime() - new Date(b.joinTime).getTime();
@@ -792,30 +786,28 @@ async (req, res, next) => {
                         return a.dbId - b.dbId;
                 }
             })
+
             result.total = userTotal;
         } else if (type == 'comment') {
-            const commentTotal = await db('comments').count({num: 1})
-                .where('comments.content', 'like', '%' + param + '%')
-                .andWhere('comments.videoLink', 'like', '%' + param + '%')
-                .andWhere('comments.createTime', '>=', createTimeFrom)
-                .andWhere('comments.createTime', '<=', createTimeTo)
-                .first().then(r => r.num);
-
-            const comment = await db('comments')
+            const comment = db('comments')
                 .join('users', 'users.id', 'comments.byUserId')
                 .select('comments.*', 'users.username', 'users.valid')
                 .where('comments.content', 'like', '%' + param + '%')
                 .andWhere('comments.videoLink', 'like', '%' + param + '%')
                 .andWhere('comments.createTime', '>=', createTimeFrom)
                 .andWhere('comments.createTime', '<=', createTimeTo)
-                .andWhere({"users.valid": 1})
-                .offset(skip).limit(limit);
+                .andWhere({"users.valid": 1}),
+                commentArray =  await comment.offset(skip).limit(limit),
+                commentTotal = await comment.count({num: 1}).first().then(r => r.num);
 
-            result.data = comment;
+            result.data = commentArray;
             result.total = commentTotal;
         }
 
-        return res.status(200).json(result);
+        if (result.data.length <= 0)
+            return res.status(200).json(Object.assign(result, {message: 'search content not found'}));
+
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json(result);
     } catch (err) {
         next(err);
     }
@@ -904,7 +896,7 @@ router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted', 'freeze
             } else
                 result.data.similars = [];
 
-            return res.status(200).json(result);
+            return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json(result);
         } catch (err) {
             if (err instanceof ServiceApiError) {
                 logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
@@ -919,7 +911,8 @@ router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted', 'freeze
     });
 
 router.get('/trend', [
-    checkquery('limit').optional().isInt({min: 1, max: 10})
+    checkquery('limit').optional().isInt({min: 1, max: 10}),
+    checkquery('time').optional().isIn(['daily', 'weekly', 'monthly', 'yearly'])
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
     try {
@@ -927,10 +920,17 @@ async (req, res, next) => {
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'trend.bad', message: validateErr.array()});
 
+        const time = {
+            'daily': new Date(new Date().getTime() - 1 * 24 * 3600 * 1000),
+            'weekly': new Date(new Date().getTime() - 7 * 24 * 3600 * 1000),
+            'monthly': new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
+            'yearly': new Date(new Date().getTime() - 360 * 24 * 3600 * 1000)
+        }
         const limit = req.query.limit ? req.query.limit : 5;
         const result = await db.count({hot: 'tmp.id'}).select('players.*').from(function () {
             this.select('id', 'toPlayerId').from('comments').orderBy('id', 'desc').limit(200).as('tmp');
         }).join('players', 'tmp.toPlayerId', 'players.id')
+            .where('createTime', '>=', time[req.query.time] || time.weekly)
             .groupBy('id')
             .orderBy('hot', 'desc')
             .limit(limit)
@@ -938,7 +938,7 @@ async (req, res, next) => {
                 delete i.valid;
                 return i;
             }));
-        return res.status(200).json({success: 1, code: 'trend.ok', data: result});
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'trend.ok', data: result});
     } catch (err) {
         next(err);
     }

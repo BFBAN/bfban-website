@@ -83,7 +83,7 @@ async (req, res, next) => {
             });
         }
 
-        return res.status(200).json({success: 1, code: 'searchUser.ok', data: result, total});
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'searchUser.ok', data: result, total});
     } catch (err) {
         next(err);
     }
