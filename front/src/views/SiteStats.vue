@@ -145,7 +145,7 @@
               <div slot="title">{{ $t('sitestats.trend') }}</div>
               <ol class="sitestats-ul" v-if="trend.list.length > 0">
                 <li v-for="(i, index) in trend.list" :key="index">
-                  <Row>
+                  <Row :gutter="10">
                     <Col flex="1">
                       <router-link :to="{name:'player', params: { uId: i.originPersonaId }}">{{ i.originName }}</router-link>
                     </Col>
@@ -153,6 +153,8 @@
                       <Icon type="md-chatbubbles" /> {{ i.commentsNum.toFixed(0) || 0 }}
                       <Divider type="vertical"></Divider>
                       <Icon type="md-eye" /> {{ i.viewNum.toFixed(0) || 0 }}
+                    </Col>
+                    <Col>
                       <Tag color="error">
                         <Icon type="ios-flame" /> {{ i.hot.toFixed(0) || 0 }}
                       </Tag>

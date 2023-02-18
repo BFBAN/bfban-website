@@ -59,9 +59,9 @@ export default {
     }
   },
   created() {
-    this.afterData.href = unescape(this.href);
-    this.afterData.text = unescape(this.text);
-    // this.onIframeLoad();
+    // unescape is deprecated， by: https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/escape
+    this.afterData.href = decodeURI(this.href);
+    this.afterData.text = decodeURI(this.text);
   },
   methods: {
     onPoptipShow (status) {

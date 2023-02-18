@@ -75,6 +75,7 @@ export default {
     deep: true,
   },
   created() {
+    this.$i18n.locale
     this.updateRender(this.packagingRender(this.html));
   },
   methods: {
@@ -257,10 +258,10 @@ export default {
                           (p_textToLinkItemURL.protocol.indexOf('http') || p_textToLinkItemURL.protocol.indexOf('https'))
                       ) {
                         /// 卡片 =>
-                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${escape(p_textToLinkArray[j])}"></htmllinkcard>`)
+                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${encodeURI(p_textToLinkArray[j])}"></htmllinkcard>`)
                       } else {
                         /// 链接 =>
-                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${escape(p_textToLinkArray[j])}" href="${escape(p_textToLinkArray[j])}"></htmllink>`)
+                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${encodeURI(p_textToLinkArray[j])}" href="${encodeURI(p_textToLinkArray[j])}"></htmllink>`)
                       }
                     }
                 }

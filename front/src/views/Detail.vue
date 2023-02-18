@@ -481,9 +481,9 @@
                         </Col>
                         <Col style="max-width: 60%">
                           <span style="display: block;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
-                            <a :href="link.href" target="_blank">
-                              <span style="opacity: .8" v-if="link">
-                                 {{ link.href }}
+                            <a :href="link.href" target="_blank" >
+                              <span style="opacity: .8" v-if="link.href">
+                                <htmllink :href="encodeURI(link.href)" :text="encodeURI(link.href)"></htmllink>
                               </span>
                             </a>
                           </span>
@@ -1182,6 +1182,7 @@ import Html from "@/components/Html";
 import HtmlWidget from "../components/HtmlWidget";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import FastReply from "@/components/FastReply";
+import htmllink from "@/components/HtmlLink";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
@@ -1281,7 +1282,7 @@ export default new BFBAN({
       cheatMethodsGlossary: null
     }
   },
-  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, HtmlWidget, PrivilegesTag, FastReply},
+  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, HtmlWidget, PrivilegesTag, FastReply, htmllink},
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {

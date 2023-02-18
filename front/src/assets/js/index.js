@@ -20,6 +20,7 @@ import _PlayerStorage from './storage_player';
 import _Mail from "@/assets/js/mail";
 import _Voice from "@/assets/js/voice";
 import _appMessage from "@/assets/js/message";
+import store from "@/store";
 
 export const api = new _Api();
 export const http = new _Http();

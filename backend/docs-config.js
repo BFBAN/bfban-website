@@ -10,7 +10,7 @@ const docs_config = {
         description: 'bfban 后端接口文档，任何问题请到github的bfban仓库提出问题',
         license: {
             name: 'Apache 2.0',
-            url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+            url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
         }
     },
     servers: [

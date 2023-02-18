@@ -93,12 +93,13 @@
 </template>
 
 <script>
-import {storage, account_storage} from "../assets/js";
+import {storage, account_storage, http} from "../assets/js";
 
 import packageInfo from '../../package.json';
 import footerNavs from '/public/conf/footerNavs.json';
 import link from '/public/conf/link.json';
 import BFBAN from "@/assets/js/bfban";
+import store from "@/store";
 
 export default new BFBAN({
   data() {
@@ -148,7 +149,10 @@ export default new BFBAN({
       get() {
         const localAppLanguages = this.$root && this.$root.$i18n && this.$root.$i18n.locale;
         const localSroeageLanguage = storage.get('language')?.data?.value;
-        const loaclWebLanguage = this.$route.query.lang
+        const loaclWebLanguage = this.$route.query.lang;
+
+        // This is not the place to initialize the language
+        http.setGlobalHeader({'Accept-Language': loaclWebLanguage || localSroeageLanguage || localAppLanguages || 'zh-CN'})
 
         return loaclWebLanguage || localSroeageLanguage || localAppLanguages || 'zh-CN';
       }

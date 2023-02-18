@@ -1,5 +1,6 @@
 import http from 'axios';
 import Conf from './conf';
+import store from "@/store";
 
 export default class Http extends Conf {
     GET = 'get';
@@ -68,7 +69,7 @@ export default class Http extends Conf {
         let result = await this.HTTP({
             url: url,
             Origin: "",
-            headers: Object.assign({}, requestData.headers),
+            headers: {...this.HTTP.headers || {}, ...requestData.headers},
             method: requestData.method,
             data: requestData.data,
             params: requestData.params,
