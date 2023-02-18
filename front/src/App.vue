@@ -27,7 +27,7 @@ export default {
     }
   },
   beforeCreate() {
-    if(window.location.hash) {
+    if (window.location.hash) {
       location.replace(window.location.hash.replace('#', ''));
     }
   },
@@ -40,12 +40,15 @@ export default {
     this.onLoadTheme();
     this.onUserinfo();
   },
+  mounted() {
+
+  },
   methods: {
     /**
      * 加载主题
      * @returns {Promise<void>}
      */
-    async onLoadTheme () {
+    async onLoadTheme() {
       let theme = storage.get('theme');
 
       if (theme.data && theme.data.value) {
@@ -60,7 +63,7 @@ export default {
      * 加载语言
      * @returns {Promise<void>}
      */
-    async onLoadLang () {
+    async onLoadLang() {
       let selectLang = null;
 
       if (this.$route.query.lang) {
@@ -68,14 +71,14 @@ export default {
       }
 
       // load lang
-      if (!selectLang && account_storage.getConfiguration('langLoaclSync')) return ;
-        this.$store.dispatch('setLang', selectLang);
+      if (!selectLang && account_storage.getConfiguration('langLoaclSync')) return;
+      this.$store.dispatch('setLang', selectLang);
     },
     /**
      * 处理用户信息
      */
-    onUserinfo () {
-      if(this.$store.state.user) {
+    onUserinfo() {
+      if (this.$store.state.user) {
         this.http.get(api["user_me"], {}).then(res => {
           const d = res.data;
           if (d.success === 1) {
@@ -83,15 +86,13 @@ export default {
             this.$store.dispatch('setUserInfo', d.data);
             if (account_storage.getConfiguration('langLoaclSync'))
               this.$store.dispatch('setLang', d.data.attr.language);
-            }
+          }
         })
       }
-      
+
     }
   },
-  computed: {
-
-  }
+  computed: {}
 };
 import 'view-design/dist/styles/iview.css'
 </script>
@@ -105,14 +106,10 @@ import 'view-design/dist/styles/iview.css'
   font-style: normal;
   src: url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.eot");
   src: url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.eot#iefix") format("embedded-opentype"),
-    /* IE6-IE8 */
-  url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.woff2") format("woff2"),
-    /* Super Modern Browsers */
-  url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.woff") format("woff"),
-    /* Modern Browsers */
-  url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.ttf") format("truetype"),
-    /* Safari, Android, iOS */
-  url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.svg") format("svg"); /* Legacy iOS */
+    /* IE6-IE8 */ url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.woff2") format("woff2"),
+    /* Super Modern Browsers */ url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.woff") format("woff"),
+    /* Modern Browsers */ url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.ttf") format("truetype"),
+    /* Safari, Android, iOS */ url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.svg") format("svg"); /* Legacy iOS */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
