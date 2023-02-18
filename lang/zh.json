@@ -837,6 +837,7 @@
     "admins": "总共管理员数",
     "communityParticipation": "用户社区参与排行",
     "reportRanking": "举报排行",
+    "trend": "案件热度",
     "timeRange": {
       "daily": "昨天",
       "weekly": "一周",
