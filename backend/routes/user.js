@@ -17,13 +17,13 @@ import logger from "../logger.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 
 const router = express.Router();
-
-router.post('/signup', verifyCaptcha, [
+// verifyCaptcha
+router.post('/signup', [
     checkbody('data.username').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
     checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().unescape().trim().notEmpty(),
-    checkbody('data.language').isIn(config.supportLanguages)
+    // checkbody('data.language').isIn(config.supportLanguages)
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
@@ -75,7 +75,9 @@ async (req, res, next) => {
             expiresTime: new Date(Date.now() + 1000 * 60 * 60 * 4), // 4h
             createTime: new Date()
         });
-        await sendRegisterVerify(username, originName, originEmail, req.body.data.language, randomStr);
+        let language = req.headers["accept-language"]
+        language = language == 'zh-CN' ? language : 'en-US'
+        await sendRegisterVerify(username, originName, originEmail, language, randomStr);
         logger.info('users.signup Success:', {username, originName, originEmail, randomStr});
         return res.status(201).json({success: 1, code: 'signup.needVerify', message: 'Verify Email to join BFBan!'});
     } catch (err) {
@@ -272,7 +274,6 @@ async (req, res, next) => {
             expiresTime: new Date(Date.now() + 1000 * 60 * 60 * 4), // 4h
             createTime: new Date()
         });
-
         await sendBindingOriginVerify(req.user.username, originEmail, req.user.attr.language, encodeURIComponent(code));
 
         logger.info('users.bindOrigin#1 Success:', {name: req.user.username, email: originEmail});
