@@ -39,7 +39,8 @@
             </template>
             <template v-else-if="share.collapse == 3">
               <div style="position: relative; overflow: hidden">
-                <SharePlayerCell ref="sharePlayerWidget" id="getSharePicture_window" :personaId="$route.params.ouid" :lang="share.languages"></SharePlayerCell>
+                <SharePlayerCell ref="sharePlayerWidget" id="getSharePicture_window" :personaId="$route.params.ouid"
+                                 :lang="share.languages"></SharePlayerCell>
               </div>
             </template>
             <template v-else>
@@ -68,7 +69,7 @@
                     <Input v-model="share.webLink" readonly/>
                   </FormItem>
                   <FormItem :label="$t('share.link.textLink')">
-                    <Input v-model="share.webLinkText" @on-change="upDataShare" readonly/>
+                    <Input :value="share.webLinkText" readonly/>
                   </FormItem>
                   <FormItem :label="$t('share.link.webHtmlLink')">
                     <Input v-model="share.webLinkHtml" type="textarea" :autosize="{minRows: 4,maxRows: 8}"
@@ -81,17 +82,19 @@
                 <div slot="content">
                   <FormItem :label="$t('share.iframe.theme')">
                     <RadioGroup v-model="share.theme" type="button" @on-change="upDataShare">
-                      <Radio :label="i.name" v-for="(i, index) in share.themeChild" :key="index">{{i.name}}</Radio>
+                      <Radio :label="i.name" v-for="(i, index) in share.themeChild" :key="index">{{ i.name }}</Radio>
                     </RadioGroup>
                   </FormItem>
                   <FormItem :label="$t('share.iframe.size')">
                     <RadioGroup v-model="share.size" type="button" @on-change="upDataShare">
-                      <Radio :label="i.id" v-for="(i, index) in share.sizeChild" :key="index">{{i.name}}</Radio>
+                      <Radio :label="i.id" v-for="(i, index) in share.sizeChild" :key="index">{{ i.name }}</Radio>
                     </RadioGroup>
                   </FormItem>
                   <FormItem :label="$t('share.iframe.code')">
-                    <Input v-model="share.iframeLink" type="textarea" :autosize="{minRows: 4,maxRows: 8}"
-                           placeholder="" readonly></Input>
+                    <Input v-model="share.iframeLink" type="textarea"
+                           :autosize="{minRows: 8}"
+                           :placeholder="$t('share.iframe.code')"
+                           readonly></Input>
                   </FormItem>
                 </div>
               </Panel>
@@ -103,12 +106,13 @@
                   <FormItem>
                     <Select v-model="share.fileValue">
                       <Option v-for="(i, index) in share.fileType" :key="index" :value="i.format" :label="i.name">
-                        {{i.name}}
+                        {{ i.name }}
                       </Option>
                     </Select>
                   </FormItem>
                   <FormItem>
-                    <Button long @click="onGenerateSharePicture" :disabled="share.statusSharePicture" :loading="share.statusSharePicture">
+                    <Button long @click="onGenerateSharePicture" :disabled="share.statusSharePicture"
+                            :loading="share.statusSharePicture">
                       {{ $t('share.image.generate') }}
                     </Button>
                   </FormItem>
@@ -126,6 +130,7 @@
 import BFBAN from "/src/assets/js/bfban";
 import theme from "/public/conf/themes.json";
 import languages from "/public/conf/languages.json";
+import config from "@/../package.json";
 
 import {api, http, http_token, util} from '../assets/js/index'
 import vueQr from 'vue-qr'
@@ -134,8 +139,6 @@ import html2canvas from 'html2canvas';
 import Empty from '../components/Empty.vue'
 import BusinessCard from "../components/businessCard.vue";
 import SharePlayerCell from "../components/SharePlayerCell.vue";
-
-import {formatTextarea, waitForAction} from "@/mixins/common";
 
 export default new BFBAN({
   data() {
@@ -160,13 +163,13 @@ export default new BFBAN({
             h: 450,
           }
         }, {
-            name: 'w:auto * h:350',
-            id: 2,
-            value: {
-              w: null,
-              h: 350,
-            }
-          }],
+          name: 'w:auto * h:350',
+          id: 2,
+          value: {
+            w: null,
+            h: 350,
+          }
+        }],
         webLink: '',
         webLinkText: '',
         webLinkHtml: '',
@@ -192,6 +195,20 @@ export default new BFBAN({
       this.http = http_token.call(this);
     },
     /**
+     * 字符串替换
+     * @param text
+     * @param params {Object}
+     * @returns {string}
+     */
+    onStringSubstitution(text, params) {
+      if (!text) return;
+      Object.keys(params).forEach(i => {
+        // text = text
+        //     .replaceAll(new RegExp(`{${i}}`, 'g'), params[i]);
+      });
+      return text;
+    },
+    /**
      * 更新 / 设置分享内容
      */
     upDataShare() {
@@ -201,20 +218,21 @@ export default new BFBAN({
       const shareSize = share.sizeChild.filter(i => i.id == this.share.size)[0].value || {};
 
       let _webLink = `${url}?lang=${share.languages}`;
+      const _shareWebLinkText = `${that.$i18n.tc('share.link.textLinkContent', 0, this.share.languages, {
+        'webname': config.name,
+        'url': _webLink,
+      })}`;
       this.share.webLink = _webLink;
 
-      if (this.$refs.sharePlayerWidget){
+      if (this.$refs.sharePlayerWidget) {
         this.$refs.sharePlayerWidget.onLoadLang(share.languages);
       }
 
       this.share.load = true;
       this.share = Object.assign(this.share, {
         webLink: _webLink,
-        webLinkText: `${that.$i18n.t(
-            'share.link.textLinkContent',
-            { webname: 'BFBAN', url: _webLink }
-        )}`,
-        webLinkHtml: `<a href="${url}?lang=${share.languages}" target="_blank">${ share.webLinkText }</a>`,
+        webLinkText: _shareWebLinkText,
+        webLinkHtml: `<a href="${url}?lang=${share.languages}" target="_blank">${_shareWebLinkText}</a>`,
         iframeLink: `<iframe src="${window.location.href}/card?full=true&theme=${share.theme}&lang=${share.languages}" scrolling="auto" frameborder="0" seamless style="filter:chroma(color=#ffffff);${shareSize.w ? `width:${shareSize.w}px;` : 'width:100%;'} ${shareSize.h ? `height:${shareSize.h}px;` : 'height:100%;'}"><a href="${url}" target="_blank">${url}</a></iframe>`.trim().replaceAll(/\r\n/g, '')
       });
       setTimeout(() => this.share.load = false, 1000)
@@ -242,7 +260,7 @@ export default new BFBAN({
           logging: true,
           scale: 1,
           imageTimeout: 100000,
-          ignoreElements : (element) => {
+          ignoreElements: (element) => {
             if (element.className && element.className.toString().indexOf('html2canvas-ignore') >= 0) {
               return true;
             }
@@ -265,15 +283,15 @@ export default new BFBAN({
      * 生产下载
      * @param canvas
      */
-    onDownload (canvas) {
+    onDownload(canvas) {
       let link = document.createElement("a");
       let imgData = canvas.toDataURL({
         format: this.share.fileValue,
-        quality:1
+        quality: 1
       });
 
       link.download = "grid1.png";
-      link.href = URL.createObjectURL( this.dataURLtoBlob(imgData) );
+      link.href = URL.createObjectURL(this.dataURLtoBlob(imgData));
       link.click();
     },
     /**
@@ -284,15 +302,13 @@ export default new BFBAN({
     dataURLtoBlob(dataurl) {
       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
           bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-      while(n--){
+      while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
       }
-      return new Blob([u8arr], {type:mime});
+      return new Blob([u8arr], {type: mime});
     },
   },
-  computed: {
-
-  }
+  computed: {}
 })
 </script>
 

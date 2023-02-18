@@ -124,8 +124,9 @@
           <TabPane name="comment" :label="$t('search.tabs.comment')"></TabPane>
         </Tabs>
 
+        <!-- 玩家 S -->
         <template v-if="searchTypeValue == 'player'">
-          <Row>
+          <Row :gutter="10">
             <Col flex="1">
               <RadioGroup v-model="searchGameSort" type="button" @on-change="handleSearch">
                 <Radio label="default">{{ $t('search.sort.default') }}</Radio>
@@ -141,6 +142,15 @@
                   {{ $t('basic.games.' + i.value) }}
                 </Option>
               </Select>
+            </Col>
+            <Col>
+              <DatePicker type="daterange"
+                          placement="bottom-end"
+                          split-panels
+                          @on-change="handleCDatepicker"
+                          :options="timeOptions"
+                          :value="intervalTime"
+                          style="width: 100%"></DatePicker>
             </Col>
           </Row>
           <Card dis-hover class="list" v-if="result.player.length > 0">
@@ -214,18 +224,30 @@
                   :current="skip.player"
                   :total="total.player"/>
           </Card>
-          <Card dis-hover :padding="10" v-else align="center">
+          <Card dis-hover class="list" :padding="10" v-else align="center">
             <Empty></Empty>
           </Card>
         </template>
+        <!-- 玩家 E -->
+
+        <!-- 用户 S -->
         <template v-if="searchTypeValue == 'user'">
-          <Row>
+          <Row :gutter="10">
             <Col flex="1">
               <RadioGroup v-model="searchUserSort" type="button" @on-change="handleSearch">
                 <Radio label="default">{{ $t('search.sort.default') }}</Radio>
                 <Radio label="joinedAt">{{ $t("account.joinedAt") }}</Radio>
                 <Radio label="lastOnlineTime">{{ $t("account.lastOnlineTime") }}</Radio>
               </RadioGroup>
+            </Col>
+            <Col>
+              <DatePicker type="daterange"
+                          placement="bottom-end"
+                          split-panels
+                          @on-change="handleCDatepicker"
+                          :options="timeOptions"
+                          :value="intervalTime"
+                          style="width: 100%"></DatePicker>
             </Col>
           </Row>
           <Card dis-hover class="list" v-if="result.user.length > 0">
@@ -280,11 +302,25 @@
                   :current="skip.user"
                   :total="total.user"/>
           </Card>
-          <Card dis-hover :padding="10" v-else align="center">
+          <Card dis-hover class="list" :padding="10" v-else align="center">
             <Empty></Empty>
           </Card>
         </template>
+        <!-- 用户 E -->
+
+        <!-- 评论 S -->
         <template v-if="searchTypeValue == 'comment'">
+          <Row :gutter="10">
+            <Col flex="1"></Col>
+            <Col>
+              <DatePicker type="daterange"
+                          placement="bottom-end"
+                          split-panels
+                          @on-change="handleCDatepicker"
+                          :options="timeOptions"
+                          :value="intervalTime"></DatePicker>
+            </Col>
+          </Row>
           <Card dis-hover class="list" v-if="result.comment.length > 0">
             <div v-for="(comment, comment_index) in result.comment" :key="comment_index" class="timeline-content">
               <div class="timeline-time">
@@ -322,10 +358,11 @@
                   :current="skip.comment"
                   :total="total.comment"/>
           </Card>
-          <Card dis-hover :padding="10" v-else align="center">
+          <Card dis-hover class="list" :padding="10" v-else align="center">
             <Empty></Empty>
           </Card>
         </template>
+        <!-- 评论 E -->
       </template>
 
     </div>
@@ -363,6 +400,51 @@ export default new BFBAN({
       searchGameValue: 'all',
       searchGameSort: 'default',
       searchUserSort: 'default',
+
+      intervalTime: undefined,
+      timeOptions: {
+        disabledDate(date) {
+          return date && date.valueOf() > Date.now();
+        },
+        shortcuts: [
+          {
+            text: this.$i18n.t('sitestats.timeRange.daily'),
+            value() {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24);
+              return [start, end];
+            }
+          },
+          {
+            text: this.$i18n.t('sitestats.timeRange.weekly'),
+            value() {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              return [start, end];
+            }
+          },
+          {
+            text: this.$i18n.t('sitestats.timeRange.monthly'),
+            value() {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              return [start, end];
+            }
+          },
+          {
+            text: this.$i18n.t('sitestats.timeRange.yearly'),
+            value() {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 12);
+              return [start, end];
+            }
+          }
+        ]
+      },
 
       result: {
         player: [],
@@ -435,6 +517,12 @@ export default new BFBAN({
       this.limit[this.searchTypeValue] = num;
       this.handleSearch();
     },
+    handleCDatepicker(date) {
+      this.intervalTime = date;
+      this.skip[this.searchTypeValue] = 1; // reset
+
+      this.handleSearch();
+    },
     /**
      * Ocr输出
      * @param val
@@ -479,6 +567,15 @@ export default new BFBAN({
             skip: (this.skip.player - 1) * this.limit.player,
             limit: this.limit.player,
           }, data)
+
+          // Time limit
+          if (this.intervalTime) {
+            data.createTimeFrom = new Date(this.intervalTime[0]).getTime();
+            data.createTimeTo = new Date(this.intervalTime[1]).getTime();
+          } else {
+            delete data.createTimeFrom;
+            delete data.createTimeTo;
+          }
           break;
         case 'user':
           data = Object.assign({
@@ -496,17 +593,14 @@ export default new BFBAN({
       }
 
       // restriction
-      if (keyword == '' || keyword.length <= 2 || this.modalSpinShow) {
+      if (keyword == '' || keyword.length <= 3 || this.modalSpinShow) {
         this.$Message.info(this.$i18n.t('signin.fillEverything'))
         this.modalSpinShow = false;
         return;
       }
 
       this.modalSpinShow = true;
-      this.$router.push({
-        name: this.$router.name,
-        query: data
-      });
+      this.$router.push({name: this.$router.name, query: data});
       data.param = data.keyword;
       http.get(api["search"], {
         params: data

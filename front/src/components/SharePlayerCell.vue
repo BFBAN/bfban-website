@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import {api, http, storage} from '../assets/js/index'
+import {api, http, http_token, storage} from '../assets/js/index'
 import theme from "/public/conf/themes.json";
 import languages from "/public/conf/languages.json";
 
@@ -89,6 +89,8 @@ export default {
     }
   },
   created() {
+    this.http = http_token.call(this);
+
     this.getCheatersInfo();
     // this.onLoadTheme();
     this.onLoadLang();
@@ -124,13 +126,12 @@ export default {
     getCheatersInfo() {
       this.cheater = {};
 
-      if (!this.personaId) return;
+      console.log('执行！')
 
-      http.get(api["cheaters"], {
+      this.http.get(api["cheaters"], {
         params: Object.assign({
-          history: true
-        }, {
-          personaId: this.personaId || this.$route.params.ouid
+          history: true,
+          personaId:  this.$route.params.ouid || this.personaId || null
         })
       }).then(res => {
         this.spinShow = false;

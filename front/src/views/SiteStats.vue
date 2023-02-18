@@ -147,7 +147,9 @@
                 <li v-for="(i, index) in trend.list" :key="index">
                   <Row :gutter="10">
                     <Col flex="1">
-                      <router-link :to="{name:'player', params: { uId: i.originPersonaId }}">{{ i.originName }}</router-link>
+                      <router-link :to="{name:'player', params: { ouid: i.originPersonaId }}">
+                        {{ i.originName }}
+                      </router-link>
                     </Col>
                     <Col>
                       <Icon type="md-chatbubbles" /> {{ i.commentsNum.toFixed(0) || 0 }}

@@ -38,7 +38,7 @@
                     <Card dis-hover>
                       <h3>{{ statistics.reports || 0 }}</h3>
                       <span>{{ $t("home.cover.dataReceived") }}</span>
-                      <Spin size="large" fix v-if="activityLoad"></Spin>
+                      <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
                     </Card>
                   </router-link>
                 </Col>
@@ -47,7 +47,7 @@
                     <Card dis-hover>
                       <h3>{{ statistics.confirmed || 0 }}</h3>
                       <span>{{ $t("home.cover.confirmData") }}</span>
-                      <Spin size="large" fix v-if="activityLoad"></Spin>
+                      <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
                     </Card>
                   </router-link>
                 </Col>
@@ -176,6 +176,7 @@ export default new BFBAN({
       bannerImage: '',
       bannerTime: '',
 
+      statisticsInfoLoad: false,
       activityLoad: false,
       activities: [],
       activities_l: [],
@@ -259,6 +260,8 @@ export default new BFBAN({
      * 获取统计
      */
     getStatisticsInfo() {
+      this.statisticsInfoLoad = true;
+
       http.get(api["statistics"], {
         params: {
           reports: 'show', // show reports number
@@ -275,6 +278,8 @@ export default new BFBAN({
         if (d.success == 1) {
           this.statistics = d.data;
         }
+      }).finally(() => {
+        this.statisticsInfoLoad = false;
       })
     }
   },

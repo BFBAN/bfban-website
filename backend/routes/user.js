@@ -253,10 +253,16 @@ async (req, res, next) => {
         const originUserInfo = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
         if (originUserInfo.username.toLowerCase() !== originName.toLowerCase()) // verify
             return res.status(400).json({error: 1, code: 'bindOrigin.originNotFound'});
-        if ((await db.select('originUserId').from('verifications').where({originUserId: originUserId}).union([
-            db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
-        ])).length != 0)
+
+        if ( (await db.from('verifications').select('originUserId').where({originUserId: originUserId}).union([
+            db.from('users').select('originUserId').where({originUserId: originUserId}) // check duplicated binding
+        ]) ).length != 0)
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
+
+        // // check duplicated binding
+        // if (await db.from('verifications').select('originUserId').where({originUserId: originUserId}).first().length > 0) {
+        //     return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
+        // }
 
         const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r => r.data);
         if (userGames && userGames.concat(' ').indexOf('Battlefield') == false) // does the user have battlefield?
@@ -351,7 +357,7 @@ async function showUserInfo(req, res, next) {
         const reportnum = await db('comments')
             .countDistinct({num: 'id'})
             .where({byUserId: user.id, type: 'report'})
-            .first().then(r=>r.num);
+            .first().then(r => r.num);
         const data = {
             id: user.id,
             userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,

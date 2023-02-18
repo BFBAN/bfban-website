@@ -650,7 +650,7 @@ router.get('/admins', async (req, res, next) => {
 
 /**
  * @swagger
- * /api/search?game={game}&createTimeFrom={createTimeFrom}&createTimeTo={createTimeTo}:
+ * /api/search:
  *   get:
  *     tags:
  *       - 查询
@@ -716,8 +716,8 @@ async (req, res, next) => {
         const result = {success: 1, code: 'search.success', data: [], total: 0};
 
         if (type === 'player') {
-            /** @type {(import("../typedef.js").Player&{prevOriginName:string,fromTime:Date,toTime:Date})[]} */
-            const history = db('name_logs').join('players', 'name_logs.originUserId', 'players.originUserId')
+            const history = db('name_logs')
+                    .join('players', 'name_logs.originUserId', 'players.originUserId')
                     .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
                     .where('name_logs.originName', 'like', '%' + param + '%')
                     .andWhere('players.games', 'like', game ? `%"${game}"%` : "%")
@@ -725,7 +725,7 @@ async (req, res, next) => {
                     .andWhere('players.createTime', '<=', createTimeTo)
                     .andWhere({valid: 1}),
                 playerArray = await history.offset(skip).limit(limit),
-                playerTotal = await history.count({num: 1}).first().then(r => r.num);
+                playerTotal = await history.first().then(r => 1);
 
             result.data = playerArray.map(i => {
                 return {
@@ -764,7 +764,7 @@ async (req, res, next) => {
                     .andWhere('users.createTime', '<=', createTimeTo)
                     .andWhere({valid: 1}),
                 userArray = await user.offset(skip).limit(limit),
-                userTotal = await user.count({num: 1}).first().then(r => r.num);
+                userTotal = await user.first().then(r => 1);
 
             result.data = userArray.map(i => {
                 return {
@@ -798,7 +798,7 @@ async (req, res, next) => {
                 .andWhere('comments.createTime', '<=', createTimeTo)
                 .andWhere({"users.valid": 1}),
                 commentArray =  await comment.offset(skip).limit(limit),
-                commentTotal = await comment.count({num: 1}).first().then(r => r.num);
+                commentTotal = await comment.first().then(r => 1);
 
             result.data = commentArray;
             result.total = commentTotal;
