@@ -340,9 +340,8 @@ router.post('/report', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'b
                     return
                 }
             }
-
             // check Binding Account
-            if (!req.user.originEmail)
+            if (!req.user.originEmail && req.user.privilege.some(item => ['dev', 'root', 'bot', 'admin', 'super'].toString().indexOf(item) == -1))
                 return res.status(403).json({error: 1, code: 'report.bad', message: 'The account is not up to the requirements'});
 
             const originUserId = await raceGetOriginUserId(req.body.data.originName);
