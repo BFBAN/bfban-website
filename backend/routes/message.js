@@ -151,7 +151,7 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'message.bad', message: validateErr.array()});
 
         // check Binding Account
-        if (!req.user.originEmail)
+        if (!req.user.originEmail && req.user.privilege.some(item => ['dev', 'root', 'bot', 'admin', 'super'].toString().indexOf(item) == -1))
             return res.status(403).json({
                 error: 1,
                 code: 'report.bad',
