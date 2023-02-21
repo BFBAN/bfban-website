@@ -58,7 +58,7 @@ async function sendRegisterVerify(username, originName, address, language, code)
         "Hello "+username+"!\n"+
         "   You are now signing up for BFBan as "+originName+" in game.\n"+
         "   Pease click the link below to complete your registration: \n"+
-        "       " + domain + "signupComplete?code="+code+"&lang="+language,
+        "       " + domain + "/signupComplete?code="+code+"&lang="+language,
         config.mail[language].user, address, '', subject, [
             {
                 data: html
