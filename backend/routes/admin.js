@@ -17,6 +17,7 @@ import {sendRegisterVerify} from "../lib/mail.js";
 import logger from "../logger.js";
 import {siteEvent} from "../lib/bfban.js";
 import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
+import {submitSpam, toSpam} from "../lib/akismet.js";
 
 const router = express.Router();
 
@@ -83,7 +84,12 @@ async (req, res, next) => {
             });
         }
 
-        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'searchUser.ok', data: result, total});
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+            success: 1,
+            code: 'searchUser.ok',
+            data: result,
+            total
+        });
     } catch (err) {
         next(err);
     }
@@ -133,6 +139,8 @@ router.post('/setComment', verifyJWT, allowPrivileges(["super", "root", "dev"]),
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.content').isString().isLength({max: 65535}),
     checkbody('data.videoLink').optional().isURL().isLength({max: 255}),
+    checkbody('data.isSpam').optional().isBoolean(),
+    checkbody('data.valid').optional().isInt({min: 0, max: 1})
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
@@ -141,11 +149,14 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'setComment.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").Comment} */
+        const isSpam = req.query.data.includes('isSpam') ? req.query.data.isSpam : false;
+        const valid = req.query.data.valid ? req.query.data.valid : null;
         const comment = await db.select('*').from('comments').where({id: req.body.data.id}).first();
         if (!comment)
             return res.status(404).json({error: 1, code: 'setComment.notFound'});
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setComment', target: comment.id}));
+
         if (req.body.data.content.length == 0 && !req.body.data.videoLink)
             await db('comments').delete().where({id: comment.id});
         else {
@@ -157,11 +168,20 @@ async (req, res, next) => {
             }).where({id: comment.id});
         }
 
+        // Whether to submit a report to akismet here
+        if (isSpam) submitSpam(toSpam(req))
+
+        if (valid != null) {
+            await db('comments').update({
+                valid: valid
+            }).where({id: comment.id})
+        }
+
         await db('operation_log').insert({
             byUserId: req.user.id,
             toUserId: comment.toPlayerId,
             action: 'edit',
-            role: 'comment',
+            role: isSpam ? 'spam' : 'comment',
             createTime: new Date()
         });
 
@@ -509,8 +529,16 @@ router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "ad
             const itemUser = disableOperateUser.some(item => userData.privilege.includes(item))
 
             // Check User authority
-            if (itemUser) return res.status(402).json({error: 1, code: 'muteUser.ban.userUnauthorized', message: `this user cannot operate`});
-            if (req.user.id === id) res.status(402).json({error: 1, code: 'muteUser.ban.userUnauthorized', message: `You can't shut yourself down`});
+            if (itemUser) return res.status(402).json({
+                error: 1,
+                code: 'muteUser.ban.userUnauthorized',
+                message: `this user cannot operate`
+            });
+            if (req.user.id === id) res.status(402).json({
+                error: 1,
+                code: 'muteUser.ban.userUnauthorized',
+                message: `You can't shut yourself down`
+            });
 
             let doEditUserData = {};
             switch (req.body.data.type) {

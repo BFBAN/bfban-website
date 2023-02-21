@@ -19,9 +19,9 @@ export default {
   data() {
     return {
       site: {
-        'Battlefield Tracker': {
+        'Battlefield-Tracker': {
           webSite: "https://battlefieldtracker.com",
-          icon: "https://battlefieldtracker.com/public/icons/icon192.png",
+          icon: "https://battlefieldtracker.com/public/icons/icon-192.png",
           platform: {
             "origin": {
               "bf1": `/bf1/profile/origin/{name}`,
@@ -40,7 +40,7 @@ export default {
             }
           }
         },
-        'Gametools Network': {
+        'Gametools-Network': {
           webSite: "https://gametools.network",
           icon: "https://gametools.network/favicon.ico",
           platform: {
@@ -58,7 +58,7 @@ export default {
             }
           }
         },
-        '247 Fairplay': {
+        '247-Fairplay': {
           webSite: "https://www.247fairplay.com",
           icon: "https://endof.p-stats.com/favicon.ico",
           platform: {
@@ -69,9 +69,9 @@ export default {
         },
       },
       links: {
-        'bf1': ['Battlefield Tracker', 'Gametools Network', '247 Fairplay'],
-        'bfv': ['Battlefield Tracker', 'Gametools Network'],
-        'bf6': ['Battlefield Tracker'],
+        'bf1': ['Battlefield-Tracker', 'Gametools-Network', '247-Fairplay'],
+        'bfv': ['Battlefield-Tracker', 'Gametools-Network'],
+        'bf6': ['Battlefield-Tracker'],
         '*': []
       },
       detailLink: {
@@ -94,7 +94,7 @@ export default {
                     h('Avatar', {
                       props: {
                         shape: 'square',
-                        src: this.site[params.row.name].icon
+                        src: require(`/src/assets/images/recordPlatforms/${params.row.name}.png`)
                       },
                     }),
                   ]),

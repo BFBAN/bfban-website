@@ -15,6 +15,7 @@ import {playerWidget} from "../lib/widget.js";
 import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
+import {checkSpam, toSpam} from "../lib/akismet.js";
 
 const router = express.Router()
 
@@ -315,17 +316,17 @@ function raceGetOriginUserId(originName) {
  *         description: player.notFound
  */
 router.post('/report', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'blacklisted']), [
-        checkbody('data.game').isIn(config.supportGames),
-        checkbody('data.originName').isAscii().notEmpty(),
-        checkbody('data.cheatMethods').isArray().custom(cheatMethodsSanitizer),
-        checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
-        checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),
-    ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
-    async (req, res, next) => {
-        try {
-            const validateErr = validationResult(req);
-            if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'report.bad', message: validateErr.array()});
+    checkbody('data.game').isIn(config.supportGames),
+    checkbody('data.originName').isAscii().notEmpty(),
+    checkbody('data.cheatMethods').isArray().custom(cheatMethodsSanitizer),
+    checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
+    checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
+async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'report.bad', message: validateErr.array()});
 
             // The user identity is disabled
             if (req.user.attr.mute) {
@@ -342,88 +343,100 @@ router.post('/report', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'b
             }
             // check Binding Account
             if (!req.user.originEmail && !req.user.privilege.some(item => ['dev', 'root', 'bot', 'admin', 'super'].toString().indexOf(item) != -1))
-                return res.status(403).json({error: 1, code: 'report.bad', message: 'The account is not up to the requirements'});
+                return res.status(403).json({
+                    error: 1,
+                    code: 'report.bad',
+                    message: 'The account is not up to the requirements'
+                });
 
-            const originUserId = await raceGetOriginUserId(req.body.data.originName);
-            if (!originUserId)
-                return res.status(403).json({error: 1, code: 'report.notFound', message: 'Report user not found.'});
-            /** @type {{username:string, personaId:string, userId:string}} */
-            const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
+            // Check for spam content
+            if (await checkSpam(toSpam(req)))
+                return res.status(403).json({
+                    error: 1,
+                    code: 'report.spam',
+                    message: 'The content you submitted contains spam, please revise it'
+                });
 
-            // now the user being reported is found
-            let avatarLink;
-            try {   // get/update avatar each report
-                avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fail
-            } catch (err) {
-                logger.warn('/report: error while fetching user\'s avatar');
-                avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
-            }
-            /** @type {import('../typedef.js').Player|undefined} */
-            const reported = await db.select('*').from('players').where({originUserId: profile.userId}).first();
-            const player = {
-                id: reported ? reported.id : undefined,
-                originName: profile.username,
-                originUserId: profile.userId,
-                originPersonaId: profile.personaId,
-                games: JSON.stringify(Array.from(new Set(reported ? reported.games : []).add(req.body.data.game))),
-                cheatMethods: JSON.stringify(reported ? reported.cheatMethods : []), // cheateMethod should be decided by admin
-                avatarLink: avatarLink,
-                viewNum: reported ? reported.viewNum : 0,
-                commentsNum: reported ? reported.commentsNum + 1 : 1,
-                valid: 1,
-                status: reported ? await stateMachine(reported, req.user, 'report') : 0,
-                createTime: reported ? reported.createTime : new Date(),
-                updateTime: new Date()
-            };
-            const playerId = await db('players').insert(player).onConflict('id').merge().then(r => r[0]);
-            const stateChange = {
-                prev: reported ? reported.status : null,
-                next: player.status
-            };
-            await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
-            // write report content to db
-            const report = {
-                type: 'report',
-                byUserId: req.user.id,
-                toPlayerId: playerId,
-                toOriginName: profile.username,
-                toOriginUserId: profile.userId,
-                toOriginPersonaId: profile.personaId,
-                cheatGame: req.body.data.game,
-                cheatMethods: JSON.stringify(req.body.data.cheatMethods),
-                videoLink: req.body.data.videoLink,
-                content: handleRichTextInput(req.body.data.description),
-                valid: 1,
-                createTime: new Date()
-            };
-            await db('comments').insert(report);
+        const originUserId = await raceGetOriginUserId(req.body.data.originName);
+        if (!originUserId)
+            return res.status(403).json({error: 1, code: 'report.notFound', message: 'Report user not found.'});
+        /** @type {{username:string, personaId:string, userId:string}} */
+        const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
+
+        // now the user being reported is found
+        let avatarLink;
+        try {   // get/update avatar each report
+            avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fail
+        } catch (err) {
+            logger.warn('/report: error while fetching user\'s avatar');
+            avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
+        }
+        /** @type {import('../typedef.js').Player|undefined} */
+        const reported = await db.select('*').from('players').where({originUserId: profile.userId}).first();
+        const player = {
+            id: reported ? reported.id : undefined,
+            originName: profile.username,
+            originUserId: profile.userId,
+            originPersonaId: profile.personaId,
+            games: JSON.stringify(Array.from(new Set(reported ? reported.games : []).add(req.body.data.game))),
+            cheatMethods: JSON.stringify(reported ? reported.cheatMethods : []), // cheateMethod should be decided by admin
+            avatarLink: avatarLink,
+            viewNum: reported ? reported.viewNum : 0,
+            commentsNum: reported ? reported.commentsNum + 1 : 1,
+            valid: 1,
+            status: reported ? await stateMachine(reported, req.user, 'report') : 0,
+            createTime: reported ? reported.createTime : new Date(),
+            updateTime: new Date()
+        };
+        const playerId = await db('players').insert(player).onConflict('id').merge().then(r => r[0]);
+        const stateChange = {
+            prev: reported ? reported.status : null,
+            next: player.status
+        };
+        await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
+        // write report content to db
+        const report = {
+            type: 'report',
+            byUserId: req.user.id,
+            toPlayerId: playerId,
+            toOriginName: profile.username,
+            toOriginUserId: profile.userId,
+            toOriginPersonaId: profile.personaId,
+            cheatGame: req.body.data.game,
+            cheatMethods: JSON.stringify(req.body.data.cheatMethods),
+            videoLink: req.body.data.videoLink,
+            content: handleRichTextInput(req.body.data.description),
+            valid: 1,
+            createTime: new Date()
+        };
+        await db('comments').insert(report);
 
             player.id = playerId;
             player.games = Array.from(new Set(reported ? reported.games : []).add(req.body.data.game));
             player.cheatMethods = reported ? reported.cheatMethods : [];
             report.cheatMethods = req.body.data.cheatMethods;
 
-            siteEvent.emit('action', {method: 'report', params: {report, player, stateChange}});
-            return res.status(200).json({
-                success: 1, code: 'report.success', message: 'Thank you.', data: {
-                    originName: profile.username,
-                    originUserId: profile.userId,
-                    originPersonaId: profile.personaId,
-                    dbId: report.toPlayerId
-                }
-            });
-        } catch (err) {
-            if (err instanceof ServiceApiError) {
-                logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
-                return res.status(err.statusCode == 501 ? 501 : 500).json({
-                    error: 1,
-                    code: err.statusCode == 501 ? 'report.notImplement' : 'report.error',
-                    message: err.message
-                });
+        siteEvent.emit('action', {method: 'report', params: {report, player, stateChange}});
+        return res.status(200).json({
+            success: 1, code: 'report.success', message: 'Thank you.', data: {
+                originName: profile.username,
+                originUserId: profile.userId,
+                originPersonaId: profile.personaId,
+                dbId: report.toPlayerId
             }
-            next(err);
+        });
+    } catch (err) {
+        if (err instanceof ServiceApiError) {
+            logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
+            return res.status(err.statusCode == 501 ? 501 : 500).json({
+                error: 1,
+                code: err.statusCode == 501 ? 'report.notImplement' : 'report.error',
+                message: err.message
+            });
         }
-    });
+        next(err);
+    }
+});
 
 router.post('/reportById', verifyJWT, verifyCaptcha,
     forbidPrivileges(['freezed', 'blacklisted']), [
@@ -502,10 +515,10 @@ router.post('/reportById', verifyJWT, verifyCaptcha,
             };
             await db('comments').insert(report);
 
-            player.id = playerId;
-            player.games = Array.from(new Set(reported ? reported.games : []).add(req.body.data.game));
-            player.cheatMethods = reported ? reported.cheatMethods : [];
-            report.cheatMethods = req.body.data.cheatMethods;
+        player.id = playerId;
+        player.games = Array.from(new Set(reported ? reported.games : []).add(req.body.data.game));
+        player.cheatMethods = reported ? reported.cheatMethods : [];
+        report.cheatMethods = req.body.data.cheatMethods;
 
             siteEvent.emit('action', {method: 'report', params: {report, player, stateChange}});
             return res.status(201).json({
@@ -684,11 +697,13 @@ async (req, res, next) => {
  *         value: 填写举报内容
  *     responses:
  *       200:
- *         description: reply.suceess
+ *         description: reply.success
  *       404:
  *         description: reply.notFound
+ *       403:
+ *         description: reply.spam
  *       400:
- *         description: viewed.bad
+ *         description: reply.bad
  */
 router.post('/reply', verifyCaptcha, verifyJWT, forbidPrivileges(['freezed', 'blacklisted']),
     commentRateLimiter.limiter([{roles: ['admin', 'super', 'root', 'dev', 'bot'], value: 0}]), [
@@ -702,23 +717,27 @@ router.post('/reply', verifyCaptcha, verifyJWT, forbidPrivileges(['freezed', 'bl
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});
 
-            // The user identity is disabled
-            if (req.user.attr.mute) {
-                const date = new Date(req.user.attr.mute)
-                const now = new Date()
-                if (date - now > 0) {
-                    res.status(400).json({
-                        error: 1,
-                        code: `reply.bad`,
-                        message: `You have been disable to reply, ${req.user.attr.mute} end of disable`
-                    });
-                    return
-                }
+        // The user identity is disabled
+        if (req.user.attr.mute) {
+            const date = new Date(req.user.attr.mute)
+            const now = new Date()
+            if (date - now > 0) {
+                res.status(400).json({
+                    error: 1,
+                    code: `reply.bad`,
+                    message: `You have been disable to reply, ${req.user.attr.mute} end of disable`
+                });
+                return
             }
+        }
 
-            // check Binding Account
-            if (!req.user.originEmail)
-                return res.status(403).json({error: 1, code: 'report.bad', message: 'The account is not up to the requirements'});
+        // check Binding Account
+        if (!req.user.originEmail)
+            return res.status(403).json({
+                error: 1,
+                code: 'report.bad',
+                message: 'The account is not up to the requirements'
+            });
 
             const dbId = req.body.data.toPlayerId;
             const toCommentId = req.body.data.toCommentId;
@@ -752,7 +771,7 @@ router.post('/reply', verifyCaptcha, verifyJWT, forbidPrivileges(['freezed', 'bl
             }).increment('commentsNum', 1).where({id: dbId});
 
             siteEvent.emit('action', {method: 'reply', params: {reply, player}});
-            return res.status(200).json({success: 1, code: 'reply.suceess', message: 'Reply success.'});
+            return res.status(200).json({success: 1, code: 'reply.success', message: 'Reply success.'});
         } catch (err) {
             next(err);
         }

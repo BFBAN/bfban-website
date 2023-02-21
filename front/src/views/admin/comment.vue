@@ -5,7 +5,7 @@
         <RadioGroup
             class="game-type"
             v-model="gameName"
-            @on-change="handleChanges"
+            @on-change="getCommentList"
             type="button">
           <Radio label="all" value="all">
             {{ $t('basic.games.all') }}
@@ -158,7 +158,7 @@ export default new BFBAN({
       editCommentFrom: {
         id: 0,
         content: '',
-        videoLink: ''
+        videoLink: '',
       },
       commentRuleValidate: {
         content: [
@@ -193,7 +193,6 @@ export default new BFBAN({
   methods: {
     /**
      * 加载数据
-     * @returns {Promise<void>}
      */
     async loadData() {
       await util.initUtil().then(res => {
@@ -202,6 +201,10 @@ export default new BFBAN({
 
       this.getCommentList();
     },
+    /**
+     * 打开面板，展示可编辑(预备)表单
+     * @param index {numer}
+     */
     openCommentMode(index) {
       if (
           !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ['super', 'root', 'dev'])
@@ -225,11 +228,8 @@ export default new BFBAN({
       this.limit = val;
       this.getCommentList();
     },
-    handleChanges() {
-      this.getCommentList()
-    },
     /**
-     * 编辑评论、回复、判决
+     * 提交编辑评论、回复、判决
      */
     commentSubmit() {
       if (!this.editCommentFrom.id || !this.editCommentFrom.content || !this.editCommentFrom.videoLink) return;
@@ -241,14 +241,17 @@ export default new BFBAN({
         return;
       }
 
+      const data = {
+        id: this.editCommentFrom.id,
+        content: this.editCommentFrom.content,
+        videoLink: this.editCommentFrom.videoLink,
+      };
+
+      if (this.editCommentFrom.includes('isSpam')) data.isSpam = this.editCommentFrom.isSpam;
+      if (this.editCommentFrom.includes('valid')) data.valid = this.editCommentFrom.valid;
+
       this.http.post(api['admin_setComment'], {
-        data: {
-          data: {
-            id: this.editCommentFrom.id,
-            content: this.editCommentFrom.content,
-            videoLink: this.editCommentFrom.videoLink
-          },
-        }
+        data: {data}
       }).then(res => {
         const d = res.data;
 

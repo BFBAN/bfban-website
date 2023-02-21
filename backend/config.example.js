@@ -29,6 +29,14 @@ const config = {
     github: {
 
     },
+    // Go to https://akismet.com to generate the key
+    // isEnable: Is it detected
+    // debug: If enabled, the submitted data does not affect akismet and is only used for testing purposes
+    akismet: {
+        key: 'your Akismet key',
+        isEnable: true,
+        debug: true,
+    },
     // gravatar
     gravatar: {
         domain: 'https://www.gravatar.com'
