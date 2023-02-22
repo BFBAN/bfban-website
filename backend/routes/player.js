@@ -15,7 +15,7 @@ import {playerWidget} from "../lib/widget.js";
 import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
-import {checkSpam, toSpam} from "../lib/akismet.js";
+import {checkSpam, submitSpam, toSpam} from "../lib/akismet.js";
 
 const router = express.Router()
 
@@ -328,34 +328,34 @@ async (req, res, next) => {
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'report.bad', message: validateErr.array()});
 
-            // The user identity is disabled
-            if (req.user.attr.mute) {
-                const date = new Date(req.user.attr.mute)
-                const now = new Date()
-                if (date - now > 0) {
-                    res.status(400).json({
-                        error: 1,
-                        code: `reply.bad`,
-                        message: `You have been disable to reply, ${req.user.attr.mute} end of disable`
-                    });
-                    return
-                }
+        // The user identity is disabled
+        if (req.user.attr.mute) {
+            const date = new Date(req.user.attr.mute)
+            const now = new Date()
+            if (date - now > 0) {
+                res.status(400).json({
+                    error: 1,
+                    code: `reply.bad`,
+                    message: `You have been disable to reply, ${req.user.attr.mute} end of disable`
+                });
+                return
             }
-            // check Binding Account
-            if (!req.user.originEmail && !req.user.privilege.some(item => ['dev', 'root', 'bot', 'admin', 'super'].toString().indexOf(item) != -1))
-                return res.status(403).json({
-                    error: 1,
-                    code: 'report.bad',
-                    message: 'The account is not up to the requirements'
-                });
+        }
+        // check Binding Account
+        if (!req.user.originEmail && !req.user.privilege.some(item => ['dev', 'root', 'bot', 'admin', 'super'].toString().indexOf(item) != -1))
+            return res.status(403).json({
+                error: 1,
+                code: 'report.bad',
+                message: 'The account is not up to the requirements'
+            });
 
-            // Check for spam content
-            if (await checkSpam(toSpam(req)))
-                return res.status(403).json({
-                    error: 1,
-                    code: 'report.spam',
-                    message: 'The content you submitted contains spam, please revise it'
-                });
+        // Check for spam content
+        if (await checkSpam(toSpam(req, {spamType: 'report', content: req.body.data.description})))
+            return res.status(403).json({
+                error: 1,
+                code: 'report.spam',
+                message: 'The content you submitted contains spam, please revise it'
+            });
 
         const originUserId = await raceGetOriginUserId(req.body.data.originName);
         if (!originUserId)
@@ -411,10 +411,10 @@ async (req, res, next) => {
         };
         await db('comments').insert(report);
 
-            player.id = playerId;
-            player.games = Array.from(new Set(reported ? reported.games : []).add(req.body.data.game));
-            player.cheatMethods = reported ? reported.cheatMethods : [];
-            report.cheatMethods = req.body.data.cheatMethods;
+        player.id = playerId;
+        player.games = Array.from(new Set(reported ? reported.games : []).add(req.body.data.game));
+        player.cheatMethods = reported ? reported.cheatMethods : [];
+        report.cheatMethods = req.body.data.cheatMethods;
 
         siteEvent.emit('action', {method: 'report', params: {report, player, stateChange}});
         return res.status(200).json({
@@ -515,10 +515,10 @@ router.post('/reportById', verifyJWT, verifyCaptcha,
             };
             await db('comments').insert(report);
 
-        player.id = playerId;
-        player.games = Array.from(new Set(reported ? reported.games : []).add(req.body.data.game));
-        player.cheatMethods = reported ? reported.cheatMethods : [];
-        report.cheatMethods = req.body.data.cheatMethods;
+            player.id = playerId;
+            player.games = Array.from(new Set(reported ? reported.games : []).add(req.body.data.game));
+            player.cheatMethods = reported ? reported.cheatMethods : [];
+            report.cheatMethods = req.body.data.cheatMethods;
 
             siteEvent.emit('action', {method: 'report', params: {report, player, stateChange}});
             return res.status(201).json({
@@ -701,7 +701,7 @@ async (req, res, next) => {
  *       404:
  *         description: reply.notFound
  *       403:
- *         description: reply.spam
+ *         description: reply.spam and reply.bad
  *       400:
  *         description: reply.bad
  */
@@ -717,27 +717,35 @@ router.post('/reply', verifyCaptcha, verifyJWT, forbidPrivileges(['freezed', 'bl
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});
 
-        // The user identity is disabled
-        if (req.user.attr.mute) {
-            const date = new Date(req.user.attr.mute)
-            const now = new Date()
-            if (date - now > 0) {
-                res.status(400).json({
-                    error: 1,
-                    code: `reply.bad`,
-                    message: `You have been disable to reply, ${req.user.attr.mute} end of disable`
-                });
-                return
+            // The user identity is disabled
+            if (req.user.attr.mute) {
+                const date = new Date(req.user.attr.mute)
+                const now = new Date()
+                if (date - now > 0) {
+                    res.status(400).json({
+                        error: 1,
+                        code: `reply.bad`,
+                        message: `You have been disable to reply, ${req.user.attr.mute} end of disable`
+                    });
+                    return
+                }
             }
-        }
 
-        // check Binding Account
-        if (!req.user.originEmail)
-            return res.status(403).json({
-                error: 1,
-                code: 'report.bad',
-                message: 'The account is not up to the requirements'
-            });
+            // check Binding Account
+            if (!req.user.originEmail)
+                return res.status(403).json({
+                    error: 1,
+                    code: 'reply.bad',
+                    message: 'The account is not up to the requirements'
+                });
+
+            // Whether to submit a report to akismet here
+            if (await submitSpam(toSpam(req, {spamType: req.body.data.toCommentId ? 'reply' : 'comment', concat: req.body.data.content})))
+                return res.status(403).json({
+                    error: 1,
+                    code: 'reply.spam',
+                    message: 'The content you submitted contains spam, please revise it'
+                });
 
             const dbId = req.body.data.toPlayerId;
             const toCommentId = req.body.data.toCommentId;

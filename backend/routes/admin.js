@@ -169,7 +169,14 @@ async (req, res, next) => {
         }
 
         // Whether to submit a report to akismet here
-        if (isSpam) submitSpam(toSpam(req))
+        if (isSpam) {
+            if (await submitSpam(toSpam(req, {spamType: 'comment', concat: req.body.data.content})))
+                return res.status(403).json({
+                    error: 1,
+                    code: 'setComment.spam',
+                    message: 'The content you submitted contains spam, please revise it'
+                });
+        }
 
         if (valid != null) {
             await db('comments').update({

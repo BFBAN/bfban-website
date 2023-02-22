@@ -23,9 +23,9 @@
               Fast Reply
             </Col>
             <Col>
-              <Button type="primary" @click="onSwitchAddModal">
+              <Button type="primary" @click="onSwitchAddModal" :disabled="fastReply.content.length > fastReply.countMax - 1">
                 <Icon type="md-add"/>
-                ({{ 10 - fastReply.content.length }}/10)
+                ({{ fastReply.countMax - fastReply.content.length }}/{{ fastReply.countMax }})
               </Button>
             </Col>
           </Row>
@@ -168,6 +168,7 @@ export default {
   data() {
     return {
       fastReply: {
+        countMax: 10,
         content: [{
           text: 'stats',
           template: true,
@@ -224,6 +225,8 @@ export default {
      * 添加窗口开关
      */
     onSwitchAddModal() {
+      if (this.fastReply.content.length > this.fastReply.countMax - 1) return
+
       this.fastReply.add.show = !this.fastReply.add.show;
     },
     /**

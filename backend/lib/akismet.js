@@ -58,16 +58,16 @@ async function submitSpam(comment) {
     }
 }
 
-function toSpam(content, email, name, req) {
+function toSpam(req, [spamType = 'none', content = '']) {
     return Object.assign({
-        content: handleRichTextInput(req.body.data.content),
+        content: handleRichTextInput(content),
         email: req.user.originEmail || '',
         name: req.user.username,
         ip: req.REAL_IP || req.user.attr.lastSigninIP,
         referer: req.headers['referer'],
         useragent: req.headers['user-agent'],
         // The type of comment (e.g. 'comment', 'reply', 'forum-post', 'blog-post')
-        type: req.query.toCommentId ? 'reply' : 'comment',
+        type: spamType,
         role: isAdmin(req.user.privilege),
         isTest: config.akismet.debug,
     })
