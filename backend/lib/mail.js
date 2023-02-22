@@ -1,6 +1,6 @@
 "use strict";
-import { promises as fs } from "fs";
-import { SMTPClient, Message } from "emailjs";
+import {promises as fs} from "fs";
+import {SMTPClient, Message} from "emailjs";
 import config from "../config.js";
 import serviceApi from "./serviceAPI.js";
 
@@ -10,19 +10,19 @@ const domain = config.mail.domain.origin;
 * https://bfban.gametools.network/ 
 */
 
-const sender = {} 
+const sender = {}
 Object.keys(config.mail).forEach(key => {
-  const mail = config.mail[key]
-  sender[key] =  new SMTPClient({
-    user: mail.user,
-    password: mail.password,
-    host: mail.host,
-    port: mail.port,
-    ssl: mail.secure
-  })
-})  
+    const mail = config.mail[key]
+    sender[key] = new SMTPClient({
+        user: mail.user,
+        password: mail.password,
+        host: mail.host,
+        port: mail.port,
+        ssl: mail.secure
+    })
+})
 
-async function sendMail(content, from, to, cc, subject,  attachment=undefined, language) {
+async function sendMail(content, from, to, cc, subject, attachment = undefined, language) {
     const message = new Message({
         text: content,
         from: from,
@@ -51,21 +51,21 @@ async function sendRegisterVerify(username, originName, address, language, code)
         'zh-CN': 'BFBan注册',
         'en-US': 'BFBan Registration',
     }[language];
-    subject = subject? subject : 'BFBan Registration';
-    const html = await fs.readFile(`./media/mail_register_${language}.html`).then(buf=>buf.toString());
-    console.log(config.mail[language])
+    subject = subject ? subject : 'BFBan Registration';
+    const html = await fs.readFile(`./media/mail_register_${language}.html`).then(buf => buf.toString());
+
     await sendMail(
-        "Hello "+username+"!\n"+
-        "   You are now signing up for BFBan as "+originName+" in game.\n"+
-        "   Pease click the link below to complete your registration: \n"+
-        "       " + domain + "/signupComplete?code="+code+"&lang="+language,
+        "Hello " + username + "!\n" +
+        "   You are now signing up for BFBan as " + originName + " in game.\n" +
+        "   Pease click the link below to complete your registration: \n" +
+        "       " +  new URL(domain).origin + "/signupComplete?code=" + code + "&lang=" + language,
         config.mail[language].user, address, '', subject, [
             {
                 data: html
-                        .replace(/\$\{username\}/g, username)
-                        .replace(/\$\{originName\}/g, originName)
-                        .replace(/\$\{website\}/g, domain)
-                        .replace(/\$\{code\}/g, code),
+                    .replace(/\$\{username\}/g, username)
+                    .replace(/\$\{originName\}/g, originName)
+                    .replace(/\$\{website\}/g, domain)
+                    .replace(/\$\{code\}/g, code),
                 alternative: true
             }
         ],
@@ -78,20 +78,20 @@ async function sendForgetPasswordVerify(username, address, language, code) {
         'zh-CN': 'BFBan密码重置',
         'en-US': 'BFBan Password Reset',
     }[language];
-    subject = subject? subject : 'BFBan Password Reset';
-    const html = await fs.readFile(`./media/mail_forgetPasswordVerify_${language}.html`).then(buf=>buf.toString());
+    subject = subject ? subject : 'BFBan Password Reset';
+    const html = await fs.readFile(`./media/mail_forgetPasswordVerify_${language}.html`).then(buf => buf.toString());
 
     await sendMail(
-        "Hello "+username+"!\n"+
-        "   You are now reseting your password for bfban.com.\n"+
-        "   Please click the link below to reset your password: \n"+
-        "       " + domain + "forgetPasswordVerify?code="+code,
+        "Hello " + username + "!\n" +
+        "   You are now reseting your password for bfban.com.\n" +
+        "   Please click the link below to reset your password: \n" +
+        "       " + new URL(domain).origin + "/forgetPasswordVerify?code=" + code,
         config.mail[language].user, address, '', subject, [
             {
                 data: html
-                        .replace(/\$\{username\}/g, username)
-                        .replaceAll(/\$\{website\}/g, domain)
-                        .replace(/\$\{code\}/g, code),
+                    .replace(/\$\{username\}/g, username)
+                    .replaceAll(/\$\{website\}/g, domain)
+                    .replace(/\$\{code\}/g, code),
                 alternative: true
             }
         ],
@@ -104,20 +104,20 @@ async function sendBindingOriginVerify(username, address, language, code) {
         'zh-CN': 'BFBan账户绑定',
         'en-US': 'BFBan - Connecting your e-mail address',
     }[language];
-    subject = subject? subject : 'BFBan - Connecting your e-mail address';
-    const html = await fs.readFile(`./media/mail_bindEmail_${language}.html`).then(buf=>buf.toString());
+    subject = subject ? subject : 'BFBan - Connecting your e-mail address';
+    const html = await fs.readFile(`./media/mail_bindEmail_${language}.html`).then(buf => buf.toString());
 
     await sendMail(
-        "Hello "+username+"!\n"+
-        "   You are now binding this email to your bfban.com account.\n"+
-        "   Please click the link below to finish the verification: \n"+
-        "       " + domain + "bindOrigin?code="+code,
+        "Hello " + username + "!\n" +
+        "   You are now binding this email to your bfban.com account.\n" +
+        "   Please click the link below to finish the verification: \n" +
+        "       " + new URL(domain).origin + "/bindOrigin?code=" + code,
         config.mail[language].user, address, '', subject, [
             {
                 data: html
-                        .replace(/\$\{username\}/g, username)
-                        .replaceAll(/\$\{website\}/g, domain)
-                        .replace(/\$\{code\}/g, code),
+                    .replace(/\$\{username\}/g, username)
+                    .replaceAll(/\$\{website\}/g, domain)
+                    .replace(/\$\{code\}/g, code),
                 alternative: true
             }
         ],

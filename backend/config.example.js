@@ -52,6 +52,7 @@ const config = {
         user: 'somebody@somewhere.com',
         password: 'notweakpassword',
         domain: {
+            // Do not add '/', only the protocol + domain name
             origin: 'you website domain'
         },
     },
