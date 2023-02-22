@@ -53,18 +53,19 @@ async function sendRegisterVerify(username, originName, address, language, code)
     }[language];
     subject = subject ? subject : 'BFBan Registration';
     const html = await fs.readFile(`./media/mail_register_${language}.html`).then(buf => buf.toString());
+    const origin = new URL(domain).origin;
 
     await sendMail(
         "Hello " + username + "!\n" +
         "   You are now signing up for BFBan as " + originName + " in game.\n" +
         "   Pease click the link below to complete your registration: \n" +
-        "       " +  new URL(domain).origin + "/signupComplete?code=" + code + "&lang=" + language,
+        "       " +  origin + "/signupComplete?code=" + code + "&lang=" + language,
         config.mail[language].user, address, '', subject, [
             {
                 data: html
                     .replace(/\$\{username\}/g, username)
                     .replace(/\$\{originName\}/g, originName)
-                    .replace(/\$\{website\}/g, domain)
+                    .replaceAll(/\$\{website\}/g, origin)
                     .replace(/\$\{code\}/g, code),
                 alternative: true
             }
@@ -80,17 +81,18 @@ async function sendForgetPasswordVerify(username, address, language, code) {
     }[language];
     subject = subject ? subject : 'BFBan Password Reset';
     const html = await fs.readFile(`./media/mail_forgetPasswordVerify_${language}.html`).then(buf => buf.toString());
+    const origin = new URL(domain).origin;
 
     await sendMail(
         "Hello " + username + "!\n" +
         "   You are now reseting your password for bfban.com.\n" +
         "   Please click the link below to reset your password: \n" +
-        "       " + new URL(domain).origin + "/forgetPasswordVerify?code=" + code,
+        "       " + origin + "/forgetPasswordVerify?code=" + code,
         config.mail[language].user, address, '', subject, [
             {
                 data: html
                     .replace(/\$\{username\}/g, username)
-                    .replaceAll(/\$\{website\}/g, domain)
+                    .replaceAll(/\$\{website\}/g, origin)
                     .replace(/\$\{code\}/g, code),
                 alternative: true
             }
@@ -106,17 +108,18 @@ async function sendBindingOriginVerify(username, address, language, code) {
     }[language];
     subject = subject ? subject : 'BFBan - Connecting your e-mail address';
     const html = await fs.readFile(`./media/mail_bindEmail_${language}.html`).then(buf => buf.toString());
+    const origin = new URL(domain).origin;
 
     await sendMail(
         "Hello " + username + "!\n" +
         "   You are now binding this email to your bfban.com account.\n" +
         "   Please click the link below to finish the verification: \n" +
-        "       " + new URL(domain).origin + "/bindOrigin?code=" + code,
+        "       " + origin + "/bindOrigin?code=" + code,
         config.mail[language].user, address, '', subject, [
             {
                 data: html
                     .replace(/\$\{username\}/g, username)
-                    .replaceAll(/\$\{website\}/g, domain)
+                    .replaceAll(/\$\{website\}/g, origin)
                     .replace(/\$\{code\}/g, code),
                 alternative: true
             }
