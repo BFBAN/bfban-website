@@ -3,7 +3,6 @@ import config from "../config.js";
 import logger from "../logger.js";
 import {handleRichTextInput} from "./user.js";
 
-
 // https://github.com/chrisfosterelli/akismet-api/blob/HEAD/docs/comments.md
 const key = config.akismet.key;
 const domain = config.mail.domain.origin;
@@ -58,19 +57,24 @@ async function submitSpam(comment) {
     }
 }
 
-function toSpam(req, [spamType = 'none', content = '']) {
+// packing
+function toSpam(req, spamType = 'none', content = '') {
+    let spam = {};
+
+    if (!content) logger.info('Check content is missing, please check');
+    if (content) spam.content = handleRichTextInput(content) || '';
+    if (req.user.originEmail) spam.email = req.user.originEmail || '';
+    if (req.user.username) spam.name = req.user.username || '';
+
     return Object.assign({
-        content: handleRichTextInput(content),
-        email: req.user.originEmail || '',
-        name: req.user.username,
-        ip: req.REAL_IP || req.user.attr.lastSigninIP,
-        referer: req.headers['referer'],
-        useragent: req.headers['user-agent'],
+        ip: req.REAL_IP || req.user.attr.lastSigninIP || '0.0.0.0',
+        referer: req.headers['referer'] || '',
+        useragent: req.headers['user-agent'] || '',
         // The type of comment (e.g. 'comment', 'reply', 'forum-post', 'blog-post')
         type: spamType,
         role: isAdmin(req.user.privilege),
         isTest: config.akismet.debug,
-    })
+    }, spam);
 }
 
 // The commentor's 'role'. If set to 'administrator', it will never be marked spam
