@@ -179,7 +179,7 @@ export default {
               ) {
                 /// 卡片 =>
                 eleLink = document.createElement('htmllinkcard');
-                eleLink.setAttribute("href", unescape(hrefString));
+                eleLink.setAttribute("href", encodeURI(hrefString));
               } else {
                 /// 标准 =>
                 eleLink = document.createElement('htmllink');
@@ -190,8 +190,8 @@ export default {
                   // }
                 });
 
-                eleLink.setAttribute("text", new _linkExtend().$options.template);
-                eleLink.setAttribute("href", _links[i].href);
+                eleLink.setAttribute("text", encodeURI(new _linkExtend().$options.template));
+                eleLink.setAttribute("href", encodeURI(_links[i].href));
               }
 
               _links[i].parentNode.replaceChild(eleLink, _links[i]);

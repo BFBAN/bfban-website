@@ -1,21 +1,22 @@
 <template>
-  <Poptip :padding="'0'" max-width="300" trigger="hover" transfer @on-popper-show="onPoptipShow(false)" @on-popper-hide="onPoptipShow(true)">
+  <Poptip :padding="'0'" max-width="300" trigger="hover" transfer @on-popper-show="onPoptipShow(false)"
+          @on-popper-hide="onPoptipShow(true)">
     <span class="html-link">
       <template v-if="getProtocol == 'http:' || getProtocol == 'https:'">
         <Icon type="md-link"/>
       </template>
       <template v-else-if="getProtocol == 'mailto:'">
-        <Icon type="ios-mail-outline" />
+        <Icon type="ios-mail-outline"/>
       </template>
-      <a :href="afterData.href" target="_blank">{{ afterData.text }}</a>
+      <a :href="afterData.href" target="_blank">{{ afterData.text || afterData.href }}</a>
     </span>
     <template v-if="isIframeShow">
       <div class="link-iframe" slot="content">
         <template v-if="linkLoad">
           <div class="link-load link-box" style="position: relative; z-index: 1;">
             <Badge>
-              <Icon type="md-refresh" class="spin-icon-load" slot="count" size="20" />
-              <Icon type="md-browsers" size="50" />
+              <Icon type="md-refresh" class="spin-icon-load" slot="count" size="20"/>
+              <Icon type="md-browsers" size="50"/>
             </Badge>
           </div>
         </template>
@@ -47,7 +48,7 @@ export default {
       default: ""
     }
   },
-  data () {
+  data() {
     return {
       disableIframe: true,
       linkLoad: true,
@@ -60,11 +61,13 @@ export default {
   },
   created() {
     // unescape is deprecated， by: https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/escape
-    this.afterData.href = decodeURI(this.href);
-    this.afterData.text = decodeURI(this.text);
+    if (this.href)
+      this.afterData.href = decodeURI(this.href);
+    if (this.text)
+      this.afterData.text = decodeURI(this.text);
   },
   methods: {
-    onPoptipShow (status) {
+    onPoptipShow(status) {
       const that = this;
       this.disableIframe = status;
 
@@ -85,12 +88,13 @@ export default {
     },
   },
   computed: {
-    isIframeShow () {
+    isIframeShow() {
       // TODO 正则
+      if (!this.afterData.href) return false;
       let url = new URL(this.afterData.href);
       return url.protocol.indexOf('http:') >= 0 || url.protocol.indexOf('https:') >= 0;
     },
-    getProtocol () {
+    getProtocol() {
       if (!this.afterData.href) return '';
       let url = new URL(this.afterData.href);
       return url.protocol;
@@ -131,7 +135,7 @@ export default {
     transform-origin: top left;
 
     body {
-      overflow:hidden
+      overflow: hidden
     }
   }
 
