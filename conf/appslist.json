@@ -223,6 +223,25 @@
       "website": "https://zth.ink/?p=393",
       "get": "https://bfv.zth.ink/home",
       "hot": false
+    },
+    {
+      "title": "BFBAN BOT for Kook",
+      "id": "11",
+      "titleLang": {
+        "zh-CN": "联banKOOK机器人",
+        "en-US": "BFBAN BOT for Kook"
+      },
+      "describe": "运行在kook社区机器人",
+      "describeLang": {
+        "zh-CN": "运行在kook社区机器人",
+        "en-US": "Run in the kook community robot"
+      },
+      "tag": [
+        "bot"
+      ],
+      "website": "https://github.com/BFBAN/kook-bot",
+      "get": "",
+      "hot": false
     }
   ]
 }
