@@ -257,7 +257,7 @@
           <h2># {{ $t('detail.info.gameScores') }}</h2>
           <br>
           <!-- 战绩链接 S -->
-          <RecordLink :cheater="cheater" v-show="cheater.originUserId"></RecordLink>
+          <RecordLink ref="recordLink" v-show="cheater.originUserId"></RecordLink>
           <!-- 战绩链接 E -->
         </Card>
         <br>
@@ -1556,6 +1556,8 @@ export default new BFBAN({
 
           if (d.success === 1) {
             this.cheater = d.data;
+
+            this.$refs.recordLink.generateTable(this.cheater);
             return;
           }
 

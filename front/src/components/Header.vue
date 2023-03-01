@@ -104,7 +104,7 @@
                     <DropdownItem :name="i.name" :selected="themeIndex == theme_index">
                       <Row>
                         <Col flex="1">
-                          <div class="hedaer-theme-color" :style="`background-color: ${i.showColor}`"></div>
+                          <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
                         </Col>
                         <Col>{{ i.name }}</Col>
                       </Row>
@@ -143,6 +143,33 @@
             <Icon type="ios-search" size="28"/>
           </router-link>
         </Tooltip>
+
+        <Divider type="vertical"/>
+
+        <Dropdown>
+          <DropdownItem style="padding: 0;">
+            <div v-for="(i, theme_index) in themes.child" :key="theme_index">
+              <template v-if="themeIndex == theme_index">
+                <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
+              </template>
+            </div>
+          </DropdownItem>
+          <DropdownMenu slot="list">
+            <DropdownItem
+                v-for="(i, theme_index) in themes.child" :key="theme_index"
+                :name="i.name"
+                :selected="themeIndex == theme_index"
+                @click.native="changeTheme(theme_index)">
+              <Row>
+                <Col flex="1">
+                  <div class="hedaer-theme-color right-space" :style="`background-color: ${i.themeColor}`"></div>
+                </Col>
+                <Col>{{i.name}}</Col>
+              </Row>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+
 
         <Divider type="vertical"/>
 
@@ -290,9 +317,12 @@ header {
 
 .hedaer-theme-color {
   display: flex;
-  width: 20px;
-  height: 20px;
+  width: 23px;
+  height: 23px;
   border-radius: 8px;
+}
+
+.hedaer-theme-color.right-space {
   margin-right: 10px;
 }
 

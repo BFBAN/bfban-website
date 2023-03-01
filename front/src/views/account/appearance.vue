@@ -7,7 +7,7 @@
         <!--          <img class="theme-img" :src="require('/public/theme/' + i.name + '/preview.svg')" v-if="i.type == 'local'">-->
         <!--          <img class="theme-img" :src="i.img" v-else>-->
         <div @click="themeIndex = index">
-          <div class="theme-color" :style="`background-color: ${i.showColor}`"></div>
+          <div class="theme-color" :style="`background-color: ${i.themeColor}`"></div>
           <h1>
             <b>{{ i.name }}</b>
             <Badge class="theme-badge" :text="i.version"></Badge>
@@ -32,7 +32,7 @@
           <Button type="primary" @click="changeTheme"> {{ $t('basic.button.save') }} </Button>
         </Col>
         <Col>
-          <div class="theme-color" :style="`background-color: ${themes.child[themeIndex].showColor}`"></div>
+          <div class="theme-color" :style="`background-color: ${themes.child[themeIndex].themeColor}`"></div>
         </Col>
       </Row>
     </div>

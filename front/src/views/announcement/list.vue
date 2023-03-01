@@ -1,5 +1,16 @@
 <template>
-  <div class="announcementView">
+  <div class="container announcementView">
+    <br>
+    <Row>
+      <Col :xs="{push: 1}" :lg="{push: 0}">
+        <Breadcrumb>
+          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem :to="{name: 'announcement'}">{{ $t("home.bulletin.title") }}</BreadcrumbItem>
+        </Breadcrumb>
+      </Col>
+    </Row>
+    <br>
+
     <div class="list">
       <Card class="item" v-for="item in list" :key="item.label">
         <template #title><span class="ruleName">{{item.name}}</span></template>
@@ -102,10 +113,9 @@ export default {
       margin-bottom: 30px;
       .ruleName {
         font-size: 18px;
-        color: #17233d;
       }
       .ruleDesc {
-        color: rgba(0,0,0,.45);
+        opacity: .7;
       }
       .divider {
         color: #333;

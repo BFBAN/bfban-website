@@ -54,4 +54,12 @@ export default class Util {
             }
         return _key;
     }
+
+    onReplacementStringVariable(text, params) {
+        Object.keys(params).forEach(i => {
+            text = text
+                .replace(new RegExp(`{${i}}`, 'g'), params[i]);
+        });
+        return text;
+    }
 }

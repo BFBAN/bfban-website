@@ -14,7 +14,7 @@
         <mj-text align="center" color="blue">${website}/bindOrigin?code=${code}</mj-text>
       </mj-column>
       <mj-column background-color="#5D1CC5" width="100%" border-top="1px solid grey">
-        <mj-text color="white" align="center" height="20px">© 2021 BFBan</mj-text>
+        <mj-text color="white" align="center" height="20px">©2018 BFBan</mj-text>
       </mj-column>
     </mj-section>
   </mj-body>

@@ -75,7 +75,6 @@ export default {
     deep: true,
   },
   created() {
-    this.$i18n.locale
     this.updateRender(this.packagingRender(this.html));
   },
   methods: {

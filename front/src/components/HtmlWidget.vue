@@ -4,7 +4,9 @@
     <div class="html-widget-box-divider ivu-divider ivu-divider-horizontal"></div>
     <Row class="html-widget-toolbar" type="flex" justify="center" align="middle" :gutter="5">
       <Col flex="1">
-        <a @click="openFullScreenView"><Icon type="md-expand" /></a>
+        <a @click="openFullScreenView">
+          <Icon type="md-expand"/>
+        </a>
         <Modal v-model="fullScreenStatus" fullscreen footer-hide :scrollable="true">
           <div class="container">
             <Card class="content">
@@ -16,7 +18,7 @@
       <Col>
         <Dropdown trigger="click" @on-click="changeSize">
           <a href="javascript:void(0)">
-            {{htmlSize}}
+            {{ htmlSize }}
             <Icon type="ios-arrow-down"></Icon>
           </a>
           <DropdownMenu slot="list">
@@ -28,7 +30,7 @@
         <Divider type="vertical"></Divider>
         <Dropdown trigger="click" @on-click="changeMode">
           <a href="javascript:void(0)">
-            {{htmlShowMode}}
+            {{ htmlShowMode }}
             <Icon type="ios-arrow-down"></Icon>
           </a>
           <DropdownMenu slot="list">
@@ -53,7 +55,7 @@ export default {
       default: ""
     },
   },
-  data () {
+  data() {
     return {
       htmlSize: "default",
       htmlShowMode: "renderer",
@@ -62,13 +64,13 @@ export default {
   },
   components: {Html},
   methods: {
-    openFullScreenView () {
+    openFullScreenView() {
       this.fullScreenStatus = true;
     },
-    changeMode (name) {
+    changeMode(name) {
       this.htmlShowMode = name;
     },
-    changeSize (name) {
+    changeSize(name) {
       this.htmlSize = name;
     }
   }
@@ -82,6 +84,7 @@ export default {
   .html-widget-size-large {
     * {
       font-size: 20px;
+      line-height: 2;
     }
 
     p {
@@ -93,13 +96,23 @@ export default {
   .html-widget-size-default {
     * {
       font-size: 13px;
+      line-height: 1.5;
+    }
+
+    p {
+      margin-top: 5px;
+      margin-bottom: 5px;
     }
   }
 
   .html-widget-size-small {
     * {
       font-size: 12px;
-      margin: 0;
+    }
+
+    p {
+      margin-top: 1px;
+      margin-bottom: 1px;
     }
   }
 }
@@ -134,7 +147,7 @@ export default {
   }
 
   &:hover .html-widget-toolbar,
-  &:active .html-widget-toolbar{
+  &:active .html-widget-toolbar {
     overflow: initial !important;
     padding: 0 5px;
     height: 20px;
