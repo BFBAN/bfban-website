@@ -1,63 +1,61 @@
 <template>
-  <div>
-    <Card id="getSharePicture" class="share" dis-hover>
-      <div slot="title">
-        <img class="share-logo" src="../assets/images/logo.png">
-        <br>
-        <div style="text-align: center;">
-          <h1>
-            {{ cheater.originName }}
-          </h1>
-          <h5>{{ cheater.originUserId }}</h5>
-        </div>
-        <br>
-        <Row :gutter="20" type="flex" justify="center" align="middle" class="share-info">
-          <Col>
-            <Tag color="error">{{ $t(`basic.status.${cheater.status}`) }}</Tag>
-            <span class="share-info-p">{{ $t("account.status") }}</span>
-          </Col>
-          <Divider type="vertical"/>
-          <Col>
-            <router-link :to="{name: 'cheater', params: { game: cheater.game }}" v-if="cheater.games">
-              <template v-if="cheater.games.length > 0">
-                <Tag color="gold" :alt="$t('detail.info.reportedGames')"
-                     v-for="(game,gameindex) in cheater.games" :key="gameindex">
-                  {{ $t(`basic.games.${game}`, {game: game}) }}
-                </Tag>
-              </template>
-              <template v-else>
-                <Tag color="warning">N/A</Tag>
-              </template>
-            </router-link>
-            <span class="share-info-p">{{ $t("report.labels.game") }}</span>
-          </Col>
-          <Divider type="vertical"/>
-          <Col>
-            <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0" >
-              <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
-                {{ $t("cheatMethods." + method_item + ".title") }}
+  <Card id="getSharePicture" class="share" dis-hover>
+    <div slot="title">
+      <img class="share-logo" src="../assets/images/logo.png">
+      <br>
+      <div style="text-align: center;">
+        <h1>
+          {{ cheater.originName }}
+        </h1>
+        <h5>{{ cheater.originUserId }}</h5>
+      </div>
+      <br>
+      <Row :gutter="20" type="flex" justify="center" align="middle" class="share-info">
+        <Col>
+          <Tag color="error">{{ $t(`basic.status.${cheater.status}`) }}</Tag>
+          <span class="share-info-p">{{ $t("account.status") }}</span>
+        </Col>
+        <Divider type="vertical"/>
+        <Col>
+          <router-link :to="{name: 'cheater', params: { game: cheater.game }}" v-if="cheater.games">
+            <template v-if="cheater.games.length > 0">
+              <Tag color="gold" :alt="$t('detail.info.reportedGames')"
+                   v-for="(game,gameindex) in cheater.games" :key="gameindex">
+                {{ $t(`basic.games.${game}`, {game: game}) }}
               </Tag>
             </template>
             <template v-else>
               <Tag color="warning">N/A</Tag>
             </template>
-            <span class="share-info-p">{{ $t("detail.info.cheatMethod") }}</span>
-          </Col>
-        </Row>
-      </div>
-      <div v-if="type == 'none'">
-        <Row>
-          <Col flex="1">
-            <p>{{ href }} </p>
-            <p>@BFBAN 2018-{{new Date().getFullYear()}}</p>
-          </Col>
-          <Col>
-            <vue-qr :text="href" :size="70" :margin="3"></vue-qr>
-          </Col>
-        </Row>
-      </div>
-    </Card>
-  </div>
+          </router-link>
+          <span class="share-info-p">{{ $t("report.labels.game") }}</span>
+        </Col>
+        <Divider type="vertical"/>
+        <Col>
+          <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0" >
+            <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
+              {{ $t("cheatMethods." + method_item + ".title") }}
+            </Tag>
+          </template>
+          <template v-else>
+            <Tag color="warning">N/A</Tag>
+          </template>
+          <span class="share-info-p">{{ $t("detail.info.cheatMethod") }}</span>
+        </Col>
+      </Row>
+    </div>
+    <div v-if="type == 'none'">
+      <Row>
+        <Col flex="1">
+          <p>{{ href }} </p>
+          <p>@BFBAN 2018-{{new Date().getFullYear()}}</p>
+        </Col>
+        <Col>
+          <vue-qr :text="href" :size="70" :margin="3"></vue-qr>
+        </Col>
+      </Row>
+    </div>
+  </Card>
 </template>
 
 <script>
@@ -147,10 +145,11 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
   #getSharePicture {
     position: relative;
     overflow: hidden;
+    height: 100vh;
   }
 
   .share-logo {

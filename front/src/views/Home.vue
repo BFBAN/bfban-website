@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="container">
 
       <div class="styles_herosection user-select-none">
