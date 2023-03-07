@@ -36,6 +36,7 @@
                             v-model="searchVal"
                             :border="false"
                             :placeholder="$t('search.placeholder')"
+                            @on-enter="handleSearch"
                             @on-search="handleSearch">
                         </Input>
                       </FormItem>
