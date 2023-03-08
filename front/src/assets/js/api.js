@@ -15,37 +15,36 @@ export default class Api {
             'users': 'users',
             'players': 'players',
             'activity': 'activities',
-            'player_reset': 'reset',
             'trend': 'trend',
 
             'user_message': 'message',
             'user_message_mark': 'message/mark',
-
             'user_info': 'user/info',
             'user_me': 'user/me',
-            'user_forgetPassword': 'user/forgetPassword', // 重置请求
-            'user_forgetPasswordVerify': 'user/forgetPasswordVerify', // 重置密码验证
-            'user_bindOrigin': 'user/bindOrigin', // 绑定🍊
-            'user_bindOriginVerify': 'user/bindOriginVerify', // 🍊验证
+            'user_forgetPassword': 'user/forgetPassword',
+            'user_forgetPasswordVerify': 'user/forgetPasswordVerify',
+            'user_bindOrigin': 'user/bindOrigin',
+            'user_bindOriginVerify': 'user/bindOriginVerify',
             'user_reports': 'user/reports',
-            'user_changePassword': 'user/changePassword', // 修改密码
-            'user_changeName': 'user/changeName', // 修改名称
+            'user_changePassword': 'user/changePassword',
+            'user_changeName': 'user/changeName',
 
             'account_signout': 'user/signout',
             'account_signin': 'user/signin',
             'account_signup': 'user/signup',
             'account_signupVerify': 'user/signupVerify',
 
+            'player_reset': 'reset',
             'player_judgement': 'player/judgement',
             'player_judgmentResult': 'player/judgmentResult',
-            'player_banAppeal': "player/banAppeal", // 申诉
+            'player_banAppeal': "player/banAppeal",
             'player_viewBanAppeal': "player/viewBanAppeal",
-            'player_unreply': 'player/unreply', // 删除回复
-            'player_reply': 'player/reply', // 回复
+            'player_unReply': 'player/unReply',
+            'player_reply': 'player/reply',
             'player_report': 'player/report',
             'player_update': 'player/update',
             'player_viewed': 'player/viewed',
-            'account_timeline': 'player/timeline',
+            'player_timeline': 'player/timeline',
 
             'service_myStorageQuota': 'service/myStorageQuota',
             'service_myFiles': 'service/myFiles',
@@ -65,9 +64,12 @@ export default class Api {
             'admin_delUser': 'admin/delUser',
             'admin_judgementLog': 'admin/judgementLog',
             'admin_chatLog': 'admin/chatLog',
-            'getUserOperationLogs': 'admin/getUserOperationLogs',
-            'adminLog': 'admin/adminLog',
-            'mute_user': 'admin/muteUser'
+            'admin_userOperationLogs': 'admin/userOperationLogs',
+            'admin_adminLog': 'admin/adminLog',
+            'admin_muteUser': 'admin/muteUser',
+            'admin_muteUsers': 'admin/muteUsers',
+            'admin_muteUserAll': 'admin/muteUserAll',
+            'admin_verifications': 'admin/verifications'
         };
     }
 }
