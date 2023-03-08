@@ -278,7 +278,8 @@
               </template>
             </Col>
             <Col flex="auto" class="mobile-hide">
-              {{ $t('detail.info.timeLine') }} <Tag v-if="timeline.total">{{ timeline.total || 0 }}</Tag>
+              {{ $t('detail.info.timeLine') }}
+              <Tag v-if="timeline.total">{{ timeline.total || 0 }}</Tag>
             </Col>
             <Col>
               <!-- 时间轴筛选 S -->
@@ -481,7 +482,7 @@
                         </Col>
                         <Col style="max-width: 60%">
                           <span style="display: block;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
-                            <a :href="link.href" target="_blank" >
+                            <a :href="link.href" target="_blank">
                               <span style="opacity: .8" v-if="link.href">
                                 <htmllink :href="encodeURI(link.href)" :text="encodeURI(link.href)"></htmllink>
                               </span>
@@ -1282,7 +1283,18 @@ export default new BFBAN({
       cheatMethodsGlossary: null
     }
   },
-  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, HtmlWidget, PrivilegesTag, FastReply, htmllink},
+  components: {
+    Empty,
+    Textarea,
+    BusinessCard,
+    RecordLink,
+    Captcha,
+    Html,
+    HtmlWidget,
+    PrivilegesTag,
+    FastReply,
+    htmllink
+  },
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -1349,13 +1361,9 @@ export default new BFBAN({
 
       if (!muteTime && !id && !type) return false;
 
-      this.http.post(api["mute_user"], {
+      this.http.post(api["admin_muteUser"], {
         data: {
-          data: {
-            type,
-            id,
-            value: muteTime,
-          },
+          data: {type, id, value: muteTime},
           isNotice: isNoticeIntraStationUser,
           language: mail.exchangeLangField(this.$root.$i18n.locale)
         },
@@ -1586,7 +1594,7 @@ export default new BFBAN({
         const that = this;
         this.spinShow = true;
 
-        this.http.get(api["account_timeline"], {
+        this.http.get(api["player_timeline"], {
           params: Object.assign({
             skip: (this.timeline.skip - 1) * this.timeline.limit,
             limit: this.timeline.limit

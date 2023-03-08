@@ -1,7 +1,6 @@
 <template>
-  <div class="container">
+  <div>
     <div class="container">
-
       <div class="styles_herosection user-select-none">
         <div class="styles_bg"></div>
         <img class="styles_bg_img" src="../assets/images/hero-grid-overlay.png"/>

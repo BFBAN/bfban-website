@@ -20,27 +20,19 @@
         <Row type="flex" justify="center" :gutter="20" style="width: 100%">
           <Col :xs="{span: 24}" :sm="{span: 18}" :md="{span: 18}">
 
-            <!-- egg 📢 -->
-            <div class="user-select-none search-egg">🦖</div>
-
             <div class="search-input search-input-show ivu-input ivu-input-large">
               <Row :gutter="10">
                 <Col flex="1">
                   <Dropdown style="width: 100%">
-                    <Form :inline="false" style="margin-top: -5px">
-                      <FormItem :hide-required-mark="false" :show-message="false" :label-width="0"
-                                :rules="{type: 'string',min: 2,max: 100,trigger: 'change'}">
-                        <Input
-                            size="small"
-                            clearable
-                            v-model="searchVal"
-                            :border="false"
-                            :placeholder="$t('search.placeholder')"
-                            @on-enter="handleSearch"
-                            @on-search="handleSearch">
-                        </Input>
-                      </FormItem>
-                    </Form>
+                    <Input
+                        size="small"
+                        clearable
+                        v-model="searchVal"
+                        :border="false"
+                        :placeholder="$t('search.placeholder')"
+                        @on-enter="handleSearch"
+                        @on-search="handleSearch">
+                    </Input>
 
                     <!-- Search history S -->
                     <div transfer slot="list" style="padding: 10px">
@@ -49,7 +41,7 @@
                           <h5><b>{{ searchHistory.list.length }}</b><span>/10</span></h5>
                         </Col>
                         <Col>
-                          <Button size="small" type="primary" @click="deleSearchHistoryAll">
+                          <Button size="small" type="primary" @click="deleteSearchHistoryAll">
                             <Icon type="md-trash"/>
                           </Button>
                         </Col>
@@ -535,7 +527,7 @@ export default new BFBAN({
     /**
      * 删除历史记录
      */
-    deleSearchHistoryAll() {
+    deleteSearchHistoryAll() {
       storage.rem('search.history');
       this.searchHistory.list = [];
     },
@@ -695,19 +687,6 @@ export default new BFBAN({
   .search-input {
     width: 100% !important;
   }
-}
-
-.search-egg {
-  position: absolute;
-  top: -22px;
-  right: 80px;
-  font-size: 20px;
-  transition: all .25s;
-}
-
-.search-egg:hover,
-.search-egg:active {
-  top: -12px;
 }
 
 .list {

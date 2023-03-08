@@ -154,7 +154,7 @@ export default new BFBAN({
         theme: theme.default,
         languagesChild: languages.child,
         languages: languages.default,
-        size: 2, // size id
+        size: 3, // size id
         sizeChild: [{
           name: 'w:300 * h:450',
           id: 1,
@@ -163,8 +163,15 @@ export default new BFBAN({
             h: 450,
           }
         }, {
-          name: 'w:auto * h:350',
+          name: 'w:349 * h:280',
           id: 2,
+          value: {
+            w: 349,
+            h: 280,
+          }
+        }, {
+          name: 'w:auto * h:350',
+          id: 3,
           value: {
             w: null,
             h: 350,
