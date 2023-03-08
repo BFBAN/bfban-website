@@ -350,12 +350,12 @@ async (req, res, next) => {
             });
 
         // Check for spam content
-        if (await checkSpam(toSpam(req, {spamType: 'report', content: req.body.data.description})))
-            return res.status(403).json({
-                error: 1,
-                code: 'report.spam',
-                message: 'The content you submitted contains spam, please revise it'
-            });
+        // if (await checkSpam(toSpam(req, {spamType: 'report', content: req.body.data.description})))
+        //     return res.status(403).json({
+        //         error: 1,
+        //         code: 'report.spam',
+        //         message: 'The content you submitted contains spam, please revise it'
+        //     });
 
         const originUserId = await raceGetOriginUserId(req.body.data.originName);
         if (!originUserId)
@@ -740,12 +740,12 @@ router.post('/reply', verifyCaptcha, verifyJWT, forbidPrivileges(['freezed', 'bl
                 });
 
             // Whether to submit a report to akismet here
-            if (await submitSpam(toSpam(req, {spamType: req.body.data.toCommentId ? 'reply' : 'comment', concat: req.body.data.content})))
-                return res.status(403).json({
-                    error: 1,
-                    code: 'reply.spam',
-                    message: 'The content you submitted contains spam, please revise it'
-                });
+            // if (await submitSpam(toSpam(req, {spamType: req.body.data.toCommentId ? 'reply' : 'comment', concat: req.body.data.content})))
+            //     return res.status(403).json({
+            //         error: 1,
+            //         code: 'reply.spam',
+            //         message: 'The content you submitted contains spam, please revise it'
+            //     });
 
             const dbId = req.body.data.toPlayerId;
             const toCommentId = req.body.data.toCommentId;
