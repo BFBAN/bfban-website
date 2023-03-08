@@ -5,7 +5,7 @@
         <RadioGroup
             class="game-type"
             v-model="gameName"
-            @on-change="getCommentList"
+            @on-change="getCommentAllList"
             type="button">
           <Radio label="all" value="all">
             {{ $t('basic.games.all') }}
@@ -43,7 +43,7 @@
               :total="total"/>
       </Col>
       <Col>
-        <Button size="small" @click="getCommentList">
+        <Button size="small" @click="getCommentAllList">
           <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
         </Button>
       </Col>
@@ -199,7 +199,7 @@ export default new BFBAN({
         this.games = res.gameName;
       });
 
-      this.getCommentList();
+      this.getCommentAllList();
     },
     /**
      * 打开面板，展示可编辑(预备)表单
@@ -220,13 +220,13 @@ export default new BFBAN({
 
       this.commentEditModel = true;
     },
-    handlePageChange(val) {
-      this.skip = val;
-      this.getCommentList();
+    handlePageChange(num) {
+      this.skip = num;
+      this.getCommentAllList();
     },
-    handlePageSizeChange(val) {
-      this.limit = val;
-      this.getCommentList();
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getCommentAllList();
     },
     /**
      * 提交编辑评论、回复、判决
@@ -265,13 +265,13 @@ export default new BFBAN({
         this.commentEditModel = false;
         this.load = false;
 
-        this.getCommentList();
+        this.getCommentAllList();
       })
     },
     /**
-     * 取得评论列表
+     * 查询所有评论
      */
-    getCommentList() {
+    getCommentAllList() {
       this.load = true;
 
       this.http.get(api['admin_commentAll'], {

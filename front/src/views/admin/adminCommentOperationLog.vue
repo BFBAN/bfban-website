@@ -169,7 +169,7 @@ export default new BFBAN({
       if (createTimeto) _params['createTimeto'] = createTimeto;
       if (createTimeFrom) _params['createTimeFrom'] = createTimeFrom;
 
-      this.http.get(api['adminLog'], {
+      this.http.get(api['admin_adminLog'], {
         params: _params
       }).then(res => {
         const {data} = res.data

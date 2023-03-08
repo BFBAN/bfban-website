@@ -1,23 +1,20 @@
 import express from "express";
 import moment from "moment"
-import {check, body as checkbody, query as checkquery, validationResult} from "express-validator";
+import {body as checkbody, query as checkquery, validationResult} from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
 import {verifyJWT} from "../middleware/auth.js";
-import {allowPrivileges, forbidPrivileges} from "../middleware/auth.js";
+import {allowPrivileges} from "../middleware/auth.js";
 import {localeMessage, sendMessage} from "./message.js";
 import {generatePassword, privilegeGranter, privilegeRevoker, userHasRoles} from "../lib/auth.js";
 import {initUserStorageQuota, userDefaultAttribute, userSetAttributes} from "../lib/user.js";
 import got from "got";
-import verifyCaptcha from "../middleware/captcha.js";
-import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
+import {ServiceApiError} from "../lib/serviceAPI.js";
 import * as misc from "../lib/misc.js";
-import {sendRegisterVerify} from "../lib/mail.js";
 import logger from "../logger.js";
 import {siteEvent} from "../lib/bfban.js";
 import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
-import {submitSpam, toSpam} from "../lib/akismet.js";
 
 const router = express.Router();
 
@@ -34,12 +31,12 @@ async (req, res, next) => {
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
 
-        const type = req.query.type != undefined ? req.query.type : 'all';
-        const skip = req.query.skip != undefined ? req.query.skip : 0;
-        const limit = req.query.limit != undefined ? req.query.limit : 20;
+        const type = req.query.type !== undefined ? req.query.type : 'all';
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
 
-        let total = 0;
+        let total;
         let result;
 
         switch (type) {
@@ -63,7 +60,8 @@ async (req, res, next) => {
                 result = await db.select('*').from('users')
                     .where('users.username', 'like', `%${req.query.name}%`)
                     .select('users.*', 'users.username', 'users.privilege')
-                    .orderBy('users.createTime', order).offset(skip).limit(limit);
+                    .orderBy('users.createTime', order)
+                    .offset(skip).limit(limit);
 
                 total = await db.count({num: 1}).from('users').first().then(r => r.num);
                 break;
@@ -113,7 +111,7 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
             const order = req.query.order ? req.query.order : 'desc';
 
             let type = req.query.type;
-            const game = (req.query.game && req.query.game != 'all') ? req.query.game : '';
+            const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
 
             const total = await db.count({num: 1}).from('comments').first().then(r => r.num);
 
@@ -157,26 +155,16 @@ async (req, res, next) => {
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setComment', target: comment.id}));
 
-        if (req.body.data.content.length == 0 && !req.body.data.videoLink)
+        if (req.body.data.content.length === 0 && !req.body.data.videoLink)
             await db('comments').delete().where({id: comment.id});
         else {
             comment.content = req.body.data.content;
-            comment.videoLink = comment.type == 'report' ? (req.body.data.videoLink ? req.body.data.videoLink : comment.videoLink) : undefined;
+            comment.videoLink = comment.type === 'report' ? (req.body.data.videoLink ? req.body.data.videoLink : comment.videoLink) : undefined;
             await db('comments').update({
                 content: comment.content,
                 videoLink: comment.videoLink
             }).where({id: comment.id});
         }
-
-        // Whether to submit a report to akismet here
-        // if (isSpam) {
-        //     if (await submitSpam(toSpam(req, {spamType: 'comment', concat: req.body.data.content})))
-        //         return res.status(403).json({
-        //             error: 1,
-        //             code: 'setComment.spam',
-        //             message: 'The content you submitted contains spam, please revise it'
-        //         });
-        // }
 
         if (valid != null) {
             await db('comments').update({
@@ -214,7 +202,7 @@ async (req, res, next) => {
         if (!user)
             return res.status(404).json({error: 1, code: 'setUser.notFound'});
         const role = req.body.data.role;
-        if (req.body.data.action == 'grant') {
+        if (req.body.data.action === 'grant') {
             const devCan = ['normal', 'bot', 'blacklisted', 'freezed'],
                 superCan = ['normal', 'admin', 'blacklisted', 'freezed'],
                 rootCan = ['normal', 'admin', 'bot', 'super', 'dev', 'blacklisted', 'freezed'];
@@ -224,7 +212,7 @@ async (req, res, next) => {
             flag = (userHasRoles(req.user, ['super']) && superCan.includes(role)) ? true : flag;
             flag = (userHasRoles(req.user, ['root']) && rootCan.includes(role)) ? true : flag;
             // check if user trying to grant 'blacklisted' or 'freezed' role to someone who have higher permission
-            flag = (['blacklisted', 'freezed'].includes(role) && user.privilege.filter(i => ['admin', 'super', 'dev', 'root'].includes(i)).length == 0) ? false : flag;
+            flag = (['blacklisted', 'freezed'].includes(role) && user.privilege.filter(i => ['admin', 'super', 'dev', 'root'].includes(i)).length === 0) ? false : flag;
             if (flag)
                 user.privilege = privilegeGranter(user.privilege, role);
             else
@@ -281,8 +269,8 @@ router.get('/judgementLog', verifyJWT, allowPrivileges(["super", "root", "dev"])
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
-        const skip = req.query.skip != undefined ? req.query.skip : 0;
-        const limit = req.query.limit != undefined ? req.query.limit : 20;
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
 
         const total = await db.count({num: 1}).from('comments')
@@ -312,8 +300,8 @@ async (req, res, next) => {
     try {
         const createTimeFrom = new Date(req.query.createTimeFrom);
         const createTimeto = new Date(req.query.createTimeto);
-        const skip = req.query.skip != undefined ? req.query.skip : 0;
-        const limit = req.query.limit != undefined ? req.query.limit : 20;
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
 
         const result = await db('comments')
@@ -339,8 +327,8 @@ router.get('/chatLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
-        const skip = req.query.skip != undefined ? req.query.skip : 0;
-        const limit = req.query.limit != undefined ? req.query.limit : 20;
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
 
         const total = await db.count({num: 1}).from('messages').first().then(r => r.num);
@@ -355,7 +343,7 @@ async (req, res, next) => {
     }
 });
 
-router.get('/getUserOperationLogs', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+router.get('/userOperationLogs', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkbody("name").optional().isString(),
         checkquery('skip').optional().isInt({min: 0}),
         checkquery('limit').optional().isInt({min: 0}),
@@ -367,8 +355,8 @@ router.get('/getUserOperationLogs', verifyJWT, allowPrivileges(["super", "root",
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'userOperationLog.bad', message: validateErr.array()});
 
-            const skip = req.query.skip != undefined ? req.query.skip : 0;
-            const limit = req.query.limit != undefined ? req.query.limit : 20;
+            const skip = req.query.skip !== undefined ? req.query.skip : 0;
+            const limit = req.query.limit !== undefined ? req.query.limit : 20;
             const order = req.query.order ? req.query.order : 'desc';
 
             const result = await db.select('useTab1.username as adminName', 'useTab2.username as userName', 'operation_log.action', 'operation_log.role', 'operation_log.byUserId', 'operation_log.toUserId', 'operation_log.createTime')
@@ -404,7 +392,7 @@ async (req, res, next) => {
         doEditUserData.attr = JSON.stringify(userSetAttributes(userData.attr, req.body.data.attr, true));
 
         // change UserName
-        if (req.body.data.username != undefined)
+        if (req.body.data.username !== undefined)
             doEditUserData.username = req.body.data.username;
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setUserAttr', target: userData.id}));
@@ -441,7 +429,7 @@ router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
             // does anyone occupied?
             if ((await db.select('username').from('verifications').where({username: username, type: 'register'}).union([
                 db.select('username').from('users').where({username: username})
-            ])).length != 0)
+            ])).length !== 0)
                 return res.status(400).json({error: 1, code: 'admin.addUser.usernameExist'});
 
             // no mistakes detected, generate a unique string for register validation
@@ -498,12 +486,41 @@ router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         } catch (err) {
             if (err instanceof ServiceApiError) {
                 logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
-                return res.status(err.statusCode == 501 ? 501 : 500).json({
+                return res.status(err.statusCode === 501 ? 501 : 500).json({
                     error: 1,
-                    code: err.statusCode == 501 ? 'admin.addUser.notImplement' : 'admin.addUser.error',
+                    code: err.statusCode === 501 ? 'admin.addUser.notImplement' : 'admin.addUser.error',
                     message: err.message
                 });
             }
+            next(err);
+        }
+    });
+
+router.get('/muteUserAll', verifyJWT, allowPrivileges(["root", "dev", "super", "admin"]), [
+        checkquery('skip').optional().isInt({min: 0}),
+        checkquery('limit').optional().isInt({min: 0, max: 100}),
+        checkquery('order').optional().isIn(['asc', 'desc']),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'muteUsers.bad', message: validateErr.array()});
+
+            const skip = req.query.skip !== undefined ? req.query.skip : 0;
+            const limit = req.query.limit !== undefined ? req.query.limit : 20;
+            const order = req.query.order ? req.query.order : 'desc';
+
+            const total = await db.count({num: 1}).from('users')
+                .whereJsonPath('users.attr', '$.mute', '!=', '')
+                .first().then(r => r.num);
+            const result = await db.from('users')
+                .whereJsonPath('users.attr', '$.mute', '!=', '')
+                .orderBy('users.createTime', order)
+                .offset(skip).limit(limit);
+
+            return res.status(200).json({success: 1, code: 'muteUsers.ok', data: result, total});
+        } catch (err) {
             next(err);
         }
     });
@@ -519,7 +536,7 @@ router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "ad
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'muteUser.ban.bad', message: validateErr.array()});
-            if (req.body.data.value == undefined)
+            if (req.body.data.value === undefined)
                 return res.status(401).json({error: 1, code: 'muteUser.ban.bad', message: '"value" cannot be missing'});
             if (req.body.data.type === undefined)
                 return res.status(401).json({error: 1, code: 'muteUser.ban.bad', message: '"type" cannot be missing'});
@@ -594,13 +611,12 @@ router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
 
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'admin.delUser.bad', message: validateErr.array()});
-            if (req.body.data.type == undefined)
+            if (req.body.data.type === undefined)
                 return res.status(401).json({error: 1, code: 'admin.delUser.bad', message: '"type" cannot be missing'});
 
             const {id} = req.body.data;
             const userDb = db('users');
 
-            // TODO 验证账户
             switch (req.body.data.type) {
                 case "logic":
                     await userDb.update({
@@ -626,6 +642,37 @@ router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
             });
 
             return res.status(201).json({success: 1, code: 'admin.delUser.success', message: 'success'});
+        } catch (err) {
+            next(err);
+        }
+    });
+
+router.get('/verifications', verifyJWT, allowPrivileges(['dev', 'root']), [
+        checkquery('skip').optional().isInt({min: 0}),
+        checkquery('limit').optional().isInt({min: 0, max: 100}),
+        checkquery('order').optional().isIn(['asc', 'desc']),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'verifications.bad', message: validateErr.array()});
+
+            const skip = req.query.skip !== undefined ? req.query.skip : 0;
+            const limit = req.query.limit !== undefined ? req.query.limit : 20;
+            const order = req.query.order ? req.query.order : 'desc';
+
+            const total = await db.count({num: 1}).from('verifications')
+                .first().then(r => r.num);
+            const result = await db.from('verifications')
+                .orderBy('verifications.createTime', order)
+                .offset(skip).limit(limit)
+                .then(r => r.map(i => {
+                    delete i.password;
+                    return i
+                }));
+
+            return res.status(200).json({success: 1, code: 'verifications.ok', data: result, total});
         } catch (err) {
             next(err);
         }

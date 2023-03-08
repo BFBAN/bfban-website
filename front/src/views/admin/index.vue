@@ -28,7 +28,8 @@
               {{ $t('profile.admin.menu.home') }}
             </MenuItem>
 
-            <MenuGroup :title="isMobile ? null : $t('profile.admin.menu.' + i.title)" v-for="(i, index) in adminMuen" :key="index">
+            <MenuGroup :title="isMobile ? null : $t('profile.admin.menu.' + i.title)" v-for="(i, index) in adminMuen"
+                       :key="index">
               <MenuItem :name="j.value" v-for="(j, j_index) in i.child" :key="j_index" v-show="j.disabled">
                 <Row>
                   <Col flex="1">
@@ -57,6 +58,10 @@
               </p>
             </div>
             <user v-else-if="adminMenuValue == 'user'"></user>
+            <blockedUsers v-else-if="adminMenuValue == 'blockedUsers'"></blockedUsers>
+            <muteUsers v-else-if="adminMenuValue == 'muteUsers'"></muteUsers>
+
+            <verifications v-else-if="adminMenuValue == 'verifications'"></verifications>
             <comment v-else-if="adminMenuValue == 'comment'"></comment>
 
             <chatPush v-else-if="adminMenuValue == 'chat_push'"></chatPush>
@@ -77,7 +82,10 @@
 import BFBAN from "@/assets/js/bfban";
 
 import user from "./user"
+import blockedUsers from "@/views/admin/blockedUsers";
+import muteUsers from "@/views/admin/muteUsers";
 import comment from "./comment"
+import verifications from "@/views/admin/verifications";
 import adminOperationLog from "./adminSystemOperationLog"
 import judgementLog from "@/views/admin/judgementLog";
 import adminOperation from "@/views/admin/adminCommentOperationLog";
@@ -95,16 +103,6 @@ export default new BFBAN({
       openMuen: ['comment', 'comm', 'log'],
       adminMenuValue: 'home',
       adminMuen: [
-        // {
-        //   title: 'welcome',
-        //   child: [
-        //     {
-        //       title: 'home',
-        //       value: 'home',
-        //       ignore: true
-        //     }
-        //   ]
-        // },
         {
           title: 'management',
           child: [
@@ -115,10 +113,28 @@ export default new BFBAN({
               privilege: ['super', 'root', 'dev'],
             },
             {
+              title: 'blockedUsers',
+              value: 'blockedUsers',
+              disabled: false,
+              privilege: ['super', 'root', 'dev'],
+            },
+            {
+              title: 'muteUsers',
+              value: 'muteUsers',
+              disabled: false,
+              privilege: ['admin', 'super', 'root', 'dev'],
+            },
+            {
               title: 'comment',
               value: 'comment',
               disabled: false,
               privilege: ['super', 'root', 'dev'],
+            },
+            {
+              title: 'verifications',
+              value: 'verifications',
+              disabled: false,
+              privilege: ['root', 'dev'],
             }
           ]
         },
@@ -166,7 +182,19 @@ export default new BFBAN({
       ]
     }
   },
-  components: {user, comment, adminOperationLog, judgementLog, chatPush, chatList, PrivilegesTag, adminOperation},
+  components: {
+    user,
+    blockedUsers,
+    muteUsers,
+    verifications,
+    comment,
+    adminOperationLog,
+    judgementLog,
+    chatPush,
+    chatList,
+    PrivilegesTag,
+    adminOperation
+  },
   created() {
     const {pagename} = this.$route.params;
 
@@ -200,7 +228,7 @@ export default new BFBAN({
 </script>
 
 <style lang="less" scoped>
-@media screen and (min-width: 980px){
+@media screen and (min-width: 980px) {
   .admin-menu,
   .admin {
     min-height: 500px;

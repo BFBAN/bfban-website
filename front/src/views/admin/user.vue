@@ -81,14 +81,6 @@
           <PrivilegesTag :ref="`tag_${i.id}_privilegesTag`" :data="i.privilege" v-if="i.privilege"></PrivilegesTag>
         </Col>
         <Col>
-          <!-- 禁言 -->
-          <Button @click="muteUser('remove', i.id)" type="dashed" v-if="i.isMute" size="small" :disabled="!isAdmin">
-            <Icon type="md-mic-off" title="remove mute" />
-          </Button>
-          <Button @click="showMuteAlert(i.id)" type="dashed" v-else size="small" :disabled="!isAdmin">
-            <Icon type="md-mic" title="mute user" />
-          </Button>
-
           <Divider type="vertical"></Divider>
           <Button @click="onEditUser(index)" type="dashed" size="small" :disabled="!isAdmin">
             <Icon type="ios-create"/>
@@ -314,38 +306,6 @@
       </div>
     </Modal>
     <!-- 删除用户 E -->
-
-    <!-- 禁言 -->
-    <Modal
-        v-model="mute.show"
-        @on-ok="modalOk"
-        @on-cancel="mute.show = false">
-          <p slot="header" style="color:#333; text-align:center">
-            <span>Select the time duration for mute</span>
-          </p>
-
-      <Form>
-        <FormItem>
-          <Select v-model="mute.value">
-            <Option v-for="item in [
-              {value: 0, text: '10 mins'},
-              {value: 1, text: '1 hr'},
-              {value: 2, text: '12 hrs'},
-              {value: 3, text: '1 day'},
-              {value: 4, text: '1 week'},
-              {value: 5, text: '1 month'}]"
-                    :value="item.value"
-                    :key="item.value">
-              {{ item.text }}
-            </Option>
-          </Select>
-        </FormItem>
-
-        <FormItem>
-          <Checkbox v-model="mute.isNoticeIntraStationUser">是否将此禁令通知玩家？</Checkbox>
-        </FormItem>
-      </Form>
-    </Modal>
   </div>
 </template>
 
@@ -363,14 +323,11 @@ import BFBAN from "@/assets/js/bfban";
 export default new BFBAN({
   data() {
     return {
-      mute: {
-        value: '0', id: '', show: false
-      },
       delUserModel: false,
       delUserLoad: false,
       delTypes: ['logic', 'real', 'restore'],
       delTypeValue: 'logic',
-      
+
       userType: {
         value: 'all',
         list: [{title: 'All', value: 'all'}, {title: 'Admin`s', value: 'admin'}]
@@ -429,40 +386,6 @@ export default new BFBAN({
     this.getUserList();
   },
   methods: {
-    showMuteAlert(id) {
-      this.mute.id = id
-      this.mute.show = true
-    },
-    modalOk() {
-      this.muteUser('add', this.mute.id, this.mute.value)
-    },
-    muteUser(type, id, muteTime = 0) {
-      const {isNoticeIntraStationUser} = this.mute;
-
-      if (!muteTime && !id && !type) return false;
-
-      this.http.post(api["mute_user"], {
-        data: {
-          data: {
-            type,
-            id,
-            value: muteTime,
-          },
-          isNotice: isNoticeIntraStationUser,
-          language: mail.exchangeLangField(this.$root.$i18n.locale)
-        },
-      }).then(res => {
-        const d = res.data;
-        if (d.success == 1) {
-          this.onSearchUser();
-          this.$Message.success({content: d.message || d.code, duration: 3});
-          return;
-        }
-        this.$Message.error({content: d.message || d.code, duration: 3});
-      }).catch(err => {
-        this.$Message.error(err.code);
-      })
-    },
     /**
      * 提交修改表单
      */

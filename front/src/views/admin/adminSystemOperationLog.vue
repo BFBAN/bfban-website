@@ -91,7 +91,7 @@ export default {
       if (this.load) return;
       this.load = true;
 
-      this.http.get(api['getUserOperationLogs'], {
+      this.http.get(api['admin_userOperationLogs'], {
         params: {
           name: this.userValue,
           skip: this.skip - 1,
