@@ -39,14 +39,11 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 
-import {http, api, http_token} from '../assets/js/index'
-import { waitForAction} from '@/mixins/common';
+import {api, http_token} from '../assets/js/index'
 
-const {mapActions, mapMutations} = Vuex;
-
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       reset: {

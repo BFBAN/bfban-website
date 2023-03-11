@@ -2,24 +2,24 @@
   <div>
     =
     <card v-for="(i, index) in weekday" :key="index">
-      {{i}}
+      {{ i }}
     </card>
   </div>
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 
-import {api, http, util} from '../assets/js/index'
+import {http} from '../assets/js/index'
 
-export default new BFBAN({
+export default new Application({
   name: "Weekly",
   data() {
     return {
       weekday: [],
     }
   },
-  created () {
+  created() {
     this.getWeekly();
   },
   methods: {

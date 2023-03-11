@@ -187,14 +187,13 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 import Empty from "@/components/Empty"
 import businessCard from "@/components/businessCard";
-import * as echarts from "echarts";
 
-import {http, api, conf, account_storage} from '../assets/js/index'
+import {http, api, account_storage} from '../assets/js/index'
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       load: false,

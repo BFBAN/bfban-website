@@ -60,7 +60,8 @@
                 </spin>
               </Form>
 
-              <Divider dashed :style="`margin:40px -${isMobile ? 20 : 50}px;width:calc(100% + ${isMobile ? 20 * 2 : 50 * 2}px)`"/>
+              <Divider dashed
+                       :style="`margin:40px -${isMobile ? 20 : 50}px;width:calc(100% + ${isMobile ? 20 * 2 : 50 * 2}px)`"/>
 
               <Row type="flex" justify="center" align="middle">
                 <Col>
@@ -92,7 +93,7 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 
 import {api, http} from '../assets/js/index'
 import Captcha from "../components/Captcha";
@@ -101,7 +102,7 @@ import _ from "lodash";
 
 const {mapActions, mapMutations} = Vuex;
 
-export default new BFBAN({
+export default new Application({
   components: {Captcha},
   data() {
     return {
@@ -204,7 +205,7 @@ export default new BFBAN({
 </script>
 
 <style lang="less" scoped>
-@import "../assets/css/icon.less";
+@import "@/assets/css/icon.less";
 
 .signin-box {
   overflow: hidden;

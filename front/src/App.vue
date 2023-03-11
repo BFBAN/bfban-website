@@ -98,7 +98,7 @@ import 'view-design/dist/styles/iview.css'
 </script>
 
 <style lang="less">
-@import "./assets/css/index.less";
+@import "@/assets/css/index.less";
 
 @font-face {
   font-family: "Ubuntu Mono";

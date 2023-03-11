@@ -84,9 +84,9 @@
 import {api, http_token, util} from "../../assets/js";
 
 import BusinessCard from "@/components/businessCard";
-import BFBAN from "@/assets/js/bfban";
+import Application from "@/assets/js/application";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       util,

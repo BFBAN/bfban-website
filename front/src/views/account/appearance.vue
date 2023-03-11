@@ -4,8 +4,6 @@
       <Card dis-hover
             v-for="(i, index) in themes.child" :key="index"
             :class="`${index == themeIndex ? 'ivu-radio-wrapper-checked' : ''}`">
-        <!--          <img class="theme-img" :src="require('/public/theme/' + i.name + '/preview.svg')" v-if="i.type == 'local'">-->
-        <!--          <img class="theme-img" :src="i.img" v-else>-->
         <div @click="themeIndex = index">
           <div class="theme-color" :style="`background-color: ${i.themeColor}`"></div>
           <h1>
@@ -134,11 +132,6 @@ export default {
     height: 20px;
     border-radius: 8px;
     border: 1px solid rgba(0,0,0,.08);
-  }
-
-  .theme-img {
-    width: calc(100% + 32px) !important;
-    margin: -16px -16px 0px -16px;
   }
 }
 </style>

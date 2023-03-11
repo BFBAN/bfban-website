@@ -29,7 +29,7 @@
               <div style="min-height: 500px;width: 100%;display: flex;justify-content: center;align-items: center">
                 <a :href="share.webLink" v-t="{
                   path: 'share.link.textLinkContent',
-                  args: { webname: 'BFBAN', url: share.webLink },
+                  args: { webname: share.appName, url: share.webLink },
                   locale: share.languages
                 }" target="_blank"></a>
               </div>
@@ -127,12 +127,12 @@
 </template>
 
 <script>
-import BFBAN from "/src/assets/js/bfban";
+import Application from "/src/assets/js/application";
 import theme from "/public/conf/themes.json";
 import languages from "/public/conf/languages.json";
 import config from "@/../package.json";
 
-import {api, http, http_token, util} from '../assets/js/index'
+import {http_token} from '../assets/js/index'
 import vueQr from 'vue-qr'
 import html2canvas from 'html2canvas';
 
@@ -140,12 +140,12 @@ import Empty from '../components/Empty.vue'
 import BusinessCard from "../components/businessCard.vue";
 import SharePlayerCell from "../components/SharePlayerCell.vue";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       share: {
+        appName: "app",
         modeShow: false,
-        imagebase64: "",
         collapse: "1",
         statusSharePicture: false,
         show: true,
@@ -200,20 +200,8 @@ export default new BFBAN({
     async loadData() {
       // set Token Http mode
       this.http = http_token.call(this);
-    },
-    /**
-     * 字符串替换
-     * @param text
-     * @param params {Object}
-     * @returns {string}
-     */
-    onStringSubstitution(text, params) {
-      if (!text) return;
-      Object.keys(params).forEach(i => {
-        // text = text
-        //     .replaceAll(new RegExp(`{${i}}`, 'g'), params[i]);
-      });
-      return text;
+
+      this.share.appName = config.name;
     },
     /**
      * 更新 / 设置分享内容
@@ -226,7 +214,7 @@ export default new BFBAN({
 
       let _webLink = `${url}?lang=${share.languages}`;
       const _shareWebLinkText = `${that.$i18n.tc('share.link.textLinkContent', 0, this.share.languages, {
-        'webname': config.name,
+        'webname': this.share.appName,
         'url': _webLink,
       })}`;
       this.share.webLink = _webLink;
@@ -287,7 +275,7 @@ export default new BFBAN({
       }, 1000);
     },
     /**
-     * 生产下载
+     * 生成下载
      * @param canvas
      */
     onDownload(canvas) {
@@ -297,25 +285,28 @@ export default new BFBAN({
         quality: 1
       });
 
-      link.download = "grid1.png";
+      link.download = `${this.share.appName}_${new Date().getTime()}.jpg`;
       link.href = URL.createObjectURL(this.dataURLtoBlob(imgData));
       link.click();
     },
     /**
      * dataUrl 转 blob
-     * @param dataurl
+     * @param data_url
      * @returns {Blob}
      */
-    dataURLtoBlob(dataurl) {
-      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    dataURLtoBlob(data_url) {
+      let arr = data_url.split(','),
+          mime = arr[0].match(/:(.*?);/)[1],
+          atobStr = atob(arr[1]),
+          n = atobStr.length,
+          u8arr = new Uint8Array(n);
+
       while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
+        u8arr[n] = atobStr.charCodeAt(n);
       }
       return new Blob([u8arr], {type: mime});
     },
-  },
-  computed: {}
+  }
 })
 </script>
 

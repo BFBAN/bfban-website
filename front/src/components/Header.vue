@@ -191,7 +191,7 @@ import menu from '/public/conf/headerMenu.json'
 
 import Header_message from "./Header_message";
 import PrivilegesTag from "/src/components/PrivilegesTag";
-import BFBAN from "@/assets/js/bfban";
+import BFBAN from "@/assets/js/application";
 
 export default new BFBAN({
   data() {
@@ -298,7 +298,7 @@ export default new BFBAN({
 </script>
 
 <style lang="less">
-@import "src/assets/css/index";
+@import "@/assets/css/index";
 
 header {
   -webkit-app-region: drag;

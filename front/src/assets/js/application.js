@@ -1,9 +1,8 @@
-import packageInfo from '../../../package.json';
 import Print from './print';
 import Regular from "@/assets/js/regular";
-import {storage, account_storage} from "@/assets/js/index";
+import {account_storage} from "@/assets/js/index";
 
-export default class BFBAN extends Print {
+export default class Application extends Print {
     BFBANLOG = window.BFBANLOG;
 
     constructor(data) {

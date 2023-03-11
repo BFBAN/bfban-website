@@ -42,7 +42,7 @@
         <Col v-if="isLogin" class="mobile-hide">
           <router-link :to="{name: 'profile', params: {pagename: 'voice'}}">
             <Button type="text" shape="circle">
-              <Icon type="md-musical-notes" size="20" />
+              <Icon type="md-musical-notes" size="20"/>
             </Button>
           </router-link>
         </Col>
@@ -90,7 +90,7 @@
                   @on-page-size-change="handlePageSizeChange"
                   :page-size="limit"
                   :current="skip"
-                  :total="total" />
+                  :total="total"/>
 
             <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
 
@@ -101,16 +101,12 @@
                     <Col :xs="{span: 5, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
                       <!-- 头像 S -->
                       <Avatar :src="d.avatarLink"
+                              class="default-avatar"
                               @on-error="onAvatarError(d_index)"
                               alt="avatar"
                               size="55"
                               v-if="d.avatarLink">
                       </Avatar>
-                      <template v-else>
-                        <Avatar icon="ios-person"
-                                size="55"
-                                style="background-color: rgba(255,0,0,0.37)"></Avatar>
-                      </template>
                       <!-- 头像 E -->
                     </Col>
                     <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
@@ -175,7 +171,8 @@
           <Affix :offset-top="20">
             <Card dis-hover>
               <p slot="title">
-                <Icon type="md-funnel" /> {{ $t('list.colums.screenTitle') }}
+                <Icon type="md-funnel"/>
+                {{ $t('list.colums.screenTitle') }}
               </p>
 
               <Form>
@@ -216,17 +213,17 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 
 import Empty from "@/components/Empty";
 
-import {account_storage, api, http, util, voice} from '../assets/js/index'
+import {api, http, util, voice} from '../assets/js/index'
 import cheaterStatus from '/public/conf/cheaterStatus.json'
 import gameName from '/public/conf/gameName.json'
 import _ from "lodash";
 import store from "@/store";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       games: [],
@@ -235,13 +232,13 @@ export default new BFBAN({
       gameName: "all",
       statusGroup: "-1",
       timeOptions: {
-        disabledDate (date) {
+        disabledDate(date) {
           return date && date.valueOf() > Date.now();
         },
         shortcuts: [
           {
             text: this.$i18n.t('sitestats.timeRange.daily'),
-            value () {
+            value() {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24);
@@ -250,7 +247,7 @@ export default new BFBAN({
           },
           {
             text: this.$i18n.t('sitestats.timeRange.weekly'),
-            value () {
+            value() {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
@@ -259,7 +256,7 @@ export default new BFBAN({
           },
           {
             text: this.$i18n.t('sitestats.timeRange.monthly'),
-            value () {
+            value() {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
@@ -268,7 +265,7 @@ export default new BFBAN({
           },
           {
             text: this.$i18n.t('sitestats.timeRange.yearly'),
-            value () {
+            value() {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 12);
@@ -297,7 +294,7 @@ export default new BFBAN({
   components: {Empty},
   watch: {
     $route: "loadData",
-    gameName: function (val,oldVal) {
+    gameName: function (val, oldVal) {
       if (val &&
           val != 'all' &&
           store.state.configuration.voice &&
@@ -401,7 +398,10 @@ export default new BFBAN({
 
           // type methods
           [].concat(d.data).splice(splitIndex, d.data.length - 1).forEach((i, index) => {
-            totalSum.push({status: that.cheaterStatus.filter(item => item.value == i.status)[0].value, num: Number(i.count)})
+            totalSum.push({
+              status: that.cheaterStatus.filter(item => item.value == i.status)[0].value,
+              num: Number(i.count)
+            })
           });
           this.totalSum = totalSum;
         }
@@ -414,7 +414,15 @@ export default new BFBAN({
      */
     async getCheaterList() {
       // default values
-      const {game = "all", status = -1, createTime, updateTime, skip = this.skip, sort = "updateTime", limit = this.limit} = this.$route.query;
+      const {
+        game = "all",
+        status = -1,
+        createTime,
+        updateTime,
+        skip = this.skip,
+        sort = "updateTime",
+        limit = this.limit
+      } = this.$route.query;
 
       let config = {
         params: {
@@ -531,7 +539,7 @@ export default new BFBAN({
       this.limit = num;
       this.handleChanges();
     },
-    onAvatarError (index) {
+    onAvatarError(index) {
       this.data[index].avatarLink = ""
     }
   },
@@ -553,7 +561,8 @@ export default new BFBAN({
 </script>
 
 <style lang="less" scoped>
-@import "./src/assets/css/radio.less";
+@import "@/assets/css/radio.less";
+@import "@/assets/css/avatar.less";
 
 .page {
   padding: 0 16px;

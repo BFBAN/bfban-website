@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import BFBAN from "@/assets/js/bfban";
+import Application from "@/assets/js/application";
 
 import user from "./user"
 import blockedUsers from "@/views/admin/blockedUsers";
@@ -95,7 +95,7 @@ import PrivilegesTag from "@/components/PrivilegesTag";
 
 import {account_storage} from "@/assets/js";
 
-export default new BFBAN({
+export default new Application({
   name: "profile",
   data() {
     return {
@@ -145,7 +145,7 @@ export default new BFBAN({
               title: 'messagePush',
               value: 'chat_push',
               disabled: false,
-              privilege: ['super', 'root', 'dev'],
+              privilege: ['admin', 'super', 'root', 'dev'],
             },
             {
               title: 'messageList',

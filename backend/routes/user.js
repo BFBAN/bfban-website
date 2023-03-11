@@ -254,9 +254,9 @@ async (req, res, next) => {
         if (originUserInfo.username.toLowerCase() !== originName.toLowerCase()) // verify
             return res.status(400).json({error: 1, code: 'bindOrigin.originNotFound'});
 
-        if ( (await db.from('verifications').select('originUserId').where({originUserId: originUserId}).union([
+        if ((await db.from('verifications').select('originUserId').where({originUserId: originUserId}).union([
             db.from('users').select('originUserId').where({originUserId: originUserId}) // check duplicated binding
-        ]) ).length != 0)
+        ])).length != 0)
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
 
         // // check duplicated binding
@@ -351,7 +351,7 @@ async function showUserInfo(req, res, next) {
             return res.status(400).json({error: 1, code: 'userInfo.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({id: req.query.id}).first();
+        const user = await db.select('*').from('users').where({id: req.query.id, valid: 1}).first();
         if (!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
         const reportnum = await db('comments')
@@ -540,7 +540,7 @@ async (req, res, next)=>{
         const validateErr = validationResult(req);
         if(!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'userBatch.bad', message: validateErr.array()});
-        
+
         const query = req.body.data.filter(i=>{
             if(Number.isInteger(i-0))
                 return i-0;

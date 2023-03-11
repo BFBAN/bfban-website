@@ -56,11 +56,11 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 
-import {http, api, conf, mail} from '../assets/js/index'
+import {http, api, mail} from '../assets/js/index'
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       stepsIndex: 4,

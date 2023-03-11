@@ -98,7 +98,7 @@ import {storage, account_storage, http} from "../assets/js";
 import packageInfo from '../../package.json';
 import footerNavs from '/public/conf/footerNavs.json';
 import link from '/public/conf/link.json';
-import BFBAN from "@/assets/js/bfban";
+import BFBAN from "@/assets/js/application";
 
 export default new BFBAN({
   data() {
@@ -161,7 +161,7 @@ export default new BFBAN({
 </script>
 
 <style lang="less" scoped>
-@import "src/assets/css/footer";
+@import "@/assets/css/footer";
 
 @footer-primary-color: #fff;
 @footer-border-color: #00000008;

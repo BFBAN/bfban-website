@@ -297,9 +297,8 @@
           </Col>
           <Divider type="vertical"></Divider>
           <Col flex="2">
-            <Button @click="onDeleteUser" type="error" long :loading="delUserLoad">{{
-                $t('basic.button.submit')
-              }}
+            <Button @click="onDeleteUser" type="error" long :loading="delUserLoad">
+              {{ $t('basic.button.submit') }}
             </Button>
           </Col>
         </Row>
@@ -318,9 +317,9 @@ import BusinessCard from "@/components/businessCard";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import _ from "lodash";
 import Textarea from "@/components/Textarea";
-import BFBAN from "@/assets/js/bfban";
+import Application from "@/assets/js/application";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       delUserModel: false,
@@ -471,7 +470,7 @@ export default new BFBAN({
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.$Message.success(d.code);
           return
         }

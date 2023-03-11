@@ -93,6 +93,35 @@ async (req, res, next) => {
     }
 });
 
+router.get('/blockedUserAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('order').optional().isIn(['asc', 'desc']),
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'blockedUserAll.bad', message: validateErr.array()});
+
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
+        const order = req.query.order ? req.query.order : 'desc';
+
+        let total = await db.count({num: 1}).from('users')
+            .where('users.valid', 0)
+            .first().then(r => r.num);
+        let result = await db.select('*').from('users')
+            .where('users.valid', 0)
+            .orderBy('users.createTime', order)
+            .offset(skip).limit(limit);
+
+        return res.status(200).json({success: 1, code: 'blockedUserAll.ok', data: result, total});
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
         checkbody('type').optional().isString().isInt(['report', 'reply', 'judgement', 'banAppeal']),

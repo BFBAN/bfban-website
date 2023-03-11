@@ -3,19 +3,20 @@
     <p class="hint">Here you can search for users on the site and add a gag, which prevents users from Posting anything
       on the site</p>
     <p class="hint">Unable to add an administrator user</p>
+    <p class="hint">Use with caution, and your actions will be recorded</p>
     <br>
 
-    <Row :gutter="10">
+    <Row :gutter="10" type="flex" justify="center" align="middle">
       <Col flex="1">
         <Select
             v-model="muteSearchName"
             filterable
             :remote-method="getSearchMuteUser"
             :loading="searchLoading">
-          <Option v-for="(i, index) in searchMuteUserList" :value="i.id" :key="index" :disabled="true">
-            <Row :gutter="10">
+          <Option v-for="(i, index) in searchMuteUserList" :value="i.username" :key="index" :disabled="true">
+            <Row :gutter="10" type="flex" justify="center" align="middle">
               <Col flex="1">
-                {{ i.username }} ({{ i.id }})
+                <b>{{ i.username }}</b> ({{ i.id }})
               </Col>
               <Col>
                 <PrivilegesTag :data="i.privilege"></PrivilegesTag>
@@ -30,6 +31,11 @@
             </Row>
           </Option>
         </Select>
+      </Col>
+      <Col>
+        <router-link :to="{name: 'admin', params: {pagename: 'admin_operation_log'}}">
+          {{ $t('profile.admin.menu.adminOperationLog') }}
+        </router-link>
       </Col>
     </Row>
     <br>
@@ -55,12 +61,13 @@
     </Row>
     <br>
 
-    <div>
+    <template v-if="muteUserList.length >= 0">
       <Card dis-hover v-for="(i, index) in muteUserList" :key="index" class="interval-card">
-        <Row :gutter="10">
+        <Row :gutter="10" type="flex" justify="center" align="middle">
           <Col flex="1">
             <b>{{ i.username }}</b> ({{ i.id }})
             <p class="description">
+              Gag time:
               <Time :time="i.attr.mute"></Time>
             </p>
           </Col>
@@ -68,13 +75,17 @@
             <PrivilegesTag :data="i.privilege"></PrivilegesTag>
           </Col>
           <Col>
-            <Button @click="muteUser('remove', i.id)" type="dashed" size="small" :disabled="!isAdmin">
+            <Button @click="muteUser('remove', i.id)" :disabled="!isAdmin">
               <Icon type="md-mic-off" title="remove mute"/>
+              Removal Mute
             </Button>
           </Col>
         </Row>
       </Card>
-    </div>
+    </template>
+    <Card dis-hover v-else>
+      <Empty></Empty>
+    </Card>
 
     <br>
     <Row :gutter="20">
@@ -129,7 +140,8 @@
 <script>
 import {api, http_token, mail} from "@/assets/js";
 import PrivilegesTag from "@/components/PrivilegesTag";
-import BFBAN from "@/assets/js/bfban";
+import BFBAN from "@/assets/js/application";
+import Empty from "@/components/Empty";
 
 export default new BFBAN({
   name: "muteUsers",
@@ -152,7 +164,7 @@ export default new BFBAN({
       order: null
     }
   },
-  components: {PrivilegesTag},
+  components: {PrivilegesTag, Empty},
   created() {
     this.http = http_token.call(this);
 
@@ -193,11 +205,11 @@ export default new BFBAN({
     },
     handlePageChange(num) {
       this.skip = num;
-      this.getMedia();
+      this.getMuteUsers();
     },
     handlePageSizeChange(num) {
-      this.media.limit = num;
-      this.getMedia();
+      this.limit = num;
+      this.getMuteUsers();
     },
     /**
      * 条件查询站内用户

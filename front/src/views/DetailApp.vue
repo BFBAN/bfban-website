@@ -34,10 +34,10 @@
 </template>
 
 <script>
-import BFBAN from "/src/assets/js/bfban"
+import Application from "/src/assets/js/application"
 import vueQr from 'vue-qr'
 
-export default new BFBAN({
+export default new Application({
   name: "detailApp",
   data() {
     return {

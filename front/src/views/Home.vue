@@ -166,10 +166,10 @@
 <script>
 import {api, http, util, time, regular, upload} from '../assets/js/index'
 
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 import Tell from "../components/Home_tell";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       bannerImage: '',

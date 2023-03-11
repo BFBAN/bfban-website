@@ -113,8 +113,8 @@
           </div>
 
           <TabPane name="player" :label="$t('search.tabs.player')"></TabPane>
-          <TabPane name="user" :label="$t('search.tabs.user')"></TabPane>
-          <TabPane name="comment" :label="$t('search.tabs.comment')"></TabPane>
+          <TabPane name="user" :label="$t('search.tabs.user')" :disabled="!isLogin"></TabPane>
+          <TabPane name="comment" :label="$t('search.tabs.comment')" :disabled="!isLogin"></TabPane>
         </Tabs>
 
         <!-- 玩家 S -->
@@ -154,14 +154,15 @@
                     <Col :xs="{span: 5, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
                       <!-- 头像 S -->
                       <Avatar :src="d.avatarLink"
+                              class="default-avatar"
                               alt="avatar"
                               size="55"
                               v-if="d.avatarLink">
                       </Avatar>
                       <template v-else>
                         <Avatar icon="ios-person"
-                                size="55"
-                                style="background-color: rgba(255,0,0,0.37)"></Avatar>
+                                class="default-avatar"
+                                size="55"></Avatar>
                       </template>
                       <!-- 头像 E -->
                     </Col>
@@ -363,7 +364,7 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 import OcrWidget from "@/components/OcrWidget";
 import PrivilegesTag from "@/components/PrivilegesTag";
 import HtmlWidget from "@/components/HtmlWidget";
@@ -372,9 +373,9 @@ import Empty from "@/components/Empty";
 
 import game from '../../public/conf/gameName.json';
 
-import {api, http, storage, time} from "../assets/js";
+import {api, http, storage} from "../assets/js";
 
-export default new BFBAN({
+export default new Application({
   name: "search",
   data() {
     return {
@@ -642,6 +643,7 @@ export default new BFBAN({
 </script>
 
 <style scoped lang="less">
+@import "@/assets/css/avatar.less";
 @import "@/assets/css/radio.less";
 @import "@/assets/css/icon.less";
 @import "@/assets/css/timeline.less";

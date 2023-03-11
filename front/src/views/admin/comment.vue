@@ -147,10 +147,10 @@ import {account_storage, api, http, http_token, util} from "../../assets/js";
 
 import BusinessCard from "@/components/businessCard";
 import Textarea from "@/components/Textarea";
-import BFBAN from "@/assets/js/bfban";
+import Application from "@/assets/js/application";
 import HtmlWidget from "@/components/HtmlWidget";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       commentEditModel: false,

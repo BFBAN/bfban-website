@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import BFBAN from "/src/assets/js/bfban";
+import Application from "/src/assets/js/application";
 
 import {api, http, http_token, message} from "../../assets/js";
 
@@ -71,7 +71,7 @@ import BusinessCard from "/src/components/businessCard.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import messageConf from "/public/conf/message.json";
 
-export default new BFBAN({
+export default new Application({
   name: "messagePush",
   data() {
     return {

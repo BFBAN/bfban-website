@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 
 import {http, api, http_token, mail} from '../assets/js/index'
 import {testWhitespace} from "@/mixins/common";
@@ -146,9 +146,7 @@ import {testWhitespace} from "@/mixins/common";
 import EmailTip from "../components/EmailTip";
 import Captcha from "../components/Captcha";
 
-import _ from "lodash";
-
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       stepsIndex: 0,

@@ -21,6 +21,7 @@
             <div align="center">
               <!-- Origin头像 S -->
               <Avatar shape="square"
+                      class="default-avatar"
                       :src="cheater.avatarLink"
                       :size="180"
                       :title="$t('detail.info.originAvatar')"
@@ -28,9 +29,8 @@
               </Avatar>
               <template v-else>
                 <Avatar shape="square"
-                        icon="ios-person"
-                        size="180"
-                        style="background-color: rgba(255,0,0,0.37)">
+                        class="default-avatar"
+                        size="180">
                 </Avatar>
               </template>
               <!-- Origin头像 E -->
@@ -1173,7 +1173,7 @@
 <script>
 import {api, http, http_token, util, message, time, storage, account_storage, mail} from '../assets/js/index'
 
-import BFBAN from "/src/assets/js/bfban";
+import BFBAN from "/src/assets/js/application";
 import Empty from '../components/Empty.vue'
 import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
@@ -2028,6 +2028,7 @@ export default new BFBAN({
 
 <style lang="less">
 @import "@/assets/css/icon.less";
+@import "@/assets/css/avatar.less";
 
 .detail-userinfo-card {
   display: flex;

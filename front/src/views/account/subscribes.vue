@@ -200,7 +200,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "./src/assets/css/radio.less";
+@import "@/assets/css/radio.less";
 
 .history-buttons {
   margin-top: 5px;
