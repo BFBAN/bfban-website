@@ -278,7 +278,7 @@
         "management": "内容",
         "user": "用户管理",
         "muteUsers":"禁言用户",
-        "blockedUsers":"用户黑名单",
+        "blockedUsers":"黑名单用户",
         "verifications": "验证器",
         "message": "消息",
         "comment": "评论管理",
