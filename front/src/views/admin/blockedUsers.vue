@@ -20,7 +20,8 @@
                 <PrivilegesTag :data="i.privilege"></PrivilegesTag>
               </Col>
               <Col>
-                <Button @click="onAddUserBlocked(index)" size="small" :disabled="isDeleteExecutable">
+                <Button @click="onAddUserBlocked(searchBlockedUserList[index])" size="small"
+                        :disabled="isDeleteExecutable">
                   <Icon type="md-add"/>
                 </Button>
               </Col>
@@ -69,7 +70,7 @@
             <PrivilegesTag :ref="`tag_${i.id}_privilegesTag`" :data="i.privilege" v-if="i.privilege"></PrivilegesTag>
           </Col>
           <Col>
-            <Button @click="onRemoveUserBlocked(index)" :disabled="isDeleteExecutable">
+            <Button @click="onRemoveUserBlocked(blockedUserList[index])" :disabled="isDeleteExecutable">
               <Icon type="md-trash"/>
               Removal Blocked
             </Button>
@@ -182,8 +183,7 @@ export default new BFBAN({
       this.http.get(api["admin_blockedUserAll"], {
         params: {
           skip: this.skip - 1,
-          limit: this.limit,
-          order: this.order
+          limit: this.limit
         }
       }).then(res => {
         const d = res.data;
@@ -237,15 +237,16 @@ export default new BFBAN({
     /**
      * 禁用账户
      */
-    onAddUserBlocked(index) {
-      const {id} = this.blockedUserList[index];
+    onAddUserBlocked(data) {
+      const {id} = data;
+      console.log(id, this.blockedUserList)
       this.onOperatingAccountStatus(id, 'logic')
     },
     /**
      * 解除账户禁用
      */
-    onRemoveUserBlocked(index) {
-      const {id} = this.blockedUserList[index];
+    onRemoveUserBlocked(data) {
+      const {id} = data;
       this.onOperatingAccountStatus(id, 'restore')
     }
   },

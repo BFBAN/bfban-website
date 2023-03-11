@@ -95,8 +95,7 @@ async (req, res, next) => {
 
 router.get('/blockedUserAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('skip').optional().isInt({min: 0}),
-    checkquery('limit').optional().isInt({min: 0, max: 100}),
-    checkquery('order').optional().isIn(['asc', 'desc']),
+    checkquery('limit').optional().isInt({min: 0, max: 100})
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
@@ -106,14 +105,12 @@ async (req, res, next) => {
 
         const skip = req.query.skip !== undefined ? req.query.skip : 0;
         const limit = req.query.limit !== undefined ? req.query.limit : 20;
-        const order = req.query.order ? req.query.order : 'desc';
 
         let total = await db.count({num: 1}).from('users')
             .where('users.valid', 0)
             .first().then(r => r.num);
         let result = await db.select('*').from('users')
             .where('users.valid', 0)
-            .orderBy('users.createTime', order)
             .offset(skip).limit(limit);
 
         return res.status(200).json({success: 1, code: 'admin.blockedUserAll.ok', data: result, total});
@@ -382,7 +379,11 @@ router.get('/userOperationLogs', verifyJWT, allowPrivileges(["super", "root", "d
         try {
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'admin.userOperationLogs.bad', message: validateErr.array()});
+                return res.status(400).json({
+                    error: 1,
+                    code: 'admin.userOperationLogs.bad',
+                    message: validateErr.array()
+                });
 
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
@@ -566,9 +567,17 @@ router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "ad
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'admin.muteUser.ban.bad', message: validateErr.array()});
             if (req.body.data.value === undefined)
-                return res.status(401).json({error: 1, code: 'admin.muteUser.ban.bad', message: '"value" cannot be missing'});
+                return res.status(401).json({
+                    error: 1,
+                    code: 'admin.muteUser.ban.bad',
+                    message: '"value" cannot be missing'
+                });
             if (req.body.data.type === undefined)
-                return res.status(401).json({error: 1, code: 'admin.muteUser.ban.bad', message: '"type" cannot be missing'});
+                return res.status(401).json({
+                    error: 1,
+                    code: 'admin.muteUser.ban.bad',
+                    message: '"type" cannot be missing'
+                });
             if (req.body.isNotice === undefined)
                 return res.status(401).json({
                     error: 1,
@@ -643,10 +652,10 @@ router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
             if (req.body.data.type === undefined)
                 return res.status(401).json({error: 1, code: 'admin.delUser.bad', message: '"type" cannot be missing'});
 
-            const {id} = req.body.data;
+            const {id, type} = req.body.data;
             const userDb = db('users');
 
-            switch (req.body.data.type) {
+            switch (type) {
                 case "logic":
                     await userDb.update({
                         valid: 0,
