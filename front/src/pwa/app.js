@@ -31,7 +31,7 @@ export default class PwaApp {
 
                     _notification = await notification.push('查阅通知', {
                         body: `管理员! 网站有${backres.data.result.length || 0}条，待检查举报信息`,
-                        icon: '/img/icons/maskable_icon_x48.png',
+                        icon: '/images/icons/maskable_icon_x48.png',
                         requireInteraction: true,
                     });
                 }
