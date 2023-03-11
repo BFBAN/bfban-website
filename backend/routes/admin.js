@@ -102,7 +102,7 @@ async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'blockedUserAll.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'admin.blockedUserAll.bad', message: validateErr.array()});
 
         const skip = req.query.skip !== undefined ? req.query.skip : 0;
         const limit = req.query.limit !== undefined ? req.query.limit : 20;
@@ -116,7 +116,7 @@ async (req, res, next) => {
             .orderBy('users.createTime', order)
             .offset(skip).limit(limit);
 
-        return res.status(200).json({success: 1, code: 'blockedUserAll.ok', data: result, total});
+        return res.status(200).json({success: 1, code: 'admin.blockedUserAll.ok', data: result, total});
     } catch (err) {
         next(err);
     }
@@ -133,7 +133,7 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
         try {
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'comment.bad', message: validateErr.array()});
+                return res.status(400).json({error: 1, code: 'admin.commentAll.bad', message: validateErr.array()});
 
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
@@ -156,7 +156,7 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
                     return i
                 }));
 
-            return res.status(200).json({success: 1, code: 'comment.ok', data: result, total});
+            return res.status(200).json({success: 1, code: 'admin.commentAll.ok', data: result, total});
         } catch (err) {
             next(err);
         }
@@ -173,14 +173,14 @@ async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'setComment.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'admin.setComment.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").Comment} */
         const isSpam = req.query.data.includes('isSpam') ? req.query.data.isSpam : false;
         const valid = req.query.data.valid ? req.query.data.valid : null;
         const comment = await db.select('*').from('comments').where({id: req.body.data.id}).first();
         if (!comment)
-            return res.status(404).json({error: 1, code: 'setComment.notFound'});
+            return res.status(404).json({error: 1, code: 'admin.setComment.notFound'});
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setComment', target: comment.id}));
 
@@ -209,7 +209,7 @@ async (req, res, next) => {
             createTime: new Date()
         });
 
-        return res.status(200).json({success: 1, code: 'setComment.ok'});
+        return res.status(200).json({success: 1, code: 'admin.setComment.ok'});
     } catch (err) {
         next(err);
     }
@@ -224,12 +224,12 @@ async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'setComment.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'admin.setUser.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
         const user = await db.select('*').from('users').where({id: req.body.data.id}).first();
         if (!user)
-            return res.status(404).json({error: 1, code: 'setUser.notFound'});
+            return res.status(404).json({error: 1, code: 'admin.setUser.notFound'});
         const role = req.body.data.role;
         if (req.body.data.action === 'grant') {
             const devCan = ['normal', 'bot', 'blacklisted', 'freezed'],
@@ -245,7 +245,7 @@ async (req, res, next) => {
             if (flag)
                 user.privilege = privilegeGranter(user.privilege, role);
             else
-                return res.status(403).json({error: 1, code: 'setUser.permissionDenied'});
+                return res.status(403).json({error: 1, code: 'admin.setUser.permissionDenied'});
         } else {    // revoke permission
             const devCanNot = ['dev', 'admin', 'super', 'root'],
                 superCanNot = ['super', 'root', 'dev'],
@@ -258,7 +258,7 @@ async (req, res, next) => {
             if (flag)
                 user.privilege = privilegeRevoker(user.privilege, role);
             else
-                return res.status(403).json({error: 1, code: 'setUser.permissionDenied'});
+                return res.status(403).json({error: 1, code: 'admin.setUser.permissionDenied'});
         }
         await sendMessage(req.user.id, null, "command", JSON.stringify({
             action: 'setUser',
@@ -285,7 +285,7 @@ async (req, res, next) => {
             role: req.body.data.role,
             createTime: new Date()
         });
-        return res.status(200).json({success: 1, code: 'setUser.ok'});
+        return res.status(200).json({success: 1, code: 'admin.setUser.ok'});
     } catch (err) {
         next(err);
     }
@@ -312,7 +312,7 @@ async (req, res, next) => {
             .orderBy('comments.createTime', order)
             .offset(skip).limit(limit);
 
-        return res.status(200).json({success: 1, code: 'log.ok', data: result, total});
+        return res.status(200).json({success: 1, code: 'admin.log.ok', data: result, total});
     } catch (err) {
         next(err);
     }
@@ -343,7 +343,7 @@ async (req, res, next) => {
             .orderBy('users.createTime', order)
         // .offset(skip).limit(limit);
 
-        return res.status(200).json({success: 1, code: 'log.ok', data: result});
+        return res.status(200).json({success: 1, code: 'admin.log.ok', data: result});
     } catch (err) {
         next(err);
     }
@@ -366,7 +366,7 @@ async (req, res, next) => {
             .orderBy('messages.createTime', order)
             .offset(skip).limit(limit);
 
-        return res.status(200).json({success: 1, code: 'chatLog.ok', data: result, total,});
+        return res.status(200).json({success: 1, code: 'admin.chatLog.ok', data: result, total,});
     } catch (err) {
         next(err);
     }
@@ -382,7 +382,7 @@ router.get('/userOperationLogs', verifyJWT, allowPrivileges(["super", "root", "d
         try {
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'userOperationLog.bad', message: validateErr.array()});
+                return res.status(400).json({error: 1, code: 'admin.userOperationLogs.bad', message: validateErr.array()});
 
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
@@ -396,7 +396,7 @@ router.get('/userOperationLogs', verifyJWT, allowPrivileges(["super", "root", "d
                 .orderBy('users.createTime', order)
                 .offset(skip).limit(limit);
 
-            return res.status(200).json({success: 1, code: 'userOperationLog.ok', data: result});
+            return res.status(200).json({success: 1, code: 'admin.userOperationLogs.ok', data: result});
         } catch (err) {
             next(err);
         }
@@ -411,7 +411,7 @@ async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'setUserAttr.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'admin.setUserAttr.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
         const userData = await db.select('*').from('users').where({id: req.body.data.id}).first();
@@ -434,7 +434,7 @@ async (req, res, next) => {
             createTime: new Date()
         });
 
-        return res.status(200).json({success: 1, code: 'setUserAttr.ok'});
+        return res.status(200).json({success: 1, code: 'admin.setUserAttr.ok'});
     } catch (err) {
         next(err);
     }
@@ -534,7 +534,7 @@ router.get('/muteUserAll', verifyJWT, allowPrivileges(["root", "dev", "super", "
         try {
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'muteUsers.bad', message: validateErr.array()});
+                return res.status(400).json({error: 1, code: 'admin.muteUserAll.bad', message: validateErr.array()});
 
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
@@ -548,7 +548,7 @@ router.get('/muteUserAll', verifyJWT, allowPrivileges(["root", "dev", "super", "
                 .orderBy('users.createTime', order)
                 .offset(skip).limit(limit);
 
-            return res.status(200).json({success: 1, code: 'muteUsers.ok', data: result, total});
+            return res.status(200).json({success: 1, code: 'admin.muteUserAll.ok', data: result, total});
         } catch (err) {
             next(err);
         }
@@ -564,11 +564,11 @@ router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "ad
         try {
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'muteUser.ban.bad', message: validateErr.array()});
+                return res.status(400).json({error: 1, code: 'admin.muteUser.ban.bad', message: validateErr.array()});
             if (req.body.data.value === undefined)
-                return res.status(401).json({error: 1, code: 'muteUser.ban.bad', message: '"value" cannot be missing'});
+                return res.status(401).json({error: 1, code: 'admin.muteUser.ban.bad', message: '"value" cannot be missing'});
             if (req.body.data.type === undefined)
-                return res.status(401).json({error: 1, code: 'muteUser.ban.bad', message: '"type" cannot be missing'});
+                return res.status(401).json({error: 1, code: 'admin.muteUser.ban.bad', message: '"type" cannot be missing'});
             if (req.body.isNotice === undefined)
                 return res.status(401).json({
                     error: 1,
@@ -608,7 +608,7 @@ router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "ad
                     break
                 }
                 case 'remove': {
-                    userData.attr.mute = ''
+                    userData.attr.mute = ""
                     break
                 }
             }
@@ -624,7 +624,7 @@ router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "ad
                 createTime: new Date()
             });
 
-            return res.status(200).json({success: 1, message: 'Successful operation', code: 'muteUser.ok'});
+            return res.status(200).json({success: 1, message: 'Successful operation', code: 'admin.muteUser.ok'});
         } catch (err) {
             next(err);
         }

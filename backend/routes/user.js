@@ -1,7 +1,7 @@
 "use strict";
 import express from "express";
 import jwt from "jsonwebtoken";
-import {check, body as checkbody, query as checkquery, validationResult} from "express-validator";
+import {body as checkbody, query as checkquery, validationResult} from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
@@ -11,7 +11,7 @@ import {getGravatarAvatar} from "../lib/gravatar.js";
 import {sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify} from "../lib/mail.js";
 import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
 import {generatePassword, comparePassword, userHasRoles, privilegeRevoker} from "../lib/auth.js";
-import {handleRichTextInput, userDefaultAttribute, userSetAttributes, userShowAttributes} from "../lib/user.js";
+import {userDefaultAttribute, userSetAttributes, userShowAttributes} from "../lib/user.js";
 import {siteEvent} from "../lib/bfban.js";
 import logger from "../logger.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
@@ -35,14 +35,14 @@ async (req, res, next) => {
         /** @type {{username:string, password:string, originName:string, originEmail:string}} */
         const {username, password, originName, originEmail} = req.body.data;
 
-        // does anyone occupied?
+        // does anyone occupy
         if ((await db.select('username').from('verifications').where({username: username, type: 'register'}).union([
             db.select('username').from('users').where({username: username})
-        ])).length != 0)
+        ])).length !== 0)
             return res.status(400).json({error: 1, code: 'signup.usernameExist'});
 
-        // now check the origin account user binded
-        var originUserId = await serviceApi('eaAPI', '/searchUser').query({email: originEmail}).get().then(r => r.data);
+        // now check the origin account user bound
+        const originUserId = await serviceApi('eaAPI', '/searchUser').query({email: originEmail}).get().then(r => r.data);
         if (!originUserId)
             return res.status(400).json({error: 1, code: 'signup.originNotFound'});
         const originUserInfo = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
@@ -50,7 +50,7 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'signup.originNotFound'});
         if ((await db.select('originUserId').from('verifications').where({originUserId: originUserId}).union([
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
-        ])).length != 0)
+        ])).length !== 0)
             return res.status(400).json({error: 1, code: 'signup.originBindingExist'});
         // check whether the user has at least 1 battlefield game
         /** @type {string[]} */
@@ -76,16 +76,16 @@ async (req, res, next) => {
             createTime: new Date()
         });
         let language = req.headers["accept-language"]
-        language = language == 'zh-CN' ? language : 'en-US'
+        language = language === 'zh-CN' ? language : 'en-US'
         await sendRegisterVerify(username, originName, originEmail, language, randomStr);
         logger.info('users.signup Success:', {username, originName, originEmail, randomStr});
         return res.status(201).json({success: 1, code: 'signup.needVerify', message: 'Verify Email to join BFBan!'});
     } catch (err) {
         if (err instanceof ServiceApiError) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
-            return res.status(err.statusCode == 501 ? 501 : 500).json({
+            return res.status(err.statusCode === 501 ? 501 : 500).json({
                 error: 1,
-                code: err.statusCode == 501 ? 'signup.notImplement' : 'signup.error',
+                code: err.statusCode === 501 ? 'signup.notImplement' : 'signup.error',
                 message: err.message
             });
         }
@@ -163,10 +163,10 @@ async (req, res, next) => {
         /** @type {{username:string, password:string, originName:string, originEmail:string}} */
         const {username, password, originName, originEmail} = req.body.data;
 
-        // does anyone occupied?
+        // does anyone occupy
         if ((await db.select('username').from('verifications').where({username: username, type: 'register'}).union([
             db.select('username').from('users').where({username: username})
-        ])).length != 0)
+        ])).length !== 0)
             return res.status(400).json({error: 1, code: 'signup.usernameExist'});
         const passwdHash = await generatePassword(password);
         await db('users').insert({
@@ -199,7 +199,7 @@ async (req, res, next) => {
         /** @type {import("../typedef.js").User} */
         const user = await db.select('*').from('users').where({username: username}).first();
 
-        if (user && user.valid != 0 && await comparePassword(password, user.password)) {
+        if (user && user.valid !== 0 && await comparePassword(password, user.password)) {
             let expiresIn = config.userTokenExpiresIn;
             if (EXPIRES_IN && userHasRoles(user, ['dev', 'bot']))
                 expiresIn = EXPIRES_IN - 0;
@@ -256,7 +256,7 @@ async (req, res, next) => {
 
         if ((await db.from('verifications').select('originUserId').where({originUserId: originUserId}).union([
             db.from('users').select('originUserId').where({originUserId: originUserId}) // check duplicated binding
-        ])).length != 0)
+        ])).length !== 0)
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
 
         // // check duplicated binding
@@ -265,7 +265,7 @@ async (req, res, next) => {
         // }
 
         const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r => r.data);
-        if (userGames && userGames.concat(' ').indexOf('Battlefield') == false) // does the user have battlefield?
+        if (userGames && userGames.concat(' ').indexOf('Battlefield') === false) // does the user have battlefield?
             return res.status(400).json({error: 1, code: 'bindOrigin.gameNotShowed'});
         // no mistakes detected, generate code for verify
         const code = misc.generateRandomString(127);
@@ -291,9 +291,9 @@ async (req, res, next) => {
     } catch (err) {
         if (err instanceof ServiceApiError) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
-            return res.status(err.statusCode == 501 ? 501 : 500).json({
+            return res.status(err.statusCode === 501 ? 501 : 500).json({
                 error: 1,
-                code: err.statusCode == 501 ? 'bindOrigin.notImplement' : 'bindOrigin.error',
+                code: err.statusCode === 501 ? 'bindOrigin.notImplement' : 'bindOrigin.error',
                 message: err.message
             });
         }
@@ -343,7 +343,10 @@ async (req, res, next) => {
     }
 });
 
-/** @param {express.Request&import("../typedef.js").ReqUser?} req @param {express.Response} res @param {express.NextFunction} next */
+/** @param {express.Request&import("../typedef.js").ReqUser?} req @param {express.Response} res @param {express.NextFunction} next
+ * @param res
+ * @param next
+ */
 async function showUserInfo(req, res, next) {
     try {
         const validateErr = validationResult(req);
@@ -510,7 +513,7 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'changePassword.bad', message: validateErr.array()});
 
         const user = req.user
-        if (!comparePassword(req.body.data.oldpassword, user.password))
+        if (!await comparePassword(req.body.data.oldpassword, user.password))
             return res.status(400).json({
                 error: 1,
                 code: 'changePassword.notMatch',
@@ -577,7 +580,7 @@ async (req, res, next) => {
                 code: 'forgetPassword.permissionDenied',
                 message: 'you are not allow to do so.'
             });
-        if (!user || user.originEmail != req.body.data.originEmail)
+        if (!user || user.originEmail !== req.body.data.originEmail)
             return res.status(404).json({
                 error: 1,
                 code: 'forgetPassword.notFound',

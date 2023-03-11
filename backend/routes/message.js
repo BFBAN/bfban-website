@@ -1,15 +1,13 @@
 "use strict";
 import path from "path";
 import express from "express";
-import {check, body as checkbody, query as checkquery, validationResult} from "express-validator";
+import {body as checkbody, query as checkquery, validationResult} from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
-import * as misc from "../lib/misc.js";
-import verifyCaptcha from "../middleware/captcha.js";
-import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {forbidPrivileges, verifyJWT} from "../middleware/auth.js";
 import {siteEvent} from "../lib/bfban.js";
-import {userHasNotRoles, userHasRoles} from "../lib/auth.js";
+import {userHasRoles} from "../lib/auth.js";
 import {handleCommand} from "../lib/command.js";
 import logger from "../logger.js";
 import {readFile} from "fs/promises";
@@ -57,6 +55,7 @@ async (req, res, next) => {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'message.bad', message: validateErr.array()});
+
         const box = req.query.box ? req.query.box : 'in';
         const skip = req.query.skip ? req.query.skip : 0;
         const limit = req.query.limit ? req.query.limit : 20;
@@ -151,7 +150,7 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'message.bad', message: validateErr.array()});
 
         // check Binding Account
-        if (!req.user.originEmail && req.user.privilege.some(item => ['dev', 'root', 'bot', 'admin', 'super'].toString().indexOf(item) == -1))
+        if (!req.user.originEmail && req.user.privilege.some(item => ['dev', 'root', 'bot', 'admin', 'super'].toString().indexOf(item) === -1))
             return res.status(403).json({
                 error: 1,
                 code: 'report.bad',
@@ -171,7 +170,7 @@ async (req, res, next) => {
         }
 
         switch (true) {
-            case (type == 'fatal' && userHasRoles(req.user, ['super', 'root', 'dev'])):
+            case (type === 'fatal' && userHasRoles(req.user, ['super', 'root', 'dev'])):
                 await sendMessage(req.user.id, toUser.id, type, content);
                 siteEvent.emit('message', {from: req.user.id, to: toUser.id, type: type, content: content});
                 break; // jump out
@@ -181,7 +180,7 @@ async (req, res, next) => {
                 siteEvent.emit('message', {from: req.user.id, to: toUser.id, type: type, content: content});
                 break; // jump out
 
-            case (type == 'direct'): // normal or other user
+            case (type === 'direct'): // normal or other user
                 if (toUser.attr.allowDM === true) { // normal user can block dm
                     await sendMessage(req.user.id, toUser.id, 'direct', content);
                     siteEvent.emit('message', {from: req.user.id, to: toUser.id, type: type, content: content});
@@ -193,7 +192,7 @@ async (req, res, next) => {
                     });
                 break;
 
-            case (type == 'command'):
+            case (type === 'command'):
                 await handleCommand(content, req.user);
                 break;
 
@@ -240,7 +239,7 @@ router.post('/mark', verifyJWT, [
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
-        const changed = await db('messages').update({haveRead: req.query.type == 'read' ? 1 : 0})
+        const changed = await db('messages').update({haveRead: req.query.type === 'read' ? 1 : 0})
             .whereIn('type', ['direct', 'warn', 'reply'])
             .andWhere({toUserId: req.user.id, id: req.query.id});
         if (changed)
@@ -288,7 +287,9 @@ siteEvent.on('action', messageOnSiteEvent);
 
 /**
  * @param {number|null} from @param {number|null} to @param {string} content
+ * @param to
  * @param {'direct'|'reply'|'banAppeal'|'info'|'warn'|'fatal'|'toAll'|'toAdmins'|'toNormals'|'command'|'...'} type
+ * @param content
  * */
 async function sendMessage(from, to, type, content) {
     await db('messages').insert({
@@ -320,7 +321,7 @@ async function iGotReported(params) {
     const report = params.report;
     /** @type {import("../typedef.js").User} */
     const user = await db.select('*').from('users').where({originUserId: report.toOriginUserId}).first();
-    if (!user) // that player being reported hasnt registered our site
+    if (!user) // that player being reported hasn't registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
         originPersonaId: report.originPersonaId,
@@ -335,7 +336,7 @@ async function iGotJudged(params) {
     const player = params.player;
     /** @type {import("../typedef.js").User} */
     const user = await db.select('*').from('users').where({originUserId: judgement.toOriginUserId}).first();
-    if (!user) // that player being reported hasnt registered our site
+    if (!user) // that player being reported hasn't registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
         status: await localeMessage(`basic.status.${player.status}`, user.attr.language),

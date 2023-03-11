@@ -1,11 +1,10 @@
 "use strict";
 import EventEmitter from "events";
 import express from "express";
-import {check, body as checkbody, query as checkquery, validationResult, oneOf as checkOneof} from "express-validator";
+import {body as checkbody, query as checkquery, validationResult, oneOf as checkOneof} from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
-import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
 import {cheatMethodsSanitizer, handleRichTextInput} from "../lib/user.js";
@@ -221,10 +220,10 @@ async (req, res, next) => {
 
 function raceGetOriginUserId(originName) {
     const isdone = {                                    // what we are doing here:
-        successFlag: false, racer: new Set(),           // because origin api isnt good enough,
+        successFlag: false, racer: new Set(),           // because origin api isn't good enough,
         /** @type {Map<string, [number, Error]>} */
         result: new Map(),
-        event: new EventEmitter(),   // we need multiple api to provide user profile by name
+        event: new EventEmitter(),   // we need multiple api to provide user profile by name,
         // and we want it asap, so those api need to RACE
         // Promise.race() return or throw the first resolved or rejected Promise result, so we need to block the errors till someone done or all failed
         successListener: (tag) => {              // the function deal with the api get the result
@@ -240,7 +239,7 @@ function raceGetOriginUserId(originName) {
         failListener: (tag) => {                 // the function deal with the api fail
             return async (error) => {            // return a custom function for handling
                 isdone.result.set(tag, [        // record error
-                    error.statusCode == 404 ? 404 : 500,
+                    error.statusCode === 404 ? 404 : 500,
                     error
                 ]);
                 if (isdone.successFlag) return;  // someone finished before, so just return
@@ -248,8 +247,7 @@ function raceGetOriginUserId(originName) {
                     isdone.event.emit('done');
                     throw(new Error('all tries failed.'));
                 }
-                await new Promise((res, rej) => isdone.event.once('done', res)); // wait for someone finishes or all fail
-                return;
+                await new Promise((res) => isdone.event.once('done', res)); // wait for someone finishes or all fail
             }
         }
     };
@@ -260,7 +258,7 @@ function raceGetOriginUserId(originName) {
     ]).catch((err) => {
         let is404 = false;
         for (const i of isdone.result.keys()) {
-            if (isdone.result.get(i)[0] == 404)
+            if (isdone.result.get(i)[0] === 404)
                 is404 = true;
             else
                 logger.error(`/report getOriginUserId Race error ${i}`, isdone.result.get(i)[1].message, isdone.result.get(i)[1].stack);
@@ -342,7 +340,7 @@ async (req, res, next) => {
             }
         }
         // check Binding Account
-        if (!req.user.originEmail && !req.user.privilege.some(item => ['dev', 'root', 'bot', 'admin', 'super'].toString().indexOf(item) != -1))
+        if (!req.user.originEmail && !req.user.privilege.some(item => ['dev', 'root', 'bot', 'admin', 'super'].toString().indexOf(item) !== -1))
             return res.status(403).json({
                 error: 1,
                 code: 'report.bad',
@@ -366,7 +364,7 @@ async (req, res, next) => {
         // now the user being reported is found
         let avatarLink;
         try {   // get/update avatar each report
-            avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fail
+            avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fails
         } catch (err) {
             logger.warn('/report: error while fetching user\'s avatar');
             avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
@@ -428,9 +426,9 @@ async (req, res, next) => {
     } catch (err) {
         if (err instanceof ServiceApiError) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
-            return res.status(err.statusCode == 501 ? 501 : 500).json({
+            return res.status(err.statusCode === 501 ? 501 : 500).json({
                 error: 1,
-                code: err.statusCode == 501 ? 'report.notImplement' : 'report.error',
+                code: err.statusCode === 501 ? 'report.notImplement' : 'report.error',
                 message: err.message
             });
         }
@@ -470,7 +468,7 @@ router.post('/reportById', verifyJWT, verifyCaptcha,
             // now the user being reported is found
             let avatarLink;
             try {   // get/update avatar each report
-                avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fail
+                avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fails
             } catch (err) {
                 logger.warn('/reportById: error while fetching user\'s avatar');
                 avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
@@ -532,9 +530,9 @@ router.post('/reportById', verifyJWT, verifyCaptcha,
         } catch (err) {
             if (err instanceof ServiceApiError) {
                 logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
-                return res.status(err.statusCode == 501 ? 501 : 500).json({
+                return res.status(err.statusCode === 501 ? 501 : 500).json({
                     error: 1,
-                    code: err.statusCode == 501 ? 'report.notImplement' : 'report.error',
+                    code: err.statusCode === 501 ? 'report.notImplement' : 'report.error',
                     message: err.message
                 });
             }
@@ -601,8 +599,8 @@ async (req, res, next) => {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'timeline.bad', message: validateErr.array()});
-        const skip = req.query.skip != undefined ? req.query.skip : 0;
-        const limit = req.query.limit != undefined ? req.query.limit : 20;
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const dbId = await getPlayerId({
             dbId: req.query.dbId,
             userId: req.query.userId,
@@ -611,7 +609,7 @@ async (req, res, next) => {
         const order = req.query.order ? req.query.order : 'asc';
         const subject = req.query.subject ? req.query.subject : '%';
 
-        if (dbId == -1)
+        if (dbId === -1)
             return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
 
         const total = await db.count({num: 1}).from('comments').where({toPlayerId: dbId, valid: 1})
@@ -645,7 +643,7 @@ async (req, res, next) => {
             delete i.valid;
         });
 
-        const replieIds = result.filter(i => i.toCommentId != undefined).map(i => i.toCommentId);
+        const replieIds = result.filter(i => i.toCommentId !== undefined).map(i => i.toCommentId);
         /** @type {import("../typedef.js").Comment[]} */
         const quotes = await db('comments').join('users', 'comments.byUserId', 'users.id')
             .select('comments.*', 'users.username', 'users.privilege')
@@ -658,7 +656,7 @@ async (req, res, next) => {
         });
         result.forEach(i => {     // add origin comment to those replies
             if (i.toCommentId)
-                i.quote = quotes.find(j => j.id == i.toCommentId);
+                i.quote = quotes.find(j => j.id === i.toCommentId);
         });
 
         res.status(200).json({success: 1, code: 'timeline.ok', data: {result, total}});
@@ -757,7 +755,7 @@ router.post('/reply', verifyCaptcha, verifyJWT, forbidPrivileges(['freezed', 'bl
                 .from('comments')
                 .where({id: toCommentId})
                 .limit(1)
-                .first().then(r => r ? r.toPlayerId : -1) != dbId)
+                .first().then(r => r ? r.toPlayerId : -1) !== dbId)
                 return res.status(404).json({error: 1, code: 'reply.notFound', message: 'no such comment'});
 
             const reply = {
@@ -861,7 +859,7 @@ router.post('/update', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']),
             const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
             let avatarLink = tmp.avatarLink;
             if (userHasRoles(req.user, ['admin', 'super', 'root', 'dev']) && req.query.blockAvatar) {
-                if (req.query.blockAvatar == 'true')
+                if (req.query.blockAvatar === 'true')
                     avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG#BLOCKED';
                 else
                     avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data);
@@ -889,9 +887,9 @@ router.post('/update', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']),
         } catch (err) {
             if (err instanceof ServiceApiError) {
                 logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
-                return res.status(err.statusCode == 501 ? 501 : 500).json({
+                return res.status(err.statusCode === 501 ? 501 : 500).json({
                     error: 1,
-                    code: err.statusCode == 501 ? 'update.notImplement' : 'update.error',
+                    code: err.statusCode === 501 ? 'update.notImplement' : 'update.error',
                     message: err.message
                 });
             }
@@ -910,9 +908,9 @@ async (req, res, next) => {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'judgement.bad', message: validateErr.array()});
-        if ((req.body.data.action == 'kill' || req.body.data.action == 'guilt') && !req.body.data.cheatMethods)
+        if ((req.body.data.action === 'kill' || req.body.data.action === 'guilt') && !req.body.data.cheatMethods)
             return res.status(400).json({error: 1, code: 'judgement.bad', message: 'must specify one cheate method.'});
-        if (req.body.data.action == 'kill' && !userHasRoles(req.user, ['super', 'root']))
+        if (req.body.data.action === 'kill' && !userHasRoles(req.user, ['super', 'root']))
             return res.status(403).json({error: 1, code: 'judgement.permissionDenied', message: 'permission denied.'});
 
         /** @type {import("../typedef.js").Player} */
@@ -951,7 +949,7 @@ async (req, res, next) => {
         const stateChange = {prev: player.status, next: nextstate};
 
         player.status = nextstate;
-        player.cheatMethods = nextstate == 1 ? JSON.stringify(req.body.data.cheatMethods) : '[]';
+        player.cheatMethods = nextstate === 1 ? JSON.stringify(req.body.data.cheatMethods) : '[]';
         player.updateTime = new Date();
         player.commentsNum += 1;
 
@@ -963,7 +961,7 @@ async (req, res, next) => {
         }).where({id: player.id});
 
         judgement.cheatMethods = req.body.data.cheatMethods ? req.body.data.cheatMethods : [];
-        player.cheatMethods = nextstate == 1 ? req.body.data.cheatMethods : [];
+        player.cheatMethods = nextstate === 1 ? req.body.data.cheatMethods : [];
 
         siteEvent.emit('action', {method: 'judge', params: {judgement, player, stateChange}});
         return res.status(201).json({success: 1, code: 'judgement.success', message: 'thank you.'});
@@ -987,14 +985,14 @@ router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']
             const player = await db.select('*').from('players').where({id: req.body.data.toPlayerId}).first();
             if (!player)
                 return res.status(404).json({error: 1, code: 'banAppeal.notFound', message: 'no such player'});
-            if (player.status != 1 && player.status != 2)
+            if (player.status !== 1 && player.status !== 2)
                 return res.status(400).json({error: 1, code: 'banAppeal.noNeed', message: 'no need for ban appeal'});
             /** @type {import("../typedef.js").Comment} */
             const prev = await db.select('*').from('comments').where({
                 toPlayerId: req.body.data.toPlayerId,
                 type: 'banAppeal'
             }).orderBy('createTime', 'desc').first();
-            if (prev && prev.appealStatus == 'lock')
+            if (prev && prev.appealStatus === 'lock')
                 return res.status(403).json({error: 1, code: 'banAppeal.locked', message: 'this thread is locked'});
             const banAppeal = {
                 type: 'banAppeal',
@@ -1030,7 +1028,10 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'banAppeal.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").Comment} */
-        var banAppeal = await db.select('*').from('comments').where({id: req.body.data.id, type: 'banAppeal'}).first();
+        const banAppeal = await db.select('*').from('comments').where({
+            id: req.body.data.id,
+            type: 'banAppeal'
+        }).first();
         if (!banAppeal)
             return res.status(404).json({success: 1, code: 'banAppeal.notFound', message: 'no such ban appeal'});
 
@@ -1076,10 +1077,13 @@ router.get('/widget', verifyJWT, allowPrivileges(['admin', 'super', 'root', 'bot
         }
     });
 
-/** @param {string} originName @param {string} originUserId @param {string} originPersonaId */
+/** @param {string} originName @param {string} originUserId @param {string} originPersonaId
+ * @param originUserId
+ * @param originPersonaId
+ */
 async function pushOriginNameLog(originName, originUserId, originPersonaId) {
     const last = await db.select('*').from('name_logs').where({originUserId: originUserId}).orderBy('toTime', 'desc').first();
-    if (last && last.originName == originName) {
+    if (last && last.originName === originName) {
         await db('name_logs').update({toTime: new Date}).where({id: last.id});
         return false;
     } else {

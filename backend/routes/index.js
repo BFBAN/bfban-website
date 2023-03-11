@@ -1,13 +1,12 @@
 "use strict";
 import express from "express";
 
-import {check, body as checkbody, query as checkquery, validationResult} from "express-validator";
+import {body as checkbody, query as checkquery, validationResult} from "express-validator";
 import {Transform} from "stream";
 
 import db from "../mysql.js";
 import config from "../config.js";
 import * as misc from "../lib/misc.js";
-import verifyCaptcha from "../middleware/captcha.js";
 import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
 import {advSearchRateLimiter, normalSearchRateLimiter} from "../middleware/rateLimiter.js";
 import logger from "../logger.js";
@@ -102,7 +101,7 @@ router.get('/activeStatistical', [
                 return res.status(400).json({error: 1, code: 'statistics.bad', message: validateErr.array()});
 
             const time = {
-                'daily': new Date(new Date().getTime() - 1 * 24 * 3600 * 1000),
+                'daily': new Date(new Date().getTime() - 24 * 3600 * 1000),
                 'weekly': new Date(new Date().getTime() - 7 * 24 * 3600 * 1000),
                 'monthly': new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
                 'yearly': new Date(new Date().getTime() - 360 * 24 * 3600 * 1000)
@@ -190,7 +189,7 @@ router.get('/activeStatistical', [
  *         description: playerStatistics.bad
  */
 router.post('/playerStatistics', [  // like graphql :)
-    checkbody('data').isArray({min: 0, max: 11}).custom((val, {req}) => {
+    checkbody('data').isArray({min: 0, max: 11}).custom((val) => {
         for (let i of val)
             if (!config.supportGames.concat('*').includes(i.game) || ![-1, 0, 1, 2, 3, 4, 5, 6, 8].includes(i.status - 0))
                 throw(new Error('bad subquery format'));
@@ -205,8 +204,8 @@ async (req, res, next) => {
 
         const data = [];
         for (let i of req.body.data) {
-            const game = i.game == '*' ? '%' : `%"${i.game}"%`;
-            const status = i.status == -1 ? '%' : i.status;
+            const game = i.game === '*' ? '%' : `%"${i.game}"%`;
+            const status = i.status === -1 ? '%' : i.status;
             const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
                 .andWhere('games', 'like', game).andWhere('status', 'like', status).first().then(r => r.num);
             data.push({game: i.game, status: i.status, count});
@@ -380,12 +379,12 @@ async (req, res, next) => {
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'players.bad', message: validateErr.array()});
 
-        const game = (req.query.game && req.query.game != 'all') ? req.query.game : '';
+        const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
         const createTimeFrom = new Date(req.query.createTimeFrom ? req.query.createTimeFrom - 0 : 0);
         const updateTimeFrom = new Date(req.query.updateTimeFrom ? req.query.updateTimeFrom - 0 : 0);
         const createTimeTo = new Date(req.query.createTimeTo ? req.query.createTimeTo - 0 : Date.now());
         const updateTimeTo = new Date(req.query.updateTimeTo ? req.query.updateTimeTo - 0 : Date.now());
-        const status = (req.query.status && req.query.status != '-1') ? req.query.status : '%';
+        const status = (req.query.status && req.query.status !== '-1') ? req.query.status : '%';
         const sort = req.query.sortBy ? req.query.sortBy : 'createTime';
         const order = req.query.order ? req.query.order : 'desc';
         const limit = req.query.limit ? req.query.limit - 0 : 20;
@@ -492,12 +491,12 @@ async function (req, res, next) {
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'players.bad', message: validateErr.array()});
 
-        const game = (req.query.game && req.query.game != 'all') ? req.query.game : '';
+        const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
         const createTimeFrom = new Date(req.query.createTimeFrom || 0);
         const updateTimeFrom = new Date(req.query.updateTimeFrom || 0);
         const createTimeTo = new Date(req.query.createTimeTo || Date.now());
         const updateTimeTo = new Date(req.query.updateTimeTo || Date.now());
-        const status = (req.query.status && req.query.status != '-1') ? req.query.status : '%';
+        const status = (req.query.status && req.query.status !== '-1') ? req.query.status : '%';
         const sort = req.query.sortBy ? req.query.sortBy : 'createTime';
         const order = req.query.order ? req.query.order : 'desc';
         const limit = req.query.limit ? req.query.limit - 0 : 20;
@@ -531,7 +530,7 @@ async function (req, res, next) {
             resultStream.end();
         });
         res.status(200).set('Content-Type', 'application/json');
-        formatter.pipe(res);    // the pipeline will break express.Response's life cycle, then hanging the next request 
+        formatter.pipe(res);    // the pipeline will break express.Response's life cycle, then hanging the next request
         await misc.pipeline(resultStream, formatter).catch(err => {
             logger.error('/players/stream Stream error: ', err);
         });
@@ -590,10 +589,10 @@ router.get('/banAppeals', [
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
     try {
-        const game = (req.query.game && req.query.game != 'all') ? req.query.game : '';
+        const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
         const createTimeFrom = new Date(req.query.createTimeFrom ? req.query.createTimeFrom - 0 : 0);
         const createTimeTo = new Date(req.query.createTimeTo ? req.query.createTimeTo - 0 : Date.now());
-        const status = req.query.status ? req.query.status == 'all' ? '%' : req.query.status : 'open';
+        const status = req.query.status ? req.query.status === 'all' ? '%' : req.query.status : 'open';
         const limit = req.query.limit ? req.query.limit : 20;
         const skip = req.query.skip ? req.query.skip : 0;
         const order = req.query.order ? req.query.order : 'desc';
@@ -687,7 +686,7 @@ router.get('/admins', async (req, res, next) => {
  *         value: 1670544000000
  *     responses:
  *       200: search.success
- *       400: search.bad
+ *       400: search.Bad
  */
 router.get('/search', normalSearchRateLimiter, [
     checkquery('type').isIn(['player', 'user', 'comment']),
@@ -707,7 +706,7 @@ async (req, res, next) => {
 
         const type = req.query.type ? req.query.type : 'player';
         const gameSort = req.query.gameSort ? req.query.gameSort : 'default';
-        const game = (req.query.game && req.query.game != 'all') ? req.query.game : '';
+        const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
         const createTimeFrom = new Date(req.query.createTimeFrom ? req.query.createTimeFrom - 0 : 0);
         const createTimeTo = new Date(req.query.createTimeTo ? req.query.createTimeTo - 0 : Date.now());
         const skip = req.query.skip ? req.query.skip : 0;
@@ -788,7 +787,7 @@ async (req, res, next) => {
             })
 
             result.total = userTotal;
-        } else if (type == 'comment') {
+        } else if (type === 'comment') {
             const comment = db('comments')
                 .join('users', 'users.id', 'comments.byUserId')
                 .select('comments.*', 'users.username', 'users.valid')
@@ -827,7 +826,7 @@ async (req, res, next) => {
  *         in: path
  *         value:
  *     responses:
- *       200: data
+ *       200: advSearch
  *       400: advSearch.bad
  *       500: advanceSearch.error
  *       501: advSearch.bad
@@ -849,7 +848,7 @@ router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted', 'freeze
             /** @type {import("../typedef.js").EAUserInfo} */
             const exact = svResponses[0].data[0];
             /** @type {import("../typedef.js").EAUserInfo[]} */
-            const similars = svResponses[1].data.filter(i => exact?.userId != i.userId).slice(0, 10);
+            const similars = svResponses[1].data.filter(i => exact?.userId !== i.userId).slice(0, 10);
 
             const result = {success: 1, code: 'advanceSearch.ok', data: {}};
             if (exact) {
@@ -890,7 +889,7 @@ router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted', 'freeze
                         originName: i.name,
                         originPersonaId: i.personaId,
                         originUserId: i.userId,
-                        record: records.find(j => j.originUserId == i.userId)
+                        record: records.find(j => j.originUserId === i.userId)
                     };
                 });
             } else
@@ -900,9 +899,9 @@ router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted', 'freeze
         } catch (err) {
             if (err instanceof ServiceApiError) {
                 logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
-                return res.status(err.statusCode == 501 ? 501 : 500).json({
+                return res.status(err.statusCode === 501 ? 501 : 500).json({
                     error: 1,
-                    code: err.statusCode == 501 ? 'advSearch.bad' : 'advanceSearch.error',
+                    code: err.statusCode === 501 ? 'advSearch.bad' : 'advanceSearch.error',
                     message: err.message
                 });
             }
@@ -921,7 +920,7 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'trend.bad', message: validateErr.array()});
 
         const time = {
-            'daily': new Date(new Date().getTime() - 1 * 24 * 3600 * 1000),
+            'daily': new Date(new Date().getTime() - 24 * 3600 * 1000),
             'weekly': new Date(new Date().getTime() - 7 * 24 * 3600 * 1000),
             'monthly': new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
             'yearly': new Date(new Date().getTime() - 360 * 24 * 3600 * 1000)
@@ -959,7 +958,7 @@ async (req, res, next) => {
 const siteStatsCache = {data: undefined, time: new Date(0)};
 router.get('/siteStats', async (req, res, next) => {
     try {
-        if (siteStatsCache.data != undefined && Date.now() - siteStatsCache.time.getTime() < 4 * 60 * 60 * 1000)   // cache for 4h
+        if (siteStatsCache.data !== undefined && Date.now() - siteStatsCache.time.getTime() < 4 * 60 * 60 * 1000)   // cache for 4h
             return res.status(200).json({success: 1, code: 'siteStats.ok', data: siteStatsCache.data});
         const tbeg = new Date('2018-10-12T00:00:00.000Z');  // first commit of bfban
         const tnow = new Date();

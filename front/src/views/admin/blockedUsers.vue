@@ -12,7 +12,7 @@
             :remote-method="getSearchUser"
             :loading="searchLoading">
           <Option v-for="(i, index) in searchBlockedUserList" :value="i.username" :key="index" :disabled="true">
-            <Row :gutter="10">
+            <Row :gutter="10" type="flex" justify="center" align="middle">
               <Col flex="1">
                 {{ i.username }} ({{ i.id }})
               </Col>
@@ -57,7 +57,7 @@
     </Row>
     <br>
 
-    <template v-if="blockedUserList.length >= 0">
+    <template v-if="blockedUserList.length > 0">
       <Card dis-hover v-for="(i, index) in blockedUserList" :key="index" class="interval-card">
         <Row :gutter="10" type="flex" justify="center" align="middle">
           <Col flex="1">

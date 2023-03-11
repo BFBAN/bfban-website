@@ -61,7 +61,7 @@
     </Row>
     <br>
 
-    <template v-if="muteUserList.length >= 0">
+    <template v-if="muteUserList.length > 0">
       <Card dis-hover v-for="(i, index) in muteUserList" :key="index" class="interval-card">
         <Row :gutter="10" type="flex" justify="center" align="middle">
           <Col flex="1">
@@ -258,6 +258,7 @@ export default new BFBAN({
         if (d.success === 1) {
           this.muteUserList = d.data;
           this.total = d.total;
+          this.searchMuteUserList = []
           return;
         }
 

@@ -1,6 +1,6 @@
 <template>
   <Tabs :value="tagsName">
-    <TabPane :label="$t('profile.chat.tabsSend.itemName')" name="message0" v-if="isAdmin">
+    <TabPane :label="$t('profile.chat.tabsSend.itemName')" name="chat" v-if="isAdmin">
       <Card dis-hover>
         <Form slot="title" :model="message" :rules="message.ruleValidate">
           <Row :gutter="30">
@@ -75,6 +75,7 @@ export default new Application({
   name: "messagePush",
   data() {
     return {
+      tagsName: 'chat',
       message: {
         list: messageConf.sendTypes,
         typeDictionary: messageConf.typeDictionary,

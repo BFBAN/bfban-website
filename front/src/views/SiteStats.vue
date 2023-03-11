@@ -190,6 +190,7 @@
 import Application from "../assets/js/application";
 import Empty from "@/components/Empty"
 import businessCard from "@/components/businessCard";
+import * as echarts from "echarts";
 
 import {http, api, account_storage} from '../assets/js/index'
 
