@@ -224,12 +224,9 @@ export default new Application({
           }
 
           this.callbackMessage(d);
-          this.onCleanSignupForm({originEmail: false, originName: false, stepsIndex: false})
         }).catch(err => {
           this.$Message.error(err);
           this.backServiceMsg = this.$i18n.t('signup.failed');
-
-          this.onCleanSignupForm({originEmail: false, originName: false, stepsIndex: false})
         }).finally(() => {
           this.spinShow = false;
 

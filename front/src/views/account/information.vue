@@ -43,7 +43,7 @@
       </Row>
 
       <Divider dashed></Divider>
-      <template v-if="!formItem.origin && formItem.origin.originName == null || formItem.origin.originUserId == null">
+      <template v-if="formItem.origin && formItem.origin.hasOwnProperty('originName') || formItem.origin.hasOwnProperty('originUserId')">
         <Alert show-icon type="error">
           {{ $t('account.bindOrigin.title') }}
           <Icon type="ios-bulb-outline" slot="icon"></Icon>
@@ -441,10 +441,7 @@ export default {
         this.checkLangLocalSync();
         let data = Object.assign({
           password: '******',
-          origin: {
-            originName: '',
-            originEmail: '',
-          },
+          origin: null,
           userAvatar: '',
           newname: '',
           username: '',

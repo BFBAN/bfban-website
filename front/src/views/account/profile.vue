@@ -71,6 +71,7 @@
           <voice v-if="menuValue == 'voice'"></voice>
           <history v-if="menuValue == 'history'"></history>
           <subscribes v-if="menuValue == 'subscribes'"></subscribes>
+          <exportAndImport v-if="menuValue == 'exportAndImport'"></exportAndImport>
         </Col>
       </Row>
     </Card>
@@ -88,6 +89,7 @@ import media from "./media";
 import voice from "./voice";
 import history from "./history";
 import subscribes from "./subscribes"
+import exportAndImport from "@/views/account/exportAndImport";
 import {account_storage} from "@/assets/js";
 import Application from "@/assets/js/application";
 
@@ -147,12 +149,29 @@ export default new Application({
               icon: 'md-code-download',
               configurationKey: 'enhance',
               configurationValue: this.$store.state.configuration.enhance || false,
-            }]
+            },
+            {
+              title: 'exportAndImport',
+              name: 'exportAndImport',
+              icon: 'md-folder'
+            }
+          ]
         },
       ]
     }
   },
-  components: {appearance, information, chat, enhance, media, voice, history, subscribes, PrivilegesTag},
+  components: {
+    appearance,
+    information,
+    chat,
+    enhance,
+    media,
+    voice,
+    history,
+    subscribes,
+    exportAndImport,
+    PrivilegesTag
+  },
   created() {
     const {pagename} = this.$route.params;
 

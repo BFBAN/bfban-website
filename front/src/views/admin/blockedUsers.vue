@@ -102,12 +102,12 @@
 
 <script>
 import {account_storage, api, http_token, mail} from "@/assets/js";
-import BFBAN from "@/assets/js/application";
+import Application from "@/assets/js/application";
 import PrivilegesTag from "@/components/PrivilegesTag";
 import BusinessCard from "@/components/businessCard";
 import Empty from "@/components/Empty";
 
-export default new BFBAN({
+export default new Application({
   name: "blockedUsers",
   data() {
     return {
