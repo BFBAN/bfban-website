@@ -290,6 +290,8 @@ export default {
 
       this.templateRenderWorkProgress = false;
 
+      if (window.TrustedHTML && vDomString instanceof window.TrustedHTML) vDomString = "<p class='ql-editor'>⚠️ Unreliable DOM, we blocked it, <a href='//web.dev/trusted-types/'>(link)</a></p>"
+
       return vDomString;
     },
   },
