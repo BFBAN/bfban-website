@@ -3,6 +3,8 @@
   "version": "2.9.7",
   "private": true,
   "scripts": {
+    "serve:development-legacyProvider-windows": "set NODE_OPTIONS=--openssl-legacy-provider && npm run serve:development",
+    "serve:development-legacyProvider-macOs": "export NODE_OPTIONS=--openssl-legacy-provider && npm run serve:development",
     "serve:development": "vue-cli-service serve --mode development",
     "serve:production": "vue-cli-service serve --mode production",
     "build:development": "vue-cli-service build --dest dist --report --mode development",
