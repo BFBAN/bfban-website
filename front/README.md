@@ -10,7 +10,10 @@
 
 ## 参与开发
 
-* /front ,网站开发，请阅读 /front/docs/[启动Front.md](docs/启动Front.md)
-* /front ,桌面混合开发，请阅读 /front/docs/[桌面应用.md](docs/桌面应用.md)
-* /backend , 后端开发，请阅读 /backend/docs下的md
-* /backend ,执行`npm run start`后，访问[文档(127.0.0.1:3000/docs)](127.0.0.1:3000/docs)查阅testing
+* 网站开发, 对应在[这里](/front),在开始前您可以阅读[运行前端](docs/run_front.md)
+  * 对于翻译，您应该在/front运行`npm run lint:development-i18n`校验文本格式
+  * 请应用本项目.eslintrc约束
+* 桌面混合开发, 对应在[这里](https://github.com/BFBAN/bfban-desktop) (桌面模式已经从此项目中剥离出去)
+* 后端开发, 对应在[这里](/backend),请阅读[文件夹](/backend/docs/)内.md;
+  * 提供一个注释生成，在执行`npm run start`后访问127.0.0.1:3000/docs接口文档
+  * (重要) 后端包含几个独立服务，它们负责图床、EA服务，这些都需要在/backend/config.js完成配置后独立执行`npm run services`

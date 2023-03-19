@@ -5,10 +5,10 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "test": "node app.js --experimental-modules --trace-warnings",
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "services": "node services/loader.js"
+    "services": "node services/loader.js",
+    "test": "node app.js --experimental-modules --trace-warnings"
   },
   "author": "",
   "license": "ISC",

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import { detectLanguage } from './mixins/common'
 import { storage } from "../src/assets/js"
-import lang from "../public/conf/languages.json"
+import lang from "../public/config/languages.json"
 import store from './store'
 
 import en from 'view-design/dist/locale/en-US';

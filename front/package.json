@@ -10,7 +10,8 @@
     "build:development": "vue-cli-service build --dest dist --report --mode development",
     "build:production": "vue-cli-service build --dest dist --mode production",
     "local-serve": "serve -s front/dist",
-    "lint": "vue-cli-service lint",
+    "lint:development": "vue-cli-service lint",
+    "lint:development-i18n": "eslint --fix --ext .json  --format node_modules/eslint-plugin-i18n-json/formatter.js src/lang",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/lang/**/*.json\""
   },
   "dependencies": {
@@ -32,7 +33,6 @@
     "quill-placeholder-autocomplete-module": "^1.2.0",
     "quill-placeholder-module": "^0.3.1",
     "register-service-worker": "^1.7.1",
-    "sass": "^1.54.8",
     "tesseract.js": "^3.0.3",
     "v-viewer": "^1.6.4",
     "view-design": "4.7.0",
@@ -59,6 +59,7 @@
     "electron": "^14.0.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-i18n-json": "^2.0.0",
     "lodash": "^4.17.21",
     "sass-loader": "^8.0.2",
     "sitemap-webpack-plugin": "^1.1.1",
