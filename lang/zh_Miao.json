@@ -1,34 +1,143 @@
 {
+  "about": {
+    "description": "喵 喵喵 喵喵喵喵 ",
+    "privacy": "喵 喵喵喵喵喵 喵 喵",
+    "title": "喵 喵 喵喵喵 喵喵喵 喵 喵喵喵",
+    "website": "喵喵喵 喵喵喵 喵喵喵喵喵喵 喵 "
+  },
+  "account": {
+    "bindOrigin": {
+      "content": "喵 喵喵喵喵喵",
+      "title": "喵 喵 喵喵 喵喵喵 喵喵喵",
+      "travel": "喵喵 喵喵喵喵喵 喵喵喵喵喵喵 "
+    },
+    "joinedAt": "喵喵 喵喵喵喵喵 喵喵喵喵 ",
+    "lastOnlineTime": "喵喵喵喵喵喵喵 ",
+    "message": {
+      "chat": "喵",
+      "hint": {
+        "denied": "喵喵 喵喵 喵喵 喵喵喵喵喵喵喵喵喵喵喵 喵 ",
+        "selfTalk": "喵 喵",
+        "taOffChat": "喵喵喵喵 喵 喵 喵"
+      }
+    },
+    "recentlyUpdated": "喵 喵 喵喵喵喵 喵 喵 喵喵喵 喵",
+    "reported": "喵喵 喵 喵喵喵 喵喵喵 喵喵喵喵喵喵喵 ",
+    "reportnum": "喵 喵喵喵喵 喵喵 喵喵喵 喵 喵 喵",
+    "reports": "喵喵 喵",
+    "role": "喵喵喵 喵喵 喵喵 喵 喵喵喵 喵 喵喵喵喵",
+    "status": "喵 喵 喵喵 喵 喵喵喵 喵喵 喵喵喵喵喵 喵喵喵 ",
+    "title": "喵喵喵喵喵喵喵喵",
+    "userInfo": "喵喵 喵喵喵 喵 ",
+    "username": "喵"
+  },
+  "announcement": {
+    "antiCheat": {
+      "intro": "喵喵喵 喵喵喵 喵 喵 喵喵喵 喵喵",
+      "name": "喵喵喵 喵喵 喵喵喵喵喵 喵 喵"
+    },
+    "conduct": {
+      "intro": "喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵",
+      "name": "喵 喵喵喵喵 喵"
+    },
+    "latest": "喵喵喵 喵 喵 喵 喵喵 喵喵喵喵 喵喵 喵喵 喵喵",
+    "personnel": {
+      "intro": "喵喵喵 喵喵喵喵 喵喵",
+      "name": "喵喵 喵喵喵 喵"
+    },
+    "version": "喵喵 喵喵 喵喵 喵喵喵"
+  },
+  "apps": {
+    "buttons": {
+      "get": "喵 喵喵喵喵喵 喵喵 喵喵 喵喵喵 喵喵 喵喵",
+      "hot": "喵喵喵喵喵 喵喵喵 ",
+      "website": "喵"
+    },
+    "describe": "喵喵喵 喵 喵 喵喵 喵喵喵喵喵喵喵 ",
+    "screen": {
+      "admin": "喵 喵喵喵喵喵喵喵 喵 ",
+      "all": "喵喵",
+      "api": "喵 喵喵喵喵 喵喵喵喵喵 喵喵喵 喵 喵喵",
+      "app": "喵 喵 喵喵喵 喵喵喵 喵喵 喵喵 喵 喵喵喵 ",
+      "bf1": "喵喵 喵喵 喵",
+      "bf6": "喵喵",
+      "bfv": "喵喵 ",
+      "book": "喵 喵喵喵 喵喵喵 喵",
+      "bot": "喵",
+      "official": "喵喵喵喵",
+      "pc_app": "喵喵 喵喵喵喵喵 喵 喵 喵喵喵 喵喵 ",
+      "qq": "喵喵 喵喵喵喵 喵 喵 喵 喵 喵喵",
+      "web": "喵喵喵 喵喵喵 喵 喵喵喵喵喵喵"
+    },
+    "submit_tool_app": "喵喵",
+    "title": "喵喵喵 喵喵喵 喵喵喵 喵 喵 喵喵喵喵喵喵 "
+  },
   "basic": {
     "action": {
-      "suspect": {
-        "text": "喵喵喵喵喵喵喵喵 喵 喵 喵喵 喵喵",
-        "describe": "喵喵喵 喵喵 喵喵喵喵喵 喵喵喵喵 喵喵 喵 "
-      },
-      "innocent": {
-        "text": "喵喵喵喵 喵 喵喵喵喵喵 喵喵喵喵喵喵 ",
-        "describe": "喵喵喵喵 喵喵 喵喵喵喵喵喵喵喵喵喵 喵"
-      },
       "discuss": {
-        "text": "喵 喵喵 ",
-        "describe": "喵喵 喵喵喵喵喵 喵喵喵 喵 喵喵"
+        "describe": "喵喵 喵喵喵喵喵 喵喵喵 喵 喵喵",
+        "text": "喵 喵喵 "
       },
       "guilt": {
-        "text": "喵 喵喵喵喵喵喵喵喵喵喵 喵喵喵喵",
-        "describe": "喵喵喵喵喵喵"
+        "describe": "喵喵喵喵喵喵",
+        "text": "喵 喵喵喵喵喵喵喵喵喵喵 喵喵喵喵"
       },
-      "kill": {
-        "text": "喵喵",
-        "describe": "喵喵"
+      "innocent": {
+        "describe": "喵喵喵喵 喵喵 喵喵喵喵喵喵喵喵喵喵 喵",
+        "text": "喵喵喵喵 喵 喵喵喵喵喵 喵喵喵喵喵喵 "
       },
       "invalid": {
-        "text": "喵 喵",
-        "describe": "喵喵喵喵喵喵 喵喵喵喵喵"
+        "describe": "喵喵喵喵喵喵 喵喵喵喵喵",
+        "text": "喵 喵"
+      },
+      "kill": {
+        "describe": "喵喵",
+        "text": "喵喵"
       },
       "more": {
-        "text": "喵",
-        "describe": "喵 喵喵喵喵喵"
+        "describe": "喵 喵喵喵喵喵",
+        "text": "喵"
+      },
+      "suspect": {
+        "describe": "喵喵喵 喵喵 喵喵喵喵喵 喵喵喵喵 喵喵 喵 ",
+        "text": "喵喵喵喵喵喵喵喵 喵 喵 喵喵 喵喵"
       }
+    },
+    "button": {
+      "cancel": "喵喵 喵 喵 喵喵 喵 喵喵 喵 喵喵 喵",
+      "commit": "喵喵喵喵喵喵喵 喵喵 ",
+      "next": "喵 喵喵喵喵 喵 喵喵喵喵 喵 喵喵喵喵喵喵",
+      "prev": "喵 喵喵喵喵喵喵喵喵喵",
+      "reply": "喵喵喵喵 喵喵 ",
+      "report": "喵 喵 ",
+      "reset": "喵喵喵喵喵喵喵喵 喵 喵喵喵 喵",
+      "save": "喵喵喵喵 喵喵喵",
+      "submit": "喵"
+    },
+    "gamePlatforms": {
+      "origin": "喵",
+      "pc": "喵喵喵 喵喵 喵喵 喵 喵喵 喵",
+      "ps3": "喵喵喵 喵喵喵喵喵喵喵 喵喵",
+      "ps4": "喵喵喵喵喵喵喵喵喵 ",
+      "psn": "喵喵 喵喵",
+      "xbox": "喵喵 喵 喵喵喵喵喵喵 喵喵 喵 喵 喵喵喵",
+      "xboxone": "喵喵 喵喵 "
+    },
+    "games": {
+      "all": "喵喵喵喵喵喵 喵喵喵喵喵喵 喵 喵喵喵喵喵",
+      "bf1": "喵 喵 喵喵喵喵喵喵喵 喵喵 喵喵 喵 喵喵喵",
+      "bf6": "喵 喵喵 喵喵喵喵喵喵",
+      "bfv": "喵 喵"
+    },
+    "privilege": {
+      "admin": "喵",
+      "blacklisted": "喵喵喵喵喵喵 喵喵喵 喵喵喵喵 喵喵",
+      "bot": "喵喵喵喵喵 ",
+      "dev": "喵喵 ",
+      "normal": "喵喵 喵喵 喵喵喵喵喵喵 喵 喵喵 喵喵喵喵喵",
+      "root": "喵喵喵喵 喵喵喵喵喵 喵喵",
+      "super": "喵喵喵喵喵 ",
+      "test": "喵喵喵喵喵喵喵喵喵喵 喵 "
     },
     "status": {
       "0": "喵喵 喵喵 喵喵喵喵喵 喵喵 喵喵喵喵",
@@ -41,206 +150,72 @@
       "7": "喵",
       "all": "喵 喵喵 喵 喵喵喵 喵 喵喵喵喵喵喵喵喵"
     },
-    "privilege": {
-      "root": "喵喵喵喵 喵喵喵喵喵 喵喵",
-      "admin": "喵",
-      "super": "喵喵喵喵喵 ",
-      "normal": "喵喵 喵喵 喵喵喵喵喵喵 喵 喵喵 喵喵喵喵喵",
-      "blacklisted": "喵喵喵喵喵喵 喵喵喵 喵喵喵喵 喵喵",
-      "test": "喵喵喵喵喵喵喵喵喵喵 喵 ",
-      "dev": "喵喵 ",
-      "bot": "喵喵喵喵喵 "
-    },
     "tip": {
-      "notLang": "喵喵",
+      "noReports": "喵 喵喵喵 喵 喵 喵喵喵",
       "notContent": "喵喵 喵喵 喵喵 喵喵喵 喵 喵喵喵 ",
       "notFound": "喵 喵 喵 喵喵喵 喵 喵",
-      "noReports": "喵 喵喵喵 喵 喵 喵喵喵"
-    },
-    "games": {
-      "all": "喵喵喵喵喵喵 喵喵喵喵喵喵 喵 喵喵喵喵喵",
-      "bf1": "喵 喵 喵喵喵喵喵喵喵 喵喵 喵喵 喵 喵喵喵",
-      "bfv": "喵 喵",
-      "bf6": "喵 喵喵 喵喵喵喵喵喵"
-    },
-    "gamePlatforms": {
-      "pc": "喵喵喵 喵喵 喵喵 喵 喵喵 喵",
-      "origin": "喵",
-      "xbox": "喵喵 喵 喵喵喵喵喵喵 喵喵 喵 喵 喵喵喵",
-      "xboxone": "喵喵 喵喵 ",
-      "psn": "喵喵 喵喵",
-      "ps3": "喵喵喵 喵喵喵喵喵喵喵 喵喵",
-      "ps4": "喵喵喵喵喵喵喵喵喵 "
-    },
-    "button": {
-      "reply": "喵喵喵喵 喵喵 ",
-      "report": "喵 喵 ",
-      "commit": "喵喵喵喵喵喵喵 喵喵 ",
-      "save": "喵喵喵喵 喵喵喵",
-      "submit": "喵",
-      "reset": "喵喵喵喵喵喵喵喵 喵 喵喵喵 喵",
-      "cancel": "喵喵 喵 喵 喵喵 喵 喵喵 喵 喵喵 喵",
-      "prev": "喵 喵喵喵喵喵喵喵喵喵",
-      "next": "喵 喵喵喵喵 喵 喵喵喵喵 喵 喵喵喵喵喵喵"
+      "notLang": "喵喵"
     }
+  },
+  "bindOrigin": {
+    "title": "喵喵喵 喵喵 喵 "
   },
   "captcha": {
     "get": "喵 ",
     "title": "喵喵喵喵喵喵喵 喵喵喵喵喵 喵喵"
   },
-  "header": {
-    "index": "喵 喵 喵喵喵喵喵 ",
-    "about": "喵 喵",
-    "cheaters": "喵喵喵喵喵 喵喵喵喵喵喵",
-    "report": "喵喵 喵喵喵 喵 喵喵喵喵喵喵 喵喵喵",
-    "profile": "喵喵喵喵喵 喵喵 喵喵喵 喵喵",
-    "signin": "喵喵 喵喵 ",
-    "signup": "喵 喵喵喵 喵喵喵喵喵喵 喵喵喵喵 喵 喵 ",
-    "signout": "喵喵 ",
-    "userCenter": "喵",
-    "signoutSuccess": "喵 "
-  },
-  "player_list": {
-    "title": "喵喵 喵喵 喵喵 喵喵 喵喵"
-  },
-  "profile": {
-    "title": "喵喵 喵",
-    "meet": "喵 喵 喵喵喵",
-    "chat": {
-      "title": "喵 喵喵喵",
-      "look": "喵喵喵喵喵喵 喵 喵喵喵喵 喵",
-      "load": "喵 喵 喵喵喵 喵喵喵喵喵喵喵喵喵喵喵 喵 喵",
-      "control": "喵 喵喵喵 喵 喵 喵喵喵喵喵喵喵 喵喵喵 ",
-      "placeholder": "喵喵喵喵喵 喵喵喵喵喵喵喵喵 喵 喵喵 喵喵",
-      "types": {
-        "direct": {
-          "text": "喵喵喵喵喵喵 ",
-          "describe": "喵喵 喵 喵喵喵喵喵喵 喵 喵喵喵喵喵喵喵 喵"
-        },
-        "warn": {
-          "text": "喵喵 喵喵喵喵 ",
-          "describe": "喵"
-        },
-        "fatal": {
-          "text": "喵喵喵喵 喵 喵喵 喵 喵喵 喵喵喵 喵",
-          "describe": "喵喵 喵喵喵喵 喵喵喵喵 喵喵喵喵 喵喵喵 "
-        },
-        "toAll": {
-          "text": "喵喵 喵喵 ",
-          "describe": "喵喵喵 喵"
-        },
-        "toAdmins": {
-          "text": "喵 喵喵喵喵喵喵喵 喵喵 ",
-          "describe": "喵喵 喵喵喵 喵 喵喵 "
-        },
-        "toNormals": {
-          "text": "喵喵喵喵 喵 喵喵 喵喵喵 喵喵 喵喵喵 ",
-          "describe": "喵"
-        },
-        "command": {
-          "text": "喵喵喵喵 喵喵喵喵喵喵 喵喵 喵喵喵喵喵喵喵 ",
-          "describe": "喵喵"
-        }
-      },
-      "tabsList": {
-        "itemName": "喵喵喵 喵喵喵喵 喵 喵 喵喵喵喵喵喵喵喵 ",
-        "form": {
-          "del": "喵 喵喵 喵喵喵喵 ",
-          "read": "喵 喵喵 喵喵 "
-        }
-      },
-      "tabsSend": {
-        "itemName": "喵喵喵喵喵 喵喵 喵 喵喵喵喵喵 喵喵 喵喵",
-        "messageMethod": "喵喵喵 喵 喵喵 喵喵喵喵 喵 喵喵喵喵喵 喵 喵 喵",
-        "messageID": "喵喵喵喵喵 ",
-        "content": "喵喵喵喵喵喵喵喵喵 喵喵 喵喵喵 喵喵喵喵"
-      }
+  "cheatMethods": {
+    "aimbot": {
+      "describe": "喵喵喵喵喵喵喵喵喵",
+      "title": "喵喵"
     },
-    "account": {
-      "title": "喵 喵喵喵喵喵 喵 喵喵喵喵喵喵",
-      "form": {
-        "privilege": "喵喵喵喵 喵喵喵喵 喵喵喵 ",
-        "introduction": "喵 喵喵喵 喵喵喵",
-        "showOrigin": "喵 喵喵喵喵 喵喵喵喵喵喵喵喵喵喵",
-        "showOriginDescribe": "喵",
-        "allowDM": "喵喵喵",
-        "allowDMdescribe": "喵 喵喵喵喵喵喵喵喵喵喵喵喵 ",
-        "language": "喵喵喵 喵 喵喵喵喵 喵喵 喵喵 喵 喵 ",
-        "languageSyncDescribe": "喵喵喵喵 喵喵喵 喵喵喵 喵喵 喵喵喵喵喵"
-      },
-      "modifyName": {
-        "title": "喵喵 喵喵 喵喵 喵喵 喵",
-        "specification1": "喵喵喵喵喵喵 喵 喵",
-        "specification2": "喵 ",
-        "residueDegree": "喵 喵喵喵 喵喵喵喵 ",
-        "steps": {
-          "0": {
-            "title": "喵喵喵 喵喵喵喵喵喵 喵喵 "
-          },
-          "1": {
-            "title": "喵喵 喵 "
-          },
-          "2": {
-            "title": "喵喵 喵喵喵喵喵喵喵"
-          }
-        }
-      }
+    "attackServer": {
+      "describe": "喵喵喵喵喵喵喵喵喵 喵",
+      "title": "喵喵喵喵 喵 喵喵喵喵喵喵喵 喵"
     },
-    "appearance": {
-      "title": "喵喵喵 喵喵 喵 喵喵"
+    "damageChange": {
+      "describe": "喵喵",
+      "title": "喵 喵喵喵喵喵喵"
     },
-    "enhance": {
-      "title": "喵喵 喵 喵喵喵 喵喵喵喵喵喵喵喵 喵 喵 喵喵"
+    "gadgetModify": {
+      "describe": "喵喵喵 喵喵喵 喵 喵喵喵 ",
+      "title": "喵喵喵 喵喵 喵喵喵喵喵喵"
     },
-    "media": {
-      "title": "喵 喵喵 喵 喵 ",
-      "capacity": "喵喵喵喵喵喵 喵喵喵 喵 喵",
-      "fileNum": "喵喵 喵喵喵喵喵喵喵 喵 喵喵喵 喵喵 喵 喵喵喵",
-      "steps": {
-        "0": "喵喵 喵喵喵",
-        "1": "喵 喵喵 喵喵喵喵喵 喵 喵喵喵喵喵喵 喵",
-        "2": "喵 喵喵喵喵 喵喵 喵 喵 喵喵 喵喵喵"
-      },
-      "types": {
-        "0": "喵喵喵 喵喵喵",
-        "1": "喵喵喵喵喵喵喵喵喵喵喵喵 喵 喵 喵 喵喵 喵"
-      }
+    "invisable": {
+      "describe": "喵喵喵喵喵喵 喵喵喵喵喵",
+      "title": "喵 喵喵喵 "
     },
-    "history": {
-      "title": "喵 喵喵 "
+    "magicBullet": {
+      "describe": "喵喵喵 喵喵喵喵喵 喵喵喵喵 喵 喵喵 喵",
+      "title": "喵 喵喵喵喵喵喵 喵喵喵喵喵"
     },
-    "subscribes": {
-      "title": "喵"
+    "oneShotKill": {
+      "describe": "喵",
+      "title": "喵喵喵喵喵喵喵 喵 喵"
     },
-    "admin": {
-      "title": "喵 喵喵喵 喵喵 喵喵 喵喵 喵 喵 喵 喵喵喵喵 喵",
-      "menu": {
-        "management": "喵喵 喵喵喵",
-        "user": "喵喵喵喵喵喵 喵 ",
-        "comment": "喵喵喵",
-        "log": "喵喵喵 喵喵喵喵喵喵喵喵喵 ",
-        "adminLog": "喵",
-        "judgementLog": "喵喵喵喵喵喵 喵 喵喵喵喵喵 喵喵喵喵"
-      }
+    "teleport": {
+      "describe": "喵 喵喵",
+      "title": "喵 喵 喵喵 喵 喵 喵喵 喵喵喵 喵喵喵"
+    },
+    "wallhack": {
+      "describe": "喵喵 喵喵喵喵喵喵喵 喵喵 喵喵 喵 ",
+      "title": "喵喵喵 喵喵 喵喵喵喵喵喵喵喵喵 喵喵喵喵"
     }
   },
   "detail": {
-    "title": "喵喵喵喵 喵 喵 喵喵",
-    "subscribes": {
-      "tracking": "喵喵喵",
-      "trackingDescribe": "喵 喵 喵喵喵喵喵 ",
-      "cancelTrack": "喵喵喵喵喵 喵喵 喵喵喵 喵喵喵喵喵喵喵喵喵 ",
-      "cancelTrackDescribe": "喵喵 喵喵 喵喵喵 喵 喵 喵喵喵喵 喵喵喵喵"
-    },
-    "timeline": {
-      "all": "喵 喵喵喵喵 喵喵喵喵喵喵 喵 喵喵喵喵喵",
-      "verify": "喵喵 喵喵",
-      "banAppeal": "喵喵 喵 喵喵喵喵 喵喵喵 喵 "
-    },
     "appeal": {
       "describe": "喵 喵喵喵 喵喵喵 喵喵喵喵 喵喵喵喵 喵喵喵 喵",
+      "info": {
+        "content": "喵 ",
+        "originName": "喵喵 ",
+        "player": "喵喵 喵喵喵喵 喵喵喵喵喵喵喵喵喵喵喵"
+      },
       "modal": {
-        "modalTitle": "喵喵 喵喵喵 喵喵 喵",
+        "auxiliaryProof": {
+          "1": "喵喵喵 喵喵 喵喵 喵喵喵喵喵喵 ",
+          "2": "喵喵 喵",
+          "title": "喵 喵喵喵喵喵喵喵喵喵喵 喵喵喵 喵 喵喵喵喵"
+        },
         "describe": "喵 ",
         "effectiveEvidence": {
           "1": "喵喵喵喵 喵喵喵喵 喵 喵 喵 喵喵 喵",
@@ -255,16 +230,7 @@
           "4": "喵 喵喵喵喵喵喵 喵喵 ",
           "title": "喵"
         },
-        "auxiliaryProof": {
-          "1": "喵喵喵 喵喵 喵喵 喵喵喵喵喵喵 ",
-          "2": "喵喵 喵",
-          "title": "喵 喵喵喵喵喵喵喵喵喵喵 喵喵喵 喵 喵喵喵喵"
-        }
-      },
-      "info": {
-        "content": "喵 ",
-        "player": "喵喵 喵喵喵喵 喵喵喵喵喵喵喵喵喵喵喵",
-        "originName": "喵喵 "
+        "modalTitle": "喵喵 喵喵喵 喵喵 喵"
       },
       "placeholder": {
         "content": "喵喵喵喵喵喵喵 喵喵喵喵",
@@ -272,133 +238,93 @@
       }
     },
     "info": {
-      "app_qr": {
-        "title": "喵 喵喵喵喵",
-        "tip": "喵喵",
-        "openApp": "喵 喵喵 喵喵喵喵喵喵",
-        "openAppDescribe": "喵 喵"
-      },
-      "assistPppeal": "喵喵喵喵喵 喵喵喵 ",
-      "appeal": "喵喵喵 喵 喵喵",
-      "cheatersInfo": "喵喵喵 喵喵喵 喵 喵喵",
-      "viewTimes": "喵喵 喵",
-      "reportedGames": "喵喵喵喵喵喵喵喵",
-      "gameScores": "喵喵喵喵喵喵喵喵喵 喵喵喵",
-      "firstReportTime": "喵喵喵",
-      "recentUpdateTime": "喵喵 喵喵喵喵喵喵 喵 喵 喵喵喵喵喵喵喵喵 ",
-      "originAvatar": "喵喵 喵喵喵 喵 喵喵喵喵喵 喵",
-      "historyID": "喵 喵喵喵喵喵喵喵",
-      "dealRecord": "喵喵 喵 喵喵 喵喵",
-      "discription1": "喵",
-      "updateButton": "喵喵喵喵 喵喵 喵喵 喵喵喵喵喵喵 喵喵喵喵",
-      "discription2": "喵喵 喵喵 喵 喵喵 喵喵喵喵 喵喵 喵",
-      "discription3": "喵 喵 喵喵",
-      "discription4": "喵喵喵 喵喵喵喵喵喵喵喵喵 喵喵",
-      "timeLine": "喵喵喵喵 喵喵喵 喵 喵喵喵喵喵喵喵",
-      "report": "喵喵喵 喵喵喵喵喵喵喵 ",
-      "inGame": "喵喵喵喵喵 喵喵喵喵 喵喵喵喵喵",
-      "gaming": "喵",
-      "videoLink": "喵喵喵喵喵喵喵 喵",
-      "judge": "喵",
-      "cheatMethod": "喵喵喵喵喵喵喵",
-      "replyManual1": "喵喵 喵喵喵喵 喵喵喵 ",
-      "uploadPicButton": "喵喵喵喵 喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵",
-      "replyManual2": "喵喵喵喵喵喵喵喵喵 喵喵喵喵喵 ",
-      "replyManual3": "喵喵喵喵 喵喵喵喵 喵喵喵喵喵喵 喵喵喵",
-      "appealManual1": "喵",
+      "action": "喵喵喵 喵 ",
       "adminConsole": "喵喵喵喵喵喵 喵喵喵喵喵喵 喵喵 喵喵喵喵",
       "adminManual1": "喵",
       "adminManual2": "喵喵喵喵喵 喵 喵喵喵喵喵喵喵",
-      "judgement": "喵 喵",
-      "replyManual4": "喵 喵 喵喵喵喵 喵喵喵喵喵喵喵喵喵 喵喵 ",
-      "action": "喵喵喵 喵 ",
-      "writeSomething": "喵喵 喵 ",
-      "giveOpinion": "喵喵喵喵喵喵 喵 喵喵 喵 喵喵喵 喵喵喵喵喵",
+      "app_qr": {
+        "openApp": "喵 喵喵 喵喵喵喵喵喵",
+        "openAppDescribe": "喵 喵",
+        "tip": "喵喵",
+        "title": "喵 喵喵喵喵"
+      },
+      "appeal": "喵喵喵 喵 喵喵",
+      "appealManual1": "喵",
+      "assistPppeal": "喵喵喵喵喵 喵喵喵 ",
+      "cheatMethod": "喵喵喵喵喵喵喵",
+      "cheatersInfo": "喵喵喵 喵喵喵 喵 喵喵",
+      "dealRecord": "喵喵 喵 喵喵 喵喵",
+      "discription1": "喵",
+      "discription2": "喵喵 喵喵 喵 喵喵 喵喵喵喵 喵喵 喵",
+      "discription3": "喵 喵 喵喵",
+      "discription4": "喵喵喵 喵喵喵喵喵喵喵喵喵 喵喵",
       "fastReplies": {
-        "stats": "喵 喵喵喵喵 ",
         "evidencePic": "喵喵喵喵 喵喵 喵喵 喵 喵 喵 喵喵",
-        "evidenceVid": "喵喵喵 喵喵"
-      }
+        "evidenceVid": "喵喵喵 喵喵",
+        "stats": "喵 喵喵喵喵 "
+      },
+      "firstReportTime": "喵喵喵",
+      "gameScores": "喵喵喵喵喵喵喵喵喵 喵喵喵",
+      "gaming": "喵",
+      "giveOpinion": "喵喵喵喵喵喵 喵 喵喵 喵 喵喵喵 喵喵喵喵喵",
+      "historyID": "喵 喵喵喵喵喵喵喵",
+      "inGame": "喵喵喵喵喵 喵喵喵喵 喵喵喵喵喵",
+      "judge": "喵",
+      "judgement": "喵 喵",
+      "originAvatar": "喵喵 喵喵喵 喵 喵喵喵喵喵 喵",
+      "recentUpdateTime": "喵喵 喵喵喵喵喵喵 喵 喵 喵喵喵喵喵喵喵喵 ",
+      "replyManual1": "喵喵 喵喵喵喵 喵喵喵 ",
+      "replyManual2": "喵喵喵喵喵喵喵喵喵 喵喵喵喵喵 ",
+      "replyManual3": "喵喵喵喵 喵喵喵喵 喵喵喵喵喵喵 喵喵喵",
+      "replyManual4": "喵 喵 喵喵喵喵 喵喵喵喵喵喵喵喵喵 喵喵 ",
+      "report": "喵喵喵 喵喵喵喵喵喵喵 ",
+      "reportedGames": "喵喵喵喵喵喵喵喵",
+      "timeLine": "喵喵喵喵 喵喵喵 喵 喵喵喵喵喵喵喵",
+      "updateButton": "喵喵喵喵 喵喵 喵喵 喵喵喵喵喵喵 喵喵喵喵",
+      "uploadPicButton": "喵喵喵喵 喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵",
+      "videoLink": "喵喵喵喵喵喵喵 喵",
+      "viewTimes": "喵喵 喵",
+      "writeSomething": "喵喵 喵 "
     },
     "judgement": {
-      "behavior": "喵喵",
-      "methods": "喵 喵喵喵喵喵喵喵喵 喵喵喵喵喵",
-      "content": "喵喵喵喵 喵喵 喵 喵喵 喵喵喵 喵",
       "appropriateVerdict": {
         "1": "喵喵喵喵喵喵喵",
         "2": "喵",
         "title": "喵 喵喵喵喵喵喵 喵 喵 喵喵喵 喵 喵 喵喵喵"
       },
+      "behavior": "喵喵",
+      "content": "喵喵喵喵 喵喵 喵 喵喵 喵喵喵 喵",
       "inappropriateRuling": {
         "1": "喵喵喵喵 喵 喵喵 喵喵喵喵",
         "2": "喵 喵喵喵喵喵喵 喵喵 喵喵喵喵喵",
         "3": "喵 喵喵 喵喵喵 喵喵 喵喵 喵 喵喵喵喵 喵 喵喵",
         "title": "喵喵喵喵 "
-      }
+      },
+      "methods": "喵 喵喵喵喵喵喵喵喵 喵喵喵喵喵"
     },
     "messages": {
+      "dontDoIt": "喵 喵喵喵喵喵 喵 喵喵喵喵 ",
       "fillEverything": "喵喵 喵喵喵喵喵喵喵 喵喵 喵 喵 喵喵喵喵喵喵",
       "pleaseExplain": "喵喵喵 喵喵喵 喵喵喵喵",
-      "dontDoIt": "喵 喵喵喵喵喵 喵 喵喵喵喵 ",
       "replySuccess": "喵喵 喵 喵",
       "signIn": "喵",
-      "updateComplete": "喵喵喵喵喵喵喵喵喵 喵喵喵喵喵喵喵 喵",
-      "submitSuccess": "喵喵喵"
-    }
-  },
-  "report": {
-    "title": "喵喵喵喵喵喵喵喵 喵喵 喵",
-    "info": {
-      "notFoundHintTitle": "喵 喵",
-      "notFoundHintQuestion1": "喵喵喵 喵 喵喵 喵",
-      "notFoundHintAnswer1": "喵喵喵喵 喵 喵喵喵 喵喵 喵喵喵 喵喵喵喵",
-      "notFoundHintQuestion2": "喵喵 喵喵喵喵 喵 喵 喵喵 喵喵喵 喵喵 喵喵喵",
-      "notFoundHintAnswer2": "喵 喵喵 喵喵喵喵喵喵喵喵喵 ",
-      "reportHacker": "喵 喵",
-      "idNotion1": "喵喵喵喵喵喵喵喵喵喵 喵 喵 喵喵",
-      "idNotion2": "喵 喵 喵喵喵 喵 喵 喵喵喵喵 喵喵喵喵 喵喵",
-      "uploadManual1": "喵喵 喵 ",
-      "uploadManual2": "喵喵喵 喵 喵 ",
-      "uploadManual3": "喵喵喵喵喵喵喵喵喵喵喵 喵喵 喵喵喵 喵",
-      "uploadPic1": "喵 喵",
-      "uploadPic2": "喵喵喵 喵喵 喵喵喵喵喵喵 喵",
-      "uploadPic3": "喵喵喵喵喵喵喵",
-      "uploadPic4": "喵 喵喵 喵 ",
-      "reportOne": "喵 喵 喵喵 喵 喵喵喵 喵喵喵 喵 ",
-      "reportAll": "喵喵喵 喵喵喵喵 喵 喵喵喵",
-      "fromDatabaseOneId": "喵喵 喵喵",
-      "description": "喵喵喵 喵喵喵 ",
-      "required": "喵喵 喵喵喵喵喵喵喵 喵喵喵喵喵喵喵喵 ",
-      "onlyOneId": "喵",
-      "loginExpired": "喵喵"
+      "submitSuccess": "喵喵喵",
+      "updateComplete": "喵喵喵喵喵喵喵喵喵 喵喵喵喵喵喵喵 喵"
     },
-    "labels": {
-      "cheatMethod": "喵喵喵 喵喵 喵",
-      "hackerId": "喵 ",
-      "game": "喵喵 ",
-      "description": "喵喵 喵喵 喵喵 "
+    "subscribes": {
+      "cancelTrack": "喵喵喵喵喵 喵喵 喵喵喵 喵喵喵喵喵喵喵喵喵 ",
+      "cancelTrackDescribe": "喵喵 喵喵 喵喵喵 喵 喵 喵喵喵喵 喵喵喵喵",
+      "tracking": "喵喵喵",
+      "trackingDescribe": "喵 喵 喵喵喵喵喵 "
     },
-    "messages": {
-      "mediaEvidence": "喵喵喵喵喵喵喵喵喵 喵喵喵喵喵",
-      "originIdNotExist": "喵喵喵喵喵喵",
-      "success": "喵喵 喵 喵喵",
-      "permissionDenied": "喵喵喵喵喵喵喵喵喵 喵喵喵 喵 喵",
-      "videoBadFormat": "喵喵喵喵 喵喵 喵喵 喵 喵 ",
-      "videoEmpty": "喵喵 喵喵喵 ",
-      "successTitle": "喵喵 喵喵",
-      "successSubtitle": "喵喵 喵 喵喵",
-      "failureTitle": "喵喵 喵喵喵 喵喵喵喵喵 喵 喵喵",
-      "failureSubtitle": "喵喵 喵 喵，{msg}"
+    "timeline": {
+      "all": "喵 喵喵喵喵 喵喵喵喵喵喵 喵 喵喵喵喵喵",
+      "banAppeal": "喵喵 喵 喵喵喵喵 喵喵喵 喵 ",
+      "verify": "喵喵 喵喵"
     },
-    "button": {
-      "continue": "喵 喵喵",
-      "leave": "喵喵 喵"
-    }
+    "title": "喵喵喵喵 喵 喵 喵喵"
   },
   "footer": {
-    "language": {
-      "members": "喵"
-    },
     "column": {
       "col1": {
         "text": "喵喵喵 喵喵喵喵喵喵喵喵喵喵喵"
@@ -413,343 +339,415 @@
         "title": "喵 喵喵喵喵喵喵喵喵 喵 "
       },
       "sponsor": {
-        "title": "喵喵 喵喵喵喵喵 喵 喵 喵 ",
-        "join": "喵喵 "
+        "join": "喵喵 ",
+        "title": "喵喵 喵喵喵喵喵 喵 喵 喵 "
       }
+    },
+    "language": {
+      "members": "喵"
     }
   },
-  "home": {
-    "title": "喵 喵喵 喵喵喵 喵 喵 喵喵喵喵 喵 ",
-    "cover": {
-      "h1": "喵 喵喵喵喵喵喵喵 喵 喵喵喵喵 喵喵喵 喵 喵",
-      "h2": [
-        "喵喵喵喵喵喵喵喵喵 喵 喵喵喵 喵喵喵",
-        "喵喵 喵喵喵 喵"
-      ],
-      "h3": "喵",
-      "h4": "喵 喵喵喵喵喵喵 喵喵 喵喵 喵喵",
-      "subButton": "喵喵",
-      "dataReceived": "喵 喵喵喵喵 喵 喵喵喵 ",
-      "confirmData": "喵 喵喵喵喵 喵 喵喵喵喵 喵喵喵喵喵喵",
-      "endTime": "喵 喵喵喵喵 喵 喵喵"
-    },
-    "activity": {
-      "title": "喵喵喵喵 喵",
-      "more": "喵 喵喵 喵喵",
-      "description": "喵喵喵 喵 喵喵 喵 喵喵喵喵 喵 喵喵喵喵喵",
-      "activities": {
-        "report": "喵喵 喵喵 喵喵喵喵 喵 喵",
-        "join": "喵喵喵 喵喵 喵喵喵 喵喵喵 喵 喵",
-        "admin": "喵喵喵喵 喵 喵喵喵喵 喵",
-        "mark": "喵喵喵喵喵喵喵喵喵喵喵",
-        "as": "喵喵喵喵喵 "
+  "forgetPassword": {
+    "resetSuccess": "喵",
+    "steps": {
+      "0": {
+        "supplement": "喵喵 喵喵喵 喵喵喵喵 ",
+        "title": "喵喵喵 喵 喵 喵"
+      },
+      "1": {
+        "supplement": "喵喵 喵 喵 喵喵喵喵 喵喵喵喵 喵",
+        "title": "喵 喵 喵喵喵喵 喵 喵喵 喵喵 喵 喵喵喵喵喵 喵喵"
+      },
+      "2": {
+        "supplement": "喵 喵喵 喵喵喵 喵喵喵喵 喵喵喵喵喵喵喵 喵",
+        "title": "喵喵喵喵喵喵喵喵 喵 "
+      },
+      "3": {
+        "supplement": "喵喵喵 喵喵喵",
+        "title": "喵喵 喵喵 喵 喵"
+      },
+      "4": {
+        "supplement": "喵喵喵 喵 喵喵喵 喵喵喵 喵喵喵喵 喵",
+        "title": "喵喵喵喵喵喵喵 喵 喵喵 喵喵喵 喵喵 喵喵"
       }
+    },
+    "title": "喵喵 喵 喵"
+  },
+  "header": {
+    "about": "喵 喵",
+    "cheaters": "喵喵喵喵喵 喵喵喵喵喵喵",
+    "index": "喵 喵 喵喵喵喵喵 ",
+    "profile": "喵喵喵喵喵 喵喵 喵喵喵 喵喵",
+    "report": "喵喵 喵喵喵 喵 喵喵喵喵喵喵 喵喵喵",
+    "signin": "喵喵 喵喵 ",
+    "signout": "喵喵 ",
+    "signoutSuccess": "喵 ",
+    "signup": "喵 喵喵喵 喵喵喵喵喵喵 喵喵喵喵 喵 喵 ",
+    "userCenter": "喵"
+  },
+  "home": {
+    "activity": {
+      "activities": {
+        "admin": "喵喵喵喵 喵 喵喵喵喵 喵",
+        "as": "喵喵喵喵喵 ",
+        "join": "喵喵喵 喵喵 喵喵喵 喵喵喵 喵 喵",
+        "mark": "喵喵喵喵喵喵喵喵喵喵喵",
+        "report": "喵喵 喵喵 喵喵喵喵 喵 喵"
+      },
+      "description": "喵喵喵 喵 喵喵 喵 喵喵喵喵 喵 喵喵喵喵喵",
+      "more": "喵 喵喵 喵喵",
+      "title": "喵喵喵喵 喵"
     },
     "bulletin": {
       "title": "喵"
-    }
-  },
-  "about": {
-    "title": "喵 喵 喵喵喵 喵喵喵 喵 喵喵喵",
-    "description": "喵 喵喵 喵喵喵喵 ",
-    "website": "喵喵喵 喵喵喵 喵喵喵喵喵喵 喵 ",
-    "privacy": "喵 喵喵喵喵喵 喵 喵"
+    },
+    "cover": {
+      "confirmData": "喵 喵喵喵喵 喵 喵喵喵喵 喵喵喵喵喵喵",
+      "dataReceived": "喵 喵喵喵喵 喵 喵喵喵 ",
+      "endTime": "喵 喵喵喵喵 喵 喵喵",
+      "h1": "喵 喵喵喵喵喵喵喵 喵 喵喵喵喵 喵喵喵 喵 喵",
+      "h2.hint0": "喵喵喵喵喵喵喵喵喵 喵 喵喵喵 喵喵喵",
+      "h2.hint1": "喵喵 喵喵喵 喵",
+      "h3": "喵",
+      "h4": "喵 喵喵喵喵喵喵 喵喵 喵喵 喵喵",
+      "subButton": "喵喵"
+    },
+    "title": "喵 喵喵 喵喵喵 喵 喵 喵喵喵喵 喵 "
   },
   "link": {
-    "title": "喵喵 喵喵 喵喵 喵喵 喵喵喵喵喵喵 ",
-    "links": "喵喵 喵 喵 喵喵 ",
-    "sponsor": "喵 喵喵 ",
-    "linkWebDeveloperChild": "喵 喵喵喵喵喵 喵喵喵 喵喵 喵 喵 喵喵喵喵 喵 ",
-    "linkWebDeveloperDescribe": "喵 ",
+    "join": "喵喵喵喵 喵喵 喵喵 喵喵喵喵喵喵 喵",
     "languageMembers": "喵喵喵 喵 喵喵 喵喵喵喵喵喵喵 喵喵喵 喵 喵喵",
     "languageMembersDescribe": "喵喵喵喵喵喵 喵喵喵 喵喵喵 喵",
-    "join": "喵喵喵喵 喵喵 喵喵 喵喵喵喵喵喵 喵"
-  },
-  "reset": {
-    "title": "喵喵 喵喵喵 喵喵喵喵喵喵 喵喵喵喵",
-    "form": {
-      "oldPassword": "喵喵 喵喵喵喵喵喵喵喵 喵喵喵喵 喵喵喵",
-      "newPassword": "喵喵喵喵喵 喵",
-      "qq": "喵 喵 喵喵 喵 喵喵喵喵 喵喵 喵 喵喵",
-      "password": "喵",
-      "passwordRepeat": "喵喵喵喵喵 喵喵 喵喵 喵喵喵喵 喵喵 喵 喵 "
-    }
-  },
-  "account": {
-    "title": "喵喵喵喵喵喵喵喵",
-    "reportnum": "喵 喵喵喵喵 喵喵 喵喵喵 喵 喵 喵",
-    "userInfo": "喵喵 喵喵喵 喵 ",
-    "username": "喵",
-    "role": "喵喵喵 喵喵 喵喵 喵 喵喵喵 喵 喵喵喵喵",
-    "joinedAt": "喵喵 喵喵喵喵喵 喵喵喵喵 ",
-    "lastOnlineTime": "喵喵喵喵喵喵喵 ",
-    "reports": "喵喵 喵",
-    "reported": "喵喵 喵 喵喵喵 喵喵喵 喵喵喵喵喵喵喵 ",
-    "status": "喵 喵 喵喵 喵 喵喵喵 喵喵 喵喵喵喵喵 喵喵喵 ",
-    "recentlyUpdated": "喵 喵 喵喵喵喵 喵 喵 喵喵喵 喵",
-    "message": {
-      "chat": "喵",
-      "hint": {
-        "denied": "喵喵 喵喵 喵喵 喵喵喵喵喵喵喵喵喵喵喵 喵 ",
-        "selfTalk": "喵 喵",
-        "taOffChat": "喵喵喵喵 喵 喵 喵"
-      }
-    },
-    "bindOrigin": {
-      "title": "喵 喵 喵喵 喵喵喵 喵喵喵",
-      "content": "喵 喵喵喵喵喵",
-      "travel": "喵喵 喵喵喵喵喵 喵喵喵喵喵喵 "
-    }
-  },
-  "bindOrigin": {
-    "title": "喵喵喵 喵喵 喵 "
-  },
-  "signin": {
-    "title": "喵喵喵 喵 ",
-    "form": {
-      "username": "喵喵喵 喵 喵喵",
-      "password": "喵喵喵喵 喵喵 喵喵喵 喵 喵",
-      "submitHint": "喵喵喵喵 喵喵 ",
-      "forgetPasswordHint": "喵 喵 喵喵喵喵喵喵喵 喵 喵喵喵 喵喵"
-    },
-    "fillEverything": "喵",
-    "failed": "喵 喵喵喵 喵 喵",
-    "success": "喵喵 喵喵 ",
-    "loginFirst": "喵 喵喵 喵喵喵喵 喵喵 喵喵喵喵",
-    "loggedIn": "喵 喵喵 喵喵喵 喵喵喵喵喵喵 喵喵 喵 喵"
-  },
-  "signup": {
-    "title": "喵喵 喵 喵 喵 喵喵 喵喵喵喵 喵 喵 喵喵喵 喵 喵",
-    "registerVerification": {
-      "title": "喵喵喵喵 喵喵 喵喵 喵喵喵喵喵喵",
-      "validation": "喵喵 喵 喵喵喵 喵 喵 喵",
-      "successful": "喵喵喵 喵喵 喵 喵喵喵 喵喵 喵 喵喵喵喵 喵 喵 ",
-      "failure": "喵喵",
-      "error": "喵喵喵喵喵 喵"
-    },
-    "steps": {
-      "0": {
-        "title": "喵喵喵喵喵喵喵",
-        "supplement": "喵喵喵 喵喵喵"
-      },
-      "1": {
-        "title": "喵喵喵喵喵 喵 喵 喵喵 喵 喵喵喵喵喵喵 ",
-        "supplement": "喵 喵喵喵喵"
-      },
-      "2": {
-        "title": "喵喵 喵喵喵喵喵喵喵",
-        "supplement": "喵喵喵喵喵喵喵喵喵 喵 喵 喵 喵喵喵喵 喵喵喵 "
-      },
-      "3": {
-        "title": "喵喵 喵 喵 喵 喵喵喵喵喵",
-        "supplement": "喵喵"
-      },
-      "4": {
-        "title": "喵喵喵 喵 喵喵喵喵喵喵 喵喵喵 喵喵 喵 喵喵喵",
-        "supplement": "喵喵喵喵 喵 喵 喵喵喵喵喵喵"
-      }
-    },
-    "form": {
-      "username": "喵喵",
-      "newUsername": "喵喵 喵 喵 喵 喵喵 喵喵 喵喵喵喵 喵 喵喵喵 ",
-      "password": "喵 喵 喵喵喵喵 喵喵 喵 喵喵喵喵喵喵",
-      "originId": "喵喵喵 喵 喵喵喵喵 喵 喵喵 喵喵喵喵 喵喵喵 ",
-      "originEmail": "喵 喵喵喵喵 喵喵喵",
-      "originName": "喵 喵 喵 喵喵",
-      "submitHint": "喵喵喵喵喵 ",
-      "forgetPasswordHint": "喵喵喵 喵喵 喵 喵喵"
-    },
-    "placeholder": {
-      "originEmail": "喵喵喵喵",
-      "originName": "喵 喵喵喵喵喵喵喵 喵喵 喵喵喵喵",
-      "username": "喵喵喵喵喵",
-      "password": "喵喵 ",
-      "originId": "喵喵 喵 喵 喵喵喵喵喵喵喵喵喵喵喵喵 喵"
-    },
-    "eaPrivacy": "喵",
-    "checkAllEmail": "喵 喵喵喵喵喵 喵喵喵 喵喵喵喵 ",
-    "usernameExist": "喵喵喵喵 喵喵喵喵 喵喵 喵",
-    "gameNotShowed": "喵喵喵 喵喵喵喵 喵 喵喵 喵喵",
-    "playerNotFound": "喵喵喵 喵 喵 喵喵喵喵 喵喵 喵 喵喵喵喵",
-    "originIdExist": "喵喵喵喵喵喵喵",
-    "fillIn": "喵喵喵喵喵",
-    "failed": "喵 喵 喵喵喵喵喵喵喵喵"
-  },
-  "forgetPassword": {
-    "title": "喵喵 喵 喵",
-    "steps": {
-      "0": {
-        "title": "喵喵喵 喵 喵 喵",
-        "supplement": "喵喵 喵喵喵 喵喵喵喵 "
-      },
-      "1": {
-        "title": "喵 喵 喵喵喵喵 喵 喵喵 喵喵 喵 喵喵喵喵喵 喵喵",
-        "supplement": "喵喵 喵 喵 喵喵喵喵 喵喵喵喵 喵"
-      },
-      "2": {
-        "title": "喵喵喵喵喵喵喵喵 喵 ",
-        "supplement": "喵 喵喵 喵喵喵 喵喵喵喵 喵喵喵喵喵喵喵 喵"
-      },
-      "3": {
-        "title": "喵喵 喵喵 喵 喵",
-        "supplement": "喵喵喵 喵喵喵"
-      },
-      "4": {
-        "title": "喵喵喵喵喵喵喵 喵 喵喵 喵喵喵 喵喵 喵喵",
-        "supplement": "喵喵喵 喵 喵喵喵 喵喵喵 喵喵喵喵 喵"
-      }
-    },
-    "resetSuccess": "喵"
+    "linkWebDeveloperChild": "喵 喵喵喵喵喵 喵喵喵 喵喵 喵 喵 喵喵喵喵 喵 ",
+    "linkWebDeveloperDescribe": "喵 ",
+    "links": "喵喵 喵 喵 喵喵 ",
+    "sponsor": "喵 喵喵 ",
+    "title": "喵喵 喵喵 喵喵 喵喵 喵喵喵喵喵喵 "
   },
   "list": {
-    "title": "喵 喵 喵 喵喵 喵喵喵 喵喵喵喵喵喵",
+    "colums": {
+      "playerId": "喵 喵喵 喵喵 喵喵",
+      "reportTime": "喵喵喵喵喵喵 喵 喵喵",
+      "screenTitle": "喵喵喵 喵喵 喵喵喵喵喵 ",
+      "updateTime": "喵 "
+    },
     "filters": {
       "sortBy": {
+        "commentNum": "喵喵喵喵",
         "createTime": "喵喵喵喵 喵 喵喵喵喵喵 喵 喵 喵喵 喵 喵喵 ",
         "updateTime": "喵喵 喵喵 喵喵 喵喵 喵",
-        "viewNum": "喵 喵 喵 喵喵喵喵 喵 喵 喵 喵喵",
-        "commentNum": "喵喵喵喵"
+        "viewNum": "喵 喵 喵 喵喵喵喵 喵 喵 喵 喵喵"
       }
     },
     "reportTime": "喵喵 喵喵",
-    "updateTime": "喵喵喵喵喵喵喵 喵 喵喵喵喵 喵 喵喵",
-    "colums": {
-      "screenTitle": "喵喵喵 喵喵 喵喵喵喵喵 ",
-      "playerId": "喵 喵喵 喵喵 喵喵",
-      "reportTime": "喵喵喵喵喵喵 喵 喵喵",
-      "updateTime": "喵 "
-    }
-  },
-  "apps": {
-    "title": "喵喵喵 喵喵喵 喵喵喵 喵 喵 喵喵喵喵喵喵 ",
-    "describe": "喵喵喵 喵 喵 喵喵 喵喵喵喵喵喵喵 ",
-    "submit_tool_app": "喵喵",
-    "buttons": {
-      "hot": "喵喵喵喵喵 喵喵喵 ",
-      "website": "喵",
-      "get": "喵 喵喵喵喵喵 喵喵 喵喵 喵喵喵 喵喵 喵喵"
-    },
-    "screen": {
-      "all": "喵喵",
-      "official": "喵喵喵喵",
-      "bot": "喵",
-      "app": "喵 喵 喵喵喵 喵喵喵 喵喵 喵喵 喵 喵喵喵 ",
-      "pc_app": "喵喵 喵喵喵喵喵 喵 喵 喵喵喵 喵喵 ",
-      "web": "喵喵喵 喵喵喵 喵 喵喵喵喵喵喵",
-      "api": "喵 喵喵喵喵 喵喵喵喵喵 喵喵喵 喵 喵喵",
-      "book": "喵 喵喵喵 喵喵喵 喵",
-      "admin": "喵 喵喵喵喵喵喵喵 喵 ",
-      "qq": "喵喵 喵喵喵喵 喵 喵 喵 喵 喵喵",
-      "bf1": "喵喵 喵喵 喵",
-      "bfv": "喵喵 ",
-      "bf6": "喵喵"
-    }
-  },
-  "search": {
-    "title": "喵 喵 喵喵喵喵 喵喵喵 喵喵 喵 喵",
-    "describe": "喵喵喵喵喵喵喵 喵喵喵喵 喵喵 喵 喵喵",
-    "placeholder": "喵",
-    "collectionHint": "喵喵 ",
-    "scope": {
-      "history": "喵 喵 喵喵 喵 喵喵喵",
-      "current": "喵喵喵喵喵喵 喵喵喵 "
-    }
-  },
-  "cheatMethods": {
-    "invisable": {
-      "title": "喵 喵喵喵 ",
-      "describe": "喵喵喵喵喵喵 喵喵喵喵喵"
-    },
-    "wallhack": {
-      "title": "喵喵喵 喵喵 喵喵喵喵喵喵喵喵喵 喵喵喵喵",
-      "describe": "喵喵 喵喵喵喵喵喵喵 喵喵 喵喵 喵 "
-    },
-    "aimbot": {
-      "title": "喵喵",
-      "describe": "喵喵喵喵喵喵喵喵喵"
-    },
-    "oneShotKill": {
-      "title": "喵喵喵喵喵喵喵 喵 喵",
-      "describe": "喵"
-    },
-    "gadgetModify": {
-      "title": "喵喵喵 喵喵 喵喵喵喵喵喵",
-      "describe": "喵喵喵 喵喵喵 喵 喵喵喵 "
-    },
-    "damageChange": {
-      "title": "喵 喵喵喵喵喵喵",
-      "describe": "喵喵"
-    },
-    "magicBullet": {
-      "title": "喵 喵喵喵喵喵喵 喵喵喵喵喵",
-      "describe": "喵喵喵 喵喵喵喵喵 喵喵喵喵 喵 喵喵 喵"
-    },
-    "attackServer": {
-      "title": "喵喵喵喵 喵 喵喵喵喵喵喵喵 喵",
-      "describe": "喵喵喵喵喵喵喵喵喵 喵"
-    },
-    "teleport": {
-      "title": "喵 喵 喵喵 喵 喵 喵喵 喵喵喵 喵喵喵",
-      "describe": "喵 喵喵"
-    }
+    "title": "喵 喵 喵 喵喵 喵喵喵 喵喵喵喵喵喵",
+    "updateTime": "喵喵喵喵喵喵喵 喵 喵喵喵喵 喵 喵喵"
   },
   "misc": {
+    "progress": "喵喵",
     "uploadImage": {
-      "info": "喵喵喵喵喵 喵 ",
-      "mobile": "喵喵喵 喵喵",
       "desktop": "喵喵喵喵喵喵喵喵 喵喵喵喵 ",
-      "fail": "喵 喵喵 喵喵喵 喵 喵喵 "
+      "fail": "喵 喵喵 喵喵喵 喵 喵喵 ",
+      "info": "喵喵喵喵喵 喵 ",
+      "mobile": "喵喵喵 喵喵"
     },
     "uploadVideo": {
-      "info": "喵 喵喵喵喵喵喵",
-      "desktop": "喵喵喵喵喵喵喵喵喵"
+      "desktop": "喵喵喵喵喵喵喵喵喵",
+      "info": "喵 喵喵喵喵喵喵"
+    }
+  },
+  "player_list": {
+    "title": "喵喵 喵喵 喵喵 喵喵 喵喵"
+  },
+  "profile": {
+    "account": {
+      "form": {
+        "allowDM": "喵喵喵",
+        "allowDMdescribe": "喵 喵喵喵喵喵喵喵喵喵喵喵喵 ",
+        "introduction": "喵 喵喵喵 喵喵喵",
+        "language": "喵喵喵 喵 喵喵喵喵 喵喵 喵喵 喵 喵 ",
+        "languageSyncDescribe": "喵喵喵喵 喵喵喵 喵喵喵 喵喵 喵喵喵喵喵",
+        "privilege": "喵喵喵喵 喵喵喵喵 喵喵喵 ",
+        "showOrigin": "喵 喵喵喵喵 喵喵喵喵喵喵喵喵喵喵",
+        "showOriginDescribe": "喵"
+      },
+      "modifyName": {
+        "residueDegree": "喵 喵喵喵 喵喵喵喵 ",
+        "specification1": "喵喵喵喵喵喵 喵 喵",
+        "specification2": "喵 ",
+        "steps": {
+          "0": {
+            "title": "喵喵喵 喵喵喵喵喵喵 喵喵 "
+          },
+          "1": {
+            "title": "喵喵 喵 "
+          },
+          "2": {
+            "title": "喵喵 喵喵喵喵喵喵喵"
+          }
+        },
+        "title": "喵喵 喵喵 喵喵 喵喵 喵"
+      },
+      "title": "喵 喵喵喵喵喵 喵 喵喵喵喵喵喵"
     },
-    "progress": "喵喵"
+    "admin": {
+      "menu": {
+        "adminLog": "喵",
+        "comment": "喵喵喵",
+        "judgementLog": "喵喵喵喵喵喵 喵 喵喵喵喵喵 喵喵喵喵",
+        "log": "喵喵喵 喵喵喵喵喵喵喵喵喵 ",
+        "management": "喵喵 喵喵喵",
+        "user": "喵喵喵喵喵喵 喵 "
+      },
+      "title": "喵 喵喵喵 喵喵 喵喵 喵喵 喵 喵 喵 喵喵喵喵 喵"
+    },
+    "appearance": {
+      "title": "喵喵喵 喵喵 喵 喵喵"
+    },
+    "chat": {
+      "control": "喵 喵喵喵 喵 喵 喵喵喵喵喵喵喵 喵喵喵 ",
+      "load": "喵 喵 喵喵喵 喵喵喵喵喵喵喵喵喵喵喵 喵 喵",
+      "look": "喵喵喵喵喵喵 喵 喵喵喵喵 喵",
+      "placeholder": "喵喵喵喵喵 喵喵喵喵喵喵喵喵 喵 喵喵 喵喵",
+      "tabsList": {
+        "form": {
+          "del": "喵 喵喵 喵喵喵喵 ",
+          "read": "喵 喵喵 喵喵 "
+        },
+        "itemName": "喵喵喵 喵喵喵喵 喵 喵 喵喵喵喵喵喵喵喵 "
+      },
+      "tabsSend": {
+        "content": "喵喵喵喵喵喵喵喵喵 喵喵 喵喵喵 喵喵喵喵",
+        "itemName": "喵喵喵喵喵 喵喵 喵 喵喵喵喵喵 喵喵 喵喵",
+        "messageID": "喵喵喵喵喵 ",
+        "messageMethod": "喵喵喵 喵 喵喵 喵喵喵喵 喵 喵喵喵喵喵 喵 喵 喵"
+      },
+      "title": "喵 喵喵喵",
+      "types": {
+        "command": {
+          "describe": "喵喵",
+          "text": "喵喵喵喵 喵喵喵喵喵喵 喵喵 喵喵喵喵喵喵喵 "
+        },
+        "direct": {
+          "describe": "喵喵 喵 喵喵喵喵喵喵 喵 喵喵喵喵喵喵喵 喵",
+          "text": "喵喵喵喵喵喵 "
+        },
+        "fatal": {
+          "describe": "喵喵 喵喵喵喵 喵喵喵喵 喵喵喵喵 喵喵喵 ",
+          "text": "喵喵喵喵 喵 喵喵 喵 喵喵 喵喵喵 喵"
+        },
+        "toAdmins": {
+          "describe": "喵喵 喵喵喵 喵 喵喵 ",
+          "text": "喵 喵喵喵喵喵喵喵 喵喵 "
+        },
+        "toAll": {
+          "describe": "喵喵喵 喵",
+          "text": "喵喵 喵喵 "
+        },
+        "toNormals": {
+          "describe": "喵",
+          "text": "喵喵喵喵 喵 喵喵 喵喵喵 喵喵 喵喵喵 "
+        },
+        "warn": {
+          "describe": "喵",
+          "text": "喵喵 喵喵喵喵 "
+        }
+      }
+    },
+    "enhance": {
+      "title": "喵喵 喵 喵喵喵 喵喵喵喵喵喵喵喵 喵 喵 喵喵"
+    },
+    "history": {
+      "title": "喵 喵喵 "
+    },
+    "media": {
+      "capacity": "喵喵喵喵喵喵 喵喵喵 喵 喵",
+      "fileNum": "喵喵 喵喵喵喵喵喵喵 喵 喵喵喵 喵喵 喵 喵喵喵",
+      "steps": {
+        "0": "喵喵 喵喵喵",
+        "1": "喵 喵喵 喵喵喵喵喵 喵 喵喵喵喵喵喵 喵",
+        "2": "喵 喵喵喵喵 喵喵 喵 喵 喵喵 喵喵喵"
+      },
+      "title": "喵 喵喵 喵 喵 ",
+      "types": {
+        "0": "喵喵喵 喵喵喵",
+        "1": "喵喵喵喵喵喵喵喵喵喵喵喵 喵 喵 喵 喵喵 喵"
+      }
+    },
+    "meet": "喵 喵 喵喵喵",
+    "subscribes": {
+      "title": "喵"
+    },
+    "title": "喵喵 喵"
+  },
+  "report": {
+    "button": {
+      "continue": "喵 喵喵",
+      "leave": "喵喵 喵"
+    },
+    "info": {
+      "description": "喵喵喵 喵喵喵 ",
+      "fromDatabaseOneId": "喵喵 喵喵",
+      "idNotion1": "喵喵喵喵喵喵喵喵喵喵 喵 喵 喵喵",
+      "idNotion2": "喵 喵 喵喵喵 喵 喵 喵喵喵喵 喵喵喵喵 喵喵",
+      "loginExpired": "喵喵",
+      "notFoundHintAnswer1": "喵喵喵喵 喵 喵喵喵 喵喵 喵喵喵 喵喵喵喵",
+      "notFoundHintAnswer2": "喵 喵喵 喵喵喵喵喵喵喵喵喵 ",
+      "notFoundHintQuestion1": "喵喵喵 喵 喵喵 喵",
+      "notFoundHintQuestion2": "喵喵 喵喵喵喵 喵 喵 喵喵 喵喵喵 喵喵 喵喵喵",
+      "notFoundHintTitle": "喵 喵",
+      "onlyOneId": "喵",
+      "reportAll": "喵喵喵 喵喵喵喵 喵 喵喵喵",
+      "reportHacker": "喵 喵",
+      "reportOne": "喵 喵 喵喵 喵 喵喵喵 喵喵喵 喵 ",
+      "required": "喵喵 喵喵喵喵喵喵喵 喵喵喵喵喵喵喵喵 ",
+      "uploadManual1": "喵喵 喵 ",
+      "uploadManual2": "喵喵喵 喵 喵 ",
+      "uploadManual3": "喵喵喵喵喵喵喵喵喵喵喵 喵喵 喵喵喵 喵",
+      "uploadPic1": "喵 喵",
+      "uploadPic2": "喵喵喵 喵喵 喵喵喵喵喵喵 喵",
+      "uploadPic3": "喵喵喵喵喵喵喵",
+      "uploadPic4": "喵 喵喵 喵 "
+    },
+    "labels": {
+      "cheatMethod": "喵喵喵 喵喵 喵",
+      "description": "喵喵 喵喵 喵喵 ",
+      "game": "喵喵 ",
+      "hackerId": "喵 "
+    },
+    "messages": {
+      "failureSubtitle": "喵喵 喵 喵，{msg}",
+      "failureTitle": "喵喵 喵喵喵 喵喵喵喵喵 喵 喵喵",
+      "mediaEvidence": "喵喵喵喵喵喵喵喵喵 喵喵喵喵喵",
+      "originIdNotExist": "喵喵喵喵喵喵",
+      "permissionDenied": "喵喵喵喵喵喵喵喵喵 喵喵喵 喵 喵",
+      "success": "喵喵 喵 喵喵",
+      "successSubtitle": "喵喵 喵 喵喵",
+      "successTitle": "喵喵 喵喵",
+      "videoBadFormat": "喵喵喵喵 喵喵 喵喵 喵 喵 ",
+      "videoEmpty": "喵喵 喵喵喵 "
+    },
+    "title": "喵喵喵喵喵喵喵喵 喵喵 喵"
+  },
+  "reset": {
+    "form": {
+      "newPassword": "喵喵喵喵喵 喵",
+      "oldPassword": "喵喵 喵喵喵喵喵喵喵喵 喵喵喵喵 喵喵喵",
+      "password": "喵",
+      "passwordRepeat": "喵喵喵喵喵 喵喵 喵喵 喵喵喵喵 喵喵 喵 喵 ",
+      "qq": "喵 喵 喵喵 喵 喵喵喵喵 喵喵 喵 喵喵"
+    },
+    "title": "喵喵 喵喵喵 喵喵喵喵喵喵 喵喵喵喵"
+  },
+  "search": {
+    "collectionHint": "喵喵 ",
+    "describe": "喵喵喵喵喵喵喵 喵喵喵喵 喵喵 喵 喵喵",
+    "placeholder": "喵",
+    "scope": {
+      "current": "喵喵喵喵喵喵 喵喵喵 ",
+      "history": "喵 喵 喵喵 喵 喵喵喵"
+    },
+    "title": "喵 喵 喵喵喵喵 喵喵喵 喵喵 喵 喵"
   },
   "share": {
-    "title": "喵喵 喵喵喵喵 喵喵 喵喵喵喵喵 喵",
+    "iframe": {
+      "code": "喵 喵",
+      "name": "喵喵喵 喵喵喵喵喵 喵喵喵 喵 喵喵 ",
+      "size": "喵",
+      "theme": "喵喵 喵喵喵喵喵 喵 喵喵喵 喵 喵喵 喵喵喵 喵喵 "
+    },
+    "image": {
+      "describe": "喵喵喵喵 喵喵喵喵喵喵喵喵 喵 喵喵喵 喵喵 喵",
+      "generate": "喵喵喵喵喵 喵",
+      "name": "喵 喵喵喵喵喵喵喵喵"
+    },
     "link": {
-      "name": "喵喵喵喵喵喵喵喵喵喵喵喵喵喵 喵喵喵",
       "linkUrl": "喵喵喵 喵喵喵",
+      "name": "喵喵喵喵喵喵喵喵喵喵喵喵喵喵 喵喵喵",
       "textLink": "喵",
       "textLinkContent": "喵喵喵喵喵 喵 喵喵 喵喵 喵喵 喵喵喵喵喵",
       "webHtmlLink": "喵喵喵 喵喵喵喵喵喵 喵 喵喵"
     },
-    "iframe": {
-      "name": "喵喵喵 喵喵喵喵喵 喵喵喵 喵 喵喵 ",
-      "theme": "喵喵 喵喵喵喵喵 喵 喵喵喵 喵 喵喵 喵喵喵 喵喵 ",
-      "size": "喵",
-      "code": "喵 喵"
+    "title": "喵喵 喵喵喵喵 喵喵 喵喵喵喵喵 喵"
+  },
+  "signin": {
+    "failed": "喵 喵喵喵 喵 喵",
+    "fillEverything": "喵",
+    "form": {
+      "forgetPasswordHint": "喵 喵 喵喵喵喵喵喵喵 喵 喵喵喵 喵喵",
+      "password": "喵喵喵喵 喵喵 喵喵喵 喵 喵",
+      "submitHint": "喵喵喵喵 喵喵 ",
+      "username": "喵喵喵 喵 喵喵"
     },
-    "image": {
-      "name": "喵 喵喵喵喵喵喵喵喵",
-      "generate": "喵喵喵喵喵 喵",
-      "describe": "喵喵喵喵 喵喵喵喵喵喵喵喵 喵 喵喵喵 喵喵 喵"
-    }
+    "loggedIn": "喵 喵喵 喵喵喵 喵喵喵喵喵喵 喵喵 喵 喵",
+    "loginFirst": "喵 喵喵 喵喵喵喵 喵喵 喵喵喵喵",
+    "success": "喵喵 喵喵 ",
+    "title": "喵喵喵 喵 "
+  },
+  "signup": {
+    "checkAllEmail": "喵 喵喵喵喵喵 喵喵喵 喵喵喵喵 ",
+    "eaPrivacy": "喵",
+    "failed": "喵 喵 喵喵喵喵喵喵喵喵",
+    "fillIn": "喵喵喵喵喵",
+    "form": {
+      "forgetPasswordHint": "喵喵喵 喵喵 喵 喵喵",
+      "newUsername": "喵喵 喵 喵 喵 喵喵 喵喵 喵喵喵喵 喵 喵喵喵 ",
+      "originEmail": "喵 喵喵喵喵 喵喵喵",
+      "originId": "喵喵喵 喵 喵喵喵喵 喵 喵喵 喵喵喵喵 喵喵喵 ",
+      "originName": "喵 喵 喵 喵喵",
+      "password": "喵 喵 喵喵喵喵 喵喵 喵 喵喵喵喵喵喵",
+      "submitHint": "喵喵喵喵喵 ",
+      "username": "喵喵"
+    },
+    "gameNotShowed": "喵喵喵 喵喵喵喵 喵 喵喵 喵喵",
+    "originIdExist": "喵喵喵喵喵喵喵",
+    "placeholder": {
+      "originEmail": "喵喵喵喵",
+      "originId": "喵喵 喵 喵 喵喵喵喵喵喵喵喵喵喵喵喵 喵",
+      "originName": "喵 喵喵喵喵喵喵喵 喵喵 喵喵喵喵",
+      "password": "喵喵 ",
+      "username": "喵喵喵喵喵"
+    },
+    "playerNotFound": "喵喵喵 喵 喵 喵喵喵喵 喵喵 喵 喵喵喵喵",
+    "registerVerification": {
+      "error": "喵喵喵喵喵 喵",
+      "failure": "喵喵",
+      "successful": "喵喵喵 喵喵 喵 喵喵喵 喵喵 喵 喵喵喵喵 喵 喵 ",
+      "title": "喵喵喵喵 喵喵 喵喵 喵喵喵喵喵喵",
+      "validation": "喵喵 喵 喵喵喵 喵 喵 喵"
+    },
+    "steps": {
+      "0": {
+        "supplement": "喵喵喵 喵喵喵",
+        "title": "喵喵喵喵喵喵喵"
+      },
+      "1": {
+        "supplement": "喵 喵喵喵喵",
+        "title": "喵喵喵喵喵 喵 喵 喵喵 喵 喵喵喵喵喵喵 "
+      },
+      "2": {
+        "supplement": "喵喵喵喵喵喵喵喵喵 喵 喵 喵 喵喵喵喵 喵喵喵 ",
+        "title": "喵喵 喵喵喵喵喵喵喵"
+      },
+      "3": {
+        "supplement": "喵喵",
+        "title": "喵喵 喵 喵 喵 喵喵喵喵喵"
+      },
+      "4": {
+        "supplement": "喵喵喵喵 喵 喵 喵喵喵喵喵喵",
+        "title": "喵喵喵 喵 喵喵喵喵喵喵 喵喵喵 喵喵 喵 喵喵喵"
+      }
+    },
+    "title": "喵喵 喵 喵 喵 喵喵 喵喵喵喵 喵 喵 喵喵喵 喵 喵",
+    "usernameExist": "喵喵喵喵 喵喵喵喵 喵喵 喵"
   },
   "sitestats": {
-    "title": "喵",
-    "reports": "喵 喵喵喵喵 喵喵喵喵 喵喵 喵",
-    "confirmed": "喵 喵 喵喵 喵喵喵喵 喵喵喵 ",
+    "admins": "喵喵 喵 喵 喵喵喵喵喵喵喵 喵 喵 喵喵喵 喵喵喵",
     "banAppeals": "喵喵 喵 喵喵喵喵喵 喵 喵喵喵 喵",
-    "registers": "喵 喵喵喵喵喵喵喵 喵喵喵喵喵喵 喵喵喵",
+    "confirmed": "喵 喵 喵喵 喵喵喵喵 喵喵喵 ",
     "players": "喵喵喵 喵喵喵 喵喵喵喵 喵喵喵 喵 喵 ",
-    "admins": "喵喵 喵 喵 喵喵喵喵喵喵喵 喵 喵 喵喵喵 喵喵喵"
-  },
-  "announcement": {
-    "personnel": {
-      "name": "喵喵 喵喵喵 喵",
-      "intro": "喵喵喵 喵喵喵喵 喵喵"
-    },
-    "antiCheat": {
-      "name": "喵喵喵 喵喵 喵喵喵喵喵 喵 喵",
-      "intro": "喵喵喵 喵喵喵 喵 喵 喵喵喵 喵喵"
-    },
-    "conduct": {
-      "name": "喵 喵喵喵喵 喵",
-      "intro": "喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵"
-    },
-    "version": "喵喵 喵喵 喵喵 喵喵喵",
-    "latest": "喵喵喵 喵 喵 喵 喵喵 喵喵喵喵 喵喵 喵喵 喵喵"
+    "registers": "喵 喵喵喵喵喵喵喵 喵喵喵喵喵喵 喵喵喵",
+    "reports": "喵 喵喵喵喵 喵喵喵喵 喵喵 喵",
+    "title": "喵"
   }
 }

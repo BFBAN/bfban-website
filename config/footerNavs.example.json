@@ -1,0 +1,59 @@
+{
+  "title": "footer",
+  "child": {
+    "row": [
+      {
+        "text": "footer.column.col2.title",
+        "child": [
+          {
+            "text": "exmaple",
+            "textLang": {
+              "en-US": "exmaple title",
+              "zh-CN": "exmaple 标题"
+            },
+            "src": "//exmaple.com",
+            "showLang": ["zh-CN"]
+          }
+        ]
+      },
+      {
+        "text": "footer.column.col3.title",
+        "child": [
+          {
+            "text": "header.report",
+            "src": "report",
+            "insideLang": true
+          },
+          {
+            "text": "header.about",
+            "src": "about",
+            "insideLang": true
+          },
+          {
+            "text": "link.title",
+            "src": "link",
+            "insideLang": true
+          },
+          {
+            "text": "header.cheaters",
+            "src": "cheaters",
+            "insideLang": true
+          }
+        ]
+      },
+      {
+        "text": "footer.column.col4.title",
+        "child": [
+          {
+            "text": "Complaint mailbox",
+            "textLang": {
+              "en-US": "Complaint mailbox",
+              "zh-CN": "投诉邮箱"
+            },
+            "src": "//exmaple.com"
+          }
+        ]
+      }
+    ]
+  }
+}
