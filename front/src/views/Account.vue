@@ -65,7 +65,7 @@
               <Divider type="vertical"/>
               <Col>
                 <h3>{{ account.reportnum || '-' }}</h3>
-                <p class="account-info-p">{{ $t("account.reportnum") }}</p>
+                <p class="account-info-p">{{ $t("account.reportNum") }}</p>
               </Col>
             </Row>
           </Col>

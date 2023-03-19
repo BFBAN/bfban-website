@@ -23,7 +23,7 @@
     },
     "recentlyUpdated": "Обновить",
     "reported": "举报了",
-    "reportnum": "总共举报数",
+    "reportNum": "总共举报数",
     "reports": "Личные сведения",
     "role": "身份",
     "status": "состояние",
@@ -555,7 +555,6 @@
       }
     },
     "enhance": {
-      "title": "локальное расширение",
       "public": {
         "autoUpdatePlayerList": {
           "describe": "为管理员提供自动刷新，关注未处理玩家做出站内提醒",
@@ -569,7 +568,8 @@
           "describe": "网站顶部附属的工具栏，为用户提供玩家持续关注等功能",
           "name": "底部工具栏"
         }
-      }
+      },
+      "title": "локальное расширение"
     },
     "exportAndImport": {
       "description": "本地持久数据不会同步云端，需要你手动导出并在新平台导入这些数据，当然这些数据泄露不会影响您的账户安全，但包含一些记录",
@@ -603,11 +603,6 @@
     }
   },
   "report": {
-    "title": "все",
-    "seo": {
-      "description": "玩家举报",
-      "keywords": "联ban,联办,战地风云,战地"
-    },
     "button": {
       "continue": "继续",
       "leave": "离开"
@@ -653,7 +648,12 @@
       "successTitle": "提交成功",
       "videoBadFormat": "ошибка формата",
       "videoEmpty": "пустой видео адрес"
-    }
+    },
+    "seo": {
+      "description": "玩家举报",
+      "keywords": "联ban,联办,战地风云,战地"
+    },
+    "title": "все"
   },
   "reset": {
     "form": {

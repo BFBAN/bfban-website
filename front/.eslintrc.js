@@ -29,6 +29,6 @@ module.exports = {
             order: 'asc',
             indentSpaces: 2,
         }],
-        'i18n-json/identical-keys': 1,
+        'i18n-json/identical-keys': 0,
     }
 }

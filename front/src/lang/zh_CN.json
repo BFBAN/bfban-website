@@ -23,7 +23,7 @@
     },
     "recentlyUpdated": "最近更新",
     "reported": "举报了",
-    "reportnum": "总共举报数",
+    "reportNum": "总共举报数",
     "reports": "个人举报",
     "role": "身份",
     "status": "状态",
@@ -585,8 +585,8 @@
           "text": "聊天"
         },
         "fatal": {
-          "describe": "?",
-          "text": "确定"
+          "describe": "给用户发送'警告'",
+          "text": "聊天"
         },
         "toAdmins": {
           "describe": "给站内所有管理员发送信息",
@@ -607,7 +607,6 @@
       }
     },
     "enhance": {
-      "title": "本地增强",
       "public": {
         "autoUpdatePlayerList": {
           "describe": "为管理员提供自动刷新，关注未处理玩家做出站内提醒",
@@ -621,7 +620,8 @@
           "describe": "网站顶部附属的工具栏，为用户提供玩家持续关注等功能",
           "name": "底部工具栏"
         }
-      }
+      },
+      "title": "本地增强"
     },
     "exportAndImport": {
       "description": "本地持久数据不会同步云端，需要你手动导出并在新平台导入这些数据，当然这些数据泄露不会影响您的账户安全，但包含一些记录",
@@ -655,11 +655,6 @@
     }
   },
   "report": {
-    "title": "举报",
-    "seo": {
-      "description": "玩家举报",
-      "keywords": "联ban,联办,战地风云,战地"
-    },
     "button": {
       "continue": "继续",
       "leave": "离开"
@@ -705,7 +700,12 @@
       "tipBind": "请绑定你的橘子账号以后在提交举报",
       "videoBadFormat": "格式错误",
       "videoEmpty": "空的视频地址"
-    }
+    },
+    "seo": {
+      "description": "玩家举报",
+      "keywords": "联ban,联办,战地风云,战地"
+    },
+    "title": "举报"
   },
   "reset": {
     "form": {
@@ -750,7 +750,7 @@
       "linkUrl": "超链接",
       "name": "链接形式",
       "textLink": "文本地址",
-      "textLinkContent": "【{webname}】分享了一位玩家，地址:{url}",
+      "textLinkContent": "{webname} - 分享了一位玩家，地址:{url}",
       "webHtmlLink": "网络代码"
     },
     "title": "分享"

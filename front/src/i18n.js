@@ -1,24 +1,23 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import { detectLanguage } from './mixins/common'
 import { storage } from "../src/assets/js"
 import lang from "../public/config/languages.json"
 import store from './store'
 
-import en from 'view-design/dist/locale/en-US';
-import ja from 'view-design/dist/locale/ja-JP';
-import kor from 'view-design/dist/locale/ko-KR';
-// import tr from 'view-design/dist/locale/tr-TR';
-import ru from 'view-design/dist/locale/ru-RU';
-import zh from 'view-design/dist/locale/zh-CN';
+import en_view_design from 'view-design/dist/locale/en-US';
+import ja_view_design from 'view-design/dist/locale/ja-JP';
+import kor_view_design from 'view-design/dist/locale/ko-KR';
+import tr_view_design from 'view-design/dist/locale/tr-TR';
+import ru_view_design from 'view-design/dist/locale/ru-RU';
+import zh_view_design from 'view-design/dist/locale/zh-CN';
 
-import en_bfban from './lang/en.json' // 英语
-import ja_bfban from './lang/jp.json' // 日语
-import kor_bot_bfban from './lang/kor_bot.json' // 韩语 - 机翻
-// import tr_bot_bfban from './lang/tr_bot.json' // 土耳其 - 机翻
-import ru_bot_bfban from './lang/ru_bot.json' // 俄语 - 机翻
-import zh_bfban from './lang/zh.json' // 中文
-import zh_miao_bfban from './lang/zh_Miao.json' // 简体喵文
+import en_local from './lang/en.json' // 英语
+import ja_local from './lang/jp.json' // 日语
+import kor_local from './lang/kor.json' // 韩语
+import tr_local from './lang/tr.json' // 土耳其
+import ru_local from './lang/ru.json' // 俄语
+import zh_cn_local from './lang/zh_CN.json' // 中文
+import zh_cat_local from './lang/zh_Cat.json' // 简体喵文
 
 Vue.use(VueI18n)
 Vue.locale = () => {};
@@ -27,13 +26,13 @@ const i18n = new VueI18n({
   locale: storage.get('language')?.data?.value ?? navigator.language,
   fallbackLocale: lang.default,
   messages:{
-    'en-US': Object.assign(en, en_bfban), // 英语
-    'ja-JP': Object.assign(ja, ja_bfban), // 日语
-    'kor-KOR': Object.assign(kor, kor_bot_bfban), // 韩语
-    // 'tr-TR': Object.assign(tr, tr_bot_bfban), // 土耳其
-    'ru-RU': Object.assign(ru, ru_bot_bfban), // 俄语
-    'zh-CN': Object.assign(zh, zh_bfban), // 中文
-    'zh-MIAO': Object.assign(zh_miao_bfban) // 简体喵文
+    'en-US': Object.assign(en_view_design, en_local), // 英语
+    'ja-JP': Object.assign(ja_view_design, ja_local), // 日语
+    'kor-KOR': Object.assign(kor_view_design, kor_local), // 韩语
+    'tr-TR': Object.assign(tr_view_design, tr_local), // 土耳其
+    'ru-RU': Object.assign(ru_view_design, ru_local), // 俄语
+    'zh-CN': Object.assign(zh_view_design, zh_cn_local), // 中文
+    'zh-Cat': Object.assign(zh_cat_local) // 简体喵文
   },
   silentTranslationWarn: true,
 });

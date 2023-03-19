@@ -23,7 +23,7 @@
     },
     "recentlyUpdated": "last updated",
     "reported": "Reported",
-    "reportnum": "Reports",
+    "reportNum": "Reports",
     "reports": "Personal reports",
     "role": "Role",
     "status": "Status",
@@ -33,16 +33,16 @@
   },
   "announcement": {
     "antiCheat": {
-      "intro": "",
+      "intro": "The BFBAN team's standards for handling different cases are up to date",
       "name": "BFBAN Anti Cheat Rule"
     },
     "conduct": {
-      "intro": "",
+      "intro": "Code of conduct for BFBAN team members in their daily work",
       "name": "BFBAN Code of Conduct (CoC)"
     },
     "latest": "latest version",
     "personnel": {
-      "intro": "",
+      "intro": "Recruitment rules for the BFBAN team, the structure of the members and the rights and obligations and requirements of the different members are explained",
       "name": "BFBAN Personnel Rule"
     },
     "version": "version"
@@ -53,7 +53,7 @@
       "hot": "Popular",
       "website": "Website"
     },
-    "describe": "3rd party tools that use the BFBan database",
+    "describe": "Third-party integration of BFBAN database tools",
     "screen": {
       "admin": "Community management",
       "all": "All",
@@ -84,7 +84,7 @@
       },
       "guilt": {
         "describe": "A admin has judged that player is a cheater. The result will be pubished when more admins enter the vote.",
-        "text": "Voted for comfirmed cheater"
+        "text": "Voted for confirmed cheater"
       },
       "innocent": {
         "describe": "Cleared by way of video of reported information.",
@@ -231,25 +231,25 @@
         "player": "Player's ID"
       },
       "modal": {
-        "auxiliaryProof": [
-          null,
-          "Other players (enemy and friendly) perspectives of the reported single battle, and no less than 10 minutes without clips, provide the video address by yourself.",
-          "Players present, provide their own id, specific server, time, venue, and the description of your auxiliary appeal object."
-        ],
+        "auxiliaryProof": {
+          "1": "Other players (enemy and friendly) perspectives of the reported single battle, and no less than 10 minutes without clips, provide the video address by yourself.",
+          "2": "Players present, provide their own id, specific server, time, venue, and the description of your auxiliary appeal object.",
+          "title": "Auxiliary proof"
+        },
         "describe": "For wrong BAN, you or a third party can assist in the appeal. After meeting all the basic requirements below, your appeal content will be submitted to all administrators of BFBAN, and the administrator can only release it after confirmation",
-        "effectiveEvidence": [
-          null,
-          "Use software like \"High Speed Target Bullseye\" and Moss software to capture the screen, hands, and keyboard to record self-certification.",
-          "Self-defense, you can use pictures, videos and other materials.",
-          "Some places provide different requirements, you can consult the regional BFBAN management and ask for appeal materials."
-        ],
-        "evidenceInvalid": [
-          null,
-          "Lending, leasing, etc. to a third party, no matter whether it is swiping data or borrowing words from friends, cannot prove whether it is the person. You must understand that the account lending method cannot be known through any means. It will not be approved.",
-          "Intercepted and used by multiple players (not limited to my own screenshot showing cheating features) or buying cheating software multimedia.",
-          "If there is a criminal record, players with files in the above series will greatly discount the chances of passing.",
-          "Any oath, curse."
-        ],
+        "effectiveEvidence": {
+          "1": "Use software like \"High Speed Target Bullseye\" and Moss software to capture the screen, hands, and keyboard to record self-certification.",
+          "2": "Self-defense, you can use pictures, videos and other materials.",
+          "3": "Some places provide different requirements, you can consult the regional BFBAN management and ask for appeal materials.",
+          "title": "Valid evidence"
+        },
+        "evidenceInvalid": {
+          "1": "Lending, leasing, etc. to a third party, no matter whether it is swiping data or borrowing words from friends, cannot prove whether it is the person. You must understand that the account lending method cannot be known through any means. It will not be approved.",
+          "2": "Intercepted and used by multiple players (not limited to my own screenshot showing cheating features) or buying cheating software multimedia.",
+          "3": "If there is a criminal record, players with files in the above series will greatly discount the chances of passing.",
+          "4": "Any oath, curse.",
+          "title": "Proof of failure"
+        },
         "modalTitle": "Rules"
       },
       "placeholder": {
@@ -307,20 +307,20 @@
       "writeSomething": "Write something"
     },
     "judgement": {
-      "appropriateVerdict": [
-        null,
-        "Intuitively put forward the reasons for the ruling, for example, a certain behavior determines the result of the judgment due to the following factors (omitted)",
-        "Brief, with obvious cheating features, you can use the template below to make a unified judgment"
-      ],
+      "appropriateVerdict": {
+        "1": "Intuitively put forward the reasons for the ruling, for example, a certain behavior determines the result of the judgment due to the following factors (omitted)",
+        "2": "Brief, with obvious cheating features, you can use the template below to make a unified judgment",
+        "title": "Appropriate verdict\n"
+      },
       "behavior": "Judgement type",
       "content": "Judgement discription",
       "game": "Affiliated game",
-      "inappropriateRuling": [
-        null,
-        "Fill in meaningless replies such as \"1\", \"[space character]\", \"[expression]\", etc",
-        "Replies contain personal attacks, discrimination, pornography, and political content",
-        "Due to factors outside the game, such as avatar, ugly"
-      ],
+      "inappropriateRuling": {
+        "1": "Fill in meaningless replies such as \"1\", \"[space character]\", \"[expression]\", etc",
+        "2": "Replies contain personal attacks, discrimination, pornography, and political content",
+        "3": "Due to factors outside the game, such as avatar, ugly",
+        "title": "An inappropriate ruling\n"
+      },
       "methods": "Cheat method"
     },
     "messages": {
@@ -334,7 +334,7 @@
       "updateComplete": "Update completed"
     },
     "seo": {
-      "description": "",
+      "description": "Report player details",
       "keywords": "Player detail, player"
     },
     "subscribes": {
@@ -379,24 +379,24 @@
     "resetSuccess": "The password reset is successful! 💐",
     "steps": {
       "0": {
-        "title": "Basic account information",
-        "supplement": "Account name"
+        "supplement": "Account name",
+        "title": "Basic account information"
       },
       "1": {
-        "title": "Captcha",
-        "supplement": "Verity that you are not a robot"
+        "supplement": "Verity that you are not a robot",
+        "title": "Captcha"
       },
       "2": {
-        "title": "Email verification",
-        "supplement": "Check your email for a verification link"
+        "supplement": "Check your email for a verification link",
+        "title": "Email verification"
       },
       "3": {
-        "title": "Reset password",
-        "supplement": "Reset your password"
+        "supplement": "Reset your password",
+        "title": "Reset password"
       },
       "4": {
-        "title": "Submit",
-        "supplement": "The password reset is successful"
+        "supplement": "The password reset is successful",
+        "title": "Submit"
       }
     },
     "title": "Reset password"
@@ -547,7 +547,6 @@
         "messageManagement": "Message",
         "messagePush": "Push Notifications",
         "muteUsers": "Muned users",
-        "user": "User Management",
         "user": "user management"
       },
       "title": "Backend management"
@@ -585,8 +584,8 @@
           "text": "Chat"
         },
         "fatal": {
-          "describe": "",
-          "text": "Ok"
+          "describe": "Send 'fatal' to the user",
+          "text": "Chat"
         },
         "toAdmins": {
           "describe": "Send message to all admins in site",
@@ -607,11 +606,10 @@
       }
     },
     "enhance": {
-      "title": "Local enhancement",
       "public": {
         "autoUpdatePlayerList": {
-          "describe": "",
-          "name": ""
+          "describe": "Provide administrators with automatic refresh, focus on unprocessed players to make site alerts",
+          "name": "Unprocessed reminder"
         },
         "desktopNotifiction": {
           "describe": "Prompt notification in system",
@@ -621,7 +619,8 @@
           "describe": "Top toolbar, to provide user functions like follow a player.",
           "name": "Bottom toolbar"
         }
-      }
+      },
+      "title": "Local enhancement"
     },
     "exportAndImport": {
       "description": "The local persistent data will not be synchronized with the cloud, and you need to manually export and import the data on the new platform. Of course, these data leaks will not affect your account security, but they contain some records",
@@ -655,11 +654,6 @@
     }
   },
   "report": {
-    "title": "Report",
-    "seo": {
-      "description": "Player report",
-      "keywords": "BFBan,Battlefield"
-    },
     "button": {
       "continue": "Continue",
       "leave": "Leave"
@@ -705,7 +699,12 @@
       "tipBind": "Please report only after you've bound Origin account",
       "videoBadFormat": "Wrong format",
       "videoEmpty": "Empty video link"
-    }
+    },
+    "seo": {
+      "description": "Player report",
+      "keywords": "BFBan,Battlefield"
+    },
+    "title": "Report"
   },
   "reset": {
     "form": {
@@ -805,24 +804,24 @@
     },
     "steps": {
       "0": {
-        "title": "Basic infomation",
-        "supplement": "Basic account infomation"
+        "supplement": "Basic account infomation",
+        "title": "Basic infomation"
       },
       "1": {
-        "title": "Binding account",
-        "supplement": "Bind your origin account"
+        "supplement": "Bind your origin account",
+        "title": "Binding account"
       },
       "2": {
-        "title": "Captcha",
-        "supplement": "Verify you are not a robot"
+        "supplement": "Verify you are not a robot",
+        "title": "Captcha"
       },
       "3": {
-        "title": "Comfirm",
-        "supplement": "Email security code"
+        "supplement": "Email security code",
+        "title": "Comfirm"
       },
       "4": {
-        "title": "Finish",
-        "supplement": "Registration result"
+        "supplement": "Registration result",
+        "title": "Finish"
       }
     },
     "title": "Register",

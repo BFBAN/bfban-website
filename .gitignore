@@ -1,9 +1,11 @@
 .idea/
 .vs/
 .vscode/
+
 node_modules
 config.js
 config.json
+
 # private/
 backend/test/gen/
 package-lock.json

@@ -4,10 +4,10 @@
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/bfban)
 
 [网站](https://www.bfban.com) | 
-[中文社区](https://www.kookapp.cn/app/invite/uoJKC0) |
+[中文KOOK社区](https://www.kookapp.cn/app/invite/uoJKC0) |
 [EN社区](https://discord.gametools.network) |
 [GitHub Wiki](/wiki) | 
-[开发者社区](https://kook.top/8JTqYq)
+[中文开发者KOOK社区](https://kook.top/8JTqYq)
 
 ----
 
@@ -19,10 +19,9 @@
 
 任何人都可以在bfban上翻译文本，无论是增加新的语言还是修正本地化，网站社区都欢迎所有人参与。只需要准备github账户，叉出此仓库到个人，修改并给主支仓库提交合并请求！
 
+- [翻译配置](/front/src/lang)
 
-- [翻译配置](https://github.com/BFBAN/bfban-website/tree/master/front/src/lang)
-
-- [在线翻译程序](https://github.com/BFBAN/bfban-translation)
+- [翻译流程教程](/front/docs/translation_process.md)
 
 * ##### 开发
 您可以参与网站社区开发，无论是前端还是后端，随时欢迎。
