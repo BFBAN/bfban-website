@@ -13,7 +13,7 @@
               <h1 class="title">
                 {{ $t("home.cover.h1") }}
               </h1>
-              <h2>{{ $t("home.cover.h2")[Math.floor(Math.random() * 2)] }}</h2>
+              <h2>{{ $t(`home.cover.h2.hint${Math.floor(Math.random() * 2)}`) }}</h2>
               <h3>{{ $t("home.cover.h3") }}</h3>
               <br>
               <p>{{ $t("home.cover.h4") }}</p>
