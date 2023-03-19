@@ -178,7 +178,7 @@ export default {
               ) {
                 /// 卡片 =>
                 eleLink = document.createElement('htmllinkcard');
-                eleLink.setAttribute("href", unescape(hrefString));
+                eleLink.setAttribute("href", encodeURI(hrefString));
               } else {
                 /// 标准 =>
                 eleLink = document.createElement('htmllink');
@@ -189,8 +189,8 @@ export default {
                   // }
                 });
 
-                eleLink.setAttribute("text", new _linkExtend().$options.template);
-                eleLink.setAttribute("href", _links[i].href);
+                eleLink.setAttribute("text", encodeURI(new _linkExtend().$options.template));
+                eleLink.setAttribute("href", encodeURI(_links[i].href));
               }
 
               _links[i].parentNode.replaceChild(eleLink, _links[i]);
@@ -257,10 +257,10 @@ export default {
                           (p_textToLinkItemURL.protocol.indexOf('http') || p_textToLinkItemURL.protocol.indexOf('https'))
                       ) {
                         /// 卡片 =>
-                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${escape(p_textToLinkArray[j])}"></htmllinkcard>`)
+                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${encodeURI(p_textToLinkArray[j])}"></htmllinkcard>`)
                       } else {
                         /// 链接 =>
-                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${escape(p_textToLinkArray[j])}" href="${escape(p_textToLinkArray[j])}"></htmllink>`)
+                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${encodeURI(p_textToLinkArray[j])}" href="${encodeURI(p_textToLinkArray[j])}"></htmllink>`)
                       }
                     }
                 }
@@ -300,6 +300,10 @@ export default {
 </script>
 
 <style lang="less">
+.html-widget-toolbar {
+  line-height: 1 !important;
+}
+
 .timeline-description {
   line-height: initial;
   word-break: break-all;

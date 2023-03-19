@@ -343,7 +343,7 @@ const routes = [
     },
 
     // 账户验证
-    {name: 'signupComplete', path: '/signupComplete/:code',
+    {name: 'signupComplete', path: '/signupComplete',
         meta:{
             metaInfo : {
                 title: 'signupComplete.title',

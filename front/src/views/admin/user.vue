@@ -81,16 +81,11 @@
           <PrivilegesTag :ref="`tag_${i.id}_privilegesTag`" :data="i.privilege" v-if="i.privilege"></PrivilegesTag>
         </Col>
         <Col>
-          <Button @click="muteUser('remove', i.id)" type="dashed" v-if="i.isMute" size="small" :disabled="!isAdmin">
-            removue mute
-          </Button>
-          <Button @click="showMuteAlert(i.id)" type="dashed" v-else size="small" :disabled="!isAdmin">
-            mute user
-          </Button>
           <Divider type="vertical"></Divider>
           <Button @click="onEditUser(index)" type="dashed" size="small" :disabled="!isAdmin">
             <Icon type="ios-create"/>
           </Button>
+
           <Divider type="vertical"></Divider>
           <Button @click="openDelUserModel(index)" type="error" size="small" :disabled="isDeleteExecutable">
             <Icon type="md-trash"/>
@@ -302,50 +297,19 @@
           </Col>
           <Divider type="vertical"></Divider>
           <Col flex="2">
-            <Button @click="onDeleteUser" type="error" long :loading="delUserLoad">{{
-                $t('basic.button.submit')
-              }}
+            <Button @click="onDeleteUser" type="error" long :loading="delUserLoad">
+              {{ $t('basic.button.submit') }}
             </Button>
           </Col>
         </Row>
       </div>
     </Modal>
     <!-- 删除用户 E -->
-
-    <!-- 禁言 -->
-    <Modal
-        v-model="mute.show"
-        @on-ok="modalOk"
-        @on-cancel="mute.show = false">
-          <p slot="header" style="color:#333; text-align:center">
-            <span>Select the time duration for mute</span>
-          </p>
-          <RadioGroup v-model="mute.value">
-            <Radio label="0">
-              <span>10mins</span>
-            </Radio>
-            <Radio label="1">
-              <span>1hr</span>
-            </Radio>
-            <Radio label="2">
-              <span>12hrs</span>
-            </Radio>
-            <Radio label="3">
-              <span>1day</span>
-            </Radio>
-            <Radio label="4">
-              <span>1week</span>
-            </Radio>
-            <Radio label="5">
-              <span>1month</span>
-            </Radio>
-          </RadioGroup>
-    </Modal>
   </div>
 </template>
 
 <script>
-import {account_storage, api, http, http_token} from "../../assets/js";
+import {account_storage, api, http, http_token, mail} from "../../assets/js";
 
 import languages from "/public/conf/languages.json";
 
@@ -353,19 +317,16 @@ import BusinessCard from "@/components/businessCard";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import _ from "lodash";
 import Textarea from "@/components/Textarea";
-import BFBAN from "@/assets/js/bfban";
+import Application from "@/assets/js/application";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
-      mute: {
-        value: '0', id: '', show: false
-      },
       delUserModel: false,
       delUserLoad: false,
       delTypes: ['logic', 'real', 'restore'],
       delTypeValue: 'logic',
-      
+
       userType: {
         value: 'all',
         list: [{title: 'All', value: 'all'}, {title: 'Admin`s', value: 'admin'}]
@@ -424,28 +385,6 @@ export default new BFBAN({
     this.getUserList();
   },
   methods: {
-    showMuteAlert(id) {
-      this.mute.id = id
-      this.mute.show = true
-    },
-    modalOk() {
-      this.muteUser('add', this.mute.id, this.mute.value)
-    },
-    muteUser(type, id, value = 0) {
-      this.http.post(api["mute_user"], {
-        data: {
-          type, id, value
-        }
-      }).then(res => {
-        const d = res.data;
-        if (d.success == 1) {
-          this.onSearchUser();
-          this.$Message.success({content: d.message || d.code, duration: 3});
-          return;
-        }
-        this.$Message.error({content: d.message || d.code, duration: 3});
-      })
-    },
     /**
      * 提交修改表单
      */
@@ -531,7 +470,7 @@ export default new BFBAN({
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.$Message.success(d.code);
           return
         }

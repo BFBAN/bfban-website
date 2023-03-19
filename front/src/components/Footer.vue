@@ -1,6 +1,6 @@
 <template>
   <footer class="footer footer-border-top" v-if="!isFull">
-    <template v-if="$route.query['love'] == '❤'">
+    <template v-if="$route.query['love'] === '❤'">
       <Divider align="center">❤️❤️❤️❤️❤️</Divider>
     </template>
     <div class="container">
@@ -16,7 +16,7 @@
                  width="40"
                  height="40"
                  @click="logoCount += 1;"
-                 alt="bfban logo"/>
+                 alt="logo"/>
           </Badge>
           <p style="margin-right: 10px">{{ $t("footer.column.col1.text") }}</p>
         </Col>
@@ -24,23 +24,23 @@
              v-for="(i, index) in footerNavs.row" :key="index">
           <h4><b>{{ $t(i.text) }}</b></h4>
           <ul>
-            <li v-for="(itemi, itemindex) in i.child" :key="itemindex">
-              <template v-if="itemi.showLang">
-                <template v-if="itemi.showLang.filter(e => $i18n.locale == e).length > 0">
-                  <a target="_blank" :href="itemi.src">
-                    <template v-if="itemi.textLang">{{ itemi.textLang[$i18n.locale] || itemi.text }}</template>
-                    <template v-else>{{ itemi.text }}</template>
+            <li v-for="({insideLang, showLang, src, text, textLang}, item_index) in i.child" :key="item_index">
+              <template v-if="showLang">
+                <template v-if="showLang.filter(e => $i18n.locale === e).length > 0">
+                  <a target="_blank" :href="src">
+                    <template v-if="textLang">{{ textLang[$i18n.locale] || text }}</template>
+                    <template v-else>{{ text }}</template>
                     <Icon type="ios-share"/>
                   </a>
                 </template>
               </template>
-              <template v-else-if="itemi.insideLang">
-                <router-link :to="{name: itemi.src}">{{ $t(itemi.text) }}</router-link>
+              <template v-else-if="insideLang">
+                <router-link :to="{name: src}">{{ $t(text) }}</router-link>
               </template>
               <template v-else>
-                <a target="_blank" :href="itemi.src">
-                  <template v-if="itemi.textLang">{{ itemi.textLang[$i18n.locale] || itemi.text }}</template>
-                  <template v-else>{{ itemi.text }}</template>
+                <a target="_blank" :href="src">
+                  <template v-if="textLang">{{ textLang[$i18n.locale] || text }}</template>
+                  <template v-else>{{ text }}</template>
                   <Icon type="ios-share"/>
                 </a>
               </template>
@@ -49,7 +49,7 @@
         </Col>
         <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
           <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large" :disabled="langLoaclSync">
-            <Option v-for="(item, index) in languages" :value="item.name" :label="item.label" :key="index">
+            <Option v-for="(item, index) in languages" :key="index" :label="item.label" :value="item.name">
               <span>{{ item.label }}</span>
               <span style="float:right;color:#ccc">
                 {{ item.name }}
@@ -59,9 +59,9 @@
           <p v-if="languages.length > 0">
             <br>
             <span>{{ $t("footer.language.members") }}</span>: <br>
-            <a :href="i.url" target="_blank" v-for='(i, index) in languages.filter(i => i.name == currentLan)[0]["members"]' :key="index">
+            <a :href="i.url" target="_blank" v-for='(i, index) in languages.filter(i => i.name === currentLan)[0]["members"]' :key="index">
               {{ i.name }}
-              <Divider type="vertical" v-if="index + 1 < (languages.filter(i => i.name == currentLan)[0]['members'].length)"></Divider>
+              <Divider type="vertical" v-if="index + 1 < (languages.filter(i => i.name === currentLan)[0]['members'].length)"></Divider>
             </a>
           </p>
         </Col>
@@ -93,12 +93,12 @@
 </template>
 
 <script>
-import {storage, account_storage} from "../assets/js";
+import {storage, account_storage, http} from "../assets/js";
 
 import packageInfo from '../../package.json';
 import footerNavs from '/public/conf/footerNavs.json';
 import link from '/public/conf/link.json';
-import BFBAN from "@/assets/js/bfban";
+import BFBAN from "@/assets/js/application";
 
 export default new BFBAN({
   data() {
@@ -148,7 +148,10 @@ export default new BFBAN({
       get() {
         const localAppLanguages = this.$root && this.$root.$i18n && this.$root.$i18n.locale;
         const localSroeageLanguage = storage.get('language')?.data?.value;
-        const loaclWebLanguage = this.$route.query.lang
+        const loaclWebLanguage = this.$route.query.lang;
+
+        // This is not the place to initialize the language
+        http.setGlobalHeader({'Accept-Language': loaclWebLanguage || localSroeageLanguage || localAppLanguages || 'zh-CN'})
 
         return loaclWebLanguage || localSroeageLanguage || localAppLanguages || 'zh-CN';
       }
@@ -158,7 +161,7 @@ export default new BFBAN({
 </script>
 
 <style lang="less" scoped>
-@import "src/assets/css/footer";
+@import "@/assets/css/footer";
 
 @footer-primary-color: #fff;
 @footer-border-color: #00000008;

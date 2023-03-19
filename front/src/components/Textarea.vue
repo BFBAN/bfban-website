@@ -461,6 +461,7 @@ export default {
               !this.disabled
       )
         this.editorContent = data.html;
+      this.$emit("input", this.editorContent);
     },
     onEditorBlur(data) {
       const maxlength = this.maxlength;

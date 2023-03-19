@@ -72,6 +72,9 @@ module.exports = {
                 [{
                     from: `src/lang`,
                     to: `lang`
+                },{
+                    from: `src/assets/images/logo.png`,
+                    to: `img/logo.png`
                 }],
                 {
                     // 无论是否修改，全部复制

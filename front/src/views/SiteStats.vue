@@ -116,7 +116,7 @@
               </Spin>
             </Card>
           </Col>
-          <Col :xs="{span: 24}" :lg="{span: 6}">
+          <Col :xs="{span: 24}" :lg="{span: 12}">
             <Card dis-hover>
               <div slot="title">{{ $t('sitestats.reportRanking') }}</div>
               <ol class="sitestats-ul" v-if="active.report.length > 0">
@@ -138,6 +138,39 @@
             </Card>
           </Col>
         </Row>
+        <br>
+        <Row :gutter="20">
+          <Col :xs="{span:24}" :lg="{span:12}">
+            <Card dis-hover>
+              <div slot="title">{{ $t('sitestats.trend') }}</div>
+              <ol class="sitestats-ul" v-if="trend.list.length > 0">
+                <li v-for="(i, index) in trend.list" :key="index">
+                  <Row :gutter="10">
+                    <Col flex="1">
+                      <router-link :to="{name:'player', params: { ouid: i.originPersonaId }}">
+                        {{ i.originName }}
+                      </router-link>
+                    </Col>
+                    <Col>
+                      <Icon type="md-chatbubbles" /> {{ i.commentsNum.toFixed(0) || 0 }}
+                      <Divider type="vertical"></Divider>
+                      <Icon type="md-eye" /> {{ i.viewNum.toFixed(0) || 0 }}
+                    </Col>
+                    <Col>
+                      <Tag color="error">
+                        <Icon type="ios-flame" /> {{ i.hot.toFixed(0) || 0 }}
+                      </Tag>
+                    </Col>
+                  </Row>
+                </li>
+              </ol>
+              <Empty v-else></Empty>
+              <Spin size="large" fix v-show="trend.load">
+                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+              </Spin>
+            </Card>
+          </Col>
+        </Row>
 
         <Spin size="large" fix v-show="!isLogin">
           <div>
@@ -154,21 +187,19 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 import Empty from "@/components/Empty"
 import businessCard from "@/components/businessCard";
 import * as echarts from "echarts";
 
-import {http, api, conf, account_storage} from '../assets/js/index'
+import {http, api, account_storage} from '../assets/js/index'
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       load: false,
       statistics: {},
       admins: 0,
-      show: false,
-
       chart: {
         'stats': {
           color: ['#fff13c', '#401486', '#ed4014'],
@@ -233,6 +264,12 @@ export default new BFBAN({
         }
       ],
       timeRange: 'weekly',
+
+      trend: {
+        load: false,
+        list: []
+      },
+
       isIncludingRobots: true,
       active: {
         load: false,
@@ -273,6 +310,7 @@ export default new BFBAN({
       await this.getSiteStats();
       await this.getStatisticsInfo();
       await this.getActiveStatistical();
+      await this.getTrend();
 
       setTimeout(() => {
         this.load = false;
@@ -337,6 +375,7 @@ export default new BFBAN({
       this.active.load = true;
 
       let selectTime = this.timeArray.filter(i => i.value == this.timeRange)[0].value;
+
       http.get('/activeStatistical', {
         params: {
           isBot: this.isIncludingRobots,
@@ -357,6 +396,31 @@ export default new BFBAN({
         }
       }).finally(() => {
         this.active.load = false;
+      });
+
+      this.getTrend();
+    },
+    /**
+     * 获取话题排行
+     */
+    getTrend () {
+      this.trend.load = true;
+
+      http.get(api['trend'], {
+        params:{
+          limit: 10,
+          time: this.timeRange
+        }
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.trend.list = d.data;
+        }
+      }).catch(res => {
+        this.$Message.error(res.message);
+      }).finally(() => {
+        this.trend.load = false;
       });
     },
     /**
@@ -410,7 +474,7 @@ export default new BFBAN({
       return;
     },
     /**
-     * 管理
+     * 获取社区管理
      */
     getAdmins() {
       http.get(api["admins"], {}).then(res => {

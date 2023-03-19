@@ -7,10 +7,10 @@
       "name": "deep",
       "img": "public/theme/deep/main.png",
       "version": "0.4",
-      "showColor": "#401487",
+      "themeColor": "#401487",
       "authorInfo": {
         "authorName": "BFBAN",
-        "authorUpdate": "2021-9-11"
+        "authorUpdate": "2022-2-28"
       },
       "src": ""
     },
@@ -19,19 +19,7 @@
       "name": "default",
       "img": "public/theme/silence/main.png",
       "version": "0.3",
-      "showColor": "#efe227",
-      "authorInfo": {
-        "authorName": "BFBAN",
-        "authorUpdate": "2021-9-11"
-      },
-      "src": ""
-    },
-    {
-      "type": "local",
-      "name": "silence",
-      "img": "public/theme/silence/main.png",
-      "showColor": "#000",
-      "version": "0.1",
+      "themeColor": "#efe227",
       "authorInfo": {
         "authorName": "BFBAN",
         "authorUpdate": "2021-9-11"
@@ -42,24 +30,11 @@
       "type": "local",
       "name": "pink",
       "img": "public/theme/pink/main.png",
-      "showColor": "pink",
+      "themeColor": "pink",
       "version": "0.2",
       "authorInfo": {
         "authorName": "BFBAN",
         "authorUpdate": "2021-9-26"
-      },
-      "src": ""
-    },
-    {
-      "type": "local",
-      "name": "blue",
-      "value": "blue",
-      "img": "public/theme/blue/main.png",
-      "showColor": "blue",
-      "version": "0.1",
-      "authorInfo": {
-        "authorName": "BFBAN",
-        "authorUpdate": "2021-9-11"
       },
       "src": ""
     }

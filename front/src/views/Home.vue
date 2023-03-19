@@ -1,6 +1,11 @@
 <template>
   <div>
     <div class="container">
+      <div class="styles_herosection user-select-none">
+        <div class="styles_bg"></div>
+        <img class="styles_bg_img" src="../assets/images/hero-grid-overlay.png"/>
+      </div>
+
       <div class="content">
         <div class="ivu-alert-with-banner home-banner">
           <Row :gutter="30">
@@ -32,6 +37,7 @@
                     <Card dis-hover>
                       <h3>{{ statistics.reports || 0 }}</h3>
                       <span>{{ $t("home.cover.dataReceived") }}</span>
+                      <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
                     </Card>
                   </router-link>
                 </Col>
@@ -40,6 +46,7 @@
                     <Card dis-hover>
                       <h3>{{ statistics.confirmed || 0 }}</h3>
                       <span>{{ $t("home.cover.confirmData") }}</span>
+                      <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
                     </Card>
                   </router-link>
                 </Col>
@@ -50,129 +57,101 @@
             </Col>
             <Col class="mobile-hide" :lg="{span: 13, push: 1}" type="flex" align="center" justify="center"
                  style="display: flex; justify-content: center; align-items: center">
+
               <Card dis-hover :padding="0" v-if="bannerImage">
                 <img :src="bannerImage"
                      @click="openBannerWindowBox"
                      width="100%" class="ivu-row-top" style="margin-bottom: -10px;border-radius: 5px;">
               </Card>
+
             </Col>
           </Row>
         </div>
       </div>
     </div>
 
-    <div class="home-activities-box mobile-hide ivu-primary container">
-      <Row>
-        <Col :lg="{span: 10, push: 0}">
-          <h1 align="left">{{ $t("home.activity.title") }}
-            <Icon type="md-megaphone"/>
-          </h1>
-          <h5 align="left"
-              v-html="$t('home.activity.description', {report: statistics.reports || 0, cheater: statistics.confirmed || 0})"></h5>
-        </Col>
-        <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
-          <router-link :to="{name: 'player_list'}">
-            <Button type="dashed" v-voice-button>
-              {{ $t('home.activity.more') }}
-            </Button>
-          </router-link>
-        </Col>
-      </Row>
-
-      <div class="home-activities-wrapper">
-        <div class="home-activities-item" v-for="a_i in activities" :key="a_i.id">
-          <Card class="icon" dis-hover>
-            <div slot="title" class="wrapper-title">
-              <div class="home-activities-item-title-avatar">
+    <div class="home-box mobile-hide ivu-primary">
+      <div class="container">
+        <Row>
+          <Col :lg="{span: 10, push: 0}">
+            <h1 align="left">{{ $t("home.activity.title") }}</h1>
+            <h5 align="left"
+                v-html="$t('home.activity.description', {report: statistics.reports || 0, cheater: statistics.confirmed || 0})"></h5>
+          </Col>
+          <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
+            <router-link :to="{name: 'player_list'}">
+              <Button type="dashed" v-voice-button>
+                {{ $t('home.activity.more') }}
+              </Button>
+            </router-link>
+          </Col>
+        </Row>
+      </div>
+      <div class="lean-box">
+        <div class="wrapper" :style="'animation: rowup ' + activities_l.length * 2.8 + 's linear infinite;'">
+          <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
+            <Card class="icon" v-for="a_i in activity" :key="a_i.id">
+              <div align="center" style="margin-top: -80px">
                 <Avatar size="80" :src="a_i.playerAvatarLink">
                   {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
                 </Avatar>
+                <p>
+                  <br>
+                  <Tag color="success" v-if="a_i.type == 'judgement'">
+                    {{ $t("basic.privilege.admin") }}
+                  </Tag>
+                  {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
+                  <Divider type="vertical"/>
+                  <Time v-if="a_i.createTime" :time="a_i.createTime"></Time>
+                </p>
               </div>
 
-              <Row type="flex" align="middle" :gutter="5">
-                <Col flex="1" align="left">
-                  <BusinessCard :id="a_i.byUserId || a_i.id">
-                    <u><b>{{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}</b></u>
-                  </BusinessCard>
-                </Col>
-                <Col>
-                  <Time v-if="a_i.createTime" :time="a_i.createTime"></Time>
-                </Col>
-              </Row>
-            </div>
-
-            <div class="wrapper-content">
-              <div v-if="a_i.type === 'report'">
+              <span v-if="a_i.type === 'report'">
+                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  {{ a_i.byUserName }}
+                </router-link>
                 {{ $t('home.activity.activities.report') }}
-
-                <Tooltip :content="$t('basic.games.' + a_i.game)" v-if="a_i.game && typeof a_i.game != 'number'">
-                  <Tag type="border">
-                    <img height="12"
-                         :src="require('/src/assets/images/games/' + a_i.game + '/logo.png')"/>
-                  </Tag>
-                </Tooltip>
-
+                <Tag>
+                  {{ $t('basic.games.' + a_i.game) }}
+                </Tag>
                 <router-link
                     :to="{name: 'player', params: {game: `${a_i.game}`, ouid: `${a_i.playerOriginPersonaId}`}}">
-                  <u>{{ a_i.toPlayerName }}</u>
+                  {{ a_i.toPlayerName }}
                 </router-link>
-              </div>
+              </span>
 
-              <div v-if="a_i.type === 'register'">
+              <span v-if="a_i.type === 'register'">
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                  <u>{{ a_i.byUserName }}</u>
+                  {{ a_i.byUserName }}
                 </router-link>
                 {{ $t('home.activity.activities.join') }}
-              </div>
+              </span>
 
-              <div v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
+              <span v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
+                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  <Tag v-if="a_i.privilege === 'admin'" color="success">
+                    {{ $t('basic.privilege.admin') }}
+                  </Tag>
+                  <b>{{ a_i.byUserName }}</b>
+                </router-link>
+
                 {{ $t('detail.info.judge') }}
 
                 <router-link :to="{name: 'player', params: {ouid: `${a_i.playerOriginPersonaId}`}}">
-                  <u>{{ a_i.toPlayerName }}</u>
+                  {{ a_i.toPlayerName }}
                 </router-link>
 
-                &emsp;
-
-                <Tag color="warning" v-if="a_i.action">
-                  {{ $t(`basic.action.${util.queryAction(a_i.action)}.text`) }}
+                <Tag color="warning">
+                  {{ $t(`basic.action.${a_i.action}.text`) }}
                 </Tag>
 
-                ,{{ $t('detail.info.cheatMethod') }}
-
-                <template v-if="a_i.playerCheatMethods">
-                  <div v-for="(value, key) in a_i.playerCheatMethods" :key="key">
-                    <Tooltip :content="$t('basic.games.' + key)" v-if="typeof key != 'number'">
-                      <Tag type="border">
-                        <img height="12"
-                             :src="require('/src/assets/images/games/' + key + '/logo.png')"/>
-                      </Tag>
-                    </Tooltip>
-
-                    <template v-if="typeof key != 'number'">
-                      <Tag type="border" color="orange"
-                           v-for="(methods, methodsIndex) in a_i.playerCheatMethods[key]"
-                           :key="methodsIndex">
-                        <Poptip trigger="hover" :transfer="true" word-wrap width="200"
-                                :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>
-                          {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
-                        </Poptip>
-                      </Tag>
-                    </template>
-                  </div>
-                </template>
-
-                <!--                  <Tag type="border" color="orange"-->
-                <!--                       v-for="(methods, methodsIndex) in a_i.playerCheatMethods"-->
-                <!--                       :key="methodsIndex">-->
-                <!--                    <Poptip trigger="hover" :transfer="true" word-wrap width="200"-->
-                <!--                            :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>-->
-                <!--                      {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}-->
-                <!--                    </Poptip>-->
-                <!--                  </Tag>-->
-              </div>
-            </div>
-          </Card>
+                <span v-if="a_i.cheatMethods">
+                  ，{{ $t('detail.info.cheatMethod') }}
+                  <b>{{ convertCheatMethods(a_i.cheatMethods) }}</b>
+                </span>
+              </span>
+            </Card>
+          </div>
         </div>
       </div>
       <Spin size="large" fix v-if="activityLoad"></Spin>
@@ -187,19 +166,16 @@
 <script>
 import {api, http, util, time, regular, upload} from '../assets/js/index'
 
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 import Tell from "../components/Home_tell";
-import PrivilegesTag from "@/components/PrivilegesTag";
-import BusinessCard from "@/components/businessCard";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
-      util,
-
       bannerImage: '',
       bannerTime: '',
 
+      statisticsInfoLoad: false,
       activityLoad: false,
       activities: [],
       activities_l: [],
@@ -210,7 +186,7 @@ export default new BFBAN({
       },
     }
   },
-  components: {Tell, PrivilegesTag, BusinessCard},
+  components: {Tell},
   watch: {
     '$route': 'loadData',
   },
@@ -265,15 +241,15 @@ export default new BFBAN({
       http.get(api["activity"], {}).then(res => {
         const d = res.data;
         if (d.success === 1) {
-          this.activities = d.data;
-          // let new_activities = [];
+          let activities = d.data;
+          let new_activities = [];
 
           // slice array
-          // for (let i = 0; i < activities.length; i += 3) {
-          //   new_activities.push(activities.slice(i, i + 3));
-          // }
-          //
-          // this.activities_l = new_activities;
+          for (let i = 0; i < activities.length; i += 3) {
+            new_activities.push(activities.slice(i, i + 3));
+          }
+
+          this.activities_l = new_activities;
         }
       }).finally(() => {
         this.activityLoad = false;
@@ -283,6 +259,8 @@ export default new BFBAN({
      * 获取统计
      */
     getStatisticsInfo() {
+      this.statisticsInfoLoad = true;
+
       http.get(api["statistics"], {
         params: {
           reports: 'show', // show reports number
@@ -299,6 +277,8 @@ export default new BFBAN({
         if (d.success == 1) {
           this.statistics = d.data;
         }
+      }).finally(() => {
+        this.statisticsInfoLoad = false;
       })
     }
   },
@@ -321,10 +301,25 @@ export default new BFBAN({
   }
 }
 
+.home-box {
+  position: relative;
+  padding-top: 100px;
+  overflow: hidden;
+  min-height: 850px;
+  max-height: 1000px;
+  margin: 50px 0 -20px 0;
+  text-align: center;
+
+  .lean-box {
+    display: flex;
+    transform: rotate(-5deg);
+    margin-top: 50px;
+  }
+}
+
 .home-banner {
   overflow: hidden;
   min-height: 600px;
-  margin-bottom: 20px;
   background-size: 500px;
   background-repeat: no-repeat;
   background-position: right;
@@ -341,28 +336,32 @@ export default new BFBAN({
   }
 }
 
-.home-activities-box {
-  position: relative;
-  padding-top: 100px;
-  overflow: hidden;
-  margin: 0px auto -20px auto;
+.wrapper {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: nowrap;
 
-  .home-activities-wrapper {
-    margin: 50px auto;
-    flex-flow:  wrap;
-    column-count: 3;
-    column-gap: 20px;
+  .icon {
+    font-size: 12px;
+    width: 280px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transform: translateX(0) translateY(40px);
+    opacity: .6;
+    transition: all 1s;
   }
 
-  .home-activities-item {
-    display: inline-grid;
-    width: 100%;
-    margin: 30px 0 20px 0;
+  .icon:hover {
+    opacity: 1;
   }
 
-  .home-activities-item-title-avatar {
-    text-align: center;
-    margin: -50px 0 20px 0;
+  .icon:nth-child(even) {
+    margin-top: 105px;
+    margin-left: 45px;
+    transform: translateX(45px) translateY(-10px);
   }
 }
 </style>

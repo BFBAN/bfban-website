@@ -1,14 +1,30 @@
 <template>
-  <div class="announcement">
-    <div class="title">{{config.name}}</div>
-    <div class="user">
-      <div class="name">{{config.author.name}}</div>
-      <div class="date">{{config.date}}</div>
-    </div>
-    <div class="content">
-      <item :data="config.content.nodes" />
-    </div>
+  <div class="container">
+    <br>
+    <Row>
+      <Col :xs="{push: 1}" :lg="{push: 0}">
+        <Breadcrumb>
+          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem :to="{name: 'announcement'}">{{ $t("home.bulletin.title") }}</BreadcrumbItem>
+          <BreadcrumbItem>{{config.name}}</BreadcrumbItem>
+        </Breadcrumb>
+      </Col>
+    </Row>
+    <br>
+
+    <Card dis-hover class="announcement">
+      <div class="title">{{config.name}}</div>
+
+      <div class="user">
+        <div class="name">{{config.author.name}}</div>
+        <div class="date">{{config.date}}</div>
+      </div>
+      <div class="content">
+        <item :data="config.content.nodes" />
+      </div>
+    </Card>
   </div>
+
 </template>
 
 <script>
@@ -18,24 +34,21 @@ export default {
   components: { item },
   data() {
     return {
-      config: []
     }
   },
-  created() {
-    const { route, date } = this.$route.query
-    const data = require(`./data/${route}/${date}.json`)
-    this.config = data
+  computed: {
+    config() {
+      const { route, date } = this.$route.query
+      return require(`./data/${this.$i18n.locale == "zh-CN" ? "CN" : "US"}/${route}/${date}.json`)
+    }
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .announcement {
-  width: 760px;
-  margin: 0 auto;
   .title {
     min-height: 42px;
-    color: #16181a;
     font-size: 34px;
     font-weight: 600;
     line-height: 48px;

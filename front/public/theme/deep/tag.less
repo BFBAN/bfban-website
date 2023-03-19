@@ -10,7 +10,8 @@
   padding: 0 8px;
   border: 1px solid @border-color-split;
   border-radius: @btn-border-radius-small;
-  background: @background-color-base;
+  color: tint(@border-color-split, 80%);
+  background: fade(@background-color-base, 50%);
   font-size: @tag-font-size;
   vertical-align: middle;
   opacity: 1;
@@ -89,7 +90,7 @@
     line-height: 24px;
     border: 1px solid @border-color-split;
     color: @border-color-split;
-    background: #fff !important;
+    background: fade(@background-color-base, 50%) !important;
     position: relative;
 
     .@{tag-close-prefix-cls} {
@@ -101,7 +102,7 @@
       content: "";
       display: none;
       width: 1px;
-      background: currentColor;
+      background: themeColor;
       position: absolute;
       top: 0;
       bottom: 0;

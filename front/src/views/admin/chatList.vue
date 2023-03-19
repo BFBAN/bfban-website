@@ -115,12 +115,12 @@ export default {
         this.load = false;
       });
     },
-    handlePageSizeChange(val) {
-      this.limit = val;
+    handlePageSizeChange(num) {
+      this.limit = num;
       this.getChatLog();
     },
-    handlePageChange(val) {
-      this.skip = val;
+    handlePageChange(num) {
+      this.skip = num;
       this.getChatLog();
     }
   }

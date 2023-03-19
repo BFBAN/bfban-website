@@ -40,7 +40,6 @@ class Voice extends Print {
                 })
                 return;
             }
-            // console.log(this.VOICEDATA[key])
             this.VOICEDATA[key].play();
 
             this.VOICEDATA[key].once('load', function(){

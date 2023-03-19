@@ -5,7 +5,7 @@
         <RadioGroup
             class="game-type"
             v-model="gameName"
-            @on-change="handleChanges"
+            @on-change="getCommentAllList"
             type="button">
           <Radio label="all" value="all">
             {{ $t('basic.games.all') }}
@@ -43,7 +43,7 @@
               :total="total"/>
       </Col>
       <Col>
-        <Button size="small" @click="getCommentList">
+        <Button size="small" @click="getCommentAllList">
           <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
         </Button>
       </Col>
@@ -147,10 +147,10 @@ import {account_storage, api, http, http_token, util} from "../../assets/js";
 
 import BusinessCard from "@/components/businessCard";
 import Textarea from "@/components/Textarea";
-import BFBAN from "@/assets/js/bfban";
+import Application from "@/assets/js/application";
 import HtmlWidget from "@/components/HtmlWidget";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       commentEditModel: false,
@@ -158,7 +158,7 @@ export default new BFBAN({
       editCommentFrom: {
         id: 0,
         content: '',
-        videoLink: ''
+        videoLink: '',
       },
       commentRuleValidate: {
         content: [
@@ -193,15 +193,18 @@ export default new BFBAN({
   methods: {
     /**
      * 加载数据
-     * @returns {Promise<void>}
      */
     async loadData() {
       await util.initUtil().then(res => {
         this.games = res.gameName;
       });
 
-      this.getCommentList();
+      this.getCommentAllList();
     },
+    /**
+     * 打开面板，展示可编辑(预备)表单
+     * @param index {numer}
+     */
     openCommentMode(index) {
       if (
           !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ['super', 'root', 'dev'])
@@ -217,19 +220,16 @@ export default new BFBAN({
 
       this.commentEditModel = true;
     },
-    handlePageChange(val) {
-      this.skip = val;
-      this.getCommentList();
+    handlePageChange(num) {
+      this.skip = num;
+      this.getCommentAllList();
     },
-    handlePageSizeChange(val) {
-      this.limit = val;
-      this.getCommentList();
-    },
-    handleChanges() {
-      this.getCommentList()
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getCommentAllList();
     },
     /**
-     * 编辑评论、回复、判决
+     * 提交编辑评论、回复、判决
      */
     commentSubmit() {
       if (!this.editCommentFrom.id || !this.editCommentFrom.content || !this.editCommentFrom.videoLink) return;
@@ -241,14 +241,17 @@ export default new BFBAN({
         return;
       }
 
+      const data = {
+        id: this.editCommentFrom.id,
+        content: this.editCommentFrom.content,
+        videoLink: this.editCommentFrom.videoLink,
+      };
+
+      if (this.editCommentFrom.includes('isSpam')) data.isSpam = this.editCommentFrom.isSpam;
+      if (this.editCommentFrom.includes('valid')) data.valid = this.editCommentFrom.valid;
+
       this.http.post(api['admin_setComment'], {
-        data: {
-          data: {
-            id: this.editCommentFrom.id,
-            content: this.editCommentFrom.content,
-            videoLink: this.editCommentFrom.videoLink
-          },
-        }
+        data: {data}
       }).then(res => {
         const d = res.data;
 
@@ -262,13 +265,13 @@ export default new BFBAN({
         this.commentEditModel = false;
         this.load = false;
 
-        this.getCommentList();
+        this.getCommentAllList();
       })
     },
     /**
-     * 取得评论列表
+     * 查询所有评论
      */
-    getCommentList() {
+    getCommentAllList() {
       this.load = true;
 
       this.http.get(api['admin_commentAll'], {

@@ -26,7 +26,6 @@ export default {
   },
   computed: {
     line() {
-      console.log(this.$parent.line)
       return (this.$parent.line || this.$parent.line === 0) ? this.$parent.line + 1 : 0
     }
   },
@@ -71,7 +70,6 @@ export default {
         .font {
           line-height: 26px;
           font-size: 16px;
-          color: rgb(29, 29, 31);
         }
       }
     }

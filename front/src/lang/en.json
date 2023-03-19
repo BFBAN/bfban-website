@@ -57,11 +57,13 @@
       "bot": "Bot"
     },
     "tip": {
-      "notLang": "untranslated",
-      "notContent": "Nothing found",
+      "notlang": "untranslated",
+      "notcontent": "Nothing found",
       "notFound": "We cant find the page your looking for.",
       "noReports": "No reports yet",
-      "noAccess": "Have no right to access"
+      "noAccess": "Have no right to access",
+      "notLang": "No translation",
+      "notContent": "No content"
     },
     "games": {
       "all": "All games",
@@ -79,7 +81,6 @@
       "ps4": "PlayStation 4"
     },
     "button": {
-      "reply": "Reply",
       "report": "Report user",
       "commit": "Commit",
       "save": "Save",
@@ -88,12 +89,19 @@
       "reset": "Reset",
       "cancel": "Cancel",
       "prev": "Previous step",
-      "next": "Next step"
+      "next": "Next step",
+      "reply": "Reply"
     }
   },
   "captcha": {
     "get": "Get captcha",
-    "title": "Captcha"
+    "title": "Captcha",
+    "messages": {
+      "wrong": "Incorrect captcha",
+      "expired": "Expired captcha",
+      "gen": "Obtain successfully",
+      "bad": "Wrong captcha, please contact admin."
+    }
   },
   "textarea": {
     "originalImage": "The original image",
@@ -103,19 +111,9 @@
       "media": "Media library"
     },
     "steps": {
-      "upload": {
-        "0": "Select the file",
-        "1": "Editor",
-        "2": "To view"
-      },
-      "url": {
-        "0": "Fill in the picture address",
-        "1": "To view"
-      },
-      "media": {
-        "0": "Select",
-        "1": "To view"
-      }
+      "upload": ["Select the file", "Editor", "To view"],
+      "url": ["Fill in the picture address", "To view"],
+      "media": ["Select", "To view"]
     }
   },
   "header": {
@@ -129,20 +127,21 @@
     "signout": "Logout",
     "userCenter": "Public profile",
     "signoutSuccess": "Logout successful",
-    "site_stats": "Website statistics"
+    "site_stats": "Statistics",
+    "announcement": "Announcement"
   },
   "player_list": {
     "title": "Player database",
     "seo": {
-      "description": "Player list, which contains user reports on player dossiers",
-      "keywords": "Player list,list"
+      "description": "Player list, contains players that have been report.",
+      "keywords": "Player list, list"
     }
   },
   "profile": {
     "title": "Personal settings",
     "meet": "welcome back {name}! ",
-    "chat": {
-      "title": "Chat",
+    "message": {
+      "title": "Messages",
       "look": "Check",
       "load": "Refresh",
       "control": "Batch editing",
@@ -192,8 +191,7 @@
         "content": "content",
         "send": {
           "itemName": "Send message",
-          "form": {
-          }
+          "form": {}
         }
       }
     },
@@ -214,17 +212,13 @@
         "specification1": "You are changing your account name, which means that you will see changes within the site and the <b>login ID</b> will change at the same time. If you accidentally forget your new account ID, you may not be able to retrieve it, affecting your binded orgin account, and you will need to go through a very long manual review..",
         "specification2": "Do you understand the instructions above?",
         "residueDegree": "You still have {changeNameLeft}chance to change name",
-        "steps": {
-          "0": {
-            "title": "hint"
-          },
-          "1": {
-            "title": "fill in"
-          },
-          "2": {
-            "title": "complete"
-          }
-        }
+        "steps": [{
+          "title": "hint"
+        }, {
+          "title": "fill in"
+        }, {
+          "title": "complete"
+        }]
       }
     },
     "appearance": {
@@ -234,16 +228,16 @@
       "title": "Local enhancement",
       "public": {
         "footerBar": {
-          "name": "底部工具栏",
-          "describe": "网站顶部附属的工具栏，为用户提供玩家持续关注等功能"
+          "name": "Bottom toolbar",
+          "describe": "Top toolbar, to provide user functions like follow a player."
         },
         "autoUpdatePlayerList": {
-          "name": "未处理提醒",
-          "describe": "为管理员提供自动刷新，关注未处理玩家做出站内提醒"
+          "name": "",
+          "describe": ""
         },
         "desktopNotifiction": {
-          "name": "桌面通知",
-          "describe": "在系统窗口内弹窗通知"
+          "name": "Desktop notification",
+          "describe": "Prompt notification in system"
         }
       }
     },
@@ -264,23 +258,83 @@
         "home": "Home",
         "management": "content",
         "user": "user management",
-        "message": "user message",
+        "message": "User message",
         "comment": "Comments on the management",
         "log": "Logs",
         "adminLog": "Admin log",
         "judgementLog": "Judgement log",
-        "messageManagement": "Message Management",
-        "messagePush": "Message Push",
-        "messageList": "Message log"
+        "adminOperationLog": "Admin website action log",
+        "adminOperation": "Admin action log on cases",
+        "messageManagement": "Message",
+        "messagePush": "",
+        "messageList": "Message content"
       }
+    },
+    "chat": {
+      "title": "Message",
+      "look": "Open chat",
+      "load": "Reload",
+      "control": "Batch edit",
+      "placeholder": "Type message here",
+      "types": {
+        "direct": {
+          "text": "Chat",
+          "describe": "Send message to user"
+        },
+        "warn": {
+          "text": "System",
+          "describe": "Push system notification"
+        },
+        "fatal": {
+          "text": "Ok",
+          "describe": ""
+        },
+        "toAll": {
+          "text": "Everyone",
+          "describe": "Send to everyone in site"
+        },
+        "toAdmins": {
+          "text": "All admins",
+          "describe": "Send message to all admins in site"
+        },
+        "toNormals": {
+          "text": "Normal user",
+          "describe": "Send message to all normal users"
+        },
+        "command": {
+          "text": "Command",
+          "describe": "User defined function"
+        }
+      },
+      "tabsList": {
+        "itemName": "Message list",
+        "form": {
+          "del": "Delete",
+          "unread": "Unread",
+          "read": "Viewed"
+        }
+      },
+      "tabsSend": {
+        "itemName": "",
+        "messageMethod": "Type",
+        "messageID": "Site ID",
+        "content": "Content"
+      }
+    },
+    "voice": {
+      "title": "Sound",
+      "message": "Message notification Sound",
+      "messageDescribe": "Notice sound related to messages",
+      "interaction": "Interaction sound",
+      "interactionDescribe": "Some interaction sound on website",
+      "backgroundMusic": "Background sound",
+      "backgroundMusicDescribe": "Background music",
+      "video": "Video",
+      "videoDescribe": "Website video sound"
     }
   },
   "detail": {
     "title": "Detail",
-    "seo": {
-      "description": "Player Detail",
-      "keywords": "bfban,BFBAN"
-    },
     "subscribes": {
       "tracking": "Track",
       "trackingDescribe": "Track this player and notify me for updates",
@@ -289,40 +343,25 @@
     },
     "timeline": {
       "all": "All",
-      "coreComment": "Main Contents",
       "verify": "Only verified",
       "banAppeal": "Only appeals",
-      "historyName": "History Player Name"
+      "coreComment": "Main content",
+      "historyName": "Player name changing history"
     },
     "appeal": {
       "describe": "This report has a problem. I can prove that me or the player mentioned is innocent.",
       "modal": {
         "modalTitle": "Rules",
-        "describe": "针对误BAN，本人或第三方可以协助申诉，在满足下方所有基本要求后，您的申诉内容会提交到BFBAN所有管理员，管理员确认通过才可解除",
-        "effectiveEvidence": {
-          "title": "Valid evidence",
-          "1": "使用类似\"高速目标靶心\"软件、Moss软件，拍摄到屏幕与手、键盘录制自证.",
-          "2": "自我辩护，可以使用图片、视频等等材料.",
-          "3": "有些地方所提供的要求不同，可以咨询地区BFBAN管理，索要申诉材料."
-        },
-        "evidenceInvalid": {
-          "title": "不通过的证明",
-          "1": "借出、出租等形式给第三方，无论是刷数据还是朋友借用说辞，都无法证明是否本人，你必须明白账户借出无法知道通过何种手段. 一律不给与通过.",
-          "2": "被多方玩家截取使用(不限于本人截图显示出作弊特征)或购买作弊软体多媒体.",
-          "3": "存在前科，如上系列存在档案玩家将大大折扣通过几率.",
-          "4": "任何誓言，诅咒."
-        },
-        "auxiliaryProof": {
-          "title": "Extra proof",
-          "1": "举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址.",
-          "2": "在场玩家，提供自己id，具体服务器、时间、场此，以及您辅助申诉对象说明."
-        }
+        "describe": "For wrong BAN, you or a third party can assist in the appeal. After meeting all the basic requirements below, your appeal content will be submitted to all administrators of BFBAN, and the administrator can only release it after confirmation",
+        "effectiveEvidence": [null, "Use software like \"High Speed Target Bullseye\" and Moss software to capture the screen, hands, and keyboard to record self-certification.", "Self-defense, you can use pictures, videos, etc. materials.", "Some places provide different requirements , you can consult the regional BFBAN management and ask for appeal materials."],
+        "evidenceInvalid": [null, "Lending, leasing, etc. to a third party, no matter whether it is swiping data or borrowing words from friends, it is impossible to prove whether you are the person. You must understand that you cannot know the means through which the account is lent. It will not be approved.", "by multiple players Intercept and use (not limited to my own screenshots showing cheating features) or buy cheating software multimedia.", "With previous convictions, players with files in the above series will greatly reduce the chance of passing.", "Any oath, curse."],
+        "auxiliaryProof": [null, "From the perspective of other players (enemies and friends) of the reported single battle, and no less than 10 minutes without clips, provide the video address by yourself.", "Players present, provide their own id, specific server, time, scene, and you Auxiliary complaint object description."]
       },
       "info": {
         "content": "Appeal details",
         "player": "Player's ID",
-        "changeName": "Change for Player name",
-        "originName": "Player's current ID"
+        "originName": "Player's current ID",
+        "changeName": "Name change"
       },
       "placeholder": {
         "content": "Please fill in detail of your appeal for review",
@@ -340,6 +379,7 @@
       "appeal": "Appeal",
       "cheatersInfo": "Player detail",
       "viewTimes": "Views",
+      "reply": "Reply",
       "reportedGames": "Reported game",
       "gameScores": "Score track link",
       "firstReportTime": "Firstly reported date",
@@ -380,20 +420,11 @@
     },
     "judgement": {
       "behavior": "Judgement type",
-      "game": "Judgement Game",
       "methods": "Cheat method",
       "content": "Judgement discription",
-      "appropriateVerdict": {
-        "title": "合适的裁决",
-        "1": "直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)",
-        "2": "简要，作弊特征明显，可使用下方模板统一判决"
-      },
-      "inappropriateRuling": {
-        "title": "不合适的裁决",
-        "1": "填写如\"1\"、\"[空位符]\"、\"[表情]\"等这类无意义回复",
-        "2": "回复内容中携带人生攻击、歧视、色情、政治内容",
-        "3": "由于游戏外因素决定，比如头像、丑"
-      }
+      "appropriateVerdict": [null, "Intuitively put forward the reason for the ruling, for example, a certain behavior determines the result of the judgment, due to the following factors (omitted)", "Simple, with obvious cheating characteristics, you can use the template below to make a unified judgment"],
+      "inappropriateRuling": [null, "Fill in meaningless replies such as \"1\", \"[space character]\", \"[expression]\", etc.", "The content of the reply contains personal attacks, discrimination, pornography, and political content", "Because Determined by factors outside the game, such as avatar, ugly"],
+      "game": "Affiliated game"
     },
     "messages": {
       "fillEverything": "Please fill in everything",
@@ -403,15 +434,15 @@
       "signIn": "Please sign in",
       "updateComplete": "Update completed",
       "submitSuccess": "Submition successful",
-      "tipBind": "Please bind your Orange account and then reply"
+      "tipBind": "Please bind your Origin ID before replay"
+    },
+    "seo": {
+      "description": "",
+      "keywords": "Player detail, player"
     }
   },
   "report": {
     "title": "Report",
-    "seo": {
-      "description": "Player Report",
-      "keywords": "bfban,BFBAN"
-    },
     "info": {
       "notFoundHintTitle": "We can't find this player",
       "notFoundHintQuestion1": "But I've just met him in game/I can find him on battlefield tracker?",
@@ -419,6 +450,7 @@
       "notFoundHintQuestion2": "I can't find him on origin, what can I do?",
       "notFoundHintAnswer2": "That is probably because EA didnot update their database in time，or their system bugged, and we are unable to help them fix that bug. If you do wish to help, you can visit       https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en       , the official froum to send bug report，you can describe this situation as: I can't search my friend by name on origin.",
       "reportHacker": "Report a hacker",
+      "reportNews": "We offer the function to report BFV hackers!",
       "idNotion1": "You can only report one ID at a time， do not include the platoon name and do not fill in your own ID",
       "idNotion2": "Origin name has no match for lower case and upper case，but you must identify i I 1 l L o O 0 in order to offer correct ID",
       "uploadManual1": "if you do not want to register video-site member such as Bilibili and Youtube, you can go to",
@@ -442,22 +474,33 @@
       "game": "Game",
       "description": "Description"
     },
-    "messages": {
+    "error": {
       "mediaEvidence": "Please upload a picture or fill in the video link",
-      "originIdNotExist": "Origin account doesn't exist, please check the spelling",
+      "originId": "Origin account doesn't exist, please check the spelling",
       "success": "Submitted successfully",
       "permissionDenied": "",
-      "videoBadFormat": "Invild format",
-      "videoEmpty": "Invild video link",
-      "successTitle": "successfully",
-      "successSubtitle": "Thanks for your report",
-      "failureTitle": "Failure",
-      "failureSubtitle": "Failure，{msg}",
-      "tipBind": "Please bind your orange account and then report"
+      "voideBadFormat": "Invild format",
+      "voideEmpty": "Invild video link"
+    },
+    "seo": {
+      "description": "",
+      "keywords": ""
+    },
+    "messages": {
+      "mediaEvidence": "Please upload picture or fill the video link",
+      "originIdNotExist": "Game ID not exist, please check spelling",
+      "permissionDenied": "No permission",
+      "videoBadFormat": "Wrong format",
+      "videoEmpty": "Empty video link",
+      "successTitle": "Successfully submitted",
+      "successSubtitle": "Thank you for reporting",
+      "failureTitle": "Failed",
+      "failureSubtitle": "Report failed, {msg}",
+      "tipBind": "Please report only after you've bound Origin account"
     },
     "button": {
-      "continue": "继续",
-      "leave": "离开"
+      "continue": "Continue",
+      "leave": "Leave"
     }
   },
   "footer": {
@@ -485,16 +528,9 @@
   },
   "home": {
     "title": "Home",
-    "seo": {
-      "description": "BFBAN Official",
-      "keywords": "bfban,BFBAN"
-    },
     "cover": {
       "h1": "BFBAN",
-      "h2": [
-        "Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world ",
-        "Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheaters "
-      ],
+      "h2": ["Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world ", "Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheaters "],
       "h3": "A global database of cheaters",
       "h4": "Become one of us - Improve our community",
       "subButton": "Find out which communities have joined",
@@ -516,6 +552,10 @@
     },
     "bulletin": {
       "title": "Bulletin"
+    },
+    "seo": {
+      "description": "",
+      "keywords": ""
     }
   },
   "about": {
@@ -547,6 +587,8 @@
   "account": {
     "title": "User info",
     "reportnum": "Reports",
+    "hint2": "Everyone can post responses on the report page.",
+    "hint3": "If you have more evidence for a hacker, please report the same user twice.",
     "userInfo": "Account info",
     "username": "Username",
     "role": "Role",
@@ -571,7 +613,13 @@
     }
   },
   "bindOrigin": {
-    "title": "Connect your origin account"
+    "title": "Connect your origin account",
+    "messages": {
+      "notFound": "Verification code for binding not found",
+      "expired": "Verification code for binding expired, please bind again",
+      "success": "Account bind to Origin successfully",
+      "bad": "Error while binding, please contact admin"
+    }
   },
   "signin": {
     "title": "Sign In",
@@ -596,28 +644,22 @@
       "failure": "Wrong verify link，pleas check your Captcha",
       "error": "error"
     },
-    "steps": {
-      "0": {
-        "title": "Basic infomation",
-        "supplement": "Basic account infomation"
-      },
-      "1": {
-        "title": "Binding account",
-        "supplement": "Bind your origin account"
-      },
-      "2": {
-        "title": "Captcha",
-        "supplement": "Verify you are not a robot"
-      },
-      "3": {
-        "title": "Comfirm",
-        "supplement": "Email security code"
-      },
-      "4": {
-        "title": "Finish",
-        "supplement": "Registration result"
-      }
-    },
+    "steps": [{
+      "title": "Basic infomation",
+      "supplement": "Basic account infomation"
+    }, {
+      "title": "Binding account",
+      "supplement": "Bind your origin account"
+    }, {
+      "title": "Captcha",
+      "supplement": "Verify you are not a robot"
+    }, {
+      "title": "Comfirm",
+      "supplement": "Email security code"
+    }, {
+      "title": "Finish",
+      "supplement": "Registration result"
+    }],
     "form": {
       "username": "Username",
       "newUsername": "New username",
@@ -642,44 +684,41 @@
     "playerNotFound": "Origin account not found (Please ensure that you have followed the guide above)",
     "originIdExist": "This Origin account has already been used",
     "fillIn": "Please fill in the form",
-    "failed": "Registration failed"
+    "failed": "Registration failed",
+    "needVerify": "Please go to email to verify your account",
+    "originBindingExist": "This origin account has been bound",
+    "originNotFound": "Origin account with this email not found."
   },
   "forgetPassword": {
     "title": "Reset password",
-    "steps": {
-      "0": {
-        "title": "Basic account information",
-        "supplement": "Account name"
-      },
-      "1": {
-        "title": "Captcha",
-        "supplement": "Verity that you are not a robot"
-      },
-      "2": {
-        "title": "Email verification",
-        "supplement": "Check your email for a verification link"
-      },
-      "3": {
-        "title": "Reset password",
-        "supplement": "Reset your password"
-      },
-      "4": {
-        "title": "Submit",
-        "supplement": "The password reset is successful"
-      }
-    },
-    "resetSuccess": "The password reset is successful! \uD83D\uDC90"
+    "steps": [{
+      "title": "Basic account information",
+      "supplement": "Account name"
+    }, {
+      "title": "Captcha",
+      "supplement": "Verity that you are not a robot"
+    }, {
+      "title": "Email verification",
+      "supplement": "Check your email for a verification link"
+    }, {
+      "title": "Reset password",
+      "supplement": "Reset your password"
+    }, {
+      "title": "Submit",
+      "supplement": "The password reset is successful"
+    }],
+    "resetSuccess": "The password reset is successful! 💐"
   },
   "list": {
     "title": "Cheater list",
     "filters": {
-      "sortByTitle": "Sort Type",
       "sortBy": {
         "createTime": "Sort by report time",
         "updateTime": "Sort by Update time",
         "viewNum": "Sort by View time",
         "commentNum": "Sort by Reply time"
-      }
+      },
+      "sortByTitle": "Sort by"
     },
     "reportTime": "Report time",
     "updateTime": "Update time",
@@ -720,9 +759,17 @@
     "describe": "Search a playername from the BFBAN database",
     "placeholder": "Search for a player",
     "collectionHint": "Bookmark this page (Ctrl+D or Command+D)",
-    "scope": {
-      "history": "Historical ID",
-      "current": "Current ID"
+    "notUserExist": "This player cannot be found in the database",
+    "tabs": {
+      "player": "Report",
+      "user": "User",
+      "comment": "Comment"
+    },
+    "sort": {
+      "default": "default",
+      "latest": "latest",
+      "mostViewed": "most viewed",
+      "mostComments": "most comments"
     }
   },
   "cheatMethods": {
@@ -811,7 +858,23 @@
       "daily": "Daily",
       "weekly": "Weekly",
       "monthly": "Monthly",
-      "yearly": "Yearly"
+      "yearly": "1 year"
     }
+  },
+  "announcement": {
+    "personnel": {
+      "name": "BFBAN Personnel Rule",
+      "intro": ""
+    },
+    "antiCheat": {
+      "name": "BFBAN Anti Cheat Rule",
+      "intro": ""
+    },
+    "conduct": {
+      "name": "BFBAN Code of Conduct (CoC)",
+      "intro": ""
+    },
+    "version": "version",
+    "latest": "latest version"
   }
 }

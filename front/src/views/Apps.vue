@@ -12,11 +12,11 @@
     <br>
 
     <Row>
-      <Col flex="auto" :xs="{span: 18, push: 1, pull: 1}" :lg="{push: 0, pull: 0}">
+      <Col :xs="{span: 18, push: 1, pull: 1}" :lg="{push: 0, pull: 0}">
         <h1>{{ $t("apps.title") }}</h1>
         <p>{{ $t("apps.describe") }}</p>
       </Col>
-      <Col type="flex" align="right" class="mobile-hide">
+      <Col align="right" :xs="{span: 0, push: 0, pull: 0}" :lg="{span: 6,push:0, pull: 0}">
         <a href="https://kook.top/Jlo8x6" target="_blank">
           <Button>{{ $t("apps.submit_tool_app") }}</Button>
         </a>
@@ -28,24 +28,29 @@
       <Col :xs="{span: 24, push: 0, pull: 0}" :lg="{span: 18,push:0,pull:0}" class="apps-list">
         <br class="desktop-hide">
         <div v-for="item in appsConf.list" :key="item.title">
-          <Card class="apps-item" v-if="appItemIsShow(item)">
-            <Badge :text="!!item.hot ? $t('apps.buttons.hot') : ''" :offset="[15, 20]">
-              <h2 v-if="item.titleLang">
-                {{ item.titleLang[$i18n.locale] || item.title }}
-              </h2>
-              <h2 v-else>{{ item.title }}</h2>
-            </Badge>
+          <Card dis-hover class="apps-item" v-if="appItemIsShow(item)">
+            <div slot="title">
+              <Badge :text="!!item.hot ? $t('apps.buttons.hot') : ''" :offset="[-1, -20]">
+                <h2 v-if="item.titleLang">
+                  {{ item.titleLang[$i18n.locale] || item.title }}
+                </h2>
+                <h2 v-else>{{ item.title }}</h2>
+              </Badge>
+            </div>
+
             <div>
               <Tag color="primary" v-for="tagitem in item.tag || []" :key="tagitem.describe">
                 {{ $t('apps.screen.' + tagitem) }}
               </Tag>
             </div>
-            <p style="overflow: hidden">
+
+            <p>
               <span v-if="item.describeLang">{{ item.describeLang[$i18n.locale] || item.describe }}</span>
               <span v-else>{{ item.describe }}</span>
             </p>
+
             <div>
-              <Divider/>
+              <br>
               <Button type="primary" :disabled="!item.get" v-if="item.get">
                 <a :href="item.get" target="_new">{{ $t('apps.buttons.get') }}</a>
               </Button>
@@ -68,10 +73,10 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 import appsConf from '/public/conf/appslist.json';
 
-export default new BFBAN({
+export default new Application({
   name: "Apps",
   data() {
     return {

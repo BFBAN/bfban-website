@@ -21,6 +21,7 @@
             <div align="center">
               <!-- Origin头像 S -->
               <Avatar shape="square"
+                      class="default-avatar"
                       :src="cheater.avatarLink"
                       :size="180"
                       :title="$t('detail.info.originAvatar')"
@@ -28,9 +29,8 @@
               </Avatar>
               <template v-else>
                 <Avatar shape="square"
-                        icon="ios-person"
-                        size="180"
-                        style="background-color: rgba(255,0,0,0.37)">
+                        class="default-avatar"
+                        size="180">
                 </Avatar>
               </template>
               <!-- Origin头像 E -->
@@ -40,101 +40,25 @@
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col flex="1">
+                <Tag color="error" v-if="cheater.status >= 0">
+                  {{ $t(`basic.status.${cheater.status || 0}`) }}
+                </Tag>
+
                 <!-- 被举报的游戏 S -->
-                <Dropdown :transfer="isMobile" placement="top-start">
-                  <template>
-                    <Tag color="error">{{ $t(`basic.status.${throughSentryRank || 0}`) }}
-                      <Icon type="md-arrow-dropdown"/>
-                    </Tag>
-                  </template>
+                <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
+                             v-if="cheater.games">
+                  <Tag color="gold" :alt="$t('detail.info.reportedGames')"
+                       v-for="(game,gameindex) in cheater.games" :key="gameindex">
+                    {{ $t(`basic.games.${game}`, {game: game}) }}
+                  </Tag>
+                </router-link>
 
-                  <DropdownMenu slot="list" style="margin: 5px 15px">
-                    <Row :gutter="0" style="margin: 5px 0;">
-                      <Col flex="1">
-                        <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
-                                     v-if="cheater.games">
-                          <template v-if="cheater.cheatStatus == null">
-                            <Tag color="error">{{ $t(`basic.status.${cheater.status || 0}`) }}</Tag>
-                          </template>
-
-                          <template v-else>
-                            <div v-for="(status_item, status_name) in cheater.cheatStatus" :key="status_name">
-                              <Tag color="gold" :alt="$t('detail.info.reportedGames')">
-                                {{ $t(`basic.games.${status_name}`) }}
-                              </Tag>
-                              <Tag color="error">{{ $t(`basic.status.${status_item || 0}`) }}</Tag>
-
-                              <!-- 被举报的类型 S -->
-                              <template v-if="cheater.cheatMethods">
-                                <span
-                                    v-for="(methods_game_item, methods_game_name) in cheater.cheatMethods[status_name]"
-                                    :key="methods_game_name">
-                                  <Tag color="warning"
-                                       v-for="(method_type_item, method_type_index) in cheater.cheatMethods"
-                                       :key="method_type_index">
-                                    <Poptip trigger="hover" :transfer="true" word-wrap width="200"
-                                            :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods_game_item) + ".describe")'>
-                                      {{
-                                        $t("cheatMethods." + util.queryCheatMethodsGlossary(methods_game_item) + ".title")
-                                      }}
-                                    </Poptip>
-                                  </Tag>
-                                </span>
-                              </template>
-
-                              <!--                      <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">-->
-                              <!--                        <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods"-->
-                              <!--                             :key="method_index">-->
-                              <!--                          <Poptip trigger="hover" :transfer="true" word-wrap width="200"-->
-                              <!--                                  :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".describe")'>-->
-                              <!--                            {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}-->
-                              <!--                          </Poptip>-->
-                              <!--                        </Tag>-->
-                              <!--                      </template>-->
-                              <!-- 被举报的类型 S -->
-
-                            </div>
-                          </template>
-                        </router-link>
-                      </Col>
-                    </Row>
-
-                    <Divider dashed style="margin: 10px -16px; width: calc(100% + 32px)"></Divider>
-
-                    <div>
-                      <Card style="margin: 0rem 0 1rem 0;" dis-hover>
-                        <Row :gutter="16" type="flex" justify="center" align="middle">
-                          <Col>
-                            <Icon type="md-ionitron" color="#535353" size="40"/>
-                          </Col>
-                          <Col>
-                            <Icon type="md-code-working" color="#aaa" size="20"/>
-                          </Col>
-                          <Col>
-                            <Icon type="md-cloud" color="#535353" size="40"/>
-                          </Col>
-                        </Row>
-                        <Card style="margin: 20px 0 0 0" :padding="0" dis-hover>
-                          <Slider v-model="cheater.sentryRank" :marks="cheater.sentryRankMarks" :step="1" :min="1"
-                                  :max="3" show-stops style="margin: 0 60px 35px 60px"></Slider>
-                        </Card>
-                      </Card>
-                      <div style="font-size: 12px">
-                        <Row>
-                          <Col flex="1">
-                            <h3>哨兵 ({{ cheater.sentryRank }} Level)</h3>
-                          </Col>
-                          <Col>
-                            <Tag>beta</Tag>
-                          </Col>
-                        </Row>
-                        <p class="hint">
-                          这是一个提供给监管者对作弊玩家容忍度等级开关，从任意到严格，在默认情况下仅仅内部审查，同系列连责；在严格模式，它会尝试检查该名玩家是否被任意第三方作弊封禁记录，给予第三方意见。这些建议最终由监管者来决定是否踢出社区。</p>
-                        <p class="hint">请查阅bfban api文档中judgmentResult接口</p>
-                      </div>
-                    </div>
-                  </DropdownMenu>
-                </Dropdown>
+                <!-- 被举报的类型 E -->
+                <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">
+                  <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
+                    {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
+                  </Tag>
+                </template>
 
                 <div>
                   <Dropdown :transfer="isMobile" placement="bottom-start">
@@ -333,11 +257,11 @@
           <h2># {{ $t('detail.info.gameScores') }}</h2>
           <br>
           <!-- 战绩链接 S -->
-          <RecordLink :cheater="cheater" v-show="cheater.originUserId"></RecordLink>
+          <RecordLink ref="recordLink" v-show="cheater.originUserId"></RecordLink>
           <!-- 战绩链接 E -->
         </Card>
         <br>
-        <Card style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
+        <Card id="timeline" style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
           <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
             <Col :xs="{span: 23, push: 1}" :lg="appeal.disable ? {span: 7, push: 0} : {span: 1, push: 0}"
                  class="mobile-hide">
@@ -355,6 +279,7 @@
             </Col>
             <Col flex="auto" class="mobile-hide">
               {{ $t('detail.info.timeLine') }}
+              <Tag v-if="timeline.total">{{ timeline.total || 0 }}</Tag>
             </Col>
             <Col>
               <!-- 时间轴筛选 S -->
@@ -558,8 +483,8 @@
                         <Col style="max-width: 60%">
                           <span style="display: block;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
                             <a :href="link.href" target="_blank">
-                              <span style="opacity: .8" v-if="link">
-                                 {{ link.href }}
+                              <span style="opacity: .8" v-if="link.href">
+                                <htmllink :href="encodeURI(link.href)" :text="encodeURI(link.href)"></htmllink>
                               </span>
                             </a>
                           </span>
@@ -730,12 +655,16 @@
                         <!-- 禁言 -->
                         <template v-if="isSuper">
                           <Tooltip placement="top" v-if="!l.isMute">
-                            <Button size="small" @click.native="showMuteAlert(l.byUserId)">mute user</Button>
+                            <Button size="small" @click.native="showMuteAlert(l.byUserId)">
+                              <Icon type="md-mic" title="mute user"/>
+                            </Button>
                             <div slot="content">
                               disable permission to reply
                             </div>
                           </Tooltip>
-                          <Button size="small" v-else @click.native="muteUser('remove', l.byUserId)">remove mute</Button>
+                          <Button size="small" v-else @click.native="muteUser('remove', l.byUserId)">
+                            <Icon type="md-mic-off" title="remove mute"/>
+                          </Button>
                           <Divider type="vertical"/>
                         </template>
                         <!-- 回复 -->
@@ -800,6 +729,7 @@
                 <Page :page-size="timeline.limit"
                       :current="timeline.page"
                       :total="timeline.total"
+                      @on-change="handlePageChange"
                       simple
                       class="page"
                       size="small"/>
@@ -903,30 +833,6 @@
             <Form ref='verifyForm' label-position="top">
               <Row :gutter="30">
                 <Col :xs="{span:24}" :lg="{span: 12}">
-                  <FormItem :label="$t(`detail.judgement.game`)">
-                    <Select v-model="verify.game">
-                      <Option :value="c_i"
-                              :label="$t(`basic.games.${c_i}`)"
-                              v-for="c_i in cheater.games" :key="c_i.value">
-                        <Row :gutter="10" type="flex" align="middle">
-                          <Col flex="1">
-                            <Tooltip :content="$t('basic.games.' + c_i)">
-                              <Tag type="border">
-                                <img height="12" :src="require('/src/assets/images/games/' + c_i + '/logo.png')"/>
-                              </Tag>
-                            </Tooltip>
-                          </Col>
-                          <Col>
-                            {{ $t(`basic.games.${c_i}`) }}
-                          </Col>
-                        </Row>
-                      </Option>
-                    </Select>
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row :gutter="30">
-                <Col :xs="{span:24}" :lg="{span: 12}">
                   <FormItem :label="$t(`detail.judgement.behavior`)">
                     <Select v-model="verify.status">
                       <!-- 判断选项 -->
@@ -950,8 +856,8 @@
                   </FormItem>
                 </Col>
                 <Col :xs="{span:24}" :lg="{span: 12}">
-                  <FormItem :label="$t(`detail.judgement.methods`)">
-                    <Select v-model="verify.checkbox" multiple :disabled="!['kill','guilt'].includes(verify.status)">
+                  <FormItem v-show="['kill','guilt'].includes(verify.status)" :label="$t(`detail.judgement.methods`)">
+                    <Select v-model="verify.checkbox" multiple>
                       <Option v-for="method in cheatMethodsGlossary" :key="method.value"
                               :value="method.value"
                               :label="$t(`cheatMethods.${method.value}.title`)">
@@ -1004,41 +910,12 @@
                                 ref="judgementTextarea"
                                 :height="'250px'"
                                 :placeholder="$t(`detail.info.writeSomething`)"></Textarea>
-                      <Divider content-position="left"><span style="color: #3d3a42">Fast Reply</span></Divider>
-                      <Row :gutter="20" style="padding: 5px 15px">
-                        <Col flex="1">
-                          <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
-                            <Checkbox :label="i.content" v-for="(i, index) in fastReply.content" :key="index">
-                              {{ $t('detail.info.fastReplies.' + i.text) }}
-                            </Checkbox>
-                          </CheckboxGroup>
-                        </Col>
-                        <Col>
-                          <a href="javascript:void(0)" @click="fastReply.mode = true">
-                            <Icon type="md-settings" size="18"/>
-                          </a>
-                          <Drawer :closable="fastReply.mode" v-model="fastReply.mode" width="40%">
-                            <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
-                              <div v-for="(i, index) in fastReply.content" :key="index">
-                                <Checkbox :label="i.content" style="width: 100%">
-                                  <b>{{ $t('detail.info.fastReplies.' + i.text) }}</b>
-                                  <Input v-model="i.content" maxlength="100" :rows="4" show-word-limit type="textarea"></Input>
-                                </Checkbox>
-                                <Divider></Divider>
-                              </div>
-                            </CheckboxGroup>
-                          </Drawer>
-                        </Col>
-                      </Row>
-                      <Divider content-position="left"><span style="color: #3d3a42">Custom Fast Reply</span></Divider>
-                      <div class="customReply">
-                        <CheckboxGroup v-model="fastReply.selected" @on-change="onFastReply">
-                          <Checkbox :label="i" v-for="(i, index) in customReply.list" :key="index">
-                            {{ i }}
-                          </Checkbox>
-                        </CheckboxGroup>
-                        <Button size="small" @click.native="showEditCustomReply">Edit Custom Fast Reply{{ customReply.show }}</Button>
-                      </div>
+
+                      <!-- Fast Reply S -->
+                      <Divider content-position="left" style="margin: 0"></Divider>
+                      <FastReply ref="fastReply" @change="onFastReply"></FastReply>
+                      <!-- Fast Reply E -->
+
                     </Card>
                   </FormItem>
                 </Col>
@@ -1058,13 +935,27 @@
                   </Col>
                   <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
                     <br class="desktop-hide">
-                    <Button type="primary"
-                            size="large"
-                            :long="isMobile"
-                            v-voice-button :loading="verifySpinShow"
-                            @click.stop.prevent="onJudgement">
-                      {{ $t('basic.button.submit') }}
-                    </Button>
+                    <Poptip trigger="hover" content="content" placement="left-start" padding="30" offset="2">
+                      <Button type="primary"
+                              size="large"
+                              :long="isMobile"
+                              v-voice-button :loading="verifySpinShow"
+                              @click.stop.prevent="onJudgement">
+                        {{ $t('basic.button.submit') }}
+                      </Button>
+                      <div slot="content" align="left">
+                        <div>
+                          <Checkbox v-model="verify.isUpdateinformation">{{ $t('detail.info.updateButton') }}</Checkbox>
+                        </div>
+                        <div>
+                          <Checkbox v-model="verify.isSubscribeTrace"
+                                    :disabled="!$store.state.configuration.subscribes">
+                            {{ $t('detail.subscribes.tracking') }}
+                          </Checkbox>
+                        </div>
+                      </div>
+                    </Poptip>
+
                   </Col>
                 </Row>
               </FormItem>
@@ -1096,11 +987,11 @@
 
     <template v-if="!isFull">
       <Affix :top="100">
-        <Card dis-show class="detail-affix mobile-hide">
-          <a href="#up">
+        <Card dis-hover class="detail-affix mobile-hide">
+          <a href="javascript:void(0)" @click="onRollingNode(0)">
             <Icon type="md-arrow-round-up" size="30"/>
           </a>
-          <a href="#reply">
+          <a href="javascript:void(0)" v-if="isLogin" @click="onRollingComment">
             <Icon type="md-chatboxes" size="30"/>
           </a>
         </Card>
@@ -1243,63 +1134,46 @@
         </Row>
       </Modal>
       <!-- 小窗口申诉 E -->
+
+      <!-- 禁言 S -->
+      <Modal
+          v-model="mute.show"
+          @on-ok="modalOk"
+          @on-cancel="mute.show = false">
+        <p slot="header" style="text-align:center">
+          <span>Select the time duration for mute</span>
+        </p>
+        <Form>
+          <FormItem>
+            <Select v-model="mute.value">
+              <Option v-for="item in [
+              {value: 0, text: '10 mins'},
+              {value: 1, text: '1 hr'},
+              {value: 2, text: '12 hrs'},
+              {value: 3, text: '1 day'},
+              {value: 4, text: '1 week'},
+              {value: 5, text: '1 month'}]"
+                      :value="item.value"
+                      :key="item.value">
+                {{ item.text }}
+              </Option>
+            </Select>
+          </FormItem>
+
+          <FormItem>
+            <Checkbox v-model="mute.isNoticeIntraStationUser">是否将此禁令通知玩家？</Checkbox>
+          </FormItem>
+        </Form>
+      </Modal>
+      <!-- 禁言 E -->
     </template>
-    <!-- 禁言 -->
-    <Modal
-        v-model="mute.show"
-        @on-ok="modalOk"
-        @on-cancel="mute.show = false">
-          <p slot="header" style="color:#333; text-align:center">
-            <span>Select the time duration for mute</span>
-          </p>
-          <RadioGroup v-model="mute.value">
-            <Radio label="0">
-              <span>10mins</span>
-            </Radio>
-            <Radio label="1">
-              <span>1hr</span>
-            </Radio>
-            <Radio label="2">
-              <span>12hrs</span>
-            </Radio>
-            <Radio label="3">
-              <span>1day</span>
-            </Radio>
-            <Radio label="4">
-              <span>1week</span>
-            </Radio>
-            <Radio label="5">
-              <span>1month</span>
-            </Radio>
-          </RadioGroup>
-    </Modal>
-    <Modal
-        v-model="customReply.show"
-        @on-ok="editCustomReplyComfrim"
-        @on-cancel="customReply.show = false">
-        <div class="addCustomReplyContent">
-          <Checkbox-group v-model="customReply.addValue">
-            <div class="replyItem" v-for="item in customReply.addList" :key="item">
-              <Checkbox :label="item">{{item}}</Checkbox>
-            </div>
-          </Checkbox-group>
-          <div class="addCustomReply">
-            <textarea v-model="customReply.new" />
-          </div>
-          <Button @click.native="AddNewCustomReply">add</Button>
-        </div>
-        <div slot="footer">
-            <Button size="large" @click="customReply.show = false">cancel</Button>
-            <Button size="large" type="primary" @click="editCustomReplyComfrim">confirm</Button>
-        </div>
-    </Modal>
   </div>
 </template>
 
 <script>
-import {api, http, http_token, util, message, time, storage, account_storage} from '../assets/js/index'
+import {api, http, http_token, util, message, time, storage, account_storage, mail} from '../assets/js/index'
 
-import BFBAN from "/src/assets/js/bfban";
+import BFBAN from "/src/assets/js/application";
 import Empty from '../components/Empty.vue'
 import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
@@ -1308,6 +1182,8 @@ import Captcha from "../components/Captcha";
 import Html from "@/components/Html";
 import HtmlWidget from "../components/HtmlWidget";
 import PrivilegesTag from "/src/components/PrivilegesTag";
+import FastReply from "@/components/FastReply";
+import htmllink from "@/components/HtmlLink";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
@@ -1316,7 +1192,10 @@ export default new BFBAN({
     return {
       util,
       mute: {
-        value: '0', id: '', show: false
+        value: 0,
+        id: '',
+        isNoticeIntraStationUser: false,
+        show: false
       },
       subscribes: {
         load: false,
@@ -1331,7 +1210,6 @@ export default new BFBAN({
         content: ''
       },
       cheater: {
-        sentryRank: 1,
         originId: '',
         createTime: time.appStart(),
         updateTime: time.appStart()
@@ -1346,23 +1224,13 @@ export default new BFBAN({
         captchaUrl: {},
       },
       fastReply: {
-        content: [{
-          text: 'stats',
-          content: this.$i18n.t('detail.info.fastReplies.stats')
-        }, {
-          text: 'evidencePic',
-          content: this.$i18n.t('detail.info.fastReplies.evidencePic')
-        }, {
-          text: 'evidenceVid',
-          content: this.$i18n.t('detail.info.fastReplies.evidenceVid')
-        }],
-        mode: false,
         selected: [],
       },
 
       verify: {
+        isSubscribeTrace: false,
+        isUpdateinformation: false,
         status: 0,
-        game: '',
         checkbox: [],
         choice: [],
         suggestion: '',
@@ -1371,8 +1239,8 @@ export default new BFBAN({
       timelineList: [],
       timeline: {
         sort: '1',
-        skip: 0,
-        limit: 100,
+        skip: 1,
+        limit: 20,
         total: 0,
         seeType: 1,
         seeTypeList: [
@@ -1412,17 +1280,21 @@ export default new BFBAN({
       replyModal: false,
       updateUserInfospinShow: false,
       updateCheaterModal: false,
-      cheatMethodsGlossary: null,
-      customReply: {
-        list: [],
-        show: false,
-        addList: [],
-        addValue: [],
-        new: ''
-      }
+      cheatMethodsGlossary: null
     }
   },
-  components: {Empty, Textarea, BusinessCard, RecordLink, Captcha, Html, HtmlWidget, PrivilegesTag},
+  components: {
+    Empty,
+    Textarea,
+    BusinessCard,
+    RecordLink,
+    Captcha,
+    Html,
+    HtmlWidget,
+    PrivilegesTag,
+    FastReply,
+    htmllink
+  },
   watch: {
     '$route': 'loadData',
     'fastReply.selected': function () {
@@ -1432,51 +1304,8 @@ export default new BFBAN({
   created() {
     this.http = http_token.call(this);
     this.loadData();
-    let customReply = localStorage.getItem('customReply')
-    customReply = customReply ? customReply.split('&') : []
-    this.customReply.list = customReply
   },
   methods: {
-    AddNewCustomReply() {
-      const newValue = this.customReply.new
-      this.customReply.addList.push(newValue)
-      this.customReply.addValue.push(newValue)
-      this.customReply.new = ''
-      console.log(this.customReply.addList)
-      console.log(this.customReply.addValue)
-    },
-    showEditCustomReply() {
-      this.customReply.addList = [...this.customReply.list]
-      this.customReply.addValue = [...this.customReply.list]
-      this.customReply.show = true
-    },
-    editCustomReplyComfrim() {
-      this.customReply.list = [...this.customReply.addValue]
-      this.customReply.show = false
-      localStorage.setItem('customReply', this.customReply.list.join('&'))
-    },
-    showMuteAlert(id) {
-      this.mute.id = id
-      this.mute.show = true
-    },
-    modalOk() {
-      this.muteUser('add', this.mute.id, this.mute.value)
-    },
-    muteUser(type, id, value = 0) {
-      this.http.post(api["mute_user"], {
-        data: {
-          type, id, value
-        }
-      }).then(res => {
-        const d = res.data;
-        if (d.success == 1) {
-          this.getTimeline();
-          this.$Message.success({content: d.message || d.code, duration: 3});
-          return;
-        }
-        this.$Message.error({content: d.message || d.code, duration: 3});
-      })
-    },
     async loadData() {
       this.$Loading.start();
 
@@ -1496,13 +1325,61 @@ export default new BFBAN({
         this.verify.status = this.verify.choice[0].value;
       });
 
-      await this.getJudgmentResult()
       await this.getPlayerInfo()
       await this.getTimeline()
 
       this.onMergeHistoryName()
 
       this.$Loading.finish();
+    },
+    /**
+     * 时间轴分页事件
+     */
+    handlePageChange(num) {
+      this.timeline.skip = num;
+      this.getTimeline();
+
+      const commentNode = document.getElementById('timeline');
+      this.onRollingNode(commentNode.offsetTop);
+    },
+    showMuteAlert(id) {
+      this.mute.id = id
+      this.mute.show = true
+    },
+    modalOk() {
+      this.muteUser('add', this.mute.id, this.mute.value)
+    },
+    /**
+     * 禁言
+     * @param type 禁言or移除
+     * @param id user id
+     * @param muteTime 时间
+     * @returns {boolean}
+     */
+    muteUser(type, id, muteTime = 0) {
+      const {isNoticeIntraStationUser} = this.mute;
+
+      if (!muteTime && !id && !type) return false;
+
+      this.http.post(api["admin_muteUser"], {
+        data: {
+          data: {type, id, value: muteTime},
+          isNotice: isNoticeIntraStationUser,
+          language: mail.exchangeLangField(this.$root.$i18n.locale)
+        },
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.getTimeline();
+          this.$Message.success({content: d.message || d.code, duration: 3});
+          return;
+        }
+
+        this.$Message.error({content: d.message || d.code, duration: 3});
+      }).catch(err => {
+        this.$Message.error(err.code);
+      })
     },
     /**
      * 合并时间轴历史名称
@@ -1555,6 +1432,7 @@ export default new BFBAN({
     },
     /**
      * 追踪此玩家
+     * 此项操作会存进账户配置字段内
      */
     onSubscribes() {
       let subscribesLocal = storage.get('user.subscribes');
@@ -1621,12 +1499,15 @@ export default new BFBAN({
 
       if (!id) return;
 
-      // 在持久下存在此id，则不请求
-      if (viewed && viewed.data && viewed.data.value[id]) {
+      // 校验,含id且1天内，则不更新游览值
+      if (viewed &&
+          viewed.data &&
+          viewed.data.value[id] < viewed.data.value[id] + 24 * 60 * 60 * 1000
+      ) {
         return;
       }
 
-      // 实例object
+      // 创建完整 Object
       if (!(viewed && viewed.data && viewed.data.value)) {
         viewed = {
           data: {value: {}}
@@ -1639,21 +1520,8 @@ export default new BFBAN({
         }
       }).then(res => {
         storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
+        this.cheater.viewNum++;
       });
-    },
-    /**
-     * 判决结果
-     */
-    async getJudgmentResult() {
-      const id = this.$route.params.ouid;
-
-      return await new Promise(resolve => {
-        http.get(api["player_judgmentResult"], {
-          params: {
-            personaId: id
-          }
-        }).finally(() => resolve());
-      })
     },
     /**
      * 获取基本字段
@@ -1695,24 +1563,9 @@ export default new BFBAN({
           const d = res.data;
 
           if (d.success === 1) {
-            this.cheater = Object.assign({
-              sentryRank: 2, sentryRankMarks: {
-                1: {
-                  label: this.$createElement('strong', 'lower')
-                },
-                2: {
-                  label: this.$createElement('strong', 'medium')
-                },
-                3: {
-                  label: this.$createElement('strong', 'higher')
-                }
-              }
-            }, d.data);
+            this.cheater = d.data;
 
-            // 初始判决游戏
-            if (d.data.games.length == 1) {
-              this.verify.game = d.data.games[0];
-            }
+            this.$refs.recordLink.generateTable(this.cheater);
             return;
           }
 
@@ -1741,9 +1594,9 @@ export default new BFBAN({
         const that = this;
         this.spinShow = true;
 
-        this.http.get(api["account_timeline"], {
+        this.http.get(api["player_timeline"], {
           params: Object.assign({
-            skip: this.timeline.skip,
+            skip: (this.timeline.skip - 1) * this.timeline.limit,
             limit: this.timeline.limit
           }, {personaId: this.getParamsIds('personaId')})
         }).then(res => {
@@ -1766,6 +1619,7 @@ export default new BFBAN({
             });
 
             this.timelineList = d.data.result;
+            this.timeline.total = d.data.total;
 
             // 排序
             this.onTimeLineSort();
@@ -1798,8 +1652,23 @@ export default new BFBAN({
             urlOffsetTop.offsetParent.className = className;
         }, 10000);
 
-        document.documentElement.scrollTop = urlOffsetTop.offsetParent.offsetParent.offsetTop;
+        this.onRollingNode(urlOffsetTop.offsetParent.offsetParent.offsetTop);
       }
+    },
+    /**
+     * 滚动到评论区
+     */
+    onRollingComment() {
+      const commentNode = document.getElementById('reply');
+
+      this.onRollingNode(commentNode.offsetTop + commentNode.offsetHeight);
+    },
+    /**
+     * 滚动位置
+     * @param scrollTopNumber
+     */
+    onRollingNode(scrollTopNumber) {
+      document.documentElement.scrollTop = scrollTopNumber;
     },
     /**
      * 分享楼层
@@ -1860,10 +1729,6 @@ export default new BFBAN({
       const cheatMethods = this.verify.checkbox;
 
       if (this.verifySpinShow) return;
-      if (!this.verify.game) {
-        this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
-        return false;
-      }
       if ((['kill', 'guilt'].includes(status) && cheatMethods == '') || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
@@ -1878,12 +1743,20 @@ export default new BFBAN({
         return false;
       }
 
+      // 额外事件
+      if (this.verify.isUpdateinformation) {
+        this.updateCheaterInfo()
+      }
+      if (this.verify.isSubscribeTrace) {
+        this.onSubscribes()
+      }
+
+      // 判决处理
       this.verifySpinShow = true;
       this.http.post(api["player_judgement"], {
         data: {
           data: {
             toPlayerId: this.cheater.id,
-            cheatGame: this.verify.game,
             cheatMethods: ['kill', 'guilt'].includes(this.verify.status) ? cheatMethods : null,
             action: this.verify.status,
             content: formatTextarea(suggestion),
@@ -1914,6 +1787,8 @@ export default new BFBAN({
         message.playSendVoice();
 
         this.verifySpinShow = false;
+        this.verify.isSubscribeTrace = !this.verify.isSubscribeTrace;
+        this.verify.isUpdateinformation = !this.verify.isUpdateinformation;
       })
     },
     /**
@@ -1981,6 +1856,8 @@ export default new BFBAN({
     /**
      * 回复
      * 1. 对举报的回复 2. 对回复的回复
+     * @param floor string 楼层
+     * @param userId string 回复id
      */
     handleReply(floor, userId) {
       this.reply.toFloor = floor === 'undefined' ? '' : floor;
@@ -2007,8 +1884,8 @@ export default new BFBAN({
      * 用户评论/回复
      */
     onReply() {
-      if(this.$store.state.$userinfo) {
-        if(!(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
+      if (this.$store.state.$userinfo) {
+        if (!(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
           this.$Message.error({content: this.$i18n.t("detail.messages.tipBind"), duration: 3});
           setTimeout(() => {
             this.$router.push({
@@ -2069,11 +1946,8 @@ export default new BFBAN({
     /**
      * 更新玩家信息
      * update cheater
-     * @param event $event
      */
-    updateCheaterInfo(event) {
-      waitForAction.call(event.target, 60);
-
+    updateCheaterInfo() {
       if (!this.$store.state.user) {
         this.$Message.error(this.$i18n.t('detail.messages.signIn'));
         return false;
@@ -2119,10 +1993,14 @@ export default new BFBAN({
     /**
      * 判决快速模板
      */
-    onFastReply() {
+    onFastReply(data) {
+      this.fastReply.selected = data;
+
       if (this.$refs.judgementTextarea && this.fastReply.selected.length > 0) {
         this.$refs.judgementTextarea.updateContent(this.fastReply.selected.toString());
       }
+
+      if (data.length == 0) this.$refs.judgementTextarea.updateContent('');
     },
     /**
      * 左侧申诉面板开关
@@ -2139,16 +2017,10 @@ export default new BFBAN({
       const {privilege = []} = userinfo
       return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
     },
-    throughSentryRank() {
-      let status = this.cheater.status || 0;
-      if (this.cheater.sentryRank >= 2) {
-        for (const cheatStatusKey in this.cheater.cheatStatus) {
-          if (this.cheater.cheatStatus[cheatStatusKey] == 1) status = 1;
-        }
-      } else if (this.cheater.sentryRank == 1 && this.cheater.cheatStatus) {
-        status = Math.max(...Object.values(this.cheater.cheatStatus));
-      }
-      return status;
+    isSuper() {
+      const {userinfo} = this.$store.state.user || {}
+      const {privilege = []} = userinfo
+      return privilege.includes('super') || privilege.includes('root') || privilege.includes('dev')
     }
   }
 })
@@ -2156,127 +2028,7 @@ export default new BFBAN({
 
 <style lang="less">
 @import "@/assets/css/icon.less";
-.customReply {
-  padding: 0 10px 20px;
-}
-.replyItem {
-  margin-bottom: 10px;
-}
-.addCustomReply {
-  display: flex;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  textarea {
-    flex: 1;
-    border: 1px solid #ed4014;
-    border-radius: 4px;
-    padding: 10px;
-    height: 100px;
-  }
-}
-.addCustomReplyContent {
-  padding-top: 30px;
-}
-.timeline-time-line {
-  padding-top: 10px !important;
-
-  .timeline-scroll-floor {
-    animation: scrollFloor 1s infinite;
-  }
-
-  @keyframes scrollFloor {
-    0% {
-      background: hsla(yellow, 10%);
-    }
-    50% {
-      background: transparent;
-    }
-    100% {
-      background: hsla(yellow, 10%);
-    }
-  }
-
-  .timeline-content {
-    position: relative;
-
-    // force to wrap
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    margin-left: 3rem;
-  }
-
-  .timeline-content-footer {
-    margin-left: 3rem;
-    margin-top: 10px;
-  }
-
-  .ivu-timeline-item-tail {
-    margin-left: 15px;
-  }
-
-  .ivu-timeline-item-head {
-    margin-top: 10px !important;
-  }
-
-  .ivu-timeline-item {
-    padding: 1rem 0;
-  }
-
-  .ivu-timeline-item-content {
-    padding: 0 0 0 24px;
-  }
-
-  .ivu-timeline-item-tail {
-    top: 1rem;
-    border-width: .3rem !important;
-  }
-}
-
-.timeline-time-dot {
-  width: 40px;
-  margin-left: 15px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@media screen and (max-width: 980px) {
-  .timeline-time-dot {
-    width: 25px;
-    height: 25px;
-    margin-left: 5px;
-  }
-
-  .timeline-time-line {
-    .ivu-timeline-item-tail {
-      margin-left: -2px;
-    }
-
-    .timeline-content {
-      margin-left: 35px;
-    }
-
-    .ivu-timeline-item-head {
-      margin-top: 5px !important;
-    }
-
-    .ivu-timeline-item-content {
-      padding: 0 4px;
-    }
-  }
-}
-
-.timeline-description {
-  .timeline-reply-description {
-    margin: 10px 10px 0 10px;
-
-    .timeline-reply-description-title {
-      margin: 10px 15px 0 15px;
-    }
-  }
-}
+@import "@/assets/css/avatar.less";
 
 .detail-userinfo-card {
   display: flex;
@@ -2290,7 +2042,7 @@ export default new BFBAN({
 }
 
 .detail-affix {
-  position: fixed;
+  position: fixed !important;
   right: calc(50% - (960px / 2) - 85px) !important;
   top: 30% !important;;
   transform: translateY(-30%) !important;;
@@ -2302,8 +2054,9 @@ export default new BFBAN({
   }
 }
 
-@media screen and (min-width: 1180px) {
+@media screen and (max-width: 1080px) {
   .detail-affix {
+    opacity: .2;
     display: none !important;
   }
 }

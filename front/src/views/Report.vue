@@ -301,7 +301,7 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 import Html from "@/components/Html";
 import Captcha from "@/components/Captcha";
 
@@ -312,7 +312,7 @@ import Textarea from "@/components/Textarea.vue";
 import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       voiceReportManagement: voice,
@@ -486,7 +486,7 @@ export default new BFBAN({
               this.refreshCaptcha();
             }
           })
-        } 
+        }
       }else {
         this.$Message.error({content: this.$i18n.t("report.messages.tipBind"), duration: 3});
         setTimeout(() => {
@@ -580,7 +580,7 @@ export default new BFBAN({
 </script>
 
 <style lang="less" scoped>
-@import "./src/assets/css/radio.less";
+@import "@/assets/css/radio.less";
 
 .report-description-box {
   display: block;

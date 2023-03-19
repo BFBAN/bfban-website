@@ -34,7 +34,7 @@
                     style="background-color: yellow"
                     size="150"
                     icon="ios-person"
-                    :src="account.userAvatar ? `${account.userAvatar}?s=150` : false"></Avatar>
+                    :src="account.userAvatar ? `${account.userAvatar}` : ''"></Avatar>
 
             <h1 :title="$t('account.username')" class="account-username">
               {{ account.username || 'username' }}
@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 import Empty from "@/components/Empty";
 import {api, http, http_token} from '../assets/js/index'
 
@@ -141,7 +141,7 @@ import PrivilegesTag from "/src/components/PrivilegesTag";
 
 import games from '/public/conf/gameName.json'
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       games: games.child,

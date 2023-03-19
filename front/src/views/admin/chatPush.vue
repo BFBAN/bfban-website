@@ -1,6 +1,6 @@
 <template>
   <Tabs :value="tagsName">
-    <TabPane :label="$t('profile.chat.tabsSend.itemName')" name="message0" v-if="isAdmin">
+    <TabPane :label="$t('profile.chat.tabsSend.itemName')" name="chat" v-if="isAdmin">
       <Card dis-hover>
         <Form slot="title" :model="message" :rules="message.ruleValidate">
           <Row :gutter="30">
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import BFBAN from "/src/assets/js/bfban";
+import Application from "/src/assets/js/application";
 
 import {api, http, http_token, message} from "../../assets/js";
 
@@ -71,10 +71,11 @@ import BusinessCard from "/src/components/businessCard.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import messageConf from "/public/conf/message.json";
 
-export default new BFBAN({
+export default new Application({
   name: "messagePush",
   data() {
     return {
+      tagsName: 'chat',
       message: {
         list: messageConf.sendTypes,
         typeDictionary: messageConf.typeDictionary,

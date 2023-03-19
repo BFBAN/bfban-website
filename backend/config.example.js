@@ -1,39 +1,44 @@
 "use strict";
-import fs from "fs";
 import path from "path";
 
 const config = {
     // security
-    __DEBUG__: false, // WARNING: THIS WILL ENABLE NO AUTH & NO CAPTCHA FEATHURE
+    __DEBUG__: false, // WARNING: THIS WILL ENABLE NO AUTH & NO CAPTCHA FEATURE
     secret: 'dontTellAnyOneAboutThis',  // key to sign jwt and other thing
-    captchaExpiresIn: 1000*60*20,       // 2 minutes
-	userTokenExpiresIn: 1000*60*60*24*7, // 7 day
-    errorHelperVerbose: process.env.NODE_ENV==='production'? false : true,  // make the error readable to client
+    captchaExpiresIn: 1000 * 60 * 20,       // 2 minutes
+    userTokenExpiresIn: 1000 * 60 * 60 * 24 * 7, // 7 day
+    errorHelperVerbose: process.env.NODE_ENV !== 'production',  // make the error readable to client
     // runtime
     port: process.env.port || 4002,
-    address: true? '127.0.0.1' : '0.0.0.0',
+    address: '0.0.0.0',
     baseDir: path.resolve('./'),
     behindProxy: 0,
-	pollingTimeout: 90*1000,
+    pollingTimeout: 90 * 1000,
     // database
     mysql: {
         host: '127.0.0.1',
         port: 3306,
-        user: 'notroot',
-        password: 'weakpasswd',
+        user: 'not root',
+        password: 'weak passwd',
         database: 'bfban_2.0'
     },
     // using cloudflare?
     cloudflare: true,
     // github
-    github: {
-
+    github: {},
+    // Go to https://akismet.com to generate the key
+    // isEnable: Is it detected
+    // debug: If enabled, the submitted data does not affect akismet and is only used for testing purposes
+    akismet: {
+        key: 'your Akismet key',
+        isEnable: true,
+        debug: true,
     },
     // gravatar
     gravatar: {
         domain: 'https://www.gravatar.com'
     },
-	webhook: {
+    webhook: {
         senderUrl: '',	// use cloudflare worker to proxy webhook request
         token: '',		// token it use
     },
@@ -42,19 +47,11 @@ const config = {
         port: 465,
         secure: true,
         user: 'somebody@somewhere.com',
-        password: 'notweakpassword',
+        password: 'not weak password',
         domain: {
+            // Do not add '/', only the protocol + domain name
             origin: 'you website domain'
         },
-    },
-    docs: {
-        info: {
-            title: 'BFBAN V2 DOCS',
-            version: '2.0.0',
-            description: '',
-        },
-        host: '127.0.0.1:3000',
-        basePath: '/',
     },
     services: {
         // deployment has 3 mode: THREAD, PROCESS, none
@@ -74,12 +71,20 @@ const config = {
         }
     },
     // DYNAMIC CONFIGURE BEGIN
-	supportLanguages: ['zh-CN', 'en-US'],
+    supportLanguages: ['zh-CN', 'en-US'],
     personsToConfirm: 2,
-	personsToReview: 2,
-    supportGames: [ 'bf1', 'bfv' ],
-    possiblecheatMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet', 
-    'damageChange', 'gadgetModify', 'teleport', 'attackServer'],
+    personsToReview: 2,
+    // to [https://accounts.ea.com/connect], get Cookie, key: remid and sid
+    originAccounts: [
+        {
+            tag: '',
+            remid: '',
+            sid: ''
+        },
+    ],
+    supportGames: ['bf1', 'bfv', 'bf6'],
+    possiblecheatMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet',
+        'damageChange', 'gadgetModify', 'teleport', 'attackServer'],
     // DYNAMIC CONFIGURE END
 }
 

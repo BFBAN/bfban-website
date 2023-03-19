@@ -96,12 +96,12 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 import {http, api, conf, mail} from '../assets/js/index'
 import EmailTip from "../components/EmailTip";
 import Captcha from "../components/Captcha";
 
-export default new BFBAN({
+export default new Application({
   name: 'forgetPassword',
   data() {
     return {

@@ -89,9 +89,9 @@ import voice from "./voice";
 import history from "./history";
 import subscribes from "./subscribes"
 import {account_storage} from "@/assets/js";
-import BFBAN from "@/assets/js/bfban";
+import Application from "@/assets/js/application";
 
-export default new BFBAN({
+export default new Application({
   name: "profile",
   data() {
     return {

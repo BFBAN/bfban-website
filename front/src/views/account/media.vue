@@ -123,12 +123,12 @@ export default {
         callback(data);
       }, 2000);
     },
-    handlePageChange (val) {
-      this.media.skip = val;
+    handlePageChange (num) {
+      this.media.skip = num;
       this.getMedia();
     },
-    handlePageSizeChange (val) {
-      this.media.limit = val;
+    handlePageSizeChange (num) {
+      this.media.limit = num;
       this.getMedia();
     },
     /**

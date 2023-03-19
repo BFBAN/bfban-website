@@ -5,3 +5,37 @@ body, html {
 body .user-select-none {
   user-select: none;
 }
+
+.styles_herosection {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 0;
+
+  .styles_bg {
+    background: linear-gradient(302.61deg, rgba(255,243,59,0.22) -0.71%, #f1e0ff 89.57%);
+    filter: blur(70px);
+    transform: rotate(105deg);
+    height: 500px;
+    width: 500px;
+    z-index: -2;
+    position: absolute;
+    top: 30px;
+
+    animation: styles_herosection_animation 25s infinite;
+  }
+
+  .styles_bg_img {
+    height: 500px;
+    position: relative;
+  }
+}
+
+@keyframes styles_herosection_animation {
+  0% {
+    transform: rotate(-210deg);
+  }
+  100% {
+    transform: rotate(105deg);
+  }
+}

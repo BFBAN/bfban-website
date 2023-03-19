@@ -1,21 +1,20 @@
 import express from "express";
 import moment from "moment"
-import {check, body as checkbody, query as checkquery, validationResult} from "express-validator";
+import {body as checkbody, query as checkquery, validationResult} from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
 import {verifyJWT} from "../middleware/auth.js";
-import {allowPrivileges, forbidPrivileges} from "../middleware/auth.js";
-import {sendMessage} from "./message.js";
+import {allowPrivileges} from "../middleware/auth.js";
+import {localeMessage, sendMessage} from "./message.js";
 import {generatePassword, privilegeGranter, privilegeRevoker, userHasRoles} from "../lib/auth.js";
 import {initUserStorageQuota, userDefaultAttribute, userSetAttributes} from "../lib/user.js";
 import got from "got";
-import verifyCaptcha from "../middleware/captcha.js";
-import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
+import {ServiceApiError} from "../lib/serviceAPI.js";
 import * as misc from "../lib/misc.js";
-import {sendRegisterVerify} from "../lib/mail.js";
 import logger from "../logger.js";
 import {siteEvent} from "../lib/bfban.js";
+import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 const router = express.Router();
 
@@ -32,12 +31,12 @@ async (req, res, next) => {
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
 
-        const type = req.query.type != undefined ? req.query.type : 'all';
-        const skip = req.query.skip != undefined ? req.query.skip : 0;
-        const limit = req.query.limit != undefined ? req.query.limit : 20;
+        const type = req.query.type !== undefined ? req.query.type : 'all';
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
 
-        let total = 0;
+        let total;
         let result;
 
         switch (type) {
@@ -61,28 +60,60 @@ async (req, res, next) => {
                 result = await db.select('*').from('users')
                     .where('users.username', 'like', `%${req.query.name}%`)
                     .select('users.*', 'users.username', 'users.privilege')
-                    .orderBy('users.createTime', order).offset(skip).limit(limit);
+                    .orderBy('users.createTime', order)
+                    .offset(skip).limit(limit);
 
                 total = await db.count({num: 1}).from('users').first().then(r => r.num);
                 break;
         }
-        
+
         if (result) {
-          const now = new Date()
-          result.forEach(i => {
-            delete i.password;
-            delete i.subscribes;
-            if(i.attr.mute) {
-              const date = new Date(i.attr.mute)
-              if(date - now > 0) {
-                i.isMute = true
-              }
-            }
-            return i;
-          });
+            const now = new Date()
+            result.forEach(i => {
+                delete i.password;
+                delete i.subscribes;
+                if (i.attr.mute) {
+                    const date = new Date(i.attr.mute)
+                    if (date - now > 0) {
+                        i.isMute = true
+                    }
+                }
+                return i;
+            });
         }
-            
-        return res.status(200).json({success: 1, code: 'searchUser.ok', data: result, total});
+
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+            success: 1,
+            code: 'searchUser.ok',
+            data: result,
+            total
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/blockedUserAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('limit').optional().isInt({min: 0, max: 100})
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'admin.blockedUserAll.bad', message: validateErr.array()});
+
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
+
+        let total = await db.count({num: 1}).from('users')
+            .where('users.valid', 0)
+            .first().then(r => r.num);
+        let result = await db.select('*').from('users')
+            .where('users.valid', 0)
+            .offset(skip).limit(limit);
+
+        return res.status(200).json({success: 1, code: 'admin.blockedUserAll.ok', data: result, total});
     } catch (err) {
         next(err);
     }
@@ -99,14 +130,14 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
         try {
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'comment.bad', message: validateErr.array()});
+                return res.status(400).json({error: 1, code: 'admin.commentAll.bad', message: validateErr.array()});
 
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
             const order = req.query.order ? req.query.order : 'desc';
 
             let type = req.query.type;
-            const game = (req.query.game && req.query.game != 'all') ? req.query.game : '';
+            const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
 
             const total = await db.count({num: 1}).from('comments').first().then(r => r.num);
 
@@ -122,7 +153,7 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
                     return i
                 }));
 
-            return res.status(200).json({success: 1, code: 'comment.ok', data: result, total});
+            return res.status(200).json({success: 1, code: 'admin.commentAll.ok', data: result, total});
         } catch (err) {
             next(err);
         }
@@ -132,39 +163,50 @@ router.post('/setComment', verifyJWT, allowPrivileges(["super", "root", "dev"]),
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.content').isString().isLength({max: 65535}),
     checkbody('data.videoLink').optional().isURL().isLength({max: 255}),
+    checkbody('data.isSpam').optional().isBoolean(),
+    checkbody('data.valid').optional().isInt({min: 0, max: 1})
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'setComment.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'admin.setComment.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").Comment} */
+        const isSpam = req.query.data.includes('isSpam') ? req.query.data.isSpam : false;
+        const valid = req.query.data.valid ? req.query.data.valid : null;
         const comment = await db.select('*').from('comments').where({id: req.body.data.id}).first();
         if (!comment)
-            return res.status(404).json({error: 1, code: 'setComment.notFound'});
+            return res.status(404).json({error: 1, code: 'admin.setComment.notFound'});
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setComment', target: comment.id}));
-        if (req.body.data.content.length == 0 && !req.body.data.videoLink)
+
+        if (req.body.data.content.length === 0 && !req.body.data.videoLink)
             await db('comments').delete().where({id: comment.id});
         else {
             comment.content = req.body.data.content;
-            comment.videoLink = comment.type == 'report' ? (req.body.data.videoLink ? req.body.data.videoLink : comment.videoLink) : undefined;
+            comment.videoLink = comment.type === 'report' ? (req.body.data.videoLink ? req.body.data.videoLink : comment.videoLink) : undefined;
             await db('comments').update({
                 content: comment.content,
                 videoLink: comment.videoLink
             }).where({id: comment.id});
         }
 
+        if (valid != null) {
+            await db('comments').update({
+                valid: valid
+            }).where({id: comment.id})
+        }
+
         await db('operation_log').insert({
             byUserId: req.user.id,
             toUserId: comment.toPlayerId,
             action: 'edit',
-            role: 'comment',
+            role: isSpam ? 'spam' : 'comment',
             createTime: new Date()
         });
 
-        return res.status(200).json({success: 1, code: 'setComment.ok'});
+        return res.status(200).json({success: 1, code: 'admin.setComment.ok'});
     } catch (err) {
         next(err);
     }
@@ -179,14 +221,14 @@ async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'setComment.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'admin.setUser.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
         const user = await db.select('*').from('users').where({id: req.body.data.id}).first();
         if (!user)
-            return res.status(404).json({error: 1, code: 'setUser.notFound'});
+            return res.status(404).json({error: 1, code: 'admin.setUser.notFound'});
         const role = req.body.data.role;
-        if (req.body.data.action == 'grant') {
+        if (req.body.data.action === 'grant') {
             const devCan = ['normal', 'bot', 'blacklisted', 'freezed'],
                 superCan = ['normal', 'admin', 'blacklisted', 'freezed'],
                 rootCan = ['normal', 'admin', 'bot', 'super', 'dev', 'blacklisted', 'freezed'];
@@ -196,11 +238,11 @@ async (req, res, next) => {
             flag = (userHasRoles(req.user, ['super']) && superCan.includes(role)) ? true : flag;
             flag = (userHasRoles(req.user, ['root']) && rootCan.includes(role)) ? true : flag;
             // check if user trying to grant 'blacklisted' or 'freezed' role to someone who have higher permission
-            flag = (['blacklisted', 'freezed'].includes(role) && user.privilege.filter(i => ['admin', 'super', 'dev', 'root'].includes(i)).length == 0) ? false : flag;
+            flag = (['blacklisted', 'freezed'].includes(role) && user.privilege.filter(i => ['admin', 'super', 'dev', 'root'].includes(i)).length === 0) ? false : flag;
             if (flag)
                 user.privilege = privilegeGranter(user.privilege, role);
             else
-                return res.status(403).json({error: 1, code: 'setUser.permissionDenied'});
+                return res.status(403).json({error: 1, code: 'admin.setUser.permissionDenied'});
         } else {    // revoke permission
             const devCanNot = ['dev', 'admin', 'super', 'root'],
                 superCanNot = ['super', 'root', 'dev'],
@@ -213,7 +255,7 @@ async (req, res, next) => {
             if (flag)
                 user.privilege = privilegeRevoker(user.privilege, role);
             else
-                return res.status(403).json({error: 1, code: 'setUser.permissionDenied'});
+                return res.status(403).json({error: 1, code: 'admin.setUser.permissionDenied'});
         }
         await sendMessage(req.user.id, null, "command", JSON.stringify({
             action: 'setUser',
@@ -240,7 +282,7 @@ async (req, res, next) => {
             role: req.body.data.role,
             createTime: new Date()
         });
-        return res.status(200).json({success: 1, code: 'setUser.ok'});
+        return res.status(200).json({success: 1, code: 'admin.setUser.ok'});
     } catch (err) {
         next(err);
     }
@@ -253,8 +295,8 @@ router.get('/judgementLog', verifyJWT, allowPrivileges(["super", "root", "dev"])
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
-        const skip = req.query.skip != undefined ? req.query.skip : 0;
-        const limit = req.query.limit != undefined ? req.query.limit : 20;
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
 
         const total = await db.count({num: 1}).from('comments')
@@ -267,7 +309,7 @@ async (req, res, next) => {
             .orderBy('comments.createTime', order)
             .offset(skip).limit(limit);
 
-        return res.status(200).json({success: 1, code: 'log.ok', data: result, total});
+        return res.status(200).json({success: 1, code: 'admin.log.ok', data: result, total});
     } catch (err) {
         next(err);
     }
@@ -284,8 +326,8 @@ async (req, res, next) => {
     try {
         const createTimeFrom = new Date(req.query.createTimeFrom);
         const createTimeto = new Date(req.query.createTimeto);
-        const skip = req.query.skip != undefined ? req.query.skip : 0;
-        const limit = req.query.limit != undefined ? req.query.limit : 20;
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
 
         const result = await db('comments')
@@ -296,9 +338,9 @@ async (req, res, next) => {
             .andWhere("comments.createTime", ">=", createTimeFrom)
             .andWhere("comments.createTime", "<=", createTimeto)
             .orderBy('users.createTime', order)
-            // .offset(skip).limit(limit);
+        // .offset(skip).limit(limit);
 
-        return res.status(200).json({success: 1, code: 'log.ok', data: result});
+        return res.status(200).json({success: 1, code: 'admin.log.ok', data: result});
     } catch (err) {
         next(err);
     }
@@ -311,8 +353,8 @@ router.get('/chatLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
-        const skip = req.query.skip != undefined ? req.query.skip : 0;
-        const limit = req.query.limit != undefined ? req.query.limit : 20;
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
 
         const total = await db.count({num: 1}).from('messages').first().then(r => r.num);
@@ -321,13 +363,13 @@ async (req, res, next) => {
             .orderBy('messages.createTime', order)
             .offset(skip).limit(limit);
 
-        return res.status(200).json({success: 1, code: 'chatLog.ok', data: result, total,});
+        return res.status(200).json({success: 1, code: 'admin.chatLog.ok', data: result, total,});
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/getUserOperationLogs', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+router.get('/userOperationLogs', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkbody("name").optional().isString(),
         checkquery('skip').optional().isInt({min: 0}),
         checkquery('limit').optional().isInt({min: 0}),
@@ -337,10 +379,14 @@ router.get('/getUserOperationLogs', verifyJWT, allowPrivileges(["super", "root",
         try {
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'userOperationLog.bad', message: validateErr.array()});
+                return res.status(400).json({
+                    error: 1,
+                    code: 'admin.userOperationLogs.bad',
+                    message: validateErr.array()
+                });
 
-            const skip = req.query.skip != undefined ? req.query.skip : 0;
-            const limit = req.query.limit != undefined ? req.query.limit : 20;
+            const skip = req.query.skip !== undefined ? req.query.skip : 0;
+            const limit = req.query.limit !== undefined ? req.query.limit : 20;
             const order = req.query.order ? req.query.order : 'desc';
 
             const result = await db.select('useTab1.username as adminName', 'useTab2.username as userName', 'operation_log.action', 'operation_log.role', 'operation_log.byUserId', 'operation_log.toUserId', 'operation_log.createTime')
@@ -351,7 +397,7 @@ router.get('/getUserOperationLogs', verifyJWT, allowPrivileges(["super", "root",
                 .orderBy('users.createTime', order)
                 .offset(skip).limit(limit);
 
-            return res.status(200).json({success: 1, code: 'userOperationLog.ok', data: result});
+            return res.status(200).json({success: 1, code: 'admin.userOperationLogs.ok', data: result});
         } catch (err) {
             next(err);
         }
@@ -366,7 +412,7 @@ async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'setUserAttr.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'admin.setUserAttr.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
         const userData = await db.select('*').from('users').where({id: req.body.data.id}).first();
@@ -376,7 +422,7 @@ async (req, res, next) => {
         doEditUserData.attr = JSON.stringify(userSetAttributes(userData.attr, req.body.data.attr, true));
 
         // change UserName
-        if (req.body.data.username != undefined)
+        if (req.body.data.username !== undefined)
             doEditUserData.username = req.body.data.username;
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setUserAttr', target: userData.id}));
@@ -389,7 +435,7 @@ async (req, res, next) => {
             createTime: new Date()
         });
 
-        return res.status(200).json({success: 1, code: 'setUserAttr.ok'});
+        return res.status(200).json({success: 1, code: 'admin.setUserAttr.ok'});
     } catch (err) {
         next(err);
     }
@@ -413,7 +459,7 @@ router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
             // does anyone occupied?
             if ((await db.select('username').from('verifications').where({username: username, type: 'register'}).union([
                 db.select('username').from('users').where({username: username})
-            ])).length != 0)
+            ])).length !== 0)
                 return res.status(400).json({error: 1, code: 'admin.addUser.usernameExist'});
 
             // no mistakes detected, generate a unique string for register validation
@@ -470,9 +516,9 @@ router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         } catch (err) {
             if (err instanceof ServiceApiError) {
                 logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
-                return res.status(err.statusCode == 501 ? 501 : 500).json({
+                return res.status(err.statusCode === 501 ? 501 : 500).json({
                     error: 1,
-                    code: err.statusCode == 501 ? 'admin.addUser.notImplement' : 'admin.addUser.error',
+                    code: err.statusCode === 501 ? 'admin.addUser.notImplement' : 'admin.addUser.error',
                     message: err.message
                 });
             }
@@ -480,55 +526,118 @@ router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         }
     });
 
-router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super"]), [
-      checkbody('data.id').optional().isInt(),
-      checkbody('data.value').optional().isIn()
-  ],
-  async (req, res, next) => {
-      try {
-          const validateErr = validationResult(req);
-          if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'admin.ban.bad', message: validateErr.array()});
-          if (req.body.value == undefined)
-            return res.status(401).json({error: 1, code: 'admin.ban.bad', message: '"value" cannot be missing'});
-          if (req.body.type === undefined)
-            return res.status(401).json({error: 1, code: 'admin.ban.bad', message: '"type" cannot be missing'});
-          const { id } = req.body;
-          const userData = await db.select('*').from('users').where({id}).first();
-          const disableOperateUser = ['super', 'dev', 'root', 'admin']
-          const itemUser = disableOperateUser.some(item => userData.privilege.includes(item))
-          if(itemUser) {
-            return res.status(401).json({error: 1, code: 'admin.ban.bad', message: `this user cannot operate`});
-          }
-          let doEditUserData = {};
-          switch(req.body.type) {
-            case 'add': {
-              const min = 1000 * 60, hours = min * 60, day = hours * 24, month = day * 30
-              const type = [ min * 10, hours * 1, 12 * hours, 1 * day, 7 * day, 1 * month]
-              const time = +(new Date()) + type[req.body.value]
-              const banTime = moment(time).format('YYYY-MM-DD HH:mm:ss')
-              userData.attr.mute = banTime
-              break
+router.get('/muteUserAll', verifyJWT, allowPrivileges(["root", "dev", "super", "admin"]), [
+        checkquery('skip').optional().isInt({min: 0}),
+        checkquery('limit').optional().isInt({min: 0, max: 100}),
+        checkquery('order').optional().isIn(['asc', 'desc']),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'admin.muteUserAll.bad', message: validateErr.array()});
+
+            const skip = req.query.skip !== undefined ? req.query.skip : 0;
+            const limit = req.query.limit !== undefined ? req.query.limit : 20;
+            const order = req.query.order ? req.query.order : 'desc';
+
+            const total = await db.count({num: 1}).from('users')
+                .whereJsonPath('users.attr', '$.mute', '!=', '')
+                .first().then(r => r.num);
+            const result = await db.from('users')
+                .whereJsonPath('users.attr', '$.mute', '!=', '')
+                .orderBy('users.createTime', order)
+                .offset(skip).limit(limit);
+
+            return res.status(200).json({success: 1, code: 'admin.muteUserAll.ok', data: result, total});
+        } catch (err) {
+            next(err);
+        }
+    });
+
+router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "admin"]), [
+        checkbody('data.id').optional().isInt(),
+        checkbody('data.value').optional().isInt(),
+        checkbody('isNotice').optional().isBoolean(),
+        checkbody('language').isIn(config.supportLanguages)
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'admin.muteUser.ban.bad', message: validateErr.array()});
+            if (req.body.data.value === undefined)
+                return res.status(401).json({
+                    error: 1,
+                    code: 'admin.muteUser.ban.bad',
+                    message: '"value" cannot be missing'
+                });
+            if (req.body.data.type === undefined)
+                return res.status(401).json({
+                    error: 1,
+                    code: 'admin.muteUser.ban.bad',
+                    message: '"type" cannot be missing'
+                });
+            if (req.body.isNotice === undefined)
+                return res.status(401).json({
+                    error: 1,
+                    code: 'muteUser.ban.bad',
+                    message: '"isNotice" cannot be missing'
+                });
+
+            const {id} = req.body.data;
+            const userData = await db.select('*').from('users').where({id}).first();
+            const disableOperateUser = ['super', 'dev', 'root', 'admin'] // Please be consistent with 'allowPrivileges' above
+            const itemUser = disableOperateUser.some(item => userData.privilege.includes(item))
+
+            // Check User authority
+            if (itemUser) return res.status(402).json({
+                error: 1,
+                code: 'muteUser.ban.userUnauthorized',
+                message: `this user cannot operate`
+            });
+            if (req.user.id === id) res.status(402).json({
+                error: 1,
+                code: 'muteUser.ban.userUnauthorized',
+                message: `You can't shut yourself down`
+            });
+
+            let doEditUserData = {};
+            switch (req.body.data.type) {
+                case 'add': {
+                    const min = 1000 * 60, hours = min * 60, day = hours * 24, month = day * 30
+                    const type = [min * 10, hours * 1, 12 * hours, 1 * day, 7 * day, 1 * month]
+                    const time = +(new Date()) + type[req.body.data.value]
+                    const banTime = moment(time).format('YYYY-MM-DD HH:mm:ss')
+                    userData.attr.mute = banTime
+
+                    // Send notification or not
+                    if (req.body.isNotice && req.body.language)
+                        await sendMessage(req.user.id, id, 'warn', await localeMessage('notifications.beMuteUser', req.body.language, {}));
+                    break
+                }
+                case 'remove': {
+                    userData.attr.mute = ""
+                    break
+                }
             }
-            case 'remove': {
-              userData.attr.mute = ''
-              break
-            }
-          }
-          doEditUserData.attr = JSON.stringify(userSetAttributes(userData.attr, userData.attr, true));
-          await db('users').update(doEditUserData).where({id: userData.id});
-          await db('operation_log').insert({
-              byUserId: req.user.id,
-              toUserId: userData.id,
-              action: req.body.type,
-              role: 'mute',
-              createTime: new Date()
-          });
-          return res.status(200).json({ success: 1, code: 'muteUser.ok' });
-      } catch (err) {
-          next(err);
-      }
-  });
+
+            doEditUserData.attr = JSON.stringify(userSetAttributes(userData.attr, userData.attr, true));
+
+            await db('users').update(doEditUserData).where({id: userData.id});
+            await db('operation_log').insert({
+                byUserId: req.user.id,
+                toUserId: userData.id,
+                action: req.body.data.type,
+                role: 'mute',
+                createTime: new Date()
+            });
+
+            return res.status(200).json({success: 1, message: 'Successful operation', code: 'admin.muteUser.ok'});
+        } catch (err) {
+            next(err);
+        }
+    });
 
 router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
         checkbody('data.id').optional().isInt(),
@@ -537,17 +646,16 @@ router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
     async (req, res, next) => {
         try {
             const validateErr = validationResult(req);
+
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'admin.delUser.bad', message: validateErr.array()});
-            if (req.body.data.type == undefined)
+            if (req.body.data.type === undefined)
                 return res.status(401).json({error: 1, code: 'admin.delUser.bad', message: '"type" cannot be missing'});
 
-            const {id} = req.body.data;
-
+            const {id, type} = req.body.data;
             const userDb = db('users');
 
-            // TODO 验证账户
-            switch (req.body.data.type) {
+            switch (type) {
                 case "logic":
                     await userDb.update({
                         valid: 0,
@@ -572,6 +680,37 @@ router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
             });
 
             return res.status(201).json({success: 1, code: 'admin.delUser.success', message: 'success'});
+        } catch (err) {
+            next(err);
+        }
+    });
+
+router.get('/verifications', verifyJWT, allowPrivileges(['dev', 'root']), [
+        checkquery('skip').optional().isInt({min: 0}),
+        checkquery('limit').optional().isInt({min: 0, max: 100}),
+        checkquery('order').optional().isIn(['asc', 'desc']),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'verifications.bad', message: validateErr.array()});
+
+            const skip = req.query.skip !== undefined ? req.query.skip : 0;
+            const limit = req.query.limit !== undefined ? req.query.limit : 20;
+            const order = req.query.order ? req.query.order : 'desc';
+
+            const total = await db.count({num: 1}).from('verifications')
+                .first().then(r => r.num);
+            const result = await db.from('verifications')
+                .orderBy('verifications.createTime', order)
+                .offset(skip).limit(limit)
+                .then(r => r.map(i => {
+                    delete i.password;
+                    return i
+                }));
+
+            return res.status(200).json({success: 1, code: 'verifications.ok', data: result, total});
         } catch (err) {
             next(err);
         }

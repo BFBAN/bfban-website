@@ -65,7 +65,7 @@
                          maxlength="4"
                          :placeholder="$t('captcha.title')">
                     <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                      <Captcha ref="captcha"></Captcha>
+                      <Captcha ref="captcha" :seconds="15"></Captcha>
                     </div>
                   </Input>
                 </FormItem>
@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import BFBAN from "../assets/js/bfban";
+import Application from "../assets/js/application";
 
 import {http, api, http_token, mail} from '../assets/js/index'
 import {testWhitespace} from "@/mixins/common";
@@ -146,9 +146,7 @@ import {testWhitespace} from "@/mixins/common";
 import EmailTip from "../components/EmailTip";
 import Captcha from "../components/Captcha";
 
-import _ from "lodash";
-
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       stepsIndex: 0,
@@ -185,7 +183,9 @@ export default new BFBAN({
     this.http = http_token.call(this);
   },
   methods: {
-    // 提交注册信息
+    /**
+     * 提交注册信息
+     */
     onSignup() {
       const that = this;
       this.$refs['formValidate'].validate(valid => {
@@ -229,7 +229,7 @@ export default new BFBAN({
           this.$Message.error(err);
           this.backServiceMsg = this.$i18n.t('signup.failed');
 
-          this.onCleanSignupForm();
+          this.onCleanSignupForm({originEmail: false, originName: false, stepsIndex: false})
         }).finally(() => {
           this.spinShow = false;
 

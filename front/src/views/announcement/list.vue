@@ -1,14 +1,25 @@
 <template>
-  <div class="announcementView">
+  <div class="container announcementView">
+    <br>
+    <Row>
+      <Col :xs="{push: 1}" :lg="{push: 0}">
+        <Breadcrumb>
+          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem :to="{name: 'announcement'}">{{ $t("home.bulletin.title") }}</BreadcrumbItem>
+        </Breadcrumb>
+      </Col>
+    </Row>
+    <br>
+
     <div class="list">
       <Card class="item" v-for="item in list" :key="item.label">
         <template #title><span class="ruleName">{{item.name}}</span></template>
         <p class="ruleDesc">{{item.desc.cn}}</p>
-        <Divider orientation="left" size="small" class="divider">版本</Divider>
+        <Divider orientation="left" size="small" class="divider">{{$t("announcement.version")}}</Divider>
         <div class="version">
           <div v-for="(i, index) in item.list" :key="i" @click="jump(item.route, i)">
             <!-- <span>{{item.title.cn}}</span> -->
-            <span>{{i}} <span v-if="index === 0">(最新)</span></span>
+            <span>{{i}} <span v-if="index === 0">({{$t("announcement.latest")}})</span></span>
           </div>
         </div>
       </Card>
@@ -17,37 +28,56 @@
 </template>
 
 <script>
-
-const personnel = require.context(`./data/personnel/`, true, /.json$/)
-const antiCheat = require.context(`./data/antiCheat/`, true, /.json$/)
-const conduct = require.context(`./data/conduct/`, true, /.json$/)
+const cnPacket = {}
+{
+  const personnel = require.context(`./data/CN/personnel/`, true, /.json$/)
+  const antiCheat = require.context(`./data/CN/antiCheat/`, true, /.json$/)
+  const conduct = require.context(`./data/CN/conduct/`, true, /.json$/)
+  cnPacket.personnel = personnel
+  cnPacket.antiCheat = antiCheat
+  cnPacket.conduct = conduct
+}
+const enPacket = {}
+{
+  const personnel = require.context(`./data/US/personnel/`, true, /.json$/)
+  const antiCheat = require.context(`./data/US/antiCheat/`, true, /.json$/)
+  const conduct = require.context(`./data/US/conduct/`, true, /.json$/)
+  enPacket.personnel = personnel
+  enPacket.antiCheat = antiCheat
+  enPacket.conduct = conduct
+}
 export default {
   data() {
     return {
-      list: [
+    }
+  },
+  computed: {
+    list() {
+      const { personnel, antiCheat, conduct } = this.$i18n.locale == "zh-CN" ? cnPacket : enPacket
+      return [
         {
-          name: 'BFBAN人事规则',
+          name: this.$i18n.t("announcement.personnel.name"),
           route: 'personnel',
           desc: {
-            cn: 'BFBAN团队的人事招新规则，成员的结构以及不同成员的权利和义务和要求说明'
+            cn: this.$i18n.t("announcement.personnel.intro")
           },
-          list: personnel.keys().map(key => this.splitFileName(key).replace('./', ''))
+          list: personnel.keys().map(key => this.splitFileName(key).replace('./', '')).reverse()
         },
         {
-          name: 'BFBAN反作弊规则',
+          name: this.$i18n.t("announcement.antiCheat.name"),
           route: 'antiCheat',
           desc: {
-            cn: 'BFBAN团队对不同案件的处理标准，按照最新的标准来对案件进行处理'
+            cn: this.$i18n.t("announcement.antiCheat.intro")
           },
-          list: antiCheat.keys().map(key => this.splitFileName(key).replace('./', ''))
+          list: antiCheat.keys().map(key => this.splitFileName(key).replace('./', '')).reverse()
         },
         {
-          name: 'BFBAN行为规则',
-          route: 'conduct',
+          name: this.$i18n.t("announcement.conduct.name"),
+          route: 'conduct', 
           desc: {
-            cn: 'BFBAN团队的成员在日常工作中的行为规范'
+            cn: this.$i18n.t("announcement.conduct.intro")
           },
-          list: conduct.keys().map(key => this.splitFileName(key).replace('./', ''))
+          list: conduct.keys().map(key => this.splitFileName(key).replace('./', '')).reverse()
         }
       ]
     }
@@ -83,10 +113,9 @@ export default {
       margin-bottom: 30px;
       .ruleName {
         font-size: 18px;
-        color: #17233d;
       }
       .ruleDesc {
-        color: rgba(0,0,0,.45);
+        opacity: .7;
       }
       .divider {
         color: #333;

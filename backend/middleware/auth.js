@@ -4,6 +4,7 @@ import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import db from "../mysql.js";
 import { verifyJWTToken } from '../lib/auth.js';
+import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 /** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
 async function verifyJWT(req, res, next) {

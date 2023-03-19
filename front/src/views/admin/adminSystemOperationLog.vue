@@ -6,8 +6,8 @@
                type="text"
                search
                enter-button
-               @on-enter="getAdminjudgementLog"
-               @on-search="getAdminjudgementLog"
+               @on-enter="getUserOperationLog"
+               @on-search="getUserOperationLog"
                placeholder="input user name"/>
       </Col>
     </Row>
@@ -28,7 +28,7 @@
               :total="total"/>
       </Col>
       <Col>
-        <Button size="small" @click="getAdminjudgementLog">
+        <Button size="small" @click="getUserOperationLog">
           <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
         </Button>
       </Col>
@@ -84,14 +84,25 @@ export default {
   created() {
     this.http = http_token.call(this);
 
-    this.getAdminjudgementLog();
+    this.getUserOperationLog();
   },
   methods: {
-    getAdminjudgementLog() {
+    handlePageChange(num) {
+      this.skip = num;
+      this.getBlockedUserAll();
+    },
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getBlockedUserAll();
+    },
+    /**
+     * 查询用户管理员操作者日志
+     */
+    getUserOperationLog() {
       if (this.load) return;
       this.load = true;
 
-      this.http.get(api['getUserOperationLogs'], {
+      this.http.get(api['admin_userOperationLogs'], {
         params: {
           name: this.userValue,
           skip: this.skip - 1,

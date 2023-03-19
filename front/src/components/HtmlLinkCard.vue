@@ -32,7 +32,7 @@ export default {
   },
   created() {
     if (this.href) {
-      let data = new URL(unescape(this.href));
+      let data = new URL(decodeURI(this.href));
       if (data.searchParams.has("isWidget"))
         data.searchParams.delete('isWidget');
       this.urlData = data;

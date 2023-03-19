@@ -51,6 +51,10 @@
         "newBanAppeal": {
             "zh-CN": "{playername} 的案件提交了申诉，请至 {website}/player/{originPersonaId} 查看详情",
             "en-US": "{playername} has a new ban appeal, see {website}/player/{originPersonaId}"
+        },
+        "beMuteUser": {
+            "zh-CN": "你受到管理禁言，请遵循社区发言规则",
+            "en-US": "You are under an administrative gag order. Please follow the community speaking rules"
         }
     }
 }

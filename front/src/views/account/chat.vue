@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import BFBAN from "/src/assets/js/bfban";
+import Application from "/src/assets/js/application";
 import Html from "@/components/Html";
 
 import {api, http, http_token, message} from "../../assets/js";
@@ -130,7 +130,7 @@ import BusinessCard from "/src/components/businessCard.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import messageConf from "/public/conf/message.json";
 
-export default new BFBAN({
+export default new Application({
   name: "message",
   data() {
     return {
@@ -326,6 +326,7 @@ export default new BFBAN({
             let num = 0;
 
             switch (i.type) {
+              case 'fatal':
               case 'warn':
                 // 系统通知类
                 messageUser.forEach(t => {
@@ -334,13 +335,14 @@ export default new BFBAN({
 
                 if (num <= 0) {
                   messageUser.push({
-                    text: "@" + this.$i18n.t('profile.chat.types.' + i.type),
+                    text: "@" + this.$i18n.t('profile.chat.types.' + i.type + '.text'),
                     id: i.byUserId,
                     value: i.type,
                     type: i.type
                   });
                 }
                 break;
+              case 'info':
               case "reply":
               case "direct":
 

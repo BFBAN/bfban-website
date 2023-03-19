@@ -155,7 +155,7 @@ class OriginClient {
     /** @returns {Promise<string[]>} userIds */
     async searchUserName(username, api_urls=origin_api_urls) {
         username = encodeURIComponent(username); // avoid url injection
-        const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/users?userId=${this.self_prop.userId}&searchTerm=${username}&start=0`;
+        const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/playersearch?userId=${this.self_prop.userId}&searchTerm=${username}&start=0`;
         const t_start = Date.now();
         try {
             await this.checkSelfTokenValid(true);
@@ -186,17 +186,18 @@ class OriginClient {
 
     /** @returns {Promise<string|null>} userId */
     async searchUserEmail(userEmail, api_urls=origin_api_urls) {
-        const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/users?userId=${this.self_prop.userId}&start=0`;
+        const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/playersearch?userId=${this.self_prop.userId}&searchTerm=${userEmail}&start=0`;
         const t_start = Date.now();
+        console.log(url)
         try {
             await this.checkSelfTokenValid(true);
-            const response = await got.post(url, {
+            const response = await got.get(url, {
                 headers: {
-                    'authtoken': `${this.tokens.access_token}`,
+                    'AuthToken': `${this.tokens.access_token}`,
                     'Upgrade-Insecure-Requests': 1,
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
                 },
-                body: userEmail,
+                // body: userEmail,
             }).json();
 
             if(typeof(response.totalCount) != 'number')

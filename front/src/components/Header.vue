@@ -104,7 +104,7 @@
                     <DropdownItem :name="i.name" :selected="themeIndex == theme_index">
                       <Row>
                         <Col flex="1">
-                          <div class="hedaer-theme-color" :style="`background-color: ${i.showColor}`"></div>
+                          <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
                         </Col>
                         <Col>{{ i.name }}</Col>
                       </Row>
@@ -146,6 +146,33 @@
 
         <Divider type="vertical"/>
 
+        <Dropdown>
+          <DropdownItem style="padding: 0;">
+            <div v-for="(i, theme_index) in themes.child" :key="theme_index">
+              <template v-if="themeIndex == theme_index">
+                <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
+              </template>
+            </div>
+          </DropdownItem>
+          <DropdownMenu slot="list">
+            <DropdownItem
+                v-for="(i, theme_index) in themes.child" :key="theme_index"
+                :name="i.name"
+                :selected="themeIndex == theme_index"
+                @click.native="changeTheme(theme_index)">
+              <Row>
+                <Col flex="1">
+                  <div class="hedaer-theme-color right-space" :style="`background-color: ${i.themeColor}`"></div>
+                </Col>
+                <Col>{{i.name}}</Col>
+              </Row>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+
+
+        <Divider type="vertical"/>
+
         <Tooltip :content="$t('apps.title')" placement="bottom-end">
           <router-link :to="{name: 'apps'}">
             <Icon type="md-apps" size="30"/>
@@ -164,7 +191,7 @@ import menu from '/public/conf/headerMenu.json'
 
 import Header_message from "./Header_message";
 import PrivilegesTag from "/src/components/PrivilegesTag";
-import BFBAN from "@/assets/js/bfban";
+import BFBAN from "@/assets/js/application";
 
 export default new BFBAN({
   data() {
@@ -271,7 +298,7 @@ export default new BFBAN({
 </script>
 
 <style lang="less">
-@import "src/assets/css/index";
+@import "@/assets/css/index";
 
 header {
   -webkit-app-region: drag;
@@ -290,9 +317,12 @@ header {
 
 .hedaer-theme-color {
   display: flex;
-  width: 20px;
-  height: 20px;
+  width: 23px;
+  height: 23px;
   border-radius: 8px;
+}
+
+.hedaer-theme-color.right-space {
   margin-right: 10px;
 }
 
