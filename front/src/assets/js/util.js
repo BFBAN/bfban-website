@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 export default class Util {
     cheatMethodsGlossary;
     cheaterStatus;
@@ -16,10 +14,10 @@ export default class Util {
      */
     async initUtil() {
         const list = {
-            cheatMethodsGlossary : await import('/public/conf/cheatMethodsGlossary.json'),
-            cheaterStatus : await import('/public/conf/cheaterStatus.json'),
-            action: await import('/public/conf/action.json'),
-            gameName : await import('/public/conf/gameName.json')
+            cheatMethodsGlossary : await import('/public/config/cheatMethodsGlossary.json'),
+            cheaterStatus : await import('/public/config/cheaterStatus.json'),
+            action: await import('/public/config/action.json'),
+            gameName : await import('/public/config/gameName.json')
         }
         this.cheaterStatus = list.cheaterStatus.child;
         this.gameName = list.gameName.child;

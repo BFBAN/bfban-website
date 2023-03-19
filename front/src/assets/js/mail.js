@@ -1,4 +1,4 @@
-import mail from '../../../public/conf/mail.json'
+import mail from '../../../public/config/mail.json'
 
 export default class Mail {
     /**

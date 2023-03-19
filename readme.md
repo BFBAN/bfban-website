@@ -6,7 +6,7 @@
 [网站](https://www.bfban.com) | 
 [中文社区](https://www.kookapp.cn/app/invite/uoJKC0) |
 [EN社区](https://discord.gametools.network) |
-[github wiki](/wiki) | 
+[GitHub Wiki](/wiki) | 
 [开发者社区](https://kook.top/8JTqYq)
 
 ----
