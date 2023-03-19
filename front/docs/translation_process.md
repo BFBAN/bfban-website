@@ -54,6 +54,21 @@ en-IN.json
   2. 存在格式冲突，应当遵循zh.json格式为准.
   3. zh.json对比的字段存在遗漏，请所翻译的成员补全.
 
+### SEO 翻译规则
+
+seo指搜索引擎的算法，为引擎添加关键词；通常在某个字段下包含`seo`都表示着这个字段是一个单独页面
+
+- SEO必须由`description`和`keywords`组成
+  - `description` 描述，请按照zh.json对本地描述
+  - `keywords`字段的值，存在多个应当用','来分割
+
+```json
+    "seo": {
+      "description": "選手レポート",
+      "keywords": "UNBAN,UNO,バトルフィールド,バトルフィールド"
+    }
+```
+
 ## 签署
 
 ```json

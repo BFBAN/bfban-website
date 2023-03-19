@@ -20,7 +20,10 @@
 
               <Divider/>
 
-              <router-link v-if="!user.token" :to="{name: 'signup'}">
+              <router-link v-if="isLogin" :to="{name: 'profile'}">
+                <Button type="primary" v-voice-button>{{ $t("header.profile") }}</Button>
+              </router-link>
+              <router-link v-else :to="{name: 'signup'}">
                 <Button type="primary" v-voice-button>{{ $t("signup.title") }}</Button>
               </router-link>
               <Divider v-if="!user.token" type="vertical"/>
@@ -70,7 +73,7 @@
       </div>
     </div>
 
-    <div class="home-box mobile-hide ivu-primary">
+    <div class="home-box mobile-hide ivu-primary" v-if="activities_l.length > 0">
       <div class="container">
         <Row>
           <Col :lg="{span: 10, push: 0}">
@@ -196,12 +199,6 @@ export default new Application({
     this.getActivity();
   },
   methods: {
-    // for test upload
-    onChange(e) {
-      upload.on(e.target.files[0]).then(res => {
-        console.log(res)
-      })
-    },
     async loadData() {
       await util.initUtil().then(res => {
         this.cheaterStatus = res.cheaterStatus;
@@ -263,7 +260,7 @@ export default new Application({
 
       http.get(api["statistics"], {
         params: {
-          reports: 'show', // show reports number
+          reports: true, // show reports number
           players: true,	// show players that is reported number
           confirmed: true,	// show confirmed number
           registers: true,	// show register number
@@ -274,7 +271,7 @@ export default new Application({
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.statistics = d.data;
         }
       }).finally(() => {
@@ -320,6 +317,7 @@ export default new Application({
 .home-banner {
   overflow: hidden;
   min-height: 600px;
+  margin-top: 50px;
   background-size: 500px;
   background-repeat: no-repeat;
   background-position: right;
@@ -330,9 +328,14 @@ export default new Application({
     display: inline-flex;
     padding: 0 20px 0 0;
     margin-top: 80px;
-    margin-bottom: 10px;
+    margin-bottom: 40px;
     font-weight: bold;
     font-size: 70px;
+  }
+
+  h2, h3, p {
+    line-height: 1.5;
+    margin-bottom: 10px;
   }
 }
 

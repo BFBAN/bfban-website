@@ -13,13 +13,13 @@
 
     <div class="list">
       <Card class="item" v-for="item in list" :key="item.label">
-        <template #title><span class="ruleName">{{item.name}}</span></template>
-        <p class="ruleDesc">{{item.desc.cn}}</p>
-        <Divider orientation="left" size="small" class="divider">{{$t("announcement.version")}}</Divider>
+        <template #title><span class="ruleName">{{ item.name }}</span></template>
+        <p class="ruleDesc">{{ item.desc.cn }}</p>
+        <Divider orientation="left" size="small" class="divider">{{ $t("announcement.version") }}</Divider>
         <div class="version">
           <div v-for="(i, index) in item.list" :key="i" @click="jump(item.route, i)">
             <!-- <span>{{item.title.cn}}</span> -->
-            <span>{{i}} <span v-if="index === 0">({{$t("announcement.latest")}})</span></span>
+            <span>{{ i }} <span v-if="index === 0">({{ $t("announcement.latest") }})</span></span>
           </div>
         </div>
       </Card>
@@ -48,12 +48,11 @@ const enPacket = {}
 }
 export default {
   data() {
-    return {
-    }
+    return {}
   },
   computed: {
     list() {
-      const { personnel, antiCheat, conduct } = this.$i18n.locale == "zh-CN" ? cnPacket : enPacket
+      const {personnel, antiCheat, conduct} = this.$i18n.locale == "zh-CN" ? cnPacket : enPacket
       return [
         {
           name: this.$i18n.t("announcement.personnel.name"),
@@ -105,29 +104,33 @@ export default {
 
 <style lang="less" scoped>
 .announcementView {
-  width: 960px;
-  margin: 0 auto;
   .list {
     .item {
       // border-bottom: 1px solid #afb8c1;
       margin-bottom: 30px;
+
       .ruleName {
         font-size: 18px;
       }
+
       .ruleDesc {
         opacity: .7;
       }
+
       .divider {
         color: #333;
       }
+
       .version {
         font-size: 13px;
         color: #aaa;
-        >div {
+
+        > div {
           display: flex;
           justify-content: space-between;
           padding: 0 16px;
           margin-block: 5px;
+
           span:first-child {
             text-decoration: underline;
             cursor: pointer;

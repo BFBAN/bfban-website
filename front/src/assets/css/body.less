@@ -1,9 +1,37 @@
 body, html {
+  font-family: "Ubuntu Mono", monospace, 'Noto Sans TC', sans-serif, "Microsoft YaHei", "微软雅黑", "Arial", sans-serif;
   overscroll-behavior-y: contain;
 }
 
 body .user-select-none {
   user-select: none;
+}
+
+p {
+  margin: .2rem 0;
+}
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+/*mobile responsive*/
+@media screen and (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+
+  .desktop-hide {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .mobile-hide {
+    display: none !important;
+  }
 }
 
 .styles_herosection {

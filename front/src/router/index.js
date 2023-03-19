@@ -121,7 +121,7 @@ const routes = [
             metaInfo : {
                 title: 'profile.title',
                 keywords: "profile.seo.keywords",
-                description: 'profiledescription'
+                description: 'profile.description'
             }
         },
         component: Profile,
@@ -396,7 +396,7 @@ const routes = [
         // },
         component: () => import('@/views/announcement/details.vue')
     },
-    
+
     {name: 'notFound', path: '/404', meta: {
             metaInfo : {
                 title: 'basic.tip.notFound',

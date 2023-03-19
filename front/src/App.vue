@@ -1,11 +1,15 @@
 <template>
   <div id="app" class="app">
-    <Header v-if="!isFull"></Header>
+    <template v-if="!isFull">
+      <Header ></Header>
+    </template>
     <main>
       <router-view></router-view>
     </main>
-    <FooterPublicBox v-if="!isFull"></FooterPublicBox>
-    <Footer v-if="!isFull"></Footer>
+    <template v-if="!isFull">
+      <FooterPublicBox></FooterPublicBox>
+      <Footer></Footer>
+    </template>
   </div>
 </template>
 
@@ -100,33 +104,9 @@ import 'view-design/dist/styles/iview.css'
 <style lang="less">
 @import "@/assets/css/index.less";
 
-@font-face {
-  font-family: "Ubuntu Mono";
-  font-weight: 400;
-  font-style: normal;
-  src: url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.eot");
-  src: url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.eot#iefix") format("embedded-opentype"),
-    /* IE6-IE8 */ url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.woff2") format("woff2"),
-    /* Super Modern Browsers */ url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.woff") format("woff"),
-    /* Modern Browsers */ url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.ttf") format("truetype"),
-    /* Safari, Android, iOS */ url("~@/assets/fonts/ubuntu-mono-v8-latin-regular.svg") format("svg"); /* Legacy iOS */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 html, body {
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-  font-size: .8rem;
-  display: flex;
-  flex-direction: column;
   scroll-behavior: smooth;
   scroll-padding-top: 10%;
-
-  /*background image*/
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
 }
 
 .app {
@@ -149,43 +129,5 @@ html, body {
   .bottom-pane {
     backdrop-filter: blur(50px);
   }
-}
-
-.container {
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-}
-
-p {
-  margin: .2rem 0;
-}
-
-/*mobile responsive*/
-@media screen and (min-width: 1024px) {
-  .container {
-    max-width: 960px;
-    width: 960px;
-  }
-
-  .desktop-hide {
-    display: none !important;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .mobile-hide {
-    display: none !important;
-  }
-}
-
-.is-size-6 {
-  font-size: 1rem !important;
-}
-
-/*iview page component bug fix*/
-/*https://github.com/iview/iview/issues/828*/
-.ivu-page-item-jump-next:after, .ivu-page-item-jump-prev:after {
-  content: "\2022\2022\2022";
 }
 </style>
