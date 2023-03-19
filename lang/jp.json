@@ -23,7 +23,7 @@
     },
     "recentlyUpdated": "最近の更新",
     "reported": "通報した",
-    "reportnum": "合計通報数",
+    "reportNum": "合計通報数",
     "reports": "個人通報",
     "role": "アイデンティティ",
     "status": "ステータス",
@@ -165,13 +165,13 @@
     }
   },
   "bindOrigin": {
-    "title": "Originアカウントのバインド",
     "messages": {
       "bad": "错误绑定，请联系管理员",
       "expired": "绑定的验证代码过期，请重新提交绑定",
       "notFound": "未找到绑定验证代码",
       "success": "账户与橘子平台绑定成功"
-    }
+    },
+    "title": "Originアカウントのバインド"
   },
   "captcha": {
     "get": "認証コードの取得",
@@ -403,7 +403,7 @@
   },
   "header": {
     "about": "について",
-    "announcement": "公告",
+    "announcement": "お知らせ",
     "cheaters": "プレイヤーデータベース",
     "index": "トップページ",
     "profile": "個人設定",
@@ -412,7 +412,7 @@
     "signout": "ログアウト",
     "signoutSuccess": "ログアウトに成功しました",
     "signup": "登録",
-    "site_stats": "统计",
+    "site_stats": "統計情報",
     "userCenter": "マイプレゼンテーションページ"
   },
   "home": {
@@ -495,8 +495,8 @@
   },
   "player_list": {
     "seo": {
-      "description": "玩家列表,这里包含用户举报玩家档案",
-      "keywords": "玩家列表,列表"
+      "description": "ユーザーから寄せられた選手のプロフィールを掲載する「選手リスト",
+      "keywords": "プレイヤーリスト,リスト"
     },
     "title": "プレイヤーデータベース"
   },
@@ -569,7 +569,7 @@
         "itemName": "メッセージ・リスト"
       },
       "tabsSend": {
-        "content": "内容",
+        "content": "目次",
         "itemName": "プッシュ",
         "messageID": "ステーションID",
         "messageMethod": "を選択してオプションを設定します。"
@@ -607,27 +607,27 @@
       }
     },
     "enhance": {
-      "title": "ローカル拡張",
       "public": {
         "autoUpdatePlayerList": {
-          "describe": "为管理员提供自动刷新，关注未处理玩家做出站内提醒",
-          "name": "未处理提醒"
+          "describe": "管理者が未処理のプレーヤーをフォローしてステーションアラートを作るための自動リフレッシュを提供する。",
+          "name": "未処理のリマインダ"
         },
         "desktopNotifiction": {
-          "describe": "在系统窗口内弹窗通知",
-          "name": "桌面通知"
+          "describe": "システムウィンドウ内のポップアップ通知",
+          "name": "デスクトップ通知"
         },
         "footerBar": {
-          "describe": "网站顶部附属的工具栏，为用户提供玩家持续关注等功能",
-          "name": "底部工具栏"
+          "describe": "ツールバーをサイト上部に取り付け、プレーヤーへの連続フォーカスなどの機能を提供する。",
+          "name": "下部ツールバー"
         }
-      }
+      },
+      "title": "ローカル拡張"
     },
     "exportAndImport": {
-      "description": "本地持久数据不会同步云端，需要你手动导出并在新平台导入这些数据，当然这些数据泄露不会影响您的账户安全，但包含一些记录",
-      "hint1": "不要将数据导入到陌生环境下，导出的内容包含你一些本地隐私信息",
-      "hint2": "谨慎操作，覆盖无法还原",
-      "title": "导出与导入"
+      "description": "ローカル永続的なデータは、クラウドに同期されません、あなたは手動で新しいプラットフォーム上でこのデータをエクスポートしてインポートする必要があります、もちろん、このデータの漏れはあなたのアカウントのセキュリティには影響しませんが、いくつかのレコードが含まれています。",
+      "hint1": "慣れない環境でデータをインポートしないでください。エクスポートされたコンテンツには、あなたの地域の個人情報の一部が含まれています。",
+      "hint2": "上書きは元に戻せないので慎重に進めましょう",
+      "title": "輸出・輸入"
     },
     "history": {
       "title": "履歴"
@@ -635,7 +635,7 @@
     "media": {
       "capacity": "ようりょう",
       "fileNum": "{num}ファイル",
-      "title": "媒体库"
+      "title": "メディアライブラリー"
     },
     "meet": "お帰りなさい！",
     "subscribes": {
@@ -643,26 +643,21 @@
     },
     "title": "個人設定",
     "voice": {
-      "backgroundMusic": "背景声音",
-      "backgroundMusicDescribe": "背景音乐",
-      "interaction": "交互声音",
-      "interactionDescribe": "网站一些交互声音",
-      "message": "消息通知声音",
-      "messageDescribe": "与站内消息相关的通知声音",
-      "title": "声音",
-      "video": "视频",
-      "videoDescribe": "网站视频声音"
+      "backgroundMusic": "背景音",
+      "backgroundMusicDescribe": "背景音楽",
+      "interaction": "インタラクティブサウンド",
+      "interactionDescribe": "ホームページのインタラクティブサウンド",
+      "message": "メッセージ通知音",
+      "messageDescribe": "ステーションメッセージに関連する通知音",
+      "title": "サウンド",
+      "video": "動画",
+      "videoDescribe": "ウェブサイト動画音声"
     }
   },
   "report": {
-    "title": "举报",
-    "seo": {
-      "description": "玩家举报",
-      "keywords": "联ban,联办,战地风云,战地"
-    },
     "button": {
-      "continue": "继续",
-      "leave": "离开"
+      "continue": "続き",
+      "leave": "退社"
     },
     "info": {
       "description": "通報者の行為、特徴、発生場所、時間をはっきり説明し、彼の不正行為を列挙し、最後になぜ通報したのかを示してください",
@@ -695,17 +690,22 @@
       "hackerId": "不正行為者名（ID）"
     },
     "messages": {
-      "failureSubtitle": "举报失败，{msg}",
-      "failureTitle": "失败",
+      "failureSubtitle": "レポートの失敗，{msg}",
+      "failureTitle": "失敗例",
       "mediaEvidence": "画像をアップロードするか、ビデオリンクを記入してください",
       "originIdNotExist": "ゲームIDは存在しません。スペルをチェックしてください",
       "permissionDenied": "権限なし",
-      "successSubtitle": "感谢您的举报",
-      "successTitle": "提交成功",
-      "tipBind": "请绑定你的橘子账号以后在提交举报",
+      "successSubtitle": "ご報告ありがとうございました。",
+      "successTitle": "無事に提出されました",
+      "tipBind": "レポートを送信する前に、Orangeアカウントを登録してください。",
       "videoBadFormat": "フォーマットエラー",
       "videoEmpty": "空のビデオアドレス"
-    }
+    },
+    "seo": {
+      "description": "選手レポート",
+      "keywords": "UNBAN,UNO,バトルフィールド,バトルフィールド"
+    },
+    "title": "報告書"
   },
   "reset": {
     "form": {
@@ -717,20 +717,20 @@
     "title": "パスワードをリセット"
   },
   "search": {
-    "collectionHint": "收藏此页面 (Ctrl+D or Command+D)",
+    "collectionHint": "このページをブックマークする (Ctrl+D or Command+D)",
     "describe": "BFANデータベースからIDを取得する",
-    "notUserExist": "喵呜~，在数据库里找不到此信息",
+    "notUserExist": "この情報はデータベースにはありません",
     "placeholder": "何を検索しますか、ああ、あなたです！",
     "sort": {
-      "default": "默认",
-      "latest": "最新",
-      "mostComments": "评论最多",
-      "mostViewed": "观看最高"
+      "default": "デフォルト",
+      "latest": "最新情報",
+      "mostComments": "最もコメントされた",
+      "mostViewed": "最高を見る"
     },
     "tabs": {
-      "comment": "评论",
-      "player": "案件",
-      "user": "用户"
+      "comment": "コメント",
+      "player": "事例紹介",
+      "user": "ユーザー"
     },
     "title": "検索"
   },
@@ -750,7 +750,7 @@
       "linkUrl": "ハイパーリンク",
       "name": "リンク形式",
       "textLink": "テキストアドレス",
-      "textLinkContent": "【｛webname｝プレイヤーを共有しました。アドレス：｛url｝",
+      "textLinkContent": "{webname} - プレイヤーを共有しました。アドレス：｛url｝",
       "webHtmlLink": "ネットワークコード"
     },
     "title": "分かち合う"
@@ -764,30 +764,30 @@
       "submitHint": "アカウントはありませんか？登録解除",
       "username": "ユーザー名"
     },
-    "loggedIn": "おや列？先に登録してください（↔↔↔）",
+    "loggedIn": "おや列？先に登録してください (✿◡‿◡)",
     "loginFirst": "あれ？！先にログインしてください",
     "success": "ログイン成功",
     "title": "ログイン＃ログイン＃"
   },
   "signup": {
     "checkAllEmail": "メールを確認するのに時間（約1分）がかかります。ゴミ箱を確認するのを待ってください。",
-    "eaPrivacy": "请至 EA 隐私设定 中将允许按邮箱搜索开启",
+    "eaPrivacy": "EAのプライバシー設定から「電子メールによる検索を許可する」をオンにしてください。",
     "failed": "登録に失敗しました",
     "fillIn": "規範的に記入してください",
     "form": {
       "forgetPasswordHint": "パスワードを忘れましたか？",
       "newUsername": "新規ユーザー名",
-      "originEmail": "EA账户邮箱",
+      "originEmail": "EA アカウントメールアドレス",
       "originId": "EA ID",
-      "originName": "EA账户名字",
+      "originName": "EA アカウント名",
       "password": "パスワード",
       "submitHint": "既存のアカウント？ログインに行く",
       "username": "ユーザー名"
     },
     "gameNotShowed": "このメールアドレスの下のアカウントにはゲームは含まれていません",
-    "needVerify": "请前往邮箱验证账户",
+    "needVerify": "メールにアクセスして、アカウントの確認を行ってください",
     "originIdExist": "このoriginアカウントはバインドされています",
-    "originNotFound": "未找到此邮箱在origin下账户",
+    "originNotFound": "このメールアドレスのアカウントは、オリジンでは見つかりませんでした",
     "placeholder": {
       "originEmail": "オレンジメールアドレスを入力",
       "originId": "問題の選択",
@@ -838,35 +838,35 @@
     "reportRanking": "举报排行",
     "reports": "コミュニティは合計で告発されました",
     "timeRange": {
-      "daily": "昨天",
-      "monthly": "一个月",
-      "weekly": "一周",
+      "daily": "昨日",
+      "monthly": "1ヶ",
+      "weekly": "1週",
       "yearly": "一年"
     },
     "title": "統計＃トウケイ＃",
     "trend": "案件热度"
   },
   "textarea": {
-    "originalImage": "原始图片",
+    "originalImage": "オリジナル画像",
     "steps": {
       "media": {
-        "0": "选择",
-        "1": "查看"
+        "0": "セレクト",
+        "1": "見る"
       },
       "upload": {
-        "0": "选择文件",
-        "1": "编辑",
-        "2": "查看"
+        "0": "ファイルを選択",
+        "1": "エディター",
+        "2": "見る"
       },
       "url": {
-        "0": "填写地址",
-        "1": "查看"
+        "0": "アドレスを記入する",
+        "1": "見る"
       }
     },
     "type": {
-      "media": "媒体库",
-      "upload": "上传到图床",
-      "url": "图片链接"
+      "media": "メディアライブラリー",
+      "upload": "イメージベッドにアップロードする",
+      "url": "画像リンク"
     }
   }
 }
