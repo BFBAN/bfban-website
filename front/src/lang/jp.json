@@ -31,6 +31,22 @@
     "userInfo": "個人情報",
     "username": "ユーザー名"
   },
+  "announcement": {
+    "antiCheat": {
+      "intro": "BFBAN团队对不同案件的处理标准，按照最新的标准来对案件进行处理",
+      "name": "BFBAN反作弊规则"
+    },
+    "conduct": {
+      "intro": "BFBAN团队的成员在日常工作中的行为规范",
+      "name": "BFBAN行为规则"
+    },
+    "latest": "最新",
+    "personnel": {
+      "intro": "BFBAN团队的人事招新规则，成员的结构以及不同成员的权利和义务和要求说明",
+      "name": "BFBAN人事规则"
+    },
+    "version": "版本"
+  },
   "apps": {
     "buttons": {
       "get": "取得＃シュトク＃",
@@ -62,6 +78,10 @@
         "describe": "以上の証拠には、不確定な行為について、より多くの管理者とプレイヤーが議論の決定に参加する必要があります",
         "text": "議論の余地がある"
       },
+      "farm": {
+        "describe": "刷枪",
+        "text": "刷枪"
+      },
       "guilt": {
         "describe": "管理者は不正行為を認め、1票を投じ、条件を満たすシステムはプレイヤーの状態を確認する",
         "text": "一票を投じるハンマー"
@@ -90,6 +110,7 @@
     "button": {
       "cancel": "キャンセル",
       "commit": "送信",
+      "insert": "插入",
       "next": "次のステップ",
       "prev": "前へ",
       "reply": "返信",
@@ -132,9 +153,11 @@
       "5": "ディスカッション中",
       "6": "投票の管理が必要",
       "7": "超级石锤",
+      "8": "刷枪",
       "all": "すべて"
     },
     "tip": {
+      "noAccess": "当前账户,无权限",
       "noReports": "まだ何の通報もありません",
       "notContent": "コンテンツなし",
       "notFound": "おや列、アクセス先が失われているようです",
@@ -142,10 +165,22 @@
     }
   },
   "bindOrigin": {
-    "title": "Originアカウントのバインド"
+    "title": "Originアカウントのバインド",
+    "messages": {
+      "bad": "错误绑定，请联系管理员",
+      "expired": "绑定的验证代码过期，请重新提交绑定",
+      "notFound": "未找到绑定验证代码",
+      "success": "账户与橘子平台绑定成功"
+    }
   },
   "captcha": {
     "get": "認証コードの取得",
+    "messages": {
+      "bad": "验证码错误，请联系管理员",
+      "expired": "验证码已过期",
+      "gen": "获取成功",
+      "wrong": "验证码错误"
+    },
     "title": "認証コード"
   },
   "cheatMethods": {
@@ -190,6 +225,7 @@
     "appeal": {
       "describe": "この通報情報には問題があり、私は自証または他人の協力で潔白を証明することができる。",
       "info": {
+        "changeName": "名称变动",
         "content": "訴えの内容",
         "originName": "プレイヤーの現在の名前",
         "player": "プレイヤーID"
@@ -278,6 +314,7 @@
       },
       "behavior": "判決タイプ",
       "content": "判決の説明",
+      "game": "所属游戏",
       "inappropriateRuling": {
         "1": "「1」、「[空白文字]」、「[表情]」などの無意味な返信を記入する",
         "2": "返信内容には人生攻撃、差別、ポルノ、政治的内容が含まれている",
@@ -293,7 +330,12 @@
       "replySuccess": "返信成功",
       "signIn": "ログインしてください",
       "submitSuccess": "コミット成功",
+      "tipBind": "请绑定你的橘子账号以后在回复",
       "updateComplete": "更新完了"
+    },
+    "seo": {
+      "description": "举报玩家详情信息",
+      "keywords": "玩家详情,玩家"
     },
     "subscribes": {
       "cancelTrack": "追跡解除",
@@ -304,6 +346,8 @@
     "timeline": {
       "all": "すべて",
       "banAppeal": "訴えのみ表示",
+      "coreComment": "主要内容",
+      "historyName": "历史玩家变动名称",
       "verify": "判決のみ表示"
     },
     "title": "詳細"
@@ -359,6 +403,7 @@
   },
   "header": {
     "about": "について",
+    "announcement": "公告",
     "cheaters": "プレイヤーデータベース",
     "index": "トップページ",
     "profile": "個人設定",
@@ -367,6 +412,7 @@
     "signout": "ログアウト",
     "signoutSuccess": "ログアウトに成功しました",
     "signup": "登録",
+    "site_stats": "统计",
     "userCenter": "マイプレゼンテーションページ"
   },
   "home": {
@@ -390,11 +436,17 @@
       "dataReceived": "受信済み",
       "endTime": "2018年11月4日現在",
       "h1": "BFBAN",
-      "h2.hint0": "提供☁️データベースにより、世界中の異なるBattlefieldサーバから、問題のあるアーカイブを削除したプレイヤーを監視することができます。",
-      "H2.hint1": "BF 1からBF 2042までを問わず問題のあるアーカイブ・プレイヤー・クエリがサポートされているため、世界中の異なるBattlefieldサーバから監視することができます",
+      "h2": {
+        "hint0": "提供☁️データベースにより、世界中の異なるBattlefieldサーバから、問題のあるアーカイブを削除したプレイヤーを監視することができます。",
+        "hint1": "BF 1からBF 2042までを問わず問題のあるアーカイブ・プレイヤー・クエリがサポートされているため、世界中の異なるBattlefieldサーバから監視することができます"
+      },
       "h3": "全世界の不正プレイヤーリポジトリを構築する",
       "h4": "私たちの一員になる-コミュニティ環境の維持",
       "subButton": "参加しているコミュニティを理解する"
+    },
+    "seo": {
+      "description": "联ban官网,建立起全球作弊玩家档案库,成为我们一员维护社区环境",
+      "keywords": "联ban,联办,联办局,联ban局,战地风云,战地"
     },
     "title": "トップページ"
   },
@@ -421,7 +473,8 @@
         "createTime": "通報時間の順序変更",
         "updateTime": "更新時間の順序",
         "viewNum": "ルックアップ回数の順序変更"
-      }
+      },
+      "sortByTitle": "排序方式"
     },
     "reportTime": "通報時間範囲",
     "title": "公示外",
@@ -441,6 +494,10 @@
     }
   },
   "player_list": {
+    "seo": {
+      "description": "玩家列表,这里包含用户举报玩家档案",
+      "keywords": "玩家列表,列表"
+    },
     "title": "プレイヤーデータベース"
   },
   "profile": {
@@ -477,11 +534,21 @@
     "admin": {
       "menu": {
         "adminLog": "管理ログ",
+        "adminOperation": "管理案件操作日志",
+        "adminOperationLog": "管理员网站操作日志",
+        "blockedUsers": "黑名单用户",
         "comment": "コメント管理",
+        "home": "管理主页",
         "judgementLog": "判決日誌",
         "log": "ログ＃ログ＃",
         "management": "内容",
-        "user": "ユーザー管理"
+        "message": "消息",
+        "messageList": "消息内容",
+        "messageManagement": "消息",
+        "messagePush": "推送",
+        "muteUsers": "禁言用户",
+        "user": "ユーザー管理",
+        "verifications": "验证器"
       },
       "title": "バックグラウンドの管理"
     },
@@ -496,7 +563,8 @@
       "tabsList": {
         "form": {
           "del": "削除＃サクジョ＃",
-          "read": "既読"
+          "read": "既読",
+          "unread": "未读"
         },
         "itemName": "メッセージ・リスト"
       },
@@ -539,7 +607,27 @@
       }
     },
     "enhance": {
-      "title": "ローカル拡張"
+      "title": "ローカル拡張",
+      "public": {
+        "autoUpdatePlayerList": {
+          "describe": "为管理员提供自动刷新，关注未处理玩家做出站内提醒",
+          "name": "未处理提醒"
+        },
+        "desktopNotifiction": {
+          "describe": "在系统窗口内弹窗通知",
+          "name": "桌面通知"
+        },
+        "footerBar": {
+          "describe": "网站顶部附属的工具栏，为用户提供玩家持续关注等功能",
+          "name": "底部工具栏"
+        }
+      }
+    },
+    "exportAndImport": {
+      "description": "本地持久数据不会同步云端，需要你手动导出并在新平台导入这些数据，当然这些数据泄露不会影响您的账户安全，但包含一些记录",
+      "hint1": "不要将数据导入到陌生环境下，导出的内容包含你一些本地隐私信息",
+      "hint2": "谨慎操作，覆盖无法还原",
+      "title": "导出与导入"
     },
     "history": {
       "title": "履歴"
@@ -547,24 +635,31 @@
     "media": {
       "capacity": "ようりょう",
       "fileNum": "{num}ファイル",
-      "steps": {
-        "0": "ファイルを選択",
-        "1": "編集",
-        "2": "表示＃ヒョウジ＃"
-      },
-      "title": "メディアライブラリ",
-      "types": {
-        "0": "画像リンク",
-        "1": "図床にアップロード"
-      }
+      "title": "媒体库"
     },
     "meet": "お帰りなさい！",
     "subscribes": {
       "title": "追跡"
     },
-    "title": "個人設定"
+    "title": "個人設定",
+    "voice": {
+      "backgroundMusic": "背景声音",
+      "backgroundMusicDescribe": "背景音乐",
+      "interaction": "交互声音",
+      "interactionDescribe": "网站一些交互声音",
+      "message": "消息通知声音",
+      "messageDescribe": "与站内消息相关的通知声音",
+      "title": "声音",
+      "video": "视频",
+      "videoDescribe": "网站视频声音"
+    }
   },
   "report": {
+    "title": "举报",
+    "seo": {
+      "description": "玩家举报",
+      "keywords": "联ban,联办,战地风云,战地"
+    },
     "button": {
       "continue": "继续",
       "leave": "离开"
@@ -605,31 +700,37 @@
       "mediaEvidence": "画像をアップロードするか、ビデオリンクを記入してください",
       "originIdNotExist": "ゲームIDは存在しません。スペルをチェックしてください",
       "permissionDenied": "権限なし",
-      "success": "コミット成功",
       "successSubtitle": "感谢您的举报",
       "successTitle": "提交成功",
+      "tipBind": "请绑定你的橘子账号以后在提交举报",
       "videoBadFormat": "フォーマットエラー",
       "videoEmpty": "空のビデオアドレス"
-    },
-    "title": "通報する"
+    }
   },
   "reset": {
     "form": {
       "newPassword": "新しいパスワード",
       "oldPassword": "古いパスワード",
       "password": "新しいパスワード",
-      "passwordRepeat": "パスワードの確認",
-      "qq": "QQ"
+      "passwordRepeat": "パスワードの確認"
     },
     "title": "パスワードをリセット"
   },
   "search": {
     "collectionHint": "收藏此页面 (Ctrl+D or Command+D)",
     "describe": "BFANデータベースからIDを取得する",
+    "notUserExist": "喵呜~，在数据库里找不到此信息",
     "placeholder": "何を検索しますか、ああ、あなたです！",
-    "scope": {
-      "current": "現在の名前",
-      "history": "過去の名前"
+    "sort": {
+      "default": "默认",
+      "latest": "最新",
+      "mostComments": "评论最多",
+      "mostViewed": "观看最高"
+    },
+    "tabs": {
+      "comment": "评论",
+      "player": "案件",
+      "user": "用户"
     },
     "title": "検索"
   },
@@ -676,15 +777,17 @@
     "form": {
       "forgetPasswordHint": "パスワードを忘れましたか？",
       "newUsername": "新規ユーザー名",
-      "originEmail": "🍊 オレンジポスト",
-      "originId": "オレンジID",
-      "originName": "🍊 みかんの名前",
+      "originEmail": "EA账户邮箱",
+      "originId": "EA ID",
+      "originName": "EA账户名字",
       "password": "パスワード",
       "submitHint": "既存のアカウント？ログインに行く",
       "username": "ユーザー名"
     },
     "gameNotShowed": "このメールアドレスの下のアカウントにはゲームは含まれていません",
+    "needVerify": "请前往邮箱验证账户",
     "originIdExist": "このoriginアカウントはバインドされています",
+    "originNotFound": "未找到此邮箱在origin下账户",
     "placeholder": {
       "originEmail": "オレンジメールアドレスを入力",
       "originId": "問題の選択",
@@ -728,10 +831,42 @@
   "sitestats": {
     "admins": "合計管理者数",
     "banAppeals": "上告済み",
+    "communityParticipation": "用户社区参与排行",
     "confirmed": "処理された案件",
     "players": "既存の通報案件",
     "registers": "ユーザーの登録",
+    "reportRanking": "举报排行",
     "reports": "コミュニティは合計で告発されました",
-    "title": "統計＃トウケイ＃"
+    "timeRange": {
+      "daily": "昨天",
+      "monthly": "一个月",
+      "weekly": "一周",
+      "yearly": "一年"
+    },
+    "title": "統計＃トウケイ＃",
+    "trend": "案件热度"
+  },
+  "textarea": {
+    "originalImage": "原始图片",
+    "steps": {
+      "media": {
+        "0": "选择",
+        "1": "查看"
+      },
+      "upload": {
+        "0": "选择文件",
+        "1": "编辑",
+        "2": "查看"
+      },
+      "url": {
+        "0": "填写地址",
+        "1": "查看"
+      }
+    },
+    "type": {
+      "media": "媒体库",
+      "upload": "上传到图床",
+      "url": "图片链接"
+    }
   }
 }
