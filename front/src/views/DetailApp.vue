@@ -57,7 +57,7 @@ export default new Application({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 @media screen and (min-width: 1024px) {
   .detail-app {
     justify-content: center;

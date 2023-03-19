@@ -4,7 +4,7 @@
 
 1. [网站配置](./public/conf) 网站全局(移动应用同步此配置)的配置，包含主题、判决类型等等
 2. [桌面开发](./desktop) 网站附属产品，桌面应用
-3. [主题文件](./public/theme) 主题配置文件，需同时配置`publuc/conf/theme.json`
+3. [主题文件](./public/theme) 主题配置文件，需同时配置`publuc/config/theme.json`
 
 ----
 

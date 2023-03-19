@@ -258,7 +258,7 @@ export default new Application({
 })
 </script>
 
-<style ref="scss" scoped>
+<style ref="less" scoped>
 .interval-card {
   margin-bottom: 10px;
 }

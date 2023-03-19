@@ -39,7 +39,7 @@
                       <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
                              :placeholder="$t('captcha.title')">
                         <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                          <Captcha ref="captcha" :seconds="15"
+                          <Captcha ref="captcha" :seconds="5"
                                    :disable="!(!!signin.password  && !!signin.username)"></Captcha>
                         </div>
                       </Input>

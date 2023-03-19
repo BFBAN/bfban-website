@@ -277,8 +277,8 @@ export default {
   },
   methods: {
     async ready() {
-      const languages = await import('/public/conf/languages.json');
-      const privileges = await import('/public/conf/privilege.json');
+      const languages = await import('/public/config/languages.json');
+      const privileges = await import('/public/config/privilege.json');
       this.privileges = this.privileges.concat(privileges.child)
       this.languages = this.languages.concat(languages.child)
 

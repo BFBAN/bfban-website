@@ -139,7 +139,7 @@ import {api, http, http_token} from '../assets/js/index'
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
 
-import games from '/public/conf/gameName.json'
+import games from '/public/config/gameName.json'
 
 export default new Application({
   data() {
@@ -439,7 +439,7 @@ export default new Application({
 });
 </script>
 
-<style lang="scss">
+<style lang="less">
 .account-username {
   margin: 2rem 0 2rem 0;
 }

@@ -69,7 +69,7 @@ import {api, http, http_token, message} from "../../assets/js";
 
 import BusinessCard from "/src/components/businessCard.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
-import messageConf from "/public/conf/message.json";
+import messageConf from "/public/config/message.json";
 
 export default new Application({
   name: "messagePush",

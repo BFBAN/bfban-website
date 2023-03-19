@@ -73,7 +73,7 @@ export default {
         },
         {
           name: this.$i18n.t("announcement.conduct.name"),
-          route: 'conduct', 
+          route: 'conduct',
           desc: {
             cn: this.$i18n.t("announcement.conduct.intro")
           },
@@ -103,7 +103,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .announcementView {
   width: 960px;
   margin: 0 auto;

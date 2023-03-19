@@ -128,8 +128,8 @@
 
 <script>
 import Application from "/src/assets/js/application";
-import theme from "/public/conf/themes.json";
-import languages from "/public/conf/languages.json";
+import theme from "/public/config/themes.json";
+import languages from "/public/config/languages.json";
 import config from "@/../package.json";
 
 import {http_token} from '../assets/js/index'
@@ -310,6 +310,6 @@ export default new Application({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 
 </style>

@@ -121,8 +121,8 @@
 <script>
 import {http_token, storage, player_storage, account_storage} from "../../assets/js";
 
-import cheaterStatus from '/public/conf/cheaterStatus.json'
-import gameName from '/public/conf/gameName.json'
+import cheaterStatus from '/public/config/cheaterStatus.json'
+import gameName from '/public/config/gameName.json'
 
 export default {
   data() {

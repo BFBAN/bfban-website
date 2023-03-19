@@ -14,7 +14,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="less">
   .md {
     ul {
       margin-left: 1rem;

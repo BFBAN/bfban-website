@@ -39,7 +39,7 @@
 
 <script>
 import {storage} from '../../assets/js/index'
-import themes from '/public/conf/themes.json'
+import themes from '/public/config/themes.json'
 
 export default {
   name: "appearance",
@@ -89,7 +89,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .theme {
   .ivu-radio {
     position: absolute !important;

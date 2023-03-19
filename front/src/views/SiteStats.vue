@@ -200,6 +200,7 @@ export default new Application({
       load: false,
       statistics: {},
       admins: 0,
+      show: false,
       chart: {
         'stats': {
           color: ['#fff13c', '#401486', '#ed4014'],

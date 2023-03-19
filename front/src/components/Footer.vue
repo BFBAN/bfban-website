@@ -96,11 +96,11 @@
 import {storage, account_storage, http} from "../assets/js";
 
 import packageInfo from '../../package.json';
-import footerNavs from '/public/conf/footerNavs.json';
-import link from '/public/conf/link.json';
-import BFBAN from "@/assets/js/application";
+import footerNavs from '/public/config/footerNavs.json';
+import link from '/public/config/link.json';
+import Application from "@/assets/js/application";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       infos: packageInfo.version,
@@ -119,7 +119,7 @@ export default new BFBAN({
   },
   methods: {
     async loadData() {
-      const languages = await import('/public/conf/languages.json');
+      const languages = await import('/public/config/languages.json');
 
       this.langLoaclSync = account_storage.getConfiguration('langLoaclSync');
       this.languages = languages.child;

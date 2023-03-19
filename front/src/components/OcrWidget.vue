@@ -123,6 +123,7 @@ export default {
   created() {
     const that = this;
     this.worker = createWorker({
+
       errorHandler: err => {
         this.$Message.error(err.toString());
         this.onClear();

@@ -186,14 +186,14 @@
 <script>
 import {api, http, http_token, account_storage} from '../assets/js/index'
 import {storage} from '../assets/js/index'
-import themes from '/public/conf/themes.json'
-import menu from '/public/conf/headerMenu.json'
+import themes from '/public/config/themes.json'
+import menu from '/public/config/headerMenu.json'
 
 import Header_message from "./Header_message";
 import PrivilegesTag from "/src/components/PrivilegesTag";
-import BFBAN from "@/assets/js/application";
+import Application from "@/assets/js/application";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       themes,

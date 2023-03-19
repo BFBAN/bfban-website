@@ -34,7 +34,7 @@ export default new Application({
 });
 </script>
 
-<style lang="scss">
+<style lang="less">
 .logo {
   display: block;
   margin-left: auto;

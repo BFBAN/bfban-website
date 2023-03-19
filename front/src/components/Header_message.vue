@@ -36,9 +36,9 @@
 
 <script>
 import {api, http_token, account_storage, message, voice} from "../assets/js";
-import BFBAN from "@/assets/js/application";
+import Application from "@/assets/js/application";
 
-export default new BFBAN({
+export default new Application({
   name: "Header_message",
   data() {
     return {

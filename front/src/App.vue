@@ -12,7 +12,7 @@
 <script>
 import {api, http_token, storage, account_storage} from './assets/js/index';
 
-import theme from "/public/conf/themes.json"
+import theme from "/public/config/themes.json"
 
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";

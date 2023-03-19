@@ -74,7 +74,7 @@
 
 <script>
 import Application from "../assets/js/application";
-import appsConf from '/public/conf/appslist.json';
+import appsConf from '/public/config/appslist.json';
 
 export default new Application({
   name: "Apps",
@@ -150,7 +150,7 @@ export default new Application({
 });
 </script>
 
-<style lang="scss">
+<style lang="less">
 @media screen and (max-width: 900px) {
   .apps-list {
     columns: 1 !important;

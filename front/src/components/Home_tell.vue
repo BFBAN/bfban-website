@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import tell from '/public/conf/tells.json'
+import tell from '/public/config/tells.json'
 
 export default {
   data() {
@@ -42,7 +42,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="less">
 .tells {
   padding: 60px 0;
   margin: 30px 0;

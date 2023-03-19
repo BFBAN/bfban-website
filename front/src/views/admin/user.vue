@@ -311,7 +311,7 @@
 <script>
 import {account_storage, api, http, http_token, mail} from "../../assets/js";
 
-import languages from "/public/conf/languages.json";
+import languages from "/public/config/languages.json";
 
 import BusinessCard from "@/components/businessCard";
 import PrivilegesTag from "/src/components/PrivilegesTag";

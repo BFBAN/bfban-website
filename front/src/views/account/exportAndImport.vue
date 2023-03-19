@@ -292,7 +292,7 @@ export default new Application({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .export-box {
   width: 100%;
   display: inline-grid;

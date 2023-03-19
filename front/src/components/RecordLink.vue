@@ -11,7 +11,7 @@
 <script>
 import {util} from "@/assets/js";
 
-import recordLinks from '../../public/conf/recordLink.json'
+import recordLinks from '../../public/config/recordLink.json'
 
 export default {
   data() {

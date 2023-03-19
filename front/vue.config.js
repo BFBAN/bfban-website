@@ -4,7 +4,7 @@ const {InjectManifest} = require("workbox-webpack-plugin")
 const SitemapPlugin = require('sitemap-webpack-plugin').default
 
 const packageConf = require('./package.json')
-const requestConf = require('./public/conf/requestConf.json')
+const requestConf = require('./public/config/requestConf.json')
 
 const url = requestConf.child[requestConf.requestProductionName];
 

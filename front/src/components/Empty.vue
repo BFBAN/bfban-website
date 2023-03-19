@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import classicMessages from "../../public/conf/classicMessages.json";
+import classicMessages from "../../public/config/classicMessages.json";
 
 export default {
   name: "Empty",

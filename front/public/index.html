@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="search" type="application/opensearchdescription+xml" href="<%= BASE_URL %>open-search.xml" title="<%= htmlWebpackPlugin.options.title %>">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="<%= BASE_URL %>manifest.json">
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
@@ -25,7 +26,7 @@
 
       gtag('config', 'G-NVQKHNGC5E');
   </script>
-    
+
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "2503ca7362644470b5f3d2c1988eae56"}'></script>
 </html>

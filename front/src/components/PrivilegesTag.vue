@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import privileges from "/public/conf/privilege.json";
+import privileges from "/public/config/privilege.json";
 
 export default {
   props: {

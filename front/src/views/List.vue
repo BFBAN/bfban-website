@@ -218,8 +218,8 @@ import Application from "../assets/js/application";
 import Empty from "@/components/Empty";
 
 import {api, http, util, voice} from '../assets/js/index'
-import cheaterStatus from '/public/conf/cheaterStatus.json'
-import gameName from '/public/conf/gameName.json'
+import cheaterStatus from '/public/config/cheaterStatus.json'
+import gameName from '/public/config/gameName.json'
 import _ from "lodash";
 import store from "@/store";
 

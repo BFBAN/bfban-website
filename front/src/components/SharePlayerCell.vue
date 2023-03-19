@@ -60,8 +60,8 @@
 
 <script>
 import {api, http, http_token, storage} from '../assets/js/index'
-import theme from "/public/conf/themes.json";
-import languages from "/public/conf/languages.json";
+import theme from "/public/config/themes.json";
+import languages from "/public/config/languages.json";
 
 import vueQr from 'vue-qr'
 
@@ -144,7 +144,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 #getSharePicture {
   position: relative;
   overflow: hidden;

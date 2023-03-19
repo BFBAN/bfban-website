@@ -6,11 +6,11 @@
       <template v-if="!disable">
         {{ $t('captcha.get') }}
         <span v-if="postload">
-          <Icon type="md-refresh spin-icon-load" size="20" />
+          <Icon type="md-refresh spin-icon-load" size="20"/>
         </span>
       </template>
       <div v-else style="min-width: 80px">
-        <Icon type="md-close" size="20" />
+        <Icon type="md-close" size="20"/>
       </div>
     </span>
     <div v-else v-html="content"
@@ -18,10 +18,8 @@
     </div>
     <transition name="fade">
       <div v-show="content && captchaTime.count <= 0" class="captcha-view-icon">
-        <Icon v-if="disable" type="md-close" size="20" />
-        <Icon v-else type="md-refresh" size="20" :class="[
-            postload ? 'spin-icon-load' : ''
-        ]" />
+        <Icon v-if="disable" type="md-close" size="20"/>
+        <Icon v-else type="md-refresh" size="20" :class="[postload ? 'spin-icon-load' : '']"/>
       </div>
     </transition>
     <div class="count" v-show="captchaTime.count > 0">{{ captchaTime.count }}s</div>
@@ -30,6 +28,7 @@
 
 <script>
 import {http, api, storage} from '../assets/js/index'
+
 export default {
   name: "Captcha",
   props: {
@@ -93,8 +92,7 @@ export default {
         }
       }
 
-      if (this.disable || this.postload) return;
-      if (this.captchaTime.count > 0) return;
+      if (this.disable || this.postload || this.captchaTime.lock) return;
 
       this.postload = true;
 
@@ -106,7 +104,7 @@ export default {
         if (res.data.success === 1) {
           // 储存验证码hash
           that.capthcaHash = Object.assign({
-            [that.$route.name] : 0
+            [that.$route.name]: 0
           });
 
           this.hash = res.data.data["hash"];
@@ -117,7 +115,8 @@ export default {
             this.captchaTime.count = captcha.data.value[this.$route.name];
           }
 
-          this.capthcaTimeout(this.captchaTime.count || this.seconds);
+
+          this.capthcaTimeout(this.captchaTime.count || this.seconds)
           return;
         }
 
@@ -135,8 +134,11 @@ export default {
     capthcaTimeout(num) {
       const that = this;
       let fun;
-      if (that.captchaTime.lock) return;
+
+      if (that.captchaTime.lock) return false;
+
       that.captchaTime.count = num;
+
       fun = setInterval(function () {
         if (that.captchaTime.count <= 0) {
           clearInterval(fun);
@@ -146,12 +148,13 @@ export default {
         that.captchaTime.count -= 1;
 
         that.capthcaHash = Object.assign({
-          [`${that.id}_${that.$route.name}`] : that.captchaTime.count
+          [`${that.id}_${that.$route.name}`]: that.captchaTime.count
         });
         storage.session().set("captcha", that.capthcaHash);
       }, 1000);
 
       that.captchaTime.lock = true;
+      return true;
     }
   },
   computed: {

@@ -307,7 +307,7 @@ import Captcha from "@/components/Captcha";
 
 import {api, http, http_token, voice, util, regular} from '../assets/js/index'
 
-import gameName from '/public/conf/gameName.json'
+import gameName from '/public/config/gameName.json'
 import Textarea from "@/components/Textarea.vue";
 import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";

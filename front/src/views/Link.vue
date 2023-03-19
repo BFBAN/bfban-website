@@ -92,8 +92,8 @@
 
 <script>
 import Application from "../assets/js/application";
-import link from "../../public/conf/link.json";
-import language from  "../../public/conf/languages.json";
+import link from "../../public/config/link.json";
+import language from  "../../public/config/languages.json";
 
 export default new Application({
   data() {

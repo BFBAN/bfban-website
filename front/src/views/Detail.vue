@@ -1173,7 +1173,7 @@
 <script>
 import {api, http, http_token, util, message, time, storage, account_storage, mail} from '../assets/js/index'
 
-import BFBAN from "/src/assets/js/application";
+import Application from "/src/assets/js/application";
 import Empty from '../components/Empty.vue'
 import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
@@ -1187,7 +1187,7 @@ import htmllink from "@/components/HtmlLink";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
-export default new BFBAN({
+export default new Application({
   data() {
     return {
       util,

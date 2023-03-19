@@ -364,6 +364,8 @@
 </template>
 
 <script>
+import {api, http, storage} from "../assets/js";
+
 import Application from "../assets/js/application";
 import OcrWidget from "@/components/OcrWidget";
 import PrivilegesTag from "@/components/PrivilegesTag";
@@ -371,9 +373,7 @@ import HtmlWidget from "@/components/HtmlWidget";
 import BusinessCard from "@/components/businessCard";
 import Empty from "@/components/Empty";
 
-import game from '../../public/conf/gameName.json';
-
-import {api, http, storage} from "../assets/js";
+import game from '../../public/config/gameName.json';
 
 export default new Application({
   name: "search",
@@ -381,15 +381,18 @@ export default new Application({
     return {
       modalSpinShow: false,
       searchPosting: false,
-      // 搜索框+搜索历史
+
+      // Search box and search history
       searchVal: '',
       searchHistory: {
         list: []
       },
-      // 搜索方式, player 搜索案例玩家，user 搜索站内用户
+
+      // Search mode: [player,user,comment]
       searchTypes: ['player', 'user', 'comment'],
       searchTypeValue: 'player',
-      // 搜索游戏，在searchTypes字段为player时使用
+
+      // Search for games, used when the searchTypes field is player
       searchGameList: [{value: 'all'}].concat(game.child),
       searchGameValue: 'all',
       searchGameSort: 'default',
@@ -440,36 +443,23 @@ export default new Application({
         ]
       },
 
-      result: {
-        player: [],
-        user: [],
-        comment: []
-      },
-      skip: {
-        player: 1,
-        user: 1,
-        comment: 1,
-      },
-      limit: {
-        player: 40,
-        user: 20,
-        comment: 10,
-      },
-      total: {
-        player: 0,
-        user: 0,
-        comment: 0,
-      }
+      result: {player: [], user: [], comment: []},
+      skip: {player: 1, user: 1, comment: 1},
+      limit: {player: 40, user: 20, comment: 10},
+      total: {player: 0, user: 0, comment: 0}
     }
   },
   components: {OcrWidget, PrivilegesTag, HtmlWidget, BusinessCard, Empty},
   created() {
-    const {keyword, type, game} = this.$route.query;
+    const {keyword, type, game, skip, limit} = this.$route.query;
     this.searchVal = keyword || '';
     this.searchTypeValue = type || 'player';
     this.searchGameValue = game || 'all';
+    if (type && skip >= 1 && skip <= Number.MAX_VALUE) this.skip[this.searchTypeValue] = Number(skip) || this.skip[this.searchTypeValue];
+    if (type && limit >= 0 && limit <= 40) this.limit[this.searchTypeValue] = Number(limit) || this.limit[this.searchTypeValue];
 
     this.getSearchHistory();
+    this.searchVal ? this.handleSearch() : null
   },
   methods: {
     getSearchHistory() {
@@ -481,15 +471,15 @@ export default new Application({
 
       this.searchHistory.list = history.data.value || [];
     },
-    async setSearchHistoryValue(val) {
-      let maxHistory = 10;
-      let hostoryList = val;
+    setSearchHistoryValue(value) {
+      const maxHistory = 10;
+      let historyList = value;
 
-      for (let i = 0; i < hostoryList.length; i++) {
-        if (hostoryList.length > maxHistory) hostoryList.pop();
+      for (let i = 0; i < historyList.length; i++) {
+        if (historyList.length > maxHistory) historyList.pop();
       }
 
-      storage.set('search.history', hostoryList);
+      storage.set('search.history', historyList);
     },
     handleSearchHistoryClose(index) {
       this.searchHistory.list.splice(index, 1);
@@ -546,21 +536,19 @@ export default new Application({
     handleSearch() {
       const that = this;
       const keyword = this.searchVal.trim();
-      let data = {
-        keyword,
-        type: this.searchTypeValue,
-      };
+      let data = {keyword, type: this.searchTypeValue};
 
       this.searchPosting = false;
+      data = Object.assign({
+        game: this.searchGameValue,
+        gameSort: this.searchGameSort,
+      }, data)
+      this.$router.push({name: this.$router.name, query: data});
 
       switch (this.searchTypeValue) {
         case 'player':
-          data = Object.assign({
-            game: this.searchGameValue,
-            gameSort: this.searchGameSort,
-            skip: (this.skip.player - 1) * this.limit.player,
-            limit: this.limit.player,
-          }, data)
+          if (this.skip[this.searchTypeValue] >= 1) data.skip = Number((this.skip[this.searchTypeValue] - 1) * this.limit[this.searchTypeValue]);
+          if (this.limit[this.searchTypeValue] >= 0 && this.limit[this.searchTypeValue] <= 40) data.limit = Number(this.limit[this.searchTypeValue]);
 
           // Time limit
           if (this.intervalTime) {
@@ -572,17 +560,9 @@ export default new Application({
           }
           break;
         case 'user':
-          data = Object.assign({
-            skip: (this.skip.user - 1) * this.limit.user,
-            limit: this.limit.user,
-            gameSort: this.searchUserSort,
-          }, data)
-          break;
         case 'comment':
-          data = Object.assign({
-            skip: (this.skip.comment - 1) * this.limit.comment,
-            limit: this.limit.comment,
-          }, data)
+          if (this.skip[this.searchTypeValue] >= 1) data.skip = Number((this.skip[this.searchTypeValue] - 1) * this.limit[this.searchTypeValue]);
+          if (this.limit[this.searchTypeValue] >= 0 && this.limit[this.searchTypeValue] <= 40) data.limit = Number(this.limit[this.searchTypeValue]);
           break;
       }
 
@@ -594,11 +574,9 @@ export default new Application({
       }
 
       this.modalSpinShow = true;
-      this.$router.push({name: this.$router.name, query: data});
       data.param = data.keyword;
-      http.get(api["search"], {
-        params: data
-      }).then(res => {
+
+      http.get(api["search"], {params: data}).then(res => {
         const d = res.data;
         let notRepeat = false;
 

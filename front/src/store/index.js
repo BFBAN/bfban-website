@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import Cookies from 'js-cookie'
 
 import app from '../main'
-import theme from '/public/conf/themes.json'
+import theme from '/public/config/themes.json'
 import {SET_LANG, SET_THEME, SET_USER} from './mutation-types';
 
 Vue.use(Vuex)

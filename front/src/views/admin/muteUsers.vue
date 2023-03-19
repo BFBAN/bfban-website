@@ -140,10 +140,10 @@
 <script>
 import {api, http_token, mail} from "@/assets/js";
 import PrivilegesTag from "@/components/PrivilegesTag";
-import BFBAN from "@/assets/js/application";
+import Application from "@/assets/js/application";
 import Empty from "@/components/Empty";
 
-export default new BFBAN({
+export default new Application({
   name: "muteUsers",
   data() {
     return {
@@ -273,7 +273,7 @@ export default new BFBAN({
 })
 </script>
 
-<style ref="scss" scoped>
+<style ref="less" scoped>
 .interval-card {
   margin-bottom: 10px;
 }
