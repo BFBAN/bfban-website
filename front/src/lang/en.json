@@ -341,10 +341,10 @@
       "describe": "This report has a problem. I can prove that me or the player mentioned is innocent.",
       "modal": {
         "modalTitle": "Rules",
-        "describe": "针对误BAN，本人或第三方可以协助申诉，在满足下方所有基本要求后，您的申诉内容会提交到BFBAN所有管理员，管理员确认通过才可解除",
-        "effectiveEvidence": [null, "使用类似\"高速目标靶心\"软件、Moss软件，拍摄到屏幕与手、键盘录制自证.", "自我辩护，可以使用图片、视频等等材料.", "有些地方所提供的要求不同，可以咨询地区BFBAN管理，索要申诉材料."],
-        "evidenceInvalid": [null, "借出、出租等形式给第三方，无论是刷数据还是朋友借用说辞，都无法证明是否本人，你必须明白账户借出无法知道通过何种手段. 一律不给与通过.", "被多方玩家截取使用(不限于本人截图显示出作弊特征)或购买作弊软体多媒体.", "存在前科，如上系列存在档案玩家将大大折扣通过几率.", "任何誓言，诅咒."],
-        "auxiliaryProof": [null, "举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址.", "在场玩家，提供自己id，具体服务器、时间、场此，以及您辅助申诉对象说明."]
+        "describe": "For wrong BAN, you or a third party can assist in the appeal. After meeting all the basic requirements below, your appeal content will be submitted to all administrators of BFBAN, and the administrator can only release it after confirmation",
+        "effectiveEvidence": [null, "Use software like \"High Speed Target Bullseye\" and Moss software to capture the screen, hands, and keyboard to record self-certification.", "Self-defense, you can use pictures, videos, etc. materials.", "Some places provide different requirements , you can consult the regional BFBAN management and ask for appeal materials."],
+        "evidenceInvalid": [null, "Lending, leasing, etc. to a third party, no matter whether it is swiping data or borrowing words from friends, it is impossible to prove whether you are the person. You must understand that you cannot know the means through which the account is lent. It will not be approved.", "by multiple players Intercept and use (not limited to my own screenshots showing cheating features) or buy cheating software multimedia.", "With previous convictions, players with files in the above series will greatly reduce the chance of passing.", "Any oath, curse."],
+        "auxiliaryProof": [null, "From the perspective of other players (enemies and friends) of the reported single battle, and no less than 10 minutes without clips, provide the video address by yourself.", "Players present, provide their own id, specific server, time, scene, and you Auxiliary complaint object description."]
       },
       "info": {
         "content": "Appeal details",
@@ -411,8 +411,8 @@
       "behavior": "Judgement type",
       "methods": "Cheat method",
       "content": "Judgement discription",
-      "appropriateVerdict": [null, "直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)", "简要，作弊特征明显，可使用下方模板统一判决"],
-      "inappropriateRuling": [null, "填写如\"1\"、\"[空位符]\"、\"[表情]\"等这类无意义回复", "回复内容中携带人生攻击、歧视、色情、政治内容", "由于游戏外因素决定，比如头像、丑"],
+      "appropriateVerdict": [null, "Intuitively put forward the reason for the ruling, for example, a certain behavior determines the result of the judgment, due to the following factors (omitted)", "Simple, with obvious cheating characteristics, you can use the template below to make a unified judgment"],
+      "inappropriateRuling": [null, "Fill in meaningless replies such as \"1\", \"[space character]\", \"[expression]\", etc.", "The content of the reply contains personal attacks, discrimination, pornography, and political content", "Because Determined by factors outside the game, such as avatar, ugly"],
       "game": "Affiliated game"
     },
     "messages": {
