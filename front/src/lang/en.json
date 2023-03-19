@@ -11,8 +11,6 @@
       "title": "This account not connected to a Origin account!",
       "travel": "All right, Connect to my Origin account"
     },
-    "hint2": "Everyone can post responses on the report page.",
-    "hint3": "If you have more evidence for a hacker, please report the same user twice.",
     "joinedAt": "Joined at",
     "lastOnlineTime": "Last online",
     "message": {
@@ -146,25 +144,24 @@
       "super": "Super Admin",
       "test": "Testing Account"
     },
-    "status": [
-      "Unprocessed",
-      "Confirmed hacker",
-      "Suspicious",
-      "Clean",
-      "Invalid report",
-      "Under discussion",
-      "Needs more votes",
-      "Ultra-confirmed hacker",
-      "farm weapons"
-    ],
+    "status": {
+      "0": "Unprocessed",
+      "1": "Confirmed hacker",
+      "2": "Suspicious",
+      "3": "Clean",
+      "4": "Invalid report",
+      "5": "Under discussion",
+      "6": "Needs more votes",
+      "7": "Ultra-confirmed hacker",
+      "8": "farm weapons",
+      "all": "all"
+    },
     "tip": {
       "noAccess": "Have no right to access",
       "noReports": "No reports yet",
       "notContent": "No content",
       "notFound": "We cant find the page your looking for.",
-      "notLang": "No translation",
-      "notcontent": "Nothing found",
-      "notlang": "untranslated"
+      "notLang": "No translation"
     }
   },
   "bindOrigin": {
@@ -236,22 +233,22 @@
       "modal": {
         "auxiliaryProof": [
           null,
-          "举报的单场战局的其他玩家(敌人与友方)视角，且不少于10分钟无剪辑，自行提供视频地址.",
-          "在场玩家，提供自己id，具体服务器、时间、场此，以及您辅助申诉对象说明."
+          "Other players (enemy and friendly) perspectives of the reported single battle, and no less than 10 minutes without clips, provide the video address by yourself.",
+          "Players present, provide their own id, specific server, time, venue, and the description of your auxiliary appeal object."
         ],
-        "describe": "针对误BAN，本人或第三方可以协助申诉，在满足下方所有基本要求后，您的申诉内容会提交到BFBAN所有管理员，管理员确认通过才可解除",
+        "describe": "For wrong BAN, you or a third party can assist in the appeal. After meeting all the basic requirements below, your appeal content will be submitted to all administrators of BFBAN, and the administrator can only release it after confirmation",
         "effectiveEvidence": [
           null,
-          "使用类似\"高速目标靶心\"软件、Moss软件，拍摄到屏幕与手、键盘录制自证.",
-          "自我辩护，可以使用图片、视频等等材料.",
-          "有些地方所提供的要求不同，可以咨询地区BFBAN管理，索要申诉材料."
+          "Use software like \"High Speed Target Bullseye\" and Moss software to capture the screen, hands, and keyboard to record self-certification.",
+          "Self-defense, you can use pictures, videos and other materials.",
+          "Some places provide different requirements, you can consult the regional BFBAN management and ask for appeal materials."
         ],
         "evidenceInvalid": [
           null,
-          "借出、出租等形式给第三方，无论是刷数据还是朋友借用说辞，都无法证明是否本人，你必须明白账户借出无法知道通过何种手段. 一律不给与通过.",
-          "被多方玩家截取使用(不限于本人截图显示出作弊特征)或购买作弊软体多媒体.",
-          "存在前科，如上系列存在档案玩家将大大折扣通过几率.",
-          "任何誓言，诅咒."
+          "Lending, leasing, etc. to a third party, no matter whether it is swiping data or borrowing words from friends, cannot prove whether it is the person. You must understand that the account lending method cannot be known through any means. It will not be approved.",
+          "Intercepted and used by multiple players (not limited to my own screenshot showing cheating features) or buying cheating software multimedia.",
+          "If there is a criminal record, players with files in the above series will greatly discount the chances of passing.",
+          "Any oath, curse."
         ],
         "modalTitle": "Rules"
       },
@@ -296,7 +293,6 @@
       "judgement": "Judgement",
       "originAvatar": "Origin avatar",
       "recentUpdateTime": "Recent update time",
-      "reply": "Reply",
       "replyManual1": "If you have new picture or video evidence to be maintained, you can report one more time.Otherwise,you can only reply text or link by replying here.if you want to add picture click here",
       "replyManual2": "and then copy the picture link to reply",
       "replyManual3": "You must be a BFban member to take part in the disscusion",
@@ -313,17 +309,17 @@
     "judgement": {
       "appropriateVerdict": [
         null,
-        "直观提出裁决原因，比如某行为决定判决结果，由于以下因素(省略)",
-        "简要，作弊特征明显，可使用下方模板统一判决"
+        "Intuitively put forward the reasons for the ruling, for example, a certain behavior determines the result of the judgment due to the following factors (omitted)",
+        "Brief, with obvious cheating features, you can use the template below to make a unified judgment"
       ],
       "behavior": "Judgement type",
       "content": "Judgement discription",
       "game": "Affiliated game",
       "inappropriateRuling": [
         null,
-        "填写如\"1\"、\"[空位符]\"、\"[表情]\"等这类无意义回复",
-        "回复内容中携带人生攻击、歧视、色情、政治内容",
-        "由于游戏外因素决定，比如头像、丑"
+        "Fill in meaningless replies such as \"1\", \"[space character]\", \"[expression]\", etc",
+        "Replies contain personal attacks, discrimination, pornography, and political content",
+        "Due to factors outside the game, such as avatar, ugly"
       ],
       "methods": "Cheat method"
     },
@@ -381,28 +377,28 @@
   },
   "forgetPassword": {
     "resetSuccess": "The password reset is successful! 💐",
-    "steps": [
-      {
+    "steps": {
+      "0": {
         "title": "Basic account information",
         "supplement": "Account name"
       },
-      {
+      "1": {
         "title": "Captcha",
         "supplement": "Verity that you are not a robot"
       },
-      {
+      "2": {
         "title": "Email verification",
         "supplement": "Check your email for a verification link"
       },
-      {
+      "3": {
         "title": "Reset password",
         "supplement": "Reset your password"
       },
-      {
+      "4": {
         "title": "Submit",
         "supplement": "The password reset is successful"
       }
-    ],
+    },
     "title": "Reset password"
   },
   "header": {
@@ -440,15 +436,17 @@
       "dataReceived": "Recieved",
       "endTime": "As of nov. 4th 2018",
       "h1": "BFBAN",
-      "h2.hint0": "Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world",
-      "h2.hint1": "Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheaters",
+      "h2": {
+        "hint0": "Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world",
+        "hint1": "Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheaters"
+      },
       "h3": "A global database of cheaters",
       "h4": "Become one of us - Improve our community",
       "subButton": "Find out which communities have joined"
     },
     "seo": {
-      "description": "",
-      "keywords": ""
+      "description": "BfBan official website, establish a global archive of cheating players, become a member of us to maintain the community environment",
+      "keywords": "BFBan,BFBan Bureau,Battlefield"
     },
     "title": "Home"
   },
@@ -518,17 +516,17 @@
         "residueDegree": "You still have {changeNameLeft}chance to change name",
         "specification1": "You are changing your account name, which means that you will see changes within the site and the <b>login ID</b> will change at the same time. If you accidentally forget your new account ID, you may not be able to retrieve it, affecting your binded orgin account, and you will need to go through a very long manual review..",
         "specification2": "Do you understand the instructions above?",
-        "steps": [
-          {
+        "steps": {
+          "0": {
             "title": "hint"
           },
-          {
+          "1": {
             "title": "fill in"
           },
-          {
+          "2": {
             "title": "complete"
           }
-        ],
+        },
         "title": "Change name"
       },
       "title": "Account information"
@@ -538,6 +536,7 @@
         "adminLog": "Admin log",
         "adminOperation": "Admin action log on cases",
         "adminOperationLog": "Admin website action log",
+        "blockedUsers": "blockedusers",
         "comment": "Comments on the management",
         "home": "Home",
         "judgementLog": "Judgement log",
@@ -546,7 +545,9 @@
         "message": "User message",
         "messageList": "Message content",
         "messageManagement": "Message",
-        "messagePush": "",
+        "messagePush": "Push Notifications",
+        "muteUsers": "Muned users",
+        "user": "User Management",
         "user": "user management"
       },
       "title": "Backend management"
@@ -569,7 +570,7 @@
       },
       "tabsSend": {
         "content": "Content",
-        "itemName": "",
+        "itemName": "Push Notifications",
         "messageID": "Site ID",
         "messageMethod": "Type"
       },
@@ -606,6 +607,7 @@
       }
     },
     "enhance": {
+      "title": "Local enhancement",
       "public": {
         "autoUpdatePlayerList": {
           "describe": "",
@@ -619,8 +621,13 @@
           "describe": "Top toolbar, to provide user functions like follow a player.",
           "name": "Bottom toolbar"
         }
-      },
-      "title": "Local enhancement"
+      }
+    },
+    "exportAndImport": {
+      "description": "The local persistent data will not be synchronized with the cloud, and you need to manually export and import the data on the new platform. Of course, these data leaks will not affect your account security, but they contain some records",
+      "hint1": "Do not import data into unfamiliar environments, the exported content contains some of your local private information",
+      "hint2": "Proceed with caution, overwriting cannot be undone",
+      "title": "Export and import"
     },
     "history": {
       "title": "History log"
@@ -631,89 +638,31 @@
       "title": "Media library"
     },
     "meet": "welcome back {name}! ",
-    "message": {
-      "control": "Batch editing",
-      "load": "Refresh",
-      "look": "Check",
-      "placeholder": "Type your message",
-      "tabsList": {
-        "form": {
-          "del": "Delete",
-          "read": "Read",
-          "unread": "Unread"
-        },
-        "itemName": "Messages"
-      },
-      "tabsSend": {
-        "content": "content",
-        "itemName": "Recommended",
-        "messageID": "Website ID",
-        "messageMethod": "type",
-        "send": {
-          "form": {},
-          "itemName": "Send message"
-        }
-      },
-      "title": "Messages",
-      "types": {
-        "command": {
-          "describe": "",
-          "text": "command"
-        },
-        "direct": {
-          "describe": "Chat",
-          "text": "Chat"
-        },
-        "fatal": {
-          "describe": "confirm",
-          "text": "confirm"
-        },
-        "toAdmins": {
-          "describe": "Admin",
-          "text": "Admin"
-        },
-        "toAll": {
-          "describe": "All",
-          "text": "All"
-        },
-        "toNormals": {
-          "describe": "Normal user",
-          "text": "Normal user"
-        },
-        "warn": {
-          "describe": "system",
-          "text": "system"
-        }
-      }
-    },
     "subscribes": {
-      "title": "Tracked cheaters"
+      "title": "track"
     },
     "title": "Personal settings",
     "voice": {
-      "backgroundMusic": "Background sound",
+      "backgroundMusic": "background sound",
       "backgroundMusicDescribe": "Background music",
-      "interaction": "Interaction sound",
-      "interactionDescribe": "Some interaction sound on website",
-      "message": "Message notification Sound",
-      "messageDescribe": "Notice sound related to messages",
+      "interaction": "interactive sound",
+      "interactionDescribe": "Some interactive voices on the website",
+      "message": "message notification sound",
+      "messageDescribe": "Notification sounds related to in-site messages",
       "title": "Sound",
       "video": "Video",
-      "videoDescribe": "Website video sound"
+      "videoDescribe": "Website Video Sound"
     }
   },
   "report": {
+    "title": "Report",
+    "seo": {
+      "description": "Player report",
+      "keywords": "BFBan,Battlefield"
+    },
     "button": {
       "continue": "Continue",
       "leave": "Leave"
-    },
-    "error": {
-      "mediaEvidence": "Please upload a picture or fill in the video link",
-      "originId": "Origin account doesn't exist, please check the spelling",
-      "permissionDenied": "",
-      "success": "Submitted successfully",
-      "voideBadFormat": "Invild format",
-      "voideEmpty": "Invild video link"
     },
     "info": {
       "description": "List as much evidence as possible about the person being reported",
@@ -729,7 +678,6 @@
       "onlyOneId": "Only one origin account at a time",
       "reportAll": "Report all",
       "reportHacker": "Report a hacker",
-      "reportNews": "We offer the function to report BFV hackers!",
       "reportOne": "Report one",
       "required": "video link",
       "uploadManual1": "if you do not want to register video-site member such as Bilibili and Youtube, you can go to",
@@ -757,20 +705,14 @@
       "tipBind": "Please report only after you've bound Origin account",
       "videoBadFormat": "Wrong format",
       "videoEmpty": "Empty video link"
-    },
-    "seo": {
-      "description": "",
-      "keywords": ""
-    },
-    "title": "Report"
+    }
   },
   "reset": {
     "form": {
       "newPassword": "New Password",
       "oldPassword": "Old password",
       "password": "New password",
-      "passwordRepeat": "Comfirm password",
-      "qq": "QQ"
+      "passwordRepeat": "Comfirm password"
     },
     "title": "Rest paasword"
   },
@@ -835,9 +777,9 @@
     "form": {
       "forgetPasswordHint": "Forgot your password？",
       "newUsername": "New username",
-      "originEmail": "🍊 Origin email",
-      "originId": "Origin account",
-      "originName": "🍊 Origin username",
+      "originEmail": "EA account email",
+      "originId": "EA ID",
+      "originName": "EA account name",
       "password": "Password",
       "submitHint": "Already have a account? Sign In",
       "username": "Username"
@@ -845,7 +787,6 @@
     "gameNotShowed": "The account under this email does not contain any games!",
     "needVerify": "Please go to email to verify your account",
     "originBindingExist": "This origin account has been bound",
-    "originIdExist": "This Origin account has already been used",
     "originNotFound": "Origin account with this email not found.",
     "placeholder": {
       "originEmail": "Enter your Origin e-mail address",
@@ -862,28 +803,28 @@
       "title": "Verify account",
       "validation": "Verifying"
     },
-    "steps": [
-      {
+    "steps": {
+      "0": {
         "title": "Basic infomation",
         "supplement": "Basic account infomation"
       },
-      {
+      "1": {
         "title": "Binding account",
         "supplement": "Bind your origin account"
       },
-      {
+      "2": {
         "title": "Captcha",
         "supplement": "Verify you are not a robot"
       },
-      {
+      "3": {
         "title": "Comfirm",
         "supplement": "Email security code"
       },
-      {
+      "4": {
         "title": "Finish",
         "supplement": "Registration result"
       }
-    ],
+    },
     "title": "Register",
     "usernameExist": "This username is already exists!"
   },
@@ -902,24 +843,25 @@
       "weekly": "Weekly",
       "yearly": "1 year"
     },
-    "title": "Website statistics"
+    "title": "Website statistics",
+    "trend": "Case heat"
   },
   "textarea": {
     "originalImage": "The original image",
     "steps": {
-      "media": [
-        "Select",
-        "To view"
-      ],
-      "upload": [
-        "Select the file",
-        "Editor",
-        "To view"
-      ],
-      "url": [
-        "Fill in the picture address",
-        "To view"
-      ]
+      "media": {
+        "0": "Select",
+        "1": "To view"
+      },
+      "upload": {
+        "0": "Select the file",
+        "1": "Editor",
+        "2": "To view"
+      },
+      "url": {
+        "0": "Fill in the picture address",
+        "1": "To view"
+      }
     },
     "type": {
       "media": "Media library",
