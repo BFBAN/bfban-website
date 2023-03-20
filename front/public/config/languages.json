@@ -85,6 +85,16 @@
         }
       ]
     }
+    {
+      "name": "fr-FR",
+      "label": "France",
+      "members": [
+        {
+          "name": "Google Translate",
+          "url": "//translate.google.com/"
+        }
+      ]
+    }
   ],
   "TODO": [
     {
