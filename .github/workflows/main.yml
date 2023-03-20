@@ -21,8 +21,11 @@ jobs:
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
-  
     runs-on: ubuntu-latest
+    # Use the specified node.js for this project
+    strategy:
+      matrix:
+        node-version: [ 14.17.6 ]
     if: github.event_name == 'push'
 
     steps:
@@ -32,7 +35,7 @@ jobs:
         run: |
           cd backend
           docker build . --file Dockerfile --tag $IMAGE_NAME
-          
+
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
