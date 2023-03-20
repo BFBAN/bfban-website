@@ -1,0 +1,872 @@
+{
+  "about": {
+    "description": "<h2>BFBAN</h2>\n<p>\n诞生于2018年1月29日；\n是战地玩家一起组建的 <b>抵制外挂</b> 组织。\n </p>",
+    "privacy": "\n<h2>隐私政策</h2>\n它是开源的。您可以通过 GitHub 发布问题并提出更改/改进建议。社区网络提供的 API 并开放供公众使用。",
+    "title": "à propos",
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> Le site Web s'appuie sur le bureau d'enquête BFBAN, et l'idée originale est née de joueurs enthousiastes，由 <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> 开发，于 2018年11月4日 上线‘\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>"
+  },
+  "account": {
+    "bindOrigin": {
+      "content": "BFBAN vous oblige à lier le compte d'origine pour des fonctions telles que l'appel et la récupération de compte ; avant que l'origine ne soit pas liée, votre compte sera verrouillé et vous ne pourrez soumettre aucun contenu",
+      "title": "compte non lié",
+      "travel": "OK, allez à lier le compte"
+    },
+    "joinedAt": "rejoindre le temps",
+    "lastOnlineTime": "dernière fois en ligne",
+    "message": {
+      "chat": "discuter",
+      "hint": {
+        "denied": "Banni du chat",
+        "selfTalk": "je ne peux pas me parler！",
+        "taOffChat": "La personne a désactivé l'option de chat"
+      }
+    },
+    "recentlyUpdated": "récemment mis à jour",
+    "reported": "rapport",
+    "reportNum": "Nombre total de rapports",
+    "reports": "rapport personnel",
+    "role": "identité",
+    "status": "État",
+    "title": "page d'affichage de l'utilisateur",
+    "userInfo": "informations personnelles",
+    "username": "nom d'utilisateur"
+  },
+  "announcement": {
+    "antiCheat": {
+      "intro": "L'équipe BFBAN gère les normes des différents cas, et traite les cas selon les dernières normes",
+      "name": "Règles anti-triche BFBAN"
+    },
+    "conduct": {
+      "intro": "Code de conduite pour les membres de l'équipe BFBAN dans leur travail quotidien",
+      "name": "Règles de conduite BFBAN"
+    },
+    "latest": "Le plus récent",
+    "personnel": {
+      "intro": "Règles de recrutement du personnel de l'équipe BFBAN, structure des membres, droits et obligations et exigences des différents membres",
+      "name": "Règlement du personnel BFBAN"
+    },
+    "version": "Version"
+  },
+  "apps": {
+    "buttons": {
+      "get": "Obtenir",
+      "hot": "populaire",
+      "website": "site Internet"
+    },
+    "describe": "Outils de base de données BFBAN intégrés tiers",
+    "screen": {
+      "admin": "gestionnaire de communauté",
+      "all": "tous",
+      "api": "interfaces",
+      "app": "application",
+      "bf1": "Champ de bataille 1",
+      "bf6": "Champ de bataille 2042",
+      "bfv": "Champ de bataille 5",
+      "book": "guide",
+      "bot": "robot",
+      "official": "officiel",
+      "pc_app": "application de bureau",
+      "qq": "QQ de Tencent",
+      "web": "page web"
+    },
+    "submit_tool_app": "outil de soumission",
+    "title": "outil"
+  },
+  "basic": {
+    "action": {
+      "discuss": {
+        "describe": "Les preuves ci-dessus ont encore besoin de plus d'administrateurs et de joueurs pour participer à la discussion et à la décision, comportement incertain",
+        "text": "à discuter"
+      },
+      "farm": {
+        "describe": "pistolet à brosse",
+        "text": "pistolet à brosse"
+      },
+      "guilt": {
+        "describe": "L'administrateur pense tricher, voter et le système confirmera le statut du joueur si les conditions sont remplies",
+        "text": "Votez pour confirmer la tricherie"
+      },
+      "innocent": {
+        "describe": "La suspicion des informations rapportées a été levée par vidéo",
+        "text": "Auto-certification MOSS"
+      },
+      "invalid": {
+        "describe": "Comportements tels que signaler des documents incomplets ou signaler des pièces d'identité erronées",
+        "text": "rapport invalide"
+      },
+      "kill": {
+        "describe": "Marteau de pierre du jugement administratif",
+        "text": "marteau de pierre"
+      },
+      "more": {
+        "describe": "Des preuves plus solides sont nécessaires",
+        "text": "besoin de plus de preuves"
+      },
+      "suspect": {
+        "describe": "Si les données de carrière du joueur sont anormales ou si les données d'un seul match sont gravement incompatibles avec la carrière, il y a suspicion de triche. Les membres de l'équipe d'identification et de triche exigent que le joueur s'auto-certifie ou lui donnent le temps de s'auto-certifier après avoir soumis une déclaration d'auto-certification. De la date de début du statut à 7 jours plus tard, s'il n'y a pas d'auto-certification, il sera automatiquement transféré au vrai marteau",
+        "text": "être autocertifié"
+      }
+    },
+    "button": {
+      "cancel": "Annuler",
+      "commit": "soumettre",
+      "insert": "insérer",
+      "next": "L'étape suivante",
+      "prev": "Précédent",
+      "reply": "répondre",
+      "report": "rapport",
+      "reset": "réinitialiser",
+      "save": "sauvegarder",
+      "submit": "confirmer"
+    },
+    "gamePlatforms": {
+      "origin": "origin",
+      "pc": "pc",
+      "ps3": "ps3",
+      "ps4": "ps4",
+      "psn": "sony",
+      "xbox": "Xbox",
+      "xboxone": "Xbox One"
+    },
+    "games": {
+      "all": "tous",
+      "bf1": "Champ de bataille 1",
+      "bf6": "Champ de bataille 2042",
+      "bfv": "Champ de bataille 5"
+    },
+    "privilege": {
+      "admin": "gestionnaire de communauté",
+      "blacklisted": "liste noire",
+      "bot": "robot",
+      "dev": "équipe de développement",
+      "normal": "utilisateur",
+      "root": "système",
+      "super": "super administrateur",
+      "test": "compte d'essai"
+    },
+    "status": {
+      "0": "non transformé",
+      "1": "Confirmer la triche",
+      "2": "être autocertifié",
+      "3": "Auto-certification MOSS",
+      "4": "rapport invalide",
+      "5": "En conversation",
+      "6": "Besoin de plus de votes d'administrateur",
+      "7": "Des données anormales confirment automatiquement la tricherie",
+      "8": "pistolet à brosse",
+      "all": "tous"
+    },
+    "tip": {
+      "noAccess": "compte courant, pas d'autorisation",
+      "noReports": "pas encore de rapports",
+      "notContent": "Pas de contenu",
+      "notFound": "uh, L'adresse d'accès semble être perdue.......",
+      "notLang": "Non traduit"
+    }
+  },
+  "bindOrigin": {
+    "messages": {
+      "bad": "Erreur de liaison, veuillez contacter l'administrateur",
+      "expired": "Le code de vérification de la liaison a expiré, veuillez soumettre à nouveau la liaison",
+      "notFound": "Code de vérification de liaison introuvable",
+      "success": "Le compte BFBAN est lié avec succès au compte d'origine"
+    },
+    "title": "Lier le compte d'origine"
+  },
+  "captcha": {
+    "get": "obtenir le code de vérification",
+    "messages": {
+      "bad": "Erreur de code de vérification, veuillez contacter l'administrateur",
+      "expired": "Le code de vérification a expiré",
+      "gen": "réussir",
+      "wrong": "Erreur de code de vérification"
+    },
+    "title": "le code de vérification"
+  },
+  "cheatMethods": {
+    "aimbot": {
+      "describe": "Position de visée automatique, montrant le comportement de la machine",
+      "title": "Auto-visant"
+    },
+    "attackServer": {
+      "describe": "serveur d'attaque malveillant",
+      "title": "serveur d'attaque"
+    },
+    "damageChange": {
+      "describe": "Modifier les paramètres de l'arme",
+      "title": "Réhabilitation"
+    },
+    "gadgetModify": {
+      "describe": "L'équipement apparaît dans des scénarios impossibles",
+      "title": "Changer d'équipement"
+    },
+    "invisable": {
+      "describe": "Le personnage est invisible, incapable de voir et peut suivre l'emplacement",
+      "title": "invisibilité"
+    },
+    "magicBullet": {
+      "describe": "Les balles peuvent traverser des entités",
+      "title": "balle magique"
+    },
+    "oneShotKill": {
+      "describe": "Visez rapidement les pièces très endommagées pour des éliminations rapides",
+      "title": "tuer immédiatement"
+    },
+    "teleport": {
+      "describe": "mouvement de téléportation",
+      "title": "envoyer"
+    },
+    "wallhack": {
+      "describe": "Ignorer les entités pour voir les positions ennemies",
+      "title": "perspective"
+    }
+  },
+  "detail": {
+    "appeal": {
+      "describe": "Il y a un problème avec les informations rapportées et je peux prouver mon innocence par moi-même ou avec l'aide d'autres personnes.",
+      "info": {
+        "changeName": "changement de nom",
+        "content": "Contenu de la plainte",
+        "originName": "nom actuel du joueur",
+        "player": "identifiant du joueur"
+      },
+      "modal": {
+        "auxiliaryProof": {
+          "1": "D'autres points de vue des joueurs (ennemis et amis) sur la bataille unique signalée, et pas moins de 10 minutes sans clips, fournissent vous-même l'adresse vidéo.",
+          "2": "Les joueurs présents fournissent leur propre identifiant, serveur spécifique, heure, lieu et la description de votre objet d'appel auxiliaire.",
+          "title": "Preuve auxiliaire"
+        },
+        "describe": "Pour un mauvais BAN, vous ou un tiers pouvez aider à l'appel. Après avoir satisfait à toutes les exigences de base ci-dessous, votre contenu d'appel sera soumis à tous les administrateurs de BFBAN, et l'administrateur ne pourra le publier qu'après confirmation",
+        "effectiveEvidence": {
+          "1": "Utilisez des logiciels tels que \"High Speed ​​​​Target Bullseye\" et le logiciel Moss pour capturer l'écran, les mains et le clavier afin d'enregistrer l'auto-certification.",
+          "2": "Autodéfense, vous pouvez utiliser des images, des vidéos et d'autres matériaux.",
+          "3": "Certains endroits offrent des exigences différentes, vous pouvez consulter la direction régionale du BFBAN et demander des documents de recours.",
+          "title": "preuves valables"
+        },
+        "evidenceInvalid": {
+          "1": "Prêter, louer, etc. à un tiers, qu'il s'agisse de balayer des données ou d'emprunter des mots à des amis, ne peut pas prouver que vous êtes la personne. Vous devez comprendre que vous ne pouvez pas connaître les moyens par lesquels le compte est prêté. pas être approuvé.",
+          "2": "Intercepté et utilisé par plusieurs joueurs (non limité à ma propre capture d'écran montrant des fonctionnalités de triche) ou achetant un logiciel de triche multimédia.",
+          "3": "S'il y a un casier judiciaire, les joueurs avec des fichiers dans la série ci-dessus réduiront considérablement les chances de réussite.",
+          "4": "Tout serment, malédiction.",
+          "title": "preuve d'échec"
+        },
+        "modalTitle": "règle"
+      },
+      "placeholder": {
+        "content": "Veuillez remplir vos informations d'appel en détail pour examen",
+        "player": "Veuillez remplir l'identifiant du joueur"
+      }
+    },
+    "info": {
+      "action": "action",
+      "adminConsole": "Zone d'administration",
+      "adminManual1": "Ne jugez pas à la légère. Si vous ne pouvez pas prendre de décision, utilisez la réponse ci-dessus pour participer à la discussion et attendez que le journaliste réponde.",
+      "adminManual2": "Toute opération de traitement par l'administrateur modifiera l'état actuel du tricheur. Si vous n'êtes pas sûr à 100 %, veuillez utiliser le message de réponse pour en discuter",
+      "app_qr": {
+        "openApp": "Afficher dans l'application",
+        "openAppDescribe": "Voir ce lecteur dans l'application BFBAN",
+        "tip": "Dans l'application BFBAN, scannez ce code QR",
+        "title": "Voir sur mobile"
+      },
+      "appeal": "appel",
+      "appealManual1": "Appel de mauvais BAN : Si vous avez un mauvais BAN, veuillez envoyer le lien de la page de cas et des informations détaillées sur l'appel à ban-appeals@bfban.com et l'administrateur s'en chargera.",
+      "assistPppeal": "Assistance en appel",
+      "cheatMethod": "tricherie",
+      "cheatersInfo": "détails du joueur",
+      "dealRecord": "Administrateur traitant les enregistrements",
+      "discription1": "Si vous constatez que le lien n'est pas valide ou que le nom a été modifié, veuillez cliquer sur",
+      "discription2": "bfban.com a la capacité de suivre en permanence la localisation des personnes signalées",
+      "discription3": "Le serveur capturera et mettra également régulièrement à jour les informations de la personne signalée",
+      "discription4": "L'ID d'historique peut également être utilisé pour rechercher",
+      "fastReplies": {
+        "evidencePic": "La preuve est montrée dans l'image",
+        "evidenceVid": "La preuve est montrée dans la vidéo",
+        "stats": "Données du joueur anormales"
+      },
+      "firstReportTime": "Heure du premier rapport",
+      "gameScores": "Lien d'enregistrement",
+      "gaming": "dans le jeu",
+      "giveOpinion": "Qu'en penses-tu?",
+      "historyID": "nom historique",
+      "inGame": "exister",
+      "judge": "penser",
+      "judgement": "Avis de traitement",
+      "originAvatar": "Avatar d'Origin",
+      "recentUpdateTime": "dernière mise à jour",
+      "replyManual1": "S'il y a de nouvelles images ou vidéos de preuve qui doivent être complétées, vous pouvez signaler à nouveau. La fonction de réponse ne peut répondre qu'avec du texte ou un lien. Si vous voulez répondre à l'image, veuillez vous déplacer ici",
+      "replyManual2": "Copiez ensuite le lien de l'image pour répondre.",
+      "replyManual3": "Ce n'est qu'après vous être inscrit et connecté que vous pouvez participer à la discussion",
+      "replyManual4": "Veuillez vous connecter pour participer à la réponse",
+      "report": "rapport",
+      "reportedGames": "Jeu signalé",
+      "timeLine": "calendrier",
+      "updateButton": "Mises à jour",
+      "uploadPicButton": "télécharger une image",
+      "videoLink": "lien vidéo",
+      "viewTimes": "Vues",
+      "writeSomething": "écris quelque chose"
+    },
+    "judgement": {
+      "appropriateVerdict": {
+        "1": "Présentez intuitivement les raisons de la décision, par exemple, un certain comportement détermine le résultat du jugement en raison des facteurs suivants (omis)",
+        "2": "Bref, avec des fonctionnalités de triche évidentes, vous pouvez utiliser le modèle ci-dessous pour porter un jugement unifié",
+        "title": "décision appropriée"
+      },
+      "behavior": "type de jugement",
+      "content": "Description du jugement",
+      "game": "Jeu d'appartenance",
+      "inappropriateRuling": {
+        "1": "Remplissez les réponses sans signification telles que \"1\", \"[caractère espace]\", \"[expression]\", etc.",
+        "2": "Les réponses contiennent des attaques personnelles, de la discrimination, de la pornographie et du contenu politique",
+        "3": "En raison de facteurs extérieurs au jeu, tels que l'avatar, la laideur",
+        "title": "décision inappropriée"
+      },
+      "methods": "manière de tricher"
+    },
+    "messages": {
+      "dontDoIt": "interdit",
+      "fillEverything": "Veuillez compléter",
+      "pleaseExplain": "Veuillez décrire votre décision plus en détail",
+      "replySuccess": "Répondre avec succès",
+      "signIn": "veuillez vous connecter",
+      "submitSuccess": "Soumis avec succès",
+      "tipBind": "Veuillez lier votre compte orange et répondre plus tard",
+      "updateComplete": "Mise à jour terminée"
+    },
+    "seo": {
+      "description": "Signaler les détails du joueur",
+      "keywords": "détails du joueur, joueur"
+    },
+    "subscribes": {
+      "cancelTrack": "ne plus suivre",
+      "cancelTrackDescribe": "Ne pas suivre ce joueur",
+      "tracking": "piste",
+      "trackingDescribe": "Suivez ce lecteur et informez-vous des mises à jour"
+    },
+    "timeline": {
+      "all": "tous",
+      "banAppeal": "afficher les appels uniquement",
+      "coreComment": "contenu principal",
+      "historyName": "Historique des noms de changement de joueur",
+      "verify": "voir le verdict uniquement"
+    },
+    "title": "détails"
+  },
+  "footer": {
+    "column": {
+      "col1": {
+        "text": "BFBAN - Base de données mondiale des tricheurs"
+      },
+      "col2": {
+        "title": "Communauté"
+      },
+      "col3": {
+        "title": "Fonction"
+      },
+      "col4": {
+        "title": "Coordonnées"
+      },
+      "sponsor": {
+        "join": "rejoindre le parrain",
+        "title": "parrainer"
+      }
+    },
+    "language": {
+      "members": "Participer à la traduction des membres"
+    }
+  },
+  "forgetPassword": {
+    "resetSuccess": "Félicitations pour avoir terminé la réinitialisation 💐",
+    "steps": {
+      "0": {
+        "supplement": "Vérifiez compte",
+        "title": "Informations de base"
+      },
+      "1": {
+        "supplement": "Vérifiez s'il s'agit d'un robot",
+        "title": "le code de vérification"
+      },
+      "2": {
+        "supplement": "Vérifiez le lien de vérification de l'e-mail",
+        "title": "Vérification de l'E-mail"
+      },
+      "3": {
+        "supplement": "réinitialisez votre mot de passe",
+        "title": "définir le mot de passe"
+      },
+      "4": {
+        "supplement": "réinitialisation réussie",
+        "title": "Finir"
+      }
+    },
+    "title": "réinitialiser le mot de passe"
+  },
+  "header": {
+    "about": "à propos",
+    "announcement": "annonce",
+    "cheaters": "base de données des joueurs",
+    "index": "page de garde",
+    "profile": "Paramètres personnels",
+    "report": "signaler la tricherie",
+    "signin": "Connexion",
+    "signout": "Se déconnecter",
+    "signoutSuccess": "déconnexion réussie",
+    "signup": "enregistrer",
+    "site_stats": "statistiques",
+    "userCenter": "ma page d'affichage"
+  },
+  "home": {
+    "activity": {
+      "activities": {
+        "admin": "gestionnaire de communauté",
+        "as": "traité comme",
+        "join": "Bfban enregistré, bienvenue!",
+        "mark": "Sera",
+        "report": "signalé"
+      },
+      "description": "bfban.com a été lancé le 4 novembre 2018. {report} rapports ont été reçus et {cheater} tricheurs ont été lapidés. Merci pour vos efforts conjoints !",
+      "more": "En savoir plus",
+      "title": "Dynamique du site Web"
+    },
+    "bulletin": {
+      "title": "annonce"
+    },
+    "cover": {
+      "confirmData": "Confirmer le tricheur",
+      "dataReceived": "reçu",
+      "endTime": "jusqu'à {heure}",
+      "h1": "BFBAN",
+      "h2": {
+        "hint0": "Fournissez une ☁️base de données afin que les joueurs de différents serveurs Battlefield du monde entier puissent surveiller et supprimer les joueurs avec des fichiers problématiques",
+        "hint1": "Peu importe de BF1 à BF2042, il prend en charge la requête du lecteur de fichiers de questions, de sorte que différents serveurs Battlefield du monde entier puissent être surveillés"
+      },
+      "h3": "Construire une archive mondiale des joueurs tricheurs",
+      "h4": "Devenez l'un de nous - Maintenir un environnement communautaire",
+      "subButton": "Découvrez quelles communautés ont déjà rejoint"
+    },
+    "seo": {
+      "description": "Le site officiel de BFBAN a créé une archive mondiale des joueurs tricheurs et devenez membre de nous pour maintenir l'environnement communautaire",
+      "keywords": "联ban,联办,联办局,联ban局,战地风云,战地"
+    },
+    "title": "page de garde"
+  },
+  "link": {
+    "join": "rejoindre le partenaire",
+    "languageMembers": "traduction de contribution exceptionnelle",
+    "languageMembersDescribe": "Les membres qui contribuent des textes de traduction pro bono, désireux de consacrer leur temps à la relecture des langues localisées sont par la présente félicités",
+    "linkWebDeveloperChild": "Membre de développement de contribution exceptionnelle",
+    "linkWebDeveloperDescribe": "Les membres qui ont participé au développement du programme BFBAN sans compensation sont par la présente félicités en tant que pionniers de la pierre angulaire du BFBAN",
+    "links": "chaîne d'amis",
+    "sponsor": "Partenaire",
+    "title": "Détails de la chaîne d'amis"
+  },
+  "list": {
+    "colums": {
+      "playerId": "identifiant de jeu",
+      "reportTime": "temps de rapport",
+      "screenTitle": "filtre",
+      "updateTime": "temps de mise à jour"
+    },
+    "filters": {
+      "sortBy": {
+        "commentsNum": "Nombre de réponses par ordre décroissant",
+        "createTime": "Rapport dans l'ordre chronologique inverse",
+        "updateTime": "Mise à jour dans l'ordre chronologique inverse",
+        "viewNum": "Les spectateurs dans l'ordre inverse"
+      },
+      "sortByTitle": "Trier par"
+    },
+    "reportTime": "Délai de rapport",
+    "title": "Annonce du plug-in",
+    "updateTime": "délai de mise à jour"
+  },
+  "misc": {
+    "progress": "Téléchargement...",
+    "uploadImage": {
+      "desktop": "Cliquez ou faites glisser pour télécharger...",
+      "fail": "Dépassement de la limite maximale de téléchargement, image 2M",
+      "info": "Téléchargez des photos, pas plus de 2M",
+      "mobile": "Appuyez deux fois sur l'écran pour télécharger..."
+    },
+    "uploadVideo": {
+      "desktop": "Cliquez ou faites glisser le fichier ici pour le télécharger",
+      "info": "Téléchargez la vidéo, pas plus de 30M"
+    }
+  },
+  "player_list": {
+    "seo": {
+      "description": "Liste des joueurs, contient ici le profil de joueur signalé par l'utilisateur",
+      "keywords": "liste des joueurs, liste"
+    },
+    "title": "base de données des joueurs"
+  },
+  "profile": {
+    "account": {
+      "form": {
+        "allowDM": "Que ce soit pour recevoir le chat",
+        "allowDMdescribe": "Si le message doit être accepté. Pour plus d'informations sur le message, accédez à [Liste des messages] pour afficher",
+        "introduction": "Présentation de soi",
+        "language": "Paramètres de langue",
+        "languageSyncDescribe": "Définissez cette option pour synchroniser la langue locale du programme après la connexion. Si vous vous déconnectez, il reviendra à la langue conservée par le programme local",
+        "privilege": "identité",
+        "showOrigin": "Informations orange visibles",
+        "showOriginDescribe": "Que ce soit pour rendre votre Origin liée visible dans BFBAN"
+      },
+      "modifyName": {
+        "residueDegree": "Le nombre de fois pour modifier le nom {changeNameLeft} est actuellement laissé",
+        "specification1": "Vous modifiez le nom de votre compte, ce qui signifie que tout ce qui est affiché sur le site Web va changer, et l'<b>identifiant de connexion</b> va également changer en même temps. Si vous oubliez accidentellement le nouvel identifiant de compte, vous risquez de ne pas être capable de récupérer ce compte, ce qui affectera la liaison. Pour un compte d'origine désigné, vous devez passer un très long examen manuel.",
+        "specification2": "Comprenez-vous l'explication ci-dessus ?",
+        "steps": {
+          "0": {
+            "title": "indice"
+          },
+          "1": {
+            "title": "remplir"
+          },
+          "2": {
+            "title": "Finir"
+          }
+        },
+        "title": "modifier le nom"
+      },
+      "title": "Paramètres des informations de compte"
+    },
+    "admin": {
+      "menu": {
+        "adminLog": "journal de gestion",
+        "adminOperation": "Gérer le journal des opérations de cas",
+        "adminOperationLog": "Journal des opérations du site d'administration",
+        "blockedUsers": "utilisateurs de la liste noire",
+        "comment": "gestion des commentaires",
+        "home": "Gérer la page d'accueil",
+        "judgementLog": "journal des verdicts",
+        "log": "enregistrer",
+        "management": "contenu",
+        "message": "information",
+        "messageList": "Contenu du message",
+        "messageManagement": "information",
+        "messagePush": "pousser",
+        "muteUsers": "utilisateur banni",
+        "user": "Gestion des utilisateurs",
+        "verifications": "validateur"
+      },
+      "title": "Expérience en gestion"
+    },
+    "appearance": {
+      "title": "peau"
+    },
+    "chat": {
+      "control": "modification par lots",
+      "load": "rafraîchir",
+      "look": "Vérifier",
+      "placeholder": "Remplissez le message envoyé",
+      "tabsList": {
+        "form": {
+          "del": "supprimer",
+          "read": "lire",
+          "unread": "non lu"
+        },
+        "itemName": "liste de messages"
+      },
+      "tabsSend": {
+        "content": "contenu",
+        "itemName": "pousser",
+        "messageID": "ID du site",
+        "messageMethod": "taper"
+      },
+      "title": "information",
+      "types": {
+        "command": {
+          "describe": "commande de service personnalisé",
+          "text": "Commande"
+        },
+        "direct": {
+          "describe": "Envoyer 'chat' à l'utilisateur",
+          "text": "discuter"
+        },
+        "fatal": {
+          "describe": "Envoyer à l'utilisateur un "avertissement"'",
+          "text": "discuter"
+        },
+        "toAdmins": {
+          "describe": "Envoyer un message à tous les administrateurs du site",
+          "text": "tous les administrateurs"
+        },
+        "toAll": {
+          "describe": "Pousser le contenu à tout le monde sur le site",
+          "text": "tout le monde"
+        },
+        "toNormals": {
+          "describe": "Envoyer un message à tous les utilisateurs à privilèges normaux",
+          "text": "utilisateur normal"
+        },
+        "warn": {
+          "describe": "message système push",
+          "text": "système"
+        }
+      }
+    },
+    "enhance": {
+      "public": {
+        "autoUpdatePlayerList": {
+          "describe": "Fournir un rafraîchissement automatique aux administrateurs, prêter attention aux joueurs non traités et faire des rappels sur place",
+          "name": "Rappel non géré"
+        },
+        "desktopNotifiction": {
+          "describe": "Notifications contextuelles dans la fenêtre système",
+          "name": "notification de bureau"
+        },
+        "footerBar": {
+          "describe": "La barre d'outils attachée en haut du site Web offre aux utilisateurs des fonctions telles que l'attention continue des joueurs",
+          "name": "barre d'outils inférieure"
+        }
+      },
+      "title": "amélioration locale"
+    },
+    "exportAndImport": {
+      "description": "Les données persistantes locales ne seront pas synchronisées avec le cloud et vous devrez exporter et importer manuellement les données sur la nouvelle plate-forme. Bien sûr, ces fuites de données n'affecteront pas la sécurité de votre compte, mais elles contiennent des enregistrements.",
+      "hint1": "N'importez pas de données dans des environnements inconnus, le contenu exporté contient certaines de vos informations privées locales",
+      "hint2": "Procédez avec prudence, l'écrasement ne peut pas être annulé",
+      "title": "Exporter et importer"
+    },
+    "history": {
+      "title": "histoire"
+    },
+    "media": {
+      "capacity": "capacité",
+      "fileNum": "{num} documents",
+      "title": "Médiathèque"
+    },
+    "meet": "Bienvenue {nom}!",
+    "subscribes": {
+      "title": "piste"
+    },
+    "title": "Paramètres personnels",
+    "voice": {
+      "backgroundMusic": "fond sonore",
+      "backgroundMusicDescribe": "Musique de fond",
+      "interaction": "son interactif",
+      "interactionDescribe": "Quelques voix interactives sur le site",
+      "message": "son de notification de message",
+      "messageDescribe": "Sons de notification liés aux messages sur le site",
+      "title": "son",
+      "video": "vidéo",
+      "videoDescribe": "Son vidéo du site Web"
+    }
+  },
+  "report": {
+    "button": {
+      "continue": "continuer",
+      "leave": "partir"
+    },
+    "info": {
+      "description": "Veuillez décrire clairement le comportement, les caractéristiques, le lieu et l'heure de l'incident du lanceur d'alerte, énumérer son comportement de tricherie et donner la raison finale du signalement",
+      "fromDatabaseOneId": "Sélectionné dans la base de données BFBAN",
+      "idNotion1": "Ne remplissez qu'un identifiant à la fois, n'écrivez pas le nom de l'équipe, n'écrivez pas votre propre identifiant",
+      "idNotion2": "L'ID de jeu n'est pas sensible à la casse, mais veuillez faire particulièrement attention à distinguer i I 1 l L o O 0, et remplissez correctement l'ID de rapport",
+      "loginExpired": "Votre identifiant a expiré, veuillez vous reconnecter",
+      "notFoundHintAnswer1": "Veuillez vous rendre sur origin.com pour rechercher le lecteur. Si vous pouvez trouver le lecteur mais ne pouvez pas le signaler, vous pouvez signaler les bogues aux informations de contact au bas de la page d'accueil.",
+      "notFoundHintAnswer2": "Cela peut être dû au fait que la base de données EA n'est pas mise à jour à temps, ou au bogue officiel d'EA, nous ne pouvons pas le résoudre pour eux, si vous voulez aider, vous pouvez aller sur https://answers.ea.com/t5/Origin -Client-Web -Technical/bd-p/origin-technical-issues-en bogue de rétroaction officiel du forum de rétroaction, cette situation peut être décrite comme je ne peux pas rechercher mon ami par son nom sur l'origine",
+      "notFoundHintQuestion1": "Mais je viens de le voir dans le jeu/je l'ai regardé sur l'application d'enregistrement ?",
+      "notFoundHintQuestion2": "Je ne le trouve pas sur origin, que se passe-t-il ?",
+      "notFoundHintTitle": "Nous n'avons pas pu trouver le joueur",
+      "onlyOneId": "Un seul ID d'Origin à la fois",
+      "reportAll": "signaler tout",
+      "reportHacker": "signaler la tricherie",
+      "reportOne": "Signaler un seul",
+      "required": "adresse vidéo",
+      "uploadManual1": "Si vous ne souhaitez pas enregistrer un compte domestique et que cela vous pose problème, vous pouvez vous rendre sur",
+      "uploadManual2": "Collez ensuite l'adresse ci-dessous",
+      "uploadManual3": "Il peut s'agir de Youku, Tudou, station AB, etc. Lien vers le site Web de la vidéo",
+      "uploadPic1": "Il est recommandé de télécharger des images au format png, jpg, jpeg, gif",
+      "uploadPic2": "Si l'image est plus grande que 2M ou n'a pas pu être téléchargée, vous pouvez aller à",
+      "uploadPic3": "Sélectionnez ensuite l'onglet URL de l'image et collez le lien de l'image ci-dessous",
+      "uploadPic4": "Veuillez énumérer suffisamment de preuves, l'éditeur prend en charge le téléchargement d'images (limite 2M)"
+    },
+    "labels": {
+      "cheatMethod": "méthode de triche",
+      "description": "décrire",
+      "game": "jeu",
+      "hackerId": "Nom du tricheur (ID)"
+    },
+    "messages": {
+      "failureSubtitle": "Échec du signalement, {msg}",
+      "failureTitle": "échouer",
+      "mediaEvidence": "Veuillez télécharger une image ou remplir le lien vidéo",
+      "originIdNotExist": "L'ID du jeu n'existe pas, veuillez vérifier l'orthographe",
+      "permissionDenied": "Aucune autorisation",
+      "successSubtitle": "Je vous remercie pour votre rapport",
+      "successTitle": "Soumis avec succès",
+      "tipBind": "Veuillez lier votre compte orange et soumettre le rapport plus tard",
+      "videoBadFormat": "mauvais format",
+      "videoEmpty": "URL de la vidéo vide"
+    },
+    "seo": {
+      "description": "rapport de joueur",
+      "keywords": "联ban,联办,战地风云,战地"
+    },
+    "title": "rapport"
+  },
+  "reset": {
+    "form": {
+      "newPassword": "nouveau mot de passe",
+      "oldPassword": "ancien mot de passe",
+      "password": "nouveau mot de passe",
+      "passwordRepeat": "Confirmez le mot de passe"
+    },
+    "title": "réinitialiser le mot de passe"
+  },
+  "search": {
+    "collectionHint": "Ajouter cette page aux favoris (Ctrl+D ou Commande+D)",
+    "describe": "Récupérer l'ID de la base de données BFBAN",
+    "notUserExist": "Miaou~, cette information est introuvable dans la base de données",
+    "placeholder": "Que voulez-vous chercher?",
+    "sort": {
+      "default": "défaut",
+      "latest": "à jour",
+      "mostComments": "le plus commenté",
+      "mostViewed": "regarder le plus haut"
+    },
+    "tabs": {
+      "comment": "Commentaire",
+      "player": "cas",
+      "user": "utilisateur"
+    },
+    "title": "récupérer"
+  },
+  "share": {
+    "iframe": {
+      "code": "code intégré",
+      "name": "Site Web intégré",
+      "size": "taille",
+      "theme": "thème"
+    },
+    "image": {
+      "describe": "Générer une capture d'écran du rapport",
+      "generate": "générer une image",
+      "name": "image"
+    },
+    "link": {
+      "linkUrl": "Lien hypertexte",
+      "name": "formulaire de lien",
+      "textLink": "adresse textuelle",
+      "textLinkContent": "{webname} - a partagé un lecteur sur : {url}",
+      "webHtmlLink": "code réseau"
+    },
+    "title": "partager"
+  },
+  "signin": {
+    "failed": "échec de la connexion",
+    "fillEverything": "Veuillez remplir le cahier des charges",
+    "form": {
+      "forgetPasswordHint": "Mot de passe oublié?",
+      "password": "mot de passe",
+      "submitHint": "Pas de compte? enregistrer",
+      "username": "nom d'utilisateur"
+    },
+    "loggedIn": "Hé ramer? Veuillez d'abord vous déconnecter (✿◡‿◡)",
+    "loginFirst": "Hein ? ! Veuillez d'abord vous connecter",
+    "success": "connexion réussie",
+    "title": "Connexion"
+  },
+  "signup": {
+    "checkAllEmail": "L'e-mail de vérification mettra un certain temps (environ 1 minute) à arriver dans votre boîte aux lettres, veuillez patienter et n'oubliez pas de vérifier la corbeille",
+    "eaPrivacy": "Veuillez accéder aux <a href='https://myaccount.ea.com/cp-ui/privacy/index'>Paramètres de confidentialité EA</a> et activer la recherche par e-mail",
+    "failed": "échec de l'enregistrement",
+    "fillIn": "Veuillez remplir les spécifications",
+    "form": {
+      "forgetPasswordHint": "Mot de passe oublié?",
+      "newUsername": "nouveau nom d'utilisateur",
+      "originEmail": "Boîte aux lettres du compte EA",
+      "originId": "EA ID",
+      "originName": "EAnom du compte",
+      "password": "mot de passe",
+      "submitHint": "Vous avez déjà un compte? ouvrir une session",
+      "username": "nom d'utilisateur"
+    },
+    "gameNotShowed": "Le compte sous cette boîte aux lettres ne contient pas de jeux",
+    "needVerify": "Veuillez aller à l'e-mail pour vérifier le compte",
+    "originBindingExist": "Le compte d'origin a été lié",
+    "originNotFound": "Le compte d'origin n'a pas été trouvé pour cette boîte aux lettres",
+    "placeholder": {
+      "originEmail": "Entrez votre email d'origin",
+      "originId": "facultatif",
+      "originName": "Entrez votre nom Tangerine, faites attention aux majuscules",
+      "password": "6 mots de passe ou plus",
+      "username": "Plus de 4 noms d'utilisateur Uniquement en anglais, chiffres, traits de soulignement, signes moins"
+    },
+    "playerNotFound": "Le joueur est introuvable (veuillez confirmer que la recherche par e-mail est activée)",
+    "registerVerification": {
+      "error": "Vérification des erreurs de compte",
+      "failure": "Adresse de vérification incorrecte, vérifiez que le captcha est correct",
+      "successful": "Vérification réussie! , le compte a été débloqué, vous pouvez à la fois aller à la connexion",
+      "title": "Vérifier le compte",
+      "validation": "En cours de validation"
+    },
+    "steps": {
+      "0": {
+        "supplement": "Base de compte",
+        "title": "Informations de base"
+      },
+      "1": {
+        "supplement": "Plateforme orange associée",
+        "title": "Codes 02109020"
+      },
+      "2": {
+        "supplement": "Vérifier si un robot",
+        "title": "Code de vérification"
+      },
+      "3": {
+        "supplement": "Email code de vérification",
+        "title": "La confirmation"
+      },
+      "4": {
+        "supplement": "Résultats de l’enregistrement",
+        "title": "L’achèvement du"
+      }
+    },
+    "title": "l’enregistrement",
+    "usernameExist": "Ce nom d’utilisateur est déjà enregistré"
+  },
+  "sitestats": {
+    "admins": "Nombre total d’administrateurs",
+    "banAppeals": "A fait appel",
+    "communityParticipation": "Classement de l’engagement communautaire des utilisateurs",
+    "confirmed": "Cas déjà traités",
+    "players": "Cas signalés existants",
+    "registers": "Pour utilisateurs enregistrés",
+    "reportRanking": "Classement des signalements",
+    "reports": "Total communautaire déclaré",
+    "timeRange": {
+      "daily": "Hier,",
+      "monthly": "Pour un mois",
+      "weekly": "semaine",
+      "yearly": "Par rapport à l’année"
+    },
+    "title": "statistiques",
+    "trend": "Fièvre des cas"
+  },
+  "textarea": {
+    "originalImage": "La photo originale",
+    "steps": {
+      "media": {
+        "0": "Le choix",
+        "1": "voir"
+      },
+      "upload": {
+        "0": "Sélectionner un fichier",
+        "1": "Rédacteur en chef",
+        "2": "voir"
+      },
+      "url": {
+        "0": "Remplissez votre adresse",
+        "1": "voir"
+      }
+    },
+    "type": {
+      "media": "Bibliothèque des médias",
+      "upload": "Télécharger sur diagrambed",
+      "url": "Liens vers images"
+    }
+  }
+}
