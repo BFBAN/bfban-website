@@ -94,6 +94,36 @@
           "url": "//translate.google.com/"
         }
       ]
+    },
+    {
+      "name": "it-IT",
+      "label": "Italiano",
+      "members": [
+        {
+          "name": "Google Translate",
+          "url": "//translate.google.com/"
+        }
+      ]
+    },
+    {
+      "name": "ar-AR",
+      "label": "عربي",
+      "members": [
+        {
+          "name": "Google Translate",
+          "url": "//translate.google.com/"
+        }
+      ]
+    },
+    {
+      "name": "de-DE",
+      "label": "Deutsch",
+      "members": [
+        {
+          "name": "Google Translate",
+          "url": "//translate.google.com/"
+        }
+      ]
     }
   ],
   "TODO": [
