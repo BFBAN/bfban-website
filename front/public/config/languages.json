@@ -43,6 +43,10 @@
         {
           "name": "iiTzArcur",
           "url": "//gametools.network"
+        },
+        {
+          "name": "LoeGamingAngel",
+          "url": "//bfban.gametools.network"
         }
       ]
     },
@@ -118,6 +122,16 @@
     {
       "name": "de-DE",
       "label": "Deutsch",
+      "members": [
+        {
+          "name": "Google Translate",
+          "url": "//translate.google.com/"
+        }
+      ]
+    },
+    {
+      "name": "es-ES",
+      "label": "Español",
       "members": [
         {
           "name": "Google Translate",
