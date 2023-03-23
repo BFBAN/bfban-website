@@ -18,7 +18,7 @@ const db = knex({
                 return parseInt(field.string());    // MAX_INT is around 2^53, be awar of precision lost
             return next();
         }
-    }
+    },
 });
 
 export default db;

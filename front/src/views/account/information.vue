@@ -43,7 +43,7 @@
       </Row>
 
       <Divider dashed></Divider>
-      <template v-if="formItem.origin && formItem.origin.hasOwnProperty('originName') || formItem.origin.hasOwnProperty('originUserId')">
+      <template v-if="isBindAccount">
         <Alert show-icon type="error">
           {{ $t('account.bindOrigin.title') }}
           <Icon type="ios-bulb-outline" slot="icon"></Icon>
@@ -451,6 +451,15 @@ export default {
         }, this.$store.state.$userinfo);
         return data;
       }
+    },
+    isBindAccount () {
+      let formItem = this.formItem;
+      if (
+          !formItem.origin &&
+          !formItem.origin.originName &&
+          !formItem.origin.originUserId
+      ) return false
+      return true
     }
   }
 }

@@ -4,14 +4,25 @@ import { storage } from "../src/assets/js"
 import lang from "../public/config/languages.json"
 import store from './store'
 
+import ar_view_design from 'view-design/dist/locale/ar-EG';
+import de_view_design from 'view-design/dist/locale/de-DE';
 import en_view_design from 'view-design/dist/locale/en-US';
+import es_view_design from 'view-design/dist/locale/es-ES';
+import fr_view_design from 'view-design/dist/locale/fr-FR';
+import it_view_design from 'view-design/dist/locale/it-IT';
 import ja_view_design from 'view-design/dist/locale/ja-JP';
 import kor_view_design from 'view-design/dist/locale/ko-KR';
 import tr_view_design from 'view-design/dist/locale/tr-TR';
 import ru_view_design from 'view-design/dist/locale/ru-RU';
 import zh_view_design from 'view-design/dist/locale/zh-CN';
 
+
+import ar_local from './lang/ar.json'
+import de_local from './lang/de.json'
 import en_local from './lang/en.json' // 英语
+import es_local from './lang/es.json'
+import fr_local from './lang/fr.json'
+import it_local from './lang/it.json'
 import ja_local from './lang/jp.json' // 日语
 import kor_local from './lang/kor.json' // 韩语
 import tr_local from './lang/tr.json' // 土耳其
@@ -26,11 +37,16 @@ const i18n = new VueI18n({
   locale: storage.get('language')?.data?.value ?? navigator.language,
   fallbackLocale: lang.default,
   messages:{
+    'ar-EG': Object.assign(ar_view_design, ar_local),
+    'de-DE': Object.assign(de_view_design, de_local),
     'en-US': Object.assign(en_view_design, en_local), // 英语
+    'es-ES': Object.assign(es_view_design, es_local),
+    'fr-FR': Object.assign(fr_view_design, fr_local),
+    'it-IT': Object.assign(it_view_design, it_local),
     'ja-JP': Object.assign(ja_view_design, ja_local), // 日语
     'kor-KOR': Object.assign(kor_view_design, kor_local), // 韩语
-    'tr-TR': Object.assign(tr_view_design, tr_local), // 土耳其
     'ru-RU': Object.assign(ru_view_design, ru_local), // 俄语
+    'tr-TR': Object.assign(tr_view_design, tr_local), // 土耳其
     'zh-CN': Object.assign(zh_view_design, zh_cn_local), // 中文
     'zh-Cat': Object.assign(zh_cat_local) // 简体喵文
   },

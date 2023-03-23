@@ -2043,7 +2043,7 @@ export default new Application({
 
 .detail-affix {
   position: fixed !important;
-  right: calc(50% - (960px / 2) - 85px) !important;
+  right: calc(50% - (1024px / 2) - 85px) !important;
   top: 30% !important;;
   transform: translateY(-30%) !important;;
   z-index: 100;
