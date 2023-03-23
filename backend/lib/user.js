@@ -7,7 +7,8 @@ import { userHasRoles } from "./auth.js";
 
 /** @param {string} content */
 function handleRichTextInput(content) {
-    return xss(content);
+  return content
+  // return xss(content);
 }
 
 function cheatMethodsSanitizer(val, {req}) {

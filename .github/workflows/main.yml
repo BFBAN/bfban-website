@@ -23,9 +23,9 @@ jobs:
   push:
     runs-on: ubuntu-latest
     # Use the specified node.js for this project
-    strategy:
-      matrix:
-        node-version: [ 14.17.6 ]
+    # strategy:
+    #   matrix:
+    #     node-version: [ 14.17.6 ]
     if: github.event_name == 'push'
 
     steps:

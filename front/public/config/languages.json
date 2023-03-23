@@ -43,6 +43,10 @@
         {
           "name": "iiTzArcur",
           "url": "//gametools.network"
+        },
+        {
+          "name": "LoeGamingAngel",
+          "url": "//bfban.gametools.network"
         }
       ]
     },
@@ -88,6 +92,46 @@
     {
       "name": "fr-FR",
       "label": "France",
+      "members": [
+        {
+          "name": "Google Translate",
+          "url": "//translate.google.com/"
+        }
+      ]
+    },
+    {
+      "name": "it-IT",
+      "label": "Italiano",
+      "members": [
+        {
+          "name": "Google Translate",
+          "url": "//translate.google.com/"
+        }
+      ]
+    },
+    {
+      "name": "ar-AR",
+      "label": "عربي",
+      "members": [
+        {
+          "name": "Google Translate",
+          "url": "//translate.google.com/"
+        }
+      ]
+    },
+    {
+      "name": "de-DE",
+      "label": "Deutsch",
+      "members": [
+        {
+          "name": "Google Translate",
+          "url": "//translate.google.com/"
+        }
+      ]
+    },
+    {
+      "name": "es-ES",
+      "label": "Español",
       "members": [
         {
           "name": "Google Translate",
