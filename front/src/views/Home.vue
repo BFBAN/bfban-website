@@ -20,7 +20,7 @@
 
               <Divider/>
 
-              <router-link v-if="isLogin" :to="{name: 'profile'}">
+              <router-link v-if="isLogin" :to="{name: 'profile', params: {pagename: 'information'}}">
                 <Button type="primary" v-voice-button>{{ $t("header.profile") }}</Button>
               </router-link>
               <router-link v-else :to="{name: 'signup'}">

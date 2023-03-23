@@ -4,7 +4,10 @@
       <Row :gutter="30">
         <Col span="12">
           <FormItem>
-            <div slot="label"><Icon type="md-key" /> {{ $t('signup.form.username') }}</div>
+            <div slot="label">
+              <Icon type="md-key"/>
+              {{ $t('signup.form.username') }}
+            </div>
             <Input v-model="formItem.username" placeholder="" disabled>
               <a slot="append" @click="modal_setusername.show = !modal_setusername.show">
                 <Icon type="md-create" size="15"/>
@@ -13,8 +16,11 @@
           </FormItem>
         </Col>
         <Col span="12">
-          <FormItem >
-            <div slot="label"><Icon type="md-lock" /> {{ $t('signup.form.password') }}</div>
+          <FormItem>
+            <div slot="label">
+              <Icon type="md-lock"/>
+              {{ $t('signup.form.password') }}
+            </div>
             <Input v-model="formItem.password" disabled type="password">
               <a slot="append" @click="modal_changePassword.show = !modal_changePassword.show">
                 <Icon type="md-create" size="15"/>
@@ -23,7 +29,7 @@
           </FormItem>
         </Col>
         <Col span="12">
-          <Card dis-hover	>
+          <Card dis-hover>
             <FormItem :label="$t('account.joinedAt')">
               <Tag>
                 <Time :time="formItem.joinTime || new Date().getTime()"/>
@@ -32,7 +38,7 @@
           </Card>
         </Col>
         <Col span="12">
-          <Card dis-hover	>
+          <Card dis-hover>
             <FormItem :label="$t('account.lastOnlineTime')">
               <Tag>
                 <Time :time="formItem.lastOnlineTime || new Date().getTime()"/>
@@ -43,7 +49,7 @@
       </Row>
 
       <Divider dashed></Divider>
-      <template v-if="isBindAccount">
+      <template v-if="!isBindAccount">
         <Alert show-icon type="error">
           {{ $t('account.bindOrigin.title') }}
           <Icon type="ios-bulb-outline" slot="icon"></Icon>
@@ -94,7 +100,9 @@
                         placement="top-end"
                         :disabled="!langLoaclSync"
                         @on-change="switchLanguage">
-                  <Option v-for="item in languages" :value="item.name" :key="item.name" :disabled="item.ignoreSave">{{ item.label }}</Option>
+                  <Option v-for="item in languages" :value="item.name" :key="item.name" :disabled="item.ignoreSave">
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </Col>
             </Row>
@@ -131,7 +139,8 @@
     </Form>
 
     <!-- 修改名称 S -->
-    <Modal v-model="modal_setusername.show" @on-cancel="modal_setusername.index = 0" :footer-hide="modal_setusername.index >= 2">
+    <Modal v-model="modal_setusername.show" @on-cancel="modal_setusername.index = 0"
+           :footer-hide="modal_setusername.index >= 2">
       <p slot="header">
         <span>{{ $t('profile.account.modifyName.title') }}</span>
       </p>
@@ -148,10 +157,12 @@
               <template slot="desc">
                 <p v-html="$t('profile.account.modifyName.specification1')"></p>
                 <p>
-                  {{$t(
-                    'profile.account.modifyName.residueDegree',
-                    {changeNameLeft: formItem.attr.changeNameLeft || 0}
-                  )}}
+                  {{
+                    $t(
+                        'profile.account.modifyName.residueDegree',
+                        {changeNameLeft: formItem.attr.changeNameLeft || 0}
+                    )
+                  }}
                 </p>
                 <br>
                 <b> {{ $t('profile.account.modifyName.specification2') }}</b>
@@ -380,13 +391,13 @@ export default {
      */
     onSave() {
       const {
-        attr = { language: this.$root.$i18n.locale, showOrigin: false, allowDM: false }
+        attr = {language: this.$root.$i18n.locale, showOrigin: false, allowDM: false}
       } = this.formItem;
 
       this.formLoad = true;
       this.http.post(api["user_me"], {
         data: {
-          data: { attr }
+          data: {attr}
         }
       }).then(res => {
         const d = res.data;
@@ -430,14 +441,16 @@ export default {
     switchLangLocalSync(val) {
       account_storage.updateConfiguration('langLoaclSync', this.langLoaclSync);
     },
-    checkLangLocalSync () {
-      this.langLoaclSync  = account_storage.getConfiguration('langLoaclSync');
+    checkLangLocalSync() {
+      this.langLoaclSync = account_storage.getConfiguration('langLoaclSync');
     }
   },
   computed: {
     formItem: {
-      set () { return true },
-      get () {
+      set() {
+        return true
+      },
+      get() {
         this.checkLangLocalSync();
         let data = Object.assign({
           password: '******',
@@ -452,14 +465,11 @@ export default {
         return data;
       }
     },
-    isBindAccount () {
+    isBindAccount() {
       let formItem = this.formItem;
-      if (
-          !formItem.origin &&
-          !formItem.origin.originName &&
-          !formItem.origin.originUserId
-      ) return false
-      return true
+      if (!formItem.origin) return false;
+      if (formItem.origin.originName || formItem.origin.originUserId) return true;
+      return false;
     }
   }
 }
