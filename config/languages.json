@@ -52,7 +52,7 @@
     },
     {
       "name": "ja-JP",
-      "label": "日本语(bot)",
+      "label": "日本语",
       "members": [
         {
           "name": "Baidu Bot",
@@ -67,7 +67,7 @@
     },
     {
       "name": "kor-KOR",
-      "label": "한국어(bot)",
+      "label": "한국어",
       "members": [
         {
           "name": "Baidu Bot",
@@ -82,6 +82,10 @@
         {
           "name": "Baidu Bot",
           "url": "//baidu.com"
+        },
+        {
+          "name": "Deepl",
+          "url": "//deepl.com"
         },
         {
           "name": "Artem",
@@ -110,7 +114,7 @@
       ]
     },
     {
-      "name": "ar-AR",
+      "name": "ar-EG",
       "label": "عربي",
       "members": [
         {
