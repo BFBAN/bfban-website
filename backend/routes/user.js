@@ -534,33 +534,6 @@ async (req, res, next) => {
     }
 });
 
-/*
-router.post('/batch', [
-    checkbody('data').isArray({max: 100})
-],
-async (req, res, next)=>{
-    try {
-        const validateErr = validationResult(req);
-        if(!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'userBatch.bad', message: validateErr.array()});
-
-        const query = req.body.data.filter(i=>{
-            if(Number.isInteger(i-0))
-                return i-0;
-            return undefined;
-        });
-        const qres = await db.select('id','username','privilege').from('users').whereIn('id', query).andWhere({valid: 1});
-        res.status(200).json({
-            success: 1,
-            code: 'userBatch.success',
-            data: qres.map(i=>{return [i.id, i]})
-        });
-    } catch(err) {
-        next(err);
-    }
-});
-*/
-
 router.post('/forgetPassword', verifyCaptcha, [
     checkbody('data.username').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.originEmail').trim().isEmail(),

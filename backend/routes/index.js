@@ -818,7 +818,7 @@ async (req, res, next) => {
  *   get:
  *     tags:
  *       - 查询
- *     description: 历史举报玩家名称
+ *     description: 提前查询玩家，并非数据库而是EAdb
  *     produces:
  *       - application/json
  *     parameters:
@@ -909,6 +909,16 @@ router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted', 'freeze
         }
     });
 
+/**
+ * @swagger
+ * /api/siteStats:
+ *   get:
+ *     tags:
+ *       - 查询
+ *     description: 热门案件
+ *     produces:
+ *       - application/json
+ */
 router.get('/trend', [
     checkquery('limit').optional().isInt({min: 1, max: 10}),
     checkquery('time').optional().isIn(['daily', 'weekly', 'monthly', 'yearly'])
