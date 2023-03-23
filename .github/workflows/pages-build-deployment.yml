@@ -6,13 +6,31 @@ name: pages-build-deployment
 on:
   push:
     branches: [ master ]
+    tags:
+      - v*
+
   pull_request:
     branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  
+
 jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release
+        id: creat_release
+        user: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
+
   build:
     runs-on: ubuntu-latest
 
@@ -43,7 +61,7 @@ jobs:
         folder: './front/dist'
         commit-message: 'build front'
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
