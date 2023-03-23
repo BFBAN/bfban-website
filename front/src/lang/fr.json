@@ -585,7 +585,7 @@
           "text": "discuter"
         },
         "fatal": {
-          "describe": "Envoyer à l'utilisateur un 'avertissement'",
+          "describe": "Envoyer à l'utilisateur un avertissement",
           "text": "discuter"
         },
         "toAdmins": {
