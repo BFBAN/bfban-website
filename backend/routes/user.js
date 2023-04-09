@@ -280,7 +280,9 @@ async (req, res, next) => {
             expiresTime: new Date(Date.now() + 1000 * 60 * 60 * 4), // 4h
             createTime: new Date()
         });
-        await sendBindingOriginVerify(req.user.username, originEmail, req.user.attr.language, encodeURIComponent(code));
+        let language = req.headers["accept-language"]
+        language = language === 'zh-CN' ? language : 'en-US'
+        await sendBindingOriginVerify(req.user.username, originEmail, language, encodeURIComponent(code));
 
         logger.info('users.bindOrigin#1 Success:', {name: req.user.username, email: originEmail});
         res.status(200).json({
