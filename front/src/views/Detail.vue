@@ -1392,6 +1392,7 @@ export default new Application({
         let prevNameTimeListTime = 0;
         let nameTimeListTime = 0;
 
+        console.log(_timelineList)
         for (let timeLineIndex = 0; timeLineIndex < _timelineList.length; timeLineIndex++) {
           if (this.timelineList[timeLineIndex - 1] && _timelineList[timeLineIndex - 1].createTime) {
             prevNameTimeListTime = new Date(_timelineList[timeLineIndex - 1].createTime).getTime();

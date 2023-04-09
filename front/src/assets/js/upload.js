@@ -39,7 +39,7 @@ export default class Upload extends (Print, Conf) {
             if (!file) throw 'not file';
             return new Promise((resolve, reject) => {
                 if (file.size <= this.FILESIZE) {
-                    this.upDatesmallFile(file).then(res => {
+                    this.uploadDateSmallFile(file).then(res => {
                         if (res.code >= 1) {
                             resolve({
                                 code: res.code,
@@ -53,7 +53,7 @@ export default class Upload extends (Print, Conf) {
                         reject({code: -1, message: err.message})
                     })
                 } else {
-                    this.upDateLargeFile(file).then(res => {
+                    this.uploadDateLargeFile(file).then(res => {
                         if (res.code >= 1) {
                             resolve({
                                 code: res.code,
@@ -79,7 +79,7 @@ export default class Upload extends (Print, Conf) {
      * @param file new File
      * @returns {Promise<Object>}
      */
-    upDatesmallFile(file) {
+    uploadDateSmallFile(file) {
         return new Promise((resolve, reject) => {
             try {
                 if (!file) {
@@ -111,7 +111,7 @@ export default class Upload extends (Print, Conf) {
                     //         }
                     //     })
                     //     .catch(err => reject({code: -1, message: err.message}));
-                    
+
                 })
             } catch (e) {
                 resolve({
@@ -128,7 +128,7 @@ export default class Upload extends (Print, Conf) {
      * @param file new File
      * @returns {Promise<String>}
      */
-    upDateLargeFile(file) {
+    uploadDateLargeFile(file) {
         return new Promise((resolve, reject) => {
             try {
                 if (!file) {

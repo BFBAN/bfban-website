@@ -25,7 +25,7 @@
           {{ $t('detail.info.app_qr.tip') }} 🦖
         </div>
         <div class="desktop-hide" align="center">
-          <Button>{{ $t('detail.info.app_qr.openApp') }}</Button>
+          <Button @click="onPenApp">{{ $t('detail.info.app_qr.openApp') }}</Button>
           <p>{{ $t('detail.info.app_qr.openAppDescribe') }} 🦖</p>
         </div>
       </Card>
@@ -49,7 +49,9 @@ export default new Application({
 
   },
   methods: {
-
+    onPenApp () {
+      window.open(`bfban://app?open_app_type=player&id=${this.$route.params.ouid}`)
+    }
   },
   computed: {
 
