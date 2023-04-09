@@ -2,7 +2,7 @@ git:
   filters:
     - filter_type: file
       file_format: KEYVALUEJSON
-      source_language: zh
+      source_language: zh_CN
       source_file: 'front/src/lang/zh_CN.json'
       translation_files_expression: 'front/src/lang/<lang>.json'
 
@@ -19,4 +19,4 @@ git:
       ko_KR: kor
       ru_RU: ru
       tr_TR: tr
-      zh_CN: zh-CN
+      zh_CN: zh_CN
