@@ -22,6 +22,16 @@
       ]
     },
     {
+      "name": "zh-TW",
+      "label": "繁體中文",
+      "members": [
+        {
+          "name": "Google Translate",
+          "url": "//translate.google.com/"
+        }
+      ]
+    },
+    {
       "name": "zh-MIAO",
       "label": "简体喵文",
       "ignoreSave": true,
