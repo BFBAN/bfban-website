@@ -15,7 +15,7 @@ import ko_view_design from 'view-design/dist/locale/ko-KR';
 import tr_view_design from 'view-design/dist/locale/tr-TR';
 import ru_view_design from 'view-design/dist/locale/ru-RU';
 import zh_view_design from 'view-design/dist/locale/zh-CN';
-
+import zh_tw_view_design from 'view-design/dist/locale/zh-TW';
 
 import ar_local from './lang/ar.json'
 import de_local from './lang/de.json'
@@ -28,6 +28,7 @@ import ko_local from './lang/ko.json' // 韩语
 import tr_local from './lang/tr.json' // 土耳其
 import ru_local from './lang/ru.json' // 俄语
 import zh_cn_local from './lang/zh_CN.json' // 中文
+import zh_tw_local from './lang/zh_TW.json' // 中文
 import zh_cat_local from './lang/zh_Cat.json' // 简体喵文
 
 Vue.use(VueI18n)
@@ -48,6 +49,7 @@ const i18n = new VueI18n({
     'ru-RU': Object.assign(ru_view_design, ru_local), // 俄语
     'tr-TR': Object.assign(tr_view_design, tr_local), // 土耳其
     'zh-CN': Object.assign(zh_view_design, zh_cn_local), // 中文
+    'zh-TW': Object.assign(zh_tw_view_design, zh_tw_local), // 中文
     'zh-Cat': Object.assign(zh_cat_local) // 简体喵文
   },
   silentTranslationWarn: true,
