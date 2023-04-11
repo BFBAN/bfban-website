@@ -1,9 +1,9 @@
 {
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\n誕生於2018年1月29日；\n是戰地玩家一起組建的 <b>抵制外掛</b> 組織。 \n </p>",
+    "description": "<h2>BFBAN</h2>\n<p>\n誕生於2018年1月29日；\n是戰地玩家一起組建的 <b>抵制外掛</b> 組織。\n</p>",
     "privacy": "\n<h2>隱私政策</h2>\n它是開源的。您可以通過 GitHub 發布問題並提出更改/改進建議。社區網絡提供的 API 並開放供公眾使用。",
     "title": "關於",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> 开发，于 2018年11月4日 上线‘\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>"
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 網站依託於聯BAN調查局，最初想法起源於熱心玩家，由<a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a>開發，於 2018年11月4日 上線\n    </p>\n    <p>主要為廣大玩家提供舉報、列舉、搜索、追踪、討論等服務；</p>"
   },
   "account": {
     "bindOrigin": {
@@ -625,7 +625,7 @@
     },
     "exportAndImport": {
       "description": "本地持久數據不會同步雲端，需要你手動導出並在新平台導入這些數據，當然這些數據洩露不會影響您的賬戶安全，但包含一些記錄",
-      "hint1": "不要将数据导入到陌生环境下，导出的内容包含你一些本地隐私信息不要將數據導入到陌生環境下，導出的內容包含你一些本地隱私信息",
+      "hint1": "不要將數據導入到陌生環境下，導出的內容包含你一些本地隱私信息",
       "hint2": "謹慎操作，覆蓋無法還原",
       "title": "導出與導入"
     },
@@ -666,7 +666,7 @@
       "idNotion2": "遊戲ID是不區分大小寫的，但請特別注意區分 i I 1 l L o O 0，正確填寫舉報ID",
       "loginExpired": "您的登錄已過期，請重新登錄",
       "notFoundHintAnswer1": "請至origin.com搜索該玩家，如確實能搜索到而無法舉報，可至首頁下方的聯繫方式處反饋bug",
-      "notFoundHintAnswer2": "這可能是EA數據庫更新不及時，或是EA官方的bug，我們沒有辦法替他們解決，如果您想出一份力，可以至       https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en       官方反饋論壇反饋bug，此情況可以描述為 I can't search my friend by name on origin",
+      "notFoundHintAnswer2": "這可能是EA數據庫更新不及時，或是EA官方的bug，我們沒有辦法替他們解決，如果您想出一份力，可以至https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en 官方反饋論壇反饋bug，此情況可以描述為 I can't search my friend by name on origin",
       "notFoundHintQuestion1": "但是我剛剛在遊戲裡見過他/我在查戰績app上查得到他？",
       "notFoundHintQuestion2": "origin上無法搜索到，這是怎麼一回事？",
       "notFoundHintTitle": "我們無法找到該玩家",
@@ -771,7 +771,7 @@
   },
   "signup": {
     "checkAllEmail": "驗證郵件需要一段時間(大約1分鐘)才能到達您的郵箱，請等待並記得檢查垃圾箱",
-    "eaPrivacy": "請至 <a href='https://myaccount.ea.com/cp-ui/privacy/index'>EA 隱私設定</a> 中將允許按郵箱搜索開啟",
+    "eaPrivacy": "請至<a href='https://myaccount.ea.com/cp-ui/privacy/index'>EA 隱私設定</a>中將允許按郵箱搜索開啟",
     "failed": "註冊失敗",
     "fillIn": "請規範填寫",
     "form": {
@@ -789,7 +789,7 @@
     "originBindingExist": "該Origin賬號已被綁定",
     "originNotFound": "未找到此郵箱在Origin下賬戶",
     "placeholder": {
-      "originEmail": "輸入您的Origin郵箱",
+      "originEmail": "輸入您的橘子郵箱",
       "originId": "選填",
       "originName": "輸入您的Origin名字, 注意大小寫",
       "password": "6位以上密碼",
