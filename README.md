@@ -26,7 +26,7 @@ bfban目前由中文社区与gametool社区参与审核与管理工作，包含�
 联系方式，请点击上方的 [中文社区] 与 [EN Community] 联系。
 
 #### 3. 接入网站
-bfban公开接口，允许第三方接入bfban数据库，[BFBan 2.0 设计](backend/)| [API开发文档](https://bfban.gametools.network/docs/)
+bfban公开接口，允许第三方接入bfban数据库，[BFBan 2.0 设计](backend/) | [API开发文档](https://bfban.gametools.network/docs/)
 
 ----
 
@@ -46,6 +46,6 @@ BFBAN is currently audited and managed by the Chinese community and the Gametool
 Contact information, Please click above [中文社区] and [EN Community] to contact.
 
 #### 3. Access website
-BFBAN public interface, allowing third parties to access the BFBAN database, [BFBan 2.0 Design](backend/)| [API Development Documentation](https://bfban.gametools.network/docs/)
+BFBAN public interface, allowing third parties to access the BFBAN database, [BFBan 2.0 Design](backend/) | [API Development Documentation](https://bfban.gametools.network/docs/)
 
 ----
