@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.cabbagelol.bfban",
+      "sha256_cert_fingerprints": [
+        "3F:F4:6B:8F:0F:66:82:D9:37:2B:54:40:8C:2C:E7:2E:88:A2:8B:4B:55:4D:AD:6E:73:C7:13:13:78:7B:46:88"
+      ]
+    }
+  }
+]
