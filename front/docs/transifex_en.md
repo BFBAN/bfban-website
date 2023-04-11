@@ -19,7 +19,7 @@ Go to [transifex.com](https://transifex.com) to register, you can also use a thi
 
 After clicking the above link, choose to join the project, fill in your [Main Translation Language](), and then choose to continue, and wait for [BFBAN Development Team] to agree to your translation request. (After agreeing, an email will be sent to your account mailbox).
 
- - Note: If you want to become a BFBAN translation specialist, please contact the BFBAN development team, and members of the development team will grant you the authority of a translator. You can translate more languages and add new languages. (You can only translate without applying for a translator the main translation language for each of your projects).
+ - Note: If you want to become a BFBAN translation specialist, please contact the [BFBAN development team], and the member of the development team will grant you translation specialist access. You can translate more languages and add new languages. (You can only translate without applying for a translator the main translation language for each of your projects).
               
  - Main translation language: refers to your first translation language, that is, the language you are best at.
 
