@@ -48,6 +48,14 @@
             ]
           },
           {
+            "text": "Public Translation",
+            "textLang": {
+              "en-US": "Public Translation",
+              "zh-CN": "公开翻译"
+            },
+            "src": "https://app.transifex.com/bfban"
+          },
+          {
             "text": "BFBAN WebSite Public Api Docs",
             "textLang": {
               "en-US": "BFBAN WebSite Public Api Docs",
