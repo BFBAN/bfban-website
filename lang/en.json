@@ -469,7 +469,7 @@
     },
     "filters": {
       "sortBy": {
-        "commentNum": "Sort by Reply time",
+        "commentsNum": "reply counts in descending order",
         "createTime": "Sort by report time",
         "updateTime": "Sort by Update time",
         "viewNum": "Sort by View time"
@@ -547,7 +547,8 @@
         "messageManagement": "Message",
         "messagePush": "Push Notifications",
         "muteUsers": "Muned users",
-        "user": "user management"
+        "user": "user management",
+        "verifications": "validator"
       },
       "title": "Backend management"
     },

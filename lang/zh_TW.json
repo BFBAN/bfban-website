@@ -87,7 +87,7 @@
         "text": "投一票實錘"
       },
       "innocent": {
-        "describe": "通過視頻方式洗清了被舉報信息的嫌疑",
+        "describe": "通過影片方式洗清了被舉報信息的嫌疑",
         "text": "MOSS自證"
       },
       "invalid": {
@@ -232,14 +232,14 @@
       },
       "modal": {
         "auxiliaryProof": {
-          "1": "舉報的單場戰局的其他玩家(敵人與友方)視角，且不少於10分鐘無剪輯，自行提供視頻地址.",
+          "1": "舉報的單場戰局的其他玩家(敵人與友方)視角，且不少於10分鐘無剪輯，自行提供影片地址.",
           "2": "在場玩家，提供自己id，具體服務器、時間、場此，以及您輔助申訴對像說明.",
           "title": "輔助證明"
         },
         "describe": "針對誤BAN，本人或第三方可以協助申訴，在滿足下方所有基本要求後，您的申訴內容會提交到BFBAN所有管理員，管理員確認通過才可解除",
         "effectiveEvidence": {
           "1": "使用類似\"高速目標靶心\"軟件、Moss軟件，拍攝到屏幕與手、鍵盤錄製自證.",
-          "2": "自我辯護，可以使用圖片、視頻等等材料.",
+          "2": "自我辯護，可以使用圖片、影片等等材料.",
           "3": "有些地方所提供的要求不同，可以諮詢地區BFBAN管理，索要申訴材料.",
           "title": "有效證據"
         },
@@ -280,7 +280,7 @@
       "discription4": "歷史ID也可以用來搜索",
       "fastReplies": {
         "evidencePic": "證據如圖所示",
-        "evidenceVid": "證據如視頻所示",
+        "evidenceVid": "證據如影片所示",
         "stats": "玩家數據異常"
       },
       "firstReportTime": "第一次被舉報時間",
@@ -293,7 +293,7 @@
       "judgement": "處理意見",
       "originAvatar": "Origin頭像",
       "recentUpdateTime": "最近更新時間",
-      "replyManual1": "如果有新的證據圖片或視頻需要補充，可以再次舉報。回复功能只能回复文本或鏈接。如需回复圖片，請移步這裡",
+      "replyManual1": "如果有新的證據圖片或影片需要補充，可以再次舉報。回复功能只能回复文本或鏈接。如需回复圖片，請移步這裡",
       "replyManual2": "然後復製圖片鏈接進行回复。",
       "replyManual3": "註冊登錄後才可以參與討論",
       "replyManual4": "請登錄後參與回复",
@@ -302,7 +302,7 @@
       "timeLine": "時間線",
       "updateButton": "更新資料",
       "uploadPicButton": "上傳圖片",
-      "videoLink": "視頻鏈接",
+      "videoLink": "影片鏈接",
       "viewTimes": "瀏覽次數",
       "writeSomething": "寫一些東西"
     },
@@ -355,7 +355,7 @@
   "footer": {
     "column": {
       "col1": {
-        "text": "聯BFBAN - 全球作弊玩家數據庫"
+        "text": "聯BFBAN - 全球作弊玩家資料庫"
       },
       "col2": {
         "title": "社區"
@@ -404,7 +404,7 @@
   "header": {
     "about": "關於",
     "announcement": "公告",
-    "cheaters": "玩家數據庫",
+    "cheaters": "玩家資料庫",
     "index": "首頁",
     "profile": "個人設置",
     "report": "舉報作弊",
@@ -490,7 +490,7 @@
     },
     "uploadVideo": {
       "desktop": "點擊或者拖動文件到這裡上傳",
-      "info": "上傳視頻，不要超過30M"
+      "info": "上傳影片，不要超過30M"
     }
   },
   "player_list": {
@@ -498,7 +498,7 @@
       "description": "玩家列表,這裡包含用戶舉報玩家檔案",
       "keywords": "玩家列表,列表"
     },
-    "title": "玩家數據庫"
+    "title": "玩家資料庫"
   },
   "profile": {
     "account": {
@@ -650,8 +650,8 @@
       "message": "消息通知聲音",
       "messageDescribe": "與站內消息相關的通知聲音",
       "title": "聲音",
-      "video": "視頻",
-      "videoDescribe": "網站視頻聲音"
+      "video": "影片",
+      "videoDescribe": "網站影片聲音"
     }
   },
   "report": {
@@ -660,7 +660,7 @@
       "leave": "離開"
     },
     "info": {
-      "description": "請清晰描述舉報者行為、特點、發生地點、時間，列出他的作弊舉止，給出最後為何舉報",
+      "description": "請詳細描述作弊者行為、特點、發生地點、時間，列出他的作弊內容，給出檢舉理由",
       "fromDatabaseOneId": "從聯BAN數據庫中選取",
       "idNotion1": "一次只填寫一個ID，不要把戰隊名字寫進來，不要寫成自己的ID",
       "idNotion2": "遊戲ID是不區分大小寫的，但請特別注意區分 i I 1 l L o O 0，正確填寫舉報ID",
@@ -674,10 +674,10 @@
       "reportAll": "舉報所有",
       "reportHacker": "舉報作弊",
       "reportOne": "舉報單個",
-      "required": "視頻地址",
-      "uploadManual1": "不想註冊國內賬號、嫌麻煩，上傳視頻可以前往",
+      "required": "影片地址",
+      "uploadManual1": "不想註冊國內賬號、嫌麻煩，上傳影片可以前往",
       "uploadManual2": "然後地址貼在下方",
-      "uploadManual3": "可以是 優酷，土豆，AB站等 視頻網站鏈接",
+      "uploadManual3": "可以是 優酷，土豆，AB站等 影片網站鏈接",
       "uploadPic1": "推薦上傳 png, jpg, jpeg, gif 格式的圖片",
       "uploadPic2": "圖片大於 2M 或 上傳失敗，可以前往",
       "uploadPic3": "然後選擇 Image URL 選項卡，把圖片鏈接貼在下方",
@@ -692,14 +692,14 @@
     "messages": {
       "failureSubtitle": "舉報失敗，{msg}",
       "failureTitle": "失敗",
-      "mediaEvidence": "請上傳圖片或填寫視頻鏈接",
+      "mediaEvidence": "請上傳圖片或填寫影片鏈接",
       "originIdNotExist": "遊戲ID不存在，請檢查拼寫",
       "permissionDenied": "無權限",
       "successSubtitle": "感謝您的舉報",
       "successTitle": "提交成功",
       "tipBind": "請綁定你的橘子賬號以後在提交舉報",
       "videoBadFormat": "格式錯誤",
-      "videoEmpty": "空的視頻地址"
+      "videoEmpty": "空的影片地址"
     },
     "seo": {
       "description": "玩家舉報",
@@ -718,7 +718,7 @@
   },
   "search": {
     "collectionHint": "收藏此頁面 (Ctrl+D or Command+D)",
-    "describe": "從BFBAN數據庫檢索ID",
+    "describe": "從BFBAN數據庫搜尋ID",
     "notUserExist": "喵嗚~，在數據庫裡找不到此信息",
     "placeholder": "你想搜索什麼?",
     "sort": {
@@ -732,7 +732,7 @@
       "player": "案件",
       "user": "用戶"
     },
-    "title": "檢索"
+    "title": "搜尋"
   },
   "share": {
     "iframe": {
