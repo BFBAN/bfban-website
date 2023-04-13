@@ -48,12 +48,12 @@
             ]
           },
           {
-            "text": "Public Translation",
+            "text": "Public Translation \uD83D\uDCDA",
             "textLang": {
-              "en-US": "Public Translation",
-              "zh-CN": "公开翻译"
+              "en-US": "Public Translation \uD83D\uDCDA",
+              "zh-CN": "参与翻译 \uD83D\uDCDA"
             },
-            "src": "https://app.transifex.com/bfban"
+            "src": "https://explore.transifex.com/bfban"
           },
           {
             "text": "BFBAN WebSite Public Api Docs",
