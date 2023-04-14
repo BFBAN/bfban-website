@@ -1,7 +1,7 @@
 {
   "requestDevelopmentName": "development4",
   "requestProductionName": "production",
-  "requestUploadName": "upload",
+  "requestUploadName": "development4",
   "child": {
     "development": {
       "protocol": "https",
