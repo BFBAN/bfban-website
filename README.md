@@ -18,6 +18,10 @@
 
 任何人都可以在bfban上翻译文本，无论是增加新的语言还是修正本地化，网站社区都欢迎所有人参与。[点此前往transifex](https://app.transifex.com/bfban/bfban-website) 进行翻译！
 
+[如何在GitHub上翻译](/front/docs/translation_process.md)
+
+[如何在Transfiex上翻译](front/docs/transifex_zhcn.md)
+
 * ##### 开发
 您可以参与网站社区开发，无论是前端还是后端，随时欢迎。
 
@@ -37,6 +41,8 @@ bfban公开接口，允许第三方接入bfban数据库，[BFBan 2.0 设计](bac
 * ##### Translate
 
 Anyone can translate text on BFBAN, whether adding a new language or fixing a localization, the site community welcomes everyone to participate. [Click here to go transifex](https://app.transifex.com/bfban/bfban-website) to translate!
+
+[How to translate on Transfiex](front/docs/transifex_en.md)
 
 * ##### Develop
 You can participate in the development of the website community, whether it is front-end or back-end, you are always welcome to join.
