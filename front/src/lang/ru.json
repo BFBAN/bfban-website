@@ -786,7 +786,7 @@
     },
     "gameNotShowed": "счёт под почтовым ящиком не содержит игры",
     "needVerify": "请前往邮箱验证账户",
-    "originIdExist": "该origin账号已被绑定",
+    "originBindingExist": "Учетная запись Origin была привязана",
     "originNotFound": "未找到此邮箱在origin下账户",
     "placeholder": {
       "originEmail": "输入您的橘子邮箱",
