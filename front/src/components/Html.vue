@@ -58,7 +58,7 @@ export default {
   components: {htmlimage, htmllink, htmllinkcard, htmlvideo, htmlplayercard, htmlfloor, privilegestag},
   watch: {
     html: {
-      handler(val) {
+      handler(val, oldVal) {
         for (const dataKey in this.extensionData) {
           this[dataKey] = this.extensionData[dataKey];
         }

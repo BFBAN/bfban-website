@@ -1,6 +1,6 @@
 <template>
   <div class="html-widget-box">
-    <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-${htmlSize}`"></Html>
+    <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-${htmlSize}`" v-if="html"></Html>
     <div class="html-widget-box-divider ivu-divider ivu-divider-horizontal"></div>
     <Row class="html-widget-toolbar" type="flex" justify="center" align="middle" :gutter="5">
       <Col flex="1">
@@ -57,6 +57,7 @@ export default {
   },
   data() {
     return {
+      htmlContent: "",
       htmlSize: "default",
       htmlShowMode: "renderer",
       fullScreenStatus: false,

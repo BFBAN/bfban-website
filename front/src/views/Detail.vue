@@ -1236,6 +1236,7 @@ export default new Application({
         suggestion: '',
       },
 
+      timelineListPreparedness: [],
       timelineList: [],
       timeline: {
         sort: '1',
@@ -1328,8 +1329,6 @@ export default new Application({
       await this.getPlayerInfo()
       await this.getTimeline()
 
-      this.onMergeHistoryName()
-
       this.$Loading.finish();
     },
     /**
@@ -1385,14 +1384,13 @@ export default new Application({
      * 合并时间轴历史名称
      */
     onMergeHistoryName() {
-      let _timelineList = new Array().concat(this.timelineList);
+      let _timelineList = this.timelineListPreparedness;
       // 处理历史名称，放置对应对应位置
       for (let hisrotyIndex = 0; hisrotyIndex < this.cheater.history.length; hisrotyIndex++) {
         let nameHistoryTime = new Date(this.cheater.history[hisrotyIndex].fromTime).getTime();
         let prevNameTimeListTime = 0;
         let nameTimeListTime = 0;
 
-        console.log(_timelineList)
         for (let timeLineIndex = 0; timeLineIndex < _timelineList.length; timeLineIndex++) {
           if (this.timelineList[timeLineIndex - 1] && _timelineList[timeLineIndex - 1].createTime) {
             prevNameTimeListTime = new Date(_timelineList[timeLineIndex - 1].createTime).getTime();
@@ -1619,11 +1617,14 @@ export default new Application({
               i.show = false;
             });
 
-            this.timelineList = d.data.result;
+            this.timelineListPreparedness = d.data.result;
             this.timeline.total = d.data.total;
 
             // 排序
+            this.onMergeHistoryName();
             this.onTimeLineSort();
+
+            this.$forceUpdate();
           }
         }).finally(() => {
           this.onFloor();
@@ -1686,13 +1687,17 @@ export default new Application({
     onTimeLineSort() {
       switch (Number(this.timeline.sort)) {
         case 1:
-          this.timelineList = this.timelineList.sort(function (x, y) {
-            return x.index > y.index ? 1 : -1;
+          this.timelineListPreparedness = this.timelineList.sort(function (x, y) {
+            let timeX = (new Date(x.createTime).getTime() || new Date(x.fromTime).getTime());
+            let timeY = (new Date(y.createTime).getTime() || new Date(y.fromTime).getTime());
+            return timeX > timeY ? 1 : -1;
           });
           break;
         case 2:
-          this.timelineList = this.timelineList.sort(function (x, y) {
-            return x.index < y.index ? 1 : -1;
+          this.timelineListPreparedness = this.timelineList.sort(function (x, y) {
+            let timeX = (new Date(x.createTime).getTime() || new Date(x.fromTime).getTime());
+            let timeY = (new Date(y.createTime).getTime() || new Date(y.fromTime).getTime());
+            return timeX < timeY ? 1 : -1;
           });
           break;
       }
@@ -1977,7 +1982,6 @@ export default new Application({
         await this.getPlayerInfo()
         await this.getTimeline()
 
-        this.onMergeHistoryName()
         this.$Message.success(d.code);
       }).finally(() => {
         this.updateUserInfospinShow = false;
