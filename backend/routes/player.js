@@ -317,7 +317,7 @@ router.post('/report', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'b
     checkbody('data.game').isIn(config.supportGames),
     checkbody('data.originName').isAscii().notEmpty(),
     checkbody('data.cheatMethods').isArray().custom(cheatMethodsSanitizer),
-    checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
+    checkbody('data.videoLink').optional({checkFalsy: true}).isURL().isLength({max: 255}),
     checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
