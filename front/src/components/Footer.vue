@@ -12,9 +12,8 @@
             </Avatar>
             <img v-else
                  v-saknan
-                 src="../assets/images/logo.png"
-                 width="40"
-                 height="40"
+                 src="../assets/images/friendly-web.png"
+                 width="100"
                  @click="logoCount += 1;"
                  alt="logo"/>
           </Badge>
