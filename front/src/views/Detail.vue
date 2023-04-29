@@ -1336,6 +1336,7 @@ export default new Application({
      */
     handlePageChange(num) {
       this.timeline.skip = num;
+
       this.getTimeline();
 
       const commentNode = document.getElementById('timeline');
@@ -1589,6 +1590,9 @@ export default new Application({
      * 获取举报玩家时间轴
      */
     async getTimeline() {
+      this.timelineListPreparedness = [];
+      this.timelineList = [];
+
       return new Promise(resolve => {
         const that = this;
         this.spinShow = true;
