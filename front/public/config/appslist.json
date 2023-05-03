@@ -242,6 +242,48 @@
       "website": "https://cabbagelol.github.io/kook-bot-docs",
       "get": "",
       "hot": false
+    },
+    {
+      "title": "bfvhackers BFV Hacking Forensics Website",
+      "id": "11",
+      "titleLang": {
+        "zh-CN": "bfvhackers 战地五黑客鉴权网站",
+        "en-US": "bfvhackers BFV Hacking Forensics Website"
+      },
+      "describe": "Statistically based cheat and targeting bot detection was collected from over 50,000 players from different game modes, lobbies and regions to find the normal range of values for each statistic. This data also includes some of the best players in the world. The most common outliers in the hack were the headshot rate and accuracy of each weapon. During the course of the game, hacks were identified and then their stats were collected to further confirm the normal ranges.\n\nTranslated with www.DeepL.com/Translator (free version)",
+      "describeLang": {
+        "zh-CN": "基于统计的作弊和瞄准机器人检测，从不同的游戏模式、大厅和地区收集了超过 50,000 名玩家的统计数据，以找到每个统计数据的正常值范围。该数据还包括一些世界上最好的球员。黑客中最常见的异常值是每种武器的爆头率和准确率。在游戏过程中，黑客被识别出来，然后收集他们的统计数据以进一步确认正常范围。",
+        "en-US": "Statistically based cheat and targeting bot detection was collected from over 50,000 players from different game modes, lobbies and regions to find the normal range of values for each statistic. This data also includes some of the best players in the world. The most common outliers in the hack were the headshot rate and accuracy of each weapon. During the course of the game, hacks were identified and then their stats were collected to further confirm the normal ranges.\n\nTranslated with www.DeepL.com/Translator (free version)"
+      },
+      "tag": [
+        "web",
+        "api",
+        "bfv"
+      ],
+      "website": "https://bfvhackers.com",
+      "get": "",
+      "hot": false
+    },
+    {
+      "title": "Bfban Common Robot",
+      "id": "11",
+      "titleLang": {
+        "zh-CN": "联ban作弊提交机器人",
+        "en-US": "Bfban Common Robot"
+      },
+      "describe": "A QQ robot based on Ariadne for the battlefield anti-cheat website BFBAN.",
+      "describeLang": {
+        "zh-CN": "A QQ robot based on Ariadne for the battlefield anti-cheat website BFBAN.",
+        "en-US": "一款基于 Ariadne 的QQ机器人，用于Battlefield 系列游戏反作弊网站 BFBAN."
+      },
+      "tag": [
+        "bot",
+        "qq"
+      ],
+      "website": "https://github.com/KitaProject/BfbanCommonRobot",
+      "get": "",
+      "hot": false
     }
+
   ]
 }
