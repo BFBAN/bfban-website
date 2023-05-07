@@ -7,7 +7,6 @@ import serviceApi from "./serviceAPI.js";
 const domain = config.mail.domain.origin;
 /*
 * https://bfban.com/
-* https://bfban.gametools.network/ 
 */
 
 const sender = {}
