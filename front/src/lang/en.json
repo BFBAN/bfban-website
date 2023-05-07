@@ -3,7 +3,7 @@
     "description": "<h2>BFBAN</h2>\n    <p>\n    created at 2018.1.29; It is an organisation created to fight <b>against hackers</b>\n    </p>\n\n    <p>\n      Staff members in bfban include:\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>Server owners</li>\n      <li>Clan's leaders</li>\n      <li>Bf1 streamers</li>\n    </ul>",
     "privacy": "\n<h2>Privacy policy</h2>\nIt is open-sourced. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use.",
     "title": "About",
-    "website": "\n    <h2>bfban.com website</h2>\n    <p>\n      <a href=\"https://bfban.com\">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> and launched on November 4, 2018\n    </p>\n    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>"
+    "website": "\n    <h2>bfban.com website</h2>\n    <p>\n      <a href=\"https://bfban.com\">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> and launched on November 4, 2018\n    </p>\n    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>"
   },
   "account": {
     "bindOrigin": {

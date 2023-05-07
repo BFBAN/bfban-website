@@ -3,7 +3,7 @@
     "description": "<h2>BFBAN</h2>\n<p>\n诞生于2018年1月29日；\n是战地玩家一起组建的 <b>抵制外挂</b> 组织。\n </p>",
     "privacy": "\n<h2>隐私政策</h2>\n它是开源的。您可以通过 GitHub 发布问题并提出更改/改进建议。社区网络提供的 API 并开放供公众使用。",
     "title": "关于",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> El sitio web se basa en la oficina de investigación de BFBAN. La idea original se originó a partir de jugadores entusiastas. Fue desarrollado por <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> en Noviembre de 2018 Lanzado el 4'\n </p>\n <p>Proporciona principalmente servicios como informes, listas, búsquedas, seguimiento y discusión para la mayoría de los jugadores;</p>"
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> El sitio web se basa en la oficina de investigación de BFBAN. La idea original se originó a partir de jugadores entusiastas. Fue desarrollado por <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> en Noviembre de 2018 Lanzado el 4'\n </p>\n <p>Proporciona principalmente servicios como informes, listas, búsquedas, seguimiento y discusión para la mayoría de los jugadores;</p>"
   },
   "account": {
     "bindOrigin": {
