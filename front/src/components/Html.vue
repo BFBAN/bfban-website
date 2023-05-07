@@ -48,7 +48,9 @@ export default {
         'h1': 0,
         'h2': 0,
         'h3': 0,
-        'q': 0
+        'q': 0,
+        'em': 0,
+        'u': 0
       },
       options: {
         url: 'src'
