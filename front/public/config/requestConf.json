@@ -1,26 +1,11 @@
 {
-  "requestDevelopmentName": "development4",
+  "requestDevelopmentName": "development",
   "requestProductionName": "production",
-  "requestUploadName": "development4",
+  "requestUploadName": "upload",
   "child": {
     "development": {
-      "protocol": "https",
-      "host": "bfban.gametools.network",
-      "pathname": "/api/"
-    },
-    "development2": {
       "protocol": "http",
-      "host": "114.132.153.50:9990",
-      "pathname": "/api/"
-    },
-    "development3": {
-      "protocol": "https",
-      "host": "bfban.gametools.network",
-      "pathname": "/api/"
-    },
-    "development4": {
-      "protocol": "http",
-      "host": "127.0.0.1:3000",
+      "host": "localhost:3000",
       "pathname": "/api/"
     },
     "upload": {

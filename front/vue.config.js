@@ -72,7 +72,7 @@ module.exports = {
                 [{
                     from: `src/lang`,
                     to: `lang`
-                },{
+                }, {
                     from: `src/assets/images/logo.png`,
                     to: `img/logo.png`
                 }],
@@ -83,7 +83,7 @@ module.exports = {
             ),
         ],
         module: {
-          unknownContextCritical: false
+            unknownContextCritical: false
         }
     },
 }
