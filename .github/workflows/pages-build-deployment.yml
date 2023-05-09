@@ -74,7 +74,7 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        port: ${{ secrets.PASSWORD }}
-        password: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        password: ${{ secrets.PASSWORD }}
         source: "."
         target: "/var/www/bfban"
