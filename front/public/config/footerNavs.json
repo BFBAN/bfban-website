@@ -14,17 +14,6 @@
             "src": "//discord.gametools.network/"
           },
           {
-            "text": "战地中文kook社区",
-            "textLang": {
-              "en-US": "chning network kook",
-              "zh-CN": "战地中文kook社区"
-            },
-            "src": "//kaihei.co/uoJKC0",
-            "showLang": [
-              "zh-CN"
-            ]
-          },
-          {
             "text": "bfban开发者kook社区",
             "textLang": {
               "en-US": "Kook Community of developers",
@@ -59,7 +48,7 @@
             "text": "BFBAN WebSite Public Api Docs",
             "textLang": {
               "en-US": "BFBAN WebSite Public Api Docs",
-              "zh-CN": "联BAN网站公开API文档"
+              "zh-CN": "BFBAN网站公开API文档"
             },
             "src": "https://bfban.gametools.network/docs"
           }
@@ -101,8 +90,11 @@
           {
             "text": "Complaint mailbox",
             "textLang": {
-              "en-US": "Complaint mailbox",
-              "zh-CN": "申诉邮箱"
+              "en-US": "Appeal mailbox",
+              "zh-CN": "申诉邮箱",
+              "ja-JP": "訴訟用メールボックス",
+              "zh-TW": "申訴郵箱",
+              "ru-RU": "Электронная почта для апелляции"
             },
             "src": "mailto:ban-appeals@bfban.com"
           },
