@@ -40,13 +40,13 @@
     },
     {
       "type": "local",
-      "name": "39Green",
-      "img": "public/theme/39Green/main.png",
+      "name": "MikuGreen",
+      "img": "public/theme/MikuGreen/main.png",
       "themeColor": "#39C5BB",
       "version": "0.1",
       "authorInfo": {
-        "authorName": "Miku39",
-        "authorUpdate": "2023-6-3"
+        "authorName": "BFBAN",
+        "authorUpdate": "2023-6-5"
       },
       "src": ""
     }
