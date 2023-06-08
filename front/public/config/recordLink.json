@@ -39,6 +39,15 @@
         }
       }
     },
+    "bfvhackers.com": {
+      "website": "https://bfvhackers.com",
+      "icon": "https://bfvhackers.com/static/media/bfv-hacker-lookup-logo.png",
+      "platform": {
+        "origin": {
+          "bfv": "?name={name}"
+        }
+      }
+    },
     "247-Fairplay": {
       "webSite": "https://www.247fairplay.com",
       "icon": "https://endof.p-stats.com/favicon.ico",
