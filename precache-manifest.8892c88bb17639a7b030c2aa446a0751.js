@@ -104,11 +104,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/css/chunk-64e06c84.a6727635.css.map"
   },
   {
-    "revision": "afd26b0cfab289eb9863",
+    "revision": "ddae484d699f31d64e55",
     "url": "/assets/css/chunk-6fc9d0fd.876be27a.css"
   },
   {
-    "revision": "afd26b0cfab289eb9863",
+    "revision": "ddae484d699f31d64e55",
     "url": "/assets/css/chunk-6fc9d0fd.876be27a.css.map"
   },
   {
@@ -420,11 +420,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-64e06c84.2.9.7.js.map"
   },
   {
-    "revision": "afd26b0cfab289eb9863",
+    "revision": "ddae484d699f31d64e55",
     "url": "/assets/js/chunk-6fc9d0fd.2.9.7.js"
   },
   {
-    "revision": "afd26b0cfab289eb9863",
+    "revision": "ddae484d699f31d64e55",
     "url": "/assets/js/chunk-6fc9d0fd.2.9.7.js.map"
   },
   {
@@ -672,7 +672,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/config/privilege.json"
   },
   {
-    "revision": "353f0bb128f33270cb252383b56f05be",
+    "revision": "2c06712b13b225b68194def1ee828d89",
     "url": "/config/recordLink.json"
   },
   {
