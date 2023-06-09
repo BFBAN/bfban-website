@@ -39,12 +39,12 @@
         }
       }
     },
-    "bfvhackers.com": {
+    "bfv-Hackers": {
       "website": "https://bfvhackers.com",
       "icon": "https://bfvhackers.com/static/media/bfv-hacker-lookup-logo.png",
       "platform": {
         "origin": {
-          "bfv": "?name={name}"
+          "bfv": "?player-id={id}"
         }
       }
     },
@@ -66,7 +66,8 @@
     ],
     "bfv": [
       "Battlefield-Tracker",
-      "Gametools-Network"
+      "Gametools-Network",
+      "bfv-Hackers"
     ],
     "bf6": [
       "Battlefield-Tracker"
