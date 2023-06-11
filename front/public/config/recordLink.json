@@ -44,7 +44,7 @@
       "icon": "https://bfvhackers.com/static/media/bfv-hacker-lookup-logo.png",
       "platform": {
         "origin": {
-          "bfv": "?player-id={id}"
+          "bfv": "?player-id={originPersonaId}"
         }
       }
     },
