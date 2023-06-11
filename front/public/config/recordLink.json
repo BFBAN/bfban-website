@@ -40,7 +40,7 @@
       }
     },
     "bfv-Hackers": {
-      "website": "https://bfvhackers.com",
+      "webSite": "https://bfvhackers.com",
       "icon": "https://bfvhackers.com/static/media/bfv-hacker-lookup-logo.png",
       "platform": {
         "origin": {
