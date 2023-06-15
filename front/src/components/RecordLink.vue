@@ -131,6 +131,7 @@ export default {
                 title: this.$i18n.t('basic.gamePlatforms.' + gamePlatformKey),
                 url: util.onReplacementStringVariable(url, {
                   id: this.cheater.originUserId,
+                  personaId: this.cheater.originPersonaId,
                   name: this.cheater.originName
                 })
               })
