@@ -15,7 +15,7 @@
     },
     "production": {
       "protocol": "https",
-      "host": "bfban.gametools.network",
+      "host": "1b6d-114-37-213-88.ngrok-free.app",
       "pathname": "/api/"
     }
   }
