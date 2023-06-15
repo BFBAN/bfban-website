@@ -8,11 +8,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/_redirects"
   },
   {
-    "revision": "494375c712433d14729e",
+    "revision": "20f4d9c9c2ce45d218f1",
     "url": "/assets/css/app.5d8d35bb.css"
   },
   {
-    "revision": "494375c712433d14729e",
+    "revision": "20f4d9c9c2ce45d218f1",
     "url": "/assets/css/app.5d8d35bb.css.map"
   },
   {
@@ -144,12 +144,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/css/chunk-749a7dc5.2ad795b1.css.map"
   },
   {
-    "revision": "71450cd6aeaa5ad4481c",
-    "url": "/assets/css/chunk-74a14dc3.45049c07.css"
+    "revision": "9659ea0e664b92ee04d2",
+    "url": "/assets/css/chunk-74a14dc3.6f71e60b.css"
   },
   {
-    "revision": "71450cd6aeaa5ad4481c",
-    "url": "/assets/css/chunk-74a14dc3.45049c07.css.map"
+    "revision": "9659ea0e664b92ee04d2",
+    "url": "/assets/css/chunk-74a14dc3.6f71e60b.css.map"
   },
   {
     "revision": "e268e2f2821d45c7a956",
@@ -158,6 +158,14 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "e268e2f2821d45c7a956",
     "url": "/assets/css/chunk-74ae0224.4f381832.css.map"
+  },
+  {
+    "revision": "ef601692a85dd608f813",
+    "url": "/assets/css/chunk-74bc1aef.0e433876.css"
+  },
+  {
+    "revision": "ef601692a85dd608f813",
+    "url": "/assets/css/chunk-74bc1aef.0e433876.css.map"
   },
   {
     "revision": "c8fd9f62912f9fe635a9",
@@ -174,6 +182,14 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "bd9f25110c8d228ad43d",
     "url": "/assets/css/chunk-772e97bc.9fc8f4dc.css.map"
+  },
+  {
+    "revision": "758851dd899ba020a13c",
+    "url": "/assets/css/chunk-773da35d.6fd2f5b6.css"
+  },
+  {
+    "revision": "758851dd899ba020a13c",
+    "url": "/assets/css/chunk-773da35d.6fd2f5b6.css.map"
   },
   {
     "revision": "a2c5f26c92a6e97a063e",
@@ -260,11 +276,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ionicons.d535a25a.ttf"
   },
   {
-    "revision": "494375c712433d14729e",
+    "revision": "20f4d9c9c2ce45d218f1",
     "url": "/assets/js/app.2.9.8.js"
   },
   {
-    "revision": "494375c712433d14729e",
+    "revision": "20f4d9c9c2ce45d218f1",
     "url": "/assets/js/app.2.9.8.js.map"
   },
   {
@@ -460,11 +476,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-749a7dc5.2.9.8.js.map"
   },
   {
-    "revision": "71450cd6aeaa5ad4481c",
+    "revision": "9659ea0e664b92ee04d2",
     "url": "/assets/js/chunk-74a14dc3.2.9.8.js"
   },
   {
-    "revision": "71450cd6aeaa5ad4481c",
+    "revision": "9659ea0e664b92ee04d2",
     "url": "/assets/js/chunk-74a14dc3.2.9.8.js.map"
   },
   {
@@ -474,6 +490,14 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "e268e2f2821d45c7a956",
     "url": "/assets/js/chunk-74ae0224.2.9.8.js.map"
+  },
+  {
+    "revision": "ef601692a85dd608f813",
+    "url": "/assets/js/chunk-74bc1aef.2.9.8.js"
+  },
+  {
+    "revision": "ef601692a85dd608f813",
+    "url": "/assets/js/chunk-74bc1aef.2.9.8.js.map"
   },
   {
     "revision": "c3e9485df8b6ea780d9f",
@@ -498,6 +522,14 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "bd9f25110c8d228ad43d",
     "url": "/assets/js/chunk-772e97bc.2.9.8.js.map"
+  },
+  {
+    "revision": "758851dd899ba020a13c",
+    "url": "/assets/js/chunk-773da35d.2.9.8.js"
+  },
+  {
+    "revision": "758851dd899ba020a13c",
+    "url": "/assets/js/chunk-773da35d.2.9.8.js.map"
   },
   {
     "revision": "808f50e32141144fe556",
@@ -692,7 +724,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/config/tells.json"
   },
   {
-    "revision": "1e5d4e615d44c1e830d609f4d5c11a0a",
+    "revision": "d2f6537a0a61f1629c41eae63452ce82",
     "url": "/config/themes.json"
   },
   {
@@ -700,7 +732,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/favicon.ico"
   },
   {
-    "revision": "5f31e47d1cd38804e6ac34cee47c1318",
+    "revision": "45a45d7be8844951997d1d5b4dcebe9d",
     "url": "/index.html"
   },
   {
@@ -724,6 +756,150 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/robots.txt"
   },
   {
+    "revision": "b9f18ce8cd7b632a1a37fce4ee200a46",
+    "url": "/theme/BlueDeep/alert.less"
+  },
+  {
+    "revision": "c68d4dfb9a38adcd34044ffe98f37ac4",
+    "url": "/theme/BlueDeep/button.less"
+  },
+  {
+    "revision": "a98cce30e66b788df9c2fbcf293b02a8",
+    "url": "/theme/BlueDeep/card.less"
+  },
+  {
+    "revision": "aa0fba9ac49346274e7fe6ed8e18ead7",
+    "url": "/theme/BlueDeep/custom.less"
+  },
+  {
+    "revision": "7a35dc218288be96d6de9fcfe77524cb",
+    "url": "/theme/BlueDeep/divider.less"
+  },
+  {
+    "revision": "c842d6d0097ec751bc4eaeb9731219b1",
+    "url": "/theme/BlueDeep/dropdown.less"
+  },
+  {
+    "revision": "be512b5c89e832a502d30ed22e4ebddf",
+    "url": "/theme/BlueDeep/index.less"
+  },
+  {
+    "revision": "feb14334f21372d8bd34ace664a93da3",
+    "url": "/theme/BlueDeep/input.less"
+  },
+  {
+    "revision": "9365a0e26ffc12d9bbba172fff50ee0f",
+    "url": "/theme/BlueDeep/list.less"
+  },
+  {
+    "revision": "df576769d60993253818a1af472c0809",
+    "url": "/theme/BlueDeep/menu.less"
+  },
+  {
+    "revision": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "/theme/BlueDeep/mixins/checkbox.css"
+  },
+  {
+    "revision": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "/theme/BlueDeep/mixins/checkbox.css.map"
+  },
+  {
+    "revision": "5bb3fe8b3ea92e2f5c48c28b57b640a0",
+    "url": "/theme/BlueDeep/mixins/checkbox.less"
+  },
+  {
+    "revision": "f18a33feef871b65cc051dd731d66590",
+    "url": "/theme/BlueDeep/mixins/index.less"
+  },
+  {
+    "revision": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "/theme/BlueDeep/mixins/input.css"
+  },
+  {
+    "revision": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "/theme/BlueDeep/mixins/input.css.map"
+  },
+  {
+    "revision": "97697f20f9548ac72441c9af16ea62c4",
+    "url": "/theme/BlueDeep/mixins/input.less"
+  },
+  {
+    "revision": "e993fff02b5f094830df590358cf8607",
+    "url": "/theme/BlueDeep/mixins/select.less"
+  },
+  {
+    "revision": "45efce054199329a7c6e7730d4862053",
+    "url": "/theme/BlueDeep/modal.less"
+  },
+  {
+    "revision": "d323e6082ec2c6b2b259131f060399a4",
+    "url": "/theme/BlueDeep/page.less"
+  },
+  {
+    "revision": "6b03facea7b7ff12d4a1aac4cc13d1ea",
+    "url": "/theme/BlueDeep/pages/body.less"
+  },
+  {
+    "revision": "99c9b4ba31a1a6f4d8acdfd04bd0c674",
+    "url": "/theme/BlueDeep/pages/cropper.less"
+  },
+  {
+    "revision": "f4215e9bf2534f71ee16b001d1034220",
+    "url": "/theme/BlueDeep/pages/detail.less"
+  },
+  {
+    "revision": "ee08519b3f831af186f34c30496a8d72",
+    "url": "/theme/BlueDeep/pages/edit.less"
+  },
+  {
+    "revision": "1c7399732f1203cd0e70b5ec6ebf44c0",
+    "url": "/theme/BlueDeep/pages/html.less"
+  },
+  {
+    "revision": "abb1ad1a3088dc3dc0a1694d28c8fff7",
+    "url": "/theme/BlueDeep/pages/list.less"
+  },
+  {
+    "revision": "95ac745a0b4e9277928f25f89fdc9b7b",
+    "url": "/theme/BlueDeep/poptip.less"
+  },
+  {
+    "revision": "09bc2cebd759bb7407cd10ae0ff107e1",
+    "url": "/theme/BlueDeep/radio.less"
+  },
+  {
+    "revision": "459442e50e6f9a466aabb956fac23019",
+    "url": "/theme/BlueDeep/select-dropdown.less"
+  },
+  {
+    "revision": "c4b1b3cc838cb90d3ad3ef4ed002d6b4",
+    "url": "/theme/BlueDeep/select.less"
+  },
+  {
+    "revision": "59269f6d62541d8f7b4e0fa68e26744d",
+    "url": "/theme/BlueDeep/spin.less"
+  },
+  {
+    "revision": "cb63c0f3ce9f8464c001c83cc1fe9cd0",
+    "url": "/theme/BlueDeep/split.less"
+  },
+  {
+    "revision": "334e90714f03951f6c71d4b645cfb30b",
+    "url": "/theme/BlueDeep/steps.less"
+  },
+  {
+    "revision": "311f60279c3ca0a84248ab038345d14c",
+    "url": "/theme/BlueDeep/table.less"
+  },
+  {
+    "revision": "9ceb00e8f5376dfc0fb661809925d762",
+    "url": "/theme/BlueDeep/tag.less"
+  },
+  {
+    "revision": "930a7d2ba2a75af7a50d692fed79673c",
+    "url": "/theme/BlueDeep/time.less"
+  },
+  {
     "revision": "7652adff4ffa401e59f594dd00e58f01",
     "url": "/theme/MikuGreen/card.less"
   },
@@ -736,7 +912,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/theme/MikuGreen/index.less"
   },
   {
-    "revision": "87f885f5f88e55ce8a4a383721afc3d6",
+    "revision": "18458c164f3b69593cf7f4a288a316a0",
     "url": "/theme/MikuGreen/pages/body.less"
   },
   {
