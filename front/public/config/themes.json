@@ -45,8 +45,21 @@
       "themeColor": "#39C5BB",
       "version": "0.1",
       "authorInfo": {
-        "authorName": "BFBAN",
+        "authorName": "miku39",
         "authorUpdate": "2023-6-5"
+      },
+      "src": ""
+    },
+    {
+
+      "type": "local",
+      "name": "BlueDeep",
+      "img": "public/theme/BlueDeep/main.png",
+      "themeColor": "#364e80",
+      "version": "0.1",
+      "authorInfo": {
+        "authorName": "Cabbagelol",
+        "authorUpdate": "2023-6-15"
       },
       "src": ""
     }

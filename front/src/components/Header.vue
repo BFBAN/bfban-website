@@ -103,10 +103,10 @@
                   <div @click="changeTheme(theme_index)">
                     <DropdownItem :name="i.name" :selected="themeIndex == theme_index">
                       <Row>
-                        <Col flex="1">
+                        <Col>
                           <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
                         </Col>
-                        <Col>{{ i.name }}</Col>
+                        <Col flex="1">{{ i.name }}</Col>
                       </Row>
                     </DropdownItem>
                   </div>
@@ -160,11 +160,9 @@
                 :name="i.name"
                 :selected="themeIndex == theme_index"
                 @click.native="changeTheme(theme_index)">
-              <Row>
-                <Col flex="1">
-                  <div class="hedaer-theme-color right-space" :style="`background-color: ${i.themeColor}`"></div>
-                </Col>
-                <Col>{{i.name}}</Col>
+              <Row type="flex" align="middle" >
+                <div class="hedaer-theme-color right-space" :style="`background-color: ${i.themeColor}`"></div>
+                <p>{{i.name}}</p>
               </Row>
             </DropdownItem>
           </DropdownMenu>
