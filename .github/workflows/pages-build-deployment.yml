@@ -92,3 +92,10 @@ jobs:
       env:
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
+    - name: Restart service in docker
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: ${{ secrets.FRONT_UPDATE_URL }}
+        method: 'POST'
+        timeout: 90000
