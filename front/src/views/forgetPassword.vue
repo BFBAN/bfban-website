@@ -59,9 +59,9 @@
                       <Icon type="md-mail" color="#535353" size="80"/>
                     </Col>
                   </Row>
-                </Card>
-                <br>
-                <Alert type="success" show-icon>{{ $t('forgetPassword.checkEmail') }}</Alert>
+                  </Card>
+                  <br>
+                  <Alert type="success" show-icon>{{ $t('forgetPassword.checkEmail') }}</Alert>
                 </div>
 
                 <div v-if="stepsIndex == 3">
