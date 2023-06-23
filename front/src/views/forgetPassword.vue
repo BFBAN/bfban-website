@@ -47,6 +47,21 @@
 
                 <div v-if="stepsIndex == 2">
                   <EmailTip :email="forgetPassword.originEmail"></EmailTip>
+                  <Card dis-hover>
+                  <Row :gutter="16" type="flex" justify="center" align="middle">
+                    <Col>
+                      <Icon type="md-cloud" color="#535353" size="80"/>
+                    </Col>
+                    <Col>
+                      <Icon type="md-return-right" color="#aaa" size="30"/>
+                    </Col>
+                    <Col>
+                      <Icon type="md-mail" color="#535353" size="80"/>
+                    </Col>
+                  </Row>
+                </Card>
+                <br>
+                <Alert type="success" show-icon>{{ $t('forgetPassword.checkEmail') }}</Alert>
                 </div>
 
                 <div v-if="stepsIndex == 3">
