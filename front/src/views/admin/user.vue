@@ -23,8 +23,15 @@
             {{ i.title }}
           </Option>
         </Select>
-      </Col>
+      </Col>  
       <template v-if="userType.value == 'all'">
+        <Col>
+          <Select v-model="userparameter.value" @on-change="getUserList">
+            <Option :value="i.value" v-for="(i,index) in userparameter.list" :key="index">
+              {{ i.title }}
+            </Option>
+          </Select>
+        </Col>
         <Col>
           <div v-show="load">
             <Icon type="ios-loading"></Icon>
@@ -332,8 +339,12 @@ export default new Application({
         list: [{title: 'All', value: 'all'}, {title: 'Admin`s', value: 'admin'}]
       },
       userOrder: {
-        value: 'desc',
+        value: 'asc',
         list: [{title: 'Asc', value: 'asc'}, {title: 'Desc', value: 'desc'}]
+      },
+      userparameter: {
+        value: 'username',
+        list: [{title: 'BFBAN ID', value: 'id'}, {title: 'BFBAN Username', value: 'username'}, {title: 'originName', value: 'originName'}, {title: 'originPersonaId', value: 'originPersonaId'}, {title: 'Email', value: 'originEmail'}]
       },
 
       addUserLoad: false,
@@ -534,7 +545,7 @@ export default new Application({
      */
     async getUserList() {
       const that = this;
-      let params = {name: '', skip: this.skip - 1, limit: this.limit};
+      let params = {name: '', skip: this.skip - 1, limit: this.limit, parameter: ''};
 
       if (this.load) return;
 
@@ -547,6 +558,8 @@ export default new Application({
           params.type = this.userType.value;
         if (this.userOrder.value)
           params.order = this.userOrder.value
+        if (this.userparameter.value)
+          params.parameter = this.userparameter.value
 
         that.http.get(api["admin_searchUser"], {
           params,

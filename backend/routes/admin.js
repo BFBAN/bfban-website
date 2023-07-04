@@ -24,6 +24,7 @@ router.get('/searchUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
     checkquery('order').optional().isIn(['asc', 'desc']),
+    checkquery('parameter').isIn(['id', 'username', 'originName', 'originPersonaId', 'originEmail']),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
@@ -35,6 +36,7 @@ async (req, res, next) => {
         const skip = req.query.skip !== undefined ? req.query.skip : 0;
         const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
+        const parameter = req.query.parameter ? req.query.parameter : 'username';
 
         let total;
         let result;
@@ -58,13 +60,14 @@ async (req, res, next) => {
             case 'all':
             default:
                 result = await db.select('*').from('users')
-                    .where('users.username', 'like', `%${req.query.name}%`)
+                    .where(`users.${parameter}`, 'like', `%${req.query.name}%`)
                     .select('users.*', 'users.username', 'users.privilege')
                     .orderBy('users.createTime', order)
                     .offset(skip).limit(limit);
 
-                total = await db.count({num: 1}).from('users').first().then(r => r.num);
-                break;
+                total = await db.count({num: 1}).from('users')
+                    .where(`users.${parameter}`, 'like', `%${req.query.name}%`)
+                    .first().then(r => r.num);
         }
 
         if (result) {
@@ -173,7 +176,7 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'admin.setComment.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").Comment} */
-        const isSpam = req.query.data.includes('isSpam') ? req.query.data.isSpam : false;
+        const isSpam = req.query.data.isSpam ? req.query.data.isSpam : false;
         const valid = req.query.data.valid ? req.query.data.valid : null;
         const comment = await db.select('*').from('comments').where({id: req.body.data.id}).first();
         if (!comment)
