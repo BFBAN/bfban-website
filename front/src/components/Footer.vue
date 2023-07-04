@@ -1,8 +1,5 @@
 <template>
   <footer class="footer footer-border-top" v-if="!isFull">
-    <template v-if="$route.query['love'] === '❤'">
-      <Divider align="center">❤️❤️❤️❤️❤️</Divider>
-    </template>
     <div class="container">
       <Row>
         <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide">
