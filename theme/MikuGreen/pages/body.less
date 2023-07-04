@@ -3,12 +3,18 @@
 }
 
 body, html {
+  overflow-x: hidden;
   background-color: #edfded!important;
-  background-image: url(../images/miku-background.png);
-  background-size: contain;
-  background-attachment: fixed;
-  background-position-x: 150%;
-  background-repeat: repeat-y;
+}
+
+@media screen and (min-width: 1024px) {
+  body, html{
+    background-image: url(../images/miku-background.png);
+    background-size: contain;
+    background-attachment: fixed;
+    background-position-x: 150%;
+    background-repeat: no-repeat;
+  }
 }
 
 // header
