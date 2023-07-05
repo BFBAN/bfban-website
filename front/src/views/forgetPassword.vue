@@ -32,6 +32,7 @@
                   <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
                     <Input v-model="forgetPassword.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
                   </FormItem>
+                  <Alert show-icon>{{ $t('forgetPassword.forgetUsername') }}</Alert>
                 </div>
 
                 <FormItem v-if="stepsIndex == 1" :label="$t('captcha.title')">
