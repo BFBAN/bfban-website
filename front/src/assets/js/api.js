@@ -55,6 +55,7 @@ export default class Api {
             "admin_searchUser": "admin/searchUser",
             "admin_setComment": "admin/setComment",
             "admin_commentAll": "admin/commentAll",
+            "admin_commentItem": "admin/commentItem",
             "admin_setUser": "admin/setUser",
             "admin_setUserAttr": "admin/setUserAttr",
             "admin_msGraphStatus": "admin/msGraphStatus",
