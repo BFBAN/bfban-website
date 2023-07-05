@@ -167,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `originName` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `originUserId` varchar(20) DEFAULT NULL,
   `originPersonaId` varchar(20) DEFAULT NULL,
+  `introduction` TEXT DEFAULT NULL,
   `originEmail` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `signoutTime` datetime DEFAULT NULL,
   `createTime` datetime DEFAULT CURRENT_TIMESTAMP,
