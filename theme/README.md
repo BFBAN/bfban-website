@@ -7,6 +7,8 @@
 3. [default](/default) 默认主题 作者: cabbagelol
 4. [pink](/pink) 粉色 作者: cabbagelol
 5. [silence](/silence) 黑白特供 作者: cabbagelol
+6. [MikuGreen](/MikuGreen) Miku主题特供 作者: B1397KB, Fishbat627, cabbagelol
+7. [BlueDeep](/BlueDeep) 深蓝 作者: cabbagelol
 
 ## 主题目录
 1. pages 文件夹，储存特定页面的样式表
