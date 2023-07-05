@@ -427,6 +427,10 @@ async (req, res, next) => {
         // change UserName
         if (req.body.data.username !== undefined)
             doEditUserData.username = req.body.data.username;
+        
+        // Set userIntroduction
+        if (req.body.data.attr && req.body.data.attr.userIntroduction !== undefined)
+            doEditUserData.introduction = req.body.data.attr.userIntroduction;
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setUserAttr', target: userData.id}));
         await db('users').update(doEditUserData).where({id: userData.id});

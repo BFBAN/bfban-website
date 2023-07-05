@@ -34,7 +34,7 @@
         </Row>
         <br>
         <Card dis-hover>
-          <p v-html="userInfo.introduction || '(✿◡‿◡)'"></p>
+          <p>{{ userInfo.introduction ? userInfo.introduction : '(✿◡‿◡)' }}</p>
         </Card>
         <br>
         <Row>
