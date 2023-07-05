@@ -176,8 +176,8 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'admin.setComment.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").Comment} */
-        const isSpam = req.query.data.isSpam ? req.query.data.isSpam : false;
-        const valid = req.query.data.valid ? req.query.data.valid : null;
+        const isSpam = req.body.data.isSpam ? req.query.data.isSpam : false;
+        const valid = req.body.data.valid ? req.query.data.valid : null;
         const comment = await db.select('*').from('comments').where({id: req.body.data.id}).first();
         if (!comment)
             return res.status(404).json({error: 1, code: 'admin.setComment.notFound'});
