@@ -364,7 +364,6 @@ export default {
         // 调整光标到最后
         quill.setSelection(range.index + 1);
       } catch (err) {
-        console.log(err);
         this.$Message.error(err);
         this.updataIcon = false;
         this.insertLoad = false;

@@ -105,7 +105,6 @@ export default {
       }
     },
     switchVoiceAttr (key, val) {
-      console.log(val.state)
       if (!key) return;
         account_storage.updateConfiguration(key, {
           state: val.state,
