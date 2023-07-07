@@ -218,16 +218,14 @@ export default new Application({
 
       this.editCommentFrom = this.commentList[index];
 
-      if (this.$refs.commentTextarea)
-        this.$refs.commentTextarea.updateContent(this.editCommentFrom.content);
-
-      this.commentEditModel = true;
+      this.openCommentModeBase();
     },
     openCommentModeAsData(data) {
-      this.editCommentFrom.content = data.content;
-      this.editCommentFrom.videoLink = data.videoLink;
-      console.log(data)
+      this.editCommentFrom = data;
 
+      this.openCommentModeBase();
+    },
+    openCommentModeBase () {
       if (this.$refs.commentTextarea)
         this.$refs.commentTextarea.updateContent(this.editCommentFrom.content);
 
@@ -259,9 +257,9 @@ export default new Application({
         content: this.editCommentFrom.content,
       };
 
-      if (this.editCommentFrom.includes('videoLink')) data.videoLink = this.editCommentFrom.videoLink;
-      if (this.editCommentFrom.includes('isSpam')) data.isSpam = this.editCommentFrom.isSpam;
-      if (this.editCommentFrom.includes('valid')) data.valid = this.editCommentFrom.valid;
+      if (this.editCommentFrom.videoLink) data.videoLink = this.editCommentFrom.videoLink;
+      if (this.editCommentFrom.isSpam) data.isSpam = this.editCommentFrom.isSpam;
+      if (this.editCommentFrom.valid) data.valid = this.editCommentFrom.valid;
 
       this.http.post(api['admin_setComment'], {
         data: {data}
