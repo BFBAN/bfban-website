@@ -1,29 +1,30 @@
 <template>
   <div>
     <Row type="flex" align="middle">
-      <Col flex="auto" :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 24, push: 0, pull: 0}">
-        <RadioGroup
-            class="game-type"
-            v-model="gameName"
-            @on-change="getCommentAllList"
-            type="button">
-          <Radio label="all" value="all">
-            {{ $t('basic.games.all') }}
-          </Radio>
-          <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
-                 :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
-                 :class="gameName == i.value ? 'gametype-select' : ''">
-            <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
-              <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
-              <span v-else>{{ i.full_name }}</span>
-            </Tooltip>
-          </Radio>
-        </RadioGroup>
-      </Col>
       <Col>
-        <Select v-model="typeValue">
+        <Select v-model="typeValue" @on-change="getCommentAllList">
           <Option v-for="(i, index) in typeArray" :key="index" :value="i">{{ i }}</Option>
         </Select>
+      </Col>
+      <Col flex="1"></Col>
+      <Col>
+        <Row :gutter="10">
+          <Col>
+            <Select value="id">
+              <Option value="id">id</Option>
+            </Select>
+          </Col>
+          <Col>
+            <Input v-model="searchCommentValue"
+                   type="text"
+                   search
+                   enter-button
+                   @on-enter="getSearchComment"
+                   @on-search="getSearchComment"
+                   style="width: 280px">
+            </Input>
+          </Col>
+        </Row>
       </Col>
     </Row>
 
@@ -56,6 +57,8 @@
         <Card :padding="0" dis-hover>
           <div slot="title">
             <Tag>COMMENT</Tag>
+            <Tag>{{ i.type }}</Tag>
+            <Tag>{{ i.cheatGame || 'none' }}</Tag>
             <Time :time="i.createTime" type="date"></Time>
             :
             <BusinessCard :id="i.byUserId">
@@ -70,8 +73,9 @@
           <div slot="extra">
             <a href="javascript:void(0)">
               <Tooltip content="Edit Comment">
-                <Button size="small" type="primary" @click="openCommentMode(index)">
+                <Button size="small" type="primary" @click="openCommentModeAsIndex(index)">
                   <Icon type="md-create"/>
+                  id: {{ i.id }}
                 </Button>
               </Tooltip>
             </a>
@@ -165,16 +169,15 @@ export default new Application({
           {required: true, trigger: 'blur'}
         ],
         videoLink: [
-          {required: true, trigger: 'blur'}
+          {trigger: 'blur'}
         ],
       },
 
+      searchCommentValue: '',
       load: false,
-      gameName: 'all',
-      games: [],
       commentList: [],
-      typeValue: 'report',
-      typeArray: ['report', 'reply', 'judgement', 'banAppeal'],
+      typeValue: 'all',
+      typeArray: ['all', 'report', 'reply', 'judgement', 'banAppeal'],
       skip: 1,
       limit: 20,
       order: 'desc',
@@ -205,7 +208,7 @@ export default new Application({
      * 打开面板，展示可编辑(预备)表单
      * @param index {numer}
      */
-    openCommentMode(index) {
+    openCommentModeAsIndex(index) {
       if (
           !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ['super', 'root', 'dev'])
       ) {
@@ -215,6 +218,14 @@ export default new Application({
 
       this.editCommentFrom = this.commentList[index];
 
+      this.openCommentModeBase();
+    },
+    openCommentModeAsData(data) {
+      this.editCommentFrom = data;
+
+      this.openCommentModeBase();
+    },
+    openCommentModeBase () {
       if (this.$refs.commentTextarea)
         this.$refs.commentTextarea.updateContent(this.editCommentFrom.content);
 
@@ -232,7 +243,7 @@ export default new Application({
      * 提交编辑评论、回复、判决
      */
     commentSubmit() {
-      if (!this.editCommentFrom.id || !this.editCommentFrom.content || !this.editCommentFrom.videoLink) return;
+      if (!this.editCommentFrom.id || !this.editCommentFrom.content) return;
 
       if (
           !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ['super', 'root', 'dev'])
@@ -241,14 +252,14 @@ export default new Application({
         return;
       }
 
-      const data = {
+      let data = {
         id: this.editCommentFrom.id,
         content: this.editCommentFrom.content,
-        videoLink: this.editCommentFrom.videoLink,
       };
 
-      if (this.editCommentFrom.includes('isSpam')) data.isSpam = this.editCommentFrom.isSpam;
-      if (this.editCommentFrom.includes('valid')) data.valid = this.editCommentFrom.valid;
+      if (this.editCommentFrom.videoLink) data.videoLink = this.editCommentFrom.videoLink;
+      if (this.editCommentFrom.isSpam) data.isSpam = this.editCommentFrom.isSpam;
+      if (this.editCommentFrom.valid) data.valid = this.editCommentFrom.valid;
 
       this.http.post(api['admin_setComment'], {
         data: {data}
@@ -269,6 +280,31 @@ export default new Application({
       })
     },
     /**
+     * 查询单条评论
+     */
+    getSearchComment() {
+      const id = this.searchCommentValue;
+
+      if (!id) return;
+
+      this.http.get(api['admin_commentItem'], {
+        params: {
+          id: this.searchCommentValue
+        }
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.openCommentModeAsData(d.data);
+          return;
+        }
+
+        this.$Message.error(d.message || d.code);
+      }).finally(() => {
+        this.load = false;
+      })
+    },
+    /**
      * 查询所有评论
      */
     getCommentAllList() {
@@ -277,7 +313,6 @@ export default new Application({
       this.http.get(api['admin_commentAll'], {
         params: {
           type: this.typeValue,
-          game: this.gameName,
           skip: this.skip - 1,
           limit: this.limit,
           order: this.order

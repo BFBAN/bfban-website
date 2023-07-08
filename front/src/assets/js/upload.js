@@ -82,7 +82,6 @@ export default class Upload extends (Print, Conf) {
     uploadDateSmallFile(file) {
         return new Promise((resolve, reject) => {
             try {
-                console.log(file.slice(0, file.length));
                 if (!file) {
                     reject({code: -1, message: 'Missing parameter'})
                     throw 'Missing parameter';

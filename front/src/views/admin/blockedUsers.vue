@@ -239,7 +239,6 @@ export default new Application({
      */
     onAddUserBlocked(data) {
       const {id} = data;
-      console.log(id, this.blockedUserList)
       this.onOperatingAccountStatus(id, 'logic')
     },
     /**

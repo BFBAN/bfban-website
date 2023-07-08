@@ -4,7 +4,7 @@ import {body as checkbody, query as checkquery, validationResult} from "express-
 
 import db from "../mysql.js";
 import config from "../config.js";
-import {verifyJWT} from "../middleware/auth.js";
+import {forbidPrivileges, verifyJWT} from "../middleware/auth.js";
 import {allowPrivileges} from "../middleware/auth.js";
 import {localeMessage, sendMessage} from "./message.js";
 import {generatePassword, privilegeGranter, privilegeRevoker, userHasRoles} from "../lib/auth.js";
@@ -123,7 +123,6 @@ async (req, res, next) => {
 });
 
 router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
-        checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
         checkbody('type').optional().isString().isInt(['report', 'reply', 'judgement', 'banAppeal']),
         checkquery('skip').optional().isInt({min: 0}),
         checkquery('limit').optional().isInt({min: 0, max: 100}),
@@ -138,17 +137,24 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
             const order = req.query.order ? req.query.order : 'desc';
+            const type = req.query.type;
 
-            let type = req.query.type;
-            const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
-
-            const total = await db.count({num: 1}).from('comments').first().then(r => r.num);
+            const total = await db('comments')
+                .count({num: 1})
+                .andWhere(function () {
+                    this.where({valid: 1});
+                    if (type != 'all' || !type)
+                        this.where({type: type});
+                })
+                .first().then(r => r.num);
 
             const result = await db.from('comments')
                 .join('users', 'comments.byUserId', 'users.id')
                 .select('comments.*', 'users.username', 'users.privilege')
-                .where('cheatGame', 'like', game ? `%"${game}"%` : "%")
-                .andWhere({type: type})
+                .andWhere(function () {
+                    if (type != 'all' || !type)
+                        this.where({type: type});
+                })
                 .orderBy('comments.createTime', order)
                 .offset(skip).limit(limit)
                 .then(r => r.map(i => {
@@ -157,6 +163,31 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
                 }));
 
             return res.status(200).json({success: 1, code: 'admin.commentAll.ok', data: result, total});
+        } catch (err) {
+            next(err);
+        }
+    });
+
+router.get('/commentItem', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+        checkquery('id').isInt({min: 0}),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'admin.commentItem.bad', message: validateErr.array()});
+
+            const id = req.query.id;
+
+            const result = await db.from('comments')
+                .join('users', 'comments.byUserId', 'users.id')
+                .select('comments.*', 'users.username', 'users.privilege')
+                .where('comments.id', id)
+                .first();
+
+            delete result.valid;
+
+            return res.status(200).json({success: 1, code: 'admin.commentItem.ok', data: result});
         } catch (err) {
             next(err);
         }
@@ -176,8 +207,8 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'admin.setComment.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").Comment} */
-        const isSpam = req.query.data.isSpam ? req.query.data.isSpam : false;
-        const valid = req.query.data.valid ? req.query.data.valid : null;
+        const isSpam = req.body.data.isSpam ? req.query.data.isSpam : false;
+        const valid = req.body.data.valid ? req.query.data.valid : null;
         const comment = await db.select('*').from('comments').where({id: req.body.data.id}).first();
         if (!comment)
             return res.status(404).json({error: 1, code: 'admin.setComment.notFound'});
