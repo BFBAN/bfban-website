@@ -74,6 +74,10 @@
                 <Col>
                   <router-link :to="{name: 'forgetPassword'}">{{ $t('signin.form.forgetPasswordHint') }}</router-link>
                 </Col>
+                <Divider type="vertical"/>
+                <Col>
+                  <a href="http://kook.top/wHwxhw">{{ $t('signin.form.Feedback') }}</a>
+                </Col>
               </Row>
             </Card>
             <Card v-if="isLogin" shadow align="center" :padding="isMobile ? 20 : 50">

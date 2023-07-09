@@ -168,6 +168,68 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
         }
     });
 
+router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+        checkquery('type').optional().isString().isIn(['banAppeal', 'judgement']),
+        checkquery('banAppealStats').optional().isString(),
+        checkquery('judgeAction').optional().isString(),
+        checkquery('skip').optional().isInt({ min: 0 }),
+        checkquery('limit').optional().isInt({ min: 0, max: 100 }),
+        checkquery('order').optional().isIn(['asc', 'desc']),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: validateErr.array() });
+        
+            const skip = req.query.skip !== undefined ? req.query.skip : 0;
+            const limit = req.query.limit !== undefined ? req.query.limit : 20;
+            const order = req.query.order ? req.query.order : 'desc';
+            const type = req.query.type;
+            const banAppealStats = req.query.banAppealStats;
+            const judgeAction = req.query.judgeAction;
+        
+            let totalQuery = db('comments')
+                .count({ num: 1 })
+                .where({ 'comments.valid': 1 });
+        
+            let query = db.from('comments')
+                .join('users', 'comments.byUserId', 'users.id')
+                .select('comments.*', 'users.username', 'users.privilege')
+                .where({ 'comments.valid': 1 });
+        
+            if (type && type === 'banAppeal') {
+                if (!banAppealStats) {
+                return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: 'banAppealStats is required' });
+                }
+                totalQuery = totalQuery.andWhere({ 'comments.type': 'banAppeal', 'comments.appealStatus': banAppealStats });
+                query = query.andWhere({ 'comments.type': 'banAppeal', 'comments.appealStatus': banAppealStats });
+            } else if (type && type === 'judgement') {
+                if (!judgeAction) {
+                return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: 'judgeAction is required' });
+                }
+                totalQuery = totalQuery.andWhere({ 'comments.type': 'judgement', 'comments.judgeAction': judgeAction });
+                query = query.andWhere({ 'comments.type': 'judgement', 'comments.judgeAction': judgeAction });
+            } else {
+                return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: 'Invalid type' });
+            }
+        
+            const { num: total } = await totalQuery.first();
+        
+            const result = await query
+                .orderBy('comments.createTime', order)
+                .offset(skip).limit(limit)
+                .then(r => r.map(i => {
+                delete i.valid;
+                return i;
+                }));
+        
+            return res.status(200).json({ success: 1, code: 'admin.CommentTypeList.ok', data: result, total });
+        } catch (err) {
+        next(err);
+        }
+    });
+
 router.get('/commentItem', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkquery('id').isInt({min: 0}),
     ],
@@ -458,6 +520,10 @@ async (req, res, next) => {
         // change UserName
         if (req.body.data.username !== undefined)
             doEditUserData.username = req.body.data.username;
+        
+        // Set userIntroduction
+        if (req.body.data.attr && req.body.data.attr.userIntroduction !== undefined)
+            doEditUserData.introduction = req.body.data.attr.userIntroduction;
 
         await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setUserAttr', target: userData.id}));
         await db('users').update(doEditUserData).where({id: userData.id});

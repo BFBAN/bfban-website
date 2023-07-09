@@ -131,43 +131,43 @@
                 </Row>
               </Col>
               <Col span="12">
-                <FormItem label="lastSigninIP" prop="username">
+                <FormItem :label="$t('profile.account.form.lastSigninIP')" prop="username">
                   <Input v-model="editUserData.attr.lastSigninIP" readonly disabled/>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem label="registerIP" prop="">
+                <FormItem :label="$t('profile.account.form.registerIP')" prop="">
                   <Input v-model="editUserData.attr.registerIP" readonly disabled/>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem label="createTime" prop="">
+                <FormItem :label="$t('profile.account.form.createTime')" prop="">
                   <Input v-model="editUserData.createTime" readonly disabled/>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem label="signoutTime" prop="">
+                <FormItem :label="$t('profile.account.form.signoutTime')" prop="">
                   <Input v-model="editUserData.signoutTime" readonly disabled/>
                 </FormItem>
               </Col>
 
               <Col span="12">
-                <FormItem label="originEmail">
+                <FormItem :label="$t('profile.account.form.originEmail')">
                   <Input v-model="editUserData.originEmail" readonly></Input>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem label="originName">
+                <FormItem :label="$t('profile.account.form.originName')">
                   <Input v-model="editUserData.originName" readonly></Input>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem label="originPersonaId">
+                <FormItem :label="$t('profile.account.form.originPersonaId')">
                   <Input v-model="editUserData.originPersonaId" readonly></Input>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem label="originUserId">
+                <FormItem :label="$t('profile.account.form.originUserId')">
                   <Input v-model="editUserData.originUserId" readonly></Input>
                 </FormItem>
               </Col>
@@ -176,7 +176,7 @@
           <Col span="12">
             <Row :gutter="10">
               <Col span="12">
-                <FormItem label="change Name Left">
+                <FormItem :label="$t('profile.account.form.changeNameLeft')">
                   <InputNumber :max="5" :min="0" v-model="editUserData.attr.changeNameLeft"></InputNumber>
                 </FormItem>
               </Col>
@@ -202,7 +202,7 @@
               </Col>
             </Row>
 
-            <FormItem label="privileges" prop="privileges">
+            <FormItem :label="$t('profile.account.form.privileges')" prop="privileges">
               <Row :gutter="10">
                 <Col span="24">
                   <PrivilegesTag ref="privilegesTag" :data="editUserData.privilege"></PrivilegesTag>
@@ -590,8 +590,8 @@ export default new Application({
 
       if (this.$refs.privilegesTag)
         this.$refs.privilegesTag.update(this.editUserData.privilege);
-      if (this.$refs.userIntroductionTextarea)
-        this.$refs.userIntroductionTextarea.updateContent(this.editUserData.attr.introduction);
+      if (this.$refs.introduction)
+        this.$refs.introduction.updateContent(this.editUserData.userIntroduction);
     },
     /**
      * 修改用户身份
@@ -631,6 +631,7 @@ export default new Application({
               id: this.editUserData.id,
               username: this.editUserData.username,
               attr,
+              userIntroduction: attr.userIntroduction,
             }
           }
         }).then(res => {

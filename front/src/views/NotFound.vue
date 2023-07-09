@@ -4,6 +4,12 @@
       <div class="content-main">
         <h1>404</h1>
         <h4>{{ $t("basic.tip.notFound") }}</h4>
+        <br>
+        <Row type="flex" justify="center" align="middle">
+          <Col>
+            <a href="mailto:app@bfban.com">{{ $t('signin.form.Feedback') }}</a>
+          </Col>
+        </Row>
       </div>
     </div>
   </div>
