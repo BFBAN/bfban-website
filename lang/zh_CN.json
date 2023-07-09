@@ -142,6 +142,7 @@
       "normal": "用户",
       "root": "系统",
       "super": "超级管理员",
+      "freezed": "冻结用户",
       "test": "测试账户"
     },
     "status": {
@@ -378,6 +379,7 @@
   "forgetPassword": {
     "resetSuccess": "恭喜完成重置 💐",
     "checkEmail": "请检查您的邮箱，并点击其中的验证链接",
+    "forgetUsername": "如果您忘记了BFBAN用户名，请前往<a href='http://kook.top/wHwxhw'>bfban开发者社区</a>寻求帮助。注意，您可能会需要很复杂的找回过程。",
     "steps": {
       "0": {
         "supplement": "核对账户",
@@ -511,7 +513,20 @@
         "languageSyncDescribe": "设置此处选项，在登录后同步程序本地语言，如果退出登录将回退到本地程序所持久保存的语言",
         "privilege": "身份",
         "showOrigin": "可见橘子信息",
-        "showOriginDescribe": "是否让你绑定的Origin在BFBAN可见"
+        "showOriginDescribe": "是否让你绑定的Origin在BFBAN可见",
+        "modifyDescription": "修改用户简介",
+        "description": "用户简介",
+        "privileges": "权限",
+        "changeNameLeft": "剩余修改用户名次数",
+        "username": "用户名",
+        "lastSigninIP": "最后登录IP",
+        "registerIP": "注册时IP",
+        "createTime": "注册时间",
+        "signoutTime": "登出时间",
+        "originEmail": "EA账户邮箱",
+        "originPersonaId": "EA PID",
+        "originName": "EA账户名字",
+        "originUserId": "EA UID"
       },
       "modifyName": {
         "residueDegree": "目前剩余修改名称{changeNameLeft}次数",
@@ -760,9 +775,10 @@
     "failed": "登录失败",
     "fillEverything": "请填写规范",
     "form": {
-      "forgetPasswordHint": "密码忘记？",
+      "forgetPasswordHint": "忘记密码?",
       "password": "密码",
       "submitHint": "没有账号？去注册",
+      "Feedback": "反馈问题",
       "username": "用户名"
     },
     "loggedIn": "哎列？请先登出 (✿◡‿◡)",
@@ -776,7 +792,7 @@
     "failed": "注册失败",
     "fillIn": "请规范填写",
     "form": {
-      "forgetPasswordHint": "密码忘记？",
+      "forgetPasswordHint": "忘记密码？",
       "newUsername": "新用户名",
       "originEmail": "EA账户邮箱",
       "originId": "EA ID",
