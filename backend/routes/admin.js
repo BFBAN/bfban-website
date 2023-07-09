@@ -229,59 +229,6 @@ router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev
         next(err);
         }
     });
-          
-
-router.get('/banAppealList', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
-        checkquery('type').optional().isString().isIn(['banAppeal']),
-        checkquery('judgeAction').optional().isString(),
-        checkquery('skip').optional().isInt({min: 0}),
-        checkquery('limit').optional().isInt({min: 0, max: 100}),
-        checkquery('order').optional().isIn(['asc', 'desc']),
-    ],
-    async (req, res, next) => {
-        try {
-            const validateErr = validationResult(req);
-            if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'admin.JudgementList.bad', message: validateErr.array()});
-
-            const skip = req.query.skip !== undefined ? req.query.skip : 0;
-            const limit = req.query.limit !== undefined ? req.query.limit : 20;
-            const order = req.query.order ? req.query.order : 'desc';
-            const type = req.query.type;
-            const judgeAction = req.query.judgeAction;
-
-            const totalQuery = db('comments')
-                .count({ num: 1 })
-                .where({ 'comments.valid': 1, 'comments.type': 'judgement' });
-
-            if (type && type !== 'all') {
-                totalQuery.andWhere({judgeAction});
-            }
-
-            const { num: total } = await totalQuery.first();
-
-            const query = db.from('comments')
-                .join('users', 'comments.byUserId', 'users.id')
-                .select('comments.*', 'users.username', 'users.privilege')
-                .where({ 'comments.valid': 1, 'comments.type': 'judgement' });
-
-            if (type && type !== 'all') {
-                query.andWhere({judgeAction});
-            }
-
-            const result = await query
-                .orderBy('comments.createTime', order)
-                .offset(skip).limit(limit)
-                .then(r => r.map(i => {
-                    delete i.valid;
-                    return i;
-                }));
-
-            return res.status(200).json({success: 1, code: 'admin.JudgementList.ok', data: result, total});
-        } catch (err) {
-            next(err);
-        }
-    }); 
 
 router.get('/commentItem', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkquery('id').isInt({min: 0}),
