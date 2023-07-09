@@ -6,6 +6,24 @@
           <Option v-for="(i, index) in typeArray" :key="index" :value="i">{{ i }}</Option>
         </Select>
       </Col>
+      <template v-if="typeValue == 'judgement'">
+        <Col>
+          <Select v-model="judgementType.value" @on-change="getCommentTypeList">
+            <Option :value="i.value" v-for="(i,index) in judgementType.list" :key="index">
+              {{ i.title }}
+            </Option>
+          </Select>
+        </Col>
+      </template>
+      <template v-if="typeValue == 'banAppeal'">
+        <Col>
+          <Select v-model="banAppealStats.value" @on-change="getCommentTypeList">
+            <Option :value="i.value" v-for="(i,index) in banAppealStats.list" :key="index">
+              {{ i.title }}
+            </Option>
+          </Select>
+        </Col>
+      </template>
       <Col flex="1"></Col>
       <Col>
         <Row :gutter="10">
@@ -56,9 +74,31 @@
       <div v-for="(i,index) in commentList" :key="index">
         <Card :padding="0" dis-hover>
           <div slot="title">
-            <Tag>COMMENT</Tag>
-            <Tag>{{ i.type }}</Tag>
-            <Tag>{{ i.cheatGame || 'none' }}</Tag>
+            <div v-if="i.type === 'banAppeal'">
+              <Tag>COMMENT</Tag>
+              <Tag>{{ i.type }}</Tag>
+              <Tag>{{ i.appealStatus }}</Tag>
+            </div>
+            <div v-if="i.type === 'judgement'">
+              <Tag>COMMENT</Tag>
+              <Tag>{{ i.type }}</Tag>
+              <Tag>{{ i.judgeAction }}</Tag>
+            </div>
+            <div v-if="i.type === 'reply'">
+              <Tag>COMMENT</Tag>
+              <Tag>{{ i.type }}</Tag>
+              <Tag>{{ i.id }}</Tag>
+            </div>
+            <div v-if="i.type === 'all'">
+              <Tag>COMMENT</Tag>
+              <Tag>{{ i.id }}</Tag>
+              <Tag>{{ i.type }}</Tag>
+            </div>
+            <div v-if="i.type === 'report'">
+              <Tag>REPORT</Tag>
+              <Tag>{{ i.toOriginName }}</Tag>
+              <Tag>{{ i.toOriginPersonaId }}</Tag>
+            </div>
             <Time :time="i.createTime" type="date"></Time>
             :
             <BusinessCard :id="i.byUserId">
@@ -68,7 +108,7 @@
             <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
               <span>{{ i.toOriginName }}</span>
             </router-link>
-            ({{ i.cheatGame }})
+            ({{ i.id }})
           </div>
           <div slot="extra">
             <a href="javascript:void(0)">
@@ -153,6 +193,7 @@ import BusinessCard from "@/components/businessCard";
 import Textarea from "@/components/Textarea";
 import Application from "@/assets/js/application";
 import HtmlWidget from "@/components/HtmlWidget";
+import { kill } from "process";
 
 export default new Application({
   data() {
@@ -171,6 +212,14 @@ export default new Application({
         videoLink: [
           {trigger: 'blur'}
         ],
+      },
+      judgementType: {
+        value: 'kill',
+        list: [{title: 'Comfirmd', value: 'kill'}, {title: 'Farm Weapon', value: 'farm'}, {title: 'Suspicious', value: 'suspect'}, {title: 'MOSS Proof', value: 'innocent'}, {title: 'Under discussion', value: 'discuss'}, {title: 'Voted', value: 'guilt'}, {title: 'Invalid report', value: 'invalid'}]
+      },
+      banAppealStats: {
+        value: 'open',
+        list: [{title: 'Open', value: 'open'}, {title: 'Lock', value: 'lock'}, {title: 'Close', value: 'close'}]
       },
 
       searchCommentValue: '',
@@ -313,6 +362,39 @@ export default new Application({
       this.http.get(api['admin_commentAll'], {
         params: {
           type: this.typeValue,
+          skip: this.skip - 1,
+          limit: this.limit,
+          order: this.order
+        }
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.commentList = d.data;
+          this.total = d.total;
+          return;
+        }
+
+        this.$Message.error(d.message || d.code);
+      }).finally(() => {
+        this.load = false;
+      })
+    },
+    /**
+     * 查询指定Type评论
+     */
+    getCommentTypeList() {
+      this.load = true;
+      let params = {}; // 定义 params 变量
+      if (this.typeValue === 'banAppeal')
+        params.appealStatus = this.banAppealStats.value;
+      if (this.typeValue === 'judgement')
+        params.judgeAction = this.judgementType.value;
+      this.http.get(api['admin_CommentTypeList'], {
+        params: {
+          type: this.typeValue,
+          judgeAction: params.judgeAction,
+          banAppealStats: params.appealStatus,
           skip: this.skip - 1,
           limit: this.limit,
           order: this.order

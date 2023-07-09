@@ -71,7 +71,8 @@ export default class Api {
             "admin_muteUsers": "admin/muteUsers",
             "admin_muteUserAll": "admin/muteUserAll",
             "admin_verifications": "admin/verifications",
-            "admin_blockedUserAll": "admin/blockedUserAll"
+            "admin_blockedUserAll": "admin/blockedUserAll",
+            "admin_CommentTypeList": "admin/CommentTypeList"
         };
     }
 }
