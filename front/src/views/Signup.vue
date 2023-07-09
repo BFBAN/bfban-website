@@ -13,13 +13,19 @@
       <br>
 
       <Card dis-hover>
-        <Steps :current="stepsIndex" slot="title" v-if="!isMobile">
-          <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].supplement')"></Step>
-          <Step :title="$t('signup.steps[1].title')" :content="$t('signup.steps[1].title')"></Step>
-          <Step :title="$t('signup.steps[2].title')" :content="$t('signup.steps[2].title')"></Step>
-          <Step :title="$t('signup.steps[3].title')" :content="$t('signup.steps[3].title')"></Step>
-          <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
-        </Steps>
+        <div slot="title">
+          <Steps :current="stepsIndex" v-if="!isMobile">
+            <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].supplement')"></Step>
+            <Step v-show="!isOneStepToTheStomach" :title="$t('signup.steps[1].title')"
+                  :content="$t('signup.steps[1].title')"></Step>
+            <Step v-show="!isOneStepToTheStomach" :title="$t('signup.steps[2].title')"
+                  :content="$t('signup.steps[2].title')"></Step>
+            <Step v-show="!isOneStepToTheStomach" :title="$t('signup.steps[3].title')"
+                  :content="$t('signup.steps[3].title')"></Step>
+            <Step v-show="!isOneStepToTheStomach" :title="$t('signup.steps[4].title')"
+                  :content="$t('signup.steps[4].title')"></Step>
+          </Steps>
+        </div>
 
         <Row :gutter="isMobile ? 0 : 30">
           <Col span="24">
@@ -36,7 +42,7 @@
             </Alert>
 
             <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate">
-              <div v-show="stepsIndex == 0">
+              <div v-show="isOneStepToTheStomach || stepsIndex == 0">
                 <FormItem :label="$t('signup.form.username')" prop="username">
                   <Input v-model="signup.username" maxlength="40" size="large"
                          :placeholder="$t('signup.placeholder.username')"/>
@@ -47,7 +53,7 @@
                 </FormItem>
               </div>
 
-              <div v-show="stepsIndex === 1">
+              <div v-show="isOneStepToTheStomach || stepsIndex === 1">
                 <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
                   <Input v-model="signup.originEmail" size="large"
                          :placeholder="$t('signup.placeholder.originEmail')"/>
@@ -58,7 +64,7 @@
                 </FormItem>
               </div>
 
-              <div v-show="stepsIndex === 2">
+              <div v-show="isOneStepToTheStomach || stepsIndex === 2">
                 <FormItem :label="$t('captcha.title')" prop="captcha">
                   <Input type="text" v-model="signup.captcha"
                          size="large"
@@ -89,24 +95,28 @@
                 <Alert type="success" show-icon>{{ $t('signup.needVerify') }}</Alert>
               </div>
 
+              <FormItem>
+                <checkbox :size="'small'" v-model="isOneStepToTheStomach">"One step to the stomach" Mode</checkbox>
+              </FormItem>
+
               <Row v-show="stepsIndex <= 2">
                 <Col flex="auto">
-                  <Button v-if="stepsIndex >=0 && stepsIndex <= 2"
+                  <Button v-if="!isOneStepToTheStomach && stepsIndex >= 0 && stepsIndex <= 2"
                           :disabled="stepsIndex == 0"
                           @click.prevent.stop="stepsIndex--" size="large">{{ $t('basic.button.prev') }}
                   </Button>
-                  <Divider type="vertical"/>
-                  <Button v-if="stepsIndex != 2  && stepsIndex >= 0 && stepsIndex <= 2"
+                  <Divider type="vertical" v-if="!isOneStepToTheStomach"/>
+                  <Button v-if="!isOneStepToTheStomach && stepsIndex != 2 && stepsIndex >= 0 && stepsIndex <= 2"
                           @click.prevent.stop="stepsIndex++" size="large"
                           type="primary">{{ $t('basic.button.next') }}
                   </Button>
                 </Col>
                 <Col flex="auto" align="right" type="flex">
                   <!-- 账户注册-未验证 -->
-                  <template v-if="stepsIndex == 2">
+                  <template v-if="isOneStepToTheStomach || stepsIndex == 2">
                     <Button
                         @click="onSignup"
-                        :disabled="!signup.captcha"
+                        :disabled="!isOneStepToTheStomach || !signup.captcha"
                         :loading="spinShow"
                         long
                         size="large"
@@ -117,12 +127,13 @@
                 </Col>
               </Row>
             </Form>
+
           </Col>
         </Row>
 
         <template v-if="stepsIndex <= 2">
           <br>
-          <Row type="flex" justify="center" align="middle" >
+          <Row type="flex" justify="center" align="middle">
             <Col>
               <router-link :to="{name: 'signin'}">{{ $t('signup.form.submitHint') }}</router-link>
             </Col>
@@ -176,6 +187,7 @@ export default new Application({
       },
       backServiceMsg: '',
       spinShow: false,
+      isOneStepToTheStomach: false,
     }
   },
   components: {EmailTip, Captcha},
