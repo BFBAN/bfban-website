@@ -184,7 +184,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/signin', [
+router.post('/signin', verifyCaptcha, [
     checkbody("data.username").isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.EXPIRES_IN').optional({nullable: true}).isInt({min: 0})

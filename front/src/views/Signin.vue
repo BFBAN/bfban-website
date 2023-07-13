@@ -76,7 +76,7 @@
                 </Col>
                 <Divider type="vertical"/>
                 <Col>
-                  <a href="mailto:app@bfban.com">{{ $t('signin.form.Feedback') }}</a>
+                  <a href="http://kook.top/wHwxhw">{{ $t('signin.form.Feedback') }}</a>
                 </Col>
               </Row>
             </Card>
