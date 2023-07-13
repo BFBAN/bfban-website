@@ -153,6 +153,13 @@
                   <b>{{ convertCheatMethods(a_i.cheatMethods) }}</b>
                 </span>
               </span>
+
+              <span v-if="a_i.type === 'banAppeal'">
+                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  {{ a_i.byUserName }}
+                </router-link>
+                {{$t('detail.appeal.info.content')}}
+              </span>
             </Card>
           </div>
         </div>

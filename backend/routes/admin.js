@@ -122,8 +122,11 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * Didn't find a site using this api place, implicit interface?
+ * Looks like it's offered to bot
+ */
 router.get('/commentAppeal', verifyJWT, allowPrivileges(["super", "root", "dev", "bot"]), [
-    // checkbody('type').optional().isString().isInt(['banAppeal']),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
     checkquery('order').optional().isIn(['asc', 'desc']),
@@ -132,7 +135,7 @@ async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'admin.commentAll.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'admin.commentAppeal.bad', message: validateErr.array()});
 
         const skip = req.query.skip !== undefined ? req.query.skip : 0;
         const limit = req.query.limit !== undefined ? req.query.limit : 20;
@@ -162,7 +165,7 @@ async (req, res, next) => {
                 return i
             }));
 
-        return res.status(200).json({success: 1, code: 'admin.commentAll.ok', data: result, total});
+        return res.status(200).json({success: 1, code: 'admin.commentAppeal.ok', data: result, total});
     } catch (err) {
         next(err);
     }
@@ -227,23 +230,23 @@ router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
                 return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: validateErr.array() });
-        
+
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
             const order = req.query.order ? req.query.order : 'desc';
             const type = req.query.type;
             const banAppealStats = req.query.banAppealStats;
             const judgeAction = req.query.judgeAction;
-        
+
             let totalQuery = db('comments')
                 .count({ num: 1 })
                 .where({ 'comments.valid': 1 });
-        
+
             let query = db.from('comments')
                 .join('users', 'comments.byUserId', 'users.id')
                 .select('comments.*', 'users.username', 'users.privilege')
                 .where({ 'comments.valid': 1 });
-        
+
             if (type && type === 'banAppeal') {
                 if (!banAppealStats) {
                 return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: 'banAppealStats is required' });
@@ -259,9 +262,9 @@ router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev
             } else {
                 return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: 'Invalid type' });
             }
-        
+
             const { num: total } = await totalQuery.first();
-        
+
             const result = await query
                 .orderBy('comments.createTime', order)
                 .offset(skip).limit(limit)
@@ -269,7 +272,7 @@ router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev
                 delete i.valid;
                 return i;
                 }));
-        
+
             return res.status(200).json({ success: 1, code: 'admin.CommentTypeList.ok', data: result, total });
         } catch (err) {
         next(err);
@@ -566,7 +569,7 @@ async (req, res, next) => {
         // change UserName
         if (req.body.data.username !== undefined)
             doEditUserData.username = req.body.data.username;
-        
+
         // Set userIntroduction
         if (req.body.data.attr && req.body.data.attr.userIntroduction !== undefined)
             doEditUserData.introduction = req.body.data.attr.userIntroduction;
