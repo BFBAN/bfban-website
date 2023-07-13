@@ -122,7 +122,7 @@ async (req, res, next) => {
     }
 });
 
-router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev", "bot"]), [
         checkbody('type').optional().isString().isInt(['report', 'reply', 'judgement', 'banAppeal']),
         checkquery('skip').optional().isInt({min: 0}),
         checkquery('limit').optional().isInt({min: 0, max: 100}),
