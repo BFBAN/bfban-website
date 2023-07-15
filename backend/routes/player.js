@@ -730,7 +730,7 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
             }
 
             // check Binding Account
-            if (!req.user.originEmail)
+            if (!req.user.originEmail && !req.user.privilege.includes('bot'))
                 return res.status(403).json({
                     error: 1,
                     code: 'reply.bad',
