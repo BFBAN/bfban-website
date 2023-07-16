@@ -236,16 +236,30 @@
                 </FormItem>
 
                 <FormItem>
-                  <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel" v-voice-button>
-                    {{ $t("basic.button.cancel") }}
-                  </Button>
-                  <Divider type="vertical"/>
-                  <Button @click="doReport(index)"
-                          v-voice-button
-                          type="primary"
-                          size="large">
-                    {{ $t("basic.button.report") }}
-                  </Button>
+                  <Row :gutter="10" type="flex" align="middle">
+                    <Col>
+                      <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel" v-voice-button>
+                        {{ $t("basic.button.cancel") }}
+                      </Button>
+                    </Col>
+                    <Divider type="vertical"/>
+                    <Col>
+                      <Button @click="resetFieldsReport(index)"
+                              v-voice-button
+                              size="large">
+                        {{ $t("basic.button.reset") }}
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button @click="doReport(index)"
+                              :loading="tabs.list[index].load"
+                              v-voice-button
+                              type="primary"
+                              size="large">
+                        {{ $t("basic.button.report") }}
+                      </Button>
+                    </Col>
+                  </Row>
                 </FormItem>
               </Card>
               <!-- 提交 E -->
@@ -311,6 +325,7 @@ import gameName from '/public/config/gameName.json'
 import Textarea from "@/components/Textarea.vue";
 import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";
+import Promise from "lodash/_Promise";
 
 export default new Application({
   data() {
@@ -365,6 +380,7 @@ export default new Application({
       http.get(api["search"], {
         params: {
           param: query,
+          type: 'player',
           scope: 'current',
           limit: '6'
         }
@@ -387,6 +403,7 @@ export default new Application({
      */
     handleTabsAdd() {
       let newFormData = {
+        load: false,
         // 检索列表
         players: {
           list: []
@@ -480,10 +497,16 @@ export default new Application({
         let formData = this.tabs.list[index];
         // check form data
         if (this.$refs['formValidate_' + index][0]) {
-          this.$refs['formValidate_' + index][0].validate((valid) => {
+          this.$refs['formValidate_' + index][0].validate(async (valid) => {
             if (valid) {
-              this.handleReport(formData, index);
-              this.refreshCaptcha();
+              formData.load = true;
+
+              await this.handleReport(formData, index);
+              await this.refreshCaptcha();
+
+              formData.load = false;
+            } else {
+              this.$Message.error(this.$t("report.messages.videoBadFormat"))
             }
           })
         }
@@ -495,6 +518,13 @@ export default new Application({
           })
         }, 3000)
       }
+    },
+    /**
+     * 重置表单
+     * @param index tabs index
+     */
+    resetFieldsReport(index) {
+      this.$refs[`formValidate_${index}`][0].resetFields();
     },
     /**
      * 提交举报
@@ -509,64 +539,67 @@ export default new Application({
 
       this.spinShow = true;
 
-      this.http.post(api["player_report"], {
-        data: {
+      return new Promise((resolve, reject) => {
+        this.http.post(api["player_report"], {
           data: {
-            game: gameName,
-            originName: originId,
-            cheatMethods,	// see {{valid_cheatMethod}}
-            videoLink,
-            description
+            data: {
+              game: gameName,
+              originName: originId,
+              cheatMethods,	// see {{valid_cheatMethod}}
+              videoLink,
+              description
+            },
+            encryptCaptcha: this.$refs[`report_${index}`][0].hash,
+            captcha,
           },
-          encryptCaptcha: this.$refs[`report_${index}`][0].hash,
-          captcha,
-        },
-      }).then(res => {
-        const d = res.data;
+        }).then(res => {
+          const d = res.data;
 
-        if (d.success === 1) {
-          this.tabs.list[index].statusOk = 1;
+          if (d.success === 1) {
+            this.tabs.list[index].statusOk = 1;
 
-          this.voiceReportManagement.play('success');
+            this.voiceReportManagement.play('success');
 
-          this.$Message.success(this.$i18n.t("report.info.success")).then(() => {
-            this.$router.push({
-              name: "cheater",
-              params: {ouid: d.data.originPersonaId},
+            this.$Message.success(this.$i18n.t("report.info.success")).then(() => {
+              this.$router.push({
+                name: "cheater",
+                params: {ouid: d.data.originPersonaId},
+              });
             });
-          });
-        } else {
-          switch (d.code) {
-            case 'judgement.notFound':
-              this.$Message.error(this.$i18n.t('report.messages.originIdNotExist'));
-              // no such player
-              this.failedOfNotFound = true;
-              break;
-            case 'judgement.permissionDenied':
-              this.$Message.error(this.$i18n.t('report.messages.permissionDenied'));
-              break;
-            case 'originId':
-              this.$Message.error(
-                  this.$i18n.t("report.info.originId")
-              );
+          } else {
+            switch (d.code) {
+              case 'judgement.notFound':
+                this.$Message.error(this.$i18n.t('report.messages.originIdNotExist'));
+                // no such player
+                this.failedOfNotFound = true;
+                break;
+              case 'judgement.permissionDenied':
+                this.$Message.error(this.$i18n.t('report.messages.permissionDenied'));
+                break;
+              case 'originId':
+                this.$Message.error(
+                    this.$i18n.t("report.info.originId")
+                );
 
-              this.tabs.list[index].statusOk = -1;
-              break;
-            case 'captcha.bad':
-              this.tabs.list[index].formItem.captcha = '';
-              break;
-            default:
-              this.$Message.error("failed " + d.message);
+                this.tabs.list[index].statusOk = -1;
+                break;
+              case 'captcha.bad':
+                this.tabs.list[index].formItem.captcha = '';
+                break;
+              default:
+                this.$Message.error("failed " + d.message);
 
-              this.tabs.list[index].statusOk = -1;
+                this.tabs.list[index].statusOk = -1;
+            }
           }
-        }
 
-        this.tabs.list[index].statusMsg = d.message;
-      }).finally(() => {
-        this.tabs.list[index].formItem.captcha = '';
-        this.spinShow = false;
-      });
+          this.tabs.list[index].statusMsg = d.message;
+        }).finally(() => {
+          resolve();
+          this.tabs.list[index].formItem.captcha = '';
+          this.spinShow = false;
+        });
+      })
     },
     /**
      * ocr Widget 输出

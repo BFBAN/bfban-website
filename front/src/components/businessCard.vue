@@ -51,7 +51,7 @@
       <template v-else>
         <Row>
           <Col align="center">
-            <Icon type="md-alert" size="40" color="red" />
+            <Icon type="md-alert" size="40" color="red"/>
           </Col>
         </Row>
       </template>
@@ -75,7 +75,7 @@ export default {
       type: Number,
       default: 400
     },
-    id: Number,
+    id: [Number, String],
     padding: {
       type: String,
       default: '0'
@@ -90,7 +90,7 @@ export default {
       type: 'user',
     }
   },
-  components: { PrivilegesTag },
+  components: {PrivilegesTag},
   methods: {
     /**
      * 获取用户信息
