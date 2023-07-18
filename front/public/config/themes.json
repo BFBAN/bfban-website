@@ -40,6 +40,30 @@
     },
     {
       "type": "local",
+      "name": "orange",
+      "img": "public/theme/orange/main.png",
+      "themeColor": "orange",
+      "version": "0.1",
+      "authorInfo": {
+        "authorName": "BFBAN",
+        "authorUpdate": "2023-7-16"
+      },
+      "src": ""
+    },
+    {
+      "type": "local",
+      "name": "violet",
+      "img": "public/theme/violet/main.png",
+      "themeColor": "violet",
+      "version": "0.1",
+      "authorInfo": {
+        "authorName": "BFBAN",
+        "authorUpdate": "2023-7-16"
+      },
+      "src": ""
+    },
+    {
+      "type": "local",
       "name": "MikuGreen",
       "img": "public/theme/MikuGreen/main.png",
       "themeColor": "#39C5BB",
