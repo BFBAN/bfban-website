@@ -98,7 +98,8 @@ async (req, res, next) => {
 
 router.get('/blockedUserAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('skip').optional().isInt({min: 0}),
-    checkquery('limit').optional().isInt({min: 0, max: 100})
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('order').optional().isIn(['asc', 'desc']),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
@@ -108,12 +109,14 @@ async (req, res, next) => {
 
         const skip = req.query.skip !== undefined ? req.query.skip : 0;
         const limit = req.query.limit !== undefined ? req.query.limit : 20;
+        const order = req.query.order ? req.query.order : 'desc';
 
         let total = await db.count({num: 1}).from('users')
             .where('users.valid', 0)
             .first().then(r => r.num);
         let result = await db.select('*').from('users')
             .where('users.valid', 0)
+            .orderBy('users.id', order)
             .offset(skip).limit(limit);
 
         return res.status(200).json({success: 1, code: 'admin.blockedUserAll.ok', data: result, total});
@@ -127,49 +130,49 @@ async (req, res, next) => {
  * Looks like it's offered to bot
  */
 router.get('/commentAppeal', verifyJWT, allowPrivileges(["super", "root", "dev", "bot"]), [
-    checkquery('skip').optional().isInt({min: 0}),
-    checkquery('limit').optional().isInt({min: 0, max: 100}),
-    checkquery('order').optional().isIn(['asc', 'desc']),
-],
-async (req, res, next) => {
-    try {
-        const validateErr = validationResult(req);
-        if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'admin.commentAppeal.bad', message: validateErr.array()});
+        checkquery('skip').optional().isInt({min: 0}),
+        checkquery('limit').optional().isInt({min: 0, max: 100}),
+        checkquery('order').optional().isIn(['asc', 'desc']),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'admin.commentAppeal.bad', message: validateErr.array()});
 
-        const skip = req.query.skip !== undefined ? req.query.skip : 0;
-        const limit = req.query.limit !== undefined ? req.query.limit : 20;
-        const order = req.query.order ? req.query.order : 'desc';
-        const type = 'banAppeal';
+            const skip = req.query.skip !== undefined ? req.query.skip : 0;
+            const limit = req.query.limit !== undefined ? req.query.limit : 20;
+            const order = req.query.order ? req.query.order : 'desc';
+            const type = 'banAppeal';
 
-        const total = await db('comments')
-            .count({num: 1})
-            .andWhere(function () {
-                this.where({valid: 1});
-                if (type != 'all' || !type)
-                    this.where({type: type});
-            })
-            .first().then(r => r.num);
+            const total = await db('comments')
+                .count({num: 1})
+                .andWhere(function () {
+                    this.where({valid: 1});
+                    if (type != 'all' || !type)
+                        this.where({type: type});
+                })
+                .first().then(r => r.num);
 
-        const result = await db.from('comments')
-            .join('users', 'comments.byUserId', 'users.id')
-            .select('comments.*', 'users.username', 'users.privilege')
-            .andWhere(function () {
-                if (type != 'all' || !type)
-                    this.where({type: type});
-            })
-            .orderBy('comments.createTime', order)
-            .offset(skip).limit(limit)
-            .then(r => r.map(i => {
-                delete i.valid;
-                return i
-            }));
+            const result = await db.from('comments')
+                .join('users', 'comments.byUserId', 'users.id')
+                .select('comments.*', 'users.username', 'users.privilege')
+                .andWhere(function () {
+                    if (type != 'all' || !type)
+                        this.where({type: type});
+                })
+                .orderBy('comments.createTime', order)
+                .offset(skip).limit(limit)
+                .then(r => r.map(i => {
+                    delete i.valid;
+                    return i
+                }));
 
-        return res.status(200).json({success: 1, code: 'admin.commentAppeal.ok', data: result, total});
-    } catch (err) {
-        next(err);
-    }
-});
+            return res.status(200).json({success: 1, code: 'admin.commentAppeal.ok', data: result, total});
+        } catch (err) {
+            next(err);
+        }
+    });
 
 router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkbody('type').optional().isString().isInt(['report', 'reply', 'judgement', 'banAppeal']),
@@ -221,15 +224,19 @@ router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev
         checkquery('type').optional().isString().isIn(['banAppeal', 'judgement']),
         checkquery('banAppealStats').optional().isString(),
         checkquery('judgeAction').optional().isString(),
-        checkquery('skip').optional().isInt({ min: 0 }),
-        checkquery('limit').optional().isInt({ min: 0, max: 100 }),
+        checkquery('skip').optional().isInt({min: 0}),
+        checkquery('limit').optional().isInt({min: 0, max: 100}),
         checkquery('order').optional().isIn(['asc', 'desc']),
     ],
     async (req, res, next) => {
         try {
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
-                return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: validateErr.array() });
+                return res.status(400).json({
+                    error: 1,
+                    code: 'admin.CommentTypeList.bad',
+                    message: validateErr.array()
+                });
 
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
@@ -239,43 +246,54 @@ router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev
             const judgeAction = req.query.judgeAction;
 
             let totalQuery = db('comments')
-                .count({ num: 1 })
-                .where({ 'comments.valid': 1 });
+                .count({num: 1})
+                .where({'comments.valid': 1});
 
             let query = db.from('comments')
                 .join('users', 'comments.byUserId', 'users.id')
                 .select('comments.*', 'users.username', 'users.privilege')
-                .where({ 'comments.valid': 1 });
+                .where({'comments.valid': 1});
 
             if (type && type === 'banAppeal') {
                 if (!banAppealStats) {
-                return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: 'banAppealStats is required' });
+                    return res.status(400).json({
+                        error: 1,
+                        code: 'admin.CommentTypeList.bad',
+                        message: 'banAppealStats is required'
+                    });
                 }
-                totalQuery = totalQuery.andWhere({ 'comments.type': 'banAppeal', 'comments.appealStatus': banAppealStats });
-                query = query.andWhere({ 'comments.type': 'banAppeal', 'comments.appealStatus': banAppealStats });
+                totalQuery = totalQuery.andWhere({
+                    'comments.type': 'banAppeal',
+                    'comments.appealStatus': banAppealStats
+                });
+                query = query.andWhere({'comments.type': 'banAppeal', 'comments.appealStatus': banAppealStats});
             } else if (type && type === 'judgement') {
                 if (!judgeAction) {
-                return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: 'judgeAction is required' });
+                    return res.status(400).json({
+                        error: 1,
+                        code: 'admin.CommentTypeList.bad',
+                        message: 'judgeAction is required'
+                    });
                 }
-                totalQuery = totalQuery.andWhere({ 'comments.type': 'judgement', 'comments.judgeAction': judgeAction });
-                query = query.andWhere({ 'comments.type': 'judgement', 'comments.judgeAction': judgeAction });
+                totalQuery = totalQuery.andWhere({'comments.type': 'judgement', 'comments.judgeAction': judgeAction});
+                query = query.andWhere({'comments.type': 'judgement', 'comments.judgeAction': judgeAction});
             } else {
-                return res.status(400).json({ error: 1, code: 'admin.CommentTypeList.bad', message: 'Invalid type' });
+                return res.status(400).json({error: 1, code: 'admin.CommentTypeList.bad', message: 'Invalid type'});
             }
 
-            const { num: total } = await totalQuery.first();
+            const {num: total} = await totalQuery.first();
 
             const result = await query
                 .orderBy('comments.createTime', order)
                 .offset(skip).limit(limit)
                 .then(r => r.map(i => {
-                delete i.valid;
-                return i;
+                    delete i.valid;
+                    return i;
                 }));
 
-            return res.status(200).json({ success: 1, code: 'admin.CommentTypeList.ok', data: result, total });
+            return res.status(200).json({success: 1, code: 'admin.CommentTypeList.ok', data: result, total});
         } catch (err) {
-        next(err);
+            next(err);
         }
     });
 
@@ -515,7 +533,7 @@ async (req, res, next) => {
 });
 
 router.get('/userOperationLogs', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
-        checkbody("name").optional().isString(),
+        checkquery('id').optional().isString(),
         checkquery('skip').optional().isInt({min: 0}),
         checkquery('limit').optional().isInt({min: 0}),
         checkquery('order').optional().isIn(['asc', 'desc']),
@@ -530,17 +548,33 @@ router.get('/userOperationLogs', verifyJWT, allowPrivileges(["super", "root", "d
                     message: validateErr.array()
                 });
 
+            const id = req.query.id;
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
             const order = req.query.order ? req.query.order : 'desc';
 
-            const result = await db.select('useTab1.username as adminName', 'useTab2.username as userName', 'operation_log.action', 'operation_log.role', 'operation_log.byUserId', 'operation_log.toUserId', 'operation_log.createTime')
-                .from('operation_log')
-                .leftJoin('users as useTab1', 'operation_log.byUserId', 'useTab1.id')
-                .leftJoin('users as useTab2', 'operation_log.toUserId', 'useTab2.id')
-                .where('useTab2.userName', 'like', `%${req.query.name}%`)
-                .orderBy('users.createTime', order)
+            const result = await db.from('operation_log')
+                .join('users', 'operation_log.byUserId', 'users.id')
+                .select('operation_log.*', 'users.username', 'users.id')
+                .where('users.id', id)
+                .orderBy('operation_log.createTime', order)
                 .offset(skip).limit(limit);
+
+            // const result = await db.select(
+            //     'useTab1.username as adminName',
+            //     'useTab2.username as userName',
+            //     'operation_log.action',
+            //     'operation_log.role',
+            //     'operation_log.byUserId',
+            //     'operation_log.toUserId',
+            //     'operation_log.createTime'
+            // )
+            //     .from('operation_log')
+            //     .leftJoin('users as useTab1', 'operation_log.byUserId', 'useTab1.id')
+            //     .leftJoin('users as useTab2', 'operation_log.toUserId', 'useTab2.id')
+            //     .where('useTab2.id', id)
+            //     .orderBy('operation_log.createTime', order)
+            //     .offset(skip).limit(limit);
 
             return res.status(200).json({success: 1, code: 'admin.userOperationLogs.ok', data: result});
         } catch (err) {
@@ -800,6 +834,12 @@ router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
                 return res.status(400).json({error: 1, code: 'admin.delUser.bad', message: validateErr.array()});
             if (req.body.data.type === undefined)
                 return res.status(401).json({error: 1, code: 'admin.delUser.bad', message: '"type" cannot be missing'});
+            if (req.body.data.id === req.user.id)
+                return res.status(400).json({
+                    error: 1,
+                    code: 'admin.delUser.bad',
+                    message: 'unable to operate oneself'
+                });
 
             const {id, type} = req.body.data;
             const userDb = db('users');

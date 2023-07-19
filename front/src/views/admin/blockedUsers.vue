@@ -158,7 +158,8 @@ export default new Application({
           name: queryUserName,
           skip: this.skip - 1,
           limit: this.limit,
-          order: this.order
+          order: this.order,
+          parameter: 'username',
         }
       }).then(res => {
         const d = res.data;
