@@ -380,7 +380,7 @@ async (req, res, next) => {
             flag = (userHasRoles(req.user, ['super']) && superCan.includes(role)) ? true : flag;
             flag = (userHasRoles(req.user, ['root']) && rootCan.includes(role)) ? true : flag;
             // check if user trying to grant 'blacklisted' or 'freezed' role to someone who have higher permission
-            flag = (['blacklisted', 'freezed'].includes(role) && user.privilege.filter(i => ['admin', 'super', 'dev', 'root'].includes(i)).length === 0) ? false : flag;
+            flag = (['blacklisted', 'freezed'].includes(role) && user.privilege.filter(i => ['admin', 'super', 'dev', 'root'].includes(i)).length === 0) ? true : flag;
             if (flag)
                 user.privilege = privilegeGranter(user.privilege, role);
             else
