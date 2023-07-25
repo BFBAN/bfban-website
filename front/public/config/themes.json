@@ -75,6 +75,18 @@
       "src": ""
     },
     {
+      "type": "local",
+      "name": "KarmaBlue",
+      "img": "public/theme/KarmaBlue/main.png",
+      "themeColor": "#0022ff",
+      "version": "0.1",
+      "authorInfo": {
+        "authorName": "karma",
+        "authorUpdate": "2023-7-24"
+      },
+      "src": ""
+    },
+    {
 
       "type": "local",
       "name": "BlueDeep",
