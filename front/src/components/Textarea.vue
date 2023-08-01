@@ -539,7 +539,7 @@ export default {
       let res = await this.queryMediaDetail(this.media.data[index].filename);
 
       if (res.data.success == 1) {
-        this.insertValue = res.data.data.downloadURL;
+        this.insertValue = `https://bfban.gametools.network/api/service/file?filename=${this.media.data[index].filename}`;
         this.currentindex = 2;
         this.media.data[index].load = false;
         return;
