@@ -292,9 +292,7 @@
               <Divider dashed/>
               <Row :gutter="10" type="flex" justify="center" align="middle">
                 <Col>
-                  <router-link :to="{path: '/report', params: { t: new Date().getTime() }}">
-                    <Button v-voice-button>{{ $t('report.button.continue') }}</Button>
-                  </router-link>
+                  <Button v-voice-button><a href="/report">{{ $t('report.button.continue') }}</a></Button>
                 </Col>
                 <Col>
                   <router-link :to="{name: 'home'}">
