@@ -214,7 +214,7 @@ export default new Application({
         this.gameName = res.gameName;
       });
 
-      this.bannerTime = time.appStart();
+      this.bannerTime = new Intl.DateTimeFormat(this.$i18n.locale || 'en-US').format(time.appStart());
 
       try {
         this.bannerImage = require(`../assets/images/index-gl_${this.$i18n.locale || 'en-US'}.png`);
