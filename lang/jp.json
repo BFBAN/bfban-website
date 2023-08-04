@@ -434,7 +434,7 @@
     "cover": {
       "confirmData": "不正行為者の確認",
       "dataReceived": "受信済み",
-      "endTime": "2018年11月4日現在",
+      "endTime": "{time} から",
       "h1": "BFBAN",
       "h2": {
         "hint0": "提供☁️データベースにより、世界中の異なるBattlefieldサーバから、問題のあるアーカイブを削除したプレイヤーを監視することができます。",

@@ -437,7 +437,7 @@
     "cover": {
       "confirmData": "确认作弊者",
       "dataReceived": "已收到",
-      "endTime": "截止 {time}",
+      "endTime": "从 {time}",
       "h1": "BFBAN",
       "h2": {
         "hint0": "提供☁️数据库，使得来自全球不同Battlefield服务器，得以监控移除存在问题档案玩家",
