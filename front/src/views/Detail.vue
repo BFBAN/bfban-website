@@ -516,6 +516,8 @@
 
                           {{ $t('detail.appeal.info.content') }}
 
+                          <Tag> {{ getContentField(l.content).appealType }} </Tag>
+
                           <BusinessCard :id="l.originUserId">
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
                               <u>{{ l.cheaterGameName }}</u>
@@ -542,8 +544,7 @@
                       </Row>
                     </div>
 
-                    <HtmlWidget :html="l.content" v-if="l.content"
-                                class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
+                    <HtmlWidget :html="getContentField(l.content).content" v-if="l.content" class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
                   </div>
                   <!-- 申诉:any E -->
 
@@ -1268,7 +1269,7 @@
                       <!-- 第一人称录屏 -->
                       <Col flex="1">
                         <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
-                          <Input type="text" :value="appeal.videoLink" :placeholder="$t('detail.appeal.placeholder.videolink')"/>
+                          <Input type="text" v-model="appeal.videoLink" :placeholder="$t('detail.appeal.placeholder.videolink')"/>
                         </FormItem>
                       </Col>
                       <!-- MOSS上传按钮 -->
@@ -1284,7 +1285,7 @@
                       <!-- BTR链接 -->
                       <Col flex="1">
                         <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                          <Input type="text" :value="appeal.btrLink" :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
+                          <Input type="text" v-model="appeal.btrLink" :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
                         </FormItem>
                       </Col>
                     </Row>
@@ -1315,7 +1316,7 @@
                         <FormItem :label="$t('detail.appeal.deal.btrLink')">
                           <br>
                           <Card dis-hover :padding="0">
-                            <Input type="textarea" :rows="4" :maxlength="65535" :value="appeal.btrLink" :style="{ width: '100%', height: '100%'}"></Input>
+                            <Input type="textarea" :rows="4" :maxlength="65535" v-model="appeal.btrLink" :style="{ width: '100%', height: '100%'}"></Input>
                           </Card>
                         </FormItem>
                       </Col>
@@ -1443,7 +1444,6 @@ export default new Application({
         VideoLink: '',
         mossDownloadUrl: '',
         btrLink: '',
-        appealContent: '',
         action: ''
       },
       appealdeal: {
@@ -1451,7 +1451,6 @@ export default new Application({
         VideoLink: '',
         mossDownloadUrl: '',
         btrLink: '',
-        appealContent: '',
         action: ''
       },
       appealdealModal: false,
@@ -1558,14 +1557,13 @@ export default new Application({
       const data = await this.getCommentData(commentId);
       
       // 将获取的数据赋值到`appeal`对象上
-      this.appealdeal.type = data.type;
+      this.appealdeal.type = this.getContentField(data.content).appealType;
       this.appealdeal.id = data.id;
       this.appealdeal.dbid = data.dbid;
-      this.appealdeal.firstPersonRecording = data.firstPersonRecording;
-      this.appealdeal.mossDownloadUrl = data.mossDownloadUrl;
-      this.appealdeal.btrLink = data.btrLink;
-      this.appealdeal.appealContent = data.content;
-      this.appealdeal.content = data.content;
+      this.appealdeal.firstPersonRecording = data.videoLink;
+      this.appealdeal.mossDownloadUrl = this.getContentField(data.content).mossDownloadUrl;
+      this.appealdeal.btrLink = this.getContentField(data.content).btrLink;
+      this.appealdeal.content = this.getContentField(data.content).content;
 
       // 打开模态框
       this.appealdealModal = true;
@@ -2141,21 +2139,19 @@ export default new Application({
           data: {
             toPlayerId: this.cheater.id,
             content,
-            appealStatus: 'unprocessed'
+            appealStatus: 'unprocessed',
+            appealType: this.appeal.type
           }
         }
       };
-
       if (type === 'moss') {
         Object.assign(postData.data.data, {
-          videoLink: this.appeal.videoLink,
+          videoLink: this.appeal.VideoLink,
           btrLink: this.appeal.btrLink
-          // Include additional parameters for 'moss' type if needed
         });
       } else if (type === 'farm') {
         Object.assign(postData.data.data, {
           btrLink: this.appeal.btrLink
-          // Include additional parameters for 'farm' type if needed
         });
       } // No additional data for 'none' type
 
@@ -2364,6 +2360,14 @@ export default new Application({
       const div = document.createElement('div');
       div.innerHTML = html;
      return div.textContent;
+    },
+    getContentField(jsonString) {
+        try {
+            let obj = JSON.parse(jsonString);
+            return obj;
+        } catch (e) {
+            return '';  // return an empty string or handle the error accordingly
+        }
     }
   },
   computed: {
