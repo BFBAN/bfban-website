@@ -974,6 +974,11 @@ router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']
     commentRateLimiter.limiter([{roles: ['admin', 'super', 'root', 'dev', 'bot'], value: 0}]), [
         checkbody('data.toPlayerId').isInt({min: 0}),
         checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
+        // Adding new checks for optional parameters
+        checkbody('data.appealType').isString.isIn(['moss', 'farm', 'none']),
+        checkbody('data.videoLink').optional().isURL(),
+        checkbody('data.btrLink').optional().isString(),
+        checkbody('data.mossDownloadUrl').optional().isURL(),
     ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
     async (req, res, next) => {
         try {
@@ -994,6 +999,7 @@ router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']
             }).orderBy('createTime', 'desc').first();
             if (prev && prev.appealStatus === 'lock')
                 return res.status(403).json({error: 1, code: 'banAppeal.locked', message: 'this thread is locked'});
+            
             const banAppeal = {
                 type: 'banAppeal',
                 toPlayerId: player.id,
@@ -1002,9 +1008,14 @@ router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']
                 byUserId: req.user.id,
                 content: handleRichTextInput(req.body.data.content),
                 viewedAdmins: '[]',
-                appealStatus: 'open',
+                appealStatus: 'unprocessed',  // <--- Change this from 'open' to 'unprocessed'
                 valid: 1,
-                createTime: new Date()
+                createTime: new Date(),
+                // Adding optional fields
+                appealType: req.body.data.appealType,
+                mossDownloadUrl: req.body.data.appealType,
+                videoLink: req.body.data.videoLink,
+                btrLink: req.body.data.btrLink
             };
             const insertId = await db('comments').insert(banAppeal).then(r => r[0]);
             banAppeal.id = insertId;
