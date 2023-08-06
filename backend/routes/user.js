@@ -197,7 +197,7 @@ async (req, res, next) => {
 
         const {username, password, EXPIRES_IN} = req.body.data;
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({username: username}).first();
+        const user = await db.select('*').from('users').where({username: username}).orWhere({ originEmail: username }).first();
 
         if (user && user.valid !== 0 && await comparePassword(password, user.password)) {
             let expiresIn = config.userTokenExpiresIn;
