@@ -779,7 +779,7 @@
       "password": "密码",
       "submitHint": "没有账号？去注册",
       "Feedback": "反馈问题",
-      "username": "用户名"
+      "username": "用户名/邮箱"
     },
     "loggedIn": "哎列？请先登出 (✿◡‿◡)",
     "loginFirst": "啊咧?! 请先登录",
