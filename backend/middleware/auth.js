@@ -42,7 +42,7 @@ async function verifyJWT(req, res, next) {
 }
 
 /** @param {string[]} roles */
-function allowPrivileges(roles=[]) { 
+function allowPrivileges(roles=[]) {
     /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)=>any} */
     return function(req, res, next) { // as long as the user has one allowed role, then allow
         /** @type {string[]} */
