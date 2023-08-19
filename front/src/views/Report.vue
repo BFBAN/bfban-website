@@ -182,9 +182,9 @@
                               long
                               v-voice-button
                               @click="handleVideoLink"
-                              v-if="tabs.list[index].formItem.videoLink.length < 10">
+                              v-if="tabs.list[index].formItem.videoLink.length < 3">
                         <Icon type="md-add"/>
-                        <span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 10)</span>
+                        <span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 3)</span>
                       </Button>
                       <span>{{ $t("report.info.uploadManual3") }}</span>
                       <!-- 视频链接 E -->
@@ -462,6 +462,10 @@ export default new Application({
 
       if (!val) {
         return callback(this.$i18n.t('report.messages.videoEmpty'));
+      }
+
+      if (value.length > 255) {
+        return callback("The address is too long and it is recommended that evidence of the link be placed in the 'description'");
       }
 
       // 正则校验

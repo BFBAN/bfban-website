@@ -22,7 +22,11 @@
 
           <div class="qrcode" ref="qrCodeUrl"></div>
 
-          {{ $t('detail.info.app_qr.tip') }} 🦖
+          <p>{{ $t('detail.info.app_qr.tip') }} 🦖</p><br>
+
+          <a href="https://bfban-app.cabbagelol.net" target="_blank">
+            <Button>bfban download</Button>
+          </a>
         </div>
         <div class="desktop-hide" align="center">
           <Button @click="onPenApp">{{ $t('detail.info.app_qr.openApp') }}</Button>
