@@ -17,7 +17,7 @@ async function verifyJWT(req, res, next) {
             return next();
         }
         const token = req.get('x-access-token');
-        /** @type {{userId:number, username:string, privilege:string[], signWhen:number, expiresIn:number}} */
+        /** @type {{userId:number, username:string, privilege:string[], signWhen:number, visitType: String, expiresIn:number}} */
         let decodedToken;
         try {
             decodedToken = await verifyJWTToken(token)
@@ -31,13 +31,25 @@ async function verifyJWT(req, res, next) {
         //console.log(result); // DEBUG
         if(!result)
             return res.status(401).json({error: 1, code: 'user.invalid'});
-        if(result.signoutTime > decodedToken.signWhen)
+        if(result.signoutTime > decodedToken.signWhen && decodedToken.visitType == allowUserAgent(req.headers["user-agent"]))
             return res.status(401).json({error: 1, code: 'user.tokenExpired'});
         /** @type {import("../typedef.js").User} */
         req.user = result;
         next();
     } catch(err) {
         next(err);
+    }
+}
+
+/** @param {string[]} agent */
+function allowUserAgent (agent = '') {
+    switch (agent) {
+        case "client-desktop":
+        case "client-phone":
+            return "client-phone";
+        case "websites":
+        default:
+            return "websites";
     }
 }
 

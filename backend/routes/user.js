@@ -187,6 +187,7 @@ async (req, res, next) => {
 router.post('/signin', verifyCaptcha, [
     checkbody("data.username").isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
+    checkbody('data.visitType').optional().isIn(config.visitType),
     checkbody('data.EXPIRES_IN').optional({nullable: true}).isInt({min: 0})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
@@ -197,7 +198,7 @@ async (req, res, next) => {
 
         const {username, password, EXPIRES_IN} = req.body.data;
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({username: username}).orWhere({ originEmail: username }).first();
+        const user = await db.select('*').from('users').where({username: username}).orWhere({originEmail: username}).first();
 
         if (user && user.valid !== 0 && await comparePassword(password, user.password)) {
             let expiresIn = config.userTokenExpiresIn;
@@ -209,6 +210,7 @@ async (req, res, next) => {
                 userId: user.id,
                 privilege: user.privilege,
                 signWhen: Date.now(),
+                visitType: req.body.data.visitType || 'websites',
                 expiresIn: expiresIn,
             };
             const jwttoken = jwt.sign(jwtpayload, config.secret, {
@@ -216,7 +218,12 @@ async (req, res, next) => {
             });
             user.attr.lastSigninIP = req.REAL_IP;
             await db('users').update({updateTime: new Date(), attr: JSON.stringify(user.attr)}).where({id: user.id});
-            logger.info('users.login Success:', {name: user.username, ip: req.REAL_IP, token: jwttoken});
+            logger.info('users.login Success:', {
+                name: user.username,
+                ip: req.REAL_IP,
+                visitType: jwtpayload.visitType,
+                token: jwttoken
+            });
 
             return res.status(200).json({
                 success: 1,
