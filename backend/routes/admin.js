@@ -125,54 +125,51 @@ async (req, res, next) => {
     }
 });
 
-/**
- * Didn't find a site using this api place, implicit interface?
- * Looks like it's offered to bot
- */
 router.get('/commentAppeal', verifyJWT, allowPrivileges(["super", "root", "dev", "bot"]), [
-        checkquery('skip').optional().isInt({min: 0}),
-        checkquery('limit').optional().isInt({min: 0, max: 100}),
-        checkquery('order').optional().isIn(['asc', 'desc']),
-    ],
-    async (req, res, next) => {
-        try {
-            const validateErr = validationResult(req);
-            if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'admin.commentAppeal.bad', message: validateErr.array()});
+    // checkbody('type').optional().isString().isInt(['banAppeal']),
+    checkquery('skip').optional().isInt({min: 0}),
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('order').optional().isIn(['asc', 'desc']),
+],
+async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'admin.commentAll.bad', message: validateErr.array()});
 
-            const skip = req.query.skip !== undefined ? req.query.skip : 0;
-            const limit = req.query.limit !== undefined ? req.query.limit : 20;
-            const order = req.query.order ? req.query.order : 'desc';
-            const type = 'banAppeal';
+        const skip = req.query.skip !== undefined ? req.query.skip : 0;
+        const limit = req.query.limit !== undefined ? req.query.limit : 20;
+        const order = req.query.order ? req.query.order : 'desc';
+        const type = 'banAppeal';
 
-            const total = await db('comments')
-                .count({num: 1})
-                .andWhere(function () {
-                    this.where({valid: 1});
-                    if (type != 'all' || !type)
-                        this.where({type: type});
-                })
-                .first().then(r => r.num);
+        const total = await db('comments')
+            .count({num: 1})
+            .andWhere(function () {
+                this.where({valid: 1});
+                if (type != 'all' || !type)
+                    this.where({type: type});
+            })
+            .first().then(r => r.num);
 
-            const result = await db.from('comments')
-                .join('users', 'comments.byUserId', 'users.id')
-                .select('comments.*', 'users.username', 'users.privilege')
-                .andWhere(function () {
-                    if (type != 'all' || !type)
-                        this.where({type: type});
-                })
-                .orderBy('comments.createTime', order)
-                .offset(skip).limit(limit)
-                .then(r => r.map(i => {
-                    delete i.valid;
-                    return i
-                }));
+        const result = await db.from('comments')
+            .join('users', 'comments.byUserId', 'users.id')
+            .select('comments.*', 'users.username', 'users.privilege')
+            .andWhere(function () {
+                if (type != 'all' || !type)
+                    this.where({type: type});
+            })
+            .orderBy('comments.createTime', order)
+            .offset(skip).limit(limit)
+            .then(r => r.map(i => {
+                delete i.valid;
+                return i
+            }));
 
-            return res.status(200).json({success: 1, code: 'admin.commentAppeal.ok', data: result, total});
-        } catch (err) {
-            next(err);
-        }
-    });
+        return res.status(200).json({success: 1, code: 'admin.commentAll.ok', data: result, total});
+    } catch (err) {
+        next(err);
+    }
+});
 
 router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkbody('type').optional().isString().isInt(['report', 'reply', 'judgement', 'banAppeal']),
@@ -366,6 +363,41 @@ async (req, res, next) => {
             toUserId: comment.toPlayerId,
             action: 'edit',
             role: isSpam ? 'spam' : 'comment',
+            createTime: new Date()
+        });
+
+        return res.status(200).json({success: 1, code: 'admin.setComment.ok'});
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.post('/setAppeal', verifyJWT, allowPrivileges(["super", "root", "dev", "admin"]), [
+    checkbody('data.id').isInt({min: 0}),
+    checkbody('data.admincontent').isString().isLength({max: 65535}),
+    checkbody('data.appealStatus').isString().isIn(['fail', 'accept'])
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
+async (req, res, next) => {
+    try {
+        /** @type {import("../typedef.js").Comment} */
+        const comment = await db.select('*').from('comments').where({id: req.body.id}).first();
+        if (!comment)
+            return res.status(404).json({error: 1, code: 'admin.setAppeal.notFound'});
+
+        await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setAppeal', target: comment.id}));
+
+        const updateData = {
+            admincontent: req.body.content,
+            appealStatus: req.body.action
+        };
+          
+        await db('comments').update(updateData).where({ id: comment.id });
+
+        await db('operation_log').insert({
+            byUserId: req.user.id,
+            toUserId: comment.toPlayerId,
+            action: 'edit',
+            role: 'comment',
             createTime: new Date()
         });
 

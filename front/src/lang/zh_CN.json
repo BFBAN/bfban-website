@@ -117,7 +117,8 @@
       "report": "举报",
       "reset": "重置",
       "save": "保存",
-      "submit": "确认"
+      "submit": "确认",
+      "dealAppeal": "处理申诉"
     },
     "gamePlatforms": {
       "origin": "橘子",
@@ -155,6 +156,7 @@
       "6": "需更多管理投票",
       "7": "数据异常自动石锤",
       "8": "刷枪",
+      "9": "申诉",
       "all": "全部"
     },
     "tip": {
@@ -229,7 +231,8 @@
         "changeName": "名称变动",
         "content": "申诉内容",
         "originName": "玩家现在名称",
-        "player": "玩家id"
+        "player": "玩家ID",
+        "commentid": "评论ID"
       },
       "modal": {
         "auxiliaryProof": {
@@ -255,7 +258,27 @@
       },
       "placeholder": {
         "content": "请详细填写您申诉信息以便审核",
-        "player": "请填写玩家id"
+        "player": "请填写玩家id",
+        "videolink": "请填写视频链接",
+        "btrlink": "请填写btr对局链接"
+      },
+      "deal": {
+        "firstPersonRecording": "第一人称录屏链接",
+        "mossDownloadUrl": "MOSS下载",
+        "mossUpload": "上传moss",
+        "btrLink": "BTR链接",
+        "appealContent": "玩家申诉内容",
+        "admincontent": "管理回复内容",
+        "action": "申诉操作",
+        "type": "申诉类型",
+        "moss":"moss自证申诉",
+        "farm": "刷枪申诉",
+        "other": "其他类型申诉",
+        "stats":{
+          "accept": "申诉通过",
+          "fail": "申诉不通过",
+          "unprocessed": "申诉未处理"
+        }
       }
     },
     "info": {

@@ -974,6 +974,8 @@ router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']
     commentRateLimiter.limiter([{roles: ['admin', 'super', 'root', 'dev', 'bot'], value: 0}]), [
         checkbody('data.toPlayerId').isInt({min: 0}),
         checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
+        // Adding new checks for optional parameters
+        checkbody('data.appealType').isString().isIn(['moss', 'farm', 'none']),
     ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
     async (req, res, next) => {
         try {
@@ -994,15 +996,42 @@ router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']
             }).orderBy('createTime', 'desc').first();
             if (prev && prev.appealStatus === 'lock')
                 return res.status(403).json({error: 1, code: 'banAppeal.locked', message: 'this thread is locked'});
+            
+            let contentObject = {};
+
+            switch (req.body.data.appealType) {
+                case 'moss':
+                    contentObject = {
+                        appealType: req.body.data.appealType,
+                        btrLink: req.body.data.btrLink,
+                        mossDownloadUrl: req.body.data.mossDownloadUrl,
+                        videoLink: req.body.data.videoLink,
+                        content: handleRichTextInput(req.body.data.content)
+                    };
+                    break;
+                case 'farm':
+                    contentObject = {
+                        appealType: req.body.data.appealType,
+                        btrLink: req.body.data.btrLink,
+                        content: handleRichTextInput(req.body.data.content)
+                    };
+                    break;
+                case 'none':
+                    contentObject = {
+                        appealType: req.body.data.appealType,
+                        content: handleRichTextInput(req.body.data.content)
+                    };
+                    break;
+            }
             const banAppeal = {
                 type: 'banAppeal',
                 toPlayerId: player.id,
                 toOriginUserId: player.originUserId,
                 toOriginPersonaId: player.originPersonaId,
                 byUserId: req.user.id,
-                content: handleRichTextInput(req.body.data.content),
+                content: JSON.stringify(contentObject),   // Convert the content object to a string here
                 viewedAdmins: '[]',
-                appealStatus: 'open',
+                appealStatus: 'unprocessed',
                 valid: 1,
                 createTime: new Date()
             };
