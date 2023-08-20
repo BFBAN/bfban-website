@@ -187,7 +187,7 @@ async (req, res, next) => {
 router.post('/signin', verifyCaptcha, [
     checkbody("data.username").isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
-    checkbody('data.visitType').optional().isIn(config.visitType),
+    checkbody('data.visitType').optional().isIn(['websites','client-phone','client-desktop', 'bot']),
     checkbody('data.EXPIRES_IN').optional({nullable: true}).isInt({min: 0})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
