@@ -435,7 +435,7 @@
     "cover": {
       "confirmData": "Confirmed cheater",
       "dataReceived": "Recieved",
-      "endTime": "As of nov. 4th 2018",
+      "endTime": "Starting from of {time}",
       "h1": "BFBAN",
       "h2": {
         "hint0": "Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world",

@@ -434,7 +434,7 @@
     "cover": {
       "confirmData": "Confirmer le tricheur",
       "dataReceived": "reçu",
-      "endTime": "jusqu'à {heure}",
+      "endTime": "Depuis {time}",
       "h1": "BFBAN",
       "h2": {
         "hint0": "Fournissez une ☁️base de données afin que les joueurs de différents serveurs Battlefield du monde entier puissent surveiller et supprimer les joueurs avec des fichiers problématiques",

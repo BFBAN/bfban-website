@@ -153,6 +153,13 @@
                   <b>{{ convertCheatMethods(a_i.cheatMethods) }}</b>
                 </span>
               </span>
+
+              <span v-if="a_i.type === 'banAppeal'">
+                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  {{ a_i.byUserName }}
+                </router-link>
+                {{$t('detail.appeal.info.content')}}
+              </span>
             </Card>
           </div>
         </div>
@@ -207,7 +214,7 @@ export default new Application({
         this.gameName = res.gameName;
       });
 
-      this.bannerTime = time.appStart();
+      this.bannerTime = new Intl.DateTimeFormat(this.$i18n.locale || 'en-US').format(time.appStart());
 
       try {
         this.bannerImage = require(`../assets/images/index-gl_${this.$i18n.locale || 'en-US'}.png`);

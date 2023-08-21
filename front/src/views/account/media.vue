@@ -194,30 +194,18 @@ export default {
         if (this.media.list[i].filename == name)
           this.media.list[i].load = true
       }
-
-      http.get(api["service_file"], {
-        params: {
-          filename: name,
-          explain: true
+      for (let i = 0; i < this.media.list.length; i++) {
+        if (this.media.list[i].filename == name) {
+          // 修改 downloadURL
+          const newDownloadURL = `https://bfban.gametools.network/api/service/file?filename=${this.media.list[i].filename}`;
+          this.openViewImage(this.media.list[i].filename, newDownloadURL);
+          window.alert(newDownloadURL)
         }
-      }).then(res => {
-        const d = res.data;
-
-        if (d.success == 1) {
-          for (let i = 0; i < this.media.list.length; i++) {
-            if (this.media.list[i].filename == name) {
-              this.media.list[i].detail = d.data;
-              this.openViewImage(this.media.list[i].filename, d.data.downloadURL);
-            }
-          }
-
-        }
-      }).finally(() => {
-        for (let i = 0; i < this.media.list.length; i++) {
-          if (this.media.list[i].filename == name)
-            this.media.list[i].load = false
-        }
-      });
+      }
+      for (let i = 0; i < this.media.list.length; i++) {
+        if (this.media.list[i].filename == name)
+          this.media.list[i].load = false
+      }
     },
   },
   computed: {

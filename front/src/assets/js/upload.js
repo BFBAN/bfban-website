@@ -124,7 +124,7 @@ export default class Upload extends (Print, Conf) {
 
     /**
      * 大文件
-     * 超出2m以上
+     * 超出2m以上 
      * @param file new File
      * @returns {Promise<String>}
      */
@@ -135,30 +135,43 @@ export default class Upload extends (Print, Conf) {
                     reject({code: -1, message: 'Missing parameter'})
                     throw 'Missing parameter';
                 }
-
                 fetch(this.location() + api["service_uploadBigFile"], {
                     method: 'POST',
-                    data: {
-                        "size": file.type,
-                        "mimeType": file.size
-                    },
                     headers: {
-                        ['x-access-token']: store.state.user.token
+                        ['x-access-token']: store.state.user.token,
+                        ['Content-Type']: "application/json"
                     },
-                    body: file.slice(0, file.length)
-                }).then(res => res.json()).then(res => {
-                    this.service_file(res)
-                        .then(file_detail => {
-                            if (file_detail) {
-                                resolve({
-                                    code: 1,
-                                    url: file_detail
-                                })
-                            } else {
-                                resolve({code: -1})
-                            }
-                        })
-                        .catch(err => reject({code: -1, message: err.message}));
+                    // body: file.slice(0, file.length)
+                    body: JSON.stringify({
+                      data: {
+                        "size": file.size,
+                        "mimeType": file.type
+                      }
+                    })
+                }).then(res => res.json()).then( async res => {
+                    const sliceSize = 10485760 // 10MiB
+                    const fileSize = file.size
+                    const slices = [...Array(Math.ceil(fileSize/sliceSize)).keys()].map(i=>[i*sliceSize, (i+1)*sliceSize<fileSize? (i+1)*sliceSize:fileSize]);
+                    for(const i of slices) {
+                        await fetch(res.data.uploadUrl, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Length': i[1]-i[0],
+                                'Content-Range': `bytes ${i[0]}-${i[1]-1}/${fileSize}`
+                            },
+                            body: file.slice(...i),
+                        }).then(async (r)=> {
+                            console.log(r.status+ ' ' + await r.text() + '\n')
+                            if(r.status > 299)
+                                throw new Error(r.statusText);
+                        }).catch(err=> {
+                            throw err;
+                        });
+                    }
+                    resolve({
+                      code: 1,
+                      url:  `${this.location()}service/file?filename=${res.data.name}`
+                    })
                 })
             } catch (e) {
                 resolve({
@@ -194,10 +207,19 @@ export default class Upload extends (Print, Conf) {
                         explain: true
                     }
                 }).then(detailRes => {
+                  console.log(detailRes.data.size <= this.FILESIZE)
+                  if(detailRes.data.size <= this.FILESIZE) {
                     resolve({
                         code: 1,
                         data: detailRes.data.data
                     });
+                  }else {
+                    console.log(detailRes.data.downloadURL)
+                    resolve({
+                      code: 1,
+                      data: detailRes.data.downloadURL
+                    });
+                  }
                 }).catch(err => {
                     reject({
                         code: -1,

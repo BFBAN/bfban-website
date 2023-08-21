@@ -97,7 +97,6 @@ export default {
   .html-widget-size-default {
     * {
       font-size: 13px;
-      line-height: 1.5;
     }
 
     p {

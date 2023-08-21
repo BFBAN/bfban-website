@@ -2,13 +2,13 @@
   <div>
     <Row :gutter="30">
       <Col flex="1">
-        <Input v-model="userValue"
-               type="text"
+        <Input v-model="userIdValue"
                search
+               type="text"
                enter-button
                @on-enter="getUserOperationLog"
                @on-search="getUserOperationLog"
-               placeholder="input user name"/>
+               placeholder="input user db id"/>
       </Col>
     </Row>
 
@@ -42,14 +42,18 @@
           <Row type="flex" align="middle">
             <Col flex="1">
               <div>
-                <Time :time="i.createTime" type="date"></Time>
-                :
+                <Tag>Log</Tag>
+                <Time :time="i.createTime" type="date"></Time>:
+
                 <BusinessCard :id="i.byUserId">
-                  <b>{{ i.adminName }}</b>
+                  <b>{{ i.username }}</b>
                 </BusinessCard>
-                &nbsp;<Tag> {{ i.action }}</Tag>&nbsp;
-                <a href="javascript:void(0)">{{ i.userName }}</a>
-                &nbsp;<Tag>{{ i.role }}</Tag>&nbsp;
+
+                &nbsp; action: <Tag> {{ i.action }}</Tag>&nbsp;
+
+                <b>{{ i.toUserId }}</b>
+
+                role: <Tag>{{ i.role }}</Tag>
               </div>
             </Col>
           </Row>
@@ -72,7 +76,7 @@ export default {
     return {
       load: false,
       operationLogs: [],
-      userValue: '',
+      userIdValue: '',
 
       skip: 1,
       limit: 40,
@@ -83,8 +87,6 @@ export default {
   components: {BusinessCard},
   created() {
     this.http = http_token.call(this);
-
-    this.getUserOperationLog();
   },
   methods: {
     handlePageChange(num) {
@@ -99,12 +101,12 @@ export default {
      * 查询用户管理员操作者日志
      */
     getUserOperationLog() {
-      if (this.load) return;
+      if (this.load && !this.userIdValue) return;
       this.load = true;
 
       this.http.get(api['admin_userOperationLogs'], {
         params: {
-          name: this.userValue,
+          id: this.userIdValue,
           skip: this.skip - 1,
           limit: this.limit,
           order: this.order,

@@ -23,11 +23,11 @@
             {{ i.title }}
           </Option>
         </Select>
-      </Col>  
+      </Col>
       <template v-if="userType.value == 'all'">
         <Col>
-          <Select v-model="userparameter.value" @on-change="getUserList">
-            <Option :value="i.value" v-for="(i,index) in userparameter.list" :key="index">
+          <Select v-model="userParameter.value" @on-change="getUserList">
+            <Option :value="i.value" v-for="(i,index) in userParameter.list" :key="index">
               {{ i.title }}
             </Option>
           </Select>
@@ -92,7 +92,12 @@
           <Button @click="onEditUser(index)" type="dashed" size="small" :disabled="!isAdmin">
             <Icon type="ios-create"/>
           </Button>
-
+          <Divider type="vertical"></Divider>
+          <router-link :to="{name: 'account', params: { uId: `${i.id}` }}" target="_blank">
+            <Button type="dashed" size="small">
+              <Icon type="ios-eye"/>
+            </Button>
+          </router-link>
           <Divider type="vertical"></Divider>
           <Button @click="openDelUserModel(index)" type="error" size="small" :disabled="isDeleteExecutable">
             <Icon type="md-trash"/>
@@ -342,7 +347,7 @@ export default new Application({
         value: 'asc',
         list: [{title: 'Asc', value: 'asc'}, {title: 'Desc', value: 'desc'}]
       },
-      userparameter: {
+      userParameter: {
         value: 'username',
         list: [{title: 'BFBAN ID', value: 'id'}, {title: 'BFBAN Username', value: 'username'}, {title: 'originName', value: 'originName'}, {title: 'originPersonaId', value: 'originPersonaId'}, {title: 'Email', value: 'originEmail'}]
       },
@@ -558,8 +563,8 @@ export default new Application({
           params.type = this.userType.value;
         if (this.userOrder.value)
           params.order = this.userOrder.value
-        if (this.userparameter.value)
-          params.parameter = this.userparameter.value
+        if (this.userParameter.value)
+          params.parameter = this.userParameter.value
 
         that.http.get(api["admin_searchUser"], {
           params,

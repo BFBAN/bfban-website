@@ -169,8 +169,28 @@ class OriginClient {
 
             if(typeof(response.totalCount) != 'number')
                 throw new EaApiError(500, response, `${this.tag} Bad Response`);
-            if(response.totalCount > 0)
-                return response.infoList.map(i=>i.friendUserId);
+            if(response.totalCount > 0) {
+              const permises = []
+              response.infoList.forEach(item => {
+                const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/atom/users?userIds=${item.friendUserId}`;
+                permises.push(got.get(url, {
+                  headers: {
+                      'authtoken': `${this.tokens.access_token}`,
+                      'Upgrade-Insecure-Requests': 1,
+                      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+                  }
+                }))
+              })
+              const results = await Promise.all(permises)
+              let item = results.filter(item => item).map(item => {
+                const [ player = {} ] = item.users
+                return player
+              }).find(player => {
+                return player.eaId.toLowerCase() == username.toLowerCase()
+              })
+              return [item.userId];
+
+            }
             else
                 return [];
         } catch(err) {

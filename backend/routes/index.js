@@ -257,7 +257,7 @@ async (req, res, next) => {
             'players.originName as toPlayerName', 'players.originUserId as playerOriginUserId',
             'players.originPersonaId as playerOriginPersonaId', 'players.cheatMethods as playerCheatMethods',
             'players.avatarLink as playerAvatarLink', 'players.games as playerGames',
-            'players.viewNum as playerViewNum', 'players.commentsNum as PlayerCommentsNum',
+            'players.viewNum as playerViewNum', 'players.commentsNum as playerCommentsNum',
             'players.createTime as playerCreateTime', 'players.updateTime as playerUpdateTime'
         ];
 
