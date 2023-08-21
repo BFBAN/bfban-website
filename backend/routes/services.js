@@ -151,7 +151,7 @@ router.put('/upload', verifyJWT, forbidPrivileges(['blacklisted', 'freezed']), [
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
-        if(!validateErr.isEmpty())
+        if(!validateErr.isEmpty())     
             return res.status(400).json({error: 1, code: 'upload.bad', message: validateErr.array()});
 
         const contentType = req.get('Content-Type');
