@@ -6,7 +6,7 @@ import {body as checkbody, query as checkquery, validationResult, oneOf as check
 import db from "../mysql.js";
 import config from "../config.js";
 import verifyCaptcha from "../middleware/captcha.js";
-import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {allowPrivileges, forbidPrivileges, verifyJWT, verifySelfOrPrivilege} from "../middleware/auth.js";
 import {cheatMethodsSanitizer, handleRichTextInput} from "../lib/user.js";
 import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
@@ -641,7 +641,6 @@ async (req, res, next) => {
             if (typeof item.content === 'string') {
                 try {
                     let contentObj = JSON.parse(item.content);
-
                     // Check if the user's privilege doesn't contain 'admin' or 'dev'
                     if (!item.privilege.includes('admin') && !item.privilege.includes('dev')) {
                         // Check if appealType is 'moss' and if mossDownloadUrl exists
@@ -654,7 +653,7 @@ async (req, res, next) => {
                     // Convert the modified object back to JSON string
                     item.content = JSON.stringify(contentObj);
                 } catch (error) {
-                    console.error('Error parsing JSON content:', error);
+                    
                 }
             }
             return item;
@@ -993,7 +992,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']),
+router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege([]), forbidPrivileges(['freezed', 'blacklisted']),
     commentRateLimiter.limiter([{roles: ['admin', 'super', 'root', 'dev', 'bot'], value: 0}]), [
         checkbody('data.toPlayerId').isInt({min: 0}),
         checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
@@ -1024,10 +1023,21 @@ router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']
 
             switch (req.body.data.appealType) {
                 case 'moss':
+                    const mossFileName = req.body.data.mossFileName;
+                    if (mossFileName) { 
+                        const storageItem = await db.select('*').from('storage_items').where('filename', mossFileName).first();
+                        if (!storageItem) {
+                            return res.status(404).json({error: 1, code: 'banAppeal.fileNotFound', message: 'no such file'});
+                        }
+                        console.log(req.user)
+                        if (storageItem.byUserId !== req.user.id) {
+                            return res.status(403).json({error: 1, code: 'banAppeal.unauthorized', message: 'not authorized to use this file'});
+                        }
+                    }
                     contentObject = {
                         appealType: req.body.data.appealType,
                         btrLink: req.body.data.btrLink,
-                        mossDownloadUrl: req.body.data.mossDownloadUrl,
+                        mossFileName: req.body.data.mossFileName,
                         videoLink: req.body.data.videoLink,
                         content: handleRichTextInput(req.body.data.content)
                     };
