@@ -79,8 +79,33 @@ function forbidPrivileges(roles=[]) {
     }
 }
 
+/** @param {express.Request} req @param {string[]} roles */
+function verifySelfOrPrivilege(roles = []) {
+    /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)=>any} */
+    return function (req, res, next) {
+        const userRoles = req.user.privilege;
+        const superPrivileges = ['root', 'dev', 'super'];
+
+        // Check if the user has one of the super privileges
+        if (userRoles.some(role => superPrivileges.includes(role))) {
+            return next();
+        }
+        // Check if the user has one of the specified roles
+        if (userRoles.some(role => roles.includes(role))) {
+            return res.status(403).json({ error: 1, code: 'user.permissionDenied' });
+        }
+        // Check if the user's originPersonaId matches the data's toOriginPersonaId
+        if (req.user.originPersonaId === req.body.data.toOriginPersonaId) {
+            return next();
+        }
+        // If none of the above conditions are met, deny access
+        return res.status(403).json({ error: 1, code: 'user.permissionDenied' });
+    }
+}
+
 export {
     verifyJWT,
     allowPrivileges,
     forbidPrivileges,
+    verifySelfOrPrivilege,
 }
