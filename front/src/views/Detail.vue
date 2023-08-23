@@ -1078,8 +1078,8 @@
                     <FormItem :label="$t('detail.appeal.deal.mossDownloadUrl')">
                       <br>
                       <div>
-                        <a :href="appealdeal.mossDownloadUrl" target="_blank">
-                          <Button>{{ $t('downloadMoss') }}</Button>
+                        <a :href="`${requestConf.child.upload.protocol}://${requestConf.child.upload.host}${requestConf.child.upload.pathname}service/file?filename=${appealdeal.mossFileName}`" target="_blank">
+                          <Button>{{ $t('downloadMoss ') }}</Button>
                         </a>
                       </div>
                     </FormItem>
@@ -1426,7 +1426,7 @@
 </template>
 
 <script>
-import {api, http, http_token, util, message, time, storage, account_storage, mail, moss} from '../assets/js/index'
+import {api, http, http_token, util, message, time, storage, account_storage, mail, moss, upload} from '../assets/js/index'
 
 import Application from "/src/assets/js/application";
 import Empty from '../components/Empty.vue'
@@ -1439,6 +1439,7 @@ import HtmlWidget from "../components/HtmlWidget";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import FastReply from "@/components/FastReply";
 import htmllink from "@/components/HtmlLink";
+import requestConf from  "../../public/config/requestConf.json";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
@@ -1465,7 +1466,7 @@ export default new Application({
         toPlayerId: 0,
         type: '',
         VideoLink: '',
-        mossDownloadUrl: '',
+        mossFileName: '',
         selectedFile: null,
         btrLink: '',
         action: ''
@@ -1473,7 +1474,7 @@ export default new Application({
       appealdeal: {
         type: '',
         VideoLink: '',
-        mossDownloadUrl: '',
+        mossFileName: '',
         btrLink: '',
         action: ''
       },
@@ -1550,7 +1551,8 @@ export default new Application({
       replyModal: false,
       updateUserInfospinShow: false,
       updateCheaterModal: false,
-      cheatMethodsGlossary: null
+      cheatMethodsGlossary: null,
+      requestConf,
     }
   },
   components: {
@@ -1585,7 +1587,7 @@ export default new Application({
       this.appealdeal.id = data.id;
       this.appealdeal.dbid = data.dbid;
       this.appealdeal.firstPersonRecording = data.videoLink;
-      this.appealdeal.mossDownloadUrl = this.getContentField(data.content).mossDownloadUrl;
+      this.appealdeal.mossFileName = this.getContentField(data.content).mossFileName;
       this.appealdeal.btrLink = this.getContentField(data.content).btrLink;
       this.appealdeal.content = this.getContentField(data.content).content;
 
@@ -1612,7 +1614,7 @@ export default new Application({
             dbid: d.data.toPlayerId,
             type: d.data.appealType,
             firstPersonRecording: d.data.videoLink,
-            mossDownloadUrl: d.data.mossDownloadUrl,
+            mossFileName: d.data.mossFileName,
             btrLink: d.data.btrLink
           };
         } else {
@@ -2190,8 +2192,8 @@ export default new Application({
         data: {
           data: {
             toPlayerId: this.cheater.id,
+            toOriginPersonaId: this.cheater.originPersonaId,
             content,
-            appealStatus: 'unprocessed',
             appealType: this.appeal.type
           }
         }
@@ -2209,29 +2211,27 @@ export default new Application({
 
       try {
         // First, upload the MOSS file if it exists
-        let mossDownloadUrl = '';
+        let mossFileName = '';
         if (type === 'moss' && this.appeal.selectedFile) {
-          const formData = new FormData();
-          formData.append('file', this.appeal.selectedFile);
-          window.alert(this.appeal.selectedFile.name)
-
-          const config = {
-            headers: {
-              'Content-Type': this.appeal.selectedFile.type,
-              'Content-Length': this.appeal.selectedFile.size
+          await upload.on(this.appeal.selectedFile).then(res => {
+            if (res && res.code >= 1) {
+              mossFileName = res.filename; // 获取文件的URL
+              Object.assign(postData.data.data, { mossFileName });
+            } else {
+              this.$Message.error(res.message || res.code);
             }
-          }
-          const uploadResponse = await this.http.put(api["service_upload"], formData, config);
-          window.alert('Response:' + uploadResponse.data);
+          }).catch(err => {
+            this.$Message.error(err.message || err.code);
+          }).finally(() => {
+            this.appeal.load = false;
+            message.playSendVoice();
+            this.getTimeline();
+          });
 
-          if (uploadResponse.data.success !== 1) {
-            this.$Message.error(uploadResponse.data.message || uploadResponse.data.code);
+          // 如果mossFileName没有被设置，则说明上传失败，直接返回
+          if (type === 'moss' && !mossFileName) {
             return;
           }
-
-          const filename = uploadResponse.data.data.name; // 根据API的响应获取文件名
-          const mossDownloadUrl = `https://bfban.gametools.network/api/service/file?filename=${encodeURIComponent(filename)}`; // 拼接URL
-          Object.assign(postData.data.data, {mossDownloadUrl});
         }
 
         // Then, submit the appeal
