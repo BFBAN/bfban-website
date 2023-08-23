@@ -368,7 +368,7 @@ export default new Application({
       editPrivilegesForm: {
         id: '',
         roleName: '',
-        role: ['normal', 'admin', 'bot', 'super', 'dev', 'blacklisted', 'freezed'],
+        role: ['normal', 'admin', 'bot', 'super', 'dev', 'volunteer', 'blacklisted', 'freezed'],
         activeName: 'grant',
         action: ['grant', 'revoke'],
       },
