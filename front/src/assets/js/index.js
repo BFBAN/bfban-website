@@ -20,6 +20,7 @@ import _PlayerStorage from './storage_player';
 import _Mail from "@/assets/js/mail";
 import _Voice from "@/assets/js/voice";
 import _appMessage from "@/assets/js/message";
+import _Moss from "@/assets/js/moss";
 import store from "@/store";
 
 export const api = new _Api();
@@ -39,11 +40,12 @@ export const player_storage = new _PlayerStorage();
 export const mail = new _Mail();
 export const voice = new _Voice();
 export const message = new _appMessage();
+export const moss = new _Moss();
 
 export default {
     conf, api, storage, time,
     http, http_token, http_connect,
     util, notification, regular, print,
     upload, account_storage, player_storage, mail,
-    voice, message,
+    voice, message, moss
 };

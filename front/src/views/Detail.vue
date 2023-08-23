@@ -516,7 +516,9 @@
 
                           {{ $t('detail.appeal.info.content') }}
 
-                          <Tag> {{ getContentField(l.content).appealType ? getContentField(l.content).appealType : 'none' }} </Tag>
+                          <Tag>
+                            {{ getContentField(l.content).appealType ? getContentField(l.content).appealType : 'none' }}
+                          </Tag>
 
                           <BusinessCard :id="l.originUserId">
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
@@ -543,7 +545,9 @@
                         </Col>
                       </Row>
                     </div>
-                    <HtmlWidget :html="isValidJson(l.content) ? getContentField(l.content).content : l.content" v-if="l.content" class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
+                    <HtmlWidget :html="isValidJson(l.content) ? getContentField(l.content).content : l.content"
+                                v-if="l.content"
+                                class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
                   </div>
                   <!-- 申诉:any E -->
 
@@ -680,7 +684,10 @@
 
                       <!-- 申诉操作 -->
                       <template v-if="isLogin && isAdmin && l.type === 'banAppeal'">
-                        <Button size="small" @click="openAppealDealModal(l.id)">{{ $t('basic.button.dealAppeal') }}</Button>
+                        <Button size="small" @click="openAppealDealModal(l.id)">{{
+                            $t('basic.button.dealAppeal')
+                          }}
+                        </Button>
                         <Divider type="vertical"/>
                       </template>
 
@@ -784,7 +791,7 @@
             </Col>
 
             <!-- 申诉按钮 -->
-            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide" v-if="appeal.disable && false">
+            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide" v-if="appeal.disable">
               <Button type="primary"
                       v-voice-button
                       @click="appeal.show = true"
@@ -1043,12 +1050,12 @@
                 <Row :gutter="30">
                   <Col flex="1">
                     <FormItem :label="$t('detail.appeal.info.player')">
-                      <Input type="text" :value="appealdeal.dbid" disabled />
+                      <Input type="text" :value="appealdeal.dbid" disabled/>
                     </FormItem>
                   </Col>
                   <Col flex="1">
                     <FormItem :label="$t('detail.appeal.info.commentid')">
-                      <Input type="text" :value="appealdeal.id" disabled />
+                      <Input type="text" :value="appealdeal.id" disabled/>
                     </FormItem>
                   </Col>
                 </Row>
@@ -1058,12 +1065,12 @@
           <!-- Moss申诉 -->
           <div v-if="appealdeal.type === 'moss'">
             <Col flex="1">
-              <Form>
+              <Form label-position="top">
                 <Row :gutter="30">
                   <!-- 第一人称录屏 -->
                   <Col flex="1">
                     <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
-                      <Input type="text" :value="appealdeal.firstPersonRecording" disabled />
+                      <Input type="text" :value="appealdeal.firstPersonRecording" disabled/>
                     </FormItem>
                   </Col>
                   <!-- MOSS下载按钮 -->
@@ -1082,7 +1089,7 @@
                   <!-- BTR链接 -->
                   <Col flex="1">
                     <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                      <Input type="text" :value="appealdeal.btrLink" disabled />
+                      <Input type="text" :value="appealdeal.btrLink" disabled/>
                     </FormItem>
                   </Col>
                 </Row>
@@ -1092,7 +1099,9 @@
                     <FormItem :label="$t('detail.appeal.deal.appealContent')">
                       <br>
                       <Card dis-hover :padding="0">
-                        <Input type="textarea" :rows="4" :maxlength="65535" :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}" disabled></Input>
+                        <Input type="textarea" :rows="4" :maxlength="65535"
+                               :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}"
+                               disabled></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1103,14 +1112,15 @@
           <!-- 刷枪申诉 -->
           <div v-else-if="appealdeal.type === 'farm'">
             <Col flex="1">
-              <Form>
+              <Form label-position="top">
                 <Row :gutter="30">
                   <Col flex="1">
                     <!-- BTR链接 -->
                     <FormItem :label="$t('detail.appeal.deal.btrLink')">
                       <br>
                       <Card dis-hover :padding="0">
-                        <Input type="textarea" :rows="4" :maxlength="65535" :value="appealdeal.btrLink" :style="{ width: '100%', height: '100%'}" disabled></Input>
+                        <Input type="textarea" :rows="4" :maxlength="65535" :value="appealdeal.btrLink"
+                               :style="{ width: '100%', height: '100%'}" disabled></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1119,7 +1129,9 @@
                     <FormItem :label="$t('detail.appeal.deal.appealContent')">
                       <br>
                       <Card dis-hover :padding="0">
-                        <Input type="textarea" :rows="4" :maxlength="65535" :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}" disabled></Input>
+                        <Input type="textarea" :rows="4" :maxlength="65535"
+                               :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}"
+                               disabled></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1130,14 +1142,16 @@
           <!-- 其他类型申诉 -->
           <div v-else-if="appealdeal.type === 'none'">
             <Col flex="1">
-              <Form>
+              <Form label-position="top">
                 <Row :gutter="30">
                   <Col flex="1">
                     <!-- 玩家的申诉内容 -->
                     <FormItem :label="$t('detail.appeal.deal.appealContent')">
                       <br>
                       <Card dis-hover :padding="0">
-                        <Input type="textarea" :rows="4" :maxlength="65535" :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}" disabled></Input>
+                        <Input type="textarea" :rows="4" :maxlength="65535"
+                               :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}"
+                               disabled></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1151,9 +1165,9 @@
             <Col>
               <!-- 管理回复内容 -->
               <Input type="text"
-                v-model="appealdeal.admincontent"
-                placeholder="管理员回复内容"
-                size="large"/>
+                     v-model="appealdeal.admincontent"
+                     placeholder="管理员回复内容"
+                     size="large"/>
             </Col>
             <Col flex="1">
               <!-- 下拉框，选择对申诉的操作 -->
@@ -1252,7 +1266,7 @@
                 </Col>
               </Row>
               <Col flex="1">
-              <!-- 下拉框，选择对申诉的操作 -->
+                <!-- 下拉框，选择对申诉的操作 -->
                 <FormItem :label="$t('detail.appeal.deal.type')">
                   <Select v-model="appeal.type" :style="{width: '150px', 'text-align': 'right'}">
                     <Option value="moss">{{ $t('detail.appeal.deal.moss') }}</Option>
@@ -1263,20 +1277,27 @@
               </Col>
               <div v-if="appeal.type === 'moss'">
                 <Col flex="1">
-                  <Form>
+                  <Form label-position="top">
                     <Row :gutter="30">
                       <!-- 第一人称录屏 -->
                       <Col flex="1">
                         <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
-                          <Input type="text" v-model="appeal.videoLink" :placeholder="$t('detail.appeal.placeholder.videolink')"/>
+                          <Input type="text" v-model="appeal.videoLink"
+                                 :placeholder="$t('detail.appeal.placeholder.videolink')"/>
                         </FormItem>
                       </Col>
                       <!-- MOSS上传按钮 -->
                       <Col flex="1">
                         <FormItem :label="$t('detail.appeal.deal.mossUpload')">
-                          <div>
-                            <input type="file" @change="handleFileUpload" accept=".zip">
-                          </div>
+                          <Upload multiple
+                                  type="drag"
+                                  action=""
+                                  accept="application/*"
+                                  :before-upload="handleFileMossUpload">
+                            <div style="padding: 20px 0" :class="appeal.stateStyle">
+                              <Icon type="md-document" size="52"></Icon>
+                            </div>
+                          </Upload>
                         </FormItem>
                       </Col>
                     </Row>
@@ -1284,7 +1305,8 @@
                       <!-- BTR链接 -->
                       <Col flex="1">
                         <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                          <Input type="text" v-model="appeal.btrLink" :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
+                          <Input type="text" v-model="appeal.btrLink"
+                                 :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
                         </FormItem>
                       </Col>
                     </Row>
@@ -1315,7 +1337,8 @@
                         <FormItem :label="$t('detail.appeal.deal.btrLink')">
                           <br>
                           <Card dis-hover :padding="0">
-                            <Input type="textarea" :rows="4" :maxlength="65535" v-model="appeal.btrLink" :style="{ width: '100%', height: '100%'}"></Input>
+                            <Input type="textarea" :rows="4" :maxlength="65535" v-model="appeal.btrLink"
+                                   :style="{ width: '100%', height: '100%'}"></Input>
                           </Card>
                         </FormItem>
                       </Col>
@@ -1338,7 +1361,7 @@
                       </Col>
                     </Row>
                   </Form>
-                </Col>    
+                </Col>
               </div>
               <div v-else-if="appeal.type === 'none'">
                 <Col>
@@ -1403,7 +1426,7 @@
 </template>
 
 <script>
-import {api, http, http_token, util, message, time, storage, account_storage, mail} from '../assets/js/index'
+import {api, http, http_token, util, message, time, storage, account_storage, mail, moss} from '../assets/js/index'
 
 import Application from "/src/assets/js/application";
 import Empty from '../components/Empty.vue'
@@ -1438,6 +1461,7 @@ export default new Application({
         load: false,
         show: false,
         disable: this.$store.state.configuration.detailLeftAppealPanel ?? false,
+        stateStyle: '',
         toPlayerId: 0,
         type: '',
         VideoLink: '',
@@ -1555,7 +1579,7 @@ export default new Application({
     async openAppealDealModal(commentId) {
       // 调用API获取申诉数据
       const data = await this.getCommentData(commentId);
-      
+
       // 将获取的数据赋值到`appeal`对象上
       this.appealdeal.type = this.getContentField(data.content).appealType;
       this.appealdeal.id = data.id;
@@ -1573,38 +1597,38 @@ export default new Application({
       // 发起请求
       let commentData = null;  // 用于保存获取到的数据
       await this.http.get(api["admin_commentItem"], {
-          params: {
-              id: commentid
-          }
+        params: {
+          id: commentid
+        }
       }).then(res => {
-          const d = res.data;
-          if (d.success === 1) {
-              // 请求成功，处理返回的数据
-              commentData = {
-                  id: d.data.id,
-                  content: d.data.content,
-                  byUsername: d.data.username,
-                  action: null,
-                  dbid: d.data.toPlayerId,
-                  type: d.data.appealType,
-                  firstPersonRecording: d.data.videoLink, 
-                  mossDownloadUrl: d.data.mossDownloadUrl, 
-                  btrLink: d.data.btrLink
-              };
-          } else {
-              switch (d.code) {
-                  case "commentItem.bad":
-                  case "commentItem.notFound":
-                      this.$Message.info(this.$t('basic.tip.notFound'));
-                      break;
-              }
+        const d = res.data;
+        if (d.success === 1) {
+          // 请求成功，处理返回的数据
+          commentData = {
+            id: d.data.id,
+            content: d.data.content,
+            byUsername: d.data.username,
+            action: null,
+            dbid: d.data.toPlayerId,
+            type: d.data.appealType,
+            firstPersonRecording: d.data.videoLink,
+            mossDownloadUrl: d.data.mossDownloadUrl,
+            btrLink: d.data.btrLink
+          };
+        } else {
+          switch (d.code) {
+            case "commentItem.bad":
+            case "commentItem.notFound":
+              this.$Message.info(this.$t('basic.tip.notFound'));
+              break;
           }
+        }
       }).finally(() => {
-          // 请求结束后的处理
-          // 如果有加载动画，此时应该隐藏
-          this.loading = false;
-          // 如果有UI元素在请求期间被禁用，此时应该解除禁用
-          this.isButtonDisabled = false;
+        // 请求结束后的处理
+        // 如果有加载动画，此时应该隐藏
+        this.loading = false;
+        // 如果有UI元素在请求期间被禁用，此时应该解除禁用
+        this.isButtonDisabled = false;
       });
 
       return commentData;  // 返回获取到的数据
@@ -2126,9 +2150,33 @@ export default new Application({
         this.verify.isUpdateinformation = !this.verify.isUpdateinformation;
       })
     },
-    handleFileUpload(event) {
-      const files = event.target.files;
-      this.appeal.selectedFile = files[0]; // 设置 selectedFile 的值
+    /**
+     * 上传Moss文件
+     * @param event
+     */
+    handleFileMossUpload(file) {
+      const that = this;
+      that.clearFileMossUpload();
+
+      moss.verifyFileIsMoss(file).then(res => {
+        if (res.code == 0) {
+          // TO DO 在这里添加上传
+          // await upload.on(file);
+          that.appeal.stateStyle = 'ivu-alert-success';
+          that.$Message.success(res.message);
+          console.log(res);
+        } else {
+          that.appeal.stateStyle = 'ivu-alert-warning';
+          if (res.message) that.$Message.error(res.message);
+        }
+      })
+    },
+    /**
+     * 清除Moss选择的数据
+     */
+    clearFileMossUpload () {
+      this.appeal.selectedFile = null;
+      this.appeal.stateStyle = '';
     },
     async handleAppeal() {
       const type = this.appeal.type;
@@ -2158,7 +2206,7 @@ export default new Application({
           btrLink: this.appeal.btrLink
         });
       } // No additional data for 'none' type
-      
+
       try {
         // First, upload the MOSS file if it exists
         let mossDownloadUrl = '';
@@ -2183,7 +2231,7 @@ export default new Application({
 
           const filename = uploadResponse.data.data.name; // 根据API的响应获取文件名
           const mossDownloadUrl = `https://bfban.gametools.network/api/service/file?filename=${encodeURIComponent(filename)}`; // 拼接URL
-          Object.assign(postData.data.data, { mossDownloadUrl });
+          Object.assign(postData.data.data, {mossDownloadUrl});
         }
 
         // Then, submit the appeal
@@ -2393,7 +2441,7 @@ export default new Application({
     convertToPlainText(html) {
       const div = document.createElement('div');
       div.innerHTML = html;
-     return div.textContent;
+      return div.textContent;
     },
     isValidJson(jsonString) {
       try {
