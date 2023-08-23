@@ -151,7 +151,7 @@ router.put('/upload', verifyJWT, forbidPrivileges(['blacklisted', 'freezed']), [
 async (req, res, next)=> {
     try {
         const validateErr = validationResult(req);
-        if(!validateErr.isEmpty())
+        if(!validateErr.isEmpty())     
             return res.status(400).json({error: 1, code: 'upload.bad', message: validateErr.array()});
 
         const contentType = req.get('Content-Type');
@@ -211,7 +211,7 @@ async (req, res, next)=> {
         
         const fileSuffix = fileSuffixByMIMEType(req.body.data.mimeType);
         if(!fileSuffix)
-            return res.status(415).json({error: 1, code: 'upload.unsupport', message: 'Unsupport media type'});
+            return res.status(415).json({error: 1, code: 'upload.unsupport', message: 'Unsupport media type', unMIMEType: req.body.data.mimeType});
         const size = req.body.data.size;
 
         /** @type {import("../typedef.js").StorageQuota} */

@@ -636,6 +636,29 @@ async (req, res, next) => {
             delete item.attr
             return item
         })
+        // New code to handle the content field
+        result = result.map(item => {
+            if (typeof item.content === 'string') {
+                try {
+                    let contentObj = JSON.parse(item.content);
+
+                    // Check if the user's privilege doesn't contain 'admin' or 'dev'
+                    if (!item.privilege.includes('admin') && !item.privilege.includes('dev')) {
+                        // Check if appealType is 'moss' and if mossDownloadUrl exists
+                        if (contentObj.appealType === 'moss' && contentObj.hasOwnProperty('mossDownloadUrl')) {
+                            // Delete the mossDownloadUrl field
+                            delete contentObj.mossDownloadUrl;
+                        }
+                    }
+
+                    // Convert the modified object back to JSON string
+                    item.content = JSON.stringify(contentObj);
+                } catch (error) {
+                    console.error('Error parsing JSON content:', error);
+                }
+            }
+            return item;
+        });
         result.forEach(i => {     // delete those unused keys
             for (let j of Object.keys(i))
                 if (typeof (i[j]) == 'undefined' || i[j] == null)

@@ -516,7 +516,7 @@
 
                           {{ $t('detail.appeal.info.content') }}
 
-                          <Tag> {{ getContentField(l.content).appealType }} </Tag>
+                          <Tag> {{ getContentField(l.content).appealType ? getContentField(l.content).appealType : 'none' }} </Tag>
 
                           <BusinessCard :id="l.originUserId">
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
@@ -543,8 +543,7 @@
                         </Col>
                       </Row>
                     </div>
-
-                    <HtmlWidget :html="getContentField(l.content).content" v-if="l.content" class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
+                    <HtmlWidget :html="isValidJson(l.content) ? getContentField(l.content).content : l.content" v-if="l.content" class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
                   </div>
                   <!-- 申诉:any E -->
 
@@ -785,7 +784,7 @@
             </Col>
 
             <!-- 申诉按钮 -->
-            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide" v-if="appeal.disable">
+            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide" v-if="appeal.disable && false">
               <Button type="primary"
                       v-voice-button
                       @click="appeal.show = true"
@@ -1443,6 +1442,7 @@ export default new Application({
         type: '',
         VideoLink: '',
         mossDownloadUrl: '',
+        selectedFile: null,
         btrLink: '',
         action: ''
       },
@@ -2126,7 +2126,11 @@ export default new Application({
         this.verify.isUpdateinformation = !this.verify.isUpdateinformation;
       })
     },
-    handleAppeal() {
+    handleFileUpload(event) {
+      const files = event.target.files;
+      this.appeal.selectedFile = files[0]; // 设置 selectedFile 的值
+    },
+    async handleAppeal() {
       const type = this.appeal.type;
       const content = this.appeal.content || this.$refs.textareaAppealContent.editorContent;
 
@@ -2154,21 +2158,51 @@ export default new Application({
           btrLink: this.appeal.btrLink
         });
       } // No additional data for 'none' type
+      
+      try {
+        // First, upload the MOSS file if it exists
+        let mossDownloadUrl = '';
+        if (type === 'moss' && this.appeal.selectedFile) {
+          const formData = new FormData();
+          formData.append('file', this.appeal.selectedFile);
+          window.alert(this.appeal.selectedFile.name)
 
-      this.http.post(api["player_banAppeal"], postData).then(res => {
-        const d = res.data;
+          const config = {
+            headers: {
+              'Content-Type': this.appeal.selectedFile.type,
+              'Content-Length': this.appeal.selectedFile.size
+            }
+          }
+          const uploadResponse = await this.http.put(api["service_upload"], formData, config);
+          window.alert('Response:' + uploadResponse.data);
 
-        if (d.success == 1) {
-          this.$Message.success(d.message);
-          return;
+          if (uploadResponse.data.success !== 1) {
+            this.$Message.error(uploadResponse.data.message || uploadResponse.data.code);
+            return;
+          }
+
+          const filename = uploadResponse.data.data.name; // 根据API的响应获取文件名
+          const mossDownloadUrl = `https://bfban.gametools.network/api/service/file?filename=${encodeURIComponent(filename)}`; // 拼接URL
+          Object.assign(postData.data.data, { mossDownloadUrl });
         }
 
-        this.$Message.error(d.message || d.code);
-      }).finally(() => {
+        // Then, submit the appeal
+        const res = await this.http.post(api["player_banAppeal"], postData);
+
+        const d = res.data;
+
+        if (d.success === 1) {
+          this.$Message.success(d.message);
+        } else {
+          this.$Message.error(d.message || d.code);
+        }
+      } catch (error) {
+        this.$Message.error(error.message || error.code);
+      } finally {
         this.appeal.load = false;
         message.playSendVoice();
         this.getTimeline();
-      });
+      }
     },
     /**
      * 申诉状态操作
@@ -2361,13 +2395,21 @@ export default new Application({
       div.innerHTML = html;
      return div.textContent;
     },
+    isValidJson(jsonString) {
+      try {
+        JSON.parse(jsonString);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
     getContentField(jsonString) {
-        try {
-            let obj = JSON.parse(jsonString);
-            return obj;
-        } catch (e) {
-            return '';  // return an empty string or handle the error accordingly
-        }
+      try {
+        let obj = JSON.parse(jsonString);
+        return obj;
+      } catch (e) {
+        return jsonString; // 返回原始字符串或处理错误
+      }
     }
   },
   computed: {

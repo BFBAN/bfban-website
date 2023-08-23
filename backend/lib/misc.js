@@ -83,6 +83,10 @@ function fileSuffixByMIMEType(mimeType) {
         return '.ogg';
     case 'video/mp4':
         return '.mp4';
+    case 'application/x-zip-compressed':
+        return '.zip';
+    case 'application/zip':
+        return '.zip';
     default:
         return '';
     }
