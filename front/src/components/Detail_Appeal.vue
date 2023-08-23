@@ -226,7 +226,7 @@ export default new Application({
       ],
       appeal: {
         load: false,
-        show: true,
+        show: false,
         fromData: {
           videoLink: '',
           btrLink: '',

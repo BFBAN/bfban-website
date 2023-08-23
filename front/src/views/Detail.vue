@@ -548,6 +548,34 @@
                     <HtmlWidget :html="isValidJson(l.content) ? getContentField(l.content).content : l.content"
                                 v-if="l.content"
                                 class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
+
+                    <Row :gutter="5" v-if="isValidJson(l.content)">
+                      <Col v-if="getContentField(l.content).btrLink">
+                        <a :href="getContentField(l.content).btrLink" target="_new">
+                          <Badge text="BTR">
+                            <Card :padding="5">
+                              <Icon type="ios-link" size="50" />
+                            </Card>
+                          </Badge>
+                        </a>
+                      </Col>
+                      <Col v-if="getContentField(l.content).videoLink">
+                        <a :href="getContentField(l.content).videoLink" target="_new">
+                          <Badge text="Video Link">
+                            <Card :padding="5">
+                              <Icon type="ios-videocam" size="50" />
+                            </Card>
+                          </Badge>
+                        </a>
+                      </Col>
+                      <Col v-if="getContentField(l.content).moss">
+                        <Badge text="Moss File">
+                          <Card :padding="5">
+                            <Icon type="md-download" size="50" />
+                          </Card>
+                        </Badge>
+                      </Col>
+                    </Row>
                   </div>
                   <!-- 申诉:any E -->
 
@@ -1363,6 +1391,30 @@ export default new Application({
     this.loadData();
   },
   methods: {
+    async loadData() {
+      this.$Loading.start();
+
+      // set Token Http mode
+      this.http = http_token.call(this);
+
+      this.timeline.seeType = this.getSeeType();
+
+      await util.initUtil().then(res => {
+        this.cheaterStatus = res.cheaterStatus;
+
+        // 裁决结果
+        this.cheatMethodsGlossary = res.cheatMethodsGlossary;
+
+        // 裁决作弊类型
+        this.verify.choice = res.action;
+        this.verify.status = this.verify.choice[0].value;
+      });
+
+      await this.getPlayerInfo()
+      await this.getTimeline()
+
+      this.$Loading.finish();
+    },
     /**
      * 左侧申诉面板开关
      */
@@ -1371,6 +1423,11 @@ export default new Application({
 
       account_storage.updateConfiguration("detailLeftAppealPanel", this.appeal.disable);
     },
+    /**
+     * 打开申诉窗口
+     * @param commentId
+     * @returns {Promise<void>}
+     */
     async openAppealDealModal(commentId) {
       // 调用API获取申诉数据
       const data = await this.getCommentData(commentId);
@@ -1387,14 +1444,16 @@ export default new Application({
       // 打开模态框
       this.appealdealModal = true;
     },
-
+    /**
+     * 获取聊天数据
+     * @param commentid
+     * @returns {Promise<null>}
+     */
     async getCommentData(commentid) {
       // 发起请求
       let commentData = null;  // 用于保存获取到的数据
       await this.http.get(api["admin_commentItem"], {
-        params: {
-          id: commentid
-        }
+        params: { id: commentid }
       }).then(res => {
         const d = res.data;
         if (d.success === 1) {
@@ -1422,15 +1481,16 @@ export default new Application({
         // 请求结束后的处理
         // 如果有加载动画，此时应该隐藏
         this.loading = false;
-        // 如果有UI元素在请求期间被禁用，此时应该解除禁用
-        this.isButtonDisabled = false;
       });
 
       return commentData;  // 返回获取到的数据
     },
+    /**
+     * 管理员修改申诉状态
+     * @returns {Promise<void>}
+     */
     async admindealAppeal() {
       try {
-        console.log(this.appealdeal.commentid)
         const response = await this.http.post(api["admin_setAppeal"], {
           data: {
             id: this.appealdeal.id,
@@ -1450,30 +1510,6 @@ export default new Application({
       } catch (error) {
         this.$Message.error(error.code);
       }
-    },
-    async loadData() {
-      this.$Loading.start();
-
-      // set Token Http mode
-      this.http = http_token.call(this);
-
-      this.timeline.seeType = this.getSeeType();
-
-      await util.initUtil().then(res => {
-        this.cheaterStatus = res.cheaterStatus;
-
-        // 裁决结果
-        this.cheatMethodsGlossary = res.cheatMethodsGlossary;
-
-        // 裁决作弊类型
-        this.verify.choice = res.action;
-        this.verify.status = this.verify.choice[0].value;
-      });
-
-      await this.getPlayerInfo()
-      await this.getTimeline()
-
-      this.$Loading.finish();
     },
     /**
      * 时间轴分页事件
