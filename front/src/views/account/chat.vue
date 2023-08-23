@@ -18,22 +18,30 @@
               <template>
                 <div v-for="(i, index) in messageUser" :key="index">
                   <Row :gutter="10"
-                       :style="`font-weight: ${ selectWindow == i.value ? 'bold' : '' }`"
                        type="flex" justify="center" align="middle"
                        class="message-user-item">
                     <Col>
-                      <Badge :count="messageList[i.type]['num'] || 0" v-if="messageList[i.type]">
+                      <Badge :count="messageList[i.type]['num'] || 0" v-if="messageList[i.type] && messageList[i.type]['num'] > 1">
                         <Avatar icon="md-notifications"></Avatar>
                       </Badge>
                       <Avatar icon="md-notifications" v-else> {{ i.text[0] }}</Avatar>
                     </Col>
                     <Col flex="1">
-                      <businessCard :id="i.id">
+                      <template v-if="i.type == 'reply'">
+                        <businessCard :id="i.id">
+                          <p><b>{{ i.text.toString() }}</b></p>
+                        </businessCard>
+                      </template>
+                      <template v-else>
                         <p><b>{{ i.text.toString() }}</b></p>
-                      </businessCard>
+                      </template>
                     </Col>
                     <Col>
-                      <a @click="openMessageDetail(i)" v-voice-button>{{ $t('profile.chat.look') }}</a>
+                      <a @click="openMessageDetail(i)" v-voice-button>
+                        {{ $t('profile.chat.look') }}
+                        <Icon type="ios-arrow-dropright" v-if="selectWindow != i.value"/>
+                        <Icon type="md-arrow-dropright-circle" v-else/>
+                      </a>
                     </Col>
                   </Row>
                 </div>
@@ -198,7 +206,7 @@ export default new Application({
       this.message.type = this.message.list[0].title;
 
       if (this.messageUser.length > 0) {
-        this.selectWindow = this.messageUser[0].value;
+        this.selectWindow = this.messageUser[0].id;
       }
     },
     /**
@@ -362,11 +370,19 @@ export default new Application({
                 break;
             }
 
-            let val = i.type == 'warn' ? i.type : i.byUserId;
+            let val = i.byUserId;
+
+            switch (i.type) {
+              case 'fatal':
+              case 'warn':
+                val = i.type;
+                break;
+            }
+
             if (!messageList[val]) {
               messageList[val] = {child: [], num: 0}
             }
-            messageList[val].child.push(Object.assign(i,{
+            messageList[val].child.push(Object.assign(i, {
               time: i.createTime,
               content: `<p>${i.content}</p>`,
               choose: false,
@@ -375,8 +391,9 @@ export default new Application({
             messageList[val].num = messageList[val].child.length || 0;
           });
 
+          console.log(messageList, messageUser);
           this.messageList = messageList;
-          this.messageUser = messageUser;
+          this.messageUser = messageUser.sort((a, b) => a.value > b.value);
         }
       }).finally(() => {
         this.messageLoad = false;

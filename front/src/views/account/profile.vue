@@ -75,6 +75,7 @@
         </Col>
       </Row>
     </Card>
+    <br>
   </div>
 </template>
 
