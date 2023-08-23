@@ -144,6 +144,7 @@
       "root": "系统",
       "super": "超级管理员",
       "freezed": "冻结用户",
+      "volunteer": "社区志愿者",
       "test": "测试账户"
     },
     "status": {
