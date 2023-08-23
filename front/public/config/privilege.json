@@ -17,6 +17,11 @@
       "weight": 85
     },
     {
+      "value": "volunteer",
+      "class": "blue",
+      "weight": 5
+    },
+    {
       "value": "normal",
       "class": "success",
       "weight": 5
