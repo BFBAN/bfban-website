@@ -9,11 +9,7 @@
 
     <!-- 小窗口申诉 S -->
     <Modal v-model="appeal.show"
-           width="80%"
-           :loading="appeal.load"
-           @on-ok="handleAppeal">
-      <Button @click="handleAppeal">12</Button>
-
+           width="80%">
       <Row :gutter="30">
         <Col :xl="{span: 12}" :lg="{span: 12}">
           <h2> {{ $t('detail.appeal.modal.modalTitle') }} </h2>
@@ -97,108 +93,103 @@
             </FormItem>
           </Form>
 
-          <div v-if="appeal.type === 'moss'">
-            <Col flex="1">
-              <Form ref="detailAppealForm_moss" :model="appeal.fromData" :rules="formRules.moss" label-position="top">
-                <Row :gutter="30">
-                  <Col flex="1">
-                    <!-- 第一人称录屏 -->
-                    <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')" prop="videoLink">
-                      <Input v-model="appeal.fromData.videoLink"
-                             :placeholder="$t('detail.appeal.placeholder.videolink')"/>
-                    </FormItem>
+          <Form v-if="appeal.type === 'moss'"
+                ref="detailAppealForm_moss"
+                :model="appeal.fromData"
+                label-position="top">
+            <Row :gutter="30">
+              <Col flex="1">
+                <!-- 第一人称录屏 -->
+                <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')"
+                          :rules="{required: true, trigger: 'blur'}"
+                          :prop="'videoLink'">
+                  <Input v-model="appeal.fromData.videoLink"
+                         :placeholder="$t('detail.appeal.placeholder.videolink')"/>
+                </FormItem>
 
-                    <!-- BTR链接 -->
-                    <FormItem :label="$t('detail.appeal.deal.btrLink')" prop="btrLink">
-                      <Input v-model="appeal.fromData.btrLink"
-                             :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
-                    </FormItem>
-                  </Col>
-                  <Col flex="1">
-                    <!-- MOSS上传按钮 -->
-                    <FormItem :label="$t('detail.appeal.deal.mossUpload')">
-                      <Upload multiple
-                              type="drag"
-                              action=""
-                              accept="application/*"
-                              :before-upload="handleFileMossUpload">
-                        <div style="padding: 20px 0" :class="appeal.stateStyle">
-                          <Icon type="md-document" size="52"></Icon>
-                          {{ appeal.fromData.selectedFile }}
-                        </div>
-                      </Upload>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row>
-                  <!-- 玩家的申诉内容 -->
-                  <Col flex="1">
-                    <FormItem :label="$t('detail.appeal.info.content')" prop="content">
-                      <Card dis-hover :padding="0">
-                            <Textarea :value="appeal.fromData.content"
-                                      ref="textareaAppealContent"
-                                      :toolbar="['bold', 'link']"
-                                      :height="'420px'"
-                                      :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
-                      </Card>
-                    </FormItem>
-                  </Col>
-                </Row>
-              </Form>
-            </Col>
-          </div>
-          <div v-show="appeal.type === 'farm'">
-            <Col flex="1">
-              <Form ref="detailAppealForm_farm" :model="appeal" :rules="formRules.farm">
-                <Row :gutter="30">
-                  <Col flex="1">
-                    <!-- BTR链接 -->
-                    <FormItem :label="$t('detail.appeal.deal.btrLink')" prop="btrLink">
-                      <Input type="textarea" :rows="3" :maxlength="65535" v-model="appeal.btrLink"
-                             :placeholder="$t('detail.appeal.placeholder.btrlink')"></Input>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row :gutter="30">
-                  <Col flex="1">
-                    <!-- 玩家的申诉内容 -->
-                    <FormItem :label="$t('detail.appeal.info.content')" prop="content">
-                      <br>
-                      <Card dis-hover :padding="0">
-                            <Textarea :value="appeal.content"
-                                      ref="textareaAppealContent"
-                                      :toolbar="['bold', 'link']"
-                                      :height="'200px'"
-                                      :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
-                      </Card>
-                    </FormItem>
-                  </Col>
-                </Row>
-              </Form>
-            </Col>
-          </div>
-          <div v-show="appeal.type === 'none'">
-            <Col>
-              <Form ref="detailAppealForm_none" :model="appeal" :rules="formRules.none">
-                <Row :gutter="30">
-                  <Col flex="1">
-                    <!-- 玩家的申诉内容 -->
-                    <FormItem :label="$t('detail.appeal.info.content')" prop="content">
-                      <Card dis-hover :padding="0">
-                            <Textarea :value="appeal.content"
-                                      ref="textareaAppealContent"
-                                      :toolbar="['bold', 'link']"
-                                      :height="'400px'"
-                                      :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
-                      </Card>
-                    </FormItem>
-                  </Col>
-                </Row>
-              </Form>
-            </Col>
-          </div>
+                <!-- BTR链接 -->
+                <FormItem :label="$t('detail.appeal.deal.btrLink')"
+                          :rules="{required: true, trigger: 'blur'}"
+                          :prop="'btrLink'">
+                  <Input v-model="appeal.fromData.btrLink"
+                         :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
+                </FormItem>
+              </Col>
+              <Col flex="1">
+                <!-- MOSS上传按钮 -->
+                <FormItem :label="$t('detail.appeal.deal.userGeneratedMossFile')"
+                          :rules="{required: true, trigger: 'blur'}"
+                          :prop="'selectedFile'">
+                  <Upload multiple
+                          type="drag"
+                          action=""
+                          accept="application/*"
+                          :before-upload="handleFileMossUpload">
+                    <div style="padding: 20px 0" :class="appeal.stateStyle">
+                      <Icon type="md-document" size="52"></Icon>
+                      {{ appeal.fromData.selectedFile }}
+                    </div>
+                  </Upload>
+                </FormItem>
+              </Col>
+            </Row>
+
+            <!-- 玩家的申诉内容 -->
+            <FormItem :label="$t('detail.appeal.info.content')"
+                      :rules="{required: true, min: 10, trigger: 'change'}"
+                      :prop="'content'">
+              <Card dis-hover :padding="0">
+                <Textarea v-model="appeal.fromData.content"
+                          ref="farm_textareaAppealContent"
+                          :toolbar="['bold', 'link']"
+                          :height="'420px'"
+                          :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
+              </Card>
+            </FormItem>
+          </Form>
+          <Form v-if="appeal.type === 'farm'" ref="detailAppealForm_farm">
+            <!-- BTR链接 -->
+            <FormItem :label="$t('detail.appeal.deal.btrLink')"
+                      :rules="{required: true, trigger: 'blur'}"
+                      :prop="'btrLink'">
+              <Input v-model="appeal.fromData.btrLink"
+                     :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
+            </FormItem>
+
+            <!-- 玩家的申诉内容 -->
+            <FormItem :label="$t('detail.appeal.info.content')"
+                      :rules="{required: true, min: 10, trigger: 'change'}"
+                      :prop="'content'">
+              <Card dis-hover :padding="0">
+                <Textarea v-model="appeal.fromData.content"
+                          ref="farm_textareaAppealContent"
+                          :toolbar="['bold', 'link']"
+                          :height="'420px'"
+                          :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
+              </Card>
+            </FormItem>
+          </Form>
+          <Form v-if="appeal.type === 'none'" ref="detailAppealForm_none">
+            <!-- 玩家的申诉内容 -->
+            <FormItem :label="$t('detail.appeal.info.content')"
+                      :rules="{required: true, min: 10, trigger: 'change'}"
+                      :prop="'content'">
+              <Card dis-hover :padding="0">
+                <Textarea v-model="appeal.fromData.content"
+                          ref="none_textareaAppealContent"
+                          :toolbar="['bold', 'link']"
+                          :height="'420px'"
+                          :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
+              </Card>
+            </FormItem>
+          </Form>
+
         </Col>
       </Row>
+
+      <div slot="footer">
+        <Button size="large" :loading="appeal.load" @click="handleAppeal">{{ $t('basic.button.commit') }}</Button>
+      </div>
     </Modal>
     <!-- 小窗口申诉 E -->
   </div>
@@ -208,16 +199,10 @@
 import {api, http_token, message, moss, upload} from "@/assets/js";
 
 import Application from "@/assets/js/application";
-import PrivilegesTag from "@/components/PrivilegesTag";
 import Empty from "@/components/Empty.vue";
 import Textarea from "@/components/Textarea.vue";
-import BusinessCard from "@/components/businessCard.vue";
-import RecordLink from "@/components/RecordLink.vue";
 import Captcha from "@/components/Captcha.vue";
 import Html from "@/components/Html.vue";
-import HtmlWidget from "@/components/HtmlWidget.vue";
-import FastReply from "@/components/FastReply.vue";
-import htmllink from "@/components/HtmlLink.vue";
 
 export default new Application({
   props: {
@@ -239,35 +224,6 @@ export default new Application({
           'value': 'none',
         }
       ],
-      formRules: {
-        moss: {
-          videoLink: [
-            {required: true, trigger: 'blur'},
-            {type: 'string', max: 255, trigger: 'blur'},
-          ],
-          btrLink: [
-            {request: true, trigger: 'blur'},
-            {type: 'string', trigger: 'blur'},
-          ],
-          content: [
-            {request: true, trigger: 'blur'},
-            {type: 'string', min: 10, trigger: 'blur'}
-          ]
-        },
-        farm: {
-          // btrLink: [
-          //   {request: true, trigger: 'blur'},
-          //   {type: 'string', min: 1, max: 255, trigger: 'blur'}
-          // ],
-          // content: [
-          //   {request: true, trigger: 'blur'},
-          //   {type: 'string', min: 10, trigger: 'blur'}
-          // ]
-        },
-        none: {
-          // content: [{request: true, trigger: 'blur'}]
-        }
-      },
       appeal: {
         load: false,
         show: true,
@@ -277,7 +233,7 @@ export default new Application({
           content: '',
           selectedFile: null,
         },
-        // disable: this.$store.state.configuration.detailLeftAppealPanel ?? false,
+        disable: this.$store.state.configuration.detailLeftAppealPanel ?? false,
         stateStyle: '',
         toPlayerId: 0,
         type: 'moss',
@@ -289,14 +245,8 @@ export default new Application({
   components: {
     Empty,
     Textarea,
-    BusinessCard,
-    RecordLink,
     Captcha,
     Html,
-    HtmlWidget,
-    PrivilegesTag,
-    FastReply,
-    htmllink
   },
   watch: {
     '$route': 'loadData',
@@ -306,82 +256,9 @@ export default new Application({
     this.loadData();
   },
   methods: {
-
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.$Message.success('Success!');
-        } else {
-          this.$Message.error('Fail!');
-        }
-      })
-    },
-
     async loadData() {
       // set Token Http mode
       this.http = http_token.call(this);
-    },
-    async getCommentData(commentid) {
-      // 发起请求
-      let commentData = null;  // 用于保存获取到的数据
-      await this.http.get(api["admin_commentItem"], {
-        params: {
-          id: commentid
-        }
-      }).then(res => {
-        const d = res.data;
-        if (d.success === 1) {
-          // 请求成功，处理返回的数据
-          commentData = {
-            id: d.data.id,
-            byUsername: d.data.username,
-            action: null,
-            dbid: d.data.toPlayerId,
-            type: d.data.appealType,
-            mossFileName: d.data.mossFileName,
-            content: d.data.fromData.content,
-            firstPersonRecording: d.data.fromData.videoLink,
-            btrLink: d.data.fromData.btrLink
-          };
-        } else {
-          switch (d.code) {
-            case "commentItem.bad":
-            case "commentItem.notFound":
-              this.$Message.info(this.$t('basic.tip.notFound'));
-              break;
-          }
-        }
-      }).finally(() => {
-        // 请求结束后的处理
-        // 如果有加载动画，此时应该隐藏
-        this.loading = false;
-        // 如果有UI元素在请求期间被禁用，此时应该解除禁用
-        this.isButtonDisabled = false;
-      });
-
-      return commentData;  // 返回获取到的数据
-    },
-    async admindealAppeal() {
-      try {
-        const response = await this.http.post(api["admin_setAppeal"], {
-          data: {
-            id: this.appealdeal.id,
-            content: this.appealdeal.admincontent, // 管理回复内容
-            action: this.appealdeal.action // 对申诉的操作
-          },
-        });
-
-        const d = response.data;
-
-        if (d.success === 1) {
-          this.$Message.success({content: d.message || d.code, duration: 3});
-          return;
-        }
-
-        this.$Message.error({content: d.message || d.code, duration: 3});
-      } catch (error) {
-        this.$Message.error(error.code);
-      }
     },
     /**
      * 选择Moss文件
@@ -418,14 +295,12 @@ export default new Application({
     handleAppeal() {
       try {
         const type = this.appeal.type;
-        const content = this.appeal.content || this.$refs.textareaAppealContent.editorContent;
+        const content = this.appeal.content || this.$refs[`${type}_textareaAppealContent`].editorContent;
 
-        // if (!content) return;
         this.appeal.load = true;
 
         // 验证表单
-        this.$refs[`detailAppealForm_${type}`].validate((valid) => {
-          console.log(valid);
+        this.$refs[`detailAppealForm_${type}`].validate(async (valid) => {
           if (valid) {
             let postData = {
               data: {
@@ -478,16 +353,14 @@ export default new Application({
             }
 
             // Then, submit the appeal
-            // const res = await this.http.post(api["player_banAppeal"], postData);
-            // const d = res.data;
-            //
-            // if (d.success === 1) {
-            //   this.$Message.success(d.message);
-            // } else {
-            //   this.$Message.error(d.message || d.code);
-            // }
-          } else {
-            this.$Message.error('Fail!');
+            const res = await this.http.post(api["player_banAppeal"], postData);
+            const d = res.data;
+
+            if (d.success === 1) {
+              this.$Message.success(d.message);
+            } else {
+              this.$Message.error(d.message || d.code);
+            }
           }
         })
 
@@ -501,19 +374,6 @@ export default new Application({
 
       return false;
     },
-    convertToPlainText(html) {
-      const div = document.createElement('div');
-      div.innerHTML = html;
-      return div.textContent;
-    },
-    getContentField(jsonString) {
-      try {
-        let obj = JSON.parse(jsonString);
-        return obj;
-      } catch (e) {
-        return jsonString; // 返回原始字符串或处理错误
-      }
-    }
   },
 })
 </script>
