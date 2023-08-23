@@ -265,7 +265,7 @@
       "deal": {
         "firstPersonRecording": "第一人称录屏链接",
         "mossDownloadUrl": "MOSS下载",
-        "mossUpload": "上传moss",
+        "userGeneratedMossFile": "moss文件 (.zip)",
         "btrLink": "BTR链接",
         "appealContent": "玩家申诉内容",
         "admincontent": "管理回复内容",
