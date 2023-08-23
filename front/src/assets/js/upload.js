@@ -170,6 +170,7 @@ export default class Upload extends (Print, Conf) {
                     }
                     resolve({
                       code: 1,
+                      filename: res.data.name,
                       url:  `${this.location()}service/file?filename=${res.data.name}`
                     })
                 })
