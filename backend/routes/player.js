@@ -1039,7 +1039,6 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege([]), forbidPrivileges
                         appealType: req.body.data.appealType,
                         btrLink: req.body.data.btrLink,
                         mossFileName: req.body.data.mossFileName,
-                        videoLink: req.body.data.videoLink,
                         content: handleRichTextInput(req.body.data.content)
                     };
                     break;
@@ -1063,6 +1062,7 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege([]), forbidPrivileges
                 toOriginUserId: player.originUserId,
                 toOriginPersonaId: player.originPersonaId,
                 byUserId: req.user.id,
+                videoLink: req.body.data.videoLink,
                 content: JSON.stringify(contentObject),   // Convert the content object to a string here
                 viewedAdmins: '[]',
                 appealStatus: 'unprocessed',

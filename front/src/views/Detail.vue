@@ -1070,7 +1070,7 @@
                   <!-- 第一人称录屏 -->
                   <Col flex="1">
                     <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
-                      <Input type="text" :value="appealdeal.firstPersonRecording" disabled/>
+                      <Input type="text" :value="appealdeal.firstPersonRecording" readonly/>
                     </FormItem>
                   </Col>
                   <!-- MOSS下载按钮 -->
@@ -1089,7 +1089,7 @@
                   <!-- BTR链接 -->
                   <Col flex="1">
                     <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                      <Input type="text" :value="appealdeal.btrLink" disabled/>
+                      <Input type="text" :value="appealdeal.btrLink" readonly/>
                     </FormItem>
                   </Col>
                 </Row>
@@ -1101,7 +1101,7 @@
                       <Card dis-hover :padding="0">
                         <Input type="textarea" :rows="4" :maxlength="65535"
                                :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}"
-                               disabled></Input>
+                               readonly></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1120,7 +1120,7 @@
                       <br>
                       <Card dis-hover :padding="0">
                         <Input type="textarea" :rows="4" :maxlength="65535" :value="appealdeal.btrLink"
-                               :style="{ width: '100%', height: '100%'}" disabled></Input>
+                               :style="{ width: '100%', height: '100%'}" readonly></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1131,7 +1131,7 @@
                       <Card dis-hover :padding="0">
                         <Input type="textarea" :rows="4" :maxlength="65535"
                                :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}"
-                               disabled></Input>
+                               readonly></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1151,7 +1151,7 @@
                       <Card dis-hover :padding="0">
                         <Input type="textarea" :rows="4" :maxlength="65535"
                                :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}"
-                               disabled></Input>
+                               readonly></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1199,7 +1199,7 @@
             <h3> {{ $t('detail.appeal.modal.describe') }} </h3>
             <br>
             <Row :gutter="60" style="padding: 0 30px">
-              <Col flex="1">
+              <Col :xl="{span: 12}" :lg="{span: 12}">
                 <ul>
                   <li>
                     <h3>
@@ -1244,7 +1244,7 @@
             </Row>
             <br>
           </Col>
-          <Col flex="1">
+          <Col :xl="{span: 12}" :lg="{span: 12}">
             <Form>
               <Row :gutter="30">
                 <Col flex="1">
@@ -1277,13 +1277,13 @@
               </Col>
               <div v-if="appeal.type === 'moss'">
                 <Col flex="1">
-                  <Form label-position="top">
+                  <Form label-position="top" :rules="ruleValidate" v-model="isFormValid" ref="mossAppealForm">
                     <Row :gutter="30">
                       <!-- 第一人称录屏 -->
                       <Col flex="1">
-                        <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
+                        <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')" prop="videoLink">
                           <Input type="text" v-model="appeal.videoLink"
-                                 :placeholder="$t('detail.appeal.placeholder.videolink')"/>
+                                :placeholder="$t('detail.appeal.placeholder.videolink')"/>
                         </FormItem>
                       </Col>
                       <!-- MOSS上传按钮 -->
@@ -1304,7 +1304,7 @@
                     <Row>
                       <!-- BTR链接 -->
                       <Col flex="1">
-                        <FormItem :label="$t('detail.appeal.deal.btrLink')">
+                        <FormItem :label="$t('detail.appeal.deal.btrLink')" prop="btrLink">
                           <Input type="text" v-model="appeal.btrLink"
                                  :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
                         </FormItem>
@@ -1329,64 +1329,70 @@
                 </Col>
               </div>
               <div v-else-if="appeal.type === 'farm'">
-                <Col flex="1">
-                  <Form>
-                    <Row :gutter="30">
-                      <Col flex="1">
-                        <!-- BTR链接 -->
-                        <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                          <br>
-                          <Card dis-hover :padding="0">
-                            <Input type="textarea" :rows="4" :maxlength="65535" v-model="appeal.btrLink"
-                                   :style="{ width: '100%', height: '100%'}"></Input>
-                          </Card>
-                        </FormItem>
-                      </Col>
-                    </Row>
-                  </Form>
-                  <Form>
-                    <Row :gutter="30">
-                      <Col flex="1">
-                        <!-- 玩家的申诉内容 -->
-                        <FormItem :label="$t('detail.appeal.info.content')">
-                          <br>
-                          <Card dis-hover :padding="0">
-                            <Textarea value="appeal.content"
-                                      ref="textareaAppealContent"
-                                      :toolbar="['bold', 'link']"
-                                      :height="'200px'"
-                                      :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
-                          </Card>
-                        </FormItem>
-                      </Col>
-                    </Row>
-                  </Form>
-                </Col>
+                <Row>
+                  <Col flex="1">
+                    <Form>
+                      <Row :gutter="30">
+                        <Col flex="1">
+                          <!-- BTR链接 -->
+                          <FormItem :label="$t('detail.appeal.deal.btrLink')">
+                            <br>
+                            <Card dis-hover :padding="0">
+                              <Input type="textarea" :rows="4" :maxlength="65535" v-model="appeal.btrLink"
+                                    :style="{ width: '100%', height: '100%'}"></Input>
+                            </Card>
+                          </FormItem>
+                        </Col>
+                      </Row>
+                      <Row :gutter="30">
+                        <Col flex="1">
+                          <!-- 玩家的申诉内容 -->
+                          <FormItem :label="$t('detail.appeal.info.content')">
+                            <br>
+                            <Card dis-hover :padding="0">
+                              <Textarea value="appeal.content"
+                                        ref="textareaAppealContent"
+                                        :toolbar="['bold', 'link']"
+                                        :height="'200px'"
+                                        :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
+                            </Card>
+                          </FormItem>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Col>
+                </Row>
               </div>
               <div v-else-if="appeal.type === 'none'">
-                <Col>
-                  <Form>
-                    <Row :gutter="30">
-                      <Col flex="1">
-                        <!-- 玩家的申诉内容 -->
-                        <FormItem :label="$t('detail.appeal.info.content')">
-                          <br>
-                          <Card dis-hover :padding="0">
-                            <Textarea value="appeal.content"
-                                      ref="textareaAppealContent"
-                                      :toolbar="['bold', 'link']"
-                                      :height="'400px'"
-                                      :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
-                          </Card>
-                        </FormItem>
-                      </Col>
-                    </Row>
-                  </Form>
-                </Col>
+                <Row>
+                  <Col flex="1">
+                    <Form>
+                      <Row :gutter="30">
+                        <Col flex="1">
+                          <!-- 玩家的申诉内容 -->
+                          <FormItem :label="$t('detail.appeal.info.content')">
+                            <br>
+                            <Card dis-hover :padding="0">
+                              <Textarea value="appeal.content"
+                                        ref="textareaAppealContent"
+                                        :toolbar="['bold', 'link']"
+                                        :height="'400px'"
+                                        :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
+                            </Card>
+                          </FormItem>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Col>
+                </Row>
               </div>
             </Form>
           </Col>
         </Row>
+        <template #footer>
+          <Button type="primary" @click="handleAppeal" :disabled="isButtonDisabled">{{ $t('basic.button.commit') }}</Button>
+          <Button @click="appeal.show = false">{{ $t('basic.button.cancel') }}</Button>
+        </template>
       </Modal>
       <!-- 小窗口申诉 E -->
 
@@ -1446,6 +1452,15 @@ import {formatTextarea, waitForAction} from "@/mixins/common";
 export default new Application({
   data() {
     return {
+      ruleValidate: {
+        btrLink: [
+          { required: true, trigger: 'blur', validator: this.validateURL }
+        ],
+        videoLink: [
+          { required: true, trigger: 'blur', validator: this.validateURL }
+        ],
+      },
+      isFormValid: false,
       util,
       mute: {
         value: 0,
@@ -1465,7 +1480,7 @@ export default new Application({
         stateStyle: '',
         toPlayerId: 0,
         type: '',
-        VideoLink: '',
+        videoLink: '',
         mossFileName: '',
         selectedFile: null,
         btrLink: '',
@@ -1473,7 +1488,7 @@ export default new Application({
       },
       appealdeal: {
         type: '',
-        VideoLink: '',
+        videoLink: '',
         mossFileName: '',
         btrLink: '',
         action: ''
@@ -2163,7 +2178,6 @@ export default new Application({
       moss.verifyFileIsMoss(file).then(res => {
         if (res.code == 0) {
           // TO DO 在这里添加上传
-          // await upload.on(file);
           that.appeal.stateStyle = 'ivu-alert-success';
           that.$Message.success(res.message);
           console.log(res);
@@ -2200,7 +2214,7 @@ export default new Application({
       };
       if (type === 'moss') {
         Object.assign(postData.data.data, {
-          videoLink: this.appeal.VideoLink,
+          videoLink: this.appeal.videoLink,
           btrLink: this.appeal.btrLink
         });
       } else if (type === 'farm') {
@@ -2246,8 +2260,10 @@ export default new Application({
         }
       } catch (error) {
         this.$Message.error(error.message || error.code);
+        this.appeal.show = false;
       } finally {
         this.appeal.load = false;
+        this.appeal.show = false;
         message.playSendVoice();
         this.getTimeline();
       }
@@ -2458,7 +2474,11 @@ export default new Application({
       } catch (e) {
         return jsonString; // 返回原始字符串或处理错误
       }
-    }
+    },
+    validateURL() {
+      const pattern = new RegExp('^(https?:\\/\\/)?([\\w.-]+)([\\/:\\w.?-]*)?$','i');
+      return pattern.test(this.appeal.videoLink);
+    },
   },
   computed: {
     isOnlySuper() {
@@ -2470,6 +2490,12 @@ export default new Application({
       const {userinfo} = this.$store.state.user || {}
       const {privilege = []} = userinfo
       return privilege.includes('super') || privilege.includes('root') || privilege.includes('dev')
+    },
+    isButtonDisabled() {
+      if (this.appeal.type === 'none' || this.appeal.type === 'farm') {
+        return false; // 不禁用按钮
+      }
+      return this.isFormValid;  // 对于其他类型，使用isFormValid的反值
     }
   }
 })
