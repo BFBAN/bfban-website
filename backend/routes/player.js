@@ -942,7 +942,7 @@ async (req, res, next) => {
             return res.status(404).json({error: 1, code: 'judgement.notFound', message: 'no such player.'});
         const correspondingRecord = await db.count({num: 1})
             .from('comments')
-            .where({toPlayerId: player.id, type: 'banAppeal', appealStatus: 'lock'})
+            .where({toPlayerId: player.id, type: 'banAppeal'})
             .first().then(r => r.num);
         // Check if there are locked appeals that will be blocked here
         if (correspondingRecord >= 1) {
@@ -1017,9 +1017,6 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege([]), forbidPrivileges
                 toPlayerId: req.body.data.toPlayerId,
                 type: 'banAppeal'
             }).orderBy('createTime', 'desc').first();
-            if (prev && prev.appealStatus === 'lock')
-                return res.status(403).json({error: 1, code: 'banAppeal.locked', message: 'this thread is locked'});
-            
             let contentObject = {};
 
             switch (req.body.data.appealType) {
@@ -1039,7 +1036,6 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege([]), forbidPrivileges
                         appealType: req.body.data.appealType,
                         btrLink: req.body.data.btrLink,
                         mossFileName: req.body.data.mossFileName,
-                        videoLink: req.body.data.videoLink,
                         content: handleRichTextInput(req.body.data.content)
                     };
                     break;
@@ -1063,9 +1059,9 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege([]), forbidPrivileges
                 toOriginUserId: player.originUserId,
                 toOriginPersonaId: player.originPersonaId,
                 byUserId: req.user.id,
+                videoLink: req.body.data.videoLink,
                 content: JSON.stringify(contentObject),   // Convert the content object to a string here
                 viewedAdmins: '[]',
-                appealStatus: 'unprocessed',
                 valid: 1,
                 createTime: new Date()
             };
@@ -1101,13 +1097,9 @@ async (req, res, next) => {
         const viewedAdmins = new Set(banAppeal.viewedAdmins);
         viewedAdmins.add(req.user.id);
 
-        if (req.body.data.status)
-            banAppeal.appealStatus = req.body.data.status;
-
         banAppeal.viewedAdmins = JSON.stringify(Array.from(viewedAdmins).slice(0, config.personsToReview + 1));
         await db('comments').update({
             viewedAdmins: banAppeal.viewedAdmins,
-            appealStatus: banAppeal.appealStatus,
         }).where({id: banAppeal.id});
         banAppeal.viewedAdmins = Array.from(viewedAdmins).slice(0, config.personsToReview + 1);
 

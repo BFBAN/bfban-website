@@ -538,10 +538,6 @@
 
                         <Col>
                           <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
-                          <Divider type="vertical"/>
-                          <Tag type="border" color="primary">
-                            {{ $t('detail.appeal.deal.stats.' + (l.appealStatus ? l.appealStatus : 'unprocessed')) }}
-                          </Tag>
                         </Col>
                       </Row>
                     </div>
@@ -1093,7 +1089,7 @@
                   <!-- 第一人称录屏 -->
                   <Col flex="1">
                     <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
-                      <Input type="text" :value="appealdeal.firstPersonRecording" disabled/>
+                      <Input type="text" :value="appealdeal.firstPersonRecording" readonly/>
                     </FormItem>
                   </Col>
                   <!-- MOSS下载按钮 -->
@@ -1112,7 +1108,7 @@
                   <!-- BTR链接 -->
                   <Col flex="1">
                     <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                      <Input type="text" :value="appealdeal.btrLink" disabled/>
+                      <Input type="text" :value="appealdeal.btrLink" readonly/>
                     </FormItem>
                   </Col>
                 </Row>
@@ -1124,7 +1120,7 @@
                       <Card dis-hover :padding="0">
                         <Input type="textarea" :rows="4" :maxlength="65535"
                                :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}"
-                               disabled></Input>
+                               readonly></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1143,7 +1139,7 @@
                       <br>
                       <Card dis-hover :padding="0">
                         <Input type="textarea" :rows="4" :maxlength="65535" :value="appealdeal.btrLink"
-                               :style="{ width: '100%', height: '100%'}" disabled></Input>
+                               :style="{ width: '100%', height: '100%'}" readonly></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1154,7 +1150,7 @@
                       <Card dis-hover :padding="0">
                         <Input type="textarea" :rows="4" :maxlength="65535"
                                :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}"
-                               disabled></Input>
+                               readonly></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1174,7 +1170,7 @@
                       <Card dis-hover :padding="0">
                         <Input type="textarea" :rows="4" :maxlength="65535"
                                :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}"
-                               disabled></Input>
+                               readonly></Input>
                       </Card>
                     </FormItem>
                   </Col>
@@ -1267,6 +1263,15 @@ import {formatTextarea, waitForAction} from "@/mixins/common";
 export default new Application({
   data() {
     return {
+      ruleValidate: {
+        btrLink: [
+          { required: true, trigger: 'blur', validator: this.validateURL }
+        ],
+        videoLink: [
+          { required: true, trigger: 'blur', validator: this.validateURL }
+        ],
+      },
+      isFormValid: false,
       util,
       mute: {
         value: 0,
@@ -1284,7 +1289,7 @@ export default new Application({
       },
       appealdeal: {
         type: '',
-        VideoLink: '',
+        videoLink: '',
         mossFileName: '',
         btrLink: '',
         action: ''
@@ -1992,7 +1997,6 @@ export default new Application({
       moss.verifyFileIsMoss(file).then(res => {
         if (res.code == 0) {
           // TO DO 在这里添加上传
-          // await upload.on(file);
           that.appeal.stateStyle = 'ivu-alert-success';
           that.$Message.success(res.message);
           console.log(res);
@@ -2029,7 +2033,7 @@ export default new Application({
       };
       if (type === 'moss') {
         Object.assign(postData.data.data, {
-          videoLink: this.appeal.VideoLink,
+          videoLink: this.appeal.videoLink,
           btrLink: this.appeal.btrLink
         });
       } else if (type === 'farm') {
@@ -2075,8 +2079,10 @@ export default new Application({
         }
       } catch (error) {
         this.$Message.error(error.message || error.code);
+        this.appeal.show = false;
       } finally {
         this.appeal.load = false;
+        this.appeal.show = false;
         message.playSendVoice();
         this.getTimeline();
       }
