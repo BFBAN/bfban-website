@@ -538,10 +538,6 @@
 
                         <Col>
                           <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
-                          <Divider type="vertical"/>
-                          <Tag type="border" color="primary">
-                            {{ $t('detail.appeal.deal.stats.' + (l.appealStatus ? l.appealStatus : 'unprocessed')) }}
-                          </Tag>
                         </Col>
                       </Row>
                     </div>
@@ -2290,11 +2286,7 @@ export default new Application({
       } catch (e) {
         return jsonString; // 返回原始字符串或处理错误
       }
-    },
-    validateURL() {
-      const pattern = new RegExp('^(https?:\\/\\/)?([\\w.-]+)([\\/:\\w.?-]*)?$','i');
-      return pattern.test(this.appeal.videoLink);
-    },
+    }
   },
   computed: {
     isOnlySuper() {
@@ -2306,12 +2298,6 @@ export default new Application({
       const {userinfo} = this.$store.state.user || {}
       const {privilege = []} = userinfo
       return privilege.includes('super') || privilege.includes('root') || privilege.includes('dev')
-    },
-    isButtonDisabled() {
-      if (this.appeal.type === 'none' || this.appeal.type === 'farm') {
-        return false; // 不禁用按钮
-      }
-      return this.isFormValid;  // 对于其他类型，使用isFormValid的反值
     }
   }
 })
