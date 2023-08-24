@@ -367,7 +367,7 @@ router.get('/players', [
     checkquery('updateTimeFrom').optional().isInt({min: 0}),
     checkquery('createTimeTo').optional().isInt({min: 0}),
     checkquery('updateTimeTo').optional().isInt({min: 0}),
-    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8]),
+    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8, 99]),
     checkquery('sortBy').optional().isIn(['createTime', 'updateTime', 'viewNum', 'commentsNum']),
     checkquery('order').optional().isIn(['desc', 'asc']),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
@@ -390,21 +390,38 @@ async (req, res, next) => {
         const limit = req.query.limit ? req.query.limit - 0 : 20;
         const skip = req.query.skip ? req.query.skip - 0 : 0;
 
+        let whereCondition = {};
+        if (status === '99') {
+            console.log(status)
+            const appealStatus = (req.query.appealStatus && req.query.appealStatus !== '-1') ? req.query.appealStatus : '%';
+            whereCondition.appealStatus = appealStatus;
+        } else {
+            whereCondition.status = status;
+        }
+
         const result = await db.select('*').from('players')
-            .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-            .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-            .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-            .andWhere('status', 'like', status)
+            .where('games', 'like', game ? `%"${game}"%` : "%")
+            .andWhere('valid', '=', 1)
+            .andWhere('createTime', '>=', createTimeFrom)
+            .andWhere('updateTime', '>=', updateTimeFrom)
+            .andWhere('createTime', '<=', createTimeTo)
+            .andWhere('updateTime', '<=', updateTimeTo)
+            .andWhere(whereCondition)
             .orderBy(sort, order).offset(skip).limit(limit)
             .then(r => r.map(i => {
                 delete i.valid;
-                return i
+                return i;
             }));
+
         const total = await db('players').count({num: 'id'})
-            .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-            .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-            .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-            .andWhere('status', 'like', status).first().then(r => r.num);
+            .where('games', 'like', game ? `%"${game}"%` : "%")
+            .andWhere('valid', '=', 1)
+            .andWhere('createTime', '>=', createTimeFrom)
+            .andWhere('updateTime', '>=', updateTimeFrom)
+            .andWhere('createTime', '<=', createTimeTo)
+            .andWhere('updateTime', '<=', updateTimeTo)
+            .andWhere(whereCondition).first()
+            .then(r => r.num);
 
         res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
             success: 1,
