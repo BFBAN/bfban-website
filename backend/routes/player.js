@@ -993,7 +993,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege([]), forbidPrivileges(['freezed', 'blacklisted']),
+router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege(['volunteer']), forbidPrivileges(['freezed', 'blacklisted']),
     commentRateLimiter.limiter([{roles: ['admin', 'super', 'root', 'dev', 'bot'], value: 0}]), [
         checkbody('data.toPlayerId').isInt({min: 0}),
         checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
@@ -1018,6 +1018,24 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege([]), forbidPrivileges
                 type: 'banAppeal'
             }).orderBy('createTime', 'desc').first();
             let contentObject = {};
+            if (player.appealStatus == 1) {
+                if (userHasRoles(req.user, ['root', 'dev', 'super', 'admin', 'volunteer'])) {
+                    // 存在特权, 继续后面部分
+                } else {
+                    // 不存在特权, 验证cd时间
+                    if (prev) {
+                        const dbTime = new Date(prev.createTime);
+                        const currentTime = new Date();
+                        const diffHours = (currentTime - dbTime) / (1000 * 60 * 60); // convert milliseconds difference to hours
+                        if (diffHours < 24) {
+                            return res.status(404).json({error: 1, code: 'banAppeal.timeLimit', message: 'less than a day since the last appeal'});
+                        }
+                        // 大于1天, 继续后面代码
+                    } else {
+                        return res.status(400).json({error: 1, code: 'banAppeal.noPreviousAppeal', message: 'no previous appeal found'});
+                    }
+                }
+            }
 
             switch (req.body.data.appealType) {
                 case 'moss':
@@ -1068,6 +1086,7 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege([]), forbidPrivileges
             const insertId = await db('comments').insert(banAppeal).then(r => r[0]);
             banAppeal.id = insertId;
             banAppeal.viewedAdmins = [];
+            await db('players').where('id', player.id).update({ appealStatus: 1 });
 
             siteEvent.emit('action', {method: 'banAppeal', params: {banAppeal, player}});
             return res.status(201).json({success: 1, code: 'banAppeal.success', message: 'please wait.'})
