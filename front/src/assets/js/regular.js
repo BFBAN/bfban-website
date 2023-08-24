@@ -2,6 +2,9 @@ export default class Regular {
     A = 'a';
 
     REGULARTYPE = {
+        'username': {
+            v: /^[a-zA-Z0-9_-]{4,40}$/g
+        },
         'link': {
             v: /^(ftp|http|https):\/\/[^ "]+$/g
         },

@@ -223,6 +223,7 @@ export default new Application({
   background-position: calc(50% + 300px) -25px;
   background-image: url('https://bfban-app.cabbagelol.net/images/exhibition.png');
   height: 100px;
+  margin-top: 15px;
   background-size: 500px;
   background-repeat: no-repeat;
 }

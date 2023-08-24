@@ -7,7 +7,9 @@
           <Icon type="md-images" size="50"/>
         </Badge>
         <img class="user-select-none" style="display: none" :src="src" @error="onError" @load="onLoad"/>
-        <p class="img-box-url">{{ src }}</p>
+        <p class="img-box-url">
+          <html-link :isPoptip="false" :href="src"></html-link>
+        </p>
       </div>
     </template>
     <template v-else-if="imageStatus == 1">
@@ -50,7 +52,9 @@
           <Icon type="md-alert" slot="count" size="20"/>
           <Icon type="md-images" size="50"/>
         </Badge>
-        <p class="img-box-url">{{ src }}</p>
+        <p class="img-box-url">
+          <html-link :isPoptip="false" :href="src"></html-link>
+        </p>
       </div>
     </template>
   </Card>
@@ -62,11 +66,13 @@ import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
 import Vue from "vue";
 import {regular} from "@/assets/js";
+import HtmlLink from "@/components/HtmlLink.vue";
 
 Vue.use(VueViewer);
 
 export default {
   name: "HtmlImage",
+  components: {HtmlLink},
   props: {
     src: {
       type: String,

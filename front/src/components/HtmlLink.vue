@@ -10,7 +10,7 @@
       </template>
       <a :href="afterData.href" target="_blank">{{ afterData.text || afterData.href }}</a>
     </span>
-    <template v-if="isIframeShow">
+    <template v-if="isIframeShow && isPoptip">
       <div class="link-iframe" slot="content">
         <template v-if="linkLoad">
           <div class="link-load link-box" style="position: relative; z-index: 1;">
@@ -46,6 +46,10 @@ export default {
     text: {
       type: String,
       default: ""
+    },
+    isPoptip: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

@@ -17,9 +17,9 @@
 
             <Card v-if="!isLogin" class="signin-box" :padding="isMobile ? 20 : 50" dis-hover>
               <Form ref="signin" :model="signin" :rules="ruleValidate" label-position="top">
-                <Alert type="error" show-icon v-if="signinBackMsg">
+                <Alert type="error" show-icon v-if="serverReturnMessage">
                   <b>{{ $t('signin.failed') }} :</b>
-                  {{ signinBackMsg }}
+                  {{ serverReturnMessage }}
                 </Alert>
 
                 <FormItem :label="$t('signin.form.username')" prop="username">
@@ -99,7 +99,7 @@
 <script>
 import Application from "../assets/js/application";
 
-import {api, http} from '../assets/js/index'
+import {api, http, regular} from '../assets/js/index'
 import Captcha from "../components/Captcha";
 import Vuex from "vuex";
 import _ from "lodash";
@@ -112,16 +112,23 @@ export default new Application({
     return {
       ruleValidate: {
         username: [
-          {required: true, trigger: 'blur'}
+          {required: true, min: 4, max: 40, trigger: 'blur'},
+          {
+            validator(rule, value, callback) {
+              return regular.check('username', value).code == 0;
+            },
+            message: this.$t('signup.placeholder.username'),
+            trigger: 'change'
+          }
         ],
         password: [
           {required: true, trigger: 'blur'}
         ],
         captcha: [
-          {required: true, min: 4, max: 4, trigger: 'change'}
+          {required: true, len: 4, trigger: 'blur'}
         ],
       },
-      signinBackMsg: '',
+      serverReturnMessage: '',
       signin: {
         username: '',
         password: '',
@@ -131,7 +138,7 @@ export default new Application({
     }
   },
   beforeMount() {
-    if (this.$route.query.rurl) {
+    if (this.$route.query.backPath) {
       this.$Message.info(this.$t('signin.loginFirst'));
     }
   },
@@ -172,15 +179,15 @@ export default new Application({
 
               that.signin.password = '';
               that.signin.captcha = '';
-              that.signinBackMsg = d.message;
+              that.serverReturnMessage = d.message;
 
             } else {
               that.signinUser(d.data).then(() => {
-                const backurl = this.$route.query.backurl;
+                const backPath = this.$route.query.backPath;
 
-                // redirect rurl or home
-                if (backurl) {
-                  this.$router.push({path: backurl});
+                // redirect backPath or home
+                if (backPath) {
+                  this.$router.push({path: backPath});
                 } else {
                   this.$router.go('-1');
                 }
