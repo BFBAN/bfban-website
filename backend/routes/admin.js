@@ -409,15 +409,16 @@ async (req, res, next) => {
 
 router.post('/setUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
-    checkbody('data.action').isIn(['grant', 'revoke']),
+    checkbody('data.action').isIn(['grant', 'revoke', 'setInfo']),
     checkbody('data.role').isIn(['normal', 'admin', 'bot', 'super', 'dev', 'blacklisted', 'freezed'])
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
-        const validateErr = validationResult(req);
-        if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'admin.setUser.bad', message: validateErr.array()});
-
+        if (req.body.data.action === 'grant' || req.body.data.action === 'revoke') {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'admin.setUser.bad', message: validateErr.array()});
+        }
         /** @type {import("../typedef.js").User} */
         const user = await db.select('*').from('users').where({id: req.body.data.id}).first();
         if (!user)
@@ -438,7 +439,8 @@ async (req, res, next) => {
                 user.privilege = privilegeGranter(user.privilege, role);
             else
                 return res.status(403).json({error: 1, code: 'admin.setUser.permissionDenied'});
-        } else {    // revoke permission
+        };
+        if (req.body.data.action === 'revoke') {    // revoke permission
             const devCanNot = ['dev', 'admin', 'super', 'root'],
                 superCanNot = ['super', 'root', 'dev'],
                 rootCanNot = ['root'];
@@ -451,7 +453,10 @@ async (req, res, next) => {
                 user.privilege = privilegeRevoker(user.privilege, role);
             else
                 return res.status(403).json({error: 1, code: 'admin.setUser.permissionDenied'});
-        }
+        };
+        if (req.body.data.action === 'setInfo') {
+            user.originEmail = req.body.data.originEmail
+        };
         await sendMessage(req.user.id, null, "command", JSON.stringify({
             action: 'setUser',
             target: user.id,
@@ -461,6 +466,7 @@ async (req, res, next) => {
         user.attr = JSON.stringify(user.attr)
         user.subscribes = JSON.stringify(user.subscribes)
         user.privilege = JSON.stringify(user.privilege)
+        
 
         await db('users').update(user).where({id: user.id});
         const quota = initUserStorageQuota(user);
