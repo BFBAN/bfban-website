@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d214497"],{affb:function(a){a.exports=JSON.parse('{"title":"cheatMethodsGlossary","child":[{"value":"invisable","values":["invisable","invisible","stealth"]},{"value":"wallhack","values":["wallhack"]},{"value":"aimbot","values":["aimbot"]},{"value":"teleport","values":["teleport"]},{"value":"magicBullet","values":["magicBullet"]},{"value":"gadgetModify","values":["gadgetModify"]},{"value":"damageChange","values":["damageChange"]}]}')}}]);
-//# sourceMappingURL=chunk-2d214497.2.9.8.js.map
