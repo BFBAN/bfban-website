@@ -89,6 +89,7 @@ app.use((req, res, next) => {
         'Origin, X-Requested-With, Content-Type, Accept, x-access-token' + (config.__DEBUG__ ? ', x-whosdaddy, x-whosdaddy-p' : ''));  // DEBUG
     res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
     res.header('Access-Control-Allow-Credentials', true);
+    res.header('Cache-Control', "Private=x-access-token");
     next();
 });
 
