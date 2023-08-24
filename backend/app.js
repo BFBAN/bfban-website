@@ -102,6 +102,14 @@ app.use('/api/player', router_player);
 app.use('/api/message', router_message);
 app.use('/api/service', router_services);
 
+/**
+ * @swagger
+ * /api/captcha:
+ *   get:
+ *     tags:
+ *       - captcha
+ *     description: Get CAPTCHA
+ */
 app.get('/api/captcha', captchaRateLimiter, (req, res, next) => {
     res.status(200).json({success: 1, code: 'captcha.gen', data: generateCaptcha()});
 });
