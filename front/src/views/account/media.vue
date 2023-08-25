@@ -74,18 +74,32 @@ export default {
           {
             key: 'btn',
             render: (h, params) => {
+              const buttonType = this.getButtonType(params.row.filename);
+              let buttonText = this.$i18n.t('profile.chat.look');  // 默认文本
+              let buttonAction;
+
+              if (buttonType === 'view') {
+                buttonText = this.$i18n.t('profile.chat.look');
+                buttonAction = () => {
+                  if (params.row.load) return;
+                  this.queryMediaDetail(params.row.filename);
+                };
+              } else if (buttonType === 'download') {
+                const newDownloadURL = `https://bfban.gametools.network/api/service/file?filename=${params.row.filename}`;
+                buttonText = this.$i18n.t('profile.chat.download');
+                buttonAction = () => {
+                  window.location.href = newDownloadURL;
+                };
+              }
+
               return h('Button', {
                 props: {
                   loading: params.row.load
                 },
                 on: {
-                  click: () => {
-                    if (params.row.load) return;
-
-                    this.queryMediaDetail(params.row.filename);
-                  }
+                  click: buttonAction
                 }
-              }, this.$i18n.t('profile.chat.look'));
+              }, buttonText);
             }
           }
         ],
@@ -199,13 +213,21 @@ export default {
           // 修改 downloadURL
           const newDownloadURL = `https://bfban.gametools.network/api/service/file?filename=${this.media.list[i].filename}`;
           this.openViewImage(this.media.list[i].filename, newDownloadURL);
-          window.alert(newDownloadURL)
         }
       }
       for (let i = 0; i < this.media.list.length; i++) {
         if (this.media.list[i].filename == name)
           this.media.list[i].load = false
       }
+    },
+    getButtonType (filename) {
+      const extension = filename.split('.').pop().toLowerCase();
+      if (['png', 'jpg', 'jpeg', 'gif'].includes(extension)) {
+        return 'view';
+      } else if (extension === 'zip') {
+        return 'download';
+      }
+      return 'default';
     },
   },
   computed: {
