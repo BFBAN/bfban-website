@@ -110,12 +110,13 @@ export default new Application({
   components: {Captcha},
   data() {
     return {
+      signinType: 'username',
       ruleValidate: {
         username: [
           {required: true, min: 4, max: 40, trigger: 'blur'},
           {
             validator(rule, value, callback) {
-              return regular.check('username', value).code == 0;
+              return regular.check('username', value).code == 0 || regular.check('email', value).code == 0;
             },
             message: this.$t('signup.placeholder.username'),
             trigger: 'change'
