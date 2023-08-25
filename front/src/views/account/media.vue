@@ -3,11 +3,51 @@
     <Card :padding="0" dis-hover>
       <Row slot="title">
         <Col flex="1">
-          {{ $t('profile.media.fileNum', {num: media.data.todayFileNumber || 0}) }}
+          Media
         </Col>
         <Col span="8" v-if="media.data.usedStorageQuota && media.data.totalStorageQuota">
-          {{ $t('profile.media.capacity') }}<span>{{media.data.usedStorageQuota}}/{{media.data.totalStorageQuota}}</span>
-          <Progress :percent="percentValue" />
+          <Poptip placement="bottom-end" trigger="hover" width="400">
+            {{
+              $t('profile.media.capacity')
+            }}<span>{{ media.data.usedStorageQuota }}/{{ media.data.totalStorageQuota }}</span>
+            <Progress :percent="percentValue"/>
+            <div slot="content">
+              <Form label-position="left" :label-width="150">
+                <FormItem label="最大容纳文件数量">
+                  <Input v-model="media.data.maxFileNumber" size="small" readonly></Input>
+                </FormItem>
+                <FormItem label="文件最高大小">
+                  <Input v-model="media.data.maxTrafficQuota" size="small" readonly></Input>
+                </FormItem>
+                <FormItem label="总储存配额">
+                  <Row :gutter="10">
+                    <Col flex="1">
+                      <Input v-model="media.data.usedStorageQuota" size="small" readonly>
+                        <span slot="append">kb</span>
+                      </Input>
+                    </Col>
+                    <Col>/</Col>
+                    <Col flex="1">
+                      <Input v-model="media.data.totalStorageQuota" size="small" readonly>
+                        <span slot="append">kb</span>
+                      </Input>
+                    </Col>
+                  </Row>
+                </FormItem>
+                <FormItem label="今日已上传文件">
+                  <Input v-model="media.data.todayFileNumber" size="small" readonly></Input>
+                </FormItem>
+                <FormItem label="今日流量额度">
+                  <Input v-model="media.data.todayTrafficQuota" size="small" readonly>
+                    <span slot="append">kb</span>
+                  </Input>
+                </FormItem>
+                <FormItem label="每日重置限定重置时间">
+                  <Time :time="media.data.prevResetTime"></Time>
+                </FormItem>
+              </Form>
+            </div>
+          </Poptip>
         </Col>
       </Row>
 
@@ -26,7 +66,7 @@
           @on-change="handlePageChange"
           @on-page-size-change="handlePageSizeChange"
           :page-size="media.limit"
-          :current="media.skip" />
+          :current="media.skip"/>
   </div>
 </template>
 
@@ -43,7 +83,7 @@ Vue.use(VueViewer);
 export default {
   data() {
     return {
-      file: { name: '' },
+      file: {name: ''},
       loadingStatus: false,
       service_upload: api['service_upload'],
       media: {
@@ -118,7 +158,7 @@ export default {
     this.getMediaList();
   },
   methods: {
-    handleLoadData (item, callback) {
+    handleLoadData(item, callback) {
       setTimeout(() => {
         const data = [
           {
@@ -137,11 +177,11 @@ export default {
         callback(data);
       }, 2000);
     },
-    handlePageChange (num) {
+    handlePageChange(num) {
       this.media.skip = num;
       this.getMedia();
     },
-    handlePageSizeChange (num) {
+    handlePageSizeChange(num) {
       this.media.limit = num;
       this.getMedia();
     },
@@ -149,7 +189,7 @@ export default {
      * 全屏查看图片
      * @param image
      */
-    openViewImage (name, url) {
+    openViewImage(name, url) {
       let img_array = [];
       this.media.images[name] = url;
       for (const imagesKey in this.media.images) {
@@ -201,7 +241,7 @@ export default {
     /**
      * 查询文件详情
      */
-    queryMediaDetail (name) {
+    queryMediaDetail(name) {
       this.media.selectFileId = name;
 
       for (let i = 0; i < this.media.list.length; i++) {
@@ -220,7 +260,7 @@ export default {
           this.media.list[i].load = false
       }
     },
-    getButtonType (filename) {
+    getButtonType(filename) {
       const extension = filename.split('.').pop().toLowerCase();
       if (['png', 'jpg', 'jpeg', 'gif'].includes(extension)) {
         return 'view';
@@ -231,7 +271,7 @@ export default {
     },
   },
   computed: {
-    percentValue () {
+    percentValue() {
       return Number(((this.media.data.usedStorageQuota / this.media.data.totalStorageQuota) * 100).toFixed(2));
     }
   }
