@@ -45,6 +45,7 @@ export default class Api {
             "player_update": "player/update",
             "player_viewed": "player/viewed",
             "player_timeline": "player/timeline",
+            "player_timeline_item": "player/timeline/item",
 
             "service_myStorageQuota": "service/myStorageQuota",
             "service_myFiles": "service/myFiles",
@@ -55,7 +56,6 @@ export default class Api {
             "admin_searchUser": "admin/searchUser",
             "admin_setComment": "admin/setComment",
             "admin_commentAll": "admin/commentAll",
-            "admin_commentItem": "admin/commentItem",
             "admin_setUser": "admin/setUser",
             "admin_setAppeal": "admin/setAppeal",
             "admin_setUserAttr": "admin/setUserAttr",
