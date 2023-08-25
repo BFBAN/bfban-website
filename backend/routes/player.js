@@ -6,7 +6,7 @@ import {body as checkbody, query as checkquery, validationResult, oneOf as check
 import db from "../mysql.js";
 import config from "../config.js";
 import verifyCaptcha from "../middleware/captcha.js";
-import {allowPrivileges, forbidPrivileges, verifyJWT, verifySelfOrPrivilege} from "../middleware/auth.js";
+import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
 import {cheatMethodsSanitizer, handleRichTextInput} from "../lib/user.js";
 import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
@@ -245,7 +245,7 @@ function raceGetOriginUserId(originName) {
                 if (isdone.successFlag) return;  // someone finished before, so just return
                 if (isdone.result.size >= isdone.racer.size) { // all racer failed, throw error
                     isdone.event.emit('done');
-                    throw(new Error('all tries failed.'));
+                    throw (new Error('all tries failed.'));
                 }
                 await new Promise((res) => isdone.event.once('done', res)); // wait for someone finishes or all fail
             }
@@ -265,7 +265,7 @@ function raceGetOriginUserId(originName) {
         }
         if (is404)
             return undefined;
-        throw(err);
+        throw (err);
     }).finally(() => {
         isdone.event.emit('done');  // terminate the unterminated promise (if exist)
         isdone.event.removeAllListeners();  // destory
@@ -462,7 +462,7 @@ router.post('/reportById', verifyJWT, verifyCaptcha,
             } catch (err) {
                 if (err.message.includes('Bad Response:'))
                     return res.status(404).json({error: 1, code: 'reportById.notFound', message: 'no such player.'});
-                throw(err); // unknown error, throw it
+                throw (err); // unknown error, throw it
             }
 
             // now the user being reported is found
@@ -654,7 +654,7 @@ async (req, res, next) => {
                     // Convert the modified object back to JSON string
                     item.content = JSON.stringify(contentObj);
                 } catch (error) {
-
+                    console.error('Error parsing JSON content:', error);
                 }
             }
             return item;
@@ -687,6 +687,34 @@ async (req, res, next) => {
         next(err);
     }
 });
+
+router.get('/timeline/item', [
+        checkquery('id').isInt({min: 0}),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'admin.commentItem.bad', message: validateErr.array()});
+
+            const id = req.query.id;
+
+            const result = await db.from('comments')
+                .join('users', 'comments.byUserId', 'users.id')
+                .select('comments.*', 'users.username', 'users.privilege')
+                .where('comments.id', id)
+                .first();
+
+            if (!result)
+                return res.status(400).json({code: 'timeline.item.bad', message: 'This data is not available.'})
+
+            delete result.valid;
+
+            return res.status(200).json({success: 1, code: 'timeline.item.ok', data: result});
+        } catch (err) {
+            next(err);
+        }
+    });
 
 /**
  * @swagger
@@ -942,7 +970,7 @@ async (req, res, next) => {
             return res.status(404).json({error: 1, code: 'judgement.notFound', message: 'no such player.'});
         const correspondingRecord = await db.count({num: 1})
             .from('comments')
-            .where({toPlayerId: player.id, type: 'banAppeal'})
+            .where({toPlayerId: player.id, type: 'banAppeal', appealStatus: 'lock'})
             .first().then(r => r.num);
         // Check if there are locked appeals that will be blocked here
         if (correspondingRecord >= 1) {
@@ -993,7 +1021,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege(['volunteer']), forbidPrivileges(['freezed', 'blacklisted']),
+router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']),
     commentRateLimiter.limiter([{roles: ['admin', 'super', 'root', 'dev', 'bot'], value: 0}]), [
         checkbody('data.toPlayerId').isInt({min: 0}),
         checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
@@ -1017,43 +1045,18 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege(['volunteer']), forbi
                 toPlayerId: req.body.data.toPlayerId,
                 type: 'banAppeal'
             }).orderBy('createTime', 'desc').first();
+            if (prev && prev.appealStatus === 'lock')
+                return res.status(403).json({error: 1, code: 'banAppeal.locked', message: 'this thread is locked'});
+
             let contentObject = {};
-            if (player.appealStatus == 1) {
-                if (userHasRoles(req.user, ['root', 'dev', 'super', 'admin', 'volunteer'])) {
-                    // 存在特权, 继续后面部分
-                } else {
-                    // 不存在特权, 验证cd时间
-                    if (prev) {
-                        const dbTime = new Date(prev.createTime);
-                        const currentTime = new Date();
-                        const diffHours = (currentTime - dbTime) / (1000 * 60 * 60); // convert milliseconds difference to hours
-                        if (diffHours < 24) {
-                            return res.status(404).json({error: 1, code: 'banAppeal.timeLimit', message: 'less than a day since the last appeal'});
-                        }
-                        // 大于1天, 继续后面代码
-                    } else {
-                        return res.status(400).json({error: 1, code: 'banAppeal.noPreviousAppeal', message: 'no previous appeal found'});
-                    }
-                }
-            }
 
             switch (req.body.data.appealType) {
                 case 'moss':
-                    const mossFileName = req.body.data.mossFileName;
-                    if (mossFileName) { 
-                        const storageItem = await db.select('*').from('storage_items').where('filename', mossFileName).first();
-                        if (!storageItem) {
-                            return res.status(404).json({error: 1, code: 'banAppeal.fileNotFound', message: 'no such file'});
-                        }
-                        console.log(req.user)
-                        if (storageItem.byUserId !== req.user.id) {
-                            return res.status(403).json({error: 1, code: 'banAppeal.unauthorized', message: 'not authorized to use this file'});
-                        }
-                    }
                     contentObject = {
                         appealType: req.body.data.appealType,
                         btrLink: req.body.data.btrLink,
-                        mossFileName: req.body.data.mossFileName,
+                        mossDownloadUrl: req.body.data.mossDownloadUrl,
+                        videoLink: req.body.data.videoLink,
                         content: handleRichTextInput(req.body.data.content)
                     };
                     break;
@@ -1077,16 +1080,15 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege(['volunteer']), forbi
                 toOriginUserId: player.originUserId,
                 toOriginPersonaId: player.originPersonaId,
                 byUserId: req.user.id,
-                videoLink: req.body.data.videoLink,
                 content: JSON.stringify(contentObject),   // Convert the content object to a string here
                 viewedAdmins: '[]',
+                appealStatus: 'unprocessed',
                 valid: 1,
                 createTime: new Date()
             };
             const insertId = await db('comments').insert(banAppeal).then(r => r[0]);
             banAppeal.id = insertId;
             banAppeal.viewedAdmins = [];
-            await db('players').where('id', player.id).update({ appealStatus: 1 });
 
             siteEvent.emit('action', {method: 'banAppeal', params: {banAppeal, player}});
             return res.status(201).json({success: 1, code: 'banAppeal.success', message: 'please wait.'})
@@ -1116,9 +1118,13 @@ async (req, res, next) => {
         const viewedAdmins = new Set(banAppeal.viewedAdmins);
         viewedAdmins.add(req.user.id);
 
+        if (req.body.data.status)
+            banAppeal.appealStatus = req.body.data.status;
+
         banAppeal.viewedAdmins = JSON.stringify(Array.from(viewedAdmins).slice(0, config.personsToReview + 1));
         await db('comments').update({
             viewedAdmins: banAppeal.viewedAdmins,
+            appealStatus: banAppeal.appealStatus,
         }).where({id: banAppeal.id});
         banAppeal.viewedAdmins = Array.from(viewedAdmins).slice(0, config.personsToReview + 1);
 
