@@ -566,6 +566,39 @@
                     <HtmlWidget :html="isValidJson(l.content) ? handleTimeLineContent(l.content).content : l.content"
                                 v-if="l.content"
                                 class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
+
+                    <template v-if="isLogin && isValidJson(l.content)">
+                      <Row :gutter="5" v-if="isValidJson(l.content)">
+                        <Col v-if="handleTimeLineContent(l.content).btrLink">
+                          <a :href="handleTimeLineContent(l.content).btrLink" target="_new">
+                            <Badge text="BTR">
+                              <Card :padding="5">
+                                <Icon type="ios-link" size="50" />
+                              </Card>
+                            </Badge>
+                          </a>
+                        </Col>
+                        <Col v-if="handleTimeLineContent(l.content).videoLink">
+                          <a :href="handleTimeLineContent(l.content).videoLink" target="_new">
+                            <Badge text="Video Link">
+                              <Card :padding="5">
+                                <Icon type="ios-videocam" size="50" />
+                              </Card>
+                            </Badge>
+                          </a>
+                        </Col>
+                        <Col v-if="handleTimeLineContent(l.content).moss">
+                          <Badge text="Moss File">
+                            <Card :padding="5">
+                              <Icon type="md-download" size="50" />
+                            </Card>
+                          </Badge>
+                        </Col>
+                      </Row>
+                    </template>
+                    <template v-else>
+                      <Alert show-icon type="warning" :banner="true" :fade="false">玩家申诉附件需要登录才可查看</Alert>
+                    </template>
                   </div>
                   <!-- 申诉:any E -->
 
