@@ -842,13 +842,8 @@
 
             <!-- 申诉按钮 -->
             <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide"
-                 v-if="appeal.disable && false">
-              <Button type="primary"
-                      v-voice-button
-                      @click="appeal.show = true"
-                      :disabled="!isLogin || cheater.status != 1">
-                {{ $t('detail.info.appeal') }}
-              </Button>
+                 v-if="appeal.disable">
+              <DetailAppeal :cheater="cheater"></DetailAppeal>
               <p><br>{{ $t('detail.appeal.describe') }}</p>
             </Col>
           </Row>
@@ -1436,6 +1431,8 @@ import HtmlWidget from "../components/HtmlWidget";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import FastReply from "@/components/FastReply";
 import htmllink from "@/components/HtmlLink";
+import DetailAppeal from "@/components/Detail_Appeal.vue";
+import requestConf from  "../../public/config/requestConf.json";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
@@ -1559,7 +1556,8 @@ export default new Application({
     HtmlWidget,
     PrivilegesTag,
     FastReply,
-    htmllink
+    htmllink,
+    DetailAppeal
   },
   watch: {
     '$route': 'loadData',
