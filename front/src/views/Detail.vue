@@ -306,7 +306,7 @@
                   <Divider type="vertical"/>
                   <!-- 时间轴筛选 E -->
                 </Col>
-                <Col>
+                <Col class="mobile-hide">
                   <Page :page-size="timeline.limit"
                         :current="timeline.page"
                         :total="timeline.total"
@@ -316,7 +316,7 @@
                         size="small"/>
                 </Col>
                 <Col>
-                  <Divider type="vertical"/>
+                  <Divider type="vertical" class="mobile-hide"/>
                   <Button size="small" type="dashed" @click="getTimeline">
                     <Icon type="md-refresh"/>
                   </Button>
@@ -573,7 +573,7 @@
                           <a :href="handleTimeLineContent(l.content).btrLink" target="_new">
                             <Badge text="BTR">
                               <Card :padding="5">
-                                <Icon type="ios-link" size="50" />
+                                <Icon type="ios-link" size="50"/>
                               </Card>
                             </Badge>
                           </a>
@@ -582,7 +582,7 @@
                           <a :href="handleTimeLineContent(l.content).videoLink" target="_new">
                             <Badge text="Video Link">
                               <Card :padding="5">
-                                <Icon type="ios-videocam" size="50" />
+                                <Icon type="ios-videocam" size="50"/>
                               </Card>
                             </Badge>
                           </a>
@@ -590,7 +590,7 @@
                         <Col v-if="handleTimeLineContent(l.content).moss">
                           <Badge text="Moss File">
                             <Card :padding="5">
-                              <Icon type="md-download" size="50" />
+                              <Icon type="md-download" size="50"/>
                             </Card>
                           </Badge>
                         </Col>
@@ -764,7 +764,8 @@
                       </Poptip>
                     </Col>
                     <Col align="right" class="user-select-none" v-if="l.type != 'historyUsername'">
-                      # {{ (timeline.skip * timeline.limit) - timeline.limit + l.index + 1}}-<u><span style="opacity: .4">{{ l.id }}</span></u>
+                      # {{ (timeline.skip * timeline.limit) - timeline.limit + l.index + 1 }}-<u><span
+                        style="opacity: .4">{{ l.id }}</span></u>
                     </Col>
                   </Row>
 
@@ -1432,7 +1433,7 @@ import PrivilegesTag from "/src/components/PrivilegesTag";
 import FastReply from "@/components/FastReply";
 import htmllink from "@/components/HtmlLink";
 import DetailAppeal from "@/components/Detail_Appeal.vue";
-import requestConf from  "../../public/config/requestConf.json";
+import requestConf from "../../public/config/requestConf.json";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
