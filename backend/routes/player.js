@@ -683,6 +683,34 @@ async (req, res, next) => {
     }
 });
 
+router.get('/timeline/item', [
+        checkquery('id').isInt({min: 0}),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'admin.commentItem.bad', message: validateErr.array()});
+
+            const id = req.query.id;
+
+            const result = await db.from('comments')
+                .join('users', 'comments.byUserId', 'users.id')
+                .select('comments.*', 'users.username', 'users.privilege')
+                .where('comments.id', id)
+                .first();
+
+            if (!result)
+                return res.status(400).json({code: 'timeline.item.bad', message: 'This data is not available.'})
+
+            delete result.valid;
+
+            return res.status(200).json({success: 1, code: 'timeline.item.ok', data: result});
+        } catch (err) {
+            next(err);
+        }
+    });
+
 /**
  * @swagger
  * /api/player/reply:

@@ -282,30 +282,46 @@
               <Tag v-if="timeline.total">{{ timeline.total || 0 }}</Tag>
             </Col>
             <Col>
-              <!-- 时间轴筛选 S -->
-              <ButtonGroup type="button">
-                <Select v-model="timeline.seeType" size="small" @on-change="onUpdataSeeType">
-                  <Option v-for="(item, index) in timeline.seeTypeList"
-                          :value="item.value"
-                          :key="index">
-                    {{ $t('detail.timeline.' + item.label) }}
-                  </Option>
-                </Select>
-              </ButtonGroup>
-              <Divider type="vertical"/>
-              <RadioGroup v-model="timeline.sort" @on-change="onTimeLineSort" type="button" size="small">
-                <Radio label="1">
-                  <Icon type="ios-funnel"/>
-                </Radio>
-                <Radio label="2">
-                  <Icon type="ios-funnel-outline"/>
-                </Radio>
-              </RadioGroup>
-              <Divider type="vertical"/>
-              <Button size="small" type="dashed" @click="getTimeline">
-                <Icon type="md-refresh"/>
-              </Button>
-              <!-- 时间轴筛选 E -->
+              <Row>
+                <Col>
+                  <!-- 时间轴筛选 S -->
+                  <ButtonGroup type="button">
+                    <Select v-model="timeline.seeType" size="small" @on-change="onUpdataSeeType">
+                      <Option v-for="(item, index) in timeline.seeTypeList"
+                              :value="item.value"
+                              :key="index">
+                        {{ $t('detail.timeline.' + item.label) }}
+                      </Option>
+                    </Select>
+                  </ButtonGroup>
+                  <Divider type="vertical"/>
+                  <RadioGroup v-model="timeline.sort" @on-change="onTimeLineSort" type="button" size="small">
+                    <Radio label="1">
+                      <Icon type="ios-funnel"/>
+                    </Radio>
+                    <Radio label="2">
+                      <Icon type="ios-funnel-outline"/>
+                    </Radio>
+                  </RadioGroup>
+                  <Divider type="vertical"/>
+                  <!-- 时间轴筛选 E -->
+                </Col>
+                <Col>
+                  <Page :page-size="timeline.limit"
+                        :current="timeline.page"
+                        :total="timeline.total"
+                        @on-change="handlePageChange"
+                        simple
+                        class="page"
+                        size="small"/>
+                </Col>
+                <Col>
+                  <Divider type="vertical"/>
+                  <Button size="small" type="dashed" @click="getTimeline">
+                    <Icon type="md-refresh"/>
+                  </Button>
+                </Col>
+              </Row>
             </Col>
           </Row>
           <Row :gutter="20" type="flex">
@@ -516,7 +532,11 @@
 
                           {{ $t('detail.appeal.info.content') }}
 
-                          <Tag> {{ getContentField(l.content).appealType ? getContentField(l.content).appealType : 'none' }} </Tag>
+                          <Tag>
+                            {{
+                              handleTimeLineContent(l.content).appealType ? handleTimeLineContent(l.content).appealType : 'none'
+                            }}
+                          </Tag>
 
                           <BusinessCard :id="l.originUserId">
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
@@ -543,7 +563,9 @@
                         </Col>
                       </Row>
                     </div>
-                    <HtmlWidget :html="isValidJson(l.content) ? getContentField(l.content).content : l.content" v-if="l.content" class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
+                    <HtmlWidget :html="isValidJson(l.content) ? handleTimeLineContent(l.content).content : l.content"
+                                v-if="l.content"
+                                class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
                   </div>
                   <!-- 申诉:any E -->
 
@@ -680,7 +702,9 @@
 
                       <!-- 申诉操作 -->
                       <template v-if="isLogin && isAdmin && l.type === 'banAppeal'">
-                        <Button size="small" @click="openAppealDealModal(l.id)">{{ $t('basic.button.dealAppeal') }}</Button>
+                        <Button size="small" @click="openAppealDealModal(l.id)">
+                          {{ $t('basic.button.dealAppeal') }}
+                        </Button>
                         <Divider type="vertical"/>
                       </template>
 
@@ -707,7 +731,7 @@
                       </Poptip>
                     </Col>
                     <Col align="right" class="user-select-none" v-if="l.type != 'historyUsername'">
-                      # {{ l.index }}-<u><span style="opacity: .4">{{ l.id }}</span></u>
+                      # {{ (timeline.skip * timeline.limit) - timeline.limit + l.index + 1}}-<u><span style="opacity: .4">{{ l.id }}</span></u>
                     </Col>
                   </Row>
 
@@ -784,7 +808,8 @@
             </Col>
 
             <!-- 申诉按钮 -->
-            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide" v-if="appeal.disable && false">
+            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide"
+                 v-if="appeal.disable && false">
               <Button type="primary"
                       v-voice-button
                       @click="appeal.show = true"
@@ -987,7 +1012,7 @@
         </Card>
       </Affix>
 
-      <!-- 小窗口回复 S -->
+      <!-- 用户-小窗口回复 S -->
       <Modal v-model="replyModal">
         <div slot="header">
           {{ `${$t('basic.button.reply')}` }}
@@ -1029,151 +1054,9 @@
           </Row>
         </div>
       </Modal>
-      <!-- 小窗口回复 E -->
-      <!-- 管理处理申诉 S -->
-      <Modal v-model="appealdealModal"
-             width="60%">
-        <div slot="header">
-          {{ `${$t('basic.button.dealAppeal')}` }}
-        </div>
-        <div v-if="isLogin">
-          <div>
-            <Col flex="1">
-              <Form>
-                <Row :gutter="30">
-                  <Col flex="1">
-                    <FormItem :label="$t('detail.appeal.info.player')">
-                      <Input type="text" :value="appealdeal.dbid" disabled />
-                    </FormItem>
-                  </Col>
-                  <Col flex="1">
-                    <FormItem :label="$t('detail.appeal.info.commentid')">
-                      <Input type="text" :value="appealdeal.id" disabled />
-                    </FormItem>
-                  </Col>
-                </Row>
-              </Form>
-            </Col>
-          </div>
-          <!-- Moss申诉 -->
-          <div v-if="appealdeal.type === 'moss'">
-            <Col flex="1">
-              <Form>
-                <Row :gutter="30">
-                  <!-- 第一人称录屏 -->
-                  <Col flex="1">
-                    <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
-                      <Input type="text" :value="appealdeal.firstPersonRecording" disabled />
-                    </FormItem>
-                  </Col>
-                  <!-- MOSS下载按钮 -->
-                  <Col flex="1">
-                    <FormItem :label="$t('detail.appeal.deal.mossDownloadUrl')">
-                      <br>
-                      <div>
-                        <a :href="appealdeal.mossDownloadUrl" target="_blank">
-                          <Button>{{ $t('downloadMoss') }}</Button>
-                        </a>
-                      </div>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row>
-                  <!-- BTR链接 -->
-                  <Col flex="1">
-                    <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                      <Input type="text" :value="appealdeal.btrLink" disabled />
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row>
-                  <!-- 玩家的申诉内容 -->
-                  <Col flex="1">
-                    <FormItem :label="$t('detail.appeal.deal.appealContent')">
-                      <br>
-                      <Card dis-hover :padding="0">
-                        <Input type="textarea" :rows="4" :maxlength="65535" :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}" disabled></Input>
-                      </Card>
-                    </FormItem>
-                  </Col>
-                </Row>
-              </Form>
-            </Col>
-          </div>
-          <!-- 刷枪申诉 -->
-          <div v-else-if="appealdeal.type === 'farm'">
-            <Col flex="1">
-              <Form>
-                <Row :gutter="30">
-                  <Col flex="1">
-                    <!-- BTR链接 -->
-                    <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                      <br>
-                      <Card dis-hover :padding="0">
-                        <Input type="textarea" :rows="4" :maxlength="65535" :value="appealdeal.btrLink" :style="{ width: '100%', height: '100%'}" disabled></Input>
-                      </Card>
-                    </FormItem>
-                  </Col>
-                  <Col flex="1">
-                    <!-- 玩家的申诉内容 -->
-                    <FormItem :label="$t('detail.appeal.deal.appealContent')">
-                      <br>
-                      <Card dis-hover :padding="0">
-                        <Input type="textarea" :rows="4" :maxlength="65535" :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}" disabled></Input>
-                      </Card>
-                    </FormItem>
-                  </Col>
-                </Row>
-              </Form>
-            </Col>
-          </div>
-          <!-- 其他类型申诉 -->
-          <div v-else-if="appealdeal.type === 'none'">
-            <Col flex="1">
-              <Form>
-                <Row :gutter="30">
-                  <Col flex="1">
-                    <!-- 玩家的申诉内容 -->
-                    <FormItem :label="$t('detail.appeal.deal.appealContent')">
-                      <br>
-                      <Card dis-hover :padding="0">
-                        <Input type="textarea" :rows="4" :maxlength="65535" :value="convertToPlainText(appealdeal.content)" :style="{ width: '100%', height: '100%'}" disabled></Input>
-                      </Card>
-                    </FormItem>
-                  </Col>
-                </Row>
-              </Form>
-            </Col>
-          </div>
-        </div>
-        <div slot="footer">
-          <Row :gutter="30">
-            <Col>
-              <!-- 管理回复内容 -->
-              <Input type="text"
-                v-model="appealdeal.admincontent"
-                placeholder="管理员回复内容"
-                size="large"/>
-            </Col>
-            <Col flex="1">
-              <!-- 下拉框，选择对申诉的操作 -->
-              <Select v-model="appealdeal.action" :style="{width: '150px', 'text-align': 'right'}">
-                <Option value="accept">{{ $t('detail.appeal.deal.stats.accept') }}</Option>
-                <Option value="fail">{{ $t('detail.appeal.deal.stats.fail') }}</Option>
-              </Select>
-            </Col>
-            <Col>
-              <!-- 提交按钮 -->
-              <Button @click="admindealAppeal" type="primary" v-voice-button>
-                {{ $t('basic.button.submit') }}
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      </Modal>
-      <!-- 管理处理申诉 E -->
+      <!-- 用户-小窗口回复 E -->
 
-      <!-- 小窗口申诉 S -->
+      <!-- 用户-小窗口申诉 S -->
       <Modal v-model="appeal.show"
              width="80%"
              :loading="appeal.load"
@@ -1252,7 +1135,7 @@
                 </Col>
               </Row>
               <Col flex="1">
-              <!-- 下拉框，选择对申诉的操作 -->
+                <!-- 下拉框，选择对申诉的操作 -->
                 <FormItem :label="$t('detail.appeal.deal.type')">
                   <Select v-model="appeal.type" :style="{width: '150px', 'text-align': 'right'}">
                     <Option value="moss">{{ $t('detail.appeal.deal.moss') }}</Option>
@@ -1268,7 +1151,8 @@
                       <!-- 第一人称录屏 -->
                       <Col flex="1">
                         <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
-                          <Input type="text" v-model="appeal.videoLink" :placeholder="$t('detail.appeal.placeholder.videolink')"/>
+                          <Input type="text" v-model="appeal.videoLink"
+                                 :placeholder="$t('detail.appeal.placeholder.videolink')"/>
                         </FormItem>
                       </Col>
                       <!-- MOSS上传按钮 -->
@@ -1284,7 +1168,8 @@
                       <!-- BTR链接 -->
                       <Col flex="1">
                         <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                          <Input type="text" v-model="appeal.btrLink" :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
+                          <Input type="text" v-model="appeal.btrLink"
+                                 :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
                         </FormItem>
                       </Col>
                     </Row>
@@ -1315,7 +1200,8 @@
                         <FormItem :label="$t('detail.appeal.deal.btrLink')">
                           <br>
                           <Card dis-hover :padding="0">
-                            <Input type="textarea" :rows="4" :maxlength="65535" v-model="appeal.btrLink" :style="{ width: '100%', height: '100%'}"></Input>
+                            <Input type="textarea" :rows="4" :maxlength="65535" v-model="appeal.btrLink"
+                                   :style="{ width: '100%', height: '100%'}"></Input>
                           </Card>
                         </FormItem>
                       </Col>
@@ -1338,7 +1224,7 @@
                       </Col>
                     </Row>
                   </Form>
-                </Col>    
+                </Col>
               </div>
               <div v-else-if="appeal.type === 'none'">
                 <Col>
@@ -1365,9 +1251,110 @@
           </Col>
         </Row>
       </Modal>
-      <!-- 小窗口申诉 E -->
+      <!-- 用户-小窗口申诉 E -->
 
-      <!-- 禁言 S -->
+      <!-- 管理-小窗口处理申诉 S -->
+      <Modal v-model="appealdealModal" width="60%">
+        <div slot="header">
+          {{ `${$t('basic.button.dealAppeal')}` }}
+        </div>
+        <Form v-if="isLogin" label-position="top">
+          <Row :gutter="30">
+            <Col flex="1">
+              <FormItem :label="$t('detail.appeal.info.player')">
+                <Input type="text" :value="appealdeal.dbid" readonly/>
+              </FormItem>
+            </Col>
+            <Col flex="1">
+              <FormItem :label="$t('detail.appeal.info.commentid')">
+                <Input type="text" :value="appealdeal.id" readonly/>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <!-- Moss申诉 -->
+          <div v-if="appealdeal.type === 'moss'">
+            <Row :gutter="30">
+              <Col flex="1">
+                <!-- 第一人称录屏 -->
+                <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
+                  <Input type="text" :value="appealdeal.firstPersonRecording" readonly/>
+                </FormItem>
+                <!-- BTR链接 -->
+                <FormItem :label="$t('detail.appeal.deal.btrLink')">
+                  <Input type="text" :value="appealdeal.btrLink" readonly/>
+                </FormItem>
+              </Col>
+              <Col flex="1">
+                <!-- MOSS下载按钮 -->
+                <FormItem :label="$t('detail.appeal.deal.mossDownloadUrl')">
+                  <a :href="appealdeal.mossDownloadUrl" target="_blank">
+                    <div class="ivu-upload ivu-upload-drag" style="padding: 20px 0px;">
+                      <Icon type="md-download" size="50"/>
+                    </div>
+                  </a>
+                </FormItem>
+              </Col>
+            </Row>
+
+            <!-- 申诉内容 -->
+            <FormItem :label="$t('detail.appeal.deal.appealContent')">
+              <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
+                          :html="convertToPlainText(appealdeal.content)" v-if="appealdeal.content"></HtmlWidget>
+            </FormItem>
+          </div>
+          <!-- 刷枪申诉 -->
+          <div v-else-if="appealdeal.type === 'farm'">
+            <!-- BTR链接 -->
+            <FormItem :label="$t('detail.appeal.deal.btrLink')">
+              <Card dis-hover :padding="0">
+                <Input type="textarea" :rows="4" :maxlength="65535" :value="appealdeal.btrLink"
+                       :style="{ width: '100%', height: '100%'}" readonly></Input>
+              </Card>
+            </FormItem>
+            <!-- 申诉内容 -->
+            <FormItem :label="$t('detail.appeal.deal.appealContent')">
+              <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
+                          :html="convertToPlainText(appealdeal.content)" v-if="appealdeal.content"></HtmlWidget>
+            </FormItem>
+          </div>
+          <!-- 其他类型申诉 -->
+          <div v-else-if="appealdeal.type === 'none'">
+            <!-- 申诉内容 -->
+            <FormItem :label="$t('detail.appeal.deal.appealContent')">
+              <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
+                          :html="convertToPlainText(appealdeal.content)" v-if="appealdeal.content"></HtmlWidget>
+            </FormItem>
+          </div>
+
+          <!-- 管理回复内容 -->
+          <Card dis-hover :padding="0">
+            <Textarea v-model="appealdeal.admincontent"
+                      size="large"/>
+          </Card>
+        </Form>
+        <div slot="footer">
+          <Row :gutter="30">
+            <Col>
+              <Button @click="appealdealModal = false">
+                {{ $t('basic.button.cancel') }}
+              </Button>
+              <Divider type="vertical"/>
+            </Col>
+            <Col flex="1">
+              <Button @click="onAdminTimeLineDealAppeal('fail')" v-voice-button>
+                {{ $t('detail.appeal.deal.stats.fail') }}
+              </Button>
+              <Button @click="onAdminTimeLineDealAppeal('accept')" type="primary" v-voice-button>
+                {{ $t('detail.appeal.deal.stats.accept') }}
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      </Modal>
+      <!-- 管理-小窗口处理申诉 E -->
+
+      <!-- 管理-禁言 S -->
       <Modal
           v-model="mute.show"
           @on-ok="modalOk"
@@ -1397,13 +1384,13 @@
           </FormItem>
         </Form>
       </Modal>
-      <!-- 禁言 E -->
+      <!-- 管理-禁言 E -->
     </template>
   </div>
 </template>
 
 <script>
-import {api, http, http_token, util, message, time, storage, account_storage, mail} from '../assets/js/index'
+import {api, http, http_token, util, message, time, storage, account_storage, mail, regular} from '../assets/js/index'
 
 import Application from "/src/assets/js/application";
 import Empty from '../components/Empty.vue'
@@ -1552,93 +1539,18 @@ export default new Application({
     this.loadData();
   },
   methods: {
-    async openAppealDealModal(commentId) {
-      // 调用API获取申诉数据
-      const data = await this.getCommentData(commentId);
-      
-      // 将获取的数据赋值到`appeal`对象上
-      this.appealdeal.type = this.getContentField(data.content).appealType;
-      this.appealdeal.id = data.id;
-      this.appealdeal.dbid = data.dbid;
-      this.appealdeal.firstPersonRecording = data.videoLink;
-      this.appealdeal.mossDownloadUrl = this.getContentField(data.content).mossDownloadUrl;
-      this.appealdeal.btrLink = this.getContentField(data.content).btrLink;
-      this.appealdeal.content = this.getContentField(data.content).content;
-
-      // 打开模态框
-      this.appealdealModal = true;
-    },
-
-    async getCommentData(commentid) {
-      // 发起请求
-      let commentData = null;  // 用于保存获取到的数据
-      await this.http.get(api["admin_commentItem"], {
-          params: {
-              id: commentid
-          }
-      }).then(res => {
-          const d = res.data;
-          if (d.success === 1) {
-              // 请求成功，处理返回的数据
-              commentData = {
-                  id: d.data.id,
-                  content: d.data.content,
-                  byUsername: d.data.username,
-                  action: null,
-                  dbid: d.data.toPlayerId,
-                  type: d.data.appealType,
-                  firstPersonRecording: d.data.videoLink, 
-                  mossDownloadUrl: d.data.mossDownloadUrl, 
-                  btrLink: d.data.btrLink
-              };
-          } else {
-              switch (d.code) {
-                  case "commentItem.bad":
-                  case "commentItem.notFound":
-                      this.$Message.info(this.$t('basic.tip.notFound'));
-                      break;
-              }
-          }
-      }).finally(() => {
-          // 请求结束后的处理
-          // 如果有加载动画，此时应该隐藏
-          this.loading = false;
-          // 如果有UI元素在请求期间被禁用，此时应该解除禁用
-          this.isButtonDisabled = false;
-      });
-
-      return commentData;  // 返回获取到的数据
-    },
-    async admindealAppeal() {
-      try {
-        console.log(this.appealdeal.commentid)
-        const response = await this.http.post(api["admin_setAppeal"], {
-          data: {
-            id: this.appealdeal.id,
-            content: this.appealdeal.admincontent, // 管理回复内容
-            action: this.appealdeal.action // 对申诉的操作
-          },
-        });
-
-        const d = response.data;
-
-        if (d.success === 1) {
-          this.$Message.success({content: d.message || d.code, duration: 3});
-          return;
-        }
-
-        this.$Message.error({content: d.message || d.code, duration: 3});
-      } catch (error) {
-        this.$Message.error(error.code);
-      }
-    },
     async loadData() {
+      const {page = 0} = this.$route.query;
       this.$Loading.start();
 
       // set Token Http mode
       this.http = http_token.call(this);
 
       this.timeline.seeType = this.getSeeType();
+      if (page) {
+        this.timeline.skip = Number(page);
+        this.timeline.page = Number(page);
+      }
 
       await util.initUtil().then(res => {
         this.cheaterStatus = res.cheaterStatus;
@@ -1661,6 +1573,10 @@ export default new Application({
      */
     handlePageChange(num) {
       this.timeline.skip = num;
+      this.$router.push({
+        name: this.$router.name,
+        query: {page: num}
+      });
 
       this.getTimeline();
 
@@ -1705,6 +1621,54 @@ export default new Application({
       }).catch(err => {
         this.$Message.error(err.code);
       })
+    },
+    /**
+     * 展开申诉详情
+     * @param commentId
+     * @returns {Promise<void>}
+     */
+    async openAppealDealModal(commentId) {
+      // 调用API获取申诉数据
+      const timelineItem = await this.getTimeLineItemData(commentId);
+      const afterHandleTimelineContent = this.handleTimeLineContent(timelineItem.content);
+
+      // 将获取的数据赋值到`appeal`对象上
+      this.appealdeal.id = timelineItem.id;
+      this.appealdeal.dbid = timelineItem.dbid;
+      this.appealdeal.firstPersonRecording = timelineItem.videoLink;
+      this.appealdeal.type = afterHandleTimelineContent.appealType;
+      this.appealdeal.mossDownloadUrl = afterHandleTimelineContent.mossDownloadUrl;
+      this.appealdeal.btrLink = afterHandleTimelineContent.btrLink;
+      this.appealdeal.content = afterHandleTimelineContent.content;
+
+      // 打开模态框
+      this.appealdealModal = true;
+    },
+    /**
+     * 管理裁决玩家申诉
+     * @returns {Promise<void>}
+     */
+    async onAdminTimeLineDealAppeal(action) {
+      try {
+        const response = await this.http.post(api["admin_setAppeal"], {
+          data: {
+            id: this.appealdeal.id,
+            content: this.appealdeal.admincontent, // 管理回复内容
+            action                                 // 对申诉的操作
+          },
+        });
+
+        const d = response.data;
+
+        if (d.success === 1) {
+          this.$Message.success({content: d.message || d.code, duration: 3});
+          return;
+        }
+
+        this.$Message.error({content: d.message || d.code, duration: 3});
+      } catch (error) {
+        this.$Message.error(error.code);
+      }
     },
     /**
      * 合并时间轴历史名称
@@ -1912,7 +1876,7 @@ export default new Application({
       })
     },
     /**
-     * 获取举报玩家时间轴
+     * 获取举报玩家 时间轴
      */
     async getTimeline() {
       this.timelineListPreparedness = [];
@@ -1963,6 +1927,49 @@ export default new Application({
           resolve();
         })
       })
+    },
+    /**
+     * 获取 时间轴 单条数据
+     * @param id
+     * @returns {Promise<null>}
+     */
+    async getTimeLineItemData(id) {
+      // 发起请求
+      let commentData = null;  // 用于保存获取到的数据
+      await this.http.get(api["player_timeline_item"], {
+        params: {id}
+      }).then(res => {
+        const d = res.data;
+        if (d.success === 1) {
+          // 请求成功，处理返回的数据
+          commentData = {
+            id: d.data.id,
+            content: d.data.content,
+            byUsername: d.data.username,
+            action: null,
+            dbid: d.data.toPlayerId,
+            type: d.data.appealType,
+            firstPersonRecording: d.data.videoLink,
+            mossDownloadUrl: d.data.mossDownloadUrl,
+            btrLink: d.data.btrLink
+          };
+        } else {
+          switch (d.code) {
+            case "commentItem.bad":
+            case "commentItem.notFound":
+              this.$Message.info(this.$t('basic.tip.notFound'));
+              break;
+          }
+        }
+      }).finally(() => {
+        // 请求结束后的处理
+        // 如果有加载动画，此时应该隐藏
+        this.loading = false;
+        // 如果有UI元素在请求期间被禁用，此时应该解除禁用
+        this.isButtonDisabled = false;
+      });
+
+      return commentData;  // 返回获取到的数据
     },
     /**
      * 滚动至楼层位置
@@ -2158,7 +2165,7 @@ export default new Application({
           btrLink: this.appeal.btrLink
         });
       } // No additional data for 'none' type
-      
+
       try {
         // First, upload the MOSS file if it exists
         let mossDownloadUrl = '';
@@ -2183,7 +2190,7 @@ export default new Application({
 
           const filename = uploadResponse.data.data.name; // 根据API的响应获取文件名
           const mossDownloadUrl = `https://bfban.gametools.network/api/service/file?filename=${encodeURIComponent(filename)}`; // 拼接URL
-          Object.assign(postData.data.data, { mossDownloadUrl });
+          Object.assign(postData.data.data, {mossDownloadUrl});
         }
 
         // Then, submit the appeal
@@ -2393,7 +2400,16 @@ export default new Application({
     convertToPlainText(html) {
       const div = document.createElement('div');
       div.innerHTML = html;
-     return div.textContent;
+      return div.textContent;
+    },
+    /**
+     * 处理时间轴内容
+     * @param content [object | string]
+     * @returns {*}
+     */
+    handleTimeLineContent(content) {
+      if (regular.checkJSON(content)) return JSON.parse(content);
+      return content;
     },
     isValidJson(jsonString) {
       try {
@@ -2403,14 +2419,6 @@ export default new Application({
         return false;
       }
     },
-    getContentField(jsonString) {
-      try {
-        let obj = JSON.parse(jsonString);
-        return obj;
-      } catch (e) {
-        return jsonString; // 返回原始字符串或处理错误
-      }
-    }
   },
   computed: {
     isOnlySuper() {
