@@ -599,6 +599,7 @@
       "control": "批量编辑",
       "load": "刷新",
       "look": "查看",
+      "download": "下载",
       "placeholder": "填写发送的消息",
       "tabsList": {
         "form": {
@@ -673,9 +674,15 @@
       "title": "历史"
     },
     "media": {
-      "capacity": "容量",
-      "fileNum": "{num}份文件",
-      "title": "媒体库"
+      "capacity": "容量状态",
+      "title": "媒体库",
+      "maxFileNumber": "可上传文件数量",
+      "maxTrafficQuota": "文件最高大小",
+      "usedStorageQuota": "总储存配额",
+      "todayFileNumber": "今日已上传文件",
+      "todayTrafficQuota": "今日流量额度",
+      "prevResetTime": "重置限额日期",
+      "hint1": "每个账户每日都有上传宽带、文件数量、单个大小限制，但它会在下一个日期重置，但存在每个账户可用文件上传数量，对于储存要求不高文件可用其他网站网盘代替。"
     },
     "meet": "欢迎回来{name}!",
     "subscribes": {
@@ -906,7 +913,7 @@
     },
     "type": {
       "media": "媒体库",
-      "upload": "上传到图床",
+      "upload": "上传",
       "url": "图片链接"
     }
   }

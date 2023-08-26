@@ -121,7 +121,7 @@ export default new Application({
             {
               title: 'media',
               name: 'media',
-              icon: 'ios-videocam'
+              icon: 'md-folder'
             },
             {
               title: 'voice',
