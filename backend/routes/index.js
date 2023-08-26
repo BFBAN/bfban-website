@@ -189,9 +189,9 @@ router.get('/activeStatistical', [
  *         description: playerStatistics.bad
  */
 router.post('/playerStatistics', [  // like graphql :)
-    checkbody('data').isArray({min: 0, max: 11}).custom((val) => {
+    checkbody('data').isArray({min: 0, max: 12}).custom((val) => {
         for (let i of val)
-            if (!config.supportGames.concat('*').includes(i.game) || ![-1, 0, 1, 2, 3, 4, 5, 6, 8].includes(i.status - 0))
+            if (!config.supportGames.concat('*').includes(i.game) || ![-1, 0, 1, 2, 3, 4, 5, 6, 8, 9].includes(i.status - 0))
                 throw(new Error('bad subquery format'));
         return true;
     })
