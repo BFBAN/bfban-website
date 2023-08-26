@@ -1,7 +1,7 @@
 <template>
   <div>
     <Alert show-icon type="warning" style="width: 100%">
-      每个账户每日都有上传宽带、文件数量、单个大小限制，但它会在下一个日期重置，但存在每个账户可用文件上传数量，对于储存要求不高文件可用其他网站网盘代替。
+      {{ $t('profile.media.hint1') }}
     </Alert>
 
     <Card :padding="0" dis-hover>
@@ -23,13 +23,13 @@
             <Progress :percent="percentValue"/>
             <div slot="content">
               <Form label-position="left" :label-width="150">
-                <FormItem label="可上传文件数量">
+                <FormItem :label="$t('profile.media.maxFileNumber')">
                   <Input :value="media.data.maxFileNumber" size="small" readonly></Input>
                 </FormItem>
-                <FormItem label="文件最高大小">
+                <FormItem :label="$t('profile.media.maxTrafficQuota')">
                   <Input :value="onUnitConversion(media.data.maxTrafficQuota)" size="small" readonly></Input>
                 </FormItem>
-                <FormItem label="总储存配额">
+                <FormItem :label="$t('profile.media.usedStorageQuota')">
                   <Row :gutter="10">
                     <Col flex="1">
                       <Input :value="onUnitConversion(media.data.usedStorageQuota)" size="small" readonly>
@@ -42,14 +42,14 @@
                     </Col>
                   </Row>
                 </FormItem>
-                <FormItem label="今日已上传文件">
+                <FormItem :label="$t('profile.media.todayFileNumber')">
                   <Input v-model="media.data.todayFileNumber" size="small" readonly></Input>
                 </FormItem>
-                <FormItem label="今日流量额度">
+                <FormItem :label="$t('profile.media.todayTrafficQuota')">
                   <Input :value="onUnitConversion(media.data.todayTrafficQuota)" size="small" readonly>
                   </Input>
                 </FormItem>
-                <FormItem label="每日重置限定重置时间">
+                <FormItem :label="$t('profile.media.prevResetTime')">
                   <Time :time="media.data.prevResetTime"></Time>
                 </FormItem>
               </Form>
