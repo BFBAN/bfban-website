@@ -1,35 +1,43 @@
 <template>
   <div>
+    <Alert show-icon type="warning" style="width: 100%">
+      每个账户每日都有上传宽带、文件数量、单个大小限制，但它会在下一个日期重置，但存在每个账户可用文件上传数量，对于储存要求不高文件可用其他网站网盘代替。
+    </Alert>
+
     <Card :padding="0" dis-hover>
-      <Row slot="title">
+      <Row slot="title" :gutter="30">
         <Col flex="1">
-          Media
+          <Button @click="$refs['uploadWidget'].onPanelChange()">
+            <Icon type="md-add"></Icon>
+          </Button>
+          <UploadWidget ref="uploadWidget"
+                        :uploadWidgetTypeArray="['upload']"
+                        @finish="getMediaList"></UploadWidget>
         </Col>
         <Col span="8" v-if="media.data.usedStorageQuota && media.data.totalStorageQuota">
           <Poptip placement="bottom-end" trigger="hover" width="400">
-            {{
-              $t('profile.media.capacity')
-            }}<span>{{ media.data.usedStorageQuota }}/{{ media.data.totalStorageQuota }}</span>
+            {{ $t('profile.media.capacity') }}
+            <span>
+            {{ onUnitConversion(media.data.usedStorageQuota) }}/{{ onUnitConversion(media.data.totalStorageQuota) }}
+            </span>
             <Progress :percent="percentValue"/>
             <div slot="content">
               <Form label-position="left" :label-width="150">
-                <FormItem label="最大容纳文件数量">
-                  <Input v-model="media.data.maxFileNumber" size="small" readonly></Input>
+                <FormItem label="可上传文件数量">
+                  <Input :value="media.data.maxFileNumber" size="small" readonly></Input>
                 </FormItem>
                 <FormItem label="文件最高大小">
-                  <Input v-model="media.data.maxTrafficQuota" size="small" readonly></Input>
+                  <Input :value="onUnitConversion(media.data.maxTrafficQuota)" size="small" readonly></Input>
                 </FormItem>
                 <FormItem label="总储存配额">
                   <Row :gutter="10">
                     <Col flex="1">
-                      <Input v-model="media.data.usedStorageQuota" size="small" readonly>
-                        <span slot="append">kb</span>
+                      <Input :value="onUnitConversion(media.data.usedStorageQuota)" size="small" readonly>
                       </Input>
                     </Col>
                     <Col>/</Col>
                     <Col flex="1">
-                      <Input v-model="media.data.totalStorageQuota" size="small" readonly>
-                        <span slot="append">kb</span>
+                      <Input :value="onUnitConversion(media.data.totalStorageQuota)" size="small" readonly>
                       </Input>
                     </Col>
                   </Row>
@@ -38,8 +46,7 @@
                   <Input v-model="media.data.todayFileNumber" size="small" readonly></Input>
                 </FormItem>
                 <FormItem label="今日流量额度">
-                  <Input v-model="media.data.todayTrafficQuota" size="small" readonly>
-                    <span slot="append">kb</span>
+                  <Input :value="onUnitConversion(media.data.todayTrafficQuota)" size="small" readonly>
                   </Input>
                 </FormItem>
                 <FormItem label="每日重置限定重置时间">
@@ -73,14 +80,16 @@
 <script>
 import 'viewerjs/dist/viewer.css'
 
-import {api, http, http_token, upload} from "../../assets/js";
+import {api, http_token} from "../../assets/js";
 
 import VueViewer from 'v-viewer'
 import Vue from "vue";
+import UploadWidget from "@/components/UploadWidget.vue";
 
 Vue.use(VueViewer);
 
 export default {
+  components: {UploadWidget},
   data() {
     return {
       file: {name: ''},
@@ -147,7 +156,7 @@ export default {
         selectFileId: '',
         data: {},
         list: [],
-        limit: 40,
+        limit: 10,
         skip: 1
       }
     }
@@ -230,6 +239,7 @@ export default {
           d.data.map(i => i = Object.assign(i, {
             _loading: false,
             load: false,
+            size: this.onUnitConversion(i.size),
             children: []
           }));
 
@@ -269,6 +279,31 @@ export default {
       }
       return 'default';
     },
+    /**
+     * Storage unit conversion
+     * @param limit
+     * @returns {string}
+     */
+    onUnitConversion(limit) {
+      let size = "";
+      if (limit < 0.1 * 1024) {
+        size = limit.toFixed(2) + "B"
+      } else if (limit < 0.1 * 1024 * 1024) {
+        size = (limit / 1024).toFixed(2) + "KB"
+      } else if (limit < 0.1 * 1024 * 1024 * 1024) {
+        size = (limit / (1024 * 1024)).toFixed(2) + "MB"
+      } else {
+        size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB"
+      }
+
+      var sizeStr = size + "";
+      var index = sizeStr.indexOf(".");
+      var dou = sizeStr.substr(index + 1, 2)
+      if (dou == "00") {
+        return sizeStr.substring(0, index) + sizeStr.substr(index + 3, 2)
+      }
+      return size;
+    }
   },
   computed: {
     percentValue() {
