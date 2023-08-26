@@ -1087,8 +1087,13 @@ router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']
                 createTime: new Date()
             };
             const insertId = await db('comments').insert(banAppeal).then(r => r[0]);
+
             banAppeal.id = insertId;
             banAppeal.viewedAdmins = [];
+
+            await db('players')
+                .where('originPersonaId', player.originPersonaId)
+                .update({status: 9});
 
             siteEvent.emit('action', {method: 'banAppeal', params: {banAppeal, player}});
             return res.status(201).json({success: 1, code: 'banAppeal.success', message: 'please wait.'})

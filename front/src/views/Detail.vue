@@ -735,7 +735,7 @@
 
                       <!-- 申诉操作 -->
                       <template v-if="isLogin && isAdmin && l.type === 'banAppeal'">
-                        <Button size="small" @click="openAppealDealModal(l.id)">
+                        <Button size="small" @click="openAppealDealModal(l.id)" :disabled="l.appealStatus == 'accept'">
                           {{ $t('basic.button.dealAppeal') }}
                         </Button>
                         <Divider type="vertical"/>
@@ -1693,6 +1693,10 @@ export default new Application({
         const d = response.data;
 
         if (d.success === 1) {
+          this.getTimeline();
+          this.getPlayerInfo();
+
+          this.appealdealModal = false;
           this.$Message.success({content: d.message || d.code, duration: 3});
           return;
         }

@@ -118,8 +118,8 @@
               <Col flex="1">
                 <!-- MOSS上传按钮 -->
                 <FormItem :label="$t('detail.appeal.deal.userGeneratedMossFile')"
-                          :rules="{required: true, trigger: 'blur'}"
-                          :prop="'selectedFile'">
+                          :rules="{validator: checkAppealAttachmentsFile, trigger: 'change'}"
+                          :prop="'appendix'">
                   <Upload multiple
                           type="drag"
                           action=""
@@ -127,7 +127,6 @@
                           :before-upload="handleFileMossUpload">
                     <div style="padding: 20px 0" :class="appeal.stateStyle">
                       <Icon type="md-document" size="52"></Icon>
-                      {{ appeal.fromData.selectedFile }}
                     </div>
                   </Upload>
                 </FormItem>
@@ -140,7 +139,7 @@
                       :prop="'content'">
               <Card dis-hover :padding="0">
                 <Textarea v-model="appeal.fromData.content"
-                          ref="farm_textareaAppealContent"
+                          ref="moss_textareaAppealContent"
                           :toolbar="['bold', 'link']"
                           :height="'420px'"
                           :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
@@ -231,7 +230,7 @@ export default new Application({
           videoLink: '',
           btrLink: '',
           content: '',
-          selectedFile: null,
+          appendix: null
         },
         disable: this.$store.state.configuration.detailLeftAppealPanel ?? false,
         stateStyle: '',
@@ -261,6 +260,17 @@ export default new Application({
       this.http = http_token.call(this);
     },
     /**
+     * 校验附件(MOSS)
+     */
+    checkAppealAttachmentsFile(rule, value, callback) {
+      const val = value;
+
+      if (!val) return callback('not file');
+      if (this.appeal.stateStyle == 'ivu-alert-warning') return callback('Non compliant attachments');
+
+      callback()
+    },
+    /**
      * 选择Moss文件
      * @param event
      */
@@ -273,8 +283,9 @@ export default new Application({
           // TO DO 在这里添加上传
           // await upload.on(file);
           that.appeal.stateStyle = 'ivu-alert-success';
+          that.appeal.fromData.appendix = file;
+          console.log(file)
           that.$Message.success(res.message);
-
         } else {
           that.appeal.stateStyle = 'ivu-alert-warning';
           if (res.message) that.$Message.error(res.message);
@@ -285,7 +296,7 @@ export default new Application({
      * 清除Moss选择的数据
      */
     clearFileMossUpload() {
-      this.appeal.selectedFile = null;
+      this.appeal.appendix = null;
       this.appeal.stateStyle = '';
     },
     /**
@@ -301,66 +312,67 @@ export default new Application({
 
         // 验证表单
         this.$refs[`detailAppealForm_${type}`].validate(async (valid) => {
-          if (valid) {
-            let postData = {
+          if (!valid) {
+            this.$Message.error(this.$t('signin.fillEverything'));
+          }
+
+          let appealData = {
+            data: {
               data: {
-                data: {
-                  toPlayerId: this.cheater.id,
-                  toOriginPersonaId: this.cheater.originPersonaId,
-                  content,
-                  appealType: this.appeal.type
-                }
+                toPlayerId: this.cheater.id,
+                toOriginPersonaId: this.cheater.originPersonaId,
+                content,
+                appealType: this.appeal.type
               }
-            };
-
-            switch (type) {
-              case 'moss':
-                Object.assign(postData.data.data, {
-                  videoLink: this.appeal.fromData.videoLink,
-                  btrLink: this.appeal.fromData.btrLink
-                });
-                break;
-              case 'farm':
-                Object.assign(postData.data.data, {
-                  btrLink: this.appeal.fromData.btrLink
-                });
-                break;
-                // No additional data for 'none' type
             }
+          };
 
-            // First, upload the MOSS file if it exists
-            let mossFileName = '';
-            if (type === 'moss' && this.appeal.selectedFile) {
-              upload.on(this.appeal.selectedFile).then(res => {
-                if (res && res.code >= 1) {
-                  mossFileName = res.filename; // 获取文件的URL
-                  Object.assign(postData.data.data, {mossFileName});
-                } else {
-                  this.$Message.error(res.message || res.code);
-                }
-              }).catch(err => {
-                this.$Message.error(err.message || err.code);
-              }).finally(() => {
-                this.appeal.load = false;
-                message.playSendVoice();
-                this.getTimeline();
+          switch (type) {
+            case 'moss':
+              Object.assign(appealData.data.data, {
+                videoLink: this.appeal.fromData.videoLink,
+                btrLink: this.appeal.fromData.btrLink
               });
 
-              // 如果mossFileName没有被设置，则说明上传失败，直接返回
-              if (type === 'moss' && !mossFileName) {
-                return;
-              }
-            }
+              // First, upload the MOSS file if it exists
+              var mossFileName = '';
 
-            // Then, submit the appeal
-            const res = await this.http.post(api["player_banAppeal"], postData);
-            const d = res.data;
+              await upload.on(this.appeal.appendix)
+                  .then(res => {
+                    if (res && res.code >= 1) {
+                      mossFileName = res.filename; // 获取文件的URL
+                      Object.assign(appealData.data.data, {mossFileName});
+                    } else {
+                      this.$Message.error(res.message || res.code);
+                    }
+                  })
+                  .catch(err => {
+                    this.$Message.error(err.message || err.code);
+                  })
+                  .finally(() => {
+                    this.appeal.load = false;
+                    message.playSendVoice();
+                  });
+              break;
+            case 'farm':
+              Object.assign(appealData.data.data, {
+                btrLink: this.appeal.fromData.btrLink
+              });
+              break;
+            case 'none':
+            default:
+              // No additional data for 'none' type
+          }
 
-            if (d.success === 1) {
-              this.$Message.success(d.message);
-            } else {
-              this.$Message.error(d.message || d.code);
-            }
+          // Then, submit the appeal
+          const res = await this.http.post(api["player_banAppeal"], appealData);
+          const d = res.data;
+
+          if (d.success === 1) {
+            this.$Message.success(d.message);
+            this.appeal.show = false;
+          } else {
+            this.$Message.error(d.message || d.code);
           }
         })
 
@@ -369,7 +381,6 @@ export default new Application({
       } finally {
         this.appeal.load = false;
         message.playSendVoice();
-        // this.getTimeline();
       }
 
       return false;

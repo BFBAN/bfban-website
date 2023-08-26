@@ -126,50 +126,50 @@ async (req, res, next) => {
 });
 
 router.get('/commentAppeal', verifyJWT, allowPrivileges(["super", "root", "dev", "bot"]), [
-    // checkbody('type').optional().isString().isInt(['banAppeal']),
-    checkquery('skip').optional().isInt({min: 0}),
-    checkquery('limit').optional().isInt({min: 0, max: 100}),
-    checkquery('order').optional().isIn(['asc', 'desc']),
-],
-async (req, res, next) => {
-    try {
-        const validateErr = validationResult(req);
-        if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'admin.commentAll.bad', message: validateErr.array()});
+        // checkbody('type').optional().isString().isInt(['banAppeal']),
+        checkquery('skip').optional().isInt({min: 0}),
+        checkquery('limit').optional().isInt({min: 0, max: 100}),
+        checkquery('order').optional().isIn(['asc', 'desc']),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'admin.commentAll.bad', message: validateErr.array()});
 
-        const skip = req.query.skip !== undefined ? req.query.skip : 0;
-        const limit = req.query.limit !== undefined ? req.query.limit : 20;
-        const order = req.query.order ? req.query.order : 'desc';
-        const type = 'banAppeal';
+            const skip = req.query.skip !== undefined ? req.query.skip : 0;
+            const limit = req.query.limit !== undefined ? req.query.limit : 20;
+            const order = req.query.order ? req.query.order : 'desc';
+            const type = 'banAppeal';
 
-        const total = await db('comments')
-            .count({num: 1})
-            .andWhere(function () {
-                this.where({valid: 1});
-                if (type != 'all' || !type)
-                    this.where({type: type});
-            })
-            .first().then(r => r.num);
+            const total = await db('comments')
+                .count({num: 1})
+                .andWhere(function () {
+                    this.where({valid: 1});
+                    if (type != 'all' || !type)
+                        this.where({type: type});
+                })
+                .first().then(r => r.num);
 
-        const result = await db.from('comments')
-            .join('users', 'comments.byUserId', 'users.id')
-            .select('comments.*', 'users.username', 'users.privilege')
-            .andWhere(function () {
-                if (type != 'all' || !type)
-                    this.where({type: type});
-            })
-            .orderBy('comments.createTime', order)
-            .offset(skip).limit(limit)
-            .then(r => r.map(i => {
-                delete i.valid;
-                return i
-            }));
+            const result = await db.from('comments')
+                .join('users', 'comments.byUserId', 'users.id')
+                .select('comments.*', 'users.username', 'users.privilege')
+                .andWhere(function () {
+                    if (type != 'all' || !type)
+                        this.where({type: type});
+                })
+                .orderBy('comments.createTime', order)
+                .offset(skip).limit(limit)
+                .then(r => r.map(i => {
+                    delete i.valid;
+                    return i
+                }));
 
-        return res.status(200).json({success: 1, code: 'admin.commentAll.ok', data: result, total});
-    } catch (err) {
-        next(err);
-    }
-});
+            return res.status(200).json({success: 1, code: 'admin.commentAll.ok', data: result, total});
+        } catch (err) {
+            next(err);
+        }
+    });
 
 router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkbody('type').optional().isString().isInt(['report', 'reply', 'judgement', 'banAppeal']),
@@ -358,16 +358,26 @@ async (req, res, next) => {
         const comment = await db.select('*').from('comments').where({id: req.body.id}).first();
         if (!comment)
             return res.status(404).json({error: 1, code: 'admin.setAppeal.notFound'});
-
         await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setAppeal', target: comment.id}));
 
         const updateData = {
             admincontent: req.body.content,
             appealStatus: req.body.action
         };
+        const comments = db('comments');
+        const commentItem = comments.where({id: comment.id});
+        const commentItemPersonId = await commentItem.first();
 
-        await db('comments').update(updateData).where({ id: comment.id });
+        if (commentItemPersonId.appealStatus == 'accept')
+            return res.status(400).json({error: 1, code: 'admin.setAppeal.repeatedPassage'});
 
+        let playerStatus = 0;
+        if (updateData.appealStatus === 'fail') playerStatus = 1;
+        if (updateData.appealStatus === 'accept') playerStatus = 3;
+
+        await commentItem.update(updateData);
+        if (commentItemPersonId)
+            await db('players').where('originPersonaId', commentItemPersonId.toOriginPersonaId).update({status: playerStatus});
         await db('operation_log').insert({
             byUserId: req.user.id,
             toUserId: comment.toPlayerId,
