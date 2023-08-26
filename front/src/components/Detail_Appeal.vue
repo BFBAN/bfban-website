@@ -280,11 +280,8 @@ export default new Application({
 
       moss.verifyFileIsMoss(file).then(res => {
         if (res.code == 0) {
-          // TO DO 在这里添加上传
-          // await upload.on(file);
           that.appeal.stateStyle = 'ivu-alert-success';
           that.appeal.fromData.appendix = file;
-          console.log(file)
           that.$Message.success(res.message);
         } else {
           that.appeal.stateStyle = 'ivu-alert-warning';
@@ -378,6 +375,7 @@ export default new Application({
 
       } catch (error) {
         this.$Message.error(error.message || error.code);
+        this.$emit('success');
       } finally {
         this.appeal.load = false;
         message.playSendVoice();
