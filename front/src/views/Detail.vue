@@ -596,8 +596,11 @@
                         </Col>
                       </Row>
                     </template>
-                    <template v-else>
-                      <Alert show-icon type="warning" :banner="true" :fade="false">玩家申诉附件需要登录才可查看</Alert>
+                    <template v-else-if="!isValidJson(l.content)">
+                      <Alert show-icon type="info" :banner="true" :fade="false">{{$t('detail.timeline.noAppealAttachmentHint')}}</Alert>
+                    </template>
+                    <template v-else-if="!isLogin">
+                      <Alert show-icon type="warning" :banner="true" :fade="false">{{$t('detail.timeline.needLoginViewAttachmentsHint')}}</Alert>
                     </template>
                   </div>
                   <!-- 申诉:any E -->

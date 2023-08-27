@@ -378,7 +378,9 @@
       "banAppeal": "仅查看申诉",
       "coreComment": "主要内容",
       "historyName": "历史玩家变动名称",
-      "verify": "仅查看判决"
+      "verify": "仅查看判决",
+      "noAppealAttachmentHint": "此申诉无申诉附件",
+      "needLoginViewAttachmentsHint": "您需要登录账户，才可查阅玩家申诉额外提供的附件"
     },
     "title": "详情"
   },
