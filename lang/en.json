@@ -599,7 +599,6 @@
       "control": "Batch edit",
       "load": "Reload",
       "look": "Open chat",
-      "download": "Download",
       "placeholder": "Type message here",
       "tabsList": {
         "form": {
@@ -674,15 +673,9 @@
       "title": "History log"
     },
     "media": {
-      "capacity": "Capacity state",
-      "title": "Media library",
-      "maxFileNumber": "Number of files that can be uploaded",
-      "maxTrafficQuota": "Maximum file size",
-      "usedStorageQuota": "Total storage quota",
-      "todayFileNumber": "The file has been uploaded today",
-      "todayTrafficQuota": "Amount of traffic",
-      "prevResetTime": "Reset date limit",
-      "hint1": "Each account has a daily upload bandwidth, the number of files, and a single size limit, but it will reset the next date, but there is a number of files available for each account to upload, and files with low storage requirements can be replaced by other websites."
+      "capacity": "Capacity",
+      "fileNum": "{num} file",
+      "title": "Media library"
     },
     "meet": "welcome back {name}! ",
     "subscribes": {
