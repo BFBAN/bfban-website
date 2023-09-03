@@ -184,10 +184,52 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/signin:
+ *   post:
+ *     tags:
+ *       - 账户
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: data.username
+ *         description: User name, please note the required format
+ *         required: true
+ *         type: string
+ *         value:
+ *       - name: data.password
+ *         required: true
+ *         type: string
+ *         value:
+ *       - name: data.visitType
+ *         description: Login to the environment, e.g., on a cell phone, browser, client. ['websites','client-phone','client-desktop', 'bot']
+ *         required: false
+ *         type: string
+ *         value: websites
+ *       - name: data.EXPIRES_IN
+ *         description: Tells the server when the account token expires; it only takes effect for a specified number of account identities
+ *         required: false
+ *         type: num
+ *         value: 0
+ *       - name: captcha
+ *         type: string
+ *         value:
+ *       - name: encryptCaptcha
+ *         type: string
+ *         value:
+ *     responses:
+ *       200:
+ *         description: signin.success
+ *       400:
+ *         description: signin.bad
+ *       401:
+ *         description: signin.noSuchUser
+ */
 router.post('/signin', verifyCaptcha, [
     checkbody("data.username").isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
-    checkbody('data.visitType').optional().isIn(['websites','client-phone','client-desktop', 'bot']),
+    checkbody('data.visitType').optional().isIn(config.visitType ?? ['websites', 'client-phone', 'client-desktop', 'bot']),
     checkbody('data.EXPIRES_IN').optional({nullable: true}).isInt({min: 0})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
@@ -205,7 +247,7 @@ async (req, res, next) => {
             if (EXPIRES_IN && userHasRoles(user, ['dev', 'bot']))
                 expiresIn = EXPIRES_IN - 0;
             const jwtpayload = {
-                username: username,
+                username: user.username,
                 userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
                 userId: user.id,
                 privilege: user.privilege,
@@ -363,7 +405,7 @@ async function showUserInfo(req, res, next) {
             return res.status(400).json({error: 1, code: 'userInfo.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({id: req.query.id, valid: 1}).first();
+        const user = await db.from('users').where({id: req.query.id, valid: 1}).first();
         if (!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
         const reportnum = await db('comments')

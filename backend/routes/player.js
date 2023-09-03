@@ -245,7 +245,7 @@ function raceGetOriginUserId(originName) {
                 if (isdone.successFlag) return;  // someone finished before, so just return
                 if (isdone.result.size >= isdone.racer.size) { // all racer failed, throw error
                     isdone.event.emit('done');
-                    throw(new Error('all tries failed.'));
+                    throw (new Error('all tries failed.'));
                 }
                 await new Promise((res) => isdone.event.once('done', res)); // wait for someone finishes or all fail
             }
@@ -265,7 +265,7 @@ function raceGetOriginUserId(originName) {
         }
         if (is404)
             return undefined;
-        throw(err);
+        throw (err);
     }).finally(() => {
         isdone.event.emit('done');  // terminate the unterminated promise (if exist)
         isdone.event.removeAllListeners();  // destory
@@ -462,7 +462,7 @@ router.post('/reportById', verifyJWT, verifyCaptcha,
             } catch (err) {
                 if (err.message.includes('Bad Response:'))
                     return res.status(404).json({error: 1, code: 'reportById.notFound', message: 'no such player.'});
-                throw(err); // unknown error, throw it
+                throw (err); // unknown error, throw it
             }
 
             // now the user being reported is found
@@ -627,6 +627,23 @@ async (req, res, next) => {
 
         const now = new Date()
         result = result.map(item => {
+            // New code to handle the content field
+            if (isJSON(item.constructor)) {
+                let contentObj = JSON.parse(item.content);
+
+                // Check if the user's privilege doesn't contain 'admin' or 'dev'
+                if (!item.privilege.includes('admin') && !item.privilege.includes('dev')) {
+                    // Check if appealType is 'moss' and if mossDownloadUrl exists
+                    if (contentObj.appealType === 'moss' && contentObj.hasOwnProperty('mossDownloadUrl')) {
+                        // Delete the mossDownloadUrl field
+                        delete contentObj.mossDownloadUrl;
+                    }
+                }
+
+                // Convert the modified object back to JSON string
+                item.content = JSON.stringify(contentObj);
+            }
+
             if (item.attr.mute) {
                 const date = new Date(item.attr.mute)
                 if (date - now > 0) {
@@ -636,29 +653,7 @@ async (req, res, next) => {
             delete item.attr
             return item
         })
-        // New code to handle the content field
-        result = result.map(item => {
-            if (typeof item.content === 'string') {
-                try {
-                    let contentObj = JSON.parse(item.content);
 
-                    // Check if the user's privilege doesn't contain 'admin' or 'dev'
-                    if (!item.privilege.includes('admin') && !item.privilege.includes('dev')) {
-                        // Check if appealType is 'moss' and if mossDownloadUrl exists
-                        if (contentObj.appealType === 'moss' && contentObj.hasOwnProperty('mossDownloadUrl')) {
-                            // Delete the mossDownloadUrl field
-                            delete contentObj.mossDownloadUrl;
-                        }
-                    }
-
-                    // Convert the modified object back to JSON string
-                    item.content = JSON.stringify(contentObj);
-                } catch (error) {
-                    console.error('Error parsing JSON content:', error);
-                }
-            }
-            return item;
-        });
         result.forEach(i => {     // delete those unused keys
             for (let j of Object.keys(i))
                 if (typeof (i[j]) == 'undefined' || i[j] == null)
@@ -687,6 +682,34 @@ async (req, res, next) => {
         next(err);
     }
 });
+
+router.get('/timeline/item', [
+        checkquery('id').isInt({min: 0}),
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'admin.commentItem.bad', message: validateErr.array()});
+
+            const id = req.query.id;
+
+            const result = await db.from('comments')
+                .join('users', 'comments.byUserId', 'users.id')
+                .select('comments.*', 'users.username', 'users.privilege')
+                .where('comments.id', id)
+                .first();
+
+            if (!result)
+                return res.status(400).json({code: 'timeline.item.bad', message: 'This data is not available.'})
+
+            delete result.valid;
+
+            return res.status(200).json({success: 1, code: 'timeline.item.ok', data: result});
+        } catch (err) {
+            next(err);
+        }
+    });
 
 /**
  * @swagger
@@ -1019,7 +1042,7 @@ router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']
             }).orderBy('createTime', 'desc').first();
             if (prev && prev.appealStatus === 'lock')
                 return res.status(403).json({error: 1, code: 'banAppeal.locked', message: 'this thread is locked'});
-            
+
             let contentObject = {};
 
             switch (req.body.data.appealType) {
@@ -1151,6 +1174,18 @@ async function pushOriginNameLog(originName, originUserId, originPersonaId) {
         siteEvent.emit('action', {method: 'name_tracker', params: {name_log}});
         return true;
     }
+}
+
+/**
+ * Verify if the string json is similar
+ * @param jsonValue
+ * @returns {boolean}
+ */
+function isJSON(jsonValue = "") {
+    if (/^[\],:{}\s]*$/.test(jsonValue.toString().replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+        return true;
+    }
+    return false;
 }
 
 export default router;

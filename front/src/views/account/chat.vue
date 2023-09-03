@@ -391,7 +391,6 @@ export default new Application({
             messageList[val].num = messageList[val].child.length || 0;
           });
 
-          console.log(messageList, messageUser);
           this.messageList = messageList;
           this.messageUser = messageUser.sort((a, b) => a.value > b.value);
         }

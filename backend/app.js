@@ -89,6 +89,7 @@ app.use((req, res, next) => {
         'Origin, X-Requested-With, Content-Type, Accept, x-access-token' + (config.__DEBUG__ ? ', x-whosdaddy, x-whosdaddy-p' : ''));  // DEBUG
     res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
     res.header('Access-Control-Allow-Credentials', true);
+    res.header('Cache-Control', "Private=x-access-token");
     next();
 });
 
@@ -102,6 +103,14 @@ app.use('/api/player', router_player);
 app.use('/api/message', router_message);
 app.use('/api/service', router_services);
 
+/**
+ * @swagger
+ * /api/captcha:
+ *   get:
+ *     tags:
+ *       - captcha
+ *     description: Get CAPTCHA
+ */
 app.get('/api/captcha', captchaRateLimiter, (req, res, next) => {
     res.status(200).json({success: 1, code: 'captcha.gen', data: generateCaptcha()});
 });
