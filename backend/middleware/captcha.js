@@ -13,9 +13,9 @@ async function verifyCaptcha(req, res, next) {
             return next();
         if(req.body.SKIP_CAPTCHA === true && userHasRoles(req.user, ['dev','bot'])) // we allow devs and bots to skip captcha
             return next();
-        if(req.body.username) {
+        if(req.body.username && req.body.SKIP_CAPTCHA === true) {
             const userPrivileges = await getUserPrivilege(req.body.username);
-            if(req.body.SKIP_CAPTCHA === true && (userPrivileges.includes("dev") || userPrivileges.includes("bot")) )
+            if(userPrivileges.includes("dev") || userPrivileges.includes("bot") )
                 return next();
         }
         // validation
