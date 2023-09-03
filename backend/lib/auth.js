@@ -2,6 +2,7 @@
 import express from "express";
 import jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
+import db from "../mysql.js";
 import config from '../config.js';
 
 /** @param {string} token */
@@ -75,6 +76,15 @@ function privilegeRevoker(current, del) {
     return Array.from(tmp);
 }
 
+/** @param {string} username */
+async function getUserPrivilege(username) {
+    const result = await db.select('*').from('users').where({username: username}).first();
+    if (!result) {
+        return [];  // or return an empty string, based on what you expect
+    }
+    return result.privilege;
+}
+
 export {
     verifyJWTToken,
     generatePassword,
@@ -82,5 +92,6 @@ export {
     userHasRoles,
     userHasNotRoles,
     privilegeGranter,
-    privilegeRevoker
+    privilegeRevoker,
+    getUserPrivilege
 }

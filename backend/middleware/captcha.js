@@ -3,16 +3,21 @@ import express from "express";
 import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import db from "../mysql.js";
-import { userHasRoles } from "../lib/auth.js";
+import { userHasRoles, getUserPrivilege } from "../lib/auth.js";
 import { body as checkbody } from "express-validator";
 
 /** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
 async function verifyCaptcha(req, res, next) {
     try {
-        if(req.body.SKIP_CAPTCHAA === true && config.__DEBUG__) // DEBUG
+        if(req.body.SKIP_CAPTCHA === true && config.__DEBUG__) // DEBUG
             return next();
-        if(req.body.SKIP_CAPTCHA === true && userHasRoles(req.user, ['dev','bot']) ) // we allow devs and bots to skip captcha
+        if(req.body.SKIP_CAPTCHA === true && userHasRoles(req.user, ['dev','bot'])) // we allow devs and bots to skip captcha
             return next();
+        if(req.body.username) {
+            const userPrivileges = await getUserPrivilege(req.body.username);
+            if(req.body.SKIP_CAPTCHA === true && (userPrivileges.includes("dev") || userPrivileges.includes("bot")) )
+                return next();
+        }
         // validation
         if( !(await checkbody('encryptCaptcha').isBase64().run(req, {dryRun: true})).isEmpty() || 
             !(await checkbody('captcha').isAscii().isLength({min:4, max:4}).run(req, {dryRun: true})).isEmpty() )
