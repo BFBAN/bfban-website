@@ -9,18 +9,18 @@ import { body as checkbody } from "express-validator";
 /** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
 async function verifyCaptcha(req, res, next) {
     try {
-        if(req.body.SKIP_CAPTCHAA === true && config.__DEBUG__) // DEBUG
+        if(req.body.SKIP_CAPTCHA === true && config.__DEBUG__) // DEBUG
             return next();
         if(req.body.SKIP_CAPTCHA === true && userHasRoles(req.user, ['dev','bot']) ) // we allow devs and bots to skip captcha
             return next();
         // validation
-        if( !(await checkbody('encryptCaptcha').isBase64().run(req, {dryRun: true})).isEmpty() || 
+        if( !(await checkbody('encryptCaptcha').isBase64().run(req, {dryRun: true})).isEmpty() ||
             !(await checkbody('captcha').isAscii().isLength({min:4, max:4}).run(req, {dryRun: true})).isEmpty() )
             return res.status(400).json({ error: 1, code: 'captcha.bad' });
 
         const encryptCaptcha = req.body.encryptCaptcha;
         const submitCaptcha = req.body.captcha.toLowerCase();
-        
+
         const decryptCaptcha = misc.decrypt(Buffer.from(encryptCaptcha, 'base64'), config.secret).toString('utf8'); // be warn: we might get meaningless str if the encryptCaptcha is not ours
         const [ rightCaptcha, timeStamp ] = decryptCaptcha.split(',', 2); // so .split here, the second param could be undefined or meaningless
 
@@ -38,7 +38,7 @@ async function verifyCaptcha(req, res, next) {
     } catch(err) {
         next(err);
     }
-    
+
 }
 
 export default verifyCaptcha;
