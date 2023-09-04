@@ -229,6 +229,6 @@ export default new Application({
 }
 
 .footer-app-banner .p {
-  padding:10px 100px 10px 0;
+  padding: 10px 100px 10px 0;
 }
 </style>
