@@ -1,6 +1,7 @@
 {
   "requestDevelopmentName": "development",
   "requestProductionName": "production",
+  "requestTestName": "staging",
   "requestUploadName": "upload",
   "child": {
     "development": {
@@ -16,6 +17,11 @@
     "production": {
       "protocol": "https",
       "host": "bfban.gametools.network",
+      "pathname": "/api/"
+    },
+    "staging": {
+      "protocol": "https",
+      "host": "ban.linrunrun.online",
       "pathname": "/api/"
     }
   }
