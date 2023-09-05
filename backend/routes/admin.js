@@ -409,9 +409,9 @@ async (req, res, next) => {
             return res.status(404).json({error: 1, code: 'admin.setUser.notFound'});
         const role = req.body.data.role;
         if (req.body.data.action === 'grant') {
-            const devCan = ['normal', 'bot', 'blacklisted', 'freezed'],
-                superCan = ['normal', 'admin', 'blacklisted', 'freezed'],
-                rootCan = ['normal', 'admin', 'bot', 'super', 'dev', 'blacklisted', 'freezed'];
+            const devCan = ['normal', 'bot', 'blacklisted', 'freezed', 'volunteer'],
+                superCan = ['normal', 'admin', 'blacklisted', 'freezed', 'volunteer'],
+                rootCan = ['normal', 'admin', 'bot', 'super', 'dev', 'blacklisted', 'freezed', 'volunteer'];
             let flag = false;
             // check if current user can grant such permission
             flag = (userHasRoles(req.user, ['dev']) && devCan.includes(role)) ? true : flag;

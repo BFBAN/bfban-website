@@ -6,7 +6,7 @@ import {body as checkbody, query as checkquery, validationResult, oneOf as check
 import db from "../mysql.js";
 import config from "../config.js";
 import verifyCaptcha from "../middleware/captcha.js";
-import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {allowPrivileges, forbidPrivileges, verifyJWT, verifySelfOrPrivilege} from "../middleware/auth.js";
 import {cheatMethodsSanitizer, handleRichTextInput} from "../lib/user.js";
 import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
@@ -627,6 +627,23 @@ async (req, res, next) => {
 
         const now = new Date()
         result = result.map(item => {
+            // New code to handle the content field
+            if (isJSON(item.constructor)) {
+                let contentObj = JSON.parse(item.content);
+
+                // Check if the user's privilege doesn't contain 'admin' or 'dev'
+                if (!item.privilege.includes('admin') && !item.privilege.includes('dev')) {
+                    // Check if appealType is 'moss' and if mossDownloadUrl exists
+                    if (contentObj.appealType === 'moss' && contentObj.hasOwnProperty('mossDownloadUrl')) {
+                        // Delete the mossDownloadUrl field
+                        delete contentObj.mossDownloadUrl;
+                    }
+                }
+
+                // Convert the modified object back to JSON string
+                item.content = JSON.stringify(contentObj);
+            }
+
             if (item.attr.mute) {
                 const date = new Date(item.attr.mute)
                 if (date - now > 0) {
@@ -636,29 +653,7 @@ async (req, res, next) => {
             delete item.attr
             return item
         })
-        // New code to handle the content field
-        result = result.map(item => {
-            if (typeof item.content === 'string') {
-                try {
-                    let contentObj = JSON.parse(item.content);
 
-                    // Check if the user's privilege doesn't contain 'admin' or 'dev'
-                    if (!item.privilege.includes('admin') && !item.privilege.includes('dev')) {
-                        // Check if appealType is 'moss' and if mossDownloadUrl exists
-                        if (contentObj.appealType === 'moss' && contentObj.hasOwnProperty('mossDownloadUrl')) {
-                            // Delete the mossDownloadUrl field
-                            delete contentObj.mossDownloadUrl;
-                        }
-                    }
-
-                    // Convert the modified object back to JSON string
-                    item.content = JSON.stringify(contentObj);
-                } catch (error) {
-                    console.error('Error parsing JSON content:', error);
-                }
-            }
-            return item;
-        });
         result.forEach(i => {     // delete those unused keys
             for (let j of Object.keys(i))
                 if (typeof (i[j]) == 'undefined' || i[j] == null)
@@ -1021,7 +1016,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']),
+router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege(['volunteer']), forbidPrivileges(['freezed', 'blacklisted']),
     commentRateLimiter.limiter([{roles: ['admin', 'super', 'root', 'dev', 'bot'], value: 0}]), [
         checkbody('data.toPlayerId').isInt({min: 0}),
         checkbody('data.content').isString().trim().isLength({min: 1, max: 65535}),
@@ -1082,7 +1077,7 @@ router.post('/banAppeal', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']
                 byUserId: req.user.id,
                 content: JSON.stringify(contentObject),   // Convert the content object to a string here
                 viewedAdmins: '[]',
-                appealStatus: 'unprocessed',
+                appealStatus: '1',
                 valid: 1,
                 createTime: new Date()
             };
@@ -1184,6 +1179,18 @@ async function pushOriginNameLog(originName, originUserId, originPersonaId) {
         siteEvent.emit('action', {method: 'name_tracker', params: {name_log}});
         return true;
     }
+}
+
+/**
+ * Verify if the string json is similar
+ * @param jsonValue
+ * @returns {boolean}
+ */
+function isJSON(jsonValue = "") {
+    if (/^[\],:{}\s]*$/.test(jsonValue.toString().replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+        return true;
+    }
+    return false;
 }
 
 export default router;

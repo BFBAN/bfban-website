@@ -5,6 +5,7 @@ import * as misc from "../lib/misc.js";
 import db from "../mysql.js";
 import { verifyJWTToken } from '../lib/auth.js';
 import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
+import Config from "../config.js";
 
 /** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
 async function verifyJWT(req, res, next) {
@@ -31,8 +32,10 @@ async function verifyJWT(req, res, next) {
         //console.log(result); // DEBUG
         if(!result)
             return res.status(401).json({error: 1, code: 'user.invalid'});
-        if(result.signoutTime > decodedToken.signWhen && decodedToken.visitType == allowUserAgent(req.headers["user-agent"]))
+        if(result.signoutTime > decodedToken.signWhen)
             return res.status(401).json({error: 1, code: 'user.tokenExpired'});
+        if(!decodedToken.visitType && !req.header("user-agent") && decodedToken.visitType != allowUserAgent(req.headers["user-agent"]))
+            return res.status(401).json({error: 1, code: 'user.tokenClientException'})
         /** @type {import("../typedef.js").User} */
         req.user = result;
         next();

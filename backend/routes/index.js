@@ -204,11 +204,18 @@ async (req, res, next) => {
 
         const data = [];
         for (let i of req.body.data) {
+          if(i.status == 9) {
+            const game = i.game === '*' ? '%' : `%"${i.game}"%`;
+            const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
+                .andWhere('games', 'like', game).andWhere('appealStatus', '=', "1").first().then(r => r.num);
+            data.push({game: i.game, status: i.status, count});
+          } else {
             const game = i.game === '*' ? '%' : `%"${i.game}"%`;
             const status = i.status === -1 ? '%' : i.status;
             const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
                 .andWhere('games', 'like', game).andWhere('status', 'like', status).first().then(r => r.num);
             data.push({game: i.game, status: i.status, count});
+          }
         }
         res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
             success: 1,
@@ -390,28 +397,52 @@ async (req, res, next) => {
         const order = req.query.order ? req.query.order : 'desc';
         const limit = req.query.limit ? req.query.limit - 0 : 20;
         const skip = req.query.skip ? req.query.skip - 0 : 0;
+        if(status == 9) {
+          const result = await db.select('*').from('players')
+              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+              .andWhere('appealStatus', '=', '1')
+              .orderBy(sort, order).offset(skip).limit(limit)
+              .then(r => r.map(i => {
+                  delete i.valid;
+                  return i
+              }));
+          const total = await db('players').count({num: 'id'})
+              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+              .andWhere('appealStatus', '=', '1').first().then(r => r.num);
+          res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+              success: 1,
+              code: 'players.ok',
+              data: {result, total}
+          });
 
-        const result = await db.select('*').from('players')
-            .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-            .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-            .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-            .andWhere('status', 'like', status)
-            .orderBy(sort, order).offset(skip).limit(limit)
-            .then(r => r.map(i => {
-                delete i.valid;
-                return i
-            }));
-        const total = await db('players').count({num: 'id'})
-            .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-            .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-            .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-            .andWhere('status', 'like', status).first().then(r => r.num);
+        }else {
+          const result = await db.select('*').from('players')
+              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+              .andWhere('status', 'like', status)
+              .orderBy(sort, order).offset(skip).limit(limit)
+              .then(r => r.map(i => {
+                  delete i.valid;
+                  return i
+              }));
+          const total = await db('players').count({num: 'id'})
+              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+              .andWhere('status', 'like', status).first().then(r => r.num);
+  
+          res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+              success: 1,
+              code: 'players.ok',
+              data: {result, total}
+          });
 
-        res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
-            success: 1,
-            code: 'players.ok',
-            data: {result, total}
-        });
+        }
     } catch (err) {
         next(err);
     }

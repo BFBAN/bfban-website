@@ -3,7 +3,7 @@
     "description": "<h2>BFBAN</h2>\n    <p>\n    created at 2018.1.29; It is an organisation created to fight <b>against hackers</b>\n    </p>\n\n    <p>\n      Staff members in bfban include:\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>Server owners</li>\n      <li>Clan's leaders</li>\n      <li>Bf1 streamers</li>\n    </ul>",
     "privacy": "\n<h2>Privacy policy</h2>\nIt is open-sourced. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use.",
     "title": "About",
-    "website": "\n    <h2>bfban.com website</h2>\n    <p>\n      <a href=\"https://bfban.com\">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> and launched on November 4, 2018\n    </p>\n    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>"
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> and launched on November 4, 2018\n    </p>\n    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>"
   },
   "account": {
     "bindOrigin": {
@@ -117,7 +117,8 @@
       "report": "Report user",
       "reset": "Reset",
       "save": "Save",
-      "submit": "Submit"
+      "submit": "Submit",
+      "dealAppeal": "Handling of complaints"
     },
     "gamePlatforms": {
       "origin": "Origin",
@@ -142,6 +143,8 @@
       "normal": "Normal User",
       "root": "System",
       "super": "Super Admin",
+      "freezed": "user freeze",
+      "volunteer": "Community Volunteer",
       "test": "Testing Account"
     },
     "status": {
@@ -154,6 +157,7 @@
       "6": "Needs more votes",
       "7": "Ultra-confirmed hacker",
       "8": "farm weapons",
+      "9": "appeal",
       "all": "all"
     },
     "tip": {
@@ -228,7 +232,8 @@
         "changeName": "Name change",
         "content": "Appeal details",
         "originName": "Player's current ID",
-        "player": "Player's ID"
+        "player": "Player id",
+        "commentid": "Comment ID"
       },
       "modal": {
         "auxiliaryProof": {
@@ -254,7 +259,27 @@
       },
       "placeholder": {
         "content": "Please fill in detail of your appeal for review",
-        "player": "Please fill in Player's ID"
+        "player": "Please fill in Player's ID",
+        "videolink": "Please fill in the video link",
+        "btrlink": "Please fill out the btr matchup link"
+      },
+      "deal": {
+        "firstPersonRecording": "First person screen recording link",
+        "mossDownloadUrl": "Download Moss",
+        "mossUpload": "Upload Moss",
+        "btrLink": "BTR Link",
+        "appealContent": "Player appeal content",
+        "admincontent": "Admin appeal content",
+        "action": "Appeal operation",
+        "type": "Appeal type",
+        "moss":"Moss self-proof appeal",
+        "farm": "Farm weapon appeal",
+        "other": "Other appeal type",
+        "stats":{
+          "accept": "Appeal passed",
+          "fail": "Appeal failed",
+          "unprocessed": "Appeal not processed"
+        }
       }
     },
     "info": {
@@ -378,6 +403,7 @@
   "forgetPassword": {
     "resetSuccess": "The password reset is successful! 💐",
     "checkEmail": "Please check your email and click on the verification link",
+    "forgetUsername": "If you forget your BFBAN username, please go to the <a href='http://kook.top/wHwxhw'> bfban developer community</a> for help. Note that you may need a complicated retrieval process.",
     "steps": {
       "0": {
         "supplement": "Account name",
@@ -435,7 +461,7 @@
     "cover": {
       "confirmData": "Confirmed cheater",
       "dataReceived": "Recieved",
-      "endTime": "Starting from of {time}",
+      "endTime": "Since {time}",
       "h1": "BFBAN",
       "h2": {
         "hint0": "Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world",
@@ -470,7 +496,7 @@
     },
     "filters": {
       "sortBy": {
-        "commentsNum": "reply counts in descending order",
+        "commentsNum": "replies in reverse order",
         "createTime": "Sort by report time",
         "updateTime": "Sort by Update time",
         "viewNum": "Sort by View time"
@@ -511,7 +537,20 @@
         "languageSyncDescribe": "It will use the selected language while your logged in",
         "privilege": "Indentity",
         "showOrigin": "Show Orgin info",
-        "showOriginDescribe": "Allow your connected orgin account to be shown on BFBAN"
+        "showOriginDescribe": "Allow your connected orgin account to be shown on BFBAN",
+        "modifyDescription": "Modify User Profile",
+        "description": "User Profile",
+        "privileges": "Privilege",
+        "changeNameLeft": "Remaining Username Modification Times",
+        "username": "Username",
+        "lastSigninIP": "Last login IP",
+        "registerIP": "Register IP",
+        "createTime": "Register Time",
+        "signoutTime": "Logout Time",
+        "originEmail": "EA Account Email",
+        "originPersonaId": "EA Account PersonaID",
+        "originName": "EA Account Username",
+        "originUserId": "EA Account UserID"
       },
       "modifyName": {
         "residueDegree": "You still have {changeNameLeft}chance to change name",
@@ -549,7 +588,7 @@
         "messagePush": "Push Notifications",
         "muteUsers": "Muned users",
         "user": "user management",
-        "verifications": "validator"
+        "verifications": "validator code"
       },
       "title": "Backend management"
     },
@@ -560,6 +599,7 @@
       "control": "Batch edit",
       "load": "Reload",
       "look": "Open chat",
+      "download": "Download",
       "placeholder": "Type message here",
       "tabsList": {
         "form": {
@@ -634,9 +674,15 @@
       "title": "History log"
     },
     "media": {
-      "capacity": "Capacity",
-      "fileNum": "{num} file",
-      "title": "Media library"
+      "capacity": "Capacity state",
+      "title": "Media library",
+      "maxFileNumber": "Number of files that can be uploaded",
+      "maxTrafficQuota": "Maximum file size",
+      "usedStorageQuota": "Total storage quota",
+      "todayFileNumber": "The file has been uploaded today",
+      "todayTrafficQuota": "Amount of traffic",
+      "prevResetTime": "Reset date limit",
+      "hint1": "Each account has a daily upload bandwidth, the number of files, and a single size limit, but it will reset the next date, but there is a number of files available for each account to upload, and files with low storage requirements can be replaced by other websites."
     },
     "meet": "welcome back {name}! ",
     "subscribes": {
@@ -760,10 +806,11 @@
     "failed": "Login failed",
     "fillEverything": "Please fill in everything",
     "form": {
-      "forgetPasswordHint": "Forgot your password？",
+      "forgetPasswordHint": "Forget Password?",
       "password": "Password",
       "submitHint": "Don't have account? Sign up",
-      "username": "Username"
+      "Feedback": "Feedback Question",
+      "username": "Username/Email"
     },
     "loggedIn": "Please log out first (✿◡‿◡)",
     "loginFirst": "Please login first",
@@ -776,7 +823,7 @@
     "failed": "Registration failed",
     "fillIn": "Please fill in the form",
     "form": {
-      "forgetPasswordHint": "Forgot your password？",
+      "forgetPasswordHint": "Forget Password?",
       "newUsername": "New username",
       "originEmail": "EA account email",
       "originId": "EA ID",

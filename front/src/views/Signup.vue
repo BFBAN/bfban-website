@@ -22,8 +22,6 @@
                   :content="$t('signup.steps[2].title')"></Step>
             <Step v-show="!isOneStepToTheStomach" :title="$t('signup.steps[3].title')"
                   :content="$t('signup.steps[3].title')"></Step>
-            <Step v-show="!isOneStepToTheStomach" :title="$t('signup.steps[4].title')"
-                  :content="$t('signup.steps[4].title')"></Step>
           </Steps>
         </div>
 
@@ -36,9 +34,9 @@
               </Alert>
               <br>
             </template>
-            <Alert type="error" show-icon v-if="backServiceMsg">
+            <Alert type="error" show-icon v-if="serverReturnMessage">
               <b>{{ $t('signup.failed') }} :</b>
-              {{ backServiceMsg }}
+              {{ serverReturnMessage }}
             </Alert>
 
             <Form ref="formValidate" label-position="top" :model="signup" :rules="ruleValidate">
@@ -77,6 +75,10 @@
                 </FormItem>
               </div>
 
+              <FormItem v-show="stepsIndex <= 2">
+                <checkbox :size="'small'" v-model="isOneStepToTheStomach">"One step to the stomach" Mode</checkbox>
+              </FormItem>
+
               <div v-show="stepsIndex === 3">
                 <Card dis-hover>
                   <Row :gutter="16" type="flex" justify="center" align="middle">
@@ -95,10 +97,6 @@
                 <Alert type="success" show-icon>{{ $t('signup.needVerify') }}</Alert>
               </div>
 
-              <FormItem>
-                <checkbox :size="'small'" v-model="isOneStepToTheStomach">"One step to the stomach" Mode</checkbox>
-              </FormItem>
-
               <Row v-show="stepsIndex <= 2">
                 <Col flex="auto">
                   <Button v-if="!isOneStepToTheStomach && stepsIndex >= 0 && stepsIndex <= 2"
@@ -108,7 +106,8 @@
                   <Divider type="vertical" v-if="!isOneStepToTheStomach"/>
                   <Button v-if="!isOneStepToTheStomach && stepsIndex != 2 && stepsIndex >= 0 && stepsIndex <= 2"
                           @click.prevent.stop="stepsIndex++" size="large"
-                          type="primary">{{ $t('basic.button.next') }}
+                          type="primary">
+                    {{ $t('basic.button.next') }}
                   </Button>
                 </Col>
                 <Col flex="auto" align="right" type="flex">
@@ -116,7 +115,7 @@
                   <template v-if="isOneStepToTheStomach || stepsIndex == 2">
                     <Button
                         @click="onSignup"
-                        :disabled="!isOneStepToTheStomach || !signup.captcha"
+                        :disabled="!signup.captcha"
                         :loading="spinShow"
                         long
                         size="large"
@@ -151,7 +150,7 @@
 <script>
 import Application from "../assets/js/application";
 
-import {http, api, http_token, mail} from '../assets/js/index'
+import {http, api, http_token, mail, regular} from '../assets/js/index'
 import {testWhitespace} from "@/mixins/common";
 
 import EmailTip from "../components/EmailTip";
@@ -163,7 +162,14 @@ export default new Application({
       stepsIndex: 0,
       ruleValidate: {
         username: [
-          {required: true, min: 4, max: 40, trigger: 'blur'}
+          {required: true, min: 4, max: 40, trigger: 'blur'},
+          {
+            validator(rule, value, callback) {
+              return regular.check('username', value).code == 0;
+            },
+            message: this.$t('signup.placeholder.username'),
+            trigger: 'change'
+          }
         ],
         password: [
           {required: true, min: 6, max: 40, trigger: 'blur'}
@@ -175,7 +181,7 @@ export default new Application({
           {required: true, trigger: 'blur'}
         ],
         captcha: [
-          {required: true, min: 4, max: 4, trigger: 'change'}
+          {required: true, len: 4, trigger: 'blur'}
         ]
       },
       signup: {
@@ -185,7 +191,7 @@ export default new Application({
         originName: '',
         captcha: '',
       },
-      backServiceMsg: '',
+      serverReturnMessage: '',
       spinShow: false,
       isOneStepToTheStomach: false,
     }
@@ -217,7 +223,7 @@ export default new Application({
               username,
               password,
               originEmail,	// must match the originName below
-              originName,	// must have one of bf series game
+              originName,	  // must have one of bf series game
               language: mail.exchangeLangField(this.$root.$i18n.locale)
             },
             encryptCaptcha: this.$refs.captcha.hash,
@@ -238,7 +244,7 @@ export default new Application({
           this.callbackMessage(d);
         }).catch(err => {
           this.$Message.error(err);
-          this.backServiceMsg = this.$i18n.t('signup.failed');
+          this.serverReturnMessage = this.$i18n.t('signup.failed');
         }).finally(() => {
           this.spinShow = false;
 
@@ -298,7 +304,7 @@ export default new Application({
         case "signup.error":
         default:
           that.$Message.error(data.code);
-          that.backServiceMsg = data.message || data.code;
+          that.serverReturnMessage = data.message || data.code;
           break;
       }
 
@@ -308,7 +314,7 @@ export default new Application({
         let captcha_text = this.$i18n.t(`captcha.messages.${captcha_code}`);
         if (captcha_code == 'gan') return;
         that.$Message.error({content: captcha_text, duration: 6});
-        that.backServiceMsg += `,${captcha_text}`;
+        that.serverReturnMessage += `,${captcha_text}`;
       }
     }
   }
