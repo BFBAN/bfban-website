@@ -551,7 +551,7 @@
         <Button type="primary"
                 v-voice-button
                 @click="appeal.show = true"
-                :disabled="!isLogin || cheater.status != 1">
+                :disabled="!isLogin || (cheater.status != 1)">
           {{ $t('detail.info.appeal') }}
         </Button>
         <p><br>{{ $t('detail.appeal.describe') }}</p>

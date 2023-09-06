@@ -103,13 +103,13 @@ async (req, res, next) => {
         }
 
         const result = await db.select('id', 'originName', 'originUserId', 'originPersonaId', 'games',
-            'cheatMethods', 'avatarLink', 'viewNum', 'commentsNum', 'status', 'createTime', 'updateTime')
+            'cheatMethods', 'avatarLink', 'viewNum', 'commentsNum', 'status', 'createTime', 'updateTime', 'appealStatus')
             .from('players').where(key, '=', val).first();
         if (!result)
             return res.status(404).json({error: 1, code: 'player.notFound'});
         if (req.query.history) // that guy does exist
             result.history = await db.select('originName', 'fromTime', 'toTime').from('name_logs').where({originUserId: result.originUserId});
-
+        
         res.status(200).json({success: 1, code: 'player.ok', data: result});
     } catch (err) {
         next(err);
@@ -819,10 +819,12 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
             const insertId = (await db('comments').insert(reply))[0];
             reply.id = insertId;
             await db('players').update({
-                updateTime: new Date(),
+                updateTime: new Date()
             }).increment('commentsNum', 1).where({id: dbId});
-
             siteEvent.emit('action', {method: 'reply', params: {reply, player}});
+            if(req.user.privilege.includes('admin') && req.body.data.appealStatus == '1' ) {
+              await db('players').update({ appealStatus: '2' }).where({id: dbId});
+            }
             return res.status(200).json({success: 1, code: 'reply.success', message: 'Reply success.'});
         } catch (err) {
             next(err);

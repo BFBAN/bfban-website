@@ -787,7 +787,7 @@
               <!-- 用户回复 S -->
               <div class="ivu-card ivu-card-bordered ivu-card-dis-hover" id="reply" v-if="isLogin">
                 <div class="ivu-card-body">
-                  <Alert show-icon>{{ $t('detail.info.appealManual1') }}</Alert>
+                  <!-- <Alert show-icon>{{ $t('detail.info.appealManual1') }}</Alert> -->
                   <Textarea v-model="reply.content"
                             style="margin: 0 -16px;"
                             ref="replyTextarea"
@@ -806,7 +806,7 @@
                       </Input>
                     </Col>
                     <Col :xs="{span: 24, push: 0}" :lg="{span: 8, push: 7}">
-                      <ButtonGroup>
+                      <ButtonGroup v-if="cheater.appealStatus != '1' && isAdmin">
                         <Button type="primary"
                                 size="large"
                                 v-voice-button
@@ -827,6 +827,17 @@
                               <span>{{ $t('detail.info.replyManual2') }}</span>
                             </div>
                           </Poptip>
+                        </Button>
+                      </ButtonGroup>
+                      <ButtonGroup v-else>
+                        <Button type="primary"
+                                size="large"
+                                v-voice-button
+                                :long="isMobile"
+                                :loading="replySpinShow"
+                                :disabled="!reply.content"
+                                @click.stop.prevent="onReply">
+                          处理申述
                         </Button>
                       </ButtonGroup>
                     </Col>
@@ -985,8 +996,9 @@
                               :long="isMobile"
                               v-voice-button :loading="verifySpinShow"
                               @click.stop.prevent="onJudgement">
-                        {{ $t('basic.button.submit') }}
+                        {{ (cheater.appealStatus != '1' && isAdmin) ? $t('basic.button.submit') : "处理申述" }}
                       </Button>
+                      
                       <div slot="content" align="left">
                         <div>
                           <Checkbox v-model="verify.isUpdateinformation">{{ $t('detail.info.updateButton') }}</Checkbox>
@@ -1009,7 +1021,7 @@
           <Spin fix v-if="$store.state.configuration.judgementTip == false">
             <div class="loader">
               <Icon type="md-lock" size="80" style="margin-bottom: 20px"/>
-
+              
               <Alert>
                 <template slot="desc">
                   <p class="hint">{{ $t('detail.info.adminManual1') }}</p>
@@ -1370,11 +1382,11 @@
               </Button>
               <Divider type="vertical"/>
             </Col>
-            <Col flex="1">
-              <Button @click="onAdminTimeLineDealAppeal('fail')" v-voice-button>
+            <Col flex="1" v-if="false">
+              <Button @click="onAdminTimeLineDealAppeal" v-voice-button>
                 {{ $t('detail.appeal.deal.stats.fail') }}
               </Button>
-              <Button @click="onAdminTimeLineDealAppeal('accept')" type="primary" v-voice-button>
+              <Button @click="onAdminTimeLineDealAppeal" type="primary" v-voice-button>
                 {{ $t('detail.appeal.deal.stats.accept') }}
               </Button>
             </Col>
@@ -1680,13 +1692,13 @@ export default new Application({
      * 管理裁决玩家申诉
      * @returns {Promise<void>}
      */
-    async onAdminTimeLineDealAppeal(action) {
+    async onAdminTimeLineDealAppeal() {
       try {
         const response = await this.http.post(api["admin_setAppeal"], {
           data: {
-            id: this.appealdeal.id,
-            content: this.appealdeal.admincontent, // 管理回复内容
-            action                                 // 对申诉的操作
+            toPlayerId: this.cheater.id,
+            // content: this.appealdeal.admincontent, // 管理回复内容
+            // action                                 // 对申诉的操作
           },
         });
 
@@ -2327,6 +2339,7 @@ export default new Application({
           toPlayerId: cheaterId,
           toCommentId: null,
           content: content,
+          appealStatus: this.cheater.appealStatus
         },
         encryptCaptcha: this.$refs.replyPlayerCaptcha.hash,
         captcha: this.reply.captcha,
@@ -2361,7 +2374,6 @@ export default new Application({
         this.replySpinShow = false;
 
         message.playSendVoice();
-
         this.cancelReply();
         this.getPlayerInfo();
         this.getTimeline();

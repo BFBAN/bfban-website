@@ -348,45 +348,44 @@ async (req, res, next) => {
 });
 
 router.post('/setAppeal', verifyJWT, allowPrivileges(["super", "root", "dev", "admin"]), [
-    checkbody('data.id').isInt({min: 0}),
-    checkbody('data.admincontent').isString().isLength({max: 65535}),
-    checkbody('data.appealStatus').isString().isIn(['fail', 'accept'])
+    checkbody('data.toPlayerId').isInt({min: 0})
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
         /** @type {import("../typedef.js").Comment} */
-        const comment = await db.select('*').from('comments').where({id: req.body.id}).first();
-        if (!comment)
-            return res.status(404).json({error: 1, code: 'admin.setAppeal.notFound'});
-        await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setAppeal', target: comment.id}));
+        // const comment = await db.select('*').from('comments').where({id: req.body.id}).first();
+        // if (!comment)
+        //     return res.status(404).json({error: 1, code: 'admin.setAppeal.notFound'});
+        // const player = await db.select('*').from('players').where({id: req.body.data.toPlayerId}).first();
+        // await db('players').where('originPersonaId', commentItemPersonId.toOriginPersonaId).update({ appealStatus });
+        // await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setAppeal', target: comment.id}));
 
-        const updateData = {
-            admincontent: req.body.content,
-            appealStatus: req.body.action
-        };
-        const comments = db('comments');
-        const commentItem = comments.where({id: comment.id});
-        const commentItemPersonId = await commentItem.first();
+        // const updateData = {
+        //     admincontent: req.body.content,
+        //     appealStatus: req.body.action
+        // };
+        // const comments = db('comments');
+        // const commentItem = comments.where({id: comment.id});
+        // const commentItemPersonId = await commentItem.first();
 
-        if (commentItemPersonId.appealStatus == 'accept')
-            return res.status(400).json({error: 1, code: 'admin.setAppeal.repeatedPassage'});
+        // if (commentItemPersonId.appealStatus == 'accept')
+        //     return res.status(400).json({error: 1, code: 'admin.setAppeal.repeatedPassage'});
 
-        let playerStatus = 0;
-        if (updateData.appealStatus === 'fail') playerStatus = 1;
-        if (updateData.appealStatus === 'accept') playerStatus = 3;
+        // let playerStatus = 0;
+        // if (updateData.appealStatus === 'fail') playerStatus = 1;
+        // if (updateData.appealStatus === 'accept') playerStatus = 3;
 
-        await commentItem.update(updateData);
-        if (commentItemPersonId)
-            await db('players').where('originPersonaId', commentItemPersonId.toOriginPersonaId).update({status: playerStatus});
+        // await commentItem.update(updateData);
+        await db('players').where('originPersonaId', commentItemPersonId.toOriginPersonaId).update({ appealStatus: '2' });
         await db('operation_log').insert({
-            byUserId: req.user.id,
-            toUserId: comment.toPlayerId,
-            action: 'edit',
-            role: 'comment',
-            createTime: new Date()
+          byUserId: req.user.id,
+          toUserId: req.body.data.toPlayerId,
+          action: 'edit',
+          role: 'appeal',
+          createTime: new Date()
         });
 
-        return res.status(200).json({success: 1, code: 'admin.setComment.ok'});
+        return res.status(200).json({success: 1, code: 'admin.setAppeal.ok'});
     } catch (err) {
         next(err);
     }
