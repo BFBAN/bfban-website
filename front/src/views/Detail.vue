@@ -515,7 +515,7 @@
                     </template>
 
                     <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
-                                :html="l.content" v-if="l.content"></HtmlWidget>
+                                :html="l.content.text" v-if="l.content.text"></HtmlWidget>
                   </div>
                   <!-- 举报:any E -->
 
@@ -532,11 +532,7 @@
 
                           {{ $t('detail.appeal.info.content') }}
 
-                          <Tag>
-                            {{
-                              handleTimeLineContent(l.content).appealType ? handleTimeLineContent(l.content).appealType : 'none'
-                            }}
-                          </Tag>
+                          <Tag>{{ l.content.appealType || 'none' }}</Tag>
 
                           <BusinessCard :id="l.originUserId">
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
@@ -558,19 +554,19 @@
                           <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
                           <Divider type="vertical"/>
                           <Tag type="border" color="primary">
-                            {{ $t('detail.appeal.deal.stats.' + (l.appealStatus ? l.appealStatus : 'unprocessed')) }}
+                            {{ $t(`detail.appeal.deal.stats.${l.appealStatus || 'unprocessed'}`) }}
                           </Tag>
                         </Col>
                       </Row>
                     </div>
-                    <HtmlWidget :html="isValidJson(l.content) ? handleTimeLineContent(l.content).content : l.content"
-                                v-if="l.content"
+                    <HtmlWidget :html="l.content.text"
+                                v-if="l.content.text"
                                 class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
 
-                    <template v-if="isLogin && isValidJson(l.content)">
-                      <Row :gutter="5" v-if="isValidJson(l.content)">
-                        <Col v-if="handleTimeLineContent(l.content).btrLink">
-                          <a :href="handleTimeLineContent(l.content).btrLink" target="_new">
+                    <template v-if="isLogin && l.content.extendedLinks">
+                      <Row :gutter="5">
+                        <Col v-if="l.content.extendedLinks.btrLink">
+                          <a :href="l.content.extendedLinks.btrLink" target="_new">
                             <Badge text="BTR">
                               <Card :padding="5">
                                 <Icon type="ios-link" size="50"/>
@@ -578,8 +574,8 @@
                             </Badge>
                           </a>
                         </Col>
-                        <Col v-if="handleTimeLineContent(l.content).videoLink">
-                          <a :href="handleTimeLineContent(l.content).videoLink" target="_new">
+                        <Col v-if="l.content.extendedLinks.videoLink">
+                          <a :href="l.content.extendedLinks.videoLink" target="_new">
                             <Badge text="Video Link">
                               <Card :padding="5">
                                 <Icon type="ios-videocam" size="50"/>
@@ -587,7 +583,7 @@
                             </Badge>
                           </a>
                         </Col>
-                        <Col v-if="handleTimeLineContent(l.content).moss">
+                        <Col v-if="l.content.extendedLinks.mossDownloadUrl">
                           <Badge text="Moss File">
                             <Card :padding="5">
                               <Icon type="md-download" size="50"/>
@@ -596,11 +592,15 @@
                         </Col>
                       </Row>
                     </template>
-                    <template v-else-if="!isValidJson(l.content)">
-                      <Alert show-icon type="info" :banner="true" :fade="false">{{$t('detail.timeline.noAppealAttachmentHint')}}</Alert>
+                    <template v-else-if="l.content.hasOwnProperty('extendedLinks')">
+                      <Alert show-icon type="info" :banner="true" :fade="false">
+                        {{ $t('detail.timeline.noAppealAttachmentHint') }}
+                      </Alert>
                     </template>
                     <template v-else-if="!isLogin">
-                      <Alert show-icon type="warning" :banner="true" :fade="false">{{$t('detail.timeline.needLoginViewAttachmentsHint')}}</Alert>
+                      <Alert show-icon type="warning" :banner="true" :fade="false">
+                        {{ $t('detail.timeline.needLoginViewAttachmentsHint') }}
+                      </Alert>
                     </template>
                   </div>
                   <!-- 申诉:any E -->
@@ -658,7 +658,7 @@
                       </Row>
                     </div>
 
-                    <HtmlWidget :html="l.content" v-if="l.content"
+                    <HtmlWidget :html="l.content.text" v-if="l.content.text"
                                 class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
                   </div>
                   <!-- 认为:any E -->
@@ -704,7 +704,7 @@
                         </div>
                       </template>
 
-                      <HtmlWidget :html="l.content" v-if="l.content"></HtmlWidget>
+                      <HtmlWidget :html="l.content.text" v-if="l.content.text"></HtmlWidget>
                     </div>
                   </div>
                   <!-- 回复:any E -->
@@ -1001,7 +1001,7 @@
                               @click.stop.prevent="onJudgement">
                         {{ (cheater.appealStatus != '1' && isAdmin) ? $t('basic.button.submit') : "处理申述" }}
                       </Button>
-                      
+
                       <div slot="content" align="left">
                         <div>
                           <Checkbox v-model="verify.isUpdateinformation">{{ $t('detail.info.updateButton') }}</Checkbox>
@@ -1024,7 +1024,7 @@
           <Spin fix v-if="$store.state.configuration.judgementTip == false">
             <div class="loader">
               <Icon type="md-lock" size="80" style="margin-bottom: 20px"/>
-              
+
               <Alert>
                 <template slot="desc">
                   <p class="hint">{{ $t('detail.info.adminManual1') }}</p>
@@ -1242,7 +1242,6 @@
                       <Col flex="1">
                         <!-- BTR链接 -->
                         <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                          <br>
                           <Card dis-hover :padding="0">
                             <Input type="textarea" :rows="4" :maxlength="65535" v-model="appeal.btrLink"
                                    :style="{ width: '100%', height: '100%'}"></Input>
@@ -1277,9 +1276,8 @@
                       <Col flex="1">
                         <!-- 玩家的申诉内容 -->
                         <FormItem :label="$t('detail.appeal.info.content')">
-                          <br>
                           <Card dis-hover :padding="0">
-                            <Textarea value="appeal.content"
+                            <Textarea v-model="appeal.content"
                                       ref="textareaAppealContent"
                                       :toolbar="['bold', 'link']"
                                       :height="'400px'"
@@ -1301,12 +1299,13 @@
       <Modal v-model="appealdealModal" width="60%">
         <div slot="header">
           {{ `${$t('basic.button.dealAppeal')}` }}
+          <Tag>{{ appealdeal.appealStatus }}</Tag>
         </div>
         <Form v-if="isLogin" label-position="top">
           <Row :gutter="30">
             <Col flex="1">
               <FormItem :label="$t('detail.appeal.info.player')">
-                <Input type="text" :value="appealdeal.dbid" readonly/>
+                <Input type="text" :value="appealdeal.toOriginPersonaId" readonly/>
               </FormItem>
             </Col>
             <Col flex="1">
@@ -1322,17 +1321,17 @@
               <Col flex="1">
                 <!-- 第一人称录屏 -->
                 <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
-                  <Input type="text" :value="appealdeal.firstPersonRecording" readonly/>
+                  <Input type="text" :value="appealdeal.extendedLinks.firstPersonRecording" readonly/>
                 </FormItem>
                 <!-- BTR链接 -->
                 <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                  <Input type="text" :value="appealdeal.btrLink" readonly/>
+                  <Input type="text" :value="appealdeal.extendedLinks.btrLink" readonly/>
                 </FormItem>
               </Col>
               <Col flex="1">
                 <!-- MOSS下载按钮 -->
                 <FormItem :label="$t('detail.appeal.deal.mossDownloadUrl')">
-                  <a :href="appealdeal.mossDownloadUrl" target="_blank">
+                  <a :href="appealdeal.extendedLinks.mossDownloadUrl" target="_blank">
                     <div class="ivu-upload ivu-upload-drag" style="padding: 20px 0px;">
                       <Icon type="md-download" size="50"/>
                     </div>
@@ -1479,13 +1478,7 @@ export default new Application({
         btrLink: '',
         action: ''
       },
-      appealdeal: {
-        type: '',
-        VideoLink: '',
-        mossDownloadUrl: '',
-        btrLink: '',
-        action: ''
-      },
+      appealdeal: {},
       appealdealModal: false,
       cheater: {
         originId: '',
@@ -1677,16 +1670,18 @@ export default new Application({
     async openAppealDealModal(commentId) {
       // 调用API获取申诉数据
       const timelineItem = await this.getTimeLineItemData(commentId);
-      const afterHandleTimelineContent = this.handleTimeLineContent(timelineItem.content);
+      const afterHandleTimelineContent = timelineItem.content;
+      console.log(timelineItem, afterHandleTimelineContent);
 
       // 将获取的数据赋值到`appeal`对象上
-      this.appealdeal.id = timelineItem.id;
-      this.appealdeal.dbid = timelineItem.dbid;
-      this.appealdeal.firstPersonRecording = timelineItem.videoLink;
-      this.appealdeal.type = afterHandleTimelineContent.appealType;
-      this.appealdeal.mossDownloadUrl = afterHandleTimelineContent.mossDownloadUrl;
-      this.appealdeal.btrLink = afterHandleTimelineContent.btrLink;
-      this.appealdeal.content = afterHandleTimelineContent.content;
+      this.appealdeal = Object.assign(this.appealdeal, timelineItem);
+      // this.appealdeal.id = timelineItem.id;
+      // this.appealdeal.dbid = timelineItem.dbid;
+      // this.appealdeal.firstPersonRecording = timelineItem.videoLink;
+      // this.appealdeal.type = afterHandleTimelineContent.appealType;
+      // this.appealdeal.mossDownloadUrl = afterHandleTimelineContent.mossDownloadUrl;
+      // this.appealdeal.btrLink = afterHandleTimelineContent.btrLink;
+      // this.appealdeal.content = afterHandleTimelineContent.content;
 
       // 打开模态框
       this.appealdealModal = true;
@@ -1985,7 +1980,6 @@ export default new Application({
      * @returns {Promise<null>}
      */
     async getTimeLineItemData(id) {
-      // 发起请求
       let commentData = null;  // 用于保存获取到的数据
       await this.http.get(api["player_timeline_item"], {
         params: {id}
@@ -1993,17 +1987,18 @@ export default new Application({
         const d = res.data;
         if (d.success === 1) {
           // 请求成功，处理返回的数据
-          commentData = {
-            id: d.data.id,
-            content: d.data.content,
-            byUsername: d.data.username,
-            action: null,
-            dbid: d.data.toPlayerId,
-            type: d.data.appealType,
-            firstPersonRecording: d.data.videoLink,
-            mossDownloadUrl: d.data.mossDownloadUrl,
-            btrLink: d.data.btrLink
-          };
+          commentData = d.data;
+          // {
+          //   id: d.data.id,
+          //   content: d.data.content,
+          //   byUsername: d.data.username,
+          //   action: null,
+          //   dbid: d.data.toPlayerId,
+          //   type: d.data.appealType,
+          //   firstPersonRecording: d.data.videoLink,
+          //   mossDownloadUrl: d.data.mossDownloadUrl,
+          //   btrLink: d.data.btrLink
+          // };
         } else {
           switch (d.code) {
             case "commentItem.bad":
@@ -2452,23 +2447,6 @@ export default new Application({
       const div = document.createElement('div');
       div.innerHTML = html;
       return div.textContent;
-    },
-    /**
-     * 处理时间轴内容
-     * @param content [object | string]
-     * @returns {*}
-     */
-    handleTimeLineContent(content) {
-      if (regular.checkJSON(content)) return JSON.parse(content);
-      return content;
-    },
-    isValidJson(jsonString) {
-      try {
-        JSON.parse(jsonString);
-        return true;
-      } catch (e) {
-        return false;
-      }
     },
   },
   computed: {

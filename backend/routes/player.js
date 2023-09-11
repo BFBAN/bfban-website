@@ -7,7 +7,7 @@ import db from "../mysql.js";
 import config from "../config.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import {allowPrivileges, forbidPrivileges, verifyJWT, verifySelfOrPrivilege} from "../middleware/auth.js";
-import {cheatMethodsSanitizer, handleRichTextInput} from "../lib/user.js";
+import {cheatMethodsSanitizer, handleRichTextInput, userAttributes, userShowAttributes} from "../lib/user.js";
 import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
 import {playerWidget} from "../lib/widget.js";
@@ -15,6 +15,7 @@ import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.j
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
 import {checkSpam, submitSpam, toSpam} from "../lib/akismet.js";
+import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 const router = express.Router()
 
@@ -109,7 +110,7 @@ async (req, res, next) => {
             return res.status(404).json({error: 1, code: 'player.notFound'});
         if (req.query.history) // that guy does exist
             result.history = await db.select('originName', 'fromTime', 'toTime').from('name_logs').where({originUserId: result.originUserId});
-        
+
         res.status(200).json({success: 1, code: 'player.ok', data: result});
     } catch (err) {
         next(err);
@@ -627,22 +628,7 @@ async (req, res, next) => {
 
         const now = new Date()
         result = result.map(item => {
-            // New code to handle the content field
-            if (isJSON(item.constructor)) {
-                let contentObj = JSON.parse(item.content);
-
-                // Check if the user's privilege doesn't contain 'admin' or 'dev'
-                if (!item.privilege.includes('admin') && !item.privilege.includes('dev')) {
-                    // Check if appealType is 'moss' and if mossDownloadUrl exists
-                    if (contentObj.appealType === 'moss' && contentObj.hasOwnProperty('mossDownloadUrl')) {
-                        // Delete the mossDownloadUrl field
-                        delete contentObj.mossDownloadUrl;
-                    }
-                }
-
-                // Convert the modified object back to JSON string
-                item.content = JSON.stringify(contentObj);
-            }
+            item = Object.assign(item, timeLineItemShowAttributes(item));
 
             if (item.attr.mute) {
                 const date = new Date(item.attr.mute)
@@ -698,7 +684,8 @@ router.get('/timeline/item', [
                 .join('users', 'comments.byUserId', 'users.id')
                 .select('comments.*', 'users.username', 'users.privilege')
                 .where('comments.id', id)
-                .first();
+                .first()
+                .then(res => Object.assign(res, timeLineItemShowAttributes(res)));
 
             if (!result)
                 return res.status(400).json({code: 'timeline.item.bad', message: 'This data is not available.'})
@@ -822,8 +809,8 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
                 updateTime: new Date()
             }).increment('commentsNum', 1).where({id: dbId});
             siteEvent.emit('action', {method: 'reply', params: {reply, player}});
-            if(req.user.privilege.includes('admin') && req.body.data.appealStatus == '1' ) {
-              await db('players').update({ appealStatus: '2' }).where({id: dbId});
+            if (req.user.privilege.includes('admin') && req.body.data.appealStatus == '1') {
+                await db('players').update({appealStatus: '2'}).where({id: dbId});
             }
             return res.status(200).json({success: 1, code: 'reply.success', message: 'Reply success.'});
         } catch (err) {
@@ -1000,7 +987,7 @@ async (req, res, next) => {
         player.cheatMethods = nextstate === 1 ? JSON.stringify(req.body.data.cheatMethods) : '[]';
         player.updateTime = new Date();
         player.commentsNum += 1;
-        
+
         await db('players').update({
             status: player.status,
             cheatMethods: player.cheatMethods,
@@ -1047,27 +1034,33 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege(['volunteer']), forbi
 
             let contentObject = {};
 
+            contentObject = timeLineItemSetAttributes(req.body.data);
+
             switch (req.body.data.appealType) {
                 case 'moss':
                     contentObject = {
                         appealType: req.body.data.appealType,
-                        btrLink: req.body.data.btrLink,
-                        mossDownloadUrl: req.body.data.mossDownloadUrl,
-                        videoLink: req.body.data.videoLink,
-                        content: handleRichTextInput(req.body.data.content)
+                        extendedLinks: {
+                            btrLink: req.body.data.btrLink,
+                            mossDownloadUrl: req.body.data.mossDownloadUrl,
+                            videoLink: req.body.data.videoLink,
+                        },
+                        text: handleRichTextInput(req.body.data.content)
                     };
                     break;
                 case 'farm':
                     contentObject = {
                         appealType: req.body.data.appealType,
-                        btrLink: req.body.data.btrLink,
-                        content: handleRichTextInput(req.body.data.content)
+                        extendedLinks: {
+                            btrLink: req.body.data.btrLink,
+                        },
+                        text: handleRichTextInput(req.body.data.content)
                     };
                     break;
                 case 'none':
                     contentObject = {
                         appealType: req.body.data.appealType,
-                        content: handleRichTextInput(req.body.data.content)
+                        text: handleRichTextInput(req.body.data.content)
                     };
                     break;
             }
@@ -1189,10 +1182,93 @@ async function pushOriginNameLog(originName, originUserId, originPersonaId) {
  * @returns {boolean}
  */
 function isJSON(jsonValue = "") {
+    if (!!!jsonValue) return false;
+
     if (/^[\],:{}\s]*$/.test(jsonValue.toString().replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
         return true;
     }
     return false;
+}
+
+const timeLineItemAttributes = {
+    "appealType": {type: "string", appealType: ['moss', 'farm', 'none'], get: true, set: true, default: 'none'},
+    "extendedLinks": {type: "object", appealType: ['moss', 'farm'], get: true, set: true, default: {}},
+    "extendedLinks.btrLink": {type: "string", appealType: ['farm'], get: true, set: true, default: ""},
+    "extendedLinks.videoLink": {
+        type: "string",
+        appealType: ['moss', 'farm'],
+        get: true,
+        set: true,
+        default: ""
+    },
+    "extendedLinks.mossDownloadUrl": {
+        type: "string",
+        appealType: ['moss', 'farm'],
+        get: true,
+        set: true,
+        default: ""
+    },
+    "text": {type: "boolean", appealType: ['moss', 'farm', 'none'], get: true, set: true, default: ""},
+}
+
+function timeLineItemSetAttributes(attr, [force = false]) {
+    let result = {};
+    for (let i of Object.keys(timeLineItemAttributes))
+        if (
+            typeof (attr[i]) == timeLineItemAttributes[i].type &&
+            (timeLineItemAttributes[i].set || force) &&
+            timeLineItemAttributes[i].appealType.includes(attr.appealType) &&
+            attr[i]
+        )
+            result[i] = attr[i] ?? timeLineItemAttributes[i].default;
+    return result;
+}
+
+/**
+ * @param item
+ * @returns {{
+ *     extendedLink?: Map
+ *     appealType: String
+ *     text: String
+ * }}
+ */
+function timeLineItemShowAttributes(item = {}) {
+    switch (item.type) {
+        case 'banAppeal':
+            // New code to handle the content field
+            if (isJSON(item.content)) {
+                const superPrivileges = ['root', 'dev', 'super'];
+                let contentAsMap = JSON.parse(item.content);
+
+                // Check if the user's privilege doesn't contain 'admin' and 'dev' and 'root'
+                if (!item.privilege.some(role => superPrivileges.includes(role))) {
+                    // Check if appealType is 'moss' and if mossDownloadUrl exists
+                    // Delete the mossDownloadUrl field
+                    if (contentAsMap.appealType === 'moss' && contentAsMap.hasOwnProperty('mossDownloadUrl'))
+                        delete contentAsMap.mossDownloadUrl;
+                }
+
+                item.content = {
+                    appealType: contentAsMap.appealType,
+                    text: contentAsMap.content,
+                    extendedLinks: contentAsMap.extendedLinks,
+                }
+                return;
+            }
+
+            item.content = {
+                text: item.content
+            }
+
+            break;
+        default:
+            item.content = {
+                text: item.content
+            }
+            break;
+    }
+
+    return item;
 }
 
 export default router;
