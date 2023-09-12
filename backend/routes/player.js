@@ -1036,34 +1036,6 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege(['volunteer']), forbi
 
             contentObject = timeLineItemSetAttributes(req.body.data);
 
-            switch (req.body.data.appealType) {
-                case 'moss':
-                    contentObject = {
-                        appealType: req.body.data.appealType,
-                        extendedLinks: {
-                            btrLink: req.body.data.btrLink,
-                            mossDownloadUrl: req.body.data.mossDownloadUrl,
-                            videoLink: req.body.data.videoLink,
-                        },
-                        text: handleRichTextInput(req.body.data.content)
-                    };
-                    break;
-                case 'farm':
-                    contentObject = {
-                        appealType: req.body.data.appealType,
-                        extendedLinks: {
-                            btrLink: req.body.data.btrLink,
-                        },
-                        text: handleRichTextInput(req.body.data.content)
-                    };
-                    break;
-                case 'none':
-                    contentObject = {
-                        appealType: req.body.data.appealType,
-                        text: handleRichTextInput(req.body.data.content)
-                    };
-                    break;
-            }
             const banAppeal = {
                 type: 'banAppeal',
                 toPlayerId: player.id,
@@ -1208,10 +1180,11 @@ const timeLineItemAttributes = {
         set: true,
         default: ""
     },
-    "text": {type: "boolean", appealType: ['moss', 'farm', 'none'], get: true, set: true, default: ""},
+    "content": {type: "string", appealType: ['moss', 'farm', 'none'], set: true, default: ""},
+    "text": {type: "string", appealType: ['moss', 'farm', 'none'], get: true, default: ""},
 }
 
-function timeLineItemSetAttributes(attr, [force = false]) {
+function timeLineItemSetAttributes(attr) {
     let result = {};
     for (let i of Object.keys(timeLineItemAttributes))
         if (

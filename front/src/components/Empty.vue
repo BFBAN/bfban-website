@@ -2,7 +2,7 @@
   <div>
     {{ $t('basic.tip.notContent') }}
 
-    <template v-if="showClassic">
+    <template v-if="showClassic && !notHint">
       <div class="classic">
         <Divider>Classical speech</Divider>
 
@@ -22,6 +22,12 @@ import classicMessages from "../../public/config/classicMessages.json";
 
 export default {
   name: "Empty",
+  props: {
+    notHint: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data () {
     return {
       classicMessageList: classicMessages['child'],

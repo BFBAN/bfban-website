@@ -1223,7 +1223,7 @@
                         <FormItem :label="$t('detail.appeal.info.content')">
                           <br>
                           <Card dis-hover :padding="0">
-                            <Textarea value="appeal.content"
+                            <Textarea v-model="appeal.content"
                                       ref="textareaAppealContent"
                                       :toolbar="['bold', 'link']"
                                       :height="'420px'"
@@ -1257,7 +1257,7 @@
                         <FormItem :label="$t('detail.appeal.info.content')">
                           <br>
                           <Card dis-hover :padding="0">
-                            <Textarea value="appeal.content"
+                            <Textarea v-model="appeal.content"
                                       ref="textareaAppealContent"
                                       :toolbar="['bold', 'link']"
                                       :height="'200px'"
@@ -1314,67 +1314,75 @@
               </FormItem>
             </Col>
           </Row>
+          <template v-if="appealdeal.content.appealType">
+            <FormItem>
+              <Input type="text" :value="appealdeal.content.appealType" readonly/>
+            </FormItem>
 
-          <!-- Moss申诉 -->
-          <div v-if="appealdeal.type === 'moss'">
-            <Row :gutter="30">
-              <Col flex="1">
-                <!-- 第一人称录屏 -->
-                <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
-                  <Input type="text" :value="appealdeal.extendedLinks.firstPersonRecording" readonly/>
-                </FormItem>
-                <!-- BTR链接 -->
-                <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                  <Input type="text" :value="appealdeal.extendedLinks.btrLink" readonly/>
-                </FormItem>
-              </Col>
-              <Col flex="1">
-                <!-- MOSS下载按钮 -->
-                <FormItem :label="$t('detail.appeal.deal.mossDownloadUrl')">
-                  <a :href="appealdeal.extendedLinks.mossDownloadUrl" target="_blank">
-                    <div class="ivu-upload ivu-upload-drag" style="padding: 20px 0px;">
-                      <Icon type="md-download" size="50"/>
-                    </div>
-                  </a>
-                </FormItem>
-              </Col>
-            </Row>
+            <!-- Moss申诉 -->
+            <div v-if="appealdeal.content.appealType == 'moss'">
+              <Row :gutter="30">
+                <Col flex="1">
+                  <!-- 第一人称录屏 -->
+                  <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
+                    <EditLinks :links="appealdeal.content.extendedLinks.videoLink"
+                               :isReadonly="true"></EditLinks>
+                  </FormItem>
+                  <!-- BTR链接 -->
+                  <FormItem :label="$t('detail.appeal.deal.btrLink')">
+                    <EditLinks :links="appealdeal.content.extendedLinks.btrLink"
+                               :isReadonly="true"></EditLinks>
+                  </FormItem>
+                </Col>
+                <Col flex="1">
+                  <!-- MOSS下载按钮 -->
+                  <FormItem :label="$t('detail.appeal.deal.mossDownloadUrl')">
+                    <a :href="appealdeal.content.extendedLinks.mossDownloadUrl" target="_blank">
+                      <div class="ivu-upload ivu-upload-drag" style="padding: 20px 0px;">
+                        <Icon type="md-download" size="50"/>
+                      </div>
+                    </a>
+                  </FormItem>
+                </Col>
+              </Row>
 
-            <!-- 申诉内容 -->
-            <FormItem :label="$t('detail.appeal.deal.appealContent')">
-              <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
-                          :html="convertToPlainText(appealdeal.content)" v-if="appealdeal.content"></HtmlWidget>
-            </FormItem>
-          </div>
-          <!-- 刷枪申诉 -->
-          <div v-else-if="appealdeal.type === 'farm'">
-            <!-- BTR链接 -->
-            <FormItem :label="$t('detail.appeal.deal.btrLink')">
-              <Card dis-hover :padding="0">
-                <Input type="textarea" :rows="4" :maxlength="65535" :value="appealdeal.btrLink"
-                       :style="{ width: '100%', height: '100%'}" readonly></Input>
-              </Card>
-            </FormItem>
-            <!-- 申诉内容 -->
-            <FormItem :label="$t('detail.appeal.deal.appealContent')">
-              <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
-                          :html="convertToPlainText(appealdeal.content)" v-if="appealdeal.content"></HtmlWidget>
-            </FormItem>
-          </div>
-          <!-- 其他类型申诉 -->
-          <div v-else-if="appealdeal.type === 'none'">
-            <!-- 申诉内容 -->
-            <FormItem :label="$t('detail.appeal.deal.appealContent')">
-              <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
-                          :html="convertToPlainText(appealdeal.content)" v-if="appealdeal.content"></HtmlWidget>
-            </FormItem>
-          </div>
+              <!-- 申诉内容 -->
+              <FormItem :label="$t('detail.appeal.deal.appealContent')">
+                <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
+                            :html="appealdeal.content.text" v-if="appealdeal.content.text"></HtmlWidget>
+              </FormItem>
+            </div>
+            <!-- 刷枪申诉 -->
+            <div v-else-if="appealdeal.content.appealType === 'farm'">
+              <!-- BTR链接 -->
+              <FormItem :label="$t('detail.appeal.deal.btrLink')">
+                <Card dis-hover :padding="0">
+                  <EditLinks :links="appealdeal.content.extendedLinks.btrLink"
+                             :isReadonly="true"></EditLinks>
+                </Card>
+              </FormItem>
+              <!-- 申诉内容 -->
+              <FormItem :label="$t('detail.appeal.deal.appealContent')">
+                <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
+                            :html="appealdeal.content.text" v-if="appealdeal.content.text"></HtmlWidget>
+              </FormItem>
+            </div>
+            <!-- 其他类型申诉 -->
+            <div v-else-if="appealdeal.content.appealType === 'none'">
+              <!-- 申诉内容 -->
+              <FormItem :label="$t('detail.appeal.deal.appealContent')">
+                <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
+                            :html="appealdeal.content.text" v-if="appealdeal.content.text"></HtmlWidget>
+              </FormItem>
+            </div>
+          </template>
+
 
           <!-- 管理回复内容 -->
-          <Card dis-hover :padding="0">
-            <Textarea v-model="appealdeal.admincontent"
-                      size="large"/>
-          </Card>
+<!--          <Card dis-hover :padding="0">-->
+<!--            <Textarea v-model="appealdeal.admincontent"-->
+<!--                      size="large"/>-->
+<!--          </Card>-->
         </Form>
         <div slot="footer">
           <Row :gutter="30">
@@ -1447,6 +1455,7 @@ import PrivilegesTag from "/src/components/PrivilegesTag";
 import FastReply from "@/components/FastReply";
 import htmllink from "@/components/HtmlLink";
 import DetailAppeal from "@/components/Detail_Appeal.vue";
+import EditLinks from "@/components/EditLinks.vue";
 import requestConf from "../../public/config/requestConf.json";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
@@ -1478,7 +1487,12 @@ export default new Application({
         btrLink: '',
         action: ''
       },
-      appealdeal: {},
+      appealdeal: {
+        content: {
+          appealType: '',
+          text: ''
+        }
+      },
       appealdealModal: false,
       cheater: {
         originId: '',
@@ -1566,7 +1580,8 @@ export default new Application({
     PrivilegesTag,
     FastReply,
     htmllink,
-    DetailAppeal
+    DetailAppeal,
+    EditLinks
   },
   watch: {
     '$route': 'loadData',

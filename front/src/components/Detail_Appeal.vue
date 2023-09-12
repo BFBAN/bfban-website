@@ -69,7 +69,7 @@
               <Col flex="1">
                 <FormItem :label="$t('detail.appeal.info.player')" prop="id">
                   <Input type="text"
-                         disabled
+                         readonly
                          size="large"
                          :value="cheater.id"
                          :placeholder="$t('detail.placeholder.player')"/>
@@ -79,7 +79,7 @@
                 <FormItem :label="$t('detail.appeal.info.originName')" prop="originName">
                   <Input type="text"
                          :value="cheater.originName"
-                         disabled
+                         readonly
                          size="large"/>
                 </FormItem>
               </Col>
@@ -88,7 +88,12 @@
             <!-- 下拉框，选择对申诉的操作 -->
             <FormItem :label="$t('detail.appeal.deal.type')">
               <Select v-model="appeal.type">
-                <Option :value="i.value" v-for="(i, index) in appealType" :key="index">{{ $t(i.name) }}</Option>
+                <Option :value="i.value" :label="$t(i.name)" v-for="(i, index) in appealType" :key="index">
+                  <Row>
+                    <Col flex="1">{{ $t(i.name) }}</Col>
+                    <Col>{{ i.value }}</Col>
+                  </Row>
+                </Option>
               </Select>
             </FormItem>
           </Form>
@@ -102,30 +107,32 @@
                 <!-- 第一人称录屏 -->
                 <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')"
                           :rules="{required: true, trigger: 'blur'}"
-                          :prop="'videoLink'">
-                  <Input v-model="appeal.fromData.videoLink"
-                         :placeholder="$t('detail.appeal.placeholder.videolink')"/>
+                          :prop="'extendedLinks.videoLink'">
+                  <EditLinks v-model="appeal.fromData.extendedLinks.videoLink"
+                             :max="10"
+                             :placeholder="$t('detail.appeal.placeholder.videolink')"></EditLinks>
                 </FormItem>
 
                 <!-- BTR链接 -->
                 <FormItem :label="$t('detail.appeal.deal.btrLink')"
                           :rules="{required: true, trigger: 'blur'}"
-                          :prop="'btrLink'">
-                  <Input v-model="appeal.fromData.btrLink"
-                         :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
+                          :prop="'extendedLinks.btrLink'">
+                  <EditLinks v-model="appeal.fromData.extendedLinks.btrLink"
+                             :max="100"
+                             :placeholder="$t('detail.appeal.placeholder.btrlink')"></EditLinks>
                 </FormItem>
               </Col>
               <Col flex="1">
                 <!-- MOSS上传按钮 -->
                 <FormItem :label="$t('detail.appeal.deal.userGeneratedMossFile')"
                           :rules="{validator: checkAppealAttachmentsFile, trigger: 'change'}"
-                          :prop="'appendix'">
+                          :prop="'extendedLinks.appendix'">
                   <Upload multiple
                           type="drag"
                           action=""
                           accept="application/*"
                           :before-upload="handleFileMossUpload">
-                    <div style="padding: 20px 0" :class="appeal.stateStyle">
+                    <div style="padding: 20px 0" :class="appeal.appendixStateStyle">
                       <Icon type="md-document" size="52"></Icon>
                     </div>
                   </Upload>
@@ -202,6 +209,7 @@ import Empty from "@/components/Empty.vue";
 import Textarea from "@/components/Textarea.vue";
 import Captcha from "@/components/Captcha.vue";
 import Html from "@/components/Html.vue";
+import EditLinks from "@/components/EditLinks.vue"
 
 export default new Application({
   props: {
@@ -227,17 +235,18 @@ export default new Application({
         load: false,
         show: false,
         fromData: {
-          videoLink: '',
-          btrLink: '',
+          extendedLinks: {
+            videoLink: '',
+            btrLink: '',
+            mossDownloadUrl: '',
+          },
           content: '',
-          appendix: null
         },
         disable: this.$store.state.configuration.detailLeftAppealPanel ?? false,
-        stateStyle: '',
+        appendix: null,
+        appendixStateStyle: '',
         toPlayerId: 0,
-        type: 'moss',
-        mossFileName: '',
-        action: ''
+        type: '',
       },
     }
   },
@@ -246,12 +255,16 @@ export default new Application({
     Textarea,
     Captcha,
     Html,
+    EditLinks
   },
   watch: {
     '$route': 'loadData',
   },
   created() {
     this.http = http_token.call(this);
+
+    this.appeal.type = this.appealType[0].value;
+
     this.loadData();
   },
   methods: {
@@ -266,7 +279,7 @@ export default new Application({
       const val = value;
 
       if (!val) return callback('not file');
-      if (this.appeal.stateStyle == 'ivu-alert-warning') return callback('Non compliant attachments');
+      if (this.appeal.appendixStateStyle == 'ivu-alert-warning') return callback('Non compliant attachments');
 
       callback()
     },
@@ -280,11 +293,11 @@ export default new Application({
 
       moss.verifyFileIsMoss(file).then(res => {
         if (res.code == 0) {
-          that.appeal.stateStyle = 'ivu-alert-success';
-          that.appeal.fromData.appendix = file;
+          that.appeal.appendixStateStyle = 'ivu-alert-success';
+          that.appeal.appendix = file;
           that.$Message.success(res.message);
         } else {
-          that.appeal.stateStyle = 'ivu-alert-warning';
+          that.appeal.appendixStateStyle = 'ivu-alert-warning';
           if (res.message) that.$Message.error(res.message);
         }
       })
@@ -294,7 +307,7 @@ export default new Application({
      */
     clearFileMossUpload() {
       this.appeal.appendix = null;
-      this.appeal.stateStyle = '';
+      this.appeal.appendixStateStyle = '';
     },
     /**
      * 提交申诉
@@ -313,35 +326,37 @@ export default new Application({
             this.$Message.error(this.$t('signin.fillEverything'));
           }
 
-          let appealData = {
+          let appealDataFormData = {
             data: {
               data: {
                 toPlayerId: this.cheater.id,
-                toOriginPersonaId: this.cheater.originPersonaId,
-                content,
-                appealType: this.appeal.type
+                appealType: this.appeal.type,
+                content: content
               }
             }
           };
 
           switch (type) {
             case 'moss':
-              Object.assign(appealData.data.data, {
-                videoLink: this.appeal.fromData.videoLink,
-                btrLink: this.appeal.fromData.btrLink
+              appealDataFormData.data.data = Object.assign(appealDataFormData.data.data, {
+                extendedLinks: {
+                  videoLink: this.appeal.fromData.extendedLinks.videoLink,
+                  btrLink: this.appeal.fromData.extendedLinks.btrLink
+                }
               });
-
-              // First, upload the MOSS file if it exists
-              var mossFileName = '';
 
               await upload.on(this.appeal.appendix)
                   .then(res => {
                     if (res && res.code >= 1) {
-                      mossFileName = res.filename; // 获取文件的URL
-                      Object.assign(appealData.data.data, {mossFileName});
-                    } else {
-                      this.$Message.error(res.message || res.code);
+                      appealDataFormData.data.data = Object.assign(appealDataFormData.data.data, {
+                        extendedLinks: {
+                          mossDownloadUrl: res.filename
+                        }
+                      });
+                      return;
                     }
+
+                    this.$Message.error(res.message || res.code);
                   })
                   .catch(err => {
                     this.$Message.error(err.message || err.code);
@@ -352,8 +367,10 @@ export default new Application({
                   });
               break;
             case 'farm':
-              Object.assign(appealData.data.data, {
-                btrLink: this.appeal.fromData.btrLink
+              appealDataFormData.data.data = Object.assign(appealDataFormData.data.data, {
+                extendedLinks: {
+                  btrLink: this.appeal.fromData.extendedLinks.btrLink
+                }
               });
               break;
             case 'none':
@@ -362,7 +379,7 @@ export default new Application({
           }
 
           // Then, submit the appeal
-          const res = await this.http.post(api["player_banAppeal"], appealData);
+          const res = await this.http.post(api["player_banAppeal"], appealDataFormData);
           const d = res.data;
 
           if (d.success === 1) {
