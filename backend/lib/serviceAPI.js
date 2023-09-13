@@ -4,7 +4,7 @@ import config from "../config.js";
 
 class ServiceApiError extends Error {
     constructor(statusCode, body, msg) {
-        super(msg instanceof Error ? JSON.parse(msg.message) : JSON.parse(msg));
+        super(msg instanceof Error ? msg.message : msg);
         if (msg instanceof Error)
             this.stack = msg.stack;
         if (!config.__DEBUG__)
