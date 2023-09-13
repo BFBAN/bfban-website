@@ -424,7 +424,7 @@ async (req, res, next) => {
             }
         });
     } catch (err) {
-        if (err instanceof ServiceApiError) {
+        if (err instanceof ServiceApiError || err instanceof Error) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
             return res.status(err.statusCode === 501 ? 501 : 500).json({
                 error: 1,
@@ -528,7 +528,7 @@ router.post('/reportById', verifyJWT, verifyCaptcha,
                 }
             });
         } catch (err) {
-            if (err instanceof ServiceApiError) {
+            if (err instanceof ServiceApiError || err instanceof Error) {
                 logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
                 return res.status(err.statusCode === 501 ? 501 : 500).json({
                     error: 1,
