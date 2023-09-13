@@ -14,12 +14,13 @@ async function verifyAllowPrivilege(req, res, next) {
         const {username} = req.body.data;
         const result = await db.select('*')
             .from('users')
-            .where({username: username}).orWhere({originEmail: username}).first();
+            .where({username: username})
+            .orWhere({originEmail: username}).first();
 
         if (!result)
             return res.status(401).json({error: 1, code: 'user.invalid'});
-        if (!userHasRoles(result, ['dev', 'bot']))
-            return res.status(401).json({error: 1, code: 'user.invalidIdentity'});
+        if (result && req.body.SKIP_CAPTCHA === true && !userHasRoles(result, ['dev', 'bot']))
+            return res.status(401).json({error: 1, code: 'user.invalid', message: `SKIP_CAPTCHA ${req.body.SKIP_CAPTCHA}: skips authentication without permission`});
 
         req.user = result;
 
