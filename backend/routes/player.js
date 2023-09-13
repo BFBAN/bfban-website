@@ -15,7 +15,6 @@ import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.j
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
 import {checkSpam, submitSpam, toSpam} from "../lib/akismet.js";
-import Config from "../config.js";
 
 const router = express.Router()
 
