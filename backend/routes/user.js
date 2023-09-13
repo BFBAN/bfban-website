@@ -9,7 +9,7 @@ import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import {getGravatarAvatar} from "../lib/gravatar.js";
 import {sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify} from "../lib/mail.js";
-import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {allowPrivileges, forbidPrivileges, verifyAllowPrivilege, verifyJWT} from "../middleware/auth.js";
 import {generatePassword, comparePassword, userHasRoles, privilegeRevoker} from "../lib/auth.js";
 import {userDefaultAttribute, userSetAttributes, userShowAttributes} from "../lib/user.js";
 import {siteEvent} from "../lib/bfban.js";
@@ -226,7 +226,7 @@ async (req, res, next) => {
  *       401:
  *         description: signin.noSuchUser
  */
-router.post('/signin', verifyCaptcha, [
+router.post('/signin', verifyAllowPrivilege, verifyCaptcha, [
     checkbody("data.username").isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.visitType').optional().isIn(config.visitType ?? ['websites', 'client-phone', 'client-desktop', 'bot']),
@@ -240,7 +240,7 @@ async (req, res, next) => {
 
         const {username, password, EXPIRES_IN} = req.body.data;
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({username: username}).orWhere({originEmail: username}).first();
+        const user = req.user;
 
         if (user && user.valid !== 0 && await comparePassword(password, user.password)) {
             let expiresIn = config.userTokenExpiresIn;

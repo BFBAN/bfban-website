@@ -3,13 +3,35 @@ import express from "express";
 import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import db from "../mysql.js";
-import { verifyJWTToken } from '../lib/auth.js';
+import {userHasRoles, verifyJWTToken} from '../lib/auth.js';
 import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
+
+async function verifyAllowPrivilege(req, res, next) {
+    try {
+        if (!req.body.SKIP_CAPTCHA) return next();
+
+        const {username} = req.body.data;
+        const result = await db.select('*')
+            .from('users')
+            .where({username: username}).orWhere({originEmail: username}).first();
+
+        if (!result)
+            return res.status(401).json({error: 1, code: 'user.invalid'});
+        if (!userHasRoles(result, ['dev', 'bot']))
+            return res.status(401).json({error: 1, code: 'user.invalidIdentity'});
+
+        req.user = result;
+
+        next();
+    } catch (err) {
+        next(err);
+    }
+}
 
 /** @param {express.Request} req @param {express.Response} res @param {express.NextFunction} next */
 async function verifyJWT(req, res, next) {
     try {
-        if(config.__DEBUG__ && req.get('x-whosdaddy') && req.get('x-whosdaddy-p')) {    // DEBUG !!
+        if (config.__DEBUG__ && req.get('x-whosdaddy') && req.get('x-whosdaddy-p')) {    // DEBUG !!
             /** @type {import("../typedef.js").User} */
             const result = await db.select('*').from('users').where({id: req.get('x-whosdaddy'), valid: 1}).first();
             result.privilege = req.get('x-whosdaddy-p').split(',');
@@ -21,30 +43,30 @@ async function verifyJWT(req, res, next) {
         let decodedToken;
         try {
             decodedToken = await verifyJWTToken(token)
-        } catch(err) {
-            return res.status(401).json({ err: 1, code: 'user.tokenExpired' });
+        } catch (err) {
+            return res.status(401).json({err: 1, code: 'user.tokenExpired'});
         }
         //console.log('token:'+JSON.stringify(decodedToken)); // DEBUG
         /** @type {import("../typedef.js").User} */
         const result = await db.select('*').from('users').where({id: decodedToken.userId, valid: 1}).first();
         delete result.subscribes; // useless, and may take up a lot of memory
         //console.log(result); // DEBUG
-        if(!result)
+        if (!result)
             return res.status(401).json({error: 1, code: 'user.invalid'});
-        if(result.signoutTime > decodedToken.signWhen)
+        if (result.signoutTime > decodedToken.signWhen)
             return res.status(401).json({error: 1, code: 'user.tokenExpired'});
-        if(decodedToken.visitType != allowUserAgent(req.headers["user-agent"]))
+        if (decodedToken.visitType != allowUserAgent(req.headers["user-agent"]))
             return res.status(401).json({error: 1, code: 'user.tokenExpired'})
         /** @type {import("../typedef.js").User} */
         req.user = result;
         next();
-    } catch(err) {
+    } catch (err) {
         next(err);
     }
 }
 
 /** @param {string[]} agent */
-function allowUserAgent (agent = '') {
+function allowUserAgent(agent = '') {
     switch (agent) {
         case "client-desktop":
         case "client-phone":
@@ -56,32 +78,33 @@ function allowUserAgent (agent = '') {
 }
 
 /** @param {string[]} roles */
-function allowPrivileges(roles=[]) {
+function allowPrivileges(roles = []) {
     /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)=>any} */
-    return function(req, res, next) { // as long as the user has one allowed role, then allow
+    return function (req, res, next) { // as long as the user has one allowed role, then allow
         /** @type {string[]} */
         const userRoles = req.user.privilege;
-        for(let i of userRoles)
-            if(roles.includes(i))
+        for (let i of userRoles)
+            if (roles.includes(i))
                 return next();
         return res.status(403).json({error: 1, code: 'user.permissionDenined'});
     }
 }
 
 /** @param {string[]} roles */
-function forbidPrivileges(roles=[]) {
+function forbidPrivileges(roles = []) {
     /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)=>any} */
-    return function(req, res, next) { // as long as the user has one forbidden role, then forbid
+    return function (req, res, next) { // as long as the user has one forbidden role, then forbid
         /** @type {string[]} */
         const userRoles = req.user.privilege;
-        for(let i of userRoles)
-            if(roles.includes(i))
+        for (let i of userRoles)
+            if (roles.includes(i))
                 return res.status(403).json({error: 1, code: 'user.permissionDenined'});
         return next();
     }
 }
 
 export {
+    verifyAllowPrivilege,
     verifyJWT,
     allowPrivileges,
     forbidPrivileges,
