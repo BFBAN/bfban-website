@@ -18,7 +18,7 @@ import zh_view_design from 'view-design/dist/locale/zh-CN';
 import zh_tw_view_design from 'view-design/dist/locale/zh-TW';
 
 import ar_local from './lang/ar.json'
-import de_local from './lang/de.json'
+import de_local from './lang/de_DE.json'
 import en_local from './lang/en.json' // 英语
 import es_local from './lang/es.json'
 import fr_local from './lang/fr.json'
