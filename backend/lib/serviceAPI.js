@@ -1,14 +1,13 @@
 import assert from "assert";
 import got, {HTTPError} from "got";
 import config from "../config.js";
-import Config from "../config.js";
 
 class ServiceApiError extends Error {
     constructor(statusCode, body, msg) {
         super(msg instanceof Error ? JSON.parse(msg.message) : JSON.parse(msg));
         if (msg instanceof Error)
             this.stack = msg.stack;
-        if (!Config.__DEBUG__)
+        if (!config.__DEBUG__)
             delete this.message;
         this.statusCode = statusCode;
         this.body = body;
