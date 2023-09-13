@@ -3,9 +3,9 @@
  * 微软
  */
 
-import Print from "./print"
-import {conf, http, api, http_token} from "./index"
+import {http, api} from "./index"
 import store from '@/store'
+import Print from "./print"
 import Conf from "@/assets/js/conf";
 
 export default class Upload extends (Print, Conf) {
@@ -86,6 +86,7 @@ export default class Upload extends (Print, Conf) {
                     reject({code: -1, message: 'Missing parameter'})
                     throw 'Missing parameter';
                 }
+
                 fetch(this.location() + api["service_upload"], {
                     method: 'PUT',
                     headers: {
@@ -102,7 +103,7 @@ export default class Upload extends (Print, Conf) {
 
                     resolve({
                         code: 1,
-                        url:  `${this.location()}service/file?filename=${res.data.name}`
+                        url: `${this.location()}service/file?filename=${res.data.name}`
                     })
                 }).catch(err => {
                     resolve({code: -1, message: err});
@@ -129,6 +130,7 @@ export default class Upload extends (Print, Conf) {
                     reject({code: -1, message: 'Missing parameter'})
                     throw 'Missing parameter';
                 }
+
                 fetch(this.location() + api["service_uploadBigFile"], {
                     method: 'POST',
                     headers: {
@@ -137,35 +139,35 @@ export default class Upload extends (Print, Conf) {
                     },
                     // body: file.slice(0, file.length)
                     body: JSON.stringify({
-                      data: {
-                        "size": file.size,
-                        "mimeType": file.type
-                      }
+                        data: {
+                            "size": file.size,
+                            "mimeType": file.type
+                        }
                     })
-                }).then(res => res.json()).then( async res => {
+                }).then(res => res.json()).then(async res => {
                     const sliceSize = 10485760 // 10MiB
                     const fileSize = file.size
-                    const slices = [...Array(Math.ceil(fileSize/sliceSize)).keys()].map(i=>[i*sliceSize, (i+1)*sliceSize<fileSize? (i+1)*sliceSize:fileSize]);
-                    for(const i of slices) {
+                    const slices = [...Array(Math.ceil(fileSize / sliceSize)).keys()].map(i => [i * sliceSize, (i + 1) * sliceSize < fileSize ? (i + 1) * sliceSize : fileSize]);
+                    for (const i of slices) {
                         await fetch(res.data.uploadUrl, {
                             method: 'PUT',
                             headers: {
-                                'Content-Length': i[1]-i[0],
-                                'Content-Range': `bytes ${i[0]}-${i[1]-1}/${fileSize}`
+                                'Content-Length': i[1] - i[0],
+                                'Content-Range': `bytes ${i[0]}-${i[1] - 1}/${fileSize}`
                             },
                             body: file.slice(...i),
-                        }).then(async (r)=> {
-                            console.log(r.status+ ' ' + await r.text() + '\n')
-                            if(r.status > 299)
+                        }).then(async (r) => {
+                            console.log(r.status + ' ' + await r.text() + '\n')
+                            if (r.status > 299)
                                 throw new Error(r.statusText);
-                        }).catch(err=> {
+                        }).catch(err => {
                             throw err;
                         });
                     }
                     resolve({
-                      code: 1,
-                      filename: res.data.name,
-                      url:  `${this.location()}service/file?filename=${res.data.name}`
+                        code: 1,
+                        filename: res.data.name,
+                        url: `${this.location()}service/file?filename=${res.data.name}`
                     })
                 })
             } catch (e) {
@@ -193,28 +195,26 @@ export default class Upload extends (Print, Conf) {
                     })
                     throw res;
                 }
-                resolve({
-
-                })
+                resolve({})
                 http.get(api["service_file"], {
                     params: {
                         filename: res.data.name,
                         explain: true
                     }
                 }).then(detailRes => {
-                  console.log(detailRes.data.size <= this.FILESIZE)
-                  if(detailRes.data.size <= this.FILESIZE) {
-                    resolve({
-                        code: 1,
-                        data: detailRes.data.data
-                    });
-                  }else {
-                    console.log(detailRes.data.downloadURL)
-                    resolve({
-                      code: 1,
-                      data: detailRes.data.downloadURL
-                    });
-                  }
+                    console.log(detailRes.data.size <= this.FILESIZE)
+                    if (detailRes.data.size <= this.FILESIZE) {
+                        resolve({
+                            code: 1,
+                            data: detailRes.data.data
+                        });
+                    } else {
+                        console.log(detailRes.data.downloadURL)
+                        resolve({
+                            code: 1,
+                            data: detailRes.data.downloadURL
+                        });
+                    }
                 }).catch(err => {
                     reject({
                         code: -1,

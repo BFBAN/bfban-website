@@ -34,7 +34,7 @@
       "tag": ["link"]
     }
   ],
-  "footerStatic": false,
+  "footerStatic": true,
   "footerChild": [
     {
       "title": "gametools.network",
@@ -50,13 +50,26 @@
       ]
     },
     {
-      "title": "evolution host",
-      "linkUrl": "https://evolution-host.com/blog/ssd-vps-hosting.php",
-      "describe": "Powered by an SSD VPS from Evolution Host",
+      "title": "1password",
+      "linkUrl": "https://1password.com",
+      "describe": "Provides password management support",
       "describeLang": {
-        "zh-CN": "服务器由evolution host供应商支持"
+        "zh-CN": "提供密码管理支持"
       },
-      "linkImageUrl": "https://iph.href.lu/100x35?text=evolution host&fg=ffffff&bg=0b3cac",
+      "linkImageUrl": "https://1password.com/logo-images/1password-logo-desktop-dark@2x.png",
+      "tag": [
+        "host",
+        "platinum"
+      ]
+    },
+    {
+      "title": "netlify",
+      "linkUrl": "https://www.netlify.com",
+      "describe": "Provide web hosting services",
+      "describeLang": {
+        "zh-CN": "提供网页存放服务"
+      },
+      "linkImageUrl": "https://qualified-production.s3.us-east-1.amazonaws.com/uploads/bd0ddbec21accfade4075e9e1af55575df7a7d526f52d129042a7dbf551597ea.png\n",
       "tag": [
         "host",
         "platinum"

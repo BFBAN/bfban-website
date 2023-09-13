@@ -294,30 +294,7 @@ router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev
         }
     });
 
-router.get('/commentItem', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
-        checkquery('id').isInt({min: 0}),
-    ],
-    async (req, res, next) => {
-        try {
-            const validateErr = validationResult(req);
-            if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'admin.commentItem.bad', message: validateErr.array()});
 
-            const id = req.query.id;
-
-            const result = await db.from('comments')
-                .join('users', 'comments.byUserId', 'users.id')
-                .select('comments.*', 'users.username', 'users.privilege')
-                .where('comments.id', id)
-                .first();
-
-            delete result.valid;
-
-            return res.status(200).json({success: 1, code: 'admin.commentItem.ok', data: result});
-        } catch (err) {
-            next(err);
-        }
-    });
 
 router.post('/setComment', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
@@ -390,7 +367,7 @@ async (req, res, next) => {
             admincontent: req.body.content,
             appealStatus: req.body.action
         };
-          
+
         await db('comments').update(updateData).where({ id: comment.id });
 
         await db('operation_log').insert({

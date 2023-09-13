@@ -5,12 +5,15 @@ export default class Regular {
         'username': {
             v: /^[a-zA-Z0-9_-]{4,40}$/g
         },
+        'email': {
+            v: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/
+        },
         'link': {
             v: /^(ftp|http|https):\/\/[^ "]+$/g
         },
         'image': {},
         'video': {},
-        'date':{
+        'date': {
             // yyyy-MM-dd HH:mm:ss
             v: /^(?:19|20)[0-9][0-9]-(?:(?:0[1-9])|(?:1[0-2]))-(?:(?:[0-2][1-9])|(?:[1-3][0-1])) (?:(?:[0-2][0-3])|(?:[0-1][0-9])):[0-5][0-9]:[0-5][0-9]$/
         },
@@ -43,7 +46,22 @@ export default class Regular {
         }
     }
 
-    getCheckText (regularType = '', value) {
+    checkJSON(jsonValue = "") {
+        const t = /^[\],:{}\s]*$/;
+
+        if (
+            t.test(
+                jsonValue.toString()
+                    .replace(/\\["\\/bfnrtu]/g, '@')
+                    .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\\-]?\d+)?/g, ']')
+                    .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
+            )
+        ) return true;
+
+        return false;
+    }
+
+    getCheckText(regularType = '', value) {
         if (!regularType || !value) return;
         let res = value.match(this.REGULARTYPE[regularType].v);
         return res;
@@ -56,11 +74,11 @@ export default class Regular {
      */
 
     // 图片验证
-    authImage (url) {
+    authImage(url) {
         if (!url) return false;
         return new Promise(function (resolve, reject) {
             let img = new Image()
-                img.src = url;
+            img.src = url;
             img.onload = function (res) {
                 resolve(true);
             }

@@ -170,11 +170,12 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import {http, upload, api, http_token} from "../assets/js"
 
 import Empty from "@/components/Empty";
 import {VueCropper} from 'vue-cropper'
+import uuid from "uuid";
 
 export default {
   name: 'UploadWidget',
@@ -260,14 +261,14 @@ export default {
 
       if (this.ignore) {
         // 原图
-        file = await that.dataURLtoFile(this.vueCropper.img, this.filename());
+        file = await that.dataURLtoFile(this.vueCropper.img,  `${this.filename(this.vueCropper.name)}.${this.vueCropper.outputType}`);
 
         await that.onAfterUpload(file);
       } else {
         // 裁剪
         this.$refs.cropper.getCropBlob(async blob => {
           blob.lastModifiedDate = new Date();
-          blob.name = this.filename();
+          blob.name = `${this.filename(blob.name)}.${this.vueCropper.outputType}`;
 
           this.updataIcon = true;
           file = new File([blob], that.currentFileType, {
@@ -307,6 +308,9 @@ export default {
      */
     async handleBeforeSelectFile(file) {
       const that = this;
+
+      if (file.length <= 1) return ;
+
       let reader = new FileReader();
       reader.readAsDataURL(file);
 
@@ -315,6 +319,7 @@ export default {
       // file() -> blob()
       reader.addEventListener('loadend', function () {
         that.vueCropper.img = reader.result;
+        that.vueCropper.name = file.name;
         that.currentIndex += 1;
       });
 
@@ -342,8 +347,8 @@ export default {
      * 临时作用
      * @returns {*}
      */
-    filename() {
-      return `${new Date().getTime()}${Math.floor(Math.random() * new Date().getTime())}`;
+    filename(name) {
+      return uuid.v4({'name': name, "generationTime": new Date().getTime()});
     },
     /**
      * 获取媒体列表
