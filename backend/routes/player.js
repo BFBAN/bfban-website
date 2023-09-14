@@ -13,7 +13,7 @@ import {userHasRoles} from "../lib/auth.js";
 import {playerWidget} from "../lib/widget.js";
 import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.js";
 import {SpamFormData} from "../lib/akismet.js";
-import {textSimilarityDiff} from "../lib/textDiff.js";
+import {texCoincidenceRatio, textSimilarityDiff} from "../lib/textDiff.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
 
@@ -803,13 +803,13 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
                     message: 'The account is not up to the requirements'
                 });
 
-            // Check for intentional duplication
+            // check for intentional duplication
             const prevUserCommentItem = await db.select("*").from('comments').where({
                 toPlayerId: toPlayerId,
                 byUserId: req.user.id
             }).orderBy('createTime', 'desc').first();
             const f = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
-            if (f >= 96.0)
+            if (f >= texCoincidenceRatio)
                 return res.status(403).json({error: 1, code: 'reply.bad', message: 'Duplicate submission'});
 
             // Whether to submit a report to akismet here
@@ -1051,6 +1051,7 @@ async (req, res, next) => {
             .from('comments')
             .where({toPlayerId: player.id, type: 'banAppeal', appealStatus: 'lock'})
             .first().then(r => r.num);
+
         // Check if there are locked appeals that will be blocked here
         if (correspondingRecord >= 1) {
             return res.status(403).json({
@@ -1059,6 +1060,15 @@ async (req, res, next) => {
                 message: 'There is an appeal lock and the case cannot be decided further'
             });
         }
+
+        // check for intentional duplication
+        const prevUserCommentItem = await db.select("*").from('comments').where({
+            toPlayerId: req.body.data.toPlayerId,
+            byUserId: req.user.id
+        }).orderBy('createTime', 'desc').first();
+        const f = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
+        if (f >= texCoincidenceRatio)
+            return res.status(403).json({error: 1, code: 'reply.bad', message: 'Duplicate submission'});
 
         // auth complete, player found, store action into db
         const judgement = {
