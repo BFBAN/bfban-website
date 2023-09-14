@@ -1,12 +1,12 @@
 <template>
   <Card dis-hover :padding="0" class="img">
-    <template v-if="imageStatus == 0">
+    <template v-if="imageStatus === 0">
       <div class="img-error img-box">
         <Badge class="user-select-none">
-          <Icon type="md-refresh" class="spin-icon-load" slot="count" size="20"/>
+          <Icon type="md-refresh" class="spin-icon-load" size="20"/>
           <Icon type="md-images" size="50"/>
         </Badge>
-        <img class="user-select-none" style="display: none" :src="src" @error="onError" @load="onLoad"/>
+        <img class="user-select-none" style="display: none" :src="src" :alt="src" @error="onError" @load="onLoad"/>
         <p class="img-box-url">
           <html-link :isPoptip="false" :href="src"></html-link>
         </p>
@@ -17,15 +17,15 @@
         <div class="img-toolbar">
           <Row>
             <Col>
-              <a class="user-select-none" size="small" type="dashed" href="javascript:void(0)" @click="onRotating(-90)">
+              <a class="user-select-none" href="javascript:void(0)" @click="onRotating(-90)">
                 <Icon type="md-redo" size="15" style="transform: rotate(-180deg)"/>
               </a>
               <Divider type="vertical"></Divider>
-              <a class="user-select-none" size="small" type="dashed" href="javascript:void(0)" @click="onRotating(90)">
+              <a class="user-select-none" href="javascript:void(0)" @click="onRotating(90)">
                 <Icon type="md-redo" size="15"/>
               </a>
               <Divider type="vertical" v-if="rotateValue != 0"></Divider>
-              <a v-if="rotateValue != 0" class="user-select-none" size="small" type="dashed" href="javascript:void(0)" @click="onRotating(0)">
+              <a v-if="rotateValue != 0" class="user-select-none" type="dashed" href="javascript:void(0)" @click="onRotating(0)">
                 <Icon type="md-refresh" size="15"/>
               </a>
             </Col>
@@ -33,7 +33,7 @@
               <span>{{ src }}</span>
             </Col>
             <Col v-if="src" class="user-select-none">
-              <a size="small" type="dashed" :href="src" target="_new">
+              <a type="dashed" :href="src" target="_new">
                 <Icon type="md-link"/>
               </a>
             </Col>
@@ -41,7 +41,7 @@
         </div>
         <picture>
           <source :srcset="src" media="(orientation: portrait)" />
-          <img :src="src" class="img-tag user-select-none" :style="`transform: rotate(${rotateValue}deg)`"/>
+          <img :src="src" :alt="src" class="img-tag user-select-none" :style="`transform: rotate(${rotateValue}deg)`"/>
         </picture>
 
         <div class="img-hover ivu-card user-select-none" @click="show">
@@ -52,7 +52,7 @@
     <template v-else-if="imageStatus == -1">
       <div class="img-error img-box" @click="openUrl">
         <Badge class="user-select-none">
-          <Icon type="md-alert" slot="count" size="20"/>
+          <Icon type="md-alert" size="20"/>
           <Icon type="md-images" size="50"/>
         </Badge>
         <p class="img-box-url">
@@ -68,7 +68,6 @@ import 'viewerjs/dist/viewer.css'
 
 import VueViewer from 'v-viewer'
 import Vue from "vue";
-import {regular} from "@/assets/js";
 import HtmlLink from "@/components/HtmlLink.vue";
 
 Vue.use(VueViewer);
