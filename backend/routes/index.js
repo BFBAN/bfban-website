@@ -189,9 +189,9 @@ router.get('/activeStatistical', [
  *         description: playerStatistics.bad
  */
 router.post('/playerStatistics', [  // like graphql :)
-    checkbody('data').isArray({min: 0, max: 11}).custom((val) => {
+    checkbody('data').isArray({min: 0, max: 12}).custom((val) => {
         for (let i of val)
-            if (!config.supportGames.concat('*').includes(i.game) || ![-1, 0, 1, 2, 3, 4, 5, 6, 8].includes(i.status - 0))
+            if (!config.supportGames.concat('*').includes(i.game) || ![-1, 0, 1, 2, 3, 4, 5, 6, 8, 9].includes(i.status - 0))
                 throw(new Error('bad subquery format'));
         return true;
     })
@@ -204,11 +204,18 @@ async (req, res, next) => {
 
         const data = [];
         for (let i of req.body.data) {
+          if(i.status == 9) {
+            const game = i.game === '*' ? '%' : `%"${i.game}"%`;
+            const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
+                .andWhere('games', 'like', game).andWhere('appealStatus', '=', "1").first().then(r => r.num);
+            data.push({game: i.game, status: i.status, count});
+          } else {
             const game = i.game === '*' ? '%' : `%"${i.game}"%`;
             const status = i.status === -1 ? '%' : i.status;
             const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
                 .andWhere('games', 'like', game).andWhere('status', 'like', status).first().then(r => r.num);
             data.push({game: i.game, status: i.status, count});
+          }
         }
         res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
             success: 1,
@@ -257,6 +264,7 @@ async (req, res, next) => {
             'players.originName as toPlayerName', 'players.originUserId as playerOriginUserId',
             'players.originPersonaId as playerOriginPersonaId', 'players.cheatMethods as playerCheatMethods',
             'players.avatarLink as playerAvatarLink', 'players.games as playerGames',
+            'players.viewNum as playerViewNum', 'players.commentsNum as PlayerCommentsNum',
             'players.viewNum as playerViewNum', 'players.commentsNum as playerCommentsNum',
             'players.createTime as playerCreateTime', 'players.updateTime as playerUpdateTime'
         ];
@@ -367,7 +375,7 @@ router.get('/players', [
     checkquery('updateTimeFrom').optional().isInt({min: 0}),
     checkquery('createTimeTo').optional().isInt({min: 0}),
     checkquery('updateTimeTo').optional().isInt({min: 0}),
-    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8]),
+    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]),
     checkquery('sortBy').optional().isIn(['createTime', 'updateTime', 'viewNum', 'commentsNum']),
     checkquery('order').optional().isIn(['desc', 'asc']),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
@@ -389,28 +397,52 @@ async (req, res, next) => {
         const order = req.query.order ? req.query.order : 'desc';
         const limit = req.query.limit ? req.query.limit - 0 : 20;
         const skip = req.query.skip ? req.query.skip - 0 : 0;
+        if(status == 9) {
+          const result = await db.select('*').from('players')
+              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+              .andWhere('appealStatus', '=', '1')
+              .orderBy(sort, order).offset(skip).limit(limit)
+              .then(r => r.map(i => {
+                  delete i.valid;
+                  return i
+              }));
+          const total = await db('players').count({num: 'id'})
+              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+              .andWhere('appealStatus', '=', '1').first().then(r => r.num);
+          res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+              success: 1,
+              code: 'players.ok',
+              data: {result, total}
+          });
 
-        const result = await db.select('*').from('players')
-            .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-            .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-            .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-            .andWhere('status', 'like', status)
-            .orderBy(sort, order).offset(skip).limit(limit)
-            .then(r => r.map(i => {
-                delete i.valid;
-                return i
-            }));
-        const total = await db('players').count({num: 'id'})
-            .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-            .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-            .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-            .andWhere('status', 'like', status).first().then(r => r.num);
+        }else {
+          const result = await db.select('*').from('players')
+              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+              .andWhere('status', 'like', status)
+              .orderBy(sort, order).offset(skip).limit(limit)
+              .then(r => r.map(i => {
+                  delete i.valid;
+                  return i
+              }));
+          const total = await db('players').count({num: 'id'})
+              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+              .andWhere('status', 'like', status).first().then(r => r.num);
+  
+          res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+              success: 1,
+              code: 'players.ok',
+              data: {result, total}
+          });
 
-        res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
-            success: 1,
-            code: 'players.ok',
-            data: {result, total}
-        });
+        }
     } catch (err) {
         next(err);
     }
@@ -789,13 +821,13 @@ async (req, res, next) => {
             result.total = userTotal;
         } else if (type === 'comment') {
             const comment = db('comments')
-                .join('users', 'users.id', 'comments.byUserId')
-                .select('comments.*', 'users.username', 'users.valid')
-                .where('comments.content', 'like', '%' + param + '%')
-                .andWhere('comments.videoLink', 'like', '%' + param + '%')
-                .andWhere('comments.createTime', '>=', createTimeFrom)
-                .andWhere('comments.createTime', '<=', createTimeTo)
-                .andWhere({"users.valid": 1}),
+                    .join('users', 'users.id', 'comments.byUserId')
+                    .select('comments.*', 'users.username', 'users.valid')
+                    .where('comments.content', 'like', '%' + param + '%')
+                    .andWhere('comments.videoLink', 'like', '%' + param + '%')
+                    .andWhere('comments.createTime', '>=', createTimeFrom)
+                    .andWhere('comments.createTime', '<=', createTimeTo)
+                    .andWhere({"users.valid": 1}),
                 commentArray =  await comment.offset(skip).limit(limit),
                 commentTotal = await comment.first().then(r => 1);
 

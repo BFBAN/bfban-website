@@ -170,7 +170,7 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import {http, upload, api, http_token} from "../assets/js"
 
 import Empty from "@/components/Empty";

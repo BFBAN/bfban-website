@@ -599,6 +599,7 @@
       "control": "Batch edit",
       "load": "Reload",
       "look": "Open chat",
+      "download": "Download",
       "placeholder": "Type message here",
       "tabsList": {
         "form": {
@@ -673,9 +674,15 @@
       "title": "History log"
     },
     "media": {
-      "capacity": "Capacity",
-      "fileNum": "{num} file",
-      "title": "Media library"
+      "capacity": "Capacity state",
+      "title": "Media library",
+      "maxFileNumber": "Number of files that can be uploaded",
+      "maxTrafficQuota": "Maximum file size",
+      "usedStorageQuota": "Total storage quota",
+      "todayFileNumber": "The file has been uploaded today",
+      "todayTrafficQuota": "Amount of traffic",
+      "prevResetTime": "Reset date limit",
+      "hint1": "Each account has a daily upload bandwidth, the number of files, and a single size limit, but it will reset the next date, but there is a number of files available for each account to upload, and files with low storage requirements can be replaced by other websites."
     },
     "meet": "welcome back {name}! ",
     "subscribes": {
@@ -715,9 +722,8 @@
       "reportHacker": "Report a hacker",
       "reportOne": "Report one",
       "required": "video link",
-      "uploadManual1": "if you do not want to register video-site member such as Bilibili and Youtube, you can go to",
-      "uploadManual2": "and then paste the video link below",
-      "uploadManual3": "you can offer your video by Bilibili,Youtube,Youku,Tudou and more",
+      "uploadManual1": "Additional video sites can be provided from YouTube,Dailymotion,TikTok stations, etc. Video sites can access the source file address, click the Add button to paste in the below",
+      "uploadManual2": "Please choose a video site with a long - term link or network storage",
       "uploadPic1": "We recommend you to upload pictures with png, jpg, jpeg, gif format.",
       "uploadPic2": "picture larger than 2M will fail to upload ,you can go to ",
       "uploadPic3": "and then choose Image URL Tag，paste the image link below",

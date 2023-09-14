@@ -144,11 +144,8 @@
                 <FormItem :label="$t('detail.info.videoLink')">
                   <Row :gutter="30">
                     <Col :xs="{span: 24}" :lg="{span:12}">
-                      <Alert type="warning">
+                      <Alert show-icon type="warning">
                         {{ $t("report.info.uploadManual1") }}
-                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
-                          $t("report.info.uploadManual2")
-                        }}
                       </Alert>
 
                       <!-- 视频链接 S -->
@@ -186,8 +183,9 @@
                         <Icon type="md-add"/>
                         <span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 3)</span>
                       </Button>
-                      <span>{{ $t("report.info.uploadManual3") }}</span>
                       <!-- 视频链接 E -->
+
+                      <div class="hint">{{ $t("report.info.uploadManual2") }}</div>
                     </Col>
                   </Row>
                 </FormItem>
@@ -238,7 +236,8 @@
                 <FormItem>
                   <Row :gutter="10" type="flex" align="middle">
                     <Col>
-                      <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel" v-voice-button>
+                      <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel"
+                              v-voice-button>
                         {{ $t("basic.button.cancel") }}
                       </Button>
                     </Col>
@@ -493,8 +492,8 @@ export default new Application({
      * @returns {Promise<boolean>}
      */
     async doReport(index) {
-      if(this.$store.state.$userinfo && this.$store.state.$userinfo.origin.originUserId) {
-      // if(false) {
+      if (this.$store.state.$userinfo && this.$store.state.$userinfo.origin.originUserId) {
+        // if(false) {
         // that form
         let formData = this.tabs.list[index];
         // check form data
@@ -512,7 +511,7 @@ export default new Application({
             }
           })
         }
-      }else {
+      } else {
         this.$Message.error({content: this.$i18n.t("report.messages.tipBind"), duration: 3});
         setTimeout(() => {
           this.$router.push({

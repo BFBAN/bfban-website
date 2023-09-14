@@ -45,6 +45,9 @@ export default class Http extends Conf {
             case 'production': // 生产
                 super.GETURL = this.CONF.child[this.CONF.requestProductionName];
                 break;
+            case 'staging': // 测试
+                super.GETURL = this.CONF.child[this.CONF.requestTestName];
+                break;
             case 'development': // 开发
             default:
                 super.GETURL = this.CONF.child[this.CONF.requestDevelopmentName];

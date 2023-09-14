@@ -157,8 +157,13 @@
       "6": "需更多管理投票",
       "7": "数据异常自动石锤",
       "8": "刷枪",
-      "9": "申诉",
+      "9": "申诉中",
       "all": "全部"
+    },
+    "appealStatus":{
+      "0": "无申诉记录",
+      "1": "未处理的申诉",
+      "2": "已处理的申诉"
     },
     "tip": {
       "noAccess": "当前账户,无权限",
@@ -266,7 +271,7 @@
       "deal": {
         "firstPersonRecording": "第一人称录屏链接",
         "mossDownloadUrl": "MOSS下载",
-        "mossUpload": "上传moss",
+        "userGeneratedMossFile": "moss文件 (.zip)",
         "btrLink": "BTR链接",
         "appealContent": "玩家申诉内容",
         "admincontent": "管理回复内容",
@@ -373,7 +378,9 @@
       "banAppeal": "仅查看申诉",
       "coreComment": "主要内容",
       "historyName": "历史玩家变动名称",
-      "verify": "仅查看判决"
+      "verify": "仅查看判决",
+      "noAppealAttachmentHint": "此申诉无申诉附件",
+      "needLoginViewAttachmentsHint": "您需要登录账户，才可查阅玩家申诉额外提供的附件"
     },
     "title": "详情"
   },
@@ -722,9 +729,8 @@
       "reportHacker": "举报作弊",
       "reportOne": "举报单个",
       "required": "视频地址",
-      "uploadManual1": "不想注册国内账号、嫌麻烦，上传视频可以前往",
-      "uploadManual2": "然后地址贴在下方",
-      "uploadManual3": "可以是 优酷，土豆，AB站等 视频网站链接",
+      "uploadManual1": "可额外提供从优酷，土豆，AB站等，视频网站可访问源文件地址，点击添加按钮粘贴在下方",
+      "uploadManual2": "请选择具有长时间链接有效视频网站或是网盘",
       "uploadPic1": "推荐上传 png, jpg, jpeg, gif 格式的图片",
       "uploadPic2": "图片大于 2M 或 上传失败，可以前往",
       "uploadPic3": "然后选择 Image URL 选项卡，把图片链接贴在下方",
