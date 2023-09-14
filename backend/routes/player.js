@@ -12,9 +12,10 @@ import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
 import {playerWidget} from "../lib/widget.js";
 import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.js";
+import {SpamFormData} from "../lib/akismet.js";
+import {textSimilarityDiff} from "../lib/textDiff.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
-import {checkSpam, submitSpam, SpamFormData} from "../lib/akismet.js";
 
 const router = express.Router()
 
@@ -778,6 +779,7 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});
+            const {content, toCommentId, toPlayerId} = req.body.data;
 
             // The user identity is disabled
             if (req.user.attr.mute) {
@@ -801,6 +803,15 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
                     message: 'The account is not up to the requirements'
                 });
 
+            // Check for intentional duplication
+            const prevUserCommentItem = await db.select("*").from('comments').where({
+                toPlayerId: toPlayerId,
+                byUserId: req.user.id
+            }).orderBy('createTime', 'desc').first();
+            const f = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
+            if (f >= 96.0)
+                return res.status(403).json({error: 1, code: 'reply.bad', message: 'Duplicate submission'});
+
             // Whether to submit a report to akismet here
             // const {content} = req.body.data;
             // const waitFormData = new SpamFormData(req, req.body.data.toCommentId ? 'reply' : 'comment', content);
@@ -813,7 +824,6 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
             //     });
 
             const dbId = req.body.data.toPlayerId;
-            const toCommentId = req.body.data.toCommentId;
             /** @type {import("../typedef.js").Player} */
             const player = await db.select('*').from('players').where({id: dbId}).first();
             if (!player) // no such player
@@ -832,7 +842,7 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
                 toOriginPersonaId: player.originPersonaId,
                 byUserId: req.user.id,
                 toCommentId: toCommentId ? toCommentId : null,
-                content: handleRichTextInput(req.body.data.content),
+                content: handleRichTextInput(content),
                 valid: 1,
                 createTime: new Date(),
             };
