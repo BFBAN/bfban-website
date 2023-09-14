@@ -7,8 +7,7 @@ import { userHasRoles } from "./auth.js";
 
 /** @param {string} content */
 function handleRichTextInput(content) {
-  return content
-  // return xss(content);
+  return xss(content);
 }
 
 function cheatMethodsSanitizer(val, {req}) {
@@ -91,13 +90,13 @@ function initUserStorageQuota(user, totalStorageQuota, maxTrafficQuota, maxFileN
         else
             maxTrafficQuota = 0;
     const quota = {
-        userId: user.id, 
-        totalStorageQuota, 
+        userId: user.id,
+        totalStorageQuota,
         usedStorageQuota: 0,
-        maxTrafficQuota, 
-        todayTrafficQuota: 0, 
+        maxTrafficQuota,
+        todayTrafficQuota: 0,
         maxFileNumber,
-        todayFileNumber: 0, 
+        todayFileNumber: 0,
         prevResetTime: new Date()
     };
     return quota;
@@ -110,7 +109,7 @@ async function updateUserStorageQuota(quota, size) {
         quota.todayTrafficQuota = 0;
         quota.todayFileNumber = 0;
     }
-    if(quota.todayTrafficQuota+size > quota.maxTrafficQuota 
+    if(quota.todayTrafficQuota+size > quota.maxTrafficQuota
     || quota.usedStorageQuota+size > quota.totalStorageQuota)
         return undefined;
     quota.usedStorageQuota += size;

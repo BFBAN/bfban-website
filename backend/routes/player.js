@@ -14,7 +14,7 @@ import {playerWidget} from "../lib/widget.js";
 import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
-import {checkSpam, submitSpam, toSpam} from "../lib/akismet.js";
+import {checkSpam, submitSpam, SpamFormData} from "../lib/akismet.js";
 
 const router = express.Router()
 
@@ -683,6 +683,20 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/player/timeline/item:
+ *   get:
+ *     tags:
+ *       - 玩家
+ *     summary: 获取评论内容
+ *     description: 获取时间轴单条评论详细信息
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: timeline.item.ok
+ */
 router.get('/timeline/item', [
         checkquery('id').isInt({min: 0}),
     ],
@@ -690,18 +704,22 @@ router.get('/timeline/item', [
         try {
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'admin.commentItem.bad', message: validateErr.array()});
+                return res.status(400).json({error: 1, code: 'timeline.item.bad', message: validateErr.array()});
 
             const id = req.query.id;
 
             const result = await db.from('comments')
                 .join('users', 'comments.byUserId', 'users.id')
                 .select('comments.*', 'users.username', 'users.privilege')
-                .where('comments.id', id)
+                .where('comments.id', id).andWhere({"users.valid": 1})
                 .first();
 
             if (!result)
-                return res.status(400).json({code: 'timeline.item.bad', message: 'This data is not available.'})
+                return res.status(400).json({
+                    error: 1,
+                    code: 'timeline.item.bad',
+                    message: 'This data is not available.'
+                })
 
             delete result.valid;
 
@@ -784,11 +802,14 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
                 });
 
             // Whether to submit a report to akismet here
-            // if (await submitSpam(toSpam(req, {spamType: req.body.data.toCommentId ? 'reply' : 'comment', concat: req.body.data.content})))
+            // const {content} = req.body.data;
+            // const waitFormData = new SpamFormData(req, req.body.data.toCommentId ? 'reply' : 'comment', content);
+            // var result = await submitSpam(waitFormData);
+            // if (!result && result.status == false)
             //     return res.status(403).json({
             //         error: 1,
             //         code: 'reply.spam',
-            //         message: 'The content you submitted contains spam, please revise it'
+            //         message: result.message ??= 'The content you submitted contains spam, please revise it',
             //     });
 
             const dbId = req.body.data.toPlayerId;
@@ -828,6 +849,59 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
             next(err);
         }
     });
+
+/**
+ * @swagger
+ * /api/player/checkContent:
+ *   post:
+ *     tags:
+ *       - 检测
+ *     summary: 检测文本
+ *     description: 检测内容是否包含垃圾广告
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: data.content
+ *         description: 文本 1-5000
+ *         required: true
+ *         type: string
+ *         in: path
+ *         value: "test"
+ *       - name: data.spamType
+ *         description: ['reply', 'comment']
+ *         type: string
+ *         in: path
+ *         value: "comment"
+ *     responses:
+ *       200:
+ *         description: checkContent.success
+ */
+router.post('/checkContent', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'blacklisted']), [
+    checkbody('data.content').isString().trim().isLength({min: 1, max: 5000}),
+    checkbody('data.spamType').isIn(['reply', 'comment']),
+], async (req, res, next) => {
+    try {
+        const {content, spamType = ''} = req.body.data;
+        const waitFormData = new SpamFormData(req, spamType, content);
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'checkContent.bad', message: validateErr.array()});
+
+        // Whether to submit a report to akismet here
+        var result = await submitSpam(waitFormData);
+        if (!result && result.status == false)
+            return res.status(403).json({
+                error: 1,
+                code: 'reply.spam',
+                message: result.message ??= 'The content you submitted contains spam, please revise it',
+            });
+
+        return res.status(200).json({success: 1, code: 'checkContent.success', message: result.message});
+    } catch (err) {
+        logger.error('akismet:' + err);
+        next(err);
+    }
+});
 
 /**
  * @swagger
