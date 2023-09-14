@@ -39,8 +39,11 @@
             </Col>
           </Row>
         </div>
+        <picture>
+          <source :srcset="src" media="(orientation: portrait)" />
+          <img :src="src" class="img-tag user-select-none" :style="`transform: rotate(${rotateValue}deg)`"/>
+        </picture>
 
-        <img :src="src" class="img-tag user-select-none" :style="`transform: rotate(${rotateValue}deg)`"/>
         <div class="img-hover ivu-card user-select-none" @click="show">
           <Icon type="ios-search" size="50"/>
         </div>

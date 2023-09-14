@@ -95,6 +95,8 @@ export default new Application({
           <Col flex="1">
             <Input
                 style="margin-bottom: 5px"
+                type="url"
+                pattern="*://.*"
                 v-model="i.value"
                 @on-change="onInputChange"
                 :clearable="!isReadonly"
