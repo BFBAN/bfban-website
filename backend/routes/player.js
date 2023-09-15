@@ -1132,26 +1132,6 @@ async (req, res, next) => {
     }
 });
 
-router.get('/widget', verifyJWT, allowPrivileges(['admin', 'super', 'root', 'bot']), [
-        checkbody('id').optional().isString(),
-    ],
-    async (req, res, next) => {
-        try {
-            const validateErr = validationResult(req);
-            if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'widget.bad', message: validateErr.array()});
-
-            let renderStream = await playerWidget(req.query.id);
-
-            renderStream.on('data', function (data) {
-                res.writeHead('200', {'Content-Type': 'image/jpeg'});    //写http头部信息
-                res.end(data, 'binary');
-            });
-        } catch (err) {
-            next(err);
-        }
-    });
-
 /** @param {string} originName @param {string} originUserId @param {string} originPersonaId
  * @param originUserId
  * @param originPersonaId
