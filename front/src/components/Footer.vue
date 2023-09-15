@@ -87,10 +87,10 @@
             </router-link>
           </Col>
         </Row>
-        <Row :gutter="5" class="footer-link" type="flex" v-if="links.footerStatic">
+        <Row :gutter="10" class="footer-link" type="flex" v-if="links.footerStatic">
           <Col v-for="(link, linkindex) in links.footerChild" :key="linkindex" align="center">
             <a :href="link.linkUrl" target="_blank" class="footer-link-text">
-              <img :src="link.linkImageUrl" width="100" height="35" :alt="link.tag" :title="link.describe">
+              <img :src="link.linkImageUrl" height="35" :alt="link.tag" :title="link.describe">
             </a>
           </Col>
         </Row>
