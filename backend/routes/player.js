@@ -628,7 +628,7 @@ async (req, res, next) => {
 
         const now = new Date()
         result = result.map(item => {
-            item = Object.assign(item, timeLineItemShowAttributes(item));
+            item = Object.assign(item, timeLineItemShowAttributes(item, req));
 
             if (item.attr.mute) {
                 const date = new Date(item.attr.mute)
@@ -685,7 +685,7 @@ router.get('/timeline/item', [
                 .select('comments.*', 'users.username', 'users.privilege')
                 .where('comments.id', id)
                 .first()
-                .then(res => Object.assign(res, timeLineItemShowAttributes(res)));
+                .then(res => Object.assign(res, timeLineItemShowAttributes(res, req)));
 
             if (!result)
                 return res.status(400).json({code: 'timeline.item.bad', message: 'This data is not available.'})
@@ -1205,26 +1205,26 @@ function timeLineItemSetAttributes(attr) {
  *     text: String
  * }}
  */
-function timeLineItemShowAttributes(item = {}) {
+function timeLineItemShowAttributes(item = {}, req) {
     switch (item.type) {
         case 'banAppeal':
             // New code to handle the content field
             if (isJSON(item.content)) {
                 const superPrivileges = ['root', 'dev', 'super'];
-                let contentAsMap = JSON.parse(item.content);
+                let contentAsMap = JSON.parse(item.content) ?? {};
 
                 // Check if the user's privilege doesn't contain 'admin' and 'dev' and 'root'
                 if (!item.privilege.some(role => superPrivileges.includes(role))) {
                     // Check if appealType is 'moss' and if mossDownloadUrl exists
                     // Delete the mossDownloadUrl field
-                    if (contentAsMap.appealType === 'moss' && contentAsMap.hasOwnProperty('mossDownloadUrl'))
-                        delete contentAsMap.mossDownloadUrl;
+                    if (contentAsMap.appealType === 'moss' && contentAsMap.extendedLinks.hasOwnProperty('mossDownloadUrl'))
+                        delete contentAsMap.extendedLinks.mossDownloadUrl;
                 }
 
                 item.content = {
                     appealType: contentAsMap.appealType,
-                    text: contentAsMap.content,
                     extendedLinks: contentAsMap.extendedLinks,
+                    text: contentAsMap.content ??= null,
                 }
                 return;
             }
@@ -1241,6 +1241,10 @@ function timeLineItemShowAttributes(item = {}) {
             break;
     }
 
+    item.content.showAttachment = !!req.user;
+    if (!req.user && !!item.content.extendedLinks) {
+        delete item.content.extendedLinks;
+    }
     return item;
 }
 
