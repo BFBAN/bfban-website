@@ -47,22 +47,12 @@
           "bfv": "?player-id={personaId}"
         }
       }
-    },
-    "247-Fairplay": {
-      "webSite": "https://www.247fairplay.com",
-      "icon": "https://endof.p-stats.com/favicon.ico",
-      "platform": {
-        "origin": {
-          "bf1": "https://bf1stats.com/pc/{id}"
-        }
-      }
     }
   },
   "links": {
     "bf1": [
       "Battlefield-Tracker",
-      "Gametools-Network",
-      "247-Fairplay"
+      "Gametools-Network"
     ],
     "bfv": [
       "Battlefield-Tracker",
