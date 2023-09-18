@@ -28,6 +28,7 @@ import UploadWidget from './UploadWidget';
 import Quill from "quill";
 import {quillEditor} from 'vue-quill-editor'
 import atPeople from 'quill-mention-people';
+import ImageBlot from '../assets/js/quill-module-image'
 
 import 'quill-mention-people/index.css'
 
@@ -99,6 +100,7 @@ export default {
     if (this.content)
       this.editorContent = this.content;
 
+    Quill.register(ImageBlot, true) //
     // Quill.register('modules/atPeople',atPeople);
   },
   methods: {
@@ -145,7 +147,6 @@ export default {
      */
     async onInsert(insertValue) {
       try {
-        console.log(insertValue);
         const quill = this.quill;
         const range = quill.getSelection(true);
 
@@ -157,7 +158,11 @@ export default {
           return;
         }
 
-        quill.insertEmbed(range.index, 'image' ?? this.$refs['uploadWidget'].currentFileType, insertValue);
+        quill.insertEmbed(
+            range.index,
+            'image' ?? this.$refs['uploadWidget'].currentFileType,
+            insertValue,
+        );
 
         // 关闭mode
         this.updataPlane = false;
@@ -185,24 +190,31 @@ export default {
      */
     onEditorChange(data) {
       const maxlength = this.maxlength;
+      console.log('Change', data);
+
       if (
-          data.html &&
-          maxlength ? data.html.length < maxlength : true &&
-              !this.disabled
-      )
-        this.editorContent = data.html;
+          !data.html &&
+          data.html.length > maxlength &&
+          this.disabled
+      ) return;
+
+      this.editorContent = data.html;
       this.$emit("input", this.editorContent);
     },
     onEditorBlur(data) {
       const maxlength = this.maxlength;
+      console.log('blue', data);
+
+      if (data.html == null) return;
 
       if (
-          data.html &&
-          maxlength ? data.html.length < maxlength : true &&
-              !this.disabled
-      ) {
-        this.$emit("input", this.editorContent);
-      }
+          !data.html &&
+          data.html.length > maxlength &&
+          this.disabled
+      ) return;
+
+      this.editorContent = data.html;
+      this.$emit("input", this.editorContent);
     },
   },
   computed: {
@@ -219,7 +231,15 @@ export default {
 <style lang="less">
 .editor .ql-container.ql-snow {
   font-family: "Ionicons";
-  height: calc(100% - 45px) !important;
+  height: calc(100% - 48px) !important;
+}
+
+.editor .ql-container.ql-snow img {
+  width: 100%;
+  display: block;
+  border: 1px solid;
+  border-radius: 3px;
+  margin: 10px 0;
 }
 
 .ql-snow .ql-tooltip.ql-editing a {
