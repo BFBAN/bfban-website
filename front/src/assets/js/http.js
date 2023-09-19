@@ -17,6 +17,7 @@ export default class Http extends Conf {
         withCredentials: true,
         headers: {
             // 'Content-type': 'application/json',
+            "Cache-Control": "no-cache"
         },
         validateStatus(status) {
             return status <= 1000;
