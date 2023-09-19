@@ -896,6 +896,8 @@
   },
   "textarea": {
     "originalImage": "原始图片",
+    "textOverflowHint": "文本内容超出最大长度，请适当缩减或分段提交",
+    "textHelpHint": "统计内容包含不可见的标签，与可见的文本内容有差异，请以此统计为准",
     "steps": {
       "media": {
         "0": "选择",
