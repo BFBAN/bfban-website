@@ -286,7 +286,7 @@
                 <Col>
                   <!-- 时间轴筛选 S -->
                   <ButtonGroup type="button">
-                    <Select v-model="timeline.seeType" size="small" @on-change="onUpdataSeeType">
+                    <Select v-model="timeline.seeType" size="small" @on-change="onUpdateSeeType">
                       <Option v-for="(item, index) in timeline.seeTypeList"
                               :value="item.value"
                               :key="index">
@@ -731,7 +731,8 @@
                       </Poptip>
                     </Col>
                     <Col align="right" class="user-select-none" v-if="l.type != 'historyUsername'">
-                      # {{ (timeline.skip * timeline.limit) - timeline.limit + l.index + 1}}-<u><span style="opacity: .4">{{ l.id }}</span></u>
+                      # {{ (timeline.skip * timeline.limit) - timeline.limit + l.index + 1 }}-<u><span
+                        style="opacity: .4">{{ l.id }}</span></u>
                     </Col>
                   </Row>
 
@@ -757,7 +758,9 @@
                   <Textarea v-model="reply.content"
                             style="margin: 0 -16px;"
                             ref="replyTextarea"
-                            :height="'120px'"
+                            :height="'150px'"
+                            :maxlength="5000"
+                            :showMaxlengthLabel="true"
                             :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
                 </div>
                 <div class="ivu-card-body">
@@ -767,7 +770,7 @@
                              maxlength="4"
                              :placeholder="$t('captcha.title')">
                         <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                          <Captcha :id="'replyPlayerCaptcha'" ref="replyPlayerCaptcha"></Captcha>
+                          <Captcha :id="'replyCaptcha'" ref="replyCaptcha"></Captcha>
                         </div>
                       </Input>
                     </Col>
@@ -779,7 +782,7 @@
                                 :long="isMobile"
                                 :loading="replySpinShow"
                                 :disabled="!reply.content"
-                                @click.stop.prevent="onReply">
+                                @click.stop.prevent="onReply('default')">
                           {{ $t('basic.button.reply') }}
                         </Button>
                         <Button size="large" type="dashed">
@@ -924,6 +927,8 @@
                       <Textarea v-model="verify.suggestion"
                                 ref="judgementTextarea"
                                 :height="'250px'"
+                                :maxlength="60000"
+                                :showMaxlengthLabel="true"
                                 :placeholder="$t(`detail.info.writeSomething`)"></Textarea>
 
                       <!-- Fast Reply S -->
@@ -1017,35 +1022,36 @@
         <div slot="header">
           {{ `${$t('basic.button.reply')}` }}
           <BusinessCard :id="timelineList[reply.toFloor].byUserId" v-if="timelineList[reply.toFloor]">
-            <b>{{ timelineList[reply.toFloor].username }}</b>({{ reply.toFloor }})
+            <b>{{ timelineList[reply.toFloor].username }}</b>({{ reply.toFloor + 1 }})
           </BusinessCard>
         </div>
-        <div v-if="isLogin">
-          <Form ref="replyForm">
-            <Textarea v-model="reply.content"
-                      :toolbar="['bold', 'link']"
-                      :height="'320px'"
-                      :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
-          </Form>
-        </div>
+        <Form ref="replyForm" style="margin: -17px;" v-if="isLogin">
+          <Textarea v-model="reply.miniModeContent"
+                    ref="replyMiniModeTextarea"
+                    :toolbar="['bold', 'link']"
+                    :height="'320px'"
+                    :maxlength="5000"
+                    :showMaxlengthLabel="true"
+                    :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+        </Form>
         <div v-else>{{ $t('detail.info.replyManual4') }}</div>
 
         <div slot="footer">
           <Row :gutter="30">
             <Col flex="1">
-              <Input type="text" v-model="reply.captcha"
+              <Input type="text" v-model="reply.miniModeCaptcha"
                      maxlength="4"
                      :placeholder="$t('captcha.title')">
                 <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                  <Captcha :id="'replyCommentsCaptcha'" ref="replyCommentsCaptcha"></Captcha>
+                  <Captcha :id="'replyMiniModeCaptcha'" ref="replyMiniModeCaptcha"></Captcha>
                 </div>
               </Input>
             </Col>
             <Col>
               <Button @click="cancelReply" v-voice-button>{{ $t('basic.button.cancel') }}</Button>
-              <Button @click="onReply"
+              <Button @click="onReply('mini')"
                       type="primary"
-                      :disabled="(!reply.content || !reply.captcha) || false"
+                      :disabled="(!reply.miniModeContent || !reply.miniModeCaptcha) || false"
                       :loading="replySpinShow"
                       v-voice-button>
                 {{ $t('basic.button.submit') }}
@@ -1447,13 +1453,14 @@ export default new Application({
         updateTime: time.appStart()
       },
       reply: {
+        miniModeContent: '',
+        miniModeCaptcha: '',
         cheaterId: '',
         userId: '',
         content: '',
         toFloor: '',
         toUserId: '',
         captcha: '',
-        captchaUrl: {},
       },
       fastReply: {
         selected: [],
@@ -1546,7 +1553,8 @@ export default new Application({
       // set Token Http mode
       this.http = http_token.call(this);
 
-      this.timeline.seeType = this.getSeeType();
+      this.timeline.seeType = this.getSeeType;
+
       if (page) {
         this.timeline.skip = Number(page);
         this.timeline.page = Number(page);
@@ -2055,23 +2063,19 @@ export default new Application({
     /**
      * 时间轴更新状态
      */
-    onUpdataSeeType() {
+    onUpdateSeeType() {
       account_storage.updateConfiguration("timelineSeeType", this.timeline.seeType);
-    },
-    getSeeType() {
-      let value = account_storage.getConfiguration("timelineSeeType");
-      if (typeof value == 'boolean' && !value) value = this.timeline.seeType;
-      return value;
     },
     /**
      * 提交判决
      */
     async onJudgement() {
-      let {suggestion, status} = this.verify;
+      const {suggestion, status} = this.verify;
       const cheatMethods = this.verify.checkbox;
 
       if (this.verifySpinShow) return;
-      if ((['kill', 'guilt'].includes(status) && cheatMethods == '') || suggestion.trim() === '') {
+
+      if (['kill', 'guilt'].includes(status) && cheatMethods == '' || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
@@ -2086,15 +2090,15 @@ export default new Application({
       }
 
       // 额外事件
-      if (this.verify.isUpdateinformation) {
+      if (this.verify.isUpdateinformation)
         this.updateCheaterInfo()
-      }
-      if (this.verify.isSubscribeTrace) {
+      if (this.verify.isSubscribeTrace)
         this.onSubscribes()
-      }
+
 
       // 判决处理
       this.verifySpinShow = true;
+
       this.http.post(api["player_judgement"], {
         data: {
           data: {
@@ -2103,18 +2107,15 @@ export default new Application({
             action: this.verify.status,
             content: formatTextarea(suggestion),
           },
-          encryptCaptcha: this.reply.captchaUrl.hash,
-          captcha: this.reply.captcha,
         }
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           // reset verifyForm
           this.verify.status = '';
           this.verify.suggestion = '';
           this.verify.checkbox = [];
-          this.reply.captcha = '';
           this.cheater.status = status;
 
           this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
@@ -2123,20 +2124,24 @@ export default new Application({
 
         this.$Message.error(d.message || d.code);
       }).finally(() => {
-        this.getPlayerInfo();
-        this.getTimeline();
-
-        message.playSendVoice();
-
         this.verifySpinShow = false;
         this.verify.isSubscribeTrace = !this.verify.isSubscribeTrace;
         this.verify.isUpdateinformation = !this.verify.isUpdateinformation;
+
+        message.playSendVoice();
+
+        this.getPlayerInfo();
+        this.getTimeline();
       })
     },
     handleFileUpload(event) {
       const files = event.target.files;
       this.appeal.selectedFile = files[0]; // 设置 selectedFile 的值
     },
+    /**
+     * 处理申诉
+     * @returns {Promise<void>}
+     */
     async handleAppeal() {
       const type = this.appeal.type;
       const content = this.appeal.content || this.$refs.textareaAppealContent.editorContent;
@@ -2255,78 +2260,98 @@ export default new Application({
       this.replyModal = true;
     },
     /**
-     * 触发评论取消时
+     * 触发小窗口评论取消时
      * 重置前端评论内容值
      */
-    cancelReply() {
-      this.replyModal = false;
-      this.reply = {
-        content: '',
-        captchaUrl: {
+    cancelReply(isOffMode = false) {
+      if (isOffMode)
+        this.replyModal = false;
+      this.reply = Object.assign(this.reply, {
+        miniModeContent: '',
+        miniModeCaptchaUrl: {
           content: '',
           hash: '',
         }
-      };
+      });
     },
     /**
      * 用户评论/回复
+     * @param replyType
      */
-    onReply() {
-      if (this.$store.state.$userinfo) {
-        if (!(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
-          this.$Message.error({content: this.$i18n.t("detail.messages.tipBind"), duration: 3});
-          setTimeout(() => {
-            this.$router.push({
-              path: '/profile/information'
-            })
-          }, 3000)
-          return
-        }
-      }
+    onReply(replyType = 'default') {
       const cheaterId = this.cheater.id;
-      let {content = ''} = this.reply;
-      content = formatTextarea(content);
-      let data = {
-        data: {
-          toPlayerId: cheaterId,
-          toCommentId: null,
-          content: content,
-        },
-        encryptCaptcha: this.$refs.replyPlayerCaptcha.hash,
-        captcha: this.reply.captcha,
-      };
+      const {content = '', miniModeContent = ''} = this.reply;
+      let message = "";
+      let data = {};
 
-      // 楼中楼
-      // 回复 评论dbID
-      if (this.reply.toFloor && Number(this.reply.toFloor) >= 0) {
-        data.data.toCommentId = this.timelineList[this.reply.toFloor].id;
-        data.encryptCaptcha = this.$refs.replyCommentsCaptcha.hash;
+      if (this.$store.state.$userinfo && !(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
+        this.$Message.error({content: this.$i18n.t("detail.messages.tipBind"), duration: 3});
+        setTimeout(() => {
+          this.$router.push({
+            path: '/profile/information'
+          })
+        }, 3000)
+        return
+      }
+
+      // 依照不同回复窗口模式来填充提交表单
+      switch (replyType) {
+        case "default":
+          data = {
+            data: {
+              toPlayerId: cheaterId,
+              content: formatTextarea(content),
+            },
+            encryptCaptcha: this.$refs.replyCaptcha.hash,
+            captcha: this.reply.captcha,
+          };
+          break;
+        case "mini":
+          data = {
+            data: {
+              toPlayerId: cheaterId,
+              toCommentId: this.timelineList[this.reply.toFloor].id,
+              content: formatTextarea(miniModeContent),
+            },
+            encryptCaptcha: this.$refs.replyMiniModeCaptcha.hash,
+            captcha: this.reply.miniModeCaptcha,
+          };
+          break;
       }
 
       this.replySpinShow = true;
+
       this.http.post(api["player_reply"], {data}).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
 
           this.replyModal = false;
           this.reply.toFloor = "";
-          this.reply = "";
+          this.reply.content = "";
+          this.reply.captcha = "";
+          this.reply.miniModeContent = "";
+          this.reply.miniModeCaptcha = "";
 
           // Actively update text
           if (this.$refs.replyTextarea)
             this.$refs.replyTextarea.updateContent('');
+          if (this.$refs.replyMiniModeTextarea)
+            this.$refs.replyMiniModeTextarea.updateContent('');
+
           return;
         }
 
-        this.$Message.error({content: d.message || d.code, duration: 3});
+        message = typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : d.message;
+
+        this.$Message.error({content: message || d.code, duration: 3});
       }).finally(() => {
         this.replySpinShow = false;
 
         message.playSendVoice();
 
-        this.cancelReply();
+        this.cancelReply(false);
         this.getPlayerInfo();
         this.getTimeline();
       });
@@ -2347,10 +2372,10 @@ export default new Application({
         data: {
           personaId: this.cheater.originPersonaId
         }
-      }).then(async res => {
+      }).then(res => {
         const d = res.data;
 
-        if (d.error == 0) {
+        if (d.error === 0) {
           const {cheaterGameName: originId, originUserId, avatarLink} = d.data.origin;
 
           this.cheater.originId = originId;
@@ -2361,13 +2386,13 @@ export default new Application({
           return;
         }
 
-        await this.getPlayerInfo()
-        await this.getTimeline()
-
-        this.$Message.success(d.code);
-      }).finally(() => {
+        this.$Message.success(d.message || d.code);
+      }).finally(async () => {
         this.updateUserInfospinShow = false;
         this.updateCheaterModal = false;
+
+        await this.getPlayerInfo()
+        await this.getTimeline()
       });
     },
     /**
@@ -2421,6 +2446,15 @@ export default new Application({
     },
   },
   computed: {
+    /**
+     * 时间轴可见类型，筛选
+     * @returns {*|boolean}
+     */
+    getSeeType() {
+      let value = account_storage.getConfiguration("timelineSeeType");
+      if (typeof value == 'boolean' && !value) value = this.timeline.seeType;
+      return value;
+    },
     isOnlySuper() {
       const {userinfo} = this.$store.state.user || {}
       const {privilege = []} = userinfo

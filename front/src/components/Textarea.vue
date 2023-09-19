@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="position: relative">
     <quill-editor
         class="editor"
         ref="myTextEditor"
@@ -9,11 +9,30 @@
         :disabled="disabled"
         :maxlength="maxlength"
         @change="onEditorChange"
-        @blur="onEditorBlur"
         @ready="onEditorReady"
         useCustomImageHandler/>
-    <p style="text-align: right; padding-right: 10px" v-if="maxlength">
-      {{ editorContent.length || 0 }}/{{ maxlength }}</p>
+    <Row :gutter="10" v-if="showMaxlengthLabel" style="margin: 0px 10px">
+      <Col flex="1">
+        <template v-if="editorContent != null && editorContent.length >= maxlength">
+          <Alert show-icon type="error">{{ $t('textarea.textOverflowHint') }}</Alert>
+        </template>
+      </Col>
+      <Col>
+        <Tooltip :placement="'left-start'" :content="$t('textarea.textHelpHint')" max-width="300" :transfer="true">
+          <Icon type="md-help-circle" style="margin-right: 5px;"/>
+          <template v-if="editorContent != null && editorContent.length == maxlength">
+            <b style="color: darkred">{{ editorContent.length || 0 }}</b>
+          </template>
+          <template
+              v-else-if="editorContent != null && editorContent.length >= maxlength / 2 && editorContent.length < maxlength">
+            <span style="color: goldenrod">{{ editorContent.length || 0 }}</span>
+          </template>
+          <template v-else-if="editorContent != null">{{ editorContent.length || 0 }}</template>
+          <template v-else>0</template>
+          /{{ maxlength }}
+        </Tooltip>
+      </Col>
+    </Row>
 
     <UploadWidget ref="uploadWidget"
                   @finish="onInsert"></UploadWidget>
@@ -35,6 +54,10 @@ import 'quill-mention-people/index.css'
 export default {
   props: {
     index: null,
+    showMaxlengthLabel: {
+      type: Boolean,
+      default: false,
+    },
     maxlength: {
       type: Number,
       default: 0
@@ -189,33 +212,30 @@ export default {
      * @param text
      */
     onEditorChange(data) {
-      const maxlength = this.maxlength;
-      console.log('Change', data);
+      this.editorContent = "";
+      if (this.disabled && !data.html) return;
 
-      if (
-          !data.html &&
-          data.html.length > maxlength &&
-          this.disabled
-      ) return;
-
-      this.editorContent = data.html;
+      this.editorContent = this.onContentOverflowProcessing(data.html, true);
       this.$emit("input", this.editorContent);
     },
-    onEditorBlur(data) {
-      const maxlength = this.maxlength;
-      console.log('blue', data);
-
-      if (data.html == null) return;
-
-      if (
-          !data.html &&
-          data.html.length > maxlength &&
-          this.disabled
-      ) return;
-
-      this.editorContent = data.html;
-      this.$emit("input", this.editorContent);
-    },
+    /**
+     * 文本溢出处理
+     * @param {string} content
+     * @param {boolean} isShowHint
+     * @returns {string}
+     */
+    onContentOverflowProcessing(content, isShowHint = false) {
+      const quill = this.quill;
+      let laterContent = "";
+      if (content != null && content.length > this.maxlength) {
+        laterContent = content.substring(0, this.maxlength);
+        quill.deleteText(this.maxlength + 1, quill.getLength());
+        quill.update()
+      } else {
+        laterContent = content;
+      }
+      return laterContent;
+    }
   },
   computed: {
     editor() {
