@@ -1890,7 +1890,7 @@ export default new Application({
           params: Object.assign({
             skip: (this.timeline.skip - 1) * this.timeline.limit,
             limit: this.timeline.limit
-          }, {personaId: this.getParamsIds('personaId')})
+          }, {personaId: this.getParamsIds('personaId'), random: +(new Date())})
         }).then(res => {
           let d = res.data;
 
