@@ -1682,7 +1682,13 @@ export default new Application({
      * 合并时间轴历史名称
      */
     onMergeHistoryName() {
+      const {page} = this.$route.query;
       let _timelineList = this.timelineListPreparedness;
+      let _timeStartAndEndTime = {
+        0: new Date(_timelineList[0].createTime).getTime(),
+        1: new Date(_timelineList[_timelineList.length - 1].createTime).getTime()
+      } // 当前页第一条与最后一条时间间距
+
       // 处理历史名称，放置对应对应位置
       for (let hisrotyIndex = 0; hisrotyIndex < this.cheater.history.length; hisrotyIndex++) {
         let nameHistoryTime = new Date(this.cheater.history[hisrotyIndex].fromTime).getTime();
@@ -1701,7 +1707,10 @@ export default new Application({
               hisrotyIndex >= 1 &&
               _timelineList[timeLineIndex].type != 'historyUsername' &&
               nameHistoryTime >= prevNameTimeListTime &&
-              nameHistoryTime <= nameTimeListTime) {
+              nameHistoryTime <= nameTimeListTime &&
+              page == 1 ? true : nameHistoryTime >= _timeStartAndEndTime[0] &&
+                  nameHistoryTime <= _timeStartAndEndTime[1]
+          ) {
             _timelineList.splice(timeLineIndex, 0, {
               type: 'historyUsername',
               beforeUsername: this.cheater.history[hisrotyIndex - 1]?.originName,
@@ -1860,6 +1869,13 @@ export default new Application({
           const d = res.data;
 
           if (d.success === 1) {
+            // 历史名称排序
+            d.data.history = d.data.history.sort(function (a, b) {
+              let aTime = new Date(a.fromTime).getTime();
+              let bTime = new Date(b.fromTime).getTime();
+              return aTime > bTime ? 1 : -1;
+            })
+
             this.cheater = d.data;
 
             this.$refs.recordLink.generateTable(this.cheater);
