@@ -624,6 +624,7 @@ async (req, res, next) => {
             .orderBy('comments.createTime', order)
             .offset(skip).limit(limit);
 
+        /*
         const now = new Date()
         result = result.map(item => {
             // New code to handle the content field
@@ -659,6 +660,7 @@ async (req, res, next) => {
                     delete i[j];
             delete i.valid;
         });
+        */
 
         const replieIds = result.filter(i => i.toCommentId !== undefined).map(i => i.toCommentId);
         /** @type {import("../typedef.js").Comment[]} */
