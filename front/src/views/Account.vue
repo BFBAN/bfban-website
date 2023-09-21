@@ -89,6 +89,16 @@
                         <b>{{ account.statusNum['4'] || '-' }}</b>
                         <p class="account-info-p">{{ $t(`basic.status.4`) }}</p>
                       </Col>
+                      <Divider type="vertical"/>
+                      <Col>
+                        <b>{{ account.reportnum - (account.statusNum['0'] + account.statusNum['1'] + account.statusNum['4']) }}</b>
+                        <p class="account-info-p">···</p>
+                      </Col>
+                      <Col>=</Col>
+                      <Col>
+                        <b>{{ account.reportnum || '-' }}</b>
+                        <p class="account-info-p">{{ $t("account.reportNum") }}</p>
+                      </Col>
                     </template>
                     <Spin size="large" v-show="!isLogin">
                       <div>
