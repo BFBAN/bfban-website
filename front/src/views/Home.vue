@@ -13,7 +13,9 @@
               <h1 class="title">
                 {{ $t("home.cover.h1") }}
               </h1>
-              <h2>{{ $t(`home.cover.h2.hint${Math.floor(Math.random() * 2)}`) }}</h2>
+              <h2>{{ $t(`home.cover.h2.hint${hintRandom}`) }}
+                <icon @click="onHomeHintRandom()" type="md-refresh"></icon>
+              </h2>
               <h3>{{ $t("home.cover.h3") }}</h3>
               <br>
               <p>{{ $t("home.cover.h4") }}</p>
@@ -158,7 +160,7 @@
                 <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
                   {{ a_i.byUserName }}
                 </router-link>
-                {{$t('detail.appeal.info.content')}}
+                {{ $t('detail.appeal.info.content') }}
               </span>
             </Card>
           </div>
@@ -184,6 +186,7 @@ export default new Application({
     return {
       bannerImage: '',
       bannerTime: '',
+      hintRandom: 0,
 
       statisticsInfoLoad: false,
       activityLoad: false,
@@ -215,12 +218,21 @@ export default new Application({
       });
 
       this.bannerTime = new Intl.DateTimeFormat(this.$i18n.locale || 'en-US').format(time.appStart());
+      this.onHomeHintRandom(true);
 
       try {
         this.bannerImage = require(`../assets/images/index-gl_${this.$i18n.locale || 'en-US'}.png`);
       } catch (e) {
         this.bannerImage = require(`../assets/images/index-gl_en-US.png`);
       }
+    },
+    onHomeHintRandom(isFirst = false) {
+      let newRandom = Math.floor(Math.random() * 3);
+      if (!isFirst && newRandom == this.hintRandom) {
+        this.onHomeHintRandom();
+        return;
+      }
+      this.hintRandom = newRandom;
     },
     /**
      * 查看首页介绍图片
