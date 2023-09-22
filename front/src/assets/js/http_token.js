@@ -56,4 +56,10 @@ export default class http_token extends http {
 
     return super.put(url, this.setToken(data));
   }
+
+  async delete(url = '', data = {data: {}, params: {}}) {
+    this.CONF = await super.initConf();
+
+    return super.delete(url, this.setToken(data));
+  }
 }

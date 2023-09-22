@@ -50,6 +50,7 @@ export default class Api {
             "service_myStorageQuota": "service/myStorageQuota",
             "service_myFiles": "service/myFiles",
             "service_file": "service/file",
+            "service_files": "service/files",
             "service_upload": "service/upload",
             "service_uploadBigFile": "service/uploadBigFile",
 

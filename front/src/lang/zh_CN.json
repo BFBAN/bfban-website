@@ -580,6 +580,8 @@
         "comment": "评论管理",
         "home": "管理主页",
         "judgementLog": "判决日志",
+        "fileManagement": "多媒体管理",
+        "files": "文件列表",
         "log": "日志",
         "management": "内容",
         "message": "消息",
