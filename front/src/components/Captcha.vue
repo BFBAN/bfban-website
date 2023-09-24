@@ -5,7 +5,7 @@
     <span v-if="!content" class="tip">
       <template v-if="!disable">
         {{ $t('captcha.get') }}
-        <span v-if="postload">
+        <span v-if="postLoad">
           <Icon type="md-refresh spin-icon-load" size="20"/>
         </span>
       </template>
@@ -19,7 +19,7 @@
     <transition name="fade">
       <div v-show="content && captchaTime.count <= 0" class="captcha-view-icon">
         <Icon v-if="disable" type="md-close" size="20"/>
-        <Icon v-else type="md-refresh" size="20" :class="[postload ? 'spin-icon-load' : '']"/>
+        <Icon v-else type="md-refresh" size="20" :class="[postLoad ? 'spin-icon-load' : '']"/>
       </div>
     </transition>
     <div class="count" v-show="captchaTime.count > 0">{{ captchaTime.count }}s</div>
@@ -51,10 +51,10 @@ export default {
   },
   data() {
     return {
-      postload: false,
+      postLoad: false,
       hash: "",
       content: "",
-      capthcaHash: {},
+      captchaHash: {},
       captchaTime: {
         fun: null,
         count: 0,
@@ -63,11 +63,12 @@ export default {
     }
   },
   created() {
-    let captcha = storage.session().get('captcha');
+    this.storageSession = storage.session();
+    let captcha = this.storageSession.get('captcha');
     if (captcha) {
-      this.capthcaHash = captcha.data;
+      this.captchaHash = captcha.data;
     } else {
-      storage.session().set(`captcha`, {
+      this.storageSession.set(`captcha`, {
         [`${this.id}_${this.$route.name}`]: this.seconds
       });
     }
@@ -81,7 +82,7 @@ export default {
      * 刷新验证码
      */
     async refreshCaptcha() {
-      let captcha = await storage.session().get('captcha');
+      let captcha = this.storageSession.get('captcha');
       let that = this;
 
       if (captcha.code <= 0) {
@@ -92,38 +93,40 @@ export default {
         }
       }
 
-      if (this.disable || this.postload || this.captchaTime.lock) return;
+      if (this.disable || this.postLoad || this.captchaTime.lock) return;
 
-      this.postload = true;
+      this.postLoad = true;
 
       http.get(api["captcha"], {
         params: {
           t: Math.random()
         }
       }).then(res => {
-        if (res.data.success === 1) {
+        const d = res.data;
+        if (d.success === 1) {
           // 储存验证码hash
-          that.capthcaHash = Object.assign({
+          that.captchaHash = Object.assign({
             [that.$route.name]: 0
           });
 
-          this.hash = res.data.data["hash"];
-          this.content = res.data.data["content"];
+          this.hash = d.data["hash"];
+          this.content = d.data["content"];
 
           if (Object.keys(captcha.data.value).indexOf(this.$route.name) >= 0) {
             // 会话持久对应时间加载
             this.captchaTime.count = captcha.data.value[this.$route.name];
           }
 
-
           this.capthcaTimeout(this.captchaTime.count || this.seconds)
           return;
         }
 
-        this.$Message.error(res.data.code);
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(res => {
         setTimeout(function () {
-          that.postload = false;
+          that.postLoad = false;
         }, 800)
       });
     },
@@ -147,10 +150,10 @@ export default {
         }
         that.captchaTime.count -= 1;
 
-        that.capthcaHash = Object.assign({
+        that.captchaHash = Object.assign({
           [`${that.id}_${that.$route.name}`]: that.captchaTime.count
         });
-        storage.session().set("captcha", that.capthcaHash);
+        this.storageSession.set("captcha", that.captchaHash);
       }, 1000);
 
       that.captchaTime.lock = true;

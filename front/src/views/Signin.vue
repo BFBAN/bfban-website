@@ -161,50 +161,55 @@ export default new Application({
       });
 
       this.$refs['signin'].validate((valid) => {
-        if (valid) {
-          this.spinShow = true;
-
-          http.post(api["account_signin"], {
-            data: {
-              data: {
-                username,
-                password,
-              },
-              encryptCaptcha: this.$refs.captcha.hash,
-              captcha,
-            },
-          }).then(res => {
-            const d = res.data;
-
-            if (d.error == 1) {
-
-              that.signin.password = '';
-              that.signin.captcha = '';
-              that.serverReturnMessage = d.message;
-
-            } else {
-              that.signinUser(d.data).then(() => {
-                const backPath = this.$route.query.backPath;
-
-                // redirect backPath or home
-                if (backPath) {
-                  this.$router.push({path: backPath});
-                } else {
-                  this.$router.go('-1');
-                }
-
-                this.$Message.success(this.$t('signin.success'));
-              })
-            }
-          }).finally(res => {
-            that.spinShow = false;
-            if (that.$refs.captcha)
-              that.$refs.captcha.refreshCaptcha();
-          });
-
-        } else {
+        if (!valid) {
           this.$Message.error(this.$t('signin.fillEverything'));
+          return;
         }
+
+        this.spinShow = true;
+
+        http.post(api["account_signin"], {
+          data: {
+            data: {
+              username,
+              password,
+            },
+            encryptCaptcha: this.$refs.captcha.hash,
+            captcha,
+          },
+        }).then(res => {
+          const d = res.data;
+
+          if (d.error === 1) {
+            that.signin.password = '';
+            that.signin.captcha = '';
+            that.serverReturnMessage = d.message;
+
+            this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+              message: d.message || ""
+            }));
+            return;
+          }
+
+          that.signinUser(d.data).then(() => {
+            const backPath = this.$route.query.backPath;
+
+            // redirect backPath or home
+            if (backPath) {
+              this.$router.push({path: backPath});
+            } else {
+              this.$router.go('-1');
+            }
+
+            this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+              message: d.message || ""
+            }, d.code || d.message));
+          })
+        }).finally(err => {
+          that.spinShow = false;
+          if (that.$refs.captcha)
+            that.$refs.captcha.refreshCaptcha();
+        });
       });
     }
   },
