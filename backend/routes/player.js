@@ -1070,7 +1070,7 @@ async (req, res, next) => {
         if (prevUserCommentItem) {
             const f = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
             if (f >= texCoincidenceRatio)
-                return res.status(403).json({error: 1, code: 'reply.bad', message: 'Duplicate submission'});
+                return res.status(403).json({error: 1, code: 'judgement.bad', message: 'Duplicate submission'});
         }
 
 
