@@ -9,20 +9,19 @@ import Config from "../config.js";
 
 async function verifyAllowPrivilege(req, res, next) {
     try {
-
         const {username} = req.body.data;
         const result = await db.select('*')
             .from('users')
-            .where({username: username})
-            .orWhere({originEmail: username}).first();
+            .where({username: username}).orWhere({originEmail: username}).first();
 
         req.user = result;
 
         if (!req.body.SKIP_CAPTCHA) return next();
         if (!result)
             return res.status(401).json({error: 1, code: 'user.invalid'});
-        if (result && req.body.SKIP_CAPTCHA === true && !userHasRoles(result, ['dev', 'bot']))
-            return res.status(401).json({error: 1, code: 'user.invalid', message: `SKIP_CAPTCHA ${req.body.SKIP_CAPTCHA}: skips authentication without permission`});
+        if (!userHasRoles(result, ['dev', 'bot']))
+            return res.status(401).json({error: 1, code: 'user.invalidIdentity'});
+
 
         next();
     } catch (err) {

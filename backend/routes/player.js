@@ -10,7 +10,6 @@ import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.j
 import {cheatMethodsSanitizer, handleRichTextInput} from "../lib/user.js";
 import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
-import {playerWidget} from "../lib/widget.js";
 import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.js";
 import {SpamFormData} from "../lib/akismet.js";
 import {texCoincidenceRatio, textSimilarityDiff} from "../lib/textDiff.js";
@@ -425,7 +424,7 @@ async (req, res, next) => {
             }
         });
     } catch (err) {
-        if (err instanceof ServiceApiError) {
+        if (err instanceof ServiceApiError || err instanceof Error) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
             return res.status(err.statusCode === 501 ? 501 : 500).json({
                 error: 1,
@@ -529,7 +528,7 @@ router.post('/reportById', verifyJWT, verifyCaptcha,
                 }
             });
         } catch (err) {
-            if (err instanceof ServiceApiError) {
+            if (err instanceof ServiceApiError || err instanceof Error) {
                 logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
                 return res.status(err.statusCode === 501 ? 501 : 500).json({
                     error: 1,
@@ -1104,7 +1103,7 @@ async (req, res, next) => {
         player.cheatMethods = nextstate === 1 ? req.body.data.cheatMethods : [];
 
         siteEvent.emit('action', {method: 'judge', params: {judgement, player, stateChange}});
-        return res.status(201).json({success: 1, code: 'judgement.success', message: 'thank you.'});
+        return res.status(200).json({success: 1, code: 'judgement.success', message: 'thank you.'});
     } catch (err) {
         next(err);
     }
@@ -1225,26 +1224,6 @@ async (req, res, next) => {
         next(err);
     }
 });
-
-router.get('/widget', verifyJWT, allowPrivileges(['admin', 'super', 'root', 'bot']), [
-        checkbody('id').optional().isString(),
-    ],
-    async (req, res, next) => {
-        try {
-            const validateErr = validationResult(req);
-            if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'widget.bad', message: validateErr.array()});
-
-            let renderStream = await playerWidget(req.query.id);
-
-            renderStream.on('data', function (data) {
-                res.writeHead('200', {'Content-Type': 'image/jpeg'});    //写http头部信息
-                res.end(data, 'binary');
-            });
-        } catch (err) {
-            next(err);
-        }
-    });
 
 /** @param {string} originName @param {string} originUserId @param {string} originPersonaId
  * @param originUserId

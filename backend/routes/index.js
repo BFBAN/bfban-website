@@ -227,7 +227,7 @@ async (req, res, next) => {
  *     tags:
  *       - 统计
  *     summary: 获取网站动态
- *     description: 取得网站近期操作动态，包含注册、举报、回复、申诉内容
+ *     description: 取得网站近期操作动态，包含注册、举报、、申诉内容
  *     produces:
  *       - application/json
  *     parameters:

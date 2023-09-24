@@ -37,39 +37,50 @@
   "footerStatic": true,
   "footerChild": [
     {
-      "title": "gametools.network",
+      "title": "GameTools Network",
       "linkUrl": "https://gametools.network",
       "describe": "Made with ❤️ Hosted at GameTools-Community Network",
       "describeLang": {
         "zh-CN": "主机提供商"
       },
-      "linkImageUrl": "https://i.loli.net/2021/09/30/F4hedSaYV96BsOg.png",
+      "linkImageUrl": "https://s2.loli.net/2023/09/18/JqbfcRxoZX15eNz.png",
       "tag": [
         "host",
         "platinum"
       ]
     },
     {
-      "title": "1password",
+      "title": "1Password",
       "linkUrl": "https://1password.com",
       "describe": "Provides password management support",
       "describeLang": {
         "zh-CN": "提供密码管理支持"
       },
-      "linkImageUrl": "https://1password.com/logo-images/1password-logo-desktop-dark@2x.png",
+      "linkImageUrl": "https://s2.loli.net/2023/09/18/YMQKt7y4REZ3dp1.png",
       "tag": [
         "host",
         "platinum"
       ]
     },
     {
-      "title": "netlify",
+      "title": "Netlify",
       "linkUrl": "https://www.netlify.com",
       "describe": "Provide web hosting services",
       "describeLang": {
         "zh-CN": "提供网页存放服务"
       },
-      "linkImageUrl": "https://qualified-production.s3.us-east-1.amazonaws.com/uploads/bd0ddbec21accfade4075e9e1af55575df7a7d526f52d129042a7dbf551597ea.png\n",
+      "linkImageUrl": "https://s2.loli.net/2023/09/18/nWmSfzVIMhws21X.png",
+      "tag": [
+        "host",
+        "platinum"
+      ]
+    },
+    {
+      "title": "Cloudflare",
+      "linkUrl": "https://www.cloudflare.com/",
+      "describe": "",
+      "describeLang": {},
+      "linkImageUrl": "https://s2.loli.net/2023/09/18/P5FucBIZyXl8mQM.png",
       "tag": [
         "host",
         "platinum"

@@ -91,14 +91,14 @@
           <FormItem :label="$t('profile.account.form.language')">
             <Row>
               <Col>
-                <Checkbox v-model="langLoaclSync" @on-change="switchLangLocalSync"></Checkbox>
+                <Checkbox v-model="langLocalSync" @on-change="switchLangLocalSync"></Checkbox>
               </Col>
               <Col flex="1">
                 <Select v-model="formItem.attr.language"
                         class="switch-language"
                         prefix="md-globe"
                         placement="top-end"
-                        :disabled="!langLoaclSync"
+                        :disabled="!langLocalSync"
                         @on-change="switchLanguage">
                   <Option v-for="item in languages" :value="item.name" :key="item.name" :disabled="item.ignoreSave">
                     {{ item.label }}
@@ -106,7 +106,7 @@
                 </Select>
               </Col>
             </Row>
-            <Alert show-icon v-if="langLoaclSync">{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
+            <Alert show-icon v-if="langLocalSync">{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
           </FormItem>
         </Col>
         <Col span="12">
@@ -261,7 +261,7 @@ export default {
       privileges: [],
       languages: [],
       formLoad: false,
-      langLoaclSync: false,
+      langLocalSync: false,
 
       modal_changePassword: {
         load: false,
@@ -453,10 +453,10 @@ export default {
      * 是否同步再登录后同步语言
      */
     switchLangLocalSync(val) {
-      account_storage.updateConfiguration('langLoaclSync', this.langLoaclSync);
+      account_storage.updateConfiguration('langLocalSync', this.langLocalSync);
     },
     checkLangLocalSync() {
-      this.langLoaclSync = account_storage.getConfiguration('langLoaclSync');
+      this.langLocalSync = account_storage.getConfiguration('langLocalSync');
     }
   },
   computed: {
