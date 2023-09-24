@@ -129,13 +129,17 @@
             <Col :xs="{span: 0}" :lg="{span: 20}">
             </Col>
             <Col :xs="{span: 24}" :lg="{span: 4}">
-              <Button type="primary" long :loading="formLoad" @click="onSave">
+              <Button type="primary" long :loading="formLoad" :disabled="userInfoLoad" @click="onSave">
                 {{ $t("basic.button.save") }}
               </Button>
             </Col>
           </Row>
         </Card>
       </Affix>
+
+      <Spin size="large" fix v-show="userInfoLoad">
+        <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+      </Spin>
     </Form>
 
     <!-- 修改名称 S -->
@@ -260,8 +264,9 @@ export default {
     return {
       privileges: [],
       languages: [],
-      formLoad: false,
-      langLocalSync: false,
+      userInfoLoad: false, // 用户信息获取状态
+      formLoad: false, // 表单提交状态
+      langLocalSync: false, // 用户信息保存语言是否同步开关
 
       modal_changePassword: {
         load: false,
@@ -433,6 +438,8 @@ export default {
      * 获取用户信息
      */
     async getUserinfo() {
+      this.userInfoLoad = true;
+
       return new Promise(resolve => {
         this.http.get(api["user_me"], {}).then(res => {
           const d = res.data;
@@ -443,6 +450,8 @@ export default {
             this.formItem = Object.assign(this.formItem, d.data);
           }
         }).finally(() => {
+          this.userInfoLoad = false;
+
           this.checkLangLocalSync();
           resolve();
         })

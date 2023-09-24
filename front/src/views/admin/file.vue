@@ -55,7 +55,7 @@
     <br>
 
     <Card dis-hover>
-      <div v-if="files.length >= 0">
+      <div v-if="files.length > 0">
         <div v-for="(i, index) in files" :key="index">
           <Row>
             <Col>
@@ -183,7 +183,7 @@ export default {
       this.filesLoading = true;
       this.http.post(api['service_files'], {data: fromData}).then(res => {
         const d = res.data;
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.files = d.data;
           this.total = d.total;
         }

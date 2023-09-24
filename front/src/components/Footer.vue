@@ -4,7 +4,7 @@
       <div class="container">
         <h2 class="p">BFBAN APP</h2>
         <a href="https://bfban-app.cabbagelol.net" target="_blank">
-          <Button>download</Button>
+          <Button><Icon type="md-download" /> Download</Button>
         </a>
       </div>
     </div>
@@ -96,14 +96,14 @@
         </Row>
       </div>
       <div align="center" class="mobile-hide footer-border-top footer-padding">
-        <p>&copy; 2018-{{ new Date().getFullYear() }} All Rights Reserved. v: {{ infos }}</p>
+        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} All Rights Reserved. v: {{ infos }}</p>
       </div>
     </footer>
   </div>
 </template>
 
 <script>
-import {storage, account_storage, http} from "../assets/js";
+import {storage, account_storage, http, time} from "../assets/js";
 
 import packageInfo from '../../package.json';
 import footerNavs from '/public/config/footerNavs.json';
@@ -113,6 +113,7 @@ import Application from "@/assets/js/application";
 export default new Application({
   data() {
     return {
+      time,
       infos: packageInfo.version,
       footerNavs: footerNavs.child,
       links: link,
