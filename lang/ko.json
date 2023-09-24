@@ -22,8 +22,8 @@
       }
     },
     "recentlyUpdated": "최근 업데이트",
-    "reported": "신고했어",
     "reportNum": "총 제보수",
+    "reported": "신고했어",
     "reports": "개인 제보",
     "role": "신분",
     "status": "상태",
@@ -835,8 +835,8 @@
     "confirmed": "이미 처리한 사건",
     "players": "기존 고발 사건",
     "registers": "사용자 등록",
-    "reports": "커뮤니티에서 모두 신고됨",
     "reportRanking": "举报排行",
+    "reports": "커뮤니티에서 모두 신고됨",
     "timeRange": {
       "daily": "昨天",
       "monthly": "一个月",
