@@ -110,7 +110,6 @@ export default new Application({
   components: {Captcha},
   data() {
     return {
-      signinType: 'username',
       ruleValidate: {
         username: [
           {required: true, min: 4, max: 40, trigger: 'blur'},
@@ -154,8 +153,9 @@ export default new Application({
     /**
      * 登录
      */
-    handleSignin() {
+    handleSignin: function () {
       const that = this;
+      const backPath = this.$route.query.backPath;
       const {username, password, captcha} = _.each(this.signin, (v, k, o) => {
         o[k] = v.trim();
       });
@@ -177,34 +177,32 @@ export default new Application({
             encryptCaptcha: this.$refs.captcha.hash,
             captcha,
           },
-        }).then(res => {
+        }).then(async res => {
           const d = res.data;
 
           if (d.error === 1) {
             that.signin.password = '';
             that.signin.captcha = '';
-            that.serverReturnMessage = d.message;
-
-            this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+            that.serverReturnMessage = this.$t(`basic.tip['${d.code}']`, {
               message: d.message || ""
-            }));
+            });
+
+            this.$Message.error(that.serverReturnMessage);
             return;
           }
 
-          that.signinUser(d.data).then(() => {
-            const backPath = this.$route.query.backPath;
+          await that.signinUser(d.data);
 
-            // redirect backPath or home
-            if (backPath) {
-              this.$router.push({path: backPath});
-            } else {
-              this.$router.go('-1');
-            }
+          // redirect backPath or home
+          if (backPath) {
+            await this.$router.push({path: backPath});
+          } else {
+            this.$router.go('-1');
+          }
 
-            this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
-              message: d.message || ""
-            }, d.code || d.message));
-          })
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
         }).finally(err => {
           that.spinShow = false;
           if (that.$refs.captcha)

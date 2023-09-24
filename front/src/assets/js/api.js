@@ -20,6 +20,7 @@ export default class Api {
             "user_message": "message",
             "user_message_mark": "message/mark",
             "user_info": "user/info",
+            "user_info4admin": "user/info4admin",
             "user_me": "user/me",
             "user_forgetPassword": "user/forgetPassword",
             "user_forgetPasswordVerify": "user/forgetPasswordVerify",

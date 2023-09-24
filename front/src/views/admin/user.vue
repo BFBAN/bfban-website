@@ -75,7 +75,7 @@
     <Card dis-hover v-for="(i, index) in userListData" :key="index" class="admin-user">
       <Row :gutter="10" type="flex" justify="center" align="middle">
         <Col flex="1">
-          <BusinessCard :id="i.id">
+          <BusinessCard :id="i.id" :showAdminUserInfo="true">
             <b>{{ i.username }}</b>
           </BusinessCard>
           <div>
@@ -295,7 +295,7 @@
         <span>Delete User Account</span>
       </p>
       <Card dis-hover align="center">
-        <BusinessCard :id="editUserData.id">
+        <BusinessCard :id="editUserData.id" :showAdminUserInfo="true">
           <h2><a href="javascript:void(0)"><b>{{ editUserData.username }}</b></a></h2>
         </BusinessCard>
         <p>{{ editUserData.id }}</p>

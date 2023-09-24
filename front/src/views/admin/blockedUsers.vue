@@ -62,7 +62,7 @@
       <Card dis-hover v-for="(i, index) in blockedUserList" :key="index" class="interval-card">
         <Row :gutter="10" type="flex" justify="center" align="middle">
           <Col flex="1">
-            <BusinessCard :id="i.id">
+            <BusinessCard :id="i.id" :showAdminUserInfo="true">
               <b>{{ i.username }}</b> ({{ i.id }})
             </BusinessCard>
           </Col>

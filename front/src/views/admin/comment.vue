@@ -101,7 +101,7 @@
             </div>
             <Time :time="i.createTime" type="date"></Time>
             :
-            <BusinessCard :id="i.byUserId">
+            <BusinessCard :id="i.byUserId" :showAdminUserInfo="true">
               <a href="javascript:void(0)"><b>{{ i.username }}</b></a>
             </BusinessCard>
             {{ $t(`basic.button.reply`) }}
