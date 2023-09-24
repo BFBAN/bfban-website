@@ -387,7 +387,10 @@ async (req, res, next) => {
 router.post('/signout', verifyJWT, /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
-        await db('users').update({signoutTime: new Date()}).where({id: req.user.id});
+        const result = await db('users').update({signoutTime: new Date()}).where({id: req.user.id});
+        if (!result)
+            return res.status(401).json({error: 1, code: 'logout.bad'});
+
         return res.status(200).json({success: 1, code: 'logout.success', message: 'bye~'});
     } catch (err) {
         next(err);

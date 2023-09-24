@@ -313,7 +313,9 @@ export default {
       }).then(res => {
         const d = res.data;
         if (d.success === 1) {
-          this.$Message.success(d.message);
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
 
           this.$store.dispatch('signout').then(() => {
             this.signout();
@@ -325,7 +327,9 @@ export default {
           return;
         }
 
-        this.$Message.error(d.message);
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(() => {
         this.modal_changePassword.load = false;
       });
@@ -371,14 +375,18 @@ export default {
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.modal_setusername.index = 2;
-          this.$Message.success(d.code);
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
           return;
         }
 
         this.modal_setusername.index = 0;
-        this.$Message.error(d.message || d.code);
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(async () => {
         this.modal_setusername.load = false;
         this.usernameCaptcha = "";
@@ -403,14 +411,20 @@ export default {
         const d = res.data;
 
         if (d.success === 1) {
-
           // 同步本地语言
           if (d.data.attr.language) {
             this.$store.dispatch('setLang', d.data.attr.language);
           }
 
-          this.$Message.success(d.code);
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
+          return;
         }
+
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(() => {
         this.formLoad = false;
       })

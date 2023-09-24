@@ -231,11 +231,15 @@ export default new Application({
         const d = res.data;
 
         if (d.success === 1) {
-          this.$Message.success(d.message);
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.code || d.message
+          }));
           return;
         }
 
-        this.$Message.error(d.message || d.code)
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.code || d.message
+        }));
       }).catch(e => {
         this.$Message.error(e.toString());
       }).finally(() => {

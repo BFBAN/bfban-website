@@ -212,12 +212,19 @@ export default {
 
           if (d.success == 1) {
             that.stepsIndex++;
-            that.$Message.success(d.message);
+            this.$Message.success({
+              content: this.$t(`basic.tip['${d.code}']`, {
+                message: d.message || ""
+              }),
+              duration: 10
+            });
 
             return;
           }
 
-          this.callbackMessage(d)
+          this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
         }).catch(err => {
           that.bindOrigin.backServiceMsg = this.$i18n.t('signup.failed');
         }).finally(() => {
@@ -248,59 +255,22 @@ export default {
         if (d.success === 1) {
           this.stepsIndex = 2;
           this.bindOriginVerify.state = 1;
-          this.$Message.success('bindOrigin.messages.success');
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
 
           setInterval(() => this.$router.back(), 3000);
           return;
         }
 
-        this.callbackMessage(d);
         this.bindOriginVerify.state = -1;
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(() => {
         this.bindOriginVerify.load = false;
       })
     },
-
-    // 绑定[BindOrigin]类请求回调
-    // 消息国际化
-    callbackMessage(data) {
-      const that = this;
-
-      // 基础
-      switch (data.code) {
-        case "bindOrigin.originBindingExist":
-          var originBindingExist_text = this.$i18n.t('bindOrigin.messages.originBindingExist');
-          this.bindOriginVerify.backServiceMsg = originBindingExist_text;
-          that.$Message.info(originBindingExist_text);
-          break;
-        case "bindOrigin.expired":
-          var expired_text = this.$i18n.t('bindOrigin.messages.expired');
-          this.bindOriginVerify.backServiceMsg = expired_text;
-          that.$Message.info(expired_text);
-          break;
-        case "bindOrigin.notFound":
-          var notFound_text = this.$i18n.t('bindOrigin.messages.notFound');
-          this.bindOriginVerify.backServiceMsg = notFound_text;
-          that.$Message.info(notFound_text);
-          break;
-        case "bindOrigin.bad":
-        default:
-          var error_text = data.message || data.code;
-          this.$Message.error(error_text);
-          this.bindOriginVerify.backServiceMsg = error_text;
-          this.bindOrigin.backServiceMsg = error_text;
-          break;
-      }
-
-      // 验证码
-      if (data.code.indexOf('captcha') >= 0) {
-        let captcha_code = data.code.split('.')[1];
-        let captcha_text = this.$i18n.t(`captcha.messages.${captcha_code}`);
-        if (captcha_code == 'gan') return;
-        that.$Message.error({content: captcha_text, duration: 6});
-        that.bindOrigin.backServiceMsg += `,${captcha_text}`;
-      }
-    }
   },
 }
 </script>

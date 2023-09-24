@@ -334,8 +334,8 @@ async (req, res, next) => {
             if (date - now > 0) {
                 res.status(400).json({
                     error: 1,
-                    code: `reply.bad`,
-                    message: `You have been disable to reply, ${req.user.attr.mute} end of disable`
+                    code: `report.bad`,
+                    message: `You have been disable to report, ${req.user.attr.mute} end of disable`
                 });
                 return
             }

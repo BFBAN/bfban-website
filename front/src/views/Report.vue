@@ -238,7 +238,8 @@
                 <FormItem>
                   <Row :gutter="10" type="flex" align="middle">
                     <Col>
-                      <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel" v-voice-button>
+                      <Button type="dashed" size="large" :disabled="tabs.list.length <= 1" @click="doCancel"
+                              v-voice-button>
                         {{ $t("basic.button.cancel") }}
                       </Button>
                     </Col>
@@ -493,8 +494,8 @@ export default new Application({
      * @returns {Promise<boolean>}
      */
     async doReport(index) {
-      if(this.$store.state.$userinfo && this.$store.state.$userinfo.origin.originUserId) {
-      // if(false) {
+      if (this.$store.state.$userinfo && this.$store.state.$userinfo.origin.originUserId) {
+        // if(false) {
         // that form
         let formData = this.tabs.list[index];
         // check form data
@@ -512,8 +513,8 @@ export default new Application({
             }
           })
         }
-      }else {
-        this.$Message.error({content: this.$i18n.t("report.messages.tipBind"), duration: 3});
+      } else {
+        this.$Message.error({content: this.$i18n.t("basic.tip.needBindEaAccount"), duration: 3});
         setTimeout(() => {
           this.$router.push({
             path: '/profile/information'
@@ -560,42 +561,24 @@ export default new Application({
           if (d.success === 1) {
             this.tabs.list[index].statusOk = 1;
 
+            // play voice send
             this.voiceReportManagement.play('success');
 
-            this.$Message.success(this.$i18n.t("report.info.success")).then(() => {
+            this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+              message: d.message || ""
+            })).then(() => {
               this.$router.push({
                 name: "cheater",
                 params: {ouid: d.data.originPersonaId},
               });
             });
-          } else {
-            switch (d.code) {
-              case 'judgement.notFound':
-                this.$Message.error(this.$i18n.t('report.messages.originIdNotExist'));
-                // no such player
-                this.failedOfNotFound = true;
-                break;
-              case 'judgement.permissionDenied':
-                this.$Message.error(this.$i18n.t('report.messages.permissionDenied'));
-                break;
-              case 'originId':
-                this.$Message.error(
-                    this.$i18n.t("report.info.originId")
-                );
-
-                this.tabs.list[index].statusOk = -1;
-                break;
-              case 'captcha.bad':
-                this.tabs.list[index].formItem.captcha = '';
-                break;
-              default:
-                this.$Message.error("failed " + d.message);
-
-                this.tabs.list[index].statusOk = -1;
-            }
+            return;
           }
 
           this.tabs.list[index].statusMsg = d.message;
+          this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
         }).finally(() => {
           resolve();
           this.tabs.list[index].formItem.captcha = '';

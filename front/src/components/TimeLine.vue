@@ -441,7 +441,7 @@
                 <!-- 申诉操作 -->
                 <template v-if="isLogin && isAdmin && l.type === 'banAppeal'">
                   <Button size="small" @click="openAppealDealModal(l.id)">
-                    {{ $t('basic.button.dealAppeal') }}
+                    {{ $t('detail.appeal.dealAppeal') }}
                   </Button>
                   <Divider type="vertical"/>
                 </template>

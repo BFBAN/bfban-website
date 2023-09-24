@@ -703,7 +703,7 @@
                       <!-- 申诉操作 -->
                       <template v-if="isLogin && isAdmin && l.type === 'banAppeal'">
                         <Button size="small" @click="openAppealDealModal(l.id)">
-                          {{ $t('basic.button.dealAppeal') }}
+                          {{ $t('detail.appeal.dealAppeal') }}
                         </Button>
                         <Divider type="vertical"/>
                       </template>
@@ -1256,7 +1256,7 @@
       <!-- 管理-小窗口处理申诉 S -->
       <Modal v-model="appealdealModal" width="60%">
         <div slot="header">
-          {{ `${$t('basic.button.dealAppeal')}` }}
+          {{ `${$t('detail.appeal.dealAppeal')}` }}
         </div>
         <Form v-if="isLogin" label-position="top">
           <Row :gutter="30">
@@ -2117,11 +2117,15 @@ export default new Application({
           this.reply.captcha = '';
           this.cheater.status = status;
 
-          this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
           return;
         }
 
-        this.$Message.error(d.message || d.code);
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(() => {
         this.getPlayerInfo();
         this.getTimeline();
@@ -2242,7 +2246,7 @@ export default new Application({
       })
     },
     /**
-     * 回复
+     * 打开回复窗口
      * 1. 对举报的回复 2. 对回复的回复
      * @param floor string 楼层
      * @param userId string 回复id
@@ -2274,7 +2278,7 @@ export default new Application({
     onReply() {
       if (this.$store.state.$userinfo) {
         if (!(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
-          this.$Message.error({content: this.$i18n.t("detail.messages.tipBind"), duration: 3});
+          this.$Message.error({content: this.$i18n.t("basic.tip.needBindEaAccount"), duration: 3});
           setTimeout(() => {
             this.$router.push({
               path: '/profile/information'
@@ -2308,7 +2312,9 @@ export default new Application({
         const d = res.data;
 
         if (d.success == 1) {
-          this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
 
           this.replyModal = false;
           this.reply.toFloor = "";
@@ -2320,7 +2326,9 @@ export default new Application({
           return;
         }
 
-        this.$Message.error({content: d.message || d.code, duration: 3});
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(() => {
         this.replySpinShow = false;
 
