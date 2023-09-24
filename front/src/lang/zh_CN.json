@@ -172,6 +172,7 @@
       "bindOrigin.originBindingExist": "此邮箱已绑定账户",
       "bindOrigin.originNotFound": "找不到此邮箱账户，请检测是邮箱正确性以及否开启邮箱查找",
       "bindOrigin.success": "恭喜你成功激活!",
+      "server.error": "服务错误 {message}",
       "captcha.bad": "验证码模块发生错误,请联系管理员 {message}",
       "captcha.expired": "验证码未填",
       "captcha.wrong": "错误的验证码",
