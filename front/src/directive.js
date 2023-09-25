@@ -6,17 +6,18 @@ export default (vue) => {
      * 单击播放交互音效
      */
     vue.directive('voice-button', {
-        bind (el) {
+        bind(el) {
             if (
                 store.state.configuration.voice &&
                 store.state.configuration['voice_interaction'] &&
                 store.state.configuration['voice_interaction'].state
             ) {
-                el.addEventListener('click',() => {
-                    message.playMessageVoice()
+                el.addEventListener('click', () => {
+                    if (message.playMessageVoice)
+                        message.playMessageVoice()
                 })
             }
-      }
+        }
     })
 
     /**

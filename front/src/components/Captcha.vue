@@ -51,6 +51,7 @@ export default {
   },
   data() {
     return {
+      storageSession: storage.session(),
       postLoad: false,
       hash: "",
       content: "",
@@ -63,7 +64,6 @@ export default {
     }
   },
   created() {
-    this.storageSession = storage.session();
     let captcha = this.storageSession.get('captcha');
     if (captcha) {
       this.captchaHash = captcha.data;
@@ -117,7 +117,7 @@ export default {
             this.captchaTime.count = captcha.data.value[this.$route.name];
           }
 
-          this.capthcaTimeout(this.captchaTime.count || this.seconds)
+          this.capthcaTimeout(this.captchaTime.count || this.seconds || 0)
           return;
         }
 
@@ -153,7 +153,7 @@ export default {
         that.captchaHash = Object.assign({
           [`${that.id}_${that.$route.name}`]: that.captchaTime.count
         });
-        this.storageSession.set("captcha", that.captchaHash);
+        that.storageSession.set("captcha", that.captchaHash);
       }, 1000);
 
       that.captchaTime.lock = true;

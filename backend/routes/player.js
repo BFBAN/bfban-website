@@ -808,8 +808,8 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
                 byUserId: req.user.id
             }).orderBy('createTime', 'desc').limit(3).first();
             if (prevUserCommentItem) {
-                const f = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
-                if (f >= texCoincidenceRatio)
+                const value = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
+                if (value >= texCoincidenceRatio)
                     return res.status(403).json({error: 1, code: 'reply.bad', message: 'Duplicate submission'});
             }
 
@@ -1043,9 +1043,10 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'judgement.bad', message: 'must specify one cheate method.'});
         if (req.body.data.action === 'kill' && !userHasRoles(req.user, ['super', 'root']))
             return res.status(403).json({error: 1, code: 'judgement.permissionDenied', message: 'permission denied.'});
+        const {toPlayerId, cheatMethods, action, content} = req.body.data;
 
         /** @type {import("../typedef.js").Player} */
-        const player = await db.select('*').from('players').where({id: req.body.data.toPlayerId}).first();
+        const player = await db.select('*').from('players').where({id: toPlayerId}).first();
         if (!player)
             return res.status(404).json({error: 1, code: 'judgement.notFound', message: 'no such player.'});
         const correspondingRecord = await db.count({num: 1})
@@ -1064,15 +1065,14 @@ async (req, res, next) => {
 
         // check for intentional duplication
         const prevUserCommentItem = await db.select("*").from('comments').where({
-            toPlayerId: req.body.data.toPlayerId,
+            toPlayerId: toPlayerId,
             byUserId: req.user.id
         }).orderBy('createTime', 'desc').limit(3).first();
         if (prevUserCommentItem) {
-            const f = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
-            if (f >= texCoincidenceRatio)
+            const value = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
+            if (value >= texCoincidenceRatio)
                 return res.status(403).json({error: 1, code: 'judgement.bad', message: 'Duplicate submission'});
         }
-
 
         // auth complete, player found, store action into db
         const judgement = {
@@ -1081,19 +1081,19 @@ async (req, res, next) => {
             toPlayerId: player.id,
             toOriginUserId: player.originUserId,
             toOriginPersonaId: player.originPersonaId,
-            cheatMethods: req.body.data.cheatMethods ? JSON.stringify(req.body.data.cheatMethods) : '[]',
-            judgeAction: req.body.data.action,
-            content: handleRichTextInput(req.body.data.content),
+            cheatMethods: cheatMethods ? JSON.stringify(cheatMethods) : '[]',
+            judgeAction: action,
+            content: handleRichTextInput(content),
             valid: 1,
             createTime: new Date(),
         };
         const insertId = (await db('comments').insert(judgement))[0];
         judgement.id = insertId;
-        const nextstate = await stateMachine(player, req.user, req.body.data.action);
+        const nextstate = await stateMachine(player, req.user, action);
         const stateChange = {prev: player.status, next: nextstate};
 
         player.status = nextstate;
-        player.cheatMethods = nextstate === 1 ? JSON.stringify(req.body.data.cheatMethods) : '[]';
+        player.cheatMethods = nextstate === 1 ? JSON.stringify(cheatMethods) : '[]';
         player.updateTime = new Date();
         player.commentsNum += 1;
 
@@ -1104,8 +1104,8 @@ async (req, res, next) => {
             commentsNum: player.commentsNum
         }).where({id: player.id});
 
-        judgement.cheatMethods = req.body.data.cheatMethods ? req.body.data.cheatMethods : [];
-        player.cheatMethods = nextstate === 1 ? req.body.data.cheatMethods : [];
+        judgement.cheatMethods = cheatMethods ? cheatMethods : [];
+        player.cheatMethods = nextstate === 1 ? cheatMethods : [];
 
         siteEvent.emit('action', {method: 'judge', params: {judgement, player, stateChange}});
         return res.status(200).json({success: 1, code: 'judgement.success', message: 'thank you.'});

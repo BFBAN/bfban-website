@@ -254,7 +254,7 @@
       <template v-if="!isFull">
         <br>
         <Card dis-hover>
-          <h2># {{ $t('detail.info.gameScores') }}</h2>
+          <h2><a href="javascript:void(0)">#</a> {{ $t('detail.info.gameScores') }}</h2>
           <br>
           <!-- 战绩链接 S -->
           <RecordLink ref="recordLink" v-show="cheater.originUserId"></RecordLink>
@@ -262,14 +262,13 @@
         </Card>
         <br>
         <Card id="timeline" style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
-          <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
+          <Row :gutter="5" slot="title" type="flex" justify="center" align="middle">
             <Col :xs="{span: 23, push: 1}" :lg="appeal.disable ? {span: 7, push: 0} : {span: 1, push: 0}"
                  class="mobile-hide">
               <template v-if="appeal.disable">
                 <Button @click="onLeftAppealPlan" size="small">
                   <Icon type="md-contract"/>
                 </Button>
-                {{ $t('detail.info.assistPppeal') }}
               </template>
               <template v-else>
                 <Button @click="onLeftAppealPlan" size="small">
@@ -324,7 +323,7 @@
               </Row>
             </Col>
           </Row>
-          <Row :gutter="20" type="flex">
+          <Row :gutter="5" type="flex">
             <Col :xs="{span: 24, push: 0, pull: 0}" :lg="appeal.disable ? {span: 17, push: 1} : {span: 24, push: 0} "
                  order="2" class="tabs-style">
               <div class="content">
@@ -381,7 +380,7 @@
                       <Dropdown :transfer="isMobile" placement="bottom-start" style="width: 100%">
                         <Row :gutter="16" type="flex" justify="center" align="middle">
                           <Col>
-                            {{ l.beforeUsername }}
+                            {{ l.beforeUsername || "N/A" }}
                           </Col>
                           <Col class="mobile-hide">
                             <Icon type="md-arrow-round-forward" size="20" style="opacity: .6"/>
@@ -390,7 +389,7 @@
                             <Icon type="md-arrow-round-forward" size="20" style="opacity: .6;transform: rotate(90deg)"/>
                           </Col>
                           <Col>
-                            <b>{{ l.nextUsername }}</b>
+                            <b>{{ l.nextUsername || "N/A" }}</b>
                           </Col>
                         </Row>
 
@@ -811,15 +810,19 @@
             </Col>
 
             <!-- 申诉按钮 -->
-            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide"
-                 v-if="appeal.disable && false">
-              <Button type="primary"
-                      v-voice-button
-                      @click="appeal.show = true"
-                      :disabled="!isLogin || cheater.status != 1">
-                {{ $t('detail.info.appeal') }}
-              </Button>
-              <p><br>{{ $t('detail.appeal.describe') }}</p>
+            <Col :xs="{span: 23, push: 1, pull: 0}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide"
+                 v-if="appeal.disable">
+              <Card dis-hover style="text-align: center">
+                <h1>👷🏻‍🚧</h1>
+                <b>Appeal function upgrade</b>
+                <p>We are in the process of upgrading the appeal feature of the website, please feel free to check
+                  back</p>
+              </Card>
+              <br>
+              <Card dis-hover style="text-align: center">
+                <h1>📮</h1>
+                <p>Please appeal by email</p>
+              </Card>
             </Col>
           </Row>
 
@@ -840,7 +843,7 @@
             <h2 style="margin: 0 0 1rem 0;">
               <Row>
                 <Col flex="1">
-                  # {{ $t('detail.info.judgement') }}
+                  <a href="javascript:void(0)">#</a> {{ $t('detail.info.judgement') }}
                 </Col>
                 <Col class="mobile-hide">
                   <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
@@ -875,13 +878,23 @@
                 </Col>
                 <Col :xs="{span:24}" :lg="{span: 12}">
                   <FormItem v-show="['kill','guilt'].includes(verify.status)" :label="$t(`detail.judgement.methods`)">
-                    <Select v-model="verify.checkbox" multiple>
+                    <Select v-model="verify.checkbox" multiple :placeholder="$t(`detail.judgement.methods`)">
                       <Option v-for="method in cheatMethodsGlossary" :key="method.value"
                               :value="method.value"
                               :label="$t(`cheatMethods.${method.value}.title`)">
-                        <Tag>{{ $t(`cheatMethods.${method.value}.title`) }}</Tag>
-                        <Divider type="vertical"/>
-                        {{ $t(`cheatMethods.${method.value}.describe`) }}
+                        <Row :gutter="10">
+                          <Col>
+                            {{ $t(`cheatMethods.${method.value}.title`) }}
+                          </Col>
+                          <Col>
+                            <Poptip trigger="hover" transfer>
+                              <Icon type="md-help-circle"/>
+                              <div slot="content">
+                                {{ $t(`cheatMethods.${method.value}.describe`) }}
+                              </div>
+                            </Poptip>
+                          </Col>
+                        </Row>
                       </Option>
                     </Select>
                   </FormItem>
@@ -890,37 +903,6 @@
                   <FormItem>
                     <div slot="label">
                       {{ $t(`detail.judgement.content`) }}
-                      <Poptip trigger="hover" word-wrap placement="right-end" :padding="'20px 30px'">
-                        <Button type="dashed" size="small">
-                          <Icon type="ios-help-buoy"/>
-                        </Button>
-
-                        <div slot="content" span="24">
-                          <Row :gutter="60">
-                            <Col flex="1">
-                              <h3>
-                                <Icon type="md-done-all" color="#19be6b"/>
-                                {{ $t('detail.judgement.appropriateVerdict.title') }}
-                              </h3>
-                              <ol>
-                                <li>{{ $t('detail.judgement.appropriateVerdict.1') }}</li>
-                                <li>{{ $t('detail.judgement.appropriateVerdict.2') }}</li>
-                              </ol>
-                            </Col>
-                            <Col flex="1">
-                              <h3>
-                                <Icon type="ios-alert-outline" color="red"/>
-                                {{ $t('detail.judgement.inappropriateRuling.title') }}
-                              </h3>
-                              <ol>
-                                <li>{{ $t('detail.judgement.inappropriateRuling.1') }}</li>
-                                <li>{{ $t('detail.judgement.inappropriateRuling.2') }}</li>
-                                <li>{{ $t('detail.judgement.inappropriateRuling.3') }}</li>
-                              </ol>
-                            </Col>
-                          </Row>
-                        </div>
-                      </Poptip>
                     </div>
 
                     <Card :padding="0" dis-hover>
@@ -941,21 +923,12 @@
                 </Col>
               </Row>
 
-              <FormItem :label="$t('captcha.title')">
-                <Row :gutter="50">
-                  <Col :xs="{span:24}" :lg="{span: 8, flex: 1}">
-                    <Input type="text" v-model="reply.captcha"
-                           size="large"
-                           maxlength="4"
-                           :placeholder="$t('captcha.title')">
-                      <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                        <Captcha ref="captcha" :seconds="5"></Captcha>
-                      </div>
-                    </Input>
-                  </Col>
-                  <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
-                    <br class="desktop-hide">
-                    <Poptip trigger="hover" content="content" placement="left-start" padding="30" offset="2">
+              <Row :gutter="50">
+                <Col :xs="{span:24}" :lg="{span: 8, flex: 1}"></Col>
+                <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
+                  <br class="desktop-hide">
+                  <ButtonGroup type="button">
+                    <Poptip trigger="hover" content="content" placement="left-start" padding="50" offset="2">
                       <Button type="primary"
                               size="large"
                               :long="isMobile"
@@ -975,10 +948,41 @@
                         </div>
                       </div>
                     </Poptip>
+                    <Divider type="vertical"></Divider>
+                    <Poptip trigger="hover" word-wrap placement="left-end" :padding="'20px 30px'" transfer>
+                      <Button type="dashed" size="large">
+                        <Icon type="ios-help-buoy"/>
+                      </Button>
 
-                  </Col>
-                </Row>
-              </FormItem>
+                      <div slot="content" span="24">
+                        <Row :gutter="60">
+                          <Col flex="1">
+                            <h3>
+                              <Icon type="md-done-all" color="#19be6b"/>
+                              {{ $t('detail.judgement.appropriateVerdict.title') }}
+                            </h3>
+                            <ol>
+                              <li>{{ $t('detail.judgement.appropriateVerdict.1') }}</li>
+                              <li>{{ $t('detail.judgement.appropriateVerdict.2') }}</li>
+                            </ol>
+                          </Col>
+                          <Col flex="1">
+                            <h3>
+                              <Icon type="ios-alert-outline" color="red"/>
+                              {{ $t('detail.judgement.inappropriateRuling.title') }}
+                            </h3>
+                            <ol>
+                              <li>{{ $t('detail.judgement.inappropriateRuling.1') }}</li>
+                              <li>{{ $t('detail.judgement.inappropriateRuling.2') }}</li>
+                              <li>{{ $t('detail.judgement.inappropriateRuling.3') }}</li>
+                            </ol>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Poptip>
+                  </ButtonGroup>
+                </Col>
+              </Row>
             </Form>
           </div>
 
@@ -1903,11 +1907,11 @@ export default new Application({
      * 获取举报玩家 时间轴
      */
     async getTimeline() {
+      const that = this;
       this.timelineListPreparedness = [];
       this.timelineList = [];
 
       return new Promise(resolve => {
-        const that = this;
         this.spinShow = true;
 
         this.http.get(api["player_timeline"], {
@@ -2114,7 +2118,6 @@ export default new Application({
 
       // 判决处理
       this.verifySpinShow = true;
-
       this.http.post(api["player_judgement"], {
         data: {
           data: {
@@ -2148,7 +2151,11 @@ export default new Application({
         this.verify.isSubscribeTrace = !this.verify.isSubscribeTrace;
         this.verify.isUpdateinformation = !this.verify.isUpdateinformation;
 
-        message.playSendVoice();
+        if (this.$refs.judgementTextarea)
+          this.$refs.judgementTextarea.updateContent("");
+
+        if (message.playSendVoice)
+          message.playSendVoice();
 
         this.getPlayerInfo();
         this.getTimeline();
@@ -2232,7 +2239,10 @@ export default new Application({
         this.$Message.error(error.message || error.code);
       } finally {
         this.appeal.load = false;
-        message.playSendVoice();
+
+        if (message.playSendVoice)
+          message.playSendVoice();
+
         this.getTimeline();
       }
     },
@@ -2372,7 +2382,8 @@ export default new Application({
       }).finally(() => {
         this.replySpinShow = false;
 
-        message.playSendVoice();
+        if (message.playSendVoice)
+          message.playSendVoice();
 
         this.cancelReply(false);
         this.getPlayerInfo();

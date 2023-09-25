@@ -47,9 +47,12 @@ import UploadWidget from './UploadWidget';
 import Quill from "quill";
 import {quillEditor} from 'vue-quill-editor'
 import atPeople from 'quill-mention-people';
+import quillEmoji from 'quill-emoji'
 import ImageBlot from '../assets/js/quill-module-image'
 
+import 'quill-emoji/dist/quill-emoji.css'
 import 'quill-mention-people/index.css'
+import EmojiBlot from "@/assets/js/quill-module-emoji";
 
 export default {
   props: {
@@ -88,6 +91,18 @@ export default {
       editorOption: {
         placeholder: this.placeholder,
         modules: {
+          "emoji-shortname": {
+            fuse: {
+              shouldSort: true,
+              threshold: 0.1,
+              location: 1,
+              distance: 200,
+              maxPatternLength: 32,
+              minMatchCharLength: 1,
+              keys: ["shortname"]
+            },
+          },
+          "emoji-toolbar": true,
           clipboard: {
             // 粘贴版，处理粘贴时候带图片
             matchers: [[Node.ELEMENT_NODE, this.handlePaste]],
@@ -123,6 +138,7 @@ export default {
     if (this.content)
       this.editorContent = this.content;
 
+    Quill.register({'formats/emoji': EmojiBlot}, true);
     Quill.register(ImageBlot, true) //
     // Quill.register('modules/atPeople',atPeople);
   },

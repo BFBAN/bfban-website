@@ -12,9 +12,9 @@
                           :value="item.title"
                           :label="$t('profile.chat.types.' + item.title + '.text' )"
                           :key="item_index">
-                    {{ $t('profile.chat.types.' + item.title + '.text' ) }}
+                    {{ $t('profile.chat.types.' + item.title + '.text') }}
                     <p style="margin: 5px 0; font-size: 10px">
-                      {{ $t('profile.chat.types.' + item.title + '.describe' ) }}
+                      {{ $t('profile.chat.types.' + item.title + '.describe') }}
                     </p>
                     <PrivilegesTag :data="item.privilege"></PrivilegesTag>
                   </Option>
@@ -54,7 +54,8 @@
                     v-voice-button
                     :loading="message.load"
                     :disabled="!message.type || !message.content"
-                    @click="putMessage">{{ $t('basic.button.commit') }}</Button>
+                    @click="putMessage">{{ $t('basic.button.commit') }}
+            </Button>
           </Col>
         </Row>
       </Card>
@@ -81,13 +82,13 @@ export default new Application({
         typeDictionary: messageConf.typeDictionary,
         ruleValidate: {
           type: [
-            { required: true, trigger: 'blur' }
+            {required: true, trigger: 'blur'}
           ],
           id: [
-            { required: true, trigger: 'blur' }
+            {required: true, trigger: 'blur'}
           ],
           content: [
-            { required: true, trigger: 'blur' }
+            {required: true, trigger: 'blur'}
           ],
         },
         messages: [],
@@ -102,7 +103,7 @@ export default new Application({
       },
     }
   },
-  components: { BusinessCard, PrivilegesTag },
+  components: {BusinessCard, PrivilegesTag},
   created() {
     this.http = http_token.call(this);
   },
@@ -130,16 +131,15 @@ export default new Application({
       }).finally(() => {
         this.resetMessageFrom();
 
-        message.playSendVoice();
+        if (message.playSendVoice)
+          message.playSendVoice();
 
         this.message.load = false;
         this.message.show = false;
       })
     },
   },
-  computed: {
-
-  }
+  computed: {}
 });
 </script>
 
