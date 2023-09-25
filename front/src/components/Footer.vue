@@ -4,7 +4,10 @@
       <div class="container">
         <h2 class="p">BFBAN APP</h2>
         <a href="https://bfban-app.cabbagelol.net" target="_blank">
-          <Button><Icon type="md-download" /> Download</Button>
+          <Button>
+            <Icon type="md-download"/>
+            Download
+          </Button>
         </a>
       </div>
     </div>
@@ -90,13 +93,14 @@
         <Row :gutter="10" class="footer-link" type="flex" v-if="links.footerStatic">
           <Col v-for="(link, linkindex) in links.footerChild" :key="linkindex" align="center">
             <a :href="link.linkUrl" target="_blank" class="footer-link-text">
-              <img :src="link.linkImageUrl" height="35" :alt="link.tag" :title="link.describe">
+              <img :src="link.localFilePath" height="35" :alt="link.tag" :title="link.describe">
             </a>
           </Col>
         </Row>
       </div>
       <div align="center" class="mobile-hide footer-border-top footer-padding">
-        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} All Rights Reserved. v: {{ infos }}</p>
+        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} All Rights Reserved. v:
+          {{ infos }}</p>
       </div>
     </footer>
   </div>
