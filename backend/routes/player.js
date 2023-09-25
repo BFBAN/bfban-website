@@ -807,9 +807,11 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
                 toPlayerId: toPlayerId,
                 byUserId: req.user.id
             }).orderBy('createTime', 'desc').limit(3).first();
-            const f = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
-            if (f >= texCoincidenceRatio)
-                return res.status(403).json({error: 1, code: 'reply.bad', message: 'Duplicate submission'});
+            if (prevUserCommentItem) {
+                const f = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
+                if (f >= texCoincidenceRatio)
+                    return res.status(403).json({error: 1, code: 'reply.bad', message: 'Duplicate submission'});
+            }
 
             // Whether to submit a report to akismet here
             // const {content} = req.body.data;
@@ -1065,9 +1067,12 @@ async (req, res, next) => {
             toPlayerId: req.body.data.toPlayerId,
             byUserId: req.user.id
         }).orderBy('createTime', 'desc').limit(3).first();
-        const f = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
-        if (f >= texCoincidenceRatio)
-            return res.status(403).json({error: 1, code: 'reply.bad', message: 'Duplicate submission'});
+        if (prevUserCommentItem) {
+            const f = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
+            if (f >= texCoincidenceRatio)
+                return res.status(403).json({error: 1, code: 'judgement.bad', message: 'Duplicate submission'});
+        }
+
 
         // auth complete, player found, store action into db
         const judgement = {
