@@ -43,7 +43,7 @@
       "describeLang": {
         "zh-CN": "主机提供商"
       },
-      "linkImageUrl": "https://s2.loli.net/2023/09/18/JqbfcRxoZX15eNz.png",
+      "localFilePath": "/images/links/gametools.network.png",
       "tag": [
         "host",
         "platinum"
@@ -56,7 +56,7 @@
       "describeLang": {
         "zh-CN": "提供密码管理支持"
       },
-      "linkImageUrl": "https://s2.loli.net/2023/09/18/YMQKt7y4REZ3dp1.png",
+      "localFilePath": "/images/links/1password-dark.png",
       "tag": [
         "host",
         "platinum"
@@ -69,7 +69,7 @@
       "describeLang": {
         "zh-CN": "提供网页存放服务"
       },
-      "linkImageUrl": "https://s2.loli.net/2023/09/18/nWmSfzVIMhws21X.png",
+      "localFilePath": "/images/links/netlify.png",
       "tag": [
         "host",
         "platinum"
@@ -80,7 +80,7 @@
       "linkUrl": "https://www.cloudflare.com/",
       "describe": "",
       "describeLang": {},
-      "linkImageUrl": "https://s2.loli.net/2023/09/18/P5FucBIZyXl8mQM.png",
+      "localFilePath": "/images/links/cloudflare.png",
       "tag": [
         "host",
         "platinum"
