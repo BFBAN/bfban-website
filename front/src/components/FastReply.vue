@@ -100,6 +100,8 @@
             <Textarea v-model="fastReply.add.content"
                       ref="fastReplyAddTextarea"
                       :height="'250px'"
+                      :maxlength="500"
+                      :show-maxlength-label="true"
                       placeholder="Template Content"></Textarea>
           </Card>
         </FormItem>

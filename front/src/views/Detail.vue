@@ -838,7 +838,7 @@
         <br v-if="isAdmin && !isOnlySuper">
 
         <!-- 管理员裁判 S -->
-        <Card dis-hover v-if="isAdmin && !isOnlySuper">
+        <Card id="judgement" dis-hover v-if="isAdmin && !isOnlySuper">
           <div :label="$t('detail.info.adminConsole')">
             <h2 style="margin: 0 0 1rem 0;">
               <Row>
@@ -1018,6 +1018,15 @@
           <a href="javascript:void(0)" v-if="isLogin" @click="onRollingComment">
             <Icon type="md-chatboxes" size="30"/>
           </a>
+          <a href="javascript:void(0)" @click="getTimeline">
+            <Icon type="md-refresh" size="30"/>
+          </a>
+          <template v-if="isLogin && isAdmin">
+            <Divider></Divider>
+            <a href="javascript:void(0)" @click="onRollingJudgement">
+              <Icon type="md-hammer" size="25"/>
+            </a>
+          </template>
         </Card>
       </Affix>
 
@@ -2028,6 +2037,14 @@ export default new Application({
       const commentNode = document.getElementById('reply');
 
       this.onRollingNode(commentNode.offsetTop + commentNode.offsetHeight);
+    },
+    /**
+     * 滚动到判决
+     */
+    onRollingJudgement() {
+      const commentNode = document.getElementById('judgement');
+
+      this.onRollingNode(commentNode.offsetTop - 50);
     },
     /**
      * 滚动位置
