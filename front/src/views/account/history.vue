@@ -1,44 +1,17 @@
 <template>
   <div>
     <template v-if="$store.state.configuration.history">
-      <Row :gutter="20">
-        <Col flex="auto">
-          <RadioGroup
-              class="game-type"
-              v-model="gameName"
-              type="button">
-            <Radio label="all" value="all">
-              {{ $t('basic.games.all') }}
-            </Radio>
-            <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
-                   :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
-                   :class="gameName == i.value ? 'gametype-select' : ''">
-              <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
-              <span v-else>{{ i.full_name }}</span>
-            </Radio>
-          </RadioGroup>
-        </Col>
-      </Row>
       <Row :gutter="10" class="history-buttons" type="flex" justify="center">
         <Col flex="1">
-          <Checkbox v-model="checkboxAll" :disabled="listCalcStatistics <= 0" @on-change="onCheckboxAll"></Checkbox>
-          <Divider type="vertical" />
-          <Button @click="onDelete" :disabled="listCalcStatistics <= 0" size="small">
-            <Icon type="md-trash" />
+          <Checkbox v-model="checkboxAll" @on-change="onCheckboxAll"></Checkbox>
+          <Divider type="vertical"/>
+          <Button @click="onDelete" size="small">
+            <Icon type="md-trash"/>
           </Button>
         </Col>
         <Col>
-          <Select size="small" v-model="statusName" :disabled="listCalcStatistics <= 0" style="width: 150px">
-            <Option value="-1">
-              {{ $t("basic.status.all") }}
-            </Option>
-            <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">
-              {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
-            </Option>
-          </Select>
-          <Divider type="vertical" />
-          <Button @click="onForcedUpdate" size="small" :loading="load">
-            <Icon type="md-refresh" />
+          <Button @click="getHisory" size="small" :loading="load">
+            <Icon type="md-refresh"/>
           </Button>
         </Col>
       </Row>
@@ -46,10 +19,8 @@
       <br>
 
       <div class="list">
-        <div v-for="(i, i_index) in list" :key="i_index">
-          <Divider v-if="i.time && i_index > 0" dashed></Divider>
-          <div v-for="(d, d_index) in i.data" :key="d_index"
-               v-show="onScreening(i_index, d_index)"
+        <template v-if="list.length > 0">
+          <div v-for="(d, d_index) in list" :key="d_index"
                class="item-card">
             <Row :gutter="10" type="flex" justify="center" align="middle">
               <Col>
@@ -102,29 +73,42 @@
                     </Col>
                   </Row>
                 </Card>
-
               </Col>
             </Row>
           </div>
-        </div>
-        <div v-if="list.length <= 0" align="center">
-          <br>
-          {{ $t('basic.tip.notContent') }}
-          <br>
-        </div>
+        </template>
+        <Empty v-else></Empty>
       </div>
+
+      <br>
+      <Row>
+        <Col :xs="{span: 23, push: 1}" :lg="{span: 24, push: 0}">
+          <Page class="page"
+                size="small"
+                show-sizer
+                show-total
+                show-elevator
+                @on-change="handlePageChange"
+                @on-page-size-change="handlePageSizeChange"
+                :page-size="limit"
+                :current="skip"
+                :total="total"/>
+        </Col>
+      </Row>
     </template>
     <div v-else>Disable Component</div>
   </div>
 </template>
 
 <script>
-import {http_token, storage, player_storage, account_storage} from "../../assets/js";
+import {http_token, storage, player_storage, account_storage, api} from "../../assets/js";
 
 import cheaterStatus from '/public/config/cheaterStatus.json'
 import gameName from '/public/config/gameName.json'
+import Empty from "@/components/Empty.vue";
 
 export default {
+  components: {Empty},
   data() {
     return {
       disable: false,
@@ -134,7 +118,11 @@ export default {
       cheaterStatus: cheaterStatus.child,
       checkboxAll: false,
       load: false,
-      list: [{ time: 0, data: [] }, { time: 0, data: [] }],
+      list: [],
+
+      total: 0,
+      skip: 1,
+      limit: 10
     }
   },
   created() {
@@ -146,73 +134,73 @@ export default {
     /**
      * 取得历史列表
      */
-    async getHisory () {
-      let loaclData = storage.get('viewed');
-      this.list = [{ time: 0, data: [] }, { time: 0, data: [] }];
+    async getHisory() {
+      const {skip, limit} = this;
+      let localData = storage.get('viewed');
+      this.list = [];
 
+      if (localData.code != 0 && !localData.data.value) return;
       if (!this.$store.state.configuration.history) return;
 
-      if (loaclData.code >= 0) {
-        for (const key in loaclData.data.value) {
-          let _data = await player_storage.query(key);
+      let dbIds = Object.entries(localData.data.value)
+          .sort((a, b) => a[1] > b[1] ? 1 : -1)
+          .slice((skip - 1) * limit, skip * limit)
+          .map(i => i[0]);
 
-          if (loaclData.data.value[key] >= new Date('2022 09-11').getTime()) {
-            this.list[0].data.push(_data);
-          } else {
-            this.list[1].data.push(_data);
-          }
+      this.http.get(api["player_batch"], {
+        params: {dbIds}
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.list = d.data;
         }
-      }
-    },
-    /**
-     * 强制更新
-     */
-    async onForcedUpdate () {
-      this.load = true;
-      await player_storage.onForcedUpdate();
-      this.getHisory();
-      this.load = false;
+      });
+
+      this.total = Object.entries(localData.data.value).length;
     },
     /**
      * 筛选
      */
-    onScreening (i_1, i_2) {
+    onScreening(i_1, i_2) {
       let _static = false;
 
-      if ( this.gameName == 'all' || this.statusMethods == '-1' ) { _static = true; }
-      if ( this.list[i_1].data[i_2].games && this.list[i_1].data[i_2].games.includes(this.gameName)  ) { _static = true; }
-      if ( this.list[i_1].data[i_2].status == this.statusName ) { _static = true; }
+      if (this.gameName == 'all' || this.statusMethods == '-1') {
+        _static = true;
+      }
+      if (this.list[i_1].data[i_2].games && this.list[i_1].data[i_2].games.includes(this.gameName)) {
+        _static = true;
+      }
+      if (this.list[i_1].data[i_2].status == this.statusName) {
+        _static = true;
+      }
 
       return _static;
     },
     /**
      * 批量多选
      */
-    onCheckboxAll () {
+    onCheckboxAll() {
       let array = this.list;
       for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < array[i].data.length; j++) {
-          array[i].data[j]["checkbox"] = this.checkboxAll;
-        }
+        array[i]["checkbox"] = this.checkboxAll;
       }
     },
     /**
      * 删除
      */
-    onDelete () {
+    onDelete() {
       let array = this.list;
       let _storage = storage.get('viewed');
 
       if (_storage.code != 0 && _storage.data && Object.keys(_storage.data.value) <= 0) {
-        _storage = { data: {value: {}} }
+        _storage = {data: {value: {}}}
       }
 
       // 查询删除
       for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < array[i].data.length; j++) {
-          if (array[i].data[j]["checkbox"]) {
-            delete _storage.data.value[array[i].data[j]["id"]];
-          }
+        if (array[i]["checkbox"]) {
+          delete _storage.data.value[array[i]["id"]];
         }
       }
 
@@ -220,15 +208,18 @@ export default {
         storage.set('viewed', _storage.data.value);
         this.getHisory();
       }
+    },
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getHisory();
+    },
+    handlePageChange(num) {
+      this.skip = num;
+      console.log("page", num);
+      this.getHisory();
     }
   },
-  computed: {
-    listCalcStatistics () {
-      let count = 0;
-      this.list.forEach(i => i.data.forEach(j => count+=1));
-      return count;
-    }
-  }
+  computed: {}
 }
 </script>
 

@@ -40,6 +40,7 @@ export default class Api {
             "account_signupVerify": "user/signupVerify",
 
             "player_reset": "reset",
+            "player_batch": "player/batch",
             "player_judgement": "player/judgement",
             "player_judgmentResult": "player/judgmentResult",
             "player_banAppeal": "player/banAppeal",
