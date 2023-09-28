@@ -482,7 +482,8 @@ async (req, res, next) => {
         const order = req.body.order ? req.query.order : 'desc';
 
         const total = await db.count({num: 1}).from('comments')
-            .andWhere('type', 'judgement').first().then(r => r.num);
+            .andWhere('type', 'judgement')
+            .first().then(r => r.num);
 
         const result = await db('comments')
             .join('users', 'comments.byUserId', 'users.id')
@@ -499,7 +500,7 @@ async (req, res, next) => {
             .andWhere('comments.createTime', '>=', createTimeFrom)
             .andWhere('comments.createTime', '<=', createTimeTo)
             .orderBy('comments.createTime', order)
-            .offset(skip).limit(limit);
+            .limit(limit).offset(skip);
 
         return res.status(200).json({success: 1, code: 'admin.log.ok', data: result, total});
     } catch (err) {

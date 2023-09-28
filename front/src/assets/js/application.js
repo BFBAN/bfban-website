@@ -21,10 +21,35 @@ export default class Application extends Print {
         return data;
     }
 
-    isAdmin () {
+    isAdmin() {
         return account_storage.checkPrivilegeGroup(
             this.$store.state?.user?.userinfo,
             ['root', 'admin', 'super', 'dev']
+        );
+    }
+
+    isAdminL1() {
+        return this.isAdmin();
+    }
+
+    isAdminL2() {
+        return account_storage.checkPrivilegeGroup(
+            this.$store.state?.user?.userinfo,
+            ['root', 'super', 'dev']
+        );
+    }
+
+    isAdminL3() {
+        return account_storage.checkPrivilegeGroup(
+            this.$store.state?.user?.userinfo,
+            ['root', 'dev']
+        );
+    }
+
+    isAdminL4() {
+        return account_storage.checkPrivilegeGroup(
+            this.$store.state?.user?.userinfo,
+            ['root']
         );
     }
 

@@ -463,7 +463,7 @@ async function showUserInfo(req, res, next) {
 }
 
 router.get('/info', [checkquery('id').isInt({min: 0})], showUserInfo);
-router.get('/info4admin', verifyJWT, allowPrivileges(['admin', 'super', 'root', 'dev']), [
+router.get('/info4admin', verifyJWT, allowPrivileges(['super', 'root', 'dev']), [
     checkquery('id').isInt({min: 0})
 ], showUserInfo);
 router.get('/me', verifyJWT, (req, res, next) => {
