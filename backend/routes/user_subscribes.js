@@ -35,7 +35,7 @@ router.post('/subscribes', verifyJWT, forbidPrivileges(['freezed', 'blacklisted'
             }))
         );
 
-        return res.status(200).json({success: 1, code: 'subscribes.success', data: result, total});
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=7').json({success: 1, code: 'subscribes.success', data: result, total});
     } catch (err) {
         next(err);
     }
@@ -56,7 +56,7 @@ router.post('/isSubscribes', verifyJWT, forbidPrivileges(['freezed', 'blackliste
 
         const {id} = req.body;
         const subscribes = user.subscribes;
-        return res.status(200).json({success: 1, code: 'subscribes.success', data: subscribes.includes(id)});
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=7').json({success: 1, code: 'subscribes.success', data: subscribes.includes(id)});
     } catch (err) {
         next(err);
     }
