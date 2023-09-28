@@ -22,7 +22,7 @@
             <Row :gutter="10">
               <Col>
                 <a href="https://github.com/BFBAN/exterior-design" target="_blank">
-                  <Button>exterior design</Button>
+                  <Button>Exterior design</Button>
                 </a>
               </Col>
               <Col>
@@ -36,7 +36,7 @@
         <Row :gutter="10" class="footer-link" type="flex" v-if="link.footerStatic">
           <Col v-for="(link, linkindex) in link.footerChild" :key="linkindex" align="center">
             <a :href="link.linkUrl" target="_blank" class="footer-link-text">
-              <img :src="link.linkImageUrl" height="35" :alt="link.tag" :title="link.describe">
+              <img :src="link.localFilePath" height="35" :alt="link.tag" :title="link.describe">
             </a>
           </Col>
         </Row>
