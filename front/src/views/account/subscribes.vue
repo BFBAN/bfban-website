@@ -12,7 +12,7 @@
         {{ list.length }} / 5000
         <Divider type="vertical"/>
         <Button @click="getSubscribes" size="small">
-          <Icon type="md-refresh"  :class="[load ? 'spin-icon-load' :'']"/>
+          <Icon type="md-refresh" :class="[load ? 'spin-icon-load' :'']"/>
         </Button>
       </Col>
     </Row>
