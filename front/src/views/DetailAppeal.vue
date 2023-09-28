@@ -201,6 +201,13 @@
           <br>
           <Button :to="{name: 'signin'}">{{ $t("header.signin") }}</Button>
         </Spin>
+
+        <Spin size="large" fix v-show="isLogin && cheater.status != 1 || cheater == null">
+          <div>
+            <Icon type="md-lock" size="100"/>
+          </div>
+          <br>
+        </Spin>
       </Card>
       <br>
 
@@ -212,7 +219,9 @@
             <Button size="large" @click="resetAppealForm()">{{ $t('basic.button.reset') }}</Button>
           </ButtonGroup>
           <Divider type="vertical"/>
-          <Button size="large" type="primary" :loading="appeal.load" :disabled="!isLogin" @click="handleAppeal">
+          <Button size="large" type="primary" :loading="appeal.load"
+                  :disabled="!isLogin || cheater.status != 1 || cheater == null"
+                  @click="handleAppeal">
             {{ $t('basic.button.commit') }}
           </Button>
         </Col>

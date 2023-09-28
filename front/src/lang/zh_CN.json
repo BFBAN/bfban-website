@@ -161,11 +161,6 @@
       "9": "申诉中",
       "all": "全部"
     },
-    "appealStatus":{
-      "0": "无申诉记录",
-      "1": "未处理的申诉",
-      "2": "已处理的申诉"
-    },
     "tip": {
       "bindOrigin.bad": "绑定账户发生错误，请联系管理员 {message}",
       "bindOrigin.error": "发生错误，请联系管理员 {message}",
@@ -312,7 +307,7 @@
         "type": "申诉类型"
       },
       "dealAppeal": "处理申诉",
-      "describe": "该举报信息存在问题,我能自证或他人协助证明清白.",
+      "describe": "该举报与事实不符,能提供自证材料 或 协助证明清白",
       "info": {
         "changeName": "名称变动",
         "commentid": "评论ID",
