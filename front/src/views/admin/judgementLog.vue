@@ -1,5 +1,51 @@
 <template>
   <div>
+    <Row :gutter="20">
+      <Col flex="1">
+        <p>-> 右侧功能专门为miku400(iku)设立</p>
+        <p>-> The right function is dedicated to the miku400(iku)</p>
+      </Col>
+      <Col>
+        <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400" popper-class="files-poptip" :padding="'20px 30px'">
+          <Button>
+            <Icon type="md-funnel" size="15"/>
+          </Button>
+          <Form ref="filesFunnel" label-position="top" slot="content">
+            <Row :gutter="10">
+              <Col flex="1">
+                <FormItem label="Search Type">
+                  <Select v-model="searchTypeValue">
+                    <Option v-for="(i, index) in searchType" :key="index" :value="i">{{ i }}</Option>
+                  </Select>
+                </FormItem>
+              </Col>
+              <Col flex="1">
+                <FormItem label="Search">
+                  <Input type="text" v-model="searchValue" :placeholder="`input ${searchType.toString()}`"></Input>
+                </FormItem>
+              </Col>
+            </Row>
+            <FormItem label="Create Time Radiu">
+              <DatePicker type="daterange"
+                          split-panels
+                          @on-change="handleCDatepicker"
+                          :placeholder="'createTime'"></DatePicker>
+            </FormItem>
+            <Row :gutter="10">
+              <Col>
+                <Button @click="resetFormData">{{ $t('basic.button.reset') }}</Button>
+              </Col>
+              <Col>
+                <Button @click="subimtFormData" type="primary" :disabled="judgementLog.load">
+                  {{ $t('basic.button.commit') }}
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Poptip>
+      </Col>
+    </Row>
+    <br>
     <Row>
       <Col flex="1">
         <Page class="page"
@@ -80,6 +126,55 @@ export default {
 
       load: false,
       judgementLog: [],
+      searchTypeValue: "userId",
+      searchType: ['userId', 'userName', 'dbId'],
+      searchValue: "",
+      createTimeFrom: 0,
+      createTimeTo: 0,
+      timeOptions: {
+        disabledDate(date) {
+          return date && date.valueOf() > Date.now();
+        },
+        shortcuts: [
+          {
+            text: this.$i18n.t('sitestats.timeRange.daily'),
+            value() {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24);
+              return [start, end];
+            }
+          },
+          {
+            text: this.$i18n.t('sitestats.timeRange.weekly'),
+            value() {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              return [start, end];
+            }
+          },
+          {
+            text: this.$i18n.t('sitestats.timeRange.monthly'),
+            value() {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              return [start, end];
+            }
+          },
+          {
+            text: this.$i18n.t('sitestats.timeRange.yearly'),
+            value() {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 12);
+              return [start, end];
+            }
+          }
+        ]
+      },
+
       limit: 40,
       skip: 1,
       total: 0,
@@ -93,16 +188,22 @@ export default {
   },
   methods: {
     getAdminjudgementLog() {
+      let fromData = {
+        limit: this.limit,
+        skip: this.skip,
+        total: this.total,
+      };
+
       if (this.load) return;
       this.load = true;
 
-      this.http.get(api['admin_judgementLog'], {
-        params: {
-          limit: this.limit,
-          skip: this.skip,
-          total: this.total,
-        }
-      }).then(res => {
+      if (this.searchTypeValue == 'userId' && this.searchValue) fromData.userId = this.searchValue;
+      if (this.searchTypeValue == 'userName' && this.searchValue) fromData.userName = this.searchValue;
+      if (this.searchTypeValue == 'dbId' && this.searchValue) fromData.dbId = this.searchValue;
+      if (this.createTimeFrom) fromData.createTimeFrom = this.createTimeFrom;
+      if (this.createTimeTo) fromData.createTimeTo = this.createTimeTo;
+
+      this.http.post(api['admin_judgementLog'], {data: fromData}).then(res => {
         const d = res.data;
         if (d.success == 1) {
           this.judgementLog = d.data;
@@ -111,6 +212,24 @@ export default {
       }).finally(() => {
         this.load = false;
       });
+    },
+    resetFormData() {
+      this.searchValue = "";
+      this.createTimeFrom = 0;
+      this.createTimeTo = 0;
+
+      this.$refs["filesPoptip"].handleClose();
+      this.$refs["filesFunnel"].resetFields();
+    },
+    subimtFormData() {
+      this.getAdminjudgementLog();
+      this.resetFormData();
+    },
+    handleCDatepicker(date) {
+      this.createTimeFrom = new Date(date[0]).getTime();
+      this.createTimeTo = new Date(date[1]).getTime();
+
+      this.skip = 1;
     },
     handlePageSizeChange(num) {
       this.limit = num;

@@ -3,7 +3,7 @@
     <Row :gutter="20">
       <Col flex="1"></Col>
       <Col>
-        <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400" popper-class="files-poptip">
+        <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400" popper-class="files-poptip" :padding="'20px 30px'">
           <Button>
             <Icon type="md-funnel" size="15"/>
           </Button>
