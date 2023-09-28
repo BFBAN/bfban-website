@@ -30,20 +30,6 @@ export default class Http extends Conf {
         super.initConf();
 
         this.NODE = process.env.NODE_ENV || 'development';
-        this.HTTP.interceptors.response.use(response => response, error => {
-            const {code = "none", message = ""} = error.response.data;
-
-            // 无效令牌
-            let userError = ["user.invalid", "user.tokenExpired", "user.tokenClientException"]
-            if (code.constructor(userError)) {
-                account_storage.clearAll()
-                store.dispatch('signout').then(() => {
-                    router.push('/signin');
-                });
-            }
-
-            return Promise.reject(error)
-        })
     }
 
     location = () => {
