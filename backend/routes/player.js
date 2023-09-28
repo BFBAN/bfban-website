@@ -14,7 +14,7 @@ import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.j
 import {texCoincidenceRatio, textSimilarityDiff} from "../lib/textDiff.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
-import {checkSpam, submitSpam, toSpam} from "../lib/akismet.js";
+import {SpamFormData} from "../lib/akismet.js";
 import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 const router = express.Router()

@@ -1,3 +1,46 @@
+<template>
+  <div>
+    <Form>
+      <Empty :notHint="true" v-if="linkList.length <= 0"></Empty>
+      <FormItem v-else
+                v-for="(i, index) in linkList" :key="index"
+                :prop="`linkList[${index}].value`"
+                :rules="{validator (rule, value, callback) { checkVideoLink(rule, linkList[index].value,callback) }, trigger: 'change'}">
+        <Row :gutter="5">
+          <Col flex="1">
+            <Input
+                style="margin-bottom: 5px"
+                type="url"
+                pattern="*://.*"
+                v-model="i.value"
+                @on-change="onInputChange"
+                :clearable="!isReadonly"
+                :readonly="isReadonly"
+                :placeholder="placeholder"></Input>
+          </Col>
+          <Col v-if="!isReadonly">
+            <Button @click="del(index)" type="dashed" v-voice-button v-if="linkList.length >= 0">
+              <Icon type="md-trash"/>
+            </Button>
+          </Col>
+          <Col v-else>
+            <a :href="i.value" target="_new">
+              <Button>
+                <Icon type="md-share"/>
+              </Button>
+            </a>
+          </Col>
+        </Row>
+      </FormItem>
+
+      <Button long @click="add" :disabled="linkList.length >= max" v-if="!isReadonly">
+        <Icon type="md-add"/>
+        ({{ linkList.length }}/{{ max }})
+      </Button>
+    </Form>
+  </div>
+</template>
+
 <script>
 import Application from "@/assets/js/application";
 import Empty from "@/components/Empty.vue"
@@ -21,21 +64,31 @@ export default new Application({
       linkList: [],
     };
   },
+  watch: {
+  },
   components: {Empty},
   created() {
-    if (this.links && typeof this.links == 'string') {
-      this.links.split(',').forEach(i => {
-        this.linkList.push({value: i})
-      })
-    }
-
-    if (this.links && typeof this.links == 'object') {
-      this.links.forEach(i => {
-        this.linkList.push({value: i})
-      })
-    }
+    this.init();
   },
   methods: {
+    /**
+     * 初始链接列表
+     */
+    init() {
+      this.linkList = [];
+
+      if (this.links && typeof this.links == 'string') {
+        this.links.split(',').forEach(i => {
+          this.linkList.push({value: i})
+        })
+      }
+
+      if (this.links && typeof this.links == 'object') {
+        this.links.forEach(i => {
+          this.linkList.push({value: i})
+        })
+      }
+    },
     add() {
       if (this.linkList.length >= this.max) return;
       this.linkList.push({
@@ -82,49 +135,6 @@ export default new Application({
   }
 });
 </script>
-
-<template>
-  <div>
-    <Form>
-      <Empty :notHint="true" v-if="linkList.length <= 0"></Empty>
-      <FormItem v-else
-                v-for="(i, index) in linkList" :key="index"
-                :prop="`linkList[${index}].value`"
-                :rules="{validator (rule, value, callback) { checkVideoLink(rule, linkList[index].value,callback) }, trigger: 'change'}">
-        <Row :gutter="5">
-          <Col flex="1">
-            <Input
-                style="margin-bottom: 5px"
-                type="url"
-                pattern="*://.*"
-                v-model="i.value"
-                @on-change="onInputChange"
-                :clearable="!isReadonly"
-                :readonly="isReadonly"
-                :placeholder="placeholder"></Input>
-          </Col>
-          <Col v-if="!isReadonly">
-            <Button @click="del(index)" type="dashed" v-voice-button v-if="linkList.length >= 0">
-              <Icon type="md-trash"/>
-            </Button>
-          </Col>
-          <Col v-else>
-            <a :href="i.value" target="_new">
-              <Button>
-                <Icon type="md-share"/>
-              </Button>
-            </a>
-          </Col>
-        </Row>
-      </FormItem>
-
-      <Button long @click="add" :disabled="linkList.length >= max" v-if="!isReadonly">
-        <Icon type="md-add"/>
-        ({{ linkList.length }}/{{ max }})
-      </Button>
-    </Form>
-  </div>
-</template>
 
 <style scoped lang="less">
 

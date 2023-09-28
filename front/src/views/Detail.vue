@@ -262,21 +262,8 @@
         </Card>
         <br>
         <Card id="timeline" style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
-          <Row :gutter="5" slot="title" type="flex" justify="center" align="middle">
-            <Col :xs="{span: 23, push: 1}" :lg="appeal.disable ? {span: 7, push: 0} : {span: 1, push: 0}"
-                 class="mobile-hide">
-              <template v-if="appeal.disable">
-                <Button @click="onLeftAppealPlan" size="small">
-                  <Icon type="md-contract"/>
-                </Button>
-              </template>
-              <template v-else>
-                <Button @click="onLeftAppealPlan" size="small">
-                  <Icon type="md-expand"/>
-                </Button>
-              </template>
-            </Col>
-            <Col flex="auto" class="mobile-hide">
+          <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
+            <Col flex="1" class="mobile-hide">
               {{ $t('detail.info.timeLine') }}
               <Tag v-if="timeline.total">{{ timeline.total || 0 }}</Tag>
             </Col>
@@ -322,10 +309,23 @@
                 </Col>
               </Row>
             </Col>
+            <Col :xs="{span: 23, push: 1}" :lg="appeal.disable ? {span: 7, push: 0} : {span: 1, push: 0}"
+                 class="mobile-hide">
+              <template v-if="appeal.disable">
+                <Button @click="onLeftAppealPlan" size="small">
+                  <Icon type="md-contract"/>
+                </Button>
+              </template>
+              <template v-else>
+                <Button @click="onLeftAppealPlan" size="small">
+                  <Icon type="md-expand"/>
+                </Button>
+              </template>
+            </Col>
           </Row>
-          <Row :gutter="5" type="flex">
-            <Col :xs="{span: 24, push: 0, pull: 0}" :lg="appeal.disable ? {span: 17, push: 1} : {span: 24, push: 0} "
-                 order="2" class="tabs-style">
+          <Row :gutter="20" type="flex">
+            <Col :xs="{span: 24, push: 0, pull: 0}" :lg="appeal.disable ? {span: 17, push: 0} : {span: 24, push: 0}"
+                 order="1" class="tabs-style">
               <div class="content">
                 <!-- 时间线 -->
                 <TimelineItem
@@ -801,7 +801,6 @@
               <!-- 用户回复 S -->
               <div class="ivu-card ivu-card-bordered ivu-card-dis-hover" id="reply" v-if="isLogin">
                 <div class="ivu-card-body">
-                  <!-- <Alert show-icon>{{ $t('detail.info.appealManual1') }}</Alert> -->
                   <Textarea v-model="reply.content"
                             style="margin: 0 -16px;"
                             ref="replyTextarea"
@@ -869,10 +868,33 @@
             </Col>
 
             <!-- 申诉按钮 -->
-            <Col :xs="{span: 23, push: 1}" :lg="{span: 6, push: 0}" order="1" class="mobile-hide"
+            <Col :xs="{span: 23, push: 0}" :lg="{span: 7, push: 0}" order="2" class="mobile-hide"
                  v-if="appeal.disable">
-              <DetailAppeal :cheater="cheater" @success="getPlayerInfo();getTimeline()"></DetailAppeal>
-              <p><br>{{ $t('detail.appeal.describe') }}</p>
+              <Card dis-hover>
+                <h1 style="text-align: center">📥</h1>
+                <p>{{ $t('detail.info.appealManual1') }}</p>
+                <br>
+                <div>
+                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1`) }}</Tag>
+                  <Tag :size="'default'" type="border">{{ $t(`basic.status.2`) }}</Tag>
+                </div>
+              </Card>
+
+              <br>
+              <p style="text-align:center">or</p>
+              <br>
+
+              <Card dis-hover>
+                <Button type="primary"
+                        size="large"
+                        long
+                        :to="{'name': 'cheater_appeal'}"
+                        :disabled="!isLogin || cheater.status !== 1">
+                  {{ $t('detail.info.appeal') }}
+                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1`) }}</Tag>
+                </Button>
+                <p><br>{{ $t('detail.appeal.describe') }}</p>
+              </Card>
             </Col>
           </Row>
 
@@ -1240,13 +1262,11 @@ import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
 import RecordLink from "../components/RecordLink.vue";
 import Captcha from "../components/Captcha";
-import Html from "@/components/Html";
+import HtmlCore from "@/components/Html";
 import HtmlWidget from "../components/HtmlWidget";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import FastReply from "@/components/FastReply";
 import htmllink from "@/components/HtmlLink";
-import DetailAppeal from "@/components/Detail_Appeal.vue";
-import EditLinks from "@/components/EditLinks.vue";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
 
@@ -1366,13 +1386,11 @@ export default new Application({
     BusinessCard,
     RecordLink,
     Captcha,
-    Html,
+    HtmlCore,
     HtmlWidget,
     PrivilegesTag,
     FastReply,
     htmllink,
-    DetailAppeal,
-    EditLinks
   },
   watch: {
     '$route': 'loadData',
@@ -2153,71 +2171,72 @@ export default new Application({
         data.data.toCommentId = this.timelineList[this.reply.toFloor].id;
         data.encryptCaptcha = this.$refs.replyCommentsCaptcha.hash;
 
-      // 依照不同回复窗口模式来填充提交表单
-      switch (replyType) {
-        case "default":
-          data = {
-            data: {
-              toPlayerId: cheaterId,
-              content: formatTextarea(content),
-            },
-            encryptCaptcha: this.$refs.replyCaptcha.hash,
-            captcha: this.reply.captcha,
-          };
-          break;
-        case "mini":
-          data = {
-            data: {
-              toPlayerId: cheaterId,
-              toCommentId: this.timelineList[this.reply.toFloor].id,
-              content: formatTextarea(miniModeContent),
-            },
-            encryptCaptcha: this.$refs.replyMiniModeCaptcha.hash,
-            captcha: this.reply.miniModeCaptcha,
-          };
-          break;
-      }
-
-      this.replySpinShow = true;
-
-      this.http.post(api["player_reply"], {data}).then(res => {
-        const d = res.data;
-
-        if (d.success === 1) {
-          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
-            message: d.message || ""
-          }));
-
-          this.replyModal = false;
-          this.reply.toFloor = "";
-          this.reply.content = "";
-          this.reply.captcha = "";
-          this.reply.miniModeContent = "";
-          this.reply.miniModeCaptcha = "";
-
-          // Actively update text
-          if (this.$refs.replyTextarea)
-            this.$refs.replyTextarea.updateContent('');
-          if (this.$refs.replyMiniModeTextarea)
-            this.$refs.replyMiniModeTextarea.updateContent('');
-
-          return;
+        // 依照不同回复窗口模式来填充提交表单
+        switch (replyType) {
+          case "default":
+            data = {
+              data: {
+                toPlayerId: cheaterId,
+                content: formatTextarea(content),
+              },
+              encryptCaptcha: this.$refs.replyCaptcha.hash,
+              captcha: this.reply.captcha,
+            };
+            break;
+          case "mini":
+            data = {
+              data: {
+                toPlayerId: cheaterId,
+                toCommentId: this.timelineList[this.reply.toFloor].id,
+                content: formatTextarea(miniModeContent),
+              },
+              encryptCaptcha: this.$refs.replyMiniModeCaptcha.hash,
+              captcha: this.reply.miniModeCaptcha,
+            };
+            break;
         }
 
-        message = typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : this.$t(`basic.tip['${d.code}']`, {
-          message: d.message || ""
+        this.replySpinShow = true;
+
+        this.http.post(api["player_reply"], {data}).then(res => {
+          const d = res.data;
+
+          if (d.success === 1) {
+            this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+              message: d.message || ""
+            }));
+
+            this.replyModal = false;
+            this.reply.toFloor = "";
+            this.reply.content = "";
+            this.reply.captcha = "";
+            this.reply.miniModeContent = "";
+            this.reply.miniModeCaptcha = "";
+
+            // Actively update text
+            if (this.$refs.replyTextarea)
+              this.$refs.replyTextarea.updateContent('');
+            if (this.$refs.replyMiniModeTextarea)
+              this.$refs.replyMiniModeTextarea.updateContent('');
+
+            return;
+          }
+
+          message = typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          });
+          this.$Message.error({content: message, duration: 3});
+        }).finally(() => {
+          this.replySpinShow = false;
+
+          if (message.playSendVoice)
+            message.playSendVoice();
+
+          this.cancelReply(false);
+          this.getPlayerInfo();
+          this.getTimeline();
         });
-        this.$Message.error({content: message, duration: 3});
-      }).finally(() => {
-        this.replySpinShow = false;
-
-        if (message.playSendVoice)
-          message.playSendVoice();
-
-        this.cancelReply(false);
-        this.getPlayerInfo();
-        this.getTimeline();
-      });
+      }
     },
     /**
      * 更新玩家信息
@@ -2300,19 +2319,21 @@ export default new Application({
       let value = account_storage.getConfiguration("timelineSeeType");
       if (typeof value == 'boolean' && !value) value = this.timeline.seeType;
       return value;
-    },
+    }
+    ,
     isOnlySuper() {
       const {userinfo} = this.$store.state.user || {}
       const {privilege = []} = userinfo
       return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
-    },
+    }
+    ,
     isSuper() {
       const {userinfo} = this.$store.state.user || {}
       const {privilege = []} = userinfo
       return privilege.includes('super') || privilege.includes('root') || privilege.includes('dev')
     }
   }
-})
+});
 </script>
 
 <style lang="less">

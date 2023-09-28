@@ -10,6 +10,7 @@ const Report = () => import('@/views/Report.vue');
 const List = () => import('@/views/List.vue');
 const Detail = () => import('@/views/Detail.vue');
 const DetailShare = () => import('@/views/DetailShare.vue');
+const DetailAppeal = () => import('@/views/DetailAppeal.vue');
 const DetailApp = () => import('@/views/DetailApp.vue');
 const DetailCard = () => import('@/components/SharePlayerCell.vue');
 const Signin = () => import('@/views/Signin.vue');
@@ -224,6 +225,18 @@ const routes = [
             }
         },
         component: DetailShare
+    },
+
+    // 申诉
+    {name: 'cheater_appeal', path: '/player/:ouid/appeal',
+        meta: {
+            metaInfo : {
+                title: 'detail.info.app_qr.title',
+                keywords: "detail.seo.keywords",
+                description: 'detail.info.app_qr.title'
+            }
+        },
+        component: DetailAppeal
     },
 
     // 唤起应用面板

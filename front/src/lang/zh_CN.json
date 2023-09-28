@@ -299,6 +299,7 @@
         "btrLink": "BTR链接",
         "farm": "刷枪申诉",
         "firstPersonRecording": "第一人称录屏链接",
+        "userGeneratedMossFile": "moss文件 (.zip)",
         "moss": "moss自证申诉",
         "mossDownloadUrl": "MOSS下载",
         "mossUpload": "上传moss",
@@ -343,7 +344,7 @@
       },
       "placeholder": {
         "btrlink": "请填写btr对局链接",
-        "content": "请详细填写您申诉信息以便审核",
+        "content": "请详细填写您申诉信息以便审核(注意格式，不同地区会对申诉格式有需求，请以当地申诉社区《申诉格式》为准)",
         "player": "请填写玩家id",
         "videolink": "请填写视频链接"
       }
