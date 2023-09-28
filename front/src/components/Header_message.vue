@@ -54,7 +54,7 @@ export default new Application({
   },
   watch: {
     unReadCount: function (val) {
-      if (val >= 0)
+      if (val >= 0 && message.playMessageVoice)
         message.playMessageVoice()
     }
   },

@@ -34,29 +34,53 @@
       "tag": ["link"]
     }
   ],
-  "footerStatic": false,
+  "footerStatic": true,
   "footerChild": [
     {
-      "title": "gametools.network",
+      "title": "GameTools Network",
       "linkUrl": "https://gametools.network",
       "describe": "Made with ❤️ Hosted at GameTools-Community Network",
       "describeLang": {
         "zh-CN": "主机提供商"
       },
-      "linkImageUrl": "https://i.loli.net/2021/09/30/F4hedSaYV96BsOg.png",
+      "localFilePath": "/images/links/gametools.network.png",
       "tag": [
         "host",
         "platinum"
       ]
     },
     {
-      "title": "evolution host",
-      "linkUrl": "https://evolution-host.com/blog/ssd-vps-hosting.php",
-      "describe": "Powered by an SSD VPS from Evolution Host",
+      "title": "1Password",
+      "linkUrl": "https://1password.com",
+      "describe": "Provides password management support",
       "describeLang": {
-        "zh-CN": "服务器由evolution host供应商支持"
+        "zh-CN": "提供密码管理支持"
       },
-      "linkImageUrl": "https://iph.href.lu/100x35?text=evolution host&fg=ffffff&bg=0b3cac",
+      "localFilePath": "/images/links/1password-dark.png",
+      "tag": [
+        "host",
+        "platinum"
+      ]
+    },
+    {
+      "title": "Netlify",
+      "linkUrl": "https://www.netlify.com",
+      "describe": "Provide web hosting services",
+      "describeLang": {
+        "zh-CN": "提供网页存放服务"
+      },
+      "localFilePath": "/images/links/netlify.png",
+      "tag": [
+        "host",
+        "platinum"
+      ]
+    },
+    {
+      "title": "Cloudflare",
+      "linkUrl": "https://www.cloudflare.com/",
+      "describe": "",
+      "describeLang": {},
+      "localFilePath": "/images/links/cloudflare.png",
       "tag": [
         "host",
         "platinum"

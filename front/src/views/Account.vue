@@ -15,7 +15,10 @@
             {{ $t("account.message.chat") }}
           </Button>
           <div slot="content">
-            <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{ $t("account.message.hint.taOffChat") }}</Alert>
+            <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{
+                $t("account.message.hint.taOffChat")
+              }}
+            </Alert>
             <Alert show-icon type="error" v-if="account.id == currentUser.userinfo.userId">
               {{ $t("account.message.hint.selfTalk") }}
             </Alert>
@@ -64,8 +67,52 @@
               </Col>
               <Divider type="vertical"/>
               <Col>
-                <h3>{{ account.reportnum || '-' }}</h3>
+                <Poptip :transfer="true">
+                  <h3>{{ account.reportnum || '-' }}
+                    <Icon type="md-more"/>
+                  </h3>
+                  <Row :gutter="15" type="flex" justify="center" align="middle" slot="content"
+                       v-if="account.statusNum"
+                       style="text-align: center">
+                    <template v-if="isLogin">
+                      <Col>
+                        <b>{{ account.statusNum['0'] || '-' }}</b>
+                        <p class="account-info-p">{{ $t(`basic.status.0`) }}</p>
+                      </Col>
+                      <Divider type="vertical"/>
+                      <Col>
+                        <b>{{ account.statusNum['1'] || '-' }}</b>
+                        <p class="account-info-p">{{ $t(`basic.status.1`) }}</p>
+                      </Col>
+                      <Divider type="vertical"/>
+                      <Col>
+                        <b>{{ account.statusNum['4'] || '-' }}</b>
+                        <p class="account-info-p">{{ $t(`basic.status.4`) }}</p>
+                      </Col>
+                      <Divider type="vertical"/>
+                      <Col>
+                        <b>{{ account.reportnum - (account.statusNum['0'] + account.statusNum['1'] + account.statusNum['4']) }}</b>
+                        <p class="account-info-p">···</p>
+                      </Col>
+                      <Col>=</Col>
+                      <Col>
+                        <b>{{ account.reportnum || '-' }}</b>
+                        <p class="account-info-p">{{ $t("account.reportNum") }}</p>
+                      </Col>
+                    </template>
+                    <Spin size="large" v-show="!isLogin">
+                      <div>
+                        <Icon type="md-lock" size="30" />
+                      </div>
+                      <Button :to="{name: 'signin'}">{{ $t("header.signin") }}</Button>
+                    </Spin>
+                  </Row>
+                </Poptip>
                 <p class="account-info-p">{{ $t("account.reportNum") }}</p>
+              </Col>
+              <Divider type="vertical"/>
+              <Col>
+                <vue-qr :text="url" :size="60" :margin="3" v-if="url"></vue-qr>
               </Col>
             </Row>
           </Col>
@@ -135,7 +182,8 @@
 <script>
 import Application from "../assets/js/application";
 import Empty from "@/components/Empty";
-import {api, http, http_token} from '../assets/js/index'
+import vueQr from "vue-qr";
+import {api, http, http_token, util} from '../assets/js/index'
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
 
@@ -268,7 +316,7 @@ export default new Application({
                 props: {
                   color: "primary"
                 }
-              } ,[
+              }, [
                 h('Time', {
                   props: {
                     time: params.row.updateTime
@@ -284,6 +332,9 @@ export default new Application({
       page: 1,
       total: 100,
 
+      cheaterStatus: [],
+      url: "",
+
       message: {
         id: '',
         show: false,
@@ -295,7 +346,7 @@ export default new Application({
   watch: {
     $route: "loadData",
   },
-  components: {PrivilegesTag, Empty},
+  components: {PrivilegesTag, Empty, vueQr},
   created() {
     this.http = http_token.call(this);
 
@@ -305,6 +356,11 @@ export default new Application({
     async loadData() {
       const {uId} = this.$route.params;
 
+      await util.initUtil().then(res => {
+        this.cheaterStatus = res.cheaterStatus;
+        this.url = window.location.href;
+      });
+
       this.getUserInfo(uId);
     },
     /**
@@ -313,7 +369,7 @@ export default new Application({
     getUserInfo(uId) {
       this.$Loading.start();
 
-      http.get(api["user_info"], {
+      this.http.get(api["user_info"], {
         params: {
           id: uId
         }
@@ -432,7 +488,7 @@ export default new Application({
      * 如果自我描述以及attr特定属性不显示，则关闭右侧一栏
      * @returns {boolean}
      */
-    isAttachedContent () {
+    isAttachedContent() {
       return !this.account.attr.introduction && !this.account.origin;
     }
   }

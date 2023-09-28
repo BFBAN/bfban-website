@@ -4,7 +4,6 @@
  */
 
 import {http, api} from "./index"
-import uuid from 'uuid';
 import store from '@/store'
 import Print from "./print"
 import Conf from "@/assets/js/conf";
@@ -88,8 +87,6 @@ export default class Upload extends (Print, Conf) {
                     throw 'Missing parameter';
                 }
 
-                file.name.set(uuid.v4({'name': file.name}));
-
                 fetch(this.location() + api["service_upload"], {
                     method: 'PUT',
                     headers: {
@@ -133,8 +130,6 @@ export default class Upload extends (Print, Conf) {
                     reject({code: -1, message: 'Missing parameter'})
                     throw 'Missing parameter';
                 }
-
-                file.name.set(uuid.v4({'name': file.name}));
 
                 fetch(this.location() + api["service_uploadBigFile"], {
                     method: 'POST',

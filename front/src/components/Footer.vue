@@ -4,7 +4,10 @@
       <div class="container">
         <h2 class="p">BFBAN APP</h2>
         <a href="https://bfban-app.cabbagelol.net" target="_blank">
-          <Button>download</Button>
+          <Button>
+            <Icon type="md-download"/>
+            Download
+          </Button>
         </a>
       </div>
     </div>
@@ -55,7 +58,7 @@
           </Col>
           <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
             <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large"
-                    :disabled="langLoaclSync">
+                    :disabled="langLocalSync">
               <Option v-for="(item, index) in languages" :key="index" :label="item.label" :value="item.name">
                 <span>{{ item.label }}</span>
                 <span style="float:right;color:#ccc">
@@ -87,23 +90,24 @@
             </router-link>
           </Col>
         </Row>
-        <Row :gutter="5" class="footer-link" type="flex" v-if="links.footerStatic">
+        <Row :gutter="10" class="footer-link" type="flex" v-if="links.footerStatic">
           <Col v-for="(link, linkindex) in links.footerChild" :key="linkindex" align="center">
             <a :href="link.linkUrl" target="_blank" class="footer-link-text">
-              <img :src="link.linkImageUrl" width="100" height="35" :alt="link.tag" :title="link.describe">
+              <img :src="link.localFilePath" height="35" :alt="link.tag" :title="link.describe">
             </a>
           </Col>
         </Row>
       </div>
       <div align="center" class="mobile-hide footer-border-top footer-padding">
-        <p>&copy; 2018-{{ new Date().getFullYear() }} All Rights Reserved. v: {{ infos }}</p>
+        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} All Rights Reserved. v:
+          {{ infos }}</p>
       </div>
     </footer>
   </div>
 </template>
 
 <script>
-import {storage, account_storage, http} from "../assets/js";
+import {storage, account_storage, http, time} from "../assets/js";
 
 import packageInfo from '../../package.json';
 import footerNavs from '/public/config/footerNavs.json';
@@ -113,11 +117,12 @@ import Application from "@/assets/js/application";
 export default new Application({
   data() {
     return {
+      time,
       infos: packageInfo.version,
       footerNavs: footerNavs.child,
       links: link,
       logoCount: 0,
-      langLoaclSync: false,
+      langLocalSync: false,
       languages: [],
     }
   },
@@ -131,7 +136,7 @@ export default new Application({
     async loadData() {
       const languages = await import('/public/config/languages.json');
 
-      this.langLoaclSync = account_storage.getConfiguration('langLoaclSync');
+      this.langLocalSync = account_storage.getConfiguration('langLocalSync');
       this.languages = languages.child;
       // this.loadLanguages();
     },
@@ -139,7 +144,7 @@ export default new Application({
       let that = this;
       let lang = this.currentLan;
       setTimeout(function () {
-        if (this.langLoaclSync)
+        if (this.langLocalSync)
           that.$store.dispatch('setLang', lang);
       }, 200)
     }
@@ -229,6 +234,6 @@ export default new Application({
 }
 
 .footer-app-banner .p {
-  padding:10px 100px 10px 0;
+  padding: 10px 100px 10px 0;
 }
 </style>

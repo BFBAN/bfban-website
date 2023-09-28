@@ -22,6 +22,7 @@ import {commentRateLimiter} from "../middleware/rateLimiter.js";
 import {sendMessage} from "./message.js";
 import {handleRichTextInput, initUserStorageQuota, updateUserStorageQuota} from "../lib/user.js";
 import {fileSuffixByMIMEType, readStreamTillEnd} from "../lib/misc.js";
+import {use} from "bcrypt/promises.js";
 
 const router = express.Router();
 
@@ -118,6 +119,44 @@ async (req, res, next) => {
     }
 })
 
+router.post('/files', verifyJWT, allowPrivileges(["root", "dev"]), [
+        checkbody('data.userId').optional().isInt({min: 0}),
+        checkbody('data.createTimeFrom').optional().isInt({min: 0}),
+        checkbody('data.createTimeTo').optional().isInt({min: 0}),
+        checkbody('order').optional().isIn(['desc', 'asc']),
+        checkbody('limit').optional().isInt({min: 0, max: 100}),
+        checkbody('skip').optional().isInt({min: 0})
+    ],
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty())
+                return res.status(400).json({error: 1, code: 'msGetFile.bad', message: validateErr.array()});
+            const userId = req.body.data.userId !== undefined ? req.body.data.userId : "%%";
+            const createTimeFrom = new Date(req.body.data.createTimeFrom ? req.body.data.createTimeFrom - 0 : 0);
+            const createTimeTo = new Date(req.body.data.createTimeTo ? req.body.data.createTimeTo - 0 : Date.now());
+            const skip = req.body.skip !== undefined ? req.body.skip : 0;
+            const limit = req.body.limit !== undefined ? req.body.limit : 20;
+            const order = req.body.order ? req.body.order : 'desc';
+
+            const total = await db.count({num: 1}).from('storage_items')
+                .where('byUserId', 'like', userId)
+                .andWhere("createTime", ">=", createTimeFrom)
+                .andWhere("createTime", "<=", createTimeTo)
+                .first().then(r => r.num);
+            const result = await db.select("*").from("storage_items")
+                .where('byUserId', 'like', userId)
+                .andWhere("createTime", ">=", createTimeFrom)
+                .andWhere("createTime", "<=", createTimeTo)
+                .orderBy('createTime', order)
+                .offset(skip).limit(limit);
+
+            return res.status(200).json({success: 1, code: 'files.ok', data: result, total});
+        } catch (err) {
+            res.status(500).json({error: 1, code: 'files.error', message: err.message});
+        }
+    });
+
 router.get('/file', [
     checkquery('filename').isString().isLength({min: 0, max: 64}),
     checkquery('explain').optional()
@@ -156,6 +195,43 @@ async (req, res, next) => {
             });
         else
             return res.redirect(svResBody.data.downloadURL);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/file', [
+    checkbody('filename').isString().isLength({min: 0, max: 64}),
+    checkbody('explain').optional()
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
+async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'deleteFile.bad', message: validateErr.array()});
+
+        /** @type {import("../typedef.js").StorageItem} */
+        const fileItem = await db.select('*').from('storage_items').where({filename: req.query.filename}).first();
+        if (!fileItem)
+            return res.status(404).json({error: 1, code: 'deleteFile.notFound', message: 'no such file.'});
+
+        const svResponse = await got.delete(`${config.services.msGraphAPI.url}/file?id=${fileItem.fileId}`, {
+            throwHttpErrors: false,
+        });
+        const svResBody = JSON.parse(svResponse.body);
+
+        if (svResponse.statusCode == 404) {
+            return res.status(404).json({error: 1, code: 'deleteFile.notFound', message: 'file not found'});
+        } else if (svResponse.statusCode != 200)
+            return res.status(svResponse.statusCode).json({
+                error: 1,
+                code: 'deleteFile.error',
+                message: svResBody.message
+            });
+
+        await db('storage_items').delete().where({id: fileItem.id});
+
+        return res.status(200).json({success: 1, code: 'deleteFile.ok'});
     } catch (err) {
         next(err);
     }

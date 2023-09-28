@@ -10,8 +10,8 @@ import {allowPrivileges, forbidPrivileges, verifyJWT, verifySelfOrPrivilege} fro
 import {cheatMethodsSanitizer, handleRichTextInput, userAttributes, userShowAttributes} from "../lib/user.js";
 import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
-import {playerWidget} from "../lib/widget.js";
 import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.js";
+import {texCoincidenceRatio, textSimilarityDiff} from "../lib/textDiff.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
 import {checkSpam, submitSpam, toSpam} from "../lib/akismet.js";
@@ -334,8 +334,8 @@ async (req, res, next) => {
             if (date - now > 0) {
                 res.status(400).json({
                     error: 1,
-                    code: `reply.bad`,
-                    message: `You have been disable to reply, ${req.user.attr.mute} end of disable`
+                    code: `report.bad`,
+                    message: `You have been disable to report, ${req.user.attr.mute} end of disable`
                 });
                 return
             }
@@ -425,7 +425,7 @@ async (req, res, next) => {
             }
         });
     } catch (err) {
-        if (err instanceof ServiceApiError) {
+        if (err instanceof ServiceApiError || err instanceof Error) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
             return res.status(err.statusCode === 501 ? 501 : 500).json({
                 error: 1,
@@ -529,7 +529,7 @@ router.post('/reportById', verifyJWT, verifyCaptcha,
                 }
             });
         } catch (err) {
-            if (err instanceof ServiceApiError) {
+            if (err instanceof ServiceApiError || err instanceof Error) {
                 logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
                 return res.status(err.statusCode === 501 ? 501 : 500).json({
                     error: 1,
@@ -669,6 +669,20 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/player/timeline/item:
+ *   get:
+ *     tags:
+ *       - 玩家
+ *     summary: 获取评论内容
+ *     description: 获取时间轴单条评论详细信息
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: timeline.item.ok
+ */
 router.get('/timeline/item', [
         checkquery('id').isInt({min: 0}),
     ],
@@ -676,7 +690,7 @@ router.get('/timeline/item', [
         try {
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'admin.commentItem.bad', message: validateErr.array()});
+                return res.status(400).json({error: 1, code: 'timeline.item.bad', message: validateErr.array()});
 
             const id = req.query.id;
 
@@ -688,7 +702,11 @@ router.get('/timeline/item', [
                 .then(res => Object.assign(res, timeLineItemShowAttributes(res, req)));
 
             if (!result)
-                return res.status(400).json({code: 'timeline.item.bad', message: 'This data is not available.'})
+                return res.status(400).json({
+                    error: 1,
+                    code: 'timeline.item.bad',
+                    message: 'This data is not available.'
+                })
 
             delete result.valid;
 
@@ -747,6 +765,7 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'reply.bad', message: validateErr.array()});
+            const {content, toCommentId, toPlayerId} = req.body.data;
 
             // The user identity is disabled
             if (req.user.attr.mute) {
@@ -770,16 +789,29 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
                     message: 'The account is not up to the requirements'
                 });
 
+            // check for intentional duplication
+            const prevUserCommentItem = await db.select("*").from('comments').where({
+                toPlayerId: toPlayerId,
+                byUserId: req.user.id
+            }).orderBy('createTime', 'desc').limit(3).first();
+            if (prevUserCommentItem) {
+                const value = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
+                if (value >= texCoincidenceRatio)
+                    return res.status(403).json({error: 1, code: 'reply.bad', message: 'Duplicate submission'});
+            }
+
             // Whether to submit a report to akismet here
-            // if (await submitSpam(toSpam(req, {spamType: req.body.data.toCommentId ? 'reply' : 'comment', concat: req.body.data.content})))
+            // const {content} = req.body.data;
+            // const waitFormData = new SpamFormData(req, req.body.data.toCommentId ? 'reply' : 'comment', content);
+            // var result = await submitSpam(waitFormData);
+            // if (!result && result.status == false)
             //     return res.status(403).json({
             //         error: 1,
             //         code: 'reply.spam',
-            //         message: 'The content you submitted contains spam, please revise it'
+            //         message: result.message ??= 'The content you submitted contains spam, please revise it',
             //     });
 
             const dbId = req.body.data.toPlayerId;
-            const toCommentId = req.body.data.toCommentId;
             /** @type {import("../typedef.js").Player} */
             const player = await db.select('*').from('players').where({id: dbId}).first();
             if (!player) // no such player
@@ -798,7 +830,7 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
                 toOriginPersonaId: player.originPersonaId,
                 byUserId: req.user.id,
                 toCommentId: toCommentId ? toCommentId : null,
-                content: handleRichTextInput(req.body.data.content),
+                content: handleRichTextInput(content),
                 valid: 1,
                 createTime: new Date(),
             };
@@ -817,6 +849,59 @@ router.post('/reply', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'bl
             next(err);
         }
     });
+
+/**
+ * @swagger
+ * /api/player/checkContent:
+ *   post:
+ *     tags:
+ *       - 检测
+ *     summary: 检测文本
+ *     description: 检测内容是否包含垃圾广告
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: data.content
+ *         description: 文本 1-5000
+ *         required: true
+ *         type: string
+ *         in: path
+ *         value: "test"
+ *       - name: data.spamType
+ *         description: ['reply', 'comment']
+ *         type: string
+ *         in: path
+ *         value: "comment"
+ *     responses:
+ *       200:
+ *         description: checkContent.success
+ */
+router.post('/checkContent', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'blacklisted']), [
+    checkbody('data.content').isString().trim().isLength({min: 1, max: 5000}),
+    checkbody('data.spamType').isIn(['reply', 'comment']),
+], async (req, res, next) => {
+    try {
+        const {content, spamType = ''} = req.body.data;
+        const waitFormData = new SpamFormData(req, spamType, content);
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'checkContent.bad', message: validateErr.array()});
+
+        // Whether to submit a report to akismet here
+        var result = await submitSpam(waitFormData);
+        if (!result && result.status == false)
+            return res.status(403).json({
+                error: 1,
+                code: 'reply.spam',
+                message: result.message ??= 'The content you submitted contains spam, please revise it',
+            });
+
+        return res.status(200).json({success: 1, code: 'checkContent.success', message: result.message});
+    } catch (err) {
+        logger.error('akismet:' + err);
+        next(err);
+    }
+});
 
 /**
  * @swagger
@@ -947,15 +1032,17 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'judgement.bad', message: 'must specify one cheate method.'});
         if (req.body.data.action === 'kill' && !userHasRoles(req.user, ['super', 'root']))
             return res.status(403).json({error: 1, code: 'judgement.permissionDenied', message: 'permission denied.'});
+        const {toPlayerId, cheatMethods, action, content} = req.body.data;
 
         /** @type {import("../typedef.js").Player} */
-        const player = await db.select('*').from('players').where({id: req.body.data.toPlayerId}).first();
+        const player = await db.select('*').from('players').where({id: toPlayerId}).first();
         if (!player)
             return res.status(404).json({error: 1, code: 'judgement.notFound', message: 'no such player.'});
         const correspondingRecord = await db.count({num: 1})
             .from('comments')
             .where({toPlayerId: player.id, type: 'banAppeal', appealStatus: 'lock'})
             .first().then(r => r.num);
+
         // Check if there are locked appeals that will be blocked here
         if (correspondingRecord >= 1) {
             return res.status(403).json({
@@ -965,6 +1052,17 @@ async (req, res, next) => {
             });
         }
 
+        // check for intentional duplication
+        const prevUserCommentItem = await db.select("*").from('comments').where({
+            toPlayerId: toPlayerId,
+            byUserId: req.user.id
+        }).orderBy('createTime', 'desc').limit(3).first();
+        if (prevUserCommentItem) {
+            const value = textSimilarityDiff(handleRichTextInput(content), handleRichTextInput(prevUserCommentItem.content), 1);
+            if (value >= texCoincidenceRatio)
+                return res.status(403).json({error: 1, code: 'judgement.bad', message: 'Duplicate submission'});
+        }
+
         // auth complete, player found, store action into db
         const judgement = {
             type: 'judgement',
@@ -972,19 +1070,19 @@ async (req, res, next) => {
             toPlayerId: player.id,
             toOriginUserId: player.originUserId,
             toOriginPersonaId: player.originPersonaId,
-            cheatMethods: req.body.data.cheatMethods ? JSON.stringify(req.body.data.cheatMethods) : '[]',
-            judgeAction: req.body.data.action,
-            content: handleRichTextInput(req.body.data.content),
+            cheatMethods: cheatMethods ? JSON.stringify(cheatMethods) : '[]',
+            judgeAction: action,
+            content: handleRichTextInput(content),
             valid: 1,
             createTime: new Date(),
         };
         const insertId = (await db('comments').insert(judgement))[0];
         judgement.id = insertId;
-        const nextstate = await stateMachine(player, req.user, req.body.data.action);
+        const nextstate = await stateMachine(player, req.user, action);
         const stateChange = {prev: player.status, next: nextstate};
 
         player.status = nextstate;
-        player.cheatMethods = nextstate === 1 ? JSON.stringify(req.body.data.cheatMethods) : '[]';
+        player.cheatMethods = nextstate === 1 ? JSON.stringify(cheatMethods) : '[]';
         player.updateTime = new Date();
         player.commentsNum += 1;
 
@@ -995,11 +1093,12 @@ async (req, res, next) => {
             commentsNum: player.commentsNum,
             appealStatus: player.appealStatus ? '2' : null
         }).where({id: player.id});
-        judgement.cheatMethods = req.body.data.cheatMethods ? req.body.data.cheatMethods : [];
-        player.cheatMethods = nextstate === 1 ? req.body.data.cheatMethods : [];
+
+        judgement.cheatMethods = cheatMethods ? cheatMethods : [];
+        player.cheatMethods = nextstate === 1 ? cheatMethods : [];
 
         siteEvent.emit('action', {method: 'judge', params: {judgement, player, stateChange}});
-        return res.status(201).json({success: 1, code: 'judgement.success', message: 'thank you.'});
+        return res.status(200).json({success: 1, code: 'judgement.success', message: 'thank you.'});
     } catch (err) {
         next(err);
     }
@@ -1103,26 +1202,6 @@ async (req, res, next) => {
         next(err);
     }
 });
-
-router.get('/widget', verifyJWT, allowPrivileges(['admin', 'super', 'root', 'bot']), [
-        checkbody('id').optional().isString(),
-    ],
-    async (req, res, next) => {
-        try {
-            const validateErr = validationResult(req);
-            if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'widget.bad', message: validateErr.array()});
-
-            let renderStream = await playerWidget(req.query.id);
-
-            renderStream.on('data', function (data) {
-                res.writeHead('200', {'Content-Type': 'image/jpeg'});    //写http头部信息
-                res.end(data, 'binary');
-            });
-        } catch (err) {
-            next(err);
-        }
-    });
 
 /** @param {string} originName @param {string} originUserId @param {string} originPersonaId
  * @param originUserId

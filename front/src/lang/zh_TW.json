@@ -22,8 +22,8 @@
       }
     },
     "recentlyUpdated": "最近更新",
-    "reported": "舉報了",
     "reportNum": "總共舉報數",
+    "reported": "舉報了",
     "reports": "個人舉報",
     "role": "身份",
     "status": "狀態",
@@ -110,6 +110,7 @@
     "button": {
       "cancel": "取消",
       "commit": "提交",
+      "dealAppeal": "處理申訴",
       "insert": "插入",
       "next": "下一步",
       "prev": "上一步",
@@ -117,8 +118,7 @@
       "report": "舉報",
       "reset": "重置",
       "save": "保存",
-      "submit": "確認",
-      "dealAppeal": "處理申訴"
+      "submit": "確認"
     },
     "gamePlatforms": {
       "origin": "Origin",
@@ -140,12 +140,12 @@
       "blacklisted": "黑名單",
       "bot": "機器人",
       "dev": "開發組",
+      "freezed": "凍結用戶",
       "normal": "用戶",
       "root": "系統",
       "super": "超級管理員",
-      "freezed": "凍結用戶",
-      "volunteer": "社區志願者",
-      "test": "測試賬戶"
+      "test": "測試賬戶",
+      "volunteer": "社區志願者"
     },
     "status": {
       "0": "未處理",
@@ -227,13 +227,31 @@
   },
   "detail": {
     "appeal": {
+      "deal": {
+        "action": "申訴操作",
+        "admincontent": "管理回复內容",
+        "appealContent": "玩家申訴內容",
+        "btrLink": "BTR鏈接",
+        "farm": "刷槍申訴",
+        "firstPersonRecording": "第一人稱錄屏鏈接",
+        "moss": "moss自證申訴",
+        "mossDownloadUrl": "下載MOSS",
+        "mossUpload": "上傳moss",
+        "other": "其他類型申訴",
+        "stats": {
+          "accept": "申訴通過",
+          "fail": "申訴不通過",
+          "unprocessed": "申訴未處理"
+        },
+        "type": "申訴類型"
+      },
       "describe": "該舉報信息存在問題,我能自證或他人協助證明清白.",
       "info": {
         "changeName": "名稱變動",
+        "commentid": "評論ID",
         "content": "申訴內容",
         "originName": "玩家現在名稱",
-        "player": "玩家ID",
-        "commentid": "評論ID"
+        "player": "玩家ID"
       },
       "modal": {
         "auxiliaryProof": {
@@ -258,28 +276,10 @@
         "modalTitle": "規則"
       },
       "placeholder": {
+        "btrlink": "請填寫btr對局鏈接",
         "content": "請詳細填寫您申訴信息以便審核",
         "player": "請填寫玩家id",
-        "videolink": "請填寫視頻鏈接",
-        "btrlink": "請填寫btr對局鏈接"
-      },
-      "deal": {
-        "firstPersonRecording": "第一人稱錄屏鏈接",
-        "mossDownloadUrl": "下載MOSS",
-        "mossUpload": "上傳moss",
-        "btrLink": "BTR鏈接",
-        "appealContent": "玩家申訴內容",
-        "admincontent": "管理回复內容",
-        "action": "申訴操作",
-        "type": "申訴類型",
-        "moss":"moss自證申訴",
-        "farm": "刷槍申訴",
-        "other": "其他類型申訴",
-        "stats":{
-          "accept": "申訴通過",
-          "fail": "申訴不通過",
-          "unprocessed": "申訴未處理"
-        }
+        "videolink": "請填寫視頻鏈接"
       }
     },
     "info": {
@@ -401,9 +401,9 @@
     }
   },
   "forgetPassword": {
-    "resetSuccess": "恭喜完成重置 💐",
     "checkEmail": "請檢查您的郵箱，並點擊其中的驗證鏈接",
     "forgetUsername": "如果您忘記了BFBAN用戶名，請前往<a href='http://kook.top/wHwxhw'>bfban開發者社區</a>尋求幫助。注意，您可能會需要很複雜的找回過程",
+    "resetSuccess": "恭喜完成重置 💐",
     "steps": {
       "0": {
         "supplement": "核對賬戶",
@@ -532,25 +532,25 @@
       "form": {
         "allowDM": "是否接收聊天",
         "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
+        "changeNameLeft": "剩餘修改用戶名次數",
+        "createTime": "註冊時間",
+        "description": "用戶簡介",
         "introduction": "自我介紹",
         "language": "設置語言",
         "languageSyncDescribe": "設置此處選項，在登錄後同步程序本地語言，如果退出登錄將回退到本地程序所持久保存的語言",
+        "lastSigninIP": "最後登錄IP",
+        "modifyDescription": "修改用戶簡介",
+        "originEmail": "EA賬戶郵箱",
+        "originName": "EA賬戶名字",
+        "originPersonaId": "EA PID",
+        "originUserId": "EA UID",
         "privilege": "身份",
+        "privileges": "特權",
+        "registerIP": "註冊時IP",
         "showOrigin": "可見橘子信息",
         "showOriginDescribe": "是否讓你綁定的Origin在BFBAN可見",
-        "modifyDescription": "修改用戶簡介",
-        "description": "用戶簡介",
-        "privileges": "特權",
-        "changeNameLeft": "剩餘修改用戶名次數",
-        "username": "用戶名",
-        "lastSigninIP": "最後登錄IP",
-        "registerIP": "註冊時IP",
-        "createTime": "註冊時間",
         "signoutTime": "登出時間",
-        "originEmail": "EA賬戶郵箱",
-        "originPersonaId": "EA PID",
-        "originName": "EA賬戶名字",
-        "originUserId": "EA UID"
+        "username": "用戶名"
       },
       "modifyName": {
         "residueDegree": "目前剩餘修改名稱{changeNameLeft}次數",
@@ -597,9 +597,9 @@
     },
     "chat": {
       "control": "批量編輯",
+      "download": "下載",
       "load": "刷新",
       "look": "查看",
-      "download": "下載",
       "placeholder": "填寫發送的消息",
       "tabsList": {
         "form": {
@@ -675,14 +675,14 @@
     },
     "media": {
       "capacity": "容量狀態",
-      "title": "媒體庫",
+      "hint1": "每個賬戶每日都有上傳寬帶、文件數量、單個大小限制，但它會在下一個日期重置，但存在每個賬戶可用文件上傳數量，對於儲存要求不高文件可用其他網站網盤代替。",
       "maxFileNumber": "可上傳文件數量",
       "maxTrafficQuota": "文件最高大小",
-      "usedStorageQuota": "總儲存配額",
+      "prevResetTime": "重置限額日期",
+      "title": "媒體庫",
       "todayFileNumber": "今日已上傳文件",
       "todayTrafficQuota": "今日流量額度",
-      "prevResetTime": "重置限額日期",
-      "hint1": "每個賬戶每日都有上傳寬帶、文件數量、單個大小限制，但它會在下一個日期重置，但存在每個賬戶可用文件上傳數量，對於儲存要求不高文件可用其他網站網盤代替。"
+      "usedStorageQuota": "總儲存配額"
     },
     "meet": "歡迎回來{name}!",
     "subscribes": {
@@ -805,10 +805,10 @@
     "failed": "登錄失敗",
     "fillEverything": "請填寫規範",
     "form": {
+      "Feedback": "反饋問題",
       "forgetPasswordHint": "忘記密碼?",
       "password": "密碼",
       "submitHint": "沒有賬號？去註冊",
-      "Feedback": "反饋問題",
       "username": "用戶名/郵箱"
     },
     "loggedIn": "哎列？請先登出 (✿◡‿◡)",

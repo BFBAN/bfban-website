@@ -30,11 +30,11 @@
               <Tag>{{ i.type }}</Tag>
               <Time :time="i.createTime" type="date"></Time>
               :
-              <BusinessCard :id="i.byUserId">
+              <BusinessCard :id="i.byUserId" :showAdminUserInfo="true">
                 <b>{{ i.byUserId || 'N/A' }}</b>
               </BusinessCard>
               ->
-              <BusinessCard :id="i.byUserId">
+              <BusinessCard :id="i.byUserId" :showAdminUserInfo="true">
                 <b>{{ i.toUserId || 'N/A' }}</b>
               </BusinessCard>
               <div class="ivu-card-extra">

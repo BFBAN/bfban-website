@@ -67,6 +67,8 @@
             <chatPush v-else-if="adminMenuValue == 'chat_push'"></chatPush>
             <chatList v-else-if="adminMenuValue == 'chat_list'"></chatList>
 
+            <fileList v-else-if="adminMenuValue == 'file_list'"></fileList>
+
             <adminOperationLog v-else-if="adminMenuValue == 'admin_operation_log'"></adminOperationLog>
             <messageLog v-else-if="adminMenuValue == 'message_Log'"></messageLog>
             <adminOperation v-else-if="adminMenuValue == 'adminOperation'"></adminOperation>
@@ -91,6 +93,7 @@ import judgementLog from "@/views/admin/judgementLog";
 import adminOperation from "@/views/admin/adminCommentOperationLog";
 import chatPush from "@/views/admin/chatPush";
 import chatList from "@/views/admin/chatList";
+import fileList from "@/views/admin/file.vue"
 import PrivilegesTag from "@/components/PrivilegesTag";
 
 import {account_storage} from "@/assets/js";
@@ -136,6 +139,17 @@ export default new Application({
               disabled: false,
               privilege: ['root', 'dev'],
             }
+          ]
+        },
+        {
+          title: 'fileManagement',
+          child: [
+            {
+              title: 'files',
+              value: 'file_list',
+              disabled: false,
+              privilege: ['root', 'dev'],
+            },
           ]
         },
         {
@@ -193,7 +207,8 @@ export default new Application({
     chatPush,
     chatList,
     PrivilegesTag,
-    adminOperation
+    adminOperation,
+    fileList
   },
   created() {
     const {pagename} = this.$route.params;

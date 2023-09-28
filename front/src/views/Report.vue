@@ -195,6 +195,8 @@
                       <Textarea :placeholder="$t('report.info.description')"
                                 :index="index"
                                 :height="'520px'"
+                                :maxlength="60000"
+                                :showMaxlengthLabel="true"
                                 v-model="tabs.list[index].formItem.description">
                       </Textarea>
                   </Card>
@@ -318,7 +320,6 @@ import Captcha from "@/components/Captcha";
 
 import {api, http, http_token, voice, util, regular} from '../assets/js/index'
 
-import gameName from '/public/config/gameName.json'
 import Textarea from "@/components/Textarea.vue";
 import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";
@@ -448,7 +449,11 @@ export default new Application({
       const FROM = this.tabs.list[this.tabs.count];
 
       // 添加link
-      FROM.formItem.videoLink.splice(FROM.formItem.videoLink.length + 1, 0, '');
+      FROM.formItem.videoLink.splice(
+          FROM.formItem.videoLink.length + 1,
+          0,
+          ''
+      );
     },
     /**
      * 校验地址
@@ -480,9 +485,8 @@ export default new Application({
      * 同删除此标签
      */
     doCancel() {
-      if (this.tabs.list.length <= 1) {
-        return;
-      }
+      if (this.tabs.list.length <= 1) return;
+
       this.tabs.count = 0;
       this.tabs.list.splice(this.tabs.count, 1);
     },
@@ -492,32 +496,50 @@ export default new Application({
      * @returns {Promise<boolean>}
      */
     async doReport(index) {
-      if (this.$store.state.$userinfo && this.$store.state.$userinfo.origin.originUserId) {
-        // if(false) {
+      const that = this;
+      let formData = this.tabs.list[index];
+
+      try {
+        if (!this.$store.state.$userinfo && !this.$store.state.$userinfo.origin.originUserId) {
+          this.$Message.error({content: this.$i18n.t("report.messages.tipBind"), duration: 3});
+          setTimeout(() => {
+            that.$router.push({
+              path: '/profile/information'
+            })
+          }, 3000);
+
+          return;
+        }
+
         // that form
-        let formData = this.tabs.list[index];
         // check form data
         if (this.$refs['formValidate_' + index][0]) {
           this.$refs['formValidate_' + index][0].validate(async (valid) => {
-            if (valid) {
-              formData.load = true;
-
-              await this.handleReport(formData, index);
-              await this.refreshCaptcha();
-
-              formData.load = false;
-            } else {
-              this.$Message.error(this.$t("report.messages.videoBadFormat"))
+            if (!valid) {
+              that.$Message.error(this.$t("report.messages.videoBadFormat"))
+              return
             }
+
+            formData.load = true;
+
+            await that.handleReport(formData, index);
+            await that.refreshCaptcha();
+
+            formData.load = false;
           })
+          return;
         }
-      } else {
-        this.$Message.error({content: this.$i18n.t("report.messages.tipBind"), duration: 3});
+
+        this.$Message.error({content: this.$i18n.t("basic.tip.needBindEaAccount"), duration: 3});
         setTimeout(() => {
           this.$router.push({
             path: '/profile/information'
           })
         }, 3000)
+      } catch (err) {
+        this.$Message.error(err.toString());
+      } finally {
+        formData.load = false;
       }
     },
     /**
@@ -540,7 +562,7 @@ export default new Application({
 
       this.spinShow = true;
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         this.http.post(api["player_report"], {
           data: {
             data: {
@@ -559,42 +581,24 @@ export default new Application({
           if (d.success === 1) {
             this.tabs.list[index].statusOk = 1;
 
+            // play voice send
             this.voiceReportManagement.play('success');
 
-            this.$Message.success(this.$i18n.t("report.info.success")).then(() => {
+            this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+              message: d.message || ""
+            })).then(() => {
               this.$router.push({
                 name: "cheater",
                 params: {ouid: d.data.originPersonaId},
               });
             });
-          } else {
-            switch (d.code) {
-              case 'judgement.notFound':
-                this.$Message.error(this.$i18n.t('report.messages.originIdNotExist'));
-                // no such player
-                this.failedOfNotFound = true;
-                break;
-              case 'judgement.permissionDenied':
-                this.$Message.error(this.$i18n.t('report.messages.permissionDenied'));
-                break;
-              case 'originId':
-                this.$Message.error(
-                    this.$i18n.t("report.info.originId")
-                );
-
-                this.tabs.list[index].statusOk = -1;
-                break;
-              case 'captcha.bad':
-                this.tabs.list[index].formItem.captcha = '';
-                break;
-              default:
-                this.$Message.error("failed " + d.message);
-
-                this.tabs.list[index].statusOk = -1;
-            }
+            return;
           }
 
           this.tabs.list[index].statusMsg = d.message;
+          this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
         }).finally(() => {
           resolve();
           this.tabs.list[index].formItem.captcha = '';

@@ -302,14 +302,14 @@ async function sendMessage(from, to, type, content) {
     });
 }
 
-async function localeMessage(namepath = '', lang = 'en-US', params) {
+async function localeMessage(namepath = '', lang = 'en-US', params = {}) {
     let msgs = JSON.parse(await readFile(path.resolve(config.baseDir, './media/messages.json')));
     for (const i of namepath.split('.'))
         msgs = msgs ? msgs[i] : undefined;
     /** @type {string} */
     let text = msgs?.[lang] ? msgs[lang] : msgs?.['en-US'];
-    if (text)
-        Object.keys(params).forEach(i => {
+    if (text && params != null)
+        Object.keys(params ??= {}).forEach(i => {
             text = text
                 .replace(new RegExp(`{${i}}`, 'g'), params[i]);
         });

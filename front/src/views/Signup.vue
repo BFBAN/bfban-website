@@ -234,17 +234,23 @@ export default new Application({
 
           if (d.success === 1) {
             that.stepsIndex += 1;
-            that.$Message.success({
-              content: this.$i18n.t('signup.needVerify'),
+            this.$Message.success({
+              content: this.$t(`basic.tip['${d.code}']`, {
+                message: d.message || ""
+              }),
               duration: 10
             });
             return;
           }
 
-          this.callbackMessage(d);
+          const message = this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          });
+          this.serverReturnMessage = message;
+          this.$Message.error({content: message, duration: 5});
         }).catch(err => {
           this.$Message.error(err);
-          this.serverReturnMessage = this.$i18n.t('signup.failed');
+          this.serverReturnMessage = err.toString();
         }).finally(() => {
           this.spinShow = false;
 
@@ -276,47 +282,6 @@ export default new Application({
       if (stepsIndex)
         this.stepsIndex = 0;
     },
-
-    // 注册[Signup]类请求回调
-    // 消息国际化
-    callbackMessage(data) {
-      const that = this;
-
-      // 基础
-      switch (data.code) {
-        case "signup.needVerify": // 验证账户
-          that.$Message.info(this.$i18n.t('signup.needVerify'));
-          break;
-        case "signup.gameNotShowed": // 账户未找到战地系列
-          that.$Message.info(this.$i18n.t('signup.gameNotShowed'));
-          break;
-        case "signup.originBindingExist": // 橘子已绑定现有BFBAN账户
-          that.$Message.info(this.$i18n.t('signup.originBindingExist'));
-          break;
-        case "signup.originNotFound": // 橘子账户不存在
-          that.$Message.info(this.$i18n.t('signup.originNotFound'));
-          break;
-        case "signup.usernameExist": // 注册名称已存在
-          that.$Message.info(this.$i18n.t('signup.usernameExist'));
-          break;
-        case "signup.notImplement":
-        case "signup.bad":
-        case "signup.error":
-        default:
-          that.$Message.error(data.code);
-          that.serverReturnMessage = data.message || data.code;
-          break;
-      }
-
-      // 验证码
-      if (data.code.indexOf('captcha') >= 0) {
-        let captcha_code = data.code.split('.')[1];
-        let captcha_text = this.$i18n.t(`captcha.messages.${captcha_code}`);
-        if (captcha_code == 'gan') return;
-        that.$Message.error({content: captcha_text, duration: 6});
-        that.serverReturnMessage += `,${captcha_text}`;
-      }
-    }
   }
 });
 </script>

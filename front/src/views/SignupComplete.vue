@@ -98,54 +98,22 @@ export default new Application({
         if (d.success === 1) {
           this.verify.state = 1;
 
-          // setInterval(function () {
-          //   // dispatch 异步的
-          //   this.$store.dispatch('signin', d.data)
-          //     .then(() => {
-          //       // redirect
-          //       this.$router.push('/')
-          //     })
-          // }, 10000);
-
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
           return;
         }
 
         this.verify.state = -1;
-        this.callbackMessage(d);
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).catch(err => {
         this.verify.state = -1;
       }).finally(() => {
         this.verify.load = false;
       })
     },
-    // 注册[SignupVerify]类请求回调
-    // 消息国际化
-    callbackMessage(data) {
-      const that = this;
-
-      // 基础
-      switch (data.code) {
-        case "signup.notFound": // 验证账户
-          that.$Message.info(this.$i18n.t('signup.notFound'));
-          break;
-        case "signup.bad":
-        case "signup.error":
-        default:
-          this.$Message.error(data.message || data.code);
-          this.verify.load = -1;
-          this.verify.msg = data.message || data.code;
-          break;
-      }
-
-      // 验证码
-      if (data.code.indexOf('captcha') >= 0) {
-        let captcha_code = data.code.split('.')[1];
-        let captcha_text = this.$i18n.t(`captcha.messages.${captcha_code}`);
-        if (captcha_code == 'gan') return;
-        that.$Message.error({content: captcha_text, duration: 6});
-        that.backServiceMsg += `,${captcha_text}`;
-      }
-    }
   }
 });
 </script>

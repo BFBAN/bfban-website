@@ -8,9 +8,29 @@ const key = config.akismet.key;
 const domain = config.mail.domain.origin;
 const client = config.akismet.isEnable ? new AkismetClient({
     key,
-    bolg: domain,
+    blog: domain,
     isTest: config.akismet.debug
 }) : null;
+
+class SubmitSpamError extends Error {
+    constructor() {
+        super();
+    }
+}
+
+class SubmitSpamResult {
+    code = 404;
+    status = false;
+    message;
+
+    /** @param {{result:Map}} @returns {Promise<SubmitSpamResult>} **/
+    constructor(result = {}) {
+        this.code = result.statusCode;
+        if (result)
+            this.status = this.code >= 200 && this.code < 300;
+        this.message = result.text ??= "none"
+    }
+}
 
 // Verifying your Key
 async function verifyAkismetKey() {
@@ -44,37 +64,48 @@ async function checkSpam(comment) {
     }
 }
 
-// Submitting False Negatives
-async function submitSpam(comment) {
+/**
+ * Submitting False Negatives
+ * @param comment
+ * @returns {Promise<SubmitSpamResult>}
+ */
+async function submitSpam(spamFormData = SpamFormData()) {
     try {
-        if (!config.akismet.isEnable) return false;
+        if (!config.akismet.isEnable) return new SubmitSpamResult(result);
 
-        await client.submitSpam(comment);
+        var result = await client.submitSpam(spamFormData);
 
-        return true
+        return new SubmitSpamResult(result);
     } catch (err) {
-        logger.error('Something went wrong:' + err.message)
+        throw err;
     }
 }
 
 // packing
-function toSpam(req, spamType = 'none', content = '') {
-    let spam = {};
+class SpamFormData {
+    constructor(req, spamType = 'none', content = '') {
+        let spam = {};
 
-    if (!content) logger.info('Check content is missing, please check');
-    if (content) spam.content = handleRichTextInput(content) || '';
-    if (req.user.originEmail) spam.email = req.user.originEmail || '';
-    if (req.user.username) spam.name = req.user.username || '';
+        if (!content) logger.info('Check content is missing, please check');
+        if (content) spam.content = handleRichTextInput(content) || '';
+        if (req.user.originEmail) spam.email = req.user.originEmail || '';
+        if (req.user.username) spam.name = req.user.username || '';
 
-    return Object.assign({
-        ip: req.REAL_IP || req.user.attr.lastSigninIP || '0.0.0.0',
-        referer: req.headers['referer'] || '',
-        useragent: req.headers['user-agent'] || '',
-        // The type of comment (e.g. 'comment', 'reply', 'forum-post', 'blog-post')
-        type: spamType,
-        role: isAdmin(req.user.privilege),
-        isTest: config.akismet.debug,
-    }, spam);
+        const ip = req.REAL_IP || req.user.attr.lastSigninIP || '0.0.0.0';
+
+        spam = Object.assign({
+            ip,
+            bolg: domain,
+            referer: req.headers['referer'] || '',
+            useragent: req.headers['user-agent'] || '',
+            // The type of comment (e.g. 'comment', 'reply', 'forum-post', 'blog-post')
+            type: spamType,
+            role: isAdmin(req.user.privilege),
+            isTest: ['127.0.0.1', 'localhost'].includes(ip) ? true : config.akismet.debug,
+        }, spam)
+
+        return spam;
+    }
 }
 
 // The commentor's 'role'. If set to 'administrator', it will never be marked spam
@@ -88,5 +119,6 @@ export {
     checkSpam,
     submitSpam,
     verifyAkismetKey,
-    toSpam
+    SpamFormData,
+    SubmitSpamError,
 }

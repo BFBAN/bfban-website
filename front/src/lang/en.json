@@ -22,8 +22,8 @@
       }
     },
     "recentlyUpdated": "last updated",
-    "reported": "Reported",
     "reportNum": "Reports",
+    "reported": "Reported",
     "reports": "Personal reports",
     "role": "Role",
     "status": "Status",
@@ -110,6 +110,7 @@
     "button": {
       "cancel": "Cancel",
       "commit": "Commit",
+      "dealAppeal": "Handling of complaints",
       "insert": "Insert",
       "next": "Next step",
       "prev": "Previous step",
@@ -117,8 +118,7 @@
       "report": "Report user",
       "reset": "Reset",
       "save": "Save",
-      "submit": "Submit",
-      "dealAppeal": "Handling of complaints"
+      "submit": "Submit"
     },
     "gamePlatforms": {
       "origin": "Origin",
@@ -140,12 +140,12 @@
       "blacklisted": "Blacklisted user",
       "bot": "Bot",
       "dev": "Development Account",
+      "freezed": "user freeze",
       "normal": "Normal User",
       "root": "System",
       "super": "Super Admin",
-      "freezed": "user freeze",
-      "volunteer": "Community Volunteer",
-      "test": "Testing Account"
+      "test": "Testing Account",
+      "volunteer": "Community Volunteer"
     },
     "status": {
       "0": "Unprocessed",
@@ -227,13 +227,31 @@
   },
   "detail": {
     "appeal": {
+      "deal": {
+        "action": "Appeal operation",
+        "admincontent": "Admin appeal content",
+        "appealContent": "Player appeal content",
+        "btrLink": "BTR Link",
+        "farm": "Farm weapon appeal",
+        "firstPersonRecording": "First person screen recording link",
+        "moss": "Moss self-proof appeal",
+        "mossDownloadUrl": "Download Moss",
+        "mossUpload": "Upload Moss",
+        "other": "Other appeal type",
+        "stats": {
+          "accept": "Appeal passed",
+          "fail": "Appeal failed",
+          "unprocessed": "Appeal not processed"
+        },
+        "type": "Appeal type"
+      },
       "describe": "This report has a problem. I can prove that me or the player mentioned is innocent.",
       "info": {
         "changeName": "Name change",
+        "commentid": "Comment ID",
         "content": "Appeal details",
         "originName": "Player's current ID",
-        "player": "Player id",
-        "commentid": "Comment ID"
+        "player": "Player id"
       },
       "modal": {
         "auxiliaryProof": {
@@ -258,28 +276,10 @@
         "modalTitle": "Rules"
       },
       "placeholder": {
+        "btrlink": "Please fill out the btr matchup link",
         "content": "Please fill in detail of your appeal for review",
         "player": "Please fill in Player's ID",
-        "videolink": "Please fill in the video link",
-        "btrlink": "Please fill out the btr matchup link"
-      },
-      "deal": {
-        "firstPersonRecording": "First person screen recording link",
-        "mossDownloadUrl": "Download Moss",
-        "mossUpload": "Upload Moss",
-        "btrLink": "BTR Link",
-        "appealContent": "Player appeal content",
-        "admincontent": "Admin appeal content",
-        "action": "Appeal operation",
-        "type": "Appeal type",
-        "moss":"Moss self-proof appeal",
-        "farm": "Farm weapon appeal",
-        "other": "Other appeal type",
-        "stats":{
-          "accept": "Appeal passed",
-          "fail": "Appeal failed",
-          "unprocessed": "Appeal not processed"
-        }
+        "videolink": "Please fill in the video link"
       }
     },
     "info": {
@@ -401,9 +401,9 @@
     }
   },
   "forgetPassword": {
-    "resetSuccess": "The password reset is successful! 💐",
     "checkEmail": "Please check your email and click on the verification link",
     "forgetUsername": "If you forget your BFBAN username, please go to the <a href='http://kook.top/wHwxhw'> bfban developer community</a> for help. Note that you may need a complicated retrieval process.",
+    "resetSuccess": "The password reset is successful! 💐",
     "steps": {
       "0": {
         "supplement": "Account name",
@@ -532,25 +532,25 @@
       "form": {
         "allowDM": "Allow DMs",
         "allowDMdescribe": "Receive DMs from other people.",
+        "changeNameLeft": "Remaining Username Modification Times",
+        "createTime": "Register Time",
+        "description": "User Profile",
         "introduction": "About me",
         "language": "Languages",
         "languageSyncDescribe": "It will use the selected language while your logged in",
+        "lastSigninIP": "Last login IP",
+        "modifyDescription": "Modify User Profile",
+        "originEmail": "EA Account Email",
+        "originName": "EA Account Username",
+        "originPersonaId": "EA Account PersonaID",
+        "originUserId": "EA Account UserID",
         "privilege": "Indentity",
+        "privileges": "Privilege",
+        "registerIP": "Register IP",
         "showOrigin": "Show Orgin info",
         "showOriginDescribe": "Allow your connected orgin account to be shown on BFBAN",
-        "modifyDescription": "Modify User Profile",
-        "description": "User Profile",
-        "privileges": "Privilege",
-        "changeNameLeft": "Remaining Username Modification Times",
-        "username": "Username",
-        "lastSigninIP": "Last login IP",
-        "registerIP": "Register IP",
-        "createTime": "Register Time",
         "signoutTime": "Logout Time",
-        "originEmail": "EA Account Email",
-        "originPersonaId": "EA Account PersonaID",
-        "originName": "EA Account Username",
-        "originUserId": "EA Account UserID"
+        "username": "Username"
       },
       "modifyName": {
         "residueDegree": "You still have {changeNameLeft}chance to change name",
@@ -597,9 +597,9 @@
     },
     "chat": {
       "control": "Batch edit",
+      "download": "Download",
       "load": "Reload",
       "look": "Open chat",
-      "download": "Download",
       "placeholder": "Type message here",
       "tabsList": {
         "form": {
@@ -675,14 +675,14 @@
     },
     "media": {
       "capacity": "Capacity state",
-      "title": "Media library",
+      "hint1": "Each account has a daily upload bandwidth, the number of files, and a single size limit, but it will reset the next date, but there is a number of files available for each account to upload, and files with low storage requirements can be replaced by other websites.",
       "maxFileNumber": "Number of files that can be uploaded",
       "maxTrafficQuota": "Maximum file size",
-      "usedStorageQuota": "Total storage quota",
+      "prevResetTime": "Reset date limit",
+      "title": "Media library",
       "todayFileNumber": "The file has been uploaded today",
       "todayTrafficQuota": "Amount of traffic",
-      "prevResetTime": "Reset date limit",
-      "hint1": "Each account has a daily upload bandwidth, the number of files, and a single size limit, but it will reset the next date, but there is a number of files available for each account to upload, and files with low storage requirements can be replaced by other websites."
+      "usedStorageQuota": "Total storage quota"
     },
     "meet": "welcome back {name}! ",
     "subscribes": {
@@ -805,10 +805,10 @@
     "failed": "Login failed",
     "fillEverything": "Please fill in everything",
     "form": {
+      "Feedback": "Feedback Question",
       "forgetPasswordHint": "Forget Password?",
       "password": "Password",
       "submitHint": "Don't have account? Sign up",
-      "Feedback": "Feedback Question",
       "username": "Username/Email"
     },
     "loggedIn": "Please log out first (✿◡‿◡)",

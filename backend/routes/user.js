@@ -387,7 +387,10 @@ async (req, res, next) => {
 router.post('/signout', verifyJWT, /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
-        await db('users').update({signoutTime: new Date()}).where({id: req.user.id});
+        const result = await db('users').update({signoutTime: new Date()}).where({id: req.user.id});
+        if (!result)
+            return res.status(401).json({error: 1, code: 'logout.bad'});
+
         return res.status(200).json({success: 1, code: 'logout.success', message: 'bye~'});
     } catch (err) {
         next(err);
@@ -408,10 +411,27 @@ async function showUserInfo(req, res, next) {
         const user = await db.from('users').where({id: req.query.id, valid: 1}).first();
         if (!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
-        const reportnum = await db('comments')
+        const reportNum = await db('comments')
             .countDistinct({num: 'id'})
             .where({byUserId: user.id, type: 'report'})
             .first().then(r => r.num);
+        let statusNum = {};
+        let promisesStatusNum = [];
+        for (const status of [0, 1, 4]) {
+            promisesStatusNum.push(db('comments')
+                .join('players', 'comments.toPlayerId', 'players.id')
+                .select('players.status as status')
+                .countDistinct({num: 'players.id'})
+                .where({'comments.byUserId': user.id, "comments.type": 'report', 'players.status': status})
+                .first()
+                .then(r => r.num)
+                .then((r) => {
+                    return {[status]: r}
+                })
+            )
+        }
+        const statusNumResult = await Promise.all(promisesStatusNum);
+        statusNumResult.forEach(i => statusNum = Object.assign(statusNum, i));
         const data = {
             id: user.id,
             userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
@@ -427,11 +447,12 @@ async function showUserInfo(req, res, next) {
             attr: userShowAttributes(user.attr,
                 (req.user && req.user.id === user.id), // self, show private info
                 (req.user && userHasRoles(req.user, ['admin', 'super', 'root', 'dev']))), // no limit for admin
-            reportnum: reportnum,
+            reportnum: reportNum,
+            statusNum: statusNum,
             introduction: user.introduction,
         };
 
-        return res.status(200).json({success: 1, code: 'userInfo.success', data: data});
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'userInfo.success', data: data});
     } catch (err) {
         next(err);
     }

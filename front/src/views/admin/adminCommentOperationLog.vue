@@ -55,7 +55,7 @@
               <div>
                 <Time :time="i.createTime" type="date"></Time>
                 :
-                <BusinessCard :id="i.byUserId">
+                <BusinessCard :id="i.byUserId" :showAdminUserInfo="true">
                   <b>{{ i.username }}</b>
                 </BusinessCard>
                 <span> {{ $t('detail.info.judge') }} </span>

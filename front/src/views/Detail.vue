@@ -254,7 +254,7 @@
       <template v-if="!isFull">
         <br>
         <Card dis-hover>
-          <h2># {{ $t('detail.info.gameScores') }}</h2>
+          <h2><a href="javascript:void(0)">#</a> {{ $t('detail.info.gameScores') }}</h2>
           <br>
           <!-- 战绩链接 S -->
           <RecordLink ref="recordLink" v-show="cheater.originUserId"></RecordLink>
@@ -262,14 +262,13 @@
         </Card>
         <br>
         <Card id="timeline" style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
-          <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
+          <Row :gutter="5" slot="title" type="flex" justify="center" align="middle">
             <Col :xs="{span: 23, push: 1}" :lg="appeal.disable ? {span: 7, push: 0} : {span: 1, push: 0}"
                  class="mobile-hide">
               <template v-if="appeal.disable">
                 <Button @click="onLeftAppealPlan" size="small">
                   <Icon type="md-contract"/>
                 </Button>
-                {{ $t('detail.info.assistPppeal') }}
               </template>
               <template v-else>
                 <Button @click="onLeftAppealPlan" size="small">
@@ -324,7 +323,7 @@
               </Row>
             </Col>
           </Row>
-          <Row :gutter="20" type="flex">
+          <Row :gutter="5" type="flex">
             <Col :xs="{span: 24, push: 0, pull: 0}" :lg="appeal.disable ? {span: 17, push: 1} : {span: 24, push: 0} "
                  order="2" class="tabs-style">
               <div class="content">
@@ -381,7 +380,7 @@
                       <Dropdown :transfer="isMobile" placement="bottom-start" style="width: 100%">
                         <Row :gutter="16" type="flex" justify="center" align="middle">
                           <Col>
-                            {{ l.beforeUsername }}
+                            {{ l.beforeUsername || "N/A" }}
                           </Col>
                           <Col class="mobile-hide">
                             <Icon type="md-arrow-round-forward" size="20" style="opacity: .6"/>
@@ -390,7 +389,7 @@
                             <Icon type="md-arrow-round-forward" size="20" style="opacity: .6;transform: rotate(90deg)"/>
                           </Col>
                           <Col>
-                            <b>{{ l.nextUsername }}</b>
+                            <b>{{ l.nextUsername || "N/A" }}</b>
                           </Col>
                         </Row>
 
@@ -751,7 +750,7 @@
                       <!-- 申诉操作 -->
                       <template v-if="isLogin && isAdmin && l.type === 'banAppeal'">
                         <Button size="small" @click="openAppealDealModal(l.id)" :disabled="l.appealStatus == 'accept'">
-                          {{ $t('basic.button.dealAppeal') }}
+                          {{ $t('detail.appeal.dealAppeal') }}
                         </Button>
                         <Divider type="vertical"/>
                       </template>
@@ -806,7 +805,9 @@
                   <Textarea v-model="reply.content"
                             style="margin: 0 -16px;"
                             ref="replyTextarea"
-                            :height="'120px'"
+                            :height="'150px'"
+                            :maxlength="5000"
+                            :showMaxlengthLabel="true"
                             :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
                 </div>
                 <div class="ivu-card-body">
@@ -816,7 +817,7 @@
                              maxlength="4"
                              :placeholder="$t('captcha.title')">
                         <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                          <Captcha :id="'replyPlayerCaptcha'" ref="replyPlayerCaptcha"></Captcha>
+                          <Captcha :id="'replyCaptcha'" ref="replyCaptcha"></Captcha>
                         </div>
                       </Input>
                     </Col>
@@ -828,7 +829,7 @@
                                 :long="isMobile"
                                 :loading="replySpinShow"
                                 :disabled="!reply.content"
-                                @click.stop.prevent="onReply">
+                                @click.stop.prevent="onReply('default')">
                           {{ $t('basic.button.reply') }}
                         </Button>
                         <Button size="large" type="dashed">
@@ -892,7 +893,7 @@
             <h2 style="margin: 0 0 1rem 0;">
               <Row>
                 <Col flex="1">
-                  # {{ $t('detail.info.judgement') }}
+                  <a href="javascript:void(0)">#</a> {{ $t('detail.info.judgement') }}
                 </Col>
                 <Col class="mobile-hide">
                   <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
@@ -927,13 +928,23 @@
                 </Col>
                 <Col :xs="{span:24}" :lg="{span: 12}">
                   <FormItem v-show="['kill','guilt'].includes(verify.status)" :label="$t(`detail.judgement.methods`)">
-                    <Select v-model="verify.checkbox" multiple>
+                    <Select v-model="verify.checkbox" multiple :placeholder="$t(`detail.judgement.methods`)">
                       <Option v-for="method in cheatMethodsGlossary" :key="method.value"
                               :value="method.value"
                               :label="$t(`cheatMethods.${method.value}.title`)">
-                        <Tag>{{ $t(`cheatMethods.${method.value}.title`) }}</Tag>
-                        <Divider type="vertical"/>
-                        {{ $t(`cheatMethods.${method.value}.describe`) }}
+                        <Row :gutter="10">
+                          <Col>
+                            {{ $t(`cheatMethods.${method.value}.title`) }}
+                          </Col>
+                          <Col>
+                            <Poptip trigger="hover" transfer>
+                              <Icon type="md-help-circle"/>
+                              <div slot="content">
+                                {{ $t(`cheatMethods.${method.value}.describe`) }}
+                              </div>
+                            </Poptip>
+                          </Col>
+                        </Row>
                       </Option>
                     </Select>
                   </FormItem>
@@ -942,43 +953,14 @@
                   <FormItem>
                     <div slot="label">
                       {{ $t(`detail.judgement.content`) }}
-                      <Poptip trigger="hover" word-wrap placement="right-end" :padding="'20px 30px'">
-                        <Button type="dashed" size="small">
-                          <Icon type="ios-help-buoy"/>
-                        </Button>
-
-                        <div slot="content" span="24">
-                          <Row :gutter="60">
-                            <Col flex="1">
-                              <h3>
-                                <Icon type="md-done-all" color="#19be6b"/>
-                                {{ $t('detail.judgement.appropriateVerdict.title') }}
-                              </h3>
-                              <ol>
-                                <li>{{ $t('detail.judgement.appropriateVerdict.1') }}</li>
-                                <li>{{ $t('detail.judgement.appropriateVerdict.2') }}</li>
-                              </ol>
-                            </Col>
-                            <Col flex="1">
-                              <h3>
-                                <Icon type="ios-alert-outline" color="red"/>
-                                {{ $t('detail.judgement.inappropriateRuling.title') }}
-                              </h3>
-                              <ol>
-                                <li>{{ $t('detail.judgement.inappropriateRuling.1') }}</li>
-                                <li>{{ $t('detail.judgement.inappropriateRuling.2') }}</li>
-                                <li>{{ $t('detail.judgement.inappropriateRuling.3') }}</li>
-                              </ol>
-                            </Col>
-                          </Row>
-                        </div>
-                      </Poptip>
                     </div>
 
                     <Card :padding="0" dis-hover>
                       <Textarea v-model="verify.suggestion"
                                 ref="judgementTextarea"
                                 :height="'250px'"
+                                :maxlength="60000"
+                                :showMaxlengthLabel="true"
                                 :placeholder="$t(`detail.info.writeSomething`)"></Textarea>
 
                       <!-- Fast Reply S -->
@@ -1064,35 +1046,36 @@
         <div slot="header">
           {{ `${$t('basic.button.reply')}` }}
           <BusinessCard :id="timelineList[reply.toFloor].byUserId" v-if="timelineList[reply.toFloor]">
-            <b>{{ timelineList[reply.toFloor].username }}</b>({{ reply.toFloor }})
+            <b>{{ timelineList[reply.toFloor].username }}</b>({{ reply.toFloor + 1 }})
           </BusinessCard>
         </div>
-        <div v-if="isLogin">
-          <Form ref="replyForm">
-            <Textarea v-model="reply.content"
-                      :toolbar="['bold', 'link']"
-                      :height="'320px'"
-                      :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
-          </Form>
-        </div>
+        <Form ref="replyForm" style="margin: -17px;" v-if="isLogin">
+          <Textarea v-model="reply.miniModeContent"
+                    ref="replyMiniModeTextarea"
+                    :toolbar="['bold', 'link']"
+                    :height="'320px'"
+                    :maxlength="5000"
+                    :showMaxlengthLabel="true"
+                    :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+        </Form>
         <div v-else>{{ $t('detail.info.replyManual4') }}</div>
 
         <div slot="footer">
           <Row :gutter="30">
             <Col flex="1">
-              <Input type="text" v-model="reply.captcha"
+              <Input type="text" v-model="reply.miniModeCaptcha"
                      maxlength="4"
                      :placeholder="$t('captcha.title')">
                 <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                  <Captcha :id="'replyCommentsCaptcha'" ref="replyCommentsCaptcha"></Captcha>
+                  <Captcha :id="'replyMiniModeCaptcha'" ref="replyMiniModeCaptcha"></Captcha>
                 </div>
               </Input>
             </Col>
             <Col>
               <Button @click="cancelReply" v-voice-button>{{ $t('basic.button.cancel') }}</Button>
-              <Button @click="onReply"
+              <Button @click="onReply('mini')"
                       type="primary"
-                      :disabled="(!reply.content || !reply.captcha) || false"
+                      :disabled="(!reply.miniModeContent || !reply.miniModeCaptcha) || false"
                       :loading="replySpinShow"
                       v-voice-button>
                 {{ $t('basic.button.submit') }}
@@ -1307,13 +1290,14 @@ export default new Application({
         updateTime: time.appStart()
       },
       reply: {
+        miniModeContent: '',
+        miniModeCaptcha: '',
         cheaterId: '',
         userId: '',
         content: '',
         toFloor: '',
         toUserId: '',
         captcha: '',
-        captchaUrl: {},
       },
       fastReply: {
         selected: [],
@@ -1408,7 +1392,8 @@ export default new Application({
       // set Token Http mode
       this.http = http_token.call(this);
 
-      this.timeline.seeType = this.getSeeType();
+      this.timeline.seeType = this.getSeeType;
+
       if (page) {
         this.timeline.skip = Number(page);
         this.timeline.page = Number(page);
@@ -1535,7 +1520,13 @@ export default new Application({
      * 合并时间轴历史名称
      */
     onMergeHistoryName() {
+      const {page} = this.$route.query;
       let _timelineList = this.timelineListPreparedness;
+      let _timeStartAndEndTime = {
+        0: new Date(_timelineList[0].createTime).getTime(),
+        1: new Date(_timelineList[_timelineList.length - 1].createTime).getTime()
+      } // 当前页第一条与最后一条时间间距
+
       // 处理历史名称，放置对应对应位置
       for (let hisrotyIndex = 0; hisrotyIndex < this.cheater.history.length; hisrotyIndex++) {
         let nameHistoryTime = new Date(this.cheater.history[hisrotyIndex].fromTime).getTime();
@@ -1554,7 +1545,10 @@ export default new Application({
               hisrotyIndex >= 1 &&
               _timelineList[timeLineIndex].type != 'historyUsername' &&
               nameHistoryTime >= prevNameTimeListTime &&
-              nameHistoryTime <= nameTimeListTime) {
+              nameHistoryTime <= nameTimeListTime &&
+              page == 1 ? true : nameHistoryTime >= _timeStartAndEndTime[0] &&
+                  nameHistoryTime <= _timeStartAndEndTime[1]
+          ) {
             _timelineList.splice(timeLineIndex, 0, {
               type: 'historyUsername',
               beforeUsername: this.cheater.history[hisrotyIndex - 1]?.originName,
@@ -1713,6 +1707,13 @@ export default new Application({
           const d = res.data;
 
           if (d.success === 1) {
+            // 历史名称排序
+            d.data.history = d.data.history.sort(function (a, b) {
+              let aTime = new Date(a.fromTime).getTime();
+              let bTime = new Date(b.fromTime).getTime();
+              return aTime > bTime ? 1 : -1;
+            })
+
             this.cheater = d.data;
 
             this.$refs.recordLink.generateTable(this.cheater);
@@ -1740,18 +1741,18 @@ export default new Application({
      * 获取举报玩家 时间轴
      */
     async getTimeline() {
+      const that = this;
       this.timelineListPreparedness = [];
       this.timelineList = [];
 
       return new Promise(resolve => {
-        const that = this;
         this.spinShow = true;
 
         this.http.get(api["player_timeline"], {
           params: Object.assign({
             skip: (this.timeline.skip - 1) * this.timeline.limit,
             limit: this.timeline.limit
-          }, {personaId: this.getParamsIds('personaId')})
+          }, {personaId: this.getParamsIds('personaId'), random: +(new Date())})
         }).then(res => {
           let d = res.data;
 
@@ -1908,20 +1909,16 @@ export default new Application({
     onUpdateSeeType() {
       account_storage.updateConfiguration("timelineSeeType", this.timeline.seeType);
     },
-    getSeeType() {
-      let value = account_storage.getConfiguration("timelineSeeType");
-      if (typeof value == 'boolean' && !value) value = this.timeline.seeType;
-      return value;
-    },
     /**
      * 提交判决
      */
     async onJudgement() {
-      let {suggestion, status} = this.verify;
+      const {suggestion, status} = this.verify;
       const cheatMethods = this.verify.checkbox;
 
       if (this.verifySpinShow) return;
-      if ((['kill', 'guilt'].includes(status) && cheatMethods == '') || suggestion.trim() === '') {
+
+      if (['kill', 'guilt'].includes(status) && cheatMethods == '' || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
@@ -1936,12 +1933,11 @@ export default new Application({
       }
 
       // 额外事件
-      if (this.verify.isUpdateinformation) {
+      if (this.verify.isUpdateinformation)
         this.updateCheaterInfo()
-      }
-      if (this.verify.isSubscribeTrace) {
+      if (this.verify.isSubscribeTrace)
         this.onSubscribes()
-      }
+
 
       // 判决处理
       this.verifySpinShow = true;
@@ -1953,35 +1949,125 @@ export default new Application({
             action: this.verify.status,
             content: formatTextarea(suggestion),
           },
-          encryptCaptcha: this.reply.captchaUrl.hash,
-          captcha: this.reply.captcha,
         }
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           // reset verifyForm
           this.verify.status = '';
           this.verify.suggestion = '';
           this.verify.checkbox = [];
-          this.reply.captcha = '';
           this.cheater.status = status;
 
-          this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
           return;
         }
 
-        this.$Message.error(d.message || d.code);
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(() => {
-        this.getPlayerInfo();
-        this.getTimeline();
-
-        message.playSendVoice();
-
         this.verifySpinShow = false;
         this.verify.isSubscribeTrace = !this.verify.isSubscribeTrace;
         this.verify.isUpdateinformation = !this.verify.isUpdateinformation;
+
+        if (this.$refs.judgementTextarea)
+          this.$refs.judgementTextarea.updateContent("");
+
+        if (message.playSendVoice)
+          message.playSendVoice();
+
+        this.getPlayerInfo();
+        this.getTimeline();
       })
+    },
+    handleFileUpload(event) {
+      const files = event.target.files;
+      this.appeal.selectedFile = files[0]; // 设置 selectedFile 的值
+    },
+    /**
+     * 处理申诉
+     * @returns {Promise<void>}
+     */
+    async handleAppeal() {
+      const type = this.appeal.type;
+      const content = this.appeal.content || this.$refs.textareaAppealContent.editorContent;
+
+      if (!content) return;
+
+      this.appeal.load = true;
+
+      let postData = {
+        data: {
+          data: {
+            toPlayerId: this.cheater.id,
+            content,
+            appealStatus: 'unprocessed',
+            appealType: this.appeal.type
+          }
+        }
+      };
+      if (type === 'moss') {
+        Object.assign(postData.data.data, {
+          videoLink: this.appeal.VideoLink,
+          btrLink: this.appeal.btrLink
+        });
+      } else if (type === 'farm') {
+        Object.assign(postData.data.data, {
+          btrLink: this.appeal.btrLink
+        });
+      } // No additional data for 'none' type
+
+      try {
+        // First, upload the MOSS file if it exists
+        let mossDownloadUrl = '';
+        if (type === 'moss' && this.appeal.selectedFile) {
+          const formData = new FormData();
+          formData.append('file', this.appeal.selectedFile);
+          window.alert(this.appeal.selectedFile.name)
+
+          const config = {
+            headers: {
+              'Content-Type': this.appeal.selectedFile.type,
+              'Content-Length': this.appeal.selectedFile.size
+            }
+          }
+          const uploadResponse = await this.http.put(api["service_upload"], formData, config);
+          window.alert('Response:' + uploadResponse.data);
+
+          if (uploadResponse.data.success !== 1) {
+            this.$Message.error(uploadResponse.data.message || uploadResponse.data.code);
+            return;
+          }
+
+          const filename = uploadResponse.data.data.name; // 根据API的响应获取文件名
+          const mossDownloadUrl = `https://bfban.gametools.network/api/service/file?filename=${encodeURIComponent(filename)}`; // 拼接URL
+          Object.assign(postData.data.data, {mossDownloadUrl});
+        }
+
+        // Then, submit the appeal
+        const res = await this.http.post(api["player_banAppeal"], postData);
+
+        const d = res.data;
+
+        if (d.success === 1) {
+          this.$Message.success(d.message);
+        } else {
+          this.$Message.error(d.message || d.code);
+        }
+      } catch (error) {
+        this.$Message.error(error.message || error.code);
+      } finally {
+        this.appeal.load = false;
+
+        if (message.playSendVoice)
+          message.playSendVoice();
+
+        this.getTimeline();
+      }
     },
     /**
      * 申诉状态操作
@@ -2014,7 +2100,7 @@ export default new Application({
       })
     },
     /**
-     * 回复
+     * 打开回复窗口
      * 1. 对举报的回复 2. 对回复的回复
      * @param floor string 楼层
      * @param userId string 回复id
@@ -2027,77 +2113,108 @@ export default new Application({
       this.replyModal = true;
     },
     /**
-     * 触发评论取消时
+     * 触发小窗口评论取消时
      * 重置前端评论内容值
      */
-    cancelReply() {
-      this.replyModal = false;
-      this.reply = {
-        content: '',
-        captchaUrl: {
+    cancelReply(isOffMode = false) {
+      if (isOffMode)
+        this.replyModal = false;
+      this.reply = Object.assign(this.reply, {
+        miniModeContent: '',
+        miniModeCaptchaUrl: {
           content: '',
           hash: '',
         }
-      };
+      });
     },
     /**
      * 用户评论/回复
+     * @param replyType
      */
-    onReply() {
-      if (this.$store.state.$userinfo) {
-        if (!(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
-          this.$Message.error({content: this.$i18n.t("detail.messages.tipBind"), duration: 3});
-          setTimeout(() => {
-            this.$router.push({
-              path: '/profile/information'
-            })
-          }, 3000)
-          return
-        }
-      }
+    onReply(replyType = 'default') {
       const cheaterId = this.cheater.id;
-      let {content = ''} = this.reply;
-      let data = {
-        data: {
-          toPlayerId: cheaterId,
-          toCommentId: null,
-          content: formatTextarea(content),
-          appealStatus: this.cheater.appealStatus
-        },
-        encryptCaptcha: this.$refs.replyPlayerCaptcha.hash,
-        captcha: this.reply.captcha,
-      };
+      const {content = '', miniModeContent = ''} = this.reply;
+      let message = "";
+      let data = {};
+
+      if (this.$store.state.$userinfo && !(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
+        this.$Message.error({content: this.$i18n.t("basic.tip.needBindEaAccount"), duration: 3});
+        setTimeout(() => {
+          this.$router.push({
+            path: '/profile/information'
+          })
+        }, 3000)
+        return
+      }
 
       // 楼中楼
       // 回复 评论dbID
       if (this.reply.toFloor && Number(this.reply.toFloor) >= 0) {
         data.data.toCommentId = this.timelineList[this.reply.toFloor].id;
         data.encryptCaptcha = this.$refs.replyCommentsCaptcha.hash;
+
+      // 依照不同回复窗口模式来填充提交表单
+      switch (replyType) {
+        case "default":
+          data = {
+            data: {
+              toPlayerId: cheaterId,
+              content: formatTextarea(content),
+            },
+            encryptCaptcha: this.$refs.replyCaptcha.hash,
+            captcha: this.reply.captcha,
+          };
+          break;
+        case "mini":
+          data = {
+            data: {
+              toPlayerId: cheaterId,
+              toCommentId: this.timelineList[this.reply.toFloor].id,
+              content: formatTextarea(miniModeContent),
+            },
+            encryptCaptcha: this.$refs.replyMiniModeCaptcha.hash,
+            captcha: this.reply.miniModeCaptcha,
+          };
+          break;
       }
 
       this.replySpinShow = true;
+
       this.http.post(api["player_reply"], {data}).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
-          this.$Message.success(this.$i18n.t('detail.messages.replySuccess'));
+        if (d.success === 1) {
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
 
           this.replyModal = false;
           this.reply.toFloor = "";
-          this.reply = "";
+          this.reply.content = "";
+          this.reply.captcha = "";
+          this.reply.miniModeContent = "";
+          this.reply.miniModeCaptcha = "";
 
           // Actively update text
           if (this.$refs.replyTextarea)
             this.$refs.replyTextarea.updateContent('');
+          if (this.$refs.replyMiniModeTextarea)
+            this.$refs.replyMiniModeTextarea.updateContent('');
+
           return;
         }
 
-        this.$Message.error({content: d.message || d.code, duration: 3});
+        message = typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        });
+        this.$Message.error({content: message, duration: 3});
       }).finally(() => {
         this.replySpinShow = false;
 
-        message.playSendVoice();
-        this.cancelReply();
+        if (message.playSendVoice)
+          message.playSendVoice();
+
+        this.cancelReply(false);
         this.getPlayerInfo();
         this.getTimeline();
       });
@@ -2118,10 +2235,10 @@ export default new Application({
         data: {
           personaId: this.cheater.originPersonaId
         }
-      }).then(async res => {
+      }).then(res => {
         const d = res.data;
 
-        if (d.error == 0) {
+        if (d.error === 0) {
           const {cheaterGameName: originId, originUserId, avatarLink} = d.data.origin;
 
           this.cheater.originId = originId;
@@ -2132,13 +2249,13 @@ export default new Application({
           return;
         }
 
-        await this.getPlayerInfo()
-        await this.getTimeline()
-
-        this.$Message.success(d.code);
-      }).finally(() => {
+        this.$Message.success(d.message || d.code);
+      }).finally(async () => {
         this.updateUserInfospinShow = false;
         this.updateCheaterModal = false;
+
+        await this.getPlayerInfo()
+        await this.getTimeline()
       });
     },
     /**
@@ -2175,6 +2292,15 @@ export default new Application({
     },
   },
   computed: {
+    /**
+     * 时间轴可见类型，筛选
+     * @returns {*|boolean}
+     */
+    getSeeType() {
+      let value = account_storage.getConfiguration("timelineSeeType");
+      if (typeof value == 'boolean' && !value) value = this.timeline.seeType;
+      return value;
+    },
     isOnlySuper() {
       const {userinfo} = this.$store.state.user || {}
       const {privilege = []} = userinfo

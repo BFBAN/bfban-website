@@ -45,7 +45,9 @@ export default class NotificationApp {
             }
 
             // 播放声音
-            if (store.state.configuration['voice_message'] && store.state.configuration['voice_message'].state)
+            if (store.state.configuration['voice_message'] &&
+                store.state.configuration['voice_message'].state &&
+                message.playMessageVoice)
                 message.playMessageVoice();
 
             this.init()

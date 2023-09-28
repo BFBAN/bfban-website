@@ -227,11 +227,16 @@ export default new Application({
         if (d.success === 1) {
           this.verify.load = 3;
           this.stepsIndex = 4;
-          // this.forgetPassword.password = d.data.newpassword;
-        } else {
-          this.$Message.error(d.message);
-          this.verify.load = -1;
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
+          return;
         }
+
+        this.verify.load = -1;
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).catch((e) => {
         this.verify = {
           load: -1,
@@ -263,12 +268,15 @@ export default new Application({
 
         if (d.success === 1) {
           this.stepsIndex++;
-          this.$Message.success(this.$i18n.t('detail.messages.submitSuccess'));
-
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
           return;
         }
 
-        this.$Message.error(d.message || d.code);
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).catch(err => {
         this.$Message.error(err.toString());
       }).finally(() => {

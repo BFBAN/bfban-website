@@ -1,12 +1,14 @@
 import http from 'axios';
 import Conf from './conf';
+import router from "../../router/index";
+import {account_storage} from "@/assets/js";
 import store from "@/store";
 
 export default class Http extends Conf {
     GET = 'get';
     POST = 'post';
     PUT = 'put';
-    DEL = 'del';
+    DELETE = 'delete';
     //..
 
     GETURL = {protocol: '', request: ''};
@@ -28,11 +30,6 @@ export default class Http extends Conf {
         super.initConf();
 
         this.NODE = process.env.NODE_ENV || 'development';
-        this.HTTP.interceptors.request.use(config => {
-            return config
-        }, error => {
-            return Promise.reject(error)
-        })
     }
 
     location = () => {
@@ -130,6 +127,26 @@ export default class Http extends Conf {
         let result = await this.HTTP({
             url: _url,
             method: this.PUT,
+            headers: data.headers,
+            params: data.params,
+            data: data.data,
+        })
+
+        return result;
+    }
+
+    /**
+     * delete 请求
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    async delete(url = '', data = {data: {}, params: {}}) {
+        const _url = this.globalUrl() + url;
+
+        this.HTTP.headers = {...this.HTTP.headers, ...data.headers};
+
+        let result = await this.HTTP({
+            url: _url,
+            method: this.DELETE,
             headers: data.headers,
             params: data.params,
             data: data.data,

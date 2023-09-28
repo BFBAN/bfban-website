@@ -36,6 +36,22 @@
         <Card dis-hover>
           <p>{{ userInfo.introduction ? userInfo.introduction : '(✿◡‿◡)' }}</p>
         </Card>
+        <template v-if="isLogin && isAdmin && showAdminUserInfo">
+          <br>
+          <Card dis-hover>
+            <Row>
+              <Col flex="1">
+                <Icon type="md-eye" size="17"/>
+              </Col>
+              <Col><PrivilegesTag :data="['admin', 'super', 'root', 'dev']"></PrivilegesTag></Col>
+            </Row>
+            <br>
+            <p><b>User Orgin:</b></p>
+            <code type="json" style="width: 100%; white-space: pre-line" v-if="userInfo.origin">{{userInfo.origin}}</code>
+            <p><b>User Attr:</b></p>
+            <code type="json" style="width: 100%; white-space: pre-line" v-if="userInfo.attr">{{userInfo.attr}}</code>
+          </Card>
+        </template>
         <br>
         <Row>
           <Col flex="auto"></Col>
@@ -65,12 +81,17 @@
 </template>
 
 <script>
-import {api, http, storage} from '../assets/js/index';
+import {api, http, http_token, storage} from '../assets/js/index';
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
+import Application from "@/assets/js/application";
 
-export default {
+export default new Application({
   props: {
+    showAdminUserInfo: {
+      type: Boolean,
+      default: false,
+    },
     width: {
       type: Number,
       default: 400
@@ -91,6 +112,10 @@ export default {
     }
   },
   components: {PrivilegesTag},
+  created() {
+    this.http = http_token.call(this);
+    this.type = this.isAdmin ? "admin" : "user";
+  },
   methods: {
     /**
      * 获取用户信息
@@ -121,7 +146,29 @@ export default {
             }
           }).then(res => {
             const d = res.data;
-            if (d.success == 1) {
+            if (d.success === 1) {
+              this.userInfo = d.data;
+
+              this.localBusinessMap[this.userInfo.id] = this.userInfo;
+
+              storage.session().set(name, this.localBusinessMap);
+            } else {
+              this.catch();
+            }
+          }).catch(() => {
+            this.loadErr = true;
+          }).finally(() => {
+            this.spinShow = false;
+          })
+          break;
+        case "admin":
+          this.http.get(api["user_info4admin"], {
+            params: {
+              id: this.id,
+            }
+          }).then(res => {
+            const d = res.data;
+            if (d.success === 1) {
               this.userInfo = d.data;
 
               this.localBusinessMap[this.userInfo.id] = this.userInfo;
@@ -139,7 +186,7 @@ export default {
       }
     }
   }
-}
+})
 </script>
 
 <style lang="less">

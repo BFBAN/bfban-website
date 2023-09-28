@@ -91,14 +91,14 @@
           <FormItem :label="$t('profile.account.form.language')">
             <Row>
               <Col>
-                <Checkbox v-model="langLoaclSync" @on-change="switchLangLocalSync"></Checkbox>
+                <Checkbox v-model="langLocalSync" @on-change="switchLangLocalSync"></Checkbox>
               </Col>
               <Col flex="1">
                 <Select v-model="formItem.attr.language"
                         class="switch-language"
                         prefix="md-globe"
                         placement="top-end"
-                        :disabled="!langLoaclSync"
+                        :disabled="!langLocalSync"
                         @on-change="switchLanguage">
                   <Option v-for="item in languages" :value="item.name" :key="item.name" :disabled="item.ignoreSave">
                     {{ item.label }}
@@ -106,7 +106,7 @@
                 </Select>
               </Col>
             </Row>
-            <Alert show-icon v-if="langLoaclSync">{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
+            <Alert show-icon v-if="langLocalSync">{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
           </FormItem>
         </Col>
         <Col span="12">
@@ -129,13 +129,17 @@
             <Col :xs="{span: 0}" :lg="{span: 20}">
             </Col>
             <Col :xs="{span: 24}" :lg="{span: 4}">
-              <Button type="primary" long :loading="formLoad" @click="onSave">
+              <Button type="primary" long :loading="formLoad" :disabled="userInfoLoad" @click="onSave">
                 {{ $t("basic.button.save") }}
               </Button>
             </Col>
           </Row>
         </Card>
       </Affix>
+
+      <Spin size="large" fix v-show="userInfoLoad">
+        <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+      </Spin>
     </Form>
 
     <!-- 修改名称 S -->
@@ -260,8 +264,9 @@ export default {
     return {
       privileges: [],
       languages: [],
-      formLoad: false,
-      langLoaclSync: false,
+      userInfoLoad: false, // 用户信息获取状态
+      formLoad: false, // 表单提交状态
+      langLocalSync: false, // 用户信息保存语言是否同步开关
 
       modal_changePassword: {
         load: false,
@@ -313,7 +318,9 @@ export default {
       }).then(res => {
         const d = res.data;
         if (d.success === 1) {
-          this.$Message.success(d.message);
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
 
           this.$store.dispatch('signout').then(() => {
             this.signout();
@@ -325,7 +332,9 @@ export default {
           return;
         }
 
-        this.$Message.error(d.message);
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(() => {
         this.modal_changePassword.load = false;
       });
@@ -371,14 +380,18 @@ export default {
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.modal_setusername.index = 2;
-          this.$Message.success(d.code);
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
           return;
         }
 
         this.modal_setusername.index = 0;
-        this.$Message.error(d.message || d.code);
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(async () => {
         this.modal_setusername.load = false;
         this.usernameCaptcha = "";
@@ -403,14 +416,20 @@ export default {
         const d = res.data;
 
         if (d.success === 1) {
-
           // 同步本地语言
           if (d.data.attr.language) {
             this.$store.dispatch('setLang', d.data.attr.language);
           }
 
-          this.$Message.success(d.code);
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
+          return;
         }
+
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(() => {
         this.formLoad = false;
       })
@@ -419,6 +438,8 @@ export default {
      * 获取用户信息
      */
     async getUserinfo() {
+      this.userInfoLoad = true;
+
       return new Promise(resolve => {
         this.http.get(api["user_me"], {}).then(res => {
           const d = res.data;
@@ -429,6 +450,8 @@ export default {
             this.formItem = Object.assign(this.formItem, d.data);
           }
         }).finally(() => {
+          this.userInfoLoad = false;
+
           this.checkLangLocalSync();
           resolve();
         })
@@ -439,10 +462,10 @@ export default {
      * 是否同步再登录后同步语言
      */
     switchLangLocalSync(val) {
-      account_storage.updateConfiguration('langLoaclSync', this.langLoaclSync);
+      account_storage.updateConfiguration('langLocalSync', this.langLocalSync);
     },
     checkLangLocalSync() {
-      this.langLoaclSync = account_storage.getConfiguration('langLoaclSync');
+      this.langLocalSync = account_storage.getConfiguration('langLocalSync');
     }
   },
   computed: {

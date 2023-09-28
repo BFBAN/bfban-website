@@ -2,14 +2,8 @@
   <div class="container">
     <div class="content notFound" align="center">
       <div class="content-main">
-        <h1>404</h1>
-        <h4>{{ $t("basic.tip.notFound") }}</h4>
-        <br>
-        <Row type="flex" justify="center" align="middle">
-          <Col>
-            <a href="http://kook.top/wHwxhw">{{ $t('signin.form.Feedback') }}</a>
-          </Col>
-        </Row>
+        <Icon type="md-alert" size="100" />
+        <h2>{{ $t("basic.tip.notFound") }}</h2>
       </div>
     </div>
   </div>

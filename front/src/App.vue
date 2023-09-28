@@ -75,7 +75,7 @@ export default {
       }
 
       // load lang
-      if (!selectLang && account_storage.getConfiguration('langLoaclSync')) return;
+      if (!selectLang && account_storage.getConfiguration('langLocalSync')) return;
       this.$store.dispatch('setLang', selectLang);
     },
     /**
@@ -88,7 +88,7 @@ export default {
           if (d.success === 1) {
             // set userinfo
             this.$store.dispatch('setUserInfo', d.data);
-            if (account_storage.getConfiguration('langLoaclSync'))
+            if (account_storage.getConfiguration('langLocalSync'))
               this.$store.dispatch('setLang', d.data.attr.language);
           }
         })

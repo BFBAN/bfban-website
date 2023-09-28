@@ -20,6 +20,7 @@ export default class Api {
             "user_message": "message",
             "user_message_mark": "message/mark",
             "user_info": "user/info",
+            "user_info4admin": "user/info4admin",
             "user_me": "user/me",
             "user_forgetPassword": "user/forgetPassword",
             "user_forgetPasswordVerify": "user/forgetPasswordVerify",
@@ -50,6 +51,7 @@ export default class Api {
             "service_myStorageQuota": "service/myStorageQuota",
             "service_myFiles": "service/myFiles",
             "service_file": "service/file",
+            "service_files": "service/files",
             "service_upload": "service/upload",
             "service_uploadBigFile": "service/uploadBigFile",
 

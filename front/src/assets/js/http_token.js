@@ -5,6 +5,8 @@
 
 import http from './http';
 import store from '@/store'
+import {account_storage} from "@/assets/js/index";
+import router from "@/router";
 
 export default class http_token extends http {
   THAT;
@@ -12,6 +14,21 @@ export default class http_token extends http {
   constructor(that) {
     super();
     this.THAT = that;
+
+    this.HTTP.interceptors.response.use(response => response, error => {
+      const {code = "none", message = ""} = error.response.data;
+
+      // 无效令牌
+      let userError = ["user.invalid", "user.tokenExpired", "user.tokenClientException"]
+      if (code.constructor(userError)) {
+        account_storage.clearAll()
+        store.dispatch('signout').then(() => {
+          router.push('/signin');
+        });
+      }
+
+      return Promise.reject(error)
+    });
   }
 
   call (t) {
@@ -55,5 +72,11 @@ export default class http_token extends http {
     this.CONF = await super.initConf();
 
     return super.put(url, this.setToken(data));
+  }
+
+  async delete(url = '', data = {data: {}, params: {}}) {
+    this.CONF = await super.initConf();
+
+    return super.delete(url, this.setToken(data));
   }
 }
