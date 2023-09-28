@@ -1,45 +1,18 @@
 <template>
   <div v-if="$store.state.configuration.subscribes">
-    <Row :gutter="20">
-      <Col flex="auto" >
-        <RadioGroup
-            class="game-type"
-            v-model="gameName"
-            type="button">
-          <Radio label="all" value="all">
-            {{ $t('basic.games.all') }}
-          </Radio>
-          <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
-                 :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
-                 :class="gameName == i.value ? 'gametype-select' : ''">
-            <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
-            <span v-else>{{ i.full_name }}</span>
-          </Radio>
-        </RadioGroup>
-      </Col>
-    </Row>
     <Row :gutter="10" class="history-buttons" type="flex" justify="center">
       <Col flex="1">
         <Checkbox v-model="checkboxAll" :disabled="list.length <= 0" @on-change="onCheckboxAll"></Checkbox>
-        <Divider type="vertical" />
+        <Divider type="vertical"/>
         <Button @click="onDelete" :disabled="list.length <= 0" size="small">
-          <Icon type="md-trash" />
+          <Icon type="md-trash"/>
         </Button>
       </Col>
       <Col>
-        {{ list.length }} / 100
-        <Divider type="vertical" />
-        <Select size="small" v-model="statusName" :disabled="listCalcStatistics <= 0" style="width: 150px">
-          <Option value="-1">
-            {{ $t("basic.status.all") }}
-          </Option>
-          <Option v-for="status in cheaterStatus" :value="status.value" :key="status.value">
-            {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
-          </Option>
-        </Select>
-        <Divider type="vertical" />
-        <Button @click="onForcedUpdate" size="small" :loading="load">
-          <Icon type="md-refresh" />
+        {{ list.length }} / 5000
+        <Divider type="vertical"/>
+        <Button @click="getSubscribes" size="small" :loading="load">
+          <Icon type="md-refresh"/>
         </Button>
       </Col>
     </Row>
@@ -102,8 +75,24 @@
         </Row>
       </div>
     </div>
-
     <div v-if="list.length <= 0">{{ $t('basic.tip.notContent') }}</div>
+
+    <br>
+    <Row>
+      <Col :xs="{span: 23, push: 1}" :lg="{span: 24, push: 0}">
+        <Page class="page"
+              size="small"
+              show-sizer
+              show-total
+              show-elevator
+              @on-change="handlePageChange"
+              @on-page-size-change="handlePageSizeChange"
+              :page-size="limit"
+              :current="skip"
+              :total="total"/>
+      </Col>
+    </Row>
+
   </div>
   <div v-else>
     Disable Component
@@ -126,6 +115,10 @@ export default {
       load: false,
       list: [],
       checkboxAll: false,
+
+      total: 0,
+      skip: 1,
+      limit: 10,
     }
   },
   created() {
@@ -137,29 +130,30 @@ export default {
     /**
      * 取得订阅列表
      */
-    getSubscribes () {
-      let loaclData = storage.get('user.subscribes');
-
+    getSubscribes() {
+      const {skip, limit} = this;
       if (!this.$store.state.configuration.subscribes) return;
 
-      if (loaclData.code >= 0) {
-        loaclData.data.value.forEach(async i => {
-          this.list.push(await player_storage.query(i))
-        })
-      }
-    },
-    /**
-     * 强制更新
-     */
-    async onForcedUpdate () {
-      this.load = true;
-      await player_storage.onForcedUpdate();
-      this.load = false;
+      this.http.post(api["user_subscribes"], {
+        data: {
+          skip: (skip || 1) - 1,
+          limit: limit,
+        }
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success == 1) {
+          this.list = d.data;
+          this.total = d.total;
+        }
+      }).finally(() => {
+
+      });
     },
     /**
      * 批量多选
      */
-    onCheckboxAll () {
+    onCheckboxAll() {
       let array = this.list;
       for (let i = 0; i < array.length; i++) {
         this.list[i]['checkbox'] = this.checkboxAll
@@ -168,34 +162,31 @@ export default {
     /**
      * 删除
      */
-    onDelete () {
+    onDelete() {
       let array = this.list;
-      let _storage = storage.get('viewed');
+      let subscribesArray = array.filter(i => i["checkbox"]).map(i => i.id);
 
-      if (_storage.data && _storage.data.value) {
-        _storage = { data: {value: []} }
-      }
+      if (subscribesArray.length > 0)
+        this.http.post(api["user_subscribes_delete"], {
+          data: {playerIds: subscribesArray}
+        }).then(res => {
+          const d = res.data;
 
-      for (let i = 0; i < array.length; i++) {
-        if (this.list[i]['checkbox'] && _storage.code >= 0) {
-          _storage.data.value.splice(
-              _storage.data.value.indexOf(this.list[i].id),
-              1
-          )
-        }
-      }
-
-      if (_storage.data.value)
-        storage.set('viewed', _storage.data.value);
+          if (d.success == 1) {
+            this.list = this.list.filter(i => !subscribesArray.includes(i.id));
+          }
+        });
+    },
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getSubscribes();
+    },
+    handlePageChange(num) {
+      this.skip = num;
+      this.getSubscribes();
     }
   },
-  computed: {
-    listCalcStatistics () {
-      let count = 0;
-      this.list.forEach(i => i.data.forEach(j => count+=1));
-      return count;
-    }
-  }
+  computed: {}
 }
 </script>
 

@@ -224,7 +224,7 @@
                     <Col flex="1">
                       <Select v-model="editPrivilegesForm.roleName">
                         <Option v-for="(i, index) in editPrivilegesForm.role" :value="i" :key="index">
-                          {{ $t('basic.privilege.' + i) }}
+                          <Tag :color="i">{{ $t('basic.privilege.' + i) }}</Tag>
                         </Option>
                       </Select>
                     </Col>

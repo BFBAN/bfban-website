@@ -452,7 +452,11 @@ async function showUserInfo(req, res, next) {
             introduction: user.introduction,
         };
 
-        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'userInfo.success', data: data});
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+            success: 1,
+            code: 'userInfo.success',
+            data: data
+        });
     } catch (err) {
         next(err);
     }

@@ -1463,7 +1463,8 @@ export default new Application({
       cheater: {
         originId: '',
         createTime: time.appStart(),
-        updateTime: time.appStart()
+        updateTime: time.appStart(),
+        isSubscribes: false
       },
       reply: {
         miniModeContent: '',
@@ -1750,64 +1751,51 @@ export default new Application({
       this.timelineList = _timelineList;
     },
     /**
-     * 追踪此玩家
-     * 此项操作会存进账户配置字段内
+     * 获取追踪状态
      */
-    onSubscribes() {
-      let subscribesLocal = storage.get('user.subscribes');
-      let subscribesArray = [];
-      let isSubscribes = false;
+    getIsSubscribes() {
+      const {id} = this.cheater;
 
-      if (subscribesLocal.code < 0) {
-        subscribesLocal = {data: {value: []}};
-      }
-
-      let localdata = subscribesLocal.data.value;
-      subscribesArray = subscribesArray.concat(localdata);
-
-      // 校对本地是否已订阅
-      if (
-          subscribesLocal.code == 0 &&
-          localdata.length >= 0 &&
-          localdata.includes(this.cheater.id)
-      ) {
-        // 若存在触发相同，则移除
-        localdata.splice(localdata.indexOf(this.cheater.id), 1);
-        isSubscribes = false;
-      } else {
-        // 添加
-        isSubscribes = true;
-        subscribesArray.push(this.cheater.id);
-      }
+      if (!this.isLogin) return;
 
       this.subscribes.load = true;
-      this.http.post(api["user_me"], {
-        data: {
-          data: {subscribes: subscribesArray}
-        }
+      this.http.post(api["user_isSubscribes"], {
+        data: {id}
       }).then(res => {
         const d = res.data;
-
-        if (d.success == 1) {
-          storage.set('user.subscribes', subscribesArray);
-        }
-      }).finally(() => {
+        if (res.data.success == 1)
+          this.subscribes.static = d.data;
+      }).finally((err) => {
         this.subscribes.load = false;
-        this.subscribes.static = isSubscribes;
       });
     },
     /**
-     * 检查用户对玩家订阅状态
+     * 追踪此玩家
+     * 此项操作会存进账户配置字段内
      */
-    checkPlayerSubscribes() {
-      const subscribesLocal = storage.get('user.subscribes');
-      if (subscribesLocal.code < 0) return false;
+    async onSubscribes() {
+      this.subscribes.load = true;
 
-      subscribesLocal.data.value.filter(i => {
-        if (i == this.cheater.id) {
-          this.subscribes.static = true;
-        }
-      });
+      switch (this.subscribes.static) {
+        case false:
+          await this.http.post(api["user_subscribes_add"], {
+            data: {playerIds: [this.cheater.id]}
+          }).then(res => {
+            if (res.data.success == 1)
+              this.subscribes.static = true;
+          });
+          break;
+        case true:
+          await this.http.post(api["user_subscribes_delete"], {
+            data: {playerIds: [this.cheater.id]}
+          }).then(res => {
+            if (res.data.success == 1)
+              this.subscribes.static = false;
+          });
+          break;
+      }
+
+      this.subscribes.load = false;
     },
     /**
      * 更新游览值
@@ -1878,7 +1866,7 @@ export default new Application({
 
         this.cheater = {};
 
-        this.http.get(api["cheaters"], {params}).then(res => {
+        http.get(api["cheaters"], {params}).then(res => {
           const d = res.data;
 
           if (d.success === 1) {
@@ -1905,7 +1893,7 @@ export default new Application({
           this.$Message.info(this.$t('basic.tip.notFound'));
         }).finally(() => {
           this.onViewed();
-          this.checkPlayerSubscribes();
+          this.getIsSubscribes();
           this.spinShow = false;
 
           resolve()
@@ -2131,7 +2119,6 @@ export default new Application({
         this.updateCheaterInfo()
       if (this.verify.isSubscribeTrace)
         this.onSubscribes()
-
 
       // 判决处理
       this.verifySpinShow = true;
