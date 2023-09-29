@@ -221,7 +221,7 @@ export default new Application({
       this.http.get(api["admin_searchUser"], {
         params: {
           name: queryUserName,
-          skip: this.skip - 1,
+          skip: (this.skip - 1) * this.limit,
           limit: this.limit,
           order: this.order,
           parameter: 'username',
