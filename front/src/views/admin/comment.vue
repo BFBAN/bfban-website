@@ -336,7 +336,7 @@ export default new Application({
 
       if (!id) return;
 
-      this.http.get(api['admin_commentItem'], {
+      this.http.get(api['player_timeline_item'], {
         params: {
           id: this.searchCommentValue
         }
@@ -362,7 +362,7 @@ export default new Application({
       this.http.get(api['admin_commentAll'], {
         params: {
           type: this.typeValue,
-          skip: this.skip - 1,
+          skip: (this.skip - 1) * this.limit,
           limit: this.limit,
           order: this.order
         }

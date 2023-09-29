@@ -99,7 +99,7 @@ export default {
       this.http.get(api['admin_judgementLog'], {
         params: {
           limit: this.limit,
-          skip: this.skip,
+          skip: (this.skip - 1) * this.limit,
           total: this.total,
         }
       }).then(res => {
