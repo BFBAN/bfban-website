@@ -336,7 +336,7 @@ export default new Application({
 
       if (!id) return;
 
-      this.http.get(api['admin_commentItem'], {
+      this.http.get(api['player_timeline_item'], {
         params: {
           id: this.searchCommentValue
         }
