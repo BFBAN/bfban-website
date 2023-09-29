@@ -194,24 +194,13 @@
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
                   <Card :padding="0" dis-hover>
-                      <Textarea :placeholder="$t('report.info.description')"
-                                :index="index"
-                                :height="'520px'"
-                                :maxlength="60000"
-                                :showMaxlengthLabel="true"
-                                v-model="tabs.list[index].formItem.description">
-                      </Textarea>
-                  </Card>
-
-                  <br>
-
-                  <Card :padding="0" dis-hover class="timeline-description"
-                        v-if="tabs.list[index].formItem.description">
-                    <Html :html="tabs.list[index].formItem.description" :data="{
-                      'videoLink': tabs.list[index].formItem.videoLink,
-                      'selfUserName': 'selfUserName',
-                      'playerUserName': 'playerUserName'
-                    }"></Html>
+                        <Textarea :placeholder="$t('report.info.description')"
+                                  :index="index"
+                                  :height="'520px'"
+                                  :maxlength="60000"
+                                  :showMaxlengthLabel="true"
+                                  v-model="tabs.list[index].formItem.description">
+                        </Textarea>
                   </Card>
                 </FormItem>
               </Card>
@@ -326,6 +315,8 @@ import Textarea from "@/components/Textarea.vue";
 import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";
 import Promise from "lodash/_Promise";
+import Empty from "@/components/Empty.vue";
+import HtmlWidget from "@/components/HtmlWidget.vue";
 
 export default new Application({
   data() {
@@ -341,7 +332,7 @@ export default new Application({
       cheatMethodsGlossary: [],
     };
   },
-  components: {Textarea, Html, OcrWidget, Captcha},
+  components: {Textarea, Html, HtmlWidget, OcrWidget, Captcha, Empty},
   created() {
     const message = store.state.configuration['voice_message']
 

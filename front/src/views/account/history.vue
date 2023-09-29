@@ -10,8 +10,8 @@
           </Button>
         </Col>
         <Col>
-          <Button @click="getHisory" size="small" :loading="load">
-            <Icon type="md-refresh"/>
+          <Button @click="getHisory" size="small">
+            <Icon type="md-refresh" :class="[load ? 'spin-icon-load' :'']"/>
           </Button>
         </Col>
       </Row>
@@ -147,6 +147,7 @@ export default {
           .slice((skip - 1) * limit, skip * limit)
           .map(i => i[0]);
 
+      this.load = true;
       this.http.get(api["player_batch"], {
         params: {dbIds}
       }).then(res => {
@@ -155,6 +156,8 @@ export default {
         if (d.success == 1) {
           this.list = d.data;
         }
+      }).finally(() => {
+        this.load = false;
       });
 
       this.total = Object.entries(localData.data.value).length;
@@ -225,6 +228,7 @@ export default {
 
 <style lang="less" scoped>
 @import "@/assets/css/radio.less";
+@import "@/assets/css/icon.less";
 
 .history-buttons {
   margin-top: 5px;

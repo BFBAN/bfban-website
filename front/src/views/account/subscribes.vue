@@ -11,8 +11,8 @@
       <Col>
         {{ list.length }} / 5000
         <Divider type="vertical"/>
-        <Button @click="getSubscribes" size="small" :loading="load">
-          <Icon type="md-refresh"/>
+        <Button @click="getSubscribes" size="small">
+          <Icon type="md-refresh"  :class="[load ? 'spin-icon-load' :'']"/>
         </Button>
       </Col>
     </Row>
@@ -134,6 +134,7 @@ export default {
       const {skip, limit} = this;
       if (!this.$store.state.configuration.subscribes) return;
 
+      this.load = true;
       this.http.post(api["user_subscribes"], {
         data: {
           skip: (skip || 1) - 1,
@@ -147,7 +148,7 @@ export default {
           this.total = d.total;
         }
       }).finally(() => {
-
+        this.load = false;
       });
     },
     /**
@@ -192,6 +193,7 @@ export default {
 
 <style lang="less" scoped>
 @import "@/assets/css/radio.less";
+@import "@/assets/css/icon.less";
 
 .history-buttons {
   margin-top: 5px;

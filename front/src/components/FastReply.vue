@@ -5,14 +5,19 @@
         <CheckboxGroup v-model="fastReply.selected">
           <Checkbox :label="i.content" v-for="(i, index) in fastReply.content" :key="index">
             <template v-if="i.template">
-              <Card dis-hover :padding="0"><HtmlWidget :html="i.content"></HtmlWidget></Card>
+              <Card dis-hover :padding="0">
+                <HtmlWidget :html="i.content"></HtmlWidget>
+              </Card>
             </template>
             <template v-else>
-              <Card dis-hover :padding="0"><HtmlWidget :html="i.content"></HtmlWidget></Card>
+              <Card dis-hover :padding="0">
+                <HtmlWidget :html="i.content"></HtmlWidget>
+              </Card>
             </template>
           </Checkbox>
         </CheckboxGroup>
       </Col>
+
       <Col>
         <a href="javascript:void(0)" @click="fastReply.mode = true">
           <Icon type="md-settings" size="18"/>
@@ -23,7 +28,8 @@
               Fast Reply
             </Col>
             <Col>
-              <Button type="primary" @click="onSwitchAddModal" :disabled="fastReply.content.length > fastReply.countMax - 1">
+              <Button type="primary" @click="onSwitchAddModal"
+                      :disabled="fastReply.content.length > fastReply.countMax - 1">
                 <Icon type="md-add"/>
                 ({{ fastReply.countMax - fastReply.content.length }}/{{ fastReply.countMax }})
               </Button>
@@ -32,17 +38,6 @@
 
           <div v-for="(i, index) in fastReply.content" :key="index">
             <div v-if="i.template">
-              <Row>
-                <Col flex="1"></Col>
-                <Col>
-                  <Dropdown trigger="click">
-                    <Icon type="ios-more"/>
-                    <DropdownMenu slot="list">
-                      <DropdownItem @click.native="onSwitchTemporaryEditor();onPassTemporaryEditorData(i)">Edit</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </Col>
-              </Row>
               <FormItem>
                 <Card dis-hover :padding="0">
                   <HtmlWidget :html="i.content"></HtmlWidget>
@@ -69,9 +64,11 @@
                   <Divider type="vertical"></Divider>
                   <Dropdown trigger="click">
                     <Icon type="ios-more"/>
-                    <DropdownMenu slot="list">
-                      <DropdownItem @click.native="onSwitchTemporaryEditor();onPassTemporaryEditorData(i)">Edit</DropdownItem>
-                      <DropdownItem @click.native="fastReplyDel(i)">Dele</DropdownItem>
+                    <DropdownMenu slot="list" :disabled="false">
+                      <DropdownItem @click.native="onSwitchTemporaryEditor();onPassTemporaryEditorData(i)">
+                        Edit
+                      </DropdownItem>
+                      <DropdownItem @click.native="fastReplyDel(i)">Delete</DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
                 </Col>
@@ -145,7 +142,7 @@
             </Button>
           </Col>
           <Col flex="1">
-            <Button type="primary" @click="editTemporaryEditorData">
+            <Button type="primary" :disabled="fastReply.temporaryEditor.template" @click="editTemporaryEditorData">
               {{ $t('basic.button.commit') }}
             </Button>
           </Col>
@@ -164,9 +161,6 @@ import Textarea from "@/components/Textarea";
 
 export default {
   name: "FastReply",
-  created() {
-    this.loadFastReplyData();
-  },
   data() {
     return {
       fastReply: {
@@ -192,6 +186,7 @@ export default {
         temporaryEditor: {
           show: false,
           template: false,
+          indexAt: -1,
           text: '',
           content: '',
         },
@@ -222,6 +217,9 @@ export default {
       this.loadFastReplyData();
     }
   },
+  created() {
+    this.loadFastReplyData();
+  },
   methods: {
     /**
      * 添加窗口开关
@@ -235,7 +233,8 @@ export default {
      * 待编辑窗口开关
      */
     onSwitchTemporaryEditor() {
-      this.fastReply.temporaryEditor.show = !this.fastReply.temporaryEditor.show;
+      const {show} = this.fastReply.temporaryEditor;
+      this.fastReply.temporaryEditor.show = !show;
     },
 
     /**
@@ -245,7 +244,6 @@ export default {
     onPassTemporaryEditorData(data) {
       const name = data.text;
       const template = data.template;
-
       this.fastReply.temporaryEditor.template = template;
 
       if (data) {
@@ -253,11 +251,13 @@ export default {
           let item = this.fastReply.content[index];
 
           if (item.text === name) {
+            this.fastReply.temporaryEditor.indexAt = index;
             this.fastReply.temporaryEditor.text = item.text;
             this.fastReply.temporaryEditor.content = item.content;
 
             // TextArea非标准标签，需要主动调用内部方法更新
-            this.$refs.fastReplyEditTextarea.updateContent(this.fastReply.temporaryEditor.content);
+            if (this.$refs.fastReplyEditTextarea)
+              this.$refs.fastReplyEditTextarea.updateContent(item.content);
           }
         }
       }
@@ -268,19 +268,17 @@ export default {
      */
     editTemporaryEditorData() {
       let temporaryEditorData = this.fastReply.temporaryEditor;
+      const indexAt = temporaryEditorData.indexAt;
 
-      for (let index = 0; index < this.fastReply.content.length; index++) {
-        var item = this.fastReply.content[index];
-        if (item.text === temporaryEditorData.text) {
-          this.fastReply.content[index].text = temporaryEditorData.text;
-          this.fastReply.content[index].content = temporaryEditorData.content;
-          this.fastReply.content[index].updateTime = new Date().getTime();
-          this.fastReply.content[index].language = this.$i18n.locale;
-        }
-      }
+      if (indexAt <= 0) return;
+
+      this.fastReply.content[indexAt].text = temporaryEditorData.text;
+      this.fastReply.content[indexAt].content = temporaryEditorData.content;
+      this.fastReply.content[indexAt].updateTime = new Date().getTime();
+      this.fastReply.content[indexAt].language = this.$i18n.locale;
 
       this.onSwitchTemporaryEditor();
-      this.updataFastReply();
+      this.updateWriteLocalFastReply();
     },
     /**
      * 还原数据
@@ -311,7 +309,7 @@ export default {
         if (name === item.text) this.fastReply.content.splice(index, 1);
       }
 
-      this.updataFastReply();
+      this.updateWriteLocalFastReply();
     },
     /**
      * 添加快速回复模板
@@ -343,12 +341,13 @@ export default {
       });
 
       this.onInitialData();
-      this.updataFastReply();
+      this.loadFastReplyData()
+      this.updateWriteLocalFastReply();
     },
     /**
      * 写入持久储存
      */
-    updataFastReply() {
+    updateWriteLocalFastReply() {
       // 仅保留用户定义数据
       storage.set('customReply', this.fastReply.content.filter(l => !l.template));
     }

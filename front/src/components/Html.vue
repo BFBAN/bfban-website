@@ -66,7 +66,6 @@ export default {
         }
         this.updateRender(this.packagingRender(val));
       },
-      deep: false,
     },
     mode: {
       handler(val) {
@@ -81,6 +80,7 @@ export default {
   },
   methods: {
     updateRender(nodes) {
+      console.log(nodes);
       const compiled = VueWithCompiler.compile(nodes);
 
       this.templateRender = compiled.render;
