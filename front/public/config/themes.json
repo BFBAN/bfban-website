@@ -1,6 +1,6 @@
 {
   "title": "theme",
-  "default": "default",
+  "default": "lightness",
   "child": [
     {
       "type": "local",
