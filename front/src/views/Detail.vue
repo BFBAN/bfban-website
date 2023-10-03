@@ -62,7 +62,7 @@
 
                 <div>
                   <Dropdown :transfer="isMobile" placement="bottom-start">
-                    <h1> {{ cheater.originName || 'User Name' }} </h1>
+                    <h1 class="text-distinguishing-letter"><code>{{ cheater.originName || 'User Name' }}</code></h1>
 
                     <!-- 历史ID -->
                     <DropdownMenu slot="list"
@@ -88,7 +88,9 @@
                             <Col flex="1" class="mobile-hide">
                               <Divider dashed style="margin: 0"/>
                             </Col>
-                            <Col>{{ origin.originName }}</Col>
+                            <Col class="text-distinguishing-letter">
+                              <code>{{ origin.originName }}</code>
+                            </Col>
                           </Row>
                         </div>
                       </div>
@@ -253,7 +255,7 @@
 
       <template v-if="!isFull">
         <br>
-        <Card dis-hover>
+        <Card id="recordLink" dis-hover>
           <h2><a href="javascript:void(0)">#</a> {{ $t('detail.info.gameScores') }}</h2>
           <br>
           <!-- 战绩链接 S -->
@@ -379,8 +381,8 @@
                           style="padding: 15px 0">
                       <Dropdown :transfer="isMobile" placement="bottom-start" style="width: 100%">
                         <Row :gutter="16" type="flex" justify="center" align="middle">
-                          <Col>
-                            {{ l.beforeUsername || "N/A" }}
+                          <Col class="text-distinguishing-letter">
+                            <code>{{ l.beforeUsername || "N/A" }}</code>
                           </Col>
                           <Col class="mobile-hide">
                             <Icon type="md-arrow-round-forward" size="20" style="opacity: .6"/>
@@ -389,7 +391,7 @@
                             <Icon type="md-arrow-round-forward" size="20" style="opacity: .6;transform: rotate(90deg)"/>
                           </Col>
                           <Col>
-                            <b>{{ l.nextUsername || "N/A" }}</b>
+                            <b class="text-distinguishing-letter"><code>{{ l.nextUsername || "N/A" }}</code></b>
                           </Col>
                         </Row>
 
@@ -416,12 +418,12 @@
                                 <Col flex="1">
                                   <Divider dashed style="margin: 0"/>
                                 </Col>
-                                <Col>
+                                <Col class="text-distinguishing-letter">
                                   <template v-if="l.fromTime == origin.fromTime">
-                                    <Tag color="primary">{{ origin.originName }}</Tag>
+                                    <Tag color="primary"><code>{{ origin.originName }}</code></Tag>
                                   </template>
                                   <template v-else>
-                                    {{ origin.originName }}
+                                    <code>{{ origin.originName }}</code>
                                   </template>
                                 </Col>
                               </Row>
@@ -1015,9 +1017,16 @@
           <a href="javascript:void(0)" @click="onRollingNode(0)">
             <Icon type="md-arrow-round-up" size="30"/>
           </a>
-          <a href="javascript:void(0)" v-if="isLogin" @click="onRollingComment">
-            <Icon type="md-chatboxes" size="30"/>
-          </a>
+          <Dropdown placement="left-start" trigger="contextMenu" @on-click="onRollingDropdowns">
+            <a href="javascript:void(0)" v-if="isLogin" @click="onRollingComment">
+              <Icon type="md-chatboxes" size="30"/>
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem name="recordlink">{{ $t('detail.info.gameScores') }}</DropdownItem>
+              <DropdownItem name="timeline">{{ $t('detail.info.timeLine') }}</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+
           <a href="javascript:void(0)" @click="getTimeline">
             <Icon type="md-refresh" size="30"/>
           </a>
@@ -2018,13 +2027,40 @@ export default new Application({
         this.onRollingNode(urlOffsetTop.offsetParent.offsetParent.offsetTop);
       }
     },
+    onRollingDropdowns(name) {
+      console.log(name);
+      switch (name) {
+        case 'recordlink':
+          this.onRollingRecordLink();
+          break;
+        case 'timeline':
+          this.onRollingTimeline();
+          break;
+      }
+    },
     /**
-     * 滚动到评论区
+     * 滚动到评论文本框
      */
     onRollingComment() {
       const commentNode = document.getElementById('reply');
 
       this.onRollingNode(commentNode.offsetTop + commentNode.offsetHeight);
+    },
+    /**
+     * 滚动到战绩
+     */
+    onRollingRecordLink() {
+      const commentNode = document.getElementById('recordLink');
+
+      this.onRollingNode(commentNode.offsetTop - 50);
+    },
+    /**
+     * 滚动到时间轴
+     */
+    onRollingTimeline() {
+      const commentNode = document.getElementById('timeline');
+
+      this.onRollingNode(commentNode.offsetTop - 50);
     },
     /**
      * 滚动到判决
