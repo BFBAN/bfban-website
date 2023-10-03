@@ -107,7 +107,7 @@ export default {
       this.http.get(api['admin_userOperationLogs'], {
         params: {
           id: this.userIdValue,
-          skip: this.skip - 1,
+          skip: (this.skip - 1) * this.limit,
           limit: this.limit,
           order: this.order,
         }

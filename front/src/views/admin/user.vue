@@ -608,7 +608,7 @@ export default new Application({
      */
     async getUserList() {
       const that = this;
-      let params = {name: '', skip: this.skip - 1, limit: this.limit, parameter: ''};
+      let params = {name: '', skip: (this.skip - 1) * this.limit, limit: this.limit, parameter: ''};
 
       if (this.load) return;
 

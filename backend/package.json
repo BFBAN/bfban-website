@@ -8,8 +8,6 @@
     "dev": "nodemon app.js",
     "start": "node app.js",
     "services": "node services/loader.js",
-    "appmap-services": "npx appmap-agent-js --command='npm run start' --recorder=mocha",
-    "appmap-services-remote": "npx appmap-agent-js --recorder=remote -- node app.js",
     "test": "node app.js --experimental-modules --trace-warnings"
   },
   "author": "",
@@ -46,7 +44,6 @@
     "xss": "^1.0.10"
   },
   "devDependencies": {
-    "@appland/appmap-agent-js": "^14.2.0",
     "@babel/core": "^7.16.7",
     "@babel/eslint-parser": "^7.16.5",
     "eslint": "^7.32.0"

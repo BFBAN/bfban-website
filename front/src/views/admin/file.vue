@@ -175,7 +175,7 @@ export default {
     getFiles() {
       let fromData = {
         limit: this.limit,
-        skip: this.skip,
+        skip: (this.skip - 1) * this.limit,
         data: {}
       };
 
