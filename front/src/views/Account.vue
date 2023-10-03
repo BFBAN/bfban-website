@@ -154,8 +154,8 @@
             <br v-if="account.attr.introduction">
 
             <Card v-if="account.origin && account.origin.originName" dis-shadow>
-              <b>origin id:</b>
-              <p>{{ account.origin.originName }}</p>
+              <b>ea(origin) id:</b>
+              <p class="text-distinguishing-letter"><code>{{ account.origin.originName }}</code></p>
             </Card>
             <br v-if="account.origin && account.origin.originName">
           </Col>

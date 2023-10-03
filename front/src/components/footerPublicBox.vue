@@ -39,7 +39,7 @@
                       <Avatar :src="i.avatarLink" size="15"></Avatar>
                     </Col>
                     <Col flex="1">
-                      <a href="javascript:void(0)" @click="openDetail(i)"><b>{{i.originName}}</b></a>
+                      <a href="javascript:void(0)" @click="openDetail(i)"><b class="text-distinguishing-letter"><code>{{i.originName}}</code></b></a>
                     </Col>
                     <Col>
                       <Tag type="border">{{ $t('basic.games.' + i.games) }}</Tag>

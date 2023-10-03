@@ -42,10 +42,10 @@
                     <Col :xs="{span: 17, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
                       <div style="display: flex; flex-direction: column;">
                         <Tooltip :content="$t('list.colums.playerId')">
-                          <h2>
+                          <h2 class="text-distinguishing-letter">
                             <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}"
                                          :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
-                              {{ d.originName }}
+                              <code>{{ d.originName }}</code>
                             </router-link>
                           </h2>
                         </Tooltip>

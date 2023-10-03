@@ -49,6 +49,7 @@ export default class Api {
             "player_unReply": "player/unReply",
             "player_reply": "player/reply",
             "player_report": "player/report",
+            "player_reportById": "player/reportById",
             "player_update": "player/update",
             "player_viewed": "player/viewed",
             "player_timeline": "player/timeline",
