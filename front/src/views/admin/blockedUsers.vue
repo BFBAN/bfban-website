@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="hint">Blacklist users cannot log in to the website</p>
+    <p class="hint">此处名单将禁用账户，用户无法继续登陆账户；如果仍然需要保留账户，并且依旧能赋予黑名单限制，可以在账户身份中添加'黑名单'身份来限制用户网站使用范围</p>
     <p class="hint">Use with caution, and your actions will be recorded</p>
     <br>
 

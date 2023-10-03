@@ -3,9 +3,14 @@
     <Row :gutter="10" type="flex" align="middle">
       <Col>
         <Button
-            @click="addUserModel = true"
-            :disabled="isAddUserExecutable">
-          <Icon type="md-add"/>
+            @click.stop.prevent="addUserModel = true"
+            :disabled="!isAdmin">
+          <Row :gutter="20" type="flex" align="middle">
+            <privilegesTag :data="['dev']"></privilegesTag>
+            <Col>
+              <Icon type="md-add"/>
+            </Col>
+          </Row>
         </Button>
       </Col>
       <Col flex="1">
@@ -99,7 +104,7 @@
             </Button>
           </router-link>
           <Divider type="vertical"></Divider>
-          <Button @click="openDelUserModel(index)" type="error" size="small" :disabled="isDeleteExecutable">
+          <Button @click="openDelUserModel(index)" type="error" size="small" :disabled="!isAdmin">
             <Icon type="md-trash"/>
           </Button>
         </Col>
@@ -108,6 +113,22 @@
     <Card dis-hover align="center" v-if="userListData.length <= 0">
       {{ $t('basic.tip.notContent') }}
     </Card>
+
+    <br>
+    <Row :gutter="20">
+      <Col flex="1">
+        <Page class="page"
+              size="small"
+              show-sizer
+              show-total
+              show-elevator
+              @on-change="handlePageChange"
+              @on-page-size-change="handlePageSizeChange"
+              :page-size="limit"
+              :current="skip"
+              :total="total"/>
+      </Col>
+    </Row>
 
     <!-- 编辑用户 S -->
     <Modal v-model="userEditModel"
@@ -223,22 +244,29 @@
                     </Col>
                     <Col flex="1">
                       <Select v-model="editPrivilegesForm.roleName">
-                        <Option v-for="(i, index) in editPrivilegesForm.role" :value="i" :key="index">
-                          <Tag :color="i">{{ $t('basic.privilege.' + i) }}</Tag>
+                        <Option v-for="(i, index) in editPrivilegesForm.role" :value="i"
+                                :label="$t('basic.privilege.' + i)" :key="index">
+                          <Tag>{{ $t('basic.privilege.' + i) }}</Tag>
                         </Option>
                       </Select>
                     </Col>
                     <Col>
-                      <Button @click="onEditPrivileges">{{ $t('basic.button.commit') }}</Button>
+                      <Button @click="onEditPrivileges">
+                        <Icon v-if="editPrivilegesForm.activeName == 'grant'" type="md-add"/>
+                        <Icon v-else-if="editPrivilegesForm.activeName == 'revoke'" type="md-close"/>
+                      </Button>
                     </Col>
                   </Row>
                 </Col>
               </Row>
+
+              <p class="hint">To modify the user identity, click Save below</p>
             </FormItem>
 
             <FormItem label="introduction" prop="introduction">
               <Card dis-hover :padding="0">
-                <Textarea ref="userIntroductionTextarea" :content="editUserData.attr.introduction"></Textarea>
+                <Textarea ref="userIntroductionTextarea" :content="editUserData.attr.introduction"
+                          v-model="editUserData.attr.introduction"></Textarea>
               </Card>
             </FormItem>
           </Col>
@@ -254,13 +282,6 @@
             :rules="addUserRuleValidate"
             ref="addUserFormValidate"
             label-position="top">
-
-        <Alert type="info" icon="info">
-          添加未绑定用户
-          <template slot="desc">
-            在当前添加的用户，无法操作任何评论、判决、回复等操作，因为他未通过origin的邮箱绑定，需要用户登录账户完成最后平台绑定。
-          </template>
-        </Alert>
 
         <Row :gutter="10">
           <Col span="24">
@@ -278,6 +299,22 @@
                      :placeholder="$t('signup.placeholder.password')"/>
             </FormItem>
           </Col>
+          <Col span="24">
+            <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
+              <Input v-model="addUserData.originEmail"
+                     password
+                     minlength="6"
+                     :placeholder="$t('signup.placeholder.originEmail')"/>
+            </FormItem>
+          </Col>
+          <Col span="24">
+            <FormItem :label="$t('signup.form.originName')" prop="originName">
+              <Input v-model="addUserData.originName"
+                     password
+                     minlength="6"
+                     :placeholder="$t('signup.placeholder.originName')"/>
+            </FormItem>
+          </Col>
         </Row>
       </Form>
       <div slot="footer">
@@ -292,25 +329,40 @@
            width="360">
       <p slot="header" style="color:#f60;text-align:center">
         <Icon type="ios-information-circle"></Icon>
-        <span>Delete User Account</span>
+        <span>User account status</span>
       </p>
       <Card dis-hover align="center">
         <BusinessCard :id="editUserData.id" :showAdminUserInfo="true">
           <h2><a href="javascript:void(0)"><b>{{ editUserData.username }}</b></a></h2>
         </BusinessCard>
-        <p>{{ editUserData.id }}</p>
+        <p>User Id: {{ editUserData.id }}</p>
+        <p>Current valid: {{ editUserData.valid }}</p>
       </Card>
       <div slot="footer">
         <Row type="flex" align="middle">
           <Col>
-            <Select v-model="delTypeValue" style="width: 150px">
+            <Select v-model="delTypeValue">
               <Option v-for="(i, index) in delTypes" :key="index" :value="i"> {{ i }}</Option>
             </Select>
           </Col>
           <Divider type="vertical"></Divider>
-          <Col flex="2">
-            <Button @click="onDeleteUser" type="error" long :loading="delUserLoad">
+          <Col flex="1">
+            <Button @click="onDeleteUser" long :type="{
+              'logic': 'error',
+              'real':'error',
+              'restore':'success'
+            }[delTypeValue]" :ghost="{
+              'logic': true,
+              'real':false,
+              'restore':false
+            }[delTypeValue]" :loading="delUserLoad">
+              <Icon :type="{
+                'logic': 'md-trash',
+                'real':'md-trash',
+              }[delTypeValue]" v-if="delTypeValue != 'restore'"/>
               {{ $t('basic.button.submit') }}
+
+              <template v-if="delTypeValue=='real'">⚠️⚠️⚠️</template>
             </Button>
           </Col>
         </Row>
@@ -321,13 +373,12 @@
 </template>
 
 <script>
-import {account_storage, api, http, http_token, mail} from "../../assets/js";
+import {api, http_token} from "../../assets/js";
 
 import languages from "/public/config/languages.json";
 
 import BusinessCard from "@/components/businessCard";
 import PrivilegesTag from "/src/components/PrivilegesTag";
-import _ from "lodash";
 import Textarea from "@/components/Textarea";
 import Application from "@/assets/js/application";
 
@@ -349,7 +400,10 @@ export default new Application({
       },
       userParameter: {
         value: 'username',
-        list: [{title: 'BFBAN ID', value: 'id'}, {title: 'BFBAN Username', value: 'username'}, {title: 'originName', value: 'originName'}, {title: 'originPersonaId', value: 'originPersonaId'}, {title: 'Email', value: 'originEmail'}]
+        list: [{title: 'BFBAN ID', value: 'id'}, {title: 'BFBAN Username', value: 'username'}, {
+          title: 'originName',
+          value: 'originName'
+        }, {title: 'originPersonaId', value: 'originPersonaId'}, {title: 'Email', value: 'originEmail'}]
       },
 
       addUserLoad: false,
@@ -374,15 +428,15 @@ export default new Application({
       },
       addUserData: {
         username: '',
-        password: ''
+        password: '',
+        originEmail: '',
+        originName: '',
       },
       addUserRuleValidate: {
-        username: [
-          {required: true, min: 4, max: 40, trigger: 'blur'}
-        ],
-        password: [
-          {required: true, min: 6, max: 40, trigger: 'blur'}
-        ],
+        username: [{required: true, min: 4, max: 40, trigger: 'blur'}],
+        password: [{required: true, min: 6, max: 40, trigger: 'blur'}],
+        originName: [{required: true, min: 1, trigger: 'blur'}],
+        originEmail: [{required: true, min: 1, type: 'email', trigger: 'blur'}],
       },
       userEditModel: false,
       addUserModel: false,
@@ -428,11 +482,9 @@ export default new Application({
      * 管理员增加用户
      */
     onAddUserSubmit() {
-      const {username, password} = this.addUserData;
+      const {username, password, originEmail, originName} = this.addUserData;
 
-      if (
-          !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ['super', 'root', 'dev'])
-      ) {
+      if (this.isAdminL3) {
         this.$Message.error(this.$i18n.t('basic.tip.noAccess'))
         return;
       }
@@ -446,11 +498,13 @@ export default new Application({
 
         this.addUserLoad = true;
 
-        this.http.post(api["admin_addUser"], {
+        this.http.post(api["signup4dev"], {
           data: {
             data: {
               username,
               password,
+              originEmail,
+              originName,
               language: this.$i18n.locale
             }
           }
@@ -463,6 +517,8 @@ export default new Application({
           }
 
           this.$Message.error(d.message || d.code);
+        }).error((err) => {
+          this.$Message.error(err);
         }).finally(() => {
           this.addUserLoad = false;
           this.addUserModel = false;
@@ -474,6 +530,8 @@ export default new Application({
      */
     onDeleteUser() {
       const {id} = this.editUserData;
+
+      if (!id && this.delTypes.constructor(this.delTypeValue)) return;
 
       this.delUserLoad = true;
       this.http.post(api["admin_delUser"], {
@@ -667,14 +725,6 @@ export default new Application({
       this.total = 0;
     }
   },
-  computed: {
-    isDeleteExecutable() {
-      return !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ['root', 'dev']);
-    },
-    isAddUserExecutable() {
-      return !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, ["super", "root", "dev"]);
-    }
-  }
 })
 </script>
 

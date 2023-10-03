@@ -115,7 +115,10 @@ async (req, res, next) => {
             .where('users.valid', 0)
             .first().then(r => r.num);
         let result = await db.select('*').from('users')
-            .where('users.valid', 0)
+            .where((qb) => {
+                const key = 'users.privilege';
+                qb.where('users.valid', 0).orWhere(key, 'like', '%"freezed"%').orWhere(key, 'like','%"blacklisted"%')
+            })
             .orderBy('users.id', order)
             .offset(skip).limit(limit);
 

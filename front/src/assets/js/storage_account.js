@@ -104,8 +104,8 @@ export default class AccountStorage extends Storage {
 
     /**
      * 检查权限组
-     * @param currentGroup 当前身份租
-     * @param adminGroup 检查是否包含的身份
+     * @param {Array} currentGroup 当前身份租
+     * @param {Array} adminGroup 检查是否包含的身份
      * @returns {boolean}
      */
     checkPrivilegeGroup (currentGroup, adminGroup = ['root', 'admin', 'super', 'dev']) {

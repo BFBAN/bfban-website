@@ -1,9 +1,9 @@
 <template>
   <Poptip :padding="padding"
           :width="width"
+          :transfer="true"
           trigger="hover"
           placement="bottom"
-          :transfer="true"
           @on-popper-show="getUserInfo">
     <slot></slot>
     <div slot="content" class="business">

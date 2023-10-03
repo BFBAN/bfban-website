@@ -37,6 +37,7 @@ export default class Api {
             "account_signout": "user/signout",
             "account_signin": "user/signin",
             "account_signup": "user/signup",
+            "account_signup4dev": "user/signup4dev",
             "account_signupVerify": "user/signupVerify",
 
             "player_reset": "reset",
