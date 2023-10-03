@@ -457,7 +457,7 @@
                           </router-link>
                           <!-- 举报 -->
                           {{ $t('detail.info.report') }}
-                          <a><u><b>{{ l.toOriginName }}</b></u></a>
+                          <a><u><b class="text-distinguishing-letter"><code>{{ l.toOriginName }}</code></b></u></a>
 
                           <template v-if="l.cheatGame">
                             <!-- 在 -->
