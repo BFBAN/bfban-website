@@ -310,7 +310,8 @@ export default {
 
 .timeline-description {
   line-height: initial;
-  word-break: break-all;
+  word-break: break-word;
+  word-wrap: break-word;
   margin: 10px 0;
 
   p:first-child,
