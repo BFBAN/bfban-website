@@ -1,13 +1,13 @@
 {
   "title": "theme",
-  "default": "default",
+  "default": "lightness",
   "child": [
     {
       "type": "local",
-      "name": "deep",
-      "img": "public/theme/deep/main.png",
+      "name": "dark",
+      "img": "public/theme/dark/main.png",
       "version": "0.4",
-      "themeColor": "#401487",
+      "themeColor": "#000000",
       "authorInfo": {
         "authorName": "BFBAN",
         "authorUpdate": "2022-2-28"
@@ -16,7 +16,7 @@
     },
     {
       "type": "local",
-      "name": "default",
+      "name": "lightness",
       "img": "public/theme/silence/main.png",
       "version": "0.3",
       "themeColor": "#efe227",
