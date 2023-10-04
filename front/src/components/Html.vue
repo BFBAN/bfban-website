@@ -80,7 +80,6 @@ export default {
   },
   methods: {
     updateRender(nodes) {
-      console.log(nodes);
       const compiled = VueWithCompiler.compile(nodes);
 
       this.templateRender = compiled.render;
