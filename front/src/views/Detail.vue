@@ -158,7 +158,34 @@
             </Row>
             <Row>
               <Col>
-                <span>Origin id:  {{ cheater.originUserId || 'id' }}</span>
+                <Poptip transfer width="400" placement="bottom-start">
+                  <Icon type="md-more"/>
+                  ids
+                  <div slot="content">
+                    <Row :gutter="10" type="flex" align="middle">
+                      <Col>id:</Col>
+                      <Col flex="1">
+                        <Divider dashed/>
+                      </Col>
+                      <Col>{{ cheater.id || 'cheater id' }}</Col>
+                    </Row>
+                    <Row :gutter="10" type="flex" align="middle">
+                      <Col>User id:</Col>
+                      <Col flex="1">
+                        <Divider dashed/>
+                      </Col>
+                      <Col>{{ cheater.originUserId || 'user id' }}</Col>
+                    </Row>
+                    <Row :gutter="10" type="flex" align="middle">
+                      <Col>Persona id:</Col>
+                      <Col flex="1">
+                        <Divider dashed/>
+                      </Col>
+                      <Col>{{ cheater.originPersonaId || 'persona id' }}</Col>
+                    </Row>
+                  </div>
+                </Poptip>
+
                 <template v-if="!isFull">
                   <Divider type="vertical"/>
 
