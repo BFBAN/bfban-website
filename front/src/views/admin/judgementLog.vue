@@ -174,6 +174,12 @@ export default {
           }
         ]
       },
+      currentFilters: {
+        searchTypeValue: null,
+        searchValue: null,
+        createTimeFrom: null,
+        createTimeTo: null
+      },
 
       limit: 40,
       skip: 1,
@@ -188,29 +194,26 @@ export default {
   },
   methods: {
     getAdminjudgementLog() {
+      this.setFilters();  // 使用当前的筛选条件
       let fromData = {
-        limit: this.limit,
-        skip: (this.skip - 1) * this.limit,
-        total: this.total,
+          limit: this.limit,
+          skip: (this.skip - 1) * this.limit,
       };
 
-      if (this.load) return;
-      this.load = true;
-
-      if (this.searchTypeValue == 'userId' && this.searchValue) fromData.userId = this.searchValue;
-      if (this.searchTypeValue == 'userName' && this.searchValue) fromData.userName = this.searchValue;
-      if (this.searchTypeValue == 'dbId' && this.searchValue) fromData.dbId = this.searchValue;
-      if (this.createTimeFrom) fromData.createTimeFrom = this.createTimeFrom;
-      if (this.createTimeTo) fromData.createTimeTo = this.createTimeTo;
+      if (this.currentFilters.searchTypeValue == 'userId' && this.currentFilters.searchValue) fromData.userId = this.currentFilters.searchValue;
+      if (this.currentFilters.searchTypeValue == 'userName' && this.currentFilters.searchValue) fromData.userName = this.currentFilters.searchValue;
+      if (this.currentFilters.searchTypeValue == 'dbId' && this.currentFilters.searchValue) fromData.dbId = this.currentFilters.searchValue;
+      if (this.currentFilters.createTimeFrom) fromData.createTimeFrom = this.currentFilters.createTimeFrom;
+      if (this.currentFilters.createTimeTo) fromData.createTimeTo = this.currentFilters.createTimeTo;
 
       this.http.post(api['admin_judgementLog'], {data: fromData}).then(res => {
-        const d = res.data;
-        if (d.success == 1) {
-          this.judgementLog = d.data;
-          this.total = d.total;
-        }
+          const d = res.data;
+          if (d.success == 1) {
+              this.judgementLog = d.data;
+              this.total = d.total; // 确保每次请求后都更新total值
+          }
       }).finally(() => {
-        this.load = false;
+          this.load = false;
       });
     },
     resetFormData() {
@@ -222,8 +225,8 @@ export default {
       this.$refs["filesFunnel"].resetFields();
     },
     subimtFormData() {
+      this.skip = 1;  // 重置页码
       this.getAdminjudgementLog();
-      this.resetFormData();
     },
     handleCDatepicker(date) {
       this.createTimeFrom = new Date(date[0]).getTime();
@@ -238,7 +241,16 @@ export default {
     handlePageChange(num) {
       this.skip = num;
       this.getAdminjudgementLog();
-    }
+    },
+    setFilters() {
+      this.currentFilters = {
+        searchTypeValue: this.searchTypeValue,
+        searchValue: this.searchValue,
+        createTimeFrom: this.createTimeFrom,
+        createTimeTo: this.createTimeTo
+      };
+    },
+    
   }
 }
 </script>
