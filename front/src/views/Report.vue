@@ -634,7 +634,7 @@ export default new Application({
         case "originName":
         default:
           url = api["player_report"];
-          formData.data.riginName = originName;
+          formData.data.originName = originName;
           break;
       }
 
