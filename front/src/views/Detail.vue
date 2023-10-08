@@ -1460,6 +1460,7 @@ import FastReply from "@/components/FastReply";
 import htmllink from "@/components/HtmlLink";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
+import router from "@/router";
 
 export default new Application({
   data() {

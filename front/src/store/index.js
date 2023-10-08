@@ -72,11 +72,15 @@ const store = new Vuex.Store({
       app.$i18n.locale = payload;
     },
     [SET_THEME](state, data) {
-      state.$theme = data || theme.child.filter(i => i.name == theme.default)[0];
+      state.$theme = data || theme.child.filter(i => i.name == theme.default).first || theme.default;
 
       if (!state && !state.$theme && !state.$theme.name) return;
 
-      import(`/public/theme/${state.$theme.name}/index.less`)
+      try {
+        import(`/public/theme/${state.$theme.name}/index.less`)
+      } catch (err) {
+        import(`/public/theme/${theme.default}/index.less`)
+      }
     },
     [SET_USER](state, data) {
       state.$userinfo = data;
