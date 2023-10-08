@@ -485,7 +485,18 @@ async (req, res, next) => {
         const order = req.body.order ? req.query.order : 'desc';
 
         const total = await db.count({num: 1}).from('comments')
-            .andWhere('type', 'judgement')
+            .join('users', 'comments.byUserId', 'users.id')
+            .where((qb) => {
+                if (req.body.userId)
+                    qb.where('comments.byUserId', '=', req.body.userId)
+                if (req.body.dbId)
+                    qb.where('comments.id', '=', req.body.dbId)
+                if (req.body.userName)
+                    qb.where('users.username', 'like', `%${req.body.userName}%`)
+            })
+            .andWhere('type', `judgement`)
+            .andWhere('comments.createTime', '>=', createTimeFrom)
+            .andWhere('comments.createTime', '<=', createTimeTo)
             .first().then(r => r.num);
 
         const result = await db('comments')
