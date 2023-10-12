@@ -188,7 +188,7 @@ import themes from '/public/config/themes.json'
 import menu from '/public/config/headerMenu.json'
 
 import UserAvatar from "@/components/UserAvatar.vue";
-import Header_message from "./Header_message";
+import Header_message from "./HeaderMessage.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import Application from "@/assets/js/application";
 

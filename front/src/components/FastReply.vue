@@ -23,9 +23,13 @@
           <Icon type="md-settings" size="18"/>
         </a>
         <Drawer :closable="fastReply.mode" v-model="fastReply.mode" width="40%">
-          <Row slot="header" :gutter="20" type="flex" justify="center">
+          <Row slot="header" :gutter="20" type="flex" align="middle">
             <Col flex="1">
+              <Icon type="md-chatboxes" size="20"></Icon>
               Fast Reply
+            </Col>
+            <Col>
+              <Input v-model="fastReply.searchValue" icon="md-search"></Input>
             </Col>
             <Col>
               <Button type="primary" @click="onSwitchAddModal"
@@ -37,7 +41,7 @@
           </Row>
 
           <div v-for="(i, index) in fastReply.content" :key="index">
-            <div v-if="i.template">
+            <div v-if="i.template && hasIndexOfSearch(i)">
               <FormItem>
                 <Card dis-hover :padding="0">
                   <HtmlWidget :html="i.content"></HtmlWidget>
@@ -45,7 +49,7 @@
               </FormItem>
             </div>
 
-            <div v-if="!i.template">
+            <div v-if="!i.template && hasIndexOfSearch(i)">
               <Row>
                 <Col flex="1">
                   <b>{{ i.text }}</b>
@@ -80,7 +84,6 @@
               </FormItem>
             </div>
           </div>
-
         </Drawer>
       </Col>
     </Row>
@@ -158,6 +161,7 @@ import {storage} from "@/assets/js";
 
 import HtmlWidget from "./HtmlWidget";
 import Textarea from "@/components/Textarea";
+import uuid from "uuid";
 
 export default {
   name: "FastReply",
@@ -165,7 +169,8 @@ export default {
     return {
       fastReply: {
         countMax: 10,
-        content: [{
+        searchValue: '',
+        templateContent: [{
           text: 'stats',
           template: true,
           content: this.$i18n.t('detail.info.fastReplies.stats')
@@ -178,6 +183,7 @@ export default {
           template: true,
           content: this.$i18n.t('detail.info.fastReplies.evidenceVid')
         }],
+        content: [],
         add: {
           show: false,
           text: '',
@@ -267,6 +273,7 @@ export default {
      * @param data
      */
     editTemporaryEditorData() {
+      const that = this;
       let temporaryEditorData = this.fastReply.temporaryEditor;
       const indexAt = temporaryEditorData.indexAt;
 
@@ -279,6 +286,11 @@ export default {
 
       this.onSwitchTemporaryEditor();
       this.updateWriteLocalFastReply();
+
+      this.fastReply.content = [];
+      setTimeout(function () {
+        that.loadFastReplyData()
+      }, 150)
     },
     /**
      * 还原数据
@@ -286,6 +298,14 @@ export default {
     onInitialData() {
       this.fastReply.add = {show: false, text: '', content: ''};
       this.fastReply.temporaryEditor = {show: false, text: '', content: ''};
+
+      // Edit
+      if (this.$refs.fastReplyEditTextarea)
+        this.$refs.fastReplyEditTextarea.updateContent('');
+
+      // Add
+      if (this.$refs.fastReplyAddTextarea)
+        this.$refs.fastReplyAddTextarea.updateContent('');
     },
     /**
      * 载入管理快速回复模板数据
@@ -294,8 +314,11 @@ export default {
       const replyData = storage.get('customReply');
 
       if (replyData.code == -1) return;
-
-      this.fastReply.content = this.fastReply.content.concat(replyData.data.value);
+      this.fastReply.content = this.fastReply.templateContent.concat(replyData.data.value);
+      this.fastReply.content.map(i => {
+        if (!i.template && !i.id)
+          i.id = uuid.v4();
+      })
     },
     /**
      * 删除快速回复模板
@@ -324,14 +347,13 @@ export default {
       }
 
       // 校验标题重复
-      if (
-          this.fastReply.content.filter(i => i.text === tmpTitle).length >= 1
-      ) {
+      if (this.fastReply.content.filter(i => i.text === tmpTitle).length >= 1) {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return;
       }
 
       this.fastReply.content.push({
+        id: uuid.v4(),
         template: false,
         creationTime: new Date().getTime(),
         updateTime: 0,
@@ -341,7 +363,6 @@ export default {
       });
 
       this.onInitialData();
-      this.loadFastReplyData()
       this.updateWriteLocalFastReply();
     },
     /**
@@ -350,8 +371,12 @@ export default {
     updateWriteLocalFastReply() {
       // 仅保留用户定义数据
       storage.set('customReply', this.fastReply.content.filter(l => !l.template));
+    },
+    hasIndexOfSearch(i) {
+      if (this.fastReply.searchValue.length <= 0) return true;
+      return i.text.indexOf(this.fastReply.searchValue) >= 0 || i.content.indexOf(this.fastReply.searchValue) >= 0
     }
-  }
+  },
 }
 </script>
 
