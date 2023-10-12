@@ -210,7 +210,7 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'deleteFile.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").StorageItem} */
-        const fileItem = await db.select('*').from('storage_items').where({filename: req.query.filename}).first();
+        const fileItem = await db.select('*').from('storage_items').where({filename: req.body.filename}).first();
         if (!fileItem)
             return res.status(404).json({error: 1, code: 'deleteFile.notFound', message: 'no such file.'});
 
