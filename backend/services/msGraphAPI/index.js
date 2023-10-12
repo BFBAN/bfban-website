@@ -234,7 +234,7 @@ app.delete('/file', [
 ], async (req, res, next) => {
     const validateErr = validationResult(req);
     if (!validateErr.isEmpty())
-        return res.status(400).json({error: 1, code: 'msGetFile.bad', message: validateErr.array()});
+        return res.status(400).json({error: 1, code: 'msDeleteFile.bad', message: validateErr.array()});
     try {
         const fileId = req.query.id;
         const url = `/drives/${svcConfig.driveId}/items/${fileId}`;
@@ -246,13 +246,13 @@ app.delete('/file', [
                     throw (err);
                 return {status: err.statusCode, error: err.body};
             });
-        if (!msResponse.error)
-            return res.status(200).json({success: 1, code: 'msGetFile.delete.ok'});
+        if (!msResponse?.error)
+            return res.status(200).json({success: 1, code: 'msDeleteFile.delete.ok'});
         else
-            return res.status(msResponse.status).json({error: 1, code: 'msGetFile.error', message: msResponse.error});
+            return res.status(msResponse.status).json({error: 1, code: 'msDeleteFile.error', message: msResponse.error});
     } catch (err) {
-        logger.error('getFile:', err.stack)
-        res.status(500).json({error: 1, code: 'msGetFile.error', message: err.message});
+        logger.error('msDeleteFile:', err.stack)
+        res.status(500).json({error: 1, code: 'msDeleteFile.error', message: err.message});
     }
 })
 

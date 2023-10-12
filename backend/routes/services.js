@@ -200,9 +200,8 @@ async (req, res, next) => {
     }
 });
 
-router.delete('/file', [
+router.delete('/file', verifyJWT, allowPrivileges(['root', 'dev', 'super']), [
     checkbody('filename').isString().isLength({min: 0, max: 64}),
-    checkbody('explain').optional()
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
     try {
