@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="profile-body">
     <template v-if="$store.state.configuration.history">
       <Row :gutter="10" class="history-buttons" type="flex" justify="center">
         <Col flex="1">

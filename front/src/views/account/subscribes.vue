@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.configuration.subscribes">
+  <div class="profile-body" v-if="$store.state.configuration.subscribes">
     <Row :gutter="10" class="history-buttons" type="flex" justify="center">
       <Col flex="1">
         <Checkbox v-model="checkboxAll" :disabled="list.length <= 0" @on-change="onCheckboxAll"></Checkbox>
@@ -94,7 +94,7 @@
     </Row>
 
   </div>
-  <div v-else>
+  <div class="profile-body" v-else>
     Disable Component
   </div>
 </template>

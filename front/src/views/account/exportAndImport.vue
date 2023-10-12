@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="profile-body">
     <p>{{ $t('profile.exportAndImport.description') }}</p>
     <br>
     <p class="hint">{{ $t('profile.exportAndImport.hint1') }}</p>

@@ -33,11 +33,7 @@
         <Row type="flex" justify="center" align="middle">
           <Col justify="center" align="middle">
             <br>
-            <Avatar shape="square"
-                    style="background-color: yellow"
-                    size="150"
-                    icon="ios-person"
-                    :src="account.userAvatar ? `${account.userAvatar}` : ''"></Avatar>
+            <UserAvatar :src="account.userAvatar ? `${account.userAvatar}` : ''"></UserAvatar>
 
             <h1 :title="$t('account.username')" class="account-username">
               {{ account.username || 'username' }}
@@ -91,7 +87,9 @@
                       </Col>
                       <Divider type="vertical"/>
                       <Col>
-                        <b>{{ account.reportnum - (account.statusNum['0'] + account.statusNum['1'] + account.statusNum['4']) }}</b>
+                        <b>{{
+                            account.reportnum - (account.statusNum['0'] + account.statusNum['1'] + account.statusNum['4'])
+                          }}</b>
                         <p class="account-info-p">···</p>
                       </Col>
                       <Col>=</Col>
@@ -102,7 +100,7 @@
                     </template>
                     <Spin size="large" v-show="!isLogin">
                       <div>
-                        <Icon type="md-lock" size="30" />
+                        <Icon type="md-lock" size="30"/>
                       </div>
                       <Button :to="{name: 'signin'}">{{ $t("header.signin") }}</Button>
                     </Spin>
@@ -183,6 +181,7 @@
 import Application from "../assets/js/application";
 import Empty from "@/components/Empty";
 import vueQr from "vue-qr";
+import UserAvatar from "@/components/UserAvatar.vue";
 import {api, http, http_token, util} from '../assets/js/index'
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
@@ -346,7 +345,7 @@ export default new Application({
   watch: {
     $route: "loadData",
   },
-  components: {PrivilegesTag, Empty, vueQr},
+  components: {PrivilegesTag, Empty, UserAvatar, vueQr},
   created() {
     this.http = http_token.call(this);
 

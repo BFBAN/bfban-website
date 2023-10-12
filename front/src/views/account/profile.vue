@@ -12,27 +12,9 @@
     <br>
 
     <Card dis-hover :padding="0">
-      <Form label-position="top" class="profile-header">
-        <Row :gutter="15">
-          <Col>
-            <a href="https://gravatar.com" target="_blank">
-              <Avatar icon="ios-person" :size="48" :src="userinfo.userAvatar"></Avatar>
-            </a>
-          </Col>
-          <Col flex="1">
-            <h3> {{ userinfo.username }} </h3>
-            <p>{{ $t('profile.meet', {name: userinfo.username}) }} ({{ userinfo.userId }})</p>
-          </Col>
-          <Col v-if="userinfo.privilege">
-            <p><b>{{ $t('profile.account.form.privilege') }}</b></p>
-            <PrivilegesTag :data="userinfo.privilege"></PrivilegesTag>
-          </Col>
-        </Row>
-      </Form>
-      <div class="profile-header-divider ivu-divider ivu-divider-horizontal"></div>
       <Row>
         <Col :xs="{span: 24}" :sm="{span: 6}">
-          <Menu class="profile-menu" :mode="isMobile ? 'horizontal' : 'vertical'"
+          <Menu class="profile-menu" width="100%" :mode="isMobile ? 'horizontal' : 'vertical'"
                 :active-name="menuValue" @on-select="onMenuActive">
             <div v-for="(i, index) in menu" :key="index">
               <MenuItem :name="j.name" v-for="(j, j_index) in i.child" :key="j_index">
@@ -51,7 +33,7 @@
               </MenuItem>
             </div>
             <MenuGroup>
-              <MenuItem name="userCenter" :to="{name: 'account', params: { uId: `${userinfo.userId }` }}">
+              <MenuItem name="userCenter" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId }` }}">
                 {{ $t("header.userCenter") }}
                 <Icon type="ios-link"/>
               </MenuItem>
@@ -93,6 +75,7 @@ import subscribes from "./subscribes"
 import exportAndImport from "@/views/account/exportAndImport";
 import {account_storage} from "@/assets/js";
 import Application from "@/assets/js/application";
+import UserAvatar from "@/components/UserAvatar.vue";
 
 export default new Application({
   name: "profile",
@@ -171,7 +154,8 @@ export default new Application({
     history,
     subscribes,
     exportAndImport,
-    PrivilegesTag
+    PrivilegesTag,
+    UserAvatar
   },
   created() {
     const {pagename} = this.$route.params;
@@ -192,15 +176,10 @@ export default new Application({
       account_storage.updateConfiguration(key, val);
     }
   },
-  computed: {
-    userinfo() {
-      return this.currentUser.userinfo || {}
-    }
-  }
 })
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .profile-menu {
   height: 100%;
 
@@ -213,12 +192,15 @@ export default new Application({
   padding: 15px 20px;
 }
 
-.profile-header-divider {
-  margin: 0 !important;
-  opacity: .2;
-}
-
 .profile-right-content {
-  padding: 10px 20px;
+  .profile-divider {
+    height: 1px;
+    margin: 5px 0;
+    opacity: .3;
+  }
+
+  .profile-body {
+    padding: 10px 20px;
+  }
 }
 </style>

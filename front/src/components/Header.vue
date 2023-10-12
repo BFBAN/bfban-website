@@ -62,34 +62,34 @@
                   :trigger="isMobile ? 'click' : 'hover'"
                   :placement="isMobile ? 'bottom' : 'bottom-end'"
                   :padding="0">
-          <Avatar icon="ios-person" :src="userinfo.userAvatar">{{ userinfo.username }}</Avatar>
+          <UserAvatar :src="userinfo.userAvatar" :size="30"></UserAvatar>
 
           <DropdownMenu slot="list" class="header-dropdown-menu">
             <div class="header-dropdown-avatar">
               <div>
-                <Avatar icon="ios-person" size="60" :src="userinfo.userAvatar"></Avatar>
+                <UserAvatar :src="userinfo.userAvatar" :size="80"></UserAvatar>
                 <p class="header-dropdown-name">{{ userinfo.username }}</p>
                 <p class="header-dropdown-id">{{ userinfo.userId }}</p>
               </div>
               <PrivilegesTag :data="userinfo.privilege"></PrivilegesTag>
             </div>
             <router-link :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
-              <DropdownItem divided>
+              <DropdownItem divided :disabled="$route.name == 'account'">
                 {{ $t("header.userCenter") }}
               </DropdownItem>
             </router-link>
             <router-link :to="{name: 'report'}">
-              <DropdownItem>
+              <DropdownItem :disabled="$route.name == 'report'">
                 {{ $t("header.report") }}
               </DropdownItem>
             </router-link>
             <router-link :to="{name: 'profile', params: {pagename: 'information'}}">
-              <DropdownItem>
+              <DropdownItem :disabled="$route.name == 'profile'">
                 {{ $t("header.profile") }}
               </DropdownItem>
             </router-link>
             <router-link :to="{name: 'admin', params: {pagename: 'home'}}" v-if="isAdmin">
-              <DropdownItem>
+              <DropdownItem :disabled="$route.name == 'admin'">
                 {{ $t("profile.admin.title") }}
               </DropdownItem>
             </router-link>
@@ -160,9 +160,9 @@
                 :name="i.name"
                 :selected="themeIndex == theme_index"
                 @click.native="changeTheme(theme_index)">
-              <Row type="flex" align="middle" >
+              <Row type="flex" align="middle">
                 <div class="hedaer-theme-color right-space" :style="`background-color: ${i.themeColor}`"></div>
-                <p>{{i.name}}</p>
+                <p>{{ i.name }}</p>
               </Row>
             </DropdownItem>
           </DropdownMenu>
@@ -187,6 +187,7 @@ import {storage} from '../assets/js/index'
 import themes from '/public/config/themes.json'
 import menu from '/public/config/headerMenu.json'
 
+import UserAvatar from "@/components/UserAvatar.vue";
 import Header_message from "./Header_message";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import Application from "@/assets/js/application";
@@ -202,7 +203,7 @@ export default new Application({
       },
     }
   },
-  components: {Header_message, PrivilegesTag},
+  components: {Header_message, UserAvatar, PrivilegesTag},
   watch: {
     $route: "loadData",
   },

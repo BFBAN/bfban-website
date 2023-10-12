@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="profile-body">
     <Alert show-icon type="warning" style="width: 100%">
       {{ $t('profile.media.hint1') }}
     </Alert>

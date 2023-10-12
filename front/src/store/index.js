@@ -78,7 +78,7 @@ const store = new Vuex.Store({
 
       try {
         import(`/public/theme/${state.$theme.name}/index.less`)
-      } catch (err) {
+      } finally {
         import(`/public/theme/${theme.default}/index.less`)
       }
     },
