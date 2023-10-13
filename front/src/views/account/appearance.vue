@@ -83,7 +83,7 @@ export default {
     changeTheme(val) {
       storage.set('theme', this.themes.child[this.themeIndex || 0]);
 
-      location.reload();
+      window.location.reload();
     }
   }
 }
