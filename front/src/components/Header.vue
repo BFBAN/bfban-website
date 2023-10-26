@@ -101,7 +101,7 @@
               <DropdownMenu slot="list">
                 <div v-for="(i, theme_index) in themes.child" :key="theme_index">
                   <div @click="changeTheme(theme_index)">
-                    <DropdownItem :name="i.name" :selected="themeIndex == theme_index">
+                    <DropdownItem :name="i.name" :selected="$store.state.$theme.name == i.name">
                       <Row>
                         <Col>
                           <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
@@ -145,11 +145,10 @@
         </Tooltip>
 
         <Divider type="vertical"/>
-
         <Dropdown>
           <DropdownItem style="padding: 0;">
             <div v-for="(i, theme_index) in themes.child" :key="theme_index">
-              <template v-if="themeIndex == theme_index">
+              <template v-if="$store.state.$theme.name == i.name">
                 <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
               </template>
             </div>
@@ -158,7 +157,7 @@
             <DropdownItem
                 v-for="(i, theme_index) in themes.child" :key="theme_index"
                 :name="i.name"
-                :selected="themeIndex == theme_index"
+                :selected="$store.state.$theme.name == i.name"
                 @click.native="changeTheme(theme_index)">
               <Row type="flex" align="middle">
                 <div class="hedaer-theme-color right-space" :style="`background-color: ${i.themeColor}`"></div>
@@ -196,7 +195,6 @@ export default new Application({
   data() {
     return {
       themes,
-      themeIndex: 0,
       headerMenu: {
         show: false,
         child: [],
@@ -262,28 +260,18 @@ export default new Application({
       let theme = await storage.get('theme');
 
       if (theme.data && theme.data.value) {
-        this.themes.child.forEach((i, index) => {
-          if (i.name == theme.data.value.name) {
-            this.themeIndex = index;
-          }
-        });
         await this.$store.dispatch('setTheme', theme.data.value);
         return;
-      } else {
-        themes.child.filter((i, index) => {
-          if (i.name == themes.default) this.themeIndex = index
-        });
       }
 
       await this.$store.dispatch('setTheme', this.$store.state.$theme);
     },
     /**
      * 改变主题
-     * @param val
+     * @param {number} index
      */
-    changeTheme(val) {
-      this.themeIndex = val;
-      storage.set('theme', this.themes.child[this.themeIndex || 0]);
+    changeTheme(index) {
+      storage.set('theme', this.themes.child[index || 0]);
 
       location.reload();
     },

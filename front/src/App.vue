@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="app">
     <template v-if="!isFull">
-      <Header ></Header>
+      <Header></Header>
     </template>
     <main>
       <router-view></router-view>
@@ -14,13 +14,16 @@
 </template>
 
 <script>
-import {api, http_token, storage, account_storage} from './assets/js/index';
+import {http_token, storage, account_storage} from './assets/js/index';
+import {SET_LANG, SET_THEME} from "@/store/mutation-types";
 
 import theme from "/public/config/themes.json"
 
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 import FooterPublicBox from "@/components/footerPublicBox";
+
+import 'view-design/dist/styles/iview.css'
 
 export default {
   name: "app",
@@ -56,12 +59,12 @@ export default {
       let theme = storage.get('theme');
 
       if (theme.data && theme.data.value) {
-        await this.$store.dispatch('setTheme', theme.data.value);
+        await this.$store.dispatch(SET_THEME, theme.data.value);
         return;
       }
 
       // 让它加载默认主题
-      await this.$store.dispatch('setTheme', null);
+      await this.$store.dispatch(SET_THEME, null);
     },
     /**
      * 加载语言
@@ -76,29 +79,18 @@ export default {
 
       // load lang
       if (!selectLang && account_storage.getConfiguration('langLocalSync')) return;
-      this.$store.dispatch('setLang', selectLang);
+      this.$store.dispatch(SET_LANG, selectLang);
     },
     /**
      * 处理用户信息
      */
-    onUserinfo() {
-      if (this.$store.state.user) {
-        this.http.get(api["user_me"], {}).then(res => {
-          const d = res.data;
-          if (d.success === 1) {
-            // set userinfo
-            this.$store.dispatch('setUserInfo', d.data);
-            if (account_storage.getConfiguration('langLocalSync'))
-              this.$store.dispatch('setLang', d.data.attr.language);
-          }
-        })
-      }
-
+    async onUserinfo() {
+      if (!this.$store.state.$userinfo) return;
+      account_storage.getUserInfo()
     }
   },
   computed: {}
 };
-import 'view-design/dist/styles/iview.css'
 </script>
 
 <style lang="less">

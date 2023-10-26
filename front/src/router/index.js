@@ -3,7 +3,7 @@ import store from '@/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueMeta from 'vue-meta'
-import config from "../../package.json";
+import {CHANGE_META_INFO} from '../store/mutation-types'
 
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
@@ -462,7 +462,7 @@ router.beforeEach((to, from, next) => {
             else metainfo.title = "";
             if (metainfo.description && i18n.t(metainfo.description) != metainfo.description) metainfo.description = i18n.t(metainfo.description);
             else metainfo.description = "";
-            store.commit("CHANGE_META_INFO", metainfo)
+            store.commit(CHANGE_META_INFO, metainfo)
         }
 
         store.commit('syncLoginState');
