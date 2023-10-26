@@ -283,7 +283,27 @@
       "website": "https://github.com/KitaProject/BfbanCommonRobot",
       "get": "",
       "hot": false
+    },
+    {
+      "title": "BF2042 State App",
+      "id": "12",
+      "titleLang": {
+        "zh-CN": "战地风云2042统应用计",
+        "en-US": "BF2042 State App"
+      },
+      "describe": "A simple Android application for querying battlefield 2042 results",
+      "describeLang": {
+        "zh-CN": "一个简单的Android应用，用于查询战地2042战绩",
+        "en-US": "A simple Android application for querying battlefield 2042 results"
+      },
+      "tag": [
+        "bfv",
+        "app",
+        "web"
+      ],
+      "website": "https://dzxrly.github.io/BF2042StateWeb/",
+      "get": "https://github.com/dzxrly/BF2042State2.0",
+      "hot": false
     }
-
   ]
 }
