@@ -705,7 +705,7 @@
                     <Col flex="auto" v-if="l.type != 'historyUsername'">
                       <template v-if="isLogin">
                         <!-- 禁言 -->
-                        <template v-if="isSuper">
+                        <template v-if="isAdminL2">
                           <Tooltip placement="top" v-if="!l.isMute">
                             <Button size="small" @click.native="showMuteAlert(l.byUserId)">
                               <Icon type="md-mic" title="mute user"/>
@@ -864,10 +864,10 @@
             <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
           </Spin>
         </Card>
-        <br v-if="isAdmin && !isOnlySuper">
+        <br v-if="isAdmin">
 
         <!-- 管理员裁判 S -->
-        <Card id="judgement" dis-hover v-if="isAdmin && !isOnlySuper">
+        <Card id="judgement" dis-hover v-if="isAdmin">
           <div :label="$t('detail.info.adminConsole')">
             <h2 style="margin: 0 0 1rem 0;">
               <Row>
@@ -2557,16 +2557,6 @@ export default new Application({
       if (typeof value == 'boolean' && !value) value = this.timeline.seeType;
       return value;
     },
-    isOnlySuper() {
-      const {userinfo} = this.$store.state.user || {}
-      const {privilege = []} = userinfo
-      return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
-    },
-    isSuper() {
-      const {userinfo} = this.$store.state.user || {}
-      const {privilege = []} = userinfo
-      return privilege.includes('super') || privilege.includes('root') || privilege.includes('dev')
-    }
   }
 })
 </script>
