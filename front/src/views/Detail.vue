@@ -1640,9 +1640,10 @@ export default new Application({
       this.timelineList = _timelineList;
     },
     /**
-     * 获取追踪状态
+     * 追踪此玩家
+     * 此项操作会存进账户配置字段内
      */
-    getIsSubscribes() {
+    checkPlayerSubscribes() {
       const {id} = this.cheater;
 
       if (!this.isLogin) return;
