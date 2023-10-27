@@ -155,7 +155,7 @@ class OriginClient {
     /** @returns {Promise<string[]>} userIds */
     async searchUserName(username, api_urls=origin_api_urls) {
         username = encodeURIComponent(username); // avoid url injection
-        const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/playersearch?userId=${this.self_prop.userId}&searchTerm=${username}&start=0`;
+        const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/playersearch?userId=${this.self_prop.userId}&searchTerm=${username}&start=0&pageSize=50`;
         const t_start = Date.now();
         try {
             await this.checkSelfTokenValid(true);
@@ -206,7 +206,7 @@ class OriginClient {
 
     /** @returns {Promise<string|null>} userId */
     async searchUserEmail(userEmail, api_urls=origin_api_urls) {
-        const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/playersearch?userId=${this.self_prop.userId}&searchTerm=${userEmail}&start=0`;
+        const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/xsearch/playersearch?userId=${this.self_prop.userId}&searchTerm=${userEmail}&start=0&pageSize=50`;
         const t_start = Date.now();
         console.log(url)
         try {
