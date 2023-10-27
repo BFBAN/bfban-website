@@ -1,6 +1,5 @@
 import Print from './print';
-import Regular from "@/assets/js/regular";
-import {account_storage} from "@/assets/js/index";
+import {account_storage, regular} from "./index";
 
 export default class Application extends Print {
     BFBANLOG = window.BFBANLOG;
@@ -10,6 +9,10 @@ export default class Application extends Print {
 
         data.computed = {
             isAdmin: this.isAdmin,
+            isAdminL1: this.isAdminL1,
+            isAdminL2: this.isAdminL2,
+            isAdminL3: this.isAdminL3,
+            isAdminL4: this.isAdminL4,
             isLogin: this.isLogin,
             isFull: this.isFull,
             isMobile: this.isMobile,
@@ -21,10 +24,35 @@ export default class Application extends Print {
         return data;
     }
 
-    isAdmin () {
+    isAdmin() {
         return account_storage.checkPrivilegeGroup(
             this.$store.state?.user?.userinfo,
             ['root', 'admin', 'super', 'dev']
+        );
+    }
+
+    isAdminL1() {
+        return this.isAdmin();
+    }
+
+    isAdminL2() {
+        return account_storage.checkPrivilegeGroup(
+            this.$store.state?.user?.userinfo,
+            ['root', 'super', 'dev']
+        );
+    }
+
+    isAdminL3() {
+        return account_storage.checkPrivilegeGroup(
+            this.$store.state?.user?.userinfo,
+            ['root', 'dev']
+        );
+    }
+
+    isAdminL4() {
+        return account_storage.checkPrivilegeGroup(
+            this.$store.state?.user?.userinfo,
+            ['root']
         );
     }
 
@@ -45,6 +73,6 @@ export default class Application extends Print {
     }
 
     isMobile() {
-        return new Regular().check('mobile', navigator.userAgent).code >= 0;
+        return regular.check('mobile', navigator.userAgent).code >= 0;
     }
 }

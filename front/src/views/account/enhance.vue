@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.configuration.enhance">
+  <div class="profile-body" v-if="$store.state.configuration.enhance">
     <div v-for="(i, index) in enhance" :key="index">
       <Card>
         <Row>
@@ -15,11 +15,11 @@
       <br>
     </div>
   </div>
-  <div v-else-if="$store.state.configuration.enhance || false" align="center" class="enhance-notApp-content">
+  <div class="profile-body enhance-notApp-content" v-else-if="$store.state.configuration.enhance || false" align="center">
     <h1>No application was detected</h1>
     <p>The BFBAN WEB APP is not installed</p>
   </div>
-  <div v-else>Disable Component</div>
+  <div class="profile-body" v-else>Disable Component</div>
 </template>
 
 <script>

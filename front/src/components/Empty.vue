@@ -10,7 +10,7 @@
           <img :src="showClassic.image" width="50%"/>
         </div>
         <q v-if="showClassic.content">
-          <div v-html="showClassic.content"></div>
+          <div class="classic-content" v-html="showClassic.content"></div>
         </q>
       </div>
     </template>
@@ -70,5 +70,9 @@ export default {
 .classic {
   width: 100%;
   margin-top: 30px;
+
+  .classic-content {
+    white-space: pre;
+  }
 }
 </style>

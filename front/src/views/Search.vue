@@ -19,7 +19,6 @@
           :class="`search-content ${(searchVal.length > 3 && searchPosting) ? 'search-content-mini' : ''}`">
         <Row type="flex" justify="center" :gutter="20" style="width: 100%">
           <Col :xs="{span: 24}" :sm="{span: 18}" :md="{span: 18}">
-
             <div class="search-input search-input-show ivu-input ivu-input-large">
               <Row :gutter="10">
                 <Col flex="1">
@@ -28,6 +27,8 @@
                         size="small"
                         clearable
                         v-model="searchVal"
+                        :show-word-limit="true"
+                        :maxlength="100"
                         :border="false"
                         :placeholder="$t('search.placeholder')"
                         @on-enter="handleSearch"
@@ -80,7 +81,7 @@
                   </OcrWidget>
                 </Col>
                 <Col>
-                  <Button type="primary" size="small" @click="handleSearch">
+                  <Button type="primary" size="small" :disabled="searchVal.length <= 3"  @click="handleSearch">
                     <Icon type="ios-search" v-if="!modalSpinShow"/>
                     <Icon type="md-refresh spin-icon-load" v-else/>
                   </Button>
@@ -568,7 +569,6 @@ export default new Application({
 
       // restriction
       if (keyword == '' || keyword.length <= 3 || this.modalSpinShow) {
-        this.$Message.info(this.$i18n.t('signin.fillEverything'))
         this.modalSpinShow = false;
         return;
       }

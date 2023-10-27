@@ -1,6 +1,6 @@
 # created because this version of bfban is far behind the current node version, and i dont want to switch when working on gametools and bfban
 
-FROM node:14
+FROM node:16
 
 WORKDIR /usr/src/app
 

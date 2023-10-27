@@ -115,7 +115,10 @@ async (req, res, next) => {
             .where('users.valid', 0)
             .first().then(r => r.num);
         let result = await db.select('*').from('users')
-            .where('users.valid', 0)
+            .where((qb) => {
+                const key = 'users.privilege';
+                qb.where('users.valid', 0).orWhere(key, 'like', '%"freezed"%').orWhere(key, 'like','%"blacklisted"%')
+            })
             .orderBy('users.id', order)
             .offset(skip).limit(limit);
 
@@ -467,26 +470,59 @@ async (req, res, next) => {
     }
 });
 
-router.get('/judgementLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
-    checkquery('skip').optional().isInt({min: 0}),
-    checkquery('limit').optional().isInt({min: 0, max: 100}),
-    checkquery('order').optional().isIn(['asc', 'desc']),
+router.post('/judgementLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+    checkbody('userId').optional().isInt({min: 0}),
+    checkbody('userName').optional().isString(),
+    checkbody('dbId').optional().isInt({min: 0}),
+    checkbody('createTimeFrom').optional().isInt({min: 0}),
+    checkbody('createTimeTo').optional().isInt({min: 0}),
+    checkbody('skip').optional().isInt({min: 0}),
+    checkbody('limit').optional().isInt({min: 0, max: 100}),
+    checkbody('order').optional().isIn(['asc', 'desc']),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
-        const skip = req.query.skip !== undefined ? req.query.skip : 0;
-        const limit = req.query.limit !== undefined ? req.query.limit : 20;
-        const order = req.query.order ? req.query.order : 'desc';
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'judgementLog.bad', message: validateErr.array()});
+
+        const createTimeFrom = new Date(req.query.createTimeFrom ? req.query.createTimeFrom - 0 : 0);
+        const createTimeTo = new Date(req.query.createTimeTo ? req.query.createTimeTo - 0 : Date.now());
+        const skip = req.body.skip !== undefined ? req.body.skip : 0;
+        const limit = req.body.limit !== undefined ? req.body.limit : 20;
+        const order = req.body.order ? req.query.order : 'desc';
 
         const total = await db.count({num: 1}).from('comments')
-            .andWhere('type', 'judgement').first().then(r => r.num);
+            .join('users', 'comments.byUserId', 'users.id')
+            .where((qb) => {
+                if (req.body.userId)
+                    qb.where('comments.byUserId', '=', req.body.userId)
+                if (req.body.dbId)
+                    qb.where('comments.id', '=', req.body.dbId)
+                if (req.body.userName)
+                    qb.where('users.username', 'like', `%${req.body.userName}%`)
+            })
+            .andWhere('type', `judgement`)
+            .andWhere('comments.createTime', '>=', createTimeFrom)
+            .andWhere('comments.createTime', '<=', createTimeTo)
+            .first().then(r => r.num);
 
         const result = await db('comments')
             .join('users', 'comments.byUserId', 'users.id')
             .select('comments.*', 'users.username', 'users.privilege')
-            .where('type', `judgement`)
+            .where((qb) => {
+                if (req.body.userId)
+                    qb.where('comments.byUserId', '=', req.body.userId)
+                if (req.body.dbId)
+                    qb.where('comments.id', '=', req.body.dbId)
+                if (req.body.userName)
+                    qb.where('users.username', 'like', `%${req.body.userName}%`)
+            })
+            .andWhere('type', `judgement`)
+            .andWhere('comments.createTime', '>=', createTimeFrom)
+            .andWhere('comments.createTime', '<=', createTimeTo)
             .orderBy('comments.createTime', order)
-            .offset(skip).limit(limit);
+            .limit(limit).offset(skip);
 
         return res.status(200).json({success: 1, code: 'admin.log.ok', data: result, total});
     } catch (err) {

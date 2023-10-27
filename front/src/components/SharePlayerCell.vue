@@ -4,8 +4,8 @@
       <img class="share-logo" src="../assets/images/logo.png">
       <br>
       <div style="text-align: center;">
-        <h1>
-          {{ cheater.originName }}
+        <h1 class="text-distinguishing-letter">
+          <code>{{ cheater.originName }}</code>
         </h1>
         <h5>{{ cheater.originUserId }}</h5>
       </div>

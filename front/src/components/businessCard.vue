@@ -1,9 +1,9 @@
 <template>
   <Poptip :padding="padding"
           :width="width"
+          :transfer="true"
           trigger="hover"
           placement="bottom"
-          :transfer="true"
           @on-popper-show="getUserInfo">
     <slot></slot>
     <div slot="content" class="business">
@@ -43,7 +43,7 @@
               <Col flex="1">
                 <Icon type="md-eye" size="17"/>
               </Col>
-              <Col><PrivilegesTag :data="['admin', 'super', 'root', 'dev']"></PrivilegesTag></Col>
+              <Col><PrivilegesTag :data="['super', 'root', 'dev']"></PrivilegesTag></Col>
             </Row>
             <br>
             <p><b>User Orgin:</b></p>
@@ -114,7 +114,7 @@ export default new Application({
   components: {PrivilegesTag},
   created() {
     this.http = http_token.call(this);
-    this.type = this.isAdmin ? "admin" : "user";
+    this.type = this.isAdminL2 ? "admin" : "user";
   },
   methods: {
     /**

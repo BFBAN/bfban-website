@@ -1,6 +1,17 @@
 <template>
   <div class="theme ivu-radio-group-button">
-    <RadioGroup v-model="themeIndex" size="large" :button-style="'solid'" class="theme-card-content">
+    <div class="profile-body">
+      <Row :gutter="10" type="flex" align="middle" justify="end">
+        <Col>
+          <Button type="primary" @click="changeTheme"> {{ $t('basic.button.save') }} </Button>
+        </Col>
+        <Col>
+          <div class="theme-color" :style="`background-color: ${themes.child[themeIndex].themeColor}`"></div>
+        </Col>
+      </Row>
+    </div>
+    <Divider class="profile-divider"></Divider>
+    <RadioGroup v-model="themeIndex" size="large" :button-style="'solid'" class="theme-card-content profile-body">
       <Card dis-hover
             v-for="(i, index) in themes.child" :key="index"
             :class="`${index == themeIndex ? 'ivu-radio-wrapper-checked' : ''}`">
@@ -23,17 +34,6 @@
         </Card>
       </a>
     </RadioGroup>
-    <Divider dashed></Divider>
-    <div>
-      <Row :gutter="10" type="flex" align="middle" justify="end">
-        <Col>
-          <Button type="primary" @click="changeTheme"> {{ $t('basic.button.save') }} </Button>
-        </Col>
-        <Col>
-          <div class="theme-color" :style="`background-color: ${themes.child[themeIndex].themeColor}`"></div>
-        </Col>
-      </Row>
-    </div>
   </div>
 </template>
 
@@ -83,7 +83,7 @@ export default {
     changeTheme(val) {
       storage.set('theme', this.themes.child[this.themeIndex || 0]);
 
-      location.reload();
+      window.location.reload();
     }
   }
 }

@@ -146,9 +146,9 @@
               <ol class="sitestats-ul" v-if="trend.list.length > 0">
                 <li v-for="(i, index) in trend.list" :key="index">
                   <Row :gutter="10">
-                    <Col flex="1">
+                    <Col flex="1" class="text-distinguishing-letter">
                       <router-link :to="{name:'player', params: { ouid: i.originPersonaId }}">
-                        {{ i.originName }}
+                        <code>{{ i.originName }}</code>
                       </router-link>
                     </Col>
                     <Col>

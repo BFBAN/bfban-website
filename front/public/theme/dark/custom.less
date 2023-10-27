@@ -1,28 +1,28 @@
 // Color
-@primary-color          : #efe227;
+@primary-color          : #401487;
 @info-color             : #6b3abb;
 @success-color          : #19be6b;
 @processing-color       : @primary-color;
 @warning-color          : #ff9900;
 @error-color            : #ed4014;
-@normal-color           : #888882;
-@link-color             : #383838;
+@normal-color           : #e6ebf1;
+@link-color             : #fff;
 @link-hover-color       : tint(@link-color, 10%);
-@link-active-color      : shade(#401487, 5%);
-@selected-color         : fade(#401487, 50%);
+@link-active-color      : shade(@link-color, 5%);
+@selected-color         : fade(@primary-color, 50%);
 @tooltip-color          : #fff;
-@subsidiary-color       : #ececec;
+@subsidiary-color       : #808695;
 @rate-star-color        : #f5a623;
 @white: #fff;
-@black: #000;
+@black: #535353;
 
 // Base
-@body-background        : #d2d0d0;
-@component-background   : #000;
+@body-background        : transparent;
+@component-background   : transparent;
 @font-family            : "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 @code-family            : Consolas,Menlo,Courier,monospace;
-@title-color            : #efe227;
-@text-color             : #3d3a42;
+@title-color            : #e5e5e5;
+@text-color             : #b6bbc5;
 @text-color-secondary: fade(@black, 45%);
 @heading-color: fade(#000, 85%);
 @heading-color-dark: fade(#000, 100%);
@@ -42,25 +42,25 @@
 @padding-xs: 8px; // small items
 
 // Border color
-@border-color-base      : #f3f3f3;  // outside
-@border-color-split     : #dedede;  // inside
+@border-color-base      : #535353;  // outside
+@border-color-split     : #232121;  // inside
 @border-width-base      : 1px;            // width of the border for a component
 @border-style-base      : solid;          // style of a components border
 
 // Background color
-@background-color-base        : #f5f3f3;  // base
+@background-color-base        : #555;  // base
 @background-color-select-hover: @input-disabled-bg;
 @tooltip-bg                   : rgba(70, 76, 91, .9);
-@head-bg                      : #fff;
-@table-thead-bg               : #fff;
-@table-td-stripe-bg           : #fff;
-@table-td-hover-bg            : #fff;
-@table-td-highlight-bg        : #fff;
+@head-bg                      : #555;
+@table-thead-bg               : #555;
+@table-td-stripe-bg           : #555;
+@table-td-hover-bg            : #555;
+@table-td-highlight-bg        : #555;
 @menu-dark-title              : #515a6e;
 @menu-dark-active-bg          : #363e4f;
 @menu-dark-subsidiary-color   : rgba(255,255,255,.7);
 @menu-dark-group-title-color  : rgba(255,255,255,.36);
-@date-picker-cell-hover-bg    : fade(@primary-color, 10%);
+@date-picker-cell-hover-bg    : #555;
 
 // Shadow
 @shadow-color           : rgba(0, 0, 0, .2);
@@ -91,15 +91,15 @@
 @btn-border-radius-small: 3px;
 @btn-group-border       : shade(@primary-color, 5%);
 
-@btn-disable-color      : #d9d9d9;
+@btn-disable-color      : rgba(242, 242, 242, 0.5);
 @btn-disable-bg         : @background-color-base;
 @btn-disable-border     : @border-color-base;
 
 @btn-default-color      : @text-color;
-@btn-default-bg         : #fff;
+@btn-default-bg         : #000;
 @btn-default-border     : @border-color-base;
 
-@btn-primary-color      : #fff;
+@btn-primary-color      : #000;
 @btn-primary-bg         : @primary-color;
 
 @btn-ghost-color        : @text-color;
@@ -117,8 +117,8 @@
 // Layout and Grid
 @grid-columns                : 24;
 @grid-gutter-width           : 0;
-@layout-body-background      : #dcdcdc;
-@layout-header-background    : #dcdcdc;
+@layout-body-background      : #555;
+@layout-header-background    : #555;
 @layout-header-height        : 64px;
 @layout-header-padding       : 0 50px;
 @layout-footer-padding       : 24px 50px;
@@ -145,12 +145,12 @@
 @input-placeholder-color     : @btn-disable-color;
 @input-color                 : @text-color;
 @input-border-color          : @border-color-base;
-@input-bg                    : #fff;
-@input-group-bg              : #fff;
+@input-bg                    : #171515;
+@input-group-bg              : #171515;
 
 @input-hover-border-color    : @primary-color;
 @input-focus-border-color    : @primary-color;
-@input-disabled-bg           : #f2f2f2;
+@input-disabled-bg           : #383838;
 
 // Tag
 @tag-font-size          : 12px;
@@ -221,7 +221,7 @@
 @avatar-font-size-base: 18px;
 @avatar-font-size-lg: 24px;
 @avatar-font-size-sm: 14px;
-@avatar-bg: #ccc;
+@avatar-bg: #000;
 @avatar-color: #fff;
 @avatar-border-radius: @border-radius-small;
 

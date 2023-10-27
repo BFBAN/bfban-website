@@ -62,7 +62,7 @@
 
                 <div>
                   <Dropdown :transfer="isMobile" placement="bottom-start">
-                    <h1> {{ cheater.originName || 'User Name' }} </h1>
+                    <h1 class="text-distinguishing-letter"><code>{{ cheater.originName || 'User Name' }}</code></h1>
 
                     <!-- 历史ID -->
                     <DropdownMenu slot="list"
@@ -88,7 +88,9 @@
                             <Col flex="1" class="mobile-hide">
                               <Divider dashed style="margin: 0"/>
                             </Col>
-                            <Col>{{ origin.originName }}</Col>
+                            <Col class="text-distinguishing-letter">
+                              <code>{{ origin.originName }}</code>
+                            </Col>
                           </Row>
                         </div>
                       </div>
@@ -156,7 +158,34 @@
             </Row>
             <Row>
               <Col>
-                <span>Origin id:  {{ cheater.originUserId || 'id' }}</span>
+                <Poptip transfer width="400" placement="bottom-start">
+                  <Icon type="md-more"/>
+                  ids
+                  <div slot="content">
+                    <Row :gutter="10" type="flex" align="middle">
+                      <Col>id:</Col>
+                      <Col flex="1">
+                        <Divider dashed/>
+                      </Col>
+                      <Col>{{ cheater.id || 'cheater id' }}</Col>
+                    </Row>
+                    <Row :gutter="10" type="flex" align="middle">
+                      <Col>User id:</Col>
+                      <Col flex="1">
+                        <Divider dashed/>
+                      </Col>
+                      <Col>{{ cheater.originUserId || 'user id' }}</Col>
+                    </Row>
+                    <Row :gutter="10" type="flex" align="middle">
+                      <Col>Persona id:</Col>
+                      <Col flex="1">
+                        <Divider dashed/>
+                      </Col>
+                      <Col>{{ cheater.originPersonaId || 'persona id' }}</Col>
+                    </Row>
+                  </div>
+                </Poptip>
+
                 <template v-if="!isFull">
                   <Divider type="vertical"/>
 
@@ -253,7 +282,7 @@
 
       <template v-if="!isFull">
         <br>
-        <Card dis-hover>
+        <Card id="recordLink" dis-hover>
           <h2><a href="javascript:void(0)">#</a> {{ $t('detail.info.gameScores') }}</h2>
           <br>
           <!-- 战绩链接 S -->
@@ -379,8 +408,8 @@
                           style="padding: 15px 0">
                       <Dropdown :transfer="isMobile" placement="bottom-start" style="width: 100%">
                         <Row :gutter="16" type="flex" justify="center" align="middle">
-                          <Col>
-                            {{ l.beforeUsername || "N/A" }}
+                          <Col class="text-distinguishing-letter">
+                            <code>{{ l.beforeUsername || "N/A" }}</code>
                           </Col>
                           <Col class="mobile-hide">
                             <Icon type="md-arrow-round-forward" size="20" style="opacity: .6"/>
@@ -389,7 +418,7 @@
                             <Icon type="md-arrow-round-forward" size="20" style="opacity: .6;transform: rotate(90deg)"/>
                           </Col>
                           <Col>
-                            <b>{{ l.nextUsername || "N/A" }}</b>
+                            <b class="text-distinguishing-letter"><code>{{ l.nextUsername || "N/A" }}</code></b>
                           </Col>
                         </Row>
 
@@ -416,12 +445,12 @@
                                 <Col flex="1">
                                   <Divider dashed style="margin: 0"/>
                                 </Col>
-                                <Col>
+                                <Col class="text-distinguishing-letter">
                                   <template v-if="l.fromTime == origin.fromTime">
-                                    <Tag color="primary">{{ origin.originName }}</Tag>
+                                    <Tag color="primary"><code>{{ origin.originName }}</code></Tag>
                                   </template>
                                   <template v-else>
-                                    {{ origin.originName }}
+                                    <code>{{ origin.originName }}</code>
                                   </template>
                                 </Col>
                               </Row>
@@ -455,7 +484,7 @@
                           </router-link>
                           <!-- 举报 -->
                           {{ $t('detail.info.report') }}
-                          <a><u><b>{{ l.toOriginName }}</b></u></a>
+                          <a><u><b class="text-distinguishing-letter"><code>{{ l.toOriginName }}</code></b></u></a>
 
                           <template v-if="l.cheatGame">
                             <!-- 在 -->
@@ -724,7 +753,7 @@
                     <Col flex="auto" v-if="l.type != 'historyUsername'">
                       <template v-if="isLogin">
                         <!-- 禁言 -->
-                        <template v-if="isSuper">
+                        <template v-if="isAdminL2">
                           <Tooltip placement="top" v-if="!l.isMute">
                             <Button size="small" @click.native="showMuteAlert(l.byUserId)">
                               <Icon type="md-mic" title="mute user"/>
@@ -907,10 +936,10 @@
             <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
           </Spin>
         </Card>
-        <br v-if="isAdmin && !isOnlySuper">
+        <br v-if="isAdmin">
 
         <!-- 管理员裁判 S -->
-        <Card dis-hover v-if="isAdmin && !isOnlySuper">
+        <Card id="judgement" dis-hover v-if="isAdmin">
           <div :label="$t('detail.info.adminConsole')">
             <h2 style="margin: 0 0 1rem 0;">
               <Row>
@@ -1057,9 +1086,25 @@
           <a href="javascript:void(0)" @click="onRollingNode(0)">
             <Icon type="md-arrow-round-up" size="30"/>
           </a>
-          <a href="javascript:void(0)" v-if="isLogin" @click="onRollingComment">
-            <Icon type="md-chatboxes" size="30"/>
+          <Dropdown placement="left-start" trigger="contextMenu" @on-click="onRollingDropdowns">
+            <a href="javascript:void(0)" v-if="isLogin" @click="onRollingComment">
+              <Icon type="md-chatboxes" size="30"/>
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem name="recordlink">{{ $t('detail.info.gameScores') }}</DropdownItem>
+              <DropdownItem name="timeline">{{ $t('detail.info.timeLine') }}</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+
+          <a href="javascript:void(0)" @click="getTimeline">
+            <Icon type="md-refresh" size="30"/>
           </a>
+          <template v-if="isLogin && isAdmin">
+            <Divider></Divider>
+            <a href="javascript:void(0)" @click="onRollingJudgement">
+              <Icon type="md-hammer" size="25"/>
+            </a>
+          </template>
         </Card>
       </Affix>
 
@@ -1269,6 +1314,7 @@ import FastReply from "@/components/FastReply";
 import htmllink from "@/components/HtmlLink";
 
 import {formatTextarea, waitForAction} from "@/mixins/common";
+import router from "@/router";
 
 export default new Application({
   data() {
@@ -1307,7 +1353,8 @@ export default new Application({
       cheater: {
         originId: '',
         createTime: time.appStart(),
-        updateTime: time.appStart()
+        updateTime: time.appStart(),
+        isSubscribes: false
       },
       reply: {
         miniModeContent: '',
@@ -1593,64 +1640,51 @@ export default new Application({
       this.timelineList = _timelineList;
     },
     /**
-     * 追踪此玩家
-     * 此项操作会存进账户配置字段内
+     * 获取追踪状态
      */
-    onSubscribes() {
-      let subscribesLocal = storage.get('user.subscribes');
-      let subscribesArray = [];
-      let isSubscribes = false;
+    getIsSubscribes() {
+      const {id} = this.cheater;
 
-      if (subscribesLocal.code < 0) {
-        subscribesLocal = {data: {value: []}};
-      }
-
-      let localdata = subscribesLocal.data.value;
-      subscribesArray = subscribesArray.concat(localdata);
-
-      // 校对本地是否已订阅
-      if (
-          subscribesLocal.code == 0 &&
-          localdata.length >= 0 &&
-          localdata.includes(this.cheater.id)
-      ) {
-        // 若存在触发相同，则移除
-        localdata.splice(localdata.indexOf(this.cheater.id), 1);
-        isSubscribes = false;
-      } else {
-        // 添加
-        isSubscribes = true;
-        subscribesArray.push(this.cheater.id);
-      }
+      if (!this.isLogin) return;
 
       this.subscribes.load = true;
-      this.http.post(api["user_me"], {
-        data: {
-          data: {subscribes: subscribesArray}
-        }
+      this.http.post(api["user_isSubscribes"], {
+        data: {id}
       }).then(res => {
         const d = res.data;
-
-        if (d.success == 1) {
-          storage.set('user.subscribes', subscribesArray);
-        }
-      }).finally(() => {
+        if (res.data.success == 1)
+          this.subscribes.static = d.data;
+      }).finally((err) => {
         this.subscribes.load = false;
-        this.subscribes.static = isSubscribes;
       });
     },
     /**
-     * 检查用户对玩家订阅状态
+     * 追踪此玩家
+     * 此项操作会存进账户配置字段内
      */
-    checkPlayerSubscribes() {
-      const subscribesLocal = storage.get('user.subscribes');
-      if (subscribesLocal.code < 0) return false;
+    async onSubscribes() {
+      this.subscribes.load = true;
 
-      subscribesLocal.data.value.filter(i => {
-        if (i == this.cheater.id) {
-          this.subscribes.static = true;
-        }
-      });
+      switch (this.subscribes.static) {
+        case false:
+          await this.http.post(api["user_subscribes_add"], {
+            data: {playerIds: [this.cheater.id]}
+          }).then(res => {
+            if (res.data.success == 1)
+              this.subscribes.static = true;
+          });
+          break;
+        case true:
+          await this.http.post(api["user_subscribes_delete"], {
+            data: {playerIds: [this.cheater.id]}
+          }).then(res => {
+            if (res.data.success == 1)
+              this.subscribes.static = false;
+          });
+          break;
+      }
+
+      this.subscribes.load = false;
     },
     /**
      * 更新游览值
@@ -1721,7 +1755,7 @@ export default new Application({
 
         this.cheater = {};
 
-        this.http.get(api["cheaters"], {params}).then(res => {
+        http.get(api["cheaters"], {params}).then(res => {
           const d = res.data;
 
           if (d.success === 1) {
@@ -1862,8 +1896,18 @@ export default new Application({
         this.onRollingNode(urlOffsetTop.offsetParent.offsetParent.offsetTop);
       }
     },
+    onRollingDropdowns(name) {
+      switch (name) {
+        case 'recordlink':
+          this.onRollingRecordLink();
+          break;
+        case 'timeline':
+          this.onRollingTimeline();
+          break;
+      }
+    },
     /**
-     * 滚动到评论区
+     * 滚动到评论文本框
      */
     onRollingComment() {
       const commentNode = document.getElementById('reply');
@@ -1871,7 +1915,31 @@ export default new Application({
       this.onRollingNode(commentNode.offsetTop + commentNode.offsetHeight);
     },
     /**
-     * 滚动节点位置
+     * 滚动到战绩
+     */
+    onRollingRecordLink() {
+      const commentNode = document.getElementById('recordLink');
+
+      this.onRollingNode(commentNode.offsetTop - 50);
+    },
+    /**
+     * 滚动到时间轴
+     */
+    onRollingTimeline() {
+      const commentNode = document.getElementById('timeline');
+
+      this.onRollingNode(commentNode.offsetTop - 50);
+    },
+    /**
+     * 滚动到判决
+     */
+    onRollingJudgement() {
+      const commentNode = document.getElementById('judgement');
+
+      this.onRollingNode(commentNode.offsetTop - 50);
+    },
+    /**
+     * 滚动位置
      * @param scrollTopNumber
      */
     onRollingNode(scrollTopNumber) {
@@ -1955,7 +2023,6 @@ export default new Application({
         this.updateCheaterInfo()
       if (this.verify.isSubscribeTrace)
         this.onSubscribes()
-
 
       // 判决处理
       this.verifySpinShow = true;
@@ -2319,19 +2386,7 @@ export default new Application({
       let value = account_storage.getConfiguration("timelineSeeType");
       if (typeof value == 'boolean' && !value) value = this.timeline.seeType;
       return value;
-    }
-    ,
-    isOnlySuper() {
-      const {userinfo} = this.$store.state.user || {}
-      const {privilege = []} = userinfo
-      return privilege.includes('super') && (!privilege.includes('root') && !privilege.includes('dev'))
-    }
-    ,
-    isSuper() {
-      const {userinfo} = this.$store.state.user || {}
-      const {privilege = []} = userinfo
-      return privilege.includes('super') || privilege.includes('root') || privilege.includes('dev')
-    }
+    },
   }
 });
 </script>

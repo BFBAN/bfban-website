@@ -95,6 +95,10 @@ export default {
   }
 
   .html-widget-size-default {
+    white-space: pre-wrap !important;;
+    word-wrap: break-word !important;;
+    word-break: break-word !important;
+
     * {
       font-size: 13px;
     }

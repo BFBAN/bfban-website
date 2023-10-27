@@ -3,7 +3,8 @@
     <Row :gutter="20">
       <Col flex="1"></Col>
       <Col>
-        <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400" popper-class="files-poptip">
+        <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400" popper-class="files-poptip"
+                :padding="'20px 30px'">
           <Button>
             <Icon type="md-funnel" size="15"/>
           </Button>
@@ -66,7 +67,9 @@
               <div>
                 <Time :time="i.createTime" :type="'datetime'"></Time>
                 <Divider type="vertical"/>
-                {{ i.byUserId }}
+                <BusinessCard :id="i.byUserId">
+                  <router-link :to="{name:'account', params: { uId: i.byUserId }}">{{ i.byUserId }}</router-link>
+                </BusinessCard>
               </div>
             </Col>
             <Col>
@@ -97,6 +100,7 @@
 <script>
 import {api, util, http_token} from "../../assets/js";
 import Empty from "@/components/Empty.vue";
+import BusinessCard from "@/components/businessCard.vue";
 
 export default {
   data() {
@@ -158,7 +162,7 @@ export default {
       total: 0,
     }
   },
-  components: {Empty},
+  components: {BusinessCard, Empty},
   created() {
     this.http = http_token.call(this);
 
@@ -171,7 +175,7 @@ export default {
     getFiles() {
       let fromData = {
         limit: this.limit,
-        skip: this.skip,
+        skip: (this.skip - 1) * this.limit,
         data: {}
       };
 
@@ -219,7 +223,7 @@ export default {
       this.$refs["filesPoptip"].handleClose();
       this.$refs["filesFunnel"].resetFields();
     },
-    subimtFormData () {
+    subimtFormData() {
       this.getFiles();
       this.resetFormData();
     },

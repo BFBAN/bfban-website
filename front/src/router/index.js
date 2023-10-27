@@ -3,7 +3,7 @@ import store from '@/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueMeta from 'vue-meta'
-import config from "../../package.json";
+import {CHANGE_META_INFO} from '../store/mutation-types'
 
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
@@ -38,7 +38,7 @@ const isLoginBeforeEnter = function (to, from, next) {
     if (store.state.user) {
         next();
     } else {
-        next({path: '/signin', query: { backurl: to.fullPath }});
+        next({path: '/signin', query: {backurl: to.fullPath}});
     }
 }
 
@@ -48,10 +48,10 @@ const isAdminBefore = (to, from, next) => {
     isLoginBeforeEnter(to, from, next);
 
     if (store.state.user)
-      checkAdmin = store.state.user.userinfo.privilege.some(item => ['admin', 'super', 'dev'].includes(item))
-        // for (const i of store.state.user.userinfo.privilege) {
-        //     if (['admin', 'root', ''].includes(i)) checkAdmin = true;
-        // }
+        checkAdmin = store.state.user.userinfo.privilege.some(item => ['admin', 'super', 'dev'].includes(item))
+    // for (const i of store.state.user.userinfo.privilege) {
+    //     if (['admin', 'root', ''].includes(i)) checkAdmin = true;
+    // }
 
     if (checkAdmin) {
         next();
@@ -71,19 +71,23 @@ const routes = [
     //     }, component: test},
 
     // 主页
-    {name: 'home', path: '/', meta: {
-        value: 'home.title',
-        metaInfo : {
-            title: 'home.title',
-            keywords: "home.seo.keywords",
-            description: 'home.seo.description'
-        }
-    }, component: Home},
+    {
+        name: 'home', path: '/', meta: {
+            value: 'home.title',
+            metaInfo: {
+                title: 'home.title',
+                keywords: "home.seo.keywords",
+                description: 'home.seo.description'
+            }
+        },
+        component: Home,
+    },
 
     // 关于
-    {name: 'about', path: '/about',
+    {
+        name: 'about', path: '/about',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'about.title',
                 keywords: "about.seo.keywords",
                 description: 'about.description'
@@ -93,9 +97,10 @@ const routes = [
     },
 
     // 友链
-    {name: 'link', path: '/link',
+    {
+        name: 'link', path: '/link',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'link.title',
                 keywords: "link.seo.keywords",
                 description: 'link.description'
@@ -105,9 +110,10 @@ const routes = [
     },
 
     // 应用名单
-    {name: 'apps', path: '/apps',
+    {
+        name: 'apps', path: '/apps',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'apps.title',
                 keywords: "apps.seo.keywords",
                 description: 'apps.description'
@@ -117,9 +123,10 @@ const routes = [
     },
 
     // 个人中心
-    {name: 'profile_home', path: '/profile',
+    {
+        name: 'profile_home', path: '/profile',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'profile.title',
                 keywords: "profile.seo.keywords",
                 description: 'profile.description'
@@ -128,9 +135,10 @@ const routes = [
         component: Profile,
         beforeEnter: isLoginBeforeEnter
     },
-    {name: 'profile', path: '/profile/:pagename',
+    {
+        name: 'profile', path: '/profile/:pagename',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'profile.title',
                 keywords: "profile.seo.keywords",
                 description: 'profile.description'
@@ -143,7 +151,7 @@ const routes = [
         name: 'admin',
         path: '/admin/:pagename',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'profile.admin.title',
                 keywords: "profile.seo.keywords",
                 description: 'profile.admin.title'
@@ -155,9 +163,10 @@ const routes = [
 
 
     // 搜索
-    {name: 'search', path: '/search/:conetnt',
+    {
+        name: 'search', path: '/search/:conetnt',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'search.title',
                 keywords: "search.seo.keywords",
                 description: 'search.description'
@@ -165,9 +174,10 @@ const routes = [
         },
         component: Search
     },
-    {name: 'search_main', path: '/search',
+    {
+        name: 'search_main', path: '/search',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'search.title',
                 keywords: "search.seo.keywords",
                 description: 'search.description'
@@ -181,7 +191,7 @@ const routes = [
         name: 'report',
         path: '/report',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'report.title',
                 keywords: "report.seo.keywords",
                 description: 'report.description'
@@ -192,9 +202,10 @@ const routes = [
     },
 
     // 作弊名单
-    {name: 'player_list', path: '/player',
+    {
+        name: 'player_list', path: '/player',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'player_list.title',
                 keywords: "player.seo.keywords",
                 description: 'player_list.description'
@@ -204,9 +215,10 @@ const routes = [
     },
 
     // 作弊者详情
-    {name: 'player', path: '/player/:ouid',
+    {
+        name: 'player', path: '/player/:ouid',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'detail.title',
                 keywords: "detail.seo.keywords",
                 description: 'detail.description'
@@ -216,9 +228,10 @@ const routes = [
     },
 
     // 作弊者分享面板
-    {name: 'cheater_share', path: '/player/:ouid/share',
+    {
+        name: 'cheater_share', path: '/player/:ouid/share',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'share.title',
                 keywords: "share.seo.keywords",
                 description: 'share.title'
@@ -240,9 +253,10 @@ const routes = [
     },
 
     // 唤起应用面板
-    {name: 'cheater_app', path: '/player/:ouid/app',
-        meta:{
-            metaInfo : {
+    {
+        name: 'cheater_app', path: '/player/:ouid/app',
+        meta: {
+            metaInfo: {
                 title: 'detail.info.app_qr.title',
                 keywords: "detail.seo.keywords",
                 description: 'detail.info.app_qr.title'
@@ -252,9 +266,10 @@ const routes = [
     },
 
     // 作弊者卡片
-    {name: 'cheater_share_card', path: '/player/:ouid/share/card',
-        meta:{
-            metaInfo : {
+    {
+        name: 'cheater_share_card', path: '/player/:ouid/share/card',
+        meta: {
+            metaInfo: {
                 title: 'detail.info.app_qr.title',
                 keywords: "detail.seo.keywords",
                 description: 'detail.info.app_qr.title'
@@ -267,7 +282,7 @@ const routes = [
     {
         name: 'cheaters_old', path: '/cheaters/:ouid',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'detail.title',
                 keywords: "detail.seo.keywords",
                 description: 'detail.description'
@@ -282,9 +297,10 @@ const routes = [
     },
 
     // 登录
-    {name: 'signin', path: '/signin',
+    {
+        name: 'signin', path: '/signin',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'signin.title',
                 keywords: "signin.seo.keywords",
                 description: 'signin.description'
@@ -294,9 +310,10 @@ const routes = [
     },
 
     // 注册
-    {name: 'signup', path: '/signup',
+    {
+        name: 'signup', path: '/signup',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'signup.title',
                 keywords: "signup.seo.keywords",
                 description: 'signup.description'
@@ -306,9 +323,10 @@ const routes = [
     },
 
     // 注册验证
-    {name: 'registerVerification', path: '/registerVerification',
+    {
+        name: 'registerVerification', path: '/registerVerification',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'registerVerification.title',
                 keywords: "registerVerification.seo.keywords",
                 description: 'registerVerification.description'
@@ -322,7 +340,7 @@ const routes = [
         name: 'bindOrigin',
         path: '/bindOrigin',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'bindOrigin.title',
                 keywords: "bindOrigin.seo.keywords",
                 description: 'bindOrigin.description'
@@ -333,9 +351,10 @@ const routes = [
     },
 
     // 重置密码
-    {name: 'forgetPassword', path: '/forgetPassword',
-        meta:{
-            metaInfo : {
+    {
+        name: 'forgetPassword', path: '/forgetPassword',
+        meta: {
+            metaInfo: {
                 title: 'forgetPassword.title',
                 keywords: "forgetPassword.seo.keywords",
                 description: 'forgetPassword.description'
@@ -344,9 +363,10 @@ const routes = [
         component: ForgetPassword
     },
 
-    {name: 'forgetPasswordVerify', path: '/forgetPasswordVerify',
+    {
+        name: 'forgetPasswordVerify', path: '/forgetPasswordVerify',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'forgetPasswordVerify.title',
                 keywords: "forgetPasswordVerify.seo.keywords",
                 description: 'forgetPasswordVerify.description'
@@ -356,9 +376,10 @@ const routes = [
     },
 
     // 账户验证
-    {name: 'signupComplete', path: '/signupComplete',
-        meta:{
-            metaInfo : {
+    {
+        name: 'signupComplete', path: '/signupComplete',
+        meta: {
+            metaInfo: {
                 title: 'signupComplete.title',
                 keywords: "signupComplete.seo.keywords",
                 description: 'signupComplete.description'
@@ -368,9 +389,10 @@ const routes = [
     },
 
     // 网站统计
-    {name: 'site_stats', path: '/sitestats',
+    {
+        name: 'site_stats', path: '/sitestats',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'sitestats.title',
                 keywords: "sitestats.seo.keywords",
                 description: 'sitestats.description'
@@ -379,9 +401,10 @@ const routes = [
         component: SiteStats
     },
 
-    {name: 'account', path: '/account/:uId',
+    {
+        name: 'account', path: '/account/:uId',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'account.title',
                 keywords: "account.seo.keywords",
                 description: 'account.description'
@@ -389,7 +412,8 @@ const routes = [
         },
         component: Account
     },
-    {name: 'announcement', path: '/announcement',
+    {
+        name: 'announcement', path: '/announcement',
         // meta: {
         //     metaInfo : {
         //         title: 'account.title',
@@ -399,7 +423,8 @@ const routes = [
         // },
         component: () => import('@/views/announcement/list.vue')
     },
-    {name: 'announcementDetails', path: '/announcement/details',
+    {
+        name: 'announcementDetails', path: '/announcement/details',
         // meta: {
         //     metaInfo : {
         //         title: 'account.title',
@@ -410,8 +435,9 @@ const routes = [
         component: () => import('@/views/announcement/details.vue')
     },
 
-    {name: 'notFound', path: '/404', meta: {
-            metaInfo : {
+    {
+        name: 'notFound', path: '/404', meta: {
+            metaInfo: {
                 title: 'basic.tip.notFound',
                 keywords: "basic.tip.notFound",
                 description: 'basic.tip.notFound'
@@ -438,22 +464,34 @@ VueRouter.prototype.push = function push(location) {
 }
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.metaInfo) {
-        let metainfo = to.meta.metaInfo;
+    const app = router.app;
+
+    try {
+        if (to.meta.metaInfo) {
+            let metainfo = to.meta.metaInfo;
             if (metainfo.keywords && i18n.t(metainfo.keywords) != metainfo.keywords) metainfo.keywords = "bfban,BFBAN," + i18n.t(metainfo.keywords);
             else metainfo.keywords = "bfban,BFBAN";
             if (metainfo.title) metainfo.title = i18n.t(metainfo.title);
             else metainfo.title = "";
             if (metainfo.description && i18n.t(metainfo.description) != metainfo.description) metainfo.description = i18n.t(metainfo.description);
             else metainfo.description = "";
-        store.commit("CHANGE_META_INFO", metainfo)
+            store.commit(CHANGE_META_INFO, metainfo)
+        }
+
+        store.commit('syncLoginState');
+
+        // document.title = `${config.name} | ${i18n.t(to.meta.value)}`;
+        app.$Loading.start();
+    } catch (err) {
+        app.$Loading.error();
+    } finally {
+        next();
     }
-
-    store.commit('syncLoginState');
-
-    // document.title = `${config.name} | ${i18n.t(to.meta.value)}`;
-
-    next();
 });
+
+router.afterEach(() => {
+    const app = router.app;
+    app.$Loading.finish();
+})
 
 export default router;

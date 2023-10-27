@@ -7,7 +7,7 @@
           <Button @click="onLeftAppealPlan" size="small">
             <Icon type="md-contract"/>
           </Button>
-          {{ $t('detail.info.assistPppeal') }}
+          {{ $t('detail.info.assistAppeal') }}
         </template>
         <template v-else>
           <Button @click="onLeftAppealPlan" size="small">
@@ -155,12 +155,12 @@
                           <Col flex="1">
                             <Divider dashed style="margin: 0"/>
                           </Col>
-                          <Col>
+                          <Col class="text-distinguishing-letter">
                             <template v-if="l.fromTime == origin.fromTime">
-                              <Tag color="primary">{{ origin.originName }}</Tag>
+                              <Tag color="primary"><code>{{ origin.originName }}</code></Tag>
                             </template>
                             <template v-else>
-                              {{ origin.originName }}
+                              <code>{{ origin.originName }}</code>
                             </template>
                           </Col>
                         </Row>
@@ -194,7 +194,7 @@
                     </router-link>
                     <!-- 举报 -->
                     {{ $t('detail.info.report') }}
-                    <a><u><b>{{ l.toOriginName }}</b></u></a>
+                    <a><u><b class="text-distinguishing-letter"><code>{{ l.toOriginName }}</code></b></u></a>
 
                     <template v-if="l.cheatGame">
                       <!-- 在 -->

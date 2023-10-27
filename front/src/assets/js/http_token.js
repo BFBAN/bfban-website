@@ -9,74 +9,84 @@ import {account_storage} from "@/assets/js/index";
 import router from "@/router";
 
 export default class http_token extends http {
-  THAT;
+    THAT;
 
-  constructor(that) {
-    super();
-    this.THAT = that;
-
-    this.HTTP.interceptors.response.use(response => response, error => {
-      const {code = "none", message = ""} = error.response.data;
-
-      // 无效令牌
-      let userError = ["user.invalid", "user.tokenExpired", "user.tokenClientException"]
-      if (code.constructor(userError)) {
-        account_storage.clearAll()
-        store.dispatch('signout').then(() => {
-          router.push('/signin');
-        });
-      }
-
-      return Promise.reject(error)
-    });
-  }
-
-  call (t) {
-    return new http_token(t);
-  }
-
-  /**
-   * token
-   * @param data
-   * @returns {{}}
-   */
-  setToken (data = {}) {
-    if (store.state.user && store.state.user.token) {
-      const token = store.state.user.token;
-      if (token != null || token != '') {
-        const headers = data.headers || {}
-        data = Object.assign(data, {
-          headers: {
-            'x-access-token': token,
-            ...headers
-          }
+    constructor(that) {
+        super();
+        const token_that = this;
+        this.THAT = that;
+        this.HTTP.interceptors.response.use(response => {
+            token_that.checkExpiredToken(response)
+            return response;
+        }, error => {
+            token_that.checkExpiredToken(error)
+            return Promise.reject(error)
         })
-      }
     }
-    return data;
-  }
 
-  async post(url = '', data = {data: {}}) {
-    this.CONF = await super.initConf();
+    call(t) {
+        return new http_token(t);
+    }
 
-    return super.post(url, this.setToken(data));
-  }
+    /**
+     * token
+     * @param data
+     * @returns {{}}
+     */
+    setToken(data = {}) {
+        if (store.state.user && store.state.user.token) {
+            const token = store.state.user.token;
+            if (token != null || token != '') {
+                const headers = data.headers || {}
+                data = Object.assign(data, {
+                    headers: {
+                        'x-access-token': token,
+                        ...headers
+                    }
+                })
+            }
+        }
+        return data;
+    }
 
-  async get(url = '', data = {data: {}, params: {}}) {
-    this.CONF = await super.initConf();
+    /**
+     * 检查令牌是否过期
+     * @param context
+     */
+    checkExpiredToken(context = {}) {
+        const {code = "none", message = "", success = 0, error = 0} = context?.response?.data || context?.data || {};
 
-    return super.get(url, this.setToken(data));
-  }
+        // 无效令牌
+        let userError = ["user.invalid", "user.tokenExpired", "user.tokenClientException"]
+        if (userError.includes(code) && error == 1) {
+            account_storage.clearAll()
+            store.dispatch('signout').then(() => {
+                router.push('/signin');
+            });
+        }
+    }
 
-  async put(url = '', data = {data: {}, params: {}}) {
-    this.CONF = await super.initConf();
+    async post(url = '', data = {data: {}}) {
+        this.CONF = await super.initConf();
 
-    return super.put(url, this.setToken(data));
-  }
+        return super.post(url, this.setToken(data));
+    }
 
-  async delete(url = '', data = {data: {}, params: {}}) {
-    this.CONF = await super.initConf();
+    async get(url = '', data = {data: {}, params: {}}) {
+        this.CONF = await super.initConf();
 
-    return super.delete(url, this.setToken(data));
-  }
+        return super.get(url, this.setToken(data));
+    }
+
+    async put(url = '', data = {data: {}, params: {}}) {
+        this.CONF = await super.initConf();
+
+        return super.put(url, this.setToken(data));
+    }
+
+    async delete(url = '', data = {data: {}, params: {}}) {
+        this.CONF = await super.initConf();
+
+        return super.delete(url, this.setToken(data));
+    }
 }

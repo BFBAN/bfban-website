@@ -3,7 +3,7 @@
     <div v-for="(i, index) in voiceType" :key="index" :class="[
         globalState ? '' : 'disabled'
     ]">
-      <Row :gutter="10" type="flex" align="middle" class="voice-item" v-voice-button>
+      <Row :gutter="10" type="flex" align="middle" class="voice-item profile-body" v-voice-button>
         <Col>
           <Checkbox v-model="i.state" @on-change="switchVoiceAttr(i.loaclValue,  i)"></Checkbox>
         </Col>

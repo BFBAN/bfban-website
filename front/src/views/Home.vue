@@ -179,7 +179,7 @@
 import {api, http, util, time, regular, upload} from '../assets/js/index'
 
 import Application from "../assets/js/application";
-import Tell from "../components/Home_tell";
+import Tell from "../components/HomeTell.vue";
 
 export default new Application({
   data() {

@@ -17,7 +17,7 @@
             @on-tab-remove="doCancel">
         <TabPane v-for="(tab, index) in tabs.list.length" :key="index"
                  disabled
-                 :label="(tabs.list[index].formItem.originId ? tabs.list[index].formItem.originId : tab.toString())">
+                 :label="(tabs.list[index].formItem.originName ? tabs.list[index].formItem.originName : tab.toString())">
           <template dis-hover shadow v-if="tabs.list[index].statusOk == 0">
             <Form :label-width="isMobile ? null : 150"
                   :model="tabs.list[index].formItem"
@@ -48,7 +48,7 @@
                 <!-- 游戏类型 E -->
 
                 <!-- 游戏名称 S -->
-                <FormItem prop="originId" :label="$t('report.labels.hackerId')">
+                <FormItem :prop="tabs.list[index].type" :label="$t('report.labels.hackerId')">
                   <Alert type="error"
                          show-icon
                          class="notFoundHint"
@@ -69,53 +69,101 @@
                       </p>
                     </span>
                   </Alert>
-                  <Row :gutter="30">
-                    <Col :xs="{span:16}" :lg="{span: 10}">
-                      <AutoComplete
-                          v-model="tabs.list[index].formItem.originId"
-                          :data="tabs.list[index].players.list"
-                          @on-search="handleSearchReportId"
-                          maxlength="280"
-                          clearable
-                          :transfer="true"
-                          show-word-limit
-                          icon="ios-search"
-                          size="large"
-                          :placeholder="$t('report.info.onlyOneId')">
-                        <template v-if="tabs.list && tabs.list[index].players.length > 0">
-                          <div v-for="(option,optionIndex) in tabs.list[index].players" :key="optionIndex">
-                            <Option :value="option.originName" v-if="option && option.originName">
-                              <Row>
-                                <Col flex="auto">
-                                  <Avatar :src="option.avatarLink"></Avatar>
-                                  <span>&emsp; {{ option.originName }}</span>
-                                </Col>
-                              </Row>
-                            </Option>
-                          </div>
-                        </template>
-                      </AutoComplete>
+                  <Row :gutter="10" type="flex" align="middle">
+                    <Col>
+                      <Select v-model="tabs.list[index].type" size="large" style="min-width: 120px">
+                        <Option v-for="(type, typeIndex) in tabs.list[index].types" :key="typeIndex" :value="type"
+                                :label="$t(`report.labels.types.${type}.name`)">
+                          <Row :gutter="5" type="flex" align="middle">
+                            <Col :lg="{span: 20}">
+                              {{ $t(`report.labels.types.${type}.name`) }}
+                            </Col>
+                            <Col :lg="{span: 4}">
+                              <Poptip trigger="hover" transfer>
+                                <Icon type="ios-help-circle-outline" />
+                                <div slot="content">{{ $t(`report.labels.types.${type}.hint`) }}</div>
+                              </Poptip>
+                            </Col>
+                          </Row>
+                        </Option>
+                      </Select>
                     </Col>
-                    <Col :xs="{span: 8}" :lg="{span: 14}">
-                      <OcrWidget :data="{index}" @ok="onOcrOutput">
-                        <Button size="large">
-                          <Icon type="md-qr-scanner"/>
-                          OCR
-                        </Button>
-                      </OcrWidget>
-                    </Col>
+                    <Divider type="vertical"></Divider>
+                    <template v-if="tabs.list[index].type == 'originName'">
+                      <Col flex="1">
+                        <AutoComplete
+                            v-model="tabs.list[index].formItem.originName"
+                            :data="tabs.list[index].players.list"
+                            @on-search="handleSearchReportId"
+                            maxlength="280"
+                            clearable
+                            :transfer="true"
+                            show-word-limit
+                            icon="ios-search"
+                            size="large"
+                            :placeholder="$t('report.info.onlyOneId')">
+                          <template v-if="tabs.list && tabs.list[index].players.length > 0">
+                            <div v-for="(option,optionIndex) in tabs.list[index].players" :key="optionIndex">
+                              <Option :value="option.originName" v-if="option && option.originName">
+                                <Row :gutter="10" type="flex" justify="center" align="middle">
+                                  <Col>
+                                    <Avatar :src="option.avatarLink"></Avatar>
+                                  </Col>
+                                  <Col flex="1">
+                                    <span class="text-distinguishing-letter"><code>{{ option.originName }}</code></span>
+                                  </Col>
+                                </Row>
+                              </Option>
+                            </div>
+                          </template>
+                        </AutoComplete>
+                      </Col>
+                      <Col>
+                        <OcrWidget :data="{index}" @ok="onOcrOutput">
+                          <Button size="large">
+                            <Icon type="md-qr-scanner"/>
+                            OCR
+                          </Button>
+                        </OcrWidget>
+                      </Col>
+                    </template>
+                    <template v-else-if="tabs.list[index].type == 'originPersonaId'">
+                      <Col flex="1">
+                        <Input v-model="tabs.list[index].formItem.originPersonaId"
+                               maxlength="280"
+                               clearable
+                               show-word-limit
+                               size="large"
+                               type="number"
+                               :transfer="true"
+                               :placeholder="$t('report.info.onlyOneId')"></Input>
+                      </Col>
+                    </template>
+                    <template v-else-if="tabs.list[index].type == 'originUserId'">
+                      <Col flex="1">
+                        <Input v-model="tabs.list[index].formItem.originUserId"
+                               maxlength="280"
+                               clearable
+                               show-word-limit
+                               size="large"
+                               type="number"
+                               :transfer="true"
+                               :placeholder="$t('report.info.onlyOneId')"></Input>
+                      </Col>
+                    </template>
                   </Row>
 
-                  <Card class="report-hackrid" dis-hover>
+                  <Card class="report-hackrid" dis-hover v-if="tabs.list[index].type == 'originName'">
                     <div slot="title">
-                      <h1 v-if="tabs.list[index].formItem.originId">{{ tabs.list[index].formItem.originId }}</h1>
+                      <h1 v-if="tabs.list[index].formItem.originName" class="text-distinguishing-letter">
+                        <code>{{ tabs.list[index].formItem.originName }}</code></h1>
                       <span v-else>ID</span>
                     </div>
                     <p class="hint">
                       {{ $t("report.info.idNotion1") }}
                     </p>
                     <p class="hint">
-                      {{ $t("report.info.idNotion2") }}
+                      <code>{{ $t("report.info.idNotion2") }}</code>
                     </p>
                   </Card>
                 </FormItem>
@@ -192,24 +240,13 @@
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
                   <Card :padding="0" dis-hover>
-                      <Textarea :placeholder="$t('report.info.description')"
-                                :index="index"
-                                :height="'520px'"
-                                :maxlength="60000"
-                                :showMaxlengthLabel="true"
-                                v-model="tabs.list[index].formItem.description">
-                      </Textarea>
-                  </Card>
-
-                  <br>
-
-                  <Card :padding="0" dis-hover class="timeline-description"
-                        v-if="tabs.list[index].formItem.description">
-                    <Html :html="tabs.list[index].formItem.description" :data="{
-                      'videoLink': tabs.list[index].formItem.videoLink,
-                      'selfUserName': 'selfUserName',
-                      'playerUserName': 'playerUserName'
-                    }"></Html>
+                        <Textarea :placeholder="$t('report.info.description')"
+                                  :index="index"
+                                  :height="'520px'"
+                                  :maxlength="60000"
+                                  :showMaxlengthLabel="true"
+                                  v-model="tabs.list[index].formItem.description">
+                        </Textarea>
                   </Card>
                 </FormItem>
               </Card>
@@ -324,6 +361,8 @@ import Textarea from "@/components/Textarea.vue";
 import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";
 import Promise from "lodash/_Promise";
+import Empty from "@/components/Empty.vue";
+import HtmlWidget from "@/components/HtmlWidget.vue";
 
 export default new Application({
   data() {
@@ -339,7 +378,7 @@ export default new Application({
       cheatMethodsGlossary: [],
     };
   },
-  components: {Textarea, Html, OcrWidget, Captcha},
+  components: {Textarea, Html, HtmlWidget, OcrWidget, Captcha, Empty},
   created() {
     const message = store.state.configuration['voice_message']
 
@@ -402,6 +441,8 @@ export default new Application({
     handleTabsAdd() {
       let newFormData = {
         load: false,
+        type: 'originName',
+        types: ['originName', 'originUserId', 'originPersonaId'],
         // 检索列表
         players: {
           list: []
@@ -409,13 +450,13 @@ export default new Application({
         // form data
         formItem: {
           gameName: "",
-          originId: "",
+          originName: "",
+          originUserId: "",
+          originPersonaId: "",
           videoLink: [],
           checkbox: [],
           description: "",
           captcha: "",
-          originUserId: "",
-          originPersonaId: "",
           avatarLink: "",
         },
         // form rule
@@ -423,8 +464,14 @@ export default new Application({
           gameName: [
             {required: true, trigger: 'change'}
           ],
-          originId: [
+          originName: [
             {required: true, trigger: 'blur'}
+          ],
+          originUserId: [
+            {required: true, min: 1, max: 280, trigger: 'blur'}
+          ],
+          originPersonaId: [
+            {required: true, min: 1, max: 280, trigger: 'blur'}
           ],
           checkbox: [
             {required: true, type: 'array', min: 1, trigger: 'change'},
@@ -554,28 +601,43 @@ export default new Application({
      * @param formData
      * @param index
      */
-    handleReport(formData, index) {
-      const cheatMethods = formData.formItem.checkbox;
-      const {gameName, captcha, originId} = formData.formItem;
-      const description = formData.formItem.description.trim();
-      const videoLink = formData.formItem.videoLink.filter(i => i != '' || i != undefined || i != null).toString().trim();
+    handleReport(data, index) {
+      const {gameName, captcha, originName, originUserId, originPersonaId} = data.formItem;
+      const cheatMethods = data.formItem.checkbox;
+      const description = data.formItem.description.trim();
+      const videoLink = data.formItem.videoLink.filter(i => i != '' || i != undefined || i != null).toString().trim() || null;
+      const formData = {
+        data: {
+          game: gameName,
+          cheatMethods,	// see {{valid_cheatMethod}}
+          videoLink,
+          description
+        },
+        encryptCaptcha: this.$refs[`report_${index}`][0].hash,
+        captcha,
+      };
+      let url = ""
 
       this.spinShow = true;
 
+      switch (formData.type) {
+        case "originUserId":
+          url = api["player_reportById"];
+          formData.data.originUserId = originUserId
+          break;
+        case "originPersonaId":
+          url = api["player_reportById"];
+          formData.data.originPersonaId = originPersonaId
+          break;
+        case "originName":
+        default:
+          url = api["player_report"];
+          formData.data.originName = originName;
+          break;
+      }
+
       return new Promise((resolve) => {
-        this.http.post(api["player_report"], {
-          data: {
-            data: {
-              game: gameName,
-              originName: originId,
-              cheatMethods,	// see {{valid_cheatMethod}}
-              videoLink,
-              description
-            },
-            encryptCaptcha: this.$refs[`report_${index}`][0].hash,
-            captcha,
-          },
-        }).then(res => {
+        this.http.post(url, {data: formData}).then(res => {
           const d = res.data;
 
           if (d.success === 1) {
@@ -611,7 +673,7 @@ export default new Application({
      */
     onOcrOutput(data) {
       if (!data.value) return;
-      this.tabs.list[data.index].formItem.originId = data.value;
+      this.tabs.list[data.index].formItem.originName = data.value;
     }
   },
 });

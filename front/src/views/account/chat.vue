@@ -1,131 +1,129 @@
 <template>
-  <div>
-    <Tabs :value="tagsName">
-      <TabPane :label="$t('profile.chat.tabsList.itemName')" name="message0">
-        <Card dis-hover :padding="0">
-          <p slot="title"></p>
-          <div slot="extra">
-            <Button size="small" :disabled="!selectWindow" @click="setMessageEdit" v-voice-button>
-              {{ $t('profile.chat.control') }}
-            </Button>
-            <Divider type="vertical"/>
-            <Button type="primary" size="small" :loading="messageLoad" @click="getMessage" v-voice-button>
-              {{ $t('profile.chat.load') }}
-            </Button>
-          </div>
-          <Row v-if="messageList[selectWindow]">
-            <Col class="message-user">
-              <template>
-                <div v-for="(i, index) in messageUser" :key="index">
-                  <Row :gutter="10"
-                       type="flex" justify="center" align="middle"
-                       class="message-user-item">
-                    <Col>
-                      <Badge :count="messageList[i.type]['num'] || 0" v-if="messageList[i.type] && messageList[i.type]['num'] > 1">
-                        <Avatar icon="md-notifications"></Avatar>
-                      </Badge>
-                      <Avatar icon="md-notifications" v-else> {{ i.text[0] }}</Avatar>
-                    </Col>
-                    <Col flex="1">
-                      <template v-if="i.type == 'reply'">
-                        <businessCard :id="i.id">
-                          <p><b>{{ i.text.toString() }}</b></p>
-                        </businessCard>
-                      </template>
-                      <template v-else>
+  <Tabs :value="tagsName">
+    <TabPane :label="$t('profile.chat.tabsList.itemName')" class="profile-body" name="message0">
+      <Card dis-hover :padding="0">
+        <p slot="title"></p>
+        <div slot="extra">
+          <Button size="small" :disabled="!selectWindow" @click="setMessageEdit" v-voice-button>
+            {{ $t('profile.chat.control') }}
+          </Button>
+          <Divider type="vertical"/>
+          <Button type="primary" size="small" :loading="messageLoad" @click="getMessage" v-voice-button>
+            {{ $t('profile.chat.load') }}
+          </Button>
+        </div>
+        <Row v-if="messageList[selectWindow]">
+          <Col class="message-user">
+            <template>
+              <div v-for="(i, index) in messageUser" :key="index">
+                <Row :gutter="10"
+                     type="flex" justify="center" align="middle"
+                     class="message-user-item">
+                  <Col>
+                    <Badge :count="messageList[i.type]['num'] || 0" v-if="messageList[i.type] && messageList[i.type]['num'] > 1">
+                      <Avatar icon="md-notifications"></Avatar>
+                    </Badge>
+                    <Avatar icon="md-notifications" v-else> {{ i.text[0] }}</Avatar>
+                  </Col>
+                  <Col flex="1">
+                    <template v-if="i.type == 'reply'">
+                      <businessCard :id="i.id">
                         <p><b>{{ i.text.toString() }}</b></p>
-                      </template>
-                    </Col>
-                    <Col>
-                      <a @click="openMessageDetail(i)" v-voice-button>
-                        {{ $t('profile.chat.look') }}
-                        <Icon type="ios-arrow-dropright" v-if="selectWindow != i.value"/>
-                        <Icon type="md-arrow-dropright-circle" v-else/>
-                      </a>
-                    </Col>
-                  </Row>
-                </div>
-              </template>
-            </Col>
-            <Col flex="1" class="message-content">
-              <!-- 编辑 S -->
-              <Row class="message-content-control" v-if="control.open">
-                <Col>
-                  <Checkbox v-model="control.all" @on-change="onBatchAll"></Checkbox>
-                  <Divider type="vertical"/>
-                </Col>
-                <Col flex="1">
-                  <Select v-model="control.model" size="small" style="width:200px">
-                    <Option v-for="item in control.list" :value="item.value" :key="item.value">
-                      {{ $t('profile.chat.tabsList.form.' + item.label) }}
-                    </Option>
-                  </Select>
-                </Col>
-                <Col>
-                  <Button size="small" @click="onBatchOperation" :disabled="control.model < 0" :loading="control.load"
-                          v-voice-button>
-                    {{ $t('basic.button.submit') }}
-                  </Button>
-                </Col>
-              </Row>
-              <!-- 编辑 E -->
-
-              <div class="message-content-box">
-                <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index"
-                     class="message-content-item">
-                  <Row :gutter="18">
-                    <Col span="2" v-if="control.open">
-                      <Checkbox v-model="child.choose"></Checkbox>
-                    </Col>
-                    <Col :span="control.open ? 22 : 24">
-                      <Row>
-                        <Col flex="1">
-                          <Time :time="child.time"/>
-                        </Col>
-                        <Col>
-                          <a href="javascript:void(0)" v-if="child.haveRead == 0" @click="onMessageMark(child.id, 0)">
-                            <Icon type="md-eye" size="20"/>
-                          </a>
-                        </Col>
-                      </Row>
-                      <Card dis-hover :padding="0">
-                        <Html :html="child.content"></Html>
-                      </Card>
-                    </Col>
-                  </Row>
-
-                  <divider :size="'small'"></divider>
-                </div>
+                      </businessCard>
+                    </template>
+                    <template v-else>
+                      <p><b>{{ i.text.toString() }}</b></p>
+                    </template>
+                  </Col>
+                  <Col>
+                    <a @click="openMessageDetail(i)" v-voice-button>
+                      {{ $t('profile.chat.look') }}
+                      <Icon type="ios-arrow-dropright" v-if="selectWindow != i.value"/>
+                      <Icon type="md-arrow-dropright-circle" v-else/>
+                    </a>
+                  </Col>
+                </Row>
               </div>
+            </template>
+          </Col>
+          <Col flex="1" class="message-content">
+            <!-- 编辑 S -->
+            <Row class="message-content-control" v-if="control.open">
+              <Col>
+                <Checkbox v-model="control.all" @on-change="onBatchAll"></Checkbox>
+                <Divider type="vertical"/>
+              </Col>
+              <Col flex="1">
+                <Select v-model="control.model" size="small" style="width:200px">
+                  <Option v-for="item in control.list" :value="item.value" :key="item.value">
+                    {{ $t('profile.chat.tabsList.form.' + item.label) }}
+                  </Option>
+                </Select>
+              </Col>
+              <Col>
+                <Button size="small" @click="onBatchOperation" :disabled="control.model < 0" :loading="control.load"
+                        v-voice-button>
+                  {{ $t('basic.button.submit') }}
+                </Button>
+              </Col>
+            </Row>
+            <!-- 编辑 E -->
 
-              <!--            <Row :gutter="5">-->
-              <!--              <Col flex="1">-->
-              <!--              </Col>-->
-              <!--              <Col align="right">-->
-              <!--                <span>2022年08月30日19:59:39</span>-->
-              <!--                <Card dis-hover :padding="5">消息内容</Card>-->
-              <!--              </Col>-->
-              <!--              <Col>-->
-              <!--                <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg"/>-->
-              <!--              </Col>-->
-              <!--            </Row>-->
+            <div class="message-content-box">
+              <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index"
+                   class="message-content-item">
+                <Row :gutter="18">
+                  <Col span="2" v-if="control.open">
+                    <Checkbox v-model="child.choose"></Checkbox>
+                  </Col>
+                  <Col :span="control.open ? 22 : 24">
+                    <Row>
+                      <Col flex="1">
+                        <Time :time="child.time"/>
+                      </Col>
+                      <Col>
+                        <a href="javascript:void(0)" v-if="child.haveRead == 0" @click="onMessageMark(child.id, 0)">
+                          <Icon type="md-eye" size="20"/>
+                        </a>
+                      </Col>
+                    </Row>
+                    <Card dis-hover :padding="0">
+                      <Html :html="child.content"></Html>
+                    </Card>
+                  </Col>
+                </Row>
 
-              <div class="message-content-footer" v-if="messageList[selectWindow].type == 'direct'">
-                <router-link :to="{name: 'account',params: {uId: selectWindow}, query: {repeat: true}}">
-                  <Button long type="primary" v-voice-button>
-                    <Icon type="ios-send" size="20"/>
-                  </Button>
-                </router-link>
+                <divider :size="'small'"></divider>
               </div>
-            </Col>
-          </Row>
-          <template v-else>
-            <div class="message-content-not">{{ $t('basic.tip.notContent') }}</div>
-          </template>
-        </Card>
-      </TabPane>
-    </Tabs>
-  </div>
+            </div>
+
+            <!--            <Row :gutter="5">-->
+            <!--              <Col flex="1">-->
+            <!--              </Col>-->
+            <!--              <Col align="right">-->
+            <!--                <span>2022年08月30日19:59:39</span>-->
+            <!--                <Card dis-hover :padding="5">消息内容</Card>-->
+            <!--              </Col>-->
+            <!--              <Col>-->
+            <!--                <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg"/>-->
+            <!--              </Col>-->
+            <!--            </Row>-->
+
+            <div class="message-content-footer" v-if="messageList[selectWindow].type == 'direct'">
+              <router-link :to="{name: 'account',params: {uId: selectWindow}, query: {repeat: true}}">
+                <Button long type="primary" v-voice-button>
+                  <Icon type="ios-send" size="20"/>
+                </Button>
+              </router-link>
+            </div>
+          </Col>
+        </Row>
+        <template v-else>
+          <div class="message-content-not">{{ $t('basic.tip.notContent') }}</div>
+        </template>
+      </Card>
+    </TabPane>
+  </Tabs>
 </template>
 
 <script>

@@ -63,7 +63,7 @@ export default {
     },
     maxlength: {
       type: Number,
-      default: 0
+      default: 500
     },
     height: {
       type: String,

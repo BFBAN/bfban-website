@@ -1,145 +1,164 @@
 <template>
   <div>
     <Form :model="formItem" label-position="top">
-      <Row :gutter="30">
-        <Col span="12">
-          <FormItem>
-            <div slot="label">
-              <Icon type="md-key"/>
-              {{ $t('signup.form.username') }}
-            </div>
-            <Input v-model="formItem.username" placeholder="" disabled>
-              <a slot="append" @click="modal_setusername.show = !modal_setusername.show">
-                <Icon type="md-create" size="15"/>
-              </a>
-            </Input>
-          </FormItem>
+      <Row :gutter="15" class="profile-body">
+        <Col>
+          <a href="https://gravatar.com" target="_blank">
+            <UserAvatar :src="formItem.userAvatar" :size="50"></UserAvatar>
+          </a>
         </Col>
-        <Col span="12">
-          <FormItem>
-            <div slot="label">
-              <Icon type="md-lock"/>
-              {{ $t('signup.form.password') }}
-            </div>
-            <Input v-model="formItem.password" disabled type="password">
-              <a slot="append" @click="modal_changePassword.show = !modal_changePassword.show">
-                <Icon type="md-create" size="15"/>
-              </a>
-            </Input>
-          </FormItem>
+        <Col flex="1">
+          <h3> {{ formItem.username }} </h3>
+          <p>{{ $t('profile.meet', {name: formItem.username}) }} ({{ formItem.id }})</p>
         </Col>
-        <Col span="12">
-          <Card dis-hover>
-            <FormItem :label="$t('account.joinedAt')">
-              <Tag>
-                <Time :time="formItem.joinTime || new Date().getTime()"/>
-              </Tag>
-            </FormItem>
-          </Card>
+        <Col v-if="formItem.privilege">
+          <p><b>{{ $t('profile.account.form.privilege') }}</b></p>
+          <PrivilegesTag :data="formItem.privilege"></PrivilegesTag>
         </Col>
-        <Col span="12">
-          <Card dis-hover>
-            <FormItem :label="$t('account.lastOnlineTime')">
-              <Tag>
-                <Time :time="formItem.lastOnlineTime || new Date().getTime()"/>
-              </Tag>
-            </FormItem>
-          </Card>
-        </Col>
-      </Row>
+      </Row  >
+      <Divider class="profile-divider"></Divider>
 
-      <Divider dashed></Divider>
-      <template v-if="!isBindAccount">
-        <Alert show-icon type="error">
-          {{ $t('account.bindOrigin.title') }}
-          <Icon type="ios-bulb-outline" slot="icon"></Icon>
-          <template slot="desc">
-            <p>{{ $t('account.bindOrigin.content') }}</p><br>
-            <router-link to="/bindOrigin">
-              <Button>{{ $t('account.bindOrigin.travel') }}</Button>
-            </router-link>
-          </template>
-        </Alert>
-      </template>
-      <template v-else>
+      <div class="profile-body">
         <Row :gutter="30">
-          <Col flex="1">
-            <FormItem :label="$t('signup.form.originName')">
-              <Input v-model="formItem.origin.originName"
-                     type="text"
-                     disabled
-                     :autosize="{minRows: 2,maxRows: 5}"
-                     placeholder=""></Input>
+          <Col span="12">
+            <FormItem>
+              <div slot="label">
+                <Icon type="md-key"/>
+                {{ $t('signup.form.username') }}
+              </div>
+              <Input v-model="formItem.username" placeholder="" disabled>
+                <a slot="append" @click="modal_setusername.show = !modal_setusername.show">
+                  <Icon type="md-create" size="15"/>
+                </a>
+              </Input>
             </FormItem>
           </Col>
-          <Col flex="1">
-            <FormItem :label="$t('signup.form.originId')">
-              <Input v-model="formItem.origin.originUserId"
-                     type="text"
-                     disabled
-                     :autosize="{minRows: 2,maxRows: 5}"
-                     placeholder=""></Input>
+          <Col span="12">
+            <FormItem>
+              <div slot="label">
+                <Icon type="md-lock"/>
+                {{ $t('signup.form.password') }}
+              </div>
+              <Input v-model="formItem.password" disabled type="password">
+                <a slot="append" @click="modal_changePassword.show = !modal_changePassword.show">
+                  <Icon type="md-create" size="15"/>
+                </a>
+              </Input>
+            </FormItem>
+          </Col>
+          <Col span="12">
+            <Card dis-hover>
+              <FormItem :label="$t('account.joinedAt')">
+                <Tag>
+                  <Time :time="formItem.joinTime || new Date().getTime()"/>
+                </Tag>
+              </FormItem>
+            </Card>
+          </Col>
+          <Col span="12">
+            <Card dis-hover>
+              <FormItem :label="$t('account.lastOnlineTime')">
+                <Tag>
+                  <Time :time="formItem.lastOnlineTime || new Date().getTime()"/>
+                </Tag>
+              </FormItem>
+            </Card>
+          </Col>
+        </Row>
+
+        <Divider dashed></Divider>
+        <template v-if="!isBindAccount">
+          <Alert show-icon type="error">
+            {{ $t('account.bindOrigin.title') }}
+            <Icon type="ios-bulb-outline" slot="icon"></Icon>
+            <template slot="desc">
+              <p>{{ $t('account.bindOrigin.content') }}</p><br>
+              <router-link to="/bindOrigin">
+                <Button>{{ $t('account.bindOrigin.travel') }}</Button>
+              </router-link>
+            </template>
+          </Alert>
+        </template>
+        <template v-else>
+          <Row :gutter="30">
+            <Col flex="1">
+              <FormItem :label="$t('signup.form.originName')">
+                <Input v-model="formItem.origin.originName"
+                       type="text"
+                       disabled
+                       :autosize="{minRows: 2,maxRows: 5}"
+                       placeholder=""></Input>
+              </FormItem>
+            </Col>
+            <Col flex="1">
+              <FormItem :label="$t('signup.form.originId')">
+                <Input v-model="formItem.origin.originUserId"
+                       type="text"
+                       disabled
+                       :autosize="{minRows: 2,maxRows: 5}"
+                       placeholder=""></Input>
+              </FormItem>
+            </Col>
+          </Row>
+        </template>
+
+        <Divider dashed></Divider>
+
+        <Row :gutter="30">
+          <Col span="12">
+            <FormItem :label="$t('profile.account.form.language')">
+              <Row>
+                <Col>
+                  <Checkbox v-model="langLocalSync" @on-change="switchLangLocalSync"></Checkbox>
+                </Col>
+                <Col flex="1">
+                  <Select v-model="formItem.attr.language"
+                          class="switch-language"
+                          prefix="md-globe"
+                          placement="top-end"
+                          :disabled="!langLocalSync"
+                          @on-change="switchLanguage">
+                    <Option v-for="item in languages" :value="item.name" :key="item.name" :disabled="item.ignoreSave">
+                      {{ item.label }}
+                    </Option>
+                  </Select>
+                </Col>
+              </Row>
+              <Alert show-icon v-if="langLocalSync">{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
+            </FormItem>
+          </Col>
+          <Col span="12">
+            <FormItem :label="$t('profile.account.form.showOrigin')">
+              <Alert show-icon>{{ $t('profile.account.form.showOriginDescribe') }}</Alert>
+              <i-switch v-model="formItem.attr.showOrigin"/>
+            </FormItem>
+          </Col>
+          <Col span="12">
+            <FormItem :label="$t('profile.account.form.allowDM')">
+              <Alert show-icon>{{ $t('profile.account.form.allowDMdescribe') }}</Alert>
+              <i-switch v-model="formItem.attr.allowDM"/>
             </FormItem>
           </Col>
         </Row>
-      </template>
 
-      <Divider dashed></Divider>
-
-      <Row :gutter="30">
-        <Col span="12">
-          <FormItem :label="$t('profile.account.form.language')">
+        <Affix :offset-bottom="0">
+          <Card dis-hover :padding="8">
             <Row>
-              <Col>
-                <Checkbox v-model="langLocalSync" @on-change="switchLangLocalSync"></Checkbox>
+              <Col :xs="{span: 0}" :lg="{span: 20}">
               </Col>
-              <Col flex="1">
-                <Select v-model="formItem.attr.language"
-                        class="switch-language"
-                        prefix="md-globe"
-                        placement="top-end"
-                        :disabled="!langLocalSync"
-                        @on-change="switchLanguage">
-                  <Option v-for="item in languages" :value="item.name" :key="item.name" :disabled="item.ignoreSave">
-                    {{ item.label }}
-                  </Option>
-                </Select>
+              <Col :xs="{span: 24}" :lg="{span: 4}">
+                <Button type="primary" long :loading="formLoad" :disabled="userInfoLoad" @click="onSave">
+                  {{ $t("basic.button.save") }}
+                </Button>
               </Col>
             </Row>
-            <Alert show-icon v-if="langLocalSync">{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
-          </FormItem>
-        </Col>
-        <Col span="12">
-          <FormItem :label="$t('profile.account.form.showOrigin')">
-            <Alert show-icon>{{ $t('profile.account.form.showOriginDescribe') }}</Alert>
-            <i-switch v-model="formItem.attr.showOrigin"/>
-          </FormItem>
-        </Col>
-        <Col span="12">
-          <FormItem :label="$t('profile.account.form.allowDM')">
-            <Alert show-icon>{{ $t('profile.account.form.allowDMdescribe') }}</Alert>
-            <i-switch v-model="formItem.attr.allowDM"/>
-          </FormItem>
-        </Col>
-      </Row>
+          </Card>
+        </Affix>
 
-      <Affix :offset-bottom="0">
-        <Card dis-hover :padding="8">
-          <Row>
-            <Col :xs="{span: 0}" :lg="{span: 20}">
-            </Col>
-            <Col :xs="{span: 24}" :lg="{span: 4}">
-              <Button type="primary" long :loading="formLoad" :disabled="userInfoLoad" @click="onSave">
-                {{ $t("basic.button.save") }}
-              </Button>
-            </Col>
-          </Row>
-        </Card>
-      </Affix>
-
-      <Spin size="large" fix v-show="userInfoLoad">
-        <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
-      </Spin>
+        <Spin size="large" fix v-show="userInfoLoad">
+          <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+        </Spin>
+      </div>
     </Form>
 
     <!-- 修改名称 S -->
@@ -255,6 +274,8 @@
 
 <script>
 import Captcha from "../../components/Captcha";
+import UserAvatar from "@/components/UserAvatar.vue";
+import PrivilegesTag from "@/components/PrivilegesTag.vue";
 
 import {api, http, http_token, account_storage} from "../../assets/js";
 
@@ -285,7 +306,7 @@ export default {
       passwordCaptcha: "",
     }
   },
-  components: {Captcha},
+  components: {Captcha, UserAvatar, PrivilegesTag},
   created() {
     this.http = http_token.call(this);
 
@@ -499,5 +520,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 </style>
