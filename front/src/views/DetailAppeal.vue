@@ -103,7 +103,7 @@
               :model="appeal.fromData"
               label-position="top">
           <Row :gutter="30">
-            <Col flex="1">
+            <Col :xs="{span: 24}" :lg="{span: 12}">
               <!-- 第一人称录屏 -->
               <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')"
                         :rules="{required: true, trigger: 'blur'}"
@@ -124,10 +124,10 @@
                            :placeholder="$t('detail.appeal.placeholder.btrlink')"></EditLinks>
               </FormItem>
             </Col>
-            <Col flex="1">
+            <Col :xs="{span: 24}" :lg="{span: 12}">
               <!-- MOSS上传按钮 -->
               <FormItem :label="$t('detail.appeal.deal.userGeneratedMossFile')"
-                        :rules="{validator: checkAppealAttachmentsFile, trigger: 'change'}"
+                        :rules="{required: true, validator: checkAppealAttachmentsFile, trigger: 'change'}"
                         :prop="'extendedLinks.appendix'">
                 <Upload multiple
                         type="drag"
@@ -157,14 +157,20 @@
             </Card>
           </FormItem>
         </Form>
-        <Form rel="farm_appeal" v-if="appeal.type === 'farm'" ref="detailAppealForm_farm">
-          <!-- BTR链接 -->
-          <FormItem :label="$t('detail.appeal.deal.btrLink')"
-                    :rules="{required: true, trigger: 'blur'}"
-                    :prop="'btrLink'">
-            <Input v-model="appeal.fromData.btrLink"
-                   :placeholder="$t('detail.appeal.placeholder.btrlink')"/>
-          </FormItem>
+        <Form label-position="top" rel="farm_appeal" v-if="appeal.type === 'farm'">
+          <Row :gutter="30">
+            <Col :xs="{span: 24}" :lg="{span: 12}">
+              <!-- BTR链接 -->
+              <FormItem :label="$t('detail.appeal.deal.btrLink')"
+                        :rules="{required: true, trigger: 'blur'}"
+                        :prop="'extendedLinks.btrLink'">
+                <EditLinks v-model="appeal.fromData.extendedLinks.btrLink"
+                           :links="appeal.fromData.extendedLinks.btrLink"
+                           :max="100"
+                           :placeholder="$t('detail.appeal.placeholder.btrlink')"></EditLinks>
+              </FormItem>
+            </Col>
+          </Row>
 
           <!-- 玩家的申诉内容 -->
           <FormItem :label="$t('detail.appeal.info.content')"
@@ -179,7 +185,7 @@
             </Card>
           </FormItem>
         </Form>
-        <Form rel="none_appeal" v-if="appeal.type === 'none'" ref="detailAppealForm_none">
+        <Form rel="none_appeal" v-if="appeal.type === 'none'">
           <!-- 玩家的申诉内容 -->
           <FormItem :label="$t('detail.appeal.info.content')"
                     :rules="{required: true, min: 10, trigger: 'change'}"
@@ -353,10 +359,11 @@ export default new Application({
      * 校验附件(MOSS)
      */
     checkAppealAttachmentsFile(rule, value, callback) {
-      const val = value;
+      const val = this.appeal.appendix;
+      const isMossMode = this.appeal.type == 'moss';
 
-      if (!val) return callback('not file');
-      if (this.appeal.appendixStateStyle == 'ivu-alert-warning') return callback('Non compliant attachments');
+      if (isMossMode && !val) return callback('not file');
+      if (isMossMode && this.appeal.appendixStateStyle == 'ivu-alert-warning') return callback('Non compliant attachments');
 
       callback()
     },
@@ -400,7 +407,7 @@ export default new Application({
         // 验证表单
         this.$refs[`detailAppealForm_${type}`].validate(async (valid) => {
           if (!valid) {
-            this.$Message.error(this.$t('signin.fillEverything'));
+            return;
           }
 
           let appealDataFormData = {
