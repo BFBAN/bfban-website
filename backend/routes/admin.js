@@ -117,7 +117,7 @@ async (req, res, next) => {
         let result = await db.select('*').from('users')
             .where((qb) => {
                 const key = 'users.privilege';
-                qb.where('users.valid', 0).orWhere(key, 'like', '%"freezed"%').orWhere(key, 'like','%"blacklisted"%')
+                qb.where('users.valid', 0).orWhere(key, 'like', '%"freezed"%').orWhere(key, 'like', '%"blacklisted"%')
             })
             .orderBy('users.id', order)
             .offset(skip).limit(limit);
@@ -379,13 +379,13 @@ async (req, res, next) => {
         // if (updateData.appealStatus === 'accept') playerStatus = 3;
 
         // await commentItem.update(updateData);
-        await db('players').where('originPersonaId', commentItemPersonId.toOriginPersonaId).update({ appealStatus: '2' });
+        await db('players').where('originPersonaId', commentItemPersonId.toOriginPersonaId).update({appealStatus: '2'});
         await db('operation_log').insert({
-          byUserId: req.user.id,
-          toUserId: req.body.data.toPlayerId,
-          action: 'edit',
-          role: 'appeal',
-          createTime: new Date()
+            byUserId: req.user.id,
+            toUserId: req.body.data.toPlayerId,
+            action: 'edit',
+            role: 'appeal',
+            createTime: new Date()
         });
 
         return res.status(200).json({success: 1, code: 'admin.setAppeal.ok'});
@@ -397,7 +397,7 @@ async (req, res, next) => {
 router.post('/setUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.action').isIn(['grant', 'revoke']),
-    checkbody('data.role').isIn(['normal', 'admin', 'bot', 'super', 'dev', 'blacklisted', 'freezed'])
+    checkbody('data.role').isIn(['normal', 'admin', 'bot', 'super', 'dev', 'volunteer', 'blacklisted', 'freezed'])
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
