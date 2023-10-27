@@ -1124,14 +1124,33 @@ router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege(['volunteer']), forbi
             if (player.status !== 1 && player.status !== 2)
                 return res.status(400).json({error: 1, code: 'banAppeal.noNeed', message: 'no need for ban appeal'});
             /** @type {import("../typedef.js").Comment} */
+
+            let contentObject = {};
             const prev = await db.select('*').from('comments').where({
                 toPlayerId: req.body.data.toPlayerId,
                 type: 'banAppeal'
             }).orderBy('createTime', 'desc').first();
             if (prev && prev.appealStatus === 'lock')
                 return res.status(403).json({error: 1, code: 'banAppeal.locked', message: 'this thread is locked'});
+            // 申诉事件，不符合条件, 添加冷却时间
+            if (player.appealStatus == 1 && !userHasRoles(req.user, ['root', 'dev', 'super', 'admin', 'volunteer'])) {
+                if (!prev)
+                    return res.status(400).json({
+                        error: 1,
+                        code: 'banAppeal.noPreviousAppeal',
+                        message: 'no previous appeal found'
+                    });
+                const dbTime = new Date(prev.createTime);
+                const currentTime = new Date();
+                const diffHours = (currentTime - dbTime) / (1000 * 60 * 60); // convert milliseconds difference to hours
 
-            let contentObject = {};
+                if (diffHours < 24)
+                    return res.status(404).json({
+                        error: 1,
+                        code: 'banAppeal.timeLimit',
+                        message: 'less than a day since the last appeal'
+                    });
+            }
 
             contentObject = timeLineItemSetAttributes(req.body.data);
 
