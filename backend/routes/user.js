@@ -53,12 +53,12 @@ async (req, res, next) => {
         ])).length !== 0)
             return res.status(400).json({error: 1, code: 'signup.originBindingExist'});
         // check whether the user has at least 1 battlefield game
-        /** @type {string[]} */
-        const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r => r.data);
+        // /** @type {string[]} */
+        // const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r => r.data);
 
         // 检查库存中含有Battlefield系列游戏
-        if (userGames && userGames.indexOf("Battlefield").length >= 0)
-            return res.status(400).json({error: 1, code: 'signup.gameNotShowed'});
+        // if (userGames && userGames.indexOf("Battlefield").length >= 0)
+        //     return res.status(400).json({error: 1, code: 'signup.gameNotShowed'});
 
         // no mistakes detected, generate a unique string for register validation
         const randomStr = misc.generateRandomString(127);
