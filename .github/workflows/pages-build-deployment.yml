@@ -27,7 +27,7 @@ jobs:
     # Use the specified node for this project
     strategy:
       matrix:
-        node-version: [14.17.6]
+        node-version: [ 16.0.0 ]
 
     steps:
     - uses: actions/checkout@v3
