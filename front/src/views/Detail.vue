@@ -412,7 +412,7 @@
                             <code>{{ l.beforeUsername || "N/A" }}</code>
                           </Col>
                           <Col class="mobile-hide">
-                            <Icon type="md-arrow-round-forward" size="20" style="opacity: .6"/>
+                            <Icon type="md-arrow-round-forward" class="ivu-tag-text" size="20" style="opacity: .6"/>
                           </Col>
                           <Col class="desktop-hide" align="center" :xs="{span: 24}">
                             <Icon type="md-arrow-round-forward" size="20" style="opacity: .6;transform: rotate(90deg)"/>
@@ -801,7 +801,7 @@
                             </FormItem>
                             <FormItem label="" v-if="l.id">
                               <Card dis-hover :padding="5">
-                                <Html :html="`<p>{floor:${l.id}}</p>`" v-if="l.id"/>
+                                <HtmlCore :html="`<p>{floor:${l.id}}</p>`" v-if="l.id"/>
                               </Card>
                             </FormItem>
                           </Form>
@@ -1759,7 +1759,11 @@ export default new Application({
         let urlOffsetTop = document.getElementById(
             (id || that.url.hash).replaceAll('#', '')
         );
-        let className = urlOffsetTop.offsetParent.className;
+        let className = urlOffsetTop?.offsetParent.className;
+
+        // 检查内容ID是否在网页中，没有则终止滚动
+        if (!urlOffsetTop) return;
+
         urlOffsetTop.offsetParent.className = className + " timeline-scroll-floor";
         setInterval(function () {
           if (urlOffsetTop.offsetParent)
