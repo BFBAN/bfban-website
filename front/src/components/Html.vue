@@ -41,6 +41,7 @@ export default {
         'a': 0,
         'pre': 0,
         'p': 0,
+        'span': 0,
         'b': 0,
         'br': 0,
         'strong': 0,
