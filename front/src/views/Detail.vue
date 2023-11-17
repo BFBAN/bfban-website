@@ -723,7 +723,7 @@
                     </div>
 
                     <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
-                         :class="[l.byUserId == currentUser.userinfo.userId ? 'ivu-tag-geekblue' : '']">
+                         :class="[isLogin && l.byUserId == currentUser.userinfo.userId ? 'ivu-tag-geekblue' : '']">
                       <template v-if="l.quote">
                         <div @click="onRollingFloor(`floor-${l.quote.id}`)"
                              class="timeline-description timeline-reply-description user-select-none ivu-card ivu-card-bordered ivu-card-dis-hover">
