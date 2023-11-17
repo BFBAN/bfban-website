@@ -15,7 +15,8 @@
     <footer class="footer footer-border-top" v-if="!isFull">
       <div class="container">
         <Row>
-          <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide">
+          <Col :xs="{span: 23, pull: 0, push: 1, order: 2}" :sm="{span: 23 ,pull: 0, push: 1, order: 2}"
+               :lg="{span: 5,pull: 0, push: 0,order:0}">
             <Badge :count="logoCount" overflow-count="999999" :class="logoCount >= 10 ? 'shake active_infinite' : ''">
               <Avatar v-if="logoCount >= 5" size="40">
                 <router-link :to="{name: 'home', query:{ 'love': '❤'}}">😊</router-link>
@@ -29,7 +30,7 @@
             </Badge>
             <p style="margin-right: 10px">{{ $t("footer.column.col1.text") }}</p>
           </Col>
-          <Col :xs="{span: 9 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}" class="mobile-hide"
+          <Col :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}"
                v-for="(i, index) in footerNavs.row" :key="index">
             <h4><b>{{ $t(i.text) }}</b></h4>
             <ul>
@@ -56,7 +57,7 @@
               </li>
             </ul>
           </Col>
-          <Col :xs="{span: 18 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
+          <Col :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
             <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large"
                     :disabled="langLocalSync">
               <Option v-for="(item, index) in languages" :key="index" :label="item.label" :value="item.name">
@@ -98,7 +99,7 @@
           </Col>
         </Row>
       </div>
-      <div align="center" class="mobile-hide footer-border-top footer-padding">
+      <div align="center" class="footer-border-top footer-padding">
         <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} All Rights Reserved. v:
           {{ infos }}</p>
       </div>

@@ -404,7 +404,7 @@
                       </Row>
                     </div>
                     <Card :padding="0" dis-hover
-                          class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
+                          class="timeline-description ivu-tag-gold ivu-card ivu-card-bordered ivu-card-dis-hover"
                           style="padding: 15px 0">
                       <Dropdown :transfer="isMobile" placement="bottom-start" style="width: 100%">
                         <Row :gutter="16" type="flex" justify="center" align="middle">
@@ -722,7 +722,8 @@
                       </Row>
                     </div>
 
-                    <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover">
+                    <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
+                         :class="[l.byUserId == currentUser.userinfo.userId ? 'ivu-tag-geekblue' : '']">
                       <template v-if="l.quote">
                         <div @click="onRollingFloor(`floor-${l.quote.id}`)"
                              class="timeline-description timeline-reply-description user-select-none ivu-card ivu-card-bordered ivu-card-dis-hover">
@@ -739,8 +740,8 @@
                               <Time :time="l.quote.createTime" type="datetime"></Time>
                             </Col>
                           </Row>
-                          <Html
-                              :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></Html>
+                          <HtmlCore
+                              :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></HtmlCore>
                         </div>
                       </template>
 
@@ -770,7 +771,8 @@
                         <!-- 回复 -->
                         <Button size="small"
                                 v-voice-button
-                                @click="handleReply(l.floor || index, l.byUserId)">
+                                v-if="l.id && l.byUserId"
+                                @click="handleReply(l.id, l.byUserId)">
                           {{ $t('basic.button.reply') }}
                         </Button>
                         <Divider type="vertical"/>
@@ -840,7 +842,7 @@
                 </div>
                 <div class="ivu-card-body">
                   <Row :gutter="10">
-                    <Col :xs="{span: 24}" :lg="{span: 12}">
+                    <Col :xs="{span: 14}" :lg="{span: 12}">
                       <Input type="text" size="large" v-model="reply.captcha"
                              maxlength="4"
                              :placeholder="$t('captcha.title')">
@@ -849,30 +851,33 @@
                         </div>
                       </Input>
                     </Col>
-                    <Col :xs="{span: 24, push: 0}" :lg="{span: 8, push: 7}">
-                      <ButtonGroup>
-                        <Button type="primary"
-                                size="large"
-                                v-voice-button
-                                :long="isMobile"
-                                :loading="replySpinShow"
-                                :disabled="!reply.content"
-                                @click.stop.prevent="onReply('default')">
-                          {{ $t('basic.button.reply') }}
-                        </Button>
-                        <Button size="large" type="dashed">
-                          <Poptip word-wrap width="280" trigger="hover" transfer>
-                            <Icon type="ios-help-buoy"/>
-                            <div slot="content">
-                              <span>{{ $t('detail.info.replyManual1') }}</span>
-                              <b><a href="https://sm.ms/" target="_blank">{{
-                                  $t('detail.info.uploadPicButton')
-                                }}</a></b>，
-                              <span>{{ $t('detail.info.replyManual2') }}</span>
-                            </div>
-                          </Poptip>
-                        </Button>
-                      </ButtonGroup>
+                    <Col :xs="{span: 10, push: 0}" :lg="{span: 12, push: 0}">
+                      <Row type="flex" justify="end" align="middle">
+                        <Col>
+                          <ButtonGroup>
+                            <Button type="primary"
+                                    size="large"
+                                    v-voice-button
+                                    :loading="replySpinShow"
+                                    :disabled="!reply.content"
+                                    @click.stop.prevent="onReply('default')">
+                              {{ $t('basic.button.reply') }}
+                            </Button>
+                            <Button size="large" type="dashed">
+                              <Poptip word-wrap width="280" trigger="hover" transfer>
+                                <Icon type="ios-help-buoy"/>
+                                <div slot="content">
+                                  <span>{{ $t('detail.info.replyManual1') }}</span>
+                                  <b><a href="https://sm.ms/" target="_blank">{{
+                                      $t('detail.info.uploadPicButton')
+                                    }}</a></b>，
+                                  <span>{{ $t('detail.info.replyManual2') }}</span>
+                                </div>
+                              </Poptip>
+                            </Button>
+                          </ButtonGroup>
+                        </Col>
+                      </Row>
                     </Col>
                   </Row>
                 </div>
@@ -1142,116 +1147,6 @@
       </Modal>
       <!-- 用户-小窗口回复 E -->
 
-      <!-- 管理-小窗口处理申诉 S -->
-      <Modal v-model="appealdealModal" width="60%">
-        <div slot="header">
-          {{ `${$t('basic.button.dealAppeal')}` }}
-          <Tag>{{ appealdeal.appealStatus }}</Tag>
-        </div>
-        <Form v-if="isLogin" label-position="top">
-          <Row :gutter="30">
-            <Col flex="1">
-              <FormItem :label="$t('detail.appeal.info.player')">
-                <Input type="text" :value="appealdeal.toOriginPersonaId" readonly/>
-              </FormItem>
-            </Col>
-            <Col flex="1">
-              <FormItem :label="$t('detail.appeal.info.commentid')">
-                <Input type="text" :value="appealdeal.id" readonly/>
-              </FormItem>
-            </Col>
-          </Row>
-          <template v-if="appealdeal.content.appealType">
-            <FormItem>
-              <Input type="text" :value="appealdeal.content.appealType" readonly/>
-            </FormItem>
-
-            <!-- Moss申诉 -->
-            <div v-if="appealdeal.content.appealType == 'moss'">
-              <Row :gutter="30">
-                <Col flex="1">
-                  <!-- 第一人称录屏 -->
-                  <FormItem :label="$t('detail.appeal.deal.firstPersonRecording')">
-                    <EditLinks :links="appealdeal.content.extendedLinks.videoLink"
-                               :isReadonly="true"></EditLinks>
-                  </FormItem>
-                  <!-- BTR链接 -->
-                  <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                    <EditLinks :links="appealdeal.content.extendedLinks.btrLink"
-                               :isReadonly="true"></EditLinks>
-                  </FormItem>
-                </Col>
-                <Col flex="1">
-                  <!-- MOSS下载按钮 -->
-                  <FormItem :label="$t('detail.appeal.deal.mossDownloadUrl')">
-                    <a :href="appealdeal.content.extendedLinks.mossDownloadUrl" target="_blank">
-                      <div class="ivu-upload ivu-upload-drag" style="padding: 20px 0px;">
-                        <Icon type="md-download" size="50"/>
-                      </div>
-                    </a>
-                  </FormItem>
-                </Col>
-              </Row>
-
-              <!-- 申诉内容 -->
-              <FormItem :label="$t('detail.appeal.deal.appealContent')">
-                <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
-                            :html="appealdeal.content.text" v-if="appealdeal.content.text"></HtmlWidget>
-              </FormItem>
-            </div>
-            <!-- 刷枪申诉 -->
-            <div v-else-if="appealdeal.content.appealType === 'farm'">
-              <!-- BTR链接 -->
-              <FormItem :label="$t('detail.appeal.deal.btrLink')">
-                <Card dis-hover :padding="0">
-                  <EditLinks :links="appealdeal.content.extendedLinks.btrLink"
-                             :isReadonly="true"></EditLinks>
-                </Card>
-              </FormItem>
-              <!-- 申诉内容 -->
-              <FormItem :label="$t('detail.appeal.deal.appealContent')">
-                <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
-                            :html="appealdeal.content.text" v-if="appealdeal.content.text"></HtmlWidget>
-              </FormItem>
-            </div>
-            <!-- 其他类型申诉 -->
-            <div v-else-if="appealdeal.content.appealType === 'none'">
-              <!-- 申诉内容 -->
-              <FormItem :label="$t('detail.appeal.deal.appealContent')">
-                <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
-                            :html="appealdeal.content.text" v-if="appealdeal.content.text"></HtmlWidget>
-              </FormItem>
-            </div>
-          </template>
-
-
-          <!-- 管理回复内容 -->
-          <!--          <Card dis-hover :padding="0">-->
-          <!--            <Textarea v-model="appealdeal.admincontent"-->
-          <!--                      size="large"/>-->
-          <!--          </Card>-->
-        </Form>
-        <div slot="footer">
-          <Row :gutter="30">
-            <Col>
-              <Button @click="appealdealModal = false">
-                {{ $t('basic.button.cancel') }}
-              </Button>
-              <Divider type="vertical"/>
-            </Col>
-            <Col flex="1" v-if="false">
-              <Button @click="onAdminTimeLineDealAppeal" v-voice-button>
-                {{ $t('detail.appeal.deal.stats.fail') }}
-              </Button>
-              <Button @click="onAdminTimeLineDealAppeal" type="primary" v-voice-button>
-                {{ $t('detail.appeal.deal.stats.accept') }}
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      </Modal>
-      <!-- 管理-小窗口处理申诉 E -->
-
       <!-- 管理-禁言 S -->
       <Modal
           v-model="mute.show"
@@ -1322,23 +1217,9 @@ export default new Application({
 
       appeal: {
         load: false,
-        show: false,
         disable: this.$store.state.configuration.detailLeftAppealPanel ?? false,
-        toPlayerId: 0,
-        type: '',
-        VideoLink: '',
-        mossDownloadUrl: '',
-        selectedFile: null,
-        btrLink: '',
-        action: ''
       },
-      appealdeal: {
-        content: {
-          appealType: '',
-          text: ''
-        }
-      },
-      appealdealModal: false,
+
       cheater: {
         originId: '',
         createTime: time.appStart(),
@@ -1351,7 +1232,7 @@ export default new Application({
         cheaterId: '',
         userId: '',
         content: '',
-        toFloor: '',
+        toReplyId: null,
         toUserId: '',
         captcha: '',
       },
@@ -1493,9 +1374,9 @@ export default new Application({
     },
     /**
      * 禁言
-     * @param type 禁言or移除
-     * @param id user id
-     * @param muteTime 时间
+     * @param {string} type 禁言or移除
+     * @param {string} id user id
+     * @param {number} muteTime 时间
      * @returns {boolean}
      */
     muteUser(type, id, muteTime = 0) {
@@ -1525,7 +1406,7 @@ export default new Application({
     },
     /**
      * 展开申诉详情
-     * @param commentId
+     * @param {string} commentId
      * @returns {Promise<void>}
      */
     async openAppealDealModal(commentId) {
@@ -1712,6 +1593,8 @@ export default new Application({
     /**
      * 获取基本字段
      * 从[url]中整理
+     * @param {string} name
+     * @returns {*|{dbId: *, userId: *, personaId: *}}
      */
     getParamsIds(name) {
       const object_id = this.$route.params.ouid.split('.');
@@ -1834,8 +1717,8 @@ export default new Application({
     },
     /**
      * 获取 时间轴 单条数据
-     * @param id
-     * @returns {Promise<null>}
+     * @param {string} id
+     * @returns {Promise}
      */
     async getTimeLineItemData(id) {
       let commentData = null;  // 用于保存获取到的数据
@@ -1937,11 +1820,13 @@ export default new Application({
     },
     /**
      * 分享楼层
+     * @param {number} floorId 楼层id，同时也是回复id
+     * @returns {string} URL
      */
-    getShareFloor(id) {
+    getShareFloor(floorId) {
       let _url = new URL(window.location.href);
-      if (!id) return _url;
-      _url.hash = "#floor-" + id;
+      if (!floorId) return _url;
+      _url.hash = "#floor-" + floorId;
       return _url.toString() || "";
     },
     /**
@@ -1966,9 +1851,8 @@ export default new Application({
       }
     },
     /**
-     * 时间轴筛选
-     * 依次条件筛选
-     * @param index
+     * 时间轴筛选,依次条件筛选
+     * @param {number} index 时间轴下标
      * @returns {boolean}
      */
     filtrateTimelineItem(index) {
@@ -2059,129 +1943,13 @@ export default new Application({
         this.getTimeline();
       })
     },
-    handleFileUpload(event) {
-      const files = event.target.files;
-      this.appeal.selectedFile = files[0]; // 设置 selectedFile 的值
-    },
     /**
-     * 处理申诉
-     * @returns {Promise<void>}
+     * 展开回复小窗口
+     * @param {string} replyId 楼层id
+     * @param {string} userId 回复id
      */
-    async handleAppeal() {
-      const type = this.appeal.type;
-      const content = this.appeal.content || this.$refs.textareaAppealContent.editorContent;
-
-      if (!content) return;
-
-      this.appeal.load = true;
-
-      let postData = {
-        data: {
-          data: {
-            toPlayerId: this.cheater.id,
-            content,
-            appealStatus: 'unprocessed',
-            appealType: this.appeal.type
-          }
-        }
-      };
-      if (type === 'moss') {
-        Object.assign(postData.data.data, {
-          videoLink: this.appeal.VideoLink,
-          btrLink: this.appeal.btrLink
-        });
-      } else if (type === 'farm') {
-        Object.assign(postData.data.data, {
-          btrLink: this.appeal.btrLink
-        });
-      } // No additional data for 'none' type
-
-      try {
-        // First, upload the MOSS file if it exists
-        let mossDownloadUrl = '';
-        if (type === 'moss' && this.appeal.selectedFile) {
-          const formData = new FormData();
-          formData.append('file', this.appeal.selectedFile);
-          window.alert(this.appeal.selectedFile.name)
-
-          const config = {
-            headers: {
-              'Content-Type': this.appeal.selectedFile.type,
-              'Content-Length': this.appeal.selectedFile.size
-            }
-          }
-          const uploadResponse = await this.http.put(api["service_upload"], formData, config);
-          window.alert('Response:' + uploadResponse.data);
-
-          if (uploadResponse.data.success !== 1) {
-            this.$Message.error(uploadResponse.data.message || uploadResponse.data.code);
-            return;
-          }
-
-          const filename = uploadResponse.data.data.name; // 根据API的响应获取文件名
-          const mossDownloadUrl = `https://bfban.gametools.network/api/service/file?filename=${encodeURIComponent(filename)}`; // 拼接URL
-          Object.assign(postData.data.data, {mossDownloadUrl});
-        }
-
-        // Then, submit the appeal
-        const res = await this.http.post(api["player_banAppeal"], postData);
-
-        const d = res.data;
-
-        if (d.success === 1) {
-          this.$Message.success(d.message);
-        } else {
-          this.$Message.error(d.message || d.code);
-        }
-      } catch (error) {
-        this.$Message.error(error.message || error.code);
-      } finally {
-        this.appeal.load = false;
-
-        if (message.playSendVoice)
-          message.playSendVoice();
-
-        this.getTimeline();
-      }
-    },
-    /**
-     * 申诉状态操作
-     */
-    handAdminAppeal(data) {
-      if (!data) return;
-
-      const array = data.split(',');
-
-      this.http.post(api["player_viewBanAppeal"], {
-        data: {
-          data: {
-            // the ban appeal id
-            id: array[0],
-            status: ['open', 'close', 'lock'][array[1]]
-          }
-        }
-      }).then(res => {
-        const d = res.data;
-
-        if (d.success == 1) {
-          this.$Message.success(d.message);
-          this.getTimeline();
-          return;
-        }
-
-        this.$Message.error(d.message || d.code);
-      }).catch(err => {
-        this.$Message.error(err);
-      })
-    },
-    /**
-     * 打开回复窗口
-     * 1. 对举报的回复 2. 对回复的回复
-     * @param floor string 楼层
-     * @param userId string 回复id
-     */
-    handleReply(floor, userId) {
-      this.reply.toFloor = floor === 'undefined' ? '' : floor;
+    handleReply(replyId, userId) {
+      this.reply.toReplyId = replyId === null ? '' : replyId;
       this.reply.toUserId = userId === 'undefined' ? '' : userId;
 
       // open reply modal
@@ -2190,6 +1958,7 @@ export default new Application({
     /**
      * 触发小窗口评论取消时
      * 重置前端评论内容值
+     * @param {boolean} isOffMode
      */
     cancelReply(isOffMode = false) {
       if (isOffMode)
@@ -2204,7 +1973,7 @@ export default new Application({
     },
     /**
      * 用户评论/回复
-     * @param replyType
+     * @param {string} replyType
      */
     onReply(replyType = 'default') {
       const cheaterId = this.cheater.id;
@@ -2214,86 +1983,82 @@ export default new Application({
 
       if (this.$store.state.$userinfo && !(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
         this.$Message.error({content: this.$i18n.t("basic.tip.needBindEaAccount"), duration: 3});
+
         setTimeout(() => {
-          this.$router.push({
-            path: '/profile/information'
-          })
+          this.$router.push({path: '/profile/information'})
         }, 3000)
+
         return
       }
 
-      // 楼中楼
-      // 回复 评论dbID
-      if (this.reply.toFloor && Number(this.reply.toFloor) >= 0) {
-        data.data.toCommentId = this.timelineList[this.reply.toFloor].id;
-        data.encryptCaptcha = this.$refs.replyCommentsCaptcha.hash;
+      console.log(this.reply)
 
-        // 依照不同回复窗口模式来填充提交表单
-        switch (replyType) {
-          case "default":
-            data = {
-              data: {
-                toPlayerId: cheaterId,
-                content: formatTextarea(content),
-              },
-              encryptCaptcha: this.$refs.replyCaptcha.hash,
-              captcha: this.reply.captcha,
-            };
-            break;
-          case "mini":
-            data = {
-              data: {
-                toPlayerId: cheaterId,
-                toCommentId: this.timelineList[this.reply.toFloor].id,
-                content: formatTextarea(miniModeContent),
-              },
-              encryptCaptcha: this.$refs.replyMiniModeCaptcha.hash,
-              captcha: this.reply.miniModeCaptcha,
-            };
-            break;
+      // 依照不同回复窗口模式来填充提交表单
+      switch (replyType) {
+        case "default":
+          data = {
+            data: {
+              toPlayerId: cheaterId,
+              content: formatTextarea(content),
+            },
+            encryptCaptcha: this.$refs.replyCaptcha.hash,
+            captcha: this.reply.captcha,
+          };
+          break;
+        case "mini":
+          data = {
+            data: {
+              toPlayerId: cheaterId,
+              toCommentId: this.reply.toReplyId, // 楼中楼，填充回复的dbId
+              content: formatTextarea(miniModeContent),
+            },
+            encryptCaptcha: this.$refs.replyMiniModeCaptcha.hash,
+            captcha: this.reply.miniModeCaptcha,
+          };
+          break;
+      }
+
+      console.log(data);
+
+      this.replySpinShow = true;
+      this.http.post(api["player_reply"], {data}).then(res => {
+        const d = res.data;
+
+        if (d.success === 1) {
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
+
+          this.replyModal = false;
+          this.reply.toReplyId = null;
+          this.reply.content = "";
+          this.reply.captcha = "";
+          this.reply.miniModeContent = "";
+          this.reply.miniModeCaptcha = "";
+
+          // Actively update text
+          if (this.$refs.replyTextarea)
+            this.$refs.replyTextarea.updateContent('');
+          if (this.$refs.replyMiniModeTextarea)
+            this.$refs.replyMiniModeTextarea.updateContent('');
+
+          return;
         }
 
-        this.replySpinShow = true;
-
-        this.http.post(api["player_reply"], {data}).then(res => {
-          const d = res.data;
-
-          if (d.success === 1) {
-            this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
-              message: d.message || ""
-            }));
-
-            this.replyModal = false;
-            this.reply.toFloor = "";
-            this.reply.content = "";
-            this.reply.captcha = "";
-            this.reply.miniModeContent = "";
-            this.reply.miniModeCaptcha = "";
-
-            // Actively update text
-            if (this.$refs.replyTextarea)
-              this.$refs.replyTextarea.updateContent('');
-            if (this.$refs.replyMiniModeTextarea)
-              this.$refs.replyMiniModeTextarea.updateContent('');
-
-            return;
-          }
-
-          message = typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : this.$t(`basic.tip['${d.code}']`, {
-            message: d.message || ""
-          });
-          this.$Message.error({content: message, duration: 3});
-        }).finally(() => {
-          this.replySpinShow = false;
-
-          if (message.playSendVoice)
-            message.playSendVoice();
-
-          this.cancelReply(false);
-          this.getPlayerInfo();
-          this.getTimeline();
+        message = typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
         });
-      }
+        this.$Message.error({content: message, duration: 3});
+      }).finally(() => {
+        this.replySpinShow = false;
+
+        if (message.playSendVoice)
+          message.playSendVoice();
+
+        this.cancelReply(false);
+        this.getPlayerInfo();
+        this.getTimeline();
+      });
     },
     /**
      * 更新玩家信息
@@ -2302,7 +2067,7 @@ export default new Application({
     updateCheaterInfo() {
       if (!this.$store.state.user) {
         this.$Message.error(this.$i18n.t('detail.messages.signIn'));
-        return false;
+        return;
       }
 
       this.updateUserInfospinShow = true;
@@ -2343,6 +2108,7 @@ export default new Application({
     },
     /**
      * 判决快速模板
+     * @param  {Object} data
      */
     onFastReply(data) {
       this.fastReply.selected = data;
@@ -2354,17 +2120,12 @@ export default new Application({
       if (data.length == 0) this.$refs.judgementTextarea.updateContent('');
     },
     /**
-     * 左侧申诉面板开关
+     * 右侧侧栏，申诉显示
      */
     onLeftAppealPlan() {
       this.appeal.disable = !this.appeal.disable;
 
       account_storage.updateConfiguration("detailLeftAppealPanel", this.appeal.disable);
-    },
-    convertToPlainText(html) {
-      const div = document.createElement('div');
-      div.innerHTML = html;
-      return div.textContent;
     },
   },
   computed: {
