@@ -1,7 +1,7 @@
 <template>
   <div>
     <Form>
-      <Empty :notHint="true" v-if="linkList.length <= 0"></Empty>
+      <Empty :notHint="false" v-if="linkList.length <= 0"></Empty>
       <FormItem v-else
                 v-for="(i, index) in linkList" :key="index"
                 :prop="`linkList[${index}].value`"

@@ -93,26 +93,6 @@
                 {{ $t("profile.admin.title") }}
               </DropdownItem>
             </router-link>
-            <Dropdown placement="right-start">
-              <DropdownItem divided>
-                {{ $t("profile.appearance.title") }}
-                <Icon type="ios-arrow-forward"></Icon>
-              </DropdownItem>
-              <DropdownMenu slot="list">
-                <div v-for="(i, theme_index) in themes.child" :key="theme_index">
-                  <div @click="changeTheme(theme_index)">
-                    <DropdownItem :name="i.name" :selected="$store.state.$theme.name == i.name">
-                      <Row>
-                        <Col>
-                          <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
-                        </Col>
-                        <Col flex="1">{{ i.name }}</Col>
-                      </Row>
-                    </DropdownItem>
-                  </div>
-                </div>
-              </DropdownMenu>
-            </Dropdown>
             <div @click="onSignout">
               <Dropdown-item divided v-show="isLogin">
                 <Row>
