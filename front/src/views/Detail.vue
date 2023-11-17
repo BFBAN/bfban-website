@@ -850,7 +850,7 @@
                       </Input>
                     </Col>
                     <Col :xs="{span: 24, push: 0}" :lg="{span: 8, push: 7}">
-                      <ButtonGroup v-if="cheater.appealStatus != '1' && isAdmin">
+                      <ButtonGroup>
                         <Button type="primary"
                                 size="large"
                                 v-voice-button
@@ -871,17 +871,6 @@
                               <span>{{ $t('detail.info.replyManual2') }}</span>
                             </div>
                           </Poptip>
-                        </Button>
-                      </ButtonGroup>
-                      <ButtonGroup v-else>
-                        <Button type="primary"
-                                size="large"
-                                v-voice-button
-                                :long="isMobile"
-                                :loading="replySpinShow"
-                                :disabled="!reply.content"
-                                @click.stop.prevent="onReply">
-                          处理申述
                         </Button>
                       </ButtonGroup>
                     </Col>
