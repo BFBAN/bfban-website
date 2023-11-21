@@ -958,7 +958,8 @@
       "yearly": "一年"
     },
     "title": "统计",
-    "trend": "案件热度"
+    "trend": "案件热度",
+    "netstatus": "网络状态"
   },
   "textarea": {
     "originalImage": "原始图片",
