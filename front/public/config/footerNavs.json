@@ -92,6 +92,14 @@
             "text": "sitestats.title",
             "src": "site_stats",
             "insideLang": true
+          },
+          {
+            "text": "sitestats.netstatus",
+            "src": "https://bfban.betteruptime.com",
+            "textLang": {
+              "en-US": "Network Status",
+              "zh-CN": "网络状态"
+            }
           }
         ]
       },
