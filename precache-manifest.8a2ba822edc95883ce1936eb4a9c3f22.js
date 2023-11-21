@@ -12,11 +12,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/_redirects"
   },
   {
-    "revision": "86ad13b5d0a7d9f09944",
+    "revision": "d2390f58d7fad51404e9",
     "url": "/assets/css/app.bd1c0928.css"
   },
   {
-    "revision": "86ad13b5d0a7d9f09944",
+    "revision": "d2390f58d7fad51404e9",
     "url": "/assets/css/app.bd1c0928.css.map"
   },
   {
@@ -312,11 +312,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ionicons.d535a25a.ttf"
   },
   {
-    "revision": "86ad13b5d0a7d9f09944",
+    "revision": "d2390f58d7fad51404e9",
     "url": "/assets/js/app.2.9.11.js"
   },
   {
-    "revision": "86ad13b5d0a7d9f09944",
+    "revision": "d2390f58d7fad51404e9",
     "url": "/assets/js/app.2.9.11.js.map"
   },
   {
@@ -744,7 +744,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/config/footerNavs.example.json"
   },
   {
-    "revision": "1e4f656ceef9ceb6a4a990c6c6859072",
+    "revision": "efe58ea88de259fe06ddcb2b20b4dcc7",
     "url": "/config/footerNavs.json"
   },
   {
