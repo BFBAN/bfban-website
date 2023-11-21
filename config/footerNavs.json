@@ -95,7 +95,7 @@
           },
           {
             "text": "sitestats.netstatus",
-            "src": "https://bfban.betteruptime.com",
+            "src": "https://status.bfban.com/",
             "textLang": {
               "en-US": "Network Status",
               "zh-CN": "网络状态"
