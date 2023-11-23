@@ -7,53 +7,63 @@
           @on-popper-show="getUserInfo">
     <slot></slot>
     <div slot="content" class="business">
-      <template v-if="!loadErr">
-        <div class="business-img">
-          <img src="@/assets/images/games/bfv/bf.jpg">
+      <Banner :height="150">
+        <div v-if="!loadErr" class="business-padding business-padding-perpendicularity">
+          <Row>
+            <Col flex="1">
+              <h2>
+                <Row :gutter="10">
+                  <Col v-if="userInfo.userAvatar">
+                    <Avatar shape="square"
+                            size="20"
+                            icon="ios-person"
+                            :src="`${userInfo.userAvatar}`"></Avatar>
+                  </Col>
+                  <Col flex="1">
+                    <a :href="`/account/${userInfo.id}`" target="_blank">{{ userInfo.username }}</a>
+                  </Col>
+                </Row>
+              </h2>
+              <PrivilegesTag :data="userInfo.privilege" v-if="userInfo.privilege"></PrivilegesTag>
+            </Col>
+            <Col>
+              # {{ userInfo.id }}
+            </Col>
+          </Row>
         </div>
-        <Row>
-          <Col flex="1">
-            <h2>
-              <Row :gutter="10">
-                <Col v-if="userInfo.userAvatar">
-                  <Avatar shape="square"
-                          size="20"
-                          icon="ios-person"
-                          :src="`${userInfo.userAvatar}`"></Avatar>
-                </Col>
-                <Col flex="1">
-                  <a :href="`/account/${userInfo.id}`" target="_blank">{{ userInfo.username }}</a>
-                </Col>
-              </Row>
-            </h2>
-            <PrivilegesTag :data="userInfo.privilege" v-if="userInfo.privilege"></PrivilegesTag>
-          </Col>
-          <Col>
-            # {{ userInfo.id }}
-          </Col>
-        </Row>
-        <br>
-        <Card dis-hover>
+        <template v-if="loadErr">
+          <Row>
+            <Col align="center">
+              <Icon type="md-alert" size="40" color="red"/>
+            </Col>
+          </Row>
+        </template>
+      </Banner>
+
+      <div v-if="!loadErr">
+        <Card style="margin: 15px 15px" dis-hover>
           <p>{{ userInfo.introduction ? userInfo.introduction : '(✿◡‿◡)' }}</p>
         </Card>
         <template v-if="isLogin && isAdmin && showAdminUserInfo">
-          <br>
-          <Card dis-hover>
+          <Card class="business-padding" style="margin: 10px 15px" dis-hover>
             <Row>
               <Col flex="1">
                 <Icon type="md-eye" size="17"/>
               </Col>
-              <Col><PrivilegesTag :data="['super', 'root', 'dev']"></PrivilegesTag></Col>
+              <Col>
+                <PrivilegesTag :data="['super', 'root', 'dev']"></PrivilegesTag>
+              </Col>
             </Row>
             <br>
             <p><b>User Orgin:</b></p>
-            <code type="json" style="width: 100%; white-space: pre-line" v-if="userInfo.origin">{{userInfo.origin}}</code>
+            <code type="json" style="width: 100%; white-space: pre-line"
+                  v-if="userInfo.origin">{{ userInfo.origin }}</code>
             <p><b>User Attr:</b></p>
-            <code type="json" style="width: 100%; white-space: pre-line" v-if="userInfo.attr">{{userInfo.attr}}</code>
+            <code type="json" style="width: 100%; white-space: pre-line"
+                  v-if="userInfo.attr">{{ userInfo.attr }}</code>
           </Card>
         </template>
-        <br>
-        <Row>
+        <Row class="business-padding business-padding-perpendicularity">
           <Col flex="auto"></Col>
           <Col>
             <router-link :to="{path: '/account/' + userInfo.id, query: {repeat: true}}">
@@ -63,14 +73,7 @@
             </router-link>
           </Col>
         </Row>
-      </template>
-      <template v-else>
-        <Row>
-          <Col align="center">
-            <Icon type="md-alert" size="40" color="red"/>
-          </Col>
-        </Row>
-      </template>
+      </div>
 
       <Spin size="large" fix v-show="spinShow">
         <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
@@ -85,6 +88,7 @@ import {api, http, http_token, storage} from '../assets/js/index';
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import Application from "@/assets/js/application";
+import Banner from "@/components/Banner.vue";
 
 export default new Application({
   props: {
@@ -111,7 +115,7 @@ export default new Application({
       type: 'user',
     }
   },
-  components: {PrivilegesTag},
+  components: {PrivilegesTag, Banner},
   created() {
     this.http = http_token.call(this);
     this.type = this.isAdminL2 ? "admin" : "user";
@@ -191,23 +195,17 @@ export default new Application({
 
 <style lang="less">
 .business {
-  padding: 20px;
   position: relative;
   user-select: none;
 }
 
-.business-img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: calc(50% + 10px);
-  overflow: hidden;
-  opacity: .3;
-  border-radius: 5px 5px 0 0;
+.business-padding {
+  padding-left: 15px;
+  padding-right: 15px;
+}
 
-  img {
-    width: 100%;
-  }
+.business-padding-perpendicularity {
+  padding-top: 20px !important;
+  padding-bottom: 15px !important;
 }
 </style>
