@@ -212,7 +212,7 @@
       "report.notImplement": "發生錯誤，請聯繫管理員 {message}",
       "report.spam": "你所提供的內容，包含敏感資訊",
       "report.success": "感謝你的檢舉",
-      "signin.bad": "登入發生錯誤，請聯繫管理員(message)",
+      "signin.bad": "登入發生錯誤，請聯繫管理員{message}",
       "signin.noSuchUser": "無此用戶或密碼錯誤",
       "signin.success": "歡迎回來",
       "signup.bad": "註冊發生錯誤，請聯繫管理員 {message}",
