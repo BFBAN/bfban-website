@@ -1,13 +1,13 @@
 {
   "about": {
-    "description": "<h2>BFBAN</h2>\n    <p>\n    created at 2018.1.29; It is an organization created to fight <b>against hackers</b>\n    </p>\n\n    <p>\n      Staff members in bfban include:\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>Server owners</li>\n      <li>Clan's leaders</li>\n      <li>Bf1 streamers</li>\n    </ul>",
-    "privacy": "\n<h2>Privacy policy</h2>\nIt is open-source. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use.",
+    "description": "<h2>BFBAN</h2>\n    <p>\n    created at 2018.1.29; It is an organisation created to fight <b>against hackers</b>\n    </p>\n\n    <p>\n      Staff members in bfban include:\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>Server owners</li>\n      <li>Clan's leaders</li>\n      <li>Bf1 streamers</li>\n    </ul>",
+    "privacy": "\n<h2>Privacy policy</h2>\nIt is open-sourced. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use.",
     "title": "About",
     "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> and launched on November 4, 2018\n    </p>\n    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>"
   },
   "account": {
     "bindOrigin": {
-      "content": "BfBan requires you to connect your Origin account in order to appeal. Your account will be locked, and you will not be able to submit anything if you don't connect your Origin first.",
+      "content": "BfBan requires you to connect your Origin account in order to appeal. Your account will be locked and you will not be able to submit anything if you dont connect your Orgin first.",
       "title": "This account not connected to a Origin account!",
       "travel": "All right, Connect to my Origin account"
     },
@@ -16,7 +16,7 @@
     "message": {
       "chat": "Chat",
       "hint": {
-        "denied": "You have been blocked.",
+        "denied": "Your hav been blocked.",
         "selfTalk": "You can't chat with yourself！",
         "taOffChat": "This User has turned off the chat option"
       }
@@ -110,6 +110,7 @@
     "button": {
       "cancel": "Cancel",
       "commit": "Commit",
+      "dealAppeal": "Handling of complaints",
       "insert": "Insert",
       "next": "Next step",
       "prev": "Previous step",
@@ -131,8 +132,6 @@
     "games": {
       "all": "All games",
       "bf1": "Battlefield 1",
-      "bf3": "Battlefield 3",
-      "bf4": "Battlefield 4",
       "bf6": "Battlefield 2042",
       "bfv": "Battlefield 5"
     },
@@ -162,80 +161,21 @@
       "all": "all"
     },
     "tip": {
-      "bindOrigin.bad": "An error occurred when binding account, please contact the admin. {message}",
-      "bindOrigin.error": "An error occurred, please contact the admin {message}",
-      "bindOrigin.expired": "The activation verification code has expired, please register again.",
-      "bindOrigin.gameNotShowed": "The judged account does not correspond to the Battlefield series of games.",
-      "bindOrigin.needVerify": "Congratulations, you are still one step away. Please go to your email to activate your account.",
-      "bindOrigin.notFound": "The activation verification code is invalid, please check the verification code",
-      "bindOrigin.notImplement": "An error occurred, please contact the admin. {message}",
-      "bindOrigin.originBindingExist": "An account has already bound to this e-mail.",
-      "bindOrigin.originNotFound": "Can not find account link to this e-mail. Please check whether the e-mail is correct or search by e-mail is enabled.",
-      "bindOrigin.success": "Congratulations! Now you have activated your account!",
-      "server.error": "Service error {message}",
-      "captcha.bad": "An error occurred in the verification code module, please contact the administrator {message}",
-      "captcha.expired": "Verification code is not filled in",
-      "captcha.wrong": "Wrong verification code",
-      "changeName.bad": "An error occurred when changing username, please contact the admin {message}",
-      "changeName.noChance": "You have run out of chance to change your name.",
-      "changeName.occupied": "This new name is already taken by others.",
-      "changeName.success": "You have changed your name. Look at this, a shining new name!⭐️",
-      "changePassword.bad": "An error occurred when changing password, please contact the admin. {message}",
-      "changePassword.notMatch": "Incorrect old password.",
-      "changePassword.success": "You need to re-login to complete this process.",
-      "forgetPassword.bad": "An error occurred when resetting password, please contact the admin. {message}",
-      "forgetPassword.needVerify": "Please check your email to reset your password.",
-      "forgetPassword.notFound": "No such user or e-mail is not bound.",
-      "forgetPassword.permissionDenied": "Your account cannot do this",
-      "forgetPassword.success": "Successfully reset password.",
-      "judgement.appealLock": "Appeal locked, case cannot be judged at the moment.",
-      "judgement.bad": "An error occurred when judging the case, please contact the admin {message}",
-      "judgement.notFound": "Cannot find the case, please contact the admin {message}",
-      "judgement.permissionDenied": "You don't have permission to do this.",
-      "judgement.spam": "The submission contains sensitive content.",
-      "judgement.success": "Thank you for your judgement!",
-      "logout.bad": "Logout failed, please contact the administrator",
-      "logout.success": "Good bye!👋🏻",
-      "needBindEaAccount": "Please reply after you bind your Origin account.",
       "noAccess": "Have no right to access",
       "noReports": "No reports yet",
       "notContent": "No content",
       "notFound": "We cant find the page your looking for.",
-      "notLang": "No translation",
-      "reply.bad": "An error occurred when trying to reply, please contact the admin {message}",
-      "reply.notFound": "No such reply or no such player.",
-      "reply.spam": "The submission contains sensitive content.",
-      "reply.success": "Your reply has been submitted.",
-      "report.bad": "An error occurred when trying to report, please contact the admin {message}",
-      "report.error": "An error occurred when trying to report, please contact the admin {message}",
-      "report.notFound": "No such user found.",
-      "report.notImplement": "An error occurred, please contact the admin {message}",
-      "report.spam": "The submission contains sensitive content.",
-      "report.success": "Thank you for your report.",
-      "signin.bad": "An error occurred when trying to login, please contact the admin {message}",
-      "signin.noSuchUser": "No such user or incorrect password.",
-      "signin.success": "Welcome back!",
-      "signup.bad": "An error occurred when trying to register, please contact the admin {message}",
-      "signup.error": "An error occurred, please contact the admin {message}",
-      "signup.notFound": "Invalid activation code",
-      "signup.expired": "The activation code has expired, please register again",
-      "signup.gameNotShowed": "The judged account does not correspond to the Battlefield series of games.",
-      "signup.needVerify": "Congratulations, you are still one step away. Please go to your email to activate your account.",
-      "signup.notImplement": "An error occurred, please contact the admin {message}",
-      "signup.originBindingExist": "This email has been bound to an account",
-      "signup.originNotFound": "Unable to find EA account based on the information provided by the user",
-      "signup.usernameExist": "User name is taken.",
-      "user.invalid": "Invalid token.",
-      "user.permissionDenined": "You do not have the permission.",
-      "user.tokenClientException": "User token expired or invalid.",
-      "user.tokenExpired": "Token expired.",
-      "userReports.bad": "An error occurred when reporting player, please contact the admin {message}",
-      "userReports.notFound": "There is no such player, please check carefully",
-      "userReports.success": "Successfully reported."
+      "notLang": "No translation"
     }
   },
   "bindOrigin": {
-    "title": "Bind EA account."
+    "messages": {
+      "bad": "Error while binding, please contact admin",
+      "expired": "Verification code for binding expired, please bind again",
+      "notFound": "Verification code for binding not found",
+      "success": "Account bind to Origin successfully"
+    },
+    "title": "Connect your origin account"
   },
   "captcha": {
     "get": "Get captcha",
@@ -289,12 +229,11 @@
     "appeal": {
       "deal": {
         "action": "Appeal operation",
-        "adminContent": "Reply by admin",
+        "admincontent": "Admin appeal content",
         "appealContent": "Player appeal content",
         "btrLink": "BTR Link",
         "farm": "Farm weapon appeal",
         "firstPersonRecording": "First person screen recording link",
-        "userGeneratedMossFile": "moss file (.zip)",
         "moss": "Moss self-proof appeal",
         "mossDownloadUrl": "Download Moss",
         "mossUpload": "Upload Moss",
@@ -306,8 +245,7 @@
         },
         "type": "Appeal type"
       },
-      "dealAppeal": "Process appeals",
-      "describe": "The report is inconsistent with the facts and can provide self-corroborating material or help prove innocence",
+      "describe": "This report has a problem. I can prove that me or the player mentioned is innocent.",
       "info": {
         "changeName": "Name change",
         "commentid": "Comment ID",
@@ -339,7 +277,7 @@
       },
       "placeholder": {
         "btrlink": "Please fill out the btr matchup link",
-        "content": "Please fill in the details of your appeal information for review (pay attention to the format, different regions will have requirements for the appeal format, please refer to the local appeal community \"appeal format\" shall prevail)",
+        "content": "Please fill in detail of your appeal for review",
         "player": "Please fill in Player's ID",
         "videolink": "Please fill in the video link"
       }
@@ -361,10 +299,10 @@
       "cheatMethod": "via",
       "cheatersInfo": "Player detail",
       "dealRecord": "Admin's operational records：",
-      "description1": "Click here if the link expired, or name changed.",
-      "description2": "bfban.com can track cheater permanently.",
-      "description3": "The server will also regularly capture and update the information of the person being reported.",
-      "description4": "Previous ID can also be used to search.",
+      "discription1": "If you cant find the player on battlefieldtracker or you think he changed Origin account name,please Click",
+      "discription2": "bfban.com can track hackers' newest ID",
+      "discription3": "Server can update hacker who is on the list periodically",
+      "discription4": "Historical ID which they used before can be found too",
       "fastReplies": {
         "evidencePic": "As the evidence showed in the picture",
         "evidenceVid": "As the evidence showed in the video",
@@ -373,7 +311,7 @@
       "firstReportTime": "Firstly reported date",
       "gameScores": "Score track link",
       "gaming": "for",
-      "giveOpinion": "What is your opinion?",
+      "giveOpinion": "What's your opinion?",
       "historyID": "Historical User Name",
       "inGame": "in",
       "judge": "has",
@@ -414,6 +352,10 @@
       "dontDoIt": "Do not just give a ",
       "fillEverything": "Please fill in everything",
       "pleaseExplain": "Please explian your decision in details",
+      "replySuccess": "Your reply was successfully added",
+      "signIn": "Please sign in",
+      "submitSuccess": "Submition successful",
+      "tipBind": "Please bind your Origin ID before replay",
       "updateComplete": "Update completed"
     },
     "seo": {
@@ -431,9 +373,7 @@
       "banAppeal": "Only appeals",
       "coreComment": "Main content",
       "historyName": "Player name changing history",
-      "verify": "Only verified",
-      "noAppealAttachmentHint": "There is no complaint attachment for this complaint",
-      "needLoginViewAttachmentsHint": "You will need to log in to your account to access the additional attachments provided by Player Complaints"
+      "verify": "Only verified"
     },
     "title": "Detail"
   },
@@ -497,6 +437,7 @@
     "report": "Report",
     "signin": "Sign in",
     "signout": "Logout",
+    "signoutSuccess": "Logout successful",
     "signup": "Signup",
     "site_stats": "Statistics",
     "userCenter": "Public profile"
@@ -506,7 +447,7 @@
       "activities": {
         "admin": "Administrator",
         "as": "as",
-        "join": "You just registered on BFBAN, welcome!",
+        "join": "Welcome to BFBAN",
         "mark": "marked",
         "report": "reported"
       },
@@ -520,12 +461,11 @@
     "cover": {
       "confirmData": "Confirmed cheater",
       "dataReceived": "Recieved",
-      "endTime": "start from {time}",
+      "endTime": "Since {time}",
       "h1": "BFBAN",
       "h2": {
         "hint0": "Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world",
-        "hint1": "Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheaters",
-        "hint2": "Everything is controlled by the community, open and transparent, and provides free services to everyone connected to BFBAN."
+        "hint1": "Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheaters"
       },
       "h3": "A global database of cheaters",
       "h4": "Become one of us - Improve our community",
@@ -638,8 +578,6 @@
         "adminOperationLog": "Admin website action log",
         "blockedUsers": "blockedusers",
         "comment": "Comments on the management",
-        "fileManagement": "Media management",
-        "files": "file list",
         "home": "Home",
         "judgementLog": "Judgement log",
         "log": "Logs",
@@ -770,8 +708,8 @@
     },
     "info": {
       "description": "List as much evidence as possible about the person being reported",
-      "fromDatabaseOneId": "Select from BFBAN database",
-      "idNotion1": "Only fill in one ID at a time, do not put the team name in, do not write your own ID",
+      "fromDatabaseOneId": "Select from BFBAN's database",
+      "idNotion1": "You can only report one ID at a time， do not include the platoon name and do not fill in your own ID",
       "idNotion2": "Origin name has no match for lower case and upper case，but you must identify i I 1 l L o O 0 in order to offer correct ID",
       "loginExpired": "Your login has expired, please re-login.",
       "notFoundHintAnswer1": "Please visit origin.com to search that player. If this player can be found but the report can't be made, you can send us bug report via the contact methods on the bottom of the frontpage.",
@@ -784,32 +722,18 @@
       "reportHacker": "Report a hacker",
       "reportOne": "Report one",
       "required": "video link",
-      "uploadManual1": "Additional video sites can be provided from YouTube、Dailymotion、TikTok stations, etc. Video sites can access the source file address, click the Add button to paste in the below",
-      "uploadManual2": "Please select a video site or web disk with a valid long link",
+      "uploadManual1": "Additional video sites can be provided from YouTube,Dailymotion,TikTok stations, etc. Video sites can access the source file address, click the Add button to paste in the below",
+      "uploadManual2": "Please choose a video site with a long - term link or network storage",
       "uploadPic1": "We recommend you to upload pictures with png, jpg, jpeg, gif format.",
       "uploadPic2": "picture larger than 2M will fail to upload ,you can go to ",
       "uploadPic3": "and then choose Image URL Tag，paste the image link below",
       "uploadPic4": "please list your evidence here，Text editor offer image upload service（Size limits:2M）"
     },
     "labels": {
-      "types": {
-        "originName": {
-          "name": "Username",
-          "hint": "Platform abbreviated username or platform username"
-        },
-        "originPersonaId": {
-          "name": "Role identity",
-          "hint": "Character Identification (id), which can be obtained through game platforms or third-party tools, consists of a number"
-        },
-        "originUserId": {
-          "name": "User identification",
-          "hint": "User Identification (id), which can be obtained through gaming platforms or third-party tools, consists of a number"
-        }
-      },
       "cheatMethod": "Cheat method",
       "description": "Description",
       "game": "Game",
-      "hackerId": "Confirmed cheater"
+      "hackerId": "Cheater ID"
     },
     "messages": {
       "failureSubtitle": "Report failed, {msg}",
@@ -819,6 +743,7 @@
       "permissionDenied": "No permission",
       "successSubtitle": "Thank you for reporting",
       "successTitle": "Successfully submitted",
+      "tipBind": "Please report only after you've bound Origin account",
       "videoBadFormat": "Wrong format",
       "videoEmpty": "Empty video link"
     },
@@ -877,8 +802,8 @@
     "title": "Share"
   },
   "signin": {
-    "failed": "login error",
-    "fillEverything": "Incomplete login information, please fill it in properly.",
+    "failed": "Login failed",
+    "fillEverything": "Please fill in everything",
     "form": {
       "Feedback": "Feedback Question",
       "forgetPasswordHint": "Forget Password?",
@@ -886,15 +811,16 @@
       "submitHint": "Don't have account? Sign up",
       "username": "Username/Email"
     },
-    "loggedIn": "Hmm? Please logout first. (✿◡‿◡)",
+    "loggedIn": "Please log out first (✿◡‿◡)",
     "loginFirst": "Please login first",
+    "success": "Login sucessful",
     "title": "Sign In"
   },
   "signup": {
     "checkAllEmail": "The verification email takes a while (about 1 minute) to deliver to your mail box, please wait patiently and remember to check your spam",
     "eaPrivacy": "Please go to your \\\n      <a href=\"https://myaccount.ea.com/cp-ui/privacy/index\">EA privacy settings</a>      \\\n      to enable \"search by email\".",
-    "failed": "Registration failed.",
-    "fillIn": "Incomplete register information, please fill it in properly.",
+    "failed": "Registration failed",
+    "fillIn": "Please fill in the form",
     "form": {
       "forgetPasswordHint": "Forget Password?",
       "newUsername": "New username",
@@ -905,14 +831,20 @@
       "submitHint": "Already have a account? Sign In",
       "username": "Username"
     },
+    "gameNotShowed": "The account under this email does not contain any games!",
+    "needVerify": "Please go to email to verify your account",
+    "originBindingExist": "This origin account has been bound",
+    "originNotFound": "Origin account with this email not found.",
     "placeholder": {
       "originEmail": "Enter your Origin e-mail address",
+      "originId": "Optional",
       "originName": "Enter your Origin account name",
       "password": "At least 6 characters",
-      "username": "User names with more than 4 characters can be English, digits, underscores, and subtractions only"
+      "username": "At least 4 characters"
     },
+    "playerNotFound": "Origin account not found (Please ensure that you have followed the guide above)",
     "registerVerification": {
-      "error": "Account verification error",
+      "error": "error",
       "failure": "Wrong verify link，pleas check your Captcha",
       "successful": "Verify successful!，Account is now unlocked, you are free to login",
       "title": "Verify account",
@@ -940,7 +872,8 @@
         "title": "Finish"
       }
     },
-    "title": "Register"
+    "title": "Register",
+    "usernameExist": "This username is already exists!"
   },
   "sitestats": {
     "admins": "Total number of administrators",
@@ -958,8 +891,7 @@
       "yearly": "1 year"
     },
     "title": "Website statistics",
-    "trend": "Case heat",
-    "netstatus": "Network state"
+    "trend": "Case heat"
   },
   "textarea": {
     "originalImage": "The original image",
@@ -978,8 +910,6 @@
         "1": "To view"
       }
     },
-    "textHelpHint": "The statistical content contains invisible tags and is different from the visible text content. In case of any discrepancy, please refer to the statistics.",
-    "textOverflowHint": "The text content exceeds the maximum length, please shorten it appropriately or submit it in sections.",
     "type": {
       "media": "Media library",
       "upload": "Upload to the chart bed",
