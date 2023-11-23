@@ -1,9 +1,9 @@
 {
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\nNée le 29 janvier 2018;\nIl s'agit d'un groupe de joueurs de Battlefield qui se sont réunis pour former une organisation de résistance aux plug-ins.\n </p>",
-    "privacy": "\n<h2>politique de confidentialité</h2>\nIl s'agit d'un logiciel libre. Vous pouvez signaler des problèmes et suggérer des changements/améliorations via GitHub. API fournies par le réseau communautaire et ouvertes à l'utilisation publique.",
+    "description": "<h2>BFBAN</h2>\n<p>\n诞生于2018年1月29日；\n是战地玩家一起组建的 <b>抵制外挂</b> 组织。\n </p>",
+    "privacy": "\n<h2>隐私政策</h2>\n它是开源的。您可以通过 GitHub 发布问题并提出更改/改进建议。社区网络提供的 API 并开放供公众使用。",
     "title": "à propos",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> Le site est basé sur le United BAN Survey Board et l'idée originale est venue de joueurs enthousiastes et a été développée par <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> ,Publié le 4 novembre 2018 En ligne‘\n    </p>\n    <p>Principalement pour les acteurs généraux, pour signaler, lister, rechercher, suivre, discuter et d'autres services;</p>"
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> Le site Web s'appuie sur le bureau d'enquête BFBAN, et l'idée originale est née de joueurs enthousiastes，由 <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> 开发，于 2018年11月4日 上线‘\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>"
   },
   "account": {
     "bindOrigin": {
@@ -131,8 +131,6 @@
     "games": {
       "all": "tous",
       "bf1": "Champ de bataille 1",
-      "bf3": "战地风云 3",
-      "bf4": "战地风云 4",
       "bf6": "Champ de bataille 2042",
       "bfv": "Champ de bataille 5"
     },
@@ -141,12 +139,10 @@
       "blacklisted": "liste noire",
       "bot": "robot",
       "dev": "équipe de développement",
-      "freezed": "冻结用户",
       "normal": "utilisateur",
       "root": "système",
       "super": "super administrateur",
-      "test": "compte d'essai",
-      "volunteer": "社区志愿者"
+      "test": "compte d'essai"
     },
     "status": {
       "0": "non transformé",
@@ -158,84 +154,24 @@
       "6": "Besoin de plus de votes d'administrateur",
       "7": "Des données anormales confirment automatiquement la tricherie",
       "8": "pistolet à brosse",
-      "9": "申诉中",
       "all": "tous"
     },
     "tip": {
-      "bindOrigin.bad": "绑定账户发生错误，请联系管理员 {message}",
-      "bindOrigin.error": "发生错误，请联系管理员 {message}",
-      "bindOrigin.expired": "激活验证码过期，请重新注册",
-      "bindOrigin.gameNotShowed": "判断的账户，没有对应战地系列游戏",
-      "bindOrigin.needVerify": "恭喜，你还差一步，请前往邮箱激活账户",
-      "bindOrigin.notFound": "激活验证码无效，请检查验证代码",
-      "bindOrigin.notImplement": "发生错误，请联系管理员 {message}",
-      "bindOrigin.originBindingExist": "此邮箱已绑定账户",
-      "bindOrigin.originNotFound": "找不到此邮箱账户，请检测是邮箱正确性以及否开启邮箱查找",
-      "bindOrigin.success": "恭喜你成功激活!",
-      "server.error": "服务错误 {message}",
-      "captcha.bad": "验证码模块发生错误,请联系管理员 {message}",
-      "captcha.expired": "验证码未填",
-      "captcha.wrong": "错误的验证码",
-      "changeName.bad": "更改用户名称错误，请联系管理员 {message}",
-      "changeName.noChance": "你已经用完了所有改名的机会",
-      "changeName.occupied": "有人已经占用了你的新名字",
-      "changeName.success": "已修改用户成功，来看看崭新的名字⭐️",
-      "changePassword.bad": "更改密码错误，请联系管理员 {message}",
-      "changePassword.notMatch": "原密码不正确",
-      "changePassword.success": "您需要重新登录来完成此过程",
-      "forgetPassword.bad": "重置密码错误，请联系管理员 {message}",
-      "forgetPassword.needVerify": "请检查您的电子邮件以重置密码",
-      "forgetPassword.notFound": "没有这样的用户或者您没有绑定电子邮件",
-      "forgetPassword.permissionDenied": "你账户无法这样做",
-      "forgetPassword.success": "重置密码成功",
-      "judgement.appealLock": "上诉被锁定，案件无法进一步裁决",
-      "judgement.bad": "判决发生错误，请联系管理员 {message}",
-      "judgement.notFound": "未找到案件，请联系管理员 {message}",
-      "judgement.permissionDenied": "你无权这样做",
-      "judgement.spam": "你所提交的内容，包含敏感内容",
-      "judgement.success": "感谢你的判决",
-      "logout.bad": "注销失败,请联系管理员",
-      "logout.success": "再见👋🏻",
-      "needBindEaAccount": "请绑定你的橘子账号以后在回复",
       "noAccess": "compte courant, pas d'autorisation",
       "noReports": "pas encore de rapports",
       "notContent": "Pas de contenu",
       "notFound": "uh, L'adresse d'accès semble être perdue.......",
-      "notLang": "Non traduit",
-      "reply.bad": "回复发生错误，请联系管理员 {message}",
-      "reply.notFound": "没有此回复或玩家",
-      "reply.spam": "你所提交的内容，包含敏感内容",
-      "reply.success": "已提交回复",
-      "report.bad": "举报发生错误，请联系管理员 {message}",
-      "report.error": "举报发生错误，请联系管理员 {message}",
-      "report.notFound": "查无此用户信息",
-      "report.notImplement": "发生错误，请联系管理员 {message}",
-      "report.spam": "你所提交的内容，包含敏感内容",
-      "report.success": "感谢你的举报",
-      "signin.bad": "登录发生错误，请联系管理员 {message}",
-      "signin.noSuchUser": "无此用户或密码错误",
-      "signin.success": "欢迎回来",
-      "signup.bad": "注册发生错误，请联系管理员 {message}",
-      "signup.error": "发生错误，请联系管理员 {message}",
-      "signup.notFound": "激活码无效",
-      "signup.expired": "激活码时效过期，请重新注册",
-      "signup.gameNotShowed": "判断的账户，没有对应战地系列游戏",
-      "signup.needVerify": "恭喜，你还差一步，请前往邮箱激活账户",
-      "signup.notImplement": "发生错误，请联系管理员 {message}",
-      "signup.originBindingExist": "此邮箱已绑定账户",
-      "signup.originNotFound": "无法依照用户提供的信息查找到EA账户",
-      "signup.usernameExist": "用户名已存在",
-      "user.invalid": "令牌失效",
-      "user.permissionDenined": "无权许可",
-      "user.tokenClientException": "当前客户端令牌过期或失效",
-      "user.tokenExpired": "令牌过期",
-      "userReports.bad": "用户举报发生错误，请联系管理员 {messgae}",
-      "userReports.notFound": "没有此玩家，请仔细核对",
-      "userReports.success": "举报成功"
+      "notLang": "Non traduit"
     }
   },
   "bindOrigin": {
-    "title": "绑定EA账户"
+    "messages": {
+      "bad": "Erreur de liaison, veuillez contacter l'administrateur",
+      "expired": "Le code de vérification de la liaison a expiré, veuillez soumettre à nouveau la liaison",
+      "notFound": "Code de vérification de liaison introuvable",
+      "success": "Le compte BFBAN est lié avec succès au compte d'origine"
+    },
+    "title": "Lier le compte d'origine"
   },
   "captcha": {
     "get": "obtenir le code de vérification",
@@ -287,33 +223,12 @@
   },
   "detail": {
     "appeal": {
-      "deal": {
-        "action": "申诉操作",
-        "adminContent": "管理回复内容",
-        "appealContent": "玩家申诉内容",
-        "btrLink": "BTR链接",
-        "farm": "刷枪申诉",
-        "firstPersonRecording": "第一人称录屏链接",
-        "userGeneratedMossFile": "moss文件 (.zip)",
-        "moss": "moss自证申诉",
-        "mossDownloadUrl": "MOSS下载",
-        "mossUpload": "上传moss",
-        "other": "其他类型申诉",
-        "stats": {
-          "accept": "申诉通过",
-          "fail": "申诉不通过",
-          "unprocessed": "申诉未处理"
-        },
-        "type": "申诉类型"
-      },
-      "dealAppeal": "处理申诉",
-      "describe": "该举报与事实不符,能提供自证材料 或 协助证明清白",
+      "describe": "Il y a un problème avec les informations rapportées et je peux prouver mon innocence par moi-même ou avec l'aide d'autres personnes.",
       "info": {
         "changeName": "changement de nom",
-        "commentid": "评论ID",
         "content": "Contenu de la plainte",
         "originName": "nom actuel du joueur",
-        "player": "玩家ID"
+        "player": "identifiant du joueur"
       },
       "modal": {
         "auxiliaryProof": {
@@ -338,10 +253,8 @@
         "modalTitle": "règle"
       },
       "placeholder": {
-        "btrlink": "请填写btr对局链接",
-        "content": "请详细填写您申诉信息以便审核(注意格式，不同地区会对申诉格式有需求，请以当地申诉社区《申诉格式》为准)",
-        "player": "Veuillez remplir l'identifiant du joueur",
-        "videolink": "请填写视频链接"
+        "content": "Veuillez remplir vos informations d'appel en détail pour examen",
+        "player": "Veuillez remplir l'identifiant du joueur"
       }
     },
     "info": {
@@ -361,10 +274,10 @@
       "cheatMethod": "tricherie",
       "cheatersInfo": "détails du joueur",
       "dealRecord": "Administrateur traitant les enregistrements",
-      "description1": "若发现 链接失效 或 改名，请点击",
-      "description2": "bfban.com 有能力永久追踪被举报者的行踪",
-      "description3": "服务器也会定期抓取、更新被举报人的信息",
-      "description4": "历史ID也可以用来搜索",
+      "discription1": "Si vous constatez que le lien n'est pas valide ou que le nom a été modifié, veuillez cliquer sur",
+      "discription2": "bfban.com a la capacité de suivre en permanence la localisation des personnes signalées",
+      "discription3": "Le serveur capturera et mettra également régulièrement à jour les informations de la personne signalée",
+      "discription4": "L'ID d'historique peut également être utilisé pour rechercher",
       "fastReplies": {
         "evidencePic": "La preuve est montrée dans l'image",
         "evidenceVid": "La preuve est montrée dans la vidéo",
@@ -373,7 +286,7 @@
       "firstReportTime": "Heure du premier rapport",
       "gameScores": "Lien d'enregistrement",
       "gaming": "dans le jeu",
-      "giveOpinion": "你有何见解?",
+      "giveOpinion": "Qu'en penses-tu?",
       "historyID": "nom historique",
       "inGame": "exister",
       "judge": "penser",
@@ -414,6 +327,10 @@
       "dontDoIt": "interdit",
       "fillEverything": "Veuillez compléter",
       "pleaseExplain": "Veuillez décrire votre décision plus en détail",
+      "replySuccess": "Répondre avec succès",
+      "signIn": "veuillez vous connecter",
+      "submitSuccess": "Soumis avec succès",
+      "tipBind": "Veuillez lier votre compte orange et répondre plus tard",
       "updateComplete": "Mise à jour terminée"
     },
     "seo": {
@@ -431,9 +348,7 @@
       "banAppeal": "afficher les appels uniquement",
       "coreComment": "contenu principal",
       "historyName": "Historique des noms de changement de joueur",
-      "verify": "voir le verdict uniquement",
-      "noAppealAttachmentHint": "此申诉无申诉附件",
-      "needLoginViewAttachmentsHint": "您需要登录账户，才可查阅玩家申诉额外提供的附件"
+      "verify": "voir le verdict uniquement"
     },
     "title": "détails"
   },
@@ -461,8 +376,6 @@
     }
   },
   "forgetPassword": {
-    "checkEmail": "请检查您的邮箱，并点击其中的验证链接",
-    "forgetUsername": "如果您忘记了BFBAN用户名，请前往<a href='http://kook.top/wHwxhw'>bfban开发者社区</a>寻求帮助。注意，您可能会需要很复杂的找回过程。",
     "resetSuccess": "Félicitations pour avoir terminé la réinitialisation 💐",
     "steps": {
       "0": {
@@ -497,6 +410,7 @@
     "report": "signaler la tricherie",
     "signin": "Connexion",
     "signout": "Se déconnecter",
+    "signoutSuccess": "déconnexion réussie",
     "signup": "enregistrer",
     "site_stats": "statistiques",
     "userCenter": "ma page d'affichage"
@@ -506,7 +420,7 @@
       "activities": {
         "admin": "gestionnaire de communauté",
         "as": "traité comme",
-        "join": "注册了联ban, 欢迎你的到来！",
+        "join": "Bfban enregistré, bienvenue!",
         "mark": "Sera",
         "report": "signalé"
       },
@@ -520,12 +434,11 @@
     "cover": {
       "confirmData": "Confirmer le tricheur",
       "dataReceived": "reçu",
-      "endTime": "从{time}开始",
+      "endTime": "Depuis {time}",
       "h1": "BFBAN",
       "h2": {
         "hint0": "Fournissez une ☁️base de données afin que les joueurs de différents serveurs Battlefield du monde entier puissent surveiller et supprimer les joueurs avec des fichiers problématiques",
-        "hint1": "Peu importe de BF1 à BF2042, il prend en charge la requête du lecteur de fichiers de questions, de sorte que différents serveurs Battlefield du monde entier puissent être surveillés",
-        "hint2": "一切由社区掌控，公开透明，免费为所有接入BFBAN提供服务"
+        "hint1": "Peu importe de BF1 à BF2042, il prend en charge la requête du lecteur de fichiers de questions, de sorte que différents serveurs Battlefield du monde entier puissent être surveillés"
       },
       "h3": "Construire une archive mondiale des joueurs tricheurs",
       "h4": "Devenez l'un de nous - Maintenir un environnement communautaire",
@@ -592,25 +505,12 @@
       "form": {
         "allowDM": "Que ce soit pour recevoir le chat",
         "allowDMdescribe": "Si le message doit être accepté. Pour plus d'informations sur le message, accédez à [Liste des messages] pour afficher",
-        "changeNameLeft": "剩余修改用户名次数",
-        "createTime": "注册时间",
-        "description": "用户简介",
         "introduction": "Présentation de soi",
         "language": "Paramètres de langue",
         "languageSyncDescribe": "Définissez cette option pour synchroniser la langue locale du programme après la connexion. Si vous vous déconnectez, il reviendra à la langue conservée par le programme local",
-        "lastSigninIP": "最后登录IP",
-        "modifyDescription": "修改用户简介",
-        "originEmail": "EA账户邮箱",
-        "originName": "EA账户名字",
-        "originPersonaId": "EA PID",
-        "originUserId": "EA UID",
         "privilege": "identité",
-        "privileges": "权限",
-        "registerIP": "注册时IP",
         "showOrigin": "Informations orange visibles",
-        "showOriginDescribe": "Que ce soit pour rendre votre Origin liée visible dans BFBAN",
-        "signoutTime": "登出时间",
-        "username": "用户名"
+        "showOriginDescribe": "Que ce soit pour rendre votre Origin liée visible dans BFBAN"
       },
       "modifyName": {
         "residueDegree": "Le nombre de fois pour modifier le nom {changeNameLeft} est actuellement laissé",
@@ -638,8 +538,6 @@
         "adminOperationLog": "Journal des opérations du site d'administration",
         "blockedUsers": "utilisateurs de la liste noire",
         "comment": "gestion des commentaires",
-        "fileManagement": "多媒体管理",
-        "files": "文件列表",
         "home": "Gérer la page d'accueil",
         "judgementLog": "journal des verdicts",
         "log": "enregistrer",
@@ -659,7 +557,6 @@
     },
     "chat": {
       "control": "modification par lots",
-      "download": "下载",
       "load": "rafraîchir",
       "look": "Vérifier",
       "placeholder": "Remplissez le message envoyé",
@@ -736,15 +633,9 @@
       "title": "histoire"
     },
     "media": {
-      "capacity": "容量状态",
-      "hint1": "每个账户每日都有上传宽带、文件数量、单个大小限制，但它会在下一个日期重置，但存在每个账户可用文件上传数量，对于储存要求不高文件可用其他网站网盘代替。",
-      "maxFileNumber": "可上传文件数量",
-      "maxTrafficQuota": "文件最高大小",
-      "prevResetTime": "重置限额日期",
-      "title": "Médiathèque",
-      "todayFileNumber": "今日已上传文件",
-      "todayTrafficQuota": "今日流量额度",
-      "usedStorageQuota": "总储存配额"
+      "capacity": "capacité",
+      "fileNum": "{num} documents",
+      "title": "Médiathèque"
     },
     "meet": "Bienvenue {nom}!",
     "subscribes": {
@@ -784,32 +675,19 @@
       "reportHacker": "signaler la tricherie",
       "reportOne": "Signaler un seul",
       "required": "adresse vidéo",
-      "uploadManual1": "可额外提供从优酷，土豆，AB站等，视频网站可访问源文件地址，点击添加按钮粘贴在下方",
-      "uploadManual2": "请选择具有长时间链接有效视频网站或是网盘",
+      "uploadManual1": "Si vous ne souhaitez pas enregistrer un compte domestique et que cela vous pose problème, vous pouvez vous rendre sur",
+      "uploadManual2": "Collez ensuite l'adresse ci-dessous",
+      "uploadManual3": "Il peut s'agir de Youku, Tudou, station AB, etc. Lien vers le site Web de la vidéo",
       "uploadPic1": "Il est recommandé de télécharger des images au format png, jpg, jpeg, gif",
       "uploadPic2": "Si l'image est plus grande que 2M ou n'a pas pu être téléchargée, vous pouvez aller à",
       "uploadPic3": "Sélectionnez ensuite l'onglet URL de l'image et collez le lien de l'image ci-dessous",
       "uploadPic4": "Veuillez énumérer suffisamment de preuves, l'éditeur prend en charge le téléchargement d'images (limite 2M)"
     },
     "labels": {
-      "types": {
-        "originName": {
-          "name": "用户名称",
-          "hint": "平台简写用户名或是平台用户名"
-        },
-        "originPersonaId": {
-          "name": "角色身份标识",
-          "hint": "角色标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
-        },
-        "originUserId": {
-          "name": "用户身份标识",
-          "hint": "用户身份标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
-        }
-      },
       "cheatMethod": "méthode de triche",
       "description": "décrire",
       "game": "jeu",
-      "hackerId": "作弊者"
+      "hackerId": "Nom du tricheur (ID)"
     },
     "messages": {
       "failureSubtitle": "Échec du signalement, {msg}",
@@ -819,6 +697,7 @@
       "permissionDenied": "Aucune autorisation",
       "successSubtitle": "Je vous remercie pour votre rapport",
       "successTitle": "Soumis avec succès",
+      "tipBind": "Veuillez lier votre compte orange et soumettre le rapport plus tard",
       "videoBadFormat": "mauvais format",
       "videoEmpty": "URL de la vidéo vide"
     },
@@ -877,26 +756,26 @@
     "title": "partager"
   },
   "signin": {
-    "failed": "登录错误",
-    "fillEverything": "登录信息不完整，请规范填写",
+    "failed": "échec de la connexion",
+    "fillEverything": "Veuillez remplir le cahier des charges",
     "form": {
-      "Feedback": "反馈问题",
-      "forgetPasswordHint": "忘记密码?",
+      "forgetPasswordHint": "Mot de passe oublié?",
       "password": "mot de passe",
       "submitHint": "Pas de compte? enregistrer",
-      "username": "用户名/邮箱"
+      "username": "nom d'utilisateur"
     },
-    "loggedIn": "哎列？请先注销 (✿◡‿◡)",
+    "loggedIn": "Hé ramer? Veuillez d'abord vous déconnecter (✿◡‿◡)",
     "loginFirst": "Hein ? ! Veuillez d'abord vous connecter",
+    "success": "connexion réussie",
     "title": "Connexion"
   },
   "signup": {
     "checkAllEmail": "L'e-mail de vérification mettra un certain temps (environ 1 minute) à arriver dans votre boîte aux lettres, veuillez patienter et n'oubliez pas de vérifier la corbeille",
     "eaPrivacy": "Veuillez accéder aux <a href='https://myaccount.ea.com/cp-ui/privacy/index'>Paramètres de confidentialité EA</a> et activer la recherche par e-mail",
-    "failed": "注册错误",
-    "fillIn": "注册内容不完整，请填写规范",
+    "failed": "échec de l'enregistrement",
+    "fillIn": "Veuillez remplir les spécifications",
     "form": {
-      "forgetPasswordHint": "忘记密码？",
+      "forgetPasswordHint": "Mot de passe oublié?",
       "newUsername": "nouveau nom d'utilisateur",
       "originEmail": "Boîte aux lettres du compte EA",
       "originId": "EA ID",
@@ -905,12 +784,18 @@
       "submitHint": "Vous avez déjà un compte? ouvrir une session",
       "username": "nom d'utilisateur"
     },
+    "gameNotShowed": "Le compte sous cette boîte aux lettres ne contient pas de jeux",
+    "needVerify": "Veuillez aller à l'e-mail pour vérifier le compte",
+    "originBindingExist": "Le compte d'origin a été lié",
+    "originNotFound": "Le compte d'origin n'a pas été trouvé pour cette boîte aux lettres",
     "placeholder": {
       "originEmail": "Entrez votre email d'origin",
+      "originId": "facultatif",
       "originName": "Entrez votre nom Tangerine, faites attention aux majuscules",
       "password": "6 mots de passe ou plus",
       "username": "Plus de 4 noms d'utilisateur Uniquement en anglais, chiffres, traits de soulignement, signes moins"
     },
+    "playerNotFound": "Le joueur est introuvable (veuillez confirmer que la recherche par e-mail est activée)",
     "registerVerification": {
       "error": "Vérification des erreurs de compte",
       "failure": "Adresse de vérification incorrecte, vérifiez que le captcha est correct",
@@ -940,7 +825,8 @@
         "title": "L’achèvement du"
       }
     },
-    "title": "l’enregistrement"
+    "title": "l’enregistrement",
+    "usernameExist": "Ce nom d’utilisateur est déjà enregistré"
   },
   "sitestats": {
     "admins": "Nombre total d’administrateurs",
@@ -958,8 +844,7 @@
       "yearly": "Par rapport à l’année"
     },
     "title": "statistiques",
-    "trend": "Fièvre des cas",
-    "netstatus": "网络状态"
+    "trend": "Fièvre des cas"
   },
   "textarea": {
     "originalImage": "La photo originale",
@@ -978,11 +863,9 @@
         "1": "voir"
       }
     },
-    "textHelpHint": "统计内容包含不可见的标签，与可见的文本内容有差异，请以此统计为准",
-    "textOverflowHint": "文本内容超出最大长度，请适当缩减或分段提交",
     "type": {
       "media": "Bibliothèque des médias",
-      "upload": "上传",
+      "upload": "Télécharger sur diagrambed",
       "url": "Liens vers images"
     }
   }
