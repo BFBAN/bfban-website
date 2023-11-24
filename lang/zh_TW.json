@@ -162,7 +162,7 @@
       "all": "全部"
     },
     "tip": {
-      "bindOrigin.bad": "绑定账户发生错误，请联系管理员 {message}",
+      "bindOrigin.bad": "绑定帳戶發生错误，請聯繫管理員 {message}",
       "bindOrigin.error": "发生错误，请联系管理员 {message}",
       "bindOrigin.expired": "激活验证码过期，请重新注册",
       "bindOrigin.gameNotShowed": "判断的账户，没有对应战地系列游戏",
