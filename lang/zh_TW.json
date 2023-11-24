@@ -863,7 +863,7 @@
       "theme": "主題"
     },
     "image": {
-      "describe": "生成一張舉報信息截圖",
+      "describe": "生成一張檢舉信息截圖",
       "generate": "生成圖片",
       "name": "圖片"
     },
