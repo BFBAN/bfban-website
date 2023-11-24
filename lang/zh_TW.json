@@ -814,10 +814,10 @@
     "messages": {
       "failureSubtitle": "檢舉失敗，{msg}",
       "failureTitle": "失敗",
-      "mediaEvidence": "請上傳圖片或填寫影片鏈接",
+      "mediaEvidence": "請上傳圖片或填寫影片鏈結",
       "originIdNotExist": "遊戲ID不存在，請檢查拼寫",
       "permissionDenied": "無權限",
-      "successSubtitle": "感謝您的舉報",
+      "successSubtitle": "感謝您的檢舉",
       "successTitle": "提交成功",
       "videoBadFormat": "格式錯誤",
       "videoEmpty": "空的影片地址"
