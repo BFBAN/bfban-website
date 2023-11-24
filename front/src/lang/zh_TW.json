@@ -607,7 +607,7 @@
         "privilege": "身份",
         "privileges": "權限",
         "registerIP": "註冊時IP",
-        "showOrigin": "可見橘子信息",
+        "showOrigin": "可見Origin信息",
         "showOriginDescribe": "是否讓你綁定的Origin在BFBAN可見",
         "signoutTime": "登出時間",
         "username": "用戶名"
