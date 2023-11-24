@@ -170,7 +170,7 @@
       "bindOrigin.notFound": "激活驗證碼無效，請檢查驗證代碼",
       "bindOrigin.notImplement": "發生錯誤，請聯繫管理員 {message}",
       "bindOrigin.originBindingExist": "此電子信箱已綁定帳戶",
-      "bindOrigin.originNotFound": "找不到此郵箱賬戶，請檢測是郵箱正確性以及否開啓郵箱查找",
+      "bindOrigin.originNotFound": "找不到此電子信箱帳戶，請檢查是信箱地址是否正確 以及是否已開啟信箱查詢",
       "bindOrigin.success": "恭喜你成功激活!",
       "server.error": "服務錯誤 {message}",
       "captcha.bad": "驗證碼模組發生錯誤，請聯繫管理員 {message}",
