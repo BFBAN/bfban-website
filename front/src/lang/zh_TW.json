@@ -892,7 +892,7 @@
   },
   "signup": {
     "checkAllEmail": "驗證信件需要一段時間(大約1分鐘)才能到達您的信箱，請等待並記得檢查垃圾收件箱",
-    "eaPrivacy": "請至<a href='https://myaccount.ea.com/cp-ui/privacy/index'>EA 隱私設定</a>中將允許按郵箱搜索開啟",
+    "eaPrivacy": "請至<a href='https://myaccount.ea.com/cp-ui/privacy/index'>EA 隱私設定</a>中將允許按信箱搜尋開啟",
     "failed": "註冊失敗",
     "fillIn": "註冊內容不完整，請填寫規範",
     "form": {
