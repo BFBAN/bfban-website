@@ -887,8 +887,8 @@
       "username": "用戶名/信箱"
     },
     "loggedIn": "哎列？請先登出 (✿◡‿◡)",
-    "loginFirst": "啊咧?! 請先登錄",
-    "title": "登錄"
+    "loginFirst": "啊咧?! 請先登入",
+    "title": "登入"
   },
   "signup": {
     "checkAllEmail": "驗證郵件需要一段時間(大約1分鐘)才能到達您的郵箱，請等待並記得檢查垃圾箱",
