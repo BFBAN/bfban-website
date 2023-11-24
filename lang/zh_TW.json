@@ -898,9 +898,9 @@
     "form": {
       "forgetPasswordHint": "忘記密碼？",
       "newUsername": "新用戶名",
-      "originEmail": "EA賬戶郵箱",
+      "originEmail": "EA帳戶信箱",
       "originId": "EA ID",
-      "originName": "EA賬戶名字",
+      "originName": "EA帳戶名字",
       "password": "密碼",
       "submitHint": "已有賬號？去登錄",
       "username": "用戶名"
