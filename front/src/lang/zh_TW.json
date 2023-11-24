@@ -597,7 +597,7 @@
         "description": "用戶簡介",
         "introduction": "自我介紹",
         "language": "設定語言",
-        "languageSyncDescribe": "設置此處選項，在登錄後同步程序本地語言，如果退出登錄將回退到本地程序所持久保存的語言",
+        "languageSyncDescribe": "設定此處選項，在登入後同步程式本地語言，如果退出登入將回退到本地程式所持久保存的語言",
         "lastSigninIP": "最後登錄IP",
         "modifyDescription": "修改用戶簡介",
         "originEmail": "EA賬戶郵箱",
