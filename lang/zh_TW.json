@@ -348,11 +348,11 @@
       "action": "行動",
       "adminConsole": "管理員專區",
       "adminManual1": "不要輕易下判斷，如果不能做出處理判斷，就使用上方回覆 參與討論，等待檢舉者回覆",
-      "adminManual2": "管理員的任何處理操作都會對作弊者的 現有狀態 造成改變，如果不是100%確定，請使用回复留言討論",
+      "adminManual2": "管理員的任何處理操作都會對作弊者的 現有狀態 造成改變，若非100%確定，請使用回覆留言討論",
       "app_qr": {
         "openApp": "在App內查看",
         "openAppDescribe": "在BFBAN APP內查看此玩家",
-        "tip": "在BFBAN APP內，掃此二維碼",
+        "tip": "在BFBAN APP內，掃此QR code",
         "title": "手機上查看"
       },
       "appeal": "上訴",
