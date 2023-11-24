@@ -914,7 +914,7 @@
     "registerVerification": {
       "error": "驗證帳戶錯誤",
       "failure": "錯誤的驗證地址，請檢查驗證碼是否正確",
-      "successful": "驗證成功!,賬戶已解鎖,即可前往登錄",
+      "successful": "驗證成功!,帳戶已解鎖,可立即前往登入",
       "title": "驗證賬戶",
       "validation": "驗證中"
     },
