@@ -563,7 +563,7 @@
       },
       "sortByTitle": "排序方式"
     },
-    "reportTime": "舉報時間範圍",
+    "reportTime": "檢舉時間範圍",
     "title": "外掛公示",
     "updateTime": "更新時間範圍"
   },
@@ -573,7 +573,7 @@
       "desktop": "單擊 或 拖拽 上傳...",
       "fail": "超過上傳最大限制，圖片2M",
       "info": "上傳圖片，不要超過2M",
-      "mobile": "雙擊屏幕上傳..."
+      "mobile": "雙擊螢幕上傳..."
     },
     "uploadVideo": {
       "desktop": "點擊或者拖動文件到這裡上傳",
