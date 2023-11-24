@@ -582,7 +582,7 @@
   },
   "player_list": {
     "seo": {
-      "description": "玩家列表,這裡包含用戶舉報玩家檔案",
+      "description": "玩家列表,這裡包含用戶檢舉玩家檔案",
       "keywords": "玩家列表,列表"
     },
     "title": "玩家資料庫"
