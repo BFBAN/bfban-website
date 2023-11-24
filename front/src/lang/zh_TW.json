@@ -254,7 +254,7 @@
     },
     "attackServer": {
       "describe": "惡意攻擊伺服器",
-      "title": "攻擊服務器"
+      "title": "攻擊伺服器"
     },
     "damageChange": {
       "describe": "修改武器參數",
