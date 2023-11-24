@@ -812,7 +812,7 @@
       "hackerId": "作弊者"
     },
     "messages": {
-      "failureSubtitle": "舉報失敗，{msg}",
+      "failureSubtitle": "檢舉失敗，{msg}",
       "failureTitle": "失敗",
       "mediaEvidence": "請上傳圖片或填寫影片鏈接",
       "originIdNotExist": "遊戲ID不存在，請檢查拼寫",
