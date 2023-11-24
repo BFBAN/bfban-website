@@ -912,7 +912,7 @@
       "username": "4位以上用戶名 僅限英文、數字、下劃線、減號"
     },
     "registerVerification": {
-      "error": "驗證賬戶錯誤",
+      "error": "驗證帳戶錯誤",
       "failure": "錯誤的驗證地址，請檢查驗證碼是否正確",
       "successful": "驗證成功!,賬戶已解鎖,即可前往登錄",
       "title": "驗證賬戶",
