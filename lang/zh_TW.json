@@ -87,11 +87,11 @@
         "text": "投一票實錘"
       },
       "innocent": {
-        "describe": "通過影片方式洗清了被舉報信息的嫌疑",
+        "describe": "通過影片方式洗清了被檢舉信息的嫌疑",
         "text": "MOSS自證"
       },
       "invalid": {
-        "describe": "舉報材料不全或舉報錯誤ID等行為",
+        "describe": "檢舉資料不全或檢舉錯誤ID等行為",
         "text": "無效舉報"
       },
       "kill": {
