@@ -266,7 +266,7 @@
     },
     "invisable": {
       "describe": "角色隱身，無法看見，能追蹤位置",
-      "title": "隱身"
+      "title": "隱形"
     },
     "magicBullet": {
       "describe": "子彈可以穿過實體",
