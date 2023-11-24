@@ -915,12 +915,12 @@
       "error": "驗證帳戶錯誤",
       "failure": "錯誤的驗證地址，請檢查驗證碼是否正確",
       "successful": "驗證成功!,帳戶已解鎖,可立即前往登入",
-      "title": "驗證賬戶",
+      "title": "驗證帳戶",
       "validation": "驗證中"
     },
     "steps": {
       "0": {
-        "supplement": "賬戶基本",
+        "supplement": "帳戶基本",
         "title": "基礎信息"
       },
       "1": {
