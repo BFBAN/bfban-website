@@ -92,7 +92,7 @@
       },
       "invalid": {
         "describe": "檢舉資料不全或檢舉錯誤ID等行為",
-        "text": "無效舉報"
+        "text": "無效檢舉"
       },
       "kill": {
         "describe": "管理員判斷實錘",
