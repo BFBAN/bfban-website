@@ -250,10 +250,10 @@
   "cheatMethods": {
     "aimbot": {
       "describe": "自動瞄準位置，呈現出機械動作",
-      "title": "自瞄"
+      "title": "自動瞄準"
     },
     "attackServer": {
-      "describe": "惡意攻擊服務器",
+      "describe": "惡意攻擊伺服器",
       "title": "攻擊服務器"
     },
     "damageChange": {
