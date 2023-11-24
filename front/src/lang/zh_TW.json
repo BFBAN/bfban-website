@@ -748,9 +748,9 @@
     },
     "meet": "歡迎回來{name}!",
     "subscribes": {
-      "title": "追踪"
+      "title": "追蹤"
     },
-    "title": "個人設置",
+    "title": "個人設定",
     "voice": {
       "backgroundMusic": "背景聲音",
       "backgroundMusicDescribe": "背景音樂",
