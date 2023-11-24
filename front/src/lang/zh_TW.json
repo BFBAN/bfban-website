@@ -772,7 +772,7 @@
       "description": "請詳細描述作弊者行為、特點、發生地點、時間，列出他的作弊內容，給出檢舉理由",
       "fromDatabaseOneId": "從聯BAN數據庫中選取",
       "idNotion1": "一次只填寫一個ID，不要把戰隊名字寫進來，不要寫成自己的ID",
-      "idNotion2": "遊戲ID是不區分大小寫的，但請特別注意區分 i I 1 l L o O 0，正確填寫舉報ID",
+      "idNotion2": "遊戲ID是不區分大小寫的，但請特別注意區分 i I 1 l L o O 0，填寫正確ID",
       "loginExpired": "您的登入已過期，請重新登入",
       "notFoundHintAnswer1": "請至origin.com搜索該玩家，如確實能搜索到而無法舉報，可至首頁下方的聯繫方式處反饋bug",
       "notFoundHintAnswer2": "這可能是EA數據庫更新不及時，或是EA官方的bug，我們沒有辦法替他們解決，如果您想出一份力，可以至https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en 官方反饋論壇反饋bug，此情況可以描述為 I can't search my friend by name on origin",
