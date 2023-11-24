@@ -841,7 +841,7 @@
     "collectionHint": "收藏此頁面 (Ctrl+D or Command+D)",
     "describe": "從BFBAN數據庫搜尋ID",
     "notUserExist": "喵嗚~，在數據庫裡找不到此信息",
-    "placeholder": "你想搜索什麼?",
+    "placeholder": "你想搜尋什麼?",
     "sort": {
       "default": "默認",
       "latest": "最新",
