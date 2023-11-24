@@ -902,11 +902,11 @@
       "originId": "EA ID",
       "originName": "EA帳戶名字",
       "password": "密碼",
-      "submitHint": "已有賬號？去登錄",
+      "submitHint": "已有帳號？去登入",
       "username": "用戶名"
     },
     "placeholder": {
-      "originEmail": "輸入您的橘子郵箱",
+      "originEmail": "輸入您的Origin信箱",
       "originName": "輸入您的Origin名字, 注意大小寫",
       "password": "6位以上密碼",
       "username": "4位以上用戶名 僅限英文、數字、下劃線、減號"
