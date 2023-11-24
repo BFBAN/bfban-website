@@ -261,7 +261,7 @@
       "title": "更改傷害"
     },
     "gadgetModify": {
-      "describe": "裝備出現在不可能存在場景中",
+      "describe": "裝備出現在不可能存在的場景中",
       "title": "改裝備"
     },
     "invisable": {
