@@ -229,7 +229,7 @@
       "user.permissionDenined": "無許可權",
       "user.tokenClientException": "當前客戶端令牌逾期或失效",
       "user.tokenExpired": "令牌過期",
-      "userReports.bad": "用戶舉報發生錯誤，請聯繫管理員 {messgae}",
+      "userReports.bad": "用戶檢舉發生錯誤，請聯繫管理員 {messgae}",
       "userReports.notFound": "沒有此玩家，請仔細核對",
       "userReports.success": "檢舉成功"
     }
