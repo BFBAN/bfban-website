@@ -878,7 +878,7 @@
   },
   "signin": {
     "failed": "登入失敗",
-    "fillEverything": "登錄信息不完整，請規範填寫",
+    "fillEverything": "登入信息不完整，請填寫確實",
     "form": {
       "Feedback": "反饋問題",
       "forgetPasswordHint": "忘記密碼?",
