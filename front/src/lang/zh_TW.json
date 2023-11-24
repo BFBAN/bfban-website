@@ -557,7 +557,7 @@
     "filters": {
       "sortBy": {
         "commentsNum": "回覆次數倒序",
-        "createTime": "舉報時間倒序",
+        "createTime": "檢舉時間倒序",
         "updateTime": "更新時間倒序",
         "viewNum": "圍觀次數倒序"
       },
