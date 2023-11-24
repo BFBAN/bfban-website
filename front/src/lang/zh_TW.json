@@ -258,7 +258,7 @@
     },
     "damageChange": {
       "describe": "修改武器參數",
-      "title": "改傷"
+      "title": "更改傷害"
     },
     "gadgetModify": {
       "describe": "裝備出現在不可能存在場景中",
