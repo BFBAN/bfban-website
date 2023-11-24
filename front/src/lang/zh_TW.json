@@ -164,7 +164,7 @@
     "tip": {
       "bindOrigin.bad": "绑定帳戶發生错误，請聯繫管理員 {message}",
       "bindOrigin.error": "發生错误，請聯繫管理員 {message}",
-      "bindOrigin.expired": "激活验证码过期，请重新注册",
+      "bindOrigin.expired": "激活驗證碼逾時，請重新註冊",
       "bindOrigin.gameNotShowed": "判断的账户，没有对应战地系列游戏",
       "bindOrigin.needVerify": "恭喜，你還差一步，請前往郵箱激活賬戶",
       "bindOrigin.notFound": "激活驗證碼無效，請檢查驗證代碼",
