@@ -363,8 +363,8 @@
       "dealRecord": "管理員處理記錄",
       "description1": "若發現 鏈結失效 或 改名，請點擊",
       "description2": "bfban.com 有能力永久追蹤被檢舉人的行蹤",
-      "description3": "服務器也會定期抓取、更新被舉報人的信息",
-      "description4": "歷史ID也可以用來搜索",
+      "description3": "伺服器也會定期抓取、更新被檢舉人的信息",
+      "description4": "歷史ID也可被用來搜尋",
       "fastReplies": {
         "evidencePic": "證據如圖所示",
         "evidenceVid": "證據如影片所示",
