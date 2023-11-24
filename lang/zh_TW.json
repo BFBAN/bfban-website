@@ -461,7 +461,7 @@
     }
   },
   "forgetPassword": {
-    "checkEmail": "請檢查您的郵箱，並點擊其中的驗證鏈接",
+    "checkEmail": "請檢查您的電子信箱，並點擊其中的驗證鏈結",
     "forgetUsername": "如果您忘記了BFBAN用戶名，請前往<a href='http://kook.top/wHwxhw'>bfban開發者社區</a>尋求幫助。注意，您可能會需要很複雜的找回過程",
     "resetSuccess": "恭喜完成重置 💐",
     "steps": {
