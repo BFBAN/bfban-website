@@ -872,12 +872,12 @@
       "name": "鏈結形式",
       "textLink": "文本地址",
       "textLinkContent": "{webname} - 分享了一位玩家，地址:{url}",
-      "webHtmlLink": "網絡代碼"
+      "webHtmlLink": "網路代碼"
     },
     "title": "分享"
   },
   "signin": {
-    "failed": "登錄失敗",
+    "failed": "登入失敗",
     "fillEverything": "登錄信息不完整，請規範填寫",
     "form": {
       "Feedback": "反饋問題",
