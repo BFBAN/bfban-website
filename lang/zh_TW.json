@@ -550,13 +550,13 @@
   "list": {
     "colums": {
       "playerId": "遊戲ID",
-      "reportTime": "舉報時間",
+      "reportTime": "檢舉時間",
       "screenTitle": "篩選",
       "updateTime": "更新時間"
     },
     "filters": {
       "sortBy": {
-        "commentsNum": "回復次數倒序",
+        "commentsNum": "回覆次數倒序",
         "createTime": "舉報時間倒序",
         "updateTime": "更新時間倒序",
         "viewNum": "圍觀次數倒序"
