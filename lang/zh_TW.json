@@ -421,8 +421,8 @@
       "keywords": "玩家詳情,玩家"
     },
     "subscribes": {
-      "cancelTrack": "取消追踪",
-      "cancelTrackDescribe": "不在跟踪此玩家",
+      "cancelTrack": "取消追蹤",
+      "cancelTrackDescribe": "不再跟蹤此玩家",
       "tracking": "追踪",
       "trackingDescribe": "追踪此玩家，在更新動態時通知您"
     },
