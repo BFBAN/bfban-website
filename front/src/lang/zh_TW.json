@@ -226,7 +226,7 @@
       "signup.originNotFound": "無法依照用戶提供的資訊查找到EA帳戶",
       "signup.usernameExist": "用戶名已存在",
       "user.invalid": "令牌失效",
-      "user.permissionDenined": "無權許可",
+      "user.permissionDenined": "無許可權",
       "user.tokenClientException": "當前客戶端令牌逾期或失效",
       "user.tokenExpired": "令牌過期",
       "userReports.bad": "用戶舉報發生錯誤，請聯繫管理員 {messgae}",
