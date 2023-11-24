@@ -91,7 +91,7 @@
         "text": "MOSS自證"
       },
       "invalid": {
-        "describe": "舉報材料不全或舉報錯誤ID等行為",
+        "describe": "檢舉資料不全或檢舉錯誤ID等行為",
         "text": "無效舉報"
       },
       "kill": {
