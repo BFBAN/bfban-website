@@ -788,7 +788,7 @@
       "uploadManual2": "請選擇具有長時間鏈結有效影片網站或是雲端",
       "uploadPic1": "推薦上傳 png, jpg, jpeg, gif 格式的圖片",
       "uploadPic2": "圖片大於 2M 或 上傳失敗，可以前往",
-      "uploadPic3": "然後選擇 Image URL 選項卡，把圖片鏈接貼在下方",
+      "uploadPic3": "然後選擇 Image URL 選項卡，把圖片鏈結貼在下方",
       "uploadPic4": "請列出闡明足夠的證據，編輯器支持上傳圖片（限制2M）"
     },
     "labels": {
