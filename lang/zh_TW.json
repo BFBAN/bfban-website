@@ -249,7 +249,7 @@
   },
   "cheatMethods": {
     "aimbot": {
-      "describe": "自動瞄準位置，呈現出機器行為",
+      "describe": "自動瞄準位置，呈現出機械動作",
       "title": "自瞄"
     },
     "attackServer": {
