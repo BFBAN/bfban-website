@@ -606,7 +606,7 @@
         "originUserId": "EA UID",
         "privilege": "Identität",
         "privileges": "权限",
-        "registerIP": "注册时IP",
+        "registerIP": "Registrierungs-IP",
         "showOrigin": "Sichtbare Origin-Informationen",
         "showOriginDescribe": "Ob Ihr gebundener Origin in BFBAN sichtbar gemacht werden soll",
         "signoutTime": "登出时间",
