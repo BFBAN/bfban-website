@@ -216,7 +216,7 @@
       "signin.noSuchUser": "无此用户或密码错误",
       "signin.success": "欢迎回来",
       "signup.bad": "Es ist ein Fehler bei der Registrierung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
-      "signup.error": "发生错误，请联系管理员 {message}",
+      "signup.error": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "signup.notFound": "激活码无效",
       "signup.expired": "激活码时效过期，请重新注册",
       "signup.gameNotShowed": "判断的账户，没有对应战地系列游戏",
