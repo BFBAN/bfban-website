@@ -598,7 +598,7 @@
         "introduction": "Vorstellen",
         "language": "Spracheinstellungen",
         "languageSyncDescribe": "Stellen Sie diese Option ein, um die lokale Sprache des Programms nach der Anmeldung zu synchronisieren. Wenn Sie sich abmelden, wird auf die Sprache zurückgegriffen, die vom lokalen Programm beibehalten wird",
-        "lastSigninIP": "最后登录IP",
+        "lastSigninIP": "Letzte Anmeldung IP",
         "modifyDescription": "Benutzerprofil bearbeiten",
         "originEmail": "EA-Konto-E-Mail",
         "originName": "EA-Kontoname",
