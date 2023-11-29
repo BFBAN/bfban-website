@@ -214,7 +214,7 @@
       "report.success": "Vielen Dank für Ihren Bericht",
       "signin.bad": "Anmeldungsfehler aufgetreten, bitte kontaktieren Sie den Administrator {message}",
       "signin.noSuchUser": "Kein benutzername Oder passwort eingegeben",
-      "signin.success": "欢迎回来",
+      "signin.success": "Willkommen zurück, nick.",
       "signup.bad": "Es ist ein Fehler bei der Registrierung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "signup.error": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "signup.notFound": "Aktivierungscode ungültig",
