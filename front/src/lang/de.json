@@ -192,7 +192,7 @@
       "judgement.bad": "Das Urteil ist fehlerhaft. Bitte kontaktieren Sie den Administrator {message}",
       "judgement.notFound": "Nicht gefunden Fall, bitte kontaktieren Sie den Administrator {message}",
       "judgement.permissionDenied": "Du darfst das nicht tun.",
-      "judgement.spam": "你所提交的内容，包含敏感内容",
+      "judgement.spam": "Der von Ihnen eingereichte Inhalt enthält sensible Informationen.",
       "judgement.success": "感谢你的判决",
       "logout.bad": "注销失败,请联系管理员",
       "logout.success": "再见👋🏻",
