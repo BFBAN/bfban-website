@@ -212,7 +212,7 @@
       "report.notImplement": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "report.spam": "你所提交的内容，包含敏感内容",
       "report.success": "感谢你的举报",
-      "signin.bad": "登录发生错误，请联系管理员 {message}",
+      "signin.bad": "Anmeldungsfehler aufgetreten, bitte kontaktieren Sie den Administrator {message}",
       "signin.noSuchUser": "无此用户或密码错误",
       "signin.success": "欢迎回来",
       "signup.bad": "注册发生错误，请联系管理员 {message}",
