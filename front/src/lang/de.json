@@ -313,7 +313,7 @@
         "commentid": "评论ID",
         "content": "Beschwerdeinhalt",
         "originName": "aktueller Name des Spielers",
-        "player": "玩家ID"
+        "player": "Spieler-ID"
       },
       "modal": {
         "auxiliaryProof": {
