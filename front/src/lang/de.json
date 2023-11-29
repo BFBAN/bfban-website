@@ -979,7 +979,7 @@
       }
     },
     "textHelpHint": "Der statistische Inhalt enthält unsichtbare Tags, die sich vom sichtbaren Textinhalt unterscheiden. Bitte verwenden Sie diese Statistik als Referenz.",
-    "textOverflowHint": "文本内容超出最大长度，请适当缩减或分段提交",
+    "textOverflowHint": "Der Textinhalt überschreitet die maximale Länge. Bitte reduzieren Sie ihn entsprechend oder reichen Sie ihn in Abschnitten ein.",
     "type": {
       "media": "Medienbibliothek",
       "upload": "上传",
