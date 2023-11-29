@@ -189,7 +189,7 @@
       "forgetPassword.permissionDenied": "Dein Konto kann dies nicht tun.",
       "forgetPassword.success": "Passwort erfolgreich zurückgesetzt",
       "judgement.appealLock": "上诉被锁定，案件无法进一步裁决",
-      "judgement.bad": "判决发生错误，请联系管理员 {message}",
+      "judgement.bad": "Das Urteil ist fehlerhaft. Bitte kontaktieren Sie den Administrator {message}",
       "judgement.notFound": "未找到案件，请联系管理员 {message}",
       "judgement.permissionDenied": "你无权这样做",
       "judgement.spam": "你所提交的内容，包含敏感内容",
