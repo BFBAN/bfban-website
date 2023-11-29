@@ -227,7 +227,7 @@
       "signup.usernameExist": "Die benutzernamen existieren bereits",
       "user.invalid": "令牌失效",
       "user.permissionDenined": "Nicht autorisiert",
-      "user.tokenClientException": "Alle aktuellen kunden können das mandat nicht mehr erneuert Oder verfallen lassen",
+      "user.tokenClientException": "当前客户端令牌过期或失效",
       "user.tokenExpired": "令牌过期",
       "userReports.bad": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "userReports.notFound": "Kein Spieler gefunden, bitte überprüfen Sie sorgfältig.",
