@@ -601,7 +601,7 @@
         "lastSigninIP": "最后登录IP",
         "modifyDescription": "修改用户简介",
         "originEmail": "EA账户邮箱",
-        "originName": "EA账户名字",
+        "originName": "EA-Kontoname",
         "originPersonaId": "EA PID",
         "originUserId": "EA UID",
         "privilege": "Identität",
