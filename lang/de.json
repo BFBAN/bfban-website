@@ -213,7 +213,7 @@
       "report.spam": "Der von Ihnen eingereichte Inhalt enthält sensible Informationen.",
       "report.success": "Vielen Dank für Ihren Bericht",
       "signin.bad": "Anmeldungsfehler aufgetreten, bitte kontaktieren Sie den Administrator {message}",
-      "signin.noSuchUser": "无此用户或密码错误",
+      "signin.noSuchUser": "Kein benutzername Oder passwort eingegeben",
       "signin.success": "欢迎回来",
       "signup.bad": "Es ist ein Fehler bei der Registrierung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "signup.error": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
