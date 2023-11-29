@@ -172,7 +172,7 @@
       "bindOrigin.originBindingExist": "Dieses E-Mail-Konto ist bereits mit einem Konto verknüpft.",
       "bindOrigin.originNotFound": "Kann das E-Mail-Konto nicht finden. Bitte überprüfen Sie die Richtigkeit der E-Mail und ob die E-Mail-Suche aktiviert ist.",
       "bindOrigin.success": "恭喜你成功激活!",
-      "server.error": "服务错误 {message}",
+      "server.error": "Dienstfehler {message}",
       "captcha.bad": "Der Verifizierungsmodul hat einen Fehler festgestellt. Bitte kontaktieren Sie den Administrator {message}",
       "captcha.expired": "Der Code wurde nicht ausgefüllt.",
       "captcha.wrong": "错误的验证码",
