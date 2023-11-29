@@ -169,7 +169,7 @@
       "bindOrigin.needVerify": "Herzlichen Glückwunsch, Sie sind nur noch einen Schritt entfernt. Bitte gehen Sie zur E-Mail, um Ihr Konto zu aktivieren.",
       "bindOrigin.notFound": "Aktivierungscode ungültig, bitte überprüfen Sie den Überprüfungscode.",
       "bindOrigin.notImplement": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
-      "bindOrigin.originBindingExist": "此邮箱已绑定账户",
+      "bindOrigin.originBindingExist": "Dieses E-Mail-Konto ist bereits mit einem Konto verknüpft.",
       "bindOrigin.originNotFound": "Kann das E-Mail-Konto nicht finden. Bitte überprüfen Sie die Richtigkeit der E-Mail und ob die E-Mail-Suche aktiviert ist.",
       "bindOrigin.success": "恭喜你成功激活!",
       "server.error": "服务错误 {message}",
