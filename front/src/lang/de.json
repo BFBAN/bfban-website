@@ -184,7 +184,7 @@
       "changePassword.notMatch": "原密码不正确",
       "changePassword.success": "您需要重新登录来完成此过程",
       "forgetPassword.bad": "重置密码错误，请联系管理员 {message}",
-      "forgetPassword.needVerify": "请检查您的电子邮件以重置密码",
+      "forgetPassword.needVerify": "Bitte überprüfen Sie Ihre E-Mail, um Ihr Passwort zurückzusetzen.",
       "forgetPassword.notFound": "Es gibt keinen solchen Benutzer oder Sie haben keine E-Mail-Adresse verknüpft.",
       "forgetPassword.permissionDenied": "你账户无法这样做",
       "forgetPassword.success": "重置密码成功",
