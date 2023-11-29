@@ -231,7 +231,7 @@
       "user.tokenExpired": "Also, was ist mit der marke",
       "userReports.bad": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "userReports.notFound": "Kein Spieler gefunden, bitte überprüfen Sie sorgfältig.",
-      "userReports.success": "举报成功"
+      "userReports.success": "Melde erfolg"
     }
   },
   "bindOrigin": {
