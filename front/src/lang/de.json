@@ -219,7 +219,7 @@
       "signup.error": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "signup.notFound": "Aktivierungscode ungültig",
       "signup.expired": "Aktivierungscode ist abgelaufen. Bitte registrieren Sie sich erneut.",
-      "signup.gameNotShowed": "判断的账户，没有对应战地系列游戏",
+      "signup.gameNotShowed": "Das Konto der Entscheidung, es gibt keine entsprechenden Battlefield-Spielserie.",
       "signup.needVerify": "Herzlichen Glückwunsch, Ihnen fehlt nur noch ein Schritt. Bitte gehen Sie zum E-Mail-Posteingang, um Ihr Konto zu aktivieren.",
       "signup.notImplement": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "signup.originBindingExist": "此邮箱已绑定账户",
