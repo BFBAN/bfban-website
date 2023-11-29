@@ -894,7 +894,7 @@
     "checkAllEmail": "Es dauert eine Weile (ca. 1 Minute), bis die Bestätigungs-E-Mail in Ihrem Postfach ankommt. Bitte warten Sie und denken Sie daran, den Papierkorb zu überprüfen",
     "eaPrivacy": "Bitte gehen Sie zu <a href='https://myaccount.ea.com/cp-ui/privacy/index'>EA-Datenschutzeinstellungen</a> und aktivieren Sie die Suche per E-Mail",
     "failed": "注册错误",
-    "fillIn": "注册内容不完整，请填写规范",
+    "fillIn": "Die Registrierungsinformationen sind unvollständig. Bitte füllen Sie sie korrekt aus.",
     "form": {
       "forgetPasswordHint": "忘记密码？",
       "newUsername": "Neuer Benutzername",
