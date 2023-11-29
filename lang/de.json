@@ -177,7 +177,7 @@
       "captcha.expired": "Der Code wurde nicht ausgefüllt.",
       "captcha.wrong": "错误的验证码",
       "changeName.bad": "Fehler beim Ändern des Benutzernamens. Bitte kontaktieren Sie den Administrator {message}",
-      "changeName.noChance": "你已经用完了所有改名的机会",
+      "changeName.noChance": "Du hast alle Möglichkeiten zum Umbenennen aufgebraucht.",
       "changeName.occupied": "Jemand hat bereits deinen neuen Namen übernommen.",
       "changeName.success": "Erfolgreich geänderte Benutzer, schau dir den brandneuen Namen an⭐️",
       "changePassword.bad": "Ändern Sie das Passwort falsch, bitte wenden Sie sich an den Administrator {message}",
@@ -978,7 +978,7 @@
         "1": "Überprüfen"
       }
     },
-    "textHelpHint": "统计内容包含不可见的标签，与可见的文本内容有差异，请以此统计为准",
+    "textHelpHint": "Der statistische Inhalt enthält unsichtbare Tags, die sich vom sichtbaren Textinhalt unterscheiden. Bitte verwenden Sie diese Statistik als Referenz.",
     "textOverflowHint": "文本内容超出最大长度，请适当缩减或分段提交",
     "type": {
       "media": "Medienbibliothek",
