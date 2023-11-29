@@ -225,7 +225,7 @@
       "signup.originBindingExist": "Dieses E-Mail-Konto ist bereits mit einem Konto verknüpft.",
       "signup.originNotFound": "Kann das EA-Konto nicht anhand der vom Benutzer bereitgestellten Informationen finden.",
       "signup.usernameExist": "Die benutzernamen existieren bereits",
-      "user.invalid": "令牌失效",
+      "user.invalid": "Die marke wird ungültig",
       "user.permissionDenined": "Nicht autorisiert",
       "user.tokenClientException": "Alle aktuellen kunden können das mandat nicht mehr erneuert Oder verfallen lassen",
       "user.tokenExpired": "Also, was ist mit der marke",
