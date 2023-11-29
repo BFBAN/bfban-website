@@ -230,7 +230,7 @@
       "user.tokenClientException": "当前客户端令牌过期或失效",
       "user.tokenExpired": "令牌过期",
       "userReports.bad": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
-      "userReports.notFound": "没有此玩家，请仔细核对",
+      "userReports.notFound": "Kein Spieler gefunden, bitte überprüfen Sie sorgfältig.",
       "userReports.success": "举报成功"
     }
   },
