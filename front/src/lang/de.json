@@ -229,7 +229,7 @@
       "user.permissionDenined": "无权许可",
       "user.tokenClientException": "当前客户端令牌过期或失效",
       "user.tokenExpired": "令牌过期",
-      "userReports.bad": "用户举报发生错误，请联系管理员 {messgae}",
+      "userReports.bad": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "userReports.notFound": "没有此玩家，请仔细核对",
       "userReports.success": "举报成功"
     }
