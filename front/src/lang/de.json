@@ -207,7 +207,7 @@
       "reply.spam": "你所提交的内容，包含敏感内容",
       "reply.success": "已提交回复",
       "report.bad": "Es gab einen Fehler bei der Meldung, bitte kontaktieren Sie den Administrator {message}",
-      "report.error": "举报发生错误，请联系管理员 {message}",
+      "report.error": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "report.notFound": "查无此用户信息",
       "report.notImplement": "发生错误，请联系管理员 {message}",
       "report.spam": "你所提交的内容，包含敏感内容",
