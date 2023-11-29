@@ -223,7 +223,7 @@
       "signup.needVerify": "Herzlichen Glückwunsch, Ihnen fehlt nur noch ein Schritt. Bitte gehen Sie zum E-Mail-Posteingang, um Ihr Konto zu aktivieren.",
       "signup.notImplement": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "signup.originBindingExist": "Dieses E-Mail-Konto ist bereits mit einem Konto verknüpft.",
-      "signup.originNotFound": "无法依照用户提供的信息查找到EA账户",
+      "signup.originNotFound": "Kann das EA-Konto nicht anhand der vom Benutzer bereitgestellten Informationen finden.",
       "signup.usernameExist": "用户名已存在",
       "user.invalid": "令牌失效",
       "user.permissionDenined": "无权许可",
