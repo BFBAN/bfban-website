@@ -228,7 +228,7 @@
       "user.invalid": "令牌失效",
       "user.permissionDenined": "Nicht autorisiert",
       "user.tokenClientException": "Alle aktuellen kunden können das mandat nicht mehr erneuert Oder verfallen lassen",
-      "user.tokenExpired": "令牌过期",
+      "user.tokenExpired": "Also, was ist mit der marke",
       "userReports.bad": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "userReports.notFound": "Kein Spieler gefunden, bitte überprüfen Sie sorgfältig.",
       "userReports.success": "举报成功"
