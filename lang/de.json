@@ -209,7 +209,7 @@
       "report.bad": "Es gab einen Fehler bei der Meldung, bitte kontaktieren Sie den Administrator {message}",
       "report.error": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "report.notFound": "查无此用户信息",
-      "report.notImplement": "发生错误，请联系管理员 {message}",
+      "report.notImplement": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "report.spam": "你所提交的内容，包含敏感内容",
       "report.success": "感谢你的举报",
       "signin.bad": "登录发生错误，请联系管理员 {message}",
