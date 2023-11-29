@@ -737,7 +737,7 @@
     },
     "media": {
       "capacity": "容量状态",
-      "hint1": "每个账户每日都有上传宽带、文件数量、单个大小限制，但它会在下一个日期重置，但存在每个账户可用文件上传数量，对于储存要求不高文件可用其他网站网盘代替。",
+      "hint1": "Jeder Account hat tägliche Upload-Bandbreiten-, Dateimengen- und Einzelgrößenbeschränkungen, die jedoch am nächsten Tag zurückgesetzt werden. Es gibt jedoch eine begrenzte Anzahl von Dateiuploads pro Account. Für Dateien mit geringem Speicherbedarf können andere Websites verwendet werden, um sie anstelle von Online-Speicherdiensten zu nutzen.",
       "maxFileNumber": "可上传文件数量",
       "maxTrafficQuota": "文件最高大小",
       "prevResetTime": "重置限额日期",
