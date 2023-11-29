@@ -341,7 +341,7 @@
         "btrlink": "Bitte füllen Sie den BTR-Spiel-Link aus.",
         "content": "Bitte füllen Sie die Informationen für Ihre Beschwerde detailliert aus, um sie überprüfen zu können (beachten Sie das Format, verschiedene Regionen haben möglicherweise unterschiedliche Anforderungen an das Beschwerdeformat, bitte orientieren Sie sich an der örtlichen Beschwerdecommunity und dem \"Beschwerdeformat\").",
         "player": "Bitte geben Sie die Spieler-ID ein",
-        "videolink": "请填写视频链接"
+        "videolink": "Bitte geben Sie den Videolink ein."
       }
     },
     "info": {
@@ -355,7 +355,7 @@
         "tip": "Scannen Sie in der BFBAN APP diesen QR-Code",
         "title": "Auf dem Handy ansehen"
       },
-      "appeal": "appellieren",
+      "appeal": "Appellieren",
       "appealManual1": "Falscher BAN-Einspruch: Wenn Sie einen falschen BAN haben, senden Sie bitte den Link zur Fallseite und detaillierte Informationen zum Einspruch an ban-appeals@bfban.com und der Administrator wird sich darum kümmern.",
       "assistPppeal": "Berufung einlegen",
       "cheatMethod": "schummeln",
