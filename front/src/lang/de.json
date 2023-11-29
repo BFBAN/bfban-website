@@ -896,7 +896,7 @@
     "failed": "注册错误",
     "fillIn": "Die Registrierungsinformationen sind unvollständig. Bitte füllen Sie sie korrekt aus.",
     "form": {
-      "forgetPasswordHint": "忘记密码？",
+      "forgetPasswordHint": "Passwort vergessen?",
       "newUsername": "Neuer Benutzername",
       "originEmail": "Postfach des EA-Kontos",
       "originId": "EA ID",
