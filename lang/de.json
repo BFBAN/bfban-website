@@ -364,7 +364,7 @@
       "description1": "Falls ein Link ungültig oder umbenannt ist, klicken Sie bitte hier",
       "description2": "bfban.com hat die Fähigkeit, den Aufenthaltsort des gemeldeten Benutzers dauerhaft zu verfolgen.",
       "description3": "Der Server wird regelmäßig die Informationen der gemeldeten Person abrufen und aktualisieren.",
-      "description4": "历史ID也可以用来搜索",
+      "description4": "Die Historische ID kann auch zur Suche verwendet werden.",
       "fastReplies": {
         "evidencePic": "Der Beweis ist auf dem Bild zu sehen",
         "evidenceVid": "Beweise werden im Video gezeigt",
