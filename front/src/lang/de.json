@@ -181,7 +181,7 @@
       "changeName.occupied": "有人已经占用了你的新名字",
       "changeName.success": "Erfolgreich geänderte Benutzer, schau dir den brandneuen Namen an⭐️",
       "changePassword.bad": "Ändern Sie das Passwort falsch, bitte wenden Sie sich an den Administrator {message}",
-      "changePassword.notMatch": "原密码不正确",
+      "changePassword.notMatch": "Das ursprüngliche Passwort ist falsch.",
       "changePassword.success": "您需要重新登录来完成此过程",
       "forgetPassword.bad": "Fehler beim zurücksetzen. Rufen sie den administrator an {message}",
       "forgetPassword.needVerify": "Bitte überprüfen Sie Ihre E-Mail, um Ihr Passwort zurückzusetzen.",
