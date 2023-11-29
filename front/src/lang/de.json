@@ -339,7 +339,7 @@
       },
       "placeholder": {
         "btrlink": "请填写btr对局链接",
-        "content": "请详细填写您申诉信息以便审核(注意格式，不同地区会对申诉格式有需求，请以当地申诉社区《申诉格式》为准)",
+        "content": "Bitte füllen Sie die Informationen für Ihre Beschwerde detailliert aus, um sie überprüfen zu können (beachten Sie das Format, verschiedene Regionen haben möglicherweise unterschiedliche Anforderungen an das Beschwerdeformat, bitte orientieren Sie sich an der örtlichen Beschwerdecommunity und dem \"Beschwerdeformat\").",
         "player": "Bitte geben Sie die Spieler-ID ein",
         "videolink": "请填写视频链接"
       }
