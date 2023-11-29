@@ -188,7 +188,7 @@
       "forgetPassword.notFound": "Es gibt keinen solchen Benutzer oder Sie haben keine E-Mail-Adresse verknüpft.",
       "forgetPassword.permissionDenied": "Dein Konto kann dies nicht tun.",
       "forgetPassword.success": "Passwort erfolgreich zurückgesetzt",
-      "judgement.appealLock": "Oben genannte Übersetzung: \"Die Berufung ist gesperrt, der Fall kann nicht weiter entschieden werden.",
+      "judgement.appealLock": "Es wurde eingeriegelt, es konnten keine weiteren Entscheidungen getroffen werden",
       "judgement.bad": "Das Urteil ist fehlerhaft. Bitte kontaktieren Sie den Administrator {message}",
       "judgement.notFound": "未找到案件，请联系管理员 {message}",
       "judgement.permissionDenied": "你无权这样做",
