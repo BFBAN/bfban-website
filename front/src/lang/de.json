@@ -166,7 +166,7 @@
       "bindOrigin.error": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "bindOrigin.expired": "Aktivierungscode abgelaufen, bitte erneut registrieren.",
       "bindOrigin.gameNotShowed": "Das Konto der Entscheidung, es gibt keine entsprechenden Battlefield-Spielserie.",
-      "bindOrigin.needVerify": "恭喜你，你离成功只有一步之遥了。请前往电子邮件帐户激活您的帐户。",
+      "bindOrigin.needVerify": "Herzlichen Glückwunsch, Sie sind nur noch einen Schritt entfernt. Bitte gehen Sie zur E-Mail, um Ihr Konto zu aktivieren.",
       "bindOrigin.notFound": "Aktivierungscode ungültig, bitte überprüfen Sie den Überprüfungscode.",
       "bindOrigin.notImplement": "发生错误，请联系管理员 {message}",
       "bindOrigin.originBindingExist": "此邮箱已绑定账户",
