@@ -221,7 +221,7 @@
       "signup.expired": "激活码时效过期，请重新注册",
       "signup.gameNotShowed": "判断的账户，没有对应战地系列游戏",
       "signup.needVerify": "恭喜，你还差一步，请前往邮箱激活账户",
-      "signup.notImplement": "发生错误，请联系管理员 {message}",
+      "signup.notImplement": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "signup.originBindingExist": "此邮箱已绑定账户",
       "signup.originNotFound": "无法依照用户提供的信息查找到EA账户",
       "signup.usernameExist": "用户名已存在",
