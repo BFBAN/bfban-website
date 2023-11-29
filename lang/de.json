@@ -599,7 +599,7 @@
         "language": "Spracheinstellungen",
         "languageSyncDescribe": "Stellen Sie diese Option ein, um die lokale Sprache des Programms nach der Anmeldung zu synchronisieren. Wenn Sie sich abmelden, wird auf die Sprache zurückgegriffen, die vom lokalen Programm beibehalten wird",
         "lastSigninIP": "最后登录IP",
-        "modifyDescription": "修改用户简介",
+        "modifyDescription": "Benutzerprofil bearbeiten",
         "originEmail": "EA-Konto-E-Mail",
         "originName": "EA-Kontoname",
         "originPersonaId": "EA PID",
