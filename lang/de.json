@@ -146,7 +146,7 @@
       "root": "System",
       "super": "Superadministrator",
       "test": "Testkonto",
-      "volunteer": "社区志愿者"
+      "volunteer": "Gemeinschaftliche Freiwillige"
     },
     "status": {
       "0": "unbearbeitet",
@@ -158,34 +158,34 @@
       "6": "Benötigen Sie mehr Admin-Stimmen",
       "7": "Anormale Daten bestätigen Betrug automatisch",
       "8": "Bürstenpistole",
-      "9": "申诉中",
+      "9": "Einspruch eingereicht",
       "all": "alle"
     },
     "tip": {
       "bindOrigin.bad": "Fehler bei der Kontobindung aufgetreten, bitte kontaktieren Sie den Administrator {message}",
       "bindOrigin.error": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "bindOrigin.expired": "Aktivierungscode abgelaufen, bitte erneut registrieren.",
-      "bindOrigin.gameNotShowed": "判断的账户，没有对应战地系列游戏",
-      "bindOrigin.needVerify": "恭喜，你还差一步，请前往邮箱激活账户",
-      "bindOrigin.notFound": "激活验证码无效，请检查验证代码",
-      "bindOrigin.notImplement": "发生错误，请联系管理员 {message}",
-      "bindOrigin.originBindingExist": "此邮箱已绑定账户",
-      "bindOrigin.originNotFound": "找不到此邮箱账户，请检测是邮箱正确性以及否开启邮箱查找",
+      "bindOrigin.gameNotShowed": "Das Konto der Entscheidung, es gibt keine entsprechenden Battlefield-Spielserie.",
+      "bindOrigin.needVerify": "Herzlichen Glückwunsch, Sie sind nur noch einen Schritt entfernt. Bitte gehen Sie zur E-Mail, um Ihr Konto zu aktivieren.",
+      "bindOrigin.notFound": "Aktivierungscode ungültig, bitte überprüfen Sie den Überprüfungscode.",
+      "bindOrigin.notImplement": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
+      "bindOrigin.originBindingExist": "Dieses E-Mail-Konto ist bereits mit einem Konto verknüpft.",
+      "bindOrigin.originNotFound": "Kann das E-Mail-Konto nicht finden. Bitte überprüfen Sie die Richtigkeit der E-Mail und ob die E-Mail-Suche aktiviert ist.",
       "bindOrigin.success": "恭喜你成功激活!",
-      "server.error": "服务错误 {message}",
-      "captcha.bad": "验证码模块发生错误,请联系管理员 {message}",
-      "captcha.expired": "验证码未填",
+      "server.error": "Dienstfehler {message}",
+      "captcha.bad": "Der Verifizierungsmodul hat einen Fehler festgestellt. Bitte kontaktieren Sie den Administrator {message}",
+      "captcha.expired": "Der Code wurde nicht ausgefüllt.",
       "captcha.wrong": "错误的验证码",
-      "changeName.bad": "更改用户名称错误，请联系管理员 {message}",
+      "changeName.bad": "Fehler beim Ändern des Benutzernamens. Bitte kontaktieren Sie den Administrator {message}",
       "changeName.noChance": "你已经用完了所有改名的机会",
       "changeName.occupied": "有人已经占用了你的新名字",
-      "changeName.success": "已修改用户成功，来看看崭新的名字⭐️",
+      "changeName.success": "Erfolgreich geänderte Benutzer, schau dir den brandneuen Namen an⭐️",
       "changePassword.bad": "更改密码错误，请联系管理员 {message}",
       "changePassword.notMatch": "原密码不正确",
       "changePassword.success": "您需要重新登录来完成此过程",
       "forgetPassword.bad": "重置密码错误，请联系管理员 {message}",
-      "forgetPassword.needVerify": "请检查您的电子邮件以重置密码",
-      "forgetPassword.notFound": "没有这样的用户或者您没有绑定电子邮件",
+      "forgetPassword.needVerify": "Bitte überprüfen Sie Ihre E-Mail, um Ihr Passwort zurückzusetzen.",
+      "forgetPassword.notFound": "Es gibt keinen solchen Benutzer oder Sie haben keine E-Mail-Adresse verknüpft.",
       "forgetPassword.permissionDenied": "你账户无法这样做",
       "forgetPassword.success": "重置密码成功",
       "judgement.appealLock": "上诉被锁定，案件无法进一步裁决",
@@ -339,7 +339,7 @@
       },
       "placeholder": {
         "btrlink": "请填写btr对局链接",
-        "content": "请详细填写您申诉信息以便审核(注意格式，不同地区会对申诉格式有需求，请以当地申诉社区《申诉格式》为准)",
+        "content": "Bitte füllen Sie die Informationen für Ihre Beschwerde detailliert aus, um sie überprüfen zu können (beachten Sie das Format, verschiedene Regionen haben möglicherweise unterschiedliche Anforderungen an das Beschwerdeformat, bitte orientieren Sie sich an der örtlichen Beschwerdecommunity und dem \"Beschwerdeformat\").",
         "player": "Bitte geben Sie die Spieler-ID ein",
         "videolink": "请填写视频链接"
       }
@@ -433,7 +433,7 @@
       "historyName": "Historische Spielernamen ändern",
       "verify": "nur Urteil ansehen",
       "noAppealAttachmentHint": "此申诉无申诉附件",
-      "needLoginViewAttachmentsHint": "您需要登录账户，才可查阅玩家申诉额外提供的附件"
+      "needLoginViewAttachmentsHint": "Sie müssen sich anmelden, um die zusätzlichen Anhänge der Spielerbeschwerde einsehen zu können."
     },
     "title": "Einzelheiten"
   },
@@ -462,7 +462,7 @@
   },
   "forgetPassword": {
     "checkEmail": "请检查您的邮箱，并点击其中的验证链接",
-    "forgetUsername": "如果您忘记了BFBAN用户名，请前往<a href='http://kook.top/wHwxhw'>bfban开发者社区</a>寻求帮助。注意，您可能会需要很复杂的找回过程。",
+    "forgetUsername": "Wenn Sie Ihren BFBAN-Benutzernamen vergessen haben, gehen Sie zur <a href='http://kook.top/wHwxhw'>bfban Entwicklergemeinschaft</a> um Hilfe zu suchen. Beachten Sie, dass Sie möglicherweise einen komplexen Wiederherstellungsprozess durchlaufen müssen.",
     "resetSuccess": "Herzlichen Glückwunsch zum Abschluss des Zurücksetzens 💐",
     "steps": {
       "0": {
@@ -525,7 +525,7 @@
       "h2": {
         "hint0": "Stellen Sie eine ☁️Datenbank bereit, damit Spieler von verschiedenen Battlefield-Servern auf der ganzen Welt Spieler mit problematischen Dateien überwachen und entfernen können",
         "hint1": "Egal von BF1 bis BF2042, es unterstützt die Fragedatei-Player-Abfrage, sodass verschiedene Battlefield-Server aus der ganzen Welt überwacht werden können",
-        "hint2": "一切由社区掌控，公开透明，免费为所有接入BFBAN提供服务"
+        "hint2": "Alles wird von der Gemeinschaft kontrolliert, offen und transparent, kostenlos für alle, die BFBAN zugreifen."
       },
       "h3": "Bauen Sie ein globales Archiv betrügerischer Spieler auf",
       "h4": "Werden Sie einer von uns - Pflegen Sie eine Gemeinschaftsumgebung",
@@ -598,15 +598,15 @@
         "introduction": "Vorstellen",
         "language": "Spracheinstellungen",
         "languageSyncDescribe": "Stellen Sie diese Option ein, um die lokale Sprache des Programms nach der Anmeldung zu synchronisieren. Wenn Sie sich abmelden, wird auf die Sprache zurückgegriffen, die vom lokalen Programm beibehalten wird",
-        "lastSigninIP": "最后登录IP",
-        "modifyDescription": "修改用户简介",
-        "originEmail": "EA账户邮箱",
-        "originName": "EA账户名字",
+        "lastSigninIP": "Letzte Anmeldung IP",
+        "modifyDescription": "Benutzerprofil bearbeiten",
+        "originEmail": "EA-Konto-E-Mail",
+        "originName": "EA-Kontoname",
         "originPersonaId": "EA PID",
         "originUserId": "EA UID",
         "privilege": "Identität",
         "privileges": "权限",
-        "registerIP": "注册时IP",
+        "registerIP": "Registrierungs-IP",
         "showOrigin": "Sichtbare Origin-Informationen",
         "showOriginDescribe": "Ob Ihr gebundener Origin in BFBAN sichtbar gemacht werden soll",
         "signoutTime": "登出时间",
@@ -737,7 +737,7 @@
     },
     "media": {
       "capacity": "容量状态",
-      "hint1": "每个账户每日都有上传宽带、文件数量、单个大小限制，但它会在下一个日期重置，但存在每个账户可用文件上传数量，对于储存要求不高文件可用其他网站网盘代替。",
+      "hint1": "Jeder Account hat tägliche Upload-Bandbreiten-, Dateimengen- und Einzelgrößenbeschränkungen, die jedoch am nächsten Tag zurückgesetzt werden. Es gibt jedoch eine begrenzte Anzahl von Dateiuploads pro Account. Für Dateien mit geringem Speicherbedarf können andere Websites verwendet werden, um sie anstelle von Online-Speicherdiensten zu nutzen.",
       "maxFileNumber": "可上传文件数量",
       "maxTrafficQuota": "文件最高大小",
       "prevResetTime": "重置限额日期",
