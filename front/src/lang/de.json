@@ -978,7 +978,7 @@
         "1": "Überprüfen"
       }
     },
-    "textHelpHint": "统计内容包含不可见的标签，与可见的文本内容有差异，请以此统计为准",
+    "textHelpHint": "Der statistische Inhalt enthält unsichtbare Tags, die sich vom sichtbaren Textinhalt unterscheiden. Bitte verwenden Sie diese Statistik als Referenz.",
     "textOverflowHint": "文本内容超出最大长度，请适当缩减或分段提交",
     "type": {
       "media": "Medienbibliothek",
