@@ -217,7 +217,7 @@
       "signin.success": "欢迎回来",
       "signup.bad": "Es ist ein Fehler bei der Registrierung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "signup.error": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
-      "signup.notFound": "激活码无效",
+      "signup.notFound": "Aktivierungscode ungültig",
       "signup.expired": "激活码时效过期，请重新注册",
       "signup.gameNotShowed": "判断的账户，没有对应战地系列游戏",
       "signup.needVerify": "Herzlichen Glückwunsch, Ihnen fehlt nur noch ein Schritt. Bitte gehen Sie zum E-Mail-Posteingang, um Ihr Konto zu aktivieren.",
