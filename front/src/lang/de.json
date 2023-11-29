@@ -175,7 +175,7 @@
       "server.error": "Dienstfehler {message}",
       "captcha.bad": "Der Verifizierungsmodul hat einen Fehler festgestellt. Bitte kontaktieren Sie den Administrator {message}",
       "captcha.expired": "Der Code wurde nicht ausgefüllt.",
-      "captcha.wrong": "错误的验证码",
+      "captcha.wrong": "Falscher Bestätigungscode",
       "changeName.bad": "Fehler beim Ändern des Benutzernamens. Bitte kontaktieren Sie den Administrator {message}",
       "changeName.noChance": "Du hast alle Möglichkeiten zum Umbenennen aufgebraucht.",
       "changeName.occupied": "Jemand hat bereits deinen neuen Namen übernommen.",
