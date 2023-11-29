@@ -204,7 +204,7 @@
       "notLang": "Nicht übersetzt",
       "reply.bad": "Antwortfehler aufgetreten, bitte kontaktieren Sie den Administrator {message}",
       "reply.notFound": "Keine Antwort oder Spieler vorhanden",
-      "reply.spam": "你所提交的内容，包含敏感内容",
+      "reply.spam": "Der von Ihnen eingereichte Inhalt enthält sensible Informationen.",
       "reply.success": "已提交回复",
       "report.bad": "Es gab einen Fehler bei der Meldung, bitte kontaktieren Sie den Administrator {message}",
       "report.error": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
