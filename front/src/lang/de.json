@@ -307,7 +307,7 @@
         "type": "申诉类型"
       },
       "dealAppeal": "处理申诉",
-      "describe": "该举报与事实不符,能提供自证材料 或 协助证明清白",
+      "describe": "Dieser Bericht entspricht nicht der Wahrheit. Es können Beweismaterialien vorgelegt werden oder Unterstützung bei der Klärung der Unschuld angeboten werden.",
       "info": {
         "changeName": "Namensänderung",
         "commentid": "评论ID",
