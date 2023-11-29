@@ -174,7 +174,7 @@
       "bindOrigin.success": "恭喜你成功激活!",
       "server.error": "服务错误 {message}",
       "captcha.bad": "Der Verifizierungsmodul hat einen Fehler festgestellt. Bitte kontaktieren Sie den Administrator {message}",
-      "captcha.expired": "验证码未填",
+      "captcha.expired": "Der Code wurde nicht ausgefüllt.",
       "captcha.wrong": "错误的验证码",
       "changeName.bad": "Fehler beim Ändern des Benutzernamens. Bitte kontaktieren Sie den Administrator {message}",
       "changeName.noChance": "你已经用完了所有改名的机会",
