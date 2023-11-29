@@ -176,7 +176,7 @@
       "captcha.bad": "验证码模块发生错误,请联系管理员 {message}",
       "captcha.expired": "验证码未填",
       "captcha.wrong": "错误的验证码",
-      "changeName.bad": "更改用户名称错误，请联系管理员 {message}",
+      "changeName.bad": "Fehler beim Ändern des Benutzernamens. Bitte kontaktieren Sie den Administrator {message}",
       "changeName.noChance": "你已经用完了所有改名的机会",
       "changeName.occupied": "有人已经占用了你的新名字",
       "changeName.success": "Erfolgreich geänderte Benutzer, schau dir den brandneuen Namen an⭐️",
