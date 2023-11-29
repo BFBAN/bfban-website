@@ -210,7 +210,7 @@
       "report.error": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "report.notFound": "查无此用户信息",
       "report.notImplement": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
-      "report.spam": "你所提交的内容，包含敏感内容",
+      "report.spam": "Der von Ihnen eingereichte Inhalt enthält sensible Informationen.",
       "report.success": "感谢你的举报",
       "signin.bad": "Anmeldungsfehler aufgetreten, bitte kontaktieren Sie den Administrator {message}",
       "signin.noSuchUser": "无此用户或密码错误",
