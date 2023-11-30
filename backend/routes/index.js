@@ -192,7 +192,7 @@ router.post('/playerStatistics', [  // like graphql :)
     checkbody('data').isArray({min: 0, max: 12}).custom((val) => {
         for (let i of val)
             if (!config.supportGames.concat('*').includes(i.game) || ![-1, 0, 1, 2, 3, 4, 5, 6, 8, 9].includes(i.status - 0))
-                throw(new Error('bad subquery format'));
+                throw (new Error('bad subquery format'));
         return true;
     })
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
@@ -204,18 +204,18 @@ async (req, res, next) => {
 
         const data = [];
         for (let i of req.body.data) {
-          if(i.status == 9) {
-            const game = i.game === '*' ? '%' : `%"${i.game}"%`;
-            const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
-                .andWhere('games', 'like', game).andWhere('appealStatus', '=', "1").first().then(r => r.num);
-            data.push({game: i.game, status: i.status, count});
-          } else {
-            const game = i.game === '*' ? '%' : `%"${i.game}"%`;
-            const status = i.status === -1 ? '%' : i.status;
-            const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
-                .andWhere('games', 'like', game).andWhere('status', 'like', status).first().then(r => r.num);
-            data.push({game: i.game, status: i.status, count});
-          }
+            if (i.status == 9) {
+                const game = i.game === '*' ? '%' : `%"${i.game}"%`;
+                const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
+                    .andWhere('games', 'like', game).andWhere('appealStatus', '=', "1").first().then(r => r.num);
+                data.push({game: i.game, status: i.status, count});
+            } else {
+                const game = i.game === '*' ? '%' : `%"${i.game}"%`;
+                const status = i.status === -1 ? '%' : i.status;
+                const count = await db.count({num: 'id'}).from('players').where('valid', '=', 1)
+                    .andWhere('games', 'like', game).andWhere('status', 'like', status).first().then(r => r.num);
+                data.push({game: i.game, status: i.status, count});
+            }
         }
         res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
             success: 1,
@@ -256,7 +256,7 @@ async (req, res, next) => {
         const limit = req.query.limit ? req.query.limit - 0 : 100;
 
         const commentsRows = [
-            'comments.id as id', 'users.username as byUserName',
+            'comments.id as id', 'users.username as byUserName', 'users.privilege as byUserPrivilege',
             'comments.byUserId as byUserId', 'comments.toPlayerId as toPlayerId',
             'comments.createTime as createTime'
         ];
@@ -265,11 +265,10 @@ async (req, res, next) => {
             'players.originPersonaId as playerOriginPersonaId', 'players.cheatMethods as playerCheatMethods',
             'players.avatarLink as playerAvatarLink', 'players.games as playerGames',
             'players.viewNum as playerViewNum', 'players.commentsNum as PlayerCommentsNum',
-            'players.viewNum as playerViewNum', 'players.commentsNum as playerCommentsNum',
             'players.createTime as playerCreateTime', 'players.updateTime as playerUpdateTime'
         ];
 
-        const registers = await db.select('id', 'username', 'createTime')
+        const registers = await db.select('id', 'username', 'privilege', 'createTime')
             .from('users').where('createTime', '<=', from)
             .orderBy('createTime', 'desc').limit(limit);
 
@@ -397,50 +396,50 @@ async (req, res, next) => {
         const order = req.query.order ? req.query.order : 'desc';
         const limit = req.query.limit ? req.query.limit - 0 : 20;
         const skip = req.query.skip ? req.query.skip - 0 : 0;
-        if(status == 9) {
-          const result = await db.select('*').from('players')
-              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-              .andWhere('appealStatus', '=', '1')
-              .orderBy(sort, order).offset(skip).limit(limit)
-              .then(r => r.map(i => {
-                  delete i.valid;
-                  return i
-              }));
-          const total = await db('players').count({num: 'id'})
-              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-              .andWhere('appealStatus', '=', '1').first().then(r => r.num);
-          res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
-              success: 1,
-              code: 'players.ok',
-              data: {result, total}
-          });
+        if (status == 9) {
+            const result = await db.select('*').from('players')
+                .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+                .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+                .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+                .andWhere('appealStatus', '=', '1')
+                .orderBy(sort, order).offset(skip).limit(limit)
+                .then(r => r.map(i => {
+                    delete i.valid;
+                    return i
+                }));
+            const total = await db('players').count({num: 'id'})
+                .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+                .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+                .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+                .andWhere('appealStatus', '=', '1').first().then(r => r.num);
+            res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+                success: 1,
+                code: 'players.ok',
+                data: {result, total}
+            });
 
-        }else {
-          const result = await db.select('*').from('players')
-              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-              .andWhere('status', 'like', status)
-              .orderBy(sort, order).offset(skip).limit(limit)
-              .then(r => r.map(i => {
-                  delete i.valid;
-                  return i
-              }));
-          const total = await db('players').count({num: 'id'})
-              .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-              .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-              .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-              .andWhere('status', 'like', status).first().then(r => r.num);
-  
-          res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
-              success: 1,
-              code: 'players.ok',
-              data: {result, total}
-          });
+        } else {
+            const result = await db.select('*').from('players')
+                .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+                .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+                .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+                .andWhere('status', 'like', status)
+                .orderBy(sort, order).offset(skip).limit(limit)
+                .then(r => r.map(i => {
+                    delete i.valid;
+                    return i
+                }));
+            const total = await db('players').count({num: 'id'})
+                .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+                .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+                .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+                .andWhere('status', 'like', status).first().then(r => r.num);
+
+            res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+                success: 1,
+                code: 'players.ok',
+                data: {result, total}
+            });
 
         }
     } catch (err) {
@@ -673,7 +672,11 @@ router.get('/admins', async (req, res, next) => {
             }
             delete i.attr;
         });
-        res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'getAdmins.success', data: admins});
+        res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+            success: 1,
+            code: 'getAdmins.success',
+            data: admins
+        });
     } catch (err) {
         next(err);
     }
@@ -828,7 +831,7 @@ async (req, res, next) => {
                     .andWhere('comments.createTime', '>=', createTimeFrom)
                     .andWhere('comments.createTime', '<=', createTimeTo)
                     .andWhere({"users.valid": 1}),
-                commentArray =  await comment.offset(skip).limit(limit),
+                commentArray = await comment.offset(skip).limit(limit),
                 commentTotal = await comment.first().then(r => 1);
 
             result.data = commentArray;
@@ -979,7 +982,11 @@ async (req, res, next) => {
                 delete i.valid;
                 return i;
             }));
-        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'trend.ok', data: result});
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+            success: 1,
+            code: 'trend.ok',
+            data: result
+        });
     } catch (err) {
         next(err);
     }

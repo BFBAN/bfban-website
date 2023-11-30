@@ -93,75 +93,98 @@
         </Row>
       </div>
       <div class="lean-box">
-        <div class="wrapper" :style="'animation: rowup ' + activities_l.length * 2.8 + 's linear infinite;'">
+        <div class="wrapper" :style="`animation: rowup ${activities_l.length * 2.8}s linear infinite;`">
           <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
             <Card class="icon" v-for="a_i in activity" :key="a_i.id">
-              <div align="center" style="margin-top: -80px">
-                <Avatar size="80" :src="a_i.playerAvatarLink">
-                  {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
-                </Avatar>
-                <p>
-                  <br>
-                  <Tag color="success" v-if="a_i.type == 'judgement'">
-                    {{ $t("basic.privilege.admin") }}
-                  </Tag>
-                  {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
-                  <Divider type="vertical"/>
+              <Avatar size="80" :src="a_i.playerAvatarLink" style="margin-top: -80px">
+                {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
+              </Avatar>
+              <br>
+              <Row type="flex" align="start" class="text-start">
+                <Col flex="1">
+                  <Tag>{{ a_i.type || 'null' }}</Tag>
+                </Col>
+                <Col>
                   <Time v-if="a_i.createTime" :time="a_i.createTime"></Time>
-                </p>
-              </div>
+                </Col>
+              </Row>
 
-              <span v-if="a_i.type === 'report'">
-                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                  {{ a_i.byUserName }}
-                </router-link>
-                {{ $t('home.activity.activities.report') }}
-                <Tag>
-                  {{ $t('basic.games.' + a_i.game) }}
-                </Tag>
-                <router-link
-                    :to="{name: 'player', params: {game: `${a_i.game}`, ouid: `${a_i.playerOriginPersonaId}`}}">
-                  {{ a_i.toPlayerName }}
-                </router-link>
-              </span>
+              <div class="text-start">
+                <!-- 举报 -->
+                <span v-if="a_i.type === 'report'">
+                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                    <u>{{ a_i.byUserName }}</u>
+                  </router-link>
+                  {{ $t('home.activity.activities.report') }}
 
-              <span v-if="a_i.type === 'register'">
-                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                  {{ a_i.byUserName }}
-                </router-link>
-                {{ $t('home.activity.activities.join') }}
-              </span>
+                  <router-link :to="{name: 'player', query: {game: a_i.game, status: -1 } }">
+                    <Tooltip :content="$t('basic.games.' + a_i.game)">
+                      <Tag type="border">
+                        <img height="12"
+                             :src="require('/src/assets/images/games/' + a_i.game + '/logo.png')"/>
+                      </Tag>
+                    </Tooltip>
+                  </router-link>
 
-              <span v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
-                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                  <Tag v-if="a_i.privilege === 'admin'" color="success">
-                    {{ $t('basic.privilege.admin') }}
+                  <router-link
+                      :to="{name: 'player', params: {game: `${a_i.game}`, ouid: `${a_i.playerOriginPersonaId}`}}">
+                    <u>{{ a_i.toPlayerName }}</u>
+                  </router-link>
+
+                  <Tag type="border" color="orange"
+                                v-for="(methods, methodsIndex) in a_i.playerCheatMethods"
+                                :key="methodsIndex">
+                    <Poptip trigger="hover" :transfer="true" word-wrap width="200"
+                            :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>
+                      {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
+                    </Poptip>
                   </Tag>
-                  <b>{{ a_i.byUserName }}</b>
-                </router-link>
-
-                {{ $t('detail.info.judge') }}
-
-                <router-link :to="{name: 'player', params: {ouid: `${a_i.playerOriginPersonaId}`}}">
-                  {{ a_i.toPlayerName }}
-                </router-link>
-
-                <Tag color="warning">
-                  {{ $t(`basic.action.${a_i.action}.text`) }}
-                </Tag>
-
-                <span v-if="a_i.cheatMethods">
-                  ，{{ $t('detail.info.cheatMethod') }}
-                  <b>{{ convertCheatMethods(a_i.cheatMethods) }}</b>
                 </span>
-              </span>
 
-              <span v-if="a_i.type === 'banAppeal'">
-                <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                  {{ a_i.byUserName }}
-                </router-link>
-                {{ $t('detail.appeal.info.content') }}
-              </span>
+                <!-- 注册 -->
+                <span v-if="a_i.type === 'register'">
+                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                    <u>{{ a_i.byUserName }}</u>
+                  </router-link>
+                  {{ $t('home.activity.activities.join') }}
+                </span>
+
+                <!-- 判决 -->
+                <span v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
+                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                    <u>{{ a_i.byUserName }}</u>
+                  </router-link>
+
+                  {{ $t('detail.info.judge') }}
+
+                  <router-link :to="{name: 'player', params: {ouid: `${a_i.playerOriginPersonaId}`}}">
+                    <u style="margin-right: 5px">{{ a_i.toPlayerName }}</u>
+                  </router-link>
+
+                  <Tag color="warning">
+                    {{ $t(`basic.action.${a_i.action}.text`) }}
+                  </Tag>
+
+                  {{ $t('detail.info.cheatMethod') }}
+
+                  <Tag type="border" color="orange"
+                       v-for="(methods, methodsIndex) in (a_i.playerCheatMethods)"
+                       :key="methodsIndex">
+                    <Poptip trigger="hover" :transfer="true" word-wrap width="200"
+                            :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>
+                      {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
+                    </Poptip>
+                  </Tag>
+                </span>
+
+                <!-- 申诉 -->
+                <span v-if="a_i.type === 'banAppeal'">
+                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                    {{ a_i.byUserName }}
+                  </router-link>
+                  {{ $t('detail.appeal.info.content') }}
+                </span>
+              </div>
             </Card>
           </div>
         </div>
@@ -180,10 +203,13 @@ import {api, http, util, time, regular, upload} from '../assets/js/index'
 
 import Application from "../assets/js/application";
 import Tell from "../components/HomeTell.vue";
+import PrivilegesTag from "../components/PrivilegesTag.vue";
 
 export default new Application({
   data() {
     return {
+      util,
+
       bannerImage: '',
       bannerTime: '',
       hintRandom: 0,
@@ -199,7 +225,7 @@ export default new Application({
       },
     }
   },
-  components: {Tell},
+  components: {Tell, PrivilegesTag},
   watch: {
     '$route': 'loadData',
   },
@@ -226,6 +252,10 @@ export default new Application({
         this.bannerImage = require(`../assets/images/index-gl_en-US.png`);
       }
     },
+    /**
+     * 首页随机标题
+     * @param isFirst 强制更新
+     */
     onHomeHintRandom(isFirst = false) {
       let newRandom = Math.floor(Math.random() * 3);
       if (!isFirst && newRandom == this.hintRandom) {
@@ -285,7 +315,7 @@ export default new Application({
           registers: true,	// show register number
           banappeals: true,// show ban appeals number
           details: true,	// show number of each game, each status
-          from: 1514764800000
+          from: time.appStart()
         }
       }).then(res => {
         const d = res.data;
@@ -363,13 +393,14 @@ export default new Application({
   display: flex;
   flex-wrap: nowrap;
 
+  .text-start {
+    text-align: start;
+  }
+
   .icon {
     font-size: 12px;
     width: 280px;
     height: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-weight: bold;
     transform: translateX(0) translateY(40px);
     opacity: .6;
