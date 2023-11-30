@@ -432,7 +432,7 @@
       "coreComment": "Hauptinhalt",
       "historyName": "Historische Spielernamen ändern",
       "verify": "nur Urteil ansehen",
-      "noAppealAttachmentHint": "此申诉无申诉附件",
+      "noAppealAttachmentHint": "Dieser Anspruch hat keinen Anhang für den Anspruch.",
       "needLoginViewAttachmentsHint": "Sie müssen sich anmelden, um die zusätzlichen Anhänge der Spielerbeschwerde einsehen zu können."
     },
     "title": "Einzelheiten"
