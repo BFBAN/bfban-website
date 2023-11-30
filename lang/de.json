@@ -609,8 +609,8 @@
         "registerIP": "Registrierungs-IP",
         "showOrigin": "Sichtbare Origin-Informationen",
         "showOriginDescribe": "Ob Ihr gebundener Origin in BFBAN sichtbar gemacht werden soll",
-        "signoutTime": "登出时间",
-        "username": "用户名"
+        "signoutTime": "Abmeldezeit",
+        "username": "Benutzername"
       },
       "modifyName": {
         "residueDegree": "Die Anzahl der Male, um den Namen {changeNameLeft} zu ändern, ist derzeit übrig",
