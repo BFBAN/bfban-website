@@ -461,7 +461,7 @@
     }
   },
   "forgetPassword": {
-    "checkEmail": "请检查您的邮箱，并点击其中的验证链接",
+    "checkEmail": "Bitte überprüfen Sie Ihre E-Mails und klicken Sie auf den Bestätigungslink.",
     "forgetUsername": "Wenn Sie Ihren BFBAN-Benutzernamen vergessen haben, gehen Sie zur <a href='http://kook.top/wHwxhw'>bfban Entwicklergemeinschaft</a> um Hilfe zu suchen. Beachten Sie, dass Sie möglicherweise einen komplexen Wiederherstellungsprozess durchlaufen müssen.",
     "resetSuccess": "Herzlichen Glückwunsch zum Abschluss des Zurücksetzens 💐",
     "steps": {
