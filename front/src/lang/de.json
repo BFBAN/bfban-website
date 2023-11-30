@@ -877,7 +877,7 @@
     "title": "Aktie"
   },
   "signin": {
-    "failed": "登录错误",
+    "failed": "Anmeldefehler",
     "fillEverything": "登录信息不完整，请规范填写",
     "form": {
       "Feedback": "反馈问题",
