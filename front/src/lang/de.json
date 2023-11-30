@@ -744,7 +744,7 @@
       "title": "Medienbibliothek",
       "todayFileNumber": "Heute hochgeladene Datei",
       "todayTrafficQuota": "Heutiges Datenlimit",
-      "usedStorageQuota": "总储存配额"
+      "usedStorageQuota": "Gesamtspeicherquote"
     },
     "meet": "Willkommen zurück {Name}!",
     "subscribes": {
