@@ -315,7 +315,7 @@ export default new Application({
           registers: true,	// show register number
           banappeals: true,// show ban appeals number
           details: true,	// show number of each game, each status
-          from: time.appStart()
+          from: new Date(time.appStart()).getTime()
         }
       }).then(res => {
         const d = res.data;
