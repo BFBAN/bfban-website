@@ -520,7 +520,7 @@
     "cover": {
       "confirmData": "Betrüger bestätigen",
       "dataReceived": "erhalten",
-      "endTime": "从{time}开始",
+      "endTime": "Von {time} anfangen.",
       "h1": "BFBAN",
       "h2": {
         "hint0": "Stellen Sie eine ☁️Datenbank bereit, damit Spieler von verschiedenen Battlefield-Servern auf der ganzen Welt Spieler mit problematischen Dateien überwachen und entfernen können",
