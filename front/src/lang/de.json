@@ -300,8 +300,8 @@
         "mossUpload": "Hochladen von Moss",
         "other": "Andere Arten von Beschwerden",
         "stats": {
-          "accept": "申诉通过",
-          "fail": "申诉不通过",
+          "accept": "Erfolgreich beantragt",
+          "fail": "Einspruch abgelehnt",
           "unprocessed": "申诉未处理"
         },
         "type": "申诉类型"
