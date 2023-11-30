@@ -740,7 +740,7 @@
       "hint1": "Jeder Account hat tägliche Upload-Bandbreiten-, Dateimengen- und Einzelgrößenbeschränkungen, die jedoch am nächsten Tag zurückgesetzt werden. Es gibt jedoch eine begrenzte Anzahl von Dateiuploads pro Account. Für Dateien mit geringem Speicherbedarf können andere Websites verwendet werden, um sie anstelle von Online-Speicherdiensten zu nutzen.",
       "maxFileNumber": "Die Anzahl der hochladbaren Dateien",
       "maxTrafficQuota": "Dateigröße",
-      "prevResetTime": "重置限额日期",
+      "prevResetTime": "Reset Limit Date",
       "title": "Medienbibliothek",
       "todayFileNumber": "今日已上传文件",
       "todayTrafficQuota": "今日流量额度",
