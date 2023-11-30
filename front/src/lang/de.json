@@ -306,11 +306,11 @@
         },
         "type": "Beschwerdetyp"
       },
-      "dealAppeal": "处理申诉",
+      "dealAppeal": "Verarbeitung von Beschwerden",
       "describe": "Dieser Bericht entspricht nicht der Wahrheit. Es können Beweismaterialien vorgelegt werden oder Unterstützung bei der Klärung der Unschuld angeboten werden.",
       "info": {
         "changeName": "Namensänderung",
-        "commentid": "评论ID",
+        "commentid": "Kommentar-ID",
         "content": "Beschwerdeinhalt",
         "originName": "aktueller Name des Spielers",
         "player": "Spieler-ID"
