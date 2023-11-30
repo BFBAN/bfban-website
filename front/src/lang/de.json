@@ -742,8 +742,8 @@
       "maxTrafficQuota": "Dateigröße",
       "prevResetTime": "Reset Limit Date",
       "title": "Medienbibliothek",
-      "todayFileNumber": "今日已上传文件",
-      "todayTrafficQuota": "今日流量额度",
+      "todayFileNumber": "Heute hochgeladene Datei",
+      "todayTrafficQuota": "Heutiges Datenlimit",
       "usedStorageQuota": "总储存配额"
     },
     "meet": "Willkommen zurück {Name}!",
