@@ -288,8 +288,8 @@
   "detail": {
     "appeal": {
       "deal": {
-        "action": "申诉操作",
-        "adminContent": "管理回复内容",
+        "action": "Einspruchsverfahren",
+        "adminContent": "Verwaltung der Antwortinhalte",
         "appealContent": "玩家申诉内容",
         "btrLink": "BTR链接",
         "farm": "刷枪申诉",
