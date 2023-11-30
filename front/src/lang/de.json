@@ -659,7 +659,7 @@
     },
     "chat": {
       "control": "Batch-Bearbeitung",
-      "download": "下载",
+      "download": "Herunterladen",
       "load": "erneuern",
       "look": "Überprüfen",
       "placeholder": "Füllen Sie die gesendete Nachricht aus",
