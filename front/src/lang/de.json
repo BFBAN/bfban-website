@@ -235,7 +235,7 @@
     }
   },
   "bindOrigin": {
-    "title": "绑定EA账户"
+    "title": "Origin-Konto binden"
   },
   "captcha": {
     "get": "Bestätigungscode erhalten",
@@ -288,29 +288,29 @@
   "detail": {
     "appeal": {
       "deal": {
-        "action": "申诉操作",
-        "adminContent": "管理回复内容",
-        "appealContent": "玩家申诉内容",
-        "btrLink": "BTR链接",
-        "farm": "刷枪申诉",
-        "firstPersonRecording": "第一人称录屏链接",
-        "userGeneratedMossFile": "moss文件 (.zip)",
-        "moss": "moss自证申诉",
-        "mossDownloadUrl": "MOSS下载",
-        "mossUpload": "上传moss",
-        "other": "其他类型申诉",
+        "action": "Einspruchsverfahren",
+        "adminContent": "Verwaltung der Antwortinhalte",
+        "appealContent": "Spieler Beschwerdeinhalt",
+        "btrLink": "BTR-Link",
+        "farm": "Waffenbeschwerde",
+        "firstPersonRecording": "erste Person Bildschirmaufzeichnungslink",
+        "userGeneratedMossFile": "moss-Datei (.zip)",
+        "moss": "moss Selbstnachweis Beschwerde",
+        "mossDownloadUrl": "MOSS-Download",
+        "mossUpload": "Hochladen von Moss",
+        "other": "Andere Arten von Beschwerden",
         "stats": {
-          "accept": "申诉通过",
-          "fail": "申诉不通过",
-          "unprocessed": "申诉未处理"
+          "accept": "Erfolgreich beantragt",
+          "fail": "Einspruch abgelehnt",
+          "unprocessed": "Einspruch unbehandelt"
         },
-        "type": "申诉类型"
+        "type": "Beschwerdetyp"
       },
-      "dealAppeal": "处理申诉",
+      "dealAppeal": "Verarbeitung von Beschwerden",
       "describe": "Dieser Bericht entspricht nicht der Wahrheit. Es können Beweismaterialien vorgelegt werden oder Unterstützung bei der Klärung der Unschuld angeboten werden.",
       "info": {
         "changeName": "Namensänderung",
-        "commentid": "评论ID",
+        "commentid": "Kommentar-ID",
         "content": "Beschwerdeinhalt",
         "originName": "aktueller Name des Spielers",
         "player": "Spieler-ID"
@@ -432,7 +432,7 @@
       "coreComment": "Hauptinhalt",
       "historyName": "Historische Spielernamen ändern",
       "verify": "nur Urteil ansehen",
-      "noAppealAttachmentHint": "此申诉无申诉附件",
+      "noAppealAttachmentHint": "Dieser Anspruch hat keinen Anhang für den Anspruch.",
       "needLoginViewAttachmentsHint": "Sie müssen sich anmelden, um die zusätzlichen Anhänge der Spielerbeschwerde einsehen zu können."
     },
     "title": "Einzelheiten"
@@ -461,7 +461,7 @@
     }
   },
   "forgetPassword": {
-    "checkEmail": "请检查您的邮箱，并点击其中的验证链接",
+    "checkEmail": "Bitte überprüfen Sie Ihre E-Mails und klicken Sie auf den Bestätigungslink.",
     "forgetUsername": "Wenn Sie Ihren BFBAN-Benutzernamen vergessen haben, gehen Sie zur <a href='http://kook.top/wHwxhw'>bfban Entwicklergemeinschaft</a> um Hilfe zu suchen. Beachten Sie, dass Sie möglicherweise einen komplexen Wiederherstellungsprozess durchlaufen müssen.",
     "resetSuccess": "Herzlichen Glückwunsch zum Abschluss des Zurücksetzens 💐",
     "steps": {
@@ -506,7 +506,7 @@
       "activities": {
         "admin": "Community-Management",
         "as": "verarbeitet als",
-        "join": "注册了联ban, 欢迎你的到来！",
+        "join": "Registrierter bfban, willkommen!",
         "mark": "markieren",
         "report": "gemeldet"
       },
@@ -520,7 +520,7 @@
     "cover": {
       "confirmData": "Betrüger bestätigen",
       "dataReceived": "erhalten",
-      "endTime": "从{time}开始",
+      "endTime": "Von {time} anfangen.",
       "h1": "BFBAN",
       "h2": {
         "hint0": "Stellen Sie eine ☁️Datenbank bereit, damit Spieler von verschiedenen Battlefield-Servern auf der ganzen Welt Spieler mit problematischen Dateien überwachen und entfernen können",
@@ -592,9 +592,9 @@
       "form": {
         "allowDM": "Ob Chat empfangen werden soll",
         "allowDMdescribe": "Ob die Nachricht angenommen werden soll.Weitere Nachrichteninformationen finden Sie unter [Nachrichtenliste], um sie anzuzeigen",
-        "changeNameLeft": "剩余修改用户名次数",
-        "createTime": "注册时间",
-        "description": "用户简介",
+        "changeNameLeft": "Die verbleibende Anzahl der Benutzernamenänderungen.",
+        "createTime": "Registrierungszeit",
+        "description": "Benutzerprofil",
         "introduction": "Vorstellen",
         "language": "Spracheinstellungen",
         "languageSyncDescribe": "Stellen Sie diese Option ein, um die lokale Sprache des Programms nach der Anmeldung zu synchronisieren. Wenn Sie sich abmelden, wird auf die Sprache zurückgegriffen, die vom lokalen Programm beibehalten wird",
@@ -605,12 +605,12 @@
         "originPersonaId": "EA PID",
         "originUserId": "EA UID",
         "privilege": "Identität",
-        "privileges": "权限",
+        "privileges": "Berechtigung",
         "registerIP": "Registrierungs-IP",
         "showOrigin": "Sichtbare Origin-Informationen",
         "showOriginDescribe": "Ob Ihr gebundener Origin in BFBAN sichtbar gemacht werden soll",
-        "signoutTime": "登出时间",
-        "username": "用户名"
+        "signoutTime": "Abmeldezeit",
+        "username": "Benutzername"
       },
       "modifyName": {
         "residueDegree": "Die Anzahl der Male, um den Namen {changeNameLeft} zu ändern, ist derzeit übrig",
@@ -638,8 +638,8 @@
         "adminOperationLog": "Betriebsprotokoll der Admin-Site",
         "blockedUsers": "Benutzer auf der schwarzen Liste",
         "comment": "Kommentarverwaltung",
-        "fileManagement": "多媒体管理",
-        "files": "文件列表",
+        "fileManagement": "Multimedia-Verwaltung",
+        "files": "Dateiliste",
         "home": "Homepage verwalten",
         "judgementLog": "Urteilsprotokoll",
         "log": "Protokoll",
@@ -659,7 +659,7 @@
     },
     "chat": {
       "control": "Batch-Bearbeitung",
-      "download": "下载",
+      "download": "Herunterladen",
       "load": "erneuern",
       "look": "Überprüfen",
       "placeholder": "Füllen Sie die gesendete Nachricht aus",
@@ -736,15 +736,15 @@
       "title": "Geschichte"
     },
     "media": {
-      "capacity": "容量状态",
+      "capacity": "Kapazitätsstatus",
       "hint1": "Jeder Account hat tägliche Upload-Bandbreiten-, Dateimengen- und Einzelgrößenbeschränkungen, die jedoch am nächsten Tag zurückgesetzt werden. Es gibt jedoch eine begrenzte Anzahl von Dateiuploads pro Account. Für Dateien mit geringem Speicherbedarf können andere Websites verwendet werden, um sie anstelle von Online-Speicherdiensten zu nutzen.",
-      "maxFileNumber": "可上传文件数量",
-      "maxTrafficQuota": "文件最高大小",
-      "prevResetTime": "重置限额日期",
+      "maxFileNumber": "Die Anzahl der hochladbaren Dateien",
+      "maxTrafficQuota": "Dateigröße",
+      "prevResetTime": "Reset Limit Date",
       "title": "Medienbibliothek",
-      "todayFileNumber": "今日已上传文件",
-      "todayTrafficQuota": "今日流量额度",
-      "usedStorageQuota": "总储存配额"
+      "todayFileNumber": "Heute hochgeladene Datei",
+      "todayTrafficQuota": "Heutiges Datenlimit",
+      "usedStorageQuota": "Gesamtspeicherquote"
     },
     "meet": "Willkommen zurück {Name}!",
     "subscribes": {
@@ -785,7 +785,7 @@
       "reportOne": "Single melden",
       "required": "Videoadresse",
       "uploadManual1": "Kann zusätzlich von Youtube, Jitterbug, Cloud Drive, etc. zur Verfügung gestellt werden, die Video-Website kann zugegriffen werden Quelldatei Adresse, klicken Sie auf die Schaltfläche hinzufügen, um unten einfügen",
-      "uploadManual2": "请选择具有长时间链接有效视频网站或是网盘",
+      "uploadManual2": "Bitte wählen Sie eine Website oder eine Cloud-Speicherlösung mit langfristig gültigen Links aus.",
       "uploadPic1": "Es wird empfohlen, Bilder in den Formaten png, jpg, jpeg, gif hochzuladen",
       "uploadPic2": "Wenn das Bild größer als 2 MB ist oder nicht hochgeladen werden konnte, können Sie zu gehen",
       "uploadPic3": "Wählen Sie dann die Registerkarte Bild-URL und fügen Sie den Bildlink unten ein",
@@ -794,22 +794,22 @@
     "labels": {
       "types": {
         "originName": {
-          "name": "用户名称",
-          "hint": "平台简写用户名或是平台用户名"
+          "name": "Benutzername",
+          "hint": "Plattform Benutzername oder Plattform Benutzername"
         },
         "originPersonaId": {
-          "name": "角色身份标识",
-          "hint": "角色标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
+          "name": "Rollenidentifikation",
+          "hint": "Rollenkennung (ID), die über die Spielplattform oder ein Drittanbieter-Tool abgerufen werden kann. Sie besteht aus Zahlen."
         },
         "originUserId": {
-          "name": "用户身份标识",
-          "hint": "用户身份标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
+          "name": "Benutzeridentifikation",
+          "hint": "Benutzeridentifikation (ID), die über die Spieleplattform oder ein Drittanbieter-Tool abgerufen werden kann. Sie besteht aus Zahlen."
         }
       },
       "cheatMethod": "Betrugsmethode",
       "description": "beschreiben",
       "game": "Spiel",
-      "hackerId": "作弊者"
+      "hackerId": "Betrüger"
     },
     "messages": {
       "failureSubtitle": "Fehler beim Melden, {msg}",
@@ -877,23 +877,23 @@
     "title": "Aktie"
   },
   "signin": {
-    "failed": "登录错误",
-    "fillEverything": "登录信息不完整，请规范填写",
+    "failed": "Anmeldefehler",
+    "fillEverything": "Login-Informationen sind unvollständig, bitte füllen Sie sie ordnungsgemäß aus.",
     "form": {
-      "Feedback": "反馈问题",
-      "forgetPasswordHint": "忘记密码?",
+      "Feedback": "Rückmeldung Problem",
+      "forgetPasswordHint": "Passwort vergessen?",
       "password": "Passwort",
       "submitHint": "Kein Account? zu registrieren",
-      "username": "用户名/邮箱"
+      "username": "Benutzername/E-Mail"
     },
-    "loggedIn": "哎列？请先注销 (✿◡‿◡)",
+    "loggedIn": "Hey Reihe? Bitte melden Sie sich zuerst ab (✿◡‿◡)",
     "loginFirst": "Bitte melden Sie sich zuerst an",
     "title": "Anmeldung"
   },
   "signup": {
     "checkAllEmail": "Es dauert eine Weile (ca. 1 Minute), bis die Bestätigungs-E-Mail in Ihrem Postfach ankommt. Bitte warten Sie und denken Sie daran, den Papierkorb zu überprüfen",
     "eaPrivacy": "Bitte gehen Sie zu <a href='https://myaccount.ea.com/cp-ui/privacy/index'>EA-Datenschutzeinstellungen</a> und aktivieren Sie die Suche per E-Mail",
-    "failed": "注册错误",
+    "failed": "Registrierungsfehler",
     "fillIn": "Die Registrierungsinformationen sind unvollständig. Bitte füllen Sie sie korrekt aus.",
     "form": {
       "forgetPasswordHint": "Passwort vergessen?",
@@ -959,7 +959,7 @@
     },
     "title": "Statistiken",
     "trend": "Gehäusewärme",
-    "netstatus": "网络状态"
+    "netstatus": "Netzwerkstatus"
   },
   "textarea": {
     "originalImage": "Original Bild",
@@ -982,7 +982,7 @@
     "textOverflowHint": "Der Textinhalt überschreitet die maximale Länge. Bitte reduzieren Sie ihn entsprechend oder reichen Sie ihn in Abschnitten ein.",
     "type": {
       "media": "Medienbibliothek",
-      "upload": "上传",
+      "upload": "Hochladen",
       "url": "Bildlink"
     }
   }
