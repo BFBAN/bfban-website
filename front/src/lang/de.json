@@ -802,8 +802,8 @@
           "hint": "Rollenkennung (ID), die über die Spielplattform oder ein Drittanbieter-Tool abgerufen werden kann. Sie besteht aus Zahlen."
         },
         "originUserId": {
-          "name": "用户身份标识",
-          "hint": "用户身份标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
+          "name": "Benutzeridentifikation",
+          "hint": "Benutzeridentifikation (ID), die über die Spieleplattform oder ein Drittanbieter-Tool abgerufen werden kann. Sie besteht aus Zahlen."
         }
       },
       "cheatMethod": "Betrugsmethode",
