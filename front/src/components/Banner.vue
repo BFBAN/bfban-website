@@ -1,15 +1,15 @@
 <template>
-  <div class="home-banner" :style="`height: ${height}px`"
+  <div class="widget-banner" :style="`height: ${height}px`"
        @dblclick.prevent.stop="updateBackground">
     <div class="home-backdrop-filter">
       <slot name="header"/>
     </div>
-    <div class="home-banner-body mt-7">
+    <div class="widget-banner-body mt-7">
       <slot />
     </div>
-    <div class="home-banner-body-before"
+    <div class="widget-banner-body-before"
          :style="`background: linear-gradient(rgba(21, 24, 41, 0) 0%,transparent ${showMask}%)`"></div>
-    <div class="home-banner-bg">
+    <div class="widget-banner-bg">
       <img class="img" :src="backgroundPath"/>
     </div>
   </div>
@@ -77,12 +77,11 @@ export default {
 
 <style scoped>
 
-.home-banner {
+.widget-banner {
   overflow: hidden;
   position: relative;
-  width: 100%;
 
-  .home-banner-body {
+  .widget-banner-body {
     position: absolute;
     z-index: 3;
     bottom: 0;
@@ -90,7 +89,7 @@ export default {
     width: 100%;
   }
 
-  .home-banner-body-before {
+  .widget-banner-body-before {
     position: absolute;
     display: block;
     backdrop-filter: saturate(5%) opacity(10%);
@@ -108,19 +107,21 @@ export default {
     backdrop-filter: blur(10px);
   }
 
-  .home-banner-bg {
+  .widget-banner-bg {
     background-position: top center;
     background-repeat: no-repeat;
     background-size: contain;
     opacity: .5;
-    position: absolute;
+    position: relative;
     z-index: 1;
     left: 0;
+    right: 0;
     bottom: 0;
     width: 100%;
     height: 100%;
 
     .img {
+      transform: scale(1.5);
       position: absolute;
       width: 100%;
       opacity: .5;
