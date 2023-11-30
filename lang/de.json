@@ -592,7 +592,7 @@
       "form": {
         "allowDM": "Ob Chat empfangen werden soll",
         "allowDMdescribe": "Ob die Nachricht angenommen werden soll.Weitere Nachrichteninformationen finden Sie unter [Nachrichtenliste], um sie anzuzeigen",
-        "changeNameLeft": "剩余修改用户名次数",
+        "changeNameLeft": "Die verbleibende Anzahl der Benutzernamenänderungen.",
         "createTime": "注册时间",
         "description": "用户简介",
         "introduction": "Vorstellen",
