@@ -798,7 +798,7 @@
           "hint": "Plattform Benutzername oder Plattform Benutzername"
         },
         "originPersonaId": {
-          "name": "角色身份标识",
+          "name": "Rollenidentifikation",
           "hint": "Rollenkennung (ID), die über die Spielplattform oder ein Drittanbieter-Tool abgerufen werden kann. Sie besteht aus Zahlen."
         },
         "originUserId": {
@@ -809,7 +809,7 @@
       "cheatMethod": "Betrugsmethode",
       "description": "beschreiben",
       "game": "Spiel",
-      "hackerId": "作弊者"
+      "hackerId": "Betrüger"
     },
     "messages": {
       "failureSubtitle": "Fehler beim Melden, {msg}",
