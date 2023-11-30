@@ -878,9 +878,9 @@
   },
   "signin": {
     "failed": "Anmeldefehler",
-    "fillEverything": "登录信息不完整，请规范填写",
+    "fillEverything": "Login-Informationen sind unvollständig, bitte füllen Sie sie ordnungsgemäß aus.",
     "form": {
-      "Feedback": "反馈问题",
+      "Feedback": "Rückmeldung Problem",
       "forgetPasswordHint": "忘记密码?",
       "password": "Passwort",
       "submitHint": "Kein Account? zu registrieren",
