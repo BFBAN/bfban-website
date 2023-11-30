@@ -738,7 +738,7 @@
     "media": {
       "capacity": "Kapazitätsstatus",
       "hint1": "Jeder Account hat tägliche Upload-Bandbreiten-, Dateimengen- und Einzelgrößenbeschränkungen, die jedoch am nächsten Tag zurückgesetzt werden. Es gibt jedoch eine begrenzte Anzahl von Dateiuploads pro Account. Für Dateien mit geringem Speicherbedarf können andere Websites verwendet werden, um sie anstelle von Online-Speicherdiensten zu nutzen.",
-      "maxFileNumber": "可上传文件数量",
+      "maxFileNumber": "Die Anzahl der hochladbaren Dateien",
       "maxTrafficQuota": "文件最高大小",
       "prevResetTime": "重置限额日期",
       "title": "Medienbibliothek",
