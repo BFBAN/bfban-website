@@ -795,7 +795,7 @@
       "types": {
         "originName": {
           "name": "Benutzername",
-          "hint": "平台简写用户名或是平台用户名"
+          "hint": "Plattform Benutzername oder Plattform Benutzername"
         },
         "originPersonaId": {
           "name": "角色身份标识",
