@@ -304,7 +304,7 @@
           "fail": "Einspruch abgelehnt",
           "unprocessed": "Einspruch unbehandelt"
         },
-        "type": "申诉类型"
+        "type": "Beschwerdetyp"
       },
       "dealAppeal": "处理申诉",
       "describe": "Dieser Bericht entspricht nicht der Wahrheit. Es können Beweismaterialien vorgelegt werden oder Unterstützung bei der Klärung der Unschuld angeboten werden.",
