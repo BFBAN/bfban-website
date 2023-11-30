@@ -881,10 +881,10 @@
     "fillEverything": "Login-Informationen sind unvollständig, bitte füllen Sie sie ordnungsgemäß aus.",
     "form": {
       "Feedback": "Rückmeldung Problem",
-      "forgetPasswordHint": "忘记密码?",
+      "forgetPasswordHint": "Passwort vergessen?",
       "password": "Passwort",
       "submitHint": "Kein Account? zu registrieren",
-      "username": "用户名/邮箱"
+      "username": "Benutzername/E-Mail"
     },
     "loggedIn": "哎列？请先注销 (✿◡‿◡)",
     "loginFirst": "Bitte melden Sie sich zuerst an",
