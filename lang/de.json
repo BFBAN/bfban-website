@@ -959,7 +959,7 @@
     },
     "title": "Statistiken",
     "trend": "Gehäusewärme",
-    "netstatus": "网络状态"
+    "netstatus": "Netzwerkstatus"
   },
   "textarea": {
     "originalImage": "Original Bild",
@@ -982,7 +982,7 @@
     "textOverflowHint": "Der Textinhalt überschreitet die maximale Länge. Bitte reduzieren Sie ihn entsprechend oder reichen Sie ihn in Abschnitten ein.",
     "type": {
       "media": "Medienbibliothek",
-      "upload": "上传",
+      "upload": "Hochladen",
       "url": "Bildlink"
     }
   }
