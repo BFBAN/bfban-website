@@ -400,11 +400,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-2d214497.2.9.12.js.map"
   },
   {
-    "revision": "bbd0d5e1e120c5baf306",
+    "revision": "1b4b08f58e08ea91afbc",
     "url": "/assets/js/chunk-2d21a5a3.2.9.12.js"
   },
   {
-    "revision": "bbd0d5e1e120c5baf306",
+    "revision": "1b4b08f58e08ea91afbc",
     "url": "/assets/js/chunk-2d21a5a3.2.9.12.js.map"
   },
   {
