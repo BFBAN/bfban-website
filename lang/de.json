@@ -302,7 +302,7 @@
         "stats": {
           "accept": "Erfolgreich beantragt",
           "fail": "Einspruch abgelehnt",
-          "unprocessed": "申诉未处理"
+          "unprocessed": "Einspruch unbehandelt"
         },
         "type": "申诉类型"
       },
