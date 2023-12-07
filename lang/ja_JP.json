@@ -131,6 +131,8 @@
     "games": {
       "all": "すべて",
       "bf1": "戦地風雲1",
+      "bf3": "战地风云 3",
+      "bf4": "战地风云 4",
       "bf6": "戦地風雲2042",
       "bfv": "戦地風雲5"
     },
@@ -139,10 +141,12 @@
       "blacklisted": "ブラックリスト",
       "bot": "ロボット",
       "dev": "開発グループ",
+      "freezed": "冻结用户",
       "normal": "ユーザー",
       "root": "システム",
       "super": "スーパー管理者",
-      "test": "アカウントのテスト"
+      "test": "アカウントのテスト",
+      "volunteer": "社区志愿者"
     },
     "status": {
       "0": "未処理",
@@ -154,23 +158,83 @@
       "6": "投票の管理が必要",
       "7": "超级石锤",
       "8": "刷枪",
+      "9": "申诉中",
       "all": "すべて"
     },
     "tip": {
+      "bindOrigin.bad": "绑定账户发生错误，请联系管理员 {message}",
+      "bindOrigin.error": "发生错误，请联系管理员 {message}",
+      "bindOrigin.expired": "激活验证码过期，请重新注册",
+      "bindOrigin.gameNotShowed": "判断的账户，没有对应战地系列游戏",
+      "bindOrigin.needVerify": "恭喜，你还差一步，请前往邮箱激活账户",
+      "bindOrigin.notFound": "激活验证码无效，请检查验证代码",
+      "bindOrigin.notImplement": "发生错误，请联系管理员 {message}",
+      "bindOrigin.originBindingExist": "此邮箱已绑定账户",
+      "bindOrigin.originNotFound": "找不到此邮箱账户，请检测是邮箱正确性以及否开启邮箱查找",
+      "bindOrigin.success": "恭喜你成功激活!",
+      "server.error": "服务错误 {message}",
+      "captcha.bad": "验证码模块发生错误,请联系管理员 {message}",
+      "captcha.expired": "验证码未填",
+      "captcha.wrong": "错误的验证码",
+      "changeName.bad": "更改用户名称错误，请联系管理员 {message}",
+      "changeName.noChance": "你已经用完了所有改名的机会",
+      "changeName.occupied": "有人已经占用了你的新名字",
+      "changeName.success": "已修改用户成功，来看看崭新的名字⭐️",
+      "changePassword.bad": "更改密码错误，请联系管理员 {message}",
+      "changePassword.notMatch": "原密码不正确",
+      "changePassword.success": "您需要重新登录来完成此过程",
+      "forgetPassword.bad": "重置密码错误，请联系管理员 {message}",
+      "forgetPassword.needVerify": "请检查您的电子邮件以重置密码",
+      "forgetPassword.notFound": "没有这样的用户或者您没有绑定电子邮件",
+      "forgetPassword.permissionDenied": "你账户无法这样做",
+      "forgetPassword.success": "重置密码成功",
+      "judgement.appealLock": "上诉被锁定，案件无法进一步裁决",
+      "judgement.bad": "判决发生错误，请联系管理员 {message}",
+      "judgement.notFound": "未找到案件，请联系管理员 {message}",
+      "judgement.permissionDenied": "你无权这样做",
+      "judgement.spam": "你所提交的内容，包含敏感内容",
+      "judgement.success": "感谢你的判决",
+      "logout.bad": "注销失败,请联系管理员",
+      "logout.success": "再见👋🏻",
+      "needBindEaAccount": "请绑定你的橘子账号以后在回复",
       "noAccess": "当前账户,无权限",
       "noReports": "まだ何の通報もありません",
       "notContent": "コンテンツなし",
       "notFound": "おや列、アクセス先が失われているようです",
-      "notLang": "未翻訳"
+      "notLang": "未翻訳",
+      "reply.bad": "回复发生错误，请联系管理员 {message}",
+      "reply.notFound": "没有此回复或玩家",
+      "reply.spam": "你所提交的内容，包含敏感内容",
+      "reply.success": "已提交回复",
+      "report.bad": "举报发生错误，请联系管理员 {message}",
+      "report.error": "举报发生错误，请联系管理员 {message}",
+      "report.notFound": "查无此用户信息",
+      "report.notImplement": "发生错误，请联系管理员 {message}",
+      "report.spam": "你所提交的内容，包含敏感内容",
+      "report.success": "感谢你的举报",
+      "signin.bad": "登录发生错误，请联系管理员 {message}",
+      "signin.noSuchUser": "无此用户或密码错误",
+      "signin.success": "欢迎回来",
+      "signup.bad": "注册发生错误，请联系管理员 {message}",
+      "signup.error": "发生错误，请联系管理员 {message}",
+      "signup.notFound": "激活码无效",
+      "signup.expired": "激活码时效过期，请重新注册",
+      "signup.gameNotShowed": "判断的账户，没有对应战地系列游戏",
+      "signup.needVerify": "恭喜，你还差一步，请前往邮箱激活账户",
+      "signup.notImplement": "发生错误，请联系管理员 {message}",
+      "signup.originBindingExist": "此邮箱已绑定账户",
+      "signup.originNotFound": "无法依照用户提供的信息查找到EA账户",
+      "signup.usernameExist": "用户名已存在",
+      "user.invalid": "令牌失效",
+      "user.permissionDenined": "无权许可",
+      "user.tokenClientException": "当前客户端令牌过期或失效",
+      "user.tokenExpired": "令牌过期",
+      "userReports.bad": "用户举报发生错误，请联系管理员 {messgae}",
+      "userReports.notFound": "没有此玩家，请仔细核对",
+      "userReports.success": "举报成功"
     }
   },
   "bindOrigin": {
-    "messages": {
-      "bad": "错误绑定，请联系管理员",
-      "expired": "绑定的验证代码过期，请重新提交绑定",
-      "notFound": "未找到绑定验证代码",
-      "success": "账户与橘子平台绑定成功"
-    },
     "title": "Originアカウントのバインド"
   },
   "captcha": {
@@ -223,9 +287,30 @@
   },
   "detail": {
     "appeal": {
+      "deal": {
+        "action": "申诉操作",
+        "adminContent": "管理回复内容",
+        "appealContent": "玩家申诉内容",
+        "btrLink": "BTR链接",
+        "farm": "刷枪申诉",
+        "firstPersonRecording": "第一人称录屏链接",
+        "userGeneratedMossFile": "moss文件 (.zip)",
+        "moss": "moss自证申诉",
+        "mossDownloadUrl": "MOSS下载",
+        "mossUpload": "上传moss",
+        "other": "其他类型申诉",
+        "stats": {
+          "accept": "申诉通过",
+          "fail": "申诉不通过",
+          "unprocessed": "申诉未处理"
+        },
+        "type": "申诉类型"
+      },
+      "dealAppeal": "处理申诉",
       "describe": "この通報情報には問題があり、私は自証または他人の協力で潔白を証明することができる。",
       "info": {
         "changeName": "名称变动",
+        "commentid": "评论ID",
         "content": "訴えの内容",
         "originName": "プレイヤーの現在の名前",
         "player": "プレイヤーID"
@@ -253,8 +338,10 @@
         "modalTitle": "ルール＃ルール＃"
       },
       "placeholder": {
+        "btrlink": "请填写btr对局链接",
         "content": "審査のために申請情報を詳細に記入してください",
-        "player": "プレイヤーIDを記入してください"
+        "player": "プレイヤーIDを記入してください",
+        "videolink": "请填写视频链接"
       }
     },
     "info": {
@@ -274,10 +361,10 @@
       "cheatMethod": "カンニングモード",
       "cheatersInfo": "プレイヤー詳細",
       "dealRecord": "管理者がレコードを処理する",
-      "discription1": "リンクの無効化や名前変更を発見した場合は、",
-      "discription2": "bfban.comは通報された人の行方を永続的に追跡する能力がある",
-      "discription3": "サーバも定期的に被通報者の情報を取得し、更新します",
-      "discription4": "履歴IDは検索にも使用できます",
+      "description1": "若发现 链接失效 或 改名，请点击",
+      "description2": "bfban.com 有能力永久追踪被举报者的行踪",
+      "description3": "服务器也会定期抓取、更新被举报人的信息",
+      "description4": "历史ID也可以用来搜索",
       "fastReplies": {
         "evidencePic": "証拠を図に示す",
         "evidenceVid": "証拠はビデオのように",
@@ -327,10 +414,6 @@
       "dontDoIt": "許可しない",
       "fillEverything": "完全に記入してください",
       "pleaseExplain": "あなたの裁決内容をもっと詳しく説明してください",
-      "replySuccess": "返信成功",
-      "signIn": "ログインしてください",
-      "submitSuccess": "コミット成功",
-      "tipBind": "请绑定你的橘子账号以后在回复",
       "updateComplete": "更新完了"
     },
     "seo": {
@@ -348,7 +431,9 @@
       "banAppeal": "訴えのみ表示",
       "coreComment": "主要内容",
       "historyName": "历史玩家变动名称",
-      "verify": "判決のみ表示"
+      "verify": "判決のみ表示",
+      "noAppealAttachmentHint": "此申诉无申诉附件",
+      "needLoginViewAttachmentsHint": "您需要登录账户，才可查阅玩家申诉额外提供的附件"
     },
     "title": "詳細"
   },
@@ -376,6 +461,8 @@
     }
   },
   "forgetPassword": {
+    "checkEmail": "请检查您的邮箱，并点击其中的验证链接",
+    "forgetUsername": "如果您忘记了BFBAN用户名，请前往<a href='http://kook.top/wHwxhw'>bfban开发者社区</a>寻求帮助。注意，您可能会需要很复杂的找回过程。",
     "resetSuccess": "リセット完了おめでとうございます💐",
     "steps": {
       "0": {
@@ -410,7 +497,6 @@
     "report": "不正行為を告発する.",
     "signin": "ログイン＃ログイン＃",
     "signout": "ログアウト",
-    "signoutSuccess": "ログアウトに成功しました",
     "signup": "登録",
     "site_stats": "統計情報",
     "userCenter": "マイプレゼンテーションページ"
@@ -438,7 +524,8 @@
       "h1": "BFBAN",
       "h2": {
         "hint0": "提供☁️データベースにより、世界中の異なるBattlefieldサーバから、問題のあるアーカイブを削除したプレイヤーを監視することができます。",
-        "hint1": "BF 1からBF 2042までを問わず問題のあるアーカイブ・プレイヤー・クエリがサポートされているため、世界中の異なるBattlefieldサーバから監視することができます"
+        "hint1": "BF 1からBF 2042までを問わず問題のあるアーカイブ・プレイヤー・クエリがサポートされているため、世界中の異なるBattlefieldサーバから監視することができます",
+        "hint2": "一切由社区掌控，公开透明，免费为所有接入BFBAN提供服务"
       },
       "h3": "全世界の不正プレイヤーリポジトリを構築する",
       "h4": "私たちの一員になる-コミュニティ環境の維持",
@@ -505,12 +592,25 @@
       "form": {
         "allowDM": "チャットを受信するかどうか",
         "allowDMdescribe": "情報を受け入れるかどうか詳細なメッセージ情報は[メッセージリスト]に表示されます",
+        "changeNameLeft": "剩余修改用户名次数",
+        "createTime": "注册时间",
+        "description": "用户简介",
         "introduction": "自己紹介",
         "language": "言語の設定",
         "languageSyncDescribe": "ログイン後にプログラムローカル言語を同期し、ログオンを終了するとローカルプログラムが永続的に保存している言語にロールバックする場合は、このオプションを設定します",
+        "lastSigninIP": "最后登录IP",
+        "modifyDescription": "修改用户简介",
+        "originEmail": "EA账户邮箱",
+        "originName": "EA账户名字",
+        "originPersonaId": "EA PID",
+        "originUserId": "EA UID",
         "privilege": "アイデンティティ",
+        "privileges": "权限",
+        "registerIP": "注册时IP",
         "showOrigin": "みかん情報",
-        "showOriginDescribe": "あなたがバインドしたOriginをBFBANに表示させるかどうか"
+        "showOriginDescribe": "あなたがバインドしたOriginをBFBANに表示させるかどうか",
+        "signoutTime": "登出时间",
+        "username": "用户名"
       },
       "modifyName": {
         "residueDegree": "現在の変更名{changeNameLeft}の残りの数",
@@ -538,6 +638,8 @@
         "adminOperationLog": "管理员网站操作日志",
         "blockedUsers": "黑名单用户",
         "comment": "コメント管理",
+        "fileManagement": "多媒体管理",
+        "files": "文件列表",
         "home": "管理主页",
         "judgementLog": "判決日誌",
         "log": "ログ＃ログ＃",
@@ -557,6 +659,7 @@
     },
     "chat": {
       "control": "一括編集",
+      "download": "下载",
       "load": "リフレッシュ",
       "look": "表示＃ヒョウジ＃",
       "placeholder": "送信されたメッセージを入力",
@@ -634,8 +737,14 @@
     },
     "media": {
       "capacity": "ようりょう",
-      "fileNum": "{num}ファイル",
-      "title": "メディアライブラリー"
+      "hint1": "每个账户每日都有上传宽带、文件数量、单个大小限制，但它会在下一个日期重置，但存在每个账户可用文件上传数量，对于储存要求不高文件可用其他网站网盘代替。",
+      "maxFileNumber": "可上传文件数量",
+      "maxTrafficQuota": "文件最高大小",
+      "prevResetTime": "重置限额日期",
+      "title": "メディアライブラリー",
+      "todayFileNumber": "今日已上传文件",
+      "todayTrafficQuota": "今日流量额度",
+      "usedStorageQuota": "总储存配额"
     },
     "meet": "お帰りなさい！",
     "subscribes": {
@@ -677,13 +786,26 @@
       "required": "ビデオアドレス",
       "uploadManual1": "YouTube、TikTokなどから\nついか\n追加\nで\nていきょう\n提供\nされています。\nどう\n働\nが\n画\nサイトからアクセスできます。",
       "uploadManual2": "長じかん時間のリンクが ゆうこう有効などうが動画サイトかwebサイトをせんたく選択します。",
-      "uploadManual3": "優酷、ジャガイモ、AB駅などの動画サイトへのリンクが可能",
       "uploadPic1": "png、jpg、jpeg、gif形式の画像をアップロードすることをお勧めします",
       "uploadPic2": "画像が2 Mより大きいか、アップロードに失敗した場合は、",
       "uploadPic3": "次にImage URLタブを選択し、画像リンクを下に貼り付けます",
       "uploadPic4": "十分な証拠を明らかにしてください。エディタは画像のアップロードをサポートしています（2 M制限）"
     },
     "labels": {
+      "types": {
+        "originName": {
+          "name": "用户名称",
+          "hint": "平台简写用户名或是平台用户名"
+        },
+        "originPersonaId": {
+          "name": "角色身份标识",
+          "hint": "角色标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
+        },
+        "originUserId": {
+          "name": "用户身份标识",
+          "hint": "用户身份标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
+        }
+      },
       "cheatMethod": "不正行為の方法",
       "description": "説明",
       "game": "ゲーム",
@@ -697,7 +819,6 @@
       "permissionDenied": "権限なし",
       "successSubtitle": "ご報告ありがとうございました。",
       "successTitle": "無事に提出されました",
-      "tipBind": "レポートを送信する前に、Orangeアカウントを登録してください。",
       "videoBadFormat": "フォーマットエラー",
       "videoEmpty": "空のビデオアドレス"
     },
@@ -759,6 +880,7 @@
     "failed": "ログインに失敗しました",
     "fillEverything": "仕様を記入してください",
     "form": {
+      "Feedback": "反馈问题",
       "forgetPasswordHint": "パスワードを忘れましたか？",
       "password": "パスワード",
       "submitHint": "アカウントはありませんか？登録解除",
@@ -766,7 +888,6 @@
     },
     "loggedIn": "おや列？先に登録してください (✿◡‿◡)",
     "loginFirst": "あれ？！先にログインしてください",
-    "success": "ログイン成功",
     "title": "ログイン＃ログイン＃"
   },
   "signup": {
@@ -784,18 +905,12 @@
       "submitHint": "既存のアカウント？ログインに行く",
       "username": "ユーザー名"
     },
-    "gameNotShowed": "このメールアドレスの下のアカウントにはゲームは含まれていません",
-    "needVerify": "メールにアクセスして、アカウントの確認を行ってください",
-    "originIdExist": "このoriginアカウントはバインドされています",
-    "originNotFound": "このメールアドレスのアカウントは、オリジンでは見つかりませんでした",
     "placeholder": {
       "originEmail": "オレンジメールアドレスを入力",
-      "originId": "問題の選択",
       "originName": "みかんの名前を入力",
       "password": "6ビット以上のパスワード",
       "username": "4桁以上のユーザー名は、英数字、アンダースコア、マイナス記号のみ"
     },
-    "playerNotFound": "プレイヤーが見つかりません（メールボックスで検索が許可されていることを確認してください）",
     "registerVerification": {
       "error": "エラー",
       "failure": "間違った認証アドレス、認証コードが正しいかどうかを確認してください",
@@ -825,8 +940,7 @@
         "title": "完了"
       }
     },
-    "title": "登録",
-    "usernameExist": "ユーザー名が登録されています"
+    "title": "登録"
   },
   "sitestats": {
     "admins": "合計管理者数",
@@ -844,7 +958,8 @@
       "yearly": "一年"
     },
     "title": "統計＃トウケイ＃",
-    "trend": "案件热度"
+    "trend": "案件热度",
+    "netstatus": "网络状态"
   },
   "textarea": {
     "originalImage": "オリジナル画像",
@@ -863,6 +978,8 @@
         "1": "見る"
       }
     },
+    "textHelpHint": "统计内容包含不可见的标签，与可见的文本内容有差异，请以此统计为准",
+    "textOverflowHint": "文本内容超出最大长度，请适当缩减或分段提交",
     "type": {
       "media": "メディアライブラリー",
       "upload": "イメージベッドにアップロードする",
