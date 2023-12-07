@@ -833,7 +833,7 @@
       "newPassword": "новый пароль",
       "oldPassword": "Старый пароль",
       "password": "новый пароль",
-      "passwordRepeat": "确认密码"
+      "passwordRepeat": "Подтвердите пароль"
     },
     "title": "сбросить пароль"
   },
