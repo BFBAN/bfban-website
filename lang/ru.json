@@ -202,7 +202,7 @@
       "notContent": "Содержание",
       "notFound": "Не найден",
       "notLang": "Не переводимо",
-      "reply.bad": "回复发生错误，请联系管理员 {message}",
+      "reply.bad": "Ошибка ответа, пожалуйста, свяжитесь с администратором {message}",
       "reply.notFound": "没有此回复或玩家",
       "reply.spam": "你所提交的内容，包含敏感内容",
       "reply.success": "已提交回复",
