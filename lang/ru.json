@@ -845,7 +845,7 @@
     "sort": {
       "default": "По умолчанию",
       "latest": "最新",
-      "mostComments": "评论最多",
+      "mostComments": "Наибольшее количество комментариев",
       "mostViewed": "Смотреть наивысший"
     },
     "tabs": {
@@ -868,7 +868,7 @@
       "name": "Фотографии"
     },
     "link": {
-      "linkUrl": "超链接",
+      "linkUrl": "Суперссылка",
       "name": "вид связи",
       "textLink": "Текстовый адрес",
       "textLinkContent": "【{webname}】分享了一位玩家，地址:{url}",
