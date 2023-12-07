@@ -868,7 +868,7 @@
       "name": "Фотографии"
     },
     "link": {
-      "linkUrl": "超链接",
+      "linkUrl": "Суперссылка",
       "name": "вид связи",
       "textLink": "Текстовый адрес",
       "textLinkContent": "【{webname}】分享了一位玩家，地址:{url}",
