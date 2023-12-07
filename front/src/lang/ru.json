@@ -902,7 +902,7 @@
       "originId": "ID мандарин",
       "originName": "Имя счета эксперта",
       "password": "пароль",
-      "submitHint": "已有账号？去登录",
+      "submitHint": "Нет аккаунта? Зарегистрируйтесь.",
       "username": "Имя пользователя"
     },
     "placeholder": {
