@@ -843,7 +843,7 @@
     "notUserExist": "Эта информация не найдена в базе данных",
     "placeholder": "Что вы ищите, а, это вы!",
     "sort": {
-      "default": "默认",
+      "default": "По умолчанию",
       "latest": "最新",
       "mostComments": "评论最多",
       "mostViewed": "观看最高"
