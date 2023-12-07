@@ -959,7 +959,7 @@
     },
     "title": "статистика",
     "trend": "案件热度",
-    "netstatus": "网络状态"
+    "netstatus": "Сетевой статус"
   },
   "textarea": {
     "originalImage": "原始图片",
