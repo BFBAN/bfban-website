@@ -818,7 +818,7 @@
       "originIdNotExist": "Идентификатор игры не существует, проверьте правописание",
       "permissionDenied": "нет прав",
       "successSubtitle": "Спасибо за ваше сообщение.",
-      "successTitle": "提交成功",
+      "successTitle": "передача успешно завершена",
       "videoBadFormat": "ошибка формата",
       "videoEmpty": "пустой видео адрес"
     },
