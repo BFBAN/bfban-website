@@ -12,11 +12,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/_redirects"
   },
   {
-    "revision": "d1b29df3fa136fdc10f7",
+    "revision": "bf93d8842ab1fcc8767c",
     "url": "/assets/css/app.f55f2a7d.css"
   },
   {
-    "revision": "d1b29df3fa136fdc10f7",
+    "revision": "bf93d8842ab1fcc8767c",
     "url": "/assets/css/app.f55f2a7d.css.map"
   },
   {
@@ -312,11 +312,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ionicons.d535a25a.ttf"
   },
   {
-    "revision": "d1b29df3fa136fdc10f7",
+    "revision": "bf93d8842ab1fcc8767c",
     "url": "/assets/js/app.2.9.12.js"
   },
   {
-    "revision": "d1b29df3fa136fdc10f7",
+    "revision": "bf93d8842ab1fcc8767c",
     "url": "/assets/js/app.2.9.12.js.map"
   },
   {
