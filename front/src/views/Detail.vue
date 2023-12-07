@@ -213,12 +213,12 @@
                       </Card>
                       <br/>
                       <p class="hint">
-                        {{ $t('detail.info.discription1') }}，
+                        {{ $t('detail.info.description1') }}，
                         <Tag>{{ $t('detail.info.updateButton') }}</Tag>
-                        <span>{{ $t('detail.info.discription2') }}</span>
+                        <span>{{ $t('detail.info.description2') }}</span>
                       </p>
-                      <p class="hint"> {{ $t('detail.info.discription3') }} </p>
-                      <p class="hint"> {{ $t('detail.info.discription4') }} </p>
+                      <p class="hint"> {{ $t('detail.info.description3') }} </p>
+                      <p class="hint"> {{ $t('detail.info.description4') }} </p>
                     </div>
                     <div slot="footer">
                       <Row :gutter="16">

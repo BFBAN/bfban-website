@@ -909,7 +909,7 @@
       "originEmail": "输入您的橘子邮箱",
       "originName": "输入您的橘子名字, 注意大小写",
       "password": "6位以上密码",
-      "username": "4位以上用户名 仅限英文、数字、下划线、减号"
+      "username": "用户名至少4位以上,仅限英文、数字、下划线、减号 或 包含名@地址的邮箱"
     },
     "registerVerification": {
       "error": "验证账户错误",
