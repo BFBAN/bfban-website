@@ -962,7 +962,7 @@
     "netstatus": "Сетевой статус"
   },
   "textarea": {
-    "originalImage": "原始图片",
+    "originalImage": "Исходное изображение",
     "steps": {
       "media": {
         "0": "选择",
