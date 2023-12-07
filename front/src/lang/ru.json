@@ -184,7 +184,7 @@
       "changePassword.notMatch": "原密码不正确",
       "changePassword.success": "您需要重新登录来完成此过程",
       "forgetPassword.bad": "重置密码错误，请联系管理员 {message}",
-      "forgetPassword.needVerify": "请检查您的电子邮件以重置密码",
+      "forgetPassword.needVerify": "Пожалуйста, проверьте свою электронную почту для сброса пароля.",
       "forgetPassword.notFound": "Нет такого пользователя или вы не привязали электронную почту.",
       "forgetPassword.permissionDenied": "Вы не имеете права делать это",
       "forgetPassword.success": "сбросить пароль",
