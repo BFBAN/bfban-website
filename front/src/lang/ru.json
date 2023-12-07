@@ -845,7 +845,7 @@
     "sort": {
       "default": "По умолчанию",
       "latest": "最新",
-      "mostComments": "评论最多",
+      "mostComments": "Наибольшее количество комментариев",
       "mostViewed": "Смотреть наивысший"
     },
     "tabs": {
