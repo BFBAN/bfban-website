@@ -831,7 +831,7 @@
   "reset": {
     "form": {
       "newPassword": "новый пароль",
-      "oldPassword": "旧密码",
+      "oldPassword": "Старый пароль",
       "password": "новый пароль",
       "passwordRepeat": "确认密码"
     },
