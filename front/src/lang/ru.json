@@ -871,7 +871,7 @@
       "linkUrl": "Суперссылка",
       "name": "вид связи",
       "textLink": "Текстовый адрес",
-      "textLinkContent": "【{webname}】分享了一位玩家，地址:{url}",
+      "textLinkContent": "{webname} - Поделился игроком, адрес:{url}",
       "webHtmlLink": "сетевой код"
     },
     "title": "делить"
