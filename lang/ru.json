@@ -953,8 +953,8 @@
     "reports": "社区共计已举报",
     "timeRange": {
       "daily": "вчера",
-      "monthly": "一个月",
-      "weekly": "一周",
+      "monthly": "Один месяц",
+      "weekly": "Одна неделя",
       "yearly": "一年"
     },
     "title": "статистика",
