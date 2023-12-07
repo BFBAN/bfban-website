@@ -193,7 +193,7 @@
       "judgement.notFound": "未找到案件，请联系管理员 {message}",
       "judgement.permissionDenied": "你无权这样做",
       "judgement.spam": "你所提交的内容，包含敏感内容",
-      "judgement.success": "感谢你的判决",
+      "judgement.success": "Спасибо за ваше решение.",
       "logout.bad": "Ошибка отмены регистрации, пожалуйста, свяжитесь с администратором",
       "logout.success": "До свидания👋🏻",
       "needBindEaAccount": "Пожалуйста, привяжите свою учетную запись Orange перед ответом.",
