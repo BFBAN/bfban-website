@@ -813,7 +813,7 @@
     },
     "messages": {
       "failureSubtitle": "举报失败，{msg}",
-      "failureTitle": "失败",
+      "failureTitle": "неудача",
       "mediaEvidence": "Пожалуйста, выложите фото или заполните видео ссылки",
       "originIdNotExist": "Идентификатор игры не существует, проверьте правописание",
       "permissionDenied": "нет прав",
