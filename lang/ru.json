@@ -648,7 +648,7 @@
         "messageList": "Сообщение содержание",
         "messageManagement": "Сообщение",
         "messagePush": "推送",
-        "muteUsers": "禁言用户",
+        "muteUsers": "запретить говорить пользователю",
         "user": "Управление пользователями",
         "verifications": "验证器"
       },
