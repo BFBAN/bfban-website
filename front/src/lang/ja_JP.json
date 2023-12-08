@@ -417,8 +417,8 @@
       "updateComplete": "更新完了"
     },
     "seo": {
-      "description": "举报玩家详情信息",
-      "keywords": "玩家详情,玩家"
+      "description": "举报プレイヤー詳細情報",
+      "keywords": "玩家の詳細、プレイヤー"
     },
     "subscribes": {
       "cancelTrack": "追跡解除",
