@@ -172,7 +172,7 @@
       "bindOrigin.originBindingExist": "Этот адрес электронной почты уже привязан к аккаунту.",
       "bindOrigin.originNotFound": "Не удается найти эту учетную запись электронной почты. Пожалуйста, проверьте правильность адреса электронной почты и включите поиск по электронной почте.",
       "bindOrigin.success": "Поздравляю вас с успешной активацией!",
-      "server.error": "服务错误 {message}",
+      "server.error": "Сервисная ошибка {message}",
       "captcha.bad": "验证码模块发生错误,请联系管理员 {message}",
       "captcha.expired": "验证码未填",
       "captcha.wrong": "错误的验证码",
