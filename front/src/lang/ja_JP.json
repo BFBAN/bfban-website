@@ -746,7 +746,7 @@
       "todayTrafficQuota": "今日流量额度",
       "usedStorageQuota": "总储存配额"
     },
-    "meet": "お帰りなさい！",
+    "meet": "{name}さん、お帰りなさい！",
     "subscribes": {
       "title": "追跡"
     },
