@@ -775,7 +775,7 @@
       "idNotion2": "ゲームIDは大文字と小文字を区別しませんが、特にi I 1 l Lo O 0を区別し、通報IDを正しく記入することに注意してください",
       "loginExpired": "ログインの有効期限が切れました。再ログインしてください",
       "notFoundHintAnswer1": "origin.comでそのプレイヤーを検索し、確実に検索できて通報できない場合は、トップページの下の連絡先にバグをフィードバックすることができます",
-      "notFoundHintAnswer2": "これは、EAデータベースの更新が遅れているか、EA公式のバグである可能性があります。私たちは彼らのために解決することはできません。もしあなたが力を考え出したら、https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-enI can't search my friend by name on originと記述できる公式フィードバックフォーラムフィードバックバグ",
+      "notFoundHintAnswer2": "これはEAデータベースの更新が遅れているか、またはEA公式のバグの可能性があります。私たちはそれらを解決する手段を持っていません。もし力を貸していただけるのであれば、以下の公式フィードバックフォーラムにアクセスしてバグを報告していただけますか。この問題は「I can't search my friend by name on origin」と表現できます。\nhttps://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en",
       "notFoundHintQuestion1": "でもゲームで彼に会ったばかりです/私は戦績アプリで彼を調べていますか？",
       "notFoundHintQuestion2": "originでは検索できませんが、これはどういうことですか。",
       "notFoundHintTitle": "プレイヤーを見つけることはできません",
