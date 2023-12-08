@@ -162,8 +162,8 @@
       "all": "Все"
     },
     "tip": {
-      "bindOrigin.bad": "绑定账户发生错误，请联系管理员 {message}",
-      "bindOrigin.error": "发生错误，请联系管理员 {message}",
+      "bindOrigin.bad": "Произошла ошибка при привязке аккаунта, пожалуйста, свяжитесь с администратором {message}",
+      "bindOrigin.error": "Произошла ошибка, пожалуйста, свяжитесь с администратором {message}",
       "bindOrigin.expired": "激活验证码过期，请重新注册",
       "bindOrigin.gameNotShowed": "判断的账户，没有对应战地系列游戏",
       "bindOrigin.needVerify": "恭喜，你还差一步，请前往邮箱激活账户",
