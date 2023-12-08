@@ -338,7 +338,7 @@
         "modalTitle": "ルール＃ルール＃"
       },
       "placeholder": {
-        "btrlink": "请填写btr对局链接",
+        "btrlink": "BTRの対局リンクを入力してください。",
         "content": "審査のために申請情報を詳細に記入してください",
         "player": "プレイヤーIDを記入してください",
         "videolink": "请填写视频链接"
