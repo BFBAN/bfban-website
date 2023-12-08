@@ -634,7 +634,7 @@
     "admin": {
       "menu": {
         "adminLog": "журнал управления",
-        "adminOperation": "管理案件操作日志",
+        "adminOperation": "Управление журналом операций по делам",
         "adminOperationLog": "管理员网站操作日志",
         "blockedUsers": "黑名单用户",
         "comment": "управление комментариями",
