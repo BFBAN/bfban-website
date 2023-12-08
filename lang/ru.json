@@ -168,7 +168,7 @@
       "bindOrigin.gameNotShowed": "Определенный аккаунт, не имеющий соответствующей серии игр Battlefield.",
       "bindOrigin.needVerify": "Поздравляю, вам остался всего один шаг, перейдите в почту для активации аккаунта.",
       "bindOrigin.notFound": "Активационный код недействителен, пожалуйста, проверьте код подтверждения.",
-      "bindOrigin.notImplement": "发生错误，请联系管理员 {message}",
+      "bindOrigin.notImplement": "Произошла ошибка, пожалуйста, свяжитесь с администратором {message}",
       "bindOrigin.originBindingExist": "此邮箱已绑定账户",
       "bindOrigin.originNotFound": "找不到此邮箱账户，请检测是邮箱正确性以及否开启邮箱查找",
       "bindOrigin.success": "恭喜你成功激活!",
