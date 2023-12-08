@@ -892,7 +892,7 @@
   },
   "signup": {
     "checkAllEmail": "メールを確認するのに時間（約1分）がかかります。ゴミ箱を確認するのを待ってください。",
-    "eaPrivacy": "EAのプライバシー設定から「電子メールによる検索を許可する」をオンにしてください。",
+    "eaPrivacy": "EAプライバシー設定でメールアドレス検索を許可するには、<a href='https://myaccount.ea.com/cp-ui/privacy/index'>こちら</a>をご覧ください。",
     "failed": "登録に失敗しました",
     "fillIn": "規範的に記入してください",
     "form": {
