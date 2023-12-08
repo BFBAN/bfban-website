@@ -310,7 +310,7 @@
       "describe": "この通報情報には問題があり、私は自証または他人の協力で潔白を証明することができる。",
       "info": {
         "changeName": "名称变动",
-        "commentid": "评论ID",
+        "commentid": "コメントID",
         "content": "訴えの内容",
         "originName": "プレイヤーの現在の名前",
         "player": "プレイヤーID"
