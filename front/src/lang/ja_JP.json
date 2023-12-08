@@ -809,7 +809,7 @@
       "cheatMethod": "不正行為の方法",
       "description": "説明",
       "game": "ゲーム",
-      "hackerId": "不正行為者名（ID）"
+      "hackerId": "不正行為者名"
     },
     "messages": {
       "failureSubtitle": "レポートの失敗，{msg}",
