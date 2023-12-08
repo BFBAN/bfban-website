@@ -635,8 +635,8 @@
       "menu": {
         "adminLog": "журнал управления",
         "adminOperation": "Управление журналом операций по делам",
-        "adminOperationLog": "管理员网站操作日志",
-        "blockedUsers": "黑名单用户",
+        "adminOperationLog": "Управление журналом операций по делам",
+        "blockedUsers": "Чёрный список",
         "comment": "управление комментариями",
         "fileManagement": "多媒体管理",
         "files": "文件列表",
