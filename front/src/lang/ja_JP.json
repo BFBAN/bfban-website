@@ -871,7 +871,7 @@
       "linkUrl": "ハイパーリンク",
       "name": "リンク形式",
       "textLink": "テキストアドレス",
-      "textLinkContent": "{webname} - プレイヤーを共有しました。アドレス：｛url｝",
+      "textLinkContent": "{webname} - 一人のプレイヤーが共有しました、アドレス:{url}",
       "webHtmlLink": "ネットワークコード"
     },
     "title": "分かち合う"
