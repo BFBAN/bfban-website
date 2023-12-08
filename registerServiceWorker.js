@@ -1,4 +1,4 @@
-importScripts("/precache-manifest.c4c2ee54e29eb253821cbaa4deef907a.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/precache-manifest.6ed12df252b9d4a91b678a079004ab68.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 /* eslint-disable no-console */
 import { register } from 'register-service-worker'
