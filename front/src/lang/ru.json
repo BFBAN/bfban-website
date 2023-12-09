@@ -226,7 +226,7 @@
       "signup.originNotFound": "Не удалось найти учетную запись EA на основе предоставленной пользователем информации.",
       "signup.usernameExist": "Пользователь существует",
       "user.invalid": "Токен недействителен",
-      "user.permissionDenined": "无权许可",
+      "user.permissionDenined": "Отсутствует разрешение.",
       "user.tokenClientException": "当前客户端令牌过期或失效",
       "user.tokenExpired": "令牌过期",
       "userReports.bad": "用户举报发生错误，请联系管理员 {messgae}",
