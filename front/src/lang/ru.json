@@ -221,7 +221,7 @@
       "signup.expired": "Активационный код истек, пожалуйста, зарегистрируйтесь заново.",
       "signup.gameNotShowed": "Определенный аккаунт, не имеющий соответствующей серии игр Battlefield.",
       "signup.needVerify": "Поздравляю, вам остался всего один шаг, перейдите в почту для активации аккаунта.",
-      "signup.notImplement": "发生错误，请联系管理员 {message}",
+      "signup.notImplement": "Произошла ошибка, пожалуйста, свяжитесь с администратором {message}",
       "signup.originBindingExist": "此邮箱已绑定账户",
       "signup.originNotFound": "无法依照用户提供的信息查找到EA账户",
       "signup.usernameExist": "用户名已存在",
