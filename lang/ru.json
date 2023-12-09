@@ -228,7 +228,7 @@
       "user.invalid": "Токен недействителен",
       "user.permissionDenined": "Отсутствует разрешение.",
       "user.tokenClientException": "Текущий токен клиента истек или недействителен",
-      "user.tokenExpired": "令牌过期",
+      "user.tokenExpired": "Токен истек.",
       "userReports.bad": "Пользователь сообщил об ошибке, пожалуйста, свяжитесь с администратором {messgae}",
       "userReports.notFound": "没有此玩家，请仔细核对",
       "userReports.success": "举报成功"
