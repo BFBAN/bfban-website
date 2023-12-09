@@ -208,7 +208,7 @@
       "reply.success": "Уже отправлен ответ",
       "report.bad": "Ошибка при отправке жалобы, пожалуйста, свяжитесь с администратором {message}",
       "report.error": "Ошибка при отправке жалобы, пожалуйста, свяжитесь с администратором {message}",
-      "report.notFound": "查无此用户信息",
+      "report.notFound": "Пользователь не найден",
       "report.notImplement": "发生错误，请联系管理员 {message}",
       "report.spam": "你所提交的内容，包含敏感内容",
       "report.success": "感谢你的举报",
