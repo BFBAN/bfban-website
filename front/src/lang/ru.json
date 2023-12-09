@@ -225,7 +225,7 @@
       "signup.originBindingExist": "Этот адрес электронной почты уже привязан к аккаунту.",
       "signup.originNotFound": "Не удалось найти учетную запись EA на основе предоставленной пользователем информации.",
       "signup.usernameExist": "Пользователь существует",
-      "user.invalid": "令牌失效",
+      "user.invalid": "Токен недействителен",
       "user.permissionDenined": "无权许可",
       "user.tokenClientException": "当前客户端令牌过期或失效",
       "user.tokenExpired": "令牌过期",
