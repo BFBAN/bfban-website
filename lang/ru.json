@@ -222,7 +222,7 @@
       "signup.gameNotShowed": "Определенный аккаунт, не имеющий соответствующей серии игр Battlefield.",
       "signup.needVerify": "Поздравляю, вам остался всего один шаг, перейдите в почту для активации аккаунта.",
       "signup.notImplement": "Произошла ошибка, пожалуйста, свяжитесь с администратором {message}",
-      "signup.originBindingExist": "此邮箱已绑定账户",
+      "signup.originBindingExist": "Этот адрес электронной почты уже привязан к аккаунту.",
       "signup.originNotFound": "无法依照用户提供的信息查找到EA账户",
       "signup.usernameExist": "用户名已存在",
       "user.invalid": "令牌失效",
