@@ -231,7 +231,7 @@
       "user.tokenExpired": "Токен истек.",
       "userReports.bad": "Пользователь сообщил об ошибке, пожалуйста, свяжитесь с администратором {messgae}",
       "userReports.notFound": "нет такого игрока, пожалуйста, проверьте внимательно",
-      "userReports.success": "举报成功"
+      "userReports.success": "Успешно сообщено"
     }
   },
   "bindOrigin": {
