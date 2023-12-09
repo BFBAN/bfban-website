@@ -352,7 +352,7 @@
       "app_qr": {
         "openApp": "在App内查看",
         "openAppDescribe": "Просмотреть этот игрок в BFBAN APP",
-        "tip": "在BFBAN APP内，扫此二维码",
+        "tip": "Просмотреть этот игрок в BFBAN APP",
         "title": "Смотреть на телефоне"
       },
       "appeal": "апелляция",
