@@ -106,16 +106,16 @@
       "label": "Русский",
       "members": [
         {
-          "name": "Baidu Bot",
-          "url": "//baidu.com"
-        },
-        {
           "name": "Deepl",
           "url": "//deepl.com"
         },
         {
           "name": "Artem",
           "url": "//github.com/nicoth-in"
+        },
+        {
+          "name":"Blueberryy",
+          "url":"//app.transifex.com/user/profile/Blueberryy"
         }
       ]
     },
