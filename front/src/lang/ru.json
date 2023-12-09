@@ -254,7 +254,7 @@
     },
     "attackServer": {
       "describe": "Сервер атаки",
-      "title": "攻击服务器"
+      "title": "Сервер атаки"
     },
     "damageChange": {
       "describe": "Изменение параметров вооружения",
