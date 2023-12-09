@@ -188,7 +188,7 @@
       "forgetPassword.notFound": "Нет такого пользователя или вы не привязали электронную почту.",
       "forgetPassword.permissionDenied": "Вы не имеете права делать это",
       "forgetPassword.success": "сбросить пароль",
-      "judgement.appealLock": "上诉被锁定，案件无法进一步裁决",
+      "judgement.appealLock": "Апелляция заблокирована, дело не может быть дальше рассмотрено",
       "judgement.bad": "Приговор произошел с ошибкой, пожалуйста, свяжитесь с администратором {message}",
       "judgement.notFound": "Не найдено дело, пожалуйста, свяжитесь с администратором {message}",
       "judgement.permissionDenied": "Вы не имеете права делать это",
