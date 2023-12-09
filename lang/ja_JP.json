@@ -1,9 +1,9 @@
 {
   "about": {
-    "description": "BFBAN\n\n2018年1月29日に誕生しました；\n戦場のプレイヤーたちが一緒に結成した<b>チート対策</b>組織です。",
-    "privacy": "\n<h2>隠私ポリシー</h2>\nそれはオープンソースです。GitHubで問題を報告し、変更/改善の提案をすることができます。コミュニティネットワークが提供するAPIは一般に公開されています。",
+    "description": "BFBAN\n\n诞生于2018年1月29日；\n是战地玩家一起组建的 抵制外挂 组织。\n",
+    "privacy": "\n隐私政策\n它是开源的。您可以通过 GitHub 发布问题并提出更改/改进建议。社区网络提供的 API 并开放供公众使用。",
     "title": "について",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> 开发，于 2018年11月4日 上线‘\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>"
+    "website": "\n      bfban.com 网站依托于联BAN调查局，最初想法起源于热心玩家，由 mygoare 开发，于 2018年11月4日 上线‘\n\n主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；"
   },
   "account": {
     "bindOrigin": {
@@ -103,7 +103,7 @@
         "text": "もっと証拠が必要だ"
       },
       "suspect": {
-        "describe": "玩家のキャリアデータが異常であり、または単一の試合データとキャリアデータが著しく一致しない場合、チートの疑いがあります。チート判定チームのメンバーは、プレイヤーに自己証明を要求するか、プレイヤーが自己証明の申述を提出した後、自己証明の時間を与えることを要求します。状態開始日から7日後までに自己証明が成功しない場合、自動的に実証に移行します。",
+        "describe": "提出された証明書から不正行為を確定するには不十分だが、以上の証拠には不審な点があり、もし十分な証明資料があればハンマーを変更することができる",
         "text": "疑わしい"
       }
     },
@@ -131,8 +131,8 @@
     "games": {
       "all": "すべて",
       "bf1": "戦地風雲1",
-      "bf3": "戦地風雲3",
-      "bf4": "戦地風雲4",
+      "bf3": "战地风云 3",
+      "bf4": "战地风云 4",
       "bf6": "戦地風雲2042",
       "bfv": "戦地風雲5"
     },
@@ -228,7 +228,7 @@
       "user.invalid": "令牌失效",
       "user.permissionDenined": "无权许可",
       "user.tokenClientException": "当前客户端令牌过期或失效",
-      "user.tokenExpired": "令牌の有効期限切れ",
+      "user.tokenExpired": "令牌过期",
       "userReports.bad": "用户举报发生错误，请联系管理员 {messgae}",
       "userReports.notFound": "没有此玩家，请仔细核对",
       "userReports.success": "举报成功"
@@ -310,7 +310,7 @@
       "describe": "この通報情報には問題があり、私は自証または他人の協力で潔白を証明することができる。",
       "info": {
         "changeName": "名称变动",
-        "commentid": "コメントID",
+        "commentid": "评论ID",
         "content": "訴えの内容",
         "originName": "プレイヤーの現在の名前",
         "player": "プレイヤーID"
@@ -338,8 +338,8 @@
         "modalTitle": "ルール＃ルール＃"
       },
       "placeholder": {
-        "btrlink": "BTRの対局リンクを入力してください。",
-        "content": "注意格式，不同地区会对申诉格式有需求，请以当地申诉社区《申诉格式》为准",
+        "btrlink": "请填写btr对局链接",
+        "content": "審査のために申請情報を詳細に記入してください",
         "player": "プレイヤーIDを記入してください",
         "videolink": "请填写视频链接"
       }
@@ -361,10 +361,10 @@
       "cheatMethod": "カンニングモード",
       "cheatersInfo": "プレイヤー詳細",
       "dealRecord": "管理者がレコードを処理する",
-      "description1": "若発見 リンク失効 または 改名、クリックしてください。",
-      "description2": "bfban.com は被告者の行方を永久に追跡する能力を持っています。",
-      "description3": "サーバーも定期的に報告された人の情報を取得し、更新します。",
-      "description4": "歴史IDも検索に使用できます。",
+      "description1": "若发现 链接失效 或 改名，请点击",
+      "description2": "bfban.com 有能力永久追踪被举报者的行踪",
+      "description3": "服务器也会定期抓取、更新被举报人的信息",
+      "description4": "历史ID也可以用来搜索",
       "fastReplies": {
         "evidencePic": "証拠を図に示す",
         "evidenceVid": "証拠はビデオのように",
@@ -417,8 +417,8 @@
       "updateComplete": "更新完了"
     },
     "seo": {
-      "description": "举报プレイヤー詳細情報",
-      "keywords": "玩家の詳細、プレイヤー"
+      "description": "举报玩家详情信息",
+      "keywords": "玩家详情,玩家"
     },
     "subscribes": {
       "cancelTrack": "追跡解除",
@@ -461,8 +461,8 @@
     }
   },
   "forgetPassword": {
-    "checkEmail": "ご確認ください。メールボックスをチェックし、検証リンクをクリックしてください。",
-    "forgetUsername": "もしBFBANのユーザー名を忘れた場合は、<a href='http://kook.top/wHwxhw'>bfban開発者コミュニティ</a>にアクセスしてヘルプを求めてください。ただし、回復プロセスが非常に複雑である可能性があります。",
+    "checkEmail": "请检查您的邮箱，并点击其中的验证链接",
+    "forgetUsername": "如果您忘记了BFBAN用户名，请前往<a href='http://kook.top/wHwxhw'>bfban开发者社区</a>寻求帮助。注意，您可能会需要很复杂的找回过程。",
     "resetSuccess": "リセット完了おめでとうございます💐",
     "steps": {
       "0": {
@@ -552,7 +552,7 @@
       "playerId": "ゲームID",
       "reportTime": "通報時間",
       "screenTitle": "フィルタリング",
-      "updateTime": "更新時間"
+      "updateTime": "更新日時"
     },
     "filters": {
       "sortBy": {
@@ -746,7 +746,7 @@
       "todayTrafficQuota": "今日流量额度",
       "usedStorageQuota": "总储存配额"
     },
-    "meet": "{name}さん、お帰りなさい！",
+    "meet": "お帰りなさい！",
     "subscribes": {
       "title": "追跡"
     },
@@ -775,7 +775,7 @@
       "idNotion2": "ゲームIDは大文字と小文字を区別しませんが、特にi I 1 l Lo O 0を区別し、通報IDを正しく記入することに注意してください",
       "loginExpired": "ログインの有効期限が切れました。再ログインしてください",
       "notFoundHintAnswer1": "origin.comでそのプレイヤーを検索し、確実に検索できて通報できない場合は、トップページの下の連絡先にバグをフィードバックすることができます",
-      "notFoundHintAnswer2": "これはEAデータベースの更新が遅れているか、またはEA公式のバグの可能性があります。私たちはそれらを解決する手段を持っていません。もし力を貸していただけるのであれば、以下の公式フィードバックフォーラムにアクセスしてバグを報告していただけますか。この問題は「I can't search my friend by name on origin」と表現できます。\nhttps://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en",
+      "notFoundHintAnswer2": "これは、EAデータベースの更新が遅れているか、EA公式のバグである可能性があります。私たちは彼らのために解決することはできません。もしあなたが力を考え出したら、https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-enI can't search my friend by name on originと記述できる公式フィードバックフォーラムフィードバックバグ",
       "notFoundHintQuestion1": "でもゲームで彼に会ったばかりです/私は戦績アプリで彼を調べていますか？",
       "notFoundHintQuestion2": "originでは検索できませんが、これはどういうことですか。",
       "notFoundHintTitle": "プレイヤーを見つけることはできません",
@@ -799,17 +799,17 @@
         },
         "originPersonaId": {
           "name": "角色身份标识",
-          "hint": "角色の識別子（id）は、ゲームプラットフォームやサードパーティツールを通じて取得できます。それは数字で構成されています。"
+          "hint": "角色标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
         },
         "originUserId": {
-          "name": "ユーザーの身元識別",
-          "hint": "ユーザーの身分識別子（id）は、ゲームプラットフォームやサードパーティのツールを通じて取得できます。それは数字で構成されています。"
+          "name": "用户身份标识",
+          "hint": "用户身份标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
         }
       },
       "cheatMethod": "不正行為の方法",
       "description": "説明",
       "game": "ゲーム",
-      "hackerId": "不正行為者名"
+      "hackerId": "不正行為者名（ID）"
     },
     "messages": {
       "failureSubtitle": "レポートの失敗，{msg}",
@@ -871,7 +871,7 @@
       "linkUrl": "ハイパーリンク",
       "name": "リンク形式",
       "textLink": "テキストアドレス",
-      "textLinkContent": "{webname} - 一人のプレイヤーが共有しました、アドレス:{url}",
+      "textLinkContent": "{webname} - プレイヤーを共有しました。アドレス：｛url｝",
       "webHtmlLink": "ネットワークコード"
     },
     "title": "分かち合う"
@@ -892,7 +892,7 @@
   },
   "signup": {
     "checkAllEmail": "メールを確認するのに時間（約1分）がかかります。ゴミ箱を確認するのを待ってください。",
-    "eaPrivacy": "EAプライバシー設定でメールアドレス検索を許可するには、<a href='https://myaccount.ea.com/cp-ui/privacy/index'>こちら</a>をご覧ください。",
+    "eaPrivacy": "EAのプライバシー設定から「電子メールによる検索を許可する」をオンにしてください。",
     "failed": "登録に失敗しました",
     "fillIn": "規範的に記入してください",
     "form": {
