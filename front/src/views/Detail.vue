@@ -833,7 +833,7 @@
               <div class="ivu-card ivu-card-bordered ivu-card-dis-hover" id="reply" v-if="isLogin">
                 <div class="ivu-card-body">
                   <Textarea v-model="reply.content"
-                            style="margin: 0 -16px;"
+                            style="margin: -10px -16px;"
                             ref="replyTextarea"
                             :height="'150px'"
                             :maxlength="5000"
@@ -1197,7 +1197,7 @@ import PrivilegesTag from "/src/components/PrivilegesTag";
 import FastReply from "@/components/FastReply";
 import htmllink from "@/components/HtmlLink";
 
-import {formatTextarea, waitForAction} from "@/mixins/common";
+import {formatTextarea} from "@/mixins/common";
 import router from "@/router";
 
 export default new Application({
@@ -1994,8 +1994,6 @@ export default new Application({
 
         return
       }
-
-      console.log(this.reply)
 
       // 依照不同回复窗口模式来填充提交表单
       switch (replyType) {

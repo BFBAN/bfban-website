@@ -7,7 +7,8 @@ import htmllink from "./HtmlLink";
 import htmllinkcard from "./HtmlLinkCard";
 import htmlvideo from "./HtmlVideo";
 import htmlplayercard from "./HtmlPlayerCard";
-import htmlfloor from "@/components/htmlFloor";
+import htmlfloor from "./htmlFloor";
+import htmlemoji from "./HtmlEmoji"
 import privilegestag from "./PrivilegesTag";
 import {regular} from "@/assets/js";
 
@@ -51,14 +52,15 @@ export default {
         'h3': 0,
         'q': 0,
         'em': 0,
-        'u': 0
+        'u': 0,
+        'emoji': 0
       },
       options: {
         url: 'src'
       }
     };
   },
-  components: {htmlimage, htmllink, htmllinkcard, htmlvideo, htmlplayercard, htmlfloor, privilegestag},
+  components: {htmlimage, htmllink, htmllinkcard, htmlvideo, htmlplayercard, htmlfloor, privilegestag, htmlemoji},
   watch: {
     html: {
       handler(val, oldVal) {
@@ -130,20 +132,36 @@ export default {
 
           if (imgs && imgs.length > 0) {
             let _imgs = Array.from(imgs); // deep copy
-            for (let i = 0; i < _imgs.length; i++) {
-              let eleImg = document.createElement('htmlimage');
-              eleImg.setAttribute("src", _imgs[i].src);
+            let eleImgType = ["htmlimage", "htmlemoji"];
+            let eleImgTypeIndex = 0;
 
-              this.images.push(_imgs[i].src);
+            for (let i = 0; i < _imgs.length; i++) {
+              if (_imgs[i].src.indexOf(';base64,') >= 0) eleImgTypeIndex = 1;
+
+              let eleImg = document.createElement(eleImgType[eleImgTypeIndex]);
+
+              switch (eleImgTypeIndex.toString()) {
+                case '0':
+                  eleImg.setAttribute("src", _imgs[i].src);
+                  this.images.push(_imgs[i].src);
+                  break;
+                case '1':
+                  eleImg.setAttribute("data-name", `${_imgs[i].title}` || '');
+                  eleImg.setAttribute("data-src", _imgs[i].src || '');
+                  eleImg.setAttribute("data-style", _imgs[i].style.cssText || '');
+                  break;
+              }
 
               _imgs[i].parentNode.replaceChild(eleImg, _imgs[i]);
             }
 
-            // upDate attr images
-            let _htmlimage = vDom.getElementsByTagName("htmlimage");
-            for (let i = 0; i < _htmlimage.length; i++) {
-              _htmlimage[i].setAttribute("images", this.images);
-              _htmlimage[i].setAttribute("index", i);
+            if (eleImgTypeIndex == 0) {
+              // upDate attr images
+              let _htmlimage = vDom.getElementsByTagName(eleImgType[eleImgTypeIndex]);
+              for (let i = 0; i < _htmlimage.length; i++) {
+                _htmlimage[i].setAttribute("images", this.images);
+                _htmlimage[i].setAttribute("index", i);
+              }
             }
           }
 
