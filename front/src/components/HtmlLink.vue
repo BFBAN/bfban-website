@@ -34,8 +34,6 @@
 </template>
 
 <script>
-import {regular} from "@/assets/js";
-
 export default {
   name: "HtmlLink",
   props: {

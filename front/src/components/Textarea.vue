@@ -2,7 +2,7 @@
   <div style="position: relative">
     <quill-editor
         class="editor"
-        ref="myTextEditor"
+        ref="quillTextEditor"
         :style="`height:${height}`"
         :content="editorContent"
         :options="editorOption"
@@ -35,7 +35,7 @@
     </Row>
 
     <UploadWidget ref="uploadWidget"
-                  @finish="onInsert"></UploadWidget>
+                  @finish="onInsertImage"></UploadWidget>
   </div>
 </template>
 
@@ -46,13 +46,10 @@ import UploadWidget from './UploadWidget';
 
 import Quill from "quill";
 import {quillEditor} from 'vue-quill-editor'
-import atPeople from 'quill-mention-people';
-import quillEmoji from 'quill-emoji'
+import {Emoji, emojis} from '@nutrify/quill-emoji-mart-picker';
 import ImageBlot from '../assets/js/quill-module-image'
 
-import 'quill-emoji/dist/quill-emoji.css'
-import 'quill-mention-people/index.css'
-import EmojiBlot from "@/assets/js/quill-module-emoji";
+import emojiJsonList from '../../public/config/emoji.json'
 
 export default {
   props: {
@@ -91,32 +88,21 @@ export default {
       editorOption: {
         placeholder: this.placeholder,
         modules: {
-          "emoji-shortname": {
-            fuse: {
-              shouldSort: true,
-              threshold: 0.1,
-              location: 1,
-              distance: 200,
-              maxPatternLength: 32,
-              minMatchCharLength: 1,
-              keys: ["shortname"]
-            },
+          'emoji-module': {
+            emojiData: emojis,
+            customEmojiData: emojiJsonList.child,
+            preventDrag: true,
+            showTitle: true,
+            indicator: ':',
+            convertEmoticons: true,
+            convertShortNames: true,
           },
-          "emoji-toolbar": true,
           clipboard: {
             // 粘贴版，处理粘贴时候带图片
-            matchers: [[Node.ELEMENT_NODE, this.handlePaste]],
+            matchers: [
+              [Node.ELEMENT_NODE, this.handlePaste],
+            ],
           },
-          // https://github.com/merrylmr/quill-mention-people
-          // atPeople:{
-          //   list:[
-          //     {id:1,name:'admin'},
-          //     {id:2,name:'test'},
-          //   ],
-          //   atOneMemberAction (item) {
-          //     console.log(item);
-          //   }
-          // },
           toolbar: {
             container: this.toolbar || [[{'list': 'ordered'}, {'list': 'bullet'}], ['bold'], ["link", "image"]],
             handlers: {
@@ -129,6 +115,7 @@ export default {
             }
           }
         },
+        formats: ['emoji'],
       },
     }
   },
@@ -138,9 +125,7 @@ export default {
     if (this.content)
       this.editorContent = this.content;
 
-    Quill.register({'formats/emoji': EmojiBlot}, true);
     Quill.register(ImageBlot, true) //
-    // Quill.register('modules/atPeople',atPeople);
   },
   methods: {
     /**
@@ -182,9 +167,9 @@ export default {
         this.editorContent = val;
     },
     /**
-     * 插入
+     * 插入图像
      */
-    async onInsert(insertValue) {
+    async onInsertImage(insertValue) {
       try {
         const quill = this.quill;
         const range = quill.getSelection(true);
@@ -213,6 +198,20 @@ export default {
         this.$Message.error(err);
         this.$refs['uploadWidget'].updataIcon = false;
         this.insertLoad = false;
+        console.error(err)
+      }
+    },
+    /**
+     * 插入表情
+     * @param emoji
+     */
+    insertEmoji(emoji) {
+      try {
+        console.log(Emoji, this.quill, emoji)
+        Emoji.insertEmoji(this.quill, {emoji: emoji});
+      } catch (err) {
+        //
+        console.error(err)
       }
     },
     /**
@@ -255,7 +254,7 @@ export default {
   },
   computed: {
     editor() {
-      return this.$refs.myTextEditor.quill;
+      return this.$refs.quillTextEditor.quill;
     }
   },
   mounted() {
@@ -273,9 +272,19 @@ export default {
 .editor .ql-container.ql-snow img {
   width: 100%;
   display: block;
-  border: 1px solid;
   border-radius: 3px;
   margin: 10px 0;
+}
+
+.editor .ql-container.ql-snow img.ql-emoji {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+  margin-top: 0rem;
+  margin-bottom: -0.21rem;
+  vertical-align: baseline;
+  cursor: default;
 }
 
 .ql-snow .ql-tooltip.ql-editing a {
