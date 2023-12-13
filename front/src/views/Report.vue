@@ -80,7 +80,7 @@
                             </Col>
                             <Col :lg="{span: 4}">
                               <Poptip trigger="hover" transfer>
-                                <Icon type="ios-help-circle-outline" />
+                                <Icon type="ios-help-circle-outline"/>
                                 <div slot="content">{{ $t(`report.labels.types.${type}.hint`) }}</div>
                               </Poptip>
                             </Col>
@@ -240,7 +240,8 @@
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
                   <Card :padding="0" dis-hover>
-                        <Textarea :placeholder="$t('report.info.description')"
+                        <Textarea :toolbar="[[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'hr'], ['link', 'image']]"
+                                  :placeholder="$t('report.info.description')"
                                   :index="index"
                                   :height="'520px'"
                                   :maxlength="60000"

@@ -23,8 +23,9 @@ export default {
   },
   methods: {
     getActionClass () {
+      const unknownClass = '#535353';
       let actionFilter = this.action.filter(i => i.value == this.util.queryAction(this.judgeAction));
-      if (actionFilter.length <= 0) return '#000';
+      if (actionFilter.length <= 0) return unknownClass;
       return actionFilter[0]['class'];
     }
   },

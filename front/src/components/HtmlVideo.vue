@@ -1,33 +1,36 @@
 <template>
   <div class="video">
     <template v-if="imageStatus == 0">
-      <div class="video-error video-box">
+      <div class="video-error video-box ivu-card ivu-card-bordered ivu-card-dis-hover">
         <Badge>
           <Icon type="md-refresh" class="spin-icon-load" slot="count" size="20" />
           <Icon type="ios-videocam" size="50" />
         </Badge>
-        <p>{{src}}</p>
+        <html-link :isPoptip="false" :href="src || 'link'"></html-link>
         <iframe class="iframe-load video-box" :src="src" @error="onError" @load="onLoad"></iframe>
       </div>
     </template>
     <template v-else-if="imageStatus == 1">
-      <iframe class="iframe video-box" :src="src"></iframe>
+      <iframe class="iframe video-box ivu-card ivu-card-bordered ivu-card-dis-hover" :src="src"></iframe>
     </template>
     <template v-else-if="imageStatus == -1">
-      <div class="video-error video-box" @click="openUrl">
+      <div class="video-error video-box ivu-card ivu-card-bordered ivu-card-dis-hover" @click="openUrl">
         <Badge>
           <Icon type="md-alert" slot="count" size="20" />
           <Icon type="ios-videocam" size="50" />
         </Badge>
-        <p v-if="src">{{src}}</p>
+        <html-link :isPoptip="false" :href="src || 'link'"></html-link>
       </div>
     </template>
   </div>
 </template>
 
 <script>
+import HtmlLink from "@/components/HtmlLink.vue";
+
 export default {
   name: "HtmlVideo",
+  components: {HtmlLink},
   props: {
     src: {
       type: String,
@@ -69,8 +72,8 @@ export default {
   .video {
     user-select: none;
     position: relative;
-    width: calc(100% + 30px);
-    margin: 10px -15px 10px -15px;
+    width: calc(100% + 16px);
+    margin: 10px -8px 10px -8px;
     overflow: hidden;
 
     .iframe {

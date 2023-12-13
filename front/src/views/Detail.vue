@@ -40,7 +40,7 @@
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col flex="1">
-                <cheater-status-view :status="cheater.status" />
+                <cheater-status-view :status="cheater.status"/>
 
                 <!-- 被举报的游戏 S -->
                 <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
@@ -828,6 +828,7 @@
                   <Textarea v-model="reply.content"
                             style="margin: -10px -16px;"
                             ref="replyTextarea"
+                            :toolbar="[['bold'], ['link', 'image']]"
                             :height="'150px'"
                             :maxlength="5000"
                             :showMaxlengthLabel="true"
@@ -1106,7 +1107,7 @@
         <Form ref="replyForm" style="margin: -17px;" v-if="isLogin">
           <Textarea v-model="reply.miniModeContent"
                     ref="replyMiniModeTextarea"
-                    :toolbar="['bold', 'link']"
+                    :toolbar="[['bold'], ['link', 'image']]"
                     :height="'320px'"
                     :maxlength="5000"
                     :showMaxlengthLabel="true"

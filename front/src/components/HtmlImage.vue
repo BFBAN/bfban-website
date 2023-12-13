@@ -52,7 +52,7 @@
     <template v-else-if="imageStatus == -1">
       <div class="img-error img-box" @click="openUrl">
         <Badge class="user-select-none">
-          <Icon type="md-alert" size="20"/>
+          <Icon type="md-alert" slot="count" size="20"/>
           <Icon type="md-images" size="50"/>
         </Badge>
         <p class="img-box-url">
