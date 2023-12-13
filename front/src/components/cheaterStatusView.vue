@@ -8,7 +8,7 @@ export default {
       default: 0
     }
   },
-  data () {
+  data() {
     return {
       util,
 
@@ -22,7 +22,7 @@ export default {
     this.loadData();
   },
   methods: {
-    async loadData () {
+    async loadData() {
       await util.initUtil().then(res => {
         this.cheaterStatus = res.cheaterStatus;
       });
@@ -33,8 +33,8 @@ export default {
      * @returns {*|string|string}
      */
     cheaterStatusClass(status) {
-      const unknownClass = '#000';
-      if (!status) return unknownClass;
+      const unknownClass = '#535353';
+      if (status == null) return unknownClass;
       let resultStatusObjects = this.cheaterStatus.filter((i) => i.value == status);
       if (resultStatusObjects.length <= 0) return unknownClass;
       return resultStatusObjects[0]['class'] || unknownClass;
