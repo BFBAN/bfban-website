@@ -102,7 +102,7 @@
               <br>
               <Row type="flex" align="start" class="text-start">
                 <Col flex="1">
-                  <Tag>{{ a_i.type || 'null' }}</Tag>
+                  <Tag fade type="border" color="default">{{ $t(`detail.timeline.types.${a_i.type}`) }}</Tag>
                 </Col>
                 <Col>
                   <Time v-if="a_i.createTime" :time="a_i.createTime"></Time>
@@ -132,8 +132,8 @@
                   </router-link>
 
                   <Tag type="border" color="orange"
-                                v-for="(methods, methodsIndex) in a_i.playerCheatMethods"
-                                :key="methodsIndex">
+                       v-for="(methods, methodsIndex) in a_i.playerCheatMethods"
+                       :key="methodsIndex">
                     <Poptip trigger="hover" :transfer="true" word-wrap width="200"
                             :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>
                       {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
@@ -144,7 +144,7 @@
                 <!-- 注册 -->
                 <span v-if="a_i.type === 'register'">
                   <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                    <u>{{ a_i.byUserName }}</u>
+                    <u>{{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}</u>
                   </router-link>
                   {{ $t('home.activity.activities.join') }}
                 </span>
@@ -161,9 +161,7 @@
                     <u style="margin-right: 5px">{{ a_i.toPlayerName }}</u>
                   </router-link>
 
-                  <Tag color="warning">
-                    {{ $t(`basic.action.${a_i.action}.text`) }}
-                  </Tag>
+                  <judgeActionView :judgeAction="a_i.action"></judgeActionView>
 
                   {{ $t('detail.info.cheatMethod') }}
 
@@ -180,7 +178,7 @@
                 <!-- 申诉 -->
                 <span v-if="a_i.type === 'banAppeal'">
                   <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
-                    {{ a_i.byUserName }}
+                    <u>{{ a_i.byUserName }}</u>
                   </router-link>
                   {{ $t('detail.appeal.info.content') }}
                 </span>
@@ -204,6 +202,7 @@ import {api, http, util, time, regular, upload} from '../assets/js/index'
 import Application from "../assets/js/application";
 import Tell from "../components/HomeTell.vue";
 import PrivilegesTag from "../components/PrivilegesTag.vue";
+import judgeActionView from "../components/judgeActionView.vue";
 
 export default new Application({
   data() {
@@ -225,7 +224,7 @@ export default new Application({
       },
     }
   },
-  components: {Tell, PrivilegesTag},
+  components: {Tell, PrivilegesTag, judgeActionView},
   watch: {
     '$route': 'loadData',
   },

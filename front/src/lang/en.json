@@ -149,17 +149,49 @@
       "volunteer": "Community Volunteer"
     },
     "status": {
-      "0": "Unprocessed",
-      "1": "Confirmed hacker",
-      "2": "Suspicious",
-      "3": "Clean",
-      "4": "Invalid report",
-      "5": "Under discussion",
-      "6": "Needs more votes",
-      "7": "Ultra-confirmed hacker",
-      "8": "farm weapons",
-      "9": "appeal",
-      "all": "all"
+      "0": {
+        "describe": "",
+        "text": "Unprocessed"
+      },
+      "1": {
+        "describe": "",
+        "text": "Confirmed hacker"
+      },
+      "2": {
+        "describe": "",
+        "text": "Suspicious"
+      },
+      "3": {
+        "describe": "",
+        "text": "Clean"
+      },
+      "4": {
+        "describe": "",
+        "text": "Invalid report"
+      },
+      "5": {
+        "describe": "",
+        "text": "Under discussion"
+      },
+      "6": {
+        "describe": "",
+        "text": "Needs more votes"
+      },
+      "7": {
+        "describe": "",
+        "text": "Ultra-confirmed hacker"
+      },
+      "8": {
+        "describe": "",
+        "text": "farm weapons"
+      },
+      "9": {
+        "describe": "",
+        "text": "appeal"
+      },
+      "all": {
+        "text": "all"
+      }
     },
     "tip": {
       "bindOrigin.bad": "An error occurred when binding account, please contact the admin. {message}",

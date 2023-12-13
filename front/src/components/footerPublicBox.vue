@@ -13,7 +13,7 @@
             <Col flex="1">
               <Badge status="success" />
               <router-link :to="{name: 'player_list', query: { status: '0', game: 'all' }}" v-show="!isFooterFull">
-                {{ $store.state.$desktop.autoUpdatePlayerList.total || 0 }}{{ $t('basic.status.0') }}
+                {{ $store.state.$desktop.autoUpdatePlayerList.total || 0 }}{{ $t('basic.status.0.text') }}
               </router-link>
             </Col>
             <Col v-if="!$store.state.configuration.desktopNotifiction">
@@ -32,7 +32,7 @@
           </Row>
           <div v-if="isFooterFull">
             <Tabs size="small">
-              <TabPane :label="$t('basic.status.0')" class="content">
+              <TabPane :label="$t('basic.status.0.text')" class="content">
                 <Card dis-hover :padding="2" v-for="(i, index) in $store.state.$desktop.autoUpdatePlayerList.result" :key="index">
                   <Row :gutter="4" type="flex" align="middle">
                     <Col>

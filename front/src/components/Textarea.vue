@@ -50,6 +50,7 @@ import {Emoji, emojis} from '@nutrify/quill-emoji-mart-picker';
 import ImageBlot from '../assets/js/quill-module-image'
 
 import emojiJsonList from '../../public/config/emoji.json'
+import Regular from "@/assets/js/regular";
 
 export default {
   props: {
@@ -98,24 +99,35 @@ export default {
             convertShortNames: true,
           },
           clipboard: {
-            // 粘贴版，处理粘贴时候带图片
+            matchVisual: false,
             matchers: [
-              [Node.ELEMENT_NODE, this.handlePaste],
+              [
+                Node.ELEMENT_NODE, this.handlePasteLink,
+                Node.ELEMENT_NODE, this.handlePaste,
+              ],
             ],
           },
           toolbar: {
-            container: this.toolbar || [[{'list': 'ordered'}, {'list': 'bullet'}], ['bold'], ["link", "image"]],
+            container: this.toolbar || [[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'italic', 'underline', 'hr'], ['link', 'image']],
             handlers: {
               image: () => {
                 this.$refs['uploadWidget'].onPanelChange();
                 this.$refs['uploadWidget'].currentIndex = 0;
                 this.$refs['uploadWidget'].currentFileType = '';
                 this.$refs['uploadWidget'].updataIcon = false;
-              }
+              },
+              hr: () => {
+                const quill = this.quill;
+                const range = quill.getSelection(true);
+                quill.insertText(range.index, '\n');
+                quill.insertText(range.index + 1, '-----');
+                quill.insertText(range.index + 6, '\n');
+
+                quill.setSelection(range.index + 7);
+              },
             }
           }
         },
-        formats: ['emoji'],
       },
     }
   },
@@ -136,12 +148,12 @@ export default {
       this.updataPlane = value;
     },
     /**
-     * 处理富文本粘贴事件
+     * 处理富文本-粘贴-图像
      * @param node
      * @param Delta
      * @returns {*}
      */
-    handlePaste(node, Delta) {
+    handlePasteImage(node, Delta) {
       let ops = []
       Delta.ops.forEach(op => {
         // 如果粘贴了图片，这里会是一个对象，所以可以这样处理
@@ -149,13 +161,30 @@ export default {
           ops.push({
             insert: op.attributes.link,
           })
-        } else if (op.insert && typeof op.insert === 'string') {
-          ops.push({
-            insert: op.insert,
-          })
         }
       })
       Delta.ops = ops;
+      return Delta;
+    },
+    /**
+     * 处理富文本-粘贴-链接
+     * @param node
+     * @param Delta
+     * @returns {*}
+     */
+    handlePasteLink(node, Delta) {
+      let ops = []
+      Delta.ops.forEach(op => {
+        if (op.insert && typeof op.insert === 'string') {
+          // 将文本中的URL转换为<a>标签
+          const insert = op.insert
+          const replacedUrlText = insert.replace(regular.REGULARTYPE.link.v, function (match) {
+            return '<a href="' + match + '">' + match + '</a>'
+          })
+          ops.push({insert: replacedUrlText, attributes: {link: replacedUrlText}})
+        }
+      })
+      Delta.ops = ops
       return Delta;
     },
     /**
@@ -285,6 +314,12 @@ export default {
   margin-bottom: -0.21rem;
   vertical-align: baseline;
   cursor: default;
+}
+
+.editor .ql-hr {
+  background: no-repeat scroll 50% 50% transparent !important;
+  background-image: url("./../../src/assets/images/hr.svg") !important;
+  text-align: center;
 }
 
 .ql-snow .ql-tooltip.ql-editing a {

@@ -73,17 +73,17 @@
                     <template v-if="isLogin">
                       <Col>
                         <b>{{ account.statusNum['0'] || '-' }}</b>
-                        <p class="account-info-p">{{ $t(`basic.status.0`) }}</p>
+                        <p class="account-info-p">{{ $t(`basic.status.0.text`) }}</p>
                       </Col>
                       <Divider type="vertical"/>
                       <Col>
                         <b>{{ account.statusNum['1'] || '-' }}</b>
-                        <p class="account-info-p">{{ $t(`basic.status.1`) }}</p>
+                        <p class="account-info-p">{{ $t(`basic.status.1.text`) }}</p>
                       </Col>
                       <Divider type="vertical"/>
                       <Col>
                         <b>{{ account.statusNum['4'] || '-' }}</b>
-                        <p class="account-info-p">{{ $t(`basic.status.4`) }}</p>
+                        <p class="account-info-p">{{ $t(`basic.status.4.text`) }}</p>
                       </Col>
                       <Divider type="vertical"/>
                       <Col>
@@ -182,6 +182,7 @@ import Application from "../assets/js/application";
 import Empty from "@/components/Empty";
 import vueQr from "vue-qr";
 import UserAvatar from "@/components/UserAvatar.vue";
+import cheaterStatusView from "@/components/cheaterStatusView.vue";
 import {api, http, http_token, util} from '../assets/js/index'
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
@@ -276,11 +277,11 @@ export default new Application({
             align: 'center',
             render: (h, params) => {
               return h('div', [
-                h('Tag', {
+                h(cheaterStatusView, {
                   props: {
-                    color: 'error'
+                    status: 1
                   }
-                }, `${this.$i18n.t(`basic.status[${params.row.status}]`)}`)
+                }, params.row.status)
               ]);
             }
           },
@@ -345,7 +346,7 @@ export default new Application({
   watch: {
     $route: "loadData",
   },
-  components: {PrivilegesTag, Empty, UserAvatar, vueQr},
+  components: {PrivilegesTag, Empty, UserAvatar, cheaterStatusView, vueQr},
   created() {
     this.http = http_token.call(this);
 

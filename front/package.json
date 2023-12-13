@@ -1,6 +1,6 @@
 {
   "name": "BFBAN",
-  "version": "2.9.12",
+  "version": "2.9.13",
   "private": true,
   "scripts": {
     "serve:development-legacyProvider-windows": "set NODE_OPTIONS=--openssl-legacy-provider && npm run serve:development",

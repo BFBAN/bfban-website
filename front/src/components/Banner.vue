@@ -9,7 +9,7 @@
     </div>
     <div class="widget-banner-body-before"
          :style="`background: linear-gradient(rgba(21, 24, 41, 0) 0%,transparent ${showMask}%)`"></div>
-    <div class="widget-banner-bg">
+    <div class="widget-banner-bg ivu-btn-primary">
       <img class="img" :src="backgroundPath"/>
     </div>
   </div>
@@ -124,7 +124,8 @@ export default {
       transform: scale(1.5);
       position: absolute;
       width: 100%;
-      opacity: .5;
+      max-width: 100%;
+      opacity: .3;
       top: 0;
       left: 0;
       right: 0;

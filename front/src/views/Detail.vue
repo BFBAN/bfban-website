@@ -40,9 +40,7 @@
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col flex="1">
-                <Tag color="error" v-if="cheater.status >= 0">
-                  {{ $t(`basic.status.${cheater.status || 0}`) }}
-                </Tag>
+                <cheater-status-view :status="cheater.status" />
 
                 <!-- 被举报的游戏 S -->
                 <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
@@ -659,12 +657,7 @@
 
                           {{ $t('detail.info.judge') }}
 
-                          <Poptip trigger="hover" :transfer="true" word-wrap width="200"
-                                  :content="$t(`basic.action.${util.queryAction(l.judgeAction)}.describe`)">
-                            <Tag color="warning">
-                              {{ $t(`basic.action.${util.queryAction(l.judgeAction)}.text`) }}
-                            </Tag>
-                          </Poptip>
+                          <judgeActionView :judgeAction="l.judgeAction"></judgeActionView>
 
                           <template v-if="l.cheatGame">
                             <!-- 在 -->
@@ -898,8 +891,8 @@
                 <p>{{ $t('detail.info.appealManual1') }}</p>
                 <br>
                 <div>
-                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1`) }}</Tag>
-                  <Tag :size="'default'" type="border">{{ $t(`basic.status.2`) }}</Tag>
+                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1.text`) }}</Tag>
+                  <Tag :size="'default'" type="border">{{ $t(`basic.status.2.text`) }}</Tag>
                 </div>
               </Card>
 
@@ -914,7 +907,7 @@
                         :to="{'name': 'cheater_appeal'}"
                         :disabled="!isLogin || cheater.status !== 1">
                   {{ $t('detail.info.appeal') }}
-                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1`) }}</Tag>
+                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1.text`) }}</Tag>
                 </Button>
                 <p><br>{{ $t('detail.appeal.describe') }}</p>
               </Card>
@@ -1190,15 +1183,16 @@ import Empty from '../components/Empty.vue'
 import Textarea from "../components/Textarea";
 import BusinessCard from "../components/businessCard.vue";
 import RecordLink from "../components/RecordLink.vue";
+import cheaterStatusView from "../components/cheaterStatusView.vue";
+import judgeActionView from "@/components/judgeActionView.vue";
 import Captcha from "../components/Captcha";
-import HtmlCore from "@/components/Html";
+import HtmlCore from "../components/Html";
 import HtmlWidget from "../components/HtmlWidget";
 import PrivilegesTag from "/src/components/PrivilegesTag";
-import FastReply from "@/components/FastReply";
-import htmllink from "@/components/HtmlLink";
+import FastReply from "../components/FastReply";
+import htmllink from "../components/HtmlLink";
 
 import {formatTextarea} from "@/mixins/common";
-import router from "@/router";
 
 export default new Application({
   data() {
@@ -1302,6 +1296,8 @@ export default new Application({
     Textarea,
     BusinessCard,
     RecordLink,
+    cheaterStatusView,
+    judgeActionView,
     Captcha,
     HtmlCore,
     HtmlWidget,
