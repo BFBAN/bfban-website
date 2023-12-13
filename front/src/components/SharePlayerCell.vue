@@ -12,7 +12,7 @@
       <br>
       <Row :gutter="20" type="flex" justify="center" align="middle" class="share-info">
         <Col>
-          <Tag color="error">{{ $t(`basic.status.${cheater.status}`) }}</Tag>
+          <Tag color="error">{{ $t(`basic.status.${cheater.status}.text`) }}</Tag>
           <span class="share-info-p">{{ $t("account.status") }}</span>
         </Col>
         <Divider type="vertical"/>

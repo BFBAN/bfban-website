@@ -62,7 +62,7 @@
               <Badge :overflow-count="900000"
                      size="small"
                      type="info">
-                {{ $t("basic.status.all") }}
+                {{ $t("basic.status.all.text") }}
               </Badge>
             </Radio>
             <Radio
@@ -70,7 +70,7 @@
                 :key="status.value"
                 :label="`${status.value}`">
               <Badge :count="getcHeaterStatusNum(status.value)" :overflow-count="900000" type="info">
-                {{ $t(`basic.status[${status.value}]`) }}{{ status[$i18n.locale] }}
+                {{ $t(`basic.status[${status.value}].text`) }}{{ status[$i18n.locale] }}
               </Badge>
             </Radio>
           </RadioGroup>

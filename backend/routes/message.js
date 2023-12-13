@@ -339,7 +339,7 @@ async function iGotJudged(params) {
     if (!user) // that player being reported hasn't registered our site
         return;
     await sendMessage(undefined, user.id, 'warn', await localeMessage('notifications.beReported', user.attr.language, {
-        status: await localeMessage(`basic.status.${player.status}`, user.attr.language, {}),
+        status: await localeMessage(`basic.status.${player.status}.text`, user.attr.language, {}),
         originPersonaId: player.originPersonaId,
         website: config.mail.domain.origin
     }));
