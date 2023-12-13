@@ -149,17 +149,49 @@
       "volunteer": "社区志愿者"
     },
     "status": {
-      "0": "未处理",
-      "1": "石锤",
-      "2": "待自证",
-      "3": "MOSS自证",
-      "4": "无效举报",
-      "5": "讨论中",
-      "6": "需更多管理投票",
-      "7": "数据异常自动石锤",
-      "8": "刷枪",
-      "9": "申诉中",
-      "all": "全部"
+      "0": {
+        "describe": "前或被批准保留前，称为未处理案件",
+        "text": "未处理"
+      },
+      "1": {
+        "describe": "“石锤”通“实锤”，坚硬无比之意，意思就是用实实在在的证据来捶打他，也有证据确凿的意思",
+        "text": "石锤"
+      },
+      "2": {
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "text": "待自证"
+      },
+      "3": {
+        "describe": "通过证明，该案件分类到自证分类中",
+        "text": "MOSS自证"
+      },
+      "4": {
+        "describe": "举报材料不全或举报错误ID等行为，该分类不等于确认作弊",
+        "text": "无效举报"
+      },
+      "5": {
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "text": "讨论中"
+      },
+      "6": {
+        "describe": "以上证据需要更多管理参与投票",
+        "text": "需更多管理投票"
+      },
+      "7": {
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "text": "数据异常自动石锤"
+      },
+      "8": {
+        "describe": "在游戏中快速解锁武器配件",
+        "text": "刷枪"
+      },
+      "9": {
+        "describe": "案件处于上诉中，管理将有下一步判决",
+        "text": "申诉中"
+      },
+      "all": {
+        "text": "全部"
+      }
     },
     "tip": {
       "bindOrigin.bad": "绑定账户发生错误，请联系管理员 {message}",
@@ -433,7 +465,13 @@
       "historyName": "历史玩家变动名称",
       "verify": "仅查看判决",
       "noAppealAttachmentHint": "此申诉无申诉附件",
-      "needLoginViewAttachmentsHint": "您需要登录账户，才可查阅玩家申诉额外提供的附件"
+      "needLoginViewAttachmentsHint": "您需要登录账户，才可查阅玩家申诉额外提供的附件",
+      "types": {
+        "judgement": "举报",
+        "register": "注册",
+        "report": "举报",
+        "banAppeal": "申诉"
+      }
     },
     "title": "详情"
   },
@@ -779,7 +817,6 @@
       "notFoundHintQuestion1": "但是我刚刚在游戏里见过他/我在查战绩app上查得到他？",
       "notFoundHintQuestion2": "origin上无法搜索到，这是怎么一回事？",
       "notFoundHintTitle": "我们无法找到该玩家",
-      "onlyOneId": "一次只有一个Origin ID",
       "reportAll": "举报所有",
       "reportHacker": "举报作弊",
       "reportOne": "举报单个",
@@ -795,15 +832,18 @@
       "types": {
         "originName": {
           "name": "用户名称",
-          "hint": "平台简写用户名或是平台用户名"
+          "hint": "平台简写用户名或是平台用户名",
+          "placeholder": "一次只有一个EA名称"
         },
         "originPersonaId": {
           "name": "角色身份标识",
-          "hint": "角色标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
+          "hint": "角色标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA角色身份id，由数字组成，一次只有一个"
         },
         "originUserId": {
           "name": "用户身份标识",
-          "hint": "用户身份标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
+          "hint": "用户身份标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA用户身份id，由数字组成，一次只有一个"
         }
       },
       "cheatMethod": "作弊方法",
@@ -909,7 +949,7 @@
       "originEmail": "输入您的橘子邮箱",
       "originName": "输入您的橘子名字, 注意大小写",
       "password": "6位以上密码",
-      "username": "4位以上用户名 仅限英文、数字、下划线、减号"
+      "username": "用户名至少4位以上,仅限英文、数字、下划线、减号 或 包含名@地址的邮箱"
     },
     "registerVerification": {
       "error": "验证账户错误",

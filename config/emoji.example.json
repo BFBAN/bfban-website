@@ -1,0 +1,30 @@
+{
+  "child": [
+    {
+      "name": "Test Flag",
+      "shortNames": [
+        "test"
+      ],
+      "keywords": [
+        "test"
+      ],
+      "spriteUrl": "https://unpkg.com/emoji-datasource-twitter@4.0.4/img/twitter/sheets-256/64.png",
+      "sheet_x": 1,
+      "sheet_y": 1,
+      "size": 64,
+      "sheetColumns": 52,
+      "sheetRows": 52
+    },
+    {
+      "name": "Party Parrot",
+      "shortNames": [
+        "parrot",
+        "test2"
+      ],
+      "keywords": [
+        "party"
+      ],
+      "imageUrl": "https://quill-emoji-mart-picker.netlify.app/assets/images/parrot.gif"
+    }
+  ]
+}

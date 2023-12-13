@@ -1,0 +1,14 @@
+{
+  "child": [
+    {
+      "name": "Party Parrot",
+      "shortNames": [
+        "parrot"
+      ],
+      "keywords": [
+        "party"
+      ],
+      "imageUrl": "https://quill-emoji-mart-picker.netlify.app/assets/images/parrot.gif"
+    }
+  ]
+}
