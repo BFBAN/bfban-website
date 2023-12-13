@@ -7,9 +7,26 @@ function formatNewLine(str) {
   return str.replace(/\r\n|\r|\n/g, '<br />');
 }
 
+function formatImage(str) {
+  const imgRegex = /<img src="(.*?)" \/>/g;
+  const convertedText = str
+      .replace(imgRegex, (match, src) => `<img src="${src}" />`);
+
+  return convertedText;
+}
+
+function formatLink(str) {
+  const linkRegex = /(?:^|\s)((?:http|https|ftp):\/\/[^\s<]+)/g;
+  const convertedText = str
+      .replace(linkRegex, (match, url) => ` <a href="${url}">${url}</a>`)
+
+  return convertedText;
+}
+
 function formatTextarea(val) {
   let str = val;
-
+  str = formatImage(str);
+  str = formatLink(str);
   str = formatNewLine(str);
   return str;
 }

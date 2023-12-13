@@ -62,7 +62,7 @@
           </Col>
           <Divider type="vertical" class="mobile-hide"/>
           <Col :xs="{span: 12}" :lg="{span: 3}">
-            <h2>{{ admins || 0 }}</h2>
+            <h2>{{ statistics.admins || 0 }}</h2>
             {{ $t('sitestats.admins') }}
           </Col>
         </Row>
@@ -199,7 +199,6 @@ export default new Application({
     return {
       load: false,
       statistics: {},
-      admins: 0,
       show: false,
       chart: {
         'stats': {
@@ -468,24 +467,10 @@ export default new Application({
         if (d.success == 1) {
           this.statistics = d.data;
         }
-      }).finally(() => {
-        this.getAdmins();
       });
 
       return;
     },
-    /**
-     * 获取社区管理
-     */
-    getAdmins() {
-      http.get(api["admins"], {}).then(res => {
-        const d = res.data;
-
-        if (d.success == 1) {
-          this.admins = d.data.length;
-        }
-      })
-    }
   },
 });
 </script>

@@ -69,15 +69,17 @@ router.get('/statistics', [
 
             let data = {};
             if (req.query.reports)
-                data.reports = await db('comments').count({reports: 'id'}).where('createTime', '>=', new Date(from)).andWhere({type: 'report'}).first().then(r => r.reports);
+                data.reports = await db('comments').count({reports: 'id'}, {method: 'estimate'}).where('createTime', '>=', new Date(from)).andWhere({type: 'report'}).first().then(r => r.reports);
             if (req.query.players)
-                data.players = await db('players').count({players: 'id'}).where('createTime', '>=', new Date(from)).andWhere({valid: 1}).first().then(r => r.players);
+                data.players = await db('players').count({players: 'id'}, {method: 'estimate'}).where('createTime', '>=', new Date(from)).andWhere({valid: 1}).first().then(r => r.players);
             if (req.query.confirmed)
-                data.confirmed = await db('players').count({confirmed: 'id'}).where('createTime', '>=', new Date(from)).andWhere({status: 1}).andWhere({valid: 1}).first().then(r => r.confirmed);
+                data.confirmed = await db('players').count({confirmed: 'id'}, {method: 'estimate'}).where('createTime', '>=', new Date(from)).andWhere({status: 1}).andWhere({valid: 1}).first().then(r => r.confirmed);
             if (req.query.registers)
-                data.registers = await db('users').count({registers: 'id'}).where('createTime', '>=', new Date(from)).first().then(r => r.registers);
+                data.registers = await db('users').count({registers: 'id'}, {method: 'estimate'}).where('createTime', '>=', new Date(from)).first().then(r => r.registers);
+            if (req.query.admins)
+                data.admins = await db('users').count({admins: 'id'}, {method: 'estimate'}).where('privilege', 'like', '%"admin"%').orWhere('privilege', 'like', '%"super"%').orWhere('privilege', 'like', '%"dev"%').orWhere('privilege', 'like', '%"root"%').first().then(r => r.admins);
             if (req.query.banAppeals)
-                data.banAppeals = await db('comments').count({banAppeals: 'id'}).where('createTime', '>=', new Date(from)).andWhere({type: 'banAppeal'}).first().then(r => r.banAppeals);
+                data.banAppeals = await db('comments').count({banAppeals: 'id'}, {method: 'estimate'}).where('createTime', '>=', new Date(from)).andWhere({type: 'banAppeal'}).first().then(r => r.banAppeals);
             res.status(200).json({success: 1, code: 'statistics.ok', data: data});
         } catch (err) {
             next(err);
@@ -661,16 +663,16 @@ async (req, res, next) => {
 router.get('/admins', async (req, res, next) => {
     try {
         /** @type {import("../typedef.js").User[]} */
-        let admins = await db.select('id', 'username', 'originName', 'originUserId', 'privilege', 'attr').from('users')
+        let admins = await db.select('id', 'username', 'originName', 'originUserId', 'privilege').from('users')
             .where('privilege', 'like', '%"admin"%')
             .orWhere('privilege', 'like', '%"super"%')
+            .orWhere('privilege', 'like', '%"dev"%')
             .orWhere('privilege', 'like', '%"root"%');
         admins.forEach(i => {
             if (!i.attr.showOrigin) {
                 i.originUserId = null;
                 i.originName = null;
             }
-            delete i.attr;
         });
         res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
             success: 1,
@@ -729,7 +731,7 @@ router.get('/search', normalSearchRateLimiter, [
     checkquery('gameSort').optional().isIn(['default', 'latest', 'mostViewed', 'mostComments', 'joinedAt', 'lastOnlineTime']),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
     checkquery('createTimeTo').optional().isInt({min: 0}),
-    checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 3}),
+    checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 3, max: 100}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */

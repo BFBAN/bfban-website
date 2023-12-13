@@ -101,7 +101,7 @@
                             show-word-limit
                             icon="ios-search"
                             size="large"
-                            :placeholder="$t('report.info.onlyOneId')">
+                            :placeholder="$t(`report.labels.types.${tabs.list[index].type}.placeholder`)">
                           <template v-if="tabs.list && tabs.list[index].players.length > 0">
                             <div v-for="(option,optionIndex) in tabs.list[index].players" :key="optionIndex">
                               <Option :value="option.originName" v-if="option && option.originName">
@@ -136,7 +136,7 @@
                                size="large"
                                type="number"
                                :transfer="true"
-                               :placeholder="$t('report.info.onlyOneId')"></Input>
+                               :placeholder="$t(`report.labels.types.${tabs.list[index].type}.placeholder`)"></Input>
                       </Col>
                     </template>
                     <template v-else-if="tabs.list[index].type == 'originUserId'">
@@ -148,7 +148,7 @@
                                size="large"
                                type="number"
                                :transfer="true"
-                               :placeholder="$t('report.info.onlyOneId')"></Input>
+                               :placeholder="$t(`report.labels.types.${tabs.list[index].type}.placeholder`)"></Input>
                       </Col>
                     </template>
                   </Row>

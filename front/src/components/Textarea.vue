@@ -103,7 +103,7 @@ export default {
             matchers: [
               [
                 Node.ELEMENT_NODE, this.handlePasteLink,
-                Node.ELEMENT_NODE, this.handlePaste,
+                Node.ELEMENT_NODE, this.handlePasteImage,
               ],
             ],
           },
@@ -179,9 +179,15 @@ export default {
           // 将文本中的URL转换为<a>标签
           const insert = op.insert
           const replacedUrlText = insert.replace(regular.REGULARTYPE.link.v, function (match) {
-            return '<a href="' + match + '">' + match + '</a>'
+            return `${match}`
           })
-          ops.push({insert: replacedUrlText, attributes: {link: replacedUrlText}})
+          if (regular.check('link', replacedUrlText).code == 0)
+            ops.push({insert: replacedUrlText, attributes: {link: replacedUrlText}})
+          else
+            ops.push({insert: replacedUrlText})
+        } else if (op.insert.image && typeof op.insert === 'object') {
+          // 插入图像
+          ops.push(op)
         }
       })
       Delta.ops = ops
@@ -236,10 +242,8 @@ export default {
      */
     insertEmoji(emoji) {
       try {
-        console.log(Emoji, this.quill, emoji)
         Emoji.insertEmoji(this.quill, {emoji: emoji});
       } catch (err) {
-        //
         console.error(err)
       }
     },
@@ -278,6 +282,12 @@ export default {
       } else {
         laterContent = content;
       }
+
+      // Remove the following line feed
+      const leadingPattern = /^(<p><br><\/p>)+/;
+      const trailingPattern = /(<p><br><\/p>)+$/;
+      laterContent = laterContent.replace(leadingPattern, '').replace(trailingPattern, '');
+
       return laterContent;
     }
   },
@@ -359,6 +369,15 @@ export default {
 .ql-editor.ql-blank::before {
   opacity: .6;
   font-style: normal;
+}
+
+.ql-editor a::before {
+  content: "\f3d1";
+}
+
+.html-widget-box .ql-editor a::before {
+  content: "" !important;
+  display: none !important;
 }
 
 .ql-toolbar.ql-snow, .quill-editor {
