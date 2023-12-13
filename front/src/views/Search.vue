@@ -115,7 +115,6 @@
 
           <TabPane name="player" :label="$t('search.tabs.player')"></TabPane>
           <TabPane name="user" :label="$t('search.tabs.user')" :disabled="!isLogin"></TabPane>
-          <TabPane name="comment" :label="$t('search.tabs.comment')" :disabled="!isLogin"></TabPane>
         </Tabs>
 
         <!-- 玩家 S -->
@@ -536,15 +535,14 @@ export default new Application({
      */
     handleSearch() {
       const that = this;
-      const keyword = this.searchVal.trim();
+      const keyword = this.searchVal.replaceAll(' ', '').trim();
       let data = {keyword, type: this.searchTypeValue};
 
-      this.searchPosting = false;
-      data = Object.assign({
-        game: this.searchGameValue,
-        gameSort: this.searchGameSort,
-      }, data)
+      data = Object.assign({game: this.searchGameValue, gameSort: this.searchGameSort}, data);
+
       this.$router.push({name: this.$router.name, query: data});
+      this.searchVal = keyword;
+      this.searchPosting = false;
 
       switch (this.searchTypeValue) {
         case 'player':
@@ -608,7 +606,7 @@ export default new Application({
           return;
         }
 
-        this.$Message.error(d.message || d.data.code)
+        this.$Message.error(d.data.message || d.code)
       }).catch(err => {
         this.$Message.error(err)
       }).finally(() => {

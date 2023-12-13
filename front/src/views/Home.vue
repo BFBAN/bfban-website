@@ -28,13 +28,6 @@
               <router-link v-else :to="{name: 'signup'}">
                 <Button type="primary" v-voice-button>{{ $t("signup.title") }}</Button>
               </router-link>
-              <Divider v-if="!user.token" type="vertical"/>
-              <router-link :to="{name: 'about'}">
-                <Button type="text" v-voice-button>
-                  <Icon type="ios-help-circle-outline"/>
-                  {{ $t("home.cover.subButton") }}
-                </Button>
-              </router-link>
 
               <Row :gutter="10" style="margin-top: 50px">
                 <Col span="12">
