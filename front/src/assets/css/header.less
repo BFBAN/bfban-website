@@ -1,9 +1,10 @@
 header,
 .header {
+  position: fixed !important; // 冬季css
   user-select: none;
 }
 
-header:after {
+header::after  {
   content: " ";
   background-image: url(https://trackercdn.com/cdn/tracker.gg/holiday/trn-christmas-lights.png);
   background-repeat: repeat-x;

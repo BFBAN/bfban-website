@@ -42,7 +42,7 @@
 
       <div v-if="!loadErr">
         <Card style="margin: 15px 15px" dis-hover>
-          <p>{{ userInfo.introduction ? userInfo.introduction : '(✿◡‿◡)' }}</p>
+          <p v-html="userInfo.attr && userInfo.attr.introduction ? userInfo.attr.introduction : '(✿◡‿◡)' "></p>
         </Card>
         <template v-if="isLogin && isAdmin && showAdminUserInfo">
           <Card class="business-padding" style="margin: 10px 15px" dis-hover>

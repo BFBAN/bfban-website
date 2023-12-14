@@ -15,7 +15,7 @@
           <p><b>{{ $t('profile.account.form.privilege') }}</b></p>
           <PrivilegesTag :data="formItem.privilege"></PrivilegesTag>
         </Col>
-      </Row  >
+      </Row>
       <Divider class="profile-divider"></Divider>
 
       <div class="profile-body">
@@ -63,6 +63,23 @@
                 </Tag>
               </FormItem>
             </Card>
+          </Col>
+          <Col span="12" v-if="isAdmin">
+            <br>
+            <FormItem>
+              <div slot="label">
+                <p><b>{{ $t('profile.account.form.introduction') }}</b></p>
+              </div>
+              <Card :padding="0" dis-hover>
+                <Textarea v-model="formItem.attr.introduction"
+                          ref="informationTextarea"
+                          :toolbar="['bold']"
+                          :height="'160px'"
+                          :maxlength="500"
+                          :show-maxlength-label="true"
+                          :placeholder="$t('profile.account.form.introduction')"></Textarea>
+              </Card>
+            </FormItem>
           </Col>
         </Row>
 
@@ -278,8 +295,10 @@ import UserAvatar from "@/components/UserAvatar.vue";
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
 
 import {api, http, http_token, account_storage} from "../../assets/js";
+import Textarea from "@/components/Textarea.vue";
+import Application from "@/assets/js/application";
 
-export default {
+export default new Application({
   name: "account",
   data() {
     return {
@@ -306,7 +325,7 @@ export default {
       passwordCaptcha: "",
     }
   },
-  components: {Captcha, UserAvatar, PrivilegesTag},
+  components: {Textarea, Captcha, UserAvatar, PrivilegesTag},
   created() {
     this.http = http_token.call(this);
 
@@ -424,14 +443,12 @@ export default {
      * 保存表单
      */
     onSave() {
-      const {
-        attr = {language: this.$root.$i18n.locale, showOrigin: false, allowDM: false}
-      } = this.formItem;
-
+      console.log(this.formItem.attr)
       this.formLoad = true;
+      this.formItem.language = this.$root.$i18n.locale
       this.http.post(api["user_me"], {
         data: {
-          data: {attr}
+          data: {attr: this.formItem.attr}
         }
       }).then(res => {
         const d = res.data;
@@ -469,6 +486,7 @@ export default {
             this.$store.dispatch('setUserInfo', d.data);
 
             this.formItem = Object.assign(this.formItem, d.data);
+            this.$refs.informationTextarea.updateContent(this.formItem.attr.introduction);
           }
         }).finally(() => {
           this.userInfoLoad = false;
@@ -491,8 +509,8 @@ export default {
   },
   computed: {
     formItem: {
-      set() {
-        return true
+      set(value) {
+        this.data = value;
       },
       get() {
         this.checkLangLocalSync();
@@ -503,9 +521,11 @@ export default {
           newname: '',
           username: '',
           attr: {
+            introduction: '',
             language: ''
           }
-        }, this.$store.state.$userinfo);
+        }, this.data, this.$store.state.$userinfo);
+        console.log(this.data)
         return data;
       }
     },
@@ -516,7 +536,7 @@ export default {
       return false;
     }
   }
-}
+})
 </script>
 
 <style lang="less" scoped>

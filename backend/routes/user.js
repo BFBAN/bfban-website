@@ -449,7 +449,6 @@ async function showUserInfo(req, res, next) {
                 (req.user && userHasRoles(req.user, ['admin', 'super', 'root', 'dev']))), // no limit for admin
             reportnum: reportNum,
             statusNum: statusNum,
-            introduction: user.introduction,
         };
 
         return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
@@ -525,12 +524,9 @@ async (req, res, next) => {
         if (req.body.data.subscribes)
             update.subscribes = JSON.stringify(req.body.data.subscribes.map(i => i - 0)); // to number
         if (req.body.data.attr)
-            update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
+            update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr, true));
 
         await db('users').update(update).where({id: req.user.id});
-
-        if (req.body.data.attr)
-            update.attr = userSetAttributes({}, req.body.data.attr);
 
         res.status(200).json({success: 1, code: 'me.success', data: update});
     } catch (err) {

@@ -35,9 +35,14 @@
             <br>
             <UserAvatar :src="account.userAvatar ? `${account.userAvatar}` : ''"></UserAvatar>
 
-            <h1 :title="$t('account.username')" class="account-username">
-              {{ account.username || 'username' }}
-            </h1>
+            <div class="account-username">
+              <h1 :title="$t('account.username')">
+                {{ account.username || 'username' }}
+              </h1>
+              <template v-if="account.attr.introduction">
+                <span v-html="account.attr.introduction" style="opacity: .6;"></span>
+              </template>
+            </div>
 
             <Row :gutter="20" type="flex" justify="center" align="middle">
               <Col>
@@ -121,7 +126,7 @@
 
       <div class="content">
         <Row :gutter="isAttachedContent ? 0 : 15">
-          <Col :xm="{span: 24}" :lg="isAttachedContent ? {span: 24} : {span: 17}"
+          <Col :xm="{span: 24}" :lg="{span: 24}"
                style="width: 100%">
             <Card dis-hover :padding="0">
               <Table show-header
@@ -144,18 +149,6 @@
                     size="small"/>
               </Col>
             </Row>
-          </Col>
-          <Col :xm="{span: 22, push: 2}" :lg="isAttachedContent ? {span: 0, push: 0} : {span: 7, push: 0}">
-            <Card v-if="account.attr.introduction" dis-shadow>
-              <div v-html="account.attr.introduction"></div>
-            </Card>
-            <br v-if="account.attr.introduction">
-
-            <Card v-if="account.origin && account.origin.originName" dis-shadow>
-              <b>ea(origin) id:</b>
-              <p class="text-distinguishing-letter"><code>{{ account.origin.originName }}</code></p>
-            </Card>
-            <br v-if="account.origin && account.origin.originName">
           </Col>
         </Row>
       </div>
