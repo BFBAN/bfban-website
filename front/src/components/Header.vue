@@ -192,7 +192,6 @@ export default new Application({
   methods: {
     async loadData() {
       this.getTheme();
-      console.log(this.$route.params.uId)
     },
     /**
      * 表头账户注销

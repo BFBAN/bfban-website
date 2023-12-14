@@ -10,6 +10,8 @@
         :maxlength="maxlength"
         @change="onEditorChange"
         @ready="onEditorReady"
+        @blur="onEditorBlur"
+        @focus="onEditorBlur"
         useCustomImageHandler/>
     <Row :gutter="10" v-if="showMaxlengthLabel" style="margin: 0px 10px">
       <Col flex="1">
@@ -161,6 +163,10 @@ export default {
           ops.push({
             insert: op.attributes.link,
           })
+        } else if (op.insert && typeof op.insert === 'string') {
+          ops.push({
+            insert: op.insert,
+          })
         }
       })
       Delta.ops = ops;
@@ -177,7 +183,15 @@ export default {
       Delta.ops.forEach(op => {
         if (op.insert && typeof op.insert === 'string') {
           // 将文本中的URL转换为<a>标签
-          const insert = op.insert
+          let insert;
+          let userAgent = navigator.userAgent;
+
+          // 不同游览器剪切对象兼容
+          if (userAgent.indexOf("Edg") > -1 && userAgent.indexOf("Edge") > -1 && op.attributes)
+            insert = op.attributes.link || op.insert;
+          else
+            insert = op.insert;
+
           const replacedUrlText = insert.replace(regular.REGULARTYPE.link.v, function (match) {
             return `${match}`
           })
@@ -188,6 +202,8 @@ export default {
         } else if (op.insert.image && typeof op.insert === 'object') {
           // 插入图像
           ops.push(op)
+        } else {
+          ops.push({insert: op.insert})
         }
       })
       Delta.ops = ops
@@ -254,6 +270,12 @@ export default {
 
     },
     /**
+     * 编辑器失焦
+     */
+    onEditorBlur () {
+      this.replaceEmptyEle();
+    },
+    /**
      * 编辑器触发事件
      * @param quill
      * @param html
@@ -283,12 +305,15 @@ export default {
         laterContent = content;
       }
 
-      // Remove the following line feed
+      return laterContent;
+    },
+    /**
+     * Remove the following line feed
+     */
+    replaceEmptyEle () {
       const leadingPattern = /^(<p><br><\/p>)+/;
       const trailingPattern = /(<p><br><\/p>)+$/;
-      laterContent = laterContent.replace(leadingPattern, '').replace(trailingPattern, '');
-
-      return laterContent;
+      this.editorContent = this.editorContent.replace(leadingPattern, '').replace(trailingPattern, '');
     }
   },
   computed: {

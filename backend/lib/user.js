@@ -6,12 +6,22 @@ import config from "../config.js";
 import {userHasRoles} from "./auth.js";
 
 const xssConfig = {
-    WhiteList: {
-        img: ["class", "style", "src", "alt", "title"],
+    whiteList: {
+        p: [],
+        ul: [],
+        oi: [],
+        li: [],
+        span: [],
+        u: [],
+        i: [],
+        strong: [],
+        b: [],
+        video: ["autoplay", "controls", "crossorigin", "loop", "muted", "playsinline", "poster", "preload", "src", "height", "width",],
+        img: ["src", "alt", "style", "title", "width", "height"],
         a: ["href", "title", "target"],
     },
-    css: true,
-    allowCommentTag: false
+    css: false,
+    allowCommentTag: false,
 };
 
 /** @param {string} content */

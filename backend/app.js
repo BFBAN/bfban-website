@@ -85,7 +85,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // cors options
-app.use((req, res, next) => {
+app.use((req, res, next, version) => {
     res.header('Access-Control-Allow-Origin', req.header('Origin')); // better than wildcard *
     res.header('Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept, x-access-token' + (config.__DEBUG__ ? ', x-whosdaddy, x-whosdaddy-p' : ''));  // DEBUG
@@ -94,8 +94,6 @@ app.use((req, res, next) => {
     res.header('Cache-Control', "no-cache");
     next();
 });
-
-//app.use((req, res, next)=> {console.log(req.body); next();})
 
 app.use('/static', express.static('./test'));   // debug only
 app.use('/api', router_index);
