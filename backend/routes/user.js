@@ -412,7 +412,8 @@ async function showUserInfo(req, res, next) {
         if (!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
         const reportNum = await db('comments')
-            .countDistinct({num: 'id'})
+            .select('comments.byUserId', 'comments.type')
+            .count({num: 'id'},{method: 'estimate'})
             .where({byUserId: user.id, type: 'report'})
             .first().then(r => r.num);
         let statusNum = {};
