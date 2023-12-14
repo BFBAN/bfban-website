@@ -1,6 +1,6 @@
 {
   "name": "bfban_2.0_backend",
-  "version": "0.0.0",
+  "version": "2.1.0",
   "description": "nop",
   "main": "app.js",
   "type": "module",
