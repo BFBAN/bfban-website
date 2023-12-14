@@ -136,7 +136,7 @@
 
                 <!-- 注册 -->
                 <span v-if="a_i.type === 'register'">
-                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  <router-link :to="{name: 'account', params: {uId: `${a_i.id}`}}">
                     <u>{{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}</u>
                   </router-link>
                   {{ $t('home.activity.activities.join') }}
