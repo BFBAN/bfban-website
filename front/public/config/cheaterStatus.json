@@ -38,7 +38,7 @@
     },
     {
       "value": 3,
-      "class": "yellow",
+      "class": "warning",
       "values": [
         "3"
       ]
@@ -59,7 +59,7 @@
     },
     {
       "value": 9,
-      "class": "yellow",
+      "class": "green",
       "values": [
         "9"
       ]
