@@ -3,7 +3,7 @@
     <template v-if="imageStatus === 0">
       <div class="img-error img-box">
         <Badge class="user-select-none">
-          <Icon type="md-refresh" class="spin-icon-load" size="20"/>
+          <Icon type="md-refresh" slot="count" class="spin-icon-load" size="20"/>
           <Icon type="md-images" size="50"/>
         </Badge>
         <img class="user-select-none" style="display: none" :src="src" :alt="src" @error="onError" @load="onLoad"/>

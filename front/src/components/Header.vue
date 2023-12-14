@@ -74,7 +74,7 @@
               <PrivilegesTag :data="userinfo.privilege"></PrivilegesTag>
             </div>
             <router-link :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
-              <DropdownItem divided :disabled="$route.name == 'account'">
+              <DropdownItem divided :disabled="$route.name == 'account' && userinfo.userId == this.$route.params.uId">
                 {{ $t("header.userCenter") }}
               </DropdownItem>
             </router-link>
@@ -192,6 +192,7 @@ export default new Application({
   methods: {
     async loadData() {
       this.getTheme();
+      console.log(this.$route.params.uId)
     },
     /**
      * 表头账户注销

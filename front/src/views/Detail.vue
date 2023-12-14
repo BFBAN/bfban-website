@@ -60,7 +60,9 @@
 
                 <div>
                   <Dropdown :transfer="isMobile" placement="bottom-start">
-                    <h1 class="text-distinguishing-letter"><code>{{ cheater.originName || 'User Name' }}</code></h1>
+                    <h1 class="text-distinguishing-letter">
+                      <code :alt="cheater.originName || 'User Name'">{{ cheater.originName || 'User Name' }}</code>
+                    </h1>
 
                     <!-- 历史ID -->
                     <DropdownMenu slot="list"
@@ -1310,7 +1312,7 @@ export default new Application({
     '$route': 'loadData',
     'fastReply.selected': function () {
       this.verify.suggestion = '' + this.fastReply.selected.map(i => i);
-    }
+    },
   },
   created() {
     this.http = http_token.call(this);
@@ -1637,7 +1639,7 @@ export default new Application({
             })
 
             this.cheater = d.data;
-
+            document.title = document.title + ' - ' + this.cheater.originName + ' - ' + this.cheater.games;
             this.$refs.recordLink.generateTable(this.cheater);
             return;
           }
