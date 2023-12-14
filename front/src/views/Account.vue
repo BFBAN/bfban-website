@@ -272,7 +272,7 @@ export default new Application({
               return h('div', [
                 h(cheaterStatusView, {
                   props: {
-                    status: 1
+                    status: params.row.status
                   }
                 }, params.row.status)
               ]);

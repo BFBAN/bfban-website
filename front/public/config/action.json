@@ -52,7 +52,7 @@
     },
     {
       "value": "kill",
-      "class": "#ff9900",
+      "class": "error",
       "values": [
         "kill"
       ],
