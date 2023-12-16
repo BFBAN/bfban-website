@@ -219,7 +219,7 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
         }
     });
 
-router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+router.get('/commentFilter', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkquery('type').optional().isString().isIn(['banAppeal', 'judgement']),
         checkquery('banAppealStats').optional().isString(),
         checkquery('judgeAction').optional().isString(),

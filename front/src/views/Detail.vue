@@ -1006,7 +1006,7 @@
                     </Select>
                   </FormItem>
                 </Col>
-                <Col span="24">
+                <Col span="24" v-show="!['appeal'].includes(verify.status)">
                   <FormItem>
                     <div slot="label">
                       {{ $t(`detail.judgement.content`) }}
@@ -1035,6 +1035,14 @@
                 <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
                   <br class="desktop-hide">
                   <Poptip trigger="hover" content="content" placement="left-start" padding="30" offset="2">
+                    <Button type="primary"
+                            size="large"
+                            :long="isMobile"
+                            v-voice-button :loading="verifySpinShow"
+                            @click.stop.prevent="onJudgement">
+                      {{ $t('basic.button.submit') }}
+                    </Button>
+
                     <div slot="content" align="left">
                       <div>
                         <Checkbox v-model="verify.isUpdateinformation">{{ $t('detail.info.updateButton') }}</Checkbox>
