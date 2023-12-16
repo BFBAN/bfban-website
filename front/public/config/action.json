@@ -2,6 +2,19 @@
   "title": "action",
   "child": [
     {
+      "value": "appeal",
+      "class": "#ff9900",
+      "values": [
+        "appeal"
+      ],
+      "privilege": [
+        "admin",
+        "super",
+        "dev",
+        "volunteer"
+      ]
+    },
+    {
       "value": "suspect",
       "class": "#ff9900",
       "values": [

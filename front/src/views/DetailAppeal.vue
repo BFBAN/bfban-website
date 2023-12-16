@@ -98,10 +98,10 @@
           </FormItem>
         </Form>
 
-        <Form rel="moss_appeal" v-if="appeal.type === 'moss'"
-              ref="detailAppealForm_moss"
-              :model="appeal.fromData"
-              label-position="top">
+        <Form rel="moss_appeal" ref="detailAppealForm_moss"
+              v-if="appeal.type === 'moss'"
+              label-position="top"
+              :model="appeal.fromData">
           <Row :gutter="30">
             <Col :xs="{span: 24}" :lg="{span: 12}">
               <!-- 第一人称录屏 -->
@@ -157,7 +157,10 @@
             </Card>
           </FormItem>
         </Form>
-        <Form label-position="top" rel="farm_appeal" v-if="appeal.type === 'farm'">
+        <Form rel="farm_appeal" ref="detailAppealForm_farm"
+              v-if="appeal.type === 'farm'"
+              label-position="top"
+              :model="appeal.fromData">
           <Row :gutter="30">
             <Col :xs="{span: 24}" :lg="{span: 12}">
               <!-- BTR链接 -->
@@ -185,7 +188,10 @@
             </Card>
           </FormItem>
         </Form>
-        <Form rel="none_appeal" v-if="appeal.type === 'none'">
+        <Form rel="none_appeal"
+              ref="detailAppealForm_none"
+              v-if="appeal.type === 'none'"
+              :model="appeal.fromData">
           <!-- 玩家的申诉内容 -->
           <FormItem :label="$t('detail.appeal.info.content')"
                     :rules="{required: true, min: 10, trigger: 'change'}"
@@ -199,6 +205,8 @@
             </Card>
           </FormItem>
         </Form>
+
+        {{appeal.fromData}}
 
         <Spin size="large" fix v-show="!isLogin">
           <div>
@@ -218,6 +226,15 @@
       <br>
 
       <Row>
+        <Col>
+          <Input type="text" v-model="appeal.captcha"
+                 maxlength="4"
+                 :placeholder="$t('captcha.title')">
+            <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
+              <Captcha :id="'appealModeCaptcha'" ref="appealModeCaptcha"></Captcha>
+            </div>
+          </Input>
+        </Col>
         <Col flex="1"></Col>
         <Col>
           <ButtonGroup>
@@ -273,11 +290,12 @@ export default new Application({
           },
           content: '',
         },
+        captcha: '',
         disable: this.$store.state.configuration.detailLeftAppealPanel ?? false,
         appendix: null,
         appendixStateStyle: '',
         toPlayerId: 0,
-        type: '',
+        type: ''
       },
       cheater: {},
     }
@@ -400,9 +418,11 @@ export default new Application({
     handleAppeal() {
       try {
         const type = this.appeal.type;
-        const content = this.appeal.content || this.$refs[`${type}_textareaAppealContent`].editorContent;
+        const content = this.appeal.fromData.content || this.$refs[`${type}_textareaAppealContent`].editorContent;
 
         this.appeal.load = true;
+
+        console.log(content, this.appeal.fromData.content)
 
         // 验证表单
         this.$refs[`detailAppealForm_${type}`].validate(async (valid) => {
@@ -414,7 +434,9 @@ export default new Application({
                 toPlayerId: this.cheater.id,
                 appealType: this.appeal.type,
                 content: content
-              }
+              },
+              encryptCaptcha: this.$refs.appealModeCaptcha.hash,
+              captcha: this.appeal.captcha,
             }
           };
 
@@ -467,6 +489,7 @@ export default new Application({
           if (d.success === 1) {
             this.$Message.success(this.$t(`basic.tip['${d.code}']`));
             this.appeal.show = false;
+            this.$router.back();
           } else {
             this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
               message: d.message || ""

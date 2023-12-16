@@ -789,14 +789,6 @@
                         <Divider type="vertical"/>
                       </template>
 
-                      <!-- 申诉操作 -->
-                      <template v-if="isLogin && isAdmin && l.type === 'banAppeal'">
-                        <Button size="small" @click="openAppealDealModal(l.id)" :disabled="l.appealStatus == 'accept'">
-                          {{ $t('detail.appeal.dealAppeal') }}
-                        </Button>
-                        <Divider type="vertical"/>
-                      </template>
-
                       <Poptip width="400" transfer>
                         <Button size="small" v-voice-button>
                           <Icon type="md-share"/>
@@ -961,9 +953,9 @@
             <Form ref='verifyForm' label-position="top">
               <Row :gutter="30">
                 <Col :xs="{span:24}" :lg="{span: 12}">
+                  <!-- 判断选项 -->
                   <FormItem :label="$t(`detail.judgement.behavior`)">
-                    <Select v-model="verify.status">
-                      <!-- 判断选项 -->
+                    <Select v-model="verify.status" filterable filterByLabel :maxTagCount="10">
                       <Option :value="v_i.value"
                               :label="$t(`basic.action.${v_i.value}.text`)"
                               v-for="v_i in verify.choice" :key="v_i.value">
@@ -1005,6 +997,14 @@
                       </Option>
                     </Select>
                   </FormItem>
+                  <FormItem v-show="['appeal'].includes(verify.status)" :label="$t(`detail.judgement.appealStatus`)">
+                    <Select v-model="verify.banAppealStatus" :placeholder="$t(`detail.judgement.appealStatus`)">
+                      <Option v-for="appealStatus in ['fail', 'accept']" :key="appealStatus"
+                              :value="appealStatus">
+                        {{ appealStatus }}
+                      </Option>
+                    </Select>
+                  </FormItem>
                 </Col>
                 <Col span="24">
                   <FormItem>
@@ -1031,20 +1031,10 @@
               </Row>
 
               <Row :gutter="50">
-                <Col :xs="{span:24}" :lg="{span: 8, flex: 1}">
-
-                </Col>
+                <Col :xs="{span:24}" :lg="{span: 8, flex: 1}"></Col>
                 <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
                   <br class="desktop-hide">
                   <Poptip trigger="hover" content="content" placement="left-start" padding="30" offset="2">
-                    <Button type="primary"
-                            size="large"
-                            :long="isMobile"
-                            v-voice-button :loading="verifySpinShow"
-                            @click.stop.prevent="onJudgement">
-                      {{ (cheater.appealStatus != '1' && isAdmin) ? $t('basic.button.submit') : "处理申述" }}
-                    </Button>
-
                     <div slot="content" align="left">
                       <div>
                         <Checkbox v-model="verify.isUpdateinformation">{{ $t('detail.info.updateButton') }}</Checkbox>
@@ -1410,7 +1400,7 @@ export default new Application({
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.getTimeline();
           this.$Message.success({content: d.message || d.code, duration: 3});
           return;
@@ -1420,53 +1410,6 @@ export default new Application({
       }).catch(err => {
         this.$Message.error(err.code);
       })
-    },
-    /**
-     * 展开申诉详情
-     * @param {string} commentId
-     * @returns {Promise<void>}
-     */
-    async openAppealDealModal(commentId) {
-      // 调用API获取申诉数据
-      const timelineItem = await this.getTimeLineItemData(commentId);
-      const afterHandleTimelineContent = timelineItem.content;
-      console.log(timelineItem, afterHandleTimelineContent);
-
-      // 将获取的数据赋值到`appeal`对象上
-      this.appealdeal = Object.assign(this.appealdeal, timelineItem);
-
-      // 打开模态框
-      this.appealdealModal = true;
-    },
-    /**
-     * 管理裁决玩家申诉
-     * @returns {Promise<void>}
-     */
-    async onAdminTimeLineDealAppeal() {
-      try {
-        const response = await this.http.post(api["admin_setAppeal"], {
-          data: {
-            toPlayerId: this.cheater.id,
-            // content: this.appealdeal.admincontent, // 管理回复内容
-            // action                                 // 对申诉的操作
-          },
-        });
-
-        const d = response.data;
-
-        if (d.success === 1) {
-          this.getTimeline();
-          this.getPlayerInfo();
-
-          this.appealdealModal = false;
-          this.$Message.success({content: d.message || d.code, duration: 3});
-          return;
-        }
-
-        this.$Message.error({content: d.message || d.code, duration: 3});
-      } catch (error) {
-        this.$Message.error(error.code);
-      }
     },
     /**
      * 合并时间轴历史名称
@@ -2036,8 +1979,6 @@ export default new Application({
           };
           break;
       }
-
-      console.log(data);
 
       this.replySpinShow = true;
       this.http.post(api["player_reply"], {data}).then(res => {

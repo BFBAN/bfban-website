@@ -74,6 +74,10 @@
   },
   "basic": {
     "action": {
+      "appeal": {
+        "describe": "决定申诉结果",
+        "text": "申诉"
+      },
       "discuss": {
         "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
         "text": "待讨论"
@@ -440,6 +444,7 @@
         "3": "由于游戏外因素决定，比如头像、丑",
         "title": "不合适的裁决"
       },
+      "appealStatus": "申诉状态",
       "methods": "作弊的方法"
     },
     "messages": {
