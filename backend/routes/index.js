@@ -87,7 +87,7 @@ router.get('/statistics', [
     });
 
 /**
- * 日活
+ * active statistical
  */
 router.get('/activeStatistical', [
         checkquery('isBot').optional().isBoolean(),

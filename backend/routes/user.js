@@ -18,12 +18,38 @@ import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 
 const router = express.Router();
 // verifyCaptcha
+
+/**
+ * @swagger
+ * /api/user/signup:
+ *   post:
+ *     tags:
+ *       - 账户
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: data.username
+ *         required: true
+ *         type: string
+ *         value:
+ *       - name: data.password
+ *         required: true
+ *         type: string
+ *         value:
+ *       - name: data.originEmail
+ *         required: true
+ *         type: string
+ *         value:
+ *       - name: data.originName
+ *         required: true
+ *         type: string
+ *         value:
+ */
 router.post('/signup', [
     checkbody('data.username').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
     checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().unescape().trim().notEmpty(),
-    // checkbody('data.language').isIn(config.supportLanguages)
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
@@ -308,10 +334,10 @@ async (req, res, next) => {
         ])).length !== 0)
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
 
-        // // check duplicated binding
-        // if (await db.from('verifications').select('originUserId').where({originUserId: originUserId}).first().length > 0) {
-        //     return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
-        // }
+        // check duplicated binding
+        if (await db.from('verifications').select('originUserId').where({originUserId: originUserId}).first().length > 0) {
+            return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
+        }
 
         const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r => r.data);
         if (userGames && userGames.concat(' ').indexOf('Battlefield') === false) // does the user have battlefield?
@@ -384,6 +410,15 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/signout:
+ *   post:
+ *     tags:
+ *       - 账户
+ *     produces:
+ *       - application/json
+ */
 router.post('/signout', verifyJWT, /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
@@ -673,8 +708,6 @@ async (req, res, next) => {
         const passwdHash = await generatePassword(newpassword);
 
         await db('users').update({password: passwdHash}).where({id: verification.userId}); // store the new password into db
-
-        // TODO 移除重置的密匙
 
         return res.status(200).json({success: 1, code: 'forgetPassword.success'});
     } catch (err) {
