@@ -585,8 +585,7 @@ async (req, res, next) => {
             message: 'no such timeline'
         });
 
-        const total = await db('comments').count({num: 1})
-            .select('comments.toPlayerId', 'comments.valid', 'comments.type')
+        const total = await db.count({num: 1}).from('comments')
             .where({toPlayerId: dbId, valid: 1})
             .andWhere('type', 'like', subject).first()
             .then(r => r.num);
