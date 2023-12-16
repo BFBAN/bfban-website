@@ -123,10 +123,14 @@
 
                       <div>
                         {{ $t('list.colums.reportTime') }}
-                        <Time v-if="d.createTime" :time="d.createTime"/>
+                        <TimeView :time="d.createTime">
+                          <Time v-if="d.createTime" :time="d.createTime"/>
+                        </TimeView>
                         <Divider type="vertical"/>
                         {{ $t('list.colums.updateTime') }}
-                        <Time v-if="d.updateTime" :time="d.updateTime"/>
+                        <TimeView :time="d.updateTime">
+                          <Time v-if="d.updateTime" :time="d.updateTime"/>
+                        </TimeView>
                       </div>
                     </Col>
                     <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}" class="mobile-hide">
@@ -216,6 +220,7 @@
 import Application from "../assets/js/application";
 
 import Empty from "@/components/Empty";
+import TimeView from "@/components/TimeView.vue";
 
 import {api, http, util, voice} from '../assets/js/index'
 import cheaterStatus from '/public/config/cheaterStatus.json'
@@ -291,7 +296,7 @@ export default new Application({
       cheaterStatus: null,
     };
   },
-  components: {Empty},
+  components: {Empty, TimeView},
   watch: {
     $route: "loadData",
     gameName: function (val, oldVal) {

@@ -261,7 +261,9 @@
                 <Card :padding="10" dis-hover>
                   <!-- 第一次被举报时间 -->
                   <h3>
-                    <Time v-if="cheater.createTime" :time="cheater.createTime" type="datetime"></Time>
+                    <TimeView :time="cheater.createTime">
+                      <Time v-if="cheater.createTime" :time="cheater.createTime" type="datetime"></Time>
+                    </TimeView>
                   </h3>
                   <span>{{ $t('detail.info.firstReportTime') }}</span>
                 </Card>
@@ -270,7 +272,9 @@
                 <Card :padding="10" dis-hover>
                   <!-- 最近更新时间 -->
                   <h3>
-                    <Time v-if="cheater.updateTime" :time="cheater.updateTime" type="datetime"></Time>
+                    <TimeView :time="cheater.updateTime">
+                      <Time v-if="cheater.updateTime" :time="cheater.updateTime" type="datetime"></Time>
+                    </TimeView>
                   </h3>
                   <span>{{ $t('detail.info.recentUpdateTime') }}</span>
                 </Card>
@@ -398,8 +402,10 @@
                         <Col flex="1">
                           {{ $t('detail.appeal.info.changeName') }}
                         </Col>
-                        <Col align="right">
-                          <Time :time="l.fromTime" v-if="l.fromTime" type="datetime"></Time>
+                        <Col>
+                          <TimeView :time="l.fromTime">
+                            <Time :time="l.fromTime" v-if="l.fromTime" type="datetime"></Time>
+                          </TimeView>
                         </Col>
                       </Row>
                     </div>
@@ -512,8 +518,10 @@
                             </Poptip>
                           </Tag>
                         </Col>
-                        <Col align="right">
-                          <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
+                        <Col>
+                          <TimeView :time="l.createTime">
+                            <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
+                          </TimeView>
                         </Col>
                       </Row>
                     </div>
@@ -560,7 +568,7 @@
 
                           {{ $t('detail.appeal.info.content') }}
 
-                          <Tag>{{ l.content.appealType || 'none' }}</Tag>
+                          <Tag type="border">{{ l.content.appealType || 'none' }}</Tag>
 
                           <BusinessCard :id="l.originUserId">
                             <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
@@ -579,7 +587,9 @@
                         </Col>
 
                         <Col>
-                          <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
+                          <TimeView :time="l.createTime">
+                            <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
+                          </TimeView>
                           <Divider type="vertical"/>
                           <Tag type="border" color="primary">
                             {{ $t(`detail.appeal.deal.stats.${l.appealStatus || 'unprocessed'}`) }}
@@ -687,8 +697,10 @@
                             </Tag>
                           </template>
                         </Col>
-                        <Col align="right">
-                          <Time v-if="l.createTime" :time="l.createTime" type="datetime"></Time>
+                        <Col>
+                          <TimeView :time="l.createTime">
+                            <Time v-if="l.createTime" :time="l.createTime" type="datetime"></Time>
+                          </TimeView>
                         </Col>
                       </Row>
                     </div>
@@ -711,8 +723,10 @@
 
                           {{ $t('basic.button.reply') }}
                         </Col>
-                        <Col align="right">
-                          <Time v-if="l.createTime" :time="l.createTime" type="datetime"></Time>
+                        <Col>
+                          <TimeView :time="l.createTime">
+                            <Time v-if="l.createTime" :time="l.createTime" type="datetime"></Time>
+                          </TimeView>
                         </Col>
                       </Row>
                     </div>
@@ -1189,6 +1203,7 @@ import RecordLink from "../components/RecordLink.vue";
 import cheaterStatusView from "../components/cheaterStatusView.vue";
 import judgeActionView from "@/components/judgeActionView.vue";
 import Captcha from "../components/Captcha";
+import TimeView from "../components/TimeView.vue"
 import HtmlCore from "../components/Html";
 import HtmlWidget from "../components/HtmlWidget";
 import PrivilegesTag from "/src/components/PrivilegesTag";
@@ -1301,6 +1316,7 @@ export default new Application({
     RecordLink,
     cheaterStatusView,
     judgeActionView,
+    TimeView,
     Captcha,
     HtmlCore,
     HtmlWidget,
