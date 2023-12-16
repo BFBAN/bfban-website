@@ -175,6 +175,7 @@ import Application from "../assets/js/application";
 import Empty from "@/components/Empty";
 import vueQr from "vue-qr";
 import UserAvatar from "@/components/UserAvatar.vue";
+import TimeView from "@/components/TimeView.vue";
 import cheaterStatusView from "@/components/cheaterStatusView.vue";
 import {api, http, http_token, util} from '../assets/js/index'
 
@@ -289,12 +290,18 @@ export default new Application({
                   color: 'primary'
                 }
               }, [
-                h('Time', {
+                h(TimeView, {
                   props: {
-                    time: params.row.createTime,
-                    type: 'datetime'
+                    time: params.row.createTime
                   }
-                })
+                }, [
+                  h('Time', {
+                    props: {
+                      time: params.row.createTime,
+                      type: 'datetime'
+                    }
+                  })
+                ])
               ]);
             }
           },
@@ -310,11 +317,17 @@ export default new Application({
                   color: "primary"
                 }
               }, [
-                h('Time', {
+                h(TimeView, {
                   props: {
-                    time: params.row.updateTime
+                    time: params.row.createTime
                   }
-                })
+                }, [
+                  h('Time', {
+                    props: {
+                      time: params.row.updateTime
+                    }
+                  })
+                ])
               ]);
             }
           }
@@ -339,7 +352,7 @@ export default new Application({
   watch: {
     $route: "loadData",
   },
-  components: {PrivilegesTag, Empty, UserAvatar, cheaterStatusView, vueQr},
+  components: {PrivilegesTag, Empty, UserAvatar, cheaterStatusView, TimeView, vueQr},
   created() {
     this.http = http_token.call(this);
 

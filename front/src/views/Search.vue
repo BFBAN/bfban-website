@@ -81,7 +81,7 @@
                   </OcrWidget>
                 </Col>
                 <Col>
-                  <Button type="primary" size="small" :disabled="searchVal.length <= 3"  @click="handleSearch">
+                  <Button type="primary" size="small" :disabled="searchVal.length <= 3" @click="handleSearch">
                     <Icon type="ios-search" v-if="!modalSpinShow"/>
                     <Icon type="md-refresh spin-icon-load" v-else/>
                   </Button>
@@ -179,10 +179,14 @@
 
                       <div>
                         {{ $t('list.colums.reportTime') }}
-                        <Time v-if="d.createTime" :time="d.createTime"/>
+                        <TimeView :time="d.createTime" trigger="hover">
+                          <Time v-if="d.createTime" :time="d.createTime"/>
+                        </TimeView>
                         <Divider type="vertical"/>
                         {{ $t('list.colums.updateTime') }}
-                        <Time v-if="d.updateTime" :time="d.updateTime"/>
+                        <TimeView :time="d.updateTime" trigger="hover">
+                          <Time v-if="d.updateTime" :time="d.updateTime"/>
+                        </TimeView>
                       </div>
                     </Col>
                     <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}" class="mobile-hide">
@@ -272,10 +276,14 @@
 
                     <div>
                       {{ $t("account.joinedAt") }}
-                      <Time v-if="user.joinTime" :time="user.joinTime"/>
+                      <TimeView :time="user.joinTime" trigger="hover">
+                        <Time v-if="user.joinTime" :time="user.joinTime"/>
+                      </TimeView>
                       <Divider type="vertical"/>
                       {{ $t("account.lastOnlineTime") }}
-                      <Time v-if="user.signoutTime" :time="user.signoutTime"/>
+                      <TimeView :time="user.signoutTime" trigger="hover">
+                        <Time v-if="user.signoutTime" :time="user.signoutTime"/>
+                      </TimeView>
                     </div>
                   </Col>
                   <Col :xs="{span: 4, push: 0,pull:0}" align="right">
@@ -372,6 +380,7 @@ import PrivilegesTag from "@/components/PrivilegesTag";
 import HtmlWidget from "@/components/HtmlWidget";
 import BusinessCard from "@/components/businessCard";
 import Empty from "@/components/Empty";
+import TimeView from "@/components/TimeView.vue";
 
 import game from '../../public/config/gameName.json';
 
@@ -449,7 +458,7 @@ export default new Application({
       total: {player: 0, user: 0, comment: 0}
     }
   },
-  components: {OcrWidget, PrivilegesTag, HtmlWidget, BusinessCard, Empty},
+  components: {OcrWidget, PrivilegesTag, HtmlWidget, BusinessCard, Empty, TimeView},
   created() {
     const {keyword, type, game, skip, limit} = this.$route.query;
     this.searchVal = keyword || '';
