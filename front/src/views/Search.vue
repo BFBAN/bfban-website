@@ -609,7 +609,7 @@ export default new Application({
           this.total[this.searchTypeValue] = d.total;
 
           if (d.data.length <= 0) {
-            this.$Message.info(this.$i18n.t('search.notUserExist'))
+            this.$Message.info(this.$i18n.t('search.notExist'))
             return;
           }
           return;

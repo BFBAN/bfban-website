@@ -84,11 +84,11 @@ export default {
       <FormItem :label="$t('detail.dateView.primitive')">
         <Alert show-icon type="info">{{ $t('detail.dateView.primitiveDescription') }}</Alert>
         <Select v-model="primitiveValue">
-          <Option value="primitive" :label="timeMap.primitive">
+          <Option value="primitive" :label="timeMap.primitive.toString()">
             <p>primitive value</p>
             <Input :value="timeMap.primitive.toString()" readonly></Input>
           </Option>
-          <Option value="primitiveDateString" :label="timeMap.primitiveDateString">
+          <Option value="primitiveDateString" :label="timeMap.primitiveDateString.toString()">
             <p>primitive date string value</p>
             <Input :value="timeMap.primitiveDateString.toString()" readonly></Input>
           </Option>
