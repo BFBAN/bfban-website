@@ -956,6 +956,9 @@
                   <!-- 判断选项 -->
                   <FormItem :label="$t(`detail.judgement.behavior`)">
                     <Select v-model="verify.status" filterable filterByLabel :maxTagCount="10">
+                      <span slot="prefix">
+                        <Icon type="ios-search"></Icon>
+                      </span>
                       <Option :value="v_i.value"
                               :label="$t(`basic.action.${v_i.value}.text`)"
                               v-for="v_i in verify.choice" :key="v_i.value">

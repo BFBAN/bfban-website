@@ -2,6 +2,18 @@
   "title": "action",
   "child": [
     {
+      "value": "suspect",
+      "class": "#ff9900",
+      "values": [
+        "suspect"
+      ],
+      "privilege": [
+        "admin",
+        "super",
+        "dev"
+      ]
+    },
+    {
       "value": "appeal",
       "class": "#ff9900",
       "values": [
@@ -12,18 +24,6 @@
         "super",
         "dev",
         "volunteer"
-      ]
-    },
-    {
-      "value": "suspect",
-      "class": "#ff9900",
-      "values": [
-        "suspect"
-      ],
-      "privilege": [
-        "admin",
-        "super",
-        "dev"
       ]
     },
     {
