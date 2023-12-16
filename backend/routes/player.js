@@ -613,7 +613,9 @@ async (req, res, next) => {
         if (dbId === -1)
             return res.status(404).json({error: 1, code: 'timeline.notFound', message: 'no such timeline'});
 
-        const total = await db.count({num: 1}).from('comments')
+        const total = await db.count({num: 1})
+            .from('comments')
+            .select('toPlayerId', 'valid', 'type')
             .where({toPlayerId: dbId, valid: 1})
             .andWhere('type', 'like', subject).first()
             .then(r => r.num);
