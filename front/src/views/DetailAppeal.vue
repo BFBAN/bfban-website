@@ -304,7 +304,7 @@ export default new Application({
       // set Token Http mode
       this.http = http_token.call(this);
 
-      this.getPlayerInfo();
+      await this.getPlayerInfo();
     },
     /**
      * 获取举报玩家档案
@@ -373,7 +373,7 @@ export default new Application({
      */
     handleFileMossUpload(file) {
       const that = this;
-      that.clearFileMossUpload();
+      that.clearFileMoss();
 
       moss.verifyFileIsMoss(file).then(res => {
         if (res.code == 0) {
@@ -387,15 +387,15 @@ export default new Application({
       })
     },
     /**
-     * 清除Moss选择的数据
+     * 清除Moss File选择的数据
      */
-    clearFileMossUpload() {
+    clearFileMoss() {
       this.appeal.appendix = null;
       this.appeal.appendixStateStyle = '';
     },
     /**
      * 提交申诉
-     * @returns {Promise<void>}
+     * @returns {boolean}
      */
     handleAppeal() {
       try {
@@ -406,9 +406,7 @@ export default new Application({
 
         // 验证表单
         this.$refs[`detailAppealForm_${type}`].validate(async (valid) => {
-          if (!valid) {
-            return;
-          }
+          if (!valid) return;
 
           let appealDataFormData = {
             data: {
@@ -467,10 +465,12 @@ export default new Application({
           const d = res.data;
 
           if (d.success === 1) {
-            this.$Message.success(d.message);
+            this.$Message.success(this.$t(`basic.tip['${d.code}']`));
             this.appeal.show = false;
           } else {
-            this.$Message.error(d.message || d.code);
+            this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+              message: d.message || ""
+            }));
           }
         })
 
@@ -489,7 +489,7 @@ export default new Application({
      */
     resetAppealForm() {
       const that = this;
-      this.clearFileMossUpload();
+      this.clearFileMoss();
       this.appealType.forEach(i => {
         const appeal = `${i["value"]}_appeal`;
         const textarea = `${i["value"]}_textareaAppealContent`;

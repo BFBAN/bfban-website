@@ -229,6 +229,8 @@
                         </Col>
                         <Col flex="1">
                           <Button type="primary" size="large"
+                                  :loading="updateUserInfospinShow"
+                                  :disabled="updateUserInfospinShow"
                                   v-voice-button
                                   long @click.prevent="updateCheaterInfo">
                             {{ $t('detail.info.updateButton') }}
@@ -2078,7 +2080,7 @@ export default new Application({
       });
     },
     /**
-     * 更新玩家信息
+     * 主动更新玩家信息
      * update cheater
      */
     updateCheaterInfo() {
@@ -2090,24 +2092,24 @@ export default new Application({
       this.updateUserInfospinShow = true;
 
       this.http.post(api["player_update"], {
-        data: {
-          personaId: this.cheater.originPersonaId
-        }
+        data: {personaId: this.cheater.originPersonaId}
       }).then(res => {
         const d = res.data;
 
-        if (d.error === 0) {
+        if (d.success === 1) {
           const {cheaterGameName: originId, originUserId, avatarLink} = d.data.origin;
 
           this.cheater.originId = originId;
           this.cheater.originUserId = originUserId;
           this.cheater.avatarLink = avatarLink;
 
-          this.$Message.error(this.$i18n.t('detail.messages.updateComplete'));
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`));
           return;
         }
 
-        this.$Message.success(d.message || d.code);
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(async () => {
         this.updateUserInfospinShow = false;
         this.updateCheaterModal = false;
