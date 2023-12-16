@@ -2065,7 +2065,7 @@ export default new Application({
         message = typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : this.$t(`basic.tip['${d.code}']`, {
           message: d.message || ""
         });
-        this.$Message.error({content: message, duration: 3});
+        this.$Message.error({content: message, duration: 10});
       }).finally(() => {
         this.replySpinShow = false;
 

@@ -247,7 +247,7 @@ export default new Application({
             message: d.message || ""
           });
           this.serverReturnMessage = message;
-          this.$Message.error({content: message, duration: 5});
+          this.$Message.error({content: message, duration: 10});
         }).catch(err => {
           this.$Message.error(err);
           this.serverReturnMessage = err.toString();
