@@ -15,6 +15,8 @@ const xssConfig = {
         u: [],
         i: [],
         strong: [],
+        br: [],
+        hr: [],
         b: [],
         video: ["autoplay", "controls", "crossorigin", "loop", "muted", "playsinline", "poster", "preload", "src", "height", "width",],
         img: ["src", "alt", "style", "title", "width", "height"],
