@@ -175,7 +175,7 @@
       },
       "6": {
         "describe": "more votes are required for the above evidence",
-        "text": "需更多管理投票"
+        "text": "needs more votes from admins"
       },
       "7": {
         "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
@@ -183,14 +183,14 @@
       },
       "8": {
         "describe": "在游戏中快速解锁武器配件",
-        "text": "刷枪"
+        "text": "weapon farming"
       },
       "9": {
         "describe": "案件处于上诉中，管理将有下一步判决",
-        "text": "申诉中"
+        "text": "appeal in progress"
       },
       "all": {
-        "text": "全部"
+        "text": "all"
       }
     },
     "tip": {
@@ -467,18 +467,18 @@
       "noAppealAttachmentHint": "There is no complaint attachment for this complaint",
       "needLoginViewAttachmentsHint": "You will need to log in to your account to access the additional attachments provided by Player Complaints",
       "types": {
-        "judgement": "举报",
-        "register": "注册",
-        "report": "举报",
-        "banAppeal": "申诉"
+        "judgement": "report",
+        "register": "register",
+        "report": "report",
+        "banAppeal": "appeal"
       }
     },
     "dateView": {
-      "primitive": "原始",
-      "primitiveDescription": "服务器所在时区时间",
-      "localTimeZoneName": "当前时区名称",
-      "localeTimeDescription": "转换'原始'时间为你所在地本地区间时间",
-      "localeTime": "当前本地时间"
+      "primitive": "original",
+      "primitiveDescription": "current local time for the server",
+      "localTimeZoneName": "current time zone name",
+      "localeTimeDescription": "transfer \"original\" time to your current local time",
+      "localeTime": "current local time"
     },
     "title": "Detail"
   },
@@ -840,7 +840,7 @@
         "originName": {
           "name": "Username",
           "hint": "Platform abbreviated username or platform username",
-          "placeholder": "一次只有一个EA名称"
+          "placeholder": "only one EA id at a time"
         },
         "originPersonaId": {
           "name": "Role identity",
