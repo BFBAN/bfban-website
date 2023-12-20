@@ -915,21 +915,21 @@
                 </div>
               </Card>
 
-              <br>
-              <p style="text-align:center">or</p>
-              <br>
+<!--              <br>-->
+<!--              <p style="text-align:center">or</p>-->
+<!--              <br>-->
 
-              <Card dis-hover>
-                <Button type="primary"
-                        size="large"
-                        long
-                        :to="{'name': 'cheater_appeal'}"
-                        :disabled="!isLogin || cheater.status !== 1">
-                  {{ $t('detail.info.appeal') }}
-                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1.text`) }}</Tag>
-                </Button>
-                <p><br>{{ $t('detail.appeal.describe') }}</p>
-              </Card>
+<!--              <Card dis-hover>-->
+<!--                <Button type="primary"-->
+<!--                        size="large"-->
+<!--                        long-->
+<!--                        :to="{'name': 'cheater_appeal'}"-->
+<!--                        :disabled="!isLogin || cheater.status !== 1">-->
+<!--                  {{ $t('detail.info.appeal') }}-->
+<!--                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1.text`) }}</Tag>-->
+<!--                </Button>-->
+<!--                <p><br>{{ $t('detail.appeal.describe') }}</p>-->
+<!--              </Card>-->
             </Col>
           </Row>
 
