@@ -111,10 +111,16 @@
         <Divider type="vertical" v-show="isLogin"/>
 
         <Tooltip :content="$t('profile.chat.title')" placement="bottom-end">
-          <Header_message v-show="isLogin">
+          <HeaderMessage v-show="isLogin">
             <Icon slot="content" type="md-notifications" size="30"/>
-          </Header_message>
+          </HeaderMessage>
         </Tooltip>
+
+        <Divider type="vertical" v-if="$store.state.configuration.history"/>
+
+        <HistoryView v-if="$store.state.configuration.history">
+          <Icon type="md-filing" size="25"/>
+        </HistoryView>
 
         <Divider type="vertical"/>
 
@@ -167,7 +173,8 @@ import themes from '/public/config/themes.json'
 import menu from '/public/config/headerMenu.json'
 
 import UserAvatar from "@/components/UserAvatar.vue";
-import Header_message from "./HeaderMessage.vue";
+import HistoryView from "@/components/HistoryView.vue";
+import HeaderMessage from "./HeaderMessage.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import Application from "@/assets/js/application";
 
@@ -181,7 +188,7 @@ export default new Application({
       },
     }
   },
-  components: {Header_message, UserAvatar, PrivilegesTag},
+  components: {HistoryView, HeaderMessage, UserAvatar, PrivilegesTag},
   watch: {
     $route: "loadData",
   },

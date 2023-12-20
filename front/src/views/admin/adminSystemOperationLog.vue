@@ -69,7 +69,7 @@
 <script>
 import {api, http, http_token} from "../../assets/js";
 
-import BusinessCard from "@/components/businessCard";
+import BusinessCard from "@/components/BusinessCard.vue";
 
 export default {
   data() {

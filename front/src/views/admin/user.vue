@@ -377,7 +377,7 @@ import {api, http_token} from "../../assets/js";
 
 import languages from "/public/config/languages.json";
 
-import BusinessCard from "@/components/businessCard";
+import BusinessCard from "@/components/BusinessCard.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import Textarea from "@/components/Textarea";
 import Application from "@/assets/js/application";

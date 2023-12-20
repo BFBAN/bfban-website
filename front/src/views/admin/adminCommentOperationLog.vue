@@ -83,7 +83,7 @@
 <script>
 import {api, http_token, util} from "../../assets/js";
 
-import BusinessCard from "@/components/businessCard";
+import BusinessCard from "@/components/BusinessCard.vue";
 import Application from "@/assets/js/application";
 
 export default new Application({

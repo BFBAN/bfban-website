@@ -1,38 +1,43 @@
 <template>
-  <div class="voice" v-if="$store.state.configuration.voice">
-    <div v-for="(i, index) in voiceType" :key="index" :class="[
+  <div class="profile-body">
+    <div class="voice" v-if="$store.state.configuration.voice">
+      <div v-for="(i, index) in voiceType" :key="index" :class="[
         globalState ? '' : 'disabled'
     ]">
-      <Row :gutter="10" type="flex" align="middle" class="voice-item profile-body" v-voice-button>
-        <Col>
-          <Checkbox v-model="i.state" @on-change="switchVoiceAttr(i.loaclValue,  i)"></Checkbox>
-        </Col>
-        <Col span="8">
-          <b class="title">{{ $t(i.name) }}</b>
-          <p class="describe" v-if="i.describe">{{ $t(i.describe) }}</p>
-        </Col>
-        <Col flex="1">
-          <Slider :min="i.min"
-                  :max="i.max"
-                  show-input
-                  v-model="i.value"
-                  :disabled="!i.state"
-                  @on-change="switchVoiceAttr(i.loaclValue,  i)"></Slider>
-        </Col>
-        <template v-if="i.voiceFileName">
-          <Divider type="vertical"></Divider>
+        <Row :gutter="10" type="flex" align="middle" class="voice-item profile-body" v-voice-button>
           <Col>
-            <Select v-model="i.voiceFileName">
-              <Option v-for="(file, fileIndex) in voiceFiles" :key="fileIndex" :value="file.name">{{file.name}}.mp4</Option>
-            </Select>
+            <Checkbox v-model="i.state" @on-change="switchVoiceAttr(i.loaclValue,  i)"></Checkbox>
           </Col>
-        </template>
-      </Row>
-      <div class="voice-divider ivu-divider ivu-divider-horizontal"></div>
+          <Col span="8">
+            <b class="title">{{ $t(i.name) }}</b>
+            <p class="describe" v-if="i.describe">{{ $t(i.describe) }}</p>
+          </Col>
+          <Col flex="1">
+            <Slider :min="i.min"
+                    :max="i.max"
+                    show-input
+                    v-model="i.value"
+                    :disabled="!i.state"
+                    @on-change="switchVoiceAttr(i.loaclValue,  i)"></Slider>
+          </Col>
+          <template v-if="i.voiceFileName">
+            <Divider type="vertical"></Divider>
+            <Col>
+              <Select v-model="i.voiceFileName">
+                <Option v-for="(file, fileIndex) in voiceFiles" :key="fileIndex" :value="file.name">
+                  {{ file.name }}.mp4
+                </Option>
+              </Select>
+            </Col>
+          </template>
+        </Row>
+        <div class="voice-divider ivu-divider ivu-divider-horizontal"></div>
+      </div>
     </div>
-  </div>
-  <div v-else>
-    Disable Component
+    <div v-else>
+      <p>Disable Component</p>
+      <div><img src="@/assets/images/open-component.png" width="80%"/></div>
+    </div>
   </div>
 </template>
 
@@ -41,7 +46,7 @@ import {account_storage} from "@/assets/js";
 
 export default {
   name: "voice",
-  data () {
+  data() {
     return {
       globalState: true,
       voiceFiles: [{
@@ -96,7 +101,7 @@ export default {
     }
   },
   methods: {
-    switchAll (val) {
+    switchAll(val) {
       for (let key in this.voiceType) {
         this.voiceType[key].state = val;
 
@@ -104,12 +109,12 @@ export default {
         this.switchVoiceAttr(this.voiceType[key].loaclValue, this.voiceType[key]);
       }
     },
-    switchVoiceAttr (key, val) {
+    switchVoiceAttr(key, val) {
       if (!key) return;
-        account_storage.updateConfiguration(key, {
-          state: val.state,
-          value: val.value * .01,
-        });
+      account_storage.updateConfiguration(key, {
+        state: val.state,
+        value: val.value * .01,
+      });
     }
   }
 }

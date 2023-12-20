@@ -378,7 +378,7 @@ import Application from "../assets/js/application";
 import OcrWidget from "@/components/OcrWidget";
 import PrivilegesTag from "@/components/PrivilegesTag";
 import HtmlWidget from "@/components/HtmlWidget";
-import BusinessCard from "@/components/businessCard";
+import BusinessCard from "@/components/BusinessCard.vue";
 import Empty from "@/components/Empty";
 import TimeView from "@/components/TimeView.vue";
 

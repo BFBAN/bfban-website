@@ -49,8 +49,10 @@
           <Col span="12">
             <Card dis-hover>
               <FormItem :label="$t('account.joinedAt')">
-                <Tag>
-                  <Time :time="formItem.joinTime || new Date().getTime()"/>
+                <Tag type="border">
+                  <TimeView :time="formItem.joinTime || new Date().getTime()">
+                    <Time :time="formItem.joinTime || new Date().getTime()"/>
+                  </TimeView>
                 </Tag>
               </FormItem>
             </Card>
@@ -58,8 +60,10 @@
           <Col span="12">
             <Card dis-hover>
               <FormItem :label="$t('account.lastOnlineTime')">
-                <Tag>
-                  <Time :time="formItem.lastOnlineTime || new Date().getTime()"/>
+                <Tag type="border">
+                  <TimeView :time="formItem.lastOnlineTime || new Date().getTime()">
+                    <Time :time="formItem.lastOnlineTime || new Date().getTime()"/>
+                  </TimeView>
                 </Tag>
               </FormItem>
             </Card>

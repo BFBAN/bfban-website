@@ -1,10 +1,7 @@
 <template>
   <div>
     <Row :gutter="20">
-      <Col flex="1">
-        <p>-> 右侧功能专门为miku400(iku)设立</p>
-        <p>-> The right function is dedicated to the miku400(iku)</p>
-      </Col>
+      <Col flex="1"></Col>
       <Col>
         <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400" popper-class="files-poptip" :padding="'20px 30px'">
           <Button>
@@ -117,7 +114,7 @@
 <script>
 import {api, util, http, http_token} from "../../assets/js";
 
-import BusinessCard from "@/components/businessCard";
+import BusinessCard from "@/components/BusinessCard.vue";
 
 export default {
   data() {
@@ -250,7 +247,7 @@ export default {
         createTimeTo: this.createTimeTo
       };
     },
-    
+
   }
 }
 </script>

@@ -16,7 +16,7 @@ function formatImage(str) {
 }
 
 function formatLink(str) {
-  const linkRegex = /(?:^|\s)((?:http|https|ftp):\/\/[^\s<]+)/g;
+  const linkRegex = /(?:^|\s)((?:http|https|ftp):\/\/[^\s<,，、]+)/g;
   const convertedText = str
       .replace(linkRegex, (match, url) => ` <a href="${url}">${url}</a>`)
 

@@ -137,7 +137,7 @@ import vueQr from 'vue-qr'
 import html2canvas from 'html2canvas';
 
 import Empty from '../components/Empty.vue'
-import BusinessCard from "../components/businessCard.vue";
+import BusinessCard from "../components/BusinessCard.vue";
 import SharePlayerCell from "../components/SharePlayerCell.vue";
 
 export default new Application({

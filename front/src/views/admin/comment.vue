@@ -189,7 +189,7 @@
 <script>
 import {account_storage, api, http, http_token, util} from "../../assets/js";
 
-import BusinessCard from "@/components/businessCard";
+import BusinessCard from "@/components/BusinessCard.vue";
 import Textarea from "@/components/Textarea";
 import Application from "@/assets/js/application";
 import HtmlWidget from "@/components/HtmlWidget";

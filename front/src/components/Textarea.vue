@@ -11,7 +11,6 @@
         @change="onEditorChange"
         @ready="onEditorReady"
         @blur="onEditorBlur"
-        @focus="onEditorBlur"
         useCustomImageHandler/>
     <Row :gutter="10" v-if="showMaxlengthLabel" style="margin: 0px 10px">
       <Col flex="1">
@@ -397,6 +396,7 @@ export default {
 }
 
 .ql-editor a::before {
+  user-select: none;
   content: "\f3d1";
 }
 

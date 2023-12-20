@@ -19,7 +19,10 @@
     <h1>No application was detected</h1>
     <p>The BFBAN WEB APP is not installed</p>
   </div>
-  <div class="profile-body" v-else>Disable Component</div>
+  <div class="profile-body" v-else>
+    <p>Disable Component</p>
+    <div><img src="@/assets/images/open-component.png" width="80%"/></div>
+  </div>
 </template>
 
 <script>

@@ -7,7 +7,7 @@ import htmllink from "./HtmlLink";
 import htmllinkcard from "./HtmlLinkCard";
 import htmlvideo from "./HtmlVideo";
 import htmlplayercard from "./HtmlPlayerCard";
-import htmlfloor from "./htmlFloor";
+import htmlfloor from "./HtmlFloor.vue";
 import htmlemoji from "./HtmlEmoji"
 import privilegestag from "./PrivilegesTag";
 import {regular} from "@/assets/js";

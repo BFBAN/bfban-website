@@ -20,7 +20,8 @@
                      type="flex" justify="center" align="middle"
                      class="message-user-item">
                   <Col>
-                    <Badge :count="messageList[i.type]['num'] || 0" v-if="messageList[i.type] && messageList[i.type]['num'] > 1">
+                    <Badge :count="messageList[i.type]['num'] || 0"
+                           v-if="messageList[i.type] && messageList[i.type]['num'] > 1">
                       <Avatar icon="md-notifications"></Avatar>
                     </Badge>
                     <Avatar icon="md-notifications" v-else> {{ i.text[0] }}</Avatar>
@@ -79,7 +80,9 @@
                   <Col :span="control.open ? 22 : 24">
                     <Row>
                       <Col flex="1">
-                        <Time :time="child.time"/>
+                        <TimeView :time="child.time">
+                          <Time :time="child.time"/>
+                        </TimeView>
                       </Col>
                       <Col>
                         <a href="javascript:void(0)" v-if="child.haveRead == 0" @click="onMessageMark(child.id, 0)">
@@ -129,10 +132,11 @@
 <script>
 import Application from "/src/assets/js/application";
 import Html from "@/components/Html";
+import TimeView from "@/components/TimeView.vue";
 
 import {api, http, http_token, message} from "../../assets/js";
 
-import BusinessCard from "/src/components/businessCard.vue";
+import BusinessCard from "/src/components/BusinessCard.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import messageConf from "/public/config/message.json";
 
@@ -188,7 +192,7 @@ export default new Application({
       }
     }
   },
-  components: {BusinessCard, PrivilegesTag, Html},
+  components: {BusinessCard, PrivilegesTag, TimeView, Html},
   watch: {
     $route: "loadData",
   },

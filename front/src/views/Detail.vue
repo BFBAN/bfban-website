@@ -1200,9 +1200,9 @@ import {api, http, http_token, util, message, time, storage, account_storage, ma
 import Application from "/src/assets/js/application";
 import Empty from '../components/Empty.vue'
 import Textarea from "../components/Textarea";
-import BusinessCard from "../components/businessCard.vue";
+import BusinessCard from "../components/BusinessCard.vue";
 import RecordLink from "../components/RecordLink.vue";
-import cheaterStatusView from "../components/cheaterStatusView.vue";
+import cheaterStatusView from "../components/CheaterStatusView.vue";
 import judgeActionView from "@/components/judgeActionView.vue";
 import Captcha from "../components/Captcha";
 import TimeView from "../components/TimeView.vue"
@@ -1583,6 +1583,8 @@ export default new Application({
 
       if (!id) return;
 
+      storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
+
       // 校验,含id且1天内，则不更新游览值
       if (viewed &&
           viewed.data &&
@@ -1603,7 +1605,6 @@ export default new Application({
           data: {id}
         }
       }).then(res => {
-        storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
         this.cheater.viewNum++;
       });
     },

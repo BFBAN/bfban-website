@@ -86,9 +86,11 @@ async function submitSpam(spamFormData = SpamFormData()) {
 
 /**
  * Regular expressions are used to match repeated characters, numbers, or punctuation marks
+ * @param text content
+ * @param repeatCount Number of duplicates, not included
  * @returns {Promise<boolean>}
  */
-async function verifyDuplicateContent(text, repeatCount = 6) {
+async function verifyDuplicateContent(text, repeatCount = 7) {
     const regex = new RegExp(`([a-zA-Z0-9\\p{P}])\\1{${repeatCount},}`, 'gu');
     return regex.test(text);
 }

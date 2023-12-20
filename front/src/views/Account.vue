@@ -176,7 +176,7 @@ import Empty from "@/components/Empty";
 import vueQr from "vue-qr";
 import UserAvatar from "@/components/UserAvatar.vue";
 import TimeView from "@/components/TimeView.vue";
-import cheaterStatusView from "@/components/cheaterStatusView.vue";
+import cheaterStatusView from "@/components/CheaterStatusView.vue";
 import {api, http, http_token, util} from '../assets/js/index'
 
 import PrivilegesTag from "/src/components/PrivilegesTag";

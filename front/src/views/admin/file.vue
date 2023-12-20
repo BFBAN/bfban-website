@@ -100,7 +100,7 @@
 <script>
 import {api, util, http_token} from "../../assets/js";
 import Empty from "@/components/Empty.vue";
-import BusinessCard from "@/components/businessCard.vue";
+import BusinessCard from "@/components/BusinessCard.vue";
 
 export default {
   data() {

@@ -7,6 +7,7 @@ import {userHasRoles} from "./auth.js";
 
 const xssConfig = {
     whiteList: {
+        div: [],
         p: [],
         ul: [],
         oi: [],

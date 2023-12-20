@@ -98,10 +98,9 @@
           </FormItem>
         </Form>
 
-        <Form rel="moss_appeal" v-if="appeal.type === 'moss'"
+        <Form label-position="top" rel="moss_appeal" v-if="appeal.type === 'moss'"
               ref="detailAppealForm_moss"
-              :model="appeal.fromData"
-              label-position="top">
+              :model="appeal.fromData">
           <Row :gutter="30">
             <Col :xs="{span: 24}" :lg="{span: 12}">
               <!-- 第一人称录屏 -->
@@ -151,7 +150,7 @@
                           ref="moss_textareaAppealContent"
                           :toolbar="['bold', 'link']"
                           :height="'420px'"
-                          :maxlength="60000"
+                          :maxlength="40000"
                           :show-maxlength-label="true"
                           :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
             </Card>
@@ -181,11 +180,17 @@
                           ref="farm_textareaAppealContent"
                           :toolbar="['bold', 'link']"
                           :height="'420px'"
+                          :maxlength="40000"
+                          :show-maxlength-label="true"
                           :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
             </Card>
           </FormItem>
         </Form>
-        <Form rel="none_appeal" v-if="appeal.type === 'none'">
+        <Form label-position="top" rel="none_appeal" v-if="appeal.type === 'none'">
+          <Alert show-icon type="error">
+            此分类属于非常规申诉，在上方没有你所选对应类型时使用,在下方文本提交特殊材料，如果你属于'刷枪'或'自证'请重新更正申诉类型；使用不合适的申诉类型将导致案件被锁定，遭到管理永久无视此案件申诉
+          </Alert>
+
           <!-- 玩家的申诉内容 -->
           <FormItem :label="$t('detail.appeal.info.content')"
                     :rules="{required: true, min: 10, trigger: 'change'}"
@@ -193,8 +198,10 @@
             <Card dis-hover :padding="0">
                 <Textarea v-model="appeal.fromData.content"
                           ref="none_textareaAppealContent"
-                          :toolbar="['bold', 'link']"
-                          :height="'420px'"
+                          :toolbar=" [[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'hr'], ['link', 'image']]"
+                          :height="'520px'"
+                          :maxlength="60000"
+                          :show-maxlength-label="true"
                           :placeholder="$t('detail.appeal.placeholder.content')"></Textarea>
             </Card>
           </FormItem>
