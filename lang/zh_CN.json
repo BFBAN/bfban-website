@@ -206,7 +206,7 @@
       "bindOrigin.success": "恭喜你成功激活!",
       "server.error": "服务错误 {message}",
       "captcha.bad": "验证码模块发生错误,请联系管理员 {message}",
-      "captcha.expired": "验证码未填",
+      "captcha.expired": "验证码过期或未填",
       "captcha.wrong": "错误的验证码",
       "changeName.bad": "更改用户名称错误，请联系管理员 {message}",
       "changeName.noChance": "你已经用完了所有改名的机会",
