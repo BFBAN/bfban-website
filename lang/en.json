@@ -75,7 +75,7 @@
   "basic": {
     "action": {
       "discuss": {
-        "describe": "More discussion bettween admins and player is needed, currently uncertain.",
+        "describe": "More discussions are required from admins and players before a judgement can be issued since the incident from the above evidence contains high uncertainty.",
         "text": "Under discussion"
       },
       "farm": {
@@ -166,11 +166,11 @@
         "text": "MOSS self-proof"
       },
       "4": {
-        "describe": "举报材料不全或举报错误ID等行为，该分类不等于确认作弊",
+        "describe": "insufficient evidence or wrong id, this does not mean confirmed hacker",
         "text": "invalid report"
       },
       "5": {
-        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "describe": "More discussions are required from admins and players before a judgement can be issued since the incident from the above evidence contains high uncertainty.",
         "text": "under discussion"
       },
       "6": {
@@ -178,7 +178,7 @@
         "text": "needs more votes from admins"
       },
       "7": {
-        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "describe": "More discussions are required from admins and players before a judgement can be issued since the incident from the above evidence contains high uncertainty.",
         "text": "automatically confirmed due to abnormal data"
       },
       "8": {
