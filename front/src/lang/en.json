@@ -150,47 +150,47 @@
     },
     "status": {
       "0": {
-        "describe": "",
-        "text": "Unprocessed"
+        "describe": "前或被批准保留前，称为未处理案件",
+        "text": "unprocessed"
       },
       "1": {
-        "describe": "",
-        "text": "Confirmed hacker"
+        "describe": "“石锤”通“实锤”，坚硬无比之意，意思就是用实实在在的证据来捶打他，也有证据确凿的意思",
+        "text": "confirmed hacker"
       },
       "2": {
-        "describe": "",
-        "text": "Suspicious"
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "text": "needs self-proof"
       },
       "3": {
-        "describe": "",
-        "text": "Clean"
+        "describe": "通过证明，该案件分类到自证分类中",
+        "text": "MOSS self-proof"
       },
       "4": {
-        "describe": "",
-        "text": "Invalid report"
+        "describe": "举报材料不全或举报错误ID等行为，该分类不等于确认作弊",
+        "text": "invalid report"
       },
       "5": {
-        "describe": "",
-        "text": "Under discussion"
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "text": "under discussion"
       },
       "6": {
-        "describe": "",
-        "text": "Needs more votes"
+        "describe": "more votes are required for the above evidence",
+        "text": "需更多管理投票"
       },
       "7": {
-        "describe": "",
-        "text": "Ultra-confirmed hacker"
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "text": "数据异常自动石锤"
       },
       "8": {
-        "describe": "",
-        "text": "farm weapons"
+        "describe": "在游戏中快速解锁武器配件",
+        "text": "刷枪"
       },
       "9": {
-        "describe": "",
-        "text": "appeal"
+        "describe": "案件处于上诉中，管理将有下一步判决",
+        "text": "申诉中"
       },
       "all": {
-        "text": "all"
+        "text": "全部"
       }
     },
     "tip": {
@@ -206,7 +206,7 @@
       "bindOrigin.success": "Congratulations! Now you have activated your account!",
       "server.error": "Service error {message}",
       "captcha.bad": "An error occurred in the verification code module, please contact the administrator {message}",
-      "captcha.expired": "Verification code is not filled in",
+      "captcha.expired": "verification code expired or not filled",
       "captcha.wrong": "Wrong verification code",
       "changeName.bad": "An error occurred when changing username, please contact the admin {message}",
       "changeName.noChance": "You have run out of chance to change your name.",
@@ -224,7 +224,7 @@
       "judgement.bad": "An error occurred when judging the case, please contact the admin {message}",
       "judgement.notFound": "Cannot find the case, please contact the admin {message}",
       "judgement.permissionDenied": "You don't have permission to do this.",
-      "judgement.spam": "The submission contains sensitive content.",
+      "judgement.spam": "The content you submitted cannot pass verification and marked as spam {message}",
       "judgement.success": "Thank you for your judgement!",
       "logout.bad": "Logout failed, please contact the administrator",
       "logout.success": "Good bye!👋🏻",
@@ -236,13 +236,13 @@
       "notLang": "No translation",
       "reply.bad": "An error occurred when trying to reply, please contact the admin {message}",
       "reply.notFound": "No such reply or no such player.",
-      "reply.spam": "The submission contains sensitive content.",
+      "reply.spam": "The content you submitted cannot pass verification and marked as spam {message}",
       "reply.success": "Your reply has been submitted.",
       "report.bad": "An error occurred when trying to report, please contact the admin {message}",
       "report.error": "An error occurred when trying to report, please contact the admin {message}",
       "report.notFound": "No such user found.",
       "report.notImplement": "An error occurred, please contact the admin {message}",
-      "report.spam": "The submission contains sensitive content.",
+      "report.spam": "The content you submitted cannot pass verification and marked as spam {message}",
       "report.success": "Thank you for your report.",
       "signin.bad": "An error occurred when trying to login, please contact the admin {message}",
       "signin.noSuchUser": "No such user or incorrect password.",
@@ -256,7 +256,7 @@
       "signup.notImplement": "An error occurred, please contact the admin {message}",
       "signup.originBindingExist": "This email has been bound to an account",
       "signup.originNotFound": "Unable to find EA account based on the information provided by the user",
-      "signup.usernameExist": "User name is taken.",
+      "signup.usernameExist": "account username exists in website accounts or pre-activation accounts",
       "user.invalid": "Invalid token.",
       "user.permissionDenined": "You do not have the permission.",
       "user.tokenClientException": "User token expired or invalid.",
@@ -465,7 +465,20 @@
       "historyName": "Player name changing history",
       "verify": "Only verified",
       "noAppealAttachmentHint": "There is no complaint attachment for this complaint",
-      "needLoginViewAttachmentsHint": "You will need to log in to your account to access the additional attachments provided by Player Complaints"
+      "needLoginViewAttachmentsHint": "You will need to log in to your account to access the additional attachments provided by Player Complaints",
+      "types": {
+        "judgement": "举报",
+        "register": "注册",
+        "report": "举报",
+        "banAppeal": "申诉"
+      }
+    },
+    "dateView": {
+      "primitive": "原始",
+      "primitiveDescription": "服务器所在时区时间",
+      "localTimeZoneName": "当前时区名称",
+      "localeTimeDescription": "转换'原始'时间为你所在地本地区间时间",
+      "localeTime": "当前本地时间"
     },
     "title": "Detail"
   },
@@ -811,7 +824,6 @@
       "notFoundHintQuestion1": "But I've just met him in game/I can find him on battlefield tracker?",
       "notFoundHintQuestion2": "I can't find him on origin, what can I do?",
       "notFoundHintTitle": "We can't find this player",
-      "onlyOneId": "Only one origin account at a time",
       "reportAll": "Report all",
       "reportHacker": "Report a hacker",
       "reportOne": "Report one",
@@ -827,15 +839,18 @@
       "types": {
         "originName": {
           "name": "Username",
-          "hint": "Platform abbreviated username or platform username"
+          "hint": "Platform abbreviated username or platform username",
+          "placeholder": "一次只有一个EA名称"
         },
         "originPersonaId": {
           "name": "Role identity",
-          "hint": "Character Identification (id), which can be obtained through game platforms or third-party tools, consists of a number"
+          "hint": "Character Identification (id), which can be obtained through game platforms or third-party tools, consists of a number",
+          "placeholder": "EA角色身份id，由数字组成，一次只有一个"
         },
         "originUserId": {
           "name": "User identification",
-          "hint": "User Identification (id), which can be obtained through gaming platforms or third-party tools, consists of a number"
+          "hint": "User Identification (id), which can be obtained through gaming platforms or third-party tools, consists of a number",
+          "placeholder": "EA用户身份id，由数字组成，一次只有一个"
         }
       },
       "cheatMethod": "Cheat method",
@@ -872,7 +887,7 @@
   "search": {
     "collectionHint": "Bookmark this page (Ctrl+D or Command+D)",
     "describe": "Search a playername from the BFBAN database",
-    "notUserExist": "This player cannot be found in the database",
+    "notExist": "cannot find data",
     "placeholder": "Search for a player",
     "sort": {
       "default": "default",
@@ -941,12 +956,12 @@
       "originEmail": "Enter your Origin e-mail address",
       "originName": "Enter your Origin account name",
       "password": "At least 6 characters",
-      "username": "User names with more than 4 characters can be English, digits, underscores, and subtractions only"
+      "username": "用户名至少4位以上,仅限英文、数字、下划线、减号 或 包含名@地址的邮箱"
     },
     "registerVerification": {
       "error": "Account verification error",
-      "failure": "Wrong verify link，pleas check your Captcha",
-      "successful": "Verify successful!，Account is now unlocked, you are free to login",
+      "failure": "Verification failed. This may caused by wrong verification address, wrong verification code, expired verification code, etc. Please register again after a short period.",
+      "successful": "Verification success! Account has been unlocked, please proceed to login.",
       "title": "Verify account",
       "validation": "Verifying"
     },
