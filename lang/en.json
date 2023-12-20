@@ -150,7 +150,7 @@
     },
     "status": {
       "0": {
-        "describe": "前或被批准保留前，称为未处理案件",
+        "describe": "unprocessed since it is not judged by admins",
         "text": "unprocessed"
       },
       "1": {
@@ -179,7 +179,7 @@
       },
       "7": {
         "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
-        "text": "数据异常自动石锤"
+        "text": "automatically confirmed due to abnormal data"
       },
       "8": {
         "describe": "在游戏中快速解锁武器配件",
