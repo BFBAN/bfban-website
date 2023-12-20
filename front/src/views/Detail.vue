@@ -917,21 +917,21 @@
                 </div>
               </Card>
 
-<!--              <br>-->
-<!--              <p style="text-align:center">or</p>-->
-<!--              <br>-->
+              <!--              <br>-->
+              <!--              <p style="text-align:center">or</p>-->
+              <!--              <br>-->
 
-<!--              <Card dis-hover>-->
-<!--                <Button type="primary"-->
-<!--                        size="large"-->
-<!--                        long-->
-<!--                        :to="{'name': 'cheater_appeal'}"-->
-<!--                        :disabled="!isLogin || cheater.status !== 1">-->
-<!--                  {{ $t('detail.info.appeal') }}-->
-<!--                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1.text`) }}</Tag>-->
-<!--                </Button>-->
-<!--                <p><br>{{ $t('detail.appeal.describe') }}</p>-->
-<!--              </Card>-->
+              <!--              <Card dis-hover>-->
+              <!--                <Button type="primary"-->
+              <!--                        size="large"-->
+              <!--                        long-->
+              <!--                        :to="{'name': 'cheater_appeal'}"-->
+              <!--                        :disabled="!isLogin || cheater.status !== 1">-->
+              <!--                  {{ $t('detail.info.appeal') }}-->
+              <!--                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1.text`) }}</Tag>-->
+              <!--                </Button>-->
+              <!--                <p><br>{{ $t('detail.appeal.describe') }}</p>-->
+              <!--              </Card>-->
             </Col>
           </Row>
 
@@ -1432,8 +1432,6 @@ export default new Application({
       // 调用API获取申诉数据
       const timelineItem = await this.getTimeLineItemData(commentId);
       const afterHandleTimelineContent = timelineItem.content;
-      console.log(timelineItem, afterHandleTimelineContent);
-
       // 将获取的数据赋值到`appeal`对象上
       this.appealdeal = Object.assign(this.appealdeal, timelineItem);
 
@@ -1584,16 +1582,11 @@ export default new Application({
       const id = this.cheater.id;
 
       if (!id) return;
-
-      storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
-
+      if (viewed && viewed.code == 0)
+        storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
       // 校验,含id且1天内，则不更新游览值
-      if (viewed &&
-          viewed.data &&
-          viewed.data.value[id] < viewed.data.value[id] + 24 * 60 * 60 * 1000
-      ) {
+      if (viewed && viewed.data && viewed.data.value[id] < viewed.data.value[id] + 24 * 60 * 60 * 1000)
         return;
-      }
 
       // 创建完整 Object
       if (!(viewed && viewed.data && viewed.data.value)) {

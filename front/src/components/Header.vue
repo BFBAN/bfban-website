@@ -48,6 +48,10 @@
                      v-for="(i, index) in headerMenu.child" :key="index">
           {{ $t("header." + i.name) }}
         </router-link>
+
+        <a href="https://www.longsir.link/" target="_blank" class="link">
+          <img src="@/assets/images/ladder-season.png" height="20px" style="border-radius: 4px;margin-top: 0.2rem"/>
+        </a>
       </div>
       <div class="nav">
         <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
