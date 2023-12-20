@@ -30,96 +30,102 @@
 
     <template v-if="account">
       <div dis-hover bordered>
-        <Row type="flex" justify="center" align="middle">
-          <Col justify="center" align="middle">
-            <br>
-            <UserAvatar :src="account.userAvatar ? `${account.userAvatar}` : ''"></UserAvatar>
+        <Confetti :y="20" :emojiCount="300" :switch="new Date(account.joinTime).getTime() < new Date('2020 01-01').getTime() || account.id <= 1000">
+          <Row type="flex" justify="center" align="middle">
+            <Col justify="center" align="middle">
+              <br>
+              <UserAvatar :src="account.userAvatar ? `${account.userAvatar}` : ''"></UserAvatar>
 
-            <div class="account-username">
-              <h1 :title="$t('account.username')">
-                {{ account.username || 'username' }}
-              </h1>
-              <template v-if="account.attr.introduction">
-                <span v-html="account.attr.introduction" style="opacity: .6;"></span>
-              </template>
-            </div>
+              <div class="account-username">
+                <h1 :title="$t('account.username')">
+                  {{ account.username || 'username' }}
+                </h1>
+                <template v-if="account.attr.introduction">
+                  <span v-html="account.attr.introduction" style="opacity: .6;"></span>
+                </template>
+              </div>
 
-            <Row :gutter="20" type="flex" justify="center" align="middle">
-              <Col>
-                <PrivilegesTag :data="account.privilege" v-if="account.privilege"></PrivilegesTag>
-                <p v-else>-</p>
-                <p class="account-info-p">{{ $t("account.role") }}</p>
-              </Col>
-              <Divider type="vertical"/>
-              <Col>
-                <Tag type="border" size="large" color="primary" v-if="account.joinTime">
-                  <Time :time="account.joinTime || new Date()"/>
-                </Tag>
-                <p v-else>-</p>
-                <p class="account-info-p">{{ $t("account.joinedAt") }}</p>
-              </Col>
-              <Divider type="vertical"/>
-              <Col>
-                <Tag type="border" size="large" color="#df22ff" v-if="account.lastOnlineTime">
-                  <Time :time="account.lastOnlineTime || new Date()"/>
-                </Tag>
-                <p v-else>-</p>
-                <p class="account-info-p">{{ $t("account.lastOnlineTime") }}</p>
-              </Col>
-              <Divider type="vertical"/>
-              <Col>
-                <Poptip :transfer="true">
-                  <h3>{{ account.reportnum || '-' }}
-                    <Icon type="md-more"/>
-                  </h3>
-                  <Row :gutter="15" type="flex" justify="center" align="middle" slot="content"
-                       v-if="account.statusNum"
-                       style="text-align: center">
-                    <template v-if="isLogin">
-                      <Col>
-                        <b>{{ account.statusNum['0'] || '-' }}</b>
-                        <p class="account-info-p">{{ $t(`basic.status.0.text`) }}</p>
-                      </Col>
-                      <Divider type="vertical"/>
-                      <Col>
-                        <b>{{ account.statusNum['1'] || '-' }}</b>
-                        <p class="account-info-p">{{ $t(`basic.status.1.text`) }}</p>
-                      </Col>
-                      <Divider type="vertical"/>
-                      <Col>
-                        <b>{{ account.statusNum['4'] || '-' }}</b>
-                        <p class="account-info-p">{{ $t(`basic.status.4.text`) }}</p>
-                      </Col>
-                      <Divider type="vertical"/>
-                      <Col>
-                        <b>{{
-                            account.reportnum - (account.statusNum['0'] + account.statusNum['1'] + account.statusNum['4'])
-                          }}</b>
-                        <p class="account-info-p">···</p>
-                      </Col>
-                      <Col>=</Col>
-                      <Col>
-                        <b>{{ account.reportnum || '-' }}</b>
-                        <p class="account-info-p">{{ $t("account.reportNum") }}</p>
-                      </Col>
-                    </template>
-                    <Spin size="large" v-show="!isLogin">
-                      <div>
-                        <Icon type="md-lock" size="30"/>
-                      </div>
-                      <Button :to="{name: 'signin'}">{{ $t("header.signin") }}</Button>
-                    </Spin>
-                  </Row>
-                </Poptip>
-                <p class="account-info-p">{{ $t("account.reportNum") }}</p>
-              </Col>
-              <Divider type="vertical"/>
-              <Col>
-                <vue-qr :text="url" :size="60" :margin="3" v-if="url"></vue-qr>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+              <Row :gutter="20" type="flex" justify="center" align="middle">
+                <Col>
+                  <PrivilegesTag :data="account.privilege" v-if="account.privilege"></PrivilegesTag>
+                  <p v-else>-</p>
+                  <p class="account-info-p">{{ $t("account.role") }}</p>
+                </Col>
+                <Divider type="vertical"/>
+                <Col>
+                  <Tag type="border" size="large" color="primary" v-if="account.joinTime">
+                    <TimeView :time="account.joinTime || new Date()">
+                      <Time :time="account.joinTime || new Date()"/>
+                    </TimeView>
+                  </Tag>
+                  <p v-else>-</p>
+                  <p class="account-info-p">{{ $t("account.joinedAt") }}</p>
+                </Col>
+                <Divider type="vertical"/>
+                <Col>
+                  <Tag type="border" size="large" color="#df22ff" v-if="account.lastOnlineTime">
+                    <TimeView :time="account.lastOnlineTime || new Date()">
+                      <Time :time="account.lastOnlineTime || new Date()"/>
+                    </TimeView>
+                  </Tag>
+                  <p v-else>-</p>
+                  <p class="account-info-p">{{ $t("account.lastOnlineTime") }}</p>
+                </Col>
+                <Divider type="vertical"/>
+                <Col>
+                  <Poptip :transfer="true">
+                    <h3>{{ account.reportnum || '-' }}
+                      <Icon type="md-more"/>
+                    </h3>
+                    <Row :gutter="15" type="flex" justify="center" align="middle" slot="content"
+                         v-if="account.statusNum"
+                         style="text-align: center">
+                      <template v-if="isLogin">
+                        <Col>
+                          <b>{{ account.statusNum['0'] || '-' }}</b>
+                          <p class="account-info-p">{{ $t(`basic.status.0.text`) }}</p>
+                        </Col>
+                        <Divider type="vertical"/>
+                        <Col>
+                          <b>{{ account.statusNum['1'] || '-' }}</b>
+                          <p class="account-info-p">{{ $t(`basic.status.1.text`) }}</p>
+                        </Col>
+                        <Divider type="vertical"/>
+                        <Col>
+                          <b>{{ account.statusNum['4'] || '-' }}</b>
+                          <p class="account-info-p">{{ $t(`basic.status.4.text`) }}</p>
+                        </Col>
+                        <Divider type="vertical"/>
+                        <Col>
+                          <b>{{
+                              account.reportnum - (account.statusNum['0'] + account.statusNum['1'] + account.statusNum['4'])
+                            }}</b>
+                          <p class="account-info-p">···</p>
+                        </Col>
+                        <Col>=</Col>
+                        <Col>
+                          <b>{{ account.reportnum || '-' }}</b>
+                          <p class="account-info-p">{{ $t("account.reportNum") }}</p>
+                        </Col>
+                      </template>
+                      <Spin size="large" v-show="!isLogin">
+                        <div>
+                          <Icon type="md-lock" size="30"/>
+                        </div>
+                        <Button :to="{name: 'signin'}">{{ $t("header.signin") }}</Button>
+                      </Spin>
+                    </Row>
+                  </Poptip>
+                  <p class="account-info-p">{{ $t("account.reportNum") }}</p>
+                </Col>
+                <Divider type="vertical"/>
+                <Col>
+                  <vue-qr :text="url" :size="60" :margin="3" v-if="url"></vue-qr>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Confetti>
       </div>
 
       <br/>
@@ -177,6 +183,7 @@ import vueQr from "vue-qr";
 import UserAvatar from "@/components/UserAvatar.vue";
 import TimeView from "@/components/TimeView.vue";
 import cheaterStatusView from "@/components/CheaterStatusView.vue";
+import Confetti from "@/components/Confetti.vue";
 import {api, http, http_token, util} from '../assets/js/index'
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
@@ -352,7 +359,7 @@ export default new Application({
   watch: {
     $route: "loadData",
   },
-  components: {PrivilegesTag, Empty, UserAvatar, cheaterStatusView, TimeView, vueQr},
+  components: {PrivilegesTag, Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, vueQr},
   created() {
     this.http = http_token.call(this);
 
@@ -498,7 +505,8 @@ export default new Application({
       return !this.account.attr.introduction && !this.account.origin;
     }
   }
-});
+})
+;
 </script>
 
 <style lang="less">

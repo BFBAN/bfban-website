@@ -108,6 +108,7 @@ export default {
 <style scoped lang="less">
 u.spelling {
   text-decoration: dashed underline;
+  cursor: pointer;
 }
 
 .time-view-form {

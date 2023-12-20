@@ -121,7 +121,7 @@ export default {
 
       switch (this.mode) {
         case "code":
-          vDomString = `<div><Input style="margin: -1px; width: calc(100% + 2px)" readonly type="textarea" :autosize="true" :value="this.html"></Input></div>`;
+          vDomString = `<div class="ql-input"><Input readonly type="textarea" :autosize="true" :value="this.html"></Input></div>`;
           break;
         case "text":
           vDomString = `<div class="ql-editor"><p>${vDom.getElementsByTagName("body")[0]?.innerText}</p></div>`;
@@ -350,6 +350,16 @@ export default {
     opacity: .5;
     width: calc(100% + 30px) !important;
     margin: 10px -15px 10px -15px !important;
+  }
+
+  .ql-input {
+    margin: -1px;
+    width: calc(100% + 2px);
+  }
+
+  .ql-input, .ql-input textarea {
+    border-right-color: transparent !important;
+    background-color: transparent !important;
   }
 }
 </style>

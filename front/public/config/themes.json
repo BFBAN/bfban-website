@@ -6,11 +6,11 @@
       "type": "local",
       "name": "dark",
       "img": "public/theme/dark/main.png",
-      "version": "0.4",
+      "version": "0.5",
       "themeColor": "#000000",
       "authorInfo": {
         "authorName": "BFBAN",
-        "authorUpdate": "2022-2-28"
+        "authorUpdate": "2023-12-21"
       },
       "src": ""
     },
@@ -91,10 +91,10 @@
       "name": "BlueDeep",
       "img": "public/theme/BlueDeep/main.png",
       "themeColor": "#364e80",
-      "version": "0.1",
+      "version": "0.2",
       "authorInfo": {
         "authorName": "Cabbagelol",
-        "authorUpdate": "2023-6-15"
+        "authorUpdate": "2023-12-21"
       },
       "src": ""
     }

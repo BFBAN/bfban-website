@@ -83,7 +83,9 @@
                           <Row :gutter="5" type="flex" align="middle"
                                style="padding: 0 16px;margin: 10px 0 ; width:100%">
                             <Col class="mobile-hide">
-                              <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
+                              <TimeView :time="origin.fromTime">
+                                <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
+                              </TimeView>
                             </Col>
                             <Col flex="1" class="mobile-hide">
                               <Divider dashed style="margin: 0"/>
@@ -444,11 +446,13 @@
                               <Row :gutter="5" type="flex" align="middle"
                                    style="padding: 0 16px;margin: 10px 0 ; width:100%">
                                 <Col>
-                                  <Time :time="origin.fromTime"
-                                        v-if="origin.fromTime && l.fromTime != origin.fromTime"></Time>
-                                  <b v-else>
-                                    <Time :time="origin.fromTime" v-if="origin.fromTime"></Time>
-                                  </b>
+                                  <TimeView :time="origin.fromTime">
+                                    <Time :time="origin.fromTime"
+                                          v-if="origin.fromTime && l.fromTime != origin.fromTime"></Time>
+                                    <b v-else>
+                                      <Time :time="origin.fromTime" v-if="origin.fromTime"></Time>
+                                    </b>
+                                  </TimeView>
                                 </Col>
                                 <Col flex="1">
                                   <Divider dashed style="margin: 0"/>
@@ -1580,10 +1584,14 @@ export default new Application({
     onUpdateViewed() {
       let viewed = storage.get("viewed");
       const id = this.cheater.id;
+      const historyTime = new Date().getTime();
 
       if (!id) return;
-      if (viewed && viewed.code == 0)
-        storage.set("viewed", {...viewed.data.value, [id]: new Date().getTime()});
+      if (viewed)
+        storage.set("viewed", viewed.data.constructor('value') ? {
+          ...viewed.data.value,
+          [id]: historyTime
+        } : {[id]: historyTime})
       // 校验,含id且1天内，则不更新游览值
       if (viewed && viewed.data && viewed.data.value[id] < viewed.data.value[id] + 24 * 60 * 60 * 1000)
         return;

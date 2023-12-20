@@ -157,14 +157,17 @@ export default new Application({
     PrivilegesTag,
     UserAvatar
   },
-  created() {
-    const {pagename} = this.$route.params;
-
-    if (pagename == undefined) {
-      this.onMenuActive('account');
-      return;
+  watch: {
+    '$route': {
+      handler (val, oldVal) {
+        const {pagename = 'account'} = val.params;
+        if (!oldVal) return;
+        this.onMenuActive(pagename);
+      },
     }
-
+  },
+  created() {
+    const {pagename = 'account'} = this.$route.params;
     this.onMenuActive(pagename);
   },
   methods: {

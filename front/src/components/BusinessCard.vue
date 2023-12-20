@@ -7,38 +7,40 @@
           @on-popper-show="getUserInfo">
     <slot></slot>
     <div slot="content" class="business">
-      <Banner :height="150">
-        <div v-if="!loadErr" class="business-padding business-padding-perpendicularity">
-          <Row>
-            <Col flex="1">
-              <h2>
-                <Row :gutter="10">
-                  <Col v-if="userInfo.userAvatar">
-                    <Avatar shape="square"
-                            size="20"
-                            icon="ios-person"
-                            :src="`${userInfo.userAvatar}`"></Avatar>
-                  </Col>
-                  <Col flex="1">
-                    <a :href="`/account/${userInfo.id}`" target="_blank">{{ userInfo.username }}</a>
-                  </Col>
-                </Row>
-              </h2>
-              <PrivilegesTag :data="userInfo.privilege" v-if="userInfo.privilege"></PrivilegesTag>
-            </Col>
-            <Col>
-              # {{ userInfo.id }}
-            </Col>
-          </Row>
-        </div>
-        <template v-if="loadErr">
-          <Row>
-            <Col align="center">
-              <Icon type="md-alert" size="40" color="red"/>
-            </Col>
-          </Row>
-        </template>
-      </Banner>
+      <Confetti :y="0" :emojiCount="200" :switch="new Date(userInfo.joinTime).getTime() < new Date('2020 01-01').getTime() || userInfo.id <= 1000 && showStatus">
+        <Banner :height="150">
+          <div v-if="!loadErr" class="business-padding business-padding-perpendicularity">
+            <Row>
+              <Col flex="1">
+                <h2>
+                  <Row :gutter="10">
+                    <Col v-if="userInfo.userAvatar">
+                      <Avatar shape="square"
+                              size="20"
+                              icon="ios-person"
+                              :src="`${userInfo.userAvatar}`"></Avatar>
+                    </Col>
+                    <Col flex="1">
+                      <a :href="`/account/${userInfo.id}`" target="_blank">{{ userInfo.username }}</a>
+                    </Col>
+                  </Row>
+                </h2>
+                <PrivilegesTag :data="userInfo.privilege" v-if="userInfo.privilege"></PrivilegesTag>
+              </Col>
+              <Col>
+                # {{ userInfo.id }}
+              </Col>
+            </Row>
+          </div>
+          <template v-if="loadErr">
+            <Row>
+              <Col align="center">
+                <Icon type="md-alert" size="40" color="red"/>
+              </Col>
+            </Row>
+          </template>
+        </Banner>
+      </Confetti>
 
       <div v-if="!loadErr">
         <Card style="margin: 15px 15px" dis-hover>
@@ -89,6 +91,7 @@ import {api, http, http_token, storage} from '../assets/js/index';
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import Application from "@/assets/js/application";
 import Banner from "@/components/Banner.vue";
+import Confetti from "@/components/Confetti.vue";
 
 export default new Application({
   props: {
@@ -110,12 +113,13 @@ export default new Application({
     return {
       localBusinessMap: {},
       userInfo: {},
+      showStatus: false,
       spinShow: false,
       loadErr: false,
       type: 'user',
     }
   },
-  components: {PrivilegesTag, Banner},
+  components: {PrivilegesTag, Banner, Confetti},
   created() {
     this.http = http_token.call(this);
     this.type = this.isAdminL2 ? "admin" : "user";
@@ -127,6 +131,8 @@ export default new Application({
     getUserInfo() {
       const name = 'business';
       let localBusinessCardData = storage.session().get(name);
+
+      this.showStatus = !this.showStatus;
 
       // 本地持久取
       if (localBusinessCardData.code == 0) {

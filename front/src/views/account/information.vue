@@ -297,6 +297,7 @@
 import Captcha from "../../components/Captcha";
 import UserAvatar from "@/components/UserAvatar.vue";
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
+import TimeView from "@/components/TimeView.vue";
 
 import {api, http, http_token, account_storage} from "../../assets/js";
 import Textarea from "@/components/Textarea.vue";
@@ -329,7 +330,7 @@ export default new Application({
       passwordCaptcha: "",
     }
   },
-  components: {Textarea, Captcha, UserAvatar, PrivilegesTag},
+  components: {Textarea, TimeView, Captcha, UserAvatar, PrivilegesTag},
   created() {
     this.http = http_token.call(this);
 
@@ -529,7 +530,6 @@ export default new Application({
             language: ''
           }
         }, this.data, this.$store.state.$userinfo);
-        console.log(this.data)
         return data;
       }
     },

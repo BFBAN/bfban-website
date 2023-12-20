@@ -15,23 +15,23 @@ export default {
   },
   components: {Empty},
   watch: {
-    '$route': 'getHisory',
+    '$route': 'getHistory',
   },
   created() {
     this.http = http_token.call(this);
 
-    this.getHisory()
+    this.getHistory()
   },
   methods: {
     /**
      * 取得历史列表
      */
-    async getHisory() {
+    async getHistory() {
       const {skip, limit} = this;
       let localData = storage.get('viewed');
       this.list = [];
 
-      if (localData.code != 0 && !localData.data.value) return;
+      if (localData.code != 0 && !localData.data?.value) return;
       if (!this.$store.state.configuration.history) return;
 
       let dbIds = Object.entries(localData.data.value)
@@ -69,7 +69,7 @@ export default {
       <Row>
         <Col flex="1">{{ $t('profile.history.title') }}</Col>
         <Col>
-          <Button @click="getHisory" size="small" :disabled="load">
+          <Button @click="getHistory" size="small" :disabled="load">
             <Icon type="md-refresh" size="15" :class="[
                 load ? 'spin-icon-load' : ''
             ]"/>
@@ -130,7 +130,7 @@ export default {
   margin: 10px 0;
 
   .history-view-item {
-    margin-bottom: 3px;
+    margin-bottom: 6px;
   }
 }
 </style>
