@@ -909,6 +909,8 @@
                 <h1 style="text-align: center">📥</h1>
                 <p>{{ $t('detail.info.appealManual1') }}</p>
                 <br>
+                <p>{{ $t('detail.appeal.describe') }}</p>
+                <br>
                 <div>
                   <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1.text`) }}</Tag>
                   <Tag :size="'default'" type="border">{{ $t(`basic.status.2.text`) }}</Tag>
