@@ -32,7 +32,7 @@ export default {
       this.list = [];
 
       if (localData.code != 0 && !localData.data?.value) return;
-      if (!this.$store.state.configuration.history) return;
+      if (this.load && !this.$store.state.configuration.history) return;
 
       let dbIds = Object.entries(localData.data.value)
           .sort((a, b) => a[1] > b[1] ? 1 : -1)
@@ -61,7 +61,7 @@ export default {
 </script>
 
 <template>
-  <Poptip trigger="click" width="300">
+  <Poptip trigger="click" width="300" @on-popper-show="getHistory">
     <Tooltip :content="$t('profile.history.title')" placement="bottom-end">
       <slot></slot>
     </Tooltip>

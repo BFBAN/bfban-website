@@ -1587,11 +1587,8 @@ export default new Application({
       const historyTime = new Date().getTime();
 
       if (!id) return;
-      if (viewed)
-        storage.set("viewed", viewed.data.constructor('value') ? {
-          ...viewed.data.value,
-          [id]: historyTime
-        } : {[id]: historyTime})
+      storage.set("viewed", viewed && viewed.data ? {...viewed.data.value, [id]: historyTime} : {[id]: historyTime})
+
       // 校验,含id且1天内，则不更新游览值
       if (viewed && viewed.data && viewed.data.value[id] < viewed.data.value[id] + 24 * 60 * 60 * 1000)
         return;
