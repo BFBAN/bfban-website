@@ -317,11 +317,11 @@ async (req, res, next) => {
         });
 
         // check for spam content
-        if (await verifyDuplicateContent(req.body.data.description)) return res.status(403).json({
-            error: 1,
-            code: 'report.spam',
-            message: 'Duplicate content detected'
-        });
+        // if (await verifyDuplicateContent(req.body.data.description)) return res.status(403).json({
+        //     error: 1,
+        //     code: 'report.spam',
+        //     message: 'Duplicate content detected'
+        // });
         // if (await checkSpam(toSpam(req, {spamType: 'report', content: req.body.data.description})))
         //     return res.status(403).json({
         //         error: 1,
