@@ -656,9 +656,19 @@
           "conditions": "- 创建时间在2020 1月1日前<br>- 用户id在1000以内(包含1000)<br>(以上条件任一满足既可)",
           "description": "最早一批注册联ban先锋用户"
         },
+        "open_chat": {
+          "name": "开放聊天",
+          "conditions": "- 打开账户聊天",
+          "description": "欢迎随时与我对话"
+        },
+        "one_search_player": {
+          "name": "首次搜索玩家",
+          "conditions": "- 使用网站搜索案件",
+          "description": "使用网站搜索玩家，并查看案件"
+        },
         "report_assemble": {
           "name": "举报",
-          "description": "提交一定举报数量并且石锤，获取成就"
+          "description": "提交一定举报数量并且石锤，获取成就 <i>-愿举报越来越少</i>"
         },
         "report_l1" : {
           "name": "举报萌新",

@@ -8,6 +8,18 @@ import config from "../config.js";
 
 const router = express.Router();
 const achievementConfig = {
+    'open_chat': {
+        another: ['old_user'],
+        points: 0.5,
+        conditions(req, res, next) {
+            return req.user.attr && req.user.attr.allowDM;
+        },
+    },
+    'one_search_player': {
+        another: ['one_search_player'],
+        points: 0.5,
+        conditions: (req, res, next) => true,
+    },
     'old_user': {
         another: ['old_user'],
         points: 10,

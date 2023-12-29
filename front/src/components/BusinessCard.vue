@@ -32,8 +32,6 @@
                 # {{ userInfo.id }}
               </Col>
             </Row>
-
-            <AchievementsTag :data="userInfo.attr.achievements || []" v-if="userInfo.attr && userInfo.attr.achievements"></AchievementsTag>
           </div>
           <template v-if="loadErr">
             <Row>
@@ -69,7 +67,9 @@
           </Card>
         </template>
         <Row class="business-padding business-padding-perpendicularity">
-          <Col flex="auto"></Col>
+          <Col flex="auto">
+            <AchievementsTag trigger="hover" :data="userInfo.attr.achievements || []" v-if="userInfo.attr && userInfo.attr.achievements"></AchievementsTag>
+          </Col>
           <Col>
             <router-link :to="{path: '/account/' + userInfo.id, query: {repeat: true}}">
               <Button>

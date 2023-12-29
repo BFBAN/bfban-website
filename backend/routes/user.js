@@ -475,7 +475,7 @@ async function showUserInfo(req, res, next) {
             privilege: user.privilege,
             joinTime: user.createTime,
             lastOnlineTime: user.updateTime,
-            subscribes: user.subscribes,
+            subscribes: (req.user && req.user.id === user.id) ? user.subscribes : null,
             origin: user.attr.showOrigin === true // user set it public
             || (req.user && userHasRoles(req.user, ['admin', 'super', 'root', 'dev'])) // no limit for admin
             || (req.user && req.user.id === user.id) ? // for self

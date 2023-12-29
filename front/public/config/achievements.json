@@ -12,19 +12,53 @@
   },
   "child": [
     {
+      "value": "open_chat",
+      "isHidden": true,
+      "isShowCard": false,
+      "rarity": "normal",
+      "acquisition": [
+        "active"
+      ],
+      "tag": [
+        "user"
+      ]
+    },
+    {
+      "value": "one_search_player",
+      "isHidden": true,
+      "isShowCard": false,
+      "rarity": "normal",
+      "acquisition": [
+        "active"
+      ],
+      "tag": [
+        "user"
+      ]
+    },
+    {
       "value": "old_user_l2",
       "iconPath": "old_user.png",
       "isHidden": true,
+      "isShowCard": true,
       "rarity": "normal",
-      "acquisition": ["passive"],
-      "tag": []
+      "acquisition": [
+        "passive"
+      ],
+      "tag": [
+        "user"
+      ]
     },
     {
       "value": "old_user",
       "iconPath": "old_user.png",
+      "isShowCard": true,
       "rarity": "preciousness",
-      "acquisition": ["active"],
-      "tag": []
+      "acquisition": [
+        "active"
+      ],
+      "tag": [
+        "user"
+      ]
     },
     {
       "value": "report_assemble",
@@ -32,8 +66,11 @@
         {
           "value": "report_l1",
           "iconPath": "report_l1.png",
+          "isShowCard": true,
           "rarity": "normal",
-          "acquisition": ["active"],
+          "acquisition": [
+            "active"
+          ],
           "tag": [
             "report"
           ]
@@ -41,8 +78,11 @@
         {
           "value": "report_l2",
           "iconPath": "report_l1.png",
+          "isShowCard": true,
           "rarity": "rare",
-          "acquisition": ["active"],
+          "acquisition": [
+            "active"
+          ],
           "tag": [
             "report"
           ]
@@ -50,8 +90,11 @@
         {
           "value": "report_l3",
           "iconPath": "report_l2.png",
+          "isShowCard": true,
           "rarity": "rare",
-          "acquisition": ["active"],
+          "acquisition": [
+            "active"
+          ],
           "tag": [
             "report"
           ]
@@ -59,8 +102,11 @@
         {
           "value": "report_l4",
           "iconPath": "report_l2.png",
+          "isShowCard": true,
           "rarity": "preciousness",
-          "acquisition": ["active"],
+          "acquisition": [
+            "active"
+          ],
           "tag": [
             "report"
           ]
@@ -68,8 +114,11 @@
         {
           "value": "report_l5",
           "iconPath": "report_l3.png",
+          "isShowCard": true,
           "rarity": "preciousness",
-          "acquisition": ["active"],
+          "acquisition": [
+            "active"
+          ],
           "tag": [
             "report"
           ]

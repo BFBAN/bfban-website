@@ -1,6 +1,11 @@
 <template>
   <Tabs :value="'1'">
     <TabPane :label="$t('profile.achievement.title')" class="profile-body" name="1">
+      <template v-if="Object.keys(userAchievements).length > 0">
+        <AchievementsTag :data="userAchievements"></AchievementsTag>
+        <Divider></Divider>
+      </template>
+
       <Row :gutter="20" v-for="(i,index) in achievements.child.filter(i => !i.isHidden)" :key="index"
            class="achievement-item">
         <template>
@@ -9,9 +14,7 @@
               <h3>
                 <b>{{ $t(`profile.achievement.list.${i.value}.name`) }}</b>
               </h3>
-              <p class="description" v-if="i.child">
-                <template>{{ $t(`profile.achievement.list.${i.value}.description`) }}</template>
-              </p>
+              <p class="description" v-if="i.child" v-html="$t(`profile.achievement.list.${i.value}.description`)"></p>
               <p class="conditions">
                 <span v-if="!i.child" v-html="$t(`profile.achievement.list.${i.value}.conditions`)"></span>
               </p>
@@ -20,8 +23,8 @@
                   {{ $t(`profile.achievement.rarity.${i.rarity}`) }}
                 </Tag>
               </template>
-              <Tag type="border" v-if="i.unlock" >
-                {{ $t('profile.achievement.acquisitionTime')}}
+              <Tag type="border" v-if="i.unlock">
+                {{ $t('profile.achievement.acquisitionTime') }}
                 <Time :time="i.unlock.acquisitionTime"></Time>
               </Tag>
             </AchievementView>
@@ -44,7 +47,9 @@
                   </Step>
                   <div class="more" v-if="i.child.length >= 3">
                     <Poptip slot="content" transfer width="300">
-                      <a href="javascript:void(0)"><Icon type="md-more" size="20"/></a>
+                      <a href="javascript:void(0)">
+                        <Icon type="md-more" size="20"/>
+                      </a>
                       <Steps slot="content" direction="vertical">
                         <Step v-for="(i_more_c, i_more_cIndex) in i.child.slice(3,i.child.length)" :key="i_more_cIndex">
                           <img slot="icon" :src="getIcon(i_more_c.iconPath)" width="25px" height="25px"
@@ -94,6 +99,7 @@
 import achievements from "/public/config/achievements.json"
 
 import AchievementView from "@/components/AchievementView.vue";
+import AchievementsTag from "@/components/AchievementsTag.vue";
 import {api, http_token} from "@/assets/js";
 
 export default {
@@ -103,7 +109,7 @@ export default {
       userAchievements: {}
     }
   },
-  components: {AchievementView},
+  components: {AchievementView, AchievementsTag},
   created() {
     this.http = http_token.call(this);
 

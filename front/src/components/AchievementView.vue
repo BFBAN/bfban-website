@@ -1,5 +1,5 @@
 <template>
-  <Poptip width="300" transfer :disabled="disabled">
+  <Poptip width="300" :trigger="trigger" transfer :disabled="disabled">
     <slot></slot>
     <div slot="content" class="achievement-view">
       <h3>
@@ -18,7 +18,7 @@
       <p class="achievement-view-description">{{ $t(`profile.achievement.list.${achievementInfo.value}.description`) }}</p>
       <p><b>{{ $t('profile.achievement.conditions') }}</b></p>
       <p class="achievement-view-conditions" v-html="$t(`profile.achievement.list.${achievementInfo.value}.conditions`)"></p>
-      <template v-if="achievementInfo.acquisition.indexOf('active') >= 0 && activeButton">
+      <template v-if="achievementInfo.acquisition.indexOf('active') >= 0 && activeButton && !onlyShow">
         <Button long :loading="load" @click="onActiveAchievement(achievementInfo.value)">
           {{ $t('profile.achievement.getButton')}}
         </Button>
@@ -34,6 +34,14 @@ import {api, http_token} from "@/assets/js";
 export default {
   props: {
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    trigger: {
+      type: String,
+      default: 'click'
+    },
+    onlyShow: {
       type: Boolean,
       default: false,
     },
@@ -109,7 +117,7 @@ export default {
 .achievement-view {
   .achievement-view-description {
     margin-bottom: 10px;
-    opacity: .8;
+    opacity: .6;
   }
 
   .achievement-view-conditions {

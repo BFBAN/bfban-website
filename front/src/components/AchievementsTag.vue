@@ -2,10 +2,10 @@
   <div>
     <template v-if="data != {}">
       <span v-for="(i,index) in Object.entries(data)" :key="index">
-        <Poptip transfer trigger="hover">
+        <AchievementView :id="i[0]" :onlyShow="true" v-if="getAchievements(i[0])['isShowCard']">
           <img :src="getIcon(getAchievements(i[0])['iconPath'])" width="25px" height="25px"/>
           <span slot="content">{{ $t(`profile.achievement.list.${i[0]}.name`) }}</span>
-        </Poptip>
+        </AchievementView>
       </span>
     </template>
     <template v-else>
@@ -17,6 +17,7 @@
 <script setup>
 import achievements from "/public/config/achievements.json"
 import Empty from "@/components/Empty.vue";
+import AchievementView from "@/components/AchievementView.vue";
 
 export default {
   props: {
@@ -32,6 +33,7 @@ export default {
       achievements,
     }
   },
+  components: {AchievementView},
   methods: {
     getIcon(path) {
       if (path)
