@@ -10,7 +10,7 @@
         :maxlength="maxlength"
         @change="onEditorChange"
         @ready="onEditorReady"
-        @blur="onEditorBlur"
+        @on-blur="onEditorBlur($event)"
         useCustomImageHandler/>
     <Row :gutter="10" v-if="showMaxlengthLabel" style="margin: 0px 10px">
       <Col flex="1">
@@ -271,8 +271,10 @@ export default {
     /**
      * 编辑器失焦
      */
-    onEditorBlur () {
+    onEditorBlur (quill) {
       this.replaceEmptyEle();
+      console.log(quill)
+      quill.blur()
     },
     /**
      * 编辑器触发事件

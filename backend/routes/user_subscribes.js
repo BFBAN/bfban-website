@@ -5,7 +5,7 @@ import db from "../mysql.js";
 import express from "express";
 
 // Maximum tracking quantity
-const maxSubscribes = 5000;
+const maxSubscribes = 100;
 
 const router = express.Router();
 

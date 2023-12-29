@@ -258,6 +258,7 @@
                 <FormItem prop="captcha" :label="$t('captcha.title')">
                   <Input
                       type="text"
+                      maxlength="4"
                       v-model="tabs.list[index].formItem.captcha"
                       :placeholder="$t('captcha.title')">
                     <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
