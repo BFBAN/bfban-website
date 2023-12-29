@@ -21,6 +21,7 @@ Object.keys(config.mail).forEach(key => {
     })
 })
 
+/*
 async function sendMail(content, from, to, cc, subject, attachment = undefined, language) {
     const message = new Message({
         text: content,
@@ -32,7 +33,15 @@ async function sendMail(content, from, to, cc, subject, attachment = undefined, 
     });
     return await sender[language].sendAsync(message);
 }
+*/
 
+/** 
+ * @param {string} content 
+ * @param {'Text'|'HTML'} type 
+ * @param {string} from
+ * @param {string} to
+ * @param {string} subject
+ */
 async function sendMail_ms(content, type, from, to, subject) {
     return await serviceApi('msGraphAPI', '/sendMail').post({
         data: {
@@ -43,6 +52,17 @@ async function sendMail_ms(content, type, from, to, subject) {
             to
         }
     });
+}
+
+// !!! TEMPORARY FIX
+async function sendMail(content, from, to, cc, subject, attachment = undefined, language) {
+    return await sendMail_ms(
+        attachment?.[0].data || content,
+        attachment?.[0].alternative? "HTML" : "Text",
+        "register@bfban.com" || from,   
+        to,
+        subject
+    );
 }
 
 async function sendRegisterVerify(username, originName, address, language, code) {
