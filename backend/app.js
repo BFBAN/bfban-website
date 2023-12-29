@@ -15,6 +15,7 @@ import logger from "./logger.js";
 
 import router_user from "./routes/user.js";
 import router_user_subscribes from "./routes/user_subscribes.js";
+import router_user_achievement from "./routes/user_achievements.js";
 import router_admin from "./routes/admin.js"
 import router_index from "./routes/index.js";
 import router_player from "./routes/player.js";
@@ -97,7 +98,7 @@ app.use((req, res, next) => {
 
 app.use('/static', express.static('./test'));   // debug only
 app.use('/api', router_index);
-app.use('/api/user', router_user, router_user_subscribes);
+app.use('/api/user', router_user, router_user_subscribes, router_user_achievement);
 app.use('/api/admin', router_admin);
 app.use('/api/player', router_player);
 app.use('/api/message', router_message);

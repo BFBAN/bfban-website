@@ -46,6 +46,7 @@
         </Col>
         <Col :xs="{span: 24}" :sm="{span: 18}" class="profile-right-content">
           <information v-if="menuValue == 'information'"></information>
+          <achievement v-if="menuValue == 'achievement'"></achievement>
           <appearance v-if="menuValue == 'appearance'"></appearance>
           <chat v-if="menuValue == 'chat'"></chat>
           <enhance v-if="menuValue == 'enhance'"></enhance>
@@ -64,6 +65,7 @@
 <script>
 import PrivilegesTag from "/src/components/PrivilegesTag";
 
+import achievement from "./achievement"
 import appearance from "./appearance";
 import information from "./information";
 import chat from "./chat";
@@ -91,6 +93,10 @@ export default new Application({
             title: 'account',
             name: 'information',
             icon: 'md-person'
+          }, {
+            title: 'achievement',
+            name: 'achievement',
+            icon: 'md-ribbon'
           }, {
             title: 'appearance',
             name: 'appearance',
@@ -145,6 +151,7 @@ export default new Application({
     }
   },
   components: {
+    achievement,
     appearance,
     information,
     chat,
@@ -159,7 +166,7 @@ export default new Application({
   },
   watch: {
     '$route': {
-      handler (val, oldVal) {
+      handler(val, oldVal) {
         const {pagename = 'account'} = val.params;
         if (!oldVal) return;
         this.onMenuActive(pagename);

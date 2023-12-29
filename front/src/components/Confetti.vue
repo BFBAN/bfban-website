@@ -58,33 +58,34 @@ export default {
      */
     generateConfetti() {
       var emojis = ["🎉", "🎊", "🎈", "🎁", "🎀"].concat(this.emojis || []);
-      for (let i = 0; i < this.emojiCount; i++) {
-        this.animation.push(setTimeout(() => {
-          var emoji = emojis[Math.floor(Math.random() * emojis.length)];
-          var x = Math.floor(Math.random() * this.$refs.confettiContainer.offsetWidth) - this.x;
-          var y = Math.floor(Math.random() * this.$refs.confettiContainer.offsetHeight) - this.y;
-          var span = document.createElement("span");
-          span.style.position = "absolute";
-          span.style.left = `${x}px`;
-          span.style.top = `${y}px`;
-          span.style.fontSize = "30px";
-          span.style.opacity = 0;
-          span.style.transition = "all 0.5s";
-          span.innerText = emoji;
-          this.$refs.confettiContainer.appendChild(span);
-
-          setTimeout(() => {
-            span.style.opacity = 1;
-          }, 50);
-
-          setTimeout(() => {
+      if (this.$refs.confettiContainer)
+        for (let i = 0; i < this.emojiCount; i++) {
+          this.animation.push(setTimeout(() => {
+            var emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            var x = Math.floor(Math.random() * this.$refs.confettiContainer.offsetWidth || 0) - this.x;
+            var y = Math.floor(Math.random() * this.$refs.confettiContainer.offsetHeight || 0) - this.y;
+            var span = document.createElement("span");
+            span.style.position = "absolute";
+            span.style.left = `${x}px`;
+            span.style.top = `${y}px`;
+            span.style.fontSize = "30px";
             span.style.opacity = 0;
+            span.style.transition = "all 0.5s";
+            span.innerText = emoji;
+            this.$refs.confettiContainer.appendChild(span);
+
             setTimeout(() => {
-              span.remove();
-            }, 100);
-          }, 1000);
-        }, i * 100));
-      }
+              span.style.opacity = 1;
+            }, 50);
+
+            setTimeout(() => {
+              span.style.opacity = 0;
+              setTimeout(() => {
+                span.remove();
+              }, 100);
+            }, 1000);
+          }, i * 100));
+        }
     }
   }
 }

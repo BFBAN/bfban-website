@@ -38,7 +38,10 @@ export default class Api {
             "account_signin": "user/signin",
             "account_signup": "user/signup",
             "account_signup4dev": "user/signup4dev",
-            "account_signupVerify": "user/signupVerify",
+            "account_achievements": "user/achievements",
+            "account_achievement": "user/achievement",
+            "account_achievement_add": "user/achievement/admin/add",
+            "account_achievement_delete": "user/achievement/admin/delete",
 
             "player_reset": "reset",
             "player_batch": "player/batch",

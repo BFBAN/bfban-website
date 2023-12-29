@@ -30,7 +30,8 @@
 
     <template v-if="account">
       <div dis-hover bordered>
-        <Confetti :y="20" :emojiCount="300" :switch="new Date(account.joinTime).getTime() < new Date('2020 01-01').getTime() || account.id <= 1000">
+        <Confetti :y="20" :emojiCount="300"
+                  :switch="new Date(account.joinTime).getTime() < new Date('2020 01-01').getTime() || account.id <= 1000">
           <Row type="flex" justify="center" align="middle">
             <Col justify="center" align="middle">
               <br>
@@ -71,6 +72,13 @@
                   <p v-else>-</p>
                   <p class="account-info-p">{{ $t("account.lastOnlineTime") }}</p>
                 </Col>
+                <template v-if="account.attr && account.attr.achievements && Object.keys(account.attr.achievements).length > 0">
+                  <Divider type="vertical"/>
+                  <Col>
+                    <AchievementsTag :data="account.attr.achievements"></AchievementsTag>
+                    <p class="account-info-p">{{ $t("profile.achievement.title") }}</p>
+                  </Col>
+                </template>
                 <Divider type="vertical"/>
                 <Col>
                   <Poptip :transfer="true">
@@ -187,6 +195,7 @@ import Confetti from "@/components/Confetti.vue";
 import {api, http, http_token, util} from '../assets/js/index'
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
+import AchievementsTag from "/src/components/AchievementsTag.vue";
 
 import games from '/public/config/gameName.json'
 
@@ -359,7 +368,7 @@ export default new Application({
   watch: {
     $route: "loadData",
   },
-  components: {PrivilegesTag, Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, vueQr},
+  components: {PrivilegesTag, AchievementsTag, Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, vueQr},
   created() {
     this.http = http_token.call(this);
 

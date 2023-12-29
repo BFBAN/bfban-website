@@ -48,13 +48,14 @@ const userAttributes = {
     "showOrigin": {type: "boolean", get: true, set: true, default: false},
     "allowDM": {type: "boolean", get: true, set: true, default: false},     // allow direct message?
     "certUser": {type: "string", get: true, set: false, default: ''},
-    "freezeOfNoBinding": {type: "boolen", get: true, set: false, default: false},
+    "freezeOfNoBinding": {type: "boolean", get: true, set: false, default: false},
     "changeNameLeft": {type: "number", get: true, set: false, isprivate: true, default: 3},
     "registerIP": {type: "string", get: false, set: false, default: ''},
     "lastSigninIP": {type: "string", get: false, set: false, default: ''},
     "avatar": {type: "string", get: true, set: false, default: ''},
     "introduction": {type: "string", get: true, set: true, default: ''},
-    "mute": {type: "string", get: true, set: true, default: ''}
+    "mute": {type: "string", get: true, set: true, default: ''},
+    "achievements": {type: "object", get: true, set: true, default: {}}
 }
 
 function userShowAttributes(attr, showprivate = false, force = false) {
@@ -66,10 +67,12 @@ function userShowAttributes(attr, showprivate = false, force = false) {
 }
 
 function userSetAttributes(org, attr, force = false) {
-    const result = org;
+    let result = org;
     for (let i of Object.keys(userAttributes))
-        if (typeof (attr[i]) == userAttributes[i].type && (userAttributes[i].set || force) && attr[i] && result[i])
+        if (typeof (attr[i]) == userAttributes[i].type && (userAttributes[i].set || force)) {
             result[i] = attr[i];
+        }
+
     return result;
 }
 

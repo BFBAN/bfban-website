@@ -7,7 +7,8 @@
           @on-popper-show="getUserInfo">
     <slot></slot>
     <div slot="content" class="business">
-      <Confetti :y="0" :emojiCount="200" :switch="new Date(userInfo.joinTime).getTime() < new Date('2020 01-01').getTime() || userInfo.id <= 1000 && showStatus">
+      <Confetti :y="0" :emojiCount="200"
+                :switch="new Date(userInfo.joinTime).getTime() < new Date('2020 01-01').getTime() || userInfo.id <= 1000 && showStatus">
         <Banner :height="150">
           <div v-if="!loadErr" class="business-padding business-padding-perpendicularity">
             <Row>
@@ -31,6 +32,8 @@
                 # {{ userInfo.id }}
               </Col>
             </Row>
+
+            <AchievementsTag :data="userInfo.attr.achievements || []" v-if="userInfo.attr && userInfo.attr.achievements"></AchievementsTag>
           </div>
           <template v-if="loadErr">
             <Row>
@@ -89,6 +92,7 @@
 import {api, http, http_token, storage} from '../assets/js/index';
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
+import AchievementsTag from "@/components/AchievementsTag.vue";
 import Application from "@/assets/js/application";
 import Banner from "@/components/Banner.vue";
 import Confetti from "@/components/Confetti.vue";
@@ -119,7 +123,7 @@ export default new Application({
       type: 'user',
     }
   },
-  components: {PrivilegesTag, Banner, Confetti},
+  components: {PrivilegesTag, AchievementsTag, Banner, Confetti},
   created() {
     this.http = http_token.call(this);
     this.type = this.isAdminL2 ? "admin" : "user";

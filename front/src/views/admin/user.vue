@@ -197,6 +197,11 @@
                   <Input v-model="editUserData.originUserId" readonly></Input>
                 </FormItem>
               </Col>
+              <Col span="24">
+                <FormItem :label="$t('profile.achievement.title')" prop="achievements">
+                  <AchievementsTag :data="editUserData.attr.achievements"></AchievementsTag>
+                </FormItem>
+              </Col>
             </Row>
           </Col>
           <Col span="12">
@@ -379,6 +384,7 @@ import languages from "/public/config/languages.json";
 
 import BusinessCard from "@/components/BusinessCard.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
+import AchievementsTag from "@/components/AchievementsTag.vue";
 import Textarea from "@/components/Textarea";
 import Application from "@/assets/js/application";
 
@@ -448,7 +454,7 @@ export default new Application({
       total: 0,
     }
   },
-  components: {Textarea, PrivilegesTag, BusinessCard},
+  components: {Textarea, PrivilegesTag, BusinessCard, AchievementsTag},
   created() {
     this.http = http_token.call(this);
 

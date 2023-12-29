@@ -1,0 +1,80 @@
+{
+  "raritys": {
+    "normal": {
+      "class": ""
+    },
+    "rare": {
+      "class": "green"
+    },
+    "preciousness": {
+      "class": "red"
+    }
+  },
+  "child": [
+    {
+      "value": "old_user_l2",
+      "iconPath": "old_user.png",
+      "isHidden": true,
+      "rarity": "normal",
+      "acquisition": ["passive"],
+      "tag": []
+    },
+    {
+      "value": "old_user",
+      "iconPath": "old_user.png",
+      "rarity": "preciousness",
+      "acquisition": ["active"],
+      "tag": []
+    },
+    {
+      "value": "report_assemble",
+      "child": [
+        {
+          "value": "report_l1",
+          "iconPath": "report_l1.png",
+          "rarity": "normal",
+          "acquisition": ["active"],
+          "tag": [
+            "report"
+          ]
+        },
+        {
+          "value": "report_l2",
+          "iconPath": "report_l1.png",
+          "rarity": "rare",
+          "acquisition": ["active"],
+          "tag": [
+            "report"
+          ]
+        },
+        {
+          "value": "report_l3",
+          "iconPath": "report_l2.png",
+          "rarity": "rare",
+          "acquisition": ["active"],
+          "tag": [
+            "report"
+          ]
+        },
+        {
+          "value": "report_l4",
+          "iconPath": "report_l2.png",
+          "rarity": "preciousness",
+          "acquisition": ["active"],
+          "tag": [
+            "report"
+          ]
+        },
+        {
+          "value": "report_l5",
+          "iconPath": "report_l3.png",
+          "rarity": "preciousness",
+          "acquisition": ["active"],
+          "tag": [
+            "report"
+          ]
+        }
+      ]
+    }
+  ]
+}
