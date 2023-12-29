@@ -491,7 +491,8 @@ export default new Application({
             this.$store.dispatch('setUserInfo', d.data);
 
             this.formItem = Object.assign(this.formItem, d.data);
-            this.$refs.informationTextarea.updateContent(this.formItem.attr.introduction);
+            if (this.$refs.informationTextarea)
+              this.$refs.informationTextarea.updateContent(this.formItem.attr.introduction);
           }
         }).finally(() => {
           this.userInfoLoad = false;
