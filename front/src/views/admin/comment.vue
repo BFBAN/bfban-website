@@ -99,7 +99,9 @@
               <Tag>{{ i.toOriginName }}</Tag>
               <Tag>{{ i.toOriginPersonaId }}</Tag>
             </div>
-            <Time :time="i.createTime" type="date"></Time>
+            <TimeView :time="i.createTime">
+              <Time :time="i.createTime" type="date"></Time>
+            </TimeView>
             :
             <BusinessCard :id="i.byUserId" :showAdminUserInfo="true">
               <a href="javascript:void(0)"><b>{{ i.username }}</b></a>
@@ -127,6 +129,9 @@
                 </Button>
               </Tooltip>
             </a>
+          </div>
+          <div class="comment-links" v-if="i.videoLink">
+            <EditLinks :links="i.videoLink" :isReadonly="true" placeholder="http(s)://"></EditLinks>
           </div>
           <HtmlWidget class="comment-html" :html="i.content"></HtmlWidget>
         </Card>
@@ -158,15 +163,16 @@
             label-position="top">
         <Row :gutter="10">
           <Col span="24">
+            <FormItem prop="videoLink" label="videoLink">
+              <EditLinks v-model="editCommentFrom.videoLink" :links="editCommentFrom.videoLink" :max="10"
+                         placeholder="http(s)://"></EditLinks>
+            </FormItem>
+          </Col>
+          <Col span="24">
             <FormItem prop="content">
               <Card dis-hover :padding="0">
                 <Textarea ref="commentTextarea" :maxlength="65535" v-model="editCommentFrom.content"></Textarea>
               </Card>
-            </FormItem>
-          </Col>
-          <Col span="24">
-            <FormItem prop="videoLink" label="videoLink">
-              <Input v-model="editCommentFrom.videoLink" :maxlength="255"/>
             </FormItem>
           </Col>
         </Row>
@@ -189,11 +195,13 @@
 <script>
 import {account_storage, api, http, http_token, util} from "../../assets/js";
 
+import Application from "@/assets/js/application";
+import TimeView from "@/components/TimeView.vue";
 import BusinessCard from "@/components/BusinessCard.vue";
 import Textarea from "@/components/Textarea";
-import Application from "@/assets/js/application";
+import EditLinks from "@/components/EditLinks.vue";
 import HtmlWidget from "@/components/HtmlWidget";
-import { kill } from "process";
+import {kill} from "process";
 
 export default new Application({
   data() {
@@ -210,12 +218,18 @@ export default new Application({
           {required: true, trigger: 'blur'}
         ],
         videoLink: [
-          {trigger: 'blur'}
+          {required: false, trigger: 'blur'}
         ],
       },
       judgementType: {
         value: 'kill',
-        list: [{title: 'Comfirmd', value: 'kill'}, {title: 'Farm Weapon', value: 'farm'}, {title: 'Suspicious', value: 'suspect'}, {title: 'MOSS Proof', value: 'innocent'}, {title: 'Under discussion', value: 'discuss'}, {title: 'Voted', value: 'guilt'}, {title: 'Invalid report', value: 'invalid'}]
+        list: [{title: 'Comfirmd', value: 'kill'}, {title: 'Farm Weapon', value: 'farm'}, {
+          title: 'Suspicious',
+          value: 'suspect'
+        }, {title: 'MOSS Proof', value: 'innocent'}, {title: 'Under discussion', value: 'discuss'}, {
+          title: 'Voted',
+          value: 'guilt'
+        }, {title: 'Invalid report', value: 'invalid'}]
       },
       banAppealStats: {
         value: 'open',
@@ -233,7 +247,7 @@ export default new Application({
       total: 0,
     }
   },
-  components: {BusinessCard, HtmlWidget, Textarea},
+  components: {BusinessCard, TimeView, HtmlWidget, EditLinks, Textarea},
   created() {
     this.http = http_token.call(this);
 
@@ -274,7 +288,7 @@ export default new Application({
 
       this.openCommentModeBase();
     },
-    openCommentModeBase () {
+    openCommentModeBase() {
       if (this.$refs.commentTextarea)
         this.$refs.commentTextarea.updateContent(this.editCommentFrom.content);
 
@@ -418,6 +432,10 @@ export default new Application({
 </script>
 
 <style lang="less" scoped>
+.comment-links {
+  padding: 10px 15px;
+}
+
 .comment-html {
   overflow: hidden;
 }

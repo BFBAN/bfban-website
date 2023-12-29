@@ -168,12 +168,18 @@
               </Col>
               <Col span="12">
                 <FormItem :label="$t('profile.account.form.createTime')" prop="">
-                  <Input v-model="editUserData.createTime" readonly disabled/>
+                  <TimeView :time="editUserData.createTime" v-if="editUserData.createTime">
+                    {{ editUserData.createTime }}
+                  </TimeView>
+                  <span v-else>-</span>
                 </FormItem>
               </Col>
               <Col span="12">
                 <FormItem :label="$t('profile.account.form.signoutTime')" prop="">
-                  <Input v-model="editUserData.signoutTime" readonly disabled/>
+                  <TimeView :time="editUserData.signoutTime" v-if="editUserData.signoutTime">
+                    {{ editUserData.signoutTime }}
+                  </TimeView>
+                  <span v-else>-</span>
                 </FormItem>
               </Col>
 
@@ -383,6 +389,7 @@ import {api, http_token} from "../../assets/js";
 import languages from "/public/config/languages.json";
 
 import BusinessCard from "@/components/BusinessCard.vue";
+import TimeView from "@/components/TimeView.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import AchievementsTag from "@/components/AchievementsTag.vue";
 import Textarea from "@/components/Textarea";
@@ -454,7 +461,7 @@ export default new Application({
       total: 0,
     }
   },
-  components: {Textarea, PrivilegesTag, BusinessCard, AchievementsTag},
+  components: {Textarea, TimeView, PrivilegesTag, BusinessCard, AchievementsTag},
   created() {
     this.http = http_token.call(this);
 
