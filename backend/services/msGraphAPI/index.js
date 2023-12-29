@@ -416,7 +416,9 @@ async (req, res, next) => {
             });
         const msResponse = await getAuthenticatedClient(msalClient)
             .api('/me/sendMail')
-            .post(payload)
+            .post({
+                "message": payload
+            })
             .catch(err => {
                 if (!(err instanceof msgraph.GraphError) || err.statusCode <= 0)
                     throw (err);
@@ -430,7 +432,7 @@ async (req, res, next) => {
             });
         else
             return res.status(msResponse.status).json({
-                success: 1,
+                error: 1,
                 code: 'msSendMail.error',
                 message: msResponse.error.message
             });
