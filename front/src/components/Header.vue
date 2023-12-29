@@ -1,6 +1,6 @@
 <template>
   <header v-if="!isFull">
-    <div class="header-container container">
+    <div class="header-container">
       <router-link class="mobile-hide" :to="{name: 'home'}">
         <img src="../assets/images/logo.png"
              style="border-radius: 50%"
@@ -50,13 +50,11 @@
         </router-link>
       </div>
       <div class="nav">
-        <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
-                     v-if="$route.name != 'signin'">
-          <Button type="primary" shape="circle">
-            <Icon type="md-log-in"/>
-            {{ $t("header.signin") }}
-          </Button>
-        </router-link>
+        <Button type="primary" v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
+                icon="md-log-in"
+                v-if="$route.name != 'signin'">
+          {{ $t("header.signin") }}
+        </Button>
 
         <Dropdown v-if="isLogin"
                   :trigger="isMobile ? 'click' : 'hover'"
@@ -283,7 +281,7 @@ header {
   z-index: 1000;
   width: 100%;
   height: auto;
-  padding: 10px 0 !important;
+  padding: 10px 15px !important;
   background-image: linear-gradient(rgba(0, 0, 0, 0.2), transparent);
 }
 
@@ -333,9 +331,9 @@ header {
   display: flex;
   align-items: center;
   padding: 0 .4rem;
-  font-weight: bold;
 
   a.link {
+    font-weight: bold;
     padding: .7rem .8rem;
     text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0;
   }
