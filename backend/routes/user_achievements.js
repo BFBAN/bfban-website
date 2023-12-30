@@ -77,24 +77,22 @@ const achievementConfig = {
     },
     'trend_yearly_l1': {
         another: ['trend_yearly_l1'],
-        points: 10,
+        points: 30,
         async conditions(req, res, next) {
-            return result.data.data.filler(i => i.id == req.user.id).length > 0;
             let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=yearly`, {method: 'GET'});
-            const result = await response.json();
+            let result = await response.json();
             if (result.error == 1 && result.data.length <= 0) return false;
             return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') >= 0;
         },
     },
     'trend_yearly_l2': {
         another: ['trend_yearly_l2'],
-        points: 10,
+        points: 60,
         async conditions(req, res, next) {
-            return result.data.data.filler(i => i.id == req.user.id).length > 0;
             let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=3&time=yearly`, {method: 'GET'});
-            const result = await response.json();
+            let result = await response.json();
             if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') >= 0;
+            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') >= 0 && req.user.attr.achievements['trend_yearly_l1'];
         },
     },
     'report_l1': {
@@ -102,14 +100,14 @@ const achievementConfig = {
         points: 10,
         async conditions(req, res, next) {
             const user = req.user;
-            const reports = await db('comments').distinct('toPlayerId').count({num: 1})
+            const reports = await db('comments')
+                .count({num: 1})
+                .distinct('comments.toPlayerId')
                 .where({'comments.byUserId': user.id, type: 'report'})
                 .andWhere('createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
             if (req.user.privilege && req.user.privilege.indexOf('bot') >= 0) return false;
             return reports >= 10;
-        },
-        end() {
         }
     },
     'report_l2': {
@@ -117,22 +115,24 @@ const achievementConfig = {
         points: 20,
         async conditions(req, res, next) {
             const user = req.user;
-            const totalReports = await db('comments').distinct('toPlayerId').count({num: 1})
+            const totalReports = await db('comments')
+                .count({num: 1})
+                .distinct('comments.toPlayerId')
                 .where({'comments.byUserId': user.id, type: 'report'})
                 .andWhere('createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
 
-            const hammerReports = await db('comments').distinct('toPlayerId').count({num: 1})
+            const hammerReports = await db('comments')
+                .count({num: 1})
+                .distinct('comments.toPlayerId')
                 .join('players')
                 .select('players.status', 'comments.byUserId', 'comments.type')
-                .where({'comments.byUserId': user.id, type: 'report', status: 1})
-                .andWhere('createTime', '>=', new Date('2024 01-01'))
+                .where({'comments.byUserId': user.id, type: 'comments.report', 'players.status': 1})
+                .andWhere('comments.createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
 
             if (req.user.privilege && req.user.privilege.indexOf('bot') >= 0) return false;
             return totalReports >= 100 && hammerReports / totalReports >= 0.96 && req.user.attr.achievements['report_l1'];
-        },
-        end() {
         }
     },
     'report_l3': {
@@ -140,22 +140,24 @@ const achievementConfig = {
         points: 30,
         async conditions(req, res, next) {
             const user = req.user;
-            const totalReports = await db('comments').distinct('toPlayerId').count({num: 1})
+            const totalReports = await db('comments')
+                .count({num: 1})
+                .distinct('comments.toPlayerId')
                 .where({'comments.byUserId': user.id, type: 'report'})
                 .andWhere('createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
 
-            const hammerReports = await db('comments').distinct('toPlayerId').count({num: 1})
+            const hammerReports = await db('comments')
                 .join('players')
+                .count({num: 1})
+                .distinct('comments.toPlayerId')
                 .select('players.status', 'comments.byUserId', 'comments.type')
-                .where({'comments.byUserId': user.id, type: 'report', status: 1})
-                .andWhere('createTime', '>=', new Date('2024 01-01'))
+                .where({'comments.byUserId': user.id, 'comments.type': 'report', 'players.status': 1})
+                .andWhere('comments.createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
 
             if (req.user.privilege && req.user.privilege.indexOf('bot') >= 0) return false;
             return totalReports >= 300 && hammerReports / totalReports >= 0.96 && req.user.attr.achievements['report_l2'];
-        },
-        end() {
         }
     },
     'report_l4': {
@@ -163,22 +165,23 @@ const achievementConfig = {
         points: 50,
         async conditions(req, res, next) {
             const user = req.user;
-            const totalReports = await db('comments').distinct('toPlayerId').count({num: 1})
+            const totalReports = await db('comments').count({num: 1})
+                .distinct('comments.toPlayerId')
                 .where({'comments.byUserId': user.id, type: 'report'})
                 .andWhere('createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
 
-            const hammerReports = await db('comments').distinct('toPlayerId').count({num: 1})
+            const hammerReports = await db('comments')
                 .join('players')
+                .count({num: 1})
+                .distinct('comments.toPlayerId')
                 .select('players.status', 'comments.byUserId', 'comments.type')
-                .where({'comments.byUserId': user.id, type: 'report', status: 1})
-                .andWhere('createTime', '>=', new Date('2024 01-01'))
+                .where({'comments.byUserId': user.id, 'comments.type': 'report', 'players.status': 1})
+                .andWhere('comments.createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
 
             if (req.user.privilege && req.user.privilege.indexOf('bot') >= 0) return false;
             return totalReports >= 1000 && hammerReports / totalReports >= 0.96 && req.user.attr.achievements['report_l3'];
-        },
-        end() {
         }
     },
     'report_l5': {
@@ -186,22 +189,23 @@ const achievementConfig = {
         points: 70,
         async conditions(req, res, next) {
             const user = req.user;
-            const totalReports = await db('comments').distinct('toPlayerId').count({num: 1})
+            const totalReports = await db('comments')
+                .distinct('comments.toPlayerId')
+                .count({num: 1})
                 .where({'comments.byUserId': user.id, type: 'report'})
                 .andWhere('createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
 
-            const hammerReports = await db('comments').distinct('toPlayerId').count({num: 1})
+            const hammerReports = await db('comments').count({num: 1})
                 .join('players')
+                .distinct('comments.toPlayerId')
                 .select('players.status', 'comments.byUserId', 'comments.type')
-                .where({'comments.byUserId': user.id, type: 'report', status: 1})
-                .andWhere('createTime', '>=', new Date('2024 01-01'))
+                .where({'comments.byUserId': user.id, 'comments.type': 'report', 'players.status': 1})
+                .andWhere('comments.createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
 
             if (req.user.privilege && req.user.privilege.indexOf('bot') >= 0) return false;
             return totalReports >= 5000 && hammerReports / totalReports >= 0.96 && req.user.attr.achievements['report_l4'];
-        },
-        end() {
         }
     }
 }
