@@ -1,5 +1,5 @@
 {
-  "requestDevelopmentName": "production",
+  "requestDevelopmentName": "development",
   "requestProductionName": "production",
   "requestTestName": "staging",
   "requestUploadName": "upload",

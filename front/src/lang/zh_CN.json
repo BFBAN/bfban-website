@@ -194,10 +194,14 @@
       }
     },
     "tip": {
+      "me.bad": "个人信息发生错误，请联系管理员 {message}",
+      "me.success": "保存个人信息成功",
+      "request.404": "不存在此请求地址，请检查接口",
       "achievement.bad": "成就发生错误，请联系管理员 {message}",
       "achievement.duplicate": "重复领取成就",
       "achievement.notConditions": "领取成就条件不符合",
       "achievement.ineffective": "无效的成就",
+      "achievement.success": "成就领取成功",
       "bindOrigin.bad": "绑定账户发生错误，请联系管理员 {message}",
       "bindOrigin.error": "发生错误，请联系管理员 {message}",
       "bindOrigin.expired": "激活验证码过期，请重新注册",
@@ -266,7 +270,7 @@
       "user.invalid": "令牌失效",
       "user.permissionDenined": "无权许可",
       "user.tokenClientException": "当前客户端令牌过期或失效",
-      "user.tokenExpired": "令牌过期",
+      "user.tokenExpired": "令牌过期，请重新登陆",
       "userReports.bad": "用户举报发生错误，请联系管理员 {message}",
       "userReports.notFound": "没有此玩家，请仔细核对",
       "userReports.success": "举报成功"
@@ -651,15 +655,61 @@
         "special": "特殊"
       },
       "list": {
+        "trend_weekly_assemble": {
+          "name": "周贡献",
+          "description": "用户在一周(7天)社区累计贡献"
+        },
+        "trend_weekly_l1": {
+          "name": "一周社区贡献",
+          "conditions": "- 在本周统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一周社区贡献前10名"
+        },
+        "trend_monthly_assemble": {
+          "name": "月贡献",
+          "description": "用户在一个月内社区累计贡献"
+        },
+        "trend_monthly_l1": {
+          "name": "一个月社区贡献",
+          "conditions": "- 在本月统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一月社区贡献前10名"
+        },
+        "trend_monthly_l2": {
+          "name": "一个月社区贡献",
+          "conditions": "- 在本月统计社区参与排行榜中前3用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一月社区贡献前3名"
+        },
+        "trend_yearly_assemble": {
+          "name": "年贡献",
+          "description": "用户在一年内社区累计贡献"
+        },
+        "trend_yearly_l1": {
+          "name": "一年社区贡献",
+          "conditions": "- 在本年统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一年社区贡献前10名"
+        },
+        "trend_yearly_l2": {
+          "name": "一年社区贡献",
+          "conditions": "- 在本年统计社区参与排行榜中前3用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一年社区贡献前3名"
+        },
         "old_user": {
           "name": "老用户",
-          "conditions": "- 创建时间在2020 1月1日前<br>- 用户id在1000以内(包含1000)<br>(以上条件任一满足既可)",
+          "conditions": "- 创建时间在2024 1月1日前<br>- 用户id在10000以内(包含10000)<br>(同时满足)<br>- 非机器人账户",
           "description": "最早一批注册联ban先锋用户"
         },
-        "open_chat": {
+        "open_chat_assemble": {
+          "name": "聊天",
+          "description": "完成对应条件聊天"
+        },
+        "open_chat_l1": {
           "name": "开放聊天",
           "conditions": "- 打开账户聊天",
           "description": "欢迎随时与我对话"
+        },
+        "open_chat_l2": {
+          "name": "收到消息",
+          "conditions": "- 打开账户聊天<br>- 一个月收到消息并已读<br>(同时满足)",
+          "description": "交流的第一步"
         },
         "one_search_player": {
           "name": "首次搜索玩家",
@@ -670,27 +720,27 @@
           "name": "举报",
           "description": "提交一定举报数量并且石锤，获取成就 <i>-愿举报越来越少</i>"
         },
-        "report_l1" : {
+        "report_l1": {
           "name": "举报萌新",
           "conditions": "- 举报10条玩家<br>- 非机器人账户",
           "description": "初步探索联BAN使用方法"
         },
-        "report_l2" : {
+        "report_l2": {
           "name": "举报入门",
           "conditions": "- 举报100条玩家<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
           "description": "区区100条数据"
         },
-        "report_l3" : {
+        "report_l3": {
           "name": "举报大师",
           "conditions": "- 举报300条玩家<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
           "description": "只需要看一眼，就能识你"
         },
-        "report_l4" : {
+        "report_l4": {
           "name": "举报专家",
           "conditions": "- 举报1000条玩家<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
           "description": "我预料了你的预料"
         },
-        "report_l5" : {
+        "report_l5": {
           "name": "举报导师",
           "conditions": "- 举报5000条玩家<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
           "description": "你只需此成就条件既可，一切无需描述"

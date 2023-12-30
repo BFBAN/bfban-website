@@ -1,28 +1,35 @@
 <template>
-  <Poptip width="300" :trigger="trigger" transfer :disabled="disabled">
-    <slot></slot>
+  <Poptip width="300" :trigger="trigger" transfer :disabled="disabled" :padding="0">
+    <span class="achievement-view-slot"><slot></slot></span>
     <div slot="content" class="achievement-view">
-      <h3>
-        <Row :gutter="10">
-          <Col>
-            <img :src="achievementInfo.iconParh" v-if="achievementInfo.iconParh" width="25px" height="25px"/>
-            <b>{{ $t(`profile.achievement.list.${achievementInfo.value}.name`) }}</b>
-          </Col>
-          <Col>
-            <Tag type="border" :color="achievements.raritys[achievementInfo.rarity].class" v-if="achievementInfo.rarity">
-              {{ $t(`profile.achievement.rarity.${achievementInfo.rarity}`) }}
-            </Tag>
-          </Col>
-        </Row>
-      </h3>
-      <p class="achievement-view-description">{{ $t(`profile.achievement.list.${achievementInfo.value}.description`) }}</p>
-      <p><b>{{ $t('profile.achievement.conditions') }}</b></p>
-      <p class="achievement-view-conditions" v-html="$t(`profile.achievement.list.${achievementInfo.value}.conditions`)"></p>
-      <template v-if="achievementInfo.acquisition.indexOf('active') >= 0 && activeButton && !onlyShow">
-        <Button long :loading="load" @click="onActiveAchievement(achievementInfo.value)">
-          {{ $t('profile.achievement.getButton')}}
-        </Button>
-      </template>
+      <Banner height="160">
+        <div align="center">
+          <Avatar :size="50" shape="square" :src="getIcon(achievementInfo.iconPath)" v-if="achievementInfo.iconPath" width="25px" height="25px"/>
+        </div>
+
+        <h3 class="achievement-view-body achievement-view-title">
+          <Row :gutter="10">
+            <Col>
+              <b>{{ $t(`profile.achievement.list.${achievementInfo.value}.name`) }}</b>
+            </Col>
+            <Col>
+              <Tag type="border" :color="achievements.raritys[achievementInfo.rarity].class" v-if="achievementInfo.rarity">
+                {{ $t(`profile.achievement.rarity.${achievementInfo.rarity}`) }}
+              </Tag>
+            </Col>
+          </Row>
+        </h3>
+      </Banner>
+      <div class="achievement-view-body">
+        <p class="achievement-view-description">{{ $t(`profile.achievement.list.${achievementInfo.value}.description`) }}</p>
+        <p><b>{{ $t('profile.achievement.conditions') }}</b></p>
+        <p class="achievement-view-conditions" v-html="$t(`profile.achievement.list.${achievementInfo.value}.conditions`)"></p>
+        <template v-if="achievementInfo.acquisition.indexOf('active') >= 0 && activeButton && !onlyShow">
+          <Button long ghost type="primary" :loading="load" @click="onActiveAchievement(achievementInfo.value)">
+            {{ $t('profile.achievement.getButton')}}
+          </Button>
+        </template>
+      </div>
     </div>
   </Poptip>
 </template>
@@ -30,6 +37,7 @@
 <script setup>
 import achievements from "/public/config/achievements.json"
 import {api, http_token} from "@/assets/js";
+import Banner from "@/components/Banner.vue";
 
 export default {
   props: {
@@ -61,6 +69,7 @@ export default {
       }
     }
   },
+  components: {Banner},
   created() {
     this.http = http_token.call(this);
 
@@ -108,13 +117,29 @@ export default {
               this.achievementInfo = j;
           })
       }
+    },
+    getIcon(path) {
+      if (path)
+        return require(`/src/assets/images/achievement/${path}`);
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+.achievement-view-slot {
+  cursor: pointer;
+}
+
 .achievement-view {
+  .achievement-view-title {
+    text-align: center;
+  }
+
+  .achievement-view-body {
+    padding: 10px 16px;
+  }
+
   .achievement-view-description {
     margin-bottom: 10px;
     opacity: .6;

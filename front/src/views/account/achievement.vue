@@ -1,18 +1,23 @@
 <template>
   <Tabs :value="'1'">
-    <TabPane :label="$t('profile.achievement.title')" class="profile-body" name="1">
+    <TabPane :label="$t('profile.achievement.title')" name="1">
       <template v-if="Object.keys(userAchievements).length > 0">
-        <AchievementsTag :data="userAchievements"></AchievementsTag>
-        <Divider></Divider>
+        <div style="margin: 10px 10px">
+          <AchievementsTag :data="userAchievements"></AchievementsTag>
+        </div>
+        <Divider style="opacity: .4"></Divider>
       </template>
 
-      <Row :gutter="20" v-for="(i,index) in achievements.child.filter(i => !i.isHidden)" :key="index"
-           class="achievement-item">
-        <template>
+      <div class="profile-body">
+        <Row :gutter="20" v-for="(i,index) in achievements.child.filter(i => !i.isHidden)" :key="index"
+             class="achievement-item">
           <Col flex="1" style="width: 30%">
             <AchievementView :id="i.value" :disabled="i.child && i.child.length > 0">
               <h3>
-                <b>{{ $t(`profile.achievement.list.${i.value}.name`) }}</b>
+                <b>
+                  <template v-if="!i.child"><u>{{ $t(`profile.achievement.list.${i.value}.name`) }}</u></template>
+                  <template v-else>{{ $t(`profile.achievement.list.${i.value}.name`) }}</template>
+                </b>
               </h3>
               <p class="description" v-if="i.child" v-html="$t(`profile.achievement.list.${i.value}.description`)"></p>
               <p class="conditions">
@@ -39,13 +44,13 @@
                     </template>
                     <template slot="title">
                       <AchievementView :id="i_c.value">
-                        <b>{{ $t(`profile.achievement.list.${i_c.value}.name`) }}</b>
+                        <b><u>{{ $t(`profile.achievement.list.${i_c.value}.name`) }}</u></b>
                       </AchievementView>
                     </template>
                     <p style="max-width: 100px" slot="content">
                       {{ $t(`profile.achievement.list.${i_c.value}.description`) }}</p>
                   </Step>
-                  <div class="more" v-if="i.child.length >= 3">
+                  <div class="more" v-if="i.child.length > 3">
                     <Poptip slot="content" transfer width="300">
                       <a href="javascript:void(0)">
                         <Icon type="md-more" size="20"/>
@@ -89,8 +94,8 @@
               </template>
             </Card>
           </Col>
-        </template>
-      </Row>
+        </Row>
+      </div>
     </TabPane>
   </Tabs>
 </template>
@@ -167,7 +172,7 @@ export default {
 }
 
 .achievement-item {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 
   .more {
     opacity: .8;
