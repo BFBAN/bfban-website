@@ -512,7 +512,7 @@ async (req, res, next) => {
  */
 router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'dev', 'root']), [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
-    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8]),
+    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]),
     checkquery('sortBy').optional().isIn(['createTime', 'updateTime', 'viewNum', 'commentsNum']),
     checkquery('order').optional().isIn(['desc', 'asc']),
     checkquery('limit').optional().isInt({min: 0}),

@@ -94,6 +94,8 @@
 
             <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
 
+            <AdsGoogle id="7930151828" style="margin-bottom: 8px;"></AdsGoogle>
+
             <div v-for="(d, d_index) in data" :key="d.originUserId" class="item-card" v-voice-button>
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
                 <Card dis-hover :padding="10">
@@ -158,6 +160,8 @@
               <Empty></Empty>
             </Card>
 
+            <AdsGoogle id="7930151828" style="margin-bottom: 8px;"></AdsGoogle>
+
             <Page class="page"
                   size="small"
                   show-sizer
@@ -172,6 +176,8 @@
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 7, push: 0, pull: 0}">
           <br>
+          <AdsGoogle id="1760339032"></AdsGoogle>
+
           <Affix :offset-top="20">
             <Card dis-hover>
               <p slot="title">
@@ -217,14 +223,15 @@
 </template>
 
 <script>
+import {api, http, util, voice} from '../assets/js/index';
+
+import cheaterStatus from '/public/config/cheaterStatus.json';
+import gameName from '/public/config/gameName.json';
+
 import Application from "../assets/js/application";
-
 import Empty from "@/components/Empty";
+import AdsGoogle from "@/components/ads/google/index.vue";
 import TimeView from "@/components/TimeView.vue";
-
-import {api, http, util, voice} from '../assets/js/index'
-import cheaterStatus from '/public/config/cheaterStatus.json'
-import gameName from '/public/config/gameName.json'
 import _ from "lodash";
 import store from "@/store";
 
@@ -296,7 +303,7 @@ export default new Application({
       cheaterStatus: null,
     };
   },
-  components: {Empty, TimeView},
+  components: {Empty, AdsGoogle, TimeView},
   watch: {
     $route: "loadData",
     gameName: function (val, oldVal) {
@@ -441,20 +448,20 @@ export default new Application({
 
       if (createTime) {
         const _time = createTime.split(",");
-        const _starttime = new Date(_time[0]).getTime();
-        const _endtime = new Date(_time[1]).getTime();
+        const _startTime = new Date(_time[0]).getTime();
+        const _endTime = new Date(_time[1]).getTime();
 
-        config["params"]["createTimeFrom"] = _starttime;
-        config["params"]["createTimeTo"] = _endtime;
+        config["params"]["createTimeFrom"] = _startTime;
+        config["params"]["createTimeTo"] = _endTime;
       }
 
       if (updateTime) {
         const _time = updateTime.split(",");
-        const _starttime = new Date(_time[0]).getTime() * 1000;
-        const _endtime = new Date(_time[1]).getTime() * 1000;
+        const _startTime = new Date(_time[0]).getTime();
+        const _endTime = new Date(_time[1]).getTime();
 
-        config["params"]["updateTimeFrom"] = _starttime;
-        config["params"]["updateTimeTo"] = _endtime;
+        config["params"]["updateTimeFrom"] = _startTime;
+        config["params"]["updateTimeTo"] = _endTime;
       }
 
       // 设置筛选参

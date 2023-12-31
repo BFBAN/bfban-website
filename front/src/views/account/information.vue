@@ -20,33 +20,33 @@
 
       <div class="profile-body">
         <Row :gutter="30">
-          <Col span="12">
+          <Col :xs="{span: 24}" :lg="{span: 12}">
             <FormItem>
               <div slot="label">
                 <Icon type="md-key"/>
                 {{ $t('signup.form.username') }}
               </div>
-              <Input v-model="formItem.username" placeholder="" disabled>
-                <a slot="append" @click="modal_setusername.show = !modal_setusername.show">
+              <Input v-model="formItem.username" :placeholder="$t('signup.form.username')" disabled>
+                <a href="javascript:void(0)" slot="append" @click="modal_setusername.show = !modal_setusername.show">
                   <Icon type="md-create" size="15"/>
                 </a>
               </Input>
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col :xs="{span: 24}" :lg="{span: 12}">
             <FormItem>
               <div slot="label">
                 <Icon type="md-lock"/>
                 {{ $t('signup.form.password') }}
               </div>
-              <Input v-model="formItem.password" disabled type="password">
-                <a slot="append" @click="modal_changePassword.show = !modal_changePassword.show">
+              <Input v-model="formItem.password" :placeholder="$t('signup.form.password')" disabled type="password">
+                <a href="javascript:void(0)" slot="append" @click="modal_changePassword.show = !modal_changePassword.show">
                   <Icon type="md-create" size="15"/>
                 </a>
               </Input>
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col :xs="{span: 24}" :lg="{span: 12}">
             <Card dis-hover>
               <FormItem :label="$t('account.joinedAt')">
                 <Tag type="border">
@@ -57,7 +57,7 @@
               </FormItem>
             </Card>
           </Col>
-          <Col span="12">
+          <Col :xs="{span: 24}" :lg="{span: 12}">
             <Card dis-hover>
               <FormItem :label="$t('account.lastOnlineTime')">
                 <Tag type="border">
@@ -68,7 +68,7 @@
               </FormItem>
             </Card>
           </Col>
-          <Col span="12" v-if="isAdmin">
+          <Col :xs="{span: 24}" :lg="{span: 24}" v-if="isAdmin">
             <br>
             <FormItem>
               <div slot="label">
@@ -126,7 +126,7 @@
         <Divider dashed></Divider>
 
         <Row :gutter="30">
-          <Col span="12">
+          <Col :xs="{span: 24}" :lg="{span: 12}">
             <FormItem :label="$t('profile.account.form.language')">
               <Row>
                 <Col>
@@ -148,13 +148,13 @@
               <Alert show-icon v-if="langLocalSync">{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col :xs="{span: 24}" :lg="{span: 12}">
             <FormItem :label="$t('profile.account.form.showOrigin')">
               <Alert show-icon>{{ $t('profile.account.form.showOriginDescribe') }}</Alert>
               <i-switch v-model="formItem.attr.showOrigin"/>
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col :xs="{span: 24}" :lg="{span: 12}">
             <FormItem :label="$t('profile.account.form.allowDM')">
               <Alert show-icon>{{ $t('profile.account.form.allowDMdescribe') }}</Alert>
               <i-switch v-model="formItem.attr.allowDM"/>
@@ -162,24 +162,26 @@
           </Col>
         </Row>
 
-        <Affix :offset-bottom="0">
-          <Card dis-hover :padding="8">
-            <Row>
-              <Col :xs="{span: 0}" :lg="{span: 20}">
-              </Col>
-              <Col :xs="{span: 24}" :lg="{span: 4}">
-                <Button type="primary" long :loading="formLoad" :disabled="userInfoLoad" @click="onSave">
-                  {{ $t("basic.button.save") }}
-                </Button>
-              </Col>
-            </Row>
-          </Card>
-        </Affix>
 
         <Spin size="large" fix v-show="userInfoLoad">
           <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
         </Spin>
       </div>
+
+      <Affix :offset-bottom="0">
+        <Divider size="small" plain style="margin: 0px"></Divider>
+        <Card dis-hover :padding="8" :bordered="false">
+          <Row>
+            <Col :xs="{span: 0}" :lg="{span: 20}">
+            </Col>
+            <Col :xs="{span: 24}" :lg="{span: 4}">
+              <Button type="primary" long :loading="formLoad" :disabled="userInfoLoad" @click="onSave">
+                {{ $t("basic.button.save") }}
+              </Button>
+            </Col>
+          </Row>
+        </Card>
+      </Affix>
     </Form>
 
     <!-- 修改名称 S -->

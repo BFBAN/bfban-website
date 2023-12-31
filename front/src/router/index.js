@@ -7,7 +7,7 @@ import {CHANGE_META_INFO} from '../store/mutation-types'
 
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
-const List = () => import('@/views/List.vue');
+const Players = () => import('@/views/Players.vue');
 const Detail = () => import('@/views/Detail.vue');
 const DetailShare = () => import('@/views/DetailShare.vue');
 const DetailAppeal = () => import('@/views/DetailAppeal.vue');
@@ -211,7 +211,7 @@ const routes = [
                 description: 'player_list.description'
             }
         },
-        component: List
+        component: Players
     },
 
     // 作弊者详情

@@ -12,6 +12,8 @@
       </Row>
       <br>
 
+      <AdsGoogle id="7930151828" style="margin-bottom: 10px"></AdsGoogle>
+
       <Tabs type="card"
             v-model="tabs.count"
             @on-tab-remove="doCancel">
@@ -240,13 +242,14 @@
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
                   <Card :padding="0" dis-hover>
-                        <Textarea :toolbar="[[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'hr'], ['link', 'image']]"
-                                  :placeholder="$t('report.info.description')"
-                                  :index="index"
-                                  :height="'520px'"
-                                  :maxlength="60000"
-                                  :showMaxlengthLabel="true"
-                                  v-model="tabs.list[index].formItem.description">
+                        <Textarea
+                            :toolbar="[[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'hr'], ['link', 'image']]"
+                            :placeholder="$t('report.info.description')"
+                            :index="index"
+                            :height="'520px'"
+                            :maxlength="60000"
+                            :showMaxlengthLabel="true"
+                            v-model="tabs.list[index].formItem.description">
                         </Textarea>
                   </Card>
                 </FormItem>
@@ -352,13 +355,12 @@
   </div>
 </template>
 
-<script>
+<script>import {api, http, http_token, voice, util, regular} from '../assets/js/index'
+
 import Application from "../assets/js/application";
+import AdsGoogle from "@/components/ads/google/index.vue";
 import Html from "@/components/Html";
 import Captcha from "@/components/Captcha";
-
-import {api, http, http_token, voice, util, regular} from '../assets/js/index'
-
 import Textarea from "@/components/Textarea.vue";
 import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";
@@ -380,7 +382,7 @@ export default new Application({
       cheatMethodsGlossary: [],
     };
   },
-  components: {Textarea, Html, HtmlWidget, OcrWidget, Captcha, Empty},
+  components: {AdsGoogle, Textarea, Html, HtmlWidget, OcrWidget, Captcha, Empty},
   created() {
     const message = store.state.configuration['voice_message']
 
