@@ -909,9 +909,12 @@
               <!-- 用户回复 E -->
             </Col>
 
-            <!-- 申诉按钮 -->
             <Col :xs="{span: 23, push: 0}" :lg="{span: 7, push: 0}" order="2" class="mobile-hide"
                  v-if="appeal.disable">
+              <AdsGoogle id="1760339032"></AdsGoogle>
+              <br>
+
+              <!-- 申诉按钮 -->
               <Card dis-hover>
                 <h1 style="text-align: center">📥</h1>
                 <p>{{ $t('detail.info.appealManual1') }}</p>

@@ -52,12 +52,15 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 .ad-container {
-  position: relative;
+  overflow: hidden;
 
-  > * {
+  ins, .ins {
+    position: relative;
     z-index: 5;
+    min-width: 100%;
+    min-height: 100%;
   }
 }
 
