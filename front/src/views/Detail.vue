@@ -15,8 +15,6 @@
         <br>
       </template>
 
-      <AdsGoogle></AdsGoogle>
-
       <Card id="getSharePicture" v-if="isCheaterExist" dis-hover>
         <Row :gutter="10">
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 3, pull: 0, push: 0}">
@@ -1093,6 +1091,8 @@
         </div>
       </template>
     </div>
+
+    <AdsGoogle></AdsGoogle>
 
     <template v-if="!isFull">
       <Affix :top="100">
