@@ -50,29 +50,29 @@ const achievementConfig = {
         points: 10,
         async conditions(req, res, next) {
             let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=weekly`, {method: 'GET'});
-            const result = await response.json();
+            let result = await response.json();
             if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') >= 0;
+            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
         },
     },
     'trend_monthly_l1': {
-        another: ['trend_yearly_l1'],
+        another: ['trend_monthly_l1'],
         points: 10,
         async conditions(req, res, next) {
             let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=monthly`, {method: 'GET'});
-            const result = await response.json();
+            let result = await response.json();
             if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') >= 0;
+            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
         },
     },
     'trend_monthly_l2': {
-        another: ['trend_yearly_l2'],
+        another: ['trend_monthly_l2'],
         points: 10,
         async conditions(req, res, next) {
             let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=3&time=monthly`, {method: 'GET'});
-            const result = await response.json();
+            let result = await response.json();
             if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') >= 0;
+            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
         },
     },
     'trend_yearly_l1': {
@@ -82,7 +82,7 @@ const achievementConfig = {
             let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=yearly`, {method: 'GET'});
             let result = await response.json();
             if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') >= 0;
+            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
         },
     },
     'trend_yearly_l2': {
@@ -92,7 +92,7 @@ const achievementConfig = {
             let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=3&time=yearly`, {method: 'GET'});
             let result = await response.json();
             if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') >= 0 && req.user.attr.achievements['trend_yearly_l1'];
+            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0 && req.user.attr.achievements['trend_yearly_l1'];
         },
     },
     'report_l1': {
@@ -100,11 +100,9 @@ const achievementConfig = {
         points: 10,
         async conditions(req, res, next) {
             const user = req.user;
-            const reports = await db('comments')
-                .count({num: 1})
-                .distinct('comments.toPlayerId')
-                .where({'comments.byUserId': user.id, type: 'report'})
-                .andWhere('createTime', '>=', new Date('2024 01-01'))
+            const reports = await db('comments').count({num: 1})
+                .where({'comments.byUserId': user.id, 'comments.type': 'report'})
+                .andWhere('comments.createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
             if (req.user.privilege && req.user.privilege.indexOf('bot') >= 0) return false;
             return reports >= 10;
@@ -140,17 +138,13 @@ const achievementConfig = {
         points: 30,
         async conditions(req, res, next) {
             const user = req.user;
-            const totalReports = await db('comments')
-                .count({num: 1})
-                .distinct('comments.toPlayerId')
+            const totalReports = await db('comments').count({num: 1})
                 .where({'comments.byUserId': user.id, type: 'report'})
                 .andWhere('createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
 
-            const hammerReports = await db('comments')
-                .join('players')
+            const hammerReports = await db('comments').join('players')
                 .count({num: 1})
-                .distinct('comments.toPlayerId')
                 .select('players.status', 'comments.byUserId', 'comments.type')
                 .where({'comments.byUserId': user.id, 'comments.type': 'report', 'players.status': 1})
                 .andWhere('comments.createTime', '>=', new Date('2024 01-01'))
@@ -166,7 +160,6 @@ const achievementConfig = {
         async conditions(req, res, next) {
             const user = req.user;
             const totalReports = await db('comments').count({num: 1})
-                .distinct('comments.toPlayerId')
                 .where({'comments.byUserId': user.id, type: 'report'})
                 .andWhere('createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);
@@ -174,7 +167,6 @@ const achievementConfig = {
             const hammerReports = await db('comments')
                 .join('players')
                 .count({num: 1})
-                .distinct('comments.toPlayerId')
                 .select('players.status', 'comments.byUserId', 'comments.type')
                 .where({'comments.byUserId': user.id, 'comments.type': 'report', 'players.status': 1})
                 .andWhere('comments.createTime', '>=', new Date('2024 01-01'))
@@ -190,7 +182,6 @@ const achievementConfig = {
         async conditions(req, res, next) {
             const user = req.user;
             const totalReports = await db('comments')
-                .distinct('comments.toPlayerId')
                 .count({num: 1})
                 .where({'comments.byUserId': user.id, type: 'report'})
                 .andWhere('createTime', '>=', new Date('2024 01-01'))
@@ -198,7 +189,6 @@ const achievementConfig = {
 
             const hammerReports = await db('comments').count({num: 1})
                 .join('players')
-                .distinct('comments.toPlayerId')
                 .select('players.status', 'comments.byUserId', 'comments.type')
                 .where({'comments.byUserId': user.id, 'comments.type': 'report', 'players.status': 1})
                 .andWhere('comments.createTime', '>=', new Date('2024 01-01'))
