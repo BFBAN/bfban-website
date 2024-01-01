@@ -194,6 +194,9 @@
       }
     },
     "tip": {
+      "search.bad": "搜索发生错误，请联系管理员 {message}",
+      "search.success": "搜索成功",
+      "search.notExist": "未找到数据",
       "me.bad": "个人信息发生错误，请联系管理员 {message}",
       "me.success": "保存个人信息成功",
       "request.404": "不存在此请求地址，请检查接口",
