@@ -1,16 +1,21 @@
 <template>
   <Card dis-hover :padding="0" class="ad-container mobile-hide" :class="adId && ads[adId].class || []"
-        v-if="!isSkipAds"
+        v-if="adId && adsSwitch"
         :style="ads[adId].style">
+    <div class="ad-off" @click="offAds">
+      <Icon size="10" type="md-close"></Icon>
+    </div>
     <Adsense v-if="adId"
-         :data-ad-client="adClient"
-         :data-ad-slot="adId"
-         :data-ad-format="ads[adId].adFormat"
-         :data-full-width-responsive="ads[adId].fullWidthResponsive"></Adsense>
+             :data-ad-client="adClient"
+             :data-ad-slot="adId"
+             :data-ad-format="ads[adId].adFormat"
+             :data-full-width-responsive="ads[adId].fullWidthResponsive"></Adsense>
   </Card>
 </template>
 
 <script setup>
+import {account_storage} from "@/assets/js";
+
 export default {
   name: 'AdsGoogle',
   props: {
@@ -20,18 +25,19 @@ export default {
   watch: {
     id: {
       handler(value) {
-        if (!this.isSkipAds)
-          this.adId = value.toString();
+        this.adId = value.toString();
       }
     }
   },
   data() {
     return {
+      account_storage,
+
       adId: "",
       adClient: "ca-pub-6625226616103631",
       ads: {
         "7930151828": {
-          style: "width: 100%;height: 100px;",
+          style: "width: 100%;height: 80px;",
           class: [],
           adFormat: 'true',
           fullWidthResponsive: 'true'
@@ -46,13 +52,25 @@ export default {
     }
   },
   created() {
-    if (!this.isSkipAds)
-      this.adId = this.id.toString();
+    this.adId = this.id.toString();
+  },
+  methods: {
+    offAds() {
+      account_storage.updateConfiguration('ads-switch', false);
+      this.$router.push({
+        name: this.$router.name,
+        query: {
+          ...this.$route.query,
+          skipAds: true
+        }
+      })
+    }
   },
   computed: {
-    isSkipAds() {
-      return this.$route.query['skipAds'] || false;
-    }
+    adsSwitch() {
+      const isSkipAds = this.$route.query['skipAds'] || false;
+      return isSkipAds ? false : account_storage.getConfiguration('ads-switch');
+    },
   }
 }
 </script>
@@ -60,6 +78,25 @@ export default {
 <style lang="less">
 .ad-container {
   overflow: hidden;
+
+  .ad-off {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.02);
+
+    & * {
+      opacity: .5;
+    }
+  }
 
   ins, .ins {
     position: relative;

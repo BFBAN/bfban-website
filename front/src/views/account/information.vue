@@ -40,7 +40,8 @@
                 {{ $t('signup.form.password') }}
               </div>
               <Input v-model="formItem.password" :placeholder="$t('signup.form.password')" disabled type="password">
-                <a href="javascript:void(0)" slot="append" @click="modal_changePassword.show = !modal_changePassword.show">
+                <a href="javascript:void(0)" slot="append"
+                   @click="modal_changePassword.show = !modal_changePassword.show">
                   <Icon type="md-create" size="15"/>
                 </a>
               </Input>
@@ -130,7 +131,7 @@
             <FormItem :label="$t('profile.account.form.language')">
               <Row>
                 <Col>
-                  <Checkbox v-model="langLocalSync" @on-change="switchLangLocalSync"></Checkbox>
+                  <Checkbox v-model="langLocalSync" @on-change="switchAttr('langLocalSync',langLocalSync)"></Checkbox>
                 </Col>
                 <Col flex="1">
                   <Select v-model="formItem.attr.language"
@@ -158,6 +159,12 @@
             <FormItem :label="$t('profile.account.form.allowDM')">
               <Alert show-icon>{{ $t('profile.account.form.allowDMdescribe') }}</Alert>
               <i-switch v-model="formItem.attr.allowDM"/>
+            </FormItem>
+          </Col>
+          <Col :xs="{span: 24}" :lg="{span: 12}">
+            <FormItem :label="'Ad'">
+              <Alert show-icon>You can refuse to serve ads, the site is still open for public benefit, change the switch to off, and all ads on the site will be terminated</Alert>
+              <i-switch v-model="adsSwitch" @on-change="switchAttr('ads-switch', adsSwitch)"/>
             </FormItem>
           </Col>
         </Row>
@@ -296,14 +303,15 @@
 </template>
 
 <script>
+import {api, http, http_token, account_storage} from "../../assets/js";
+
+import Application from "@/assets/js/application";
+import AdsGoogle from "@/components/ads/google/index.vue";
+import Textarea from "@/components/Textarea.vue";
 import Captcha from "../../components/Captcha";
 import UserAvatar from "@/components/UserAvatar.vue";
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
 import TimeView from "@/components/TimeView.vue";
-
-import {api, http, http_token, account_storage} from "../../assets/js";
-import Textarea from "@/components/Textarea.vue";
-import Application from "@/assets/js/application";
 
 export default new Application({
   name: "account",
@@ -311,6 +319,7 @@ export default new Application({
     return {
       privileges: [],
       languages: [],
+      adsSwitch: account_storage.getConfiguration('ads-switch'),
       userInfoLoad: false, // 用户信息获取状态
       formLoad: false, // 表单提交状态
       langLocalSync: false, // 用户信息保存语言是否同步开关
@@ -332,7 +341,7 @@ export default new Application({
       passwordCaptcha: "",
     }
   },
-  components: {Textarea, TimeView, Captcha, UserAvatar, PrivilegesTag},
+  components: {Textarea, TimeView, Captcha, UserAvatar, PrivilegesTag, AdsGoogle},
   created() {
     this.http = http_token.call(this);
 
@@ -504,15 +513,11 @@ export default new Application({
         })
       })
     },
-    /**
-     * 切换本地同步
-     * 是否同步再登录后同步语言
-     */
-    switchLangLocalSync(val) {
-      account_storage.updateConfiguration('langLocalSync', this.langLocalSync);
-    },
     checkLangLocalSync() {
       this.langLocalSync = account_storage.getConfiguration('langLocalSync');
+    },
+    switchAttr(key, val) {
+      account_storage.updateConfiguration(key, val);
     }
   },
   computed: {
