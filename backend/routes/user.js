@@ -156,7 +156,7 @@ async (req, res, next) => {
                 originUserId: registrant.originUserId,
                 originPersonaId: registrant.originPersonaId,
                 privilege: JSON.stringify(['normal']),
-                attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.query.lang)),
+                attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.headers["accept-language"] || req.query.lang)),
                 createTime: new Date(),
                 updateTime: new Date(),
             };
@@ -201,7 +201,7 @@ async (req, res, next) => {
             originName: originName,
             originEmail: originEmail,
             privilege: JSON.stringify(['normal']),
-            attr: JSON.stringify(userDefaultAttribute()),
+            attr: JSON.stringify(userDefaultAttribute(undefined, req.headers["accept-language"] || req.query.lang)),
             createTime: new Date(),
         });
         return res.status(201).json({success: 1, code: 'signup.success', message: 'Welcome to BFBan!'});
@@ -448,7 +448,7 @@ async function showUserInfo(req, res, next) {
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
         const reportNum = await db('comments')
             .select('comments.byUserId', 'comments.type')
-            .count({num: 'id'},{method: 'estimate'})
+            .count({num: 'id'}, {method: 'estimate'})
             .where({byUserId: user.id, type: 'report'})
             .first().then(r => r.num);
         let statusNum = {};

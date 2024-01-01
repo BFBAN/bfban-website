@@ -15,8 +15,7 @@
         <div class="styles_bg"></div>
         <img class="styles_bg_img" src="../assets/images/hero-grid-overlay.png"/>
       </div>
-      <div
-          :class="`search-content ${(searchVal.length > 3 && searchPosting) ? 'search-content-mini' : ''}`">
+      <div :class="`search-content ${(searchVal.length > 3 && searchPosting) ? 'search-content-mini' : ''}`">
         <Row type="flex" justify="center" :gutter="20" style="width: 100%">
           <Col :xs="{span: 24}" :sm="{span: 18}" :md="{span: 18}">
             <div class="search-input search-input-show ivu-input ivu-input-large">
@@ -37,12 +36,12 @@
 
                     <!-- Search history S -->
                     <div transfer slot="list" style="padding: 10px">
-                      <Row :gutter="5" v-if="searchHistory.list.length > 0">
+                      <Row type="flex" align="middle" :gutter="5" v-if="searchHistory.list.length > 0">
                         <Col flex="1">
                           <h5><b>{{ searchHistory.list.length }}</b><span>/10</span></h5>
                         </Col>
                         <Col>
-                          <Button size="small" type="primary" @click="deleteSearchHistoryAll">
+                          <Button size="small" type="primary" ghost @click="deleteSearchHistoryAll">
                             <Icon type="md-trash"/>
                           </Button>
                         </Col>
@@ -68,7 +67,6 @@
                       </div>
                     </div>
                     <!-- Search history E -->
-
                   </Dropdown>
                 </Col>
                 <Col>
@@ -87,7 +85,6 @@
                   </Button>
                 </Col>
               </Row>
-
             </div>
           </Col>
         </Row>
@@ -106,52 +103,114 @@
       </div>
 
       <template v-if="searchVal.length >= 3 && searchPosting">
-        <Tabs v-model="searchTypeValue" @on-click="onTabClick">
-          <div slot="extra">
-            <Button size="small" @click="handleSearch">
-              <Icon type="md-refresh" :class="modalSpinShow ? 'spin-icon-load' : ''"/>
-            </Button>
-          </div>
+        <Row type="flex" align="middle">
+          <Col flex="1">
+            <Tabs captureFocus v-model="searchTypeValue" @on-click="onTabClick">
+              <TabPane name="player" :label="$t('search.tabs.player')"></TabPane>
+              <TabPane name="user" :label="$t('search.tabs.user')" :disabled="!isLogin"></TabPane>
+            </Tabs>
+          </Col>
+          <Col>
+            <Row :gutter="5">
+              <Col>
+                <template v-if="searchTypeValue == 'player'">
+                  <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400"
+                          popper-class="files-poptip"
+                          :padding="'20px 30px'">
+                    <Button size="small">
+                      <Icon type="md-funnel" size="15"/>
+                    </Button>
+                    <Form ref="filesFunnel" label-position="top" slot="content">
+                      <FormItem>
+                        <RadioGroup v-model="searchGameSort" type="button">
+                          <Radio label="default">{{ $t('search.sort.default') }}</Radio>
+                          <Radio label="latest">{{ $t('search.sort.latest') }}</Radio>
+                          <Radio label="mostViewed">{{ $t('search.sort.mostViewed') }}</Radio>
+                          <Radio label="mostComments">{{ $t('search.sort.mostComments') }}</Radio>
+                        </RadioGroup>
+                      </FormItem>
+                      <FormItem>
+                        <Select v-model="searchGameValue" :transfer="true" class="search-input-show">
+                          <Icon type="ios-funnel" slot="prefix"
+                                style="margin-left: 10px; margin-right: 5px; opacity: .6"/>
+                          <Option v-for="i in searchGameList" :value="i.value" :key="i.value">
+                            {{ $t('basic.games.' + i.value) }}
+                          </Option>
+                        </Select>
+                      </FormItem>
+                      <FormItem label="">
+                        <DatePicker type="daterange"
+                                    translate
+                                    placement="bottom-end"
+                                    split-panels
+                                    @on-change="handleCDatepicker"
+                                    :options="timeOptions"
+                                    :value="intervalTime"
+                                    style="width: 100%"></DatePicker>
+                      </FormItem>
+                      <Row :gutter="10">
+                        <Col>
+                          <Button @click="handleSearch" type="primary" :disabled="modalSpinShow">
+                            {{ $t('basic.button.commit') }}
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Poptip>
+                </template>
+                <template v-else-if="searchTypeValue == 'user'">
+                  <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400"
+                          popper-class="files-poptip"
+                          :padding="'20px 30px'">
+                    <Button size="small">
+                      <Icon type="md-funnel" size="15"/>
+                    </Button>
+                    <Form ref="filesFunnel" label-position="top" slot="content">
+                      <FormItem>
+                        <RadioGroup v-model="searchUserSort" type="button">
+                          <Radio label="default">{{ $t('search.sort.default') }}</Radio>
+                          <Radio label="joinedAt">{{ $t("account.joinedAt") }}</Radio>
+                          <Radio label="lastOnlineTime">{{ $t("account.lastOnlineTime") }}</Radio>
+                        </RadioGroup>
+                      </FormItem>
+                      <FormItem>
+                        <DatePicker type="daterange"
+                                    placement="bottom-end"
+                                    split-panels
+                                    @on-change="handleCDatepicker"
+                                    :options="timeOptions"
+                                    :value="intervalTime"
+                                    style="width: 100%"></DatePicker>
+                      </FormItem>
+                      <Row :gutter="10">
+                        <Col>
+                          <Button @click="handleSearch" type="primary" :disabled="modalSpinShow">
+                            {{ $t('basic.button.commit') }}
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Poptip>
+                </template>
+              </Col>
 
-          <TabPane name="player" :label="$t('search.tabs.player')"></TabPane>
-          <TabPane name="user" :label="$t('search.tabs.user')" :disabled="!isLogin"></TabPane>
-        </Tabs>
+              <Col>
+                <Button size="small" @click="handleSearch">
+                  <Icon type="md-refresh" :class="modalSpinShow ? 'spin-icon-load' : ''"/>
+                </Button>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
 
-        <!-- 玩家 S -->
+        <!-- 案件 S -->
         <template v-if="searchTypeValue == 'player'">
-          <Row :gutter="10">
-            <Col flex="1">
-              <RadioGroup v-model="searchGameSort" type="button" @on-change="handleSearch">
-                <Radio label="default">{{ $t('search.sort.default') }}</Radio>
-                <Radio label="latest">{{ $t('search.sort.latest') }}</Radio>
-                <Radio label="mostViewed">{{ $t('search.sort.mostViewed') }}</Radio>
-                <Radio label="mostComments">{{ $t('search.sort.mostComments') }}</Radio>
-              </RadioGroup>
-            </Col>
-            <Col>
-              <Select v-model="searchGameValue" :transfer="true" class="search-input-show" @on-change="handleSearch">
-                <Icon type="ios-funnel" slot="prefix" style="margin-left: 10px; margin-right: 5px; opacity: .6"/>
-                <Option v-for="i in searchGameList" :value="i.value" :key="i.value">
-                  {{ $t('basic.games.' + i.value) }}
-                </Option>
-              </Select>
-            </Col>
-            <Col>
-              <DatePicker type="daterange"
-                          placement="bottom-end"
-                          split-panels
-                          @on-change="handleCDatepicker"
-                          :options="timeOptions"
-                          :value="intervalTime"
-                          style="width: 100%"></DatePicker>
-            </Col>
-          </Row>
-          <Card dis-hover class="list" v-if="result.player.length > 0">
+          <Card dis-hover class="search-list" v-if="result.player.length > 0">
             <div v-for="(d, d_index) in result.player" :key="d_index" class="item-card" v-voice-button>
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
-                <Card dis-hover :padding="10">
+                <Card dis-hover :padding="10" :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}">
                   <Row :gutter="10" type="flex">
-                    <Col :xs="{span: 5, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
+                    <Col :xs="{span: 5, push: 0,pull:0}" :sm="{span: 3,push:0,pull:0}" :lg="{span: 2, push: 0,pull:0}">
                       <!-- 头像 S -->
                       <Avatar :src="d.avatarLink"
                               class="default-avatar"
@@ -166,14 +225,11 @@
                       </template>
                       <!-- 头像 E -->
                     </Col>
-                    <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
+                    <Col :xs="{span: 18, push: 0,pull:0}" :sm="{span: 18,push:0,pull:0}"
+                         :lg="{span: 18, push: 0,pull:0}">
                       <div style="display: flex; flex-direction: column;">
                         <Tooltip :content="$t('list.colums.playerId')">
-                          <h2>
-                            <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}">
-                              {{ d.historyName }}
-                            </router-link>
-                          </h2>
+                          <h2>{{ d.historyName }}</h2>
                         </Tooltip>
                       </div>
 
@@ -226,33 +282,15 @@
             <Empty></Empty>
           </Card>
         </template>
-        <!-- 玩家 E -->
+        <!-- 案件 E -->
 
         <!-- 用户 S -->
         <template v-if="searchTypeValue == 'user'">
-          <Row :gutter="10">
-            <Col flex="1">
-              <RadioGroup v-model="searchUserSort" type="button" @on-change="handleSearch">
-                <Radio label="default">{{ $t('search.sort.default') }}</Radio>
-                <Radio label="joinedAt">{{ $t("account.joinedAt") }}</Radio>
-                <Radio label="lastOnlineTime">{{ $t("account.lastOnlineTime") }}</Radio>
-              </RadioGroup>
-            </Col>
-            <Col>
-              <DatePicker type="daterange"
-                          placement="bottom-end"
-                          split-panels
-                          @on-change="handleCDatepicker"
-                          :options="timeOptions"
-                          :value="intervalTime"
-                          style="width: 100%"></DatePicker>
-            </Col>
-          </Row>
-          <Card dis-hover class="list" v-if="result.user.length > 0">
+          <Card dis-hover class="search-list" v-if="result.user.length > 0">
             <div v-for="(user, user_index) in result.user" :key="user_index" class="item-card" v-voice-button>
-              <Card dis-hover :padding="10" @click.native="$router.push({path: '/account/' + user.dbId})">
+              <Card dis-hover :padding="10" :to="{path: '/account/' + user.dbId}">
                 <Row :gutter="10" type="flex">
-                  <Col :xs="{span: 5, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
+                  <Col :xs="{span: 4, push: 0,pull:0}" :sm="{span: 2,push:0,pull:0}" :lg="{span: 2, push: 0,pull:0}">
                     <!-- 头像 S -->
                     <Avatar :src="user.userAvatar"
                             alt="avatar"
@@ -265,7 +303,7 @@
                     </Avatar>
                     <!-- 头像 E -->
                   </Col>
-                  <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
+                  <Col :xs="{span: 15, push: 0,pull:0}" :sm="{span: 17,push:0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
                     <div style="display: flex; flex-direction: column;">
                       <Tooltip :content="$t('list.colums.playerId')">
                         <h2>
@@ -286,7 +324,8 @@
                       </TimeView>
                     </div>
                   </Col>
-                  <Col :xs="{span: 4, push: 0,pull:0}" align="right">
+                  <Col :xs="{span: 5, push: 0,pull:0}" :sm="{span: 5,push:0,pull:0}" :lg="{span: 5, push: 0,pull:0}"
+                       align="right">
                     <PrivilegesTag :data="user.privilege"></PrivilegesTag>
                   </Col>
                 </Row>
@@ -471,6 +510,9 @@ export default new Application({
     this.searchVal ? this.handleSearch() : null
   },
   methods: {
+    /**
+     * 查询
+     */
     getSearchHistory() {
       let history = storage.get('search.history');
 
@@ -546,6 +588,7 @@ export default new Application({
       const that = this;
       const keyword = this.searchVal.replaceAll(' ', '').trim();
       let data = {keyword, type: this.searchTypeValue};
+      let message = "";
 
       data = Object.assign({game: this.searchGameValue, gameSort: this.searchGameSort}, data);
 
@@ -608,16 +651,17 @@ export default new Application({
           this.result[this.searchTypeValue] = d.data;
           this.total[this.searchTypeValue] = d.total;
 
-          if (d.data.length <= 0) {
+          if (d.data.length <= 0)
             this.$Message.info(this.$i18n.t('search.notExist'))
-            return;
-          }
           return;
         }
 
-        this.$Message.error(d.data.message || d.code)
+        typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        });
+        this.$Message.error({content: message, duration: 10});
       }).catch(err => {
-        this.$Message.error(err)
+        this.$Message.error({content: err, duration: 10});
       }).finally(() => {
         that.modalSpinShow = false;
         that.searchPosting = true;
@@ -627,7 +671,7 @@ export default new Application({
 });
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 @import "@/assets/css/avatar.less";
 @import "@/assets/css/radio.less";
 @import "@/assets/css/icon.less";
@@ -676,7 +720,7 @@ export default new Application({
   }
 }
 
-.list {
+.search-list {
   margin: 20px 0 0 0;
   position: relative;
 
@@ -694,4 +738,11 @@ export default new Application({
     margin: 0 20px 0 5px;
   }
 }
+
+.files-poptip {
+  .ivu-poptip-body-content {
+    overflow: inherit !important;
+  }
+}
+
 </style>

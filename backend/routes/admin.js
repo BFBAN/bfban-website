@@ -730,7 +730,7 @@ router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
                 originUserId: registrant.originUserId,
                 originPersonaId: registrant.originPersonaId,
                 privilege: JSON.stringify(['normal']),
-                attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.query.lang)),
+                attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.headers["accept-language"] || req.query.lang)),
                 createTime: new Date(),
                 updateTime: new Date(),
             };

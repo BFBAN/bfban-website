@@ -2,11 +2,11 @@
   <Card dis-hover :padding="0" class="ad-container mobile-hide" :class="adId && ads[adId].class || []"
         v-if="!isSkipAds"
         :style="ads[adId].style">
-    <ins v-if="adId"
-         :data-ad-client="'ca-pub-6625226616103631'"
+    <Adsense v-if="adId"
+         :data-ad-client="adClient"
          :data-ad-slot="adId"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
+         :data-ad-format="ads[adId].adFormat"
+         :data-full-width-responsive="ads[adId].fullWidthResponsive"></Adsense>
   </Card>
 </template>
 
@@ -28,14 +28,19 @@ export default {
   data() {
     return {
       adId: "",
+      adClient: "ca-pub-6625226616103631",
       ads: {
         "7930151828": {
           style: "width: 100%;height: 100px;",
-          class: []
+          class: [],
+          adFormat: 'true',
+          fullWidthResponsive: 'true'
         },
         "1760339032": {
           style: "width: 100%;height: 300px;margin-bottom: 10px;",
-          class: []
+          class: [],
+          adFormat: 'true',
+          fullWidthResponsive: 'true'
         }
       }
     }

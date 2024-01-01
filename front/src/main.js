@@ -12,7 +12,7 @@ import ViewUI from 'view-design'
 import VueQuillEditor from 'vue-quill-editor'
 import ECharts from 'vue-echarts'
 import Cookies from 'js-cookie'
-// import Ads from 'vue-google-adsense'
+import Ads from 'vue-google-adsense'
 
 // vue directive, [https://v2.cn.vuejs.org/v2/guide/custom-directive.html]
 Directive(Vue);
@@ -33,10 +33,10 @@ import 'quill/dist/quill.snow.css'
 // pwa js
 import './registerServiceWorker'
 
-// Vue.use(require('vue-script2'))
-// Vue.use(Ads.Adsense , { adClient: 'ca-pub-6625226616103631', isNewAdsCode: true })
-// Vue.use(Ads.InArticleAdsense)
-// Vue.use(Ads.InFeedAdsense)
+Vue.use(require('vue-script2'))
+Vue.use(Ads.Adsense , { adClient: 'ca-pub-6625226616103631'})
+Vue.use(Ads.InArticleAdsense)
+Vue.use(Ads.InFeedAdsense)
 Vue.use(less)
 Vue.use(ViewUI, {i18n: (key, value) => i18n.t(key,value)})
 Vue.use(VueQuillEditor)

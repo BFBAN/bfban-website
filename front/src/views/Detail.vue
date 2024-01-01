@@ -2049,8 +2049,6 @@ export default new Application({
           break;
       }
 
-      console.log(data);
-
       this.replySpinShow = true;
       this.http.post(api["player_reply"], {data}).then(res => {
         const d = res.data;

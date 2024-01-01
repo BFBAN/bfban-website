@@ -53,7 +53,7 @@ const userAttributes = {
     "registerIP": {type: "string", get: false, set: false, default: ''},
     "lastSigninIP": {type: "string", get: false, set: false, default: ''},
     "avatar": {type: "string", get: true, set: false, default: ''},
-    "introduction": {type: "string", get: true, set: true, default: ''},
+    "introduction": {type: "string", get: true, set: true, default: '', handleValue: (value) => xss(value, xssConfig)},
     "mute": {type: "string", get: true, set: true, default: ''},
     "achievements": {type: "object", get: true, set: true, default: {}}
 }
@@ -62,17 +62,15 @@ function userShowAttributes(attr, showprivate = false, force = false) {
     const result = {};
     for (let i of Object.keys(userAttributes))
         if ((userAttributes[i].get && showprivate | (!userAttributes[i].isprivate)) || force)
-            result[i] = attr[i];
+            result[i] = i.handleValue ? i.handleValue(attr[i]) : attr[i];
     return result;
 }
 
 function userSetAttributes(org, attr, force = false) {
     let result = org;
     for (let i of Object.keys(userAttributes))
-        if (typeof (attr[i]) == userAttributes[i].type && (userAttributes[i].set || force)) {
-            result[i] = attr[i];
-        }
-
+        if (typeof (attr[i]) == userAttributes[i].type && (userAttributes[i].set || force))
+            result[i] = i.handleValue ? i.handleValue(attr[i]) : attr[i];
     return result;
 }
 

@@ -62,7 +62,7 @@ const converter = new Stream.Writable({
     /** @param {OldUser} chunk */
     write: async (chunk, encoding, callback)=> {
         console.log('--Now handling row:'+chunk.id);
-        const attr = userDefaultAttribute('0.0.0.0');
+        const attr = userDefaultAttribute(undefined);
         attr.freezeOfNoBinding = true;
         /** @type {User} */
         const obj = {
