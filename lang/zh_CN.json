@@ -660,39 +660,68 @@
         "special": "特殊"
       },
       "list": {
-        "trend_weekly_assemble": {
+        "user_innocent_case": {
+          "name": "无罪释放",
+          "conditions": "- 在联BAN中存在一个与此账户关联的案件<br>- 案件状态自证、无效举报、刷枪",
+          "description": "案件无效"
+        },
+        "user_achievement_assemble": {
+          "name": "成就收藏家",
+          "description": "成就收藏者(此成就不会展示在列表中，仅自己可见)"
+        },
+        "user_achievement_l1": {
+          "name": "成就1",
+          "conditions": "- 拥有3个成就",
+          "description": "已获取3个成就"
+        },
+        "user_achievement_l2": {
+          "name": "成就2",
+          "conditions": "- 拥有10个以上成就",
+          "description": "拥有10个以上成就"
+        },
+        "user_achievement_l3": {
+          "name": "成就3",
+          "conditions": "- 拥有10个以上成就<br>- 10成就内包含1个珍贵成就",
+          "description": "拥有10个以上成就，且包含1个珍贵"
+        },
+        "user_achievement_l4": {
+          "name": "成就4",
+          "conditions": "- 拥有15个以上成就<br>- 10成就内包含3个珍贵成就",
+          "description": "拥有10个以上成就，且包含3个珍贵"
+        },
+        "active_community_weekly_assemble": {
           "name": "周贡献",
           "description": "用户在一周(7天)社区累计贡献"
         },
-        "trend_weekly_l1": {
+        "active_community_weekly_l1": {
           "name": "一周社区贡献",
           "conditions": "- 在本周统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
           "description": "一周社区贡献前10名"
         },
-        "trend_monthly_assemble": {
+        "active_community_monthly_assemble": {
           "name": "月贡献",
           "description": "用户在一个月内社区累计贡献"
         },
-        "trend_monthly_l1": {
+        "active_community_monthly_l1": {
           "name": "一个月社区贡献",
           "conditions": "- 在本月统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
           "description": "一月社区贡献前10名"
         },
-        "trend_monthly_l2": {
+        "active_community_monthly_l2": {
           "name": "一个月社区贡献",
           "conditions": "- 在本月统计社区参与排行榜中前3用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
           "description": "一月社区贡献前3名"
         },
-        "trend_yearly_assemble": {
+        "active_community_yearly_assemble": {
           "name": "年贡献",
           "description": "用户在一年内社区累计贡献"
         },
-        "trend_yearly_l1": {
+        "active_community_yearly_l1": {
           "name": "一年社区贡献",
           "conditions": "- 在本年统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
           "description": "一年社区贡献前10名"
         },
-        "trend_yearly_l2": {
+        "active_community_yearly_l2": {
           "name": "一年社区贡献",
           "conditions": "- 在本年统计社区参与排行榜中前3用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
           "description": "一年社区贡献前3名"
