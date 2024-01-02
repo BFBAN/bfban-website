@@ -1,9 +1,9 @@
 <template>
   <Tabs :value="tagsName">
-    <TabPane :label="$t('profile.chat.tabsList.itemName')" class="profile-body" name="message0">
-      <Card dis-hover :padding="0">
-        <p slot="title"></p>
-        <div slot="extra">
+    <TabPane :label="$t('profile.chat.tabsList.itemName')" name="message0">
+      <div class="chat">
+        <Row class="profile-body" type="flex" align="middle">
+          <Col flex="1"></Col>
           <Button size="small" :disabled="!selectWindow" @click="setMessageEdit" v-voice-button>
             {{ $t('profile.chat.control') }}
           </Button>
@@ -11,45 +11,40 @@
           <Button type="primary" size="small" :loading="messageLoad" @click="getMessage" v-voice-button>
             {{ $t('profile.chat.load') }}
           </Button>
-        </div>
+        </Row>
         <Row v-if="messageList[selectWindow]">
-          <Col class="message-user">
-            <template>
-              <div v-for="(i, index) in messageUser" :key="index">
-                <Row :gutter="10"
-                     type="flex" justify="center" align="middle"
-                     class="message-user-item">
-                  <Col>
-                    <Badge :count="messageList[i.type]['num'] || 0"
-                           v-if="messageList[i.type] && messageList[i.type]['num'] > 1">
-                      <Avatar icon="md-notifications"></Avatar>
-                    </Badge>
-                    <Avatar icon="md-notifications" v-else> {{ i.text[0] }}</Avatar>
-                  </Col>
-                  <Col flex="1">
-                    <template v-if="i.type == 'reply'">
-                      <businessCard :id="i.id">
-                        <p><b>{{ i.text.toString() }}</b></p>
-                      </businessCard>
-                    </template>
-                    <template v-else>
-                      <p><b>{{ i.text.toString() }}</b></p>
-                    </template>
-                  </Col>
-                  <Col>
-                    <a @click="openMessageDetail(i)" v-voice-button>
-                      {{ $t('profile.chat.look') }}
-                      <Icon type="ios-arrow-dropright" v-if="selectWindow != i.value"/>
-                      <Icon type="md-arrow-dropright-circle" v-else/>
-                    </a>
-                  </Col>
-                </Row>
-              </div>
-            </template>
+          <Col class="chat-user">
+            <div v-for="(i, index) in messageUser" :key="index" @click="openMessageDetail(i)" >
+              <Row :gutter="10"
+                   type="flex" justify="center" align="middle"
+                   class="chat-user-item">
+                <Col>
+                  <Badge :count="messageList[i.value]['unreadNum'] || 0"
+                         v-if="messageList[i.value] && messageList[i.value]['unreadNum'] > 1">
+                    <Avatar icon="md-notifications"></Avatar>
+                  </Badge>
+                  <Avatar icon="md-notifications" v-else> {{ i.text[0] }}</Avatar>
+                </Col>
+                <Col flex="1">
+                  <businessCard :id="i.id" v-if="'reply' == i.type">
+                    <b>{{ i.text.toString() }}</b>
+                  </businessCard>
+                  <span v-else><b>{{ i.text.toString() }}</b></span>
+                  ({{ messageList[i.value]['num']||0}})
+                </Col>
+                <Col>
+                  <Button size="small" v-voice-button>
+                    {{ $t('profile.chat.look') }}
+                    <Icon type="ios-arrow-dropright" v-if="selectWindow != i.value"/>
+                    <Icon type="md-arrow-dropright-circle" v-else/>
+                  </Button>
+                </Col>
+              </Row>
+            </div>
           </Col>
-          <Col flex="1" class="message-content">
+          <Col flex="1" class="chat-content">
             <!-- 编辑 S -->
-            <Row class="message-content-control" v-if="control.open">
+            <Row class="chat-content-control" v-if="control.open">
               <Col>
                 <Checkbox v-model="control.all" @on-change="onBatchAll"></Checkbox>
                 <Divider type="vertical"/>
@@ -70,29 +65,38 @@
             </Row>
             <!-- 编辑 E -->
 
-            <div class="message-content-box">
+            <div class="chat-content-box">
               <div v-for="(child, child_index) of messageList[selectWindow].child" :key="child_index"
-                   class="message-content-item">
+                   class="chat-content-item">
                 <Row :gutter="18">
                   <Col span="2" v-if="control.open">
                     <Checkbox v-model="child.choose"></Checkbox>
                   </Col>
                   <Col :span="control.open ? 22 : 24">
-                    <Row>
+                    <Row type="flex" align="middle">
                       <Col flex="1">
                         <TimeView :time="child.time">
-                          <Time :time="child.time"/>
+                          <Time :time="child.time" type="datetime"/>
                         </TimeView>
                       </Col>
                       <Col>
+                        <Tag type="border" :color="{'fatal': 'red', 'warn': 'red'}[child.type] || 'info'">{{ child.type }}</Tag>
+                      </Col>
+                      <Col v-if="['direct', 'warn', 'reply'][child.type]">
                         <a href="javascript:void(0)" v-if="child.haveRead == 0" @click="onMessageMark(child.id, 0)">
                           <Icon type="md-eye" size="20"/>
                         </a>
                       </Col>
                     </Row>
-                    <Card dis-hover :padding="0">
+                    <Card dis-hover :padding="0" style="margin: 10px 0">
                       <Html :html="child.content"></Html>
                     </Card>
+                    <Row>
+                      <Col flex="1">
+                        <span v-if="['info', 'warn', 'fatal'].indexOf(child.type) < 0">by <u>{{ child.username }}</u>({{ child.byUserId }})</span>
+                      </Col>
+                      <Col># {{ child.id }}</Col>
+                    </Row>
                   </Col>
                 </Row>
 
@@ -112,7 +116,7 @@
             <!--              </Col>-->
             <!--            </Row>-->
 
-            <div class="message-content-footer" v-if="messageList[selectWindow].type == 'direct'">
+            <div class="-content-footer" v-if="messageList[selectWindow].type == 'direct'">
               <router-link :to="{name: 'account',params: {uId: selectWindow}, query: {repeat: true}}">
                 <Button long type="primary" v-voice-button>
                   <Icon type="ios-send" size="20"/>
@@ -120,11 +124,12 @@
               </router-link>
             </div>
           </Col>
+
         </Row>
         <template v-else>
-          <div class="message-content-not">{{ $t('basic.tip.notContent') }}</div>
+          <div class="chat-content-not">{{ $t('basic.tip.notContent') }}</div>
         </template>
-      </Card>
+      </div>
     </TabPane>
   </Tabs>
 </template>
@@ -251,13 +256,12 @@ export default new Application({
     async onBatchOperation() {
       let onFun = [];
       this.messageList[this.selectWindow].child.forEach(i => {
-        if (i.choose) {
+        if (i.choose && ['direct', 'warn', 'reply'][i.type]) {
           switch (this.control.model) {
             case 0:
               // 0: 批量已读时，检查下方的消息是否已读，如果是则跳过
-              if (i.haveRead == 0) {
+              if (i.haveRead == 0)
                 onFun.push(this.onMessageMark(i.id, this.control.model));
-              }
               break;
             case 1:
               // 删除
@@ -278,7 +282,7 @@ export default new Application({
      * 设置消息状态
      * 已读，未读，删除
      */
-    async onMessageMark(id, type) {
+    async onMessageMark(id, type = 0) {
       await this.http.post(api["user_message_mark"], {
         params: {
           id,
@@ -295,7 +299,7 @@ export default new Application({
       this.message.load = true;
       this.message.playerList = [];
 
-      if (value.length <= 2 || typeof value == 'number') return
+      if (value.length <= 2 || typeof value == 'number') return;
 
       http.get(api["users"], {
         params: {
@@ -331,70 +335,84 @@ export default new Application({
           let messageUser = [];
           let messageList = {};
 
+          // 处理用户列表
           d.data.messages.forEach(i => {
-            let numUser = 0;
-            let num = 0;
-
             switch (i.type) {
-              case 'fatal':
-              case 'warn':
+              case "info":
+              case "fatal":
+              case "warn":
+              case "toAll":
+              case "toAdmins":
+              case "toNormals":
                 // 系统通知类
-                messageUser.forEach(t => {
-                  t.type == i.type ? num += 1 : null
-                });
-
-                if (num <= 0) {
+                if (!messageUser.find(j => j.type == i.type)) {
                   messageUser.push({
                     text: "@" + this.$i18n.t('profile.chat.types.' + i.type + '.text'),
                     id: i.byUserId,
                     value: i.type,
-                    type: i.type
+                    type: i.type,
+                    index: 0,
                   });
                 }
                 break;
-              case 'info':
               case "reply":
               case "direct":
-
+              default:
                 // 用户通知类
-                messageUser.forEach(t => {
-                  if (t.value == i.byUserId) num += 1;
-                });
-
-                if (num <= 0) {
+                if (!messageUser.find(j => j.id == i.byUserId)) {
                   messageUser.push({
                     text: i.username || i.byUserId,
                     id: i.byUserId,
                     value: i.byUserId,
-                    type: i.type
+                    type: i.type,
+                    index: 1,
                   });
                 }
                 break;
             }
 
-            let val = i.byUserId;
-
+            // 处理内容列表
             switch (i.type) {
-              case 'fatal':
-              case 'warn':
-                val = i.type;
+              case "info":
+              case "fatal":
+              case "warn":
+              case "toAll":
+              case "toAdmins":
+              case "toNormals":
+                if (!messageList[i.type])
+                  messageList[i.type] = {child: [], num: 0}
+
+                messageList[i.type].child.push(Object.assign(i, {
+                  time: i.createTime,
+                  content: `<p>${i.content}</p>`,
+                  choose: false,
+                }));
+
+                messageList[i.type].type = i.type;
+                messageList[i.type].num = messageList[i.type].child.length || 0;
+                return;
+
+              case "reply":
+              case "direct":
+              default:
+                if (!messageList[i.byUserId])
+                  messageList[i.byUserId] = {child: [], num: 0}
+
+                messageList[i.byUserId].child.push(Object.assign(i, {
+                  time: i.createTime,
+                  content: `<p>${i.content}</p>`,
+                  choose: false,
+                }));
+
+                messageList[i.byUserId].type = i.type;
+                messageList[i.byUserId].num = messageList[i.byUserId].child.length || 0;
+                messageList[i.byUserId].unreadNum = messageList[i.byUserId].child.filter(i => i.haveRead === 0).length;
                 break;
             }
-
-            if (!messageList[val]) {
-              messageList[val] = {child: [], num: 0}
-            }
-            messageList[val].child.push(Object.assign(i, {
-              time: i.createTime,
-              content: `<p>${i.content}</p>`,
-              choose: false,
-            }));
-            messageList[val].type = i.type;
-            messageList[val].num = messageList[val].child.length || 0;
           });
 
           this.messageList = messageList;
-          this.messageUser = messageUser.sort((a, b) => a.value > b.value);
+          this.messageUser = messageUser.sort((a, b) => a.index - b.index);
         }
       }).finally(() => {
         this.messageLoad = false;
@@ -407,57 +425,64 @@ export default new Application({
 </script>
 
 <style lang="less" scoped>
-.message-user {
-  width: 230px;
-}
+.chat {
+  margin-top: -16px;
+  min-height: 600px;
 
-.message-user > div {
-  padding: 10px 15px 2px 15px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-}
+  .chat-user {
+    width: 300px;
+    height: 100%;
+    cursor: pointer;
+  }
 
-.message-user-item {
-  margin-bottom: 10px;
-}
+  .chat-user > div {
+    padding: 10px 15px 2px 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  }
 
-.message-content {
-  display: flex;
-  background-color: rgba(0, 0, 0, .02);
-  flex-direction: column;
-  justify-content: space-between;
-}
+  .chat-user-item {
+    margin-bottom: 10px;
+  }
 
-.message-content-box {
-  overflow: auto;
-  min-height: 350px;
-  max-height: 400px;
-  height: 100%;
-}
+  .chat-content {
+    display: flex;
+    background-color: rgba(0, 0, 0, .02);
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
-.message-content-item > .ivu-row {
-  padding: 15px 20px !important;
-  width: calc(100% + 9px);
-}
+  .chat-content-box {
+    overflow: auto;
+    min-height: 350px;
+    max-height: 150vh;
+    height: 70vh;
+  }
 
-.message-content-item > .ivu-divider {
-  margin: 0 !important;
-  opacity: .3;
-}
+  .chat-content-item > .ivu-row {
+    padding: 15px 20px !important;
+    width: calc(100% + 9px);
+  }
 
-.message-content-not {
-  min-height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.03);
-}
+  .chat-content-item > .ivu-divider {
+    margin: 0 !important;
+    opacity: .3;
+  }
 
-.message-content-control {
-  background-color: rgba(0, 0, 0, 0.02);
-  padding: 10px 18px;
-}
+  .chat-content-not {
+    min-height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.03);
+  }
 
-.message-content-footer {
-  padding: 10px 20px;
+  .chat-content-control {
+    background-color: rgba(0, 0, 0, 0.02);
+    padding: 10px 18px;
+  }
+
+  .chat-content-footer {
+    padding: 10px 20px;
+  }
 }
 </style>

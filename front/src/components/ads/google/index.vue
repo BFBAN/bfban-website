@@ -78,12 +78,20 @@ export default {
 </script>
 
 <style lang="less">
+.ad-container:hover,
+.ad-container:active,
+.ad-container:focus {
+  .ad-off {
+    display: flex;
+  }
+}
+
 .ad-container {
   .ad-off {
     position: absolute;
     top: 5px;
     right: 5px;
-    display: flex;
+    display: none;
     cursor: pointer;
     justify-content: center;
     align-items: center;

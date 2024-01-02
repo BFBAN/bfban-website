@@ -38,7 +38,7 @@ const achievementConfig = {
     },
     'old_user': {
         another: ['old_user'],
-        points: 10,
+        points: 100,
         async conditions(req, res, next) {
             const user = req.user;
             return new Date(user.createTime).getDate() < new Date('2024 01-01').getTime() && user.id <= 10000;
@@ -116,7 +116,6 @@ const achievementConfig = {
             const user = req.user;
             const totalReports = await db('comments')
                 .count({num: 1})
-                .distinct('comments.toPlayerId')
                 .where({'comments.byUserId': user.id, type: 'report'})
                 .andWhere('createTime', '>=', new Date('2024 01-01'))
                 .first().then(r => r.num);

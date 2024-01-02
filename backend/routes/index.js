@@ -759,8 +759,7 @@ async (req, res, next) => {
                     .andWhere('players.games', 'like', game ? `%"${game}"%` : "%")
                     .andWhere('players.createTime', '>=', createTimeFrom)
                     .andWhere('players.createTime', '<=', createTimeTo)
-                    .andWhere({valid: 1})
-                    .groupBy('players.originUserId'),
+                    .andWhere({valid: 1}),
                 playerArray = await history.offset(skip).limit(limit),
                 playerTotal = await history.first().then(r => 1);
 

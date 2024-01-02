@@ -1,11 +1,24 @@
 <template>
   <Row :gutter="5">
     <template v-if="data != {}">
-      <Col v-for="(i,index) in processingSortList" :key="index">
+      <Col v-for="(i,index) in processingSortList.slice(0,maxOverflow)" :key="index">
         <AchievementView :id="i.value" :onlyShow="true" v-if="getAchievements(i.value)['isShowCard']">
           <img :src="getIcon(getAchievements(i.value)['iconPath'])" :width="size" :height="size"/>
           <span slot="content">{{ $t(`profile.achievement.list.${i.value}.name`) }}</span>
         </AchievementView>
+      </Col>
+      <Col v-if="processingSortList.length > maxOverflow">
+        <Poptip trigger="hover">
+          <Icon type="md-more"></Icon>
+          <div slot="content">
+            <Col v-for="(i,index) in processingSortList.slice(maxOverflow,processingSortList.length )" :key="index">
+              <AchievementView :id="i.value.toString()" :onlyShow="true" v-if="getAchievements(i.value)['isShowCard']">
+                <img :src="getIcon(getAchievements(i.value)['iconPath'])" :width="size" :height="size"/>
+                <span slot="content">{{ $t(`profile.achievement.list.${i.value}.name`) }}</span>
+              </AchievementView>
+            </Col>
+          </div>
+        </Poptip>
       </Col>
     </template>
     <template v-else>
@@ -30,6 +43,10 @@ export default {
     size: {
       type: String,
       default: '20px'
+    },
+    maxOverflow: {
+      type: Number,
+      default: 3
     }
   },
   data() {

@@ -473,7 +473,7 @@ async function showUserInfo(req, res, next) {
             id: user.id,
             userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
             username: user.username,
-            userAachievementExp: (req.user && req.user.id === user.id) && user.attr.showAchievement ? totalAachievementExp(req.user) : null,
+            userAachievementExp: user.attr.showAchievement ? totalAachievementExp(req.user) : null,
             privilege: user.privilege,
             joinTime: user.createTime,
             lastOnlineTime: user.updateTime,

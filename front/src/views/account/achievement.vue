@@ -1,5 +1,5 @@
 <template>
-  <Tabs :value="'1'">
+  <Tabs :value="'1'" class="achievement">
     <TabPane :label="$t('profile.achievement.title')" name="1">
       <Banner :height="200" class="achievement-banner">
         <Form class="profile-body">
@@ -12,7 +12,7 @@
             <Col>
               <FormItem>
                 <template slot="label">
-                  <span class="achievement-banner-title">{{ $t('profile.achievement.owned') }}</span>
+                  <span class="achievement-banner-title">{{ $t('profile.achievement.exp') }}</span>
                   <Icon type="md-color-wand" size="25"/>
                 </template>
                 <span class="achievement-banner-value">{{ userAchievementsInfo.userAachievementExp || 0 }}</span>
@@ -21,17 +21,22 @@
             <Col>
               <FormItem>
                 <template slot="label">
-                  <span class="achievement-banner-title">已拥有</span>
+                  <span class="achievement-banner-title">{{ $t('profile.achievement.owned') }}</span>
                   <Icon type="md-trophy" color="yellow" size="25"/>
                   <Icon type="md-eye-off" size="25" v-if="!userAchievementsInfo.isPublicAchievement" />
                 </template>
                 <AchievementsTag :data="userAchievementsInfo.achievements"
+                                 :max-overflow="6"
                                  v-if="userAchievementsInfo.achievements"></AchievementsTag>
               </FormItem>
             </Col>
           </Row>
         </Form>
       </Banner>
+
+      <Spin size="large" fix v-show="load">
+        <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+      </Spin>
 
       <div class="profile-body">
         <Row :gutter="20" v-for="(i,index) in achievements.child.filter(i => !i.isHidden)" :key="index"
@@ -138,6 +143,8 @@ export default {
   data() {
     return {
       achievements: achievements,
+
+      load: false,
       userAchievementsInfo: {}
     }
   },
@@ -152,6 +159,7 @@ export default {
      * 获取用户成就列表
      */
     getUserAchievement() {
+      this.load = true;
       this.http.get(api["account_achievements"]).then(res => {
         const d = res.data;
 
@@ -174,6 +182,8 @@ export default {
             }
           }
         }
+      }).finally(() => {
+        this.load = false;
       })
     },
     getIcon(path) {
@@ -198,8 +208,8 @@ export default {
   margin-top: 5px !important;
 }
 
-
 .achievement-banner {
+  position: relative;
   margin-top: -16px;
   margin-bottom: 15px;
 

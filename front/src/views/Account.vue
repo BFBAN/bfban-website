@@ -46,7 +46,7 @@
                 </template>
               </div>
 
-              <Row :gutter="20" type="flex" justify="center" align="middle">
+              <Row :gutter="10" type="flex" justify="center" align="middle">
                 <Col>
                   <PrivilegesTag :data="account.privilege" v-if="account.privilege"></PrivilegesTag>
                   <p v-else>-</p>
@@ -75,7 +75,7 @@
                 <template v-if="account.attr && account.attr.achievements && Object.keys(account.attr.achievements).length > 0">
                   <Divider type="vertical"/>
                   <Col>
-                    <AchievementsTag :data="account.attr.achievements"></AchievementsTag>
+                    <AchievementsTag :data="account.attr.achievements" :max-overflow="3"></AchievementsTag>
                     <p class="account-info-p">{{ $t("profile.achievement.title") }}</p>
                   </Col>
                 </template>
