@@ -46,10 +46,10 @@ export default {
     this.onSort()
   },
   methods: {
-    onSort () {
+    onSort() {
       Object.entries(this.data).forEach(i => {
-        this.processingSortList.push({value: i[0], time: i[1]});
-      })
+        this.processingSortList.push({value: i[0], time: i[1]})
+      });
       this.processingSortList.sort((a, b) => a.time > b.time)
     },
     getIcon(path) {

@@ -1,8 +1,8 @@
 <template>
-  <Poptip width="300" :trigger="trigger" transfer :disabled="disabled" :padding="0">
+  <Poptip :width="300" :trigger="trigger" transfer :disabled="disabled" padding="0">
     <span class="achievement-view-slot"><slot></slot></span>
     <div slot="content" class="achievement-view">
-      <Banner height="160">
+      <Banner :height="160">
         <div align="center">
           <Avatar :size="50" shape="square" :src="getIcon(achievementInfo.iconPath)" v-if="achievementInfo.iconPath" width="25px" height="25px"/>
         </div>

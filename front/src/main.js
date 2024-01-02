@@ -4,10 +4,10 @@ import config from "../package.json"
 import Vue from 'vue'
 import App from './App.vue'
 import i18n from './i18n'
-import less from 'less'
 import router from './router'
 import store from './store'
 import Directive  from './directive.js';
+import Less from 'less'
 import ViewUI from 'view-design'
 import VueQuillEditor from 'vue-quill-editor'
 import ECharts from 'vue-echarts'
@@ -34,10 +34,8 @@ import 'quill/dist/quill.snow.css'
 import './registerServiceWorker'
 
 Vue.use(require('vue-script2'))
-Vue.use(Ads.Adsense , { adClient: 'ca-pub-6625226616103631'})
-Vue.use(Ads.InArticleAdsense)
-Vue.use(Ads.InFeedAdsense)
-Vue.use(less)
+Vue.use(Ads.Adsense)
+Vue.use(Less)
 Vue.use(ViewUI, {i18n: (key, value) => i18n.t(key,value)})
 Vue.use(VueQuillEditor)
 

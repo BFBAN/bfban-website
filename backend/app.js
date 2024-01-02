@@ -14,8 +14,8 @@ import {generateCaptcha} from "./lib/captcha.js";
 import logger from "./logger.js";
 
 import router_user from "./routes/user.js";
-import router_user_subscribes from "./routes/user_subscribes.js";
-import router_user_achievement from "./routes/user_achievements.js";
+import {router as router_user_subscribes} from "./routes/user_subscribes.js";
+import {router as router_user_achievement} from "./routes/user_achievements.js";
 import router_admin from "./routes/admin.js"
 import router_index from "./routes/index.js";
 import router_player from "./routes/player.js";
@@ -26,7 +26,7 @@ import {query as checkquery, validationResult, body as checkbody} from "express-
 import {captchaRateLimiter, UserRateLimiter} from "./middleware/rateLimiter.js";
 import {verifyJWT} from "./middleware/auth.js";
 
-import "./services/loader.js"; // load services
+import "./services/loader.js";
 
 // process
 process.on('uncaughtException', (err) => {

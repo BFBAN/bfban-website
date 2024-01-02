@@ -82,7 +82,7 @@
                 <Divider type="vertical"/>
                 <Col>
                   <Poptip :transfer="true">
-                    <h3>{{ account.reportnum || '-' }}
+                    <h3>{{ account.reportNum || '-' }}
                       <Icon type="md-more"/>
                     </h3>
                     <Row :gutter="15" type="flex" justify="center" align="middle" slot="content"
@@ -106,13 +106,13 @@
                         <Divider type="vertical"/>
                         <Col>
                           <b>{{
-                              account.reportnum - (account.statusNum['0'] + account.statusNum['1'] + account.statusNum['4'])
+                              account.reportNum - (account.statusNum['0'] + account.statusNum['1'] + account.statusNum['4'])
                             }}</b>
                           <p class="account-info-p">···</p>
                         </Col>
                         <Col>=</Col>
                         <Col>
-                          <b>{{ account.reportnum || '-' }}</b>
+                          <b>{{ account.reportNum || '-' }}</b>
                           <p class="account-info-p">{{ $t("account.reportNum") }}</p>
                         </Col>
                       </template>
@@ -496,7 +496,7 @@ export default new Application({
           });
 
           this.report.data = reportData;
-          this.total = Number(this.account.reportnum);
+          this.total = Number(this.account.reportNum);
         }
       }).finally(() => {
         this.$Loading.finish();

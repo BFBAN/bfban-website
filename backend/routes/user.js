@@ -12,6 +12,7 @@ import {sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify} f
 import {allowPrivileges, forbidPrivileges, verifyAllowPrivilege, verifyJWT} from "../middleware/auth.js";
 import {generatePassword, comparePassword, userHasRoles, privilegeRevoker} from "../lib/auth.js";
 import {userDefaultAttribute, userSetAttributes, userShowAttributes} from "../lib/user.js";
+import {achievementConfig, totalAachievementExp} from "./user_achievements.js"
 import {siteEvent} from "../lib/bfban.js";
 import logger from "../logger.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
@@ -472,6 +473,7 @@ async function showUserInfo(req, res, next) {
             id: user.id,
             userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
             username: user.username,
+            userAachievementExp: (req.user && req.user.id === user.id) && user.attr.showAchievement ? totalAachievementExp(req.user) : null,
             privilege: user.privilege,
             joinTime: user.createTime,
             lastOnlineTime: user.updateTime,
@@ -483,9 +485,13 @@ async function showUserInfo(req, res, next) {
             attr: userShowAttributes(user.attr,
                 (req.user && req.user.id === user.id), // self, show private info
                 (req.user && userHasRoles(req.user, ['admin', 'super', 'root', 'dev']))), // no limit for admin
-            reportnum: reportNum,
+            reportNum: reportNum,
             statusNum: statusNum,
         };
+        if (!user.attr.showAchievement) {
+            delete data.attr.achievements;
+            delete data.userAachievementExp;
+        }
 
         return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
             success: 1,

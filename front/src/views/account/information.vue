@@ -161,9 +161,15 @@
               <i-switch v-model="formItem.attr.allowDM"/>
             </FormItem>
           </Col>
+
           <Col :xs="{span: 24}" :lg="{span: 12}">
-            <FormItem :label="'Ad'">
-              <Alert show-icon>You can refuse to serve ads, the site is still open for public benefit, change the switch to off, and all ads on the site will be terminated</Alert>
+            <FormItem :label="$t('profile.account.form.showAchievement')">
+              <i-switch v-model="formItem.attr.showAchievement"/>
+            </FormItem>
+          </Col>
+          <Col :xs="{span: 24}" :lg="{span: 12}">
+            <FormItem :label="$t('profile.account.form.AD')">
+              <Alert show-icon>{{$t('profile.account.form.ADDescribe')}}</Alert>
               <i-switch v-model="adsSwitch" @on-change="switchAttr('ads-switch', adsSwitch)"/>
             </FormItem>
           </Col>

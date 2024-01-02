@@ -55,6 +55,7 @@ const userAttributes = {
     "avatar": {type: "string", get: true, set: false, default: ''},
     "introduction": {type: "string", get: true, set: true, default: '', handleValue: (value) => xss(value, xssConfig)},
     "mute": {type: "string", get: true, set: true, default: ''},
+    "showAchievement": {type: "boolean", get: true, set: true, default: true},
     "achievements": {type: "object", get: true, set: true, default: {}}
 }
 

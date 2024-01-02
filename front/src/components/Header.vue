@@ -131,9 +131,11 @@
         <Divider type="vertical"/>
         <Dropdown>
           <DropdownItem style="padding: 0;">
-            <div v-for="(i, theme_index) in themes.child" :key="theme_index">
+            <div v-for="(i, theme_index) in themes.child" :key="theme_index" class="iuv-card">
               <template v-if="$store.state.$theme.name == i.name">
-                <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
+                <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`">
+                  <Icon type="md-color-fill" size="18" />
+                </div>
               </template>
             </div>
           </DropdownItem>
@@ -293,9 +295,15 @@ header {
 
 .hedaer-theme-color {
   display: flex;
-  width: 23px;
-  height: 23px;
-  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+  width: 27px;
+  height: 27px;
+  border-radius: 3px;
+
+  .ivu-icon {
+    opacity: .1;
+  }
 }
 
 .hedaer-theme-color.right-space {

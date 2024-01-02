@@ -1,5 +1,6 @@
 <template>
-  <Poptip :padding="'0'" max-width="300" trigger="hover" transfer @on-popper-show="onPoptipShow(false)"
+  <Poptip :padding="0" max-width="300" trigger="hover" transfer :disabled="getProtocol == 'mailto:'"
+          @on-popper-show="onPoptipShow(false)"
           @on-popper-hide="onPoptipShow(true)">
     <span class="html-link">
       <template v-if="getProtocol == 'http:' || getProtocol == 'https:'">
@@ -20,14 +21,17 @@
             </Badge>
           </div>
         </template>
-        <iframe :src="disableIframe ? '' : afterData.href" v-show="!linkLoad"
-                allowTransparency="true"
-                frameborder="no"
-                border="0"
-                marginwidth="0"
-                marginheight="0"
-                scrolling="no"
-                sandbox="allow-scripts allow-forms"></iframe>
+        <template v-show="!isIframeShow">
+          <iframe :src="disableIframe ? '' : afterData.href" v-show="!linkLoad"
+                  allowTransparency="true"
+                  security="restricted"
+                  frameborder="no"
+                  border="0"
+                  marginwidth="0"
+                  marginheight="0"
+                  scrolling="no"
+                  sandbox="allow-same-origin allow-forms allow-scripts"></iframe>
+        </template>
       </div>
     </template>
   </Poptip>
@@ -121,6 +125,7 @@ export default {
 .link-iframe {
   border-radius: 3px;
   overflow: hidden;
+  cursor: pointer;
   margin-bottom: -10px;
   position: relative;
   height: 200px;

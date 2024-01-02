@@ -1,12 +1,37 @@
 <template>
   <Tabs :value="'1'">
     <TabPane :label="$t('profile.achievement.title')" name="1">
-      <template v-if="Object.keys(userAchievements).length > 0">
-        <div style="margin: 10px 10px">
-          <AchievementsTag :data="userAchievements"></AchievementsTag>
-        </div>
-        <Divider style="opacity: .4"></Divider>
-      </template>
+      <Banner :height="200" class="achievement-banner">
+        <Form class="profile-body">
+          <Row :gutter="10">
+            <Col flex="1">
+              <UserAvatar :src="userAchievementsInfo.userAvatar" :size="45"></UserAvatar>
+              <h1>{{ userAchievementsInfo.username || 'username' }}</h1>
+              <p>{{ userAchievementsInfo.userId }}</p>
+            </Col>
+            <Col>
+              <FormItem>
+                <template slot="label">
+                  <span class="achievement-banner-title">{{ $t('profile.achievement.owned') }}</span>
+                  <Icon type="md-color-wand" size="25"/>
+                </template>
+                <span class="achievement-banner-value">{{ userAchievementsInfo.userAachievementExp || 0 }}</span>
+              </FormItem>
+            </Col>
+            <Col>
+              <FormItem>
+                <template slot="label">
+                  <span class="achievement-banner-title">已拥有</span>
+                  <Icon type="md-trophy" color="yellow" size="25"/>
+                  <Icon type="md-eye-off" size="25" v-if="!userAchievementsInfo.isPublicAchievement" />
+                </template>
+                <AchievementsTag :data="userAchievementsInfo.achievements"
+                                 v-if="userAchievementsInfo.achievements"></AchievementsTag>
+              </FormItem>
+            </Col>
+          </Row>
+        </Form>
+      </Banner>
 
       <div class="profile-body">
         <Row :gutter="20" v-for="(i,index) in achievements.child.filter(i => !i.isHidden)" :key="index"
@@ -106,15 +131,17 @@ import achievements from "/public/config/achievements.json"
 import AchievementView from "@/components/AchievementView.vue";
 import AchievementsTag from "@/components/AchievementsTag.vue";
 import {api, http_token} from "@/assets/js";
+import Banner from "@/components/Banner.vue";
+import UserAvatar from "@/components/UserAvatar.vue";
 
 export default {
   data() {
     return {
       achievements: achievements,
-      userAchievements: {}
+      userAchievementsInfo: {}
     }
   },
-  components: {AchievementView, AchievementsTag},
+  components: {AchievementView, AchievementsTag, UserAvatar, Banner},
   created() {
     this.http = http_token.call(this);
 
@@ -129,9 +156,9 @@ export default {
         const d = res.data;
 
         if (d.success === 1) {
-          this.userAchievements = d.data.achievements;
-          for (let userAchievementIndex in Object.entries(this.userAchievements)) {
-            let userAItem = Object.entries(this.userAchievements)[userAchievementIndex];
+          this.userAchievementsInfo = d.data;
+          for (let userAchievementIndex in Object.entries(this.userAchievementsInfo.achievements)) {
+            let userAItem = Object.entries(this.userAchievementsInfo.achievements)[userAchievementIndex];
             const value = userAItem[1];
             const key = userAItem[0];
 
@@ -170,6 +197,22 @@ export default {
   margin-bottom: 4px !important;
   margin-top: 5px !important;
 }
+
+
+.achievement-banner {
+  margin-top: -16px;
+  margin-bottom: 15px;
+
+  .achievement-banner-title {
+    font-size: 20px
+  }
+
+  .achievement-banner-value {
+    opacity: .8;
+    font-size: 18px;
+  }
+}
+
 
 .achievement-item {
   margin-bottom: 30px;

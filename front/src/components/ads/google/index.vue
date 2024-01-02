@@ -1,15 +1,16 @@
 <template>
-  <Card dis-hover :padding="0" class="ad-container mobile-hide" :class="adId && ads[adId].class || []"
+  <Card dis-hover :padding="0" class="ad-container" :class="adId && ads[adId].class || []"
         v-if="adId && adsSwitch"
         :style="ads[adId].style">
     <div class="ad-off" @click="offAds">
       <Icon size="10" type="md-close"></Icon>
     </div>
-    <Adsense v-if="adId"
-             :data-ad-client="adClient"
-             :data-ad-slot="adId"
-             :data-ad-format="ads[adId].adFormat"
-             :data-full-width-responsive="ads[adId].fullWidthResponsive"></Adsense>
+    <Adsense
+        v-if="adId"
+        :data-ad-client="adClient.toString()"
+        :data-ad-slot="adId.toString()"
+        :data-ad-format="ads[adId].adFormat"
+        :data-full-width-responsive="ads[adId].fullWidthResponsive"></Adsense>
   </Card>
 </template>
 
@@ -39,14 +40,14 @@ export default {
         "7930151828": {
           style: "width: 100%;height: 80px;",
           class: [],
-          adFormat: 'true',
-          fullWidthResponsive: 'true'
+          adFormat: 'false',
+          fullWidthResponsive: 'false'
         },
         "1760339032": {
           style: "width: 100%;height: 300px;margin-bottom: 10px;",
           class: [],
-          adFormat: 'true',
-          fullWidthResponsive: 'true'
+          adFormat: 'false',
+          fullWidthResponsive: 'false'
         }
       }
     }
@@ -69,7 +70,8 @@ export default {
   computed: {
     adsSwitch() {
       const isSkipAds = this.$route.query['skipAds'] || false;
-      return isSkipAds ? false : account_storage.getConfiguration('ads-switch');
+      const adsSwitchValue = account_storage.getConfiguration('ads-switch') || true; // On by default
+      return isSkipAds ? false : adsSwitchValue;
     },
   }
 }
@@ -77,8 +79,6 @@ export default {
 
 <style lang="less">
 .ad-container {
-  overflow: hidden;
-
   .ad-off {
     position: absolute;
     top: 5px;
@@ -101,8 +101,6 @@ export default {
   ins, .ins {
     position: relative;
     z-index: 5;
-    min-width: 100%;
-    min-height: 100%;
   }
 }
 

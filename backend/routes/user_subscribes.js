@@ -118,4 +118,6 @@ router.post('/subscribes/delete', verifyJWT, forbidPrivileges(['freezed', 'black
     }
 });
 
-export default router;
+export {
+    router,
+};

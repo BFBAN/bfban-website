@@ -1,7 +1,7 @@
 <template>
   <div class="widget-banner" :style="`height: ${height}px`"
        @dblclick.prevent.stop="updateBackground">
-    <div class="home-backdrop-filter">
+    <div class="home-backdrop-filter ivu-btn-primary">
       <slot name="header"/>
     </div>
     <div class="widget-banner-body mt-7">
@@ -43,22 +43,6 @@ export default {
         "922200.jpg",
         "922367.jpg",
         "922941.jpg",
-
-        "923013.jpg",
-        "923016.jpg",
-        "923021.jpg",
-        "923023.jpg",
-        "923024.jpg",
-        "923030.jpg",
-        "923032.jpg",
-
-        "1002308.jpg",
-        "1002312.jpg",
-        "1002314.jpg",
-        "1003868.jpg",
-        "1018612.jpg",
-        "1035269.jpg",
-        "1039956.jpg",
       ]
     }
   },

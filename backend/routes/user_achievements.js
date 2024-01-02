@@ -4,6 +4,7 @@ import {validationResult} from "express-validator";
 import db from "../mysql.js";
 import express from "express";
 import {userSetAttributes} from "../lib/user.js";
+import {getGravatarAvatar} from "../lib/gravatar.js";
 import config from "../config.js";
 import fetch from 'node-fetch';
 
@@ -122,7 +123,6 @@ const achievementConfig = {
 
             const hammerReports = await db('comments')
                 .count({num: 1})
-                .distinct('comments.toPlayerId')
                 .join('players')
                 .select('players.status', 'comments.byUserId', 'comments.type')
                 .where({'comments.byUserId': user.id, type: 'comments.report', 'players.status': 1})
@@ -211,8 +211,12 @@ router.get('/achievements', verifyJWT, forbidPrivileges(['freezed', 'blacklisted
         if (!user)
             return res.status(404).json({error: 1, code: 'achievement.notFound', message: 'no such user.'});
 
-        var result = {
-            id: user.id,
+        const result = {
+            userId: user.id,
+            username: user.username,
+            userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
+            userAachievementExp: totalAachievementExp(user),
+            isPublicAchievement: user.attr.showAchievement,
             achievements: user.attr.achievements || {}
         };
 
@@ -330,5 +334,12 @@ router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "r
     }
 });
 
+function totalAachievementExp (user = {}) {
+    return user.attr && Object.keys(user.attr.achievements).reduce((now, cur) =>  achievementConfig[now].points + achievementConfig[cur].points);
+}
 
-export default router;
+export {
+    router,
+    achievementConfig,
+    totalAachievementExp,
+};
