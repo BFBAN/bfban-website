@@ -10,7 +10,7 @@
         <h3 class="achievement-view-body achievement-view-title">
           <Row :gutter="10">
             <Col>
-              <b>{{ $t(`profile.achievement.list.${achievementInfo.value}.name`) }}</b>
+              <b :title="achievementInfo.value">{{ $t(`profile.achievement.list.${achievementInfo.value}.name`) }}</b>
             </Col>
             <Col>
               <Tag type="border" :color="achievements.raritys[achievementInfo.rarity].class" v-if="achievementInfo.rarity">

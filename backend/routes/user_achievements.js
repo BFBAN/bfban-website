@@ -370,7 +370,7 @@ router.post('/achievement/admin/add', verifyJWT, allowPrivileges(["super", "root
 
 router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('userId').optional().isInt({min: 0}),
-    checkbody('achievementId').isIn(Object.keys(achievementConfig))
+    checkbody('achievementId')
 ], async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
@@ -384,14 +384,13 @@ router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "r
             return res.status(404).json({error: 1, code: 'achievement.notFound', message: 'no such user.'});
 
         let update = {attr: {...user.attr}}
-        let attr = {};
-        if (achievementConfig[achievementId]) {
-            delete req.user.attr.achievements[achievementId];
-            attr.achievements = {...req.user.attr.achievements};
+        if (update.attr.achievements[achievementId]) {
+            delete update.attr.achievements[achievementId];
+            update.attr.achievements = {...update.attr.achievements};
         } else
             return res.status(403).json({error: 1, code: 'achievement.not', message: 'No such achievement'})
 
-        update.attr = JSON.stringify(userSetAttributes(req.user.attr, attr, true));
+        update.attr = JSON.stringify(userSetAttributes(user.attr, update.attr, true));
 
         await db.from('users').update(update).where({id: userId || req.user.id});
         if (achievementConfig[achievementId].end)

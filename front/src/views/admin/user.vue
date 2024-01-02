@@ -29,7 +29,7 @@
           </Option>
         </Select>
       </Col>
-      <template v-if="userType.value == 'all'">
+      <template v-if="userType.value === 'all'">
         <Col>
           <Select v-model="userParameter.value" @on-change="getUserList">
             <Option :value="i.value" v-for="(i,index) in userParameter.list" :key="index">
@@ -205,7 +205,34 @@
               </Col>
               <Col span="24">
                 <FormItem :label="$t('profile.achievement.title')" prop="achievements">
-                  <AchievementsTag :data="editUserData.attr.achievements"></AchievementsTag>
+                  <Card dis-hover>
+                    <AchievementsTag :data="editUserData.attr.achievements || {}"
+                                     max-overflow="6"
+                                     v-if="editUserData.attr.achievements"></AchievementsTag>
+
+                    <code type="json" style="width: 100%; white-space: pre-line">{{editUserData.attr.achievements}}</code>
+
+                    <Row :gutter="10">
+                      <Col>
+                        <Select v-model="editUserData.achievementTypeValue">
+                          <Option value="add">Add</Option>
+                          <Option value="delete">Delete</Option>
+                        </Select>
+                      </Col>
+                      <Col flex="1">
+                        <Input v-model="editUserData.achievementValue"></Input>
+                      </Col>
+                      <Col>
+                        <Button
+                            @click="editUserData.achievementTypeValue === 'add' ? setUserAchievement(editUserData.id, editUserData.achievementValue) : deleteUserAchievement(editUserData.id, editUserData.achievementValue)">
+                          <Icon v-if="editUserData.achievementTypeValue === 'add'" type="md-add"/>
+                          <Icon v-else-if="editUserData.achievementTypeValue === 'delete'" type="md-close"/>
+                        </Button>
+                      </Col>
+                    </Row>
+                    <p class="hint">The achievement value added here will ignore the rule and be saved upon
+                      confirmation</p>
+                  </Card>
                 </FormItem>
               </Col>
             </Row>
@@ -237,6 +264,11 @@
                   <i-switch v-model="editUserData.attr.allowDM"/>
                 </FormItem>
               </Col>
+              <Col span="12">
+                <FormItem :label="$t('profile.account.form.showAchievement')">
+                  <i-switch v-model="editUserData.attr.showAchievement"/>
+                </FormItem>
+              </Col>
             </Row>
 
             <FormItem :label="$t('profile.account.form.privileges')" prop="privileges">
@@ -263,8 +295,8 @@
                     </Col>
                     <Col>
                       <Button @click="onEditPrivileges">
-                        <Icon v-if="editPrivilegesForm.activeName == 'grant'" type="md-add"/>
-                        <Icon v-else-if="editPrivilegesForm.activeName == 'revoke'" type="md-close"/>
+                        <Icon v-if="editPrivilegesForm.activeName === 'grant'" type="md-add"/>
+                        <Icon v-else-if="editPrivilegesForm.activeName === 'revoke'" type="md-close"/>
                       </Button>
                     </Col>
                   </Row>
@@ -370,10 +402,10 @@
               <Icon :type="{
                 'logic': 'md-trash',
                 'real':'md-trash',
-              }[delTypeValue]" v-if="delTypeValue != 'restore'"/>
+              }[delTypeValue]" v-if="delTypeValue !== 'restore'"/>
               {{ $t('basic.button.submit') }}
 
-              <template v-if="delTypeValue=='real'">⚠️⚠️⚠️</template>
+              <template v-if="delTypeValue==='real'">⚠️⚠️⚠️</template>
             </Button>
           </Col>
         </Row>
@@ -394,10 +426,13 @@ import PrivilegesTag from "/src/components/PrivilegesTag";
 import AchievementsTag from "@/components/AchievementsTag.vue";
 import Textarea from "@/components/Textarea";
 import Application from "@/assets/js/application";
+import achievement from "/public/config/achievements.json";
 
 export default new Application({
   data() {
     return {
+      achievement,
+
       delUserModel: false,
       delUserLoad: false,
       delTypes: ['logic', 'real', 'restore'],
@@ -429,6 +464,8 @@ export default new Application({
           language: '',
           introduction: ''
         },
+        achievementTypeValue: 'add',
+        achievementValue: '',
         temporaryPrivilege: {},
         privilege: []
       },
@@ -524,7 +561,7 @@ export default new Application({
         }).then(res => {
           const d = res.data;
 
-          if (d.success == 1) {
+          if (d.success === 1) {
             this.$Message.success(d.code);
             return
           }
@@ -618,6 +655,7 @@ export default new Application({
     },
     /**
      * 站内用户搜索
+     * @returns {Promise<*>}
      */
     async getUserList() {
       const that = this;
@@ -642,7 +680,7 @@ export default new Application({
         }).then(res => {
           const d = res.data;
 
-          if (d.success == 1) {
+          if (d.success === 1) {
             that.userListData = d.data;
             that.total = d.total;
             return;
@@ -680,12 +718,56 @@ export default new Application({
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           // TODO
           return;
         }
 
         this.$Message.error(d.message || d.code);
+      })
+    },
+    /**
+     * 添加用户身份
+     * @param userId
+     * @param achievementId
+     * @returns {Promise<void>}
+     */
+    async setUserAchievement(userId, achievementId) {
+      await this.http.post(api['account_achievement_add'], {
+        data: {userId, achievementId}
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success === 1) {
+          this.$Message.success(d.message || d.code);
+          return;
+        }
+
+        this.$Message.error(d.message || d.code);
+      }).finally(() => {
+        this.getSearchUser()
+      })
+    },
+    /**
+     * 删除用户身份
+     * @param userId
+     * @param achievementId
+     * @returns {Promise<void>}
+     */
+    async deleteUserAchievement(userId, achievementId) {
+      await this.http.post(api['account_achievement_delete'], {
+        data: {userId, achievementId}
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success === 1) {
+          this.$Message.success(d.message || d.code);
+          return;
+        }
+
+        this.$Message.error(d.message || d.code);
+      }).finally(() => {
+        this.getSearchUser()
       })
     },
     /**
@@ -713,7 +795,7 @@ export default new Application({
         }).then(res => {
           const d = res.data;
 
-          if (d.success == 1) {
+          if (d.success === 1) {
             resolve()
             return;
           }
