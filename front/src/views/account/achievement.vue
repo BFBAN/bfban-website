@@ -26,7 +26,8 @@
                   <Icon type="md-eye-off" size="25" v-if="!userAchievementsInfo.isPublicAchievement" />
                 </template>
                 <AchievementsTag :data="userAchievementsInfo.achievements"
-                                 :max-overflow="6"
+                                 :max-overflow="4"
+                                 :size="'25px'"
                                  v-if="userAchievementsInfo.achievements"></AchievementsTag>
               </FormItem>
             </Col>

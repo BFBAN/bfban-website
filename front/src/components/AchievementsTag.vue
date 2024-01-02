@@ -11,15 +11,15 @@
       </block>
       <Col v-if="processingSortList.length > maxOverflow">
         <Poptip trigger="hover">
-          <Icon type="md-more"></Icon>
-          <div slot="content">
-            <Col v-for="(i,index) in processingSortList.slice(maxOverflow,processingSortList.length )" :key="index">
+          <Icon type="md-more" :size="size.replace('px', '')"></Icon>
+          <template slot="content">
+            <span v-for="(i,index) in processingSortList.slice(maxOverflow,processingSortList.length )" :key="index">
               <AchievementView :id="i.value.toString()" :onlyShow="true" v-if="getAchievements(i.value)['isShowCard']">
                 <img :src="getIcon(getAchievements(i.value)['iconPath'])" :width="size" :height="size"/>
                 <span slot="content">{{ $t(`profile.achievement.list.${i.value}.name`) }}</span>
               </AchievementView>
-            </Col>
-          </div>
+            </span>
+          </template>
         </Poptip>
       </Col>
     </template>
@@ -58,7 +58,8 @@ export default {
     }
   },
   watch: {
-    '$route': 'onSort'
+    '$route': 'onSort',
+    'data': 'onSort',
   },
   components: {AchievementView},
   created() {
@@ -69,7 +70,7 @@ export default {
       Object.entries(this.data).forEach(i => {
         this.processingSortList.push({value: i[0], time: i[1]})
       });
-      this.processingSortList.sort((a, b) => a.time > b.time)
+      this.processingSortList.sort((a, b) => a.time - b.time)
     },
     getIcon(path) {
       if (path)

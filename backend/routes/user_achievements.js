@@ -330,7 +330,7 @@ router.post('/achievement', verifyJWT, forbidPrivileges(['freezed', 'blacklisted
         update.attr = JSON.stringify(userSetAttributes(req.user.attr, update.attr));
 
         await db.from('users').update(update).where({id: req.user.id});
-        if (achievementConfig[id].end)
+        if (achievementConfig[id].hasOwnProperty('end'))
             achievementConfig[id].end(req, res, next);
 
         return res.status(200).json({success: 1, code: 'achievement.success'});
@@ -359,7 +359,7 @@ router.post('/achievement/admin/add', verifyJWT, allowPrivileges(["super", "root
         update.attr = JSON.stringify(userSetAttributes(req.user.attr, update.attr, true));
 
         await db.from('users').update(update).where({id: userId || user.id});
-        if (achievementConfig[achievementId].end)
+        if (achievementConfig[achievementId].hasOwnProperty('end'))
             achievementConfig[achievementId].end(req, res, next);
 
         return res.status(200).json({success: 1, code: 'achievement.success'});
@@ -393,7 +393,7 @@ router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "r
         update.attr = JSON.stringify(userSetAttributes(user.attr, update.attr, true));
 
         await db.from('users').update(update).where({id: userId || req.user.id});
-        if (achievementConfig[achievementId].end)
+        if (achievementConfig[achievementId].hasOwnProperty('end'))
             achievementConfig[achievementId].end(req, res, next);
 
         return res.status(200).json({success: 1, code: 'achievement.success'});
