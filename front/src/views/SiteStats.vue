@@ -376,7 +376,7 @@ export default new Application({
 
       let selectTime = this.timeArray.filter(i => i.value == this.timeRange)[0].value;
 
-      http.get('/activeStatistical', {
+      http.get(api['activeStatistical'], {
         params: {
           isBot: this.isIncludingRobots,
           time: selectTime,

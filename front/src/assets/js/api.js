@@ -15,6 +15,7 @@ export default class Api {
             "users": "users",
             "players": "players",
             "activity": "activities",
+            "activeStatistical": "activeStatistical",
             "trend": "trend",
 
             "user_message": "message",
@@ -37,7 +38,7 @@ export default class Api {
             "account_signout": "user/signout",
             "account_signin": "user/signin",
             "account_signup": "user/signup",
-            "account_signupVerify":"user/signupVerify",
+            "account_signupVerify": "user/signupVerify",
             "account_signup4dev": "user/signup4dev",
             "account_achievements": "user/achievements",
             "account_achievement": "user/achievement",

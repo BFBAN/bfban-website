@@ -4,7 +4,7 @@
     <div slot="content" class="achievement-view">
       <Banner :height="160">
         <div align="center">
-          <Avatar :size="50" shape="square" :src="getIcon(achievementInfo.iconPath)" v-if="achievementInfo.iconPath" width="25px" height="25px"/>
+          <Avatar :size="50" shape="square" :src="getIcon(achievementInfo.iconPath)" v-if="achievementInfo.iconPath" width="35px" height="35px"/>
         </div>
 
         <h3 class="achievement-view-body achievement-view-title">

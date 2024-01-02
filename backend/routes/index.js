@@ -93,16 +93,17 @@ router.get('/activeStatistical', [
         checkquery('isBot').optional().isBoolean(),
         checkquery('report').optional().isBoolean(),
         checkquery('community').optional().isBoolean(),
+        checkquery('limit').optional().isInt({min: 0, max: 100}),
         checkquery('time').optional().isIn(['daily', 'weekly', 'monthly', 'yearly'])
     ],
     async (req, res, next) => {
         try {
             const validateErr = validationResult(req);
-
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'statistics.bad', message: validateErr.array()});
-
-            const time = {
+            let {isBot = true, report = true, community = true, limit = 10, time} = req.query;
+            const maxLimit = 3000;
+            const times = {
                 'daily': new Date(new Date().getTime() - 24 * 3600 * 1000),
                 'weekly': new Date(new Date().getTime() - 7 * 24 * 3600 * 1000),
                 'monthly': new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
@@ -112,12 +113,16 @@ router.get('/activeStatistical', [
             // 社区参与度
             // Community Engagement
             let data = {community: [], report: []};
-            if (req.query.community) {
+            if (community) {
                 let communityMap = {};
-                let array = await db('comments')
+                let query = db('comments')
                     .join('users', 'comments.byUserId', 'users.id')
                     .select('comments.createTime', 'comments.content', 'comments.type', 'users.createTime', 'users.username', 'users.id')
-                    .where('comments.createTime', '>=', time[req.query.time] || time.weekly);
+                    .where('comments.createTime', '>=', times[req.query.time] || times.weekly)
+                    .limit(time == 'yearly' ? maxLimit : limit);
+                if (!Boolean(isBot))
+                    query = query.whereRaw("NOT JSON_CONTAINS(users.privilege, '\"bot\"')");
+                let array = await query;
 
                 for (const i of array) {
                     if (communityMap[i.id] != null) {
@@ -140,20 +145,22 @@ router.get('/activeStatistical', [
                 }
                 for (const i in communityMap) data.community.push(communityMap[i]);
 
-                data.community = data.community.sort((a, b) => {
-                    return a.total - b.total
-                }).reverse().slice(0, 10)
+                data.community = data.community.sort((a, b) => a.total - b.total).reverse().slice(0, 10)
             }
 
             // 举报统计
             // 7内时间 + 高判决
-            if (req.query.report) {
+            if (report) {
                 let reportMap = {};
-                const reportArray = await db('comments')
+                let reportQuery = db('comments')
                     .join('users', 'comments.byUserId', 'users.id')
                     .select('comments.createTime', 'comments.content', 'comments.type', 'users.createTime', 'users.username', 'users.id')
-                    .where('comments.createTime', '>=', time[req.query.time] || time.weekly)
+                    .where('comments.createTime', '>=', times[req.query.time] || times.weekly)
                     .andWhere('comments.type', 'report')
+                    .limit(time == 'yearly' ? maxLimit : limit);
+                if (!Boolean(isBot))
+                    reportQuery = query.whereRaw("NOT JSON_CONTAINS(users.privilege, '\"bot\"')");
+                let reportArray = await reportQuery;
 
                 for (const i of reportArray) {
                     if (reportMap[i.id] != null) reportMap[i.id].total += 1
@@ -161,11 +168,8 @@ router.get('/activeStatistical', [
                 }
                 for (const i in reportMap) data.report.push(reportMap[i]);
 
-                data.report = data.report.sort((a, b) => {
-                    return a.total - b.total
-                }).reverse().slice(0, 10)
+                data.report = data.report.sort((a, b) => a.total - b.total).reverse().slice(0, 10)
             }
-
 
             res.status(200).json({success: 1, code: 'statistics.ok', data: data});
         } catch (err) {

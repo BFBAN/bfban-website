@@ -94,9 +94,7 @@
             <div @click="onSignout">
               <Dropdown-item divided v-show="isLogin">
                 <Row>
-                  <Col flex="1">
-                    {{ $t("header.signout") }}
-                  </Col>
+                  <Col flex="1">{{ $t("header.signout") }}</Col>
                   <Col>
                     <Icon type="md-log-out"></Icon>
                   </Col>
@@ -134,7 +132,7 @@
             <div v-for="(i, theme_index) in themes.child" :key="theme_index" class="iuv-card">
               <template v-if="$store.state.$theme.name == i.name">
                 <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`">
-                  <Icon type="md-color-fill" size="18" />
+                  <Icon type="md-color-fill" size="18"/>
                 </div>
               </template>
             </div>

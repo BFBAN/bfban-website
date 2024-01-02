@@ -1,12 +1,14 @@
 <template>
   <Row :gutter="5">
     <template v-if="data != {}">
-      <Col v-for="(i,index) in processingSortList.slice(0,maxOverflow)" :key="index">
-        <AchievementView :id="i.value" :onlyShow="true" v-if="getAchievements(i.value)['isShowCard']">
-          <img :src="getIcon(getAchievements(i.value)['iconPath'])" :width="size" :height="size"/>
-          <span slot="content">{{ $t(`profile.achievement.list.${i.value}.name`) }}</span>
-        </AchievementView>
-      </Col>
+      <block v-for="(i,index) in processingSortList.slice(0,maxOverflow)" :key="index">
+        <Col v-if="getAchievements(i.value)['isShowCard']">
+          <AchievementView :id="i.value" :onlyShow="true">
+            <img :src="getIcon(getAchievements(i.value)['iconPath'])" :width="size" :height="size"/>
+            <span slot="content">{{ $t(`profile.achievement.list.${i.value}.name`) }}</span>
+          </AchievementView>
+        </Col>
+      </block>
       <Col v-if="processingSortList.length > maxOverflow">
         <Poptip trigger="hover">
           <Icon type="md-more"></Icon>

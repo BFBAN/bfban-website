@@ -7,6 +7,8 @@ import {userSetAttributes} from "../lib/user.js";
 import {getGravatarAvatar} from "../lib/gravatar.js";
 import config from "../config.js";
 import fetch from 'node-fetch';
+import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
+import logger from "../logger.js";
 
 const router = express.Router();
 const achievementConfig = {
@@ -36,8 +38,19 @@ const achievementConfig = {
         points: 0.5,
         conditions: (req, res, next) => true,
     },
+    'user_innocent_case': {
+        another: ['user_legal_case'],
+        points: 0.5,
+        async conditions(req, res, next) {
+            const user = req.user;
+            let player = await db.select('*').from('players').where({originUserId: user.originUserId}).first();
+            if (!player) return false;
+            return player && [3, 4, 8].constructor(player.status);
+        },
+    },
     'old_user': {
         another: ['old_user'],
+        rarity: "preciousness",
         points: 100,
         async conditions(req, res, next) {
             const user = req.user;
@@ -48,52 +61,109 @@ const achievementConfig = {
     },
     'trend_weekly_l1': {
         another: ['trend_weekly_l1'],
-        points: 10,
+        points: 5,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=weekly`, {method: 'GET'});
-            let result = await response.json();
-            if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
+            const user = req.user;
+            let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=yearly`, {method: 'GET'}).then(res => res.json());
+            return response.success === 1 && response.data.find(i => i.originUserId == user.originUserId)
         },
     },
-    'trend_monthly_l1': {
-        another: ['trend_monthly_l1'],
-        points: 10,
+    'user_achievement_l1': {
+        another: ['user_achievement_l1'],
+        points: 15,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=monthly`, {method: 'GET'});
-            let result = await response.json();
-            if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
+            const user = req.user;
+            return Object.keys(user.attr.achievements).length >= 3;
         },
     },
-    'trend_monthly_l2': {
-        another: ['trend_monthly_l2'],
-        points: 10,
+    'user_achievement_l2': {
+        another: ['user_achievement_l2'],
+        points: 15,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=3&time=monthly`, {method: 'GET'});
-            let result = await response.json();
-            if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
+            const user = req.user;
+            return Object.keys(user.attr.achievements).length >= 10;
         },
     },
-    'trend_yearly_l1': {
-        another: ['trend_yearly_l1'],
+    'user_achievement_l3': {
+        another: ['user_achievement_l3'],
+        points: 15,
+        async conditions(req, res, next) {
+            const user = req.user;
+            let achievements = Object.keys(user.attr.achievements);
+            let preciousnessCount = 0;
+            achievements.forEach((currentValue) => {
+                if (achievementConfig[currentValue].rarity == 'preciousness')
+                    preciousnessCount += 1;
+            })
+            return achievements.length >= 10 && preciousnessCount >= 1;
+        },
+    },
+    'user_achievement_l4': {
+        another: ['user_achievement_l4'],
+        points: 15,
+        async conditions(req, res, next) {
+            const user = req.user;
+            let achievements = Object.keys(user.attr.achievements);
+            let preciousnessCount = 0;
+            achievements.forEach((currentValue) => {
+                if (achievementConfig[currentValue].rarity == 'preciousness')
+                    preciousnessCount += 1;
+            })
+            return achievements.length >= 15 && preciousnessCount >= 3;
+        },
+    },
+    'active_community_weekly_l1': {
+        another: ['active_community_weekly_l1'],
+        points: 10,
+        async conditions(req, res, next) {
+            let response = await fetch(`http://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=weekly&community=true`, {method: 'GET'});
+            let result = await response.json();
+            if (result.error === 1 && result.data.community.length <= 0) return false;
+            return result.data.community.find(i => i.id === req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
+        },
+    },
+    'active_community_monthly_l1': {
+        another: ['active_community_monthly_l1'],
+        points: 10,
+        async conditions(req, res, next) {
+            let response = await fetch(`http://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=monthly&community=true`, {method: 'GET'});
+            let result = await response.json();
+            if (result.error === 1 && result.data.community.length <= 0) return false;
+            return result.data.community.find(i => i.id === req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
+        },
+    },
+    'active_community_monthly_l2': {
+        another: ['active_community_monthly_l2'],
+        points: 10,
+        async conditions(req, res, next) {
+            let response = await fetch(`http://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=monthly&community=true`, {method: 'GET'});
+            let result = await response.json();
+            if (result.error === 1 && result.data.community.length <= 0) return false;
+            return result.data.community
+                .splice(0, 3)
+                .find(i => i.id === req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
+        },
+    },
+    'active_community_yearly_l1': {
+        another: ['active_community_yearly_l1'],
         points: 30,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=yearly`, {method: 'GET'});
+            let response = await fetch(`http://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=yearly&community=true`, {method: 'GET'});
             let result = await response.json();
-            if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
+            if (result.error === 1 && result.data.community.length <= 0) return false;
+            return result.data.community.find(i => i.id === req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
         },
     },
-    'trend_yearly_l2': {
-        another: ['trend_yearly_l2'],
+    'active_community_yearly_l2': {
+        another: ['active_community_yearly_l2'],
         points: 60,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=3&time=yearly`, {method: 'GET'});
+            let response = await fetch(`http://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=yearly&community=true`, {method: 'GET'});
             let result = await response.json();
-            if (result.error == 1 && result.data.length <= 0) return false;
-            return result.data.find(i => i.id == req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0 && req.user.attr.achievements['trend_yearly_l1'];
+            if (result.error === 1 && result.data.community.length <= 0) return false;
+            return result.data.community
+                .splice(0, 3)
+                .find(i => i.id === req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0 && req.user.attr.achievements['trend_yearly_l1'];
         },
     },
     'report_l1': {
@@ -333,8 +403,16 @@ router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "r
     }
 });
 
-function totalAachievementExp (user = {}) {
-    return user.attr && Object.keys(user.attr.achievements).reduce((now, cur) =>  achievementConfig[now].points + achievementConfig[cur].points);
+function totalAachievementExp(user = {}) {
+    let total = 0;
+    let achievements = Object.keys(user.attr.achievements);
+
+    achievements.forEach((i, index) => {
+        if (achievementConfig[i])
+            total += achievementConfig[i].points;
+    })
+
+    return total;
 }
 
 export {
