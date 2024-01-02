@@ -651,6 +651,8 @@
       "acquisitionTime": "领取时间",
       "conditions": "获取方式",
       "getButton": "立即获取成就",
+      "exp": "成就经验",
+      "owned": "已拥有成就",
       "rarity": {
         "normal": "普通",
         "rare": "稀有",
@@ -758,7 +760,7 @@
         "createTime": "注册时间",
         "description": "用户简介",
         "introduction": "自我介绍",
-        "language": "设置语言",
+        "language": "首选语言",
         "languageSyncDescribe": "设置此处选项，在登录后同步程序本地语言，如果退出登录将回退到本地程序所持久保存的语言",
         "lastSigninIP": "最后登录IP",
         "modifyDescription": "修改用户简介",
@@ -771,6 +773,9 @@
         "registerIP": "注册时IP",
         "showOrigin": "可见橘子信息",
         "showOriginDescribe": "是否让你绑定的Origin在BFBAN可见",
+        "showAchievement": "公开成就",
+        "AD": "广告",
+        "ADDescribe": "您可以拒绝服务广告，网站仍为公益开放，将开关更改为关闭，网站上的所有广告将被终止",
         "signoutTime": "登出时间",
         "username": "用户名"
       },
