@@ -10,11 +10,12 @@
         :data-ad-client="adClient.toString()"
         :data-ad-slot="adId.toString()"
         :data-ad-format="ads[adId].adFormat"
-        :data-full-width-responsive="ads[adId].fullWidthResponsive"></Adsense>
+        :data-full-width-responsive="ads[adId].fullWidthResponsive">
+    </Adsense>
   </Card>
 </template>
 
-<script setup>
+<script>
 import {account_storage} from "@/assets/js";
 
 export default {
@@ -26,7 +27,7 @@ export default {
   watch: {
     id: {
       handler(value) {
-        this.adId = value.toString();
+        this.adId = value;
       }
     }
   },
@@ -37,23 +38,31 @@ export default {
       adId: "",
       adClient: "ca-pub-6625226616103631",
       ads: {
-        "7930151828": {
-          style: "width: 100%;height: 80px;",
+        7930151828: {
+          style: "width: 100%;min-height: 80px;",
           class: [],
-          adFormat: 'false',
-          fullWidthResponsive: 'false'
+          adFormat: 'true',
+          fullWidthResponsive: 'true'
         },
-        "1760339032": {
-          style: "width: 100%;height: 300px;margin-bottom: 10px;",
+        1760339032: {
+          name:'right',
+          style: "width: 100%;min-height: 300px;margin-bottom: 10px;",
           class: [],
-          adFormat: 'false',
-          fullWidthResponsive: 'false'
-        }
+          adFormat: 'true',
+          fullWidthResponsive: 'true'
+        },
+        6674125493: {
+          name: 'bfban-x',
+          style: "width: 100%;min-height: 200px;",
+          class: [],
+          adFormat: 'autorelaxed',
+          fullWidthResponsive: 'true'
+        },
       }
     }
   },
   created() {
-    this.adId = this.id.toString();
+    this.adId = this.id;
   },
   methods: {
     offAds() {
@@ -106,9 +115,10 @@ export default {
     }
   }
 
-  ins, .ins {
+  ins {
     position: relative;
     z-index: 5;
+    height: 100%;
   }
 }
 

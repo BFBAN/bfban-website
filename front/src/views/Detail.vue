@@ -1099,7 +1099,7 @@
     </div>
 
     <br>
-    <AdsGoogle id="7930151828"></AdsGoogle>
+    <AdsGoogle id="6674125493" style="margin-bottom: 8px;"></AdsGoogle>
 
     <template v-if="!isFull">
       <Affix :top="100">

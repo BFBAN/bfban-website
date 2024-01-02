@@ -404,7 +404,7 @@ router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "r
 
 function totalAachievementExp(user = {}) {
     let total = 0;
-    let achievements = Object.keys(user.attr.achievements);
+    let achievements = user.attr && Object.keys(user.attr.achievements) || [];
 
     achievements.forEach((i, index) => {
         if (achievementConfig[i])
