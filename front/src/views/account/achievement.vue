@@ -4,11 +4,11 @@
       <Banner :height="200" class="achievement-banner">
         <Form class="profile-body" label-position="top">
           <Row :gutter="10">
-            <Col :xs="{span: 24}" :lg="{span: 14}">
+            <Col :xs="{span: 24}" :lg="{span: 14}" class="mobile-hide">
               <UserAvatar :src="userAchievementsInfo.userAvatar" :size="45"></UserAvatar>
               <h1>{{ userAchievementsInfo.username || 'username' }}</h1>
             </Col>
-            <Col :xs="{span: 24}" :lg="{span: 5}">
+            <Col :xs="{span: 12}" :lg="{span: 5}">
               <FormItem>
                 <template slot="label">
                   <Icon type="md-color-wand" size="25"/>
@@ -17,7 +17,7 @@
                 <span class="achievement-banner-value">{{ userAchievementsInfo.userAachievementExp || 0 }}</span>
               </FormItem>
             </Col>
-            <Col :xs="{span: 24}" :lg="{span: 5}">
+            <Col :xs="{span: 12}" :lg="{span: 5}">
               <FormItem>
                 <template slot="label">
                   <Icon type="md-trophy" color="#FFC107" size="25"/>
