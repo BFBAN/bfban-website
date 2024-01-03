@@ -5,6 +5,7 @@
 import _Conf from './conf';
 import _Api from './api';
 
+import _Achievement from './achievement';
 import _Storage from './storage';
 import _Time from './date';
 import _Http from './http';
@@ -24,6 +25,7 @@ import _Moss from "@/assets/js/moss";
 import store from "@/store";
 
 export const api = new _Api();
+export const achievement = new _Achievement();
 export const http = new _Http();
 export const http_token = new _Http_token();
 export const http_connect = new _Http_Connect();
@@ -43,7 +45,7 @@ export const message = new _appMessage();
 export const moss = new _Moss();
 
 export default {
-    conf, api, storage, time,
+    conf, api, achievement, storage, time,
     http, http_token, http_connect,
     util, notification, regular, print,
     upload, account_storage, player_storage, mail,

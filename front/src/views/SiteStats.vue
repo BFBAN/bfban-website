@@ -404,6 +404,7 @@ export default new Application({
      * 获取话题排行
      */
     getTrend () {
+      if (!this.isLogin) return;
       this.trend.load = true;
 
       http.get(api['trend'], {

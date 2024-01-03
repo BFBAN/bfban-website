@@ -4,29 +4,41 @@
     <div slot="content" class="achievement-view">
       <Banner :height="160">
         <div align="center">
-          <Avatar :size="50" shape="square" :src="getIcon(achievementInfo.iconPath)" v-if="achievementInfo.iconPath" width="35px" height="35px"/>
+          <Avatar :size="50" shape="square" :src="achievementUtil.getIcon(achievementInfo.iconPath)"
+                  v-if="achievementInfo.iconPath" width="35px" height="35px"/>
         </div>
 
         <h3 class="achievement-view-body achievement-view-title">
-          <Row :gutter="10">
+          <Row :gutter="10" type="flex" align="middle">
             <Col>
               <b :title="achievementInfo.value">{{ $t(`profile.achievement.list.${achievementInfo.value}.name`) }}</b>
             </Col>
             <Col>
-              <Tag type="border" :color="achievements.raritys[achievementInfo.rarity].class" v-if="achievementInfo.rarity">
+              <Tag type="border" :color="achievements.raritys[achievementInfo.rarity].class"
+                   v-if="achievementInfo.rarity">
                 {{ $t(`profile.achievement.rarity.${achievementInfo.rarity}`) }}
+              </Tag>
+              <Tag type="border" v-if="time">
+                {{ $t('profile.achievement.acquisitionTime') }}
+                <TimeView :time="time">
+                  <Time :time="time"></Time>
+                </TimeView>
               </Tag>
             </Col>
           </Row>
         </h3>
       </Banner>
       <div class="achievement-view-body">
-        <p class="achievement-view-description">{{ $t(`profile.achievement.list.${achievementInfo.value}.description`) }}</p>
+        <p class="achievement-view-description">{{
+            $t(`profile.achievement.list.${achievementInfo.value}.description`)
+          }}</p>
         <p><b>{{ $t('profile.achievement.conditions') }}</b></p>
-        <p class="achievement-view-conditions" v-html="$t(`profile.achievement.list.${achievementInfo.value}.conditions`)"></p>
-        <template v-if="achievementInfo.acquisition.indexOf('active') >= 0 && activeButton && !onlyShow">
+        <p class="achievement-view-conditions"
+           v-html="$t(`profile.achievement.list.${achievementInfo.value}.conditions`)"></p>
+        <template
+            v-if="achievementInfo.acquisition && achievementInfo.acquisition.indexOf('active') >= 0 && activeButton && !onlyShow">
           <Button long ghost type="primary" :loading="load" @click="onActiveAchievement(achievementInfo.value)">
-            {{ $t('profile.achievement.getButton')}}
+            {{ $t('profile.achievement.getButton') }}
           </Button>
         </template>
       </div>
@@ -35,9 +47,12 @@
 </template>
 
 <script setup>
-import achievements from "/public/config/achievements.json"
-import {api, http_token} from "@/assets/js";
+import {achievement as achievementUtil} from "@/assets/js";
+
+import achievements from "/public/config/achievements.json";
+
 import Banner from "@/components/Banner.vue";
+import TimeView from "@/components/TimeView.vue";
 
 export default {
   props: {
@@ -53,6 +68,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    time: {
+      type: [String, Number],
+      default: ''
+    },
     id: {
       type: String,
       default: ''
@@ -60,6 +79,7 @@ export default {
   },
   data() {
     return {
+      achievementUtil,
       achievements,
 
       load: false,
@@ -69,23 +89,20 @@ export default {
       }
     }
   },
-  components: {Banner},
+  components: {Banner, TimeView},
   created() {
-    this.http = http_token.call(this);
-
-    this.getAchievements(this.id)
+    this.getCurrentAchievementInfo(this.id)
   },
   methods: {
     /**
      * 主动获取成就
+     * @param id
      */
-    onActiveAchievement(id) {
-      if (id && this.load) return;
+    async onActiveAchievement(id) {
+      if (!id || this.load) return;
 
       this.load = true;
-      this.http.post(api["account_achievement"], {
-        data: {id}
-      }).then(res => {
+      await achievementUtil.onActiveAchievement(id).then(res => {
         const d = res.data;
 
         if (d.success === 1) {
@@ -99,29 +116,16 @@ export default {
         }));
       }).finally(() => {
         this.load = false;
-      })
+      });
     },
     /**
      * 获取成就信息
      * @param value
      */
-    getAchievements(value) {
-      if (!value && this.disabled) return;
-      for (let index = 0; index < achievements.child.length; index++) {
-        let i = achievements.child[index];
-        if (!i.child && i.value === value)
-          this.achievementInfo = i;
-        else if (i.child)
-          i.child.filter(j => {
-            if (j.value === value)
-              this.achievementInfo = j;
-          })
-      }
+    getCurrentAchievementInfo(value) {
+      if (value)
+        this.achievementInfo = achievementUtil.getItem(value);
     },
-    getIcon(path) {
-      if (path)
-        return require(`/src/assets/images/achievement/${path}`);
-    }
   }
 }
 </script>

@@ -75,7 +75,7 @@
                 <template v-if="account.attr && account.attr.achievements && Object.keys(account.attr.achievements).length > 0">
                   <Divider type="vertical"/>
                   <Col>
-                    <AchievementsTag :data="account.attr.achievements" :max-overflow="3"></AchievementsTag>
+                    <AchievementsTag :data="account.attr.achievements" :size="'17px'" :max-overflow="3"></AchievementsTag>
                     <p class="account-info-p">{{ $t("profile.achievement.title") }}</p>
                   </Col>
                 </template>

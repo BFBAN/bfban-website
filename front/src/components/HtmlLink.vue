@@ -1,5 +1,5 @@
 <template>
-  <Poptip :padding="0" max-width="300" trigger="hover" transfer :disabled="getProtocol == 'mailto:'"
+  <Poptip padding="0" max-width="300" trigger="hover" transfer :disabled="getProtocol == 'mailto:'"
           @on-popper-show="onPoptipShow(false)"
           @on-popper-hide="onPoptipShow(true)">
     <span class="html-link">

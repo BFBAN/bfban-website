@@ -126,7 +126,7 @@
                       <div>
                         {{ $t('list.colums.reportTime') }}
                         <TimeView :time="d.createTime">
-                          <Time v-if="d.createTime" :time="d.createTime"/>
+                          <Time v-if="d.createTime" :time="d.createTime" type="datetime"/>
                         </TimeView>
                         <Divider type="vertical"/>
                         {{ $t('list.colums.updateTime') }}

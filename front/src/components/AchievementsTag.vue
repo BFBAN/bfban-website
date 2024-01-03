@@ -1,21 +1,22 @@
 <template>
   <Row :gutter="5">
-    <template v-if="processingSortList">
+    <template v-if="processingSortList.length >= 0">
       <Col v-for="(i,index) in processingSortList.slice(0,maxOverflow)" :key="index">
-        <AchievementView :id="i.value" :onlyShow="true">
-          <img :src="getIcon(getAchievements(i.value)['iconPath'])" :width="size" :height="size"/>
+        <AchievementView :id="i.value" :time="i.time" :onlyShow="true">
+          <img :src="achievementUtil.getIcon(achievementUtil.getItem(i.value)['iconPath'])" :width="size" :height="size"/>
           <span slot="content">{{ $t(`profile.achievement.list.${i.value}.name`) }}</span>
         </AchievementView>
       </Col>
       <Col v-if="processingSortList.length > maxOverflow">
         <Poptip trigger="hover">
-          <Badge :count="processingSortList.length" :offset="[-5,-2]">
+          <Badge :count="processingSortList.slice(maxOverflow,processingSortList.length).length" :offset="[-5,-2]">
             <Icon type="md-more" :size="size.replace('px', '')"></Icon>
           </Badge>
           <template slot="content">
-            <span v-for="(i,index) in processingSortList.slice(maxOverflow,processingSortList.length )" :key="index">
-              <AchievementView :id="i.value.toString()" :onlyShow="true" v-if="getAchievements(i.value)['isShowCard']">
-                <img :src="getIcon(getAchievements(i.value)['iconPath'])" :width="size" :height="size"/>
+            <span v-for="(i,index) in processingSortList.slice(maxOverflow,processingSortList.length)" :key="index">
+              <AchievementView :id="i.value.toString()" :time="i.time" :onlyShow="true"
+                               v-if="achievementUtil.getItem(i.value)['isShowCard']">
+                <img :src="achievementUtil.getIcon(achievementUtil.getItem(i.value)['iconPath'])" :width="size" :height="size"/>
                 <span slot="content">{{ $t(`profile.achievement.list.${i.value}.name`) }}</span>
               </AchievementView>
             </span>
@@ -30,7 +31,8 @@
 </template>
 
 <script setup>
-import achievements from "/public/config/achievements.json"
+import {achievement as achievementUtil} from "@/assets/js";
+
 import Empty from "@/components/Empty.vue";
 import AchievementView from "@/components/AchievementView.vue";
 
@@ -46,6 +48,10 @@ export default {
       type: String,
       default: '20px'
     },
+    showAll: {
+      type: Boolean,
+      default: false
+    },
     maxOverflow: {
       type: Number,
       default: 3
@@ -53,7 +59,8 @@ export default {
   },
   data() {
     return {
-      achievements,
+      achievementUtil,
+
       processingSortList: [],
     }
   },
@@ -63,42 +70,16 @@ export default {
   },
   components: {AchievementView},
   created() {
-    this.onSort()
+    this.onSort();
   },
   methods: {
     onSort() {
-      Object.entries(this.data).forEach(i => {
-        if (this.getAchievements(i[0])['isShowCard'])
-          this.processingSortList.push({value: i[0], time: i[1]})
-      });
-      this.processingSortList.sort((a, b) => a.time - b.time)
+      this.processingSortList = Object.entries(this.data)
+          .filter(([key]) => achievementUtil.getItem(key)['isShowCard'])
+          .map(([value, time]) => ({value, time}))
+          .sort((a, b) => a.time - b.time);
     },
-    getIcon(path) {
-      if (path)
-        return require(`/src/assets/images/achievement/${path}`);
-    },
-    /**
-     * 获取成就信息
-     * @param value
-     */
-    getAchievements(value) {
-      let achievementInfo = {};
-      if (!value && this.disabled) return;
-      for (let index = 0; index < achievements.child.length; index++) {
-        let i = achievements.child[index];
-        if (!i.child && i.value === value)
-          achievementInfo = i;
-        else if (i.child && i.child.length > 0) {
-          for (let jIndex = 0; jIndex < i.child.length; jIndex++) {
-            let j = i.child[jIndex];
-            if (j.value === value)
-              achievementInfo = j;
-          }
-        }
-      }
-      return achievementInfo;
-    }
-  }
+  },
 }
 </script>
 

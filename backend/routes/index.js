@@ -93,7 +93,7 @@ router.get('/activeStatistical', [
         checkquery('isBot').optional().isBoolean(),
         checkquery('report').optional().isBoolean(),
         checkquery('community').optional().isBoolean(),
-        checkquery('limit').optional().isInt({min: 0, max: 100}),
+        checkquery('limit').optional().isInt({min: 0}),
         checkquery('time').optional().isIn(['daily', 'weekly', 'monthly', 'yearly'])
     ],
     async (req, res, next) => {
@@ -101,8 +101,8 @@ router.get('/activeStatistical', [
             const validateErr = validationResult(req);
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'statistics.bad', message: validateErr.array()});
-            let {isBot = true, report = true, community = true, limit = 10, time} = req.query;
             const maxLimit = 3000;
+            let {isBot = true, report = true, community = true, limit = maxLimit, time} = req.query;
             const times = {
                 'daily': new Date(new Date().getTime() - 24 * 3600 * 1000),
                 'weekly': new Date(new Date().getTime() - 7 * 24 * 3600 * 1000),

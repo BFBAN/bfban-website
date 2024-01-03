@@ -660,9 +660,23 @@
         "special": "特殊"
       },
       "list": {
+        "trend_monthly_assemble": {
+          "name": "热门景点(月)",
+          "description": "登上本月热门案件排行"
+        },
+        "trend_monthly_l1": {
+          "name": "热门景点",
+          "conditions": "- 案件登上本月前10名热门TOP<br>- 当前账户与案件被举报玩家关联<br>- 案件游览大于等于100",
+          "description": "热门景点😁"
+        },
+        "trend_monthly_l2": {
+          "name": "热门景点2",
+          "conditions": "- 案件登上本月前10名热门TOP<br>- 当前账户与案件被举报玩家关联<br>- 热度值大于等于3以上<br>- 案件游览大于等于500",
+          "description": "热门景点常来打卡"
+        },
         "user_innocent_case": {
-          "name": "无罪释放",
-          "conditions": "- 在联BAN中存在一个与此账户关联的案件<br>- 案件状态自证、无效举报、刷枪",
+          "name": "安全落地",
+          "conditions": "- 在联BAN中存在一个与此账户关联的案件<br>- 案件状态自证状态",
           "description": "案件无效"
         },
         "user_achievement_assemble": {
@@ -686,8 +700,8 @@
         },
         "user_achievement_l4": {
           "name": "成就4",
-          "conditions": "- 拥有15个以上成就<br>- 10成就内包含3个珍贵成就",
-          "description": "拥有10个以上成就，且包含3个珍贵"
+          "conditions": "- 拥有15个以上成就<br>- 10个成就内包含3个珍贵成就",
+          "description": "拥有15个以上成就，且包含3个珍贵"
         },
         "active_community_weekly_assemble": {
           "name": "周贡献",
@@ -965,7 +979,7 @@
       "leave": "离开"
     },
     "info": {
-      "description": "请清晰描述举报者行为、特点、发生地点、时间，列出他的作弊举止，给出最后为何举报",
+      "description": "🤝 内容基本要求:\n\t- 不要将举报者任何隐私信息提交到此处\n\t- 视频链接可以粘贴在上面，有利于醒目提醒和索引\n\t- 请清晰描述举报者行为、特点、发生地点、时间，列出他的作弊举止，最后给出原因\n\t- 可以对你提供的截图、视频标注位置，附加说明\n\n⚠️ 请不要仅填写简单作弊方式，不提供任何直接证据\n⚠️ 多次无意义/恶意举报，账户将受到黑名单",
       "fromDatabaseOneId": "从联BAN数据库中选取",
       "idNotion1": "一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID",
       "idNotion2": "游戏ID是不区分大小写的，但请特别注意区分 i I 1 l L o O 0，正确填写举报ID",

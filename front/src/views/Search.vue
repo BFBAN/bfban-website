@@ -208,7 +208,7 @@
           <Card dis-hover class="search-list" v-if="result.player.length > 0">
             <div v-for="(d, d_index) in result.player" :key="d_index" class="item-card" v-voice-button>
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
-                <Card dis-hover :padding="10" :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}">
+                <Card dis-hover :padding="10" :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }, query: {byPath: $route.name}}" @click="getA">
                   <Row :gutter="10" type="flex">
                     <Col :xs="{span: 5, push: 0,pull:0}" :sm="{span: 3,push:0,pull:0}" :lg="{span: 2, push: 0,pull:0}">
                       <!-- 头像 S -->
@@ -236,12 +236,12 @@
                       <div>
                         {{ $t('list.colums.reportTime') }}
                         <TimeView :time="d.createTime" trigger="hover">
-                          <Time v-if="d.createTime" :time="d.createTime"/>
+                          <Time v-if="d.createTime" :time="d.createTime" type="datetime"/>
                         </TimeView>
                         <Divider type="vertical"/>
                         {{ $t('list.colums.updateTime') }}
                         <TimeView :time="d.updateTime" trigger="hover">
-                          <Time v-if="d.updateTime" :time="d.updateTime"/>
+                          <Time v-if="d.updateTime" :time="d.updateTime" type="datetime"/>
                         </TimeView>
                       </div>
                     </Col>

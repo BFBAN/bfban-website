@@ -2,33 +2,34 @@
   <Tabs :value="'1'" class="achievement">
     <TabPane :label="$t('profile.achievement.title')" name="1">
       <Banner :height="200" class="achievement-banner">
-        <Form class="profile-body">
+        <Form class="profile-body" label-position="top">
           <Row :gutter="10">
-            <Col flex="1">
+            <Col :xs="{span: 24}" :lg="{span: 14}">
               <UserAvatar :src="userAchievementsInfo.userAvatar" :size="45"></UserAvatar>
               <h1>{{ userAchievementsInfo.username || 'username' }}</h1>
-              <p>{{ userAchievementsInfo.userId }}</p>
             </Col>
-            <Col>
+            <Col :xs="{span: 24}" :lg="{span: 5}">
               <FormItem>
                 <template slot="label">
-                  <span class="achievement-banner-title">{{ $t('profile.achievement.exp') }}</span>
                   <Icon type="md-color-wand" size="25"/>
+                  <span class="achievement-banner-title">{{ $t('profile.achievement.exp') }}</span>
                 </template>
                 <span class="achievement-banner-value">{{ userAchievementsInfo.userAachievementExp || 0 }}</span>
               </FormItem>
             </Col>
-            <Col>
+            <Col :xs="{span: 24}" :lg="{span: 5}">
               <FormItem>
                 <template slot="label">
+                  <Icon type="md-trophy" color="#FFC107" size="25"/>
+                  <Icon type="md-eye-off" size="25" v-if="!userAchievementsInfo.isPublicAchievement"/>
                   <span class="achievement-banner-title">{{ $t('profile.achievement.owned') }}</span>
-                  <Icon type="md-trophy" color="yellow" size="25"/>
-                  <Icon type="md-eye-off" size="25" v-if="!userAchievementsInfo.isPublicAchievement" />
                 </template>
-                <AchievementsTag :data="userAchievementsInfo.achievements"
-                                 :max-overflow="4"
-                                 :size="'25px'"
-                                 v-if="userAchievementsInfo.achievements"></AchievementsTag>
+                <div class="achievement-banner-value">
+                  <AchievementsTag :data="userAchievementsInfo.achievements"
+                                   :max-overflow="3"
+                                   :size="'25px'"
+                                   v-if="userAchievementsInfo.achievements"></AchievementsTag>
+                </div>
               </FormItem>
             </Col>
           </Row>
@@ -61,7 +62,9 @@
               </template>
               <Tag type="border" v-if="i.unlock">
                 {{ $t('profile.achievement.acquisitionTime') }}
-                <Time :time="i.unlock.acquisitionTime"></Time>
+                <TimeView :time="i.unlock.acquisitionTime">
+                  <Time :time="i.unlock.acquisitionTime"></Time>
+                </TimeView>
               </Tag>
             </AchievementView>
           </Col>
@@ -71,7 +74,7 @@
                 <Steps size="small">
                   <Step v-for="(i_c, i_cIndex) in i.child.slice(0,3)" :key="i_cIndex">
                     <template slot="icon" v-if="i_c.iconPath">
-                      <img :src="getIcon(i_c.iconPath)" width="25px" height="25px"/>
+                      <img :src="achievementUtil.getIcon(i_c.iconPath)" width="25px" height="25px"/>
                     </template>
                     <template slot="title">
                       <AchievementView :id="i_c.value">
@@ -88,7 +91,7 @@
                       </a>
                       <Steps slot="content" direction="vertical">
                         <Step v-for="(i_more_c, i_more_cIndex) in i.child.slice(3,i.child.length)" :key="i_more_cIndex">
-                          <img slot="icon" :src="getIcon(i_more_c.iconPath)" width="25px" height="25px"
+                          <img slot="icon" :src="achievementUtil.getIcon(i_more_c.iconPath)" width="25px" height="25px"
                                v-if="i_more_c.iconPath"/>
                           <b slot="title">
                             <AchievementView :id="i_more_c.value">
@@ -113,7 +116,7 @@
                   <Step>
                     <div slot="icon" v-if="i.iconPath">
                       <AchievementView :id="i.value">
-                        <img :src="getIcon(i.iconPath)" width="25px" height="25px"/>
+                        <img :src="achievementUtil.getIcon(i.iconPath)" width="25px" height="25px"/>
                       </AchievementView>
                     </div>
                     <div slot="title" v-if="!i.child">{{ $t(`profile.achievement.list.${i.value}.name`) }}</div>
@@ -136,20 +139,22 @@ import achievements from "/public/config/achievements.json"
 
 import AchievementView from "@/components/AchievementView.vue";
 import AchievementsTag from "@/components/AchievementsTag.vue";
-import {api, http_token} from "@/assets/js";
+import {achievement as achievementUtil, api, http_token} from "@/assets/js";
 import Banner from "@/components/Banner.vue";
 import UserAvatar from "@/components/UserAvatar.vue";
+import TimeView from "@/components/TimeView.vue";
 
 export default {
   data() {
     return {
+      achievementUtil,
       achievements: achievements,
 
       load: false,
       userAchievementsInfo: {}
     }
   },
-  components: {AchievementView, AchievementsTag, UserAvatar, Banner},
+  components: {AchievementView, AchievementsTag, UserAvatar, TimeView, Banner},
   created() {
     this.http = http_token.call(this);
 
@@ -187,11 +192,7 @@ export default {
         this.load = false;
       })
     },
-    getIcon(path) {
-      if (path)
-        return require(`/src/assets/images/achievement/${path}`);
-    }
-  }
+  },
 }
 </script>
 
@@ -215,7 +216,7 @@ export default {
   margin-bottom: 15px;
 
   .achievement-banner-title {
-    font-size: 20px
+    font-weight: bold;
   }
 
   .achievement-banner-value {

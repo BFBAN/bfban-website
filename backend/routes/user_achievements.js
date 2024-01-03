@@ -45,7 +45,7 @@ const achievementConfig = {
             const user = req.user;
             let player = await db.select('*').from('players').where({originUserId: user.originUserId}).first();
             if (!player) return false;
-            return player && [3, 4, 8].constructor(player.status);
+            return player && [3].lastIndexOf(player.status) >= 0;
         },
     },
     'old_user': {
@@ -59,13 +59,22 @@ const achievementConfig = {
         end() {
         }
     },
-    'trend_weekly_l1': {
-        another: ['trend_weekly_l1'],
+    'trend_monthly_l1': {
+        another: ['trend_monthly_l1'],
         points: 5,
         async conditions(req, res, next) {
             const user = req.user;
-            let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=yearly`, {method: 'GET'}).then(res => res.json());
-            return response.success === 1 && response.data.find(i => i.originUserId == user.originUserId)
+            let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=monthly`, {method: 'GET'}).then(res => res.json());
+            return response.success === 1 && response.data.find(i => i.originUserId == user.originUserId && i.viewNum >= 100)
+        },
+    },
+    'trend_monthly_l2': {
+        another: ['trend_monthly_l2'],
+        points: 5,
+        async conditions(req, res, next) {
+            const user = req.user;
+            let response = await fetch(`http://${config.address}:${config.port}/api/trend?limit=10&time=monthly`, {method: 'GET'}).then(res => res.json());
+            return response.success === 1 && response.data.find(i => i.originUserId == user.originUserId && i.hot >= 3 && i.viewNum >= 500)
         },
     },
     'user_achievement_l1': {

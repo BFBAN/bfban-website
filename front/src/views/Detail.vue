@@ -1210,7 +1210,18 @@
 </template>
 
 <script>
-import {api, http, http_token, util, message, time, storage, account_storage, mail, regular} from '../assets/js/index'
+import {
+  api,
+  http,
+  http_token,
+  util,
+  message,
+  time,
+  storage,
+  account_storage,
+  mail,
+  achievement as achievementUtil
+} from '../assets/js/index'
 
 import Application from "/src/assets/js/application";
 import AdsGoogle from "../components/ads/google/index.vue";
@@ -1598,11 +1609,14 @@ export default new Application({
       const historyTime = new Date().getTime();
 
       if (!id) return;
-      storage.set("viewed", viewed && viewed.data ? {...viewed.data.value, [id]: historyTime} : {[id]: historyTime})
-
       // 校验,含id且1天内，则不更新游览值
-      if (viewed && viewed.data && viewed.data.value[id] < viewed.data.value[id] + 24 * 60 * 60 * 1000)
+      if (viewed != undefined && viewed.data?.value[id] < viewed.data?.value[id] + 24 * 60 * 60 * 1000)
         return;
+
+      storage.set("viewed", viewed && viewed.data ? {
+        ...viewed.data.value || {},
+        [id]: historyTime
+      } : {[id]: historyTime})
 
       // 创建完整 Object
       if (!(viewed && viewed.data && viewed.data.value)) {
@@ -1638,6 +1652,7 @@ export default new Application({
      * 获取举报玩家档案
      */
     async getPlayerInfo() {
+      const that = this;
       return new Promise(resolve => {
         let params = Object.assign({
           history: true
@@ -1655,7 +1670,7 @@ export default new Application({
           delete params.personaId;
         }
 
-        this.cheater = {};
+        that.cheater = {};
 
         http.get(api["cheaters"], {params}).then(res => {
           const d = res.data;
@@ -1668,24 +1683,24 @@ export default new Application({
               return aTime > bTime ? 1 : -1;
             })
 
-            this.cheater = d.data;
+            that.cheater = d.data;
             document.title = document.title + ' - ' + this.cheater.originName + ' - ' + this.cheater.games;
-            this.$refs.recordLink.generateTable(this.cheater);
+            that.$refs.recordLink.generateTable(this.cheater);
             return;
           }
 
           switch (d.code) {
             case "player.bad":
             case "player.notFound":
-              this.$router.push({name: 'player_list'})
+              that.$router.push({name: 'player_list'})
               break;
           }
 
-          this.$Message.info(this.$t('basic.tip.notFound'));
+          that.$Message.info(this.$t('basic.tip.notFound'));
         }).finally(() => {
-          this.onUpdateViewed();
-          this.checkPlayerSubscribes();
-          this.spinShow = false;
+          that.onUpdateViewed();
+          that.checkPlayerSubscribes();
+          that.spinShow = false;
 
           resolve()
         });
