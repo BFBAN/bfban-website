@@ -254,6 +254,43 @@
       ]
     },
     {
+      "value": "trend_monthly_assemble",
+      "tag": [
+        "user",
+        "hot_case"
+      ],
+      "child": [
+        {
+          "value": "trend_monthly_l1",
+          "iconPath": "hot_case_monthly_l1.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user",
+            "hot_case"
+          ]
+        },
+        {
+          "value": "trend_monthly_l2",
+          "iconPath": "hot_case_monthly_l2.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user",
+            "hot_case"
+          ]
+        }
+      ]
+    },
+    {
       "value": "user_achievement_assemble",
       "tag": [
         "achievement",
