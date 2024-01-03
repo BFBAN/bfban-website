@@ -103,7 +103,7 @@
       </div>
 
       <template v-if="searchVal.length >= 3 && searchPosting">
-        <Row type="flex" align="middle">
+        <Row type="flex" align="middle" :gutter="10">
           <Col flex="1">
             <Tabs captureFocus v-model="searchTypeValue" @on-click="onTabClick">
               <TabPane name="player" :label="$t('search.tabs.player')"></TabPane>
@@ -142,6 +142,7 @@
                         <DatePicker type="daterange"
                                     translate
                                     placement="bottom-end"
+                                    placeholder="Time"
                                     split-panels
                                     @on-change="handleCDatepicker"
                                     :options="timeOptions"
@@ -176,6 +177,7 @@
                       <FormItem>
                         <DatePicker type="daterange"
                                     placement="bottom-end"
+                                    placeholder="Time"
                                     split-panels
                                     @on-change="handleCDatepicker"
                                     :options="timeOptions"

@@ -88,6 +88,7 @@
                   show-elevator
                   @on-change="handlePageChange"
                   @on-page-size-change="handlePageSizeChange"
+                  :pageSizeOpts="[10, 20, 30, 50, 100]"
                   :page-size="limit"
                   :current="skip"
                   :total="total"/>
@@ -165,6 +166,7 @@
                   show-sizer
                   show-total
                   show-elevator
+                  :pageSizeOpts="[10, 20, 30, 50, 100]"
                   :page-size="limit"
                   :current="skip"
                   :total="total"
@@ -289,7 +291,7 @@ export default new Application({
       createTime: [],
       updateTime: [],
       skip: 1,
-      limit: 20,
+      limit: 50,
       total: 0,
       gameSum: [],
       totalSum: [],

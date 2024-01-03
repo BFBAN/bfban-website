@@ -1,6 +1,6 @@
 <template>
   <Card dis-hover :padding="0" class="ad-container" :class="adId && ads[adId].class || []"
-        v-if="adId && adsSwitch"
+        v-if="false || adId && adsSwitch"
         :style="ads[adId].style">
     <div class="ad-off" @click="offAds">
       <Icon size="10" type="md-close"></Icon>
@@ -21,15 +21,17 @@ import {account_storage} from "@/assets/js";
 export default {
   name: 'AdsGoogle',
   props: {
-    id: [Number, String],
-    default: () => '7930151828'
+    id: {
+      type: [Number, String],
+      default: () => '7930151828',
+    },
   },
   watch: {
     id: {
       handler(value) {
         this.adId = value;
       }
-    }
+    },
   },
   data() {
     return {
@@ -45,7 +47,7 @@ export default {
           fullWidthResponsive: 'true'
         },
         1760339032: {
-          name:'right',
+          name: 'right',
           style: "width: 100%;min-height: 300px;margin-bottom: 10px;",
           class: [],
           adFormat: 'true',
@@ -79,7 +81,7 @@ export default {
   computed: {
     adsSwitch() {
       const isSkipAds = this.$route.query['skipAds'] || false;
-      const adsSwitchValue = account_storage.getConfiguration('ads-switch') || true; // On by default
+      const adsSwitchValue = account_storage.getConfiguration('ads-switch') || false; // On by default
       return isSkipAds ? false : adsSwitchValue;
     },
   }
