@@ -100,8 +100,8 @@
         </Row>
       </div>
       <div align="center" class="footer-border-top footer-padding">
-        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} All Rights Reserved. v:
-          {{ infos }}</p>
+        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} <u>{{ infos.name || ''}}</u> All Rights Reserved. v:
+          {{ infos.version || '' }}</p>
       </div>
     </footer>
   </div>
@@ -119,7 +119,7 @@ export default new Application({
   data() {
     return {
       time,
-      infos: packageInfo.version,
+      infos: packageInfo,
       footerNavs: footerNavs.child,
       links: link,
       logoCount: 0,
