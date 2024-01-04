@@ -12,7 +12,7 @@ import {sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify} f
 import {allowPrivileges, forbidPrivileges, verifyAllowPrivilege, verifyJWT} from "../middleware/auth.js";
 import {generatePassword, comparePassword, userHasRoles, privilegeRevoker} from "../lib/auth.js";
 import {userDefaultAttribute, userSetAttributes, userShowAttributes} from "../lib/user.js";
-import {achievementConfig, totalAachievementExp} from "./user_achievements.js"
+import {totalAachievementExp} from "./user_achievements.js"
 import {siteEvent} from "../lib/bfban.js";
 import logger from "../logger.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
@@ -25,7 +25,7 @@ const router = express.Router();
  * /api/user/signup:
  *   post:
  *     tags:
- *       - 账户
+ *       - user
  *     produces:
  *       - application/json
  *     parameters:
@@ -216,7 +216,7 @@ async (req, res, next) => {
  * /api/user/signin:
  *   post:
  *     tags:
- *       - 账户
+ *       - user
  *     produces:
  *       - application/json
  *     parameters:
@@ -416,7 +416,7 @@ async (req, res, next) => {
  * /api/user/signout:
  *   post:
  *     tags:
- *       - 账户
+ *       - user
  *     produces:
  *       - application/json
  */

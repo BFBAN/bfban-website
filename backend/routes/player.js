@@ -34,9 +34,9 @@ async function getPlayerId({dbId, userId, personaId}) {
  * /api/player:
  *   get:
  *     tags:
- *       - 玩家
- *     summary: 获取举报玩家详情信息
- *     description: 获取举报玩家详情信息
+ *       - player
+ *     summary: player Detail
+ *     description: Get the details of the player who reported it
  *     produces:
  *       - application/json
  *     parameters:
@@ -55,7 +55,7 @@ async function getPlayerId({dbId, userId, personaId}) {
  *         type: num
  *         in: query
  *       - name: history
- *         description: 历史是否存在
+ *         description: Whether history exists
  *         required: true
  *         type: boolean
  *         in: query
@@ -165,7 +165,7 @@ async (req, res, next) => {
  * /api/player/viewed:
  *   post:
  *     tags:
- *       - 玩家
+ *       - player
  *     summary: 游览量
  *     description: 增加举报者游览量，请做本地缓存
  *     produces:
@@ -248,31 +248,33 @@ function raceGetOriginUserId(originName) {
  * /api/player/report:
  *   post:
  *     tags:
- *       - 举报
- *     summary: 举报玩家
+ *       - report
+ *       - player
+ *     summary: report player
  *     description:
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: game
- *         description: 举报的游戏类型
+ *         description: Type of game reported
  *         type: num
  *         in: query
  *       - name: originName
- *         description: Origin游戏ID
+ *         description: Origin game ID
  *         required: true
  *         type: integer
  *         in: query
  *       - name: cheatMethods
- *         description: 举报的外挂类型 ['wallhack', 'aimbot', 'invisable', 'magicBullet', 'damageChange', 'gadgetModify', 'teleport', 'attackServer']
+ *         description: Reported plug-in type ['wallhack', 'aimbot', 'invisable', 'magicBullet', 'damageChange', 'gadgetModify', 'teleport', 'attackServer']
  *         type: array
  *         in: query
  *       - name: videoLink
- *         description: 视频连接
+ *         description: Video connection
  *         type: integer
  *         in: query
+ *         value: https://google.com,https://youtube.com
  *       - name: description
- *         description: 补充说明
+ *         description: Supplementary statement
  *         required: true
  *         type: integer
  *         in: query
@@ -519,9 +521,9 @@ async (req, res, next) => {
  * /api/player/timeline:
  *   get:
  *     tags:
- *       - 玩家
- *     summary: 时间轴
- *     description: 玩家抽线，包含评论、举报、回复、申诉内容
+ *       - player
+ *     summary: timeline
+ *     description: Players draw lines, including comments, reports, replies, complaints content
  *     produces:
  *       - application/json
  *     parameters:
@@ -544,12 +546,12 @@ async (req, res, next) => {
  *         in: query
  *         value: 1
  *       - name: order
- *         description: 顺序，['asc', 'desc']
+ *         description: order，['asc', 'desc']
  *         type: string
  *         in: query
  *         value: desc
  *       - name: subject
- *         description: 类型，['report', 'reply', 'judgement', 'banAppeal']
+ *         description: type，['report', 'reply', 'judgement', 'banAppeal']
  *         type: string
  *         in: query
  *         value: null
@@ -641,9 +643,9 @@ async (req, res, next) => {
  * /api/player/timeline/item:
  *   get:
  *     tags:
- *       - 玩家
- *     summary: 获取评论内容
- *     description: 获取时间轴单条评论详细信息
+ *       - player
+ *     summary: Get comments
+ *     description: Get details on a single comment in the timeline
  *     produces:
  *       - application/json
  *     responses:
@@ -685,29 +687,30 @@ router.get('/timeline/item', [checkquery('id').isInt({min: 0}),], async (req, re
  * /api/player/reply:
  *   post:
  *     tags:
- *       - 玩家
- *     summary: 回复
- *     description: 回复内容
+ *       - player
+ *       - user
+ *     summary: reply
+ *     description: Reply content
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: data.toPlayerId
- *         description: 玩家id
+ *         description: player id
  *         required: true
  *         type: num
  *         in: path
  *         value: 1
  *       - name: data.toCommentId
- *         description: 评论、回复、申诉id
+ *         description: Comment, reply, complaint id
  *         type: num
  *         in: path
  *         value: 1
  *       - name: data.content
- *         description: 内容
+ *         description: content
  *         required: true
  *         type: string
  *         in: path
- *         value: 填写举报内容
+ *         value: Text
  *     responses:
  *       200:
  *         description: reply.success
@@ -821,14 +824,14 @@ async (req, res, next) => {
  * /api/player/checkContent:
  *   post:
  *     tags:
- *       - 检测
- *     summary: 检测文本
- *     description: 检测内容是否包含垃圾广告
+ *       - player
+ *     summary: Detection text
+ *     description: Detect whether the content contains spam ads
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: data.content
- *         description: 文本 1-5000
+ *         description: text 1-5000
  *         required: true
  *         type: string
  *         in: path
@@ -876,9 +879,9 @@ router.post('/checkContent', verifyJWT, verifyCaptcha, forbidPrivileges(['freeze
  * /api/player/update:
  *   post:
  *     tags:
- *       - 玩家
- *     summary: 更新历史名称
- *     description: 主动更新举报玩家新的名称
+ *       - player
+ *     summary: Update history name
+ *     description: Actively update new names of reported players
  *     produces:
  *       - application/json
  *     parameters:

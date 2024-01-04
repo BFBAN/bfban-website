@@ -47,7 +47,6 @@ const userAttributes = {
     "language": {type: "string", get: true, set: true, isprivate: true, default: 'en-US'},
     "showOrigin": {type: "boolean", get: true, set: true, default: false},
     "allowDM": {type: "boolean", get: true, set: true, default: false},     // allow direct message?
-    "certUser": {type: "string", get: true, set: false, default: ''},
     "freezeOfNoBinding": {type: "boolean", get: true, set: false, default: false},
     "changeNameLeft": {type: "number", get: true, set: false, isprivate: true, default: 3},
     "registerIP": {type: "string", get: false, set: false, default: ''},

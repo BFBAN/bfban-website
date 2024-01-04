@@ -2,22 +2,24 @@
   <Row :gutter="5">
     <template v-if="processingSortList.length >= 0">
       <Col v-for="(i,index) in processingSortList.slice(0,maxOverflow)" :key="index">
-        <AchievementView :id="i.value" :time="i.time" :onlyShow="true">
-          <img :src="achievementUtil.getIcon(achievementUtil.getItem(i.value)['iconPath'])" :width="size" :height="size"/>
-          <span slot="content">{{ $t(`profile.achievement.list.${i.value}.name`) }}</span>
+        <AchievementView :id="i.name" :time="i.acquisitionTime" :onlyShow="true">
+          <img :src="achievementUtil.getIcon(achievementUtil.getItem(i.name)['iconPath'])" :width="size"
+               :height="size"/>
+          <span slot="content">{{ $t(`profile.achievement.list.${i.name}.name`) }}</span>
         </AchievementView>
       </Col>
       <Col v-if="processingSortList.length > maxOverflow">
-        <Poptip trigger="hover">
+        <Poptip trigger="hover" transfer>
           <Badge :count="processingSortList.slice(maxOverflow,processingSortList.length).length" :offset="[-5,-2]">
             <Icon type="md-more" :size="size.replace('px', '')"></Icon>
           </Badge>
           <template slot="content">
             <span v-for="(i,index) in processingSortList.slice(maxOverflow,processingSortList.length)" :key="index">
-              <AchievementView :id="i.value.toString()" :time="i.time" :onlyShow="true"
-                               v-if="achievementUtil.getItem(i.value)['isShowCard']">
-                <img :src="achievementUtil.getIcon(achievementUtil.getItem(i.value)['iconPath'])" :width="size" :height="size"/>
-                <span slot="content">{{ $t(`profile.achievement.list.${i.value}.name`) }}</span>
+              <AchievementView :id="i.name.toString()" :time="i.acquisitionTime" :onlyShow="true"
+                               v-if="achievementUtil.getItem(i.name)['isShowCard']">
+                <img :src="achievementUtil.getIcon(achievementUtil.getItem(i.name)['iconPath'])" :width="size"
+                     :height="size"/>
+                <span slot="content">{{ $t(`profile.achievement.list.${i.name}.name`) }}</span>
               </AchievementView>
             </span>
           </template>
@@ -39,9 +41,9 @@ import AchievementView from "@/components/AchievementView.vue";
 export default {
   props: {
     data: {
-      type: [Object, Array],
+      type: Array,
       default() {
-        return {}
+        return []
       }
     },
     size: {
@@ -74,10 +76,9 @@ export default {
   },
   methods: {
     onSort() {
-      this.processingSortList = Object.entries(this.data)
-          .filter(([key]) => achievementUtil.getItem(key)['isShowCard'])
-          .map(([value, time]) => ({value, time}))
-          .sort((a, b) => a.time - b.time);
+      this.processingSortList = this.data
+          .filter((i) => achievementUtil.getItem(i.name)['isShowCard'])
+          .sort((a, b) => a.acquisitionTime - b.acquisitionTime);
     },
   },
 }

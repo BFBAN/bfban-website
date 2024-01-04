@@ -21,9 +21,9 @@ const router = express.Router();
  * /api/statistics:
  *   get:
  *     tags:
- *       - 统计
- *     summary: 获取简单统计信息
- *     description: 取得统计, 支持reports、players、confirmed、registers、banappeals、details
+ *       - statistic
+ *     summary: Get simple statistics
+ *     description: Get statistics, support reports、players、confirmed、registers、banappeals、details
  *     produces:
  *       - application/json
  *     parameters:
@@ -182,9 +182,9 @@ router.get('/activeStatistical', [
  * /api/playerStatistics:
  *   post:
  *     tags:
- *       - 统计
- *     summary: 获取游戏类型、游戏作弊方式统计
- *     description: 像graphql一样
+ *       - statistic
+ *     summary: Get game types, game cheating statistics
+ *     description: Like graphql
  *     produces:
  *       - application/json
  *     parameters:
@@ -238,9 +238,9 @@ async (req, res, next) => {
  * /api/activities:
  *   get:
  *     tags:
- *       - 统计
- *     summary: 获取网站动态
- *     description: 取得网站近期操作动态，包含注册、举报、、申诉内容
+ *       - statistic
+ *     summary: Get website updates
+ *     description: Get the recent operation of the website, including registration, reports, complaints...
  *     produces:
  *       - application/json
  *     parameters:
@@ -325,24 +325,24 @@ async (req, res, next) => {
  * /api/players:
  *   get:
  *     tags:
- *       - 统计
- *     summary: 玩家列表
- *     description: 获取玩家列表
+ *       - statistic
+ *     summary: Player list
+ *     description: Get the player list
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: game
- *         description: 游戏类型，['bf1', 'bfv', 'bf6']
+ *         description: Game type，['bf1', 'bfv', 'bf6']
  *         type: string
  *         in: query
  *         value: bf1
  *       - name: createTimeFrom
- *         description: 举报创建时间
+ *         description: Report creation time
  *         type: integer
  *         in: query
  *         value: 0
  *       - name: updateTimeFrom
- *         description: 最近更新时间
+ *         description: Last updated time
  *         type: integer
  *         in: query
  *         value: 0
@@ -355,17 +355,17 @@ async (req, res, next) => {
  *         in: query
  *         value: 0
  *       - name: status
- *         description: 案件状态类型
+ *         description: Case status type
  *         type: integer
  *         in: query
  *         value: 0
  *       - name: sortBy
- *         description: 筛选方式,['createTime','updateTime','viewNum','commentsNum']
+ *         description: Screening mode,['createTime','updateTime','viewNum','commentsNum']
  *         type: string
  *         in: query
  *         value: commentsNum
  *       - name: order
- *         description: 顺序方式，['desc','asc']
+ *         description: Sequential mode，['desc','asc']
  *         type: string
  *         in: query
  *         value: desc
@@ -458,54 +458,54 @@ async (req, res, next) => {
  * /api/players/stream:
  *   get:
  *     tags:
- *       - 统计
- *     summary: 玩家列表流 BOT 账号用
- *     description: 获取大批量玩家列表数据
+ *       - player
+ *     summary: Player list streaming BOT account used
+ *     description: Mass player list data
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: game
- *         description: 游戏类型，['bf1', 'bfv', 'bf6']
+ *         description: Game type，['bf1', 'bfv', 'bf6']
  *         type: string
  *         in: query
  *         value: bf1
  *       - name: createTimeFrom
- *         description: 根据当前创建时间开始查询
+ *         description: Start the query based on the current creation time
  *         type: integer
  *         in: query
  *         value: 0
  *       - name: updateTimeFrom
- *         description: 根据当前更新时间开始查询
+ *         description: Start the query based on the current update time
  *         type: integer
  *         in: query
  *         value: 0
  *       - name: createTimeTo
- *         description: 根据当前创建时间开结束查询
+ *         description: End The query based on the current creation time
  *         type: integer
  *         in: query
  *         value: 0
  *       - name: updateTimeTo
- *         description: 根据当前更新时间开结束查询
+ *         description: End the query based on the current update time
  *         type: integer
  *         in: query
  *         value: 0
  *       - name: status
- *         description: 案件状态类型
+ *         description: Case status type
  *         type: integer
  *         in: query
  *         value: 0
  *       - name: sortBy
- *         description: 筛选方式,['createTime','updateTime','viewNum','commentsNum']
+ *         description: Screening mode,['createTime','updateTime','viewNum','commentsNum']
  *         type: string
  *         in: query
  *         value: commentsNum
  *       - name: order
- *         description: 顺序方式，['desc','asc']
+ *         description: order，['desc','asc']
  *         type: string
  *         in: query
  *         value: desc
  *       - name: limit
- *         description: 查询数量
+ *         description: limit
  *         type: num
  *         in: query
  *         value: 10
@@ -582,9 +582,10 @@ async function (req, res, next) {
  * /api/banAppeals:
  *   get:
  *     tags:
- *       - 统计
- *     summary: 申诉
- *     description: 在石锤状态下，提交申诉
+ *       - user
+ *       - statistic
+ *     summary: appeals
+ *     description: In the stone hammer state, file a complaint
  *     produces:
  *       - application/json
  *     parameters:
@@ -693,13 +694,13 @@ router.get('/admins', async (req, res, next) => {
  * /api/search:
  *   get:
  *     tags:
- *       - 查询
- *     description: 查询举报玩家
+ *       - search
+ *     description: Query and report player
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: type
- *         description: 搜索类型, ['player', 'user', 'comment'] -> ['案件玩家','站内用户','评论']
+ *         description: Search type, ['player', 'user', 'comment']
  *         type: string
  *         value: player
  *       - name: game
@@ -707,21 +708,20 @@ router.get('/admins', async (req, res, next) => {
  *         in: path
  *         value: bf1
  *       - name: gameSort
- *         description: 排序方式 ['default', 'latest', 'mostViewed', 'mostComments', 'joinedAt', 'lastOnlineTime']
+ *         description: Sort mode ['default', 'latest', 'mostViewed', 'mostComments', 'joinedAt', 'lastOnlineTime']
  *         type: string
  *         in: path
  *         value: default
  *       - name: param
- *         description: 搜索值
  *         type: string
  *         value:
  *       - name: createTimeFrom
- *         description: 创建时间,时间戳
+ *         description: Creation time, timestamp
  *         type: num
  *         in: path
  *         value: 1544313600000
  *       - name: createTimeTo
- *         description: 结束时间,时间戳
+ *         description: End time, timestamp
  *         type: num
  *         in: path
  *         value: 1670544000000
@@ -858,8 +858,8 @@ async (req, res, next) => {
  * /api/advanceSearch:
  *   get:
  *     tags:
- *       - 查询
- *     description: 提前查询玩家，并非数据库而是EAdb
+ *       - search
+ *     description: Query players in advance, not the database but the EAdb
  *     produces:
  *       - application/json
  *     parameters:
@@ -955,8 +955,8 @@ router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted', 'freeze
  * /api/siteStats:
  *   get:
  *     tags:
- *       - 查询
- *     description: 热门案件
+ *       - statistic
+ *     description: Hot case
  *     produces:
  *       - application/json
  */
@@ -1003,8 +1003,8 @@ async (req, res, next) => {
  * /api/siteStats:
  *   get:
  *     tags:
- *       - 查询
- *     description: 网站基本数据统计
+ *       - statistic
+ *     description: Website basic data statistics
  *     produces:
  *       - application/json
  *     responses:

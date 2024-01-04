@@ -109,6 +109,7 @@ app.use('/api/service', router_services);
  * /api/captcha:
  *   get:
  *     tags:
+ *       - user
  *       - captcha
  *     description: Get CAPTCHA
  */
