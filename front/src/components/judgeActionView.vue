@@ -49,7 +49,7 @@ export default {
   cursor: help;
   display: inline-block;
   margin: -2px -8px 0px 5px;
-  padding: 0px 5px;
+  padding: 0px 3px;
   background-color: rgba(0, 0, 0, 0.08);
 }
 </style>

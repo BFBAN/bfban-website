@@ -4,25 +4,10 @@ import express from "express";
 import db from "../mysql.js";
 import config from "../config.js";
 import {userHasRoles} from "./auth.js";
+import {handleAchievemenMapToArray} from "../routes/user_achievements.js";
 
 const xssConfig = {
-    whiteList: {
-        div: [],
-        p: [],
-        ul: [],
-        oi: [],
-        li: [],
-        span: [],
-        u: [],
-        i: [],
-        strong: [],
-        br: [],
-        hr: [],
-        b: [],
-        video: ["autoplay", "controls", "crossorigin", "loop", "muted", "playsinline", "poster", "preload", "src", "height", "width",],
-        img: ["src", "alt", "style", "title", "width", "height"],
-        a: ["href", "title", "target"],
-    },
+    whiteList: {a: ["href", "title", "target"], b: [], br: [], div: [], hr: [], i: [], img: ["src", "alt", "style", "title", "width", "height"], li: [], oi: [], p: [], span: [], strong: [], u: [], ul: [], video: ["autoplay", "controls", "crossorigin", "loop", "muted", "playsinline", "poster", "preload", "src", "height", "width",]},
     css: false,
     allowCommentTag: false,
 };
@@ -44,25 +29,25 @@ function cheatMethodsSanitizer(val, {req}) {
 }
 
 const userAttributes = {
-    "language": {type: "string", get: true, set: true, isprivate: true, default: 'en-US'},
-    "showOrigin": {type: "boolean", get: true, set: true, default: false},
-    "allowDM": {type: "boolean", get: true, set: true, default: false},     // allow direct message?
-    "freezeOfNoBinding": {type: "boolean", get: true, set: false, default: false},
+    "achievements": {type: "object", get: true, set: true, default: {}, handleValue: (value, type) => type === 'show' ? handleAchievemenMapToArray(value) : value},
+    "allowDM": {type: "boolean", get: true, set: true, default: false},
+    "avatar": {type: "string", get: true, set: false, default: ''},     // allow direct message?
     "changeNameLeft": {type: "number", get: true, set: false, isprivate: true, default: 3},
-    "registerIP": {type: "string", get: false, set: false, default: ''},
+    "freezeOfNoBinding": {type: "boolean", get: true, set: false, default: false},
+    "introduction": {type: "string", get: true, set: true, default: '', handleValue: (value, type) => xss(value, xssConfig)},
+    "language": {type: "string", get: true, set: true, isprivate: true, default: 'en-US'},
     "lastSigninIP": {type: "string", get: false, set: false, default: ''},
-    "avatar": {type: "string", get: true, set: false, default: ''},
-    "introduction": {type: "string", get: true, set: true, default: '', handleValue: (value) => xss(value, xssConfig)},
     "mute": {type: "string", get: true, set: true, default: ''},
+    "registerIP": {type: "string", get: false, set: false, default: ''},
     "showAchievement": {type: "boolean", get: true, set: true, default: true},
-    "achievements": {type: "object", get: true, set: true, default: {}}
+    "showOrigin": {type: "boolean", get: true, set: true, default: false}
 }
 
 function userShowAttributes(attr, showprivate = false, force = false) {
     const result = {};
     for (let i of Object.keys(userAttributes))
         if ((userAttributes[i].get && showprivate | (!userAttributes[i].isprivate)) || force)
-            result[i] = i.handleValue ? i.handleValue(attr[i]) : attr[i];
+            result[i] = userAttributes[i].handleValue ? userAttributes[i].handleValue(attr[i], 'show') : attr[i];
     return result;
 }
 
@@ -70,7 +55,7 @@ function userSetAttributes(org, attr, force = false) {
     let result = org;
     for (let i of Object.keys(userAttributes))
         if (typeof (attr[i]) == userAttributes[i].type && (userAttributes[i].set || force))
-            result[i] = i.handleValue ? i.handleValue(attr[i]) : attr[i];
+            result[i] = userAttributes[i].handleValue ? userAttributes[i].handleValue(attr[i], 'set') : attr[i];
     return result;
 }
 

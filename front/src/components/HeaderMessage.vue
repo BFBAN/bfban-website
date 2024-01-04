@@ -4,7 +4,7 @@
       <div @click="message.show = true">
         <slot name="content"></slot>
       </div>
-      <Drawer :title="$t($route.name + '.title')" placement="left" width="80%" :closable="false" v-model="message.show">
+      <Drawer :title="$t(`${$route.name}.title`)" placement="left" width="80%" :closable="false" v-model="message.show">
         <List>
           <ListItem v-if="message.messages.length > 0">
             <div v-for="(item, index) in message.messages" :key="index">
@@ -64,18 +64,23 @@ export default new Application({
     this.getMessage();
   },
   methods: {
+    /**
+     * 获取消息列表
+     */
     getMessage() {
       if (!this.isLogin) return;
 
       this.http.get(api["user_message"], {}).then(res => {
         const d = res.data;
 
+        if (d.success === 1) {
+          this.message = d.data;
+          return;
+        }
+
         if (d.code == 'user.tokenExpired') {
           account_storage.clearAll();
           return
-        }
-        if (d.success == 1) {
-          this.message = d.data;
         }
       })
     },
@@ -84,7 +89,7 @@ export default new Application({
     unReadCount() {
       let num = 0;
       this.message.messages.forEach(i => {
-        if (i.haveRead == 0) num += 1;
+        if (i.haveRead === 0 && ['info', 'warn', 'fatal'].indexOf(i.type) < 0) num += 1;
         return i
       })
       return num;

@@ -24,7 +24,7 @@
     },
     {
       "value": 1,
-      "class": "red",
+      "class": "error",
       "values": [
         "1"
       ]

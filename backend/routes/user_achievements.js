@@ -305,17 +305,13 @@ router.get('/achievements', verifyJWT, forbidPrivileges(['freezed', 'blacklisted
         if (!user)
             return res.status(404).json({error: 1, code: 'achievement.notFound', message: 'no such user.'});
 
-        const achievements = Object.entries(achievementConfig).map(([key, value]) => {
-            if (user.attr.achievements[key] && key && value)
-                return {name: key, acquisitionTime: user.attr.achievements[key], points: achievementConfig[key].points || 0};
-        }).filter(i => i != null);
         const result = {
             userId: user.id,
             username: user.username,
             userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
             userAachievementExp: totalAachievementExp(user),
             isPublicAchievement: user.attr.showAchievement,
-            achievements
+            achievements: handleAchievemenMapToArray(user.attr.achievements)
         };
 
         return res.status(200).json({success: 1, code: 'achievement.success', data: result});
@@ -452,6 +448,13 @@ router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "r
     }
 });
 
+function handleAchievemenMapToArray (achievements = {}) {
+    return Object.entries(achievementConfig).map(([key, value]) => {
+        if (achievements[key] && key && value)
+            return {name: key, acquisitionTime: new Date(achievements[key]), points: achievementConfig[key].points || 0};
+    }).filter(i => i != null);
+}
+
 function totalAachievementExp(user = {}) {
     let total = 0;
     let achievements = user.attr && Object.keys(user.attr.achievements) || [];
@@ -468,4 +471,5 @@ export {
     router,
     achievementConfig,
     totalAachievementExp,
+    handleAchievemenMapToArray,
 };

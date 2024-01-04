@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="detailLoad">
+  <div class="container">
     <div class="content">
       <template v-if="!isFull">
         <br>
@@ -42,16 +42,20 @@
           </Col>
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
-              <Col flex="1">
+              <Col :flex="isMobile ? 1 : null" :xs="isMobile ? {span: 24, order:1} : {}"
+                   :lg="isMobile ? {span: 12, order: 1} : {}">
                 <cheater-status-view :status="cheater.status"/>
 
                 <!-- 被举报的游戏 S -->
                 <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
                              v-if="cheater.games">
-                  <Tag color="gold" :alt="$t('detail.info.reportedGames')"
-                       v-for="(game,gameindex) in cheater.games" :key="gameindex">
-                    {{ $t(`basic.games.${game}`, {game: game}) }}
-                  </Tag>
+                  <Poptip trigger="hover"
+                          v-for="(game,gameindex) in cheater.games" :key="gameindex">
+                    <Tag type="border" :alt="$t('detail.info.reportedGames')">
+                      <img height="12" :src="require('/src/assets/images/games/' + game + '/logo.png')"/>
+                    </Tag>
+                    <div slot="content">{{$t(`basic.games.${game}`)}}</div>
+                  </Poptip>
                 </router-link>
 
                 <!-- 被举报的类型 E -->
@@ -60,7 +64,67 @@
                     {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
                   </Tag>
                 </template>
+              </Col>
+              <template v-if="!isFull">
+                <Col :xs="isMobile ? {span: 24} : {}" :lg="isMobile ? {span: 12} : {}" class="html2canvas-ignore buttons">
+                  <!-- Subscribes S -->
+                  <template v-if="isLogin">
+                    <Dropdown placement="bottom-end">
+                      <ButtonGroup type="button">
+                        <Button @click="onSubscribes" :loading="subscribes.load"
+                                :disabled="!$store.state.configuration.subscribes">
+                          <template v-if="subscribes.static">
+                            <Icon type="md-notifications-off" size="20"/>
+                            {{ $t('detail.subscribes.cancelTrack') }}
+                          </template>
+                          <template v-else>
+                            <Icon type="md-notifications-outline" size="20"/>
+                            {{ $t('detail.subscribes.tracking') }}
+                          </template>
+                        </Button>
+                      </ButtonGroup>
+                      <DropdownMenu slot="list" v-if="$store.state.configuration.subscribes">
+                        <DropdownItem :selected="!subscribes.static">
+                          <h4>
+                            <Icon type="md-notifications-outline"/>
+                            {{ $t('detail.subscribes.tracking') }}
+                          </h4>
+                          <p>{{ $t('detail.subscribes.trackingDescribe') }}</p>
+                        </DropdownItem>
+                        <DropdownItem :selected="subscribes.static">
+                          <h4>
+                            <Icon type="md-notifications-off"/>
+                            {{ $t('detail.subscribes.cancelTrack') }}
+                          </h4>
+                          <p>{{ $t('detail.subscribes.cancelTrackDescribe') }}</p>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </template>
+                  <Divider type="vertical"/>
+                  <!-- Subscribes E -->
 
+                  <Dropdown placement="bottom-end">
+                    <ButtonGroup type="button">
+                      <Button shape="circle-outline" type="primary" icon="md-more"></Button>
+                    </ButtonGroup>
+                    <DropdownMenu slot="list" style="min-width: 200px">
+                      <DropdownItem @click.native.stop="$router.push({name: 'cheater_app'})" v-if="!isMobile">
+                        <Icon type="md-qr-scanner"/> {{ $t('detail.info.app_qr.title') }}
+                      </DropdownItem>
+                      <DropdownItem @click.native.stop="updateCheaterModal = true">
+                          <Icon type="md-cloud"/> {{ $t('detail.info.updateButton') }}
+                      </DropdownItem>
+                      <DropdownItem divided="true" @click.native.stop="$router.push({name: 'cheater_share'})">
+                        <!-- 分享 share S -->
+                        <Icon type="md-share"/> {{ $t('share.title') }}
+                        <!-- 分享 share E -->
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </Col>
+              </template>
+              <Col :xs="{span: 24}" :lg="{span: 24}">
                 <div>
                   <Dropdown :transfer="isMobile" placement="bottom-start">
                     <h1 class="text-distinguishing-letter">
@@ -103,72 +167,18 @@
                   </Dropdown>
                 </div>
               </Col>
-              <template v-if="!isFull">
-                <Col class="mobile-hide html2canvas-ignore">
-                  <!-- App S -->
-                  <router-link :to="{name: 'cheater_app'}">
-                    <Button>
-                      <Icon type="md-qr-scanner" size="20" color="#535353"/>
-                      {{ $t('detail.info.app_qr.title') }}
-                    </Button>
-                  </router-link>
-                  <!-- App E -->
-                  <template v-if="isLogin">
-                    <Divider type="vertical"/>
-                    <Dropdown placement="bottom-end">
-                      <ButtonGroup type="button">
-                        <Button @click="onSubscribes" :loading="subscribes.load"
-                                :disabled="!$store.state.configuration.subscribes">
-                          <template v-if="subscribes.static">
-                            <Icon type="md-notifications-off" size="20"/>
-                            {{ $t('detail.subscribes.cancelTrack') }}
-                          </template>
-                          <template v-else>
-                            <Icon type="md-notifications-outline" size="20"/>
-                            {{ $t('detail.subscribes.tracking') }}
-                          </template>
-                        </Button>
-                        <Button :disabled="!$store.state.configuration.subscribes">
-                          <Icon type="ios-arrow-down"></Icon>
-                        </Button>
-                      </ButtonGroup>
-                      <DropdownMenu slot="list" v-if="$store.state.configuration.subscribes">
-                        <DropdownItem :selected="!subscribes.static">
-                          <h4>
-                            <Icon type="md-notifications-outline"/>
-                            {{ $t('detail.subscribes.tracking') }}
-                          </h4>
-                          <p>{{ $t('detail.subscribes.trackingDescribe') }}</p>
-                        </DropdownItem>
-                        <DropdownItem :selected="subscribes.static">
-                          <h4>
-                            <Icon type="md-notifications-off"/>
-                            {{ $t('detail.subscribes.cancelTrack') }}
-                          </h4>
-                          <p>{{ $t('detail.subscribes.cancelTrackDescribe') }}</p>
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  </template>
-                  <Divider type="vertical"/>
-                  <!-- 分享 share S -->
-                  <router-link :to="{name: 'cheater_share'}">
-                    <Button type="primary" v-voice-button>
-                      <Icon type="md-share"/>
-                    </Button>
-                  </router-link>
-                  <!-- 分享 share E -->
-                </Col>
-              </template>
             </Row>
-            <Row>
-              <Col>
+
+            <Row :gutter="10" class="cards">
+              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
                 <Poptip transfer width="400" placement="bottom-start">
-                  <Icon type="md-more"/>
-                  ids
+                  <Card :padding="isMobile ? 5 : 10" dis-hover>
+                    <h3>{{ cheater.id || 0 }}</h3>
+                    <span>IDs <Icon type="md-more"/></span>
+                  </Card>
                   <div slot="content">
                     <Row :gutter="10" type="flex" align="middle">
-                      <Col>id:</Col>
+                      <Col>id:<Icon type="md-more"/></Col>
                       <Col flex="1">
                         <Divider dashed/>
                       </Col>
@@ -190,82 +200,23 @@
                     </Row>
                   </div>
                 </Poptip>
-
-                <template v-if="!isFull">
-                  <Divider type="vertical"/>
-
-                  <a @click="updateCheaterModal = true;">
-                    <Icon type="md-cloud"/>
-                    {{ $t('detail.info.updateButton') }}
-                  </a>
-                  <Modal v-model="updateCheaterModal">
-                    <div sort="title">
-                      <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
-                    </div>
-                    <div>
-                      <Card style="margin: 2.5rem 0 1rem 0;" dis-hover>
-                        <Row :gutter="16" type="flex" justify="center" align="middle">
-                          <Col>
-                            <Icon type="md-cloud" color="#535353" size="40"/>
-                          </Col>
-                          <Col>
-                            <Icon type="md-code-working" color="#aaa" size="20"/>
-                          </Col>
-                          <Col>
-                            <Icon type="ios-albums" color="#535353" size="40"/>
-                          </Col>
-                        </Row>
-                      </Card>
-                      <br/>
-                      <p class="hint">
-                        {{ $t('detail.info.description1') }}，
-                        <Tag>{{ $t('detail.info.updateButton') }}</Tag>
-                        <span>{{ $t('detail.info.description2') }}</span>
-                      </p>
-                      <p class="hint"> {{ $t('detail.info.description3') }} </p>
-                      <p class="hint"> {{ $t('detail.info.description4') }} </p>
-                    </div>
-                    <div slot="footer">
-                      <Row :gutter="16">
-                        <Col>
-                          <Button type="dashed" size="large" long @click.prevent="updateCheaterModal = false;">
-                            {{ $t('basic.button.cancel') }}
-                          </Button>
-                        </Col>
-                        <Col flex="1">
-                          <Button type="primary" size="large"
-                                  :loading="updateUserInfospinShow"
-                                  :disabled="updateUserInfospinShow"
-                                  v-voice-button
-                                  long @click.prevent="updateCheaterInfo">
-                            {{ $t('detail.info.updateButton') }}
-                          </Button>
-                        </Col>
-                      </Row>
-                    </div>
-                  </Modal>
-                </template>
               </Col>
-            </Row>
-            <br>
-
-            <Row :gutter="10">
-              <Col :xs="{span: 12}" :lg="{span: 6}">
-                <Card :padding="10" dis-hover>
+              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
+                <Card :padding="isMobile ? 5 : 10" dis-hover>
                   <!-- 浏览次数 -->
                   <h3>{{ cheater.viewNum || 0 }}</h3>
                   <span>{{ $t('detail.info.viewTimes') }}</span>
                 </Card>
               </Col>
-              <Col :xs="{span: 12}" :lg="{span: 6}">
-                <Card :padding="10" dis-hover>
+              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 4}">
+                <Card :padding="isMobile ? 5 : 10" dis-hover>
                   <!-- 回复次数 -->
                   <h3>{{ cheater.commentsNum || 0 }}</h3>
                   <span>{{ $t('basic.button.reply') }}</span>
                 </Card>
               </Col>
-              <Col :xs="{span: 12}" :lg="{span: 6}">
-                <Card :padding="10" dis-hover>
+              <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 12}" :lg="{span: 6}">
+                <Card :padding="isMobile ? 5 : 10" dis-hover>
                   <!-- 第一次被举报时间 -->
                   <h3>
                     <TimeView :time="cheater.createTime">
@@ -275,8 +226,8 @@
                   <span>{{ $t('detail.info.firstReportTime') }}</span>
                 </Card>
               </Col>
-              <Col :xs="{span: 12}" :lg="{span: 6}">
-                <Card :padding="10" dis-hover>
+              <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 12}" :lg="{span: 6}">
+                <Card :padding="isMobile ? 5 : 10" dis-hover>
                   <!-- 最近更新时间 -->
                   <h3>
                     <TimeView :time="cheater.updateTime">
@@ -305,7 +256,7 @@
           <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
             <Col flex="1" class="mobile-hide">
               {{ $t('detail.info.timeLine') }}
-              <Tag v-if="timeline.total">{{ timeline.total || 0 }}</Tag>
+              <Tag type="border" v-if="timeline.total">{{ timeline.total || 0 }}</Tag>
             </Col>
             <Col>
               <Row>
@@ -1205,6 +1156,55 @@
         </Form>
       </Modal>
       <!-- 管理-禁言 E -->
+
+      <!-- Upload Player S -->
+      <Modal v-model="updateCheaterModal">
+        <div sort="title">
+          <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
+        </div>
+        <div>
+          <Card style="margin: 2.5rem 0 1rem 0;" dis-hover>
+            <Row :gutter="16" type="flex" justify="center" align="middle">
+              <Col>
+                <Icon type="md-cloud" color="#535353" size="40"/>
+              </Col>
+              <Col>
+                <Icon type="md-code-working" color="#aaa" size="20"/>
+              </Col>
+              <Col>
+                <Icon type="ios-albums" color="#535353" size="40"/>
+              </Col>
+            </Row>
+          </Card>
+          <br/>
+          <p class="hint">
+            {{ $t('detail.info.description1') }}，
+            <Tag>{{ $t('detail.info.updateButton') }}</Tag>
+            <span>{{ $t('detail.info.description2') }}</span>
+          </p>
+          <p class="hint"> {{ $t('detail.info.description3') }} </p>
+          <p class="hint"> {{ $t('detail.info.description4') }} </p>
+        </div>
+        <div slot="footer">
+          <Row :gutter="16">
+            <Col>
+              <Button type="dashed" size="large" long @click.prevent="updateCheaterModal = false;">
+                {{ $t('basic.button.cancel') }}
+              </Button>
+            </Col>
+            <Col flex="1">
+              <Button type="primary" size="large"
+                      :loading="updateUserInfospinShow"
+                      :disabled="updateUserInfospinShow"
+                      v-voice-button
+                      long @click.prevent="updateCheaterInfo">
+                {{ $t('detail.info.updateButton') }}
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      </Modal>
+      <!-- Upload Player E -->
     </template>
   </div>
 </template>
@@ -1327,7 +1327,6 @@ export default new Application({
         ]
       },
 
-      detailLoad: true,
       spinShow: true,
       verifySpinShow: false,
       replySpinShow: false,
@@ -2199,6 +2198,11 @@ export default new Application({
   h1 {
     font-size: 2.2rem;
   }
+
+  .cards .ivu-poptip,
+  .cards .ivu-poptip-rel {
+    width: 100%;
+  }
 }
 
 .detail-affix {
@@ -2218,6 +2222,23 @@ export default new Application({
   .detail-affix {
     opacity: .2;
     display: none !important;
+  }
+}
+
+@media screen and (max-width: 990px) {
+  .detail-userinfo-card .cards .ivu-card {
+    margin-bottom: 10px !important;
+  }
+
+  .detail-userinfo-card .buttons {
+    margin-top: 5px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .detail-userinfo-card .buttons {
+    margin-bottom: 10px;
+    margin-top: 5px;
   }
 }
 </style>

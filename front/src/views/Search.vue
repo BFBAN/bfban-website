@@ -210,7 +210,7 @@
           <Card dis-hover class="search-list" v-if="result.player.length > 0">
             <div v-for="(d, d_index) in result.player" :key="d_index" class="item-card" v-voice-button>
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
-                <Card dis-hover :padding="10" :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }, query: {byPath: $route.name}}" @click="getA">
+                <Card dis-hover :padding="10" :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }, query: {byPath: $route.name}}">
                   <Row :gutter="10" type="flex">
                     <Col :xs="{span: 5, push: 0,pull:0}" :sm="{span: 3,push:0,pull:0}" :lg="{span: 2, push: 0,pull:0}">
                       <!-- 头像 S -->

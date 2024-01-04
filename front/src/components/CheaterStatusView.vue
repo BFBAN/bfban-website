@@ -44,14 +44,23 @@ export default {
 </script>
 
 <template>
-  <Poptip trigger="hover" :transfer="true" word-wrap width="200"
-          :content="$t(`basic.status.${status || 0}.describe`)">
-    <Tag :color="cheaterStatusClass(status || 0)" v-if="status >= 0">
-      {{ $t(`basic.status.${status || 0}.text`) }}
-    </Tag>
-  </Poptip>
+  <Tag :color="cheaterStatusClass(status || 0)" v-if="status >= 0">
+    {{ $t(`basic.status.${status || 0}.text`) }}
+    <span class="judge-action-before-icon">
+     <Poptip trigger="hover" :transfer="true" word-wrap width="200"
+             :content="$t(`basic.status.${status || 0}.describe`)">
+       <Icon type="md-help"></Icon>
+     </Poptip>
+    </span>
+  </Tag>
 </template>
 
 <style scoped lang="less">
-
+.judge-action-before-icon {
+  cursor: help;
+  display: inline-block;
+  margin: -2px -8px 0px 5px;
+  padding: 0px 3px;
+  background-color: rgba(0, 0, 0, 0.08);
+}
 </style>

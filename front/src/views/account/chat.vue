@@ -14,7 +14,7 @@
         </Row>
         <Row v-if="messageList[selectWindow]">
           <Col class="chat-user">
-            <div v-for="(i, index) in messageUser" :key="index" @click="openMessageDetail(i)" >
+            <div v-for="(i, index) in messageUser" :key="index" @click="openMessageDetail(i)">
               <Row :gutter="10"
                    type="flex" justify="center" align="middle"
                    class="chat-user-item">
@@ -30,7 +30,7 @@
                     <b>{{ i.text.toString() }}</b>
                   </businessCard>
                   <span v-else><b>{{ i.text.toString() }}</b></span>
-                  ({{ messageList[i.value]['num']||0}})
+                  ({{ messageList[i.value]['num'] || 0 }})
                 </Col>
                 <Col>
                   <Button size="small" v-voice-button>
@@ -80,10 +80,15 @@
                         </TimeView>
                       </Col>
                       <Col>
-                        <Tag type="border" :color="{'fatal': 'red', 'warn': 'red'}[child.type] || 'info'">{{ child.type }}</Tag>
+                        <Tag type="border" :color="{'fatal': 'red', 'warn': 'red'}[child.type] || 'info'">{{
+                            child.type
+                          }}
+                        </Tag>
                       </Col>
-                      <Col v-if="['direct', 'warn', 'reply'][child.type]">
-                        <a href="javascript:void(0)" v-if="child.haveRead == 0" @click="onMessageMark(child.id, 0)">
+                      <Col>
+                        <a href="javascript:void(0)"
+                           v-if="child.haveRead == 0 && ['info', 'warn', 'fatal'].indexOf(child.type) < 0"
+                           @click="onMessageMark(child.id, 0)">
                           <Icon type="md-eye" size="20"/>
                         </a>
                       </Col>
@@ -93,7 +98,9 @@
                     </Card>
                     <Row>
                       <Col flex="1">
-                        <span v-if="['info', 'warn', 'fatal'].indexOf(child.type) < 0">by <u>{{ child.username }}</u>({{ child.byUserId }})</span>
+                        <span v-if="['info', 'warn', 'fatal'].indexOf(child.type) < 0">by <u>{{
+                            child.username
+                          }}</u>({{ child.byUserId }})</span>
                       </Col>
                       <Col># {{ child.id }}</Col>
                     </Row>
@@ -211,10 +218,6 @@ export default new Application({
       await this.getMessage();
 
       this.message.type = this.message.list[0].title;
-
-      if (this.messageUser.length > 0) {
-        this.selectWindow = this.messageUser[0].id;
-      }
     },
     /**
      * 重置推送表单
@@ -308,7 +311,7 @@ export default new Application({
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.message.playerList = d.data;
         }
 
@@ -330,7 +333,7 @@ export default new Application({
       await this.http.get(api["user_message"]).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.message.messages = d.data.messages;
           let messageUser = [];
           let messageList = {};
@@ -413,7 +416,15 @@ export default new Application({
 
           this.messageList = messageList;
           this.messageUser = messageUser.sort((a, b) => a.index - b.index);
+
+          if (this.messageUser.length > 0)
+            this.selectWindow = this.messageUser[0].value;
+          return;
         }
+
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
       }).finally(() => {
         this.messageLoad = false;
       });
@@ -469,7 +480,7 @@ export default new Application({
   }
 
   .chat-content-not {
-    min-height: 300px;
+    height: 70vh;
     display: flex;
     justify-content: center;
     align-items: center;
