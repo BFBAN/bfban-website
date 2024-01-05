@@ -40,10 +40,10 @@
             </div>
             <br class="desktop-hide">
           </Col>
-          <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 19, push: 2}" class="detail-userinfo-card">
+          <Col :xs="{span: 24, pull: 0, push: 0}" :lg="{span: 19, pull: 0, push: 2}" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col :flex="isMobile ? 1 : null" :xs="isMobile ? {span: 24, order:1} : {}"
-                   :lg="isMobile ? {span: 12, order: 1} : {}">
+                   :lg="isMobile ? {span: 12, order: 1} : {}" class="tags">
                 <cheater-status-view :status="cheater.status"/>
 
                 <!-- 被举报的游戏 S -->
@@ -64,6 +64,28 @@
                     {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
                   </Tag>
                 </template>
+
+                <Dropdown placement="bottom-end" class="desktop-hide">
+                  <ButtonGroup type="button">
+                    <Button size="small" type="primary" icon="md-more"></Button>
+                  </ButtonGroup>
+                  <DropdownMenu slot="list" style="min-width: 200px">
+                    <DropdownItem @click.native.stop="$router.push({name: 'cheater_app'})" v-if="!isMobile">
+                      <Icon type="md-qr-scanner"/>
+                      {{ $t('detail.info.app_qr.title') }}
+                    </DropdownItem>
+                    <DropdownItem @click.native.stop="updateCheaterModal = true">
+                      <Icon type="md-cloud"/>
+                      {{ $t('detail.info.updateButton') }}
+                    </DropdownItem>
+                    <DropdownItem :divided="true" @click.native.stop="$router.push({name: 'cheater_share'})">
+                      <!-- 分享 share S -->
+                      <Icon type="md-share"/>
+                      {{ $t('share.title') }}
+                      <!-- 分享 share E -->
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </Col>
               <template v-if="!isFull">
                 <Col :xs="isMobile ? {span: 24} : {}" :lg="isMobile ? {span: 12} : {}"
@@ -101,13 +123,13 @@
                         </DropdownItem>
                       </DropdownMenu>
                     </Dropdown>
+                    <Divider type="vertical"/>
                   </template>
-                  <Divider type="vertical"/>
                   <!-- Subscribes E -->
 
-                  <Dropdown placement="bottom-end">
+                  <Dropdown placement="bottom-end" class="mobile-hide">
                     <ButtonGroup type="button">
-                      <Button shape="circle-outline" type="primary" icon="md-more"></Button>
+                      <Button shape="circle-outline" size="default" icon="md-more"></Button>
                     </ButtonGroup>
                     <DropdownMenu slot="list" style="min-width: 200px">
                       <DropdownItem @click.native.stop="$router.push({name: 'cheater_app'})" v-if="!isMobile">
@@ -129,52 +151,50 @@
                 </Col>
               </template>
               <Col :xs="{span: 24}" :lg="{span: 24}">
-                <div>
-                  <Dropdown :transfer="isMobile" placement="bottom-start">
-                    <h1 class="text-distinguishing-letter">
-                      <code :alt="cheater.originName || 'User Name'">{{ cheater.originName || 'User Name' }}</code>
-                    </h1>
+                <Dropdown :transfer="isMobile" placement="bottom-start">
+                  <h1 class="text-distinguishing-letter">
+                    <code :alt="cheater.originName || 'User Name'">{{ cheater.originName || 'User Name' }}</code>
+                  </h1>
 
-                    <!-- 历史ID -->
-                    <DropdownMenu slot="list"
-                                  :style="isMobile ? '' : 'min-width: 630px'"
-                                  v-if="cheater && cheater.history && cheater.history.length >= 0">
-                      <Row style="margin: 5px 18px">
-                        <Col flex="1">
-                          <b>{{ $t('detail.info.historyID') }}</b>
-                        </Col>
-                        <Col>
-                          <Button size="small" @click="updateCheaterModal = true;">
-                            {{ $t('detail.info.updateButton') }}
-                          </Button>
-                        </Col>
-                      </Row>
-                      <div style="overflow: auto; max-height: 80vh">
-                        <div v-for="(origin, origin_index) in cheater.history" :key="origin_index">
-                          <Row :gutter="5" type="flex" align="middle"
-                               style="padding: 0 16px;margin: 10px 0 ; width:100%">
-                            <Col class="mobile-hide">
-                              <TimeView :time="origin.fromTime">
-                                <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
-                              </TimeView>
-                            </Col>
-                            <Col flex="1" class="mobile-hide">
-                              <Divider dashed style="margin: 0"/>
-                            </Col>
-                            <Col class="text-distinguishing-letter">
-                              <code>{{ origin.originName }}</code>
-                            </Col>
-                          </Row>
-                        </div>
+                  <!-- 历史ID -->
+                  <DropdownMenu slot="list"
+                                :style="isMobile ? '' : 'min-width: 630px'"
+                                v-if="cheater && cheater.history && cheater.history.length >= 0">
+                    <Row style="margin: 5px 18px">
+                      <Col flex="1">
+                        <b>{{ $t('detail.info.historyID') }}</b>
+                      </Col>
+                      <Col>
+                        <Button size="small" @click="updateCheaterModal = true;">
+                          {{ $t('detail.info.updateButton') }}
+                        </Button>
+                      </Col>
+                    </Row>
+                    <div style="overflow: auto; max-height: 80vh">
+                      <div v-for="(origin, origin_index) in cheater.history" :key="origin_index">
+                        <Row :gutter="5" type="flex" align="middle"
+                             style="padding: 0 16px;margin: 10px 0 ; width:100%">
+                          <Col class="mobile-hide">
+                            <TimeView :time="origin.fromTime">
+                              <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
+                            </TimeView>
+                          </Col>
+                          <Col flex="1" class="mobile-hide">
+                            <Divider dashed style="margin: 0"/>
+                          </Col>
+                          <Col class="text-distinguishing-letter">
+                            <code>{{ origin.originName }}</code>
+                          </Col>
+                        </Row>
                       </div>
-                    </DropdownMenu>
-                  </Dropdown>
-                </div>
+                    </div>
+                  </DropdownMenu>
+                </Dropdown>
               </Col>
             </Row>
 
             <Row :gutter="10" class="cards">
-              <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 6}" :lg="{span: 4}">
+              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
                 <Poptip transfer width="400" placement="bottom-start">
                   <Card :padding="isMobile ? 5 : 10" dis-hover>
                     <h3>{{ cheater.id || 0 }}</h3>
@@ -182,23 +202,21 @@
                   </Card>
                   <div slot="content">
                     <Row :gutter="10" type="flex" align="middle">
-                      <Col>id:
-                        <Icon type="md-more"/>
-                      </Col>
+                      <Col>id:</Col>
                       <Col flex="1">
                         <Divider dashed/>
                       </Col>
                       <Col>{{ cheater.id || 'cheater id' }}</Col>
                     </Row>
                     <Row :gutter="10" type="flex" align="middle">
-                      <Col>User id:</Col>
+                      <Col>User id <Poptip transfer :content="$t(`report.labels.types.originUserId.hint`)"><Icon type="md-help"></Icon></Poptip> :</Col>
                       <Col flex="1">
                         <Divider dashed/>
                       </Col>
                       <Col>{{ cheater.originUserId || 'user id' }}</Col>
                     </Row>
                     <Row :gutter="10" type="flex" align="middle">
-                      <Col>Persona id:</Col>
+                      <Col>Persona id <Poptip transfer :content="$t(`report.labels.types.originPersonaId.hint`)"><Icon type="md-help"></Icon></Poptip> :</Col>
                       <Col flex="1">
                         <Divider dashed/>
                       </Col>
@@ -207,14 +225,14 @@
                   </div>
                 </Poptip>
               </Col>
-              <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 6}" :lg="{span: 4}">
+              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
                 <Card :padding="isMobile ? 5 : 10" dis-hover>
                   <!-- 浏览次数 -->
                   <h3>{{ cheater.viewNum || 0 }}</h3>
                   <span>{{ $t('detail.info.viewTimes') }}</span>
                 </Card>
               </Col>
-              <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 12}" :lg="{span: 4}">
+              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 4}">
                 <Card :padding="isMobile ? 5 : 10" dis-hover>
                   <!-- 回复次数 -->
                   <h3>{{ cheater.commentsNum || 0 }}</h3>
@@ -2111,7 +2129,8 @@ export default new Application({
 }
 
 @media screen and (max-width: 480px) {
-  .detail-userinfo-card .buttons {
+  .detail-userinfo-card .buttons,
+  .detail-userinfo-card .tags {
     margin-bottom: 10px;
     margin-top: 5px;
   }
