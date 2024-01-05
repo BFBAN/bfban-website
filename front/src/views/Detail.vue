@@ -54,7 +54,7 @@
                     <Tag type="border" :alt="$t('detail.info.reportedGames')">
                       <img height="12" :src="require('/src/assets/images/games/' + game + '/logo.png')"/>
                     </Tag>
-                    <div slot="content">{{$t(`basic.games.${game}`)}}</div>
+                    <div slot="content">{{ $t(`basic.games.${game}`) }}</div>
                   </Poptip>
                 </router-link>
 
@@ -66,7 +66,8 @@
                 </template>
               </Col>
               <template v-if="!isFull">
-                <Col :xs="isMobile ? {span: 24} : {}" :lg="isMobile ? {span: 12} : {}" class="html2canvas-ignore buttons">
+                <Col :xs="isMobile ? {span: 24} : {}" :lg="isMobile ? {span: 12} : {}"
+                     class="html2canvas-ignore buttons">
                   <!-- Subscribes S -->
                   <template v-if="isLogin">
                     <Dropdown placement="bottom-end">
@@ -110,14 +111,17 @@
                     </ButtonGroup>
                     <DropdownMenu slot="list" style="min-width: 200px">
                       <DropdownItem @click.native.stop="$router.push({name: 'cheater_app'})" v-if="!isMobile">
-                        <Icon type="md-qr-scanner"/> {{ $t('detail.info.app_qr.title') }}
+                        <Icon type="md-qr-scanner"/>
+                        {{ $t('detail.info.app_qr.title') }}
                       </DropdownItem>
                       <DropdownItem @click.native.stop="updateCheaterModal = true">
-                          <Icon type="md-cloud"/> {{ $t('detail.info.updateButton') }}
+                        <Icon type="md-cloud"/>
+                        {{ $t('detail.info.updateButton') }}
                       </DropdownItem>
-                      <DropdownItem divided="true" @click.native.stop="$router.push({name: 'cheater_share'})">
+                      <DropdownItem :divided="true" @click.native.stop="$router.push({name: 'cheater_share'})">
                         <!-- 分享 share S -->
-                        <Icon type="md-share"/> {{ $t('share.title') }}
+                        <Icon type="md-share"/>
+                        {{ $t('share.title') }}
                         <!-- 分享 share E -->
                       </DropdownItem>
                     </DropdownMenu>
@@ -170,7 +174,7 @@
             </Row>
 
             <Row :gutter="10" class="cards">
-              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
+              <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 6}" :lg="{span: 4}">
                 <Poptip transfer width="400" placement="bottom-start">
                   <Card :padding="isMobile ? 5 : 10" dis-hover>
                     <h3>{{ cheater.id || 0 }}</h3>
@@ -178,7 +182,9 @@
                   </Card>
                   <div slot="content">
                     <Row :gutter="10" type="flex" align="middle">
-                      <Col>id:<Icon type="md-more"/></Col>
+                      <Col>id:
+                        <Icon type="md-more"/>
+                      </Col>
                       <Col flex="1">
                         <Divider dashed/>
                       </Col>
@@ -201,14 +207,14 @@
                   </div>
                 </Poptip>
               </Col>
-              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
+              <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 6}" :lg="{span: 4}">
                 <Card :padding="isMobile ? 5 : 10" dis-hover>
                   <!-- 浏览次数 -->
                   <h3>{{ cheater.viewNum || 0 }}</h3>
                   <span>{{ $t('detail.info.viewTimes') }}</span>
                 </Card>
               </Col>
-              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 4}">
+              <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 12}" :lg="{span: 4}">
                 <Card :padding="isMobile ? 5 : 10" dis-hover>
                   <!-- 回复次数 -->
                   <h3>{{ cheater.commentsNum || 0 }}</h3>
@@ -272,12 +278,13 @@
                     </Select>
                   </ButtonGroup>
                   <Divider type="vertical"/>
-                  <RadioGroup v-model="timeline.sort" @on-change="onTimeLineSort" type="button" size="small">
-                    <Radio label="1">
-                      <Icon type="ios-funnel"/>
+                  <RadioGroup v-model="timeline.order" @on-change="getTimeline"
+                              type="button" size="small">
+                    <Radio label="asc">
+                      <span class="iconfont md-asc"></span>
                     </Radio>
-                    <Radio label="2">
-                      <Icon type="ios-funnel-outline"/>
+                    <Radio label="desc">
+                      <span class="iconfont md-desc"></span>
                     </Radio>
                   </RadioGroup>
                   <Divider type="vertical"/>
@@ -722,21 +729,6 @@
                   <Row class="timeline-content-footer" type="flex" align="middle">
                     <Col flex="auto" v-if="l.type != 'historyUsername'">
                       <template v-if="isLogin">
-                        <!-- 禁言 -->
-                        <template v-if="isAdminL2">
-                          <Tooltip placement="top" v-if="!l.isMute">
-                            <Button size="small" @click.native="showMuteAlert(l.byUserId)">
-                              <Icon type="md-mic" title="mute user"/>
-                            </Button>
-                            <div slot="content">
-                              disable permission to reply
-                            </div>
-                          </Tooltip>
-                          <Button size="small" v-else @click.native="muteUser('remove', l.byUserId)">
-                            <Icon type="md-mic-off" title="remove mute"/>
-                          </Button>
-                          <Divider type="vertical"/>
-                        </template>
                         <!-- 回复 -->
                         <Button size="small"
                                 v-voice-button
@@ -778,8 +770,7 @@
                       </Poptip>
                     </Col>
                     <Col align="right" class="user-select-none" v-if="l.type != 'historyUsername'">
-                      # {{ (timeline.skip * timeline.limit) - timeline.limit + l.index + 1 }}-<u><span
-                        style="opacity: .4">{{ l.id }}</span></u>
+                      # <u><span style="opacity: .4">{{ l.id }}</span></u>
                     </Col>
                   </Row>
 
@@ -1125,38 +1116,6 @@
       </Modal>
       <!-- 用户-小窗口回复 E -->
 
-      <!-- 管理-禁言 S -->
-      <Modal
-          v-model="mute.show"
-          @on-ok="modalOk"
-          @on-cancel="mute.show = false">
-        <p slot="header" style="text-align:center">
-          <span>Select the time duration for mute</span>
-        </p>
-        <Form>
-          <FormItem>
-            <Select v-model="mute.value">
-              <Option v-for="item in [
-              {value: 0, text: '10 mins'},
-              {value: 1, text: '1 hr'},
-              {value: 2, text: '12 hrs'},
-              {value: 3, text: '1 day'},
-              {value: 4, text: '1 week'},
-              {value: 5, text: '1 month'}]"
-                      :value="item.value"
-                      :key="item.value">
-                {{ item.text }}
-              </Option>
-            </Select>
-          </FormItem>
-
-          <FormItem>
-            <Checkbox v-model="mute.isNoticeIntraStationUser">是否将此禁令通知玩家？</Checkbox>
-          </FormItem>
-        </Form>
-      </Modal>
-      <!-- 管理-禁言 E -->
-
       <!-- Upload Player S -->
       <Modal v-model="updateCheaterModal">
         <div sort="title">
@@ -1293,7 +1252,7 @@ export default new Application({
       timelineListPreparedness: [],
       timelineList: [],
       timeline: {
-        sort: '1',
+        order: 'asc',
         skip: 1,
         limit: 20,
         total: 0,
@@ -1365,18 +1324,18 @@ export default new Application({
   },
   methods: {
     async loadData() {
-      const {page = 0} = this.$route.query;
+      const {page = 0, order = 'asc'} = this.$route.query;
       this.$Loading.start();
 
       // set Token Http mode
       this.http = http_token.call(this);
 
       this.timeline.seeType = this.getSeeType;
-
       if (page) {
         this.timeline.skip = Number(page);
         this.timeline.page = Number(page);
       }
+      if (order) this.timeline.order = order;
 
       await util.initUtil().then(res => {
         this.cheaterStatus = res.cheaterStatus;
@@ -1401,52 +1360,13 @@ export default new Application({
       this.timeline.skip = num;
       this.$router.push({
         name: this.$router.name,
-        query: {page: num}
+        query: {...this.$route.query, page: num}
       });
 
       this.getTimeline();
 
       const commentNode = document.getElementById('timeline');
       this.onRollingNode(commentNode.offsetTop);
-    },
-    showMuteAlert(id) {
-      this.mute.id = id
-      this.mute.show = true
-    },
-    modalOk() {
-      this.muteUser('add', this.mute.id, this.mute.value)
-    },
-    /**
-     * 禁言
-     * @param {string} type 禁言or移除
-     * @param {string} id user id
-     * @param {number} muteTime 时间
-     * @returns {boolean}
-     */
-    muteUser(type, id, muteTime = 0) {
-      const {isNoticeIntraStationUser} = this.mute;
-
-      if (!muteTime && !id && !type) return false;
-
-      this.http.post(api["admin_muteUser"], {
-        data: {
-          data: {type, id, value: muteTime},
-          isNotice: isNoticeIntraStationUser,
-          language: mail.exchangeLangField(this.$root.$i18n.locale)
-        },
-      }).then(res => {
-        const d = res.data;
-
-        if (d.success == 1) {
-          this.getTimeline();
-          this.$Message.success({content: d.message || d.code, duration: 3});
-          return;
-        }
-
-        this.$Message.error({content: d.message || d.code, duration: 3});
-      }).catch(err => {
-        this.$Message.error(err.code);
-      })
     },
     /**
      * 展开申诉详情
@@ -1493,63 +1413,40 @@ export default new Application({
         this.$Message.error(error.code);
       }
     },
+    getTime(dateString) {
+      return new Date(dateString).getTime();
+    },
     /**
      * 合并时间轴历史名称
      */
     onMergeHistoryName() {
-      const {page} = this.$route.query;
+      const that = this;
+      const {order} = this.timeline;
       let _timelineList = this.timelineListPreparedness;
       let _timeStartAndEndTime = {
-        0: new Date(_timelineList[0].createTime).getTime(),
-        1: new Date(_timelineList[_timelineList.length - 1].createTime).getTime()
-      } // 当前页第一条与最后一条时间间距
+        0: this.getTime(_timelineList[0].createTime),
+        1: this.getTime(_timelineList[_timelineList.length - 1].createTime)
+      };
 
-      // 处理历史名称，放置对应对应位置
-      for (let hisrotyIndex = 0; hisrotyIndex < this.cheater.history.length; hisrotyIndex++) {
-        let nameHistoryTime = new Date(this.cheater.history[hisrotyIndex].fromTime).getTime();
-        let prevNameTimeListTime = 0;
-        let nameTimeListTime = 0;
+      this.cheater.history.forEach((history, hisrotyIndex) => {
+        let _itemHistoryTime = this.getTime(history.fromTime);
 
-        for (let timeLineIndex = 0; timeLineIndex < _timelineList.length; timeLineIndex++) {
-          if (this.timelineList[timeLineIndex - 1] && _timelineList[timeLineIndex - 1].createTime) {
-            prevNameTimeListTime = new Date(_timelineList[timeLineIndex - 1].createTime).getTime();
-          }
-          nameTimeListTime = new Date(_timelineList[timeLineIndex].createTime).getTime();
-
-          // 历史名称的记录大于1，history内表示举报提交时初始名称，不应当放进timeline中
-          // 索引自身历史修改日期位置，放入timeline中
-          if (
-              hisrotyIndex >= 1 &&
-              _timelineList[timeLineIndex].type != 'historyUsername' &&
-              nameHistoryTime >= prevNameTimeListTime &&
-              nameHistoryTime <= nameTimeListTime &&
-              page == 1 ? true : nameHistoryTime >= _timeStartAndEndTime[0] &&
-                  nameHistoryTime <= _timeStartAndEndTime[1]
-          ) {
-            _timelineList.splice(timeLineIndex, 0, {
-              type: 'historyUsername',
-              beforeUsername: this.cheater.history[hisrotyIndex - 1]?.originName,
-              nextUsername: this.cheater.history[hisrotyIndex]?.originName,
-              fromTime: this.cheater.history[hisrotyIndex].fromTime
-            });
-            break;
-          } else if (
-              hisrotyIndex >= 1 &&
-              hisrotyIndex == this.cheater.history.length - 1 &&
-              _timelineList[timeLineIndex].type != 'historyUsername' &&
-              nameHistoryTime >= nameTimeListTime
-          ) {
-            _timelineList.push({
-              type: 'historyUsername',
-              beforeUsername: this.cheater.history[hisrotyIndex - 1]?.originName,
-              nextUsername: this.cheater.history[hisrotyIndex]?.originName,
-              fromTime: this.cheater.history[hisrotyIndex].fromTime
-            })
-            break;
-          }
+        // Check if the history is within the timeline range
+        if (_itemHistoryTime >= _timeStartAndEndTime[order === 'asc' ? 0 : 1] && _itemHistoryTime <= _timeStartAndEndTime[order === 'asc' ? 1 : 0]) {
+          _timelineList.push({
+            type: 'historyUsername',
+            beforeUsername: this.cheater.history[hisrotyIndex - 1]?.originName,
+            nextUsername: history.originName,
+            fromTime: history.fromTime
+          });
         }
-      }
-      this.timelineList = _timelineList;
+      });
+
+      this.timelineList = _timelineList.sort(function (x, y) {
+        let timeX = (that.getTime(x.createTime) || that.getTime(x.fromTime));
+        let timeY = (that.getTime(y.createTime) || that.getTime(y.fromTime));
+        return order === 'asc' ? timeX - timeY : timeY + timeX;
+      });
     },
     /**
      * 追踪此玩家
@@ -1565,7 +1462,7 @@ export default new Application({
         data: {id}
       }).then(res => {
         const d = res.data;
-        if (res.data.success == 1)
+        if (res.data.success === 1)
           this.subscribes.static = d.data;
       }).finally((err) => {
         this.subscribes.load = false;
@@ -1583,7 +1480,7 @@ export default new Application({
           await this.http.post(api["user_subscribes_add"], {
             data: {playerIds: [this.cheater.id]}
           }).then(res => {
-            if (res.data.success == 1)
+            if (res.data.success === 1)
               this.subscribes.static = true;
           });
           break;
@@ -1591,7 +1488,7 @@ export default new Application({
           await this.http.post(api["user_subscribes_delete"], {
             data: {playerIds: [this.cheater.id]}
           }).then(res => {
-            if (res.data.success == 1)
+            if (res.data.success === 1)
               this.subscribes.static = false;
           });
           break;
@@ -1709,9 +1606,10 @@ export default new Application({
      * 获取举报玩家 时间轴
      */
     async getTimeline() {
-      const that = this;
       this.timelineListPreparedness = [];
       this.timelineList = [];
+
+      this.$router.push({name: this.$route.name, query: {...this.$route.query, order: this.timeline.order}})
 
       return new Promise(resolve => {
         this.spinShow = true;
@@ -1719,20 +1617,19 @@ export default new Application({
         this.http.get(api["player_timeline"], {
           params: Object.assign({
             skip: (this.timeline.skip - 1) * this.timeline.limit,
-            limit: this.timeline.limit
+            limit: this.timeline.limit,
+            order: this.timeline.order,
           }, {personaId: this.getParamsIds('personaId'), random: +(new Date())})
         }).then(res => {
           let d = res.data;
 
-          if (d.success == 1) {
+          if (d.success === 1) {
             d.data.result.forEach((i, index) => {
               if (i.videoLink) {
                 let videoLink = i.videoLink.split(',');
-                if (videoLink instanceof Array) {
-                  for (let j = 0; j < videoLink.length; j++) {
+                if (videoLink instanceof Array)
+                  for (let j = 0; j < videoLink.length; j++)
                     if (videoLink[j].indexOf('http') >= 0) videoLink[j] = new URL(videoLink[j]);
-                  }
-                }
                 i.videoLink = videoLink;
               }
 
@@ -1745,7 +1642,6 @@ export default new Application({
 
             // 排序
             this.onMergeHistoryName();
-            this.onTimeLineSort();
 
             this.$forceUpdate();
           }
@@ -1875,27 +1771,6 @@ export default new Application({
       if (!floorId) return _url;
       _url.hash = "#floor-" + floorId;
       return _url.toString() || "";
-    },
-    /**
-     * 时间轴排序
-     */
-    onTimeLineSort() {
-      switch (Number(this.timeline.sort)) {
-        case 1:
-          this.timelineListPreparedness = this.timelineList.sort(function (x, y) {
-            let timeX = (new Date(x.createTime).getTime() || new Date(x.fromTime).getTime());
-            let timeY = (new Date(y.createTime).getTime() || new Date(y.fromTime).getTime());
-            return timeX > timeY ? 1 : -1;
-          });
-          break;
-        case 2:
-          this.timelineListPreparedness = this.timelineList.sort(function (x, y) {
-            let timeX = (new Date(x.createTime).getTime() || new Date(x.fromTime).getTime());
-            let timeY = (new Date(y.createTime).getTime() || new Date(y.fromTime).getTime());
-            return timeX < timeY ? 1 : -1;
-          });
-          break;
-      }
     },
     /**
      * 时间轴筛选,依次条件筛选

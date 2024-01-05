@@ -75,7 +75,7 @@
           <Row :gutter="20">
             <Col :xs="{span: 23, push: 1}" :lg="{push: 0}">
               <RadioGroup size="small" type="button" v-voice-button v-model="timeRange"
-                          @on-change="getActiveStatistical">
+                          @on-change="onChangePeriod">
                 <Radio v-for="(i, index) in timeArray" :key="index"
                        :disabled="!isLogin && !show"
                        :label="i.value"
@@ -309,8 +309,7 @@ export default new Application({
 
       await this.getSiteStats();
       await this.getStatisticsInfo();
-      await this.getActiveStatistical();
-      await this.getTrend();
+      await this.onChangePeriod();
 
       setTimeout(() => {
         this.load = false;
@@ -349,6 +348,10 @@ export default new Application({
         i.show = account_storage.checkPrivilegeGroup(this.currentUser.userinfo, i.privileges);
       })
     },
+    async onChangePeriod () {
+      await this.getActiveStatistical();
+      await this.getTrend();
+    },
     getActiveStatistical() {
       if (
           !this.isLogin &&
@@ -381,12 +384,12 @@ export default new Application({
           isBot: this.isIncludingRobots,
           time: selectTime,
           report: true,
-          community: true
+          community: true,
         }
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.active = Object.assign(this.active, d.data);
 
           this.active.communityConf.series[0].data = [];
@@ -397,8 +400,6 @@ export default new Application({
       }).finally(() => {
         this.active.load = false;
       });
-
-      this.getTrend();
     },
     /**
      * 获取话题排行
@@ -446,8 +447,6 @@ export default new Application({
       }).catch(res => {
         this.$Message.error(res.message);
       });
-
-      return;
     },
     /**
      * 获取统计
@@ -465,12 +464,10 @@ export default new Application({
         }
       }).then(res => {
         const d = res.data;
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.statistics = d.data;
         }
       });
-
-      return;
     },
   },
 });

@@ -881,7 +881,7 @@ router.post('/checkContent', verifyJWT, verifyCaptcha, forbidPrivileges(['freeze
  *     tags:
  *       - player
  *     summary: Update history name
- *     description: Actively update new names of reported players
+ *     description: 主动更新举报玩家新的名称
  *     produces:
  *       - application/json
  *     parameters:
