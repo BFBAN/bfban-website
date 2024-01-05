@@ -25,10 +25,10 @@
             ]
           },
           {
-            "text": "bfban开发者kook社区",
+            "text": "BFBAN开发者KOOK社区",
             "textLang": {
               "en-US": "Kook Community of developers",
-              "zh-CN": "bfban 开发者kook社区"
+              "zh-CN": "BFBAN开发者KOOK社区"
             },
             "src": "//kook.top/wHwxhw",
             "showLang": [
@@ -51,7 +51,7 @@
             "text": "Public Translation \uD83D\uDCDA",
             "textLang": {
               "en-US": "Public Translation \uD83D\uDCDA",
-              "zh-CN": "参与翻译 \uD83D\uDCDA"
+              "zh-CN": "帮我们翻译 \uD83D\uDCDA"
             },
             "src": "https://explore.transifex.com/bfban"
           },
@@ -115,10 +115,20 @@
             "src": "mailto:ban-appeals@bfban.com"
           },
           {
+            "text": "app mailbox",
+            "textLang": {
+              "en-US": "App mailbox",
+              "zh-CN": "应用邮箱"
+            },
+            "src": "mailto:app@bfban.com"
+          },
+          {
             "text": "QQ交流群",
             "src": "//jq.qq.com/?_wv=1027&k=FY8TCpCV",
             "showLang": [
-              "zh-CN"
+              "zh-CN",
+              "zh-TW",
+              "zh-Cat"
             ]
           }
         ]
