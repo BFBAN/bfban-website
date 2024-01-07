@@ -3,7 +3,7 @@
     "description": "<h2>BFBAN</h2>\n    <p>\n    created at 2018.1.29; It is an organization created to fight <b>against hackers</b>\n    </p>\n\n    <p>\n      Staff members in bfban include:\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>Server owners</li>\n      <li>Clan's leaders</li>\n      <li>Bf1 streamers</li>\n    </ul>",
     "privacy": "\n<h2>Privacy policy</h2>\nIt is open-source. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use.",
     "title": "About",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> and launched on November 4, 2018\n    </p>\n    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>"
+    "website": "The website <a href=\"https://bfban.com\">bfban.com</a> is based on the BFBAN Investigation Bureau. The initial idea originated from enthusiastic players and was developed by <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a>. It was launched on November 4, 2018.\nIt mainly provides services such as reporting, listing, searching, tracking, and discussing for players."
   },
   "account": {
     "bindOrigin": {
@@ -154,7 +154,7 @@
         "text": "unprocessed"
       },
       "1": {
-        "describe": "“石锤”通“实锤”，坚硬无比之意，意思就是用实实在在的证据来捶打他，也有证据确凿的意思",
+        "describe": "\"Confirm Hacker\" is the same as \"real hammer\", which means extremely hard. It means to beat him with real evidence, and it also means to have solid evidence.",
         "text": "confirmed hacker"
       },
       "2": {
@@ -162,7 +162,7 @@
         "text": "needs self-proof"
       },
       "3": {
-        "describe": "通过证明，该案件分类到自证分类中",
+        "describe": "Through certification, the case is classified into the self-certification category",
         "text": "MOSS self-proof"
       },
       "4": {
@@ -182,11 +182,11 @@
         "text": "automatically confirmed due to abnormal data"
       },
       "8": {
-        "describe": "在游戏中快速解锁武器配件",
+        "describe": "Quickly unlock weapon accessories in the game",
         "text": "weapon farming"
       },
       "9": {
-        "describe": "案件处于上诉中，管理将有下一步判决",
+        "describe": "The case is under appeal and bfban admin will make the next decision",
         "text": "appeal in progress"
       },
       "all": {
@@ -194,6 +194,17 @@
       }
     },
     "tip": {
+      "search.bad": "Search error occurred, please contact the administrator {message}",
+      "search.success": "Search successful",
+      "search.notExist": "No data found",
+      "me.bad": "There is an error in personal information, please contact the administrator {message}",
+      "me.success": "Personal information saved successfully",
+      "request.404": "This request address does not exist, please check the interface",
+      "achievement.bad": "An achievement error occurred, please contact the administrator {message}",
+      "achievement.duplicate": "Receive achievements repeatedly",
+      "achievement.notConditions": "Not eligible to receive achievements",
+      "achievement.ineffective": "Invalid achievement",
+      "achievement.success": "Achievement received successfully",
       "bindOrigin.bad": "An error occurred when binding account, please contact the admin. {message}",
       "bindOrigin.error": "An error occurred, please contact the admin {message}",
       "bindOrigin.expired": "The activation verification code has expired, please register again.",
@@ -226,6 +237,8 @@
       "judgement.permissionDenied": "You don't have permission to do this.",
       "judgement.spam": "The content you submitted cannot pass verification and marked as spam {message}",
       "judgement.success": "Thank you for your judgement!",
+      "userInfo.bad": "User information is wrong, please contact the administrator {message}",
+      "userInfo.notFound": "There is no such user",
       "logout.bad": "Logout failed, please contact the administrator",
       "logout.success": "Good bye!👋🏻",
       "needBindEaAccount": "Please reply after you bind your Origin account.",
@@ -260,8 +273,8 @@
       "user.invalid": "Invalid token.",
       "user.permissionDenined": "You do not have the permission.",
       "user.tokenClientException": "User token expired or invalid.",
-      "user.tokenExpired": "Token expired.",
-      "userReports.bad": "An error occurred when reporting player, please contact the admin {message}",
+      "user.tokenExpired": "Token expired, please log in again",
+      "userReports.bad": "User reports an error, please contact the administrator {message}",
       "userReports.notFound": "There is no such player, please check carefully",
       "userReports.success": "Successfully reported."
     }
@@ -633,6 +646,155 @@
     "title": "Player database"
   },
   "profile": {
+    "achievement": {
+      "title": "Achievement",
+      "acquisitionTime": "Receive time",
+      "conditions": "Obtain Method",
+      "getButton": "Get achievements immediately.",
+      "exp": "Achievement experience",
+      "owned": "Already have achievements.",
+      "rarity": {
+        "normal": "Normal",
+        "rare": "Rare",
+        "preciousness": "Precious",
+        "special": "Special"
+      },
+      "list": {
+        "trend_monthly_assemble": {
+          "name": "Hot spots (month)",
+          "description": "Listed in the ranking of popular cases this month"
+        },
+        "trend_monthly_l1": {
+          "name": "Hot spots",
+          "conditions": "- The case ranks in the top 10 hot TOP this month<br>\n- The current account is associated with the reported player in the case<br>\n- The case tour is greater than or equal to 100",
+          "description": "Hot spots 😁"
+        },
+        "trend_monthly_l2": {
+          "name": "Hot spots 2",
+          "conditions": "- The case ranks among the top 10 hot TOP this month\n- The current account is associated with the reported player in the case\n- The heat value is greater than or equal to 3\n- The case visit is greater than or equal to 500",
+          "description": "Hot spots often come to check in."
+        },
+        "user_innocent_case": {
+          "name": "Safe landing",
+          "conditions": "- There is a case associated with this account in BFBAN.\n- The case status is self-proven status.",
+          "description": "Case invalid"
+        },
+        "user_achievement_assemble": {
+          "name": "Achievement collector",
+          "description": "Achievement Collector (This achievement will not be displayed in the list, only visible to yourself)"
+        },
+        "user_achievement_l1": {
+          "name": "Achievement 1",
+          "conditions": "- Has 3 achievements",
+          "description": "Already obtained 3 achievements."
+        },
+        "user_achievement_l2": {
+          "name": "Achievement 2",
+          "conditions": "- Have more than 10 achievements.",
+          "description": "Having more than 10 achievements."
+        },
+        "user_achievement_l3": {
+          "name": "Achievement 3",
+          "conditions": "- More than 10 achievements\n- 1 precious achievement within the 10 achievements",
+          "description": "Having more than 10 achievements, including 1 precious."
+        },
+        "user_achievement_l4": {
+          "name": "Achievement 4",
+          "conditions": "- More than 15 achievements\n- 10 achievements include 3 precious achievements",
+          "description": "Having more than 15 achievements, including 3 precious ones."
+        },
+        "active_community_weekly_assemble": {
+          "name": "Week Contribution",
+          "description": "Users' cumulative contributions to the community in one week (7 days)."
+        },
+        "active_community_weekly_l1": {
+          "name": "One week community contribution.",
+          "conditions": "- In the top 10 users in the community participation leaderboard this week\n- No banned or blacklisted users\n- Non-robot accounts",
+          "description": "Top 10 community contributions of the week"
+        },
+        "active_community_monthly_assemble": {
+          "name": "Monthly Contribution",
+          "description": "Users have accumulated contributions to the community within one month."
+        },
+        "active_community_monthly_l1": {
+          "name": "One month community contribution.",
+          "conditions": "- In the top 10 users in the community participation leaderboard this month\n- No banned or blacklisted users\n- Non-robot accounts",
+          "description": "Top 10 community contributions in January"
+        },
+        "active_community_monthly_l2": {
+          "name": "One month community contribution.",
+          "conditions": "- In the top 3 users in the community participation leaderboard this month\n- No banned or blacklisted users\n- Non-robot accounts",
+          "description": "Top 3 community contributions in January"
+        },
+        "active_community_yearly_assemble": {
+          "name": "Yearly contribution",
+          "description": "Users have accumulated contributions to the community within a year."
+        },
+        "active_community_yearly_l1": {
+          "name": "One year community contribution",
+          "conditions": "- In the top 10 users in the community participation leaderboard this year\n- No banned or blacklisted users\n- Non-robot accounts",
+          "description": "Top 10 community contributions of the year"
+        },
+        "active_community_yearly_l2": {
+          "name": "One year community contribution",
+          "conditions": "- In the top 3 users in the community participation leaderboard this year\n- No banned or blacklisted users\n- Non-robot accounts",
+          "description": "Top 3 community contributions of the year"
+        },
+        "old_user": {
+          "name": "Existing user",
+          "conditions": "- Created before January 1, 2024\n- User ID within 10,000 (including 10,000)\n(Both conditions must be met)",
+          "description": "The earliest batch of registered BFBAN pioneer users."
+        },
+        "open_chat_assemble": {
+          "name": "Chat",
+          "description": "Complete corresponding condition chat."
+        },
+        "open_chat_l1": {
+          "name": "Open chat",
+          "conditions": "- Open account chat",
+          "description": "Welcome to chat with me at any time."
+        },
+        "open_chat_l2": {
+          "name": "Received message.",
+          "conditions": "- Open account chat\n- Receive and read messages for one month\n(At the same time)",
+          "description": "The first step of communication."
+        },
+        "one_search_player": {
+          "name": "First search player",
+          "conditions": "- Use the website to search for cases.",
+          "description": "Search for players on the website and view cases."
+        },
+        "report_assemble": {
+          "name": "Report",
+          "description": "Submit a certain number of reports and hammer them to achieve the achievement <i>-May the number of reports decrease</i>"
+        },
+        "report_l1": {
+          "name": "Report newbie",
+          "conditions": "- Report 10 players\n- Start counting from 2024-01-01\n- Non-robot accounts",
+          "description": "Preliminary exploration of BFBAN usage methods"
+        },
+        "report_l2": {
+          "name": "Getting Started with Reporting",
+          "conditions": "- Report 100 players\n- Start counting from 2024-01-01\n- And the percentage of valid hammer cases is over 96%\n- Non-robot accounts",
+          "description": "Just 100 pieces of data."
+        },
+        "report_l3": {
+          "name": "Report Master",
+          "conditions": "- Report 300 players\n- Start counting from 2024-01-01\n- And the percentage of valid hammer cases is over 96%\n- Non-robot accounts",
+          "description": "Just one look, and I can recognize you."
+        },
+        "report_l4": {
+          "name": "Report expert",
+          "conditions": "- Report 1000 players\n- Start counting from 2024-01-01\n- And valid ban cases are over 96%\n- Non-robot accounts",
+          "description": "I anticipated your anticipation."
+        },
+        "report_l5": {
+          "name": "Report mentor",
+          "conditions": "- Report 5000 players\n- Start counting from 2024-01-01\n- And the percentage of valid hammer cases is over 96%\n- Non-robot accounts",
+          "description": "You only need this achievement condition, no need to describe everything."
+        }
+      }
+    },
     "account": {
       "form": {
         "allowDM": "Allow DMs",
@@ -641,7 +803,7 @@
         "createTime": "Register Time",
         "description": "User Profile",
         "introduction": "About me",
-        "language": "Languages",
+        "language": "Preferred language",
         "languageSyncDescribe": "It will use the selected language while your logged in",
         "lastSigninIP": "Last login IP",
         "modifyDescription": "Modify User Profile",
@@ -654,6 +816,9 @@
         "registerIP": "Register IP",
         "showOrigin": "Show Orgin info",
         "showOriginDescribe": "Allow your connected orgin account to be shown on BFBAN",
+        "showAchievement": "Public achievements",
+        "AD": "Advertisement",
+        "ADDescribe": "You can refuse to serve advertisements, and the website will still be open for public welfare. Change the switch to \"off\" and all advertisements on the website will be terminated.",
         "signoutTime": "Logout Time",
         "username": "Username"
       },
@@ -814,7 +979,7 @@
       "leave": "Leave"
     },
     "info": {
-      "description": "List as much evidence as possible about the person being reported",
+      "description": "🤝 Basic requirements for the content:\n- Do not submit any private information of the reporter here.\n- You can paste the video link above, which is helpful for highlighting and indexing.\n- Please describe clearly the actions, characteristics, location, and time of the reporter, list their cheating behavior, and finally provide the reason.\n- You can annotate the location in the screenshots or videos you provide, with additional explanations.\n\n⚠️ Please do not only provide simple cheating methods without any direct evidence.\n⚠️ Repeated meaningless/malicious reports will result in account blacklisting.",
       "fromDatabaseOneId": "Select from BFBAN database",
       "idNotion1": "Only fill in one ID at a time, do not put the team name in, do not write your own ID",
       "idNotion2": "Origin name has no match for lower case and upper case，but you must identify i I 1 l L o O 0 in order to offer correct ID",
@@ -845,12 +1010,12 @@
         "originPersonaId": {
           "name": "Role identity",
           "hint": "Character Identification (id), which can be obtained through game platforms or third-party tools, consists of a number",
-          "placeholder": "EA角色身份id，由数字组成，一次只有一个"
+          "placeholder": "EA character identity ID, composed of numbers, only one at a time."
         },
         "originUserId": {
           "name": "User identification",
           "hint": "User Identification (id), which can be obtained through gaming platforms or third-party tools, consists of a number",
-          "placeholder": "EA用户身份id，由数字组成，一次只有一个"
+          "placeholder": "EA user identity ID, consisting of numbers, only one at a time."
         }
       },
       "cheatMethod": "Cheat method",
@@ -956,7 +1121,7 @@
       "originEmail": "Enter your Origin e-mail address",
       "originName": "Enter your Origin account name",
       "password": "At least 6 characters",
-      "username": "用户名至少4位以上,仅限英文、数字、下划线、减号 或 包含名@地址的邮箱"
+      "username": "Usernames must be at least 4 characters long and can only contain English letters, numbers, underscores, hyphens, or email addresses with the format name@address."
     },
     "registerVerification": {
       "error": "Account verification error",
