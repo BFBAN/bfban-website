@@ -124,6 +124,8 @@
                     <u>{{ a_i.toPlayerName }}</u>
                   </router-link>
 
+                  {{ $t('detail.info.cheatMethod') }}
+
                   <Tag type="border" color="orange"
                        v-for="(methods, methodsIndex) in a_i.playerCheatMethods"
                        :key="methodsIndex">
