@@ -8,8 +8,7 @@ export default class Achievement {
      * @returns {*}
      */
     getIcon(path) {
-        if (path)
-            return require(`/src/assets/images/achievement/${path}`);
+        return path ? '' : require(`/src/assets/images/achievement/${path}`)
     }
 
     /**
