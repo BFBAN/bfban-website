@@ -462,7 +462,7 @@
   },
   "forgetPassword": {
     "checkEmail": "Bitte überprüfen Sie Ihre E-Mails und klicken Sie auf den Bestätigungslink.",
-    "forgetUsername": "Wenn Sie Ihren BFBAN-Benutzernamen vergessen haben, gehen Sie zur <a href='http://kook.top/wHwxhw'>bfban Entwicklergemeinschaft</a> um Hilfe zu suchen. Beachten Sie, dass Sie möglicherweise einen komplexen Wiederherstellungsprozess durchlaufen müssen.",
+    "forgetUsername": "Wenn Sie Ihren BFBAN-Benutzernamen vergessen haben, gehen Sie zur <a href='https://discord.gg/gametools-network-770746735533228083'> bfban gametools-network community</a> um Hilfe zu suchen. Beachten Sie, dass Sie möglicherweise einen komplexen Wiederherstellungsprozess durchlaufen müssen.",
     "resetSuccess": "Herzlichen Glückwunsch zum Abschluss des Zurücksetzens 💐",
     "steps": {
       "0": {

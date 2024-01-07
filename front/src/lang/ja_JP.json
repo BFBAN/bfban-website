@@ -462,7 +462,7 @@
   },
   "forgetPassword": {
     "checkEmail": "ご確認ください。メールボックスをチェックし、検証リンクをクリックしてください。",
-    "forgetUsername": "もしBFBANのユーザー名を忘れた場合は、<a href='http://kook.top/wHwxhw'>bfban開発者コミュニティ</a>にアクセスしてヘルプを求めてください。ただし、回復プロセスが非常に複雑である可能性があります。",
+    "forgetUsername": "もしBFBANのユーザー名を忘れた場合は、<a href='https://discord.gg/gametools-network-770746735533228083'>bfban開発者コミュニティ</a>にアクセスしてヘルプを求めてください。ただし、回復プロセスが非常に複雑である可能性があります。",
     "resetSuccess": "リセット完了おめでとうございます💐",
     "steps": {
       "0": {

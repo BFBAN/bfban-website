@@ -26,13 +26,13 @@
             <div>
               <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
                 <div v-if="stepsIndex == 0">
-                  <FormItem :label="$t('signup.form.username')" prop="username">
-                    <Input v-model="forgetPassword.username" size="large" :placeholder="$t('signup.placeholder.username')"/>
+                  <FormItem :label="$t('forgetPassword.form.username')" prop="username">
+                    <Input v-model="forgetPassword.username" size="large" :placeholder="$t('forgetPassword.placeholder.username')"/>
                   </FormItem>
-                  <FormItem :label="$t('signup.form.originEmail')" prop="originEmail">
-                    <Input v-model="forgetPassword.originEmail" size="large" :placeholder="$t('signup.placeholder.originEmail')"/>
+                  <FormItem :label="$t('forgetPassword.form.originEmail')" prop="originEmail">
+                    <Input v-model="forgetPassword.originEmail" size="large" :placeholder="$t('forgetPassword.placeholder.originEmail')"/>
                   </FormItem>
-                  <Alert show-icon>{{ $t('forgetPassword.forgetUsername') }}</Alert>
+                  <Alert show-icon><span v-html="$t('forgetPassword.forgetUsername')"></span></Alert>
                 </div>
 
                 <FormItem v-if="stepsIndex == 1" :label="$t('captcha.title')">

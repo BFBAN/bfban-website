@@ -658,9 +658,10 @@ async (req, res, next) => {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: validateErr.array()});
+        const {username} = req.body.data;
 
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({username: req.body.data.username}).first();
+        const user = await db.select('*').from('users').where({username: username}).orWhere({originName: username}).first();
         if (userHasRoles(user, ['blacklisted']))
             return res.status(403).json({
                 error: 1,
