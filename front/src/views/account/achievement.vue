@@ -14,7 +14,7 @@
                   <Icon type="md-color-wand" size="25"/>
                   <span class="achievement-banner-title">{{ $t('profile.achievement.exp') }}</span>
                 </template>
-                <span class="achievement-banner-value">{{ userAchievementsInfo.userAachievementExp || 0 }}</span>
+                <span class="achievement-banner-value">{{ userAchievementsInfo.userAchievementExp || 0 }}</span>
               </FormItem>
             </Col>
             <Col :xs="{span: 12}" :lg="{span: 5}">

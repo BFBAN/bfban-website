@@ -14,10 +14,21 @@
 
       <Col>
         <Card :padding="0" dis-hover>
-          <Button @click="loadData" class="sitestats-loading">
-            <Icon type="md-refresh" :class="[load ? 'spin-icon-load' :'']"/>
-          </Button>
-          <v-chart class="chart" :option="chart.stats"/>
+          <Row :gutter="10" class="sitestats-chart-top">
+            <Col>
+              <Button @click="loadData">
+                <Icon type="md-refresh" :class="[load ? 'spin-icon-load' :'']"/>
+              </Button>
+            </Col>
+            <Col>
+              <Select v-model="chartConfig.timeFrame" @on-change="changeChartTime">
+                <Option value="all">All</Option>
+                <Option value="yearly">{{ $t('sitestats.timeRange.yearly') }}</Option>
+                <Option value="monthly">{{ $t('sitestats.timeRange.monthly') }}</Option>
+              </Select>
+            </Col>
+          </Row>
+          <v-chart ref="chart" class="chart" :option="chart.stats"/>
         </Card>
         <Spin size="large" fix v-if="load"></Spin>
       </Col>
@@ -73,7 +84,7 @@
       <div style="position: relative">
         <div>
           <Row :gutter="20">
-            <Col :xs="{span: 23, push: 1}" :lg="{push: 0}">
+            <Col :xs="{span: 24, push: 1}" :lg="{span: 20, push: 0}">
               <RadioGroup size="small" type="button" v-voice-button v-model="timeRange"
                           @on-change="onChangePeriod">
                 <Radio v-for="(i, index) in timeArray" :key="index"
@@ -82,6 +93,10 @@
                        :value="i.value">{{ $t(i.name) }}
                 </Radio>
               </RadioGroup>
+            </Col>
+            <Col :xs="{span: 24, push: 0}" :lg="{span: 4,push: 0}" align="right" class="mobile-hide">
+              <Checkbox v-model="isIncludingRobots" @on-change="onChangePeriod"></Checkbox>
+              <PrivilegesTag :data="['bot']"></PrivilegesTag>
             </Col>
           </Row>
         </div>
@@ -152,13 +167,16 @@
                       </router-link>
                     </Col>
                     <Col>
-                      <Icon type="md-chatbubbles" /> {{ i.commentsNum.toFixed(0) || 0 }}
+                      <Icon type="md-chatbubbles"/>
+                      {{ i.commentsNum.toFixed(0) || 0 }}
                       <Divider type="vertical"></Divider>
-                      <Icon type="md-eye" /> {{ i.viewNum.toFixed(0) || 0 }}
+                      <Icon type="md-eye"/>
+                      {{ i.viewNum.toFixed(0) || 0 }}
                     </Col>
                     <Col>
                       <Tag color="error">
-                        <Icon type="ios-flame" /> {{ i.hot.toFixed(0) || 0 }}
+                        <Icon type="ios-flame"/>
+                        {{ i.hot.toFixed(0) || 0 }}
                       </Tag>
                     </Col>
                   </Row>
@@ -174,7 +192,7 @@
 
         <Spin size="large" fix v-show="!isLogin">
           <div>
-            <Icon type="md-lock" size="100" />
+            <Icon type="md-lock" size="100"/>
           </div>
           <br>
           <Button :to="{name: 'signin'}">{{ $t("header.signin") }}</Button>
@@ -190,18 +208,21 @@
 import Application from "../assets/js/application";
 import Empty from "@/components/Empty"
 import businessCard from "@/components/BusinessCard.vue";
+import PrivilegesTag from "@/components/PrivilegesTag.vue";
 import * as echarts from "echarts";
 
-import {http, api, account_storage} from '../assets/js/index'
+import {http, api, account_storage, time} from '../assets/js/index'
 
 export default new Application({
   data() {
     return {
+      time,
+
       load: false,
       statistics: {},
       show: false,
       chart: {
-        'stats': {
+        stats: {
           color: ['#fff13c', '#401486', '#ed4014'],
           tooltip: {
             trigger: 'axis',
@@ -217,21 +238,32 @@ export default new Application({
             type: 'time',
             boundaryGap: true,
             splitLine: {
-              show: false,
-            }
+              show: true,
+            },
+            min: (value) => {
+              switch (this.chartConfig.timeFrame) {
+                case 'yearly':
+                  return new Date(new Date().getTime() - 360 * 24 * 3600 * 1000)
+                case 'monthly':
+                  return new Date(new Date().getTime() - 24 * 3600 * 1000)
+                case 'all':
+                default:
+                  return time.appStart()
+              }
+            },
           },
           yAxis: {
             type: 'value',
             boundaryGap: [0, '30%'],
-            splitLine: {
-              show: false,
-            }
+            show: false,
           },
           series: [],
-          grid: {x: -1, y: -1, x2: 0, y2: 30},
+          grid: {x: -1, y: -1, x2: -1, y2: 30},
+          useUTC: true
         },
       },
-      chartConf: {
+      chartConfig: {
+        timeFrame: 'yearly',
         array: [{
           name: "players",
           valName: 'playerStats',
@@ -297,7 +329,7 @@ export default new Application({
       }
     }
   },
-  components: {businessCard, Empty},
+  components: {businessCard, Empty, PrivilegesTag},
   created() {
     this.loadData();
   },
@@ -316,28 +348,33 @@ export default new Application({
       }, 1000);
     },
     init() {
-      this.chart['stats'].series = [];
+      this.chart.stats.series = [];
 
-      this.chartConf.array.map(i => {
-        this.chart['stats'].series.push({
+      this.chartConfig.array.map(i => {
+        this.chart.stats.series.push({
           name: this.$i18n.t(`sitestats.${i.name}`),
           valName: i.valName,
           type: 'line',
           smooth: true,
           symbol: 'none',
           stack: 'Total',
+          stackStrategy: 'positive',
           showSymbol: true,
+          label: {
+            show: true,
+            position: "top"
+          },
           lineStyle: {
             color: i.lineColor,
             width: 2
           },
           markLine: {
             symbol: ['none', 'none'],
-            label: {show: false},
+            label: {show: true},
             data: [{xAxis: 1}, {xAxis: 3}, {xAxis: 5}, {xAxis: 7}]
           },
           areaStyle: {
-            opacity: 1,
+            opacity: .2,
             color: i.lineColor
           },
           data: []
@@ -348,10 +385,13 @@ export default new Application({
         i.show = account_storage.checkPrivilegeGroup(this.currentUser.userinfo, i.privileges);
       })
     },
-    async onChangePeriod () {
+    async onChangePeriod() {
       await this.getActiveStatistical();
       await this.getTrend();
     },
+    /**
+     * 获取活跃统计
+     */
     getActiveStatistical() {
       if (
           !this.isLogin &&
@@ -402,21 +442,27 @@ export default new Application({
       });
     },
     /**
+     * 更变统计视图时间范围
+     */
+    changeChartTime() {
+      this.$refs.chart.setOption(this.chart.stats);
+    },
+    /**
      * 获取话题排行
      */
-    getTrend () {
+    getTrend() {
       if (!this.isLogin) return;
       this.trend.load = true;
 
       http.get(api['trend'], {
-        params:{
+        params: {
           limit: 10,
           time: this.timeRange
         }
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.trend.list = d.data;
         }
       }).catch(res => {
@@ -433,14 +479,13 @@ export default new Application({
       http.get(api['siteStats'], {}).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           for (const dKey in d.data) {
-            this.chart['stats'].series.filter(i => {
-              if (i.valName == dKey) {
+            this.chart.stats.series.forEach(i => {
+              if (i.valName === dKey)
                 d.data[dKey].forEach(t => {
                   i.data.push([t.time, t.num]);
                 })
-              }
             })
           }
         }
@@ -509,7 +554,7 @@ export default new Application({
   }
 }
 
-.sitestats-loading {
+.sitestats-chart-top {
   position: absolute;
   z-index: 10;
   top: 10px;

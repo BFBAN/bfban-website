@@ -473,7 +473,7 @@ async function showUserInfo(req, res, next) {
             id: user.id,
             userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
             username: user.username,
-            userAachievementExp: user.attr.showAchievement ? totalAachievementExp(req.user) : null,
+            userAchievementExp: user.attr.showAchievement ? totalAachievementExp(req.user) : null,
             privilege: user.privilege,
             joinTime: user.createTime,
             lastOnlineTime: user.updateTime,
@@ -490,7 +490,7 @@ async function showUserInfo(req, res, next) {
         };
         if (!user.attr.showAchievement) {
             delete data.attr.achievements;
-            delete data.userAachievementExp;
+            delete data.userAchievementExp;
         }
 
         return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({

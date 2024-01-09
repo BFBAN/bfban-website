@@ -7,8 +7,8 @@ export default class Achievement {
      * @param path
      * @returns {*}
      */
-    getIcon(path) {
-        return path ? '' : require(`/src/assets/images/achievement/${path}`)
+    getIcon(path = 'none.png') {
+        return require(`/src/assets/images/achievement/${path}`)
     }
 
     /**

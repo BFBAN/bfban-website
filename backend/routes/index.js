@@ -120,8 +120,8 @@ router.get('/activeStatistical', [
                     .select('comments.createTime', 'comments.content', 'comments.type', 'users.createTime', 'users.username', 'users.id')
                     .where('comments.createTime', '>=', times[req.query.time] || times.weekly)
                     .limit(time == 'yearly' ? maxLimit : limit);
-                if (!Boolean(isBot))
-                    query = query.whereRaw("NOT JSON_CONTAINS(users.privilege, '\"bot\"')");
+                if (!isBot)
+                    query = query.where('users.privilege', 'not like', '%"bot"%');
                 let array = await query;
 
                 for (const i of array) {
@@ -158,8 +158,8 @@ router.get('/activeStatistical', [
                     .where('comments.createTime', '>=', times[req.query.time] || times.weekly)
                     .andWhere('comments.type', 'report')
                     .limit(time == 'yearly' ? maxLimit : limit);
-                if (!Boolean(isBot))
-                    reportQuery = query.whereRaw("NOT JSON_CONTAINS(users.privilege, '\"bot\"')");
+                if (!isBot)
+                    reportQuery = query.where('users.privilege', 'not like', '%"bot"%');
                 let reportArray = await reportQuery;
 
                 for (const i of reportArray) {

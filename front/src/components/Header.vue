@@ -10,33 +10,40 @@
       </router-link>
       <div class="nav nav-menu">
         <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>
-        <Drawer class="desktop-hide"
+        <Drawer class="desktop-hide header-drawer"
                 placement="left"
                 width="80%"
+                :title="title"
                 :closable="true"
                 v-model="headerMenu.show">
-          <List v-show="!isLogin">
-            <Card>
-              <Row :gutter="10">
-                <Col flex="1">
-                  <div @click="navigatorTo({to: {name: 'signin'}})">
-                    <Icon type="md-log-in" size="20"/>
-                    {{ $t("header.signin") }}
-                  </div>
-                </Col>
-                <Col>
-                  <div @click="navigatorTo({to: {name: 'signup'}})">
-                    <Icon type="md-person-add" size="20"/>
-                    {{ $t("header.signup") }}
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </List>
 
-          <List>
-            <ListItem v-for="(i, index) in headerMenu.child" :key="index">
-              <div @click.stop="navigatorTo(i)">
+          <List split class="header-drawer-body">
+            <Banner :height="150">
+              <template v-if="!isLogin">
+                <Card>
+                  <Row :gutter="10">
+                    <Col flex="1">
+                      <div @click="navigatorTo({to: {name: 'signin'}})">
+                        <Icon type="md-log-in" size="20"/>
+                        {{ $t("header.signin") }}
+                      </div>
+                    </Col>
+                    <Col>
+                      <div @click="navigatorTo({to: {name: 'signup'}})">
+                        <Icon type="md-person-add" size="20"/>
+                        {{ $t("header.signup") }}
+                      </div>
+                    </Col>
+                  </Row>
+                </Card>
+              </template>
+              <template v-else>
+                <h2>{{ currentUser.userinfo.username}}</h2>
+              </template>
+            </Banner>
+
+            <ListItem v-for="(i, index) in headerMenu.child" :key="index" @click.native.stop="navigatorTo(i)">
+              <div>
                 {{ $t("header." + i.name) }}
               </div>
             </ListItem>
@@ -177,6 +184,7 @@ import HeaderMessage from "./HeaderMessage.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import Application from "@/assets/js/application";
 import Lantern from "@/components/Lantern.vue";
+import Banner from "@/components/Banner.vue";
 
 export default new Application({
   data() {
@@ -188,7 +196,7 @@ export default new Application({
       },
     }
   },
-  components: {HistoryView, HeaderMessage, UserAvatar, Lantern, PrivilegesTag},
+  components: {HistoryView, Banner, HeaderMessage, UserAvatar, Lantern, PrivilegesTag},
   watch: {
     $route: "loadData",
   },
@@ -270,6 +278,9 @@ export default new Application({
   computed: {
     userinfo() {
       return this.currentUser.userinfo || {}
+    },
+    title() {
+      return document.title || 'APP';
     }
   }
 })
@@ -285,6 +296,17 @@ header {
   height: auto;
   padding: 10px 15px !important;
   background-image: linear-gradient(rgba(0, 0, 0, 0.2), transparent);
+}
+
+.header-drawer {
+  .header-drawer-body {
+    margin: -16px;
+
+    .ivu-list-item div,
+    .widget-banner-body {
+      padding: 10px 15px;
+    }
+  }
 }
 
 .header-container {

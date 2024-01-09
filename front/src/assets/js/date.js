@@ -13,7 +13,7 @@ export default class Time {
      * 程序启动时间
      */
     appStart() {
-        return new Date(1514764800000);
+        return new Date(1541260800000);
     }
 
     getUTCTimeStamp() {

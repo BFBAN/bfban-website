@@ -309,7 +309,7 @@ router.get('/achievements', verifyJWT, forbidPrivileges(['freezed', 'blacklisted
             userId: user.id,
             username: user.username,
             userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
-            userAachievementExp: totalAachievementExp(user),
+            userAchievementExp: totalAachievementExp(user),
             isPublicAchievement: user.attr.showAchievement,
             achievements: handleAchievemenMapToArray(user.attr.achievements)
         };

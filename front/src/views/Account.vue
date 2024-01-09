@@ -9,8 +9,8 @@
         </Breadcrumb>
       </Col>
       <Col v-if="currentUser && currentUser.userinfo">
-        <Poptip trigger="hover">
-          <Button @click="openMessage" :disabled="!account.attr.allowDM || account.id == currentUser.userinfo.userId">
+        <Poptip trigger="hover" :disabled="isChat">
+          <Button @click="openMessage" :disabled="isChat">
             <Icon type="ios-chatbubbles"/>
             {{ $t("account.message.chat") }}
           </Button>
@@ -512,6 +512,13 @@ export default new Application({
      */
     isAttachedContent() {
       return !this.account.attr.introduction && !this.account.origin;
+    },
+    /**
+     * 是否可用聊天
+     * @returns {boolean}
+     */
+    isChat () {
+      return !this.account.attr.allowDM || this.account.id == this.currentUser.userinfo.userId
     }
   }
 })

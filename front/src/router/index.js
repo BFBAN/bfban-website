@@ -49,9 +49,6 @@ const isAdminBefore = (to, from, next) => {
 
     if (store.state.user)
         checkAdmin = store.state.user.userinfo.privilege.some(item => ['admin', 'super', 'dev'].includes(item))
-    // for (const i of store.state.user.userinfo.privilege) {
-    //     if (['admin', 'root', ''].includes(i)) checkAdmin = true;
-    // }
 
     if (checkAdmin) {
         next();
@@ -436,7 +433,7 @@ const routes = [
     },
 
     {
-        name: 'notFound', path: '/404', meta: {
+        name: 'notFound', path: '/empty', meta: {
             metaInfo: {
                 title: 'basic.tip.notFound',
                 keywords: "basic.tip.notFound",
@@ -447,7 +444,7 @@ const routes = [
     },
 
     // otherwise redirect to home
-    {path: '*', redirect: '/404'},
+    {path: '*', redirect: '/empty'},
 ];
 const RouterConfig = {
     mode: 'history',
