@@ -29,7 +29,7 @@ function cheatMethodsSanitizer(val, {req}) {
 }
 
 const userAttributes = {
-    "achievements": {type: "object", get: true, set: true, default: {}, handleValue: (value, type) => type === 'show' ? handleAchievemenMapToArray(value) : value},
+    "achievements": {type: "object", get: true, set: false, default: {}, handleValue: (value, type) => type === 'show' ? handleAchievemenMapToArray(value) : value},
     "allowDM": {type: "boolean", get: true, set: true, default: false},
     "avatar": {type: "string", get: true, set: false, default: ''},     // allow direct message?
     "changeNameLeft": {type: "number", get: true, set: false, isprivate: true, default: 3},

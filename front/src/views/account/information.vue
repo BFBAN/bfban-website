@@ -475,9 +475,8 @@ export default new Application({
      * 保存表单
      */
     onSave() {
-      console.log(this.formItem.attr)
       this.formLoad = true;
-      this.formItem.language = this.$root.$i18n.locale
+      this.formItem.language = this.$root.$i18n.locale;
       this.http.post(api["user_me"], {
         data: {
           data: {attr: this.formItem.attr}

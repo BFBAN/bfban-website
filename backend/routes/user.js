@@ -566,7 +566,7 @@ async (req, res, next) => {
         if (req.body.data.subscribes)
             update.subscribes = JSON.stringify(req.body.data.subscribes.map(i => i - 0)); // to number
         if (req.body.data.attr)
-            update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr, true));
+            update.attr = JSON.stringify(userSetAttributes(req.user.attr, req.body.data.attr));
 
         await db('users').update(update).where({id: req.user.id});
 

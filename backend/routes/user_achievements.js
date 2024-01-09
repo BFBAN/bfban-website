@@ -373,7 +373,7 @@ router.post('/achievement', verifyJWT, forbidPrivileges(['freezed', 'blacklisted
         else
             return res.status(403).json({error: 1, code: 'achievement.ineffective', message: 'no such achievement'})
 
-        update.attr = JSON.stringify(userSetAttributes(req.user.attr, update.attr));
+        update.attr = JSON.stringify(userSetAttributes(req.user.attr, update.attr, true));
 
         await db.from('users').update(update).where({id: req.user.id});
         if (achievementConfig[id].hasOwnProperty('end'))
