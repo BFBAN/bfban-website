@@ -520,7 +520,7 @@
   },
   "forgetPassword": {
     "checkEmail": "Please check your email and click on the verification link",
-    "forgetUsername": "If you forget your BFBAN username, please go to the <a href='http://kook.top/wHwxhw'> bfban developer community</a> for help. Note that you may need a complicated retrieval process.",
+    "forgetUsername": "If you forget your BFBAN username, please go to the <a href='https://discord.gg/gametools-network-770746735533228083'> bfban gametools-network community</a> for help. Note that you may need a complicated retrieval process.",
     "resetSuccess": "The password reset is successful! 💐",
     "steps": {
       "0": {
