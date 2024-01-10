@@ -228,7 +228,7 @@
       "changePassword.success": "You need to re-login to complete this process.",
       "forgetPassword.bad": "An error occurred when resetting password, please contact the admin. {message}",
       "forgetPassword.needVerify": "Please check your email to reset your password.",
-      "forgetPassword.notFound": "没有这样的用户或者您没有绑定电子邮件，请检查名称或邮箱是否一致",
+      "forgetPassword.notFound": "There is no such user or you have not bound an email, please check if the name or email is consistent.",
       "forgetPassword.permissionDenied": "Your account cannot do this",
       "forgetPassword.success": "Successfully reset password.",
       "judgement.appealLock": "Appeal locked, case cannot be judged at the moment.",
@@ -241,7 +241,7 @@
       "userInfo.notFound": "There is no such user",
       "logout.bad": "Logout failed, please contact the administrator",
       "logout.success": "Good bye!👋🏻",
-      "needBindEaAccount": "请绑定你的EA账号以后在回复",
+      "needBindEaAccount": "Please bind your EA account before replying.",
       "noAccess": "Have no right to access",
       "noReports": "No reports yet",
       "notContent": "No content",
@@ -523,12 +523,12 @@
     "forgetUsername": "If you forget your BFBAN username, please go to the <a href='http://kook.top/wHwxhw'> bfban developer community</a> for help. Note that you may need a complicated retrieval process.",
     "resetSuccess": "The password reset is successful! 💐",
     "form": {
-      "username": "用户名",
-      "originEmail": "EA邮箱"
+      "username": "Username",
+      "originEmail": "EA Mail"
     },
     "placeholder": {
-      "username": "请填写网站用户名或EA平台账户(注意大小写)用户名",
-      "originEmail": "输入您的EA邮箱"
+      "username": "Please fill in the website username or EA platform account (note the case sensitivity) username.",
+      "originEmail": "Enter your EA email."
     },
     "steps": {
       "0": {
@@ -552,7 +552,7 @@
         "title": "Submit"
       }
     },
-    "title": "重置账户密码"
+    "title": "Reset account password"
   },
   "header": {
     "about": "About",
@@ -822,7 +822,7 @@
         "privilege": "Indentity",
         "privileges": "Privilege",
         "registerIP": "Register IP",
-        "showOrigin": "可见EA信息",
+        "showOrigin": "EA information can be seen.",
         "showOriginDescribe": "Allow your connected orgin account to be shown on BFBAN",
         "showAchievement": "Public achievements",
         "AD": "Advertisement",
@@ -1126,8 +1126,8 @@
       "username": "Username"
     },
     "placeholder": {
-      "originEmail": "输入您的EA邮箱",
-      "originName": "输入您的EA名字, 注意大小写",
+      "originEmail": "Enter your EA email.",
+      "originName": "Enter your EA name, pay attention to the case.",
       "password": "At least 6 characters",
       "username": "Usernames must be at least 4 characters long and can only contain English letters, numbers, underscores, hyphens, or email addresses with the format name@address."
     },
@@ -1144,7 +1144,7 @@
         "title": "Basic infomation"
       },
       "1": {
-        "supplement": "关联EA平台",
+        "supplement": "Associate EA platform",
         "title": "Binding account"
       },
       "2": {
