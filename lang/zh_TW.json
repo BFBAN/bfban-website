@@ -717,7 +717,7 @@
         },
         "active_community_weekly_l1": {
           "name": "一週社區貢獻",
-          "conditions": "- 在本周统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "conditions": "- 在本周統計社區參與排行榜中前10用戶<br>- 無禁言、無非名單用戶<br>- 非機器人帳戶",
           "description": "一週社區貢獻前10名"
         },
         "active_community_monthly_assemble": {
@@ -726,12 +726,12 @@
         },
         "active_community_monthly_l1": {
           "name": "一個月社區貢獻",
-          "conditions": "- 在本月统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "conditions": "- 在本月統計社區參與排行榜中前10用戶<br>- 無禁言、無非名單用戶<br>- 非機器人帳戶",
           "description": "一月社區貢獻前10名"
         },
         "active_community_monthly_l2": {
           "name": "一個月社區貢獻",
-          "conditions": "- 在本月统计社区参与排行榜中前3用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "conditions": "- 在本月統計社區參與排行榜中前3用戶<br>- 無禁言、無非名單用戶<br>- 非機器人帳戶",
           "description": "一個月社區貢獻前3名"
         },
         "active_community_yearly_assemble": {
@@ -740,17 +740,17 @@
         },
         "active_community_yearly_l1": {
           "name": "一年社區貢獻",
-          "conditions": "- 在本年统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "conditions": "- 在本年統計社區參與排行榜中前10用戶<br>- 無禁言、無非名單用戶<br>- 非機器人帳戶",
           "description": "一年社區貢獻前10名"
         },
         "active_community_yearly_l2": {
           "name": "一年社區貢獻",
-          "conditions": "- 在本年统计社区参与排行榜中前3用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "conditions": "- 在本年統計社區參與排行榜中前3用戶<br>- 無禁言、無非名單用戶<br>- 非機器人帳戶",
           "description": "一年社區貢獻前3名"
         },
         "old_user": {
           "name": "老用戶",
-          "conditions": "- 创建时间在2024 1月1日前<br>- 用户id在10000以内(包含10000)<br>(同时满足)",
+          "conditions": "-創建時間在2024 1月1日前<br>- 用戶ID在10000以内(包含10000)<br>(同時滿足)",
           "description": "最早一批註冊聯ban先鋒用戶"
         },
         "open_chat_assemble": {
@@ -764,7 +764,7 @@
         },
         "open_chat_l2": {
           "name": "收到消息",
-          "conditions": "- 打开账户聊天<br>- 一个月收到消息并已读<br>(同时满足)",
+          "conditions": "- 打開帳戶聊天<br>- 一個月收到消息並已讀<br>(同時滿足)",
           "description": "交流的第一步"
         },
         "one_search_player": {
@@ -774,11 +774,11 @@
         },
         "report_assemble": {
           "name": "檢舉",
-          "description": "提交一定举报数量并且石锤，获取成就 <i>-愿举报越来越少</i>"
+          "description": "提交一定檢舉數量並且石錘，獲取成就<i>-願檢舉越來越少</i>"
         },
         "report_l1": {
           "name": "檢舉新手",
-          "conditions": "- 举报10条玩家<br>- 从2024 01-01开始统计<br>- 非机器人账户",
+          "conditions": "-檢舉10條玩家<br>- 從2024 01-01開始統計<br>- 非機器人帳戶 ",
           "description": "初步探索聯BAN使用方法"
         },
         "report_l2": {
@@ -1134,7 +1134,7 @@
     "registerVerification": {
       "error": "驗證帳戶錯誤",
       "failure": "驗證失敗，這可能是因為錯誤驗證地址、非法驗證碼、驗證碼逾期等原因；請在一段時間後，再次嘗試重新註冊帳號",
-      "successful": "验证成功!账户已解锁，既可前往登录",
+      "successful": "驗證成功!帳戶已解鎖，即可前往登入",
       "title": "驗證帳戶",
       "validation": "驗證中"
     },
@@ -1144,7 +1144,7 @@
         "title": "基礎信息"
       },
       "1": {
-        "supplement": "关联EA平台",
+        "supplement": "關聯EA平台",
         "title": "綁定"
       },
       "2": {
