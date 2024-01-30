@@ -105,7 +105,7 @@
               <div class="text-start">
                 <!-- 举报 -->
                 <span v-if="a_i.type === 'report'">
-                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  <router-link :to="{name: 'space', params: {uId: `${a_i.byUserId}`}}">
                     <u>{{ a_i.byUserName }}</u>
                   </router-link>
                   {{ $t('home.activity.activities.report') }}
@@ -138,7 +138,7 @@
 
                 <!-- 注册 -->
                 <span v-if="a_i.type === 'register'">
-                  <router-link :to="{name: 'account', params: {uId: `${a_i.id}`}}">
+                  <router-link :to="{name: 'space', params: {uId: `${a_i.id}`}}">
                     <u>{{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}</u>
                   </router-link>
                   {{ $t('home.activity.activities.join') }}
@@ -146,7 +146,7 @@
 
                 <!-- 判决 -->
                 <span v-if="a_i.type === 'verify' || a_i.type === 'judgement'">
-                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  <router-link :to="{name: 'space', params: {uId: `${a_i.byUserId}`}}">
                     <u>{{ a_i.byUserName }}</u>
                   </router-link>
 
@@ -172,7 +172,7 @@
 
                 <!-- 申诉 -->
                 <span v-if="a_i.type === 'banAppeal'">
-                  <router-link :to="{name: 'account', params: {uId: `${a_i.byUserId}`}}">
+                  <router-link :to="{name: 'space', params: {uId: `${a_i.byUserId}`}}">
                     <u>{{ a_i.byUserName }}</u>
                   </router-link>
                   {{ $t('detail.appeal.info.content') }}

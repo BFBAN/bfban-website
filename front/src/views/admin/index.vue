@@ -214,7 +214,7 @@ export default new Application({
     const {pagename} = this.$route.params;
 
     if (pagename == undefined) {
-      this.onMenuActive('account');
+      this.onMenuActive('space');
       return;
     }
 

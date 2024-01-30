@@ -113,7 +113,7 @@
                       <Row>
                         <Col flex="1">
                           <businessCard :id="i.id">
-                            <router-link :to="{name:'account', params: { uId: i.id }}">{{ i.username }}</router-link>
+                            <router-link :to="{name:'space', params: { uId: i.id }}">{{ i.username }}</router-link>
                           </businessCard>
                         </Col>
                         <Col>{{ i.total.toFixed(2) || 0 }}</Col>
@@ -139,7 +139,7 @@
                   <Row>
                     <Col flex="1">
                       <businessCard :id="i.id">
-                        <router-link :to="{name:'account', params: { uId: i.id }}">{{ i.username }}</router-link>
+                        <router-link :to="{name:'space', params: { uId: i.id }}">{{ i.username }}</router-link>
                       </businessCard>
                     </Col>
                     <Col>{{ i.total.toFixed(0) || 0 }}</Col>

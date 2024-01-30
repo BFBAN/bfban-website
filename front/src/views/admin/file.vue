@@ -68,7 +68,7 @@
                 <Time :time="i.createTime" :type="'datetime'"></Time>
                 <Divider type="vertical"/>
                 <BusinessCard :id="i.byUserId">
-                  <router-link :to="{name:'account', params: { uId: i.byUserId }}">{{ i.byUserId }}</router-link>
+                  <router-link :to="{name:'space', params: { uId: i.byUserId }}">{{ i.byUserId }}</router-link>
                 </BusinessCard>
               </div>
             </Col>

@@ -33,7 +33,7 @@
               </MenuItem>
             </div>
             <MenuGroup>
-              <MenuItem name="userCenter" :to="{name: 'account', params: { uId: `${currentUser.userinfo.userId }` }}">
+              <MenuItem name="userCenter" :to="{name: 'space', params: { uId: `${currentUser.userinfo.userId }` }}">
                 {{ $t("header.userCenter") }}
                 <Icon type="ios-link"/>
               </MenuItem>
@@ -84,13 +84,13 @@ export default new Application({
   data() {
     return {
       privileges: [],
-      menuValue: 'account',
+      menuValue: 'space',
       menu: [
         {
           title: "基础",
           name: "0",
           child: [{
-            title: 'account',
+            title: 'space',
             name: 'information',
             icon: 'md-person'
           }, {
@@ -167,14 +167,14 @@ export default new Application({
   watch: {
     '$route': {
       handler(val, oldVal) {
-        const {pagename = 'account'} = val.params;
+        const {pagename = 'space'} = val.params;
         if (!oldVal) return;
         this.onMenuActive(pagename);
       },
     }
   },
   created() {
-    const {pagename = 'account'} = this.$route.params;
+    const {pagename = 'space'} = this.$route.params;
     this.onMenuActive(pagename);
   },
   methods: {

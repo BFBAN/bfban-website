@@ -468,7 +468,7 @@
                     <div class="timeline-time">
                       <Row>
                         <Col flex="1">
-                          <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                          <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
                               <u><b>{{ l.username || l.byUserId }}</b></u>
                             </BusinessCard>
@@ -545,7 +545,7 @@
                     <div class="timeline-time">
                       <Row>
                         <Col flex="auto">
-                          <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                          <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
                               <u><b>{{ l.username || l.byUserId }}</b></u>
                             </BusinessCard>
@@ -646,7 +646,7 @@
                     <div class="timeline-time">
                       <Row>
                         <Col flex="1">
-                          <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                          <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
                               <u><b>{{ l.username || l.byUserId }}</b></u>
                             </BusinessCard>
@@ -700,7 +700,7 @@
                     <div class="timeline-time">
                       <Row>
                         <Col flex="1">
-                          <router-link :to="{name: 'account', params: {uId: `${l.byUserId}`}}">
+                          <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
                               <u><b>{{ l.username || l.byUserId }}</b></u>
                             </BusinessCard>

@@ -78,8 +78,8 @@
               </div>
               <PrivilegesTag :data="userinfo.privilege"></PrivilegesTag>
             </div>
-            <router-link :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
-              <DropdownItem divided :disabled="$route.name == 'account' && userinfo.userId == this.$route.params.uId">
+            <router-link :to="{name: 'space', params: { uId: `${userinfo.userId}` }}">
+              <DropdownItem divided :disabled="$route.name == 'space' && userinfo.userId == this.$route.params.uId">
                 {{ $t("header.userCenter") }}
               </DropdownItem>
             </router-link>
@@ -168,7 +168,6 @@
         </Tooltip>
       </div>
     </div>
-    <Lantern></Lantern>
   </header>
 </template>
 

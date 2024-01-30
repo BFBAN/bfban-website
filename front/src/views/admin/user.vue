@@ -98,7 +98,7 @@
             <Icon type="ios-create"/>
           </Button>
           <Divider type="vertical"></Divider>
-          <router-link :to="{name: 'account', params: { uId: `${i.id}` }}" target="_blank">
+          <router-link :to="{name: 'space', params: { uId: `${i.id}` }}" target="_blank">
             <Button type="dashed" size="small">
               <Icon type="ios-eye"/>
             </Button>

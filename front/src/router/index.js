@@ -399,7 +399,7 @@ const routes = [
     },
 
     {
-        name: 'account', path: '/account/:uId',
+        name: 'space', path: '/space/:uId',
         meta: {
             metaInfo: {
                 title: 'account.title',

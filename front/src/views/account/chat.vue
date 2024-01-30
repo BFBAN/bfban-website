@@ -124,7 +124,7 @@
             <!--            </Row>-->
 
             <div class="-content-footer" v-if="messageList[selectWindow].type == 'direct'">
-              <router-link :to="{name: 'account',params: {uId: selectWindow}, query: {repeat: true}}">
+              <router-link :to="{name: 'space',params: {uId: selectWindow}, query: {repeat: true}}">
                 <Button long type="primary" v-voice-button>
                   <Icon type="ios-send" size="20"/>
                 </Button>

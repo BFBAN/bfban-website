@@ -369,7 +369,7 @@
               <div class="timeline-time">
                 <Row>
                   <Col flex="1">
-                    <router-link :to="{name: 'account', params: {uId: `${comment.byUserId}`}}">
+                    <router-link :to="{name: 'space', params: {uId: `${comment.byUserId}`}}">
                       <BusinessCard :id="comment.byUserId">
                         <u><b>{{ comment.username || comment.byUserId }}</b></u>
                       </BusinessCard>
