@@ -530,17 +530,18 @@ async (req, res, next) => {
         const user = await db.select('*').from('users').where({id: req.query.id}).first();
         if (!user)
             return res.status(404).json({error: 1, code: 'userReports.notFound', message: 'no such user.'});
+        const total = await db('comments').count({num: 1})
+            .where({'comments.byUserId': user.id, type: 'report'})
+            .first().then(r => r.num);
         const reports = await db('comments').join('players', 'comments.toPlayerId', 'players.id')
             .select('players.originName as originName', 'players.originUserId as originuserId',
                 'players.originPersonaId as originPersonaId', 'players.status as status',
                 'players.updateTime as updateTime', 'comments.createTime as createTime',
                 'players.avatarLink as avatarLink')
-            .where({
-                'comments.byUserId': user.id,
-                type: 'report'
-            }).orderBy('comments.createTime', 'desc').offset(skip * limit).limit(limit);
+            .where({'comments.byUserId': user.id, type: 'report'})
+            .orderBy('comments.createTime', 'desc').offset(skip * limit).limit(limit);
 
-        res.status(200).json({success: 1, code: 'userReports.success', data: reports});
+        res.status(200).json({success: 1, code: 'userReports.success', data: reports, total});
     } catch (err) {
         next(err);
     }

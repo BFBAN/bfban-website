@@ -1,6 +1,6 @@
 <template>
   <Tabs>
-    <TabPane :label="$t('profile.account.title')">
+    <TabPane :label="$t('profile.space.title')">
       <div class="account">
         <Form :model="formItem" label-position="top">
           <Banner :height="200" class="account-banner">
@@ -15,7 +15,7 @@
                 <p>{{ $t('profile.meet', {name: formItem.username}) }} ({{ formItem.id }})</p>
               </Col>
               <Col v-if="formItem.privilege">
-                <p><b>{{ $t('profile.account.form.privilege') }}</b></p>
+                <p><b>{{ $t('profile.space.form.privilege') }}</b></p>
                 <PrivilegesTag :data="formItem.privilege"></PrivilegesTag>
               </Col>
             </Row>
@@ -76,7 +76,7 @@
                 <br>
                 <FormItem>
                   <div slot="label">
-                    <p><b>{{ $t('profile.account.form.introduction') }}</b></p>
+                    <p><b>{{ $t('profile.space.form.introduction') }}</b></p>
                   </div>
                   <Card :padding="0" dis-hover>
                 <Textarea v-model="formItem.attr.introduction"
@@ -85,7 +85,7 @@
                           :height="'160px'"
                           :maxlength="500"
                           :show-maxlength-label="true"
-                          :placeholder="$t('profile.account.form.introduction')"></Textarea>
+                          :placeholder="$t('profile.space.form.introduction')"></Textarea>
                   </Card>
                 </FormItem>
               </Col>
@@ -131,7 +131,7 @@
 
             <Row :gutter="30">
               <Col :xs="{span: 24}" :lg="{span: 12}">
-                <FormItem :label="$t('profile.account.form.language')">
+                <FormItem :label="$t('profile.space.form.language')">
                   <Row>
                     <Col>
                       <Checkbox v-model="langLocalSync" @on-change="switchAttr('langLocalSync',langLocalSync)"></Checkbox>
@@ -149,24 +149,24 @@
                       </Select>
                     </Col>
                   </Row>
-                  <Alert show-icon v-if="langLocalSync">{{ $t('profile.account.form.languageSyncDescribe') }}</Alert>
+                  <Alert show-icon v-if="langLocalSync">{{ $t('profile.space.form.languageSyncDescribe') }}</Alert>
                 </FormItem>
               </Col>
               <Col :xs="{span: 24}" :lg="{span: 12}">
-                <FormItem :label="$t('profile.account.form.showOrigin')">
-                  <Alert show-icon>{{ $t('profile.account.form.showOriginDescribe') }}</Alert>
+                <FormItem :label="$t('profile.space.form.showOrigin')">
+                  <Alert show-icon>{{ $t('profile.space.form.showOriginDescribe') }}</Alert>
                   <i-switch v-model="formItem.attr.showOrigin"/>
                 </FormItem>
               </Col>
               <Col :xs="{span: 24}" :lg="{span: 12}">
-                <FormItem :label="$t('profile.account.form.allowDM')">
-                  <Alert show-icon>{{ $t('profile.account.form.allowDMdescribe') }}</Alert>
+                <FormItem :label="$t('profile.space.form.allowDM')">
+                  <Alert show-icon>{{ $t('profile.space.form.allowDMdescribe') }}</Alert>
                   <i-switch v-model="formItem.attr.allowDM"/>
                 </FormItem>
               </Col>
 
               <Col :xs="{span: 24}" :lg="{span: 12}">
-                <FormItem :label="$t('profile.account.form.showAchievement')">
+                <FormItem :label="$t('profile.space.form.showAchievement')">
                   <i-switch v-model="formItem.attr.showAchievement"/>
                 </FormItem>
               </Col>
@@ -193,30 +193,30 @@
         <Modal v-model="modal_setusername.show" @on-cancel="modal_setusername.index = 0"
                :footer-hide="modal_setusername.index >= 2">
           <p slot="header">
-            <span>{{ $t('profile.account.modifyName.title') }}</span>
+            <span>{{ $t('profile.space.modifyName.title') }}</span>
           </p>
           <div>
             <Steps :current="modal_setusername.index" size="small">
-              <Step :title="$t('profile.account.modifyName.steps[0].title')"></Step>
-              <Step :title="$t('profile.account.modifyName.steps[1].title')"></Step>
-              <Step :title="$t('profile.account.modifyName.steps[2].title')"></Step>
+              <Step :title="$t('profile.space.modifyName.steps[0].title')"></Step>
+              <Step :title="$t('profile.space.modifyName.steps[1].title')"></Step>
+              <Step :title="$t('profile.space.modifyName.steps[2].title')"></Step>
             </Steps>
             <Form ref="formValidate" label-position="top">
               <div v-if="modal_setusername.index == 0">
                 <br>
                 <Alert type="warning">
                   <template slot="desc">
-                    <p v-html="$t('profile.account.modifyName.specification1')"></p>
+                    <p v-html="$t('profile.space.modifyName.specification1')"></p>
                     <p>
                       {{
                         $t(
-                            'profile.account.modifyName.residueDegree',
+                            'profile.space.modifyName.residueDegree',
                             {changeNameLeft: formItem.attr.changeNameLeft || 0}
                         )
                       }}
                     </p>
                     <br>
-                    <b> {{ $t('profile.account.modifyName.specification2') }}</b>
+                    <b> {{ $t('profile.space.modifyName.specification2') }}</b>
                   </template>
                 </Alert>
               </div>
@@ -306,8 +306,8 @@
       <Form class="profile-body" label-position="top">
         <Row :gutter="30">
           <Col :xs="{span: 24}" :lg="{span: 12}">
-            <FormItem :label="$t('profile.account.form.AD')">
-              <Alert show-icon>{{ $t('profile.account.form.ADDescribe') }}</Alert>
+            <FormItem :label="$t('profile.space.form.AD')">
+              <Alert show-icon>{{ $t('profile.space.form.ADDescribe') }}</Alert>
               <i-switch v-model="adsSwitch" @on-change="switchAttr('ads-switch', adsSwitch)"/>
             </FormItem>
           </Col>

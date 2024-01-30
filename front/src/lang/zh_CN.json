@@ -803,7 +803,10 @@
         }
       }
     },
-    "account": {
+    "reports": {
+      "title": "我的举报"
+    },
+    "space": {
       "form": {
         "allowDM": "是否接收聊天",
         "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",

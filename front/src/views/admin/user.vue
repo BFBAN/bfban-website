@@ -157,17 +157,17 @@
                 </Row>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.lastSigninIP')" prop="username">
+                <FormItem :label="$t('profile.space.form.lastSigninIP')" prop="username">
                   <Input v-model="editUserData.attr.lastSigninIP" readonly disabled/>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.registerIP')" prop="">
+                <FormItem :label="$t('profile.space.form.registerIP')" prop="">
                   <Input v-model="editUserData.attr.registerIP" readonly disabled/>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.createTime')" prop="">
+                <FormItem :label="$t('profile.space.form.createTime')" prop="">
                   <TimeView :time="editUserData.createTime" v-if="editUserData.createTime">
                     {{ editUserData.createTime }}
                   </TimeView>
@@ -175,7 +175,7 @@
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.signoutTime')" prop="">
+                <FormItem :label="$t('profile.space.form.signoutTime')" prop="">
                   <TimeView :time="editUserData.signoutTime" v-if="editUserData.signoutTime">
                     {{ editUserData.signoutTime }}
                   </TimeView>
@@ -184,22 +184,22 @@
               </Col>
 
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.originEmail')">
+                <FormItem :label="$t('profile.space.form.originEmail')">
                   <Input v-model="editUserData.originEmail" readonly></Input>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.originName')">
+                <FormItem :label="$t('profile.space.form.originName')">
                   <Input v-model="editUserData.originName" readonly></Input>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.originPersonaId')">
+                <FormItem :label="$t('profile.space.form.originPersonaId')">
                   <Input v-model="editUserData.originPersonaId" readonly></Input>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.originUserId')">
+                <FormItem :label="$t('profile.space.form.originUserId')">
                   <Input v-model="editUserData.originUserId" readonly></Input>
                 </FormItem>
               </Col>
@@ -240,12 +240,12 @@
           <Col span="12">
             <Row :gutter="10">
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.changeNameLeft')">
+                <FormItem :label="$t('profile.space.form.changeNameLeft')">
                   <InputNumber :max="5" :min="0" v-model="editUserData.attr.changeNameLeft"></InputNumber>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.language')">
+                <FormItem :label="$t('profile.space.form.language')">
                   <Select v-model="editUserData.attr.language" class="switch-language" prefix="md-globe"
                           placement="top-end">
                     <Option v-for="item in languages" :value="item.name" :disabled="item.ignoreSave" :key="item.name">
@@ -255,23 +255,23 @@
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.showOrigin')">
+                <FormItem :label="$t('profile.space.form.showOrigin')">
                   <i-switch v-model="editUserData.attr.showOrigin"/>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.allowDM')">
+                <FormItem :label="$t('profile.space.form.allowDM')">
                   <i-switch v-model="editUserData.attr.allowDM"/>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.showAchievement')">
+                <FormItem :label="$t('profile.space.form.showAchievement')">
                   <i-switch v-model="editUserData.attr.showAchievement"/>
                 </FormItem>
               </Col>
             </Row>
 
-            <FormItem :label="$t('profile.account.form.privileges')" prop="privileges">
+            <FormItem :label="$t('profile.space.form.privileges')" prop="privileges">
               <Row :gutter="10">
                 <Col span="24">
                   <PrivilegesTag ref="privilegesTag" :data="editUserData.privilege"></PrivilegesTag>

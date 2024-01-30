@@ -47,6 +47,7 @@
         <Col :xs="{span: 24}" :sm="{span: 18}" class="profile-right-content">
           <information v-if="menuValue == 'information'"></information>
           <achievement v-if="menuValue == 'achievement'"></achievement>
+          <reports v-if="menuValue == 'reports'"></reports>
           <appearance v-if="menuValue == 'appearance'"></appearance>
           <chat v-if="menuValue == 'chat'"></chat>
           <enhance v-if="menuValue == 'enhance'"></enhance>
@@ -66,6 +67,7 @@
 import PrivilegesTag from "/src/components/PrivilegesTag";
 
 import achievement from "./achievement"
+import reports from "./reports";
 import appearance from "./appearance";
 import information from "./information";
 import chat from "./chat";
@@ -93,6 +95,10 @@ export default new Application({
             title: 'space',
             name: 'information',
             icon: 'md-person'
+          }, {
+            title: 'reports',
+            name: 'reports',
+            icon: 'ios-hand'
           }, {
             title: 'achievement',
             name: 'achievement',
@@ -152,6 +158,7 @@ export default new Application({
   },
   components: {
     achievement,
+    reports,
     appearance,
     information,
     chat,

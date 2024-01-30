@@ -200,6 +200,7 @@ import AchievementsTag from "/src/components/AchievementsTag.vue";
 import games from '/public/config/gameName.json'
 
 export default new Application({
+  name: 'space',
   data() {
     return {
       games: games.child,
@@ -413,7 +414,7 @@ export default new Application({
       }).catch(err => {
         this.$Loading.error();
       }).finally(() => {
-        this.getReports()
+        this.getUserReports()
       });
     },
     /**
@@ -473,7 +474,7 @@ export default new Application({
      * 获取举报信息
      * @param uId
      */
-    getReports(pageNum) {
+    getUserReports(pageNum) {
       const {uId} = this.$route.params;
 
       if (!uId) return;
@@ -491,12 +492,10 @@ export default new Application({
         let reportData = [];
 
         if (d.success === 1) {
-          d.data.forEach(i => {
-            reportData.push(i);
-          });
+          d.data.forEach(i => reportData.push(i));
 
           this.report.data = reportData;
-          this.total = Number(this.account.reportNum);
+          this.total = d.total;
         }
       }).finally(() => {
         this.$Loading.finish();
@@ -522,7 +521,6 @@ export default new Application({
     }
   }
 })
-;
 </script>
 
 <style lang="less">
