@@ -1167,6 +1167,7 @@
   },
   "sitestats": {
     "admins": "总共管理员数",
+    "achievement": "成就价值排行",
     "banAppeals": "已上诉",
     "communityParticipation": "用户社区参与排行",
     "confirmed": "已处理案件",

@@ -22,7 +22,7 @@
                               :src="`${userInfo.userAvatar}`"></Avatar>
                     </Col>
                     <Col flex="1">
-                      <a :href="`/account/${userInfo.id}`" target="_blank">{{ userInfo.username }}</a>
+                      <a :href="`/space/${userInfo.id}`" target="_blank">{{ userInfo.username }}</a>
                     </Col>
                   </Row>
                 </h2>

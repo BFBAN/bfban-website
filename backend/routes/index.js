@@ -13,6 +13,7 @@ import logger from "../logger.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import {pushOriginNameLog} from "./player.js";
 import {getGravatarAvatar} from "../lib/gravatar.js";
+import {achievementConfig, handleAchievemenMapToArray} from "./user_achievements.js";
 
 const router = express.Router();
 
@@ -93,6 +94,7 @@ router.get('/activeStatistical', [
         checkquery('isBot').optional().isBoolean(),
         checkquery('report').optional().isBoolean(),
         checkquery('community').optional().isBoolean(),
+        checkquery('achievement').optional().isBoolean(),
         checkquery('limit').optional().isInt({min: 0}),
         checkquery('time').optional().isIn(['daily', 'weekly', 'monthly', 'yearly'])
     ],
@@ -102,7 +104,7 @@ router.get('/activeStatistical', [
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'statistics.bad', message: validateErr.array()});
             const maxLimit = 3000;
-            let {isBot = true, report = true, community = true, limit = maxLimit, time} = req.query;
+            let {isBot = true, report = true, community = true, achievement = true, limit = maxLimit, time} = req.query;
             const times = {
                 'daily': new Date(new Date().getTime() - 24 * 3600 * 1000),
                 'weekly': new Date(new Date().getTime() - 7 * 24 * 3600 * 1000),
@@ -112,7 +114,7 @@ router.get('/activeStatistical', [
 
             // 社区参与度
             // Community Engagement
-            let data = {community: [], report: []};
+            let data = {community: [], report: [], achievement: []};
             if (community) {
                 let communityMap = {};
                 let query = db('comments')
@@ -149,7 +151,6 @@ router.get('/activeStatistical', [
             }
 
             // 举报统计
-            // 7内时间 + 高判决
             if (report) {
                 let reportMap = {};
                 let reportQuery = db('comments')
@@ -169,6 +170,34 @@ router.get('/activeStatistical', [
                 for (const i in reportMap) data.report.push(reportMap[i]);
 
                 data.report = data.report.sort((a, b) => a.total - b.total).reverse().slice(0, 10)
+            }
+
+            if (achievement) {
+                let userQuery = db('users')
+                    .select('users.username', 'users.id', 'users.attr')
+                    .where('users.signoutTime', '>=', times.yearly)
+                    .whereRaw("JSON_EXTRACT(attr, '$.achievements') IS NOT NULL")
+                    .limit(maxLimit);
+
+                let reportArray = await userQuery;
+
+                // 对每个用户的成就进行排序
+                for (let user of reportArray) {
+                    if (user.attr && user.attr.achievements) {
+                        var userPoints = 0;
+                        handleAchievemenMapToArray(user.attr.achievements).sort((a, b) => {
+                            // 使用成就的价值进行排序
+                            let aValue = achievementConfig[a.name].points || 0;
+                            let bValue = achievementConfig[b.name].points || 0;
+                            userPoints += aValue;
+                            return aValue - bValue;
+                        }).reverse();
+                        user.points = userPoints;
+                        user.userAchievements = handleAchievemenMapToArray(user.attr.achievements);
+                    }
+                }
+
+                data.achievement = reportArray.slice(0, 10);
             }
 
             res.status(200).json({success: 1, code: 'statistics.ok', data: data});
