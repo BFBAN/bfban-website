@@ -124,6 +124,6 @@ html, body {
 }
 
 .lantern {
-  pointer-events: none;
+  pointer-events: none !important;
 }
 </style>
