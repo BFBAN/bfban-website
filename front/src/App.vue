@@ -122,4 +122,8 @@ html, body {
     backdrop-filter: blur(50px);
   }
 }
+
+.lantern {
+  pointer-events: none;
+}
 </style>
