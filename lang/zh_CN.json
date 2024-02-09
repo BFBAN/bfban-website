@@ -803,7 +803,10 @@
         }
       }
     },
-    "account": {
+    "reports": {
+      "title": "我的举报"
+    },
+    "space": {
       "form": {
         "allowDM": "是否接收聊天",
         "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
@@ -1164,6 +1167,7 @@
   },
   "sitestats": {
     "admins": "总共管理员数",
+    "achievement": "成就价值排行",
     "banAppeals": "已上诉",
     "communityParticipation": "用户社区参与排行",
     "confirmed": "已处理案件",
