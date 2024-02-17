@@ -803,36 +803,39 @@
         }
       }
     },
-    "account": {
+    "reports": {
+      "title": "My report"
+    },
+    "space": {
       "form": {
         "allowDM": "Allow DMs",
-        "allowDMdescribe": "Receive DMs from other people.",
+        "allowDMdescribe": "Receive DMs from other people. For more message information, go to [Message List] to view",
         "changeNameLeft": "Remaining Username Modification Times",
         "createTime": "Register Time",
         "description": "User Profile",
         "introduction": "About me",
         "language": "Preferred language",
-        "languageSyncDescribe": "It will use the selected language while your logged in",
+        "languageSyncDescribe": "Set this option to synchronize the local language of the program after logging in. If you log out, you will fall back to the language persisted by the local program.",
         "lastSigninIP": "Last login IP",
         "modifyDescription": "Modify User Profile",
         "originEmail": "EA Account Email",
         "originName": "EA Account Username",
         "originPersonaId": "EA Account PersonaID",
         "originUserId": "EA Account UserID",
-        "privilege": "Indentity",
+        "privilege": "Identity",
         "privileges": "Privilege",
         "registerIP": "Register IP",
         "showOrigin": "EA information can be seen.",
-        "showOriginDescribe": "Allow your connected orgin account to be shown on BFBAN",
-        "showAchievement": "Public achievements",
+        "showOriginDescribe": "Allow your connected Origin account to be shown on BFBAN.",
+        "showAchievement": "Public your achievements",
         "AD": "Advertisement",
-        "ADDescribe": "You can refuse to serve advertisements, and the website will still be open for public welfare. Change the switch to \"off\" and all advertisements on the website will be terminated.",
+        "ADDescribe": "You can refuse service of ads and the site will remain open for public benefit, change the switch to off and all advertising on the site will be terminated.",
         "signoutTime": "Logout Time",
         "username": "Username"
       },
       "modifyName": {
-        "residueDegree": "You still have {changeNameLeft}chance to change name",
-        "specification1": "You are changing your account name, which means that you will see changes within the site and the <b>login ID</b> will change at the same time. If you accidentally forget your new account ID, you may not be able to retrieve it, affecting your binded orgin account, and you will need to go through a very long manual review..",
+        "residueDegree": "You still have {changeNameLeft} chance to change name",
+        "specification1": "You are changing your account name, which means that you will see changes within the site and the <b>login ID</b> will change at the same time. If you accidentally forget your new account ID, you may not be able to retrieve it, affecting your binded orgin account, and you will need to go through a very long manual review.",
         "specification2": "Do you understand the instructions above?",
         "steps": {
           "0": {
@@ -842,12 +845,12 @@
             "title": "fill in"
           },
           "2": {
-            "title": "complete"
+            "title": "Finish"
           }
         },
         "title": "Change name"
       },
-      "title": "Account information"
+      "title": "Account information setting"
     },
     "admin": {
       "menu": {
@@ -1164,6 +1167,7 @@
   },
   "sitestats": {
     "admins": "Total number of administrators",
+    "achievement": "Achievement Value Ranking",
     "banAppeals": "Have appealed",
     "communityParticipation": "User community participation ranking",
     "confirmed": "Confirmed cheaters",
