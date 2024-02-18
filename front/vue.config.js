@@ -74,7 +74,10 @@ module.exports = {
                     to: `lang`
                 }, {
                     from: `src/assets/images/logo.png`,
-                    to: `img/logo.png`
+                    to: `images/logo.png`
+                }, {
+                    from: `src/assets/images/achievement`,
+                    to: `images/achievement`
                 }],
                 {
                     // 无论是否修改，全部复制
