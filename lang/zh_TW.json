@@ -803,20 +803,23 @@
         }
       }
     },
-    "account": {
+    "reports": {
+      "title": "我的檢舉案件"
+    },
+    "space": {
       "form": {
         "allowDM": "是否接收聊天",
-        "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
+        "allowDMdescribe": "是否接收訊息，更多消息訊息前往[訊息列表] 查看",
         "changeNameLeft": "剩餘修改用戶名次數",
         "createTime": "註冊時間",
         "description": "用戶簡介",
         "introduction": "自我介紹",
         "language": "首選語言",
-        "languageSyncDescribe": "設定此處選項，在登入後同步程式本地語言，如果退出登入將回退到本地程式所持久保存的語言",
+        "languageSyncDescribe": "設定此處選項，在登入後同步程式本地語言，如果退出登入將退回到本地程式所長期保存的語言",
         "lastSigninIP": "最後登入IP",
         "modifyDescription": "修改用戶簡介",
         "originEmail": "EA帳戶信箱",
-        "originName": "EA帳戶名字",
+        "originName": "EA帳戶名子",
         "originPersonaId": "EA PID",
         "originUserId": "EA UID",
         "privilege": "身份",
@@ -824,30 +827,30 @@
         "registerIP": "註冊時IP",
         "showOrigin": "可見EA信息",
         "showOriginDescribe": "是否讓你綁定的Origin在BFBAN可見",
-        "showAchievement": "公開成就",
-        "AD": "廣告",
-        "ADDescribe": "您可以拒絕服務廣告，網站仍為公益開放，將開關更改為關閉，網站上的所有廣告將被終止",
-        "signoutTime": "登出時間",
-        "username": "用戶名"
+        "showAchievement": "公开成就",
+        "AD": "广告",
+        "ADDescribe": "您可以拒绝服务广告，网站仍为公益开放，将开关更改为关闭，网站上的所有广告将被终止",
+        "signoutTime": "登出时间",
+        "username": "用户名"
       },
       "modifyName": {
-        "residueDegree": "目前剩餘修改名稱{changeNameLeft}次數",
-        "specification1": "你正在修改您的帳戶名稱，這代表網站內看見都會變更，並且同時<b>登入的ID</b>同時變動,如果您不小心忘記新帳戶id，可能無法找回此帳戶，影響綁定的origin帳戶，你需要通過非常長的人工審核.",
-        "specification2": "你明白以上說明了嗎?",
+        "residueDegree": "目前剩余修改名称{changeNameLeft}次数",
+        "specification1": "你正在修改您的账户名称，这代表网站内看见都会更变，并且同时<b>登录的ID</b>同时变动,如果您不小心忘记新账户id，可能无法找回此账户，影响绑定的orgin账户，你需要通过非常长的人工审核.",
+        "specification2": "你明白以上说明了吗?",
         "steps": {
           "0": {
             "title": "提示"
           },
           "1": {
-            "title": "填寫"
+            "title": "填写"
           },
           "2": {
             "title": "完成"
           }
         },
-        "title": "修改名稱"
+        "title": "修改名称"
       },
-      "title": "帳戶信息設定"
+      "title": "账户信息设置"
     },
     "admin": {
       "menu": {
@@ -1164,6 +1167,7 @@
   },
   "sitestats": {
     "admins": "管理員總人數",
+    "achievement": "成就价值排行",
     "banAppeals": "已上訴",
     "communityParticipation": "用戶社區參與排行",
     "confirmed": "已處理案件",
