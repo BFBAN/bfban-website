@@ -220,10 +220,10 @@ class OriginClient {
                 // body: userEmail,
             }).json();
 
-            if(typeof(response.totalCount) != 'number')
-                throw new EaApiError(500, response, `${this.tag} Bad Response`);
-            if(response.totalCount > 0)
-                return response.infoList[0].friendUserId;
+            // if(typeof(response.totalCount) != 'number')
+            //     throw new EaApiError(500, response, `${this.tag} Bad Response`);
+            if(response.preferenceUser)
+                return response.preferenceUser.id
             else
                 return null;
         } catch(err) {
