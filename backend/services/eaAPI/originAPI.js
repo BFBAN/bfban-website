@@ -223,7 +223,7 @@ class OriginClient {
             // if(typeof(response.totalCount) != 'number')
             //     throw new EaApiError(500, response, `${this.tag} Bad Response`);
             if(response.preferenceUser)
-                return response.preferenceUser.id
+                return response.preferenceUser.nucleusUserUri.replace('/pids/', '')
             else
                 return null;
         } catch(err) {
