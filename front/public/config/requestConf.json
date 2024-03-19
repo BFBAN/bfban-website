@@ -11,12 +11,12 @@
     },
     "upload": {
       "protocol": "https",
-      "host": "bfban.gametools.network",
+      "host": "backend.bfban.com",
       "pathname": "/api/"
     },
     "production": {
       "protocol": "https",
-      "host": "bfban.gametools.network",
+      "host": "backend.bfban.com",
       "pathname": "/api/"
     },
     "staging": {
