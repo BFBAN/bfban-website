@@ -11,12 +11,12 @@
     },
     "upload": {
       "protocol": "https",
-      "host": "backend.bfban.com",
+      "host": "api.bfban.com",
       "pathname": "/api/"
     },
     "production": {
       "protocol": "https",
-      "host": "backend.bfban.com",
+      "host": "api.bfban.com",
       "pathname": "/api/"
     },
     "staging": {
