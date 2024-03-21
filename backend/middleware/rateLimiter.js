@@ -79,6 +79,12 @@ const captchaRateLimiter = rateLimit({
     message: {error: 1, code: 'request.rateLimited', message: 'slow down please.'}
 });
 
+const statisticsLimiter = rateLimit({
+    windowMs: 10000,
+    max: 5,
+    message: {error: 1, code: 'request.rateLimited', message: 'slow down please.'}
+});
+
 export {
     UserRateLimiter,
     commentRateLimiter,
@@ -86,4 +92,5 @@ export {
     normalSearchRateLimiter,
     viewedRateLimiter,
     captchaRateLimiter,
+    statisticsLimiter,
 }

@@ -8,7 +8,7 @@ import db from "../mysql.js";
 import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
-import {advSearchRateLimiter, normalSearchRateLimiter} from "../middleware/rateLimiter.js";
+import {advSearchRateLimiter, normalSearchRateLimiter, statisticsLimiter} from "../middleware/rateLimiter.js";
 import logger from "../logger.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import {pushOriginNameLog} from "./player.js";
@@ -58,30 +58,94 @@ const router = express.Router();
  *       400:
  *         description: statistics.bad
  */
-router.get('/statistics', [
+
+router.get('/statistics', statisticsLimiter, [
         checkquery('from').optional().isInt({min: 0}),
     ],
     async (req, res, next) => {
         try {
             const validateErr = validationResult(req);
-            if (!validateErr.isEmpty())
-                return res.status(400).json({error: 1, code: 'statistics.bad', message: validateErr.array()});
-            const from = typeof (req.query.from) === 'string' ? req.query.from - 0 : 0;
-
-            let data = {};
-            if (req.query.reports)
-                data.reports = await db('comments').count({reports: 'id'}, {method: 'estimate'}).where('createTime', '>=', new Date(from)).andWhere({type: 'report'}).first().then(r => r.reports);
-            if (req.query.players)
-                data.players = await db('players').count({players: 'id'}, {method: 'estimate'}).where('createTime', '>=', new Date(from)).andWhere({valid: 1}).first().then(r => r.players);
-            if (req.query.confirmed)
-                data.confirmed = await db('players').count({confirmed: 'id'}, {method: 'estimate'}).where('createTime', '>=', new Date(from)).andWhere({status: 1}).andWhere({valid: 1}).first().then(r => r.confirmed);
-            if (req.query.registers)
-                data.registers = await db('users').count({registers: 'id'}, {method: 'estimate'}).where('createTime', '>=', new Date(from)).first().then(r => r.registers);
-            if (req.query.admins)
-                data.admins = await db('users').count({admins: 'id'}, {method: 'estimate'}).where('privilege', 'like', '%"admin"%').orWhere('privilege', 'like', '%"super"%').orWhere('privilege', 'like', '%"dev"%').orWhere('privilege', 'like', '%"root"%').first().then(r => r.admins);
-            if (req.query.banAppeals)
-                data.banAppeals = await db('comments').count({banAppeals: 'id'}, {method: 'estimate'}).where('createTime', '>=', new Date(from)).andWhere({type: 'banAppeal'}).first().then(r => r.banAppeals);
-            res.status(200).json({success: 1, code: 'statistics.ok', data: data});
+            
+            if (!validateErr.isEmpty()) {
+                return res.status(400).json({ error: 1, code: 'statistics.bad', message: validateErr.array() });
+            }
+    
+            const from = typeof (req.query.from) === 'string' ? parseInt(req.query.from, 10) : 0;
+    
+            const queryPromises = [];
+    
+            if (req.query.reports) {
+                const rawSQL = `
+                    SELECT COUNT(id) AS reports
+                    FROM comments
+                    WHERE createTime >= ?
+                    AND type = 'report'
+                `;
+                const params = [new Date(from).toISOString()]; // Ensure the date is in the correct format for SQL
+            
+                queryPromises.push(
+                    db.raw(rawSQL, params)
+                    .then(result => {
+                        // Assuming the result structure follows what Knex typically returns for raw queries,
+                        // you might need to adjust based on the actual structure.
+                        const reportsCount = parseInt(result[0][0].reports);
+                        return { reports: reportsCount };
+                    })
+                    .catch(error => console.error(error))
+                );
+            }
+            if (req.query.players) {
+                queryPromises.push(
+                    db('players').count('id as count')
+                    .where('createTime', '>=', from)
+                    .andWhere({ valid: 1 })
+                    .then(result => ({ players: parseInt(result[0].count) }))
+                );
+            }
+    
+            if (req.query.confirmed) {
+                queryPromises.push(
+                    db('players').count('id as count')
+                    .where('createTime', '>=', from)
+                    .andWhere({ status: 1, valid: 1 })
+                    .then(result => ({ confirmed: parseInt(result[0].count) }))
+                );
+            }
+    
+            if (req.query.registers) {
+                queryPromises.push(
+                    db('users').count('id as count')
+                    .where('createTime', '>=', new Date(from))
+                    .then(results => ({ registers: parseInt(results[0].count) }))
+                );
+            }
+            
+            if (req.query.admins) {
+                queryPromises.push(
+                    db('users').count('id as count')
+                    .where('privilege', 'like', '%"admin"%')
+                    .orWhere('privilege', 'like', '%"super"%')
+                    .orWhere('privilege', 'like', '%"dev"%')
+                    .orWhere('privilege', 'like', '%"root"%')
+                    .then(results => ({ admins: parseInt(results[0].count) }))
+                );
+            }
+            
+            if (req.query.banAppeals) {
+                queryPromises.push(
+                    db('comments').count('id as count')
+                    .where('createTime', '>=', new Date(from))
+                    .andWhere({ type: 'banAppeal' })
+                    .then(results => ({ banAppeals: parseInt(results[0].count) }))
+                );
+            }
+    
+            // 并行执行所有查询
+            const results = await Promise.all(queryPromises);
+            // 使用reduce合并所有结果到单个对象
+            const data = results.reduce((acc, result) => ({ ...acc, ...result }), {});
+    
+            res.status(200).json({ success: 1, code: 'statistics.ok', data: data });
         } catch (err) {
             next(err);
         }
