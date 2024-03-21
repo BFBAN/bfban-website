@@ -110,6 +110,13 @@ async (req, res, next) => {
     } catch (err) {
         if (err instanceof ServiceApiError) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
+            // 检查是否是404错误并返回特定的400错误响应
+            if (err.statusCode === 404) {
+                return res.status(400).json({
+                    error: 1,
+                    code: 'signup.originNotFound'
+                });
+            }
             return res.status(err.statusCode === 501 ? 501 : 500).json({
                 error: 1,
                 code: err.statusCode === 501 ? 'signup.notImplement' : 'signup.error',
