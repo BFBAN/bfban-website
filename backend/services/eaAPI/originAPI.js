@@ -229,8 +229,17 @@ class OriginClient {
         } catch(err) {
             if(err instanceof EaApiError)
                 throw err;
-            if(err instanceof HTTPError || err instanceof ParseError)
-                throw new EaApiError(err.response.statusCode, err.response.body, `${this.tag} Bad Response`);
+            if(err instanceof HTTPError || err instanceof ParseError) {
+                // 尝试解析 err.response.body 为 JSON 对象
+                const errorBody = JSON.parse(err.response.body);
+                // Check if the error message includes "NO_SUCH_PREFERENCE_USER"
+                if(errorBody.error && errorBody.error.code === "NO_SUCH_PREFERENCE_USER") {
+                    // throw new EaApiError(err.response.statusCode, err.response.body, `${this.tag} Cannot Search User`); // Return null for this specific error
+                    return null;
+                } else {
+                    throw new EaApiError(err.response.statusCode, err.response.body, `${this.tag} Bad Response`);
+                }
+            }
             throw new EaApiError(-1, null, err);
         } finally {
             logger.info(`OriginClient.searchUserEmail spent ${(Date.now()-t_start)/1000}s`);
