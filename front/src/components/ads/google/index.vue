@@ -5,13 +5,13 @@
     <div class="ad-off" @click="offAds">
       <Icon size="10" type="md-close"></Icon>
     </div>
-    <Adsense
+    <!-- <Adsense
         v-if="adId"
         :data-ad-client="adClient.toString()"
         :data-ad-slot="adId.toString()"
         :data-ad-format="ads[adId].adFormat"
         :data-full-width-responsive="ads[adId].fullWidthResponsive">
-    </Adsense>
+    </Adsense> -->
   </Card>
 </template>
 
