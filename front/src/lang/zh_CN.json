@@ -269,6 +269,7 @@
       "signup.notImplement": "发生错误，请联系管理员 {message}",
       "signup.originBindingExist": "此邮箱已绑定账户",
       "signup.originNotFound": "无法依照用户提供的信息查找到EA账户",
+      "signup.usernameMismatch": "邮箱所对应的EA账户与填入的EA账户名称不符合",
       "signup.usernameExist": "网站用户或账户待激活账户池内用户名已存在",
       "user.invalid": "令牌失效",
       "user.permissionDenined": "无权许可",
