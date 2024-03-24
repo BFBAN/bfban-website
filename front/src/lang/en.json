@@ -269,6 +269,7 @@
       "signup.notImplement": "An error occurred, please contact the admin {message}",
       "signup.originBindingExist": "This email has been bound to an account",
       "signup.originNotFound": "Unable to find EA account based on the information provided by the user",
+      "signup.usernameMismatch": "The EA account corresponding to the email address does not match the filled-in EA account name.",
       "signup.usernameExist": "account username exists in website accounts or pre-activation accounts",
       "user.invalid": "Invalid token.",
       "user.permissionDenined": "You do not have the permission.",
