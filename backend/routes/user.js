@@ -74,7 +74,7 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'signup.originNotFound'});
         const originUserInfo = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
         if (originUserInfo.username !== originName) // verify again
-            return res.status(400).json({error: 1, code: 'signup.originNotFound'});
+            return res.status(400).json({error: 1, code: 'signup.usernameMismatch'});
         if ((await db.select('originUserId').from('verifications').where({originUserId: originUserId}).union([
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
         ])).length !== 0)
