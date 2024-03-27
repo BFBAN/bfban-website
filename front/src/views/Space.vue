@@ -155,7 +155,7 @@
               <Col :xs="{span: 23, push: 1}" :lg="{span: 24, push: 0}">
                 <Page
                     show-total
-                    @on-change="getReports"
+                    @on-change="getUserReports"
                     :page-size="limit"
                     :current="page"
                     :total="total"

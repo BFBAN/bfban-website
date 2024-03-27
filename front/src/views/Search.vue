@@ -290,7 +290,7 @@
         <template v-if="searchTypeValue == 'user'">
           <Card dis-hover class="search-list" v-if="result.user.length > 0">
             <div v-for="(user, user_index) in result.user" :key="user_index" class="item-card" v-voice-button>
-              <Card dis-hover :padding="10" :to="{path: '/account/' + user.dbId}">
+              <Card dis-hover :padding="10" :to="{path: '/space/' + user.dbId}">
                 <Row :gutter="10" type="flex">
                   <Col :xs="{span: 4, push: 0,pull:0}" :sm="{span: 2,push:0,pull:0}" :lg="{span: 2, push: 0,pull:0}">
                     <!-- 头像 S -->
