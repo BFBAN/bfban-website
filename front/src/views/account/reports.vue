@@ -19,7 +19,7 @@
               <Col :xs="{span: 23, push: 1}" :lg="{span: 24, push: 0}">
                 <Page
                     show-total
-                    @on-change="getReports"
+                    @on-change="getMyReports"
                     :page-size="limit"
                     :current="page"
                     :total="total"
@@ -204,13 +204,13 @@ export default new Application({
      * 获取举报信息
      * @param uId
      */
-    getMyReports() {
+    getMyReports(pageNum) {
       this.load = true;
 
       http.get(api["user_reports"], {
         params: {
           id: this.currentUser.userinfo.userId,
-          skip: (this.page || 1) - 1,
+          skip: (pageNum || 1) - 1,
           limit: this.limit,
         }
       }).then(res => {
