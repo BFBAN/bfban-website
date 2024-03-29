@@ -117,10 +117,10 @@
           {
             "text": "app mailbox",
             "textLang": {
-              "en-US": "App mailbox",
-              "zh-CN": "应用邮箱"
+              "en-US": "Contact Us",
+              "zh-CN": "联系我们"
             },
-            "src": "mailto:app@bfban.com"
+            "src": "mailto:services@bfban.com"
           },
           {
             "text": "QQ交流群",
