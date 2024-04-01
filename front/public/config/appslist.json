@@ -304,6 +304,31 @@
       "website": "https://dzxrly.github.io/BF2042StateWeb/",
       "get": "https://github.com/dzxrly/BF2042State2.0",
       "hot": false
+    },
+    {
+      "title":"BFHelper",
+      "describe": "battlefield 助手",
+      "describeLang": {
+        "zh-CN": "battlefield 助手",
+        "en-US": "battlefield Helper"
+      },
+      "tag": [
+        "bot"
+      ],
+      "website": "https://github.com/KomeiDiSanXian/BFHelper"
+    },
+    {
+      "title":"xiaomai-bot",
+      "describe": "依附在QQ查询BF玩家状态",
+      "describeLang": {
+        "zh-CN": "依附在QQ查询BF玩家状态",
+        "en-US": "Attached to QQ query BF player status"
+      },
+      "tag": [
+        "bot",
+        "qq"
+      ],
+      "website": "https://github.com/g1331/xiaomai-bot"
     }
   ]
 }

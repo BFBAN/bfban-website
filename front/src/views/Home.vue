@@ -31,18 +31,16 @@
 
               <Row :gutter="10" style="margin-top: 50px">
                 <Col span="12">
-                  <router-link :to="{name: 'site_stats'}">
-                    <Card dis-hover>
-                      <h3>{{ statistics.reports || 0 }}</h3>
+                    <Card dis-hover :to="{name: 'site_stats'}">
+                      <h3>{{ number.format(statistics.reports, currentLan) || 0 }}</h3>
                       <span>{{ $t("home.cover.dataReceived") }}</span>
                       <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
                     </Card>
-                  </router-link>
                 </Col>
                 <Col span="12">
                   <router-link :to="{name: 'site_stats'}">
                     <Card dis-hover>
-                      <h3>{{ statistics.confirmed || 0 }}</h3>
+                      <h3>{{ number.format(statistics.confirmed, currentLan) || 0 }}</h3>
                       <span>{{ $t("home.cover.confirmData") }}</span>
                       <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
                     </Card>
@@ -50,7 +48,7 @@
                 </Col>
               </Row>
               <br>
-              <p>{{ $t("home.cover.endTime", {time: bannerTime}) }}</p>
+              <TimeView :time="bannerTime">{{ $t("home.cover.endTime", {time: bannerTime}) }}</TimeView>
               <br>
             </Col>
             <Col class="mobile-hide" :lg="{span: 13, push: 1}" type="flex" align="center" justify="center"
@@ -74,7 +72,7 @@
           <Col :lg="{span: 10, push: 0}">
             <h1 align="left">{{ $t("home.activity.title") }}</h1>
             <h4 align="left"
-                v-html="$t('home.activity.description', {report: statistics.reports || 0, cheater: statistics.confirmed || 0})"></h4>
+                v-html="$t('home.activity.description', {report: number.format(statistics.reports, currentLan) || 0, cheater: number.format(statistics.confirmed, currentLan) || 0})"></h4>
           </Col>
           <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
             <router-link :to="{name: 'player_list'}">
@@ -192,17 +190,19 @@
 </template>
 
 <script>
-import {api, http, util, time, regular, upload} from '../assets/js/index'
+import {api, http, util, time, number, regular, upload} from '../assets/js/index'
 
 import Application from "../assets/js/application";
 import Tell from "../components/HomeTell.vue";
 import PrivilegesTag from "../components/PrivilegesTag.vue";
 import judgeActionView from "../components/judgeActionView.vue";
+import TimeView from '../components/TimeView.vue';
 
 export default new Application({
   data() {
     return {
       util,
+      number,
 
       bannerImage: '',
       bannerTime: '',
@@ -219,7 +219,7 @@ export default new Application({
       },
     }
   },
-  components: {Tell, PrivilegesTag, judgeActionView},
+  components: {Tell, PrivilegesTag, judgeActionView, TimeView},
   watch: {
     '$route': 'loadData',
   },

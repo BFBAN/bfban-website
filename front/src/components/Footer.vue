@@ -1,16 +1,25 @@
 <template>
   <div>
-    <div class="ivu-card ivu-card-dis-hover footer-app-banner footer-border-top">
+    <Row class="ivu-card ivu-card-dis-hover footer-app-banner footer-border-top">
       <div class="container">
-        <h2 class="p">BFBAN APP</h2>
-        <a href="https://bfban-app.cabbagelol.net" target="_blank">
-          <Button>
-            <Icon type="md-download"/>
-            Download
-          </Button>
-        </a>
+        <Col :xs="{push: 1}" :lg="{push:0}" >
+          <h2 class="p">BFBAN APP</h2>
+          <ButtonGroup shape="circle">
+            <Button type="info" to="https://play.google.com/store/apps/details?id=com.cabbagelol.bfban" target="_blank">
+              <Icon type="logo-google" />
+              Google Play
+            </Button>
+            <Button type="info" to="https://apps.apple.com/us/app/bfban-little-helper/id6446828173" target="_blank">
+              <Icon type="logo-apple" />
+              Apple Store
+            </Button>
+            <Button to="https://bfban-app.cabbagelol.net" target="_blank">
+              <Icon type="md-open" />
+            </Button>
+          </ButtonGroup>
+        </Col>
       </div>
-    </div>
+    </Row>
 
     <footer class="footer footer-border-top" v-if="!isFull">
       <div class="container">
@@ -29,6 +38,8 @@
                    alt="logo"/>
             </Badge>
             <p style="margin-right: 10px">{{ $t("footer.column.col1.text") }}</p>
+
+            <iframe src="https://status.bfban.com/badge" class="footer-status-badge" allowTransparency="true" frameborder="0" scrolling="no"></iframe>
           </Col>
           <Col :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}"
                v-for="(i, index) in footerNavs.row" :key="index">
@@ -220,8 +231,11 @@ export default new Application({
     font-size: 20px;
   }
 
-  .footer-link {
-
+  .footer-status-badge {
+    margin: 10px 0;
+    height: 30px;
+    width: 182px;
+    border-radius: 10px;
   }
 }
 
