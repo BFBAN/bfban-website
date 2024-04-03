@@ -63,7 +63,7 @@
                         </Row>
                       </template>
                       <div v-else align="center">
-                        🦖
+                        🦖🦈🐧
                       </div>
                     </div>
                     <!-- Search history E -->

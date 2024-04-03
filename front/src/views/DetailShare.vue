@@ -45,7 +45,7 @@
             </template>
             <template v-else>
               <div style="min-height: 500px;width: 100%;display: flex;justify-content: center;align-items: center">
-                (✿◡‿◡) 🦖
+                (✿◡‿◡) 🦖🦈🐧
               </div>
             </template>
             <Spin size="large" fix v-if="share.load"></Spin>

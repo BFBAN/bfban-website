@@ -22,7 +22,7 @@
 
           <div class="qrcode" ref="qrCodeUrl"></div>
 
-          <p>{{ $t('detail.info.app_qr.tip') }} 🦖</p><br>
+          <p>{{ $t('detail.info.app_qr.tip') }} 🦖🦈🐧</p><br>
 
           <a href="https://bfban-app.cabbagelol.net" target="_blank">
             <Button>bfban download</Button>
@@ -30,7 +30,7 @@
         </div>
         <div class="desktop-hide" align="center">
           <Button @click="onPenApp">{{ $t('detail.info.app_qr.openApp') }}</Button>
-          <p>{{ $t('detail.info.app_qr.openAppDescribe') }} 🦖</p>
+          <p>{{ $t('detail.info.app_qr.openAppDescribe') }} 🦖🦈🐧</p>
         </div>
       </Card>
     </div>

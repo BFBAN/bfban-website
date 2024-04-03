@@ -5,7 +5,7 @@
       <Col :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem>{{ $t("link.title") }} 🦖</BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("link.title") }} 🦖🦈🐧</BreadcrumbItem>
         </Breadcrumb>
       </Col>
     </Row>
