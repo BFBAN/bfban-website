@@ -68,44 +68,73 @@ async function getPlayerId({dbId, userId, personaId}) {
  *       404:
  *         description: player.notFound
  */
-router.get('/', [checkquery('userId').optional().isInt({min: 0}), checkquery('personaId').optional().isInt({min: 0}), checkquery('dbId').optional().isInt({min: 0}), checkquery('history').optional()], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+router.get('/', [checkquery('userId').optional(), checkquery('personaId').optional(), checkquery('dbId').optional(), checkquery('history').optional()], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
     try {
+        // 验证请求参数
         const validateErr = validationResult(req);
-        if (!validateErr.isEmpty()) return res.status(400).json({
-            error: 1,
-            code: 'player.bad',
-            message: validateErr.array()
-        });
-        let key = '', val = '';
-        switch (true) {
-            case !!req.query.userId:
-                key = 'originUserId';
-                val = req.query.userId;
-                break;
-            case !!req.query.personaId:
-                key = 'originPersonaId';
-                val = req.query.personaId;
-                break;
-            case !!req.query.dbId:
-                key = 'id';
-                val = req.query.dbId;
-                break;
-            default:
-                return res.status(400).json({
-                    error: 1,
-                    code: 'player.bad',
-                    message: 'Must specify one param from "originUserId","originPersonaId","dbId"'
-                });
+        if (!validateErr.isEmpty()) {
+            return res.status(400).json({
+                error: 1,
+                code: 'player.bad',
+                message: validateErr.array()
+            });
         }
 
-        const result = await db.select('id', 'originName', 'originUserId', 'originPersonaId', 'games', 'cheatMethods', 'avatarLink', 'viewNum', 'commentsNum', 'status', 'createTime', 'updateTime', 'appealStatus')
-            .from('players').where(key, '=', val).first();
-        if (!result) return res.status(404).json({error: 1, code: 'player.notFound'});
-        if (req.query.history) // that guy does exist
-            result.history = await db.select('originName', 'fromTime', 'toTime').from('name_logs').where({originUserId: result.originUserId});
+        // 初始化查询参数
+        let keys = [], values = [];
 
-        res.status(200).json({success: 1, code: 'player.ok', data: result});
+        // 分解并验证参数，确保所有值都是整数
+        const parseAndValidateIds = (param) => {
+            if (!req.query[param]) return [];
+            return req.query[param].split(',').filter(id => /^\d+$/.test(id));
+        };
+
+        if (req.query.userId) {
+            keys.push('originUserId');
+            values.push(parseAndValidateIds('userId'));
+        }
+        if (req.query.personaId) {
+            keys.push('originPersonaId');
+            values.push(parseAndValidateIds('personaId'));
+        }
+        if (req.query.dbId) {
+            keys.push('id');
+            values.push(parseAndValidateIds('dbId'));
+        }
+
+        if (keys.length === 0 || values.some(v => v.length === 0)) {
+            return res.status(400).json({
+                error: 1,
+                code: 'player.bad',
+                message: 'Must specify valid parameter values for "originUserId", "originPersonaId", or "dbId"'
+            });
+        }
+
+        // 执行数据库查询
+        const results = await db.select('id', 'originName', 'originUserId', 'originPersonaId', 'games', 'cheatMethods', 'avatarLink', 'viewNum', 'commentsNum', 'status', 'createTime', 'updateTime', 'appealStatus')
+            .from('players')
+            .whereIn(keys[0], values[0]); // Assumes first non-empty set is valid for simplicity
+
+        if (results.length === 0) {
+            return res.status(404).json({error: 1, code: 'player.notFound'});
+        }
+
+        // 添加历史记录，如果需要
+        if (req.query.history) {
+            for (let result of results) {
+                result.history = await db.select('originName', 'fromTime', 'toTime')
+                    .from('name_logs')
+                    .where({originUserId: result.originUserId});
+            }
+        }
+
+        // 根据结果数量决定返回格式
+        if (results.length === 1) {
+            res.status(200).json({success: 1, code: 'player.ok', data: results[0]});
+        } else {
+            res.status(200).json({success: 1, code: 'player.ok', data: results});
+        }
     } catch (err) {
         next(err);
     }
