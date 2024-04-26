@@ -10,7 +10,7 @@ import {allowPrivileges, forbidPrivileges, verifyJWT, verifySelfOrPrivilege} fro
 import {cheatMethodsSanitizer, handleRichTextInput, userAttributes, userShowAttributes} from "../lib/user.js";
 import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
-import {commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.js";
+import {commentRateLimiter, viewedRateLimiter, batchSearchRateLimiter} from "../middleware/rateLimiter.js";
 import {texCoincidenceRatio, textSimilarityDiff} from "../lib/textDiff.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
@@ -61,9 +61,9 @@ async function getPlayerId({dbId, userId, personaId}) {
  *         value: true
  *     responses:
  *       200:
- *         description: viewed.ok
+ *         description: player.ok
  *       400:
- *         description: viewed.bad
+ *         description: player.bad
  *       404:
  *         description: player.notFound
  */
@@ -111,7 +111,127 @@ async (req, res, next) => {
 });
 
 
-router.get('/batch', verifyJWT, allowPrivileges(['bot', 'admin', 'super', 'root']), [checkquery('userIds').optional().isArray({max: 128}).custom((val) => {
+/**
+ * @swagger
+ * /api/player/batch:
+ *   get:
+ *     tags:
+ *       - player
+ *     summary: player Detail
+ *     description: Get the status of the players
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: userIds
+ *         description: user IDs 
+ *         type: num
+ *         in: query
+ *       - name: personaIds
+ *         description: persona ID
+ *         required: true
+ *         type: integer
+ *         in: query
+ *         value: 1003377988190
+ *       - name: dbIds
+ *         description: db ID
+ *         type: num
+ *         in: query
+ *     responses:
+ *       200:
+ *         description: playerBatch.ok
+ *       400:
+ *         description: playerBatch.bad
+ *       404:
+ *         description: playerBatch.notFound
+ */
+router.get('/batch',
+    // 处理逗号分隔值的中间件
+    (req, res, next) => {
+        const queryParams = ['userIds', 'personaIds', 'dbIds'];
+        queryParams.forEach(param => {
+            if (req.query[param] && typeof req.query[param] === 'string') {
+                req.query[param] = req.query[param].split(',').map(Number).filter(n => !isNaN(n) && n >= 0);
+            }
+        });
+        next();
+    },
+    // 匿名中间件处理验证和限速
+    (req, res, next) => {
+        req.maxCount = 80;  // 默认值，无token时的最大cnt限制
+        if (req.headers['x-access-token']) {
+            verifyJWT(req, res, () => {
+                batchSearchRateLimiter(req, res, () => {
+                    if (userHasRoles(req.user, ['dev', 'bot', 'admin', 'super', 'root'])) {
+                        req.maxCount = 10000;  // token验证通过且角色合适，提高cnt限制
+                    }
+                    next();  // 继续处理请求
+                });
+            });
+        } else {
+            batchSearchRateLimiter(req, res, next);  // 不包含token，则直接应用限速规则并继续
+        }
+    },
+    // 参数验证
+    [checkquery('userIds').optional().isArray({max: 1024}).custom((val) => {
+        for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
+        return true;
+    }), checkquery('personaIds').optional().isArray({max: 1024}).custom((val) => {
+        for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
+        return true;
+    }), checkquery('dbIds').optional().isArray({max: 1024}).custom((val) => {
+        for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
+        return true;
+    }), checkquery('*').custom((val, {req}) => {
+        let cnt = 0;
+        cnt += Array.isArray(req.query.userIds) ? req.query.userIds.length : 0;
+        cnt += Array.isArray(req.query.personaIds) ? req.query.personaIds.length : 0;
+        cnt += Array.isArray(req.query.dbIds) ? req.query.dbIds.length : 0;
+        if (cnt > req.maxCount) {  // 使用动态设置的最大计数限制
+            throw new Error(`Too many entities. Max allowed is ${req.maxCount}`);
+        }
+        return true;
+})], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty()) {
+            return res.status(400).json({
+                error: 1,
+                code: 'playerBatch.bad',
+                message: validateErr.array()
+            });
+        }
+        
+        let result = [];
+        let idsNotFound;
+        
+        if (req.query.userIds?.length) {
+            const users = await db.select(['originUserId', 'status']).from('players').whereIn('originUserId', req.query.userIds);
+            idsNotFound = req.query.userIds.filter(id => !users.some(user => user.originUserId == id)); // 注意：比较时用 == 而非 ===，因为类型可能不同
+            result = result.concat(users.map(user => ({ userId: Number(user.originUserId), status: user.status })));
+            result = result.concat(idsNotFound.map(id => ({ userId: Number(id), status: -1 })));
+        }
+        if (req.query.personaIds?.length) {
+            const personas = await db.select(['originPersonaId', 'status']).from('players').whereIn('originPersonaId', req.query.personaIds);
+            idsNotFound = req.query.personaIds.filter(id => !personas.some(persona => persona.originPersonaId == id));
+            result = result.concat(personas.map(persona => ({ personaId: Number(persona.originPersonaId), status: persona.status })));
+            result = result.concat(idsNotFound.map(id => ({ personaId: Number(id), status: -1 })));
+        }
+        if (req.query.dbIds?.length) {
+            const dbs = await db.select(['id', 'status']).from('players').whereIn('id', req.query.dbIds);
+            idsNotFound = req.query.dbIds.filter(id => !dbs.some(db => db.id == id));
+            result = result.concat(dbs.map(db => ({ dbId: Number(db.id), status: db.status })));
+            result = result.concat(idsNotFound.map(id => ({ dbId: Number(id), status: -1 })));
+        }
+
+        return res.status(200).json({success: 1, code: 'playerBatch.ok', data: result});
+    } catch (err) {
+        next(err);
+    }
+});
+
+
+router.get('/batchs', verifyJWT, allowPrivileges(['bot', 'admin', 'super', 'root']), [checkquery('userIds').optional().isArray({max: 128}).custom((val) => {
     for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
     return true;
 }), checkquery('personaIds').optional().isArray({max: 128}).custom((val) => {
@@ -133,7 +253,7 @@ async (req, res, next) => {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty()) return res.status(400).json({
             error: 1,
-            code: 'playerBatch.bad',
+            code: 'playerBatchs.bad',
             message: validateErr.array()
         });
 
@@ -154,7 +274,7 @@ async (req, res, next) => {
                 return i;
             })));
 
-        return res.status(200).json({success: 1, code: 'playerBatch.ok', data: result});
+        return res.status(200).json({success: 1, code: 'playerBatchs.ok', data: result});
     } catch (err) {
         next(err);
     }
@@ -1261,6 +1381,7 @@ function timeLineItemSetAttributes(attr) {
     for (let i of Object.keys(timeLineItemAttributes)) if (typeof (attr[i]) == timeLineItemAttributes[i].type && (timeLineItemAttributes[i].set || force) && timeLineItemAttributes[i].appealType.includes(attr.appealType) && attr[i]) result[i] = attr[i] ?? timeLineItemAttributes[i].default;
     return result;
 }
+
 
 /**
  * @param item
