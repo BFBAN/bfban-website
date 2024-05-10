@@ -32,7 +32,7 @@ const docs_config = {
             }
         },
         {
-            "url": "https://bfban.gametools.network", "description": "main hosting service"
+            "url": "https://api.bfban.com", "description": "main hosting service"
         },
     ],
     tags: [],
