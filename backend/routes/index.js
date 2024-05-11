@@ -656,7 +656,7 @@ async function (req, res, next) {
               if(first) {
                 callback(null, ']');
               }else {
-                callback();
+                callback(null, '[]');
               }
             }
         });
