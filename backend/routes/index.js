@@ -653,7 +653,11 @@ async function (req, res, next) {
                 callback(null, data);
             },
             flush(callback) {
+              if(first) {
                 callback(null, ']');
+              }else {
+                callback();
+              }
             }
         });
         req.on('close', () => {
