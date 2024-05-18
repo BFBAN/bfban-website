@@ -653,7 +653,7 @@ async function (req, res, next) {
                 callback(null, data);
             },
             flush(callback) {
-              if(first) {
+              if(!first) {
                 callback(null, ']');
               }else {
                 callback(null, '[]');
