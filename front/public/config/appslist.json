@@ -205,24 +205,25 @@
       "hot": false
     },
     {
-      "title": "BattleField V Robot",
+      "title": "BattleField V Robot bfvtools",
       "id": "10",
       "titleLang": {
-        "zh-CN": "战地风云5 Robot机器人",
-        "en-US": "BattleField V Robot"
+        "zh-CN": "战地风云5 bfvtools机器人",
+        "en-US": "BFV ROBOT"
       },
-      "describe": "BFV Robot主要用于战地5中社区服务器管理使用，通过软件可以达到自动喊话，反作弊等功能，以达到改善房间内游戏环境的效果，同时将大部分甄别工作交给机器人来解放管理员，使社区服更容易满足24小时开服的要求。",
+      "describe": "bfvtools主要用于战地5中 BFVROBOT社区服务器管理使用，通过软件可以达到自动喊话，反作弊等功能，以达到改善房间内游戏环境的效果，同时将大部分甄别工作交给机器人来解放管理员，使社区服更容易满足24小时开服的要求。管理员可以使用QQ kook等渠道控制服务器。社区拥有案件、成就等系统。",
       "describeLang": {
-        "zh-CN": "BFV Robot主要用于战地5中社区服务器管理使用，通过软件可以达到自动喊话，反作弊等功能，以达到改善房间内游戏环境的效果，同时将大部分甄别工作交给机器人来解放管理员，使社区服更容易满足24小时开服的要求。",
-        "en-US": "BFV Robot is mainly used in battlefield 5 community server management, through the software can achieve automatic propaganda, anti-cheating and other functions, in order to improve the effect of the game environment in the room, while most of the screening work to the Robot to liberate the administrator, so that the community service is easier to meet the requirements of 24 hours open service."
+        "zh-CN": "bfvtools主要用于战地5中 BFVROBOT社区服务器管理使用，通过软件可以达到自动喊话，反作弊等功能，以达到改善房间内游戏环境的效果，同时将大部分甄别工作交给机器人来解放管理员，使社区服更容易满足24小时开服的要求。管理员可以使用QQ kook等渠道控制服务器。社区拥有案件、成就等系统。",
+        "en-US": "bfvtools is mainly used in battlefield 5 community server management, through the software can achieve automatic propaganda, anti-cheating and other functions, in order to improve the effect of the game environment in the room, while most of the screening work to the Robot to liberate the administrator, so that the community service is easier to meet the requirements of 24 hours open service."
       },
       "tag": [
         "bfv",
-        "admin"
+        "admin",
+        "api"
       ],
-      "website": "https://zth.ink/?p=393",
-      "get": "https://bfv.zth.ink/home",
-      "hot": false
+      "website": "https://bfvrobot.net/",
+      "get": "https://bfvrobot.net/home",
+      "hot": true
     },
     {
       "title": "BFBAN BOT for Kook",
@@ -304,6 +305,31 @@
       "website": "https://dzxrly.github.io/BF2042StateWeb/",
       "get": "https://github.com/dzxrly/BF2042State2.0",
       "hot": false
+    },
+    {
+      "title":"BFHelper",
+      "describe": "battlefield 助手",
+      "describeLang": {
+        "zh-CN": "battlefield 助手",
+        "en-US": "battlefield Helper"
+      },
+      "tag": [
+        "bot"
+      ],
+      "website": "https://github.com/KomeiDiSanXian/BFHelper"
+    },
+    {
+      "title":"xiaomai-bot",
+      "describe": "依附在QQ查询BF玩家状态",
+      "describeLang": {
+        "zh-CN": "依附在QQ查询BF玩家状态",
+        "en-US": "Attached to QQ query BF player status"
+      },
+      "tag": [
+        "bot",
+        "qq"
+      ],
+      "website": "https://github.com/g1331/xiaomai-bot"
     }
   ]
 }

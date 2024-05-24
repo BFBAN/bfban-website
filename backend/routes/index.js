@@ -261,7 +261,7 @@ router.get('/activeStatistical', [
                     }
                 }
 
-                data.achievement = reportArray.slice(0, 10);
+                data.achievement = reportArray.sort((a, b) => a.points - b.points).reverse().slice(0, 10);
             }
 
             res.status(200).json({success: 1, code: 'statistics.ok', data: data});
@@ -653,7 +653,11 @@ async function (req, res, next) {
                 callback(null, data);
             },
             flush(callback) {
+              if(!first) {
                 callback(null, ']');
+              }else {
+                callback(null, '[]');
+              }
             }
         });
         req.on('close', () => {

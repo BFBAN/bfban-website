@@ -22,6 +22,7 @@ import _Mail from "@/assets/js/mail";
 import _Voice from "@/assets/js/voice";
 import _appMessage from "@/assets/js/message";
 import _Moss from "@/assets/js/moss";
+import _Number from "./number";
 import store from "@/store";
 
 export const api = new _Api();
@@ -43,11 +44,12 @@ export const mail = new _Mail();
 export const voice = new _Voice();
 export const message = new _appMessage();
 export const moss = new _Moss();
+export const number = new _Number();
 
 export default {
     conf, api, achievement, storage, time,
     http, http_token, http_connect,
     util, notification, regular, print,
     upload, account_storage, player_storage, mail,
-    voice, message, moss
+    voice, message, moss, number,
 };

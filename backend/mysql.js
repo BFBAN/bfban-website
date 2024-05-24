@@ -19,6 +19,7 @@ const db = knex({
             return next();
         }
     },
+    pool: { min: 0, max: 10000 }  // 根据应用负载调整这些值
 });
 
 export default db;
