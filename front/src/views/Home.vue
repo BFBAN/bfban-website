@@ -154,7 +154,7 @@
                     <u style="margin-right: 5px">{{ a_i.toPlayerName }}</u>
                   </router-link>
 
-                  <judgeActionView :judgeAction="a_i.action"></judgeActionView>
+                  <judgeActionTypeView :judgeAction="a_i.action"></judgeActionTypeView>
 
                   {{ $t('detail.info.cheatMethod') }}
 
@@ -195,7 +195,7 @@ import {api, http, util, time, number, regular, upload} from '../assets/js/index
 import Application from "../assets/js/application";
 import Tell from "../components/HomeTell.vue";
 import PrivilegesTag from "../components/PrivilegesTag.vue";
-import judgeActionView from "../components/judgeActionView.vue";
+import judgeActionTypeView from "../components/judgeActionTypeView.vue";
 import TimeView from '../components/TimeView.vue';
 
 export default new Application({
@@ -219,7 +219,7 @@ export default new Application({
       },
     }
   },
-  components: {Tell, PrivilegesTag, judgeActionView, TimeView},
+  components: {Tell, PrivilegesTag, judgeActionTypeView, TimeView},
   watch: {
     '$route': 'loadData',
   },

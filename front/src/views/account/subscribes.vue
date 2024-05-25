@@ -41,7 +41,7 @@
                   <div style="display: flex; flex-direction: column;">
                     <Tooltip :content="$t('list.colums.playerId')">
                       <h2 class="text-distinguishing-letter">
-                        <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}"
+                        <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}`, query: {byPath: $route.name} }}"
                                      :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
                           <code>{{ d.originName }}</code>
                         </router-link>

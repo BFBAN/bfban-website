@@ -107,7 +107,7 @@
               <a href="javascript:void(0)"><b>{{ i.username }}</b></a>
             </BusinessCard>
             {{ $t(`basic.button.reply`) }}
-            <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
+            <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}">
               <span>{{ i.toOriginName }}</span>
             </router-link>
             ({{ i.id }})
@@ -124,7 +124,7 @@
             <Divider type="vertical"></Divider>
             <a href="javascript:void(0)">
               <Tooltip content="Open Player Page">
-                <Button size="small" :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
+                <Button size="small" :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}">
                   <Icon type="ios-eye"/>
                 </Button>
               </Tooltip>

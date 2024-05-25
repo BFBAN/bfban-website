@@ -258,9 +258,7 @@ export default new Application({
                       click() {
                         that.$router.push({
                           name: 'player',
-                          params: {
-                            ouid: params.row.originPersonaId
-                          }
+                          params: {ouid: params.row.originPersonaId}
                         })
                       }
                     }

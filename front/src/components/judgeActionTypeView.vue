@@ -1,3 +1,7 @@
+<!--
+- 判决类型标签
+-->
+
 <script setup>
 import {util} from "@/assets/js";
 

@@ -654,7 +654,7 @@
 
                           {{ $t('detail.info.judge') }}
 
-                          <judgeActionView :judgeAction="l.judgeAction"></judgeActionView>
+                          <judgeActionTypeView :judgeAction="l.judgeAction"></judgeActionTypeView>
 
                           <template v-if="l.cheatGame">
                             <!-- 在 -->
@@ -1004,7 +1004,7 @@
 
               <Row :gutter="50">
                 <Col :xs="{span:24}" :lg="{span: 8, flex: 1}">
-
+                  <judgeActionTemplateView :fromData="verify" :containerRefs="$refs" @on-select="onT"></judgeActionTemplateView>
                 </Col>
                 <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
                   <br class="desktop-hide">
@@ -1207,7 +1207,8 @@ import Textarea from "../components/Textarea";
 import BusinessCard from "../components/BusinessCard.vue";
 import RecordLink from "../components/RecordLink.vue";
 import cheaterStatusView from "../components/CheaterStatusView.vue";
-import judgeActionView from "@/components/judgeActionView.vue";
+import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
+import judgeActionTemplateView from "@/components/judgeActionTemplateView.vue";
 import Captcha from "../components/Captcha";
 import TimeView from "../components/TimeView.vue"
 import HtmlCore from "../components/Html";
@@ -1321,7 +1322,8 @@ export default new Application({
     BusinessCard,
     RecordLink,
     cheaterStatusView,
-    judgeActionView,
+    judgeActionTypeView,
+    judgeActionTemplateView,
     TimeView,
     Captcha,
     HtmlCore,

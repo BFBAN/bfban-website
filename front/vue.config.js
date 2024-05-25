@@ -54,6 +54,7 @@ module.exports = {
             chunkFilename: `assets/js/[name].${packageConf.version}.js`
         },
         plugins: [
+            new MiniCssExtractPlugin({ ignoreOrder: true }),
             new SitemapPlugin({
                 // Production Url
                 base: url.protocol + '://' + url.host,
@@ -86,7 +87,7 @@ module.exports = {
             ),
         ],
         module: {
-            unknownContextCritical: false
+            unknownContextCritical: false,
         }
     },
 }

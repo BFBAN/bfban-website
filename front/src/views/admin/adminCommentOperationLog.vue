@@ -47,7 +47,7 @@
       <template v-if="adminLogs.length > 0">
         <div v-for="(i, index) in adminLogs" :key="index">
           <Row type="flex" align="middle"
-               @click.native="$router.push({name: 'player', params: {ouid: i.toOriginPersonaId}})">
+               @click.native="$router.push({name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}})">
             <Col>
               <Tag>Log</Tag>
             </Col>
@@ -66,7 +66,7 @@
               </div>
             </Col>
             <Col>
-              <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
+              <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}">
                 <Icon type="ios-eye" size="25"/>
               </router-link>
             </Col>
