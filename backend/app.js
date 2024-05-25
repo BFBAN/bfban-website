@@ -116,9 +116,13 @@ app.get('/api/captcha', captchaRateLimiter, (req, res, next) => {
     res.status(200).json({success: 1, code: 'captcha.gen', data: generateCaptcha()});
 });
 
-app.get('/', (req, res, next) => res.redirect('/docs'));
+app.get('/', (req, res, next) => {
+    res.redirect('/docs');
+});
 
-app.get('/test', (req, res, next) => res.redirect('/static/SPA.html'));
+app.get('/test', (req, res, next) => {
+    res.redirect('/static/SPA.html');
+});
 
 app.options('*', (req, res, next) => {  // for preflight requests
     res.status(200).send();

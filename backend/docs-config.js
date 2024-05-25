@@ -6,7 +6,7 @@ const docs_config = {
     schemes: ["http", "https"],
     info: {
         title: "BFBAN backend V2 API document",
-        version: ">2.0.0",
+        version: "2.0.0",
         description: "bfban back-end interface documentation, any questions please to github\"s bfban repository questions",
         contact: {
             email: "app@bfban.com",
