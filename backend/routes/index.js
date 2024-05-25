@@ -58,22 +58,21 @@ const router = express.Router();
  *       400:
  *         description: statistics.bad
  */
-
 router.get('/statistics', statisticsLimiter, [
         checkquery('from').optional().isInt({min: 0}),
     ],
     async (req, res, next) => {
         try {
             const validateErr = validationResult(req);
-            
+
             if (!validateErr.isEmpty()) {
-                return res.status(400).json({ error: 1, code: 'statistics.bad', message: validateErr.array() });
+                return res.status(400).json({error: 1, code: 'statistics.bad', message: validateErr.array()});
             }
-    
+
             const from = typeof (req.query.from) === 'string' ? parseInt(req.query.from, 10) : 0;
-    
+
             const queryPromises = [];
-    
+
             if (req.query.reports) {
                 const rawSQL = `
                     SELECT COUNT(id) AS reports
@@ -82,70 +81,70 @@ router.get('/statistics', statisticsLimiter, [
                     AND type = 'report'
                 `;
                 const params = [new Date(from).toISOString()]; // Ensure the date is in the correct format for SQL
-            
+
                 queryPromises.push(
                     db.raw(rawSQL, params)
-                    .then(result => {
-                        // Assuming the result structure follows what Knex typically returns for raw queries,
-                        // you might need to adjust based on the actual structure.
-                        const reportsCount = parseInt(result[0][0].reports);
-                        return { reports: reportsCount };
-                    })
-                    .catch(error => console.error(error))
+                        .then(result => {
+                            // Assuming the result structure follows what Knex typically returns for raw queries,
+                            // you might need to adjust based on the actual structure.
+                            const reportsCount = parseInt(result[0][0].reports);
+                            return {reports: reportsCount};
+                        })
+                        .catch(error => console.error(error))
                 );
             }
             if (req.query.players) {
                 queryPromises.push(
                     db('players').count('id as count')
-                    .where('createTime', '>=', from)
-                    .andWhere({ valid: 1 })
-                    .then(result => ({ players: parseInt(result[0].count) }))
+                        .where('createTime', '>=', from)
+                        .andWhere({valid: 1})
+                        .then(result => ({players: parseInt(result[0].count)}))
                 );
             }
-    
+
             if (req.query.confirmed) {
                 queryPromises.push(
                     db('players').count('id as count')
-                    .where('createTime', '>=', from)
-                    .andWhere({ status: 1, valid: 1 })
-                    .then(result => ({ confirmed: parseInt(result[0].count) }))
+                        .where('createTime', '>=', from)
+                        .andWhere({status: 1, valid: 1})
+                        .then(result => ({confirmed: parseInt(result[0].count)}))
                 );
             }
-    
+
             if (req.query.registers) {
                 queryPromises.push(
                     db('users').count('id as count')
-                    .where('createTime', '>=', new Date(from))
-                    .then(results => ({ registers: parseInt(results[0].count) }))
+                        .where('createTime', '>=', new Date(from))
+                        .then(results => ({registers: parseInt(results[0].count)}))
                 );
             }
-            
+
             if (req.query.admins) {
                 queryPromises.push(
                     db('users').count('id as count')
-                    .where('privilege', 'like', '%"admin"%')
-                    .orWhere('privilege', 'like', '%"super"%')
-                    .orWhere('privilege', 'like', '%"dev"%')
-                    .orWhere('privilege', 'like', '%"root"%')
-                    .then(results => ({ admins: parseInt(results[0].count) }))
+                        .where('privilege', 'like', '%"admin"%')
+                        .orWhere('privilege', 'like', '%"super"%')
+                        .orWhere('privilege', 'like', '%"dev"%')
+                        .orWhere('privilege', 'like', '%"root"%')
+                        .then(results => ({admins: parseInt(results[0].count)}))
                 );
             }
-            
+
             if (req.query.banAppeals) {
                 queryPromises.push(
                     db('comments').count('id as count')
-                    .where('createTime', '>=', new Date(from))
-                    .andWhere({ type: 'banAppeal' })
-                    .then(results => ({ banAppeals: parseInt(results[0].count) }))
+                        .where('createTime', '>=', new Date(from))
+                        .andWhere({type: 'banAppeal'})
+                        .then(results => ({banAppeals: parseInt(results[0].count)}))
                 );
             }
-    
+
             // 并行执行所有查询
             const results = await Promise.all(queryPromises);
             // 使用reduce合并所有结果到单个对象
-            const data = results.reduce((acc, result) => ({ ...acc, ...result }), {});
-    
-            res.status(200).json({ success: 1, code: 'statistics.ok', data: data });
+            const data = results.reduce((acc, result) => ({...acc, ...result}), {});
+
+            res.status(200).json({success: 1, code: 'statistics.ok', data: data});
         } catch (err) {
             next(err);
         }
@@ -608,13 +607,13 @@ async (req, res, next) => {
  *       400: players.bad
  */
 router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'dev', 'root']), [
-    checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
-    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]),
-    checkquery('sortBy').optional().isIn(['createTime', 'updateTime', 'viewNum', 'commentsNum']),
-    checkquery('order').optional().isIn(['desc', 'asc']),
-    checkquery('limit').optional().isInt({min: 0}),
-    checkquery('skip').optional().isInt({min: 0})
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+        checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
+        checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]),
+        checkquery('sortBy').optional().isIn(['createTime', 'updateTime', 'viewNum', 'commentsNum']),
+        checkquery('order').optional().isIn(['desc', 'asc']),
+        checkquery('limit').optional().isInt({min: 0, max: 100}),
+        checkquery('skip').optional().isInt({min: 0})
+    ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async function (req, res, next) {
     try {
         const validateErr = validationResult(req);
@@ -672,7 +671,10 @@ async function (req, res, next) {
     } catch (err) {
         next(err);
     }
-});
+}
+
+)
+;
 
 /**
  * @swagger
