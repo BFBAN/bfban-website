@@ -49,7 +49,6 @@ const swaggerSpec = swaggerJsDoc({
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-
 app.set('trust proxy', false);
 app.use((req, res, next) => {
     let realIP = '';
@@ -138,5 +137,6 @@ app.listen(config.port, config.address, () => {
     logger.success(`App start at ${config.address}:${config.port}`);
 });
 
+console.log('start')
 
 export default app;
