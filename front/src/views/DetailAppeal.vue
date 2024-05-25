@@ -228,7 +228,7 @@
         <Col flex="1"></Col>
         <Col>
           <ButtonGroup>
-            <Button size="large" :to="{name: 'player'}">{{ $t('basic.button.cancel') }}</Button>
+            <Button size="large" :to="{name: 'player', query: {byPath: $route.name}}">{{ $t('basic.button.cancel') }}</Button>
             <Button size="large" @click="resetAppealForm()">{{ $t('basic.button.reset') }}</Button>
           </ButtonGroup>
           <Divider type="vertical"/>

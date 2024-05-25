@@ -68,7 +68,7 @@
       <template v-if="judgementLog.length > 0">
         <div v-for="(i, index) in judgementLog" :key="index">
           <Row type="flex" align="middle"
-               @click.native="$router.push({name: 'player', params: {ouid: i.toOriginPersonaId}, hash: '#floor-' + i.id})">
+               @click.native="$router.push({name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}, hash: '#floor-' + i.id})">
             <Col>
               <Tag>Log</Tag>
             </Col>

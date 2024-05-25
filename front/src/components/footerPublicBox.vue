@@ -11,35 +11,37 @@
         <div>
           <Row :gutter="10" type="flex" align="middle" class="title">
             <Col flex="1">
-              <Badge status="success" />
+              <Badge status="success"/>
               <router-link :to="{name: 'player_list', query: { status: '0', game: 'all' }}" v-show="!isFooterFull">
                 {{ $store.state.$desktop.autoUpdatePlayerList.total || 0 }}{{ $t('basic.status.0.text') }}
               </router-link>
             </Col>
             <Col v-if="!$store.state.configuration.desktopNotifiction">
-              <Icon type="md-alert" />
-              <Icon type="md-notifications-off" />
+              <Icon type="md-alert"/>
+              <Icon type="md-notifications-off"/>
               <Divider type="vertical"></Divider>
             </Col>
             <Col>
               <a @click="isFooterFull = true" v-if="!isFooterFull">
-                <Icon type="md-expand" />
+                <Icon type="md-expand"/>
               </a>
               <a @click="isFooterFull = false" v-else>
-                <Icon type="md-contract" />
+                <Icon type="md-contract"/>
               </a>
             </Col>
           </Row>
           <div v-if="isFooterFull">
             <Tabs size="small">
               <TabPane :label="$t('basic.status.0.text')" class="content">
-                <Card dis-hover :padding="2" v-for="(i, index) in $store.state.$desktop.autoUpdatePlayerList.result" :key="index">
+                <Card dis-hover :padding="2" v-for="(i, index) in $store.state.$desktop.autoUpdatePlayerList.result"
+                      :key="index">
                   <Row :gutter="4" type="flex" align="middle">
                     <Col>
                       <Avatar :src="i.avatarLink" size="15"></Avatar>
                     </Col>
                     <Col flex="1">
-                      <a href="javascript:void(0)" @click="openDetail(i)"><b class="text-distinguishing-letter"><code>{{i.originName}}</code></b></a>
+                      <a href="javascript:void(0)" @click="openDetail(i)"><b
+                          class="text-distinguishing-letter"><code>{{ i.originName }}</code></b></a>
                     </Col>
                     <Col>
                       <Tag type="border">{{ $t('basic.games.' + i.games) }}</Tag>
@@ -58,18 +60,16 @@
 <script>
 export default {
   name: "footerBox",
-  data () {
+  data() {
     return {
       isFooterFull: false
     }
   },
-  watch: {
-
-  },
+  watch: {},
   methods: {
-    openDetail (i) {
+    openDetail(i) {
       this.isFooterFull = false;
-      this.$router.push({ name: 'player', params: {ouid: i.originPersonaId} })
+      this.$router.push({name: 'player', params: {ouid: i.originPersonaId}, query: {byPath: this.$route.name}})
     }
   }
 }
