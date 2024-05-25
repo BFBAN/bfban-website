@@ -607,13 +607,13 @@ async (req, res, next) => {
  *       400: players.bad
  */
 router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'dev', 'root']), [
-        checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
-        checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]),
-        checkquery('sortBy').optional().isIn(['createTime', 'updateTime', 'viewNum', 'commentsNum']),
-        checkquery('order').optional().isIn(['desc', 'asc']),
-        checkquery('limit').optional().isInt({min: 0, max: 100}),
-        checkquery('skip').optional().isInt({min: 0})
-    ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+    checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
+    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]),
+    checkquery('sortBy').optional().isIn(['createTime', 'updateTime', 'viewNum', 'commentsNum']),
+    checkquery('order').optional().isIn(['desc', 'asc']),
+    checkquery('limit').optional().isInt({min: 0, max: 100}),
+    checkquery('skip').optional().isInt({min: 0})
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async function (req, res, next) {
     try {
         const validateErr = validationResult(req);
@@ -652,11 +652,11 @@ async function (req, res, next) {
                 callback(null, data);
             },
             flush(callback) {
-              if(!first) {
-                callback(null, ']');
-              }else {
-                callback(null, '[]');
-              }
+                if (!first) {
+                    callback(null, ']');
+                } else {
+                    callback(null, '[]');
+                }
             }
         });
         req.on('close', () => {
@@ -671,10 +671,7 @@ async function (req, res, next) {
     } catch (err) {
         next(err);
     }
-}
-
-)
-;
+});
 
 /**
  * @swagger
