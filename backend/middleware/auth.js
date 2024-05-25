@@ -4,7 +4,7 @@ import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import db from "../mysql.js";
 import {userHasRoles, verifyJWTToken} from '../lib/auth.js';
-import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
+// import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 async function verifyAllowPrivilege(req, res, next) {
     try {
