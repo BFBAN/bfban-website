@@ -29,29 +29,51 @@ const router = express.Router();
  *       - application/json
  *     parameters:
  *       - name: reports
- *         type: boolean
- *         in: query
  *         value: true
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *           enum: [true, false]
  *       - name: players
- *         type: boolean
- *         in: query
  *         value: true
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *           enum: [true, false]
  *       - name: confirmed
- *         type: boolean
- *         in: query
  *         value: true
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *           enum: [true, false]
  *       - name: registers
- *         type: boolean
- *         in: query
  *         value: true
- *       - name: banappeals
- *         type: boolean
  *         in: query
+ *         schema:
+ *           type: boolean
+ *           enum: [true, false]
+ *       - name: banAppeals
  *         value: true
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *           enum: [true, false]
  *       - name: details
- *         type: boolean
- *         in: query
  *         value: true
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *           enum: [true, false]
+ *       - name: admins
+ *         value: true
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *           enum: [true, false]
+ *       - name: from
+ *         value: 0
+ *         in: query
+ *         type: string
  *     responses:
  *       200:
  *         description: statistics.ok
@@ -101,7 +123,6 @@ router.get('/statistics', statisticsLimiter, [
                         .then(result => ({players: parseInt(result[0].count)}))
                 );
             }
-
             if (req.query.confirmed) {
                 queryPromises.push(
                     db('players').count('id as count')
@@ -110,7 +131,6 @@ router.get('/statistics', statisticsLimiter, [
                         .then(result => ({confirmed: parseInt(result[0].count)}))
                 );
             }
-
             if (req.query.registers) {
                 queryPromises.push(
                     db('users').count('id as count')
@@ -118,7 +138,6 @@ router.get('/statistics', statisticsLimiter, [
                         .then(results => ({registers: parseInt(results[0].count)}))
                 );
             }
-
             if (req.query.admins) {
                 queryPromises.push(
                     db('users').count('id as count')
@@ -129,7 +148,6 @@ router.get('/statistics', statisticsLimiter, [
                         .then(results => ({admins: parseInt(results[0].count)}))
                 );
             }
-
             if (req.query.banAppeals) {
                 queryPromises.push(
                     db('comments').count('id as count')
@@ -144,7 +162,7 @@ router.get('/statistics', statisticsLimiter, [
             // 使用reduce合并所有结果到单个对象
             const data = results.reduce((acc, result) => ({...acc, ...result}), {});
 
-            res.status(200).json({success: 1, code: 'statistics.ok', data: data});
+            res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'statistics.ok', data: data});
         } catch (err) {
             next(err);
         }
@@ -279,7 +297,17 @@ router.get('/activeStatistical', [
  *     description: Like graphql
  *     produces:
  *       - application/json
- *     parameters:
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: true
+ *             example:
+ *               data: [{"game":"bf1","status":-1},{"game":"bfv","status":-1},{"game":"bf6","status":-1},{"game":"*","status":0},{"game":"*","status":5},{"game":"*","status":6},{"game":"*","status":1},{"game":"*","status":2},{"game":"*","status":3},{"game":"*","status":4},{"game":"*","status":8},{"game":"*","status":9}]
+ *             properties:
+ *               data:
+ *                 type: array
  *     responses:
  *       200:
  *         description: playerStatistics.success
@@ -336,6 +364,17 @@ async (req, res, next) => {
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: from
+ *         description: The current time is not specified when the current time is queried.
+ *         type:
+ *           - integer
+ *           - string
+ *         format: date-time
+ *       - name: limit
+ *         type: integer
+ *         value: 50
+ *         minimum: 0
+ *         maximim: 100
  *     responses:
  *       200:
  *         description: activities.ok
@@ -674,8 +713,9 @@ async function (req, res, next) {
  *         example: 0
  *     responses:
  *       200:
- *         description: activities.ok
- *       400: players.bad
+ *         description: players.ok
+ *       400:
+ *         description: players.bad
  */
 router.get('/players', [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
@@ -761,10 +801,9 @@ async (req, res, next) => {
  * /api/banAppeals:
  *   get:
  *     tags:
- *       - user
  *       - statistic
- *     summary: appeals
- *     description: In the stone hammer state, file a complaint
+ *     summary: appeals list
+ *     description: Get a list of complaints
  *     produces:
  *       - application/json
  *     parameters:
@@ -1036,6 +1075,8 @@ async (req, res, next) => {
  * @swagger
  * /api/advanceSearch:
  *   get:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - search
  *     description: Query players in advance, not the database but the EAdb

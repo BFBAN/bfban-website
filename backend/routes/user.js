@@ -553,6 +553,7 @@ async function showUserInfo(req, res, next) {
  *       - appToken: []
  *     tags:
  *       - user
+ *     description: Query and report player
  *     produces:
  *       - application/json
  */
@@ -581,12 +582,31 @@ router.get('/me', verifyJWT, (req, res, next) => {
  * @swagger
  * /api/user/reports:
  *   get:
- *     security:
- *       - appToken: []
  *     tags:
  *       - user
+ *     description: Get a list of players reported by users on the site
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         required: true
+ *         type: string
+ *         minLength: 0
+ *       - name: skip
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *         minimum: 0
+ *       - name: limit
+ *         type: integer
+ *         in: query
+ *         value: 20
+ *         minimum: 0
+ *         maximum: 100
+ *     responses:
+ *       200: userReports.notFound
+ *       400: userReports.bad
+ *       404: userReports.success
  */
 router.get('/reports', [
     checkquery('id').isInt({min: 0}),

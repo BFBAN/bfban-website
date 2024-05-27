@@ -283,6 +283,8 @@ const achievementConfig = {
  * @swagger
  * /api/user/achievements:
  *  get:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - user
  *       - achievement
@@ -324,6 +326,8 @@ router.get('/achievements', verifyJWT, forbidPrivileges(['freezed', 'blacklisted
  * @swagger
  * /api/user/achievement:
  *   post:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - user
  *       - achievement

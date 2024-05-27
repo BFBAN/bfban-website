@@ -299,6 +299,8 @@ async (req, res, next) => {
  * @swagger
  * /api/player/viewed:
  *   post:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - player
  *     summary: Tourist volume
@@ -839,6 +841,8 @@ router.get('/timeline/item', [checkquery('id').isInt({min: 0}),], async (req, re
  * @swagger
  * /api/player/reply:
  *   post:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - player
  *       - user
@@ -976,6 +980,8 @@ async (req, res, next) => {
  * @swagger
  * /api/player/checkContent:
  *   post:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - player
  *     summary: Detection text
@@ -1031,15 +1037,17 @@ router.post('/checkContent', verifyJWT, verifyCaptcha, forbidPrivileges(['freeze
  * @swagger
  * /api/player/update:
  *   post:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - player
  *     summary: Update history name
- *     description: 主动更新举报玩家新的名称
+ *     description: Actively update new names of reported players
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: userId
- *         description: 用户 id
+ *         description: user id
  *         required: true
  *         type: num
  *         in: path
