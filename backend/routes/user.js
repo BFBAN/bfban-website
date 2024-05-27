@@ -219,7 +219,6 @@ async (req, res, next) => {
 });
 
 /**
- * 用户登录接口
  * @swagger
  * /api/user/signin:
  *   post:
@@ -456,6 +455,8 @@ async (req, res, next) => {
  * @swagger
  * /api/user/signout:
  *   post:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - user
  *     produces:
@@ -544,15 +545,49 @@ async function showUserInfo(req, res, next) {
     }
 }
 
+/**
+ * @swagger
+ * /api/user/info:
+ *   get:
+ *     security:
+ *       - appToken: []
+ *     tags:
+ *       - user
+ *     produces:
+ *       - application/json
+ */
 router.get('/info', [checkquery('id').isInt({min: 0})], showUserInfo);
 router.get('/info4admin', verifyJWT, allowPrivileges(['super', 'root', 'dev']), [
     checkquery('id').isInt({min: 0})
 ], showUserInfo);
+
+/**
+ * @swagger
+ * /api/user/me:
+ *   get:
+ *     security:
+ *       - appToken: []
+ *     tags:
+ *       - user
+ *     produces:
+ *       - application/json
+ */
 router.get('/me', verifyJWT, (req, res, next) => {
     req.query.id = '' + req.user.id;
     return next();
 }, showUserInfo);
 
+/**
+ * @swagger
+ * /api/user/reports:
+ *   get:
+ *     security:
+ *       - appToken: []
+ *     tags:
+ *       - user
+ *     produces:
+ *       - application/json
+ */
 router.get('/reports', [
     checkquery('id').isInt({min: 0}),
     checkquery('skip').optional().isInt({min: 0}),

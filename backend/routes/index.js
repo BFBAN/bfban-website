@@ -414,6 +414,160 @@ async (req, res, next) => {
 
 /**
  * @swagger
+ * /api/players/stream:
+ *   get:
+ *     security:
+ *       - appToken: []
+ *     tags:
+ *       - player
+ *     summary: Player list streaming BOT account used
+ *     description: Mass player list data
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: game
+ *         in: query
+ *         nullable: true
+ *         example: all
+ *         schema:
+ *           type: string
+ *           enum: ['all','bf1', 'bfv', 'bf6']
+ *         description: >
+ *           Sort order:
+ *            * `all` - All
+ *            * `bf1` - Battlefield 1
+ *            * `bfv` - Battlefield 5
+ *            * `bf6` - Battlefield 2024
+ *       - name: status
+ *         in: query
+ *         example: -1
+ *         schema:
+ *           type: integer
+ *           enum: [-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]
+ *         description: >
+ *           Case status type
+ *           Sort order:
+ *            * `-1` - All
+ *            * `0` - untreated
+ *            * `1` - cheat
+ *            * `2` - Pending self-proof
+ *            * `3` - sinlessness
+ *            * `4` - In vain
+ *            * `5` - discuss
+ *            * `6` - Wait for confirmation
+ *            * `8` - Brush gun
+ *            * `7` - null
+ *            * `9` - appeal
+ *       - name: sortBy
+ *         in: query
+ *         nullable: true
+ *         example: commentsNum
+ *         schema:
+ *           type: string
+ *           enum: ['createTime','updateTime','viewNum','commentsNum']
+ *         description: >
+ *           Sort order:
+ *            * `createTime` - To create the time ranking
+ *            * `updateTime` - Sort by update time
+ *            * `viewNum` - Sort by preview number
+ *            * `commentsNum` - Sort by number of comments
+ *       - name: order
+ *         description: Sequential mode
+ *         type: string
+ *         in: query
+ *         nullable: true
+ *         example: desc
+ *         schema:
+ *           type: string
+ *           enum: ['desc','asc']
+ *       - name: limit
+ *         description: limit
+ *         type: integer
+ *         in: query
+ *         value: 20
+ *         minimum: 1
+ *         maximum: 100
+ *       - name: skip
+ *         description: skip
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *         minimum: 0
+ *         example: 0
+ *     responses:
+ *       200:
+ *         description: activities.ok
+ *       400: players.bad
+ */
+router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'dev', 'root']), [
+    checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
+    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]),
+    checkquery('sortBy').optional().isIn(['createTime', 'updateTime', 'viewNum', 'commentsNum']),
+    checkquery('order').optional().isIn(['desc', 'asc']),
+    checkquery('limit').optional().isInt({min: 0}),
+    checkquery('skip').optional().isInt({min: 0})
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+async function (req, res, next) {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'players.bad', message: validateErr.array()});
+
+        const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
+        const createTimeFrom = new Date(req.query.createTimeFrom || 0);
+        const updateTimeFrom = new Date(req.query.updateTimeFrom || 0);
+        const createTimeTo = new Date(req.query.createTimeTo || Date.now());
+        const updateTimeTo = new Date(req.query.updateTimeTo || Date.now());
+        const status = (req.query.status && req.query.status !== '-1') ? req.query.status : '%';
+        const sort = req.query.sortBy ? req.query.sortBy : 'createTime';
+        const order = req.query.order ? req.query.order : 'desc';
+        const limit = req.query.limit ? req.query.limit - 0 : 20;
+        const skip = req.query.skip ? req.query.skip - 0 : 0;
+
+        const resultStream = db.select('*').from('players')
+            .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
+            .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
+            .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
+            .andWhere('status', 'like', status)
+            .orderBy(sort, order).offset(skip).limit(limit).stream();
+
+        let first = true;
+        const formatter = new Transform({
+            objectMode: true,
+            transform(chunk, encoding, callback) {
+                delete chunk.valid;
+                let data;
+                if (first)
+                    data = '[' + JSON.stringify(chunk);
+                else
+                    data = ',' + JSON.stringify(chunk);
+                first = false;
+                callback(null, data);
+            },
+            flush(callback) {
+                if (!first) {
+                    callback(null, ']');
+                } else {
+                    callback(null, '[]');
+                }
+            }
+        });
+        req.on('close', () => {
+            resultStream.end();
+        });
+        res.status(200).set('Content-Type', 'application/json');
+        formatter.pipe(res);    // the pipeline will break express.Response's life cycle, then hanging the next request
+        await misc.pipeline(resultStream, formatter).catch(err => {
+            logger.error('/players/stream Stream error: ', err);
+        });
+        res.end();
+    } catch (err) {
+        next(err);
+    }
+});
+
+/**
+ * @swagger
  * /api/players:
  *   get:
  *     tags:
@@ -424,43 +578,100 @@ async (req, res, next) => {
  *       - application/json
  *     parameters:
  *       - name: game
- *         description: Game type，['bf1', 'bfv', 'bf6']
- *         type: string
  *         in: query
- *         value: bf1
+ *         nullable: true
+ *         example: all
+ *         schema:
+ *           type: string
+ *           enum: ['all','bf1', 'bfv', 'bf6']
+ *         description: >
+ *           Sort order:
+ *            * `all` - All
+ *            * `bf1` - Battlefield 1
+ *            * `bfv` - Battlefield 5
+ *            * `bf6` - Battlefield 2024
  *       - name: createTimeFrom
  *         description: Report creation time
- *         type: integer
+ *         type:
+ *           - integer
+ *           - string
+ *         format: date-time
  *         in: query
- *         value: 0
  *       - name: updateTimeFrom
  *         description: Last updated time
- *         type: integer
+ *         type:
+ *           - integer
+ *           - string
+ *         format: date-time
  *         in: query
- *         value: 0
  *       - name: createTimeTo
- *         type: integer
+ *         type:
+ *           - integer
+ *           - string
+ *         format: date-time
  *         in: query
- *         value: 0
  *       - name: updateTimeTo
- *         type: integer
+ *         type:
+ *           - integer
+ *           - string
+ *         format: date-time
  *         in: query
- *         value: 0
  *       - name: status
- *         description: Case status type
+ *         in: query
+ *         example: -1
+ *         schema:
+ *           type: integer
+ *           enum: [-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]
+ *         description: >
+ *           Case status type
+ *           Sort order:
+ *            * `-1` - All
+ *            * `0` - untreated
+ *            * `1` - cheat
+ *            * `2` - Pending self-proof
+ *            * `3` - sinlessness
+ *            * `4` - In vain
+ *            * `5` - discuss
+ *            * `6` - Wait for confirmation
+ *            * `8` - Brush gun
+ *            * `7` - null
+ *            * `9` - appeal
+ *       - name: sortBy
+ *         in: query
+ *         nullable: true
+ *         example: commentsNum
+ *         schema:
+ *           type: string
+ *           enum: ['createTime','updateTime','viewNum','commentsNum']
+ *         description: >
+ *           Sort order:
+ *            * `createTime` - To create the time ranking
+ *            * `updateTime` - Sort by update time
+ *            * `viewNum` - Sort by preview number
+ *            * `commentsNum` - Sort by number of comments
+ *       - name: order
+ *         description: Sequential mode
+ *         type: string
+ *         in: query
+ *         nullable: true
+ *         example: desc
+ *         schema:
+ *           type: string
+ *           enum: ['desc','asc']
+ *       - name: limit
+ *         description: limit
+ *         type: integer
+ *         in: query
+ *         value: 20
+ *         minimum: 1
+ *         maximum: 100
+ *       - name: skip
+ *         description: skip
  *         type: integer
  *         in: query
  *         value: 0
- *       - name: sortBy
- *         description: Screening mode,['createTime','updateTime','viewNum','commentsNum']
- *         type: string
- *         in: query
- *         value: commentsNum
- *       - name: order
- *         description: Sequential mode，['desc','asc']
- *         type: string
- *         in: query
- *         value: desc
+ *         minimum: 0
+ *         example: 0
  *     responses:
  *       200:
  *         description: activities.ok
@@ -540,134 +751,6 @@ async (req, res, next) => {
             });
 
         }
-    } catch (err) {
-        next(err);
-    }
-});
-
-/**
- * @swagger
- * /api/players/stream:
- *   get:
- *     tags:
- *       - player
- *     summary: Player list streaming BOT account used
- *     description: Mass player list data
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: game
- *         description: Game type，['bf1', 'bfv', 'bf6']
- *         type: string
- *         in: query
- *         value: bf1
- *       - name: createTimeFrom
- *         description: Start the query based on the current creation time
- *         type: integer
- *         in: query
- *         value: 0
- *       - name: updateTimeFrom
- *         description: Start the query based on the current update time
- *         type: integer
- *         in: query
- *         value: 0
- *       - name: createTimeTo
- *         description: End The query based on the current creation time
- *         type: integer
- *         in: query
- *         value: 0
- *       - name: updateTimeTo
- *         description: End the query based on the current update time
- *         type: integer
- *         in: query
- *         value: 0
- *       - name: status
- *         description: Case status type
- *         type: integer
- *         in: query
- *         value: 0
- *       - name: sortBy
- *         description: Screening mode,['createTime','updateTime','viewNum','commentsNum']
- *         type: string
- *         in: query
- *         value: commentsNum
- *       - name: order
- *         description: order，['desc','asc']
- *         type: string
- *         in: query
- *         value: desc
- *       - name: limit
- *         description: limit
- *         type: num
- *         in: query
- *         value: 10
- *     responses:
- *       200:
- *         description: activities.ok
- *       400: players.bad
- */
-router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'dev', 'root']), [
-    checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
-    checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]),
-    checkquery('sortBy').optional().isIn(['createTime', 'updateTime', 'viewNum', 'commentsNum']),
-    checkquery('order').optional().isIn(['desc', 'asc']),
-    checkquery('limit').optional().isInt({min: 0}),
-    checkquery('skip').optional().isInt({min: 0})
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
-async function (req, res, next) {
-    try {
-        const validateErr = validationResult(req);
-        if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'players.bad', message: validateErr.array()});
-
-        const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
-        const createTimeFrom = new Date(req.query.createTimeFrom || 0);
-        const updateTimeFrom = new Date(req.query.updateTimeFrom || 0);
-        const createTimeTo = new Date(req.query.createTimeTo || Date.now());
-        const updateTimeTo = new Date(req.query.updateTimeTo || Date.now());
-        const status = (req.query.status && req.query.status !== '-1') ? req.query.status : '%';
-        const sort = req.query.sortBy ? req.query.sortBy : 'createTime';
-        const order = req.query.order ? req.query.order : 'desc';
-        const limit = req.query.limit ? req.query.limit - 0 : 20;
-        const skip = req.query.skip ? req.query.skip - 0 : 0;
-
-        const resultStream = db.select('*').from('players')
-            .where('games', 'like', game ? `%"${game}"%` : "%").andWhere('valid', '=', 1)
-            .andWhere('createTime', '>=', createTimeFrom).andWhere('updateTime', '>=', updateTimeFrom)
-            .andWhere('createTime', '<=', createTimeTo).andWhere('updateTime', '<=', updateTimeTo)
-            .andWhere('status', 'like', status)
-            .orderBy(sort, order).offset(skip).limit(limit).stream();
-
-        let first = true;
-        const formatter = new Transform({
-            objectMode: true,
-            transform(chunk, encoding, callback) {
-                delete chunk.valid;
-                let data;
-                if (first)
-                    data = '[' + JSON.stringify(chunk);
-                else
-                    data = ',' + JSON.stringify(chunk);
-                first = false;
-                callback(null, data);
-            },
-            flush(callback) {
-                if (!first) {
-                    callback(null, ']');
-                } else {
-                    callback(null, '[]');
-                }
-            }
-        });
-        req.on('close', () => {
-            resultStream.end();
-        });
-        res.status(200).set('Content-Type', 'application/json');
-        formatter.pipe(res);    // the pipeline will break express.Response's life cycle, then hanging the next request
-        await misc.pipeline(resultStream, formatter).catch(err => {
-            logger.error('/players/stream Stream error: ', err);
-        });
-        res.end();
     } catch (err) {
         next(err);
     }

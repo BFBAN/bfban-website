@@ -27,6 +27,8 @@ import {captchaRateLimiter, UserRateLimiter} from "./middleware/rateLimiter.js";
 import {verifyJWT} from "./middleware/auth.js";
 
 import "./services/loader.js";
+import fs from "fs";
+import path from "path";
 
 // process
 process.on('uncaughtException', (err) => {
@@ -47,7 +49,10 @@ const swaggerSpec = swaggerJsDoc({
     apis: ['./routes/*.js'],
 });
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    explorer: true,
+    customCss: fs.readFileSync('theme-feeling-blue.css', 'utf-8') + ' .swagger-ui .topbar { display: none }',
+}));
 
 app.set('trust proxy', false);
 app.use((req, res, next) => {
@@ -140,7 +145,5 @@ app.use((err, req, res, next) => { // error handler
 app.listen(config.port, config.address, () => {
     logger.success(`App start at ${config.address}:${config.port}`);
 });
-
-console.log('start')
 
 export default app;

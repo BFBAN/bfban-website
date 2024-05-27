@@ -67,7 +67,12 @@ async function getPlayerId({dbId, userId, personaId}) {
  *       404:
  *         description: player.notFound
  */
-router.get('/', [checkquery('userId').optional().isInt({min: 0}), checkquery('personaId').optional().isInt({min: 0}), checkquery('dbId').optional().isInt({min: 0}), checkquery('history').optional()], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+router.get('/', [
+    checkquery('userId').optional().isInt({min: 0}),
+    checkquery('personaId').optional().isInt({min: 0}),
+    checkquery('dbId').optional().isInt({min: 0}),
+    checkquery('history').optional()
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
@@ -110,32 +115,35 @@ async (req, res, next) => {
     }
 });
 
-
 /**
  * @swagger
  * /api/player/batch:
- *   get:
+ *   post:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - player
- *     summary: player Detail
- *     description: Get the status of the players
+ *     summary: players Detail
+ *     description: To get the status of a player, if you need complete information about that player's case, you should use GET /api/players/stream
  *     produces:
  *       - application/json
- *     parameters:
- *       - name: userIds
- *         description: user IDs 
- *         type: num
- *         in: query
- *       - name: personaIds
- *         description: persona ID
- *         required: true
- *         type: integer
- *         in: query
- *         value: 1003377988190
- *       - name: dbIds
- *         description: db ID
- *         type: num
- *         in: query
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example:
+ *               personaIds: '1003377988190,236300885'
+ *             properties:
+ *               userIds:
+ *                 type: integer
+ *                 description: user IDs
+ *               personaIds:
+ *                 type: integer
+ *                 description: persona ID
+ *               dbIds:
+ *                 type: integer
+ *                 description: db ID
  *     responses:
  *       200:
  *         description: playerBatch.ok
@@ -144,13 +152,18 @@ async (req, res, next) => {
  *       404:
  *         description: playerBatch.notFound
  */
-router.get('/batch',
+router.get('/batch', (req, res, next) => {
+    res.status(404).jsonp({
+        message: 'The current GET interface is deprecated. Please change the POST mode'
+    })
+})
+router.post('/batch',
     // 处理逗号分隔值的中间件
     (req, res, next) => {
         const queryParams = ['userIds', 'personaIds', 'dbIds'];
         queryParams.forEach(param => {
-            if (req.query[param] && typeof req.query[param] === 'string') {
-                req.query[param] = req.query[param].split(',').map(Number).filter(n => !isNaN(n) && n >= 0);
+            if (req.body[param] && typeof req.body[param] === 'string') {
+                req.body[param] = req.body[param].split(',').map(Number).filter(n => !isNaN(n) && n >= 0);
             }
         });
         next();
@@ -183,53 +196,55 @@ router.get('/batch',
         return true;
     }), checkquery('*').custom((val, {req}) => {
         let cnt = 0;
-        cnt += Array.isArray(req.query.userIds) ? req.query.userIds.length : 0;
-        cnt += Array.isArray(req.query.personaIds) ? req.query.personaIds.length : 0;
-        cnt += Array.isArray(req.query.dbIds) ? req.query.dbIds.length : 0;
+        cnt += Array.isArray(req.body.userIds) ? req.body.userIds.length : 0;
+        cnt += Array.isArray(req.body.personaIds) ? req.body.personaIds.length : 0;
+        cnt += Array.isArray(req.body.dbIds) ? req.body.dbIds.length : 0;
         if (cnt > req.maxCount) {  // 使用动态设置的最大计数限制
             throw new Error(`Too many entities. Max allowed is ${req.maxCount}`);
         }
         return true;
-})], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
-async (req, res, next) => {
-    try {
-        const validateErr = validationResult(req);
-        if (!validateErr.isEmpty()) {
-            return res.status(400).json({
-                error: 1,
-                code: 'playerBatch.bad',
-                message: validateErr.array()
-            });
-        }
-        
-        let result = [];
-        let idsNotFound;
-        
-        if (req.query.userIds?.length) {
-            const users = await db.select(['originUserId', 'status']).from('players').whereIn('originUserId', req.query.userIds);
-            idsNotFound = req.query.userIds.filter(id => !users.some(user => user.originUserId == id)); // 注意：比较时用 == 而非 ===，因为类型可能不同
-            result = result.concat(users.map(user => ({ userId: Number(user.originUserId), status: user.status })));
-            result = result.concat(idsNotFound.map(id => ({ userId: Number(id), status: -1 })));
-        }
-        if (req.query.personaIds?.length) {
-            const personas = await db.select(['originPersonaId', 'status']).from('players').whereIn('originPersonaId', req.query.personaIds);
-            idsNotFound = req.query.personaIds.filter(id => !personas.some(persona => persona.originPersonaId == id));
-            result = result.concat(personas.map(persona => ({ personaId: Number(persona.originPersonaId), status: persona.status })));
-            result = result.concat(idsNotFound.map(id => ({ personaId: Number(id), status: -1 })));
-        }
-        if (req.query.dbIds?.length) {
-            const dbs = await db.select(['id', 'status']).from('players').whereIn('id', req.query.dbIds);
-            idsNotFound = req.query.dbIds.filter(id => !dbs.some(db => db.id == id));
-            result = result.concat(dbs.map(db => ({ dbId: Number(db.id), status: db.status })));
-            result = result.concat(idsNotFound.map(id => ({ dbId: Number(id), status: -1 })));
-        }
+    })], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+    async (req, res, next) => {
+        try {
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty()) {
+                return res.status(400).json({
+                    error: 1,
+                    code: 'playerBatch.bad',
+                    message: validateErr.array()
+                });
+            }
 
-        return res.status(200).json({success: 1, code: 'playerBatch.ok', data: result});
-    } catch (err) {
-        next(err);
-    }
-});
+            let result = [];
+            let idsNotFound;
 
+            if (req.body.userIds?.length) {
+                const users = await db.select(['originUserId', 'status']).from('players').whereIn('originUserId', req.body.userIds);
+                idsNotFound = req.body.userIds.filter(id => !users.some(user => user.originUserId == id)); // 注意：比较时用 == 而非 ===，因为类型可能不同
+                result = result.concat(users.map(user => ({userId: Number(user.originUserId), status: user.status})));
+                result = result.concat(idsNotFound.map(id => ({userId: Number(id), status: -1})));
+            }
+            if (req.body.personaIds?.length) {
+                const personas = await db.select(['originPersonaId', 'status']).from('players').whereIn('originPersonaId', req.body.personaIds);
+                idsNotFound = req.body.personaIds.filter(id => !personas.some(persona => persona.originPersonaId == id));
+                result = result.concat(personas.map(persona => ({
+                    personaId: Number(persona.originPersonaId),
+                    status: persona.status
+                })));
+                result = result.concat(idsNotFound.map(id => ({personaId: Number(id), status: -1})));
+            }
+            if (req.body.dbIds?.length) {
+                const dbs = await db.select(['id', 'status']).from('players').whereIn('id', req.body.dbIds);
+                idsNotFound = req.body.dbIds.filter(id => !dbs.some(db => db.id == id));
+                result = result.concat(dbs.map(db => ({dbId: Number(db.id), status: db.status})));
+                result = result.concat(idsNotFound.map(id => ({dbId: Number(id), status: -1})));
+            }
+
+            return res.status(200).json({success: 1, code: 'playerBatch.ok', data: result});
+        } catch (err) {
+            next(err);
+        }
+    });
 
 router.get('/batchs', verifyJWT, allowPrivileges(['bot', 'admin', 'super', 'root']), [checkquery('userIds').optional().isArray({max: 128}).custom((val) => {
     for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
@@ -286,16 +301,27 @@ async (req, res, next) => {
  *   post:
  *     tags:
  *       - player
- *     summary: 游览量
- *     description: 增加举报者游览量，请做本地缓存
+ *     summary: Tourist volume
+ *     description: Increase whistleblower visits, please do local caching
  *     produces:
  *       - application/json
- *     parameters:
- *       - name: data.id
- *         description: player的DB id，不是橘子id
- *         type: num
- *         in: path
- *         value: 1
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example:
+ *               data:
+ *                 id: 1003377988190
+ *             properties:
+ *               data:
+ *                 required: true
+ *                 type: object
+ *                 properties:
+ *                  id:
+ *                    required: true
+ *                    type: string
+ *                    description: The DB id of the player, not the orange id
  *     responses:
  *       200:
  *         description: viewed.ok
@@ -367,6 +393,8 @@ function raceGetOriginUserId(originName) {
  * @swagger
  * /api/player/report:
  *   post:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - report
  *       - player
@@ -376,28 +404,33 @@ function raceGetOriginUserId(originName) {
  *       - application/json
  *     parameters:
  *       - name: game
- *         description: Type of game reported
- *         type: num
- *         in: query
+ *         example: bf1
+ *         schema:
+ *           type: string
+ *           enum: ['bf1', 'bfv', 'bf6']
+ *         description: >
+ *           Sort order:
+ *            * `bf1` - Battlefield 1
+ *            * `bfv` - Battlefield 5
+ *            * `bf6` - Battlefield 2024
  *       - name: originName
  *         description: Origin game ID
  *         required: true
- *         type: integer
- *         in: query
+ *         type: string
  *       - name: cheatMethods
  *         description: Reported plug-in type ['wallhack', 'aimbot', 'invisable', 'magicBullet', 'damageChange', 'gadgetModify', 'teleport', 'attackServer']
  *         type: array
- *         in: query
+ *         value: ['wallhack', 'aimbot']
  *       - name: videoLink
  *         description: Video connection
- *         type: integer
- *         in: query
+ *         type: string
  *         value: https://google.com,https://youtube.com
  *       - name: description
  *         description: Supplementary statement
  *         required: true
- *         type: integer
- *         in: query
+ *         type: string
+ *         minLength: 1
+ *         maxLength: 65535
  *     responses:
  *       200:
  *         description: viewed.ok

@@ -18,6 +18,8 @@ const router = express.Router();
  * @swagger
  * /api/message:
  *   get:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - message
  *     description: It needs a token, Get notice, which is a generic front-end get notification message list interface
@@ -118,6 +120,8 @@ async (req, res, next) => {
  * @swagger
  * /api/message:
  *   post:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - message
  *     summary: Send chat
@@ -214,6 +218,8 @@ async (req, res, next) => {
  * @swagger
  * /api/message/mark:
  *   post:
+ *     security:
+ *       - appToken: []
  *     tags:
  *       - message
  *     summary: Mark message
