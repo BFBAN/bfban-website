@@ -219,42 +219,76 @@ async (req, res, next) => {
 });
 
 /**
+ * 用户登录接口
  * @swagger
  * /api/user/signin:
  *   post:
+ *     description: Account login
  *     tags:
  *       - user
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: data.username
- *         description: User name, please note the required format
- *         required: true
- *         type: string
- *         value:
- *       - name: data.password
- *         required: true
- *         type: string
- *         value:
- *       - name: data.visitType
- *         description: Login to the environment, e.g., on a cell phone, browser, client. ['websites','client-phone','client-desktop', 'bot']
- *         required: false
- *         type: string
- *         value: websites
- *       - name: data.EXPIRES_IN
- *         description: Tells the server when the account token expires; it only takes effect for a specified number of account identities
- *         required: false
- *         type: num
- *         value: 0
- *       - name: captcha
- *         type: string
- *         value:
- *       - name: encryptCaptcha
- *         type: string
- *         value:
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - data
+ *             example:
+ *               data:
+ *                 username: admin
+ *                 password: test
+ *                 captcha: ABCD
+ *                 encryptCaptcha: ABCD...ZY
+ *             properties:
+ *               data:
+ *                 required: true
+ *                 type: object
+ *                 properties:
+ *                   username:
+ *                     required: true
+ *                     type: string
+ *                     description: User name, please note the required format
+ *                     example: admin
+ *                   password:
+ *                     required: true
+ *                     type: string
+ *                     example: test
+ *                   visitType:
+ *                     required: false
+ *                     example: websites
+ *                     schema:
+ *                       type: string
+ *                       enum: [websites, client-phone, client-desktop, bot]
+ *                     description: >
+ *                       Sort order:
+ *                        * `websites` - Default, website login, PWD, etc
+ *                        * `client-phone` - Mobile device client
+ *                        * `client-desktop` - Desktop device client
+ *                        * `bot` - Bot
+ *                   EXPIRES_IN:
+ *                     required: false
+ *                     description: Tells the server when the account token expires; it only takes effect for a specified number of account identities
+ *                     type: number
+ *                     example: 2.220446049250313e-16
+ *                   captcha:
+ *                     required: false
+ *                     type: string
+ *                   encryptCaptcha:
+ *                     required: false
+ *                     type: string
+ *               SKIP_CAPTCHA:
+ *                 required: false
+ *                 type: boolean
+ *                 description: Global parameter that allows specific identities to skip captCHA
+ *                 value: false
  *     responses:
  *       200:
- *         description: signin.success
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: 1
+ *               code: signin.success
+ *               message: Welcome back.
  *       400:
  *         description: signin.bad
  *       401:
