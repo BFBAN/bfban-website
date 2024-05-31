@@ -119,7 +119,7 @@
                             <router-link
                                 :to="{name: 'player', params: { ouid: d.originPersonaId}, query: {byPath: $route.name}}"
                                 :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
-                              <code>{{ d.originName }}test</code>
+                              <code>{{ d.originName }}</code>
                             </router-link>
                           </h2>
                         </Tooltip>
