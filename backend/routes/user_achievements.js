@@ -461,7 +461,11 @@ function handleAchievemenMapToArray (achievements = {}) {
 
 function totalAachievementExp(user = {}) {
     let total = 0;
-    let achievements = user.attr && Object.keys(user.attr.achievements) || [];
+    let achievements = [];
+
+    if (user.attr && user.attr.achievements) {
+        achievements = Object.keys(user.attr.achievements);
+    }
 
     achievements.forEach((i, index) => {
         if (achievementConfig[i])
