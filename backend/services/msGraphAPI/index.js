@@ -59,7 +59,12 @@ const msalConfig = {
     cache: {
         cachePlugin: {
             beforeCacheAccess: async (context) => {
-                context.tokenCache.deserialize(await fs.promises.readFile(tokenCachePath).catch((err) => ""));
+                try {
+                    const file = (await fs.promises.readFile(tokenCachePath)).toString();
+                    context.tokenCache.deserialize(file);
+                } catch (err) {
+                    logger.warn('TokenCache:', err.message);
+                }
             },
             afterCacheAccess: async (context) => {
                 if (context.cacheHasChanged)
