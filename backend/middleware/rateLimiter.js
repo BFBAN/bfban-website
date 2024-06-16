@@ -91,7 +91,7 @@ const batchSearchRateLimiter = rateLimit({                     // 5 normal searc
         if(!!req.user && userHasRoles(req.user, ['dev','bot','admin','super','root']))
             return 10000;
         else
-            return 6;
+            return 600;
     },
     message: {error: 1, code: 'request.rateLimited', message: 'slow down please.'}
 });
