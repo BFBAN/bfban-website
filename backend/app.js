@@ -91,7 +91,7 @@ app.use(bodyParser.json());
 
 // cors options
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin || '*'); // better than wildcard *
+    res.header('Access-Control-Allow-Origin', req.header('Origin') || '*'); // better than wildcard *
     res.header('Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept, x-access-token' + (config.__DEBUG__ ? ', x-whosdaddy, x-whosdaddy-p' : ''));  // DEBUG
     res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
