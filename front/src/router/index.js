@@ -319,6 +319,13 @@ const routes = [
         component: Signup
     },
 
+    // 授权
+    {
+        name: 'externalAuth', path: '/externalAuth',
+        component: () => import('@/views/externalAuth.vue'),
+        beforeEnter: isLoginBeforeEnter
+    },
+
     // 注册验证
     {
         name: 'registerVerification', path: '/registerVerification',

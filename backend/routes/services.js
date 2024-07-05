@@ -18,8 +18,9 @@ import {handleRichTextInput, initUserStorageQuota, updateUserStorageQuota} from 
 import {fileSuffixByMIMEType, readStreamTillEnd} from "../lib/misc.js";
 import {use} from "bcrypt/promises.js";
 import {getGravatarAvatar} from "../lib/gravatar.js";
-import {userHasRoles} from "../lib/auth.js";
+import {userHasRoles, verifyJWTToken} from "../lib/auth.js";
 import jwt from "jsonwebtoken";
+import {sendForgetPasswordVerify, sendUserAuthVerify} from "../lib/mail.js";
 
 const router = express.Router();
 
@@ -372,72 +373,119 @@ async (req, res, next) => {
  */
 router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot', 'dev', 'super']), [
     checkbody('id').isLength({min: 0}),
-    // checkbody('username').optional().isString().trim().isLength({min: 1, max: 40}),
-    checkbody('IS_USERINFO').optional().isBoolean(false),
+    checkbody('appId').optional().isString().trim(),
+    checkbody('appName').optional().isString().trim().isLength({min: 1, max: 40}),
     checkbody('EXPIRES_IN').optional({nullable: true}).isInt({min: 0}),
-    checkbody('CALLBACK_LP').optional().isString().isLength({min: 1, max: 255}),
-    checkbody('CALLBACK_PATH').optional().isString().isLength({min: 1})
+    checkbody('CALLBACK_PATH').isString().isLength({min: 1})
 ], async (req, res, next) => {
     try {
-        const {id, username, IS_USERINFO, EXPIRES_IN, CALLBACK_LP, CALLBACK_PATH} = req.body;
+        const {id, appName, appId, EXPIRES_IN, CALLBACK_PATH} = req.body;
 
         const targetUser = await db('users').where({id}).first()
         if (!targetUser)
-            res.status(401).json({
+            return res.status(401).json({
                 error: 1,
                 code: 'externalAuth.noSuchUser',
                 message: 'there is no such user'
             })
 
         if (userHasRoles(req.user, ['bot']) && EXPIRES_IN <= 0 && EXPIRES_IN >= config.userTokenExpiresIn)
-            res.status(401).json({
+            return res.status(401).json({
                 error: 1,
                 code: 'externalAuth.fail',
                 message: `bot account the maximum time is: ${config.userTokenExpiresIn}`
             })
 
         let jwtpayload = {
-                username: targetUser.username,
                 userId: targetUser.id,
-                privilege: targetUser.privilege,
                 signWhen: Date.now(),
                 visitType: 'external-auth',
-                expiresIn: EXPIRES_IN,
-                host: {address: req.REAL_IP}
+                expiresIn: EXPIRES_IN, // 身份有效期
             },
             targetUserJwttoken = jwt.sign(jwtpayload, config.secret, {
                 expiresIn: EXPIRES_IN / 1000,  // second
             }),
-            data = {
+            authData = jwt.sign({
+                host: {address: req.REAL_IP},
+                callbackPath: CALLBACK_PATH,
+                userId: targetUser.id,
                 licensorId: req.user.id,
+                licensorUsername: req.user.username,
                 token: targetUserJwttoken,
-            }
-
-        // set User info
-        if (IS_USERINFO) {
-            const targetUserInfo = await got.get(`http://${config.address}:${config.port}/api/user/info?id=${targetUser.id}`).json()
-            data = {data: {...data, ...targetUserInfo.data || {}}}
-        }
-
-        if (CALLBACK_PATH && !CALLBACK_LP && new URL(CALLBACK_PATH).protocol !== 'https:')
-            res.status(401).json({
-                error: 1,
-                code: 'externalAuth.fail',
-                message: 'You may have the following reasons:\n' +
-                    '- If CALLBACK_PATH is configured, CALLBACK_LP must also be configured\n' +
-                    '- The return address protocol must be https'
+                signWhen: Date.now(),
+            }, config.secret, {
+                expiresIn: 1000 * 60 * 60 * 24,  // 24小时授权有效期
             })
-        else if (CALLBACK_PATH && CALLBACK_LP)
-            await got.post(CALLBACK_PATH, {body: data})
 
-        res.status(200).json({
+        let language = req.headers["accept-language"]
+        language = language === 'zh-CN' ? language : 'en-US'
+        await sendUserAuthVerify(
+            targetUser.username,
+            targetUser.originEmail,
+            appName || req.user.username,
+            appId || req.user.id,
+            language,
+            encodeURIComponent(authData)
+        );
+
+        return res.status(200).json({
             success: 1,
             code: 'externalAuth.success',
-            ...(CALLBACK_PATH && CALLBACK_LP ? {} : data)
+            message: 'send email'
         })
     } catch (e) {
-        console.log(e)
         next(req)
+    }
+})
+
+router.post('/confirmAuth', verifyJWT, [
+    checkbody('code')
+], async (req, res, next) => {
+    try {
+        const {code} = req.body;
+
+        let decodedToken, data = {};
+        try {
+            decodedToken = await verifyJWTToken(code)
+        } catch (err) {
+            return res.status(401).json({err: 1, code: 'user.tokenExpired'});
+        }
+
+        if (!decodedToken.licensorId && !decodedToken.licensorUsername)
+            return res.status(401).json({
+                error: 1,
+                code: 'confirmAuth.fail',
+                message: 'invalid authorization'
+            })
+        if (!decodedToken.callbackPath && new URL(decodedToken.callbackPath).protocol !== 'https:' && config.__DEBUG__)
+            return res.status(403).json({
+                error: 1,
+                code: 'confirmAuth.fail',
+                message: 'You may have the following reasons:\n' +
+                    '- If CALLBACK_PATH is null\n' +
+                    '- The return address protocol must be https'
+            })
+
+        if (req.user.id !== decodedToken.userId)
+            return res.status(403).json({
+                error: 1,
+                code: 'confirmAuth.fail',
+                message: 'the authorization code is inconsistent with the current account'
+            })
+
+        // 用户已确认，通过回调地址传递信息
+        await got.post(`${decodedToken.callbackPath}`, {
+            throwHttpErrors: false,
+            json: {userId: decodedToken.userId, token: decodedToken.token},
+            responseType: 'json'
+        })
+
+        return res.status(200).json({
+            success: 1,
+            code: 'confirmAuth.success'
+        })
+    } catch (err) {
+        next(err);
     }
 })
 

@@ -17,7 +17,8 @@ Object.keys(config.mail).forEach(key => {
         password: mail.password,
         host: mail.host,
         port: mail.port,
-        ssl: mail.secure
+        ssl: mail.secure,
+        tls: mail.tls
     })
 })
 
@@ -35,9 +36,9 @@ async function sendMail(content, from, to, cc, subject, attachment = undefined, 
 }
 */
 
-/** 
- * @param {string} content 
- * @param {'Text'|'HTML'} type 
+/**
+ * @param {string} content
+ * @param {'Text'|'HTML'} type
  * @param {string} from
  * @param {string} to
  * @param {string} subject
@@ -58,8 +59,8 @@ async function sendMail_ms(content, type, from, to, subject) {
 async function sendMail(content, from, to, cc, subject, attachment = undefined, language) {
     return await sendMail_ms(
         attachment?.[0].data || content,
-        attachment?.[0].alternative? "HTML" : "Text",
-        "register@bfban.com" || from,   
+        attachment?.[0].alternative ? "HTML" : "Text",
+        "register@bfban.com" || from,
         to,
         subject
     );
@@ -78,7 +79,7 @@ async function sendRegisterVerify(username, originName, address, language, code)
         "Hello " + username + "!\n" +
         "   You are now signing up for BFBan as " + originName + " in game.\n" +
         "   Pease click the link below to complete your registration: \n" +
-        "       " +  origin + "/signupComplete?code=" + code + "&lang=" + language,
+        "       " + origin + "/signupComplete?code=" + code + "&lang=" + language,
         "register@bfban.com", address, '', subject, [
             {
                 data: html
@@ -147,9 +148,36 @@ async function sendBindingOriginVerify(username, address, language, code) {
     );
 }
 
+async function sendUserAuthVerify(username, address, appname, appid, language, code) {
+    let subject = {
+        'zh-CN': 'BFBan应用授权',
+        'en-US': 'BFBan Application authorization',
+    }[language];
+    subject = subject ? subject : 'BFBan Application authorization';
+    const html = await fs.readFile(`./media/mail_userAuth_${language}.html`).then(buf => buf.toString());
+    const origin = new URL(domain).origin;
+
+    await sendMail(
+        "Hello " + username + "!\n",
+        "bfban-auth@bfban.com", address, '', subject, [
+            {
+                data: html,
+                    // .replace(/\$\{username\}/g, username)
+                    // .replace(/\$\{appname\}/g, appname)
+                    // .replace(/\$\{appid\}/g, appid)
+                    // .replaceAll(/\$\{website\}/g, origin)
+                    // .replaceAll(/\$\{code\}/g, code),
+                alternative: true
+            }
+        ],
+        language
+    );
+}
+
 export {
     sendMail,
     sendRegisterVerify,
     sendForgetPasswordVerify,
     sendBindingOriginVerify,
+    sendUserAuthVerify
 }
