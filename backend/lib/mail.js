@@ -161,12 +161,12 @@ async function sendUserAuthVerify(username, address, appname, appid, language, c
         "Hello " + username + "!\n",
         "bfban-auth@bfban.com", address, '', subject, [
             {
-                data: html,
-                    // .replace(/\$\{username\}/g, username)
-                    // .replace(/\$\{appname\}/g, appname)
-                    // .replace(/\$\{appid\}/g, appid)
-                    // .replaceAll(/\$\{website\}/g, origin)
-                    // .replaceAll(/\$\{code\}/g, code),
+                data: html
+                    .replace(/\$\{username\}/g, username)
+                    .replace(/\$\{appname\}/g, appname)
+                    .replace(/\$\{appid\}/g, appid)
+                    .replaceAll(/\$\{website\}/g, origin)
+                    .replaceAll(/\$\{code\}/g, code),
                 alternative: true
             }
         ],
