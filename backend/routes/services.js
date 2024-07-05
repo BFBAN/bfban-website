@@ -2,15 +2,9 @@
 import crypto from "crypto";
 import got from "got";
 import express from "express";
+import dns from "dns"
 import {PassThrough, Transform, pipeline} from "stream";
-import {
-    check,
-    body as checkbody,
-    query as checkquery,
-    header as checkheader,
-    oneOf as checkOneOf,
-    validationResult
-} from "express-validator";
+import {body as checkbody, query as checkquery, header as checkheader, validationResult} from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
@@ -23,6 +17,9 @@ import {sendMessage} from "./message.js";
 import {handleRichTextInput, initUserStorageQuota, updateUserStorageQuota} from "../lib/user.js";
 import {fileSuffixByMIMEType, readStreamTillEnd} from "../lib/misc.js";
 import {use} from "bcrypt/promises.js";
+import {getGravatarAvatar} from "../lib/gravatar.js";
+import {userHasRoles} from "../lib/auth.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -368,5 +365,80 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * External Auth
+ * The licensor needs to deposit a token and it should be long term
+ * And returns a user-defined time identity token
+ */
+router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot', 'dev', 'super']), [
+    checkbody('id').isLength({min: 0}),
+    // checkbody('username').optional().isString().trim().isLength({min: 1, max: 40}),
+    checkbody('IS_USERINFO').optional().isBoolean(false),
+    checkbody('EXPIRES_IN').optional({nullable: true}).isInt({min: 0}),
+    checkbody('CALLBACK_LP').optional().isString().isLength({min: 1, max: 255}),
+    checkbody('CALLBACK_PATH').optional().isString().isLength({min: 1})
+], async (req, res, next) => {
+    try {
+        const {id, username, IS_USERINFO, EXPIRES_IN, CALLBACK_LP, CALLBACK_PATH} = req.body;
+
+        const targetUser = await db('users').where({id}).first()
+        if (!targetUser)
+            res.status(401).json({
+                error: 1,
+                code: 'externalAuth.noSuchUser',
+                message: 'there is no such user'
+            })
+
+        if (userHasRoles(req.user, ['bot']) && EXPIRES_IN <= 0 && EXPIRES_IN >= config.userTokenExpiresIn)
+            res.status(401).json({
+                error: 1,
+                code: 'externalAuth.fail',
+                message: `bot account the maximum time is: ${config.userTokenExpiresIn}`
+            })
+
+        let jwtpayload = {
+                username: targetUser.username,
+                userId: targetUser.id,
+                privilege: targetUser.privilege,
+                signWhen: Date.now(),
+                visitType: 'external-auth',
+                expiresIn: EXPIRES_IN,
+                host: {address: req.REAL_IP}
+            },
+            targetUserJwttoken = jwt.sign(jwtpayload, config.secret, {
+                expiresIn: EXPIRES_IN / 1000,  // second
+            }),
+            data = {
+                licensorId: req.user.id,
+                token: targetUserJwttoken,
+            }
+
+        // set User info
+        if (IS_USERINFO) {
+            const targetUserInfo = await got.get(`http://${config.address}:${config.port}/api/user/info?id=${targetUser.id}`).json()
+            data = {data: {...data, ...targetUserInfo.data || {}}}
+        }
+
+        if (CALLBACK_PATH && !CALLBACK_LP && new URL(CALLBACK_PATH).protocol !== 'https:')
+            res.status(401).json({
+                error: 1,
+                code: 'externalAuth.fail',
+                message: 'You may have the following reasons:\n' +
+                    '- If CALLBACK_PATH is configured, CALLBACK_LP must also be configured\n' +
+                    '- The return address protocol must be https'
+            })
+        else if (CALLBACK_PATH && CALLBACK_LP)
+            await got.post(CALLBACK_PATH, {body: data})
+
+        res.status(200).json({
+            success: 1,
+            code: 'externalAuth.success',
+            ...(CALLBACK_PATH && CALLBACK_LP ? {} : data)
+        })
+    } catch (e) {
+        console.log(e)
+        next(req)
+    }
+})
 
 export default router;
