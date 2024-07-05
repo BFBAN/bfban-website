@@ -247,11 +247,6 @@
       "notContent": "無內容",
       "notFound": "哎列, 訪問地址似乎走失",
       "notLang": "未翻譯",
-      "externalAuth.success": "授权请求成功",
-      "externalAuth.noSuchUser": "授权请求的目标用户不存在",
-      "externalAuth.fail": "授权请求失败，请联系管理员 {message}",
-      "confirmAuth.success": "确认授权成功",
-      "confirmAuth.fail": "确认授权失败，请联系管理员 {message}",
       "reply.bad": "回覆發生錯誤，請聯繫管理員 {message}",
       "reply.notFound": "沒有此回覆或玩家",
       "reply.spam": "你所提交的內容未通過檢測，被標記為垃圾內容{message}",
@@ -1215,12 +1210,5 @@
       "upload": "上傳",
       "url": "圖片鏈結"
     }
-  },
-  "externalAuth": {
-    "title": "授权",
-    "validation": "授权中",
-    "successful": "授权成功，可以关闭此页面",
-    "error": "授权失败",
-    "failure": "请检查各项参数是否正确"
   }
 }
