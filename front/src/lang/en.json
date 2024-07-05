@@ -247,6 +247,11 @@
       "notContent": "No content",
       "notFound": "We cant find the page your looking for.",
       "notLang": "No translation",
+      "externalAuth.success": "授权请求成功",
+      "externalAuth.noSuchUser": "授权请求的目标用户不存在",
+      "externalAuth.fail": "授权请求失败，请联系管理员 {message}",
+      "confirmAuth.success": "确认授权成功",
+      "confirmAuth.fail": "确认授权失败，请联系管理员 {message}",
       "reply.bad": "An error occurred when trying to reply, please contact the admin {message}",
       "reply.notFound": "No such reply or no such player.",
       "reply.spam": "The content you submitted cannot pass verification and marked as spam {message}",
@@ -1210,5 +1215,12 @@
       "upload": "Upload to the chart bed",
       "url": "Image links"
     }
+  },
+  "externalAuth": {
+    "title": "授权",
+    "validation": "授权中",
+    "successful": "授权成功，可以关闭此页面",
+    "error": "授权失败",
+    "failure": "请检查各项参数是否正确"
   }
 }
