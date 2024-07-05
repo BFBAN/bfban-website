@@ -16,19 +16,19 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ads.txt"
   },
   {
-    "revision": "a1192873c02f834b92f1",
+    "revision": "682d213d4d83f419303b",
     "url": "/app.css"
   },
   {
-    "revision": "a1192873c02f834b92f1",
+    "revision": "682d213d4d83f419303b",
     "url": "/app.css.map"
   },
   {
-    "revision": "a1192873c02f834b92f1",
+    "revision": "682d213d4d83f419303b",
     "url": "/assets/css/app.6b62778b.css"
   },
   {
-    "revision": "a1192873c02f834b92f1",
+    "revision": "682d213d4d83f419303b",
     "url": "/assets/css/app.6b62778b.css.map"
   },
   {
@@ -300,11 +300,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ionicons.d535a25a.ttf"
   },
   {
-    "revision": "a1192873c02f834b92f1",
+    "revision": "682d213d4d83f419303b",
     "url": "/assets/js/app.2.9.15.js"
   },
   {
-    "revision": "a1192873c02f834b92f1",
+    "revision": "682d213d4d83f419303b",
     "url": "/assets/js/app.2.9.15.js.map"
   },
   {
@@ -378,6 +378,14 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "a616c0204494a7158ba7",
     "url": "/assets/js/chunk-23fd807a.2.9.15.js.map"
+  },
+  {
+    "revision": "97e83e3dfc572fcee15d",
+    "url": "/assets/js/chunk-2d0a3539.2.9.15.js"
+  },
+  {
+    "revision": "97e83e3dfc572fcee15d",
+    "url": "/assets/js/chunk-2d0a3539.2.9.15.js.map"
   },
   {
     "revision": "c0e4282df2a20f679a16",
@@ -1056,7 +1064,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/favicon.ico"
   },
   {
-    "revision": "70bd9bf60cb5e8715a07af34eaf33577",
+    "revision": "cab4a6bb4435608397bfa91bef65cc16",
     "url": "/index.html"
   },
   {
