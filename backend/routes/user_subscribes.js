@@ -1,4 +1,4 @@
-import {forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {forbidPrivileges, forbidVisitTypes, verifyJWT} from "../middleware/auth.js";
 import {body as checkbody, query as checkquery} from "express-validator/src/middlewares/validation-chain-builders.js";
 import {validationResult} from "express-validator";
 import db from "../mysql.js";
@@ -56,7 +56,11 @@ router.post('/isSubscribes', verifyJWT, forbidPrivileges(['freezed', 'blackliste
 
         const {id} = req.body;
         const subscribes = user.subscribes;
-        return res.status(200).setHeader('Cache-Control', 'public, max-age=7').json({success: 1, code: 'subscribes.success', data: subscribes.includes(id)});
+        return res.status(200).setHeader('Cache-Control', 'public, max-age=7').json({
+            success: 1,
+            code: 'subscribes.success',
+            data: subscribes.includes(id)
+        });
     } catch (err) {
         next(err);
     }
@@ -89,7 +93,7 @@ router.post('/subscribes/add', verifyJWT, forbidPrivileges(['freezed', 'blacklis
     }
 });
 
-router.post('/subscribes/delete', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']), [
+router.post('/subscribes/delete', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']), forbidVisitTypes(['bot', 'external-auth']), [
     checkbody('playerIds').isArray({min: 1})
 ], async (req, res, next) => {
     try {

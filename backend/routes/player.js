@@ -6,7 +6,13 @@ import {body as checkbody, query as checkquery, validationResult, oneOf as check
 import db from "../mysql.js";
 import config from "../config.js";
 import verifyCaptcha from "../middleware/captcha.js";
-import {allowPrivileges, forbidPrivileges, verifyJWT, verifySelfOrPrivilege} from "../middleware/auth.js";
+import {
+    allowPrivileges,
+    forbidPrivileges,
+    forbidVisitTypes,
+    verifyJWT,
+    verifySelfOrPrivilege
+} from "../middleware/auth.js";
 import {cheatMethodsSanitizer, handleRichTextInput, userAttributes, userShowAttributes} from "../lib/user.js";
 import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
@@ -1140,7 +1146,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/judgement', verifyJWT, allowPrivileges(['admin', 'super', 'root']), [checkbody('data.toPlayerId').isInt({min: 0}), checkbody('data.cheatMethods').optional({nullable: true}).isArray().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
+router.post('/judgement', verifyJWT, allowPrivileges(['admin', 'super', 'root']), forbidVisitTypes(['external-auth']), [checkbody('data.toPlayerId').isInt({min: 0}), checkbody('data.cheatMethods').optional({nullable: true}).isArray().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
     checkbody('data.action').isIn(['suspect', 'innocent', 'discuss', 'guilt', 'kill', 'invalid', 'more', 'farm']), checkbody('data.content').isString().trim().isLength({
         min: 1,
         max: 65535
@@ -1395,7 +1401,7 @@ async function pushOriginNameLog(originName, originUserId, originPersonaId) {
  * @returns {boolean}
  */
 function isJSON(jsonValue = "") {
-    if (!!!jsonValue) return false;
+    if (!jsonValue) return false;
 
     if (/^[\],:{}\s]*$/.test(jsonValue.toString().replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
         return true;

@@ -321,7 +321,7 @@ const routes = [
 
     // 授权
     {
-        name: 'externalAuth', path: '/externalAuth',
+        name: 'externalAuth', path: '/appAuth',
         component: () => import('@/views/externalAuth.vue'),
         beforeEnter: isLoginBeforeEnter
     },

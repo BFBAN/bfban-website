@@ -4,6 +4,7 @@ import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import db from "../mysql.js";
 import {userHasRoles, verifyJWTToken} from '../lib/auth.js';
+
 // import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 async function verifyAllowPrivilege(req, res, next) {
@@ -102,9 +103,7 @@ function forbidPrivileges(roles = []) {
     }
 }
 
-/**
- * @param roles
- */
+/** @param roles */
 function verifySelfOrPrivilege(roles = []) {
     /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)=>any} */
     return function (req, res, next) {
@@ -128,10 +127,26 @@ function verifySelfOrPrivilege(roles = []) {
     }
 }
 
+/**
+ * disable access type
+ * @param types
+ */
+function forbidVisitTypes(types = []) {
+    return function (req, res, next) {
+        /** @type {string[]} */
+        const userRoles = req.user.visitType || config.defaultVisit || 'websites';
+        for (let i of userRoles)
+            if (types.includes(i))
+                return next();
+        return res.status(403).json({error: 1, code: 'user.permissionDenined'});
+    }
+}
+
 export {
     verifySelfOrPrivilege,
     verifyAllowPrivilege,
     verifyJWT,
     allowPrivileges,
     forbidPrivileges,
+    forbidVisitTypes
 }

@@ -82,6 +82,9 @@ const config = {
             sid: ''
         },
     ],
+    // user login MODE
+    defaultVisit: 'websites',
+    visitType: ['websites', 'client-phone', 'client-desktop', 'external-auth', 'bot'],
     supportGames: ['bf1', 'bfv', 'bf6'],
     possiblecheatMethods: ['wallhack', 'aimbot', 'invisable', 'magicBullet',
         'damageChange', 'gadgetModify', 'teleport', 'attackServer'],

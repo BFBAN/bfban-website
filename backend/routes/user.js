@@ -9,7 +9,13 @@ import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import {getGravatarAvatar} from "../lib/gravatar.js";
 import {sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify} from "../lib/mail.js";
-import {allowPrivileges, forbidPrivileges, verifyAllowPrivilege, verifyJWT} from "../middleware/auth.js";
+import {
+    allowPrivileges,
+    forbidPrivileges,
+    forbidVisitTypes,
+    verifyAllowPrivilege,
+    verifyJWT
+} from "../middleware/auth.js";
 import {generatePassword, comparePassword, userHasRoles, privilegeRevoker} from "../lib/auth.js";
 import {userDefaultAttribute, userSetAttributes, userShowAttributes} from "../lib/user.js";
 import {totalAachievementExp} from "./user_achievements.js"
@@ -18,7 +24,6 @@ import logger from "../logger.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 
 const router = express.Router();
-// verifyCaptcha
 
 /**
  * @swagger
@@ -319,7 +324,7 @@ async (req, res, next) => {
                 userId: user.id,
                 privilege: user.privilege,
                 signWhen: Date.now(),
-                visitType: req.body.data.visitType || 'websites',
+                visitType: req.body.data.visitType || config.defaultVisit || 'websites',
                 expiresIn: expiresIn,
             };
             const jwttoken = jwt.sign(jwtpayload, config.secret, {
@@ -643,7 +648,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/me', verifyJWT, forbidPrivileges(['blacklisted']), [
+router.post('/me', verifyJWT, forbidPrivileges(['blacklisted']), forbidVisitTypes(['bot', 'external-auth']), [
     checkbody('data.subscribes').optional({nullable: true}).isArray().isLength({max: 100}).custom((val) => {
         for (const i of val)
             if (Number.isNaN(parseInt(i)) || parseInt(i) < 0)
@@ -673,7 +678,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/changeName', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
+router.post('/changeName', verifyJWT, forbidPrivileges(['blacklisted']), forbidVisitTypes(['bot', 'external-auth']), verifyCaptcha, [
     checkbody('data.newname').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
@@ -713,7 +718,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/changePassword', verifyJWT, [
+router.post('/changePassword', verifyJWT, forbidVisitTypes(['bot', 'external-auth']), [
     checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.oldpassword').isString().trim().isLength({min: 1, max: 40})
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */

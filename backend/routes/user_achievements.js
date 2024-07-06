@@ -5,7 +5,7 @@ import config from "../config.js";
 import fetch from 'node-fetch';
 import logger from "../logger.js";
 
-import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {allowPrivileges, forbidPrivileges, forbidVisitTypes, verifyJWT} from "../middleware/auth.js";
 import {body as checkbody, query as checkquery} from "express-validator/src/middlewares/validation-chain-builders.js";
 import {validationResult} from "express-validator";
 import {userSetAttributes} from "../lib/user.js";
@@ -418,7 +418,7 @@ router.post('/achievement/admin/add', verifyJWT, allowPrivileges(["super", "root
     }
 });
 
-router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "root", "dev"]), forbidVisitTypes(['bot', 'external-auth']), [
     checkbody('userId').optional().isInt({min: 0}),
     checkbody('achievementId')
 ], async (req, res, next) => {
@@ -452,10 +452,14 @@ router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "r
     }
 });
 
-function handleAchievemenMapToArray (achievements = {}) {
+function handleAchievemenMapToArray(achievements = {}) {
     return Object.entries(achievementConfig).map(([key, value]) => {
         if (achievements[key] && key && value)
-            return {name: key, acquisitionTime: new Date(achievements[key]), points: achievementConfig[key].points || 0};
+            return {
+                name: key,
+                acquisitionTime: new Date(achievements[key]),
+                points: achievementConfig[key].points || 0
+            };
     }).filter(i => i != null);
 }
 
