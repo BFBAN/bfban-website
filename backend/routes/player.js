@@ -447,10 +447,13 @@ function raceGetOriginUserId(originName) {
  *       404:
  *         description: player.notFound
  */
-router.post('/report', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'blacklisted']), [checkbody('data.game').isIn(config.supportGames), checkbody('data.originName').isAscii().notEmpty(), checkbody('data.cheatMethods').isArray().custom(cheatMethodsSanitizer), checkbody('data.videoLink').optional({checkFalsy: true}).isURL().isLength({max: 255}), checkbody('data.description').isString().trim().isLength({
-    min: 1,
-    max: 65535
-}),], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
+router.post('/report', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'blacklisted']), [
+    checkbody('data.game').isIn(config.supportGames),
+    checkbody('data.originName').isAscii().notEmpty(),
+    checkbody('data.cheatMethods').isArray().custom(cheatMethodsSanitizer),
+    checkbody('data.videoLink').optional({checkFalsy: true}).isURL().isLength({max: 255}),
+    checkbody('data.description').isString().trim().isLength({min: 1, max: 65535})
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
@@ -566,7 +569,9 @@ async (req, res, next) => {
         if (err instanceof ServiceApiError || err instanceof Error) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
             return res.status(err.statusCode === 501 ? 501 : 500).json({
-                error: 1, code: err.statusCode === 501 ? 'report.notImplement' : 'report.error', message: err.message
+                error: 1,
+                code: err.statusCode === 501 ? 'report.notImplement' : 'report.error',
+                message: err.message
             });
         }
         next(err);

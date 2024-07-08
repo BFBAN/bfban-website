@@ -368,8 +368,6 @@ async (req, res, next) => {
 
 /**
  * External Auth
- * The licensor needs to deposit a token and it should be long term
- * And returns a user-defined time identity token
  */
 router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot', 'dev', 'super']), [
     checkbody('id').isLength({min: 0}),
@@ -476,9 +474,10 @@ router.post('/confirmAuth', verifyJWT, [
         // 用户已确认，通过回调地址传递信息
         await got.post(`${decodedToken.callbackPath}`, {
             throwHttpErrors: false,
+            headers: {'User-Agent': 'BFBAN'},
             json: {userId: decodedToken.userId, token: decodedToken.token},
             responseType: 'json'
-        })
+        }).catch()
 
         return res.status(200).json({
             success: 1,
