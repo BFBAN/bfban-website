@@ -62,15 +62,3 @@ jobs:
           tags: ghcr.io/bfban/bfban-website/${{ env.IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  deploy:
-    needs: push
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Restart service in docker
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: ${{ secrets.UPDATE_URL }}
-          method: 'POST'
-          timeout: 90000
