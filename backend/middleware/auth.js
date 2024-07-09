@@ -133,11 +133,10 @@ function verifySelfOrPrivilege(roles = []) {
  */
 function forbidVisitTypes(types = []) {
     return function (req, res, next) {
-        /** @type {string[]} */
-        const userRoles = req.user.visitType || config.defaultVisit || 'websites';
-        for (let i of userRoles)
-            if (types.includes(i))
-                return next();
+        /** @type {string} */
+        const userVisit = req.user.visitType || config.defaultVisit || 'websites';
+        if (!types.includes(userVisit))
+            return next();
         return res.status(403).json({error: 1, code: 'user.permissionDenined'});
     }
 }
