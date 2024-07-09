@@ -4,7 +4,13 @@ import got from "got";
 import express from "express";
 import dns from "dns"
 import {PassThrough, Transform, pipeline} from "stream";
-import {body as checkbody, query as checkquery, header as checkheader, validationResult} from "express-validator";
+import {
+    body as checkbody,
+    query as checkquery,
+    header as checkheader,
+    validationResult,
+    query
+} from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
@@ -21,6 +27,7 @@ import {getGravatarAvatar} from "../lib/gravatar.js";
 import {userHasRoles, verifyJWTToken} from "../lib/auth.js";
 import jwt from "jsonwebtoken";
 import {sendForgetPasswordVerify, sendUserAuthVerify} from "../lib/mail.js";
+import fs from "fs";
 
 const router = express.Router();
 
@@ -436,7 +443,7 @@ router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot',
     }
 })
 
-router.post('/confirmAuth', verifyJWT, [
+router.post('/confirmAuth', verifyJWT, forbidPrivileges(['blacklisted', 'freezed']), [
     checkbody('code')
 ], async (req, res, next) => {
     try {
@@ -471,7 +478,27 @@ router.post('/confirmAuth', verifyJWT, [
                 message: 'the authorization code is inconsistent with the current account'
             })
 
-        // 用户已确认，通过回调地址传递信息
+        // Verify that bfbanAuth under the callback domain holds the token to ensure that the callback domain is owned by a bot (or a third party),
+        // preventing calls to untrusted domains
+        const checkServerRootFile = await Promise.any([
+            got.get(decodedToken.callbackPath + '/auths.txt'),
+            got.get(decodedToken.callbackPath + '/auths')
+        ]);
+        if (!checkServerRootFile && verifyAuths(checkServerRootFile, req.user.token) && !config.__DEBUG__)
+            return res.status(403).json({
+                error: 1,
+                code: 'confirmAuth.fail',
+                message: 'untrusted address'
+            })
+
+        // The callback domain is not allowed to call locally, it must be network accessible to the address
+        if (['localhost', '0.0.0.0', '127.0.0.1'].includes(new URL(decodedToken.callbackPath).hostname) || decodedToken.callbackPath.indexOf('../') >= 0 && !config.__DEBUG__)
+            return res.status(403).json({
+                error: 1,
+                code: 'confirmAuth.fail',
+            })
+
+        // The user has confirmed that the information is passed through the callback address
         await got.post(`${decodedToken.callbackPath}`, {
             throwHttpErrors: false,
             headers: {'User-Agent': 'BFBAN'},
@@ -487,5 +514,31 @@ router.post('/confirmAuth', verifyJWT, [
         next(err);
     }
 })
+
+router.get('/getAuthText', verifyJWT, allowPrivileges(['root', 'admin', 'bot', 'dev', 'super']), [query("appId")], getAuth)
+
+function verifyAuths(checkServerRootFile, t) {
+    for (const i of checkServerRootFile.split(/\n/)) {
+        let isSameDomain = i.split(',')[0] === new URL(config.mail.host).hostname,
+            isSameCode = i.split(',')[1] && i.split(',')[1] === t.slice(t.length - 250, t.length - 5);
+        if (isSameDomain && isSameCode)
+            return true
+    }
+    return false
+}
+
+function getAuth(req, res, next) {
+    const t = res.user.token, type = 'DIRECT', {appId} = req.query,
+        filename = "auths.txt",
+        content = `${new URL(config.mail.host).hostname},${t.slice(t.length - 250, t.length - 5)},${type},${appId}\n`;
+
+    res.writeHead(200, {
+        'Content-Type': 'text/plain',
+        'Content-Disposition': `attachment; filename=${filename}`,
+    });
+
+    const readStream = fs.createReadStream(null, {start: 0, end: content.length});
+    readStream.pipe(res);
+}
 
 export default router;

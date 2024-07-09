@@ -7,11 +7,19 @@
 
 ----
 
-## 接入
+## 1.前置
 
-## 1.创建
+请务必先完善前置的设定
 
-创建callback回调POST接口,比如`POST` `https://you.com/auth` ，用于处理接收BFBAN的确认，它会返回`userID`和`token`
+**1.1 准备域名**
+
+请准备一个域名并配置ssl，对于认证的请求，BFBAN需要要求HTTPS协议
+
+**1.2 实现确认回调接口**
+
+该接口接受用户确认授权后来自BFBAN请求
+
+创建`callback_path`回调POST接口,比如`POST` `https://you.com/auth` ,返回`userID`和`token`
 ，对应用户id和用户令牌
 
 ```json
@@ -20,6 +28,28 @@
   "token": "......"
 }
 ```
+
+在收到数据后，开发者可以将token和userId存储数据库中，如果你希望获得用户详情，可以调用`api/user/info`
+来获取；注意token是存在时间，它依照之后调用的授权接口(`/api/servers/externalAuth`)
+决定，因此在调用前你需要创建一条数据包含userId、token、tokenExpirationTime，tokenExpirationTime将用来判断过期重置授权
+
+**1.3 配置域名认证**
+
+`callback_path`的地址根目录下需要存在`auths.txt`，用于bfban验证域名所有者，你可以调用`api/servers/getAuthText`来得到此文件
+
+`POST` `/api/servers/getAuthText`
+
+| 参数    | 类型  | 是否必选 | 描述          | 例子 | 版本 |
+|-------|-----|------|-------------|----|----|
+| appId | any | 可选   | 联系BFBAN社区申请 |    | 2  |
+
+```text
+bfban.com,{code},DIRECT,{appId}
+```
+
+***X-Access-Token***
+
+需要`bot`身份, 读取token填写到headers下的`x-access-token`: {{you account token}}
 
 ## 2.申请绑定/授权
 
@@ -30,10 +60,10 @@
 | 参数                  | 类型               | 是否必选 | 描述                                                   | 例子         | 版本 |
 |---------------------|------------------|------|------------------------------------------------------|------------|----|
 | **id**              | string or number | 必选   | BFBAN 用户id                                           | 1          | 2  |
-| appId               | any              | 可选   | 联系BFBAN社区申请                                          |            |    |
-| appName             | string           | 可选   | 此名称会在邮件呈现，如果不填则或使用你当前令牌的身份                           |            |    |
+| appId               | any              | 可选   | 联系BFBAN社区申请                                          |            | 2  |
+| appName             | string           | 可选   | 此名称会在邮件呈现，如果不填则或使用你当前令牌的身份                           |            | 2  |
 | EXPIRES_IN          | number           | 可选   | 授权的站内用户令牌过期时间戳                                       | 1554209980 | 2  |
-| ***CALLBACK_PATH*** | string           | 必选   | 在用户确认后，所填的地址会收到来自BFBAN的post请求，它包含用户令牌和id(必须是https地址) |            |    |
+| ***CALLBACK_PATH*** | string           | 必选   | 在用户确认后，所填的地址会收到来自BFBAN的post请求，它包含用户令牌和id(必须是https地址) |            | 2  |
 
 ### HTTP头
 
@@ -56,12 +86,15 @@ POST:
   CALLBACK_PATH=https://you.com/auth
 ```
 
+----
 
 ## 授权令牌范围
 
 这里的范围指，授权获得的用户令牌除了存在时间限制，还存在可调用接口范围，如无法使用修改名称、更改密码敏感行为。
 
 使用此类接口，应当告知用户访问bfban网站进行操作
+
+----
 
 ## 案例
 
