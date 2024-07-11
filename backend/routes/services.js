@@ -3,16 +3,11 @@ import crypto from "crypto";
 import got from "got";
 import express from "express";
 import {PassThrough} from "stream";
-import {
-    body as checkbody,
-    query as checkquery,
-    header as checkheader,
-    validationResult,
-    query
-} from "express-validator";
+import {body as checkbody, query as checkquery, header as checkheader, validationResult, query} from "express-validator";
 import db from "../mysql.js";
 import config from "../config.js";
 
+import AgentKeepAlive from "agentkeepalive"
 import {allowPrivileges, verifyJWT} from "../middleware/auth.js";
 import {forbidPrivileges} from "../middleware/auth.js";
 import {commentRateLimiter} from "../middleware/rateLimiter.js";
@@ -25,13 +20,20 @@ import {userHasRoles, verifyJWTToken} from "../lib/auth.js";
 import jwt from "jsonwebtoken";
 import {sendForgetPasswordVerify, sendUserAuthVerify} from "../lib/mail.js";
 import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
-import pkg from "https-proxy-agent";
 
-const {HttpsProxyAgent} = pkg;
 const router = express.Router();
 const proxy = {
-    https: new HttpsProxyAgent({host: 'proxy.bfban.com'}),
-}
+        https: new AgentKeepAlive.HttpsAgent({host: 'proxy.bfban.com'})
+    },
+    agentConfiguration = {
+        throwHttpErrors: false,
+        agent: proxy,
+        decompress: false,
+        headers: {
+            'accept-encoding': 'gzip, deflate',
+            'User-Agent': `${config.mail.domain.origin}}`,
+        }
+    }
 
 /*
 router.get('/feedbacks', [
@@ -375,11 +377,6 @@ async (req, res, next) => {
     }
 });
 
-// router.get('/test', async (req,res,next) => {
-//     await got.post('http://127.0.0.1:6000/api/authCallback',{agent: proxy}).json()
-//     next(req)
-// })
-
 /**
  * External Auth S
  */
@@ -503,14 +500,7 @@ async (req, res, next) => {
 
         // The user has confirmed that the information is passed through the callback address
         await got.post(`${decodedToken.callbackPath}`, {
-            agent: proxy,
-            throwHttpErrors: false,
-            decompress: false,
-            headers: {
-                'accept-encoding': 'gzip, deflate',
-                'User-Agent': Date.now(),
-                'referer': callPathURL.host
-            },
+            ...agentConfiguration,
             json: {userId: decodedToken.userId, token: decodedToken.token},
             responseType: 'json'
         }).catch()
@@ -540,7 +530,7 @@ async function verifyAuths(req, res, next, callPathURL) {
     try {
         const token = req.get('x-access-token');
         const maximumFileSize = 1024 * 1024; // 1 MB in bytes
-        const streamResponse = await got.stream(callPathURL.hostname + '/auths.txt', {agent: proxy});
+        const streamResponse = await got.stream(callPathURL.hostname + '/auths.txt',);
         let fileContent = '';
 
         streamResponse.on('data', (chunk) => {
@@ -550,19 +540,19 @@ async function verifyAuths(req, res, next, callPathURL) {
             if (fileContent >= maximumFileSize || fileContent <= 5)
                 return {
                     error: 1,
-                    code: 'confirmAuth.fail'
+                    code: 'checkAuths.fail'
                 }
             for (const i of fileContent.split(/\n/)) {
                 let isSameDomain = i.split(',')[0] === new URL(config.mail.host).hostname,
                     isSameCode = i.split(',')[1] && i.split(',')[1] === token.slice(token.length - 250, token.length - 5);
                 if (isSameDomain && isSameCode)
-                    return {success: 1, code: 'auth.success'}
+                    return {success: 1, code: 'checkAuths.success'}
             }
         });
         streamResponse.on('error', (error) => {
             return {
                 error: 1,
-                code: 'confirmAuth.fail',
+                code: 'checkAuths.fail',
                 message: `Error fetching auths.txt with stream:${error}`
             }
         });
