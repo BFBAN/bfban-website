@@ -2,8 +2,7 @@
 import crypto from "crypto";
 import got from "got";
 import express from "express";
-import dns from "dns"
-import {PassThrough, Transform, pipeline} from "stream";
+import {PassThrough} from "stream";
 import {
     body as checkbody,
     query as checkquery,
@@ -11,10 +10,8 @@ import {
     validationResult,
     query
 } from "express-validator";
-
 import db from "../mysql.js";
 import config from "../config.js";
-
 
 import {allowPrivileges, verifyJWT} from "../middleware/auth.js";
 import {forbidPrivileges} from "../middleware/auth.js";
@@ -27,9 +24,14 @@ import {getGravatarAvatar} from "../lib/gravatar.js";
 import {userHasRoles, verifyJWTToken} from "../lib/auth.js";
 import jwt from "jsonwebtoken";
 import {sendForgetPasswordVerify, sendUserAuthVerify} from "../lib/mail.js";
-import fs from "fs";
+import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
+import pkg from "https-proxy-agent";
 
+const {HttpsProxyAgent} = pkg;
 const router = express.Router();
+const proxy = {
+    https: new HttpsProxyAgent({host: 'proxy.bfban.com'}),
+}
 
 /*
 router.get('/feedbacks', [
@@ -373,8 +375,13 @@ async (req, res, next) => {
     }
 });
 
+// router.get('/test', async (req,res,next) => {
+//     await got.post('http://127.0.0.1:6000/api/authCallback',{agent: proxy}).json()
+//     next(req)
+// })
+
 /**
- * External Auth
+ * External Auth S
  */
 router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot', 'dev', 'super']), [
     checkbody('id').isLength({min: 0}),
@@ -382,9 +389,10 @@ router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot',
     checkbody('appName').optional().isString().trim().isLength({min: 1, max: 40}),
     checkbody('EXPIRES_IN').optional({nullable: true}).isInt({min: 0}),
     checkbody('CALLBACK_PATH').isString().isLength({min: 1})
-], async (req, res, next) => {
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
+async (req, res, next) => {
     try {
-        const {id, appName, appId, EXPIRES_IN, CALLBACK_PATH} = req.body;
+        const {id, appName, appId, EXPIRES_IN = 1000 * 60 * 60 * 24, CALLBACK_PATH} = req.body;
 
         const targetUser = await db('users').where({id}).first()
         if (!targetUser)
@@ -408,7 +416,7 @@ router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot',
                 expiresIn: EXPIRES_IN, // 身份有效期
             },
             targetUserJwttoken = jwt.sign(jwtpayload, config.secret, {
-                expiresIn: EXPIRES_IN / 1000,  // second
+                expiresIn: EXPIRES_IN / 1000,  // user token, default 24 hours second
             }),
             authData = jwt.sign({
                 host: {address: req.REAL_IP},
@@ -419,7 +427,7 @@ router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot',
                 token: targetUserJwttoken,
                 signWhen: Date.now(),
             }, config.secret, {
-                expiresIn: 1000 * 60 * 60 * 24,  // 24小时授权有效期
+                expiresIn: 1000 * 60 * 60 * 24,  // auth token,24 hours authorization period
             })
 
         let language = req.headers["accept-language"]
@@ -444,8 +452,9 @@ router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot',
 })
 
 router.post('/confirmAuth', verifyJWT, forbidPrivileges(['blacklisted', 'freezed']), [
-    checkbody('code')
-], async (req, res, next) => {
+    checkbody('code').isString({min: 0}).notEmpty()
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
+async (req, res, next) => {
     try {
         const {code} = req.body;
 
@@ -475,21 +484,15 @@ router.post('/confirmAuth', verifyJWT, forbidPrivileges(['blacklisted', 'freezed
             return res.status(403).json({
                 error: 1,
                 code: 'confirmAuth.fail',
-                message: 'the authorization code is inconsistent with the current account'
+                message: 'the authorization code is inconsistent with the current account，This is not your confirmation authorization'
             })
 
         // Verify that bfbanAuth under the callback domain holds the token to ensure that the callback domain is owned by a bot (or a third party),
         // preventing calls to untrusted domains
-        const checkServerRootFile = await Promise.any([
-            got.get(decodedToken.callbackPath + '/auths.txt'),
-            got.get(decodedToken.callbackPath + '/auths')
-        ]);
-        if (!checkServerRootFile && verifyAuths(checkServerRootFile, req.user.token) && !config.__DEBUG__)
-            return res.status(403).json({
-                error: 1,
-                code: 'confirmAuth.fail',
-                message: 'untrusted address'
-            })
+        const callPathURL = new URL(decodedToken.callbackPath)
+        const verifyAuthResult = await verifyAuths(req, res, next, callPathURL);
+        if (verifyAuthResult.error === 1)
+            return res.status(403).json(verifyAuthResult)
 
         // The callback domain is not allowed to call locally, it must be network accessible to the address
         if (['localhost', '0.0.0.0', '127.0.0.1'].includes(new URL(decodedToken.callbackPath).hostname) || decodedToken.callbackPath.indexOf('../') >= 0 && !config.__DEBUG__)
@@ -500,8 +503,14 @@ router.post('/confirmAuth', verifyJWT, forbidPrivileges(['blacklisted', 'freezed
 
         // The user has confirmed that the information is passed through the callback address
         await got.post(`${decodedToken.callbackPath}`, {
+            agent: proxy,
             throwHttpErrors: false,
-            headers: {'User-Agent': 'BFBAN'},
+            decompress: false,
+            headers: {
+                'accept-encoding': 'gzip, deflate',
+                'User-Agent': Date.now(),
+                'referer': callPathURL.host
+            },
             json: {userId: decodedToken.userId, token: decodedToken.token},
             responseType: 'json'
         }).catch()
@@ -511,34 +520,72 @@ router.post('/confirmAuth', verifyJWT, forbidPrivileges(['blacklisted', 'freezed
             code: 'confirmAuth.success'
         })
     } catch (err) {
-        next(err);
+        return res.status(500).json({
+            error: 1,
+            code: 'externalAuth.success',
+            message: err.toString()
+        })
     }
 })
 
 router.get('/getAuthText', verifyJWT, allowPrivileges(['root', 'admin', 'bot', 'dev', 'super']), [query("appId")], getAuth)
 
-function verifyAuths(checkServerRootFile, t) {
-    for (const i of checkServerRootFile.split(/\n/)) {
-        let isSameDomain = i.split(',')[0] === new URL(config.mail.host).hostname,
-            isSameCode = i.split(',')[1] && i.split(',')[1] === t.slice(t.length - 250, t.length - 5);
-        if (isSameDomain && isSameCode)
-            return true
+/**
+ * @param {Request<P, ResBody, ReqBody, ReqQuery, Locals>} req
+ * @param {Response<ResBody, Locals>} res
+ * @param {NextFunction} next
+ * @param {URL} callPathURL
+ */
+async function verifyAuths(req, res, next, callPathURL) {
+    try {
+        const token = req.get('x-access-token');
+        const maximumFileSize = 1024 * 1024; // 1 MB in bytes
+        const streamResponse = await got.stream(callPathURL.hostname + '/auths.txt', {agent: proxy});
+        let fileContent = '';
+
+        streamResponse.on('data', (chunk) => {
+            fileContent += chunk.toString();
+        });
+        streamResponse.on('end', () => {
+            if (fileContent >= maximumFileSize || fileContent <= 5)
+                return {
+                    error: 1,
+                    code: 'confirmAuth.fail'
+                }
+            for (const i of fileContent.split(/\n/)) {
+                let isSameDomain = i.split(',')[0] === new URL(config.mail.host).hostname,
+                    isSameCode = i.split(',')[1] && i.split(',')[1] === token.slice(token.length - 250, token.length - 5);
+                if (isSameDomain && isSameCode)
+                    return {success: 1, code: 'auth.success'}
+            }
+        });
+        streamResponse.on('error', (error) => {
+            return {
+                error: 1,
+                code: 'confirmAuth.fail',
+                message: `Error fetching auths.txt with stream:${error}`
+            }
+        });
+    } catch (err) {
+        next(err)
     }
-    return false
 }
 
-function getAuth(req, res, next) {
-    const t = res.user.token, type = 'DIRECT', {appId} = req.query,
-        filename = "auths.txt",
-        content = `${new URL(config.mail.host).hostname},${t.slice(t.length - 250, t.length - 5)},${type},${appId}\n`;
-
-    res.writeHead(200, {
-        'Content-Type': 'text/plain',
-        'Content-Disposition': `attachment; filename=${filename}`,
-    });
-
-    const readStream = fs.createReadStream(null, {start: 0, end: content.length});
-    readStream.pipe(res);
+/**
+ * @param {*} res
+ * @param {*} req
+ * @param {NextFunction|Response<ResBody, Locals>} next
+ */
+function getAuth(res, req, next) {
+    try {
+        const token = req.get('x-access-token'), type = 'DIRECT', {appId} = req.query,
+            content = `${new URL(config.mail.domain.origin).hostname},${token.slice(token.length - 250, token.length - 5)},${type},${appId}`;
+        if (!token && !appId)
+            res.status(403).json({code: "getAuth.fail"})
+        res.status(200).json(content)
+    } catch (e) {
+        next(req)
+    }
 }
 
 export default router;
