@@ -142,7 +142,7 @@ export default new Application({
       }
     },
     getLocaleAppKeys() {
-      const keys = storage.keys();
+      const keys = storage.local.keys();
       const list = []
       this.primitiveStorageKeys = keys;
       for (const key in keys) {
@@ -228,7 +228,7 @@ export default new Application({
               _zip.folder("data").forEach(function (relativePath, zipEntry) {
                 zip.file(zipEntry.name).async('text').then(data => {
                   const name = relativePath.split(':')[1].replaceAll('.json', '');
-                  const isExists = storage.get(name).code === 0;
+                  const isExists = storage.local.get(name).code === 0;
 
                   that.importPreparation.push({
                     name: relativePath.replaceAll('.json', ''),
@@ -263,7 +263,7 @@ export default new Application({
                 data = JSON.parse(i.value);
                 break;
               case "inherit":
-                localData = await storage.get(i.name.split(':')[1])?.data.value;
+                localData = await storage.local.get(i.name.split(':')[1])?.data.value;
                 checkData = JSON.parse(i.value);
 
                 if (checkData.constructor === Array) {
@@ -280,7 +280,7 @@ export default new Application({
             }
           }
 
-          storage.set(i.name.split(':')[1], data)
+          storage.local.set(i.name.split(':')[1], data)
         })
 
         this.$Message.success('ok');

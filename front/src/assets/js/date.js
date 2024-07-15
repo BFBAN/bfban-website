@@ -3,10 +3,17 @@
  */
 
 export default class Time {
-    DATE = new Date();
+    constructor() {
+        this.DATE = new Date()
+    }
 
-    now() {
-        return new Date().getTime();
+    get nowTimeStamp() {
+        return this.DATE.getTime();
+    }
+
+    update() {
+        this.DATE = new Date()
+        return this
     }
 
     /**
@@ -14,12 +21,5 @@ export default class Time {
      */
     appStart() {
         return new Date(1541260800000);
-    }
-
-    getUTCTimeStamp() {
-        const now = new Date();
-        const utcTimeStamp = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
-            now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
-        return utcTimeStamp;
     }
 }

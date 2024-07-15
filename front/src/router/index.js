@@ -3,7 +3,7 @@ import store from '@/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueMeta from 'vue-meta'
-import {CHANGE_META_INFO} from '../store/mutation-types'
+import {CHANGE_META_INFO} from '@/store/mutation-types'
 
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');

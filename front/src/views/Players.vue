@@ -101,7 +101,10 @@
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
                 <Card dis-hover :padding="10">
                   <Row :gutter="10" type="flex">
-                    <Col :xs="{span: 5, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}">
+                    <Col :xs="{span: 4, push: 0,pull:0}"
+                         :sm="{span: 3}"
+                         :lg="{span: 3, push: 0,pull:0}"
+                         :xl="{span: 2, push: 0,pull:0}">
                       <!-- 头像 S -->
                       <Avatar :src="d.avatarLink"
                               class="default-avatar"
@@ -112,7 +115,8 @@
                       </Avatar>
                       <!-- 头像 E -->
                     </Col>
-                    <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
+                    <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}"
+                         :xl="{span: 18, push: 0,pull:0}">
                       <div style="display: flex; flex-direction: column;">
                         <Tooltip :content="$t('list.colums.playerId')">
                           <h2 class="text-distinguishing-letter">

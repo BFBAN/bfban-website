@@ -516,7 +516,7 @@ export default new Application({
      * 查询
      */
     getSearchHistory() {
-      let history = storage.get('search.history');
+      let history = storage.local.get('search.history');
 
       if (history.code == -1) {
         this.setSearchHistoryValue([]);
@@ -572,7 +572,7 @@ export default new Application({
      * 删除历史记录
      */
     deleteSearchHistoryAll() {
-      storage.rem('search.history');
+      storage.local.rem('search.history');
       this.searchHistory.list = [];
     },
     /**

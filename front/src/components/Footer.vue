@@ -110,7 +110,7 @@
       </div>
       <div align="center" class="footer-border-top footer-padding">
         <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} <u>{{ infos.name || ''}}</u> All Rights Reserved. v:
-          {{ infos.version || '' }}             
+          {{ infos.version || '' }}
           <iframe src="https://status.bfban.com/badge" class="footer-status-badge" allowTransparency="true" frameborder="0" scrolling="no"></iframe>
         </p>
       </div>
@@ -168,19 +168,19 @@ export default new Application({
         // 路由语言
         this.$store.dispatch('setLang', lang);
         // 本地持久语言
-        storage.set('language', lang);
+        storage.local.set('language', lang);
         // 网页语言
         document.getElementsByTagName('html')[0].lang = lang;
       },
       get() {
         const localAppLanguages = this.$root && this.$root.$i18n && this.$root.$i18n.locale;
-        const localSroeageLanguage = storage.get('language')?.data?.value;
-        const loaclWebLanguage = this.$route.query.lang;
+        const localStorageLanguage = storage.local.get('language')?.data?.value;
+        const localWebLanguage = this.$route.query.lang;
 
         // This is not the place to initialize the language
-        http.setGlobalHeader({'Accept-Language': loaclWebLanguage || localSroeageLanguage || localAppLanguages || 'zh-CN'})
+        http.setGlobalHeader({'Accept-Language': localWebLanguage || localStorageLanguage || localAppLanguages || 'zh-CN'})
 
-        return loaclWebLanguage || localSroeageLanguage || localAppLanguages || 'zh-CN';
+        return localWebLanguage || localStorageLanguage || localAppLanguages || 'zh-CN';
       }
     }
   }

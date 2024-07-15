@@ -250,7 +250,7 @@ export default new Application({
      * @returns {Promise<void>}
      */
     async getTheme() {
-      let theme = await storage.get('theme');
+      let theme = storage.local.get('theme');
 
       if (theme.data && theme.data.value) {
         await this.$store.dispatch('setTheme', theme.data.value);
@@ -264,7 +264,7 @@ export default new Application({
      * @param {number} index
      */
     changeTheme(index) {
-      storage.set('theme', this.themes.child[index || 0]);
+      storage.local.set('theme', this.themes.child[index || 0]);
 
       location.reload();
     },

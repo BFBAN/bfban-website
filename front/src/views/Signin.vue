@@ -61,7 +61,7 @@
               </Form>
 
               <Divider dashed
-                       :style="`margin:35px -${isMobile ? 20 : 50}px;width:calc(100% + ${isMobile ? 20 * 2 : 50 * 2}px)`"/>
+                       :style="`margin:25px -${isMobile ? 20 : 50}px;width:calc(100% + ${isMobile ? 20 * 2 : 50 * 2}px)`"/>
 
               <Row type="flex" justify="center" align="middle">
                 <Col>

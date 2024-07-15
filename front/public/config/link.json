@@ -38,11 +38,6 @@
       "tag": ["link"]
     },
     {
-      "title": "longsir.link",
-      "linkUrl": "https://www.longsir.link",
-      "tag": ["link"]
-    },
-    {
       "title": "BFVHackers",
       "linkUrl": "https://bfvhackers.com/",
       "tag": ["link"]
@@ -53,8 +48,13 @@
       "tag": ["link"]
     },
     {
-      "title": "Game Tools",
-      "linkUrl": "https://gametools.network",
+      "title": "BFVRobot",
+      "linkUrl": "https://bfvrobot.net",
+      "tag": ["link"]
+    },
+    {
+      "title": "Rank BFVRobot",
+      "linkUrl": "https://rank.bfvrobot.net",
       "tag": ["link"]
     }
   ],

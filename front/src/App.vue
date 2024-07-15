@@ -56,7 +56,7 @@ export default {
      * @returns {Promise<void>}
      */
     async onLoadTheme() {
-      let theme = storage.get('theme');
+      let theme = storage.local.get('theme');
 
       if (theme.data && theme.data.value) {
         await this.$store.dispatch(SET_THEME, theme.data.value);

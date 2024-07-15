@@ -40,14 +40,14 @@ export default {
      * 写入持久储存
      */
     updateWriteLocalFastReply() {
-      storage.set('user.customJudgeAction', this.list);
+      storage.local.set('user.customJudgeAction', this.list);
     },
     /**
      * 读取持久存储
      */
     readLocal() {
-      let data = storage.get('user.customJudgeAction');
-      if (data.code == 0)
+      let data = storage.local.get('user.customJudgeAction');
+      if (data.code === 0)
         this.list = data.data.value;
     },
     /**
@@ -82,7 +82,7 @@ export default {
      * 删除模板
      */
     onDeleteTemplate(id) {
-      let index = this.list.findIndex((i) => i.__id != id);
+      let index = this.list.findIndex((i) => i.__id !== id);
       this.modal.open = false;
       this.list.slice(index, 0, 1);
     }
@@ -94,14 +94,16 @@ export default {
   <div>
     <ButtonGroup>
       <Poptip ref="filesPoptip" placement="bottom-start" trigger="click" width="400" :padding="0">
-        <Button>JudgeAction Template (Beta)</Button>
+        <Button size="large">JudgeAction Template</Button>
         <template slot="content">
           <Row :gutter="10" style="padding: 10px">
             <Col flex="1">
               <Input v-model="modal.title" placeholder="Title"></Input>
             </Col>
             <Col>
-              <Button @click="createTemplate"><Icon type="md-add"/></Button>
+              <Button @click="createTemplate">
+                <Icon type="md-add"/>
+              </Button>
             </Col>
           </Row>
           <ul class="ivu-dropdown-menu list" v-if="list.length > 0">
@@ -116,11 +118,13 @@ export default {
                 <Button @click="onSelectTemplate(i)">Use</Button>
               </Col>
               <Col>
-                <Button @click="openModal(i)"><Icon type="md-more"/></Button>
+                <Button @click="openModal(i)">
+                  <Icon type="md-more"/>
+                </Button>
               </Col>
             </Row>
           </ul>
-          <EmptyView v-else></EmptyView>
+          <EmptyView class="judgeActionTemplate-empty" align="center" :notHint="false" v-else></EmptyView>
         </template>
       </Poptip>
     </ButtonGroup>
@@ -129,15 +133,12 @@ export default {
     <Modal v-model="modal.open">
       <div slot="default" v-if="modal.data">
         <Input v-model="modal.data.__title"/>
-        <code type="json">
-          {{ modal.data }}
-        </code>
-        <p>id: {{ modal.data.__id}}</p>
+        <p>id: {{ modal.data.__id }}</p>
       </div>
 
-      <Row slot="footer">
+      <Row slot:footer>
         <Button @click="onDeleteTemplate(modal.data.__id)">
-          <Icon type="md-delete"/>
+          <Icon type="md-view-design"/>
         </Button>
         <Button>{{ $t('basic.button.save') }}</Button>
       </Row>
@@ -158,5 +159,10 @@ export default {
     opacity: .5;
     font-size: 12px;
   }
+}
+
+.judgeActionTemplate-empty {
+  margin: 20px;
+  text-align: center;
 }
 </style>

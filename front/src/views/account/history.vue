@@ -148,7 +148,7 @@ export default {
      */
     async getHisory() {
       const {skip, limit} = this;
-      let localData = storage.get('viewed');
+      let localData = storage.local.get('viewed');
       this.list = [];
 
       if (localData.code != 0 && !localData.data.value) return;
@@ -208,7 +208,7 @@ export default {
      */
     onDelete() {
       let array = this.list;
-      let _storage = storage.get('viewed');
+      let _storage = storage.local.get('viewed');
 
       if (_storage.code != 0 && _storage.data && Object.keys(_storage.data.value) <= 0) {
         _storage = {data: {value: {}}}
@@ -222,7 +222,7 @@ export default {
       }
 
       if (Object.keys(_storage.data.value).length >= 0) {
-        storage.set('viewed', _storage.data.value);
+        storage.local.set('viewed', _storage.data.value);
         this.getHisory();
       }
     },

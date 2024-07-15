@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      storageSession: storage.session(),
+      storageSession: storage.session,
       postLoad: false,
       hash: "",
       content: "",

@@ -32,7 +32,7 @@
               <Row :gutter="10" style="margin-top: 50px">
                 <Col span="12">
                     <Card dis-hover :to="{name: 'site_stats'}">
-                      <h3>{{ number.format(statistics.reports, currentLan) || 0 }}</h3>
+                      <h3>{{ number.format(statistics.reports) || 0 }}</h3>
                       <span>{{ $t("home.cover.dataReceived") }}</span>
                       <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
                     </Card>
@@ -40,7 +40,7 @@
                 <Col span="12">
                   <router-link :to="{name: 'site_stats'}">
                     <Card dis-hover>
-                      <h3>{{ number.format(statistics.confirmed, currentLan) || 0 }}</h3>
+                      <h3>{{ number.format(statistics.confirmed) || 0 }}</h3>
                       <span>{{ $t("home.cover.confirmData") }}</span>
                       <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
                     </Card>

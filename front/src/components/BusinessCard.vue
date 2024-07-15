@@ -165,7 +165,7 @@ export default new Application({
 
               this.localBusinessMap[this.userInfo.id] = this.userInfo;
 
-              storage.session().set(name, this.localBusinessMap);
+              storage.session.set(name, this.localBusinessMap);
             } else {
               this.catch();
             }
@@ -187,7 +187,7 @@ export default new Application({
 
               this.localBusinessMap[this.userInfo.id] = this.userInfo;
 
-              storage.session().set(name, this.localBusinessMap);
+              storage.session.set(name, this.localBusinessMap);
             } else {
               this.catch();
             }

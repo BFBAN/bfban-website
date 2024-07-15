@@ -91,7 +91,7 @@
                       </Select>
                     </Col>
                     <Divider type="vertical"></Divider>
-                    <template v-if="tabs.list[index].type == 'originName'">
+                    <template v-if="tabs.list[index].type === 'originName'">
                       <Col flex="1">
                         <AutoComplete
                             v-model="tabs.list[index].formItem.originName"
@@ -161,10 +161,10 @@
                         <code>{{ tabs.list[index].formItem.originName }}</code></h1>
                       <span v-else>ID</span>
                     </div>
-                    <p class="hint">
+                    <p class="hint hint-seriousness">
                       {{ $t("report.info.idNotion1") }}
                     </p>
-                    <p class="hint">
+                    <p class="hint hint-seriousness">
                       <code>{{ $t("report.info.idNotion2") }}</code>
                     </p>
                   </Card>
@@ -197,7 +197,8 @@
                       <Alert show-icon type="warning">
                         {{ $t("report.info.uploadManual1") }}
                       </Alert>
-
+                    </Col>
+                    <Col :xs="{span: 24}" :lg="{span:24}">
                       <!-- 视频链接 S -->
                       <FormItem
                           :prop="`videoLink[${blinkindex}]`"
@@ -215,8 +216,7 @@
                           </Col>
                           <Col>
                             <Divider type="vertical" v-if="tabs.list[index].formItem.videoLink.length > 0"/>
-                            <Button type="dashed"
-                                    @click="tabs.list[index].formItem.videoLink.splice(blinkindex, 1)"
+                            <Button @click="tabs.list[index].formItem.videoLink.splice(blinkindex, 1)"
                                     v-voice-button
                                     v-if="tabs.list[index].formItem.videoLink.length > 0">
                               <Icon type="md-trash"/>
@@ -225,17 +225,22 @@
                         </Row>
                       </FormItem>
 
-                      <Button type="primary"
-                              long
-                              v-voice-button
-                              @click="handleVideoLink"
-                              v-if="tabs.list[index].formItem.videoLink.length < 3">
-                        <Icon type="md-add"/>
-                        <span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 3)</span>
-                      </Button>
+                      <Row gutter="10">
+                        <Col>
+                          <Button type="primary"
+                                  v-voice-button
+                                  @click="handleVideoLink"
+                                  v-if="tabs.list[index].formItem.videoLink.length < 3">
+                            <Icon type="md-add"/>
+                            <span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 3)</span>
+                          </Button>
+                        </Col>
+                        <Col>
+                          <div class="hint hint-caution">{{ $t("report.info.uploadManual2") }}</div>
+                        </Col>
+                      </Row>
                       <!-- 视频链接 E -->
 
-                      <div class="hint">{{ $t("report.info.uploadManual2") }}</div>
                     </Col>
                   </Row>
                 </FormItem>

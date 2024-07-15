@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import storage from "../src/assets/js/storage"
-import lang from "../public/config/languages.json"
-import store from './store'
+import Storage from "@/assets/js/storage"
+import lang from "@/../public/config/languages.json"
+import store from '@/store'
 
 import ar_view_design from 'view-design/dist/locale/ar-EG';
 import de_view_design from 'view-design/dist/locale/de-DE';
@@ -32,11 +32,9 @@ import zh_tw_local from './lang/zh_TW.json' // 中文
 import zh_cat_local from './lang/zh_Cat.json' // 简体喵文
 
 Vue.use(VueI18n)
-Vue.locale = () => {
-};
 
 let i18n = new VueI18n({
-    locale: new storage().get('language')?.data?.value ?? navigator.language,
+    locale: new Storage().local.get('language')?.data?.value ?? navigator.language,
     fallbackLocale: lang.default,
     formatFallbackMessages: true,
     silentTranslationWarn: true,

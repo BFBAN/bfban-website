@@ -14,7 +14,7 @@ export default class PlayerStorage extends Storage {
 
     constructor() {
         super();
-        let ary = super.get(this.NAME);
+        let ary = super.local.get(this.NAME);
         if (ary.code >= 0) {
             for (const aryKey in ary.data.value) {
                 this.PLAYERDATA[ ary.data.value[aryKey].id ] = ary.data.value[aryKey];
@@ -36,7 +36,7 @@ export default class PlayerStorage extends Storage {
             }
         }
 
-        super.set(this.NAME, this.PLAYERDATA);
+        super.local.set(this.NAME, this.PLAYERDATA);
     }
 
     /**

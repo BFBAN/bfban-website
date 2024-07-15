@@ -3,7 +3,7 @@
     <div class="profile-body">
       <Row :gutter="10" type="flex" align="middle" justify="end">
         <Col>
-          <Button type="primary" @click="changeTheme"> {{ $t('basic.button.save') }} </Button>
+          <Button type="primary" @click="changeTheme"> {{ $t('basic.button.save') }}</Button>
         </Col>
         <Col>
           <div class="theme-color" :style="`background-color: ${themes.child[themeIndex].themeColor}`"></div>
@@ -30,7 +30,7 @@
       </Card>
       <a href="//github.com/BFBAN/bfban-website/tree/master/front/public/theme" target="_blank">
         <Card dis-hover class="theme-card theme-card-not">
-          <Icon type="md-add" size="30" />
+          <Icon type="md-add" size="30"/>
         </Card>
       </a>
     </RadioGroup>
@@ -57,22 +57,22 @@ export default {
      * 获取主题
      * @returns {Promise<void>}
      */
-    async getTheme () {
-      let theme = await storage.get('theme');
+    async getTheme() {
+      let theme = storage.local.get('theme');
 
       if (theme.data && theme.data.value) {
         this.themes.child.forEach((i, index) => {
-          if (i.name == theme.data.value.name) {
+          if (i.name === theme.data.value.name) {
             this.themeIndex = index;
           }
         });
         await this.$store.dispatch('setTheme', theme.data.value);
         return;
-      } else {
-        themes.child.filter((i, index) => {
-          if (i.name == themes.default) this.themeIndex = index
-        });
       }
+
+      themes.child.filter((i, index) => {
+        if (i.name === themes.default) this.themeIndex = index
+      });
 
       await this.$store.dispatch('setTheme', this.$store.state.$theme);
     },
@@ -81,7 +81,7 @@ export default {
      * @param val
      */
     changeTheme(val) {
-      storage.set('theme', this.themes.child[this.themeIndex || 0]);
+      storage.local.set('theme', this.themes.child[this.themeIndex || 0]);
 
       window.location.reload();
     }
@@ -131,7 +131,7 @@ export default {
     width: 20px;
     height: 20px;
     border-radius: 8px;
-    border: 1px solid rgba(0,0,0,.08);
+    border: 1px solid rgba(0, 0, 0, .08);
   }
 }
 </style>

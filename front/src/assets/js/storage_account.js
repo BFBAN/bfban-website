@@ -4,14 +4,15 @@
 
 import Storage from './storage';
 import store from "@/store";
-import {account_storage, api, http_token} from "@/assets/js/index";
+import {account_storage, api, http_token, application} from "@/assets/js/index";
 import {SET_LANG} from "@/store/mutation-types";
 
 export default class AccountStorage extends Storage {
-    ACCOUNTDATA = [{
-        type: 'local',
-        name: 'viewed'
-    },
+    ACCOUNTDATA = [
+        {
+            type: 'local',
+            name: 'viewed'
+        },
         {
             type: 'local',
             name: 'captcha'
@@ -50,7 +51,7 @@ export default class AccountStorage extends Storage {
     constructor() {
         super();
 
-        const conf = super.get(this.NAME);
+        const conf = super.local.get(this.NAME);
         if (conf.code >= 0)
             store.commit("syncLocalConfiguration", conf.data.value)
     }
@@ -60,18 +61,19 @@ export default class AccountStorage extends Storage {
      * @returns {*}
      */
     getUserInfo() {
-        return new Promise((r) => {
-            http_token.get(api["user_me"], {}).then(res => {
-                const d = res.data;
-                if (d.success === 1) {
-                    // set userinfo
-                    store.dispatch('setUserInfo', d.data);
-                    if (account_storage.getConfiguration('langLocalSync'))
-                        store.dispatch(SET_LANG, d.data.attr.language);
-                }
-                r(res);
+        if (application.isLogin())
+            return new Promise((r) => {
+                http_token.get(api["user_me"], {}).then(async res => {
+                    const d = res.data;
+                    if (d.success === 1) {
+                        // set userinfo
+                        await store.dispatch('setUserInfo', d.data);
+                        if (account_storage.getConfiguration('langLocalSync'))
+                            await store.dispatch(SET_LANG, d.data.attr.language);
+                    }
+                    r(res);
+                })
             })
-        })
     }
 
     /**
@@ -81,10 +83,10 @@ export default class AccountStorage extends Storage {
         this.ACCOUNTDATA.forEach(i => {
             switch (i.type) {
                 case 'session':
-                    super.session().rem(i.name);
+                    super.session.rem(i.name);
                     break;
                 case 'local':
-                    super.local().rem(i.name);
+                    super.local.rem(i.name);
                     break;
             }
         })
@@ -99,7 +101,7 @@ export default class AccountStorage extends Storage {
      * @constructor
      */
     updateConfiguration(key, value) {
-        let data = super.get(this.NAME);
+        let data = super.local.get(this.NAME);
 
         if (data.code < 0) {
             data = {data: {value: {}}}
@@ -107,7 +109,7 @@ export default class AccountStorage extends Storage {
 
         data.data.value[key] = value;
         store.commit("syncLocalConfiguration", data.data.value)
-        super.set(this.NAME, data.data.value)
+        super.local.set(this.NAME, data.data.value)
     }
 
     /**
@@ -116,7 +118,7 @@ export default class AccountStorage extends Storage {
      * @returns {*|boolean}
      */
     getConfiguration(key) {
-        let data = super.get(this.NAME);
+        let data = super.local.get(this.NAME);
 
         if (data.code < 0) return false;
         return key in data.data.value ? data.data.value[key] : false;
@@ -134,7 +136,7 @@ export default class AccountStorage extends Storage {
         if (!user) return false;
         for (const i of adminGroup) {
             for (const j of user?.privilege) {
-                if (j == i) isBool = true;
+                if (j === i) isBool = true;
             }
         }
         return Boolean(isBool);

@@ -77,7 +77,7 @@ export default {
 
 <template>
   <Poptip transfer :trigger="trigger" class="time-view">
-    <u class="spelling">
+    <u class="spelling time-view time-view-slot">
       <slot></slot>
     </u>
     <Form labelPosition="top" width="100" slot="content" v-if="time" class="time-view-form">
@@ -106,6 +106,13 @@ export default {
 </template>
 
 <style scoped lang="less">
+.time-view-slot:hover {
+  padding: 1px 6px !important;
+  margin: -1px -6px;
+  border-radius: 5px;
+  background: #0000000a;
+}
+
 u.spelling {
   text-decoration: dashed underline;
   cursor: pointer;

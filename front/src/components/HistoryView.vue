@@ -28,7 +28,7 @@ export default {
      */
     async getHistory() {
       const {skip, limit} = this;
-      let localData = storage.get('viewed');
+      let localData = storage.local.get('viewed');
       this.list = [];
 
       if (localData.code != 0 && !localData.data?.value) return;

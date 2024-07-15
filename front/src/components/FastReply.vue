@@ -311,7 +311,7 @@ export default {
      * 载入管理快速回复模板数据
      */
     loadFastReplyData() {
-      const replyData = storage.get('customReply');
+      const replyData = storage.local.get('customReply');
 
       if (replyData.code == -1) return;
       this.fastReply.content = this.fastReply.templateContent.concat(replyData.data.value);
@@ -370,7 +370,7 @@ export default {
      */
     updateWriteLocalFastReply() {
       // 仅保留用户定义数据
-      storage.set('customReply', this.fastReply.content.filter(l => !l.template));
+      storage.local.set('customReply', this.fastReply.content.filter(l => !l.template));
     },
     hasIndexOfSearch(i) {
       if (this.fastReply.searchValue.length <= 0) return true;

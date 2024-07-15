@@ -136,6 +136,8 @@ export default {
 }
 
 .achievement-view {
+  user-select: none;
+
   .achievement-view-title {
     text-align: center;
   }

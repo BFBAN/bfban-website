@@ -209,14 +209,24 @@
                       <Col>{{ cheater.id || 'cheater id' }}</Col>
                     </Row>
                     <Row :gutter="10" type="flex" align="middle">
-                      <Col>User id <Poptip transfer :content="$t(`report.labels.types.originUserId.hint`)"><Icon type="md-help"></Icon></Poptip> :</Col>
+                      <Col>User id
+                        <Poptip transfer :content="$t(`report.labels.types.originUserId.hint`)">
+                          <Icon type="md-help"></Icon>
+                        </Poptip>
+                        :
+                      </Col>
                       <Col flex="1">
                         <Divider dashed/>
                       </Col>
                       <Col>{{ cheater.originUserId || 'user id' }}</Col>
                     </Row>
                     <Row :gutter="10" type="flex" align="middle">
-                      <Col>Persona id <Poptip transfer :content="$t(`report.labels.types.originPersonaId.hint`)"><Icon type="md-help"></Icon></Poptip> :</Col>
+                      <Col>Persona id
+                        <Poptip transfer :content="$t(`report.labels.types.originPersonaId.hint`)">
+                          <Icon type="md-help"></Icon>
+                        </Poptip>
+                        :
+                      </Col>
                       <Col flex="1">
                         <Divider dashed/>
                       </Col>
@@ -1004,7 +1014,8 @@
 
               <Row :gutter="50">
                 <Col :xs="{span:24}" :lg="{span: 8, flex: 1}">
-                  <judgeActionTemplateView :fromData="verify" :containerRefs="$refs" @on-select="onT"></judgeActionTemplateView>
+                  <judgeActionTemplateView :fromData="verify" :containerRefs="$refs"
+                                           @on-select="onT"></judgeActionTemplateView>
                 </Col>
                 <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
                   <br class="desktop-hide">
@@ -1171,8 +1182,8 @@
             </Col>
             <Col flex="1">
               <Button type="primary" size="large"
-                      :loading="updateUserInfospinShow"
-                      :disabled="updateUserInfospinShow"
+                      :loading="updateUserInfoSpinShow"
+                      :disabled="updateUserInfoSpinShow"
                       v-voice-button
                       long @click.prevent="updateCheaterInfo">
                 {{ $t('detail.info.updateButton') }}
@@ -1310,7 +1321,7 @@ export default new Application({
       replySpinShow: false,
       isCheaterExist: true,
       replyModal: false,
-      updateUserInfospinShow: false,
+      updateUserInfoSpinShow: false,
       updateCheaterModal: false,
       cheatMethodsGlossary: null
     }
@@ -1520,7 +1531,7 @@ export default new Application({
      * 更新游览值
      */
     onUpdateViewed() {
-      let viewed = storage.get("viewed");
+      let viewed = storage.local.get("viewed");
       const id = this.cheater.id;
       const historyTime = new Date().getTime();
 
@@ -1529,7 +1540,7 @@ export default new Application({
       if (viewed != undefined && viewed.data?.value[id] < viewed.data?.value[id] + 24 * 60 * 60 * 1000)
         return;
 
-      storage.set("viewed", viewed && viewed.data ? {
+      storage.local.set("viewed", viewed && viewed.data ? {
         ...viewed.data.value || {},
         [id]: historyTime
       } : {[id]: historyTime})
@@ -1629,8 +1640,6 @@ export default new Application({
       this.timelineListPreparedness = [];
       this.timelineList = [];
 
-      this.$router.push({name: this.$route.name, query: {...this.$route.query, order: this.timeline.order}})
-
       return new Promise(resolve => {
         this.spinShow = true;
 
@@ -1681,28 +1690,28 @@ export default new Application({
      */
     async getTimeLineItemData(id) {
       let commentData = null;  // 用于保存获取到的数据
-      await this.http.get(api["player_timeline_item"], {
-        params: {id}
-      }).then(res => {
-        const d = res.data;
-        if (d.success === 1) {
-          // 请求成功，处理返回的数据
-          commentData = d.data;
-        } else {
-          switch (d.code) {
-            case "commentItem.bad":
-            case "commentItem.notFound":
-              this.$Message.info(this.$t('basic.tip.notFound'));
-              break;
-          }
-        }
-      }).finally(() => {
-        // 请求结束后的处理
-        // 如果有加载动画，此时应该隐藏
-        this.loading = false;
-        // 如果有UI元素在请求期间被禁用，此时应该解除禁用
-        this.isButtonDisabled = false;
-      });
+      await this.http
+          .get(api["player_timeline_item"], {params: {id}})
+          .then(res => {
+            const d = res.data;
+            if (d.success === 1) {
+              // 请求成功，处理返回的数据
+              commentData = d.data;
+            } else {
+              switch (d.code) {
+                case "commentItem.bad":
+                case "commentItem.notFound":
+                  this.$Message.info(this.$t('basic.tip.notFound'));
+                  break;
+              }
+            }
+          }).finally(() => {
+            // 请求结束后的处理
+            // 如果有加载动画，此时应该隐藏
+            this.loading = false;
+            // 如果有UI元素在请求期间被禁用，此时应该解除禁用
+            this.isButtonDisabled = false;
+          });
 
       return commentData;  // 返回获取到的数据
     },
@@ -2008,7 +2017,7 @@ export default new Application({
         return;
       }
 
-      this.updateUserInfospinShow = true;
+      this.updateUserInfoSpinShow = true;
 
       this.http.post(api["player_update"], {
         data: {personaId: this.cheater.originPersonaId}
@@ -2030,7 +2039,7 @@ export default new Application({
           message: d.message || ""
         }));
       }).finally(async () => {
-        this.updateUserInfospinShow = false;
+        this.updateUserInfoSpinShow = false;
         this.updateCheaterModal = false;
 
         await this.getPlayerInfo()
