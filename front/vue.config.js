@@ -57,7 +57,7 @@ module.exports = {
             new MiniCssExtractPlugin({ ignoreOrder: true }),
             new SitemapPlugin({
                 // Production Url
-                base: url.protocol + '://' + url.host,
+                base: url.protocol + '://' + url.frontend_host,
                 paths: [{
                     path: '/',
                     priority: 1
