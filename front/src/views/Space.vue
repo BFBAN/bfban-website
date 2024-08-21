@@ -226,7 +226,11 @@ export default new Application({
             ellipsis: true,
             tooltip: true,
             render: (h, params) => {
-              const that = this;
+              const that = this,
+                  href = window.location.origin + that.$router.resolve({
+                    name: "player",
+                    params: {ouid: params.row.originPersonaId}
+                  }).href;
               return h('row', {
                 props: {
                   type: 'flex',
@@ -243,28 +247,28 @@ export default new Application({
                     }
                   })
                 ]),
-                h('col', [
-                  h(HtmlLink, {
-                    props: {
-                      text: params.row.originName,
-                    },
-                    style: {
-                      "overflow": "hidden",
-                      "display": "block",
-                      "width": "100px",
-                      "text-overflow": "ellipsis",
-                      "white-space": "nowrap"
-                    },
-                    on: {
-                      click() {
-                        that.$router.push({
-                          name: 'player',
-                          params: {ouid: params.row.originPersonaId}
-                        })
-                      }
+                h(HtmlLink, {
+                  props: {
+                    text: params.row.originName,
+                    isPoptip: false,
+                    href
+                  },
+                  style: {
+                    "overflow": "hidden",
+                    "display": "block",
+                    "width": "100px",
+                    "text-overflow": "ellipsis",
+                    "white-space": "nowrap"
+                  },
+                  on: {
+                    click: () => {
+                      that.$router.push({
+                        name: "player",
+                        params: {ouid: params.row.originPersonaId},
+                      })
                     }
-                  }, params.row.originName)
-                ])
+                  }
+                }, params.row.originName)
               ]);
             }
           },

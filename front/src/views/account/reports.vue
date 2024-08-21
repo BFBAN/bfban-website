@@ -60,7 +60,11 @@ export default new Application({
             ellipsis: true,
             tooltip: true,
             render: (h, params) => {
-              const that = this;
+              const that = this,
+                  href = window.location.origin + that.$router.resolve({
+                    name: "player",
+                    params: {ouid: params.row.originPersonaId}
+                  }).href;
               return h('row', {
                 props: {
                   type: 'flex',
@@ -81,6 +85,8 @@ export default new Application({
                   h(HtmlLink, {
                     props: {
                       text: params.row.originName,
+                      isPoptip: false,
+                      href
                     },
                     style: {
                       "overflow": "hidden",
@@ -90,10 +96,10 @@ export default new Application({
                       "white-space": "nowrap"
                     },
                     on: {
-                      click() {
+                      click: () => {
                         that.$router.push({
-                          name: 'player',
-                          params: {ouid: params.row.originPersonaId}
+                          name: "player",
+                          params: {ouid: params.row.originPersonaId},
                         })
                       }
                     }
@@ -192,7 +198,7 @@ export default new Application({
   watch: {
     $route: "loadData",
   },
-  components: { Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, vueQr},
+  components: {Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, vueQr},
   created() {
     this.http = http_token.call(this);
 
@@ -241,7 +247,7 @@ export default new Application({
      * 是否可用聊天
      * @returns {boolean}
      */
-    isChat () {
+    isChat() {
       return !this.account.attr.allowDM || this.account.id == this.currentUser.userinfo.userId
     }
   }

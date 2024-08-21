@@ -134,7 +134,7 @@ export default new Application({
      */
     getUserInfo() {
       const name = 'business';
-      let localBusinessCardData = storage.session().get(name);
+      let localBusinessCardData = storage.session.get(name);
 
       this.showStatus = !this.showStatus;
 
