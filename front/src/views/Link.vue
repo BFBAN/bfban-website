@@ -26,7 +26,7 @@
                 </a>
               </Col>
               <Col>
-                <a href="https://kook.top/1G13TM" target="_blank">
+                <a href="mailto:services@bfban.com?subject=Join the BFBAN Sponsor application" target="_blank">
                   <Button>{{ $t("link.join") }}</Button>
                 </a>
               </Col>
@@ -115,4 +115,5 @@ export default new Application({
 </script>
 
 <style lang="less" scoped>
+@import "@/assets/css/footer";
 </style>

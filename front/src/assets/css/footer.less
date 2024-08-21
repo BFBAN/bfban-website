@@ -2,4 +2,28 @@
   position: relative;
   margin-bottom: 10px;
   user-select: none;
+
+  .footer-link > div {
+    margin-right: 15px;
+    filter: grayscale(1);
+    opacity: .6;
+    transition: all 1s;
+
+    &:hover {
+      filter: grayscale(0);
+      opacity: 1;
+    }
+
+
+    & img {
+      transition: all .25s;
+    }
+
+    &:hover img {
+      backdrop-filter: blur(20px);
+      position: relative;
+      z-index: 10;
+      transform: scale(1.1);
+    }
+  }
 }

@@ -1014,8 +1014,7 @@
 
               <Row :gutter="50">
                 <Col :xs="{span:24}" :lg="{span: 8, flex: 1}">
-                  <judgeActionTemplateView :fromData="verify" :containerRefs="$refs"
-                                           @on-select="onT"></judgeActionTemplateView>
+                  <judgeActionTemplateView :fromData="verify" :containerRefs="$refs"></judgeActionTemplateView>
                 </Col>
                 <Col :xs="{span:24}" :lg="{span: 8, push: 8}" align="right">
                   <br class="desktop-hide">
@@ -1074,7 +1073,7 @@
 
     <template v-if="!isFull">
       <Affix :top="100">
-        <Card dis-hover class="detail-affix mobile-hide">
+        <Card dis-hover class="detail-affix">
           <a href="javascript:void(0)" @click="onRollingNode(0)">
             <Icon type="md-arrow-round-up" size="30"/>
           </a>
@@ -2111,8 +2110,7 @@ export default new Application({
 
 .detail-affix {
   position: fixed !important;
-  right: calc(50% - (1024px / 2) - 85px) !important;
-  top: 30% !important;;
+  top: 30%;
   transform: translateY(-30%) !important;;
   z-index: 100;
 
@@ -2122,9 +2120,20 @@ export default new Application({
   }
 }
 
+@media screen and (min-width: 2048px) {
+  .detail-affix {
+    right: calc(50% - (1400px / 2) - 85px) !important;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .detail-affix {
+    right: calc(50% - (1200px / 2) - 85px);
+  }
+}
+
 @media screen and (max-width: 1080px) {
   .detail-affix {
-    opacity: .2;
     display: none !important;
   }
 }

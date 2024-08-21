@@ -91,7 +91,7 @@
 <script>
 import {api, http, http_token, storage} from '../assets/js/index';
 
-import PrivilegesTag from "/src/components/PrivilegesTag";
+import PrivilegesTag from "@/components/PrivilegesTag";
 import AchievementsTag from "@/components/AchievementsTag.vue";
 import Application from "@/assets/js/application";
 import Banner from "@/components/Banner.vue";

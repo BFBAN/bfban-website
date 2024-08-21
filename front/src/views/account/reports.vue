@@ -43,6 +43,7 @@ import UserAvatar from "@/components/UserAvatar.vue";
 import Confetti from "@/components/Confetti.vue";
 import vueQr from "vue-qr";
 import {api, http, http_token, util} from "@/assets/js";
+import HtmlLink from "@/components/HtmlLink.vue";
 
 export default new Application({
   data() {
@@ -77,9 +78,9 @@ export default new Application({
                   })
                 ]),
                 h('col', [
-                  h('a', {
-                    attr: {
-                      title: params.row.originName
+                  h(HtmlLink, {
+                    props: {
+                      text: params.row.originName,
                     },
                     style: {
                       "overflow": "hidden",

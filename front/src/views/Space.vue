@@ -189,6 +189,7 @@ import Application from "../assets/js/application";
 import Empty from "@/components/Empty";
 import vueQr from "vue-qr";
 import UserAvatar from "@/components/UserAvatar.vue";
+import HtmlLink from "@/components/HtmlLink.vue";
 import TimeView from "@/components/TimeView.vue";
 import cheaterStatusView from "@/components/CheaterStatusView.vue";
 import Confetti from "@/components/Confetti.vue";
@@ -243,9 +244,9 @@ export default new Application({
                   })
                 ]),
                 h('col', [
-                  h('a', {
-                    attr: {
-                      title: params.row.originName
+                  h(HtmlLink, {
+                    props: {
+                      text: params.row.originName,
                     },
                     style: {
                       "overflow": "hidden",

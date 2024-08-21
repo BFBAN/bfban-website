@@ -66,7 +66,7 @@
               </div>
             </Col>
             <Col>
-              <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}">
+              <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}" target="_blank">
                 <Icon type="ios-eye" size="25"/>
               </router-link>
             </Col>

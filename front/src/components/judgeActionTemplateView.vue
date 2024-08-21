@@ -93,7 +93,7 @@ export default {
 <template>
   <div>
     <ButtonGroup>
-      <Poptip ref="filesPoptip" placement="bottom-start" trigger="click" width="400" :padding="0">
+      <Poptip ref="filesPoptip" placement="bottom-start" trigger="click" width="400" :padding="'0'">
         <Button size="large">JudgeAction Template</Button>
         <template slot="content">
           <Row :gutter="10" style="padding: 10px">
