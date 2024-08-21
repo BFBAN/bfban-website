@@ -74,11 +74,6 @@
             "insideLang": true
           },
           {
-            "text": "header.about",
-            "src": "about",
-            "insideLang": true
-          },
-          {
             "text": "link.title",
             "src": "link",
             "insideLang": true
@@ -100,12 +95,25 @@
               "en-US": "Network Status",
               "zh-CN": "网络状态"
             }
+          },
+          {
+            "text": "Exterior Design",
+            "textLang": {
+              "en-US": "Exterior Design",
+              "zh-CN": "设计材料"
+            },
+            "src": "https://github.com/BFBAN/exterior-design"
           }
         ]
       },
       {
         "text": "footer.column.col4.title",
         "child": [
+          {
+            "text": "header.about",
+            "src": "about",
+            "insideLang": true
+          },
           {
             "text": "Complaint mailbox",
             "textLang": {
@@ -115,7 +123,7 @@
             "src": "mailto:ban-appeals@bfban.com"
           },
           {
-            "text": "app mailbox",
+            "text": "Contact Us",
             "textLang": {
               "en-US": "Contact Us",
               "zh-CN": "联系我们"
@@ -123,7 +131,7 @@
             "src": "mailto:services@bfban.com"
           },
           {
-            "text": "QQ交流群",
+            "text": "腾讯QQ交流群",
             "src": "//jq.qq.com/?_wv=1027&k=FY8TCpCV",
             "showLang": [
               "zh-CN",
