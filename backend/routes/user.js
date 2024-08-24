@@ -186,18 +186,15 @@ async (req, res, next) => {
     }
 });
 
-router.post('/signin4comm', verifyCaptcha, verifyJWT, allowPrivileges(['dev']), [
-    checkbody("data.username").isString().trim().isLength({min: 1, max: 40}),
-    checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
-    checkbody('data.EXPIRES_IN').optional({nullable: true}).isInt({min: 0})
-], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
+router.post('/signin4comm', verifyCaptcha, verifyJWT, allowPrivileges(['dev']),
+/** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'signin.bad', message: validateErr.array()});
 
-        const {username, password, EXPIRES_IN} = req.body.data;
+        const {username, password} = req.body.data;
         req.user = await db.select('*')
             .from('users')
             .where({username: username}).orWhere({originEmail: username}).first();
