@@ -198,6 +198,7 @@ async (req, res, next) => {
         req.user = await db.select('*')
             .from('users')
             .where({username: username}).orWhere({originEmail: username}).first();
+        const user = req.user;
 
         if (user && user.valid !== 0 && await comparePassword(password, user.password)) {
             return res.status(200).json({
