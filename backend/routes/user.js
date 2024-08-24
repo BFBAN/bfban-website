@@ -8,7 +8,7 @@ import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import {getGravatarAvatar} from "../lib/gravatar.js";
-import {sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify} from "../lib/mail.js";
+import {sendBindingOriginVerify, sendForgetPasswordVerify, sendRegisterVerify} from "../lib/mail.js";
 import {
     allowPrivileges,
     forbidPrivileges,
@@ -16,7 +16,7 @@ import {
     verifyAllowPrivilege,
     verifyJWT
 } from "../middleware/auth.js";
-import {generatePassword, comparePassword, userHasRoles, privilegeRevoker} from "../lib/auth.js";
+import {comparePassword, generatePassword, privilegeRevoker, userHasRoles} from "../lib/auth.js";
 import {userDefaultAttribute, userSetAttributes, userShowAttributes} from "../lib/user.js";
 import {totalAachievementExp} from "./user_achievements.js"
 import {siteEvent} from "../lib/bfban.js";
@@ -186,38 +186,40 @@ async (req, res, next) => {
     }
 });
 
-router.post('/signup4dev', verifyJWT, allowPrivileges(['dev']), [
+router.post('/signin4comm', verifyCaptcha, verifyJWT, allowPrivileges(['dev']), [
     checkbody("data.username").isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
-    checkbody('data.originEmail').isString().trim(),
-    checkbody('data.originName').isString().trim()
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
+    checkbody('data.EXPIRES_IN').optional({nullable: true}).isInt({min: 0})
+], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'signup.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'signin.bad', message: validateErr.array()});
 
-        // all data well-formed, ready to flight
-        /** @type {{username:string, password:string, originName:string, originEmail:string}} */
-        const {username, password, originName, originEmail} = req.body.data;
+        const {username, password, EXPIRES_IN} = req.body.data;
+        req.user = await db.select('*')
+            .from('users')
+            .where({username: username}).orWhere({originEmail: username}).first();
 
-        // does anyone occupy
-        if ((await db.select('username').from('verifications').where({username: username, type: 'register'}).union([
-            db.select('username').from('users').where({username: username})
-        ])).length !== 0)
-            return res.status(400).json({error: 1, code: 'signup.usernameExist'});
-        const passwdHash = await generatePassword(password);
-        await db('users').insert({
-            username: username,
-            password: passwdHash,
-            originName: originName,
-            originEmail: originEmail,
-            privilege: JSON.stringify(['normal']),
-            attr: JSON.stringify(userDefaultAttribute(undefined, req.headers["accept-language"] || req.query.lang)),
-            createTime: new Date(),
-        });
-        return res.status(201).json({success: 1, code: 'signup.success', message: 'Welcome to BFBan!'});
+        if (user && user.valid !== 0 && await comparePassword(password, user.password)) {
+            return res.status(200).json({
+                success: 1,
+                code: 'signin.success',
+                data: {
+                    username: user.username,
+                    userid: user.id,
+                    usermail: user.originEmail
+                },
+                message: 'Login Verify Success',
+            });
+        } else {
+            return res.status(401).json({
+                error: 1,
+                code: 'signin.noSuchUser',
+                message: 'User not found or password mismatch'
+            });
+        }
     } catch (err) {
         next(err);
     }
