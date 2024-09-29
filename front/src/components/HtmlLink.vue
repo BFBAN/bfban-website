@@ -65,14 +65,21 @@ export default {
       }
     }
   },
+  watch: {
+    'href': 'loadData',
+    'text': 'loadData'
+  },
   created() {
-    // unescape is deprecated， by: https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/escape
-    if (this.href)
-      this.afterData.href = decodeURI(this.href);
-    if (this.text)
-      this.afterData.text = decodeURI(this.text);
+    this.loadData();
   },
   methods: {
+    loadData() {
+      // unescape is deprecated， by: https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/escape
+      if (this.href)
+        this.afterData.href = decodeURI(this.href);
+      if (this.text)
+        this.afterData.text = decodeURI(this.text);
+    },
     onPoptipShow(status) {
       const that = this;
       this.disableIframe = status;
