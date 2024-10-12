@@ -150,16 +150,10 @@ export default new Application({
 
       this.langLocalSync = account_storage.getConfiguration('langLocalSync');
       this.languages = languages.child;
-      // this.loadLanguages();
+
+      if (this.$route.query.lang)
+        this.currentLan = this.$route.query.lang;
     },
-    async loadLanguages() {
-      let that = this;
-      let lang = this.currentLan;
-      setTimeout(function () {
-        if (this.langLocalSync)
-          that.$store.dispatch('setLang', lang);
-      }, 200)
-    }
   },
   computed: {
     currentLan: {
