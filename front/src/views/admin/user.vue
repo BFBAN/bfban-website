@@ -440,7 +440,7 @@ export default new Application({
 
       userType: {
         value: 'all',
-        list: [{title: 'All', value: 'all'}, {title: 'Admin`s', value: 'admin'}]
+        list: [{title: 'All', value: 'all'}, {title: 'Admin`s', value: 'admin'}, {title: 'Bot`s', value: 'bot'}]
       },
       userOrder: {
         value: 'asc',
