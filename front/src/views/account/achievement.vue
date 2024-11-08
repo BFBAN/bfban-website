@@ -36,10 +36,6 @@
         </Form>
       </Banner>
 
-      <Spin size="large" fix v-show="load">
-        <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
-      </Spin>
-
       <div class="profile-body">
         <Row :gutter="20" v-for="(i,index) in achievements.child.filter(i => !i.isHidden)" :key="index"
              class="achievement-item">
@@ -129,6 +125,10 @@
             </Card>
           </Col>
         </Row>
+
+        <Spin size="large" fix v-show="!load">
+          <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+        </Spin>
       </div>
     </TabPane>
   </Tabs>
@@ -197,6 +197,10 @@ export default {
 </script>
 
 <style lang="less">
+.profile-body {
+  position: relative;
+}
+
 .ivu-steps.ivu-steps-small .ivu-steps-tail {
   top: 14px !important;
 }
