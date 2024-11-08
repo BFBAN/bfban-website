@@ -354,6 +354,51 @@
           ]
         }
       ]
+    },
+    {
+      "value": "user_subscribes_assemble",
+      "tag": [
+        "subscribes",
+        "user"
+      ],
+      "child": [
+        {
+          "value": "user_subscribes_l1",
+          "iconPath": "user_subscribes_l1.png",
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        },
+        {
+          "value": "user_subscribes_l2",
+          "iconPath": "user_subscribes_l2.png",
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        }
+      ]
+    },
+    {
+      "value": "site_20w_report_witnesses",
+      "iconPath": "site_20w_report_witnesses_l1.png",
+      "isShowCard": true,
+      "rarity": "normal",
+      "acquisition": [
+        "active"
+      ],
+      "tag": [
+        "user"
+      ]
     }
   ]
 }

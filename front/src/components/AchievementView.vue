@@ -133,6 +133,11 @@ export default {
 <style scoped lang="less">
 .achievement-view-slot {
   cursor: pointer;
+
+  u {
+    font-weight: bold;
+    outline: 1px;
+  }
 }
 
 .achievement-view {
@@ -149,6 +154,7 @@ export default {
   .achievement-view-description {
     margin-bottom: 10px;
     opacity: .6;
+    white-space: break-spaces;
   }
 
   .achievement-view-conditions {

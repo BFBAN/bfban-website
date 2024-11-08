@@ -65,6 +65,7 @@ export default class Api {
             "service_file": "service/file",
             "service_files": "service/files",
             "service_upload": "service/upload",
+            "service_getAuthText": "service/getAuthText",
             "service_uploadBigFile": "service/uploadBigFile",
             "service_externalAuth": "service/externalAuth",
             "service_confirmAuth": "service/confirmAuth",

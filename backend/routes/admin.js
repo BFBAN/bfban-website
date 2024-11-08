@@ -20,7 +20,7 @@ const router = express.Router();
 
 router.get('/searchUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('name').isString(),
-    checkquery('type').optional().isIn(['all', 'admin']),
+    checkquery('type').optional().isIn(['all', 'admin', 'bot']),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
     checkquery('order').optional().isIn(['asc', 'desc']),
@@ -29,62 +29,64 @@ router.get('/searchUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
 async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
-        if (!validateErr.isEmpty())
+        if (!validateErr.isEmpty()) {
             return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
+        }
 
-        const type = req.query.type !== undefined ? req.query.type : 'all';
-        const skip = req.query.skip !== undefined ? req.query.skip : 0;
-        const limit = req.query.limit !== undefined ? req.query.limit : 20;
-        const order = req.query.order ? req.query.order : 'desc';
-        const parameter = req.query.parameter ? req.query.parameter : 'username';
-
-        let total;
-        let result;
+        const type = req.query.type || 'all';
+        const skip = Number(req.query.skip) || 0;
+        const limit = Number(req.query.limit) || 20;
+        const order = req.query.order || 'desc';
+        const parameter = req.query.parameter || 'username';
+        let total, result;
 
         switch (type) {
             case 'admin':
-                result = await db.select('*').from('users')
-                    .where('users.privilege', 'like', '%"admin"%')
-                    .orWhere('users.privilege', 'like', '%"super"%')
-                    .orWhere('users.privilege', 'like', '%"root"%')
-                    .select('users.*', 'users.username', 'users.privilege')
-                    .orderBy('users.createTime', order)
-                    .offset(skip).limit(limit);
-
-                total = await db.count({num: 1}).from('users')
-                    .where('users.privilege', 'like', '%"admin"%')
-                    .orWhere('users.privilege', 'like', '%"super"%')
-                    .orWhere('users.privilege', 'like', '%"root"%')
-                    .first().then(r => r.num);
+                [result, total] = await Promise.all([
+                    db('users')
+                        .select('*', 'username', 'privilege').where('privilege', 'like', '%"admin"%')
+                        .orWhere('privilege', 'like', '%"super"%')
+                        .orWhere('privilege', 'like', '%"root"%')
+                        .orderBy('createTime', order)
+                        .offset(skip).limit(limit),
+                    db('users').count({num: 1})
+                        .where('privilege', 'like', '%"admin"%')
+                        .orWhere('privilege', 'like', '%"super"%')
+                        .orWhere('privilege', 'like', '%"root"%')
+                        .first().then(r => r.num)
+                ]);
+                break;
+            case 'bot':
+                [result, total] = await Promise.all([
+                    db('users')
+                        .select('*', 'username', 'privilege').where('privilege', 'like', '%"bot"%')
+                        .orderBy('createTime', order).offset(skip).limit(limit),
+                    db('users')
+                        .count({num: 1}).where('privilege', 'like', '%"bot"%').first()
+                        .then(r => r.num)
+                ]);
                 break;
             case 'all':
             default:
-                result = await db.select('*').from('users')
-                    .where(`users.${parameter}`, 'like', `%${req.query.name}%`)
-                    .select('users.*', 'users.username', 'users.privilege')
-                    .orderBy('users.createTime', order)
-                    .offset(skip).limit(limit);
-
-                total = await db.count({num: 1}).from('users')
-                    .where(`users.${parameter}`, 'like', `%${req.query.name}%`)
-                    .first().then(r => r.num);
+                [result, total] = await Promise.all([
+                    db('users')
+                        .select('*', 'username', 'privilege').where(parameter, 'like', `%${req.query.name}%`)
+                        .orderBy('createTime', order).offset(skip).limit(limit),
+                    db('users').count({num: 1})
+                        .where(parameter, 'like', `%${req.query.name}%`).first()
+                        .then(r => r.num)
+                ]);
         }
-
         if (result) {
-            const now = new Date()
+            const now = new Date();
             result.forEach(i => {
                 delete i.password;
                 delete i.subscribes;
-                if (i.attr.mute) {
-                    const date = new Date(i.attr.mute)
-                    if (date - now > 0) {
-                        i.isMute = true
-                    }
+                if (i.attr.mute && new Date(i.attr.mute) - now > 0) {
+                    i.isMute = true;
                 }
-                return i;
             });
         }
-
         return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
             success: 1,
             code: 'searchUser.ok',

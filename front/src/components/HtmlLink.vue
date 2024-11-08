@@ -3,10 +3,10 @@
           @on-popper-show="onPoptipShow(false)"
           @on-popper-hide="onPoptipShow(true)">
     <span class="html-link">
-      <template v-if="getProtocol == 'http:' || getProtocol == 'https:'">
+      <template v-if="getProtocol === 'http:' || getProtocol === 'https:'">
         <Icon type="md-link"/>
       </template>
-      <template v-else-if="getProtocol == 'mailto:'">
+      <template v-else-if="getProtocol === 'mailto:'">
         <Icon type="ios-mail-outline"/>
       </template>
       <a :href="afterData.href" target="_blank" rel="noopener noreferrer">{{ afterData.text || afterData.href }}</a>
@@ -16,7 +16,7 @@
         <template v-if="linkLoad">
           <div class="link-load link-box" style="position: relative; z-index: 1;">
             <Badge>
-              <Icon type="md-refresh" class="spin-icon-load" slot="count" size="20"/>
+              <Icon type="md-refresh" class="spin-icon-load" size="20"/>
               <Icon type="md-browsers" size="50"/>
             </Badge>
           </div>

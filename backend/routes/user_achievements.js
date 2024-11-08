@@ -126,7 +126,7 @@ const achievementConfig = {
         another: ['active_community_weekly_l1'],
         points: 10,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=weekly&community=true`, {method: 'GET'});
+            let response = await fetch(`https://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=weekly&community=true`, {method: 'GET'});
             let result = await response.json();
             if (result.error === 1 && result.data.community.length <= 0) return false;
             return result.data.community.find(i => i.id === req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
@@ -136,7 +136,7 @@ const achievementConfig = {
         another: ['active_community_monthly_l1'],
         points: 10,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=monthly&community=true`, {method: 'GET'});
+            let response = await fetch(`https://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=monthly&community=true`, {method: 'GET'});
             let result = await response.json();
             if (result.error === 1 && result.data.community.length <= 0) return false;
             return result.data.community.find(i => i.id === req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
@@ -146,7 +146,7 @@ const achievementConfig = {
         another: ['active_community_monthly_l2'],
         points: 10,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=monthly&community=true`, {method: 'GET'});
+            let response = await fetch(`https://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=monthly&community=true`, {method: 'GET'});
             let result = await response.json();
             if (result.error === 1 && result.data.community.length <= 0) return false;
             return result.data.community
@@ -158,7 +158,7 @@ const achievementConfig = {
         another: ['active_community_yearly_l1'],
         points: 30,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=yearly&community=true`, {method: 'GET'});
+            let response = await fetch(`https://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=yearly&community=true`, {method: 'GET'});
             let result = await response.json();
             if (result.error === 1 && result.data.community.length <= 0) return false;
             return result.data.community.find(i => i.id === req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0;
@@ -168,7 +168,7 @@ const achievementConfig = {
         another: ['active_community_yearly_l2'],
         points: 60,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=yearly&community=true`, {method: 'GET'});
+            let response = await fetch(`https://${config.address}:${config.port}/api/activeStatistical?isBot=false&time=yearly&community=true`, {method: 'GET'});
             let result = await response.json();
             if (result.error === 1 && result.data.community.length <= 0) return false;
             return result.data.community
@@ -276,6 +276,34 @@ const achievementConfig = {
             if (req.user.privilege && req.user.privilege.indexOf('bot') >= 0) return false;
             return totalReports >= 5000 && hammerReports / totalReports >= 0.96 && req.user.attr.achievements['report_l4'];
         }
+    },
+    'user_subscribes_l1': {
+        another: ['user_subscribes_l1'],
+        points: 2,
+        async conditions(req, res, next) {
+            const user = req.user;
+            if (!user || !user.subscribes || user.subscribes.length <= 0) return false;
+            return user.subscribes.length > 0;
+        }
+    },
+    'user_subscribes_l2': {
+        another: ['user_subscribes_l2'],
+        points: 2,
+        async conditions(req, res, next) {
+            const user = req.user;
+            if (!user || !user.subscribes || user.subscribes.length <= 0) return false;
+            return user.subscribes.length >= 20 && req.user.attr.achievements['user_subscribes_l1'];
+        }
+    },
+    'site_20w_report_witnesses': {
+        another: ['site_20w_report_witnesses'],
+        points: 1,
+        async conditions(req, res, next) {
+            let response = await fetch(`https://${config.address}:${config.port}/api/statistics?reports=true`, {method: 'GET'});
+            let result = await response.json();
+            if (result.error === 1 && result.data.community.length <= 0) return false;
+            return result.data.reports.length >= 0;
+        },
     }
 }
 
