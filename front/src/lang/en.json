@@ -806,6 +806,25 @@
           "name": "Report mentor",
           "conditions": "- Report 5000 players\n- Start counting from 2024-01-01\n- And the percentage of valid hammer cases is over 96%\n- Non-robot accounts",
           "description": "You only need this achievement condition, no need to describe everything."
+        },
+        "user_subscribes_assemble": {
+          "name": "案件追踪",
+          "description": "完成对应案件追踪"
+        },
+        "user_subscribes_l1": {
+          "name": "猎人的眼睛1",
+          "conditions": "- 追踪第一条案件<br>- 正常账户",
+          "description": "猎人将时刻关注猎物"
+        },
+        "user_subscribes_l2": {
+          "name": "猎人的眼睛2",
+          "conditions": "- 追踪足够20条案件<br>- 正常账户",
+          "description": "一名成熟的猎人"
+        },
+        "site_20w_report_witnesses": {
+          "name": "20W举报见证者",
+          "conditions": "- 当网站举报突破20W时所有用户都可以获得",
+          "description": "20w对于我们来说不是值得庆祝的事，这个成就更希望不需要领取"
         }
       }
     },
