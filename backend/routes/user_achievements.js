@@ -302,7 +302,7 @@ const achievementConfig = {
             let response = await fetch(`https://${config.address}:${config.port}/api/statistics?reports=true`, {method: 'GET'});
             let result = await response.json();
             if (result.error === 1 && result.data.community.length <= 0) return false;
-            return result.data.reports.length >= 0;
+            return result.data.reports.length >= 200000;
         },
     }
 }
