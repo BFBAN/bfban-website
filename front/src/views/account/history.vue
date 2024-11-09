@@ -160,8 +160,8 @@ export default {
           .map(i => i[0]);
 
       this.load = true;
-      this.http.get(api["player_batch"], {
-        params: {dbIds}
+      this.http.post(api["player_batch"], {
+        data: {dbIds}
       }).then(res => {
         const d = res.data;
 
