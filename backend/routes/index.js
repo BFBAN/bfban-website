@@ -538,7 +538,7 @@ async (req, res, next) => {
  *         description: activities.ok
  *       400: players.bad
  */
-router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'dev', 'root']), [
+router.get('/players/stream', verifyJWT, allowPrivileges(['bot', 'admin', 'super', 'root']), [
     checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
     checkquery('status').optional().isIn([-1, 0, 1, 2, 3, 4, 5, 6, 8, 9]),
     checkquery('sortBy').optional().isIn(['createTime', 'updateTime', 'viewNum', 'commentsNum']),

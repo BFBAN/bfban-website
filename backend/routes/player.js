@@ -121,16 +121,21 @@ async (req, res, next) => {
     }
 });
 
+// ===================
+// 这处的备注是给阅读到此段开发者提供思路，这些接口有后面新增也有程序设计时存在的接口，批量处理有以下，都有不同细微不同:
+// 1.[POST]/api/player/batch    批查询、仅返回id和状态、有一定查询上限，但可最大程度返回所有         | 提供外部查询
+// 2.[GET]/api/player/batchs    批查询、返回详情，需要令牌，有128查询上限                         | 综合使用
+// 3.[GET]/api/players/stream   批查询，返回详情，需要令牌，提供状态、顺序、时间筛选、支持分页        | 网站使用
+// ===================
+
 /**
  * @swagger
  * /api/player/batch:
  *   post:
- *     security:
- *       - appToken: []
  *     tags:
  *       - player
  *     summary: players Detail
- *     description: To get the status of a player, if you need complete information about that player's case, you should use GET /api/players/stream
+ *     description: To get the status of a player, if you need complete information about that player's case, you should use [GET]/api/players/stream or [GET]/api/player/batchs
  *     produces:
  *       - application/json
  *     requestBody:
@@ -158,11 +163,6 @@ async (req, res, next) => {
  *       404:
  *         description: playerBatch.notFound
  */
-router.get('/batch', (req, res, next) => {
-    res.status(404).jsonp({
-        message: 'The current GET interface is deprecated. Please change the POST mode'
-    })
-})
 router.post('/batch',
     // 处理逗号分隔值的中间件
     (req, res, next) => {
@@ -191,25 +191,30 @@ router.post('/batch',
         }
     },
     // 参数验证
-    [checkquery('userIds').optional().isArray({max: 1024}).custom((val) => {
-        for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
-        return true;
-    }), checkquery('personaIds').optional().isArray({max: 1024}).custom((val) => {
-        for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
-        return true;
-    }), checkquery('dbIds').optional().isArray({max: 1024}).custom((val) => {
-        for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
-        return true;
-    }), checkquery('*').custom((val, {req}) => {
-        let cnt = 0;
-        cnt += Array.isArray(req.body.userIds) ? req.body.userIds.length : 0;
-        cnt += Array.isArray(req.body.personaIds) ? req.body.personaIds.length : 0;
-        cnt += Array.isArray(req.body.dbIds) ? req.body.dbIds.length : 0;
-        if (cnt > req.maxCount) {  // 使用动态设置的最大计数限制
-            throw new Error(`Too many entities. Max allowed is ${req.maxCount}`);
-        }
-        return true;
-    })], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+    [
+        checkquery('userIds').optional().isArray({max: 1024}).custom((val) => {
+            for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
+            return true;
+        }),
+        checkquery('personaIds').optional().isArray({max: 1024}).custom((val) => {
+            for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
+            return true;
+        }),
+        checkquery('dbIds').optional().isArray({max: 1024}).custom((val) => {
+            for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
+            return true;
+        }),
+        checkquery('*').custom((val, {req}) => {
+            let cnt = 0;
+            cnt += Array.isArray(req.body.userIds) ? req.body.userIds.length : 0;
+            cnt += Array.isArray(req.body.personaIds) ? req.body.personaIds.length : 0;
+            cnt += Array.isArray(req.body.dbIds) ? req.body.dbIds.length : 0;
+            if (cnt > req.maxCount) {  // 使用动态设置的最大计数限制
+                throw new Error(`Too many entities. Max allowed is ${req.maxCount}`);
+            }
+            return true;
+        })
+    ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
     async (req, res, next) => {
         try {
             const validateErr = validationResult(req);
@@ -252,23 +257,40 @@ router.post('/batch',
         }
     });
 
-router.get('/batchs', verifyJWT, allowPrivileges(['bot', 'admin', 'super', 'root']), [checkquery('userIds').optional().isArray({max: 128}).custom((val) => {
-    for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
-    return true;
-}), checkquery('personaIds').optional().isArray({max: 128}).custom((val) => {
-    for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
-    return true;
-}), checkquery('dbIds').optional().isArray({max: 128}).custom((val) => {
-    for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
-    return true;
-}), checkquery('*').custom((val, {req}) => {
-    let cnt = 0;
-    cnt += Array.isArray(req.query.userIds) ? req.query.userIds.length : 0;
-    cnt += Array.isArray(req.query.personaIds) ? req.query.personaIds.length : 0;
-    cnt += Array.isArray(req.query.dbIds) ? req.query.dbIds.length : 0;
-    if (cnt > 128) throw new Error('Too much entities. (max 128)');
-    return true;
-})], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
+/**
+ * @swagger
+ * /api/player/batchs:
+ *   get:
+ *     security:
+ *       - appToken: []
+ *     tags:
+ *       - player
+ *     summary: players Detail
+ *     description: Similar to [POST]/api/player/batch, but requires token identity and returns case details with query caps
+ *     produces:
+ *       - application/json
+ */
+router.get('/batchs', verifyJWT, allowPrivileges(['bot', 'admin', 'super', 'root']), [
+    checkquery('userIds').optional().isArray({max: 128}).custom((val) => {
+        for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
+        return true;
+    }),
+    checkquery('personaIds').optional().isArray({max: 128}).custom((val) => {
+        for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
+        return true;
+    }),
+    checkquery('dbIds').optional().isArray({max: 128}).custom((val) => {
+        for (const i of val) if (Number.isNaN(parseInt(i)) || parseInt(i) < 0) throw new Error('Bad input');
+        return true;
+    }),
+    checkquery('*').custom((val, {req}) => {
+        let cnt = 0;
+        cnt += Array.isArray(req.query.userIds) ? req.query.userIds.length : 0;
+        cnt += Array.isArray(req.query.personaIds) ? req.query.personaIds.length : 0;
+        cnt += Array.isArray(req.query.dbIds) ? req.query.dbIds.length : 0;
+        if (cnt > 128) throw new Error('Too much entities. (max 128)');
+        return true;
+    })], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
