@@ -126,7 +126,7 @@
           </Col>
         </Row>
 
-        <Spin size="large" fix v-show="!load">
+        <Spin size="large" fix v-show="load">
           <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
         </Spin>
       </div>
