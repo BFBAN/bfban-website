@@ -90,22 +90,18 @@ async function sendRegisterVerify(username, originName, address, language, code)
     const html = await getTemplateContent("mail_register", language);
     const origin = new URL(domain).origin;
 
+    const emailContent = html
+        .replace(/\$\{username\}/g, username)
+        .replace(/\$\{originName\}/g, originName)
+        .replace(/\$\{website\}/g, origin)
+        .replace(/\$\{code\}/g, code);
+
     await sendMail(
-        `Hello ${username}!\nYou are now signing up for BFBAN as ${originName} in game.\nPlease click the link below to complete your registration:\n${origin}/signupComplete?code=${code}&lang=${language}`,
+        emailContent,
         `"BFBAN Account Service" <no-reply@bfban.com>`,
         address,
         "",
-        subject,
-        [
-            {
-                data: html
-                    .replace(/\$\{username\}/g, username)
-                    .replace(/\$\{originName\}/g, originName)
-                    .replaceAll(/\$\{website\}/g, origin)
-                    .replace(/\$\{code\}/g, code),
-                alternative: true,
-            },
-        ]
+        subject
     );
 }
 
@@ -114,21 +110,17 @@ async function sendForgetPasswordVerify(username, address, language, code) {
     const html = await getTemplateContent("mail_forgetPasswordVerify", language);
     const origin = new URL(domain).origin;
 
+    const emailContent = html
+        .replace(/\$\{username\}/g, username)
+        .replace(/\$\{website\}/g, origin)
+        .replace(/\$\{code\}/g, code);
+
     await sendMail(
-        `Hello ${username}!\nYou are now resetting your password for bfban.com.\nPlease click the link below to reset your password:\n${origin}/forgetPasswordVerify?code=${code}&lang=${language}`,
+        emailContent,
         `"BFBAN Account Service" <no-reply@bfban.com>`,
         address,
         "",
-        subject,
-        [
-            {
-                data: html
-                    .replace(/\$\{username\}/g, username)
-                    .replaceAll(/\$\{website\}/g, origin)
-                    .replace(/\$\{code\}/g, code),
-                alternative: true,
-            },
-        ]
+        subject
     );
 }
 
@@ -140,21 +132,17 @@ async function sendBindingOriginVerify(username, address, language, code) {
     const html = await getTemplateContent("mail_bindEmail", language);
     const origin = new URL(domain).origin;
 
+    const emailContent = html
+        .replace(/\$\{username\}/g, username)
+        .replace(/\$\{website\}/g, origin)
+        .replace(/\$\{code\}/g, code);
+
     await sendMail(
-        `Hello ${username}!\nYou are now binding this email to your bfban.com account.\nPlease click the link below to finish the verification:\n${origin}/bindOrigin?code=${code}&lang=${language}`,
+        emailContent,
         `"BFBAN Account Service" <no-reply@bfban.com>`,
         address,
         "",
-        subject,
-        [
-            {
-                data: html
-                    .replace(/\$\{username\}/g, username)
-                    .replaceAll(/\$\{website\}/g, origin)
-                    .replace(/\$\{code\}/g, code),
-                alternative: true,
-            },
-        ]
+        subject
     );
 }
 
@@ -166,25 +154,23 @@ async function sendUserAuthVerify(username, address, appname, appid, language, c
     const html = await getTemplateContent("mail_userAuth", language);
     const origin = new URL(domain).origin;
 
+    const emailContent = html
+        .replace(/\$\{username\}/g, username)
+        .replace(/\$\{appname\}/g, appname)
+        .replace(/\$\{appid\}/g, appid)
+        .replace(/\$\{website\}/g, origin)
+        .replace(/\$\{code\}/g, code);
+
     await sendMail(
-        `Hello ${username}!\n`,
+        emailContent,
         `"BFBAN Auth App Service" <no-reply@bfban.com>`,
         address,
         "",
-        subject,
-        [
-            {
-                data: html
-                    .replace(/\$\{username\}/g, username)
-                    .replace(/\$\{appname\}/g, appname)
-                    .replace(/\$\{appid\}/g, appid)
-                    .replaceAll(/\$\{website\}/g, origin)
-                    .replaceAll(/\$\{code\}/g, code),
-                alternative: true,
-            },
-        ]
+        subject
     );
 }
+
+
 export {
     sendMail,
     sendRegisterVerify,
