@@ -1,6 +1,6 @@
 "use strict";
 import {promises as fs} from "fs";
-import {SMTPClient, Message} from "emailjs";
+import nodemailer from "nodemailer";
 import config from "../config.js";
 import serviceApi from "./serviceAPI.js";
 
@@ -9,31 +9,57 @@ const domain = config.mail.domain.origin;
 * https://bfban.com/
 */
 
-const sender = {}
-Object.keys(config.mail).forEach(key => {
-    const mail = config.mail[key]
-    sender[key] = new SMTPClient({
-        user: mail.user,
-        password: mail.password,
-        host: mail.host,
-        port: mail.port,
-        ssl: mail.secure,
-        tls: mail.tls
-    })
-})
+// 初始化邮件发送器
+const senders = {};
 
-// Use Default SMTP Server To Send Mail
-async function sendMail(content, from, to, cc, subject, attachment = undefined, language) {
-    const message = new Message({
-        text: content,
-        from: from,
-        to: to,
-        cc: cc,
-        subject: subject,
-        attachment: attachment
+if (Array.isArray(config.mail)) {
+    // 如果 `config.mail` 是数组，则为每个配置创建一个 transporter
+    config.mail.forEach((mailConfig, index) => {
+        senders[`config_${index}`] = nodemailer.createTransport({
+            host: mailConfig.host,
+            port: mailConfig.port,
+            secure: mailConfig.secure, // true for 465, false for other ports
+            auth: {
+                user: mailConfig.user,
+                pass: mailConfig.password,
+            },
+            tls: mailConfig.tls ? { rejectUnauthorized: false } : undefined,
+        });
     });
-    return await sender[language].sendAsync(message);
+} else {
+    // 如果 `config.mail` 是单个对象，则创建默认发送器
+    senders.default = nodemailer.createTransport({
+        host: config.mail.host,
+        port: config.mail.port,
+        secure: config.mail.secure,
+        auth: {
+            user: config.mail.user,
+            pass: config.mail.password,
+        },
+        tls: config.mail.tls ? { rejectUnauthorized: false } : undefined,
+    });
 }
+
+// 邮件发送方法
+async function sendMail(content, from, to, cc, subject, attachments = [], senderKey = "default") {
+    const transporter = senders[senderKey];
+
+    if (!transporter) {
+        throw new Error(`No SMTP configuration found for senderKey: ${senderKey}`);
+    }
+
+    const mailOptions = {
+        from,
+        to,
+        cc,
+        subject,
+        text: content,
+        attachments,
+    };
+
+    return transporter.sendMail(mailOptions);
+}
+
 
 
 // /** 此函数用于使用Microsoft进行发件(Microsoft E5或其他专业版本)
