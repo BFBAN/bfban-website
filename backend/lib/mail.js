@@ -73,14 +73,25 @@ async function sendMail(content, from, to, cc, subject, attachments = []) {
     return transporter.sendMail(mailOptions);
 }
 
+
+// 动态读取模板文件
+async function getTemplateContent(templateName, language) {
+    const filePath = `./media/${templateName}_${language}.html`;
+    try {
+        return await fs.readFile(filePath, "utf-8");
+    } catch (error) {
+        throw new Error(`Failed to load email template: ${filePath}`);
+    }
+}
+
 // 邮件模板方法
-async function sendRegisterVerify(username, originName, address, code) {
-    const subject = "BFBAN Registration";
-    const html = await fs.readFile(`./media/mail_register.html`).then((buf) => buf.toString());
+async function sendRegisterVerify(username, originName, address, language, code) {
+    const subject = language === "zh-CN" ? "BFBAN注册" : "BFBAN Registration";
+    const html = await getTemplateContent("mail_register", language);
     const origin = new URL(domain).origin;
 
     await sendMail(
-        `Hello ${username}!\nYou are now signing up for BFBAN as ${originName} in game.\nPlease click the link below to complete your registration:\n${origin}/signupComplete?code=${code}`,
+        `Hello ${username}!\nYou are now signing up for BFBAN as ${originName} in game.\nPlease click the link below to complete your registration:\n${origin}/signupComplete?code=${code}&lang=${language}`,
         `"BFBAN Account Service" <no-reply@bfban.com>`,
         address,
         "",
@@ -98,13 +109,13 @@ async function sendRegisterVerify(username, originName, address, code) {
     );
 }
 
-async function sendForgetPasswordVerify(username, address, code) {
-    const subject = "BFBAN Password Reset";
-    const html = await fs.readFile(`./media/mail_forgetPasswordVerify.html`).then((buf) => buf.toString());
+async function sendForgetPasswordVerify(username, address, language, code) {
+    const subject = language === "zh-CN" ? "BFBAN密码重置" : "BFBAN Password Reset";
+    const html = await getTemplateContent("mail_forgetPasswordVerify", language);
     const origin = new URL(domain).origin;
 
     await sendMail(
-        `Hello ${username}!\nYou are now resetting your password for bfban.com.\nPlease click the link below to reset your password:\n${origin}/forgetPasswordVerify?code=${code}`,
+        `Hello ${username}!\nYou are now resetting your password for bfban.com.\nPlease click the link below to reset your password:\n${origin}/forgetPasswordVerify?code=${code}&lang=${language}`,
         `"BFBAN Account Service" <no-reply@bfban.com>`,
         address,
         "",
@@ -121,13 +132,16 @@ async function sendForgetPasswordVerify(username, address, code) {
     );
 }
 
-async function sendBindingOriginVerify(username, address, code) {
-    const subject = "BFBAN - Connecting your e-mail address";
-    const html = await fs.readFile(`./media/mail_bindEmail.html`).then((buf) => buf.toString());
+async function sendBindingOriginVerify(username, address, language, code) {
+    const subject =
+        language === "zh-CN"
+            ? "BFBAN账户绑定"
+            : "BFBAN - Connecting your e-mail address";
+    const html = await getTemplateContent("mail_bindEmail", language);
     const origin = new URL(domain).origin;
 
     await sendMail(
-        `Hello ${username}!\nYou are now binding this email to your bfban.com account.\nPlease click the link below to finish the verification:\n${origin}/bindOrigin?code=${code}`,
+        `Hello ${username}!\nYou are now binding this email to your bfban.com account.\nPlease click the link below to finish the verification:\n${origin}/bindOrigin?code=${code}&lang=${language}`,
         `"BFBAN Account Service" <no-reply@bfban.com>`,
         address,
         "",
@@ -144,9 +158,12 @@ async function sendBindingOriginVerify(username, address, code) {
     );
 }
 
-async function sendUserAuthVerify(username, address, appname, appid, code) {
-    const subject = "BFBAN Application authorization";
-    const html = await fs.readFile(`./media/mail_userAuth.html`).then((buf) => buf.toString());
+async function sendUserAuthVerify(username, address, appname, appid, language, code) {
+    const subject =
+        language === "zh-CN"
+            ? "BFBAN应用授权"
+            : "BFBAN Application authorization";
+    const html = await getTemplateContent("mail_userAuth", language);
     const origin = new URL(domain).origin;
 
     await sendMail(
@@ -168,7 +185,6 @@ async function sendUserAuthVerify(username, address, appname, appid, code) {
         ]
     );
 }
-
 export {
     sendMail,
     sendRegisterVerify,
