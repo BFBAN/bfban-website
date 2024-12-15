@@ -22,7 +22,7 @@ Object.keys(config.mail).forEach(key => {
     })
 })
 
-/*
+// Use Default SMTP Server To Send Mail
 async function sendMail(content, from, to, cc, subject, attachment = undefined, language) {
     const message = new Message({
         text: content,
@@ -34,53 +34,43 @@ async function sendMail(content, from, to, cc, subject, attachment = undefined, 
     });
     return await sender[language].sendAsync(message);
 }
-*/
 
-/**
- * @param {string} content
- * @param {'Text'|'HTML'} type
- * @param {string} from
- * @param {string} to
- * @param {string} subject
- */
-async function sendMail_ms(content, type, from, to, subject) {
-    return await serviceApi('msGraphAPI', '/sendMail').post({
-        data: {
-            subject,
-            type,
-            content,
-            from,
-            to
-        }
-    });
-}
 
-// !!! TEMPORARY FIX
-async function sendMail(content, from, to, cc, subject, attachment = undefined, language) {
-    return await sendMail_ms(
-        attachment?.[0].data || content,
-        attachment?.[0].alternative ? "HTML" : "Text",
-        "register@bfban.com" || from,
-        to,
-        subject
-    );
-}
+// /** 此函数用于使用Microsoft进行发件(Microsoft E5或其他专业版本)
+//  * @param {string} content
+//  * @param {'Text'|'HTML'} type
+//  * @param {string} from
+//  * @param {string} to
+//  * @param {string} subject
+//  */
+// async function sendMail_ms(content, type, from, to, subject) {
+//     return await serviceApi('msGraphAPI', '/sendMail').post({
+//         data: {
+//             subject,
+//             type,
+//             content,
+//             from,
+//             to
+//         }
+//     });
+// }
+
 
 async function sendRegisterVerify(username, originName, address, language, code) {
     let subject = {
-        'zh-CN': 'BFBan注册',
-        'en-US': 'BFBan Registration',
+        'zh-CN': 'BFBAN注册',
+        'en-US': 'BFBAN Registration',
     }[language];
-    subject = subject ? subject : 'BFBan Registration';
+    subject = subject ? subject : 'BFBAN Registration';
     const html = await fs.readFile(`./media/mail_register_${language}.html`).then(buf => buf.toString());
     const origin = new URL(domain).origin;
 
     await sendMail(
         "Hello " + username + "!\n" +
-        "   You are now signing up for BFBan as " + originName + " in game.\n" +
+        "   You are now signing up for BFBAN as " + originName + " in game.\n" +
         "   Pease click the link below to complete your registration: \n" +
         "       " + origin + "/signupComplete?code=" + code + "&lang=" + language,
-        "register@bfban.com", address, '', subject, [
+        '"BFBAN Account Service" <no-reply@bfban.com>', address, '', subject, [
             {
                 data: html
                     .replace(/\$\{username\}/g, username)
@@ -108,7 +98,7 @@ async function sendForgetPasswordVerify(username, address, language, code) {
         "   You are now reseting your password for bfban.com.\n" +
         "   Please click the link below to reset your password: \n" +
         "       " + origin + "/forgetPasswordVerify?code=" + code,
-        "register@bfban.com", address, '', subject, [
+        '"BFBAN Account Service" <no-reply@bfban.com>', address, '', subject, [
             {
                 data: html
                     .replace(/\$\{username\}/g, username)
@@ -135,7 +125,7 @@ async function sendBindingOriginVerify(username, address, language, code) {
         "   You are now binding this email to your bfban.com account.\n" +
         "   Please click the link below to finish the verification: \n" +
         "       " + origin + "/bindOrigin?code=" + code,
-        "register@bfban.com", address, '', subject, [
+        '"BFBAN Account Service" <no-reply@bfban.com>', address, '', subject, [
             {
                 data: html
                     .replace(/\$\{username\}/g, username)
@@ -159,7 +149,7 @@ async function sendUserAuthVerify(username, address, appname, appid, language, c
 
     await sendMail(
         "Hello " + username + "!\n",
-        "bfban-auth@bfban.com", address, '', subject, [
+        '"BFBAN Auth App Service" <no-reply@bfban.com>', address, '', subject, [
             {
                 data: html
                     .replace(/\$\{username\}/g, username)
