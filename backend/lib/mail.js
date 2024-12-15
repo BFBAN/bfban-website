@@ -44,7 +44,7 @@ let currentSenderIndex = 0;
 
 /**
  * 邮件发送方法
- * @param {string} content 邮件文本内容
+ * @param {string} htmlContent 邮件HTML内容
  * @param {string} from 发件人邮箱地址
  * @param {string} to 收件人邮箱地址
  * @param {string} cc 抄送邮箱地址
@@ -52,7 +52,7 @@ let currentSenderIndex = 0;
  * @param {Array} attachments 附件
  * @returns {Promise<void>}
  */
-async function sendMail(content, from, to, cc, subject, attachments = []) {
+async function sendMail(htmlContent, from, to, cc, subject, attachments = []) {
     if (senders.length === 0) {
         throw new Error("No SMTP configuration available");
     }
@@ -66,7 +66,7 @@ async function sendMail(content, from, to, cc, subject, attachments = []) {
         to,
         cc,
         subject,
-        text: content,
+        html: htmlContent,
         attachments,
     };
 
