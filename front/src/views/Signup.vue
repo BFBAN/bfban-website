@@ -64,14 +64,8 @@
 
               <div v-show="isOneStepToTheStomach || stepsIndex === 2">
                 <FormItem :label="$t('captcha.title')" prop="captcha">
-                  <Input type="text" v-model="signup.captcha"
-                         size="large"
-                         maxlength="4"
-                         :placeholder="$t('captcha.title')">
-                    <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                      <Captcha ref="captcha" :seconds="15"></Captcha>
-                    </div>
-                  </Input>
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
+
                 </FormItem>
               </div>
 
@@ -181,7 +175,7 @@ export default new Application({
           {required: true, trigger: 'blur'}
         ],
         captcha: [
-          {required: true, len: 4, trigger: 'blur'}
+          {required: true}
         ]
       },
       signup: {
@@ -201,6 +195,9 @@ export default new Application({
     this.http = http_token.call(this);
   },
   methods: {
+    getCaptchaData(e) {
+      this.signup.captcha = e;
+    },
     /**
      * 提交注册信息
      */
@@ -226,7 +223,6 @@ export default new Application({
               originName,	  // must have one of bf series game
               language: mail.exchangeLangField(this.$root.$i18n.locale)
             },
-            encryptCaptcha: this.$refs.captcha.hash,
             captcha
           }
         }).then(res => {

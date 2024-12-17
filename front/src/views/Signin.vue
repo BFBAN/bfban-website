@@ -36,13 +36,7 @@
                 <Row :gutter="30" type="flex" justify="space-between" align="middle">
                   <Col :span="isMobile ? 24 : 15">
                     <FormItem :label="$t('captcha.title')" prop="captcha">
-                      <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
-                             :placeholder="$t('captcha.title')">
-                        <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                          <Captcha ref="captcha" :seconds="15"
-                                   :disable="!(!!signin.password  && !!signin.username)"></Captcha>
-                        </div>
-                      </Input>
+                      <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
                     </FormItem>
                   </Col>
                 </Row>
@@ -125,7 +119,7 @@ export default new Application({
           {required: true, trigger: 'blur'}
         ],
         captcha: [
-          {required: true, len: 4, trigger: 'blur'}
+          {required: true}
         ],
       },
       serverReturnMessage: '',
@@ -149,16 +143,20 @@ export default new Application({
     ...mapMutations([
       'SIGNIN'
     ]),
-
+    getCaptchaData(e) {
+      this.signin.captcha = e;
+    },
     /**
      * 登录
      */
     handleSignin: function () {
       const that = this;
       const backPath = this.$route.query.backPath;
-      const {username, password, captcha} = _.each(this.signin, (v, k, o) => {
-        o[k] = v.trim();
-      });
+      let { username, password, captcha } = this.signin;
+
+      // 提取出单独 trim 过的 username 和 password
+      username = username.trim();
+      password = password.trim();
 
       this.$refs['signin'].validate((valid) => {
         if (!valid) {
@@ -174,7 +172,6 @@ export default new Application({
               username,
               password,
             },
-            encryptCaptcha: this.$refs.captcha.hash,
             captcha,
           },
         }).then(async res => {

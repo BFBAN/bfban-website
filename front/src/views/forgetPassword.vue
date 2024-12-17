@@ -36,14 +36,7 @@
                 </div>
 
                 <FormItem v-if="stepsIndex == 1" :label="$t('captcha.title')">
-                  <Input type="text" v-model="forgetPassword.captcha"
-                         size="large"
-                         maxlength="4"
-                         :placeholder="$t('captcha.title')">
-                    <div slot="append" class="captcha-input-append">
-                      <Captcha ref="captcha"></Captcha>
-                    </div>
-                  </Input>
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
                 </FormItem>
 
                 <div v-if="stepsIndex == 2">
@@ -184,6 +177,10 @@ export default new Application({
       return this.stepsIndex;
     },
 
+    getCaptchaData(e) {
+      this.forgetPassword.captcha = e;
+    },
+
     /**
      * 提交
      */
@@ -259,7 +256,6 @@ export default new Application({
       http.post(api["user_forgetPassword"], {
         data: {
           data: this.forgetPassword,
-          encryptCaptcha: this.$refs.captcha.hash,
           captcha: this.forgetPassword.captcha,
           language: mail.exchangeLangField(this.$root.$i18n.locale)
         },

@@ -264,22 +264,7 @@
               <!-- 提交 S -->
               <Card dis-hover :padding="isMobile ? 20 : 50">
                 <FormItem prop="captcha" :label="$t('captcha.title')">
-                  <Input
-                      type="text"
-                      maxlength="4"
-                      v-model="tabs.list[index].formItem.captcha"
-                      :placeholder="$t('captcha.title')">
-                    <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                      <Captcha :ref="`report_${index}`" :id="`report_${index}`"></Captcha>
-                    </div>
-                  </Input>
-                  <!--                  <div v-html="tabs.list[index].captchaUrl.content"></div>-->
-                  <!--                  <a-->
-                  <!--                      ref="reCaptcha"-->
-                  <!--                      href="#"-->
-                  <!--                      @click.stop.prevent="refreshCaptcha(index)">-->
-                  <!--                    {{ $t("captcha.get") }}-->
-                  <!--                  </a>-->
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
                 </FormItem>
 
                 <FormItem>
@@ -360,7 +345,8 @@
   </div>
 </template>
 
-<script>import {api, http, http_token, voice, util, regular} from '../assets/js/index'
+<script>
+import {api, http, http_token, voice, util, regular} from '../assets/js/index'
 
 import Application from "../assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
@@ -385,6 +371,7 @@ export default new Application({
       spinShow: false,
       failedOfNotFound: false,
       cheatMethodsGlossary: [],
+      captcha: '',
     };
   },
   components: {AdsGoogle, Textarea, Html, HtmlWidget, OcrWidget, Captcha, Empty},
@@ -414,6 +401,9 @@ export default new Application({
         this.cheatMethodsGlossary = res.cheatMethodsGlossary;
         this.games = res.gameName;
       });
+    },
+    getCaptchaData(e) {
+      this.captcha = e;
     },
     /**
      * 查询作弊玩家列表
@@ -465,7 +455,6 @@ export default new Application({
           videoLink: [],
           checkbox: [],
           description: "",
-          captcha: "",
           avatarLink: "",
         },
         // form rule
@@ -487,9 +476,6 @@ export default new Application({
           ],
           description: [
             {required: true, type: 'string', min: 5, trigger: 'change'},
-          ],
-          captcha: [
-            {required: true, trigger: 'blur'}
           ],
         },
         statusOk: 0,
@@ -579,7 +565,6 @@ export default new Application({
             formData.load = true;
 
             await that.handleReport(formData, index);
-            await that.refreshCaptcha();
 
             formData.load = false;
           })
@@ -611,7 +596,10 @@ export default new Application({
      * @param index
      */
     handleReport(data, index) {
-      const {gameName, captcha, originName, originUserId, originPersonaId} = data.formItem;
+      if (!this.captcha) {
+        this.$Message.error(this.$t('basic.tip.captcha.expired'));
+      }
+      const {gameName, originName, originUserId, originPersonaId} = data.formItem;
       const cheatMethods = data.formItem.checkbox;
       const description = data.formItem.description.trim();
       const videoLink = data.formItem.videoLink.filter(i => i != '' || i != undefined || i != null).toString().trim() || null;
@@ -622,8 +610,7 @@ export default new Application({
           videoLink,
           description
         },
-        encryptCaptcha: this.$refs[`report_${index}`][0].hash,
-        captcha,
+        captcha: this.captcha,
       };
       let url = ""
 
@@ -672,7 +659,7 @@ export default new Application({
           }));
         }).finally(() => {
           resolve();
-          this.tabs.list[index].formItem.captcha = '';
+          this.captcha = '';
           this.spinShow = false;
         });
       })

@@ -41,14 +41,8 @@
 
                 <div v-show="stepsIndex === 1">
                   <FormItem :label="$t('captcha.title')" prop="captcha">
-                    <Input type="text" v-model="signup.captcha"
-                           size="large"
-                           maxlength="4"
-                           :placeholder="$t('captcha.title')">
-                      <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                        <Captcha ref="captcha"></Captcha>
-                      </div>
-                    </Input>
+                    <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
+
                   </FormItem>
                 </div>
 
@@ -182,6 +176,9 @@ export default {
   },
   components: {Captcha},
   methods: {
+    getCaptchaData(e) {
+      this.signup.captcha = e;
+    },
     // 绑定橘子账户
     // 发送邮件
     onBindOrigin() {
@@ -204,7 +201,6 @@ export default {
               originName,
               language: mail.exchangeLangField(that.$i18n.locale)
             },
-            encryptCaptcha: this.$refs.captcha.hash,
             captcha,
           }
         }).then(res => {

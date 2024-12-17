@@ -1,221 +1,145 @@
 <template>
-  <div class="captcha-view"
-       @click="refreshCaptcha"
-       :style="`cursor: ${captchaTime.count <= 0 ? 'pointer' : 'not-allowed'};height: ${height}`">
-    <span v-if="!content" class="tip">
-      <template v-if="!disable">
-        {{ $t('captcha.get') }}
-        <span v-if="postLoad">
-          <Icon type="md-refresh spin-icon-load" size="20"/>
+  <div class="turnstile-wrapper">
+    <div
+        class="container"
+        :class="{ blurred: isBlurred }"
+        :style="{ pointerEvents: isBlurred ? 'none' : 'auto' }"
+    >
+      <div class="captcha">
+        <div ref="turnstileContainer" class="turnstile-container"></div>
+        <span class="captcha-text" @click="renderTurnstile">
+          {{ $t('captcha.fresh') }}
         </span>
-      </template>
-      <div v-else style="min-width: 80px">
-        <Icon type="md-close" size="20"/>
       </div>
-    </span>
-    <div v-else v-html="content"
-         :class="`${captchaTime.count <= 0 ? 'disable': ''}`">
+
     </div>
-    <transition name="fade">
-      <div v-show="content && captchaTime.count <= 0" class="captcha-view-icon">
-        <Icon v-if="disable" type="md-close" size="20"/>
-        <Icon v-else type="md-refresh" size="20" :class="[postLoad ? 'spin-icon-load' : '']"/>
-      </div>
-    </transition>
-    <div class="count" v-show="captchaTime.count > 0">{{ captchaTime.count }}s</div>
+    <div v-if="isBlurred" class="click-to-show" @click="removeBlur">
+      {{ $t('captcha.get') }}
+    </div>
   </div>
 </template>
 
 <script>
-import {http, api, storage} from '../assets/js/index'
-
 export default {
-  name: "Captcha",
+  name: 'Captcha',
   props: {
-    id: {
+    sitekey: {
       type: String,
-      default: '0',
-    },
-    disable: {
-      type: Boolean,
-      default: false,
-    },
-    seconds: {
-      type: Number,
-      default: 60
-    },
-    height: {
-      type: String,
-      default: '40px'
+      default: '0x4AAAAAAA10y-7P5RclJ5Zm'
     }
   },
   data() {
     return {
-      storageSession: storage.session,
-      postLoad: false,
-      hash: "",
-      content: "",
-      captchaHash: {},
-      captchaTime: {
-        fun: null,
-        count: 0,
-        lock: false,
-      },
-    }
-  },
-  created() {
-    let captcha = this.storageSession.get('captcha');
-    if (captcha) {
-      this.captchaHash = captcha.data;
-    } else {
-      this.storageSession.set(`captcha`, {
-        [`${this.id}_${this.$route.name}`]: this.seconds
-      });
-    }
-  },
-  destroyed() {
-    clearInterval(this.captchaTime.fun);
-    this.captchaTime.fun = null;
+      isBlurred: true
+    };
   },
   methods: {
-    /**
-     * 刷新验证码
-     */
-    async refreshCaptcha() {
-      let captcha = this.storageSession.get('captcha');
-      let that = this;
-
-      if (captcha.code <= 0) {
-        captcha = {
-          data: {
-            value: this.seconds,
-          }
-        }
+    removeBlur() {
+      this.isBlurred = false; // 点击后取消虚化
+      setTimeout(() => {
+        this.initTurnstile(); // 加载 CAPTCHA
+      }, 500)
+    },
+    initTurnstile() {
+      // 检查是否已经加载脚本
+      if (typeof window.turnstile !== 'undefined') {
+        this.renderTurnstile();
+        return;
       }
 
-      if (this.disable || this.postLoad || this.captchaTime.lock) return;
-
-      this.postLoad = true;
-
-      http.get(api["captcha"], {
-        params: {
-          t: Math.random()
-        }
-      }).then(res => {
-        const d = res.data;
-        if (d.success === 1) {
-          // 储存验证码hash
-          that.captchaHash = Object.assign({
-            [that.$route.name]: 0
-          });
-
-          this.hash = d.data["hash"];
-          this.content = d.data["content"];
-
-          if (Object.keys(captcha.data.value).indexOf(this.$route.name) >= 0) {
-            // 会话持久对应时间加载
-            this.captchaTime.count = captcha.data.value[this.$route.name];
-          }
-
-          this.capthcaTimeout(this.captchaTime.count || this.seconds || 0)
-          return;
-        }
-
-        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
-          message: d.message || ""
-        }));
-      }).finally(res => {
-        setTimeout(function () {
-          that.postLoad = false;
-        }, 800)
-      });
-    },
-    /**
-     * 计时器
-     * @param num
-     */
-    capthcaTimeout(num) {
-      const that = this;
-      let fun;
-
-      if (that.captchaTime.lock) return false;
-
-      that.captchaTime.count = num;
-
-      fun = setInterval(function () {
-        if (that.captchaTime.count <= 0) {
-          clearInterval(fun);
-          that.captchaTime.lock = false;
-          return;
-        }
-        that.captchaTime.count -= 1;
-
-        that.captchaHash = Object.assign({
-          [`${that.id}_${that.$route.name}`]: that.captchaTime.count
+      const existingScript = document.querySelector('script[src="https://challenges.cloudflare.com/turnstile/v0/api.js"]');
+      if (existingScript) {
+        // 如果脚本已存在，等待其加载完成再渲染
+        existingScript.addEventListener('load', () => {
+          this.renderTurnstile();
         });
-        that.storageSession.set("captcha", that.captchaHash);
-      }, 1000);
+        return;
+      }
 
-      that.captchaTime.lock = true;
-      return true;
-    }
-  },
-  computed: {
-    // 是否有验证码
-    isCaptcha() {
-      return this.hash && this.content;
+      // 如果脚本不存在，动态添加脚本
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        this.renderTurnstile();
+      };
+      document.head.appendChild(script);
+    },
+    renderTurnstile() {
+      if (!this.$refs.turnstileContainer) return;
+
+      // 如果已经渲染过，则重置 Turnstile
+      if (this.$refs.turnstileContainer.getAttribute('data-rendered') === 'true') {
+        window.turnstile.reset(this.$refs.turnstileContainer);
+        return;
+      }
+
+      // 渲染 Turnstile
+      window.turnstile.render(this.$refs.turnstileContainer, {
+        sitekey: this.sitekey,
+        callback: (response) => {
+          this.$emit('getCaptchaData', { response, captchaType: 'turnstile' });
+        },
+      });
+
+      // 标记已渲染
+      this.$refs.turnstileContainer.setAttribute('data-rendered', 'true');
     }
   }
 }
 </script>
 
-<style lang="less">
-@import "@/assets/css/icon.less";
-
-.captcha-view {
-  overflow: hidden;
-  position: relative;
+<style scoped>
+.turnstile-wrapper {
   display: flex;
-  justify-items: center;
+  justify-content: flex-start; /* 左对齐 */
+  align-items: flex-start; /* 顶部对齐 */
+  padding: 10px;
+  background-color: gainsboro;
+  min-height: 100px;
+  box-sizing: border-box;
+}
+
+.turnstile-container {
+  display: inline-block;
+}
+
+/* 容器样式 */
+.container {
+  display: flex;
+
+  justify-content: center;
+  transition: filter 0.3s ease;
+  position: relative; /* 相对定位容器 */
+}
+
+/* 虚化效果 */
+.blurred {
+  filter: blur(5px);
+}
+
+/* 点击提示文字样式 */
+.click-to-show {
+  position: absolute; /* 绝对定位在外层容器 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  cursor: pointer;
+  border-radius: 5px;
+  z-index: 10; /* 确保层级高于虚化容器 */
+}
+/* 验证码容器样式 */
+.captcha {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin: 0 5px;
-
-  .captcha-view-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 100%;
-  }
-
-  .disable {
-    filter: blur(2px);
-    transition: all .24s;
-    opacity: .4;
-  }
-
-  .count {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 1s;
-    font-size: 10px;
-    transform: scale(.7);
-    color: #000;
-    padding: 0 2px;
-    border: 1px solid #000;
-    background-color: #fff;
-    border-radius: 5px;
-    position: absolute;
-    top: 2px;
-    right: 2px;
-  }
-
-  .tip {
-    font-size: 12px;
-    margin: 0 5px;
-  }
+  gap: 10px;
+}
+.captcha-text {
+  font-size: 12px;
+  color: gray;
+  margin-top: -10px;
 }
 </style>

@@ -230,12 +230,7 @@
                 </FormItem>
 
                 <FormItem :label="$t('captcha.title')" prop="captcha">
-                  <Input type="text" v-model="usernameCaptcha" size="large" maxlength="4"
-                         :placeholder="$t('captcha.title')">
-                    <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                      <Captcha id="usernameCaptcha" ref="usernameCaptcha"></Captcha>
-                    </div>
-                  </Input>
+                  <Captcha ref="captcha" @getCaptchaData="getUserNameCaptchaData" ></Captcha>
                 </FormItem>
               </div>
               <div v-if="modal_setusername.index == 2" align="center">
@@ -277,12 +272,7 @@
               </FormItem>
 
               <FormItem :label="$t('captcha.title')" prop="captcha">
-                <Input type="text" v-model="passwordCaptcha" size="large" maxlength="4"
-                       :placeholder="$t('captcha.title')">
-                  <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                    <Captcha id="passwordCaptcha" ref="passwordCaptcha"></Captcha>
-                  </div>
-                </Input>
+                <Captcha ref="captcha" @getCaptchaData="getPasswordCaptchaData" ></Captcha>
               </FormItem>
             </Form>
           </div>
@@ -372,6 +362,12 @@ export default new Application({
 
       await this.getUserinfo();
     },
+    getUserNameCaptchaData(e) {
+      this.usernameCaptcha = e;
+    },
+    getPasswordCaptchaData(e) {
+      this.passwordCaptcha = e;
+    },
     /**
      * 修改密码
      */
@@ -384,7 +380,6 @@ export default new Application({
             newpassword,
             oldpassword
           },
-          encryptCaptcha: this.$refs.passwordCaptcha.hash,
           captcha: this.passwordCaptcha
         }
       }).then(res => {
@@ -446,7 +441,6 @@ export default new Application({
           data: {
             newname: this.formItem.newname,
           },
-          encryptCaptcha: this.$refs.usernameCaptcha.hash,
           captcha: this.usernameCaptcha
         }
       }).then(res => {

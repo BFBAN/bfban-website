@@ -832,13 +832,7 @@
                 <div class="ivu-card-body">
                   <Row :gutter="10">
                     <Col :xs="{span: 14}" :lg="{span: 12}">
-                      <Input type="text" size="large" v-model="reply.captcha"
-                             maxlength="4"
-                             :placeholder="$t('captcha.title')">
-                        <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                          <Captcha :id="'replyCaptcha'" ref="replyCaptcha"></Captcha>
-                        </div>
-                      </Input>
+                      <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
                     </Col>
                     <Col :xs="{span: 10, push: 0}" :lg="{span: 12, push: 0}">
                       <Row type="flex" justify="end" align="middle">
@@ -1000,7 +994,9 @@
                                 :height="'250px'"
                                 :maxlength="60000"
                                 :showMaxlengthLabel="true"
-                                :placeholder="$t(`detail.info.writeSomething`)"></Textarea>
+                                :placeholder="$t(`detail.info.writeSomething`)">
+
+                      </Textarea>
 
                       <!-- Fast Reply S -->
                       <Divider content-position="left" style="margin: 0"></Divider>
@@ -1121,13 +1117,8 @@
         <div slot="footer">
           <Row :gutter="30">
             <Col flex="1">
-              <Input type="text" v-model="reply.miniModeCaptcha"
-                     maxlength="4"
-                     :placeholder="$t('captcha.title')">
-                <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                  <Captcha :id="'replyMiniModeCaptcha'" ref="replyMiniModeCaptcha"></Captcha>
-                </div>
-              </Input>
+              <Captcha ref="captcha" @getCaptchaData="getMiniCaptchaData" ></Captcha>
+
             </Col>
             <Col>
               <Button @click="cancelReply" v-voice-button>{{ $t('basic.button.cancel') }}</Button>
@@ -1921,6 +1912,12 @@ export default new Application({
         }
       });
     },
+    getCaptchaData(e) {
+      this.reply.captcha = e;
+    },
+    getMiniCaptchaData(e) {
+      this.reply.miniModeCaptcha = e;
+    },
     /**
      * 用户评论/回复
      * @param {string} replyType
@@ -1949,7 +1946,6 @@ export default new Application({
               toPlayerId: cheaterId,
               content: formatTextarea(content),
             },
-            encryptCaptcha: this.$refs.replyCaptcha.hash,
             captcha: this.reply.captcha,
           };
           break;
@@ -1960,7 +1956,6 @@ export default new Application({
               toCommentId: this.reply.toReplyId, // 楼中楼，填充回复的dbId
               content: formatTextarea(miniModeContent),
             },
-            encryptCaptcha: this.$refs.replyMiniModeCaptcha.hash,
             captcha: this.reply.miniModeCaptcha,
           };
           break;
