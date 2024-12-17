@@ -33,13 +33,11 @@
                          :placeholder="$t('signin.form.password')"/>
                 </FormItem>
 
-                <Row :gutter="30" type="flex" justify="space-between" align="middle">
-                  <Col :span="isMobile ? 24 : 15">
-                    <FormItem :label="$t('captcha.title')" prop="captcha">
-                      <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
-                    </FormItem>
-                  </Col>
-                </Row>
+
+                <FormItem :label="$t('captcha.title')" prop="captcha">
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
+                </FormItem>
+
 
                 <br>
 
