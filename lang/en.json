@@ -7,7 +7,7 @@
   },
   "account": {
     "bindOrigin": {
-      "content": "BfBan requires you to connect your Origin account in order to appeal. Your account will be locked, and you will not be able to submit anything if you don't connect your Origin first.",
+      "content": "BFBAN requires you to bind your EA account in order to appeal, retrieve, and other functions; before binding EA, your account will be locked and you will not be able to submit any content",
       "title": "This account not connected to a Origin account!",
       "travel": "All right, Connect to my Origin account"
     },
@@ -16,7 +16,7 @@
     "message": {
       "chat": "Chat",
       "hint": {
-        "denied": "You have been blocked.",
+        "denied": "You have been blocked chat.",
         "selfTalk": "You can't chat with yourself！",
         "taOffChat": "This User has turned off the chat option"
       }
@@ -27,8 +27,8 @@
     "reports": "Personal reports",
     "role": "Role",
     "status": "Status",
-    "title": "User info",
-    "userInfo": "Account info",
+    "title": "User Info",
+    "userInfo": "Account Info",
     "username": "Username"
   },
   "announcement": {
@@ -40,12 +40,12 @@
       "intro": "Code of conduct for BFBAN team members in their daily work",
       "name": "BFBAN Code of Conduct (CoC)"
     },
-    "latest": "latest version",
+    "latest": "Latest Version",
     "personnel": {
       "intro": "Recruitment rules for the BFBAN team, the structure of the members and the rights and obligations and requirements of the different members are explained",
       "name": "BFBAN Personnel Rule"
     },
-    "version": "version"
+    "version": "Version"
   },
   "apps": {
     "buttons": {
@@ -96,7 +96,7 @@
       },
       "kill": {
         "describe": "admins think this player is a comfirmed cheater.",
-        "text": "confirmed cheater"
+        "text": "Confirmed Cheater"
       },
       "more": {
         "describe": "Need stronger evidence",
@@ -247,11 +247,11 @@
       "notContent": "No content",
       "notFound": "We cant find the page your looking for.",
       "notLang": "No translation",
-      "externalAuth.success": "授权请求成功",
-      "externalAuth.noSuchUser": "授权请求的目标用户不存在",
-      "externalAuth.fail": "授权请求失败，请联系管理员 {message}",
-      "confirmAuth.success": "确认授权成功",
-      "confirmAuth.fail": "确认授权失败，请联系管理员 {message}",
+      "externalAuth.success": "Authorization request successful",
+      "externalAuth.noSuchUser": "The target user of the authorization request does not exist",
+      "externalAuth.fail": "Authorization request failed, please contact the administrator {message}",
+      "confirmAuth.success": "Confirm that the authorization is successful",
+      "confirmAuth.fail": "Confirm authorization failed, please contact the administrator {message}",
       "reply.bad": "An error occurred when trying to reply, please contact the admin {message}",
       "reply.notFound": "No such reply or no such player.",
       "reply.spam": "The content you submitted cannot pass verification and marked as spam {message}",
@@ -290,6 +290,7 @@
   },
   "captcha": {
     "get": "Get captcha",
+    "fresh": "Refresh Captcha",
     "messages": {
       "bad": "Wrong captcha, please contact admin.",
       "expired": "Expired captcha",
@@ -429,7 +430,7 @@
       "inGame": "in",
       "judge": "has",
       "judgement": "Judgement",
-      "originAvatar": "Origin avatar",
+      "originAvatar": "EA Avatar",
       "recentUpdateTime": "Recent update time",
       "replyManual1": "If you have new picture or video evidence to be maintained, you can report one more time.Otherwise,you can only reply text or link by replying here.if you want to add picture click here",
       "replyManual2": "and then copy the picture link to reply",
@@ -504,7 +505,7 @@
   "footer": {
     "column": {
       "col1": {
-        "text": "BFBAN - Global cheater database"
+        "text": "BFBAN - Global Cheater Database"
       },
       "col2": {
         "title": "Communities"
@@ -516,7 +517,7 @@
         "title": "Contact us"
       },
       "sponsor": {
-        "join": "成为赞助商",
+        "join": "Become Sponsor",
         "title": "Sponsor"
       }
     },
@@ -808,23 +809,23 @@
           "description": "You only need this achievement condition, no need to describe everything."
         },
         "user_subscribes_assemble": {
-          "name": "案件追踪",
-          "description": "完成对应案件追踪"
+          "name": "Case Tracking",
+          "description": "Complete corresponding case tracking"
         },
         "user_subscribes_l1": {
-          "name": "猎人的眼睛1",
-          "conditions": "- 追踪第一条案件<br>- 正常账户",
-          "description": "猎人将时刻关注猎物"
+          "name": "Hunter's Eyes I",
+          "conditions": "- Tracking the first case <br>- Normal account",
+          "description": "The hunter will always keep an eye on the prey"
         },
         "user_subscribes_l2": {
-          "name": "猎人的眼睛2",
-          "conditions": "- 追踪足够20条案件<br>- 正常账户",
-          "description": "一名成熟的猎人"
+          "name": "Hunter's Eyes II",
+          "conditions": "- Track enough 20 cases<br>- Normal account",
+          "description": "A mature hunter"
         },
         "site_20w_report_witnesses": {
-          "name": "20W举报见证者",
-          "conditions": "- 当网站举报突破20W时所有用户都可以获得",
-          "description": "20w对于我们来说不是值得庆祝的事，这个成就更希望不需要领取"
+          "name": "200K Reporting Witnesses",
+          "conditions": "- When the number of website reports exceeds 200K, all users can obtain",
+          "description": "200K is not something worth celebrating for us, and we hope that we don’t need to claim this achievement."
         }
       }
     },
@@ -851,7 +852,7 @@
         "privileges": "Privilege",
         "registerIP": "Register IP",
         "showOrigin": "EA information can be seen.",
-        "showOriginDescribe": "Allow your connected Origin account to be shown on BFBAN.",
+        "showOriginDescribe": "Make your bound EA account visible on BFBAN",
         "showAchievement": "Public your achievements",
         "AD": "Advertisement",
         "ADDescribe": "You can refuse service of ads and the site will remain open for public benefit, change the switch to off and all advertising on the site will be terminated.",
@@ -1020,16 +1021,16 @@
       "idNotion1": "Only fill in one ID at a time, do not put the team name in, do not write your own ID",
       "idNotion2": "Origin name has no match for lower case and upper case，but you must identify i I 1 l L o O 0 in order to offer correct ID",
       "loginExpired": "Your login has expired, please re-login.",
-      "notFoundHintAnswer1": "Please visit origin.com to search that player. If this player can be found but the report can't be made, you can send us bug report via the contact methods on the bottom of the frontpage.",
+      "notFoundHintAnswer1": "Please search for the player on ea.com. If you can find the player but cannot report him, you can report the bug in the contact information at the bottom of the homepage.",
       "notFoundHintAnswer2": "That is probably because EA didnot update their database in time，or their system bugged, and we are unable to help them fix that bug. If you do wish to help, you can visit       https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en       , the official froum to send bug report，you can describe this situation as: I can't search my friend by name on origin.",
       "notFoundHintQuestion1": "But I've just met him in game/I can find him on battlefield tracker?",
-      "notFoundHintQuestion2": "I can't find him on origin, what can I do?",
+      "notFoundHintQuestion2": "It cannot be searched on EA, what is going on?",
       "notFoundHintTitle": "We can't find this player",
       "reportAll": "Report all",
       "reportHacker": "Report a hacker",
       "reportOne": "Report one",
       "required": "video link",
-      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun,Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
+      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun, Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
       "uploadManual2": "请选择具有长时间有效视频网站链接,请勿上传视频至网盘",
       "uploadPic1": "We recommend you to upload pictures with png, jpg, jpeg, gif format.",
       "uploadPic2": "picture larger than 2M will fail to upload ,you can go to ",
@@ -1044,14 +1045,14 @@
           "placeholder": "only one EA id at a time"
         },
         "originPersonaId": {
-          "name": "Role identity",
-          "hint": "Character Identification (id), which can be obtained through game platforms or third-party tools, consists of a number",
-          "placeholder": "EA character identity ID, composed of numbers, only one at a time."
+          "name": "角色身份标识(PID)",
+          "hint": "角色标识(PID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA PersonaId，由数字组成，一次只有一个"
         },
         "originUserId": {
-          "name": "User identification",
-          "hint": "User Identification (id), which can be obtained through gaming platforms or third-party tools, consists of a number",
-          "placeholder": "EA user identity ID, consisting of numbers, only one at a time."
+          "name": "用户身份标识(UID)",
+          "hint": "用户身份标识(UID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA UserId，由数字组成，一次只有一个"
         }
       },
       "cheatMethod": "Cheat method",
