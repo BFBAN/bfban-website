@@ -7,7 +7,7 @@
   },
   "account": {
     "bindOrigin": {
-      "content": "BFBAN需要您绑定origin账户，以便账户申诉、找回等功能；未绑定origin前，您的账户会被锁定，无法提交任何内容",
+      "content": "BFBAN需要您绑定EA账户，以便账户申诉、找回等功能；未绑定EA前，您的账户会被锁定，无法提交任何内容",
       "title": "未绑定账户",
       "travel": "好的，前往绑定账户"
     },
@@ -430,7 +430,7 @@
       "inGame": "在",
       "judge": "认为",
       "judgement": "处理意见",
-      "originAvatar": "Origin头像",
+      "originAvatar": "EA头像",
       "recentUpdateTime": "最近更新时间",
       "replyManual1": "如果有新的证据图片或视频需要补充，可以再次举报。回复功能只能回复文本或链接。如需回复图片，请移步这里",
       "replyManual2": "然后复制图片链接进行回复。",
@@ -505,7 +505,7 @@
   "footer": {
     "column": {
       "col1": {
-        "text": "联BFBAN - 全球作弊玩家数据库"
+        "text": "BFBAN - 全球作弊玩家数据库"
       },
       "col2": {
         "title": "社区"
@@ -852,7 +852,7 @@
         "privileges": "权限",
         "registerIP": "注册时IP",
         "showOrigin": "可见EA信息",
-        "showOriginDescribe": "是否让你绑定的Origin在BFBAN可见",
+        "showOriginDescribe": "是否让你绑定的EA账户在BFBAN可见",
         "showAchievement": "公开成就",
         "AD": "广告",
         "ADDescribe": "您可以拒绝服务广告，网站仍为公益开放，将开关更改为关闭，网站上的所有广告将被终止",
@@ -1021,16 +1021,16 @@
       "idNotion1": "一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID",
       "idNotion2": "游戏ID是不区分大小写的，但请特别注意区分 i I 1 l L o O 0，正确填写举报ID",
       "loginExpired": "您的登录已过期，请重新登录",
-      "notFoundHintAnswer1": "请至origin.com搜索该玩家，如确实能搜索到而无法举报，可至首页下方的联系方式处反馈bug",
+      "notFoundHintAnswer1": "请至ea.com搜索该玩家，如确实能搜索到而无法举报，可至首页下方的联系方式处反馈bug",
       "notFoundHintAnswer2": "这可能是EA数据库更新不及时，或是EA官方的bug，我们没有办法替他们解决，如果您想出一份力，可以至       https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en       官方反馈论坛反馈bug，此情况可以描述为 I can't search my friend by name on origin",
       "notFoundHintQuestion1": "但是我刚刚在游戏里见过他/我在查战绩app上查得到他？",
-      "notFoundHintQuestion2": "origin上无法搜索到，这是怎么一回事？",
+      "notFoundHintQuestion2": "EA上无法搜索到，这是怎么一回事？",
       "notFoundHintTitle": "我们无法找到该玩家",
       "reportAll": "举报所有",
       "reportHacker": "举报作弊",
       "reportOne": "举报单个",
       "required": "视频地址",
-      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun,Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
+      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun, Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
       "uploadManual2": "请选择具有长时间有效视频网站链接,请勿上传视频至网盘",
       "uploadPic1": "推荐上传 png, jpg, jpeg, gif 格式的图片",
       "uploadPic2": "图片大于 2M 或 上传失败，可以前往",
@@ -1045,14 +1045,14 @@
           "placeholder": "一次只有一个EA名称"
         },
         "originPersonaId": {
-          "name": "角色身份标识",
-          "hint": "角色标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成",
-          "placeholder": "EA角色身份id，由数字组成，一次只有一个"
+          "name": "角色身份标识(PID)",
+          "hint": "角色标识(PID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA PersonaId，由数字组成，一次只有一个"
         },
         "originUserId": {
-          "name": "用户身份标识",
-          "hint": "用户身份标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成",
-          "placeholder": "EA用户身份id，由数字组成，一次只有一个"
+          "name": "用户身份标识(UID)",
+          "hint": "用户身份标识(UID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA UserId，由数字组成，一次只有一个"
         }
       },
       "cheatMethod": "作弊方法",
