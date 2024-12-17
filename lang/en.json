@@ -1031,7 +1031,7 @@
       "reportOne": "Report one",
       "required": "video link",
       "uploadManual1": "You can also provide additional sharing links from Youku, Tudou, Acfun, Bilibili and other video sites or accessible source file addresses [Network disk is prohibited], click the Add button and paste it below",
-      "uploadManual2": "请选择具有长时间有效视频网站链接,请勿上传视频至网盘",
+      "uploadManual2": "Please select a video website link that has a long-term validity period. Do not upload the video to the network disk.",
       "uploadPic1": "We recommend you to upload pictures with png, jpg, jpeg, gif format.",
       "uploadPic2": "picture larger than 2M will fail to upload ,you can go to ",
       "uploadPic3": "and then choose Image URL Tag，paste the image link below",
@@ -1045,14 +1045,14 @@
           "placeholder": "only one EA id at a time"
         },
         "originPersonaId": {
-          "name": "角色身份标识(PID)",
-          "hint": "角色标识(PID)，可通过游戏平台或第三方工具获取, 它由数字组成",
-          "placeholder": "EA PersonaId，由数字组成，一次只有一个"
+          "name": "PersonaID",
+          "hint": "PersonaID,  which can be obtained through the game platform or third-party tools, consists of numbers",
+          "placeholder": "EA PersonaId, composed of numbers, unique to the EA"
         },
         "originUserId": {
-          "name": "用户身份标识(UID)",
+          "name": "UserID, which can be obtained through the game platform or third-party tools, consists of numbers",
           "hint": "用户身份标识(UID)，可通过游戏平台或第三方工具获取, 它由数字组成",
-          "placeholder": "EA UserId，由数字组成，一次只有一个"
+          "placeholder": "EA UserId, composed of numbers, unique to the platform (XBOX, PS, PC)"
         }
       },
       "cheatMethod": "Cheat method",
@@ -1237,10 +1237,10 @@
     }
   },
   "externalAuth": {
-    "title": "授权",
-    "validation": "授权中",
-    "successful": "授权成功，可以关闭此页面",
-    "error": "授权失败",
-    "failure": "请检查各项参数是否正确"
+    "title": "Authorization",
+    "validation": "Authorizing",
+    "successful": "Authorization is successful, you can close this page",
+    "error": "Authorization failed",
+    "failure": "Please check whether the parameters are correct."
   }
 }
