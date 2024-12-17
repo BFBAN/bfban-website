@@ -299,7 +299,7 @@ const achievementConfig = {
         another: ['site_20w_report_witnesses'],
         points: 1,
         async conditions(req, res, next) {
-            let response = await fetch(`https://${config.address}:${config.port}/api/statistics?reports=true`, {method: 'GET'});
+            let response = await fetch(`http://${config.address}:${config.port}/api/statistics?reports=true`, {method: 'GET'});
             let result = await response.json();
             if (result.error === 1 && result.data.community.length <= 0) return false;
             return result.data.reports.length >= 200000;
