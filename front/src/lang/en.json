@@ -290,7 +290,6 @@
   },
   "captcha": {
     "get": "Get captcha",
-    "fresh": "刷新验证码",
     "messages": {
       "bad": "Wrong captcha, please contact admin.",
       "expired": "Expired captcha",
