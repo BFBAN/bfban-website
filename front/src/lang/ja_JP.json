@@ -7,7 +7,7 @@
   },
   "account": {
     "bindOrigin": {
-      "content": "BFBANはアカウントの訴え、取り戻すなどの機能のためにoriginアカウントをバインドする必要があります。originをバインドする前にアカウントがロックされ、コミットできません",
+      "content": "BFBAN需要您绑定EA账户，以便账户申诉、找回等功能；未绑定EA前，您的账户会被锁定，无法提交任何内容",
       "title": "アカウントがバインドされていません",
       "travel": "はい、口座のバインドに行きます"
     },
@@ -430,7 +430,7 @@
       "inGame": "にある",
       "judge": "と考える",
       "judgement": "意見を処理する.",
-      "originAvatar": "Originアバター",
+      "originAvatar": "EA头像",
       "recentUpdateTime": "最終更新日時",
       "replyManual1": "新しい証拠写真やビデオが追加される必要がある場合は、再度通報することができます。返信機能は、テキストまたはリンクのみに返信できます。画像に返信するには、こちらに移動してください",
       "replyManual2": "その後、画像リンクをコピーして返信します。",
@@ -505,7 +505,7 @@
   "footer": {
     "column": {
       "col1": {
-        "text": "連合BFBAN-グローバル不正プレイヤーデータベース"
+        "text": "BFBAN - 全球作弊玩家数据库"
       },
       "col2": {
         "title": "コミュニティ"
@@ -852,7 +852,7 @@
         "privileges": "权限",
         "registerIP": "注册时IP",
         "showOrigin": "可见EA信息",
-        "showOriginDescribe": "是否让你绑定的Origin在BFBAN可见",
+        "showOriginDescribe": "是否让你绑定的EA账户在BFBAN可见",
         "showAchievement": "公开成就",
         "AD": "广告",
         "ADDescribe": "您可以拒绝服务广告，网站仍为公益开放，将开关更改为关闭，网站上的所有广告将被终止",
@@ -1021,16 +1021,16 @@
       "idNotion1": "一度にIDを1つだけ記入して、戦隊名を入れないで、自分のIDにしないでください",
       "idNotion2": "ゲームIDは大文字と小文字を区別しませんが、特にi I 1 l Lo O 0を区別し、通報IDを正しく記入することに注意してください",
       "loginExpired": "ログインの有効期限が切れました。再ログインしてください",
-      "notFoundHintAnswer1": "origin.comでそのプレイヤーを検索し、確実に検索できて通報できない場合は、トップページの下の連絡先にバグをフィードバックすることができます",
+      "notFoundHintAnswer1": "请至ea.com搜索该玩家，如确实能搜索到而无法举报，可至首页下方的联系方式处反馈bug",
       "notFoundHintAnswer2": "これはEAデータベースの更新が遅れているか、またはEA公式のバグの可能性があります。私たちはそれらを解決する手段を持っていません。もし力を貸していただけるのであれば、以下の公式フィードバックフォーラムにアクセスしてバグを報告していただけますか。この問題は「I can't search my friend by name on origin」と表現できます。\nhttps://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en",
       "notFoundHintQuestion1": "でもゲームで彼に会ったばかりです/私は戦績アプリで彼を調べていますか？",
-      "notFoundHintQuestion2": "originでは検索できませんが、これはどういうことですか。",
+      "notFoundHintQuestion2": "EA上无法搜索到，这是怎么一回事？",
       "notFoundHintTitle": "プレイヤーを見つけることはできません",
       "reportAll": "すべてを告発する",
       "reportHacker": "不正行為を告発する.",
       "reportOne": "通報個別",
       "required": "ビデオアドレス",
-      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun,Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
+      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun, Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
       "uploadManual2": "请选择具有长时间有效视频网站链接,请勿上传视频至网盘",
       "uploadPic1": "png、jpg、jpeg、gif形式の画像をアップロードすることをお勧めします",
       "uploadPic2": "画像が2 Mより大きいか、アップロードに失敗した場合は、",
@@ -1045,14 +1045,14 @@
           "placeholder": "一次只有一个EA名称"
         },
         "originPersonaId": {
-          "name": "角色身份标识",
-          "hint": "角色の識別子（id）は、ゲームプラットフォームやサードパーティツールを通じて取得できます。それは数字で構成されています。",
-          "placeholder": "EA角色身份id，由数字组成，一次只有一个"
+          "name": "角色身份标识(PID)",
+          "hint": "角色标识(PID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA PersonaId，由数字组成，一次只有一个"
         },
         "originUserId": {
-          "name": "ユーザーの身元識別",
-          "hint": "ユーザーの身分識別子（id）は、ゲームプラットフォームやサードパーティのツールを通じて取得できます。それは数字で構成されています。",
-          "placeholder": "EA用户身份id，由数字组成，一次只有一个"
+          "name": "用户身份标识(UID)",
+          "hint": "用户身份标识(UID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA UserId，由数字组成，一次只有一个"
         }
       },
       "cheatMethod": "不正行為の方法",
