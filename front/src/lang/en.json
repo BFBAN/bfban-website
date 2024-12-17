@@ -1051,7 +1051,7 @@
         },
         "originUserId": {
           "name": "UserID, which can be obtained through the game platform or third-party tools, consists of numbers",
-          "hint": "用户身份标识(UID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "hint": "EA UserID, composed of numbers, unique to the platform.",
           "placeholder": "EA UserId, composed of numbers, unique to the platform (XBOX, PS, PC)"
         }
       },
