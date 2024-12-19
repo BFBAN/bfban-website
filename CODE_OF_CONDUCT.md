@@ -77,7 +77,8 @@ This code of conduct and its related procedures also applies to unacceptable beh
 
 ## 10. Contact info
 
-noreply1@bfban.com
+- services@bfban.com
+- noreply1@bfban.com
 
 ## 11. License and attribution
 
