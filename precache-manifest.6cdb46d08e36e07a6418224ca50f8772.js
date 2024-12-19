@@ -16,19 +16,19 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ads.txt"
   },
   {
-    "revision": "91d2b2ae594e11b1564f",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/app.css"
   },
   {
-    "revision": "91d2b2ae594e11b1564f",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/app.css.map"
   },
   {
-    "revision": "91d2b2ae594e11b1564f",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/assets/css/app.91325301.css"
   },
   {
-    "revision": "91d2b2ae594e11b1564f",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/assets/css/app.91325301.css.map"
   },
   {
@@ -308,11 +308,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ionicons.d535a25a.ttf"
   },
   {
-    "revision": "91d2b2ae594e11b1564f",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/assets/js/app.2.9.16.js"
   },
   {
-    "revision": "91d2b2ae594e11b1564f",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/assets/js/app.2.9.16.js.map"
   },
   {
@@ -428,11 +428,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-2d214497.2.9.16.js.map"
   },
   {
-    "revision": "25aa7bf3d732edc51d50",
+    "revision": "bba9e3c20437bdbd4c0f",
     "url": "/assets/js/chunk-2d21a5a3.2.9.16.js"
   },
   {
-    "revision": "25aa7bf3d732edc51d50",
+    "revision": "bba9e3c20437bdbd4c0f",
     "url": "/assets/js/chunk-2d21a5a3.2.9.16.js.map"
   },
   {

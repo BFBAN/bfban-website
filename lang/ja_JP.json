@@ -3,11 +3,11 @@
     "description": "BFBAN\n\n2018年1月29日に誕生しました；\n戦場のプレイヤーたちが一緒に結成した<b>チート対策</b>組織です。",
     "privacy": "\n<h2>隠私ポリシー</h2>\nそれはオープンソースです。GitHubで問題を報告し、変更/改善の提案をすることができます。コミュニティネットワークが提供するAPIは一般に公開されています。",
     "title": "について",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> この Web サイトは連邦 BAN 捜査局に基づいています。元のアイデアは熱心なプレイヤーから生まれました。 <スパンによって開発されましたclass='notranslate'><a target=\"_blank\" href=\"https://github.com/mygoare\"></span>mygoare</a> 2018 年 11 月 4 日に開発および発売\n    </p>\n    <p> 主にプレーヤーにレポート、列挙、検索、追跡、ディスカッションなどのサービスを提供します。</p>"
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> 开发，于 2018年11月4日 上线\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>"
   },
   "account": {
     "bindOrigin": {
-      "content": "BFBAN では、アカウントの異議申し立て、取得、その他の機能を容易にするために EA アカウントをバインドする必要があります。EA をバインドする前に、アカウントがロックされ、コンテンツを送信できなくなります。",
+      "content": "BFBAN需要您绑定EA账户，以便账户申诉、找回等功能；未绑定EA前，您的账户会被锁定，无法提交任何内容",
       "title": "アカウントがバインドされていません",
       "travel": "はい、口座のバインドに行きます"
     },
@@ -150,61 +150,61 @@
     },
     "status": {
       "0": {
-        "describe": "保持される前、または保持が承認される前は、オープンケースと呼ばれます",
+        "describe": "前或被批准保留前，称为未处理案件",
         "text": "未処理です"
       },
       "1": {
-        "describe": "「石ハンマー」は「本物のハンマー」と同じで、本物の証拠で叩きのめすという意味であり、確固たる証拠があるという意味でもある。",
+        "describe": "“石锤”通“实锤”，坚硬无比之意，意思就是用实实在在的证据来捶打他，也有证据确凿的意思",
         "text": "いしハンマ"
       },
       "2": {
-        "describe": "上記の証拠では、より多くの管理者とプレイヤーが議論や決定に参加する必要があり、その動作は不確実です",
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
         "text": "自己証明を待ちます"
       },
       "3": {
-        "describe": "認証により、ケースは自己認証カテゴリに分類されます",
+        "describe": "通过证明，该案件分类到自证分类中",
         "text": "MOSS自己証明です"
       },
       "4": {
-        "describe": "不完全な資料の報告や間違った ID の報告など、この分類は不正行為の確認を意味するものではありません",
+        "describe": "举报材料不全或举报错误ID等行为，该分类不等于确认作弊",
         "text": "無効通報です"
       },
       "5": {
-        "describe": "上記の証拠では、より多くの管理者とプレイヤーが議論や決定に参加する必要があり、その動作は不確実です",
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
         "text": "検討中です"
       },
       "6": {
-        "describe": "上記の証拠には、経営陣による投票へのさらなる参加が必要です",
-        "text": "さらに経営陣の投票が必要"
+        "describe": "以上证据需要更多管理参与投票",
+        "text": "需更多管理投票"
       },
       "7": {
-        "describe": "上記の証拠では、より多くの管理者とプレイヤーが議論や決定に参加する必要があり、その動作は不確実です",
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
         "text": "データ異常自動石鎚です"
       },
       "8": {
-        "describe": "ゲーム内で武器アクセサリーを素早くロック解除",
+        "describe": "在游戏中快速解锁武器配件",
         "text": "銃を磨きます"
       },
       "9": {
-        "describe": "この訴訟は控訴中であり、経営陣が次の決定を下す予定です",
+        "describe": "案件处于上诉中，管理将有下一步判决",
         "text": "申し立て中です"
       },
       "all": {
-        "text": "全て"
+        "text": "全部"
       }
     },
     "tip": {
-      "search.bad": "検索エラーが発生しました。管理者に連絡してください{message}",
-      "search.success": "検索が成功しました",
-      "search.notExist": "データが見つかりませんでした",
-      "me.bad": "個人情報に誤りがありますので、管理者にご連絡ください{message}",
-      "me.success": "個人情報が正常に保存されました",
-      "request.404": "このリクエストアドレスは存在しません。インターフェースを確認してください。",
-      "achievement.bad": "実績エラーが発生しました。管理者に連絡してください{message}",
-      "achievement.duplicate": "実績を繰り返し受け取る",
-      "achievement.notConditions": "実績を受け取るための条件が満たされていません。",
-      "achievement.ineffective": "無効な実績",
-      "achievement.success": "実績を正常に受け取りました",
+      "search.bad": "搜索发生错误，请联系管理员 {message}",
+      "search.success": "搜索成功",
+      "search.notExist": "未找到数据",
+      "me.bad": "个人信息发生错误，请联系管理员 {message}",
+      "me.success": "保存个人信息成功",
+      "request.404": "不存在此请求地址，请检查接口",
+      "achievement.bad": "成就发生错误，请联系管理员 {message}",
+      "achievement.duplicate": "重复领取成就",
+      "achievement.notConditions": "领取成就条件不符合",
+      "achievement.ineffective": "无效的成就",
+      "achievement.success": "成就领取成功",
       "bindOrigin.bad": "結果を提供します。\n<text_to_translate>アカウントのバインドにエラーが発生しました。管理者に連絡してください {message}</text_to_translate>",
       "bindOrigin.error": "発生したエラーについては、管理者に連絡してください {message}",
       "bindOrigin.expired": "激活認証コードの有効期限が切れていますので、再登録してください。",
@@ -217,7 +217,7 @@
       "bindOrigin.success": "恭喜你成功激活!",
       "server.error": "サービスエラー {message}",
       "captcha.bad": "エラーが発生しました。管理者に連絡してください {message}",
-      "captcha.expired": "認証コードの有効期限が切れているか、入力されていません",
+      "captcha.expired": "验证码过期或未填",
       "captcha.wrong": "間違った認証コード",
       "changeName.bad": "更改用户名称错误，请联系管理员 {message}",
       "changeName.noChance": "あなたはすべての名前変更の機会を使い果たしました",
@@ -228,61 +228,61 @@
       "changePassword.success": "再ログインしてこのプロセスを完了する必要があります。",
       "forgetPassword.bad": "重置パスワードエラー、管理者に連絡してください {message}",
       "forgetPassword.needVerify": "ご確認ください。パスワードのリセットに関するメールをご確認ください。",
-      "forgetPassword.notFound": "そのようなユーザーが存在しないか、電子メールをバインドしていません。名前または電子メールが一致しているかどうかを確認してください。",
+      "forgetPassword.notFound": "没有这样的用户或者您没有绑定电子邮件，请检查名称或邮箱是否一致",
       "forgetPassword.permissionDenied": "あなたのアカウントはこのようにすることができません。",
       "forgetPassword.success": "重置パスワード成功",
       "judgement.appealLock": "上訴がロックされ、事件はさらなる裁定ができません。",
       "judgement.bad": "判決がエラーになりましたので、管理者に連絡してください {message}",
       "judgement.notFound": "未找到案件，请联系管理员 {message}",
       "judgement.permissionDenied": "あなたはこのようにする権限はありません。",
-      "judgement.spam": "送信したコンテンツは検出に合格せず、スパムとしてマークされました{message}",
+      "judgement.spam": "你所提交的内容不通过检测，被标记为垃圾内容 {message}",
       "judgement.success": "感謝します",
-      "userInfo.bad": "ユーザー情報が間違っています。管理者に連絡してください{message}",
-      "userInfo.notFound": "そのようなユーザーはいません",
+      "userInfo.bad": "用户信息错误，请联系管理员 {message}",
+      "userInfo.notFound": "没有这样的用户",
       "logout.bad": "注销失敗、管理者に連絡してください。",
       "logout.success": "さようなら👋🏻",
-      "needBindEaAccount": "返信する前に EA アカウントをバインドしてください",
+      "needBindEaAccount": "请绑定你的EA账号以后在回复",
       "noAccess": "当前账户,无权限",
       "noReports": "まだ何の通報もありません",
       "notContent": "コンテンツなし",
       "notFound": "おや列、アクセス先が失われているようです",
       "notLang": "未翻訳",
-      "externalAuth.success": "認可リクエストが成功しました",
-      "externalAuth.noSuchUser": "認可リクエストの対象ユーザーが存在しません",
-      "externalAuth.fail": "認証リクエストが失敗しました。管理者に連絡してください{message}",
-      "confirmAuth.success": "認証が成功したことを確認する",
-      "confirmAuth.fail": "認証が失敗したことを確認してください。管理者に連絡してください{message}",
+      "externalAuth.success": "授权请求成功",
+      "externalAuth.noSuchUser": "授权请求的目标用户不存在",
+      "externalAuth.fail": "授权请求失败，请联系管理员 {message}",
+      "confirmAuth.success": "确认授权成功",
+      "confirmAuth.fail": "确认授权失败，请联系管理员 {message}",
       "reply.bad": "回复がエラーになりました。管理者に連絡してください {message}",
       "reply.notFound": "この返信またはプレイヤーは存在しません。",
-      "reply.spam": "送信したコンテンツは検出に合格せず、スパムとしてマークされました{message}",
+      "reply.spam": "你所提交的内容不通过检测，被标记为垃圾内容 {message}",
       "reply.success": "既に回答が提出されました。",
       "report.bad": "举报がエラーが発生しました。管理者に連絡してください {message}",
       "report.error": "举报がエラーになりました。管理者に連絡してください {message}",
-      "report.notFound": "このユーザーに関する情報は見つかりませんでした",
-      "report.notImplement": "エラーが発生しました。管理者に連絡してください{message}",
-      "report.spam": "送信したコンテンツは検出に合格せず、スパムとしてマークされました{message}",
-      "report.success": "ご報告ありがとうございます",
-      "signin.bad": "ログイン エラーが発生しました。管理者に連絡してください {message}",
-      "signin.noSuchUser": "そのようなユーザーが存在しないか、パスワードが間違っています",
-      "signin.success": "おかえり",
-      "signup.bad": "登録中にエラーが発生しました。管理者に連絡してください{message}",
-      "signup.error": "エラーが発生しました。管理者に連絡してください{message}",
-      "signup.notFound": "無効なアクティベーション コードです",
-      "signup.expired": "アクティベーション コードの有効期限が切れています。再度登録してください",
-      "signup.gameNotShowed": "判定されたアカウントは、バトルフィールド シリーズのゲームに対応していません。",
-      "signup.needVerify": "おめでとうございます。メールアドレスにアクセスしてアカウントを有効にしてください。",
-      "signup.notImplement": "エラーが発生しました。管理者に連絡してください{message}",
-      "signup.originBindingExist": "このメールアドレスはアカウントにバインドされています",
-      "signup.originNotFound": "ユーザーが提供した情報に基づいて EA アカウントが見つかりません",
-      "signup.usernameMismatch": "電子メール アドレスに対応する EA アカウントが、入力された EA アカウント名と一致しません。",
-      "signup.usernameExist": "アクティブ化される Web サイト ユーザーまたはアカウントのユーザー名は、アカウント プールにすでに存在します。",
-      "user.invalid": "トークンの有効期限が切れました",
-      "user.permissionDenined": "許可がありません",
-      "user.tokenClientException": "現在のクライアント トークンの有効期限が切れているか、有効期限が切れています",
-      "user.tokenExpired": "トークンの有効期限が切れています。再度ログインしてください",
-      "userReports.bad": "ユーザーがエラーを報告しました。管理者に連絡してください{message}",
-      "userReports.notFound": "そのようなプレーヤーはありません。よく確認してください",
-      "userReports.success": "レポートが成功しました"
+      "report.notFound": "查无此用户信息",
+      "report.notImplement": "发生错误，请联系管理员 {message}",
+      "report.spam": "你所提交的内容不通过检测，被标记为垃圾内容 {message}",
+      "report.success": "感谢你的举报",
+      "signin.bad": "登录发生错误，请联系管理员 {message}",
+      "signin.noSuchUser": "无此用户或密码错误",
+      "signin.success": "欢迎回来",
+      "signup.bad": "注册发生错误，请联系管理员 {message}",
+      "signup.error": "发生错误，请联系管理员 {message}",
+      "signup.notFound": "激活码无效",
+      "signup.expired": "激活码时效过期，请重新注册",
+      "signup.gameNotShowed": "判断的账户，没有对应战地系列游戏",
+      "signup.needVerify": "恭喜，你还差一步，请前往邮箱激活账户",
+      "signup.notImplement": "发生错误，请联系管理员 {message}",
+      "signup.originBindingExist": "此邮箱已绑定账户",
+      "signup.originNotFound": "无法依照用户提供的信息查找到EA账户",
+      "signup.usernameMismatch": "邮箱所对应的EA账户与填入的EA账户名称不符合",
+      "signup.usernameExist": "网站用户或账户待激活账户池内用户名已存在",
+      "user.invalid": "令牌失效",
+      "user.permissionDenined": "无权许可",
+      "user.tokenClientException": "当前客户端令牌过期或失效",
+      "user.tokenExpired": "令牌过期，请重新登陆",
+      "userReports.bad": "用户举报发生错误，请联系管理员 {message}",
+      "userReports.notFound": "没有此玩家，请仔细核对",
+      "userReports.success": "举报成功"
     }
   },
   "bindOrigin": {
@@ -290,7 +290,7 @@
   },
   "captcha": {
     "get": "認証コードの取得",
-    "fresh": "確認コードを更新する",
+    "fresh": "刷新验证码",
     "messages": {
       "bad": "验证码错误，请联系管理员",
       "expired": "验证码已过期",
@@ -340,25 +340,25 @@
   "detail": {
     "appeal": {
       "deal": {
-        "action": "異議申し立ての操作",
-        "adminContent": "返信内容を管理する",
-        "appealContent": "プレイヤーの苦情",
-        "btrLink": "BTRリンク",
-        "farm": "銃のブラッシングに関する苦情",
-        "firstPersonRecording": "一人称視点の画面録画リンク",
-        "userGeneratedMossFile": "mossファイル(.zip)",
-        "moss": "苔自己認証の苦情",
-        "mossDownloadUrl": "MOSSダウンロード",
-        "mossUpload": "苔をアップロードする",
-        "other": "その他の種類の苦情",
+        "action": "申诉操作",
+        "adminContent": "管理回复内容",
+        "appealContent": "玩家申诉内容",
+        "btrLink": "BTR链接",
+        "farm": "刷枪申诉",
+        "firstPersonRecording": "第一人称录屏链接",
+        "userGeneratedMossFile": "moss文件 (.zip)",
+        "moss": "moss自证申诉",
+        "mossDownloadUrl": "MOSS下载",
+        "mossUpload": "上传moss",
+        "other": "其他类型申诉",
         "stats": {
-          "accept": "控訴が可決されました",
-          "fail": "異議申し立ては失敗しました",
-          "unprocessed": "異議申し立ては処理されませんでした"
+          "accept": "申诉通过",
+          "fail": "申诉不通过",
+          "unprocessed": "申诉未处理"
         },
-        "type": "アピールタイプ"
+        "type": "申诉类型"
       },
-      "dealAppeal": "苦情への対応",
+      "dealAppeal": "处理申诉",
       "describe": "この通報情報には問題があり、私は自証または他人の協力で潔白を証明することができる。",
       "info": {
         "changeName": "名称变动",
@@ -430,7 +430,7 @@
       "inGame": "にある",
       "judge": "と考える",
       "judgement": "意見を処理する.",
-      "originAvatar": "EAアバター",
+      "originAvatar": "EA头像",
       "recentUpdateTime": "最終更新日時",
       "replyManual1": "新しい証拠写真やビデオが追加される必要がある場合は、再度通報することができます。返信機能は、テキストまたはリンクのみに返信できます。画像に返信するには、こちらに移動してください",
       "replyManual2": "その後、画像リンクをコピーして返信します。",
@@ -484,28 +484,28 @@
       "coreComment": "主要内容",
       "historyName": "历史玩家变动名称",
       "verify": "判決のみ表示",
-      "noAppealAttachmentHint": "この異議申し立てには異議申し立ての添付ファイルはありません",
-      "needLoginViewAttachmentsHint": "プレーヤーの苦情によって提供された追加の添付ファイルを表示するには、アカウントにログインする必要があります。",
+      "noAppealAttachmentHint": "此申诉无申诉附件",
+      "needLoginViewAttachmentsHint": "您需要登录账户，才可查阅玩家申诉额外提供的附件",
       "types": {
-        "judgement": "報告",
-        "register": "登録する",
-        "report": "報告",
-        "banAppeal": "訴える"
+        "judgement": "举报",
+        "register": "注册",
+        "report": "举报",
+        "banAppeal": "申诉"
       }
     },
     "dateView": {
-      "primitive": "オリジナル",
-      "primitiveDescription": "サーバーのタイムゾーン",
-      "localTimeZoneName": "現在のタイムゾーン名",
-      "localeTimeDescription": "「元の」時間を現地のタイムゾーンに変換します",
-      "localeTime": "現在の現地時間"
+      "primitive": "原始",
+      "primitiveDescription": "服务器所在时区时间",
+      "localTimeZoneName": "当前时区名称",
+      "localeTimeDescription": "转换'原始'时间为你所在地本地区间时间",
+      "localeTime": "当前本地时间"
     },
     "title": "詳細"
   },
   "footer": {
     "column": {
       "col1": {
-        "text": "BFBAN - グローバル不正行為プレイヤー データベース"
+        "text": "BFBAN - 全球作弊玩家数据库"
       },
       "col2": {
         "title": "コミュニティ"
@@ -517,7 +517,7 @@
         "title": "連絡先"
       },
       "sponsor": {
-        "join": "スポンサーになる",
+        "join": "成为赞助商",
         "title": "スポンサー人"
       }
     },
@@ -530,12 +530,12 @@
     "forgetUsername": "もしBFBANのユーザー名を忘れた場合は、<a href='http://kook.top/wHwxhw'>bfban開発者コミュニティ</a>にアクセスしてヘルプを求めてください。ただし、回復プロセスが非常に複雑である可能性があります。",
     "resetSuccess": "リセット完了おめでとうございます💐",
     "form": {
-      "username": "ユーザー名",
-      "originEmail": "EAメールボックス"
+      "username": "用户名",
+      "originEmail": "EA邮箱"
     },
     "placeholder": {
-      "username": "Web サイトのユーザー名または EA プラットフォーム アカウント (大文字と小文字を区別) のユーザー名を入力してください",
-      "originEmail": "EA のメールアドレスを入力してください"
+      "username": "请填写网站用户名或EA平台账户(注意大小写)用户名",
+      "originEmail": "输入您的EA邮箱"
     },
     "steps": {
       "0": {
@@ -559,7 +559,7 @@
         "title": "完了"
       }
     },
-    "title": "アカウントのパスワードをリセットする"
+    "title": "重置账户密码"
   },
   "header": {
     "about": "について",
@@ -598,7 +598,7 @@
       "h2": {
         "hint0": "提供☁️データベースにより、世界中の異なるBattlefieldサーバから、問題のあるアーカイブを削除したプレイヤーを監視することができます。",
         "hint1": "BF 1からBF 2042までを問わず問題のあるアーカイブ・プレイヤー・クエリがサポートされているため、世界中の異なるBattlefieldサーバから監視することができます",
-        "hint2": "すべてはコミュニティによって管理され、オープンかつ透明性があり、BFBAN にアクセスするすべての人に無料のサービスを提供します。"
+        "hint2": "一切由社区掌控，公开透明，免费为所有接入BFBAN提供服务"
       },
       "h3": "全世界の不正プレイヤーリポジトリを構築する",
       "h4": "私たちの一員になる-コミュニティ環境の維持",
@@ -637,7 +637,7 @@
       "sortByTitle": "排序方式"
     },
     "reportTime": "通報時間範囲",
-    "title": "プレイヤーデータベース",
+    "title": "玩家数据库",
     "updateTime": "更新時間範囲"
   },
   "misc": {
@@ -662,221 +662,221 @@
   },
   "profile": {
     "achievement": {
-      "title": "成果",
-      "acquisitionTime": "収集時間",
-      "conditions": "入手方法",
-      "getButton": "今すぐ実績を取得",
-      "exp": "達成経験",
-      "owned": "すでに実績がある",
+      "title": "成就",
+      "acquisitionTime": "领取时间",
+      "conditions": "获取方式",
+      "getButton": "立即获取成就",
+      "exp": "成就经验",
+      "owned": "已拥有成就",
       "rarity": {
         "normal": "普通",
-        "rare": "レア",
-        "preciousness": "貴重な",
-        "special": "特別"
+        "rare": "稀有",
+        "preciousness": "珍贵",
+        "special": "特殊"
       },
       "list": {
         "trend_monthly_assemble": {
-          "name": "人気の観光スポット (月)",
-          "description": "今月の人気案件ランキングに掲載中"
+          "name": "热门景点(月)",
+          "description": "登上本月热门案件排行"
         },
         "trend_monthly_l1": {
-          "name": "人気の観光スポット",
-          "conditions": "- このケースは今月の人気トップ 10 に入っています<br>- 現在のアカウントは、ケースが報告されたプレーヤーに関連付けられています<br>- ケース ツアーが 100 以上である",
-          "description": "人気のアトラクション😁"
+          "name": "热门景点",
+          "conditions": "- 案件登上本月前10名热门TOP<br>- 当前账户与案件被举报玩家关联<br>- 案件游览大于等于100",
+          "description": "热门景点😁"
         },
         "trend_monthly_l2": {
-          "name": "人気の観光スポット 2",
-          "conditions": "- このケースは今月の人気トップ 10 に入っています<br>- 現在のアカウントは、ケースが報告されたプレーヤーに関連付けられています<br>- 人気値が 3 以上である<br> - ケース ツアーが 500 以上",
-          "description": "人気の観光スポットでは頻繁にチェックイン"
+          "name": "热门景点2",
+          "conditions": "- 案件登上本月前10名热门TOP<br>- 当前账户与案件被举报玩家关联<br>- 热度值大于等于3以上<br>- 案件游览大于等于500",
+          "description": "热门景点常来打卡"
         },
         "user_innocent_case": {
-          "name": "安全な着陸",
-          "conditions": "- このアカウントに関連付けられたケースが BAN されています <br> - ケースのステータス自己認証ステータス",
-          "description": "大文字と小文字が無効です"
+          "name": "安全落地",
+          "conditions": "- 在联BAN中存在一个与此账户关联的案件<br>- 案件状态自证状态",
+          "description": "案件无效"
         },
         "user_achievement_assemble": {
-          "name": "実績コレクター",
-          "description": "実績コレクター (この実績はリストには表示されません。自分だけに表示されます)"
+          "name": "成就收藏家",
+          "description": "成就收藏者(此成就不会展示在列表中，仅自己可见)"
         },
         "user_achievement_l1": {
-          "name": "実績1",
-          "conditions": "- 3つの実績があります",
-          "description": "3つの実績を獲得しました"
+          "name": "成就1",
+          "conditions": "- 拥有3个成就",
+          "description": "已获取3个成就"
         },
         "user_achievement_l2": {
-          "name": "実績2",
-          "conditions": "- 10以上の実績がある",
-          "description": "10以上の実績がある"
+          "name": "成就2",
+          "conditions": "- 拥有10个以上成就",
+          "description": "拥有10个以上成就"
         },
         "user_achievement_l3": {
-          "name": "実績3",
-          "conditions": "- 10 個以上の実績がある <br> - 10 個の実績には貴重な実績が 1 つ含まれています",
-          "description": "貴重な 1 つを含む 10 個以上の実績を持っている"
+          "name": "成就3",
+          "conditions": "- 拥有10个以上成就<br>- 10成就内包含1个珍贵成就",
+          "description": "拥有10个以上成就，且包含1个珍贵"
         },
         "user_achievement_l4": {
-          "name": "実績4",
-          "conditions": "- 15 を超える実績がある <br> - 10 の実績には 3 つの貴重な実績が含まれます",
-          "description": "3 つの貴重な成果を含む 15 以上の成果を持っています"
+          "name": "成就4",
+          "conditions": "- 拥有15个以上成就<br>- 10个成就内包含3个珍贵成就",
+          "description": "拥有15个以上成就，且包含3个珍贵"
         },
         "active_community_weekly_assemble": {
-          "name": "毎週の貢献",
-          "description": "1 週間 (7 日間) のユーザーのコミュニティへの累積貢献度"
+          "name": "周贡献",
+          "description": "用户在一周(7天)社区累计贡献"
         },
         "active_community_weekly_l1": {
-          "name": "今週のコミュニティ貢献",
-          "conditions": "- 今週のコミュニティ参加統計ランキングのトップ 10 ユーザー <br> - 禁止またはブラックリストに登録されたユーザーなし <br> - 非ロボット アカウント",
-          "description": "今週のコミュニティ貢献トップ 10"
+          "name": "一周社区贡献",
+          "conditions": "- 在本周统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一周社区贡献前10名"
         },
         "active_community_monthly_assemble": {
-          "name": "毎月の拠出金",
-          "description": "1 か月以内のユーザーのコミュニティへの累積貢献度"
+          "name": "月贡献",
+          "description": "用户在一个月内社区累计贡献"
         },
         "active_community_monthly_l1": {
-          "name": "1ヶ月間の地域貢献活動",
-          "conditions": "- 今月のコミュニティ参加統計ランキングのトップ 10 ユーザー <br> - 禁止またはブラックリストに登録されたユーザーなし <br> - 非ロボット アカウント",
-          "description": "1 月のコミュニティ貢献トップ 10"
+          "name": "一个月社区贡献",
+          "conditions": "- 在本月统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一月社区贡献前10名"
         },
         "active_community_monthly_l2": {
-          "name": "1ヶ月間の地域貢献活動",
-          "conditions": "- 今月のコミュニティ参加統計ランキングのトップ 3 ユーザー <br> - 禁止またはブラックリストに登録されたユーザーなし <br> - 非ロボット アカウント",
-          "description": "1月のコミュニティ貢献トップ 3"
+          "name": "一个月社区贡献",
+          "conditions": "- 在本月统计社区参与排行榜中前3用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一月社区贡献前3名"
         },
         "active_community_yearly_assemble": {
-          "name": "年間寄付金",
-          "description": "1年間のユーザーのコミュニティへの累積貢献度"
+          "name": "年贡献",
+          "description": "用户在一年内社区累计贡献"
         },
         "active_community_yearly_l1": {
-          "name": "1年間の地域貢献活動",
-          "conditions": "- 今年のコミュニティ参加統計ランキングのトップ 10 ユーザー <br> - 禁止またはブラックリストに登録されたユーザーなし <br> - 非ロボット アカウント",
-          "description": "年間のコミュニティ貢献トップ 10"
+          "name": "一年社区贡献",
+          "conditions": "- 在本年统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一年社区贡献前10名"
         },
         "active_community_yearly_l2": {
-          "name": "1年間の地域貢献活動",
-          "conditions": "- 今年のコミュニティ参加統計ランキングのトップ 3 ユーザー <br> - 禁止またはブラックリストに登録されたユーザーなし <br> - 非ロボット アカウント",
-          "description": "年間トップ 3 のコミュニティ貢献者"
+          "name": "一年社区贡献",
+          "conditions": "- 在本年统计社区参与排行榜中前3用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一年社区贡献前3名"
         },
         "old_user": {
-          "name": "古いユーザー",
-          "conditions": "- 作成時期が 2024 年 1 月 1 日より前である <br> - ユーザー ID が 10000 以内 (10000 を含む) <br> (満足同じ時間）",
-          "description": "Lianban Pioneer 登録ユーザーの最初のバッチ"
+          "name": "老用户",
+          "conditions": "- 创建时间在2024 1月1日前<br>- 用户id在10000以内(包含10000)<br>(同时满足)",
+          "description": "最早一批注册联ban先锋用户"
         },
         "open_chat_assemble": {
-          "name": "チャット",
-          "description": "対応する条件付きチャットを完了する"
+          "name": "聊天",
+          "description": "完成对应条件聊天"
         },
         "open_chat_l1": {
-          "name": "オープンチャット",
-          "conditions": "- チャットするにはアカウントを開いてください",
-          "description": "いつでもお気軽にご相談ください"
+          "name": "开放聊天",
+          "conditions": "- 打开账户聊天",
+          "description": "欢迎随时与我对话"
         },
         "open_chat_l2": {
-          "name": "受信したメッセージ",
-          "conditions": "- アカウントを開いてチャットする <br> - 1 か月以内にメッセージを受信して読む <br> (同時に満足)",
-          "description": "コミュニケーションの第一歩"
+          "name": "收到消息",
+          "conditions": "- 打开账户聊天<br>- 一个月收到消息并已读<br>(同时满足)",
+          "description": "交流的第一步"
         },
         "one_search_player": {
-          "name": "初めてプレイヤーを検索する",
-          "conditions": "- Web サイトを使用して事例を検索する",
-          "description": "サイトを使用してプレーヤーを検索し、ケースを表示します"
+          "name": "首次搜索玩家",
+          "conditions": "- 使用网站搜索案件",
+          "description": "使用网站搜索玩家，并查看案件"
         },
         "report_assemble": {
-          "name": "報告",
-          "description": "実績を獲得するには、一定数のレポートとストーンハンマーを提出してください<i> - レポートはますます少なくなる可能性があります</i>"
+          "name": "举报",
+          "description": "提交一定举报数量并且石锤，获取成就 <i>-愿举报越来越少</i>"
         },
         "report_l1": {
-          "name": "初心者を報告する",
-          "conditions": "- 10 人のプレーヤーをレポート<br> - 2024 01-01 からの統計<br> - 非ロボット アカウント",
-          "description": "BAN の使用方法の事前調査"
+          "name": "举报萌新",
+          "conditions": "- 举报10条玩家<br>- 从2024 01-01开始统计<br>- 非机器人账户",
+          "description": "初步探索联BAN使用方法"
         },
         "report_l2": {
-          "name": "レポート作成の開始",
-          "conditions": "- 100 人のプレイヤーをレポート<br>- 2024 01-01 から開始されるシステム<br>- そして、有効なストーンハンマー事件の割合は、 96%<スパンclass='notranslate'><br></span>- ロボット以外のアカウント",
-          "description": "わずか 100 個のデータ"
+          "name": "举报入门",
+          "conditions": "- 举报100条玩家<br>- 从2024 01-01开始统<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
+          "description": "区区100条数据"
         },
         "report_l3": {
-          "name": "レポートマスター",
-          "conditions": "- 300のプレーヤーを通報します<br>- 2024 01-01から統<br>-しかも有効な石鎚の案件96%以上<br>-非ロボットアカウント",
-          "description": "一目見ただけであなただとわかる"
+          "name": "举报大师",
+          "conditions": "- 举报300条玩家<br>- 从2024 01-01开始统<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
+          "description": "只需要看一眼，就能识你"
         },
         "report_l4": {
-          "name": "レポートエキスパート",
-          "conditions": "- 1000のプレーヤーを通報します<br>- 2024 01-01から統<br>-しかも有効な石のハンマーの案件96%以上<br>-非ロボットアカウント",
-          "description": "あなたが期待していたことを私も期待していました"
+          "name": "举报专家",
+          "conditions": "- 举报1000条玩家<br>- 从2024 01-01开始统<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
+          "description": "我预料了你的预料"
         },
         "report_l5": {
-          "name": "家庭教師を報告する",
-          "conditions": "- 5000件のプレーヤーを通報します<br>- 2024 01-01から統<br>-しかも有効な石鎚の案件96%以上<br>-非ロボットアカウント",
-          "description": "達成条件はこれだけで特に説明は不要です"
+          "name": "举报导师",
+          "conditions": "- 举报5000条玩家<br>- 从2024 01-01开始统<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
+          "description": "你只需此成就条件既可，一切无需描述"
         },
         "user_subscribes_assemble": {
-          "name": "症例追跡",
-          "description": "対応するケースの追跡を完了する"
+          "name": "案件追踪",
+          "description": "完成对应案件追踪"
         },
         "user_subscribes_l1": {
-          "name": "狩人の目 1",
-          "conditions": "- 最初のケースを追跡 <br> - 通常のアカウント",
-          "description": "ハンターは常に獲物を監視します"
+          "name": "猎人的眼睛1",
+          "conditions": "- 追踪第一条案件<br>- 正常账户",
+          "description": "猎人将时刻关注猎物"
         },
         "user_subscribes_l2": {
-          "name": "ハンターズアイ2",
-          "conditions": "- 十分な 20 件のケースを追跡 <br> - 通常のアカウント",
-          "description": "成熟したハンター"
+          "name": "猎人的眼睛2",
+          "conditions": "- 追踪足够20条案件<br>- 正常账户",
+          "description": "一名成熟的猎人"
         },
         "site_20w_report_witnesses": {
-          "name": "目撃者を報告するには20W",
-          "conditions": "- Webサイトのレポートが20Wを超えると、すべてのユーザーがレポートを取得できます",
-          "description": "私たちにとって 200,000 件は祝う価値のあるものではありません。この達成を受け取る必要がないことを願っています。"
+          "name": "20W举报见证者",
+          "conditions": "- 当网站举报突破20W时所有用户都可以获得",
+          "description": "20w对于我们来说不是值得庆祝的事，这个成就更希望不需要领取"
         }
       }
     },
     "reports": {
-      "title": "私のレポート"
+      "title": "我的举报"
     },
     "space": {
       "form": {
-        "allowDM": "チャットを受信するかどうか",
-        "allowDMdescribe": "メッセージを受け入れるかどうか メッセージの詳細については、[メッセージ一覧]を参照してください。",
-        "changeNameLeft": "残りのユーザー名変更の数",
-        "createTime": "登録時間",
-        "description": "ユーザープロフィール",
-        "introduction": "自己紹介",
-        "language": "優先言語",
-        "languageSyncDescribe": "ログイン後にプログラムのローカル言語を同期するには、このオプションを設定します。ログアウトすると、ローカル プログラムによって保持されている言語に戻ります。",
-        "lastSigninIP": "最終ログインIP",
-        "modifyDescription": "ユーザープロファイルを変更する",
-        "originEmail": "EAアカウントのメールアドレス",
-        "originName": "EAアカウント名",
+        "allowDM": "是否接收聊天",
+        "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
+        "changeNameLeft": "剩余修改用户名次数",
+        "createTime": "注册时间",
+        "description": "用户简介",
+        "introduction": "自我介绍",
+        "language": "首选语言",
+        "languageSyncDescribe": "设置此处选项，在登录后同步程序本地语言，如果退出登录将回退到本地程序所持久保存的语言",
+        "lastSigninIP": "最后登录IP",
+        "modifyDescription": "修改用户简介",
+        "originEmail": "EA账户邮箱",
+        "originName": "EA账户名字",
         "originPersonaId": "EA PID",
         "originUserId": "EA UID",
-        "privilege": "身元",
-        "privileges": "権限",
-        "registerIP": "登録時のIP",
-        "showOrigin": "EA 情報の可視化",
-        "showOriginDescribe": "バインドされた EA アカウントを BFBAN に表示するかどうか",
-        "showAchievement": "公的業績",
-        "AD": "宣伝する",
-        "ADDescribe": "広告のサービスを拒否することができ、サイトは公益のためにオープンされたままになります。スイッチをオフに変更すると、サイト上のすべての広告が終了します。",
+        "privilege": "身份",
+        "privileges": "权限",
+        "registerIP": "注册时IP",
+        "showOrigin": "可见EA信息",
+        "showOriginDescribe": "是否让你绑定的EA账户在BFBAN可见",
+        "showAchievement": "公开成就",
+        "AD": "广告",
+        "ADDescribe": "您可以拒绝服务广告，网站仍为公益开放，将开关更改为关闭，网站上的所有广告将被终止",
         "signoutTime": "登出时间",
-        "username": "ユーザー名"
+        "username": "用户名"
       },
       "modifyName": {
-        "residueDegree": "現在残っている名前変更の数 {changeNameLeft}",
-        "specification1": "アカウント名を変更しています。つまり、ウェブサイトに表示されるときにアカウント名が変更され、同時に<b>ログイン ID</b> も同時に変更されるため、新しいアカウント ID を忘れてしまうと、このアカウントを取得できなくなる可能性があり、バインドされている Orgin アカウントに影響を与える可能性があります。非常に長い手動レビュー。",
-        "specification2": "上記の説明は理解できましたか？",
+        "residueDegree": "目前剩余修改名称{changeNameLeft}次数",
+        "specification1": "你正在修改您的账户名称，这代表网站内看见都会更变，并且同时<b>登录的ID</b>同时变动,如果您不小心忘记新账户id，可能无法找回此账户，影响绑定的orgin账户，你需要通过非常长的人工审核.",
+        "specification2": "你明白以上说明了吗?",
         "steps": {
           "0": {
-            "title": "ヒント"
+            "title": "提示"
           },
           "1": {
-            "title": "埋める"
+            "title": "填写"
           },
           "2": {
-            "title": "仕上げる"
+            "title": "完成"
           }
         },
-        "title": "名前の変更"
+        "title": "修改名称"
       },
-      "title": "アカウント情報の設定"
+      "title": "账户信息设置"
     },
     "admin": {
       "menu": {
@@ -885,8 +885,8 @@
         "adminOperationLog": "管理员网站操作日志",
         "blockedUsers": "黑名单用户",
         "comment": "コメント管理",
-        "fileManagement": "マルチメディア管理",
-        "files": "ファイルリスト",
+        "fileManagement": "多媒体管理",
+        "files": "文件列表",
         "home": "管理主页",
         "judgementLog": "判決日誌",
         "log": "ログ＃ログ＃",
@@ -906,7 +906,7 @@
     },
     "chat": {
       "control": "一括編集",
-      "download": "ダウンロード",
+      "download": "下载",
       "load": "リフレッシュ",
       "look": "表示＃ヒョウジ＃",
       "placeholder": "送信されたメッセージを入力",
@@ -984,14 +984,14 @@
     },
     "media": {
       "capacity": "ようりょう",
-      "hint1": "各アカウントには毎日のアップロード帯域幅、ファイル数、および個別のサイズ制限がありますが、次の日にリセットされます。ただし、各アカウントでアップロードできるファイルの数はあります。ストレージ要件が低いファイルは、他のファイルに置き換えることができます。 Web サイトのネットワーク ディスク。",
-      "maxFileNumber": "アップロードできるファイル数",
-      "maxTrafficQuota": "最大ファイルサイズ",
-      "prevResetTime": "制限日をリセットする",
+      "hint1": "每个账户每日都有上传宽带、文件数量、单个大小限制，但它会在下一个日期重置，但存在每个账户可用文件上传数量，对于储存要求不高文件可用其他网站网盘代替。",
+      "maxFileNumber": "可上传文件数量",
+      "maxTrafficQuota": "文件最高大小",
+      "prevResetTime": "重置限额日期",
       "title": "メディアライブラリー",
-      "todayFileNumber": "今日アップロードされたファイル",
-      "todayTrafficQuota": "今日のトラフィック割り当て",
-      "usedStorageQuota": "合計ストレージ割り当て量"
+      "todayFileNumber": "今日已上传文件",
+      "todayTrafficQuota": "今日流量额度",
+      "usedStorageQuota": "总储存配额"
     },
     "meet": "{name}さん、お帰りなさい！",
     "subscribes": {
@@ -1016,22 +1016,22 @@
       "leave": "退社"
     },
     "info": {
-      "description": "🤝 基本的なコンテンツ要件:\n- 記者の個人情報をここに提出しないでください\n- 動画リンクを貼り付けることができるので、目を引くリマインダーやインデックス作成に役立ちます\n- 報告者の行動、特徴、発生場所、発生時刻を明確に記載し、浮気行為を列挙し、最後にその理由を述べてください。\n- 場所をマークし、提供したスクリーンショットやビデオに手順を追加できます\n\n⚠️直接的な証拠を提供せずに、単純な不正行為の方法だけを記入しないでください。\n⚠️無意味/悪意のある報告を複数回行うと、アカウントがブラックリストに登録されます",
+      "description": "🤝 内容基本要求:\n\t- 不要将举报者任何隐私信息提交到此处\n\t- 视频链接可以粘贴在上面，有利于醒目提醒和索引\n\t- 请清晰描述举报者行为、特点、发生地点、时间，列出他的作弊举止，最后给出原因\n\t- 可以对你提供的截图、视频标注位置，附加说明\n\n⚠️ 请不要仅填写简单作弊方式，不提供任何直接证据\n⚠️ 多次无意义/恶意举报，账户将受到黑名单",
       "fromDatabaseOneId": "結合されたANデータベースから選択",
       "idNotion1": "一度にIDを1つだけ記入して、戦隊名を入れないで、自分のIDにしないでください",
       "idNotion2": "ゲームIDは大文字と小文字を区別しませんが、特にi I 1 l Lo O 0を区別し、通報IDを正しく記入することに注意してください",
       "loginExpired": "ログインの有効期限が切れました。再ログインしてください",
-      "notFoundHintAnswer1": "ea.com にアクセスしてプレーヤーを検索してください。プレーヤーが見つかっても報告できない場合は、ホームページの下部にある連絡先情報にアクセスしてバグを報告してください。",
+      "notFoundHintAnswer1": "请至ea.com搜索该玩家，如确实能搜索到而无法举报，可至首页下方的联系方式处反馈bug",
       "notFoundHintAnswer2": "これはEAデータベースの更新が遅れているか、またはEA公式のバグの可能性があります。私たちはそれらを解決する手段を持っていません。もし力を貸していただけるのであれば、以下の公式フィードバックフォーラムにアクセスしてバグを報告していただけますか。この問題は「I can't search my friend by name on origin」と表現できます。\nhttps://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en",
       "notFoundHintQuestion1": "でもゲームで彼に会ったばかりです/私は戦績アプリで彼を調べていますか？",
-      "notFoundHintQuestion2": "EA で見つからないのですが、何が起こっているのでしょうか?",
+      "notFoundHintQuestion2": "EA上无法搜索到，这是怎么一回事？",
       "notFoundHintTitle": "プレイヤーを見つけることはできません",
       "reportAll": "すべてを告発する",
       "reportHacker": "不正行為を告発する.",
       "reportOne": "通報個別",
       "required": "ビデオアドレス",
-      "uploadManual1": "さらに、Youku、Tudou、推奨されるAcfun、Bilibiliおよび他のビデオサイトからの共有リンクまたはアクセス可能なソースファイルアドレス[クラウドドライブは禁止されています]を提供することができ、追加ボタンをクリックして以下に貼り付けます。",
-      "uploadManual2": "長期間有効なビデオ Web サイトのリンクを選択してください。ビデオをネットワーク ディスクにアップロードしないでください。",
+      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun, Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
+      "uploadManual2": "请选择具有长时间有效视频网站链接,请勿上传视频至网盘",
       "uploadPic1": "png、jpg、jpeg、gif形式の画像をアップロードすることをお勧めします",
       "uploadPic2": "画像が2 Mより大きいか、アップロードに失敗した場合は、",
       "uploadPic3": "次にImage URLタブを選択し、画像リンクを下に貼り付けます",
@@ -1040,19 +1040,19 @@
     "labels": {
       "types": {
         "originName": {
-          "name": "ユーザー名",
-          "hint": "プラットフォームの略称ユーザー名またはプラットフォーム ユーザー名",
-          "placeholder": "EA 名は一度に 1 つだけです"
+          "name": "用户名称",
+          "hint": "平台简写用户名或是平台用户名",
+          "placeholder": "一次只有一个EA名称"
         },
         "originPersonaId": {
-          "name": "ロールアイデンティティ識別子 (PID)",
-          "hint": "キャラクター ID (PID)。ゲーム プラットフォームまたはサードパーティ ツールを通じて取得でき、数字で構成されます。",
-          "placeholder": "EA ペルソナ ID。数字で構成され、一度に 1 つだけ"
+          "name": "角色身份标识(PID)",
+          "hint": "角色标识(PID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA PersonaId，由数字组成，一次只有一个"
         },
         "originUserId": {
-          "name": "ユーザー識別子 (UID)",
-          "hint": "ユーザー識別 (UID) は、ゲーム プラットフォームまたはサードパーティ ツールを通じて取得でき、数字で構成されます。",
-          "placeholder": "EA UserId、数値で構成され、一度に 1 つだけ"
+          "name": "用户身份标识(UID)",
+          "hint": "用户身份标识(UID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA UserId，由数字组成，一次只有一个"
         }
       },
       "cheatMethod": "不正行為の方法",
@@ -1089,7 +1089,7 @@
   "search": {
     "collectionHint": "このページをブックマークする (Ctrl+D or Command+D)",
     "describe": "BFANデータベースからIDを取得する",
-    "notExist": "データが見つかりません",
+    "notExist": "未能查找到数据",
     "placeholder": "何を検索しますか、ああ、あなたです！",
     "sort": {
       "default": "デフォルト",
@@ -1129,7 +1129,7 @@
     "failed": "ログインに失敗しました",
     "fillEverything": "仕様を記入してください",
     "form": {
-      "Feedback": "フィードバックの質問",
+      "Feedback": "反馈问题",
       "forgetPasswordHint": "パスワードを忘れましたか？",
       "password": "パスワード",
       "submitHint": "アカウントはありませんか？登録解除",
@@ -1155,15 +1155,15 @@
       "username": "ユーザー名"
     },
     "placeholder": {
-      "originEmail": "EA のメールアドレスを入力してください",
-      "originName": "EA 名を入力します。大文字と小文字に注意してください。",
+      "originEmail": "输入您的EA邮箱",
+      "originName": "输入您的EA名字, 注意大小写",
       "password": "6ビット以上のパスワード",
-      "username": "ユーザー名は 4 文字以上で、英語、数字、アンダースコア、マイナス記号、または name@ と address を含む電子メール アドレスである必要があります。"
+      "username": "用户名至少4位以上,仅限英文、数字、下划线、减号 或 包含名@地址的邮箱"
     },
     "registerVerification": {
       "error": "エラー",
-      "failure": "認証に失敗しました。認証アドレスが間違っている、認証コードが無効である、認証コードが期限切れであるなどの原因が考えられます。しばらくしてからアカウントを再度登録してください。",
-      "successful": "認証が成功しました。アカウントのロックが解除され、ログインできるようになりました。",
+      "failure": "验证失败，这可能是因为错误验证地址、非法验证码、验证码过期等原因；请在一段时间后，再次尝试重新注册账号",
+      "successful": "验证成功!账户已解锁，既可前往登录",
       "title": "アカウントの検証",
       "validation": "検証中"
     },
@@ -1173,7 +1173,7 @@
         "title": "基礎情報"
       },
       "1": {
-        "supplement": "EAプラットフォームと連携",
+        "supplement": "关联EA平台",
         "title": "バインド"
       },
       "2": {
@@ -1193,7 +1193,7 @@
   },
   "sitestats": {
     "admins": "合計管理者数",
-    "achievement": "実績値ランキング",
+    "achievement": "成就价值排行",
     "banAppeals": "上告済み",
     "communityParticipation": "用户社区参与排行",
     "confirmed": "処理された案件",
@@ -1209,7 +1209,7 @@
     },
     "title": "統計＃トウケイ＃",
     "trend": "案件热度",
-    "netstatus": "ネットワークステータス"
+    "netstatus": "网络状态"
   },
   "textarea": {
     "originalImage": "オリジナル画像",
@@ -1228,8 +1228,8 @@
         "1": "見る"
       }
     },
-    "textHelpHint": "統計コンテンツには、目に見えるテキストコンテンツとは異なる非表示のタグが含まれています。この統計を参照してください。",
-    "textOverflowHint": "テキスト コンテンツが最大長を超えています。適切に短くするか、分割して送信してください。",
+    "textHelpHint": "统计内容包含不可见的标签，与可见的文本内容有差异，请以此统计为准",
+    "textOverflowHint": "文本内容超出最大长度，请适当缩减或分段提交",
     "type": {
       "media": "メディアライブラリー",
       "upload": "イメージベッドにアップロードする",
@@ -1237,10 +1237,10 @@
     }
   },
   "externalAuth": {
-    "title": "承認する",
-    "validation": "承認する",
-    "successful": "認証に成功しました。このページを閉じても問題ありません",
-    "error": "認証に失敗しました",
-    "failure": "すべてのパラメータが正しいかどうかを確認してください"
+    "title": "授权",
+    "validation": "授权中",
+    "successful": "授权成功，可以关闭此页面",
+    "error": "授权失败",
+    "failure": "请检查各项参数是否正确"
   }
 }
