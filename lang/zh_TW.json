@@ -7,7 +7,7 @@
   },
   "account": {
     "bindOrigin": {
-      "content": "BFBAN需要您綁定EA賬戶，以便賬戶申訴、找回等功能；未綁定EA前，您的賬戶會被鎖定，無法提交任何內容",
+      "content": "BFBAN需要您綁定origin賬戶，以便賬戶申訴、找回等功能；未綁定origin前，您的賬戶會被鎖定，無法提交任何內容",
       "title": "未綁定帳戶",
       "travel": "好的，前往綁定帳戶"
     },
@@ -247,9 +247,9 @@
       "notContent": "無內容",
       "notFound": "哎列, 訪問地址似乎走失",
       "notLang": "未翻譯",
-      "externalAuth.success": "授權請求成功",
-      "externalAuth.noSuchUser": "授權請求的目標用戶不存在",
-      "externalAuth.fail": "授權請求失敗，請聯繫管理員 {message}",
+      "externalAuth.success": "授权请求成功",
+      "externalAuth.noSuchUser": "授权请求的目标用户不存在",
+      "externalAuth.fail": "授权请求失败，请联系管理员 {message}",
       "confirmAuth.success": "确认授权成功",
       "confirmAuth.fail": "确认授权失败，请联系管理员 {message}",
       "reply.bad": "回覆發生錯誤，請聯繫管理員 {message}",
@@ -290,7 +290,6 @@
   },
   "captcha": {
     "get": "獲得驗證碼",
-    "fresh": "刷新验证码",
     "messages": {
       "bad": "驗證碼錯誤，請聯繫管理員",
       "expired": "驗證碼已過期",
@@ -430,7 +429,7 @@
       "inGame": "在",
       "judge": "認為",
       "judgement": "處理意見",
-      "originAvatar": "EA头像",
+      "originAvatar": "Origin大頭貼",
       "recentUpdateTime": "最近更新時間",
       "replyManual1": "如果有新的證據圖片或影片需要補充，可以再次檢舉。回覆功能只能回覆文本或鏈結。如需回覆圖片，請移步這裡",
       "replyManual2": "然後複製圖片鏈結進行回覆。",
@@ -505,7 +504,7 @@
   "footer": {
     "column": {
       "col1": {
-        "text": "BFBAN - 全球作弊玩家数据库"
+        "text": "聯BFBAN - 全球作弊玩家資料庫"
       },
       "col2": {
         "title": "社區"
@@ -819,8 +818,8 @@
         },
         "user_subscribes_l2": {
           "name": "猎人的眼睛2",
-          "conditions": "- 追蹤足夠20條案件<br>- 正常賬戶",
-          "description": "一名成熟的獵人"
+          "conditions": "- 追踪足够20条案件<br>- 正常账户",
+          "description": "一名成熟的猎人"
         },
         "site_20w_report_witnesses": {
           "name": "20W举报见证者",
@@ -852,7 +851,7 @@
         "privileges": "權限",
         "registerIP": "註冊時IP",
         "showOrigin": "可見EA信息",
-        "showOriginDescribe": "是否让你绑定的EA账户在BFBAN可见",
+        "showOriginDescribe": "是否讓你綁定的Origin在BFBAN可見",
         "showAchievement": "公開成就",
         "AD": "廣告",
         "ADDescribe": "你可以拒絕服務廣告，網站仍為公益開放，將開關更改為關閉，網站上的所有廣告將被終止",
@@ -1021,16 +1020,16 @@
       "idNotion1": "一次只填寫一個ID，不要把戰隊名字寫進來，不要寫成自己的ID",
       "idNotion2": "遊戲ID是不區分大小寫的，但請特別注意區分 i I 1 l L o O 0，填寫正確ID",
       "loginExpired": "您的登入已過期，請重新登入",
-      "notFoundHintAnswer1": "请至ea.com搜索该玩家，如确实能搜索到而无法举报，可至首页下方的联系方式处反馈bug",
+      "notFoundHintAnswer1": "請至origin.com搜尋該玩家，如確實能搜索到而無法檢舉，可至首頁下方的聯絡方式處反饋bug",
       "notFoundHintAnswer2": "這可能是EA數據庫更新不及時，或是EA官方的bug，我們沒有辦法替他們解決，如果您想出一份力，可以至https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en 官方反饋論壇反饋bug，此情況可以描述為 I can't search my friend by name on origin",
       "notFoundHintQuestion1": "但是我剛剛在遊戲裡見過他/我在查戰績app上查得到他？",
-      "notFoundHintQuestion2": "EA上无法搜索到，这是怎么一回事？",
+      "notFoundHintQuestion2": "origin上無法搜尋到，這是怎麼一回事？",
       "notFoundHintTitle": "我們無法找到該玩家",
       "reportAll": "檢舉所有",
       "reportHacker": "檢舉作弊",
       "reportOne": "檢舉單個",
       "required": "影片地址",
-      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun, Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
+      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun,Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
       "uploadManual2": "请选择具有长时间有效视频网站链接,请勿上传视频至网盘",
       "uploadPic1": "推薦上傳 png, jpg, jpeg, gif 格式的圖片",
       "uploadPic2": "圖片大於 2M 或 上傳失敗，可以前往",
@@ -1045,14 +1044,14 @@
           "placeholder": "一次只有一個EA名稱"
         },
         "originPersonaId": {
-          "name": "角色身份标识(PID)",
-          "hint": "角色标识(PID)，可通过游戏平台或第三方工具获取, 它由数字组成",
-          "placeholder": "EA PersonaId，由数字组成，一次只有一个"
+          "name": "角色身分標識",
+          "hint": "角色標識(id)，可通過遊戲平台或第三方工具獲取，它由數字組成",
+          "placeholder": "EA角色身分ID，由數字組成，一次只有一個"
         },
         "originUserId": {
-          "name": "用户身份标识(UID)",
-          "hint": "用户身份标识(UID)，可通过游戏平台或第三方工具获取, 它由数字组成",
-          "placeholder": "EA UserId，由数字组成，一次只有一个"
+          "name": "用戶身分標識",
+          "hint": "角色標識(id)，可通過遊戲平台或第三方工具獲取，它由數字組成",
+          "placeholder": "EA用戶身分ID，由數字組成，一次只有一個"
         }
       },
       "cheatMethod": "作弊方法",
