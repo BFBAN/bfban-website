@@ -67,8 +67,17 @@ const msalConfig = {
                 }
             },
             afterCacheAccess: async (context) => {
-                if (context.cacheHasChanged)
-                    await fs.promises.writeFile(tokenCachePath, context.tokenCache.serialize());
+                try {
+                    if (context.cacheHasChanged) {
+                        // I guess if the read happened during the write, it will get a dirty content.
+                        // And the dirty content will ruin the token cache, making the session invalid.
+                        // So we might need to make the write atomic.
+                        await fs.promises.writeFile(tokenCachePath + '.tmp', context.tokenCache.serialize());
+                        await fs.promises.rename(tokenCachePath + '.tmp', tokenCachePath);
+                    }
+                } catch (err) {
+                    logger.error('TokenCache:', err.message);
+                }
             }
         }
     },
