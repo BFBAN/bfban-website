@@ -41,7 +41,7 @@
 
                 <div v-show="stepsIndex === 1">
                   <FormItem :label="$t('captcha.title')" prop="captcha">
-                    <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
+                    <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
 
                   </FormItem>
                 </div>
@@ -127,7 +127,7 @@
 
 <script>
 import {api, http_token, mail} from "@/assets/js";
-import Captcha from "@/components/Captcha";
+import Captcha from "@/components/captcha/index";
 
 export default {
   name: "bindOrigin",

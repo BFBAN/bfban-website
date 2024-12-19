@@ -351,7 +351,7 @@ import {api, http, http_token, voice, util, regular} from '../assets/js/index'
 import Application from "../assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
 import Html from "@/components/Html";
-import Captcha from "@/components/Captcha";
+import Captcha from "@/components/captcha/index";
 import Textarea from "@/components/Textarea.vue";
 import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";
@@ -598,7 +598,9 @@ export default new Application({
     handleReport(data, index) {
       if (!this.captcha) {
         this.$Message.error(this.$t('basic.tip.captcha.expired'));
+        return ;
       }
+
       const {gameName, originName, originUserId, originPersonaId} = data.formItem;
       const cheatMethods = data.formItem.checkbox;
       const description = data.formItem.description.trim();

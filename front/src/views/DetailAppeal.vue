@@ -228,7 +228,10 @@
         <Col flex="1"></Col>
         <Col>
           <ButtonGroup>
-            <Button size="large" :to="{name: 'player', query: {byPath: $route.name}}">{{ $t('basic.button.cancel') }}</Button>
+            <Button size="large" :to="{name: 'player', query: {byPath: $route.name}}">{{
+                $t('basic.button.cancel')
+              }}
+            </Button>
             <Button size="large" @click="resetAppealForm()">{{ $t('basic.button.reset') }}</Button>
           </ButtonGroup>
           <Divider type="vertical"/>
@@ -249,7 +252,7 @@ import {api, http_token, message, moss, upload} from "@/assets/js";
 import Application from "@/assets/js/application";
 import Empty from "@/components/Empty.vue";
 import Textarea from "@/components/Textarea.vue";
-import Captcha from "@/components/Captcha.vue";
+import Captcha from "@/components/captcha/index";
 import Html from "@/components/Html.vue";
 import EditLinks from "@/components/EditLinks.vue"
 

@@ -148,7 +148,7 @@ import {http, api, http_token, mail, regular} from '../assets/js/index'
 import {testWhitespace} from "@/mixins/common";
 
 import EmailTip from "../components/EmailTip";
-import Captcha from "../components/Captcha";
+import Captcha from "../components/captcha/index";
 
 export default new Application({
   data() {

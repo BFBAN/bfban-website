@@ -1210,7 +1210,7 @@ import RecordLink from "../components/RecordLink.vue";
 import cheaterStatusView from "../components/CheaterStatusView.vue";
 import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
 import judgeActionTemplateView from "@/components/judgeActionTemplateView.vue";
-import Captcha from "../components/Captcha";
+import Captcha from "../components/captcha/index";
 import TimeView from "../components/TimeView.vue"
 import HtmlCore from "../components/Html";
 import HtmlWidget from "../components/HtmlWidget";

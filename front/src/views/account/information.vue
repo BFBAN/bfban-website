@@ -313,7 +313,7 @@ import {api, http, http_token, account_storage} from "../../assets/js";
 import Application from "@/assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
 import Textarea from "@/components/Textarea.vue";
-import Captcha from "../../components/Captcha";
+import Captcha from "../../components/captcha/index";
 import UserAvatar from "@/components/UserAvatar.vue";
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
 import TimeView from "@/components/TimeView.vue";

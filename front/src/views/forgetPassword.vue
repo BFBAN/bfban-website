@@ -108,7 +108,7 @@
 import Application from "../assets/js/application";
 import {http, api, conf, mail} from '../assets/js/index'
 import EmailTip from "../components/EmailTip";
-import Captcha from "../components/Captcha";
+import Captcha from "../components/captcha/index";
 
 export default new Application({
   name: 'forgetPassword',

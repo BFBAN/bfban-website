@@ -92,7 +92,7 @@
 import Application from "../assets/js/application";
 
 import {api, http, regular} from '../assets/js/index'
-import Captcha from "../components/Captcha";
+import Captcha from "../components/captcha/index";
 import Vuex from "vuex";
 import _ from "lodash";
 
