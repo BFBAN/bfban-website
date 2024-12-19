@@ -1,22 +1,12 @@
 <template>
-  <div class="turnstile-wrapper">
-    <div
-        class="container"
-        :class="{ blurred: isBlurred }"
-        :style="{ pointerEvents: isBlurred ? 'none' : 'auto' }"
-    >
-      <div class="captcha">
-        <div ref="turnstileContainer" class="turnstile-container"></div>
-        <span class="captcha-text" @click="renderTurnstile">
-          {{ $t('captcha.fresh') }}
-        </span>
-      </div>
-
+  <Card class="captcha turnstile-wrapper" dis-hover :padding="0">
+    <div class="ivu-card" :style="{ pointerEvents: isBlurred ? 'none' : 'auto' }">
+      <div ref="turnstileContainer" class="turnstile-container"></div>
     </div>
-    <div v-if="isBlurred" class="click-to-show" @click="removeBlur">
+    <div v-if="isBlurred" class="captcha-hint" @click="removeBlur">
       {{ $t('captcha.get') }}
     </div>
-  </div>
+  </Card>
 </template>
 
 <script>
@@ -78,68 +68,46 @@ export default {
       // 渲染 Turnstile
       window.turnstile.render(this.$refs.turnstileContainer, {
         sitekey: this.sitekey,
+        size: 'flexible',
+        appearance: 'execute',
         callback: (response) => {
-          this.$emit('getCaptchaData', { response, captchaType: 'turnstile' });
+          this.$emit('getCaptchaData', {response, captchaType: 'turnstile'});
         },
       });
 
       // 标记已渲染
       this.$refs.turnstileContainer.setAttribute('data-rendered', 'true');
-    }
+    },
   }
 }
 </script>
 
 <style scoped>
-.turnstile-wrapper {
+.captcha.turnstile-wrapper {
+  overflow: hidden;
+  width: 180px;
+  height: 38px !important;
   display: flex;
-  justify-content: flex-start; /* 左对齐 */
-  align-items: flex-start; /* 顶部对齐 */
-  padding: 10px;
-  background-color: gainsboro;
-  min-height: 100px;
   box-sizing: border-box;
 }
 
-.turnstile-container {
-  display: inline-block;
+.captcha .turnstile-container {
+  margin: -15px -61px;
+  position: absolute;
+  height: 65px !important;
+  overflow: hidden;
+  transform: scale(.6);
 }
 
-/* 容器样式 */
-.container {
-  display: flex;
-
-  justify-content: center;
-  transition: filter 0.3s ease;
-  position: relative; /* 相对定位容器 */
+.captcha .turnstile-container > * {
+  margin-bottom: -12px !important;
 }
 
-/* 虚化效果 */
-.blurred {
-  filter: blur(5px);
-}
-
-/* 点击提示文字样式 */
-.click-to-show {
-  position: absolute; /* 绝对定位在外层容器 */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: black;
+.captcha .captcha-hint {
   cursor: pointer;
-  border-radius: 5px;
-  z-index: 10; /* 确保层级高于虚化容器 */
-}
-/* 验证码容器样式 */
-.captcha {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-.captcha-text {
-  font-size: 12px;
-  color: gray;
-  margin-top: -10px;
+  position: absolute;
+  text-align: center;
+  display: block;
+  width: 100%;
 }
 </style>
