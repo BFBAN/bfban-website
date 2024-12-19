@@ -117,17 +117,18 @@ export default {
 
 .captcha.turnstile-wrapper {
   overflow: hidden;
-  width: 120px;
+  width: 140px;
+  min-height: 30px;
   height: 40px !important;
   display: flex;
   box-sizing: border-box;
 }
 
 .captcha .turnstile-container {
-  margin: -16px -61px;
-  position: absolute;
+  margin: -14px -25px;
+  position: relative;
   overflow: hidden;
-  transform: scale(.6);
+  transform: scale(.85);
 }
 
 .captcha .turnstile-container > * {
