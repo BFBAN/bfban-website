@@ -16,19 +16,19 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ads.txt"
   },
   {
-    "revision": "b2bb7ee2d6f03c0e83c3",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/app.css"
   },
   {
-    "revision": "b2bb7ee2d6f03c0e83c3",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/app.css.map"
   },
   {
-    "revision": "b2bb7ee2d6f03c0e83c3",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/assets/css/app.91325301.css"
   },
   {
-    "revision": "b2bb7ee2d6f03c0e83c3",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/assets/css/app.91325301.css.map"
   },
   {
@@ -308,11 +308,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ionicons.d535a25a.ttf"
   },
   {
-    "revision": "b2bb7ee2d6f03c0e83c3",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/assets/js/app.2.9.16.js"
   },
   {
-    "revision": "b2bb7ee2d6f03c0e83c3",
+    "revision": "a6a57ad8d92f08e871e6",
     "url": "/assets/js/app.2.9.16.js.map"
   },
   {
