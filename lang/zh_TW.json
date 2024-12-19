@@ -250,8 +250,8 @@
       "externalAuth.success": "授權請求成功",
       "externalAuth.noSuchUser": "授權請求的目標用戶不存在",
       "externalAuth.fail": "授權請求失敗，請聯繫管理員 {message}",
-      "confirmAuth.success": "確認授權成功",
-      "confirmAuth.fail": "確認授權失敗，請聯絡管理員 {message}",
+      "confirmAuth.success": "确认授权成功",
+      "confirmAuth.fail": "确认授权失败，请联系管理员 {message}",
       "reply.bad": "回覆發生錯誤，請聯繫管理員 {message}",
       "reply.notFound": "沒有此回覆或玩家",
       "reply.spam": "你所提交的內容未通過檢測，被標記為垃圾內容{message}",
@@ -290,7 +290,7 @@
   },
   "captcha": {
     "get": "獲得驗證碼",
-    "fresh": "刷新驗證碼",
+    "fresh": "刷新验证码",
     "messages": {
       "bad": "驗證碼錯誤，請聯繫管理員",
       "expired": "驗證碼已過期",
@@ -430,7 +430,7 @@
       "inGame": "在",
       "judge": "認為",
       "judgement": "處理意見",
-      "originAvatar": "EA頭像",
+      "originAvatar": "EA头像",
       "recentUpdateTime": "最近更新時間",
       "replyManual1": "如果有新的證據圖片或影片需要補充，可以再次檢舉。回覆功能只能回覆文本或鏈結。如需回覆圖片，請移步這裡",
       "replyManual2": "然後複製圖片鏈結進行回覆。",
@@ -505,7 +505,7 @@
   "footer": {
     "column": {
       "col1": {
-        "text": "Bfban - 全球作弊玩家資料庫"
+        "text": "BFBAN - 全球作弊玩家数据库"
       },
       "col2": {
         "title": "社區"
@@ -517,7 +517,7 @@
         "title": "聯絡方式"
       },
       "sponsor": {
-        "join": "成為贊助商",
+        "join": "成为赞助商",
         "title": "贊助商"
       }
     },
@@ -809,23 +809,23 @@
           "description": "你只需此成就條件即可，一切無須描述"
         },
         "user_subscribes_assemble": {
-          "name": "案件追蹤",
-          "description": "完成對應案件追蹤"
+          "name": "案件追踪",
+          "description": "完成对应案件追踪"
         },
         "user_subscribes_l1": {
-          "name": "獵人的眼睛1",
-          "conditions": "- 追蹤第一個案件<br>- 正常帳戶",
-          "description": "獵人將時時刻刻關注獵物"
+          "name": "猎人的眼睛1",
+          "conditions": "- 追踪第一条案件<br>- 正常账户",
+          "description": "猎人将时刻关注猎物"
         },
         "user_subscribes_l2": {
-          "name": "獵人的眼睛2",
+          "name": "猎人的眼睛2",
           "conditions": "- 追蹤足夠20條案件<br>- 正常賬戶",
           "description": "一名成熟的獵人"
         },
         "site_20w_report_witnesses": {
-          "name": "20W檢舉見證者",
-          "conditions": "- 當網站檢舉突破20W時所有使用者都可以獲得",
-          "description": "20w對我們來說不是值得慶祝的事，這個成就更希望不需要領取"
+          "name": "20W举报见证者",
+          "conditions": "- 当网站举报突破20W时所有用户都可以获得",
+          "description": "20w对于我们来说不是值得庆祝的事，这个成就更希望不需要领取"
         }
       }
     },
@@ -852,7 +852,7 @@
         "privileges": "權限",
         "registerIP": "註冊時IP",
         "showOrigin": "可見EA信息",
-        "showOriginDescribe": "是否讓你綁定的EA帳號在BFBAN可見",
+        "showOriginDescribe": "是否让你绑定的EA账户在BFBAN可见",
         "showAchievement": "公開成就",
         "AD": "廣告",
         "ADDescribe": "你可以拒絕服務廣告，網站仍為公益開放，將開關更改為關閉，網站上的所有廣告將被終止",
@@ -1021,17 +1021,17 @@
       "idNotion1": "一次只填寫一個ID，不要把戰隊名字寫進來，不要寫成自己的ID",
       "idNotion2": "遊戲ID是不區分大小寫的，但請特別注意區分 i I 1 l L o O 0，填寫正確ID",
       "loginExpired": "您的登入已過期，請重新登入",
-      "notFoundHintAnswer1": "請至ea.com搜尋該玩家，如確實能搜尋到而無法檢舉，可至首頁下方的聯絡方式處反饋bug",
+      "notFoundHintAnswer1": "请至ea.com搜索该玩家，如确实能搜索到而无法举报，可至首页下方的联系方式处反馈bug",
       "notFoundHintAnswer2": "這可能是EA數據庫更新不及時，或是EA官方的bug，我們沒有辦法替他們解決，如果您想出一份力，可以至https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en 官方反饋論壇反饋bug，此情況可以描述為 I can't search my friend by name on origin",
       "notFoundHintQuestion1": "但是我剛剛在遊戲裡見過他/我在查戰績app上查得到他？",
-      "notFoundHintQuestion2": "EA上無法搜尋到，這是怎麼一回事？",
+      "notFoundHintQuestion2": "EA上无法搜索到，这是怎么一回事？",
       "notFoundHintTitle": "我們無法找到該玩家",
       "reportAll": "檢舉所有",
       "reportHacker": "檢舉作弊",
       "reportOne": "檢舉單個",
       "required": "影片地址",
-      "uploadManual1": "可額外提供從優酷，土豆，推薦Acfun, Bilibili等視頻網站分享鏈接或可訪問源文件地址[禁止網盤]，點擊添加按鈕粘貼在下方",
-      "uploadManual2": "請選擇具有長時間有效影片網站連結,請勿上傳影片至網盤",
+      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun, Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
+      "uploadManual2": "请选择具有长时间有效视频网站链接,请勿上传视频至网盘",
       "uploadPic1": "推薦上傳 png, jpg, jpeg, gif 格式的圖片",
       "uploadPic2": "圖片大於 2M 或 上傳失敗，可以前往",
       "uploadPic3": "然後選擇 Image URL 選項卡，把圖片鏈結貼在下方",
@@ -1045,14 +1045,14 @@
           "placeholder": "一次只有一個EA名稱"
         },
         "originPersonaId": {
-          "name": "角色身份識別(PID)",
-          "hint": "角色識別(PID)，可透過遊戲平台或第三方工具取得, 它由數字組成",
-          "placeholder": "EA PersonaId，由數字組成，一次只有一個"
+          "name": "角色身份标识(PID)",
+          "hint": "角色标识(PID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA PersonaId，由数字组成，一次只有一个"
         },
         "originUserId": {
-          "name": "使用者身分識別識別(UID)",
-          "hint": "使用者身分識別(UID)，可透過遊戲平台或第三方工具取得, 它由數字組成",
-          "placeholder": "EA UserId，由數字組成，一次只有一個"
+          "name": "用户身份标识(UID)",
+          "hint": "用户身份标识(UID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA UserId，由数字组成，一次只有一个"
         }
       },
       "cheatMethod": "作弊方法",
@@ -1237,10 +1237,10 @@
     }
   },
   "externalAuth": {
-    "title": "授權",
-    "validation": "授權中",
-    "successful": "授權成功，可以關閉此頁面",
-    "error": "授權失敗",
-    "failure": "請檢查各項參數是否正確"
+    "title": "授权",
+    "validation": "授权中",
+    "successful": "授权成功，可以关闭此页面",
+    "error": "授权失败",
+    "failure": "请检查各项参数是否正确"
   }
 }
