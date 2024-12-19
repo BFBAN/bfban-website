@@ -7,7 +7,7 @@
   },
   "account": {
     "bindOrigin": {
-      "content": "BFBAN需要您绑定EA账户，以便账户申诉、找回等功能；未绑定EA前，您的账户会被锁定，无法提交任何内容",
+      "content": "BFBAN では、アカウントの異議申し立て、取得、その他の機能を容易にするために EA アカウントをバインドする必要があります。EA をバインドする前に、アカウントがロックされ、コンテンツを送信できなくなります。",
       "title": "アカウントがバインドされていません",
       "travel": "はい、口座のバインドに行きます"
     },
@@ -290,7 +290,7 @@
   },
   "captcha": {
     "get": "認証コードの取得",
-    "fresh": "刷新验证码",
+    "fresh": "確認コードを更新する",
     "messages": {
       "bad": "验证码错误，请联系管理员",
       "expired": "验证码已过期",
@@ -430,7 +430,7 @@
       "inGame": "にある",
       "judge": "と考える",
       "judgement": "意見を処理する.",
-      "originAvatar": "EA头像",
+      "originAvatar": "EAアバター",
       "recentUpdateTime": "最終更新日時",
       "replyManual1": "新しい証拠写真やビデオが追加される必要がある場合は、再度通報することができます。返信機能は、テキストまたはリンクのみに返信できます。画像に返信するには、こちらに移動してください",
       "replyManual2": "その後、画像リンクをコピーして返信します。",
@@ -505,7 +505,7 @@
   "footer": {
     "column": {
       "col1": {
-        "text": "BFBAN - 全球作弊玩家数据库"
+        "text": "BFBAN - グローバル不正行為プレイヤー データベース"
       },
       "col2": {
         "title": "コミュニティ"
@@ -739,11 +739,11 @@
         "active_community_monthly_l2": {
           "name": "1ヶ月間の地域貢献活動",
           "conditions": "- 今月のコミュニティ参加統計ランキングのトップ 3 ユーザー <br> - 禁止またはブラックリストに登録されたユーザーなし <br> - 非ロボット アカウント",
-          "description": "1 月のコミュニティ貢献トップ 3"
+          "description": "1月のコミュニティ貢献トップ 3"
         },
         "active_community_yearly_assemble": {
           "name": "年間寄付金",
-          "description": "1 年間のユーザーのコミュニティへの累積貢献度"
+          "description": "1年間のユーザーのコミュニティへの累積貢献度"
         },
         "active_community_yearly_l1": {
           "name": "1年間の地域貢献活動",
@@ -795,17 +795,17 @@
         },
         "report_l3": {
           "name": "レポートマスター",
-          "conditions": "- 300 人のプレイヤーをレポート <br> - 2024 01-01 から開始されるシステム <br> - そして、効果的なストーンハンマー事件の割合は、 96%<スパンclass='notranslate'><br></span>- ロボット以外のアカウント",
+          "conditions": "- 300のプレーヤーを通報します<br>- 2024 01-01から統<br>-しかも有効な石鎚の案件96%以上<br>-非ロボットアカウント",
           "description": "一目見ただけであなただとわかる"
         },
         "report_l4": {
           "name": "レポートエキスパート",
-          "conditions": "- 1,000 人のプレイヤーをレポート <br> - 2024 年 1 月 1 日から開始されるシステム <br> - そして、効果的な石ハンマー事件の割合は、 96%<スパンclass='notranslate'><br></span>- ロボット以外のアカウント",
+          "conditions": "- 1000のプレーヤーを通報します<br>- 2024 01-01から統<br>-しかも有効な石のハンマーの案件96%以上<br>-非ロボットアカウント",
           "description": "あなたが期待していたことを私も期待していました"
         },
         "report_l5": {
           "name": "家庭教師を報告する",
-          "conditions": "- プレイヤー数は 5,000 人と報告されています <br> - 2024 年 1 月 1 日から開始 <br> - そして有効なストーンハンマー事件の割合は 96 以上です%< スパンclass='notranslate'><br></span>- ロボット以外のアカウント",
+          "conditions": "- 5000件のプレーヤーを通報します<br>- 2024 01-01から統<br>-しかも有効な石鎚の案件96%以上<br>-非ロボットアカウント",
           "description": "達成条件はこれだけで特に説明は不要です"
         },
         "user_subscribes_assemble": {
@@ -852,7 +852,7 @@
         "privileges": "権限",
         "registerIP": "登録時のIP",
         "showOrigin": "EA 情報の可視化",
-        "showOriginDescribe": "是否让你绑定的EA账户在BFBAN可见",
+        "showOriginDescribe": "バインドされた EA アカウントを BFBAN に表示するかどうか",
         "showAchievement": "公的業績",
         "AD": "宣伝する",
         "ADDescribe": "広告のサービスを拒否することができ、サイトは公益のためにオープンされたままになります。スイッチをオフに変更すると、サイト上のすべての広告が終了します。",
@@ -860,8 +860,8 @@
         "username": "ユーザー名"
       },
       "modifyName": {
-        "residueDegree": "目前剩余修改名称{changeNameLeft}次数",
-        "specification1": "你正在修改您的账户名称，这代表网站内看见都会更变，并且同时<b>登录的ID</b>同时变动,如果您不小心忘记新账户id，可能无法找回此账户，影响绑定的orgin账户，你需要通过非常长的人工审核.",
+        "residueDegree": "現在残っている名前変更の数 {changeNameLeft}",
+        "specification1": "アカウント名を変更しています。つまり、ウェブサイトに表示されるときにアカウント名が変更され、同時に<b>ログイン ID</b> も同時に変更されるため、新しいアカウント ID を忘れてしまうと、このアカウントを取得できなくなる可能性があり、バインドされている Orgin アカウントに影響を与える可能性があります。非常に長い手動レビュー。",
         "specification2": "上記の説明は理解できましたか？",
         "steps": {
           "0": {
@@ -1021,16 +1021,16 @@
       "idNotion1": "一度にIDを1つだけ記入して、戦隊名を入れないで、自分のIDにしないでください",
       "idNotion2": "ゲームIDは大文字と小文字を区別しませんが、特にi I 1 l Lo O 0を区別し、通報IDを正しく記入することに注意してください",
       "loginExpired": "ログインの有効期限が切れました。再ログインしてください",
-      "notFoundHintAnswer1": "请至ea.com搜索该玩家，如确实能搜索到而无法举报，可至首页下方的联系方式处反馈bug",
+      "notFoundHintAnswer1": "ea.com にアクセスしてプレーヤーを検索してください。プレーヤーが見つかっても報告できない場合は、ホームページの下部にある連絡先情報にアクセスしてバグを報告してください。",
       "notFoundHintAnswer2": "これはEAデータベースの更新が遅れているか、またはEA公式のバグの可能性があります。私たちはそれらを解決する手段を持っていません。もし力を貸していただけるのであれば、以下の公式フィードバックフォーラムにアクセスしてバグを報告していただけますか。この問題は「I can't search my friend by name on origin」と表現できます。\nhttps://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en",
       "notFoundHintQuestion1": "でもゲームで彼に会ったばかりです/私は戦績アプリで彼を調べていますか？",
-      "notFoundHintQuestion2": "EA上无法搜索到，这是怎么一回事？",
+      "notFoundHintQuestion2": "EA で見つからないのですが、何が起こっているのでしょうか?",
       "notFoundHintTitle": "プレイヤーを見つけることはできません",
       "reportAll": "すべてを告発する",
       "reportHacker": "不正行為を告発する.",
       "reportOne": "通報個別",
       "required": "ビデオアドレス",
-      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun, Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
+      "uploadManual1": "優酷、じゃがいも、推薦Acfun、Bilibiliなどの働画サイトから追加で提供することができます。",
       "uploadManual2": "長期間有効なビデオ Web サイトのリンクを選択してください。ビデオをネットワーク ディスクにアップロードしないでください。",
       "uploadPic1": "png、jpg、jpeg、gif形式の画像をアップロードすることをお勧めします",
       "uploadPic2": "画像が2 Mより大きいか、アップロードに失敗した場合は、",
@@ -1045,9 +1045,9 @@
           "placeholder": "EA 名は一度に 1 つだけです"
         },
         "originPersonaId": {
-          "name": "角色身份标识(PID)",
-          "hint": "角色标识(PID)，可通过游戏平台或第三方工具获取, 它由数字组成",
-          "placeholder": "EA PersonaId，由数字组成，一次只有一个"
+          "name": "ロールアイデンティティ識別子 (PID)",
+          "hint": "キャラクター ID (PID)。ゲーム プラットフォームまたはサードパーティ ツールを通じて取得でき、数字で構成されます。",
+          "placeholder": "EA ペルソナ ID。数字で構成され、一度に 1 つだけ"
         },
         "originUserId": {
           "name": "用户身份标识(UID)",
