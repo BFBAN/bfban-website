@@ -16,20 +16,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ads.txt"
   },
   {
-    "revision": "5bee17dca3b30140b0da",
+    "revision": "2799cd9778fd3b7777ea",
     "url": "/app.css"
   },
   {
-    "revision": "5bee17dca3b30140b0da",
+    "revision": "2799cd9778fd3b7777ea",
     "url": "/app.css.map"
   },
   {
-    "revision": "5bee17dca3b30140b0da",
-    "url": "/assets/css/app.91325301.css"
+    "revision": "2799cd9778fd3b7777ea",
+    "url": "/assets/css/app.0834905b.css"
   },
   {
-    "revision": "5bee17dca3b30140b0da",
-    "url": "/assets/css/app.91325301.css.map"
+    "revision": "2799cd9778fd3b7777ea",
+    "url": "/assets/css/app.0834905b.css.map"
   },
   {
     "revision": "650472ffbd6b03c5d946",
@@ -308,11 +308,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ionicons.d535a25a.ttf"
   },
   {
-    "revision": "5bee17dca3b30140b0da",
+    "revision": "2799cd9778fd3b7777ea",
     "url": "/assets/js/app.2.9.16.js"
   },
   {
-    "revision": "5bee17dca3b30140b0da",
+    "revision": "2799cd9778fd3b7777ea",
     "url": "/assets/js/app.2.9.16.js.map"
   },
   {
@@ -1080,7 +1080,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/favicon.ico"
   },
   {
-    "revision": "6ef56d0cbf7fff26e88df8f5118b7c11",
+    "revision": "0976f6250fab427669b8a6a2577d8fff",
     "url": "/index.html"
   },
   {
