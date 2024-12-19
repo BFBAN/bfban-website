@@ -3,11 +3,11 @@
     "description": "<h2>BFBAN</h2>\n<p>\nGegründet am 29. Januar 2018;\nist eine von Spielern gebildete Organisation zur Bekämpfung von Cheatern.\n </p>",
     "privacy": "\n<h2>Datenschutzrichtlinie</h2>\nEs ist Open Source. Sie können Fragen stellen und Änderungs-/Verbesserungsvorschläge über GitHub einreichen. Die API, die von der Community bereitgestellt wird, ist für die Öffentlichkeit zugänglich.",
     "title": "Um uns",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> Die ursprüngliche Idee stammt von begeisterten Spielern und wurde entwickelt von <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> Entwickelt und gestartet am 4. November 2018\n    </p>\n    <p> Bietet hauptsächlich Berichterstattung, Aufzählung, Suche, Nachverfolgung, Diskussion und andere Dienste für Spieler; </p>"
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> Die Website stützt sich auf das Ermittlungsbüro BFBAN. Die ursprüngliche Idee stammt von begeisterten Spielern. Sie wurde von <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> entwickelt November 2018 Gestartet am 4.\n </p>\n <p>Bieten hauptsächlich Dienste wie Berichten, Auflisten, Suchen, Verfolgen und Diskutieren für die Mehrheit der Spieler an;</p>"
   },
   "account": {
     "bindOrigin": {
-      "content": "BFBAN erfordert, dass Sie Ihr EA-Konto binden, um Kontobeschwerden, den Abruf und andere Funktionen zu ermöglichen, bevor Sie EA binden. Ihr Konto wird gesperrt und Sie können keine Inhalte einreichen.",
+      "content": "BFBAN verlangt von Ihnen, das Ursprungskonto für Funktionen wie Kontoeinspruch und -wiederherstellung zu binden; bevor das Ursprungskonto nicht gebunden ist, wird Ihr Konto gesperrt und Sie können keine Inhalte übermitteln",
       "title": "ungebundenes Konto",
       "travel": "OK, gehen Sie zum Binden des Kontos"
     },
@@ -120,7 +120,7 @@
       "submit": "bestätigen"
     },
     "gamePlatforms": {
-      "origin": "EA",
+      "origin": "Origin",
       "pc": "Computer",
       "ps3": "Sony-Konsole 3",
       "ps4": "Sony-Konsole 4",
@@ -149,62 +149,19 @@
       "volunteer": "Gemeinschaftliche Freiwillige"
     },
     "status": {
-      "0": {
-        "describe": "Bevor es zurückbehalten oder zur Aufbewahrung freigegeben wird, spricht man von einem offenen Fall",
-        "text": "Nicht verarbeitet"
-      },
-      "1": {
-        "describe": "„Steinhammer“ ist dasselbe wie „echter Hammer“, was extrem hart bedeutet. Es bedeutet, ihn mit echten Beweisen zu schlagen, und es bedeutet auch, solide Beweise zu haben.",
-        "text": "Steinhammer"
-      },
-      "2": {
-        "describe": "Die oben genannten Beweise erfordern immer noch, dass mehr Administratoren und Spieler an Diskussionen und Entscheidungen teilnehmen, und das Verhalten ist unsicher",
-        "text": "Sich selbst beweisen"
-      },
-      "3": {
-        "describe": "Durch die Zertifizierung wird der Fall in die Kategorie Selbstzertifizierung eingeordnet",
-        "text": "MOSS-Selbstzertifizierung"
-      },
-      "4": {
-        "describe": "Wenn Sie unvollständige Materialien oder falsche IDs usw. melden, bedeutet diese Klassifizierung keine Bestätigung des Betrugs",
-        "text": "Ungültiger Bericht"
-      },
-      "5": {
-        "describe": "Die oben genannten Beweise erfordern immer noch, dass mehr Administratoren und Spieler an Diskussionen und Entscheidungen teilnehmen, und das Verhalten ist unsicher",
-        "text": "Im Gespräch"
-      },
-      "6": {
-        "describe": "Die oben genannten Beweise erfordern eine stärkere Beteiligung des Managements an Abstimmungen",
-        "text": "Weitere Managementstimmen erforderlich"
-      },
-      "7": {
-        "describe": "Die oben genannten Beweise erfordern immer noch, dass mehr Administratoren und Spieler an Diskussionen und Entscheidungen teilnehmen, und das Verhalten ist ungewiss",
-        "text": "Datenanomalie automatischer Steinhammer"
-      },
-      "8": {
-        "describe": "Schalte im Spiel schnell Waffenzubehör frei",
-        "text": "Bürstenpistole"
-      },
-      "9": {
-        "describe": "Gegen den Fall wird Berufung eingelegt und das Management wird die nächste Entscheidung treffen",
-        "text": "Ansprechend"
-      },
-      "all": {
-        "text": "alle"
-      }
+      "0": "unbearbeitet",
+      "1": "Betrug bestätigen",
+      "2": "selbst zertifiziert werden",
+      "3": "MOSS-Selbstzertifizierung",
+      "4": "ungültiger Bericht",
+      "5": "In Konversation",
+      "6": "Benötigen Sie mehr Admin-Stimmen",
+      "7": "Anormale Daten bestätigen Betrug automatisch",
+      "8": "Bürstenpistole",
+      "9": "Einspruch eingereicht",
+      "all": "alle"
     },
     "tip": {
-      "search.bad": "Es ist ein Suchfehler aufgetreten. Bitte wenden Sie sich an den Administrator {message}",
-      "search.success": "Suche erfolgreich",
-      "search.notExist": "Keine Daten gefunden",
-      "me.bad": "Es liegt ein Fehler in den persönlichen Daten vor. Bitte wenden Sie sich an den Administrator {message}",
-      "me.success": "Persönliche Daten erfolgreich gespeichert",
-      "request.404": "Diese Anfrageadresse existiert nicht, bitte überprüfen Sie die Schnittstelle",
-      "achievement.bad": "Es ist ein Leistungsfehler aufgetreten. Bitte wenden Sie sich an den Administrator {message}",
-      "achievement.duplicate": "Erhalten Sie wiederholt Erfolge",
-      "achievement.notConditions": "Die Voraussetzungen für den Erhalt der Leistung sind nicht erfüllt.",
-      "achievement.ineffective": "Ungültiger Erfolg",
-      "achievement.success": "Erfolg erfolgreich erhalten",
       "bindOrigin.bad": "Fehler bei der Kontobindung aufgetreten, bitte kontaktieren Sie den Administrator {message}",
       "bindOrigin.error": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "bindOrigin.expired": "Aktivierungscode abgelaufen, bitte erneut registrieren.",
@@ -217,7 +174,7 @@
       "bindOrigin.success": "Herzlichen Glückwunsch zur erfolgreichen Aktivierung!",
       "server.error": "Dienstfehler {message}",
       "captcha.bad": "Der Verifizierungsmodul hat einen Fehler festgestellt. Bitte kontaktieren Sie den Administrator {message}",
-      "captcha.expired": "Der Bestätigungscode ist abgelaufen oder wurde nicht ausgefüllt",
+      "captcha.expired": "Der Code wurde nicht ausgefüllt.",
       "captcha.wrong": "Falscher Bestätigungscode",
       "changeName.bad": "Fehler beim Ändern des Benutzernamens. Bitte kontaktieren Sie den Administrator {message}",
       "changeName.noChance": "Du hast alle Möglichkeiten zum Umbenennen aufgebraucht.",
@@ -228,39 +185,32 @@
       "changePassword.success": "Sie müssen sich erneut anmelden, um diesen Vorgang abzuschließen.",
       "forgetPassword.bad": "Fehler beim zurücksetzen. Rufen sie den administrator an {message}",
       "forgetPassword.needVerify": "Bitte überprüfen Sie Ihre E-Mail, um Ihr Passwort zurückzusetzen.",
-      "forgetPassword.notFound": "Es gibt keinen solchen Benutzer oder Sie haben die E-Mail-Adresse nicht gebunden. Bitte überprüfen Sie, ob der Name oder die E-Mail-Adresse konsistent sind.",
+      "forgetPassword.notFound": "Es gibt keinen solchen Benutzer oder Sie haben keine E-Mail-Adresse verknüpft.",
       "forgetPassword.permissionDenied": "Dein Konto kann dies nicht tun.",
       "forgetPassword.success": "Passwort erfolgreich zurückgesetzt",
       "judgement.appealLock": "Es wurde eingeriegelt, es konnten keine weiteren Entscheidungen getroffen werden",
       "judgement.bad": "Das Urteil ist fehlerhaft. Bitte kontaktieren Sie den Administrator {message}",
       "judgement.notFound": "Nicht gefunden Fall, bitte kontaktieren Sie den Administrator {message}",
       "judgement.permissionDenied": "Du darfst das nicht tun.",
-      "judgement.spam": "Der von Ihnen übermittelte Inhalt hat die Erkennung nicht bestanden und wurde als Spam {message} markiert",
+      "judgement.spam": "Der von Ihnen eingereichte Inhalt enthält sensible Informationen.",
       "judgement.success": "Danke für dein Urteil",
-      "userInfo.bad": "Die Benutzerinformationen sind falsch. Bitte wenden Sie sich an den Administrator {message}",
-      "userInfo.notFound": "Es gibt keinen solchen Benutzer",
       "logout.bad": "Abmeldung fehlgeschlagen, bitte kontaktieren Sie den Administrator",
       "logout.success": "Auf Wiedersehen 👋🏻",
-      "needBindEaAccount": "Bitte verknüpfen Sie Ihr EA-Konto, bevor Sie antworten",
+      "needBindEaAccount": "Bitte verknüpfen Sie Ihr EA, bevor Sie antworten.",
       "noAccess": "Girokonto, keine Berechtigung",
       "noReports": "noch keine Berichte",
       "notContent": "kein Inhalt",
       "notFound": "Hey Spalte, die Zugangsadresse scheint verloren gegangen zu sein",
       "notLang": "Nicht übersetzt",
-      "externalAuth.success": "Autorisierungsanfrage erfolgreich",
-      "externalAuth.noSuchUser": "Der Zielbenutzer der Autorisierungsanfrage existiert nicht",
-      "externalAuth.fail": "Die Autorisierungsanfrage ist fehlgeschlagen. Bitte wenden Sie sich an den Administrator {message}",
-      "confirmAuth.success": "Bestätigen Sie, dass die Autorisierung erfolgreich war",
-      "confirmAuth.fail": "Bestätigen Sie, dass die Autorisierung fehlgeschlagen ist. Bitte wenden Sie sich an den Administrator {message}",
       "reply.bad": "Antwortfehler aufgetreten, bitte kontaktieren Sie den Administrator {message}",
       "reply.notFound": "Keine Antwort oder Spieler vorhanden",
-      "reply.spam": "Der von Ihnen übermittelte Inhalt hat die Erkennung nicht bestanden und wurde als Spam {message} markiert",
+      "reply.spam": "Der von Ihnen eingereichte Inhalt enthält sensible Informationen.",
       "reply.success": "Bereits eingereichte Antwort",
       "report.bad": "Es gab einen Fehler bei der Meldung, bitte kontaktieren Sie den Administrator {message}",
       "report.error": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "report.notFound": "Keine Benutzerinformationen gefunden.",
       "report.notImplement": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
-      "report.spam": "Der von Ihnen übermittelte Inhalt hat die Erkennung nicht bestanden und wurde als Spam {message} markiert",
+      "report.spam": "Der von Ihnen eingereichte Inhalt enthält sensible Informationen.",
       "report.success": "Vielen Dank für Ihren Bericht",
       "signin.bad": "Anmeldungsfehler aufgetreten, bitte kontaktieren Sie den Administrator {message}",
       "signin.noSuchUser": "Kein benutzername Oder passwort eingegeben",
@@ -274,13 +224,12 @@
       "signup.notImplement": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "signup.originBindingExist": "Dieses E-Mail-Konto ist bereits mit einem Konto verknüpft.",
       "signup.originNotFound": "Kann das EA-Konto nicht anhand der vom Benutzer bereitgestellten Informationen finden.",
-      "signup.usernameMismatch": "Das der E-Mail-Adresse entsprechende EA-Konto stimmt nicht mit dem eingegebenen EA-Kontonamen überein.",
-      "signup.usernameExist": "Der Benutzername des zu aktivierenden Website-Benutzers oder Kontos ist bereits im Kontopool vorhanden.",
+      "signup.usernameExist": "Die benutzernamen existieren bereits",
       "user.invalid": "Die marke wird ungültig",
       "user.permissionDenined": "Nicht autorisiert",
       "user.tokenClientException": "Alle aktuellen kunden können das mandat nicht mehr erneuert Oder verfallen lassen",
-      "user.tokenExpired": "Der Token ist abgelaufen. Bitte melden Sie sich erneut an",
-      "userReports.bad": "Wenn Benutzer einen Fehler melden, wenden Sie sich bitte an den Administrator {message}",
+      "user.tokenExpired": "Also, was ist mit der marke",
+      "userReports.bad": "Es ist ein Fehler bei der Meldung aufgetreten. Bitte kontaktieren Sie den Administrator {message}",
       "userReports.notFound": "Kein Spieler gefunden, bitte überprüfen Sie sorgfältig.",
       "userReports.success": "Melde erfolg"
     }
@@ -290,7 +239,6 @@
   },
   "captcha": {
     "get": "Bestätigungscode erhalten",
-    "fresh": "Bestätigungscode aktualisieren",
     "messages": {
       "bad": "Bestätigungscodefehler, bitte kontaktieren Sie den Administrator",
       "expired": "Der Bestätigungscode ist abgelaufen",
@@ -430,7 +378,7 @@
       "inGame": "im Spiel",
       "judge": "denken",
       "judgement": "Stellungnahme verarbeiten",
-      "originAvatar": "EA-Avatar",
+      "originAvatar": "OriginBenutzerbild",
       "recentUpdateTime": "letzte Aktualisierung",
       "replyManual1": "Wenn es neue Beweisbilder oder Videos gibt, die ergänzt werden müssen, können Sie sich erneut melden. Die Antwortfunktion kann nur mit Text oder Link antworten. Wenn Sie auf das Bild antworten möchten, bewegen Sie sich bitte hierher",
       "replyManual2": "Kopieren Sie dann den Bildlink, um zu antworten.",
@@ -485,27 +433,14 @@
       "historyName": "Historische Spielernamen ändern",
       "verify": "nur Urteil ansehen",
       "noAppealAttachmentHint": "Dieser Anspruch hat keinen Anhang für den Anspruch.",
-      "needLoginViewAttachmentsHint": "Sie müssen sich anmelden, um die zusätzlichen Anhänge der Spielerbeschwerde einsehen zu können.",
-      "types": {
-        "judgement": "Bericht",
-        "register": "registrieren",
-        "report": "Bericht",
-        "banAppeal": "Appellieren"
-      }
-    },
-    "dateView": {
-      "primitive": "Original",
-      "primitiveDescription": "Zeitzone des Servers",
-      "localTimeZoneName": "Name der aktuellen Zeitzone",
-      "localeTimeDescription": "Konvertieren Sie die „ursprüngliche“ Zeit in Ihre lokale Zeitzone",
-      "localeTime": "aktuelle Ortszeit"
+      "needLoginViewAttachmentsHint": "Sie müssen sich anmelden, um die zusätzlichen Anhänge der Spielerbeschwerde einsehen zu können."
     },
     "title": "Einzelheiten"
   },
   "footer": {
     "column": {
       "col1": {
-        "text": "BFBAN – Globale Datenbank betrügerischer Spieler"
+        "text": "BFBAN - Globale Cheating-Spieler-Datenbank"
       },
       "col2": {
         "title": "Gemeinschaft"
@@ -517,7 +452,7 @@
         "title": "Kontaktinformationen"
       },
       "sponsor": {
-        "join": "Werden Sie Sponsor",
+        "join": "Sponsor beitreten",
         "title": "Sponsor"
       }
     },
@@ -527,16 +462,8 @@
   },
   "forgetPassword": {
     "checkEmail": "Bitte überprüfen Sie Ihre E-Mails und klicken Sie auf den Bestätigungslink.",
-    "forgetUsername": "Wenn Sie Ihren BFBAN-Benutzernamen vergessen haben, gehen Sie zur <a href='http://kook.top/wHwxhw'>bfban Entwicklergemeinschaft</a> um Hilfe zu suchen. Beachten Sie, dass Sie möglicherweise einen komplexen Wiederherstellungsprozess durchlaufen müssen.",
+    "forgetUsername": "Wenn Sie Ihren BFBAN-Benutzernamen vergessen haben, gehen Sie zur <a href='https://discord.gg/gametools-network-770746735533228083'> bfban gametools-network community</a> um Hilfe zu suchen. Beachten Sie, dass Sie möglicherweise einen komplexen Wiederherstellungsprozess durchlaufen müssen.",
     "resetSuccess": "Herzlichen Glückwunsch zum Abschluss des Zurücksetzens 💐",
-    "form": {
-      "username": "Benutzername",
-      "originEmail": "EA-Postfach"
-    },
-    "placeholder": {
-      "username": "Bitte geben Sie den Benutzernamen der Website oder des EA-Plattform-Kontos (Groß-/Kleinschreibung beachten) ein",
-      "originEmail": "Geben Sie Ihre EA-E-Mail-Adresse ein"
-    },
     "steps": {
       "0": {
         "supplement": "Scheckkonto",
@@ -559,7 +486,7 @@
         "title": "Beenden"
       }
     },
-    "title": "Kontopasswort zurücksetzen"
+    "title": "Passwort zurücksetzen"
   },
   "header": {
     "about": "um",
@@ -637,7 +564,7 @@
       "sortByTitle": "Sortieren nach"
     },
     "reportTime": "Zeitraum melden",
-    "title": "Spielerdatenbank",
+    "title": "Plug-in-Ankündigung",
     "updateTime": "Zeitrahmen aktualisieren"
   },
   "misc": {
@@ -661,214 +588,40 @@
     "title": "Spielerdatenbank"
   },
   "profile": {
-    "achievement": {
-      "title": "Leistung",
-      "acquisitionTime": "Abholzeit",
-      "conditions": "Wie man es bekommt",
-      "getButton": "Holen Sie sich jetzt Erfolge",
-      "exp": "Erfolgserfahrung",
-      "owned": "Habe bereits Erfolge erzielt",
-      "rarity": {
-        "normal": "normal",
-        "rare": "selten",
-        "preciousness": "wertvoll",
-        "special": "besonders"
-      },
-      "list": {
-        "trend_monthly_assemble": {
-          "name": "Beliebte Attraktionen (Monat)",
-          "description": "Diesen Monat im Ranking der beliebtesten Fälle aufgeführt"
-        },
-        "trend_monthly_l1": {
-          "name": "Beliebte Attraktionen",
-          "conditions": "– Der Fall steht diesen Monat unter den Top 10 der beliebtesten TOP<br>- Das aktuelle Konto ist mit dem Spieler verknüpft, dessen Fall gemeldet wurde<br>- Die Falltour ist größer gleich 100",
-          "description": "Beliebte Attraktionen😁"
-        },
-        "trend_monthly_l2": {
-          "name": "Beliebte Attraktionen 2",
-          "conditions": "– Der Fall gehört diesen Monat zu den 10 beliebtesten TOP<br>- Das aktuelle Konto ist mit dem Spieler verknüpft, dessen Fall gemeldet wurde<br>- Der Beliebtheitswert ist größer als gleich 3 oder mehr<br>- Falltour größer oder gleich 500",
-          "description": "Häufiges Einchecken an beliebten Attraktionen"
-        },
-        "user_innocent_case": {
-          "name": "Sichere Landung",
-          "conditions": "– Mit diesem Konto ist im BAN ein Fall verknüpft. <br> – Selbstzertifizierungsstatus des Fallstatus",
-          "description": "Fall ungültig"
-        },
-        "user_achievement_assemble": {
-          "name": "Leistungssammler",
-          "description": "Erfolgssammler (dieser Erfolg wird nicht in der Liste angezeigt, sondern ist nur für Sie sichtbar)"
-        },
-        "user_achievement_l1": {
-          "name": "Erfolge 1",
-          "conditions": "- Hat 3 Erfolge",
-          "description": "Es wurden 3 Erfolge erzielt"
-        },
-        "user_achievement_l2": {
-          "name": "Erfolge 2",
-          "conditions": "- Mehr als 10 Erfolge haben",
-          "description": "Erziele mehr als 10 Erfolge"
-        },
-        "user_achievement_l3": {
-          "name": "Erfolg 3",
-          "conditions": "- Mehr als 10 Erfolge haben <br> - 10 Erfolge beinhalten 1 wertvollen Erfolg",
-          "description": "Erziele mehr als 10 Erfolge, darunter einen wertvollen"
-        },
-        "user_achievement_l4": {
-          "name": "Erfolg 4",
-          "conditions": "- Mehr als 15 Erfolge haben <br> - 10 Erfolge umfassen 3 wertvolle Erfolge",
-          "description": "Erreiche mehr als 15 Erfolge, darunter 3 wertvolle"
-        },
-        "active_community_weekly_assemble": {
-          "name": "Wöchentlicher Beitrag",
-          "description": "Kumulierte Beiträge der Benutzer zur Community in einer Woche (7 Tage)"
-        },
-        "active_community_weekly_l1": {
-          "name": "Community-Beitrag der Woche",
-          "conditions": "- Top 10 Benutzer in der statistischen Community-Teilnahme-Rangliste dieser Woche <br> - Keine gesperrten oder auf der schwarzen Liste stehenden Benutzer <br> - Nicht-Roboter-Konto",
-          "description": "Top 10 Community-Beiträge der Woche"
-        },
-        "active_community_monthly_assemble": {
-          "name": "monatlicher Beitrag",
-          "description": "Die kumulierten Beiträge der Benutzer zur Community innerhalb eines Monats"
-        },
-        "active_community_monthly_l1": {
-          "name": "Ein Monat Gemeinschaftsbeitrag",
-          "conditions": "- Top 10 Benutzer in der statistischen Community-Teilnahme-Rangliste dieses Monats <br> - Keine gesperrten oder auf der schwarzen Liste stehenden Benutzer <br> - Nicht-Robot-Konto",
-          "description": "Top 10 Community-Beiträge im Januar"
-        },
-        "active_community_monthly_l2": {
-          "name": "Ein Monat Gemeinschaftsbeitrag",
-          "conditions": "- Top 3 Benutzer in der statistischen Community-Teilnahme-Rangliste dieses Monats <br> - Keine gesperrten oder auf der schwarzen Liste stehenden Benutzer <br> - Nicht-Roboter-Konto",
-          "description": "Top 3 Community-Beiträge im Januar"
-        },
-        "active_community_yearly_assemble": {
-          "name": "Jahresbeitrag",
-          "description": "Die kumulierten Beiträge der Benutzer zur Community innerhalb eines Jahres"
-        },
-        "active_community_yearly_l1": {
-          "name": "Ein Jahr Gemeinschaftsbeitrag",
-          "conditions": "- Top 10 Benutzer im diesjährigen statistischen Community-Teilnahmeranking <br> - Keine gesperrten oder auf der schwarzen Liste stehenden Benutzer <br> - Nicht-Roboter-Konto",
-          "description": "Die 10 besten Community-Beiträge in einem Jahr"
-        },
-        "active_community_yearly_l2": {
-          "name": "Ein Jahr Gemeinschaftsbeitrag",
-          "conditions": "- Top 3 Benutzer im diesjährigen statistischen Community-Teilnahmeranking <br> - Keine gesperrten oder auf der schwarzen Liste stehenden Benutzer <br> - Nicht-Roboter-Konto",
-          "description": "Die drei besten Community-Beiträge in einem Jahr"
-        },
-        "old_user": {
-          "name": "alter Benutzer",
-          "conditions": "– Die Erstellungszeit liegt vor dem 1. Januar 2024. <br> – Die Benutzer-ID liegt innerhalb von 10.000 (einschließlich 10.000) <br> (erfüllt bei zur gleichen Zeit)",
-          "description": "Die erste Gruppe registrierter Lianban Pioneer-Benutzer"
-        },
-        "open_chat_assemble": {
-          "name": "chatten",
-          "description": "Schließen Sie den entsprechenden bedingten Chat ab"
-        },
-        "open_chat_l1": {
-          "name": "Chat öffnen",
-          "conditions": "- Eröffnen Sie ein Konto, um zu chatten",
-          "description": "Sprechen Sie jederzeit gerne mit mir"
-        },
-        "open_chat_l2": {
-          "name": "Nachricht erhalten",
-          "conditions": "- Konto zum Chatten eröffnen <br> - Nachrichten innerhalb eines Monats empfangen und gelesen <br> (gleichzeitig zufrieden)",
-          "description": "Der erste Schritt in der Kommunikation"
-        },
-        "one_search_player": {
-          "name": "Suche zum ersten Mal nach Spielern",
-          "conditions": "- Nutzen Sie die Website, um nach Fällen zu suchen",
-          "description": "Nutzen Sie die Website, um nach Spielern zu suchen und Fälle anzusehen"
-        },
-        "report_assemble": {
-          "name": "Bericht",
-          "description": "Reichen Sie eine bestimmte Anzahl von Berichten und Steinhämmern ein, um Erfolge zu erzielen <i>-Möge es immer weniger Berichte geben</i>"
-        },
-        "report_l1": {
-          "name": "Neuling melden",
-          "conditions": "- 10 Spieler melden <br> - Statistiken ab 01.01.2024<br> - Nicht-Roboter-Konto",
-          "description": "Vorläufige Untersuchung zur Verwendung von BAN"
-        },
-        "report_l2": {
-          "name": "Erste Schritte mit der Berichterstellung",
-          "conditions": "- 100 Spieler melden <br> - System ab 2024 01-01 <br> - Und der Prozentsatz effektiver Steinhammerfälle beträgt mehr als 96 % < Spanne class='notranslate'><br></span>- Nicht-Roboter-Konto",
-          "description": "Nur 100 Daten"
-        },
-        "report_l3": {
-          "name": "Berichtsmaster",
-          "conditions": "- 300 Spieler melden <br> - System ab 2024 01-01 <br> - Und der Prozentsatz effektiver Steinhammerfälle beträgt mehr als 96 % < Spanne class='notranslate'><br></span>- Nicht-Roboter-Konto",
-          "description": "Ich kann dich erkennen, wenn ich dich nur ansehe"
-        },
-        "report_l4": {
-          "name": "Berichtsexperte",
-          "conditions": "- 1.000 Spieler melden <br> - System ab 2024 01-01 <br> - Und der Prozentsatz effektiver Steinhammerfälle beträgt mehr als 96 % < Spanne class='notranslate'><br></span>- Nicht-Roboter-Konto",
-          "description": "Ich habe erwartet, was Sie erwartet haben"
-        },
-        "report_l5": {
-          "name": "Melden Sie einen Tutor",
-          "conditions": "- Gemeldete 5.000 Spieler <br> - Ab 1. Januar 2024 <br> - Und der Prozentsatz der effektiven Steinhammerfälle beträgt mehr als 96 %< Spanne class='notranslate'><br></span>- Nicht-Roboter-Konto",
-          "description": "Sie benötigen lediglich diese Leistungsbedingung, es ist nicht nötig, etwas zu beschreiben"
-        },
-        "user_subscribes_assemble": {
-          "name": "Fallverfolgung",
-          "description": "Vervollständigen Sie die entsprechende Fallverfolgung"
-        },
-        "user_subscribes_l1": {
-          "name": "Jägeraugen 1",
-          "conditions": "– Verfolgen Sie den ersten Fall <br> – Normales Konto",
-          "description": "Jäger werden ihre Beute immer im Auge behalten"
-        },
-        "user_subscribes_l2": {
-          "name": "Jägeraugen 2",
-          "conditions": "- Verfolgen Sie ausreichend 20 Fälle <br> - Normales Konto",
-          "description": "ein reifer Jäger"
-        },
-        "site_20w_report_witnesses": {
-          "name": "20W, um Zeugen zu melden",
-          "conditions": "- Wenn der Website-Bericht 20 W überschreitet, können ihn alle Benutzer abrufen",
-          "description": "200.000 sind für uns nichts, was es wert ist, gefeiert zu werden. Wir hoffen, dass dieser Erfolg nicht erforderlich ist."
-        }
-      }
-    },
-    "reports": {
-      "title": "Mein Bericht"
-    },
-    "space": {
+    "account": {
       "form": {
         "allowDM": "Ob Chat empfangen werden soll",
-        "allowDMdescribe": "Ob die Nachricht angenommen werden soll. Weitere Nachrichteninformationen finden Sie unter [Nachrichtenliste].",
-        "changeNameLeft": "Anzahl der verbleibenden Benutzernamenänderungen",
-        "createTime": "Anmeldezeit",
+        "allowDMdescribe": "Ob die Nachricht angenommen werden soll.Weitere Nachrichteninformationen finden Sie unter [Nachrichtenliste], um sie anzuzeigen",
+        "changeNameLeft": "Die verbleibende Anzahl der Benutzernamenänderungen.",
+        "createTime": "Registrierungszeit",
         "description": "Benutzerprofil",
-        "introduction": "stell dich vor",
-        "language": "bevorzugte Sprache",
-        "languageSyncDescribe": "Legen Sie diese Option fest, um die lokale Sprache des Programms nach der Anmeldung zu synchronisieren. Wenn Sie sich abmelden, greifen Sie auf die vom lokalen Programm beibehaltene Sprache zurück.",
-        "lastSigninIP": "Letzte Login-IP",
-        "modifyDescription": "Benutzerprofil ändern",
-        "originEmail": "E-Mail-Adresse des EA-Kontos",
+        "introduction": "Vorstellen",
+        "language": "Spracheinstellungen",
+        "languageSyncDescribe": "Stellen Sie diese Option ein, um die lokale Sprache des Programms nach der Anmeldung zu synchronisieren. Wenn Sie sich abmelden, wird auf die Sprache zurückgegriffen, die vom lokalen Programm beibehalten wird",
+        "lastSigninIP": "Letzte Anmeldung IP",
+        "modifyDescription": "Benutzerprofil bearbeiten",
+        "originEmail": "EA-Konto-E-Mail",
         "originName": "EA-Kontoname",
-        "originPersonaId": "EA-PID",
-        "originUserId": "EA-UID",
+        "originPersonaId": "EA PID",
+        "originUserId": "EA UID",
         "privilege": "Identität",
-        "privileges": "Berechtigungen",
-        "registerIP": "IP bei der Registrierung",
-        "showOrigin": "Sichtbare EA-Informationen",
-        "showOriginDescribe": "Ob Ihr gebundenes EA-Konto in BFBAN sichtbar gemacht werden soll",
-        "showAchievement": "öffentliche Errungenschaften",
-        "AD": "werben",
-        "ADDescribe": "Sie können die Bereitstellung von Anzeigen verweigern und die Website bleibt für die Allgemeinheit geöffnet. Wenn Sie den Schalter auf „Aus“ stellen, wird jegliche Werbung auf der Website eingestellt",
+        "privileges": "Berechtigung",
+        "registerIP": "Registrierungs-IP",
+        "showOrigin": "Sichtbare Origin-Informationen",
+        "showOriginDescribe": "Ob Ihr gebundener Origin in BFBAN sichtbar gemacht werden soll",
         "signoutTime": "Abmeldezeit",
         "username": "Benutzername"
       },
       "modifyName": {
-        "residueDegree": "Die Anzahl der derzeit verbleibenden Namensänderungen {changeNameLeft}",
-        "specification1": "Sie ändern Ihren Kontonamen, was bedeutet, dass er geändert wird, wenn Sie ihn auf der Website sehen, und gleichzeitig <b>Anmelde-ID</b> Wenn Sie die neue Konto-ID versehentlich vergessen, können Sie dieses Konto möglicherweise nicht abrufen, was sich auf das gebundene Ursprungskonto auswirkt Sehr lange manuelle Überprüfung.",
-        "specification2": "Verstehen Sie die obige Erklärung?",
+        "residueDegree": "Die Anzahl der Male, um den Namen {changeNameLeft} zu ändern, ist derzeit übrig",
+        "specification1": "Sie ändern Ihren Kontonamen, was bedeutet, dass sich alles ändert, was auf der Website zu sehen ist, und gleichzeitig ändert sich auch die <b>Anmelde-ID</b>. Wenn Sie die neue Konto-ID versehentlich vergessen, ist dies möglicherweise nicht der Fall Dieses Konto kann abgerufen werden, was sich auf die Bindung auswirkt. Für ein bestimmtes Ursprungskonto müssen Sie eine sehr lange manuelle Überprüfung bestehen.",
+        "specification2": "Verstehst du die obige Erklärung?",
         "steps": {
           "0": {
             "title": "Hinweis"
           },
           "1": {
-            "title": "ausfüllen"
+            "title": "ergänze"
           },
           "2": {
             "title": "Beenden"
@@ -1016,22 +769,23 @@
       "leave": "verlassen"
     },
     "info": {
-      "description": "🤝 Grundlegende Inhaltsanforderungen:\n- Geben Sie hier keine privaten Informationen des Reporters ein\n- Es können Videolinks eingefügt werden, was für auffällige Erinnerungen und die Indexierung hilfreich ist\n- Bitte beschreiben Sie klar das Verhalten des Meldenden, seine Merkmale, den Ort und die Zeit des Vorfalls, listen Sie sein Betrugsverhalten auf und geben Sie abschließend die Gründe an\n- Sie können den Standort markieren und Anweisungen zu den von Ihnen bereitgestellten Screenshots und Videos hinzufügen\n\n⚠️ Bitte füllen Sie nicht einfach die einfache Betrugsmethode aus, ohne direkte Beweise vorzulegen\n⚠️ Wenn Sie mehrere bedeutungslose/böswillige Meldungen einreichen, wird Ihr Konto auf die schwarze Liste gesetzt",
+      "description": "Bitte beschreiben Sie eindeutig das Verhalten, die Eigenschaften, den Ort und die Zeit des Auftretens des Hinweisgebers, listen Sie sein Betrugsverhalten auf und geben Sie den endgültigen Grund für die Meldung an",
       "fromDatabaseOneId": "Ausgewählt aus der BFBAN-Datenbank",
       "idNotion1": "Nur eine ID auf einmal ausfüllen, nicht den Teamnamen eintragen, keine eigene ID eintragen",
       "idNotion2": "Bei der Spiel-ID wird nicht zwischen Groß- und Kleinschreibung unterschieden, aber achten Sie bitte besonders darauf, i I 1 l L o O 0 zu unterscheiden, und geben Sie die Berichts-ID korrekt ein",
       "loginExpired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an",
-      "notFoundHintAnswer1": "Bitte gehen Sie zu ea.com, um nach dem Player zu suchen, aber Sie können ihn nicht melden, indem Sie die Kontaktinformationen unten auf der Homepage aufrufen, um einen Fehler zu melden.",
+      "notFoundHintAnswer1": "Bitte gehen Sie zu origin.com, um nach dem Player zu suchen. Wenn Sie den Player finden, aber nicht melden können, können Sie Fehler über die Kontaktinformationen unten auf der Homepage melden.",
       "notFoundHintAnswer2": "Dies kann daran liegen, dass die EA-Datenbank nicht rechtzeitig aktualisiert wird, oder an einem offiziellen Fehler von EA, den wir nicht für sie lösen können. Wenn Sie helfen möchten, können Sie zu https://answers.ea.com/t5/Origin gehen -Client-Web -Technical/bd-p/origin-technical-issues-en offizielles Feedback-Forum Feedback-Bug, diese Situation kann so beschrieben werden, dass ich meinen Freund nicht nach Namen auf Origin suchen kann",
       "notFoundHintQuestion1": "Aber ich habe ihn gerade im Spiel gesehen/ich habe ihn in der Rekord-App gesucht?",
-      "notFoundHintQuestion2": "Ich kann es nicht auf EA suchen, was ist los?",
+      "notFoundHintQuestion2": "Ich kann es auf Origin nicht finden, was ist los?",
       "notFoundHintTitle": "Wir konnten den Spieler nicht finden",
+      "onlyOneId": "Nur eine Ursprungs-ID auf einmal",
       "reportAll": "alles melden",
       "reportHacker": "Betrug melden",
       "reportOne": "Single melden",
       "required": "Videoadresse",
-      "uploadManual1": "Sie können außerdem Freigabelinks oder zugängliche Quelldateiadressen von Video-Websites wie Youku, Tudou, empfohlenem Acfun, Bilibili usw. bereitstellen. [Netzwerkfestplatte ist verboten], klicken Sie auf die Schaltfläche „Hinzufügen“, um sie unten einzufügen",
-      "uploadManual2": "Bitte wählen Sie einen Link zu einer Video-Website aus, der über einen längeren Zeitraum gültig ist. Bitte laden Sie keine Videos auf die Netzwerkfestplatte hoch.",
+      "uploadManual1": "Kann zusätzlich von Youtube, Jitterbug, Cloud Drive, etc. zur Verfügung gestellt werden, die Video-Website kann zugegriffen werden Quelldatei Adresse, klicken Sie auf die Schaltfläche hinzufügen, um unten einfügen",
+      "uploadManual2": "Bitte wählen Sie eine Website oder eine Cloud-Speicherlösung mit langfristig gültigen Links aus.",
       "uploadPic1": "Es wird empfohlen, Bilder in den Formaten png, jpg, jpeg, gif hochzuladen",
       "uploadPic2": "Wenn das Bild größer als 2 MB ist oder nicht hochgeladen werden konnte, können Sie zu gehen",
       "uploadPic3": "Wählen Sie dann die Registerkarte Bild-URL und fügen Sie den Bildlink unten ein",
@@ -1041,18 +795,15 @@
       "types": {
         "originName": {
           "name": "Benutzername",
-          "hint": "Plattform Benutzername oder Plattform Benutzername",
-          "placeholder": "Es gibt jeweils nur einen EA-Namen"
+          "hint": "Plattform Benutzername oder Plattform Benutzername"
         },
         "originPersonaId": {
-          "name": "Rollenidentitätsidentifikator (PID)",
-          "hint": "Charakter-ID (PID), die über die Spielplattform oder Tools von Drittanbietern abgerufen werden kann und aus Zahlen besteht",
-          "placeholder": "EA-PersonaId, bestehend aus jeweils nur einer Zahl"
+          "name": "Rollenidentifikation",
+          "hint": "Rollenkennung (ID), die über die Spielplattform oder ein Drittanbieter-Tool abgerufen werden kann. Sie besteht aus Zahlen."
         },
         "originUserId": {
-          "name": "Benutzer-ID (UID)",
-          "hint": "Die Benutzeridentifikation (UID), die über die Spielplattform oder Tools von Drittanbietern abgerufen werden kann, besteht aus Zahlen",
-          "placeholder": "EA-Benutzer-ID, bestehend aus Zahlen, jeweils nur eine"
+          "name": "Benutzeridentifikation",
+          "hint": "Benutzeridentifikation (ID), die über die Spieleplattform oder ein Drittanbieter-Tool abgerufen werden kann. Sie besteht aus Zahlen."
         }
       },
       "cheatMethod": "Betrugsmethode",
@@ -1073,7 +824,7 @@
     },
     "seo": {
       "description": "Spielerbericht",
-      "keywords": "gemeinsames Verbot, gemeinsames Amt, Schlachtfeldsituation, Schlachtfeld"
+      "keywords": "联ban,联办,战地风云,战地"
     },
     "title": "Bericht"
   },
@@ -1089,7 +840,7 @@
   "search": {
     "collectionHint": "Lesezeichen für diese Seite setzen (Strg+D oder Befehl+D)",
     "describe": "Rufen Sie die ID aus der BFBAN-Datenbank ab",
-    "notExist": "Es konnten keine Daten gefunden werden",
+    "notUserExist": "Miau~, diese Information kann nicht in der Datenbank gefunden werden",
     "placeholder": "Wonach möchten Sie suchen?",
     "sort": {
       "default": "Standard",
@@ -1155,15 +906,15 @@
       "username": "Nutzername"
     },
     "placeholder": {
-      "originEmail": "Geben Sie Ihre EA-E-Mail-Adresse ein",
-      "originName": "Geben Sie Ihren EA-Namen ein, achten Sie auf die Groß- und Kleinschreibung",
+      "originEmail": "Geben Sie Ihr Tangerine-Postfach ein",
+      "originName": "Geben Sie Ihren Tangerine-Namen ein und achten Sie auf die Groß- und Kleinschreibung",
       "password": "6 oder mehr Passwörter",
-      "username": "Der Benutzername muss mindestens 4 Zeichen lang sein und darf nur aus Englisch, Zahlen, Unterstrichen, Minuszeichen oder E-Mail-Adressen bestehen, die name@ und Adresse enthalten."
+      "username": "Mehr als 4 Benutzernamen Nur Englisch, Zahlen, Unterstriche, Minuszeichen"
     },
     "registerVerification": {
       "error": "Kontofehler bestätigen",
-      "failure": "Die Verifizierung ist fehlgeschlagen. Dies kann an einer falschen Verifizierungsadresse, einem ungültigen Verifizierungscode oder einem abgelaufenen Verifizierungscode liegen. Bitte versuchen Sie nach einiger Zeit erneut, das Konto zu registrieren.",
-      "successful": "Verifizierung erfolgreich! Das Konto wurde entsperrt und Sie können sich anmelden",
+      "failure": "Falsche Verifizierungsadresse, bitte überprüfen Sie, ob der Verifizierungscode korrekt ist",
+      "successful": "Verifizierung erfolgreich!, das Konto wurde entsperrt, Sie können sich anmelden",
       "title": "Konto überprüfen",
       "validation": "verifizieren"
     },
@@ -1173,7 +924,7 @@
         "title": "Grundinformation"
       },
       "1": {
-        "supplement": "Verbunden mit der EA-Plattform",
+        "supplement": "Zugehörige Origin-Plattform",
         "title": "zu binden"
       },
       "2": {
@@ -1193,7 +944,6 @@
   },
   "sitestats": {
     "admins": "Gesamtzahl der Administratoren",
-    "achievement": "Rangfolge der Leistungswerte",
     "banAppeals": "appelliert",
     "communityParticipation": "Ranking der Teilnahme an der Benutzergemeinschaft",
     "confirmed": "Fälle bearbeitet",
@@ -1235,12 +985,5 @@
       "upload": "Hochladen",
       "url": "Bildlink"
     }
-  },
-  "externalAuth": {
-    "title": "Autorisieren",
-    "validation": "Autorisieren",
-    "successful": "Autorisierung erfolgreich, Sie können diese Seite schließen",
-    "error": "Die Autorisierung ist fehlgeschlagen",
-    "failure": "Bitte prüfen Sie, ob alle Parameter korrekt sind"
   }
 }
