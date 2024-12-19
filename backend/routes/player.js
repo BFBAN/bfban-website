@@ -600,109 +600,169 @@ async (req, res, next) => {
     }
 });
 
-router.post('/reportById', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'blacklisted']), [checkbody('data.game').isIn(config.supportGames), checkOneof([checkbody('data.originUserId').isInt({min: 0}), checkbody('data.originPersonaId').isInt({min: 0}) // cuurently not support
-]), checkbody('data.cheatMethods').isArray().custom(cheatMethodsSanitizer), checkbody('data.videoLink').optional({checkFalsy: true}).isURL(), checkbody('data.description').isString().trim().isLength({
-    min: 1,
-    max: 65535
-}),], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
-async (req, res, next) => {
-    try {
-        const validateErr = validationResult(req);
-        if (!validateErr.isEmpty()) return res.status(400).json({
-            error: 1,
-            code: 'reportById.bad',
-            message: validateErr.array()
-        });
-
-        if (req.body.data.originPersonaId && !req.body.data.originUserId) return res.status(500).json({
-            error: 1,
-            code: 'reportById.notSupportYet',
-            message: 'not support yet'
-        });
-        const originUserId = req.body.data.originUserId
-        let profile;
+/**
+ * @swagger
+ * /api/player/reportById:
+ *   post:
+ *     security:
+ *       - appToken: []
+ *     tags:
+ *       - report
+ *       - player
+ *     summary: report player
+ *     description:
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: game
+ *         example: bf1
+ *         schema:
+ *           type: string
+ *           enum: ['bf1', 'bfv', 'bf6']
+ *         description: >
+ *           Sort order:
+ *            * `bf1` - Battlefield 1
+ *            * `bfv` - Battlefield 5
+ *            * `bf6` - Battlefield 2024
+ *       - name: originUserId
+ *         description: (1)Origin User ID
+ *         type: string
+ *       - name: originPersonaId
+ *         description: (2)Origin Persona ID
+ *         type: string
+ *       - name: cheatMethods
+ *         description: Reported plug-in type ['wallhack', 'aimbot', 'invisable', 'magicBullet', 'damageChange', 'gadgetModify', 'teleport', 'attackServer']
+ *         type: array
+ *         value: ['wallhack', 'aimbot']
+ *       - name: videoLink
+ *         description: Video connection
+ *         type: string
+ *         value: https://google.com,https://youtube.com
+ *       - name: description
+ *         description: Supplementary statement
+ *         required: true
+ *         type: string
+ *         minLength: 1
+ *         maxLength: 65535
+ *     responses:
+ *       200:
+ *         description: report.success
+ *       400:
+ *         description: report.bad
+ *       404:
+ *         description: player.notFound
+ */
+router.post('/reportById', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'blacklisted']),
+    [
+        checkbody('data.game').isIn(config.supportGames),
+        checkOneof([
+            checkbody('data.originUserId').isInt({min: 0}),
+            checkbody('data.originPersonaId').isInt({min: 0}) // cuurently not support
+        ]),
+        checkbody('data.cheatMethods').isArray().custom(cheatMethodsSanitizer),
+        checkbody('data.videoLink').optional({checkFalsy: true}).isURL(),
+        checkbody('data.description').isString().trim().isLength({min: 1, max: 65535}),
+    ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
+    async (req, res, next) => {
         try {
-            profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
-        } catch (err) {
-            if (err.message.includes('Bad Response:')) return res.status(404).json({
+            const validateErr = validationResult(req);
+            if (!validateErr.isEmpty()) return res.status(400).json({
                 error: 1,
-                code: 'reportById.notFound',
-                message: 'no such player.'
+                code: 'reportById.bad',
+                message: validateErr.array()
             });
-            throw (err); // unknown error, throw it
-        }
 
-        // now the user being reported is found
-        let avatarLink;
-        try {   // get/update avatar each report
-            avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fails
-        } catch (err) {
-            logger.warn('/reportById: error while fetching user\'s avatar');
-            avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
-        }
-        /** @type {import('../typedef.js').Player|undefined} */
-        const reported = await db.select('*').from('players').where({originUserId: profile.userId}).first();
-        const player = {
-            id: reported ? reported.id : undefined,
-            originName: profile.username,
-            originUserId: profile.userId,
-            originPersonaId: profile.personaId,
-            games: JSON.stringify(Array.from(new Set(reported ? reported.games : []).add(req.body.data.game))),
-            cheatMethods: JSON.stringify(reported ? reported.cheatMethods : []), // cheateMethod should be decided by admin
-            avatarLink: avatarLink,
-            viewNum: reported ? reported.viewNum : 0,
-            commentsNum: reported ? reported.commentsNum + 1 : 1,
-            valid: 1,
-            status: reported ? await stateMachine(reported, req.user, 'report') : 0,
-            createTime: reported ? reported.createTime : new Date(),
-            updateTime: new Date()
-        };
-        const playerId = await db('players').insert(player).onConflict('id').merge().then(r => r[0]);
-        const stateChange = {
-            prev: reported ? reported.status : null, next: player.status
-        };
-        await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
-        // write report content to db
-        const report = {
-            type: 'report',
-            byUserId: req.user.id,
-            toPlayerId: playerId,
-            toOriginName: profile.username,
-            toOriginUserId: profile.userId,
-            toOriginPersonaId: profile.personaId,
-            cheatGame: req.body.data.game,
-            cheatMethods: JSON.stringify(req.body.data.cheatMethods),
-            videoLink: req.body.data.videoLink,
-            content: handleRichTextInput(req.body.data.description),
-            valid: 1,
-            createTime: new Date()
-        };
-        await db('comments').insert(report);
+            if (req.body.data.originPersonaId && !req.body.data.originUserId) return res.status(500).json({
+                error: 1,
+                code: 'reportById.notSupportYet',
+                message: 'not support yet'
+            });
+            const originUserId = req.body.data.originUserId
+            let profile;
+            try {
+                profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
+            } catch (err) {
+                if (err.message.includes('Bad Response:')) return res.status(404).json({
+                    error: 1,
+                    code: 'reportById.notFound',
+                    message: 'no such player.'
+                });
+                throw (err); // unknown error, throw it
+            }
 
-        player.id = playerId;
-        player.games = Array.from(new Set(reported ? reported.games : []).add(req.body.data.game));
-        player.cheatMethods = reported ? reported.cheatMethods : [];
-        report.cheatMethods = req.body.data.cheatMethods;
-
-        siteEvent.emit('action', {method: 'report', params: {report, player, stateChange}});
-        return res.status(201).json({
-            success: 1, code: 'report.success', message: 'Thank you.', data: {
+            // now the user being reported is found
+            let avatarLink;
+            try {   // get/update avatar each report
+                avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fails
+            } catch (err) {
+                logger.warn('/reportById: error while fetching user\'s avatar');
+                avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
+            }
+            /** @type {import('../typedef.js').Player|undefined} */
+            const reported = await db.select('*').from('players').where({originUserId: profile.userId}).first();
+            const player = {
+                id: reported ? reported.id : undefined,
                 originName: profile.username,
                 originUserId: profile.userId,
                 originPersonaId: profile.personaId,
-                dbId: report.toPlayerId
-            }
-        });
-    } catch (err) {
-        if (err instanceof ServiceApiError || err instanceof Error) {
-            logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
-            return res.status(err.statusCode === 501 ? 501 : 500).json({
-                error: 1, code: err.statusCode === 501 ? 'report.notImplement' : 'report.error', message: err.message
+                games: JSON.stringify(Array.from(new Set(reported ? reported.games : []).add(req.body.data.game))),
+                cheatMethods: JSON.stringify(reported ? reported.cheatMethods : []), // cheateMethod should be decided by admin
+                avatarLink: avatarLink,
+                viewNum: reported ? reported.viewNum : 0,
+                commentsNum: reported ? reported.commentsNum + 1 : 1,
+                valid: 1,
+                status: reported ? await stateMachine(reported, req.user, 'report') : 0,
+                createTime: reported ? reported.createTime : new Date(),
+                updateTime: new Date()
+            };
+            const playerId = await db('players').insert(player).onConflict('id').merge().then(r => r[0]);
+            const stateChange = {
+                prev: reported ? reported.status : null, next: player.status
+            };
+            await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
+            // write report content to db
+            const report = {
+                type: 'report',
+                byUserId: req.user.id,
+                toPlayerId: playerId,
+                toOriginName: profile.username,
+                toOriginUserId: profile.userId,
+                toOriginPersonaId: profile.personaId,
+                cheatGame: req.body.data.game,
+                cheatMethods: JSON.stringify(req.body.data.cheatMethods),
+                videoLink: req.body.data.videoLink,
+                content: handleRichTextInput(req.body.data.description),
+                valid: 1,
+                createTime: new Date()
+            };
+            await db('comments').insert(report);
+
+            player.id = playerId;
+            player.games = Array.from(new Set(reported ? reported.games : []).add(req.body.data.game));
+            player.cheatMethods = reported ? reported.cheatMethods : [];
+            report.cheatMethods = req.body.data.cheatMethods;
+
+            siteEvent.emit('action', {method: 'report', params: {report, player, stateChange}});
+            return res.status(200).json({
+                success: 1, code: 'report.success', message: 'Thank you.', data: {
+                    originName: profile.username,
+                    originUserId: profile.userId,
+                    originPersonaId: profile.personaId,
+                    dbId: report.toPlayerId
+                }
             });
+        } catch (err) {
+            if (err instanceof ServiceApiError || err instanceof Error) {
+                logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
+                return res.status(err.statusCode === 501 ? 501 : 500).json({
+                    error: 1,
+                    code: err.statusCode === 501 ? 'report.notImplement' : 'report.error',
+                    message: err.message
+                });
+            }
+            next(err);
         }
-        next(err);
-    }
-});
+    });
 
 /**
  * @swagger
