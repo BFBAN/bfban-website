@@ -391,7 +391,7 @@
       },
       "placeholder": {
         "btrlink": "BTRの対局リンクを入力してください。",
-        "content": "審査のために異議申し立て情報を詳しく入力してください (形式に注意してください。地域によって異議申し立ての形式に関する要件があります。地域の異議申し立てコミュニティの「異議申し立ての形式」を参照してください)。",
+        "content": "注意フォーマット、異なる地域では申し立てのフォーマット要件が異なる場合がありますので、現地の申し立てコミュニティの「申し立てフォーマット」に従ってください。",
         "player": "プレイヤーIDを記入してください",
         "videolink": "ビデオリンクを入力してください。"
       }
@@ -481,7 +481,7 @@
     "timeline": {
       "all": "すべて",
       "banAppeal": "訴えのみ表示",
-      "coreComment": "主な内容",
+      "coreComment": "主要内容",
       "historyName": "历史玩家变动名称",
       "verify": "判決のみ表示",
       "noAppealAttachmentHint": "この異議申し立てには異議申し立ての添付ファイルはありません",
@@ -634,7 +634,7 @@
         "updateTime": "更新時間の順序",
         "viewNum": "ルックアップ回数の順序変更"
       },
-      "sortByTitle": "並べ替え"
+      "sortByTitle": "排序方式"
     },
     "reportTime": "通報時間範囲",
     "title": "プレイヤーデータベース",
@@ -655,7 +655,7 @@
   },
   "player_list": {
     "seo": {
-      "description": "ユーザーが報告したプレーヤー ファイルを含むプレーヤー リスト",
+      "description": "ユーザーから寄せられた選手のプロフィールを掲載する「選手リスト",
       "keywords": "プレイヤーリスト,リスト"
     },
     "title": "プレイヤーデータベース"
@@ -891,13 +891,13 @@
         "judgementLog": "判決日誌",
         "log": "ログ＃ログ＃",
         "management": "内容",
-        "message": "情報",
-        "messageList": "メッセージ内容",
-        "messageManagement": "情報",
-        "messagePush": "押す",
-        "muteUsers": "禁止ユーザー",
+        "message": "消息",
+        "messageList": "消息内容",
+        "messageManagement": "消息",
+        "messagePush": "推送",
+        "muteUsers": "禁言用户",
         "user": "ユーザー管理",
-        "verifications": "バリデーター"
+        "verifications": "验证器"
       },
       "title": "バックグラウンドの管理"
     },
@@ -914,7 +914,7 @@
         "form": {
           "del": "削除＃サクジョ＃",
           "read": "既読",
-          "unread": "未読"
+          "unread": "未读"
         },
         "itemName": "メッセージ・リスト"
       },
@@ -935,7 +935,7 @@
           "text": "チャット"
         },
         "fatal": {
-          "describe": "ユーザーに「警告」を送信する",
+          "describe": "?",
           "text": "を選択して、"
         },
         "toAdmins": {
