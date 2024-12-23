@@ -1,48 +1,48 @@
 {
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\nNato il 29 gennaio 2018;\nÈ un'organizzazione formata dai giocatori di Battlefield per resistere ai cheat </b>.\n </p>",
-    "privacy": "\n<h2>Informativa sulla privacy</h2>\nÈ open source. Puoi pubblicare problemi e suggerire modifiche/miglioramenti tramite GitHub. L'API è fornita dalla rete della comunità ed è aperta all'uso pubblico.",
+    "description": "<h2>BFBAN</h2>\n<p>\n诞生于2018年1月29日；\n是战地玩家一起组建的 <b>抵制外挂</b> 组织。\n </p>",
+    "privacy": "\n<h2>隐私政策</h2>\n它是开源的。您可以通过 GitHub 发布问题并提出更改/改进建议。社区网络提供的 API 并开放供公众使用。",
     "title": "Di",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> Il sito web è basato sul Federal BAN Bureau of Investigation. L'idea originale è nata da giocatori entusiasti ed era sviluppato da <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> Sviluppato e lanciato il 4 novembre 2018\n    </p>\n    <p> Fornisce principalmente report, enumerazione, ricerca, monitoraggio, discussione e altri servizi per i giocatori </p>"
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> Il sito web fa affidamento sull'ufficio investigativo BFBAN. L'idea originale è nata da giocatori entusiasti. È stato sviluppato da <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> in Novembre 2018 Lanciato il 4'\n </p>\n <p>Fornire principalmente servizi come segnalazione, elenco, ricerca, tracciamento e discussione per la maggior parte dei giocatori;</p>"
   },
   "account": {
     "bindOrigin": {
-      "content": "BFBAN richiede di vincolare il tuo account EA per facilitare i ricorsi, il recupero e altre funzioni dell'account prima di vincolare EA, il tuo account verrà bloccato e non sarai in grado di inviare alcun contenuto;",
-      "title": "Conto non vincolato",
+      "content": "BFBAN richiede di vincolare l'account Origin per funzioni come l'appello e il recupero dell'account; prima di vincolare Origin, il tuo account verrà bloccato e non sarai in grado di inviare alcun contenuto",
+      "title": "conto non vincolato",
       "travel": "OK, vai a vincolare l'account"
     },
-    "joinedAt": "Unisciti al tempo",
-    "lastOnlineTime": "L'ultima volta online",
+    "joinedAt": "unire il tempo",
+    "lastOnlineTime": "l'ultima volta online",
     "message": {
       "chat": "chiacchierata",
       "hint": {
-        "denied": "È stato bannato dalla chat",
-        "selfTalk": "Non posso parlare da solo!",
-        "taOffChat": "L'altra parte ha disattivato l'opzione chat"
+        "denied": "Bannato dalla chat",
+        "selfTalk": "Non posso parlare con me stesso!",
+        "taOffChat": "La persona ha disattivato l'opzione di chat"
       }
     },
-    "recentlyUpdated": "Ultimi aggiornamenti",
-    "reportNum": "Numero totale di report",
-    "reported": "Segnalato",
-    "reports": "relazione personale",
+    "recentlyUpdated": "aggiornato di recente",
+    "reportNum": "Numero totale di segnalazioni",
+    "reported": "segnalato",
+    "reports": "rapporto personale",
     "role": "identità",
     "status": "stato",
-    "title": "Pagina di visualizzazione dell'utente",
-    "userInfo": "informazioni personali",
+    "title": "pagina di visualizzazione dell'utente",
+    "userInfo": "informazione personale",
     "username": "nome utente"
   },
   "announcement": {
     "antiCheat": {
-      "intro": "Il team BFBAN gestisce diversi casi secondo gli standard più recenti.",
-      "name": "Regole anti-cheat di BFBAN"
+      "intro": "Il team BFBAN gestisce gli standard di diversi casi e gestisce i casi secondo gli standard più recenti",
+      "name": "BFBAN regole anti-cheat"
     },
     "conduct": {
-      "intro": "Codice di condotta per i membri del team BFBAN nel lavoro quotidiano",
-      "name": "Regole di condotta della BFBAN"
+      "intro": "Codice di condotta per i membri del team BFBAN nel loro lavoro quotidiano",
+      "name": "BFBAN Regole di condotta"
     },
     "latest": "aggiornato",
     "personnel": {
-      "intro": "Regole di reclutamento del personale del team BFBAN, struttura dei membri e spiegazione dei diritti, degli obblighi e dei requisiti dei diversi membri",
+      "intro": "Regole di reclutamento del personale del team BFBAN, struttura dei membri, diritti e doveri e requisiti dei diversi membri",
       "name": "Regole del personale BFBAN"
     },
     "version": "Versione"
@@ -50,10 +50,10 @@
   "apps": {
     "buttons": {
       "get": "Ottenere",
-      "hot": "Popolare",
+      "hot": "popolare",
       "website": "sito web"
     },
-    "describe": "Strumento database BFBAN integrato di terze parti",
+    "describe": "Strumenti di database BFBAN integrati di terze parti",
     "screen": {
       "admin": "gestione della comunità",
       "all": "Tutto",
@@ -66,8 +66,8 @@
       "bot": "robot",
       "official": "ufficiale",
       "pc_app": "applicazione desktop",
-      "qq": "TencentQQ",
-      "web": "Pagina Web"
+      "qq": "Tencent QQ",
+      "web": "pagina web"
     },
     "submit_tool_app": "strumento di invio",
     "title": "attrezzo"
@@ -75,64 +75,62 @@
   "basic": {
     "action": {
       "discuss": {
-        "describe": "Le prove di cui sopra richiedono ancora che più amministratori e attori partecipino alle discussioni e alle decisioni, e il comportamento è incerto",
-        "text": "Da discutere"
+        "describe": "Le prove di cui sopra hanno ancora bisogno di più amministratori e giocatori per partecipare alla discussione e alla decisione, comportamento incerto",
+        "text": "essere discusso"
       },
       "farm": {
-        "describe": "pistola a spazzola",
-        "text": "pistola a spazzola"
+        "describe": "pistola a pennello",
+        "text": "pistola a pennello"
       },
       "guilt": {
-        "describe": "Se l'amministratore pensa che si tratti di barare, vota. Se le condizioni sono soddisfatte, il sistema confermerà lo stato del giocatore.",
-        "text": "Vota per un martello"
+        "describe": "L'amministratore pensa di imbrogliare, vota e il sistema confermerà lo stato del giocatore se le condizioni sono soddisfatte",
+        "text": "voto rock martello"
       },
       "innocent": {
-        "describe": "Il sospetto delle notizie riportate è stato fugato attraverso un video",
+        "describe": "Il sospetto delle informazioni riportate è stato chiarito attraverso il video",
         "text": "Autocertificazione MOSS"
       },
       "invalid": {
-        "describe": "Segnalazione di materiali incompleti o segnalazione di ID errati, ecc.",
-        "text": "Rapporto non valido"
+        "describe": "Comportamenti come la segnalazione di materiali incompleti o la segnalazione di ID errati",
+        "text": "rapporto non valido"
       },
       "kill": {
-        "describe": "Martello di pietra del giudizio dell'amministratore",
-        "text": "martello di pietra"
+        "describe": "L'amministratore giudica e conferma l'imbroglio",
+        "text": "Conferma l'imbroglio"
       },
       "more": {
-        "describe": "Sono necessarie prove più forti",
-        "text": "servono più prove"
+        "describe": "Sono necessarie prove più solide",
+        "text": "bisogno di più prove"
       },
       "suspect": {
-        "describe": "Se i dati della carriera del giocatore sono anomali o i dati della singola partita sono gravemente incoerenti con la sua carriera, c'è il sospetto di cheating. I membri della squadra cheating chiederanno al giocatore di autocertificarsi o gli daranno il tempo di autocertificarsi dopo essersi presentato. una dichiarazione di autocertificazione. Se l'autocertificazione non va a buon fine trascorsi 7 giorni dalla data di inizio dello stato, verrà automaticamente trasferito al martello reale.",
-        "text": "Essere autodimostrato"
+        "describe": "Se i dati della carriera del giocatore sono anomali o i dati di una singola partita sono gravemente incoerenti con la carriera, c'è il sospetto di imbroglio.I membri del team di identificazione e imbroglio richiedono al giocatore di autocertificare o danno al giocatore il tempo di autocertificare dopo aver presentato una dichiarazione di autocertificazione. Dalla data di inizio stato a 7 giorni dopo, se manca l'autocertificazione, si andrà automaticamente a confermare l'imbroglio",
+        "text": "essere autocertificato"
       }
     },
     "button": {
-      "cancel": "Cancellare",
+      "cancel": "Annulla",
       "commit": "invia",
       "insert": "inserire",
-      "next": "Prossimo passo",
-      "prev": "Passaggio precedente",
+      "next": "Passo successivo",
+      "prev": "Precedente",
       "reply": "rispondere",
       "report": "rapporto",
-      "reset": "reset",
+      "reset": "Ripristina",
       "save": "salva",
-      "submit": "confermare"
+      "submit": "Confermare"
     },
     "gamePlatforms": {
-      "origin": "EA",
-      "pc": "computer",
-      "ps3": "Consolle Sony 3",
-      "ps4": "Consolle Sony 4",
-      "psn": "sony",
+      "origin": "Origin",
+      "pc": "PC",
+      "ps3": "PS3",
+      "ps4": "PS4",
+      "psn": "PSN",
       "xbox": "Xbox",
       "xboxone": "Xbox One"
     },
     "games": {
       "all": "Tutto",
       "bf1": "Campo di battaglia 1",
-      "bf3": "Campo di battaglia 3",
-      "bf4": "Campo di battaglia 4",
       "bf6": "Campo di battaglia 2042",
       "bfv": "Campo di battaglia 5"
     },
@@ -140,367 +138,219 @@
       "admin": "gestione della comunità",
       "blacklisted": "lista nera",
       "bot": "robot",
-      "dev": "squadra di sviluppo",
-      "freezed": "bloccare l'utente",
+      "dev": "team di sviluppo",
       "normal": "utente",
       "root": "sistema",
       "super": "super amministratore",
-      "test": "Conto di prova",
-      "volunteer": "volontario della comunità"
+      "test": "conto di prova"
     },
     "status": {
-      "0": {
-        "describe": "prima di essere trattenuto o approvato per essere trattenuto, si parla di caso aperto",
-        "text": "Non elaborato"
-      },
-      "1": {
-        "describe": "\"Martello di pietra\" è uguale a \"martello vero\", che significa estremamente duro. Significa picchiarlo con prove reali, e significa anche avere prove concrete.",
-        "text": "martello di pietra"
-      },
-      "2": {
-        "describe": "Le prove di cui sopra richiedono ancora che più amministratori e attori partecipino alle discussioni e alle decisioni, e il comportamento è incerto",
-        "text": "Essere autodimostrato"
-      },
-      "3": {
-        "describe": "Attraverso la certificazione la pratica viene classificata nella categoria delle autocertificazioni",
-        "text": "Autocertificazione MOSS"
-      },
-      "4": {
-        "describe": "Segnalazione di materiali incompleti o segnalazione di ID errati, ecc., questa classificazione non significa conferma di frode",
-        "text": "Rapporto non valido"
-      },
-      "5": {
-        "describe": "Le prove di cui sopra richiedono ancora che più amministratori e attori partecipino alle discussioni e alle decisioni, e il comportamento è incerto",
-        "text": "In discussione"
-      },
-      "6": {
-        "describe": "Le prove di cui sopra richiedono una maggiore partecipazione del management al voto",
-        "text": "Sono necessari più voti da parte del management"
-      },
-      "7": {
-        "describe": "Le prove di cui sopra richiedono ancora che più amministratori e attori partecipino alle discussioni e alle decisioni, e il comportamento è incerto",
-        "text": "Martello automatico per pietra con anomalia dei dati"
-      },
-      "8": {
-        "describe": "Sblocca rapidamente gli accessori delle armi nel gioco",
-        "text": "pistola a spazzola"
-      },
-      "9": {
-        "describe": "Il caso è in appello e la direzione prenderà la prossima decisione",
-        "text": "Attraente"
-      },
-      "all": {
-        "text": "Tutto"
-      }
+      "0": "non processato",
+      "1": "Conferma l'imbroglio",
+      "2": "essere autocertificato",
+      "3": "Autocertificazione MOSS",
+      "4": "rapporto non valido",
+      "5": "In conversazione",
+      "6": "Hai bisogno di più voti di amministratore",
+      "7": "Anomalia dei dati martello di pietra automatico",
+      "8": "pistola a pennello",
+      "all": "Tutto"
     },
     "tip": {
-      "search.bad": "Si è verificato un errore di ricerca, contatta l'amministratore {message}",
-      "search.success": "Ricerca riuscita",
-      "search.notExist": "Nessun dato trovato",
-      "me.bad": "C'è un errore nelle informazioni personali, contatta l'amministratore {message}",
-      "me.success": "Informazioni personali salvate con successo",
-      "request.404": "Questo indirizzo di richiesta non esiste, controlla l'interfaccia",
-      "achievement.bad": "Si è verificato un errore nell'obiettivo, contatta l'amministratore {message}",
-      "achievement.duplicate": "Ricevi risultati ripetutamente",
-      "achievement.notConditions": "Le condizioni per ricevere il risultato non sono soddisfatte.",
-      "achievement.ineffective": "Obiettivo non valido",
-      "achievement.success": "Obiettivo ricevuto con successo",
-      "bindOrigin.bad": "Si è verificato un errore durante l'associazione dell'account, contatta l'amministratore {message}",
-      "bindOrigin.error": "Si è verificato un errore, contatta l'amministratore {message}",
-      "bindOrigin.expired": "Il codice di verifica dell'attivazione è scaduto, registrati nuovamente",
-      "bindOrigin.gameNotShowed": "Il resoconto giudicato non corrisponde alla serie di giochi Battlefield.",
-      "bindOrigin.needVerify": "Congratulazioni, sei ancora ad un passo. Vai alla tua email per attivare il tuo account.",
-      "bindOrigin.notFound": "Il codice di verifica dell'attivazione non è valido, controlla il codice di verifica",
-      "bindOrigin.notImplement": "Si è verificato un errore, contatta l'amministratore {message}",
-      "bindOrigin.originBindingExist": "Questo indirizzo email è stato associato a un account",
-      "bindOrigin.originNotFound": "Impossibile trovare questo account e-mail. Controlla se l'e-mail è corretta e se abilitare la ricerca e-mail.",
-      "bindOrigin.success": "Congratulazioni per l'attivazione riuscita!",
-      "server.error": "Errore di servizio {message}",
-      "captcha.bad": "Si è verificato un errore nel modulo del codice di verifica, contatta l'amministratore {message}",
-      "captcha.expired": "Codice di verifica scaduto o non compilato",
-      "captcha.wrong": "Codice di verifica errato",
-      "changeName.bad": "Errore durante la modifica del nome utente, contatta l'amministratore {message}",
-      "changeName.noChance": "Hai esaurito tutte le opportunità per cambiare il tuo nome",
-      "changeName.occupied": "Qualcuno ha preso il tuo nuovo nome",
-      "changeName.success": "L'utente è stato modificato con successo, diamo un'occhiata al nuovo nome⭐️",
-      "changePassword.bad": "Modifica password errata, contatta l'amministratore {message}",
-      "changePassword.notMatch": "La password originale non è corretta",
-      "changePassword.success": "È necessario accedere nuovamente per completare questo processo",
-      "forgetPassword.bad": "Reimpostazione password errata, contatta l'amministratore {message}",
-      "forgetPassword.needVerify": "Controlla la tua email per reimpostare la password",
-      "forgetPassword.notFound": "Non esiste un utente di questo tipo o non hai associato l'indirizzo email. Controlla se il nome o l'indirizzo email sono coerenti.",
-      "forgetPassword.permissionDenied": "Il tuo account non può farlo",
-      "forgetPassword.success": "Reimpostazione della password riuscita",
-      "judgement.appealLock": "L'appello è bloccato e il caso non può essere ulteriormente deciso",
-      "judgement.bad": "Si è verificato un errore nel giudizio, contatta l'amministratore {message}",
-      "judgement.notFound": "Caso non trovato, contatta l'amministratore {message}",
-      "judgement.permissionDenied": "non hai il diritto di farlo",
-      "judgement.spam": "Il contenuto inviato non ha superato il rilevamento ed è stato contrassegnato come spam {message}",
-      "judgement.success": "grazie per il tuo verdetto",
-      "userInfo.bad": "Le informazioni utente non sono corrette, contatta l'amministratore {message}",
-      "userInfo.notFound": "Non esiste un utente del genere",
-      "logout.bad": "Disconnessione non riuscita, contattare l'amministratore",
-      "logout.success": "Arrivederci👋🏻",
-      "needBindEaAccount": "Collega il tuo account EA prima di rispondere",
-      "noAccess": "Conto corrente, senza permessi",
-      "noReports": "Nessuna segnalazione ancora",
-      "notContent": "Nessun contenuto",
-      "notFound": "Siamo spiacenti, l'indirizzo di accesso sembra essere andato perso.",
-      "notLang": "non tradotto",
-      "externalAuth.success": "Richiesta di autorizzazione riuscita",
-      "externalAuth.noSuchUser": "L'utente di destinazione della richiesta di autorizzazione non esiste",
-      "externalAuth.fail": "Richiesta di autorizzazione non riuscita, contatta l'amministratore {message}",
-      "confirmAuth.success": "Conferma che l'autorizzazione ha avuto successo",
-      "confirmAuth.fail": "Conferma autorizzazione non riuscita, contatta l'amministratore {message}",
-      "reply.bad": "Si è verificato un errore nella risposta, contatta l'amministratore {message}",
-      "reply.notFound": "Non esiste una risposta o un giocatore del genere",
-      "reply.spam": "Il contenuto inviato non ha superato il rilevamento ed è stato contrassegnato come spam {message}",
-      "reply.success": "Risposta inviata",
-      "report.bad": "Per segnalare un errore, contatta l'amministratore {message}",
-      "report.error": "Per segnalare un errore, contatta l'amministratore {message}",
-      "report.notFound": "Nessuna informazione trovata per questo utente",
-      "report.notImplement": "Si è verificato un errore, contatta l'amministratore {message}",
-      "report.spam": "Il contenuto inviato non ha superato il rilevamento ed è stato contrassegnato come spam {message}",
-      "report.success": "Grazie per la tua segnalazione",
-      "signin.bad": "Si è verificato un errore di accesso, contatta l'amministratore {message}",
-      "signin.noSuchUser": "Nessun errore di tipo utente o password",
-      "signin.success": "Bentornato",
-      "signup.bad": "Si è verificato un errore durante la registrazione, contatta l'amministratore {message}",
-      "signup.error": "Si è verificato un errore, contatta l'amministratore {message}",
-      "signup.notFound": "Codice di attivazione non valido",
-      "signup.expired": "Il codice di attivazione è scaduto, registrati nuovamente",
-      "signup.gameNotShowed": "Il resoconto giudicato non corrisponde alla serie di giochi Battlefield.",
-      "signup.needVerify": "Congratulazioni, sei ancora ad un passo. Vai alla tua email per attivare il tuo account.",
-      "signup.notImplement": "Si è verificato un errore, contatta l'amministratore {message}",
-      "signup.originBindingExist": "Questo indirizzo email è stato associato a un account",
-      "signup.originNotFound": "Impossibile trovare l'account EA in base alle informazioni fornite dall'utente",
-      "signup.usernameMismatch": "L'account EA corrispondente all'indirizzo e-mail non corrisponde al nome dell'account EA compilato.",
-      "signup.usernameExist": "Il nome utente dell'utente del sito web o dell'account da attivare esiste già nel pool di account.",
-      "user.invalid": "Il gettone è scaduto",
-      "user.permissionDenined": "Nessun permesso",
-      "user.tokenClientException": "Il token client corrente è scaduto o è scaduto",
-      "user.tokenExpired": "Il token è scaduto, effettua nuovamente l'accesso",
-      "userReports.bad": "Gli utenti segnalano un errore, contatta l'amministratore {message}",
-      "userReports.notFound": "Non esiste un lettore del genere, controlla attentamente",
-      "userReports.success": "Segnalazione riuscita"
+      "noAccess": "conto corrente, nessun permesso",
+      "noReports": "ancora nessuna segnalazione",
+      "notContent": "nessun contenuto",
+      "notFound": "Oops, l'indirizzo di accesso sembra essere perso",
+      "notLang": "Non tradotto"
     }
   },
   "bindOrigin": {
-    "title": "Associa l'account EA"
+    "messages": {
+      "bad": "Errore durante l'associazione, contattare l'amministratore",
+      "expired": "Il codice di verifica dell'associazione è scaduto, inviare nuovamente l'associazione",
+      "notFound": "Codice di verifica dell'associazione non trovato",
+      "success": "L'account è collegato correttamente alla piattaforma Orange"
+    },
+    "title": "Associa l'account Origin"
   },
   "captcha": {
-    "get": "Ottieni il codice di verifica",
-    "fresh": "Aggiorna il codice di verifica",
+    "get": "ottenere il codice di verifica",
     "messages": {
-      "bad": "Il codice di verifica è sbagliato, contatta l'amministratore",
+      "bad": "Errore nel codice di verifica, contatta l'amministratore",
       "expired": "Il codice di verifica è scaduto",
-      "gen": "ottenere il successo",
-      "wrong": "Errore nel codice di verifica"
+      "gen": "ottenere successo",
+      "wrong": "Errore codice di verifica"
     },
-    "title": "Codice di verifica"
+    "title": "codice di verifica"
   },
   "cheatMethods": {
     "aimbot": {
-      "describe": "Posizione di puntamento automatico, che mostra il comportamento della macchina",
-      "title": "Obiettivo personale"
+      "describe": "Posizione di mira automatica, che mostra il comportamento della macchina",
+      "title": "Auto-mira"
     },
     "attackServer": {
-      "describe": "Attacco dannoso al server",
-      "title": "Server d'attacco"
+      "describe": "server di attacco dannoso",
+      "title": "server di attacco"
     },
     "damageChange": {
       "describe": "Modifica i parametri dell'arma",
-      "title": "Riparare l'infortunio"
+      "title": "Riabilitazione"
     },
     "gadgetModify": {
-      "describe": "L'attrezzatura appare in scene impossibili",
+      "describe": "L'equipaggiamento appare in scenari impossibili",
       "title": "Cambia attrezzatura"
     },
     "invisable": {
-      "describe": "Il personaggio è invisibile, non può essere visto e può tracciare la posizione",
-      "title": "Furtivo"
+      "describe": "Il personaggio è invisibile, incapace di vedere e può tracciare la posizione",
+      "title": "invisibilità"
     },
     "magicBullet": {
-      "describe": "I proiettili possono passare attraverso le entità",
-      "title": "pallottola magica"
+      "describe": "I punti elenco possono passare attraverso le entità",
+      "title": "proiettile magico"
     },
     "oneShotKill": {
-      "describe": "Prendi di mira rapidamente le parti ad alto danno per ottenere uccisioni rapide",
-      "title": "vendita lampo"
+      "describe": "Mira rapidamente a parti ad alto danno per uccisioni rapide",
+      "title": "arpione"
     },
     "teleport": {
-      "describe": "Movimento di teletrasporto",
-      "title": "trasmettere"
+      "describe": "mossa di teletrasporto",
+      "title": "Inviare"
     },
     "wallhack": {
-      "describe": "Visualizza la posizione del nemico indipendentemente dall'entità",
+      "describe": "Ignora entità per visualizzare le posizioni nemiche",
       "title": "prospettiva"
     }
   },
   "detail": {
     "appeal": {
-      "deal": {
-        "action": "Operazione di appello",
-        "adminContent": "Gestisci il contenuto della risposta",
-        "appealContent": "Contenuto del reclamo del giocatore",
-        "btrLink": "Collegamento BTR",
-        "farm": "Denuncia per spazzolatura armi",
-        "firstPersonRecording": "Collegamento alla registrazione dello schermo in prima persona",
-        "userGeneratedMossFile": "file muschio (.zip)",
-        "moss": "Denuncia autocertificazione muschio",
-        "mossDownloadUrl": "Scarica MOSS",
-        "mossUpload": "Carica muschio",
-        "other": "Altri tipi di reclami",
-        "stats": {
-          "accept": "L'appello è stato accolto",
-          "fail": "Ricorso fallito",
-          "unprocessed": "Ricorso non trattato"
-        },
-        "type": "Tipo di ricorso"
-      },
-      "dealAppeal": "Gestire i reclami",
-      "describe": "Il rapporto non è coerente con i fatti. Potete fornire materiale autosufficiente o contribuire a dimostrare la vostra innocenza?",
+      "describe": "C'è un problema con le informazioni riportate e posso dimostrare la mia innocenza da solo o con l'aiuto di altri.",
       "info": {
-        "changeName": "cambio nome",
-        "commentid": "ID commento",
+        "changeName": "cambio di nome",
         "content": "Contenuto del reclamo",
-        "originName": "Il nome attuale del giocatore",
-        "player": "ID del giocatore"
+        "originName": "il nome attuale del giocatore",
+        "player": "ID giocatore"
       },
       "modal": {
         "auxiliaryProof": {
-          "1": "Segnala il punto di vista di altri giocatori (nemici e alleati) in una singola battaglia e non dovrebbe durare meno di 10 minuti senza modifiche. Fornisci tu stesso l'indirizzo del video.",
-          "2": "Per i giocatori presenti, fornisci il tuo ID, server specifico, ora, posizione e descrizione dell'oggetto del tuo ricorso ausiliario.",
+          "1": "Le prospettive di altri giocatori (nemici e amici) della singola battaglia riportata, e non meno di 10 minuti senza clip, forniscono l'indirizzo video da soli.",
+          "2": "I giocatori presenti, forniscono il proprio ID, server specifico, ora, luogo e la descrizione del proprio oggetto di ricorso ausiliario.",
           "title": "Prova ausiliaria"
         },
-        "describe": "In caso di BAN errato, io o una terza parte possiamo assistere nel ricorso Dopo aver soddisfatto tutti i requisiti di base di seguito, il tuo ricorso verrà inviato a tutti gli amministratori BFBAN e l'amministratore lo confermerà e lo approverà prima che possa essere revocato.",
+        "describe": "Per BAN errato, tu o una terza parte potete assistere nel ricorso. Dopo aver soddisfatto tutti i requisiti di base di seguito, il contenuto del ricorso verrà inviato a tutti gli amministratori di BFBAN e l'amministratore può rilasciarlo solo dopo la conferma",
         "effectiveEvidence": {
-          "1": "Utilizza software come \"High Speed Target Bullseye\" o il software Moss per catturare lo schermo, le mani e la tastiera da registrare per l'autocertificazione.",
-          "2": "Per l'autodifesa, puoi utilizzare immagini, video e altri materiali.",
-          "3": "I requisiti previsti da alcuni luoghi sono diversi Puoi consultare la gestione regionale della BFBAN e richiedere i materiali per il ricorso.",
+          "1": "Usa software come \"High Speed ​​​​Target Bullseye\" e il software Moss per catturare lo schermo, le mani e la tastiera per registrare l'autocertificazione.",
+          "2": "Autodifesa, puoi usare immagini, video e altri materiali.",
+          "3": "Alcuni luoghi prevedono requisiti diversi, puoi consultare la direzione regionale del BFBAN e richiedere i materiali per i ricorsi.",
           "title": "prove valide"
         },
         "evidenceInvalid": {
-          "1": "Il prestito, il leasing, ecc. a terzi, sia tramite trasferimento di dati che prendendo in prestito da amici, non possono dimostrare se si tratta della persona o meno. È necessario comprendere che non è possibile conoscere il mezzo con cui viene prestato il conto non sarà approvato.",
-          "2": "Intercettato e utilizzato da più giocatori (non limitato a screenshot personali che mostrano le caratteristiche dell'imbroglio) o software e contenuti multimediali acquistati per l'imbroglio.",
-          "3": "I giocatori con precedenti penali, come quelli delle serie precedenti, avranno possibilità di passaggio notevolmente ridotte.",
+          "1": "Il prestito, leasing, ecc. a terzi, indipendentemente dal fatto che si tratti di strisciare dati o prendere in prestito parole da amici, non può provare se sei la persona. Devi capire che non puoi conoscere i mezzi attraverso i quali l'account viene prestato. non essere approvato.",
+          "2": "Intercettato e utilizzato da più giocatori (non limitato al mio screenshot che mostra le funzionalità di imbroglio) o acquisto di software multimediale di imbroglio.",
+          "3": "Se c'è una fedina penale, i giocatori con file nelle serie precedenti ridurranno notevolmente le possibilità di passare.",
           "4": "Qualsiasi giuramento, maledizione.",
-          "title": "Prova del fallimento"
+          "title": "prova del fallimento"
         },
         "modalTitle": "regola"
       },
       "placeholder": {
-        "btrlink": "Compila il link del gioco btr",
-        "content": "Inserisci le informazioni dettagliate sul ricorso per la revisione (presta attenzione al formato, diverse regioni avranno requisiti per i formati di ricorso, fai riferimento al \"Formato di ricorso\" della comunità di ricorso locale)",
-        "player": "Per favore inserisci l'ID giocatore",
-        "videolink": "Si prega di compilare il collegamento al video"
+        "content": "Si prega di compilare le informazioni sul ricorso in dettaglio per la revisione",
+        "player": "Inserisci l'ID giocatore"
       }
     },
     "info": {
       "action": "azione",
-      "adminConsole": "Area amministratore",
-      "adminManual1": "Non dare giudizi facilmente Se non riesci a prendere una decisione, usa semplicemente la risposta sopra per partecipare alla discussione e attendere la risposta del giornalista.",
-      "adminManual2": "Qualsiasi operazione di elaborazione da parte dell'amministratore causerà modifiche allo stato attuale del cheater. Se non sei sicuro al 100%, utilizza il messaggio di risposta per discuterne",
+      "adminConsole": "Area amministrativa",
+      "adminManual1": "Non giudicare alla leggera: se non puoi prendere una decisione, usa la risposta sopra per partecipare alla discussione e attendi che il giornalista risponda.",
+      "adminManual2": "Qualsiasi operazione di elaborazione da parte dell'amministratore cambierà lo stato attuale dell'imbroglione. Se non sei sicuro al 100%, utilizza il messaggio di risposta per discutere",
       "app_qr": {
-        "openApp": "Visualizza all'interno dell'app",
+        "openApp": "Visualizza nell'app",
         "openAppDescribe": "Visualizza questo giocatore nell'APP BFBAN",
         "tip": "Nell'APP BFBAN, scansiona questo codice QR",
         "title": "Visualizza sul cellulare"
       },
       "appeal": "appello",
-      "appealManual1": "Ricorso BAN errato: se è presente un BAN errato, inviare il collegamento alla pagina del caso e le informazioni dettagliate sul ricorso a ban-appeals@bfban.com e l'amministratore lo gestirà.",
-      "assistPppeal": "Assistenza nei ricorsi",
-      "cheatMethod": "metodi di imbroglio",
-      "cheatersInfo": "Dettagli del giocatore",
-      "dealRecord": "Record di elaborazione da parte dell'amministratore",
-      "description1": "Se ritieni che il collegamento non sia valido o che il nome sia stato modificato, fai clic su",
-      "description2": "bfban.com ha la capacità di tracciare in modo permanente il luogo in cui si trovano le persone segnalate",
-      "description3": "Il server inoltre catturerà e aggiornerà regolarmente le informazioni della persona segnalata.",
-      "description4": "Gli ID storici possono essere utilizzati anche per la ricerca",
+      "appealManual1": "Ricorso per BAN sbagliato: se hai un BAN errato, invia il link alla pagina del caso e le informazioni dettagliate sul ricorso a ban-appeals@bfban.com e l'amministratore se ne occuperà.",
+      "assistPppeal": "Assistere in appello",
+      "cheatMethod": "imbrogliare",
+      "cheatersInfo": "dettagli del giocatore",
+      "dealRecord": "Record di elaborazione dell'amministratore",
+      "discription1": "Se ritieni che il collegamento non sia valido o che il nome sia stato modificato, fai clic su",
+      "discription2": "bfban.com ha la capacità di tracciare in modo permanente il luogo in cui si trovano le persone segnalate",
+      "discription3": "Il server acquisirà e aggiornerà regolarmente anche le informazioni della persona segnalata",
+      "discription4": "L'ID cronologia può essere utilizzato anche per la ricerca",
       "fastReplies": {
         "evidencePic": "Le prove sono mostrate nella foto",
         "evidenceVid": "Le prove sono mostrate nel video",
-        "stats": "Anomalia dei dati del giocatore"
+        "stats": "Dati giocatore anomali"
       },
-      "firstReportTime": "Momento della prima segnalazione",
-      "gameScores": "Collegamento ai risultati",
+      "firstReportTime": "Ora della prima segnalazione",
+      "gameScores": "Registra collegamento",
       "gaming": "nel gioco",
-      "giveOpinion": "Qual è la tua opinione?",
+      "giveOpinion": "Cosa ne pensi?",
       "historyID": "nome storico",
-      "inGame": "esistere",
+      "inGame": "in gioco",
       "judge": "pensare",
-      "judgement": "Gestire le opinioni",
-      "originAvatar": "Avatar dell'EA",
-      "recentUpdateTime": "ora dell'ultimo aggiornamento",
-      "replyManual1": "Se ci sono nuove immagini o video di prova che devono essere aggiunti, puoi segnalarlo nuovamente. La funzione di risposta può rispondere solo a testo o collegamenti. Se hai bisogno di rispondere all'immagine, spostati qui",
-      "replyManual2": "Quindi copia il collegamento dell'immagine per rispondere.",
-      "replyManual3": "È necessario registrarsi ed effettuare il login prima di poter partecipare alla discussione",
+      "judgement": "Elaborazione del parere",
+      "originAvatar": "Origin avatar",
+      "recentUpdateTime": "ultimo aggiornamento",
+      "replyManual1": "Se ci sono nuove immagini o video di prova che devono essere integrati, puoi segnalare di nuovo. La funzione di risposta può rispondere solo con testo o link. Se vuoi rispondere alla foto, spostati qui",
+      "replyManual2": "Quindi copia il link dell'immagine per rispondere.",
+      "replyManual3": "Solo dopo esserti registrato ed aver effettuato il login puoi partecipare alla discussione",
       "replyManual4": "Effettua il login per partecipare alla risposta",
       "report": "rapporto",
-      "reportedGames": "Partite segnalate",
+      "reportedGames": "Partita segnalata",
       "timeLine": "sequenza temporale",
-      "updateButton": "Aggiorna le informazioni",
-      "uploadPicButton": "Carica immagini",
-      "videoLink": "Collegamento video",
-      "viewTimes": "Viste",
-      "writeSomething": "scrivi qualcosa"
+      "updateButton": "Aggiornamenti",
+      "uploadPicButton": "carica immagine",
+      "videoLink": "collegamento video",
+      "viewTimes": "Visualizzazioni",
+      "writeSomething": "Scrivi qualcosa"
     },
     "judgement": {
       "appropriateVerdict": {
-        "1": "Addurre intuitivamente le ragioni della sentenza, ad esempio, un certo comportamento determina l'esito del giudizio a causa dei seguenti fattori (omessi)",
-        "2": "In breve, le caratteristiche dell'imbroglio sono evidenti, puoi utilizzare il modello sottostante per unificare il giudizio",
-        "title": "sentenza adeguata"
+        "1": "Adducendo intuitivamente i motivi della sentenza, ad esempio, un determinato comportamento determina l'esito del giudizio a causa dei seguenti fattori (omesso)",
+        "2": "Breve, con ovvie caratteristiche di imbroglio, puoi utilizzare il modello qui sotto per esprimere un giudizio unificato",
+        "title": "sentenza appropriata"
       },
-      "behavior": "Tipologia di giudizio",
-      "content": "Spiegazione della sentenza",
+      "behavior": "tipo di giudizio",
+      "content": "Descrizione del giudizio",
       "game": "Gioco di appartenenza",
       "inappropriateRuling": {
-        "1": "Inserisci risposte prive di significato come \"1\", \"[carattere spazio]\", \"[emoticon]\", ecc.",
-        "2": "Rispondere a contenuti contenenti attacchi personali, discriminazioni, pornografia e contenuti politici",
-        "3": "Determinato da fattori esterni al gioco, come avatar, brutti",
-        "title": "sentenza inappropriata"
+        "1": "Inserisci risposte prive di significato come \"1\", \"[carattere spazio]\", \"[espressione]\", ecc.",
+        "2": "Le risposte contengono attacchi personali, discriminazioni, pornografia e contenuti politici",
+        "3": "A causa di fattori esterni al gioco, come avatar, brutto",
+        "title": "sentenza inopportuna"
       },
-      "methods": "Modi per imbrogliare"
+      "methods": "modo di barare"
     },
     "messages": {
-      "dontDoIt": "non consentito",
-      "fillEverything": "Si prega di compilare il modulo completo",
+      "dontDoIt": "non autorizzato",
+      "fillEverything": "Completare prego",
       "pleaseExplain": "Descrivi la tua decisione in modo più dettagliato",
-      "updateComplete": "Aggiornamento completato"
+      "replySuccess": "Rispondi con successo",
+      "signIn": "per favore accedi",
+      "submitSuccess": "Inviato con successo",
+      "tipBind": "Associa il tuo account arancione e rispondi più tardi",
+      "updateComplete": "aggiornamento completato"
     },
     "seo": {
       "description": "Segnala i dettagli del giocatore",
       "keywords": "dettagli del giocatore, giocatore"
     },
     "subscribes": {
-      "cancelTrack": "Annulla il monitoraggio",
-      "cancelTrackDescribe": "Non seguo più questo giocatore",
+      "cancelTrack": "non seguire",
+      "cancelTrackDescribe": "Non seguire più questo giocatore",
       "tracking": "traccia",
-      "trackingDescribe": "Segui questo giocatore e riceverai una notifica quando ci sono aggiornamenti"
+      "trackingDescribe": "Segui questo giocatore e facci sapere quando ci sono aggiornamenti"
     },
     "timeline": {
       "all": "Tutto",
-      "banAppeal": "Visualizza solo i ricorsi",
-      "coreComment": "Contenuto principale",
-      "historyName": "Cambiamenti storici al nome del giocatore",
-      "verify": "Visualizza solo il giudizio",
-      "noAppealAttachmentHint": "Non vi è alcun allegato di appello per questo ricorso",
-      "needLoginViewAttachmentsHint": "Devi accedere al tuo account per visualizzare gli allegati aggiuntivi forniti dai reclami dei giocatori",
-      "types": {
-        "judgement": "rapporto",
-        "register": "registro",
-        "report": "rapporto",
-        "banAppeal": "appello"
-      }
+      "banAppeal": "visualizzare solo i ricorsi",
+      "coreComment": "contenuto principale",
+      "historyName": "I giocatori storici cambiano i nomi",
+      "verify": "visualizza solo il verdetto"
     },
-    "dateView": {
-      "primitive": "originale",
-      "primitiveDescription": "Fuso orario del server",
-      "localTimeZoneName": "Nome del fuso orario attuale",
-      "localeTimeDescription": "Converti l'ora \"originale\" nel fuso orario locale",
-      "localeTime": "ora locale attuale"
-    },
-    "title": "Dettagli"
+    "title": "dettagli"
   },
   "footer": {
     "column": {
@@ -517,441 +367,241 @@
         "title": "Informazioni sui contatti"
       },
       "sponsor": {
-        "join": "Diventa uno sponsor",
-        "title": "Sponsor"
+        "join": "unisciti allo sponsor",
+        "title": "sponsor"
       }
     },
     "language": {
-      "members": "Membri traduttori partecipanti"
+      "members": "Partecipa ai membri della traduzione"
     }
   },
   "forgetPassword": {
-    "checkEmail": "Controlla la tua email e fai clic sul collegamento di verifica lì",
-    "forgetUsername": "Se dimentichi il tuo nome utente BFBAN, vai alla <a href='http://kook.top/wHwxhw'>comunità di sviluppatori bfban </a> per assistenza. Tieni presente che potrebbe essere necessario eseguire un complicato processo di recupero.",
     "resetSuccess": "Congratulazioni per aver completato il ripristino 💐",
-    "form": {
-      "username": "nome utente",
-      "originEmail": "Casella di posta EA"
-    },
-    "placeholder": {
-      "username": "Inserisci il nome utente del sito web o il nome utente dell'account della piattaforma EA (caso nota).",
-      "originEmail": "Inserisci la tua email EA"
-    },
     "steps": {
       "0": {
-        "supplement": "Riconciliare i conti",
-        "title": "Informazioni di base"
+        "supplement": "conto corrente",
+        "title": "informazioni di base"
       },
       "1": {
         "supplement": "Verifica se si tratta di un robot",
-        "title": "Codice di verifica"
+        "title": "codice di verifica"
       },
       "2": {
-        "supplement": "Visualizza il collegamento di verifica e-mail",
-        "title": "Verifica e-mail"
+        "supplement": "Controlla il link di verifica e-mail",
+        "title": "Verifica email"
       },
       "3": {
-        "supplement": "Reimposta la tua password",
-        "title": "Imposta la password"
+        "supplement": "reimposta la tua password",
+        "title": "impostare la password"
       },
       "4": {
-        "supplement": "Reimpostazione riuscita",
+        "supplement": "ripristino riuscito",
         "title": "Fine"
       }
     },
-    "title": "Reimposta la password dell'account"
+    "title": "Resetta la password"
   },
   "header": {
     "about": "Di",
-    "announcement": "annuncio",
-    "cheaters": "banca dati dei giocatori",
+    "announcement": "Circa l'annuncio",
+    "cheaters": "database dei giocatori",
     "index": "prima pagina",
-    "profile": "impostazioni personali",
-    "report": "Segnala un imbroglio",
+    "profile": "Impostazioni personali",
+    "report": "denuncia il tradimento",
     "signin": "Login",
-    "signout": "Esci",
-    "signup": "registro",
+    "signout": "disconnettersi",
+    "signoutSuccess": "disconnessione riuscita",
+    "signup": "Registrati",
     "site_stats": "statistiche",
-    "userCenter": "La mia pagina di visualizzazione"
+    "userCenter": "la mia pagina di visualizzazione"
   },
   "home": {
     "activity": {
       "activities": {
         "admin": "gestione della comunità",
         "as": "elaborato come",
-        "join": "Registrato per il divieto, benvenuto al tuo arrivo!",
-        "mark": "Volere",
-        "report": "Segnalato"
+        "join": "Bfban registrato, benvenuto!",
+        "mark": "futuro",
+        "report": "segnalato"
       },
-      "description": "bfban.com è stato lanciato il 4 novembre 2018. Ha ricevuto {report} segnalazioni ed è stato bannato {cheater}, grazie a tutti per il vostro sforzi congiunti!",
+      "description": "bfban.com è stato lanciato il 4 novembre 2018. Sono state ricevute {report} segnalazioni ed è stato confermato che {cheater} imbroglioni hanno barato. Grazie per i vostri sforzi congiunti!",
       "more": "Per saperne di più",
-      "title": "Novità sul sito"
+      "title": "Dinamiche del sito web"
     },
     "bulletin": {
       "title": "annuncio"
     },
     "cover": {
-      "confirmData": "Conferma il traditore",
-      "dataReceived": "Ricevuto",
-      "endTime": "Inizia con {time}",
+      "confirmData": "Conferma l'imbroglione",
+      "dataReceived": "ricevuto",
+      "endTime": "fino alle {time}",
       "h1": "BFBAN",
       "h2": {
-        "hint0": "Fornisce ☁️database per monitorare e rimuovere giocatori con file problematici da diversi server Battlefield in tutto il mondo",
-        "hint1": "Sia BF1 che BF2042 supportano le query del lettore di file problematico, consentendo di monitorare diversi server Battlefield da tutto il mondo.",
-        "hint2": "Tutto è controllato dalla community, aperto e trasparente, e fornisce servizi gratuiti a chiunque acceda a BFBAN"
+        "hint0": "Fornisci ☁️database in modo che i giocatori di diversi server Battlefield in tutto il mondo possano monitorare e rimuovere i giocatori con file problematici",
+        "hint1": "Non importa da BF1 a BF2042, supporta la query del lettore di file di domande, in modo da poter monitorare diversi server Battlefield da tutto il mondo"
       },
-      "h3": "Crea un archivio globale dei giocatori che imbrogliano",
-      "h4": "Diventa un membro di noi: mantieni l'ambiente comunitario",
-      "subButton": "Scopri quali comunità hanno aderito"
+      "h3": "Costruisci un archivio globale di giocatori che imbrogliano",
+      "h4": "Diventa uno di noi - Mantenere un ambiente comunitario",
+      "subButton": "Scopri quali community hanno già aderito"
     },
     "seo": {
-      "description": "Sito web ufficiale di Lianban, crea un archivio globale di giocatori imbroglioni, diventa un membro di noi per mantenere l'ambiente della comunità",
-      "keywords": "divieto congiunto, ufficio congiunto, ufficio congiunto, ufficio congiunto del divieto, situazione del campo di battaglia, campo di battaglia"
+      "description": "Sito ufficiale di BFban, crea un archivio globale di giocatori che imbrogliano, diventa un membro di noi per mantenere l'ambiente della comunità",
+      "keywords": "联ban,联办,联办局,联ban局,战地风云,战地"
     },
     "title": "prima pagina"
   },
   "link": {
-    "join": "Unisciti a un partner",
-    "languageMembers": "Contributi eccezionali alla traduzione",
-    "languageMembersDescribe": "Con la presente lodiamo quei membri che hanno contribuito con testi di traduzione gratuiti e sono disposti a dedicare tempo alla correzione di bozze delle lingue localizzate.",
+    "join": "unisciti al compagno",
+    "languageMembers": "contributo eccezionale traduzione",
+    "languageMembersDescribe": "I membri che contribuiscono pro bono alla traduzione di testi, disposti a dedicare il loro tempo alla correzione di bozze in lingue localizzate, sono encomiati",
     "linkWebDeveloperChild": "Membro eccezionale per lo sviluppo del contributo",
-    "linkWebDeveloperDescribe": "Questo per lodare quei membri che hanno partecipato gratuitamente allo sviluppo del programma BFBAN, come pionieri e pionieri della pietra angolare di BFBAN.",
-    "links": "Collegamento amichevole",
-    "sponsor": "Partner",
-    "title": "Dettagli del collegamento amico"
+    "linkWebDeveloperDescribe": "I membri che hanno partecipato allo sviluppo del programma BFBAN senza compenso sono encomiati come pionieri della pietra angolare di BFBAN",
+    "links": "catena di amici",
+    "sponsor": "Compagno",
+    "title": "Dettagli della catena degli amici"
   },
   "list": {
     "colums": {
-      "playerId": "ID del gioco",
-      "reportTime": "Segnala il tempo",
+      "playerId": "identità di gioco",
+      "reportTime": "tempo di segnalazione",
       "screenTitle": "filtro",
-      "updateTime": "Ora dell'aggiornamento"
+      "updateTime": "tempo di aggiornamento"
     },
     "filters": {
       "sortBy": {
-        "commentsNum": "Risposte in ordine decrescente",
-        "createTime": "Riporta in ordine cronologico inverso",
-        "updateTime": "Aggiorna l'ora in ordine inverso",
-        "viewNum": "In ordine decrescente di numero di spettatori"
+        "commentsNum": "Numero di risposte in ordine decrescente",
+        "createTime": "Rapporto in ordine cronologico inverso",
+        "updateTime": "Aggiornamento in ordine cronologico inverso",
+        "viewNum": "Spettatori in ordine inverso"
       },
-      "sortByTitle": "ordinare per"
+      "sortByTitle": "ordina per"
     },
     "reportTime": "Intervallo di tempo del rapporto",
-    "title": "banca dati dei giocatori",
-    "updateTime": "Aggiorna intervallo di tempo"
+    "title": "Annuncio plug-in",
+    "updateTime": "aggiornare la fascia oraria"
   },
   "misc": {
-    "progress": "Caricamento...",
+    "progress": "caricamento...",
     "uploadImage": {
-      "desktop": "Fare clic o trascinare per caricare...",
-      "fail": "Limite massimo di caricamento superato, immagine 2M",
-      "info": "Carica immagini, non più di 2 milioni",
-      "mobile": "Fare doppio clic sullo schermo per caricare..."
+      "desktop": "Clicca o trascina per caricare...",
+      "fail": "Superato il limite massimo di upload, foto 2M",
+      "info": "Carica immagini, non più di 2M",
+      "mobile": "Tocca due volte lo schermo per caricare..."
     },
     "uploadVideo": {
       "desktop": "Fare clic o trascinare il file qui per caricarlo",
-      "info": "Carica video, non più di 30 milioni"
+      "info": "Carica video, non più di 30M"
     }
   },
   "player_list": {
     "seo": {
-      "description": "Elenco dei giocatori, che contiene i file dei giocatori segnalati dall'utente",
-      "keywords": "elenco giocatori, elenco"
+      "description": "Elenco dei giocatori, qui contiene il profilo del giocatore segnalato dall'utente",
+      "keywords": "elenco dei giocatori, elenco"
     },
-    "title": "banca dati dei giocatori"
+    "title": "database dei giocatori"
   },
   "profile": {
-    "achievement": {
-      "title": "Risultato",
-      "acquisitionTime": "Orario di raccolta",
-      "conditions": "Come ottenerlo",
-      "getButton": "Ottieni risultati adesso",
-      "exp": "esperienza di realizzazione",
-      "owned": "Hai già dei risultati",
-      "rarity": {
-        "normal": "ordinario",
-        "rare": "raro",
-        "preciousness": "prezioso",
-        "special": "speciale"
-      },
-      "list": {
-        "trend_monthly_assemble": {
-          "name": "Attrazioni popolari (mese)",
-          "description": "Inserito nella classifica dei casi popolari questo mese"
-        },
-        "trend_monthly_l1": {
-          "name": "Attrazioni popolari",
-          "conditions": "- Il caso è tra i 10 TOP più popolari questo mese<br>- Il conto corrente è associato al giocatore il cui caso è stato segnalato<br>- Il giro delle casse è maggiore che uguale a 100",
-          "description": "Attrazioni popolari😁"
-        },
-        "trend_monthly_l2": {
-          "name": "Attrazioni popolari 2",
-          "conditions": "- Il caso è tra i 10 TOP più popolari questo mese<br>- Il conto corrente è associato al giocatore il cui caso è stato segnalato<br>- Il valore di popolarità è maggiore di Uguale a 3 o più<br>- case tour maggiore o uguale a 500",
-          "description": "Check-in frequenti nelle attrazioni più famose"
-        },
-        "user_innocent_case": {
-          "name": "Atterraggio sicuro",
-          "conditions": "- Esiste una pratica associata a questo conto nel BAN <br> - Stato autocertificazione stato della pratica",
-          "description": "Caso non valido"
-        },
-        "user_achievement_assemble": {
-          "name": "collezionista di risultati",
-          "description": "Collezionista di obiettivi (questo obiettivo non verrà visualizzato nell'elenco, sarà visibile solo a te)"
-        },
-        "user_achievement_l1": {
-          "name": "Risultati 1",
-          "conditions": "- Ha 3 risultati",
-          "description": "Sono stati ottenuti 3 risultati"
-        },
-        "user_achievement_l2": {
-          "name": "Risultati 2",
-          "conditions": "- Avere più di 10 risultati",
-          "description": "Avere più di 10 risultati"
-        },
-        "user_achievement_l3": {
-          "name": "Realizzazione 3",
-          "conditions": "- Avere più di 10 risultati <br> - 10 risultati includono 1 risultato prezioso",
-          "description": "Ottieni più di 10 obiettivi, incluso 1 prezioso"
-        },
-        "user_achievement_l4": {
-          "name": "Realizzazione 4",
-          "conditions": "- Avere più di 15 risultati <br> - 10 risultati includono 3 preziosi risultati",
-          "description": "Ottieni più di 15 risultati, inclusi 3 preziosi"
-        },
-        "active_community_weekly_assemble": {
-          "name": "Contributo settimanale",
-          "description": "Contributi cumulativi degli utenti alla comunità in una settimana (7 giorni)"
-        },
-        "active_community_weekly_l1": {
-          "name": "Contributo comunitario della settimana",
-          "conditions": "- I primi 10 utenti nelle classifiche statistiche di partecipazione alla community di questa settimana <br> - Nessun utente escluso o inserito nella lista nera <br> - Account non robot",
-          "description": "I 10 migliori contributi della community della settimana"
-        },
-        "active_community_monthly_assemble": {
-          "name": "contributo mensile",
-          "description": "Contributi cumulativi degli utenti alla comunità entro un mese"
-        },
-        "active_community_monthly_l1": {
-          "name": "Un mese di contributo comunitario",
-          "conditions": "- Primi 10 utenti nelle classifiche statistiche di partecipazione alla comunità di questo mese <br> - Nessun utente bannato o inserito nella lista nera <br> - Account non robot",
-          "description": "I 10 migliori contributi della community di gennaio"
-        },
-        "active_community_monthly_l2": {
-          "name": "Un mese di contributo comunitario",
-          "conditions": "- Primi 3 utenti nelle classifiche statistiche di partecipazione alla comunità di questo mese <br> - Nessun utente bannato o inserito nella lista nera <br> - Account non robot",
-          "description": "I 3 principali contributi della community di gennaio"
-        },
-        "active_community_yearly_assemble": {
-          "name": "contributo annuale",
-          "description": "Contributi cumulativi degli utenti alla comunità entro un anno"
-        },
-        "active_community_yearly_l1": {
-          "name": "Un anno di contributo comunitario",
-          "conditions": "- Primi 10 utenti nelle classifiche statistiche di partecipazione alla comunità di quest'anno <br> - Nessun utente bannato o inserito nella lista nera <br> - Account non robot",
-          "description": "I 10 migliori contributi della community in un anno"
-        },
-        "active_community_yearly_l2": {
-          "name": "Un anno di contributo comunitario",
-          "conditions": "- I primi 3 utenti nelle classifiche statistiche di partecipazione alla comunità di quest'anno <br> - Nessun utente bannato o inserito nella lista nera <br> - Account non robot",
-          "description": "I 3 principali contributi della community in un anno"
-        },
-        "old_user": {
-          "name": "vecchio utente",
-          "conditions": "- L'ora di creazione è precedente al 1 gennaio 2024 <br> - L'ID utente è compreso tra 10000 (incluso 10000) <br> (soddisfatto a allo stesso tempo)",
-          "description": "Il primo gruppo di utenti registrati di Lianban Pioneer"
-        },
-        "open_chat_assemble": {
-          "name": "chiacchierata",
-          "description": "Completa la chat condizionale corrispondente"
-        },
-        "open_chat_l1": {
-          "name": "chat aperta",
-          "conditions": "- Apri un account per chattare",
-          "description": "Sentiti libero di parlare con me in qualsiasi momento"
-        },
-        "open_chat_l2": {
-          "name": "messaggio ricevuto",
-          "conditions": "- Apri un account per chattare <br> - Ricevuto e letto messaggi entro un mese <br> (soddisfatto allo stesso tempo)",
-          "description": "Il primo passo nella comunicazione"
-        },
-        "one_search_player": {
-          "name": "Cerco giocatori per la prima volta",
-          "conditions": "- Utilizzare il sito Web per cercare i casi",
-          "description": "Utilizza il sito per cercare giocatori e visualizzare i casi"
-        },
-        "report_assemble": {
-          "name": "rapporto",
-          "description": "Invia un certo numero di segnalazioni e martelli di pietra per ottenere risultati <i>-Che ci siano sempre meno segnalazioni</i>"
-        },
-        "report_l1": {
-          "name": "Segnala principiante",
-          "conditions": "- Segnala 10 giocatori <br> - Statistiche a partire dal 2024 01-01<br> - Account non bot",
-          "description": "Esplorazione preliminare di come utilizzare BAN"
-        },
-        "report_l2": {
-          "name": "Iniziare con il reporting",
-          "conditions": "- Segnala 100 giocatori <br> - Sistema a partire dal 2024 01-01 <br> - E la percentuale di casi di martello di pietra efficaci è superiore a 96%<intervallo class='notranslate'><br></span>- Account non robot",
-          "description": "Solo 100 dati"
-        },
-        "report_l3": {
-          "name": "Maestro del rapporto",
-          "conditions": "- Segnala 300 giocatori <br> - Sistema a partire dal 2024 01-01 <br> - E la percentuale di casi di martello di pietra efficaci è superiore a 96%<intervallo class='notranslate'><br></span>- Account non robot",
-          "description": "Posso riconoscerti solo guardandoti"
-        },
-        "report_l4": {
-          "name": "Esperto di relazioni",
-          "conditions": "- Segnala 1.000 giocatori <br> - Sistema a partire dal 01-01-2024 <br> - E la percentuale di casi di martello di pietra efficaci è superiore a 96%<intervallo class='notranslate'><br></span>- Account non robot",
-          "description": "Mi aspettavo quello che ti aspettavi"
-        },
-        "report_l5": {
-          "name": "Segnala un tutor",
-          "conditions": "- Segnalati 5.000 giocatori <br> - A partire dal 01-01 2024 <br> - E la percentuale di casi di martello di pietra efficaci è superiore a 96 %< intervallo class='notranslate'><br></span>- Account non robot",
-          "description": "Hai solo bisogno di questa condizione di raggiungimento, non è necessario descrivere nulla"
-        },
-        "user_subscribes_assemble": {
-          "name": "monitoraggio dei casi",
-          "description": "Completare il monitoraggio del caso corrispondente"
-        },
-        "user_subscribes_l1": {
-          "name": "occhi del cacciatore 1",
-          "conditions": "- Tieni traccia del primo caso <br> - Account normale",
-          "description": "I cacciatori terranno sempre d'occhio la loro preda"
-        },
-        "user_subscribes_l2": {
-          "name": "Gli occhi del cacciatore 2",
-          "conditions": "- Tieni traccia di un numero sufficiente di 20 casi <br> - Account normale",
-          "description": "un cacciatore maturo"
-        },
-        "site_20w_report_witnesses": {
-          "name": "20W per denunciare testimoni",
-          "conditions": "- Quando il rapporto del sito web supera i 20 W, tutti gli utenti possono ottenerlo",
-          "description": "200.000 non è qualcosa che valga la pena festeggiare per noi. Ci auguriamo che questo risultato non richieda di riceverlo."
-        }
-      }
-    },
-    "reports": {
-      "title": "Il mio rapporto"
-    },
-    "space": {
+    "account": {
       "form": {
         "allowDM": "Se ricevere la chat",
-        "allowDMdescribe": "Se accettare il messaggio Per ulteriori informazioni sul messaggio, andare su [Elenco messaggi] per visualizzarlo",
-        "changeNameLeft": "Numero di modifiche rimanenti del nome utente",
-        "createTime": "Orario di registrazione",
-        "description": "Profilo utente",
-        "introduction": "presentati",
-        "language": "lingua preferita",
-        "languageSyncDescribe": "Imposta questa opzione per sincronizzare la lingua locale del programma dopo l'accesso. Se esci, tornerai alla lingua mantenuta dal programma locale.",
-        "lastSigninIP": "IP dell'ultimo accesso",
-        "modifyDescription": "Modifica profilo utente",
-        "originEmail": "E-mail dell'account EA",
-        "originName": "Nome dell'account EA",
-        "originPersonaId": "PID dell'EA",
-        "originUserId": "UID dell'EA",
+        "allowDMdescribe": "Se accettare il messaggio Per ulteriori informazioni sui messaggi, vai a [Elenco messaggi] per visualizzare",
+        "introduction": "Autointroduzione",
+        "language": "impostazione della lingua",
+        "languageSyncDescribe": "Imposta questa opzione per sincronizzare la lingua locale del programma dopo l'accesso. Se ti disconnetti, tornerà alla lingua persistente del programma locale",
         "privilege": "identità",
-        "privileges": "Autorizzazioni",
-        "registerIP": "IP al momento della registrazione",
-        "showOrigin": "Informazioni EA visibili",
-        "showOriginDescribe": "Se rendere visibile il tuo account EA associato in BFBAN",
-        "showAchievement": "conquiste pubbliche",
-        "AD": "pubblicizzare",
-        "ADDescribe": "Puoi rifiutare il servizio di annunci e il sito rimarrà aperto per pubblica utilità, disattiva l'interruttore e tutta la pubblicità sul sito verrà interrotta",
-        "signoutTime": "Orario di disconnessione",
-        "username": "nome utente"
+        "showOrigin": "Informazioni sull'Origin visibili",
+        "showOriginDescribe": "Se rendere visibile la tua Origin associata in BFBAN"
       },
       "modifyName": {
-        "residueDegree": "Il numero di modifiche al nome attualmente rimanenti {changeNameLeft}",
-        "specification1": "Stai modificando il nome del tuo account, il che significa che verrà modificato quando lo vedrai sul sito web e allo stesso tempo <b>ID di accesso</b> cambia contemporaneamente. Se dimentichi accidentalmente il nuovo ID account, potresti non essere in grado di recuperare questo account, il che influirà sull'account di origine associato revisione manuale molto lunga.",
-        "specification2": "Capisci la spiegazione sopra?",
+        "residueDegree": "Il numero di volte per modificare il nome {changeNameLeft} è attualmente disponibile",
+        "specification1": "Stai modificando il nome del tuo account, il che significa che tutto ciò che viene visualizzato sul sito web cambierà e contemporaneamente cambierà anche l'<b>ID di accesso</b>. Se dimentichi accidentalmente il nuovo ID dell'account, potresti non essere in grado di recuperare questo account, che influirà sull'associazione Per un account di origine designato, è necessario superare una revisione manuale molto lunga.",
+        "specification2": "Capisci la spiegazione di cui sopra?",
         "steps": {
           "0": {
             "title": "suggerimento"
           },
           "1": {
-            "title": "riempire"
+            "title": "compilare"
           },
           "2": {
             "title": "Fine"
           }
         },
-        "title": "Modifica nome"
+        "title": "modifica nome"
       },
       "title": "Impostazioni delle informazioni sull'account"
     },
     "admin": {
       "menu": {
-        "adminLog": "Gestisci i log",
-        "adminOperation": "Gestire il registro delle operazioni del caso",
-        "adminOperationLog": "Registro delle operazioni del sito Web dell'amministratore",
-        "blockedUsers": "Utenti nella lista nera",
-        "comment": "Gestione dei commenti",
-        "fileManagement": "Gestione multimediale",
-        "files": "elenco dei file",
+        "adminLog": "registro di gestione",
+        "adminOperation": "Gestisci il registro delle operazioni del caso",
+        "adminOperationLog": "Registro delle operazioni del sito di amministrazione",
+        "blockedUsers": "utenti della lista nera",
+        "comment": "gestione dei commenti",
         "home": "Gestisci la home page",
-        "judgementLog": "Registro delle sentenze",
+        "judgementLog": "registro dei verdetti",
         "log": "tronco d'albero",
         "management": "contenuto",
-        "message": "informazioni",
+        "message": "informazione",
         "messageList": "Contenuto del messaggio",
-        "messageManagement": "informazioni",
-        "messagePush": "Spingere",
-        "muteUsers": "Escludere l'utente",
+        "messageManagement": "informazione",
+        "messagePush": "messaggio Push",
+        "muteUsers": "banna utente",
         "user": "Gestione utenti",
         "verifications": "validatore"
       },
-      "title": "Contesto gestionale"
+      "title": "Sfondo di gestione"
     },
     "appearance": {
       "title": "pelle"
     },
     "chat": {
-      "control": "Modifica in batch",
-      "download": "scaricamento",
+      "control": "modifica in blocco",
       "load": "aggiornare",
       "look": "Controllo",
-      "placeholder": "Compila il messaggio da inviare",
+      "placeholder": "Compila il messaggio inviato",
       "tabsList": {
         "form": {
           "del": "eliminare",
           "read": "Leggere",
-          "unread": "non letto"
+          "unread": "Non letto"
         },
-        "itemName": "Elenco dei messaggi"
+        "itemName": "elenco messaggi"
       },
       "tabsSend": {
         "content": "contenuto",
-        "itemName": "Spingere",
-        "messageID": "ID del sito",
+        "itemName": "spingere",
+        "messageID": "ID sito",
         "messageMethod": "tipo"
       },
-      "title": "informazioni",
+      "title": "informazione",
       "types": {
         "command": {
-          "describe": "Istruzioni per il servizio personalizzato",
+          "describe": "comando di servizio personalizzato",
           "text": "Ordine"
         },
         "direct": {
-          "describe": "Invia \"chat\" all'utente",
+          "describe": "Invia 'chat' all'utente",
           "text": "chiacchierata"
         },
         "fatal": {
-          "describe": "Invia \"avviso\" all'utente",
+          "describe": "Invia un 'avviso' all'utente",
           "text": "chiacchierata"
         },
         "toAdmins": {
           "describe": "Invia un messaggio a tutti gli amministratori del sito",
-          "text": "Tutti gli amministratori"
+          "text": "tutti gli amministratori"
         },
         "toAll": {
-          "describe": "Invia i contenuti a tutti sul sito",
+          "describe": "Invia contenuti a tutti sul sito",
           "text": "tutti"
         },
         "toNormals": {
-          "describe": "Invia messaggi a tutti gli utenti con permessi normali",
+          "describe": "Invia un messaggio a tutti gli utenti con privilegi normali",
           "text": "utente normale"
         },
         "warn": {
-          "describe": "Invia messaggi di sistema",
+          "describe": "messaggio di sistema push",
           "text": "sistema"
         }
       }
@@ -959,248 +609,234 @@
     "enhance": {
       "public": {
         "autoUpdatePlayerList": {
-          "describe": "Fornisci aggiornamento automatico agli amministratori, presta attenzione ai giocatori non elaborati e crea promemoria sul sito",
-          "name": "Promemoria non elaborato"
+          "describe": "Fornire aggiornamento automatico per gli amministratori, prestare attenzione ai giocatori non elaborati e creare promemoria in loco",
+          "name": "Promemoria non gestito"
         },
         "desktopNotifiction": {
-          "describe": "Notifica popup nella finestra di sistema",
-          "name": "Notifiche sul desktop"
+          "describe": "Notifiche pop-up nella finestra di sistema",
+          "name": "notifica sul desktop"
         },
         "footerBar": {
-          "describe": "La barra degli strumenti collegata alla parte superiore del sito Web fornisce agli utenti funzioni come l'attenzione continua ai giocatori.",
+          "describe": "La barra degli strumenti collegata alla parte superiore del sito Web fornisce agli utenti funzioni come l'attenzione continua dei giocatori",
           "name": "barra degli strumenti inferiore"
         }
       },
       "title": "valorizzazione locale"
     },
     "exportAndImport": {
-      "description": "I dati persistenti locali non verranno sincronizzati con il cloud e dovrai esportare e importare manualmente i dati sulla nuova piattaforma. Naturalmente, queste fughe di dati non influiranno sulla sicurezza del tuo account, ma contengono alcuni record.",
-      "hint1": "Non importare dati in un ambiente sconosciuto. Il contenuto esportato contiene alcune delle tue informazioni private locali.",
-      "hint2": "Operare con cautela, la sovrascrittura non può essere ripristinata",
+      "description": "I dati persistenti locali non verranno sincronizzati con il cloud e dovrai esportare e importare manualmente i dati sulla nuova piattaforma.Naturalmente, queste perdite di dati non influiranno sulla sicurezza del tuo account, ma contengono alcuni record",
+      "hint1": "Non importare dati in ambienti sconosciuti, il contenuto esportato contiene alcune delle tue informazioni private locali",
+      "hint2": "Procedi con cautela, la sovrascrittura non può essere annullata",
       "title": "Esportare e importare"
     },
     "history": {
       "title": "storia"
     },
     "media": {
-      "capacity": "stato di capacità",
-      "hint1": "Ogni account ha una larghezza di banda di caricamento giornaliera, un numero di file e un limite di dimensione individuale, ma verrà ripristinato la data successiva, ma è disponibile un numero di file da caricare per ciascun account. I file con requisiti di archiviazione bassi possono essere sostituiti da altri dischi di rete del sito Web.",
-      "maxFileNumber": "Numero di file che possono essere caricati",
-      "maxTrafficQuota": "dimensione massima del file",
-      "prevResetTime": "Reimposta la data limite",
-      "title": "biblioteca multimediale",
-      "todayFileNumber": "File caricati oggi",
-      "todayTrafficQuota": "La quota di traffico di oggi",
-      "usedStorageQuota": "Quota di archiviazione totale"
+      "capacity": "capacità",
+      "fileNum": "{num} documenti",
+      "title": "Libreria multimediale"
     },
-    "meet": "Bentornato{name}!",
+    "meet": "Bentornato {name}!",
     "subscribes": {
       "title": "traccia"
     },
-    "title": "impostazioni personali",
+    "title": "Impostazioni personali",
     "voice": {
       "backgroundMusic": "suono di sottofondo",
-      "backgroundMusicDescribe": "musica di sottofondo",
+      "backgroundMusicDescribe": "Musica di sottofondo",
       "interaction": "suono interattivo",
-      "interactionDescribe": "Alcuni suoni interattivi sul sito",
-      "message": "Suono di notifica dei messaggi",
-      "messageDescribe": "Suoni di notifica relativi ai messaggi del sito",
+      "interactionDescribe": "Alcune voci interattive sul sito web",
+      "message": "suono di notifica del messaggio",
+      "messageDescribe": "Suoni di notifica relativi ai messaggi nel sito",
       "title": "suono",
       "video": "video",
-      "videoDescribe": "suono del video del sito web"
+      "videoDescribe": "Suono video del sito web"
     }
   },
   "report": {
     "button": {
-      "continue": "continuare",
+      "continue": "Continua",
       "leave": "Partire"
     },
     "info": {
-      "description": "🤝 Requisiti di contenuto di base:\n- Non inviare qui alcuna informazione privata del giornalista\n- I collegamenti video possono essere incollati su di esso, il che è utile per promemoria e indicizzazioni accattivanti\n- Si prega di descrivere chiaramente il comportamento, le caratteristiche, il luogo e l'ora in cui si è verificato il segnalante, elencare il suo comportamento fraudolento e infine fornire le ragioni\n- Puoi contrassegnare la posizione e aggiungere istruzioni agli screenshot e ai video forniti\n\n⚠️ Per favore, non limitarti a compilare il semplice metodo cheat senza fornire alcuna prova diretta\n⚠️ Se effettui più segnalazioni prive di significato/dannose, il tuo account verrà inserito nella lista nera",
-      "fromDatabaseOneId": "Seleziona dal database BAN",
-      "idNotion1": "Inserisci solo un ID alla volta. Non includere il nome della squadra o il tuo ID.",
-      "idNotion2": "L'ID del gioco non fa distinzione tra maiuscole e minuscole, ma presta particolare attenzione a distinguere i I 1 l L o O 0 e inserisci correttamente l'ID del rapporto.",
-      "loginExpired": "Il tuo login è scaduto, effettua nuovamente l'accesso",
-      "notFoundHintAnswer1": "Vai su ea.com per cercare il lettore. Se riesci a trovarlo ma non riesci a segnalarlo, puoi andare alle informazioni di contatto nella parte inferiore della home page per segnalare un bug.",
-      "notFoundHintAnswer2": "Ciò potrebbe essere dovuto al fatto che il database EA non viene aggiornato in tempo o si tratta di un bug ufficiale di EA. Non abbiamo modo di risolverlo per loro. Se vuoi aiutare, puoi andare su https://answers.ea. com/t5/Origin-Client-Web -Technical/bd-p/origin-technical-issues-en Forum di feedback ufficiale per segnalare bug, questa situazione può essere descritta come non riesco a cercare il mio amico per nome su origin",
-      "notFoundHintQuestion1": "Ma l'ho appena visto nel gioco/l'ho trovato sull'app di controllo del punteggio?",
-      "notFoundHintQuestion2": "Non riesco a trovarlo su EA, cosa succede?",
-      "notFoundHintTitle": "Non riusciamo a trovare il giocatore",
-      "reportAll": "Segnala tutto",
-      "reportHacker": "Segnala un imbroglio",
-      "reportOne": "Segnalane uno solo",
-      "required": "Indirizzo video",
-      "uploadManual1": "Puoi inoltre fornire collegamenti di condivisione o indirizzi di file di origine accessibili da siti Web di video come Youku, Tudou, Acfun consigliato, Bilibili ecc. [Disco di rete vietato], fare clic sul pulsante Aggiungi per incollarlo di seguito",
-      "uploadManual2": "Seleziona un collegamento a un sito Web di video valido per molto tempo. Non caricare video sul disco di rete.",
-      "uploadPic1": "Si consiglia di caricare immagini nei formati png, jpg, jpeg, gif",
-      "uploadPic2": "Se l'immagine è più grande di 2 M o il caricamento non riesce, puoi andare su",
-      "uploadPic3": "Quindi seleziona la scheda URL immagine e incolla il collegamento dell'immagine di seguito",
-      "uploadPic4": "Elenca prove sufficienti. L'editor supporta il caricamento di immagini (limite 2M)"
+      "description": "Descrivi chiaramente il comportamento, le caratteristiche, il luogo e l'ora in cui si è verificato l'informatore, elenca il suo comportamento imbroglione e fornisci il motivo finale della segnalazione",
+      "fromDatabaseOneId": "Selezionato dal database BFBAN",
+      "idNotion1": "Inserisci solo un ID alla volta, non scrivere il nome della squadra, non scrivere il tuo ID",
+      "idNotion2": "L'ID del gioco non fa distinzione tra maiuscole e minuscole, ma presta particolare attenzione a distinguere i I 1 l L o O 0 e inserisci correttamente l'ID del rapporto",
+      "loginExpired": "Il tuo login è scaduto, effettua nuovamente il login",
+      "notFoundHintAnswer1": "Vai su origin.com per cercare il lettore. Se riesci a trovare il lettore ma non puoi segnalarlo, puoi segnalare bug nelle informazioni di contatto nella parte inferiore della home page.",
+      "notFoundHintAnswer2": "Ciò potrebbe essere dovuto al fatto che il database EA non viene aggiornato in tempo, o bug ufficiale di EA, non possiamo risolverlo per loro, se vuoi aiutare, puoi andare su https://answers.ea.com/t5/Origin -Client-Web -Technical/bd-p/origin-technical-issues-en bug di feedback del forum di feedback ufficiale, questa situazione può essere descritta in quanto non riesco a cercare il mio amico per nome sull'origine",
+      "notFoundHintQuestion1": "Ma l'ho appena visto nel gioco/l'ho cercato nell'app di registrazione?",
+      "notFoundHintQuestion2": "Non riesco a trovarlo su Origin, cosa sta succedendo?",
+      "notFoundHintTitle": "Non siamo riusciti a trovare il giocatore",
+      "onlyOneId": "Un solo ID origine alla volta",
+      "reportAll": "denuncia tutto",
+      "reportHacker": "denuncia il tradimento",
+      "reportOne": "Segnala un singolo",
+      "required": "indirizzo video",
+      "uploadManual1": "Se non vuoi registrare un account domestico e lo trovi problematico, puoi andare a",
+      "uploadManual2": "Quindi incolla l'indirizzo qui sotto",
+      "uploadManual3": "Può essere Youku, Tudou, stazione AB, ecc. Collegamento al sito web del video",
+      "uploadPic1": "Si consiglia di caricare immagini in formato png, jpg, jpeg, gif",
+      "uploadPic2": "Se l'immagine è più grande di 2 M o non è stata caricata, puoi andare su",
+      "uploadPic3": "Quindi seleziona la scheda URL immagine e incolla il link dell'immagine qui sotto",
+      "uploadPic4": "Si prega di elencare prove sufficienti, l'editor supporta il caricamento di immagini (limite 2M)"
     },
     "labels": {
-      "types": {
-        "originName": {
-          "name": "Nome utente",
-          "hint": "Nome utente abbreviazione della piattaforma o nome utente della piattaforma",
-          "placeholder": "Esiste un solo nome EA alla volta"
-        },
-        "originPersonaId": {
-          "name": "Identificatore di identità del ruolo (PID)",
-          "hint": "Character ID (PID), che può essere ottenuto tramite la piattaforma di gioco o strumenti di terze parti, ed è composto da numeri",
-          "placeholder": "EA PersonaId, composto da numeri, solo uno alla volta"
-        },
-        "originUserId": {
-          "name": "Identificatore utente (UID)",
-          "hint": "L'identificazione dell'utente (UID), che può essere ottenuta tramite la piattaforma di gioco o strumenti di terze parti, è composta da numeri",
-          "placeholder": "EA UserId, composto da numeri, solo uno alla volta"
-        }
-      },
-      "cheatMethod": "Metodi di imbroglio",
+      "cheatMethod": "metodo barare",
       "description": "descrivere",
       "game": "gioco",
-      "hackerId": "imbroglione"
+      "hackerId": "Nome imbroglione (ID)"
     },
     "messages": {
       "failureSubtitle": "Segnalazione non riuscita, {msg}",
       "failureTitle": "fallire",
-      "mediaEvidence": "Si prega di caricare una foto o inserire il collegamento al video",
+      "mediaEvidence": "Carica un'immagine o inserisci il link del video",
       "originIdNotExist": "L'ID del gioco non esiste, controlla l'ortografia",
       "permissionDenied": "Nessun permesso",
       "successSubtitle": "Grazie per la tua segnalazione",
-      "successTitle": "Invio riuscito",
-      "videoBadFormat": "Errore di formato",
-      "videoEmpty": "Indirizzo video vuoto"
+      "successTitle": "Inviato con successo",
+      "tipBind": "Associa il tuo account Origin e invia il rapporto in un secondo momento",
+      "videoBadFormat": "formato errato",
+      "videoEmpty": "URL del video vuoto"
     },
     "seo": {
-      "description": "Rapporto del giocatore",
-      "keywords": "divieto congiunto, ufficio congiunto, situazione del campo di battaglia, campo di battaglia"
+      "description": "rapporto del giocatore",
+      "keywords": "联ban,联办,战地风云,战地"
     },
     "title": "rapporto"
   },
   "reset": {
     "form": {
-      "newPassword": "Nuova parola d'ordine",
-      "oldPassword": "Vecchia parola d'ordine",
-      "password": "Nuova parola d'ordine",
+      "newPassword": "nuova password",
+      "oldPassword": "vecchia password",
+      "password": "nuova password",
       "passwordRepeat": "Conferma password"
     },
-    "title": "reimpostare la password"
+    "title": "Resetta la password"
   },
   "search": {
     "collectionHint": "Aggiungi questa pagina ai segnalibri (Ctrl+D o Comando+D)",
     "describe": "Recupera l'ID dal database BFBAN",
-    "notExist": "Impossibile trovare i dati",
+    "notUserExist": "Miao~, questa informazione non può essere trovata nel database",
     "placeholder": "Cosa vuoi cercare?",
     "sort": {
       "default": "predefinito",
       "latest": "aggiornato",
-      "mostComments": "La maggior parte dei commenti",
-      "mostViewed": "I più visti"
+      "mostComments": "più commentato",
+      "mostViewed": "guarda il più alto"
     },
     "tabs": {
       "comment": "Commento",
       "player": "caso",
       "user": "utente"
     },
-    "title": "Ricerca"
+    "title": "recuperare"
   },
   "share": {
     "iframe": {
-      "code": "Incorpora il codice",
-      "name": "Sito Web incorporato",
+      "code": "codice di incorporamento",
+      "name": "Sito web incorporato",
       "size": "misurare",
       "theme": "tema"
     },
     "image": {
-      "describe": "Genera uno screenshot delle informazioni del report",
-      "generate": "Genera immagini",
+      "describe": "Genera uno screenshot del rapporto",
+      "generate": "generare immagine",
       "name": "immagine"
     },
     "link": {
-      "linkUrl": "collegamento ipertestuale",
+      "linkUrl": "Collegamento ipertestuale",
       "name": "modulo di collegamento",
-      "textLink": "indirizzo di testo",
-      "textLinkContent": "{webname} - ha condiviso un giocatore, indirizzo: {url}",
+      "textLink": "indirizzo testuale",
+      "textLinkContent": "{webname} - ha condiviso un giocatore su: {url}",
       "webHtmlLink": "codice di rete"
     },
     "title": "condividere"
   },
   "signin": {
-    "failed": "Errore di accesso",
-    "fillEverything": "I dati di accesso sono incompleti, compilali correttamente",
+    "failed": "Accesso non riuscito",
+    "fillEverything": "Si prega di compilare le specifiche",
     "form": {
-      "Feedback": "Domanda di feedback",
-      "forgetPasswordHint": "dimenticare la password?",
-      "password": "password",
-      "submitHint": "Nessun conto? Vai alla registrazione",
-      "username": "Nome utente/e-mail"
+      "forgetPasswordHint": "Password dimenticata?",
+      "password": "parola d'ordine",
+      "submitHint": "Nessun conto? registrare",
+      "username": "nome utente"
     },
-    "loggedIn": "EHI? Per favore disconnettiti prima (✿◡‿◡)",
-    "loginFirst": "Ah?! Per favore, accedi prima",
+    "loggedIn": "Ehi fila? Per favore disconnettiti prima (✿◡‿◡)",
+    "loginFirst": "Eh?! Per favore accedi prima",
+    "success": "accesso riuscito",
     "title": "Login"
   },
   "signup": {
-    "checkAllEmail": "L'e-mail di verifica richiederà del tempo (circa 1 minuto) per arrivare nella tua casella di posta, attendi e ricordati di controllare la cartella spam",
-    "eaPrivacy": "Vai a <a href='https://myaccount.ea.com/cp-ui/privacy/index'>Impostazioni privacy EA </a> per abilitare la ricerca tramite email.",
-    "failed": "Errore di registrazione",
-    "fillIn": "Il contenuto della registrazione è incompleto, si prega di compilare le specifiche",
+    "checkAllEmail": "L'e-mail di verifica impiegherà un po' (circa 1 minuto) ad arrivare nella tua casella di posta, attendi e ricordati di controllare il cestino",
+    "eaPrivacy": "Vai a <a href='https://myaccount.ea.com/cp-ui/privacy/index'>Impostazioni sulla privacy di EA</a> e abilita la ricerca tramite email",
+    "failed": "registrazione fallita",
+    "fillIn": "Si prega di compilare le specifiche",
     "form": {
-      "forgetPasswordHint": "dimenticare la password?",
+      "forgetPasswordHint": "Password dimenticata?",
       "newUsername": "nuovo nome utente",
-      "originEmail": "E-mail dell'account EA",
-      "originId": "ID dell'EA",
+      "originEmail": "Casella di posta dell'account EA",
+      "originId": "EA ID",
       "originName": "Nome dell'account EA",
-      "password": "password",
-      "submitHint": "Hai già un account? Vai al login",
+      "password": "parola d'ordine",
+      "submitHint": "Hai già un account? per accedere",
       "username": "nome utente"
     },
+    "gameNotShowed": "L'account sotto questa casella di posta non contiene giochi",
+    "needVerify": "Vai all'e-mail per verificare l'account",
+    "originBindingExist": "L'account Origin è stato vincolato",
+    "originNotFound": "Nessun account trovato per questo indirizzo email in Origin",
     "placeholder": {
-      "originEmail": "Inserisci la tua email EA",
-      "originName": "Inserisci il tuo nome EA, presta attenzione alle maiuscole",
-      "password": "Password con più di 6 cifre",
-      "username": "Il nome utente deve contenere almeno 4 caratteri e deve essere in inglese, numeri, trattini bassi, segni meno o indirizzi e-mail contenenti nome@ e indirizzo."
+      "originEmail": "Inserisci la tua casella di posta Tangerine",
+      "originId": "opzionale",
+      "originName": "Inserisci il tuo nome Tangerine, presta attenzione alle maiuscole",
+      "password": "6 o più password",
+      "username": "Più di 4 nomi utente Solo inglese, numeri, trattini bassi, segni meno"
     },
+    "playerNotFound": "Il giocatore non può essere trovato (conferma che la ricerca tramite e-mail è abilitata)",
     "registerVerification": {
-      "error": "Errore di verifica dell'account",
-      "failure": "Verifica non riuscita. Ciò potrebbe essere dovuto a un indirizzo di verifica errato, un codice di verifica non valido, un codice di verifica scaduto, ecc.; prova a registrare nuovamente l'account dopo un periodo di tempo.",
-      "successful": "Verifica riuscita! L'account è stato sbloccato e puoi accedere",
-      "title": "Verifica conto",
-      "validation": "Verifica"
+      "error": "Verifica l'errore dell'account",
+      "failure": "Indirizzo di verifica errato, controlla se il codice di verifica è corretto",
+      "successful": "Verifica riuscita!, l'account è stato sbloccato, puoi accedere",
+      "title": "Verifica Account",
+      "validation": "verificando"
     },
     "steps": {
       "0": {
         "supplement": "Nozioni di base sull'account",
-        "title": "Informazioni di base"
+        "title": "informazioni di base"
       },
       "1": {
-        "supplement": "Associato alla piattaforma EA",
-        "title": "legame"
+        "supplement": "Associa la piattaforma di Origin",
+        "title": "legare"
       },
       "2": {
         "supplement": "Verifica se si tratta di un robot",
-        "title": "Codice di verifica"
+        "title": "codice di verifica"
       },
       "3": {
         "supplement": "Codice di verifica e-mail",
-        "title": "confermare"
+        "title": "Confermare"
       },
       "4": {
-        "supplement": "Risultati della registrazione",
+        "supplement": "risultato della registrazione",
         "title": "Fine"
       }
     },
-    "title": "registro"
+    "title": "Registrati",
+    "usernameExist": "questo nome utente è stato registrato"
   },
   "sitestats": {
-    "admins": "Numero totale di amministratori",
-    "achievement": "Classifica del valore ottenuto",
-    "banAppeals": "Appello",
-    "communityParticipation": "Classifica della partecipazione alla comunità degli utenti",
-    "confirmed": "Caso elaborato",
-    "players": "Casi di segnalazione esistenti",
-    "registers": "Utente registrato",
-    "reportRanking": "Classifica del rapporto",
-    "reports": "Un totale di segnalazioni dalla comunità",
+    "admins": "numero totale di amministratori",
+    "banAppeals": "appellato",
+    "communityParticipation": "Classifica di partecipazione alla comunità degli utenti",
+    "confirmed": "Casi trattati",
+    "players": "Casi segnalati esistenti",
+    "registers": "utente registrato",
+    "reportRanking": "Classifica dei rapporti",
+    "reports": "L'intera comunità ha riferito",
     "timeRange": {
       "daily": "Ieri",
       "monthly": "un mese",
@@ -1208,39 +844,29 @@
       "yearly": "un anno"
     },
     "title": "statistiche",
-    "trend": "Popolarità del caso",
-    "netstatus": "stato della rete"
+    "trend": "calore della cassa"
   },
   "textarea": {
-    "originalImage": "immagine originale",
+    "originalImage": "Immagine originale",
     "steps": {
       "media": {
         "0": "scegliere",
         "1": "Controllo"
       },
       "upload": {
-        "0": "Seleziona file",
+        "0": "Seleziona un documento",
         "1": "modificare",
         "2": "Controllo"
       },
       "url": {
-        "0": "Compila l'indirizzo",
+        "0": "Inserisci l'indirizzo",
         "1": "Controllo"
       }
     },
-    "textHelpHint": "Il contenuto statistico contiene tag invisibili, che sono diversi dal contenuto testuale visibile. Fare riferimento a queste statistiche.",
-    "textOverflowHint": "Il contenuto del testo supera la lunghezza massima, accorciarlo opportunamente o inviarlo in sezioni",
     "type": {
-      "media": "biblioteca multimediale",
-      "upload": "caricamento",
-      "url": "Collegamento immagine"
+      "media": "Libreria multimediale",
+      "upload": "Carica sul letto delle immagini",
+      "url": "collegamento immagine"
     }
-  },
-  "externalAuth": {
-    "title": "Autorizzare",
-    "validation": "Autorizzare",
-    "successful": "Autorizzazione avvenuta con successo, puoi chiudere questa pagina",
-    "error": "Autorizzazione fallita",
-    "failure": "Si prega di verificare se tutti i parametri sono corretti"
   }
 }
