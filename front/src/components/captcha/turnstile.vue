@@ -117,7 +117,7 @@ export default {
 
 .captcha.turnstile-wrapper {
   overflow: hidden;
-  width: 140px;
+  width: 177px;
   min-height: 30px;
   height: 40px !important;
   display: flex;
