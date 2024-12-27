@@ -1,25 +1,27 @@
 <template>
   <div class="container announcementView">
-    <br>
+    <br />
     <Row>
-      <Col :xs="{push: 1}" :lg="{push: 0}">
+      <Col :xs="{ push: 1 }" :lg="{ push: 0 }">
         <Breadcrumb>
-          <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem :to="{name: 'announcement'}">{{ $t("home.bulletin.title") }}</BreadcrumbItem>
+          <BreadcrumbItem :to="{ name: 'home' }">{{ $t("header.index") }}</BreadcrumbItem>
+          <BreadcrumbItem :to="{ name: 'announcement' }">{{ $t("home.bulletin.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
     </Row>
-    <br>
+    <br />
 
     <div class="list">
-      <Card class="item" v-for="item in list" :key="item.label">
+      <Card class="item" v-for="item in list" :key="item.route">
         <template #title><span class="ruleName">{{ item.name }}</span></template>
-        <p class="ruleDesc">{{ item.desc.cn }}</p>
+        <p class="ruleDesc">{{ item.desc }}</p>
         <Divider orientation="left" size="small" class="divider">{{ $t("announcement.version") }}</Divider>
         <div class="version">
-          <div v-for="(i, index) in item.list" :key="i" @click="jump(item.route, i)">
-            <!-- <span>{{item.title.cn}}</span> -->
-            <span>{{ i }} <span v-if="index === 0">({{ $t("announcement.latest") }})</span></span>
+          <div v-for="(i, index) in item.versions" :key="i" @click="jump(item.route, i)">
+            <span>
+              {{ i }}
+              <span v-if="index === 0">({{ $t("announcement.latest") }})</span>
+            </span>
           </div>
         </div>
       </Card>
@@ -28,85 +30,49 @@
 </template>
 
 <script>
-const cnPacket = {}
-{
-  const personnel = require.context(`./data/CN/personnel/`, true, /.json$/)
-  const antiCheat = require.context(`./data/CN/antiCheat/`, true, /.json$/)
-  const conduct = require.context(`./data/CN/conduct/`, true, /.json$/)
-  cnPacket.personnel = personnel
-  cnPacket.antiCheat = antiCheat
-  cnPacket.conduct = conduct
-}
-const enPacket = {}
-{
-  const personnel = require.context(`./data/US/personnel/`, true, /.json$/)
-  const antiCheat = require.context(`./data/US/antiCheat/`, true, /.json$/)
-  const conduct = require.context(`./data/US/conduct/`, true, /.json$/)
-  enPacket.personnel = personnel
-  enPacket.antiCheat = antiCheat
-  enPacket.conduct = conduct
-}
 export default {
   data() {
-    return {}
+    return {
+      list: [] // 用于存储加载的配置数据
+    };
   },
-  computed: {
-    list() {
-      const {personnel, antiCheat, conduct} = this.$i18n.locale == "zh-CN" ? cnPacket : enPacket
-      return [
-        {
-          name: this.$i18n.t("announcement.personnel.name"),
-          route: 'personnel',
-          desc: {
-            cn: this.$i18n.t("announcement.personnel.intro")
-          },
-          list: personnel.keys().map(key => this.splitFileName(key).replace('./', '')).reverse()
-        },
-        {
-          name: this.$i18n.t("announcement.antiCheat.name"),
-          route: 'antiCheat',
-          desc: {
-            cn: this.$i18n.t("announcement.antiCheat.intro")
-          },
-          list: antiCheat.keys().map(key => this.splitFileName(key).replace('./', '')).reverse()
-        },
-        {
-          name: this.$i18n.t("announcement.conduct.name"),
-          route: 'conduct',
-          desc: {
-            cn: this.$i18n.t("announcement.conduct.intro")
-          },
-          list: conduct.keys().map(key => this.splitFileName(key).replace('./', '')).reverse()
-        }
-      ]
+  async created() {
+    // 动态加载配置文件
+    const locale = this.$i18n.locale === "zh-CN" ? "CN" : "US";
+    try {
+      const response = await fetch(`/data/config.json`);
+      const config = await response.json();
+      const categories = Object.keys(config[locale]);
+
+      // 动态生成 list
+      this.list = categories.map((key) => ({
+        name: this.$i18n.t(`announcement.${key}.name`),
+        desc: this.$i18n.t(`announcement.${key}.intro`),
+        route: config[locale][key].route,
+        versions: config[locale][key].versions.reverse()
+      }));
+    } catch (error) {
+      console.error("加载配置文件失败:", error);
     }
   },
   methods: {
-    splitFileName(text) {
-      var pattern = /\.{1}[a-z]{1,}$/;
-      if (pattern.exec(text) !== null) {
-        return (text.slice(0, pattern.exec(text).index));
-      } else {
-        return text;
-      }
-    },
     jump(route, date) {
       this.$router.push({
-        name: 'announcementDetails',
+        name: "announcementDetails",
         query: {
-          route, date
+          route,
+          date
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
 .announcementView {
   .list {
     .item {
-      // border-bottom: 1px solid #afb8c1;
       margin-bottom: 30px;
 
       .ruleName {
@@ -114,7 +80,7 @@ export default {
       }
 
       .ruleDesc {
-        opacity: .7;
+        opacity: 0.7;
       }
 
       .divider {
