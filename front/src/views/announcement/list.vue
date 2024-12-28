@@ -40,7 +40,7 @@ export default {
     // 动态加载配置文件
     const locale = this.$i18n.locale === "zh-CN" ? "CN" : "US";
     try {
-      const response = await fetch(`/data/config.json`);
+      const response = await fetch(`/config/announcement.json`);
       const config = await response.json();
       const categories = Object.keys(config[locale]);
 
