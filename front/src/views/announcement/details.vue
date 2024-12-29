@@ -13,15 +13,6 @@
     <br>
 
     <Card dis-hover class="announcement">
-<!--      <div class="title">{{config.name}}</div>-->
-
-<!--      <div class="user">-->
-<!--        <div class="name">{{config.author.name}}</div>-->
-<!--        <div class="date">{{config.date}}</div>-->
-<!--      </div>-->
-<!--      <div class="content">-->
-<!--        <item :data="config.content.nodes" />-->
-<!--      </div>-->
       <div ref="shadowContainer" class="announcementHtmlContent"></div>
     </Card>
   </div>
@@ -63,8 +54,10 @@ export default {
     // text-align: center;
     padding: 30px 10px 10px;
   }
+
   .user {
     margin: 14px 10px 24px;
+
     .name {
       color: rgb(44, 44, 47);
       display: -webkit-box;
@@ -74,15 +67,18 @@ export default {
       text-overflow: ellipsis;
       word-break: break-all;
     }
+
     .date {
       color: rgb(146, 146, 156);
       font-size: 12px;
       font-weight: normal;
       line-height: 1.45;
     }
-  .announcementHtmlContent {
-    width: 100%;
-    min-height: 400px;
+
+    .announcementHtmlContent {
+      width: 100%;
+      min-height: 400px;
+    }
   }
 }
 </style>
