@@ -22,17 +22,12 @@
 <!--      <div class="content">-->
 <!--        <item :data="config.content.nodes" />-->
 <!--      </div>-->
-
-      <div v-html="htmlContent"></div>
-
+      <div ref="shadowContainer" class="announcementHtmlContent"></div>
     </Card>
   </div>
-
 </template>
 
 <script>
-// import item from './components/item.vue'
-// import config from './config'
 export default {
   data() {
     return {
@@ -40,20 +35,22 @@ export default {
     }
   },
   mounted() {
-    const { route, date } = this.$route.query
+    const {route, date} = this.$route.query;
     fetch(`/data/${this.$i18n.locale === "zh-CN" ? "CN" : "US"}/${route}/${date}.html`)
         .then((response) => {
           if (!response.ok) throw new Error("加载 HTML 文件失败！");
           return response.text();
         })
         .then((html) => {
-          this.htmlContent = html;
+          const shadowContainer = this.$refs.shadowContainer;
+          const shadowRoot = shadowContainer.attachShadow({mode: "open"});
+          shadowRoot.innerHTML = html;
         })
         .catch((error) => {
           console.error("HTML 加载错误:", error);
         });
-  },
-}
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -83,6 +80,9 @@ export default {
       font-weight: normal;
       line-height: 1.45;
     }
+  .announcementHtmlContent {
+    width: 100%;
+    min-height: 400px;
   }
 }
 </style>
