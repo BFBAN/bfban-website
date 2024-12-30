@@ -87,13 +87,13 @@
       ]
     },
     {
-      "title": "Netlify",
-      "linkUrl": "https://www.netlify.com",
+      "title": "Cloudflare Pages",
+      "linkUrl": "https://pages.cloudflare.com/",
       "describe": "Provide web hosting services",
       "describeLang": {
         "zh-CN": "提供网页存放服务"
       },
-      "localFilePath": "/images/links/netlify.png",
+      "localFilePath": "/images/links/cloudflare-pages.svg",
       "tag": [
         "host",
         "platinum"
@@ -104,7 +104,7 @@
       "linkUrl": "https://www.cloudflare.com/",
       "describe": "",
       "describeLang": {},
-      "localFilePath": "/images/links/cloudflare.png",
+      "localFilePath": "/images/links/cloudflare.svg",
       "tag": [
         "host",
         "platinum"
