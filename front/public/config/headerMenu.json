@@ -60,10 +60,7 @@
         "desktop",
         "mobile"
       ],
-      "to": {
-        "name": "announcement",
-        "query": {}
-      }
+      "href": "https://announcement.bfban.com"
     }
   ]
 }

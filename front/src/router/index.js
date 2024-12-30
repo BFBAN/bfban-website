@@ -3,7 +3,9 @@ import store from '@/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueMeta from 'vue-meta'
+
 import {CHANGE_META_INFO} from '@/store/mutation-types'
+import bindOrigin from "@/views/bindOrigin";
 
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
@@ -26,7 +28,6 @@ const Apps = () => import('@/views/Apps.vue');
 const Profile = () => import('@/views/account/index.vue');
 const Admin = () => import('@/views/admin/index.vue');
 const Search = () => import('@/views/Search.vue');
-import bindOrigin from "@/views/bindOrigin";
 
 Vue.use(VueRouter);
 Vue.use(VueMeta, {
@@ -416,28 +417,6 @@ const routes = [
         },
         component: Account
     },
-    {
-        name: 'announcement', path: '/announcement',
-        // meta: {
-        //     metaInfo : {
-        //         title: 'account.title',
-        //         keywords: "account.seo.keywords",
-        //         description: 'account.description'
-        //     }
-        // },
-        component: () => import('@/views/announcement/list.vue')
-    },
-    {
-        name: 'announcementDetails', path: '/announcement/details',
-        // meta: {
-        //     metaInfo : {
-        //         title: 'account.title',
-        //         keywords: "account.seo.keywords",
-        //         description: 'account.description'
-        //     }
-        // },
-        component: () => import('@/views/announcement/details.vue')
-    },
 
     {
         name: 'notFound', path: '/empty', meta: {
@@ -472,14 +451,14 @@ router.beforeEach((to, from, next) => {
 
     try {
         if (to.meta.metaInfo) {
-            let metainfo = to.meta.metaInfo;
-            if (metainfo.keywords && i18n.t(metainfo.keywords) != metainfo.keywords) metainfo.keywords = "bfban,BFBAN," + i18n.t(metainfo.keywords);
-            else metainfo.keywords = "bfban,BFBAN";
-            if (metainfo.title) metainfo.title = i18n.t(metainfo.title);
-            else metainfo.title = "";
-            if (metainfo.description && i18n.t(metainfo.description) != metainfo.description) metainfo.description = i18n.t(metainfo.description);
-            else metainfo.description = "";
-            store.commit(CHANGE_META_INFO, metainfo)
+            let _metainfo = to.meta.metaInfo;
+            if (_metainfo.keywords && i18n.t(_metainfo.keywords) !== _metainfo.keywords) _metainfo.keywords = "bfban,BFBAN," + i18n.t(_metainfo.keywords);
+            else _metainfo.keywords = "bfban,BFBAN";
+            if (_metainfo.title) _metainfo.title = i18n.t(_metainfo.title);
+            else _metainfo.title = "";
+            if (_metainfo.description && i18n.t(_metainfo.description) !== _metainfo.description) _metainfo.description = i18n.t(_metainfo.description);
+            else _metainfo.description = "";
+            store.commit(CHANGE_META_INFO, _metainfo)
         }
 
         store.commit('syncLoginState');

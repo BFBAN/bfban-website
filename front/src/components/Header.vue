@@ -3,7 +3,8 @@
     <!-- 临时通知 S -->
     <!-- TODO 过期请删除 -->
     <a href="https://announcement.bfban.com" target="_blank">
-      <Card :padding="0" dis-hover style="padding: 3px 20px; margin: -10px -20px 8px -20px; text-align: center; background: darkred; color: white">
+      <Card :padding="0" dis-hover
+            style="padding: 3px 20px; margin: -10px -20px 8px -20px; text-align: center; background: darkred; color: white">
         {{
           {
             'zh-CN': '我们已更新《反作弊准则》,前往查看',
@@ -52,7 +53,7 @@
                 </Card>
               </template>
               <template v-else>
-                <h2>{{ currentUser.userinfo.username}}</h2>
+                <h2>{{ currentUser.userinfo.username }}</h2>
               </template>
             </Banner>
 
@@ -64,11 +65,12 @@
           </List>
         </Drawer>
 
-        <router-link class="mobile-hide link"
-                     :to="i.to"
-                     v-for="(i, index) in headerMenu.child" :key="index">
+        <a class="mobile-hide link"
+           href="javascript:void(0)"
+           @click="navigatorTo(i)"
+           v-for="(i, index) in headerMenu.child" :key="index">
           {{ $t("header." + i.name) }}
-        </router-link>
+        </a>
       </div>
       <div class="nav">
         <Button type="primary" v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
@@ -282,9 +284,17 @@ export default new Application({
 
       location.reload();
     },
+    /**
+     * 导航
+     * @param i
+     */
     navigatorTo(i) {
       this.headerMenu.show = false;
-      this.$router.push({name: i.to.name, query: i.to.query});
+
+      if (i.to)
+        this.$router.push({name: i.to.name, query: i.to.query});
+      else if (i.href)
+        window.location.href = i.href;
     }
   },
   computed: {
