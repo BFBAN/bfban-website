@@ -3,14 +3,14 @@
     <!-- 临时通知 S -->
     <!-- TODO 过期请删除 -->
     <a href="https://announcement.bfban.com" target="_blank">
-      <div style="padding: 4px 20px; margin: -10px -20px 8px -20px; text-align: center; background: darkred; color: white">
+      <Card :padding="0" dis-hover style="padding: 3px 20px; margin: -10px -20px 8px -20px; text-align: center; background: darkred; color: white">
         {{
           {
-            'zh-CN': '我们更新新的《反作弊准测》,前往查看',
+            'zh-CN': '我们已更新《反作弊准则》,前往查看',
             'en-US': 'We have updated the new 《Anti-Cheating precepts》, go to view them.',
           }[$i18n.locale] || 'We have updated the new 《Anti-Cheating precepts》, go to view them.'
         }}
-      </div>
+      </Card>
     </a>
     <!-- 临时通知 E -->
 
