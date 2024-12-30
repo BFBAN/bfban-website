@@ -16,7 +16,7 @@
 
 <script>
 const TurnstileConfig = {
-  siteKey: '0x4AAAAAAA10y-7P5RclJ5Zm'
+  siteKey: '0x4AAAAAAA4QIOj1Gk0kU2lz'
 };
 
 export default {
