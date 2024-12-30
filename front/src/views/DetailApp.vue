@@ -18,7 +18,7 @@
 
       <Card dis-hover class="detail-app">
         <div class="mobile-hide" align="center">
-          <vue-qr :text="'{id: '+ $route.params.ouid + '}'" :size="250"></vue-qr>
+          <vue-qr :text="'bfban://app/player?id=' + $route.params.ouid" :size="250"></vue-qr>
 
           <div class="qrcode" ref="qrCodeUrl"></div>
 

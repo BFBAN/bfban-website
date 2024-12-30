@@ -128,7 +128,7 @@
                 </Col>
                 <Divider type="vertical"/>
                 <Col>
-                  <vue-qr :text="url" :size="60" :margin="3" v-if="url"></vue-qr>
+                  <vue-qr :text="'bfban://app/account?id=' + $route.params.uId" :size="60" :margin="3" v-if="$route.params.uId"></vue-qr>
                 </Col>
               </Row>
             </Col>
