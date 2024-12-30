@@ -16,19 +16,19 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ads.txt"
   },
   {
-    "revision": "af25660b05ff3eefedff",
+    "revision": "0368437f68f602e20ce4",
     "url": "/app.css"
   },
   {
-    "revision": "af25660b05ff3eefedff",
+    "revision": "0368437f68f602e20ce4",
     "url": "/app.css.map"
   },
   {
-    "revision": "af25660b05ff3eefedff",
+    "revision": "0368437f68f602e20ce4",
     "url": "/assets/css/app.204f93ff.css"
   },
   {
-    "revision": "af25660b05ff3eefedff",
+    "revision": "0368437f68f602e20ce4",
     "url": "/assets/css/app.204f93ff.css.map"
   },
   {
@@ -80,14 +80,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/css/chunk-3b23e7e0.1a5af5de.css.map"
   },
   {
-    "revision": "111e21559e3b30f0c73e",
-    "url": "/assets/css/chunk-44eb1b58.707b719b.css"
-  },
-  {
-    "revision": "111e21559e3b30f0c73e",
-    "url": "/assets/css/chunk-44eb1b58.707b719b.css.map"
-  },
-  {
     "revision": "65b51f8deacee9e92105",
     "url": "/assets/css/chunk-46b19524.fbead95a.css"
   },
@@ -134,14 +126,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "6299b20ff30e5af29cfb",
     "url": "/assets/css/chunk-5d72a256.97cd1371.css.map"
-  },
-  {
-    "revision": "78985b228d46d2291d49",
-    "url": "/assets/css/chunk-5f65defc.73178364.css"
-  },
-  {
-    "revision": "78985b228d46d2291d49",
-    "url": "/assets/css/chunk-5f65defc.73178364.css.map"
   },
   {
     "revision": "76589723ac9e86078c78",
@@ -308,11 +292,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ionicons.d535a25a.ttf"
   },
   {
-    "revision": "af25660b05ff3eefedff",
+    "revision": "0368437f68f602e20ce4",
     "url": "/assets/js/app.2.9.16.js"
   },
   {
-    "revision": "af25660b05ff3eefedff",
+    "revision": "0368437f68f602e20ce4",
     "url": "/assets/js/app.2.9.16.js.map"
   },
   {
@@ -452,14 +436,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/js/chunk-3b23e7e0.2.9.16.js.map"
   },
   {
-    "revision": "111e21559e3b30f0c73e",
-    "url": "/assets/js/chunk-44eb1b58.2.9.16.js"
-  },
-  {
-    "revision": "111e21559e3b30f0c73e",
-    "url": "/assets/js/chunk-44eb1b58.2.9.16.js.map"
-  },
-  {
     "revision": "65b51f8deacee9e92105",
     "url": "/assets/js/chunk-46b19524.2.9.16.js"
   },
@@ -506,14 +482,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "6299b20ff30e5af29cfb",
     "url": "/assets/js/chunk-5d72a256.2.9.16.js.map"
-  },
-  {
-    "revision": "78985b228d46d2291d49",
-    "url": "/assets/js/chunk-5f65defc.2.9.16.js"
-  },
-  {
-    "revision": "78985b228d46d2291d49",
-    "url": "/assets/js/chunk-5f65defc.2.9.16.js.map"
   },
   {
     "revision": "12a0b3afcf4597ebe4b7",
@@ -756,14 +724,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/chunk-3b23e7e0.css.map"
   },
   {
-    "revision": "111e21559e3b30f0c73e",
-    "url": "/chunk-44eb1b58.css"
-  },
-  {
-    "revision": "111e21559e3b30f0c73e",
-    "url": "/chunk-44eb1b58.css.map"
-  },
-  {
     "revision": "65b51f8deacee9e92105",
     "url": "/chunk-46b19524.css"
   },
@@ -810,14 +770,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "6299b20ff30e5af29cfb",
     "url": "/chunk-5d72a256.css.map"
-  },
-  {
-    "revision": "78985b228d46d2291d49",
-    "url": "/chunk-5f65defc.css"
-  },
-  {
-    "revision": "78985b228d46d2291d49",
-    "url": "/chunk-5f65defc.css.map"
   },
   {
     "revision": "76589723ac9e86078c78",
@@ -1020,7 +972,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/config/gameName.json"
   },
   {
-    "revision": "499453b8a7680e7deb96c00172fe1f6b",
+    "revision": "512e8d11111324bb4eaf91b0a0a334b1",
     "url": "/config/headerMenu.json"
   },
   {
@@ -1072,35 +1024,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/config/themes.json"
   },
   {
-    "revision": "bfbd155a6c59727d6fa30da9d8321051",
-    "url": "/data/CN/antiCheat/2022-12-06.html"
-  },
-  {
-    "revision": "e08519c6190a696f0465cc87c61d04b0",
-    "url": "/data/CN/antiCheat/2023-02-10.html"
-  },
-  {
-    "revision": "98c4f24c8665658ad082758fb30ce53e",
-    "url": "/data/CN/antiCheat/2023-06-21.html"
-  },
-  {
-    "revision": "7f1179ab1e9d4c282c015c7aa8a5e465",
-    "url": "/data/CN/antiCheat/2024-12-21.html"
-  },
-  {
-    "revision": "bcd4088be1d5be63320fdbba5de6156c",
-    "url": "/data/CN/conduct/2022-10-01.html"
-  },
-  {
-    "revision": "b22317728aab17d3015dd576c0f86710",
-    "url": "/data/CN/personnel/2022-10-01.html"
-  },
-  {
     "revision": "06d70ff7260f707496ff56df49db7eac",
     "url": "/favicon.ico"
   },
   {
-    "revision": "1b8307ec5d6f903f9ca5eeb3ab65d0b0",
+    "revision": "0838116faea19f0cdd1a2ae5e7327187",
     "url": "/index.html"
   },
   {
