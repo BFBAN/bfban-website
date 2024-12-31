@@ -1,4 +1,4 @@
-@radio-color: #bdbd31;
+@radio-color: #672d29;
 @radio-prefix-cls: ~"@{css-prefix}radio";
 @radio-group-prefix-cls: ~"@{radio-prefix-cls}-group";
 @radio-inner-prefix-cls: ~"@{radio-prefix-cls}-inner";
@@ -212,7 +212,7 @@ span.@{radio-prefix-cls} + * {
     cursor: pointer;
     border: 1px solid @border-color-base;
     border-left: 0;
-    background-color: #212121 !important;
+    background-color: @border-color-base !important;
     position: relative;
 
     > span {
@@ -272,8 +272,8 @@ span.@{radio-prefix-cls} + * {
     }
 
     &-checked {
-      background-color: shade(@primary-color, 50%) !important;
-      border-color: shade(@primary-color, 50%);
+      background-color: shade(@primary-color, 1%) !important;
+      border-color: @primary-color;
       color: @normal-color;
       box-shadow: -1px 0 0 0 @primary-color;
       z-index: 1;

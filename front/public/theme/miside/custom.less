@@ -1,12 +1,12 @@
 // Color
 @primary-color          : #cd5951;
-@info-color             : #bdbd31;
+@info-color             : #3f3959;
 @success-color          : #19be6b;
 @processing-color       : #ca9f9e;
 @warning-color          : #ff9900;
 @error-color            : #ed4014;
-@normal-color           : #e6ebf1;
-@link-color             : #fff;
+@normal-color           : #000;
+@link-color             : @text-color;
 @link-hover-color       : tint(@link-color, 3%);
 @link-active-color      : shade(@link-color, 1%);
 @selected-color         : fade(@primary-color, 10%);
@@ -21,8 +21,8 @@
 @component-background   : transparent;
 @font-family            : "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 @code-family            : Consolas,Menlo,Courier,monospace;
-@title-color            : #fff;
-@text-color             : #fff;
+@title-color            : shade(@primary-color, 90%);
+@text-color             : shade(@primary-color, 90%);
 @text-color-secondary: fade(@black, 45%);
 @heading-color: fade(#000, 85%);
 @heading-color-dark: fade(#000, 100%);
@@ -42,17 +42,17 @@
 @padding-xs: 8px; // small items
 
 // Border color
-@border-color-base      : shade(@primary-color, 30%);  // outside
-@border-color-split     : shade(@primary-color, 30%);  // inside
+@border-color-base      : #e5cfcd;  // outside
+@border-color-split     : #e5cfcd;  // inside
 @border-width-base      : 1px;            // width of the border for a component
 @border-style-base      : solid;          // style of a components border
 
 // Background color
-@background-color-base        : #555;  // base
+@background-color-base        : @primary-color;  // base
 @background-color-select-hover: @input-disabled-bg;
 @tooltip-bg                   : rgba(70, 76, 91, .9);
-@head-bg                      : #555;
-@table-thead-bg               : #555;
+@head-bg                      : @primary-color;
+@table-thead-bg               : tint(@primary-color, 50%);
 @table-td-stripe-bg           : #555;
 @table-td-hover-bg            : #555;
 @table-td-highlight-bg        : #555;
@@ -60,7 +60,7 @@
 @menu-dark-active-bg          : #363e4f;
 @menu-dark-subsidiary-color   : rgba(255,255,255,.7);
 @menu-dark-group-title-color  : rgba(255,255,255,.36);
-@date-picker-cell-hover-bg    : #555;
+@date-picker-cell-hover-bg    : tint(@primary-color, 28%);
 
 // Shadow
 @shadow-color           : rgba(0, 0, 0, .2);
@@ -96,10 +96,10 @@
 @btn-disable-border     : @border-color-base;
 
 @btn-default-color      : @text-color;
-@btn-default-bg         : #000;
+@btn-default-bg         : #fff;
 @btn-default-border     : @border-color-base;
 
-@btn-primary-color      : #000;
+@btn-primary-color      : #fff;
 @btn-primary-bg         : @primary-color;
 
 @btn-ghost-color        : @text-color;
@@ -117,8 +117,8 @@
 // Layout and Grid
 @grid-columns                : 24;
 @grid-gutter-width           : 0;
-@layout-body-background      : #555;
-@layout-header-background    : #555;
+@layout-body-background      : shade(@primary-color, 88%);
+@layout-header-background    : shade(@primary-color, 88%);
 @layout-header-height        : 64px;
 @layout-header-padding       : 0 50px;
 @layout-footer-padding       : 24px 50px;
@@ -145,7 +145,7 @@
 @input-placeholder-color     : @btn-disable-color;
 @input-color                 : @text-color;
 @input-border-color          : @border-color-base;
-@input-bg                    : shade(@primary-color, 60%);
+@input-bg                    : tint(@primary-color, 90%);
 @input-group-bg              : @input-bg;
 
 @input-hover-border-color    : @primary-color;

@@ -1,4 +1,4 @@
-@card-background: #642420;
+@card-background: tint(@primary-color, 95%);
 
 .@{tabs-prefix-cls} {
   color: @text-color;
@@ -7,6 +7,7 @@
     border: 1px solid transparent;
     background: @card-background !important;
   }
+
   &&-card > &-bar &-tab-active {
     background: transparent;
     border-color: @card-background;
@@ -20,7 +21,7 @@
 
 @card-prefix-cls: ~"@{css-prefix}card";
 
-.@{card-prefix-cls}{
+.@{card-prefix-cls} {
   background: @card-background;
 
   &:hover {
@@ -33,7 +34,7 @@
 .@{tag-prefix-cls} {
   background: @background-color-base;
 
-  &-dot{
+  &-dot {
     background: #2d2c2c !important;
   }
 }
