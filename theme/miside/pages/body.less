@@ -1,0 +1,46 @@
+*::selection {
+  background: fade(@primary-color, 60%);
+}
+
+body, html {
+  overflow-x: hidden;
+  background-color: tint(@primary-color, 80%) !important;
+}
+
+@media screen and (min-width: 1024px) {
+  body, html {
+    background-image: url(../images/miside-background.png);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position-x: 100%;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(10px);
+  }
+}
+
+// header
+header {
+  background-image: linear-gradient(@primary-color, transparent) !important;
+}
+
+// nav
+.nav a.link {
+  padding: 0.7rem 0.8rem;
+  text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0 !important;
+}
+
+footer {
+  background-color: tint(@primary-color, 80%);
+}
+
+// styles_herosection
+.styles_herosection {
+  .styles_bg {
+    background: linear-gradient(302.61deg, tint(@primary-color, 80%) -0.71%, #fff9ad6e 89.57%);
+    filter: blur(60px);
+  }
+}
+
+.app {
+  background: linear-gradient(90deg, tint(@primary-color, 80%) 30%, hsla(@primary-color, 40%) 100%);
+}

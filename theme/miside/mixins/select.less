@@ -1,0 +1,10 @@
+.select-item(@size-class, @item-class) {
+  .@{item-class} {
+    &-divided {
+      border-top-color: @border-color-base;
+    }
+    &-divided:before {
+      background-color: @border-color-split;
+    }
+  }
+}
