@@ -4,7 +4,7 @@
     <!-- TODO 过期请删除 -->
     <a href="https://announcement.bfban.com" target="_blank">
       <Card :padding="0" dis-hover
-            style="padding: 3px 20px; margin: -10px -20px 8px -20px; text-align: center; background: darkred; color: white">
+            style="padding: 3px 20px; margin: -10px -20px 0px -20px; text-align: center; background: darkred; color: white">
         {{
           {
             'zh-CN': '我们已更新《反作弊准则》,前往查看',
@@ -13,9 +13,10 @@
         }}
       </Card>
     </a>
+    <Lantern></Lantern>
     <!-- 临时通知 E -->
 
-    <div class="header-container">
+    <div class="header-container" style="margin-top: 8px;">
       <router-link class="mobile-hide" :to="{name: 'home'}">
         <img src="../assets/images/logo.png"
              style="border-radius: 50%"
@@ -199,6 +200,7 @@ import HeaderMessage from "./HeaderMessage.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import Application from "@/assets/js/application";
 import Banner from "@/components/Banner.vue";
+import Lantern from "@/components/Lantern"
 
 export default new Application({
   data() {
@@ -210,7 +212,7 @@ export default new Application({
       },
     }
   },
-  components: {HistoryView, Banner, HeaderMessage, UserAvatar, PrivilegesTag},
+  components: {HistoryView, Banner, HeaderMessage, UserAvatar, PrivilegesTag, Lantern},
   watch: {
     $route: "loadData",
   },
