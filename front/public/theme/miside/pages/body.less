@@ -1,0 +1,43 @@
+*::selection {
+  background: fade(@primary-color, 60%);
+}
+
+body, html {
+  overflow-x: hidden;
+  background-color: @primary-color !important;
+}
+
+@media screen and (min-width: 1024px) {
+  body, html {
+    //background-image: url(../images/miside-background.png);
+    background-image: url('https://clan.fastly.steamstatic.com/images/44457345/c37b15ff590ddb968af24c96b8c8a4028a8b1279.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position-x: 100%;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(10px);
+  }
+}
+
+// header
+header {
+  background-image: linear-gradient(#642420, transparent) !important;
+}
+
+// nav
+.nav a.link {
+  padding: 0.7rem 0.8rem;
+  text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0 !important;
+}
+
+// styles_herosection
+.styles_herosection {
+  .styles_bg {
+    background: linear-gradient(302.61deg, rgb(208 252 248) -0.71%, #fff9ad6e 89.57%);
+    filter: blur(60px);
+  }
+}
+
+.app {
+  background: linear-gradient(90deg, @primary-color 30%, hsla(@primary-color, 80%) 100%);
+}
