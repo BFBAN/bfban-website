@@ -1,0 +1,47 @@
+@card-background: tint(@primary-color, 95%);
+
+.@{tabs-prefix-cls} {
+  color: @text-color;
+
+  &&-card > &-bar &-tab {
+    border: 1px solid transparent;
+    background: @card-background !important;
+  }
+
+  &&-card > &-bar &-tab-active {
+    background: transparent;
+    border-color: @card-background;
+    color: @card-background;
+  }
+}
+
+.@{select-dropdown-prefix-cls} {
+  background-color: @card-background !important;
+}
+
+@card-prefix-cls: ~"@{css-prefix}card";
+
+.@{card-prefix-cls} {
+  background: @card-background;
+
+  &:hover {
+    border-color: #000;
+  }
+}
+
+@tag-prefix-cls: ~"@{css-prefix}tag";
+
+.@{tag-prefix-cls} {
+  background: @background-color-base;
+
+  &-dot {
+    background: #2d2c2c !important;
+  }
+}
+
+.@{modal-prefix-cls} {
+  &-content {
+    position: relative;
+    background-color: #373838 !important;
+  }
+}
