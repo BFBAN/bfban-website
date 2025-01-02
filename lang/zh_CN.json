@@ -305,11 +305,11 @@
       "title": "自瞄"
     },
     "attackServer": {
-      "describe": "恶意攻击服务器",
+      "describe": "恶意攻击服务器引起玩家高延迟、玩家死亡、重置、服务器无响应等",
       "title": "攻击服务器"
     },
     "damageChange": {
-      "describe": "修改武器参数",
+      "describe": "修改武器/载具/技能等参数",
       "title": "改伤"
     },
     "gadgetModify": {
@@ -329,7 +329,7 @@
       "title": "秒杀"
     },
     "teleport": {
-      "describe": "传送移动",
+      "describe": "传送、角色非正常速率移动",
       "title": "传送"
     },
     "wallhack": {
