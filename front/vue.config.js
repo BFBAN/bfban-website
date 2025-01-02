@@ -79,6 +79,9 @@ module.exports = {
                 }, {
                     from: `src/assets/images/achievement`,
                     to: `images/achievement`
+                }, {
+                    from: `../backend/package.json`,
+                    to: `config/backend-package.json`
                 }],
                 {
                     // 无论是否修改，全部复制

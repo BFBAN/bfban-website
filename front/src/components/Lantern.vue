@@ -1,9 +1,12 @@
 <template>
-  <div class="lan" v-if="nowTime >= new Date('2024 12-31').getTime() && nowTime <= new Date('2025 2-4').getTime()" >
+  <div class="lantern-widget-box" v-if="nowTime >= new Date('2024 12-31').getTime() && nowTime <= new Date('2025 2-4').getTime()">
     <div class="lan-header">
-      <div class="container">🎆 2025 <HtmlLink href="https://en.wikipedia.org/wiki/Chinese_New_Year" text="New Year"></HtmlLink> 🎆</div>
+      <div class="container">🎆 2025
+        <HtmlLink href="https://en.wikipedia.org/wiki/Chinese_New_Year" text="New Year"></HtmlLink>
+        🎆
+      </div>
     </div>
-    <div class="lan-box">
+    <div class="lantern-box">
       <div v-for="(i, index) in ['left', 'right']" :key="index" :class="`lantern ${i}-lantern`">
         <!-- 顶部绳索 -->
         <div class="lantern-rope lantern-top-rope "></div>
@@ -29,7 +32,7 @@
   --lantern-yellow: #ecaa2f;
 }
 
-.lan:hover {
+.lantern-widget-box:hover {
   .lan-header {
     transition: all 0.25s;
     padding: 15px 0;
@@ -44,7 +47,7 @@
   }
 }
 
-.lan {
+.lantern-widget-box {
   .lan-header {
     position: absolute;
     min-height: 3px;
@@ -78,8 +81,8 @@
   }
 }
 
-
-.lan-box {
+.lantern-box {
+  pointer-events: none;
   position: absolute;
   width: 100%;
   display: flex;
@@ -94,23 +97,35 @@
   }
 
   .left-lantern {
-    left: 55px;
+    left: 40px;
   }
 
   .right-lantern {
-    right: 55px;
+    right: 40px;
   }
 }
 
 @media screen and (min-width: 1350px) {
-  .lan {
+  .lantern-widget-box {
     min-width: 1024px;
     max-width: 100%;
   }
 }
 
+@media screen and (max-width: 1740px) {
+  .lantern-box {
+    .left-lantern {
+      left: 0px !important;
+    }
+
+    .right-lantern {
+      right: 0px !important;
+    }
+  }
+}
+
 @media screen and (max-width: 1350px) {
-  .lan {
+  .lantern-widget-box {
     .left-lantern,
     .right-lantern {
       display: none !important;
@@ -132,7 +147,7 @@
 }
 
 .lantern-top-rope {
-  height: 85px;
+  height: 100px;
 }
 
 .lantern-bottom-rope {
@@ -219,7 +234,7 @@ import HtmlLink from "@/components/HtmlLink.vue";
 export default {
   components: {HtmlLink},
   computed: {
-    nowTime () {
+    nowTime() {
       return new Date().getTime();
     }
   }

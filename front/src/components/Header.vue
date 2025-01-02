@@ -4,7 +4,7 @@
     <!-- TODO 过期请删除 -->
     <a href="https://announcement.bfban.com" target="_blank">
       <Card :padding="0" dis-hover
-            style="padding: 3px 20px; margin: -10px -20px 0px -20px; text-align: center; background: darkred; color: white">
+            style="padding: 3px 20px; margin: -10px -20px 0 -20px; text-align: center; background: darkred; color: white">
         {{
           {
             'zh-CN': '我们已更新《反作弊准则》,前往查看',
@@ -76,7 +76,7 @@
       <div class="nav">
         <Button type="primary" v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
                 icon="md-log-in"
-                v-if="$route.name != 'signin'">
+                v-if="$route.name !== 'signin'">
           {{ $t("header.signin") }}
         </Button>
 

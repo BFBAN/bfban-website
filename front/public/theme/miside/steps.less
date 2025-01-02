@@ -3,7 +3,7 @@
 @steps-wait-title-color: #999;
 @steps-wait-description-color: @steps-wait-title-color;
 @steps-wait-tail-color: @border-color-split;
-@steps-title-color: #666;
+@steps-title-color: @text-color;
 
 .@{steps-prefix-cls} {
   display: -webkit-box;
@@ -141,7 +141,7 @@
     vertical-align: top;
   }
   .@{steps-prefix-cls}-head {
-    background: #373838 !important;
+    background: tint(@primary-color, 98%) !important;
   }
 
   .@{steps-prefix-cls}-head-inner {
@@ -183,11 +183,11 @@
     padding-right: 10px;
     font-size: 14px;
     font-weight: bold;
-    color: #666;
-    background: #373838 !important;
+    color: @text-color;
+    background: tint(@primary-color, 98%) !important;
 
     > a:first-child:last-child {
-      color: #666;
+      color: @text-color;
     }
   }
   .@{steps-prefix-cls}-item-last {
@@ -247,7 +247,7 @@
     .@{steps-prefix-cls}-title {
       margin-bottom: 4px;
       margin-top: 0;
-      color: #666;
+      color: @text-color;
       font-size: 12px;
       font-weight: bold;
     }

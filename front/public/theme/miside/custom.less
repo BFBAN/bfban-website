@@ -48,11 +48,11 @@
 @border-style-base      : solid;          // style of a components border
 
 // Background color
-@background-color-base        : @primary-color;  // base
+@background-color-base        : tint(@primary-color, 60%);  // base
 @background-color-select-hover: @input-disabled-bg;
 @tooltip-bg                   : rgba(70, 76, 91, .9);
 @head-bg                      : @primary-color;
-@table-thead-bg               : tint(@primary-color, 50%);
+@table-thead-bg               : tint(@primary-color, 90%);
 @table-td-stripe-bg           : #555;
 @table-td-hover-bg            : #555;
 @table-td-highlight-bg        : #555;
@@ -60,7 +60,7 @@
 @menu-dark-active-bg          : #363e4f;
 @menu-dark-subsidiary-color   : rgba(255,255,255,.7);
 @menu-dark-group-title-color  : rgba(255,255,255,.36);
-@date-picker-cell-hover-bg    : tint(@primary-color, 28%);
+@date-picker-cell-hover-bg    : tint(@primary-color, 20%);
 
 // Shadow
 @shadow-color           : rgba(0, 0, 0, .2);

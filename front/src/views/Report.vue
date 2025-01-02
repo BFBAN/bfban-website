@@ -225,7 +225,7 @@
                         </Row>
                       </FormItem>
 
-                      <Row gutter="10">
+                      <Row :gutter="10">
                         <Col>
                           <Button type="primary"
                                   v-voice-button

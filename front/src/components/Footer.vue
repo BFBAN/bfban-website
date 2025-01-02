@@ -109,8 +109,8 @@
         </Row>
       </div>
       <div align="center" class="footer-border-top footer-padding">
-        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} <u>{{ infos.name || ''}}</u> All Rights Reserved. v:
-          {{ infos.version || '' }}
+        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} <u>{{ infos.name || ''}}</u> All Rights Reserved. v(f):
+          {{ infos['front-version'] || '' }} v(b): {{ infos['backend-version'] || '' }}
           <iframe src="https://status.bfban.com/badge" class="footer-status-badge" allowTransparency="true" frameborder="0" scrolling="no"></iframe>
         </p>
       </div>
@@ -122,15 +122,20 @@
 import {storage, account_storage, http, time} from "../assets/js";
 
 import packageInfo from '../../package.json';
+import backendPackageInfo from '/public/config/backend-package.json';
 import footerNavs from '/public/config/footerNavs.json';
 import link from '/public/config/link.json';
 import Application from "@/assets/js/application";
 
 export default new Application({
   data() {
+    let infos = {
+      'front-version': packageInfo['version'] || '0.0.0',
+      'backend-version': backendPackageInfo['version'] || '0.0.0'
+    };
     return {
       time,
-      infos: packageInfo,
+      infos,
       footerNavs: footerNavs.child,
       links: link,
       logoCount: 0,
