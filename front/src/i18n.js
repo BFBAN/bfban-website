@@ -24,7 +24,7 @@ import es_local from './lang/es.json'
 import fr_local from './lang/fr.json'
 import it_local from './lang/it.json'
 import ja_JP_local from './lang/ja_JP.json' // 日语
-import ko_local from './lang/ko.json' // 韩语
+import ko_local from './lang/ko_KR.json' // 韩语
 import tr_local from './lang/tr.json' // 土耳其
 import ru_local from './lang/ru.json' // 俄语
 import zh_cn_local from './lang/zh_CN.json' // 中文

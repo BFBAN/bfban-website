@@ -516,6 +516,9 @@
       "col4": {
         "title": "联系方式"
       },
+      "col5": {
+        "title": "其他"
+      },
       "sponsor": {
         "join": "成为赞助商",
         "title": "赞助商"

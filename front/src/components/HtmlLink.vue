@@ -1,5 +1,5 @@
 <template>
-  <Poptip padding="0" max-width="300" trigger="hover" transfer :disabled="getProtocol == 'mailto:'"
+  <Poptip padding="0" max-width="300" trigger="hover" transfer :disabled="!isPoptip || getProtocol == 'mailto:'"
           @on-popper-show="onPoptipShow(false)"
           @on-popper-hide="onPoptipShow(true)">
     <span class="html-link">
@@ -103,14 +103,22 @@ export default {
   computed: {
     isIframeShow() {
       // TODO 正则
-      if (!this.afterData.href) return false;
-      let url = new URL(this.afterData.href);
-      return url.protocol.indexOf('http:') >= 0 || url.protocol.indexOf('https:') >= 0;
+      try {
+        if (!this.afterData.href) return false;
+        let url = new URL(this.afterData.href);
+        return url.protocol.indexOf('http:') >= 0 || url.protocol.indexOf('https:') >= 0;
+      } catch (e) {
+        return false;
+      }
     },
     getProtocol() {
-      if (!this.afterData.href) return '';
-      let url = new URL(this.afterData.href);
-      return url.protocol;
+      try {
+        if (!this.afterData && !this.afterData.href) return '';
+        let url = new URL(this.afterData.href);
+        return url.protocol;
+      } catch (e) {
+        return '';
+      }
     }
   }
 }

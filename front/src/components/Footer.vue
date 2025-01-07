@@ -2,19 +2,19 @@
   <div>
     <Row class="ivu-card ivu-card-dis-hover footer-app-banner footer-border-top">
       <div class="container">
-        <Col :xs="{push: 1}" :lg="{push:0}" >
+        <Col :xs="{push: 1}" :lg="{push:0}">
           <h2 class="p">BFBAN APP</h2>
           <ButtonGroup shape="circle">
             <Button type="info" to="https://play.google.com/store/apps/details?id=com.cabbagelol.bfban" target="_blank">
-              <Icon type="logo-google" />
+              <Icon type="logo-google"/>
               Google Play
             </Button>
             <Button type="info" to="https://apps.apple.com/us/app/bfban-little-helper/id6446828173" target="_blank">
-              <Icon type="logo-apple" />
+              <Icon type="logo-apple"/>
               Apple Store
             </Button>
             <Button to="https://bfban-app.cabbagelol.net" target="_blank">
-              <Icon type="md-open" />
+              <Icon type="md-open"/>
             </Button>
           </ButtonGroup>
         </Col>
@@ -23,23 +23,25 @@
 
     <footer class="footer footer-border-top" v-if="!isFull">
       <div class="container">
-        <Row>
+        <Row :gutter="14">
           <Col :xs="{span: 23, pull: 0, push: 1, order: 2}" :sm="{span: 23 ,pull: 0, push: 1, order: 2}"
-               :lg="{span: 5,pull: 0, push: 0, order:0}">
-            <Badge :count="logoCount" overflow-count="999999" :class="logoCount >= 10 ? 'shake active_infinite' : ''">
-              <Avatar v-if="logoCount >= 5" size="40">
-                <router-link :to="{name: 'home', query:{ 'love': '❤'}}">😊</router-link>
-              </Avatar>
-              <img v-else
-                   v-saknan
-                   src="../assets/images/friendly-web.png"
-                   width="100"
-                   @click="logoCount += 1;"
-                   alt="logo"/>
-            </Badge>
+               :lg="{span: 4,pull: 0, push: 0, order:0}">
+            <b>
+              <Badge :count="logoCount" overflow-count="999999" :class="logoCount >= 10 ? 'shake active_infinite' : ''">
+                <Avatar v-if="logoCount >= 5" size="40">
+                  <router-link :to="{name: 'home', query:{ 'love': '❤'}}">😊</router-link>
+                </Avatar>
+                <img v-else
+                     v-saknan
+                     src="../assets/images/friendly-web.png"
+                     width="100"
+                     @click="logoCount += 1;"
+                     alt="logo"/>
+              </Badge>
+            </b>
             <p style="margin-right: 30px">{{ $t("footer.column.col1.text") }}</p>
           </Col>
-          <Col :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 5,pull: 0, push: 0}"
+          <Col :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}"
                v-for="(i, index) in footerNavs.row" :key="index">
             <h4><b>{{ $t(i.text) }}</b></h4>
             <ul>
@@ -76,16 +78,17 @@
               </span>
               </Option>
             </Select>
-            <p v-if="languages.length > 0">
+            <div v-if="languages.length > 0" class="footer-language-members">
               <br>
-              <span>{{ $t("footer.language.members") }}</span>: <br>
-              <a :href="i.url" target="_blank"
-                 v-for='(i, index) in languages.filter(i => i.name === currentLan)[0]["members"]' :key="index">
-                {{ i.name }}
+              <span>{{ $t("footer.language.members") }}</span><br>
+              <span
+                  class="span"
+                  v-for='(i, index) in languages.filter(i => i.name === currentLan)[0]["members"]' :key="index">
+                <HtmlLink :text='i.name' :href="i.url" :key="index" :isPoptip="false"></HtmlLink>
                 <Divider type="vertical"
                          v-if="index + 1 < (languages.filter(i => i.name === currentLan)[0]['members'].length)"></Divider>
-              </a>
-            </p>
+              </span>
+            </div>
           </Col>
         </Row>
       </div>
@@ -109,9 +112,11 @@
         </Row>
       </div>
       <div align="center" class="footer-border-top footer-padding">
-        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }} <u>{{ infos.name || ''}}</u> All Rights Reserved. v(f):
+        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }}
+          <u>{{ infos.name || '' }}</u> All Rights Reserved. v(f):
           {{ infos['front-version'] || '' }} v(b): {{ infos['backend-version'] || '' }}
-          <iframe src="https://status.bfban.com/badge" class="footer-status-badge" allowTransparency="true" frameborder="0" scrolling="no"></iframe>
+          <iframe src="https://status.bfban.com/badge" class="footer-status-badge" allowTransparency="true"
+                  frameborder="0" scrolling="no"></iframe>
         </p>
       </div>
     </footer>
@@ -125,6 +130,7 @@ import packageInfo from '../../package.json';
 import backendPackageInfo from '/public/config/backend-package.json';
 import footerNavs from '/public/config/footerNavs.json';
 import link from '/public/config/link.json';
+import HtmlLink from '@/components/HtmlLink.vue'
 import Application from "@/assets/js/application";
 
 export default new Application({
@@ -146,6 +152,7 @@ export default new Application({
   created() {
     this.loadData();
   },
+  components: {HtmlLink},
   watch: {
     $route: "loadData",
   },
@@ -259,5 +266,14 @@ export default new Application({
 
 .footer-app-banner .p {
   padding: 10px 100px 10px 0;
+}
+
+.footer-language-members {
+  margin-bottom: 15px;
+}
+
+.footer-language-members .span {
+  line-height: 1.5rem;
+  display: inline-flex;
 }
 </style>
