@@ -173,7 +173,7 @@ const achievementConfig = {
             if (result.error === 1 && result.data.community.length <= 0) return false;
             return result.data.community
                 .splice(0, 3)
-                .find(i => i.id === req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0 && req.user.attr.achievements['trend_yearly_l1'];
+                .find(i => i.id === req.user.id) && req.user.privilege && req.user.privilege.indexOf('bot') <= 0 && req.user.attr.achievements['active_community_yearly_l1'];
         },
     },
     'report_l1': {
