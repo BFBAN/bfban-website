@@ -71,7 +71,7 @@
             <AchievementsTag trigger="hover" :data="userInfo.attr.achievements || []" v-if="userInfo.attr && userInfo.attr.achievements"></AchievementsTag>
           </Col>
           <Col>
-            <router-link :to="{path: '/account/' + userInfo.id, query: {repeat: true}}">
+            <router-link :to="{path: '/space/' + userInfo.id, query: {repeat: true}}">
               <Button>
                 <Icon type="ios-send" size="20"/>
               </Button>

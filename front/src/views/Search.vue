@@ -20,6 +20,12 @@
           <Col :xs="{span: 24}" :sm="{span: 18}" :md="{span: 18}">
             <div class="search-input search-input-show ivu-input ivu-input-large">
               <Row :gutter="10">
+                <Col>
+                  <RadioGroup type="button" v-model="searchTypeValue" size="small" @on-change="onTabClick">
+                    <Radio label="player" value="player">{{ $t('search.tabs.player') }}</Radio>
+                    <Radio label="user" value="user" :disabled="!isLogin">{{ $t('search.tabs.user') }}</Radio>
+                  </RadioGroup>
+                </Col>
                 <Col flex="1">
                   <Dropdown style="width: 100%">
                     <Input
@@ -439,6 +445,7 @@ import Empty from "@/components/Empty";
 import TimeView from "@/components/TimeView.vue";
 
 import game from '../../public/config/gameName.json';
+import tag from "view-design/src/components/tag";
 
 export default new Application({
   name: "search",
@@ -595,6 +602,7 @@ export default new Application({
      * @param tagName
      */
     onTabClick(tagName) {
+      console.log(tagName)
       this.searchTypeValue = tagName;
       this.handleSearch();
     },

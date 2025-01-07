@@ -107,13 +107,13 @@
             <Card dis-hover>
               <div slot="title">{{ $t('sitestats.communityParticipation') }} · {{ $t(timeArray.find(i => i.value == timeRange).name) }}</div>
               <Row :gutter="5">
-                <Col span="12">
+                <Col span="14">
                   <ol class="sitestats-ul" v-if="active.community.length > 0">
                     <li v-for="(i, index) in active.community" :key="index">
                       <Row :gutter="10" type="flex" align="middle">
                         <Col>
                           <businessCard :id="i.id">
-                            <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}`"></HtmlLink>
+                            <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
                           </businessCard>
                         </Col>
                         <Col flex="1">
@@ -125,7 +125,7 @@
                   </ol>
                   <Empty :notHint="false" v-else></Empty>
                 </Col>
-                <Col span="12">
+                <Col span="10">
                   <v-chart class="chart chart-min" :option="active.communityConf"/>
                 </Col>
               </Row>
@@ -142,7 +142,7 @@
                   <Row :gutter="10" type="flex" align="middle">
                     <Col>
                       <businessCard :id="i.id">
-                        <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}`"></HtmlLink>
+                        <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
                       </businessCard>
                     </Col>
                     <Col flex="1">
@@ -202,7 +202,7 @@
                 <li v-for="(i, index) in active.achievement" :key="index">
                   <Row :gutter="10" type="flex" align="middle">
                     <Col class="text-distinguishing-letter">
-                      <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}`"></HtmlLink>
+                      <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
                     </Col>
                     <Col flex="1">
                       <Divider dashed style="margin: 0"></Divider>
@@ -414,7 +414,7 @@ export default new Application({
             data: [{xAxis: 1}, {xAxis: 3}, {xAxis: 5}, {xAxis: 7}]
           },
           areaStyle: {
-            opacity: .2,
+            opacity: .5,
             color: i.lineColor
           },
           data: []
@@ -567,7 +567,7 @@ export default new Application({
 
 .chart-min {
   width: 100%;
-  height: 250px;
+  height: 350px;
 }
 
 .sitestats-ul {

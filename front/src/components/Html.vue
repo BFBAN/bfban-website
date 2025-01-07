@@ -228,7 +228,7 @@ export default {
                 if (p_data[0])
                   switch (p_data[0]) {
                     case "user":
-                      _p[i].innerHTML = `<span><a href="/account/${p_data[1]}">@${p_data[1]}</a></span>`;
+                      _p[i].innerHTML = `<span><a href="/space/${p_data[1]}">@${p_data[1]}</a></span>`;
                       break;
                     case "player":
                       _p[i].innerHTML = `<htmlplayercard :id="${p_data[1].toString()}"></htmlplayercard>`;
