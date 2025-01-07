@@ -5,8 +5,8 @@ import VueRouter from 'vue-router';
 import VueMeta from 'vue-meta'
 
 import {CHANGE_META_INFO} from '@/store/mutation-types'
-import bindOrigin from "@/views/bindOrigin";
 
+import bindOrigin from "@/views/BindOrigin.vue";
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
 const Players = () => import('@/views/Players.vue');
@@ -17,7 +17,7 @@ const DetailApp = () => import('@/views/DetailApp.vue');
 const DetailCard = () => import('@/components/SharePlayerCell.vue');
 const Signin = () => import('@/views/Signin.vue');
 const Signup = () => import('@/views/Signup.vue');
-const ForgetPassword = () => import('@/views/forgetPassword.vue');
+const ForgetPassword = () => import('@/views/ForgetPassword.vue');
 const SignupComplete = () => import('@/views/SignupComplete.vue');
 const SiteStats = () => import('@/views/SiteStats.vue');
 const Account = () => import('@/views/Space.vue');
@@ -323,7 +323,7 @@ const routes = [
     // 授权
     {
         name: 'externalAuth', path: '/appAuth',
-        component: () => import('@/views/externalAuth.vue'),
+        component: () => import('@/views/ExternalAuth.vue'),
         beforeEnter: isLoginBeforeEnter
     },
 

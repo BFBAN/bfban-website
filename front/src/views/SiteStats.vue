@@ -110,17 +110,20 @@
                 <Col span="12">
                   <ol class="sitestats-ul" v-if="active.community.length > 0">
                     <li v-for="(i, index) in active.community" :key="index">
-                      <Row>
-                        <Col flex="1">
+                      <Row :gutter="10" type="flex" align="middle">
+                        <Col>
                           <businessCard :id="i.id">
-                            <router-link :to="{name:'space', params: { uId: i.id }}">{{ i.username }}</router-link>
+                            <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}`"></HtmlLink>
                           </businessCard>
                         </Col>
-                        <Col>{{ i.total.toFixed(2) || 0 }}</Col>
+                        <Col flex="1">
+                          <Divider dashed style="margin: 0"></Divider>
+                        </Col>
+                        <Col>{{ i.total.toFixed(1) || 0 }}</Col>
                       </Row>
                     </li>
                   </ol>
-                  <Empty v-else></Empty>
+                  <Empty :notHint="false" v-else></Empty>
                 </Col>
                 <Col span="12">
                   <v-chart class="chart chart-min" :option="active.communityConf"/>
@@ -136,17 +139,20 @@
               <div slot="title">{{ $t('sitestats.reportRanking') }} · {{ $t(timeArray.find(i => i.value == timeRange).name) }}</div>
               <ol class="sitestats-ul" v-if="active.report.length > 0">
                 <li v-for="(i, index) in active.report" :key="index">
-                  <Row>
-                    <Col flex="1">
+                  <Row :gutter="10" type="flex" align="middle">
+                    <Col>
                       <businessCard :id="i.id">
-                        <router-link :to="{name:'space', params: { uId: i.id }}">{{ i.username }}</router-link>
+                        <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}`"></HtmlLink>
                       </businessCard>
+                    </Col>
+                    <Col flex="1">
+                      <Divider dashed style="margin: 0"></Divider>
                     </Col>
                     <Col>{{ i.total.toFixed(0) || 0 }}</Col>
                   </Row>
                 </li>
               </ol>
-              <Empty v-else></Empty>
+              <Empty :notHint="false" v-else></Empty>
               <Spin size="large" fix v-show="active.load">
                 <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
               </Spin>
@@ -160,11 +166,12 @@
               <div slot="title">{{ $t('sitestats.trend') }} · {{ $t(timeArray.find(i => i.value == timeRange).name) }}</div>
               <ol class="sitestats-ul" v-if="trend.list.length > 0">
                 <li v-for="(i, index) in trend.list" :key="index">
-                  <Row :gutter="10">
-                    <Col flex="1" class="text-distinguishing-letter">
-                      <router-link :to="{name:'player', params: { ouid: i.originPersonaId }}">
-                        <code>{{ i.originName }}</code>
-                      </router-link>
+                  <Row :gutter="10" type="flex" align="middle">
+                    <Col class="text-distinguishing-letter">
+                      <HtmlLink :text="i.originName" :is-poptip="false" :href="`/player/${i.originPersonaId}`"></HtmlLink>
+                    </Col>
+                    <Col flex="1">
+                      <Divider dashed style="margin: 0"></Divider>
                     </Col>
                     <Col>
                       <Icon type="md-chatbubbles"/>
@@ -182,7 +189,7 @@
                   </Row>
                 </li>
               </ol>
-              <Empty v-else></Empty>
+              <Empty :notHint="false" v-else></Empty>
               <Spin size="large" fix v-show="trend.load">
                 <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
               </Spin>
@@ -193,24 +200,26 @@
               <div slot="title">{{ $t('sitestats.achievement') }} </div>
               <ol class="sitestats-ul" v-if="active.achievement.length > 0">
                 <li v-for="(i, index) in active.achievement" :key="index">
-                  <Row :gutter="10">
-                    <Col flex="1" class="text-distinguishing-letter">
-                      <router-link :to="{name:'space', params: { uId: i.id }}">
-                        {{ i.username }}
-                      </router-link>
+                  <Row :gutter="10" type="flex" align="middle">
+                    <Col class="text-distinguishing-letter">
+                      <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}`"></HtmlLink>
+                    </Col>
+                    <Col flex="1">
+                      <Divider dashed style="margin: 0"></Divider>
                     </Col>
                     <Col>
-                      <AchievementsTag :data="i.userAchievements" size="15"></AchievementsTag>
+                      <AchievementsTag :maxOverflow="10" :data="i.userAchievements" size="15"></AchievementsTag>
                     </Col>
-                    <Divider type="vertical"></Divider>
                     <Col>
-                      <Icon type="md-color-wand"/>
-                      {{ i.points || 0}}
+                      <Tag color="primary">
+                        <Icon type="md-color-wand"/>
+                        {{ i.points || 0}}
+                      </Tag>
                     </Col>
                   </Row>
                 </li>
               </ol>
-              <Empty v-else></Empty>
+              <Empty :notHint="false" v-else></Empty>
               <Spin size="large" fix v-show="active.load">
                 <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
               </Spin>
@@ -238,6 +247,7 @@ import Empty from "@/components/Empty"
 import businessCard from "@/components/BusinessCard.vue";
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
 import AchievementsTag from "@/components/AchievementsTag.vue";
+import HtmlLink from "@/components/HtmlLink.vue"
 import * as echarts from "echarts";
 
 import {http, api, account_storage, time} from '../assets/js/index'
@@ -359,10 +369,10 @@ export default new Application({
       }
     }
   },
-  components: {businessCard, Empty, PrivilegesTag,AchievementsTag},
   created() {
     this.loadData();
   },
+  components: {businessCard, Empty, PrivilegesTag,AchievementsTag, HtmlLink},
   methods: {
     async loadData() {
       this.init();
@@ -565,6 +575,7 @@ export default new Application({
 
   li {
     padding-left: 5px;
+    line-height: 2.1rem;
   }
 
   li:nth-child(1)::marker,

@@ -227,7 +227,7 @@ export default new Application({
     }
 
     a:hover {
-      background: #00000012;
+      background: rgba(0, 0, 0, 0.04);
       padding: 1px 5px;
       border-radius: 5px;
       margin-left: -5px;
@@ -274,6 +274,6 @@ export default new Application({
 
 .footer-language-members .span {
   line-height: 1.5rem;
-  display: inline-flex;
+  display: contents;
 }
 </style>

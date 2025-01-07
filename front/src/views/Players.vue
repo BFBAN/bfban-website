@@ -99,67 +99,78 @@
 
             <div v-for="(d, d_index) in data" :key="d.originUserId" class="item-card" v-voice-button>
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
-                <Card dis-hover :padding="10">
-                  <Row :gutter="10" type="flex">
-                    <Col :xs="{span: 4, push: 0,pull:0}"
-                         :sm="{span: 3}"
-                         :lg="{span: 3, push: 0,pull:0}"
-                         :xl="{span: 2, push: 0,pull:0}">
-                      <!-- 头像 S -->
-                      <Avatar :src="d.avatarLink"
-                              class="default-avatar"
-                              @on-error="onAvatarError(d_index)"
-                              alt="avatar"
-                              size="55"
-                              v-if="d.avatarLink">
-                      </Avatar>
-                      <!-- 头像 E -->
-                    </Col>
-                    <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}"
-                         :xl="{span: 18, push: 0,pull:0}">
-                      <div style="display: flex; flex-direction: column;">
-                        <Tooltip :content="$t('list.colums.playerId')">
-                          <h2 class="text-distinguishing-letter">
-                            <router-link
-                                :to="{name: 'player', params: { ouid: d.originPersonaId}, query: {byPath: $route.name}}"
-                                :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
-                              <code>{{ d.originName }}</code>
-                            </router-link>
-                          </h2>
-                        </Tooltip>
-                      </div>
+                <Row :gutter="10">
+                  <Col flex="1"><Card dis-hover :padding="10">
+                    <Row :gutter="10" type="flex">
+                      <Col :xs="{span: 4, push: 0,pull:0}"
+                           :sm="{span: 3}"
+                           :lg="{span: 3, push: 0,pull:0}"
+                           :xl="{span: 2, push: 0,pull:0}">
+                        <!-- 头像 S -->
+                        <Avatar :src="d.avatarLink"
+                                class="default-avatar"
+                                @on-error="onAvatarError(d_index)"
+                                alt="avatar"
+                                size="55"
+                                v-if="d.avatarLink">
+                        </Avatar>
+                        <!-- 头像 E -->
+                      </Col>
+                      <Col :xs="{span: 18, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}"
+                           :xl="{span: 18, push: 0,pull:0}">
+                        <div style="display: flex; flex-direction: column;">
+                          <Tooltip :content="$t('list.colums.playerId')">
+                            <h2 class="text-distinguishing-letter">
+                              <router-link
+                                  :to="{name: 'player', params: { ouid: d.originPersonaId}, query: {byPath: $route.name}}"
+                                  :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
+                                <code>{{ d.originName }}</code>
+                              </router-link>
+                            </h2>
+                          </Tooltip>
+                        </div>
 
-                      <div>
-                        {{ $t('list.colums.reportTime') }}
-                        <TimeView :time="d.createTime">
-                          <Time v-if="d.createTime" :time="d.createTime" type="datetime"/>
-                        </TimeView>
-                        <Divider type="vertical"/>
-                        {{ $t('list.colums.updateTime') }}
-                        <TimeView :time="d.updateTime">
-                          <Time v-if="d.updateTime" :time="d.updateTime"/>
-                        </TimeView>
-                      </div>
-                    </Col>
-                    <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}" class="mobile-hide">
-                      <Row type="flex" justify="end" align="middle" style="height: 100%">
-                        <Col flex="auto" align="right" class="item-text">
-                          <span>{{ d.viewNum || 0 }}</span>
-                          <Icon type="md-eye" size="17" class="item-icon"/>
-                        </Col>
-                        <Col flex="auto" align="right" class="item-text">
-                          <span>{{ d.commentsNum || 0 }}</span>
-                          <Icon type="md-chatboxes" size="17" class="item-icon"/>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 1, push: 0,pull:0}"
-                         align="center"
-                         class="mobile-hide">
-                      <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
-                    </Col>
-                  </Row>
-                </Card>
+                        <div>
+                          {{ $t('list.colums.reportTime') }}
+                          <TimeView :time="d.createTime">
+                            <Time v-if="d.createTime" :time="d.createTime" type="datetime"/>
+                          </TimeView>
+                          <Divider type="vertical"/>
+                          {{ $t('list.colums.updateTime') }}
+                          <TimeView :time="d.updateTime">
+                            <Time v-if="d.updateTime" :time="d.updateTime"/>
+                          </TimeView>
+                        </div>
+                      </Col>
+                      <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 3, push: 0,pull:0}" class="mobile-hide">
+                        <Row type="flex" justify="end" align="middle" style="height: 100%">
+                          <Col flex="auto" align="right" class="item-text">
+                            <span>{{ d.viewNum || 0 }}</span>
+                            <Icon type="md-eye" size="17" class="item-icon"/>
+                          </Col>
+                          <Col flex="auto" align="right" class="item-text">
+                            <span>{{ d.commentsNum || 0 }}</span>
+                            <Icon type="md-chatboxes" size="17" class="item-icon"/>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 1, push: 0,pull:0}"
+                           align="center"
+                           class="mobile-hide">
+                        <Progress vertical :percent="d.status == 1 ? 99 : 100" hide-info status="wrong"/>
+                      </Col>
+                    </Row>
+                  </Card></Col>
+                  <Col class="mobile-hide">
+                    <Card dis-hover :padding="25"
+                          :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }, query: {byPath: $route.name}}"
+                          target="_blank">
+                      <Button size="small" type="text" icon>
+                        <Icon type="md-open"/>
+                      </Button>
+                    </Card>
+                  </Col>
+                </Row>
               </Badge>
             </div>
             <Card dis-hover :padding="10" v-if="data.length <= 0" align="center">

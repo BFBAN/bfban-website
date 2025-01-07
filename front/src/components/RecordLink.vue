@@ -1,5 +1,6 @@
 <template>
   <Table row-key="name"
+         class="record-link-box"
          :span-method="handleSpan"
          :show-header="false"
          :columns="detailLink.th"
@@ -7,6 +8,13 @@
          border>
   </Table>
 </template>
+
+<style>
+.record-link-box td[rowspan="1"] .ivu-table-cell .ivu-table-cell-tree-level,
+.record-link-box td[rowspan="1"] .ivu-table-cell .ivu-table-cell-tree.ivu-table-cell-tree-empty {
+  display: none;
+}
+</style>
 
 <script>
 import {util} from "@/assets/js";
@@ -23,16 +31,21 @@ export default {
             maxWidth: 300,
             tree: true,
             render: (h, params) => {
+              // 分支
               if (params.row.platform) {
+                // params.column.tree = true;
                 return h('Row', {
                   props: {
-                    gutter: 20,
+                    gutter: 10,
                     type: "flex",
                     align: "middle"
                   },
                 }, [
                   h('Col', {}, [
                     h('Avatar', {
+                      style: {
+                        margin: '0 10px 0 0'
+                      },
                       props: {
                         shape: 'square',
                         src: require(`/src/assets/images/recordPlatforms/${params.row.key}.png`)
@@ -46,6 +59,9 @@ export default {
                   }, [h('p', {}, `${params.row.key}`)]),
                 ]);
               }
+
+              // 主类型
+              // params.column.tree = false;
               return h('Tag', {
                 props: {
                   color: 'primary'
@@ -89,6 +105,9 @@ export default {
         data: []
       },
     }
+  },
+  watch: {
+    "$route": 'generateTable'
   },
   methods: {
     /**
@@ -160,7 +179,7 @@ export default {
         array.push({
           name: this.$i18n.t(`basic.games.${i}`),
           link: '',
-          children:this.generateLine([], i),
+          children: this.generateLine([], i),
         })
       });
 

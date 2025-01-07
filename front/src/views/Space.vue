@@ -9,12 +9,12 @@
         </Breadcrumb>
       </Col>
       <Col v-if="currentUser && currentUser.userinfo">
-        <Poptip trigger="hover" :disabled="isChat">
+        <Poptip trigger="hover" transfer :disabled="isChat">
           <Button @click="openMessage" :disabled="isChat">
             <Icon type="ios-chatbubbles"/>
             {{ $t("account.message.chat") }}
           </Button>
-          <div slot="content">
+          <div slot="content" >
             <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{
                 $t("account.message.hint.taOffChat")
               }}
@@ -22,6 +22,7 @@
             <Alert show-icon type="error" v-if="account.id == currentUser.userinfo.userId">
               {{ $t("account.message.hint.selfTalk") }}
             </Alert>
+            <template v-show="!isChat">{{ $t("account.message.chat") }}</template>
           </div>
         </Poptip>
       </Col>
@@ -75,7 +76,7 @@
                 <template v-if="account.attr && account.attr.achievements && Object.keys(account.attr.achievements).length > 0">
                   <Divider type="vertical"/>
                   <Col>
-                    <AchievementsTag :data="account.attr.achievements" :size="'17px'" :max-overflow="3"></AchievementsTag>
+                    <AchievementsTag :showAll="true" :data="account.attr.achievements" :size="'17px'" :max-overflow="3"></AchievementsTag>
                     <p class="account-info-p">{{ $t("profile.achievement.title") }}</p>
                   </Col>
                 </template>
@@ -128,7 +129,9 @@
                 </Col>
                 <Divider type="vertical"/>
                 <Col>
-                  <vue-qr :text="'bfban://app/account?id=' + $route.params.uId" :size="60" :margin="3" v-if="$route.params.uId"></vue-qr>
+                  <Card :padding="0">
+                    <vue-qr :text="'//bfban.com/space/' + $route.params.uId" :size="60" :margin="3" v-if="$route.params.uId" style="display: block"></vue-qr>
+                  </Card>
                 </Col>
               </Row>
             </Col>
@@ -148,6 +151,9 @@
                      :no-data-text="$t('basic.tip.noReports')"
                      :columns="report.columns"
                      :data="report.data"></Table>
+              <Spin size="large" fix v-show="load">
+                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+              </Spin>
             </Card>
 
             <br/>
@@ -205,7 +211,7 @@ export default new Application({
   data() {
     return {
       games: games.child,
-      load: false,
+      load: true,
       account: {
         username: "",
         originId: "",
@@ -374,7 +380,9 @@ export default new Application({
   },
   components: {PrivilegesTag, AchievementsTag, Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, vueQr},
   created() {
+    const {username} = this.$route.query;
     this.http = http_token.call(this);
+    this.account.username = username || '';
 
     this.loadData();
   },
