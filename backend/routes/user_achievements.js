@@ -433,7 +433,7 @@ router.post('/achievement/admin/add', verifyJWT, allowPrivileges(["super", "root
             return res.status(404).json({error: 1, code: 'achievement.notFound', message: 'no such user.'});
 
         let update = {attr: {...user.attr}};
-        update.attr.achievements = {...user.attr.achievements, [achievementId]: new Date().getDate()};
+        update.attr.achievements = {...user.attr.achievements, [achievementId]: new Date().getTime()};
         update.attr = JSON.stringify(userSetAttributes(req.user.attr, update.attr, true));
 
         await db.from('users').update(update).where({id: userId || user.id});
