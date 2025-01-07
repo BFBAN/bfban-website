@@ -229,7 +229,7 @@
           "value": "active_community_yearly_l2",
           "iconPath": "active_community_l3-2.png",
           "isHidden": false,
-          "isShowCard": false,
+          "isShowCard": true,
           "rarity": "rare",
           "acquisition": [
             "active"
