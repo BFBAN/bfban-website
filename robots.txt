@@ -2,6 +2,10 @@ User-agent: *
 Disallow: /api
 Disallow: /account?
 Disallow: /account/
-Allow:
+Disallow: /space?
+Disallow: /space/
+Disallow: /report
+Disallow: /profile/chat
 
+Allow:
 Sitemap: /sitemap.xml
