@@ -275,6 +275,7 @@ router.get('/activeStatistical', [
                         }).reverse();
                         user.points = userPoints;
                         user.userAchievements = handleAchievemenMapToArray(user.attr.achievements);
+                        delete user.attr;
                     }
                 }
 
