@@ -46,22 +46,6 @@
             "showLang": [
               "zh-CN"
             ]
-          },
-          {
-            "text": "Public Translation \uD83D\uDCDA",
-            "textLang": {
-              "en-US": "Public Translation \uD83D\uDCDA",
-              "zh-CN": "帮我们翻译 \uD83D\uDCDA"
-            },
-            "src": "https://explore.transifex.com/bfban"
-          },
-          {
-            "text": "BFBAN WebSite Public Api Docs",
-            "textLang": {
-              "en-US": "BFBAN WebSite Public Api Docs",
-              "zh-CN": "联BAN网站公开API文档"
-            },
-            "src": "https://bfban.gametools.network/docs"
           }
         ]
       },
@@ -87,6 +71,62 @@
             "text": "sitestats.title",
             "src": "site_stats",
             "insideLang": true
+          }
+        ]
+      },
+      {
+        "text": "footer.column.col4.title",
+        "child": [
+          {
+            "text": "Complaint mailbox",
+            "textLang": {
+              "en-US": "Appeals mailbox",
+              "zh-CN": "申诉邮箱"
+            },
+            "src": "mailto:ban-appeals@bfban.com"
+          },
+          {
+            "text": "Transaction mailbox (Transactions/website feedback/bugs)",
+            "textLang": {
+              "en-US": "Transaction mailbox (Transactions/website feedback/bugs)",
+              "zh-CN": "事务邮箱(事务/网站反馈/BUG)"
+            },
+            "src": "mailto:services@bfban.com"
+          },
+          {
+            "text": "BFBAN助手反馈邮箱",
+            "textLang": {
+              "en-US": "BFBAN Assistant application mailbox",
+              "zh-CN": "BFBAN助手应用程序邮箱"
+            },
+            "src": "mailto:services@bfban.com"
+          },
+          {
+            "text": "腾讯QQ交流群",
+            "src": "//jq.qq.com/?_wv=1027&k=FY8TCpCV",
+            "showLang": [
+              "zh-CN",
+              "zh-TW",
+              "zh-Cat"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "footer.column.col5.title",
+        "child": [
+          {
+            "text": "header.about",
+            "src": "about",
+            "insideLang": true
+          },
+          {
+            "text": "Privacy Policy",
+            "src": "https://short.bfban.com/privacy-policy",
+            "textLang": {
+              "en-US": "Privacy Policy",
+              "zh-CN": "隐私政策"
+            }
           },
           {
             "text": "sitestats.netstatus",
@@ -102,42 +142,23 @@
               "en-US": "Exterior Design",
               "zh-CN": "设计材料"
             },
-            "src": "https://github.com/BFBAN/exterior-design"
-          }
-        ]
-      },
-      {
-        "text": "footer.column.col4.title",
-        "child": [
-          {
-            "text": "header.about",
-            "src": "about",
-            "insideLang": true
+            "src": "https://short.bfban.com/exterior-design"
           },
           {
-            "text": "Complaint mailbox",
+            "text": "Public Translation \uD83D\uDCDA",
             "textLang": {
-              "en-US": "Appeals mailbox",
-              "zh-CN": "申诉邮箱"
+              "en-US": "Public Translation \uD83D\uDCDA",
+              "zh-CN": "帮我们翻译 \uD83D\uDCDA"
             },
-            "src": "mailto:ban-appeals@bfban.com"
+            "src": "https://explore.transifex.com/bfban"
           },
           {
-            "text": "Contact Us",
+            "text": "BFBAN WebSite Public Api Docs",
             "textLang": {
-              "en-US": "Contact Us",
-              "zh-CN": "联系我们"
+              "en-US": "BFBAN WebSite Public Api Docs",
+              "zh-CN": "联BAN网站公开API文档"
             },
-            "src": "mailto:services@bfban.com"
-          },
-          {
-            "text": "腾讯QQ交流群",
-            "src": "//jq.qq.com/?_wv=1027&k=FY8TCpCV",
-            "showLang": [
-              "zh-CN",
-              "zh-TW",
-              "zh-Cat"
-            ]
+            "src": "https://test.bfban.com"
           }
         ]
       }

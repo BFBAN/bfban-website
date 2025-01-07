@@ -16,20 +16,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ads.txt"
   },
   {
-    "revision": "33a0ab66b1b2188e0c81",
+    "revision": "f1d38b8a75e42b6285cb",
     "url": "/app.css"
   },
   {
-    "revision": "33a0ab66b1b2188e0c81",
+    "revision": "f1d38b8a75e42b6285cb",
     "url": "/app.css.map"
   },
   {
-    "revision": "33a0ab66b1b2188e0c81",
-    "url": "/assets/css/app.e3e44de6.css"
+    "revision": "f1d38b8a75e42b6285cb",
+    "url": "/assets/css/app.89e584a7.css"
   },
   {
-    "revision": "33a0ab66b1b2188e0c81",
-    "url": "/assets/css/app.e3e44de6.css.map"
+    "revision": "f1d38b8a75e42b6285cb",
+    "url": "/assets/css/app.89e584a7.css.map"
   },
   {
     "revision": "88cbe66fc082f576e9d0",
@@ -308,11 +308,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/fonts/ionicons.d535a25a.ttf"
   },
   {
-    "revision": "33a0ab66b1b2188e0c81",
+    "revision": "f1d38b8a75e42b6285cb",
     "url": "/assets/js/app.2.9.17.js"
   },
   {
-    "revision": "33a0ab66b1b2188e0c81",
+    "revision": "f1d38b8a75e42b6285cb",
     "url": "/assets/js/app.2.9.17.js.map"
   },
   {
@@ -1016,7 +1016,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/config/footerNavs.example.json"
   },
   {
-    "revision": "f638946456a8f13e8b3f472ddb550f59",
+    "revision": "2e44492ab07e06fbda3d637ee5e9423b",
     "url": "/config/footerNavs.json"
   },
   {
@@ -1028,7 +1028,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/config/headerMenu.json"
   },
   {
-    "revision": "8d11b3b81f2090921d1acce71090cca2",
+    "revision": "e27adcd88d5b133f99fd420ec22191ac",
     "url": "/config/languages.json"
   },
   {
@@ -1080,7 +1080,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/favicon.ico"
   },
   {
-    "revision": "5ba02c21e8eba4da5ea942f361e98719",
+    "revision": "f4de53b8426913e5a1b2e27a61bb4424",
     "url": "/index.html"
   },
   {
