@@ -4,17 +4,17 @@ import {body as checkbody, query as checkquery, validationResult} from "express-
 
 import db from "../mysql.js";
 import config from "../config.js";
-import {forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {verifyJWT} from "../middleware/auth.js";
 import {allowPrivileges} from "../middleware/auth.js";
 import {localeMessage, sendMessage} from "./message.js";
 import {generatePassword, privilegeGranter, privilegeRevoker, userHasRoles} from "../lib/auth.js";
 import {initUserStorageQuota, userDefaultAttribute, userSetAttributes} from "../lib/user.js";
+import {sendUserGeneratePasswordNotification} from "../lib/mail.js";
 import got from "got";
 import {ServiceApiError} from "../lib/serviceAPI.js";
 import * as misc from "../lib/misc.js";
 import logger from "../logger.js";
 import {siteEvent} from "../lib/bfban.js";
-import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 const router = express.Router();
 
@@ -222,7 +222,11 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
         }
     });
 
-router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+router.get('/CommentTypeList', async (req, res, next) => res.status(404).json({
+    code: -1,
+    message: '[get]CommentTypeList -> [get]commentTypeList'
+}))
+router.get('/commentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkquery('type').optional().isString().isIn(['banAppeal', 'judgement']),
         checkquery('banAppealStats').optional().isString(),
         checkquery('judgeAction').optional().isString(),
@@ -396,7 +400,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/setUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+router.post('/setUserRole', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.action').isIn(['grant', 'revoke']),
     checkbody('data.role').isIn(['normal', 'admin', 'bot', 'super', 'dev', 'volunteer', 'blacklisted', 'freezed'])
@@ -677,6 +681,135 @@ async (req, res, next) => {
         next(err);
     }
 });
+
+router.post('/setUserBindData', verifyJWT, allowPrivileges(["root", "dev"]), [
+    checkbody('data.id').isInt({min: 0}),
+    checkbody('data.originEmail').isString().trim().isEmail(),
+    checkbody('data.originName').isString().unescape().trim().notEmpty(),
+    checkbody('data.originUserId').isString().trim(),
+    checkbody('data.originPersonaId').isString().trim(),
+], async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: `setUserBindData.bad`, message: validateErr.array()});
+
+        const {id, originEmail, originName, originUserId, originPersonaId} = req.body.data;
+        const checkIdData = db('users').where({id: id})
+        if (!checkIdData)
+            return req.status(201).json({error: 1, code: 'setUserBindData.notPrimitiveUser'})
+
+        await db('users').update({originName, originEmail, originUserId, originPersonaId}).where({id: id});
+        await db('operation_log').insert({
+            byUserId: req.user.id,
+            toUserId: id,
+            action: 'edit',
+            role: 'bind',
+            createTime: new Date()
+        });
+
+        return res.status(200).json({success: 1, code: 'setUserBindData.success', message: 'transfer success!'});
+    } catch (e) {
+        next(e)
+    }
+});
+
+router.post('/transferBindData', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+    checkbody('data.id').isInt({min: 0}),
+    checkbody('data.targetId').isInt({min: 0}),
+], async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: `transferBindData.bad`, message: validateErr.array()});
+
+        // Verify mutual accounts
+        const {id, targetId} = req.body.data;
+        const primitiveIdData = db('users')
+            .select('users.originName as originName', 'users.originEmail as originEmail', 'users.originUserId as originUserId', 'users.originPersonaId as originPersonaId')
+            .where({id: id})
+        if (!primitiveIdData)
+            return req.status(201).json({error: 1, code: 'transferBindData.notPrimitiveUser'})
+        const targetIdData = db('users')
+            .select('users.valid as valid', 'users.privilege as privilege', 'users.originName as originName', 'users.originEmail as originEmail', 'users.originUserId as originUserId', 'users.originPersonaId as originPersonaId')
+            .where({id: targetId})
+        if (!targetIdData && !targetIdData.valid && targetIdData.privilege.some(i => new Set(['blacklisted','freezed']).has(i)))
+            return req.status(201).json({
+                error: 1,
+                code: 'transferBindData.notTargetUser',
+                message: 'This account could not be found or other factors have led to the rejection'
+            })
+
+        // binding information migration
+        await db('users').update({
+            originName: "",
+            originEmail: "",
+            originUserId: "",
+            originPersonaId: ""
+        }).where({id: id});
+        await db('users')
+            .update({
+                originName: primitiveIdData.originName,
+                originEmail: primitiveIdData.originEmail,
+                originUserId: primitiveIdData.originUserId,
+                originPersonaId: primitiveIdData.originPersonaId
+            })
+            .where({id: targetId});
+        await db('operation_log').insert({
+            byUserId: req.user.id,
+            toUserId: `${id},${targetId}`,
+            action: 'transfer',
+            role: 'bind',
+            createTime: new Date()
+        });
+
+        return res.status(200).json({success: 1, code: 'transferBindData.success', message: 'transfer success!'});
+    } catch (e) {
+        next(e);
+    }
+});
+
+router.post('/setUserGeneratePassword', verifyJWT, allowPrivileges(["root", "dev"]), [
+    checkbody('data.id').isInt({min: 0}),
+    checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40}),
+], async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'setUserGeneratePassword.bad', message: validateErr.array()});
+
+        const {newpassword, id} = req.body.data;
+        const targetUser = await db('users').where({id: id})
+
+        if (!targetUser)
+            return res.status(200).json({
+                error: 1,
+                code: 'setUserGeneratePassword.notUser',
+                message: 'No user found'
+            })
+
+        await db('users').update({
+            password: await generatePassword(newpassword),
+            signoutTime: new Date()
+        }).where({id: id});
+
+        if (targetUser.originEmail)
+            await sendUserGeneratePasswordNotification(
+                targetUser.username,
+                targetUser.originEmail,
+                ['zh-CN', 'en-US'].findLast(i => i === req.headers["accept-language"]) || 'en-US',
+                newpassword
+            );
+
+        return res.status(200).json({
+            success: 1,
+            code: 'setUserGeneratePassword.success',
+            message: `${targetUser.username} need a Re-login to finish this process`
+        });
+    } catch (e) {
+        next(e)
+    }
+})
 
 router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkbody('data.username').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),

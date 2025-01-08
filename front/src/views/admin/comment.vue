@@ -404,7 +404,7 @@ export default new Application({
         params.appealStatus = this.banAppealStats.value;
       if (this.typeValue === 'judgement')
         params.judgeAction = this.judgementType.value;
-      this.http.get(api['admin_CommentTypeList'], {
+      this.http.get(api['admin_commentTypeList'], {
         params: {
           type: this.typeValue,
           judgeAction: params.judgeAction,

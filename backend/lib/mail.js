@@ -1,5 +1,5 @@
 "use strict";
-import { promises as fs } from "fs";
+import {promises as fs} from "fs";
 import nodemailer from "nodemailer";
 import config from "../config.js";
 
@@ -20,7 +20,7 @@ if (Array.isArray(config.mail)) {
                     user: mailConfig.user,
                     pass: mailConfig.password,
                 },
-                tls: mailConfig.tls ? { rejectUnauthorized: false } : undefined,
+                tls: mailConfig.tls ? {rejectUnauthorized: false} : undefined,
             })
         );
     });
@@ -34,7 +34,7 @@ if (Array.isArray(config.mail)) {
                 user: config.mail.user,
                 pass: config.mail.password,
             },
-            tls: config.mail.tls ? { rejectUnauthorized: false } : undefined,
+            tls: config.mail.tls ? {rejectUnauthorized: false} : undefined,
         })
     );
 }
@@ -170,6 +170,28 @@ async function sendUserAuthVerify(username, address, appname, appid, language, c
     );
 }
 
+async function sendUserGeneratePasswordNotification(username, address, language, code) {
+    const subject =
+        language === "zh-CN"
+            ? "BFBAN新密码生成"
+            : "BFBAN Generate New Password";
+    const html = await getTemplateContent("mail_userGeneratePassword", language);
+    const origin = new URL(domain).origin;
+
+    const emailContent = html
+        .replace(/\$\{username\}/g, username)
+        .replace(/\$\{website\}/g, origin)
+        .replace(/\$\{code\}/g, code);
+
+    await sendMail(
+        emailContent,
+        `"BFBAN Account Service" <no-reply@bfban.com>`,
+        address,
+        "",
+        subject
+    );
+}
+
 
 export {
     sendMail,
@@ -177,4 +199,5 @@ export {
     sendForgetPasswordVerify,
     sendBindingOriginVerify,
     sendUserAuthVerify,
+    sendUserGeneratePasswordNotification,
 };

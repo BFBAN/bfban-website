@@ -72,10 +72,12 @@ export default class Api {
 
             "admin_searchUser": "admin/searchUser",
             "admin_setComment": "admin/setComment",
-            "admin_commentAll": "admin/commentAll",
-            "admin_setUser": "admin/setUser",
-            "admin_setAppeal": "admin/setAppeal",
+            "admin_setUserRole": "admin/setUserRole",
             "admin_setUserAttr": "admin/setUserAttr",
+            "admin_setAppeal": "admin/setAppeal",
+            "admin_setUserBindData": "admin/setUserBindData",
+            "admin_setUserGeneratePassword": "admin/setUserGeneratePassword",
+            "admin_transferBindData": "admin/transferBindData",
             "admin_msGraphStatus": "admin/msGraphStatus",
             "admin_msGraphInit": "admin/msGraphInit",
             "admin_msGraphAuthCode": "admin/msGraphAuthCode",
@@ -90,7 +92,8 @@ export default class Api {
             "admin_muteUserAll": "admin/muteUserAll",
             "admin_verifications": "admin/verifications",
             "admin_blockedUserAll": "admin/blockedUserAll",
-            "admin_CommentTypeList": "admin/CommentTypeList"
+            "admin_commentAll": "admin/commentAll",
+            "admin_commentTypeList": "admin/commentTypeList"
         };
     }
 }

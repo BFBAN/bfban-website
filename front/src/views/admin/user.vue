@@ -156,6 +156,17 @@
                   </Col>
                 </Row>
               </Col>
+              <Col span="24">
+                <FormItem :label="$t('signup.form.password')">
+                  <Input value="******" readonly disabled>
+                    <a href="javascript:void(0)" slot="append"
+                       v-if="isAdminL3"
+                       @click="generatesUserPasswordModel = !generatesUserPasswordModel">
+                      <Icon type="md-create" size="15"/>
+                    </a>
+                  </Input>
+                </FormItem>
+              </Col>
               <Col span="12">
                 <FormItem :label="$t('profile.space.form.lastSigninIP')" prop="username">
                   <Input v-model="editUserData.attr.lastSigninIP" readonly disabled/>
@@ -184,8 +195,14 @@
               </Col>
 
               <Col span="12">
-                <FormItem :label="$t('profile.space.form.originEmail')">
+                <FormItem>
                   <Input v-model="editUserData.originEmail" readonly></Input>
+                  <template slot="label">
+                    {{ $t('profile.space.form.originEmail') }}
+                    <a @click="transferUserBindModel = !transferUserBindModel; editUserBindData.id = editUserData.id">
+                      <Icon type="md-create" size="15"/>
+                    </a>
+                  </template>
                 </FormItem>
               </Col>
               <Col span="12">
@@ -210,7 +227,8 @@
                                      max-overflow="6"
                                      v-if="editUserData.attr.achievements"></AchievementsTag>
 
-                    <code type="json" style="width: 100%; white-space: pre-line">{{editUserData.attr.achievements}}</code>
+                    <code type="json"
+                          style="width: 100%; white-space: pre-line">{{ editUserData.attr.achievements }}</code>
 
                     <Row :gutter="10">
                       <Col>
@@ -289,7 +307,7 @@
                       <Select v-model="editPrivilegesForm.roleName">
                         <Option v-for="(i, index) in editPrivilegesForm.role" :value="i"
                                 :label="$t('basic.privilege.' + i)" :key="index">
-                          <Tag>{{ $t('basic.privilege.' + i) }}</Tag>
+                          {{ $t('basic.privilege.' + i) }}
                         </Option>
                       </Select>
                     </Col>
@@ -317,6 +335,67 @@
       </Form>
     </Modal>
     <!-- 编辑用户 E -->
+
+    <!-- 编辑用户 - 强制生成新用户密码 - Admin S -->
+    <Modal v-model="generatesUserPasswordModel">
+      <template slot="header">
+        <Row type="flex" align="middle">
+          <PrivilegesTag :data='["root", "dev"]'></PrivilegesTag>
+          <Col flex="1">
+            Generates Password
+          </Col>
+        </Row>
+      </template>
+      <Form ref="formUserPasswordValidate"
+            v-model="editUserPasswordData"
+            :rules="addUserRuleValidate"
+            label-position="top">
+        <FormItem :label="$t('reset.form.newPassword')" prop="password">
+          <Input v-model="editUserPasswordData.password" maxlength="40"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button @click="onGeneratesUserPassword" :loading="generatesUserPasswordLoad" color="primary">{{ $t('basic.button.submit') }}</Button>
+      </div>
+    </Modal>
+    <!-- 编辑用户 - 强制生成新用户密码 - Admin E -->
+
+    <!-- 编辑用户 - 迁移绑定 - Admin S -->
+    <Modal v-model="transferUserBindModel">
+      <template slot="header">
+        <Row type="flex" align="middle">
+          <PrivilegesTag :data='["super","root", "dev"]'></PrivilegesTag>
+          <Col flex="1">
+            Transfer User Bind
+          </Col>
+        </Row>
+      </template>
+
+      <Form ref="formUserBindValidate"
+            v-model="editUserBindData"
+            :rules="transferUserBindRuleValidate"
+            label-position="top">
+        <Row :gutter="30" type="flex" align="middle">
+          <Col flex="1">
+            <FormItem label="id" prop="id">
+              <Input v-model="editUserBindData.id" readonly></Input>
+            </FormItem>
+          </Col>
+          <Col span="1" align="center">
+            <Icon type="md-link" size="15"/>
+          </Col>
+          <Col flex="1">
+            <FormItem label="Target Id" prop="targetId">
+              <Input v-model="editUserBindData.targetId"></Input>
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+      <div slot="footer">
+        <Button @click="onTransferAccountBindData" :loading="bindUserLoad" color="primary">{{ $t('basic.button.submit') }}</Button>
+      </div>
+    </Modal>
+    <!-- 编辑用户 - 迁移绑定 - Admin E -->
 
     <!-- 新增用户 S -->
     <Modal v-model="addUserModel"
@@ -361,7 +440,7 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="onAddUserSubmit" :loading="addUserLoad">{{ $t('basic.button.submit') }}</Button>
+        <Button @click="onAddUserSubmit" :loading="addUserLoad" color="primary">{{ $t('basic.button.submit') }}</Button>
       </div>
     </Modal>
     <!-- 新增用户 E -->
@@ -454,7 +533,9 @@ export default new Application({
         }, {title: 'originPersonaId', value: 'originPersonaId'}, {title: 'Email', value: 'originEmail'}]
       },
 
+      generatesUserPasswordLoad: false,
       addUserLoad: false,
+      bindUserLoad: false,
       load: false,
 
       userValue: '',
@@ -488,7 +569,20 @@ export default new Application({
         originName: [{required: true, min: 1, trigger: 'blur'}],
         originEmail: [{required: true, min: 1, type: 'email', trigger: 'blur'}],
       },
+      editUserPasswordData: {
+        password: '',
+      },
+      transferUserBindRuleValidate: {
+        id: [{trigger: 'blur'}],
+        targetId: [{required: true, trigger: 'blur'}],
+      },
+      editUserBindData: {
+        id: '',
+        targetId: '',
+      },
       userEditModel: false,
+      generatesUserPasswordModel: false,
+      transferUserBindModel: false,
       addUserModel: false,
       languages: languages.child,
 
@@ -804,6 +898,79 @@ export default new Application({
           reject();
         })
       })
+    },
+    /**
+     * 生成新密码 - 管理
+     * 同时邮件通知用户
+     */
+    async onGeneratesUserPassword() {
+      try {
+        this.$refs.formUserPasswordValidate.validate(async (valid) => {
+          if (!valid) return;
+
+          this.generatesUserPasswordLoad = true
+
+          const res = await this.http.post("admin_setUserGeneratePassword", {
+            data: {
+              data: {
+                id: this.editUserData.id,
+                newpassword: this.editUserPasswordData.password,
+              }
+            }
+          });
+
+          const d = res.data;
+
+          if (d.success === 1) {
+            this.$Message.success(d.message || d.code);
+            this.generatesUserPasswordModel = false;
+            return;
+          }
+
+          this.$Message.error(d.message || d.code);
+        })
+
+      } catch (e) {
+        this.$Message.error(e);
+      } finally {
+        this.generatesUserPasswordLoad = false;
+      }
+    },
+    /**
+     * 迁移绑定数据
+     * 从一个账户到另一个账户
+     */
+    onTransferAccountBindData() {
+      try {
+        this.$refs.formUserBindValidate.validate(async (valid) => {
+          if (!valid) return;
+
+          this.bindUserLoad = true;
+          const res = await this.http.post("admin_transferBindData", {
+            data: {
+              data: {
+                id: this.editUserBindData.id,
+                targetId: this.editUserBindData.targetId,
+              }
+            }
+          });
+
+          const d = res.data;
+
+          if (d.success === 1) {
+            this.$Message.success(d.message || d.code);
+            this.transferUserBindModel = false;
+            return;
+          }
+
+          this.$Message.error(d.message || d.code);
+        })
+
+      } catch (e) {
+        this.$Message.error(e);
+      } finally {
+        this.bindUserLoad = false;
+      }
     },
     handlePageChange(num) {
       this.skip = num;
