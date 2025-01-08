@@ -34,7 +34,7 @@ import zh_cat_local from './lang/zh_Cat.json' // 简体喵文
 Vue.use(VueI18n)
 
 let i18n = new VueI18n({
-    locale: new Storage().local.get('language')?.data?.value ?? navigator.language,
+    locale: new Storage().local.get('language')?.data?.value ?? 'en-US',
     fallbackLocale: lang.default,
     formatFallbackMessages: true,
     silentTranslationWarn: true,

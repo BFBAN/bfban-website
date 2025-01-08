@@ -69,25 +69,28 @@
             </ul>
           </Col>
           <Col :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
-            <Select v-model="currentLan" class="switch-language" prefix="md-globe" size="large"
+            <Select v-model="currentLan"
+                    class="switch-language" prefix="md-globe" size="large"
                     :disabled="langLocalSync">
               <Option v-for="(item, index) in languages" :key="index" :label="item.label" :value="item.name">
                 <span>{{ item.label }}</span>
                 <span style="float:right;color:#ccc">
-                {{ item.name }}
-              </span>
+                  {{ item.name }}
+                </span>
               </Option>
             </Select>
-            <div v-if="languages.length > 0" class="footer-language-members">
+            <div class="footer-language-members">
               <br>
               <span>{{ $t("footer.language.members") }}</span><br>
-              <span
-                  class="span"
-                  v-for='(i, index) in languages.filter(i => i.name === currentLan)[0]["members"]' :key="index">
-                <HtmlLink :text='i.name' :href="i.url" :key="index" :isPoptip="false"></HtmlLink>
-                <Divider type="vertical"
-                         v-if="index + 1 < (languages.filter(i => i.name === currentLan)[0]['members'].length)"></Divider>
-              </span>
+              <template v-if="languages.length >= 0 && languages.filter(i => i.name === currentLan)">
+                <span
+                      class="span"
+                      v-for='(i, index) in currentLanMembers' :key="index">
+                  <HtmlLink :text='i.name' :href="i.url" :key="index" :isPoptip="false"></HtmlLink>
+                  <Divider type="vertical"
+                           v-if="index + 1 < currentLanMembers.length"></Divider>
+                </span>
+              </template>
             </div>
           </Col>
         </Row>
@@ -147,27 +150,34 @@ export default new Application({
       logoCount: 0,
       langLocalSync: false,
       languages: [],
+      languagesImport: {}
     }
   },
   created() {
     this.loadData();
   },
   components: {HtmlLink},
-  watch: {
-    $route: "loadData",
-  },
   methods: {
     async loadData() {
-      const languages = await import('/public/config/languages.json');
+      this.languagesImport = await import('/public/config/languages.json');
 
       this.langLocalSync = account_storage.getConfiguration('langLocalSync');
-      this.languages = languages.child;
+      this.languages = this.languagesImport.child;
 
-      if (this.$route.query.lang)
+      if (this.$route.query.lang) {
         this.currentLan = this.$route.query.lang;
+        return;
+      }
     },
   },
   computed: {
+    currentLanMembers () {
+      try {
+        return this.languages.filter(i => i.name === this.currentLan)[0]["members"];
+      } catch (e) {
+        return  [];
+      }
+    },
     currentLan: {
       set(val) {
         const lang = val;
@@ -179,14 +189,19 @@ export default new Application({
         document.getElementsByTagName('html')[0].lang = lang;
       },
       get() {
-        const localAppLanguages = this.$root && this.$root.$i18n && this.$root.$i18n.locale;
-        const localStorageLanguage = storage.local.get('language')?.data?.value;
-        const localWebLanguage = this.$route.query.lang;
+        try {
+          const localAppLanguages = this.$root && this.$root.$i18n && this.$root.$i18n.locale;
+          const localStorageLanguage = storage.local.get('language')?.data?.value;
+          const localWebLanguage = this.$route.query.lang;
 
-        // This is not the place to initialize the language
-        http.setGlobalHeader({'Accept-Language': localWebLanguage || localStorageLanguage || localAppLanguages || 'zh-CN'})
+          // This is not the place to initialize the language
+          http.setGlobalHeader({'Accept-Language': localWebLanguage || localStorageLanguage || localAppLanguages || 'zh-CN'})
 
-        return localWebLanguage || localStorageLanguage || localAppLanguages || 'zh-CN';
+          console.log(this.$root.$i18n.locale)
+          return localWebLanguage || localStorageLanguage || localAppLanguages || this.languagesImport.default.default;
+        } catch (e) {
+          return this.languagesImport.default.default;
+        }
       }
     }
   }
