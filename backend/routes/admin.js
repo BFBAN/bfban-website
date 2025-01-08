@@ -717,6 +717,7 @@ router.post('/setUserBindData', verifyJWT, allowPrivileges(["root", "dev"]), [
 router.post('/transferBindData', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.targetId').isInt({min: 0}),
+    checkbody('data.mode').isIn(['cover', 'interchange'])
 ], async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
@@ -724,7 +725,7 @@ router.post('/transferBindData', verifyJWT, allowPrivileges(["super", "root", "d
             return res.status(400).json({error: 1, code: `transferBindData.bad`, message: validateErr.array()});
 
         // Verify mutual accounts
-        const {id, targetId} = req.body.data;
+        const {id, targetId, mode = 'cover'} = req.body.data;
         const primitiveIdData = db('users')
             .select('users.originName as originName', 'users.originEmail as originEmail', 'users.originUserId as originUserId', 'users.originPersonaId as originPersonaId')
             .where({id: id})
@@ -733,33 +734,53 @@ router.post('/transferBindData', verifyJWT, allowPrivileges(["super", "root", "d
         const targetIdData = db('users')
             .select('users.valid as valid', 'users.privilege as privilege', 'users.originName as originName', 'users.originEmail as originEmail', 'users.originUserId as originUserId', 'users.originPersonaId as originPersonaId')
             .where({id: targetId})
-        if (!targetIdData && !targetIdData.valid && targetIdData.privilege.some(i => new Set(['blacklisted','freezed']).has(i)))
+        if (!targetIdData && !targetIdData.valid && targetIdData.originEmail && targetIdData.privilege.some(i => new Set(['blacklisted','freezed']).has(i)))
             return req.status(201).json({
                 error: 1,
-                code: 'transferBindData.notTargetUser',
+                code: 'transferBindData.fail',
                 message: 'This account could not be found or other factors have led to the rejection'
             })
 
         // binding information migration
-        await db('users').update({
-            originName: "",
-            originEmail: "",
-            originUserId: "",
-            originPersonaId: ""
-        }).where({id: id});
-        await db('users')
-            .update({
-                originName: primitiveIdData.originName,
-                originEmail: primitiveIdData.originEmail,
-                originUserId: primitiveIdData.originUserId,
-                originPersonaId: primitiveIdData.originPersonaId
-            })
-            .where({id: targetId});
+        let primitive, target;
+        switch (mode) {
+            case 'cover':
+                primitive = {
+                    originName: "",
+                    originEmail: "",
+                    originUserId: "",
+                    originPersonaId: ""
+                };
+                target = {
+                    originName: primitiveIdData.originName,
+                    originEmail: primitiveIdData.originEmail,
+                    originUserId: primitiveIdData.originUserId,
+                    originPersonaId: primitiveIdData.originPersonaId
+                };
+                break;
+            case 'interchange':
+                primitive = {
+                    originName: targetIdData.originName,
+                    originEmail: targetIdData.originEmail,
+                    originUserId: targetIdData.originUserId,
+                    originPersonaId: targetIdData.originPersonaId
+                };
+                target = {
+                    originName: primitiveIdData.originName,
+                    originEmail: primitiveIdData.originEmail,
+                    originUserId: primitiveIdData.originUserId,
+                    originPersonaId: primitiveIdData.originPersonaId
+                };
+                break;
+        }
+
+        await db('users').update(primitive).where({id: id});
+        await db('users').update(target).where({id: targetId});
         await db('operation_log').insert({
             byUserId: req.user.id,
             toUserId: `${id},${targetId}`,
             action: 'transfer',
-            role: 'bind',
+            role: `bind_${mode}`,
             createTime: new Date()
         });
 

@@ -951,6 +951,7 @@ export default new Application({
               data: {
                 id: this.editUserBindData.id,
                 targetId: this.editUserBindData.targetId,
+                mode: 'cover'
               }
             }
           });
