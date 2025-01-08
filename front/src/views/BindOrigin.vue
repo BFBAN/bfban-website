@@ -42,7 +42,6 @@
                 <div v-show="stepsIndex === 1">
                   <FormItem :label="$t('captcha.title')" prop="captcha">
                     <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
-
                   </FormItem>
                 </div>
 
@@ -142,7 +141,7 @@ export default {
           {required: true, trigger: 'blur'}
         ],
         captcha: [
-          {required: true, min: 4, max: 4, trigger: 'change'}
+          {required: true}
         ]
       },
       signup: {
@@ -150,7 +149,6 @@ export default {
         originName: '',
         captcha: '',
       },
-
       bindOrigin: {
         load: false,
         backServiceMsg: ''
@@ -164,7 +162,7 @@ export default {
   },
   watch: {
     '$route': function (val) {
-      if (val.name == 'bindOrigin' && !val.query.code) {
+      if (val.name === 'bindOrigin' && !val.query.code) {
         this.stepsIndex = 0;
       }
     }
@@ -176,11 +174,17 @@ export default {
   },
   components: {Captcha},
   methods: {
+    /**
+     * 获得验证
+     * @param e
+     */
     getCaptchaData(e) {
       this.signup.captcha = e;
     },
-    // 绑定橘子账户
-    // 发送邮件
+    /**
+     * 绑定橘子账户
+     * 发送邮件
+     */
     onBindOrigin() {
       const that = this;
       let {originEmail, originName, captcha} = this.signup;
@@ -232,8 +236,10 @@ export default {
       })
     },
 
-    // 绑定橘子验证
-    // 提供旧用户需要换绑
+    /**
+     * 绑定橘子验证
+     * 提供旧用户需要换绑
+     */
     onBindOriginVerify() {
       const {query} = this.$route;
       const code = query.code;
