@@ -348,7 +348,6 @@
       </template>
       <Form ref="formUserPasswordValidate"
             v-model="editUserPasswordData"
-            :rules="addUserRuleValidate"
             label-position="top">
         <FormItem :label="$t('reset.form.newPassword')" prop="password">
           <Input v-model="editUserPasswordData.password" maxlength="40"></Input>
@@ -375,18 +374,29 @@
             v-model="editUserBindData"
             :rules="transferUserBindRuleValidate"
             label-position="top">
-        <Row :gutter="30" type="flex" align="middle">
-          <Col flex="1">
-            <FormItem label="id" prop="id">
-              <Input v-model="editUserBindData.id" readonly></Input>
-            </FormItem>
+        <Row>
+          <Col span="24">
+            <Row :gutter="30" type="flex" align="middle">
+              <Col flex="1">
+                <FormItem label="id" prop="id">
+                  <Input v-model="editUserBindData.id" readonly></Input>
+                </FormItem>
+              </Col>
+              <Col span="1" align="center">
+                <Icon type="md-link" size="15"/>
+              </Col>
+              <Col flex="1">
+                <FormItem label="Target Id" prop="targetId">
+                  <Input v-model="editUserBindData.targetId"></Input>
+                </FormItem>
+              </Col>
+            </Row>
           </Col>
-          <Col span="1" align="center">
-            <Icon type="md-link" size="15"/>
-          </Col>
-          <Col flex="1">
-            <FormItem label="Target Id" prop="targetId">
-              <Input v-model="editUserBindData.targetId"></Input>
+          <Col span="12">
+            <FormItem label="Mode">
+              <Select v-model="editUserBindData.mode">
+                <Option :label="i" :value="i" v-for="i in ['cover', 'interchange']" :key="i"></Option>
+              </Select>
             </FormItem>
           </Col>
         </Row>
@@ -574,11 +584,12 @@ export default new Application({
       },
       transferUserBindRuleValidate: {
         id: [{trigger: 'blur'}],
-        targetId: [{required: true, trigger: 'blur'}],
+        targetId: [{required: false, trigger: 'blur'}],
       },
       editUserBindData: {
         id: '',
         targetId: '',
+        mode: 'cover',
       },
       userEditModel: false,
       generatesUserPasswordModel: false,
@@ -951,7 +962,7 @@ export default new Application({
               data: {
                 id: this.editUserBindData.id,
                 targetId: this.editUserBindData.targetId,
-                mode: 'cover'
+                mode: this.editUserBindData.mode,
               }
             }
           });
