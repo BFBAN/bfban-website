@@ -1,4 +1,5 @@
 {
+  "name": "BFBAN",
   "about": {
     "description": "<h2>BFBAN</h2>\n    <p>\n    created at 2018.1.29; It is an organization created to fight <b>against hackers</b>\n    </p>\n\n    <p>\n      Staff members in bfban include:\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>Server owners</li>\n      <li>Clan's leaders</li>\n      <li>Bf1 streamers</li>\n    </ul>",
     "privacy": "\n<h2>Privacy policy</h2>\nIt is open-source. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use.",

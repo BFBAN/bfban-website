@@ -54,11 +54,11 @@ const app = new Vue({
   metaInfo () {
     let meta = [];
     for (let metaInfoKey in this.$store.state.metaInfo) {
-      if (this.$store.state.metaInfo[metaInfoKey] != "")
+      if (this.$store.state.metaInfo[metaInfoKey] !== "")
         meta.push({name: metaInfoKey, content: this.$store.state.metaInfo[metaInfoKey]})
     }
     return Object.assign({
-      titleTemplate: config.name + ' / %s',
+      titleTemplate: i18n.t('name') + ' / %s',
       htmlAttrs: {
         lang: this.$i18n.locale,
         amp: true

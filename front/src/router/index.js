@@ -463,7 +463,6 @@ router.beforeEach((to, from, next) => {
 
         store.commit('syncLoginState');
 
-        // document.title = `${config.name} | ${i18n.t(to.meta.value)}`;
         app.$Loading.start();
     } catch (err) {
         app.$Loading.error();

@@ -201,7 +201,7 @@ export default new Application({
       // set Token Http mode
       this.http = http_token.call(this);
 
-      this.share.appName = config.name;
+      this.share.appName = this.$i18n.t("name");
     },
     /**
      * 更新 / 设置分享内容
