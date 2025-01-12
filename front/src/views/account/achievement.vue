@@ -10,7 +10,7 @@
             </Col>
             <Col :xs="{span: 12}" :lg="{span: 5}">
               <FormItem>
-                <template slot="label">
+                <template v-slot:label>
                   <Icon type="md-color-wand" size="25"/>
                   <span class="achievement-banner-title">{{ $t('profile.achievement.exp') }}</span>
                 </template>
@@ -19,7 +19,7 @@
             </Col>
             <Col :xs="{span: 12}" :lg="{span: 5}">
               <FormItem>
-                <template slot="label">
+                <template v-slot:label>
                   <Icon type="md-trophy" color="#FFC107" size="25"/>
                   <Icon type="md-eye-off" size="25" v-if="!userAchievementsInfo.isPublicAchievement"/>
                   <span class="achievement-banner-title">{{ $t('profile.achievement.owned') }}</span>
@@ -69,10 +69,10 @@
               <template v-if="i.child">
                 <Steps size="small">
                   <Step v-for="(i_c, i_cIndex) in i.child.slice(0,3)" :key="i_cIndex">
-                    <template slot="icon" v-if="i_c.iconPath">
+                    <template v-slot:icon v-if="i_c.iconPath">
                       <img :src="achievementUtil.getIcon(i_c.iconPath)" width="25px" height="25px"/>
                     </template>
-                    <template slot="title">
+                    <template v-slot:title>
                       <AchievementView :id="i_c.value">
                         <b><u>{{ $t(`profile.achievement.list.${i_c.value}.name`) }}</u></b>
                       </AchievementView>

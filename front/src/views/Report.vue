@@ -20,7 +20,7 @@
         <TabPane v-for="(tab, index) in tabs.list.length" :key="index"
                  disabled
                  :label="(tabs.list[index].formItem.originName ? tabs.list[index].formItem.originName : tab.toString())">
-          <template dis-hover shadow v-if="tabs.list[index].statusOk == 0">
+          <template v-if="tabs.list[index].statusOk === 0">
             <Form :label-width="isMobile ? null : 150"
                   :model="tabs.list[index].formItem"
                   :rules="tabs.list[index].ruleValidate"
@@ -37,9 +37,9 @@
                       type="button">
                     <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
                            :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ')'"
-                           :class="tabs.list[index].formItem.gameName == i.value ? 'gametype-select' : ''">
+                           :class="tabs.list[index].formItem.gameName === i.value ? 'game-type-select' : ''">
                       <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
-                        <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
+                        <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src" alt="img" />
                         <span v-else>{{ i.full_name }}</span>
                       </Tooltip>
                     </Radio>
@@ -56,7 +56,7 @@
                          class="notFoundHint"
                          v-show="failedOfNotFound">
                     <b>{{ $t("report.info.notFoundHintTitle") }}</b>
-                    <span slot="desc">
+                    <div slot="desc">
                       <p style="font-size: 14px; margin-left: 10px">
                         Q:{{ $t("report.info.notFoundHintQuestion1") }}
                       </p>
@@ -69,7 +69,7 @@
                       <p style="font-size: 12px; margin-left: 20px">
                         A:{{ $t("report.info.notFoundHintAnswer2") }}
                       </p>
-                    </span>
+                    </div>
                   </Alert>
                   <Row :gutter="10" type="flex" align="middle">
                     <Col>
@@ -129,7 +129,7 @@
                         </OcrWidget>
                       </Col>
                     </template>
-                    <template v-else-if="tabs.list[index].type == 'originPersonaId'">
+                    <template v-else-if="tabs.list[index].type === 'originPersonaId'">
                       <Col flex="1">
                         <Input v-model="tabs.list[index].formItem.originPersonaId"
                                maxlength="280"
@@ -141,7 +141,7 @@
                                :placeholder="$t(`report.labels.types.${tabs.list[index].type}.placeholder`)"></Input>
                       </Col>
                     </template>
-                    <template v-else-if="tabs.list[index].type == 'originUserId'">
+                    <template v-else-if="tabs.list[index].type === 'originUserId'">
                       <Col flex="1">
                         <Input v-model="tabs.list[index].formItem.originUserId"
                                maxlength="280"
@@ -155,7 +155,7 @@
                     </template>
                   </Row>
 
-                  <Card class="report-hackrid" dis-hover v-if="tabs.list[index].type == 'originName'">
+                  <Card class="report-hacker-id" dis-hover v-if="tabs.list[index].type === 'originName'">
                     <div slot="title">
                       <h1 v-if="tabs.list[index].formItem.originName" class="text-distinguishing-letter">
                         <code>{{ tabs.list[index].formItem.originName }}</code></h1>
@@ -337,7 +337,7 @@
           </div>
           <!-- 举报结果 E -->
         </TabPane>
-        <Button @click="handleTabsAdd" size="small" slot="extra" disabled v-voice-button>
+        <Button @click="handleTabsAdd" size="small" v-slot:extra disabled v-voice-button>
           <Icon type="md-add"/>
         </Button>
       </Tabs>
@@ -604,7 +604,7 @@ export default new Application({
       const {gameName, originName, originUserId, originPersonaId} = data.formItem;
       const cheatMethods = data.formItem.checkbox;
       const description = data.formItem.description.trim();
-      const videoLink = data.formItem.videoLink.filter(i => i != '' || i != undefined || i != null).toString().trim() || null;
+      const videoLink = data.formItem.videoLink.filter(i => i !== '' || i !== undefined || false).toString().trim() || null;
       const formData = {
         data: {
           game: gameName,
@@ -689,7 +689,7 @@ export default new Application({
   }
 }
 
-.report-hackrid {
+.report-hacker-id {
   margin-top: 20px;
 
   h1, span {

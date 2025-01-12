@@ -1,6 +1,5 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const {InjectManifest} = require("workbox-webpack-plugin")
 const SitemapPlugin = require('sitemap-webpack-plugin').default
 
 const packageConf = require('./package.json')

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <Avatar shape="square"
+  <div class="user-avatar">
+    <Avatar :shape="shape"
             icon="ios-person"
             :size="size"
             v-if="imageStatus != 1">
@@ -15,11 +15,20 @@
 </template>
 
 <script>
+import {oneOf} from "view-design/src/utils/assist";
+
 export default {
   props: {
     size: {
       type: Number,
       default: 150
+    },
+    shape: {
+      type: String,
+      validator (value) {
+        return oneOf(value, ['circle', 'square']);
+      },
+      default: 'square'
     },
     src: {
       type: String,
@@ -67,5 +76,9 @@ export default {
 </script>
 
 <style scoped lang="less">
+.user-avatar {
+  display: inline-flex;
+  position: relative;
+}
 
 </style>

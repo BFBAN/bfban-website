@@ -46,7 +46,7 @@
   </Poptip>
 </template>
 
-<script setup>
+<script>
 import {achievement as achievementUtil} from "@/assets/js";
 
 import achievements from "/public/config/achievements.json";

@@ -20,7 +20,7 @@
               </Radio>
               <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
                      :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
-                     :class="gameName == i.value ? 'gametype-select' : ''">
+                     :class="gameName === i.value ? 'game-type-select' : ''">
                 <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
                   <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
                   <span v-else>{{ i.full_name }}</span>

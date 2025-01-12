@@ -21,6 +21,7 @@ import {texCoincidenceRatio, textSimilarityDiff} from "../lib/textDiff.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
 import {verifyDuplicateContent, SpamFormData} from "../lib/akismet.js";
+import {getGravatarAvatar} from "../lib/gravatar.js";
 
 const router = express.Router()
 
@@ -842,7 +843,7 @@ async (req, res, next) => {
 
         /** @type {import("../typedef.js").Comment[]} */
         let result = await db('comments').join('users', 'comments.byUserId', 'users.id')
-            .select('comments.*', 'users.username', 'users.privilege', 'users.attr')
+            .select('comments.*', 'users.username', 'users.privilege', 'users.attr', 'users.originEmail')
             .where({toPlayerId: dbId, 'comments.valid': 1})
             .andWhere('comments.type', 'like', subject)
             .orderBy('comments.createTime', order)
@@ -850,7 +851,7 @@ async (req, res, next) => {
 
         const now = new Date()
         result = result.map(item => {
-            item = Object.assign(item, timeLineItemShowAttributes(item, req));
+            item = Object.assign(item, {byUserAvatar: item.originEmail ? getGravatarAvatar(item.originEmail) : null}, timeLineItemShowAttributes(item, req));
 
             if (item.attr.mute) {
                 const date = new Date(item.attr.mute)
@@ -859,6 +860,7 @@ async (req, res, next) => {
                 }
             }
             delete item.attr
+            delete item.originEmail
             return item
         })
 

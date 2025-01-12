@@ -2,7 +2,7 @@
   <div class="container">
     <div class="content">
       <template v-if="!isFull">
-        <br>
+      <br>
         <Row>
           <Col :xs="{push: 1}" :lg="{push: 0}">
             <Breadcrumb>
@@ -480,7 +480,14 @@
                         <Col flex="1">
                           <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <u><b>{{ l.username || l.byUserId }}</b></u>
+                              <Row :gutter="5" type="flex" align="middle">
+                                <Col>
+                                  <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
+                                </Col>
+                                <Col>
+                                  <u><b>{{ l.username || l.byUserId }}</b></u>
+                                </Col>
+                              </Row>
                             </BusinessCard>
                           </router-link>
                           <!-- 举报 -->
@@ -531,7 +538,7 @@
                           <span style="display: block;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
                             <a :href="link.href" target="_blank">
                               <span style="opacity: .8" v-if="link.href">
-                                <htmllink :href="encodeURI(link.href)" :text="encodeURI(link.href)"></htmllink>
+                                <Htmllink :href="encodeURI(link.href)" :text="encodeURI(link.href)"></Htmllink>
                               </span>
                             </a>
                           </span>
@@ -658,7 +665,14 @@
                         <Col flex="1">
                           <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <u><b>{{ l.username || l.byUserId }}</b></u>
+                              <Row :gutter="5" type="flex" align="middle">
+                                <Col>
+                                  <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
+                                </Col>
+                                <Col>
+                                  <u><b>{{ l.username || l.byUserId }}</b></u>
+                                </Col>
+                              </Row>
                             </BusinessCard>
                           </router-link>
 
@@ -712,7 +726,14 @@
                         <Col flex="1">
                           <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <u><b>{{ l.username || l.byUserId }}</b></u>
+                              <Row :gutter="5" type="flex" align="middle">
+                                <Col>
+                                  <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
+                                </Col>
+                                <Col>
+                                  <u><b>{{ l.username || l.byUserId }}</b></u>
+                                </Col>
+                              </Row>
                             </BusinessCard>
                           </router-link>
 
@@ -1202,21 +1223,22 @@ import {
 } from '../assets/js/index'
 
 import Application from "/src/assets/js/application";
-import AdsGoogle from "../components/ads/google/index.vue";
-import Empty from '../components/Empty.vue'
-import Textarea from "../components/Textarea";
-import BusinessCard from "../components/BusinessCard.vue";
-import RecordLink from "../components/RecordLink.vue";
-import cheaterStatusView from "../components/CheaterStatusView.vue";
+import AdsGoogle from "@/components/ads/google/index.vue";
+import Empty from '@/components/Empty.vue'
+import Textarea from "@/components/Textarea";
+import BusinessCard from "@/components/BusinessCard.vue";
+import RecordLink from "@/components/RecordLink.vue";
+import cheaterStatusView from "@/components/CheaterStatusView.vue";
 import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
 import judgeActionTemplateView from "@/components/judgeActionTemplateView.vue";
-import Captcha from "../components/captcha/index";
-import TimeView from "../components/TimeView.vue"
-import HtmlCore from "../components/Html";
-import HtmlWidget from "../components/HtmlWidget";
-import PrivilegesTag from "/src/components/PrivilegesTag";
-import FastReply from "../components/FastReply";
-import htmllink from "../components/HtmlLink";
+import Captcha from "@/components/captcha/index";
+import TimeView from "@/components/TimeView.vue"
+import HtmlCore from "@/components/Html";
+import HtmlWidget from "@/components/HtmlWidget";
+import Htmllink from "@/components/HtmlLink";
+import PrivilegesTag from "@/components/PrivilegesTag";
+import FastReply from "@/components/FastReply";
+import UserAvatar from "@/components/UserAvatar.vue"
 
 import {formatTextarea} from "@/mixins/common";
 
@@ -1329,9 +1351,10 @@ export default new Application({
     Captcha,
     HtmlCore,
     HtmlWidget,
+    Htmllink,
     PrivilegesTag,
     FastReply,
-    htmllink,
+    UserAvatar,
   },
   watch: {
     '$route': 'loadData',

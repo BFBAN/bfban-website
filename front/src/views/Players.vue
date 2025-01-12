@@ -29,7 +29,7 @@
             </Radio>
             <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
                    :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
-                   :class="gameName == i.value ? 'gametype-select' : ''">
+                   :class="gameName == i.value ? 'game-type-select' : ''">
               <Badge :count="getTotalNum(i.value)" :overflow-count="900000" type="info">
                 <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
                   <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
@@ -165,9 +165,7 @@
                     <Card dis-hover :padding="25"
                           :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }, query: {byPath: $route.name}}"
                           target="_blank">
-                      <Button size="small" type="text" icon>
-                        <Icon type="md-open"/>
-                      </Button>
+                      <Button size="small" type="text" icon="md-open"></Button>
                     </Card>
                   </Col>
                 </Row>

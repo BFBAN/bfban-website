@@ -281,9 +281,7 @@
                     <Card dis-hover :padding="25"
                           :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }, query: {byPath: $route.name}}"
                           target="_blank">
-                      <Button size="small" type="text" icon>
-                        <Icon type="md-open"/>
-                      </Button>
+                      <Button size="small" type="text" icon="md-open"></Button>
                     </Card>
                   </Col>
                 </Row>

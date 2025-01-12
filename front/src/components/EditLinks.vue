@@ -89,19 +89,32 @@ export default new Application({
         })
       }
     },
+    /**
+     * 增加
+     */
     add() {
       if (this.linkList.length >= this.max) return;
       this.linkList.push({
         value: ''
       });
     },
+    /**
+     * 删除
+     * @param index
+     */
     del(index) {
       this.linkList.splice(index, 1);
       this.upData();
     },
+    /**
+     * 变动更新
+     */
     onInputChange() {
       this.upData();
     },
+    /**
+     * 更新数据
+     */
     upData() {
       let linkList = [];
       for (let i of this.linkList) {

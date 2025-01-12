@@ -120,7 +120,7 @@ table td {
 .game-type .ivu-radio-group-item {
   background-size: 100%;
 }
-.game-type .ivu-radio-group-item.gametype-select {
+.game-type .ivu-radio-group-item.game-type-select {
   position: relative;
   animation: gameAnimation 15s infinite;
 }

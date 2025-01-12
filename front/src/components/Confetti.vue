@@ -57,21 +57,23 @@ export default {
      * 生成
      */
     generateConfetti() {
-      var emojis = ["🎉", "🎊", "🎈", "🎁", "🎀"].concat(this.emojis || []);
+      let emojis = ["🎉", "🎊", "🎈", "🎁", "🎀"].concat(this.emojis || []);
       if (this.$refs.confettiContainer)
         for (let i = 0; i < this.emojiCount; i++) {
           this.animation.push(setTimeout(() => {
-            var emoji = emojis[Math.floor(Math.random() * emojis.length)];
-            var x = Math.floor(Math.random() * this.$refs.confettiContainer?.offsetWidth || 0) - this.x;
-            var y = Math.floor(Math.random() * this.$refs.confettiContainer?.offsetHeight || 0) - this.y;
-            var span = document.createElement("span");
+            let emoji = emojis[Math.floor(Math.random() * emojis.length)],
+                x = Math.floor(Math.random() * this.$refs.confettiContainer?.offsetWidth || 0) - this.x,
+                y = Math.floor(Math.random() * this.$refs.confettiContainer?.offsetHeight || 0) - this.y,
+                span = document.createElement("span");
+
             span.style.position = "absolute";
             span.style.left = `${x}px`;
             span.style.top = `${y}px`;
             span.style.fontSize = "30px";
-            span.style.opacity = 0;
+            span.style.opacity = `0`;
             span.style.transition = "all 0.5s";
             span.innerText = emoji;
+
             this.$refs.confettiContainer?.appendChild(span);
 
             setTimeout(() => {

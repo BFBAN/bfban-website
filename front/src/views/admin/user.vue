@@ -6,7 +6,7 @@
             @click.stop.prevent="addUserModel = true"
             :disabled="!isAdmin">
           <Row :gutter="20" type="flex" align="middle">
-            <privilegesTag :data="['dev']"></privilegesTag>
+            <PrivilegesTag :data="['dev']"></PrivilegesTag>
             <Col>
               <Icon type="md-add"/>
             </Col>
@@ -505,16 +505,16 @@
 </template>
 
 <script>
-import {api, http_token} from "../../assets/js";
+import {api, http_token} from "@/assets/js";
 
-import languages from "/public/config/languages.json";
-
+import Application from "@/assets/js/application";
 import BusinessCard from "@/components/BusinessCard.vue";
 import TimeView from "@/components/TimeView.vue";
-import PrivilegesTag from "/src/components/PrivilegesTag";
+import PrivilegesTag from "@/components/PrivilegesTag";
 import AchievementsTag from "@/components/AchievementsTag.vue";
 import Textarea from "@/components/Textarea";
-import Application from "@/assets/js/application";
+
+import languages from "/public/config/languages.json";
 import achievement from "/public/config/achievements.json";
 
 export default new Application({
@@ -603,12 +603,12 @@ export default new Application({
       total: 0,
     }
   },
-  components: {Textarea, TimeView, PrivilegesTag, BusinessCard, AchievementsTag},
   created() {
     this.http = http_token.call(this);
 
     this.getUserList();
   },
+  components: {Textarea, TimeView, PrivilegesTag, BusinessCard, AchievementsTag},
   methods: {
     /**
      * 提交修改表单

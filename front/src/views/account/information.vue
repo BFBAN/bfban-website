@@ -6,9 +6,7 @@
           <Banner :height="200" class="account-banner">
             <Row :gutter="15" class="profile-body">
               <Col>
-                <a href="https://gravatar.com" target="_blank">
-                  <UserAvatar :src="formItem.userAvatar" :size="50"></UserAvatar>
-                </a>
+                <UserAvatar :src="formItem.userAvatar" :size="50"></UserAvatar>
               </Col>
               <Col flex="1">
                 <h3> {{ formItem.username }} </h3>
@@ -30,7 +28,8 @@
                     {{ $t('signup.form.username') }}
                   </div>
                   <Input v-model="formItem.username" :placeholder="$t('signup.form.username')" disabled>
-                    <a href="javascript:void(0)" slot="append" @click="modal_setusername.show = !modal_setusername.show">
+                    <a href="javascript:void(0)" slot="append"
+                       @click="modal_setusername.show = !modal_setusername.show">
                       <Icon type="md-create" size="15"/>
                     </a>
                   </Input>
@@ -79,13 +78,69 @@
                     <p><b>{{ $t('profile.space.form.introduction') }}</b></p>
                   </div>
                   <Card :padding="0" dis-hover>
-                <Textarea v-model="formItem.attr.introduction"
-                          ref="informationTextarea"
-                          :toolbar="['bold']"
-                          :height="'160px'"
-                          :maxlength="500"
-                          :show-maxlength-label="true"
-                          :placeholder="$t('profile.space.form.introduction')"></Textarea>
+                    <Textarea v-model="formItem.attr.introduction"
+                              ref="informationTextarea"
+                              :toolbar="['bold']"
+                              :height="'160px'"
+                              :maxlength="500"
+                              :show-maxlength-label="true"
+                              :placeholder="$t('profile.space.form.introduction')"></Textarea>
+                  </Card>
+                </FormItem>
+              </Col>
+              <Col :xs="{span: 24}" :lg="{span: 12}">
+                <FormItem>
+                  <div slot="label">
+                    <p><b>Avatar</b></p>
+                  </div>
+                  <Card dis-hover>
+                    <Row type="flex" align="bottom">
+                      <Col flex="1">
+                        <a href="https://gravatar.com" target="_blank">
+                          <svg class="ivu-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                               viewBox="0 0 27 27" role="presentation"
+                               aria-hidden="true">
+                            <path
+                                d="M10.8 2.699v9.45a2.699 2.699 0 005.398 0V5.862a8.101 8.101 0 11-8.423 1.913 2.702 2.702 0 00-3.821-3.821A13.5 13.5 0 1013.499 0 2.699 2.699 0 0010.8 2.699z"></path>
+                          </svg>
+                        </a>
+                      </Col>
+                      <Col>
+                        <a :href="formItem.userAvatar ? 'https://gravatar.com/connect/' : 'https://gravatar.com/connect/?gravatar_from=signup'"
+                           target="_blank">
+                          <Button>
+                            <Icon type="md-link" size="20"></Icon>
+                          </Button>
+                        </a>
+                      </Col>
+                    </Row>
+
+                    <Row :gutter="20" type="flex" align="middle">
+                      <Col>
+                        <Row :gutter="5" type="flex" justify="space-around" align="end">
+                          <Col>
+                            <p>80</p>
+                            <UserAvatar :src="formItem.userAvatar" :size="80"></UserAvatar>
+                          </Col>
+                          <Col>
+                            <p>50</p>
+                            <UserAvatar :src="formItem.userAvatar" :size="50"></UserAvatar>
+                          </Col>
+                          <Col>
+                            <p>45</p>
+                            <UserAvatar :src="formItem.userAvatar" :size="45"></UserAvatar>
+                          </Col>
+                          <Col>
+                            <p>30</p>
+                            <UserAvatar :src="formItem.userAvatar" :size="30"></UserAvatar>
+                          </Col>
+                          <Col>
+                            <p>22</p>
+                            <UserAvatar :src="formItem.userAvatar" :size="22"></UserAvatar>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
                   </Card>
                 </FormItem>
               </Col>
@@ -134,7 +189,8 @@
                 <FormItem :label="$t('profile.space.form.language')">
                   <Row>
                     <Col>
-                      <Checkbox v-model="langLocalSync" @on-change="switchAttr('langLocalSync',langLocalSync)"></Checkbox>
+                      <Checkbox v-model="langLocalSync"
+                                @on-change="switchAttr('langLocalSync',langLocalSync)"></Checkbox>
                     </Col>
                     <Col flex="1">
                       <Select v-model="formItem.attr.language"
@@ -143,7 +199,8 @@
                               placement="top-end"
                               :disabled="!langLocalSync"
                               @on-change="switchLanguage">
-                        <Option v-for="item in languages" :value="item.name" :key="item.name" :disabled="item.ignoreSave">
+                        <Option v-for="item in languages" :value="item.name" :key="item.name"
+                                :disabled="item.ignoreSave">
                           {{ item.label }}
                         </Option>
                       </Select>
@@ -230,7 +287,7 @@
                 </FormItem>
 
                 <FormItem :label="$t('captcha.title')" prop="captcha">
-                  <Captcha ref="captcha" @getCaptchaData="getUserNameCaptchaData" ></Captcha>
+                  <Captcha ref="captcha" @getCaptchaData="getUserNameCaptchaData"></Captcha>
                 </FormItem>
               </div>
               <div v-if="modal_setusername.index == 2" align="center">
@@ -272,7 +329,7 @@
               </FormItem>
 
               <FormItem :label="$t('captcha.title')" prop="captcha">
-                <Captcha ref="captcha" @getCaptchaData="getPasswordCaptchaData" ></Captcha>
+                <Captcha ref="captcha" @getCaptchaData="getPasswordCaptchaData"></Captcha>
               </FormItem>
             </Form>
           </div>
