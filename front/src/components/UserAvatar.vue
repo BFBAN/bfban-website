@@ -62,12 +62,10 @@ export default {
   methods: {
     loadImageError() {
       if (this.jxIndex >= -1) {
-        // console.log(this.jxIndex, this.newSrc, this.jx[this.jxIndex])
         this.newSrc = this.newSrc.replaceAll(
-            this.jxIndex == 0 ? 'https://www.gravatar.com/avatar/' : this.jx[this.jxIndex - 1],
+            this.jxIndex === 0 ? 'https://www.gravatar.com/avatar/' : this.jx[this.jxIndex - 1],
             this.jx[this.jxIndex]
         )
-        // console.log('result:', this.newSrc)
         this.jxIndex += 1;
       }
     },
@@ -77,8 +75,6 @@ export default {
 
 <style scoped lang="less">
 .user-avatar {
-  display: inline-flex;
   position: relative;
 }
-
 </style>

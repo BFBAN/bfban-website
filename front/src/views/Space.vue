@@ -253,28 +253,30 @@ export default new Application({
                     }
                   })
                 ]),
-                h(HtmlLink, {
-                  props: {
-                    text: params.row.originName,
-                    isPoptip: false,
-                    href
-                  },
-                  style: {
-                    "overflow": "hidden",
-                    "display": "block",
-                    "width": "100px",
-                    "text-overflow": "ellipsis",
-                    "white-space": "nowrap"
-                  },
-                  on: {
-                    click: () => {
-                      that.$router.push({
-                        name: "player",
-                        params: {ouid: params.row.originPersonaId},
-                      })
+                h('col', [
+                  h(HtmlLink, {
+                    props: {
+                      text: params.row.originName,
+                      isPoptip: false,
+                      href
+                    },
+                    style: {
+                      "overflow": "hidden",
+                      "display": "inline",
+                      "width": "100px",
+                      "text-overflow": "ellipsis",
+                      "white-space": "nowrap"
+                    },
+                    on: {
+                      click: () => {
+                        that.$router.push({
+                          name: "player",
+                          params: {ouid: params.row.originPersonaId},
+                        })
+                      }
                     }
-                  }
-                }, params.row.originName)
+                  }, params.row.originName),
+                ])
               ]);
             }
           },
@@ -362,7 +364,7 @@ export default new Application({
       },
       limit: 20,
       page: 1,
-      total: 100,
+      total: 0,
 
       cheaterStatus: [],
       url: "",

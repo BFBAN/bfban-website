@@ -20,7 +20,7 @@
 
       <Card id="getSharePicture" v-if="isCheaterExist" dis-hover>
         <Row :gutter="10">
-          <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 3, pull: 0, push: 0}">
+          <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 4, pull: 0, push: 0}">
             <div align="center">
               <!-- Origin头像 S -->
               <Avatar shape="square"
@@ -33,14 +33,14 @@
               <template v-else>
                 <Avatar shape="square"
                         class="default-avatar"
-                        size="180">
+                        :size="180">
                 </Avatar>
               </template>
               <!-- Origin头像 E -->
             </div>
             <br class="desktop-hide">
           </Col>
-          <Col :xs="{span: 24, pull: 0, push: 0}" :lg="{span: 19, pull: 0, push: 2}" class="detail-userinfo-card">
+          <Col :xs="{span: 24, pull: 0, push: 0}" :lg="{span: 19, pull: 0, push: 1}" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col :flex="isMobile ? 1 : null" :xs="isMobile ? {span: 24, order:1} : {}"
                    :lg="isMobile ? {span: 12, order: 1} : {}" class="tags">
@@ -480,7 +480,7 @@
                         <Col flex="1">
                           <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <Row :gutter="5" type="flex" align="middle">
+                              <Row :gutter="5" type="flex" justify="center" align="middle">
                                 <Col>
                                   <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
                                 </Col>
@@ -564,7 +564,14 @@
                         <Col flex="auto">
                           <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <u><b>{{ l.username || l.byUserId }}</b></u>
+                              <Row :gutter="5" type="flex" justify="center" align="middle">
+                                <Col>
+                                  <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
+                                </Col>
+                                <Col>
+                                  <u><b>{{ l.username || l.byUserId }}</b></u>
+                                </Col>
+                              </Row>
                             </BusinessCard>
                           </router-link>
 
@@ -665,7 +672,7 @@
                         <Col flex="1">
                           <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <Row :gutter="5" type="flex" align="middle">
+                              <Row :gutter="5" type="flex" justify="center" align="middle">
                                 <Col>
                                   <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
                                 </Col>
@@ -726,7 +733,7 @@
                         <Col flex="1">
                           <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                             <BusinessCard :id="l.byUserId">
-                              <Row :gutter="5" type="flex" align="middle">
+                              <Row :gutter="5" type="flex" justify="center" align="middle">
                                 <Col>
                                   <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
                                 </Col>
