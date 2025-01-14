@@ -194,9 +194,9 @@ export default {
 
           const replacedUrlText = insert.replace(regular.REGULARTYPE.link.v, function (match) {
             return `${match}`
-          })
-          if (regular.check('link', replacedUrlText).code == 0)
-            ops.push({insert: replacedUrlText, attributes: {link: replacedUrlText}})
+          });
+          if (regular.check('link', replacedUrlText).code === 0)
+            ops.push({insert: replacedUrlText, attributes: {link: replacedUrlText.replaceAll('\n','')}})
           else
             ops.push({insert: replacedUrlText})
         } else if (op.insert.image && typeof op.insert === 'object') {
