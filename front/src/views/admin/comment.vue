@@ -1,23 +1,23 @@
 <template>
   <div>
-    <Row type="flex" align="middle">
+    <Row :gutter="10" type="flex" align="middle">
       <Col>
-        <Select v-model="typeValue" @on-change="getCommentAllList">
+        <Select v-model="typeValue" :disabled="!!searchCommentValue" @on-change="getCommentAllList()">
           <Option v-for="(i, index) in typeArray" :key="index" :value="i">{{ i }}</Option>
         </Select>
       </Col>
-      <template v-if="typeValue == 'judgement'">
+      <template v-if="typeValue === 'judgement'">
         <Col>
-          <Select v-model="judgementType.value" @on-change="getCommentTypeList">
+          <Select v-model="judgementType.value" :disabled="!!searchCommentValue" @on-change="getCommentTypeList">
             <Option :value="i.value" v-for="(i,index) in judgementType.list" :key="index">
               {{ i.title }}
             </Option>
           </Select>
         </Col>
       </template>
-      <template v-if="typeValue == 'banAppeal'">
+      <template v-if="typeValue === 'banAppeal'">
         <Col>
-          <Select v-model="banAppealStats.value" @on-change="getCommentTypeList">
+          <Select v-model="banAppealStats.value" :disabled="!!searchCommentValue" @on-change="getCommentTypeList">
             <Option :value="i.value" v-for="(i,index) in banAppealStats.list" :key="index">
               {{ i.title }}
             </Option>
@@ -28,12 +28,13 @@
       <Col>
         <Row :gutter="10">
           <Col>
-            <Select value="id">
-              <Option value="id">id</Option>
+            <Select v-model="filter.queryModeValue" :disabled="typeValue !== 'all'">
+              <Option :value="i.value" v-for="(i, index) in filter.queryModes" :key="index">{{i.label}}</Option>
             </Select>
           </Col>
           <Col>
             <Input v-model="searchCommentValue"
+                   :disabled="typeValue !== 'all'"
                    type="text"
                    search
                    enter-button
@@ -62,7 +63,7 @@
               :total="total"/>
       </Col>
       <Col>
-        <Button size="small" @click="getCommentAllList">
+        <Button size="small" @click="getCommentAllList()">
           <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
         </Button>
       </Col>
@@ -221,6 +222,16 @@ export default new Application({
           {required: false, trigger: 'blur'}
         ],
       },
+      filter: {
+        queryModeValue: 'userId',
+        queryModes: [{
+          value: 'commentId',
+          label: 'Comment ID'
+        }, {
+          value: 'userId',
+          label: 'User ID'
+        }]
+      },
       judgementType: {
         value: 'kill',
         list: [{title: 'Comfirmd', value: 'kill'}, {title: 'Farm Weapon', value: 'farm'}, {
@@ -235,7 +246,6 @@ export default new Application({
         value: 'open',
         list: [{title: 'Open', value: 'open'}, {title: 'Lock', value: 'lock'}, {title: 'Close', value: 'close'}]
       },
-
       searchCommentValue: '',
       load: false,
       commentList: [],
@@ -345,31 +355,23 @@ export default new Application({
      * 查询单条评论
      */
     getSearchComment() {
-      const id = this.searchCommentValue;
+      const inputValue = this.searchCommentValue;
 
-      if (!id) return;
+      if (!inputValue) return;
 
-      this.http.get(api['player_timeline_item'], {
-        params: {
-          id: this.searchCommentValue
-        }
-      }).then(res => {
-        const d = res.data;
-
-        if (d.success === 1) {
-          this.openCommentModeAsData(d.data);
-          return;
-        }
-
-        this.$Message.error(d.message || d.code);
-      }).finally(() => {
-        this.load = false;
-      })
+      switch (this.filter.queryModeValue) {
+        case "userId":
+          this.getCommentAllList({userId: inputValue})
+          break;
+        case "commentId":
+          this.getCommentAllList({id: inputValue})
+          break;
+      }
     },
     /**
      * 查询所有评论
      */
-    getCommentAllList() {
+    getCommentAllList(params = {}) {
       this.load = true;
 
       this.http.get(api['admin_commentAll'], {
@@ -377,7 +379,8 @@ export default new Application({
           type: this.typeValue,
           skip: (this.skip - 1) * this.limit,
           limit: this.limit,
-          order: this.order
+          order: this.order,
+          ...params
         }
       }).then(res => {
         const d = res.data;

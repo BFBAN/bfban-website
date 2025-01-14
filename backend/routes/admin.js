@@ -177,7 +177,9 @@ router.get('/commentAppeal', verifyJWT, allowPrivileges(["super", "root", "dev",
     });
 
 router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
-        checkbody('type').optional().isString().isInt(['report', 'reply', 'judgement', 'banAppeal']),
+        checkbody('type').optional().isIn(['all', 'report', 'reply', 'judgement', 'banAppeal']),
+        checkquery('id').optional().isInt({min: 0}),
+        checkquery('userId').optional().isInt({min: 0}),
         checkquery('skip').optional().isInt({min: 0}),
         checkquery('limit').optional().isInt({min: 0, max: 100}),
         checkquery('order').optional().isIn(['asc', 'desc']),
@@ -188,16 +190,15 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'admin.commentAll.bad', message: validateErr.array()});
 
+            const {type, id, userId} = req.query;
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
             const order = req.query.order ? req.query.order : 'desc';
-            const type = req.query.type;
 
             const total = await db('comments')
                 .count({num: 1})
                 .andWhere(function () {
-                    this.where({valid: 1});
-                    if (type != 'all' || !type)
+                    if (type && type !== 'all')
                         this.where({type: type});
                 })
                 .first().then(r => r.num);
@@ -206,8 +207,12 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
                 .join('users', 'comments.byUserId', 'users.id')
                 .select('comments.*', 'users.username', 'users.privilege')
                 .andWhere(function () {
-                    if (type != 'all' || !type)
+                    if (type && type !== 'all')
                         this.where({type: type});
+                    if (id && !userId)
+                        this.where('comments.id', id);
+                    else if (!id && userId)
+                        this.where('comments.byUserId', userId);
                 })
                 .orderBy('comments.createTime', order)
                 .offset(skip).limit(limit)
@@ -222,10 +227,6 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
         }
     });
 
-router.get('/CommentTypeList', async (req, res, next) => res.status(404).json({
-    code: -1,
-    message: '[get]CommentTypeList -> [get]commentTypeList'
-}))
 router.get('/commentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkquery('type').optional().isString().isIn(['banAppeal', 'judgement']),
         checkquery('banAppealStats').optional().isString(),
@@ -734,7 +735,7 @@ router.post('/transferBindData', verifyJWT, allowPrivileges(["super", "root", "d
         const targetIdData = db('users')
             .select('users.valid as valid', 'users.privilege as privilege', 'users.originName as originName', 'users.originEmail as originEmail', 'users.originUserId as originUserId', 'users.originPersonaId as originPersonaId')
             .where({id: targetId})
-        if (!targetIdData && !targetIdData.valid && targetIdData.originEmail && targetIdData.privilege.some(i => new Set(['blacklisted','freezed']).has(i)))
+        if (!targetIdData && !targetIdData.valid && targetIdData.originEmail && targetIdData.privilege.some(i => new Set(['blacklisted', 'freezed']).has(i)))
             return req.status(201).json({
                 error: 1,
                 code: 'transferBindData.fail',
