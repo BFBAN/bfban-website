@@ -147,7 +147,7 @@ export default {
       signup: {
         originEmail: '',
         originName: '',
-        captcha: '',
+        captcha: {},
       },
       bindOrigin: {
         load: false,
@@ -178,8 +178,8 @@ export default {
      * 获得验证
      * @param e
      */
-    getCaptchaData(e) {
-      this.signup.captcha = e;
+    getCaptchaData(value) {
+      this.signup.captcha = value;
     },
     /**
      * 绑定橘子账户

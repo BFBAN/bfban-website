@@ -403,8 +403,8 @@ export default new Application({
         this.games = res.gameName;
       });
     },
-    getCaptchaData(e) {
-      this.captcha = e;
+    getCaptchaData(value) {
+      this.captcha = value;
     },
     /**
      * 查询作弊玩家列表
@@ -602,20 +602,21 @@ export default new Application({
         return;
       }
 
-      const {gameName, originName, originUserId, originPersonaId} = data.formItem;
-      const cheatMethods = data.formItem.checkbox;
-      const description = data.formItem.description.trim();
-      const videoLink = data.formItem.videoLink.filter(i => i !== '' || i !== undefined || false).toString().trim() || null;
-      const formData = {
-        data: {
-          game: gameName,
-          cheatMethods,	// see {{valid_cheatMethod}}
-          videoLink,
-          description
-        },
-        captcha: this.captcha,
-      };
-      let url = ""
+      const {gameName, originName, originUserId, originPersonaId} = data.formItem,
+          cheatMethods = data.formItem.checkbox,
+          description = data.formItem.description.trim(),
+          videoLink = data.formItem.videoLink.filter(i => i !== '' || i !== undefined || false).toString();
+
+      let formData = {
+            data: {
+              game: gameName,
+              cheatMethods,	// see {{valid_cheatMethod}}
+              videoLink,
+              description
+            },
+            captcha: this.captcha,
+          },
+          url = ""
 
       this.spinShow = true;
 

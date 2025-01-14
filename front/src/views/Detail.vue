@@ -40,7 +40,8 @@
             </div>
             <br class="desktop-hide">
           </Col>
-          <Col :xs="{span: 24, pull: 0, push: 0}" :lg="{span: 20, pull: 0, push: 0}" flex="1" class="detail-userinfo-card">
+          <Col :xs="{span: 24, pull: 0, push: 0}" :lg="{span: 20, pull: 0, push: 0}" flex="1"
+               class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col :flex="isMobile ? 1 : null" :xs="isMobile ? {span: 24, order:1} : {}"
                    :lg="isMobile ? {span: 12, order: 1} : {}" class="tags">
@@ -1053,7 +1054,7 @@
 
                     <div slot="content" align="left">
                       <div>
-                        <Checkbox v-model="verify.isUpdateinformation">{{ $t('detail.info.updateButton') }}</Checkbox>
+                        <Checkbox v-model="verify.isUpdateInformation">{{ $t('detail.info.updateButton') }}</Checkbox>
                       </div>
                       <div>
                         <Checkbox v-model="verify.isSubscribeTrace"
@@ -1277,13 +1278,13 @@ export default new Application({
       },
       reply: {
         miniModeContent: '',
-        miniModeCaptcha: '',
+        miniModeCaptcha: {},
         cheaterId: '',
         userId: '',
         content: '',
         toReplyId: null,
         toUserId: '',
-        captcha: '',
+        captcha: {},
       },
       fastReply: {
         selected: [],
@@ -1291,7 +1292,7 @@ export default new Application({
 
       verify: {
         isSubscribeTrace: false,
-        isUpdateinformation: false,
+        isUpdateInformation: false,
         status: 0,
         checkbox: [],
         choice: [],
@@ -1864,7 +1865,7 @@ export default new Application({
       }
 
       // 额外事件
-      if (this.verify.isUpdateinformation)
+      if (this.verify.isUpdateInformation)
         this.updateCheaterInfo()
       if (this.verify.isSubscribeTrace)
         this.onSubscribes()
@@ -1902,7 +1903,7 @@ export default new Application({
       }).finally(() => {
         this.verifySpinShow = false;
         this.verify.isSubscribeTrace = !this.verify.isSubscribeTrace;
-        this.verify.isUpdateinformation = !this.verify.isUpdateinformation;
+        this.verify.isUpdateInformation = !this.verify.isUpdateInformation;
 
         if (this.$refs.judgementTextarea)
           this.$refs.judgementTextarea.updateContent("");
@@ -1942,11 +1943,11 @@ export default new Application({
         }
       });
     },
-    getCaptchaData(e) {
-      this.reply.captcha = e;
+    getCaptchaData(value) {
+      this.reply.captcha = value;
     },
-    getMiniCaptchaData(e) {
-      this.reply.miniModeCaptcha = e;
+    getMiniCaptchaData(value) {
+      this.reply.miniModeCaptcha = value;
     },
     /**
      * 用户评论/回复
@@ -1954,7 +1955,7 @@ export default new Application({
      */
     onReply(replyType = 'default') {
       const cheaterId = this.cheater.id;
-      const {content = '', miniModeContent = ''} = this.reply;
+      const {content = '', miniModeContent = '', captcha, miniModeCaptcha} = this.reply;
       let message = "";
       let data = {};
 
@@ -1976,7 +1977,7 @@ export default new Application({
               toPlayerId: cheaterId,
               content: formatTextarea(content),
             },
-            captcha: this.reply.captcha,
+            captcha,
           };
           break;
         case "mini":
@@ -1986,7 +1987,7 @@ export default new Application({
               toCommentId: this.reply.toReplyId, // 楼中楼，填充回复的dbId
               content: formatTextarea(miniModeContent),
             },
-            captcha: this.reply.miniModeCaptcha,
+            captcha: miniModeCaptcha,
           };
           break;
       }
@@ -2003,9 +2004,9 @@ export default new Application({
           this.replyModal = false;
           this.reply.toReplyId = null;
           this.reply.content = "";
-          this.reply.captcha = "";
+          this.reply.captcha = {};
           this.reply.miniModeContent = "";
-          this.reply.miniModeCaptcha = "";
+          this.reply.miniModeCaptcha = {};
 
           // Actively update text
           if (this.$refs.replyTextarea)
@@ -2126,6 +2127,7 @@ export default new Application({
   h1 {
     font-size: 2.2rem;
   }
+
   .cards .ivu-poptip,
   .cards .ivu-poptip-rel {
     width: 100%;

@@ -140,12 +140,12 @@ export default new Application({
       'SIGNIN'
     ]),
     getCaptchaData(value) {
-      this.signin.captcha = Object.assign(this.signin.captcha, value);
+      this.signin.captcha = value;
     },
     /**
      * 登录
      */
-    handleSignin: function () {
+    handleSignin () {
       const that = this;
       const backPath = this.$route.query.backPath;
       let {username, password, captcha} = this.signin;
@@ -164,10 +164,7 @@ export default new Application({
 
         http.post(api["account_signin"], {
           data: {
-            data: {
-              username,
-              password,
-            },
+            data: {username, password},
             captcha,
           },
         }).then(async res => {
@@ -190,7 +187,7 @@ export default new Application({
           if (backPath) {
             await this.$router.push({path: backPath});
           } else {
-            this.$router.go('-1');
+            this.$router.go(-1);
           }
 
           this.$Message.success(this.$t(`basic.tip['${d.code}']`, {

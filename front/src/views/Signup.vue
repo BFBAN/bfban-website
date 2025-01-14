@@ -64,7 +64,7 @@
 
               <div v-show="isOneStepToTheStomach || stepsIndex === 2">
                 <FormItem :label="$t('captcha.title')" prop="captcha">
-                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
 
                 </FormItem>
               </div>
@@ -183,7 +183,7 @@ export default new Application({
         password: '',
         originEmail: '',
         originName: '',
-        captcha: '',
+        captcha: {},
       },
       serverReturnMessage: '',
       spinShow: false,
@@ -195,9 +195,10 @@ export default new Application({
     this.http = http_token.call(this);
   },
   methods: {
-    getCaptchaData(e) {
-      this.signup.captcha = e;
+    getCaptchaData(value) {
+      this.signup.captcha = value;
     },
+
     /**
      * 提交注册信息
      */
@@ -256,7 +257,15 @@ export default new Application({
       })
     },
 
-    // 清理表单字段
+    /**
+     * 清理表单字段
+     * @param captcha
+     * @param username
+     * @param password
+     * @param originEmail
+     * @param originName
+     * @param stepsIndex
+     */
     onCleanSignupForm({
                         captcha = true,
                         username = true,

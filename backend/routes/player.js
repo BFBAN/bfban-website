@@ -902,7 +902,9 @@ async (req, res, next) => {
  *       200:
  *         description: timeline.item.ok
  */
-router.get('/timeline/item', [checkquery('id').isInt({min: 0}),], async (req, res, next) => {
+router.get('/timeline/item', [
+    checkquery('id').isInt({min: 0}),
+], async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty()) return res.status(400).json({

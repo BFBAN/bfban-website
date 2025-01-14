@@ -27,32 +27,34 @@
               <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
                 <div v-if="stepsIndex == 0">
                   <FormItem :label="$t('forgetPassword.form.username')" prop="username">
-                    <Input v-model="forgetPassword.username" size="large" :placeholder="$t('forgetPassword.placeholder.username')"/>
+                    <Input v-model="forgetPassword.username" size="large"
+                           :placeholder="$t('forgetPassword.placeholder.username')"/>
                   </FormItem>
                   <FormItem :label="$t('forgetPassword.form.originEmail')" prop="originEmail">
-                    <Input v-model="forgetPassword.originEmail" size="large" :placeholder="$t('forgetPassword.placeholder.originEmail')"/>
+                    <Input v-model="forgetPassword.originEmail" size="large"
+                           :placeholder="$t('forgetPassword.placeholder.originEmail')"/>
                   </FormItem>
                   <Alert show-icon><span v-html="$t('forgetPassword.forgetUsername')"></span></Alert>
                 </div>
 
                 <FormItem v-if="stepsIndex == 1" :label="$t('captcha.title')">
-                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
                 </FormItem>
 
                 <div v-if="stepsIndex == 2">
                   <EmailTip :email="forgetPassword.originEmail"></EmailTip>
                   <Card dis-hover>
-                  <Row :gutter="16" type="flex" justify="center" align="middle">
-                    <Col>
-                      <Icon type="md-cloud" color="#535353" size="80"/>
-                    </Col>
-                    <Col>
-                      <Icon type="md-return-right" color="#aaa" size="30"/>
-                    </Col>
-                    <Col>
-                      <Icon type="md-mail" color="#535353" size="80"/>
-                    </Col>
-                  </Row>
+                    <Row :gutter="16" type="flex" justify="center" align="middle">
+                      <Col>
+                        <Icon type="md-cloud" color="#535353" size="80"/>
+                      </Col>
+                      <Col>
+                        <Icon type="md-return-right" color="#aaa" size="30"/>
+                      </Col>
+                      <Col>
+                        <Icon type="md-mail" color="#535353" size="80"/>
+                      </Col>
+                    </Row>
                   </Card>
                   <br>
                   <Alert type="success" show-icon>{{ $t('forgetPassword.checkEmail') }}</Alert>
@@ -75,7 +77,9 @@
                   <Col span="12">
                     <Button v-if="button.prev"
                             :disabled="button.prevShow"
-                            @click.prevent.stop="stepsIndex--; onStepsIndex();" size="large">{{ $t('basic.button.prev') }}
+                            @click.prevent.stop="stepsIndex--; onStepsIndex();" size="large">{{
+                        $t('basic.button.prev')
+                      }}
                     </Button>
                     <Divider type="vertical"/>
                     <Button v-if="button.next"
@@ -144,7 +148,7 @@ export default new Application({
     }
   },
   methods: {
-    onStepsIndex () {
+    onStepsIndex() {
       let stepsIndex = this.stepsIndex;
       this.button.submit = false;
 
@@ -177,14 +181,14 @@ export default new Application({
       return this.stepsIndex;
     },
 
-    getCaptchaData(e) {
-      this.forgetPassword.captcha = e;
+    getCaptchaData(value) {
+      this.forgetPassword.captcha = value;
     },
 
     /**
      * 提交
      */
-    onSubmit () {
+    onSubmit() {
       switch (this.stepsIndex) {
         case 1:
           this.onForgetPassword();
@@ -248,13 +252,15 @@ export default new Application({
     /**
      * 提交 重置密码
      */
-    onForgetPassword () {
+    onForgetPassword() {
       this.spinShow = true;
+
+      const {username, originEmail, captcha} = this.forgetPassword;
 
       http.post(api["user_forgetPassword"], {
         data: {
-          data: Object.assign(this.forgetPassword, {language: mail.exchangeLangField(this.$root.$i18n.locale)}),
-          captcha: this.forgetPassword.captcha,
+          data: Object.assign({username, originEmail}, {language: mail.exchangeLangField(this.$root.$i18n.locale)}),
+          captcha,
         },
       }).then(res => {
         const d = res.data;
