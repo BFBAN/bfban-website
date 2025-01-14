@@ -172,7 +172,12 @@
           <Col span="24">
             <FormItem prop="content">
               <Card dis-hover :padding="0">
-                <Textarea ref="commentTextarea" :maxlength="65535" v-model="editCommentFrom.content.text"></Textarea>
+                <template v-if="editCommentFrom.content.text">
+                  <Textarea ref="commentTextarea" :maxlength="65535" v-model="editCommentFrom.content.text"></Textarea>
+                </template>
+                <template v-else>
+                  <Textarea ref="commentTextarea" :maxlength="65535" v-model="editCommentFrom.content"></Textarea>
+                </template>
               </Card>
             </FormItem>
           </Col>
@@ -289,8 +294,7 @@ export default new Application({
         return;
       }
 
-      this.editCommentFrom = this.commentList[index];
-
+      this.openCommentModeAsData(this.commentList[index]);
       this.openCommentModeBase();
     },
     /**
@@ -301,7 +305,7 @@ export default new Application({
       this.editCommentFrom = data;
 
       if (this.$refs.commentTextarea)
-        this.$refs.commentTextarea.updateContent(this.editCommentFrom.content.text);
+        this.$refs.commentTextarea.updateContent(this.editCommentFrom.content || this.editCommentFrom.content.text);
 
       this.openCommentModeBase();
     },
@@ -326,7 +330,7 @@ export default new Application({
 
       let data = {
         id: this.editCommentFrom.id,
-        content: this.editCommentFrom.content.text,
+        content: this.editCommentFrom.content.text || this.editCommentFrom.content,
       };
 
       if (this.editCommentFrom.videoLink) data.videoLink = this.editCommentFrom.videoLink;
