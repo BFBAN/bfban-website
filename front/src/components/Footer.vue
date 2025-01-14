@@ -69,23 +69,30 @@
             </ul>
           </Col>
           <Col :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
-            <Select v-model="currentLan"
-                    class="switch-language" prefix="md-globe" size="large"
-                    :disabled="langLocalSync">
-              <Option v-for="(item, index) in languages" :key="index" :label="item.label" :value="item.name">
-                <span>{{ item.label }}</span>
-                <span style="float:right;color:#ccc">
+            <Row :gutter="5">
+              <Col>
+                <ThemeWidget size="39px" />
+              </Col>
+              <Col flex="1">
+                <Select v-model="currentLan"
+                        class="switch-language" prefix="md-globe" size="large"
+                        :disabled="langLocalSync">
+                  <Option v-for="(item, index) in languages" :key="index" :label="item.label" :value="item.name">
+                    <span>{{ item.label }}</span>
+                    <span style="float:right;color:#ccc">
                   {{ item.name }}
                 </span>
-              </Option>
-            </Select>
+                  </Option>
+                </Select>
+              </Col>
+            </Row>
             <div class="footer-language-members">
               <br>
               <span>{{ $t("footer.language.members") }}</span><br>
               <template v-if="languages.length >= 0 && languages.filter(i => i.name === currentLan)">
                 <span
-                      class="span"
-                      v-for='(i, index) in currentLanMembers' :key="index">
+                    class="span"
+                    v-for='(i, index) in currentLanMembers' :key="index">
                   <HtmlLink :text='i.name' :href="i.url" :key="index" :isPoptip="false"></HtmlLink>
                   <Divider type="vertical"
                            v-if="index + 1 < currentLanMembers.length"></Divider>
@@ -135,6 +142,7 @@ import footerNavs from '/public/config/footerNavs.json';
 import link from '/public/config/link.json';
 import HtmlLink from '@/components/HtmlLink.vue'
 import Application from "@/assets/js/application";
+import ThemeWidget from "@/components/ThemeWidget.vue";
 
 export default new Application({
   data() {
@@ -156,7 +164,7 @@ export default new Application({
   created() {
     this.loadData();
   },
-  components: {HtmlLink},
+  components: {HtmlLink, ThemeWidget},
   methods: {
     async loadData() {
       this.languagesImport = await import('/public/config/languages.json');
@@ -171,11 +179,11 @@ export default new Application({
     },
   },
   computed: {
-    currentLanMembers () {
+    currentLanMembers() {
       try {
         return this.languages.filter(i => i.name === this.currentLan)[0]["members"];
       } catch (e) {
-        return  [];
+        return [];
       }
     },
     currentLan: {

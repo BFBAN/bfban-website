@@ -64,10 +64,12 @@
 </template>
 
 <script>
+import {account_storage} from "@/assets/js";
+
 import PrivilegesTag from "/src/components/PrivilegesTag";
 
 import achievement from "./achievement"
-import reports from "./reports";
+import reports from "./userReports";
 import appearance from "./appearance";
 import information from "./information";
 import chat from "./chat";
@@ -77,9 +79,8 @@ import voice from "./voice";
 import history from "./history";
 import subscribes from "./subscribes"
 import exportAndImport from "@/views/account/exportAndImport";
-import {account_storage} from "@/assets/js";
 import Application from "@/assets/js/application";
-import UserAvatar from "@/components/UserAvatar.vue";
+import UserAvatar from "@/components/UserAvatar";
 
 export default new Application({
   name: "profile",

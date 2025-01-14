@@ -151,31 +151,7 @@
         </Tooltip>
 
         <Divider type="vertical"/>
-        <Dropdown>
-          <DropdownItem style="padding: 0;">
-            <div v-for="(i, theme_index) in themes.child" :key="theme_index" class="iuv-card">
-              <template v-if="$store.state.$theme.name == i.name">
-                <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`">
-                  <Icon type="md-color-fill" size="18"/>
-                </div>
-              </template>
-            </div>
-          </DropdownItem>
-          <DropdownMenu slot="list">
-            <DropdownItem
-                v-for="(i, theme_index) in themes.child" :key="theme_index"
-                :name="i.name"
-                :selected="$store.state.$theme.name == i.name"
-                @click.native="changeTheme(theme_index)">
-              <Row type="flex" align="middle">
-                <div class="hedaer-theme-color right-space" :style="`background-color: ${i.themeColor}`"></div>
-                <p>{{ i.name }}</p>
-              </Row>
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-
-
+        <ThemeWidget/>
         <Divider type="vertical"/>
 
         <Tooltip :content="$t('apps.title')" placement="bottom-end">
@@ -189,30 +165,28 @@
 </template>
 
 <script>
-import {api, http, http_token, account_storage} from '../assets/js/index'
-import {storage} from '../assets/js/index'
-import themes from '/public/config/themes.json'
+import {api, http, http_token, account_storage, storage} from '../assets/js/index'
 import menu from '/public/config/headerMenu.json'
 
 import UserAvatar from "@/components/UserAvatar.vue";
 import HistoryView from "@/components/HistoryView.vue";
 import HeaderMessage from "./HeaderMessage.vue";
-import PrivilegesTag from "/src/components/PrivilegesTag";
+import PrivilegesTag from "@/components/PrivilegesTag";
 import Application from "@/assets/js/application";
 import Banner from "@/components/Banner.vue";
-import Lantern from "@/components/Lantern"
+import ThemeWidget from "@/components/ThemeWidget"
+import Lantern from "@/components/Lantern";
 
 export default new Application({
   data() {
     return {
-      themes,
       headerMenu: {
         show: false,
         child: [],
       },
     }
   },
-  components: {HistoryView, Banner, HeaderMessage, UserAvatar, PrivilegesTag, Lantern},
+  components: {HistoryView, Banner, HeaderMessage, UserAvatar, PrivilegesTag, ThemeWidget, Lantern},
   watch: {
     $route: "loadData",
   },
@@ -278,15 +252,6 @@ export default new Application({
       await this.$store.dispatch('setTheme', this.$store.state.$theme);
     },
     /**
-     * 改变主题
-     * @param {number} index
-     */
-    changeTheme(index) {
-      storage.local.set('theme', this.themes.child[index || 0]);
-
-      location.reload();
-    },
-    /**
      * 导航
      * @param i
      */
@@ -337,23 +302,6 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.hedaer-theme-color {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 27px;
-  height: 27px;
-  border-radius: 3px;
-
-  .ivu-icon {
-    opacity: .1;
-  }
-}
-
-.hedaer-theme-color.right-space {
-  margin-right: 10px;
 }
 
 .header-dropdown-menu {

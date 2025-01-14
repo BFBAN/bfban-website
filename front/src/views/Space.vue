@@ -146,11 +146,7 @@
           <Col :xm="{span: 24}" :lg="{span: 24}"
                style="width: 100%">
             <Card dis-hover :padding="0">
-              <Table show-header
-                     :border="false"
-                     :no-data-text="$t('basic.tip.noReports')"
-                     :columns="report.columns"
-                     :data="report.data"></Table>
+              <Reports :data="report.data"/>
               <Spin size="large" fix v-show="load">
                 <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
               </Spin>
@@ -195,8 +191,8 @@ import Application from "../assets/js/application";
 import Empty from "@/components/Empty";
 import vueQr from "vue-qr";
 import UserAvatar from "@/components/UserAvatar.vue";
-import HtmlLink from "@/components/HtmlLink.vue";
 import TimeView from "@/components/TimeView.vue";
+import Reports from "@/components/Reports.vue"
 import cheaterStatusView from "@/components/CheaterStatusView.vue";
 import Confetti from "@/components/Confetti.vue";
 import {api, http, http_token, util} from '../assets/js/index'
@@ -222,144 +218,6 @@ export default new Application({
         }
       },
       report: {
-        columns: [
-          {
-            title: this.$i18n.t("account.reported"),
-            key: 'originName',
-            fixed: "left",
-            minWidth: 200,
-            maxWidth: 300,
-            ellipsis: true,
-            tooltip: true,
-            render: (h, params) => {
-              const that = this,
-                  href = window.location.origin + that.$router.resolve({
-                    name: "player",
-                    params: {ouid: params.row.originPersonaId}
-                  }).href;
-              return h('row', {
-                props: {
-                  type: 'flex',
-                  align: 'middle',
-                }
-              }, [
-                h('col', [
-                  h('Avatar', {
-                    props: {
-                      src: params.row.avatarLink
-                    },
-                    style: {
-                      margin: '0 10px 0 0'
-                    }
-                  })
-                ]),
-                h('col', [
-                  h(HtmlLink, {
-                    props: {
-                      text: params.row.originName,
-                      isPoptip: false,
-                      href
-                    },
-                    style: {
-                      "overflow": "hidden",
-                      "display": "inline",
-                      "width": "100px",
-                      "text-overflow": "ellipsis",
-                      "white-space": "nowrap"
-                    },
-                    on: {
-                      click: () => {
-                        that.$router.push({
-                          name: "player",
-                          params: {ouid: params.row.originPersonaId},
-                        })
-                      }
-                    }
-                  }, params.row.originName),
-                ])
-              ]);
-            }
-          },
-          {
-            title: this.$i18n.t('signup.form.originId'),
-            key: 'originPersonaId',
-            ellipsis: true,
-            width: 200,
-            align: 'center',
-            render: (h, params) => {
-              return h('div', [
-                h('p', params.row.originPersonaId)
-              ]);
-            }
-          },
-          {
-            title: this.$i18n.t("account.status"),
-            key: 'status',
-            width: 200,
-            align: 'center',
-            render: (h, params) => {
-              return h('div', [
-                h(cheaterStatusView, {
-                  props: {
-                    status: params.row.status
-                  }
-                }, params.row.status)
-              ]);
-            }
-          },
-          {
-            title: this.$i18n.t("list.colums.reportTime"),
-            key: 'createTime',
-            sortable: true,
-            minWidth: 150,
-            render: (h, params) => {
-              return h('Tag', {
-                props: {
-                  color: 'primary'
-                }
-              }, [
-                h(TimeView, {
-                  props: {
-                    time: params.row.createTime
-                  }
-                }, [
-                  h('Time', {
-                    props: {
-                      time: params.row.createTime,
-                      type: 'datetime'
-                    }
-                  })
-                ])
-              ]);
-            }
-          },
-          {
-            title: this.$i18n.t("list.colums.updateTime"),
-            key: 'updateTime',
-            align: 'center',
-            width: 200,
-            sortable: true,
-            render: (h, params) => {
-              return h('tag', {
-                props: {
-                  color: "primary"
-                }
-              }, [
-                h(TimeView, {
-                  props: {
-                    time: params.row.createTime
-                  }
-                }, [
-                  h('Time', {
-                    props: {
-                      time: params.row.updateTime
-                    }
-                  })
-                ])
-              ]);
-            }
-          }
-        ],
         data: []
       },
       limit: 20,
@@ -380,7 +238,7 @@ export default new Application({
   watch: {
     $route: "loadData",
   },
-  components: {PrivilegesTag, AchievementsTag, Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, vueQr},
+  components: {PrivilegesTag, AchievementsTag, Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, Reports, vueQr},
   created() {
     const {username} = this.$route.query;
     this.http = http_token.call(this);
