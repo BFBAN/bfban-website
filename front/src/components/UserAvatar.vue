@@ -7,7 +7,7 @@
     </Avatar>
     <img :src="newSrc"
          :style="`width:${size}px;height:${size}px`"
-         class="ivu-avatar ivu-avatar-square"
+         class="ivu-avatar-square"
          v-show="imageStatus == 1"
          @load="imageStatus = 1"
          @error="loadImageError"/>

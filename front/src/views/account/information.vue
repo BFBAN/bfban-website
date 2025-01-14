@@ -88,11 +88,8 @@
                   </Card>
                 </FormItem>
               </Col>
-              <Col :xs="{span: 24}" :lg="{span: 12}">
+              <Col :xs="{span: 24}" :lg="{span: 18}">
                 <FormItem>
-                  <div slot="label">
-                    <p><b>Avatar</b></p>
-                  </div>
                   <Card dis-hover>
                     <Row type="flex" align="bottom">
                       <Col flex="1">
@@ -114,31 +111,30 @@
                         </a>
                       </Col>
                     </Row>
-
-                    <Row :gutter="20" type="flex" align="middle">
+                    <Row :gutter="5" type="flex" align="top">
                       <Col>
-                        <Row :gutter="5" type="flex" justify="space-around" align="end">
-                          <Col>
-                            <p>80</p>
-                            <UserAvatar :src="formItem.userAvatar" :size="80"></UserAvatar>
-                          </Col>
-                          <Col>
-                            <p>50</p>
-                            <UserAvatar :src="formItem.userAvatar" :size="50"></UserAvatar>
-                          </Col>
-                          <Col>
-                            <p>45</p>
-                            <UserAvatar :src="formItem.userAvatar" :size="45"></UserAvatar>
-                          </Col>
-                          <Col>
-                            <p>30</p>
-                            <UserAvatar :src="formItem.userAvatar" :size="30"></UserAvatar>
-                          </Col>
-                          <Col>
-                            <p>22</p>
-                            <UserAvatar :src="formItem.userAvatar" :size="22"></UserAvatar>
-                          </Col>
-                        </Row>
+                        <p>150</p>
+                        <UserAvatar :src="formItem.userAvatar" :size="150"></UserAvatar>
+                      </Col>
+                      <Col>
+                        <p>80</p>
+                        <UserAvatar :src="formItem.userAvatar" :size="80"></UserAvatar>
+                      </Col>
+                      <Col>
+                        <p>50</p>
+                        <UserAvatar :src="formItem.userAvatar" :size="50"></UserAvatar>
+                      </Col>
+                      <Col>
+                        <p>45</p>
+                        <UserAvatar :src="formItem.userAvatar" :size="45"></UserAvatar>
+                      </Col>
+                      <Col>
+                        <p>30</p>
+                        <UserAvatar :src="formItem.userAvatar" :size="30"></UserAvatar>
+                      </Col>
+                      <Col>
+                        <p>22</p>
+                        <UserAvatar :src="formItem.userAvatar" :size="22"></UserAvatar>
                       </Col>
                     </Row>
                   </Card>

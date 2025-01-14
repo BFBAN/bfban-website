@@ -33,11 +33,9 @@
                          :placeholder="$t('signin.form.password')"/>
                 </FormItem>
 
-
                 <FormItem :label="$t('captcha.title')" prop="captcha">
-                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
                 </FormItem>
-
 
                 <br>
 
@@ -124,7 +122,7 @@ export default new Application({
       signin: {
         username: '',
         password: '',
-        captcha: '',
+        captcha: {},
       },
       spinShow: false,
     }
@@ -141,8 +139,8 @@ export default new Application({
     ...mapMutations([
       'SIGNIN'
     ]),
-    getCaptchaData(e) {
-      this.signin.captcha = e;
+    getCaptchaData(value) {
+      this.signin.captcha = Object.assign(this.signin.captcha, value);
     },
     /**
      * 登录
@@ -150,7 +148,7 @@ export default new Application({
     handleSignin: function () {
       const that = this;
       const backPath = this.$route.query.backPath;
-      let { username, password, captcha } = this.signin;
+      let {username, password, captcha} = this.signin;
 
       // 提取出单独 trim 过的 username 和 password
       username = username.trim();

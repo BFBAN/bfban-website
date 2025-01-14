@@ -1,7 +1,7 @@
 <template>
   <Card dis-hover :padding="0" class="img">
     <template v-if="imageStatus === 0">
-      <div class="img-error img-box">
+      <div class="img-loading img-box">
         <Badge class="user-select-none">
           <Icon type="md-refresh" slot="count" class="spin-icon-load" size="20"/>
           <Icon type="md-images" size="50"/>
@@ -52,7 +52,7 @@
     <template v-else-if="imageStatus == -1">
       <div class="img-error img-box" @click="openUrl">
         <Badge class="user-select-none">
-          <Icon type="md-alert" slot="count" size="20"/>
+          <Icon type="md-alert" slot="count" class="status" size="20"/>
           <Icon type="md-images" size="50"/>
         </Badge>
         <p class="img-box-url">
@@ -187,9 +187,14 @@ export default {
     line-clamp: 2;
   }
 
+  .img-loading,
   .img-error {
     text-align: center;
     padding: 20px 0;
+  }
+
+  .img-error .status {
+    color: darkred;
   }
 
   .img-hover {

@@ -17,6 +17,7 @@
         <template v-if="editorContent != null && editorContent.length >= maxlength">
           <Alert show-icon type="error">{{ $t('textarea.textOverflowHint') }}</Alert>
         </template>
+        <slot name="footer"/>
       </Col>
       <Col>
         <Tooltip :placement="'left-start'" :content="$t('textarea.textHelpHint')" max-width="300" :transfer="true">

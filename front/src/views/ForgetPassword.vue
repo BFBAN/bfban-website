@@ -88,7 +88,7 @@
                     <Button v-if="button.submit"
                             long
                             @click.prevent.stop="onSubmit"
-                            :disabled="forgetPassword.captcha == ''"
+                            :disabled="forgetPassword.captcha === {}"
                             :loading="spinShow"
                             size="large" type="primary">
                       {{ $t('basic.button.submit') }}
@@ -126,7 +126,7 @@ export default new Application({
       forgetPassword: {
         username: '',
         originEmail: '',
-        password: '',
+        captcha: {}
       },
       spinShow: false,
 
@@ -251,13 +251,10 @@ export default new Application({
     onForgetPassword () {
       this.spinShow = true;
 
-      this.forgetPassword.language = this.$root.$i18n.locale;
-
       http.post(api["user_forgetPassword"], {
         data: {
-          data: this.forgetPassword,
+          data: Object.assign(this.forgetPassword, {language: mail.exchangeLangField(this.$root.$i18n.locale)}),
           captcha: this.forgetPassword.captcha,
-          language: mail.exchangeLangField(this.$root.$i18n.locale)
         },
       }).then(res => {
         const d = res.data;

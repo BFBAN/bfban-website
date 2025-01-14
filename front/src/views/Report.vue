@@ -39,7 +39,8 @@
                            :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ')'"
                            :class="tabs.list[index].formItem.gameName === i.value ? 'game-type-select' : ''">
                       <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
-                        <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src" alt="img" />
+                        <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"
+                             alt="img"/>
                         <span v-else>{{ i.full_name }}</span>
                       </Tooltip>
                     </Radio>
@@ -247,15 +248,15 @@
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
                   <Card :padding="0" dis-hover>
-                        <Textarea
-                            :toolbar="[[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'hr'], ['link', 'image']]"
-                            :placeholder="$t('report.info.description')"
-                            :index="index"
-                            :height="'520px'"
-                            :maxlength="60000"
-                            :showMaxlengthLabel="true"
-                            v-model="tabs.list[index].formItem.description">
-                        </Textarea>
+                    <Textarea
+                        :toolbar="[[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'hr'], ['link', 'image']]"
+                        :placeholder="$t('report.info.description')"
+                        :index="index"
+                        :height="'520px'"
+                        :maxlength="60000"
+                        :showMaxlengthLabel="true"
+                        v-model="tabs.list[index].formItem.description">
+                    </Textarea>
                   </Card>
                 </FormItem>
               </Card>
@@ -264,7 +265,7 @@
               <!-- 提交 S -->
               <Card dis-hover :padding="isMobile ? 20 : 50">
                 <FormItem prop="captcha" :label="$t('captcha.title')">
-                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
                 </FormItem>
 
                 <FormItem>
@@ -598,7 +599,7 @@ export default new Application({
     handleReport(data, index) {
       if (!this.captcha) {
         this.$Message.error(this.$t('basic.tip.captcha.expired'));
-        return ;
+        return;
       }
 
       const {gameName, originName, originUserId, originPersonaId} = data.formItem;

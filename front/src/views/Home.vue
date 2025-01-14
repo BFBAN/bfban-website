@@ -91,7 +91,7 @@
                 {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
               </Avatar>
               <br>
-              <Row type="flex" align="start" class="text-start">
+              <Row type="flex" align="top" class="text-start">
                 <Col flex="1">
                   <Tag fade type="border" color="default">{{ $t(`detail.timeline.types.${a_i.type}`) }}</Tag>
                 </Col>

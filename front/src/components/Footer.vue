@@ -197,7 +197,6 @@ export default new Application({
           // This is not the place to initialize the language
           http.setGlobalHeader({'Accept-Language': localWebLanguage || localStorageLanguage || localAppLanguages || 'zh-CN'})
 
-          console.log(this.$root.$i18n.locale)
           return localWebLanguage || localStorageLanguage || localAppLanguages || this.languagesImport.default.default;
         } catch (e) {
           return this.languagesImport.default.default;

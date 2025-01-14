@@ -9,10 +9,6 @@ header,
 .header {
   user-select: none;
 }
-.captcha-input-append {
-  user-select: none;
-  margin: -10px -7px !important;
-}
 table {
   width: 100%;
   border-collapse: collapse;

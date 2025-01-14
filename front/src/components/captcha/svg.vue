@@ -1,29 +1,34 @@
 <template>
-  <div class="captcha-svg"
-       @click="refreshCaptcha"
-       :style="`cursor: ${captchaTime.count <= 0 ? 'pointer' : 'not-allowed'};height: ${height}`">
-    <span v-if="!content" class="tip">
-      <template v-if="!disable">
-        {{ $t('captcha.get') }}
-        <span v-if="postLoad">
-          <Icon type="md-refresh spin-icon-load" size="20"/>
+  <div>
+    <Input v-model="inputValue" size="large" maxlength="4" @on-change="onChangeValue" :placeholder="$t('captcha.title')">
+      <div slot="append" class="captcha-input-append captcha-svg"
+           @click="refreshCaptcha"
+           :style="`cursor: ${captchaTime.count <= 0 ? 'pointer' : 'not-allowed'};height: ${height}`">
+        <span v-if="!content" class="tip">
+          <template v-if="!disable">
+            {{ $t('captcha.get') }}
+            <span v-if="postLoad">
+              <Icon type="md-refresh spin-icon-load" size="20"/>
+            </span>
+          </template>
+          <div v-else style="min-width: 80px">
+            <Icon type="md-close" size="20"/>
+          </div>
         </span>
-      </template>
-      <div v-else style="min-width: 80px">
-        <Icon type="md-close" size="20"/>
+        <div v-else v-html="content"
+             :class="`${captchaTime.count <= 0 ? 'disable': ''}`">
+        </div>
+        <transition name="fade">
+          <div v-show="content && captchaTime.count <= 0" class="captcha-svg-icon">
+            <Icon v-if="disable" type="md-close" size="20"/>
+            <Icon v-else type="md-refresh" size="20" :class="[postLoad ? 'spin-icon-load' : '']"/>
+          </div>
+        </transition>
+        <div class="count" v-show="captchaTime.count > 0">{{ captchaTime.count }}s</div>
       </div>
-    </span>
-    <div v-else v-html="content"
-         :class="`${captchaTime.count <= 0 ? 'disable': ''}`">
-    </div>
-    <transition name="fade">
-      <div v-show="content && captchaTime.count <= 0" class="captcha-svg-icon">
-        <Icon v-if="disable" type="md-close" size="20"/>
-        <Icon v-else type="md-refresh" size="20" :class="[postLoad ? 'spin-icon-load' : '']"/>
-      </div>
-    </transition>
-    <div class="count" v-show="captchaTime.count > 0">{{ captchaTime.count }}s</div>
+    </Input>
   </div>
+
 </template>
 
 <script>
@@ -54,6 +59,7 @@ export default {
       postLoad: false,
       hash: "",
       content: "",
+      inputValue: "",
       captchaHash: {},
       captchaTime: {
         fun: null,
@@ -78,30 +84,43 @@ export default {
   },
   methods: {
     /**
+     * 变动事件
+     */
+    onChangeValue() {
+      this.$emit('callbackDoneVerifies', {
+        encryptCaptcha: this.hash,
+        response: this.inputValue,
+      });
+      console.log(this.inputValue)
+    },
+    /**
      * 刷新验证码
      */
     async refreshCaptcha() {
       let captcha = this.storageSession.get('captcha');
       let that = this;
 
-      if (captcha.code <= 0) {
-        captcha = {
-          data: {
-            value: this.seconds,
+      try {
+        if (captcha.code <= 0) {
+          captcha = {
+            data: {
+              value: this.seconds,
+            }
           }
         }
-      }
 
-      if (this.disable || this.postLoad || this.captchaTime.lock) return;
+        if (this.disable || this.postLoad || this.captchaTime.lock) return;
 
-      this.postLoad = true;
+        this.postLoad = true;
 
-      http.get(api["captcha"], {
-        params: {
-          t: Math.random()
-        }
-      }).then(res => {
+        let res = await http.get(api["captcha"], {
+          params: {
+            t: Math.random()
+          }
+        });
+
         const d = res.data;
+
         if (d.success === 1) {
           // 储存验证码hash
           that.captchaHash = Object.assign({
@@ -117,19 +136,17 @@ export default {
           }
 
           this.capthcaTimeout(this.captchaTime.count || this.seconds || 0)
-
-          this.$emit('getCaptchaData', {content: this.content, hash: this.hash});
           return;
         }
 
         this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
           message: d.message || ""
         }));
-      }).finally(res => {
+      } finally {
         setTimeout(function () {
           that.postLoad = false;
         }, 800)
-      });
+      }
     },
     /**
      * 计时器
@@ -172,6 +189,7 @@ export default {
 
 <style lang="less">
 @import "@/assets/css/icon.less";
+@import "@/assets/css/captcha";
 
 .captcha-svg {
   overflow: hidden;

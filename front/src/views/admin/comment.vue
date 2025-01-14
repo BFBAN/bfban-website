@@ -171,7 +171,7 @@
           <Col span="24">
             <FormItem prop="content">
               <Card dis-hover :padding="0">
-                <Textarea ref="commentTextarea" :maxlength="65535" v-model="editCommentFrom.content"></Textarea>
+                <Textarea ref="commentTextarea" :maxlength="65535" v-model="editCommentFrom.content.text"></Textarea>
               </Card>
             </FormItem>
           </Col>
@@ -181,7 +181,7 @@
         <Row>
           <Col flex="1"></Col>
           <Col>
-            <Button type="primary" :loading="commentEditLoad" @click="commentSubmit">
+            <Button type="primary" :loading="commentEditLoad" @click="onCommentSubmit">
               {{ $t('basic.button.submit') }}
             </Button>
           </Col>
@@ -283,29 +283,28 @@ export default new Application({
 
       this.openCommentModeBase();
     },
+    /**
+     * 编辑评论弹窗数据载入
+     * @param data
+     */
     openCommentModeAsData(data) {
       this.editCommentFrom = data;
 
+      if (this.$refs.commentTextarea)
+        this.$refs.commentTextarea.updateContent(this.editCommentFrom.content.text);
+
       this.openCommentModeBase();
     },
+    /**
+     * 展开编辑评论弹窗
+     */
     openCommentModeBase() {
-      if (this.$refs.commentTextarea)
-        this.$refs.commentTextarea.updateContent(this.editCommentFrom.content);
-
       this.commentEditModel = true;
-    },
-    handlePageChange(num) {
-      this.skip = num;
-      this.getCommentAllList();
-    },
-    handlePageSizeChange(num) {
-      this.limit = num;
-      this.getCommentAllList();
     },
     /**
      * 提交编辑评论、回复、判决
      */
-    commentSubmit() {
+    onCommentSubmit() {
       if (!this.editCommentFrom.id || !this.editCommentFrom.content) return;
 
       if (
@@ -317,7 +316,7 @@ export default new Application({
 
       let data = {
         id: this.editCommentFrom.id,
-        content: this.editCommentFrom.content,
+        content: this.editCommentFrom.content.text,
       };
 
       if (this.editCommentFrom.videoLink) data.videoLink = this.editCommentFrom.videoLink;
@@ -329,7 +328,7 @@ export default new Application({
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.$Message.success(d.code);
           return;
         }
@@ -357,7 +356,7 @@ export default new Application({
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.openCommentModeAsData(d.data);
           return;
         }
@@ -426,6 +425,14 @@ export default new Application({
       }).finally(() => {
         this.load = false;
       })
+    },
+    handlePageChange(num) {
+      this.skip = num;
+      this.getCommentAllList();
+    },
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getCommentAllList();
     },
   }
 })

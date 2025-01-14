@@ -2,7 +2,6 @@
 import TurnstileCaptchaWidget from "./turnstile.vue";
 import SvgCaptchaWidget from "./svg.vue"
 
-
 /**
  * 验证器
  * svg:
@@ -43,7 +42,7 @@ export default {
      * 重置验证器
      */
     refreshCaptcha() {
-      switch (this.type) {
+      switch (this.captchaType) {
         case "turnstile":
           this.$refs.turnstileCaptchaRef.onRenderTurnstile();
           break;
@@ -59,14 +58,14 @@ export default {
      * @param string|map value
      */
     doneVerifies(value) {
-      let result = {captchaType: this.type};
+      let result = {captchaType: this.captchaType};
 
-      switch (this.type) {
+      switch (this.captchaType) {
         case "turnstile":
           result = {...result, response: value};
           break;
         case "svg":
-          result = {...result, content: this.$refs.content, hash: this.$refs.hash};
+          result = {...result, ...value};
           break;
         default:
           throw "Unknown captcha type";
@@ -74,7 +73,12 @@ export default {
 
       this.$emit('getCaptchaData', result);
     }
-  }
+  },
+  computed: {
+    captchaType () {
+      return this.$route.query.captcha || this.type;
+    }
+  },
 }
 </script>
 
@@ -82,12 +86,12 @@ export default {
   <div class="captcha"
        :style="`height: ${height}`">
     <TurnstileCaptchaWidget ref="turnstileCaptchaRef"
-                            v-if="type === 'turnstile'"
+                            v-if="captchaType === 'turnstile'"
                             :id="id"
                             :disable="disable"
                             @callbackDoneVerifies="doneVerifies"></TurnstileCaptchaWidget>
     <SvgCaptchaWidget ref="svgCaptchaRef"
-                      v-if="type === 'svg'"
+                      v-if="captchaType === 'svg'"
                       :id="id"
                       :seconds="seconds"
                       :disable="disable"

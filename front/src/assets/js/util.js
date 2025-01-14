@@ -46,7 +46,7 @@ export default class Util {
 
     queryCheatMethodsGlossary (key) {
         let _key = key;
-        if (this.cheatMethodsGlossary.length > 0)
+        if (this.cheatMethodsGlossary && this.cheatMethodsGlossary.length > 0)
             for (let i = 0; i < this.cheatMethodsGlossary.length; i++) {
                 if (this.cheatMethodsGlossary[i].values.includes(key)) _key = this.cheatMethodsGlossary[i].value;
             }

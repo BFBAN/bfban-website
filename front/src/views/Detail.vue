@@ -2,7 +2,7 @@
   <div class="container">
     <div class="content">
       <template v-if="!isFull">
-      <br>
+        <br>
         <Row>
           <Col :xs="{push: 1}" :lg="{push: 0}">
             <Breadcrumb>
@@ -21,12 +21,12 @@
       <Card id="getSharePicture" v-if="isCheaterExist" dis-hover>
         <Row :gutter="10">
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 4, pull: 0, push: 0}">
-            <div align="center">
+            <div class="default-avatar-box">
               <!-- Origin头像 S -->
               <Avatar shape="square"
                       class="default-avatar"
                       :src="cheater.avatarLink"
-                      :size="180"
+                      :size="'100%'"
                       :title="$t('detail.info.originAvatar')"
                       v-if="cheater.avatarLink">
               </Avatar>
@@ -40,7 +40,7 @@
             </div>
             <br class="desktop-hide">
           </Col>
-          <Col :xs="{span: 24, pull: 0, push: 0}" :lg="{span: 19, pull: 0, push: 1}" class="detail-userinfo-card">
+          <Col :xs="{span: 24, pull: 0, push: 0}" :lg="{span: 20, pull: 0, push: 0}" flex="1" class="detail-userinfo-card">
             <Row :gutter="10" type="flex" justify="space-between" align="top">
               <Col :flex="isMobile ? 1 : null" :xs="isMobile ? {span: 24, order:1} : {}"
                    :lg="isMobile ? {span: 12, order: 1} : {}" class="tags">
@@ -860,7 +860,7 @@
                 <div class="ivu-card-body">
                   <Row :gutter="10">
                     <Col :xs="{span: 14}" :lg="{span: 12}">
-                      <Captcha ref="captcha" @getCaptchaData="getCaptchaData" ></Captcha>
+                      <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
                     </Col>
                     <Col :xs="{span: 10, push: 0}" :lg="{span: 12, push: 0}">
                       <Row type="flex" justify="end" align="middle">
@@ -1145,7 +1145,7 @@
         <div slot="footer">
           <Row :gutter="30">
             <Col flex="1">
-              <Captcha ref="captcha" @getCaptchaData="getMiniCaptchaData" ></Captcha>
+              <Captcha ref="captcha" @getCaptchaData="getMiniCaptchaData"></Captcha>
 
             </Col>
             <Col>
@@ -1506,7 +1506,7 @@ export default new Application({
     checkPlayerSubscribes() {
       const {id} = this.cheater;
 
-      if (!this.isLogin) return;
+      if (!this.isLogin || !this.$store.state.configuration.subscribes) return;
 
       this.subscribes.load = true;
       this.http.post(api["user_isSubscribes"], {
@@ -1631,7 +1631,7 @@ export default new Application({
             })
 
             that.cheater = d.data;
-            document.title = document.title + ' - ' + this.cheater.originName + ' - ' + this.cheater.games;
+            document.title = document.title + ' - ' + this.cheater.originName + ' - ' + this.cheater.games.map(i => this.$i18n.t(`basic.games.${i}`));
             that.$refs.recordLink.generateTable(this.cheater);
             return;
           }
@@ -2126,11 +2126,15 @@ export default new Application({
   h1 {
     font-size: 2.2rem;
   }
-
   .cards .ivu-poptip,
   .cards .ivu-poptip-rel {
     width: 100%;
   }
+}
+
+.default-avatar-box {
+  text-align: center;
+  overflow: hidden;
 }
 
 .detail-affix {
