@@ -93,7 +93,8 @@ export default class Api {
             "admin_verifications": "admin/verifications",
             "admin_blockedUserAll": "admin/blockedUserAll",
             "admin_commentAll": "admin/commentAll",
-            "admin_commentTypeList": "admin/commentTypeList"
+            "admin_commentTypeList": "admin/commentTypeList",
+            "admin_userStats": "admin/userStats"
         };
     }
 }

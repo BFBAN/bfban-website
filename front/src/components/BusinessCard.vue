@@ -4,6 +4,10 @@
           :transfer="true"
           trigger="hover"
           placement="bottom"
+          style="
+              display: inline-flex;
+              align-items: center;
+          "
           @on-popper-show="getUserInfo">
     <slot></slot>
     <div slot="content" class="business">
@@ -68,7 +72,8 @@
         </template>
         <Row class="business-padding business-padding-perpendicularity">
           <Col flex="auto">
-            <AchievementsTag trigger="hover" :data="userInfo.attr.achievements || []" v-if="userInfo.attr && userInfo.attr.achievements"></AchievementsTag>
+            <AchievementsTag trigger="hover" :data="userInfo.attr.achievements || []"
+                             v-if="userInfo.attr && userInfo.attr.achievements"></AchievementsTag>
           </Col>
           <Col>
             <router-link :to="{path: '/space/' + userInfo.id, query: {repeat: true}}">

@@ -1,5 +1,5 @@
 <template>
-  <div class="user-avatar">
+  <div class="user-avatar" :style="`width:${size}px;height:${size}px`">
     <Avatar :shape="shape"
             icon="ios-person"
             :size="size"

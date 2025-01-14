@@ -477,20 +477,22 @@
                   <!-- 举报:any S -->
                   <div :id="`floor-${l.id}`" v-if="l.type === 'report'" class="timeline-content">
                     <div class="timeline-time">
-                      <Row>
-                        <Col flex="1">
-                          <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                            <BusinessCard :id="l.byUserId">
-                              <Row :gutter="5" type="flex" justify="center" align="middle">
-                                <Col>
-                                  <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
-                                </Col>
-                                <Col>
+                      <Row :gutter="5" type="flex" justify="center" align="middle">
+                        <Col>
+                          <BusinessCard :id="l.byUserId">
+                            <Row :gutter="5" type="flex" justify="center" align="middle">
+                              <Col>
+                                <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
+                              </Col>
+                              <Col>
+                                <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                                   <u><b>{{ l.username || l.byUserId }}</b></u>
-                                </Col>
-                              </Row>
-                            </BusinessCard>
-                          </router-link>
+                                </router-link>
+                              </Col>
+                            </Row>
+                          </BusinessCard>
+                        </Col>
+                        <Col>
                           <!-- 举报 -->
                           {{ $t('detail.info.report') }}
                           <a><u><b class="text-distinguishing-letter"><code>{{ l.toOriginName }}</code></b></u></a>
@@ -521,6 +523,7 @@
                             </Poptip>
                           </Tag>
                         </Col>
+                        <Col flex="1"></Col>
                         <Col>
                           <TimeView :time="l.createTime">
                             <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
@@ -567,7 +570,7 @@
                             <BusinessCard :id="l.byUserId">
                               <Row :gutter="5" type="flex" justify="center" align="middle">
                                 <Col>
-                                  <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
+                                  <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
                                 </Col>
                                 <Col>
                                   <u><b>{{ l.username || l.byUserId }}</b></u>
@@ -669,21 +672,22 @@
                   <div :id="`floor-${l.id}`" v-if="l.type === 'verify' || l.type === 'judgement'"
                        class="timeline-content bookmark">
                     <div class="timeline-time">
-                      <Row>
-                        <Col flex="1">
-                          <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                            <BusinessCard :id="l.byUserId">
-                              <Row :gutter="5" type="flex" justify="center" align="middle">
-                                <Col>
-                                  <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
-                                </Col>
-                                <Col>
+                      <Row :gutter="5" type="flex" align="middle">
+                        <Col>
+                          <BusinessCard :id="l.byUserId">
+                            <Row :gutter="5" type="flex" justify="center" align="middle">
+                              <Col>
+                                <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
+                              </Col>
+                              <Col>
+                                <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                                   <u><b>{{ l.username || l.byUserId }}</b></u>
-                                </Col>
-                              </Row>
-                            </BusinessCard>
-                          </router-link>
-
+                                </router-link>
+                              </Col>
+                            </Row>
+                          </BusinessCard>
+                        </Col>
+                        <Col>
                           {{ $t('detail.info.judge') }}
 
                           <judgeActionTypeView :judgeAction="l.judgeAction"></judgeActionTypeView>
@@ -714,6 +718,7 @@
                             </Tag>
                           </template>
                         </Col>
+                        <Col flex="1"></Col>
                         <Col>
                           <TimeView :time="l.createTime">
                             <Time v-if="l.createTime" :time="l.createTime" type="datetime"></Time>
@@ -730,23 +735,25 @@
                   <!-- 回复:any S -->
                   <div :id="`floor-${l.id}`" v-if="l.type === 'reply'" class="timeline-content">
                     <div class="timeline-time">
-                      <Row>
-                        <Col flex="1">
-                          <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                            <BusinessCard :id="l.byUserId">
-                              <Row :gutter="5" type="flex" justify="center" align="middle">
-                                <Col>
-                                  <UserAvatar :src="l.byUserAvatar" :size="22"></UserAvatar>
-                                </Col>
-                                <Col>
+                      <Row :gutter="5" type="flex" justify="center" align="middle">
+                        <Col>
+                          <BusinessCard :id="l.byUserId">
+                            <Row :gutter="5" type="flex" justify="center" align="middle">
+                              <Col>
+                                <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
+                              </Col>
+                              <Col>
+                                <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
                                   <u><b>{{ l.username || l.byUserId }}</b></u>
-                                </Col>
-                              </Row>
-                            </BusinessCard>
-                          </router-link>
-
+                                </router-link>
+                              </Col>
+                            </Row>
+                          </BusinessCard>
+                        </Col>
+                        <Col>
                           {{ $t('basic.button.reply') }}
                         </Col>
+                        <Col flex="1"></Col>
                         <Col>
                           <TimeView :time="l.createTime">
                             <Time v-if="l.createTime" :time="l.createTime" type="datetime"></Time>
@@ -919,22 +926,6 @@
                   <Tag :size="'default'" type="border">{{ $t(`basic.status.2.text`) }}</Tag>
                 </div>
               </Card>
-
-              <!--              <br>-->
-              <!--              <p style="text-align:center">or</p>-->
-              <!--              <br>-->
-
-              <!--              <Card dis-hover>-->
-              <!--                <Button type="primary"-->
-              <!--                        size="large"-->
-              <!--                        long-->
-              <!--                        :to="{'name': 'cheater_appeal'}"-->
-              <!--                        :disabled="!isLogin || cheater.status !== 1">-->
-              <!--                  {{ $t('detail.info.appeal') }}-->
-              <!--                  <Tag :size="'default'" type="border" color="error">{{ $t(`basic.status.1.text`) }}</Tag>-->
-              <!--                </Button>-->
-              <!--                <p><br>{{ $t('detail.appeal.describe') }}</p>-->
-              <!--              </Card>-->
             </Col>
           </Row>
 
@@ -1226,8 +1217,6 @@ import {
   time,
   storage,
   account_storage,
-  mail,
-  achievement as achievementUtil
 } from '../assets/js/index'
 
 import Application from "/src/assets/js/application";
@@ -2101,6 +2090,9 @@ export default new Application({
     },
   },
   computed: {
+    userAvatarSize () {
+      return 24;
+    },
     /**
      * 时间轴可见类型，筛选
      * @returns {*|boolean}

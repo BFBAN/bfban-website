@@ -18,6 +18,66 @@ import {siteEvent} from "../lib/bfban.js";
 
 const router = express.Router();
 
+router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "dev"]), [],
+    async (req, res, next) => {
+        try {
+            const tbeg = new Date('2018-10-12T00:00:00.000Z');  // first commit of bfban
+            const behaviorAdminStats = await db('comments')
+                .select(db.raw("DATE_FORMAT(comments.createTime, '%Y-%m-01') as month"), 'u.username', 'u.id')
+                .count('* as judgement_count')
+                .join('users as u', 'comments.byUserId', 'u.id')
+                .where('comments.type', 'judgement')
+                .orWhere('comments.type', 'reply')
+                .where('privilege', 'like', '%"admin"%')
+                .orWhere('privilege', 'like', '%"super"%')
+                .orWhere('privilege', 'like', '%"root"%')
+                .where('comments.createTime', '>=', tbeg)
+                .groupBy('month', 'u.username')
+                .orderBy('month')
+                .then(res => {
+                    let monthlyData = {};
+                    res.forEach(row => {
+                        const month = row.month;
+                        if (!monthlyData[month]) {
+                            monthlyData[month] = {
+                                users: [],
+                                total_count: 0
+                            };
+                        }
+                        monthlyData[month].users.push({
+                            username: row.username,
+                            id: row.id,
+                            total: row.judgement_count
+                        });
+                        monthlyData[month].total_count += parseInt(row.judgement_count);
+                    });
+                    return Object.keys(monthlyData).map(month => ({
+                        month,
+                        users: monthlyData[month].users,
+                        total_count: monthlyData[month].total_count
+                    }));
+                });
+            const inactiveAdminStats = await db('users')
+                .select('id', 'username', 'signoutTime', 'privilege', 'valid')
+                .where('signoutTime', '<', Date.now() - 3 * 30 * 24 * 60 * 60 * 1000)
+                .orWhereNull('signoutTime')
+                .where('privilege', 'like', '%"admin"%')
+                .where('valid', 1)
+                .then(r => r.map(i => {
+                    delete i.valid;
+                    return i
+                }));
+
+            return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+                success: 1,
+                code: 'userStats.ok',
+                data: {behaviorAdminStats, inactiveAdminStats}
+            });
+        } catch (err) {
+            next(err);
+        }
+    });
+
 router.get('/searchUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('name').isString(),
     checkquery('type').optional().isIn(['all', 'admin', 'bot']),
