@@ -5,11 +5,38 @@
     "zh-CN": {
       "value": "zh-CN"
     },
-    "zh-MIAO": {
+    "zh-Cat": {
       "value": "zh-CN"
+    },
+    "zh-TW": {
+      "value": "zh-TW"
     },
     "en-US": {
       "value": "en-US"
+    },
+    "ja-JP": {
+      "value": "ja-JP"
+    },
+    "ko-KR": {
+      "value": "ko-KR"
+    },
+    "ru-RU": {
+      "value": "ru-RU"
+    },
+    "fr-FR": {
+      "value": "fr-FR"
+    },
+    "it-IT": {
+      "value": "it-IT"
+    },
+    "ar-EG": {
+      "value": "ar-EG"
+    },
+    "de-DE": {
+      "value": "de-DE"
+    },
+    "es-ES": {
+      "value": "es-ES"
     }
   }
 }

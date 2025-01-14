@@ -18,7 +18,7 @@
       "type": "local",
       "name": "lightness",
       "img": "public/theme/silence/main.png",
-      "version": "0.3",
+      "version": "0.4",
       "themeColor": "#efe227",
       "authorInfo": {
         "authorName": "BFBAN",
@@ -67,7 +67,7 @@
       "name": "MikuGreen",
       "img": "public/theme/MikuGreen/main.png",
       "themeColor": "#39C5BB",
-      "version": "0.1",
+      "version": "0.2",
       "authorInfo": {
         "authorName": "miku39",
         "authorUpdate": "2023-6-5"
@@ -79,7 +79,7 @@
       "name": "miside",
       "img": "public/theme/miside/main.png",
       "themeColor": "#cd5951",
-      "version": "0.2",
+      "version": "0.1",
       "authorInfo": {
         "authorName": "cabbagelol",
         "authorUpdate": "2024-12-31"
@@ -103,10 +103,22 @@
       "name": "BlueDeep",
       "img": "public/theme/BlueDeep/main.png",
       "themeColor": "#364e80",
-      "version": "0.2",
+      "version": "0.3",
       "authorInfo": {
         "authorName": "Cabbagelol",
         "authorUpdate": "2023-12-21"
+      },
+      "src": ""
+    },
+    {
+      "type": "local",
+      "name": "blue",
+      "img": "public/theme/blue/main.png",
+      "themeColor": "#2d8cf0",
+      "version": "0.1",
+      "authorInfo": {
+        "authorName": "BFBAN",
+        "authorUpdate": "2025-1-14"
       },
       "src": ""
     }
