@@ -1,10 +1,10 @@
 {
-  "name": "联BAN",
+  "name": "BFBAN",
   "about": {
     "description": "<h2>BFBAN</h2>\n<p>\n诞生于2018年1月29日；\n是战地玩家一起组建的 <b>抵制外挂</b> 组织。\n </p>",
     "privacy": "\n<h2>隐私政策</h2>\n它是开源的。您可以通过 GitHub 发布问题并提出更改/改进建议。社区网络提供的 API 并开放供公众使用。",
     "title": "关于",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> 开发，于 2018年11月4日 上线\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>"
+    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 网站依托于BFBAN调查局，最初想法起源于热心玩家，由 <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> 开发，于 2018年11月4日 上线\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>"
   },
   "account": {
     "bindOrigin": {
@@ -583,7 +583,7 @@
       "activities": {
         "admin": "社区管理",
         "as": "处理为",
-        "join": "注册了联ban, 欢迎你的到来！",
+        "join": "注册了BFBAN, 欢迎你的到来！",
         "mark": "将",
         "report": "举报了"
       },
@@ -609,8 +609,8 @@
       "subButton": "了解有那些社区已经加入"
     },
     "seo": {
-      "description": "联ban官网,建立起全球作弊玩家档案库,成为我们一员维护社区环境",
-      "keywords": "联ban,联办,联办局,联ban局,战地风云,战地"
+      "description": "BFBAN官网,建立起全球作弊玩家档案库,成为我们一员维护社区环境",
+      "keywords": "BFBAN,联办,联Ban,联办局,BFBAN局,战地风云,战地"
     },
     "title": "首页"
   },
@@ -695,7 +695,7 @@
         },
         "user_innocent_case": {
           "name": "安全落地",
-          "conditions": "- 在联BAN中存在一个与此账户关联的案件<br>- 案件状态自证状态",
+          "conditions": "- 在BFBAN中存在一个与此账户关联的案件<br>- 案件状态自证状态",
           "description": "案件无效"
         },
         "user_achievement_assemble": {
@@ -762,7 +762,7 @@
         "old_user": {
           "name": "老用户",
           "conditions": "- 创建时间在2024 1月1日前<br>- 用户id在10000以内(包含10000)<br>(同时满足)",
-          "description": "最早一批注册联ban先锋用户"
+          "description": "最早一批注册BFBAN先锋用户"
         },
         "open_chat_assemble": {
           "name": "聊天",
@@ -790,7 +790,7 @@
         "report_l1": {
           "name": "举报萌新",
           "conditions": "- 举报10条玩家<br>- 从2024 01-01开始统计<br>- 非机器人账户",
-          "description": "初步探索联BAN使用方法"
+          "description": "初步探索BFBAN使用方法"
         },
         "report_l2": {
           "name": "举报入门",
@@ -1021,7 +1021,7 @@
     },
     "info": {
       "description": "🤝 内容基本要求:\n\t- 不要将举报者任何隐私信息提交到此处\n\t- 视频链接可以粘贴在上面，有利于醒目提醒和索引\n\t- 请清晰描述举报者行为、特点、发生地点、时间，列出他的作弊举止，最后给出原因\n\t- 可以对你提供的截图、视频标注位置，附加说明\n\n⚠️ 请不要仅填写简单作弊方式，不提供任何直接证据\n⚠️ 多次无意义/恶意举报，账户将受到黑名单",
-      "fromDatabaseOneId": "从联BAN数据库中选取",
+      "fromDatabaseOneId": "从BFBAN数据库中选取",
       "idNotion1": "一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID",
       "idNotion2": "游戏ID是不区分大小写的，但请特别注意区分 i I 1 l L o O 0，正确填写举报ID",
       "loginExpired": "您的登录已过期，请重新登录",
@@ -1077,7 +1077,7 @@
     },
     "seo": {
       "description": "玩家举报",
-      "keywords": "联ban,联办,战地风云,战地"
+      "keywords": "BFBAN,联办,战地风云,战地"
     },
     "title": "举报"
   },
