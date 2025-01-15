@@ -141,10 +141,10 @@ router.get('/statistics', statisticsLimiter, [
             if (req.query.admins) {
                 queryPromises.push(
                     db('users').count('id as count')
-                        .where('privilege', 'like', '%"admin"%')
-                        .orWhere('privilege', 'like', '%"super"%')
-                        .orWhere('privilege', 'like', '%"dev"%')
-                        .orWhere('privilege', 'like', '%"root"%')
+                        .whereJsonSupersetOf('privilege', '["admin"]')
+                        .orWhereJsonSupersetOf('privilege', '["super"]')
+                        .orWhereJsonSupersetOf('privilege', '["dev"]')
+                        .orWhereJsonSupersetOf('privilege', '["root"]')
                         .then(results => ({admins: parseInt(results[0].count)}))
                 );
             }

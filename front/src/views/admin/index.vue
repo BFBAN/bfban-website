@@ -50,14 +50,16 @@
         <Col :xs="{span: 24}" :sm="{span: 18}" style="padding: 20px">
           <keep-alive>
             <div v-if="adminMenuValue === 'home'">
-              <div class="admin-content">
-                <h1>{{ currentUser.userinfo.username }}</h1>
-                <p>({{ currentUser.userinfo.userId }})</p>
-                <br>
-                <p>
-                  <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
-                </p>
-              </div>
+              <Banner :height="300" class="index-banner profile-right-content ">
+                <div class="admin-content">
+                  <h1>{{ currentUser.userinfo.username }}</h1>
+                  <p>({{ currentUser.userinfo.userId }})</p>
+                  <br>
+                  <p>
+                    <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
+                  </p>
+                </div>
+              </Banner>
 
               <Card dis-hover>
                 <Row type="flex" justify="space-between" align="middle">
@@ -103,16 +105,43 @@
 
               <Row :gutter="10" :wrap="true">
                 <Col :lg="{span: 24}">
-                  <v-chart class="chart hot-map" :option="stats.userConfig"/>
+                  <v-chart @click="(e) => onRatioClick(e, stats.userData)" class="chart hot-map"
+                           :option="stats.userConfig"/>
                 </Col>
                 <Col :xs="{span: 24}" :lg="{span: 12}">
-                  <Card dis-hover :padding="0" >
-                    <v-chart @click="onRatioClick" ref="workingRatio" class="ratio" :option="stats.workingRatioStats"/>
+                  <Card dis-hover :padding="0">
+                    <v-chart @click="(e) => onRatioClick(e, stats.workingRatioData)" ref="workingRatio" class="ratio"
+                             :option="stats.workingRatioStats"/>
 
-                    <Modal v-model="model.workingRatio.value">
+                    <Modal v-model="model.workingRatio.value" footer-hide>
+                      <Row :gutter="10" type="flex" align="middle">
+                        <Col flex="1">
+                          <h2><b>Detail</b> ({{
+                              model.workingRatio.data.users && model.workingRatio.data.users.length || 0
+                            }}/{{ statistics.admins || 0 }})</h2>
+                        </Col>
+                        <Col span="24">
+                          <Card dis-hover :padding="0">
+                            <v-chart class="statistical-percentage"
+                                     :option="stats.statisticalPercentageStats"/>
+                          </Card>
+                        </Col>
+                        <Col span="24">
+                          <br>
+                          <Input placeholder="search value" v-model="model.workingRatio.searchValue"
+                                 class="ivu-mb-10">
+                            <template slot="prefix">
+                              <Icon type="ios-search"/>
+                            </template>
+                          </Input>
+                        </Col>
+                      </Row>
+                      <br/>
+
                       <div class="working-ratio-ul">
                         <ul v-if="model.workingRatio.data.users && model.workingRatio.data.users.length > 0">
-                          <li v-for="(i, index) in model.workingRatio.data.users" :key="index">
+                          <li v-for="(i, index) in model.workingRatio.data.users" :key="index"
+                              v-show="i.username.indexOf(model.workingRatio.searchValue) >= 0">
                             <Row :gutter="10" type="flex" align="middle">
                               <Col>
                                 <BusinessCard :id="i.id">
@@ -124,7 +153,7 @@
                                 <Divider dashed style="margin: 0"></Divider>
                               </Col>
                               <Col class="privilege">
-                                <PrivilegesTag :data="i.privilege"></PrivilegesTag>
+                                {{ i.total || 0 }}
                               </Col>
                             </Row>
                           </li>
@@ -141,9 +170,13 @@
                             statistics.admins || 0
                           }})</h2>
                       </Col>
-                      <Col span="6">
+                      <Col span="24">
                         <Input placeholder="search value" v-model="stats.inactiveUserSearchValue"
-                               class="ivu-mb-8"></Input>
+                               class="ivu-mb-10">
+                          <template slot="prefix">
+                            <Icon type="ios-search"/>
+                          </template>
+                        </Input>
                       </Col>
                     </Row>
                     <br/>
@@ -211,6 +244,7 @@ import fileList from "@/views/admin/file.vue"
 import PrivilegesTag from "@/components/PrivilegesTag";
 import BusinessCard from "@/components/BusinessCard";
 import HtmlLink from "@/components/HtmlLink";
+import Banner from "@/components/Banner"
 
 import {account_storage, api, http_token} from "@/assets/js";
 import echarts from "echarts";
@@ -312,15 +346,18 @@ export default new Application({
         }
       ],
 
-      model:{
+      model: {
         workingRatio: {
           value: false,
+          searchValue: "",
           data: {}
         }
       },
 
       statistics: {},
       stats: {
+        // 日历
+        userShowRawValue: 4,
         userConfig: {
           tooltip: {
             position: 'top'
@@ -332,7 +369,7 @@ export default new Application({
             left: 'center',
             top: -100,
             inRange: {
-              color: ['#0e4429', '#006d32', '#26a641', '#39d353'],
+              color: ['#46E761', '#3DCB55', '#34AE48', '#2B913C', '#237430', '#275423', '#15451D', '#0F3315', '#203918', '#423918', '#7F3918', '#852E14', '#88250F', '#942510', '#B9170A'],
             },
           },
           calendar: [],
@@ -340,9 +377,11 @@ export default new Application({
         },
         userData: {},
 
+        // 不活跃
         inactiveUserData: [],
         inactiveUserSearchValue: "",
 
+        // 柱
         workingRatioStats: {
           tooltip: {
             trigger: 'axis',
@@ -354,22 +393,30 @@ export default new Application({
             }
           },
           grid: {
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 30
+            left: 5,
+            right: 5,
+            top: 10,
+            bottom: 0
           },
+
           yAxis: {
             type: 'value',
             show: false
           },
           xAxis: {
             type: 'category',
-            data: []
+            data: [],
+            interval: 0
           },
           series: []
         },
-        workingRatioData: []
+        workingRatioData: [],
+
+        // 详情-统计
+        statisticalPercentageStats: {
+          series: []
+        },
+        statisticalPercentageData: {},
       }
     }
   },
@@ -377,6 +424,7 @@ export default new Application({
     BusinessCard,
     HtmlLink,
     PrivilegesTag,
+    Banner,
 
     user,
     blockedUsers,
@@ -450,7 +498,7 @@ export default new Application({
         const d = res.data;
 
         if (d.success === 1) {
-          this.stats.userData = d.data.behaviorAdminStats;
+          this.stats.userData = d.data.behaviorAdminDayStats;
           this.stats.inactiveUserData = d.data.inactiveAdminStats;
           this.stats.workingRatioData = d.data.behaviorAdminStats;
           this.generateYearsHeatMap();
@@ -465,8 +513,14 @@ export default new Application({
 
       })
     },
+    /**
+     * 生成日历图
+     */
     generateWorkingRatio() {
-      let y = this.stats.userData.reduce((accumulator, item) => {
+      this.stats.workingRatioStats.series = [];
+      this.stats.workingRatioStats.xAxis.data = [];
+
+      let y = this.stats.workingRatioData.reduce((accumulator, item) => {
         const time = item.month;
         if (!accumulator[time]) {
           accumulator[time] = [];
@@ -485,21 +539,32 @@ export default new Application({
       this.stats.workingRatioStats.series.push({
         data: data,
         type: 'bar',
+        itemStyle: {
+          color: 'rgb(211,201,8)'
+        },
+        label: {
+          show: true,
+          position: 'insideBottom',
+          distance: 15,
+          align: 'left',
+          verticalAlign: 'middle',
+          rotate: 90,
+          formatter: '{c}  {name|{a}}',
+          fontSize: 16,
+          rich: {
+            name: {}
+          },
+        },
         showBackground: true,
-        backgroundStyle: {
-          color: 'rgba(180, 180, 180, 0.2)'
-        }
       })
     },
-    onRatioClick(data) {
-      console.log(data)
-      this.model.workingRatio.value = !this.model.workingRatio.value;
-      this.model.workingRatio.data = this.stats.workingRatioData.filter(i => data.name === i.month)[0]
-    },
     /**
-     * 生成年热力图
+     * 生成年柱图
      */
     generateYearsHeatMap() {
+      this.stats.userConfig.series = [];
+      this.stats.userConfig.calendar = [];
+
       let y = this.stats.userData.reduce((accumulator, item) => {
         const year = item.month.split('-')[0];
         if (!accumulator[year]) {
@@ -511,7 +576,7 @@ export default new Application({
 
       // 年分组
       let yEntries = Object.entries(y);
-      yEntries.slice(yEntries.length - 3, yEntries.length).forEach((value, index, array) => {
+      yEntries.slice(yEntries.length - this.stats.userShowRawValue, yEntries.length).forEach((value, index, array) => {
         // 创建实例图
         this.stats.userConfig.calendar.push({
           top: index * 185 + 23,
@@ -533,7 +598,45 @@ export default new Application({
           data: value[1].map(t => [t.month, t.total_count])
         })
       })
-    }
+    },
+    /**
+     * 生成半圆形统计百分比
+     */
+    generateStatisticalPercentage(d) {
+      if (!d) return;
+      let data = d.users.map(i => {
+        return {"value": i.total, 'name': i.username}
+      });
+
+      this.stats.statisticalPercentageStats.series = [
+        {
+          type: 'pie',
+          radius: ['30%', '100%'],
+          center: ['50%', '100%'],
+          startAngle: 180,
+          endAngle: 360,
+          data
+        }
+      ]
+    },
+    /**
+     * 查看详情
+     * @param data
+     */
+    onRatioClick(data, raw) {
+      switch (data.seriesType) {
+        case "scatter":
+          this.model.workingRatio.value = !this.model.workingRatio.value;
+          this.model.workingRatio.data = raw.filter(i => data.data[0] === i.month)[0]
+          this.generateStatisticalPercentage(this.model.workingRatio.data)
+          break;
+        case "bar":
+          this.model.workingRatio.value = !this.model.workingRatio.value;
+          this.model.workingRatio.data = raw.filter(i => data.name === i.month)[0]
+          this.generateStatisticalPercentage(this.model.workingRatio.data)
+          break;
+      }
+    },
   },
   computed: {}
 })
@@ -551,14 +654,34 @@ export default new Application({
   }
 }
 
+.index-banner {
+  position: relative;
+  margin: -20px -20px 20px;
+
+  .index-banner-title {
+    font-weight: bold;
+  }
+
+  .index-banner-value {
+    opacity: .8;
+    font-size: 18px;
+  }
+}
+
 .admin-content {
   height: 100%;
   padding: 20px 0;
+  margin-bottom: 20px;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.inactive-user {
+  height: 362px;
+  overflow: auto;
 }
 
 .working-ratio-ul,
@@ -574,21 +697,30 @@ export default new Application({
       overflow-x: auto;
       white-space: nowrap;
     }
+
+    li {
+      margin-bottom: 4px;
+    }
   }
 }
 
 .ratio {
-  margin-top: 10px;
+  margin-top: 0px;
   width: calc(100% - 10px);
-  min-height: 350px;
+  min-height: 360px;
 }
 
 .chart {
   width: calc(100% - 25px);
-  min-height: 500px;
+  min-height: 700px;
 }
 
 .chart.hot-map {
   margin: 20px 5px 10px 5px;
+}
+
+.statistical-percentage {
+  width: 500px;
+  height: 200px;
 }
 </style>

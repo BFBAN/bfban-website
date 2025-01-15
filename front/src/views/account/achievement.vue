@@ -229,7 +229,6 @@ export default {
   }
 }
 
-
 .achievement-item {
   margin-bottom: 30px;
 
