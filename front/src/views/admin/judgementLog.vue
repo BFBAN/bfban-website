@@ -3,7 +3,8 @@
     <Row :gutter="20">
       <Col flex="1"></Col>
       <Col>
-        <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400" popper-class="files-poptip" :padding="'20px 30px'">
+        <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400" popper-class="files-poptip"
+                :padding="'20px 30px'">
           <Button>
             <Icon type="md-funnel" size="15"/>
           </Button>
@@ -57,7 +58,7 @@
               :total="total"/>
       </Col>
       <Col>
-        <Button size="small" @click="getAdminjudgementLog">
+        <Button size="small" @click="getAdminJudgementLog">
           <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
         </Button>
       </Col>
@@ -183,34 +184,52 @@ export default {
       total: 0,
     }
   },
-  components: {BusinessCard},
   created() {
     this.http = http_token.call(this);
 
-    this.getAdminjudgementLog();
+    this.getAdminJudgementLog();
   },
+  watch: {
+    '$route': 'getAdminJudgementLog'
+  },
+  components: {BusinessCard},
   methods: {
-    getAdminjudgementLog() {
-      this.setFilters();  // 使用当前的筛选条件
+    /**
+     * 获取判决日志
+     */
+    getAdminJudgementLog() {
+      let {value, type, date} = this.$route.query;
+      if (value) this.searchValue = value.toString();
+      if (type) this.currentFilters.searchTypeValue = type;
+      if (date) {
+        this.currentFilters.createTimeFrom = new Date(date.split(',')[0]).getTime();
+        this.currentFilters.createTimeTo = new Date(date.split(',')[1]).getTime();
+      }
+
+      if (!value || !type || !date)
+        this.setFilters();  // 使用当前的筛选条件
+
       let fromData = {
-          limit: this.limit,
-          skip: (this.skip - 1) * this.limit,
+        limit: this.limit,
+        skip: (this.skip - 1) * this.limit,
       };
 
-      if (this.currentFilters.searchTypeValue == 'userId' && this.currentFilters.searchValue) fromData.userId = this.currentFilters.searchValue;
-      if (this.currentFilters.searchTypeValue == 'userName' && this.currentFilters.searchValue) fromData.userName = this.currentFilters.searchValue;
-      if (this.currentFilters.searchTypeValue == 'dbId' && this.currentFilters.searchValue) fromData.dbId = this.currentFilters.searchValue;
+      this.load = true;
+
+      if (this.currentFilters.searchTypeValue === 'userId' && this.currentFilters.searchValue) fromData.userId = this.currentFilters.searchValue;
+      if (this.currentFilters.searchTypeValue === 'userName' && this.currentFilters.searchValue) fromData.userName = this.currentFilters.searchValue;
+      if (this.currentFilters.searchTypeValue === 'dbId' && this.currentFilters.searchValue) fromData.dbId = this.currentFilters.searchValue;
       if (this.currentFilters.createTimeFrom) fromData.createTimeFrom = this.currentFilters.createTimeFrom;
       if (this.currentFilters.createTimeTo) fromData.createTimeTo = this.currentFilters.createTimeTo;
 
       this.http.post(api['admin_judgementLog'], {data: fromData}).then(res => {
-          const d = res.data;
-          if (d.success == 1) {
-              this.judgementLog = d.data;
-              this.total = d.total; // 确保每次请求后都更新total值
-          }
+        const d = res.data;
+        if (d.success === 1) {
+          this.judgementLog = d.data;
+          this.total = d.total; // 确保每次请求后都更新total值
+        }
       }).finally(() => {
-          this.load = false;
+        this.load = false;
       });
     },
     resetFormData() {
@@ -223,7 +242,7 @@ export default {
     },
     subimtFormData() {
       this.skip = 1;  // 重置页码
-      this.getAdminjudgementLog();
+      this.getAdminJudgementLog();
     },
     handleCDatepicker(date) {
       this.createTimeFrom = new Date(date[0]).getTime();

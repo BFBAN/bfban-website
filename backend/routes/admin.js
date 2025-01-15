@@ -22,8 +22,14 @@ router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "
     async (req, res, next) => {
         try {
             const tbeg = new Date('2018-10-12T00:00:00.000Z');  // first commit of bfban
-            const [behaviorAdminDayStats, behaviorAdminStats] = await Promise.all(['%d', '01'].map(i => db('comments')
-                .select(db.raw(`DATE_FORMAT(comments.createTime, '%Y-%m-${i}') as month`), 'u.username', 'u.id')
+            const [behaviorAdminDayStats, behaviorAdminStats] = await Promise.all([{
+                'type': '0',
+                'date_format': '%Y-%m-%d'
+            }, {
+                'type': '1',
+                'date_format': '%Y-%m'
+            }].map(i => db('comments')
+                .select(db.raw(`DATE_FORMAT(comments.createTime, '${i.date_format}') as month`), 'u.username', 'u.id')
                 .count('* as judgement_count')
                 .join('users as u', 'comments.byUserId', 'u.id')
                 .where('comments.type', 'judgement')
@@ -36,7 +42,7 @@ router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "
                 .orderBy('month')
                 .then(res => {
                     let monthlyData = {};
-                    res.forEach(row => {
+                    res.forEach(async row => {
                         const month = row.month;
                         if (!monthlyData[month]) {
                             monthlyData[month] = {
@@ -47,7 +53,7 @@ router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "
                         monthlyData[month].users.push({
                             username: row.username,
                             id: row.id,
-                            total: row.judgement_count
+                            total: row.judgement_count,
                         });
                         monthlyData[month].total_count += parseInt(row.judgement_count);
                     });
@@ -69,7 +75,7 @@ router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "
                     return i
                 }));
 
-            return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+            return res.status(200).setHeader('Cache-Control', 'public, max-age=1').setHeader('Cache-Control', 'public, max-age=30').json({
                 success: 1,
                 code: 'userStats.ok',
                 data: {behaviorAdminStats, behaviorAdminDayStats, inactiveAdminStats}
@@ -554,8 +560,8 @@ async (req, res, next) => {
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'judgementLog.bad', message: validateErr.array()});
 
-        const createTimeFrom = new Date(req.query.createTimeFrom ? req.query.createTimeFrom - 0 : 0);
-        const createTimeTo = new Date(req.query.createTimeTo ? req.query.createTimeTo - 0 : Date.now());
+        const createTimeFrom = new Date(req.body.createTimeFrom ? req.body.createTimeFrom - 0 : 0);
+        const createTimeTo = new Date(req.body.createTimeTo ? req.body.createTimeTo - 0 : Date.now());
         const skip = req.body.skip !== undefined ? req.body.skip : 0;
         const limit = req.body.limit !== undefined ? req.body.limit : 20;
         const order = req.body.order ? req.query.order : 'desc';
@@ -570,10 +576,11 @@ async (req, res, next) => {
                 if (req.body.userName)
                     qb.where('users.username', 'like', `%${req.body.userName}%`)
             })
-            .andWhere('type', `judgement`)
+            .andWhere('comments.type', `judgement`)
             .andWhere('comments.createTime', '>=', createTimeFrom)
             .andWhere('comments.createTime', '<=', createTimeTo)
-            .first().then(r => r.num);
+            .first()
+            .then(r => r.num);
 
         const result = await db('comments')
             .join('users', 'comments.byUserId', 'users.id')

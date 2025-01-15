@@ -105,7 +105,7 @@
 
               <Row :gutter="10" :wrap="true">
                 <Col :lg="{span: 24}">
-                  <v-chart @click="(e) => onRatioClick(e, stats.userData)" class="chart hot-map"
+                  <v-chart @click="(e) => onRatioClick(e, stats.userData)" class="user-chart-op hot-map"
                            :option="stats.userConfig"/>
                 </Col>
                 <Col :xs="{span: 24}" :lg="{span: 12}">
@@ -113,18 +113,56 @@
                     <v-chart @click="(e) => onRatioClick(e, stats.workingRatioData)" ref="workingRatio" class="ratio"
                              :option="stats.workingRatioStats"/>
 
-                    <Modal v-model="model.workingRatio.value" footer-hide>
+                    <Modal v-model="model.workingRatio.value" footer-hide width="600px">
                       <Row :gutter="10" type="flex" align="middle">
                         <Col flex="1">
-                          <h2><b>Detail</b> ({{
-                              model.workingRatio.data.users && model.workingRatio.data.users.length || 0
-                            }}/{{ statistics.admins || 0 }})</h2>
+                          <h2><b>{{ model.workingRatio.data.title || 'Detail' }}</b></h2>
                         </Col>
                         <Col span="24">
                           <Card dis-hover :padding="0">
                             <v-chart class="statistical-percentage"
                                      :option="stats.statisticalPercentageStats"/>
                           </Card>
+                          <br>
+                        </Col>
+                        <Col span="24">
+                          <Row :gutter="20" type="flex" justify="space-between" align="bottom">
+                            <Col span="6">
+                              <Card dis-hover :padding="4" align="center" v-if="model.workingRatio.data.max">
+                                <div>
+                                  <BusinessCard :id="model.workingRatio.data.max.id">
+                                    <HtmlLink :text="model.workingRatio.data.max.username" :is-poptip="false"
+                                              :href="`/space/${model.workingRatio.data.max.id}?username=${model.workingRatio.data.max.username}`"></HtmlLink>
+                                    ·
+                                    {{ model.workingRatio.data.max.total || 'N/A' }}
+                                  </BusinessCard>
+                                </div>
+                                <b>Max</b>
+                              </Card>
+                            </Col>
+                            <Col span="6">
+                              <Card dis-hover :padding="4" align="center">
+                                <p>{{
+                                    statistics.admins - (model.workingRatio.data.users && model.workingRatio.data.users.length || 0)
+                                  }}</p>
+                                <b>Have not participated</b>
+                              </Card>
+                            </Col>
+                            <Col span="6">
+                              <Card dis-hover :padding="4" align="center">
+                                <p>{{
+                                    (model.workingRatio.data.users && model.workingRatio.data.users.length || 0)
+                                  }}</p>
+                                <b>Participate in</b>
+                              </Card>
+                            </Col>
+                            <Col span="6">
+                              <Card dis-hover :padding="4" align="center">
+                                <p> {{ statistics.admins || 0 }}</p>
+                                <b>All personnel</b>
+                              </Card>
+                            </Col>
+                          </Row>
                         </Col>
                         <Col span="24">
                           <br>
@@ -153,7 +191,11 @@
                                 <Divider dashed style="margin: 0"></Divider>
                               </Col>
                               <Col class="privilege">
-                                {{ i.total || 0 }}
+                                <HtmlLink
+                                    :text="i.total || 0" :is-poptip="false"
+                                    :href="`/admin/judgement_log?value=${i.id}&type=userId&date=${model.workingRatio.data.date_as}`">
+                                  {{ i.total || 0 }}
+                                </HtmlLink>
                               </Col>
                             </Row>
                           </li>
@@ -166,9 +208,16 @@
                   <Card dis-hover class="inactive-user">
                     <Row :gutter="10" type="flex" align="middle">
                       <Col flex="1">
-                        <h2><b>inactive admin</b> ({{ stats.inactiveUserData.length || 0 }}/{{
-                            statistics.admins || 0
-                          }})</h2>
+                        <Row type="flex" align="middle">
+                          <Col flex="1">
+                            <h2>
+                              <b>inactive admin</b>
+                            </h2>
+                          </Col>
+                          <Col>
+                            <span> ({{ stats.inactiveUserData.length || 0 }}/{{ statistics.admins || 0 }})</span>
+                          </Col>
+                        </Row>
                       </Col>
                       <Col span="24">
                         <Input placeholder="search value" v-model="stats.inactiveUserSearchValue"
@@ -203,6 +252,10 @@
                   </Card>
                 </Col>
               </Row>
+
+              <Spin size="large" fix v-show="load">
+                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+              </Spin>
             </div>
             <user v-else-if="adminMenuValue == 'user'"></user>
             <blockedUsers v-else-if="adminMenuValue == 'blockedUsers'"></blockedUsers>
@@ -253,6 +306,8 @@ export default new Application({
   name: "profile",
   data() {
     return {
+      load: false,
+
       privileges: [],
       openMuen: ['comment', 'comm', 'log'],
       adminMenuValue: 'home',
@@ -384,29 +439,29 @@ export default new Application({
         // 柱
         workingRatioStats: {
           tooltip: {
+            position: 'top',
             trigger: 'axis',
             axisPointer: {
               type: 'shadow'
             },
             formatter: function (params) {
-              return `${params[0].name}：${params[0].data}`;
+              return `${params[0].name}: <b>${params[0].data}</b>`;
             }
           },
           grid: {
-            left: 5,
-            right: 5,
+            left: 10,
+            right: 10,
             top: 10,
             bottom: 0
           },
-
           yAxis: {
             type: 'value',
-            show: false
+            show: false,
           },
           xAxis: {
             type: 'category',
             data: [],
-            interval: 0
+            interval: 10
           },
           series: []
         },
@@ -414,6 +469,9 @@ export default new Application({
 
         // 详情-统计
         statisticalPercentageStats: {
+          grid: {
+            top: '20%',
+          },
           series: []
         },
         statisticalPercentageData: {},
@@ -465,7 +523,7 @@ export default new Application({
   methods: {
     onMenuActive(name) {
       this.adminMenuValue = name;
-      this.$router.push({name: 'admin', params: {pagename: name}})
+      this.$router.push({name: 'admin', params: {pagename: name}, query: {...this.$route.query}})
     },
     /**
      * 获取统计
@@ -494,6 +552,8 @@ export default new Application({
     getUserStats() {
       if (!this.isAdminL2) return;
 
+      this.load = true;
+
       this.http.get(api["admin_userStats"], {}).then(res => {
         const d = res.data;
 
@@ -510,7 +570,7 @@ export default new Application({
           message: d.message || ""
         }));
       }).finally(() => {
-
+        this.load = false;
       })
     },
     /**
@@ -530,7 +590,7 @@ export default new Application({
       }, {});
 
       let tEntries = Object.entries(y), data = [];
-      tEntries.slice(tEntries.length - 10, tEntries.length).forEach((value, index, array) => {
+      tEntries.slice(tEntries.length - 20, tEntries.length).forEach((value, index, array) => {
         // 创建x轴
         this.stats.workingRatioStats.xAxis.data.push(value[0])
         data.push(value[1].map(j => j.total_count)[0])
@@ -539,8 +599,10 @@ export default new Application({
       this.stats.workingRatioStats.series.push({
         data: data,
         type: 'bar',
+        barWidth: '95%',
         itemStyle: {
-          color: 'rgb(211,201,8)'
+          color: 'rgb(211,201,8)',
+          borderRadius: [4, 4, 0, 0]
         },
         label: {
           show: true,
@@ -549,7 +611,9 @@ export default new Application({
           align: 'left',
           verticalAlign: 'middle',
           rotate: 90,
-          formatter: '{c}  {name|{a}}',
+          formatter: (params) => {
+            return `${params.data}`;
+          },
           fontSize: 16,
           rich: {
             name: {}
@@ -582,6 +646,16 @@ export default new Application({
           top: index * 185 + 23,
           range: value[0],
           cellSize: ['auto', 15],
+          itemStyle: {
+            borderWidth: 0.5,
+            color: "rgba(0, 0, 0, 0)",
+            borderColor: 'rgba(141,141,141,0.3)'
+          },
+          splitLine: {
+            lineStyle: {
+              color: 'rgba(141,141,141,0.3)'
+            }
+          },
           left: 50,
           right: 0,
         })
@@ -605,8 +679,15 @@ export default new Application({
     generateStatisticalPercentage(d) {
       if (!d) return;
       let data = d.users.map(i => {
-        return {"value": i.total, 'name': i.username}
-      });
+            return {"value": i.total, 'name': i.username}
+          }),
+          today = new Date(d.month),
+          startOfDay = new Date(today).setHours(0, 0, 0, 0).toString(),
+          endOfDay = new Date(today).setHours(23, 59, 59, 999).toString();
+
+      d.max = d.users.sort((a, b) => b.total - a.total)[0];
+      d.title = d.month;
+      d.date_as = `${startOfDay},${endOfDay}`
 
       this.stats.statisticalPercentageStats.series = [
         {
@@ -624,14 +705,13 @@ export default new Application({
      * @param data
      */
     onRatioClick(data, raw) {
+      this.model.workingRatio.value = !this.model.workingRatio.value;
       switch (data.seriesType) {
         case "scatter":
-          this.model.workingRatio.value = !this.model.workingRatio.value;
           this.model.workingRatio.data = raw.filter(i => data.data[0] === i.month)[0]
           this.generateStatisticalPercentage(this.model.workingRatio.data)
           break;
         case "bar":
-          this.model.workingRatio.value = !this.model.workingRatio.value;
           this.model.workingRatio.data = raw.filter(i => data.name === i.month)[0]
           this.generateStatisticalPercentage(this.model.workingRatio.data)
           break;
@@ -642,7 +722,9 @@ export default new Application({
 })
 </script>
 
-<style lang="less">
+<style lang="less" setup>
+@import "@/assets/css/icon";
+
 @media screen and (min-width: 980px) {
   .admin-menu,
   .admin {
@@ -679,8 +761,8 @@ export default new Application({
   flex-direction: column;
 }
 
-.inactive-user {
-  height: 362px;
+.sitestats-ul {
+  height: 244px;
   overflow: auto;
 }
 
@@ -710,17 +792,17 @@ export default new Application({
   min-height: 360px;
 }
 
-.chart {
+.user-chart-op {
   width: calc(100% - 25px);
   min-height: 700px;
 }
 
-.chart.hot-map {
+.user-chart-op.hot-map {
   margin: 20px 5px 10px 5px;
 }
 
 .statistical-percentage {
-  width: 500px;
+  width: 600px;
   height: 200px;
 }
 </style>
