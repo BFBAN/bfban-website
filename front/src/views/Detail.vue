@@ -926,6 +926,18 @@
                   <Tag :size="'default'" type="border">{{ $t(`basic.status.2.text`) }}</Tag>
                 </div>
               </Card>
+              <br>
+
+              <Row>
+                <Col flex="1">
+                  <b>{{ $t('sitestats.trend') }}</b>
+                </Col>
+                <Col>
+                  <i>{{ $t('sitestats.timeRange.weekly') }}</i>
+                </Col>
+              </Row>
+
+              <TrendWidget></TrendWidget>
             </Col>
           </Row>
 
@@ -1236,6 +1248,7 @@ import Htmllink from "@/components/HtmlLink";
 import PrivilegesTag from "@/components/PrivilegesTag";
 import FastReply from "@/components/FastReply";
 import UserAvatar from "@/components/UserAvatar.vue"
+import TrendWidget from "@/components/TrendWidget"
 
 import {formatTextarea} from "@/mixins/common";
 
@@ -1352,6 +1365,7 @@ export default new Application({
     PrivilegesTag,
     FastReply,
     UserAvatar,
+    TrendWidget,
   },
   watch: {
     '$route': 'loadData',

@@ -21,14 +21,14 @@
           <Menu class="admin-menu"
                 :mode="isMobile ? 'horizontal' : 'vertical'"
                 :width="isMobile ? null : '100%'"
-                :open-names="openMuen"
+                :open-names="openMenu"
                 :active-name="adminMenuValue" @on-select="onMenuActive">
 
             <MenuItem name="home">
               {{ $t('profile.admin.menu.home') }}
             </MenuItem>
 
-            <MenuGroup :title="isMobile ? null : $t('profile.admin.menu.' + i.title)" v-for="(i, index) in adminMuen"
+            <MenuGroup :title="isMobile ? null : $t('profile.admin.menu.' + i.title)" v-for="(i, index) in adminMenus"
                        :key="index">
               <MenuItem :name="j.value" v-for="(j, j_index) in i.child" :key="j_index" v-show="j.disabled">
                 <Row>
@@ -176,6 +176,14 @@
                       </Row>
                       <br/>
 
+                      <Row>
+                        <Col flex="1"></Col>
+                        <Col>
+                          <template v-if="model.workingRatio.data">
+                            All Count: <b>{{ model.workingRatio.data.total_count || 0 }}</b>
+                          </template>
+                        </Col>
+                      </Row>
                       <div class="working-ratio-ul">
                         <ul v-if="model.workingRatio.data.users && model.workingRatio.data.users.length > 0">
                           <li v-for="(i, index) in model.workingRatio.data.users" :key="index"
@@ -309,9 +317,9 @@ export default new Application({
       load: false,
 
       privileges: [],
-      openMuen: ['comment', 'comm', 'log'],
+      openMenu: ['comment', 'comm', 'log'],
       adminMenuValue: 'home',
-      adminMuen: [
+      adminMenus: [
         {
           title: 'management',
           child: [
@@ -505,13 +513,13 @@ export default new Application({
       return;
     }
 
-    for (let i = 0; i < this.adminMuen.length; i++) {
-      if (this.adminMuen[i].child)
-        for (let j = 0; j < this.adminMuen[i].child.length; j++) {
-          if (!this.adminMuen[i].ignore)
-            this.adminMuen[i].child[j].disabled = account_storage.checkPrivilegeGroup(
+    for (let i = 0; i < this.adminMenus.length; i++) {
+      if (this.adminMenus[i].child)
+        for (let j = 0; j < this.adminMenus[i].child.length; j++) {
+          if (!this.adminMenus[i].ignore)
+            this.adminMenus[i].child[j].disabled = account_storage.checkPrivilegeGroup(
                 this.currentUser.userinfo,
-                this.adminMuen[i].child[j].privilege
+                this.adminMenus[i].child[j].privilege
             )
         }
     }
@@ -521,6 +529,10 @@ export default new Application({
     this.onMenuActive(pagename);
   },
   methods: {
+    /**
+     * 菜单
+     * @param name
+     */
     onMenuActive(name) {
       this.adminMenuValue = name;
       this.$router.push({name: 'admin', params: {pagename: name}, query: {...this.$route.query}})
@@ -574,9 +586,9 @@ export default new Application({
       })
     },
     /**
-     * 生成日历图
+     * 生成年柱图
      */
-    generateWorkingRatio() {
+    generateYearsHeatMap() {
       this.stats.workingRatioStats.series = [];
       this.stats.workingRatioStats.xAxis.data = [];
 
@@ -594,7 +606,7 @@ export default new Application({
         // 创建x轴
         this.stats.workingRatioStats.xAxis.data.push(value[0])
         data.push(value[1].map(j => j.total_count)[0])
-      })
+      });
 
       this.stats.workingRatioStats.series.push({
         data: data,
@@ -623,9 +635,9 @@ export default new Application({
       })
     },
     /**
-     * 生成年柱图
+     * 生成日历图
      */
-    generateYearsHeatMap() {
+    generateWorkingRatio() {
       this.stats.userConfig.series = [];
       this.stats.userConfig.calendar = [];
 

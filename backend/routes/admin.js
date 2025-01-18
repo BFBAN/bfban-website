@@ -18,10 +18,23 @@ import {siteEvent} from "../lib/bfban.js";
 
 const router = express.Router();
 
-router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "dev"]), [],
+let userStatsCache = {data: undefined, time: new Date(0)};
+router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "dev"]), [
+        checkbody('createTimeFrom').optional().isInt({min: 0}),
+        checkbody('createTimeTo').optional().isInt({min: 0}),
+    ],
     async (req, res, next) => {
         try {
-            const tbeg = new Date('2018-10-12T00:00:00.000Z');  // first commit of bfban
+            if (userStatsCache.data !== undefined && Date.now() - userStatsCache.time.getTime() < 60 * 60 * 1000)   // cache for 1h
+                return res.status(200)
+                    .setHeader('Cache-Control', 'public, max-age=86400')
+                    .json({success: 1, code: 'siteStats.ok', data: userStatsCache.data});
+
+            const tnow = new Date();
+            const {
+                createTimeFrom = new Date(new Date('2018-10-12T00:00:00.000Z').getTime() - 4 * 365 * 24 * 60 * 60 * 1000),
+                createTimeTo = new Date()
+            } = req.body;
             const [behaviorAdminDayStats, behaviorAdminStats] = await Promise.all([{
                 'type': '0',
                 'date_format': '%Y-%m-%d'
@@ -34,10 +47,13 @@ router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "
                 .join('users as u', 'comments.byUserId', 'u.id')
                 .where('comments.type', 'judgement')
                 .orWhere('comments.type', 'reply')
-                .where('privilege', 'like', '%"admin"%')
-                .orWhere('privilege', 'like', '%"super"%')
-                .orWhere('privilege', 'like', '%"root"%')
-                .where('comments.createTime', '>=', tbeg)
+                .where(function () {
+                    this.where('u.privilege', 'like', '%"admin"%')
+                        .orWhere('u.privilege', 'like', '%"super"%')
+                        .orWhere('u.privilege', 'like', '%"root"%');
+                })
+                .where('comments.createTime', '>=', createTimeFrom)
+                .andWhere("comments.createTime", "<", createTimeTo)
                 .groupBy('month', 'u.username')
                 .orderBy('month')
                 .then(res => {
@@ -66,7 +82,7 @@ router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "
             const inactiveAdminStats = await db('users')
                 .select('id', 'username', 'updateTime', 'privilege', 'valid')
                 .where('valid', 1)
-                .andWhere('updateTime', '>=', tbeg)
+                .andWhere('updateTime', '>=', createTimeFrom)
                 .andWhere('updateTime', '<=', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
                 .andWhere('privilege', 'like', '%"admin"%')
                 .limit(155)
@@ -75,10 +91,13 @@ router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "
                     return i
                 }));
 
-            return res.status(200).setHeader('Cache-Control', 'public, max-age=1').setHeader('Cache-Control', 'public, max-age=30').json({
+            userStatsCache.data = {behaviorAdminStats, behaviorAdminDayStats, inactiveAdminStats};
+            userStatsCache.time = tnow;
+
+            return res.status(200).setHeader('Cache-Control', 'public, max-age=86400').setHeader('Cache-Control', 'public, max-age=30').json({
                 success: 1,
                 code: 'userStats.ok',
-                data: {behaviorAdminStats, behaviorAdminDayStats, inactiveAdminStats}
+                data: {...userStatsCache.data}
             });
         } catch (err) {
             next(err);
@@ -607,7 +626,7 @@ async (req, res, next) => {
 
 router.get('/adminLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('createTimeFrom').optional().isInt({min: 0}),
-    checkquery('createTimeto').optional().isInt({min: 0}),
+    checkquery('createTimeTo').optional().isInt({min: 0}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0}),
     checkquery('order').optional().isIn(['asc', 'desc']),
@@ -615,7 +634,7 @@ router.get('/adminLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
 async (req, res, next) => {
     try {
         const createTimeFrom = new Date(req.query.createTimeFrom);
-        const createTimeto = new Date(req.query.createTimeto);
+        const createTimeTo = new Date(req.query.createTimeTo);
         const skip = req.query.skip !== undefined ? req.query.skip : 0;
         const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
@@ -626,7 +645,7 @@ async (req, res, next) => {
             .where('type', '!=', `report`).andWhere('type', '!=', `reply`)
             .select('comments.*', 'users.username', 'users.privilege', 'players.games', 'players.originName')
             .andWhere("comments.createTime", ">=", createTimeFrom)
-            .andWhere("comments.createTime", "<=", createTimeto)
+            .andWhere("comments.createTime", "<=", createTimeTo)
             .orderBy('users.createTime', order)
         // .offset(skip).limit(limit);
 

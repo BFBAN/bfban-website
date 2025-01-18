@@ -105,7 +105,9 @@
         <Row :gutter="20">
           <Col :xs="{span: 24}" :lg="{span: 12}">
             <Card dis-hover>
-              <div slot="title">{{ $t('sitestats.communityParticipation') }} · {{ $t(timeArray.find(i => i.value == timeRange).name) }}</div>
+              <div slot="title">{{ $t('sitestats.communityParticipation') }} ·
+                {{ $t(timeArray.find(i => i.value == timeRange).name) }}
+              </div>
               <Row :gutter="5">
                 <Col span="14">
                   <ol class="sitestats-ul" v-if="active.community.length > 0">
@@ -113,7 +115,8 @@
                       <Row :gutter="10" type="flex" align="middle">
                         <Col>
                           <businessCard :id="i.id">
-                            <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
+                            <HtmlLink :text="i.username" :is-poptip="false"
+                                      :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
                           </businessCard>
                         </Col>
                         <Col flex="1">
@@ -136,13 +139,16 @@
           </Col>
           <Col :xs="{span: 24}" :lg="{span: 12}">
             <Card dis-hover>
-              <div slot="title">{{ $t('sitestats.reportRanking') }} · {{ $t(timeArray.find(i => i.value == timeRange).name) }}</div>
+              <div slot="title">{{ $t('sitestats.reportRanking') }} ·
+                {{ $t(timeArray.find(i => i.value == timeRange).name) }}
+              </div>
               <ol class="sitestats-ul" v-if="active.report.length > 0">
                 <li v-for="(i, index) in active.report" :key="index">
                   <Row :gutter="10" type="flex" align="middle">
                     <Col>
                       <businessCard :id="i.id">
-                        <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
+                        <HtmlLink :text="i.username" :is-poptip="false"
+                                  :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
                       </businessCard>
                     </Col>
                     <Col flex="1">
@@ -163,46 +169,22 @@
         <Row :gutter="20">
           <Col :xs="{span:24}" :lg="{span:12}">
             <Card dis-hover>
-              <div slot="title">{{ $t('sitestats.trend') }} · {{ $t(timeArray.find(i => i.value == timeRange).name) }}</div>
-              <ol class="sitestats-ul" v-if="trend.list.length > 0">
-                <li v-for="(i, index) in trend.list" :key="index">
-                  <Row :gutter="10" type="flex" align="middle">
-                    <Col class="text-distinguishing-letter">
-                      <HtmlLink :text="i.originName" :is-poptip="false" :href="`/player/${i.originPersonaId}`"></HtmlLink>
-                    </Col>
-                    <Col flex="1">
-                      <Divider dashed style="margin: 0"></Divider>
-                    </Col>
-                    <Col>
-                      <Icon type="md-chatbubbles"/>
-                      {{ i.commentsNum.toFixed(0) || 0 }}
-                      <Divider type="vertical"></Divider>
-                      <Icon type="md-eye"/>
-                      {{ i.viewNum.toFixed(0) || 0 }}
-                    </Col>
-                    <Col>
-                      <Tag color="error">
-                        <Icon type="ios-flame"/>
-                        {{ i.hot.toFixed(0) || 0 }}
-                      </Tag>
-                    </Col>
-                  </Row>
-                </li>
-              </ol>
-              <Empty :notHint="false" v-else></Empty>
-              <Spin size="large" fix v-show="trend.load">
-                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
-              </Spin>
+              <div slot="title">{{ $t('sitestats.trend') }} · {{
+                  $t(timeArray.find(i => i.value == timeRange).name)
+                }}
+              </div>
+              <TrendWidget ref="trend" :timeRange="timeRange"/>
             </Card>
           </Col>
           <Col :xs="{span:24}" :lg="{span:12}">
             <Card dis-hover>
-              <div slot="title">{{ $t('sitestats.achievement') }} </div>
+              <div slot="title">{{ $t('sitestats.achievement') }}</div>
               <ol class="sitestats-ul" v-if="active.achievement.length > 0">
                 <li v-for="(i, index) in active.achievement" :key="index">
                   <Row :gutter="10" type="flex" align="middle">
                     <Col class="text-distinguishing-letter">
-                      <HtmlLink :text="i.username" :is-poptip="false" :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
+                      <HtmlLink :text="i.username" :is-poptip="false"
+                                :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
                     </Col>
                     <Col flex="1">
                       <Divider dashed style="margin: 0"></Divider>
@@ -213,7 +195,7 @@
                     <Col>
                       <Tag color="primary">
                         <Icon type="md-color-wand"/>
-                        {{ i.points || 0}}
+                        {{ i.points || 0 }}
                       </Tag>
                     </Col>
                   </Row>
@@ -248,6 +230,7 @@ import businessCard from "@/components/BusinessCard.vue";
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
 import AchievementsTag from "@/components/AchievementsTag.vue";
 import HtmlLink from "@/components/HtmlLink.vue"
+import TrendWidget from "@/components/TrendWidget.vue";
 import * as echarts from "echarts";
 
 import {http, api, account_storage, time} from '../assets/js/index'
@@ -260,6 +243,7 @@ export default new Application({
       load: false,
       statistics: {},
       show: false,
+      isIncludingRobots: true,
       chart: {
         stats: {
           color: ['#fff13c', '#401486', '#ed4014'],
@@ -336,12 +320,6 @@ export default new Application({
       ],
       timeRange: 'weekly',
 
-      trend: {
-        load: false,
-        list: []
-      },
-
-      isIncludingRobots: true,
       active: {
         load: false,
         communityConf: {
@@ -372,7 +350,7 @@ export default new Application({
   created() {
     this.loadData();
   },
-  components: {businessCard, Empty, PrivilegesTag,AchievementsTag, HtmlLink},
+  components: {businessCard, Empty, PrivilegesTag, AchievementsTag, HtmlLink, TrendWidget},
   methods: {
     async loadData() {
       this.init();
@@ -427,7 +405,7 @@ export default new Application({
     },
     async onChangePeriod() {
       await this.getActiveStatistical();
-      await this.getTrend();
+      await this.$refs.trend.getTrend();
     },
     /**
      * 获取活跃统计
@@ -486,30 +464,6 @@ export default new Application({
      */
     changeChartTime() {
       this.$refs.chart.setOption(this.chart.stats);
-    },
-    /**
-     * 获取话题排行
-     */
-    getTrend() {
-      if (!this.isLogin) return;
-      this.trend.load = true;
-
-      http.get(api['trend'], {
-        params: {
-          limit: 10,
-          time: this.timeRange
-        }
-      }).then(res => {
-        const d = res.data;
-
-        if (d.success === 1) {
-          this.trend.list = d.data;
-        }
-      }).catch(res => {
-        this.$Message.error(res.message);
-      }).finally(() => {
-        this.trend.load = false;
-      });
     },
     /**
      * 统计信息
