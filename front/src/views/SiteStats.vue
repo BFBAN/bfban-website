@@ -122,7 +122,7 @@
                         <Col flex="1">
                           <Divider dashed style="margin: 0"></Divider>
                         </Col>
-                        <Col>{{ i.total.toFixed(1) || 0 }}</Col>
+                        <Col>{{ Number.isInteger(i.total) ? i.total : i.total.toFixed(1) || 0 }}</Col>
                       </Row>
                     </li>
                   </ol>
