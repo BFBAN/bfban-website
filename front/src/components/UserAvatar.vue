@@ -76,5 +76,6 @@ export default {
 <style scoped lang="less">
 .user-avatar {
   position: relative;
+  display: flex;
 }
 </style>

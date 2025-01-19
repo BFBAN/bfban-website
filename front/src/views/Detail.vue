@@ -477,22 +477,18 @@
                   <!-- 举报:any S -->
                   <div :id="`floor-${l.id}`" v-if="l.type === 'report'" class="timeline-content">
                     <div class="timeline-time">
-                      <Row :gutter="5" type="flex" justify="center" align="middle">
+                      <Row :gutter="5" type="flex" align="middle">
                         <Col>
                           <BusinessCard :id="l.byUserId">
-                            <Row :gutter="5" type="flex" justify="center" align="middle">
-                              <Col>
-                                <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
-                              </Col>
-                              <Col>
-                                <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                                  <u><b>{{ l.username || l.byUserId }}</b></u>
-                                </router-link>
-                              </Col>
-                            </Row>
+                            <Tag fade color="transparent" class="avatar">
+                              <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
+                            </Tag>
+
+                            <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
+                              <u><b>{{ l.username || l.byUserId }}</b></u>
+                            </router-link>
                           </BusinessCard>
-                        </Col>
-                        <Col>
+
                           <!-- 举报 -->
                           {{ $t('detail.info.report') }}
                           <a><u><b class="text-distinguishing-letter"><code>{{ l.toOriginName }}</code></b></u></a>
@@ -523,7 +519,6 @@
                             </Poptip>
                           </Tag>
                         </Col>
-                        <Col flex="1"></Col>
                         <Col>
                           <TimeView :time="l.createTime">
                             <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
@@ -536,7 +531,7 @@
                       <Row :gutter="10" type="flex" align="middle" v-for="(link, linkindex) in l.videoLink"
                            :key="linkindex">
                         <Col class="user-select-none">
-                          <Tag size="default" color="geekblue">{{ $t('detail.info.videoLink') }}</Tag>
+                          <Tag color="geekblue">{{ $t('detail.info.videoLink') }}</Tag>
                         </Col>
                         <Col style="max-width: 60%">
                           <span style="display: block;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
@@ -566,18 +561,15 @@
                     <div class="timeline-time">
                       <Row>
                         <Col flex="auto">
-                          <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                            <BusinessCard :id="l.byUserId">
-                              <Row :gutter="5" type="flex" justify="center" align="middle">
-                                <Col>
-                                  <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
-                                </Col>
-                                <Col>
-                                  <u><b>{{ l.username || l.byUserId }}</b></u>
-                                </Col>
-                              </Row>
-                            </BusinessCard>
-                          </router-link>
+                          <Tag fade color="transparent" class="avatar">
+                            <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
+                          </Tag>
+
+                          <BusinessCard :id="l.byUserId">
+                            <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
+                              <u><b>{{ l.username || l.byUserId }}</b></u>
+                            </router-link>
+                          </BusinessCard>
 
                           {{ $t('detail.appeal.info.content') }}
 
@@ -674,17 +666,14 @@
                     <div class="timeline-time">
                       <Row :gutter="5" type="flex" align="middle">
                         <Col>
+                          <Tag fade color="transparent" class="avatar">
+                            <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
+                          </Tag>
+
                           <BusinessCard :id="l.byUserId">
-                            <Row :gutter="5" type="flex" justify="center" align="middle">
-                              <Col>
-                                <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
-                              </Col>
-                              <Col>
-                                <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                                  <u><b>{{ l.username || l.byUserId }}</b></u>
-                                </router-link>
-                              </Col>
-                            </Row>
+                            <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
+                              <u><b>{{ l.username || l.byUserId }}</b></u>
+                            </router-link>
                           </BusinessCard>
                         </Col>
                         <Col>
@@ -737,17 +726,14 @@
                     <div class="timeline-time">
                       <Row :gutter="5" type="flex" justify="center" align="middle">
                         <Col>
+                          <Tag fade color="transparent" class="avatar">
+                            <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
+                          </Tag>
+
                           <BusinessCard :id="l.byUserId">
-                            <Row :gutter="5" type="flex" justify="center" align="middle">
-                              <Col>
-                                <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
-                              </Col>
-                              <Col>
-                                <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                                  <u><b>{{ l.username || l.byUserId }}</b></u>
-                                </router-link>
-                              </Col>
-                            </Row>
+                            <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
+                              <u><b>{{ l.username || l.byUserId }}</b></u>
+                            </router-link>
                           </BusinessCard>
                         </Col>
                         <Col>
@@ -2104,8 +2090,8 @@ export default new Application({
     },
   },
   computed: {
-    userAvatarSize () {
-      return 24;
+    userAvatarSize() {
+      return 20
     },
     /**
      * 时间轴可见类型，筛选
@@ -2123,6 +2109,13 @@ export default new Application({
 <style lang="less">
 @import "@/assets/css/icon.less";
 @import "@/assets/css/avatar.less";
+
+.timeline-time {
+  .avatar {
+    padding: 0;
+    margin-right: 5px;
+  }
+}
 
 .detail-userinfo-card {
   display: flex;
