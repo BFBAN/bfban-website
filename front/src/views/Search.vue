@@ -601,7 +601,6 @@ export default new Application({
      * @param tagName
      */
     onTabClick(tagName) {
-      console.log(tagName)
       this.searchTypeValue = tagName;
       this.handleSearch();
     },

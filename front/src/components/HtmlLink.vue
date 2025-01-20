@@ -16,7 +16,7 @@
         <template v-if="linkLoad">
           <div class="link-load link-box" style="position: relative; z-index: 1;">
             <Badge>
-              <Icon type="md-refresh" class="spin-icon-load" size="20"/>
+              <Icon type="md-refresh" class="spin-icon-load" size="20" slot="count"/>
               <Icon type="md-browsers" size="50"/>
             </Badge>
           </div>

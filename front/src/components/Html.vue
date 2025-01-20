@@ -282,8 +282,14 @@ export default {
                 }
 
                 /// 标准链接 =>
-                const urlRegex = /(?<!<a|img|video|iframe[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/a>)/g;
-                _p[i].innerHTML = _p[i].innerText.replaceAll(urlRegex, `<htmllink text="${encodeURI('$&')}" href="${encodeURI('$&')}"></htmllink>`);
+                const urlRegex = /(?<!<a|htmllink|img|video|iframe[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
+                _p[i].innerHTML = _p[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
+              }
+
+              // 邮箱
+              if (_p[i] && _p[i].innerText) {
+                const emailRegex = /(?<!<a|htmllink[^>]*)[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}(?![^<]*<\/htmllink|a>)/gi;
+                _p[i].innerHTML = _p[i].innerHTML.replace(emailRegex, `<htmllink text='$&' href='mailto:$&'></htmllink>`);
               }
 
               // 解析HR, 分割线
