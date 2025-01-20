@@ -73,7 +73,6 @@ import HtmlLink from "@/components/HtmlLink.vue";
 Vue.use(VueViewer);
 
 export default {
-  name: "HtmlImage",
   components: {HtmlLink},
   props: {
     src: {

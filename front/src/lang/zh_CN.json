@@ -196,6 +196,7 @@
     },
     "html": {
       "size": {
+        "x-large": "加大",
         "large": "大",
         "default": "默认",
         "small": "小"

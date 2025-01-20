@@ -12,7 +12,7 @@
         @ready="onEditorReady"
         @on-blur="onEditorBlur($event)"
         useCustomImageHandler/>
-    <Row :gutter="10" v-if="showMaxlengthLabel" style="margin: 0px 10px">
+    <Row :gutter="10" v-if="showMaxlengthLabel" style="margin: 0 10px">
       <Col flex="1">
         <template v-if="editorContent != null && editorContent.length >= maxlength">
           <Alert show-icon type="error">{{ $t('textarea.textOverflowHint') }}</Alert>
@@ -22,7 +22,7 @@
       <Col>
         <Tooltip :placement="'left-start'" :content="$t('textarea.textHelpHint')" max-width="300" :transfer="true">
           <Icon type="md-help-circle" style="margin-right: 5px;"/>
-          <template v-if="editorContent != null && editorContent.length == maxlength">
+          <template v-if="editorContent != null && editorContent.length === maxlength">
             <b style="color: darkred">{{ editorContent.length || 0 }}</b>
           </template>
           <template
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import {regular, http_token} from "../assets/js"
+import {regular, http_token} from "@/assets/js"
 
 import UploadWidget from './UploadWidget';
 
@@ -50,9 +50,7 @@ import Quill from "quill";
 import {quillEditor} from 'vue-quill-editor'
 import {Emoji, emojis} from '@nutrify/quill-emoji-mart-picker';
 import ImageBlot from '../assets/js/quill-module-image'
-
 import emojiJsonList from '../../public/config/emoji.json'
-import Regular from "@/assets/js/regular";
 
 export default {
   props: {
@@ -227,7 +225,7 @@ export default {
 
         this.insertLoad = true;
 
-        if (await regular.authImage(insertValue) == false) {
+        if (await regular.authImage(insertValue) === false) {
           this.$Message.error('Image unavailable :(');
           this.insertLoad = false;
           return;
@@ -279,9 +277,7 @@ export default {
     },
     /**
      * 编辑器触发事件
-     * @param quill
-     * @param html
-     * @param text
+     * @param data
      */
     onEditorChange(data) {
       this.editorContent = "";
@@ -347,15 +343,14 @@ export default {
   width: 20px;
   height: 20px;
   border-radius: 0;
-  margin-top: 0rem;
+  margin-top: 0;
   margin-bottom: -0.21rem;
   vertical-align: baseline;
   cursor: default;
 }
 
 .editor .ql-hr {
-  background: no-repeat scroll 50% 50% transparent !important;
-  background-image: url("./../../src/assets/images/hr.svg") !important;
+  background: transparent url("./../../src/assets/images/hr.svg") no-repeat scroll 50% 50% !important;
   text-align: center;
 }
 

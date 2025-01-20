@@ -2,14 +2,15 @@
 import VueWithCompiler from "vue/dist/vue";
 import Vue from "vue";
 
-import htmlimage from "./HtmlImage";
-import htmllink from "./HtmlLink";
-import htmllinkcard from "./HtmlLinkCard";
-import htmlvideo from "./HtmlVideo";
-import htmlplayercard from "./HtmlPlayerCard";
-import htmlfloor from "./HtmlFloor.vue";
-import htmlemoji from "./HtmlEmoji"
-import privilegestag from "./PrivilegesTag";
+import htmlimage from "@/components/HtmlImage";
+import htmllink from "@/components/HtmlLink";
+import htmllinkcard from "@/components/HtmlLinkCard";
+import htmlvideo from "@/components/HtmlVideo";
+import htmlplayercard from "@/components/HtmlPlayerCard";
+import htmlfloor from "@/components/HtmlFloor";
+import htmlemoji from "@/components/HtmlEmoji"
+import timeview from "@/components/TimeView"
+import privilegestag from "@/components/PrivilegesTag";
 import {regular} from "@/assets/js";
 
 export default {
@@ -60,7 +61,17 @@ export default {
       }
     };
   },
-  components: {htmlimage, htmllink, htmllinkcard, htmlvideo, htmlplayercard, htmlfloor, privilegestag, htmlemoji},
+  components: {
+    htmlimage,
+    htmllink,
+    htmllinkcard,
+    htmlvideo,
+    htmlplayercard,
+    htmlfloor,
+    htmlemoji,
+    timeview,
+    privilegestag,
+  },
   watch: {
     html: {
       handler(val, oldVal) {
@@ -103,8 +114,8 @@ export default {
       let vDomString;
       const vDom = new DOMParser().parseFromString(_html, "text/html"),
           video = vDom.getElementsByTagName("video"),
-          imgs = vDom.getElementsByTagName("img"),
-          links = vDom.getElementsByTagName("a"),
+          img = vDom.getElementsByTagName("img"),
+          link = vDom.getElementsByTagName("a"),
           p = vDom.getElementsByTagName("p"),
           pres = vDom.getElementsByTagName("pre");
 
@@ -122,15 +133,17 @@ export default {
         case "code":
           vDomString = `<div class="ql-input"><Input readonly type="textarea" :autosize="true" :value="this.html"></Input></div>`;
           break;
-        case "text":
-          vDomString = `<div class="ql-editor"><p>${vDom.getElementsByTagName("body")[0]?.innerText}</p></div>`;
+        case "text": {
+          let text = vDom.getElementsByTagName("body")[0].innerHTML.replaceAll(/<[^>]*>/g, '');
+          vDomString = `<div class="ql-input"><Input readonly type="textarea" :autosize="true" value="${text}"></Input></div>`;
+        }
           break;
         case "renderer":
         default:
           // ==================== 处理自定义HTML
 
-          if (imgs && imgs.length > 0) {
-            let _imgs = Array.from(imgs); // deep copy
+          if (img && img.length > 0) {
+            let _imgs = Array.from(img); // deep copy
             let eleImgType = ["htmlimage", "htmlemoji"];
             let eleImgTypeIndex = 0;
 
@@ -185,8 +198,8 @@ export default {
             }
           }
 
-          if (links && links.length > 0) {
-            let _links = Array.from(links); // deep copy
+          if (link && link.length > 0) {
+            let _links = Array.from(link); // deep copy
             for (let i = 0; i < _links.length; i++) {
               let hrefString = new URL(_links[i].href)
               let eleLink;
@@ -203,9 +216,6 @@ export default {
                 eleLink = document.createElement('htmllink');
                 let _linkExtend = Vue.component("HtmlLinkCom", {
                   template: _links[i].innerText,
-                  // data () {
-                  //   return this.extensionData;
-                  // }
                 });
 
                 eleLink.setAttribute("text", encodeURI(new _linkExtend().$options.template));
@@ -290,6 +300,12 @@ export default {
               if (_p[i] && _p[i].innerText) {
                 const emailRegex = /(?<!<a|htmllink[^>]*)[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}(?![^<]*<\/htmllink|a>)/gi;
                 _p[i].innerHTML = _p[i].innerHTML.replace(emailRegex, `<htmllink text='$&' href='mailto:$&'></htmllink>`);
+              }
+
+              // 时间
+              if (_p[i] && _p[i].innerText) {
+                const dateTimeRegex = /\d{4}-\d{2}-\d{2}( |&nbsp;)?(\d{1,2}(:\d{1,2})?(:\d{2})?)?/gi;
+                _p[i].innerHTML = _p[i].innerHTML.replace(dateTimeRegex, `<timeview time="$&">$&</timeview>`);
               }
 
               // 解析HR, 分割线

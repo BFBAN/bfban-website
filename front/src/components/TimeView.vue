@@ -1,4 +1,4 @@
-<script setup>
+<script>
 export default {
   props: {
     time: [String, Number, Date],
@@ -34,17 +34,22 @@ export default {
     loadData() {
       if (this.time)
         this.timeMap = {
-          primitive: this.time,
-          primitiveDateString: this.toDateString(this.time),
-          conversionDate: new Date(this.time).toLocaleDateString(),
-          conversionLocalDate: this.toLocaleString(new Date(this.time).getTime()),
+          primitive: this.onTime(this.time),
+          primitiveDateString: this.toDateString(this.onTime(this.time)),
+          conversionDate: new Date(this.onTime(this.time)).toLocaleDateString(),
+          conversionLocalDate: this.toLocaleString(new Date(this.onTime(this.time)).getTime()),
           timeFormatName: this.getTimeFormatName(),
-          localeDateString: this.toLocaleDateString(this.time)
+          localeDateString: this.toLocaleDateString(this.onTime(this.time))
         };
     },
     toLocaleString(unixTimestamp) {
       const date = new Date(unixTimestamp);
       return date.toLocaleString();
+    },
+    onTime(time) {
+      return time.toString()
+          .replaceAll('\n', ' ')
+          .replaceAll('&nbsp;', ' ');
     },
     /**
      * 获取时区名称
@@ -98,7 +103,7 @@ export default {
         <Tag type="border">{{ timeMap.timeFormatName }}</Tag>
       </FormItem>
       <FormItem :label="$t('detail.dateView.localeTime')">
-        <Alert show-icon type="info">{{$t('detail.dateView.localeTimeDescription')}}</Alert>
+        <Alert show-icon type="info">{{ $t('detail.dateView.localeTimeDescription') }}</Alert>
         <Input :value="timeMap.localeDateString.toString()" readonly></Input>
       </FormItem>
     </Form>

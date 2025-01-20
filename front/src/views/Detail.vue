@@ -478,7 +478,7 @@
                   <div :id="`floor-${l.id}`" v-if="l.type === 'report'" class="timeline-content">
                     <div class="timeline-time">
                       <Row :gutter="5" type="flex" align="middle">
-                        <Col>
+                        <Col flex="1">
                           <BusinessCard :id="l.byUserId">
                             <Tag fade color="transparent" class="avatar">
                               <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
@@ -777,7 +777,7 @@
                   <!-- 回复:any E -->
 
                   <Row class="timeline-content-footer" type="flex" align="middle">
-                    <Col flex="auto" v-if="l.type != 'historyUsername'">
+                    <Col flex="1" v-if="l.type !== 'historyUsername'">
                       <template v-if="isLogin">
                         <!-- 回复 -->
                         <Button size="small"
@@ -819,8 +819,8 @@
                         </div>
                       </Poptip>
                     </Col>
-                    <Col align="right" class="user-select-none" v-if="l.type != 'historyUsername'">
-                      # <u><span style="opacity: .4">{{ l.id }}</span></u>
+                    <Col align="right"  v-if="l.type !== 'historyUsername'">
+                      <span class="user-select-none"># </span><u><span style="opacity: .4">{{ l.id }}</span></u>
                     </Col>
                   </Row>
 

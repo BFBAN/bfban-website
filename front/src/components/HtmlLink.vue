@@ -4,10 +4,10 @@
           @on-popper-hide="onPoptipShow(true)">
     <span class="html-link">
       <template v-if="getProtocol === 'http:' || getProtocol === 'https:'">
-        <Icon type="md-link"/>
+        <Icon type="md-link" class="icon"/>
       </template>
       <template v-else-if="getProtocol === 'mailto:'">
-        <Icon type="ios-mail-outline"/>
+        <Icon type="ios-mail-outline" class="icon"/>
       </template>
       <a :href="afterData.href" target="_blank" rel="noopener noreferrer">{{ afterData.text || afterData.href }}</a>
     </span>
@@ -186,6 +186,11 @@ export default {
 
   a:hover {
     opacity: 1;
+  }
+
+  .icon {
+    margin-right: 2px;
+    opacity: .8;
   }
 }
 
