@@ -44,8 +44,6 @@ export default {
     }
   },
   mounted() {
-    // const getLocalFloorDomData = this.isGetFloorDom(this.id); // 从当前页面Dom里找数据
-    // this.isContains = getLocalFloorDomData;
     this.getItemData();
   },
   methods: {
