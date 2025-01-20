@@ -1,7 +1,7 @@
 <template>
   <Card id="getSharePicture" class="share" dis-hover>
     <div slot="title">
-      <img class="share-logo" src="../assets/images/logo.png">
+      <img class="share-logo user-select-none" src="../assets/images/logo.png">
       <br>
       <div style="text-align: center;">
         <h1 class="text-distinguishing-letter">
@@ -152,6 +152,7 @@ export default {
 }
 
 .share-logo {
+  pointer-events: none;
   width: 300px;
   height: 300px;
   position: absolute;

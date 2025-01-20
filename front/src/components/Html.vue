@@ -72,7 +72,7 @@ export default {
     },
     mode: {
       handler(val) {
-        if (this.templateRender && this.templateRender == undefined) return;
+        if (this.templateRender && this.templateRender === undefined) return;
         this.updateRender(this.packagingRender(this.html));
       }
     },
@@ -106,7 +106,6 @@ export default {
           imgs = vDom.getElementsByTagName("img"),
           links = vDom.getElementsByTagName("a"),
           p = vDom.getElementsByTagName("p"),
-          br = vDom.getElementsByTagName("br"),
           pres = vDom.getElementsByTagName("pre");
 
       // 过滤标签
@@ -263,7 +262,7 @@ export default {
               // 可疑链接
               // 将可疑的文本链接转换为链接widget
               if (_p[i] && _p[i].innerText) {
-                if (regular.check("link", _p[i].innerHTML).code == 0) {
+                if (regular.check("link", _p[i].innerHTML).code === 0) {
                   _p[i].innerHTML = _p[i].innerHTML.replaceAll('\n', '\n\b');
 
                   let p_textToLinkArray = regular.getCheckText("link", _p[i].innerText);
@@ -276,14 +275,15 @@ export default {
                           p_textToLinkItemURL.searchParams.getAll("isWidget")[0] &&
                           (p_textToLinkItemURL.protocol.indexOf('http') || p_textToLinkItemURL.protocol.indexOf('https'))
                       ) {
-                        /// 卡片 =>
-                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${encodeURI(p_textToLinkArray[j])}"></htmllinkcard>`)
-                      } else {
-                        /// 链接 =>
-                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${encodeURI(p_textToLinkArray[j])}" href="${encodeURI(p_textToLinkArray[j])}"></htmllink>`)
+                        /// 卡片链接 =>
+                        _p[i].innerHTML = _p[i].innerText.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${encodeURI('$&')}"></htmllinkcard>`)
                       }
                     }
                 }
+
+                /// 标准链接 =>
+                const urlRegex = /(?<!<a|img|video|iframe[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/a>)/g;
+                _p[i].innerHTML = _p[i].innerText.replaceAll(urlRegex, `<htmllink text="${encodeURI('$&')}" href="${encodeURI('$&')}"></htmllink>`);
               }
 
               // 解析HR, 分割线
@@ -291,12 +291,12 @@ export default {
                 let calcStringCount = 0;
 
                 for (let j = 0; j < _p[i].innerText.length; j++) {
-                  if (_p[i].innerText[j] == "-") {
+                  if (_p[i].innerText[j] === "-") {
                     calcStringCount += 1;
                   }
                 }
 
-                if (calcStringCount == _p[i].innerText.length && calcStringCount >= 4)
+                if (calcStringCount === _p[i].innerText.length && calcStringCount >= 4)
                   _p[i].innerHTML = `<Divider class="hr" dashed />`;
               }
             }

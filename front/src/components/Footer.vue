@@ -27,8 +27,8 @@
           <Col :xs="{span: 23, pull: 0, push: 1, order: 2}" :sm="{span: 23 ,pull: 0, push: 1, order: 2}"
                :lg="{span: 4,pull: 0, push: 0, order:0}">
             <b>
-              <Badge :count="logoCount" overflow-count="999999" :class="logoCount >= 10 ? 'shake active_infinite' : ''">
-                <Avatar v-if="logoCount >= 5" size="40">
+              <Badge :count="logoCount" overflow-count="999999" :class="logoCount >= 1000 ? 'shake active_infinite' : ''">
+                <Avatar v-if="logoCount >= 1000" size="40">
                   <router-link :to="{name: 'home', query:{ 'love': '❤'}}">😊</router-link>
                 </Avatar>
                 <img v-else

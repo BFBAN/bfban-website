@@ -194,6 +194,18 @@
         "text": "全部"
       }
     },
+    "html": {
+      "size": {
+        "large": "大",
+        "default": "默认",
+        "small": "小"
+      },
+      "type": {
+        "renderer": "渲染器",
+        "text": "文本",
+        "code": "代码"
+      }
+    },
     "tip": {
       "search.bad": "搜索发生错误，请联系管理员 {message}",
       "search.success": "搜索成功",

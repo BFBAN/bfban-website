@@ -14,7 +14,7 @@
             <Icon type="ios-chatbubbles"/>
             {{ $t("account.message.chat") }}
           </Button>
-          <div slot="content" >
+          <div slot="content">
             <Alert show-icon type="error" v-if="!account.attr.allowDM"> {{
                 $t("account.message.hint.taOffChat")
               }}
@@ -43,7 +43,7 @@
                   {{ account.username || 'username' }}
                 </h1>
                 <template v-if="account.attr.introduction">
-                  <span v-html="account.attr.introduction" style="opacity: .6;"></span>
+                  <Html :html="account.attr.introduction" class="introduction"></Html>
                 </template>
               </div>
 
@@ -73,10 +73,12 @@
                   <p v-else>-</p>
                   <p class="account-info-p">{{ $t("account.lastOnlineTime") }}</p>
                 </Col>
-                <template v-if="account.attr && account.attr.achievements && Object.keys(account.attr.achievements).length > 0">
+                <template
+                    v-if="account.attr && account.attr.achievements && Object.keys(account.attr.achievements).length > 0">
                   <Divider type="vertical"/>
                   <Col>
-                    <AchievementsTag :showAll="true" :data="account.attr.achievements" :size="'17px'" :max-overflow="3"></AchievementsTag>
+                    <AchievementsTag :showAll="true" :data="account.attr.achievements" :size="'17px'"
+                                     :max-overflow="3"></AchievementsTag>
                     <p class="account-info-p">{{ $t("profile.achievement.title") }}</p>
                   </Col>
                 </template>
@@ -130,7 +132,8 @@
                 <Divider type="vertical"/>
                 <Col>
                   <Card :padding="0">
-                    <vue-qr :text="'//bfban.com/space/' + $route.params.uId" :size="60" :margin="3" v-if="$route.params.uId" style="display: block"></vue-qr>
+                    <vue-qr :text="'//bfban.com/space/' + $route.params.uId" :size="60" :margin="3"
+                            v-if="$route.params.uId" style="display: block"></vue-qr>
                   </Card>
                 </Col>
               </Row>
@@ -187,6 +190,8 @@
 </template>
 
 <script>
+import {api, http, http_token, util} from '../assets/js/index'
+
 import Application from "../assets/js/application";
 import Empty from "@/components/Empty";
 import vueQr from "vue-qr";
@@ -195,9 +200,8 @@ import TimeView from "@/components/TimeView.vue";
 import Reports from "@/components/Reports.vue"
 import cheaterStatusView from "@/components/CheaterStatusView.vue";
 import Confetti from "@/components/Confetti.vue";
-import {api, http, http_token, util} from '../assets/js/index'
-
-import PrivilegesTag from "/src/components/PrivilegesTag";
+import Html from "@/components/Html.vue"
+import PrivilegesTag from "@/components/PrivilegesTag";
 import AchievementsTag from "/src/components/AchievementsTag.vue";
 
 import games from '/public/config/gameName.json'
@@ -238,7 +242,18 @@ export default new Application({
   watch: {
     $route: "loadData",
   },
-  components: {PrivilegesTag, AchievementsTag, Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, Reports, vueQr},
+  components: {
+    PrivilegesTag,
+    AchievementsTag,
+    Empty,
+    UserAvatar,
+    cheaterStatusView,
+    TimeView,
+    Confetti,
+    Reports,
+    Html,
+    vueQr
+  },
   created() {
     const {username} = this.$route.query;
     this.http = http_token.call(this);
@@ -387,7 +402,7 @@ export default new Application({
      * 是否可用聊天
      * @returns {boolean}
      */
-    isChat () {
+    isChat() {
       return !this.account.attr.allowDM || this.account.id == this.currentUser.userinfo.userId
     }
   }
@@ -397,6 +412,11 @@ export default new Application({
 <style lang="less">
 .account-username {
   margin: 2rem 0 2rem 0;
+
+  .introduction {
+    opacity: .8;
+    text-align: center;
+  }
 }
 
 .account-info-p {

@@ -4,7 +4,7 @@
     <!-- TODO 过期请删除 -->
     <a href="https://announcement.bfban.com" target="_blank">
       <Card :padding="0" dis-hover
-            style="padding: 3px 20px; margin: -10px -20px 0 -20px; text-align: center; background: darkred; color: white">
+            style="padding: 3px 20px; margin: -11px -20px -1px; text-align: center; background: darkred; color: white">
         {{
           {
             'zh-CN': '我们已更新《反作弊准则》,前往查看',

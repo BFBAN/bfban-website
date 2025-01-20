@@ -49,7 +49,8 @@
 
       <div v-if="!loadErr">
         <Card style="margin: 15px 15px" dis-hover>
-          <p v-html="userInfo.attr && userInfo.attr.introduction ? userInfo.attr.introduction : '(✿◡‿◡)' "></p>
+          <Html :html="userInfo.attr && userInfo.attr.introduction ? userInfo.attr.introduction : '(✿◡‿◡)'"
+                class="introduction"></Html>
         </Card>
         <template v-if="isLogin && isAdmin && showAdminUserInfo">
           <Card class="business-padding" style="margin: 10px 15px" dis-hover>
@@ -72,7 +73,9 @@
         </template>
         <Row class="business-padding business-padding-perpendicularity">
           <Col flex="auto">
-            <AchievementsTag trigger="hover" :data="userInfo.attr.achievements || []"
+            <AchievementsTag trigger="hover"
+                             :maxOverflow="8"
+                             :data="userInfo.attr.achievements || []"
                              v-if="userInfo.attr && userInfo.attr.achievements"></AchievementsTag>
           </Col>
           <Col>
@@ -101,6 +104,7 @@ import AchievementsTag from "@/components/AchievementsTag.vue";
 import Application from "@/assets/js/application";
 import Banner from "@/components/Banner.vue";
 import Confetti from "@/components/Confetti.vue";
+import Html from "@/components/Html.vue"
 
 export default new Application({
   props: {
@@ -128,7 +132,7 @@ export default new Application({
       type: 'user',
     }
   },
-  components: {PrivilegesTag, AchievementsTag, Banner, Confetti},
+  components: {PrivilegesTag, AchievementsTag, Banner, Confetti, Html},
   created() {
     this.http = http_token.call(this);
     this.type = this.isAdminL2 ? "admin" : "user";
@@ -212,6 +216,12 @@ export default new Application({
 .business {
   position: relative;
   user-select: none;
+
+  .introduction {
+    white-space: break-spaces;
+    max-height: 170px;
+    overflow-y: auto;
+  }
 }
 
 .business-padding {

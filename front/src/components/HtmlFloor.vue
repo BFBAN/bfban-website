@@ -1,8 +1,9 @@
 <template>
-  <span v-if="load">load</span>
-  <span v-else-if="isContains" class="html-floor" @click="onFloor(`floor-${id}`)">
-    <HtmlLink :href="getShareFloor(id)" :text="id"></HtmlLink>:
-    <Html v-if="floorDom && floorDom.content" :html="floorDom.content"></Html>
+  <span v-if="load">
+     <Icon type="md-refresh" class="spin-icon-load"/>
+  </span>
+  <span v-else-if="floorData" class="html-floor" @click="onFloor(`floor-${id}`)">
+    <Html class="ivu-alert ivu-alert-info" :html="floorData.content.text"></Html>
   </span>
   <span v-else class="html-floor">
     <div class="html-floor-card ivu-card ivu-card-bordered ivu-card-dis-hover">
@@ -14,11 +15,10 @@
 <script>
 import {api, http} from "@/assets/js";
 import Html from "@/components/Html.vue";
-import HtmlLink from "@/components/HtmlLink.vue";
 
 export default {
   name: "htmlFloor",
-  components: {HtmlLink, Html},
+  components: {Html},
   props: {
     id: {
       type: String,
@@ -31,8 +31,7 @@ export default {
   },
   data() {
     return {
-      isContains: true,
-      floorDom: null,
+      floorData: null,
       load: false,
     }
   },
@@ -45,15 +44,13 @@ export default {
     }
   },
   mounted() {
-    const getLocalFloorDomData = this.isGetFloorDom(this.id); // 从当前页面Dom里找数据
-    this.isContains = getLocalFloorDomData;
+    // const getLocalFloorDomData = this.isGetFloorDom(this.id); // 从当前页面Dom里找数据
+    // this.isContains = getLocalFloorDomData;
     this.getItemData();
   },
   methods: {
     async getItemData() {
-      // 如果没有则通过API获取
-      if (!this.isContains)
-        await this.getTimeLineItemData(this.id);
+      await this.getTimeLineItemData(this.id);
     },
     /**
      * 分享楼层
@@ -77,20 +74,11 @@ export default {
         params: {id}
       })
       this.load = false;
-      this.floorDom.content = result.data.data.content.text;
-      this.isContains = true;
-      return result.data.data.data || {};
-    },
-    isGetFloorDom(id) {
-      if (!id) return;
+      let d = result.data;
 
-      let floorDom = document.getElementById(`floor-${id}`);
-      let content = floorDom && floorDom.querySelector('.ql-editor') && floorDom.querySelector('.ql-editor').innerText || this.$i18n.t('basic.tip.notContent');
-      this.floorDom = {
-        username: "username",
-        content
+      if (d.success === 1) {
+        this.floorData = d.data;
       }
-      return !!floorDom || false;
     },
     /**
      * 滚动至楼层位置
@@ -118,9 +106,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "@/assets/css/index";
+
 .html-floor {
   user-select: none;
-  cursor: pointer;
+  cursor: auto;
 
   .html-floor-card {
     display: inline-block;

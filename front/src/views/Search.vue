@@ -16,6 +16,7 @@
         <img class="styles_bg_img" src="../assets/images/hero-grid-overlay.png"/>
       </div>
       <div :class="`search-content ${(searchVal.length > 3 && searchPosting) ? 'search-content-mini' : ''}`">
+
         <Row type="flex" justify="center" :gutter="20" style="width: 100%">
           <Col :xs="{span: 24}" :sm="{span: 18}" :md="{span: 18}">
             <div class="search-input search-input-show ivu-input ivu-input-large">
