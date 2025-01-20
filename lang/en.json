@@ -194,6 +194,19 @@
         "text": "all"
       }
     },
+    "html": {
+      "size": {
+        "x-large": "X Large",
+        "large": "Large",
+        "default": "Default",
+        "small": "Small"
+      },
+      "type": {
+        "renderer": "Renderer",
+        "text": "Text",
+        "code": "Code"
+      }
+    },
     "tip": {
       "search.bad": "Search error occurred, please contact the administrator {message}",
       "search.success": "Search successful",
