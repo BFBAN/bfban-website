@@ -182,6 +182,7 @@ export default {
 
   a {
     opacity: .6;
+    content: "" !important;
   }
 
   a:hover {

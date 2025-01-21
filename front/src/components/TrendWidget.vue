@@ -17,12 +17,14 @@ export default new Application({
     return {
       trend: {
         load: false,
-        list: []
+        list: Array.from({length: 10}, (_, index) => {
+          return {'hot': 0, 'commentsNum': 0, 'viewNum': 0, 'originName': `🦖 ${index + 1}`, 'originPersonaId': -1}
+        }) || []
       },
     }
   },
   created() {
-    this.getTrend()
+    this.getTrend();
   },
   watch: {
     '$route': 'getTrend'

@@ -496,12 +496,12 @@ async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'admin.setUser.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'admin.setUserRole.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
         const user = await db.select('*').from('users').where({id: req.body.data.id}).first();
         if (!user)
-            return res.status(404).json({error: 1, code: 'admin.setUser.notFound'});
+            return res.status(404).json({error: 1, code: 'admin.setUserRole.notFound'});
         const role = req.body.data.role;
         if (req.body.data.action === 'grant') {
             const devCan = ['normal', 'bot', 'blacklisted', 'freezed', 'volunteer'],
@@ -517,7 +517,7 @@ async (req, res, next) => {
             if (flag)
                 user.privilege = privilegeGranter(user.privilege, role);
             else
-                return res.status(403).json({error: 1, code: 'admin.setUser.permissionDenied'});
+                return res.status(403).json({error: 1, code: 'admin.setUserRole.permissionDenied'});
         } else {    // revoke permission
             const devCanNot = ['dev', 'admin', 'super', 'root'],
                 superCanNot = ['super', 'root', 'dev'],
@@ -530,7 +530,7 @@ async (req, res, next) => {
             if (flag)
                 user.privilege = privilegeRevoker(user.privilege, role);
             else
-                return res.status(403).json({error: 1, code: 'admin.setUser.permissionDenied'});
+                return res.status(403).json({error: 1, code: 'admin.setUserRole.permissionDenied'});
         }
         await sendMessage(req.user.id, null, "command", JSON.stringify({
             action: 'setUser',
@@ -557,7 +557,7 @@ async (req, res, next) => {
             role: req.body.data.role,
             createTime: new Date()
         });
-        return res.status(200).json({success: 1, code: 'admin.setUser.ok'});
+        return res.status(200).json({success: 1, code: 'admin.setUserRole.ok'});
     } catch (err) {
         next(err);
     }

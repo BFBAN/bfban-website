@@ -341,9 +341,15 @@ export default new Application({
             }
           ]
         },
-        community: [],
-        report: [],
-        achievement: [],
+        community: Array.from({length: 10}, (_, index) => {
+          return {'total': 0, 'username': `🦈 ${index}`, 'id': -1}
+        }) || [],
+        report: Array.from({length: 10}, (_, index) => {
+          return {'total': 0, 'username': `🦖 ${index}`, 'id': -2}
+        }) || [],
+        achievement: Array.from({length: 10}, (_, index) => {
+          return {'total': 0, 'username': `🐧 ${index}`, 'id': -3}
+        }) || [],
       }
     }
   },

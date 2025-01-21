@@ -196,10 +196,19 @@
 
           <Affix :offset-top="20">
             <Card dis-hover>
-              <p slot="title">
-                <Icon type="md-funnel"/>
-                {{ $t('list.colums.screenTitle') }}
-              </p>
+              <Row slot="title" type="flex" align="middle">
+                <Col flex="1">
+                  <h3>
+                    <Icon type="md-funnel"/>
+                    {{ $t('list.colums.screenTitle') }}
+                  </h3>
+                </Col>
+                <Col>
+                  <Button size="small" @click="getCheaterList">
+                    <Icon type="md-refresh" :class="spinShow ? 'spin-icon-load' : ''"/>
+                  </Button>
+                </Col>
+              </Row>
 
               <Form>
                 <FormItem :label="$t('list.reportTime')">
@@ -324,7 +333,7 @@ export default new Application({
     $route: "loadData",
     gameName: function (val, oldVal) {
       if (val &&
-          val != 'all' &&
+          val !== 'all' &&
           store.state.configuration.voice &&
           store.state.configuration['voice_backgroundMusic'].state
       ) {

@@ -102,13 +102,6 @@ async function verifyCaptcha(req, res, next) {
                 message: e
             });
         }
-
-        if (req.body.captcha.captchaType && req.body.captcha.captchaType === 'turnstile') {
-
-        } else {
-
-        }
-
     } catch (err) {
         next(err);
     }

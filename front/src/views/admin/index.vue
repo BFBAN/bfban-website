@@ -441,7 +441,9 @@ export default new Application({
         userData: {},
 
         // 不活跃
-        inactiveUserData: [],
+        inactiveUserData: Array.from({length: 10}, (_, index) => {
+          return {'privilege': 0, 'username': `🦖 ${index + 1}`, 'id': -1}
+        }) || [],
         inactiveUserSearchValue: "",
 
         // 柱
@@ -721,13 +723,12 @@ export default new Application({
       switch (data.seriesType) {
         case "scatter":
           this.model.workingRatio.data = raw.filter(i => data.data[0] === i.month)[0]
-          this.generateStatisticalPercentage(this.model.workingRatio.data)
           break;
         case "bar":
           this.model.workingRatio.data = raw.filter(i => data.name === i.month)[0]
-          this.generateStatisticalPercentage(this.model.workingRatio.data)
           break;
       }
+      this.generateStatisticalPercentage(this.model.workingRatio.data)
     },
   },
   computed: {}
@@ -781,6 +782,7 @@ export default new Application({
 .working-ratio-ul,
 .inactive-user {
   ul {
+    list-style-type: list-style-type;
     padding: 0 0 0 15px;
 
     .privilege {

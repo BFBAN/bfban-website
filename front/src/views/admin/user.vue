@@ -622,7 +622,7 @@ export default new Application({
       // 处理用户身份权限
       for (const key in this.editUserData.temporaryPrivilege) {
         if (this.editUserData.id) {
-          await this.setUser(
+          await this.setUserRole(
               this.editUserData.id,
               this.editUserData.temporaryPrivilege[key],
               key
@@ -815,8 +815,8 @@ export default new Application({
     /**
      * 修改用户身份
      */
-    async setUser(id, action, role) {
-      await this.http.post("admin/setUser", {
+    async setUserRole(id, action, role) {
+      await this.http.post(api['admin_setUserRole'], {
         data: {
           data: {id, action, role},
         }
@@ -824,7 +824,6 @@ export default new Application({
         const d = res.data;
 
         if (d.success === 1) {
-          // TODO
           return;
         }
 

@@ -112,29 +112,9 @@
                       </Col>
                     </Row>
                     <Row :gutter="5" type="flex" align="top">
-                      <Col>
-                        <p>150</p>
-                        <UserAvatar :src="formItem.userAvatar" :size="150"></UserAvatar>
-                      </Col>
-                      <Col>
-                        <p>80</p>
-                        <UserAvatar :src="formItem.userAvatar" :size="80"></UserAvatar>
-                      </Col>
-                      <Col>
-                        <p>50</p>
-                        <UserAvatar :src="formItem.userAvatar" :size="50"></UserAvatar>
-                      </Col>
-                      <Col>
-                        <p>45</p>
-                        <UserAvatar :src="formItem.userAvatar" :size="45"></UserAvatar>
-                      </Col>
-                      <Col>
-                        <p>30</p>
-                        <UserAvatar :src="formItem.userAvatar" :size="30"></UserAvatar>
-                      </Col>
-                      <Col>
-                        <p>22</p>
-                        <UserAvatar :src="formItem.userAvatar" :size="22"></UserAvatar>
+                      <Col v-for="(i, index) in [150,80,50,45,30,22]" :key="index">
+                        <p>{{i}}</p>
+                        <UserAvatar :src="formItem.userAvatar" :size="i"></UserAvatar>
                       </Col>
                     </Row>
                   </Card>
