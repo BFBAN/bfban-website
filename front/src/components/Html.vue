@@ -113,6 +113,7 @@ export default {
       let _html = `<div class="ql-editor">${html}</div>`;
       let vDomString;
       const vDom = new DOMParser().parseFromString(_html, "text/html"),
+          div = vDom.getElementsByTagName("div"),
           video = vDom.getElementsByTagName("video"),
           img = vDom.getElementsByTagName("img"),
           link = vDom.getElementsByTagName("a"),
@@ -139,8 +140,21 @@ export default {
         }
           break;
         case "renderer":
-        default:
+        default: {
+
           // ==================== 处理自定义HTML
+
+          // 纯文本，无内置标签
+          if (div && div.length > 0 && link && link.length <= 0 && p && p.length <= 1 && img && img.length <= 0) {
+            let _divs = Array.from(div); // deep copy
+
+            for (let i = 0; i < _divs.length; i++) {
+              /// 标准链接 =>
+              /// 排除标签a|htmllink|img|video|iframe、排除标签属性内链接、排除标签内的链接
+              const urlRegex = /(?<!<(a|htmllink|img|video|iframe)[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
+              _divs[i].innerHTML = _divs[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
+            }
+          }
 
           if (img && img.length > 0) {
             let _imgs = Array.from(img); // deep copy
@@ -250,6 +264,9 @@ export default {
                       var p_value = p_data[1];
                       _p[i].innerHTML = `<htmlfloor id="${p_value}"></htmlfloor>`;
                       break;
+                    case "---":
+                      _p[i].innerHTML = `<Divider class="hr" dashed>`;
+                      break;
                     case "privilege":
                       var p_value_privileges = p_data[1].split(',').toString();
                       if (p_data[1])
@@ -289,10 +306,14 @@ export default {
                         _p[i].innerHTML = _p[i].innerText.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${encodeURI('$&')}"></htmllinkcard>`)
                       }
                     }
-                }
 
-                /// 标准链接 =>
-                const urlRegex = /(?<!<a|htmllink|img|video|iframe[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
+
+                }
+              }
+
+              /// 标准链接 =>
+              if (_p[i] && _p[i].innerText) {
+                const urlRegex = /(?<!<(a|htmllink|img|video|iframe)[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
                 _p[i].innerHTML = _p[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
               }
 
@@ -325,6 +346,7 @@ export default {
           }
 
           vDomString = vDom.getElementsByTagName("body")[0]?.innerHTML ?? "";
+        }
           break;
       }
 
