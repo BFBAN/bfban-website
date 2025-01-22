@@ -367,7 +367,7 @@ export default new Application({
 
 .home-banner {
   overflow: hidden;
-  margin-top: 9rem;
+  margin-top: 15rem;
   margin-bottom: 6rem;
   background-size: 500px;
   background-repeat: no-repeat;
