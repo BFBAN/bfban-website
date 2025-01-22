@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     offAds() {
-      account_storage.updateConfiguration('ads-switch', false);
+      account_storage.updateConfiguration('ads.google.switch', false);
       this.$router.push({
         name: this.$router.name,
         query: {
@@ -81,7 +81,7 @@ export default {
   computed: {
     adsSwitch() {
       const isSkipAds = this.$route.query['skipAds'] || false;
-      const adsSwitchValue = account_storage.getConfiguration('ads-switch') || false; // On by default
+      const adsSwitchValue = account_storage.getConfiguration('ads.google.switch') || false; // On by default
       return isSkipAds ? false : adsSwitchValue;
     },
   }

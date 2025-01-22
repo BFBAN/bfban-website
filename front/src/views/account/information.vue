@@ -331,7 +331,7 @@
           <Col :xs="{span: 24}" :lg="{span: 12}">
             <FormItem :label="$t('profile.space.form.AD')">
               <Alert show-icon>{{ $t('profile.space.form.ADDescribe') }}</Alert>
-              <i-switch v-model="adsSwitch" @on-change="switchAttr('ads-switch', adsSwitch)"/>
+              <i-switch v-model="adsSwitch" @on-change="switchAttr('ads.google.switch', adsSwitch)"/>
             </FormItem>
           </Col>
         </Row>
@@ -358,7 +358,7 @@ export default new Application({
     return {
       privileges: [],
       languages: [],
-      adsSwitch: account_storage.getConfiguration('ads-switch'),
+      adsSwitch: account_storage.getConfiguration('ads.google.switch'),
       userInfoLoad: false, // 用户信息获取状态
       formLoad: false, // 表单提交状态
       langLocalSync: false, // 用户信息保存语言是否同步开关

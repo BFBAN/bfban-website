@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <div>
     <div class="container">
       <div class="styles_herosection user-select-none">
         <div class="styles_bg"></div>
@@ -9,16 +9,14 @@
       <div class="content">
         <div class="ivu-alert-with-banner home-banner">
           <Row :gutter="30" type="flex" align="middle">
-            <Col :xs="{span: 22, offset: 1}" :sm="{span: 12, offset: 1}" :md="{span: 12, offset: 1}"
-                 :lg="{span: 8}">
-              <h1 class="title">
-                {{ $t("home.cover.h1") }}
-              </h1>
+            <Col :xs="{span: 22, offset: 1}" :sm="{span: 12, offset: 1}" :md="{span: 22, offset: 1}"
+                 :lg="{span: 9}">
+              <h1 class="title">{{ title }}</h1>
               <h2>
                 {{ $t(`home.cover.h2.hint${hintRandom}`) }}
                 <icon @click="onHomeHintRandom()" type="md-refresh"></icon>
               </h2>
-              <h3>{{ $t("home.cover.h3") }} <br> {{ $t("home.cover.h4") }}</h3>
+              <h3>{{ $t("home.cover.h3") }} <br>{{ $t("home.cover.h4") }}</h3>
               <br>
               <router-link v-if="isLogin" :to="{name: 'profile', params: {pagename: 'information'}}">
                 <Button type="primary" size="large" v-voice-button>{{ $t("header.profile") }}</Button>
@@ -27,7 +25,7 @@
                 <Button type="primary" size="large" v-voice-button>{{ $t("signup.title") }}</Button>
               </router-link>
             </Col>
-            <Col class="mobile-hide" :lg="{span: 14, push: 0}" type="flex" align="center" justify="center">
+            <Col class="mobile-hide" :lg="{span: 13, push: 0}" type="flex" align="center" justify="center">
               <img :src="bannerImage"
                    class="ivu-row-top img">
             </Col>
@@ -37,7 +35,7 @@
 
       <div class="content">
         <Row :gutter="15">
-          <Col :xs="{span: 11, offset: 1}" :lg="{span: 5, offset: 1}">
+          <Col :xs="{span: 11, offset: 1}" :lg="{span: 5, pull: 0}">
             <Card dis-hover :to="{name: 'site_stats'}">
               <h3>{{ number.format(statistics.reports) || 0 }}</h3>
               <span>{{ $t("home.cover.dataReceived") }}</span>
@@ -53,7 +51,7 @@
               </Card>
             </router-link>
           </Col>
-          <Col :lg="{span: 5, offset: 0}" class="mobile-hide">
+          <Col :lg="{span: 4, offset: 0}" class="mobile-hide">
             <router-link :to="{name: 'site_stats'}">
               <Card dis-hover>
                 <h3>{{ number.format(statistics.players) || 0 }}</h3>
@@ -62,7 +60,7 @@
               </Card>
             </router-link>
           </Col>
-          <Col :lg="{span: 5, offset: 0}" class="mobile-hide">
+          <Col :lg="{span: 4, offset: 0}" class="mobile-hide">
             <router-link :to="{name: 'site_stats'}">
               <Card dis-hover>
                 <h3>{{ number.format(statistics.registers) || 0 }}</h3>
@@ -71,7 +69,16 @@
               </Card>
             </router-link>
           </Col>
-          <Col :xs="{span: 23, offset: 1}" :lg="{span: 23, offset: 1}">
+          <Col :lg="{span: 4, offset: 0}" class="mobile-hide">
+            <router-link :to="{name: 'site_stats'}">
+              <Card dis-hover>
+                <h3>{{ number.format(statistics.banAppeals) || 0 }}</h3>
+                <span>{{ $t('sitestats.banAppeals') }}</span>
+                <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
+              </Card>
+            </router-link>
+          </Col>
+          <Col :xs="{span: 23, offset: 1}" :lg="{span: 24, push: 0}">
             <br>
             <TimeView :time="bannerTime">{{ $t("home.cover.endTime", {time: bannerTime}) }}</TimeView>
           </Col>
@@ -195,7 +202,7 @@
       </div>
       <Spin size="large" fix v-if="activityLoad"></Spin>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -301,8 +308,7 @@ export default new Application({
           players: true,	// show players that is reported number
           confirmed: true,	// show confirmed number
           registers: true,	// show register number
-          banappeals: true,// show ban appeals number
-          details: true,	// show number of each game, each status
+          banAppeals: true,// show ban appeals number
           from: new Date(time.appStart()).getTime()
         }
       }).then(res => {
@@ -319,6 +325,10 @@ export default new Application({
   computed: {
     user() {
       return this.$store.state.user || {}
+    },
+    title() {
+      const name = this.$t("home.cover.h1")
+      return `${name.charAt(0).toUpperCase()}${name.slice(1).toLocaleLowerCase()}`;
     }
   },
 })
@@ -341,7 +351,7 @@ export default new Application({
   overflow: hidden;
   min-height: 850px;
   max-height: 1000px;
-  margin: 50px 0 -20px 0;
+  margin: 50px 0 -15px 0;
   text-align: center;
 
   .lean-box {
@@ -357,8 +367,8 @@ export default new Application({
 
 .home-banner {
   overflow: hidden;
-  min-height: 500px;
-  margin-top: 5rem;
+  margin-top: 9rem;
+  margin-bottom: 6rem;
   background-size: 500px;
   background-repeat: no-repeat;
   background-position: right;
@@ -367,9 +377,10 @@ export default new Application({
     position: relative;
     display: inline-flex;
     padding: 0 10px 0 0;
-    margin-bottom: 20px;
-    font-weight: bold;
-    font-size: 70px;
+    margin-bottom: 30px;
+    font-weight: initial;
+    font-size: 68px;
+    font-family: "Playwrite_IN", Tofu, serif;
   }
 
   .img {
@@ -385,6 +396,18 @@ export default new Application({
     line-height: 1.5;
     margin-bottom: 10px;
     font-weight: initial;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .home-banner {
+    text-align: center;
+  }
+
+  h1.title {
+    display: block !important;
+    text-align: center;
+    width: 100%;
   }
 }
 
