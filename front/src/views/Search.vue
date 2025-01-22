@@ -15,31 +15,50 @@
         <div class="styles_bg"></div>
         <img class="styles_bg_img" src="../assets/images/hero-grid-overlay.png"/>
       </div>
-      <div :class="`search-content ${(searchVal.length > 3 && searchPosting) ? 'search-content-mini' : ''}`">
-
+      <div :class="[
+          `search-content`,
+          (searchValue[searchTypeValue].toString().length > searchConfig.type[searchTypeValue].minLength && searchPosting) ? 'search-content-mini' : ''
+      ]">
         <Row type="flex" justify="center" :gutter="20" style="width: 100%">
           <Col :xs="{span: 24}" :sm="{span: 18}" :md="{span: 18}">
             <div class="search-input search-input-show ivu-input ivu-input-large">
               <Row :gutter="10">
                 <Col>
-                  <RadioGroup type="button" v-model="searchTypeValue" size="small" @on-change="onTabClick">
-                    <Radio label="player" value="player">{{ $t('search.tabs.player') }}</Radio>
-                    <Radio label="user" value="user" :disabled="!isLogin">{{ $t('search.tabs.user') }}</Radio>
-                  </RadioGroup>
+                  <Select v-model="searchTypeValue" size="small">
+                    <Option :label="$t('search.tabs.player')" value="player">{{ $t('search.tabs.player') }}</Option>
+                    <Option :label="$t('search.tabs.user')" value="user" :disabled="!isLogin">{{ $t('search.tabs.user') }}</Option>
+                    <Option :label="$t('search.tabs.comment')" value="comment" :disabled="!isLogin && !isAdminL2" v-if="isAdminL2">
+                      {{ $t('search.tabs.comment') }}
+                    </Option>
+                  </Select>
                 </Col>
                 <Col flex="1">
                   <Dropdown style="width: 100%">
-                    <Input
-                        size="small"
-                        clearable
-                        v-model="searchVal"
-                        :show-word-limit="true"
-                        :maxlength="100"
-                        :border="false"
-                        :placeholder="$t('search.placeholder')"
-                        @on-enter="handleSearch"
-                        @on-search="handleSearch">
-                    </Input>
+                    <template v-if="searchConfig.type[searchTypeValue].inputType === 'text'">
+                      <Input
+                          size="small"
+                          clearable
+                          v-model="searchValue[searchTypeValue]"
+                          :show-word-limit="true"
+                          :minlength="searchConfig.type[searchTypeValue].minLength"
+                          :maxlength="searchConfig.type[searchTypeValue].maxLength"
+                          :border="false"
+                          :placeholder="$t('search.placeholder')"
+                          @on-enter="handleSearch"
+                          @on-search="handleSearch">
+                      </Input>
+                    </template>
+                    <template v-else-if="searchConfig.type[searchTypeValue].inputType === 'textarea'">
+                      <Input type="textarea"
+                             :border="false"
+                             :placeholder="$t('search.placeholder')"
+                             :minlength="searchConfig.type[searchTypeValue].minLength"
+                             :maxlength="searchConfig.type[searchTypeValue].maxLength"
+                             :multiple="true"
+                             :show-word-limit="true"
+                             v-model="searchValue[searchTypeValue]"
+                             @on-search="handleSearch"></Input>
+                    </template>
 
                     <!-- Search history S -->
                     <div transfer slot="list" style="padding: 10px">
@@ -64,7 +83,7 @@
                                  closable
                                  @on-change="handleSearchHistoryClickTag(index)"
                                  @on-close="handleSearchHistoryClose(index)">
-                              {{ $t('search.tabs.' + i.type) || '' }}:{{ i.keyword }}
+                              {{ $t('search.tabs.' + i.type) || '' }}:{{ i.param }}
                             </Tag>
                           </Col>
                         </Row>
@@ -86,7 +105,9 @@
                   </OcrWidget>
                 </Col>
                 <Col>
-                  <Button type="primary" size="small" :disabled="searchVal.length <= 3" @click="handleSearch">
+                  <Button type="primary" size="small"
+                          :disabled="searchTypeValue && searchValue && searchValue[searchTypeValue].length <= 3"
+                          @click="handleSearch">
                     <Icon type="ios-search" v-if="!modalSpinShow"/>
                     <Icon type="md-refresh spin-icon-load" v-else/>
                   </Button>
@@ -95,7 +116,8 @@
             </div>
           </Col>
         </Row>
-        <Row type="flex" justify="center" align="middle" class="checkboxGroup">
+        <Row type="flex" justify="center" align="middle" class="checkboxGroup"
+             v-if="!(searchValue[searchTypeValue].toString().length > searchConfig.type[searchTypeValue].minLength && searchPosting)">
           <Col :xs="{span: 24}" :lg="{span: 6}" align="center">
             <Icon type="md-alert"/>
             {{ $t("search.describe") }}
@@ -109,18 +131,21 @@
         </Row>
       </div>
 
-      <template v-if="searchVal.length >= 3 && searchPosting">
+      <template
+          v-if="searchValue[searchTypeValue].length >= searchConfig.type[searchTypeValue].minLength && searchPosting">
         <Row type="flex" align="middle" :gutter="10">
           <Col flex="1">
             <Tabs captureFocus v-model="searchTypeValue" @on-click="onTabClick">
               <TabPane name="player" :label="$t('search.tabs.player')"></TabPane>
               <TabPane name="user" :label="$t('search.tabs.user')" :disabled="!isLogin"></TabPane>
+              <TabPane name="comment" :label="$t('search.tabs.comment')" :disabled="!isLogin && !isAdminL2"
+                       v-if="isAdminL2"></TabPane>
             </Tabs>
           </Col>
           <Col>
             <Row :gutter="5">
               <Col>
-                <template v-if="searchTypeValue == 'player'">
+                <template v-if="searchTypeValue === 'player'">
                   <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400"
                           popper-class="files-poptip"
                           :padding="'20px 30px'">
@@ -129,7 +154,7 @@
                     </Button>
                     <Form ref="filesFunnel" label-position="top" slot="content">
                       <FormItem>
-                        <RadioGroup v-model="searchGameSort" type="button">
+                        <RadioGroup v-model="searchSort" type="button">
                           <Radio label="default">{{ $t('search.sort.default') }}</Radio>
                           <Radio label="latest">{{ $t('search.sort.latest') }}</Radio>
                           <Radio label="mostViewed">{{ $t('search.sort.mostViewed') }}</Radio>
@@ -166,7 +191,7 @@
                     </Form>
                   </Poptip>
                 </template>
-                <template v-else-if="searchTypeValue == 'user'">
+                <template v-else-if="searchTypeValue === 'user'">
                   <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400"
                           popper-class="files-poptip"
                           :padding="'20px 30px'">
@@ -175,12 +200,40 @@
                     </Button>
                     <Form ref="filesFunnel" label-position="top" slot="content">
                       <FormItem>
-                        <RadioGroup v-model="searchUserSort" type="button">
+                        <RadioGroup v-model="searchSort" type="button">
                           <Radio label="default">{{ $t('search.sort.default') }}</Radio>
                           <Radio label="joinedAt">{{ $t("account.joinedAt") }}</Radio>
                           <Radio label="lastOnlineTime">{{ $t("account.lastOnlineTime") }}</Radio>
                         </RadioGroup>
                       </FormItem>
+                      <FormItem>
+                        <DatePicker type="daterange"
+                                    placement="bottom-end"
+                                    placeholder="Time"
+                                    split-panels
+                                    @on-change="handleCDatepicker"
+                                    :options="timeOptions"
+                                    :value="intervalTime"
+                                    style="width: 100%"></DatePicker>
+                      </FormItem>
+                      <Row :gutter="10">
+                        <Col>
+                          <Button @click="handleSearch" type="primary" :disabled="modalSpinShow">
+                            {{ $t('basic.button.commit') }}
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Poptip>
+                </template>
+                <template v-else-if="searchTypeValue === 'comment'">
+                  <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400"
+                          popper-class="files-poptip"
+                          :padding="'20px 30px'">
+                    <Button size="small">
+                      <Icon type="md-funnel" size="15"/>
+                    </Button>
+                    <Form ref="filesFunnel" label-position="top" slot="content">
                       <FormItem>
                         <DatePicker type="daterange"
                                     placement="bottom-end"
@@ -213,7 +266,7 @@
         </Row>
 
         <!-- 案件 S -->
-        <template v-if="searchTypeValue == 'player'">
+        <template v-if="searchTypeValue === 'player'">
           <Card dis-hover class="search-list" v-if="result.player.length > 0">
             <div v-for="(d, d_index) in result.player" :key="d_index" class="item-card" v-voice-button>
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
@@ -307,7 +360,7 @@
         <!-- 案件 E -->
 
         <!-- 用户 S -->
-        <template v-if="searchTypeValue == 'user'">
+        <template v-if="searchTypeValue === 'user'">
           <Card dis-hover class="search-list" v-if="result.user.length > 0">
             <div v-for="(user, user_index) in result.user" :key="user_index" class="item-card" v-voice-button>
               <Card dis-hover :padding="10" :to="{path: '/space/' + user.dbId}">
@@ -372,38 +425,33 @@
         <!-- 用户 E -->
 
         <!-- 评论 S -->
-        <template v-if="searchTypeValue == 'comment'">
-          <Row :gutter="10">
-            <Col flex="1"></Col>
-            <Col>
-              <DatePicker type="daterange"
-                          placement="bottom-end"
-                          split-panels
-                          @on-change="handleCDatepicker"
-                          :options="timeOptions"
-                          :value="intervalTime"></DatePicker>
-            </Col>
-          </Row>
+        <template v-if="searchTypeValue === 'comment'">
           <Card dis-hover class="list" v-if="result.comment.length > 0">
             <div v-for="(comment, comment_index) in result.comment" :key="comment_index" class="timeline-content">
               <div class="timeline-time">
-                <Row>
+                <Row :gutter="10">
+                  <Col>
+                    <Button size="small"
+                            :to="{name: 'player', params: { ouid: `${comment.toOriginPersonaId}` }, query: {byPath: $route.name}}">
+                      <Icon type="md-eye"></Icon>
+                    </Button>
+                  </Col>
                   <Col flex="1">
                     <router-link :to="{name: 'space', params: {uId: `${comment.byUserId}`}}">
                       <BusinessCard :id="comment.byUserId">
                         <u><b>{{ comment.username || comment.byUserId }}</b></u>
                       </BusinessCard>
                     </router-link>
-
-                    {{ $t('basic.button.reply') }}
                   </Col>
                   <Col align="right">
-                    <Time v-if="comment.createTime" :time="comment.createTime" type="datetime"></Time>
+                    <TimeView :time="comment.createTime">
+                      <Time v-if="comment.createTime" :time="comment.createTime" type="datetime"></Time>
+                    </TimeView>
                   </Col>
                 </Row>
               </div>
               <Card dis-hover :padding="0"
-                    class="item-card" v-voice-button>
+                    class="item-card timeline-description" v-voice-button>
 
                 <HtmlWidget :html="comment.content"></HtmlWidget>
               </Card>
@@ -444,7 +492,6 @@ import Empty from "@/components/Empty";
 import TimeView from "@/components/TimeView.vue";
 
 import game from '../../public/config/gameName.json';
-import tag from "view-design/src/components/tag";
 
 export default new Application({
   name: "search",
@@ -454,20 +501,46 @@ export default new Application({
       searchPosting: false,
 
       // Search box and search history
-      searchVal: '',
+      searchValue: {
+        player: '',
+        user: '',
+        comment: ''
+      },
       searchHistory: {
+        load: false,
         list: []
+      },
+      searchConfig: {
+        type: {
+          // types, get Object.keys(searchConfig.type)
+          player: {
+            minLength: 3,
+            maxLength: 50,
+            inputType: 'text',
+            verify: []
+          },
+          user: {
+            minLength: 3,
+            maxLength: 50,
+            inputType: 'text',
+            verify: []
+          },
+          comment: {
+            minLength: 2,
+            maxLength: 100,
+            inputType: 'text',
+            verify: []
+          }
+        }
       },
 
       // Search mode: [player,user,comment]
-      searchTypes: ['player', 'user', 'comment'],
       searchTypeValue: 'player',
 
       // Search for games, used when the searchTypes field is player
       searchGameList: [{value: 'all'}].concat(game.child),
       searchGameValue: 'all',
-      searchGameSort: 'default',
-      searchUserSort: 'default',
+      searchSort: 'default',
 
       intervalTime: undefined,
       timeOptions: {
@@ -522,15 +595,15 @@ export default new Application({
   },
   components: {OcrWidget, PrivilegesTag, HtmlWidget, BusinessCard, Empty, TimeView},
   created() {
-    const {keyword, type, game, skip, limit} = this.$route.query;
-    this.searchVal = keyword || '';
+    const {param, type, game, skip, limit} = this.$route.query;
+    this.searchValue[type] = param || this.searchValue[type] || '';
     this.searchTypeValue = type || 'player';
     this.searchGameValue = game || 'all';
     if (type && skip >= 1 && skip <= Number.MAX_VALUE) this.skip[this.searchTypeValue] = Number(skip) || this.skip[this.searchTypeValue];
     if (type && limit >= 0 && limit <= 40) this.limit[this.searchTypeValue] = Number(limit) || this.limit[this.searchTypeValue];
 
     this.getSearchHistory();
-    this.searchVal ? this.handleSearch() : null
+    this.searchValue[type] ? this.handleSearch() : null
   },
   methods: {
     /**
@@ -563,7 +636,7 @@ export default new Application({
     handleSearchHistoryClickTag(index) {
       if (this.modalSpinShow) return;
 
-      this.searchVal = this.searchHistory.list[index].keyword;
+      this.searchValue[this.searchTypeValue] = this.searchHistory.list[index].param;
       this.searchTypeValue = this.searchHistory.list[index].type;
       this.handleSearch();
     },
@@ -586,7 +659,7 @@ export default new Application({
      * @param val
      */
     onOcrOutput(data) {
-      this.searchVal = data.value;
+      this.searchValue[this.searchTypeValue] = data.value;
       this.handleSearch();
     },
     /**
@@ -609,14 +682,14 @@ export default new Application({
      */
     handleSearch() {
       const that = this;
-      const keyword = this.searchVal.replaceAll(' ', '').trim();
-      let data = {keyword, type: this.searchTypeValue};
+      const param = this.searchValue[this.searchTypeValue].toString().trim();
+      let data = {param, type: this.searchTypeValue};
       let message = "";
 
-      data = Object.assign({game: this.searchGameValue, gameSort: this.searchGameSort}, data);
+      data = Object.assign({game: this.searchGameValue, sort: this.searchSort}, data);
 
       this.$router.push({name: this.$router.name, query: data});
-      this.searchVal = keyword;
+      this.searchValue[this.searchTypeValue] = param;
       this.searchPosting = false;
 
       switch (this.searchTypeValue) {
@@ -637,17 +710,25 @@ export default new Application({
         case 'comment':
           if (this.skip[this.searchTypeValue] >= 1) data.skip = Number((this.skip[this.searchTypeValue] - 1) * this.limit[this.searchTypeValue]);
           if (this.limit[this.searchTypeValue] >= 0 && this.limit[this.searchTypeValue] <= 40) data.limit = Number(this.limit[this.searchTypeValue]);
+
+          // Time limit
+          if (this.intervalTime) {
+            data.createTimeFrom = new Date(this.intervalTime[0]).getTime();
+            data.createTimeTo = new Date(this.intervalTime[1]).getTime();
+          } else {
+            delete data.createTimeFrom;
+            delete data.createTimeTo;
+          }
           break;
       }
 
       // restriction
-      if (keyword == '' || keyword.length <= 3 || this.modalSpinShow) {
+      if (data.param === '' || data.param.length <= 3 || this.modalSpinShow) {
         this.modalSpinShow = false;
         return;
       }
 
       this.modalSpinShow = true;
-      data.param = data.keyword;
 
       http.get(api["search"], {params: data}).then(res => {
         const d = res.data;
@@ -655,14 +736,14 @@ export default new Application({
 
         for (let index = 0; index < that.searchHistory.list.length; index++) {
           let i = that.searchHistory.list[index];
-          if (i.keyword == keyword && i.type == this.searchTypeValue) {
+          if (i.param == param && i.type == this.searchTypeValue) {
             notRepeat = true;
           }
         }
 
         if (!notRepeat) {
           that.searchHistory.list.push({
-            keyword,
+            param,
             type: this.searchTypeValue,
             count: d.data.length || 0
           })
@@ -695,6 +776,7 @@ export default new Application({
 </script>
 
 <style lang="less">
+@import "@/assets/css/timeline.less";
 @import "@/assets/css/avatar.less";
 @import "@/assets/css/radio.less";
 @import "@/assets/css/icon.less";

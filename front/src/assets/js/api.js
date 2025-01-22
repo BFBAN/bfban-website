@@ -47,6 +47,7 @@ export default class Api {
 
             "player_reset": "reset",
             "player_batch": "player/batch",
+            "player_batchs": "player/batchs",
             "player_judgement": "player/judgement",
             "player_judgmentResult": "player/judgmentResult",
             "player_banAppeal": "player/banAppeal",

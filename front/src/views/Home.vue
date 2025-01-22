@@ -367,7 +367,7 @@ export default new Application({
 
 .home-banner {
   overflow: hidden;
-  margin-top: 15rem;
+  margin-top: 16rem;
   margin-bottom: 6rem;
   background-size: 500px;
   background-repeat: no-repeat;
@@ -376,7 +376,7 @@ export default new Application({
   h1.title {
     position: relative;
     display: inline-flex;
-    padding: 0 10px 0 0;
+    padding: 0 20px 0 0;
     margin-bottom: 30px;
     font-weight: initial;
     font-size: 68px;

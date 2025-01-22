@@ -162,7 +162,11 @@ router.get('/statistics', statisticsLimiter, [
             // 使用reduce合并所有结果到单个对象
             const data = results.reduce((acc, result) => ({...acc, ...result}), {});
 
-            res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({success: 1, code: 'statistics.ok', data: data});
+            res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
+                success: 1,
+                code: 'statistics.ok',
+                data: data
+            });
         } catch (err) {
             next(err);
         }
@@ -950,11 +954,8 @@ router.get('/admins', async (req, res, next) => {
  */
 router.get('/search', normalSearchRateLimiter, [
     checkquery('type').isIn(['player', 'user', 'comment']),
-    checkquery('game').optional().isIn(config.supportGames.concat(['all'])),
-    checkquery('gameSort').optional().isIn(['default', 'latest', 'mostViewed', 'mostComments', 'joinedAt', 'lastOnlineTime']),
     checkquery('createTimeFrom').optional().isInt({min: 0}),
     checkquery('createTimeTo').optional().isInt({min: 0}),
-    checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 3, max: 100}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100})
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
@@ -965,8 +966,6 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'search.bad', message: validateErr.array()});
 
         const type = req.query.type ? req.query.type : 'player';
-        const gameSort = req.query.gameSort ? req.query.gameSort : 'default';
-        const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
         const createTimeFrom = new Date(req.query.createTimeFrom ? req.query.createTimeFrom - 0 : 0);
         const createTimeTo = new Date(req.query.createTimeTo ? req.query.createTimeTo - 0 : Date.now());
         const skip = req.query.skip ? req.query.skip : 0;
@@ -974,93 +973,134 @@ async (req, res, next) => {
         const param = req.query.param;
         const result = {success: 1, code: 'search.success', data: [], total: 0};
 
-        if (type === 'player') {
-            const history = db('name_logs')
-                    .join('players', 'name_logs.originUserId', 'players.originUserId')
-                    .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
-                    .where('name_logs.originName', 'like', '%' + param + '%')
-                    .andWhere('players.games', 'like', game ? `%"${game}"%` : "%")
-                    .andWhere('players.createTime', '>=', createTimeFrom)
-                    .andWhere('players.createTime', '<=', createTimeTo)
-                    .andWhere({valid: 1}),
-                playerArray = await history.offset(skip).limit(limit),
-                playerTotal = await history.first().then(r => 1);
+        switch (type) {
+            case "player": {
+                if (!(await checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({
+                        min: 3,
+                        max: 100
+                    })).isEmpty() ||
+                    !(await checkquery('sort').optional().isIn(['default', 'latest', 'mostViewed', 'mostComments'])).isEmpty() ||
+                    !(await checkquery('game').optional().isIn(config.supportGames.concat(['all']))).isEmpty())
+                    return res.status(400).json({error: 1, code: 'search.bad'});
 
-            result.data = playerArray.map(i => {
-                return {
-                    historyName: i.prevOriginName,
-                    originName: i.originName,
-                    dbId: i.id,
-                    originUserId: i.originUserId,
-                    originPersonaId: i.originPersonaId,
-                    avatarLink: i.avatarLink,
-                    status: i.status,
-                    games: i.games,
-                    cheatMethods: i.cheatMethods,
-                    viewNum: i.viewNum,
-                    commentsNum: i.commentsNum,
-                    createTime: i.createTime,
-                    updateTime: i.updateTime,
-                    log: {from: i.fromTime, to: i.toTime},
-                };
-            }).sort((a, b) => {
-                switch (gameSort) {
-                    case 'latest':
-                        return new Date(a.updateTime).getTime() - new Date(b.updateTime).getTime();
-                    case 'mostViewed':
-                        return b.viewNum - a.viewNum;
-                    case 'mostComments':
-                        return b.commentsNum - a.commentsNum;
-                    default:
-                        return b.dbId - a.dbId;
-                }
-            })
-            result.total = playerTotal;
-        } else if (type === 'user') {
-            const user = db('users')
-                    .where('users.username', 'like', '%' + param + '%')
-                    .andWhere('users.createTime', '>=', createTimeFrom)
-                    .andWhere('users.createTime', '<=', createTimeTo)
-                    .andWhere({valid: 1}),
-                userArray = await user.offset(skip).limit(limit),
-                userTotal = await user.first().then(r => 1);
+                const game = (req.query.game && req.query.game !== 'all') ? req.query.game : '';
+                const sort = req.query.sort ? req.query.sort : 'default';
+                const history = db('name_logs')
+                        .join('players', 'name_logs.originUserId', 'players.originUserId')
+                        .select('name_logs.originName as prevOriginName', 'players.*', 'name_logs.fromTime', 'name_logs.toTime')
+                        .where('name_logs.originName', 'like', '%' + param + '%')
+                        .andWhere('players.games', 'like', game ? `%"${game}"%` : "%")
+                        .andWhere('players.createTime', '>=', createTimeFrom)
+                        .andWhere('players.createTime', '<=', createTimeTo)
+                        .andWhere({valid: 1}),
+                    playerArray = await history.offset(skip).limit(limit).then(res => {
+                        return res.map((i) => {
+                            return {
+                                historyName: i.prevOriginName,
+                                originName: i.originName,
+                                dbId: i.id,
+                                originUserId: i.originUserId,
+                                originPersonaId: i.originPersonaId,
+                                avatarLink: i.avatarLink,
+                                status: i.status,
+                                games: i.games,
+                                cheatMethods: i.cheatMethods,
+                                viewNum: i.viewNum,
+                                commentsNum: i.commentsNum,
+                                createTime: i.createTime,
+                                updateTime: i.updateTime,
+                                log: {from: i.fromTime, to: i.toTime},
+                            }
+                        });
+                    }).then(res => res.sort((a, b) => {
+                        switch (sort) {
+                            case 'latest':
+                                return new Date(a.updateTime).getTime() - new Date(b.updateTime).getTime();
+                            case 'mostViewed':
+                                return b.viewNum - a.viewNum;
+                            case 'mostComments':
+                                return b.commentsNum - a.commentsNum;
+                            default:
+                                return b.dbId - a.dbId;
+                        }
+                    })),
+                    playerTotal = await history.first().then(r => 1);
+                result.data = playerArray;
+                result.total = playerTotal;
+            }
+                break;
+            case "user": {
+                if (!(await checkquery('param').trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({
+                        min: 3,
+                        max: 100
+                    })).isEmpty() ||
+                    !(await checkquery('sort').optional().isIn(['default', 'joinedAt', 'lastOnlineTime'])).isEmpty())
+                    return res.status(400).json({error: 1, code: 'search.bad'});
 
-            result.data = userArray.map(i => {
-                return {
-                    username: i.username,
-                    dbId: i.id,
-                    userAvatar: i.originEmail ? getGravatarAvatar(i.originEmail) : null,
-                    joinTime: i.createTime,
-                    updateTime: i.updateTime,
-                    signoutTime: i.signoutTime,
-                    privilege: i.privilege,
-                };
-            }).sort((a, b) => {
-                switch (gameSort) {
-                    case 'joinedAt':
-                        return new Date(a.joinTime).getTime() - new Date(b.joinTime).getTime();
-                    case 'lastOnlineTime':
-                        return new Date(a.signoutTime).getTime() - new Date(b.signoutTime).getTime();
-                    default:
-                        return a.dbId - b.dbId;
-                }
-            })
+                const sort = req.query.sort ? req.query.sort : 'default';
+                const user = db('users')
+                        .where('users.username', 'like', '%' + param + '%')
+                        .andWhere('users.createTime', '>=', createTimeFrom)
+                        .andWhere('users.createTime', '<=', createTimeTo)
+                        .andWhere({valid: 1}),
+                    userArray = await user.offset(skip).limit(limit).then(res => {
+                        return res.map(i => {
+                            return {
+                                username: i.username,
+                                dbId: i.id,
+                                userAvatar: i.originEmail ? getGravatarAvatar(i.originEmail) : null,
+                                joinTime: i.createTime,
+                                updateTime: i.updateTime,
+                                signoutTime: i.signoutTime,
+                                privilege: i.privilege,
+                            };
+                        })
+                    }).then(res => res.sort((a, b) => {
+                        switch (sort) {
+                            case 'joinedAt':
+                                return new Date(a.joinTime).getTime() - new Date(b.joinTime).getTime();
+                            case 'lastOnlineTime':
+                                return new Date(a.signoutTime).getTime() - new Date(b.signoutTime).getTime();
+                            default:
+                                return a.dbId - b.dbId;
+                        }
+                    })),
+                    userTotal = await user.first().then(r => 1);
 
-            result.total = userTotal;
-        } else if (type === 'comment') {
-            const comment = db('comments')
+                result.data = userArray;
+                result.total = userTotal;
+            }
+                break;
+            case "comment": {
+                if (!(await checkquery('param').trim().isLength({
+                    min: 2,
+                    max: 100
+                })).isEmpty())
+                    return res.status(400).json({error: 1, code: 'search.bad'});
+
+                const commentArray = await db('comments')
                     .join('users', 'users.id', 'comments.byUserId')
                     .select('comments.*', 'users.username', 'users.valid')
-                    .where('comments.content', 'like', '%' + param + '%')
-                    .andWhere('comments.videoLink', 'like', '%' + param + '%')
-                    .andWhere('comments.createTime', '>=', createTimeFrom)
-                    .andWhere('comments.createTime', '<=', createTimeTo)
-                    .andWhere({"users.valid": 1}),
-                commentArray = await comment.offset(skip).limit(limit),
-                commentTotal = await comment.first().then(r => 1);
+                    .where('comments.content', 'like', `%${param}%`)
+                    .orWhere('comments.videoLink', 'like', '%' + param + '%')
+                    .where('comments.createTime', '>=', createTimeFrom)
+                    .andWhere('comments.createTime', '<', createTimeTo)
+                    .andWhere({"users.valid": 1})
+                    .offset(skip).limit(limit);
+                const commentTotal = await db('comments')
+                    .join('users', 'users.id', 'comments.byUserId')
+                    .andWhere('comments.content', 'like', `%${param}%`)
+                    .orWhere('comments.videoLink', 'like', '%' + param + '%')
+                    .where('comments.createTime', '>=', createTimeFrom)
+                    .andWhere('comments.createTime', '<', createTimeTo)
+                    .andWhere({"users.valid": 1})
+                    .count('* as total')
+                    .then(result => result[0].total);
 
-            result.data = commentArray;
-            result.total = commentTotal;
+                result.data = commentArray;
+                result.total = commentTotal;
+            }
+                break;
         }
 
         if (result.data.length <= 0)

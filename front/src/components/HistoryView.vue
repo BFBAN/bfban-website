@@ -1,4 +1,4 @@
-<script setup>
+<script>
 import {api, http_token, storage} from "@/assets/js";
 import Empty from "@/components/Empty.vue";
 
@@ -31,7 +31,7 @@ export default {
       let localData = storage.local.get('viewed');
       this.list = [];
 
-      if (localData.code != 0 && !localData.data?.value) return;
+      if (localData.code !== 0 && !localData.data?.value) return;
       if (this.load && !this.$store.state.configuration.history) return;
 
       let dbIds = Object.entries(localData.data.value)
@@ -40,12 +40,12 @@ export default {
           .map(i => i[0]);
 
       this.load = true;
-      this.http.post(api["player_batch"], {
-        data: {dbIds}
+      this.http.get(api["player_batchs"], {
+        params: {dbIds}
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.list = d.data
               .map(i => localData.data.value[i.id] ? {...i, historyCreationTime: localData.data.value[i.id]} : i)
               .sort((a, b) => b.historyCreationTime - a.historyCreationTime);

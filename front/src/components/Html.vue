@@ -310,14 +310,12 @@ export default {
                         _p[i].innerHTML = _p[i].innerText.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${encodeURI('$&')}"></htmllinkcard>`)
                       }
                     }
-
-
                 }
               }
 
               /// 标准链接 =>
               if (_p[i] && _p[i].innerText) {
-                const urlRegex = /(?<!<(a|htmllink|img|video|iframe)[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
+                const urlRegex = /(?<!<[a|htmllink|img|video|iframe][^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
                 _p[i].innerHTML = _p[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
               }
 
