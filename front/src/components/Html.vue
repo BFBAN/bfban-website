@@ -145,7 +145,7 @@ export default {
           // ==================== 处理自定义HTML
 
           // 纯文本，无内置标签
-          if (div && div.length > 0 && link && link.length <= 0 && p && p.length <= 1 && img && img.length <= 0) {
+          if (div && div.length > 0) {
             let _divs = Array.from(div); // deep copy
 
             for (let i = 0; i < _divs.length; i++) {
@@ -153,6 +153,10 @@ export default {
               /// 排除标签a|htmllink|img|video|iframe、排除标签属性内链接、排除标签内的链接
               const urlRegex = /(?<!<(a|htmllink|img|video|iframe)[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
               _divs[i].innerHTML = _divs[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
+
+              // 解析HR, 分割线
+              const dividerRegex = /-{3,}/g
+              _divs[i].innerHTML = _divs[i].innerHTML.replace(dividerRegex, `<Divider class="hr" dashed></Divider>`);
             }
           }
 
