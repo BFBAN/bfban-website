@@ -316,6 +316,10 @@ header {
   white-space: nowrap;
   text-align: center;
 
+  .user-avatar {
+    margin: 0 auto;
+  }
+
   .header-dropdown-name {
     margin: 5px 0 2px 0;
     font-size: 1.5rem;

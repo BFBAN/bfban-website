@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <main>
     <div class="container">
       <div class="styles_herosection user-select-none">
         <div class="styles_bg"></div>
@@ -8,73 +8,86 @@
 
       <div class="content">
         <div class="ivu-alert-with-banner home-banner">
-          <Row :gutter="30">
-            <Col :xs="{span: 22, offset: 1}" :sm="12" :md="12" :lg="{span: 10, offset: 0}">
+          <Row :gutter="30" type="flex" align="middle">
+            <Col :xs="{span: 22, offset: 1}" :sm="{span: 12, offset: 1}" :md="{span: 12, offset: 1}"
+                 :lg="{span: 8}">
               <h1 class="title">
                 {{ $t("home.cover.h1") }}
               </h1>
-              <h2>{{ $t(`home.cover.h2.hint${hintRandom}`) }}
+              <h2>
+                {{ $t(`home.cover.h2.hint${hintRandom}`) }}
                 <icon @click="onHomeHintRandom()" type="md-refresh"></icon>
               </h2>
-              <h3>{{ $t("home.cover.h3") }}</h3>
+              <h3>{{ $t("home.cover.h3") }} <br> {{ $t("home.cover.h4") }}</h3>
               <br>
-              <p>{{ $t("home.cover.h4") }}</p>
-
-              <Divider/>
-
               <router-link v-if="isLogin" :to="{name: 'profile', params: {pagename: 'information'}}">
-                <Button type="primary" v-voice-button>{{ $t("header.profile") }}</Button>
+                <Button type="primary" size="large" v-voice-button>{{ $t("header.profile") }}</Button>
               </router-link>
               <router-link v-else :to="{name: 'signup'}">
-                <Button type="primary" v-voice-button>{{ $t("signup.title") }}</Button>
+                <Button type="primary" size="large" v-voice-button>{{ $t("signup.title") }}</Button>
               </router-link>
-
-              <Row :gutter="10" style="margin-top: 50px">
-                <Col span="12">
-                    <Card dis-hover :to="{name: 'site_stats'}">
-                      <h3>{{ number.format(statistics.reports) || 0 }}</h3>
-                      <span>{{ $t("home.cover.dataReceived") }}</span>
-                      <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
-                    </Card>
-                </Col>
-                <Col span="12">
-                  <router-link :to="{name: 'site_stats'}">
-                    <Card dis-hover>
-                      <h3>{{ number.format(statistics.confirmed) || 0 }}</h3>
-                      <span>{{ $t("home.cover.confirmData") }}</span>
-                      <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
-                    </Card>
-                  </router-link>
-                </Col>
-              </Row>
-              <br>
-              <TimeView :time="bannerTime">{{ $t("home.cover.endTime", {time: bannerTime}) }}</TimeView>
-              <br>
             </Col>
-            <Col class="mobile-hide" :lg="{span: 13, push: 1}" type="flex" align="center" justify="center"
-                 style="display: flex; justify-content: center; align-items: center">
-
-              <Card dis-hover :padding="0" v-if="bannerImage">
-                <img :src="bannerImage"
-                     @click="openBannerWindowBox"
-                     width="100%" class="ivu-row-top" style="margin-bottom: -10px;border-radius: 5px;">
-              </Card>
-
+            <Col class="mobile-hide" :lg="{span: 14, push: 0}" type="flex" align="center" justify="center">
+              <img :src="bannerImage"
+                   class="ivu-row-top img">
             </Col>
           </Row>
         </div>
       </div>
+
+      <div class="content">
+        <Row :gutter="15">
+          <Col :xs="{span: 11, offset: 1}" :lg="{span: 5, offset: 1}">
+            <Card dis-hover :to="{name: 'site_stats'}">
+              <h3>{{ number.format(statistics.reports) || 0 }}</h3>
+              <span>{{ $t("home.cover.dataReceived") }}</span>
+              <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
+            </Card>
+          </Col>
+          <Col :xs="{span: 11, offset: 0}" :lg="{span: 5, offset: 0}">
+            <router-link :to="{name: 'site_stats'}">
+              <Card dis-hover>
+                <h3>{{ number.format(statistics.confirmed) || 0 }}</h3>
+                <span>{{ $t("home.cover.confirmData") }}</span>
+                <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
+              </Card>
+            </router-link>
+          </Col>
+          <Col :lg="{span: 5, offset: 0}" class="mobile-hide">
+            <router-link :to="{name: 'site_stats'}">
+              <Card dis-hover>
+                <h3>{{ number.format(statistics.players) || 0 }}</h3>
+                <span>{{ $t('sitestats.players') }}</span>
+                <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
+              </Card>
+            </router-link>
+          </Col>
+          <Col :lg="{span: 5, offset: 0}" class="mobile-hide">
+            <router-link :to="{name: 'site_stats'}">
+              <Card dis-hover>
+                <h3>{{ number.format(statistics.registers) || 0 }}</h3>
+                <span>{{ $t('sitestats.registers') }}</span>
+                <Spin size="large" fix v-if="statisticsInfoLoad"></Spin>
+              </Card>
+            </router-link>
+          </Col>
+          <Col :xs="{span: 23, offset: 1}" :lg="{span: 23, offset: 1}">
+            <br>
+            <TimeView :time="bannerTime">{{ $t("home.cover.endTime", {time: bannerTime}) }}</TimeView>
+          </Col>
+        </Row>
+      </div>
     </div>
 
-    <div class="home-box mobile-hide ivu-primary" v-if="activities_l.length > 0">
+    <div class="home-activity-box mobile-hide ivu-primary" v-if="activities_l.length > 0">
       <div class="container">
         <Row>
-          <Col :lg="{span: 10, push: 0}">
+          <Col :xs="{span: 23, offset: 1}" :lg="{span: 10, offset: 1}">
             <h1 align="left">{{ $t("home.activity.title") }}</h1>
             <h4 align="left"
                 v-html="$t('home.activity.description', {report: number.format(statistics.reports, currentLan) || 0, cheater: number.format(statistics.confirmed, currentLan) || 0})"></h4>
           </Col>
-          <Col :lg="{span: 11, push: 3}" type="flex" align="right" justify="center">
+          <Col :lg="{span: 9, push: 3}" type="flex" align="right" justify="center">
             <router-link :to="{name: 'player_list'}">
               <Button type="dashed" v-voice-button>
                 {{ $t('home.activity.more') }}
@@ -87,7 +100,7 @@
         <div class="wrapper" :style="`animation: rowup ${activities_l.length * 2.8}s linear infinite;`">
           <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
             <Card class="icon" v-for="a_i in activity" :key="a_i.id">
-              <Avatar size="80" :src="a_i.playerAvatarLink" style="margin-top: -80px">
+              <Avatar size="80" :src="a_i.playerAvatarLink" style="margin-top: -55px">
                 {{ a_i.username || a_i.byUserName || a_i.toPlayerName || 'null' }}
               </Avatar>
               <br>
@@ -182,18 +195,13 @@
       </div>
       <Spin size="large" fix v-if="activityLoad"></Spin>
     </div>
-
-    <div class="container">
-      <Tell class="mobile-hide content"></Tell>
-    </div>
-  </div>
+  </main>
 </template>
 
 <script>
-import {api, http, util, time, number, regular, upload} from '../assets/js/index'
+import {api, http, util, time, number} from '../assets/js/index'
 
 import Application from "../assets/js/application";
-import Tell from "../components/HomeTell.vue";
 import PrivilegesTag from "../components/PrivilegesTag.vue";
 import judgeActionTypeView from "../components/judgeActionTypeView.vue";
 import TimeView from '../components/TimeView.vue';
@@ -219,7 +227,7 @@ export default new Application({
       },
     }
   },
-  components: {Tell, PrivilegesTag, judgeActionTypeView, TimeView},
+  components: {PrivilegesTag, judgeActionTypeView, TimeView},
   watch: {
     '$route': 'loadData',
   },
@@ -257,20 +265,6 @@ export default new Application({
         return;
       }
       this.hintRandom = newRandom;
-    },
-    /**
-     * 查看首页介绍图片
-     */
-    openBannerWindowBox() {
-      this.$viewerApi({
-        options: {
-          toolbar: false,
-          navbar: false,
-          keyboard: false,
-          fullscreen: true,
-        },
-        images: [this.bannerImage],
-      })
     },
     /**
      * 获取动态
@@ -341,7 +335,7 @@ export default new Application({
   }
 }
 
-.home-box {
+.home-activity-box {
   position: relative;
   padding-top: 100px;
   overflow: hidden;
@@ -355,30 +349,42 @@ export default new Application({
     transform: rotate(-5deg);
     margin-top: 50px;
   }
+
+  h1, h4 {
+    font-weight: initial;
+  }
 }
 
 .home-banner {
   overflow: hidden;
-  min-height: 600px;
-  margin-top: 50px;
+  min-height: 500px;
+  margin-top: 5rem;
   background-size: 500px;
   background-repeat: no-repeat;
   background-position: right;
 
-  .title {
+  h1.title {
     position: relative;
-    border-bottom: 5px solid #fff13c;
     display: inline-flex;
-    padding: 0 20px 0 0;
-    margin-top: 80px;
-    margin-bottom: 40px;
+    padding: 0 10px 0 0;
+    margin-bottom: 20px;
     font-weight: bold;
     font-size: 70px;
   }
 
-  h2, h3, p {
+  .img {
+    width: 100%;
+    user-select: none;
+  }
+
+  h2 {
+    font-size: 30px;
+  }
+
+  h2, h3, h4, p {
     line-height: 1.5;
     margin-bottom: 10px;
+    font-weight: initial;
   }
 }
 
