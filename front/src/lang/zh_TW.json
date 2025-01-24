@@ -1,10 +1,9 @@
 {
-  "name": "BFBAN",
+  "name": "Bfban",
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\n誕生於2018年1月29日；\n是戰地玩家一起組建的 <b>抵制外掛</b> 組織。\n</p>",
-    "privacy": "\n<h2>隱私政策</h2>\n它是開源的。您可以通過 GitHub 發布問題並提出更改/改進建議。社區網絡提供的 API 並開放供公眾使用。",
     "title": "關於",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 網站依託於聯BAN調查局，最初想法起源於熱心玩家，由 <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> 開發，於 2018年11月4日 上線‘\n    </p>\n    <p>主要為廣大玩家提供檢舉、列舉、搜尋、追蹤、討論等服務；</p>"
+    "minor": "全球作弊玩家資料庫",
+    "description": "誕生於2018年1月29日,是戰地玩家一起組成的<b>抵制外掛</b>組織,由私服主持人,戰隊隊長以及主播組成,聯BAN局創建以來,聯合諸多玩家一起抵制外掛，不僅在遊戲內,更是一場敵暗我明的幕外戰爭;\n最初想法起源於熱心玩家，由Mygoare開發,於<b>2018年11月4日</b>提供線，為廣大玩家上線，為廣大玩家上檢舉、列舉、搜尋、追蹤、討論等透明化服務，社群驅動;"
   },
   "account": {
     "bindOrigin": {
@@ -194,6 +193,19 @@
         "text": "全部"
       }
     },
+    "html": {
+      "size": {
+        "x-large": "加大",
+        "large": "大",
+        "default": "預設",
+        "small": "小"
+      },
+      "type": {
+        "renderer": "渲染器",
+        "text": "文字",
+        "code": "程式碼"
+      }
+    },
     "tip": {
       "search.bad": "搜尋發生錯誤，請聯繫管理員{message}",
       "search.success": "搜尋成功",
@@ -206,6 +218,11 @@
       "achievement.notConditions": "領取成就條件不符",
       "achievement.ineffective": "無效的成就",
       "achievement.success": "成就領取成功",
+      "update.success": "玩家資訊更新成功",
+      "update.notFound": "玩家更新失敗，沒有此玩家數據",
+      "update.notImplement": "玩家更新失敗 {message}",
+      "update.error": "玩家更新失敗 {message}",
+      "update.bad": "玩家更新錯誤，請聯絡管理員 {message}",
       "bindOrigin.bad": "绑定帳戶發生错误，請聯繫管理員 {message}",
       "bindOrigin.error": "發生错误，請聯繫管理員 {message}",
       "bindOrigin.expired": "激活驗證碼逾時，請重新註冊",
@@ -306,11 +323,11 @@
       "title": "自動瞄準"
     },
     "attackServer": {
-      "describe": "惡意攻擊伺服器",
+      "describe": "惡意攻擊伺服器引起玩家高延遲、玩家死亡、重置、伺服器無回應等",
       "title": "攻擊伺服器"
     },
     "damageChange": {
-      "describe": "修改武器參數",
+      "describe": "修改武器/載具/技能等參數",
       "title": "更改傷害"
     },
     "gadgetModify": {
@@ -330,7 +347,7 @@
       "title": "秒殺"
     },
     "teleport": {
-      "describe": "傳送移動",
+      "describe": "傳送、角色非正常速率移動",
       "title": "傳送"
     },
     "wallhack": {
@@ -517,6 +534,9 @@
       "col4": {
         "title": "聯絡方式"
       },
+      "col5": {
+        "title": "其他"
+      },
       "sponsor": {
         "join": "成為贊助商",
         "title": "贊助商"
@@ -567,7 +587,7 @@
     "announcement": "公告",
     "cheaters": "玩家資料庫",
     "index": "首頁",
-    "profile": "個人設定",
+    "profile": "儀表板",
     "report": "檢舉作弊",
     "signin": "登入",
     "signout": "註銷",
@@ -580,7 +600,7 @@
       "activities": {
         "admin": "社區管理",
         "as": "處理為",
-        "join": "註冊了聯ban, 歡迎你的到來！",
+        "join": "註冊了BFBAN, 歡迎你的到來！",
         "mark": "將",
         "report": "檢舉了"
       },
@@ -606,8 +626,8 @@
       "subButton": "了解有那些社區已經加入"
     },
     "seo": {
-      "description": "聯ban官網,建立起全球作弊玩家檔案庫,成為我們一員維護社區環境",
-      "keywords": "聯ban,聯辦,聯辦局,聯ban局,戰地風雲,戰地"
+      "description": "BFBAN官網,建立起全球作弊玩家檔案庫,成為我們一員維護社群環境",
+      "keywords": "Bfban,聯辦,联ban,聯辦局,BFBAN局,戰地風雲,戰地"
     },
     "title": "首頁"
   },
@@ -692,7 +712,7 @@
         },
         "user_innocent_case": {
           "name": "安全落地",
-          "conditions": "-在聯BAN中存在一個與此帳戶關聯的案件<br>-案件狀態自證狀態",
+          "conditions": "- 在BFBAN中存在一個與此帳戶關聯的案件<br>- 案件狀態自證狀態",
           "description": "案件無效"
         },
         "user_achievement_assemble": {
@@ -759,7 +779,7 @@
         "old_user": {
           "name": "老用戶",
           "conditions": "-創建時間在2024 1月1日前<br>- 用戶ID在10000以内(包含10000)<br>(同時滿足)",
-          "description": "最早一批註冊聯ban先鋒用戶"
+          "description": "最早一批註冊BFBAN先鋒用戶"
         },
         "open_chat_assemble": {
           "name": "聊天",
@@ -787,7 +807,7 @@
         "report_l1": {
           "name": "檢舉新手",
           "conditions": "-檢舉10條玩家<br>- 從2024 01-01開始統計<br>- 非機器人帳戶 ",
-          "description": "初步探索聯BAN使用方法"
+          "description": "初步探索BFBAN使用方法"
         },
         "report_l2": {
           "name": "檢舉入門",
@@ -827,6 +847,11 @@
           "name": "20W檢舉見證者",
           "conditions": "- 當網站檢舉突破20W時所有使用者都可以獲得",
           "description": "20w對我們來說不是值得慶祝的事，這個成就更希望不需要領取"
+        },
+        "app_use_mobile": {
+          "name": "使用BFBAN助手應用",
+          "conditions": "- 使用BFBAN助手應用，並在應用程式內登陸後領取<br>- 所有用戶",
+          "description": "🤔 這是BFBAN分身？到底是誰開發這應用"
         }
       }
     },
@@ -1018,7 +1043,7 @@
     },
     "info": {
       "description": "🤝 内容基本要求:\n\t- 不要將檢舉者任何隱私訊息提交到此處\n\t- 影片連結可以複製在上面，有利於醒目提醒和索引\n\t- 請清晰描述被檢舉人行為、特點、發生地點、時間，列出他的作弊內容，最後給出原因\n\t- 可以對你提供的截圖、影片標註位置，附加說明\n\n⚠️ 請不要僅填寫簡單作弊方式，不提供任何直接證據\n⚠️ 多次無意義/惡意檢舉，帳戶將被黑名單",
-      "fromDatabaseOneId": "從聯BAN數據庫中選取",
+      "fromDatabaseOneId": "從BFBAN資料庫選取",
       "idNotion1": "一次只填寫一個ID，不要把戰隊名字寫進來，不要寫成自己的ID",
       "idNotion2": "遊戲ID是不區分大小寫的，但請特別注意區分 i I 1 l L o O 0，填寫正確ID",
       "loginExpired": "您的登入已過期，請重新登入",
@@ -1074,7 +1099,7 @@
     },
     "seo": {
       "description": "玩家檢舉",
-      "keywords": "聯ban,聯辦,戰地風雲,戰地"
+      "keywords": "Bfban,聯辦,戰地風雲,戰地"
     },
     "title": "檢舉"
   },
