@@ -1,10 +1,9 @@
 {
   "name": "BFBAN",
   "about": {
-    "description": "<h2>BFBAN</h2>\n    <p>\n    created at 2018.1.29; It is an organization created to fight <b>against hackers</b>\n    </p>\n\n    <p>\n      Staff members in bfban include:\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>Server owners</li>\n      <li>Clan's leaders</li>\n      <li>Bf1 streamers</li>\n    </ul>",
-    "privacy": "\n<h2>Privacy policy</h2>\nIt is open-source. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use.",
     "title": "About",
-    "website": "The website <a href=\"https://bfban.com\">bfban.com</a> is based on the BFBAN Investigation Bureau. The initial idea originated from enthusiastic players and was developed by <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a>. It was launched on November 4, 2018.\nIt mainly provides services such as reporting, listing, searching, tracking, and discussing for players."
+    "minor": "Global cheating player database",
+    "description": "Born on January 29, 2018, is the Battlefield players together to form a <b>Resist plugins</b> organisation, by the host of the private service, the captain of the battle team and the anchor composition, the United BAN Bureau since its creation, united many players together to boycott hangers, not only in the game, but it is a war outside the curtain of the enemy's darkness and my Ming;\nThe initial idea originated from enthusiastic players, developed by Mygoare, on <b>4 November 2, 2018 2</b> online, for the majority of players to provide reporting, listing, searching, tracking, discussion and other transparent services, community-driven."
   },
   "account": {
     "bindOrigin": {
@@ -196,14 +195,14 @@
     },
     "html": {
       "size": {
-        "x-large": "X Large",
-        "large": "Large",
-        "default": "Default",
+        "x-large": "Increase",
+        "large": "big",
+        "default": "default",
         "small": "Small"
       },
       "type": {
         "renderer": "Renderer",
-        "text": "Text",
+        "text": "text",
         "code": "Code"
       }
     },
@@ -219,6 +218,11 @@
       "achievement.notConditions": "Not eligible to receive achievements",
       "achievement.ineffective": "Invalid achievement",
       "achievement.success": "Achievement received successfully",
+      "update.success": "Player information updated successfully",
+      "update.notFound": "Player update failed, no such player data",
+      "update.notImplement": "Player update failed {message}",
+      "update.error": "Player update failed {message}",
+      "update.bad": "Player update error, please contact the administrator {message}",
       "bindOrigin.bad": "An error occurred when binding account, please contact the admin. {message}",
       "bindOrigin.error": "An error occurred, please contact the admin {message}",
       "bindOrigin.expired": "The activation verification code has expired, please register again.",
@@ -319,11 +323,11 @@
       "title": "Aimbot"
     },
     "attackServer": {
-      "describe": "Attack battlefield server using method such as DDOS attack",
+      "describe": "Malicious attacks on the server cause high player latency, player death, reset, server unresponsiveness, etc.",
       "title": "Attacking server"
     },
     "damageChange": {
-      "describe": "Moditfy weapon's damage profile",
+      "describe": "Modify parameters of weapons/vehicles/skills etc.",
       "title": "Damage modify"
     },
     "gadgetModify": {
@@ -343,7 +347,7 @@
       "title": "Insta-kill"
     },
     "teleport": {
-      "describe": "Player can teleport",
+      "describe": "Teleportation, character movement at abnormal speed",
       "title": "Teleportation"
     },
     "wallhack": {
@@ -531,7 +535,7 @@
         "title": "Contact us"
       },
       "col5": {
-        "title": "Other"
+        "title": "other"
       },
       "sponsor": {
         "join": "Become Sponsor",
@@ -583,7 +587,7 @@
     "announcement": "Announcement",
     "cheaters": "Player database",
     "index": "Home",
-    "profile": "Personal settings",
+    "profile": "Dashboard",
     "report": "Report",
     "signin": "Sign in",
     "signout": "Logout",
@@ -596,7 +600,7 @@
       "activities": {
         "admin": "Administrator",
         "as": "as",
-        "join": "You just registered on BFBAN, welcome!",
+        "join": "Registered BFBAN, welcome!",
         "mark": "marked",
         "report": "reported"
       },
@@ -622,8 +626,8 @@
       "subButton": "Find out which communities have joined"
     },
     "seo": {
-      "description": "BfBan official website, establish a global archive of cheating players, become a member of us to maintain the community environment",
-      "keywords": "BFBan,BFBan Bureau,Battlefield"
+      "description": "BFBAN official website, establish a global cheating player archive, become one of us to maintain the community environment",
+      "keywords": "BFBAN, Joint Office, BFBAN, Joint Office, BFBAN Bureau, Battlefield, Battlefield"
     },
     "title": "Home"
   },
@@ -708,7 +712,7 @@
         },
         "user_innocent_case": {
           "name": "Safe landing",
-          "conditions": "- There is a case associated with this account in BFBAN.\n- The case status is self-proven status.",
+          "conditions": "- There is a case associated with this account in BFBAN <br>- Case Status Self-certification status",
           "description": "Case invalid"
         },
         "user_achievement_assemble": {
@@ -775,7 +779,7 @@
         "old_user": {
           "name": "Existing user",
           "conditions": "- Created before January 1, 2024\n- User ID within 10,000 (including 10,000)\n(Both conditions must be met)",
-          "description": "The earliest batch of registered BFBAN pioneer users."
+          "description": "The earliest batch of registered BFBAN pioneer users"
         },
         "open_chat_assemble": {
           "name": "Chat",
@@ -803,7 +807,7 @@
         "report_l1": {
           "name": "Report newbie",
           "conditions": "- Report 10 players\n- Start counting from 2024-01-01\n- Non-robot accounts",
-          "description": "Preliminary exploration of BFBAN usage methods"
+          "description": "Preliminary exploration of BFBAN usage"
         },
         "report_l2": {
           "name": "Getting Started with Reporting",
@@ -843,6 +847,11 @@
           "name": "200K Reporting Witnesses",
           "conditions": "- When the number of website reports exceeds 200K, all users can obtain",
           "description": "200K is not something worth celebrating for us, and we hope that we don’t need to claim this achievement."
+        },
+        "app_use_mobile": {
+          "name": "Using the BFBAN Assistant App",
+          "conditions": "- Use the BFBAN Assistant app and log in to claim <br> - All users",
+          "description": "🤔 Is this a BFBAN clone? Who developed this app?"
         }
       }
     },
@@ -1090,7 +1099,7 @@
     },
     "seo": {
       "description": "Player report",
-      "keywords": "BFBan,Battlefield"
+      "keywords": "BFBAN, Joint Office, Battlefield, Battlefield"
     },
     "title": "Report"
   },
