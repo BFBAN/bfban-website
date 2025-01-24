@@ -9,7 +9,9 @@
       <template v-else-if="getProtocol === 'mailto:'">
         <Icon type="ios-mail-outline" class="icon"/>
       </template>
-      <a :href="afterData.href" target="_blank" rel="noopener noreferrer">{{ afterData.text || afterData.href }}</a>
+      <a :href="afterData.href" target="_blank" rel="noopener noreferrer">
+         {{ afterData.text || afterData.href }}
+      </a>
     </span>
     <template v-if="isIframeShow && isPoptip">
       <div class="link-iframe" slot="content">

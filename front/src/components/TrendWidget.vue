@@ -10,6 +10,10 @@ export default new Application({
     timeRange: {
       type: String,
       default: 'weekly'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   components: {Empty, HtmlLink},
@@ -27,14 +31,15 @@ export default new Application({
     this.getTrend();
   },
   watch: {
-    '$route': 'getTrend'
+    '$route': 'getTrend',
+    'disabled': 'getTrend',
   },
   methods: {
     /**
      * 获取话题排行
      */
     getTrend() {
-      if (!this.isLogin) return;
+      if (this.disabled) return;
       this.trend.load = true;
 
       http.get(api['trend'], {

@@ -399,6 +399,18 @@
       "tag": [
         "user"
       ]
+    },
+    {
+      "value": "app_use_mobile",
+      "iconPath": "app_use_mobile.png",
+      "isShowCard": true,
+      "rarity": "normal",
+      "acquisition": [
+        "active"
+      ],
+      "tag": [
+        "user"
+      ]
     }
   ]
 }

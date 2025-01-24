@@ -245,7 +245,7 @@ router.get('/activeStatistical', [
                     .andWhere('comments.type', 'report')
                     .limit(time == 'yearly' ? maxLimit : limit);
                 if (!isBot)
-                    reportQuery = query.where('users.privilege', 'not like', '%"bot"%');
+                    reportQuery = reportQuery.where('users.privilege', 'not like', '%"bot"%');
                 let reportArray = await reportQuery;
 
                 for (const i of reportArray) {

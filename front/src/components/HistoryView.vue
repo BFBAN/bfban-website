@@ -27,6 +27,8 @@ export default {
      * 取得历史列表
      */
     async getHistory() {
+      if (!this.isLogin) return;
+
       const {skip, limit} = this;
       let localData = storage.local.get('viewed');
       this.list = [];
@@ -61,11 +63,11 @@ export default {
 </script>
 
 <template>
-  <Poptip trigger="click" width="300" @on-popper-show="getHistory">
+  <Poptip trigger="click" width="300" transfer @on-popper-show="getHistory">
     <Tooltip :content="$t('profile.history.title')" placement="bottom-end">
       <slot></slot>
     </Tooltip>
-    <div slot="content">
+    <div slot="content" class="history-view">
       <Row>
         <Col flex="1">{{ $t('profile.history.title') }}</Col>
         <Col>
@@ -76,7 +78,7 @@ export default {
           </Button>
         </Col>
       </Row>
-      <div class="history-view">
+      <div class="history-view-list">
         <template v-if="list.length > 0">
           <div v-for="(d, d_index) in list" :key="d_index" class="history-view-item">
             <Row :gutter="10" type="flex" justify="center" align="middle">
@@ -119,6 +121,14 @@ export default {
       </div>
 
       <Button long :to="{path:'/profile/history'}">{{ $t('home.activity.more') }}</Button>
+
+      <Spin fix v-show="!isLogin">
+        <div>
+          <Icon type="md-lock" size="50"/>
+        </div>
+        <br>
+        <Button :to="{name: 'signin'}">{{ $t("header.signin") }}</Button>
+      </Spin>
     </div>
   </Poptip>
 </template>
@@ -128,7 +138,10 @@ export default {
 
 .history-view {
   position: relative;
-  margin: 10px 0;
+
+  .history-view-list {
+    min-height: 150px;
+  }
 
   .history-view-item {
     margin-bottom: 6px;

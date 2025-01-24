@@ -173,7 +173,7 @@
                   $t(timeArray.find(i => i.value == timeRange).name)
                 }}
               </div>
-              <TrendWidget ref="trend" :timeRange="timeRange"/>
+              <TrendWidget ref="trend" :disabled="!isLogin" :timeRange="timeRange"/>
             </Card>
           </Col>
           <Col :xs="{span:24}" :lg="{span:12}">

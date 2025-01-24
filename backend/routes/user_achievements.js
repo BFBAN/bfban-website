@@ -304,6 +304,14 @@ const achievementConfig = {
             if (result.error === 1 && result.data.community.length <= 0) return false;
             return result.data.reports.length >= 200000;
         },
+    },
+    'app_use_mobile': {
+        another: ['app_use_mobile'],
+        points: 1,
+        async conditions(req, res, next) {
+            if (!req.user) return false;
+            return req.user.visitType === 'client-phone';
+        },
     }
 }
 

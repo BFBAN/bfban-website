@@ -16,7 +16,7 @@
       <div>
         <Row>
           <Col flex="auto">
-            <h2>👏🏻<b>{{ $t("link.sponsor") }}</b></h2>
+            <h2>👏🏻 <b>{{ $t("link.sponsor") }}</b></h2>
           </Col>
           <Col>
             <Row :gutter="10">
@@ -33,25 +33,31 @@
             </Row>
           </Col>
         </Row>
-        <Row :gutter="10" class="footer-link" type="flex" v-if="link.footerStatic">
-          <Col v-for="(link, linkindex) in link.footerChild" :key="linkindex" align="center">
-            <a :href="link.linkUrl" target="_blank" class="footer-link-text">
-              <img :src="link.localFilePath" height="35" :alt="link.tag" :title="link.describe">
-            </a>
-          </Col>
-        </Row>
+        <br/>
+        <Card dis-hover>
+          <Row :gutter="10" class="footer-link" type="flex" v-if="link.footerStatic">
+            <Col v-for="(link, linkindex) in link.footerChild" :key="linkindex" align="center">
+              <a :href="link.linkUrl" target="_blank" class="footer-link-text">
+                <img :src="link.localFilePath" height="35" :alt="link.tag" :title="link.describe">
+              </a>
+            </Col>
+          </Row>
+        </Card>
       </div>
 
-      <Divider dashed/>
+      <br/>
 
-      <h2>🔗<b>{{ $t("link.links") }}</b></h2>
-      <span v-for="(i, linkIndex) in link.linkChild" :key="linkIndex">
-        <a :href="i.linkUrl" target="_blank">{{ i.title }}</a>,
-      </span>
+      <h2>🔗 <b>{{ $t("link.links") }}</b></h2>
+      <br/>
+      <Card dis-hover>
+        <span v-for="(i, linkIndex) in link.linkChild" :key="linkIndex">
+          <HtmlLink :href="i.linkUrl" :text="i.title" target="_blank"></HtmlLink>,
+        </span>
+      </Card>
 
-      <Divider dashed/>
+      <br/>
 
-      <h2><b>{{ $t("link.linkWebDeveloperChild") }}</b></h2>
+      <h2>🏆 <b>{{ $t("link.linkWebDeveloperChild") }}</b></h2>
       <p>{{ $t("link.linkWebDeveloperDescribe") }}</p>
       <br>
       <Row :gutter="10">
@@ -67,34 +73,42 @@
         </Col>
       </Row>
 
-      <Divider dashed/>
+      <br/>
 
-      <h2><b>{{ $t("link.languageMembers") }}</b></h2>
+      <h2>🏆 <b>{{ $t("link.languageMembers") }}</b></h2>
       <p>{{ $t("link.languageMembersDescribe") }}</p>
       <br>
-      <div v-for="(i, index) of language.child"
-           :key="index"
-           :href="i.url"
-           target="_parent">
+      <Card dis-hover>
+        <div v-for="(i, index) of language.child"
+             :key="index"
+             :href="i.url"
+             target="_parent">
 
-        <Row>
-          <Col>
-            <b>{{ i.name }} :</b>
-          </Col>
-          <Col>
-            <Row :gutter="10">
-              <Col v-for="(members, membersindex) of i.members" :key="membersindex">
-                <a :href="members.url" target="_blank">
-                  <Avatar icon="ios-person" size="20"></Avatar>
-                  {{ members.name }}
-                </a>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <br>
-      </div>
-
+          <Row :gutter="10" type="flex" align="middle">
+            <Col>
+              <b>{{ i.label }} ({{ i.name }})</b>
+            </Col>
+            <Col flex="1">
+              <Divider dashed></Divider>
+            </Col>
+            <Col>
+              <Row :gutter="10">
+                <Col v-for="(members, membersindex) of i.members" :key="membersindex">
+                  <Row :gutter="5">
+                    <Col>
+                      <Avatar icon="ios-person" size="20"></Avatar>
+                    </Col>
+                    <Col>
+                      <HtmlLink :href="members.url" :text="members.name" target="_blank"></HtmlLink>,
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <br>
+        </div>
+      </Card>
     </Card>
   </div>
 </template>
@@ -104,6 +118,8 @@ import Application from "../assets/js/application";
 import link from "../../public/config/link.json";
 import language from "../../public/config/languages.json";
 
+import HtmlLink from "@/components/HtmlLink.vue"
+
 export default new Application({
   data() {
     return {
@@ -111,6 +127,7 @@ export default new Application({
       language,
     };
   },
+  components: {HtmlLink}
 });
 </script>
 

@@ -1,10 +1,9 @@
 {
   "name": "BFBAN",
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\n诞生于2018年1月29日；\n是战地玩家一起组建的 <b>抵制外挂</b> 组织。\n </p>",
-    "privacy": "\n<h2>隐私政策</h2>\n它是开源的。您可以通过 GitHub 发布问题并提出更改/改进建议。社区网络提供的 API 并开放供公众使用。",
     "title": "关于",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 网站依托于BFBAN调查局，最初想法起源于热心玩家，由 <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> 开发，于 2018年11月4日 上线\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>"
+    "minor": "全球作弊玩家数据库",
+    "description": "诞生于2018年1月29日,是战地玩家一起组建的<b>抵制外挂</b>组织,由私服主持人,战队队长以及主播组成,联BAN局创建以来,联合诸多玩家一起抵制外挂，不仅在游戏内,更是一场敌暗我明的幕外战争;\n最初想法起源于热心玩家，由Mygoare开发,于<b>2018年11月4日</b>上线，为广大玩家提供举报、列举、搜索、追踪、讨论等透明化服务，社区驱动;"
   },
   "account": {
     "bindOrigin": {
@@ -848,6 +847,11 @@
           "name": "20W举报见证者",
           "conditions": "- 当网站举报突破20W时所有用户都可以获得",
           "description": "20w对于我们来说不是值得庆祝的事，这个成就更希望不需要领取"
+        },
+        "app_use_mobile": {
+          "name": "使用BFBAN助手应用",
+          "conditions": "- 使用BFBAN助手应用，并在应用内登陆后领取<br>- 所有用户",
+          "description": "🤔 这是BFBAN分身？到底是谁开发这应用"
         }
       }
     },
