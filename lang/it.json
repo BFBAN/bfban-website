@@ -1,10 +1,9 @@
 {
   "name": "BFBAN",
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\nNato il 29 gennaio 2018;\nÈ un'organizzazione formata dai giocatori di Battlefield per resistere ai cheat </b>.\n </p>",
-    "privacy": "\n<h2>Informativa sulla privacy</h2>\nÈ open source. Puoi pubblicare problemi e suggerire modifiche/miglioramenti tramite GitHub. L'API è fornita dalla rete della comunità ed è aperta all'uso pubblico.",
     "title": "Di",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> Il sito web è basato sul Federal BAN Bureau of Investigation. L'idea originale è nata da giocatori entusiasti ed era sviluppato da <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> Sviluppato e lanciato il 4 novembre 2018\n    </p>\n    <p> Fornisce principalmente report, enumerazione, ricerca, monitoraggio, discussione e altri servizi per i giocatori </p>"
+    "minor": "Database globale dei giocatori imbroglioni",
+    "description": "Nato il 29 gennaio 2018, è stato formato dai giocatori di Battlefield<b> per resistere agli imbrogli</b>L'organizzazione è composta da host di server privati, capitani di squadre e presentatori. Sin dalla creazione del BAN Bureau, ha unito molti giocatori per resistere agli imbrogli, non solo nel gioco, ma anche una battaglia tra il nemico e la guerra del nemico fuori dallo schermo;\nL'idea originale è nata da giocatori entusiasti ed è stata sviluppata da Mygoare. È stata lanciata su <b> il 4 novembre 2018 per fornire alla maggior parte dei giocatori servizi trasparenti come reporting, elenchi, ecc. la ricerca, il monitoraggio e la discussione sono guidati dalla comunità;"
   },
   "account": {
     "bindOrigin": {
@@ -194,6 +193,19 @@
         "text": "Tutto"
       }
     },
+    "html": {
+      "size": {
+        "x-large": "aumento",
+        "large": "grande",
+        "default": "predefinito",
+        "small": "Piccolo"
+      },
+      "type": {
+        "renderer": "Render",
+        "text": "testo",
+        "code": "codice"
+      }
+    },
     "tip": {
       "search.bad": "Si è verificato un errore di ricerca, contatta l'amministratore {message}",
       "search.success": "Ricerca riuscita",
@@ -206,6 +218,11 @@
       "achievement.notConditions": "Le condizioni per ricevere il risultato non sono soddisfatte.",
       "achievement.ineffective": "Obiettivo non valido",
       "achievement.success": "Obiettivo ricevuto con successo",
+      "update.success": "Informazioni sul giocatore aggiornate con successo",
+      "update.notFound": "Aggiornamento del giocatore non riuscito, non ci sono dati per questo giocatore",
+      "update.notImplement": "Aggiornamento del lettore non riuscito {message}",
+      "update.error": "Aggiornamento del lettore non riuscito {message}",
+      "update.bad": "Errore di aggiornamento del lettore, contatta l'amministratore {message}",
       "bindOrigin.bad": "Si è verificato un errore durante l'associazione dell'account, contatta l'amministratore {message}",
       "bindOrigin.error": "Si è verificato un errore, contatta l'amministratore {message}",
       "bindOrigin.expired": "Il codice di verifica dell'attivazione è scaduto, registrati nuovamente",
@@ -306,11 +323,11 @@
       "title": "Obiettivo personale"
     },
     "attackServer": {
-      "describe": "Attacco dannoso al server",
+      "describe": "Attacchi dannosi al server causano un'elevata latenza del giocatore, la morte del giocatore, il ripristino, la mancata risposta del server, ecc.",
       "title": "Server d'attacco"
     },
     "damageChange": {
-      "describe": "Modifica i parametri dell'arma",
+      "describe": "Modifica armi/veicoli/abilità e altri parametri",
       "title": "Riparare l'infortunio"
     },
     "gadgetModify": {
@@ -330,7 +347,7 @@
       "title": "vendita lampo"
     },
     "teleport": {
-      "describe": "Movimento di teletrasporto",
+      "describe": "Teletrasporto, movimento del personaggio a velocità anomala",
       "title": "trasmettere"
     },
     "wallhack": {
@@ -517,6 +534,9 @@
       "col4": {
         "title": "Informazioni sui contatti"
       },
+      "col5": {
+        "title": "altro"
+      },
       "sponsor": {
         "join": "Diventa uno sponsor",
         "title": "Sponsor"
@@ -567,7 +587,7 @@
     "announcement": "annuncio",
     "cheaters": "banca dati dei giocatori",
     "index": "prima pagina",
-    "profile": "impostazioni personali",
+    "profile": "Pannello di controllo",
     "report": "Segnala un imbroglio",
     "signin": "Login",
     "signout": "Esci",
@@ -580,7 +600,7 @@
       "activities": {
         "admin": "gestione della comunità",
         "as": "elaborato come",
-        "join": "Registrato per il divieto, benvenuto al tuo arrivo!",
+        "join": "BFBAN registrato, benvenuto a venire!",
         "mark": "Volere",
         "report": "Segnalato"
       },
@@ -606,8 +626,8 @@
       "subButton": "Scopri quali comunità hanno aderito"
     },
     "seo": {
-      "description": "Sito web ufficiale di Lianban, crea un archivio globale di giocatori imbroglioni, diventa un membro di noi per mantenere l'ambiente della comunità",
-      "keywords": "divieto congiunto, ufficio congiunto, ufficio congiunto, ufficio congiunto del divieto, situazione del campo di battaglia, campo di battaglia"
+      "description": "Sito web ufficiale di BFBAN, crea un archivio globale di giocatori che imbrogliano, diventa un membro di noi per mantenere l'ambiente della comunità",
+      "keywords": "BFBAN, ufficio comune, divieto comune, ufficio comune, Ufficio BFBAN, situazione sul campo di battaglia, campo di battaglia"
     },
     "title": "prima pagina"
   },
@@ -692,7 +712,7 @@
         },
         "user_innocent_case": {
           "name": "Atterraggio sicuro",
-          "conditions": "- Esiste una pratica associata a questo conto nel BAN <br> - Stato autocertificazione stato della pratica",
+          "conditions": "- Esiste un caso associato a questo conto in BFBAN <br> - Stato del caso autocertificato",
           "description": "Caso non valido"
         },
         "user_achievement_assemble": {
@@ -759,7 +779,7 @@
         "old_user": {
           "name": "vecchio utente",
           "conditions": "- L'ora di creazione è precedente al 1 gennaio 2024 <br> - L'ID utente è compreso tra 10000 (incluso 10000) <br> (soddisfatto a allo stesso tempo)",
-          "description": "Il primo gruppo di utenti registrati di Lianban Pioneer"
+          "description": "Il primo gruppo di utenti pionieri registrati di BFBAN"
         },
         "open_chat_assemble": {
           "name": "chiacchierata",
@@ -787,7 +807,7 @@
         "report_l1": {
           "name": "Segnala principiante",
           "conditions": "- Segnala 10 giocatori <br> - Statistiche a partire dal 2024 01-01<br> - Account non bot",
-          "description": "Esplorazione preliminare di come utilizzare BAN"
+          "description": "Esplorazione preliminare di come utilizzare BFBAN"
         },
         "report_l2": {
           "name": "Iniziare con il reporting",
@@ -827,6 +847,11 @@
           "name": "20W per denunciare testimoni",
           "conditions": "- Quando il rapporto del sito web supera i 20 W, tutti gli utenti possono ottenerlo",
           "description": "200.000 non è qualcosa che valga la pena festeggiare per noi. Ci auguriamo che questo risultato non richieda di riceverlo."
+        },
+        "app_use_mobile": {
+          "name": "Utilizzando l'app Assistente BFBAN",
+          "conditions": "- Utilizza l'app BFBAN Assistant e accedi per ricevere <br> - Tutti gli utenti",
+          "description": "🤔 È un clone di BFBAN? Chi ha sviluppato questa app?"
         }
       }
     },
@@ -1018,7 +1043,7 @@
     },
     "info": {
       "description": "🤝 Requisiti di contenuto di base:\n- Non inviare qui alcuna informazione privata del giornalista\n- I collegamenti video possono essere incollati su di esso, il che è utile per promemoria e indicizzazioni accattivanti\n- Si prega di descrivere chiaramente il comportamento, le caratteristiche, il luogo e l'ora in cui si è verificato il segnalante, elencare il suo comportamento fraudolento e infine fornire le ragioni\n- Puoi contrassegnare la posizione e aggiungere istruzioni agli screenshot e ai video forniti\n\n⚠️ Per favore, non limitarti a compilare il semplice metodo cheat senza fornire alcuna prova diretta\n⚠️ Se effettui più segnalazioni prive di significato/dannose, il tuo account verrà inserito nella lista nera",
-      "fromDatabaseOneId": "Seleziona dal database BAN",
+      "fromDatabaseOneId": "Seleziona dal database BFBAN",
       "idNotion1": "Inserisci solo un ID alla volta. Non includere il nome della squadra o il tuo ID.",
       "idNotion2": "L'ID del gioco non fa distinzione tra maiuscole e minuscole, ma presta particolare attenzione a distinguere i I 1 l L o O 0 e inserisci correttamente l'ID del rapporto.",
       "loginExpired": "Il tuo login è scaduto, effettua nuovamente l'accesso",
@@ -1074,7 +1099,7 @@
     },
     "seo": {
       "description": "Rapporto del giocatore",
-      "keywords": "divieto congiunto, ufficio congiunto, situazione del campo di battaglia, campo di battaglia"
+      "keywords": "BFBAN, organizzazione congiunta, situazione del campo di battaglia, campo di battaglia"
     },
     "title": "rapporto"
   },
