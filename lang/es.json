@@ -1,10 +1,7 @@
 {
   "name": "BFBAN",
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\nNacido el 29 de enero de 2018;\nEs una organización formada por jugadores de Battlefield para resistir las trampas </b>.\n </p>",
-    "privacy": "\n<h2>Política de privacidad</h2>\nEs de código abierto. Puede publicar problemas y sugerir cambios/mejoras a través de GitHub. La API la proporciona la red comunitaria y está abierta al uso público.",
-    "title": "acerca de",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> El sitio web está basado en la Oficina Federal de Investigación BAN. La idea original surgió de jugadores entusiastas y fue. desarrollado por <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> Desarrollado y lanzado el 4 de noviembre de 2018\n    </p>\n    <p> Proporciona principalmente a los jugadores informes, enumeraciones, búsquedas, seguimiento, debates y otros servicios;"
+
   },
   "account": {
     "bindOrigin": {

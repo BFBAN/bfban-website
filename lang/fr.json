@@ -1,10 +1,7 @@
 {
   "name": "BFBAN",
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\nNée le 29 janvier 2018;\nIl s'agit d'un groupe de joueurs de Battlefield qui se sont réunis pour former une organisation de résistance aux plug-ins.\n </p>",
-    "privacy": "\n<h2>politique de confidentialité</h2>\nIl s'agit d'un logiciel libre. Vous pouvez signaler des problèmes et suggérer des changements/améliorations via GitHub. API fournies par le réseau communautaire et ouvertes à l'utilisation publique.",
-    "title": "à propos",
-    "website": "Le site web bfban.com est basé sur l’organisation BFBAN. L’idée originale est née des joueurs fidèles de la série de jeux Battlefield. Le développement est dirigé par le joueur Mygoare. Le site a été lancé le 4 novembre 2018, fournissant aux joueurs des fonctions pour signaler des tricheurs dans le jeu, énumérer les comptes qui ont été bannis par l’organisation BFBAN, rechercher des cas de signalements pertinents, suivre l’évolution des cas de signalements et discuter des cas de signalements."
+
   },
   "account": {
     "bindOrigin": {
