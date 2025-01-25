@@ -2,7 +2,7 @@
   <header v-if="!isFull">
     <!-- 临时通知 S -->
     <!-- TODO 过期请删除 -->
-    <a href="https://announcement.bfban.com" target="_blank">
+    <a href="https://announcement.bfban.com/precepts/anti-cheat-v4" target="_blank">
       <Card :padding="0" dis-hover
             style="padding: 3px 20px; margin: -11px -20px -1px; text-align: center; background: darkred; color: white">
         {{

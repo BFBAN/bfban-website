@@ -12,7 +12,7 @@
     <br>
 
     <Card class="content about" :padding="80" dis-hover>
-      <img class="about-logo-background" src="@/assets/images/logo.png" alt="logo"/>
+      <div class="about-logo-background"></div>
 
       <h1 class="about-title">
         <img class="about-logo shake active_infinite" src="@/assets/images/logo.png" alt="logo"/>
@@ -26,7 +26,6 @@
           <a href="https://short.bfban.com/privacy-policy" target="_blank">
             <Button>
               Privacy Policy
-              <Icon type="ios-share"/>
             </Button>
           </a>
         </Col>
@@ -34,14 +33,21 @@
           <a href="https://github.com/BFBAN/bfban-website/edit/master/CODE_OF_CONDUCT.md" target="_blank">
             <Button>
               CODE of Conduct
-              <Icon type="ios-share"/>
             </Button>
           </a>
         </Col>
         <Col>
+          <Col>
+            <a href="https://short.bfban.com/exterior-design" target="_blank">
+              <Button>
+                Exterior design
+              </Button>
+            </a>
+          </Col>
+        </Col>
+        <Col>
           <Button :to="{path:'/link'}">
             {{ $t('link.title') }}
-            <Icon type="ios-share"/>
           </Button>
         </Col>
       </Row>
@@ -70,36 +76,41 @@ export default new Application({
   overflow: hidden;
   text-align: center;
   white-space: pre-wrap;
-  padding-top: 180px;
   padding-bottom: 10px;
 
   .about-logo-background {
-    opacity: .03;
+    opacity: .1;
     z-index: 0;
     pointer-events: none;
     position: absolute;
-    top: -5rem;
+    display: block;
+    top: -10rem;
     left: calc(50% - 15rem);
+    background-position: center center;
+    background-size: 30rem 30rem;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(to top, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 0)), url(../assets/images/logo.png);
     width: 30rem;
     height: 30rem;
-    border-radius: 50%;
-  }
-
-  .about-logo {
-    user-select: none;
-    display: inline-flex;
-    width: 80px;
-    height: 80px;
-    border-radius: 10rem;
-    margin: -10px 10px -10px 0;
+    border-radius: 50rem;
   }
 
   .about-title {
+    padding-top: 50px;
     position: relative;
     z-index: 2;
     margin-bottom: 60px;
     font-size: 58px;
-    font-family: "Playwrite_IN", Tofu, serif;
+    font-family: "Playwrite_IN", monospace, 'Noto Sans TC', sans-serif, "Microsoft YaHei", "微软雅黑", "Arial", sans-serif;
+
+    .about-logo {
+      user-select: none;
+      display: inline-flex;
+      width: 80px;
+      height: 80px;
+      border-radius: 10rem;
+      margin: -10px 10px -10px 0;
+    }
   }
 
   .about-minor {

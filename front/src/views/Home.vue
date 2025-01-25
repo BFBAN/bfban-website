@@ -18,12 +18,20 @@
               </h2>
               <h3>{{ $t("home.cover.h3") }} <br>{{ $t("home.cover.h4") }}</h3>
               <br>
-              <router-link v-if="isLogin" :to="{name: 'profile', params: {pagename: 'information'}}">
-                <Button type="primary" size="large" v-voice-button>{{ $t("header.profile") }}</Button>
-              </router-link>
-              <router-link v-else :to="{name: 'signup'}">
-                <Button type="primary" size="large" v-voice-button>{{ $t("signup.title") }}</Button>
-              </router-link>
+              <ButtonGroup>
+                <Button v-if="isLogin" type="primary" size="large"
+                        :to="{name: 'profile', params: {pagename: 'information'}}" v-voice-button>
+                  {{ $t("header.profile") }}
+                </Button>
+                <Button v-else type="primary" size="large" :to="{name: 'signup'}" v-voice-button>{{
+                    $t("signup.title")
+                  }}
+                </Button>
+                <Button size="large" :to="{name: 'about'}">
+                  <Icon type="ios-information-circle-outline"/>
+                  {{ $t('about.title') }}{{ $t('name') }}
+                </Button>
+              </ButtonGroup>
             </Col>
             <Col class="mobile-hide" :lg="{span: 13, push: 0}" type="flex" align="center" justify="center">
               <img :src="bannerImage"
@@ -229,8 +237,11 @@ export default new Application({
       activities_l: [],
 
       statistics: {
-        reports: 0,
+        banAppeals: 0,
         confirmed: 0,
+        players: 0,
+        registers: 0,
+        reports: 0
       },
     }
   },

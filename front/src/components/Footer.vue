@@ -16,12 +16,12 @@
                 <img v-else
                      v-saknan
                      src="../assets/images/friendly-web.png"
-                     width="100"
-                     @click="logoCount += 1;"
+                     width="100px"
+                     @click.stop="logoCount += 1;"
                      alt="logo"/>
               </Badge>
             </b>
-            <p style="margin-right: 30px">{{ $t("footer.column.col1.text") }}</p>
+            <p style="margin-right: 30px"><span>{{ $t("name") }}</span> · {{ $t("about.minor") }}</p>
           </Col>
           <Col :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}"
                v-for="(i, index) in footerNavs.row" :key="index">
@@ -85,17 +85,16 @@
         </Row>
       </div>
       <div class="container mobile-hide footer-padding" v-if="links.footerStatic">
-        <Row>
+        <Row type="flex" align="middle" class="sponsor-box">
           <Col flex="auto">
-            <h4><b>{{ $t("footer.column.sponsor.title") }}</b></h4>
-          </Col>
-          <Col>
-            <router-link :to="{name: 'link'}">
-              {{ $t("footer.column.sponsor.join") }}
-            </router-link>
+            <div class="sponsor-title">
+              <router-link :to="{name: 'link'}">
+                {{ $t("footer.column.sponsor.title") }}
+              </router-link>
+            </div>
           </Col>
         </Row>
-        <Row :gutter="10" class="footer-link" type="flex" v-if="links.footerStatic">
+        <Row :gutter="10" class="footer-link" type="flex" align="middle" v-if="links.footerStatic">
           <Col v-for="(link, linkindex) in links.footerChild" :key="linkindex" align="center">
             <a :href="link.linkUrl" target="_blank" class="footer-link-text">
               <img :src="link.localFilePath" height="35" :alt="link.tag" :title="link.describe">
@@ -208,9 +207,6 @@ export default new Application({
 @footer-icon-color: #c5c5c5;
 
 .footer {
-  text-align: left;
-  flex-shrink: 0;
-  margin-top: 15px;
 
   &.footer-border-top, .footer-border-top {
     border-top: 1px solid @footer-border-color;
@@ -257,10 +253,21 @@ export default new Application({
     font-size: 20px;
   }
 
+  .sponsor-box {
+    margin-bottom: 10px;
+
+    .sponsor-title {
+      opacity: .8;
+      font-size: 18px;
+      font-weight: initial;
+    }
+  }
+
   .footer-status-badge {
     margin: -10px 0;
     height: 30px;
-    width: 182px;
+    min-width: 182px;
+    max-width: 400px;
     border-radius: 10px;
   }
 }

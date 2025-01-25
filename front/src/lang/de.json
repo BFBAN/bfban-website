@@ -1,10 +1,7 @@
 {
   "name": "BFBAN",
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\nGegründet am 29. Januar 2018;\nist eine von Spielern gebildete Organisation zur Bekämpfung von Cheatern.\n </p>",
-    "privacy": "\n<h2>Datenschutzrichtlinie</h2>\nEs ist Open Source. Sie können Fragen stellen und Änderungs-/Verbesserungsvorschläge über GitHub einreichen. Die API, die von der Community bereitgestellt wird, ist für die Öffentlichkeit zugänglich.",
-    "title": "Um uns",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> Die ursprüngliche Idee stammt von begeisterten Spielern und wurde entwickelt von <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> Entwickelt und gestartet am 4. November 2018\n    </p>\n    <p> Bietet hauptsächlich Berichterstattung, Aufzählung, Suche, Nachverfolgung, Diskussion und andere Dienste für Spieler; </p>"
+
   },
   "account": {
     "bindOrigin": {

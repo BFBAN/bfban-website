@@ -1,10 +1,7 @@
 {
   "name": "BFBAN",
   "about": {
-    "description": "BFBAN\n\n2018年1月29日に誕生しました；\n戦場のプレイヤーたちが一緒に結成した<b>チート対策</b>組織です。",
-    "privacy": "\n<h2>隠私ポリシー</h2>\nそれはオープンソースです。GitHubで問題を報告し、変更/改善の提案をすることができます。コミュニティネットワークが提供するAPIは一般に公開されています。",
-    "title": "について",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> この Web サイトは連邦 BAN 捜査局に基づいています。元のアイデアは熱心なプレイヤーから生まれました。 <スパンによって開発されましたclass='notranslate'><a target=\"_blank\" href=\"https://github.com/mygoare\"></span>mygoare</a> 2018 年 11 月 4 日に開発および発売\n    </p>\n    <p> 主にプレーヤーにレポート、列挙、検索、追跡、ディスカッションなどのサービスを提供します。</p>"
+
   },
   "account": {
     "bindOrigin": {

@@ -1,10 +1,7 @@
 {
   "name": "BFBAN",
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\n29 Ocak 2018'de doğdu;\nHile </b>'e direnmek için Battlefield oyuncularının oluşturduğu bir organizasyondur.\n </p>",
-    "privacy": "\n<h2>Gizlilik Politikası</h2>\nAçık kaynaktır. GitHub aracılığıyla sorunları yayınlayabilir ve değişiklik/iyileştirme önerebilirsiniz. API, topluluk ağı tarafından sağlanır ve genel kullanıma açıktır.",
-    "title": "hakkında",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> Web sitesi Federal BAN Soruşturma Bürosu'na dayanmaktadır. Orijinal fikir coşkulu oyunculardan kaynaklanmıştır. <span tarafından geliştirildi class='notranslate'><a target=\"_blank\" href=\"https://github.com/mygoare\"></span>mygoare</a> 4 Kasım 2018'de geliştirildi ve piyasaya sürüldü\n    </p>\n    <p> Oyunculara temel olarak raporlama, numaralandırma, arama, izleme, tartışma ve diğer hizmetleri sağlar; </p>"
+
   },
   "account": {
     "bindOrigin": {
