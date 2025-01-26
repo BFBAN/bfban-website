@@ -33,7 +33,7 @@
                     <a target="_blank" :href="src">
                       <template v-if="textLang">{{ textLang[$i18n.locale] || text }}</template>
                       <template v-else>{{ text }}</template>
-                      <Icon type="ios-share"/>
+                      <Icon type="md-open"/>
                     </a>
                   </template>
                 </template>
@@ -44,7 +44,7 @@
                   <a target="_blank" :href="src">
                     <template v-if="textLang">{{ textLang[$i18n.locale] || text }}</template>
                     <template v-else>{{ text }}</template>
-                    <Icon type="ios-share"/>
+                    <Icon type="md-open"/>
                   </a>
                 </template>
               </li>

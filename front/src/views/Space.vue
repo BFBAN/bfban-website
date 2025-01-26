@@ -131,10 +131,25 @@
                 </Col>
                 <Divider type="vertical"/>
                 <Col>
-                  <Card :padding="0">
-                    <vue-qr :text="'//bfban.com/space/' + $route.params.uId" :size="60" :margin="3"
-                            v-if="$route.params.uId" style="display: block"></vue-qr>
-                  </Card>
+                  <Poptip :boundaries-padding="30">
+                    <b>
+                      <Icon type="md-qr-scanner" size="19"/>
+                    </b>
+                    <p class="account-info-p">{{ $t('share.title') }}</p>
+                    <Row style="width: 330px" :gutter="40" type="flex" justify="center" align="middle" wrap
+                         slot="content">
+                      <Col>
+                        <vue-qr :text="'https://bfban.com/space/' + $route.params.uId" :size="120" :margin="3"
+                                v-if="$route.params.uId" style="display: block"></vue-qr>
+                      </Col>
+                      <Col>
+                        <vue-qr :logoScale=".25" :logoSrc="'https://bfban-app.cabbagelol.net/images/logo.png'"
+                                :text="'https://bfban-app.cabbagelol.net/as?p=account?id=' + $route.params.uId" :size="120"
+                                :margin="3"
+                                v-if="$route.params.uId" style="display: block"></vue-qr>
+                      </Col>
+                    </Row>
+                  </Poptip>
                 </Col>
               </Row>
             </Col>

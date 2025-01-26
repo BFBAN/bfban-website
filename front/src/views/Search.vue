@@ -688,7 +688,10 @@ export default new Application({
 
       data = Object.assign({game: this.searchGameValue, sort: this.searchSort}, data);
 
-      this.$router.push({name: this.$router.name, query: data});
+      this.$router.push({
+        name: this.$router.name,
+        query: {...data, ...this.$route.query}
+      });
       this.searchValue[this.searchTypeValue] = param;
       this.searchPosting = false;
 

@@ -7,6 +7,7 @@ import VueMeta from 'vue-meta'
 import {CHANGE_META_INFO} from '@/store/mutation-types'
 
 import bindOrigin from "@/views/BindOrigin.vue";
+
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
 const Players = () => import('@/views/Players.vue');
@@ -56,6 +57,27 @@ const isAdminBefore = (to, from, next) => {
     } else {
         next({path: '/profile/information'});
     }
+}
+
+const asPath = (to, from, next) => {
+    const path = to.query.p || to.query.path || 'app',
+        baseUrl = 'https://bfban-app.cabbagelol.net/as?p=';
+    switch (to.name) {
+        case "app":
+            if (path)
+                window.open(`${baseUrl}${path}`)
+            break;
+        case "player":
+            if (typeof to.query['openApp'] == 'string' && typeof to.query['openApp'])
+                window.open(`${baseUrl}app/${to.name}?id=${to.params.ouid}`)
+            break;
+        case "search_main":
+        case "search":
+            if (typeof to.query['openApp'] == 'string' && typeof to.query['openApp'])
+                window.open(`${baseUrl}app/search?text=${to.query.param || ''}&type=${to.query.type || 'player'}`)
+            break;
+    }
+    next();
 }
 
 const routes = [
@@ -170,7 +192,8 @@ const routes = [
                 description: 'search.description'
             }
         },
-        component: Search
+        component: Search,
+        beforeEnter: asPath,
     },
     {
         name: 'search_main', path: '/search',
@@ -181,7 +204,8 @@ const routes = [
                 description: 'search.description'
             }
         },
-        component: Search
+        component: Search,
+        beforeEnter: asPath,
     },
 
     // 举报
@@ -222,7 +246,8 @@ const routes = [
                 description: 'detail.description'
             }
         },
-        component: Detail
+        component: Detail,
+        beforeEnter: asPath,
     },
 
     // 作弊者分享面板
@@ -239,9 +264,10 @@ const routes = [
     },
 
     // 申诉
-    {name: 'cheater_appeal', path: '/player/:ouid/appeal',
+    {
+        name: 'cheater_appeal', path: '/player/:ouid/appeal',
         meta: {
-            metaInfo : {
+            metaInfo: {
                 title: 'detail.info.app_qr.title',
                 keywords: "detail.seo.keywords",
                 description: 'detail.info.app_qr.title'
@@ -416,6 +442,14 @@ const routes = [
             }
         },
         component: Account
+    },
+
+    // App gangplank
+    {
+        name: 'app',
+        path: '/app',
+        component: Home,
+        beforeEnter: asPath
     },
 
     {

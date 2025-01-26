@@ -1133,6 +1133,11 @@
       "size": "大小",
       "theme": "主题"
     },
+    "qr": {
+      "name": "二维码",
+      "uriCode": "网页地址二维码",
+      "appCode": "应用案件二维码"
+    },
     "image": {
       "describe": "生成一张举报信息截图",
       "generate": "生成图片",
