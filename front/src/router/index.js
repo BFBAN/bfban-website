@@ -5,7 +5,6 @@ import VueRouter from 'vue-router';
 import VueMeta from 'vue-meta'
 
 import {CHANGE_META_INFO} from '@/store/mutation-types'
-
 import bindOrigin from "@/views/BindOrigin.vue";
 
 const Home = () => import('@/views/Home.vue');
@@ -29,6 +28,7 @@ const Apps = () => import('@/views/Apps.vue');
 const Profile = () => import('@/views/account/index.vue');
 const Admin = () => import('@/views/admin/index.vue');
 const Search = () => import('@/views/Search.vue');
+const Workflow = () => import('@/views/Workflow.vue');
 
 Vue.use(VueRouter);
 Vue.use(VueMeta, {
@@ -442,6 +442,13 @@ const routes = [
             }
         },
         component: Account
+    },
+
+    {
+        name: 'workflow',
+        path: '/workflow',
+        component: Workflow,
+        beforeEnter: isAdminBefore
     },
 
     // App gangplank

@@ -35,15 +35,15 @@ export default {
       enhance: [
         {
           enhanceName: 'footerBar',
-          value: this.$store.state.configuration?.footerBar || false,
+          value: this.$store.state?.configuration?.footerBar || false,
         },
         {
           enhanceName: 'autoUpdatePlayerList',
-          value: this.$store.state.configuration?.autoUpdatePlayerList || false,
+          value: this.$store.state?.configuration?.autoUpdatePlayerList || false,
         },
         {
-          enhanceName: 'desktopNotifiction',
-          value: this.$store.state.configuration?.desktopNotifiction || false,
+          enhanceName: 'desktopNotification',
+          value: this.$store.state?.configuration?.desktopNotification || false,
         }
       ]
     }
@@ -65,7 +65,7 @@ export default {
   computed: {
     webMode () {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      if (document.referrer.startsWith('android-app://')) {
+      if (document.referrer.startsWith('bfban://')) {
         return 'browsertab';
       } else if (navigator.standalone || isStandalone) {
         return 'standalone';

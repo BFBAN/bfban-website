@@ -960,7 +960,7 @@
           "describe": "관리자에게 자동 새로 고침을 제공하고, 처리되지 않은 플레이어에 주의를 기울이고, 사이트 내 알림을 만듭니다.",
           "name": "처리되지 않은 알림"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "시스템 창의 팝업 알림",
           "name": "데스크톱 알림"
         },

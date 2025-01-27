@@ -984,7 +984,7 @@
           "describe": "为管理员提供自动刷新，关注未处理玩家做出站内提醒",
           "name": "未处理提醒"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "在系统窗口内弹窗通知",
           "name": "桌面通知"
         },
@@ -1262,6 +1262,9 @@
       "upload": "上传",
       "url": "图片链接"
     }
+  },
+  "workflow": {
+    "title": "工作流"
   },
   "externalAuth": {
     "title": "授权",

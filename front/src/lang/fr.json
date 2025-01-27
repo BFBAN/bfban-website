@@ -960,7 +960,7 @@
           "describe": "Fournir un rafraîchissement automatique aux administrateurs, prêter attention aux joueurs non traités et faire des rappels sur place",
           "name": "Rappel non géré"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "Notifications contextuelles dans la fenêtre système",
           "name": "notification de bureau"
         },

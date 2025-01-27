@@ -1,15 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Cookies from 'js-cookie'
+import lodash from "lodash"
 
-import app from '../main'
-import theme from '/public/config/themes.json'
+import app from '@/main'
+import theme from '@/../public/config/themes.json'
+import workflowRoute from "@/store/workflow";
 import {print} from "@/assets/js";
 import {SET_LANG, SET_THEME, SET_USER, SET_SIGNIN, SET_SIGOUT} from './mutation-types';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-const store = new Vuex.Store({
+const store = new Vuex.Store(lodash.mergeWith({
     state: {
         baseUrl: process.env.BASE_URL,
         user: undefined,
@@ -22,7 +24,7 @@ const store = new Vuex.Store({
             judgementTip: false,
             enhance: false,
             autoUpdatePlayerList: false,
-            desktopNotifiction: false,
+            desktopNotification: false,
             footerBar: false,
             voice: true,
             detailLeftAppealPanel: true,
@@ -36,13 +38,7 @@ const store = new Vuex.Store({
             ]
         },
 
-        $desktop: {
-            // 查询待处理
-            autoUpdatePlayerList: {
-                result: [],
-                total: 0
-            }
-        },
+        $desktop: {},
         $theme: {},
         $userinfo: {},
     },
@@ -109,6 +105,6 @@ const store = new Vuex.Store({
             commit(SET_USER, null);
         }
     },
-});
+}, workflowRoute));
 
 export default store;

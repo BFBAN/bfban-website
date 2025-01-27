@@ -9,14 +9,14 @@ class Enhance extends AccountStorage {
      * TODO
      * @param footerBar
      * @param playerListToAdminNotification
-     * @param desktopNotifiction
+     * @param desktopNotification
      * @param reportTags
      */
     on ({
         footerBar = false,
         autoUpdatePlayerList = false,
         playerListToAdminNotification = false,
-        desktopNotifiction = false,
+        desktopNotification = false,
         reportTags = false,
     }) {
 

@@ -115,6 +115,11 @@
                 {{ $t("profile.admin.title") }}
               </DropdownItem>
             </router-link>
+            <router-link :to="{name: 'workflow', params: {pagename: 'workflow'}}" v-if="isAdmin">
+              <DropdownItem :disabled="$route.name == 'workflow'">
+                {{ $t("workflow.title") }}
+              </DropdownItem>
+            </router-link>
             <div @click="onSignout">
               <Dropdown-item divided v-show="isLogin">
                 <Row>

@@ -18,6 +18,7 @@ import _Print from './print';
 import _Upload from './upload';
 import _AccountStorage from './storage_account';
 import _PlayerStorage from './storage_player';
+import _WorkflowStorage from "./storage_workflow";
 import _Mail from "@/assets/js/mail";
 import _Voice from "@/assets/js/voice";
 import _appMessage from "@/assets/js/message";
@@ -40,6 +41,7 @@ export const print = new _Print();
 export const upload = new _Upload();
 export const account_storage = new _AccountStorage();
 export const player_storage = new _PlayerStorage();
+export const workflow_storage = new _WorkflowStorage();
 export const mail = new _Mail();
 export const voice = new _Voice();
 export const message = new _appMessage();
@@ -51,6 +53,6 @@ export default {
     conf, api, achievement, storage, time,
     http, http_token, http_connect,
     util, notification, regular, print,
-    upload, account_storage, player_storage, mail,
+    upload, account_storage, player_storage, workflow_storage, mail,
     voice, message, moss, number, application
 };

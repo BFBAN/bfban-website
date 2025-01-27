@@ -988,7 +988,7 @@
           "describe": "為管理員提供自動刷新，關注未處理玩家做出站內提醒",
           "name": "未處理提醒"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "在系統視窗內彈窗通知",
           "name": "桌面通知"
         },

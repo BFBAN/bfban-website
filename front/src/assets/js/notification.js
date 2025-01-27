@@ -33,8 +33,7 @@ export default class NotificationApp {
         return new Promise((resolve, reject) => {
             let message;
 
-            if (!store.state.configuration.desktopNotifiction) {
-                reject("Bfban: Desktop notification is not enabled")
+            if (!store.state.configuration.desktopNotification) {
                 return;
             }
 

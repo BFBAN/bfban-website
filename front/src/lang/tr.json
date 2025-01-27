@@ -960,7 +960,7 @@
           "describe": "Yöneticiler için otomatik yenileme sağlayın, işlenmemiş oyunculara dikkat edin ve site içi hatırlatmalar yapın",
           "name": "İşlenmemiş hatırlatma"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "Sistem penceresinde açılır bildirim",
           "name": "Masaüstü bildirimleri"
         },
