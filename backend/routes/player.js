@@ -1334,7 +1334,12 @@ async (req, res, next) => {
         player.cheatMethods = nextstate === 1 ? cheatMethods : [];
 
         siteEvent.emit('action', {method: 'judge', params: {judgement, player, stateChange}});
-        return res.status(200).json({success: 1, code: 'judgement.success', message: 'thank you.'});
+        return res.status(200).json({
+            success: 1, code: 'judgement.success', message: 'thank you.', data: {
+                laterStatus: player.status,     // Notifies the modified status
+                updateTime: player.updateTime   // change Time
+            }
+        });
     } catch (err) {
         next(err);
     }
