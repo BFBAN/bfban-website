@@ -38,7 +38,7 @@ export default {
   watch: {
     id: {
       handler(val) {
-        this.isContains = this.isGetFloorDom(val);
+        // this.isContains = this.isGetFloorDom(val);
       },
       deep: true
     }

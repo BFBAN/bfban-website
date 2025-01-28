@@ -155,6 +155,54 @@ export default new Application({
         this.getTimeline();
       })
     },
+
+
+
+    /**
+     * 管理裁决玩家申诉
+     * @returns {Promise<void>}
+     */
+    async onAdminTimeLineDealAppeal() {
+      try {
+        const response = await this.http.post(api["admin_setAppeal"], {
+          data: {
+            toPlayerId: this.cheater.id,
+            // content: this.appealdeal.admincontent, // 管理回复内容
+            // action                                 // 对申诉的操作
+          },
+        });
+
+        const d = response.data;
+
+        if (d.success === 1) {
+          await this.$refs.timeline.getTimeline();
+          await this.getPlayerInfo();
+
+          this.appealdealModal = false;
+          this.$Message.success({content: d.message || d.code, duration: 3});
+          return;
+        }
+
+        this.$Message.error({content: d.message || d.code, duration: 3});
+      } catch (error) {
+        this.$Message.error(error.code);
+      }
+    },
+    /**
+     * 展开申诉详情
+     * @param {string} commentId
+     * @returns {Promise<void>}
+     */
+    async openAppealDealModal(commentId) {
+      // 调用API获取申诉数据
+      const timelineItem = await this.getTimeLineItemData(commentId);
+      const afterHandleTimelineContent = timelineItem.content;
+      // 将获取的数据赋值到`appeal`对象上
+      this.appealdeal = Object.assign(this.appealdeal, timelineItem);
+
+      // 打开模态框
+      this.appealdealModal = true;
+    },
   }
 })
 </script>

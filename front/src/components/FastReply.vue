@@ -22,7 +22,7 @@
         <a href="javascript:void(0)" @click="fastReply.mode = true">
           <Icon type="md-settings" size="18"/>
         </a>
-        <Drawer :closable="fastReply.mode" v-model="fastReply.mode" width="40%">
+        <Modal v-model="fastReply.mode" :closable="false">
           <Row slot="header" :gutter="20" type="flex" align="middle">
             <Col flex="1">
               <Icon type="md-chatboxes" size="20"></Icon>
@@ -84,7 +84,10 @@
               </FormItem>
             </div>
           </div>
-        </Drawer>
+          <Card dis-hover v-if="fastReply.content.length <= 0">
+            <Empty :not-hint="false"></Empty>
+          </Card>
+        </Modal>
       </Col>
     </Row>
 
@@ -162,6 +165,7 @@ import {storage} from "@/assets/js";
 import HtmlWidget from "./HtmlWidget";
 import Textarea from "@/components/Textarea";
 import uuid from "uuid";
+import Empty from "@/components/Empty.vue";
 
 export default {
   name: "FastReply",
@@ -201,7 +205,7 @@ export default {
       },
     }
   },
-  components: {HtmlWidget, Textarea},
+  components: {Empty, HtmlWidget, Textarea},
   watch: {
     'fastReply.selected': function () {
       this.$emit("change", this.fastReply.selected.map(i => i));

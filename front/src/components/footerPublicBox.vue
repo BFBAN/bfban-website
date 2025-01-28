@@ -1,5 +1,5 @@
 <template>
-  <div class="footer-box" v-if="$route.name != 'workflow'">
+  <div class="footer-box" v-if="$route.name != 'workflow' && !$route.query.full">
     <Row :gutter="10" class="footer-box-tip" v-if="$store.state.configuration.footerBar">
       <Col class="ivu-card ivu-card-bordered ivu-card-dis-hover auto-player-list"
            v-show="$route.name != 'profile'"

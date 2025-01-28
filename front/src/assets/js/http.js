@@ -8,7 +8,7 @@ export default class Http extends Conf {
     DELETE = 'delete';
     //..
 
-    GETURL = {protocol: '', request: ''};
+    GETURL = {protocol: '', request: '', host: '', pathname: ''};
     NODE;
 
     HTTP = http.create({
@@ -35,19 +35,23 @@ export default class Http extends Conf {
 
     // 获取全局地址
     get globalUrl() {
-        switch (this.NODE) {
-            case 'production': // 生产
-                super.GETURL = this.CONF.child[this.CONF.requestProductionName];
-                break;
-            case 'staging': // 测试
-                super.GETURL = this.CONF.child[this.CONF.requestTestName];
-                break;
-            case 'development': // 开发
-            default:
-                super.GETURL = this.CONF.child[this.CONF.requestDevelopmentName];
-                break;
+        try {
+            switch (this.NODE) {
+                case 'production': // 生产
+                    this.GETURL = this.CONF.child[this.CONF.requestProductionName];
+                    break;
+                case 'staging': // 测试
+                    this.GETURL = this.CONF.child[this.CONF.requestTestName];
+                    break;
+                case 'development': // 开发
+                default:
+                    this.GETURL = this.CONF.child[this.CONF.requestDevelopmentName];
+                    break;
+            }
+            return `${this.GETURL.protocol || 'http'}://${this.GETURL.host}${this.GETURL.pathname}`;
+        } catch (e) {
+            return ''
         }
-        return `${this.GETURL.protocol || 'http'}://${this.GETURL.host}${this.GETURL.pathname}`;
     }
 
     // 配置全局协议头

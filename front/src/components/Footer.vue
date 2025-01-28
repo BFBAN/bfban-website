@@ -1,8 +1,8 @@
 <template>
-  <div class="footer">
+  <div class="footer" v-if="!isFull">
     <AppAds></AppAds>
 
-    <footer class="footer-main footer-border-top" v-if="!isFull">
+    <footer class="footer-main footer-border-top">
       <div class="container">
         <Row :gutter="14">
           <Col :xs="{span: 23, pull: 0, push: 1, order: 2}" :sm="{span: 23 ,pull: 0, push: 1, order: 2}"

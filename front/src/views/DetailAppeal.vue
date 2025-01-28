@@ -337,7 +337,7 @@ export default new Application({
 
         this.cheater = {};
 
-        this.http.get(api["cheaters"], {params}).then(res => {
+        this.http.get(api["player"], {params}).then(res => {
           const d = res.data;
 
           if (d.success === 1) {

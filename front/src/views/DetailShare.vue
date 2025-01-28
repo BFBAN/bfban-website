@@ -52,7 +52,9 @@
             </template>
             <template v-else-if="share.collapse == 4">
               <div style="position: relative; overflow: hidden">
-                <SharePlayerCell ref="sharePlayerWidget" id="getSharePicture_window" :personaId="$route.params.ouid"
+                <SharePlayerCell ref="sharePlayerWidget"
+                                 id="getSharePicture_window"
+                                 :personaId="$route.params.ouid"
                                  :lang="share.languages"></SharePlayerCell>
               </div>
             </template>
@@ -342,5 +344,4 @@ export default new Application({
 </script>
 
 <style lang="less" scoped>
-
 </style>

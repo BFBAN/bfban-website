@@ -1,69 +1,72 @@
 <template>
-  <Card id="getSharePicture" class="share" dis-hover>
-    <div slot="title">
-      <img class="share-logo user-select-none" src="../assets/images/logo.png">
-      <br>
-      <div style="text-align: center;">
-        <h1 class="text-distinguishing-letter">
-          <code>{{ cheater.originName }}</code>
-        </h1>
-        <h5>{{ cheater.originUserId }}</h5>
-      </div>
-      <br>
-      <Row :gutter="20" type="flex" justify="center" align="middle" class="share-info">
-        <Col>
-          <Tag color="error">{{ $t(`basic.status.${cheater.status}.text`) }}</Tag>
-          <span class="share-info-p">{{ $t("account.status") }}</span>
-        </Col>
-        <Divider type="vertical"/>
-        <Col>
-          <router-link :to="{name: 'cheater', params: { game: cheater.game }}" v-if="cheater.games">
-            <template v-if="cheater.games.length > 0">
-              <Tag color="gold" :alt="$t('detail.info.reportedGames')"
-                   v-for="(game,gameindex) in cheater.games" :key="gameindex">
-                {{ $t(`basic.games.${game}`, {game: game}) }}
+  <Card id="getSharePicture" dis-hover :padding="0">
+    <div class="share">
+      <div class="share-info-context">
+        <img class="share-logo user-select-none" src="../assets/images/logo.png">
+        <br class="user-select-none">
+        <div style="text-align: center;">
+          <h1 class="text-distinguishing-letter">
+            <code>{{ cheater.originName || 'N/A' }}</code>
+          </h1>
+          <h5 class="user-select-none">{{ cheater.originUserId || 'N/A' }}</h5>
+        </div>
+        <br class="user-select-none">
+        <Row :gutter="20" type="flex" justify="center" align="middle" class="share-info">
+          <Col>
+            <cheater-status-view :status="cheater.status"/>
+            <span class="share-info-p user-select-none">{{ $t("account.status") }}</span>
+          </Col>
+          <Divider type="vertical"/>
+          <Col>
+            <router-link :to="{name: 'cheater', params: { game: cheater.game }}">
+              <template v-if="cheater.games && cheater.games.length >= 0">
+                <Tag color="gold" :alt="$t('detail.info.reportedGames')"
+                     v-for="(game,gameindex) in cheater.games" :key="gameindex">
+                  {{ $t(`basic.games.${game}`, {game: game}) }}
+                </Tag>
+              </template>
+              <template v-else>
+                <Tag fade>N/A</Tag>
+              </template>
+            </router-link>
+            <span class="share-info-p user-select-none">{{ $t("report.labels.game") }}</span>
+          </Col>
+          <Divider type="vertical"/>
+          <Col>
+            <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">
+              <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
+                {{ $t("cheatMethods." + method_item + ".title") }}
               </Tag>
             </template>
             <template v-else>
-              <Tag color="warning">N/A</Tag>
+              <Tag fade>N/A</Tag>
             </template>
-          </router-link>
-          <span class="share-info-p">{{ $t("report.labels.game") }}</span>
-        </Col>
-        <Divider type="vertical"/>
-        <Col>
-          <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">
-            <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
-              {{ $t("cheatMethods." + method_item + ".title") }}
-            </Tag>
-          </template>
-          <template v-else>
-            <Tag color="warning">N/A</Tag>
-          </template>
-          <span class="share-info-p">{{ $t("detail.info.cheatMethod") }}</span>
-        </Col>
-      </Row>
-    </div>
-    <div v-if="type == 'none'">
-      <Row :gutter="5">
-        <Col :ms="{span: 18}" :xs="{span: 18}" :lg="{span: 20}" style="word-break: break-word;">
-          <p>{{ href }} </p>
-          <p>@BFBAN 2018-{{ new Date().getFullYear() }}</p>
-        </Col>
-        <Col :ms="{span: 6}" :xs="{span: 6}" :lg="{span:4}">
-          <vue-qr :text="href" :size="70" :margin="3"></vue-qr>
-        </Col>
-      </Row>
+            <span class="share-info-p user-select-none">{{ $t("detail.info.cheatMethod") }}</span>
+          </Col>
+        </Row>
+      </div>
+      <div v-if="type === 'none'">
+        <br>
+        <Row :gutter="15">
+          <Col flex="1" style="word-break: break-word;">
+            <p>{{ href }} </p>
+            <p class="share-description user-select-none">@{{ $t('name') }} 2018-{{ new Date().getFullYear() }}</p>
+          </Col>
+          <Col>
+            <vue-qr :text="href" :size="70" :margin="3"></vue-qr>
+          </Col>
+        </Row>
+      </div>
     </div>
   </Card>
 </template>
 
 <script>
-import {api, http, http_token, storage} from '../assets/js/index'
+import {http_token, player_storage} from '../assets/js/index'
 import theme from "/public/config/themes.json";
-import languages from "/public/config/languages.json";
 
 import vueQr from 'vue-qr'
+import CheaterStatusView from "@/components/CheaterStatusView.vue";
 
 if (window.callPhantom)
   window.callPhantom('takeShot');
@@ -94,16 +97,21 @@ export default {
     // this.onLoadTheme();
     this.onLoadLang();
   },
-  components: {vueQr},
+  components: {CheaterStatusView, vueQr},
+  watch: {
+    '$route': 'getCheatersInfo',
+    'personaId': 'getCheatersInfo'
+  },
   methods: {
     /**
      * 加载主题
      * @returns {Promise<void>}
      */
     async onLoadTheme() {
-      await this.$store.dispatch('setTheme', theme.child.filter(
-          i => i.name == this.$route.query.theme)[0] || theme.child[0]
-      );
+      if (this.$route.query.theme)
+        await this.$store.dispatch('setTheme', theme.child.filter(
+            i => i.name === this.$route.query.theme)[0] || theme.child[0]
+        );
     },
     /**
      * 加载语言
@@ -122,54 +130,56 @@ export default {
     /**
      * 获取作弊者档案
      */
-    getCheatersInfo() {
-      this.cheater = {};
-      this.http.get(api["cheaters"], {
-        params: Object.assign({
-          history: true,
-          personaId: this.$route.params.ouid || this.personaId || null
-        })
-      }).then(res => {
-        this.spinShow = false;
-        const d = res.data;
+    async getCheatersInfo() {
+      this.cheater = await player_storage.getPlayerInfo({
+        personaId: this.$route.params.ouid || this.personaId || null
+      }, false);
 
-        if (d.success === 1) {
-          this.cheater = d.data;
-        }
-      }).finally(() => {
-        window.widgetReady = true;
-      });
+      this.spinShow = false;
+      window.widgetReady = true;
     },
   }
 }
 </script>
 
 <style lang="less" scoped>
-#getSharePicture {
-  position: relative;
+.share {
   overflow: hidden;
-  height: 100vh;
-}
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  align-content: space-between;
 
-.share-logo {
-  pointer-events: none;
-  width: 300px;
-  height: 300px;
-  position: absolute;
-  opacity: .05;
-  left: -50px;
-  top: -110px;
-  border-radius: 50%;
-}
 
-.share-info {
-  text-align: center;
-}
+  .share-info-context {
 
-.share-info-p {
-  display: block;
-  margin: .5rem;
-  font-size: 12px;
-  opacity: .6;
+    .share-description {
+      opacity: .8;
+    }
+
+    .share-logo {
+      pointer-events: none;
+      width: 300px;
+      height: 300px;
+      position: absolute;
+      opacity: .05;
+      left: -50px;
+      top: -110px;
+      border-radius: 50%;
+    }
+
+    .share-info {
+      text-align: center;
+    }
+
+    .share-info-p {
+      display: block;
+      margin: .5rem;
+      font-size: 12px;
+      opacity: .6;
+    }
+  }
 }
 </style>

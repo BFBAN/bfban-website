@@ -17,7 +17,7 @@ export default new Application({
   components: {HtmlLink, ThemeWidget},
   methods: {
     async loadData() {
-      const bannerAppData = await storage.local.get('ads.bfban-app.switch');
+      const bannerAppData = storage.local.get('ads.bfban-app.switch');
 
       if (bannerAppData.code === 0) {
         this.banner = bannerAppData.data.value;
@@ -28,7 +28,10 @@ export default new Application({
         }
       }
     },
-    onFooter() {
+    /**
+     * 关闭底部广告
+     */
+    onSwitchFooter() {
       this.banner = !this.banner;
       storage.local.set('ads.bfban-app.switch', this.banner);
     }
@@ -37,7 +40,7 @@ export default new Application({
 </script>
 
 <template>
-  <div class="ivu-card ivu-card-dis-hover" v-if="banner">
+  <div class="ivu-card ivu-card-dis-hover" v-if="banner && !$route.query.full">
     <div class="container footer-app-banner footer-border-top">
       <Row :gutter="10" type="flex" align="middle">
         <Col :xs="{push: 1}" :lg="{span: 23,push:0}">
@@ -68,7 +71,7 @@ export default new Application({
           </ButtonGroup>
         </Col>
         <Col :xs="{span: 1}" :lg="{span: 1}">
-          <Button @click="onFooter" shape="circle-outline">
+          <Button @click="onSwitchFooter" shape="circle-outline">
             <Icon type="md-close"/>
           </Button>
         </Col>

@@ -291,15 +291,18 @@
           <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
             <Col flex="1" class="mobile-hide">
               {{ $t('detail.info.timeLine') }}
-              <Tag type="border" v-if="timeline.total">{{ timeline.total || 0 }}</Tag>
+              <Tag type="border" v-if="$refs.timeline && $refs.timeline.timeline.total">
+                {{ $refs.timeline.timeline.total || 0 }}
+              </Tag>
             </Col>
             <Col>
               <Row>
-                <Col>
+                <Col v-if="$refs.timeline">
                   <!-- 时间轴筛选 S -->
                   <ButtonGroup type="button">
-                    <Select v-model="timeline.seeType" size="small" @on-change="onUpdateSeeType">
-                      <Option v-for="(item, index) in timeline.seeTypeList"
+                    <Select v-model="$refs.timeline.timeline.seeType" size="small"
+                            @on-change="() => $refs.timeline.onUpdateSeeType()">
+                      <Option v-for="(item, index) in $refs.timeline.timeline.seeTypeList"
                               :value="item.value"
                               :key="index">
                         {{ $t('detail.timeline.' + item.label) }}
@@ -307,7 +310,7 @@
                     </Select>
                   </ButtonGroup>
                   <Divider type="vertical"/>
-                  <RadioGroup v-model="timeline.order" @on-change="getTimeline"
+                  <RadioGroup v-model="$refs.timeline.timeline.order" @on-change="() =>  $refs.timeline.getTimeline()"
                               type="button" size="small">
                     <Radio label="asc">
                       <span class="iconfont md-asc"></span>
@@ -320,17 +323,17 @@
                   <!-- 时间轴筛选 E -->
                 </Col>
                 <Col class="mobile-hide">
-                  <Page :page-size="timeline.limit"
-                        :current="timeline.page"
-                        :total="timeline.total"
-                        @on-change="handlePageChange"
-                        simple
-                        class="page"
-                        size="small"/>
+                  <!--                  <Page :page-size="$refs.timeline.timeline.limit"-->
+                  <!--                        :current="$refs.timeline.timeline.page"-->
+                  <!--                        :total="$refs.timeline.timeline.total"-->
+                  <!--                        @on-change="$refs.timeline.handlePageChange"-->
+                  <!--                        simple-->
+                  <!--                        class="page"-->
+                  <!--                        size="small"/>-->
                 </Col>
                 <Col>
                   <Divider type="vertical" class="mobile-hide"/>
-                  <Button size="small" type="dashed" @click="getTimeline">
+                  <Button size="small" type="dashed" @click="() => $refs.timeline.getTimeline()">
                     <Icon type="md-refresh"/>
                   </Button>
                 </Col>
@@ -353,490 +356,12 @@
           <Row :gutter="20" type="flex">
             <Col :xs="{span: 24, push: 0, pull: 0}" :lg="appeal.disable ? {span: 17, push: 0} : {span: 24, push: 0}"
                  order="1" class="tabs-style">
+
               <div class="content">
-                <!-- 时间线 -->
-                <TimelineItem
-                    pending
-                    class="timeline-time-line"
-                    v-show="filtrateTimelineItem(index)"
-                    v-for="(l, index) in timelineList"
-                    :key="index"
-                    :color="l.privilege === 'admin' ? 'red' : 'green'"
-                    :ref="`floor-${l.index}`"
-                    :id="`floor-${l.index}`">
-                  <div v-if="l.type === 'report'" slot="dot" class="timeline-time-dot ivu-tag-warning hand">
-                    <Icon type="ios-hand" :size="isMobile ? 13 : 20"></Icon>
-                  </div>
-                  <div v-else-if="l.type === 'reply'" slot="dot" class="timeline-time-dot ivu-tag-geekblue reply">
-                    <Icon type="ios-text" :size="isMobile ? 13 : 20" class="ivu-tag-text"></Icon>
-                  </div>
-                  <div v-else-if="l.type === 'banAppeal'" slot="dot"
-                       class="timeline-time-dot ivu-tag-magenta ban_appeal">
-                    <Icon type="md-bookmark" :size="isMobile ? 13 : 20" class="ivu-tag-text"></Icon>
-                  </div>
-                  <div v-else-if="l.type === 'judgement'" slot="dot"
-                       class="timeline-time-dot ivu-tag-primary ban_appeal">
-                    <Icon type="ios-medical" :size="isMobile ? 13 : 20" class=""></Icon>
-                  </div>
-                  <div v-else-if="l.type === 'verify'" slot="dot" class="timeline-time-dot trophy">
-                    <Icon type="ios-share-alt" :size="isMobile ? 13 : 20"></Icon>
-                  </div>
-                  <div v-else-if="l.type === 'historyUsername'" slot="dot"
-                       class="timeline-time-dot ivu-tag-gold">
-                    <Icon type="ios-time" :size="isMobile ? 13 : 20" class="ivu-tag-text"></Icon>
-                  </div>
-                  <div v-else slot="dot" class="timeline-time-dot ivu-tag-border ivu-tag-text out">
-                    <Icon type="ios" :size="isMobile ? 13 : 20" class=""></Icon>
-                  </div>
-
-                  <!-- 历史名称 S -->
-                  <div v-if="l.type === 'historyUsername'" class="timeline-content">
-                    <div class="timeline-time">
-                      <Row>
-                        <Col flex="1">
-                          {{ $t('detail.appeal.info.changeName') }}
-                        </Col>
-                        <Col>
-                          <TimeView :time="l.fromTime">
-                            <Time :time="l.fromTime" v-if="l.fromTime" type="datetime"></Time>
-                          </TimeView>
-                        </Col>
-                      </Row>
-                    </div>
-                    <Card :padding="0" dis-hover
-                          class="timeline-description ivu-tag-gold ivu-card ivu-card-bordered ivu-card-dis-hover"
-                          style="padding: 15px 0">
-                      <Dropdown :transfer="isMobile" placement="bottom-start" style="width: 100%">
-                        <Row :gutter="16" type="flex" justify="center" align="middle">
-                          <Col class="text-distinguishing-letter">
-                            <code>{{ l.beforeUsername || "N/A" }}</code>
-                          </Col>
-                          <Col class="mobile-hide">
-                            <Icon type="md-arrow-round-forward" class="ivu-tag-text" size="20" style="opacity: .6"/>
-                          </Col>
-                          <Col class="desktop-hide" align="center" :xs="{span: 24}">
-                            <Icon type="md-arrow-round-forward" size="20" style="opacity: .6;transform: rotate(90deg)"/>
-                          </Col>
-                          <Col>
-                            <b class="text-distinguishing-letter"><code>{{ l.nextUsername || "N/A" }}</code></b>
-                          </Col>
-                        </Row>
-
-                        <!-- 历史ID -->
-                        <DropdownMenu slot="list"
-                                      style="width: 100%"
-                                      v-if="cheater && cheater.history && cheater.history.length >= 0">
-                          <Row style="margin: 5px 18px">
-                            <Col flex="1">
-                              <b>{{ $t('detail.info.historyID') }}</b>
-                            </Col>
-                          </Row>
-                          <div style="overflow: auto; max-height: 80vh">
-                            <div v-for="(origin, origin_index) in cheater.history" :key="origin_index">
-                              <Row :gutter="5" type="flex" align="middle"
-                                   style="padding: 0 16px;margin: 10px 0 ; width:100%">
-                                <Col>
-                                  <TimeView :time="origin.fromTime">
-                                    <Time :time="origin.fromTime"
-                                          v-if="origin.fromTime && l.fromTime != origin.fromTime"></Time>
-                                    <b v-else>
-                                      <Time :time="origin.fromTime" v-if="origin.fromTime"></Time>
-                                    </b>
-                                  </TimeView>
-                                </Col>
-                                <Col flex="1">
-                                  <Divider dashed style="margin: 0"/>
-                                </Col>
-                                <Col class="text-distinguishing-letter">
-                                  <template v-if="l.fromTime == origin.fromTime">
-                                    <Tag color="primary"><code>{{ origin.originName }}</code></Tag>
-                                  </template>
-                                  <template v-else>
-                                    <code>{{ origin.originName }}</code>
-                                  </template>
-                                </Col>
-                              </Row>
-                            </div>
-                          </div>
-                        </DropdownMenu>
-                      </Dropdown>
-                    </Card>
-
-                    <Row type="flex" align="middle">
-                      <Col flex="auto">
-                        <template v-if="isLogin">
-                          <Button size="small" @click="updateCheaterModal = true;">
-                            {{ $t('detail.info.updateButton') }}
-                          </Button>
-                        </template>
-                      </Col>
-                    </Row>
-                  </div>
-                  <!-- 历史名称 E -->
-
-                  <!-- 举报:any S -->
-                  <div :id="`floor-${l.id}`" v-if="l.type === 'report'" class="timeline-content">
-                    <div class="timeline-time">
-                      <Row :gutter="5" type="flex" align="middle">
-                        <Col flex="1">
-                          <BusinessCard :id="l.byUserId">
-                            <Tag fade color="transparent" class="avatar">
-                              <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
-                            </Tag>
-
-                            <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                              <u><b>{{ l.username || l.byUserId }}</b></u>
-                            </router-link>
-                          </BusinessCard>
-
-                          <!-- 举报 -->
-                          {{ $t('detail.info.report') }}
-                          <a><u><b class="text-distinguishing-letter"><code>{{ l.toOriginName }}</code></b></u></a>
-
-                          <template v-if="l.cheatGame">
-                            <!-- 在 -->
-                            {{ $t('detail.info.inGame') }}
-
-                            <router-link :to="{name: 'player', query: {game: l.cheatGame, status: -1 } }">
-                              <Tooltip :content="$t('basic.games.' + l.cheatGame)">
-                                <Tag type="border">
-                                  <img height="12"
-                                       :src="require('/src/assets/images/games/' + l.cheatGame + '/logo.png')"/>
-                                </Tag>
-                              </Tooltip>
-                            </router-link>
-                          </template>
-
-                          <!-- 游戏中 -->
-                          {{ $t('detail.info.gaming') }}
-
-                          <Tag type="border" color="orange"
-                               v-for="(methods, methodsIndex) in l.cheatMethods"
-                               :key="methodsIndex">
-                            <Poptip trigger="hover" :transfer="true" word-wrap width="200"
-                                    :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>
-                              {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
-                            </Poptip>
-                          </Tag>
-                        </Col>
-                        <Col>
-                          <TimeView :time="l.createTime">
-                            <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
-                          </TimeView>
-                        </Col>
-                      </Row>
-                    </div>
-
-                    <template v-if="l.videoLink">
-                      <Row :gutter="10" type="flex" align="middle" v-for="(link, linkindex) in l.videoLink"
-                           :key="linkindex">
-                        <Col class="user-select-none">
-                          <Tag color="geekblue">{{ $t('detail.info.videoLink') }}</Tag>
-                        </Col>
-                        <Col style="max-width: 60%">
-                          <span style="display: block;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
-                            <a :href="link.href" target="_blank">
-                              <span style="opacity: .8" v-if="link.href">
-                                <Htmllink :href="encodeURI(link.href)" :text="encodeURI(link.href)"></Htmllink>
-                              </span>
-                            </a>
-                          </span>
-                        </Col>
-                        <Col flex="1">
-                          <Divider dashed style="margin: 0;min-width: 100px"></Divider>
-                        </Col>
-                        <Col class="user-select-none">
-                          {{ linkindex + 1 }}
-                        </Col>
-                      </Row>
-                    </template>
-
-                    <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
-                                :html="l.content.text" v-if="l.content.text"></HtmlWidget>
-                  </div>
-                  <!-- 举报:any E -->
-
-                  <!-- 申诉:any S -->
-                  <div :id="`floor-${l.id}`" v-if="l.type === 'banAppeal'" class="timeline-content">
-                    <div class="timeline-time">
-                      <Row>
-                        <Col flex="auto">
-                          <Tag fade color="transparent" class="avatar">
-                            <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
-                          </Tag>
-
-                          <BusinessCard :id="l.byUserId">
-                            <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                              <u><b>{{ l.username || l.byUserId }}</b></u>
-                            </router-link>
-                          </BusinessCard>
-
-                          {{ $t('detail.appeal.info.content') }}
-
-                          <Tag type="border">{{ l.content.appealType || 'none' }}</Tag>
-
-                          <BusinessCard :id="l.originUserId">
-                            <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
-                              <u>{{ l.cheaterGameName }}</u>
-                            </router-link>
-                          </BusinessCard>
-
-                          <router-link :to="{name: 'cheater', query: {game: `${l.cheatGame}`} }" v-if="l.cheatGame">
-                            <Tooltip :content="$t('basic.games.' + l.cheatGame)">
-                              <Tag type="border">
-                                <img height="12"
-                                     :src="require('/src/assets/images/games/' + l.cheatGame + '/logo.png')"/>
-                              </Tag>
-                            </Tooltip>
-                          </router-link>
-                        </Col>
-
-                        <Col>
-                          <TimeView :time="l.createTime">
-                            <Time :time="l.createTime" v-if="l.createTime" type="datetime"></Time>
-                          </TimeView>
-                          <Divider type="vertical"/>
-                          <Tag type="border" color="primary">
-                            {{ $t(`detail.appeal.deal.stats.${l.appealStatus || 'unprocessed'}`) }}
-                          </Tag>
-                        </Col>
-                      </Row>
-                    </div>
-                    <HtmlWidget :html="l.content.text"
-                                v-if="l.content.text"
-                                class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
-
-                    <template v-if="isLogin && l.content.extendedLinks">
-                      <Row :gutter="5">
-                        <Col v-if="l.content.extendedLinks.btrLink">
-                          <Poptip trigger="click" max-width="300" width="300">
-                            <Badge text="BTR">
-                              <Card :padding="5" dis-hover>
-                                <Icon type="ios-link" size="50"/>
-                              </Card>
-                            </Badge>
-                            <EditLinks
-                                slot="content"
-                                :links="l.content.extendedLinks.btrLink"
-                                :isReadonly="true"></EditLinks>
-                          </Poptip>
-                        </Col>
-                        <Col v-if="l.content.extendedLinks.videoLink">
-                          <Poptip trigger="click" max-width="300" width="300">
-                            <Badge text="Video Link">
-                              <Card :padding="5" dis-hover>
-                                <Icon type="ios-videocam" size="50"/>
-                              </Card>
-                            </Badge>
-                            <EditLinks slot="content"
-                                       :links="l.content.extendedLinks.videoLink"
-                                       :isReadonly="true"></EditLinks>
-                          </Poptip>
-                        </Col>
-                        <Col v-if="l.content.extendedLinks.mossDownloadUrl">
-                          <Poptip trigger="click" max-width="300" width="300">
-                            <Badge text="Moss File">
-                              <Card :padding="5" dis-hover>
-                                <Icon type="ios-download" size="50"/>
-                              </Card>
-                            </Badge>
-                            <EditLinks slot="content"
-                                       :links="l.content.extendedLinks.mossDownloadUrl"
-                                       :isReadonly="true"></EditLinks>
-                          </Poptip>
-                        </Col>
-                      </Row>
-                    </template>
-                    <template v-else-if="l.content.hasOwnProperty('extendedLinks')">
-                      <Alert show-icon type="info" :banner="true" :fade="false">
-                        {{ $t('detail.timeline.noAppealAttachmentHint') }}
-                      </Alert>
-                    </template>
-                    <template v-else-if="!isLogin">
-                      <Alert show-icon type="warning" :banner="true" :fade="false">
-                        {{ $t('detail.timeline.needLoginViewAttachmentsHint') }}
-                      </Alert>
-                    </template>
-                  </div>
-                  <!-- 申诉:any E -->
-
-                  <!-- 认为:any S -->
-                  <div :id="`floor-${l.id}`" v-if="l.type === 'verify' || l.type === 'judgement'"
-                       class="timeline-content bookmark">
-                    <div class="timeline-time">
-                      <Row :gutter="5" type="flex" align="middle">
-                        <Col>
-                          <Tag fade color="transparent" class="avatar">
-                            <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
-                          </Tag>
-
-                          <BusinessCard :id="l.byUserId">
-                            <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                              <u><b>{{ l.username || l.byUserId }}</b></u>
-                            </router-link>
-                          </BusinessCard>
-                        </Col>
-                        <Col>
-                          {{ $t('detail.info.judge') }}
-
-                          <judgeActionTypeView :judgeAction="l.judgeAction"></judgeActionTypeView>
-
-                          <template v-if="l.cheatGame">
-                            <!-- 在 -->
-                            {{ $t('detail.info.inGame') }}
-
-                            <Tooltip :content="$t('basic.games.' + l.cheatGame)">
-                              <Tag type="border">
-                                <img height="12"
-                                     :src="require('/src/assets/images/games/' + l.cheatGame + '/logo.png')"/>
-                              </Tag>
-                            </Tooltip>
-                          </template>
-
-                          <!-- 作弊方式 -->
-                          <template v-if="l.cheatMethods && l.cheatMethods.length > 0">
-                            {{ $t('detail.info.cheatMethod') }}
-
-                            <Tag type="border" color="orange"
-                                 v-for="(methods, methodsIndex) in l.cheatMethods"
-                                 :key="methodsIndex">
-                              <Poptip trigger="hover" :transfer="true" word-wrap width="200"
-                                      :content='$t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".describe")'>
-                                {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(methods) + ".title") }}
-                              </Poptip>
-                            </Tag>
-                          </template>
-                        </Col>
-                        <Col flex="1"></Col>
-                        <Col>
-                          <TimeView :time="l.createTime">
-                            <Time v-if="l.createTime" :time="l.createTime" type="datetime"></Time>
-                          </TimeView>
-                        </Col>
-                      </Row>
-                    </div>
-
-                    <HtmlWidget :html="l.content.text" v-if="l.content.text"
-                                class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
-                  </div>
-                  <!-- 认为:any E -->
-
-                  <!-- 回复:any S -->
-                  <div :id="`floor-${l.id}`" v-if="l.type === 'reply'" class="timeline-content">
-                    <div class="timeline-time">
-                      <Row :gutter="5" type="flex" justify="center" align="middle">
-                        <Col>
-                          <Tag fade color="transparent" class="avatar">
-                            <UserAvatar :src="l.byUserAvatar" :size="userAvatarSize"></UserAvatar>
-                          </Tag>
-
-                          <BusinessCard :id="l.byUserId">
-                            <router-link :to="{name: 'space', params: {uId: `${l.byUserId}`}}">
-                              <u><b>{{ l.username || l.byUserId }}</b></u>
-                            </router-link>
-                          </BusinessCard>
-                        </Col>
-                        <Col>
-                          {{ $t('basic.button.reply') }}
-                        </Col>
-                        <Col flex="1"></Col>
-                        <Col>
-                          <TimeView :time="l.createTime">
-                            <Time v-if="l.createTime" :time="l.createTime" type="datetime"></Time>
-                          </TimeView>
-                        </Col>
-                      </Row>
-                    </div>
-
-                    <div class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
-                         :class="[isLogin && l.byUserId == currentUser.userinfo.userId ? 'ivu-tag-geekblue' : '']">
-                      <template v-if="l.quote">
-                        <div @click="onRollingFloor(`floor-${l.quote.id}`)"
-                             class="timeline-description timeline-reply-description user-select-none ivu-card ivu-card-bordered ivu-card-dis-hover">
-                          <Row type="flex" align="middle" class="timeline-reply-description-title">
-                            <Col flex="1">
-                              <BusinessCard :id="l.quote.byUserId">
-                                <p>
-                                  <u><b>{{ l.quote.username }}</b></u>
-                                </p>
-                              </BusinessCard>
-                              :
-                            </Col>
-                            <Col>
-                              <Time :time="l.quote.createTime" type="datetime"></Time>
-                            </Col>
-                          </Row>
-                          <HtmlCore
-                              :html="l.quote.content.length > 80 ? `${l.quote.content.substr(0, 80)}...` : l.quote.content"></HtmlCore>
-                        </div>
-                      </template>
-
-                      <HtmlWidget :html="l.content.text" v-if="l.content.text"></HtmlWidget>
-                    </div>
-                  </div>
-                  <!-- 回复:any E -->
-
-                  <Row class="timeline-content-footer" type="flex" align="middle">
-                    <Col flex="1" v-if="l.type !== 'historyUsername'">
-                      <template v-if="isLogin">
-                        <!-- 回复 -->
-                        <Button size="small"
-                                v-voice-button
-                                v-if="l.id && l.byUserId"
-                                @click="handleReply(l.id, l.byUserId)">
-                          {{ $t('basic.button.reply') }}
-                        </Button>
-                        <Divider type="vertical"/>
-                      </template>
-
-                      <!-- 申诉操作 -->
-                      <template v-if="isLogin && isAdmin && l.type === 'banAppeal'">
-                        <Button size="small" @click="openAppealDealModal(l.id)" :disabled="l.appealStatus == 'accept'">
-                          {{ $t('detail.appeal.dealAppeal') }}
-                        </Button>
-                        <Divider type="vertical"/>
-                      </template>
-
-                      <Poptip width="400" transfer>
-                        <Button size="small" v-voice-button>
-                          <Icon type="md-share"/>
-                        </Button>
-                        <div slot="content">
-                          <Form :label-width="40" label-position="left">
-                            <FormItem label="Url">
-                              <Input :value="getShareFloor(l.id)" :autosize="{minRows: 2,maxRows: 2}" type="textarea"
-                                     readonly v-if="l.id"></Input>
-                            </FormItem>
-                            <FormItem label="Code">
-                              <Input :value="`{floor:${l.id}}`" readonly v-if="l.id"></Input>
-                            </FormItem>
-                            <FormItem label="" v-if="l.id">
-                              <Card dis-hover :padding="5">
-                                <HtmlCore :html="`<p>{floor:${l.id}}</p>`" v-if="l.id"/>
-                              </Card>
-                            </FormItem>
-                          </Form>
-                        </div>
-                      </Poptip>
-                    </Col>
-                    <Col align="right"  v-if="l.type !== 'historyUsername'">
-                      <span class="user-select-none"># </span><u><span style="opacity: .4">{{ l.id }}</span></u>
-                    </Col>
-                  </Row>
-
-                  <Divider v-if="index < timelineList.length - 1"></Divider>
-                </TimelineItem>
-              </div>
-
-              <div align="center">
-                <Page :page-size="timeline.limit"
-                      :current="timeline.page"
-                      :total="timeline.total"
-                      @on-change="handlePageChange"
-                      simple
-                      class="page"
-                      size="small"/>
-                <br>
+                <TimelineView :id="getParamsIds('personaId')"
+                              @click-update-name="(e) => updateCheaterModal = true"
+                              @click-reply="(e,id,byUserId) => handleReply(id, byUserId)"
+                              ref="timeline"/>
               </div>
 
               <!-- 用户回复 S -->
@@ -865,7 +390,7 @@
                                     v-voice-button
                                     :loading="replySpinShow"
                                     :disabled="!reply.content"
-                                    @click.stop.prevent="onReply('default')">
+                                    @click.stop.prevent="$refs.timeline.onReply('default')">
                               {{ $t('basic.button.reply') }}
                             </Button>
                             <Button size="large" type="dashed">
@@ -930,11 +455,6 @@
           <div v-if="cheater.status === '1'">
             <Divider/>
           </div>
-
-          <br>
-          <Spin size="large" fix v-show="spinShow">
-            <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
-          </Spin>
         </Card>
         <br v-if="isAdmin">
 
@@ -967,7 +487,7 @@
             </DropdownMenu>
           </Dropdown>
 
-          <a href="javascript:void(0)" @click="getTimeline">
+          <a href="javascript:void(0)" @click="() => $refs.timeline.getTimeline">
             <Icon type="md-refresh" size="30"/>
           </a>
           <template v-if="isLogin && isAdmin">
@@ -983,9 +503,9 @@
       <Modal v-model="replyModal">
         <div slot="header">
           {{ `${$t('basic.button.reply')}` }}
-          <BusinessCard :id="timelineList[reply.toFloor].byUserId" v-if="timelineList[reply.toFloor]">
-            <b>{{ timelineList[reply.toFloor].username }}</b>({{ reply.toFloor + 1 }})
-          </BusinessCard>
+          <!--          <BusinessCard :id="$refs.timeline.timelineList[reply.toFloor].byUserId" v-if="$refs.timeline.timelineList[reply.toFloor]">-->
+          <!--            <b>{{ $refs.timeline.timelineList[reply.toFloor].username || 'N/A' }}</b>({{ reply.toFloor + 1 }})-->
+          <!--          </BusinessCard>-->
         </div>
         <Form ref="replyForm" style="margin: -17px;" v-if="isLogin">
           <Textarea v-model="reply.miniModeContent"
@@ -1072,16 +592,7 @@
 </template>
 
 <script>
-import {
-  api,
-  http,
-  http_token,
-  util,
-  message,
-  time,
-  storage,
-  account_storage,
-} from '../assets/js/index'
+import {account_storage, api, http, http_token, storage, time, util,} from '../assets/js/index'
 
 import Application from "/src/assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
@@ -1093,6 +604,7 @@ import cheaterStatusView from "@/components/CheaterStatusView.vue";
 import JudgementActionView from "@/components/judgementActionView.vue";
 import Captcha from "@/components/captcha/index";
 import TimeView from "@/components/TimeView.vue"
+import TimelineView from "@/components/timeline/index.vue";
 import HtmlCore from "@/components/Html";
 import HtmlWidget from "@/components/HtmlWidget";
 import Htmllink from "@/components/HtmlLink";
@@ -1128,6 +640,7 @@ export default new Application({
         updateTime: time.appStart(),
         isSubscribes: false
       },
+
       reply: {
         miniModeContent: '',
         miniModeCaptcha: {},
@@ -1139,47 +652,9 @@ export default new Application({
         captcha: {},
       },
 
-      timelineListPreparedness: [],
-      timelineList: [],
-      timeline: {
-        order: 'asc',
-        skip: 1,
-        limit: 20,
-        total: 0,
-        seeType: 1,
-        seeTypeList: [
-          {
-            label: 'all',
-            value: 1,
-            item: ['report', 'reply', 'ban_appeal', 'judgement', 'verify', 'banAppeal', 'historyUsername'],
-          },
-          {
-            label: 'coreComment',
-            value: 4,
-            item: ['report', 'reply', 'ban_appeal', 'judgement', 'verify', 'banAppeal'],
-          },
-          {
-            label: 'verify',
-            value: 2,
-            item: ['judgement', 'verify'],
-          },
-          {
-            label: 'banAppeal',
-            value: 3,
-            item: ['banAppeal'],
-          },
-          {
-            label: 'historyName',
-            value: 5,
-            item: ['historyUsername'],
-          }
-        ]
-      },
-
-      spinShow: true,
+      replyModal: false,
       replySpinShow: false,
       isCheaterExist: true,
-      replyModal: false,
       updateUserInfoSpinShow: false,
       updateCheaterModal: false
     }
@@ -1192,6 +667,7 @@ export default new Application({
     RecordLink,
     cheaterStatusView,
     JudgementActionView,
+    TimelineView,
     TimeView,
     Captcha,
     HtmlCore,
@@ -1211,120 +687,19 @@ export default new Application({
     this.http = http_token.call(this);
     this.loadData();
   },
+
   methods: {
     async loadData() {
-      const {page = 0, order = 'asc'} = this.$route.query;
       this.$Loading.start();
 
       // set Token Http mode
       this.http = http_token.call(this);
 
-      this.timeline.seeType = this.getSeeType;
-      if (page) {
-        this.timeline.skip = Number(page);
-        this.timeline.page = Number(page);
-      }
-      if (order) this.timeline.order = order;
-
       await this.getPlayerInfo()
-      await this.getTimeline()
+      await this.$refs.timeline.getPlayerInfo();
+      await this.$refs.timeline.getTimeline();
 
       this.$Loading.finish();
-    },
-    /**
-     * 时间轴分页事件
-     */
-    handlePageChange(num) {
-      this.timeline.skip = num;
-      this.$router.push({
-        name: this.$router.name,
-        query: {...this.$route.query, page: num}
-      });
-
-      this.getTimeline();
-
-      const commentNode = document.getElementById('timeline');
-      this.onRollingNode(commentNode.offsetTop);
-    },
-    /**
-     * 展开申诉详情
-     * @param {string} commentId
-     * @returns {Promise<void>}
-     */
-    async openAppealDealModal(commentId) {
-      // 调用API获取申诉数据
-      const timelineItem = await this.getTimeLineItemData(commentId);
-      const afterHandleTimelineContent = timelineItem.content;
-      // 将获取的数据赋值到`appeal`对象上
-      this.appealdeal = Object.assign(this.appealdeal, timelineItem);
-
-      // 打开模态框
-      this.appealdealModal = true;
-    },
-    /**
-     * 管理裁决玩家申诉
-     * @returns {Promise<void>}
-     */
-    async onAdminTimeLineDealAppeal() {
-      try {
-        const response = await this.http.post(api["admin_setAppeal"], {
-          data: {
-            toPlayerId: this.cheater.id,
-            // content: this.appealdeal.admincontent, // 管理回复内容
-            // action                                 // 对申诉的操作
-          },
-        });
-
-        const d = response.data;
-
-        if (d.success === 1) {
-          this.getTimeline();
-          this.getPlayerInfo();
-
-          this.appealdealModal = false;
-          this.$Message.success({content: d.message || d.code, duration: 3});
-          return;
-        }
-
-        this.$Message.error({content: d.message || d.code, duration: 3});
-      } catch (error) {
-        this.$Message.error(error.code);
-      }
-    },
-    getTime(dateString) {
-      return new Date(dateString).getTime();
-    },
-    /**
-     * 合并时间轴历史名称
-     */
-    onMergeHistoryName() {
-      const that = this;
-      const {order} = this.timeline;
-      let _timelineList = this.timelineListPreparedness;
-      let _timeStartAndEndTime = {
-        0: this.getTime(_timelineList[0].createTime),
-        1: this.getTime(_timelineList[_timelineList.length - 1].createTime)
-      };
-
-      this.cheater.history.forEach((history, hisrotyIndex) => {
-        let _itemHistoryTime = this.getTime(history.fromTime);
-
-        // Check if the history is within the timeline range
-        if (_itemHistoryTime >= _timeStartAndEndTime[order === 'asc' ? 0 : 1] && _itemHistoryTime <= _timeStartAndEndTime[order === 'asc' ? 1 : 0]) {
-          _timelineList.push({
-            type: 'historyUsername',
-            beforeUsername: this.cheater.history[hisrotyIndex - 1]?.originName,
-            nextUsername: history.originName,
-            fromTime: history.fromTime
-          });
-        }
-      });
-
-      this.timelineList = _timelineList.sort(function (x, y) {
-        let timeX = (that.getTime(x.createTime) || that.getTime(x.fromTime));
-        let timeY = (that.getTime(y.createTime) || that.getTime(y.fromTime));
-        return order === 'asc' ? timeX - timeY : timeY + timeX;
-      });
     },
     /**
      * 追踪此玩家
@@ -1446,7 +821,7 @@ export default new Application({
 
         that.cheater = {};
 
-        http.get(api["cheaters"], {params}).then(res => {
+        http.get(api["player"], {params}).then(res => {
           const d = res.data;
 
           if (d.success === 1) {
@@ -1474,120 +849,12 @@ export default new Application({
         }).finally(() => {
           that.onUpdateViewed();
           that.checkPlayerSubscribes();
-          that.spinShow = false;
 
           resolve()
         });
       })
     },
-    /**
-     * 获取举报玩家 时间轴
-     */
-    async getTimeline() {
-      this.timelineListPreparedness = [];
-      this.timelineList = [];
 
-      return new Promise(resolve => {
-        this.spinShow = true;
-
-        this.http.get(api["player_timeline"], {
-          params: Object.assign({
-            skip: (this.timeline.skip - 1) * this.timeline.limit,
-            limit: this.timeline.limit,
-            order: this.timeline.order,
-          }, {personaId: this.getParamsIds('personaId'), random: +(new Date())})
-        }).then(res => {
-          let d = res.data;
-
-          if (d.success === 1) {
-            d.data.result.forEach((i, index) => {
-              if (i.videoLink) {
-                let videoLink = i.videoLink.split(',');
-                if (videoLink instanceof Array)
-                  for (let j = 0; j < videoLink.length; j++)
-                    if (videoLink[j].indexOf('http') >= 0) videoLink[j] = new URL(videoLink[j]);
-                i.videoLink = videoLink;
-              }
-
-              i.index = index;
-              i.show = false;
-            });
-
-            this.timelineListPreparedness = d.data.result;
-            this.timeline.total = d.data.total;
-
-            // 排序
-            this.onMergeHistoryName();
-
-            this.$forceUpdate();
-          }
-        }).finally(() => {
-          this.onRollingFloor();
-
-          this.spinShow = false;
-
-          resolve();
-        })
-      })
-    },
-    /**
-     * 获取 时间轴 单条数据
-     * @param {string} id
-     * @returns {Promise}
-     */
-    async getTimeLineItemData(id) {
-      let commentData = null;  // 用于保存获取到的数据
-      await this.http
-          .get(api["player_timeline_item"], {params: {id}})
-          .then(res => {
-            const d = res.data;
-            if (d.success === 1) {
-              // 请求成功，处理返回的数据
-              commentData = d.data;
-            } else {
-              switch (d.code) {
-                case "commentItem.bad":
-                case "commentItem.notFound":
-                  this.$Message.info(this.$t('basic.tip.notFound'));
-                  break;
-              }
-            }
-          }).finally(() => {
-            // 请求结束后的处理
-            // 如果有加载动画，此时应该隐藏
-            this.loading = false;
-            // 如果有UI元素在请求期间被禁用，此时应该解除禁用
-            this.isButtonDisabled = false;
-          });
-
-      return commentData;  // 返回获取到的数据
-    },
-    /**
-     * 滚动至楼层位置
-     * @param id
-     */
-    onRollingFloor(id) {
-      const that = this;
-      // 锚点
-      that.url = new URL(window.location.href);
-      if (that.url.hash || id) {
-        let urlOffsetTop = document.getElementById(
-            (id || that.url.hash).replaceAll('#', '')
-        );
-        let className = urlOffsetTop?.offsetParent.className;
-
-        // 检查内容ID是否在网页中，没有则终止滚动
-        if (!urlOffsetTop) return;
-
-        urlOffsetTop.offsetParent.className = className + " timeline-scroll-floor";
-        setInterval(function () {
-          if (urlOffsetTop.offsetParent)
-            urlOffsetTop.offsetParent.className = className;
-        }, 10000);
-
-        this.onRollingNode(urlOffsetTop.offsetParent.offsetParent.offsetTop);
-      }
-    },
     onRollingDropdowns(name) {
       switch (name) {
         case 'recordlink':
@@ -1637,71 +904,61 @@ export default new Application({
     onRollingNode(scrollTopNumber) {
       document.documentElement.scrollTop = scrollTopNumber;
     },
-    /**
-     * 分享楼层
-     * @param {number} floorId 楼层id，同时也是回复id
-     * @returns {string} URL
-     */
-    getShareFloor(floorId) {
-      let _url = new URL(window.location.href);
-      if (!floorId) return _url;
-      _url.hash = "#floor-" + floorId;
-      return _url.toString() || "";
-    },
-    /**
-     * 时间轴筛选,依次条件筛选
-     * @param {number} index 时间轴下标
-     * @returns {boolean}
-     */
-    filtrateTimelineItem(index) {
-      const that = this;
-      const list = this.timeline.seeTypeList;
-
-      return list
-          .filter(i => Number(that.timeline.seeType) == i.value)[0]?.item
-          .indexOf(this.timelineList[index].type) >= 0;
-    },
-    /**
-     * 时间轴更新状态
-     */
-    onUpdateSeeType() {
-      account_storage.updateConfiguration("timelineSeeType", this.timeline.seeType);
-    },
-
-    /**
-     * 展开回复小窗口
-     * @param {string} replyId 楼层id
-     * @param {string} userId 回复id
-     */
-    handleReply(replyId, userId) {
-      this.reply.toReplyId = replyId === null ? '' : replyId;
-      this.reply.toUserId = userId === 'undefined' ? '' : userId;
-
-      // open reply modal
-      this.replyModal = true;
-    },
-    /**
-     * 触发小窗口评论取消时
-     * 重置前端评论内容值
-     * @param {boolean} isOffMode
-     */
-    cancelReply(isOffMode = false) {
-      if (isOffMode)
-        this.replyModal = false;
-      this.reply = Object.assign(this.reply, {
-        miniModeContent: '',
-        miniModeCaptchaUrl: {
-          content: '',
-          hash: '',
-        }
-      });
-    },
     getCaptchaData(value) {
       this.reply.captcha = value;
     },
     getMiniCaptchaData(value) {
       this.reply.miniModeCaptcha = value;
     },
+    /**
+     * 主动更新玩家信息
+     * update cheater
+     */
+    updateCheaterInfo() {
+      if (!this.$store.state.user) {
+        this.$Message.error(this.$i18n.t('detail.messages.signIn'));
+        return;
+      }
+
+      this.updateUserInfoSpinShow = true;
+
+      this.http.post(api["player_update"], {
+        data: {personaId: this.cheater.originPersonaId}
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success === 1) {
+          const {cheaterGameName: originId, originUserId, avatarLink} = d.data.origin;
+
+          this.cheater.originId = originId;
+          this.cheater.originUserId = originUserId;
+          this.cheater.avatarLink = avatarLink;
+
+          this.$Message.success(this.$t(`basic.tip['${d.code}']`));
+          return;
+        }
+
+        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+          message: d.message || ""
+        }));
+      }).finally(async () => {
+        this.updateUserInfoSpinShow = false;
+        this.updateCheaterModal = false;
+
+        await this.getPlayerInfo()
+        await this.$refs.timeline.getTimeline();
+      });
+    },
+    /**
+     * 右侧侧栏，申诉显示
+     */
+    onLeftAppealPlan() {
+      this.appeal.disable = !this.appeal.disable;
+
+      account_storage.updateConfiguration("detailLeftAppealPanel", this.appeal.disable);
+    },
+
+
     /**
      * 用户评论/回复
      * @param {string} replyType
@@ -1782,85 +1039,46 @@ export default new Application({
 
         this.cancelReply(false);
         this.getPlayerInfo();
-        this.getTimeline();
+        this.$refs.timeline.getTimeline();
       });
     },
     /**
-     * 主动更新玩家信息
-     * update cheater
+     * 展开回复小窗口
+     * @param {string} replyId 楼层id
+     * @param {string} userId 回复id
      */
-    updateCheaterInfo() {
-      if (!this.$store.state.user) {
-        this.$Message.error(this.$i18n.t('detail.messages.signIn'));
-        return;
-      }
+    handleReply(replyId, userId) {
+      this.reply.toReplyId = replyId === null ? '' : replyId;
+      this.reply.toUserId = userId === 'undefined' ? '' : userId;
 
-      this.updateUserInfoSpinShow = true;
-
-      this.http.post(api["player_update"], {
-        data: {personaId: this.cheater.originPersonaId}
-      }).then(res => {
-        const d = res.data;
-
-        if (d.success === 1) {
-          const {cheaterGameName: originId, originUserId, avatarLink} = d.data.origin;
-
-          this.cheater.originId = originId;
-          this.cheater.originUserId = originUserId;
-          this.cheater.avatarLink = avatarLink;
-
-          this.$Message.success(this.$t(`basic.tip['${d.code}']`));
-          return;
+      // open reply modal
+      this.replyModal = true;
+    },
+    /**
+     * 触发小窗口评论取消时
+     * 重置前端评论内容值
+     * @param {boolean} isOffMode
+     */
+    cancelReply(isOffMode = false) {
+      if (isOffMode)
+        this.replyModal = false;
+      this.reply = Object.assign(this.reply, {
+        miniModeContent: '',
+        miniModeCaptchaUrl: {
+          content: '',
+          hash: '',
         }
-
-        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
-          message: d.message || ""
-        }));
-      }).finally(async () => {
-        this.updateUserInfoSpinShow = false;
-        this.updateCheaterModal = false;
-
-        await this.getPlayerInfo()
-        await this.getTimeline()
       });
     },
 
-    /**
-     * 右侧侧栏，申诉显示
-     */
-    onLeftAppealPlan() {
-      this.appeal.disable = !this.appeal.disable;
-
-      account_storage.updateConfiguration("detailLeftAppealPanel", this.appeal.disable);
-    },
   },
-  computed: {
-    userAvatarSize() {
-      return 20
-    },
-    /**
-     * 时间轴可见类型，筛选
-     * @returns {*|boolean}
-     */
-    getSeeType() {
-      let value = account_storage.getConfiguration("timelineSeeType");
-      if (typeof value == 'boolean' && !value) value = this.timeline.seeType;
-      return value;
-    },
-  }
+
 });
 </script>
 
 <style lang="less">
 @import "@/assets/css/icon.less";
 @import "@/assets/css/avatar.less";
-
-.timeline-time {
-  .avatar {
-    padding: 0;
-    margin-right: 5px;
-  }
-}
 
 .detail-userinfo-card {
   display: flex;

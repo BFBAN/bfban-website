@@ -8,7 +8,7 @@ export default class Api {
             "siteStats": "siteStats",
             "admins": "admins",
             "search": "search",
-            "cheaters": "player",
+            "player": "player",
             "captcha": "captcha",
             "statistics": "statistics",
             "playerStatistics": "playerStatistics",

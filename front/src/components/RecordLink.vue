@@ -114,7 +114,7 @@ export default {
      * 生成表单
      */
     generateTable(cheater) {
-      if (JSON.stringify(cheater) === '{}') return;
+      if (!cheater) return;
       this.cheater = cheater;
 
       this.detailLink.data = [];

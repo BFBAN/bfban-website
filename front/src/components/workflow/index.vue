@@ -10,6 +10,9 @@ import lodash from "lodash";
 import CheaterStatusView from "@/components/CheaterStatusView.vue";
 import TimeView from "@/components/TimeView.vue";
 import JudgementActionView from "@/components/judgementActionView.vue";
+import TimelineView from "@/components/timeline/index.vue";
+import SharePlayerCell from "@/components/SharePlayerCell.vue";
+import HtmlLink from "@/components/HtmlLink.vue";
 
 export default {
   data() {
@@ -76,7 +79,11 @@ export default {
       },
     }
   },
-  components: {JudgementActionView, TimeView, CheaterStatusView, Empty, Container, Draggable},
+  components: {
+    HtmlLink,
+    SharePlayerCell,
+    JudgementActionView, TimelineView, TimeView, CheaterStatusView, Empty, Container, Draggable
+  },
   created() {
     this.http = http_token.call(this);
     this.setting.showColumn = cheaterStatus.child.map(i => i.value);
@@ -134,6 +141,7 @@ export default {
           this.editPlayerModal.show = true;
           this.editPlayerModal.column = column;
           this.editPlayerModal.data = i;
+          this.$refs.timeline_workflow.getTimeline();
           break;
       }
     },
@@ -251,10 +259,15 @@ export default {
     /**
      * 删除玩家卡片
      */
-    onDeletePlayer(column, id) {
-      let index = lodash.findIndex(column.children, i => i.data.originPersonaId == id)
+    onDeletePlayer(column, id, type) {
+      let index = lodash.findIndex(column.children, i => i.data.originPersonaId === id)
       delete column.children.splice(index, 1);
       this.editPlayerModal.show = false;
+
+      // 添加归档数据
+      if (type === 2)
+        this.onSaveWorkflowArchivedData()
+
       this.onSaveWorkflowData();
     },
 
@@ -283,7 +296,10 @@ export default {
      * 删除take任务
      */
     onDeleteMetaTake(index) {
-      delete this.workflowMeta.data[this.editPlayerModal.data.id].take[index]
+      console.log(this.workflowMeta.data)
+      if (this.workflowMeta.data[this.editPlayerModal.data.id] &&
+          this.workflowMeta.data[this.editPlayerModal.data.id].take.length >= 0)
+        this.workflowMeta.data[this.editPlayerModal.data.id].take.splice(index, 1);
     },
 
     // =====
@@ -452,22 +468,22 @@ export default {
   <div>
     <div class="workflow-box">
       <Container
-          orientation="horizontal"
-          @drop="onColumnDrop($event)"
-          drag-handle-selector=".column-drag-handle"
           :drop-placeholder="{
             className: 'cards-drop-preview',
             animationDuration: '150',
             showOnTop: true
-          }">
+          }"
+          drag-handle-selector=".column-drag-handle"
+          orientation="horizontal"
+          @drop="onColumnDrop($event)">
         <Draggable v-for="(column, column_index) in workflow.children" :key="column_index">
-          <div :class="column.props.className"
-               :style="`width: ${setting.columnWidth}px`"
-               v-if="setting.showColumn.indexOf(column.name.value) >= 0">
-            <Row :gutter="10" class="card-column-header" type="flex" align="middle">
+          <div v-if="setting.showColumn.indexOf(column.name.value) >= 0"
+               :class="column.props.className"
+               :style="`width: ${setting.columnWidth}px`">
+            <Row :gutter="10" align="middle" class="card-column-header" type="flex">
               <Col class="column-drag-handle handle">&#x2630;</Col>
               <Col flex="1">
-                <Input size='small' :border="false" v-model="column.name.label"
+                <Input v-model="column.name.label" :border="false" size='small'
                        @on-change="(e) => onChangeColumnName(e, column.name.label,column)"></Input>
                 <p>{{ $t(`basic.status.${column.name.value}.text`) }} · {{ column.name.value }}</p>
               </Col>
@@ -481,23 +497,23 @@ export default {
               </Col>
             </Row>
             <Container
-                group-name="col"
-                @drop="(e) => onCardDrop(column.id, e)"
-                drag-handle-selector=".card-drag-handle"
-                drag-class="card-ghost"
-                drop-class="card-ghost-drop"
-                :get-child-payload="getCardPayload(column.id)"
                 :drop-placeholder="{
                   className: 'drop-preview',
                   animationDuration: '150',
                   showOnTop: true
-                }">
+                }"
+                :get-child-payload="getCardPayload(column.id)"
+                drag-class="card-ghost"
+                drag-handle-selector=".card-drag-handle"
+                drop-class="card-ghost-drop"
+                group-name="col"
+                @drop="(e) => onCardDrop(column.id, e)">
               <Draggable v-for="(card,card_index) in column.children" :key="card_index">
                 <keep-alive>
-                  <Row :gutter="4" type="flex" align="middle">
+                  <Row :gutter="4" align="middle" type="flex">
                     <Col flex="1">
-                      <Card dis-hover :padding="10" class="card card-drag-handle">
-                        <Row :gutter="4" type="flex" align="middle">
+                      <Card :padding="10" class="card card-drag-handle" dis-hover>
+                        <Row :gutter="4" align="middle" type="flex">
                           <Col>
                             <Avatar :src="card.data.avatarLink" size="30"></Avatar>
                           </Col>
@@ -505,20 +521,22 @@ export default {
                             <a herf="javascript:void(0)" @click="openDetail(card.data, column, 2)">
                               <b class="text-distinguishing-letter"><code>{{ card.data.originName }}</code></b>
                             </a>
-                            <a herf="javascript:void(0)" @click="openDetail(card.data, column, 1)">
-                              <Icon type="md-open"></Icon>
-                            </a>
                           </Col>
                           <Col>
                             <cheater-status-view :status="editPlayerModal.data.status"/>
-                            <Poptip trigger="hover"
-                                    transfer
-                                    v-for="(game,gameindex) in card.data.games" :key="gameindex">
-                              <Tag type="border" :alt="$t('detail.info.reportedGames')">
-                                <img height="12" :src="require('/src/assets/images/games/' + game + '/logo.png')"/>
+                            <Poptip v-for="(game,gameindex) in card.data.games"
+                                    :key="gameindex"
+                                    transfer trigger="hover">
+                              <Tag :alt="$t('detail.info.reportedGames')" type="border">
+                                <img :src="require('/src/assets/images/games/' + game + '/logo.png')" height="12"/>
                               </Tag>
                               <div slot="content">{{ $t(`basic.games.${game}`) }}</div>
                             </Poptip>
+                          </Col>
+                          <Col>
+                            <Button @click="openDetail(card.data, column, 1)">
+                              <Icon type="md-open"></Icon>
+                            </Button>
                           </Col>
                         </Row>
                       </Card>
@@ -526,34 +544,29 @@ export default {
                   </Row>
                 </keep-alive>
               </Draggable>
-              <div v-if="column.children.length <= 0">
-                <Card class="empty-card">
-                  <Empty :not-hint="false"></Empty>
-                </Card>
-              </div>
             </Container>
           </div>
         </Draggable>
       </Container>
     </div>
 
-    <Spin size="large" fix v-show="workflowLoading">
-      <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+    <Spin v-show="workflowLoading" fix size="large">
+      <Icon class="spin-icon-load" size="50" type="ios-loading"></Icon>
     </Spin>
 
     <!-- 添加 S -->
     <Modal v-model="addPlayerModal.show">
-      <Row slot="header"><b>导入</b></Row>
+      <Row slot="header">
+        <b>导入</b>
+        <Icon v-if="$store.state.$desktop.workflow.autoUpdatePlayerLoading" class="spin-icon-load"
+              type="ios-loading"></Icon>
+      </Row>
       <Input v-model="addPlayerModal.searchValue" placeholder="搜索玩家"></Input>
       <div style="overflow: auto; max-height: 400px; margin-top: 10px">
-        <Icon type="ios-loading" class="spin-icon-load"
-              v-if="$store.state.$desktop.workflow.autoUpdatePlayerLoading"></Icon>
-
         <div v-for="(i, index) in $store.state.$desktop.workflow.autoUpdatePlayerList.result"
-             v-else
-             :key="index"
-             v-show="i.originName.indexOf(addPlayerModal.searchValue) >= 0 && workflowPersonaIdAdded.indexOf(i.originPersonaId) < 0">
-          <Row :gutter="4" type="flex" align="middle">
+             v-show="i.originName.indexOf(addPlayerModal.searchValue) >= 0 && workflowPersonaIdAdded.indexOf(i.originPersonaId) < 0"
+             :key="index">
+          <Row :gutter="4" align="middle" type="flex">
             <Col>
               <Checkbox v-model="i.select" :border="false"></Checkbox>
             </Col>
@@ -570,7 +583,7 @@ export default {
         </div>
       </div>
       <div slot="footer">
-        <Row :gutter="30" type="flex" align="middle">
+        <Row :gutter="30" align="middle" type="flex">
           <Col flex="1">
             <Alert show-icon type="warning">
               当前一共
@@ -590,34 +603,53 @@ export default {
     <!-- 添加 E -->
 
     <!-- 编辑 S -->
-    <Modal width="100%" class-name="container" fullscreen transfer v-model="editPlayerModal.show">
-      <Row :gutter="4" type="flex" align="middle" slot="header">
+    <Modal v-model="editPlayerModal.show" class-name="2" transfer width="90%">
+      <Row slot="header" :gutter="10" type="flex" align="middle">
         <Col>
-          <Avatar :src="editPlayerModal.data.avatarLink" size="30"></Avatar>
+          <b>详情</b>
         </Col>
-        <Col flex="1">
-          <h2 class="text-distinguishing-letter"><code>{{ editPlayerModal.data.originName }}</code></h2>
-        </Col>
+        <Divider type="vertical"></Divider>
         <Col>
-          <cheater-status-view :status="editPlayerModal.data.status"/>
-          <Tag type="border">{{ $t('basic.games.' + editPlayerModal.data.games) }}</Tag>
+          <Row :gutter="5" type="flex" align="middle">
+            <Col>
+              <Avatar :src="editPlayerModal.data.avatarLink" size="22"></Avatar>
+            </Col>
+            <Col>
+              <HtmlLink :href="`/player/${editPlayerModal.data.originPersonaId}`" :text="editPlayerModal.data.originName"></HtmlLink>
+            </Col>
+          </Row>
         </Col>
       </Row>
 
-      <Row :gutter="20">
-        <Col span="8">
-          <div>
+      <div slot="default">
+        <Row :gutter="20">
+          <Col span="16">
+            <JudgementActionView :cheater="editPlayerModal.data"></JudgementActionView>
+
+            <template v-if="$route.name === 'workflow'">
+              <br>
+              <TimelineView :id="editPlayerModal.data.originPersonaId"
+                            :isDisabledUpdateName="true"
+                            :isDisabledReply="true"
+                            ref="timeline_workflow"/>
+            </template>
+          </Col>
+
+          <Col span="8">
+            <SharePlayerCell type="card" :personaId="editPlayerModal.data.originPersonaId"></SharePlayerCell>
+            <br>
+
             <Form labelPosition="top">
               <Row>
                 <Col span="12">
-                  <FormItem label="创建时间">
+                  <FormItem label="卡片创建时间">
                     <TimeView :time="editPlayerModal.data.createTime">
                       {{ editPlayerModal.data.createTime || '' }}
                     </TimeView>
                   </FormItem>
                 </Col>
                 <Col span="12">
-                  <FormItem label="更新时间">
+                  <FormItem label="卡片更新时间">
                     <TimeView :time="editPlayerModal.data.updateTime">
                       {{ editPlayerModal.data.updateTime || '' }}
                     </TimeView>
@@ -625,107 +657,115 @@ export default {
                 </Col>
               </Row>
             </Form>
-          </div>
-          <div v-if="workflowMeta.data && workflowMeta.data[editPlayerModal.data.id] && workflowMeta.data[editPlayerModal.data.id]">
-            <Form labelPosition="top">
-              <Row :gutter="30">
-                <Col span="24">
-                  <FormItem label="定时任务">
-                    <template
-                        v-if="workflowMeta.data[editPlayerModal.data.id].take.length >= 0">
-                      <Row :gutter="10" v-for="(take, take_index) in workflowMeta.data[editPlayerModal.data.id].take"
-                           :key="take_index">
+            <div
+                v-if="workflowMeta.data && workflowMeta.data[editPlayerModal.data.id] && workflowMeta.data[editPlayerModal.data.id]">
+              <Form labelPosition="top">
+                <Row :gutter="30">
+                  <Col span="24">
+                    <FormItem label="定时任务">
+                      <template
+                          v-if="workflowMeta.data[editPlayerModal.data.id].take && workflowMeta.data[editPlayerModal.data.id].take.length > 0">
+                        <Row v-for="(take, take_index) in workflowMeta.data[editPlayerModal.data.id].take"
+                             :key="take_index"
+                             :gutter="10">
+                          <Col flex="1">
+                            <Select v-model="take.timer" :disabled="true">
+                              <Option v-for="(timer_value, timer_value_index) in workflowMeta.takes.timer"
+                                      :key="timer_value_index"
+                                      :value="timer_value">
+                                {{ timer_value }}天
+                              </Option>
+                            </Select>
+                          </Col>
+                          <Col flex="1">
+                            <Select v-if="take.action" v-model="take.action" :disabled="true">
+                              <Option v-for="(action_value, action_value_index) in workflowMeta.takes.action"
+                                      :key="action_value_index"
+                                      :value="action_value">
+                                {{ action_value }}
+                              </Option>
+                            </Select>
+                          </Col>
+                          <Col>
+                            <Button @click="onDeleteMetaTake(take_index)">
+                              <Icon type="md-trash"/>
+                            </Button>
+                          </Col>
+                        </Row>
+                      </template>
+                      <template v-else>
+                        <Card dis-hover :padding="5">
+                          <Empty :not-hint="false"></Empty>
+                        </Card>
+                      </template>
+                      <br>
+                      <Row :gutter="30">
                         <Col flex="1">
-                          <Select v-model="take.timer" :disabled="true">
-                            <Option v-for="(timer_value, timer_value_index) in workflowMeta.takes.timer"
-                                    :key="timer_value_index"
-                                    :value="timer_value">
-                              {{ timer_value }}天
+                          <Select v-model="workflowMeta.value.timer">
+                            <Option v-for="(timer, timer_index) in workflowMeta.takes.timer"
+                                    :key="timer_index"
+                                    :value="timer">
+                              {{ timer }}天
                             </Option>
                           </Select>
                         </Col>
                         <Col flex="1">
-                          <Select v-model="take.action" :disabled="true" v-if="take.action">
-                            <Option v-for="(action_value, action_value_index) in workflowMeta.takes.action"
-                                    :key="action_value_index"
-                                    :value="action_value">
-                              {{ action_value }}
+                          <Select v-model="workflowMeta.value.action">
+                            <Option v-for="(action, action_index) in workflowMeta.takes.action"
+                                    :key="action_index"
+                                    :value="action">
+                              {{ action }}
                             </Option>
                           </Select>
                         </Col>
                         <Col>
-                          <Button @click="onDeleteMetaTake(take_index)">删除</Button>
+                          <Button @click="onCreateMetaTake">创建任务</Button>
                         </Col>
                       </Row>
-                    </template>
-                    <Card v-else>
-                      <Empty :not-hint="false"></Empty>
-                    </Card>
-                    <br>
-                    <Row :gutter="30">
-                      <Col flex="1">
-                        <Select v-model="workflowMeta.value.timer">
-                          <Option v-for="(timer, timer_index) in workflowMeta.takes.timer"
-                                  :key="timer_index"
-                                  :value="timer">
-                            {{ timer }}天
-                          </Option>
-                        </Select>
-                      </Col>
-                      <Col flex="1">
-                        <Select v-model="workflowMeta.value.action">
-                          <Option v-for="(action, action_index) in workflowMeta.takes.action"
-                                  :key="action_index"
-                                  :value="action">
-                            {{ action }}
-                          </Option>
-                        </Select>
-                      </Col>
-                      <Col>
-                        <Button @click="onCreateMetaTake">创建任务</Button>
-                      </Col>
-                    </Row>
-                  </FormItem>
-                </Col>
-                <Col span="24">
-                  <FormItem label="备注">
-                    <Input v-model="workflowMeta.data[editPlayerModal.data.id].remark"
-                           placeholder="案件备注，仅自己可见" type="textarea"
-                           :rows="3"/>
-                  </FormItem>
-                </Col>
-                <Col span="24">
-                  <FormItem label="操作">
-                    <Button @click="onDeletePlayer(editPlayerModal.column,editPlayerModal.data.originPersonaId)">归档
-                    </Button>
-                    <Button>移除流程</Button>
-                    <Button>聊天</Button>
-                    <Button>通知</Button>
-                  </FormItem>
-                </Col>
-                <Col span="12">
-                  <FormItem label="其他">
-                    <router-link :to="{name: 'cheater_share', params: {ouid: editPlayerModal.data.originPersonaId}}"
-                                 v-if="editPlayerModal.data.originPersonaId">
-                      <Button>{{ $t('share.title') }}</Button>
-                    </router-link>
-                  </FormItem>
-                </Col>
-              </Row>
-            </Form>
-          </div>
-        </Col>
-        <Col span="16">
-          <JudgementActionView :cheater="editPlayerModal.data"></JudgementActionView>
-        </Col>
-      </Row>
+                    </FormItem>
+                  </Col>
+                  <Col span="24">
+                    <FormItem label="备注">
+                      <Input v-model="workflowMeta.data[editPlayerModal.data.id].remark"
+                             :rows="5" placeholder="案件备注，仅自己可见"
+                             type="textarea"/>
+                    </FormItem>
+                  </Col>
+                </Row>
+              </Form>
+            </div>
+          </Col>
+        </Row>
+      </div>
 
       <div slot="footer">
-        <Row>
-          <Col flex="1"></Col>
+        <Row :gutter="10">
           <Col>
-            <Button @click="onEditPlayer">
-              {{ $t('basic.button.submit') }}
+            <ButtonGroup>
+              <Button @click="onDeletePlayer(editPlayerModal.column,editPlayerModal.data.originPersonaId, 2)">
+                <Icon type="md-cube"/>
+                归档
+              </Button>
+              <Button type="error" ghost
+                      @click="onDeletePlayer(editPlayerModal.column,editPlayerModal.data.originPersonaId, 1)">
+                <Icon type="md-trash"/>
+                删除
+              </Button>
+            </ButtonGroup>
+          </Col>
+          <Col>
+            <router-link v-if="editPlayerModal.data.originPersonaId"
+                         :to="{name: 'cheater_share', params: {ouid: editPlayerModal.data.originPersonaId}}"
+                         target="_blank">
+              <Button>
+                <Icon type="md-open"></Icon>
+                {{ $t('share.title') }}
+              </Button>
+            </router-link>
+          </Col>
+          <Col flex="1">
+            <Button type="primary" @click="onEditPlayer">
+              {{ $t('basic.button.save') }}
             </Button>
           </Col>
         </Row>
