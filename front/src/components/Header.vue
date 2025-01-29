@@ -67,7 +67,7 @@
         </Drawer>
 
         <a class="mobile-hide link"
-           href="javascript:void(0)"
+           :to="i.to ? i.to : {}"
            @click="navigatorTo(i)"
            v-for="(i, index) in headerMenu.child" :key="index">
           {{ $t("header." + i.name) }}
@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import {api, http, http_token, account_storage, storage} from '../assets/js/index'
+import {account_storage, api, http, http_token, storage} from '../assets/js/index'
 import menu from '/public/config/headerMenu.json'
 
 import UserAvatar from "@/components/UserAvatar.vue";

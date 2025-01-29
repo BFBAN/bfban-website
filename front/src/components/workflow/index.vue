@@ -13,6 +13,7 @@ import JudgementActionView from "@/components/judgementActionView.vue";
 import TimelineView from "@/components/timeline/index.vue";
 import SharePlayerCell from "@/components/SharePlayerCell.vue";
 import HtmlLink from "@/components/HtmlLink.vue";
+import ExposedName from "@/components/ExposedName.vue";
 
 export default {
   data() {
@@ -80,6 +81,7 @@ export default {
     }
   },
   components: {
+    ExposedName,
     HtmlLink,
     SharePlayerCell,
     JudgementActionView, TimelineView, TimeView, CheaterStatusView, Empty, Container, Draggable
@@ -520,7 +522,9 @@ export default {
                           <Col flex="1">
                             <a herf="javascript:void(0)" @click="openDetail(card.data, column, 2)"
                                v-if="card.data && card.data.originName">
-                              <b class="text-distinguishing-letter"><code>{{ card.data.originName || 'N/A' }}</code></b>
+                              <ExposedName :disabled="true">
+                                <b>{{ card.data.originName || 'N/A' }}</b>
+                              </ExposedName>
                             </a>
                           </Col>
                           <Col>
@@ -588,7 +592,9 @@ export default {
                   <div class="ivu-list-item-meta-title">
                     <Row :gutter="5">
                       <Col flex="1">
-                        <b class="text-distinguishing-letter"><code>{{ i.originName }}</code></b>
+                        <ExposedName>
+                          <b>{{ i.originName }}</b>
+                        </ExposedName>
                       </Col>
                       <Col>
                         <Tag type="border">{{ $t('basic.games.' + i.games) }}</Tag>

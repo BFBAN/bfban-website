@@ -1,9 +1,11 @@
 <script>
-import {http, api} from '../assets/js/index'
+import {api, http} from '../assets/js/index'
 
 import Application from "@/assets/js/application"
 import Empty from "@/components/Empty.vue"
 import HtmlLink from "@/components/HtmlLink.vue"
+import Loading from "@/components/Loading.vue";
+import ExposedName from "@/components/ExposedName.vue";
 
 export default new Application({
   props: {
@@ -16,7 +18,7 @@ export default new Application({
       default: false
     }
   },
-  components: {Empty, HtmlLink},
+  components: {Loading, Empty, HtmlLink, ExposedName},
   data() {
     return {
       trend: {
@@ -64,12 +66,14 @@ export default new Application({
 </script>
 
 <template>
-  <div>
+  <div class="trend">
     <ol class="sitestats-ul" v-if="trend.list.length > 0">
       <li v-for="(i, index) in trend.list" :key="index">
         <Row :gutter="10" type="flex" align="middle">
-          <Col class="text-distinguishing-letter">
-            <HtmlLink :text="i.originName" :is-poptip="false" :href="`/player/${i.originPersonaId}`"></HtmlLink>
+          <Col>
+            <ExposedName>
+              <HtmlLink :text="i.originName" :is-poptip="false" :href="`/player/${i.originPersonaId}`"></HtmlLink>
+            </ExposedName>
           </Col>
           <Col flex="1">
             <Divider dashed style="margin: 0"></Divider>
@@ -92,12 +96,16 @@ export default new Application({
     </ol>
     <Empty :notHint="false" v-else></Empty>
     <Spin size="large" fix v-show="trend.load">
-      <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+      <Loading :size="50"></Loading>
     </Spin>
   </div>
 </template>
 
 <style scoped lang="less">
+.trend {
+  position: relative;
+}
+
 .sitestats-ul {
   padding-left: 25px;
 

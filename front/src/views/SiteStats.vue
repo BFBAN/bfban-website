@@ -182,9 +182,11 @@
               <ol class="sitestats-ul" v-if="active.achievement.length > 0">
                 <li v-for="(i, index) in active.achievement" :key="index">
                   <Row :gutter="10" type="flex" align="middle">
-                    <Col class="text-distinguishing-letter">
-                      <HtmlLink :text="i.username" :is-poptip="false"
-                                :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
+                    <Col>
+                      <ExposedName>
+                        <HtmlLink :text="i.username" :is-poptip="false"
+                                  :href="`/space/${i.id}?username=${i.username}`"></HtmlLink>
+                      </ExposedName>
                     </Col>
                     <Col flex="1">
                       <Divider dashed style="margin: 0"></Divider>
@@ -231,9 +233,8 @@ import PrivilegesTag from "@/components/PrivilegesTag.vue";
 import AchievementsTag from "@/components/AchievementsTag.vue";
 import HtmlLink from "@/components/HtmlLink.vue"
 import TrendWidget from "@/components/TrendWidget.vue";
-import * as echarts from "echarts";
 
-import {http, api, account_storage, time} from '../assets/js/index'
+import {account_storage, api, http, time} from '../assets/js/index'
 
 export default new Application({
   data() {

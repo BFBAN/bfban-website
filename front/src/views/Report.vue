@@ -113,7 +113,9 @@
                                     <Avatar :src="option.avatarLink"></Avatar>
                                   </Col>
                                   <Col flex="1">
-                                    <span class="text-distinguishing-letter"><code>{{ option.originName }}</code></span>
+                                    <ExposedName>
+                                      {{ option.originName }}
+                                    </ExposedName>
                                   </Col>
                                 </Row>
                               </Option>
@@ -158,9 +160,12 @@
 
                   <Card class="report-hacker-id" dis-hover v-if="tabs.list[index].type === 'originName'">
                     <div slot="title">
-                      <h1 v-if="tabs.list[index].formItem.originName" class="text-distinguishing-letter">
-                        <code>{{ tabs.list[index].formItem.originName }}</code></h1>
-                      <span v-else>ID</span>
+                      <ExposedName>
+                        <h1 v-if="tabs.list[index].formItem.originName">
+                          {{ tabs.list[index].formItem.originName }}
+                        </h1>
+                        <span v-else>ID</span>
+                      </ExposedName>
                     </div>
                     <p class="hint hint-seriousness">
                       {{ $t("report.info.idNotion1") }}

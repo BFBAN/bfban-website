@@ -1,4 +1,4 @@
-<script setup>
+<script>
 import {account_storage, api, http_token, player_storage, util} from "@/assets/js";
 import UserAvatar from "@/components/UserAvatar.vue";
 import BusinessCard from "@/components/BusinessCard.vue";
@@ -10,7 +10,7 @@ import Application from "@/assets/js/application";
 import Empty from "@/components/Empty.vue";
 import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
 import Loading from "@/components/Loading.vue";
-import timeline from "view-design/src/components/timeline";
+import ExposedName from "@/components/ExposedName.vue"
 
 export default new Application({
   props: {
@@ -83,6 +83,7 @@ export default new Application({
     judgeActionTypeView,
     Loading,
     Empty,
+    ExposedName,
   },
   watch: {
     '$route': 'loadData',
@@ -406,8 +407,10 @@ export default new Application({
                 style="padding: 15px 0">
             <Dropdown :transfer="isMobile" placement="bottom-start" style="width: 100%">
               <Row :gutter="16" type="flex" justify="center" align="middle">
-                <Col class="text-distinguishing-letter">
-                  <code>{{ l.beforeUsername || "N/A" }}</code>
+                <Col>
+                  <ExposedName>
+                    {{ l.beforeUsername || "N/A" }}
+                  </ExposedName>
                 </Col>
                 <Col class="mobile-hide">
                   <Icon type="md-arrow-round-forward" class="ivu-tag-text" size="20" style="opacity: .6"/>
@@ -416,7 +419,9 @@ export default new Application({
                   <Icon type="md-arrow-round-forward" size="20" style="opacity: .6;transform: rotate(90deg)"/>
                 </Col>
                 <Col>
-                  <b class="text-distinguishing-letter"><code>{{ l.nextUsername || "N/A" }}</code></b>
+                  <ExposedName>
+                    <b>{{ l.nextUsername || "N/A" }}</b>
+                  </ExposedName>
                 </Col>
               </Row>
 
@@ -445,13 +450,15 @@ export default new Application({
                       <Col flex="1">
                         <Divider dashed style="margin: 0"/>
                       </Col>
-                      <Col class="text-distinguishing-letter">
-                        <template v-if="l.fromTime == origin.fromTime">
-                          <Tag color="primary"><code>{{ origin.originName }}</code></Tag>
-                        </template>
-                        <template v-else>
-                          <code>{{ origin.originName }}</code>
-                        </template>
+                      <Col>
+                        <ExposedName>
+                          <template v-if="l.fromTime == origin.fromTime">
+                            <Tag color="primary">{{ origin.originName }}</Tag>
+                          </template>
+                          <template v-else>
+                            {{ origin.originName }}
+                          </template>
+                        </ExposedName>
                       </Col>
                     </Row>
                   </div>
@@ -489,7 +496,13 @@ export default new Application({
 
                 <!-- 举报 -->
                 {{ $t('detail.info.report') }}
-                <a><u><b class="text-distinguishing-letter"><code>{{ l.toOriginName }}</code></b></u></a>
+                <a>
+                  <u>
+                    <ExposedName>
+                      <b>{{ l.toOriginName }}</b>
+                    </ExposedName>
+                  </u>
+                </a>
 
                 <template v-if="l.cheatGame">
                   <!-- 在 -->

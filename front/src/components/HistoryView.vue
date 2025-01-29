@@ -1,6 +1,7 @@
 <script>
 import {api, http_token, storage} from "@/assets/js";
 import Empty from "@/components/Empty.vue";
+import ExposedName from "@/components/ExposedName.vue";
 
 export default {
   data() {
@@ -13,7 +14,7 @@ export default {
       limit: 10
     }
   },
-  components: {Empty},
+  components: {ExposedName, Empty},
   watch: {
     '$route': 'getHistory',
   },
@@ -96,13 +97,15 @@ export default {
                   <Col :xs="{span: 17, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
                     <div style="display: flex; flex-direction: column;">
                       <Tooltip :content="$t('list.colums.playerId')">
-                        <b class="text-distinguishing-letter">
-                          <router-link
-                              :to="{name: 'player', params: { ouid: d.originPersonaId }, query: {byPath: $route.name}}"
-                              :style="d.avatarLink === '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
-                            <code>{{ d.originName }}</code>
-                          </router-link>
-                        </b>
+                        <ExposedName>
+                          <b>
+                            <router-link
+                                :to="{name: 'player', params: { ouid: d.originPersonaId }, query: {byPath: $route.name}}"
+                                :style="d.avatarLink === '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
+                              <code>{{ d.originName }}</code>
+                            </router-link>
+                          </b>
+                        </ExposedName>
                       </Tooltip>
                     </div>
                   </Col>

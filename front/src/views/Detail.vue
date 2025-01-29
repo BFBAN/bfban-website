@@ -153,8 +153,10 @@
               </template>
               <Col :xs="{span: 24}" :lg="{span: 24}">
                 <Dropdown :transfer="isMobile" placement="bottom-start">
-                  <h1 class="text-distinguishing-letter">
-                    <code :alt="cheater.originName || 'User Name'">{{ cheater.originName || 'User Name' }}</code>
+                  <h1>
+                    <ExposedName>
+                      {{ cheater.originName || 'User Name' }}
+                    </ExposedName>
                   </h1>
 
                   <!-- 历史ID -->
@@ -183,8 +185,10 @@
                           <Col flex="1" class="mobile-hide">
                             <Divider dashed style="margin: 0"/>
                           </Col>
-                          <Col class="text-distinguishing-letter">
-                            <code>{{ origin.originName }}</code>
+                          <Col>
+                            <ExposedName>
+                              {{ origin.originName }}
+                            </ExposedName>
                           </Col>
                         </Row>
                       </div>
@@ -508,10 +512,12 @@
       <!-- 用户-小窗口回复 S -->
       <Modal v-model="replyModal">
         <div slot="header">
-          {{ `${$t('basic.button.reply')}` }}
-          <!--          <BusinessCard :id="$refs.timeline.timelineList[reply.toFloor].byUserId" v-if="$refs.timeline.timelineList[reply.toFloor]">-->
-          <!--            <b>{{ $refs.timeline.timelineList[reply.toFloor].username || 'N/A' }}</b>({{ reply.toFloor + 1 }})-->
-          <!--          </BusinessCard>-->
+          <b>{{ `${$t('basic.button.reply')}` }}</b>
+          <Divider type="vertical"></Divider>
+          <BusinessCard :id="reply.toReplyId"
+                        v-if="reply.toReplyId">
+            <Icon type="md-open"></Icon>
+          </BusinessCard>
         </div>
         <Form ref="replyForm" style="margin: -17px;" v-if="isLogin">
           <TextareaView v-model="reply.miniModeContent"
@@ -617,6 +623,7 @@ import Htmllink from "@/components/HtmlLink";
 import PrivilegesTag from "@/components/PrivilegesTag";
 import UserAvatar from "@/components/UserAvatar.vue"
 import TrendWidget from "@/components/TrendWidget"
+import ExposedName from "@/components/ExposedName.vue"
 
 import {formatTextarea} from "@/mixins/common";
 
@@ -682,6 +689,7 @@ export default new Application({
     PrivilegesTag,
     UserAvatar,
     TrendWidget,
+    ExposedName,
   },
   watch: {
     '$route': 'loadData',
@@ -696,16 +704,23 @@ export default new Application({
 
   methods: {
     async loadData() {
-      this.$Loading.start();
+      try {
+        this.$Loading.start();
 
-      // set Token Http mode
-      this.http = http_token.call(this);
+        // set Token Http mode
+        this.http = http_token.call(this);
 
-      await this.getPlayerInfo()
-      await this.$refs.timeline.getPlayerInfo();
-      await this.$refs.timeline.getTimeline();
+        // get Detail data
+        await this.getPlayerInfo();
 
-      this.$Loading.finish();
+        // get Timeline data
+        await this.$refs.timeline.getPlayerInfo();
+        await this.$refs.timeline.getTimeline();
+
+        this.$Loading.finish();
+      } finally {
+        this.$Loading.finish();
+      }
     },
     /**
      * 追踪此玩家

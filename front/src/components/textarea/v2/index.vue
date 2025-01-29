@@ -117,7 +117,8 @@ export default {
         PlainTextPaste,
       ],
       onUpdate({editor}) {
-        that.onEditorChange(editor.getHTML())
+        const html = editor.getHTML();
+        that.onEditorChange(html)
       },
     })
   },
@@ -161,6 +162,7 @@ export default {
      * @param data
      */
     onEditorChange(data) {
+      this.editorContent = data;
       this.$emit("input", data);
     },
     /**

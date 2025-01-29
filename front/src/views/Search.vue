@@ -26,8 +26,12 @@
                 <Col>
                   <Select v-model="searchTypeValue" size="small">
                     <Option :label="$t('search.tabs.player')" value="player">{{ $t('search.tabs.player') }}</Option>
-                    <Option :label="$t('search.tabs.user')" value="user" :disabled="!isLogin">{{ $t('search.tabs.user') }}</Option>
-                    <Option :label="$t('search.tabs.comment')" value="comment" :disabled="!isLogin && !isAdminL2" v-if="isAdminL2">
+                    <Option :label="$t('search.tabs.user')" value="user" :disabled="!isLogin">{{
+                        $t('search.tabs.user')
+                      }}
+                    </Option>
+                    <Option :label="$t('search.tabs.comment')" value="comment" :disabled="!isLogin && !isAdminL2"
+                            v-if="isAdminL2">
                       {{ $t('search.tabs.comment') }}
                     </Option>
                   </Select>
@@ -294,9 +298,9 @@
                         <Col :xs="{span: 18, push: 0,pull:0}" :sm="{span: 18,push:0,pull:0}"
                              :lg="{span: 18, push: 0,pull:0}">
                           <div style="display: flex; flex-direction: column;">
-                            <Tooltip :content="$t('list.colums.playerId')">
+                            <ExposedName>
                               <h2>{{ d.historyName }}</h2>
-                            </Tooltip>
+                            </ExposedName>
                           </div>
 
                           <div>
@@ -381,9 +385,9 @@
                   <Col :xs="{span: 15, push: 0,pull:0}" :sm="{span: 17,push:0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
                     <div style="display: flex; flex-direction: column;">
                       <Tooltip :content="$t('list.colums.playerId')">
-                        <h2>
-                          {{ user.username }}
-                        </h2>
+                        <ExposedName>
+                          <h2>{{ user.username }}</h2>
+                        </ExposedName>
                       </Tooltip>
                     </div>
 
@@ -439,7 +443,9 @@
                   <Col flex="1">
                     <router-link :to="{name: 'space', params: {uId: `${comment.byUserId}`}}">
                       <BusinessCard :id="comment.byUserId">
-                        <u><b>{{ comment.username || comment.byUserId }}</b></u>
+                        <ExposedName>
+                          <u><b>{{ comment.username || comment.byUserId }}</b></u>
+                        </ExposedName>
                       </BusinessCard>
                     </router-link>
                   </Col>
@@ -490,6 +496,7 @@ import HtmlWidget from "@/components/HtmlWidget";
 import BusinessCard from "@/components/BusinessCard.vue";
 import Empty from "@/components/Empty";
 import TimeView from "@/components/TimeView.vue";
+import ExposedName from "@/components/ExposedName.vue"
 
 import game from '../../public/config/gameName.json';
 
@@ -593,7 +600,7 @@ export default new Application({
       total: {player: 0, user: 0, comment: 0}
     }
   },
-  components: {OcrWidget, PrivilegesTag, HtmlWidget, BusinessCard, Empty, TimeView},
+  components: {OcrWidget, PrivilegesTag, HtmlWidget, BusinessCard, Empty, TimeView, ExposedName},
   created() {
     const {param, type, game, skip, limit} = this.$route.query;
     this.searchValue[type] = param || this.searchValue[type] || '';

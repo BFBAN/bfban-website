@@ -10,7 +10,7 @@
         <Icon type="ios-mail-outline" class="icon"/>
       </template>
       <a :href="afterData.href" target="_blank" rel="noopener noreferrer">
-         {{ afterData.text || afterData.href }}
+        <slot>{{ afterData.text || afterData.href }}</slot>
       </a>
     </span>
     <template v-if="isIframeShow && isPoptip">

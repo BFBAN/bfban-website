@@ -5,9 +5,10 @@
         <img class="share-logo user-select-none" src="../assets/images/logo.png">
         <br class="user-select-none">
         <div style="text-align: center;">
-          <h1 class="text-distinguishing-letter">
-            <code>{{ cheater.originName || 'N/A' }}</code>
-          </h1>
+          <ExposedName>
+            <h1>{{ cheater.originName || 'N/A' }}</h1>
+          </ExposedName>
+
           <h5 class="user-select-none">{{ cheater.originUserId || 'N/A' }}</h5>
         </div>
         <br class="user-select-none">
@@ -70,6 +71,7 @@ import theme from "/public/config/themes.json";
 
 import vueQr from 'vue-qr'
 import CheaterStatusView from "@/components/CheaterStatusView.vue";
+import ExposedName from "@/components/ExposedName.vue";
 
 if (window.callPhantom)
   window.callPhantom('takeShot');
@@ -101,7 +103,7 @@ export default {
     // this.onLoadTheme();
     this.onLoadLang();
   },
-  components: {CheaterStatusView, vueQr},
+  components: {ExposedName, CheaterStatusView, vueQr},
   watch: {
     '$route': 'getCheatersInfo',
     'personaId': 'getCheatersInfo'
@@ -136,7 +138,7 @@ export default {
      */
     async getCheatersInfo() {
       try {
-        if (!this.$route.params.ouid || !this.personaId) return;
+        if (!this.$route.params.ouid && !this.personaId) return;
 
         this.load = true;
         this.cheater = await player_storage.getPlayerInfo({

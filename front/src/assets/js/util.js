@@ -28,7 +28,7 @@ export default class Util {
 
     queryAction (key) {
         let _key = key;
-        if (this.action.length > 0)
+        if (this.action && this.action.length > 0)
             for (let i = 0; i < this.action.length; i++) {
                 if (this.action[i].values.includes(key)) _key = this.action[i].value;
             }

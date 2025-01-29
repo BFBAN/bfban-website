@@ -42,12 +42,14 @@
                     <Col :xs="{span: 17, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
                       <div style="display: flex; flex-direction: column;">
                         <Tooltip :content="$t('list.colums.playerId')">
-                          <h2 class="text-distinguishing-letter">
-                            <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}"
-                                         :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
-                              <code>{{ d.originName }}</code>
-                            </router-link>
-                          </h2>
+                          <ExposedName>
+                            <h2>
+                              <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}"
+                                           :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
+                                <code>{{ d.originName }}</code>
+                              </router-link>
+                            </h2>
+                          </ExposedName>
                         </Tooltip>
                       </div>
 
@@ -112,15 +114,16 @@
 </template>
 
 <script>
-import {http_token, storage, player_storage, account_storage, api} from "../../assets/js";
+import {api, http_token, storage} from "../../assets/js";
 
 import cheaterStatus from '/public/config/cheaterStatus.json'
 import gameName from '/public/config/gameName.json'
 import Empty from "@/components/Empty.vue";
 import TimeView from "@/components/TimeView.vue";
+import ExposedName from "@/components/ExposedName.vue";
 
 export default {
-  components: {TimeView, Empty},
+  components: {ExposedName, TimeView, Empty},
   data() {
     return {
       disable: false,
