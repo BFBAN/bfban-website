@@ -12,13 +12,16 @@
         @ready="onEditorReady"
         @on-blur="onEditorBlur($event)"
         useCustomImageHandler/>
+
+    <slot name="footer"></slot>
+
     <Row :gutter="10" v-if="showMaxlengthLabel" style="margin: 0 10px">
       <Col flex="1">
-        Editor: v1
+        editor: v1
         <template v-if="editorContent != null && editorContent.length >= maxlength">
           <Alert show-icon type="error">{{ $t('textarea.textOverflowHint') }}</Alert>
         </template>
-        <slot name="footer"/>
+        <slot name="footer-left"/>
       </Col>
       <Col>
         <Tooltip :placement="'left-start'" :content="$t('textarea.textHelpHint')" max-width="300" :transfer="true">
@@ -43,7 +46,7 @@
 </template>
 
 <script>
-import {regular, http_token} from "@/assets/js"
+import {http_token, regular} from "@/assets/js"
 
 import UploadWidget from '@/components/UploadWidget';
 

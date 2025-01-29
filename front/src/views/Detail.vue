@@ -367,49 +367,54 @@
               <!-- 用户回复 S -->
               <div class="ivu-card ivu-card-bordered ivu-card-dis-hover" id="reply" v-if="isLogin">
                 <div class="ivu-card-body">
-                  <Textarea v-model="reply.content"
+                  <TextareaView v-model="reply.content"
                             style="margin: -10px -16px;"
                             ref="replyTextarea"
                             :toolbar="[['bold'], ['link', 'image']]"
                             :height="'150px'"
                             :maxlength="5000"
                             :showMaxlengthLabel="true"
-                            :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
-                </div>
-                <div class="ivu-card-body">
-                  <Row :gutter="10">
-                    <Col :xs="{span: 14}" :lg="{span: 12}">
-                      <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
-                    </Col>
-                    <Col :xs="{span: 10, push: 0}" :lg="{span: 12, push: 0}">
-                      <Row type="flex" justify="end" align="middle">
-                        <Col>
-                          <ButtonGroup>
-                            <Button type="primary"
-                                    size="large"
-                                    v-voice-button
-                                    :loading="replySpinShow"
-                                    :disabled="!reply.content"
-                                    @click.stop.prevent="$refs.timeline.onReply('default')">
-                              {{ $t('basic.button.reply') }}
-                            </Button>
-                            <Button size="large" type="dashed">
-                              <Poptip word-wrap width="280" trigger="hover" transfer>
-                                <Icon type="ios-help-buoy"/>
-                                <div slot="content">
-                                  <span>{{ $t('detail.info.replyManual1') }}</span>
-                                  <b><a href="https://sm.ms/" target="_blank">{{
-                                      $t('detail.info.uploadPicButton')
-                                    }}</a></b>，
-                                  <span>{{ $t('detail.info.replyManual2') }}</span>
-                                </div>
-                              </Poptip>
-                            </Button>
-                          </ButtonGroup>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
+                            :placeholder="$t('detail.info.giveOpinion')">
+                    <template v-slot:footer>
+                      <div class="ivu-card-body">
+                        <Row :gutter="10">
+                          <Col :xs="{span: 14}" :lg="{span: 12}">
+                            <Captcha ref="captcha" size="large" @getCaptchaData="getCaptchaData"></Captcha>
+                          </Col>
+                          <Col :xs="{span: 10, push: 0}" :lg="{span: 12, push: 0}">
+                            <Row type="flex" justify="end" align="middle">
+                              <Col>
+                                <ButtonGroup>
+                                  <Button type="primary"
+                                          size="large"
+                                          v-voice-button
+                                          :loading="replySpinShow"
+                                          :disabled="!reply.content"
+                                          @click.stop.prevent="$refs.timeline.onReply('default')">
+                                    {{ $t('basic.button.reply') }}
+                                  </Button>
+                                  <Button size="large">
+                                    <Poptip word-wrap width="280" trigger="hover" transfer>
+                                      <Icon type="ios-help-buoy"/>
+                                      <div slot="content">
+                                        <span>{{ $t('detail.info.replyManual1') }}</span>
+                                        <b>
+                                          <a href="https://sm.ms/" target="_blank">{{
+                                              $t('detail.info.uploadPicButton')
+                                            }}</a>
+                                        </b>，
+                                        <span>{{ $t('detail.info.replyManual2') }}</span>
+                                      </div>
+                                    </Poptip>
+                                  </Button>
+                                </ButtonGroup>
+                              </Col>
+                            </Row>
+                          </Col>
+                        </Row>
+                      </div>
+                    </template>
+                  </TextareaView>
                 </div>
               </div>
               <Alert type="warning" show-icon v-else>
@@ -422,8 +427,9 @@
 
             <Col :xs="{span: 23, push: 0}" :lg="{span: 7, push: 0}" order="2" class="mobile-hide"
                  v-if="appeal.disable">
-              <AdsGoogle id="1760339032"></AdsGoogle>
-              <br>
+              <AdsGoogle id="1760339032">
+                <br>
+              </AdsGoogle>
 
               <!-- 申诉按钮 -->
               <Card dis-hover>
@@ -508,13 +514,14 @@
           <!--          </BusinessCard>-->
         </div>
         <Form ref="replyForm" style="margin: -17px;" v-if="isLogin">
-          <Textarea v-model="reply.miniModeContent"
+          <TextareaView v-model="reply.miniModeContent"
                     ref="replyMiniModeTextarea"
                     :toolbar="[['bold'], ['link', 'image']]"
                     :height="'320px'"
                     :maxlength="5000"
                     :showMaxlengthLabel="true"
-                    :placeholder="$t(`detail.info.giveOpinion`)"></Textarea>
+                    :placeholder="$t('detail.info.giveOpinion')">
+          </TextareaView>
         </Form>
         <div v-else>{{ $t('detail.info.replyManual4') }}</div>
 
@@ -522,7 +529,6 @@
           <Row :gutter="30">
             <Col flex="1">
               <Captcha ref="captcha" @getCaptchaData="getMiniCaptchaData"></Captcha>
-
             </Col>
             <Col>
               <Button @click="cancelReply" v-voice-button>{{ $t('basic.button.cancel') }}</Button>
@@ -597,7 +603,7 @@ import {account_storage, api, http, http_token, storage, time, util,} from '../a
 import Application from "/src/assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
 import Empty from '@/components/Empty.vue'
-import Textarea from "@/components/textarea/index.vue";
+import TextareaView from "@/components/textarea/index.vue";
 import BusinessCard from "@/components/BusinessCard.vue";
 import RecordLink from "@/components/RecordLink.vue";
 import cheaterStatusView from "@/components/CheaterStatusView.vue";
@@ -662,7 +668,7 @@ export default new Application({
   components: {
     AdsGoogle,
     Empty,
-    Textarea,
+    TextareaView,
     BusinessCard,
     RecordLink,
     cheaterStatusView,

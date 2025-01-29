@@ -32,7 +32,7 @@
                   marginwidth="0"
                   marginheight="0"
                   scrolling="no"
-                  sandbox="allow-same-origin allow-forms allow-scripts"></iframe>
+                  sandbox="allow-scripts allow-same-origin"></iframe>
         </template>
       </div>
     </template>

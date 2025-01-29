@@ -12,6 +12,7 @@
         :data-ad-format="ads[adId].adFormat"
         :data-full-width-responsive="ads[adId].fullWidthResponsive">
     </Adsense> -->
+    <slot></slot>
   </Card>
 </template>
 

@@ -8,7 +8,9 @@
             <Breadcrumb>
               <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
               <BreadcrumbItem :to="{name: 'player_list'}">{{ $t("list.title") }}</BreadcrumbItem>
-              <BreadcrumbItem :to="{name: 'player'}">{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
+              <BreadcrumbItem :to="{name: 'player', params: { ouid: $route.params.ouid }}">
+                {{ $t("detail.info.cheatersInfo") }}
+              </BreadcrumbItem>
               <BreadcrumbItem>{{ $t('share.title') }}</BreadcrumbItem>
             </Breadcrumb>
           </Col>
@@ -254,13 +256,19 @@ export default new Application({
         this.$refs.sharePlayerWidget.onLoadLang(share.languages);
       }
 
+      let _qrLink = window.location.origin + that.$router.resolve({
+            name: "player",
+            params: {ouid: this.$route.params.ouid}
+          }).href,
+          _qrAppAsLink = 'https://bfban-app.cabbagelol.net/as?p=app/player?id=' + this.$route.params.ouid;
+
       this.share.load = true;
       this.share = Object.assign(this.share, {
         webLink: _webLink,
         webLinkText: _shareWebLinkText,
         webLinkHtml: `<a href="${url}?lang=${share.languages}" target="_blank">${_shareWebLinkText}</a>`,
-        qrUrlCode: 'https://bfban.com/player/' + this.$route.params.ouid,
-        qrAppCode: 'https://bfban-app.cabbagelol.net/as?p=app/player?id=' + this.$route.params.ouid,
+        qrUrlCode: _qrLink,
+        qrAppCode: _qrAppAsLink,
         iframeLink: `<iframe src="${window.location.href}/card?full=true&theme=${share.theme}&lang=${share.languages}" scrolling="auto" frameborder="0" seamless style="filter:chroma(color=#ffffff);${shareSize.w ? `width:${shareSize.w}px;` : 'width:100%;'} ${shareSize.h ? `height:${shareSize.h}px;` : 'height:100%;'}"><a href="${url}" target="_blank">${url}</a></iframe>`.trim().replaceAll(/\r\n/g, '')
       });
       setTimeout(() => this.share.load = false, 1000)

@@ -7,7 +7,11 @@
           <Icon type="ios-videocam" size="50" />
         </Badge>
         <html-link :isPoptip="false" :href="src || 'link'"></html-link>
-        <iframe class="iframe-load video-box" :src="src" @error="onError" @load="onLoad"></iframe>
+        <iframe class="iframe-load video-box"
+                :src="src"
+                sandbox="allow-same-origin allow-forms allow-scripts"
+                @error="onError"
+                @load="onLoad"></iframe>
       </div>
     </template>
     <template v-else-if="imageStatus == 1">

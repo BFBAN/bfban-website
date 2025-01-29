@@ -94,7 +94,14 @@ export default {
                 :showMaxlengthLabel="showMaxlengthLabel"
                 :toolbar="toolbar"
                 @input="onChangeContent"
-                v-if="editType === 'v2'"></TextareaV2>
+                v-if="editType === 'v2'">
+      <template #footer>
+        <slot name="footer"></slot>
+      </template>
+      <template #footer-left>
+        <slot name="footer-left"></slot>
+      </template>
+    </TextareaV2>
     <TextareaV1 ref="v1"
                 :content="content"
                 :disabled="disabled"
@@ -104,7 +111,14 @@ export default {
                 :showMaxlengthLabel="showMaxlengthLabel"
                 :toolbar="toolbar"
                 @input="onChangeContent"
-                v-else-if="editType === 'v1'"></TextareaV1>
+                v-else-if="editType === 'v1'">
+      <template #footer>
+        <slot name="footer"></slot>
+      </template>
+      <template #footer-left>
+        <slot name="footer-left"></slot>
+      </template>
+    </TextareaV1>
   </div>
 </template>
 

@@ -141,7 +141,8 @@ export default {
           this.editPlayerModal.show = true;
           this.editPlayerModal.column = column;
           this.editPlayerModal.data = i;
-          this.$refs.timeline_workflow.getTimeline();
+          if (this.$refs.timeline_workflow)
+            this.$refs.timeline_workflow.getTimeline();
           break;
       }
     },
@@ -296,7 +297,6 @@ export default {
      * 删除take任务
      */
     onDeleteMetaTake(index) {
-      console.log(this.workflowMeta.data)
       if (this.workflowMeta.data[this.editPlayerModal.data.id] &&
           this.workflowMeta.data[this.editPlayerModal.data.id].take.length >= 0)
         this.workflowMeta.data[this.editPlayerModal.data.id].take.splice(index, 1);
@@ -498,9 +498,8 @@ export default {
             </Row>
             <Container
                 :drop-placeholder="{
-                  className: 'drop-preview',
                   animationDuration: '150',
-                  showOnTop: true
+                  showOnTop: false
                 }"
                 :get-child-payload="getCardPayload(column.id)"
                 drag-class="card-ghost"

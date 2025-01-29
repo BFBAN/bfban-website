@@ -8,7 +8,9 @@
             <Breadcrumb>
               <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
               <BreadcrumbItem :to="{name: 'player_list'}">{{ $t("list.title") }}</BreadcrumbItem>
-              <BreadcrumbItem :to="{name: 'player'}">{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
+              <BreadcrumbItem :to="{name: 'player', params: { ouid: $route.params.ouid }}">
+                {{ $t("detail.info.cheatersInfo") }}
+              </BreadcrumbItem>
               <BreadcrumbItem>{{ $t("detail.info.appeal") }}</BreadcrumbItem>
             </Breadcrumb>
           </Col>
@@ -228,7 +230,8 @@
         <Col flex="1"></Col>
         <Col>
           <ButtonGroup>
-            <Button size="large" :to="{name: 'player', query: {byPath: $route.name}}">{{
+            <Button size="large"
+                    :to="{name: 'player',params: {ouid: $route.params.ouid} , query: {byPath: $route.name}}">{{
                 $t('basic.button.cancel')
               }}
             </Button>

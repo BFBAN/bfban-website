@@ -29,7 +29,7 @@ export default class PwaApp {
 
                 // 避免重复通知
                 // 在数量不一致时再次通知
-                if (backres.data.result.length != _oldPlayerLength) {
+                if (backres.data.result && backres.data.result.length !== _oldPlayerLength) {
                     _notification = await notification.push('查阅通知', {
                         body: `管理员! 网站有${backres.data.result.length || 0}条，待检查举报信息`,
                         icon: '/images/icons/maskable_icon_x48.png',
@@ -80,7 +80,7 @@ export default class PwaApp {
         };
 
         return new Promise((resolve, reject) => {
-            http.get(api['getPlayers'], config).then(res => {
+            http.get(api['players'], config).then(res => {
                 resolve(res.data);
             }).catch((err) => {
                 reject(err);

@@ -98,8 +98,8 @@ export default {
                       <Tooltip :content="$t('list.colums.playerId')">
                         <b class="text-distinguishing-letter">
                           <router-link
-                              :to="{name: 'player', params: { ouid: `${d.originPersonaId}` },query: {byPath: $route.name}}"
-                              :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
+                              :to="{name: 'player', params: { ouid: d.originPersonaId }, query: {byPath: $route.name}}"
+                              :style="d.avatarLink === '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
                             <code>{{ d.originName }}</code>
                           </router-link>
                         </b>

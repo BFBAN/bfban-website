@@ -136,7 +136,7 @@
                   </router-link>
                   {{ $t('home.activity.activities.report') }}
 
-                  <router-link :to="{name: 'player', query: {game: a_i.game, status: -1 } }">
+                  <router-link :to="{name: 'player_list', query: {game: a_i.game, status: -1 } }">
                     <Tooltip :content="$t('basic.games.' + a_i.game)">
                       <Tag type="border">
                         <img height="12"
@@ -146,7 +146,7 @@
                   </router-link>
 
                   <router-link
-                      :to="{name: 'player', params: {game: `${a_i.game}`, ouid: `${a_i.playerOriginPersonaId}`}}">
+                      :to="{name: 'player', params: {ouid: a_i.playerOriginPersonaId}, query: {game: a_i.game}}">
                     <u>{{ a_i.toPlayerName }}</u>
                   </router-link>
 
@@ -178,7 +178,7 @@
 
                   {{ $t('detail.info.judge') }}
 
-                  <router-link :to="{name: 'player', params: {ouid: `${a_i.playerOriginPersonaId}`}}">
+                  <router-link :to="{name: 'player', params: {ouid: a_i.playerOriginPersonaId}}">
                     <u style="margin-right: 5px">{{ a_i.toPlayerName }}</u>
                   </router-link>
 
@@ -214,7 +214,7 @@
 </template>
 
 <script>
-import {api, http, util, time, number} from '../assets/js/index'
+import {api, http, number, time, util} from '../assets/js/index'
 
 import Application from "../assets/js/application";
 import PrivilegesTag from "../components/PrivilegesTag.vue";

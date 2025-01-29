@@ -8,7 +8,7 @@
             <Breadcrumb>
               <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
               <BreadcrumbItem :to="{name: 'player_list'}">{{ $t("list.title") }}</BreadcrumbItem>
-              <BreadcrumbItem :to="{name: 'player'}">{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
+              <BreadcrumbItem :to="{name: 'player', params: { ouid: $route.params.ouid }}">{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
               <BreadcrumbItem>{{ $t('detail.info.app_qr.title') }}</BreadcrumbItem>
             </Breadcrumb>
           </Col>

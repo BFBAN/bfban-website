@@ -7,21 +7,21 @@
       <router-view></router-view>
     </main>
     <template v-if="!isFull">
-      <FooterPublicBox></FooterPublicBox>
+      <FooterWorkflowTool></FooterWorkflowTool>
       <Footer></Footer>
     </template>
   </div>
 </template>
 
 <script>
-import {http_token, storage, account_storage} from './assets/js/index';
+import {account_storage, http_token, storage} from './assets/js/index';
 import {SET_LANG, SET_THEME} from "@/store/mutation-types";
 
 import theme from "/public/config/themes.json"
 
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
-import FooterPublicBox from "@/components/footerPublicBox";
+import FooterWorkflowTool from "@/components/footerWorkflowTool.vue";
 
 import 'view-design/dist/styles/iview.css'
 
@@ -38,7 +38,7 @@ export default {
       location.replace(window.location.hash.replace('#', ''));
     }
   },
-  components: {Header, Footer, FooterPublicBox},
+  components: {Header, Footer, FooterWorkflowTool},
   created() {
     this.http = http_token.call(this);
 

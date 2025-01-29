@@ -224,7 +224,7 @@ const routes = [
         beforeEnter: isLoginBeforeEnter
     },
 
-    // 作弊名单
+    // 作弊列表
     {
         name: 'player_list', path: '/player',
         meta: {
@@ -316,7 +316,9 @@ const routes = [
         component: Detail,
         beforeEnter(to, from, next) {
             next({
-                path: `/player/${to.params.ouid}`, query: {oldUrl: true}
+                name: 'player',
+                params: {ouid: to.params.ouid},
+                query: {oldUrl: true}
             });
         }
     },

@@ -34,6 +34,10 @@ export default {
     type: {
       type: String,
       default: 'turnstile'
+    },
+    size: {
+      type: String,
+      default: 'default',
     }
   },
   components: {TurnstileCaptchaWidget, SvgCaptchaWidget},
@@ -89,12 +93,14 @@ export default {
                             v-if="captchaType === 'turnstile'"
                             :id="id"
                             :disable="disable"
+                            :size="size"
                             @callbackDoneVerifies="doneVerifies"></TurnstileCaptchaWidget>
     <SvgCaptchaWidget ref="svgCaptchaRef"
                       v-if="captchaType === 'svg'"
                       :id="id"
                       :seconds="seconds"
                       :disable="disable"
+                      :size="size"
                       @callbackDoneVerifies="doneVerifies"></SvgCaptchaWidget>
   </div>
 </template>

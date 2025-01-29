@@ -273,7 +273,7 @@
                 <Row :gutter="10" type="flex" justify="center" align="middle">
                   <Col flex="1">
                     <Card dis-hover :padding="10"
-                          :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }, query: {byPath: $route.name}}">
+                          :to="{name: 'player', params: { ouid: d.originPersonaId }, query: {byPath: $route.name, ...$route.query}}">
                       <Row :gutter="10" type="flex">
                         <Col :xs="{span: 5, push: 0,pull:0}" :sm="{span: 3,push:0,pull:0}"
                              :lg="{span: 2, push: 0,pull:0}">

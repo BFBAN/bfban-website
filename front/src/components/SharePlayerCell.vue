@@ -18,11 +18,11 @@
           </Col>
           <Divider type="vertical"/>
           <Col>
-            <router-link :to="{name: 'player', params: { game: cheater.game }}">
+            <router-link :to="{name: 'player', params: {ouid: cheater.originPersonaId}, query: { game: cheater.game }}">
               <template v-if="cheater.games && cheater.games.length >= 0">
                 <Tag color="gold" :alt="$t('detail.info.reportedGames')"
-                     v-for="(game,gameindex) in cheater.games" :key="gameindex">
-                  {{ $t(`basic.games.${game}`, {game: game}) }}
+                     v-for="(game,game_index) in cheater.games" :key="game_index">
+                  {{ $t(`basic.games.${game}`) }}
                 </Tag>
               </template>
               <template v-else>
@@ -136,6 +136,8 @@ export default {
      */
     async getCheatersInfo() {
       try {
+        if (!this.$route.params.ouid || !this.personaId) return;
+
         this.load = true;
         this.cheater = await player_storage.getPlayerInfo({
           personaId: this.$route.params.ouid || this.personaId || null

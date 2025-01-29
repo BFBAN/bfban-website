@@ -1,10 +1,8 @@
 <template>
-  <div class="footer-box" v-if="$route.name != 'workflow' && !$route.query.full">
-    <div class="ivu-modal-mask" style="z-index: 1000;" v-if="isFooterFull" @click="isFooterFull = !isFooterFull"></div>
-
-    <Row :gutter="10" class="footer-box-tip" v-if="$store.state.configuration.footerBar">
+  <div class="footer-box" v-if="isShow">
+    <Row :gutter="10" class="footer-box-tip mobile-hide" v-if="$store.state.configuration.footerBar">
       <Col class="ivu-card ivu-card-bordered ivu-card-dis-hover auto-player-list"
-           v-show="$route.name != 'profile'"
+           v-show="$route.name !== 'profile'"
            :class="[
             isFooterFull ? 'full' : '',
             $store.state.configuration.autoUpdatePlayerList ? 'show' : '',
@@ -16,14 +14,18 @@
               <router-link :to="{name: 'workflow'}">
                 <b class="workflow-title">{{ $t('workflow.title') }}</b>
               </router-link>
+              <Icon type="md-open" v-if="$route.name !== 'workflow' && isFooterFull"></Icon>
             </Col>
             <Col flex="1">
               <router-link :to="{name: 'player_list', query: { status: '0', game: 'all' }}" v-show="!isFooterFull">
                 <Icon type="ios-loading" class="spin-icon-load"
                       v-if="$store.state.$desktop.workflow.autoUpdatePlayerLoading"></Icon>
-                <span v-else>{{
-                    $store.state.$desktop.workflow.autoUpdatePlayerList.total || 0
-                  }}{{ $t('basic.status.0.text') }}</span>
+                <span v-else>
+                  <template v-if="$store.state.$desktop.workflow.autoUpdatePlayerList">
+                    {{ $store.state.$desktop.workflow.autoUpdatePlayerList.total || 0 }}
+                  </template>
+                  {{ $t('basic.status.0.text') }}
+                </span>
               </router-link>
             </Col>
             <Col v-if="!$store.state.configuration.desktopNotification">
@@ -41,7 +43,7 @@
             </Col>
           </Row>
           <div v-show="isFooterFull" class="footer-workflow container">
-            <WorkflowView @on-close="onClose"></WorkflowView>
+            <WorkflowView @close="() => onClose()"></WorkflowView>
           </div>
         </div>
       </Col>
@@ -51,8 +53,9 @@
 
 <script>
 import WorkflowView from "@/components/workflow/index.vue"
+import Application from "@/assets/js/application";
 
-export default {
+export default new Application( {
   name: "footerBox",
   data() {
     return {
@@ -65,20 +68,37 @@ export default {
     onClose() {
       this.isFooterFull = false;
     }
+  },
+  computed: {
+    isShow () {
+      return this.$route.name !== 'workflow' && !this.$route.query.full && !this.isMobile;
+    }
   }
-}
+})
 </script>
 
 <style lang="less" scoped>
 @import "@/assets/css/icon";
 
+@media only screen and (max-width: 480px) {
+  .footer-box-tip {
+    left: 0 !important;
+  }
+}
+
 .footer-box {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
   &-tip {
-    position: fixed;
+    pointer-events: auto;
+    position: absolute;
     z-index: 1001;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: calc(50% - 602px);
 
     .footer-workflow {
       max-height: 70vh;

@@ -106,7 +106,10 @@
         <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }}
           <u>{{ infos.name || '' }}</u> All Rights Reserved. v(f):
           {{ infos['front-version'] || '' }} v(b): {{ infos['backend-version'] || '' }}
-          <iframe src="https://status.bfban.com/badge" class="footer-status-badge" allowTransparency="true"
+          <iframe src="https://status.bfban.com/badge"
+                  class="footer-status-badge"
+                  allowTransparency="true"
+                  sandbox="allow-scripts allow-same-origin"
                   frameborder="0" scrolling="no"></iframe>
         </p>
       </div>
@@ -115,7 +118,7 @@
 </template>
 
 <script>
-import {storage, account_storage, http, time} from "../assets/js";
+import {account_storage, http, storage, time} from "../assets/js";
 
 import packageInfo from '../../package.json';
 import backendPackageInfo from '/public/config/backend-package.json';

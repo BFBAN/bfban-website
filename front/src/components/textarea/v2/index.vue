@@ -1,18 +1,55 @@
 <script>
+import {http_token} from "@/assets/js";
+import {Extension} from '@tiptap/core';
 import {Editor, EditorContent} from '@tiptap/vue-2'
 import StarterKit from '@tiptap/starter-kit'
-
-import Document from '@tiptap/extension-document'
-import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
-import Heading from '@tiptap/extension-heading'
-import Placeholder from '@tiptap/extension-placeholder'
-import Link from '@tiptap/extension-link';
-import HorizontalRule from '@tiptap/extension-horizontal-rule';
-
-import {http_token} from "@/assets/js";
+import EPlaceholder from '@tiptap/extension-placeholder'
+import ELink from '@tiptap/extension-link';
+import EHorizontalRule from '@tiptap/extension-horizontal-rule';
 import UploadWidget from "@/components/UploadWidget.vue";
 import lodash from "lodash";
+
+const Hr = EHorizontalRule.extend({name: 'HR'}).configure({
+      pluginKey: 'hr',
+      HTMLAttributes: {
+        class: 'hr ivu-divider ivu-divider-horizontal ivu-divider-default ivu-divider-dashed',
+      },
+    }),
+    Link = ELink.extend({name: 'Link'}).configure({
+      openOnClick: false,
+      autolink: true,
+      linkOnPaste: true,
+      protocols: ['https', 'http', 'mailto'],
+      HTMLAttributes: {
+        class: 'link',
+      },
+    });
+
+const PlainTextPaste = Extension.create({
+  name: 'plainTextPaste',
+
+  addOptions() {
+    return {
+      // 其他选项
+    };
+  },
+
+  addPasteRules() {
+    return [
+      {
+        regex: /.*/, // 匹配所有内容
+        handler: ({ match, range }) => {
+          return {
+            insert: {
+              type: 'text',
+              text: match[0],
+            },
+          };
+        },
+      },
+    ];
+  },
+});
 
 export default {
   props: {
@@ -72,34 +109,29 @@ export default {
         },
       },
       extensions: [
-        StarterKit,
-        Placeholder.configure({
+        PlainTextPaste,
+        StarterKit.configure({
+          HTMLAttributes: {
+            // 允许的全局属性
+            '*': ['style', 'class'],
+            // 允许的标签和属性
+            'h1': [],
+            'p': [],
+            'a': ['href', 'target'],
+            'img': ['src', 'alt'],
+            // ...其他标签
+          },
+        }),
+        EPlaceholder.configure({
+          pluginKey: 'placeholder',
           placeholder: this.placeholder,
           considerAnyAsEmpty: false,
           showOnlyWhenEditable: true,
           showOnlyCurrent: true,
           includeChildren: false,
         }),
-        Document,
-        Link.configure({
-          openOnClick: false,
-          autolink: true,
-          protocols: ['https', 'http', 'mailto'],
-          HTMLAttributes: {
-            class: 'link',
-          },
-        }),
-        HorizontalRule.configure({
-          HTMLAttributes: {
-            class: 'hr ivu-divider ivu-divider-horizontal ivu-divider-default ivu-divider-dashed',
-          },
-        }),
-        Text,
-        Document,
-        Paragraph,
-        Heading.configure({
-          levels: [1, 2, 3],
-        }),
+        Link,
+        Hr,
       ],
       onUpdate({editor}) {
         that.onEditorChange(editor.getHTML())
@@ -221,8 +253,10 @@ export default {
               <rect class="ql-fill" height="1" rx="0.5" ry="0.5" width="12" x="3" y="15"></rect>
             </svg>
           </Button>
-        </Col>
-        <Col>
+
+          <Divider type="vertical"
+                   v-if="toolbarAs.indexOf('bullet') >= 0 && toolbarAs.indexOf('ordered') >= 0 && toolbarAs.indexOf('hr') >= 0"></Divider>
+
           <Button @click="editor.chain().focus().toggleBulletList().run()"
                   v-if="toolbarAs.indexOf('bullet') >= 0"
                   :class="{'btn': true, 'is-active ql-active': editor.isActive('bulletList') }">
@@ -265,8 +299,9 @@ export default {
                   d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 288zm0-128c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 160z"/>
             </svg>
           </Button>
-        </Col>
-        <Col>
+
+          <Divider type="vertical" v-if="toolbarAs.indexOf('link') >= 0 && toolbarAs.indexOf('image') >= 0"></Divider>
+
           <ButtonGroup>
             <Button @click="onLink(editor.isActive('link'))" class="btn"
                     v-if="toolbarAs.indexOf('link') >= 0"
@@ -291,19 +326,22 @@ export default {
         </Col>
         <Col flex="1"></Col>
         <Col>
-          <ButtonGroup>
-            <Button class="btn" @click="editor.chain().focus().undo().run()"
-                    :disabled="!editor.can().chain().focus().undo().run()">
-              <Icon type="md-undo"/>
-            </Button>
-            <Button class="btn" @click="editor.chain().focus().redo().run()"
-                    :disabled="!editor.can().chain().focus().redo().run()">
-              <Icon type="md-redo"/>
-            </Button>
-          </ButtonGroup>
+          <Button class="btn"
+                  @click="editor.chain().focus().undo().run()"
+                  :disabled="!editor.can().chain().focus().undo().run()">
+            <Icon type="md-undo" size="16"/>
+          </Button>
+          <Button class="btn"
+                  @click="editor.chain().focus().redo().run()"
+                  :disabled="!editor.can().chain().focus().redo().run()">
+            <Icon type="md-redo" size="16"/>
+          </Button>
         </Col>
       </Row>
     </div>
+
+    <slot></slot>
+
     <editor-content
         class="editor"
         ref="tiptapTextEditor"
@@ -312,13 +350,15 @@ export default {
         v-model="editorContent"
         @on-change="onEditorChange"/>
 
-    <Row :gutter="10" v-if="showMaxlengthLabel" style="margin: 0 10px">
+    <slot name="footer"></slot>
+
+    <Row :gutter="0" class="editor-footer" v-if="showMaxlengthLabel">
       <Col flex="1">
-        Editor: v2(beta)
+        editor: v2(beta)
         <template v-if="editorContent != null && editorContent.length >= maxlength">
           <Alert show-icon type="error">{{ $t('textarea.textOverflowHint') }}</Alert>
         </template>
-        <slot name="footer"/>
+        <slot name="footer-left"/>
       </Col>
       <Col>
         <Tooltip :placement="'left-start'" :content="$t('textarea.textHelpHint')" max-width="300" :transfer="true">
@@ -436,14 +476,20 @@ export default {
     }
   }
 
-  a {
+  a:hover,
+  a:active {
     text-decoration: underline;
+  }
+
+  a {
+    opacity: .8;
+    text-decoration: underline;
+    text-decoration-style: dashed;
   }
 
   a:before {
     user-select: none;
     content: "\F3D1";
-    padding-right: 3px;
   }
 
   p {
@@ -491,5 +537,9 @@ export default {
   height: 24px;
   padding: 3px 5px;
   width: 28px;
+}
+
+.editor-footer {
+  padding: 5px 15px;
 }
 </style>

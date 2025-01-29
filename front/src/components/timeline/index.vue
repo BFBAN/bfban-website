@@ -9,6 +9,8 @@ import Htmllink from "@/components/HtmlLink.vue";
 import Application from "@/assets/js/application";
 import Empty from "@/components/Empty.vue";
 import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
+import Loading from "@/components/Loading.vue";
+import timeline from "view-design/src/components/timeline";
 
 export default new Application({
   props: {
@@ -35,7 +37,7 @@ export default new Application({
       timelineListPreparedness: [],
       timelineList: [],
       timeline: {
-        load: false,
+        load: true,
         order: 'asc',
         skip: 1,
         limit: 20,
@@ -79,6 +81,7 @@ export default new Application({
     Htmllink,
     UserAvatar,
     judgeActionTypeView,
+    Loading,
     Empty,
   },
   watch: {
@@ -126,7 +129,7 @@ export default new Application({
       try {
         this.timeline.load = true;
 
-        this.http.get(api["player_timeline"], {
+        const res = await this.http.get(api["player_timeline"], {
           params: Object.assign({
             skip: (this.timeline.skip - 1) * this.timeline.limit,
             limit: this.timeline.limit,
@@ -135,35 +138,37 @@ export default new Application({
             personaId: id || this.id,
             random: +(new Date())
           })
-        }).then(res => {
-          let d = res.data;
-
-          if (d.success === 1) {
-            d.data.result.forEach((i, index) => {
-              if (i.videoLink) {
-                let videoLink = i.videoLink.split(',');
-                if (videoLink instanceof Array)
-                  for (let j = 0; j < videoLink.length; j++)
-                    if (videoLink[j].indexOf('http') >= 0) videoLink[j] = new URL(videoLink[j]);
-                i.videoLink = videoLink;
-              }
-
-              i.index = index;
-              i.show = false;
-            });
-
-            this.timelineListPreparedness = d.data.result;
-            this.timeline.total = d.data.total;
-
-            // 排序
-            this.onMergeHistoryName();
-
-            this.$forceUpdate();
-          }
         })
-      } finally {
-        this.onRollingFloor();
 
+        let d = res.data;
+
+        if (d.success === 1) {
+          d.data.result.forEach((i, index) => {
+            if (i.videoLink) {
+              let videoLink = i.videoLink.split(',');
+              if (videoLink instanceof Array)
+                for (let j = 0; j < videoLink.length; j++)
+                  if (videoLink[j].indexOf('http') >= 0) videoLink[j] = new URL(videoLink[j]);
+              i.videoLink = videoLink;
+            }
+
+            i.index = index;
+            i.show = false;
+          });
+
+          this.timelineListPreparedness = d.data.result;
+          this.timeline.total = d.data.total;
+
+          // 排序
+          this.onMergeHistoryName();
+
+          this.$forceUpdate();
+        }
+
+        this.onRollingFloor();
+        this.timeline.load = false;
+      } finally {
+        this.$emit('ready');
         this.timeline.load = false;
       }
     },
@@ -490,7 +495,8 @@ export default new Application({
                   <!-- 在 -->
                   {{ $t('detail.info.inGame') }}
 
-                  <router-link :to="{name: 'player', query: {game: l.cheatGame, status: -1 } }">
+                  <router-link
+                      :to="{name: 'player_list', params: { ouid: l.originPersonaId }, query: {game: l.cheatGame, status: -1 } }">
                     <Tooltip :content="$t('basic.games.' + l.cheatGame)">
                       <Tag type="border">
                         <img height="12"
@@ -569,12 +575,10 @@ export default new Application({
                 <Tag type="border">{{ l.content.appealType || 'none' }}</Tag>
 
                 <BusinessCard :id="l.originUserId">
-                  <router-link :to="{name: 'player', ouid: `${l.originUserId}`}">
-                    <u>{{ l.cheaterGameName }}</u>
-                  </router-link>
+                  <u>{{ l.cheaterGameName }}</u>
                 </BusinessCard>
 
-                <router-link :to="{name: 'player', query: {game: `${l.cheatGame}`} }" v-if="l.cheatGame">
+                <router-link :to="{name: 'player_list', query: {game: `${l.cheatGame}`} }" v-if="l.cheatGame">
                   <Tooltip :content="$t('basic.games.' + l.cheatGame)">
                     <Tag type="border">
                       <img height="12"
@@ -836,7 +840,7 @@ export default new Application({
     </div>
 
     <Spin size="large" fix v-show="timeline.load">
-      <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+      <Loading :size="50"></Loading>
     </Spin>
   </div>
 </template>

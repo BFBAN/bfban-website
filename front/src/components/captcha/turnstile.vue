@@ -1,5 +1,5 @@
 <template>
-  <Card class="captcha turnstile-wrapper" dis-hover :padding="0">
+  <Card :class="`captcha captcha-size-${size} turnstile-wrapper`" dis-hover :data-placeholder="$t('captcha.title')" :padding="0">
     <div class="ivu-card" :style="{ pointerEvents: isShowGetCaptchaHint ? 'none' : 'auto' }">
       <div ref="turnstileContainer" class="turnstile-container"></div>
     </div>
@@ -29,6 +29,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    size: {
+      type: String,
+      default: 'default',
+    }
   },
   data() {
     return {
@@ -115,11 +119,31 @@ export default {
 <style scoped lang="less">
 @import "@/assets/css/icon.less";
 
+.captcha:after {
+  opacity: .2;
+  content: attr(data-placeholder);
+  position: absolute;
+  z-index: 0;
+  text-align: center;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.captcha.captcha-size-default {
+  height: 35px;
+}
+
+.captcha.captcha-size-large {
+  height: 40px;
+}
+
 .captcha.turnstile-wrapper {
   overflow: hidden;
   width: 177px;
   min-height: 30px;
-  height: 40px !important;
+  height: 100%;
   display: flex;
   box-sizing: border-box;
 }
@@ -138,6 +162,7 @@ export default {
 .captcha .captcha-hint {
   cursor: pointer;
   position: absolute;
+  z-index: 1;
   text-align: center;
   display: flex;
   justify-content: center;
