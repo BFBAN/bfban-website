@@ -163,7 +163,7 @@
 import {storage} from "@/assets/js";
 
 import HtmlWidget from "./HtmlWidget";
-import Textarea from "@/components/Textarea";
+import Textarea from "@/components/textarea/index.vue";
 import uuid from "uuid";
 import Empty from "@/components/Empty.vue";
 

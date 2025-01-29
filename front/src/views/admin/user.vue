@@ -512,7 +512,7 @@ import BusinessCard from "@/components/BusinessCard.vue";
 import TimeView from "@/components/TimeView.vue";
 import PrivilegesTag from "@/components/PrivilegesTag";
 import AchievementsTag from "@/components/AchievementsTag.vue";
-import Textarea from "@/components/Textarea";
+import Textarea from "@/components/textarea/index.vue";
 
 import languages from "/public/config/languages.json";
 import achievement from "/public/config/achievements.json";

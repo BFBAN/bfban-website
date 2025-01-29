@@ -79,19 +79,23 @@ export default class PlayerStorage extends Storage {
      * 获取作弊者档案
      */
     async getPlayerInfo(p = {dbId: '', personaId: ''}, history = true) {
-        let res = await http.get(api["player"], {
-            params: {
-                history,
-                dbId: p.dbId,
-                personaId: p.personaId,
-            }
-        });
-        const d = res.data;
+        try {
+            let res = await http.get(api["player"], {
+                params: {
+                    history,
+                    dbId: p.dbId,
+                    personaId: p.personaId,
+                }
+            });
+            const d = res.data;
 
-        if (d.success !== 1) return {};
+            if (d.success !== 1) return {};
 
-        this.PLAYERDATA[d.data.id] = d.data;
-        this.updateStorage();
-        return d.data;
+            this.PLAYERDATA[d.data.id] = d.data;
+            this.updateStorage();
+            return d.data || {};
+        } catch (e) {
+            return {}
+        }
     }
 }

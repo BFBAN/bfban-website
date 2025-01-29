@@ -14,6 +14,7 @@
         useCustomImageHandler/>
     <Row :gutter="10" v-if="showMaxlengthLabel" style="margin: 0 10px">
       <Col flex="1">
+        Editor: v1
         <template v-if="editorContent != null && editorContent.length >= maxlength">
           <Alert show-icon type="error">{{ $t('textarea.textOverflowHint') }}</Alert>
         </template>
@@ -44,13 +45,13 @@
 <script>
 import {regular, http_token} from "@/assets/js"
 
-import UploadWidget from './UploadWidget';
+import UploadWidget from '@/components/UploadWidget';
 
 import Quill from "quill";
 import {quillEditor} from 'vue-quill-editor'
 import {Emoji, emojis} from '@nutrify/quill-emoji-mart-picker';
-import ImageBlot from '../assets/js/quill-module-image'
-import emojiJsonList from '../../public/config/emoji.json'
+import ImageBlot from '@/assets/js/quill-module-image'
+import emojiJsonList from '../../../../public/config/emoji.json'
 
 export default {
   props: {
@@ -350,7 +351,6 @@ export default {
 }
 
 .editor .ql-hr {
-  background: transparent url("./../../src/assets/images/hr.svg") no-repeat scroll 50% 50% !important;
   text-align: center;
 }
 

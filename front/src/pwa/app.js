@@ -80,7 +80,7 @@ export default class PwaApp {
         };
 
         return new Promise((resolve, reject) => {
-            http.get(api['players'], config).then(res => {
+            http.get(api['getPlayers'], config).then(res => {
                 resolve(res.data);
             }).catch((err) => {
                 reject(err);

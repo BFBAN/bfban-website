@@ -597,7 +597,7 @@ import {account_storage, api, http, http_token, storage, time, util,} from '../a
 import Application from "/src/assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
 import Empty from '@/components/Empty.vue'
-import Textarea from "@/components/Textarea";
+import Textarea from "@/components/textarea/index.vue";
 import BusinessCard from "@/components/BusinessCard.vue";
 import RecordLink from "@/components/RecordLink.vue";
 import cheaterStatusView from "@/components/CheaterStatusView.vue";

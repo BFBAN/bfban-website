@@ -1,5 +1,7 @@
 <template>
   <div class="footer-box" v-if="$route.name != 'workflow' && !$route.query.full">
+    <div class="ivu-modal-mask" style="z-index: 1000;" v-if="isFooterFull" @click="isFooterFull = !isFooterFull"></div>
+
     <Row :gutter="10" class="footer-box-tip" v-if="$store.state.configuration.footerBar">
       <Col class="ivu-card ivu-card-bordered ivu-card-dis-hover auto-player-list"
            v-show="$route.name != 'profile'"
@@ -73,7 +75,7 @@ export default {
 .footer-box {
   &-tip {
     position: fixed;
-    z-index: 900;
+    z-index: 1001;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);

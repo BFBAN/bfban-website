@@ -204,7 +204,7 @@ import {account_storage, api, http, http_token, util} from "../../assets/js";
 import Application from "@/assets/js/application";
 import TimeView from "@/components/TimeView.vue";
 import BusinessCard from "@/components/BusinessCard.vue";
-import Textarea from "@/components/Textarea";
+import Textarea from "@/components/textarea/index.vue";
 import EditLinks from "@/components/EditLinks.vue";
 import HtmlWidget from "@/components/HtmlWidget";
 import {kill} from "process";

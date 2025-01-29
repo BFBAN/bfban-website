@@ -249,6 +249,7 @@
                 <FormItem prop="description" :label="$t('report.labels.description')">
                   <Card :padding="0" dis-hover>
                     <Textarea
+                        :version="'v2'"
                         :toolbar="[[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'hr'], ['link', 'image']]"
                         :placeholder="$t('report.info.description')"
                         :index="index"
@@ -347,18 +348,18 @@
 </template>
 
 <script>
-import {api, http, http_token, voice, util, regular} from '../assets/js/index'
+import {api, http, http_token, regular, util, voice} from '../assets/js/index'
 
 import Application from "../assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
 import Html from "@/components/Html";
 import Captcha from "@/components/captcha/index";
-import Textarea from "@/components/Textarea.vue";
 import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";
 import Promise from "lodash/_Promise";
 import Empty from "@/components/Empty.vue";
 import HtmlWidget from "@/components/HtmlWidget.vue";
+import Textarea from "@/components/textarea/index.vue"
 
 export default new Application({
   data() {
@@ -650,7 +651,7 @@ export default new Application({
               message: d.message || ""
             })).then(() => {
               this.$router.push({
-                name: "cheater",
+                name: "player",
                 params: {ouid: d.data.originPersonaId},
               });
             });

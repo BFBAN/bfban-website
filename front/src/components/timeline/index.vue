@@ -8,6 +8,7 @@ import HtmlWidget from "@/components/HtmlWidget.vue";
 import Htmllink from "@/components/HtmlLink.vue";
 import Application from "@/assets/js/application";
 import Empty from "@/components/Empty.vue";
+import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
 
 export default new Application({
   props: {
@@ -77,6 +78,7 @@ export default new Application({
     HtmlWidget,
     Htmllink,
     UserAvatar,
+    judgeActionTypeView,
     Empty,
   },
   watch: {
@@ -567,12 +569,12 @@ export default new Application({
                 <Tag type="border">{{ l.content.appealType || 'none' }}</Tag>
 
                 <BusinessCard :id="l.originUserId">
-                  <router-link :to="{name: 'cheater', ouid: `${l.originUserId}`}">
+                  <router-link :to="{name: 'player', ouid: `${l.originUserId}`}">
                     <u>{{ l.cheaterGameName }}</u>
                   </router-link>
                 </BusinessCard>
 
-                <router-link :to="{name: 'cheater', query: {game: `${l.cheatGame}`} }" v-if="l.cheatGame">
+                <router-link :to="{name: 'player', query: {game: `${l.cheatGame}`} }" v-if="l.cheatGame">
                   <Tooltip :content="$t('basic.games.' + l.cheatGame)">
                     <Tag type="border">
                       <img height="12"

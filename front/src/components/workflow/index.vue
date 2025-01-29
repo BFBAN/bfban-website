@@ -515,23 +515,29 @@ export default {
                       <Card :padding="10" class="card card-drag-handle" dis-hover>
                         <Row :gutter="4" align="middle" type="flex">
                           <Col>
-                            <Avatar :src="card.data.avatarLink" size="30"></Avatar>
+                            <Avatar :src="card.data.avatarLink" size="30"
+                                    v-if="card.data && card.data.avatarLink"></Avatar>
                           </Col>
                           <Col flex="1">
-                            <a herf="javascript:void(0)" @click="openDetail(card.data, column, 2)">
-                              <b class="text-distinguishing-letter"><code>{{ card.data.originName }}</code></b>
+                            <a herf="javascript:void(0)" @click="openDetail(card.data, column, 2)"
+                               v-if="card.data && card.data.originName">
+                              <b class="text-distinguishing-letter"><code>{{ card.data.originName || 'N/A' }}</code></b>
                             </a>
                           </Col>
                           <Col>
-                            <cheater-status-view :status="editPlayerModal.data.status"/>
-                            <Poptip v-for="(game,gameindex) in card.data.games"
-                                    :key="gameindex"
-                                    transfer trigger="hover">
-                              <Tag :alt="$t('detail.info.reportedGames')" type="border">
-                                <img :src="require('/src/assets/images/games/' + game + '/logo.png')" height="12"/>
-                              </Tag>
-                              <div slot="content">{{ $t(`basic.games.${game}`) }}</div>
-                            </Poptip>
+                            <cheater-status-view :status="editPlayerModal.data.status"
+                                                 v-if="editPlayerModal.data && editPlayerModal.data.status"/>
+                            <template v-if="card.data && card.data.games">
+                              <Poptip v-for="(game,game_index) in card.data.games"
+                                      :key="game_index"
+                                      transfer trigger="hover">
+                                <Tag :alt="$t('detail.info.reportedGames')" type="border">
+                                  <img :src="require('/src/assets/images/games/' + game + '/logo.png')" height="12"/>
+                                </Tag>
+                                <div slot="content">{{ $t(`basic.games.${game}`) }}</div>
+                              </Poptip>
+                            </template>
+
                           </Col>
                           <Col>
                             <Button @click="openDetail(card.data, column, 1)">
@@ -558,38 +564,72 @@ export default {
     <Modal v-model="addPlayerModal.show">
       <Row slot="header">
         <b>导入</b>
+        <template v-if="$store.state.$desktop.workflow.autoUpdatePlayerList">
+          ({{ $store.state.$desktop.workflow.autoUpdatePlayerList.total || 0 }})
+        </template>
         <Icon v-if="$store.state.$desktop.workflow.autoUpdatePlayerLoading" class="spin-icon-load"
               type="ios-loading"></Icon>
       </Row>
-      <Input v-model="addPlayerModal.searchValue" placeholder="搜索玩家"></Input>
-      <div style="overflow: auto; max-height: 400px; margin-top: 10px">
-        <div v-for="(i, index) in $store.state.$desktop.workflow.autoUpdatePlayerList.result"
-             v-show="i.originName.indexOf(addPlayerModal.searchValue) >= 0 && workflowPersonaIdAdded.indexOf(i.originPersonaId) < 0"
-             :key="index">
-          <Row :gutter="4" align="middle" type="flex">
+      <Input v-model="addPlayerModal.searchValue" clearable maxlength="20" placeholder="搜索玩家"></Input>
+      <List border style="overflow: auto; max-height: 400px; margin-top: 10px"
+            v-if="$store.state.$desktop.workflow.autoUpdatePlayerList">
+        <ListItem v-for="(i, index) in $store.state.$desktop.workflow.autoUpdatePlayerList.result"
+                  v-show="i.originName.indexOf(addPlayerModal.searchValue) >= 0 && workflowPersonaIdAdded.indexOf(i.originPersonaId) < 0"
+                  :key="index">
+          <Row :gutter="10" type="flex" align="middle" style="width: 100%">
             <Col>
-              <Checkbox v-model="i.select" :border="false"></Checkbox>
-            </Col>
-            <Col>
-              <Avatar :src="i.avatarLink" size="20"></Avatar>
+              <Checkbox size="large" v-model="i.select"></Checkbox>
             </Col>
             <Col flex="1">
-              <b class="text-distinguishing-letter"><code>{{ i.originName }}</code></b>
-            </Col>
-            <Col>
-              <Tag type="border">{{ $t('basic.games.' + i.games) }}</Tag>
+              <div class="ivu-list-item-meta">
+                <div class="ivu-list-item-meta-avatar">
+                  <Avatar :src="i.avatarLink" size="50"></Avatar>
+                </div>
+                <div class="ivu-list-item-meta-content">
+                  <div class="ivu-list-item-meta-title">
+                    <Row :gutter="5">
+                      <Col flex="1">
+                        <b class="text-distinguishing-letter"><code>{{ i.originName }}</code></b>
+                      </Col>
+                      <Col>
+                        <Tag type="border">{{ $t('basic.games.' + i.games) }}</Tag>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div class="ivu-list-item-meta-description">
+                    <Row :gutter="5" type="flex" align="middle">
+                      <Col>
+                        <TimeView :time="i.updateTime">
+                          {{ i.updateTime }}
+                        </TimeView>
+                      </Col>
+                      <!--                    <Divider type="vertical"></Divider>-->
+                      <Col>
+                        <!--                      <TimeView :time="i.createTime">-->
+                        <!--                        {{ i.createTime }}-->
+                        <!--                      </TimeView>-->
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+              </div>
             </Col>
           </Row>
-        </div>
-      </div>
+        </ListItem>
+      </List>
       <div slot="footer">
         <Row :gutter="30" align="middle" type="flex">
           <Col flex="1">
             <Alert show-icon type="warning">
               当前一共
-              {{ $store.state.$desktop.workflow.autoUpdatePlayerList.total }}待处理数据，已添加{{
-                workflowPersonaIdAdded.length
-              }}条到工作流中
+              <template v-if="$store.state.$desktop.workflow.autoUpdatePlayerList">
+                {{ $store.state.$desktop.workflow.autoUpdatePlayerList.total || 0 }}
+              </template>
+              待处理数据，已添加
+              <template v-if="workflowPersonaIdAdded">
+                {{ workflowPersonaIdAdded.length }}
+              </template>
+              条到工作流中
             </Alert>
           </Col>
           <Col>
@@ -615,7 +655,8 @@ export default {
               <Avatar :src="editPlayerModal.data.avatarLink" size="22"></Avatar>
             </Col>
             <Col>
-              <HtmlLink :href="`/player/${editPlayerModal.data.originPersonaId}`" :text="editPlayerModal.data.originName"></HtmlLink>
+              <HtmlLink :href="`/player/${editPlayerModal.data.originPersonaId}`"
+                        :text="editPlayerModal.data.originName"></HtmlLink>
             </Col>
           </Row>
         </Col>

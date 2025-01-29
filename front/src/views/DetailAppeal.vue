@@ -246,12 +246,12 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import {api, http_token, message, moss, upload} from "@/assets/js";
 
 import Application from "@/assets/js/application";
 import Empty from "@/components/Empty.vue";
-import Textarea from "@/components/Textarea.vue";
+import Textarea from "@/components/textarea/index.vue";
 import Captcha from "@/components/captcha/index";
 import Html from "@/components/Html.vue";
 import EditLinks from "@/components/EditLinks.vue"

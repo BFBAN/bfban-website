@@ -29,6 +29,7 @@ const Profile = () => import('@/views/account/index.vue');
 const Admin = () => import('@/views/admin/index.vue');
 const Search = () => import('@/views/Search.vue');
 const Workflow = () => import('@/views/Workflow.vue');
+const WorkflowAdd = () => import('@/views/WorkflowAdd.vue');
 
 Vue.use(VueRouter);
 Vue.use(VueMeta, {
@@ -449,6 +450,20 @@ const routes = [
         path: '/workflow',
         component: Workflow,
         beforeEnter: isAdminBefore
+    },
+
+    {
+        name: 'workflow_item_add',
+        path: '/workflow/item/add',
+        component: WorkflowAdd,
+        beforeEnter: isAdminBefore,
+    },
+
+    {
+        name: 'workflow_adds',
+        path: '/workflow/adds',
+        component: WorkflowAdd,
+        beforeEnter: isAdminBefore,
     },
 
     // App gangplank

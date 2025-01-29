@@ -96,7 +96,8 @@ export default {
       <Col flex="1" :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem>{{ $t("workflow.title") }}<Tag>Beta</Tag></BreadcrumbItem>
+          <BreadcrumbItem>{{ $t("workflow.title") }}</BreadcrumbItem>
+          <BreadcrumbItem><Tag>Beta</Tag></BreadcrumbItem>
         </Breadcrumb>
       </Col>
     </Row>

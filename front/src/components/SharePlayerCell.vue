@@ -18,7 +18,7 @@
           </Col>
           <Divider type="vertical"/>
           <Col>
-            <router-link :to="{name: 'cheater', params: { game: cheater.game }}">
+            <router-link :to="{name: 'player', params: { game: cheater.game }}">
               <template v-if="cheater.games && cheater.games.length >= 0">
                 <Tag color="gold" :alt="$t('detail.info.reportedGames')"
                      v-for="(game,gameindex) in cheater.games" :key="gameindex">
@@ -58,6 +58,9 @@
         </Row>
       </div>
     </div>
+    <Spin fix v-show="load">
+      <div class="spin-icon-load">🦈</div>
+    </Spin>
   </Card>
 </template>
 
@@ -84,6 +87,7 @@ export default {
   },
   data() {
     return {
+      load: true,
       isFull: true,
       href: window.location.href.replaceAll('/share', ''),
       cheater: {},
@@ -131,18 +135,24 @@ export default {
      * 获取作弊者档案
      */
     async getCheatersInfo() {
-      this.cheater = await player_storage.getPlayerInfo({
-        personaId: this.$route.params.ouid || this.personaId || null
-      }, false);
+      try {
+        this.load = true;
+        this.cheater = await player_storage.getPlayerInfo({
+          personaId: this.$route.params.ouid || this.personaId || null
+        }, false);
 
-      this.spinShow = false;
-      window.widgetReady = true;
+      } finally {
+        this.load = false;
+        window.widgetReady = true;
+      }
     },
   }
 }
 </script>
 
 <style lang="less" scoped>
+@import "@/assets/css/icon";
+
 .share {
   overflow: hidden;
   display: flex;
@@ -151,7 +161,7 @@ export default {
   align-items: flex-end;
   justify-content: center;
   align-content: space-between;
-
+  padding: 10px;
 
   .share-info-context {
 

@@ -1,7 +1,7 @@
 <script setup>
 import Application from "@/assets/js/application";
 import {account_storage, api, http_token, message, time, util} from "@/assets/js";
-import Textarea from "@/components/Textarea";
+import Textarea from "@/components/textarea/index.vue";
 import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
 import judgeActionTemplateView from "@/components/judgeActionTemplateView.vue";
 import FastReply from "@/components/FastReply.vue";

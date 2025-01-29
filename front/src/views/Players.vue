@@ -502,7 +502,7 @@ export default new Application({
       this.spinShow = true;
 
       return new Promise((resolve, reject) => {
-        http.get(api['players'], config).then(res => {
+        http.get(api['getPlayers'], config).then(res => {
           const d = res.data;
 
           if (d.success === 1) {
