@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="profile-body">
     <template v-if="$store.state.configuration.history">
       <Row :gutter="10" class="history-buttons" type="flex" justify="center">
         <Col flex="1">
@@ -53,10 +53,18 @@
 
                       <div>
                         {{ $t('list.colums.reportTime') }}
-                        <Time v-if="d.createTime" :time="d.createTime"/>
+                        <TimeView :time="d.createTime">
+                          <Time v-if="d.createTime" :time="d.createTime"/>
+                        </TimeView>
                         <Divider type="vertical"/>
                         {{ $t('list.colums.updateTime') }}
-                        <Time v-if="d.updateTime" :time="d.updateTime"/>
+                        <TimeView :time="d.updateTime">
+                          <Time v-if="d.updateTime" :time="d.updateTime"/>
+                        </TimeView>
+                        <Divider type="vertical"/>
+                        <TimeView :time="d.historyCreationTime">
+                          <Time v-if="d.historyCreationTime" :time="d.historyCreationTime"/>
+                        </TimeView>
                       </div>
                     </Col>
                     <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 4, push: 0,pull:0}" class="mobile-hide">
@@ -96,7 +104,10 @@
         </Col>
       </Row>
     </template>
-    <div v-else>Disable Component</div>
+    <div v-else>
+      <p>Disable Component</p>
+      <div><img src="@/assets/images/open-component.png" width="80%"/></div>
+    </div>
   </div>
 </template>
 
@@ -106,9 +117,10 @@ import {http_token, storage, player_storage, account_storage, api} from "../../a
 import cheaterStatus from '/public/config/cheaterStatus.json'
 import gameName from '/public/config/gameName.json'
 import Empty from "@/components/Empty.vue";
+import TimeView from "@/components/TimeView.vue";
 
 export default {
-  components: {Empty},
+  components: {TimeView, Empty},
   data() {
     return {
       disable: false,
@@ -136,10 +148,10 @@ export default {
      */
     async getHisory() {
       const {skip, limit} = this;
-      let localData = storage.get('viewed');
+      let localData = storage.local.get('viewed');
       this.list = [];
 
-      if (localData.code != 0 && !localData.data.value) return;
+      if (localData.code !== 0 && !localData.data.value) return;
       if (!this.$store.state.configuration.history) return;
 
       let dbIds = Object.entries(localData.data.value)
@@ -148,13 +160,15 @@ export default {
           .map(i => i[0]);
 
       this.load = true;
-      this.http.get(api["player_batch"], {
+      this.http.get(api["player_batchs"], {
         params: {dbIds}
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
-          this.list = d.data;
+        if (d.success === 1) {
+          this.list = d.data
+              .map(i => localData.data.value[i.id] ? {...i, historyCreationTime: localData.data.value[i.id]} : i)
+              .sort((a, b) => b.historyCreationTime - a.historyCreationTime);
         }
       }).finally(() => {
         this.load = false;
@@ -194,7 +208,7 @@ export default {
      */
     onDelete() {
       let array = this.list;
-      let _storage = storage.get('viewed');
+      let _storage = storage.local.get('viewed');
 
       if (_storage.code != 0 && _storage.data && Object.keys(_storage.data.value) <= 0) {
         _storage = {data: {value: {}}}
@@ -208,7 +222,7 @@ export default {
       }
 
       if (Object.keys(_storage.data.value).length >= 0) {
-        storage.set('viewed', _storage.data.value);
+        storage.local.set('viewed', _storage.data.value);
         this.getHisory();
       }
     },

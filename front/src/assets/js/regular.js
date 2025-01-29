@@ -6,7 +6,7 @@ export default class Regular {
             v: /^[a-zA-Z0-9_-]{4,40}$/g
         },
         'email': {
-            v: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/
+            v: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/gi
         },
         'link': {
             v: /^(ftp|http|https):\/\/[^ "]+$/g

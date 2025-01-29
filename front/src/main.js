@@ -4,14 +4,15 @@ import config from "../package.json"
 import Vue from 'vue'
 import App from './App.vue'
 import i18n from './i18n'
-import less from 'less'
 import router from './router'
 import store from './store'
 import Directive  from './directive.js';
+import Less from 'less'
 import ViewUI from 'view-design'
 import VueQuillEditor from 'vue-quill-editor'
 import ECharts from 'vue-echarts'
 import Cookies from 'js-cookie'
+import Ads from 'vue-google-adsense'
 
 // vue directive, [https://v2.cn.vuejs.org/v2/guide/custom-directive.html]
 Directive(Vue);
@@ -32,10 +33,10 @@ import 'quill/dist/quill.snow.css'
 // pwa js
 import './registerServiceWorker'
 
-Vue.use(less)
-Vue.use(ViewUI, {
-  i18n: (key, value) => i18n.t(key,value)
-})
+Vue.use(require('vue-script2'))
+Vue.use(Ads.Adsense)
+Vue.use(Less)
+Vue.use(ViewUI, {i18n: (key, value) => i18n.t(key,value)})
 Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false
@@ -53,11 +54,11 @@ const app = new Vue({
   metaInfo () {
     let meta = [];
     for (let metaInfoKey in this.$store.state.metaInfo) {
-      if (this.$store.state.metaInfo[metaInfoKey] != "")
+      if (this.$store.state.metaInfo[metaInfoKey] !== "")
         meta.push({name: metaInfoKey, content: this.$store.state.metaInfo[metaInfoKey]})
     }
     return Object.assign({
-      titleTemplate: config.name + ' / %s',
+      titleTemplate: i18n.t('name') + ' / %s',
       htmlAttrs: {
         lang: this.$i18n.locale,
         amp: true

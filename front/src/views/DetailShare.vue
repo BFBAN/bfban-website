@@ -8,7 +8,9 @@
             <Breadcrumb>
               <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
               <BreadcrumbItem :to="{name: 'player_list'}">{{ $t("list.title") }}</BreadcrumbItem>
-              <BreadcrumbItem :to="{name: 'player'}">{{ $t("detail.info.cheatersInfo") }}</BreadcrumbItem>
+              <BreadcrumbItem :to="{name: 'player', params: { ouid: $route.params.ouid }}">
+                {{ $t("detail.info.cheatersInfo") }}
+              </BreadcrumbItem>
               <BreadcrumbItem>{{ $t('share.title') }}</BreadcrumbItem>
             </Breadcrumb>
           </Col>
@@ -35,17 +37,32 @@
               </div>
             </template>
             <template v-else-if="share.collapse == 2">
-              <div v-html="share.iframeLink" style="height: 800px; width: 100%"></div>
+              <Row :gutter="40" type="flex" justify="center" align="middle" wrap>
+                <Col>
+                  <vue-qr :text="share.qrUrlCode" :margin="3"></vue-qr>
+                </Col>
+                <Col>
+                  <vue-qr :logoScale=".2"
+                          :logoSrc="'https://bfban-app.cabbagelol.net/images/logo.png'"
+                          :text="share.qrAppCode"
+                          :margin="3"></vue-qr>
+                </Col>
+              </Row>
             </template>
             <template v-else-if="share.collapse == 3">
+              <div v-html="share.iframeLink" style="height: 800px; width: 100%"></div>
+            </template>
+            <template v-else-if="share.collapse == 4">
               <div style="position: relative; overflow: hidden">
-                <SharePlayerCell ref="sharePlayerWidget" id="getSharePicture_window" :personaId="$route.params.ouid"
+                <SharePlayerCell ref="sharePlayerWidget"
+                                 id="getSharePicture_window"
+                                 :personaId="$route.params.ouid"
                                  :lang="share.languages"></SharePlayerCell>
               </div>
             </template>
             <template v-else>
               <div style="min-height: 500px;width: 100%;display: flex;justify-content: center;align-items: center">
-                (✿◡‿◡) 🦖
+                (✿◡‿◡) 🦖🦈🐧
               </div>
             </template>
             <Spin size="large" fix v-if="share.load"></Spin>
@@ -78,6 +95,23 @@
                 </div>
               </Panel>
               <Panel name="2">
+                {{ $t('share.qr.name') }}
+                <div slot="content">
+                  <FormItem :label="$t('share.qr.uriCode')">
+                    <Input v-model="share.qrUrlCode" type="textarea"
+                           :autosize="{minRows: 2}"
+                           :placeholder="$t('share.qr.uriCode')"
+                           readonly></Input>
+                  </FormItem>
+                  <FormItem :label="$t('share.qr.appCode')">
+                    <Input v-model="share.qrAppCode" type="textarea"
+                           :autosize="{minRows: 2}"
+                           :placeholder="$t('share.qr.appCode')"
+                           readonly></Input>
+                  </FormItem>
+                </div>
+              </Panel>
+              <Panel name="3">
                 {{ $t('share.iframe.name') }}
                 <div slot="content">
                   <FormItem :label="$t('share.iframe.theme')">
@@ -98,7 +132,7 @@
                   </FormItem>
                 </div>
               </Panel>
-              <Panel name="3">
+              <Panel name="4">
                 {{ $t('share.image.name') }}
                 <div slot="content">
                   <Alert show-icon>{{ $t('share.image.describe') }}</Alert>
@@ -130,14 +164,13 @@
 import Application from "/src/assets/js/application";
 import theme from "/public/config/themes.json";
 import languages from "/public/config/languages.json";
-import config from "@/../package.json";
 
 import {http_token} from '../assets/js/index'
-import vueQr from 'vue-qr'
 import html2canvas from 'html2canvas';
+import vueQr from 'vue-qr';
 
 import Empty from '../components/Empty.vue'
-import BusinessCard from "../components/businessCard.vue";
+import BusinessCard from "../components/BusinessCard.vue";
 import SharePlayerCell from "../components/SharePlayerCell.vue";
 
 export default new Application({
@@ -201,7 +234,7 @@ export default new Application({
       // set Token Http mode
       this.http = http_token.call(this);
 
-      this.share.appName = config.name;
+      this.share.appName = this.$i18n.t("name");
     },
     /**
      * 更新 / 设置分享内容
@@ -223,11 +256,19 @@ export default new Application({
         this.$refs.sharePlayerWidget.onLoadLang(share.languages);
       }
 
+      let _qrLink = window.location.origin + that.$router.resolve({
+            name: "player",
+            params: {ouid: this.$route.params.ouid}
+          }).href,
+          _qrAppAsLink = 'https://bfban-app.cabbagelol.net/as?p=app/player?id=' + this.$route.params.ouid;
+
       this.share.load = true;
       this.share = Object.assign(this.share, {
         webLink: _webLink,
         webLinkText: _shareWebLinkText,
         webLinkHtml: `<a href="${url}?lang=${share.languages}" target="_blank">${_shareWebLinkText}</a>`,
+        qrUrlCode: _qrLink,
+        qrAppCode: _qrAppAsLink,
         iframeLink: `<iframe src="${window.location.href}/card?full=true&theme=${share.theme}&lang=${share.languages}" scrolling="auto" frameborder="0" seamless style="filter:chroma(color=#ffffff);${shareSize.w ? `width:${shareSize.w}px;` : 'width:100%;'} ${shareSize.h ? `height:${shareSize.h}px;` : 'height:100%;'}"><a href="${url}" target="_blank">${url}</a></iframe>`.trim().replaceAll(/\r\n/g, '')
       });
       setTimeout(() => this.share.load = false, 1000)
@@ -311,5 +352,4 @@ export default new Application({
 </script>
 
 <style lang="less" scoped>
-
 </style>

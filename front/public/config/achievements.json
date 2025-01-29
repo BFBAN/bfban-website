@@ -1,0 +1,416 @@
+{
+  "byIcon": "https://emojikitchen.dev",
+  "raritys": {
+    "normal": {
+      "class": ""
+    },
+    "rare": {
+      "class": "green"
+    },
+    "preciousness": {
+      "class": "red"
+    }
+  },
+  "child": [
+    {
+      "value": "one_search_player",
+      "isHidden": true,
+      "isShowCard": false,
+      "rarity": "normal",
+      "acquisition": [
+        "active"
+      ],
+      "tag": [
+        "user"
+      ]
+    },
+    {
+      "value": "old_user_l2",
+      "iconPath": "old_user.png",
+      "isHidden": true,
+      "isShowCard": true,
+      "rarity": "normal",
+      "acquisition": [
+        "passive"
+      ],
+      "tag": [
+        "user"
+      ]
+    },
+    {
+      "value": "old_user",
+      "iconPath": "old_user.png",
+      "isShowCard": true,
+      "rarity": "preciousness",
+      "acquisition": [
+        "active"
+      ],
+      "tag": [
+        "user"
+      ]
+    },
+    {
+      "value": "report_assemble",
+      "child": [
+        {
+          "value": "report_l1",
+          "iconPath": "report_l1.png",
+          "isShowCard": true,
+          "rarity": "normal",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "report"
+          ]
+        },
+        {
+          "value": "report_l2",
+          "iconPath": "report_l2.png",
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "report"
+          ]
+        },
+        {
+          "value": "report_l3",
+          "iconPath": "report_l3.png",
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "report"
+          ]
+        },
+        {
+          "value": "report_l4",
+          "iconPath": "report_l4.png",
+          "isShowCard": true,
+          "rarity": "preciousness",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "report"
+          ]
+        },
+        {
+          "value": "report_l5",
+          "iconPath": "report_l5.png",
+          "isShowCard": true,
+          "rarity": "preciousness",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "report"
+          ]
+        }
+      ]
+    },
+    {
+      "value": "open_chat_assemble",
+      "tag": [
+        "chat"
+      ],
+      "child": [
+        {
+          "value": "open_chat_l1",
+          "iconPath": "open_chat.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "normal",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        },
+        {
+          "value": "open_chat_l2",
+          "iconPath": "open_chat.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "normal",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        }
+      ]
+    },
+    {
+      "value": "active_community_weekly_assemble",
+      "tag": [
+        "active_community",
+        "weekly"
+      ],
+      "child": [
+        {
+          "value": "active_community_weekly_l1",
+          "iconPath": "active_community_l1.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        }
+      ]
+    },
+    {
+      "value": "active_community_monthly_assemble",
+      "tag": [
+        "active_community",
+        "weekly"
+      ],
+      "child": [
+        {
+          "value": "active_community_monthly_l1",
+          "iconPath": "active_community_l2.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        },
+        {
+          "value": "active_community_monthly_l2",
+          "iconPath": "active_community_l2.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        }
+      ]
+    },
+    {
+      "value": "active_community_yearly_assemble",
+      "tag": [
+        "active_community",
+        "yearly"
+      ],
+      "child": [
+        {
+          "value": "active_community_yearly_l1",
+          "iconPath": "active_community_l3-1.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        },
+        {
+          "value": "active_community_yearly_l2",
+          "iconPath": "active_community_l3-2.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        }
+      ]
+    },
+    {
+      "value": "user_innocent_case",
+      "iconPath": "user_innocent_case.png",
+      "isHidden": false,
+      "isShowCard": true,
+      "rarity": "rare",
+      "acquisition": [
+        "active"
+      ],
+      "tag": [
+        "user"
+      ]
+    },
+    {
+      "value": "trend_monthly_assemble",
+      "tag": [
+        "user",
+        "hot_case"
+      ],
+      "child": [
+        {
+          "value": "trend_monthly_l1",
+          "iconPath": "hot_case_monthly_l1.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user",
+            "hot_case"
+          ]
+        },
+        {
+          "value": "trend_monthly_l2",
+          "iconPath": "hot_case_monthly_l2.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user",
+            "hot_case"
+          ]
+        }
+      ]
+    },
+    {
+      "value": "user_achievement_assemble",
+      "tag": [
+        "achievement",
+        "user"
+      ],
+      "child": [
+        {
+          "value": "user_achievement_l1",
+          "iconPath": "user_achievement_l1.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user",
+            "achievement"
+          ]
+        },
+        {
+          "value": "user_achievement_l2",
+          "iconPath": "user_achievement_l2.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user",
+            "achievement"
+          ]
+        },
+        {
+          "value": "user_achievement_l3",
+          "iconPath": "user_achievement_l3.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user",
+            "achievement"
+          ]
+        },
+        {
+          "value": "user_achievement_l4",
+          "iconPath": "user_achievement_l4.png",
+          "isHidden": false,
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user",
+            "achievement"
+          ]
+        }
+      ]
+    },
+    {
+      "value": "user_subscribes_assemble",
+      "tag": [
+        "subscribes",
+        "user"
+      ],
+      "child": [
+        {
+          "value": "user_subscribes_l1",
+          "iconPath": "user_subscribes_l1.png",
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        },
+        {
+          "value": "user_subscribes_l2",
+          "iconPath": "user_subscribes_l2.png",
+          "isShowCard": true,
+          "rarity": "rare",
+          "acquisition": [
+            "active"
+          ],
+          "tag": [
+            "user"
+          ]
+        }
+      ]
+    },
+    {
+      "value": "site_20w_report_witnesses",
+      "iconPath": "site_20w_report_witnesses_l1.png",
+      "isShowCard": true,
+      "rarity": "normal",
+      "acquisition": [
+        "active"
+      ],
+      "tag": [
+        "user"
+      ]
+    },
+    {
+      "value": "app_use_mobile",
+      "iconPath": "app_use_mobile.png",
+      "isShowCard": true,
+      "rarity": "normal",
+      "acquisition": [
+        "active"
+      ],
+      "tag": [
+        "user"
+      ]
+    }
+  ]
+}

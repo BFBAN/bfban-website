@@ -1,6 +1,6 @@
 <template>
   <div class="html-widget-box">
-    <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-${htmlSize}`" v-if="html"></Html>
+    <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-animation html-widget-size-${htmlSize}`" v-if="html"></Html>
     <div class="html-widget-box-divider ivu-divider ivu-divider-horizontal"></div>
     <Row class="html-widget-toolbar" type="flex" justify="center" align="middle" :gutter="5">
       <Col flex="1">
@@ -9,34 +9,35 @@
         </a>
         <Modal v-model="fullScreenStatus" fullscreen footer-hide :scrollable="true">
           <div class="container">
-            <Card class="content">
-              <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-${htmlSize}`"></Html>
+            <Card class="content" dis-hover>
+              <Html :html="html" :mode="'large'" :class="`html-widget-size-${htmlSize}`"></Html>
             </Card>
           </div>
         </Modal>
       </Col>
       <Col>
-        <Dropdown trigger="click" @on-click="changeSize">
+        <Dropdown placement="top" trigger="click" @on-click="changeSize">
           <a href="javascript:void(0)">
-            {{ htmlSize }}
+            {{ $t(`basic.html.size.${htmlSize}`) }}
             <Icon type="ios-arrow-down"></Icon>
           </a>
           <DropdownMenu slot="list">
-            <DropdownItem name="large" :selected="htmlSize == 'large'">Large</DropdownItem>
-            <DropdownItem name="default" :selected="htmlSize == 'default'">Default</DropdownItem>
-            <DropdownItem name="small" :selected="htmlSize == 'small'">Small</DropdownItem>
+            <DropdownItem v-for="(i,index) in htmlSizeType" :key="index" :name="i" :selected="htmlSize === i">
+              {{ $t(`basic.html.size.${i}`) }}
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
         <Divider type="vertical"></Divider>
-        <Dropdown trigger="click" @on-click="changeMode">
+        <Dropdown placement="top" trigger="click" @on-click="changeMode">
           <a href="javascript:void(0)">
-            {{ htmlShowMode }}
+            {{ $t(`basic.html.type.${htmlShowMode}`) }}
             <Icon type="ios-arrow-down"></Icon>
           </a>
           <DropdownMenu slot="list">
-            <DropdownItem name="code" :selected="htmlShowMode == 'code'">Code</DropdownItem>
-            <DropdownItem name="text" :selected="htmlShowMode == 'text'">Text</DropdownItem>
-            <DropdownItem name="renderer" :selected="htmlShowMode == 'renderer'">Renderer</DropdownItem>
+            <DropdownItem v-for="(i,index) in rendererType" :key="index" :label="i" :name="i"
+                          :selected="htmlShowMode === i">
+              {{ $t(`basic.html.type.${i}`) }}
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </Col>
@@ -61,6 +62,8 @@ export default {
       htmlSize: "default",
       htmlShowMode: "renderer",
       fullScreenStatus: false,
+      htmlSizeType: ['x-large', 'large', 'default', 'small'],
+      rendererType: ['code', 'text', 'renderer']
     }
   },
   components: {Html},
@@ -82,15 +85,35 @@ export default {
 .html-widget-box {
   transition: all .5s;
 
-  .html-widget-size-large {
-    * {
-      font-size: 20px;
-      line-height: 2;
+  .html-widget-size-x-large {
+    &, * {
+      font-size: 30px;
+      line-height: 1.8;
     }
 
     p {
       margin-top: 5px;
       margin-bottom: 5px;
+    }
+
+    .img .img-box {
+      margin-top: -46px;
+    }
+  }
+
+  .html-widget-size-large {
+    &, * {
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    p {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .img .img-box {
+      margin-top: -30px;
     }
   }
 
@@ -99,8 +122,9 @@ export default {
     word-wrap: break-word !important;;
     word-break: break-word !important;
 
-    * {
+    &, * {
       font-size: 13px;
+      line-height: 1.5;
     }
 
     p {
@@ -110,8 +134,9 @@ export default {
   }
 
   .html-widget-size-small {
-    * {
+    &, * {
       font-size: 12px;
+      line-height: 1.25;
     }
 
     p {
@@ -124,6 +149,10 @@ export default {
 
 <style lang="less" scoped>
 .html-widget-box {
+  .html-widget-size-animation {
+    animation: all .5s;
+  }
+
   .html-widget-box-divider {
     opacity: .6;
     visibility: visible;

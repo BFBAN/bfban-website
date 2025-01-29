@@ -64,14 +64,8 @@
 
               <div v-show="isOneStepToTheStomach || stepsIndex === 2">
                 <FormItem :label="$t('captcha.title')" prop="captcha">
-                  <Input type="text" v-model="signup.captcha"
-                         size="large"
-                         maxlength="4"
-                         :placeholder="$t('captcha.title')">
-                    <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                      <Captcha ref="captcha" :seconds="15"></Captcha>
-                    </div>
-                  </Input>
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
+
                 </FormItem>
               </div>
 
@@ -154,7 +148,7 @@ import {http, api, http_token, mail, regular} from '../assets/js/index'
 import {testWhitespace} from "@/mixins/common";
 
 import EmailTip from "../components/EmailTip";
-import Captcha from "../components/Captcha";
+import Captcha from "../components/captcha/index";
 
 export default new Application({
   data() {
@@ -181,7 +175,7 @@ export default new Application({
           {required: true, trigger: 'blur'}
         ],
         captcha: [
-          {required: true, len: 4, trigger: 'blur'}
+          {required: true}
         ]
       },
       signup: {
@@ -189,7 +183,7 @@ export default new Application({
         password: '',
         originEmail: '',
         originName: '',
-        captcha: '',
+        captcha: {},
       },
       serverReturnMessage: '',
       spinShow: false,
@@ -201,6 +195,10 @@ export default new Application({
     this.http = http_token.call(this);
   },
   methods: {
+    getCaptchaData(value) {
+      this.signup.captcha = value;
+    },
+
     /**
      * 提交注册信息
      */
@@ -226,7 +224,6 @@ export default new Application({
               originName,	  // must have one of bf series game
               language: mail.exchangeLangField(this.$root.$i18n.locale)
             },
-            encryptCaptcha: this.$refs.captcha.hash,
             captcha
           }
         }).then(res => {
@@ -247,7 +244,7 @@ export default new Application({
             message: d.message || ""
           });
           this.serverReturnMessage = message;
-          this.$Message.error({content: message, duration: 5});
+          this.$Message.error({content: message, duration: 10});
         }).catch(err => {
           this.$Message.error(err);
           this.serverReturnMessage = err.toString();
@@ -260,7 +257,15 @@ export default new Application({
       })
     },
 
-    // 清理表单字段
+    /**
+     * 清理表单字段
+     * @param captcha
+     * @param username
+     * @param password
+     * @param originEmail
+     * @param originName
+     * @param stepsIndex
+     */
     onCleanSignupForm({
                         captcha = true,
                         username = true,

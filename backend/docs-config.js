@@ -1,49 +1,86 @@
 "use strict";
 
+/**
+ *
+ */
+
 const docs_config = {
     openapi: "3.0.3",
-    basePath: '/',
-    schemes: ['http', 'https'],
+    basePath: "/",
+    schemes: ["http", "https"],
     info: {
-        title: 'BFBAN V2 DOCS',
-        version: '2.0.0',
-        description: 'bfban 后端接口文档，任何问题请到github的bfban仓库提出问题',
+        title: "BFBAN backend V2 API document",
+        version: ">2.0.0",
+        description: "bfban back-end interface documentation, any questions please to github\"s bfban repository questions",
+        contact: {
+            email: "services@bfban.com",
+            name: "API Support"
+        },
         license: {
-            name: 'Apache 2.0',
-            url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+            name: "MIT License",
+            url: "https://github.com/BFBAN/bfban-website/blob/master/LICENSE"
         }
     },
     servers: [
-        { "url": "http://127.0.0.1:3000" },
-        { "url": "https://bfban.com" },
-        { "url": "https://bfban.gametools.network" }
+        {
+            "url": "{protocol}://{environment}.bfban.com",
+            "description": "main hosting service",
+            "variables": {
+                "environment": {
+                    "enum": [
+                        "api",
+                        "api.dev",
+                    ],
+                    "default": "api"
+                },
+                "protocol": {
+                    "enum": [
+                        "http",
+                        "https",
+                    ],
+                    "default": "https"
+                },
+            }
+        },
+        {
+            "url": "{protocol}://localhost:{port}",
+            "description": "local host",
+            "variables": {
+                "port": {
+                    "enum": [
+                        "3000",
+                        "3001",
+                        "3002",
+                        "3003",
+                        "3004",
+                    ],
+                    "default": "3000"
+                },
+                "protocol": {
+                    "enum": [
+                        "http",
+                        "https",
+                    ],
+                    "default": "http"
+                },
+            }
+        },
     ],
-    tags: [
-        {
-            name: 'message',
-            description: 'Notification class'
-        },
-        {
-            name: '统计',
-            description: '网站统计'
-        },
-        {
-            name: '玩家',
-            description: '玩家一类信息'
-        },
-        {
-            name: '查询',
-            description: '玩家一类信息'
-        }
-    ],
+    tags: [],
     components: {
         "securitySchemes": {
-            "x-access-token": {
-                'type': "apiKey",
-                'name': "x-access-token",
-                'in': "header"
+            "appToken": {
+                "type": "apiKey",
+                "name": "x-access-token",
+                "description": "This value is an account identity token",
+                "in": "header"
+            },
+            "appId": {
+                "type": "apiKey",
+                "name": "x-app-id",
+                "in": "header"
             }
-        }
+        },
     },
 }
 

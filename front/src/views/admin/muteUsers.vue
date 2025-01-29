@@ -33,7 +33,7 @@
         </Select>
       </Col>
       <Col>
-        <router-link :to="{name: 'admin', params: {pagename: 'admin_operation_log'}}">
+        <router-link :to="{name: 'admin', params: {pagename: 'admin_operation_log'}}" target="_blank">
           {{ $t('profile.admin.menu.adminOperationLog') }}
         </router-link>
       </Col>

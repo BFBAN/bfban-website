@@ -68,7 +68,7 @@ import Application from "/src/assets/js/application";
 
 import {api, http, http_token, message} from "../../assets/js";
 
-import BusinessCard from "/src/components/businessCard.vue";
+import BusinessCard from "/src/components/BusinessCard.vue";
 import PrivilegesTag from "/src/components/PrivilegesTag";
 import messageConf from "/public/config/message.json";
 

@@ -79,6 +79,23 @@ const captchaRateLimiter = rateLimit({
     message: {error: 1, code: 'request.rateLimited', message: 'slow down please.'}
 });
 
+const statisticsLimiter = rateLimit({
+    windowMs: 10000,
+    max: 5,
+    message: {error: 1, code: 'request.rateLimited', message: 'slow down please.'}
+});
+
+const batchSearchRateLimiter = rateLimit({                     // 5 normal search request per 1s, 10000 for des/admins 
+    windowMs: 60000, 
+    max: (req, res)=>{ 
+        if(!!req.user && userHasRoles(req.user, ['dev','bot','admin','super','root']))
+            return 10000;
+        else
+            return 600;
+    },
+    message: {error: 1, code: 'request.rateLimited', message: 'slow down please.'}
+});
+
 export {
     UserRateLimiter,
     commentRateLimiter,
@@ -86,4 +103,6 @@ export {
     normalSearchRateLimiter,
     viewedRateLimiter,
     captchaRateLimiter,
+    statisticsLimiter,
+    batchSearchRateLimiter,
 }

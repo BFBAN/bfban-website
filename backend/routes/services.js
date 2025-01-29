@@ -2,20 +2,12 @@
 import crypto from "crypto";
 import got from "got";
 import express from "express";
-import {PassThrough, Transform, pipeline} from "stream";
-import {
-    check,
-    body as checkbody,
-    query as checkquery,
-    header as checkheader,
-    oneOf as checkOneOf,
-    validationResult
-} from "express-validator";
-
+import {PassThrough} from "stream";
+import {body as checkbody, query as checkquery, header as checkheader, validationResult, query} from "express-validator";
 import db from "../mysql.js";
 import config from "../config.js";
 
-
+import AgentKeepAlive from "agentkeepalive"
 import {allowPrivileges, verifyJWT} from "../middleware/auth.js";
 import {forbidPrivileges} from "../middleware/auth.js";
 import {commentRateLimiter} from "../middleware/rateLimiter.js";
@@ -23,8 +15,25 @@ import {sendMessage} from "./message.js";
 import {handleRichTextInput, initUserStorageQuota, updateUserStorageQuota} from "../lib/user.js";
 import {fileSuffixByMIMEType, readStreamTillEnd} from "../lib/misc.js";
 import {use} from "bcrypt/promises.js";
+import {getGravatarAvatar} from "../lib/gravatar.js";
+import {userHasRoles, verifyJWTToken} from "../lib/auth.js";
+import jwt from "jsonwebtoken";
+import {sendForgetPasswordVerify, sendUserAuthVerify} from "../lib/mail.js";
+import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 const router = express.Router();
+const proxy = {
+        https: new AgentKeepAlive.HttpsAgent({host: 'proxy.bfban.com'})
+    },
+    agentConfiguration = {
+        throwHttpErrors: false,
+        agent: proxy,
+        decompress: false,
+        headers: {
+            'accept-encoding': 'gzip, deflate',
+            'User-Agent': `${config.mail.domain.origin}}`,
+        }
+    }
 
 /*
 router.get('/feedbacks', [
@@ -200,9 +209,8 @@ async (req, res, next) => {
     }
 });
 
-router.delete('/file', [
+router.delete('/file', verifyJWT, allowPrivileges(['root', 'dev', 'super']), [
     checkbody('filename').isString().isLength({min: 0, max: 64}),
-    checkbody('explain').optional()
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
     try {
@@ -211,7 +219,7 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'deleteFile.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").StorageItem} */
-        const fileItem = await db.select('*').from('storage_items').where({filename: req.query.filename}).first();
+        const fileItem = await db.select('*').from('storage_items').where({filename: req.body.filename}).first();
         if (!fileItem)
             return res.status(404).json({error: 1, code: 'deleteFile.notFound', message: 'no such file.'});
 
@@ -369,5 +377,205 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * External Auth S
+ */
+router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot', 'dev', 'super']), [
+    checkbody('id').isLength({min: 0}),
+    checkbody('appId').optional().isString().trim(),
+    checkbody('appName').optional().isString().trim().isLength({min: 1, max: 40}),
+    checkbody('EXPIRES_IN').optional({nullable: true}).isInt({min: 0}),
+    checkbody('CALLBACK_PATH').isString().isLength({min: 1})
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
+async (req, res, next) => {
+    try {
+        const {id, appName, appId, EXPIRES_IN = 1000 * 60 * 60 * 24, CALLBACK_PATH} = req.body;
+
+        const targetUser = await db('users').where({id}).first()
+        if (!targetUser)
+            return res.status(401).json({
+                error: 1,
+                code: 'externalAuth.noSuchUser',
+                message: 'there is no such user'
+            })
+
+        if (userHasRoles(req.user, ['bot']) && EXPIRES_IN <= 0 && EXPIRES_IN >= config.userTokenExpiresIn)
+            return res.status(401).json({
+                error: 1,
+                code: 'externalAuth.fail',
+                message: `bot account the maximum time is: ${config.userTokenExpiresIn}`
+            })
+
+        let jwtpayload = {
+                userId: targetUser.id,
+                signWhen: Date.now(),
+                visitType: 'external-auth',
+                expiresIn: EXPIRES_IN, // 身份有效期
+            },
+            targetUserJwttoken = jwt.sign(jwtpayload, config.secret, {
+                expiresIn: EXPIRES_IN / 1000,  // user token, default 24 hours second
+            }),
+            authData = jwt.sign({
+                host: {address: req.REAL_IP},
+                callbackPath: CALLBACK_PATH,
+                userId: targetUser.id,
+                licensorId: req.user.id,
+                licensorUsername: req.user.username,
+                token: targetUserJwttoken,
+                signWhen: Date.now(),
+            }, config.secret, {
+                expiresIn: 1000 * 60 * 60 * 24,  // auth token,24 hours authorization period
+            })
+
+        let language = req.headers["accept-language"]
+        language = language === 'zh-CN' ? language : 'en-US'
+        await sendUserAuthVerify(
+            targetUser.username,
+            targetUser.originEmail,
+            appName || req.user.username,
+            appId || req.user.id,
+            language,
+            encodeURIComponent(authData)
+        );
+
+        return res.status(200).json({
+            success: 1,
+            code: 'externalAuth.success',
+            message: 'send email'
+        })
+    } catch (e) {
+        next(req)
+    }
+})
+
+router.post('/confirmAuth', verifyJWT, forbidPrivileges(['blacklisted', 'freezed']), [
+    checkbody('code').isString({min: 0}).notEmpty()
+], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
+async (req, res, next) => {
+    try {
+        const {code} = req.body;
+
+        let decodedToken, data = {};
+        try {
+            decodedToken = await verifyJWTToken(code)
+        } catch (err) {
+            return res.status(401).json({err: 1, code: 'user.tokenExpired'});
+        }
+
+        if (!decodedToken.licensorId && !decodedToken.licensorUsername)
+            return res.status(401).json({
+                error: 1,
+                code: 'confirmAuth.fail',
+                message: 'invalid authorization'
+            })
+        if (!decodedToken.callbackPath && new URL(decodedToken.callbackPath).protocol !== 'https:' && config.__DEBUG__)
+            return res.status(403).json({
+                error: 1,
+                code: 'confirmAuth.fail',
+                message: 'You may have the following reasons:\n' +
+                    '- If CALLBACK_PATH is null\n' +
+                    '- The return address protocol must be https'
+            })
+
+        if (req.user.id !== decodedToken.userId)
+            return res.status(403).json({
+                error: 1,
+                code: 'confirmAuth.fail',
+                message: 'the authorization code is inconsistent with the current account，This is not your confirmation authorization'
+            })
+
+        // Verify that bfbanAuth under the callback domain holds the token to ensure that the callback domain is owned by a bot (or a third party),
+        // preventing calls to untrusted domains
+        const callPathURL = new URL(decodedToken.callbackPath)
+        const verifyAuthResult = await verifyAuths(req, res, next, callPathURL);
+        if (verifyAuthResult.error === 1)
+            return res.status(403).json(verifyAuthResult)
+
+        // The callback domain is not allowed to call locally, it must be network accessible to the address
+        if (['localhost', '0.0.0.0', '127.0.0.1'].includes(new URL(decodedToken.callbackPath).hostname) || decodedToken.callbackPath.indexOf('../') >= 0 && !config.__DEBUG__)
+            return res.status(403).json({
+                error: 1,
+                code: 'confirmAuth.fail',
+            })
+
+        // The user has confirmed that the information is passed through the callback address
+        await got.post(`${decodedToken.callbackPath}`, {
+            ...agentConfiguration,
+            json: {userId: decodedToken.userId, token: decodedToken.token},
+            responseType: 'json'
+        }).catch()
+
+        return res.status(200).json({
+            success: 1,
+            code: 'confirmAuth.success'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            error: 1,
+            code: 'externalAuth.success',
+            message: err.toString()
+        })
+    }
+})
+
+router.get('/getAuthText', verifyJWT, allowPrivileges(['root', 'admin', 'bot', 'dev', 'super']), [query("appId")], getAuth)
+
+/**
+ * @param {Request<P, ResBody, ReqBody, ReqQuery, Locals>} req
+ * @param {Response<ResBody, Locals>} res
+ * @param {NextFunction} next
+ * @param {URL} callPathURL
+ */
+async function verifyAuths(req, res, next, callPathURL) {
+    try {
+        const token = req.get('x-access-token');
+        const maximumFileSize = 1024 * 1024; // 1 MB in bytes
+        const streamResponse = await got.stream(callPathURL.hostname + '/auths.txt',);
+        let fileContent = '';
+
+        streamResponse.on('data', (chunk) => {
+            fileContent += chunk.toString();
+        });
+        streamResponse.on('end', () => {
+            if (fileContent >= maximumFileSize || fileContent <= 5)
+                return {
+                    error: 1,
+                    code: 'checkAuths.fail'
+                }
+            for (const i of fileContent.split(/\n/)) {
+                let isSameDomain = i.split(',')[0] === new URL(config.mail.host).hostname,
+                    isSameCode = i.split(',')[1] && i.split(',')[1] === token.slice(token.length - 250, token.length - 5);
+                if (isSameDomain && isSameCode)
+                    return {success: 1, code: 'checkAuths.success'}
+            }
+        });
+        streamResponse.on('error', (error) => {
+            return {
+                error: 1,
+                code: 'checkAuths.fail',
+                message: `Error fetching auths.txt with stream:${error}`
+            }
+        });
+    } catch (err) {
+        next(err)
+    }
+}
+
+/**
+ * @param {*} res
+ * @param {*} req
+ * @param {NextFunction|Response<ResBody, Locals>} next
+ */
+function getAuth(res, req, next) {
+    try {
+        const token = req.get('x-access-token'), type = 'DIRECT', {appId} = req.query,
+            content = `${new URL(config.mail.domain.origin).hostname},${token.slice(token.length - 250, token.length - 5)},${type},${appId}`;
+        if (!token && !appId)
+            res.status(403).json({code: "getAuth.fail"})
+        res.status(200).json(content)
+    } catch (e) {
+        next(req)
+    }
+}
 
 export default router;

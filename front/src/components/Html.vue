@@ -2,13 +2,15 @@
 import VueWithCompiler from "vue/dist/vue";
 import Vue from "vue";
 
-import htmlimage from "./HtmlImage";
-import htmllink from "./HtmlLink";
-import htmllinkcard from "./HtmlLinkCard";
-import htmlvideo from "./HtmlVideo";
-import htmlplayercard from "./HtmlPlayerCard";
-import htmlfloor from "@/components/htmlFloor";
-import privilegestag from "./PrivilegesTag";
+import htmlimage from "@/components/HtmlImage";
+import htmllink from "@/components/HtmlLink";
+import htmllinkcard from "@/components/HtmlLinkCard";
+import htmlvideo from "@/components/HtmlVideo";
+import htmlplayercard from "@/components/HtmlPlayerCard";
+import htmlfloor from "@/components/HtmlFloor";
+import htmlemoji from "@/components/HtmlEmoji"
+import timeview from "@/components/TimeView"
+import privilegestag from "@/components/PrivilegesTag";
 import {regular} from "@/assets/js";
 
 export default {
@@ -41,6 +43,7 @@ export default {
         'a': 0,
         'pre': 0,
         'p': 0,
+        'span': 0,
         'b': 0,
         'br': 0,
         'strong': 0,
@@ -50,14 +53,25 @@ export default {
         'h3': 0,
         'q': 0,
         'em': 0,
-        'u': 0
+        'u': 0,
+        'emoji': 0
       },
       options: {
         url: 'src'
       }
     };
   },
-  components: {htmlimage, htmllink, htmllinkcard, htmlvideo, htmlplayercard, htmlfloor, privilegestag},
+  components: {
+    htmlimage,
+    htmllink,
+    htmllinkcard,
+    htmlvideo,
+    htmlplayercard,
+    htmlfloor,
+    htmlemoji,
+    timeview,
+    privilegestag,
+  },
   watch: {
     html: {
       handler(val, oldVal) {
@@ -69,7 +83,7 @@ export default {
     },
     mode: {
       handler(val) {
-        if (this.templateRender && this.templateRender == undefined) return;
+        if (this.templateRender && this.templateRender === undefined) return;
         this.updateRender(this.packagingRender(this.html));
       }
     },
@@ -99,11 +113,11 @@ export default {
       let _html = `<div class="ql-editor">${html}</div>`;
       let vDomString;
       const vDom = new DOMParser().parseFromString(_html, "text/html"),
+          div = vDom.getElementsByTagName("div"),
           video = vDom.getElementsByTagName("video"),
-          imgs = vDom.getElementsByTagName("img"),
-          links = vDom.getElementsByTagName("a"),
+          img = vDom.getElementsByTagName("img"),
+          link = vDom.getElementsByTagName("a"),
           p = vDom.getElementsByTagName("p"),
-          br = vDom.getElementsByTagName("br"),
           pres = vDom.getElementsByTagName("pre");
 
       // 过滤标签
@@ -118,31 +132,66 @@ export default {
 
       switch (this.mode) {
         case "code":
-          vDomString = `<div><Input style="margin: -1px; width: calc(100% + 2px)" readonly type="textarea" :autosize="true" :value="this.html"></Input></div>`;
+          vDomString = `<div class="ql-input"><Input readonly type="textarea" :autosize="true" :value="this.html"></Input></div>`;
           break;
-        case "text":
-          vDomString = `<div class="ql-editor"><p>${vDom.getElementsByTagName("body")[0]?.innerText}</p></div>`;
+        case "text": {
+          let text = vDom.getElementsByTagName("body")[0].innerHTML.replaceAll(/<[^>]*>/g, '');
+          vDomString = `<div class="ql-input"><Input readonly type="textarea" :autosize="true" value="${text}"></Input></div>`;
+        }
           break;
         case "renderer":
-        default:
+        default: {
+
           // ==================== 处理自定义HTML
 
-          if (imgs && imgs.length > 0) {
-            let _imgs = Array.from(imgs); // deep copy
-            for (let i = 0; i < _imgs.length; i++) {
-              let eleImg = document.createElement('htmlimage');
-              eleImg.setAttribute("src", _imgs[i].src);
+          // 纯文本，无内置标签
+          if (div && div.length > 0) {
+            let _divs = Array.from(div); // deep copy
 
-              this.images.push(_imgs[i].src);
+            for (let i = 0; i < _divs.length; i++) {
+              /// 标准链接 =>
+              /// 排除标签a|htmllink|img|video|iframe、排除标签属性内链接、排除标签内的链接
+              const urlRegex = /(?<!<(a|htmllink|img|video|iframe)[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
+              _divs[i].innerHTML = _divs[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
+
+              // 解析HR, 分割线
+              const dividerRegex = /-{3,}/g
+              _divs[i].innerHTML = _divs[i].innerHTML.replace(dividerRegex, `<Divider class="hr" dashed></Divider>`);
+            }
+          }
+
+          if (img && img.length > 0) {
+            let _imgs = Array.from(img); // deep copy
+            let eleImgType = ["htmlimage", "htmlemoji"];
+            let eleImgTypeIndex = 0;
+
+            for (let i = 0; i < _imgs.length; i++) {
+              if (_imgs[i].src.indexOf(';base64,') >= 0) eleImgTypeIndex = 1;
+
+              let eleImg = document.createElement(eleImgType[eleImgTypeIndex]);
+
+              switch (eleImgTypeIndex.toString()) {
+                case '0':
+                  eleImg.setAttribute("src", _imgs[i].src);
+                  this.images.push(_imgs[i].src);
+                  break;
+                case '1':
+                  eleImg.setAttribute("data-name", `${_imgs[i].title}` || '');
+                  eleImg.setAttribute("data-src", _imgs[i].src || '');
+                  eleImg.setAttribute("data-style", _imgs[i].style.cssText || '');
+                  break;
+              }
 
               _imgs[i].parentNode.replaceChild(eleImg, _imgs[i]);
             }
 
-            // upDate attr images
-            let _htmlimage = vDom.getElementsByTagName("htmlimage");
-            for (let i = 0; i < _htmlimage.length; i++) {
-              _htmlimage[i].setAttribute("images", this.images);
-              _htmlimage[i].setAttribute("index", i);
+            if (eleImgTypeIndex == 0) {
+              // upDate attr images
+              let _htmlimage = vDom.getElementsByTagName(eleImgType[eleImgTypeIndex]);
+              for (let i = 0; i < _htmlimage.length; i++) {
+                _htmlimage[i].setAttribute("images", this.images);
+                _htmlimage[i].setAttribute("index", i);
+              }
             }
           }
 
@@ -167,8 +216,8 @@ export default {
             }
           }
 
-          if (links && links.length > 0) {
-            let _links = Array.from(links); // deep copy
+          if (link && link.length > 0) {
+            let _links = Array.from(link); // deep copy
             for (let i = 0; i < _links.length; i++) {
               let hrefString = new URL(_links[i].href)
               let eleLink;
@@ -185,9 +234,6 @@ export default {
                 eleLink = document.createElement('htmllink');
                 let _linkExtend = Vue.component("HtmlLinkCom", {
                   template: _links[i].innerText,
-                  // data () {
-                  //   return this.extensionData;
-                  // }
                 });
 
                 eleLink.setAttribute("text", encodeURI(new _linkExtend().$options.template));
@@ -209,7 +255,7 @@ export default {
                 if (p_data[0])
                   switch (p_data[0]) {
                     case "user":
-                      _p[i].innerHTML = `<span><a href="/account/${p_data[1]}">@${p_data[1]}</a></span>`;
+                      _p[i].innerHTML = `<span><a href="/space/${p_data[1]}">@${p_data[1]}</a></span>`;
                       break;
                     case "player":
                       _p[i].innerHTML = `<htmlplayercard :id="${p_data[1].toString()}"></htmlplayercard>`;
@@ -221,6 +267,9 @@ export default {
                     case "floor":
                       var p_value = p_data[1];
                       _p[i].innerHTML = `<htmlfloor id="${p_value}"></htmlfloor>`;
+                      break;
+                    case "---":
+                      _p[i].innerHTML = `<Divider class="hr" dashed>`;
                       break;
                     case "privilege":
                       var p_value_privileges = p_data[1].split(',').toString();
@@ -244,7 +293,7 @@ export default {
               // 可疑链接
               // 将可疑的文本链接转换为链接widget
               if (_p[i] && _p[i].innerText) {
-                if (regular.check("link", _p[i].innerHTML).code == 0) {
+                if (regular.check("link", _p[i].innerHTML).code === 0) {
                   _p[i].innerHTML = _p[i].innerHTML.replaceAll('\n', '\n\b');
 
                   let p_textToLinkArray = regular.getCheckText("link", _p[i].innerText);
@@ -257,14 +306,29 @@ export default {
                           p_textToLinkItemURL.searchParams.getAll("isWidget")[0] &&
                           (p_textToLinkItemURL.protocol.indexOf('http') || p_textToLinkItemURL.protocol.indexOf('https'))
                       ) {
-                        /// 卡片 =>
-                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${encodeURI(p_textToLinkArray[j])}"></htmllinkcard>`)
-                      } else {
-                        /// 链接 =>
-                        _p[i].innerHTML = _p[i].innerHTML.replaceAll(p_textToLinkArray[j], `<htmllink text="${encodeURI(p_textToLinkArray[j])}" href="${encodeURI(p_textToLinkArray[j])}"></htmllink>`)
+                        /// 卡片链接 =>
+                        _p[i].innerHTML = _p[i].innerText.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${encodeURI('$&')}"></htmllinkcard>`)
                       }
                     }
                 }
+              }
+
+              /// 标准链接 =>
+              if (_p[i] && _p[i].innerText) {
+                const urlRegex = /(?<!<[a|htmllink|img|video|iframe][^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
+                _p[i].innerHTML = _p[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
+              }
+
+              // 邮箱
+              if (_p[i] && _p[i].innerText) {
+                const emailRegex = /(?<!<a|htmllink[^>]*)[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}(?![^<]*<\/htmllink|a>)/gi;
+                _p[i].innerHTML = _p[i].innerHTML.replace(emailRegex, `<htmllink text='$&' href='mailto:$&'></htmllink>`);
+              }
+
+              // 时间
+              if (_p[i] && _p[i].innerText) {
+                const dateTimeRegex = /\d{4}-\d{2}-\d{2}( |&nbsp;)?(\d{1,2}(:\d{1,2})?(:\d{2})?)?/gi;
+                _p[i].innerHTML = _p[i].innerHTML.replace(dateTimeRegex, `<timeview time="$&">$&</timeview>`);
               }
 
               // 解析HR, 分割线
@@ -272,18 +336,19 @@ export default {
                 let calcStringCount = 0;
 
                 for (let j = 0; j < _p[i].innerText.length; j++) {
-                  if (_p[i].innerText[j] == "-") {
+                  if (_p[i].innerText[j] === "-") {
                     calcStringCount += 1;
                   }
                 }
 
-                if (calcStringCount == _p[i].innerText.length && calcStringCount >= 4)
+                if (calcStringCount === _p[i].innerText.length && calcStringCount >= 4)
                   _p[i].innerHTML = `<Divider class="hr" dashed />`;
               }
             }
           }
 
           vDomString = vDom.getElementsByTagName("body")[0]?.innerHTML ?? "";
+        }
           break;
       }
 
@@ -331,6 +396,16 @@ export default {
     opacity: .5;
     width: calc(100% + 30px) !important;
     margin: 10px -15px 10px -15px !important;
+  }
+
+  .ql-input {
+    margin: -1px;
+    width: calc(100% + 2px);
+  }
+
+  .ql-input, .ql-input textarea {
+    border-right-color: transparent !important;
+    background-color: transparent !important;
   }
 }
 </style>

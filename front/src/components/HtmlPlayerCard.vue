@@ -23,6 +23,8 @@ export default {
 
 <style lang="less" scoped>
 .player-card {
+  overflow: hidden;
+  position: relative;
   user-select: none;
   margin: 10px 0;
 }

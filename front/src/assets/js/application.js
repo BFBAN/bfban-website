@@ -1,6 +1,6 @@
 import Print from './print';
-import Regular from "@/assets/js/regular";
-import {account_storage} from "@/assets/js/index";
+import {account_storage, regular} from "./index";
+import $store from "@/store"
 
 export default class Application extends Print {
     BFBANLOG = window.BFBANLOG;
@@ -8,22 +8,27 @@ export default class Application extends Print {
     constructor(data) {
         super();
 
-        data.computed = {
-            isAdmin: this.isAdmin,
-            isLogin: this.isLogin,
-            isFull: this.isFull,
-            isMobile: this.isMobile,
-            currentUser: this.currentUser,
-            currentLan: this.currentLan,
-            ...data.computed,
-        }
+        if (data)
+            data.computed = {
+                isAdmin: this.isAdmin,
+                isAdminL1: this.isAdminL1,
+                isAdminL2: this.isAdminL2,
+                isAdminL3: this.isAdminL3,
+                isAdminL4: this.isAdminL4,
+                isLogin: this.isLogin,
+                isFull: this.isFull,
+                isMobile: this.isMobile,
+                currentUser: this.currentUser,
+                currentLan: this.currentLan,
+                ...data.computed,
+            }
 
         return data;
     }
 
     isAdmin() {
         return account_storage.checkPrivilegeGroup(
-            this.$store.state?.user?.userinfo,
+            $store.state?.user?.userinfo,
             ['root', 'admin', 'super', 'dev']
         );
     }
@@ -34,27 +39,27 @@ export default class Application extends Print {
 
     isAdminL2() {
         return account_storage.checkPrivilegeGroup(
-            this.$store.state?.user?.userinfo,
+            $store.state?.user?.userinfo,
             ['root', 'super', 'dev']
         );
     }
 
     isAdminL3() {
         return account_storage.checkPrivilegeGroup(
-            this.$store.state?.user?.userinfo,
+            $store.state?.user?.userinfo,
             ['root', 'dev']
         );
     }
 
     isAdminL4() {
         return account_storage.checkPrivilegeGroup(
-            this.$store.state?.user?.userinfo,
+            $store.state?.user?.userinfo,
             ['root']
         );
     }
 
     isLogin() {
-        return Boolean(this.$store.state.user)
+        return Boolean($store.state.user)
     }
 
     isFull() {
@@ -62,7 +67,7 @@ export default class Application extends Print {
     }
 
     currentUser() {
-        return this.$store.state.user || {token: ''}
+        return $store.state.user || {token: ''}
     }
 
     currentLan() {
@@ -70,6 +75,6 @@ export default class Application extends Print {
     }
 
     isMobile() {
-        return new Regular().check('mobile', navigator.userAgent).code >= 0;
+        return regular.check('mobile', navigator.userAgent).code >= 0;
     }
 }

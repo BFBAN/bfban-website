@@ -7,6 +7,7 @@ import http from './http';
 import store from '@/store'
 import {account_storage} from "@/assets/js/index";
 import router from "@/router";
+import app from "@/main"
 
 export default class http_token extends http {
     THAT;
@@ -36,7 +37,7 @@ export default class http_token extends http {
     setToken(data = {}) {
         if (store.state.user && store.state.user.token) {
             const token = store.state.user.token;
-            if (token != null || token != '') {
+            if (token != null || token !== '') {
                 const headers = data.headers || {}
                 data = Object.assign(data, {
                     headers: {
@@ -58,10 +59,13 @@ export default class http_token extends http {
 
         // 无效令牌
         let userError = ["user.invalid", "user.tokenExpired", "user.tokenClientException"]
-        if (userError.includes(code) && error == 1) {
+        if (userError.includes(code)) {
             account_storage.clearAll()
-            store.dispatch('signout').then(() => {
-                router.push('/signin');
+            store.dispatch('signout').finally(async () => {
+                await router.push({
+                    path: '/signin',
+                    query: {...app.$route.query, byPath: app.$route.name, reason: code}
+                });
             });
         }
     }

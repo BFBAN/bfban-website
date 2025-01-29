@@ -1,23 +1,23 @@
 <template>
   <div>
-    <Row type="flex" align="middle">
+    <Row :gutter="10" type="flex" align="middle">
       <Col>
-        <Select v-model="typeValue" @on-change="getCommentAllList">
+        <Select v-model="typeValue" :disabled="!!searchCommentValue" @on-change="getCommentAllList()">
           <Option v-for="(i, index) in typeArray" :key="index" :value="i">{{ i }}</Option>
         </Select>
       </Col>
-      <template v-if="typeValue == 'judgement'">
+      <template v-if="typeValue === 'judgement'">
         <Col>
-          <Select v-model="judgementType.value" @on-change="getCommentTypeList">
+          <Select v-model="judgementType.value" :disabled="!!searchCommentValue" @on-change="getCommentTypeList">
             <Option :value="i.value" v-for="(i,index) in judgementType.list" :key="index">
               {{ i.title }}
             </Option>
           </Select>
         </Col>
       </template>
-      <template v-if="typeValue == 'banAppeal'">
+      <template v-if="typeValue === 'banAppeal'">
         <Col>
-          <Select v-model="banAppealStats.value" @on-change="getCommentTypeList">
+          <Select v-model="banAppealStats.value" :disabled="!!searchCommentValue" @on-change="getCommentTypeList">
             <Option :value="i.value" v-for="(i,index) in banAppealStats.list" :key="index">
               {{ i.title }}
             </Option>
@@ -28,12 +28,13 @@
       <Col>
         <Row :gutter="10">
           <Col>
-            <Select value="id">
-              <Option value="id">id</Option>
+            <Select v-model="filter.queryModeValue" :disabled="typeValue !== 'all'">
+              <Option :value="i.value" v-for="(i, index) in filter.queryModes" :key="index">{{i.label}}</Option>
             </Select>
           </Col>
           <Col>
             <Input v-model="searchCommentValue"
+                   :disabled="typeValue !== 'all'"
                    type="text"
                    search
                    enter-button
@@ -62,7 +63,7 @@
               :total="total"/>
       </Col>
       <Col>
-        <Button size="small" @click="getCommentAllList">
+        <Button size="small" @click="getCommentAllList()">
           <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
         </Button>
       </Col>
@@ -99,13 +100,15 @@
               <Tag>{{ i.toOriginName }}</Tag>
               <Tag>{{ i.toOriginPersonaId }}</Tag>
             </div>
-            <Time :time="i.createTime" type="date"></Time>
+            <TimeView :time="i.createTime">
+              <Time :time="i.createTime" type="date"></Time>
+            </TimeView>
             :
             <BusinessCard :id="i.byUserId" :showAdminUserInfo="true">
               <a href="javascript:void(0)"><b>{{ i.username }}</b></a>
             </BusinessCard>
             {{ $t(`basic.button.reply`) }}
-            <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
+            <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}">
               <span>{{ i.toOriginName }}</span>
             </router-link>
             ({{ i.id }})
@@ -122,11 +125,14 @@
             <Divider type="vertical"></Divider>
             <a href="javascript:void(0)">
               <Tooltip content="Open Player Page">
-                <Button size="small" :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
+                <Button size="small" :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}">
                   <Icon type="ios-eye"/>
                 </Button>
               </Tooltip>
             </a>
+          </div>
+          <div class="comment-links" v-if="i.videoLink">
+            <EditLinks :links="i.videoLink" :isReadonly="true" placeholder="http(s)://"></EditLinks>
           </div>
           <HtmlWidget class="comment-html" :html="i.content"></HtmlWidget>
         </Card>
@@ -158,15 +164,21 @@
             label-position="top">
         <Row :gutter="10">
           <Col span="24">
-            <FormItem prop="content">
-              <Card dis-hover :padding="0">
-                <Textarea ref="commentTextarea" :maxlength="65535" v-model="editCommentFrom.content"></Textarea>
-              </Card>
+            <FormItem prop="videoLink" label="videoLink">
+              <EditLinks v-model="editCommentFrom.videoLink" :links="editCommentFrom.videoLink" :max="10"
+                         placeholder="http(s)://"></EditLinks>
             </FormItem>
           </Col>
           <Col span="24">
-            <FormItem prop="videoLink" label="videoLink">
-              <Input v-model="editCommentFrom.videoLink" :maxlength="255"/>
+            <FormItem prop="content">
+              <Card dis-hover :padding="0">
+                <template v-if="editCommentFrom.content.text">
+                  <Textarea ref="commentTextarea" :maxlength="65535" v-model="editCommentFrom.content.text"></Textarea>
+                </template>
+                <template v-else>
+                  <Textarea ref="commentTextarea" :maxlength="65535" v-model="editCommentFrom.content"></Textarea>
+                </template>
+              </Card>
             </FormItem>
           </Col>
         </Row>
@@ -175,7 +187,7 @@
         <Row>
           <Col flex="1"></Col>
           <Col>
-            <Button type="primary" :loading="commentEditLoad" @click="commentSubmit">
+            <Button type="primary" :loading="commentEditLoad" @click="onCommentSubmit">
               {{ $t('basic.button.submit') }}
             </Button>
           </Col>
@@ -189,11 +201,13 @@
 <script>
 import {account_storage, api, http, http_token, util} from "../../assets/js";
 
-import BusinessCard from "@/components/businessCard";
-import Textarea from "@/components/Textarea";
 import Application from "@/assets/js/application";
+import TimeView from "@/components/TimeView.vue";
+import BusinessCard from "@/components/BusinessCard.vue";
+import Textarea from "@/components/textarea/index.vue";
+import EditLinks from "@/components/EditLinks.vue";
 import HtmlWidget from "@/components/HtmlWidget";
-import { kill } from "process";
+import {kill} from "process";
 
 export default new Application({
   data() {
@@ -210,18 +224,33 @@ export default new Application({
           {required: true, trigger: 'blur'}
         ],
         videoLink: [
-          {trigger: 'blur'}
+          {required: false, trigger: 'blur'}
         ],
+      },
+      filter: {
+        queryModeValue: 'userId',
+        queryModes: [{
+          value: 'commentId',
+          label: 'Comment ID'
+        }, {
+          value: 'userId',
+          label: 'User ID'
+        }]
       },
       judgementType: {
         value: 'kill',
-        list: [{title: 'Comfirmd', value: 'kill'}, {title: 'Farm Weapon', value: 'farm'}, {title: 'Suspicious', value: 'suspect'}, {title: 'MOSS Proof', value: 'innocent'}, {title: 'Under discussion', value: 'discuss'}, {title: 'Voted', value: 'guilt'}, {title: 'Invalid report', value: 'invalid'}]
+        list: [{title: 'Comfirmd', value: 'kill'}, {title: 'Farm Weapon', value: 'farm'}, {
+          title: 'Suspicious',
+          value: 'suspect'
+        }, {title: 'MOSS Proof', value: 'innocent'}, {title: 'Under discussion', value: 'discuss'}, {
+          title: 'Voted',
+          value: 'guilt'
+        }, {title: 'Invalid report', value: 'invalid'}]
       },
       banAppealStats: {
         value: 'open',
         list: [{title: 'Open', value: 'open'}, {title: 'Lock', value: 'lock'}, {title: 'Close', value: 'close'}]
       },
-
       searchCommentValue: '',
       load: false,
       commentList: [],
@@ -233,7 +262,7 @@ export default new Application({
       total: 0,
     }
   },
-  components: {BusinessCard, HtmlWidget, Textarea},
+  components: {BusinessCard, TimeView, HtmlWidget, EditLinks, Textarea},
   created() {
     this.http = http_token.call(this);
 
@@ -265,33 +294,31 @@ export default new Application({
         return;
       }
 
-      this.editCommentFrom = this.commentList[index];
-
+      this.openCommentModeAsData(this.commentList[index]);
       this.openCommentModeBase();
     },
+    /**
+     * 编辑评论弹窗数据载入
+     * @param data
+     */
     openCommentModeAsData(data) {
       this.editCommentFrom = data;
 
+      if (this.$refs.commentTextarea)
+        this.$refs.commentTextarea.updateContent(this.editCommentFrom.content || this.editCommentFrom.content.text);
+
       this.openCommentModeBase();
     },
-    openCommentModeBase () {
-      if (this.$refs.commentTextarea)
-        this.$refs.commentTextarea.updateContent(this.editCommentFrom.content);
-
+    /**
+     * 展开编辑评论弹窗
+     */
+    openCommentModeBase() {
       this.commentEditModel = true;
-    },
-    handlePageChange(num) {
-      this.skip = num;
-      this.getCommentAllList();
-    },
-    handlePageSizeChange(num) {
-      this.limit = num;
-      this.getCommentAllList();
     },
     /**
      * 提交编辑评论、回复、判决
      */
-    commentSubmit() {
+    onCommentSubmit() {
       if (!this.editCommentFrom.id || !this.editCommentFrom.content) return;
 
       if (
@@ -303,7 +330,7 @@ export default new Application({
 
       let data = {
         id: this.editCommentFrom.id,
-        content: this.editCommentFrom.content,
+        content: this.editCommentFrom.content.text || this.editCommentFrom.content,
       };
 
       if (this.editCommentFrom.videoLink) data.videoLink = this.editCommentFrom.videoLink;
@@ -315,7 +342,7 @@ export default new Application({
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.$Message.success(d.code);
           return;
         }
@@ -332,31 +359,23 @@ export default new Application({
      * 查询单条评论
      */
     getSearchComment() {
-      const id = this.searchCommentValue;
+      const inputValue = this.searchCommentValue;
 
-      if (!id) return;
+      if (!inputValue) return;
 
-      this.http.get(api['player_timeline_item'], {
-        params: {
-          id: this.searchCommentValue
-        }
-      }).then(res => {
-        const d = res.data;
-
-        if (d.success == 1) {
-          this.openCommentModeAsData(d.data);
-          return;
-        }
-
-        this.$Message.error(d.message || d.code);
-      }).finally(() => {
-        this.load = false;
-      })
+      switch (this.filter.queryModeValue) {
+        case "userId":
+          this.getCommentAllList({userId: inputValue})
+          break;
+        case "commentId":
+          this.getCommentAllList({id: inputValue})
+          break;
+      }
     },
     /**
      * 查询所有评论
      */
-    getCommentAllList() {
+    getCommentAllList(params = {}) {
       this.load = true;
 
       this.http.get(api['admin_commentAll'], {
@@ -364,7 +383,8 @@ export default new Application({
           type: this.typeValue,
           skip: (this.skip - 1) * this.limit,
           limit: this.limit,
-          order: this.order
+          order: this.order,
+          ...params
         }
       }).then(res => {
         const d = res.data;
@@ -390,7 +410,7 @@ export default new Application({
         params.appealStatus = this.banAppealStats.value;
       if (this.typeValue === 'judgement')
         params.judgeAction = this.judgementType.value;
-      this.http.get(api['admin_CommentTypeList'], {
+      this.http.get(api['admin_commentTypeList'], {
         params: {
           type: this.typeValue,
           judgeAction: params.judgeAction,
@@ -413,11 +433,23 @@ export default new Application({
         this.load = false;
       })
     },
+    handlePageChange(num) {
+      this.skip = num;
+      this.getCommentAllList();
+    },
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getCommentAllList();
+    },
   }
 })
 </script>
 
 <style lang="less" scoped>
+.comment-links {
+  padding: 10px 15px;
+}
+
 .comment-html {
   overflow: hidden;
 }

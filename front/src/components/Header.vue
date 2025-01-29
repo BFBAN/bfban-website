@@ -1,6 +1,22 @@
 <template>
   <header v-if="!isFull">
-    <div class="header-container container">
+    <!-- 临时通知 S -->
+    <!-- TODO 过期请删除 -->
+    <a href="https://announcement.bfban.com/precepts/anti-cheat-v4" target="_blank">
+      <Card :padding="0" dis-hover
+            style="padding: 3px 20px; margin: -11px -20px -1px; text-align: center; background: darkred; color: white">
+        {{
+          {
+            'zh-CN': '我们已更新《反作弊准则》,前往查看',
+            'en-US': 'We have updated the new 《Anti-Cheating precepts》, go to view them.',
+          }[$i18n.locale] || 'We have updated the new 《Anti-Cheating precepts》, go to view them.'
+        }}
+      </Card>
+    </a>
+    <Lantern></Lantern>
+    <!-- 临时通知 E -->
+
+    <div class="header-container" style="margin-top: 8px;">
       <router-link class="mobile-hide" :to="{name: 'home'}">
         <img src="../assets/images/logo.png"
              style="border-radius: 50%"
@@ -10,115 +26,104 @@
       </router-link>
       <div class="nav nav-menu">
         <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>
-        <Drawer class="desktop-hide"
+        <Drawer class="desktop-hide header-drawer"
                 placement="left"
                 width="80%"
+                :title="title"
                 :closable="true"
                 v-model="headerMenu.show">
-          <List v-show="!isLogin">
-            <Card>
-              <Row :gutter="10">
-                <Col flex="1">
-                  <div @click="navigatorTo({to: {name: 'signin'}})">
-                    <Icon type="md-log-in" size="20"/>
-                    {{ $t("header.signin") }}
-                  </div>
-                </Col>
-                <Col>
-                  <div @click="navigatorTo({to: {name: 'signup'}})">
-                    <Icon type="md-person-add" size="20"/>
-                    {{ $t("header.signup") }}
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </List>
 
-          <List>
-            <ListItem v-for="(i, index) in headerMenu.child" :key="index">
-              <div @click.stop="navigatorTo(i)">
+          <List split class="header-drawer-body">
+            <Banner :height="150">
+              <template v-if="!isLogin">
+                <Card>
+                  <Row :gutter="10">
+                    <Col flex="1">
+                      <div @click="navigatorTo({to: {name: 'signin'}})">
+                        <Icon type="md-log-in" size="20"/>
+                        {{ $t("header.signin") }}
+                      </div>
+                    </Col>
+                    <Col>
+                      <div @click="navigatorTo({to: {name: 'signup'}})">
+                        <Icon type="md-person-add" size="20"/>
+                        {{ $t("header.signup") }}
+                      </div>
+                    </Col>
+                  </Row>
+                </Card>
+              </template>
+              <template v-else>
+                <h2>{{ currentUser.userinfo.username }}</h2>
+              </template>
+            </Banner>
+
+            <ListItem v-for="(i, index) in headerMenu.child" :key="index" @click.native.stop="navigatorTo(i)">
+              <div>
                 {{ $t("header." + i.name) }}
               </div>
             </ListItem>
           </List>
         </Drawer>
 
-        <router-link class="mobile-hide link"
-                     :to="i.to"
-                     v-for="(i, index) in headerMenu.child" :key="index">
+        <a class="mobile-hide link"
+           href="javascript:void(0)"
+           @click="navigatorTo(i)"
+           v-for="(i, index) in headerMenu.child" :key="index">
           {{ $t("header." + i.name) }}
-        </router-link>
+        </a>
       </div>
       <div class="nav">
-        <router-link v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
-                     v-if="$route.name != 'signin'">
-          <Button type="primary" shape="circle">
-            <Icon type="md-log-in"/>
-            {{ $t("header.signin") }}
-          </Button>
-        </router-link>
+        <Button type="primary" v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
+                icon="md-log-in"
+                v-if="$route.name !== 'signin'">
+          {{ $t("header.signin") }}
+        </Button>
 
         <Dropdown v-if="isLogin"
                   :trigger="isMobile ? 'click' : 'hover'"
                   :placement="isMobile ? 'bottom' : 'bottom-end'"
                   :padding="0">
-          <Avatar icon="ios-person" :src="userinfo.userAvatar">{{ userinfo.username }}</Avatar>
+          <UserAvatar :src="userinfo.userAvatar" :size="30"></UserAvatar>
 
           <DropdownMenu slot="list" class="header-dropdown-menu">
             <div class="header-dropdown-avatar">
               <div>
-                <Avatar icon="ios-person" size="60" :src="userinfo.userAvatar"></Avatar>
+                <UserAvatar :src="userinfo.userAvatar" :size="80"></UserAvatar>
                 <p class="header-dropdown-name">{{ userinfo.username }}</p>
                 <p class="header-dropdown-id">{{ userinfo.userId }}</p>
               </div>
               <PrivilegesTag :data="userinfo.privilege"></PrivilegesTag>
             </div>
-            <router-link :to="{name: 'account', params: { uId: `${userinfo.userId}` }}">
-              <DropdownItem divided>
+            <router-link :to="{name: 'space', params: { uId: `${userinfo.userId}` }}">
+              <DropdownItem divided :disabled="$route.name == 'space' && userinfo.userId == this.$route.params.uId">
                 {{ $t("header.userCenter") }}
               </DropdownItem>
             </router-link>
             <router-link :to="{name: 'report'}">
-              <DropdownItem>
+              <DropdownItem :disabled="$route.name == 'report'">
                 {{ $t("header.report") }}
               </DropdownItem>
             </router-link>
             <router-link :to="{name: 'profile', params: {pagename: 'information'}}">
-              <DropdownItem>
+              <DropdownItem :disabled="$route.name == 'profile'">
                 {{ $t("header.profile") }}
               </DropdownItem>
             </router-link>
             <router-link :to="{name: 'admin', params: {pagename: 'home'}}" v-if="isAdmin">
-              <DropdownItem>
+              <DropdownItem :disabled="$route.name == 'admin'">
                 {{ $t("profile.admin.title") }}
               </DropdownItem>
             </router-link>
-            <Dropdown placement="right-start">
-              <DropdownItem divided>
-                {{ $t("profile.appearance.title") }}
-                <Icon type="ios-arrow-forward"></Icon>
+            <router-link :to="{name: 'workflow', params: {pagename: 'workflow'}}" v-if="isAdmin">
+              <DropdownItem :disabled="$route.name == 'workflow'">
+                {{ $t("workflow.title") }}
               </DropdownItem>
-              <DropdownMenu slot="list">
-                <div v-for="(i, theme_index) in themes.child" :key="theme_index">
-                  <div @click="changeTheme(theme_index)">
-                    <DropdownItem :name="i.name" :selected="themeIndex == theme_index">
-                      <Row>
-                        <Col>
-                          <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
-                        </Col>
-                        <Col flex="1">{{ i.name }}</Col>
-                      </Row>
-                    </DropdownItem>
-                  </div>
-                </div>
-              </DropdownMenu>
-            </Dropdown>
+            </router-link>
             <div @click="onSignout">
               <Dropdown-item divided v-show="isLogin">
                 <Row>
-                  <Col flex="1">
-                    {{ $t("header.signout") }}
-                  </Col>
+                  <Col flex="1">{{ $t("header.signout") }}</Col>
                   <Col>
                     <Icon type="md-log-out"></Icon>
                   </Col>
@@ -131,10 +136,16 @@
         <Divider type="vertical" v-show="isLogin"/>
 
         <Tooltip :content="$t('profile.chat.title')" placement="bottom-end">
-          <Header_message v-show="isLogin">
+          <HeaderMessage v-show="isLogin">
             <Icon slot="content" type="md-notifications" size="30"/>
-          </Header_message>
+          </HeaderMessage>
         </Tooltip>
+
+        <Divider type="vertical" v-if="$store.state.configuration.history"/>
+
+        <HistoryView v-if="$store.state.configuration.history">
+          <Icon type="md-filing" size="25"/>
+        </HistoryView>
 
         <Divider type="vertical"/>
 
@@ -145,30 +156,7 @@
         </Tooltip>
 
         <Divider type="vertical"/>
-
-        <Dropdown>
-          <DropdownItem style="padding: 0;">
-            <div v-for="(i, theme_index) in themes.child" :key="theme_index">
-              <template v-if="themeIndex == theme_index">
-                <div class="hedaer-theme-color" :style="`background-color: ${i.themeColor}`"></div>
-              </template>
-            </div>
-          </DropdownItem>
-          <DropdownMenu slot="list">
-            <DropdownItem
-                v-for="(i, theme_index) in themes.child" :key="theme_index"
-                :name="i.name"
-                :selected="themeIndex == theme_index"
-                @click.native="changeTheme(theme_index)">
-              <Row type="flex" align="middle" >
-                <div class="hedaer-theme-color right-space" :style="`background-color: ${i.themeColor}`"></div>
-                <p>{{i.name}}</p>
-              </Row>
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-
-
+        <ThemeWidget/>
         <Divider type="vertical"/>
 
         <Tooltip :content="$t('apps.title')" placement="bottom-end">
@@ -182,27 +170,28 @@
 </template>
 
 <script>
-import {api, http, http_token, account_storage} from '../assets/js/index'
-import {storage} from '../assets/js/index'
-import themes from '/public/config/themes.json'
+import {api, http, http_token, account_storage, storage} from '../assets/js/index'
 import menu from '/public/config/headerMenu.json'
 
-import Header_message from "./Header_message";
-import PrivilegesTag from "/src/components/PrivilegesTag";
+import UserAvatar from "@/components/UserAvatar.vue";
+import HistoryView from "@/components/HistoryView.vue";
+import HeaderMessage from "./HeaderMessage.vue";
+import PrivilegesTag from "@/components/PrivilegesTag";
 import Application from "@/assets/js/application";
+import Banner from "@/components/Banner.vue";
+import ThemeWidget from "@/components/ThemeWidget"
+import Lantern from "@/components/Lantern";
 
 export default new Application({
   data() {
     return {
-      themes,
-      themeIndex: 0,
       headerMenu: {
         show: false,
         child: [],
       },
     }
   },
-  components: {Header_message, PrivilegesTag},
+  components: {HistoryView, Banner, HeaderMessage, UserAvatar, PrivilegesTag, ThemeWidget, Lantern},
   watch: {
     $route: "loadData",
   },
@@ -258,42 +247,34 @@ export default new Application({
      * @returns {Promise<void>}
      */
     async getTheme() {
-      let theme = await storage.get('theme');
+      let theme = storage.local.get('theme');
 
       if (theme.data && theme.data.value) {
-        this.themes.child.forEach((i, index) => {
-          if (i.name == theme.data.value.name) {
-            this.themeIndex = index;
-          }
-        });
         await this.$store.dispatch('setTheme', theme.data.value);
         return;
-      } else {
-        themes.child.filter((i, index) => {
-          if (i.name == themes.default) this.themeIndex = index
-        });
       }
 
       await this.$store.dispatch('setTheme', this.$store.state.$theme);
     },
     /**
-     * 改变主题
-     * @param val
+     * 导航
+     * @param i
      */
-    changeTheme(val) {
-      this.themeIndex = val;
-      storage.set('theme', this.themes.child[this.themeIndex || 0]);
-
-      location.reload();
-    },
     navigatorTo(i) {
       this.headerMenu.show = false;
-      this.$router.push({name: i.to.name, query: i.to.query});
+
+      if (i.to)
+        this.$router.push({name: i.to.name, query: i.to.query});
+      else if (i.href)
+        window.location.href = i.href;
     }
   },
   computed: {
     userinfo() {
       return this.currentUser.userinfo || {}
+    },
+    title() {
+      return document.title || 'APP';
     }
   }
 })
@@ -307,25 +288,25 @@ header {
   z-index: 1000;
   width: 100%;
   height: auto;
-  padding: 10px 0 !important;
+  padding: 10px 15px !important;
   background-image: linear-gradient(rgba(0, 0, 0, 0.2), transparent);
+}
+
+.header-drawer {
+  .header-drawer-body {
+    margin: -16px;
+
+    .ivu-list-item div,
+    .widget-banner-body {
+      padding: 10px 15px;
+    }
+  }
 }
 
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.hedaer-theme-color {
-  display: flex;
-  width: 23px;
-  height: 23px;
-  border-radius: 8px;
-}
-
-.hedaer-theme-color.right-space {
-  margin-right: 10px;
 }
 
 .header-dropdown-menu {
@@ -339,6 +320,10 @@ header {
   font-size: 14px !important;
   white-space: nowrap;
   text-align: center;
+
+  .user-avatar {
+    margin: 0 auto;
+  }
 
   .header-dropdown-name {
     margin: 5px 0 2px 0;
@@ -357,9 +342,9 @@ header {
   display: flex;
   align-items: center;
   padding: 0 .4rem;
-  font-weight: bold;
 
   a.link {
+    font-weight: bold;
     padding: .7rem .8rem;
     text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0;
   }

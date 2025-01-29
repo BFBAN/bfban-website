@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.configuration.enhance">
+  <div class="profile-body" v-if="$store.state.configuration.enhance">
     <div v-for="(i, index) in enhance" :key="index">
       <Card>
         <Row>
@@ -15,11 +15,14 @@
       <br>
     </div>
   </div>
-  <div v-else-if="$store.state.configuration.enhance || false" align="center" class="enhance-notApp-content">
+  <div class="profile-body enhance-notApp-content" v-else-if="$store.state.configuration.enhance || false" align="center">
     <h1>No application was detected</h1>
     <p>The BFBAN WEB APP is not installed</p>
   </div>
-  <div v-else>Disable Component</div>
+  <div class="profile-body" v-else>
+    <p>Disable Component</p>
+    <div><img src="@/assets/images/open-component.png" width="80%"/></div>
+  </div>
 </template>
 
 <script>
@@ -32,15 +35,15 @@ export default {
       enhance: [
         {
           enhanceName: 'footerBar',
-          value: this.$store.state.configuration?.footerBar || false,
+          value: this.$store.state?.configuration?.footerBar || false,
         },
         {
           enhanceName: 'autoUpdatePlayerList',
-          value: this.$store.state.configuration?.autoUpdatePlayerList || false,
+          value: this.$store.state?.configuration?.autoUpdatePlayerList || false,
         },
         {
-          enhanceName: 'desktopNotifiction',
-          value: this.$store.state.configuration?.desktopNotifiction || false,
+          enhanceName: 'desktopNotification',
+          value: this.$store.state?.configuration?.desktopNotification || false,
         }
       ]
     }
@@ -62,7 +65,7 @@ export default {
   computed: {
     webMode () {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      if (document.referrer.startsWith('android-app://')) {
+      if (document.referrer.startsWith('bfban://')) {
         return 'browsertab';
       } else if (navigator.standalone || isStandalone) {
         return 'standalone';

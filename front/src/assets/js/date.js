@@ -3,16 +3,23 @@
  */
 
 export default class Time {
-    DATE = new Date();
+    constructor() {
+        this.DATE = new Date()
+    }
 
-    now () {
-        return new Date().getTime();
+    get nowTimeStamp() {
+        return this.DATE.getTime();
+    }
+
+    update() {
+        this.DATE = new Date()
+        return this
     }
 
     /**
      * 程序启动时间
      */
-    appStart () {
-        return new Date(1514764800000);
+    appStart() {
+        return new Date(1541260800000);
     }
 }

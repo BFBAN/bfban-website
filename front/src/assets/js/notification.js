@@ -1,12 +1,6 @@
-import {NoticeConfig} from "view-design";
 import store from "@/store";
-import message from "@/views/account/chat";
 
 export default class NotificationApp {
-    constructor() {
-
-    }
-
     init () {
         return new Promise((resolve, reject) => {
             if (!("Notification" in window)) {
@@ -39,8 +33,7 @@ export default class NotificationApp {
         return new Promise((resolve, reject) => {
             let message;
 
-            if (!store.state.configuration.desktopNotifiction) {
-                reject("Bfban: Desktop notification is not enabled")
+            if (!store.state.configuration.desktopNotification) {
                 return;
             }
 

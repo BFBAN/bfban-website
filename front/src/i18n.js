@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import storage from "../src/assets/js/storage"
-import lang from "../public/config/languages.json"
-import store from './store'
+import Storage from "@/assets/js/storage"
+import lang from "@/../public/config/languages.json"
+import store from '@/store'
 
 import ar_view_design from 'view-design/dist/locale/ar-EG';
 import de_view_design from 'view-design/dist/locale/de-DE';
@@ -10,7 +10,7 @@ import en_view_design from 'view-design/dist/locale/en-US';
 import es_view_design from 'view-design/dist/locale/es-ES';
 import fr_view_design from 'view-design/dist/locale/fr-FR';
 import it_view_design from 'view-design/dist/locale/it-IT';
-import ja_view_design from 'view-design/dist/locale/ja-JP';
+import ja_jp_view_design from 'view-design/dist/locale/ja-JP';
 import ko_view_design from 'view-design/dist/locale/ko-KR';
 import tr_view_design from 'view-design/dist/locale/tr-TR';
 import ru_view_design from 'view-design/dist/locale/ru-RU';
@@ -23,8 +23,8 @@ import en_local from './lang/en.json' // 英语
 import es_local from './lang/es.json'
 import fr_local from './lang/fr.json'
 import it_local from './lang/it.json'
-import ja_local from './lang/jp.json' // 日语
-import ko_local from './lang/ko.json' // 韩语
+import ja_JP_local from './lang/ja_JP.json' // 日语
+import ko_local from './lang/ko_KR.json' // 韩语
 import tr_local from './lang/tr.json' // 土耳其
 import ru_local from './lang/ru.json' // 俄语
 import zh_cn_local from './lang/zh_CN.json' // 中文
@@ -32,11 +32,9 @@ import zh_tw_local from './lang/zh_TW.json' // 中文
 import zh_cat_local from './lang/zh_Cat.json' // 简体喵文
 
 Vue.use(VueI18n)
-Vue.locale = () => {
-};
 
 let i18n = new VueI18n({
-    locale: new storage().get('language')?.data?.value ?? navigator.language,
+    locale: new Storage().local.get('language')?.data?.value ?? 'en-US',
     fallbackLocale: lang.default,
     formatFallbackMessages: true,
     silentTranslationWarn: true,
@@ -47,7 +45,7 @@ let i18n = new VueI18n({
         'es-ES': Object.assign(es_view_design, es_local),
         'fr-FR': Object.assign(fr_view_design, fr_local),
         'it-IT': Object.assign(it_view_design, it_local),
-        'ja-JP': Object.assign(ja_view_design, ja_local), // 日语
+        'ja-JP': Object.assign(ja_jp_view_design, ja_JP_local), // 日语
         'ko-KR': Object.assign(ko_view_design, ko_local), // 韩语
         'ru-RU': Object.assign(ru_view_design, ru_local), // 俄语
         'tr-TR': Object.assign(tr_view_design, tr_local), // 土耳其

@@ -12,13 +12,15 @@
       </Row>
       <br>
 
+      <AdsGoogle id="7930151828" style="margin-bottom: 10px"></AdsGoogle>
+
       <Tabs type="card"
             v-model="tabs.count"
             @on-tab-remove="doCancel">
         <TabPane v-for="(tab, index) in tabs.list.length" :key="index"
                  disabled
                  :label="(tabs.list[index].formItem.originName ? tabs.list[index].formItem.originName : tab.toString())">
-          <template dis-hover shadow v-if="tabs.list[index].statusOk == 0">
+          <template v-if="tabs.list[index].statusOk === 0">
             <Form :label-width="isMobile ? null : 150"
                   :model="tabs.list[index].formItem"
                   :rules="tabs.list[index].ruleValidate"
@@ -35,9 +37,10 @@
                       type="button">
                     <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
                            :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ')'"
-                           :class="tabs.list[index].formItem.gameName == i.value ? 'gametype-select' : ''">
+                           :class="tabs.list[index].formItem.gameName === i.value ? 'game-type-select' : ''">
                       <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
-                        <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
+                        <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"
+                             alt="img"/>
                         <span v-else>{{ i.full_name }}</span>
                       </Tooltip>
                     </Radio>
@@ -54,7 +57,7 @@
                          class="notFoundHint"
                          v-show="failedOfNotFound">
                     <b>{{ $t("report.info.notFoundHintTitle") }}</b>
-                    <span slot="desc">
+                    <div slot="desc">
                       <p style="font-size: 14px; margin-left: 10px">
                         Q:{{ $t("report.info.notFoundHintQuestion1") }}
                       </p>
@@ -67,7 +70,7 @@
                       <p style="font-size: 12px; margin-left: 20px">
                         A:{{ $t("report.info.notFoundHintAnswer2") }}
                       </p>
-                    </span>
+                    </div>
                   </Alert>
                   <Row :gutter="10" type="flex" align="middle">
                     <Col>
@@ -80,7 +83,7 @@
                             </Col>
                             <Col :lg="{span: 4}">
                               <Poptip trigger="hover" transfer>
-                                <Icon type="ios-help-circle-outline" />
+                                <Icon type="ios-help-circle-outline"/>
                                 <div slot="content">{{ $t(`report.labels.types.${type}.hint`) }}</div>
                               </Poptip>
                             </Col>
@@ -89,7 +92,7 @@
                       </Select>
                     </Col>
                     <Divider type="vertical"></Divider>
-                    <template v-if="tabs.list[index].type == 'originName'">
+                    <template v-if="tabs.list[index].type === 'originName'">
                       <Col flex="1">
                         <AutoComplete
                             v-model="tabs.list[index].formItem.originName"
@@ -101,7 +104,7 @@
                             show-word-limit
                             icon="ios-search"
                             size="large"
-                            :placeholder="$t('report.info.onlyOneId')">
+                            :placeholder="$t(`report.labels.types.${tabs.list[index].type}.placeholder`)">
                           <template v-if="tabs.list && tabs.list[index].players.length > 0">
                             <div v-for="(option,optionIndex) in tabs.list[index].players" :key="optionIndex">
                               <Option :value="option.originName" v-if="option && option.originName">
@@ -127,7 +130,7 @@
                         </OcrWidget>
                       </Col>
                     </template>
-                    <template v-else-if="tabs.list[index].type == 'originPersonaId'">
+                    <template v-else-if="tabs.list[index].type === 'originPersonaId'">
                       <Col flex="1">
                         <Input v-model="tabs.list[index].formItem.originPersonaId"
                                maxlength="280"
@@ -136,10 +139,10 @@
                                size="large"
                                type="number"
                                :transfer="true"
-                               :placeholder="$t('report.info.onlyOneId')"></Input>
+                               :placeholder="$t(`report.labels.types.${tabs.list[index].type}.placeholder`)"></Input>
                       </Col>
                     </template>
-                    <template v-else-if="tabs.list[index].type == 'originUserId'">
+                    <template v-else-if="tabs.list[index].type === 'originUserId'">
                       <Col flex="1">
                         <Input v-model="tabs.list[index].formItem.originUserId"
                                maxlength="280"
@@ -148,21 +151,21 @@
                                size="large"
                                type="number"
                                :transfer="true"
-                               :placeholder="$t('report.info.onlyOneId')"></Input>
+                               :placeholder="$t(`report.labels.types.${tabs.list[index].type}.placeholder`)"></Input>
                       </Col>
                     </template>
                   </Row>
 
-                  <Card class="report-hackrid" dis-hover v-if="tabs.list[index].type == 'originName'">
+                  <Card class="report-hacker-id" dis-hover v-if="tabs.list[index].type === 'originName'">
                     <div slot="title">
                       <h1 v-if="tabs.list[index].formItem.originName" class="text-distinguishing-letter">
                         <code>{{ tabs.list[index].formItem.originName }}</code></h1>
                       <span v-else>ID</span>
                     </div>
-                    <p class="hint">
+                    <p class="hint hint-seriousness">
                       {{ $t("report.info.idNotion1") }}
                     </p>
-                    <p class="hint">
+                    <p class="hint hint-seriousness">
                       <code>{{ $t("report.info.idNotion2") }}</code>
                     </p>
                   </Card>
@@ -192,13 +195,11 @@
                 <FormItem :label="$t('detail.info.videoLink')">
                   <Row :gutter="30">
                     <Col :xs="{span: 24}" :lg="{span:12}">
-                      <Alert type="warning">
+                      <Alert show-icon type="warning">
                         {{ $t("report.info.uploadManual1") }}
-                        <a target="_blank" href="https://streamable.com/">https://streamable.com/</a>，{{
-                          $t("report.info.uploadManual2")
-                        }}
                       </Alert>
-
+                    </Col>
+                    <Col :xs="{span: 24}" :lg="{span:24}">
                       <!-- 视频链接 S -->
                       <FormItem
                           :prop="`videoLink[${blinkindex}]`"
@@ -216,8 +217,7 @@
                           </Col>
                           <Col>
                             <Divider type="vertical" v-if="tabs.list[index].formItem.videoLink.length > 0"/>
-                            <Button type="dashed"
-                                    @click="tabs.list[index].formItem.videoLink.splice(blinkindex, 1)"
+                            <Button @click="tabs.list[index].formItem.videoLink.splice(blinkindex, 1)"
                                     v-voice-button
                                     v-if="tabs.list[index].formItem.videoLink.length > 0">
                               <Icon type="md-trash"/>
@@ -226,29 +226,38 @@
                         </Row>
                       </FormItem>
 
-                      <Button type="primary"
-                              long
-                              v-voice-button
-                              @click="handleVideoLink"
-                              v-if="tabs.list[index].formItem.videoLink.length < 3">
-                        <Icon type="md-add"/>
-                        <span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 3)</span>
-                      </Button>
-                      <span>{{ $t("report.info.uploadManual3") }}</span>
+                      <Row :gutter="10">
+                        <Col>
+                          <Button type="primary"
+                                  v-voice-button
+                                  @click="handleVideoLink"
+                                  v-if="tabs.list[index].formItem.videoLink.length < 3">
+                            <Icon type="md-add"/>
+                            <span>&emsp; ({{ tabs.list[index].formItem.videoLink.length || 0 }} / 3)</span>
+                          </Button>
+                        </Col>
+                        <Col>
+                          <div class="hint hint-caution">{{ $t("report.info.uploadManual2") }}</div>
+                        </Col>
+                      </Row>
                       <!-- 视频链接 E -->
+
                     </Col>
                   </Row>
                 </FormItem>
 
                 <FormItem prop="description" :label="$t('report.labels.description')">
                   <Card :padding="0" dis-hover>
-                        <Textarea :placeholder="$t('report.info.description')"
-                                  :index="index"
-                                  :height="'520px'"
-                                  :maxlength="60000"
-                                  :showMaxlengthLabel="true"
-                                  v-model="tabs.list[index].formItem.description">
-                        </Textarea>
+                    <Textarea
+                        :version="'v2'"
+                        :toolbar="[[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'hr'], ['link', 'image']]"
+                        :placeholder="$t('report.info.description')"
+                        :index="index"
+                        :height="'520px'"
+                        :maxlength="60000"
+                        :showMaxlengthLabel="true"
+                        v-model="tabs.list[index].formItem.description">
+                    </Textarea>
                   </Card>
                 </FormItem>
               </Card>
@@ -257,21 +266,7 @@
               <!-- 提交 S -->
               <Card dis-hover :padding="isMobile ? 20 : 50">
                 <FormItem prop="captcha" :label="$t('captcha.title')">
-                  <Input
-                      type="text"
-                      v-model="tabs.list[index].formItem.captcha"
-                      :placeholder="$t('captcha.title')">
-                    <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                      <Captcha :ref="`report_${index}`" :id="`report_${index}`"></Captcha>
-                    </div>
-                  </Input>
-                  <!--                  <div v-html="tabs.list[index].captchaUrl.content"></div>-->
-                  <!--                  <a-->
-                  <!--                      ref="reCaptcha"-->
-                  <!--                      href="#"-->
-                  <!--                      @click.stop.prevent="refreshCaptcha(index)">-->
-                  <!--                    {{ $t("captcha.get") }}-->
-                  <!--                  </a>-->
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
                 </FormItem>
 
                 <FormItem>
@@ -344,7 +339,7 @@
           </div>
           <!-- 举报结果 E -->
         </TabPane>
-        <Button @click="handleTabsAdd" size="small" slot="extra" disabled v-voice-button>
+        <Button @click="handleTabsAdd" size="small" v-slot:extra disabled v-voice-button>
           <Icon type="md-add"/>
         </Button>
       </Tabs>
@@ -353,18 +348,18 @@
 </template>
 
 <script>
+import {api, http, http_token, regular, util, voice} from '../assets/js/index'
+
 import Application from "../assets/js/application";
+import AdsGoogle from "@/components/ads/google/index.vue";
 import Html from "@/components/Html";
-import Captcha from "@/components/Captcha";
-
-import {api, http, http_token, voice, util, regular} from '../assets/js/index'
-
-import Textarea from "@/components/Textarea.vue";
+import Captcha from "@/components/captcha/index";
 import OcrWidget from "@/components/OcrWidget";
 import store from "@/store";
 import Promise from "lodash/_Promise";
 import Empty from "@/components/Empty.vue";
 import HtmlWidget from "@/components/HtmlWidget.vue";
+import Textarea from "@/components/textarea/index.vue"
 
 export default new Application({
   data() {
@@ -378,9 +373,10 @@ export default new Application({
       spinShow: false,
       failedOfNotFound: false,
       cheatMethodsGlossary: [],
+      captcha: '',
     };
   },
-  components: {Textarea, Html, HtmlWidget, OcrWidget, Captcha, Empty},
+  components: {AdsGoogle, Textarea, Html, HtmlWidget, OcrWidget, Captcha, Empty},
   created() {
     const message = store.state.configuration['voice_message']
 
@@ -407,6 +403,9 @@ export default new Application({
         this.cheatMethodsGlossary = res.cheatMethodsGlossary;
         this.games = res.gameName;
       });
+    },
+    getCaptchaData(value) {
+      this.captcha = value;
     },
     /**
      * 查询作弊玩家列表
@@ -458,7 +457,6 @@ export default new Application({
           videoLink: [],
           checkbox: [],
           description: "",
-          captcha: "",
           avatarLink: "",
         },
         // form rule
@@ -480,9 +478,6 @@ export default new Application({
           ],
           description: [
             {required: true, type: 'string', min: 5, trigger: 'change'},
-          ],
-          captcha: [
-            {required: true, trigger: 'blur'}
           ],
         },
         statusOk: 0,
@@ -572,7 +567,6 @@ export default new Application({
             formData.load = true;
 
             await that.handleReport(formData, index);
-            await that.refreshCaptcha();
 
             formData.load = false;
           })
@@ -604,21 +598,26 @@ export default new Application({
      * @param index
      */
     handleReport(data, index) {
-      const {gameName, captcha, originName, originUserId, originPersonaId} = data.formItem;
-      const cheatMethods = data.formItem.checkbox;
-      const description = data.formItem.description.trim();
-      const videoLink = data.formItem.videoLink.filter(i => i != '' || i != undefined || i != null).toString().trim() || null;
-      const formData = {
-        data: {
-          game: gameName,
-          cheatMethods,	// see {{valid_cheatMethod}}
-          videoLink,
-          description
-        },
-        encryptCaptcha: this.$refs[`report_${index}`][0].hash,
-        captcha,
-      };
-      let url = ""
+      if (!this.captcha) {
+        this.$Message.error(this.$t('basic.tip.captcha.expired'));
+        return;
+      }
+
+      const {gameName, originName, originUserId, originPersonaId} = data.formItem,
+          cheatMethods = data.formItem.checkbox,
+          description = data.formItem.description.trim(),
+          videoLink = data.formItem.videoLink.filter(i => i !== '' || i !== undefined || false).toString();
+
+      let formData = {
+            data: {
+              game: gameName,
+              cheatMethods,	// see {{valid_cheatMethod}}
+              videoLink,
+              description
+            },
+            captcha: this.captcha,
+          },
+          url = ""
 
       this.spinShow = true;
 
@@ -634,7 +633,7 @@ export default new Application({
         case "originName":
         default:
           url = api["player_report"];
-          formData.data.riginName = originName;
+          formData.data.originName = originName;
           break;
       }
 
@@ -652,7 +651,7 @@ export default new Application({
               message: d.message || ""
             })).then(() => {
               this.$router.push({
-                name: "cheater",
+                name: "player",
                 params: {ouid: d.data.originPersonaId},
               });
             });
@@ -665,7 +664,7 @@ export default new Application({
           }));
         }).finally(() => {
           resolve();
-          this.tabs.list[index].formItem.captcha = '';
+          this.captcha = '';
           this.spinShow = false;
         });
       })
@@ -693,7 +692,7 @@ export default new Application({
   }
 }
 
-.report-hackrid {
+.report-hacker-id {
   margin-top: 20px;
 
   h1, span {

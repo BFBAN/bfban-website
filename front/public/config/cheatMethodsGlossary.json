@@ -44,6 +44,12 @@
       "values": [
         "damageChange"
       ]
+    },
+    {
+      "value": "attackServer",
+      "values": [
+        "attackServer"
+      ]
     }
   ]
 }

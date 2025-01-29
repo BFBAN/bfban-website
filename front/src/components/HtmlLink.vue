@@ -1,41 +1,45 @@
 <template>
-  <Poptip :padding="'0'" max-width="300" trigger="hover" transfer @on-popper-show="onPoptipShow(false)"
+  <Poptip padding="0" max-width="300" trigger="hover" transfer :disabled="!isPoptip || getProtocol === 'mailto:'"
+          @on-popper-show="onPoptipShow(false)"
           @on-popper-hide="onPoptipShow(true)">
     <span class="html-link">
-      <template v-if="getProtocol == 'http:' || getProtocol == 'https:'">
-        <Icon type="md-link"/>
+      <template v-if="getProtocol === 'http:' || getProtocol === 'https:'">
+        <Icon type="md-link" class="icon"/>
       </template>
-      <template v-else-if="getProtocol == 'mailto:'">
-        <Icon type="ios-mail-outline"/>
+      <template v-else-if="getProtocol === 'mailto:'">
+        <Icon type="ios-mail-outline" class="icon"/>
       </template>
-      <a :href="afterData.href" target="_blank">{{ afterData.text || afterData.href }}</a>
+      <a :href="afterData.href" target="_blank" rel="noopener noreferrer">
+         {{ afterData.text || afterData.href }}
+      </a>
     </span>
     <template v-if="isIframeShow && isPoptip">
       <div class="link-iframe" slot="content">
         <template v-if="linkLoad">
           <div class="link-load link-box" style="position: relative; z-index: 1;">
             <Badge>
-              <Icon type="md-refresh" class="spin-icon-load" slot="count" size="20"/>
+              <Icon type="md-refresh" class="spin-icon-load" size="20" slot="count"/>
               <Icon type="md-browsers" size="50"/>
             </Badge>
           </div>
         </template>
-        <iframe :src="disableIframe ? '' : afterData.href" v-show="!linkLoad"
-                allowTransparency="true"
-                frameborder="no"
-                border="0"
-                marginwidth="0"
-                marginheight="0"
-                scrolling="no"
-                sandbox="allow-scripts allow-forms"></iframe>
+        <template v-show="!isIframeShow">
+          <iframe :src="disableIframe ? '' : afterData.href" v-show="!linkLoad"
+                  allowTransparency="true"
+                  security="restricted"
+                  frameborder="no"
+                  border="0"
+                  marginwidth="0"
+                  marginheight="0"
+                  scrolling="no"
+                  sandbox="allow-scripts allow-same-origin"></iframe>
+        </template>
       </div>
     </template>
   </Poptip>
 </template>
 
 <script>
-import {regular} from "@/assets/js";
-
 export default {
   name: "HtmlLink",
   props: {
@@ -63,14 +67,21 @@ export default {
       }
     }
   },
+  watch: {
+    'href': 'loadData',
+    'text': 'loadData'
+  },
   created() {
-    // unescape is deprecated， by: https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/escape
-    if (this.href)
-      this.afterData.href = decodeURI(this.href);
-    if (this.text)
-      this.afterData.text = decodeURI(this.text);
+    this.loadData();
   },
   methods: {
+    loadData() {
+      // unescape is deprecated， by: https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/escape
+      if (this.href)
+        this.afterData.href = decodeURI(this.href);
+      if (this.text)
+        this.afterData.text = decodeURI(this.text);
+    },
     onPoptipShow(status) {
       const that = this;
       this.disableIframe = status;
@@ -94,14 +105,22 @@ export default {
   computed: {
     isIframeShow() {
       // TODO 正则
-      if (!this.afterData.href) return false;
-      let url = new URL(this.afterData.href);
-      return url.protocol.indexOf('http:') >= 0 || url.protocol.indexOf('https:') >= 0;
+      try {
+        if (!this.afterData.href) return false;
+        let url = new URL(this.afterData.href);
+        return url.protocol.indexOf('http:') >= 0 || url.protocol.indexOf('https:') >= 0;
+      } catch (e) {
+        return false;
+      }
     },
     getProtocol() {
-      if (!this.afterData.href) return '';
-      let url = new URL(this.afterData.href);
-      return url.protocol;
+      try {
+        if (!this.afterData && !this.afterData.href) return '';
+        let url = new URL(this.afterData.href);
+        return url.protocol;
+      } catch (e) {
+        return '';
+      }
     }
   }
 }
@@ -123,6 +142,7 @@ export default {
 .link-iframe {
   border-radius: 3px;
   overflow: hidden;
+  cursor: pointer;
   margin-bottom: -10px;
   position: relative;
   height: 200px;
@@ -164,10 +184,20 @@ export default {
 
   a {
     opacity: .6;
+
+    &:before {
+      display: none;
+      content: "" !important;
+    }
   }
 
   a:hover {
     opacity: 1;
+  }
+
+  .icon {
+    margin-right: 2px;
+    opacity: .8;
   }
 }
 

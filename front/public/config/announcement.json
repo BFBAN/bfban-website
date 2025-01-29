@@ -1,0 +1,30 @@
+{
+  "CN": {
+    "personnel": {
+      "route": "personnel",
+      "versions": ["2022-10-01"]
+    },
+    "antiCheat": {
+      "route": "antiCheat",
+      "versions": ["2022-12-06", "2023-02-10", "2023-06-21", "2024-12-21"]
+    },
+    "conduct": {
+      "route": "conduct",
+      "versions": ["2022-10-01"]
+    }
+  },
+  "US": {
+    "personnel": {
+      "route": "personnel",
+      "versions": ["2022-10-01"]
+    },
+    "antiCheat": {
+      "route": "antiCheat",
+      "versions": ["2022-12-06", "2023-02-10", "2023-06-21", "2024-12-21"]
+    },
+    "conduct": {
+      "route": "conduct",
+      "versions": ["2022-10-01"]
+    }
+  }
+}

@@ -54,9 +54,12 @@ async function verifyAkismetKey() {
 // Checking for Spam
 async function checkSpam(comment) {
     try {
-        if (!config.akismet.isEnable) return false;
+        let isSpam = false;
 
-        const isSpam = await client.checkSpam(comment);
+        if (!config.akismet.isEnable) return false;
+        if (verifyDuplicateContent(comment.content)) return true;
+
+        isSpam = await client.checkSpam(comment);
 
         return !isSpam;
     } catch (err) {
@@ -79,6 +82,17 @@ async function submitSpam(spamFormData = SpamFormData()) {
     } catch (err) {
         throw err;
     }
+}
+
+/**
+ * Regular expressions are used to match repeated characters, numbers, or punctuation marks
+ * @param text content
+ * @param repeatCount Number of duplicates, not included
+ * @returns {Promise<boolean>}
+ */
+async function verifyDuplicateContent(text, repeatCount = 7) {
+    const regex = new RegExp(`([a-zA-Z0-9\\p{P}])\\1{${repeatCount},}`, 'gu');
+    return regex.test(text);
 }
 
 // packing
@@ -119,6 +133,7 @@ export {
     checkSpam,
     submitSpam,
     verifyAkismetKey,
+    verifyDuplicateContent,
     SpamFormData,
     SubmitSpamError,
 }

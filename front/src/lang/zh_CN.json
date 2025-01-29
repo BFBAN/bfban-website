@@ -1,13 +1,13 @@
 {
+  "name": "BFBAN",
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\n诞生于2018年1月29日；\n是战地玩家一起组建的 <b>抵制外挂</b> 组织。\n </p>",
-    "privacy": "\n<h2>隐私政策</h2>\n它是开源的。您可以通过 GitHub 发布问题并提出更改/改进建议。社区网络提供的 API 并开放供公众使用。",
     "title": "关于",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 网站依托于联BAN调查局，最初想法起源于热心玩家，由 <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> 开发，于 2018年11月4日 上线‘\n    </p>\n    <p>主要为广大玩家提供举报、列举、搜索、追踪、讨论等服务；</p>"
+    "minor": "全球作弊玩家数据库",
+    "description": "2018年1月29日，一群热衷于《战地》系列游戏的玩家自发组建了BFBAN，一个旨在抵制外挂、维护游戏公平的组织。\n\n这个组织由私服主持人、玩家等组成。不仅在游戏内，更是一场敌暗我明的幕外战争;为了更好地服务广大玩家，2018年11月4日，由Mygoare开发的BFBAN平台正式上线，这个平台以社区驱动为核心。随后，在Glass Panel的努力下，BFBAN程序不断改进，并在之后推出了v2版本，进一步提升平台的性能和举报、查询、讨论功能。\n\n让玩家能够更方便地参与到反外挂的行动中来，同时，BFBAN也致力于保障审查的透明度，让每个玩家都能了解处理结果。"
   },
   "account": {
     "bindOrigin": {
-      "content": "BFBAN需要您绑定origin账户，以便账户申诉、找回等功能；未绑定origin前，您的账户会被锁定，无法提交任何内容",
+      "content": "BFBAN需要您绑定EA账户，以便账户申诉、找回等功能；未绑定EA前，您的账户会被锁定，无法提交任何内容",
       "title": "未绑定账户",
       "travel": "好的，前往绑定账户"
     },
@@ -120,7 +120,7 @@
       "submit": "确认"
     },
     "gamePlatforms": {
-      "origin": "橘子",
+      "origin": "EA",
       "pc": "电脑",
       "ps3": "索尼主机3",
       "ps4": "索尼主机4",
@@ -149,19 +149,80 @@
       "volunteer": "社区志愿者"
     },
     "status": {
-      "0": "未处理",
-      "1": "石锤",
-      "2": "待自证",
-      "3": "MOSS自证",
-      "4": "无效举报",
-      "5": "讨论中",
-      "6": "需更多管理投票",
-      "7": "数据异常自动石锤",
-      "8": "刷枪",
-      "9": "申诉",
-      "all": "全部"
+      "0": {
+        "describe": "前或被批准保留前，称为未处理案件",
+        "text": "未处理"
+      },
+      "1": {
+        "describe": "“石锤”通“实锤”，坚硬无比之意，意思就是用实实在在的证据来捶打他，也有证据确凿的意思",
+        "text": "石锤"
+      },
+      "2": {
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "text": "待自证"
+      },
+      "3": {
+        "describe": "通过证明，该案件分类到自证分类中",
+        "text": "MOSS自证"
+      },
+      "4": {
+        "describe": "举报材料不全或举报错误ID等行为，该分类不等于确认作弊",
+        "text": "无效举报"
+      },
+      "5": {
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "text": "讨论中"
+      },
+      "6": {
+        "describe": "以上证据需要更多管理参与投票",
+        "text": "需更多管理投票"
+      },
+      "7": {
+        "describe": "以上证据仍然需要更多管理员和玩家参与讨论决定，不确定行为",
+        "text": "数据异常自动石锤"
+      },
+      "8": {
+        "describe": "在游戏中快速解锁武器配件",
+        "text": "刷枪"
+      },
+      "9": {
+        "describe": "案件处于上诉中，管理将有下一步判决",
+        "text": "申诉中"
+      },
+      "all": {
+        "text": "全部"
+      }
+    },
+    "html": {
+      "size": {
+        "x-large": "加大",
+        "large": "大",
+        "default": "默认",
+        "small": "小"
+      },
+      "type": {
+        "renderer": "渲染器",
+        "text": "文本",
+        "code": "代码"
+      }
     },
     "tip": {
+      "search.bad": "搜索发生错误，请联系管理员 {message}",
+      "search.success": "搜索成功",
+      "search.notExist": "未找到数据",
+      "me.bad": "个人信息发生错误，请联系管理员 {message}",
+      "me.success": "保存个人信息成功",
+      "request.404": "不存在此请求地址，请检查接口",
+      "achievement.bad": "成就发生错误，请联系管理员 {message}",
+      "achievement.duplicate": "重复领取成就",
+      "achievement.notConditions": "领取成就条件不符合",
+      "achievement.ineffective": "无效的成就",
+      "achievement.success": "成就领取成功",
+      "update.success": "玩家信息更新成功",
+      "update.notFound": "玩家更新失败，没有此玩家数据",
+      "update.notImplement": "玩家更新失败 {message}",
+      "update.error": "玩家更新失败 {message}",
+      "update.bad": "玩家更新错误，请联系管理员 {message}",
       "bindOrigin.bad": "绑定账户发生错误，请联系管理员 {message}",
       "bindOrigin.error": "发生错误，请联系管理员 {message}",
       "bindOrigin.expired": "激活验证码过期，请重新注册",
@@ -174,7 +235,7 @@
       "bindOrigin.success": "恭喜你成功激活!",
       "server.error": "服务错误 {message}",
       "captcha.bad": "验证码模块发生错误,请联系管理员 {message}",
-      "captcha.expired": "验证码未填",
+      "captcha.expired": "验证码过期或未填",
       "captcha.wrong": "错误的验证码",
       "changeName.bad": "更改用户名称错误，请联系管理员 {message}",
       "changeName.noChance": "你已经用完了所有改名的机会",
@@ -185,32 +246,39 @@
       "changePassword.success": "您需要重新登录来完成此过程",
       "forgetPassword.bad": "重置密码错误，请联系管理员 {message}",
       "forgetPassword.needVerify": "请检查您的电子邮件以重置密码",
-      "forgetPassword.notFound": "没有这样的用户或者您没有绑定电子邮件",
+      "forgetPassword.notFound": "没有这样的用户或者您没有绑定电子邮件，请检查名称或邮箱是否一致",
       "forgetPassword.permissionDenied": "你账户无法这样做",
       "forgetPassword.success": "重置密码成功",
       "judgement.appealLock": "上诉被锁定，案件无法进一步裁决",
       "judgement.bad": "判决发生错误，请联系管理员 {message}",
       "judgement.notFound": "未找到案件，请联系管理员 {message}",
       "judgement.permissionDenied": "你无权这样做",
-      "judgement.spam": "你所提交的内容，包含敏感内容",
+      "judgement.spam": "你所提交的内容不通过检测，被标记为垃圾内容 {message}",
       "judgement.success": "感谢你的判决",
+      "userInfo.bad": "用户信息错误，请联系管理员 {message}",
+      "userInfo.notFound": "没有这样的用户",
       "logout.bad": "注销失败,请联系管理员",
       "logout.success": "再见👋🏻",
-      "needBindEaAccount": "请绑定你的橘子账号以后在回复",
+      "needBindEaAccount": "请绑定你的EA账号以后在回复",
       "noAccess": "当前账户,无权限",
       "noReports": "还没有任何举报",
       "notContent": "无内容",
       "notFound": "哎列, 访问地址似乎走失",
       "notLang": "未翻译",
+      "externalAuth.success": "授权请求成功",
+      "externalAuth.noSuchUser": "授权请求的目标用户不存在",
+      "externalAuth.fail": "授权请求失败，请联系管理员 {message}",
+      "confirmAuth.success": "确认授权成功",
+      "confirmAuth.fail": "确认授权失败，请联系管理员 {message}",
       "reply.bad": "回复发生错误，请联系管理员 {message}",
       "reply.notFound": "没有此回复或玩家",
-      "reply.spam": "你所提交的内容，包含敏感内容",
+      "reply.spam": "你所提交的内容不通过检测，被标记为垃圾内容 {message}",
       "reply.success": "已提交回复",
       "report.bad": "举报发生错误，请联系管理员 {message}",
       "report.error": "举报发生错误，请联系管理员 {message}",
       "report.notFound": "查无此用户信息",
       "report.notImplement": "发生错误，请联系管理员 {message}",
-      "report.spam": "你所提交的内容，包含敏感内容",
+      "report.spam": "你所提交的内容不通过检测，被标记为垃圾内容 {message}",
       "report.success": "感谢你的举报",
       "signin.bad": "登录发生错误，请联系管理员 {message}",
       "signin.noSuchUser": "无此用户或密码错误",
@@ -224,12 +292,13 @@
       "signup.notImplement": "发生错误，请联系管理员 {message}",
       "signup.originBindingExist": "此邮箱已绑定账户",
       "signup.originNotFound": "无法依照用户提供的信息查找到EA账户",
-      "signup.usernameExist": "用户名已存在",
+      "signup.usernameMismatch": "邮箱所对应的EA账户与填入的EA账户名称不符合",
+      "signup.usernameExist": "网站用户或账户待激活账户池内用户名已存在",
       "user.invalid": "令牌失效",
       "user.permissionDenined": "无权许可",
       "user.tokenClientException": "当前客户端令牌过期或失效",
-      "user.tokenExpired": "令牌过期",
-      "userReports.bad": "用户举报发生错误，请联系管理员 {messgae}",
+      "user.tokenExpired": "令牌过期，请重新登陆",
+      "userReports.bad": "用户举报发生错误，请联系管理员 {message}",
       "userReports.notFound": "没有此玩家，请仔细核对",
       "userReports.success": "举报成功"
     }
@@ -239,6 +308,7 @@
   },
   "captcha": {
     "get": "获得验证码",
+    "fresh": "刷新验证码",
     "messages": {
       "bad": "验证码错误，请联系管理员",
       "expired": "验证码已过期",
@@ -253,11 +323,11 @@
       "title": "自瞄"
     },
     "attackServer": {
-      "describe": "恶意攻击服务器",
+      "describe": "恶意攻击服务器引起玩家高延迟、玩家死亡、重置、服务器无响应等",
       "title": "攻击服务器"
     },
     "damageChange": {
-      "describe": "修改武器参数",
+      "describe": "修改武器/载具/技能等参数",
       "title": "改伤"
     },
     "gadgetModify": {
@@ -277,7 +347,7 @@
       "title": "秒杀"
     },
     "teleport": {
-      "describe": "传送移动",
+      "describe": "传送、角色非正常速率移动",
       "title": "传送"
     },
     "wallhack": {
@@ -294,6 +364,7 @@
         "btrLink": "BTR链接",
         "farm": "刷枪申诉",
         "firstPersonRecording": "第一人称录屏链接",
+        "userGeneratedMossFile": "moss文件 (.zip)",
         "moss": "moss自证申诉",
         "mossDownloadUrl": "MOSS下载",
         "mossUpload": "上传moss",
@@ -306,7 +377,7 @@
         "type": "申诉类型"
       },
       "dealAppeal": "处理申诉",
-      "describe": "该举报信息存在问题,我能自证或他人协助证明清白.",
+      "describe": "该举报与事实不符,能提供自证材料 或 协助证明清白",
       "info": {
         "changeName": "名称变动",
         "commentid": "评论ID",
@@ -338,7 +409,7 @@
       },
       "placeholder": {
         "btrlink": "请填写btr对局链接",
-        "content": "请详细填写您申诉信息以便审核",
+        "content": "请详细填写您申诉信息以便审核(注意格式，不同地区会对申诉格式有需求，请以当地申诉社区《申诉格式》为准)",
         "player": "请填写玩家id",
         "videolink": "请填写视频链接"
       }
@@ -377,7 +448,7 @@
       "inGame": "在",
       "judge": "认为",
       "judgement": "处理意见",
-      "originAvatar": "Origin头像",
+      "originAvatar": "EA头像",
       "recentUpdateTime": "最近更新时间",
       "replyManual1": "如果有新的证据图片或视频需要补充，可以再次举报。回复功能只能回复文本或链接。如需回复图片，请移步这里",
       "replyManual2": "然后复制图片链接进行回复。",
@@ -430,15 +501,27 @@
       "banAppeal": "仅查看申诉",
       "coreComment": "主要内容",
       "historyName": "历史玩家变动名称",
-      "verify": "仅查看判决"
+      "verify": "仅查看判决",
+      "noAppealAttachmentHint": "此申诉无申诉附件",
+      "needLoginViewAttachmentsHint": "您需要登录账户，才可查阅玩家申诉额外提供的附件",
+      "types": {
+        "judgement": "举报",
+        "register": "注册",
+        "report": "举报",
+        "banAppeal": "申诉"
+      }
+    },
+    "dateView": {
+      "primitive": "原始",
+      "primitiveDescription": "服务器所在时区时间",
+      "localTimeZoneName": "当前时区名称",
+      "localeTimeDescription": "转换'原始'时间为你所在地本地区间时间",
+      "localeTime": "当前本地时间"
     },
     "title": "详情"
   },
   "footer": {
     "column": {
-      "col1": {
-        "text": "联BFBAN - 全球作弊玩家数据库"
-      },
       "col2": {
         "title": "社区"
       },
@@ -448,8 +531,10 @@
       "col4": {
         "title": "联系方式"
       },
+      "col5": {
+        "title": "其他"
+      },
       "sponsor": {
-        "join": "加入赞助商",
         "title": "赞助商"
       }
     },
@@ -461,6 +546,14 @@
     "checkEmail": "请检查您的邮箱，并点击其中的验证链接",
     "forgetUsername": "如果您忘记了BFBAN用户名，请前往<a href='http://kook.top/wHwxhw'>bfban开发者社区</a>寻求帮助。注意，您可能会需要很复杂的找回过程。",
     "resetSuccess": "恭喜完成重置 💐",
+    "form": {
+      "username": "用户名",
+      "originEmail": "EA邮箱"
+    },
+    "placeholder": {
+      "username": "请填写网站用户名或EA平台账户(注意大小写)用户名",
+      "originEmail": "输入您的EA邮箱"
+    },
     "steps": {
       "0": {
         "supplement": "核对账户",
@@ -483,14 +576,14 @@
         "title": "完成"
       }
     },
-    "title": "重置密码"
+    "title": "重置账户密码"
   },
   "header": {
     "about": "关于",
     "announcement": "公告",
     "cheaters": "玩家数据库",
     "index": "首页",
-    "profile": "个人设置",
+    "profile": "仪表盘",
     "report": "举报作弊",
     "signin": "登录",
     "signout": "注销",
@@ -503,7 +596,7 @@
       "activities": {
         "admin": "社区管理",
         "as": "处理为",
-        "join": "注册了联ban, 欢迎你的到来！",
+        "join": "注册了BFBAN, 欢迎你的到来！",
         "mark": "将",
         "report": "举报了"
       },
@@ -529,8 +622,8 @@
       "subButton": "了解有那些社区已经加入"
     },
     "seo": {
-      "description": "联ban官网,建立起全球作弊玩家档案库,成为我们一员维护社区环境",
-      "keywords": "联ban,联办,联办局,联ban局,战地风云,战地"
+      "description": "BFBAN官网,建立起全球作弊玩家档案库,成为我们一员维护社区环境",
+      "keywords": "BFBAN,联办,联Ban,联办局,BFBAN局,战地风云,战地"
     },
     "title": "首页"
   },
@@ -561,7 +654,7 @@
       "sortByTitle": "排序方式"
     },
     "reportTime": "举报时间范围",
-    "title": "外挂公示",
+    "title": "玩家数据库",
     "updateTime": "更新时间范围"
   },
   "misc": {
@@ -585,7 +678,183 @@
     "title": "玩家数据库"
   },
   "profile": {
-    "account": {
+    "achievement": {
+      "title": "成就",
+      "acquisitionTime": "领取时间",
+      "conditions": "获取方式",
+      "getButton": "立即获取成就",
+      "exp": "成就经验",
+      "owned": "已拥有成就",
+      "rarity": {
+        "normal": "普通",
+        "rare": "稀有",
+        "preciousness": "珍贵",
+        "special": "特殊"
+      },
+      "list": {
+        "trend_monthly_assemble": {
+          "name": "热门景点(月)",
+          "description": "登上本月热门案件排行"
+        },
+        "trend_monthly_l1": {
+          "name": "热门景点",
+          "conditions": "- 案件登上本月前10名热门TOP<br>- 当前账户与案件被举报玩家关联<br>- 案件游览大于等于100",
+          "description": "热门景点😁"
+        },
+        "trend_monthly_l2": {
+          "name": "热门景点2",
+          "conditions": "- 案件登上本月前10名热门TOP<br>- 当前账户与案件被举报玩家关联<br>- 热度值大于等于3以上<br>- 案件游览大于等于500",
+          "description": "热门景点常来打卡"
+        },
+        "user_innocent_case": {
+          "name": "安全落地",
+          "conditions": "- 在BFBAN中存在一个与此账户关联的案件<br>- 案件状态自证状态",
+          "description": "案件无效"
+        },
+        "user_achievement_assemble": {
+          "name": "成就收藏家",
+          "description": "成就收藏者(此成就不会展示在列表中，仅自己可见)"
+        },
+        "user_achievement_l1": {
+          "name": "成就1",
+          "conditions": "- 拥有3个成就",
+          "description": "已获取3个成就"
+        },
+        "user_achievement_l2": {
+          "name": "成就2",
+          "conditions": "- 拥有10个以上成就",
+          "description": "拥有10个以上成就"
+        },
+        "user_achievement_l3": {
+          "name": "成就3",
+          "conditions": "- 拥有10个以上成就<br>- 10成就内包含1个珍贵成就",
+          "description": "拥有10个以上成就，且包含1个珍贵"
+        },
+        "user_achievement_l4": {
+          "name": "成就4",
+          "conditions": "- 拥有15个以上成就<br>- 10个成就内包含3个珍贵成就",
+          "description": "拥有15个以上成就，且包含3个珍贵"
+        },
+        "active_community_weekly_assemble": {
+          "name": "周贡献",
+          "description": "用户在一周(7天)社区累计贡献"
+        },
+        "active_community_weekly_l1": {
+          "name": "一周社区贡献",
+          "conditions": "- 在本周统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一周社区贡献前10名"
+        },
+        "active_community_monthly_assemble": {
+          "name": "月贡献",
+          "description": "用户在一个月内社区累计贡献"
+        },
+        "active_community_monthly_l1": {
+          "name": "一个月社区贡献",
+          "conditions": "- 在本月统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一月社区贡献前10名"
+        },
+        "active_community_monthly_l2": {
+          "name": "一个月社区贡献",
+          "conditions": "- 在本月统计社区参与排行榜中前3用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一月社区贡献前3名"
+        },
+        "active_community_yearly_assemble": {
+          "name": "年贡献",
+          "description": "用户在一年内社区累计贡献"
+        },
+        "active_community_yearly_l1": {
+          "name": "一年社区贡献",
+          "conditions": "- 在本年统计社区参与排行榜中前10用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一年社区贡献前10名"
+        },
+        "active_community_yearly_l2": {
+          "name": "一年社区贡献",
+          "conditions": "- 在本年统计社区参与排行榜中前3用户<br>- 无禁言、无黑名单用户<br>- 非机器人账户",
+          "description": "一年社区贡献前3名"
+        },
+        "old_user": {
+          "name": "老用户",
+          "conditions": "- 创建时间在2024 1月1日前<br>- 用户id在10000以内(包含10000)<br>(同时满足)",
+          "description": "最早一批注册BFBAN先锋用户"
+        },
+        "open_chat_assemble": {
+          "name": "聊天",
+          "description": "完成对应条件聊天"
+        },
+        "open_chat_l1": {
+          "name": "开放聊天",
+          "conditions": "- 打开账户聊天",
+          "description": "欢迎随时与我对话"
+        },
+        "open_chat_l2": {
+          "name": "收到消息",
+          "conditions": "- 打开账户聊天<br>- 一个月收到消息并已读<br>(同时满足)",
+          "description": "交流的第一步"
+        },
+        "one_search_player": {
+          "name": "首次搜索玩家",
+          "conditions": "- 使用网站搜索案件",
+          "description": "使用网站搜索玩家，并查看案件"
+        },
+        "report_assemble": {
+          "name": "举报",
+          "description": "提交一定举报数量并且石锤，获取成就 <i>-愿举报越来越少</i>"
+        },
+        "report_l1": {
+          "name": "举报萌新",
+          "conditions": "- 举报10条玩家<br>- 从2024 01-01开始统计<br>- 非机器人账户",
+          "description": "初步探索BFBAN使用方法"
+        },
+        "report_l2": {
+          "name": "举报入门",
+          "conditions": "- 举报100条玩家<br>- 从2024 01-01开始统<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
+          "description": "区区100条数据"
+        },
+        "report_l3": {
+          "name": "举报大师",
+          "conditions": "- 举报300条玩家<br>- 从2024 01-01开始统<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
+          "description": "只需要看一眼，就能识你"
+        },
+        "report_l4": {
+          "name": "举报专家",
+          "conditions": "- 举报1000条玩家<br>- 从2024 01-01开始统<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
+          "description": "我预料了你的预料"
+        },
+        "report_l5": {
+          "name": "举报导师",
+          "conditions": "- 举报5000条玩家<br>- 从2024 01-01开始统<br>- 且有效石锤案件百分比96%以上<br>- 非机器人账户",
+          "description": "你只需此成就条件既可，一切无需描述"
+        },
+        "user_subscribes_assemble": {
+          "name": "案件追踪",
+          "description": "完成对应案件追踪"
+        },
+        "user_subscribes_l1": {
+          "name": "猎人的眼睛1",
+          "conditions": "- 追踪第一条案件<br>- 正常账户",
+          "description": "猎人将时刻关注猎物"
+        },
+        "user_subscribes_l2": {
+          "name": "猎人的眼睛2",
+          "conditions": "- 追踪足够20条案件<br>- 正常账户",
+          "description": "一名成熟的猎人"
+        },
+        "site_20w_report_witnesses": {
+          "name": "20W举报见证者",
+          "conditions": "- 当网站举报突破20W时所有用户都可以获得",
+          "description": "20w对于我们来说不是值得庆祝的事，这个成就更希望不需要领取"
+        },
+        "app_use_mobile": {
+          "name": "使用BFBAN助手应用",
+          "conditions": "- 使用BFBAN助手应用，并在应用内登陆后领取<br>- 所有用户",
+          "description": "🤔 这是BFBAN分身？到底是谁开发这应用"
+        }
+      }
+    },
+    "reports": {
+      "title": "我的举报"
+    },
+    "space": {
       "form": {
         "allowDM": "是否接收聊天",
         "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
@@ -593,7 +862,7 @@
         "createTime": "注册时间",
         "description": "用户简介",
         "introduction": "自我介绍",
-        "language": "设置语言",
+        "language": "首选语言",
         "languageSyncDescribe": "设置此处选项，在登录后同步程序本地语言，如果退出登录将回退到本地程序所持久保存的语言",
         "lastSigninIP": "最后登录IP",
         "modifyDescription": "修改用户简介",
@@ -604,8 +873,11 @@
         "privilege": "身份",
         "privileges": "权限",
         "registerIP": "注册时IP",
-        "showOrigin": "可见橘子信息",
-        "showOriginDescribe": "是否让你绑定的Origin在BFBAN可见",
+        "showOrigin": "可见EA信息",
+        "showOriginDescribe": "是否让你绑定的EA账户在BFBAN可见",
+        "showAchievement": "公开成就",
+        "AD": "广告",
+        "ADDescribe": "您可以拒绝服务广告，网站仍为公益开放，将开关更改为关闭，网站上的所有广告将被终止",
         "signoutTime": "登出时间",
         "username": "用户名"
       },
@@ -712,7 +984,7 @@
           "describe": "为管理员提供自动刷新，关注未处理玩家做出站内提醒",
           "name": "未处理提醒"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "在系统窗口内弹窗通知",
           "name": "桌面通知"
         },
@@ -766,24 +1038,22 @@
       "leave": "离开"
     },
     "info": {
-      "description": "请清晰描述举报者行为、特点、发生地点、时间，列出他的作弊举止，给出最后为何举报",
-      "fromDatabaseOneId": "从联BAN数据库中选取",
+      "description": "🤝 内容基本要求:\n\t- 不要将举报者任何隐私信息提交到此处\n\t- 视频链接可以粘贴在上面，有利于醒目提醒和索引\n\t- 请清晰描述举报者行为、特点、发生地点、时间，列出他的作弊举止，最后给出原因\n\t- 可以对你提供的截图、视频标注位置，附加说明\n\n⚠️ 请不要仅填写简单作弊方式，不提供任何直接证据\n⚠️ 多次无意义/恶意举报，账户将受到黑名单",
+      "fromDatabaseOneId": "从BFBAN数据库中选取",
       "idNotion1": "一次只填写一个ID，不要把战队名字写进来，不要写成自己的ID",
       "idNotion2": "游戏ID是不区分大小写的，但请特别注意区分 i I 1 l L o O 0，正确填写举报ID",
       "loginExpired": "您的登录已过期，请重新登录",
-      "notFoundHintAnswer1": "请至origin.com搜索该玩家，如确实能搜索到而无法举报，可至首页下方的联系方式处反馈bug",
+      "notFoundHintAnswer1": "请至ea.com搜索该玩家，如确实能搜索到而无法举报，可至首页下方的联系方式处反馈bug",
       "notFoundHintAnswer2": "这可能是EA数据库更新不及时，或是EA官方的bug，我们没有办法替他们解决，如果您想出一份力，可以至       https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en       官方反馈论坛反馈bug，此情况可以描述为 I can't search my friend by name on origin",
       "notFoundHintQuestion1": "但是我刚刚在游戏里见过他/我在查战绩app上查得到他？",
-      "notFoundHintQuestion2": "origin上无法搜索到，这是怎么一回事？",
+      "notFoundHintQuestion2": "EA上无法搜索到，这是怎么一回事？",
       "notFoundHintTitle": "我们无法找到该玩家",
-      "onlyOneId": "一次只有一个Origin ID",
       "reportAll": "举报所有",
       "reportHacker": "举报作弊",
       "reportOne": "举报单个",
       "required": "视频地址",
-      "uploadManual1": "不想注册国内账号、嫌麻烦，上传视频可以前往",
-      "uploadManual2": "然后地址贴在下方",
-      "uploadManual3": "可以是 优酷，土豆，AB站等 视频网站链接",
+      "uploadManual1": "可额外提供从优酷，土豆，推荐Acfun, Bilibili等视频网站分享链接或可访问源文件地址[禁止网盘]，点击添加按钮粘贴在下方",
+      "uploadManual2": "请选择具有长时间有效视频网站链接,请勿上传视频至网盘",
       "uploadPic1": "推荐上传 png, jpg, jpeg, gif 格式的图片",
       "uploadPic2": "图片大于 2M 或 上传失败，可以前往",
       "uploadPic3": "然后选择 Image URL 选项卡，把图片链接贴在下方",
@@ -793,15 +1063,18 @@
       "types": {
         "originName": {
           "name": "用户名称",
-          "hint": "平台简写用户名或是平台用户名"
+          "hint": "平台简写用户名或是平台用户名",
+          "placeholder": "一次只有一个EA名称"
         },
         "originPersonaId": {
-          "name": "角色身份标识",
-          "hint": "角色标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
+          "name": "角色身份标识(PID)",
+          "hint": "角色标识(PID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA PersonaId，由数字组成，一次只有一个"
         },
         "originUserId": {
-          "name": "用户身份标识",
-          "hint": "用户身份标识(id)，可通过游戏平台或第三方工具获取, 它由数字组成"
+          "name": "用户身份标识(UID)",
+          "hint": "用户身份标识(UID)，可通过游戏平台或第三方工具获取, 它由数字组成",
+          "placeholder": "EA UserId，由数字组成，一次只有一个"
         }
       },
       "cheatMethod": "作弊方法",
@@ -822,7 +1095,7 @@
     },
     "seo": {
       "description": "玩家举报",
-      "keywords": "联ban,联办,战地风云,战地"
+      "keywords": "BFBAN,联办,战地风云,战地"
     },
     "title": "举报"
   },
@@ -838,7 +1111,7 @@
   "search": {
     "collectionHint": "收藏此页面 (Ctrl+D or Command+D)",
     "describe": "从BFBAN数据库检索ID",
-    "notUserExist": "喵呜~，在数据库里找不到此信息",
+    "notExist": "未能查找到数据",
     "placeholder": "你想搜索什么?",
     "sort": {
       "default": "默认",
@@ -859,6 +1132,11 @@
       "name": "网站嵌入式",
       "size": "大小",
       "theme": "主题"
+    },
+    "qr": {
+      "name": "二维码",
+      "uriCode": "网页地址二维码",
+      "appCode": "应用案件二维码"
     },
     "image": {
       "describe": "生成一张举报信息截图",
@@ -904,15 +1182,15 @@
       "username": "用户名"
     },
     "placeholder": {
-      "originEmail": "输入您的橘子邮箱",
-      "originName": "输入您的橘子名字, 注意大小写",
+      "originEmail": "输入您的EA邮箱",
+      "originName": "输入您的EA名字, 注意大小写",
       "password": "6位以上密码",
-      "username": "4位以上用户名 仅限英文、数字、下划线、减号"
+      "username": "用户名至少4位以上,仅限英文、数字、下划线、减号 或 包含名@地址的邮箱"
     },
     "registerVerification": {
       "error": "验证账户错误",
-      "failure": "错误的验证地址，请检查验证码是否正确",
-      "successful": "验证成功!，账户已解锁，既可前往登录",
+      "failure": "验证失败，这可能是因为错误验证地址、非法验证码、验证码过期等原因；请在一段时间后，再次尝试重新注册账号",
+      "successful": "验证成功!账户已解锁，既可前往登录",
       "title": "验证账户",
       "validation": "验证中"
     },
@@ -922,7 +1200,7 @@
         "title": "基础信息"
       },
       "1": {
-        "supplement": "关联橘子平台",
+        "supplement": "关联EA平台",
         "title": "绑定"
       },
       "2": {
@@ -942,6 +1220,7 @@
   },
   "sitestats": {
     "admins": "总共管理员数",
+    "achievement": "成就价值排行",
     "banAppeals": "已上诉",
     "communityParticipation": "用户社区参与排行",
     "confirmed": "已处理案件",
@@ -956,7 +1235,8 @@
       "yearly": "一年"
     },
     "title": "统计",
-    "trend": "案件热度"
+    "trend": "案件热度",
+    "netstatus": "网络状态"
   },
   "textarea": {
     "originalImage": "原始图片",
@@ -982,5 +1262,15 @@
       "upload": "上传",
       "url": "图片链接"
     }
+  },
+  "workflow": {
+    "title": "工作流"
+  },
+  "externalAuth": {
+    "title": "授权",
+    "validation": "授权中",
+    "successful": "授权成功，可以关闭此页面",
+    "error": "授权失败",
+    "failure": "请检查各项参数是否正确"
   }
 }

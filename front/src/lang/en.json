@@ -1,13 +1,13 @@
 {
+  "name": "BFBAN",
   "about": {
-    "description": "<h2>BFBAN</h2>\n    <p>\n    created at 2018.1.29; It is an organisation created to fight <b>against hackers</b>\n    </p>\n\n    <p>\n      Staff members in bfban include:\n    </p>\n    <ul style=\"padding: .5rem 1rem .5rem;\">\n      <li>Server owners</li>\n      <li>Clan's leaders</li>\n      <li>Bf1 streamers</li>\n    </ul>",
-    "privacy": "\n<h2>Privacy policy</h2>\nIt is open-sourced. You can post issues and suggest changes/improvements via GitHub. The API is provided by the community network and is open for public use.",
     "title": "About",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a>  relies on bfban Bureau of Investigations, the original idea originated from enthusiastic players, it is developed by <a target=\"_blank\" href=\"https://mygoare.com\">mygoare</a> and launched on November 4, 2018\n    </p>\n    <p>Bfban is mainly used to report players and discuss if a player is a hacker or not.</p>"
+    "minor": "Global cheating player database",
+    "description": "On 29 January 2018, a group of enthusiastic players of the Battlefield series of games took it upon themselves to form BFBAN, an organisation that aims to boycott plug-ins and maintain fairness in the game.\n\nThis organisation consists of private hosts, players and others. Not only within the game, it is an off-screen war with a dark enemy; in order to better serve the majority of players, on 4 November 2018, the BFBAN platform developed by Mygoare was officially launched, a platform that is community-driven at its core. Subsequently, thanks to Glass Panel's efforts, the BFBAN programme has been continuously improved and a v2 version has since been launched to further enhance the platform's performance and reporting, querying and discussion functions.\n\nIt makes it easier for players to participate in anti-plagiarism actions, and at the same time, BFBAN is committed to guaranteeing the transparency of the review, so that every player can understand the results of the process."
   },
   "account": {
     "bindOrigin": {
-      "content": "BfBan requires you to connect your Origin account in order to appeal. Your account will be locked and you will not be able to submit anything if you dont connect your Orgin first.",
+      "content": "BFBAN requires you to bind your EA account in order to appeal, retrieve, and other functions; before binding EA, your account will be locked and you will not be able to submit any content",
       "title": "This account not connected to a Origin account!",
       "travel": "All right, Connect to my Origin account"
     },
@@ -16,7 +16,7 @@
     "message": {
       "chat": "Chat",
       "hint": {
-        "denied": "Your hav been blocked.",
+        "denied": "You have been blocked chat.",
         "selfTalk": "You can't chat with yourself！",
         "taOffChat": "This User has turned off the chat option"
       }
@@ -27,8 +27,8 @@
     "reports": "Personal reports",
     "role": "Role",
     "status": "Status",
-    "title": "User info",
-    "userInfo": "Account info",
+    "title": "User Info",
+    "userInfo": "Account Info",
     "username": "Username"
   },
   "announcement": {
@@ -40,12 +40,12 @@
       "intro": "Code of conduct for BFBAN team members in their daily work",
       "name": "BFBAN Code of Conduct (CoC)"
     },
-    "latest": "latest version",
+    "latest": "Latest Version",
     "personnel": {
       "intro": "Recruitment rules for the BFBAN team, the structure of the members and the rights and obligations and requirements of the different members are explained",
       "name": "BFBAN Personnel Rule"
     },
-    "version": "version"
+    "version": "Version"
   },
   "apps": {
     "buttons": {
@@ -75,7 +75,7 @@
   "basic": {
     "action": {
       "discuss": {
-        "describe": "More discussion bettween admins and player is needed, currently uncertain.",
+        "describe": "More discussions are required from admins and players before a judgement can be issued since the incident from the above evidence contains high uncertainty.",
         "text": "Under discussion"
       },
       "farm": {
@@ -96,7 +96,7 @@
       },
       "kill": {
         "describe": "admins think this player is a comfirmed cheater.",
-        "text": "confirmed cheater"
+        "text": "Confirmed Cheater"
       },
       "more": {
         "describe": "Need stronger evidence",
@@ -110,7 +110,6 @@
     "button": {
       "cancel": "Cancel",
       "commit": "Commit",
-      "dealAppeal": "Handling of complaints",
       "insert": "Insert",
       "next": "Next step",
       "prev": "Previous step",
@@ -121,7 +120,7 @@
       "submit": "Submit"
     },
     "gamePlatforms": {
-      "origin": "Origin",
+      "origin": "EA",
       "pc": "Pc",
       "ps3": "PlayStation 3",
       "ps4": "PlayStation 4",
@@ -132,6 +131,8 @@
     "games": {
       "all": "All games",
       "bf1": "Battlefield 1",
+      "bf3": "Battlefield 3",
+      "bf4": "Battlefield 4",
       "bf6": "Battlefield 2042",
       "bfv": "Battlefield 5"
     },
@@ -148,37 +149,166 @@
       "volunteer": "Community Volunteer"
     },
     "status": {
-      "0": "Unprocessed",
-      "1": "Confirmed hacker",
-      "2": "Suspicious",
-      "3": "Clean",
-      "4": "Invalid report",
-      "5": "Under discussion",
-      "6": "Needs more votes",
-      "7": "Ultra-confirmed hacker",
-      "8": "farm weapons",
-      "9": "appeal",
-      "all": "all"
+      "0": {
+        "describe": "unprocessed since it is not judged by admins",
+        "text": "unprocessed"
+      },
+      "1": {
+        "describe": "\"Confirm Hacker\" is the same as \"real hammer\", which means extremely hard. It means to beat him with real evidence, and it also means to have solid evidence.",
+        "text": "confirmed hacker"
+      },
+      "2": {
+        "describe": "More discussions are required from admins and players before a judgement can be issued since the incident from the above evidence contains high uncertainty.",
+        "text": "needs self-proof"
+      },
+      "3": {
+        "describe": "Through certification, the case is classified into the self-certification category",
+        "text": "MOSS self-proof"
+      },
+      "4": {
+        "describe": "insufficient evidence or wrong id, this does not mean confirmed hacker",
+        "text": "invalid report"
+      },
+      "5": {
+        "describe": "More discussions are required from admins and players before a judgement can be issued since the incident from the above evidence contains high uncertainty.",
+        "text": "under discussion"
+      },
+      "6": {
+        "describe": "more votes are required for the above evidence",
+        "text": "needs more votes from admins"
+      },
+      "7": {
+        "describe": "More discussions are required from admins and players before a judgement can be issued since the incident from the above evidence contains high uncertainty.",
+        "text": "automatically confirmed due to abnormal data"
+      },
+      "8": {
+        "describe": "Quickly unlock weapon accessories in the game",
+        "text": "weapon farming"
+      },
+      "9": {
+        "describe": "The case is under appeal and bfban admin will make the next decision",
+        "text": "appeal in progress"
+      },
+      "all": {
+        "text": "all"
+      }
+    },
+    "html": {
+      "size": {
+        "x-large": "Increase",
+        "large": "big",
+        "default": "default",
+        "small": "Small"
+      },
+      "type": {
+        "renderer": "Renderer",
+        "text": "text",
+        "code": "Code"
+      }
     },
     "tip": {
+      "search.bad": "Search error occurred, please contact the administrator {message}",
+      "search.success": "Search successful",
+      "search.notExist": "No data found",
+      "me.bad": "There is an error in personal information, please contact the administrator {message}",
+      "me.success": "Personal information saved successfully",
+      "request.404": "This request address does not exist, please check the interface",
+      "achievement.bad": "An achievement error occurred, please contact the administrator {message}",
+      "achievement.duplicate": "Receive achievements repeatedly",
+      "achievement.notConditions": "Not eligible to receive achievements",
+      "achievement.ineffective": "Invalid achievement",
+      "achievement.success": "Achievement received successfully",
+      "update.success": "Player information updated successfully",
+      "update.notFound": "Player update failed, no such player data",
+      "update.notImplement": "Player update failed {message}",
+      "update.error": "Player update failed {message}",
+      "update.bad": "Player update error, please contact the administrator {message}",
+      "bindOrigin.bad": "An error occurred when binding account, please contact the admin. {message}",
+      "bindOrigin.error": "An error occurred, please contact the admin {message}",
+      "bindOrigin.expired": "The activation verification code has expired, please register again.",
+      "bindOrigin.gameNotShowed": "The judged account does not correspond to the Battlefield series of games.",
+      "bindOrigin.needVerify": "Congratulations, you are still one step away. Please go to your email to activate your account.",
+      "bindOrigin.notFound": "The activation verification code is invalid, please check the verification code",
+      "bindOrigin.notImplement": "An error occurred, please contact the admin. {message}",
+      "bindOrigin.originBindingExist": "An account has already bound to this e-mail.",
+      "bindOrigin.originNotFound": "Can not find account link to this e-mail. Please check whether the e-mail is correct or search by e-mail is enabled.",
+      "bindOrigin.success": "Congratulations! Now you have activated your account!",
+      "server.error": "Service error {message}",
+      "captcha.bad": "An error occurred in the verification code module, please contact the administrator {message}",
+      "captcha.expired": "verification code expired or not filled",
+      "captcha.wrong": "Wrong verification code",
+      "changeName.bad": "An error occurred when changing username, please contact the admin {message}",
+      "changeName.noChance": "You have run out of chance to change your name.",
+      "changeName.occupied": "This new name is already taken by others.",
+      "changeName.success": "You have changed your name. Look at this, a shining new name!⭐️",
+      "changePassword.bad": "An error occurred when changing password, please contact the admin. {message}",
+      "changePassword.notMatch": "Incorrect old password.",
+      "changePassword.success": "You need to re-login to complete this process.",
+      "forgetPassword.bad": "An error occurred when resetting password, please contact the admin. {message}",
+      "forgetPassword.needVerify": "Please check your email to reset your password.",
+      "forgetPassword.notFound": "There is no such user or you have not bound an email, please check if the name or email is consistent.",
+      "forgetPassword.permissionDenied": "Your account cannot do this",
+      "forgetPassword.success": "Successfully reset password.",
+      "judgement.appealLock": "Appeal locked, case cannot be judged at the moment.",
+      "judgement.bad": "An error occurred when judging the case, please contact the admin {message}",
+      "judgement.notFound": "Cannot find the case, please contact the admin {message}",
+      "judgement.permissionDenied": "You don't have permission to do this.",
+      "judgement.spam": "The content you submitted cannot pass verification and marked as spam {message}",
+      "judgement.success": "Thank you for your judgement!",
+      "userInfo.bad": "User information is wrong, please contact the administrator {message}",
+      "userInfo.notFound": "There is no such user",
+      "logout.bad": "Logout failed, please contact the administrator",
+      "logout.success": "Good bye!👋🏻",
+      "needBindEaAccount": "Please bind your EA account before replying.",
       "noAccess": "Have no right to access",
       "noReports": "No reports yet",
       "notContent": "No content",
       "notFound": "We cant find the page your looking for.",
-      "notLang": "No translation"
+      "notLang": "No translation",
+      "externalAuth.success": "Authorization request successful",
+      "externalAuth.noSuchUser": "The target user of the authorization request does not exist",
+      "externalAuth.fail": "Authorization request failed, please contact the administrator {message}",
+      "confirmAuth.success": "Confirm that the authorization is successful",
+      "confirmAuth.fail": "Confirm authorization failed, please contact the administrator {message}",
+      "reply.bad": "An error occurred when trying to reply, please contact the admin {message}",
+      "reply.notFound": "No such reply or no such player.",
+      "reply.spam": "The content you submitted cannot pass verification and marked as spam {message}",
+      "reply.success": "Your reply has been submitted.",
+      "report.bad": "An error occurred when trying to report, please contact the admin {message}",
+      "report.error": "An error occurred when trying to report, please contact the admin {message}",
+      "report.notFound": "No such user found.",
+      "report.notImplement": "An error occurred, please contact the admin {message}",
+      "report.spam": "The content you submitted cannot pass verification and marked as spam {message}",
+      "report.success": "Thank you for your report.",
+      "signin.bad": "An error occurred when trying to login, please contact the admin {message}",
+      "signin.noSuchUser": "No such user or incorrect password.",
+      "signin.success": "Welcome back!",
+      "signup.bad": "An error occurred when trying to register, please contact the admin {message}",
+      "signup.error": "An error occurred, please contact the admin {message}",
+      "signup.notFound": "Invalid activation code",
+      "signup.expired": "The activation code has expired, please register again",
+      "signup.gameNotShowed": "The judged account does not correspond to the Battlefield series of games.",
+      "signup.needVerify": "Congratulations, you are still one step away. Please go to your email to activate your account.",
+      "signup.notImplement": "An error occurred, please contact the admin {message}",
+      "signup.originBindingExist": "This email has been bound to an account",
+      "signup.originNotFound": "Unable to find EA account based on the information provided by the user",
+      "signup.usernameMismatch": "The EA account corresponding to the email address does not match the filled-in EA account name.",
+      "signup.usernameExist": "account username exists in website accounts or pre-activation accounts",
+      "user.invalid": "Invalid token.",
+      "user.permissionDenined": "You do not have the permission.",
+      "user.tokenClientException": "User token expired or invalid.",
+      "user.tokenExpired": "Token expired, please log in again",
+      "userReports.bad": "User reports an error, please contact the administrator {message}",
+      "userReports.notFound": "There is no such player, please check carefully",
+      "userReports.success": "Successfully reported."
     }
   },
   "bindOrigin": {
-    "messages": {
-      "bad": "Error while binding, please contact admin",
-      "expired": "Verification code for binding expired, please bind again",
-      "notFound": "Verification code for binding not found",
-      "success": "Account bind to Origin successfully"
-    },
-    "title": "Connect your origin account"
+    "title": "Bind EA account."
   },
   "captcha": {
     "get": "Get captcha",
+    "fresh": "Refresh Captcha",
     "messages": {
       "bad": "Wrong captcha, please contact admin.",
       "expired": "Expired captcha",
@@ -193,11 +323,11 @@
       "title": "Aimbot"
     },
     "attackServer": {
-      "describe": "Attack battlefield server using method such as DDOS attack",
+      "describe": "Malicious attacks on the server cause high player latency, player death, reset, server unresponsiveness, etc.",
       "title": "Attacking server"
     },
     "damageChange": {
-      "describe": "Moditfy weapon's damage profile",
+      "describe": "Modify parameters of weapons/vehicles/skills etc.",
       "title": "Damage modify"
     },
     "gadgetModify": {
@@ -217,7 +347,7 @@
       "title": "Insta-kill"
     },
     "teleport": {
-      "describe": "Player can teleport",
+      "describe": "Teleportation, character movement at abnormal speed",
       "title": "Teleportation"
     },
     "wallhack": {
@@ -229,11 +359,12 @@
     "appeal": {
       "deal": {
         "action": "Appeal operation",
-        "admincontent": "Admin appeal content",
+        "adminContent": "Reply by admin",
         "appealContent": "Player appeal content",
         "btrLink": "BTR Link",
         "farm": "Farm weapon appeal",
         "firstPersonRecording": "First person screen recording link",
+        "userGeneratedMossFile": "moss file (.zip)",
         "moss": "Moss self-proof appeal",
         "mossDownloadUrl": "Download Moss",
         "mossUpload": "Upload Moss",
@@ -245,7 +376,8 @@
         },
         "type": "Appeal type"
       },
-      "describe": "This report has a problem. I can prove that me or the player mentioned is innocent.",
+      "dealAppeal": "Process appeals",
+      "describe": "The report is inconsistent with the facts and can provide self-corroborating material or help prove innocence",
       "info": {
         "changeName": "Name change",
         "commentid": "Comment ID",
@@ -277,7 +409,7 @@
       },
       "placeholder": {
         "btrlink": "Please fill out the btr matchup link",
-        "content": "Please fill in detail of your appeal for review",
+        "content": "Please fill in the details of your appeal information for review (pay attention to the format, different regions will have requirements for the appeal format, please refer to the local appeal community \"appeal format\" shall prevail)",
         "player": "Please fill in Player's ID",
         "videolink": "Please fill in the video link"
       }
@@ -299,10 +431,10 @@
       "cheatMethod": "via",
       "cheatersInfo": "Player detail",
       "dealRecord": "Admin's operational records：",
-      "discription1": "If you cant find the player on battlefieldtracker or you think he changed Origin account name,please Click",
-      "discription2": "bfban.com can track hackers' newest ID",
-      "discription3": "Server can update hacker who is on the list periodically",
-      "discription4": "Historical ID which they used before can be found too",
+      "description1": "Click here if the link expired, or name changed.",
+      "description2": "bfban.com can track cheater permanently.",
+      "description3": "The server will also regularly capture and update the information of the person being reported.",
+      "description4": "Previous ID can also be used to search.",
       "fastReplies": {
         "evidencePic": "As the evidence showed in the picture",
         "evidenceVid": "As the evidence showed in the video",
@@ -311,12 +443,12 @@
       "firstReportTime": "Firstly reported date",
       "gameScores": "Score track link",
       "gaming": "for",
-      "giveOpinion": "What's your opinion?",
+      "giveOpinion": "What is your opinion?",
       "historyID": "Historical User Name",
       "inGame": "in",
       "judge": "has",
       "judgement": "Judgement",
-      "originAvatar": "Origin avatar",
+      "originAvatar": "EA Avatar",
       "recentUpdateTime": "Recent update time",
       "replyManual1": "If you have new picture or video evidence to be maintained, you can report one more time.Otherwise,you can only reply text or link by replying here.if you want to add picture click here",
       "replyManual2": "and then copy the picture link to reply",
@@ -352,10 +484,6 @@
       "dontDoIt": "Do not just give a ",
       "fillEverything": "Please fill in everything",
       "pleaseExplain": "Please explian your decision in details",
-      "replySuccess": "Your reply was successfully added",
-      "signIn": "Please sign in",
-      "submitSuccess": "Submition successful",
-      "tipBind": "Please bind your Origin ID before replay",
       "updateComplete": "Update completed"
     },
     "seo": {
@@ -373,14 +501,29 @@
       "banAppeal": "Only appeals",
       "coreComment": "Main content",
       "historyName": "Player name changing history",
-      "verify": "Only verified"
+      "verify": "Only verified",
+      "noAppealAttachmentHint": "There is no complaint attachment for this complaint",
+      "needLoginViewAttachmentsHint": "You will need to log in to your account to access the additional attachments provided by Player Complaints",
+      "types": {
+        "judgement": "report",
+        "register": "register",
+        "report": "report",
+        "banAppeal": "appeal"
+      }
+    },
+    "dateView": {
+      "primitive": "original",
+      "primitiveDescription": "current local time for the server",
+      "localTimeZoneName": "current time zone name",
+      "localeTimeDescription": "transfer \"original\" time to your current local time",
+      "localeTime": "current local time"
     },
     "title": "Detail"
   },
   "footer": {
     "column": {
       "col1": {
-        "text": "BFBAN - Global cheater database"
+        "text": "BFBAN - Global Cheater Database"
       },
       "col2": {
         "title": "Communities"
@@ -391,8 +534,11 @@
       "col4": {
         "title": "Contact us"
       },
+      "col5": {
+        "title": "other"
+      },
       "sponsor": {
-        "join": "Join sponsor",
+        "join": "Become Sponsor",
         "title": "Sponsor"
       }
     },
@@ -404,6 +550,14 @@
     "checkEmail": "Please check your email and click on the verification link",
     "forgetUsername": "If you forget your BFBAN username, please go to the <a href='http://kook.top/wHwxhw'> bfban developer community</a> for help. Note that you may need a complicated retrieval process.",
     "resetSuccess": "The password reset is successful! 💐",
+    "form": {
+      "username": "Username",
+      "originEmail": "EA Mail"
+    },
+    "placeholder": {
+      "username": "Please fill in the website username or EA platform account (note the case sensitivity) username.",
+      "originEmail": "Enter your EA email."
+    },
     "steps": {
       "0": {
         "supplement": "Account name",
@@ -426,18 +580,17 @@
         "title": "Submit"
       }
     },
-    "title": "Reset password"
+    "title": "Reset account password"
   },
   "header": {
     "about": "About",
     "announcement": "Announcement",
     "cheaters": "Player database",
     "index": "Home",
-    "profile": "Personal settings",
+    "profile": "Dashboard",
     "report": "Report",
     "signin": "Sign in",
     "signout": "Logout",
-    "signoutSuccess": "Logout successful",
     "signup": "Signup",
     "site_stats": "Statistics",
     "userCenter": "Public profile"
@@ -447,7 +600,7 @@
       "activities": {
         "admin": "Administrator",
         "as": "as",
-        "join": "Welcome to BFBAN",
+        "join": "Registered BFBAN, welcome!",
         "mark": "marked",
         "report": "reported"
       },
@@ -461,19 +614,20 @@
     "cover": {
       "confirmData": "Confirmed cheater",
       "dataReceived": "Recieved",
-      "endTime": "Since {time}",
+      "endTime": "start from {time}",
       "h1": "BFBAN",
       "h2": {
         "hint0": "Provides ☁️database. Enabling observation and removal of cheater from different Battlefield servers around the world",
-        "hint1": "Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheaters"
+        "hint1": "Provides support ranging from BF1 to BF2042. Helping server around the globle to monitor cheaters",
+        "hint2": "Everything is controlled by the community, open and transparent, and provides free services to everyone connected to BFBAN."
       },
       "h3": "A global database of cheaters",
       "h4": "Become one of us - Improve our community",
       "subButton": "Find out which communities have joined"
     },
     "seo": {
-      "description": "BfBan official website, establish a global archive of cheating players, become a member of us to maintain the community environment",
-      "keywords": "BFBan,BFBan Bureau,Battlefield"
+      "description": "BFBAN official website, establish a global cheating player archive, become one of us to maintain the community environment",
+      "keywords": "BFBAN, Joint Office, BFBAN, Joint Office, BFBAN Bureau, Battlefield, Battlefield"
     },
     "title": "Home"
   },
@@ -504,7 +658,7 @@
       "sortByTitle": "Sort by"
     },
     "reportTime": "Report time",
-    "title": "Cheater list",
+    "title": "Player Database",
     "updateTime": "Update time"
   },
   "misc": {
@@ -528,33 +682,212 @@
     "title": "Player database"
   },
   "profile": {
-    "account": {
+    "achievement": {
+      "title": "Achievement",
+      "acquisitionTime": "Receive time",
+      "conditions": "Obtain Method",
+      "getButton": "Get achievements immediately.",
+      "exp": "Achievement experience",
+      "owned": "Already have achievements.",
+      "rarity": {
+        "normal": "Normal",
+        "rare": "Rare",
+        "preciousness": "Precious",
+        "special": "Special"
+      },
+      "list": {
+        "trend_monthly_assemble": {
+          "name": "Hot spots (month)",
+          "description": "Listed in the ranking of popular cases this month"
+        },
+        "trend_monthly_l1": {
+          "name": "Hot spots",
+          "conditions": "- The case ranks in the top 10 hot TOP this month<br>\n- The current account is associated with the reported player in the case<br>\n- The case tour is greater than or equal to 100",
+          "description": "Hot spots 😁"
+        },
+        "trend_monthly_l2": {
+          "name": "Hot spots 2",
+          "conditions": "- The case ranks among the top 10 hot TOP this month\n- The current account is associated with the reported player in the case\n- The heat value is greater than or equal to 3\n- The case visit is greater than or equal to 500",
+          "description": "Hot spots often come to check in."
+        },
+        "user_innocent_case": {
+          "name": "Safe landing",
+          "conditions": "- There is a case associated with this account in BFBAN <br>- Case Status Self-certification status",
+          "description": "Case invalid"
+        },
+        "user_achievement_assemble": {
+          "name": "Achievement collector",
+          "description": "Achievement Collector (This achievement will not be displayed in the list, only visible to yourself)"
+        },
+        "user_achievement_l1": {
+          "name": "Achievement 1",
+          "conditions": "- Has 3 achievements",
+          "description": "Already obtained 3 achievements."
+        },
+        "user_achievement_l2": {
+          "name": "Achievement 2",
+          "conditions": "- Have more than 10 achievements.",
+          "description": "Having more than 10 achievements."
+        },
+        "user_achievement_l3": {
+          "name": "Achievement 3",
+          "conditions": "- More than 10 achievements\n- 1 precious achievement within the 10 achievements",
+          "description": "Having more than 10 achievements, including 1 precious."
+        },
+        "user_achievement_l4": {
+          "name": "Achievement 4",
+          "conditions": "- More than 15 achievements\n- 10 achievements include 3 precious achievements",
+          "description": "Having more than 15 achievements, including 3 precious ones."
+        },
+        "active_community_weekly_assemble": {
+          "name": "Week Contribution",
+          "description": "Users' cumulative contributions to the community in one week (7 days)."
+        },
+        "active_community_weekly_l1": {
+          "name": "One week community contribution.",
+          "conditions": "- In the top 10 users in the community participation leaderboard this week\n- No banned or blacklisted users\n- Non-robot accounts",
+          "description": "Top 10 community contributions of the week"
+        },
+        "active_community_monthly_assemble": {
+          "name": "Monthly Contribution",
+          "description": "Users have accumulated contributions to the community within one month."
+        },
+        "active_community_monthly_l1": {
+          "name": "One month community contribution.",
+          "conditions": "- In the top 10 users in the community participation leaderboard this month\n- No banned or blacklisted users\n- Non-robot accounts",
+          "description": "Top 10 community contributions in January"
+        },
+        "active_community_monthly_l2": {
+          "name": "One month community contribution.",
+          "conditions": "- In the top 3 users in the community participation leaderboard this month\n- No banned or blacklisted users\n- Non-robot accounts",
+          "description": "Top 3 community contributions in January"
+        },
+        "active_community_yearly_assemble": {
+          "name": "Yearly contribution",
+          "description": "Users have accumulated contributions to the community within a year."
+        },
+        "active_community_yearly_l1": {
+          "name": "One year community contribution",
+          "conditions": "- In the top 10 users in the community participation leaderboard this year\n- No banned or blacklisted users\n- Non-robot accounts",
+          "description": "Top 10 community contributions of the year"
+        },
+        "active_community_yearly_l2": {
+          "name": "One year community contribution",
+          "conditions": "- In the top 3 users in the community participation leaderboard this year\n- No banned or blacklisted users\n- Non-robot accounts",
+          "description": "Top 3 community contributions of the year"
+        },
+        "old_user": {
+          "name": "Existing user",
+          "conditions": "- Created before January 1, 2024\n- User ID within 10,000 (including 10,000)\n(Both conditions must be met)",
+          "description": "The earliest batch of registered BFBAN pioneer users"
+        },
+        "open_chat_assemble": {
+          "name": "Chat",
+          "description": "Complete corresponding condition chat."
+        },
+        "open_chat_l1": {
+          "name": "Open chat",
+          "conditions": "- Open account chat",
+          "description": "Welcome to chat with me at any time."
+        },
+        "open_chat_l2": {
+          "name": "Received message.",
+          "conditions": "- Open account chat\n- Receive and read messages for one month\n(At the same time)",
+          "description": "The first step of communication."
+        },
+        "one_search_player": {
+          "name": "First search player",
+          "conditions": "- Use the website to search for cases.",
+          "description": "Search for players on the website and view cases."
+        },
+        "report_assemble": {
+          "name": "Report",
+          "description": "Submit a certain number of reports and hammer them to achieve the achievement <i>-May the number of reports decrease</i>"
+        },
+        "report_l1": {
+          "name": "Report newbie",
+          "conditions": "- Report 10 players\n- Start counting from 2024-01-01\n- Non-robot accounts",
+          "description": "Preliminary exploration of BFBAN usage"
+        },
+        "report_l2": {
+          "name": "Getting Started with Reporting",
+          "conditions": "- Report 100 players\n- Start counting from 2024-01-01\n- And the percentage of valid hammer cases is over 96%\n- Non-robot accounts",
+          "description": "Just 100 pieces of data."
+        },
+        "report_l3": {
+          "name": "Report Master",
+          "conditions": "- Report 300 players\n- Start counting from 2024-01-01\n- And the percentage of valid hammer cases is over 96%\n- Non-robot accounts",
+          "description": "Just one look, and I can recognize you."
+        },
+        "report_l4": {
+          "name": "Report expert",
+          "conditions": "- Report 1000 players\n- Start counting from 2024-01-01\n- And valid ban cases are over 96%\n- Non-robot accounts",
+          "description": "I anticipated your anticipation."
+        },
+        "report_l5": {
+          "name": "Report mentor",
+          "conditions": "- Report 5000 players\n- Start counting from 2024-01-01\n- And the percentage of valid hammer cases is over 96%\n- Non-robot accounts",
+          "description": "You only need this achievement condition, no need to describe everything."
+        },
+        "user_subscribes_assemble": {
+          "name": "Case Tracking",
+          "description": "Complete corresponding case tracking"
+        },
+        "user_subscribes_l1": {
+          "name": "Hunter's Eyes I",
+          "conditions": "- Tracking the first case <br>- Normal account",
+          "description": "The hunter will always keep an eye on the prey"
+        },
+        "user_subscribes_l2": {
+          "name": "Hunter's Eyes II",
+          "conditions": "- Track enough 20 cases<br>- Normal account",
+          "description": "A mature hunter"
+        },
+        "site_20w_report_witnesses": {
+          "name": "200K Reporting Witnesses",
+          "conditions": "- When the number of website reports exceeds 200K, all users can obtain",
+          "description": "200K is not something worth celebrating for us, and we hope that we don’t need to claim this achievement."
+        },
+        "app_use_mobile": {
+          "name": "Using the BFBAN Assistant App",
+          "conditions": "- Use the BFBAN Assistant app and log in to claim <br> - All users",
+          "description": "🤔 Is this a BFBAN clone? Who developed this app?"
+        }
+      }
+    },
+    "reports": {
+      "title": "My report"
+    },
+    "space": {
       "form": {
         "allowDM": "Allow DMs",
-        "allowDMdescribe": "Receive DMs from other people.",
+        "allowDMdescribe": "Receive DMs from other people. For more message information, go to [Message List] to view",
         "changeNameLeft": "Remaining Username Modification Times",
         "createTime": "Register Time",
         "description": "User Profile",
         "introduction": "About me",
-        "language": "Languages",
-        "languageSyncDescribe": "It will use the selected language while your logged in",
+        "language": "Preferred language",
+        "languageSyncDescribe": "Set this option to synchronize the local language of the program after logging in. If you log out, you will fall back to the language persisted by the local program.",
         "lastSigninIP": "Last login IP",
         "modifyDescription": "Modify User Profile",
         "originEmail": "EA Account Email",
         "originName": "EA Account Username",
         "originPersonaId": "EA Account PersonaID",
         "originUserId": "EA Account UserID",
-        "privilege": "Indentity",
+        "privilege": "Identity",
         "privileges": "Privilege",
         "registerIP": "Register IP",
-        "showOrigin": "Show Orgin info",
-        "showOriginDescribe": "Allow your connected orgin account to be shown on BFBAN",
+        "showOrigin": "EA information can be seen.",
+        "showOriginDescribe": "Make your bound EA account visible on BFBAN",
+        "showAchievement": "Public your achievements",
+        "AD": "Advertisement",
+        "ADDescribe": "You can refuse service of ads and the site will remain open for public benefit, change the switch to off and all advertising on the site will be terminated.",
         "signoutTime": "Logout Time",
         "username": "Username"
       },
       "modifyName": {
-        "residueDegree": "You still have {changeNameLeft}chance to change name",
-        "specification1": "You are changing your account name, which means that you will see changes within the site and the <b>login ID</b> will change at the same time. If you accidentally forget your new account ID, you may not be able to retrieve it, affecting your binded orgin account, and you will need to go through a very long manual review..",
+        "residueDegree": "You still have {changeNameLeft} chance to change name",
+        "specification1": "You are changing your account name, which means that you will see changes within the site and the <b>login ID</b> will change at the same time. If you accidentally forget your new account ID, you may not be able to retrieve it, affecting your binded orgin account, and you will need to go through a very long manual review.",
         "specification2": "Do you understand the instructions above?",
         "steps": {
           "0": {
@@ -564,12 +897,12 @@
             "title": "fill in"
           },
           "2": {
-            "title": "complete"
+            "title": "Finish"
           }
         },
         "title": "Change name"
       },
-      "title": "Account information"
+      "title": "Account information setting"
     },
     "admin": {
       "menu": {
@@ -578,6 +911,8 @@
         "adminOperationLog": "Admin website action log",
         "blockedUsers": "blockedusers",
         "comment": "Comments on the management",
+        "fileManagement": "Media management",
+        "files": "file list",
         "home": "Home",
         "judgementLog": "Judgement log",
         "log": "Logs",
@@ -653,7 +988,7 @@
           "describe": "Provide administrators with automatic refresh, focus on unprocessed players to make site alerts",
           "name": "Unprocessed reminder"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "Prompt notification in system",
           "name": "Desktop notification"
         },
@@ -707,34 +1042,49 @@
       "leave": "Leave"
     },
     "info": {
-      "description": "List as much evidence as possible about the person being reported",
-      "fromDatabaseOneId": "Select from BFBAN's database",
-      "idNotion1": "You can only report one ID at a time， do not include the platoon name and do not fill in your own ID",
+      "description": "🤝 Basic requirements for the content:\n- Do not submit any private information of the reporter here.\n- You can paste the video link above, which is helpful for highlighting and indexing.\n- Please describe clearly the actions, characteristics, location, and time of the reporter, list their cheating behavior, and finally provide the reason.\n- You can annotate the location in the screenshots or videos you provide, with additional explanations.\n\n⚠️ Please do not only provide simple cheating methods without any direct evidence.\n⚠️ Repeated meaningless/malicious reports will result in account blacklisting.",
+      "fromDatabaseOneId": "Select from BFBAN database",
+      "idNotion1": "Only fill in one ID at a time, do not put the team name in, do not write your own ID",
       "idNotion2": "Origin name has no match for lower case and upper case，but you must identify i I 1 l L o O 0 in order to offer correct ID",
       "loginExpired": "Your login has expired, please re-login.",
-      "notFoundHintAnswer1": "Please visit origin.com to search that player. If this player can be found but the report can't be made, you can send us bug report via the contact methods on the bottom of the frontpage.",
+      "notFoundHintAnswer1": "Please search for the player on ea.com. If you can find the player but cannot report him, you can report the bug in the contact information at the bottom of the homepage.",
       "notFoundHintAnswer2": "That is probably because EA didnot update their database in time，or their system bugged, and we are unable to help them fix that bug. If you do wish to help, you can visit       https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en       , the official froum to send bug report，you can describe this situation as: I can't search my friend by name on origin.",
       "notFoundHintQuestion1": "But I've just met him in game/I can find him on battlefield tracker?",
-      "notFoundHintQuestion2": "I can't find him on origin, what can I do?",
+      "notFoundHintQuestion2": "It cannot be searched on EA, what is going on?",
       "notFoundHintTitle": "We can't find this player",
-      "onlyOneId": "Only one origin account at a time",
       "reportAll": "Report all",
       "reportHacker": "Report a hacker",
       "reportOne": "Report one",
       "required": "video link",
-      "uploadManual1": "if you do not want to register video-site member such as Bilibili and Youtube, you can go to",
-      "uploadManual2": "and then paste the video link below",
-      "uploadManual3": "you can offer your video by Bilibili,Youtube,Youku,Tudou and more",
+      "uploadManual1": "You can also provide additional sharing links from Youku, Tudou, Acfun, Bilibili and other video sites or accessible source file addresses [Network disk is prohibited], click the Add button and paste it below",
+      "uploadManual2": "Please select a video website link that has a long-term validity period. Do not upload the video to the network disk.",
       "uploadPic1": "We recommend you to upload pictures with png, jpg, jpeg, gif format.",
       "uploadPic2": "picture larger than 2M will fail to upload ,you can go to ",
       "uploadPic3": "and then choose Image URL Tag，paste the image link below",
       "uploadPic4": "please list your evidence here，Text editor offer image upload service（Size limits:2M）"
     },
     "labels": {
+      "types": {
+        "originName": {
+          "name": "Username",
+          "hint": "Platform abbreviated username or platform username",
+          "placeholder": "only one EA id at a time"
+        },
+        "originPersonaId": {
+          "name": "PersonaID",
+          "hint": "PersonaID,  which can be obtained through the game platform or third-party tools, consists of numbers",
+          "placeholder": "EA PersonaId, composed of numbers, unique to the EA"
+        },
+        "originUserId": {
+          "name": "UserID, which can be obtained through the game platform or third-party tools, consists of numbers",
+          "hint": "EA UserID, composed of numbers, unique to the platform.",
+          "placeholder": "EA UserId, composed of numbers, unique to the platform (XBOX, PS, PC)"
+        }
+      },
       "cheatMethod": "Cheat method",
       "description": "Description",
       "game": "Game",
-      "hackerId": "Cheater ID"
+      "hackerId": "Confirmed cheater"
     },
     "messages": {
       "failureSubtitle": "Report failed, {msg}",
@@ -744,13 +1094,12 @@
       "permissionDenied": "No permission",
       "successSubtitle": "Thank you for reporting",
       "successTitle": "Successfully submitted",
-      "tipBind": "Please report only after you've bound Origin account",
       "videoBadFormat": "Wrong format",
       "videoEmpty": "Empty video link"
     },
     "seo": {
       "description": "Player report",
-      "keywords": "BFBan,Battlefield"
+      "keywords": "BFBAN, Joint Office, Battlefield, Battlefield"
     },
     "title": "Report"
   },
@@ -766,7 +1115,7 @@
   "search": {
     "collectionHint": "Bookmark this page (Ctrl+D or Command+D)",
     "describe": "Search a playername from the BFBAN database",
-    "notUserExist": "This player cannot be found in the database",
+    "notExist": "cannot find data",
     "placeholder": "Search for a player",
     "sort": {
       "default": "default",
@@ -803,8 +1152,8 @@
     "title": "Share"
   },
   "signin": {
-    "failed": "Login failed",
-    "fillEverything": "Please fill in everything",
+    "failed": "login error",
+    "fillEverything": "Incomplete login information, please fill it in properly.",
     "form": {
       "Feedback": "Feedback Question",
       "forgetPasswordHint": "Forget Password?",
@@ -812,16 +1161,15 @@
       "submitHint": "Don't have account? Sign up",
       "username": "Username/Email"
     },
-    "loggedIn": "Please log out first (✿◡‿◡)",
+    "loggedIn": "Hmm? Please logout first. (✿◡‿◡)",
     "loginFirst": "Please login first",
-    "success": "Login sucessful",
     "title": "Sign In"
   },
   "signup": {
     "checkAllEmail": "The verification email takes a while (about 1 minute) to deliver to your mail box, please wait patiently and remember to check your spam",
     "eaPrivacy": "Please go to your \\\n      <a href=\"https://myaccount.ea.com/cp-ui/privacy/index\">EA privacy settings</a>      \\\n      to enable \"search by email\".",
-    "failed": "Registration failed",
-    "fillIn": "Please fill in the form",
+    "failed": "Registration failed.",
+    "fillIn": "Incomplete register information, please fill it in properly.",
     "form": {
       "forgetPasswordHint": "Forget Password?",
       "newUsername": "New username",
@@ -832,22 +1180,16 @@
       "submitHint": "Already have a account? Sign In",
       "username": "Username"
     },
-    "gameNotShowed": "The account under this email does not contain any games!",
-    "needVerify": "Please go to email to verify your account",
-    "originBindingExist": "This origin account has been bound",
-    "originNotFound": "Origin account with this email not found.",
     "placeholder": {
-      "originEmail": "Enter your Origin e-mail address",
-      "originId": "Optional",
-      "originName": "Enter your Origin account name",
+      "originEmail": "Enter your EA email.",
+      "originName": "Enter your EA name, pay attention to the case.",
       "password": "At least 6 characters",
-      "username": "At least 4 characters"
+      "username": "Usernames must be at least 4 characters long and can only contain English letters, numbers, underscores, hyphens, or email addresses with the format name@address."
     },
-    "playerNotFound": "Origin account not found (Please ensure that you have followed the guide above)",
     "registerVerification": {
-      "error": "error",
-      "failure": "Wrong verify link，pleas check your Captcha",
-      "successful": "Verify successful!，Account is now unlocked, you are free to login",
+      "error": "Account verification error",
+      "failure": "Verification failed. This may caused by wrong verification address, wrong verification code, expired verification code, etc. Please register again after a short period.",
+      "successful": "Verification success! Account has been unlocked, please proceed to login.",
       "title": "Verify account",
       "validation": "Verifying"
     },
@@ -857,7 +1199,7 @@
         "title": "Basic infomation"
       },
       "1": {
-        "supplement": "Bind your origin account",
+        "supplement": "Associate EA platform",
         "title": "Binding account"
       },
       "2": {
@@ -873,11 +1215,11 @@
         "title": "Finish"
       }
     },
-    "title": "Register",
-    "usernameExist": "This username is already exists!"
+    "title": "Register"
   },
   "sitestats": {
     "admins": "Total number of administrators",
+    "achievement": "Achievement Value Ranking",
     "banAppeals": "Have appealed",
     "communityParticipation": "User community participation ranking",
     "confirmed": "Confirmed cheaters",
@@ -892,7 +1234,8 @@
       "yearly": "1 year"
     },
     "title": "Website statistics",
-    "trend": "Case heat"
+    "trend": "Case heat",
+    "netstatus": "Network state"
   },
   "textarea": {
     "originalImage": "The original image",
@@ -911,10 +1254,19 @@
         "1": "To view"
       }
     },
+    "textHelpHint": "The statistical content contains invisible tags and is different from the visible text content. In case of any discrepancy, please refer to the statistics.",
+    "textOverflowHint": "The text content exceeds the maximum length, please shorten it appropriately or submit it in sections.",
     "type": {
       "media": "Media library",
       "upload": "Upload to the chart bed",
       "url": "Image links"
     }
+  },
+  "externalAuth": {
+    "title": "Authorization",
+    "validation": "Authorizing",
+    "successful": "Authorization is successful, you can close this page",
+    "error": "Authorization failed",
+    "failure": "Please check whether the parameters are correct."
   }
 }

@@ -33,19 +33,9 @@
                          :placeholder="$t('signin.form.password')"/>
                 </FormItem>
 
-                <Row :gutter="30" type="flex" justify="space-between" align="middle">
-                  <Col :span="isMobile ? 24 : 15">
-                    <FormItem :label="$t('captcha.title')" prop="captcha">
-                      <Input type="text" v-model="signin.captcha" size="large" maxlength="4"
-                             :placeholder="$t('captcha.title')">
-                        <div slot="append" class="captcha-input-append" :alt="$t('captcha.get')">
-                          <Captcha ref="captcha" :seconds="15"
-                                   :disable="!(!!signin.password  && !!signin.username)"></Captcha>
-                        </div>
-                      </Input>
-                    </FormItem>
-                  </Col>
-                </Row>
+                <FormItem :label="$t('captcha.title')" prop="captcha">
+                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
+                </FormItem>
 
                 <br>
 
@@ -61,7 +51,7 @@
               </Form>
 
               <Divider dashed
-                       :style="`margin:40px -${isMobile ? 20 : 50}px;width:calc(100% + ${isMobile ? 20 * 2 : 50 * 2}px)`"/>
+                       :style="`margin:25px -${isMobile ? 20 : 50}px;width:calc(100% + ${isMobile ? 20 * 2 : 50 * 2}px)`"/>
 
               <Row type="flex" justify="center" align="middle">
                 <Col>
@@ -100,7 +90,7 @@
 import Application from "../assets/js/application";
 
 import {api, http, regular} from '../assets/js/index'
-import Captcha from "../components/Captcha";
+import Captcha from "../components/captcha/index";
 import Vuex from "vuex";
 import _ from "lodash";
 
@@ -125,14 +115,14 @@ export default new Application({
           {required: true, trigger: 'blur'}
         ],
         captcha: [
-          {required: true, len: 4, trigger: 'blur'}
+          {required: true}
         ],
       },
       serverReturnMessage: '',
       signin: {
         username: '',
         password: '',
-        captcha: '',
+        captcha: {},
       },
       spinShow: false,
     }
@@ -149,16 +139,20 @@ export default new Application({
     ...mapMutations([
       'SIGNIN'
     ]),
-
+    getCaptchaData(value) {
+      this.signin.captcha = value;
+    },
     /**
      * 登录
      */
-    handleSignin: function () {
+    handleSignin () {
       const that = this;
       const backPath = this.$route.query.backPath;
-      const {username, password, captcha} = _.each(this.signin, (v, k, o) => {
-        o[k] = v.trim();
-      });
+      let {username, password, captcha} = this.signin;
+
+      // 提取出单独 trim 过的 username 和 password
+      username = username.trim();
+      password = password.trim();
 
       this.$refs['signin'].validate((valid) => {
         if (!valid) {
@@ -170,11 +164,7 @@ export default new Application({
 
         http.post(api["account_signin"], {
           data: {
-            data: {
-              username,
-              password,
-            },
-            encryptCaptcha: this.$refs.captcha.hash,
+            data: {username, password},
             captcha,
           },
         }).then(async res => {
@@ -197,7 +187,7 @@ export default new Application({
           if (backPath) {
             await this.$router.push({path: backPath});
           } else {
-            this.$router.go('-1');
+            this.$router.go(-1);
           }
 
           this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
@@ -224,5 +214,6 @@ export default new Application({
 
 .signin-box {
   overflow: hidden;
+  margin-bottom: 1rem;
 }
 </style>

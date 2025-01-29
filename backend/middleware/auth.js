@@ -4,8 +4,8 @@ import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import db from "../mysql.js";
 import {userHasRoles, verifyJWTToken} from '../lib/auth.js';
-import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
-import Config from "../config.js";
+
+// import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 async function verifyAllowPrivilege(req, res, next) {
     try {
@@ -21,7 +21,6 @@ async function verifyAllowPrivilege(req, res, next) {
             return res.status(401).json({error: 1, code: 'user.invalid'});
         if (!userHasRoles(result, ['dev', 'bot']))
             return res.status(401).json({error: 1, code: 'user.invalidIdentity'});
-
 
         next();
     } catch (err) {
@@ -56,7 +55,7 @@ async function verifyJWT(req, res, next) {
             return res.status(401).json({error: 1, code: 'user.invalid'});
         if (result.signoutTime > decodedToken.signWhen)
             return res.status(401).json({error: 1, code: 'user.tokenExpired'});
-        if(!decodedToken.visitType && !req.header("user-agent") && decodedToken.visitType != allowUserAgent(req.headers["user-agent"]))
+        if (!decodedToken.visitType && !req.header("user-agent") && decodedToken.visitType != allowUserAgent(req.headers["user-agent"]))
             return res.status(401).json({error: 1, code: 'user.tokenClientException'})
         /** @type {import("../typedef.js").User} */
         req.user = result;
@@ -104,9 +103,49 @@ function forbidPrivileges(roles = []) {
     }
 }
 
+/** @param roles */
+function verifySelfOrPrivilege(roles = []) {
+    /** @type {(req:express.Request&import("../typedef.js").User, res:express.Response, next:express.NextFunction)=>any} */
+    return function (req, res, next) {
+        const userRoles = req.user.privilege;
+        const superPrivileges = ['root', 'dev', 'super'];
+
+        // Check if the user has one of the super privileges
+        if (userRoles.some(role => superPrivileges.includes(role))) {
+            return next();
+        }
+        // Check if the user has one of the specified roles
+        if (userRoles.some(role => roles.includes(role))) {
+            return res.status(403).json({error: 1, code: 'user.permissionDenied'});
+        }
+        // Check if the user's originPersonaId matches the data's toOriginPersonaId
+        if (req.user.originPersonaId === req.body.data.toOriginPersonaId) {
+            return next();
+        }
+        // If none of the above conditions are met, deny access
+        return res.status(403).json({error: 1, code: 'user.permissionDenied'});
+    }
+}
+
+/**
+ * disable access type
+ * @param types
+ */
+function forbidVisitTypes(types = []) {
+    return function (req, res, next) {
+        /** @type {string} */
+        const userVisit = req.user.visitType || config.defaultVisit || 'websites';
+        if (!types.includes(userVisit))
+            return next();
+        return res.status(403).json({error: 1, code: 'user.permissionDenined'});
+    }
+}
+
 export {
+    verifySelfOrPrivilege,
     verifyAllowPrivilege,
     verifyJWT,
     allowPrivileges,
     forbidPrivileges,
+    forbidVisitTypes
 }

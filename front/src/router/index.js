@@ -3,29 +3,33 @@ import store from '@/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueMeta from 'vue-meta'
-import config from "../../package.json";
+
+import {CHANGE_META_INFO} from '@/store/mutation-types'
+import bindOrigin from "@/views/BindOrigin.vue";
 
 const Home = () => import('@/views/Home.vue');
 const Report = () => import('@/views/Report.vue');
-const List = () => import('@/views/List.vue');
+const Players = () => import('@/views/Players.vue');
 const Detail = () => import('@/views/Detail.vue');
 const DetailShare = () => import('@/views/DetailShare.vue');
+const DetailAppeal = () => import('@/views/DetailAppeal.vue');
 const DetailApp = () => import('@/views/DetailApp.vue');
 const DetailCard = () => import('@/components/SharePlayerCell.vue');
 const Signin = () => import('@/views/Signin.vue');
 const Signup = () => import('@/views/Signup.vue');
-const ForgetPassword = () => import('@/views/forgetPassword.vue');
+const ForgetPassword = () => import('@/views/ForgetPassword.vue');
 const SignupComplete = () => import('@/views/SignupComplete.vue');
 const SiteStats = () => import('@/views/SiteStats.vue');
-const Account = () => import('@/views/Account.vue');
+const Account = () => import('@/views/Space.vue');
 const About = () => import('@/views/About.vue');
 const Link = () => import('@/views/Link.vue');
 const NotFound = () => import('@/views/NotFound.vue');
 const Apps = () => import('@/views/Apps.vue');
-const Profile = () => import('@/views/account/profile.vue');
+const Profile = () => import('@/views/account/index.vue');
 const Admin = () => import('@/views/admin/index.vue');
 const Search = () => import('@/views/Search.vue');
-import bindOrigin from "@/views/bindOrigin";
+const Workflow = () => import('@/views/Workflow.vue');
+const WorkflowAdd = () => import('@/views/WorkflowAdd.vue');
 
 Vue.use(VueRouter);
 Vue.use(VueMeta, {
@@ -48,15 +52,33 @@ const isAdminBefore = (to, from, next) => {
 
     if (store.state.user)
         checkAdmin = store.state.user.userinfo.privilege.some(item => ['admin', 'super', 'dev'].includes(item))
-    // for (const i of store.state.user.userinfo.privilege) {
-    //     if (['admin', 'root', ''].includes(i)) checkAdmin = true;
-    // }
 
     if (checkAdmin) {
         next();
     } else {
         next({path: '/profile/information'});
     }
+}
+
+const asPath = (to, from, next) => {
+    const path = to.query.p || to.query.path || 'app',
+        baseUrl = 'https://bfban-app.cabbagelol.net/as?p=';
+    switch (to.name) {
+        case "app":
+            if (path)
+                window.open(`${baseUrl}${path}`)
+            break;
+        case "player":
+            if (typeof to.query['openApp'] == 'string' && typeof to.query['openApp'])
+                window.open(`${baseUrl}app/${to.name}?id=${to.params.ouid}`)
+            break;
+        case "search_main":
+        case "search":
+            if (typeof to.query['openApp'] == 'string' && typeof to.query['openApp'])
+                window.open(`${baseUrl}app/search?text=${to.query.param || ''}&type=${to.query.type || 'player'}`)
+            break;
+    }
+    next();
 }
 
 const routes = [
@@ -171,7 +193,8 @@ const routes = [
                 description: 'search.description'
             }
         },
-        component: Search
+        component: Search,
+        beforeEnter: asPath,
     },
     {
         name: 'search_main', path: '/search',
@@ -182,7 +205,8 @@ const routes = [
                 description: 'search.description'
             }
         },
-        component: Search
+        component: Search,
+        beforeEnter: asPath,
     },
 
     // 举报
@@ -200,7 +224,7 @@ const routes = [
         beforeEnter: isLoginBeforeEnter
     },
 
-    // 作弊名单
+    // 作弊列表
     {
         name: 'player_list', path: '/player',
         meta: {
@@ -210,7 +234,7 @@ const routes = [
                 description: 'player_list.description'
             }
         },
-        component: List
+        component: Players
     },
 
     // 作弊者详情
@@ -223,7 +247,8 @@ const routes = [
                 description: 'detail.description'
             }
         },
-        component: Detail
+        component: Detail,
+        beforeEnter: asPath,
     },
 
     // 作弊者分享面板
@@ -237,6 +262,19 @@ const routes = [
             }
         },
         component: DetailShare
+    },
+
+    // 申诉
+    {
+        name: 'cheater_appeal', path: '/player/:ouid/appeal',
+        meta: {
+            metaInfo: {
+                title: 'detail.info.app_qr.title',
+                keywords: "detail.seo.keywords",
+                description: 'detail.info.app_qr.title'
+            }
+        },
+        component: DetailAppeal
     },
 
     // 唤起应用面板
@@ -278,7 +316,9 @@ const routes = [
         component: Detail,
         beforeEnter(to, from, next) {
             next({
-                path: `/player/${to.params.ouid}`, query: {oldUrl: true}
+                name: 'player',
+                params: {ouid: to.params.ouid},
+                query: {oldUrl: true}
             });
         }
     },
@@ -307,6 +347,13 @@ const routes = [
             }
         },
         component: Signup
+    },
+
+    // 授权
+    {
+        name: 'externalAuth', path: '/appAuth',
+        component: () => import('@/views/ExternalAuth.vue'),
+        beforeEnter: isLoginBeforeEnter
     },
 
     // 注册验证
@@ -389,7 +436,7 @@ const routes = [
     },
 
     {
-        name: 'account', path: '/account/:uId',
+        name: 'space', path: '/space/:uId',
         meta: {
             metaInfo: {
                 title: 'account.title',
@@ -399,31 +446,38 @@ const routes = [
         },
         component: Account
     },
+
     {
-        name: 'announcement', path: '/announcement',
-        // meta: {
-        //     metaInfo : {
-        //         title: 'account.title',
-        //         keywords: "account.seo.keywords",
-        //         description: 'account.description'
-        //     }
-        // },
-        component: () => import('@/views/announcement/list.vue')
-    },
-    {
-        name: 'announcementDetails', path: '/announcement/details',
-        // meta: {
-        //     metaInfo : {
-        //         title: 'account.title',
-        //         keywords: "account.seo.keywords",
-        //         description: 'account.description'
-        //     }
-        // },
-        component: () => import('@/views/announcement/details.vue')
+        name: 'workflow',
+        path: '/workflow',
+        component: Workflow,
+        beforeEnter: isAdminBefore
     },
 
     {
-        name: 'notFound', path: '/404', meta: {
+        name: 'workflow_item_add',
+        path: '/workflow/item/add',
+        component: WorkflowAdd,
+        beforeEnter: isAdminBefore,
+    },
+
+    {
+        name: 'workflow_adds',
+        path: '/workflow/adds',
+        component: WorkflowAdd,
+        beforeEnter: isAdminBefore,
+    },
+
+    // App gangplank
+    {
+        name: 'app',
+        path: '/app',
+        component: Home,
+        beforeEnter: asPath
+    },
+
+    {
+        name: 'notFound', path: '/empty', meta: {
             metaInfo: {
                 title: 'basic.tip.notFound',
                 keywords: "basic.tip.notFound",
@@ -434,7 +488,7 @@ const routes = [
     },
 
     // otherwise redirect to home
-    {path: '*', redirect: '/404'},
+    {path: '*', redirect: '/empty'},
 ];
 const RouterConfig = {
     mode: 'history',
@@ -455,19 +509,18 @@ router.beforeEach((to, from, next) => {
 
     try {
         if (to.meta.metaInfo) {
-            let metainfo = to.meta.metaInfo;
-            if (metainfo.keywords && i18n.t(metainfo.keywords) != metainfo.keywords) metainfo.keywords = "bfban,BFBAN," + i18n.t(metainfo.keywords);
-            else metainfo.keywords = "bfban,BFBAN";
-            if (metainfo.title) metainfo.title = i18n.t(metainfo.title);
-            else metainfo.title = "";
-            if (metainfo.description && i18n.t(metainfo.description) != metainfo.description) metainfo.description = i18n.t(metainfo.description);
-            else metainfo.description = "";
-            store.commit("CHANGE_META_INFO", metainfo)
+            let _metainfo = to.meta.metaInfo;
+            if (_metainfo.keywords && i18n.t(_metainfo.keywords) !== _metainfo.keywords) _metainfo.keywords = "bfban,BFBAN," + i18n.t(_metainfo.keywords);
+            else _metainfo.keywords = "bfban,BFBAN";
+            if (_metainfo.title) _metainfo.title = i18n.t(_metainfo.title);
+            else _metainfo.title = "";
+            if (_metainfo.description && i18n.t(_metainfo.description) !== _metainfo.description) _metainfo.description = i18n.t(_metainfo.description);
+            else _metainfo.description = "";
+            store.commit(CHANGE_META_INFO, _metainfo)
         }
 
         store.commit('syncLoginState');
 
-        // document.title = `${config.name} | ${i18n.t(to.meta.value)}`;
         app.$Loading.start();
     } catch (err) {
         app.$Loading.error();

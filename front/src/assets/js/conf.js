@@ -10,10 +10,12 @@ export default class Conf {
         // 请求地址 [生产]
         "requestProductionName": "",
 
+        "requestTestName": "",
+
         // 配置列表
-        "child": {
-        }
+        "child": {}
     };
+
 
     // 初始配置
     async initConf() {

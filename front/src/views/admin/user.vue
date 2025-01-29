@@ -6,7 +6,7 @@
             @click.stop.prevent="addUserModel = true"
             :disabled="!isAdmin">
           <Row :gutter="20" type="flex" align="middle">
-            <privilegesTag :data="['dev']"></privilegesTag>
+            <PrivilegesTag :data="['dev']"></PrivilegesTag>
             <Col>
               <Icon type="md-add"/>
             </Col>
@@ -29,7 +29,7 @@
           </Option>
         </Select>
       </Col>
-      <template v-if="userType.value == 'all'">
+      <template v-if="userType.value === 'all'">
         <Col>
           <Select v-model="userParameter.value" @on-change="getUserList">
             <Option :value="i.value" v-for="(i,index) in userParameter.list" :key="index">
@@ -98,7 +98,7 @@
             <Icon type="ios-create"/>
           </Button>
           <Divider type="vertical"></Divider>
-          <router-link :to="{name: 'account', params: { uId: `${i.id}` }}" target="_blank">
+          <router-link :to="{name: 'space', params: { uId: `${i.id}` }}" target="_blank">
             <Button type="dashed" size="small">
               <Icon type="ios-eye"/>
             </Button>
@@ -156,45 +156,101 @@
                   </Col>
                 </Row>
               </Col>
+              <Col span="24">
+                <FormItem :label="$t('signup.form.password')">
+                  <Input value="******" readonly disabled>
+                    <a href="javascript:void(0)" slot="append"
+                       v-if="isAdminL3"
+                       @click="generatesUserPasswordModel = !generatesUserPasswordModel">
+                      <Icon type="md-create" size="15"/>
+                    </a>
+                  </Input>
+                </FormItem>
+              </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.lastSigninIP')" prop="username">
+                <FormItem :label="$t('profile.space.form.lastSigninIP')" prop="username">
                   <Input v-model="editUserData.attr.lastSigninIP" readonly disabled/>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.registerIP')" prop="">
+                <FormItem :label="$t('profile.space.form.registerIP')" prop="">
                   <Input v-model="editUserData.attr.registerIP" readonly disabled/>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.createTime')" prop="">
-                  <Input v-model="editUserData.createTime" readonly disabled/>
+                <FormItem :label="$t('profile.space.form.createTime')" prop="">
+                  <TimeView :time="editUserData.createTime" v-if="editUserData.createTime">
+                    {{ editUserData.createTime }}
+                  </TimeView>
+                  <span v-else>-</span>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.signoutTime')" prop="">
-                  <Input v-model="editUserData.signoutTime" readonly disabled/>
+                <FormItem :label="$t('profile.space.form.signoutTime')" prop="">
+                  <TimeView :time="editUserData.signoutTime" v-if="editUserData.signoutTime">
+                    {{ editUserData.signoutTime }}
+                  </TimeView>
+                  <span v-else>-</span>
                 </FormItem>
               </Col>
 
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.originEmail')">
+                <FormItem>
                   <Input v-model="editUserData.originEmail" readonly></Input>
+                  <template slot="label">
+                    {{ $t('profile.space.form.originEmail') }}
+                    <a @click="transferUserBindModel = !transferUserBindModel; editUserBindData.id = editUserData.id">
+                      <Icon type="md-create" size="15"/>
+                    </a>
+                  </template>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.originName')">
+                <FormItem :label="$t('profile.space.form.originName')">
                   <Input v-model="editUserData.originName" readonly></Input>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.originPersonaId')">
+                <FormItem :label="$t('profile.space.form.originPersonaId')">
                   <Input v-model="editUserData.originPersonaId" readonly></Input>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.originUserId')">
+                <FormItem :label="$t('profile.space.form.originUserId')">
                   <Input v-model="editUserData.originUserId" readonly></Input>
+                </FormItem>
+              </Col>
+              <Col span="24">
+                <FormItem :label="$t('profile.achievement.title')" prop="achievements">
+                  <Card dis-hover>
+                    <AchievementsTag :data="editUserData.attr.achievements || {}"
+                                     max-overflow="6"
+                                     v-if="editUserData.attr.achievements"></AchievementsTag>
+
+                    <code type="json"
+                          style="width: 100%; white-space: pre-line">{{ editUserData.attr.achievements }}</code>
+
+                    <Row :gutter="10">
+                      <Col>
+                        <Select v-model="editUserData.achievementTypeValue">
+                          <Option value="add">Add</Option>
+                          <Option value="delete">Delete</Option>
+                        </Select>
+                      </Col>
+                      <Col flex="1">
+                        <Input v-model="editUserData.achievementValue"></Input>
+                      </Col>
+                      <Col>
+                        <Button
+                            @click="editUserData.achievementTypeValue === 'add' ? setUserAchievement(editUserData.id, editUserData.achievementValue) : deleteUserAchievement(editUserData.id, editUserData.achievementValue)">
+                          <Icon v-if="editUserData.achievementTypeValue === 'add'" type="md-add"/>
+                          <Icon v-else-if="editUserData.achievementTypeValue === 'delete'" type="md-close"/>
+                        </Button>
+                      </Col>
+                    </Row>
+                    <p class="hint">The achievement value added here will ignore the rule and be saved upon
+                      confirmation</p>
+                  </Card>
                 </FormItem>
               </Col>
             </Row>
@@ -202,12 +258,12 @@
           <Col span="12">
             <Row :gutter="10">
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.changeNameLeft')">
+                <FormItem :label="$t('profile.space.form.changeNameLeft')">
                   <InputNumber :max="5" :min="0" v-model="editUserData.attr.changeNameLeft"></InputNumber>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.language')">
+                <FormItem :label="$t('profile.space.form.language')">
                   <Select v-model="editUserData.attr.language" class="switch-language" prefix="md-globe"
                           placement="top-end">
                     <Option v-for="item in languages" :value="item.name" :disabled="item.ignoreSave" :key="item.name">
@@ -217,18 +273,23 @@
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.showOrigin')">
+                <FormItem :label="$t('profile.space.form.showOrigin')">
                   <i-switch v-model="editUserData.attr.showOrigin"/>
                 </FormItem>
               </Col>
               <Col span="12">
-                <FormItem :label="$t('profile.account.form.allowDM')">
+                <FormItem :label="$t('profile.space.form.allowDM')">
                   <i-switch v-model="editUserData.attr.allowDM"/>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem :label="$t('profile.space.form.showAchievement')">
+                  <i-switch v-model="editUserData.attr.showAchievement"/>
                 </FormItem>
               </Col>
             </Row>
 
-            <FormItem :label="$t('profile.account.form.privileges')" prop="privileges">
+            <FormItem :label="$t('profile.space.form.privileges')" prop="privileges">
               <Row :gutter="10">
                 <Col span="24">
                   <PrivilegesTag ref="privilegesTag" :data="editUserData.privilege"></PrivilegesTag>
@@ -246,14 +307,14 @@
                       <Select v-model="editPrivilegesForm.roleName">
                         <Option v-for="(i, index) in editPrivilegesForm.role" :value="i"
                                 :label="$t('basic.privilege.' + i)" :key="index">
-                          <Tag>{{ $t('basic.privilege.' + i) }}</Tag>
+                          {{ $t('basic.privilege.' + i) }}
                         </Option>
                       </Select>
                     </Col>
                     <Col>
                       <Button @click="onEditPrivileges">
-                        <Icon v-if="editPrivilegesForm.activeName == 'grant'" type="md-add"/>
-                        <Icon v-else-if="editPrivilegesForm.activeName == 'revoke'" type="md-close"/>
+                        <Icon v-if="editPrivilegesForm.activeName === 'grant'" type="md-add"/>
+                        <Icon v-else-if="editPrivilegesForm.activeName === 'revoke'" type="md-close"/>
                       </Button>
                     </Col>
                   </Row>
@@ -274,6 +335,77 @@
       </Form>
     </Modal>
     <!-- 编辑用户 E -->
+
+    <!-- 编辑用户 - 强制生成新用户密码 - Admin S -->
+    <Modal v-model="generatesUserPasswordModel">
+      <template slot="header">
+        <Row type="flex" align="middle">
+          <PrivilegesTag :data='["root", "dev"]'></PrivilegesTag>
+          <Col flex="1">
+            Generates Password
+          </Col>
+        </Row>
+      </template>
+      <Form ref="formUserPasswordValidate"
+            v-model="editUserPasswordData"
+            label-position="top">
+        <FormItem :label="$t('reset.form.newPassword')" prop="password">
+          <Input v-model="editUserPasswordData.password" maxlength="40"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button @click="onGeneratesUserPassword" :loading="generatesUserPasswordLoad" color="primary">{{ $t('basic.button.submit') }}</Button>
+      </div>
+    </Modal>
+    <!-- 编辑用户 - 强制生成新用户密码 - Admin E -->
+
+    <!-- 编辑用户 - 迁移绑定 - Admin S -->
+    <Modal v-model="transferUserBindModel">
+      <template slot="header">
+        <Row type="flex" align="middle">
+          <PrivilegesTag :data='["super","root", "dev"]'></PrivilegesTag>
+          <Col flex="1">
+            Transfer User Bind
+          </Col>
+        </Row>
+      </template>
+
+      <Form ref="formUserBindValidate"
+            v-model="editUserBindData"
+            :rules="transferUserBindRuleValidate"
+            label-position="top">
+        <Row>
+          <Col span="24">
+            <Row :gutter="30" type="flex" align="middle">
+              <Col flex="1">
+                <FormItem label="id" prop="id">
+                  <Input v-model="editUserBindData.id" readonly></Input>
+                </FormItem>
+              </Col>
+              <Col span="1" align="center">
+                <Icon type="md-link" size="15"/>
+              </Col>
+              <Col flex="1">
+                <FormItem label="Target Id" prop="targetId">
+                  <Input v-model="editUserBindData.targetId"></Input>
+                </FormItem>
+              </Col>
+            </Row>
+          </Col>
+          <Col span="12">
+            <FormItem label="Mode">
+              <Select v-model="editUserBindData.mode">
+                <Option :label="i" :value="i" v-for="i in ['cover', 'interchange']" :key="i"></Option>
+              </Select>
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+      <div slot="footer">
+        <Button @click="onTransferAccountBindData" :loading="bindUserLoad" color="primary">{{ $t('basic.button.submit') }}</Button>
+      </div>
+    </Modal>
+    <!-- 编辑用户 - 迁移绑定 - Admin E -->
 
     <!-- 新增用户 S -->
     <Modal v-model="addUserModel"
@@ -318,7 +450,7 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="onAddUserSubmit" :loading="addUserLoad">{{ $t('basic.button.submit') }}</Button>
+        <Button @click="onAddUserSubmit" :loading="addUserLoad" color="primary">{{ $t('basic.button.submit') }}</Button>
       </div>
     </Modal>
     <!-- 新增用户 E -->
@@ -359,10 +491,10 @@
               <Icon :type="{
                 'logic': 'md-trash',
                 'real':'md-trash',
-              }[delTypeValue]" v-if="delTypeValue != 'restore'"/>
+              }[delTypeValue]" v-if="delTypeValue !== 'restore'"/>
               {{ $t('basic.button.submit') }}
 
-              <template v-if="delTypeValue=='real'">⚠️⚠️⚠️</template>
+              <template v-if="delTypeValue==='real'">⚠️⚠️⚠️</template>
             </Button>
           </Col>
         </Row>
@@ -373,18 +505,23 @@
 </template>
 
 <script>
-import {api, http_token} from "../../assets/js";
+import {api, http_token} from "@/assets/js";
+
+import Application from "@/assets/js/application";
+import BusinessCard from "@/components/BusinessCard.vue";
+import TimeView from "@/components/TimeView.vue";
+import PrivilegesTag from "@/components/PrivilegesTag";
+import AchievementsTag from "@/components/AchievementsTag.vue";
+import Textarea from "@/components/textarea/index.vue";
 
 import languages from "/public/config/languages.json";
-
-import BusinessCard from "@/components/businessCard";
-import PrivilegesTag from "/src/components/PrivilegesTag";
-import Textarea from "@/components/Textarea";
-import Application from "@/assets/js/application";
+import achievement from "/public/config/achievements.json";
 
 export default new Application({
   data() {
     return {
+      achievement,
+
       delUserModel: false,
       delUserLoad: false,
       delTypes: ['logic', 'real', 'restore'],
@@ -392,7 +529,7 @@ export default new Application({
 
       userType: {
         value: 'all',
-        list: [{title: 'All', value: 'all'}, {title: 'Admin`s', value: 'admin'}]
+        list: [{title: 'All', value: 'all'}, {title: 'Admin`s', value: 'admin'}, {title: 'Bot`s', value: 'bot'}]
       },
       userOrder: {
         value: 'asc',
@@ -406,7 +543,9 @@ export default new Application({
         }, {title: 'originPersonaId', value: 'originPersonaId'}, {title: 'Email', value: 'originEmail'}]
       },
 
+      generatesUserPasswordLoad: false,
       addUserLoad: false,
+      bindUserLoad: false,
       load: false,
 
       userValue: '',
@@ -416,6 +555,8 @@ export default new Application({
           language: '',
           introduction: ''
         },
+        achievementTypeValue: 'add',
+        achievementValue: '',
         temporaryPrivilege: {},
         privilege: []
       },
@@ -438,7 +579,21 @@ export default new Application({
         originName: [{required: true, min: 1, trigger: 'blur'}],
         originEmail: [{required: true, min: 1, type: 'email', trigger: 'blur'}],
       },
+      editUserPasswordData: {
+        password: '',
+      },
+      transferUserBindRuleValidate: {
+        id: [{trigger: 'blur'}],
+        targetId: [{required: false, trigger: 'blur'}],
+      },
+      editUserBindData: {
+        id: '',
+        targetId: '',
+        mode: 'cover',
+      },
       userEditModel: false,
+      generatesUserPasswordModel: false,
+      transferUserBindModel: false,
       addUserModel: false,
       languages: languages.child,
 
@@ -448,12 +603,12 @@ export default new Application({
       total: 0,
     }
   },
-  components: {Textarea, PrivilegesTag, BusinessCard},
   created() {
     this.http = http_token.call(this);
 
     this.getUserList();
   },
+  components: {Textarea, TimeView, PrivilegesTag, BusinessCard, AchievementsTag},
   methods: {
     /**
      * 提交修改表单
@@ -467,7 +622,7 @@ export default new Application({
       // 处理用户身份权限
       for (const key in this.editUserData.temporaryPrivilege) {
         if (this.editUserData.id) {
-          await this.setUser(
+          await this.setUserRole(
               this.editUserData.id,
               this.editUserData.temporaryPrivilege[key],
               key
@@ -511,7 +666,7 @@ export default new Application({
         }).then(res => {
           const d = res.data;
 
-          if (d.success == 1) {
+          if (d.success === 1) {
             this.$Message.success(d.code);
             return
           }
@@ -605,6 +760,7 @@ export default new Application({
     },
     /**
      * 站内用户搜索
+     * @returns {Promise<*>}
      */
     async getUserList() {
       const that = this;
@@ -629,7 +785,7 @@ export default new Application({
         }).then(res => {
           const d = res.data;
 
-          if (d.success == 1) {
+          if (d.success === 1) {
             that.userListData = d.data;
             that.total = d.total;
             return;
@@ -659,20 +815,63 @@ export default new Application({
     /**
      * 修改用户身份
      */
-    async setUser(id, action, role) {
-      await this.http.post("admin/setUser", {
+    async setUserRole(id, action, role) {
+      await this.http.post(api['admin_setUserRole'], {
         data: {
           data: {id, action, role},
         }
       }).then(res => {
         const d = res.data;
 
-        if (d.success == 1) {
-          // TODO
+        if (d.success === 1) {
           return;
         }
 
         this.$Message.error(d.message || d.code);
+      })
+    },
+    /**
+     * 添加用户身份
+     * @param userId
+     * @param achievementId
+     * @returns {Promise<void>}
+     */
+    async setUserAchievement(userId, achievementId) {
+      await this.http.post(api['account_achievement_add'], {
+        data: {userId, achievementId}
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success === 1) {
+          this.$Message.success(d.message || d.code);
+          return;
+        }
+
+        this.$Message.error(d.message || d.code);
+      }).finally(() => {
+        this.getSearchUser()
+      })
+    },
+    /**
+     * 删除用户身份
+     * @param userId
+     * @param achievementId
+     * @returns {Promise<void>}
+     */
+    async deleteUserAchievement(userId, achievementId) {
+      await this.http.post(api['account_achievement_delete'], {
+        data: {userId, achievementId}
+      }).then(res => {
+        const d = res.data;
+
+        if (d.success === 1) {
+          this.$Message.success(d.message || d.code);
+          return;
+        }
+
+        this.$Message.error(d.message || d.code);
+      }).finally(() => {
+        this.getSearchUser()
       })
     },
     /**
@@ -700,7 +899,7 @@ export default new Application({
         }).then(res => {
           const d = res.data;
 
-          if (d.success == 1) {
+          if (d.success === 1) {
             resolve()
             return;
           }
@@ -709,6 +908,80 @@ export default new Application({
           reject();
         })
       })
+    },
+    /**
+     * 生成新密码 - 管理
+     * 同时邮件通知用户
+     */
+    async onGeneratesUserPassword() {
+      try {
+        this.$refs.formUserPasswordValidate.validate(async (valid) => {
+          if (!valid) return;
+
+          this.generatesUserPasswordLoad = true
+
+          const res = await this.http.post("admin_setUserGeneratePassword", {
+            data: {
+              data: {
+                id: this.editUserData.id,
+                newpassword: this.editUserPasswordData.password,
+              }
+            }
+          });
+
+          const d = res.data;
+
+          if (d.success === 1) {
+            this.$Message.success(d.message || d.code);
+            this.generatesUserPasswordModel = false;
+            return;
+          }
+
+          this.$Message.error(d.message || d.code);
+        })
+
+      } catch (e) {
+        this.$Message.error(e);
+      } finally {
+        this.generatesUserPasswordLoad = false;
+      }
+    },
+    /**
+     * 迁移绑定数据
+     * 从一个账户到另一个账户
+     */
+    onTransferAccountBindData() {
+      try {
+        this.$refs.formUserBindValidate.validate(async (valid) => {
+          if (!valid) return;
+
+          this.bindUserLoad = true;
+          const res = await this.http.post("admin_transferBindData", {
+            data: {
+              data: {
+                id: this.editUserBindData.id,
+                targetId: this.editUserBindData.targetId,
+                mode: this.editUserBindData.mode,
+              }
+            }
+          });
+
+          const d = res.data;
+
+          if (d.success === 1) {
+            this.$Message.success(d.message || d.code);
+            this.transferUserBindModel = false;
+            return;
+          }
+
+          this.$Message.error(d.message || d.code);
+        })
+
+      } catch (e) {
+        this.$Message.error(e);
+      } finally {
+        this.bindUserLoad = false;
+      }
     },
     handlePageChange(num) {
       this.skip = num;

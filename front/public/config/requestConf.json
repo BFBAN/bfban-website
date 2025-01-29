@@ -1,21 +1,31 @@
 {
-  "requestDevelopmentName": "development",
+  "requestDevelopmentName": "production",
   "requestProductionName": "production",
+  "requestTestName": "staging",
   "requestUploadName": "upload",
   "child": {
     "development": {
       "protocol": "http",
       "host": "localhost:3000",
+      "frontend_host": "localhost:4002",
       "pathname": "/api/"
     },
     "upload": {
       "protocol": "https",
-      "host": "bfban.gametools.network",
+      "host": "api.bfban.com",
+      "frontend_host": "bfban.com",
       "pathname": "/api/"
     },
     "production": {
       "protocol": "https",
-      "host": "bfban.gametools.network",
+      "host": "api.bfban.com",
+      "frontend_host": "bfban.com",
+      "pathname": "/api/"
+    },
+    "staging": {
+      "protocol": "https",
+      "host": "ban.linrunrun.online",
+      "frontend_host": "bfban.com",
       "pathname": "/api/"
     }
   }

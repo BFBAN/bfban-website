@@ -2,20 +2,20 @@
   "title": "link",
   "linkWebDeveloperChild": [
     {
-      "title": "mygoare",
-      "url": "//github.com/mygoare"
+      "title": "Mygoare",
+      "url": "/space/1"
     },
     {
-      "title": "glassPanel",
+      "title": "GlassPanel",
       "url": "//github.com/glass-panel"
     },
     {
-      "title": "lin_runrun",
+      "title": "Lin_runrun",
       "url": "//github.com/I-find-you11"
     },
     {
-      "title": "cabbagelol",
-      "url": "//github.com/cabbagelol"
+      "title": "Cabbagelol",
+      "url": "/space/544"
     },
     {
       "title": "iiTzArcur",
@@ -24,6 +24,10 @@
     {
       "title": "SuperWaterGod",
       "url": "//github.com/SuperWaterGod"
+    },
+    {
+      "title": "B1397KB",
+      "url": "/space/30980"
     }
   ],
   "linkChild": [
@@ -31,6 +35,26 @@
       "title": "2042 BiliBili WIKI",
       "linkImage": "",
       "linkUrl": "https://wiki.biligame.com/zhandi2042/",
+      "tag": ["link"]
+    },
+    {
+      "title": "BFVHackers",
+      "linkUrl": "https://bfvhackers.com/",
+      "tag": ["link"]
+    },
+    {
+      "title": "Game Tools",
+      "linkUrl": "https://gametools.network",
+      "tag": ["link"]
+    },
+    {
+      "title": "BFVRobot",
+      "linkUrl": "https://bfvrobot.net",
+      "tag": ["link"]
+    },
+    {
+      "title": "Rank BFVRobot",
+      "linkUrl": "https://rank.bfvrobot.net",
       "tag": ["link"]
     }
   ],
@@ -63,13 +87,13 @@
       ]
     },
     {
-      "title": "Netlify",
-      "linkUrl": "https://www.netlify.com",
+      "title": "Cloudflare Pages",
+      "linkUrl": "https://pages.cloudflare.com/",
       "describe": "Provide web hosting services",
       "describeLang": {
         "zh-CN": "提供网页存放服务"
       },
-      "localFilePath": "/images/links/netlify.png",
+      "localFilePath": "/images/links/cloudflare-pages.svg",
       "tag": [
         "host",
         "platinum"
@@ -80,7 +104,7 @@
       "linkUrl": "https://www.cloudflare.com/",
       "describe": "",
       "describeLang": {},
-      "localFilePath": "/images/links/cloudflare.png",
+      "localFilePath": "/images/links/cloudflare.svg",
       "tag": [
         "host",
         "platinum"

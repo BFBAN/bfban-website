@@ -1,15 +1,15 @@
 {
+  "name": "Bfban",
   "about": {
-    "description": "<h2>BFBAN</h2>\n<p>\n誕生於2018年1月29日；\n是戰地玩家一起組建的 <b>抵制外掛</b> 組織。\n</p>",
-    "privacy": "\n<h2>隱私政策</h2>\n它是開源的。您可以通過 GitHub 發布問題並提出更改/改進建議。社區網絡提供的 API 並開放供公眾使用。",
     "title": "關於",
-    "website": "<p>\n      <a href=\"https://bfban.com\">bfban.com</a> 網站依託於聯BAN調查局，最初想法起源於熱心玩家，由 <a target=\"_blank\" href=\"https://github.com/mygoare\">mygoare</a> 開發，於 2018年11月4日 上線‘\n    </p>\n    <p>主要為廣大玩家提供舉報、列舉、搜索、追踪、討論等服務；</p>"
+    "minor": "全球作弊玩家資料庫",
+    "description": "誕生於2018年1月29日,是戰地玩家一起組成的<b>抵制外掛</b>組織,由私服主持人,戰隊隊長以及主播組成,聯BAN局創建以來,聯合諸多玩家一起抵制外掛，不僅在遊戲內,更是一場敵暗我明的幕外戰爭;\n最初想法起源於熱心玩家，由Mygoare開發,於<b>2018年11月4日</b>提供線，為廣大玩家上線，為廣大玩家上檢舉、列舉、搜尋、追蹤、討論等透明化服務，社群驅動;"
   },
   "account": {
     "bindOrigin": {
-      "content": "BFBAN需要您綁定origin賬戶，以便賬戶申訴、找回等功能；未綁定origin前，您的賬戶會被鎖定，無法提交任何內容",
-      "title": "未綁定賬戶",
-      "travel": "好的，前往綁定賬戶"
+      "content": "BFBAN需要您綁定EA賬戶，以便賬戶申訴、找回等功能；未綁定EA前，您的賬戶會被鎖定，無法提交任何內容",
+      "title": "未綁定帳戶",
+      "travel": "好的，前往綁定帳戶"
     },
     "joinedAt": "加入時間",
     "lastOnlineTime": "最後在線時間",
@@ -22,9 +22,9 @@
       }
     },
     "recentlyUpdated": "最近更新",
-    "reportNum": "總共舉報數",
+    "reportNum": "總檢舉數",
     "reported": "舉報了",
-    "reports": "個人舉報",
+    "reports": "個人檢舉",
     "role": "身份",
     "status": "狀態",
     "title": "用戶展示頁",
@@ -37,7 +37,7 @@
       "name": "BFBAN反作弊規則"
     },
     "conduct": {
-      "intro": "BFBAN團隊的成員在日常工作中的行為規範",
+      "intro": "BFBAN團隊的成員在日常工作中之行為規範",
       "name": "BFBAN行為規則"
     },
     "latest": "最新",
@@ -65,7 +65,7 @@
       "book": "指南",
       "bot": "機器人",
       "official": "官方",
-      "pc_app": "桌面應用",
+      "pc_app": "桌布程式",
       "qq": "騰訊QQ",
       "web": "網頁"
     },
@@ -87,12 +87,12 @@
         "text": "投一票實錘"
       },
       "innocent": {
-        "describe": "通過影片方式洗清了被舉報信息的嫌疑",
+        "describe": "通過影片方式洗清了被檢舉信息的嫌疑",
         "text": "MOSS自證"
       },
       "invalid": {
-        "describe": "舉報材料不全或舉報錯誤ID等行為",
-        "text": "無效舉報"
+        "describe": "檢舉資料不全或檢舉錯誤ID等行為",
+        "text": "無效檢舉"
       },
       "kill": {
         "describe": "管理員判斷實錘",
@@ -103,25 +103,24 @@
         "text": "需要更多證據"
       },
       "suspect": {
-        "describe": "玩家生涯數據異常或單局數據與生涯嚴重不符，存在開掛嫌疑，鑑掛組成員要求該玩家自證或玩家提交了自證申述以後給予自證時間。從狀態開始日期到7天后如果沒有自證成功將會自動轉到實錘",
+        "describe": "玩家生涯數據異常或單局數據與生涯嚴重不符，存在開掛嫌疑，鑑掛組成員要求該玩家自證或玩家提交了自證申訴以後給予自證時間。從狀態開始日期到7天后如果沒有自證成功將會自動轉到實錘",
         "text": "待自證"
       }
     },
     "button": {
       "cancel": "取消",
       "commit": "提交",
-      "dealAppeal": "處理申訴",
       "insert": "插入",
       "next": "下一步",
       "prev": "上一步",
-      "reply": "回复",
-      "report": "舉報",
+      "reply": "回覆",
+      "report": "檢舉",
       "reset": "重置",
       "save": "保存",
       "submit": "確認"
     },
     "gamePlatforms": {
-      "origin": "Origin",
+      "origin": "EA",
       "pc": "PC",
       "ps3": "PS3",
       "ps4": "PS4",
@@ -132,6 +131,8 @@
     "games": {
       "all": "所有",
       "bf1": "戰地風雲 1",
+      "bf3": "戰地風雲 3",
+      "bf4": "戰地風雲 4",
       "bf6": "戰地風雲 2042",
       "bfv": "戰地風雲 5"
     },
@@ -144,41 +145,170 @@
       "normal": "用戶",
       "root": "系統",
       "super": "超級管理員",
-      "test": "測試賬戶",
+      "test": "測試帳戶",
       "volunteer": "社區志願者"
     },
     "status": {
-      "0": "未處理",
-      "1": "實錘",
-      "2": "待自證",
-      "3": "MOSS自證",
-      "4": "無效舉報",
-      "5": "討論中",
-      "6": "需更多管理投票",
-      "7": "數據異常自動實錘",
-      "8": "刷槍",
-      "9": "申訴",
-      "all": "全部"
+      "0": {
+        "describe": "被批准保留前，稱為未處理案件",
+        "text": "未處理"
+      },
+      "1": {
+        "describe": "\"石錘\"同\"實錘\"，堅硬無比之意，意思就是實實在在的證據來錘打他，也有證據確鑿的意思",
+        "text": "石錘"
+      },
+      "2": {
+        "describe": "以上證據仍然需要更多管理員和玩家參與討論決定，不確定行為",
+        "text": "待自證"
+      },
+      "3": {
+        "describe": "通過證明，該案件分類到自證分類中",
+        "text": "MOSS自證"
+      },
+      "4": {
+        "describe": "檢舉資料不全或檢舉錯誤ID等行為，該分類不等於確認作弊",
+        "text": "無效檢舉"
+      },
+      "5": {
+        "describe": "以上證據仍然需要更多管理員和玩家參與討論決定，不確定行為",
+        "text": "討論中"
+      },
+      "6": {
+        "describe": "以上證據需要更多管理參與討論",
+        "text": "需要更多管理投票"
+      },
+      "7": {
+        "describe": "以上證據仍然需要更多管理員和玩家參與討論決定，不確定行為",
+        "text": "數據異常自動石錘"
+      },
+      "8": {
+        "describe": "在遊戲中快速解鎖武器配件",
+        "text": "刷槍"
+      },
+      "9": {
+        "describe": "案件處於上訴中，管理將有下一步判決",
+        "text": "申訴中"
+      },
+      "all": {
+        "text": "全部"
+      }
+    },
+    "html": {
+      "size": {
+        "x-large": "加大",
+        "large": "大",
+        "default": "預設",
+        "small": "小"
+      },
+      "type": {
+        "renderer": "渲染器",
+        "text": "文字",
+        "code": "程式碼"
+      }
     },
     "tip": {
-      "noAccess": "當前賬戶,無權限",
-      "noReports": "還沒有任何舉報",
+      "search.bad": "搜尋發生錯誤，請聯繫管理員{message}",
+      "search.success": "搜尋成功",
+      "search.notExist": "未找到數據",
+      "me.bad": "個人資訊發生錯誤，請聯繫管理員{message}",
+      "me.success": "儲存個人資訊成功",
+      "request.404": "不存在此請求地址，請檢查接口",
+      "achievement.bad": "成就發生錯誤，請聯繫管理員{message}",
+      "achievement.duplicate": "重複領取成就",
+      "achievement.notConditions": "領取成就條件不符",
+      "achievement.ineffective": "無效的成就",
+      "achievement.success": "成就領取成功",
+      "update.success": "玩家資訊更新成功",
+      "update.notFound": "玩家更新失敗，沒有此玩家數據",
+      "update.notImplement": "玩家更新失敗 {message}",
+      "update.error": "玩家更新失敗 {message}",
+      "update.bad": "玩家更新錯誤，請聯絡管理員 {message}",
+      "bindOrigin.bad": "绑定帳戶發生错误，請聯繫管理員 {message}",
+      "bindOrigin.error": "發生错误，請聯繫管理員 {message}",
+      "bindOrigin.expired": "激活驗證碼逾時，請重新註冊",
+      "bindOrigin.gameNotShowed": "判斷的帳戶，沒有對應戰地系列遊戲",
+      "bindOrigin.needVerify": "恭喜，你還差一步，請前往電子信箱激活帳戶",
+      "bindOrigin.notFound": "激活驗證碼無效，請檢查驗證代碼",
+      "bindOrigin.notImplement": "發生錯誤，請聯繫管理員 {message}",
+      "bindOrigin.originBindingExist": "此電子信箱已綁定帳戶",
+      "bindOrigin.originNotFound": "找不到此電子信箱帳戶，請檢查是信箱地址是否正確 以及是否已開啟信箱查詢",
+      "bindOrigin.success": "恭喜你成功激活!",
+      "server.error": "服務錯誤 {message}",
+      "captcha.bad": "驗證碼模組發生錯誤，請聯繫管理員 {message}",
+      "captcha.expired": "驗證碼逾時或未填入",
+      "captcha.wrong": "錯誤的驗證碼",
+      "changeName.bad": "更改用戶名稱錯誤，請聯繫管理員 {message}",
+      "changeName.noChance": "你已經用完了所有改名的機會",
+      "changeName.occupied": "你的新名子已經被占用",
+      "changeName.success": "已修改用戶成功，來看看嶄新的名字⭐️",
+      "changePassword.bad": "更改密碼錯誤，請聯繫管理員 {message}",
+      "changePassword.notMatch": "原密碼不正確",
+      "changePassword.success": "您需要重新登入來完成此過程",
+      "forgetPassword.bad": "重置密碼錯誤，請聯繫管理員 {message}",
+      "forgetPassword.needVerify": "請檢查您的電子信箱以重置密碼",
+      "forgetPassword.notFound": "沒有此用戶或者您沒有綁定電子信箱，請檢查名稱或信箱是否一致",
+      "forgetPassword.permissionDenied": "你帳戶無法這樣做",
+      "forgetPassword.success": "重置密碼成功",
+      "judgement.appealLock": "上訴被鎖定，案件無法進一步裁決",
+      "judgement.bad": "判決發生錯誤，請聯繫管理員 {message}",
+      "judgement.notFound": "未找到案件，請聯繫管理員 {message}",
+      "judgement.permissionDenied": "你無權這樣做",
+      "judgement.spam": "你所提交的內容未通過檢測，被標記為垃圾內容{message}",
+      "judgement.success": "感謝你的判決",
+      "userInfo.bad": "用戶資訊發生錯誤，請聯繫管理員{message}",
+      "userInfo.notFound": "無此用戶",
+      "logout.bad": "註銷失敗，請聯繫管理員",
+      "logout.success": "再見👋🏻",
+      "needBindEaAccount": "請綁定你的EA帳號後回覆",
+      "noAccess": "當前帳戶,無權限",
+      "noReports": "還沒有任何檢舉",
       "notContent": "無內容",
       "notFound": "哎列, 訪問地址似乎走失",
-      "notLang": "未翻譯"
+      "notLang": "未翻譯",
+      "externalAuth.success": "授權請求成功",
+      "externalAuth.noSuchUser": "授權請求的目標用戶不存在",
+      "externalAuth.fail": "授權請求失敗，請聯繫管理員 {message}",
+      "confirmAuth.success": "確認授權成功",
+      "confirmAuth.fail": "確認授權失敗，請聯絡管理員 {message}",
+      "reply.bad": "回覆發生錯誤，請聯繫管理員 {message}",
+      "reply.notFound": "沒有此回覆或玩家",
+      "reply.spam": "你所提交的內容未通過檢測，被標記為垃圾內容{message}",
+      "reply.success": "已提交回覆",
+      "report.bad": "檢舉發生錯誤，請聯繫管理員 {message}",
+      "report.error": "檢舉發生錯誤，請聯繫管理員 {message}",
+      "report.notFound": "查不到此用戶資訊",
+      "report.notImplement": "發生錯誤，請聯繫管理員 {message}",
+      "report.spam": "你所提交的內容未通過檢測，被標記為垃圾內容{message}",
+      "report.success": "感謝你的檢舉",
+      "signin.bad": "登入發生錯誤，請聯繫管理員{message}",
+      "signin.noSuchUser": "無此用戶或密碼錯誤",
+      "signin.success": "歡迎回來",
+      "signup.bad": "註冊發生錯誤，請聯繫管理員 {message}",
+      "signup.error": "發生錯誤，請聯繫管理員 {message}",
+      "signup.notFound": "驗證碼無效",
+      "signup.expired": "驗證碼逾時過期，請重新註冊",
+      "signup.gameNotShowed": "判斷的帳戶，沒有對應戰地系列遊戲",
+      "signup.needVerify": "恭喜，你還差一步，請前往信箱激活帳戶",
+      "signup.notImplement": "發生錯誤，請聯繫管理員 {message}",
+      "signup.originBindingExist": "此電子信箱已綁定其他帳戶",
+      "signup.originNotFound": "無法依照用戶提供的資訊查找到EA帳戶",
+      "signup.usernameMismatch": "郵箱所對應的EA賬戶與填入的EA賬戶名稱不符合",
+      "signup.usernameExist": "網站用戶或帳號待驗證帳戶名單中已被使用",
+      "user.invalid": "令牌失效",
+      "user.permissionDenined": "無許可權",
+      "user.tokenClientException": "當前客戶端令牌逾期或失效",
+      "user.tokenExpired": "令牌逾期，請重新登入",
+      "userReports.bad": "用戶檢舉發生錯誤，請聯繫管理員{message}",
+      "userReports.notFound": "沒有此玩家，請仔細核對",
+      "userReports.success": "檢舉成功"
     }
   },
   "bindOrigin": {
-    "messages": {
-      "bad": "錯誤綁定，請聯繫管理員",
-      "expired": "綁定的驗證代碼過期，請重新提交綁定",
-      "notFound": "未找到綁定驗證代碼",
-      "success": "賬戶與橘子平台綁定成功"
-    },
-    "title": "綁定Origin賬戶"
+    "title": "綁定EA帳戶"
   },
   "captcha": {
     "get": "獲得驗證碼",
+    "fresh": "刷新驗證碼",
     "messages": {
       "bad": "驗證碼錯誤，請聯繫管理員",
       "expired": "驗證碼已過期",
@@ -189,24 +319,24 @@
   },
   "cheatMethods": {
     "aimbot": {
-      "describe": "自動瞄準位置，呈現出機器行為",
-      "title": "自瞄"
+      "describe": "自動瞄準位置，呈現出機械動作",
+      "title": "自動瞄準"
     },
     "attackServer": {
-      "describe": "惡意攻擊服務器",
-      "title": "攻擊服務器"
+      "describe": "惡意攻擊伺服器引起玩家高延遲、玩家死亡、重置、伺服器無回應等",
+      "title": "攻擊伺服器"
     },
     "damageChange": {
-      "describe": "修改武器參數",
-      "title": "改傷"
+      "describe": "修改武器/載具/技能等參數",
+      "title": "更改傷害"
     },
     "gadgetModify": {
-      "describe": "裝備出現在不可能存在場景中",
+      "describe": "裝備出現在不可能存在的場景中",
       "title": "改裝備"
     },
     "invisable": {
-      "describe": "角色隱身，無法看見，能追踪位置",
-      "title": "隱身"
+      "describe": "角色隱身，無法看見，能追蹤位置",
+      "title": "隱形"
     },
     "magicBullet": {
       "describe": "子彈可以穿過實體",
@@ -217,7 +347,7 @@
       "title": "秒殺"
     },
     "teleport": {
-      "describe": "傳送移動",
+      "describe": "傳送、角色非正常速率移動",
       "title": "傳送"
     },
     "wallhack": {
@@ -229,11 +359,12 @@
     "appeal": {
       "deal": {
         "action": "申訴操作",
-        "admincontent": "管理回复內容",
+        "adminContent": "管理回覆內容",
         "appealContent": "玩家申訴內容",
-        "btrLink": "BTR鏈接",
+        "btrLink": "BTR鏈結",
         "farm": "刷槍申訴",
-        "firstPersonRecording": "第一人稱錄屏鏈接",
+        "firstPersonRecording": "第一人稱螢幕畫面錄影鏈結",
+        "userGeneratedMossFile": "moss文件 (.zip)",
         "moss": "moss自證申訴",
         "mossDownloadUrl": "下載MOSS",
         "mossUpload": "上傳moss",
@@ -245,7 +376,8 @@
         },
         "type": "申訴類型"
       },
-      "describe": "該舉報信息存在問題,我能自證或他人協助證明清白.",
+      "dealAppeal": "處理申訴",
+      "describe": "該檢舉與事實不符，能提供自證材料 或 協助證明清白",
       "info": {
         "changeName": "名稱變動",
         "commentid": "評論ID",
@@ -255,85 +387,85 @@
       },
       "modal": {
         "auxiliaryProof": {
-          "1": "舉報的單場戰局的其他玩家(敵人與友方)視角，且不少於10分鐘無剪輯，自行提供影片地址.",
-          "2": "在場玩家，提供自己id，具體服務器、時間、場此，以及您輔助申訴對像說明.",
+          "1": "檢舉之單場對局的其他玩家(敵人與友方)視角，且不少於10分鐘無剪接，自行提供影片地址.",
+          "2": "在場玩家，提供自己id，具體伺服器、時間、場次，以及您輔助申訴對象說明.",
           "title": "輔助證明"
         },
         "describe": "針對誤BAN，本人或第三方可以協助申訴，在滿足下方所有基本要求後，您的申訴內容會提交到BFBAN所有管理員，管理員確認通過才可解除",
         "effectiveEvidence": {
-          "1": "使用類似\"高速目標靶心\"軟件、Moss軟件，拍攝到屏幕與手、鍵盤錄製自證.",
+          "1": "使用類似\"高速目標靶心\"程式、Moss程式，拍攝到螢幕畫面與手、鍵盤錄製自證.",
           "2": "自我辯護，可以使用圖片、影片等等材料.",
           "3": "有些地方所提供的要求不同，可以諮詢地區BFBAN管理，索要申訴材料.",
           "title": "有效證據"
         },
         "evidenceInvalid": {
-          "1": "借出、出租等形式給第三方，無論是刷數據還是朋友借用說辭，都無法證明是否本人，你必須明白賬戶借出無法知道通過何種手段. 一律不給與通過.",
-          "2": "被多方玩家截取使用(不限於本人截圖顯示出作弊特徵)或購買作弊軟體多媒體.",
+          "1": "借出、出租等形式給第三方，無論是刷數據還是朋友借用說辭，都無法證明是否本人，你必須明白帳戶借出無論通過何種手段. 一律不給予通過.",
+          "2": "被多位玩家截取使用(不限於本人截圖顯示出作弊特徵)或購買作弊程式.",
           "3": "存在前科，如上系列存在檔案玩家將大大折扣通過機率.",
           "4": "任何誓言，詛咒.",
-          "title": "不通過的證明"
+          "title": "無法通過的證明"
         },
         "modalTitle": "規則"
       },
       "placeholder": {
-        "btrlink": "請填寫btr對局鏈接",
-        "content": "請詳細填寫您申訴信息以便審核",
+        "btrlink": "請填寫btr對局鏈結",
+        "content": "請詳細填寫您的申訴信息以便審核(注意格式，不同地區會對申訴格式有需求，請以當地申訴社區《申訴格式》為准)",
         "player": "請填寫玩家id",
-        "videolink": "請填寫視頻鏈接"
+        "videolink": "請填寫視頻鏈結"
       }
     },
     "info": {
       "action": "行動",
       "adminConsole": "管理員專區",
-      "adminManual1": "不要輕易下判斷，如果不能做出處理判斷，就使用上方回复 參與討論，等待舉報者回复",
-      "adminManual2": "管理員的任何處理操作都會對作弊者的 現有狀態 造成改變，如果不是100%確定，請使用回复留言討論",
+      "adminManual1": "不要輕易下判斷，如果不能做出處理判斷，就使用上方回覆 參與討論，等待檢舉者回覆",
+      "adminManual2": "管理員的任何處理操作都會對作弊者的 現有狀態 造成改變，若非100%確定，請使用回覆留言討論",
       "app_qr": {
         "openApp": "在App內查看",
         "openAppDescribe": "在BFBAN APP內查看此玩家",
-        "tip": "在BFBAN APP內，掃此二維碼",
+        "tip": "在BFBAN APP內，掃此QR code",
         "title": "手機上查看"
       },
       "appeal": "上訴",
-      "appealManual1": "誤BAN申訴：如有誤BAN，請將 該案件頁面鏈接 及 詳細申訴信息 發送郵件至 ban-appeals@bfban.com 管理員將會處理。",
+      "appealManual1": "誤BAN申訴：如有誤BAN，請將 該案件頁面鏈結 及 詳細申訴信息 發送郵件至 ban-appeals@bfban.com 管理員將會處理。",
       "assistPppeal": "協助上訴",
       "cheatMethod": "作弊方式",
       "cheatersInfo": "玩家詳情",
       "dealRecord": "管理員處理記錄",
-      "discription1": "若發現 鏈接失效 或 改名，請點擊",
-      "discription2": "bfban.com 有能力永久追踪被舉報者的行踪",
-      "discription3": "服務器也會定期抓取、更新被舉報人的信息",
-      "discription4": "歷史ID也可以用來搜索",
+      "description1": "若發現 鏈結失效 或 改名，請點擊",
+      "description2": "bfban.com 有能力永久追蹤被檢舉人的行蹤",
+      "description3": "伺服器也會定期抓取、更新被檢舉人的信息",
+      "description4": "歷史ID也可被用來搜尋",
       "fastReplies": {
         "evidencePic": "證據如圖所示",
         "evidenceVid": "證據如影片所示",
         "stats": "玩家數據異常"
       },
-      "firstReportTime": "第一次被舉報時間",
-      "gameScores": "戰績鏈接",
+      "firstReportTime": "首次被檢舉時間",
+      "gameScores": "戰績鏈結",
       "gaming": "遊戲中",
       "giveOpinion": "您怎麼看?",
       "historyID": "歷史名稱",
       "inGame": "在",
       "judge": "認為",
       "judgement": "處理意見",
-      "originAvatar": "Origin頭像",
+      "originAvatar": "EA頭像",
       "recentUpdateTime": "最近更新時間",
-      "replyManual1": "如果有新的證據圖片或影片需要補充，可以再次舉報。回复功能只能回复文本或鏈接。如需回复圖片，請移步這裡",
-      "replyManual2": "然後復製圖片鏈接進行回复。",
-      "replyManual3": "註冊登錄後才可以參與討論",
-      "replyManual4": "請登錄後參與回复",
-      "report": "舉報",
-      "reportedGames": "被舉報的遊戲",
+      "replyManual1": "如果有新的證據圖片或影片需要補充，可以再次檢舉。回覆功能只能回覆文本或鏈結。如需回覆圖片，請移步這裡",
+      "replyManual2": "然後複製圖片鏈結進行回覆。",
+      "replyManual3": "註冊登入後才可以參與討論",
+      "replyManual4": "請登入後參與回覆",
+      "report": "檢舉",
+      "reportedGames": "被檢舉的遊戲",
       "timeLine": "時間線",
       "updateButton": "更新資料",
       "uploadPicButton": "上傳圖片",
-      "videoLink": "影片鏈接",
-      "viewTimes": "瀏覽次數",
+      "videoLink": "影片鏈結",
+      "viewTimes": "觀看次數",
       "writeSomething": "寫一些東西"
     },
     "judgement": {
       "appropriateVerdict": {
-        "1": "直觀提出裁決原因，比如某行為決定判決結果，由於以下因素(省略)",
+        "1": "直觀提出裁決原因，比如某行為決定判決結果，由於以下因素......(下略)",
         "2": "簡要，作弊特徵明顯，可使用下方模板統一判決",
         "title": "合適的裁決"
       },
@@ -341,9 +473,9 @@
       "content": "判決說明",
       "game": "所屬遊戲",
       "inappropriateRuling": {
-        "1": "填寫如\"1\"、\"[空位符]\"、\"[表情]\"等這類無意義回复",
-        "2": "回复內容中攜帶人生攻擊、歧視、色情、政治內容",
-        "3": "由於遊戲外因素決定，比如頭像、醜",
+        "1": "填寫如\"1\"、\"[空位符]\"、\"[表情]\"等這類無意義回覆",
+        "2": "回覆內容中攜帶人生攻擊、歧視、色情、政治內容",
+        "3": "由於遊戲外因素決定，比如大頭貼、醜",
         "title": "不合適的裁決"
       },
       "methods": "作弊的方法"
@@ -352,35 +484,46 @@
       "dontDoIt": "不允許",
       "fillEverything": "請填寫完整",
       "pleaseExplain": "請更加詳細的描述您的裁決內容",
-      "replySuccess": "回復成功",
-      "signIn": "請登錄",
-      "submitSuccess": "提交成功",
-      "tipBind": "請綁定你的橘子賬號以後在回复",
       "updateComplete": "更新完成"
     },
     "seo": {
-      "description": "舉報玩家詳情信息",
+      "description": "檢舉玩家詳情信息",
       "keywords": "玩家詳情,玩家"
     },
     "subscribes": {
-      "cancelTrack": "取消追踪",
-      "cancelTrackDescribe": "不在跟踪此玩家",
-      "tracking": "追踪",
-      "trackingDescribe": "追踪此玩家，在更新動態時通知您"
+      "cancelTrack": "取消追蹤",
+      "cancelTrackDescribe": "不再跟蹤此玩家",
+      "tracking": "追蹤",
+      "trackingDescribe": "追蹤此玩家，在更新動態時通知您"
     },
     "timeline": {
       "all": "所有",
       "banAppeal": "僅查看申訴",
       "coreComment": "主要內容",
       "historyName": "歷史玩家變動名稱",
-      "verify": "僅查看判決"
+      "verify": "僅查看判決",
+      "noAppealAttachmentHint": "此申訴無申訴附件",
+      "needLoginViewAttachmentsHint": "您需要登入帳戶，才可查閱玩家申訴額外提供的附件",
+      "types": {
+        "judgement": "檢舉",
+        "register": "註冊",
+        "report": "檢舉",
+        "banAppeal": "申訴"
+      }
+    },
+    "dateView": {
+      "primitive": "原始",
+      "primitiveDescription": "伺服器所在時區時間",
+      "localTimeZoneName": "目前時區名稱",
+      "localeTimeDescription": "轉換'原始'時間為你所在地區時間",
+      "localeTime": "目前本地時間"
     },
     "title": "詳情"
   },
   "footer": {
     "column": {
       "col1": {
-        "text": "聯BFBAN - 全球作弊玩家資料庫"
+        "text": "Bfban - 全球作弊玩家資料庫"
       },
       "col2": {
         "title": "社區"
@@ -389,10 +532,13 @@
         "title": "功能"
       },
       "col4": {
-        "title": "聯繫方式"
+        "title": "聯絡方式"
+      },
+      "col5": {
+        "title": "其他"
       },
       "sponsor": {
-        "join": "加入贊助商",
+        "join": "成為贊助商",
         "title": "贊助商"
       }
     },
@@ -401,12 +547,20 @@
     }
   },
   "forgetPassword": {
-    "checkEmail": "請檢查您的郵箱，並點擊其中的驗證鏈接",
+    "checkEmail": "請檢查您的電子信箱，並點擊其中的驗證鏈結",
     "forgetUsername": "如果您忘記了BFBAN用戶名，請前往<a href='http://kook.top/wHwxhw'>bfban開發者社區</a>尋求幫助。注意，您可能會需要很複雜的找回過程",
     "resetSuccess": "恭喜完成重置 💐",
+    "form": {
+      "username": "用戶名",
+      "originEmail": "EA信箱"
+    },
+    "placeholder": {
+      "username": "請填寫網站用戶名或EA平台帳戶(注意大小寫)用戶名",
+      "originEmail": "輸入您的EA信箱"
+    },
     "steps": {
       "0": {
-        "supplement": "核對賬戶",
+        "supplement": "核對帳戶",
         "title": "基礎信息"
       },
       "1": {
@@ -414,8 +568,8 @@
         "title": "驗證碼"
       },
       "2": {
-        "supplement": "查看郵箱驗證鏈接",
-        "title": "郵箱驗證"
+        "supplement": "查看電子信箱驗證鏈結",
+        "title": "信箱驗證"
       },
       "3": {
         "supplement": "重置您的密碼",
@@ -426,18 +580,17 @@
         "title": "完成"
       }
     },
-    "title": "重置密碼"
+    "title": "重置帳戶密碼"
   },
   "header": {
     "about": "關於",
     "announcement": "公告",
     "cheaters": "玩家資料庫",
     "index": "首頁",
-    "profile": "個人設置",
-    "report": "舉報作弊",
-    "signin": "登錄",
+    "profile": "儀表板",
+    "report": "檢舉作弊",
+    "signin": "登入",
     "signout": "註銷",
-    "signoutSuccess": "註銷成功",
     "signup": "註冊",
     "site_stats": "統計",
     "userCenter": "我的展示頁"
@@ -447,11 +600,11 @@
       "activities": {
         "admin": "社區管理",
         "as": "處理為",
-        "join": "註冊了 bfban ， 歡迎！",
+        "join": "註冊了BFBAN, 歡迎你的到來！",
         "mark": "將",
-        "report": "舉報了"
+        "report": "檢舉了"
       },
-      "description": "bfban.com於2018年11月4日上線，收到 {report} 次舉報，已實錘了 {cheater} 個掛壁，感謝大家的共同努力！",
+      "description": "bfban.com於2018年11月4日上線，收到 {report} 次檢舉，已實錘了 {cheater} 個作弊者，感謝大家的共同努力！",
       "more": "查閱更多",
       "title": "網站動態"
     },
@@ -461,19 +614,20 @@
     "cover": {
       "confirmData": "確認作弊者",
       "dataReceived": "已收到",
-      "endTime": "從 {time}",
+      "endTime": "從 {time} 開始",
       "h1": "BFBAN",
       "h2": {
         "hint0": "提供☁️數據庫，使得來自全球不同Battlefield服務器，得以監控移除存在問題檔案玩家",
-        "hint1": "無論從BF1到BF2042都支持問題檔案玩家查詢，使得來自全球不同Battlefield服務器得以監控"
+        "hint1": "無論從BF1到BF2042都支持問題檔案玩家查詢，使得來自全球不同Battlefield伺服器得以監控",
+        "hint2": "一切由社區掌控，公開透明，免費爲所有接入BFBAN提供服務"
       },
       "h3": "建立起全球作弊玩家檔案庫",
       "h4": "成為我們一員 - 維護社區環境",
       "subButton": "了解有那些社區已經加入"
     },
     "seo": {
-      "description": "聯ban官網,建立起全球作弊玩家檔案庫,成為我們一員維護社區環境",
-      "keywords": "聯ban,聯辦,聯辦局,聯ban局,戰地風雲,戰地"
+      "description": "BFBAN官網,建立起全球作弊玩家檔案庫,成為我們一員維護社群環境",
+      "keywords": "Bfban,聯辦,联ban,聯辦局,BFBAN局,戰地風雲,戰地"
     },
     "title": "首頁"
   },
@@ -483,28 +637,28 @@
     "languageMembersDescribe": "特此表彰那些無償貢獻翻譯文本成員，願付出時間校對本地化語言",
     "linkWebDeveloperChild": "傑出貢獻開發成員",
     "linkWebDeveloperDescribe": "特此表彰那些無償參與BFBAN程序開發的成員, 作為BFBAN基石開拓先鋒",
-    "links": "友鏈",
+    "links": "友情鏈結",
     "sponsor": "合作夥伴",
-    "title": "友鏈詳情"
+    "title": "友情鏈結詳情"
   },
   "list": {
     "colums": {
       "playerId": "遊戲ID",
-      "reportTime": "舉報時間",
+      "reportTime": "檢舉時間",
       "screenTitle": "篩選",
       "updateTime": "更新時間"
     },
     "filters": {
       "sortBy": {
-        "commentsNum": "回復次數倒序",
-        "createTime": "舉報時間倒序",
+        "commentsNum": "回覆次數倒序",
+        "createTime": "檢舉時間倒序",
         "updateTime": "更新時間倒序",
         "viewNum": "圍觀次數倒序"
       },
       "sortByTitle": "排序方式"
     },
-    "reportTime": "舉報時間範圍",
-    "title": "外掛公示",
+    "reportTime": "檢舉時間範圍",
+    "title": "玩家資料庫",
     "updateTime": "更新時間範圍"
   },
   "misc": {
@@ -513,7 +667,7 @@
       "desktop": "單擊 或 拖拽 上傳...",
       "fail": "超過上傳最大限制，圖片2M",
       "info": "上傳圖片，不要超過2M",
-      "mobile": "雙擊屏幕上傳..."
+      "mobile": "雙擊螢幕上傳..."
     },
     "uploadVideo": {
       "desktop": "點擊或者拖動文件到這裡上傳",
@@ -522,39 +676,218 @@
   },
   "player_list": {
     "seo": {
-      "description": "玩家列表,這裡包含用戶舉報玩家檔案",
+      "description": "玩家列表,這裡包含用戶檢舉玩家檔案",
       "keywords": "玩家列表,列表"
     },
     "title": "玩家資料庫"
   },
   "profile": {
-    "account": {
+    "achievement": {
+      "title": "成就",
+      "acquisitionTime": "領取時間",
+      "conditions": "獲取方式",
+      "getButton": "立即獲取成就",
+      "exp": "成就經驗",
+      "owned": "已擁有成就",
+      "rarity": {
+        "normal": "普通",
+        "rare": "稀有",
+        "preciousness": "珍貴",
+        "special": "特殊"
+      },
+      "list": {
+        "trend_monthly_assemble": {
+          "name": "熱門景點(月)",
+          "description": "登上本月熱門案件排行"
+        },
+        "trend_monthly_l1": {
+          "name": "熱門景點",
+          "conditions": "- 案件登上本月前10名熱門TOP<br>- 目前帳戶與案件被檢舉玩家關聯<br>- 案件觀看次數大於等於100",
+          "description": "熱門景點😁"
+        },
+        "trend_monthly_l2": {
+          "name": "熱門景點2",
+          "conditions": "-案件登上本月前10熱門TOP<br>-當前帳戶與案件被檢舉玩家關聯<br>-熱度直大於等於3以上<br>-案件觀看次數大於等於500",
+          "description": "熱門景點常來打卡"
+        },
+        "user_innocent_case": {
+          "name": "安全落地",
+          "conditions": "- 在BFBAN中存在一個與此帳戶關聯的案件<br>- 案件狀態自證狀態",
+          "description": "案件無效"
+        },
+        "user_achievement_assemble": {
+          "name": "成就收藏家",
+          "description": "成就收藏者(此成就不會展示在列表中，僅自己可見)"
+        },
+        "user_achievement_l1": {
+          "name": "成就1",
+          "conditions": "-擁有3個成就",
+          "description": "已獲得3個成就"
+        },
+        "user_achievement_l2": {
+          "name": "成就2",
+          "conditions": "-擁有10個以上成就",
+          "description": "擁有10個以上成就"
+        },
+        "user_achievement_l3": {
+          "name": "成就3",
+          "conditions": "- 擁有10個以上成就<br>- 10成就內包含1個珍貴成就",
+          "description": "擁有10個以上成就，且包含1個珍貴成就"
+        },
+        "user_achievement_l4": {
+          "name": "成就4",
+          "conditions": "- 擁有15個以上成就<br>- 10成就內包含3個珍貴成就",
+          "description": "擁有15個以上成就，且包含3個珍貴成就"
+        },
+        "active_community_weekly_assemble": {
+          "name": "週貢獻",
+          "description": "用戶在一週(7天)社區累計貢獻"
+        },
+        "active_community_weekly_l1": {
+          "name": "一週社區貢獻",
+          "conditions": "- 在本周統計社區參與排行榜中前10用戶<br>- 無禁言、無非名單用戶<br>- 非機器人帳戶",
+          "description": "一週社區貢獻前10名"
+        },
+        "active_community_monthly_assemble": {
+          "name": "月貢獻",
+          "description": "用戶在一個月內社區累計貢獻"
+        },
+        "active_community_monthly_l1": {
+          "name": "一個月社區貢獻",
+          "conditions": "- 在本月統計社區參與排行榜中前10用戶<br>- 無禁言、無非名單用戶<br>- 非機器人帳戶",
+          "description": "一月社區貢獻前10名"
+        },
+        "active_community_monthly_l2": {
+          "name": "一個月社區貢獻",
+          "conditions": "- 在本月統計社區參與排行榜中前3用戶<br>- 無禁言、無非名單用戶<br>- 非機器人帳戶",
+          "description": "一個月社區貢獻前3名"
+        },
+        "active_community_yearly_assemble": {
+          "name": "年貢獻",
+          "description": "用戶在一年內社區累計貢獻"
+        },
+        "active_community_yearly_l1": {
+          "name": "一年社區貢獻",
+          "conditions": "- 在本年統計社區參與排行榜中前10用戶<br>- 無禁言、無非名單用戶<br>- 非機器人帳戶",
+          "description": "一年社區貢獻前10名"
+        },
+        "active_community_yearly_l2": {
+          "name": "一年社區貢獻",
+          "conditions": "- 在本年統計社區參與排行榜中前3用戶<br>- 無禁言、無非名單用戶<br>- 非機器人帳戶",
+          "description": "一年社區貢獻前3名"
+        },
+        "old_user": {
+          "name": "老用戶",
+          "conditions": "-創建時間在2024 1月1日前<br>- 用戶ID在10000以内(包含10000)<br>(同時滿足)",
+          "description": "最早一批註冊BFBAN先鋒用戶"
+        },
+        "open_chat_assemble": {
+          "name": "聊天",
+          "description": "完成對應條件聊天"
+        },
+        "open_chat_l1": {
+          "name": "開放聊天",
+          "conditions": "- 打開帳戶聊天",
+          "description": "歡迎隨時與我對話"
+        },
+        "open_chat_l2": {
+          "name": "收到消息",
+          "conditions": "- 打開帳戶聊天<br>- 一個月收到消息並已讀<br>(同時滿足)",
+          "description": "交流的第一步"
+        },
+        "one_search_player": {
+          "name": "首次搜尋玩家",
+          "conditions": "- 使用網站搜尋案件",
+          "description": "使用網站搜尋玩家，並查看案件"
+        },
+        "report_assemble": {
+          "name": "檢舉",
+          "description": "提交一定檢舉數量並且石錘，獲取成就<i>-願檢舉越來越少</i>"
+        },
+        "report_l1": {
+          "name": "檢舉新手",
+          "conditions": "-檢舉10條玩家<br>- 從2024 01-01開始統計<br>- 非機器人帳戶 ",
+          "description": "初步探索BFBAN使用方法"
+        },
+        "report_l2": {
+          "name": "檢舉入門",
+          "conditions": "-檢舉100條玩家<br>- 從2024 01-01開始統計<br>且有效石錘案件百分比96%以上<br>- 非機器人帳戶 ",
+          "description": "區區100條數據"
+        },
+        "report_l3": {
+          "name": "檢舉大師",
+          "conditions": "-檢舉300條玩家<br>- 從2024 01-01開始統計<br>- 且有效石錘案件百分比96%以上<br>- 非機器人帳戶 ",
+          "description": "只需要看一眼，就能認出你"
+        },
+        "report_l4": {
+          "name": "檢舉專家",
+          "conditions": "-檢舉1000條玩家<br>- 從2024 01-01開始統計<br>- 且有效石錘案件百分比96%以上<br>- 非機器人帳戶 ",
+          "description": "我預判了你的預判"
+        },
+        "report_l5": {
+          "name": "檢舉大師",
+          "conditions": "-檢舉5000條玩家<br>- 從2024 01-01開始統計<br>- 且有效石錘案件百分比96%以上<br>- 非機器人帳戶 ",
+          "description": "你只需此成就條件即可，一切無須描述"
+        },
+        "user_subscribes_assemble": {
+          "name": "案件追蹤",
+          "description": "完成對應案件追蹤"
+        },
+        "user_subscribes_l1": {
+          "name": "獵人的眼睛1",
+          "conditions": "- 追蹤第一個案件<br>- 正常帳戶",
+          "description": "獵人將時時刻刻關注獵物"
+        },
+        "user_subscribes_l2": {
+          "name": "獵人的眼睛2",
+          "conditions": "- 追蹤足夠20條案件<br>- 正常賬戶",
+          "description": "一名成熟的獵人"
+        },
+        "site_20w_report_witnesses": {
+          "name": "20W檢舉見證者",
+          "conditions": "- 當網站檢舉突破20W時所有使用者都可以獲得",
+          "description": "20w對我們來說不是值得慶祝的事，這個成就更希望不需要領取"
+        },
+        "app_use_mobile": {
+          "name": "使用BFBAN助手應用",
+          "conditions": "- 使用BFBAN助手應用，並在應用程式內登陸後領取<br>- 所有用戶",
+          "description": "🤔 這是BFBAN分身？到底是誰開發這應用"
+        }
+      }
+    },
+    "reports": {
+      "title": "我的檢舉案件"
+    },
+    "space": {
       "form": {
         "allowDM": "是否接收聊天",
-        "allowDMdescribe": "是否接受信息. 更多消息信息前往 [消息列表] 查看",
+        "allowDMdescribe": "是否接收訊息，更多消息訊息前往[訊息列表] 查看",
         "changeNameLeft": "剩餘修改用戶名次數",
         "createTime": "註冊時間",
         "description": "用戶簡介",
         "introduction": "自我介紹",
-        "language": "設置語言",
-        "languageSyncDescribe": "設置此處選項，在登錄後同步程序本地語言，如果退出登錄將回退到本地程序所持久保存的語言",
-        "lastSigninIP": "最後登錄IP",
+        "language": "首選語言",
+        "languageSyncDescribe": "設定此處選項，在登入後同步程式本地語言，如果退出登入將退回到本地程式所長期保存的語言",
+        "lastSigninIP": "最後登入IP",
         "modifyDescription": "修改用戶簡介",
-        "originEmail": "EA賬戶郵箱",
-        "originName": "EA賬戶名字",
+        "originEmail": "EA帳戶信箱",
+        "originName": "EA帳戶名子",
         "originPersonaId": "EA PID",
         "originUserId": "EA UID",
         "privilege": "身份",
-        "privileges": "特權",
+        "privileges": "權限",
         "registerIP": "註冊時IP",
-        "showOrigin": "可見橘子信息",
-        "showOriginDescribe": "是否讓你綁定的Origin在BFBAN可見",
+        "showOrigin": "可見EA信息",
+        "showOriginDescribe": "是否讓你綁定的EA帳號在BFBAN可見",
+        "showAchievement": "公開成就",
+        "AD": "廣告",
+        "ADDescribe": "你可以拒絕服務廣告，網站仍為公益開放，將開關更改為關閉，網站上的所有廣告將被終止",
         "signoutTime": "登出時間",
         "username": "用戶名"
       },
       "modifyName": {
         "residueDegree": "目前剩餘修改名稱{changeNameLeft}次數",
-        "specification1": "你正在修改您的賬戶名稱，這代表網站內看見都會更變，並且同時<b>登錄的ID</b>同時變動,如果您不小心忘記新賬戶id，可能無法找回此賬戶，影響綁定的orgin賬戶，你需要通過非常長的人工審核.",
+        "specification1": "你正在修改您的帳戶名稱，這代表網站內看見的都會變更，並且同時<b>登入的ID</b>同時變動，如果您不小心忘記新帳戶ID，可能無法找回此帳戶。影響綁定的Origin帳戶，你需要通過非常長的人工審核流程。",
         "specification2": "你明白以上說明了嗎?",
         "steps": {
           "0": {
@@ -569,7 +902,7 @@
         },
         "title": "修改名稱"
       },
-      "title": "賬戶信息設置"
+      "title": "帳戶信息設置"
     },
     "admin": {
       "menu": {
@@ -578,6 +911,8 @@
         "adminOperationLog": "管理員網站操作日誌",
         "blockedUsers": "黑名單用戶",
         "comment": "評論管理",
+        "fileManagement": "多媒體管理",
+        "files": "文件列表",
         "home": "管理主頁",
         "judgementLog": "判決日誌",
         "log": "日誌",
@@ -653,8 +988,8 @@
           "describe": "為管理員提供自動刷新，關注未處理玩家做出站內提醒",
           "name": "未處理提醒"
         },
-        "desktopNotifiction": {
-          "describe": "在系統窗口內彈窗通知",
+        "desktopNotification": {
+          "describe": "在系統視窗內彈窗通知",
           "name": "桌面通知"
         },
         "footerBar": {
@@ -665,7 +1000,7 @@
       "title": "本地增強"
     },
     "exportAndImport": {
-      "description": "本地持久數據不會同步雲端，需要你手動導出並在新平台導入這些數據，當然這些數據洩露不會影響您的賬戶安全，但包含一些記錄",
+      "description": "本地持久數據不會同步雲端，需要你手動導出並在新平台導入這些數據，當然這些數據洩露不會影響您的帳戶安全，但包含一些記錄",
       "hint1": "不要將數據導入到陌生環境下，導出的內容包含你一些本地隱私信息",
       "hint2": "謹慎操作，覆蓋無法還原",
       "title": "導出與導入"
@@ -675,7 +1010,7 @@
     },
     "media": {
       "capacity": "容量狀態",
-      "hint1": "每個賬戶每日都有上傳寬帶、文件數量、單個大小限制，但它會在下一個日期重置，但存在每個賬戶可用文件上傳數量，對於儲存要求不高文件可用其他網站網盤代替。",
+      "hint1": "每個帳戶每日都有上傳寬帶、文件數量、單個大小限制，但它會在下一個日期重置，但存在每個帳戶可用文件上傳數量，對於儲存要求不高文件可用其他網站雲端代替。",
       "maxFileNumber": "可上傳文件數量",
       "maxTrafficQuota": "文件最高大小",
       "prevResetTime": "重置限額日期",
@@ -686,9 +1021,9 @@
     },
     "meet": "歡迎回來{name}!",
     "subscribes": {
-      "title": "追踪"
+      "title": "追蹤"
     },
-    "title": "個人設置",
+    "title": "個人設定",
     "voice": {
       "backgroundMusic": "背景聲音",
       "backgroundMusicDescribe": "背景音樂",
@@ -707,52 +1042,66 @@
       "leave": "離開"
     },
     "info": {
-      "description": "請詳細描述作弊者行為、特點、發生地點、時間，列出他的作弊內容，給出檢舉理由",
-      "fromDatabaseOneId": "從聯BAN數據庫中選取",
+      "description": "🤝 内容基本要求:\n\t- 不要將檢舉者任何隱私訊息提交到此處\n\t- 影片連結可以複製在上面，有利於醒目提醒和索引\n\t- 請清晰描述被檢舉人行為、特點、發生地點、時間，列出他的作弊內容，最後給出原因\n\t- 可以對你提供的截圖、影片標註位置，附加說明\n\n⚠️ 請不要僅填寫簡單作弊方式，不提供任何直接證據\n⚠️ 多次無意義/惡意檢舉，帳戶將被黑名單",
+      "fromDatabaseOneId": "從BFBAN資料庫選取",
       "idNotion1": "一次只填寫一個ID，不要把戰隊名字寫進來，不要寫成自己的ID",
-      "idNotion2": "遊戲ID是不區分大小寫的，但請特別注意區分 i I 1 l L o O 0，正確填寫舉報ID",
-      "loginExpired": "您的登錄已過期，請重新登錄",
-      "notFoundHintAnswer1": "請至origin.com搜索該玩家，如確實能搜索到而無法舉報，可至首頁下方的聯繫方式處反饋bug",
+      "idNotion2": "遊戲ID是不區分大小寫的，但請特別注意區分 i I 1 l L o O 0，填寫正確ID",
+      "loginExpired": "您的登入已過期，請重新登入",
+      "notFoundHintAnswer1": "請至ea.com搜尋該玩家，如確實能搜尋到而無法檢舉，可至首頁下方的聯絡方式處反饋bug",
       "notFoundHintAnswer2": "這可能是EA數據庫更新不及時，或是EA官方的bug，我們沒有辦法替他們解決，如果您想出一份力，可以至https://answers.ea.com/t5/Origin-Client-Web-Technical/bd-p/origin-technical-issues-en 官方反饋論壇反饋bug，此情況可以描述為 I can't search my friend by name on origin",
       "notFoundHintQuestion1": "但是我剛剛在遊戲裡見過他/我在查戰績app上查得到他？",
-      "notFoundHintQuestion2": "origin上無法搜索到，這是怎麼一回事？",
+      "notFoundHintQuestion2": "EA上無法搜尋到，這是怎麼一回事？",
       "notFoundHintTitle": "我們無法找到該玩家",
-      "onlyOneId": "一次只有一個Origin ID",
-      "reportAll": "舉報所有",
-      "reportHacker": "舉報作弊",
-      "reportOne": "舉報單個",
+      "reportAll": "檢舉所有",
+      "reportHacker": "檢舉作弊",
+      "reportOne": "檢舉單個",
       "required": "影片地址",
-      "uploadManual1": "不想註冊國內賬號、嫌麻煩，上傳影片可以前往",
-      "uploadManual2": "然後地址貼在下方",
-      "uploadManual3": "可以是 優酷，土豆，AB站等 影片網站鏈接",
+      "uploadManual1": "可額外提供從優酷，土豆，推薦Acfun, Bilibili等視頻網站分享鏈接或可訪問源文件地址[禁止網盤]，點擊添加按鈕粘貼在下方",
+      "uploadManual2": "請選擇具有長時間有效影片網站連結,請勿上傳影片至網盤",
       "uploadPic1": "推薦上傳 png, jpg, jpeg, gif 格式的圖片",
       "uploadPic2": "圖片大於 2M 或 上傳失敗，可以前往",
-      "uploadPic3": "然後選擇 Image URL 選項卡，把圖片鏈接貼在下方",
+      "uploadPic3": "然後選擇 Image URL 選項卡，把圖片鏈結貼在下方",
       "uploadPic4": "請列出闡明足夠的證據，編輯器支持上傳圖片（限制2M）"
     },
     "labels": {
+      "types": {
+        "originName": {
+          "name": "用戶名稱",
+          "hint": "平台簡寫用戶名或是平台用戶名",
+          "placeholder": "一次只有一個EA名稱"
+        },
+        "originPersonaId": {
+          "name": "角色身份識別(PID)",
+          "hint": "角色識別(PID)，可透過遊戲平台或第三方工具取得, 它由數字組成",
+          "placeholder": "EA PersonaId，由數字組成，一次只有一個"
+        },
+        "originUserId": {
+          "name": "使用者身分識別識別(UID)",
+          "hint": "使用者身分識別(UID)，可透過遊戲平台或第三方工具取得, 它由數字組成",
+          "placeholder": "EA UserId，由數字組成，一次只有一個"
+        }
+      },
       "cheatMethod": "作弊方法",
       "description": "描述",
       "game": "遊戲",
-      "hackerId": "作弊者名稱(ID)"
+      "hackerId": "作弊者"
     },
     "messages": {
-      "failureSubtitle": "舉報失敗，{msg}",
+      "failureSubtitle": "檢舉失敗，{msg}",
       "failureTitle": "失敗",
-      "mediaEvidence": "請上傳圖片或填寫影片鏈接",
+      "mediaEvidence": "請上傳圖片或填寫影片鏈結",
       "originIdNotExist": "遊戲ID不存在，請檢查拼寫",
       "permissionDenied": "無權限",
-      "successSubtitle": "感謝您的舉報",
+      "successSubtitle": "感謝您的檢舉",
       "successTitle": "提交成功",
-      "tipBind": "請綁定你的橘子賬號以後在提交舉報",
       "videoBadFormat": "格式錯誤",
       "videoEmpty": "空的影片地址"
     },
     "seo": {
-      "description": "玩家舉報",
-      "keywords": "聯ban,聯辦,戰地風雲,戰地"
+      "description": "玩家檢舉",
+      "keywords": "Bfban,聯辦,戰地風雲,戰地"
     },
-    "title": "舉報"
+    "title": "檢舉"
   },
   "reset": {
     "form": {
@@ -766,8 +1115,8 @@
   "search": {
     "collectionHint": "收藏此頁面 (Ctrl+D or Command+D)",
     "describe": "從BFBAN數據庫搜尋ID",
-    "notUserExist": "喵嗚~，在數據庫裡找不到此信息",
-    "placeholder": "你想搜索什麼?",
+    "notExist": "未能查找到數據",
+    "placeholder": "你想搜尋什麼?",
     "sort": {
       "default": "默認",
       "latest": "最新",
@@ -789,75 +1138,68 @@
       "theme": "主題"
     },
     "image": {
-      "describe": "生成一張舉報信息截圖",
+      "describe": "生成一張檢舉信息截圖",
       "generate": "生成圖片",
       "name": "圖片"
     },
     "link": {
-      "linkUrl": "超鏈接",
-      "name": "鏈接形式",
+      "linkUrl": "超鏈結",
+      "name": "鏈結形式",
       "textLink": "文本地址",
       "textLinkContent": "{webname} - 分享了一位玩家，地址:{url}",
-      "webHtmlLink": "網絡代碼"
+      "webHtmlLink": "網路代碼"
     },
     "title": "分享"
   },
   "signin": {
-    "failed": "登錄失敗",
-    "fillEverything": "請填寫規範",
+    "failed": "登入失敗",
+    "fillEverything": "登入信息不完整，請填寫確實",
     "form": {
       "Feedback": "反饋問題",
       "forgetPasswordHint": "忘記密碼?",
       "password": "密碼",
-      "submitHint": "沒有賬號？去註冊",
-      "username": "用戶名/郵箱"
+      "submitHint": "沒有帳號？去註冊",
+      "username": "用戶名/信箱"
     },
     "loggedIn": "哎列？請先登出 (✿◡‿◡)",
-    "loginFirst": "啊咧?! 請先登錄",
-    "success": "登錄成功",
-    "title": "登錄"
+    "loginFirst": "啊咧?! 請先登入",
+    "title": "登入"
   },
   "signup": {
-    "checkAllEmail": "驗證郵件需要一段時間(大約1分鐘)才能到達您的郵箱，請等待並記得檢查垃圾箱",
-    "eaPrivacy": "請至<a href='https://myaccount.ea.com/cp-ui/privacy/index'>EA 隱私設定</a>中將允許按郵箱搜索開啟",
+    "checkAllEmail": "驗證信件需要一段時間(大約1分鐘)才能到達您的信箱，請等待並記得檢查垃圾收件箱",
+    "eaPrivacy": "請至<a href='https://myaccount.ea.com/cp-ui/privacy/index'>EA 隱私設定</a>中將允許按信箱搜尋開啟",
     "failed": "註冊失敗",
-    "fillIn": "請規範填寫",
+    "fillIn": "註冊內容不完整，請填寫確實",
     "form": {
       "forgetPasswordHint": "忘記密碼？",
       "newUsername": "新用戶名",
-      "originEmail": "EA賬戶郵箱",
+      "originEmail": "EA帳戶信箱",
       "originId": "EA ID",
-      "originName": "EA賬戶名字",
+      "originName": "EA帳戶名字",
       "password": "密碼",
-      "submitHint": "已有賬號？去登錄",
+      "submitHint": "已有帳號？去登入",
       "username": "用戶名"
     },
-    "gameNotShowed": "該郵箱下的賬戶不包含遊戲",
-    "needVerify": "請前往郵箱驗證賬戶",
-    "originBindingExist": "該Origin賬號已被綁定",
-    "originNotFound": "未找到此郵箱在Origin下賬戶",
     "placeholder": {
-      "originEmail": "輸入您的橘子郵箱",
-      "originId": "選填",
-      "originName": "輸入您的Origin名字, 注意大小寫",
+      "originEmail": "輸入您的EA電子信箱",
+      "originName": "輸入您的EA名子，注意大小寫",
       "password": "6位以上密碼",
-      "username": "4位以上用戶名 僅限英文、數字、下劃線、減號"
+      "username": "用戶名至少4位以上，僅限英文、數字、下引線、減號 或 包含名@的電子信箱"
     },
-    "playerNotFound": "找不到該玩家(請確認已允許按郵箱搜索)",
     "registerVerification": {
-      "error": "驗證賬戶錯誤",
-      "failure": "錯誤的驗證地址，請檢查驗證碼是否正確",
-      "successful": "驗證成功!,賬戶已解鎖,即可前往登錄",
-      "title": "驗證賬戶",
+      "error": "驗證帳戶錯誤",
+      "failure": "驗證失敗，這可能是因為錯誤驗證地址、非法驗證碼、驗證碼逾期等原因；請在一段時間後，再次嘗試重新註冊帳號",
+      "successful": "驗證成功!帳戶已解鎖，即可前往登入",
+      "title": "驗證帳戶",
       "validation": "驗證中"
     },
     "steps": {
       "0": {
-        "supplement": "賬戶基本",
+        "supplement": "帳戶基本",
         "title": "基礎信息"
       },
       "1": {
-        "supplement": "關聯橘子平台",
+        "supplement": "關聯EA平台",
         "title": "綁定"
       },
       "2": {
@@ -865,7 +1207,7 @@
         "title": "驗證碼"
       },
       "3": {
-        "supplement": "郵箱驗證碼",
+        "supplement": "信箱驗證碼",
         "title": "確認"
       },
       "4": {
@@ -873,18 +1215,18 @@
         "title": "完成"
       }
     },
-    "title": "註冊",
-    "usernameExist": "該用戶名已被註冊"
+    "title": "註冊"
   },
   "sitestats": {
-    "admins": "總共管理員數",
+    "admins": "管理員總人數",
+    "achievement": "成就價值排行",
     "banAppeals": "已上訴",
     "communityParticipation": "用戶社區參與排行",
     "confirmed": "已處理案件",
-    "players": "現有舉報案件",
+    "players": "現有檢舉案件",
     "registers": "註冊用戶",
-    "reportRanking": "舉報排行",
-    "reports": "社區共計已舉報",
+    "reportRanking": "檢舉排行",
+    "reports": "社區共計已檢舉",
     "timeRange": {
       "daily": "昨天",
       "monthly": "一個月",
@@ -892,7 +1234,8 @@
       "yearly": "一年"
     },
     "title": "統計",
-    "trend": "案件熱度"
+    "trend": "案件熱度",
+    "netstatus": "網路狀態"
   },
   "textarea": {
     "originalImage": "原始圖片",
@@ -911,10 +1254,19 @@
         "1": "查看"
       }
     },
+    "textHelpHint": "統計內容包含不可見的標籤，與可見的文本內容有差異，請以此統計爲準",
+    "textOverflowHint": "文本內容超出最大長度，請適當縮減或分段提交",
     "type": {
       "media": "媒體庫",
       "upload": "上傳",
-      "url": "圖片鏈接"
+      "url": "圖片鏈結"
     }
+  },
+  "externalAuth": {
+    "title": "授權",
+    "validation": "授權中",
+    "successful": "授權成功，可以關閉此頁面",
+    "error": "授權失敗",
+    "failure": "請檢查各項參數是否正確"
   }
 }

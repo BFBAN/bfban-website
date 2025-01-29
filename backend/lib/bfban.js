@@ -8,7 +8,7 @@ import { userHasNotRoles, userHasRoles } from "./auth.js";
 const states_map = [ // from one status to another status, by specified path:{action, privilege}, if no such path, stay still
     // [null] no player profile, report
     { from: null,   to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] },
-    // [0] reported, wait for process 
+    // [0] reported, wait for process
     { from: 0,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
     { from: 0,      to: 3,  action: 'innocent', privilege: ['admin', 'super', 'root'] }, // to innocent
     { from: 0,      to: 4,  action: 'invalid',  privilege: ['admin', 'super', 'root'] }, // to invalid report
@@ -77,7 +77,7 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 7,      to: 6,  action: 'guilt',    privilege: ['admin', 'super', 'root'] }, // to pending
     { from: 7,      to: 1,  action: 'kill',     privilege: ['super', 'root'] }, // DIRECT confirm ban
     { from: 7,      to: 8,  action: 'farm',  privilege: ['admin', 'super', 'root'] }, // to farm
-    
+
     // [8] farm
     { from: 8,      to: 0,  action: 'report',   notprivilege: ['freezed', 'blacklisted'] }, // re-report, with new evidence, back to wait for process
     { from: 8,      to: 2,  action: 'suspect',  privilege: ['admin', 'super', 'root'] }, // to suspect
@@ -89,8 +89,8 @@ const states_map = [ // from one status to another status, by specified path:{ac
     { from: 8,      to: 7,  action: 'more',     privilege: ['admin', 'super', 'root'] }, // to lack evidence
 ];
 
-/** 
- * @param {import("../typedef.js").Player} player 
+/**
+ * @param {import("../typedef.js").Player} player
  * @param {import("../typedef.js").User} user */
 async function toConfirm(player, user) {
     // iterate each judgement desc, if $config.personsToConfirm people think the guy is guilty without any objection in them, then confirm
@@ -109,10 +109,10 @@ async function toConfirm(player, user) {
     return false; // objection!
 }
 
-/** 
- * @param {import('../typedef.js').Player} player 
- * @param {import('../typedef.js').User} user 
- * @param {'report'|'suspect'|'innocent'|'invalid'|'more'|'discuss'|'guilt'|'kill'} action 
+/**
+ * @param {import('../typedef.js').Player} player
+ * @param {import('../typedef.js').User} user
+ * @param {'report'|'suspect'|'innocent'|'invalid'|'more'|'discuss'|'guilt'|'kill'} action
  * */
 async function stateMachine(player, user, action) { // normally we should write action to DB first
     for(let i of states_map) { // iterate each path
@@ -138,7 +138,6 @@ async function stateMachine(player, user, action) { // normally we should write 
 
 const siteEvent = new EventEmitter();
 
-1;
 export {
     stateMachine,
     siteEvent,

@@ -1,6 +1,5 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const {InjectManifest} = require("workbox-webpack-plugin")
 const SitemapPlugin = require('sitemap-webpack-plugin').default
 
 const packageConf = require('./package.json')
@@ -54,9 +53,10 @@ module.exports = {
             chunkFilename: `assets/js/[name].${packageConf.version}.js`
         },
         plugins: [
+            new MiniCssExtractPlugin({ ignoreOrder: true }),
             new SitemapPlugin({
                 // Production Url
-                base: url.protocol + '://' + url.host,
+                base: url.protocol + '://' + url.frontend_host,
                 paths: [{
                     path: '/',
                     priority: 1
@@ -74,7 +74,13 @@ module.exports = {
                     to: `lang`
                 }, {
                     from: `src/assets/images/logo.png`,
-                    to: `img/logo.png`
+                    to: `images/logo.png`
+                }, {
+                    from: `src/assets/images/achievement`,
+                    to: `images/achievement`
+                }, {
+                    from: `../backend/package.json`,
+                    to: `config/backend-package.json`
                 }],
                 {
                     // 无论是否修改，全部复制
@@ -83,7 +89,7 @@ module.exports = {
             ),
         ],
         module: {
-            unknownContextCritical: false
+            unknownContextCritical: false,
         }
     },
 }

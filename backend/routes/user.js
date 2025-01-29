@@ -8,22 +8,54 @@ import config from "../config.js";
 import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import {getGravatarAvatar} from "../lib/gravatar.js";
-import {sendRegisterVerify, sendForgetPasswordVerify, sendBindingOriginVerify} from "../lib/mail.js";
-import {allowPrivileges, forbidPrivileges, verifyAllowPrivilege, verifyJWT} from "../middleware/auth.js";
-import {generatePassword, comparePassword, userHasRoles, privilegeRevoker} from "../lib/auth.js";
+import {sendBindingOriginVerify, sendForgetPasswordVerify, sendRegisterVerify} from "../lib/mail.js";
+import {
+    allowPrivileges,
+    forbidPrivileges,
+    forbidVisitTypes,
+    verifyAllowPrivilege,
+    verifyJWT
+} from "../middleware/auth.js";
+import {comparePassword, generatePassword, privilegeRevoker, userHasRoles} from "../lib/auth.js";
 import {userDefaultAttribute, userSetAttributes, userShowAttributes} from "../lib/user.js";
+import {totalAachievementExp} from "./user_achievements.js"
 import {siteEvent} from "../lib/bfban.js";
 import logger from "../logger.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 
 const router = express.Router();
-// verifyCaptcha
+
+/**
+ * @swagger
+ * /api/user/signup:
+ *   post:
+ *     tags:
+ *       - user
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: data.username
+ *         required: true
+ *         type: string
+ *         value:
+ *       - name: data.password
+ *         required: true
+ *         type: string
+ *         value:
+ *       - name: data.originEmail
+ *         required: true
+ *         type: string
+ *         value:
+ *       - name: data.originName
+ *         required: true
+ *         type: string
+ *         value:
+ */
 router.post('/signup', [
     checkbody('data.username').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
     checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().unescape().trim().notEmpty(),
-    // checkbody('data.language').isIn(config.supportLanguages)
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
@@ -47,18 +79,11 @@ async (req, res, next) => {
             return res.status(400).json({error: 1, code: 'signup.originNotFound'});
         const originUserInfo = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
         if (originUserInfo.username !== originName) // verify again
-            return res.status(400).json({error: 1, code: 'signup.originNotFound'});
+            return res.status(400).json({error: 1, code: 'signup.usernameMismatch'});
         if ((await db.select('originUserId').from('verifications').where({originUserId: originUserId}).union([
             db.select('originUserId').from('users').where({originUserId: originUserId}) // check duplicated binding
         ])).length !== 0)
             return res.status(400).json({error: 1, code: 'signup.originBindingExist'});
-        // check whether the user has at least 1 battlefield game
-        /** @type {string[]} */
-        const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r => r.data);
-
-        // 检查库存中含有Battlefield系列游戏
-        if (userGames && userGames.indexOf("Battlefield").length >= 0)
-            return res.status(400).json({error: 1, code: 'signup.gameNotShowed'});
 
         // no mistakes detected, generate a unique string for register validation
         const randomStr = misc.generateRandomString(127);
@@ -83,6 +108,13 @@ async (req, res, next) => {
     } catch (err) {
         if (err instanceof ServiceApiError) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
+            // 检查是否是404错误并返回特定的400错误响应
+            if (err.statusCode === 404) {
+                return res.status(400).json({
+                    error: 1,
+                    code: 'signup.originNotFound'
+                });
+            }
             return res.status(err.statusCode === 501 ? 501 : 500).json({
                 error: 1,
                 code: err.statusCode === 501 ? 'signup.notImplement' : 'signup.error',
@@ -130,7 +162,7 @@ async (req, res, next) => {
                 originUserId: registrant.originUserId,
                 originPersonaId: registrant.originPersonaId,
                 privilege: JSON.stringify(['normal']),
-                attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.query.lang)),
+                attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.headers["accept-language"] || req.query.lang)),
                 createTime: new Date(),
                 updateTime: new Date(),
             };
@@ -147,38 +179,38 @@ async (req, res, next) => {
     }
 });
 
-router.post('/signup4dev', verifyJWT, allowPrivileges(['dev']), [
-    checkbody("data.username").isString().trim().isLength({min: 1, max: 40}),
-    checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
-    checkbody('data.originEmail').isString().trim(),
-    checkbody('data.originName').isString().trim()
-], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
+router.post('/signin4comm', verifyCaptcha, verifyJWT, allowPrivileges(['dev']),
+/** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'signup.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'signin.bad', message: validateErr.array()});
 
-        // all data well-formed, ready to flight
-        /** @type {{username:string, password:string, originName:string, originEmail:string}} */
-        const {username, password, originName, originEmail} = req.body.data;
+        const {username, password} = req.body.data;
+        req.user = await db.select('*')
+            .from('users')
+            .where({username: username}).orWhere({originEmail: username}).first();
+        const user = req.user;
 
-        // does anyone occupy
-        if ((await db.select('username').from('verifications').where({username: username, type: 'register'}).union([
-            db.select('username').from('users').where({username: username})
-        ])).length !== 0)
-            return res.status(400).json({error: 1, code: 'signup.usernameExist'});
-        const passwdHash = await generatePassword(password);
-        await db('users').insert({
-            username: username,
-            password: passwdHash,
-            originName: originName,
-            originEmail: originEmail,
-            privilege: JSON.stringify(['normal']),
-            attr: JSON.stringify(userDefaultAttribute()),
-            createTime: new Date(),
-        });
-        return res.status(201).json({success: 1, code: 'signup.success', message: 'Welcome to BFBan!'});
+        if (user && user.valid !== 0 && await comparePassword(password, user.password)) {
+            return res.status(200).json({
+                success: 1,
+                code: 'signin.success',
+                data: {
+                    username: user.username,
+                    userid: user.id,
+                    usermail: user.originEmail
+                },
+                message: 'Login Verify Success',
+            });
+        } else {
+            return res.status(401).json({
+                error: 1,
+                code: 'signin.noSuchUser',
+                message: 'User not found or password mismatch'
+            });
+        }
     } catch (err) {
         next(err);
     }
@@ -188,39 +220,72 @@ async (req, res, next) => {
  * @swagger
  * /api/user/signin:
  *   post:
+ *     description: Account login
  *     tags:
- *       - 账户
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: data.username
- *         description: User name, please note the required format
- *         required: true
- *         type: string
- *         value:
- *       - name: data.password
- *         required: true
- *         type: string
- *         value:
- *       - name: data.visitType
- *         description: Login to the environment, e.g., on a cell phone, browser, client. ['websites','client-phone','client-desktop', 'bot']
- *         required: false
- *         type: string
- *         value: websites
- *       - name: data.EXPIRES_IN
- *         description: Tells the server when the account token expires; it only takes effect for a specified number of account identities
- *         required: false
- *         type: num
- *         value: 0
- *       - name: captcha
- *         type: string
- *         value:
- *       - name: encryptCaptcha
- *         type: string
- *         value:
+ *       - user
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - data
+ *             example:
+ *               data:
+ *                 username: admin
+ *                 password: test
+ *                 captcha: ABCD
+ *                 encryptCaptcha: ABCD...ZY
+ *             properties:
+ *               data:
+ *                 required: true
+ *                 type: object
+ *                 properties:
+ *                   username:
+ *                     required: true
+ *                     type: string
+ *                     description: User name, please note the required format
+ *                     example: admin
+ *                   password:
+ *                     required: true
+ *                     type: string
+ *                     example: test
+ *                   visitType:
+ *                     required: false
+ *                     example: websites
+ *                     schema:
+ *                       type: string
+ *                       enum: [websites, client-phone, client-desktop, bot]
+ *                     description: >
+ *                       Sort order:
+ *                        * `websites` - Default, website login, PWD, etc
+ *                        * `client-phone` - Mobile device client
+ *                        * `client-desktop` - Desktop device client
+ *                        * `bot` - Bot
+ *                   EXPIRES_IN:
+ *                     required: false
+ *                     description: Tells the server when the account token expires; it only takes effect for a specified number of account identities
+ *                     type: number
+ *                     example: 2.220446049250313e-16
+ *                   captcha:
+ *                     required: false
+ *                     type: string
+ *                   encryptCaptcha:
+ *                     required: false
+ *                     type: string
+ *               SKIP_CAPTCHA:
+ *                 required: false
+ *                 type: boolean
+ *                 description: Global parameter that allows specific identities to skip captCHA
+ *                 value: false
  *     responses:
  *       200:
- *         description: signin.success
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: 1
+ *               code: signin.success
+ *               message: Welcome back.
  *       400:
  *         description: signin.bad
  *       401:
@@ -252,7 +317,7 @@ async (req, res, next) => {
                 userId: user.id,
                 privilege: user.privilege,
                 signWhen: Date.now(),
-                visitType: req.body.data.visitType || 'websites',
+                visitType: req.body.data.visitType || config.defaultVisit || 'websites',
                 expiresIn: expiresIn,
             };
             const jwttoken = jwt.sign(jwtpayload, config.secret, {
@@ -308,14 +373,11 @@ async (req, res, next) => {
         ])).length !== 0)
             return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
 
-        // // check duplicated binding
-        // if (await db.from('verifications').select('originUserId').where({originUserId: originUserId}).first().length > 0) {
-        //     return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
-        // }
+        // check duplicated binding
+        if (await db.from('verifications').select('originUserId').where({originUserId: originUserId}).first().length > 0) {
+            return res.status(400).json({error: 1, code: 'bindOrigin.originBindingExist'});
+        }
 
-        const userGames = await serviceApi('eaAPI', '/userGames', false).query({userId: originUserId}).get().then(r => r.data);
-        if (userGames && userGames.concat(' ').indexOf('Battlefield') === false) // does the user have battlefield?
-            return res.status(400).json({error: 1, code: 'bindOrigin.gameNotShowed'});
         // no mistakes detected, generate code for verify
         const code = misc.generateRandomString(127);
         await db('verifications').insert({
@@ -384,6 +446,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/signout:
+ *   post:
+ *     security:
+ *       - appToken: []
+ *     tags:
+ *       - user
+ *     produces:
+ *       - application/json
+ */
 router.post('/signout', verifyJWT, /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
     try {
@@ -412,7 +485,8 @@ async function showUserInfo(req, res, next) {
         if (!user)
             return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'no such user.'});
         const reportNum = await db('comments')
-            .countDistinct({num: 'id'})
+            .select('comments.byUserId', 'comments.type')
+            .count({num: 'id'}, {method: 'estimate'})
             .where({byUserId: user.id, type: 'report'})
             .first().then(r => r.num);
         let statusNum = {};
@@ -436,10 +510,11 @@ async function showUserInfo(req, res, next) {
             id: user.id,
             userAvatar: user.originEmail ? getGravatarAvatar(user.originEmail) : null,
             username: user.username,
+            userAchievementExp: user.attr.showAchievement ? totalAachievementExp(req.user) : null,
             privilege: user.privilege,
             joinTime: user.createTime,
             lastOnlineTime: user.updateTime,
-            subscribes: user.subscribes,
+            subscribes: (req.user && req.user.id === user.id) ? user.subscribes : null,
             origin: user.attr.showOrigin === true // user set it public
             || (req.user && userHasRoles(req.user, ['admin', 'super', 'root', 'dev'])) // no limit for admin
             || (req.user && req.user.id === user.id) ? // for self
@@ -447,10 +522,13 @@ async function showUserInfo(req, res, next) {
             attr: userShowAttributes(user.attr,
                 (req.user && req.user.id === user.id), // self, show private info
                 (req.user && userHasRoles(req.user, ['admin', 'super', 'root', 'dev']))), // no limit for admin
-            reportnum: reportNum,
+            reportNum: reportNum,
             statusNum: statusNum,
-            introduction: user.introduction,
         };
+        if (!user.attr.showAchievement) {
+            delete data.attr.achievements;
+            delete data.userAchievementExp;
+        }
 
         return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
             success: 1,
@@ -462,15 +540,69 @@ async function showUserInfo(req, res, next) {
     }
 }
 
+/**
+ * @swagger
+ * /api/user/info:
+ *   get:
+ *     security:
+ *       - appToken: []
+ *     tags:
+ *       - user
+ *     description: Query and report player
+ *     produces:
+ *       - application/json
+ */
 router.get('/info', [checkquery('id').isInt({min: 0})], showUserInfo);
 router.get('/info4admin', verifyJWT, allowPrivileges(['super', 'root', 'dev']), [
     checkquery('id').isInt({min: 0})
 ], showUserInfo);
+
+/**
+ * @swagger
+ * /api/user/me:
+ *   get:
+ *     security:
+ *       - appToken: []
+ *     tags:
+ *       - user
+ *     produces:
+ *       - application/json
+ */
 router.get('/me', verifyJWT, (req, res, next) => {
     req.query.id = '' + req.user.id;
     return next();
 }, showUserInfo);
 
+/**
+ * @swagger
+ * /api/user/reports:
+ *   get:
+ *     tags:
+ *       - user
+ *     description: Get a list of players reported by users on the site
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         required: true
+ *         type: string
+ *         minLength: 0
+ *       - name: skip
+ *         type: integer
+ *         in: query
+ *         value: 0
+ *         minimum: 0
+ *       - name: limit
+ *         type: integer
+ *         in: query
+ *         value: 20
+ *         minimum: 0
+ *         maximum: 100
+ *     responses:
+ *       200: userReports.notFound
+ *       400: userReports.bad
+ *       404: userReports.success
+ */
 router.get('/reports', [
     checkquery('id').isInt({min: 0}),
     checkquery('skip').optional().isInt({min: 0}),
@@ -489,23 +621,24 @@ async (req, res, next) => {
         const user = await db.select('*').from('users').where({id: req.query.id}).first();
         if (!user)
             return res.status(404).json({error: 1, code: 'userReports.notFound', message: 'no such user.'});
+        const total = await db('comments').count({num: 1})
+            .where({'comments.byUserId': user.id, type: 'report'})
+            .first().then(r => r.num);
         const reports = await db('comments').join('players', 'comments.toPlayerId', 'players.id')
             .select('players.originName as originName', 'players.originUserId as originuserId',
                 'players.originPersonaId as originPersonaId', 'players.status as status',
                 'players.updateTime as updateTime', 'comments.createTime as createTime',
                 'players.avatarLink as avatarLink')
-            .where({
-                'comments.byUserId': user.id,
-                type: 'report'
-            }).orderBy('comments.createTime', 'desc').offset(skip * limit).limit(limit);
+            .where({'comments.byUserId': user.id, type: 'report'})
+            .orderBy('comments.createTime', 'desc').offset(skip * limit).limit(limit);
 
-        res.status(200).json({success: 1, code: 'userReports.success', data: reports});
+        res.status(200).json({success: 1, code: 'userReports.success', data: reports, total});
     } catch (err) {
         next(err);
     }
 });
 
-router.post('/me', verifyJWT, forbidPrivileges(['blacklisted']), [
+router.post('/me', verifyJWT, forbidPrivileges(['blacklisted']), forbidVisitTypes(['bot', 'external-auth']), [
     checkbody('data.subscribes').optional({nullable: true}).isArray().isLength({max: 100}).custom((val) => {
         for (const i of val)
             if (Number.isNaN(parseInt(i)) || parseInt(i) < 0)
@@ -529,16 +662,13 @@ async (req, res, next) => {
 
         await db('users').update(update).where({id: req.user.id});
 
-        if (req.body.data.attr)
-            update.attr = userSetAttributes({}, req.body.data.attr);
-
         res.status(200).json({success: 1, code: 'me.success', data: update});
     } catch (err) {
         next(err);
     }
 });
 
-router.post('/changeName', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
+router.post('/changeName', verifyJWT, forbidPrivileges(['blacklisted']), forbidVisitTypes(['bot', 'external-auth']), verifyCaptcha, [
     checkbody('data.newname').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
@@ -578,7 +708,7 @@ async (req, res, next) => {
     }
 });
 
-router.post('/changePassword', verifyJWT, [
+router.post('/changePassword', verifyJWT, forbidVisitTypes(['bot', 'external-auth']), [
     checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.oldpassword').isString().trim().isLength({min: 1, max: 40})
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
@@ -620,9 +750,10 @@ async (req, res, next) => {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'forgetPassword.bad', message: validateErr.array()});
+        const {username} = req.body.data;
 
         /** @type {import("../typedef.js").User} */
-        const user = await db.select('*').from('users').where({username: req.body.data.username}).first();
+        const user = await db.select('*').from('users').where({username: username}).orWhere({originName: username}).first();
         if (userHasRoles(user, ['blacklisted']))
             return res.status(403).json({
                 error: 1,
@@ -676,8 +807,6 @@ async (req, res, next) => {
         const passwdHash = await generatePassword(newpassword);
 
         await db('users').update({password: passwdHash}).where({id: verification.userId}); // store the new password into db
-
-        // TODO 移除重置的密匙
 
         return res.status(200).json({success: 1, code: 'forgetPassword.success'});
     } catch (err) {

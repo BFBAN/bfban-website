@@ -20,11 +20,18 @@ p {
 /*mobile responsive*/
 @media screen and (min-width: 1024px) {
   .container {
-    max-width: 1024px;
+    max-width: 1200px;
   }
 
   .desktop-hide {
     display: none !important;
+  }
+}
+
+@media screen and (min-width: 2048px) {
+  .container {
+    width: 80% !important;
+    max-width: 1400px !important;
   }
 }
 
@@ -36,7 +43,7 @@ p {
 
 .styles_herosection {
   position: absolute;
-  right: 0;
+  left: 0;
   top: 0;
   z-index: 0;
 
@@ -48,14 +55,15 @@ p {
     width: 500px;
     z-index: -2;
     position: absolute;
-    top: 30px;
-
+    top: 20px;
+    border-radius: 50%;
     animation: styles_herosection_animation 25s infinite;
   }
 
   .styles_bg_img {
     height: 500px;
     position: relative;
+    top: -100px;
   }
 }
 

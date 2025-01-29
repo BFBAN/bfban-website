@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="profile-body">
     <Alert show-icon type="warning" style="width: 100%">
       {{ $t('profile.media.hint1') }}
     </Alert>
@@ -50,7 +50,9 @@
                   </Input>
                 </FormItem>
                 <FormItem :label="$t('profile.media.prevResetTime')">
-                  <Time :time="media.data.prevResetTime"></Time>
+                  <TimeView :time="media.data.prevResetTime">
+                    <Time :time="media.data.prevResetTime"></Time>
+                  </TimeView>
                 </FormItem>
               </Form>
             </div>
@@ -85,11 +87,12 @@ import {api, http_token} from "../../assets/js";
 import VueViewer from 'v-viewer'
 import Vue from "vue";
 import UploadWidget from "@/components/UploadWidget.vue";
+import TimeView from "@/components/TimeView.vue";
 
 Vue.use(VueViewer);
 
 export default {
-  components: {UploadWidget},
+  components: {TimeView, UploadWidget},
   data() {
     return {
       file: {name: ''},
@@ -112,12 +115,18 @@ export default {
             title: 'createTime',
             key: 'createTime',
             render: (h, params) => {
-              return h('Time', {
+              return h(TimeView, {
                 props: {
-                  time: params.row.createTime,
-                  type: "datetime"
+                  time: params.row.createTime
                 }
-              });
+              }, [
+                h('Time', {
+                  props: {
+                    time: params.row.createTime,
+                    type: "datetime"
+                  }
+                })
+              ]);
             }
           },
           {

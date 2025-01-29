@@ -14,7 +14,10 @@ import privileges from "/public/config/privilege.json";
 
 export default {
   props: {
-    data: [],
+    data: {
+      type: Array,
+      default: () => []
+    },
     size: {
       type: String,
       default: 'default'

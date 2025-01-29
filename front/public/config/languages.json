@@ -32,6 +32,14 @@
         {
           "name": "巴哈姆特-高木",
           "url": "//wall.gamer.com.tw/redir.php?userId=felix1027"
+        },
+        {
+          "name": "s0110527",
+          "url": "//home.gamer.com.tw/creation.php?owner=s8077666"
+        },
+        {
+          "name": "LoeGamingAngel",
+          "url": "//app.transifex.com/user/profile/LoeGamingAngel"
         }
       ]
     },
@@ -42,7 +50,7 @@
       "members": [
         {
           "name": "Cat",
-          "url": ""
+          "url": "javascript:void(0)"
         }
       ]
     },
@@ -64,9 +72,8 @@
         },
         {
           "name": "Fishbat627",
-          "url": "//bfban.com/account/28889"
+          "url": "//bfban.com/space/28889"
         }
-        
       ]
     },
     {
@@ -85,7 +92,7 @@
       ]
     },
     {
-      "name": "kor-KOR",
+      "name": "ko-KR",
       "label": "한국어",
       "members": [
         {
@@ -99,16 +106,16 @@
       "label": "Русский",
       "members": [
         {
-          "name": "Baidu Bot",
-          "url": "//baidu.com"
-        },
-        {
           "name": "Deepl",
           "url": "//deepl.com"
         },
         {
           "name": "Artem",
           "url": "//github.com/nicoth-in"
+        },
+        {
+          "name":"Blueberryy",
+          "url":"//app.transifex.com/user/profile/Blueberryy"
         }
       ]
     },

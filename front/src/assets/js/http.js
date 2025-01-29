@@ -8,7 +8,7 @@ export default class Http extends Conf {
     DELETE = 'delete';
     //..
 
-    GETURL = {protocol: '', request: ''};
+    GETURL = {protocol: '', request: '', host: '', pathname: ''};
     NODE;
 
     HTTP = http.create({
@@ -30,21 +30,28 @@ export default class Http extends Conf {
     }
 
     location = () => {
-        return new URL(this.globalUrl());
+        return new URL(this.globalUrl);
     }
 
     // 获取全局地址
-    globalUrl() {
-        switch (this.NODE) {
-            case 'production': // 生产
-                super.GETURL = this.CONF.child[this.CONF.requestProductionName];
-                break;
-            case 'development': // 开发
-            default:
-                super.GETURL = this.CONF.child[this.CONF.requestDevelopmentName];
-                break;
+    get globalUrl() {
+        try {
+            switch (this.NODE) {
+                case 'production': // 生产
+                    this.GETURL = this.CONF.child[this.CONF.requestProductionName];
+                    break;
+                case 'staging': // 测试
+                    this.GETURL = this.CONF.child[this.CONF.requestTestName];
+                    break;
+                case 'development': // 开发
+                default:
+                    this.GETURL = this.CONF.child[this.CONF.requestDevelopmentName];
+                    break;
+            }
+            return `${this.GETURL.protocol || 'http'}://${this.GETURL.host}${this.GETURL.pathname}`;
+        } catch (e) {
+            return ''
         }
-        return `${this.GETURL.protocol || 'http'}://${this.GETURL.host}${this.GETURL.pathname}`;
     }
 
     // 配置全局协议头
@@ -57,20 +64,17 @@ export default class Http extends Conf {
      * 请求核心
      * @param url
      * @param requestData
-     * @returns {Promise<AxiosResponse<any>>}
+     * @returns {Promise<*>}
      */
     async request(url = '', requestData = {method: this.POST, data: {}, params: {}}) {
-        let result = await this.HTTP({
+        return await this.HTTP({
             url: url,
-            Origin: "",
             headers: {...this.HTTP.headers || {}, ...requestData.headers},
             method: requestData.method,
             data: requestData.data,
             params: requestData.params,
             body: requestData.body
         });
-
-        return result;
     }
 
     /**
@@ -80,16 +84,14 @@ export default class Http extends Conf {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async post(url, data = {data: {}, params: {}}) {
-        const _url = this.globalUrl() + url;
+        const _url = this.globalUrl + url;
 
-        let result = await this.request(_url, {
+        return await this.request(_url, {
             method: this.POST,
             headers: data.headers,
             params: data.params,
             data: data.data,
         });
-
-        return result;
     }
 
     /**
@@ -97,55 +99,46 @@ export default class Http extends Conf {
      * @returns {Promise<AxiosResponse<any>>}
      */
     async get(url = '', data = {data: {}, params: {}}) {
-        const _url = this.globalUrl() + url;
+        const _url = this.globalUrl + url;
 
-        let result = await this.request(_url, {
+        return await this.request(_url, {
             method: this.GET,
             headers: data.headers,
             params: data.params,
             data: data.data,
         });
-
-        return result;
     }
 
     /**
      * put 请求
+     * @param url
+     * @param data
      * @returns {Promise<AxiosResponse<any>>}
      */
     async put(url = '', data = {data: {}, params: {}}) {
-        const _url = this.globalUrl() + url;
+        const _url = this.globalUrl + url;
 
-        this.HTTP.headers = {...this.HTTP.headers, ...data.headers};
-
-        let result = await this.HTTP({
-            url: _url,
+        return await this.request(_url, {
             method: this.PUT,
             headers: data.headers,
             params: data.params,
             data: data.data,
-        })
-
-        return result;
+        });
     }
 
     /**
      * delete 请求
-     * @returns {Promise<AxiosResponse<any>>}
+     * @param url
+     * @param data
      */
     async delete(url = '', data = {data: {}, params: {}}) {
-        const _url = this.globalUrl() + url;
+        const _url = this.globalUrl + url;
 
-        this.HTTP.headers = {...this.HTTP.headers, ...data.headers};
-
-        let result = await this.HTTP({
-            url: _url,
+        return await this.request(_url, {
             method: this.DELETE,
             headers: data.headers,
             params: data.params,
             data: data.data,
-        })
-
-        return result;
+        });
     }
 }

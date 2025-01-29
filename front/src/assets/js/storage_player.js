@@ -14,10 +14,10 @@ export default class PlayerStorage extends Storage {
 
     constructor() {
         super();
-        let ary = super.get(this.NAME);
+        let ary = super.local.get(this.NAME);
         if (ary.code >= 0) {
             for (const aryKey in ary.data.value) {
-                this.PLAYERDATA[ ary.data.value[aryKey].id ] = ary.data.value[aryKey];
+                this.PLAYERDATA[ary.data.value[aryKey].id] = ary.data.value[aryKey];
             }
         }
     }
@@ -25,7 +25,7 @@ export default class PlayerStorage extends Storage {
     /**
      * 更新
      */
-    updateStorage () {
+    updateStorage() {
         let data = Object.keys(this.PLAYERDATA);
         let count = data.length;
         let executionsNumber = count - this.MAXCOUNT;
@@ -36,7 +36,7 @@ export default class PlayerStorage extends Storage {
             }
         }
 
-        super.set(this.NAME, this.PLAYERDATA);
+        super.local.set(this.NAME, this.PLAYERDATA);
     }
 
     /**
@@ -44,7 +44,7 @@ export default class PlayerStorage extends Storage {
      * @param key
      * @param val
      */
-    push (key, val) {
+    push(key, val) {
         this.PLAYERDATA[key] = val;
         this.updateStorage();
     }
@@ -54,21 +54,21 @@ export default class PlayerStorage extends Storage {
      * @param key
      * @returns {Promise<{}|*>}
      */
-    async query (key) {
+    async query(key) {
         if (this.PLAYERDATA[key]) {
             return this.PLAYERDATA[key];
         }
-        return await this.getCheatersInfo(key);
+        return await this.getPlayerInfo({dbId: key});
     }
 
     /**
      * 强制更新
      */
-    async onForcedUpdate () {
+    async onForcedUpdate() {
         if (this.PLAYERDATA) {
             for (const argumentsKey in this.PLAYERDATA) {
                 if (this.PLAYERDATA[argumentsKey])
-                    this.PLAYERDATA[argumentsKey] = await this.getCheatersInfo(argumentsKey);
+                    this.PLAYERDATA[argumentsKey] = await this.getPlayerInfo({dbId: argumentsKey});
             }
 
             this.updateStorage();
@@ -78,21 +78,24 @@ export default class PlayerStorage extends Storage {
     /**
      * 获取作弊者档案
      */
-    async getCheatersInfo(dbId) {
-        let res = await http.get(api["cheaters"], {
-            params: {
-                history: true,
-                dbId
-            }
-        });
-        const d = res.data;
+    async getPlayerInfo(p = {dbId: '', personaId: ''}, history = true) {
+        try {
+            let res = await http.get(api["player"], {
+                params: {
+                    history,
+                    dbId: p.dbId,
+                    personaId: p.personaId,
+                }
+            });
+            const d = res.data;
 
-        if (d.success != 1) return {};
+            if (d.success !== 1) return {};
 
-        delete d.data.history;
-
-        this.PLAYERDATA[d.data.id] = d.data;
-        this.updateStorage();
-        return d.data;
+            this.PLAYERDATA[d.data.id] = d.data;
+            this.updateStorage();
+            return d.data || {};
+        } catch (e) {
+            return {}
+        }
     }
 }

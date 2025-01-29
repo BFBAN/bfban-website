@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import BusinessCard from "@/components/businessCard";
+import BusinessCard from "@/components/BusinessCard.vue";
 import Html from "@/components/Html"
 import {api, http_token} from "@/assets/js";
 

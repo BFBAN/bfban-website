@@ -3,7 +3,7 @@
   "child": [
     {
       "value": "root",
-      "class": "primary",
+      "class": "red",
       "weight": 200
     },
     {
@@ -18,7 +18,7 @@
     },
     {
       "value": "volunteer",
-      "class": "blue",
+      "class": "#8BC34A",
       "weight": 5
     },
     {

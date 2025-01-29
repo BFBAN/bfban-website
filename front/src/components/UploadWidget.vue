@@ -38,6 +38,7 @@
               action=""
               accept="image/*"
               multiple
+              paste
               type="drag"
               :headers="headers"
               :data="extraData"

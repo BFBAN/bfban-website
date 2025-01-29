@@ -14,7 +14,8 @@ import {generateCaptcha} from "./lib/captcha.js";
 import logger from "./logger.js";
 
 import router_user from "./routes/user.js";
-import router_user_subscribes from "./routes/user_subscribes.js";
+import {router as router_user_subscribes} from "./routes/user_subscribes.js";
+import {router as router_user_achievement} from "./routes/user_achievements.js";
 import router_admin from "./routes/admin.js"
 import router_index from "./routes/index.js";
 import router_player from "./routes/player.js";
@@ -25,7 +26,9 @@ import {query as checkquery, validationResult, body as checkbody} from "express-
 import {captchaRateLimiter, UserRateLimiter} from "./middleware/rateLimiter.js";
 import {verifyJWT} from "./middleware/auth.js";
 
-import "./services/loader.js"; // load services
+import "./services/loader.js";
+import fs from "fs";
+import path from "path";
 
 // process
 process.on('uncaughtException', (err) => {
@@ -46,8 +49,10 @@ const swaggerSpec = swaggerJsDoc({
     apis: ['./routes/*.js'],
 });
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    explorer: true,
+    customCss: fs.readFileSync('theme-feeling-blue.css', 'utf-8') + ' .swagger-ui .topbar { display: none }',
+}));
 
 app.set('trust proxy', false);
 app.use((req, res, next) => {
@@ -86,7 +91,7 @@ app.use(bodyParser.json());
 
 // cors options
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', req.header('Origin')); // better than wildcard *
+    res.header('Access-Control-Allow-Origin', req.header('Origin') || '*'); // better than wildcard *
     res.header('Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept, x-access-token' + (config.__DEBUG__ ? ', x-whosdaddy, x-whosdaddy-p' : ''));  // DEBUG
     res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
@@ -95,11 +100,9 @@ app.use((req, res, next) => {
     next();
 });
 
-//app.use((req, res, next)=> {console.log(req.body); next();})
-
 app.use('/static', express.static('./test'));   // debug only
 app.use('/api', router_index);
-app.use('/api/user', router_user, router_user_subscribes);
+app.use('/api/user', router_user, router_user_subscribes, router_user_achievement);
 app.use('/api/admin', router_admin);
 app.use('/api/player', router_player);
 app.use('/api/message', router_message);
@@ -110,6 +113,7 @@ app.use('/api/service', router_services);
  * /api/captcha:
  *   get:
  *     tags:
+ *       - user
  *       - captcha
  *     description: Get CAPTCHA
  */
@@ -118,7 +122,11 @@ app.get('/api/captcha', captchaRateLimiter, (req, res, next) => {
 });
 
 app.get('/', (req, res, next) => {
-    res.redirect('/static/SPA.html')
+    res.redirect('/docs');
+});
+
+app.get('/test', (req, res, next) => {
+    res.redirect('/static/SPA.html');
 });
 
 app.options('*', (req, res, next) => {  // for preflight requests
@@ -137,6 +145,5 @@ app.use((err, req, res, next) => { // error handler
 app.listen(config.port, config.address, () => {
     logger.success(`App start at ${config.address}:${config.port}`);
 });
-
 
 export default app;

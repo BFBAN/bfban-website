@@ -2,15 +2,15 @@
   <div>
     {{ $t('basic.tip.notContent') }}
 
-    <template v-if="showClassic">
+    <template v-if="notHint">
       <div class="classic">
         <Divider>Classical speech</Divider>
 
-        <div v-if="showClassic.image">
-          <img :src="showClassic.image" width="50%"/>
+        <div v-if="classic.image">
+          <img :src="classic.image" width="50%"/>
         </div>
-        <q v-if="showClassic.content">
-          <div class="classic-content" v-html="showClassic.content"></div>
+        <q v-if="classic.content">
+          <div class="classic-content" v-html="classic.content"></div>
         </q>
       </div>
     </template>
@@ -22,10 +22,16 @@ import classicMessages from "../../public/config/classicMessages.json";
 
 export default {
   name: "Empty",
-  data () {
+  props: {
+    notHint: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  data() {
     return {
       classicMessageList: classicMessages['child'],
-      showClassic: {},
+      classic: {},
       showClassicIndex: 0
     }
   },
@@ -49,12 +55,12 @@ export default {
       else
         index = Math.floor(Math.random() * (this.classicMessageList.length));
 
-      this.showClassic = this.classicMessageList[index];
+      this.classic = this.classicMessageList[index];
 
-      if (this.showClassic && this.showClassic.contentLang && this.showClassic.contentLang[this.$i18n.locale])
-        this.showClassic.content = this.showClassic.contentLang[this.$i18n.locale];
+      if (this.classic && this.classic.contentLang && this.classic.contentLang[this.$i18n.locale])
+        this.classic.content = this.classic.contentLang[this.$i18n.locale];
       else
-        this.showClassic.content = this.showClassic.contentLang['en-US'];
+        this.classic.content = this.classic.contentLang['en-US'];
     }
   }
 }

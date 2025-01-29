@@ -4,23 +4,109 @@ import {body as checkbody, query as checkquery, validationResult} from "express-
 
 import db from "../mysql.js";
 import config from "../config.js";
-import {forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {verifyJWT} from "../middleware/auth.js";
 import {allowPrivileges} from "../middleware/auth.js";
 import {localeMessage, sendMessage} from "./message.js";
 import {generatePassword, privilegeGranter, privilegeRevoker, userHasRoles} from "../lib/auth.js";
 import {initUserStorageQuota, userDefaultAttribute, userSetAttributes} from "../lib/user.js";
+import {sendUserGeneratePasswordNotification} from "../lib/mail.js";
 import got from "got";
 import {ServiceApiError} from "../lib/serviceAPI.js";
 import * as misc from "../lib/misc.js";
 import logger from "../logger.js";
 import {siteEvent} from "../lib/bfban.js";
-import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
 
 const router = express.Router();
 
+let userStatsCache = {data: undefined, time: new Date(0)};
+router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "dev"]), [
+        checkbody('createTimeFrom').optional().isInt({min: 0}),
+        checkbody('createTimeTo').optional().isInt({min: 0}),
+    ],
+    async (req, res, next) => {
+        try {
+            if (userStatsCache.data !== undefined && Date.now() - userStatsCache.time.getTime() < 60 * 60 * 1000)   // cache for 1h
+                return res.status(200)
+                    .setHeader('Cache-Control', 'public, max-age=86400')
+                    .json({success: 1, code: 'siteStats.ok', data: userStatsCache.data});
+
+            const tnow = new Date();
+            const {
+                createTimeFrom = new Date(new Date('2018-10-12T00:00:00.000Z').getTime() - 4 * 365 * 24 * 60 * 60 * 1000),
+                createTimeTo = new Date()
+            } = req.body;
+            const [behaviorAdminDayStats, behaviorAdminStats] = await Promise.all([{
+                'type': '0',
+                'date_format': '%Y-%m-%d'
+            }, {
+                'type': '1',
+                'date_format': '%Y-%m'
+            }].map(i => db('comments')
+                .select(db.raw(`DATE_FORMAT(comments.createTime, '${i.date_format}') as month`), 'u.username', 'u.id')
+                .count('* as judgement_count')
+                .join('users as u', 'comments.byUserId', 'u.id')
+                .where('comments.type', 'judgement')
+                .orWhere('comments.type', 'reply')
+                .where(function () {
+                    this.where('u.privilege', 'like', '%"admin"%')
+                        .orWhere('u.privilege', 'like', '%"super"%')
+                        .orWhere('u.privilege', 'like', '%"root"%');
+                })
+                .where('comments.createTime', '>=', createTimeFrom)
+                .andWhere("comments.createTime", "<", createTimeTo)
+                .groupBy('month', 'u.username')
+                .orderBy('month')
+                .then(res => {
+                    let monthlyData = {};
+                    res.forEach(async row => {
+                        const month = row.month;
+                        if (!monthlyData[month]) {
+                            monthlyData[month] = {
+                                users: [],
+                                total_count: 0
+                            };
+                        }
+                        monthlyData[month].users.push({
+                            username: row.username,
+                            id: row.id,
+                            total: row.judgement_count,
+                        });
+                        monthlyData[month].total_count += parseInt(row.judgement_count);
+                    });
+                    return Object.keys(monthlyData).map(month => ({
+                        month,
+                        users: monthlyData[month].users,
+                        total_count: monthlyData[month].total_count
+                    }));
+                })));
+            const inactiveAdminStats = await db('users')
+                .select('id', 'username', 'updateTime', 'privilege', 'valid')
+                .where('valid', 1)
+                .andWhere('updateTime', '>=', createTimeFrom)
+                .andWhere('updateTime', '<=', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+                .andWhere('privilege', 'like', '%"admin"%')
+                .limit(155)
+                .then(r => r.map(i => {
+                    delete i.valid;
+                    return i
+                }));
+
+            userStatsCache.data = {behaviorAdminStats, behaviorAdminDayStats, inactiveAdminStats};
+            userStatsCache.time = tnow;
+
+            return res.status(200).setHeader('Cache-Control', 'public, max-age=86400').setHeader('Cache-Control', 'public, max-age=30').json({
+                success: 1,
+                code: 'userStats.ok',
+                data: {...userStatsCache.data}
+            });
+        } catch (err) {
+            next(err);
+        }
+    });
+
 router.get('/searchUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('name').isString(),
-    checkquery('type').optional().isIn(['all', 'admin']),
+    checkquery('type').optional().isIn(['all', 'admin', 'bot']),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
     checkquery('order').optional().isIn(['asc', 'desc']),
@@ -29,62 +115,64 @@ router.get('/searchUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
 async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
-        if (!validateErr.isEmpty())
+        if (!validateErr.isEmpty()) {
             return res.status(400).json({error: 1, code: 'searchUser.bad', message: validateErr.array()});
+        }
 
-        const type = req.query.type !== undefined ? req.query.type : 'all';
-        const skip = req.query.skip !== undefined ? req.query.skip : 0;
-        const limit = req.query.limit !== undefined ? req.query.limit : 20;
-        const order = req.query.order ? req.query.order : 'desc';
-        const parameter = req.query.parameter ? req.query.parameter : 'username';
-
-        let total;
-        let result;
+        const type = req.query.type || 'all';
+        const skip = Number(req.query.skip) || 0;
+        const limit = Number(req.query.limit) || 20;
+        const order = req.query.order || 'desc';
+        const parameter = req.query.parameter || 'username';
+        let total, result;
 
         switch (type) {
             case 'admin':
-                result = await db.select('*').from('users')
-                    .where('users.privilege', 'like', '%"admin"%')
-                    .orWhere('users.privilege', 'like', '%"super"%')
-                    .orWhere('users.privilege', 'like', '%"root"%')
-                    .select('users.*', 'users.username', 'users.privilege')
-                    .orderBy('users.createTime', order)
-                    .offset(skip).limit(limit);
-
-                total = await db.count({num: 1}).from('users')
-                    .where('users.privilege', 'like', '%"admin"%')
-                    .orWhere('users.privilege', 'like', '%"super"%')
-                    .orWhere('users.privilege', 'like', '%"root"%')
-                    .first().then(r => r.num);
+                [result, total] = await Promise.all([
+                    db('users')
+                        .select('*', 'username', 'privilege').where('privilege', 'like', '%"admin"%')
+                        .orWhere('privilege', 'like', '%"super"%')
+                        .orWhere('privilege', 'like', '%"root"%')
+                        .orderBy('createTime', order)
+                        .offset(skip).limit(limit),
+                    db('users').count({num: 1})
+                        .where('privilege', 'like', '%"admin"%')
+                        .orWhere('privilege', 'like', '%"super"%')
+                        .orWhere('privilege', 'like', '%"root"%')
+                        .first().then(r => r.num)
+                ]);
+                break;
+            case 'bot':
+                [result, total] = await Promise.all([
+                    db('users')
+                        .select('*', 'username', 'privilege').where('privilege', 'like', '%"bot"%')
+                        .orderBy('createTime', order).offset(skip).limit(limit),
+                    db('users')
+                        .count({num: 1}).where('privilege', 'like', '%"bot"%').first()
+                        .then(r => r.num)
+                ]);
                 break;
             case 'all':
             default:
-                result = await db.select('*').from('users')
-                    .where(`users.${parameter}`, 'like', `%${req.query.name}%`)
-                    .select('users.*', 'users.username', 'users.privilege')
-                    .orderBy('users.createTime', order)
-                    .offset(skip).limit(limit);
-
-                total = await db.count({num: 1}).from('users')
-                    .where(`users.${parameter}`, 'like', `%${req.query.name}%`)
-                    .first().then(r => r.num);
+                [result, total] = await Promise.all([
+                    db('users')
+                        .select('*', 'username', 'privilege').where(parameter, 'like', `%${req.query.name}%`)
+                        .orderBy('createTime', order).offset(skip).limit(limit),
+                    db('users').count({num: 1})
+                        .where(parameter, 'like', `%${req.query.name}%`).first()
+                        .then(r => r.num)
+                ]);
         }
-
         if (result) {
-            const now = new Date()
+            const now = new Date();
             result.forEach(i => {
                 delete i.password;
                 delete i.subscribes;
-                if (i.attr.mute) {
-                    const date = new Date(i.attr.mute)
-                    if (date - now > 0) {
-                        i.isMute = true
-                    }
+                if (i.attr.mute && new Date(i.attr.mute) - now > 0) {
+                    i.isMute = true;
                 }
-                return i;
             });
         }
-
         return res.status(200).setHeader('Cache-Control', 'public, max-age=30').json({
             success: 1,
             code: 'searchUser.ok',
@@ -117,7 +205,7 @@ async (req, res, next) => {
         let result = await db.select('*').from('users')
             .where((qb) => {
                 const key = 'users.privilege';
-                qb.where('users.valid', 0).orWhere(key, 'like', '%"freezed"%').orWhere(key, 'like','%"blacklisted"%')
+                qb.where('users.valid', 0).orWhere(key, 'like', '%"freezed"%').orWhere(key, 'like', '%"blacklisted"%')
             })
             .orderBy('users.id', order)
             .offset(skip).limit(limit);
@@ -175,7 +263,9 @@ router.get('/commentAppeal', verifyJWT, allowPrivileges(["super", "root", "dev",
     });
 
 router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
-        checkbody('type').optional().isString().isInt(['report', 'reply', 'judgement', 'banAppeal']),
+        checkbody('type').optional().isIn(['all', 'report', 'reply', 'judgement', 'banAppeal']),
+        checkquery('id').optional().isInt({min: 0}),
+        checkquery('userId').optional().isInt({min: 0}),
         checkquery('skip').optional().isInt({min: 0}),
         checkquery('limit').optional().isInt({min: 0, max: 100}),
         checkquery('order').optional().isIn(['asc', 'desc']),
@@ -186,16 +276,15 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
             if (!validateErr.isEmpty())
                 return res.status(400).json({error: 1, code: 'admin.commentAll.bad', message: validateErr.array()});
 
+            const {type, id, userId} = req.query;
             const skip = req.query.skip !== undefined ? req.query.skip : 0;
             const limit = req.query.limit !== undefined ? req.query.limit : 20;
             const order = req.query.order ? req.query.order : 'desc';
-            const type = req.query.type;
 
             const total = await db('comments')
                 .count({num: 1})
                 .andWhere(function () {
-                    this.where({valid: 1});
-                    if (type != 'all' || !type)
+                    if (type && type !== 'all')
                         this.where({type: type});
                 })
                 .first().then(r => r.num);
@@ -204,8 +293,12 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
                 .join('users', 'comments.byUserId', 'users.id')
                 .select('comments.*', 'users.username', 'users.privilege')
                 .andWhere(function () {
-                    if (type != 'all' || !type)
+                    if (type && type !== 'all')
                         this.where({type: type});
+                    if (id && !userId)
+                        this.where('comments.id', id);
+                    else if (!id && userId)
+                        this.where('comments.byUserId', userId);
                 })
                 .orderBy('comments.createTime', order)
                 .offset(skip).limit(limit)
@@ -220,7 +313,7 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
         }
     });
 
-router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+router.get('/commentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkquery('type').optional().isString().isIn(['banAppeal', 'judgement']),
         checkquery('banAppealStats').optional().isString(),
         checkquery('judgeAction').optional().isString(),
@@ -297,7 +390,6 @@ router.get('/CommentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev
         }
     });
 
-
 router.post('/setComment', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.content').isString().isLength({max: 65535}),
@@ -352,55 +444,64 @@ async (req, res, next) => {
 });
 
 router.post('/setAppeal', verifyJWT, allowPrivileges(["super", "root", "dev", "admin"]), [
-    checkbody('data.id').isInt({min: 0}),
-    checkbody('data.admincontent').isString().isLength({max: 65535}),
-    checkbody('data.appealStatus').isString().isIn(['fail', 'accept'])
+    checkbody('data.toPlayerId').isInt({min: 0})
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
         /** @type {import("../typedef.js").Comment} */
-        const comment = await db.select('*').from('comments').where({id: req.body.id}).first();
-        if (!comment)
-            return res.status(404).json({error: 1, code: 'admin.setAppeal.notFound'});
+        // const comment = await db.select('*').from('comments').where({id: req.body.id}).first();
+        // if (!comment)
+        //     return res.status(404).json({error: 1, code: 'admin.setAppeal.notFound'});
+        // const player = await db.select('*').from('players').where({id: req.body.data.toPlayerId}).first();
+        // await db('players').where('originPersonaId', commentItemPersonId.toOriginPersonaId).update({ appealStatus });
+        // await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setAppeal', target: comment.id}));
 
-        await sendMessage(req.user.id, null, "command", JSON.stringify({action: 'setAppeal', target: comment.id}));
+        // const updateData = {
+        //     admincontent: req.body.content,
+        //     appealStatus: req.body.action
+        // };
+        // const comments = db('comments');
+        // const commentItem = comments.where({id: comment.id});
+        // const commentItemPersonId = await commentItem.first();
 
-        const updateData = {
-            admincontent: req.body.content,
-            appealStatus: req.body.action
-        };
+        // if (commentItemPersonId.appealStatus == 'accept')
+        //     return res.status(400).json({error: 1, code: 'admin.setAppeal.repeatedPassage'});
 
-        await db('comments').update(updateData).where({id: comment.id});
+        // let playerStatus = 0;
+        // if (updateData.appealStatus === 'fail') playerStatus = 1;
+        // if (updateData.appealStatus === 'accept') playerStatus = 3;
 
+        // await commentItem.update(updateData);
+        await db('players').where('originPersonaId', commentItemPersonId.toOriginPersonaId).update({appealStatus: '2'});
         await db('operation_log').insert({
             byUserId: req.user.id,
-            toUserId: comment.toPlayerId,
+            toUserId: req.body.data.toPlayerId,
             action: 'edit',
-            role: 'comment',
+            role: 'appeal',
             createTime: new Date()
         });
 
-        return res.status(200).json({success: 1, code: 'admin.setComment.ok'});
+        return res.status(200).json({success: 1, code: 'admin.setAppeal.ok'});
     } catch (err) {
         next(err);
     }
 });
 
-router.post('/setUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+router.post('/setUserRole', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.action').isIn(['grant', 'revoke']),
-    checkbody('data.role').isIn(['normal', 'admin', 'bot', 'super', 'dev', 'blacklisted', 'freezed'])
+    checkbody('data.role').isIn(['normal', 'admin', 'bot', 'super', 'dev', 'volunteer', 'blacklisted', 'freezed'])
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty())
-            return res.status(400).json({error: 1, code: 'admin.setUser.bad', message: validateErr.array()});
+            return res.status(400).json({error: 1, code: 'admin.setUserRole.bad', message: validateErr.array()});
 
         /** @type {import("../typedef.js").User} */
         const user = await db.select('*').from('users').where({id: req.body.data.id}).first();
         if (!user)
-            return res.status(404).json({error: 1, code: 'admin.setUser.notFound'});
+            return res.status(404).json({error: 1, code: 'admin.setUserRole.notFound'});
         const role = req.body.data.role;
         if (req.body.data.action === 'grant') {
             const devCan = ['normal', 'bot', 'blacklisted', 'freezed', 'volunteer'],
@@ -416,7 +517,7 @@ async (req, res, next) => {
             if (flag)
                 user.privilege = privilegeGranter(user.privilege, role);
             else
-                return res.status(403).json({error: 1, code: 'admin.setUser.permissionDenied'});
+                return res.status(403).json({error: 1, code: 'admin.setUserRole.permissionDenied'});
         } else {    // revoke permission
             const devCanNot = ['dev', 'admin', 'super', 'root'],
                 superCanNot = ['super', 'root', 'dev'],
@@ -429,7 +530,7 @@ async (req, res, next) => {
             if (flag)
                 user.privilege = privilegeRevoker(user.privilege, role);
             else
-                return res.status(403).json({error: 1, code: 'admin.setUser.permissionDenied'});
+                return res.status(403).json({error: 1, code: 'admin.setUserRole.permissionDenied'});
         }
         await sendMessage(req.user.id, null, "command", JSON.stringify({
             action: 'setUser',
@@ -456,7 +557,7 @@ async (req, res, next) => {
             role: req.body.data.role,
             createTime: new Date()
         });
-        return res.status(200).json({success: 1, code: 'admin.setUser.ok'});
+        return res.status(200).json({success: 1, code: 'admin.setUserRole.ok'});
     } catch (err) {
         next(err);
     }
@@ -478,15 +579,27 @@ async (req, res, next) => {
         if (!validateErr.isEmpty())
             return res.status(400).json({error: 1, code: 'judgementLog.bad', message: validateErr.array()});
 
-        const createTimeFrom = new Date(req.query.createTimeFrom ? req.query.createTimeFrom - 0 : 0);
-        const createTimeTo = new Date(req.query.createTimeTo ? req.query.createTimeTo - 0 : Date.now());
+        const createTimeFrom = new Date(req.body.createTimeFrom ? req.body.createTimeFrom - 0 : 0);
+        const createTimeTo = new Date(req.body.createTimeTo ? req.body.createTimeTo - 0 : Date.now());
         const skip = req.body.skip !== undefined ? req.body.skip : 0;
         const limit = req.body.limit !== undefined ? req.body.limit : 20;
         const order = req.body.order ? req.query.order : 'desc';
 
         const total = await db.count({num: 1}).from('comments')
-            .andWhere('type', 'judgement')
-            .first().then(r => r.num);
+            .join('users', 'comments.byUserId', 'users.id')
+            .where((qb) => {
+                if (req.body.userId)
+                    qb.where('comments.byUserId', '=', req.body.userId)
+                if (req.body.dbId)
+                    qb.where('comments.id', '=', req.body.dbId)
+                if (req.body.userName)
+                    qb.where('users.username', 'like', `%${req.body.userName}%`)
+            })
+            .andWhere('comments.type', `judgement`)
+            .andWhere('comments.createTime', '>=', createTimeFrom)
+            .andWhere('comments.createTime', '<=', createTimeTo)
+            .first()
+            .then(r => r.num);
 
         const result = await db('comments')
             .join('users', 'comments.byUserId', 'users.id')
@@ -513,7 +626,7 @@ async (req, res, next) => {
 
 router.get('/adminLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('createTimeFrom').optional().isInt({min: 0}),
-    checkquery('createTimeto').optional().isInt({min: 0}),
+    checkquery('createTimeTo').optional().isInt({min: 0}),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0}),
     checkquery('order').optional().isIn(['asc', 'desc']),
@@ -521,7 +634,7 @@ router.get('/adminLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
 async (req, res, next) => {
     try {
         const createTimeFrom = new Date(req.query.createTimeFrom);
-        const createTimeto = new Date(req.query.createTimeto);
+        const createTimeTo = new Date(req.query.createTimeTo);
         const skip = req.query.skip !== undefined ? req.query.skip : 0;
         const limit = req.query.limit !== undefined ? req.query.limit : 20;
         const order = req.query.order ? req.query.order : 'desc';
@@ -532,7 +645,7 @@ async (req, res, next) => {
             .where('type', '!=', `report`).andWhere('type', '!=', `reply`)
             .select('comments.*', 'users.username', 'users.privilege', 'players.games', 'players.originName')
             .andWhere("comments.createTime", ">=", createTimeFrom)
-            .andWhere("comments.createTime", "<=", createTimeto)
+            .andWhere("comments.createTime", "<=", createTimeTo)
             .orderBy('users.createTime', order)
         // .offset(skip).limit(limit);
 
@@ -657,6 +770,156 @@ async (req, res, next) => {
     }
 });
 
+router.post('/setUserBindData', verifyJWT, allowPrivileges(["root", "dev"]), [
+    checkbody('data.id').isInt({min: 0}),
+    checkbody('data.originEmail').isString().trim().isEmail(),
+    checkbody('data.originName').isString().unescape().trim().notEmpty(),
+    checkbody('data.originUserId').isString().trim(),
+    checkbody('data.originPersonaId').isString().trim(),
+], async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: `setUserBindData.bad`, message: validateErr.array()});
+
+        const {id, originEmail, originName, originUserId, originPersonaId} = req.body.data;
+        const checkIdData = db('users').where({id: id})
+        if (!checkIdData)
+            return req.status(201).json({error: 1, code: 'setUserBindData.notPrimitiveUser'})
+
+        await db('users').update({originName, originEmail, originUserId, originPersonaId}).where({id: id});
+        await db('operation_log').insert({
+            byUserId: req.user.id,
+            toUserId: id,
+            action: 'edit',
+            role: 'bind',
+            createTime: new Date()
+        });
+
+        return res.status(200).json({success: 1, code: 'setUserBindData.success', message: 'transfer success!'});
+    } catch (e) {
+        next(e)
+    }
+});
+
+router.post('/transferBindData', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
+    checkbody('data.id').isInt({min: 0}),
+    checkbody('data.targetId').isInt({min: 0}),
+    checkbody('data.mode').isIn(['cover', 'interchange'])
+], async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: `transferBindData.bad`, message: validateErr.array()});
+
+        // Verify mutual accounts
+        const {id, targetId, mode = 'cover'} = req.body.data;
+        const primitiveIdData = db('users')
+            .select('users.originName as originName', 'users.originEmail as originEmail', 'users.originUserId as originUserId', 'users.originPersonaId as originPersonaId')
+            .where({id: id})
+        if (!primitiveIdData)
+            return req.status(201).json({error: 1, code: 'transferBindData.notPrimitiveUser'})
+        const targetIdData = db('users')
+            .select('users.valid as valid', 'users.privilege as privilege', 'users.originName as originName', 'users.originEmail as originEmail', 'users.originUserId as originUserId', 'users.originPersonaId as originPersonaId')
+            .where({id: targetId})
+        if (!targetIdData && !targetIdData.valid && targetIdData.originEmail && targetIdData.privilege.some(i => new Set(['blacklisted', 'freezed']).has(i)))
+            return req.status(201).json({
+                error: 1,
+                code: 'transferBindData.fail',
+                message: 'This account could not be found or other factors have led to the rejection'
+            })
+
+        // binding information migration
+        let primitive, target;
+        switch (mode) {
+            case 'cover':
+                primitive = {
+                    originName: "",
+                    originEmail: "",
+                    originUserId: "",
+                    originPersonaId: ""
+                };
+                target = {
+                    originName: primitiveIdData.originName,
+                    originEmail: primitiveIdData.originEmail,
+                    originUserId: primitiveIdData.originUserId,
+                    originPersonaId: primitiveIdData.originPersonaId
+                };
+                break;
+            case 'interchange':
+                primitive = {
+                    originName: targetIdData.originName,
+                    originEmail: targetIdData.originEmail,
+                    originUserId: targetIdData.originUserId,
+                    originPersonaId: targetIdData.originPersonaId
+                };
+                target = {
+                    originName: primitiveIdData.originName,
+                    originEmail: primitiveIdData.originEmail,
+                    originUserId: primitiveIdData.originUserId,
+                    originPersonaId: primitiveIdData.originPersonaId
+                };
+                break;
+        }
+
+        await db('users').update(primitive).where({id: id});
+        await db('users').update(target).where({id: targetId});
+        await db('operation_log').insert({
+            byUserId: req.user.id,
+            toUserId: `${id},${targetId}`,
+            action: 'transfer',
+            role: `bind_${mode}`,
+            createTime: new Date()
+        });
+
+        return res.status(200).json({success: 1, code: 'transferBindData.success', message: 'transfer success!'});
+    } catch (e) {
+        next(e);
+    }
+});
+
+router.post('/setUserGeneratePassword', verifyJWT, allowPrivileges(["root", "dev"]), [
+    checkbody('data.id').isInt({min: 0}),
+    checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40}),
+], async (req, res, next) => {
+    try {
+        const validateErr = validationResult(req);
+        if (!validateErr.isEmpty())
+            return res.status(400).json({error: 1, code: 'setUserGeneratePassword.bad', message: validateErr.array()});
+
+        const {newpassword, id} = req.body.data;
+        const targetUser = await db('users').where({id: id})
+
+        if (!targetUser)
+            return res.status(200).json({
+                error: 1,
+                code: 'setUserGeneratePassword.notUser',
+                message: 'No user found'
+            })
+
+        await db('users').update({
+            password: await generatePassword(newpassword),
+            signoutTime: new Date()
+        }).where({id: id});
+
+        if (targetUser.originEmail)
+            await sendUserGeneratePasswordNotification(
+                targetUser.username,
+                targetUser.originEmail,
+                ['zh-CN', 'en-US'].findLast(i => i === req.headers["accept-language"]) || 'en-US',
+                newpassword
+            );
+
+        return res.status(200).json({
+            success: 1,
+            code: 'setUserGeneratePassword.success',
+            message: `${targetUser.username} need a Re-login to finish this process`
+        });
+    } catch (e) {
+        next(e)
+    }
+})
+
 router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkbody('data.username').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
         checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
@@ -711,7 +974,7 @@ router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
                 originUserId: registrant.originUserId,
                 originPersonaId: registrant.originPersonaId,
                 privilege: JSON.stringify(['normal']),
-                attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.query.lang)),
+                attr: JSON.stringify(userDefaultAttribute(req.REAL_IP, req.headers["accept-language"] || req.query.lang)),
                 createTime: new Date(),
                 updateTime: new Date(),
             };

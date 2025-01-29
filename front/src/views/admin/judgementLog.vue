@@ -1,12 +1,10 @@
 <template>
   <div>
     <Row :gutter="20">
-      <Col flex="1">
-        <p>-> 右侧功能专门为miku400(iku)设立</p>
-        <p>-> The right function is dedicated to the miku400(iku)</p>
-      </Col>
+      <Col flex="1"></Col>
       <Col>
-        <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400" popper-class="files-poptip" :padding="'20px 30px'">
+        <Poptip ref="filesPoptip" placement="bottom-end" trigger="click" width="400" popper-class="files-poptip"
+                :padding="'20px 30px'">
           <Button>
             <Icon type="md-funnel" size="15"/>
           </Button>
@@ -60,7 +58,7 @@
               :total="total"/>
       </Col>
       <Col>
-        <Button size="small" @click="getAdminjudgementLog">
+        <Button size="small" @click="getAdminJudgementLog">
           <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
         </Button>
       </Col>
@@ -71,7 +69,7 @@
       <template v-if="judgementLog.length > 0">
         <div v-for="(i, index) in judgementLog" :key="index">
           <Row type="flex" align="middle"
-               @click.native="$router.push({name: 'player', params: {ouid: i.toOriginPersonaId}, hash: '#floor-' + i.id})">
+               @click.native="$router.push({name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}, hash: '#floor-' + i.id})">
             <Col>
               <Tag>Log</Tag>
             </Col>
@@ -83,7 +81,7 @@
                   <b>{{ i.username }}</b>
                 </BusinessCard>
                 <span> {{ $t('detail.info.judge') }} </span>
-                <a href="javascript:void(0)">{{ i.toOriginPersonaId }}</a>
+                <a href="javascript:void(0)" target="_blank">{{ i.toOriginPersonaId }}</a>
                 <span> {{ i.cheatMethods.toString() }} {{
                     $t(`basic.action.${util.queryAction(i.judgeAction)}.text`)
                   }}</span>
@@ -117,7 +115,7 @@
 <script>
 import {api, util, http, http_token} from "../../assets/js";
 
-import BusinessCard from "@/components/businessCard";
+import BusinessCard from "@/components/BusinessCard.vue";
 
 export default {
   data() {
@@ -174,40 +172,61 @@ export default {
           }
         ]
       },
+      currentFilters: {
+        searchTypeValue: null,
+        searchValue: null,
+        createTimeFrom: null,
+        createTimeTo: null
+      },
 
       limit: 40,
       skip: 1,
       total: 0,
     }
   },
-  components: {BusinessCard},
   created() {
     this.http = http_token.call(this);
 
-    this.getAdminjudgementLog();
+    this.getAdminJudgementLog();
   },
+  watch: {
+    '$route': 'getAdminJudgementLog'
+  },
+  components: {BusinessCard},
   methods: {
-    getAdminjudgementLog() {
+    /**
+     * 获取判决日志
+     */
+    getAdminJudgementLog() {
+      let {value, type, date} = this.$route.query;
+      if (value) this.searchValue = value.toString();
+      if (type) this.currentFilters.searchTypeValue = type;
+      if (date) {
+        this.currentFilters.createTimeFrom = new Date(date.split(',')[0]).getTime();
+        this.currentFilters.createTimeTo = new Date(date.split(',')[1]).getTime();
+      }
+
+      if (!value || !type || !date)
+        this.setFilters();  // 使用当前的筛选条件
+
       let fromData = {
         limit: this.limit,
         skip: (this.skip - 1) * this.limit,
-        total: this.total,
       };
 
-      if (this.load) return;
       this.load = true;
 
-      if (this.searchTypeValue == 'userId' && this.searchValue) fromData.userId = this.searchValue;
-      if (this.searchTypeValue == 'userName' && this.searchValue) fromData.userName = this.searchValue;
-      if (this.searchTypeValue == 'dbId' && this.searchValue) fromData.dbId = this.searchValue;
-      if (this.createTimeFrom) fromData.createTimeFrom = this.createTimeFrom;
-      if (this.createTimeTo) fromData.createTimeTo = this.createTimeTo;
+      if (this.currentFilters.searchTypeValue === 'userId' && this.currentFilters.searchValue) fromData.userId = this.currentFilters.searchValue;
+      if (this.currentFilters.searchTypeValue === 'userName' && this.currentFilters.searchValue) fromData.userName = this.currentFilters.searchValue;
+      if (this.currentFilters.searchTypeValue === 'dbId' && this.currentFilters.searchValue) fromData.dbId = this.currentFilters.searchValue;
+      if (this.currentFilters.createTimeFrom) fromData.createTimeFrom = this.currentFilters.createTimeFrom;
+      if (this.currentFilters.createTimeTo) fromData.createTimeTo = this.currentFilters.createTimeTo;
 
       this.http.post(api['admin_judgementLog'], {data: fromData}).then(res => {
         const d = res.data;
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.judgementLog = d.data;
-          this.total = d.total;
+          this.total = d.total; // 确保每次请求后都更新total值
         }
       }).finally(() => {
         this.load = false;
@@ -222,8 +241,8 @@ export default {
       this.$refs["filesFunnel"].resetFields();
     },
     subimtFormData() {
-      this.getAdminjudgementLog();
-      this.resetFormData();
+      this.skip = 1;  // 重置页码
+      this.getAdminJudgementLog();
     },
     handleCDatepicker(date) {
       this.createTimeFrom = new Date(date[0]).getTime();
@@ -238,7 +257,16 @@ export default {
     handlePageChange(num) {
       this.skip = num;
       this.getAdminjudgementLog();
-    }
+    },
+    setFilters() {
+      this.currentFilters = {
+        searchTypeValue: this.searchTypeValue,
+        searchValue: this.searchValue,
+        createTimeFrom: this.createTimeFrom,
+        createTimeTo: this.createTimeTo
+      };
+    },
+
   }
 }
 </script>

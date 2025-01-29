@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.configuration.subscribes">
+  <div class="profile-body" v-if="$store.state.configuration.subscribes">
     <Row :gutter="10" class="history-buttons" type="flex" justify="center">
       <Col flex="1">
         <Checkbox v-model="checkboxAll" :disabled="list.length <= 0" @on-change="onCheckboxAll"></Checkbox>
@@ -41,7 +41,7 @@
                   <div style="display: flex; flex-direction: column;">
                     <Tooltip :content="$t('list.colums.playerId')">
                       <h2 class="text-distinguishing-letter">
-                        <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}` }}"
+                        <router-link :to="{name: 'player', params: { ouid: `${d.originPersonaId}`, query: {byPath: $route.name} }}"
                                      :style="d.avatarLink == '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
                           <code>{{ d.originName }}</code>
                         </router-link>
@@ -51,10 +51,14 @@
 
                   <div>
                     {{ $t('list.colums.reportTime') }}
-                    <Time v-if="d.createTime" :time="d.createTime"/>
+                    <TimeView :time="d.createTime">
+                      <Time v-if="d.createTime" :time="d.createTime"/>
+                    </TimeView>
                     <Divider type="vertical"/>
                     {{ $t('list.colums.updateTime') }}
-                    <Time v-if="d.updateTime" :time="d.updateTime"/>
+                    <TimeView :time="d.updateTime">
+                      <Time v-if="d.updateTime" :time="d.updateTime"/>
+                    </TimeView>
                   </div>
                 </Col>
                 <Col :xs="{span: 24, push: 0,pull:0}" :lg="{span: 4, push: 0,pull:0}" class="mobile-hide">
@@ -94,8 +98,9 @@
     </Row>
 
   </div>
-  <div v-else>
-    Disable Component
+  <div class="profile-body" v-else>
+    <p>Disable Component</p>
+    <div><img src="@/assets/images/open-component.png" width="80%"/></div>
   </div>
 </template>
 
@@ -104,8 +109,10 @@ import {api, http_token, storage, player_storage} from "../../assets/js";
 
 import cheaterStatus from '/public/config/cheaterStatus.json'
 import gameName from '/public/config/gameName.json'
+import TimeView from "@/components/TimeView.vue";
 
 export default {
+  components: {TimeView},
   data() {
     return {
       gameName: "all",

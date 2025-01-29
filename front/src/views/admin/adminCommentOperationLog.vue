@@ -20,7 +20,7 @@
               </Radio>
               <Radio :label="i.value" :disabled="i.disabled" v-for="i in games" :key="i.value" aria-radio
                      :style="'background-image: url(' + require('/src/assets/' + i.bk_file + '/bf.jpg') + ');'"
-                     :class="gameName == i.value ? 'gametype-select' : ''">
+                     :class="gameName === i.value ? 'game-type-select' : ''">
                 <Tooltip :content="$t('basic.games.' + i.value)" placement="top-start">
                   <img height="35" :src="require('/src/assets/' + i.bk_file + '/logo.png')" v-if="i.logo_src"/>
                   <span v-else>{{ i.full_name }}</span>
@@ -47,7 +47,7 @@
       <template v-if="adminLogs.length > 0">
         <div v-for="(i, index) in adminLogs" :key="index">
           <Row type="flex" align="middle"
-               @click.native="$router.push({name: 'player', params: {ouid: i.toOriginPersonaId}})">
+               @click.native="$router.push({name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}})">
             <Col>
               <Tag>Log</Tag>
             </Col>
@@ -66,7 +66,7 @@
               </div>
             </Col>
             <Col>
-              <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}}">
+              <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}" target="_blank">
                 <Icon type="ios-eye" size="25"/>
               </router-link>
             </Col>
@@ -83,7 +83,7 @@
 <script>
 import {api, http_token, util} from "../../assets/js";
 
-import BusinessCard from "@/components/businessCard";
+import BusinessCard from "@/components/BusinessCard.vue";
 import Application from "@/assets/js/application";
 
 export default new Application({

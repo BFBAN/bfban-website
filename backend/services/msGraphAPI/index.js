@@ -59,11 +59,25 @@ const msalConfig = {
     cache: {
         cachePlugin: {
             beforeCacheAccess: async (context) => {
-                context.tokenCache.deserialize(await fs.promises.readFile(tokenCachePath).catch((err) => ""));
+                try {
+                    const file = (await fs.promises.readFile(tokenCachePath)).toString();
+                    context.tokenCache.deserialize(file);
+                } catch (err) {
+                    logger.warn('TokenCache:', err.message);
+                }
             },
             afterCacheAccess: async (context) => {
-                if (context.cacheHasChanged)
-                    await fs.promises.writeFile(tokenCachePath, context.tokenCache.serialize());
+                try {
+                    if (context.cacheHasChanged) {
+                        // I guess if the read happened during the write, it will get a dirty content.
+                        // And the dirty content will ruin the token cache, making the session invalid.
+                        // So we might need to make the write atomic.
+                        await fs.promises.writeFile(tokenCachePath + '.tmp', context.tokenCache.serialize());
+                        await fs.promises.rename(tokenCachePath + '.tmp', tokenCachePath);
+                    }
+                } catch (err) {
+                    logger.error('TokenCache:', err.message);
+                }
             }
         }
     },
@@ -234,7 +248,7 @@ app.delete('/file', [
 ], async (req, res, next) => {
     const validateErr = validationResult(req);
     if (!validateErr.isEmpty())
-        return res.status(400).json({error: 1, code: 'msGetFile.bad', message: validateErr.array()});
+        return res.status(400).json({error: 1, code: 'msDeleteFile.bad', message: validateErr.array()});
     try {
         const fileId = req.query.id;
         const url = `/drives/${svcConfig.driveId}/items/${fileId}`;
@@ -246,13 +260,13 @@ app.delete('/file', [
                     throw (err);
                 return {status: err.statusCode, error: err.body};
             });
-        if (!msResponse.error)
-            return res.status(200).json({success: 1, code: 'msGetFile.delete.ok'});
+        if (!msResponse?.error)
+            return res.status(200).json({success: 1, code: 'msDeleteFile.delete.ok'});
         else
-            return res.status(msResponse.status).json({error: 1, code: 'msGetFile.error', message: msResponse.error});
+            return res.status(msResponse.status).json({error: 1, code: 'msDeleteFile.error', message: msResponse.error});
     } catch (err) {
-        logger.error('getFile:', err.stack)
-        res.status(500).json({error: 1, code: 'msGetFile.error', message: err.message});
+        logger.error('msDeleteFile:', err.stack)
+        res.status(500).json({error: 1, code: 'msDeleteFile.error', message: err.message});
     }
 })
 
@@ -416,7 +430,9 @@ async (req, res, next) => {
             });
         const msResponse = await getAuthenticatedClient(msalClient)
             .api('/me/sendMail')
-            .post(payload)
+            .post({
+                "message": payload
+            })
             .catch(err => {
                 if (!(err instanceof msgraph.GraphError) || err.statusCode <= 0)
                     throw (err);
@@ -430,7 +446,7 @@ async (req, res, next) => {
             });
         else
             return res.status(msResponse.status).json({
-                success: 1,
+                error: 1,
                 code: 'msSendMail.error',
                 message: msResponse.error.message
             });

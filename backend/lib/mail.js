@@ -1,155 +1,203 @@
 "use strict";
 import {promises as fs} from "fs";
-import {SMTPClient, Message} from "emailjs";
+import nodemailer from "nodemailer";
 import config from "../config.js";
-import serviceApi from "./serviceAPI.js";
 
 const domain = config.mail.domain.origin;
 /*
-* https://bfban.com/
-*/
-
-const sender = {}
-Object.keys(config.mail).forEach(key => {
-    const mail = config.mail[key]
-    sender[key] = new SMTPClient({
-        user: mail.user,
-        password: mail.password,
-        host: mail.host,
-        port: mail.port,
-        ssl: mail.secure
-    })
-})
-
-/*
-async function sendMail(content, from, to, cc, subject, attachment = undefined, language) {
-    const message = new Message({
-        text: content,
-        from: from,
-        to: to,
-        cc: cc,
-        subject: subject,
-        attachment: attachment
-    });
-    return await sender[language].sendAsync(message);
-}
-*/
-
-/** 
- * @param {string} content 
- * @param {'Text'|'HTML'} type 
- * @param {string} from
- * @param {string} to
- * @param {string} subject
+ * https://bfban.com/
  */
-async function sendMail_ms(content, type, from, to, subject) {
-    return await serviceApi('msGraphAPI', '/sendMail').post({
-        data: {
-            subject,
-            type,
-            content,
-            from,
-            to
-        }
+
+const senders = [];
+if (Array.isArray(config.mail)) {
+    config.mail.forEach((mailConfig) => {
+        senders.push(
+            nodemailer.createTransport({
+                host: mailConfig.host,
+                port: mailConfig.port,
+                secure: mailConfig.secure, // true for 465, false for other ports
+                auth: {
+                    user: mailConfig.user,
+                    pass: mailConfig.password,
+                },
+                tls: mailConfig.tls ? {rejectUnauthorized: false} : undefined,
+            })
+        );
     });
+} else {
+    senders.push(
+        nodemailer.createTransport({
+            host: config.mail.host,
+            port: config.mail.port,
+            secure: config.mail.secure,
+            auth: {
+                user: config.mail.user,
+                pass: config.mail.password,
+            },
+            tls: config.mail.tls ? {rejectUnauthorized: false} : undefined,
+        })
+    );
 }
 
-// !!! TEMPORARY FIX
-async function sendMail(content, from, to, cc, subject, attachment = undefined, language) {
-    return await sendMail_ms(
-        attachment?.[0].data || content,
-        attachment?.[0].alternative? "HTML" : "Text",
-        "register@bfban.com" || from,   
+// 当前发送器索引，用于负载均衡
+let currentSenderIndex = 0;
+
+/**
+ * 邮件发送方法
+ * @param {string} htmlContent 邮件HTML内容
+ * @param {string} from 发件人邮箱地址
+ * @param {string} to 收件人邮箱地址
+ * @param {string} cc 抄送邮箱地址
+ * @param {string} subject 邮件主题
+ * @param {Array} attachments 附件
+ * @returns {Promise<void>}
+ */
+async function sendMail(htmlContent, from, to, cc, subject, attachments = []) {
+    if (senders.length === 0) {
+        throw new Error("No SMTP configuration available");
+    }
+
+    // 根据当前索引选择发送器，支持负载均衡
+    const transporter = senders[currentSenderIndex];
+    currentSenderIndex = (currentSenderIndex + 1) % senders.length;
+
+    const mailOptions = {
+        from,
         to,
+        cc,
+        subject,
+        html: htmlContent,
+        attachments,
+    };
+
+    return transporter.sendMail(mailOptions);
+}
+
+
+// 动态读取模板文件
+async function getTemplateContent(templateName, language) {
+    const filePath = `./media/${templateName}_${language}.html`;
+    try {
+        return await fs.readFile(filePath, "utf-8");
+    } catch (error) {
+        throw new Error(`Failed to load email template: ${filePath}`);
+    }
+}
+
+// 邮件模板方法
+async function sendRegisterVerify(username, originName, address, language, code) {
+    const subject = language === "zh-CN" ? "BFBAN注册" : "BFBAN Registration";
+    const html = await getTemplateContent("mail_register", language);
+    const origin = new URL(domain).origin;
+
+    const emailContent = html
+        .replace(/\$\{username\}/g, username)
+        .replace(/\$\{originName\}/g, originName)
+        .replace(/\$\{website\}/g, origin)
+        .replace(/\$\{code\}/g, code);
+
+    await sendMail(
+        emailContent,
+        `"BFBAN Account Service" <no-reply@bfban.com>`,
+        address,
+        "",
         subject
     );
 }
 
-async function sendRegisterVerify(username, originName, address, language, code) {
-    let subject = {
-        'zh-CN': 'BFBan注册',
-        'en-US': 'BFBan Registration',
-    }[language];
-    subject = subject ? subject : 'BFBan Registration';
-    const html = await fs.readFile(`./media/mail_register_${language}.html`).then(buf => buf.toString());
-    const origin = new URL(domain).origin;
-
-    await sendMail(
-        "Hello " + username + "!\n" +
-        "   You are now signing up for BFBan as " + originName + " in game.\n" +
-        "   Pease click the link below to complete your registration: \n" +
-        "       " +  origin + "/signupComplete?code=" + code + "&lang=" + language,
-        config.mail[language].user, address, '', subject, [
-            {
-                data: html
-                    .replace(/\$\{username\}/g, username)
-                    .replace(/\$\{originName\}/g, originName)
-                    .replaceAll(/\$\{website\}/g, origin)
-                    .replace(/\$\{code\}/g, code),
-                alternative: true
-            }
-        ],
-        language
-    );
-}
-
 async function sendForgetPasswordVerify(username, address, language, code) {
-    let subject = {
-        'zh-CN': 'BFBan密码重置',
-        'en-US': 'BFBan Password Reset',
-    }[language];
-    subject = subject ? subject : 'BFBan Password Reset';
-    const html = await fs.readFile(`./media/mail_forgetPasswordVerify_${language}.html`).then(buf => buf.toString());
+    const subject = language === "zh-CN" ? "BFBAN密码重置" : "BFBAN Password Reset";
+    const html = await getTemplateContent("mail_forgetPasswordVerify", language);
     const origin = new URL(domain).origin;
 
+    const emailContent = html
+        .replace(/\$\{username\}/g, username)
+        .replace(/\$\{website\}/g, origin)
+        .replace(/\$\{code\}/g, code);
+
     await sendMail(
-        "Hello " + username + "!\n" +
-        "   You are now reseting your password for bfban.com.\n" +
-        "   Please click the link below to reset your password: \n" +
-        "       " + origin + "/forgetPasswordVerify?code=" + code,
-        config.mail[language].user, address, '', subject, [
-            {
-                data: html
-                    .replace(/\$\{username\}/g, username)
-                    .replaceAll(/\$\{website\}/g, origin)
-                    .replace(/\$\{code\}/g, code),
-                alternative: true
-            }
-        ],
-        language
+        emailContent,
+        `"BFBAN Account Service" <no-reply@bfban.com>`,
+        address,
+        "",
+        subject
     );
 }
 
 async function sendBindingOriginVerify(username, address, language, code) {
-    let subject = {
-        'zh-CN': 'BFBan账户绑定',
-        'en-US': 'BFBan - Connecting your e-mail address',
-    }[language];
-    subject = subject ? subject : 'BFBan - Connecting your e-mail address';
-    const html = await fs.readFile(`./media/mail_bindEmail_${language}.html`).then(buf => buf.toString());
+    const subject =
+        language === "zh-CN"
+            ? "BFBAN账户绑定"
+            : "BFBAN - Connecting your e-mail address";
+    const html = await getTemplateContent("mail_bindEmail", language);
     const origin = new URL(domain).origin;
 
+    const emailContent = html
+        .replace(/\$\{username\}/g, username)
+        .replace(/\$\{website\}/g, origin)
+        .replace(/\$\{code\}/g, code);
+
     await sendMail(
-        "Hello " + username + "!\n" +
-        "   You are now binding this email to your bfban.com account.\n" +
-        "   Please click the link below to finish the verification: \n" +
-        "       " + origin + "/bindOrigin?code=" + code,
-        config.mail[language].user, address, '', subject, [
-            {
-                data: html
-                    .replace(/\$\{username\}/g, username)
-                    .replaceAll(/\$\{website\}/g, origin)
-                    .replace(/\$\{code\}/g, code),
-                alternative: true
-            }
-        ],
-        language
+        emailContent,
+        `"BFBAN Account Service" <no-reply@bfban.com>`,
+        address,
+        "",
+        subject
     );
 }
+
+async function sendUserAuthVerify(username, address, appname, appid, language, code) {
+    const subject =
+        language === "zh-CN"
+            ? "BFBAN应用授权"
+            : "BFBAN Application authorization";
+    const html = await getTemplateContent("mail_userAuth", language);
+    const origin = new URL(domain).origin;
+
+    const emailContent = html
+        .replace(/\$\{username\}/g, username)
+        .replace(/\$\{appname\}/g, appname)
+        .replace(/\$\{appid\}/g, appid)
+        .replace(/\$\{website\}/g, origin)
+        .replace(/\$\{code\}/g, code);
+
+    await sendMail(
+        emailContent,
+        `"BFBAN Auth App Service" <no-reply@bfban.com>`,
+        address,
+        "",
+        subject
+    );
+}
+
+async function sendUserGeneratePasswordNotification(username, address, language, code) {
+    const subject =
+        language === "zh-CN"
+            ? "BFBAN新密码生成"
+            : "BFBAN Generate New Password";
+    const html = await getTemplateContent("mail_userGeneratePassword", language);
+    const origin = new URL(domain).origin;
+
+    const emailContent = html
+        .replace(/\$\{username\}/g, username)
+        .replace(/\$\{website\}/g, origin)
+        .replace(/\$\{code\}/g, code);
+
+    await sendMail(
+        emailContent,
+        `"BFBAN Account Service" <no-reply@bfban.com>`,
+        address,
+        "",
+        subject
+    );
+}
+
 
 export {
     sendMail,
     sendRegisterVerify,
     sendForgetPasswordVerify,
     sendBindingOriginVerify,
-}
+    sendUserAuthVerify,
+    sendUserGeneratePasswordNotification,
+};
