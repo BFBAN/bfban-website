@@ -23,33 +23,27 @@ const Hr = EHorizontalRule.extend({name: 'HR'}).configure({
       HTMLAttributes: {
         class: 'link',
       },
-    });
+    }),
+    PlainTextPaste = Extension.create({
+      name: 'plainTextPaste',
+      addPasteRules() {
+        return [
+          {
+            regex: /.*/, // 匹配所有内容
+            handler: ({ match, range }) => {
+              const plainText = match[0].replace(/<[^>]*>/g, '');
 
-const PlainTextPaste = Extension.create({
-  name: 'plainTextPaste',
-
-  addOptions() {
-    return {
-      // 其他选项
-    };
-  },
-
-  addPasteRules() {
-    return [
-      {
-        regex: /.*/, // 匹配所有内容
-        handler: ({ match, range }) => {
-          return {
-            insert: {
-              type: 'text',
-              text: match[0],
+              return {
+                insert: {
+                  type: 'text',
+                  text: plainText,
+                },
+              };
             },
-          };
-        },
+          },
+        ];
       },
-    ];
-  },
-});
+    });
 
 export default {
   props: {
@@ -109,19 +103,7 @@ export default {
         },
       },
       extensions: [
-        PlainTextPaste,
-        StarterKit.configure({
-          HTMLAttributes: {
-            // 允许的全局属性
-            '*': ['style', 'class'],
-            // 允许的标签和属性
-            'h1': [],
-            'p': [],
-            'a': ['href', 'target'],
-            'img': ['src', 'alt'],
-            // ...其他标签
-          },
-        }),
+        StarterKit,
         EPlaceholder.configure({
           pluginKey: 'placeholder',
           placeholder: this.placeholder,
@@ -132,6 +114,7 @@ export default {
         }),
         Link,
         Hr,
+        PlainTextPaste,
       ],
       onUpdate({editor}) {
         that.onEditorChange(editor.getHTML())
