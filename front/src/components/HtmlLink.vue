@@ -1,15 +1,18 @@
 <template>
-  <Poptip padding="0" max-width="300" trigger="hover" transfer :disabled="!isPoptip || getProtocol === 'mailto:'"
+  <Poptip padding="0"
+          max-width="300"
+          trigger="hover"
+          transfer :disabled="!isPoptip || getProtocol === 'mailto:'"
           @on-popper-show="onPoptipShow(false)"
           @on-popper-hide="onPoptipShow(true)">
     <span class="html-link">
-      <template v-if="getProtocol === 'http:' || getProtocol === 'https:'">
+      <template v-if="isIcon || getProtocol === 'http:' || getProtocol === 'https:'">
         <Icon type="md-link" class="icon"/>
       </template>
       <template v-else-if="getProtocol === 'mailto:'">
         <Icon type="ios-mail-outline" class="icon"/>
       </template>
-      <a :href="afterData.href" target="_blank" rel="noopener noreferrer">
+      <a :href="isOpen ? afterData.href : 'javacript:void(0)'" :target="isOpen ? '_blank' : null" rel="noopener noreferrer">
         <slot>{{ afterData.text || afterData.href }}</slot>
       </a>
     </span>
@@ -52,6 +55,14 @@ export default {
       default: ""
     },
     isPoptip: {
+      type: Boolean,
+      default: true
+    },
+    isIcon: {
+      type: Boolean,
+      default: false
+    },
+    isOpen: {
       type: Boolean,
       default: true
     }

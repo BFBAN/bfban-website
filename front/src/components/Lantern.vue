@@ -48,6 +48,8 @@
 }
 
 .lantern-widget-box {
+  margin-bottom: 5px;
+
   .lan-header {
     position: absolute;
     min-height: 3px;

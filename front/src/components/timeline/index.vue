@@ -773,7 +773,9 @@ export default new Application({
                     :
                   </Col>
                   <Col>
-                    <Time :time="l.quote.createTime" type="datetime"></Time>
+                    <TimeView :time="l.quote.createTime">
+                      <Time :time="l.quote.createTime" type="datetime"></Time>
+                    </TimeView>
                   </Col>
                 </Row>
                 <HtmlCore

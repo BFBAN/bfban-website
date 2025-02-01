@@ -133,7 +133,7 @@
                 </Col>
               </Row>
               <Spin size="large" fix v-show="active.load">
-                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+                <Loading></Loading>
               </Spin>
             </Card>
           </Col>
@@ -160,7 +160,7 @@
               </ol>
               <Empty :notHint="false" v-else></Empty>
               <Spin size="large" fix v-show="active.load">
-                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+                <Loading></Loading>
               </Spin>
             </Card>
           </Col>
@@ -205,7 +205,7 @@
               </ol>
               <Empty :notHint="false" v-else></Empty>
               <Spin size="large" fix v-show="active.load">
-                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+                <Loading></Loading>
               </Spin>
             </Card>
           </Col>
@@ -233,6 +233,10 @@ import PrivilegesTag from "@/components/PrivilegesTag.vue";
 import AchievementsTag from "@/components/AchievementsTag.vue";
 import HtmlLink from "@/components/HtmlLink.vue"
 import TrendWidget from "@/components/TrendWidget.vue";
+import ExposedName from "@/components/ExposedName.vue"
+import Loading from "@/components/Loading.vue";
+
+import "echarts";
 
 import {account_storage, api, http, time} from '../assets/js/index'
 
@@ -357,7 +361,7 @@ export default new Application({
   created() {
     this.loadData();
   },
-  components: {businessCard, Empty, PrivilegesTag, AchievementsTag, HtmlLink, TrendWidget},
+  components: {businessCard, Loading, Empty, PrivilegesTag, AchievementsTag, HtmlLink, TrendWidget, ExposedName},
   methods: {
     async loadData() {
       this.init();

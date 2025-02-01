@@ -1,6 +1,6 @@
 <template>
-  <Tabs>
-    <TabPane :label="$t('profile.space.title')">
+  <Tabs v-model="informationTab">
+    <TabPane name="info" :label="$t('profile.space.title')">
       <div class="account">
         <Form :model="formItem" label-position="top">
           <Banner :height="200" class="account-banner">
@@ -325,13 +325,22 @@
         </Spin>
       </div>
     </TabPane>
-    <TabPane label="Ad">
+    <TabPane name="ad" :label="$t('profile.space.form.AD')">
       <Form class="profile-body" label-position="top">
         <Row :gutter="30">
           <Col :xs="{span: 24}" :lg="{span: 12}">
-            <FormItem :label="$t('profile.space.form.AD')">
+            <FormItem>
               <Alert show-icon>{{ $t('profile.space.form.ADDescribe') }}</Alert>
-              <i-switch v-model="adsSwitch" @on-change="switchAttr('ads.google.switch', adsSwitch)"/>
+              <List border>
+                <ListItem>
+                  <ListItemMeta title="Google AD"></ListItemMeta>
+                  <i-switch v-model="adsSwitch.google" @on-change="switchAttr('ads.google.switch', adsSwitch.google)"/>
+                </ListItem>
+                <ListItem>
+                  <ListItemMeta title="BFBAN APP AD"></ListItemMeta>
+                  <i-switch v-model="adsSwitch.bfbanApp" @on-change="switchAttr('ads.bfban-app.switch', adsSwitch.bfbanApp)"/>
+                </ListItem>
+              </List>
             </FormItem>
           </Col>
         </Row>
@@ -341,7 +350,7 @@
 </template>
 
 <script>
-import {api, http, http_token, account_storage} from "../../assets/js";
+import {account_storage, api, http, http_token} from "../../assets/js";
 
 import Application from "@/assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
@@ -358,7 +367,11 @@ export default new Application({
     return {
       privileges: [],
       languages: [],
-      adsSwitch: account_storage.getConfiguration('ads.google.switch'),
+      informationTab: 'info',
+      adsSwitch: {
+        google: account_storage.getConfiguration('ads.google.switch'),
+        bfbanApp: account_storage.getConfiguration('ads.bfban-app.switch')
+      },
       userInfoLoad: false, // 用户信息获取状态
       formLoad: false, // 表单提交状态
       langLocalSync: false, // 用户信息保存语言是否同步开关
@@ -383,15 +396,18 @@ export default new Application({
   components: {Textarea, TimeView, Captcha, UserAvatar, PrivilegesTag, Banner, AdsGoogle},
   created() {
     this.http = http_token.call(this);
-
     this.ready();
   },
   methods: {
     async ready() {
+      const {tag} = this.$route.query;
       const languages = await import('/public/config/languages.json');
       const privileges = await import('/public/config/privilege.json');
       this.privileges = this.privileges.concat(privileges.child)
       this.languages = this.languages.concat(languages.child)
+
+      if (tag)
+        this.informationTab = tag || 'info';
 
       await this.getUserinfo();
     },
@@ -449,7 +465,7 @@ export default new Application({
         }
       }).then(res => {
         const d = res.data;
-        if (d.success == 1) {
+        if (d.success === 1) {
           this.$router.push('/signin');
         }
       })

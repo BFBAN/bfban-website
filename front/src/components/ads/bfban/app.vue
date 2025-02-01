@@ -1,5 +1,5 @@
 <script setup>
-import {storage} from "@/assets/js";
+import {account_storage} from "@/assets/js";
 
 import HtmlLink from '@/components/HtmlLink.vue'
 import Application from "@/assets/js/application";
@@ -17,23 +17,15 @@ export default new Application({
   components: {HtmlLink, ThemeWidget},
   methods: {
     async loadData() {
-      const bannerAppData = storage.local.get('ads.bfban-app.switch');
-
-      if (bannerAppData.code === 0) {
-        this.banner = bannerAppData.data.value;
-
-        if (bannerAppData.data.time > Number(bannerAppData.data.time) + 7 * 24 * 60 * 60 * 1000) {
-          await storage.local.rem('ads.bfban-app.switch');
-          this.banner = false;
-        }
-      }
+      const bannerAppData = account_storage.getConfiguration('ads.bfban-app.switch');
+      this.banner = bannerAppData;
     },
     /**
      * 关闭底部广告
      */
     onSwitchFooter() {
       this.banner = !this.banner;
-      storage.local.set('ads.bfban-app.switch', this.banner);
+      account_storage.updateConfiguration('ads.bfban-app.switch', this.banner);
     }
   },
 })

@@ -228,11 +228,15 @@ export default new Application({
     margin-bottom: 10px;
     list-style-type: none;
 
+    li {
+      margin-bottom: 8px !important;
+      line-height: 1.35;
+    }
+
     a {
-      display: inline-block;
-      margin-bottom: 6px;
+      display: ruby;
       font-size: 13px;
-      animation: all .25s;
+      animation: all 0.25s;
     }
 
     a:hover {

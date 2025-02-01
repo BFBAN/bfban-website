@@ -360,6 +360,14 @@ export default {
 
       return vDomString;
     },
+
+    filterHTML(html) {
+      // 匹配所有 HTML 标签，但排除 <img> 标签
+      const regex = /<(?!\/?img\b)[^>]*>/gi;
+      // 将匹配到的标签替换为空字符串
+      const result = html.replace(regex, '');
+      return result;
+    }
   },
   render() {
     return this.templateRender();

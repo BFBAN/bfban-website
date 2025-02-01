@@ -4,7 +4,8 @@
 
 import Storage from './storage';
 import store from "@/store";
-import {account_storage, api, http_token, application} from "@/assets/js/index";
+import router from "@/router"
+import {account_storage, api, application, http, http_token} from "@/assets/js/index";
 import {SET_LANG} from "@/store/mutation-types";
 
 export default class AccountStorage extends Storage {
@@ -74,6 +75,28 @@ export default class AccountStorage extends Storage {
                     r(res);
                 })
             })
+    }
+
+    /**
+     * 账户退出
+     */
+    async signout() {
+        try {
+            const res = await http.post(api["account_signout"], {
+                headers: {
+                    'x-access-token': store.state.user.token
+                }
+            }).catch(e => { throw e });
+
+            return res.data;
+        } finally {
+            // 清除与账户相关的数据
+            this.clearAll();
+
+            store.dispatch('signout').then(() => {
+                router.push('/');
+            });
+        }
     }
 
     /**

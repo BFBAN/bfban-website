@@ -39,12 +39,12 @@
             </Col>
           </Row>
         </div>
-        <picture>
+        <picture @click="onClickEdit">
           <source :srcset="src" media="(orientation: portrait)" />
           <img :src="src" :alt="src" class="img-tag user-select-none" :style="`transform: rotate(${rotateValue}deg)`"/>
         </picture>
 
-        <div class="img-hover ivu-card user-select-none" @click="show">
+        <div class="img-hover ivu-card user-select-none" @click="show" v-if="!isEdit">
           <Icon type="ios-search" size="50"/>
         </div>
       </div>
@@ -86,6 +86,10 @@ export default {
     images: {
       type: String,
       default: ""
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -138,6 +142,13 @@ export default {
         },
         images: this.viewImages,
       })
+    },
+    /**
+     * 编辑模式-单击触发
+     */
+    onClickEdit () {
+      if (this.isEdit)
+        this.$emit('click-image')
     }
   }
 }
@@ -147,6 +158,7 @@ export default {
 @import "@/assets/css/icon.less";
 
 .img {
+  white-space: normal !important;
   position: relative;
   width: calc(100% + 16px);
   margin: 10px -8px 10px -8px;
@@ -164,10 +176,6 @@ export default {
     padding: 5px 10px;
     position: relative;
     z-index: 11;
-  }
-
-  .img-box {
-    margin-top: -18px;
   }
 
   .img-title {

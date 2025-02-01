@@ -30,7 +30,7 @@
     <br>
 
     <template v-if="account">
-      <div dis-hover bordered>
+      <div>
         <Confetti :y="20" :emojiCount="300"
                   :switch="new Date(account.joinTime).getTime() < new Date('2020 01-01').getTime() || account.id <= 1000">
           <Row type="flex" justify="center" align="middle">
@@ -166,7 +166,7 @@
             <Card dis-hover :padding="0">
               <Reports :data="report.data"/>
               <Spin size="large" fix v-show="load">
-                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+                <Loading size="50"></Loading>
               </Spin>
             </Card>
 
@@ -218,6 +218,7 @@ import Confetti from "@/components/Confetti.vue";
 import Html from "@/components/Html.vue"
 import PrivilegesTag from "@/components/PrivilegesTag";
 import AchievementsTag from "/src/components/AchievementsTag.vue";
+import Loading from "@/components/Loading.vue";
 
 import games from '/public/config/gameName.json'
 
@@ -267,6 +268,7 @@ export default new Application({
     Confetti,
     Reports,
     Html,
+    Loading,
     vueQr
   },
   created() {

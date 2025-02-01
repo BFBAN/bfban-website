@@ -18,20 +18,36 @@
               </h2>
               <h3>{{ $t("home.cover.h3") }} <br>{{ $t("home.cover.h4") }}</h3>
               <br>
-              <ButtonGroup>
-                <Button v-if="isLogin" type="primary" size="large"
-                        :to="{name: 'profile', params: {pagename: 'information'}}" v-voice-button>
-                  {{ $t("header.profile") }}
-                </Button>
-                <Button v-else type="primary" size="large" :to="{name: 'signup'}" v-voice-button>{{
-                    $t("signup.title")
-                  }}
-                </Button>
-                <Button size="large" :to="{name: 'about'}">
-                  <Icon type="ios-information-circle-outline"/>
-                  {{ $t('about.title') }}{{ $t('name') }}
-                </Button>
-              </ButtonGroup>
+
+              <div class="btn">
+                <Row :gutter="5">
+                  <Col>
+                    <ButtonGroup>
+                      <Button v-if="isLogin" type="primary" size="large"
+                              :to="{name: 'profile', params: {pagename: 'information'}}" v-voice-button>
+                        {{ $t("header.profile") }}
+                      </Button>
+                      <Button v-else type="primary" size="large" :to="{name: 'signup'}" v-voice-button>{{
+                          $t("signup.title")
+                        }}
+                      </Button>
+                      <Button size="large" :to="{name: 'about'}">
+                        <Icon type="ios-information-circle-outline"/>
+                        {{ $t('about.title') }}{{ $t('name') }}
+                      </Button>
+                    </ButtonGroup>
+                  </Col>
+                  <Col class="mobile-hide">
+                    <a href="https://test.bfban.com" target="_blank">
+                      <Button size="large" type="text">
+                        API
+                        <Icon type="md-open"></Icon>
+                      </Button>
+                    </a>
+                  </Col>
+                </Row>
+              </div>
+
             </Col>
             <Col class="mobile-hide" :lg="{span: 13, push: 0}" type="flex" align="center" justify="center">
               <img :src="bannerImage"
@@ -111,8 +127,8 @@
           </Col>
         </Row>
       </div>
-      <div class="lean-box">
-        <div class="wrapper" :style="`animation: rowup ${activities_l.length * 2.8}s linear infinite;`">
+      <div class="home-activity-lean">
+        <div class="home-wrapper" :style="`animation: HomeRowUp ${activities_l.length * 2.8}s linear infinite;`">
           <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
             <Card class="icon" v-for="a_i in activity" :key="a_i.id">
               <Avatar size="80" :src="a_i.playerAvatarLink" style="margin-top: -55px">
@@ -346,7 +362,7 @@ export default new Application({
 </script>
 
 <style lang="less">
-@keyframes rowup {
+@keyframes HomeRowUp {
   from {
     transform: translateX(0%);
   }
@@ -365,14 +381,44 @@ export default new Application({
   margin: 50px 0 -15px 0;
   text-align: center;
 
-  .lean-box {
+  h1, h4 {
+    font-weight: initial;
+  }
+
+  .home-activity-lean {
     display: flex;
     transform: rotate(-5deg);
     margin-top: 50px;
   }
 
-  h1, h4 {
-    font-weight: initial;
+  .home-wrapper {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: nowrap;
+
+    .text-start {
+      text-align: start;
+    }
+
+    .icon {
+      font-size: 12px;
+      width: 280px;
+      height: 160px;
+      font-weight: bold;
+      transform: translateX(0) translateY(40px);
+      opacity: .6;
+      transition: all 1s;
+    }
+
+    .icon:hover {
+      opacity: 1;
+    }
+
+    .icon:nth-child(even) {
+      margin-top: 105px;
+      margin-left: 45px;
+      transform: translateX(45px) translateY(-10px);
+    }
   }
 }
 
@@ -399,6 +445,10 @@ export default new Application({
     user-select: none;
   }
 
+  .btn {
+    margin: 0 auto;
+  }
+
   h2 {
     font-size: 30px;
   }
@@ -420,35 +470,10 @@ export default new Application({
     text-align: center;
     width: 100%;
   }
-}
 
-.wrapper {
-  margin-top: 40px;
-  display: flex;
-  flex-wrap: nowrap;
-
-  .text-start {
-    text-align: start;
-  }
-
-  .icon {
-    font-size: 12px;
-    width: 280px;
-    height: 160px;
-    font-weight: bold;
-    transform: translateX(0) translateY(40px);
-    opacity: .6;
-    transition: all 1s;
-  }
-
-  .icon:hover {
-    opacity: 1;
-  }
-
-  .icon:nth-child(even) {
-    margin-top: 105px;
-    margin-left: 45px;
-    transform: translateX(45px) translateY(-10px);
+  .btn {
+    display: flex;
+    justify-content: center;
   }
 }
 </style>

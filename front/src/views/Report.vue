@@ -160,7 +160,7 @@
 
                   <Card class="report-hacker-id" dis-hover v-if="tabs.list[index].type === 'originName'">
                     <div slot="title">
-                      <ExposedName>
+                      <ExposedName disabled>
                         <h1 v-if="tabs.list[index].formItem.originName">
                           {{ tabs.list[index].formItem.originName }}
                         </h1>
@@ -365,6 +365,8 @@ import Promise from "lodash/_Promise";
 import Empty from "@/components/Empty.vue";
 import HtmlWidget from "@/components/HtmlWidget.vue";
 import Textarea from "@/components/textarea/index.vue"
+import ExposedName from "@/components/ExposedName.vue";
+import Loading from "@/components/Loading.vue";
 
 export default new Application({
   data() {
@@ -381,7 +383,7 @@ export default new Application({
       captcha: '',
     };
   },
-  components: {AdsGoogle, Textarea, Html, HtmlWidget, OcrWidget, Captcha, Empty},
+  components: {AdsGoogle, Textarea, ExposedName, Html, HtmlWidget, OcrWidget, Captcha, Loading, Empty},
   created() {
     const message = store.state.configuration['voice_message']
 

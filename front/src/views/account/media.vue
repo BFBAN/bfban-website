@@ -65,6 +65,10 @@
              :columns="media.columns"
              :data="media.list"
              class="media-content"></Table>
+
+      <Spin fix v-show="loadList">
+        <Loading></Loading>
+      </Spin>
     </Card>
 
     <br>
@@ -82,21 +86,24 @@
 <script>
 import 'viewerjs/dist/viewer.css'
 
-import {api, http_token} from "../../assets/js";
+import {api, http, http_token} from "../../assets/js";
 
 import VueViewer from 'v-viewer'
 import Vue from "vue";
 import UploadWidget from "@/components/UploadWidget.vue";
 import TimeView from "@/components/TimeView.vue";
+import Loading from "@/components/Loading.vue";
+import HtmlLink from "@/components/HtmlLink.vue";
 
 Vue.use(VueViewer);
 
 export default {
-  components: {TimeView, UploadWidget},
+  components: {Loading, TimeView, UploadWidget},
   data() {
     return {
+      loadList: true,
+      loadStatus: true,
       file: {name: ''},
-      loadingStatus: false,
       service_upload: api['service_upload'],
       media: {
         columns: [
@@ -105,6 +112,15 @@ export default {
             key: 'filename',
             minWidth: 200,
             maxWidth: 400,
+            render: (h, params) => {
+              return h(HtmlLink, {
+                props: {
+                  isPoptip: false,
+                  text: params.row.filename,
+                  href: `${http.location()}service/file?filename=${params.row.filename}`
+                }
+              })
+            }
           },
           {
             title: 'size',
@@ -133,7 +149,7 @@ export default {
             key: 'btn',
             render: (h, params) => {
               const buttonType = this.getButtonType(params.row.filename);
-              let buttonText = this.$i18n.t('profile.chat.look');  // 默认文本
+              let buttonText = this.$i18n.t('profile.chat.look');
               let buttonAction;
 
               if (buttonType === 'view') {
@@ -143,7 +159,7 @@ export default {
                   this.queryMediaDetail(params.row.filename);
                 };
               } else if (buttonType === 'download') {
-                const newDownloadURL = `https://bfban.gametools.network/api/service/file?filename=${params.row.filename}`;
+                const newDownloadURL = `${http.location()}service/file?filename=${params.row.filename}`;
                 buttonText = this.$i18n.t('profile.chat.download');
                 buttonAction = () => {
                   window.location.href = newDownloadURL;
@@ -225,18 +241,20 @@ export default {
      * 查询媒体信息
      */
     getMedia() {
+      this.loadStatus = true
       this.http.get(api["service_myStorageQuota"], {}).then(res => {
         const d = res.data;
         if (d.success === 1) {
           this.media.data = d.data;
         }
-      }).finally(() => {
-      });
+        this.loadStatus = false
+      })
     },
     /**
      * 查询媒体列表
      */
     getMediaList() {
+      this.loadList = true;
       this.http.get(api["service_myFiles"], {
         params: {
           limit: this.media.limit,
@@ -254,8 +272,9 @@ export default {
 
           this.media.list = d.data;
         }
-      }).finally(() => {
-      });
+
+        this.loadList = false;
+      })
     },
     /**
      * 查询文件详情

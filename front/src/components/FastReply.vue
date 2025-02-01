@@ -24,12 +24,11 @@
         </a>
         <Modal v-model="fastReply.mode" :closable="false">
           <Row slot="header" :gutter="20" type="flex" align="middle">
-            <Col flex="1">
-              <Icon type="md-chatboxes" size="20"></Icon>
-              Fast Reply
-            </Col>
             <Col>
-              <Input v-model="fastReply.searchValue" icon="md-search"></Input>
+              <b>Fast Reply</b>
+            </Col>
+            <Col flex="1">
+              <Input v-model="fastReply.searchValue" icon="md-search" style="width: 100%"></Input>
             </Col>
             <Col>
               <Button type="primary" @click="onSwitchAddModal"
@@ -53,11 +52,13 @@
               <Row>
                 <Col flex="1">
                   <b>{{ i.text }}</b>
-                  <template v-if="i.language">
-                    [{{ i.language }}]
-                  </template>
+
                 </Col>
                 <Col>
+                  <template v-if="languages && languages.length > 0 && i.language">
+                    {{ languages && languages.findLast(j => j.name === i.language).label || i.language }}
+                    <Divider type="vertical"></Divider>
+                  </template>
                   <template v-if="i.updateTime === 0">
                     <Time :time="i.creationTime"></Time>
                   </template>
@@ -162,6 +163,8 @@
 <script>
 import {storage} from "@/assets/js";
 
+import languages from "/public/config/languages.json";
+
 import HtmlWidget from "./HtmlWidget";
 import Textarea from "@/components/textarea/index.vue";
 import uuid from "uuid";
@@ -171,6 +174,8 @@ export default {
   name: "FastReply",
   data() {
     return {
+      languages: languages.child,
+
       fastReply: {
         countMax: 10,
         searchValue: '',

@@ -151,6 +151,7 @@ export default {
 .captcha .turnstile-container {
   margin: -14px -25px;
   position: relative;
+  z-index: 2;
   overflow: hidden;
   transform: scale(.85);
 }

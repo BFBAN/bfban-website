@@ -2,6 +2,7 @@
 import HtmlLink from "@/components/HtmlLink.vue";
 import cheaterStatusView from "@/components/CheaterStatusView.vue";
 import TimeView from "@/components/TimeView.vue";
+import ExposedName from "@/components/ExposedName.vue";
 
 export default {
   props: {
@@ -43,29 +44,35 @@ export default {
                     }
                   })
                 ]),
-                h(HtmlLink, {
-                  props: {
-                    text: params.row.originName,
-                    isPoptip: false,
-                    href
-                  },
-                  style: {
-                    "overflow": "hidden",
-                    "display": "inline",
-                    "width": "calc(100% - 50px)",
-                    "text-overflow": "ellipsis",
-                    "white-space": "nowrap",
-                    "word-break": 'break-all',
-                  },
-                  on: {
-                    click: () => {
-                      that.$router.push({
-                        name: "player",
-                        params: {ouid: params.row.originPersonaId},
-                      })
-                    }
+                h(ExposedName, {
+                  props:{
+                    disabled: true
                   }
-                }, params.row.originName),
+                },[
+                  h(HtmlLink, {
+                    props: {
+                      text: params.row.originName,
+                      isPoptip: false,
+                      href
+                    },
+                    style: {
+                      "overflow": "hidden",
+                      "display": "inline",
+                      "width": "calc(100% - 50px)",
+                      "text-overflow": "ellipsis",
+                      "white-space": "nowrap",
+                      "word-break": 'break-all',
+                    },
+                    on: {
+                      click: () => {
+                        that.$router.push({
+                          name: "player",
+                          params: {ouid: params.row.originPersonaId},
+                        })
+                      }
+                    }
+                  }, params.row.originName)
+                ]),
                 h('div', {class: 'reports-table-mark'})
               ]);
             }

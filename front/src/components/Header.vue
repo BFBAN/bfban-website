@@ -16,20 +16,29 @@
     <Lantern></Lantern>
     <!-- 临时通知 E -->
 
-    <div class="header-container" style="margin-top: 8px;">
-      <router-link class="mobile-hide" :to="{name: 'home'}">
-        <img src="../assets/images/logo.png"
-             style="border-radius: 50%"
-             width="40"
-             height="40"
-             alt="logo"/>
-      </router-link>
-      <div class="nav nav-menu">
+    <div class="header-container">
+      <Row class-name="header-nav mobile-hide" type="flex" align="middle">
+        <Col type="flex" align="middle">
+          <router-link :to="{name: 'home'}">
+            <img src="../assets/images/logo.png"
+                 class="logo"
+                 width="40px"
+                 height="40px"
+                 :alt="`${$t('name')} logo`"/>
+          </router-link>
+        </Col>
+        <Col>
+          <router-link :to="{name: 'home'}" class="link">
+            {{ $t("name") }}
+          </router-link>
+        </Col>
+      </Row>
+      <div class="header-nav header-nav-menu">
         <Icon class="desktop-hide" type="md-menu" size="30" @click="headerMenu.show = !headerMenu.show "/>
         <Drawer class="desktop-hide header-drawer"
                 placement="left"
                 width="80%"
-                :title="title"
+                :title="$t('name')"
                 :closable="true"
                 v-model="headerMenu.show">
 
@@ -39,13 +48,13 @@
                 <Card>
                   <Row :gutter="10">
                     <Col flex="1">
-                      <div @click="navigatorTo({to: {name: 'signin'}})">
+                      <div @click="() => navigatorTo({to: {name: 'signin'}})">
                         <Icon type="md-log-in" size="20"/>
                         {{ $t("header.signin") }}
                       </div>
                     </Col>
                     <Col>
-                      <div @click="navigatorTo({to: {name: 'signup'}})">
+                      <div @click="() => navigatorTo({to: {name: 'signup'}})">
                         <Icon type="md-person-add" size="20"/>
                         {{ $t("header.signup") }}
                       </div>
@@ -54,26 +63,34 @@
                 </Card>
               </template>
               <template v-else>
-                <h2>{{ currentUser.userinfo.username }}</h2>
+                <h2>{{ userinfo.username }}</h2>
               </template>
             </Banner>
 
             <ListItem v-for="(i, index) in headerMenu.child" :key="index" @click.native.stop="navigatorTo(i)">
               <div>
-                {{ $t("header." + i.name) }}
+                {{ $t(`header.${i.name}`) }}
               </div>
             </ListItem>
           </List>
         </Drawer>
 
-        <a class="mobile-hide link"
-           :to="i.to ? i.to : {}"
-           @click="navigatorTo(i)"
-           v-for="(i, index) in headerMenu.child" :key="index">
-          {{ $t("header." + i.name) }}
-        </a>
+        <div v-for="(i, index) in headerMenu.child" :key="index">
+          <template v-if="i.to">
+            <router-link class="mobile-hide link"
+                         :to="i.to">
+              {{ $t(`header.${i.name}`) }}
+            </router-link>
+          </template>
+          <template v-else>
+            <a class="mobile-hide link" :href="i.href" @click="navigatorTo(i)">
+              {{ $t(`header.${i.name}`) }}
+            </a>
+          </template>
+        </div>
+
       </div>
-      <div class="nav">
+      <div class="header-nav">
         <Button type="primary" v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
                 icon="md-log-in"
                 v-if="$route.name !== 'signin'">
@@ -86,43 +103,43 @@
                   :padding="0">
           <UserAvatar :src="userinfo.userAvatar" :size="30"></UserAvatar>
 
-          <DropdownMenu slot="list" class="header-dropdown-menu">
-            <div class="header-dropdown-avatar">
+          <DropdownMenu slot="list" class="header-account-menu">
+            <div class="header-account-menu-info">
               <div>
                 <UserAvatar :src="userinfo.userAvatar" :size="80"></UserAvatar>
-                <p class="header-dropdown-name">{{ userinfo.username }}</p>
-                <p class="header-dropdown-id">{{ userinfo.userId }}</p>
+                <p class="user-name">{{ userinfo.username }}</p>
+                <p class="user-id">{{ userinfo.userId }}</p>
               </div>
               <PrivilegesTag :data="userinfo.privilege"></PrivilegesTag>
             </div>
             <router-link :to="{name: 'space', params: { uId: `${userinfo.userId}` }}">
-              <DropdownItem divided :disabled="$route.name == 'space' && userinfo.userId == this.$route.params.uId">
+              <DropdownItem divided :disabled="$route.name === 'space' && userinfo.userId === this.$route.params.uId">
                 {{ $t("header.userCenter") }}
               </DropdownItem>
             </router-link>
             <router-link :to="{name: 'report'}">
-              <DropdownItem :disabled="$route.name == 'report'">
+              <DropdownItem :disabled="$route.name === 'report'">
                 {{ $t("header.report") }}
               </DropdownItem>
             </router-link>
             <router-link :to="{name: 'profile', params: {pagename: 'information'}}">
-              <DropdownItem :disabled="$route.name == 'profile'">
+              <DropdownItem :disabled="$route.name === 'profile'">
                 {{ $t("header.profile") }}
               </DropdownItem>
             </router-link>
             <router-link :to="{name: 'admin', params: {pagename: 'home'}}" v-if="isAdmin">
-              <DropdownItem :disabled="$route.name == 'admin'">
+              <DropdownItem :disabled="$route.name === 'admin'">
                 {{ $t("profile.admin.title") }}
               </DropdownItem>
             </router-link>
             <router-link :to="{name: 'workflow', params: {pagename: 'workflow'}}" v-if="isAdmin">
-              <DropdownItem :disabled="$route.name == 'workflow'">
+              <DropdownItem :disabled="$route.name === 'workflow'">
                 {{ $t("workflow.title") }}
               </DropdownItem>
             </router-link>
-            <div @click="onSignout">
+            <div @click="() => onAccountSignout()">
               <Dropdown-item divided v-show="isLogin">
-                <Row>
+                <Row class-name="ivu-btn-error ivu-btn-ghost">
                   <Col flex="1">{{ $t("header.signout") }}</Col>
                   <Col>
                     <Icon type="md-log-out"></Icon>
@@ -170,7 +187,7 @@
 </template>
 
 <script>
-import {account_storage, api, http, http_token, storage} from '../assets/js/index'
+import {account_storage, http_token, storage} from '../assets/js/index'
 import menu from '/public/config/headerMenu.json'
 
 import UserAvatar from "@/components/UserAvatar.vue";
@@ -181,6 +198,8 @@ import Application from "@/assets/js/application";
 import Banner from "@/components/Banner.vue";
 import ThemeWidget from "@/components/ThemeWidget"
 import Lantern from "@/components/Lantern";
+import {emojis as headerMenu} from "emoji-mart-vue";
+import Http from "@/assets/js/http";
 
 export default new Application({
   data() {
@@ -201,46 +220,39 @@ export default new Application({
   },
   methods: {
     async loadData() {
-      this.getTheme();
+      await this.getTheme();
     },
     /**
      * 表头账户注销
      */
-    onSignout() {
+    async onAccountSignout() {
+      let d;
       const signout_msg = this.$Message.loading({
         content: this.$i18n.t("header.signout"),
         duration: 0
       });
 
-      http.post(api["account_signout"], {
-        headers: {
-          'x-access-token': this.$store.state.user.token
-        }
-      }).then(res => {
-        const d = res.data;
+      try {
+        const result = await account_storage.signout();
+        d = result.d;
 
-        if (d.success === 1) {
-          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
-            message: d.code || d.message
-          }));
-          return;
-        }
-
-        this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+        this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
           message: d.code || d.message
         }));
-      }).catch(e => {
-        this.$Message.error(e.toString());
-      }).finally(() => {
-        // 清除与账户相关的数据
-        account_storage.clearAll();
+      } catch (e) {
+        if (e instanceof Http)
+          this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+            message: d.code || d.message
+          }));
 
+        this.$Message.error(e.toString());
+      } finally {
         signout_msg();
 
         this.$store.dispatch('signout').then(() => {
           this.$router.push('/');
         });
-      });
+      }
     },
     /**
      * 获取主题
@@ -273,9 +285,6 @@ export default new Application({
     userinfo() {
       return this.currentUser.userinfo || {}
     },
-    title() {
-      return document.title || 'APP';
-    }
   }
 })
 </script>
@@ -307,72 +316,69 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
 
-.header-dropdown-menu {
-  min-width: 280px !important;
-}
-
-.header-dropdown-avatar {
-  width: 100%;
-  padding: 30px 16px;
-  clear: both;
-  font-size: 14px !important;
-  white-space: nowrap;
-  text-align: center;
-
-  .user-avatar {
-    margin: 0 auto;
+  .logo {
+    border-radius: 50%;
+    display: flex;
   }
 
-  .header-dropdown-name {
-    margin: 5px 0 2px 0;
-    font-size: 1.5rem;
+  .header-account-menu {
+    min-width: 280px !important;
   }
 
-  .header-dropdown-id {
-    font-weight: 400;
-    margin: 0 0 5px 0;
-    font-size: 10px;
-    opacity: .5;
-  }
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  padding: 0 .4rem;
-
-  a.link {
-    font-weight: bold;
-    padding: .7rem .8rem;
-    text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0;
-  }
-}
-
-.nav-menu {
-  flex: 1;
-}
-
-.nav-username {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  max-width: 6rem;
-  flex-grow: 0;
-}
-
-.nav-signout {
-  flex-shrink: 0;
-}
-
-@media screen and (min-width: 1088px) {
-  .nav-username {
+  .header-account-menu-info {
     width: 100%;
-  }
-}
+    padding: 30px 16px;
+    clear: both;
+    font-size: 14px !important;
+    white-space: nowrap;
+    text-align: center;
 
-.ivu-badge-dot {
-  left: -4px;
+    .user-avatar {
+      margin: 0 auto;
+    }
+
+    .user-name {
+      margin: 5px 0 2px 0;
+      font-size: 1.5rem;
+    }
+
+    .user-id {
+      font-weight: 400;
+      margin: 0 0 5px 0;
+      font-size: 12px;
+      opacity: .5;
+    }
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    padding: 0 .4rem;
+
+    a.link {
+      font-weight: bold;
+      padding: .7rem .8rem;
+      text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0;
+    }
+  }
+
+  .header-nav-menu {
+    flex: 1;
+  }
+
+  .header-nav-username {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 6rem;
+    flex-grow: 0;
+  }
+
+  @media screen and (min-width: 1088px) {
+    .header-nav-username {
+      width: 100%;
+    }
+  }
 }
 </style>

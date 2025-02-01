@@ -8,7 +8,7 @@
             <Card dis-hover :padding="0">
               <Reports :data="report.data"></Reports>
               <Spin size="large" fix v-show="load">
-                <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
+                <Loading size="50"></Loading>
               </Spin>
             </Card>
 
@@ -40,6 +40,7 @@ import Empty from "@/components/Empty.vue";
 import UserAvatar from "@/components/UserAvatar.vue";
 import Confetti from "@/components/Confetti.vue";
 import Reports from "@/components/Reports.vue"
+import Loading from "@/components/Loading.vue";
 import {api, http, http_token} from "@/assets/js";
 
 export default new Application({
@@ -57,11 +58,11 @@ export default new Application({
   watch: {
     $route: "loadData",
   },
-  components: {Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, Reports},
+  components: {Loading, Empty, UserAvatar, cheaterStatusView, TimeView, Confetti, Reports},
   created() {
     this.http = http_token.call(this);
 
-    this.getMyReports();
+    this.getMyReports(null);
   },
   methods: {
     /**

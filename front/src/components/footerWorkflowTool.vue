@@ -43,7 +43,9 @@
             </Col>
           </Row>
           <div v-show="isFooterFull" class="footer-workflow container">
-            <WorkflowView @close="() => onClose()"></WorkflowView>
+            <keep-alive>
+              <WorkflowView @close="() => onClose()"></WorkflowView>
+            </keep-alive>
           </div>
         </div>
       </Col>

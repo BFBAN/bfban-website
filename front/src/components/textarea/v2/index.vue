@@ -4,33 +4,21 @@ import {Extension} from '@tiptap/core';
 import {Editor, EditorContent} from '@tiptap/vue-2'
 import StarterKit from '@tiptap/starter-kit'
 import EPlaceholder from '@tiptap/extension-placeholder'
-import ELink from '@tiptap/extension-link';
-import EHorizontalRule from '@tiptap/extension-horizontal-rule';
 import UploadWidget from "@/components/UploadWidget.vue";
+import InputLinkWidget from "@/components/InputLinkWidget.vue";
+import LinkWidget from "./link/index";
+import ImageWidget from "./image/index"
+import HRWidget from "./hr/index";
+import UserMention from "./sy/user/index"
+
 import lodash from "lodash";
 
-const Hr = EHorizontalRule.extend({name: 'HR'}).configure({
-      pluginKey: 'hr',
-      HTMLAttributes: {
-        class: 'hr ivu-divider ivu-divider-horizontal ivu-divider-default ivu-divider-dashed',
-      },
-    }),
-    Link = ELink.extend({name: 'Link'}).configure({
-      openOnClick: false,
-      autolink: true,
-      linkOnPaste: true,
-      protocols: ['https', 'http', 'mailto'],
-      HTMLAttributes: {
-        class: 'link',
-      },
-    }),
-    PlainTextPaste = Extension.create({
-      name: 'plainTextPaste',
+const PlainTextPaste = Extension.create({
       addPasteRules() {
         return [
           {
             regex: /.*/, // 匹配所有内容
-            handler: ({ match, range }) => {
+            handler: ({match, range}) => {
               const plainText = match[0].replace(/<[^>]*>/g, '');
 
               return {
@@ -78,13 +66,20 @@ export default {
     }
   },
   components: {
+    InputLinkWidget,
     UploadWidget,
     EditorContent,
   },
   data() {
     return {
       tiptap: null,
-      editorContent: ''
+      editorContent: `
+      <p>用户 {user:544}</p>
+      <p>文本<a href="https://" class="a">链接</a>内容</p>
+      <hr/>
+      <img src="https://bfban.com/assets/img/index-gl_zh-CN.07e3ae23.png" />
+      <a href="https://">链接2</a>
+      `
     }
   },
   created() {
@@ -103,18 +98,23 @@ export default {
         },
       },
       extensions: [
-        StarterKit,
-        EPlaceholder.configure({
-          pluginKey: 'placeholder',
-          placeholder: this.placeholder,
-          considerAnyAsEmpty: false,
-          showOnlyWhenEditable: true,
-          showOnlyCurrent: true,
-          includeChildren: false,
+        StarterKit.configure({
+          horizontalRule: false,
+          codeBlock: false,
+          heading: false,
         }),
-        Link,
-        Hr,
+        EPlaceholder.configure({
+          placeholder: this.placeholder,
+        }),
+
+        // 格式
+        LinkWidget,
+        HRWidget,
+        ImageWidget,
         PlainTextPaste,
+
+        // 缩语
+        UserMention,
       ],
       onUpdate({editor}) {
         const html = editor.getHTML();
@@ -130,41 +130,39 @@ export default {
      * 图片-工具栏
      */
     onImage() {
-      this.$refs['uploadWidget'].onPanelChange();
-      this.$refs['uploadWidget'].currentIndex = 0;
-      this.$refs['uploadWidget'].currentFileType = '';
-      this.$refs['uploadWidget'].updataIcon = false;
+      this.$refs.uploadWidget.onPanelChange();
     },
     /**
      * 链接-工具栏
      */
-    onLink(status) {
-      // unset link
-      if (status) {
-        this.editor.chain().focus().unsetLink().run()
-        return
+    onLink(isActivate) {
+      // if (isActivate) {
+      //   // unset link
+      //   this.editor.chain().focus().unsetLink().run()
+      //   return
+      // }
+
+      const selection = this.editor.state.selection;
+      const from = selection.from;
+      const to = selection.to;
+
+      if (from !== to) {
+        // 文本选择编辑
+        let allText = this.editor.getText();
+        let selectedText = allText.substring(from, to);
+        this.$refs.linkWidget.onPanelChange(selectedText, null, 'commit');
+      } else {
+        // 新建
+        this.$refs.linkWidget.onPanelChange("", "", 'insert');
       }
-
-      const previousUrl = this.editor.getAttributes('link').href
-      const url = window.prompt('URL', previousUrl)
-
-      // update link
-      this.editor.chain().focus().extendMarkRange('link').setLink({href: url}).run()
     },
     /**
      * 分割线-工具栏
      */
     onHr() {
-      this.editor.commands.setHorizontalRule();
+      this.editor.commands.insertHr();
     },
-    /**
-     * 编辑器触发事件
-     * @param data
-     */
-    onEditorChange(data) {
-      this.editorContent = data;
-      this.$emit("input", data);
-    },
+
     /**
      * 更新富文本
      * @param val
@@ -174,16 +172,33 @@ export default {
       return this.tiptap.getHTML()
     },
     /**
+     * 插入链接
+     */
+    onInsertLink(href, text) {
+      this.editor.commands.insertLink(href, text);
+    },
+    /**
      * 插入图像
      */
     async onInsertImage(insertValue) {
       try {
-        this.editor.commands.setImage({src: insertValue});
+        if (insertValue)
+          this.editor.chain().focus().setImage({src: insertValue}).run()
       } catch (err) {
         this.$Message.error(err);
         this.$refs['uploadWidget'].updataIcon = false;
         this.insertLoad = false;
       }
+    },
+
+
+    /**
+     * 编辑器触发事件
+     * @param data
+     */
+    onEditorChange(data) {
+      this.editorContent = data;
+      this.$emit("input", data);
     },
   },
   computed: {
@@ -201,8 +216,8 @@ export default {
 </script>
 
 <template>
-  <div v-if="tiptap" class="container">
-    <div class="control-group ql-snow ql-toolbar editor-toolbar">
+  <div v-if="tiptap" class="container html-widget-box">
+    <div class="control-group editor-toolbar">
       <Row :gutter="20" type="flex" align="middle">
         <Col>
           <Button @click="editor.chain().focus().toggleBold().run()"
@@ -246,16 +261,12 @@ export default {
                   v-if="toolbarAs.indexOf('bullet') >= 0"
                   :class="{'btn': true, 'is-active ql-active': editor.isActive('bulletList') }">
             <svg viewBox="0 0 18 18">
-              <line class="ql-stroke" x1="7" x2="15" y1="4" y2="4"></line>
-              <line class="ql-stroke" x1="7" x2="15" y1="9" y2="9"></line>
-              <line class="ql-stroke" x1="7" x2="15" y1="14" y2="14"></line>
-              <line class="ql-stroke ql-thin" x1="2.5" x2="4.5" y1="5.5" y2="5.5"></line>
-              <path class="ql-fill"
-                    d="M3.5,6A0.5,0.5,0,0,1,3,5.5V3.085l-0.276.138A0.5,0.5,0,0,1,2.053,3c-0.124-.247-0.023-0.324.224-0.447l1-.5A0.5,0.5,0,0,1,4,2.5v3A0.5,0.5,0,0,1,3.5,6Z"></path>
-              <path class="ql-stroke ql-thin"
-                    d="M4.5,10.5h-2c0-.234,1.85-1.076,1.85-2.234A0.959,0.959,0,0,0,2.5,8.156"></path>
-              <path class="ql-stroke ql-thin"
-                    d="M2.5,14.846a0.959,0.959,0,0,0,1.85-.109A0.7,0.7,0,0,0,3.75,14a0.688,0.688,0,0,0,.6-0.736,0.959,0.959,0,0,0-1.85-.109"></path>
+              <line class="ql-stroke" x1="6" x2="15" y1="4" y2="4"></line>
+              <line class="ql-stroke" x1="6" x2="15" y1="9" y2="9"></line>
+              <line class="ql-stroke" x1="6" x2="15" y1="14" y2="14"></line>
+              <line class="ql-stroke" x1="3" x2="3" y1="4" y2="4"></line>
+              <line class="ql-stroke" x1="3" x2="3" y1="9" y2="9"></line>
+              <line class="ql-stroke" x1="3" x2="3" y1="14" y2="14"></line>
             </svg>
           </Button>
           <Button @click="editor.chain().focus().toggleOrderedList().run()"
@@ -278,36 +289,35 @@ export default {
           <Button @click="onHr"
                   v-if="toolbarAs.indexOf('hr') >= 0"
                   class="btn"
-                  :class="{ 'is-active ql-active': editor.isActive('hr') }">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
-              <path
-                  d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 288zm0-128c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 160z"/>
+                  :class="{ 'is-active ql-active': editor.isActive('HR') }"
+                  :disabled="editor.isActive('HR')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
+                    d="M400 256H112"/>
             </svg>
           </Button>
 
           <Divider type="vertical" v-if="toolbarAs.indexOf('link') >= 0 && toolbarAs.indexOf('image') >= 0"></Divider>
 
-          <ButtonGroup>
-            <Button @click="onLink(editor.isActive('link'))" class="btn"
-                    v-if="toolbarAs.indexOf('link') >= 0"
-                    :class="{ 'is-active ql-active': editor.isActive('link') }">
-              <svg viewBox="0 0 18 18">
-                <line class="ql-stroke" x1="7" x2="11" y1="7" y2="11"></line>
-                <path class="ql-even ql-stroke"
-                      d="M8.9,4.577a3.476,3.476,0,0,1,.36,4.679A3.476,3.476,0,0,1,4.577,8.9C3.185,7.5,2.035,6.4,4.217,4.217S7.5,3.185,8.9,4.577Z"></path>
-                <path class="ql-even ql-stroke"
-                      d="M13.423,9.1a3.476,3.476,0,0,0-4.679-.36,3.476,3.476,0,0,0,.36,4.679c1.392,1.392,2.5,2.542,4.679.36S14.815,10.5,13.423,9.1Z"></path>
-              </svg>
-            </Button>
-            <Button @click="onImage" class="btn"
-                    v-if="toolbarAs.indexOf('image') >= 0">
-              <svg viewBox="0 0 18 18">
-                <rect class="ql-stroke" height="10" width="12" x="3" y="4"></rect>
-                <circle class="ql-fill" cx="6" cy="7" r="1"></circle>
-                <polyline class="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
-              </svg>
-            </Button>
-          </ButtonGroup>
+          <Button @click="onLink(editor.isActive('Link'))" class="btn"
+                  v-if="toolbarAs.indexOf('link') >= 0"
+                  :class="{ 'is-active ql-active': editor.isActive('Link') }">
+            <svg viewBox="0 0 18 18">
+              <line class="ql-stroke" x1="7" x2="11" y1="7" y2="11"></line>
+              <path class="ql-even ql-stroke"
+                    d="M8.9,4.577a3.476,3.476,0,0,1,.36,4.679A3.476,3.476,0,0,1,4.577,8.9C3.185,7.5,2.035,6.4,4.217,4.217S7.5,3.185,8.9,4.577Z"></path>
+              <path class="ql-even ql-stroke"
+                    d="M13.423,9.1a3.476,3.476,0,0,0-4.679-.36,3.476,3.476,0,0,0,.36,4.679c1.392,1.392,2.5,2.542,4.679.36S14.815,10.5,13.423,9.1Z"></path>
+            </svg>
+          </Button>
+          <Button @click="onImage" class="btn"
+                  v-if="toolbarAs.indexOf('image') >= 0">
+            <svg viewBox="0 0 18 18">
+              <rect class="ql-stroke" height="10" width="12" x="3" y="4"></rect>
+              <circle class="ql-fill" cx="6" cy="7" r="1"></circle>
+              <polyline class="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
+            </svg>
+          </Button>
         </Col>
         <Col flex="1"></Col>
         <Col>
@@ -328,7 +338,7 @@ export default {
     <slot></slot>
 
     <editor-content
-        class="editor"
+        class="editor html-widget-size-default timeline-description"
         ref="tiptapTextEditor"
         :style="`min-height:${height}`"
         :editor="tiptap"
@@ -364,35 +374,43 @@ export default {
 
     <UploadWidget ref="uploadWidget"
                   @finish="onInsertImage"></UploadWidget>
+    <InputLinkWidget ref="linkWidget" @finish="onInsertLink"></InputLinkWidget>
   </div>
 </template>
 
 <style lang="less">
 .tiptap {
-  font-family: "Ionicons";
+  font-family: "Ionicons", sans-serif;
   padding: 0 15px;
 
-  &:focus-visible,
   :first-child {
+    margin-top: 0;
+  }
+
+  &:focus-visible {
     outline: none !important;
     border: none !important;
   }
 
   :first-child {
-    line-height: 1.5;
     margin-top: 0;
+  }
+
+  img {
+    width: 100%;
+    display: block;
   }
 
   /* List styles */
 
   ul,
   ol {
+    line-height: 1.2;
     padding: 0 1rem;
     margin: 1.25rem 1rem 1.25rem 0.4rem;
 
     li p {
       outline: none;
-      line-height: 1.5;
       margin-top: 0.1em;
       margin-bottom: 0.1em;
     }
@@ -461,25 +479,21 @@ export default {
     }
   }
 
-  a:hover,
-  a:active {
-    text-decoration: underline;
-  }
-
-  a {
-    opacity: .8;
-    text-decoration: underline;
-    text-decoration-style: dashed;
-  }
-
-  a:before {
-    user-select: none;
-    content: "\F3D1";
-  }
-
-  p {
-    line-height: 1.5;
-  }
+  //a:hover,
+  //a:active {
+  //  text-decoration: underline;
+  //}
+  //
+  //a {
+  //  opacity: .8;
+  //  text-decoration: underline;
+  //  text-decoration-style: dashed;
+  //}
+  //
+  //a:before {
+  //  user-select: none;
+  //  content: "\F3D1";
+  //}
 
   blockquote {
     border-left: 3px solid var(--gray-3);
@@ -493,17 +507,9 @@ export default {
     color: var(--gray-4);
     content: attr(data-placeholder);
     float: left;
+    font-style: italic;
     height: 0;
-    pointer-events: none;
-  }
-
-  /* Placeholder (on every new line) */
-
-  p.is-empty:first-child::before {
-    color: var(--gray-4);
-    content: attr(data-placeholder);
-    float: left;
-    height: 0;
+    line-height: 1.6;
     pointer-events: none;
     opacity: .8;
   }
@@ -511,6 +517,26 @@ export default {
 
 .editor-toolbar {
   margin: 0;
+  padding: 8px;
+
+  svg .ql-stroke {
+    fill: none;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke: #383838 !important;
+  }
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    padding: 3px 5px;
+    margin-left: 1px;
+    width: 28px;
+    height: 24px;
+  }
 }
 
 .editor-toolbar .btn > span {
@@ -519,7 +545,7 @@ export default {
   cursor: pointer;
   display: contents;
   float: left;
-  height: 24px;
+  height: 28px;
   padding: 3px 5px;
   width: 28px;
 }

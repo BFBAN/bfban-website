@@ -24,10 +24,10 @@
                     {{ $t(`profile.${j.title}.title`) }}
                   </Col>
                   <Col>
-                    <Checkbox @on-change="switchAttr(j.configurationKey, j.configurationValue)"
+                    <Checkbox @on-change="onChangeSwitchFunction(j.configurationKey, j.configurationValue)"
                               v-model="j.configurationValue"
-                              :disabled="j.disabled"
-                              v-if="j.configurationKey"></Checkbox>
+                              v-if="j.configurationKey"
+                              :disabled="j.disabled"></Checkbox>
                   </Col>
                 </Row>
               </MenuItem>
@@ -67,7 +67,6 @@
 import {account_storage} from "@/assets/js";
 
 import PrivilegesTag from "/src/components/PrivilegesTag";
-
 import achievement from "./achievement"
 import reports from "./userReports";
 import appearance from "./appearance";
@@ -90,7 +89,6 @@ export default new Application({
       menuValue: 'space',
       menu: [
         {
-          title: "基础",
           name: "0",
           child: [{
             title: 'space',
@@ -186,11 +184,20 @@ export default new Application({
     this.onMenuActive(pagename);
   },
   methods: {
+    /**
+     * 激活对应子页面
+     * @param val
+     */
     onMenuActive(val) {
       this.menuValue = val;
-      this.$router.push({name: 'profile', params: {pagename: val}})
+      this.$router.push({name: 'profile', params: {pagename: val}, query: {...this.$router.query}})
     },
-    switchAttr(key, val) {
+    /**
+     * 更改账户配置
+     * @param key
+     * @param val
+     */
+    onChangeSwitchFunction(key, val) {
       account_storage.updateConfiguration(key, val);
     }
   },

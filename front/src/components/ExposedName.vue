@@ -19,7 +19,7 @@ export default {
     /**
      * 获取卡槽内名字
      */
-    getSlotName () {
+    getSlotName() {
       if (this.$slots.default && this.$slots.default.length >= 0)
         this.text = this.$slots.default[0].text;
     },
@@ -38,7 +38,9 @@ export default {
 
 <template>
   <span>
-    <code class="text-distinguishing text-distinguishing-letter" @click="onDiffNameModel">
+    <code :class="[
+        !disabled ?  'text-distinguishing': ''
+    ]" class=" text-distinguishing-letter" @click="onDiffNameModel">
       <slot></slot>
     </code>
     <Modal v-model="diffPanelModel" class="exposed-name-diff" footer-hide>

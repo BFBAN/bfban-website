@@ -22,7 +22,7 @@
         <Row :gutter="10">
           <Col :xs="{span: 22, pull: 1, push: 1}" :lg="{span: 4, pull: 0, push: 0}">
             <div class="default-avatar-box">
-              <!-- Origin头像 S -->
+              <!-- EA头像 S -->
               <Avatar shape="square"
                       class="default-avatar"
                       :src="cheater.avatarLink"
@@ -36,245 +36,253 @@
                         :size="180">
                 </Avatar>
               </template>
-              <!-- Origin头像 E -->
+              <!-- EA头像 E -->
             </div>
             <br class="desktop-hide">
           </Col>
-          <Col :xs="{span: 24, pull: 0, push: 0}" :lg="{span: 20, pull: 0, push: 0}" flex="1"
+          <Col :xs="{span: 24, pull: 0, push: 0}" :lg="{span: 20, pull: 0, push: 0}"
+               flex="1"
                class="detail-userinfo-card">
-            <Row :gutter="10" type="flex" justify="space-between" align="top">
-              <Col :flex="isMobile ? 1 : null" :xs="isMobile ? {span: 24, order:1} : {}"
-                   :lg="isMobile ? {span: 12, order: 1} : {}" class="tags">
-                <cheater-status-view :status="cheater.status"/>
 
-                <!-- 被举报的游戏 S -->
-                <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
-                             v-if="cheater.games">
-                  <Poptip trigger="hover"
-                          v-for="(game,gameindex) in cheater.games" :key="gameindex">
-                    <Tag type="border" :alt="$t('detail.info.reportedGames')">
-                      <img height="12" :src="require('/src/assets/images/games/' + game + '/logo.png')"/>
-                    </Tag>
-                    <div slot="content">{{ $t(`basic.games.${game}`) }}</div>
-                  </Poptip>
-                </router-link>
+            <Row class="" justify="space-between">
+              <Col span="24">
+                <Row :gutter="10" type="flex" justify="space-between" align="top">
+                  <Col :flex="isMobile ? 1 : null" :xs="isMobile ? {span: 24, order:1} : {}"
+                       :lg="isMobile ? {span: 12, order: 1} : {}" class="tags">
+                    <cheater-status-view :status="cheater.status"/>
 
-                <!-- 被举报的类型 E -->
-                <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">
-                  <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods" :key="method_index">
-                    {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
-                  </Tag>
-                </template>
+                    <!-- 被举报的游戏 S -->
+                    <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
+                                 v-if="cheater.games">
+                      <Poptip trigger="hover"
+                              v-for="(game,gameindex) in cheater.games" :key="gameindex">
+                        <Tag type="border" :alt="$t('detail.info.reportedGames')">
+                          <img height="12" :src="require('/src/assets/images/games/' + game + '/logo.png')"/>
+                        </Tag>
+                        <div slot="content">{{ $t(`basic.games.${game}`) }}</div>
+                      </Poptip>
+                    </router-link>
 
-                <Dropdown placement="bottom-end" class="desktop-hide">
-                  <ButtonGroup type="button">
-                    <Button size="small" type="primary" icon="md-more"></Button>
-                  </ButtonGroup>
-                  <DropdownMenu slot="list" style="min-width: 200px">
-                    <DropdownItem @click.native.stop="$router.push({name: 'cheater_app'})" v-if="!isMobile">
-                      <Icon type="md-qr-scanner"/>
-                      {{ $t('detail.info.app_qr.title') }}
-                    </DropdownItem>
-                    <DropdownItem @click.native.stop="updateCheaterModal = true">
-                      <Icon type="md-cloud"/>
-                      {{ $t('detail.info.updateButton') }}
-                    </DropdownItem>
-                    <DropdownItem :divided="true" @click.native.stop="$router.push({name: 'cheater_share'})">
-                      <!-- 分享 share S -->
-                      <Icon type="md-share"/>
-                      {{ $t('share.title') }}
-                      <!-- 分享 share E -->
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              </Col>
-              <template v-if="!isFull">
-                <Col :xs="isMobile ? {span: 24} : {}" :lg="isMobile ? {span: 12} : {}"
-                     class="html2canvas-ignore buttons">
-                  <!-- Subscribes S -->
-                  <template v-if="isLogin">
-                    <Dropdown placement="bottom-end">
+                    <!-- 被举报的类型 E -->
+                    <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">
+                      <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods"
+                           :key="method_index">
+                        {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
+                      </Tag>
+                    </template>
+
+                    <Dropdown placement="bottom-end" class="desktop-hide">
                       <ButtonGroup type="button">
-                        <Button @click="onSubscribes" :loading="subscribes.load"
-                                :disabled="!$store.state.configuration.subscribes">
-                          <template v-if="subscribes.static">
-                            <Icon type="md-notifications-off" size="20"/>
-                            {{ $t('detail.subscribes.cancelTrack') }}
-                          </template>
-                          <template v-else>
-                            <Icon type="md-notifications-outline" size="20"/>
-                            {{ $t('detail.subscribes.tracking') }}
-                          </template>
-                        </Button>
+                        <Button size="small" type="primary" icon="md-more"></Button>
                       </ButtonGroup>
-                      <DropdownMenu slot="list" v-if="$store.state.configuration.subscribes">
-                        <DropdownItem :selected="!subscribes.static">
-                          <h4>
-                            <Icon type="md-notifications-outline"/>
-                            {{ $t('detail.subscribes.tracking') }}
-                          </h4>
-                          <p>{{ $t('detail.subscribes.trackingDescribe') }}</p>
+                      <DropdownMenu slot="list" style="min-width: 200px">
+                        <DropdownItem @click.native.stop="$router.push({name: 'cheater_app'})" v-if="!isMobile">
+                          <Icon type="md-qr-scanner"/>
+                          {{ $t('detail.info.app_qr.title') }}
                         </DropdownItem>
-                        <DropdownItem :selected="subscribes.static">
-                          <h4>
-                            <Icon type="md-notifications-off"/>
-                            {{ $t('detail.subscribes.cancelTrack') }}
-                          </h4>
-                          <p>{{ $t('detail.subscribes.cancelTrackDescribe') }}</p>
+                        <DropdownItem @click.native.stop="updateCheaterModal = true">
+                          <Icon type="md-cloud"/>
+                          {{ $t('detail.info.updateButton') }}
+                        </DropdownItem>
+                        <DropdownItem :divided="true" @click.native.stop="$router.push({name: 'cheater_share'})">
+                          <!-- 分享 share S -->
+                          <Icon type="md-share"/>
+                          {{ $t('share.title') }}
+                          <!-- 分享 share E -->
                         </DropdownItem>
                       </DropdownMenu>
                     </Dropdown>
-                    <Divider type="vertical"/>
+                  </Col>
+                  <template v-if="!isFull">
+                    <Col :xs="isMobile ? {span: 24} : {}" :lg="isMobile ? {span: 12} : {}"
+                         class="html2canvas-ignore buttons">
+                      <!-- Subscribes S -->
+                      <template v-if="isLogin">
+                        <Dropdown placement="bottom-end">
+                          <ButtonGroup type="button">
+                            <Button @click="onSubscribes" :loading="subscribes.load"
+                                    :disabled="!$store.state.configuration.subscribes">
+                              <template v-if="subscribes.static">
+                                <Icon type="md-notifications-off" size="20"/>
+                                {{ $t('detail.subscribes.cancelTrack') }}
+                              </template>
+                              <template v-else>
+                                <Icon type="md-notifications-outline" size="20"/>
+                                {{ $t('detail.subscribes.tracking') }}
+                              </template>
+                            </Button>
+                          </ButtonGroup>
+                          <DropdownMenu slot="list" v-if="$store.state.configuration.subscribes">
+                            <DropdownItem :selected="!subscribes.static">
+                              <h4>
+                                <Icon type="md-notifications-outline"/>
+                                {{ $t('detail.subscribes.tracking') }}
+                              </h4>
+                              <p>{{ $t('detail.subscribes.trackingDescribe') }}</p>
+                            </DropdownItem>
+                            <DropdownItem :selected="subscribes.static">
+                              <h4>
+                                <Icon type="md-notifications-off"/>
+                                {{ $t('detail.subscribes.cancelTrack') }}
+                              </h4>
+                              <p>{{ $t('detail.subscribes.cancelTrackDescribe') }}</p>
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
+                        <Divider type="vertical"/>
+                      </template>
+                      <!-- Subscribes E -->
+
+                      <Dropdown placement="bottom-end" class="mobile-hide">
+                        <ButtonGroup type="button">
+                          <Button shape="circle-outline" size="default" icon="md-more"></Button>
+                        </ButtonGroup>
+                        <DropdownMenu slot="list" style="min-width: 200px">
+                          <DropdownItem @click.native.stop="$router.push({name: 'cheater_app'})" v-if="!isMobile">
+                            <Icon type="md-qr-scanner"/>
+                            {{ $t('detail.info.app_qr.title') }}
+                          </DropdownItem>
+                          <DropdownItem @click.native.stop="updateCheaterModal = true">
+                            <Icon type="md-cloud"/>
+                            {{ $t('detail.info.updateButton') }}
+                          </DropdownItem>
+                          <DropdownItem :divided="true" @click.native.stop="$router.push({name: 'cheater_share'})">
+                            <!-- 分享 share S -->
+                            <Icon type="md-share"/>
+                            {{ $t('share.title') }}
+                            <!-- 分享 share E -->
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </Col>
                   </template>
-                  <!-- Subscribes E -->
+                  <Col :xs="{span: 24}" :lg="{span: 24}">
+                    <Dropdown :transfer="isMobile" placement="bottom-start">
+                      <h1>
+                        <ExposedName>
+                          {{ cheater.originName || 'User Name' }}
+                        </ExposedName>
+                      </h1>
 
-                  <Dropdown placement="bottom-end" class="mobile-hide">
-                    <ButtonGroup type="button">
-                      <Button shape="circle-outline" size="default" icon="md-more"></Button>
-                    </ButtonGroup>
-                    <DropdownMenu slot="list" style="min-width: 200px">
-                      <DropdownItem @click.native.stop="$router.push({name: 'cheater_app'})" v-if="!isMobile">
-                        <Icon type="md-qr-scanner"/>
-                        {{ $t('detail.info.app_qr.title') }}
-                      </DropdownItem>
-                      <DropdownItem @click.native.stop="updateCheaterModal = true">
-                        <Icon type="md-cloud"/>
-                        {{ $t('detail.info.updateButton') }}
-                      </DropdownItem>
-                      <DropdownItem :divided="true" @click.native.stop="$router.push({name: 'cheater_share'})">
-                        <!-- 分享 share S -->
-                        <Icon type="md-share"/>
-                        {{ $t('share.title') }}
-                        <!-- 分享 share E -->
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </Col>
-              </template>
-              <Col :xs="{span: 24}" :lg="{span: 24}">
-                <Dropdown :transfer="isMobile" placement="bottom-start">
-                  <h1>
-                    <ExposedName>
-                      {{ cheater.originName || 'User Name' }}
-                    </ExposedName>
-                  </h1>
-
-                  <!-- 历史ID -->
-                  <DropdownMenu slot="list"
-                                :style="isMobile ? '' : 'min-width: 630px'"
-                                v-if="cheater && cheater.history && cheater.history.length >= 0">
-                    <Row style="margin: 5px 18px">
-                      <Col flex="1">
-                        <b>{{ $t('detail.info.historyID') }}</b>
-                      </Col>
-                      <Col>
-                        <Button size="small" @click="updateCheaterModal = true;">
-                          {{ $t('detail.info.updateButton') }}
-                        </Button>
-                      </Col>
-                    </Row>
-                    <div style="overflow: auto; max-height: 80vh">
-                      <div v-for="(origin, origin_index) in cheater.history" :key="origin_index">
-                        <Row :gutter="5" type="flex" align="middle"
-                             style="padding: 0 16px;margin: 10px 0 ; width:100%">
-                          <Col class="mobile-hide">
-                            <TimeView :time="origin.fromTime">
-                              <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
-                            </TimeView>
-                          </Col>
-                          <Col flex="1" class="mobile-hide">
-                            <Divider dashed style="margin: 0"/>
+                      <!-- 历史ID -->
+                      <DropdownMenu slot="list"
+                                    :style="isMobile ? '' : 'min-width: 630px'"
+                                    v-if="cheater && cheater.history && cheater.history.length >= 0">
+                        <Row style="margin: 5px 18px">
+                          <Col flex="1">
+                            <b>{{ $t('detail.info.historyID') }}</b>
                           </Col>
                           <Col>
-                            <ExposedName>
-                              {{ origin.originName }}
-                            </ExposedName>
+                            <Button size="small" @click="updateCheaterModal = true;">
+                              {{ $t('detail.info.updateButton') }}
+                            </Button>
                           </Col>
                         </Row>
+                        <div style="overflow: auto; max-height: 80vh">
+                          <div v-for="(origin, origin_index) in cheater.history" :key="origin_index">
+                            <Row :gutter="5" type="flex" align="middle"
+                                 style="padding: 0 16px;margin: 10px 0 ; width:100%">
+                              <Col class="mobile-hide">
+                                <TimeView :time="origin.fromTime">
+                                  <Time :time="origin.fromTime" v-if="origin.fromTime" type="datetime"></Time>
+                                </TimeView>
+                              </Col>
+                              <Col flex="1" class="mobile-hide">
+                                <Divider dashed style="margin: 0"/>
+                              </Col>
+                              <Col>
+                                <ExposedName>
+                                  {{ origin.originName }}
+                                </ExposedName>
+                              </Col>
+                            </Row>
+                          </div>
+                        </div>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span="24">
+                <Row :gutter="10" class="cards">
+                  <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
+                    <Poptip transfer width="400" placement="bottom-start">
+                      <Card :padding="isMobile ? 5 : 10" dis-hover>
+                        <h3>{{ cheater.id || 0 }}</h3>
+                        <span>IDs <Icon type="md-more"/></span>
+                      </Card>
+                      <div slot="content">
+                        <Row :gutter="10" type="flex" align="middle">
+                          <Col>id:</Col>
+                          <Col flex="1">
+                            <Divider dashed/>
+                          </Col>
+                          <Col>{{ cheater.id || 'cheater id' }}</Col>
+                        </Row>
+                        <Row :gutter="10" type="flex" align="middle">
+                          <Col>User id
+                            <Poptip transfer :content="$t(`report.labels.types.originUserId.hint`)">
+                              <Icon type="md-help"></Icon>
+                            </Poptip>
+                            :
+                          </Col>
+                          <Col flex="1">
+                            <Divider dashed/>
+                          </Col>
+                          <Col>{{ cheater.originUserId || 'user id' }}</Col>
+                        </Row>
+                        <Row :gutter="10" type="flex" align="middle">
+                          <Col>Persona id
+                            <Poptip transfer :content="$t(`report.labels.types.originPersonaId.hint`)">
+                              <Icon type="md-help"></Icon>
+                            </Poptip>
+                            :
+                          </Col>
+                          <Col flex="1">
+                            <Divider dashed/>
+                          </Col>
+                          <Col>{{ cheater.originPersonaId || 'persona id' }}</Col>
+                        </Row>
                       </div>
-                    </div>
-                  </DropdownMenu>
-                </Dropdown>
-              </Col>
-            </Row>
-
-            <Row :gutter="10" class="cards">
-              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
-                <Poptip transfer width="400" placement="bottom-start">
-                  <Card :padding="isMobile ? 5 : 10" dis-hover>
-                    <h3>{{ cheater.id || 0 }}</h3>
-                    <span>IDs <Icon type="md-more"/></span>
-                  </Card>
-                  <div slot="content">
-                    <Row :gutter="10" type="flex" align="middle">
-                      <Col>id:</Col>
-                      <Col flex="1">
-                        <Divider dashed/>
-                      </Col>
-                      <Col>{{ cheater.id || 'cheater id' }}</Col>
-                    </Row>
-                    <Row :gutter="10" type="flex" align="middle">
-                      <Col>User id
-                        <Poptip transfer :content="$t(`report.labels.types.originUserId.hint`)">
-                          <Icon type="md-help"></Icon>
-                        </Poptip>
-                        :
-                      </Col>
-                      <Col flex="1">
-                        <Divider dashed/>
-                      </Col>
-                      <Col>{{ cheater.originUserId || 'user id' }}</Col>
-                    </Row>
-                    <Row :gutter="10" type="flex" align="middle">
-                      <Col>Persona id
-                        <Poptip transfer :content="$t(`report.labels.types.originPersonaId.hint`)">
-                          <Icon type="md-help"></Icon>
-                        </Poptip>
-                        :
-                      </Col>
-                      <Col flex="1">
-                        <Divider dashed/>
-                      </Col>
-                      <Col>{{ cheater.originPersonaId || 'persona id' }}</Col>
-                    </Row>
-                  </div>
-                </Poptip>
-              </Col>
-              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
-                <Card :padding="isMobile ? 5 : 10" dis-hover>
-                  <!-- 浏览次数 -->
-                  <h3>{{ cheater.viewNum || 0 }}</h3>
-                  <span>{{ $t('detail.info.viewTimes') }}</span>
-                </Card>
-              </Col>
-              <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 4}">
-                <Card :padding="isMobile ? 5 : 10" dis-hover>
-                  <!-- 回复次数 -->
-                  <h3>{{ cheater.commentsNum || 0 }}</h3>
-                  <span>{{ $t('basic.button.reply') }}</span>
-                </Card>
-              </Col>
-              <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 12}" :lg="{span: 6}">
-                <Card :padding="isMobile ? 5 : 10" dis-hover>
-                  <!-- 第一次被举报时间 -->
-                  <h3>
-                    <TimeView :time="cheater.createTime">
-                      <Time v-if="cheater.createTime" :time="cheater.createTime" type="datetime"></Time>
-                    </TimeView>
-                  </h3>
-                  <span>{{ $t('detail.info.firstReportTime') }}</span>
-                </Card>
-              </Col>
-              <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 12}" :lg="{span: 6}">
-                <Card :padding="isMobile ? 5 : 10" dis-hover>
-                  <!-- 最近更新时间 -->
-                  <h3>
-                    <TimeView :time="cheater.updateTime">
-                      <Time v-if="cheater.updateTime" :time="cheater.updateTime" type="datetime"></Time>
-                    </TimeView>
-                  </h3>
-                  <span>{{ $t('detail.info.recentUpdateTime') }}</span>
-                </Card>
+                    </Poptip>
+                  </Col>
+                  <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
+                    <Card :padding="isMobile ? 5 : 10" dis-hover>
+                      <!-- 浏览次数 -->
+                      <h3>{{ cheater.viewNum || 0 }}</h3>
+                      <span>{{ $t('detail.info.viewTimes') }}</span>
+                    </Card>
+                  </Col>
+                  <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 4}">
+                    <Card :padding="isMobile ? 5 : 10" dis-hover>
+                      <!-- 回复次数 -->
+                      <h3>{{ cheater.commentsNum || 0 }}</h3>
+                      <span>{{ $t('basic.button.reply') }}</span>
+                    </Card>
+                  </Col>
+                  <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 12}" :lg="{span: 6}">
+                    <Card :padding="isMobile ? 5 : 10" dis-hover>
+                      <!-- 第一次被举报时间 -->
+                      <h3>
+                        <TimeView :time="cheater.createTime">
+                          <Time v-if="cheater.createTime" :time="cheater.createTime" type="datetime"></Time>
+                        </TimeView>
+                      </h3>
+                      <span>{{ $t('detail.info.firstReportTime') }}</span>
+                    </Card>
+                  </Col>
+                  <Col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 12}" :lg="{span: 6}">
+                    <Card :padding="isMobile ? 5 : 10" dis-hover>
+                      <!-- 最近更新时间 -->
+                      <h3>
+                        <TimeView :time="cheater.updateTime">
+                          <Time v-if="cheater.updateTime" :time="cheater.updateTime" type="datetime"></Time>
+                        </TimeView>
+                      </h3>
+                      <span>{{ $t('detail.info.recentUpdateTime') }}</span>
+                    </Card>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Col>
@@ -327,13 +335,14 @@
                   <!-- 时间轴筛选 E -->
                 </Col>
                 <Col class="mobile-hide">
-                  <!--                  <Page :page-size="$refs.timeline.timeline.limit"-->
-                  <!--                        :current="$refs.timeline.timeline.page"-->
-                  <!--                        :total="$refs.timeline.timeline.total"-->
-                  <!--                        @on-change="$refs.timeline.handlePageChange"-->
-                  <!--                        simple-->
-                  <!--                        class="page"-->
-                  <!--                        size="small"/>-->
+                  <Page :page-size="$refs.timeline.timeline.limit"
+                        :current="$refs.timeline.timeline.page"
+                        :total="$refs.timeline.timeline.total"
+                        v-if="$refs.timeline"
+                        @on-change="$refs.timeline.handlePageChange"
+                        simple
+                        class="page"
+                        size="small"/>
                 </Col>
                 <Col>
                   <Divider type="vertical" class="mobile-hide"/>
@@ -363,8 +372,8 @@
 
               <div class="content">
                 <TimelineView :id="getParamsIds('personaId')"
-                              @click-update-name="(e) => updateCheaterModal = true"
-                              @click-reply="(e,id,byUserId) => handleReply(id, byUserId)"
+                              @click-update-name="() => updateCheaterModal = true"
+                              @click-reply="(id,byUserId) => handleReply(id, byUserId)"
                               ref="timeline"/>
               </div>
 
@@ -372,13 +381,13 @@
               <div class="ivu-card ivu-card-bordered ivu-card-dis-hover" id="reply" v-if="isLogin">
                 <div class="ivu-card-body">
                   <TextareaView v-model="reply.content"
-                            style="margin: -10px -16px;"
-                            ref="replyTextarea"
-                            :toolbar="[['bold'], ['link', 'image']]"
-                            :height="'150px'"
-                            :maxlength="5000"
-                            :showMaxlengthLabel="true"
-                            :placeholder="$t('detail.info.giveOpinion')">
+                                style="margin: -10px -16px;"
+                                ref="replyTextarea"
+                                :toolbar="[['bold'], ['link', 'image']]"
+                                :height="'150px'"
+                                :maxlength="5000"
+                                :showMaxlengthLabel="true"
+                                :placeholder="$t('detail.info.giveOpinion')">
                     <template v-slot:footer>
                       <div class="ivu-card-body">
                         <Row :gutter="10">
@@ -497,7 +506,7 @@
             </DropdownMenu>
           </Dropdown>
 
-          <a href="javascript:void(0)" @click="() => $refs.timeline.getTimeline">
+          <a href="javascript:void(0)" @click="() => $refs.timeline && $refs.timeline.getTimeline()">
             <Icon type="md-refresh" size="30"/>
           </a>
           <template v-if="isLogin && isAdmin">
@@ -521,12 +530,12 @@
         </div>
         <Form ref="replyForm" style="margin: -17px;" v-if="isLogin">
           <TextareaView v-model="reply.miniModeContent"
-                    ref="replyMiniModeTextarea"
-                    :toolbar="[['bold'], ['link', 'image']]"
-                    :height="'320px'"
-                    :maxlength="5000"
-                    :showMaxlengthLabel="true"
-                    :placeholder="$t('detail.info.giveOpinion')">
+                        ref="replyMiniModeTextarea"
+                        :toolbar="[['bold'], ['link', 'image']]"
+                        :height="'320px'"
+                        :maxlength="5000"
+                        :showMaxlengthLabel="true"
+                        :placeholder="$t('detail.info.giveOpinion')">
           </TextareaView>
         </Form>
         <div v-else>{{ $t('detail.info.replyManual4') }}</div>
@@ -1069,6 +1078,7 @@ export default new Application({
      * @param {string} userId 回复id
      */
     handleReply(replyId, userId) {
+      console.log(replyId, userId)
       this.reply.toReplyId = replyId === null ? '' : replyId;
       this.reply.toUserId = userId === 'undefined' ? '' : userId;
 
@@ -1106,6 +1116,13 @@ export default new Application({
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
+
+  > div {
+    display: flex;
+    height: 100%;
+    flex-wrap: wrap;
+    align-content: space-between;
+  }
 
   h1 {
     font-size: 2.2rem;

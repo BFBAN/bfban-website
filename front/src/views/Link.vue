@@ -83,7 +83,8 @@
                  target="_parent">
               <Row :gutter="10" type="flex" align="middle">
                 <Col>
-                  <b>{{ i.label }} ({{ i.name }})</b>
+                  <b><HtmlLink :text="i.label" :href="`/lang/${i.value}.json`"></HtmlLink></b>
+                  ({{ i.name }})
                 </Col>
                 <Col flex="1">
                   <Divider dashed></Divider>

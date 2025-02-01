@@ -486,6 +486,7 @@ export default {
               <Col class="column-drag-handle handle">&#x2630;</Col>
               <Col flex="1">
                 <Input v-model="column.name.label" :border="false" size='small'
+                       class="input-title"
                        @on-change="(e) => onChangeColumnName(e, column.name.label,column)"></Input>
                 <p>{{ $t(`basic.status.${column.name.value}.text`) }} · {{ column.name.value }}</p>
               </Col>
@@ -848,6 +849,10 @@ export default {
       height: 60px;
       margin-bottom: 5px;
 
+      .input-title input {
+        font-weight: bold;
+      }
+
       p {
         font-size: 12px;
         opacity: .4;
@@ -860,7 +865,19 @@ export default {
 
     .card {
       transition: all .25s;
-      margin: 0 0 3px 0 !important;
+    }
+
+    .smooth-dnd-drop-preview-constant-class {
+      padding: 3px 0 !important;
+      border-radius: 5px !important;
+      overflow: hidden;
+      border: none;
+      outline: none;
+      opacity: .3;
+    }
+
+    .smooth-dnd-draggable-wrapper {
+      padding: 3px 0 !important;
     }
   }
 }

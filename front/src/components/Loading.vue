@@ -1,8 +1,8 @@
 <script>
 export default {
-  props:{
+  props: {
     size: {
-      type: Number,
+      type: [Number, String],
       default: 50,
     }
   },
