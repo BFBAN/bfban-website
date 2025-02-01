@@ -73,7 +73,7 @@ export default {
   data() {
     return {
       tiptap: null,
-      editorContent: `
+      editorContent: true ? "" : `
       <p>用户 {user:544}</p>
       <p>文本<a href="https://" class="a">链接</a>内容</p>
       <hr/>
@@ -479,22 +479,6 @@ export default {
     }
   }
 
-  //a:hover,
-  //a:active {
-  //  text-decoration: underline;
-  //}
-  //
-  //a {
-  //  opacity: .8;
-  //  text-decoration: underline;
-  //  text-decoration-style: dashed;
-  //}
-  //
-  //a:before {
-  //  user-select: none;
-  //  content: "\F3D1";
-  //}
-
   blockquote {
     border-left: 3px solid var(--gray-3);
     margin: 1.5rem 0;
@@ -507,9 +491,8 @@ export default {
     color: var(--gray-4);
     content: attr(data-placeholder);
     float: left;
-    font-style: italic;
     height: 0;
-    line-height: 1.6;
+    line-height: 1.5;
     pointer-events: none;
     opacity: .8;
   }
