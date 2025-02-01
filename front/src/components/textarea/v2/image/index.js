@@ -33,8 +33,13 @@ export default Node.create({
     },
     addCommands() {
         return {
-            insertImage: (options) => ({commands}) => {
-                return commands.insertContent({type: this.name, ...options})
+            insertImage: (src) => ({commands}) => {
+                return commands.insertContent({
+                    type: this.name,
+                    attrs: {
+                        src,
+                    }
+                })
             },
         }
     },

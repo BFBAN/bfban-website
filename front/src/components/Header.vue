@@ -132,9 +132,14 @@
                 {{ $t("profile.admin.title") }}
               </DropdownItem>
             </router-link>
-            <router-link :to="{name: 'workflow', params: {pagename: 'workflow'}}" v-if="isAdmin">
+            <router-link :to="{name: 'workflow'}" v-if="isAdmin">
               <DropdownItem :disabled="$route.name === 'workflow'">
-                {{ $t("workflow.title") }}
+                <Row>
+                  <Col flex="1">{{ $t("workflow.title") }}</Col>
+                  <Col>
+                    <Tag size="medium" :fade="false">Beta</Tag>
+                  </Col>
+                </Row>
               </DropdownItem>
             </router-link>
             <div @click="() => onAccountSignout()">
@@ -316,6 +321,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 45px;
 
   .logo {
     border-radius: 50%;

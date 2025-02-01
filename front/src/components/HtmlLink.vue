@@ -12,7 +12,7 @@
       <template v-else-if="getProtocol === 'mailto:'">
         <Icon type="ios-mail-outline" class="icon"/>
       </template>
-      <a :href="isOpen ? afterData.href : 'javacript:void(0)'" :target="isOpen ? '_blank' : null" rel="noopener noreferrer">
+      <a :href="isOpen ? afterData.href : null" :target="isOpen ? '_blank' : null" rel="noopener noreferrer">
         <slot>{{ afterData.text || afterData.href }}</slot>
       </a>
     </span>

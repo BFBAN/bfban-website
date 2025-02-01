@@ -565,6 +565,8 @@ export default new Application({
 
           <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
                       :html="l.content.text" v-if="l.content.text"></HtmlWidget>
+          <Empty v-else :not-hint="true"></Empty>
+
         </div>
         <!-- 举报:any E -->
 
@@ -612,9 +614,11 @@ export default new Application({
               </Col>
             </Row>
           </div>
+
           <HtmlWidget :html="l.content.text"
                       v-if="l.content.text"
                       class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
+          <Empty v-else :not-hint="true"></Empty>
 
           <template v-if="isLogin && l.content.extendedLinks">
             <Row :gutter="5">
@@ -728,6 +732,8 @@ export default new Application({
 
           <HtmlWidget :html="l.content.text" v-if="l.content.text"
                       class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
+          <Empty v-else :not-hint="true"></Empty>
+
         </div>
         <!-- 认为:any E -->
 
@@ -784,6 +790,8 @@ export default new Application({
             </template>
 
             <HtmlWidget :html="l.content.text" v-if="l.content.text"></HtmlWidget>
+            <Empty v-else :not-hint="true"></Empty>
+
           </div>
         </div>
         <!-- 回复:any E -->

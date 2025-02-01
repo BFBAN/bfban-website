@@ -28,7 +28,7 @@
 
         <template v-if="currentType == 'url'">
           <div class="see-mode">
-            <Input v-model="insertValue" placeholder="http(s)://"></Input>
+            <Input size="large" v-model="insertValue" placeholder="http(s)://"></Input>
           </div>
         </template>
 

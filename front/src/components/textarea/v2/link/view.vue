@@ -1,25 +1,26 @@
 <script>
 import {nodeViewProps, NodeViewWrapper} from "@tiptap/vue-2";
 import HtmlLink from "@/components/HtmlLink.vue";
-import InputLinkWidget from "@/components/InputLinkWidget.vue";
+import InputLinkAttrWidget from "@/components/InputLinkAttrWidget.vue";
 
 export default {
   props: nodeViewProps,
   components: {
     HtmlLink,
-    InputLinkWidget,
+    InputLinkAttrWidget,
     NodeViewWrapper,
   },
   methods: {
     /**
      * 打开Link面板
      */
-    openLinkPalen() {
+    openLinkPanel() {
       const {href, text} = this.node.attrs;
-      this.$refs.inputLinkItem.onPanelChange(href, text);
+      this.$refs.inputLinkAttrItem.openPanel(href, text);
     },
     /**
      * 更新
+     * 已通过验证，确认属性后更新内部attr
      */
     onUpdateLink(href, text) {
       this.node.attrs.href = href;
@@ -30,7 +31,7 @@ export default {
     /**
      * 删除
      */
-    onDeleteLink () {
+    onDeleteLink() {
       this.deleteNode();
     }
   }
@@ -40,8 +41,10 @@ export default {
 <template>
   <node-view-wrapper class="node-view" :as="'span'">
     <HtmlLink :text="node.attrs.text" :href="node.attrs.href" :isOpen="false" :isIcon="true" :isPoptip="false"
-              :isEdit="true" @click.native="openLinkPalen"></HtmlLink>
-    <InputLinkWidget ref="inputLinkItem" :isDelete="true" @delete="onDeleteLink" @finish="onUpdateLink"></InputLinkWidget>
+              :isEdit="true" @click.native="openLinkPanel"></HtmlLink>
+    <InputLinkAttrWidget ref="inputLinkAttrItem" :isDelete="true"
+                         @delete="onDeleteLink"
+                         @finish="onUpdateLink"></InputLinkAttrWidget>
   </node-view-wrapper>
 </template>
 

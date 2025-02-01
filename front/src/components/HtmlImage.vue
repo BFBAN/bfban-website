@@ -135,7 +135,8 @@ export default {
       this.$viewerApi({
         options: {
           toolbar: false,
-          navbar: true,
+          button: false,
+          navbar: false,
           keyboard: false,
           fullscreen: true,
           initialViewIndex: Number(this.index),

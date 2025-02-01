@@ -1,4 +1,6 @@
 <script>
+import {regular} from "@/assets/js";
+
 export default {
   props: {
     isDelete: {
@@ -11,15 +13,32 @@ export default {
       form: {
         load: true,
         data: {
-          url: "",
-          text: ""
+          url: '',
+          text: ''
         },
         rules: {
-          text: [
-            {trigger: 'change'}
-          ],
           url: [
-            {trigger: 'change'}
+            {required: true, trigger: 'change'},
+            {
+              validator: (rule, value, callback) => {
+                try {
+                  let checkLinkHref = regular.check('link', value);
+                  if (checkLinkHref.code === -1) {
+                    callback(new Error('error link href'));
+                    return;
+                  }
+
+                  callback();
+                } catch (e) {
+                  callback(new Error(e));
+                }
+              },
+              trigger: 'blur'
+            },
+            {type: 'string', min: 1, trigger: 'blur'}
+          ],
+          text: [
+            {required: false, max: 1000, trigger: 'change'}
           ],
         },
       },
@@ -33,7 +52,7 @@ export default {
      */
     onFinish() {
       const that = this;
-      this.$refs.inputLinkForm.validate(async (valid) => {
+      this.$refs.inputLinkForm.validate((valid) => {
         if (!valid) return;
 
         const url = that.form.data.url,
@@ -41,15 +60,15 @@ export default {
             type = that.type;
 
         that.$emit('finish', url, text, type);
-        that.onPanelChange(null);
+        that.onPanelToggle();
       });
     },
     /**
      * 重置表单
      */
     onReset() {
-      this.form.data.url = "";
-      this.form.data.text = "";
+      this.form.data.text = '';
+      this.form.data.url = '';
     },
     /**
      * 删除
@@ -61,13 +80,21 @@ export default {
     /**
      * 面板改变通知
      */
-    onPanelChange(url, text, type) {
+    onPanelToggle() {
       this.inputLinkPlane = !this.inputLinkPlane;
+    },
+    /**
+     * 打开面板
+     * @param url
+     * @param text
+     * @param type
+     */
+    openPanel (url, text, type) {
+      this.onPanelToggle();
       this.form.type = type;
       this.onReset();
-      if (text) {
-        this.form.data.text = text || url;
-      }
+
+      this.form.data.text = text || url;
       if (url) {
         this.form.data.url = url;
       }
@@ -79,16 +106,20 @@ export default {
 <template>
   <div>
     <Modal v-model="inputLinkPlane" :loading="form.load">
-      <Form labelPosition="left" ref="inputLinkForm" v-model="form.data" :rules="form.rules">
+      <Form labelPosition="left" ref="inputLinkForm" :model="form.data" :rules="form.rules">
         <div>
           <Icon type="md-link" size="18"/>
         </div>
         <div class="see-mode">
-          <FormItem prop="text" label="Text" class="input">
-            <Input v-model="form.data.text" size="large" placeholder="link content" clearable></Input>
+          <FormItem label="Text" prop="text">
+            <Input v-model="form.data.text" size="large" :placeholder="form.data.url || 'link content'" clearable></Input>
           </FormItem>
-          <FormItem prop="src" label="Href" class="input">
-            <Input v-model="form.data.url" size="large" placeholder="http(s)://" clearable></Input>
+          <FormItem label="Href" prop="url">
+            <Input v-model="form.data.url"
+                   size="large"
+                   type="url"
+                   pattern="*://.*"
+                   placeholder="http(s)://" clearable></Input>
           </FormItem>
         </div>
       </Form>
@@ -100,7 +131,11 @@ export default {
         </Col>
         <Col flex="1"></Col>
         <Col>
-          <Button @click="onFinish">
+
+          <Button @click="onReset">
+            {{ $t(`basic.button.reset`) }}
+          </Button>
+          <Button type="primary" @click="onFinish">
             {{ $t(`basic.button.${form.type || 'commit' || 'insert'}`) }}
           </Button>
         </Col>
