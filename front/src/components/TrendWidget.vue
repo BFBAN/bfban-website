@@ -1,13 +1,12 @@
 <script>
-import {api, http} from '../assets/js/index'
+import {api, application, http} from '@/assets/js'
 
-import Application from "@/assets/js/application"
 import Empty from "@/components/Empty.vue"
 import HtmlLink from "@/components/HtmlLink.vue"
 import Loading from "@/components/Loading.vue";
 import ExposedName from "@/components/ExposedName.vue";
 
-export default new Application({
+export default new application({
   props: {
     timeRange: {
       type: String,

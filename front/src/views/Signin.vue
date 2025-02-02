@@ -87,16 +87,14 @@
 </template>
 
 <script>
-import Application from "../assets/js/application";
+import {api, application, http, regular} from "@/assets/js";
 
-import {api, http, regular} from '../assets/js/index'
-import Captcha from "../components/captcha/index";
+import Captcha from "@/components/captcha/index";
 import Vuex from "vuex";
-import _ from "lodash";
 
 const {mapActions, mapMutations} = Vuex;
 
-export default new Application({
+export default new application({
   components: {Captcha},
   data() {
     return {
@@ -145,7 +143,7 @@ export default new Application({
     /**
      * 登录
      */
-    handleSignin () {
+    handleSignin() {
       const that = this;
       const backPath = this.$route.query.backPath;
       let {username, password, captcha} = this.signin;

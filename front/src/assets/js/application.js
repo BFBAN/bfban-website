@@ -1,13 +1,9 @@
-import Print from './print';
 import {account_storage, regular} from "./index";
+
 import $store from "@/store"
 
-export default class Application extends Print {
-    BFBANLOG = window.BFBANLOG;
-
+export default class Application {
     constructor(data) {
-        super();
-
         if (data)
             data.computed = {
                 isAdmin: this.isAdmin,

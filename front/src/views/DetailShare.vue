@@ -161,19 +161,18 @@
 </template>
 
 <script>
-import Application from "/src/assets/js/application";
+import {application, http_token} from '@/assets/js'
+
+import vueQr from "vue-qr";
+import html2canvas from "html2canvas";
 import theme from "/public/config/themes.json";
 import languages from "/public/config/languages.json";
 
-import {http_token} from '../assets/js/index'
-import html2canvas from 'html2canvas';
-import vueQr from 'vue-qr';
+import Empty from '@/components/Empty.vue'
+import BusinessCard from "@/components/BusinessCard.vue";
+import SharePlayerCell from "@/components/SharePlayerCell.vue";
 
-import Empty from '../components/Empty.vue'
-import BusinessCard from "../components/BusinessCard.vue";
-import SharePlayerCell from "../components/SharePlayerCell.vue";
-
-export default new Application({
+export default new application({
   data() {
     return {
       share: {

@@ -289,7 +289,7 @@
 </template>
 
 <script>
-import Application from "@/assets/js/application";
+import {account_storage, api, application, http_token} from "@/assets/js";
 
 import user from "./user"
 import blockedUsers from "@/views/admin/blockedUsers";
@@ -307,10 +307,9 @@ import BusinessCard from "@/components/BusinessCard";
 import HtmlLink from "@/components/HtmlLink";
 import Banner from "@/components/Banner"
 
-import {account_storage, api, http_token} from "@/assets/js";
-import echarts from "echarts";
+import "echarts";
 
-export default new Application({
+export default new application({
   name: "profile",
   data() {
     return {

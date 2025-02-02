@@ -83,7 +83,9 @@
                  target="_parent">
               <Row :gutter="10" type="flex" align="middle">
                 <Col>
-                  <b><HtmlLink :text="i.label" :href="`/lang/${i.value}.json`"></HtmlLink></b>
+                  <b>
+                    <HtmlLink :text="i.label" :href="`/lang/${i.value}.json`"></HtmlLink>
+                  </b>
                   ({{ i.name }})
                 </Col>
                 <Col flex="1">
@@ -97,7 +99,8 @@
                           <Avatar icon="ios-person" size="20"></Avatar>
                         </Col>
                         <Col>
-                          <HtmlLink :href="members.url" :text="members.name" target="_blank"></HtmlLink>,
+                          <HtmlLink :href="members.url" :text="members.name" target="_blank"></HtmlLink>
+                          ,
                         </Col>
                       </Row>
                     </Col>
@@ -113,13 +116,14 @@
 </template>
 
 <script>
-import Application from "../assets/js/application";
+import {application} from "@/assets/js";
+
 import link from "../../public/config/link.json";
 import language from "../../public/config/languages.json";
 
 import HtmlLink from "@/components/HtmlLink.vue"
 
-export default new Application({
+export default new application({
   data() {
     return {
       link,

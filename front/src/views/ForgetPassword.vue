@@ -109,12 +109,12 @@
 </template>
 
 <script>
-import Application from "../assets/js/application";
-import {http, api, conf, mail} from '../assets/js/index'
-import EmailTip from "../components/EmailTip";
-import Captcha from "../components/captcha/index";
+import {api, application, http, mail} from "@/assets/js";
 
-export default new Application({
+import EmailTip from "@/components/EmailTip";
+import Captcha from "@/components/captcha/index";
+
+export default new application({
   name: 'forgetPassword',
   data() {
     return {

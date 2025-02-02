@@ -392,7 +392,8 @@
                       <div class="ivu-card-body">
                         <Row :gutter="10">
                           <Col :xs="{span: 14}" :lg="{span: 12}">
-                            <Captcha ref="captcha" size="large" @getCaptchaData="getCaptchaData"></Captcha>
+                            <Captcha ref="captcha" size="large"
+                                     @getCaptchaData="(value) => getCaptchaData('captcha',value)"></Captcha>
                           </Col>
                           <Col :xs="{span: 10, push: 0}" :lg="{span: 12, push: 0}">
                             <Row type="flex" justify="end" align="middle">
@@ -511,7 +512,7 @@
           </a>
           <template v-if="isLogin && isAdmin">
             <Divider></Divider>
-            <a href="javascript:void(0)" @click="onRollingJudgement">
+            <a href="javascript:void(0)" @click="onWorkflowAddPlayer">
               <Icon type="md-hammer" size="25"/>
             </a>
           </template>
@@ -543,7 +544,8 @@
         <div slot="footer">
           <Row :gutter="30">
             <Col flex="1">
-              <Captcha ref="captcha" @getCaptchaData="getMiniCaptchaData"></Captcha>
+              <Captcha ref="captcha"
+                       @getCaptchaData="(value) => getMiniCaptchaData('miniModeCaptcha', value)"></Captcha>
             </Col>
             <Col>
               <Button @click="cancelReply" v-voice-button>{{ $t('basic.button.cancel') }}</Button>
@@ -613,9 +615,9 @@
 </template>
 
 <script>
-import {account_storage, api, http, http_token, storage, time, util,} from '../assets/js/index'
+import {account_storage, api, application, http, http_token, storage, time, util,} from '../assets/js/index'
+import {formatTextarea} from "@/mixins/common";
 
-import Application from "/src/assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
 import Empty from '@/components/Empty.vue'
 import TextareaView from "@/components/textarea/index.vue";
@@ -634,9 +636,7 @@ import UserAvatar from "@/components/UserAvatar.vue"
 import TrendWidget from "@/components/TrendWidget"
 import ExposedName from "@/components/ExposedName.vue"
 
-import {formatTextarea} from "@/mixins/common";
-
-export default new Application({
+export default new application({
   data() {
     return {
       util,
@@ -723,8 +723,10 @@ export default new Application({
         await this.getPlayerInfo();
 
         // get Timeline data
-        await this.$refs.timeline.getPlayerInfo();
-        await this.$refs.timeline.getTimeline();
+        if (this.$refs.timeline) {
+          await this.$refs.timeline.getPlayerInfo();
+          await this.$refs.timeline.getTimeline();
+        }
 
         this.$Loading.finish();
       } finally {
@@ -884,6 +886,13 @@ export default new Application({
         });
       })
     },
+    /**
+     * 获取验证码
+     * @param value
+     */
+    getCaptchaData(id, value) {
+      this.reply[id || 'captcha'] = value;
+    },
 
     onRollingDropdowns(name) {
       switch (name) {
@@ -920,12 +929,18 @@ export default new Application({
       this.onRollingNode(commentNode.offsetTop - 50);
     },
     /**
-     * 滚动到判决
+     * 玩家添加到工作流
      */
-    onRollingJudgement() {
-      const commentNode = document.getElementById('judgement');
-
-      this.onRollingNode(commentNode.offsetTop - 50);
+    onWorkflowAddPlayer() {
+      const {query} = this.$route;
+      this.$router.push({
+        name: 'workflow_adds',
+        query: {
+          type: "persona",
+          ids: this.cheater.originPersonaId,
+          ...query
+        }
+      })
     },
     /**
      * 滚动位置
@@ -933,12 +948,6 @@ export default new Application({
      */
     onRollingNode(scrollTopNumber) {
       document.documentElement.scrollTop = scrollTopNumber;
-    },
-    getCaptchaData(value) {
-      this.reply.captcha = value;
-    },
-    getMiniCaptchaData(value) {
-      this.reply.miniModeCaptcha = value;
     },
     /**
      * 主动更新玩家信息

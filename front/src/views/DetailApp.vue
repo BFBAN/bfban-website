@@ -38,10 +38,11 @@
 </template>
 
 <script>
-import Application from "/src/assets/js/application"
-import vueQr from 'vue-qr'
+import {application} from "@/assets/js";
 
-export default new Application({
+import vueQr from "vue-qr";
+
+export default new application({
   name: "detailApp",
   data() {
     return {

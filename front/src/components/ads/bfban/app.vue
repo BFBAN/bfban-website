@@ -1,11 +1,10 @@
-<script setup>
-import {account_storage} from "@/assets/js";
+<script>
+import {account_storage, application} from "@/assets/js";
 
 import HtmlLink from '@/components/HtmlLink.vue'
-import Application from "@/assets/js/application";
 import ThemeWidget from "@/components/ThemeWidget.vue";
 
-export default new Application({
+export default new application({
   data() {
     return {
       banner: true,

@@ -73,10 +73,11 @@
 </template>
 
 <script>
-import Application from "../assets/js/application";
+import {application} from "@/assets/js";
+
 import appsConf from '/public/config/appslist.json';
 
-export default new Application({
+export default new application({
   name: "Apps",
   data() {
     return {

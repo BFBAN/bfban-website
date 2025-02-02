@@ -4,8 +4,9 @@
 
     <footer class="footer-main footer-border-top">
       <div class="container">
-        <Row :gutter="14">
-          <Col :xs="{span: 23, pull: 0, push: 1, order: 2}" :sm="{span: 23 ,pull: 0, push: 1, order: 2}"
+        <Row :gutter="15">
+          <Col :xs="{span: 22, pull: 0, push: 2, order: 2}"
+               :sm="{span: 10 ,pull: 0, push: 2, order: 2}"
                :lg="{span: 4,pull: 0, push: 0, order:0}">
             <b>
               <Badge :count="logoCount" overflow-count="999999"
@@ -15,7 +16,7 @@
                 </Avatar>
                 <img v-else
                      v-saknan
-                     src="../assets/images/friendly-web.png"
+                     src="@/assets/images/friendly-web.png"
                      width="100px"
                      @click.stop="logoCount += 1;"
                      alt="logo"/>
@@ -23,34 +24,38 @@
             </b>
             <p style="margin-right: 30px"><span>{{ $t("name") }}</span> · {{ $t("about.minor") }}</p>
           </Col>
-          <Col :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}"
-               v-for="(i, index) in footerNavs.row" :key="index">
-            <h4><b>{{ $t(i.text) }}</b></h4>
-            <ul>
-              <li v-for="({insideLang, showLang, src, text, textLang}, item_index) in i.child" :key="item_index">
-                <template v-if="showLang">
-                  <template v-if="showLang.filter(e => $i18n.locale === e).length > 0">
-                    <a target="_blank" :href="src">
-                      <template v-if="textLang">{{ textLang[$i18n.locale] || text }}</template>
-                      <template v-else>{{ text }}</template>
-                      <Icon type="md-open"/>
-                    </a>
-                  </template>
-                </template>
-                <template v-else-if="insideLang">
-                  <router-link :to="{name: src}">{{ $t(text) }}</router-link>
-                </template>
-                <template v-else>
-                  <a target="_blank" :href="src">
-                    <template v-if="textLang">{{ textLang[$i18n.locale] || text }}</template>
-                    <template v-else>{{ text }}</template>
-                    <Icon type="md-open"/>
-                  </a>
-                </template>
-              </li>
-            </ul>
+          <Col :xs="{span: 23 ,pull: 0, push: 1,order: 0}" :lg="{span: 16,pull: 0, push: 0}">
+            <Row :gutter="20">
+              <Col v-for="(i, index) in footerNavs.row" :key="index"
+                   :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 6,pull: 0, push: 0}">
+                <h4><b>{{ $t(i.text) }}</b></h4>
+                <ul>
+                  <li v-for="({insideLang, showLang, src, text, textLang}, item_index) in i.child" :key="item_index">
+                    <template v-if="showLang">
+                      <template v-if="showLang.filter(e => $i18n.locale === e).length > 0">
+                        <a target="_blank" :href="src">
+                          <template v-if="textLang">{{ textLang[$i18n.locale] || text }}</template>
+                          <template v-else>{{ text }}</template>
+                          <Icon type="md-open"/>
+                        </a>
+                      </template>
+                    </template>
+                    <template v-else-if="insideLang">
+                      <router-link :to="{name: src}">{{ $t(text) }}</router-link>
+                    </template>
+                    <template v-else>
+                      <a target="_blank" :href="src">
+                        <template v-if="textLang">{{ textLang[$i18n.locale] || text }}</template>
+                        <template v-else>{{ text }}</template>
+                        <Icon type="md-open"/>
+                      </a>
+                    </template>
+                  </li>
+                </ul>
+              </Col>
+            </Row>
           </Col>
-          <Col :xs="{span: 11 ,pull: 0, push: 1}" :lg="{span: 4,pull: 0, push: 0}">
+          <Col :xs="{span: 22 ,pull: 0, push: 2}" :sm="{span: 10 ,pull: 0, push: 2, order: 2}" :lg="{span: 4,pull: 0, push: 0}">
             <Row :gutter="5">
               <Col>
                 <ThemeWidget size="39px"/>
@@ -118,7 +123,7 @@
 </template>
 
 <script>
-import {account_storage, http, storage, time} from "../assets/js";
+import {account_storage, application, http, storage, time} from "../assets/js";
 
 import packageInfo from '../../package.json';
 import backendPackageInfo from '/public/config/backend-package.json';
@@ -126,10 +131,9 @@ import footerNavs from '/public/config/footerNavs.json';
 import link from '/public/config/link.json';
 import HtmlLink from '@/components/HtmlLink.vue'
 import AppAds from "@/components/ads/bfban/app.vue"
-import Application from "@/assets/js/application";
 import ThemeWidget from "@/components/ThemeWidget.vue";
 
-export default new Application({
+export default new application({
   data() {
     let infos = {
       'front-version': packageInfo['version'] || '0.0.0',

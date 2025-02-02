@@ -33,7 +33,8 @@
 </template>
 
 <script>
-import Application from "@/assets/js/application";
+import {api, application, http, http_token} from "@/assets/js";
+
 import cheaterStatusView from "@/components/CheaterStatusView.vue";
 import TimeView from "@/components/TimeView.vue";
 import Empty from "@/components/Empty.vue";
@@ -41,9 +42,8 @@ import UserAvatar from "@/components/UserAvatar.vue";
 import Confetti from "@/components/Confetti.vue";
 import Reports from "@/components/Reports.vue"
 import Loading from "@/components/Loading.vue";
-import {api, http, http_token} from "@/assets/js";
 
-export default new Application({
+export default new application({
   data() {
     return {
       load: false,

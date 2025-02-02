@@ -42,11 +42,11 @@
 </template>
 
 <script>
-import Application from "@/assets/js/application";
-import Empty from "@/components/Empty.vue"
-import {regular} from "@/assets/js";
+import {application, regular} from "@/assets/js";
 
-export default new Application({
+import Empty from "@/components/Empty.vue"
+
+export default new application({
   props: {
     placeholder: "",
     isReadonly: false,
@@ -64,8 +64,7 @@ export default new Application({
       linkList: [],
     };
   },
-  watch: {
-  },
+  watch: {},
   components: {Empty},
   created() {
     this.init();

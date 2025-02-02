@@ -47,7 +47,7 @@ export const voice = new _Voice();
 export const message = new _appMessage();
 export const moss = new _Moss();
 export const number = new _Number();
-export const application = new _Application()
+export const application = _Application;
 
 export default {
     conf, api, achievement, storage, time,

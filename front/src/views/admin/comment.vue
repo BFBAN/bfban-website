@@ -29,7 +29,7 @@
         <Row :gutter="10">
           <Col>
             <Select v-model="filter.queryModeValue" :disabled="typeValue !== 'all'">
-              <Option :value="i.value" v-for="(i, index) in filter.queryModes" :key="index">{{i.label}}</Option>
+              <Option :value="i.value" v-for="(i, index) in filter.queryModes" :key="index">{{ i.label }}</Option>
             </Select>
           </Col>
           <Col>
@@ -125,7 +125,8 @@
             <Divider type="vertical"></Divider>
             <a href="javascript:void(0)">
               <Tooltip content="Open Player Page">
-                <Button size="small" :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}">
+                <Button size="small"
+                        :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}">
                   <Icon type="ios-eye"/>
                 </Button>
               </Tooltip>
@@ -199,17 +200,17 @@
 </template>
 
 <script>
-import {account_storage, api, http, http_token, util} from "../../assets/js";
+import {account_storage, api, application, http_token, util} from "@/assets/js";
 
-import Application from "@/assets/js/application";
 import TimeView from "@/components/TimeView.vue";
 import BusinessCard from "@/components/BusinessCard.vue";
 import Textarea from "@/components/textarea/index.vue";
 import EditLinks from "@/components/EditLinks.vue";
 import HtmlWidget from "@/components/HtmlWidget";
+
 import {kill} from "process";
 
-export default new Application({
+export default new application({
   data() {
     return {
       commentEditModel: false,

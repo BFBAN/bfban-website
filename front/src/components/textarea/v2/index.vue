@@ -1,33 +1,23 @@
 <script>
 import {http_token} from "@/assets/js";
-import {Extension, Node} from '@tiptap/core';
+import {Extension} from '@tiptap/core';
 import {Editor, EditorContent} from '@tiptap/vue-2'
-import HtmlCore from "@/components/Html.vue"
 import StarterKit from '@tiptap/starter-kit'
+import lodash from "lodash";
+
 import EPlaceholder from '@tiptap/extension-placeholder'
 import UploadWidget from "@/components/UploadWidget.vue";
 import InputLinkWidget from "@/components/InputLinkAttrWidget.vue";
 import LinkWidget from "./link/index";
 import ImageWidget from "./image/index"
 import HRWidget from "./hr/index";
-import UserMention from "./sy/user/index"
+import ContractedSyntax from "./contractedSyntax"
 
-import lodash from "lodash";
 import Empty from "@/components/Empty.vue";
+import HtmlWidget from "@/components/HtmlWidget.vue";
 
-const EmptyParagraph = Node.create({
-      name: 'emptyParagraph',
-      group: 'block',
-      content: 'inline*',
-      parseHTML() {
-        return [{tag: 'p'}]
-      },
-      renderHTML({HTMLAttributes}) {
-        const isEmpty = !this.editor.getTextContent(this.node).trim()
-        return ['p', HTMLAttributes, isEmpty ? ['br'] : 0] // 如果为空，则添加 <br> 标签
-      },
-    }),
-    PlainTextPaste = Extension.create({
+
+const PlainTextPaste = Extension.create({
       // addPasteRules() {
       //   return [
       //     {
@@ -80,8 +70,8 @@ export default {
     }
   },
   components: {
+    HtmlWidget,
     Empty,
-    HtmlCore,
     InputLinkWidget,
     UploadWidget,
     EditorContent,
@@ -90,8 +80,8 @@ export default {
     return {
       tiptap: null,
       isPreviewView: false,
-      editorContent: false ? "" : `
-      <p>用户</p>
+      editorContent: process.env.NODE_ENV === 'production' ? '' : `
+      <p><a href="https://bfban.com?isWidget=true">widget</a>:{user:1}</p>
       <p>文本<a href="https://baidu.com">链接</a>内容</p>
       <hr/>
       <img src="https://bfban.com/assets/img/index-gl_zh-CN.07e3ae23.png" />
@@ -109,18 +99,15 @@ export default {
     const that = this;
     this.tiptap = new Editor({
       content: this.editorContent,
-      editorProps: {
-        attributes: {
-          class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
-        },
-      },
+      enablePasteRules: ['code'],
+      injectCSS: false,
+      editorProps: {},
       extensions: [
         StarterKit.configure({
           horizontalRule: false,
           codeBlock: false,
           heading: false,
         }),
-        EmptyParagraph,
         EPlaceholder.configure({
           placeholder: this.placeholder,
         }),
@@ -132,13 +119,18 @@ export default {
         PlainTextPaste,
 
         // 缩语
-        UserMention,
+        ContractedSyntax,
       ],
+      onCreate({editor}) {
+        editor.options.keyboardShortcuts = {};
+      },
       onUpdate({editor}) {
         const html = editor.getHTML();
-        that.onEditorChange(html)
+
+        that.onEditorChange(html);
       },
     })
+    this.tiptap.options.keyboardShortcuts = {};
   },
   beforeDestroy() {
     this.tiptap.destroy()
@@ -232,7 +224,7 @@ export default {
     <div class="control-group editor-toolbar">
       <Row :gutter="20" type="flex" align="middle">
         <Col>
-          <template v-if="!isPreviewView">
+          <div :style="isPreviewView ? 'opacity: .1;pointer-events:none' : ''">
             <Button @click="editor.chain().focus().toggleBold().run()"
                     class="btn"
                     v-if="toolbarAs.indexOf('bold') >= 0"
@@ -331,7 +323,7 @@ export default {
                 <polyline class="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
               </svg>
             </Button>
-          </template>
+          </div>
         </Col>
         <Col flex="1"></Col>
         <Col>
@@ -369,14 +361,14 @@ export default {
           v-model="editorContent"
           @on-change="onEditorChange"/>
     </template>
-    <div v-show="isPreviewView" class="html-widget-box">
-      <HtmlCore :html="editorContent" class="html-widget-size-default" v-if="editorContent"></HtmlCore>
+    <div v-if="isPreviewView">
+      <HtmlWidget :html="editorContent" :isDisableFullScreen="true" :rendererType="['renderer']" v-if="editorContent"></HtmlWidget>
       <Empty v-else :not-hint="true"></Empty>
     </div>
 
     <slot name="footer"></slot>
 
-    <Row :gutter="0" class="editor-footer" v-if="showMaxlengthLabel">
+    <Row :gutter="0" class="editor-footer" v-if="showMaxlengthLabel && !isPreviewView">
       <Col flex="1">
         <template v-if="editorContent != null && editorContent.length >= maxlength">
           <Alert show-icon type="error">{{ $t('textarea.textOverflowHint') }}</Alert>
@@ -437,9 +429,17 @@ export default {
 
   ul,
   ol {
-    line-height: 1.2;
-    padding: 0 1rem;
-    margin: 1.25rem 1rem 1.25rem 0.4rem;
+    padding-left: 1.5em;
+    margin: 0 1rem 1.25rem 0.4rem;
+
+    ::marker {
+      unicode-bidi: isolate;
+      font-variant-numeric: tabular-nums;
+      text-transform: none;
+      text-indent: 0px !important;
+      text-align: start !important;
+      text-align-last: start !important;
+    }
 
     li p {
       outline: none;
@@ -527,6 +527,10 @@ export default {
     line-height: 1.5;
     pointer-events: none;
     opacity: .8;
+  }
+
+  p .ProseMirror-separator {
+    display: none;
   }
 }
 

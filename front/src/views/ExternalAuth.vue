@@ -1,9 +1,7 @@
-<script setup>
-import Application from "../assets/js/application";
+<script>
+import {api, application, http, http_token} from "@/assets/js";
 
-import {api, http, http_token} from "@/assets/js";
-
-export default new Application({
+export default new application({
   data() {
     return {
       authLoading: false,

@@ -226,7 +226,8 @@
 </template>
 
 <script>
-import Application from "../assets/js/application";
+import {account_storage, api, application, http, time} from "@/assets/js"
+
 import Empty from "@/components/Empty"
 import businessCard from "@/components/BusinessCard.vue";
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
@@ -235,12 +236,9 @@ import HtmlLink from "@/components/HtmlLink.vue"
 import TrendWidget from "@/components/TrendWidget.vue";
 import ExposedName from "@/components/ExposedName.vue"
 import Loading from "@/components/Loading.vue";
-
 import "echarts";
 
-import {account_storage, api, http, time} from '../assets/js/index'
-
-export default new Application({
+export default new application({
   data() {
     return {
       time,

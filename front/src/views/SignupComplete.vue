@@ -56,11 +56,9 @@
 </template>
 
 <script>
-import Application from "../assets/js/application";
+import {api, application, http, mail} from '@/assets/js'
 
-import {http, api, mail} from '../assets/js/index'
-
-export default new Application({
+export default new application({
   data() {
     return {
       stepsIndex: 4,

@@ -97,16 +97,15 @@
 </template>
 
 <script>
-import {api, http, http_token, storage} from '../assets/js/index';
+import {api, application, http, http_token, storage} from '@/assets/js';
 
 import PrivilegesTag from "@/components/PrivilegesTag";
 import AchievementsTag from "@/components/AchievementsTag.vue";
-import Application from "@/assets/js/application";
 import Banner from "@/components/Banner.vue";
 import Confetti from "@/components/Confetti.vue";
 import Html from "@/components/Html.vue"
 
-export default new Application({
+export default new application({
   props: {
     showAdminUserInfo: {
       type: Boolean,

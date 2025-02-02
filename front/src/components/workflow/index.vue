@@ -536,7 +536,7 @@ export default {
                                       :key="game_index"
                                       transfer trigger="hover">
                                 <Tag :alt="$t('detail.info.reportedGames')" type="border">
-                                  <img :src="require('/src/assets/images/games/' + game + '/logo.png')" height="12"/>
+                                  <img :src="require('@/assets/images/games/' + game + '/logo.png')" height="12"/>
                                 </Tag>
                                 <div slot="content">{{ $t(`basic.games.${game}`) }}</div>
                               </Poptip>

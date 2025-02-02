@@ -252,12 +252,11 @@
 </template>
 
 <script>
-import {api, http, util, voice} from '../assets/js/index';
+import {api, application, http, util, voice} from "@/assets/js";
 
 import cheaterStatus from '/public/config/cheaterStatus.json';
 import gameName from '/public/config/gameName.json';
 
-import Application from "../assets/js/application";
 import Empty from "@/components/Empty";
 import AdsGoogle from "@/components/ads/google/index.vue";
 import TimeView from "@/components/TimeView.vue";
@@ -265,7 +264,7 @@ import ExposedName from "@/components/ExposedName.vue";
 import _ from "lodash";
 import store from "@/store";
 
-export default new Application({
+export default new application({
   data() {
     return {
       games: [],

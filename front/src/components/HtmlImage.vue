@@ -25,7 +25,8 @@
                 <Icon type="md-redo" size="15"/>
               </a>
               <Divider type="vertical" v-if="rotateValue != 0"></Divider>
-              <a v-if="rotateValue != 0" class="user-select-none" type="dashed" href="javascript:void(0)" @click="onRotating(0)">
+              <a v-if="rotateValue != 0" class="user-select-none" type="dashed" href="javascript:void(0)"
+                 @click="onRotating(0)">
                 <Icon type="md-refresh" size="15"/>
               </a>
             </Col>
@@ -40,7 +41,7 @@
           </Row>
         </div>
         <picture @click="onClickEdit">
-          <source :srcset="src" media="(orientation: portrait)" />
+          <source :srcset="src" media="(orientation: portrait)"/>
           <img :src="src" :alt="src" class="img-tag user-select-none" :style="`transform: rotate(${rotateValue}deg)`"/>
         </picture>
 
@@ -147,7 +148,7 @@ export default {
     /**
      * 编辑模式-单击触发
      */
-    onClickEdit () {
+    onClickEdit() {
       if (this.isEdit)
         this.$emit('click-image')
     }
@@ -161,8 +162,8 @@ export default {
 .img {
   white-space: normal !important;
   position: relative;
-  width: calc(100% + 16px);
-  margin: 10px -8px 10px -8px;
+  width: 100%;
+  margin: 10px auto;
   overflow: hidden;
   min-height: 80px;
   cursor: pointer;

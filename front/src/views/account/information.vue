@@ -350,18 +350,17 @@
 </template>
 
 <script>
-import {account_storage, api, http, http_token} from "../../assets/js";
+import {account_storage, api, application, http, http_token} from "@/assets/js";
 
-import Application from "@/assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
 import Textarea from "@/components/textarea/index.vue";
-import Captcha from "../../components/captcha/index";
+import Captcha from "@/components/captcha/index";
 import UserAvatar from "@/components/UserAvatar.vue";
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
 import TimeView from "@/components/TimeView.vue";
 import Banner from "@/components/Banner.vue";
 
-export default new Application({
+export default new application({
   name: "account",
   data() {
     return {

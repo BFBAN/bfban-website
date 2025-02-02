@@ -1,5 +1,5 @@
 import achievements from "/public/config/achievements.json"
-import {api, http_token} from "@/assets/js/index";
+import {api, http_token} from "@/assets/js";
 
 export default class Achievement {
     /**

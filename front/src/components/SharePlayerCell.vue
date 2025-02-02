@@ -2,7 +2,7 @@
   <Card id="getSharePicture" dis-hover :padding="0">
     <div class="share">
       <div class="share-info-context">
-        <img class="share-logo user-select-none" src="../assets/images/logo.png">
+        <img class="share-logo user-select-none" src="@/assets/images/logo.png">
         <br class="user-select-none">
         <div style="text-align: center;">
           <ExposedName>

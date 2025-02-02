@@ -35,10 +35,9 @@
 </template>
 
 <script>
-import {api, http_token, account_storage, message, voice} from "../assets/js";
-import Application from "@/assets/js/application";
+import {account_storage, api, application, http_token, message} from "../assets/js";
 
-export default new Application({
+export default new application({
   name: "Header_message",
   data() {
     return {

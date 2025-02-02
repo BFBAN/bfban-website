@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import {http, api, storage} from '@/assets/js/index'
+import {api, http, storage} from '@/assets/js'
 
 export default {
   props: {

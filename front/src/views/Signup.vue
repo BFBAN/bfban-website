@@ -142,15 +142,12 @@
 </template>
 
 <script>
-import Application from "../assets/js/application";
+import {api, application, http, http_token, mail, regular} from "@/assets/js";
 
-import {http, api, http_token, mail, regular} from '../assets/js/index'
-import {testWhitespace} from "@/mixins/common";
+import EmailTip from "@/components/EmailTip";
+import Captcha from "@/components/captcha/index";
 
-import EmailTip from "../components/EmailTip";
-import Captcha from "../components/captcha/index";
-
-export default new Application({
+export default new application({
   data() {
     return {
       stepsIndex: 0,

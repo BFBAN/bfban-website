@@ -85,15 +85,15 @@
 </template>
 
 <script>
-import {storage} from "@/assets/js";
+import {application, storage} from "@/assets/js";
+import JSZip from "jszip";
+
 import HtmlWidget from "@/components/HtmlWidget";
 import Empty from "@/components/Empty";
-import Application from "@/assets/js/application";
-import JSZip from "jszip";
 import saveAs from "@/assets/js/FileSaver";
 import config from "../../../package.json"
 
-export default new Application({
+export default new application({
   name: "exportAndImport",
   data() {
     return {

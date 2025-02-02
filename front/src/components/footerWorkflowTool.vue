@@ -54,10 +54,11 @@
 </template>
 
 <script>
-import WorkflowView from "@/components/workflow/index.vue"
-import Application from "@/assets/js/application";
+import {application} from "@/assets/js";
 
-export default new Application( {
+import WorkflowView from "@/components/workflow/index.vue"
+
+export default new application({
   name: "footerBox",
   data() {
     return {
@@ -72,7 +73,7 @@ export default new Application( {
     }
   },
   computed: {
-    isShow () {
+    isShow() {
       return this.$route.name !== 'workflow' && !this.$route.query.full && !this.isMobile;
     }
   }

@@ -136,23 +136,27 @@
         <template v-else>
           <div class="chat-content-not">{{ $t('basic.tip.notContent') }}</div>
         </template>
+
+        <spin fix v-show="messageLoad">
+          <Loading></Loading>
+        </spin>
       </div>
     </TabPane>
   </Tabs>
 </template>
 
 <script>
-import Application from "/src/assets/js/application";
+import {api, application, http, http_token} from "@/assets/js";
+
 import Html from "@/components/Html";
 import TimeView from "@/components/TimeView.vue";
+import BusinessCard from "@/components/BusinessCard.vue";
+import PrivilegesTag from "@/components/PrivilegesTag";
+import Loading from "@/components/Loading.vue";
 
-import {api, http, http_token, message} from "../../assets/js";
-
-import BusinessCard from "/src/components/BusinessCard.vue";
-import PrivilegesTag from "/src/components/PrivilegesTag";
 import messageConf from "/public/config/message.json";
 
-export default new Application({
+export default new application({
   name: "message",
   data() {
     return {
@@ -204,7 +208,7 @@ export default new Application({
       }
     }
   },
-  components: {BusinessCard, PrivilegesTag, TimeView, Html},
+  components: {Loading, BusinessCard, PrivilegesTag, TimeView, Html},
   watch: {
     $route: "loadData",
   },

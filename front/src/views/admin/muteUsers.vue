@@ -138,12 +138,12 @@
 </template>
 
 <script>
-import {api, http_token, mail} from "@/assets/js";
+import {api, application, http_token, mail} from "@/assets/js";
+
 import PrivilegesTag from "@/components/PrivilegesTag";
-import Application from "@/assets/js/application";
 import Empty from "@/components/Empty";
 
-export default new Application({
+export default new application({
   name: "muteUsers",
   data() {
     return {

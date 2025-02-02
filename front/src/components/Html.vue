@@ -11,6 +11,7 @@ import htmlfloor from "@/components/HtmlFloor";
 import htmlemoji from "@/components/HtmlEmoji"
 import timeview from "@/components/TimeView"
 import privilegestag from "@/components/PrivilegesTag";
+import htmluser from "@/components/HtmlUser.vue"
 import {regular} from "@/assets/js";
 
 export default {
@@ -70,6 +71,7 @@ export default {
     htmlfloor,
     htmlemoji,
     timeview,
+    htmluser,
     privilegestag,
   },
   watch: {
@@ -79,15 +81,17 @@ export default {
           this[dataKey] = this.extensionData[dataKey];
         }
         this.updateRender(this.packagingRender(val));
+        this.$forceUpdate();
       },
+      immediate: true,
     },
     mode: {
       handler(val) {
-        if (this.templateRender && this.templateRender === undefined) return;
+        if (this.templateRender) return;
         this.updateRender(this.packagingRender(this.html));
-      }
+      },
+      deep: true,
     },
-    deep: true,
   },
   created() {
     this.updateRender(this.packagingRender(this.html));
@@ -132,11 +136,11 @@ export default {
 
       switch (this.mode) {
         case "code":
-          vDomString = `<div class="ql-input"><Input readonly type="textarea" :autosize="true" :value="this.html"></Input></div>`;
+          vDomString = `<div class="ql-input"><Input readonly :border="false" type="textarea" :autosize="true" :value="this.html"></Input></div>`;
           break;
         case "text": {
           let text = vDom.getElementsByTagName("body")[0].innerHTML.replaceAll(/<[^>]*>/g, '');
-          vDomString = `<div class="ql-input"><Input readonly type="textarea" :autosize="true" value="${text}"></Input></div>`;
+          vDomString = `<div class="ql-input"><Input readonly :border="false" type="textarea" :autosize="true" value="${text}"></Input></div>`;
         }
           break;
         case "renderer":
@@ -255,7 +259,7 @@ export default {
                 if (p_data[0])
                   switch (p_data[0]) {
                     case "user":
-                      _p[i].innerHTML = `<span><a href="/space/${p_data[1]}">@${p_data[1]}</a></span>`;
+                      _p[i].innerHTML = _p[i].innerHTML.replaceAll(`{${str}}`, `<htmluser :id="${p_data[1]}" />`);
                       break;
                     case "player":
                       _p[i].innerHTML = `<htmlplayercard :id="${p_data[1].toString()}"></htmlplayercard>`;
@@ -360,14 +364,6 @@ export default {
 
       return vDomString;
     },
-
-    filterHTML(html) {
-      // 匹配所有 HTML 标签，但排除 <img> 标签
-      const regex = /<(?!\/?img\b)[^>]*>/gi;
-      // 将匹配到的标签替换为空字符串
-      const result = html.replace(regex, '');
-      return result;
-    }
   },
   render() {
     return this.templateRender();
@@ -381,10 +377,6 @@ export default {
 }
 
 .timeline-description {
-  line-height: initial;
-  word-break: break-word;
-  word-wrap: break-word;
-
   p:first-child,
   p:last-child {
     margin: 0;
@@ -392,6 +384,10 @@ export default {
 
   p {
     font-size: 12px;
+  }
+
+  p:empty {
+    height: 1rem;
   }
 
   span, p, a, h1, h2, h3, h4, h5, h6 {

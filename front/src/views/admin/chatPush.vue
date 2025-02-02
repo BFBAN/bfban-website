@@ -64,15 +64,14 @@
 </template>
 
 <script>
-import Application from "/src/assets/js/application";
+import {api, application, http_token, message} from "@/assets/js";
 
-import {api, http, http_token, message} from "../../assets/js";
+import BusinessCard from "@/components/BusinessCard.vue";
+import PrivilegesTag from "@/components/PrivilegesTag";
 
-import BusinessCard from "/src/components/BusinessCard.vue";
-import PrivilegesTag from "/src/components/PrivilegesTag";
 import messageConf from "/public/config/message.json";
 
-export default new Application({
+export default new application({
   name: "messagePush",
   data() {
     return {

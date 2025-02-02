@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container">
-      <div class="styles_herosection user-select-none">
+      <div class="styles-herosection user-select-none">
         <div class="styles_bg"></div>
         <img class="styles_bg_img" src="../assets/images/hero-grid-overlay.png"/>
       </div>
@@ -230,19 +230,15 @@
 </template>
 
 <script>
-import {api, http, number, time, util} from '../assets/js/index'
+import {api, application, http, number, time, util} from '../assets/js/index'
 
-import Application from "../assets/js/application";
-import PrivilegesTag from "../components/PrivilegesTag.vue";
-import judgeActionTypeView from "../components/judgeActionTypeView.vue";
-import TimeView from '../components/TimeView.vue';
+import PrivilegesTag from "@/components/PrivilegesTag.vue";
+import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
+import TimeView from '@/components/TimeView.vue';
 
-export default new Application({
+export default new application({
   data() {
     return {
-      util,
-      number,
-
       bannerImage: '',
       bannerTime: '',
       hintRandom: 0,
@@ -283,9 +279,9 @@ export default new Application({
       this.onHomeHintRandom(true);
 
       try {
-        this.bannerImage = require(`../assets/images/index-gl_${this.$i18n.locale || 'en-US'}.png`);
+        this.bannerImage = require(`@/assets/images/index-gl_${this.$i18n.locale || 'en-US'}.png`);
       } catch (e) {
-        this.bannerImage = require(`../assets/images/index-gl_en-US.png`);
+        this.bannerImage = require(`@/assets/images/index-gl_en-US.png`);
       }
     },
     /**
@@ -350,6 +346,8 @@ export default new Application({
     }
   },
   computed: {
+    number: () => number,
+    util: () => util,
     user() {
       return this.$store.state.user || {}
     },
@@ -361,7 +359,7 @@ export default new Application({
 })
 </script>
 
-<style lang="less">
+<style scoped lang="less">
 @keyframes HomeRowUp {
   from {
     transform: translateX(0%);

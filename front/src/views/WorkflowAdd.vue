@@ -19,25 +19,26 @@ export default {
       try {
         this.load = true;
         let workflowData = workflow_storage.getConfiguration('0', workflow_storage.DATA),
-            promises = this.getPlayers.map(async j => {
-              if (this.$route.query.type === 'persona' && this.getPlayers.indexOf(j) < 0) {
+            promises = this.getPlayers.map(async personaId => {
+              if (this.$route.query.type === 'persona' && this.getPlayers.indexOf(personaId) >= 0) {
                 return {
-                  data: await player_storage.getPlayerInfo({personaId: j}, true)
+                  data: await player_storage.getPlayerInfo({personaId}, true)
                 };
               }
               return {
                 error: true,
-                data: j,
+                data: {
+                  originPersonaId: personaId
+                },
               }
             }),
-            playersDatas = await Promise.all(promises).then(res => res.map(i => i.error !== true)),
+            playersData = await Promise.all(promises).then(res => res.find(i => i.error !== true)),
             selectStatusIndex = workflowData.children.findIndex(i => i.name.value === 0);
 
-        workflowData.children[selectStatusIndex].children = workflowData.children[selectStatusIndex].children.concat(playersDatas)
+        workflowData.children[selectStatusIndex].children = workflowData.children[selectStatusIndex].children.concat(playersData)
 
         workflow_storage.updateConfiguration('0', workflowData, workflow_storage.DATA);
         await this.$router.push({name: "workflow"})
-
       } finally {
         this.load = false;
       }

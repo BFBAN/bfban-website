@@ -96,15 +96,15 @@
                       <Col flex="1">
                         <AutoComplete
                             v-model="tabs.list[index].formItem.originName"
-                            :data="tabs.list[index].players.list"
                             @on-search="handleSearchReportId"
                             maxlength="280"
                             clearable
-                            :transfer="true"
                             show-word-limit
                             icon="ios-search"
                             size="large"
-                            :placeholder="$t(`report.labels.types.${tabs.list[index].type}.placeholder`)">
+                            :data="tabs.list[index].players.list"
+                            :transfer="true"
+                            :placeholder="$tc(`report.labels.types.${tabs.list[index].type}.placeholder`)">
                           <template v-if="tabs.list && tabs.list[index].players.length > 0">
                             <div v-for="(option,optionIndex) in tabs.list[index].players" :key="optionIndex">
                               <Option :value="option.originName" v-if="option && option.originName">
@@ -113,7 +113,7 @@
                                     <Avatar :src="option.avatarLink"></Avatar>
                                   </Col>
                                   <Col flex="1">
-                                    <ExposedName>
+                                    <ExposedName disabled>
                                       {{ option.originName }}
                                     </ExposedName>
                                   </Col>
@@ -167,12 +167,8 @@
                         <span v-else>ID</span>
                       </ExposedName>
                     </div>
-                    <p class="hint hint-seriousness">
-                      {{ $t("report.info.idNotion1") }}
-                    </p>
-                    <p class="hint hint-seriousness">
-                      <code>{{ $t("report.info.idNotion2") }}</code>
-                    </p>
+                    <p class="hint hint-seriousness">{{ $t("report.info.idNotion1") }}</p>
+                    <p class="hint hint-seriousness"><code>{{ $t("report.info.idNotion2") }}</code></p>
                   </Card>
                 </FormItem>
                 <!-- 游戏名称 S -->
@@ -353,9 +349,8 @@
 </template>
 
 <script>
-import {api, http, http_token, regular, util, voice} from '../assets/js/index'
+import {api, application, http, http_token, regular, util, voice} from "@/assets/js";
 
-import Application from "../assets/js/application";
 import AdsGoogle from "@/components/ads/google/index.vue";
 import Html from "@/components/Html";
 import Captcha from "@/components/captcha/index";
@@ -368,7 +363,7 @@ import Textarea from "@/components/textarea/index.vue"
 import ExposedName from "@/components/ExposedName.vue";
 import Loading from "@/components/Loading.vue";
 
-export default new Application({
+export default new application({
   data() {
     return {
       voiceReportManagement: voice,
@@ -427,7 +422,7 @@ export default new Application({
           param: query,
           type: 'player',
           scope: 'current',
-          limit: '6'
+          limit: 6
         }
       }).then(res => {
         const d = res.data;

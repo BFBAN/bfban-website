@@ -28,7 +28,7 @@ import ko_local from './lang/ko_KR.json' // 韩语
 import tr_local from './lang/tr.json' // 土耳其
 import ru_local from './lang/ru.json' // 俄语
 import zh_cn_local from './lang/zh_CN.json' // 中文
-import zh_tw_local from './lang/zh_TW.json' // 中文
+import zh_tw_local from './lang/zh_TW.json' // 中文-繁体
 import zh_cat_local from './lang/zh_Cat.json' // 简体喵文
 
 Vue.use(VueI18n)
@@ -41,17 +41,17 @@ let i18n = new VueI18n({
     messages: {
         'ar-EG': Object.assign(ar_view_design, ar_local),
         'de-DE': Object.assign(de_view_design, de_local),
-        'en-US': Object.assign(en_view_design, en_local), // 英语
+        'en-US': Object.assign(en_view_design, en_local),               // 英语
         'es-ES': Object.assign(es_view_design, es_local),
         'fr-FR': Object.assign(fr_view_design, fr_local),
         'it-IT': Object.assign(it_view_design, it_local),
-        'ja-JP': Object.assign(ja_jp_view_design, ja_JP_local), // 日语
-        'ko-KR': Object.assign(ko_view_design, ko_local), // 韩语
-        'ru-RU': Object.assign(ru_view_design, ru_local), // 俄语
-        'tr-TR': Object.assign(tr_view_design, tr_local), // 土耳其
-        'zh-CN': Object.assign(zh_view_design, zh_cn_local), // 中文
-        'zh-TW': Object.assign(zh_tw_view_design, zh_tw_local), // 中文
-        'zh-Cat': Object.assign(zh_cat_local) // 简体喵文
+        'ja-JP': Object.assign(ja_jp_view_design, ja_JP_local),         // 日语
+        'ko-KR': Object.assign(ko_view_design, ko_local),               // 韩语
+        'ru-RU': Object.assign(ru_view_design, ru_local),               // 俄语
+        'tr-TR': Object.assign(tr_view_design, tr_local),               // 土耳其
+        'zh-CN': Object.assign(zh_view_design, zh_cn_local),            // 中文
+        'zh-TW': Object.assign(zh_tw_view_design, zh_tw_local),         // 中文-繁体
+        'zh-Cat': Object.assign(zh_cat_local)                           // 简体喵文
     },
 });
 
@@ -87,4 +87,5 @@ let loadLanguageAsync = (lang) => {
 
 i18n.loadLanguageAsync = loadLanguageAsync;
 i18n.setI18nLanguage = setI18nLanguage;
+
 export default i18n;

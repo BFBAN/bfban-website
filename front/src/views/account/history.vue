@@ -114,10 +114,11 @@
 </template>
 
 <script>
-import {api, http_token, storage} from "../../assets/js";
+import {api, http_token, storage} from "@/assets/js";
 
 import cheaterStatus from '/public/config/cheaterStatus.json'
 import gameName from '/public/config/gameName.json'
+
 import Empty from "@/components/Empty.vue";
 import TimeView from "@/components/TimeView.vue";
 import ExposedName from "@/components/ExposedName.vue";

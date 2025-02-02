@@ -10,14 +10,9 @@
 </template>
 
 <script>
-import Application from "../assets/js/application";
+import {application} from "@/assets/js";
 
-export default new Application({
-  data() {
-    return {}
-  },
-  methods: {}
-});
+export default new application({});
 </script>
 
 <style lang="less" scoped>
@@ -38,6 +33,5 @@ export default new Application({
       color: #8f8f8f;
     }
   }
-
 }
 </style>

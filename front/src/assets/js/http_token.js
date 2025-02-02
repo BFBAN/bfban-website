@@ -2,10 +2,10 @@
  * extends http
  * 用于需要token请求
  */
+import {account_storage} from "@/assets/js/index";
 
 import http from './http';
 import store from '@/store'
-import {account_storage} from "@/assets/js/index";
 import router from "@/router";
 import app from "@/main"
 

@@ -1,10 +1,11 @@
 <template>
   <div class="html-widget-box">
-    <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-animation html-widget-size-${htmlSize}`" v-if="html"></Html>
+    <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-animation html-widget-size-${htmlSize}`"
+          v-if="html"></Html>
     <div class="html-widget-box-divider ivu-divider ivu-divider-horizontal"></div>
     <Row class="html-widget-toolbar" type="flex" justify="center" align="middle" :gutter="5">
       <Col flex="1">
-        <a @click="openFullScreenView">
+        <a @click="openFullScreenView" v-if="!isDisableFullScreen">
           <Icon type="md-expand"/>
         </a>
         <Modal v-model="fullScreenStatus" fullscreen footer-hide :scrollable="true">
@@ -55,6 +56,18 @@ export default {
       type: String,
       default: ""
     },
+    isDisableFullScreen: {
+      type: Boolean,
+      default: false
+    },
+    htmlSizeType: {
+      type: Array,
+      default: () => ['x-large', 'large', 'default', 'small']
+    },
+    rendererType: {
+      type: Array,
+      default: () => ['code', 'text', 'renderer']
+    }
   },
   data() {
     return {
@@ -62,11 +75,16 @@ export default {
       htmlSize: "default",
       htmlShowMode: "renderer",
       fullScreenStatus: false,
-      htmlSizeType: ['x-large', 'large', 'default', 'small'],
-      rendererType: ['code', 'text', 'renderer']
     }
   },
   components: {Html},
+  watch: {
+    isDisableFullScreen: {
+      handler: val => {
+        this.fullScreenStatus = val;
+      }
+    }
+  },
   methods: {
     openFullScreenView() {
       this.fullScreenStatus = true;
@@ -84,6 +102,7 @@ export default {
 <style lang="less">
 .html-widget-box {
   transition: all .5s;
+  margin-top: 5px;
 
   .html-widget-size-x-large {
     &, * {
@@ -130,6 +149,10 @@ export default {
     p {
       margin-top: 5px;
       margin-bottom: 5px;
+    }
+
+    li p {
+      display: inline;
     }
   }
 

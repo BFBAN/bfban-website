@@ -56,9 +56,9 @@
 </template>
 
 <script>
-import Application from "../assets/js/application";
+import {application} from "@/assets/js";
 
-export default new Application({
+export default new application({
   data() {
     return {};
   },

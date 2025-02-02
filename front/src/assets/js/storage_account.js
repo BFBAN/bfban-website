@@ -1,11 +1,12 @@
 /**
  * 账户数据
  */
+import {account_storage, api, application, http, http_token} from "@/assets/js/index";
+
 
 import Storage from './storage';
 import store from "@/store";
 import router from "@/router"
-import {account_storage, api, application, http, http_token} from "@/assets/js/index";
 import {SET_LANG} from "@/store/mutation-types";
 
 export default class AccountStorage extends Storage {
@@ -62,7 +63,7 @@ export default class AccountStorage extends Storage {
      * @returns {*}
      */
     getUserInfo() {
-        if (application.isLogin())
+        if (new application().isLogin())
             return new Promise((r) => {
                 http_token.get(api["user_me"], {}).then(async res => {
                     const d = res.data;

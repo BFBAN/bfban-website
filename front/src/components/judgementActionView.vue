@@ -1,6 +1,6 @@
-<script setup>
-import Application from "@/assets/js/application";
-import {account_storage, api, http_token, message, time, util} from "@/assets/js";
+<script>
+import {account_storage, api, application, http_token, message, util} from "@/assets/js";
+
 import Textarea from "@/components/textarea/index.vue";
 import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
 import judgeActionTemplateView from "@/components/judgeActionTemplateView.vue";
@@ -8,11 +8,11 @@ import FastReply from "@/components/FastReply.vue";
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
 import {formatTextarea} from "@/mixins/common";
 
-export default new Application({
+export default new application({
   props: {
     cheater: {}
   },
-  data () {
+  data() {
     return {
       util,
 
@@ -155,7 +155,6 @@ export default new Application({
         this.getTimeline();
       })
     },
-
 
 
     /**

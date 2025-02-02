@@ -64,9 +64,8 @@
 </template>
 
 <script>
-import {account_storage} from "@/assets/js";
+import {account_storage, application} from "@/assets/js";
 
-import PrivilegesTag from "/src/components/PrivilegesTag";
 import achievement from "./achievement"
 import reports from "./userReports";
 import appearance from "./appearance";
@@ -77,11 +76,12 @@ import media from "./media";
 import voice from "./voice";
 import history from "./history";
 import subscribes from "./subscribes"
+
+import PrivilegesTag from "@/components/PrivilegesTag";
 import exportAndImport from "@/views/account/exportAndImport";
-import Application from "@/assets/js/application";
 import UserAvatar from "@/components/UserAvatar";
 
-export default new Application({
+export default new application({
   name: "profile",
   data() {
     return {

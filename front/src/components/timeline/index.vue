@@ -1,18 +1,18 @@
 <script>
-import {account_storage, api, http_token, player_storage, util} from "@/assets/js";
+import {account_storage, api, application, http_token, player_storage, util} from "@/assets/js";
+
 import UserAvatar from "@/components/UserAvatar.vue";
 import BusinessCard from "@/components/BusinessCard.vue";
 import TimeView from "@/components/TimeView.vue";
 import HtmlCore from "@/components/Html.vue";
 import HtmlWidget from "@/components/HtmlWidget.vue";
 import Htmllink from "@/components/HtmlLink.vue";
-import Application from "@/assets/js/application";
 import Empty from "@/components/Empty.vue";
 import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
 import Loading from "@/components/Loading.vue";
 import ExposedName from "@/components/ExposedName.vue"
 
-export default new Application({
+export default new application({
   props: {
     // {*|{dbId: *, userId: *, personaId: *}}
     id: {
@@ -513,7 +513,7 @@ export default new Application({
                     <Tooltip :content="$t('basic.games.' + l.cheatGame)">
                       <Tag type="border">
                         <img height="12"
-                             :src="require('/src/assets/images/games/' + l.cheatGame + '/logo.png')"/>
+                             :src="require('@/assets/images/games/' + l.cheatGame + '/logo.png')"/>
                       </Tag>
                     </Tooltip>
                   </router-link>
@@ -597,7 +597,7 @@ export default new Application({
                   <Tooltip :content="$t('basic.games.' + l.cheatGame)">
                     <Tag type="border">
                       <img height="12"
-                           :src="require('/src/assets/images/games/' + l.cheatGame + '/logo.png')"/>
+                           :src="require('@/assets/images/games/' + l.cheatGame + '/logo.png')"/>
                     </Tag>
                   </Tooltip>
                 </router-link>
@@ -702,7 +702,7 @@ export default new Application({
                   <Tooltip :content="$t('basic.games.' + l.cheatGame)">
                     <Tag type="border">
                       <img height="12"
-                           :src="require('/src/assets/images/games/' + l.cheatGame + '/logo.png')"/>
+                           :src="require('@/assets/images/games/' + l.cheatGame + '/logo.png')"/>
                     </Tag>
                   </Tooltip>
                 </template>

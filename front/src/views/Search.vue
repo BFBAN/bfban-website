@@ -11,9 +11,9 @@
         </Col>
       </Row>
       <br>
-      <div class="styles_herosection user-select-none">
+      <div class="styles-herosection user-select-none">
         <div class="styles_bg"></div>
-        <img class="styles_bg_img" src="../assets/images/hero-grid-overlay.png"/>
+        <img class="styles_bg_img" src="@/assets/images/hero-grid-overlay.png"/>
       </div>
       <div :class="[
           `search-content`,
@@ -487,9 +487,8 @@
 </template>
 
 <script>
-import {api, http, storage} from "../assets/js";
+import {api, application, http, storage} from "@/assets/js";
 
-import Application from "../assets/js/application";
 import OcrWidget from "@/components/OcrWidget";
 import PrivilegesTag from "@/components/PrivilegesTag";
 import HtmlWidget from "@/components/HtmlWidget";
@@ -500,7 +499,7 @@ import ExposedName from "@/components/ExposedName.vue"
 
 import game from '../../public/config/gameName.json';
 
-export default new Application({
+export default new application({
   name: "search",
   data() {
     return {
@@ -619,7 +618,7 @@ export default new Application({
     getSearchHistory() {
       let history = storage.local.get('search.history');
 
-      if (history.code == -1) {
+      if (history.code === -1) {
         this.setSearchHistoryValue([]);
       }
 

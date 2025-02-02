@@ -4,8 +4,6 @@
 
 import Storage from './storage';
 import store from "@/store";
-import {account_storage, api, http_token, application} from "@/assets/js/index";
-import {SET_LANG} from "@/store/mutation-types";
 
 export default class WorkflowStorage extends Storage {
     NAME = 'user.workflow';

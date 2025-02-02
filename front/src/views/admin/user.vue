@@ -505,9 +505,8 @@
 </template>
 
 <script>
-import {api, http_token} from "@/assets/js";
+import {api, application, http_token} from "@/assets/js";
 
-import Application from "@/assets/js/application";
 import BusinessCard from "@/components/BusinessCard.vue";
 import TimeView from "@/components/TimeView.vue";
 import PrivilegesTag from "@/components/PrivilegesTag";
@@ -517,7 +516,7 @@ import Textarea from "@/components/textarea/index.vue";
 import languages from "/public/config/languages.json";
 import achievement from "/public/config/achievements.json";
 
-export default new Application({
+export default new application({
   data() {
     return {
       achievement,

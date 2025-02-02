@@ -144,7 +144,8 @@
                       </Col>
                       <Col>
                         <vue-qr :logoScale=".25" :logoSrc="'https://bfban-app.cabbagelol.net/images/logo.png'"
-                                :text="'https://bfban-app.cabbagelol.net/as?p=account?id=' + $route.params.uId" :size="120"
+                                :text="'https://bfban-app.cabbagelol.net/as?p=account?id=' + $route.params.uId"
+                                :size="120"
                                 :margin="3"
                                 v-if="$route.params.uId" style="display: block"></vue-qr>
                       </Col>
@@ -205,11 +206,9 @@
 </template>
 
 <script>
-import {api, http, http_token, util} from '../assets/js/index'
-
-import Application from "../assets/js/application";
-import Empty from "@/components/Empty";
+import {api, application, http, http_token, util} from "@/assets/js"
 import vueQr from "vue-qr";
+import Empty from "@/components/Empty";
 import UserAvatar from "@/components/UserAvatar.vue";
 import TimeView from "@/components/TimeView.vue";
 import Reports from "@/components/Reports.vue"
@@ -222,7 +221,7 @@ import Loading from "@/components/Loading.vue";
 
 import games from '/public/config/gameName.json'
 
-export default new Application({
+export default new application({
   name: 'space',
   data() {
     return {
