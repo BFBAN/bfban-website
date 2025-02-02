@@ -1,21 +1,20 @@
 <template>
   <div class="profile-body" v-if="$store.state.configuration.enhance">
-    <div v-for="(i, index) in enhance" :key="index">
-      <Card>
-        <Row>
-          <Col flex="auto">
-            <h1>{{ $t(`profile.enhance.public.${i.enhanceName}.name`) }}</h1>
-            <p>{{ $t(`profile.enhance.public.${i.enhanceName}.describe`) }}</p>
-          </Col>
-          <Col>
-            <i-switch v-model="i.value" @on-change="changeEnhanceAttr(i.enhanceName, i.value)"></i-switch>
-          </Col>
-        </Row>
-      </Card>
+    <div>
+      <List border>
+        <ListItem v-for="(i, index) in enhance" :key="index">
+          <ListItemMeta
+              :title="$t(`profile.enhance.public.${i.enhanceName}.name`)"
+              :description="$t(`profile.enhance.public.${i.enhanceName}.describe`)"
+          ></ListItemMeta>
+          <i-switch v-model="i.value" @on-change="changeEnhanceAttr(i.enhanceName, i.value)"></i-switch>
+        </ListItem>
+      </List>
       <br>
     </div>
   </div>
-  <div class="profile-body enhance-notApp-content" v-else-if="$store.state.configuration.enhance || false" align="center">
+  <div class="profile-body enhance-notApp-content" v-else-if="$store.state.configuration.enhance || false"
+       align="center">
     <h1>No application was detected</h1>
     <p>The BFBAN WEB APP is not installed</p>
   </div>
@@ -27,10 +26,9 @@
 
 <script>
 import {account_storage} from "@/assets/js";
-import store from "@/store";
 
 export default {
-  data () {
+  data() {
     return {
       enhance: [
         {
@@ -57,13 +55,13 @@ export default {
      * @param key
      * @param val
      */
-    changeEnhanceAttr (key, val) {
+    changeEnhanceAttr(key, val) {
       if (!key) return;
-        account_storage.updateConfiguration(key, val);
+      account_storage.updateConfiguration(key, val);
     }
   },
   computed: {
-    webMode () {
+    webMode() {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       if (document.referrer.startsWith('bfban://')) {
         return 'browsertab';

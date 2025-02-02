@@ -33,11 +33,15 @@
               </MenuItem>
             </div>
             <MenuGroup>
-              <MenuItem name="userCenter" :to="{name: 'space', params: { uId: `${currentUser.userinfo.userId }` }}">
+              <MenuItem :to="{name: 'space', params: { uId: `${currentUser.userinfo.userId }` }}">
                 {{ $t("header.userCenter") }}
                 <Icon type="ios-link"/>
               </MenuItem>
-              <MenuItem name="admin" v-if="isAdmin" :to="{name: 'admin', params: { pagename: 'home' }}">
+              <MenuItem v-if="isAdmin" :to="{name: 'workflow'}">
+                {{ $t("workflow.title") }}
+                <Icon type="ios-link"/>
+              </MenuItem>
+              <MenuItem v-if="isAdmin" :to="{name: 'admin', params: { pagename: 'home' }}">
                 {{ $t("profile.admin.title") }}
                 <Icon type="ios-link"/>
               </MenuItem>

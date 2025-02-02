@@ -17,6 +17,10 @@ export default class AccountStorage extends Storage {
         },
         {
             type: 'local',
+            name: 'customReply'
+        },
+        {
+            type: 'local',
             name: 'captcha'
         },
         {
@@ -29,6 +33,22 @@ export default class AccountStorage extends Storage {
         },
         {
             type: 'local',
+            name: 'workflow.data'
+        },
+        {
+            type: 'local',
+            name: 'workflow.data.archived'
+        },
+        {
+            type: 'local',
+            name: 'workflow.data.meta'
+        },
+        {
+            type: 'local',
+            name: 'workflow.setting'
+        },
+        {
+            type: 'local',
             name: 'theme'
         },
         {
@@ -38,6 +58,10 @@ export default class AccountStorage extends Storage {
         {
             type: 'local',
             name: 'user.configuration'
+        },
+        {
+            type: 'local',
+            name: 'user.player'
         },
         {
             type: 'session',
@@ -87,7 +111,9 @@ export default class AccountStorage extends Storage {
                 headers: {
                     'x-access-token': store.state.user.token
                 }
-            }).catch(e => { throw e });
+            }).catch(e => {
+                throw e
+            });
 
             return res.data;
         } finally {
@@ -114,6 +140,58 @@ export default class AccountStorage extends Storage {
                     break;
             }
         })
+    }
+
+    /**
+     * 取出所有key
+     */
+    keys() {
+        let accountKeys = this.ACCOUNTDATA,
+            storageName = this.STORAGENAME;
+
+        accountKeys = accountKeys.map(i => `${storageName}${i.name}`)
+        return accountKeys;
+    }
+
+    /**
+     * 取出所有值
+     */
+    values() {
+        let accountData = this.ACCOUNTDATA,
+            storageName = this.STORAGENAME;
+
+        accountData = accountData.map(i => {
+            switch (i.type) {
+                case 'session': {
+                    try {
+                        let d = super.session.get(`${i.name}`);
+                        return {
+                            value: storageName + i.name,
+                            data: d.data.value
+                        };
+                    } catch (e) {
+                        return {
+                            value: storageName + i.name,
+                        };
+                    }
+                }
+                default:
+                case 'local': {
+                    try {
+                        let d = super.local.get(`${i.name}`)
+                        return {
+                            value: storageName + i.name,
+                            data: d.data.value
+                        };
+                    } catch (e) {
+                        return {
+                            value: storageName + i.name,
+                        };
+                    }
+                }
+            }
+        })
+        return accountData;
     }
 
     /**

@@ -1,103 +1,115 @@
 <template>
   <div class="profile-body">
-    <p>{{ $t('profile.exportAndImport.description') }}</p>
+    <Row :gutter="10" type="flex" align="middle">
+      <Col>
+        <Button long @click="onExport" :loading="generatedZipLoad" :disabled="selectGroup.length <= 0">
+          Export ({{ selectGroup.length || 0 }})
+        </Button>
+      </Col>
+      <Col>
+        <Button @click="importModel = !importModel">
+          <Icon type="md-add"></Icon>
+          Import
+        </Button>
+      </Col>
+      <Divider type="vertical"></Divider>
+      <Col>
+        <Select v-model="patternTypeValue" @on-change="onChangePatternType">
+          <Option v-for="(i,index) in patternType" :key="index" :value="i">{{ i }}</Option>
+        </Select>
+      </Col>
+      <Col>
+        <a href="https://announcement.bfban.com/docs/exportAndImport" target="_blank">
+          <Icon type="md-help"></Icon>
+        </a>
+      </Col>
+      <Col flex="1"></Col>
+      <Col>
+        <Input></Input>
+      </Col>
+    </Row>
     <br>
-    <p class="hint">{{ $t('profile.exportAndImport.hint1') }}</p>
-    <p class="hint">{{ $t('profile.exportAndImport.hint2') }}</p>
+
+    <template v-if="storageKeys.length > 0">
+      <CheckboxGroup v-model="selectGroup" class="export-box" :disabled="selectGroup <= 0">
+        <List border>
+          <ListItem class="export-card" dis-hover v-for="(i, index) in storageKeys" :key="index">
+            <Row :gutter="0">
+              <Col>
+                <Checkbox :label="i.value" :disabled="!i.data"></Checkbox>
+              </Col>
+            </Row>
+          </ListItem>
+        </List>
+      </CheckboxGroup>
+    </template>
+    <Card dis-hover v-else>
+      <Empty :not-hint="true"></Empty>
+    </Card>
+
     <br>
+    <p class="hint hint-seriousness">{{ $t('profile.exportAndImport.description') }}</p>
+    <p class="hint hint-seriousness">{{ $t('profile.exportAndImport.hint1') }}</p>
 
-    <Tabs value="export">
-      <TabPane label="Export" name="export">
-        <Row :gutter="10">
-          <Col>
-            Preset scheme:
-          </Col>
-          <Col>
-            <Select v-model="patternTypeValue" @on-change="onChangePatternType">
-              <Option v-for="(i,index) in patternType" :key="index" :value="i">{{ i }}</Option>
-            </Select>
-          </Col>
-        </Row>
-        <br>
+    <Modal v-model="importModel" name="import">
+      <Card dis-hover :padding="2" class="ivu-upload-select">
+        <input type="file" id="file" name="file" class="ivu-upload-input" multiple
+               @change="onImportPreparation"/><br/>
+      </Card>
+      <p><br></p>
 
-        <template v-if="storageKeys.length > 0">
-          <div>
-            <CheckboxGroup v-model="selectGroup" class="export-box" :disabled="selectGroup <= 0">
-              <Card class="export-card" dis-hover v-for="(i, index) in storageKeys" :key="index">
-                <Row>
-                  <Col flex="1" class="export-card-name">
-                    <Checkbox :label="i.name">{{ i.name }}</Checkbox>
-                  </Col>
-                </Row>
-              </Card>
-            </CheckboxGroup>
-          </div>
-
-          <Divider dashed></Divider>
-
-          <Button long @click="onExport" :loading="generatedZipLoad" :disabled="selectGroup.length <= 0">
-            Export ({{ selectGroup.length || 0 }})
-          </Button>
-        </template>
-        <Card dis-hover v-else>
-          <Empty></Empty>
-        </Card>
-      </TabPane>
-      <TabPane label="Import" name="import">
-        <Card dis-hover :padding="2" class="ivu-upload-select">
-          <input type="file" id="file" name="file" class="ivu-upload-input" multiple
-                 @change="onImportPreparation"/><br/>
-        </Card>
-        <p><br></p>
-
-        <template v-if="importPreparation.length > 0">
-          <CheckboxGroup v-model="selectImportPreparationGroup" class="export-box">
-            <Card class="export-card" dis-hover v-for="(i, index) in importPreparation" :key="index">
-              <Checkbox :label="i.name">{{ i.name }}</Checkbox>
-              <p><br></p>
-              <Row :gutter="5">
-                <Col flex="1">
-                  <Select v-model="i.operationTypeValue" size="small">
-                    <Option v-for="(j, jindex) in operationType" :key="jindex" :value="j">
-                      {{ j }}
-                    </Option>
-                  </Select>
-                </Col>
-                <Col>
+      <template v-if="importPreparation.length > 0">
+        <CheckboxGroup v-model="selectImportPreparationGroup" class="export-box">
+          <Card class="export-card" dis-hover v-for="(i, index) in importPreparation" :key="index">
+            <Checkbox :label="i.name">{{ i.name }}</Checkbox>
+            <p><br></p>
+            <Row :gutter="5">
+              <Col flex="1">
+                <Select v-model="i.operationTypeValue" size="small">
+                  <Option v-for="(j, jindex) in operationType" :key="jindex" :value="j">
+                    {{ j }}
+                  </Option>
+                </Select>
+              </Col>
+              <Col>
                   <span v-if="i.isExists" style="color: red">
                     <Icon type="md-alert"/>Exists
                   </span>
-                </Col>
-              </Row>
-            </Card>
-          </CheckboxGroup>
-        </template>
-        <Card dis-hover v-else>
-          <Empty></Empty>
-        </Card>
+              </Col>
+            </Row>
+          </Card>
+        </CheckboxGroup>
+      </template>
+      <Card dis-hover v-else>
+        <Empty :not-hint="false"></Empty>
+      </Card>
 
-        <Divider dashed></Divider>
-
-        <Button long :disabled="selectImportPreparationGroup.length <= 0" @click="onImport">Import</Button>
-      </TabPane>
-    </Tabs>
+      <Row :gutter="10" slot="footer" type="flex" align="middle">
+        <Col>
+          <p class="hint hint-seriousness">{{ $t('profile.exportAndImport.hint2') }}</p>
+        </Col>
+        <Col flex="1">
+          <Button long :disabled="selectImportPreparationGroup.length <= 0" @click="onImport">Import</Button>
+        </Col>
+      </Row>
+    </Modal>
   </div>
 </template>
 
 <script>
-import {application, storage} from "@/assets/js";
+import {account_storage, application, storage} from "@/assets/js";
 import JSZip from "jszip";
 
 import HtmlWidget from "@/components/HtmlWidget";
 import Empty from "@/components/Empty";
 import saveAs from "@/assets/js/FileSaver";
-import config from "../../../package.json"
 
 export default new application({
   name: "exportAndImport",
   data() {
     return {
       generatedZipLoad: false,
+      importModel: false,
       selectGroup: [],
       storageKeys: [],
       primitiveStorageKeys: [],
@@ -110,7 +122,7 @@ export default new application({
   },
   components: {HtmlWidget, Empty},
   created() {
-    this.getLocaleAppKeys()
+    this.getLocaleKeys()
 
     if (!JSZip.support.blob) {
       this.$Message.error('This demo works only with a recent browser !')
@@ -118,22 +130,22 @@ export default new application({
   },
   methods: {
     onChangePatternType(value) {
-      const app_name = config.name.toLowerCase();
+      const app_name = account_storage.STORAGENAME;
       switch (value) {
         case "user":
           this.selectGroup = [
-            app_name + '.development:user.player',
-            app_name + '.development:user.configuration',
-            app_name + '.development:user.subscribes',
-            app_name + '.development:search.history',
-            app_name + '.development:customReply',
-            app_name + '.development:viewed',
+            app_name + 'user.player',
+            app_name + 'user.configuration',
+            app_name + 'user.subscribes',
+            app_name + 'search.history',
+            app_name + 'customReply',
+            app_name + 'viewed',
           ]
           break
         case "system":
           this.selectGroup = [
-            app_name + '.development:language',
-            app_name + '.development:theme',
+            app_name + 'language',
+            app_name + 'theme',
           ]
           break
         default:
@@ -141,34 +153,30 @@ export default new application({
           break
       }
     },
-    getLocaleAppKeys() {
-      const keys = storage.local.keys();
-      const list = []
+    /**
+     * 获取配置
+     */
+    getLocaleKeys() {
+      const keys = account_storage.values();
       this.primitiveStorageKeys = keys;
-      for (const key in keys) {
-        let i = keys[key];
-        const split = key.split(":");
-        const q = split[0];
-        const h = split[1];
-        if (!q || !h) continue
-        if (key.indexOf(storage.STORAGENAME) >= 0) {
-          i = Object.assign(JSON.parse(i), {
-            name: key
-          })
-          list.push(i)
-        }
-      }
-      this.storageKeys = list
+
+      this.storageKeys = keys.map(i => ({
+        ...i,
+        value: i.value,
+        label: i.value.split(':')[1],
+      }));
+      console.log(this.storageKeys)
     },
     /**
      * 导出
      */
     onExport() {
       try {
-
-        if (!this.isLogin || this.selectGroup.length <= 0) return
+        if (!this.isLogin || this.selectGroup.length <= 0) return;
         const that = this;
         const zip = new JSZip();
+
+        that.generatedZipLoad = true;
 
         let dictionary = {}
         for (const storageKey of this.storageKeys) {
@@ -179,11 +187,11 @@ export default new application({
            *   path: ''
            * }
            */
-          if (this.selectGroup.indexOf(storageKey.name) >= 0)
-            dictionary[storageKey.name] = {
-              size: storageKey.value.length ?? 0,
-              name: storageKey.name,
-              path: 'data/' + storageKey.name + '.json'
+          if (this.selectGroup.indexOf(storageKey.value) >= 0)
+            dictionary[storageKey.value] = {
+              size: storageKey.data.length ?? 0,
+              name: storageKey.value,
+              path: 'data/' + storageKey.value + '.json'
             }
         }
 
@@ -191,11 +199,10 @@ export default new application({
         zip.folder("data");
 
         for (const storageKey of this.storageKeys) {
-          if (this.selectGroup.indexOf(storageKey.name) >= 0)
-            zip.file("data/" + storageKey.name + '.json', JSON.stringify(storageKey.value))
+          if (this.selectGroup.indexOf(storageKey.value) >= 0)
+            zip.file("data/" + storageKey.value + '.json', JSON.stringify(storageKey.data))
         }
 
-        that.generatedZipLoad = true;
         zip.generateAsync({type: "blob"}).then(function (content) {
           that.generatedZipLoad = false;
           saveAs(content, `${that.currentUser.userinfo.userId}@${new URL(location).hostname}.zip`);
@@ -216,7 +223,7 @@ export default new application({
       this.importPreparation = [];
       this.selectImportPreparationGroup = [];
 
-      for (var i = 0; i < files.length; i++) {
+      for (let i = 0; i < files.length; i++) {
         JSZip.loadAsync(files[i])                                   // 1) read the Blob
             .then(function (zip) {
               let _zip = zip;
@@ -293,12 +300,14 @@ export default new application({
 </script>
 
 <style lang="less" scoped>
+@import "@/assets/css/hint";
+
 .export-box {
   width: 100%;
-  display: inline-grid;
-  grid-template-columns: repeat(auto-fill, calc(50% - 10px));
-  grid-row-gap: 10px;
-  grid-column-gap: 10px;
+  //display: inline-grid;
+  //grid-template-columns: repeat(auto-fill, calc(50% - 10px));
+  //grid-row-gap: 10px;
+  //grid-column-gap: 10px;
 
   .export-card {
     .export-card-name {
