@@ -1,4 +1,4 @@
-<script setup>
+<script>
 import HtmlLink from "@/components/HtmlLink.vue";
 import cheaterStatusView from "@/components/CheaterStatusView.vue";
 import TimeView from "@/components/TimeView.vue";
@@ -32,7 +32,8 @@ export default {
                   type: 'flex',
                   align: 'middle',
                 },
-                class: 'reports-table'
+                class: 'reports-table',
+                style: 'overflow: hidden;'
               }, [
                 h('Col', [
                   h('Avatar', {
@@ -45,10 +46,10 @@ export default {
                   })
                 ]),
                 h(ExposedName, {
-                  props:{
+                  props: {
                     disabled: true
                   }
-                },[
+                }, [
                   h(HtmlLink, {
                     props: {
                       text: params.row.originName,

@@ -368,7 +368,7 @@ export default {
 
     <slot name="footer"></slot>
 
-    <Row :gutter="0" class="editor-footer" v-if="showMaxlengthLabel && !isPreviewView">
+    <Row :gutter="10" class="editor-footer" v-if="showMaxlengthLabel && !isPreviewView">
       <Col flex="1">
         <template v-if="editorContent != null && editorContent.length >= maxlength">
           <Alert show-icon type="error">{{ $t('textarea.textOverflowHint') }}</Alert>
@@ -382,7 +382,7 @@ export default {
         <Divider type="vertical"></Divider>
         <Tooltip :placement="'left-start'" :content="$t('textarea.textHelpHint')" max-width="300" :transfer="true">
           <Icon type="md-code" style="margin-right: 5px;"/>
-          <template v-if="editorContent != null && editorContent.length === maxlength">
+          <template v-if="editorContent != null && editorContent.length >= maxlength">
             <b style="color: darkred">{{ editorContent.length || 0 }}</b>
           </template>
           <template

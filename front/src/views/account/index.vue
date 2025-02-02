@@ -32,20 +32,22 @@
                 </Row>
               </MenuItem>
             </div>
-            <MenuGroup>
-              <MenuItem :to="{name: 'space', params: { uId: `${currentUser.userinfo.userId }` }}">
+
+            <div class="ivu-menu-item-group-title"></div>
+            <ul>
+              <li class="ivu-menu-item ivu-menu-item-disabled" :to="{name: 'space', params: { uId: `${currentUser.userinfo.userId }` }}">
                 {{ $t("header.userCenter") }}
                 <Icon type="ios-link"/>
-              </MenuItem>
-              <MenuItem v-if="isAdmin" :to="{name: 'workflow'}">
+              </li>
+              <li class="ivu-menu-item ivu-menu-item-disabled" v-if="isAdmin" :to="{name: 'workflow'}">
                 {{ $t("workflow.title") }}
                 <Icon type="ios-link"/>
-              </MenuItem>
-              <MenuItem v-if="isAdmin" :to="{name: 'admin', params: { pagename: 'home' }}">
+              </li>
+              <li class="ivu-menu-item ivu-menu-item-disabled" v-if="isAdmin" :to="{name: 'admin', params: { pagename: 'home' }}">
                 {{ $t("profile.admin.title") }}
                 <Icon type="ios-link"/>
-              </MenuItem>
-            </MenuGroup>
+              </li>
+            </ul>
           </Menu>
         </Col>
         <Col :xs="{span: 24}" :sm="{span: 18}" class="profile-right-content">
