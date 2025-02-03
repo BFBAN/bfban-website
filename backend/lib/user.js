@@ -1,13 +1,27 @@
 "use strict";
 import xss from "xss";
-import express from "express";
-import db from "../mysql.js";
 import config from "../config.js";
 import {userHasRoles} from "./auth.js";
 import {handleAchievemenMapToArray} from "../routes/user_achievements.js";
 
 const xssConfig = {
-    whiteList: {a: ["href", "title", "target"], b: [], br: [], div: [], hr: [], i: [], img: ["src", "alt", "style", "title", "width", "height"], li: [], oi: [], p: [], span: [], strong: [], u: [], ul: [], video: ["autoplay", "controls", "crossorigin", "loop", "muted", "playsinline", "poster", "preload", "src", "height", "width",]},
+    whiteList: {
+        a: ["href", "title", "target"],
+        b: [],
+        br: [],
+        div: [],
+        hr: [],
+        i: [],
+        img: ["src", "alt", "style", "title", "width", "height"],
+        li: [],
+        oi: [],
+        p: [],
+        span: [],
+        strong: [],
+        u: [],
+        ul: [],
+        video: ["autoplay", "controls", "crossorigin", "loop", "muted", "playsinline", "poster", "preload", "src", "height", "width",],
+    },
     css: false,
     allowCommentTag: false,
 };
@@ -29,12 +43,24 @@ function cheatMethodsSanitizer(val, {req}) {
 }
 
 const userAttributes = {
-    "achievements": {type: "object", get: true, set: false, default: {}, handleValue: (value, type) => type === 'show' ? handleAchievemenMapToArray(value) : value},
+    "achievements": {
+        type: "object",
+        get: true,
+        set: false,
+        default: {},
+        handleValue: (value, type) => type === 'show' ? handleAchievemenMapToArray(value) : value
+    },
     "allowDM": {type: "boolean", get: true, set: true, default: false},
     "avatar": {type: "string", get: true, set: false, default: ''},     // allow direct message?
     "changeNameLeft": {type: "number", get: true, set: false, isprivate: true, default: 3},
     "freezeOfNoBinding": {type: "boolean", get: true, set: false, default: false},
-    "introduction": {type: "string", get: true, set: true, default: '', handleValue: (value, type) => xss(value, xssConfig)},
+    "introduction": {
+        type: "string",
+        get: true,
+        set: true,
+        default: '',
+        handleValue: (value, type) => xss(value, xssConfig)
+    },
     "language": {type: "string", get: true, set: true, isprivate: true, default: 'en-US'},
     "lastSigninIP": {type: "string", get: false, set: false, default: ''},
     "mute": {type: "string", get: true, set: true, default: ''},

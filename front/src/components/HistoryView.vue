@@ -1,9 +1,9 @@
 <script>
-import {api, http_token, storage} from "@/assets/js";
+import {api, application, http_token, storage} from "@/assets/js";
 import Empty from "@/components/Empty.vue";
 import ExposedName from "@/components/ExposedName.vue";
 
-export default {
+export default new application({
   data() {
     return {
       load: false,
@@ -60,7 +60,7 @@ export default {
       this.total = Object.entries(localData.data.value).length;
     },
   }
-}
+})
 </script>
 
 <template>
@@ -69,8 +69,8 @@ export default {
       <slot></slot>
     </Tooltip>
     <div slot="content" class="history-view">
-      <Row>
-        <Col flex="1">{{ $t('profile.history.title') }}</Col>
+      <Row class="history-header">
+        <Col flex="1"><b>{{ $t('profile.history.title') }}</b></Col>
         <Col>
           <Button @click="getHistory" size="small" :disabled="load">
             <Icon type="md-refresh" size="15" :class="[
@@ -95,19 +95,15 @@ export default {
                     <!-- 头像 E -->
                   </Col>
                   <Col :xs="{span: 17, push: 0,pull:0}" :lg="{span: 17, push: 0,pull:0}">
-                    <div style="display: flex; flex-direction: column;">
-                      <Tooltip :content="$t('list.colums.playerId')">
-                        <ExposedName>
-                          <b>
-                            <router-link
-                                :to="{name: 'player', params: { ouid: d.originPersonaId }, query: {byPath: $route.name}}"
-                                :style="d.avatarLink === '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
-                              <code>{{ d.originName }}</code>
-                            </router-link>
-                          </b>
-                        </ExposedName>
-                      </Tooltip>
-                    </div>
+                    <ExposedName disabled="">
+                      <b>
+                        <router-link
+                            :to="{name: 'player', params: { ouid: d.originPersonaId }, query: {byPath: $route.name}}"
+                            :style="d.avatarLink === '' ? 'color: rgba(255,0,0,1);text-decoration: line-through;' : ''">
+                          {{ d.originName }}
+                        </router-link>
+                      </b>
+                    </ExposedName>
                   </Col>
                 </Row>
               </Col>
@@ -141,6 +137,10 @@ export default {
 
 .history-view {
   position: relative;
+
+  .history-header {
+    margin-bottom: 10px;
+  }
 
   .history-view-list {
     min-height: 150px;

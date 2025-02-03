@@ -35,10 +35,10 @@ export default {
     },
     toolbar: {
       type: Array,
-      default: () => ['ordered', 'bullet', 'bold', 'italic', 'underline', 'hr', 'link', 'image']
+      default: () => ['ordered', 'bullet', 'bold', 'italic', 'underline', 'hr', 'link', 'image', 'cs', 'emote']
     }
   },
-  data (){
+  data() {
     return {
       context: ''
     }
@@ -64,7 +64,7 @@ export default {
     /**
      * <-
      */
-    onChangeContent (val) {
+    onChangeContent(val) {
       switch (this.version) {
         case "v1":
           this.$emit("input", val);
@@ -76,7 +76,7 @@ export default {
     }
   },
   computed: {
-    editType () {
+    editType() {
       return this.$route.query.editType || this.version;
     }
   }
@@ -123,5 +123,4 @@ export default {
 </template>
 
 <style scoped lang="less">
-
 </style>

@@ -378,7 +378,7 @@
               </div>
 
               <!-- 用户回复 S -->
-              <div class="ivu-card ivu-card-bordered ivu-card-dis-hover" id="reply" v-if="isLogin">
+              <Card :padding="0" id="reply" dis-hover v-if="!isLogin">
                 <div class="ivu-card-body">
                   <TextareaView v-model="reply.content"
                                 style="margin: -10px -16px;"
@@ -430,11 +430,19 @@
                     </template>
                   </TextareaView>
                 </div>
-              </div>
-              <Alert type="warning" show-icon v-else>
-                <template slot="desc">
-                  {{ $t('detail.info.replyManual3') }}
-                </template>
+              </Card>
+              <Alert type="warning" v-else>
+                <Row :gutter="5" type="flex" align="middle">
+                  <Col flex="1">
+                    <Icon type="ios-alert" color="#FF9800"></Icon>
+                    {{ $t('detail.info.replyManual3') }}
+                  </Col>
+                  <Col>
+                    <Button type="warning" size="small" ghost :to="{name: 'signin'}">
+                      {{ $t('signin.title') }}
+                    </Button>
+                  </Col>
+                </Row>
               </Alert>
               <!-- 用户回复 E -->
             </Col>
@@ -784,7 +792,7 @@ export default new application({
     /**
      * 更新游览值
      */
-    onUpdateViewed() {
+    async onUpdateViewed() {
       let viewed = storage.local.get("viewed");
       const id = this.cheater.id;
       const historyTime = new Date().getTime();
@@ -795,7 +803,7 @@ export default new application({
         return;
 
       storage.local.set("viewed", viewed && viewed.data ? {
-        ...viewed.data.value || {},
+        ...viewed.data.value,
         [id]: historyTime
       } : {[id]: historyTime})
 
@@ -806,13 +814,8 @@ export default new application({
         }
       }
 
-      http.post(api["player_viewed"], {
-        data: {
-          data: {id}
-        }
-      }).then(res => {
-        this.cheater.viewNum++;
-      });
+      await http.post(api["player_viewed"], {data: {data: {id}}});
+      this.cheater.viewNum++;
     },
     /**
      * 获取基本字段
@@ -865,8 +868,9 @@ export default new application({
             })
 
             that.cheater = d.data;
-            document.title = document.title + ' - ' + this.cheater.originName + ' - ' + this.cheater.games.map(i => this.$i18n.t(`basic.games.${i}`));
             that.$refs.recordLink.generateTable(this.cheater);
+
+            document.title = document.title + ' - ' + this.cheater.originName + ' - ' + this.cheater.games.map(i => this.$i18n.t(`basic.games.${i}`));
             return;
           }
 

@@ -276,14 +276,13 @@ export default new application({
               </div>
 
               <Card :padding="0" dis-hover>
-                      <Textarea v-model="verify.suggestion"
-                                ref="judgementTextarea"
-                                :height="'250px'"
-                                :maxlength="60000"
-                                :showMaxlengthLabel="true"
-                                :placeholder="$t(`detail.info.writeSomething`)">
-
-                      </Textarea>
+                <Textarea v-model="verify.suggestion"
+                          ref="judgementTextarea"
+                          :height="'250px'"
+                          :maxlength="60000"
+                          :showMaxlengthLabel="true"
+                          :placeholder="$t(`detail.info.writeSomething`)">
+                </Textarea>
 
                 <!-- Fast Reply S -->
                 <Divider content-position="left" style="margin: 0"></Divider>

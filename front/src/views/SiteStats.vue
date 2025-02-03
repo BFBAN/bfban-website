@@ -81,7 +81,7 @@
       <br>
 
       <!-- 排行统计 S -->
-      <div style="position: relative">
+      <div style="position: relative" v-if="isLogin">
         <div>
           <Row :gutter="20">
             <Col :xs="{span: 24, push: 1}" :lg="{span: 20, push: 0}">
@@ -210,16 +210,18 @@
             </Card>
           </Col>
         </Row>
+      </div>
+      <!-- 排行统计 E -->
 
-        <Spin size="large" fix v-show="!isLogin">
+      <Card v-show="!isLogin" dis-hover>
+        <Spin size="large">
           <div>
             <Icon type="md-lock" size="100"/>
           </div>
           <br>
           <Button :to="{name: 'signin'}">{{ $t("header.signin") }}</Button>
         </Spin>
-      </div>
-      <!-- 排行统计 E -->
+      </Card>
 
     </div>
   </div>

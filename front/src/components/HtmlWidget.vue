@@ -121,7 +121,7 @@ export default {
   }
 
   .html-widget-size-large {
-    &, * {
+    &, p, span, i, em, u, b, font {
       font-size: 20px;
       line-height: 1.5;
     }
@@ -141,7 +141,7 @@ export default {
     word-wrap: break-word !important;;
     word-break: break-word !important;
 
-    &, * {
+    &, p, span, i, em, u, b, font {
       font-size: 13px;
       line-height: 1.5;
     }
@@ -157,7 +157,7 @@ export default {
   }
 
   .html-widget-size-small {
-    &, * {
+    &, p, span, i, em, u, b, font {
       font-size: 12px;
       line-height: 1.25;
     }

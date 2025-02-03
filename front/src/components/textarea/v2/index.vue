@@ -1,5 +1,5 @@
 <script>
-import {http_token} from "@/assets/js";
+import {application, http_token} from "@/assets/js";
 import {Extension} from '@tiptap/core';
 import {Editor, EditorContent} from '@tiptap/vue-2'
 import StarterKit from '@tiptap/starter-kit'
@@ -8,36 +8,40 @@ import lodash from "lodash";
 import EPlaceholder from '@tiptap/extension-placeholder'
 import UploadWidget from "@/components/UploadWidget.vue";
 import InputLinkWidget from "@/components/InputLinkAttrWidget.vue";
-import LinkWidget from "./link/index";
-import ImageWidget from "./image/index"
-import HRWidget from "./hr/index";
-import ContractedSyntax from "./contractedSyntax"
-
+import InputContractedSyntaxWidget from "@/components/inputContractedSyntaxWidget.vue";
+import EmoteView from "@/components/EmoteView.vue"
 import Empty from "@/components/Empty.vue";
+
+import LinkWidget from "./link";
+import ImageWidget from "./image"
+import HRWidget from "./hr";
+import ContractedSyntax from "./contractedSyntax"
+import EmoteWidget from "./emote"
+
 import HtmlWidget from "@/components/HtmlWidget.vue";
 
 
 const PlainTextPaste = Extension.create({
-      // addPasteRules() {
-      //   return [
-      //     {
-      //       regex: /.*/, // 匹配所有内容
-      //       handler: ({match, range}) => {
-      //         const plainText = match[0].replace(/<[^>]*>/g, '');
-      //
-      //         return {
-      //           insert: {
-      //             type: 'text',
-      //             text: plainText,
-      //           },
-      //         };
-      //       },
-      //     },
-      //   ];
-      // },
-    });
+  // addPasteRules() {
+  //   return [
+  //     {
+  //       regex: /.*/, // 匹配所有内容
+  //       handler: ({match, range}) => {
+  //         const plainText = match[0].replace(/<[^>]*>/g, '');
+  //
+  //         return {
+  //           insert: {
+  //             type: 'text',
+  //             text: plainText,
+  //           },
+  //         };
+  //       },
+  //     },
+  //   ];
+  // },
+});
 
-export default {
+export default new application({
   props: {
     index: null,
     showMaxlengthLabel: {
@@ -66,27 +70,24 @@ export default {
     },
     toolbar: {
       type: Array,
-      default: () => ['ordered', 'bullet', 'bold', 'italic', 'underline', 'hr', 'link', 'image']
+      default: () => ['ordered', 'bullet', 'bold', 'italic', 'underline', 'hr', 'link', 'image', 'cs', 'emote']
     }
   },
   components: {
     HtmlWidget,
     Empty,
     InputLinkWidget,
+    InputContractedSyntaxWidget,
     UploadWidget,
+    EmoteView,
     EditorContent,
   },
   data() {
     return {
       tiptap: null,
       isPreviewView: false,
-      editorContent: process.env.NODE_ENV === 'production' ? '' : `
-      <p><a href="https://bfban.com?isWidget=true">widget</a>:{user:1}</p>
-      <p>文本<a href="https://baidu.com">链接</a>内容</p>
-      <hr/>
-      <img src="https://bfban.com/assets/img/index-gl_zh-CN.07e3ae23.png" />
-      <a href="https://baidu.com">链接2</a>
-      `
+      isOpenEmoji: false,
+      editorContent: ''
     }
   },
   created() {
@@ -116,6 +117,7 @@ export default {
         LinkWidget,
         HRWidget,
         ImageWidget,
+        EmoteWidget,
         PlainTextPaste,
 
         // 缩语
@@ -161,6 +163,22 @@ export default {
       }
     },
     /**
+     * 缩语-工具栏
+     */
+    onContractedSyntax() {
+      if (this.$refs.contractedSyntaxWidget)
+        this.$refs.contractedSyntaxWidget.openPanel();
+    },
+    /**
+     * 标签-工具栏
+     */
+    onEmote() {
+      if (this.$refs.emoteWidget) {
+        this.$refs.emoteWidget.openPanel();
+        this.isOpenEmoji = true;
+      }
+    },
+    /**
      * 分割线-工具栏
      */
     onHr() {
@@ -180,6 +198,21 @@ export default {
      */
     onInsertLink(href, text) {
       this.editor.commands.insertLink(href, text);
+    },
+    /**
+     * 插入缩语
+     */
+    onInsertContractedSyntax(val) {
+      console.log(val)
+      this.editor.commands.insertContractedSyntax({csType: val.type, csValue: val.value});
+    },
+    /**
+     * 插入标签
+     * @param val
+     */
+    onInsertEmote(type, val) {
+      this.editor.commands.insertEmote({id: `${type}|${val.name}`});
+      this.isOpenEmoji = false;
     },
     /**
      * 插入新图像
@@ -216,7 +249,7 @@ export default {
       });
     }
   }
-}
+})
 </script>
 
 <template>
@@ -323,6 +356,30 @@ export default {
                 <polyline class="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
               </svg>
             </Button>
+            <Button @click="onContractedSyntax" class="btn"
+                    v-if="toolbarAs.indexOf('cs') >= 0 && isAdmin">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <circle cx="256" cy="256" r="26"/>
+                <circle cx="346" cy="256" r="26"/>
+                <circle cx="166" cy="256" r="26"/>
+                <path fill="none" class="ql-even ql-fill" stroke="currentColor" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-width="32"
+                      d="M160 368L32 256l128-112M352 368l128-112-128-112"/>
+              </svg>
+            </Button>
+            <Button @click="onEmote"
+                    class="btn"
+                    :disabled="isOpenEmoji"
+                    v-if="toolbarAs.indexOf('emote') >= 0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <circle cx="184" cy="232" r="24"/>
+                <path
+                    d="M256.05 384c-45.42 0-83.62-29.53-95.71-69.83a8 8 0 017.82-10.17h175.69a8 8 0 017.82 10.17c-11.99 40.3-50.2 69.83-95.62 69.83z"/>
+                <circle cx="328" cy="232" r="24"/>
+                <circle cx="256" cy="256" r="208" fill="none" stroke="currentColor" stroke-miterlimit="10"
+                        stroke-width="32"/>
+              </svg>
+            </Button>
           </div>
         </Col>
         <Col flex="1"></Col>
@@ -351,7 +408,6 @@ export default {
     </div>
 
     <slot></slot>
-
     <template v-if="!isPreviewView">
       <editor-content
           class="editor html-widget-size-default timeline-description"
@@ -362,8 +418,12 @@ export default {
           @on-change="onEditorChange"/>
     </template>
     <div v-if="isPreviewView">
-      <HtmlWidget :html="editorContent" :isDisableFullScreen="true" :rendererType="['renderer']" v-if="editorContent"></HtmlWidget>
-      <Empty v-else :not-hint="true"></Empty>
+      <HtmlWidget :html="editorContent" :isDisableFullScreen="true" :rendererType="['renderer']"
+                  class="timeline-description textarea-none-padding"
+                  v-if="editorContent"></HtmlWidget>
+      <Card v-else shadow dis-hover>
+        <Empty :not-hint="false"></Empty>
+      </Card>
     </div>
 
     <slot name="footer"></slot>
@@ -399,6 +459,11 @@ export default {
     <UploadWidget ref="uploadWidget"
                   @finish="onInsertImage"></UploadWidget>
     <InputLinkWidget ref="linkWidget" @finish="onInsertLink"></InputLinkWidget>
+    <InputContractedSyntaxWidget ref="contractedSyntaxWidget"
+                                 @finish="onInsertContractedSyntax"></InputContractedSyntaxWidget>
+    <EmoteView ref="emoteWidget" :editor="tiptap"
+               @finish="onInsertEmote"
+               @close="() => isOpenEmoji = false"></EmoteView>
   </div>
 </template>
 
@@ -448,78 +513,10 @@ export default {
     }
   }
 
-  /* Heading styles */
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    line-height: 1.1;
-    margin-top: 2.5rem;
-    text-wrap: pretty;
-  }
-
-  h1,
-  h2 {
-    margin-top: 3.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  h1 {
-    font-size: 1.4rem;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  h3 {
-    font-size: 1.1rem;
-  }
-
-  h4,
-  h5,
-  h6 {
-    font-size: 1rem;
-  }
-
-  /* Code and preformatted text styles */
-
-  code {
-    background-color: var(--purple-light);
-    border-radius: 0.4rem;
-    color: var(--black);
-    font-size: 0.85rem;
-    padding: 0.25em 0.3em;
-  }
-
-  pre {
-    background: var(--black);
-    border-radius: 0.5rem;
-    color: var(--white);
-    font-family: 'JetBrainsMono', monospace;
-    margin: 1.5rem 0;
-    padding: 0.75rem 1rem;
-
-    code {
-      background: none;
-      color: inherit;
-      font-size: 0.8rem;
-      padding: 0;
-    }
-  }
-
-  blockquote {
-    border-left: 3px solid var(--gray-3);
-    margin: 1.5rem 0;
-    padding-left: 1rem;
-  }
-
   /* Placeholder (at the top) */
 
   p.is-editor-empty:first-child::before {
+    white-space: break-spaces;
     color: var(--gray-4);
     content: attr(data-placeholder);
     float: left;
@@ -557,6 +554,11 @@ export default {
     width: 28px;
     height: 28px;
   }
+}
+
+.textarea-none-padding {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .editor-toolbar .btn > span {

@@ -12,6 +12,7 @@ import htmlemoji from "@/components/HtmlEmoji"
 import timeview from "@/components/TimeView"
 import privilegestag from "@/components/PrivilegesTag";
 import htmluser from "@/components/HtmlUser.vue"
+import emoteitem from "@/components/EmoteItem.vue"
 import {regular} from "@/assets/js";
 
 export default {
@@ -41,6 +42,7 @@ export default {
         'video': 0,
         'div': 0,
         'img': 0,
+        'hr': 0,
         'a': 0,
         'pre': 0,
         'p': 0,
@@ -72,6 +74,7 @@ export default {
     htmlemoji,
     timeview,
     htmluser,
+    emoteitem,
     privilegestag,
   },
   watch: {
@@ -121,6 +124,7 @@ export default {
           video = vDom.getElementsByTagName("video"),
           img = vDom.getElementsByTagName("img"),
           link = vDom.getElementsByTagName("a"),
+          hr = vDom.getElementsByTagName("hr"),
           p = vDom.getElementsByTagName("p"),
           pres = vDom.getElementsByTagName("pre");
 
@@ -155,12 +159,42 @@ export default {
             for (let i = 0; i < _divs.length; i++) {
               /// 标准链接 =>
               /// 排除标签a|htmllink|img|video|iframe、排除标签属性内链接、排除标签内的链接
-              const urlRegex = /(?<!<(a|htmllink|img|video|iframe)[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
+              const urlRegex = /(?<!<(a|htmllink|img|video|iframe)[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&;//=]*))(?![^<]*<\/htmllink|a>)/g;
               _divs[i].innerHTML = _divs[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
 
               // 解析HR, 分割线
-              const dividerRegex = /-{3,}/g
+              const dividerRegex = /-{3,}|<hr\s*\/?>/g;
               _divs[i].innerHTML = _divs[i].innerHTML.replace(dividerRegex, `<Divider class="hr" dashed></Divider>`);
+
+              // 缩语
+              const csRegex = /\{([^:]+):([^}]+)\}/g;
+              _divs[i].innerHTML = _divs[i].innerHTML.replace(csRegex, (match, key, value) => {
+                switch (key) {
+                  case "user":
+                    return `<htmluser :id="${value}"></htmluser>`;
+                  case "player":
+                    return `<htmlplayercard :id="${value.toString()}"></htmlplayercard>`;
+                  case "router":
+                    return `<router-link :to="{path: '${value}'}">${value}</router-link>`
+                    // case "floor":
+                    //   return `<htmlfloor id="${value}"></htmlfloor>`;
+                    // case "---":
+                    //   return `<Divider class="hr" dashed></Divider>`;
+                  case "privilege":
+                    return `<privilegestag data="${value.toString().split(',')}"></privilegestag>`;
+                  case "icon":
+                    return `<Icon type='${value}'></Icon>`;
+
+                }
+                return ``;
+              })
+
+              // 标签
+              const emojiRegex = /\[([^|]+)\|([^\]]+)\]/g;
+              _divs[i].innerHTML = _divs[i].innerHTML.replace(emojiRegex, (match, key, value) => {
+                const fullValue = `${key}|${value}`;
+                return `<emoteitem id="${fullValue}">[${fullValue}]</emoteitem>`;
+              })
             }
           }
 
@@ -248,52 +282,16 @@ export default {
             }
           }
 
+          if (hr && hr.length > 0) {
+            let _hrs = Array.from(hr); // deep copy
+            for (let i = 0; i < _hrs.length; i++) {
+              console.log(_hrs[i]);
+            }
+          }
+
           if (p && p.length > 0) {
             let _p = Array.from(p); // deep copy
             for (let i = 0; i < _p.length; i++) {
-              // 缩语
-              if (_p[i] && _p[i].innerText && _p[i].innerText.match(/{(\S*)\}/)) {
-                let str = _p[i].innerText.match(/{(\S*)\}/)[1];
-                let p_data = str.split(':');
-
-                if (p_data[0])
-                  switch (p_data[0]) {
-                    case "user":
-                      _p[i].innerHTML = _p[i].innerHTML.replaceAll(`{${str}}`, `<htmluser :id="${p_data[1]}" />`);
-                      break;
-                    case "player":
-                      _p[i].innerHTML = `<htmlplayercard :id="${p_data[1].toString()}"></htmlplayercard>`;
-                      break;
-                    case "router":
-                      _p[i].innerHTML = _p[i].innerHTML
-                          .replaceAll(`{${str}}`, `<u><router-link :to="{path: '${p_data[1]}'}">${p_data[1]}</router-link></u>`);
-                      break;
-                    case "floor":
-                      var p_value = p_data[1];
-                      _p[i].innerHTML = `<htmlfloor id="${p_value}"></htmlfloor>`;
-                      break;
-                    case "---":
-                      _p[i].innerHTML = `<Divider class="hr" dashed>`;
-                      break;
-                    case "privilege":
-                      var p_value_privileges = p_data[1].split(',').toString();
-                      if (p_data[1])
-                        _p[i].innerHTML = _p[i].innerHTML
-                            .replaceAll(`{${str}}`, `<privilegestag data="${p_value_privileges}"></privilegestag>`);
-                      break;
-                    case "icon":
-                      if (p_data[1]) {
-                        _p[i].innerHTML = _p[i].innerHTML
-                            .replaceAll(`{${str}}`, `<Icon type='${p_data[1]}'></Icon>`);
-                      }
-                      break;
-                    case "egg":
-                      _p[i].innerHTML = _p[i].innerHTML
-                          .replaceAll(`{${str}}`, `<Icon type='md-egg'></Icon>`);
-                      break;
-                  }
-              }
-
               // 可疑链接
               // 将可疑的文本链接转换为链接widget
               if (_p[i] && _p[i].innerText) {
@@ -319,7 +317,7 @@ export default {
 
               /// 标准链接 =>
               if (_p[i] && _p[i].innerText) {
-                const urlRegex = /(?<!<[a|htmllink|img|video|iframe][^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&//=]*))(?![^<]*<\/htmllink|a>)/g;
+                const urlRegex = /(?<!<[a|htmllink|img|video|iframe][^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&;//=]*))(?![^<]*<\/htmllink|a>)/g;
                 _p[i].innerHTML = _p[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
               }
 

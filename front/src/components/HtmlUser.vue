@@ -1,6 +1,7 @@
 <script>
 import HtmlLink from "@/components/HtmlLink.vue";
 import {api, http} from "@/assets/js"
+import UserAvatar from "@/components/UserAvatar.vue";
 
 export default {
   props: {
@@ -15,6 +16,7 @@ export default {
     }
   },
   components: {
+    UserAvatar,
     HtmlLink,
   },
   created() {
@@ -35,9 +37,15 @@ export default {
 </script>
 
 <template>
-  <Tag size="medium" color="primary">
-    <span class="user-select-none" contenteditable="false">@ </span>
-    <HtmlLink :href="`/space/${id}`" :text="userData.username || id.toString()" target="_blank"></HtmlLink>
+  <Tag :checked="false" size="medium">
+    <Row :gutter="3" type="flex" align="middle">
+      <Col contenteditable="false" class="user-select-none">
+        <UserAvatar size="15" :src="userData.avatar"></UserAvatar>
+      </Col>
+      <Col>
+        <HtmlLink :href="`/space/${id}`" :text="userData.username || id.toString()" target="_blank"></HtmlLink>
+      </Col>
+    </Row>
   </Tag>
 </template>
 

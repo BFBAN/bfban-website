@@ -1,7 +1,7 @@
 <template>
   <div>
     <keep-alive>
-      <SharePlayerCell class="player-card" :id="id" type="card"></SharePlayerCell>
+      <SharePlayerCell class="player-card" :personaId="id" type="card"></SharePlayerCell>
     </keep-alive>
   </div>
 </template>
@@ -13,8 +13,8 @@ export default {
   name: "HtmlPlayerCard",
   props: {
     id: {
-      type: Number,
-      default: 0
+      type: [String, Number],
+      default: ""
     }
   },
   components: {SharePlayerCell},

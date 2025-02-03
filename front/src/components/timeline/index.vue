@@ -565,8 +565,9 @@ export default new application({
 
           <HtmlWidget class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"
                       :html="l.content.text" v-if="l.content.text"></HtmlWidget>
-          <Empty v-else :not-hint="true"></Empty>
-
+          <Card v-else dis-hover class="timeline-description">
+            <Empty :not-hint="false"></Empty>
+          </Card>
         </div>
         <!-- 举报:any E -->
 
@@ -618,7 +619,7 @@ export default new application({
           <HtmlWidget :html="l.content.text"
                       v-if="l.content.text"
                       class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
-          <Empty v-else :not-hint="true"></Empty>
+          <Empty v-else :not-hint="false" class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></Empty>
 
           <template v-if="isLogin && l.content.extendedLinks">
             <Row :gutter="5">
@@ -732,8 +733,9 @@ export default new application({
 
           <HtmlWidget :html="l.content.text" v-if="l.content.text"
                       class="timeline-description ivu-card ivu-card-bordered ivu-card-dis-hover"></HtmlWidget>
-          <Empty v-else :not-hint="true"></Empty>
-
+          <Card v-else dis-hover class="timeline-description">
+            <Empty :not-hint="false"></Empty>
+          </Card>
         </div>
         <!-- 认为:any E -->
 
@@ -790,8 +792,9 @@ export default new application({
             </template>
 
             <HtmlWidget :html="l.content.text" v-if="l.content.text"></HtmlWidget>
-            <Empty v-else :not-hint="true"></Empty>
-
+            <Card v-else dis-hover class="timeline-description">
+              <Empty :not-hint="false"></Empty>
+            </Card>
           </div>
         </div>
         <!-- 回复:any E -->

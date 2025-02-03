@@ -15,7 +15,7 @@ import privileges from "/public/config/privilege.json";
 export default {
   props: {
     data: {
-      type: Array,
+      type: [Array, String],
       default: () => []
     },
     size: {
@@ -37,8 +37,11 @@ export default {
     this.update();
   },
   watch: {
-    'data': function (val, old) {
-      this.update(val);
+    'data': function (value, old) {
+      let _v = value
+      if (typeof _v == 'string')
+        _v = value.split(',');
+      this.update(_v);
     }
   },
   methods: {

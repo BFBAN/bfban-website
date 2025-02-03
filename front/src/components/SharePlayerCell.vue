@@ -79,7 +79,7 @@ if (window.callPhantom)
 export default {
   props: {
     personaId: {
-      type: String,
+      type: [String, Number],
       default: ""
     },
     type: {

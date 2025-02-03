@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
-      <div dis-hover :padding="0">
+      <div>
         <Row :gutter="0" type="flex" justify="center">
           <Col style="width: 500px">
             <br>
@@ -15,7 +15,9 @@
             </Row>
             <br>
 
-            <Card v-if="!isLogin" class="signin-box" :padding="isMobile ? 20 : 50" dis-hover>
+            <Card v-if="!isLogin" class="signin-box" :padding="isMobile ? 20 : 30" dis-hover>
+              <Banner :style="`margin: -${isMobile ? 20 : 30}px -${isMobile ? 20 : 30}px 30px;`" height="120"></Banner>
+
               <Form ref="signin" :model="signin" :rules="ruleValidate" label-position="top">
                 <Alert type="error" show-icon v-if="serverReturnMessage">
                   <b>{{ $t('signin.failed') }} :</b>
@@ -53,31 +55,43 @@
               <Divider dashed
                        :style="`margin:25px -${isMobile ? 20 : 50}px;width:calc(100% + ${isMobile ? 20 * 2 : 50 * 2}px)`"/>
 
-              <Row type="flex" justify="center" align="middle">
+              <Row :gutter="10" type="flex" align="middle">
                 <Col>
                   <router-link :to="{name: 'signup'}">
-                    <Icon type="md-mail"/>
                     {{ $t('signin.form.submitHint') }}
                   </router-link>
                 </Col>
-                <Divider type="vertical"/>
+                <Divider type="vertical"></Divider>
                 <Col>
                   <router-link :to="{name: 'forgetPassword'}">{{ $t('signin.form.forgetPasswordHint') }}</router-link>
                 </Col>
-                <Divider type="vertical"/>
-                <Col>
-                  <a href="http://kook.top/wHwxhw">{{ $t('signin.form.Feedback') }}</a>
+                <Col span="24">
+                  <Row :gutter="10">
+                    <Col>
+                      <a href="http://kook.top/wHwxhw">{{ $t('signin.form.Feedback') }}</a>
+                    </Col>
+                    <Col>
+                      <Icon type="md-open"></Icon>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
             </Card>
-            <Card v-if="isLogin" shadow align="center" :padding="isMobile ? 20 : 50">
-              <Avatar icon="ios-person" size="100" :src="currentUser.userinfo.userAvatar"></Avatar>
-              <h1>
-                <router-link :to="{name:'profile', params: {pagename:'information'}}">
-                  {{ currentUser.userinfo.username }}
-                </router-link>
-              </h1>
-              <p> {{ $t('signin.loggedIn') }} </p>
+            <Card v-if="isLogin" dis-hover :padding="isMobile ? 20 : 50">
+              <div class="signin-out-userinfo">
+                <Avatar class="userinfo-avatar" icon="ios-person" size="100"
+                        :src="currentUser.userinfo.userAvatar"></Avatar>
+                <h1>
+                  <router-link :to="{name:'profile', params: {pagename:'information'}}">
+                    {{ currentUser.userinfo.username }}
+                  </router-link>
+                </h1>
+                <p> {{ $t('signin.loggedIn') }} </p>
+              </div>
+              <Button long type="error" ghost size="large" :loading="signoutLoad" :disabled="signoutLoad"
+                      @click="onAccountSignout">
+                {{ $t("header.signout") }}
+              </Button>
             </Card>
           </Col>
         </Row>
@@ -87,15 +101,16 @@
 </template>
 
 <script>
-import {api, application, http, regular} from "@/assets/js";
+import {account_storage, api, application, http, regular} from '@/assets/js';
 
+import Banner from "@/components/Banner.vue"
 import Captcha from "@/components/captcha/index";
 import Vuex from "vuex";
 
 const {mapActions, mapMutations} = Vuex;
 
 export default new application({
-  components: {Captcha},
+  components: {Banner, Captcha},
   data() {
     return {
       ruleValidate: {
@@ -122,6 +137,7 @@ export default new application({
         password: '',
         captcha: {},
       },
+      signoutLoad: false,
       spinShow: false,
     }
   },
@@ -138,7 +154,25 @@ export default new application({
       'SIGNIN'
     ]),
     getCaptchaData(value) {
+      this.signin.captcha = Object.assign(this.signin.captcha, value);
       this.signin.captcha = value;
+    },
+    /**
+     * 注销账号
+     * @returns {Promise<void>}
+     */
+    async onAccountSignout() {
+      try {
+        this.signoutLoad = true;
+        await account_storage.signout();
+        this.$store.dispatch('signout').then(() => {
+          this.$router.push('/');
+        });
+      } catch (e) {
+        this.$Message.error(e.toString());
+      } finally {
+        this.signoutLoad = false;
+      }
     },
     /**
      * 登录
@@ -185,6 +219,7 @@ export default new application({
           if (backPath) {
             await this.$router.push({path: backPath});
           } else {
+            this.$router.go('-1');
             this.$router.go(-1);
           }
 
@@ -213,5 +248,14 @@ export default new application({
 .signin-box {
   overflow: hidden;
   margin-bottom: 1rem;
+}
+
+.signin-out-userinfo {
+  margin-bottom: 50px;
+  text-align: center;
+
+  .userinfo-avatar {
+    margin-bottom: 15px;
+  }
 }
 </style>

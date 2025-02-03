@@ -128,7 +128,7 @@
         </Row>
       </div>
       <div class="home-activity-lean">
-        <div class="home-wrapper" :style="`animation: HomeRowUp ${activities_l.length * 2.8}s linear infinite;`">
+        <div class="home-wrapper" :style="`animation: homeRowUp ${activities_l.length * 2.8}s linear infinite;`">
           <div class="icon-pair" v-for="activity in activities_l" :key="activity.id">
             <Card class="icon" v-for="a_i in activity" :key="a_i.id">
               <Avatar size="80" :src="a_i.playerAvatarLink" style="margin-top: -55px">
@@ -359,8 +359,8 @@ export default new application({
 })
 </script>
 
-<style scoped lang="less">
-@keyframes HomeRowUp {
+<style lang="less">
+@keyframes homeRowUp {
   from {
     transform: translateX(0%);
   }
@@ -369,7 +369,9 @@ export default new application({
     transform: translateX(-50%);
   }
 }
+</style>
 
+<style scoped lang="less">
 .home-activity-box {
   position: relative;
   padding-top: 100px;

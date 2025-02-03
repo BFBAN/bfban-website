@@ -3,20 +3,24 @@ import {mergeAttributes, VueNodeViewRenderer} from "@tiptap/vue-2";
 import Component from "./view.vue";
 
 const UserMention = Node.create({
-    name: 'userMention',
+    name: 'contractedSyntax',
+
     group: 'inline',
-    topNode: true,
+    topNode: false,
     atom: true,
     inline: true,
-    selectable: false,
+    selectable: true,
     draggable: false,
 
     addAttributes() {
         return {
-            mentionType: {
+            csType: {
                 default: null,
             },
-            mentionId: {
+            csValue: {
+                default: null,
+            },
+            type: {
                 default: null,
             },
         }
@@ -25,35 +29,47 @@ const UserMention = Node.create({
     parseHTML() {
         return [
             {
-                tag: 'span',
+                tag: 'span[data-type="contracted-syntax"]',
                 getAttrs: (node) => {
-                    const text = node.textContent
-                    const match = text.match(/{(user|player):(\d+)}/)
-                    if (match) {
-                        return {
-                            mentionType: match[1],
-                            mentionId: parseInt(match[2]),
-                        }
+                    const {csType, csValue, type} = node.dataset;
+                    return {
+                        csType,
+                        csValue,
+                        type,
                     }
-                    return null
                 },
             },
         ]
     },
     renderHTML({HTMLAttributes}) {
         const attrs = mergeAttributes(HTMLAttributes);
-        return ['span', attrs, 0]
+        return ['span', {}, `{${attrs.csType}${attrs.csValue ? ':' : ''}${attrs.csValue}}`]
     },
-
     addNodeView() {
         return VueNodeViewRenderer(Component)
     },
-
     addCommands() {
         return {
-            insertMention: (mentionType, mentionId) => ({ commands }) => {
-                return commands.insertContent({ type: this.name, attrs: { mentionType, mentionId } })
+            insertContractedSyntax: ({csType, csValue}) => ({commands}) => {
+                return commands.insertContent({
+                    type: this.name,
+                    attrs: {
+                        csType,
+                        csValue,
+                    },
+                    // content: `${csType}${csValue ? ':' : ''}${csValue}`
+                })
             },
+            setContractedSyntax: ({csType, csValue}) => ({commands}) => {
+                return commands.setContent({
+                    type: this.name,
+                    attrs: {
+                        csType,
+                        csValue,
+                    },
+                    content: `${csType}${csValue ? ':' : ''}${csValue}`
+                })
+            }
         }
     },
 });

@@ -289,7 +289,11 @@ export default {
       for (let i = 0; i < this.media.list.length; i++) {
         if (this.media.list[i].filename == name) {
           // 修改 downloadURL
-          const newDownloadURL = `https://bfban.gametools.network/api/service/file?filename=${this.media.list[i].filename}`;
+          const requestUploadName = http.CONF['requestUploadName'],
+              getUrlData = http.CONF.child[requestUploadName],
+              origin = `${getUrlData.protocol || 'http'}://${getUrlData.host}${getUrlData.pathname}`;
+
+          const newDownloadURL = `${origin}api/service/file?filename=${this.media.list[i].filename}`;
           this.openViewImage(this.media.list[i].filename, newDownloadURL);
         }
       }

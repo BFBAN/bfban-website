@@ -251,7 +251,7 @@
                   <Card :padding="0" dis-hover>
                     <Textarea
                         :version="'v2'"
-                        :toolbar="[[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'hr'], ['link', 'image']]"
+                        :toolbar="[[{'list': 'ordered'}, {'list': 'bullet'}], ['bold', 'hr'], ['link', 'image', 'emote','cs']]"
                         :placeholder="$t('report.info.description')"
                         :index="index"
                         :height="'520px'"

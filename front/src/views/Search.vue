@@ -11,10 +11,12 @@
         </Col>
       </Row>
       <br>
+
       <div class="styles-herosection user-select-none">
         <div class="styles_bg"></div>
         <img class="styles_bg_img" src="@/assets/images/hero-grid-overlay.png"/>
       </div>
+
       <div :class="[
           `search-content`,
           (searchValue[searchTypeValue].toString().length > searchConfig.type[searchTypeValue].minLength && searchPosting) ? 'search-content-mini' : ''
@@ -130,7 +132,7 @@
             <Divider type="vertical"/>
           </Col>
           <Col :xs="{span: 24}" :lg="{span: 6}" align="center">
-            <a href="javascript:void(0)">{{ $t("search.collectionHint") }}</a>
+            {{ $t("search.collectionHint") }}
           </Col>
         </Row>
       </div>

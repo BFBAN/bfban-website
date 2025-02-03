@@ -262,7 +262,7 @@ export default {
 
       if (this.ignore) {
         // 原图
-        file = await that.dataURLtoFile(this.vueCropper.img,  `${this.filename(this.vueCropper.name)}.${this.vueCropper.outputType}`);
+        file = await that.dataURLtoFile(this.vueCropper.img, `${this.filename(this.vueCropper.name)}.${this.vueCropper.outputType}`);
 
         await that.onAfterUpload(file);
       } else {
@@ -310,7 +310,7 @@ export default {
     async handleBeforeSelectFile(file) {
       const that = this;
 
-      if (file.length <= 1) return ;
+      if (file.length <= 1) return;
 
       let reader = new FileReader();
       reader.readAsDataURL(file);
@@ -392,8 +392,12 @@ export default {
       this.media.data[index].load = true;
       let res = await this.queryMediaDetail(this.media.data[index].filename);
 
-      if (res.data.success == 1) {
-        this.insertValue = `https://bfban.gametools.network/api/service/file?filename=${this.media.data[index].filename}`;
+      if (res.data.success === 1) {
+        const requestUploadName = http.CONF['requestUploadName'],
+            getUrlData = http.CONF.child[requestUploadName],
+            origin = `${getUrlData.protocol || 'http'}://${getUrlData.host}${getUrlData.pathname}`;
+
+        this.insertValue = `${origin}service/file?filename=${this.media.data[index].filename}`;
         this.currentIndex = 2;
         this.media.data[index].load = false;
         return;
