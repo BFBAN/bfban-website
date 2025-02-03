@@ -6,6 +6,14 @@ export default {
     id: {
       type: [String],
       default: ''
+    },
+    size: {
+      type: [String, Number],
+      default: '24'
+    },
+    isSpan: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -37,10 +45,16 @@ export default {
 
       const typeList = this.emojis.child.findLast(i => i.name === type);
       if (typeList && typeList.child)
-        typeList.child.findLast(i => {
-          if (i.name === id)
-            result = i;
-        })
+        for (let index = 0; index <= typeList.child.length; index++) {
+          let i = typeList.child[index];
+          if (i.name === id) {
+            result = {
+              imageUrl: typeList.imageUrl,
+              ...i,
+            };
+            break;
+          }
+        }
       this.emojiItemData = result;
       return result;
     }
@@ -52,13 +66,30 @@ export default {
 </script>
 
 <template>
-  <img class="emote user-select-none" :alt="emojiItemData.name" :src="emojiItemData.imageUrl" v-if="emojiItemData"/>
+  <span v-if="emojiItemData">
+    <template v-if="emojiItemData.config.type == 'gif'">
+        <img class="emote user-select-none" :alt="emojiItemData.name" :src="emojiItemData.imageUrl"
+             :style="`width: ${size}px;height: ${size}px`"
+             v-if="emojiItemData"/>
+    </template>
+    <template v-if="emojiItemData.config.type == 'spriteDiagram'">
+        <span class="emote user-select-none"
+              :class="[
+                 isSpan ? 'emote-none-padding': ''
+              ]"
+              :style="`width: ${size}px;height: ${size}px;background-image: url(${emojiItemData.imageUrl});background-size: ${emojiItemData.config.size};background-position: ${emojiItemData.config.position}`"
+              v-if="emojiItemData"/>
+    </template>
+  </span>
 </template>
 
 <style scoped lang="less">
+span.emote-none-padding {
+  margin: -6px 1px;
+}
+
+span.emote,
 img.emote {
   display: inline-flex !important;
-  width: 24px;
-  height: 24px;
 }
 </style>

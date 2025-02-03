@@ -173,7 +173,7 @@ export default new application({
      * 标签-工具栏
      */
     onEmote() {
-      if (this.$refs.emoteWidget) {
+      if (this.$refs.emoteWidget || this.editor.isFocused) {
         this.$refs.emoteWidget.openPanel();
         this.isOpenEmoji = true;
       }

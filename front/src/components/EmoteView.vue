@@ -2,9 +2,10 @@
 import {Editor} from "@tiptap/vue-2";
 
 import emojis from "@/../public/config/emoji.json"
+import EmoteItem from "@/components/EmoteItem.vue";
 
 export default {
-  components: {},
+  components: {EmoteItem},
   props: {
     editor: {
       type: Editor,
@@ -65,8 +66,8 @@ export default {
     onPanelToggle() {
       this.show = !this.show;
 
-      // if (this.show === false)
-      //   this.$emit('close');
+      if (this.show === false)
+        this.$emit('close');
     },
     /**
      * 打开面板
@@ -86,9 +87,10 @@ export default {
   <Modal v-model="show"
          class="emote" class-name="emote-window-box"
          :width="600"
-         :styles="{top:pos && pos.top ? `calc(${pos.top}px + 1.1rem)` : 'calc(50%)', left: pos && pos.left ? pos.left  + 'px' : 'calc(50% - 200px)', margin: 0, padding: 0}"
+         :styles="{top:pos && pos.top ? `calc(${pos.top}px + 1.1rem)` : 'calc(20%)', left: pos && pos.left ? pos.left  + 'px' : 'calc(50% - 300px)', margin: 0, padding: 0}"
          :mask="false"
-         :closable="false"
+         :closable="true"
+         @on-visible-change="(status) => !status ? $emit('close') : null"
          sticky
          transfer
          scrollable
@@ -110,7 +112,8 @@ export default {
         <TabPane :label="i.name" :name="i.name" v-for="(i, index) in emojis.child" :key="index">
           <div class="emote-row-box">
             <Card :padding="0" dis-hover class="emote-item" v-for="(j, j_index) in i.child" :key="j_index">
-              <img :src="j.imageUrl" @click="onFinish(i.name,j)"/>
+              <EmoteItem :isSpan="false" :size="30" :id="`${i.name}|${j.name}`"
+                         @click.native="onFinish(i.name,j)"></EmoteItem>
             </Card>
           </div>
         </TabPane>
@@ -124,6 +127,7 @@ export default {
   .title {
     height: 30px;
   }
+
   .title-icon {
     height: 18px;
     width: 18px;
@@ -131,14 +135,14 @@ export default {
 
   .emote-row-box {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(13, 1fr);
+    grid-row-gap: 10px;
     padding: 10px;
     margin-top: -10px;
 
-    .emote-item,
-    .emote-item img {
-      width: 40px;
-      height: 40px;
+    .emote-item {
+      width: 32px;
+      height: 32px;
     }
   }
 }
