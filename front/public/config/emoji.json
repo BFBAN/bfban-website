@@ -3,7 +3,8 @@
   "child": [
     {
       "name": "emoji",
-      "imageUrl": "https://unpkg.com/emoji-datasource-emojione@4.0.4/img/emojione/sheets-256/64.png",
+      "byImageUrl": "https://unpkg.com/emoji-datasource-emojione@4.0.4/img/emojione/sheets-256/64.png",
+      "imageUrl": "/images/emote/emoji-one/sheets-256.png",
       "child": [
         {
           "name": "grinning",
@@ -849,7 +850,7 @@
     },
     {
       "name": "gesture",
-      "imageUrl": "https://unpkg.com/emoji-datasource-emojione@4.0.4/img/emojione/sheets-256/64.png",
+      "imageUrl": "/images/emote/emoji-one/sheets-256.png",
       "child": [
         {
           "name": "muscle",
@@ -1103,19 +1104,175 @@
     },
     {
       "name": "party",
+      "byImageUrl": "https://slackmojis.com",
       "child": [
         {
-          "name": "Party Parrot",
+          "name": "party-parrot",
           "config": {
             "type": "gif"
           },
-          "shortNames": [
-            "parrot"
-          ],
-          "keywords": [
-            "party"
-          ],
           "imageUrl": "https://quill-emoji-mart-picker.netlify.app/assets/images/parrot.gif"
+        },
+        {
+          "name": "3d-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/3d_parrot.png"
+        },
+        {
+          "name": "60fps-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/60fps_parrot.gif"
+        },
+        {
+          "name": "404error-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/404error_parrot.gif"
+        },
+        {
+          "name": "1102-daily-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/1102_dailyparrot.gif"
+        },
+        {
+          "name": "a-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/a-parrot.gif"
+        },
+        {
+          "name": "accessible-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/accessible_parrot.gif"
+        },
+        {
+          "name": "akak-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/akak.gif"
+        },
+        {
+          "name": "angel-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/angel_parrot.gif"
+        },
+        {
+          "name": "angry-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/angry_parrot.gif"
+        },
+        {
+          "name": "antarctica-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/antarctica_parrot.gif"
+        },
+        {
+          "name": "aussie-conga-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/aussie_conga_parrot.gif"
+        },
+        {
+          "name": "aussie-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/aussie_parrot.gif"
+        },
+        {
+          "name": "aussie-reverse-conga-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/aussiereversecongaparrot.gif"
+        },
+        {
+          "name": "backwards-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/backwards_parrot.gif"
+        },
+        {
+          "name": "banana-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/banana_parrot.gif"
+        },
+        {
+          "name": "beer-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/beer_parrot.gif"
+        },
+        {
+          "name": "beret-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/beret_parrot.gif"
+        },
+        {
+          "name": "birthday-party-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/birthday_party_parrot.gif"
+        },
+        {
+          "name": "blunt-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/blunt_parrot.gif"
+        },
+        {
+          "name": "boba-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/boba_parrot.gif"
+        },
+        {
+          "name": "chef-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/chef-parrot.gif"
+        },
+        {
+          "name": "zakarum-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/zakarum-parrot.gif"
+        },
+        {
+          "name": "zouk-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/zouk_parrot.gif"
         }
       ]
     }

@@ -79,7 +79,7 @@ export default {
   },
   watch: {
     html: {
-      handler(val, oldVal) {
+      handler(val) {
         for (const dataKey in this.extensionData) {
           this[dataKey] = this.extensionData[dataKey];
         }
@@ -89,11 +89,10 @@ export default {
       immediate: true,
     },
     mode: {
-      handler(val) {
-        if (this.templateRender) return;
+      handler() {
+        if (!this.templateRender) return;
         this.updateRender(this.packagingRender(this.html));
       },
-      deep: true,
     },
   },
   created() {
@@ -200,23 +199,16 @@ export default {
 
           if (img && img.length > 0) {
             let _imgs = Array.from(img); // deep copy
-            let eleImgType = ["htmlimage", "htmlemoji"];
+            let eleImgType = ["htmlimage"];
             let eleImgTypeIndex = 0;
 
             for (let i = 0; i < _imgs.length; i++) {
-              if (_imgs[i].src.indexOf(';base64,') >= 0) eleImgTypeIndex = 1;
-
               let eleImg = document.createElement(eleImgType[eleImgTypeIndex]);
 
               switch (eleImgTypeIndex.toString()) {
                 case '0':
                   eleImg.setAttribute("src", _imgs[i].src);
                   this.images.push(_imgs[i].src);
-                  break;
-                case '1':
-                  eleImg.setAttribute("data-name", `${_imgs[i].title}` || '');
-                  eleImg.setAttribute("data-src", _imgs[i].src || '');
-                  eleImg.setAttribute("data-style", _imgs[i].style.cssText || '');
                   break;
               }
 

@@ -68,12 +68,16 @@ export default {
 <template>
   <span v-if="emojiItemData">
     <template v-if="emojiItemData.config.type == 'gif'">
-        <img class="emote user-select-none" :alt="emojiItemData.name" :src="emojiItemData.imageUrl"
+        <img class="emote" :alt="emojiItemData.name"
+             :src="emojiItemData.imageUrl"
+             :class="[
+                 isSpan ? 'emote-none-padding': ''
+              ]"
              :style="`width: ${size}px;height: ${size}px`"
              v-if="emojiItemData"/>
     </template>
     <template v-if="emojiItemData.config.type == 'spriteDiagram'">
-        <span class="emote user-select-none"
+        <span class="emote"
               :class="[
                  isSpan ? 'emote-none-padding': ''
               ]"
@@ -84,7 +88,8 @@ export default {
 </template>
 
 <style scoped lang="less">
-span.emote-none-padding {
+span.emote-none-padding,
+img.emote-none-padding{
   margin: -6px 1px;
 }
 

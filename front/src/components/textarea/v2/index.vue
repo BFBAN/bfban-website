@@ -173,7 +173,7 @@ export default new application({
      * 标签-工具栏
      */
     onEmote() {
-      if (this.$refs.emoteWidget || this.editor.isFocused) {
+      if (this.$refs.emoteWidget && !this.editor.isFocused) {
         this.$refs.emoteWidget.openPanel();
         this.isOpenEmoji = true;
       }
@@ -337,6 +337,19 @@ export default new application({
 
             <Divider type="vertical" v-if="toolbarAs.indexOf('link') >= 0 && toolbarAs.indexOf('image') >= 0"></Divider>
 
+            <Button @click="onEmote"
+                    class="btn"
+                    :disabled="isOpenEmoji"
+                    v-if="toolbarAs.indexOf('emote') >= 0 && isAdmin">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <circle cx="184" cy="232" r="24"/>
+                <path
+                    d="M256.05 384c-45.42 0-83.62-29.53-95.71-69.83a8 8 0 017.82-10.17h175.69a8 8 0 017.82 10.17c-11.99 40.3-50.2 69.83-95.62 69.83z"/>
+                <circle cx="328" cy="232" r="24"/>
+                <circle cx="256" cy="256" r="208" fill="none" stroke="currentColor" stroke-miterlimit="10"
+                        stroke-width="32"/>
+              </svg>
+            </Button>
             <Button @click="onLink(editor.isActive('Link'))" class="btn"
                     v-if="toolbarAs.indexOf('link') >= 0"
                     :class="{ 'is-active ql-active': editor.isActive('Link') }">
@@ -365,19 +378,6 @@ export default new application({
                 <path fill="none" class="ql-even ql-fill" stroke="currentColor" stroke-linecap="round"
                       stroke-linejoin="round" stroke-width="32"
                       d="M160 368L32 256l128-112M352 368l128-112-128-112"/>
-              </svg>
-            </Button>
-            <Button @click="onEmote"
-                    class="btn"
-                    :disabled="isOpenEmoji"
-                    v-if="toolbarAs.indexOf('emote') >= 0">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                <circle cx="184" cy="232" r="24"/>
-                <path
-                    d="M256.05 384c-45.42 0-83.62-29.53-95.71-69.83a8 8 0 017.82-10.17h175.69a8 8 0 017.82 10.17c-11.99 40.3-50.2 69.83-95.62 69.83z"/>
-                <circle cx="328" cy="232" r="24"/>
-                <circle cx="256" cy="256" r="208" fill="none" stroke="currentColor" stroke-miterlimit="10"
-                        stroke-width="32"/>
               </svg>
             </Button>
           </div>
@@ -430,7 +430,7 @@ export default new application({
 
     <Row :gutter="10" class="editor-footer" v-if="showMaxlengthLabel && !isPreviewView">
       <Col flex="1">
-        <template v-if="editorContent != null && editorContent.length >= maxlength">
+        <template v-if="editorContent != null && editorContent.length > maxlength">
           <Alert show-icon type="error">{{ $t('textarea.textOverflowHint') }}</Alert>
         </template>
         <slot name="footer-left"/>
@@ -442,11 +442,11 @@ export default new application({
         <Divider type="vertical"></Divider>
         <Tooltip :placement="'left-start'" :content="$t('textarea.textHelpHint')" max-width="300" :transfer="true">
           <Icon type="md-code" style="margin-right: 5px;"/>
-          <template v-if="editorContent != null && editorContent.length >= maxlength">
+          <template v-if="editorContent != null && editorContent.length > maxlength">
             <b style="color: darkred">{{ editorContent.length || 0 }}</b>
           </template>
           <template
-              v-else-if="editorContent != null && editorContent.length >= maxlength / 2 && editorContent.length < maxlength">
+              v-else-if="editorContent != null && editorContent.length > maxlength / 2 && editorContent.length < maxlength">
             <span style="color: goldenrod">{{ editorContent.length || 0 }}</span>
           </template>
           <template v-else-if="editorContent != null">{{ editorContent.length || 0 }}</template>

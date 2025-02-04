@@ -40,7 +40,7 @@ export default {
   <Tag :checked="false" size="medium">
     <Row :gutter="3" type="flex" align="middle">
       <Col contenteditable="false" class="user-select-none">
-        <UserAvatar size="15" :src="userData.avatar"></UserAvatar>
+        <UserAvatar :size="15" :src="userData.avatar"></UserAvatar>
       </Col>
       <Col>
         <HtmlLink :href="`/space/${id}`" :text="userData.username || id.toString()" target="_blank"></HtmlLink>

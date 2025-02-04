@@ -378,12 +378,12 @@
               </div>
 
               <!-- 用户回复 S -->
-              <Card :padding="0" id="reply" dis-hover v-if="!isLogin">
+              <Card :padding="0" id="reply" dis-hover v-if="isLogin">
                 <div class="ivu-card-body">
                   <TextareaView v-model="reply.content"
                                 style="margin: -10px -16px;"
                                 ref="replyTextarea"
-                                :toolbar="[['bold'], ['link', 'image']]"
+                                :toolbar="[['bold'], ['emote','link', 'image', 'cs']]"
                                 :height="'150px'"
                                 :maxlength="5000"
                                 :showMaxlengthLabel="true"
@@ -404,7 +404,7 @@
                                           v-voice-button
                                           :loading="replySpinShow"
                                           :disabled="!reply.content"
-                                          @click.stop.prevent="$refs.timeline.onReply('default')">
+                                          @click.stop.prevent="onReply('default')">
                                     {{ $t('basic.button.reply') }}
                                   </Button>
                                   <Button size="large">
@@ -540,7 +540,7 @@
         <Form ref="replyForm" style="margin: -17px;" v-if="isLogin">
           <TextareaView v-model="reply.miniModeContent"
                         ref="replyMiniModeTextarea"
-                        :toolbar="[['bold'], ['link', 'image']]"
+                        :toolbar="[['bold'], ['emote','link', 'image', 'cs']]"
                         :height="'320px'"
                         :maxlength="5000"
                         :showMaxlengthLabel="true"

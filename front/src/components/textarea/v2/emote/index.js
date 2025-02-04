@@ -4,11 +4,12 @@ import Component from "./view.vue";
 export default Node.create({
     name: 'Emote',
     group: 'inline',
-    topNode: true,
+    topNode: false,
     atom: true,
     inline: true,
     selectable: true,
     draggable: false,
+
     addAttributes() {
         return {
             id: {
