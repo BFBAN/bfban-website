@@ -960,7 +960,7 @@
           "describe": "管理者が未処理のプレーヤーをフォローしてステーションアラートを作るための自動リフレッシュを提供する。",
           "name": "未処理のリマインダ"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "システムウィンドウ内のポップアップ通知",
           "name": "デスクトップ通知"
         },

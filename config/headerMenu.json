@@ -8,17 +8,6 @@
   ],
   "child": [
     {
-      "name": "index",
-      "type": [
-        "desktop",
-        "mobile"
-      ],
-      "to": {
-        "name": "home",
-        "query": {}
-      }
-    },
-    {
       "name": "cheaters",
       "type": [
         "desktop",

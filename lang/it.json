@@ -988,7 +988,7 @@
           "describe": "Fornisci aggiornamento automatico agli amministratori, presta attenzione ai giocatori non elaborati e crea promemoria sul sito",
           "name": "Promemoria non elaborato"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "Notifica popup nella finestra di sistema",
           "name": "Notifiche sul desktop"
         },

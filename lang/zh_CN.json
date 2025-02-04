@@ -586,7 +586,7 @@
     "profile": "仪表盘",
     "report": "举报作弊",
     "signin": "登录",
-    "signout": "注销",
+    "signout": "退出账户",
     "signup": "注册",
     "site_stats": "统计",
     "userCenter": "我的展示页"
@@ -984,7 +984,7 @@
           "describe": "为管理员提供自动刷新，关注未处理玩家做出站内提醒",
           "name": "未处理提醒"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "在系统窗口内弹窗通知",
           "name": "桌面通知"
         },
@@ -1133,6 +1133,11 @@
       "size": "大小",
       "theme": "主题"
     },
+    "qr": {
+      "name": "二维码",
+      "uriCode": "网页地址二维码",
+      "appCode": "应用案件二维码"
+    },
     "image": {
       "describe": "生成一张举报信息截图",
       "generate": "生成图片",
@@ -1257,6 +1262,9 @@
       "upload": "上传",
       "url": "图片链接"
     }
+  },
+  "workflow": {
+    "title": "工作流"
   },
   "externalAuth": {
     "title": "授权",

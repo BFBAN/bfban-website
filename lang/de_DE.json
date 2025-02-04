@@ -610,7 +610,7 @@
           "describe": "Bieten Sie Administratoren eine automatische Aktualisierung, achten Sie auf unverarbeitete Spieler und erstellen Sie Erinnerungen vor Ort",
           "name": "Unbearbeitete Erinnerung"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "Popup-Benachrichtigungen im Systemfenster",
           "name": "Desktop-Benachrichtigung"
         },

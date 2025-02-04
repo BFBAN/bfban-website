@@ -4,6 +4,7 @@
   "child": [
     {
       "name": "zh-CN",
+      "value": "zh_CN",
       "label": "简体中文",
       "main": true,
       "members": [
@@ -23,6 +24,7 @@
     },
     {
       "name": "zh-TW",
+      "value": "zh_TW",
       "label": "繁體中文",
       "members": [
         {
@@ -45,6 +47,7 @@
     },
     {
       "name": "zh-Cat",
+      "value": "zh_Cat",
       "label": "简体喵文",
       "ignoreSave": true,
       "members": [
@@ -56,6 +59,7 @@
     },
     {
       "name": "en-US",
+      "value": "en",
       "label": "English",
       "members": [
         {
@@ -78,6 +82,7 @@
     },
     {
       "name": "ja-JP",
+      "value": "ja_JP",
       "label": "日本语",
       "members": [
         {
@@ -93,6 +98,7 @@
     },
     {
       "name": "ko-KR",
+      "value": "ko_KR",
       "label": "한국어",
       "members": [
         {
@@ -103,6 +109,7 @@
     },
     {
       "name": "ru-RU",
+      "value": "ru",
       "label": "Русский",
       "members": [
         {
@@ -121,6 +128,7 @@
     },
     {
       "name": "fr-FR",
+      "value": "fr",
       "label": "France",
       "members": [
         {
@@ -131,6 +139,7 @@
     },
     {
       "name": "it-IT",
+      "value": "it",
       "label": "Italiano",
       "members": [
         {
@@ -141,6 +150,7 @@
     },
     {
       "name": "ar-EG",
+      "value": "ar",
       "label": "عربي",
       "members": [
         {
@@ -151,6 +161,7 @@
     },
     {
       "name": "de-DE",
+      "value": "de_DE",
       "label": "Deutsch",
       "members": [
         {
@@ -161,6 +172,7 @@
     },
     {
       "name": "es-ES",
+      "value": "es",
       "label": "Español",
       "members": [
         {

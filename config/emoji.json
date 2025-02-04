@@ -1,14 +1,1280 @@
 {
+  "default": "emoji",
   "child": [
     {
-      "name": "Party Parrot",
-      "shortNames": [
-        "parrot"
-      ],
-      "keywords": [
-        "party"
-      ],
-      "imageUrl": "https://quill-emoji-mart-picker.netlify.app/assets/images/parrot.gif"
+      "name": "emoji",
+      "byImageUrl": "https://unpkg.com/emoji-datasource-emojione@4.0.4/img/emojione/sheets-256/64.png",
+      "imageUrl": "/images/emote/emoji-one/sheets-256.png",
+      "child": [
+        {
+          "name": "grinning",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 47.0588%"
+          }
+        },
+        {
+          "name": "grin",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 49.0196%"
+          }
+        },
+        {
+          "name": "joy",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 50.9804%"
+          }
+        },
+        {
+          "name": "rolling-on-the-floor-laughing",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 50.9804%"
+          }
+        },
+        {
+          "name": "smiley",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 52.9412%"
+          }
+        },
+        {
+          "name": "smile",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 54.902%"
+          }
+        },
+        {
+          "name": "sweat-smile",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 56.8627%"
+          }
+        },
+        {
+          "name": "laughing",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 58.8235%"
+          }
+        },
+        {
+          "name": "wink",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 64.7059%"
+          }
+        },
+        {
+          "name": "blush",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 66.6667%"
+          }
+        },
+        {
+          "name": "yum",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 68.6275%"
+          }
+        },
+        {
+          "name": "sunglasses",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 74.5098%"
+          }
+        },
+        {
+          "name": "heart-eyes",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 72.549%"
+          }
+        },
+        {
+          "name": "kissing-heart",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 94.1176%"
+          }
+        },
+        {
+          "name": "kissing",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 92.1569%"
+          }
+        },
+        {
+          "name": "kissing-smiling-eyes",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 96.0784%"
+          }
+        },
+        {
+          "name": "relaxed",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "92.1569% 80.3922%"
+          }
+        },
+        {
+          "name": "slightly-smiling-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 74.5098%"
+          }
+        },
+        {
+          "name": "hugging-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 60.7843%"
+          }
+        },
+        {
+          "name": "star-struck",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 96.0784%"
+          }
+        },
+        {
+          "name": "thinking-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 54.902%"
+          }
+        },
+        {
+          "name": "face-with-raised-eyebrow",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 94.1176%"
+          }
+        },
+        {
+          "name": "neutral-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 78.4314%"
+          }
+        },
+        {
+          "name": "expressionless",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 80.3922%"
+          }
+        },
+        {
+          "name": "no-mouth",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 50.9804%"
+          }
+        },
+        {
+          "name": "expressionless",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 80.3922%"
+          }
+        },
+        {
+          "name": "no-mouth",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 50.9804%"
+          }
+        },
+        {
+          "name": "face-with-rolling-eyes",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 78.4314%"
+          }
+        },
+        {
+          "name": "smirk",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 76.4706%"
+          }
+        },
+        {
+          "name": "persevere",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 13.7255%"
+          }
+        },
+        {
+          "name": "disappointed-relieved",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 17.6471%"
+          }
+        },
+        {
+          "name": "open-mouth",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 35.2941%"
+          }
+        },
+        {
+          "name": "zipper-mouth-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 47.0588%"
+          }
+        },
+        {
+          "name": "hushed",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 37.2549%"
+          }
+        },
+        {
+          "name": "sleepy",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 27.451%"
+          }
+        },
+        {
+          "name": "tired-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 29.4118%"
+          }
+        },
+        {
+          "name": "sleeping",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 47.0588%"
+          }
+        },
+        {
+          "name": "relieved",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 70.5882%"
+          }
+        },
+        {
+          "name": "stuck-out-tongue",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 100%"
+          }
+        },
+        {
+          "name": "stuck-out-tongue-winking-eye",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 0%"
+          }
+        },
+        {
+          "name": "stuck-out-tongue-closed-eyes",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 1.96078%"
+          }
+        },
+        {
+          "name": "drooling-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 52.9412%"
+          }
+        },
+        {
+          "name": "unamused",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 82.3529%"
+          }
+        },
+        {
+          "name": "sweat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 84.3137%"
+          }
+        },
+        {
+          "name": "pensive",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 86.2745%"
+          }
+        },
+        {
+          "name": "confused",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 88.2353%"
+          }
+        },
+        {
+          "name": "upside-down-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 76.4706%"
+          }
+        },
+        {
+          "name": "money-mouth-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 49.0196%"
+          }
+        },
+        {
+          "name": "astonished",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 43.1373%"
+          }
+        },
+        {
+          "name": "white-frowning-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "92.1569% 78.4314%"
+          }
+        },
+        {
+          "name": "slightly-frowning-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 72.549%"
+          }
+        },
+        {
+          "name": "confounded",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 90.1961%"
+          }
+        },
+        {
+          "name": "disappointed",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 3.92157%"
+          }
+        },
+        {
+          "name": "worried",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 5.88235%"
+          }
+        },
+        {
+          "name": "triumph",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 15.6863%"
+          }
+        },
+        {
+          "name": "cry",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 11.7647%"
+          }
+        },
+        {
+          "name": "sob",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 33.3333%"
+          }
+        },
+        {
+          "name": "frowning",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 19.6078%"
+          }
+        },
+        {
+          "name": "anguished",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 21.5686%"
+          }
+        },
+        {
+          "name": "fearful",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 23.5294%"
+          }
+        },
+        {
+          "name": "weary",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 25.4902%"
+          }
+        },
+        {
+          "name": "exploding-head",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "76.4706% 5.88235%"
+          }
+        },
+        {
+          "name": "grimacing",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 31.3725%"
+          }
+        },
+        {
+          "name": "cold-sweat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 39.2157%"
+          }
+        },
+        {
+          "name": "scream",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 41.1765%"
+          }
+        },
+        {
+          "name": "flushed",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 45.098%"
+          }
+        },
+        {
+          "name": "zany-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 98.0392%"
+          }
+        },
+        {
+          "name": "dizzy-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 49.0196%"
+          }
+        },
+        {
+          "name": "rage",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 9.80392%"
+          }
+        },
+        {
+          "name": "angry",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 7.84314%"
+          }
+        },
+        {
+          "name": "face-with-symbols-on-mouth",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "76.4706% 0%"
+          }
+        },
+        {
+          "name": "mask",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 52.9412%"
+          }
+        },
+        {
+          "name": "face-with-thermometer",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 50.9804%"
+          }
+        },
+        {
+          "name": "face-with-head-bandage",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 56.8627%"
+          }
+        },
+        {
+          "name": "nauseated-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 49.0196%"
+          }
+        },
+        {
+          "name": "face-vomiting",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "76.4706% 3.92157%"
+          }
+        },
+        {
+          "name": "sneezing-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 92.1569%"
+          }
+        },
+        {
+          "name": "innocent",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 60.7843%"
+          }
+        },
+        {
+          "name": "face-with-cowboy-hat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 45.098%"
+          }
+        },
+        {
+          "name": "clown-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 47.0588%"
+          }
+        },
+        {
+          "name": "lying-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 54.902%"
+          }
+        },
+        {
+          "name": "shushing-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 100%"
+          }
+        },
+        {
+          "name": "face-with-hand-over-mouth",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "76.4706% 1.96078%"
+          }
+        },
+        {
+          "name": "face-with-monocle",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "82.3529% 96.0784%"
+          }
+        },
+        {
+          "name": "nerd-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 52.9412%"
+          }
+        },
+        {
+          "name": "smiling-imp",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "58.8235% 62.7451%"
+          }
+        },
+        {
+          "name": "imp",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "43.1373% 100%"
+          }
+        },
+        {
+          "name": "japanese-ogre",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "43.1373% 78.4314%"
+          }
+        },
+        {
+          "name": "japanese-goblin",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "43.1373% 80.3922%"
+          }
+        },
+        {
+          "name": "skull",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "45.098% 0%"
+          }
+        },
+        {
+          "name": "skull-and-crossbones",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "92.1569% 62.7451%"
+          }
+        },
+        {
+          "name": "ghost",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "43.1373% 82.3529%"
+          }
+        },
+        {
+          "name": "alien",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "43.1373% 96.0784%"
+          }
+        },
+        {
+          "name": "space-invader",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "43.1373% 98.0392%"
+          }
+        },
+        {
+          "name": "robot-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 58.8235%"
+          }
+        },
+        {
+          "name": "hankey",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "49.0196% 29.4118%"
+          }
+        },
+        {
+          "name": "smiley-cat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 58.8235%"
+          }
+        },
+        {
+          "name": "smile-cat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 54.902%"
+          }
+        },
+        {
+          "name": "joy-cat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 56.8627%"
+          }
+        },
+        {
+          "name": "heart-eyes-cat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 60.7843%"
+          }
+        },
+        {
+          "name": "smirk-cat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 62.7451%"
+          }
+        },
+        {
+          "name": "kissing-cat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 64.7059%"
+          }
+        },
+        {
+          "name": "scream-cat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 70.5882%"
+          }
+        },
+        {
+          "name": "crying-cat-face",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 68.6275%"
+          }
+        },
+        {
+          "name": "pouting-cat",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "60.7843% 66.6667%"
+          }
+        }
+      ]
+    },
+    {
+      "name": "gesture",
+      "imageUrl": "/images/emote/emoji-one/sheets-256.png",
+      "child": [
+        {
+          "name": "muscle",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "49.0196% 31.3725%"
+          }
+        },
+        {
+          "name": "point-left",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "27.451% 37.2549%"
+          }
+        },
+        {
+          "name": "point-right",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "27.451% 49.0196%"
+          }
+        },
+        {
+          "name": "point-up",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "92.1569% 50.9804%"
+          }
+        },
+        {
+          "name": "point-up-2",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "27.451% 13.7255%"
+          }
+        },
+        {
+          "name": "middle-finger",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "56.8627% 74.5098%"
+          }
+        },
+        {
+          "name": "point-down",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "27.451% 25.4902%"
+          }
+        },
+        {
+          "name": "v",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "96.0784% 58.8235%"
+          }
+        },
+        {
+          "name": "crossed-fingers",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 21.5686%"
+          }
+        },
+        {
+          "name": "spock-hand",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "56.8627% 86.2745%"
+          }
+        },
+        {
+          "name": "the-horns",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 62.7451%"
+          }
+        },
+        {
+          "name": "call-me-hand",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 74.5098%"
+          }
+        },
+        {
+          "name": "raised-hand-with-fingers-splayed",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "56.8627% 62.7451%"
+          }
+        },
+        {
+          "name": "hand",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "96.0784% 47.0588%"
+          }
+        },
+        {
+          "name": "ok-hand",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "27.451% 84.3137%"
+          }
+        },
+        {
+          "name": "+1",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "27.451% 96.0784%"
+          }
+        },
+        {
+          "name": "-1",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "29.4118% 5.88235%"
+          }
+        },
+        {
+          "name": "fist",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "96.0784% 35.2941%"
+          }
+        },
+        {
+          "name": "facepunch",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "27.451% 60.7843%"
+          }
+        },
+        {
+          "name": "left-facing-fist",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 98.0392%"
+          }
+        },
+        {
+          "name": "right-facing-fist",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 7.84314%"
+          }
+        },
+        {
+          "name": "raised-back-of-hand",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "72.549% 86.2745%"
+          }
+        },
+        {
+          "name": "wave",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "27.451% 72.549%"
+          }
+        },
+        {
+          "name": "i-love-you-hand-sign",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 33.3333%"
+          }
+        },
+        {
+          "name": "writing-hand",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "96.0784% 70.5882%"
+          }
+        },
+        {
+          "name": "clap",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "29.4118% 17.6471%"
+          }
+        },
+        {
+          "name": "open-hands",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "29.4118% 29.4118%"
+          }
+        },
+        {
+          "name": "raised-hands",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "64.7059% 23.5294%"
+          }
+        },
+        {
+          "name": "palms-up-together",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "76.4706% 31.3725%"
+          }
+        },
+        {
+          "name": "pray",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "66.6667% 3.92157%"
+          }
+        },
+        {
+          "name": "handshake",
+          "config": {
+            "type": "spriteDiagram",
+            "size": "5200%",
+            "position": "74.5098% 19.6078%"
+          }
+        }
+      ]
+    },
+    {
+      "name": "party",
+      "byImageUrl": "https://slackmojis.com",
+      "child": [
+        {
+          "name": "party-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "https://quill-emoji-mart-picker.netlify.app/assets/images/parrot.gif"
+        },
+        {
+          "name": "3d-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/3d_parrot.png"
+        },
+        {
+          "name": "60fps-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/60fps_parrot.gif"
+        },
+        {
+          "name": "404error-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/404error_parrot.gif"
+        },
+        {
+          "name": "1102-daily-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/1102_dailyparrot.gif"
+        },
+        {
+          "name": "a-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/a-parrot.gif"
+        },
+        {
+          "name": "accessible-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/accessible_parrot.gif"
+        },
+        {
+          "name": "akak-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/akak.gif"
+        },
+        {
+          "name": "angel-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/angel_parrot.gif"
+        },
+        {
+          "name": "angry-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/angry_parrot.gif"
+        },
+        {
+          "name": "antarctica-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/antarctica_parrot.gif"
+        },
+        {
+          "name": "aussie-conga-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/aussie_conga_parrot.gif"
+        },
+        {
+          "name": "aussie-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/aussie_parrot.gif"
+        },
+        {
+          "name": "aussie-reverse-conga-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/aussiereversecongaparrot.gif"
+        },
+        {
+          "name": "backwards-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/backwards_parrot.gif"
+        },
+        {
+          "name": "banana-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/banana_parrot.gif"
+        },
+        {
+          "name": "beer-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/beer_parrot.gif"
+        },
+        {
+          "name": "beret-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/beret_parrot.gif"
+        },
+        {
+          "name": "birthday-party-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/birthday_party_parrot.gif"
+        },
+        {
+          "name": "blunt-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/blunt_parrot.gif"
+        },
+        {
+          "name": "boba-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/boba_parrot.gif"
+        },
+        {
+          "name": "chef-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/chef-parrot.gif"
+        },
+        {
+          "name": "zakarum-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/zakarum-parrot.gif"
+        },
+        {
+          "name": "zouk-parrot",
+          "config": {
+            "type": "gif"
+          },
+          "imageUrl": "/images/emote/party-parrot/zouk_parrot.gif"
+        }
+      ]
     }
   ]
 }

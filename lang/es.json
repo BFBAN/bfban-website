@@ -960,7 +960,7 @@
           "describe": "Proporcione una actualización automática para los administradores, preste atención a los jugadores no procesados ​​y cree recordatorios en el sitio",
           "name": "recordatorio no manejado"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "Notificaciones emergentes en la ventana del sistema",
           "name": "notificación de escritorio"
         },

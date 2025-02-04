@@ -988,7 +988,7 @@
           "describe": "Provide administrators with automatic refresh, focus on unprocessed players to make site alerts",
           "name": "Unprocessed reminder"
         },
-        "desktopNotifiction": {
+        "desktopNotification": {
           "describe": "Prompt notification in system",
           "name": "Desktop notification"
         },
