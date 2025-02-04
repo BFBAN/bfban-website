@@ -80,7 +80,7 @@
                   <Card :padding="0" dis-hover>
                     <Textarea v-model="formItem.attr.introduction"
                               ref="informationTextarea"
-                              :toolbar="['bold']"
+                              :toolbar="['bold',['cs','emote']]"
                               :height="'160px'"
                               :maxlength="500"
                               :show-maxlength-label="true"
@@ -113,7 +113,7 @@
                     </Row>
                     <Row :gutter="5" type="flex" align="top">
                       <Col v-for="(i, index) in [150,80,50,45,30,22]" :key="index">
-                        <p>{{i}}</p>
+                        <p>{{ i }}</p>
                         <UserAvatar :src="formItem.userAvatar" :size="i"></UserAvatar>
                       </Col>
                     </Row>
@@ -338,7 +338,8 @@
                 </ListItem>
                 <ListItem>
                   <ListItemMeta title="BFBAN APP AD"></ListItemMeta>
-                  <i-switch v-model="adsSwitch.bfbanApp" @on-change="switchAttr('ads.bfban-app.switch', adsSwitch.bfbanApp)"/>
+                  <i-switch v-model="adsSwitch.bfbanApp"
+                            @on-change="switchAttr('ads.bfban-app.switch', adsSwitch.bfbanApp)"/>
                 </ListItem>
               </List>
             </FormItem>
@@ -560,7 +561,7 @@ export default new application({
 
             this.formItem = Object.assign(this.formItem, d.data);
             if (this.$refs.informationTextarea)
-              this.$refs.informationTextarea.updateContent(this.formItem.attr.introduction);
+              this.$refs.informationTextarea.updateContent(this.convertInformation(this.formItem.attr.introduction));
           }
         }).finally(() => {
           this.userInfoLoad = false;
@@ -570,9 +571,27 @@ export default new application({
         })
       })
     },
+    /**
+     * 处理特殊格式
+     */
+    convertInformation(text) {
+      const csRegex = /<span>\{(user|player):(\d+)}<\/span>/g;
+      const emoteRegex = /<span>\[([^|]+)\|([^\]]+)\]<\/span>/g;
+      return text
+          .replace(csRegex, '<span data-type="contracted-syntax" data-cs-type="$1" data-cs-value="$2">{$1:$2}</span>')
+          .replace(emoteRegex, '<span data-type="emote" data-id="$1|$2">[$1|$2]</span>');
+    },
+    /**
+     * 检查本地语言是否同步
+     */
     checkLangLocalSync() {
       this.langLocalSync = account_storage.getConfiguration('langLocalSync');
     },
+    /**
+     * 属性开关
+     * @param key
+     * @param val
+     */
     switchAttr(key, val) {
       account_storage.updateConfiguration(key, val);
     }

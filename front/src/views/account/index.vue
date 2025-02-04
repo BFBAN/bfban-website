@@ -35,18 +35,24 @@
 
             <div class="ivu-menu-item-group-title"></div>
             <ul>
-              <li class="ivu-menu-item ivu-menu-item-disabled" :to="{name: 'space', params: { uId: `${currentUser.userinfo.userId }` }}">
-                {{ $t("header.userCenter") }}
-                <Icon type="ios-link"/>
-              </li>
-              <li class="ivu-menu-item ivu-menu-item-disabled" v-if="isAdmin" :to="{name: 'workflow'}">
-                {{ $t("workflow.title") }}
-                <Icon type="ios-link"/>
-              </li>
-              <li class="ivu-menu-item ivu-menu-item-disabled" v-if="isAdmin" :to="{name: 'admin', params: { pagename: 'home' }}">
-                {{ $t("profile.admin.title") }}
-                <Icon type="ios-link"/>
-              </li>
+              <router-link :to="{name: 'space', params: { uId: `${currentUser.userinfo.userId }` }}">
+                <li class="ivu-menu-item ivu-menu-item-disabled" >
+                  {{ $t("header.userCenter") }}
+                  <Icon type="ios-link"/>
+                </li>
+              </router-link>
+              <router-link :to="{name: 'workflow'}">
+                <li class="ivu-menu-item ivu-menu-item-disabled" v-if="isAdmin" >
+                  {{ $t("workflow.title") }}
+                  <Icon type="ios-link"/>
+                </li>
+              </router-link>
+              <router-link :to="{name: 'admin', params: { pagename: 'home' }}">
+                <li class="ivu-menu-item ivu-menu-item-disabled" v-if="isAdmin">
+                  {{ $t("profile.admin.title") }}
+                  <Icon type="ios-link"/>
+                </li>
+              </router-link>
             </ul>
           </Menu>
         </Col>

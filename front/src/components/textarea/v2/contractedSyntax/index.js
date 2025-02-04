@@ -57,7 +57,6 @@ const UserMention = Node.create({
                         csType,
                         csValue,
                     },
-                    // content: `${csType}${csValue ? ':' : ''}${csValue}`
                 })
             },
             setContractedSyntax: ({csType, csValue}) => ({commands}) => {

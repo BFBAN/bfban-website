@@ -190,8 +190,8 @@ export default new application({
      * @param val
      */
     updateContent(val) {
-      this.tiptap.commands.setContent(val)
-      return this.tiptap.getHTML()
+      this.tiptap.commands.setContent(val);
+      this.editorContent = this.tiptap.getHTML();
     },
     /**
      * 插入新链接
@@ -203,7 +203,6 @@ export default new application({
      * 插入缩语
      */
     onInsertContractedSyntax(val) {
-      console.log(val)
       this.editor.commands.insertContractedSyntax({csType: val.type, csValue: val.value});
     },
     /**
