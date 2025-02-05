@@ -43,24 +43,13 @@ import {application} from "@/assets/js";
 import vueQr from "vue-qr";
 
 export default new application({
-  name: "detailApp",
-  data() {
-    return {
-
-    }
-  },
+  name: "detailPlayerApp",
   components: {vueQr},
-  created() {
-
-  },
   methods: {
     onPenApp () {
       window.open(`bfban://app?open_app_type=player&id=${this.$route.params.ouid}`)
     }
   },
-  computed: {
-
-  }
 })
 </script>
 

@@ -12,7 +12,13 @@
 <script>
 import {application} from "@/assets/js";
 
-export default new application({});
+export default new application({
+  data () {
+    return {
+      time: Date.now()
+    }
+  }
+});
 </script>
 
 <style lang="less" scoped>

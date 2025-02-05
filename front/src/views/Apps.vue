@@ -75,7 +75,7 @@
 <script>
 import {application} from "@/assets/js";
 
-import appsConf from '/public/config/appslist.json';
+import appsConf from "/public/config/appslist.json";
 
 export default new application({
   name: "Apps",
@@ -91,7 +91,11 @@ export default new application({
     this.checkAllGroupChange();
   },
   methods: {
-    // 取apptags map内置值
+    /**
+     * 取 app tags map内置值
+     * @param valueName
+     * @returns {{checked: boolean, title: any, value: any}[]}
+     */
     getAppsTagValue(valueName = 'value') {
       let checkAllGroup = [];
       for (let item of appsConf.tags) {

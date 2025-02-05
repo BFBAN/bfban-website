@@ -202,10 +202,10 @@
 <script>
 import {account_storage, api, application, http_token, util} from "@/assets/js";
 
-import TimeView from "@/components/TimeView.vue";
-import BusinessCard from "@/components/BusinessCard.vue";
-import Textarea from "@/components/textarea/index.vue";
-import EditLinks from "@/components/EditLinks.vue";
+import TimeView from "@/components/TimeView";
+import BusinessCard from "@/components/BusinessCard";
+import Textarea from "@/components/textarea/index";
+import EditLinks from "@/components/EditLinks";
 import HtmlWidget from "@/components/HtmlWidget";
 
 import {kill} from "process";

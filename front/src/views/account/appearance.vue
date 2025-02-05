@@ -38,8 +38,9 @@
 </template>
 
 <script>
-import {storage} from '../../assets/js/index'
-import themes from '/public/config/themes.json'
+import {storage} from "@/assets/js"
+
+import themes from "/public/config/themes.json"
 
 export default {
   name: "appearance",

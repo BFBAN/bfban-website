@@ -66,7 +66,7 @@
 <script>
 import {api, application, http_token, message} from "@/assets/js";
 
-import BusinessCard from "@/components/BusinessCard.vue";
+import BusinessCard from "@/components/BusinessCard";
 import PrivilegesTag from "@/components/PrivilegesTag";
 
 import messageConf from "/public/config/message.json";
@@ -138,7 +138,6 @@ export default new application({
       })
     },
   },
-  computed: {}
 });
 </script>
 

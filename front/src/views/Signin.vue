@@ -103,7 +103,7 @@
 <script>
 import {account_storage, api, application, http, regular} from '@/assets/js';
 
-import Banner from "@/components/Banner.vue"
+import Banner from "@/components/Banner"
 import Captcha from "@/components/captcha/index";
 import Vuex from "vuex";
 
@@ -148,11 +148,15 @@ export default new application({
   },
   methods: {
     ...mapActions({
-      'signinUser': 'signin'
+      "signinUser": "signin"
     }),
     ...mapMutations([
-      'SIGNIN'
+      "SIGNIN"
     ]),
+    /**
+     * 获取验证码
+     * @param value
+     */
     getCaptchaData(value) {
       this.signin.captcha = Object.assign(this.signin.captcha, value);
       this.signin.captcha = value;

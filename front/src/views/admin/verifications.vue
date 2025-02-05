@@ -42,7 +42,8 @@
             <Col :lg="{span:9}">
               <Input v-model="i.uniqCode" show-word-limit readonly type="textarea" :autosize="{min: 1, max: 4}"/>
 
-              <HtmlLink :href="handlerLink(i.type,i.uniqCode)" :text="`✋🏻Activate ${i.type} code`" :isPoptip="false"></HtmlLink>
+              <HtmlLink :href="handlerLink(i.type,i.uniqCode)" :text="`✋🏻Activate ${i.type} code`"
+                        :isPoptip="false"></HtmlLink>
             </Col>
             <Col :lg="{span: 4}">
               <FormItem label="expires Time">
@@ -86,10 +87,11 @@
 
 <script>
 import {api, http_token} from "@/assets/js";
+
 import Empty from "@/components/Empty";
-import BusinessCard from "@/components/BusinessCard.vue";
-import TimeView from "@/components/TimeView.vue";
-import HtmlLink from "@/components/HtmlLink.vue";
+import BusinessCard from "@/components/BusinessCard";
+import TimeView from "@/components/TimeView";
+import HtmlLink from "@/components/HtmlLink";
 
 export default {
   name: "verifications",
@@ -110,14 +112,6 @@ export default {
     this.getVerifications()
   },
   methods: {
-    handlePageChange(num) {
-      this.skip = num;
-      this.getVerifications();
-    },
-    handlePageSizeChange(num) {
-      this.limit = num;
-      this.getVerifications();
-    },
     /**
      * 获取验证码
      */
@@ -149,13 +143,35 @@ export default {
     handlerLink(type, code) {
       switch (type) {
         case 'register':
-          return `${window.location.origin}/registerVerification?code=${code}&lang=en`;
+          return window.location.origin + this.$router.resolve({
+            name: 'registerVerification', query: {
+              code,
+              lang: 'en'
+            }
+          }).href
         case 'reset':
-          return `${window.location.origin}/forgetPasswordVerify?code=${code}$lang=en`;
+          return window.location.origin + this.$router.resolve({
+            name: 'forgetPasswordVerify', query: {
+              code,
+              lang: 'en'
+            }
+          }).href
         case 'binding':
-          return `${window.location.origin}/bindOrigin?code=${code}`
+          return window.location.origin + this.$router.resolve({
+            name: 'bindOrigin', query: {
+              code,
+            }
+          }).href
       }
-    }
+    },
+    handlePageChange(num) {
+      this.skip = num;
+      this.getVerifications();
+    },
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getVerifications();
+    },
   }
 }
 </script>

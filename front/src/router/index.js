@@ -18,7 +18,7 @@ const DetailCard = () => import('@/components/SharePlayerCell.vue');
 const Signin = () => import('@/views/Signin.vue');
 const Signup = () => import('@/views/Signup.vue');
 const ForgetPassword = () => import('@/views/ForgetPassword.vue');
-const SignupComplete = () => import('@/views/SignupComplete.vue');
+const SignupVerify = () => import('@/views/SignupVerify.vue');
 const SiteStats = () => import('@/views/SiteStats.vue');
 const Account = () => import('@/views/Space.vue');
 const About = () => import('@/views/About.vue');
@@ -366,7 +366,7 @@ const routes = [
                 description: 'registerVerification.description'
             }
         },
-        component: SignupComplete
+        component: SignupVerify
     },
 
     // 旧账户换绑 需登录
@@ -397,6 +397,7 @@ const routes = [
         component: ForgetPassword
     },
 
+    // 强制重置密码
     {
         name: 'forgetPasswordVerify', path: '/forgetPasswordVerify',
         meta: {
@@ -407,19 +408,6 @@ const routes = [
             }
         },
         component: ForgetPassword
-    },
-
-    // 账户验证
-    {
-        name: 'signupComplete', path: '/signupComplete',
-        meta: {
-            metaInfo: {
-                title: 'signupComplete.title',
-                keywords: "signupComplete.seo.keywords",
-                description: 'signupComplete.description'
-            }
-        },
-        component: SignupComplete
     },
 
     // 网站统计

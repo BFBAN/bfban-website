@@ -46,6 +46,7 @@ export default {
   methods: {
     update(privilegeArray) {
       const that = this;
+      if (!privilegeArray) return [];
       this.tags = that.privileges.filter(i => {
         return privilegeArray ? privilegeArray.includes(i.value) : that.data.includes(i.value);
       });

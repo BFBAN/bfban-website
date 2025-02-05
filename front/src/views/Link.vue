@@ -118,10 +118,10 @@
 <script>
 import {application} from "@/assets/js";
 
-import link from "../../public/config/link.json";
-import language from "../../public/config/languages.json";
+import link from "/public/config/link.json";
+import language from "/public/config/languages.json";
 
-import HtmlLink from "@/components/HtmlLink.vue"
+import HtmlLink from "@/components/HtmlLink"
 
 export default new application({
   data() {

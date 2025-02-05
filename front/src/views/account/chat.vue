@@ -149,10 +149,10 @@
 import {api, application, http, http_token} from "@/assets/js";
 
 import Html from "@/components/Html";
-import TimeView from "@/components/TimeView.vue";
-import BusinessCard from "@/components/BusinessCard.vue";
+import TimeView from "@/components/TimeView";
+import BusinessCard from "@/components/BusinessCard";
 import PrivilegesTag from "@/components/PrivilegesTag";
-import Loading from "@/components/Loading.vue";
+import Loading from "@/components/Loading";
 
 import messageConf from "/public/config/message.json";
 

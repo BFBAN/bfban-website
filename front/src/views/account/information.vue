@@ -353,13 +353,13 @@
 <script>
 import {account_storage, api, application, http, http_token} from "@/assets/js";
 
-import AdsGoogle from "@/components/ads/google/index.vue";
-import Textarea from "@/components/textarea/index.vue";
-import Captcha from "@/components/captcha/index";
-import UserAvatar from "@/components/UserAvatar.vue";
-import PrivilegesTag from "@/components/PrivilegesTag.vue";
-import TimeView from "@/components/TimeView.vue";
-import Banner from "@/components/Banner.vue";
+import AdsGoogle from "@/components/ads/google";
+import Textarea from "@/components/textarea";
+import Captcha from "@/components/captcha";
+import UserAvatar from "@/components/UserAvatar";
+import PrivilegesTag from "@/components/PrivilegesTag";
+import TimeView from "@/components/TimeView";
+import Banner from "@/components/Banner";
 
 export default new application({
   name: "account",

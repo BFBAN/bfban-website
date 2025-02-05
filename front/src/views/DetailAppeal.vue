@@ -259,6 +259,7 @@ import Html from "@/components/Html.vue";
 import EditLinks from "@/components/EditLinks.vue"
 
 export default new application({
+  name: "detilaPlayerAppeal",
   data() {
     return {
       appealType: [

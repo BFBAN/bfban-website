@@ -107,12 +107,13 @@
 </template>
 
 <script>
-import {api, http_token} from "../../assets/js";
+import {api, http_token} from "@/assets/js";
 
 import cheaterStatus from '/public/config/cheaterStatus.json'
 import gameName from '/public/config/gameName.json'
-import TimeView from "@/components/TimeView.vue";
-import ExposedName from "@/components/ExposedName.vue";
+
+import TimeView from "@/components/TimeView";
+import ExposedName from "@/components/ExposedName";
 
 export default {
   components: {ExposedName, TimeView},

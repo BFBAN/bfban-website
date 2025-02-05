@@ -153,11 +153,13 @@ export default new application({
         show: false,
         isNoticeIntraStationUser: false
       },
+
       muteSearchName: "",
       muteUserList: [],
       queryMuteUsersLoading: false,
       searchMuteUserList: [],
       searchLoading: false,
+
       skip: 1,
       limit: 20,
       total: 0,
@@ -171,13 +173,27 @@ export default new application({
     this.getMuteUsers()
   },
   methods: {
+    /**
+     * 封禁弹窗
+     * @param id
+     */
     showMuteAlert(id) {
       this.mute.id = id
       this.mute.show = true
     },
+    /**
+     * 封禁确认
+     */
     modalOk() {
       this.muteUser('add', this.mute.id, this.mute.value)
     },
+    /**
+     * 封禁用户
+     * @param type
+     * @param id
+     * @param muteTime
+     * @returns {boolean}
+     */
     muteUser(type, id, muteTime = 0) {
       const {isNoticeIntraStationUser} = this.mute;
 
@@ -202,14 +218,6 @@ export default new application({
       }).catch(err => {
         this.$Message.error(err.code);
       })
-    },
-    handlePageChange(num) {
-      this.skip = num;
-      this.getMuteUsers();
-    },
-    handlePageSizeChange(num) {
-      this.limit = num;
-      this.getMuteUsers();
     },
     /**
      * 条件查询站内用户
@@ -269,6 +277,15 @@ export default new application({
       }).finally(() => {
         this.queryMuteUsersLoading = false;
       })
+    },
+
+    handlePageChange(num) {
+      this.skip = num;
+      this.getMuteUsers();
+    },
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getMuteUsers();
     },
   }
 })

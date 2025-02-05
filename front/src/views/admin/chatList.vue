@@ -66,9 +66,10 @@
 </template>
 
 <script>
-import BusinessCard from "@/components/BusinessCard.vue";
-import Html from "@/components/Html"
 import {api, http_token} from "@/assets/js";
+
+import BusinessCard from "@/components/BusinessCard";
+import Html from "@/components/Html"
 
 export default {
   name: "chat",
