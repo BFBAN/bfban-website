@@ -11,7 +11,6 @@
                placeholder="input user db id"/>
       </Col>
     </Row>
-
     <br>
 
     <Row>
@@ -43,17 +42,20 @@
             <Col flex="1">
               <div>
                 <Tag>Log</Tag>
-                <Time :time="i.createTime" type="date"></Time>:
+                <Time :time="i.createTime" type="date"></Time>
+                :
 
                 <BusinessCard :id="i.byUserId" :showAdminUserInfo="true">
                   <b>{{ i.username }}</b>
                 </BusinessCard>
 
-                &nbsp; action: <Tag> {{ i.action }}</Tag>&nbsp;
+                &nbsp; action:
+                <Tag> {{ i.action }}</Tag>&nbsp;
 
                 <b>{{ i.toUserId }}</b>
 
-                role: <Tag>{{ i.role }}</Tag>
+                role:
+                <Tag>{{ i.role }}</Tag>
               </div>
             </Col>
           </Row>
@@ -67,7 +69,7 @@
 </template>
 
 <script>
-import {api, http, http_token} from "../../assets/js";
+import {api, http_token} from "@/assets/js";
 
 import BusinessCard from "@/components/BusinessCard.vue";
 
@@ -89,14 +91,6 @@ export default {
     this.http = http_token.call(this);
   },
   methods: {
-    handlePageChange(num) {
-      this.skip = num;
-      this.getBlockedUserAll();
-    },
-    handlePageSizeChange(num) {
-      this.limit = num;
-      this.getBlockedUserAll();
-    },
     /**
      * 查询用户管理员操作者日志
      */
@@ -119,12 +113,19 @@ export default {
       }).finally(() => {
         this.load = false;
       });
-    }
+    },
+    handlePageChange(num) {
+      this.skip = num;
+      this.getBlockedUserAll();
+    },
+    handlePageSizeChange(num) {
+      this.limit = num;
+      this.getBlockedUserAll();
+    },
   }
 }
 </script>
 
 <style lang="less" scoped>
 @import "@/assets/css/icon.less";
-
 </style>

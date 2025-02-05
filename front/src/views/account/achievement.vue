@@ -134,15 +134,16 @@
   </Tabs>
 </template>
 
-<script setup>
-import achievements from "/public/config/achievements.json"
-
-import AchievementView from "@/components/AchievementView.vue";
-import AchievementsTag from "@/components/AchievementsTag.vue";
+<script>
 import {achievement as achievementUtil, api, http_token} from "@/assets/js";
-import Banner from "@/components/Banner.vue";
-import UserAvatar from "@/components/UserAvatar.vue";
-import TimeView from "@/components/TimeView.vue";
+
+import AchievementView from "@/components/AchievementView";
+import AchievementsTag from "@/components/AchievementsTag";
+import Banner from "@/components/Banner";
+import UserAvatar from "@/components/UserAvatar";
+import TimeView from "@/components/TimeView";
+
+import achievements from "/public/config/achievements.json"
 
 export default {
   data() {

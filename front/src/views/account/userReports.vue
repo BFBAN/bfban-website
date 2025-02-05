@@ -35,13 +35,13 @@
 <script>
 import {api, application, http, http_token} from "@/assets/js";
 
-import cheaterStatusView from "@/components/CheaterStatusView.vue";
-import TimeView from "@/components/TimeView.vue";
-import Empty from "@/components/Empty.vue";
-import UserAvatar from "@/components/UserAvatar.vue";
-import Confetti from "@/components/Confetti.vue";
-import Reports from "@/components/Reports.vue"
-import Loading from "@/components/Loading.vue";
+import cheaterStatusView from "@/components/CheaterStatusView";
+import TimeView from "@/components/TimeView";
+import Empty from "@/components/Empty";
+import UserAvatar from "@/components/UserAvatar";
+import Confetti from "@/components/Confetti";
+import Reports from "@/components/Reports"
+import Loading from "@/components/Loading";
 
 export default new application({
   data() {
@@ -67,7 +67,7 @@ export default new application({
   methods: {
     /**
      * 获取举报信息
-     * @param uId
+     * @param pageNum 分页数
      */
     getMyReports(pageNum) {
       this.load = true;
@@ -108,7 +108,7 @@ export default new application({
      * @returns {boolean}
      */
     isChat() {
-      return !this.account.attr.allowDM || this.account.id == this.currentUser.userinfo.userId
+      return !this.account.attr.allowDM || this.account.id === this.currentUser.userinfo.userId
     }
   }
 })

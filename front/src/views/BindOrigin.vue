@@ -126,7 +126,8 @@
 
 <script>
 import {api, http_token, mail} from "@/assets/js";
-import Captcha from "@/components/captcha/index";
+
+import Captcha from "@/components/captcha";
 
 export default {
   name: "bindOrigin",
@@ -161,7 +162,7 @@ export default {
     }
   },
   watch: {
-    '$route': function (val) {
+    "$route": function (val) {
       if (val.name === 'bindOrigin' && !val.query.code) {
         this.stepsIndex = 0;
       }

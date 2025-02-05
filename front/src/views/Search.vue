@@ -494,12 +494,12 @@ import {api, application, http, storage} from "@/assets/js";
 import OcrWidget from "@/components/OcrWidget";
 import PrivilegesTag from "@/components/PrivilegesTag";
 import HtmlWidget from "@/components/HtmlWidget";
-import BusinessCard from "@/components/BusinessCard.vue";
+import BusinessCard from "@/components/BusinessCard";
 import Empty from "@/components/Empty";
-import TimeView from "@/components/TimeView.vue";
-import ExposedName from "@/components/ExposedName.vue"
+import TimeView from "@/components/TimeView";
+import ExposedName from "@/components/ExposedName"
 
-import game from '../../public/config/gameName.json';
+import game from "/public/config/gameName.json";
 
 export default new application({
   name: "search",
@@ -626,6 +626,10 @@ export default new application({
 
       this.searchHistory.list = history.data.value || [];
     },
+    /**
+     * 添加搜索历史
+     * @param value
+     */
     setSearchHistoryValue(value) {
       const maxHistory = 10;
       let historyList = value;
@@ -636,11 +640,19 @@ export default new application({
 
       storage.local.set('search.history', historyList);
     },
+    /**
+     * 搜索历史删除
+     * @param index
+     */
     handleSearchHistoryClose(index) {
       this.searchHistory.list.splice(index, 1);
 
       this.setSearchHistoryValue(this.searchHistory.list);
     },
+    /**
+     * 搜索历史选择
+     * @param index
+     */
     handleSearchHistoryClickTag(index) {
       if (this.modalSpinShow) return;
 
@@ -648,6 +660,9 @@ export default new application({
       this.searchTypeValue = this.searchHistory.list[index].type;
       this.handleSearch();
     },
+    /**
+     * 分页 S
+     */
     handlePageChange(num) {
       this.skip[this.searchTypeValue] = num;
       this.handleSearch();
@@ -662,6 +677,9 @@ export default new application({
 
       this.handleSearch();
     },
+    /**
+     * 分页 E
+     */
     /**
      * Ocr输出
      * @param val

@@ -254,15 +254,16 @@
 <script>
 import {api, application, http, util, voice} from "@/assets/js";
 
+import lodash from "lodash";
+import store from "@/store";
+
 import cheaterStatus from '/public/config/cheaterStatus.json';
 import gameName from '/public/config/gameName.json';
 
 import Empty from "@/components/Empty";
-import AdsGoogle from "@/components/ads/google/index.vue";
-import TimeView from "@/components/TimeView.vue";
-import ExposedName from "@/components/ExposedName.vue";
-import _ from "lodash";
-import store from "@/store";
+import AdsGoogle from "@/components/ads/google";
+import TimeView from "@/components/TimeView";
+import ExposedName from "@/components/ExposedName";
 
 export default new application({
   data() {
@@ -334,8 +335,8 @@ export default new application({
   },
   components: {Empty, AdsGoogle, TimeView, ExposedName},
   watch: {
-    $route: "loadData",
-    gameName: function (val, oldVal) {
+    "$route": "loadData",
+    "gameName": function (val, oldVal) {
       if (val &&
           val !== 'all' &&
           store.state.configuration.voice &&
@@ -366,12 +367,12 @@ export default new application({
           });
           break;
         default:
-          target = _.find(this.gameSum, ["game", val]);
+          target = lodash.find(this.gameSum, ["game", val]);
       }
       return target ? target.num : 0;
     },
     getcHeaterStatusNum(val) {
-      let target = _.find(this.totalSum, ["status", val]);
+      let target = lodash.find(this.totalSum, ["status", val]);
       return target ? target.num : 0;
     },
     /**
@@ -594,7 +595,7 @@ export default new application({
             target.num += i.num || 0;
           break;
         default:
-          target = _.find(this.gameSum, ["game", this.gameName]);
+          target = lodash.find(this.gameSum, ["game", this.gameName]);
       }
       return target ? target.num : 0;
     },

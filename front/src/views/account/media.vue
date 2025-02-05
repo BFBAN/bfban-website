@@ -84,16 +84,17 @@
 </template>
 
 <script>
-import 'viewerjs/dist/viewer.css'
-
-import {api, http, http_token} from "../../assets/js";
+import {api, http, http_token} from "@/assets/js";
 
 import VueViewer from 'v-viewer'
 import Vue from "vue";
-import UploadWidget from "@/components/UploadWidget.vue";
-import TimeView from "@/components/TimeView.vue";
-import Loading from "@/components/Loading.vue";
-import HtmlLink from "@/components/HtmlLink.vue";
+
+import UploadWidget from "@/components/UploadWidget";
+import TimeView from "@/components/TimeView";
+import Loading from "@/components/Loading";
+import HtmlLink from "@/components/HtmlLink";
+
+import 'viewerjs/dist/viewer.css'
 
 Vue.use(VueViewer);
 

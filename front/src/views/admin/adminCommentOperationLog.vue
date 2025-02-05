@@ -86,13 +86,11 @@
 <script>
 import {api, application, http_token, util} from "@/assets/js";
 
-import BusinessCard from "@/components/BusinessCard.vue";
+import BusinessCard from "@/components/BusinessCard";
 
 export default new application({
   data() {
     return {
-      util,
-
       load: false,
       log: [],
       admin: [],
@@ -208,6 +206,7 @@ export default new application({
     }
   },
   computed: {
+    util: () => util,
     adminLogs() {
       return this.currentlog.filter(item => item.byUserId == this.adminId)
     },

@@ -38,11 +38,6 @@
           </Select>
         </Col>
         <Col>
-          <div v-show="load">
-            <Icon type="ios-loading"></Icon>
-          </div>
-        </Col>
-        <Col>
           <Input v-model="userValue"
                  type="text"
                  search
@@ -70,7 +65,7 @@
               :total="total"/>
       </Col>
       <Col>
-        <Button size="small" @click="getUserList">
+        <Button size="small" @click="getUserList" :disabled="load">
           <Icon type="md-refresh" :class="load ? 'spin-icon-load' : ''"/>
         </Button>
       </Col>
@@ -507,11 +502,11 @@
 <script>
 import {api, application, http_token} from "@/assets/js";
 
-import BusinessCard from "@/components/BusinessCard.vue";
-import TimeView from "@/components/TimeView.vue";
+import BusinessCard from "@/components/BusinessCard";
+import TimeView from "@/components/TimeView";
 import PrivilegesTag from "@/components/PrivilegesTag";
-import AchievementsTag from "@/components/AchievementsTag.vue";
-import Textarea from "@/components/textarea/index.vue";
+import AchievementsTag from "@/components/AchievementsTag";
+import Textarea from "@/components/textarea/index";
 
 import languages from "/public/config/languages.json";
 import achievement from "/public/config/achievements.json";

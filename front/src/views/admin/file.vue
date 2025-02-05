@@ -98,15 +98,14 @@
 </template>
 
 <script>
-import {api, util, http_token} from "../../assets/js";
-import Empty from "@/components/Empty.vue";
-import BusinessCard from "@/components/BusinessCard.vue";
+import {api, http_token, util} from "@/assets/js";
+
+import Empty from "@/components/Empty";
+import BusinessCard from "@/components/BusinessCard";
 
 export default {
   data() {
     return {
-      util,
-
       deleteFileLoading: false,
       filesLoading: false,
       files: [],
@@ -241,6 +240,9 @@ export default {
       this.skip = num;
       this.getFiles();
     }
+  },
+  computed: {
+    util: () => util,
   }
 }
 </script>

@@ -45,7 +45,9 @@ export default {
     getInquireEmojiItem(idRaw) {
       let type = idRaw.split('|')[0],
           id = idRaw.split('|')[1],
-          result = {};
+          result = {
+            isCustom: false,
+          };
 
       const typeList = this.emojis.child.findLast(i => i.name === type);
       if (typeList && typeList.child)
@@ -53,12 +55,29 @@ export default {
           let i = typeList.child[index];
           if (i && i.name === id) {
             result = {
+              isCustom: false,
               imageUrl: typeList.imageUrl,
               ...i,
             };
             break;
           }
         }
+
+      if (type === 'custom-network-https' || type === 'custom-network') {
+        result = {
+          isCustom: true,
+          name: type,
+          imageUrl: `https://${id}`
+        }
+      }
+      if (type === 'custom-network-http') {
+        result = {
+          isCustom: true,
+          name: type,
+          imageUrl: `http://${id}`
+        }
+      }
+
       this.emojiItemData = result;
       return result;
     }
@@ -83,7 +102,7 @@ export default {
            :style="`width: auto ;height: ${size}px`"
            v-if="emojiItemData"/>
     </template>
-    <template v-if="emojiItemData && emojiItemData.config && emojiItemData.config.type === 'spriteDiagram'">
+    <template v-else-if="emojiItemData && emojiItemData.config && emojiItemData.config.type === 'spriteDiagram'">
         <span class="emote"
               :class="[
                  isSpan ? 'emote-none-padding': ''
@@ -95,7 +114,21 @@ export default {
         </span>
     </template>
   </Tooltip>
-  <span v-else>[{{ id }}]</span>
+  <span v-else>
+    <template v-if="emojiItemData && emojiItemData.isCustom">
+      <img class="emote"
+           :alt="emojiItemData.name"
+           :src="emojiItemData.imageUrl"
+           :class="[
+                 isSpan ? 'emote-none-padding': ''
+              ]"
+           :style="`width: auto ;height: ${size}px`"
+           v-if="emojiItemData"/>
+    </template>
+    <template v-else>
+      [{{ id }}]
+    </template>
+  </span>
 </template>
 
 <style scoped lang="less">

@@ -90,25 +90,21 @@ export default new application({
 
       if (this.verifySpinShow) return;
 
-      if (['kill', 'guilt'].includes(status) && cheatMethods == '' || suggestion.trim() === '') {
+      if (['kill', 'guilt'].includes(status) && cheatMethods === '' || suggestion.trim() === '') {
         this.$Message.warning(this.$i18n.t('detail.messages.fillEverything'));
         return false;
       }
-      if (suggestion.trim().length < 5 || suggestion == '') {
+      if (suggestion.trim().length < 5 || suggestion === '') {
         // too short
         this.$Message.warning(this.$i18n.t('detail.messages.pleaseExplain'));
-        return false;
-      }
-      if ('0123456789abcedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_'.split('').indexOf(suggestion.trim()) != -1) { // one letter suggestion
-        this.$Message.warning(this.$i18n.t('detail.messages.dontDoIt') + suggestion);
         return false;
       }
 
       // 额外事件
       if (this.verify.isUpdateInformation)
-        this.updateCheaterInfo()
+        this.$emit('additional-event', 'updatePlayerInfo');
       if (this.verify.isSubscribeTrace)
-        this.onSubscribes()
+        this.$emit('additional-event', 'subscribes');
 
       // 判决处理
       this.verifySpinShow = true;
@@ -151,8 +147,7 @@ export default new application({
         if (message.playSendVoice)
           message.playSendVoice();
 
-        this.getPlayerInfo();
-        this.getTimeline();
+        this.$emit('submit-complete');
       })
     },
 

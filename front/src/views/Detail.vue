@@ -355,12 +355,12 @@
             <Col :xs="{span: 23, push: 1}" :lg="appeal.disable ? {span: 7, push: 0} : {span: 1, push: 0}"
                  class="mobile-hide">
               <template v-if="appeal.disable">
-                <Button @click="onLeftAppealPlan" size="small">
+                <Button @click="onSidebarSwitch" size="small">
                   <Icon type="md-contract"/>
                 </Button>
               </template>
               <template v-else>
-                <Button @click="onLeftAppealPlan" size="small">
+                <Button @click="onSidebarSwitch" size="small">
                   <Icon type="md-expand"/>
                 </Button>
               </template>
@@ -373,7 +373,7 @@
               <div class="content">
                 <TimelineView :id="getParamsIds('personaId')"
                               @click-update-name="() => updateCheaterModal = true"
-                              @click-reply="(id,byUserId) => handleReply(id, byUserId)"
+                              @click-reply="(id,byUserId) => openReplyModel(id, byUserId)"
                               ref="timeline"/>
               </div>
 
@@ -487,7 +487,9 @@
         <br v-if="isAdmin">
 
         <Card dis-hover v-if="isAdmin">
-          <JudgementActionView :cheater="cheater"></JudgementActionView>
+          <JudgementActionView :cheater="cheater"
+                               @submit-complete="onJudgementSubmitComplete"
+                               @additional-event="onJudgementAdditionalEvent"></JudgementActionView>
         </Card>
 
         <div v-if="!isCheaterExist">
@@ -510,7 +512,7 @@
               <Icon type="md-chatboxes" size="30"/>
             </a>
             <DropdownMenu slot="list">
-              <DropdownItem name="recordlink">{{ $t('detail.info.gameScores') }}</DropdownItem>
+              <DropdownItem name="recordLink">{{ $t('detail.info.gameScores') }}</DropdownItem>
               <DropdownItem name="timeline">{{ $t('detail.info.timeLine') }}</DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -610,7 +612,7 @@
                       :loading="updateUserInfoSpinShow"
                       :disabled="updateUserInfoSpinShow"
                       v-voice-button
-                      long @click.prevent="updateCheaterInfo">
+                      long @click.prevent="updatePlayerInfo">
                 {{ $t('detail.info.updateButton') }}
               </Button>
             </Col>
@@ -626,34 +628,28 @@
 import {account_storage, api, application, http, http_token, storage, time, util,} from '../assets/js/index'
 import {formatTextarea} from "@/mixins/common";
 
-import AdsGoogle from "@/components/ads/google/index.vue";
-import Empty from '@/components/Empty.vue'
-import TextareaView from "@/components/textarea/index.vue";
-import BusinessCard from "@/components/BusinessCard.vue";
-import RecordLink from "@/components/RecordLink.vue";
-import cheaterStatusView from "@/components/CheaterStatusView.vue";
-import JudgementActionView from "@/components/judgementActionView.vue";
-import Captcha from "@/components/captcha/index";
-import TimeView from "@/components/TimeView.vue"
-import TimelineView from "@/components/timeline/index.vue";
+import AdsGoogle from "@/components/ads/google";
+import Empty from '@/components/Empty'
+import TextareaView from "@/components/textarea";
+import BusinessCard from "@/components/BusinessCard";
+import RecordLink from "@/components/RecordLink";
+import cheaterStatusView from "@/components/CheaterStatusView";
+import JudgementActionView from "@/components/judgementActionView";
+import Captcha from "@/components/captcha";
+import TimeView from "@/components/TimeView"
+import TimelineView from "@/components/timeline";
 import HtmlCore from "@/components/Html";
 import HtmlWidget from "@/components/HtmlWidget";
 import Htmllink from "@/components/HtmlLink";
 import PrivilegesTag from "@/components/PrivilegesTag";
-import UserAvatar from "@/components/UserAvatar.vue"
+import UserAvatar from "@/components/UserAvatar"
 import TrendWidget from "@/components/TrendWidget"
-import ExposedName from "@/components/ExposedName.vue"
+import ExposedName from "@/components/ExposedName"
 
 export default new application({
+  name: "detailPlayer",
   data() {
     return {
-      util,
-      mute: {
-        value: 0,
-        id: '',
-        isNoticeIntraStationUser: false,
-        show: false
-      },
       subscribes: {
         load: false,
         static: false
@@ -709,8 +705,8 @@ export default new application({
     ExposedName,
   },
   watch: {
-    '$route': 'loadData',
-    'fastReply.selected': function () {
+    "$route": "loadData",
+    "fastReply.selected": function () {
       this.verify.suggestion = '' + this.fastReply.selected.map(i => i);
     },
   },
@@ -718,7 +714,6 @@ export default new application({
     this.http = http_token.call(this);
     this.loadData();
   },
-
   methods: {
     async loadData() {
       try {
@@ -745,21 +740,23 @@ export default new application({
      * 追踪此玩家
      * 此项操作会存进账户配置字段内
      */
-    checkPlayerSubscribes() {
-      const {id} = this.cheater;
+    async checkPlayerSubscribes() {
+      try {
+        const {id} = this.cheater;
 
-      if (!this.isLogin || !this.$store.state.configuration.subscribes) return;
+        if (!this.isLogin || !this.$store.state.configuration.subscribes) return;
 
-      this.subscribes.load = true;
-      this.http.post(api["user_isSubscribes"], {
-        data: {id}
-      }).then(res => {
-        const d = res.data;
-        if (res.data.success === 1)
-          this.subscribes.static = d.data;
-      }).finally((err) => {
+        this.subscribes.load = true;
+        const result = await this.http.post(api["user_isSubscribes"], {
+          data: {id}
+        });
+
+        if (result.data.success === 1)
+          this.subscribes.static = result.data.data;
+      } finally {
         this.subscribes.load = false;
-      });
+      }
+
     },
     /**
      * 追踪此玩家
@@ -799,7 +796,7 @@ export default new application({
 
       if (!id) return;
       // 校验,含id且1天内，则不更新游览值
-      if (viewed != undefined && viewed.data?.value[id] < viewed.data?.value[id] + 24 * 60 * 60 * 1000)
+      if (viewed !== undefined && viewed.data?.value[id] < viewed.data?.value[id] + 24 * 60 * 60 * 1000)
         return;
 
       storage.local.set("viewed", viewed && viewed.data ? {
@@ -897,10 +894,34 @@ export default new application({
     getCaptchaData(id, value) {
       this.reply[id || 'captcha'] = value;
     },
-
+    /**
+     * 判决完成触发事件
+     */
+    onJudgementSubmitComplete() {
+      this.getPlayerInfo();
+      if (this.$refs.timeline)
+        this.$refs.timeline.getTimeline();
+    },
+    /**
+     * 判决额外事件
+     */
+    onJudgementAdditionalEvent(eventName) {
+      switch (eventName) {
+        case 'updatePlayerInfo':
+          this.updatePlayerInfo();
+          break;
+        case 'subscribes':
+          this.onSubscribes();
+          break;
+      }
+    },
+    /**
+     * 右键菜单滚动选项
+     * @param name
+     */
     onRollingDropdowns(name) {
       switch (name) {
-        case 'recordlink':
+        case 'recordLink':
           this.onRollingRecordLink();
           break;
         case 'timeline':
@@ -957,7 +978,7 @@ export default new application({
      * 主动更新玩家信息
      * update cheater
      */
-    updateCheaterInfo() {
+    updatePlayerInfo() {
       if (!this.$store.state.user) {
         this.$Message.error(this.$i18n.t('detail.messages.signIn'));
         return;
@@ -995,13 +1016,11 @@ export default new application({
     /**
      * 右侧侧栏，申诉显示
      */
-    onLeftAppealPlan() {
+    onSidebarSwitch() {
       this.appeal.disable = !this.appeal.disable;
 
-      account_storage.updateConfiguration("detailLeftAppealPanel", this.appeal.disable);
+      account_storage.updateConfiguration("playerDetailSidebarPanel", this.appeal.disable);
     },
-
-
     /**
      * 用户评论/回复
      * @param {string} replyType
@@ -1090,8 +1109,7 @@ export default new application({
      * @param {string} replyId 楼层id
      * @param {string} userId 回复id
      */
-    handleReply(replyId, userId) {
-      console.log(replyId, userId)
+    openReplyModel(replyId, userId) {
       this.reply.toReplyId = replyId === null ? '' : replyId;
       this.reply.toUserId = userId === 'undefined' ? '' : userId;
 
@@ -1114,9 +1132,10 @@ export default new application({
         }
       });
     },
-
   },
-
+  computed: {
+    util: () => util,
+  }
 });
 </script>
 

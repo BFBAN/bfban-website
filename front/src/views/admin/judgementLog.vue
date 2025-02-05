@@ -113,15 +113,13 @@
 </template>
 
 <script>
-import {api, util, http, http_token} from "../../assets/js";
+import {api, http_token, util} from "../../assets/js";
 
 import BusinessCard from "@/components/BusinessCard.vue";
 
 export default {
   data() {
     return {
-      util,
-
       load: false,
       judgementLog: [],
       searchTypeValue: "userId",
@@ -190,7 +188,7 @@ export default {
     this.getAdminJudgementLog();
   },
   watch: {
-    '$route': 'getAdminJudgementLog'
+    $route: "getAdminJudgementLog"
   },
   components: {BusinessCard},
   methods: {
@@ -267,6 +265,9 @@ export default {
       };
     },
 
+  },
+  computed: {
+    util: () => util,
   }
 }
 </script>

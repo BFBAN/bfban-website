@@ -1,9 +1,7 @@
 <template>
   <div class="profile-body">
     <div class="voice" v-if="$store.state.configuration.voice">
-      <div v-for="(i, index) in voiceType" :key="index" :class="[
-        globalState ? '' : 'disabled'
-    ]">
+      <div v-for="(i, index) in voiceType" :key="index" :class="[globalState ? '' : 'disabled']">
         <Row :gutter="10" type="flex" align="middle" class="voice-item profile-body" v-voice-button>
           <Col>
             <Checkbox v-model="i.state" @on-change="switchVoiceAttr(i.loaclValue,  i)"></Checkbox>
@@ -109,6 +107,11 @@ export default {
         this.switchVoiceAttr(this.voiceType[key].loaclValue, this.voiceType[key]);
       }
     },
+    /**
+     * 声音属性开关
+     * @param key 对应不同类型属性
+     * @param val 开关状态
+     */
     switchVoiceAttr(key, val) {
       if (!key) return;
       account_storage.updateConfiguration(key, {

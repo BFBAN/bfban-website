@@ -165,14 +165,16 @@ import {application, http_token} from '@/assets/js'
 
 import vueQr from "vue-qr";
 import html2canvas from "html2canvas";
+
 import theme from "/public/config/themes.json";
 import languages from "/public/config/languages.json";
 
-import Empty from '@/components/Empty.vue'
-import BusinessCard from "@/components/BusinessCard.vue";
-import SharePlayerCell from "@/components/SharePlayerCell.vue";
+import Empty from '@/components/Empty'
+import BusinessCard from "@/components/BusinessCard";
+import SharePlayerCell from "@/components/SharePlayerCell";
 
 export default new application({
+  name: "detailPlayerShare",
   data() {
     return {
       share: {
@@ -220,7 +222,7 @@ export default new application({
   },
   components: {Empty, BusinessCard, SharePlayerCell, vueQr},
   watch: {
-    '$route': 'loadData'
+    "$route": "loadData"
   },
   created() {
     this.http = http_token.call(this);

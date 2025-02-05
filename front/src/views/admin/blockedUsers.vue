@@ -105,7 +105,7 @@
 import {account_storage, api, application, http_token} from "@/assets/js";
 
 import PrivilegesTag from "@/components/PrivilegesTag";
-import BusinessCard from "@/components/BusinessCard.vue";
+import BusinessCard from "@/components/BusinessCard";
 import Empty from "@/components/Empty";
 
 export default new application({

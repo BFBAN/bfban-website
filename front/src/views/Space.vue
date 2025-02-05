@@ -220,16 +220,17 @@
 import {api, application, http, http_token, util} from "@/assets/js";
 
 import vueQr from "vue-qr";
+
 import Empty from "@/components/Empty";
-import UserAvatar from "@/components/UserAvatar.vue";
-import TimeView from "@/components/TimeView.vue";
-import Reports from "@/components/Reports.vue"
-import cheaterStatusView from "@/components/CheaterStatusView.vue";
-import Confetti from "@/components/Confetti.vue";
-import Html from "@/components/Html.vue"
+import UserAvatar from "@/components/UserAvatar";
+import TimeView from "@/components/TimeView";
+import Reports from "@/components/Reports"
+import cheaterStatusView from "@/components/CheaterStatusView";
+import Confetti from "@/components/Confetti";
+import Html from "@/components/Html"
 import PrivilegesTag from "@/components/PrivilegesTag";
-import AchievementsTag from "@/components/AchievementsTag.vue";
-import Loading from "@/components/Loading.vue";
+import AchievementsTag from "@/components/AchievementsTag";
+import Loading from "@/components/Loading";
 import Textarea from "@/components/textarea"
 
 import games from '/public/config/gameName.json'

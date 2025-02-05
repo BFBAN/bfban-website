@@ -92,7 +92,7 @@
                     <Button v-if="button.submit"
                             long
                             @click.prevent.stop="onSubmit"
-                            :disabled="forgetPassword.captcha === {}"
+                            :disabled="Object.keys(forgetPassword.captcha).length <= 0"
                             :loading="spinShow"
                             size="large" type="primary">
                       {{ $t('basic.button.submit') }}
@@ -115,7 +115,7 @@ import EmailTip from "@/components/EmailTip";
 import Captcha from "@/components/captcha/index";
 
 export default new application({
-  name: 'forgetPassword',
+  name: 'userForgetPassword',
   data() {
     return {
       button: {

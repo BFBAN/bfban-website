@@ -291,10 +291,8 @@
 <script>
 import {account_storage, api, application, http_token} from "@/assets/js";
 
-import user from "./user"
 import blockedUsers from "@/views/admin/blockedUsers";
 import muteUsers from "@/views/admin/muteUsers";
-import comment from "./comment"
 import verifications from "@/views/admin/verifications";
 import adminOperationLog from "./adminSystemOperationLog"
 import judgementLog from "@/views/admin/judgementLog";
@@ -306,6 +304,9 @@ import PrivilegesTag from "@/components/PrivilegesTag";
 import BusinessCard from "@/components/BusinessCard";
 import HtmlLink from "@/components/HtmlLink";
 import Banner from "@/components/Banner"
+
+import user from "./user"
+import comment from "./comment"
 
 import "echarts";
 
