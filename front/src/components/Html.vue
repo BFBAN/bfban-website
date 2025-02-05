@@ -175,15 +175,12 @@ export default {
                     return `<htmlplayercard :id="${value.toString()}"></htmlplayercard>`;
                   case "router":
                     return `<router-link :to="{path: '${value}'}">${value}</router-link>`
-                    // case "floor":
-                    //   return `<htmlfloor id="${value}"></htmlfloor>`;
-                    // case "---":
-                    //   return `<Divider class="hr" dashed></Divider>`;
+                    case "floor":
+                      return `<htmlfloor id="${value}"></htmlfloor>`;
                   case "privilege":
                     return `<privilegestag data="${value.toString().split(',')}"></privilegestag>`;
                   case "icon":
                     return `<Icon type='${value}'></Icon>`;
-
                 }
                 return ``;
               })
@@ -215,7 +212,7 @@ export default {
               _imgs[i].parentNode.replaceChild(eleImg, _imgs[i]);
             }
 
-            if (eleImgTypeIndex == 0) {
+            if (eleImgTypeIndex === 0) {
               // upDate attr images
               let _htmlimage = vDom.getElementsByTagName(eleImgType[eleImgTypeIndex]);
               for (let i = 0; i < _htmlimage.length; i++) {
@@ -308,10 +305,10 @@ export default {
               }
 
               /// 标准链接 =>
-              if (_p[i] && _p[i].innerText) {
-                const urlRegex = /(?<!<[a|htmllink|img|video|iframe][^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&;//=]*))(?![^<]*<\/htmllink|a>)/g;
-                _p[i].innerHTML = _p[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
-              }
+              // if (_p[i] && _p[i].innerText) {
+              //   const urlRegex = /(?<!<[a|htmllink|img|video|iframe][^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&;//=]*))(?![^<]*<\/htmllink|a>)/g;
+              //   _p[i].innerHTML = _p[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
+              // }
 
               // 邮箱
               if (_p[i] && _p[i].innerText) {
@@ -326,18 +323,18 @@ export default {
               }
 
               // 解析HR, 分割线
-              if (_p[i] && _p[i].innerText) {
-                let calcStringCount = 0;
-
-                for (let j = 0; j < _p[i].innerText.length; j++) {
-                  if (_p[i].innerText[j] === "-") {
-                    calcStringCount += 1;
-                  }
-                }
-
-                if (calcStringCount === _p[i].innerText.length && calcStringCount >= 4)
-                  _p[i].innerHTML = `<Divider class="hr" dashed />`;
-              }
+              // if (_p[i] && _p[i].innerText) {
+              //   let calcStringCount = 0;
+              //
+              //   for (let j = 0; j < _p[i].innerText.length; j++) {
+              //     if (_p[i].innerText[j] === "-") {
+              //       calcStringCount += 1;
+              //     }
+              //   }
+              //
+              //   if (calcStringCount === _p[i].innerText.length && calcStringCount >= 4)
+              //     _p[i].innerHTML = `<Divider class="hr" dashed />`;
+              // }
             }
           }
 
@@ -382,6 +379,9 @@ export default {
 
   span, p, a, h1, h2, h3, h4, h5, h6 {
     line-height: initial;
+  }
+
+  p, a, h1, h2, h3, h4, h5, h6 {
     margin: 3px 0;
   }
 

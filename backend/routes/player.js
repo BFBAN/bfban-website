@@ -1,7 +1,7 @@
 "use strict";
 import EventEmitter from "events";
 import express from "express";
-import {body as checkbody, query as checkquery, validationResult, oneOf as checkOneof} from "express-validator";
+import {body as checkbody, oneOf as checkOneof, query as checkquery, validationResult} from "express-validator";
 
 import db from "../mysql.js";
 import config from "../config.js";
@@ -13,14 +13,14 @@ import {
     verifyJWT,
     verifySelfOrPrivilege
 } from "../middleware/auth.js";
-import {cheatMethodsSanitizer, handleRichTextInput, userAttributes, userShowAttributes} from "../lib/user.js";
+import {cheatMethodsSanitizer, handleRichTextInput} from "../lib/user.js";
 import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
-import {commentRateLimiter, viewedRateLimiter, batchSearchRateLimiter} from "../middleware/rateLimiter.js";
+import {batchSearchRateLimiter, commentRateLimiter, viewedRateLimiter} from "../middleware/rateLimiter.js";
 import {texCoincidenceRatio, textSimilarityDiff} from "../lib/textDiff.js";
 import serviceApi, {ServiceApiError} from "../lib/serviceAPI.js";
 import logger from "../logger.js";
-import {verifyDuplicateContent, SpamFormData} from "../lib/akismet.js";
+import {SpamFormData, verifyDuplicateContent} from "../lib/akismet.js";
 import {getGravatarAvatar} from "../lib/gravatar.js";
 
 const router = express.Router()
@@ -1040,11 +1040,12 @@ async (req, res, next) => {
             .from('comments')
             .where({id: toCommentId})
             .limit(1)
-            .first().then(r => r ? r.toPlayerId : -1) !== dbId) return res.status(404).json({
-            error: 1,
-            code: 'reply.notFound',
-            message: 'no such comment'
-        });
+            .first().then(r => r ? r.toPlayerId : -1) !== dbId)
+            return res.status(404).json({
+                error: 1,
+                code: 'reply.notFound',
+                message: 'no such comment'
+            });
 
         const reply = {
             type: 'reply',

@@ -1,7 +1,7 @@
 import {mergeAttributes, Node, VueNodeViewRenderer} from "@tiptap/vue-2"
 import Component from "./view.vue";
 
-export default Node.create({
+const EmoteNode = Node.create({
     name: 'Emote',
     group: 'inline',
     topNode: false,
@@ -9,7 +9,6 @@ export default Node.create({
     inline: true,
     selectable: true,
     draggable: false,
-
     addAttributes() {
         return {
             id: {
@@ -48,3 +47,7 @@ export default Node.create({
         }
     },
 });
+
+export {
+    EmoteNode,
+}

@@ -14,20 +14,18 @@ export default {
   },
   mounted() {
     if (this.node.attrs.csType === 'player')
-      this.$refs.csRoot.$parent.$el.style.display = 'block'
+      this.$refs.csRoot.$parent.$el.style.display = 'block';
   },
-  computed: {},
-  methods: {}
 }
 </script>
 
 <template>
   <node-view-wrapper ref="csRoot" class="node-view" :as="'span'">
     <template v-if="node.attrs.csType === 'user'">
-      <HtmlUser :id="node.attrs.csValue" contenteditable="false"></HtmlUser>
+      <HtmlUser :id="node.attrs.csValue"></HtmlUser>
     </template>
     <template v-else-if="node.attrs.csType === 'router'">
-      <router-link :to="{path: node.attrs.csValue}" contenteditable="false">
+      <router-link :to="{path: node.attrs.csValue}">
         <Icon type="md-link"></Icon>
         ({{ node.attrs.csValue }})
       </router-link>
@@ -36,10 +34,10 @@ export default {
       <HtmlPlayerCard :id="node.attrs.csValue" style="display: block" contenteditable="false"></HtmlPlayerCard>
     </template>
     <template v-else-if="node.attrs.csType === 'privilege'">
-      <PrivilegesTag :data="node.attrs.csValue" contenteditable="false"></PrivilegesTag>
+      <PrivilegesTag :data="node.attrs.csValue"></PrivilegesTag>
     </template>
     <template v-else-if="node.attrs.csType === 'icon'">
-      <Icon :type="node.attrs.csValue" contenteditable="false"></Icon>
+      <Icon :type="node.attrs.csValue" :alt="node.attrs.csValue"></Icon>
     </template>
     <template v-else-if="node.attrs.csType === 'egg'">
       <Icon type="md-egg" contenteditable="false"></Icon>

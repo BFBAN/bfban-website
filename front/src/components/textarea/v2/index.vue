@@ -1,8 +1,8 @@
 <script>
 import {application, http_token} from "@/assets/js";
-import {Extension} from '@tiptap/core';
 import {Editor, EditorContent} from '@tiptap/vue-2'
 import StarterKit from '@tiptap/starter-kit'
+import Dropcursor from '@tiptap/extension-dropcursor'
 import lodash from "lodash";
 
 import EPlaceholder from '@tiptap/extension-placeholder'
@@ -16,30 +16,9 @@ import LinkWidget from "./link";
 import ImageWidget from "./image"
 import HRWidget from "./hr";
 import ContractedSyntax from "./contractedSyntax"
-import EmoteWidget from "./emote"
+import {EmoteNode as EmoteWidget} from "./emote"
 
 import HtmlWidget from "@/components/HtmlWidget.vue";
-
-
-const PlainTextPaste = Extension.create({
-  // addPasteRules() {
-  //   return [
-  //     {
-  //       regex: /.*/, // 匹配所有内容
-  //       handler: ({match, range}) => {
-  //         const plainText = match[0].replace(/<[^>]*>/g, '');
-  //
-  //         return {
-  //           insert: {
-  //             type: 'text',
-  //             text: plainText,
-  //           },
-  //         };
-  //       },
-  //     },
-  //   ];
-  // },
-});
 
 export default new application({
   props: {
@@ -100,6 +79,9 @@ export default new application({
     const that = this;
     this.tiptap = new Editor({
       content: this.editorContent,
+      parseOptions: {
+        preserveWhitespace: 'full'
+      },
       enablePasteRules: ['code'],
       injectCSS: false,
       editorProps: {},
@@ -108,6 +90,10 @@ export default new application({
           horizontalRule: false,
           codeBlock: false,
           heading: false,
+        }),
+        Dropcursor.configure({
+          color: "#ff0000",
+          width: 2,
         }),
         EPlaceholder.configure({
           placeholder: this.placeholder,
@@ -118,7 +104,6 @@ export default new application({
         HRWidget,
         ImageWidget,
         EmoteWidget,
-        PlainTextPaste,
 
         // 缩语
         ContractedSyntax,
@@ -127,10 +112,8 @@ export default new application({
         editor.options.keyboardShortcuts = {};
       },
       onUpdate({editor}) {
-        const html = editor.getHTML();
-
-        that.onEditorChange(html);
-      },
+        that.onEditorChange(editor.isEmpty ? '' : editor.getHTML());
+      }
     })
     this.tiptap.options.keyboardShortcuts = {};
   },
@@ -345,8 +328,10 @@ export default new application({
                 <path
                     d="M256.05 384c-45.42 0-83.62-29.53-95.71-69.83a8 8 0 017.82-10.17h175.69a8 8 0 017.82 10.17c-11.99 40.3-50.2 69.83-95.62 69.83z"/>
                 <circle cx="328" cy="232" r="24"/>
-                <circle cx="256" cy="256" r="208" fill="none" stroke="currentColor" stroke-miterlimit="10"
-                        stroke-width="32"/>
+                <circle cx="256" cy="256" r="208"
+                        fill="none" stroke="currentColor" stroke-miterlimit="10"
+                        stroke-width="26"
+                        class="ql-stroke"/>
               </svg>
             </Button>
             <Button @click="onLink(editor.isActive('Link'))" class="btn"
@@ -365,7 +350,8 @@ export default new application({
               <svg viewBox="0 0 18 18">
                 <rect class="ql-stroke" height="10" width="12" x="3" y="4"></rect>
                 <circle class="ql-fill" cx="6" cy="7" r="1"></circle>
-                <polyline class="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
+                <polyline class="ql-even ql-fill" stroke-width="30"
+                          points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
               </svg>
             </Button>
             <Button @click="onContractedSyntax" class="btn"
@@ -374,8 +360,8 @@ export default new application({
                 <circle cx="256" cy="256" r="26"/>
                 <circle cx="346" cy="256" r="26"/>
                 <circle cx="166" cy="256" r="26"/>
-                <path fill="none" class="ql-even ql-fill" stroke="currentColor" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width="32"
+                <path fill="none" class="ql-stroke" stroke="currentColor" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-width="30"
                       d="M160 368L32 256l128-112M352 368l128-112-128-112"/>
               </svg>
             </Button>
@@ -537,7 +523,7 @@ export default new application({
 
   svg .ql-stroke {
     fill: none;
-    stroke-width: 1.2;
+    //stroke-width: 1.2;
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke: #383838 !important;

@@ -189,10 +189,21 @@
       </div>
 
       <Modal v-model="message.show" @on-ok="onPushMessage">
-        <Form>
-          <FormItem :label="$i18n.t('account.message.chat')">
-            <Input v-model="message.content"
-                   type="textarea" :autosize="{minRows: 5,maxRows: 10}"></Input>
+        <div>
+          <b>{{ $i18n.t('account.message.chat') }}</b>
+        </div>
+        <br>
+        <Form labelPosition="top">
+          <FormItem>
+            <Card :padding="0" dis-hover>
+              <Textarea v-model="message.content"
+                        ref="informationTextarea"
+                        :toolbar="['bold',['cs','emote']]"
+                        :height="'160px'"
+                        :maxlength="500"
+                        :show-maxlength-label="true">
+              </Textarea>
+            </Card>
           </FormItem>
         </Form>
       </Modal>
@@ -206,7 +217,8 @@
 </template>
 
 <script>
-import {api, application, http, http_token, util} from "@/assets/js"
+import {api, application, http, http_token, util} from "@/assets/js";
+
 import vueQr from "vue-qr";
 import Empty from "@/components/Empty";
 import UserAvatar from "@/components/UserAvatar.vue";
@@ -216,8 +228,9 @@ import cheaterStatusView from "@/components/CheaterStatusView.vue";
 import Confetti from "@/components/Confetti.vue";
 import Html from "@/components/Html.vue"
 import PrivilegesTag from "@/components/PrivilegesTag";
-import AchievementsTag from "/src/components/AchievementsTag.vue";
+import AchievementsTag from "@/components/AchievementsTag.vue";
 import Loading from "@/components/Loading.vue";
+import Textarea from "@/components/textarea"
 
 import games from '/public/config/gameName.json'
 
@@ -268,6 +281,7 @@ export default new application({
     Reports,
     Html,
     Loading,
+    Textarea,
     vueQr
   },
   created() {

@@ -575,7 +575,7 @@ export default new application({
      * 处理特殊格式
      */
     convertInformation(text) {
-      const csRegex = /<span>\{(user|player):(\d+)}<\/span>/g;
+      const csRegex = /<span>\{([^:]+):([^}]+)\}<\/span>/g;
       const emoteRegex = /<span>\[([^|]+)\|([^\]]+)\]<\/span>/g;
       return text
           .replace(csRegex, '<span data-type="contracted-syntax" data-cs-type="$1" data-cs-value="$2">{$1:$2}</span>')

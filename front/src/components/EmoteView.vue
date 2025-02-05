@@ -3,8 +3,9 @@ import {Editor} from "@tiptap/vue-2";
 
 import emojis from "@/../public/config/emoji.json"
 import EmoteItem from "@/components/EmoteItem.vue";
+import {application} from "@/assets/js";
 
-export default {
+export default new application({
   components: {EmoteItem},
   props: {
     editor: {
@@ -15,6 +16,8 @@ export default {
     return {
       show: false,
       emoteTabValue: "",
+      isInsertPreview: false,
+      insertPreview: "",
       pos: {left: 0, top: 0}
     }
   },
@@ -22,6 +25,10 @@ export default {
     this.emoteTabValue = this.emojis.default;
   },
   methods: {
+    /**
+     * 获取当前光标位于编辑器位置
+     * @returns {*|null}
+     */
     getCursorPosition() {
       if (this.editor) {
         const {from, to} = this.editor.state.selection;
@@ -34,21 +41,19 @@ export default {
 
       return null;
     },
+    /**
+     * 获取当前光标屏幕的位置
+     */
     getCursorScreenCoords() {
       const cursorPosition = this.getCursorPosition();
 
       if (cursorPosition !== null && this.editor) {
         const domPos = this.editor.view.coordsAtPos(cursorPosition);
-        // console.log(domPos)
-        // const rect = domPos.node.getBoundingClientRect();
-        return {
-          ...domPos
-          // x: rect.left,
-          // y: rect.top,
-        };
+        this.pos = domPos;
+        return;
       }
 
-      return null;
+      this.pos = null
     },
 
     /**
@@ -74,75 +79,120 @@ export default {
      */
     openPanel() {
       this.onPanelToggle();
-      this.pos = this.getCursorScreenCoords();
+      this.getCursorScreenCoords();
     },
+    /**
+     * 表情标题
+     * @param h
+     * @param i
+     * @returns {*}
+     */
+    emoTeTabTitle(h, i) {
+      return h(EmoteItem, {
+        props: {
+          isSpan: false,
+          size: 23,
+          id: i.titleEmoteName,
+          isDisabledTooltip: true
+        }
+      });
+    },
+
+    handleMouseEnter(i, j) {
+      this.isInsertPreview = true;
+      this.insertPreview = `${i.name}|${j.name}`
+    },
+    handleMouseLeave(i, j) {
+      this.isInsertPreview = false;
+    }
   },
   computed: {
     emojis: () => emojis,
   }
-}
+})
 </script>
 
 <template>
   <Modal v-model="show"
-         class="emote" class-name="emote-window-box"
-         :width="600"
-         :styles="{top:pos && pos.top ? `calc(${pos.top}px + 1.1rem)` : 'calc(20%)', left: pos && pos.left ? pos.left  + 'px' : 'calc(50% - 300px)', margin: 0, padding: 0}"
-         :mask="false"
+         class="emote"
+         class-name="emote-window-box"
+         :transitionNames="['fade']"
+         :width="isMobile ? '100%' : 600"
+         :styles="{
+           top: pos && pos.top ? `calc(${pos.top}px + 1.5rem)` : 'calc(20%)',
+           left: isMobile ? 0 : pos && pos.left ? pos.left  + 'px' : 'calc(50% - 300px)',
+           bottom: isMobile ? 0 : null,
+           margin: 0,
+           padding: 0
+         }"
+         :mask="true"
          :closable="true"
          @on-visible-change="(status) => !status ? $emit('close') : null"
          sticky
          transfer
-         scrollable
          footer-hide>
-    <div class="title">
-      <div class="title-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <circle cx="184" cy="232" r="24"/>
-          <path
-              d="M256.05 384c-45.42 0-83.62-29.53-95.71-69.83a8 8 0 017.82-10.17h175.69a8 8 0 017.82 10.17c-11.99 40.3-50.2 69.83-95.62 69.83z"/>
-          <circle cx="328" cy="232" r="24"/>
-          <circle cx="256" cy="256" r="208" fill="none" stroke="currentColor" stroke-miterlimit="10"
-                  stroke-width="32"/>
-        </svg>
-      </div>
+    <div class="insert-preview" v-show="isInsertPreview">
+      <EmoteItem :isSpan="false"
+                 :size="24"
+                 :id="`${insertPreview}`"
+                 v-if="insertPreview && pos"></EmoteItem>
     </div>
-    <Card dis-hover shadow :padding="0" style="margin: 0 -16px -16px -16px">
-      <Tabs v-model="emoteTabValue">
-        <TabPane :label="i.name" :name="i.name" v-for="(i, index) in emojis.child" :key="index">
+    <div class="emote-tab">
+      <Tabs v-model="emoteTabValue" size="small">
+        <TabPane :label="(h) => emoTeTabTitle(h, i)" :name="i.name" v-for="(i, index) in emojis.child" :key="index">
           <div class="emote-row-box">
-            <Card :padding="0" dis-hover class="emote-item" v-for="(j, j_index) in i.child" :key="j_index">
+            <Card :padding="3" dis-hover class="emote-item"
+                  @mouseenter.native="handleMouseEnter(i,j)"
+                  @mouseleave.native="handleMouseLeave(i,j)"
+                  v-for="(j, j_index) in i.child" :key="j_index">
               <EmoteItem :isSpan="false" :size="30" :id="`${i.name}|${j.name}`"
                          @click.native="onFinish(i.name,j)"></EmoteItem>
             </Card>
           </div>
         </TabPane>
       </Tabs>
-    </Card>
+    </div>
   </Modal>
 </template>
 
 <style scoped lang="less">
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
 .emote {
-  .title {
-    height: 30px;
+  .insert-preview {
+    position: absolute;
+    top: -30px;
+    left: 1px;
   }
 
-  .title-icon {
-    height: 18px;
-    width: 18px;
+  .emote-tab {
+    margin: -10px -16px -16px -16px;
+
+    .ivu-tabs-bar {
+      margin-bottom: 0;
+    }
   }
 
   .emote-row-box {
+    background-color: rgba(0, 0, 0, 0.01);
     display: grid;
-    grid-template-columns: repeat(13, 1fr);
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     grid-row-gap: 10px;
+    grid-column-gap: 10px;
     padding: 10px;
-    margin-top: -10px;
+    margin-top: -17px;
+    height: calc(100% + 17px);
+    max-height: 200px;
+    overflow-y: auto;
 
     .emote-item {
-      width: 32px;
-      height: 32px;
+      width: 38px;
+      height: 38px;
     }
   }
 }

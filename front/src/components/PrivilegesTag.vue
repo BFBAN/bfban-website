@@ -29,7 +29,6 @@ export default {
   },
   data() {
     return {
-      privileges: privileges.child,
       tags: []
     }
   },
@@ -51,6 +50,9 @@ export default {
         return privilegeArray ? privilegeArray.includes(i.value) : that.data.includes(i.value);
       });
     }
+  },
+  computed: {
+    privileges: () => privileges.child
   }
 }
 </script>

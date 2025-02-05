@@ -14,6 +14,10 @@ export default {
     isSpan: {
       type: Boolean,
       default: true
+    },
+    isDisabledTooltip: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -26,8 +30,8 @@ export default {
   },
   watch: {
     id: {
-      handler: val => {
-        this.getInquireEmojiItem(val)
+      handler(val) {
+        this.getInquireEmojiItem(val);
       }
     }
   },
@@ -66,16 +70,18 @@ export default {
 </script>
 
 <template>
-  <Tooltip v-if="emojiItemData && emojiItemData.config" :content="emojiItemData.name" placement="top" transfer>
-    <template v-if="emojiItemData && emojiItemData.config && (emojiItemData.config.type === 'gif' || emojiItemData.config.type === 'png')">
-        <img class="emote"
-             :alt="emojiItemData.name"
-             :src="emojiItemData.imageUrl"
-             :class="[
+  <Tooltip v-if="emojiItemData && emojiItemData.config" :disabled="isDisabledTooltip" :content="emojiItemData.name"
+           placement="top" transfer>
+    <template
+        v-if="emojiItemData && emojiItemData.config && (emojiItemData.config.type === 'gif' || emojiItemData.config.type === 'png')">
+      <img class="emote"
+           :alt="emojiItemData.name"
+           :src="emojiItemData.imageUrl"
+           :class="[
                  isSpan ? 'emote-none-padding': ''
               ]"
-             :style="`width: ${size}px;height: ${size}px`"
-             v-if="emojiItemData"/>
+           :style="`width: auto ;height: ${size}px`"
+           v-if="emojiItemData"/>
     </template>
     <template v-if="emojiItemData && emojiItemData.config && emojiItemData.config.type === 'spriteDiagram'">
         <span class="emote"
