@@ -162,7 +162,7 @@ export default {
     }
   },
   watch: {
-    "$route": function (val) {
+    $route: function (val) {
       if (val.name === 'bindOrigin' && !val.query.code) {
         this.stepsIndex = 0;
       }

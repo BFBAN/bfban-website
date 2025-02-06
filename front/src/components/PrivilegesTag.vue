@@ -36,19 +36,22 @@ export default {
     this.update();
   },
   watch: {
-    'data': function (value, old) {
-      let _v = value
-      if (typeof _v == 'string')
-        _v = value.split(',');
-      this.update(_v);
+    "data": {
+      handler (value) {
+        let _v = value
+        if (typeof _v == 'string')
+          _v = value.split(',');
+        this.update(_v);
+      },
+      deep: true
     }
   },
   methods: {
     update(privilegeArray) {
       const that = this;
-      if (!privilegeArray) return [];
+      if (privilegeArray == null) return [];
       this.tags = that.privileges.filter(i => {
-        return privilegeArray ? privilegeArray.includes(i.value) : that.data.includes(i.value);
+        return privilegeArray.includes(i.value);
       });
     }
   },

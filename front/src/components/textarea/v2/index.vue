@@ -90,6 +90,7 @@ export default new application({
           horizontalRule: false,
           codeBlock: false,
           heading: false,
+          dropcursor: false,
         }),
         Dropcursor.configure({
           color: "#ff0000",

@@ -5,10 +5,7 @@
       <Col :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem :to="{name: 'profile', params: {pagename: 'information'}}">{{
-              $t("header.profile")
-            }}
-          </BreadcrumbItem>
+          <BreadcrumbItem :to="{name: 'profile', params: {pagename: 'information'}}">{{ $t("header.profile") }}</BreadcrumbItem>
           <BreadcrumbItem>{{ $t("profile.admin.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
@@ -36,12 +33,6 @@
                     <Icon :type="j.icon" v-if="j.icon"/>
                     {{ $t('profile.admin.menu.' + j.title) }}
                   </Col>
-                  <Col v-if="!j.ignore">
-                    <Poptip trigger="hover" transfer>
-                      <Icon type="md-help-circle"/>
-                      <PrivilegesTag :data="j.privilege" slot="content"></PrivilegesTag>
-                    </Poptip>
-                  </Col>
                 </Row>
               </MenuItem>
             </MenuGroup>
@@ -56,7 +47,8 @@
                   <p>({{ currentUser.userinfo.userId }})</p>
                   <br>
                   <p>
-                    <PrivilegesTag :data="currentUser.userinfo.privilege"></PrivilegesTag>
+                    <PrivilegesTag :data="currentUser.userinfo.privilege"
+                                   v-if="currentUser.userinfo.privilege"></PrivilegesTag>
                   </p>
                 </div>
               </Banner>
@@ -142,17 +134,13 @@
                             </Col>
                             <Col span="6">
                               <Card dis-hover :padding="4" align="center">
-                                <p>{{
-                                    statistics.admins - (model.workingRatio.data.users && model.workingRatio.data.users.length || 0)
-                                  }}</p>
+                                <p>{{statistics.admins - (model.workingRatio.data.users && model.workingRatio.data.users.length || 0) }}</p>
                                 <b>Have not participated</b>
                               </Card>
                             </Col>
                             <Col span="6">
                               <Card dis-hover :padding="4" align="center">
-                                <p>{{
-                                    (model.workingRatio.data.users && model.workingRatio.data.users.length || 0)
-                                  }}</p>
+                                <p>{{ (model.workingRatio.data.users && model.workingRatio.data.users.length || 0) }}</p>
                                 <b>Participate in</b>
                               </Card>
                             </Col>
@@ -252,7 +240,7 @@
                             <Divider dashed style="margin: 0"></Divider>
                           </Col>
                           <Col class="privilege">
-                            <PrivilegesTag :data="i.privilege"></PrivilegesTag>
+                            <PrivilegesTag :data="i.privilege" v-if="i.privilege"></PrivilegesTag>
                           </Col>
                         </Row>
                       </li>
@@ -265,22 +253,22 @@
                 <Icon type="ios-loading" size="50" class="spin-icon-load"></Icon>
               </Spin>
             </div>
-            <user v-else-if="adminMenuValue == 'user'"></user>
-            <blockedUsers v-else-if="adminMenuValue == 'blockedUsers'"></blockedUsers>
-            <muteUsers v-else-if="adminMenuValue == 'muteUsers'"></muteUsers>
+            <user v-else-if="adminMenuValue === 'user'"></user>
+            <blockedUsers v-else-if="adminMenuValue === 'blockedUsers'"></blockedUsers>
+            <muteUsers v-else-if="adminMenuValue === 'muteUsers'"></muteUsers>
 
-            <verifications v-else-if="adminMenuValue == 'verifications'"></verifications>
-            <comment v-else-if="adminMenuValue == 'comment'"></comment>
+            <verifications v-else-if="adminMenuValue === 'verifications'"></verifications>
+            <comment v-else-if="adminMenuValue === 'comment'"></comment>
 
-            <chatPush v-else-if="adminMenuValue == 'chat_push'"></chatPush>
-            <chatList v-else-if="adminMenuValue == 'chat_list'"></chatList>
+            <chatPush v-else-if="adminMenuValue === 'chat_push'"></chatPush>
+            <chatList v-else-if="adminMenuValue === 'chat_list'"></chatList>
 
-            <fileList v-else-if="adminMenuValue == 'file_list'"></fileList>
+            <fileList v-else-if="adminMenuValue === 'file_list'"></fileList>
 
-            <adminOperationLog v-else-if="adminMenuValue == 'admin_operation_log'"></adminOperationLog>
-            <messageLog v-else-if="adminMenuValue == 'message_Log'"></messageLog>
-            <adminOperation v-else-if="adminMenuValue == 'adminOperation'"></adminOperation>
-            <judgementLog v-else-if="adminMenuValue == 'judgement_log'"></judgementLog>
+            <adminOperationLog v-else-if="adminMenuValue === 'admin_operation_log'"></adminOperationLog>
+            <messageLog v-else-if="adminMenuValue === 'message_Log'"></messageLog>
+            <adminOperation v-else-if="adminMenuValue === 'adminOperation'"></adminOperation>
+            <judgementLog v-else-if="adminMenuValue === 'judgement_log'"></judgementLog>
           </keep-alive>
         </Col>
       </Row>
@@ -291,22 +279,22 @@
 <script>
 import {account_storage, api, application, http_token} from "@/assets/js";
 
-import blockedUsers from "@/views/admin/blockedUsers";
-import muteUsers from "@/views/admin/muteUsers";
-import verifications from "@/views/admin/verifications";
-import adminOperationLog from "./adminSystemOperationLog"
-import judgementLog from "@/views/admin/judgementLog";
-import adminOperation from "@/views/admin/adminCommentOperationLog";
-import chatPush from "@/views/admin/chatPush";
-import chatList from "@/views/admin/chatList";
-import fileList from "@/views/admin/file.vue"
 import PrivilegesTag from "@/components/PrivilegesTag";
 import BusinessCard from "@/components/BusinessCard";
 import HtmlLink from "@/components/HtmlLink";
 import Banner from "@/components/Banner"
 
-import user from "./user"
-import comment from "./comment"
+import blockedUsers from "@/views/admin/blockedUsers";
+import muteUsers from "@/views/admin/muteUsers";
+import verifications from "@/views/admin/verifications";
+import adminOperationLog from "@/views/admin/adminSystemOperationLog"
+import judgementLog from "@/views/admin/judgementLog";
+import adminOperation from "@/views/admin/adminCommentOperationLog";
+import chatPush from "@/views/admin/chatPush";
+import chatList from "@/views/admin/chatList";
+import fileList from "@/views/admin/file"
+import user from "@/views/admin/user"
+import comment from "@/views/admin/comment"
 
 import "echarts";
 
@@ -506,7 +494,7 @@ export default new application({
     adminOperation,
     fileList,
   },
-  created() {
+  created: function () {
     const {pagename} = this.$route.params;
     this.http = http_token.call(this);
 
@@ -661,9 +649,9 @@ export default new application({
           range: value[0],
           cellSize: ['auto', 15],
           itemStyle: {
+            borderColor: 'rgba(141,141,141,0.3)',
             borderWidth: 0.5,
-            color: "rgba(0, 0, 0, 0)",
-            borderColor: 'rgba(141,141,141,0.3)'
+            color: "rgba(0, 0, 0, 0)"
           },
           splitLine: {
             lineStyle: {
@@ -735,7 +723,7 @@ export default new application({
 })
 </script>
 
-<style lang="less" setup>
+<style lang="less" scoped>
 @import "@/assets/css/icon";
 
 @media screen and (min-width: 980px) {
@@ -801,7 +789,7 @@ export default new application({
 }
 
 .ratio {
-  margin-top: 0px;
+  margin-top: 0;
   width: calc(100% - 10px);
   min-height: 360px;
 }

@@ -137,7 +137,7 @@ export default {
   }
 
   .html-widget-size-default {
-    white-space: normal !important;;
+    white-space: pre-wrap !important;;
     word-wrap: break-word !important;;
     word-break: break-word !important;
 
