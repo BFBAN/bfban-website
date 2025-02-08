@@ -1,101 +1,99 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: pages-build-deployment
 
 on:
   push:
     branches: [ master ]
     tags:
-      - v*
-
+      - 'v*'
   pull_request:
     branches: [ master ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
+  # 镜像名称
   # Image name
   IMAGE_NAME: bfbanv2-frontend
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     # 该项目请使用指定的node
     # Use the specified node for this project
     strategy:
       matrix:
-        node-version: [ 16.0.0 ]
-
+        node-version: [ '16.0.0' ]
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 2
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-      working-directory: ./front
-    - run: npm run build:production --if-present
-      working-directory: ./front
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Commit changes
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
-      with:
-        branch: gh-pages # The branch the action should deploy to.
-        folder: './front/dist'
-        commit-message: 'build front'
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./front
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+      - name: Build production
+        run: npm run build:production --if-present
+        working-directory: ./front
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Deploy GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages
+          folder: './front/dist'
+          commit-message: 'build front'
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
-    - name: Login to Registry
-      uses: docker/login-action@v1
-      with:
-        # registry: docker.pkg.github.com
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU for multi-architecture builds
+        uses: docker/setup-qemu-action@v2
 
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: ${{ runner.os }}-buildx-
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - uses: docker/build-push-action@v5
-      with:
-        context: ./front
-        file: ./front/nginx.Dockerfile
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: ghcr.io/bfban/bfban-website/${{ env.IMAGE_NAME }}:latest
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./front
+          file: ./front/nginx.Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/bfban/bfban-website/${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: gh-pages
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
 
-    - name: Deploy to netlify
-      uses: netlify/actions/cli@master
-      with:
-        args: deploy --dir=public --prod
-      env:
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@v3
+        with:
+          args: deploy --dir=public --prod
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
