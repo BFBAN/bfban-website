@@ -21,6 +21,21 @@ export default (vue) => {
     })
 
     /**
+     * text select all
+     */
+    vue.directive('selectable-text', {
+        bind: function (el) {
+            el.addEventListener('click', function () {
+                const range = document.createRange();
+                range.selectNodeContents(el);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+            });
+        }
+    });
+
+    /**
      * egg
      */
     vue.directive('saknan', {

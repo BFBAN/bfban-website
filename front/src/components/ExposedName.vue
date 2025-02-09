@@ -1,4 +1,4 @@
-<script setup>
+<script>
 export default {
   props: {
     disabled: {
@@ -13,7 +13,7 @@ export default {
     }
   },
   watch: {
-    '$route': 'getSlotName'
+    $route: "getSlotName"
   },
   methods: {
     /**
@@ -38,14 +38,22 @@ export default {
 
 <template>
   <span>
-    <code :class="[
-        !disabled ?  'text-distinguishing': ''
-    ]" class=" text-distinguishing-letter" @click="onDiffNameModel">
+    <code :class="[!disabled ?  'text-distinguishing': '']"
+          v-selectable-text
+          class="text-distinguishing-letter" @dblclick="onDiffNameModel" @click.shift="onDiffNameModel">
       <slot></slot>
     </code>
     <Modal v-model="diffPanelModel" class="exposed-name-diff" footer-hide>
-      <h2>魔法显现 (beta)</h2>
-      <p>通常有些作弊者会在名字上混淆，这是由于字体导致大小写或数字和字母相近引起误会</p>
+      <Row :gutter="10">
+        <Col>
+          <h2>{{$t('detail.exposedName.title')}}</h2>
+        </Col>
+        <Col>
+          <Tag>Shift + Click</Tag>
+          <Tag>Click * 2</Tag>
+        </Col>
+      </Row>
+      <p>{{$t('detail.exposedName.description')}}</p>
       <br class="user-select-none">
 
       <Card dis-hover class="exposed-name-diff-card">
@@ -73,10 +81,6 @@ export default {
 
 <style scoped lang="less">
 @import "@/assets/css/text";
-
-.text-distinguishing {
-  cursor: help;
-}
 
 .exposed-name-diff {
   font-size: 13px !important;
