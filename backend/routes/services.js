@@ -3,23 +3,17 @@ import crypto from "crypto";
 import got from "got";
 import express from "express";
 import {PassThrough} from "stream";
-import {body as checkbody, query as checkquery, header as checkheader, validationResult, query} from "express-validator";
+import {body as checkbody, header as checkheader, query as checkquery, query, validationResult} from "express-validator";
 import db from "../mysql.js";
 import config from "../config.js";
 
 import AgentKeepAlive from "agentkeepalive"
-import {allowPrivileges, verifyJWT} from "../middleware/auth.js";
-import {forbidPrivileges} from "../middleware/auth.js";
-import {commentRateLimiter} from "../middleware/rateLimiter.js";
-import {sendMessage} from "./message.js";
-import {handleRichTextInput, initUserStorageQuota, updateUserStorageQuota} from "../lib/user.js";
-import {fileSuffixByMIMEType, readStreamTillEnd} from "../lib/misc.js";
-import {use} from "bcrypt/promises.js";
-import {getGravatarAvatar} from "../lib/gravatar.js";
+import {allowPrivileges, forbidPrivileges, verifyJWT} from "../middleware/auth.js";
+import {initUserStorageQuota, updateUserStorageQuota} from "../lib/user.js";
+import {fileSuffixByMIMEType} from "../lib/misc.js";
 import {userHasRoles, verifyJWTToken} from "../lib/auth.js";
 import jwt from "jsonwebtoken";
-import {sendForgetPasswordVerify, sendUserAuthVerify} from "../lib/mail.js";
-import {re} from "@babel/core/lib/vendor/import-meta-resolve.js";
+import {sendUserAuthVerify} from "../lib/mail.js";
 
 const router = express.Router();
 const proxy = {
@@ -486,20 +480,25 @@ async (req, res, next) => {
 
         // Verify that bfbanAuth under the callback domain holds the token to ensure that the callback domain is owned by a bot (or a third party),
         // preventing calls to untrusted domains
-        const callPathURL = new URL(decodedToken.callbackPath)
+        let callPathURL = new URL(decodedToken.callbackPath);
+
+        // https Only Way
+        if (!callPathURL.href.startsWith('https://'))
+            callPathURL.protocol = 'https:'
+
         const verifyAuthResult = await verifyAuths(req, res, next, callPathURL);
         if (verifyAuthResult.error === 1)
             return res.status(403).json(verifyAuthResult)
 
         // The callback domain is not allowed to call locally, it must be network accessible to the address
-        if (['localhost', '0.0.0.0', '127.0.0.1'].includes(new URL(decodedToken.callbackPath).hostname) || decodedToken.callbackPath.indexOf('../') >= 0 && !config.__DEBUG__)
+        if (['localhost', '0.0.0.0', '127.0.0.1'].includes(callPathURL.hostname) || decodedToken.callbackPath.indexOf('../') >= 0 && !config.__DEBUG__)
             return res.status(403).json({
                 error: 1,
                 code: 'confirmAuth.fail',
             })
 
         // The user has confirmed that the information is passed through the callback address
-        await got.post(`${decodedToken.callbackPath}`, {
+        await got.post(callPathURL.href, {
             ...agentConfiguration,
             json: {userId: decodedToken.userId, token: decodedToken.token},
             responseType: 'json'
@@ -530,7 +529,13 @@ async function verifyAuths(req, res, next, callPathURL) {
     try {
         const token = req.get('x-access-token');
         const maximumFileSize = 1024 * 1024; // 1 MB in bytes
-        const streamResponse = await got.stream(callPathURL.hostname + '/auths.txt',);
+        const streamResponse = await got.stream(
+            `${callPathURL.hostname}/auths.txt`,
+            {
+                ...agentConfiguration,
+                isStream: true,
+            }
+        );
         let fileContent = '';
 
         streamResponse.on('data', (chunk) => {
