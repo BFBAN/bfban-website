@@ -1110,28 +1110,28 @@
       "titleEmoteName": "hangouts-blob|allo-happy",
       "child": [
         {
-          "name": "blob_cheer",
+          "name": "blob-cheer",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_cheer.png"
         },
         {
-          "name": "blobcat_cookie",
+          "name": "blobcat-cookie",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blobcat_cookie.png"
         },
         {
-          "name": "blob_awkward",
+          "name": "blob-awkward",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_awkward.png"
         },
         {
-          "name": "blob_amused",
+          "name": "blob-amused",
           "config": {
             "type": "png"
           },
@@ -1152,7 +1152,7 @@
           "imageUrl": "/images/emote/hangouts-blob/allo-crying.gif"
         },
         {
-          "name": "blob_aww",
+          "name": "blob-aww",
           "config": {
             "type": "png"
           },
@@ -1180,14 +1180,14 @@
           "imageUrl": "/images/emote/hangouts-blob/blob-ban.png"
         },
         {
-          "name": "blob_crazy_happy",
+          "name": "blob-crazy-happy",
           "config": {
             "type": "gif"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_crazy_happy.gif"
         },
         {
-          "name": "party_blob",
+          "name": "party-blob",
           "config": {
             "type": "gif"
           },
@@ -1201,7 +1201,7 @@
           "imageUrl": "/images/emote/hangouts-blob/allo-love.gif"
         },
         {
-          "name": "blob_angry",
+          "name": "blob-angry",
           "config": {
             "type": "png"
           },
@@ -1229,14 +1229,14 @@
           "imageUrl": "/images/emote/hangouts-blob/blob-drool.gif"
         },
         {
-          "name": "blob_bandage",
+          "name": "blob-bandage",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_bandage.png"
         },
         {
-          "name": "blob_confounded",
+          "name": "blob-confounded",
           "config": {
             "type": "png"
           },
@@ -1250,7 +1250,7 @@
           "imageUrl": "/images/emote/hangouts-blob/allo-drool.gif"
         },
         {
-          "name": "blob_cheeky",
+          "name": "blob-cheeky",
           "config": {
             "type": "png"
           },
@@ -1264,7 +1264,7 @@
           "imageUrl": "/images/emote/hangouts-blob/blob-cool.gif"
         },
         {
-          "name": "blob_confused",
+          "name": "blob-confused",
           "config": {
             "type": "png"
           },
@@ -1278,7 +1278,7 @@
           "imageUrl": "/images/emote/hangouts-blob/partyblob.gif"
         },
         {
-          "name": "blob_cool",
+          "name": "blob-cool",
           "config": {
             "type": "png"
           },
@@ -1292,13 +1292,6 @@
           "imageUrl": "/images/emote/hangouts-blob/blob-birthdaycake.gif"
         },
         {
-          "name": "party-blob",
-          "config": {
-            "type": "gif"
-          },
-          "imageUrl": "/images/emote/hangouts-blob/party-blob.gif"
-        },
-        {
           "name": "blobbongos",
           "config": {
             "type": "gif"
@@ -1306,42 +1299,35 @@
           "imageUrl": "/images/emote/hangouts-blob/blobbongos.gif"
         },
         {
-          "name": "blueblob_jump",
+          "name": "blueblob-jump",
           "config": {
             "type": "gif"
           },
           "imageUrl": "/images/emote/hangouts-blob/blueblob_jump.gif"
         },
         {
-          "name": "blob_excited",
+          "name": "blob-excited",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_excited.gif"
         },
         {
-          "name": "party_blob",
-          "config": {
-            "type": "png"
-          },
-          "imageUrl": "/images/emote/hangouts-blob/party_blob.png"
-        },
-        {
-          "name": "blob_angery",
+          "name": "blob-angery",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_angery.png"
         },
         {
-          "name": "blob_rainbow",
+          "name": "blob-rainbow",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_rainbow.png"
         },
         {
-          "name": "blob_astonished",
+          "name": "blob-astonished",
           "config": {
             "type": "png"
           },
@@ -1362,35 +1348,35 @@
           "imageUrl": "/images/emote/hangouts-blob/blob-beers.gif"
         },
         {
-          "name": "blob_expressionless",
+          "name": "blob-expressionless",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_expressionless.png"
         },
         {
-          "name": "blob_bowing",
+          "name": "blob-bowing",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_bowing.png"
         },
         {
-          "name": "blob_blush",
+          "name": "blob-blush",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_blush.png"
         },
         {
-          "name": "blob_0w0",
+          "name": "blob-0w0",
           "config": {
             "type": "png"
           },
           "imageUrl": "/images/emote/hangouts-blob/blob_0w0.png"
         },
         {
-          "name": "blob_angel",
+          "name": "blob-angel",
           "config": {
             "type": "png"
           },
@@ -1432,7 +1418,7 @@
           "imageUrl": "/images/emote/hangouts-blob/allo-shocked.gif"
         },
         {
-          "name": "blob_drool",
+          "name": "blob-drool",
           "config": {
             "type": "png"
           },
