@@ -302,10 +302,11 @@
         <Card id="timeline" style="overflow: hidden" dis-hover :padding="isMobile ? 15 : 20">
           <Row :gutter="20" slot="title" type="flex" justify="center" align="middle">
             <Col flex="1" class="mobile-hide">
-              {{ $t('detail.info.timeLine') }}
-              <Tag type="border" v-if="$refs.timeline && $refs.timeline.timeline.total">
-                {{ $refs.timeline.timeline.total || 0 }}
-              </Tag>
+              <h2># {{ $t('detail.info.timeLine') }}
+                <Tag type="border" v-if="$refs.timeline && $refs.timeline.timeline.total">
+                  {{ $refs.timeline.timeline.total || 0 }}
+                </Tag>
+              </h2>
             </Col>
             <Col>
               <Row>
@@ -373,7 +374,7 @@
               <div class="content">
                 <TimelineView :id="getParamsIds('personaId')"
                               @click-update-name="() => updateCheaterModal = true"
-                              @click-reply="(id,byUserId) => openReplyModel(id, byUserId)"
+                              @click-reply="(id,byUserId,commentData) => openReplyModel(id, byUserId, commentData)"
                               ref="timeline"/>
               </div>
 
@@ -534,12 +535,13 @@
         <div slot="header">
           <b>{{ `${$t('basic.button.reply')}` }}</b>
           <Divider type="vertical"></Divider>
-          <BusinessCard :id="reply.toReplyId"
-                        v-if="reply.toReplyId">
+          <BusinessCard :id="reply.toUserId"
+                        v-if="reply.toUserId">
+            {{ reply.toReplyData.username }}
             <Icon type="md-open"></Icon>
           </BusinessCard>
         </div>
-        <Form ref="replyForm" style="margin: -17px;" v-if="isLogin">
+        <Form ref="replyForm" style="margin: -16px;background-color: rgba(0, 0, 0, 0.01);" v-if="isLogin">
           <TextareaView v-model="reply.miniModeContent"
                         ref="replyMiniModeTextarea"
                         :toolbar="[['bold'], ['emote','link', 'image', 'cs']]"
@@ -1109,7 +1111,8 @@ export default new application({
      * @param {string} replyId 楼层id
      * @param {string} userId 回复id
      */
-    openReplyModel(replyId, userId) {
+    openReplyModel(replyId, userId, commentData) {
+      this.reply.toReplyData = commentData;
       this.reply.toReplyId = replyId === null ? '' : replyId;
       this.reply.toUserId = userId === 'undefined' ? '' : userId;
 

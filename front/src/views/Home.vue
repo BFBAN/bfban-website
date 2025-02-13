@@ -234,7 +234,7 @@ import {api, application, http, number, time, util} from '../assets/js/index'
 
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
 import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
-import TimeView from '@/components/TimeView.vue';
+import TimeView from "@/components/TimeView.vue";
 
 export default new application({
   data() {
@@ -259,7 +259,7 @@ export default new application({
   },
   components: {PrivilegesTag, judgeActionTypeView, TimeView},
   watch: {
-    '$route': 'loadData',
+    $route: 'loadData',
   },
   created() {
     this.loadData();

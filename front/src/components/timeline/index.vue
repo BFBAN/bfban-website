@@ -326,8 +326,6 @@ export default new application({
       _url.hash = "#floor-" + floorId;
       return _url.toString() || "";
     },
-
-
   },
   computed: {
     userAvatarSize() {
@@ -806,7 +804,7 @@ export default new application({
               <Button size="small"
                       v-voice-button
                       v-if="l.id && l.byUserId"
-                      @click="$emit('click-reply',l.id, l.byUserId)">
+                      @click="$emit('click-reply',l.id, l.byUserId, l)">
                 {{ $t('basic.button.reply') }}
               </Button>
               <Divider type="vertical"/>
