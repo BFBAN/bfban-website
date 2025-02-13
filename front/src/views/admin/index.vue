@@ -5,9 +5,7 @@
       <Col :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem :to="{name: 'profile', params: {pagename: 'information'}}">{{
-              $t("header.profile")
-            }}
+          <BreadcrumbItem :to="{name: 'profile', params: {pagename: 'information'}}">{{$t("header.profile") }}
           </BreadcrumbItem>
           <BreadcrumbItem>{{ $t("profile.admin.title") }}</BreadcrumbItem>
         </Breadcrumb>
@@ -298,9 +296,6 @@ import chatList from "@/views/admin/chatList";
 import fileList from "@/views/admin/file"
 import user from "@/views/admin/user"
 import comment from "@/views/admin/comment"
-
-import user from "./user"
-import comment from "./comment"
 
 import "echarts";
 
