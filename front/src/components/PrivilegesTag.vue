@@ -49,7 +49,7 @@ export default {
   methods: {
     update(privilegeArray) {
       const that = this;
-      if (privilegeArray == null) return [];
+      if (!privilegeArray) return [];
       this.tags = that.privileges.filter(i => {
         return privilegeArray.includes(i.value);
       });

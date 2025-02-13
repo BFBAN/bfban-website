@@ -673,15 +673,21 @@ router.post('/reportById', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed'
                 message: validateErr.array()
             });
 
-            if (req.body.data.originPersonaId && !req.body.data.originUserId) return res.status(500).json({
-                error: 1,
-                code: 'reportById.notSupportYet',
-                message: 'not support yet'
-            });
             const originUserId = req.body.data.originUserId
+            const originPersonaId = req.body.data.originPersonaId
             let profile;
             try {
-                profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
+                if (originPersonaId) {
+                    profile = await serviceApi('eaAPI', '/userInfo').query({personaId: originPersonaId}).get().then(r => r.data);
+                } else if (originUserId) {
+                    profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
+                } else {
+                    return res.status(400).json({
+                        error: 1,
+                        code: 'reportById.bad',
+                        message: validateErr.array()
+                    });
+                }
             } catch (err) {
                 if (err.message.includes('Bad Response:')) return res.status(404).json({
                     error: 1,
@@ -690,7 +696,6 @@ router.post('/reportById', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed'
                 });
                 throw (err); // unknown error, throw it
             }
-
             // now the user being reported is found
             let avatarLink;
             try {   // get/update avatar each report
@@ -1204,8 +1209,8 @@ async (req, res, next) => {
         /** @type {import("../typedef.js").Player} */
         const tmp = await db.select('*').from('players').where(key, '=', val).first();
         if (!tmp) return res.status(404).json({error: 1, code: 'update.notFound', message: 'no such player'});
-        const originUserId = tmp.originUserId;
-        const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
+        const originPersonaId = tmp.originPersonaId;
+        const profile = await serviceApi('eaAPI', '/userInfo').query({personaId: originPersonaId}).get().then(r => r.data);
         let avatarLink = tmp.avatarLink;
         if (userHasRoles(req.user, ['admin', 'super', 'root', 'dev']) && req.query.blockAvatar) {
             if (req.query.blockAvatar === 'true') avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG#BLOCKED'; else avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data);

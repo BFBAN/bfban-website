@@ -5,7 +5,10 @@
       <Col :xs="{push: 1}" :lg="{push: 0}">
         <Breadcrumb>
           <BreadcrumbItem :to="{name: 'home'}">{{ $t("header.index") }}</BreadcrumbItem>
-          <BreadcrumbItem :to="{name: 'profile', params: {pagename: 'information'}}">{{ $t("header.profile") }}</BreadcrumbItem>
+          <BreadcrumbItem :to="{name: 'profile', params: {pagename: 'information'}}">{{
+              $t("header.profile")
+            }}
+          </BreadcrumbItem>
           <BreadcrumbItem>{{ $t("profile.admin.title") }}</BreadcrumbItem>
         </Breadcrumb>
       </Col>
@@ -296,6 +299,9 @@ import fileList from "@/views/admin/file"
 import user from "@/views/admin/user"
 import comment from "@/views/admin/comment"
 
+import user from "./user"
+import comment from "./comment"
+
 import "echarts";
 
 export default new application({
@@ -494,7 +500,7 @@ export default new application({
     adminOperation,
     fileList,
   },
-  created: function () {
+  created() {
     const {pagename} = this.$route.params;
     this.http = http_token.call(this);
 

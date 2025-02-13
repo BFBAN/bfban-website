@@ -247,6 +247,51 @@ class OriginClient {
     }
 
     /** @returns {Promise<{username:string, personaId:string, userId:string}>} */
+    async getInfoByPersonaId(personaId) {
+        const url = `https://gateway.ea.com/proxy/identity/personas?personaUri=/personas/${personaId}`;
+        const t_start = Date.now();
+        try {
+            await this.checkSelfTokenValid(true);
+            const response = await got.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.tokens.access_token}`,
+                    'Upgrade-Insecure-Requests': 1,
+                    'X-Expand-Results': true,
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+                },
+            }).json();
+            if (response.personas && response.personas.persona) {
+                const result = response.personas.persona[0];
+                if (result.namespaceName !== "cem_ea_id") {
+                    throw new EaApiError(404, response, `${this.tag} Not Found Player In ea`);
+                }
+
+                const username = result.displayName
+                const userId = result.pidId
+                const personaId = result.personaId
+
+                if(!username) {
+                    throw new EaApiError(404, response, `${this.tag} Not Found`);
+                }
+
+                return { username, personaId, userId };
+
+            } else {
+                throw new EaApiError(404, response, `${this.tag} Not Found`);
+            }
+                
+        } catch(err) {
+            if(err instanceof EaApiError)
+                throw err;
+            if(err instanceof HTTPError || err instanceof ParseError)
+                throw new EaApiError(err.response.statusCode, err.response.body, `${this.tag} Bad Response`);
+            throw new EaApiError(-1, null, err);
+        } finally {
+            logger.info(`OriginClient.getInfoByPersonaId spent ${(Date.now()-t_start)/1000}s`);
+        }
+    }
+
+    /** @returns {Promise<{username:string, personaId:string, userId:string}>} */
     async getInfoByUserId(userId, api_urls=origin_api_urls) {
         const url = `https://${api_urls[Math.floor(Math.random()*api_urls.length)]}/atom/users?userIds=${userId}`;
         const t_start = Date.now();
@@ -270,7 +315,7 @@ class OriginClient {
                 else
                     throw new EaApiError(500, response, `${this.tag} Bad Response`);
             }
-                
+
             return { username, personaId, userId };
         } catch(err) {
             if(err instanceof EaApiError)
@@ -282,6 +327,7 @@ class OriginClient {
             logger.info(`OriginClient.getInfoByUserId spent ${(Date.now()-t_start)/1000}s`);
         }
     }
+
     /** @returns {Promise<void>} */
     async reportUser(userId, content) {}
 
@@ -389,6 +435,7 @@ const EaApiMethods = {
     initSelf: OriginClient.prototype.init,
     searchUserName: OriginClient.prototype.searchUserName,
     searchUserEmail: OriginClient.prototype.searchUserEmail,
+    getInfoByPersonaId: OriginClient.prototype.getInfoByPersonaId,
     getInfoByUserId: OriginClient.prototype.getInfoByUserId,
     reportUser: OriginClient.prototype.reportUser,
     getUserAvatar: OriginClient.prototype.getUserAvatar,

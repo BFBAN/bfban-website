@@ -2,7 +2,13 @@ import express from "express";
 import morgan from 'morgan';
 import bodyParser from "body-parser";
 
-import { query as checkquery, validationResult, body as checkbody, oneOf as checkOneOf, header as checkheader } from "express-validator";
+import {
+    query as checkquery,
+    validationResult,
+    body as checkbody,
+    oneOf as checkOneOf,
+    header as checkheader,
+} from "express-validator";
 
 import { svcConfig, logger, configUpdated } from "./infrastruc.js";
 import { OriginClient, OriginClientCluster, EaApiMethods, EaApiError } from "./originAPI.js";
@@ -117,18 +123,29 @@ async (req, res, next)=>{
 });
 
 app.get('/userInfo', [
-    checkquery('userId').isInt()
+    checkOneOf([
+        checkquery('userId').isInt(),
+        checkquery('personaId').isInt()
+    ]),
+
 ], /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)} */
 async (req, res, next)=>{
     const validateErr = validationResult(req);
     if(!validateErr.isEmpty())
         return res.status(400).json({error: 1, code: 'userInfo.bad', message: validateErr.array()});
     try {
-        const info = await cluster.invokeMethod(EaApiMethods.getInfoByUserId, req.query.userId);
-        return res.status(200).json({success: 1, code: 'userInfo.ok', data: info});
+        if (req.query.personaId) {
+            const info = await cluster.invokeMethod(EaApiMethods.getInfoByPersonaId, req.query.personaId);
+            return res.status(200).json({success: 1, code: 'userInfo.ok', data: info});
+        } else if (req.query.userId) {
+            const info = await cluster.invokeMethod(EaApiMethods.getInfoByUserId, req.query.userId);
+            return res.status(200).json({success: 1, code: 'userInfo.ok', data: info});
+        } else {
+            return res.status(400).json({error: 1, code: 'userInfo.error', message: 'Invalid requests query'});
+        }
     } catch(err) {
         if(err instanceof EaApiError && err.statusCode==404)
-            return res.status(404).json({error: 1, code: 'userGames.notFound', message: 'not found'});
+            return res.status(404).json({error: 1, code: 'userInfo.notFound', message: 'not found'});
         next(err);
     }
 });
