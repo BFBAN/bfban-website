@@ -217,7 +217,7 @@
 </template>
 
 <script>
-import {api, application, http, http_token, util} from "@/assets/js";
+import {api, application, http, http_token} from "@/assets/js";
 
 import vueQr from "vue-qr";
 
@@ -233,7 +233,8 @@ import AchievementsTag from "@/components/AchievementsTag";
 import Loading from "@/components/Loading";
 import Textarea from "@/components/textarea"
 
-import games from '/public/config/gameName.json'
+import games from "@/../public/config/gameName.json"
+import cheaterStatus from "@/../public/config/cheaterStatus.json"
 
 export default new application({
   name: 'space',
@@ -258,7 +259,6 @@ export default new application({
       total: 0,
 
       cheaterStatus: [],
-      url: "",
 
       message: {
         id: '',
@@ -296,43 +296,44 @@ export default new application({
     async loadData() {
       const {uId} = this.$route.params;
 
-      await util.initUtil().then(res => {
-        this.cheaterStatus = res.cheaterStatus;
-        this.url = window.location.href;
-      });
+      await this.getUserInfo(uId);
 
-      this.getUserInfo(uId);
+      if (this.$route.query.repeat) {
+        this.openMessage()
+      }
     },
     /**
      * 获取用户信息
      */
-    getUserInfo(uId) {
-      this.$Loading.start();
+    async getUserInfo(uId) {
+      try {
+        this.$Loading.start();
 
-      this.http.get(api["user_info"], {
-        params: {
-          id: uId
-        }
-      }).then(res => {
-        const d = res.data;
+        const result = await this.http.get(api["user_info"], {
+          params: {
+            id: uId
+          }
+        });
 
-        if (this.$route.query.repeat) {
-          this.openMessage()
-        }
+        const d = result.data;
 
-        if (d.success === 1) {
-          this.account = d.data;
+        if (d.error === 1) {
+          this.account = "";
+          this.$Message.warning(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
+
+          setTimeout(() =>
+              this.$router.push({name: 'notFound'}), 3000)
           return;
         }
 
-        this.account = "";
-        this.$Message.warning(d.code);
-
-      }).catch(err => {
+        this.account = d.data;
+      } catch (e) {
         this.$Loading.error();
-      }).finally(() => {
+      } finally {
         this.getUserReports()
-      });
+      }
     },
     /**
      * 打开消息
@@ -342,54 +343,57 @@ export default new application({
         this.$Message.error(this.$i18n.t("account.message.hint.taOffChat"))
         return
       }
-      if (this.account.id == this.currentUser.userinfo.userId) {
+      if (this.account.id === this.currentUser.userinfo.userId) {
         this.$Message.error(this.$i18n.t("account.message.hint.selfTalk"))
         return
       }
-
       this.message.show = true;
     },
     /**
      * 发送消息
      */
-    onPushMessage() {
-      const {uId} = this.$route.params;
+    async onPushMessage() {
+      try {
+        const {uId} = this.$route.params;
 
-      if (!uId) return;
+        if (!uId) return;
 
-      this.http.post(api["user_message"], {
-        data: {
-          data: {
-            toUserId: this.message.id || uId,
-            type: 'direct',
-            content: this.message.content,
+        const result = await this.http.post(api["user_message"], {
+              data: {
+                data: {
+                  toUserId: this.message.id || uId,
+                  type: 'direct',
+                  content: this.message.content,
+                }
+              }
+            }),
+            d = result.data;
+
+        if (d.error === 1) {
+          switch (d.error) {
+            case 'message.denied':
+              this.$Message.error(this.$i18n.t("account.message.hint.denied"));
+              break;
+            case 'message.blocked':
+              this.$Message.error(this.$i18n.t("account.message.hint.taOffChat"));
+              break;
+            default:
+              this.$Message.error(d.message);
           }
-        }
-      }).then(res => {
-        if (res.data.success == 1) {
-          this.$Message.success(res.data.message);
-
           return;
         }
 
-        switch (res.data.error) {
-          case 'message.denied':
-            this.$Message.error(this.$i18n.t("account.message.hint.denied"));
-            break;
-          case 'message.blocked':
-            this.$Message.error(this.$i18n.t("account.message.hint.taOffChat"));
-            break;
-          default:
-            this.$Message.error(res.data.message);
-        }
-      }).finally(() => {
+        this.$Message.success(d.message);
+      } catch (e) {
+        this.$Message.error(e);
+      } finally {
         this.message.load = false;
         this.message.show = false;
-      })
+      }
     },
     /**
      * 获取举报信息
-     * @param uId
+     * @param pageNum
      */
     getUserReports(pageNum) {
       const {uId} = this.$route.params;
@@ -421,6 +425,8 @@ export default new application({
     },
   },
   computed: {
+    url: () => window.location.href,
+    cheaterStatus: () => cheaterStatus,
     /**
      * 是否包含用户附带的额外内容
      * 如果自我描述以及attr特定属性不显示，则关闭右侧一栏
@@ -434,7 +440,7 @@ export default new application({
      * @returns {boolean}
      */
     isChat() {
-      return !this.account.attr.allowDM || this.account.id == this.currentUser.userinfo.userId
+      return !this.account.attr.allowDM || this.account.id === this.currentUser.userinfo.userId
     }
   }
 })
