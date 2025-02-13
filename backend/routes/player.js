@@ -6,13 +6,7 @@ import {body as checkbody, oneOf as checkOneof, query as checkquery, validationR
 import db from "../mysql.js";
 import config from "../config.js";
 import verifyCaptcha from "../middleware/captcha.js";
-import {
-    allowPrivileges,
-    forbidPrivileges,
-    forbidVisitTypes,
-    verifyJWT,
-    verifySelfOrPrivilege
-} from "../middleware/auth.js";
+import {allowPrivileges, forbidPrivileges, forbidVisitTypes, verifyJWT, verifySelfOrPrivilege} from "../middleware/auth.js";
 import {cheatMethodsSanitizer, handleRichTextInput} from "../lib/user.js";
 import {siteEvent, stateMachine} from "../lib/bfban.js";
 import {userHasRoles} from "../lib/auth.js";
@@ -1221,10 +1215,11 @@ async (req, res, next) => {
                 logger.warn('/player/update: error while fetching user\'s avatar');
             }
         }
-        await db('players').update({
-            originName: profile.username, avatarLink: avatarLink
-        }).where({originUserId: originUserId});
-        await pushOriginNameLog(profile.username, originUserId, profile.personaId);
+        const updatePlayerData = await db('players')
+            .update({originName: profile.username, avatarLink: avatarLink})
+            .where({originPersonaId: originPersonaId})
+            .returning(['username', 'originUserId', 'originPersonaId']);
+        await pushOriginNameLog(profile.username, updatePlayerData[0].originUserId, updatePlayerData[0].originPersonaId);
 
         siteEvent.emit('action', {method: 'playerUpdate', params: {profile}});
         return res.status(200).json({
