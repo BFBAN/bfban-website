@@ -1,5 +1,5 @@
 <script>
-import {account_storage, api, application, http_token, player_storage, util} from "@/assets/js";
+import {account_storage, api, application, http_token, util} from "@/assets/js";
 
 import UserAvatar from "@/components/UserAvatar.vue";
 import BusinessCard from "@/components/BusinessCard.vue";
@@ -86,8 +86,8 @@ export default new application({
     ExposedName,
   },
   watch: {
-    '$route': 'loadData',
-    'id': 'loadData'
+    $route: 'loadData',
+    id: 'loadData'
   },
   created() {
     this.http = http_token.call(this);
@@ -107,19 +107,21 @@ export default new application({
       }
       if (order) this.timeline.order = order;
 
-      await this.getPlayerInfo();
       await this.getTimeline();
     },
     /**
-     * 获取玩家档案
+     * 设置玩家档案，给与时间轴对应数据
+     * @param data
+     * @returns {any}
      */
-    async getPlayerInfo() {
-      if (!this.id) return;
-
-      this.cheater = await player_storage.getPlayerInfo({personaId: this.id}, true);
+    setPlayerInfo(data) {
+      this.cheater = data;
+      return this;
     },
     /**
      * 获取举报玩家 时间轴
+     * @param id
+     * @returns {any}
      */
     async getTimeline(id) {
       this.timelineListPreparedness = [];
@@ -131,14 +133,13 @@ export default new application({
         this.timeline.load = true;
 
         const res = await this.http.get(api["player_timeline"], {
-          params: Object.assign({
+          params: {
+            personaId: id || this.id,
+            random: +(new Date()),
             skip: (this.timeline.skip - 1) * this.timeline.limit,
             limit: this.timeline.limit,
             order: this.timeline.order,
-          }, {
-            personaId: id || this.id,
-            random: +(new Date())
-          })
+          }
         })
 
         let d = res.data;
@@ -162,8 +163,6 @@ export default new application({
 
           // 排序
           this.onMergeHistoryName();
-
-          this.$forceUpdate();
         }
 
         this.onRollingFloor();
@@ -172,6 +171,8 @@ export default new application({
         this.$emit('ready');
         this.timeline.load = false;
       }
+
+      return this;
     },
     /**
      * 获取 时间轴 单条数据
@@ -243,7 +244,7 @@ export default new application({
             urlOffsetTop.offsetParent.className = className;
         }, 10000);
 
-        this.onRollingNode(urlOffsetTop.offsetParent.offsetParent.offsetTop);
+        this.onRollingNode(urlOffsetTop.offsetParent.offsetParent.offsetBottom);
       }
     },
     /**
@@ -292,19 +293,20 @@ export default new application({
         1: this.getTime(_timelineList[_timelineList.length - 1].createTime)
       };
 
-      this.cheater.history.forEach((history, hisrotyIndex) => {
-        let _itemHistoryTime = this.getTime(history.fromTime);
+      if (this.cheater.history)
+        this.cheater.history.forEach((history, hisrotyIndex) => {
+          let _itemHistoryTime = this.getTime(history.fromTime);
 
-        // Check if the history is within the timeline range
-        if (_itemHistoryTime >= _timeStartAndEndTime[order === 'asc' ? 0 : 1] && _itemHistoryTime <= _timeStartAndEndTime[order === 'asc' ? 1 : 0]) {
-          _timelineList.push({
-            type: 'historyUsername',
-            beforeUsername: this.cheater.history[hisrotyIndex - 1]?.originName,
-            nextUsername: history.originName,
-            fromTime: history.fromTime
-          });
-        }
-      });
+          // Check if the history is within the timeline range
+          if (_itemHistoryTime >= _timeStartAndEndTime[order === 'asc' ? 0 : 1] && _itemHistoryTime <= _timeStartAndEndTime[order === 'asc' ? 1 : 0]) {
+            _timelineList.push({
+              type: 'historyUsername',
+              beforeUsername: this.cheater.history[hisrotyIndex - 1]?.originName,
+              nextUsername: history.originName,
+              fromTime: history.fromTime
+            });
+          }
+        });
 
       this.timelineList = _timelineList.sort(function (x, y) {
         let timeX = (that.getTime(x.createTime) || that.getTime(x.fromTime));
@@ -320,11 +322,18 @@ export default new application({
      * @param {number} floorId 楼层id，同时也是回复id
      * @returns {string} URL
      */
-    getShareFloor(floorId) {
+    getShareFloorUri(floorId) {
       let _url = new URL(window.location.href);
-      if (!floorId) return _url;
+      if (!floorId) return _url.href;
       _url.hash = "#floor-" + floorId;
-      return _url.toString() || "";
+      return _url.href || "";
+    },
+    /**
+     * 滚动位置
+     * @param scrollTopNumber
+     */
+    onRollingNode(scrollTopNumber) {
+      document.documentElement.scrollTop = scrollTopNumber;
     },
   },
   computed: {
@@ -823,18 +832,13 @@ export default new application({
                 <Icon type="md-share"/>
               </Button>
               <div slot="content">
-                <Form :label-width="40" label-position="left">
+                <Form :label-width="45" label-position="left">
                   <FormItem label="Url">
-                    <Input :value="getShareFloor(l.id)" :autosize="{minRows: 2,maxRows: 2}" type="textarea"
+                    <Input :value="getShareFloorUri(l.id)" :autosize="{minRows: 2,maxRows: 4}" type="textarea"
                            readonly v-if="l.id"></Input>
                   </FormItem>
                   <FormItem label="Code">
                     <Input :value="`{floor:${l.id}}`" readonly v-if="l.id"></Input>
-                  </FormItem>
-                  <FormItem label="" v-if="l.id">
-                    <Card dis-hover :padding="5">
-                      <HtmlCore :html="`<p>{floor:${l.id}}</p>`" v-if="l.id"/>
-                    </Card>
                   </FormItem>
                 </Form>
               </div>
