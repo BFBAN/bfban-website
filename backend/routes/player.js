@@ -104,7 +104,7 @@ async (req, res, next) => {
                 });
         }
 
-        const result = await db.select('id', 'originName', 'originUserId', 'originPersonaId', 'games', 'cheatMethods', 'avatarLink', 'viewNum', 'commentsNum', 'status', 'createTime', 'updateTime', 'appealStatus')
+        const result = await db.select('id', 'originName', 'originUserId', 'originPersonaId', 'games', 'cheatMethods', 'avatarLink', 'viewNum', 'commentsNum', 'status', 'createTime', 'updateTime', 'appealStatus', 'hackerLevel')
             .from('players').where(key, '=', val).first();
         if (!result) return res.status(404).json({error: 1, code: 'player.notFound'});
         if (req.query.history) // that guy does exist
@@ -1261,7 +1261,7 @@ async (req, res, next) => {
             code: 'judgement.permissionDenied',
             message: 'permission denied.'
         });
-        const {toPlayerId, cheatMethods, action, content} = req.body.data;
+        const {toPlayerId, cheatMethods, action, content, hackerLevel } = req.body.data;
 
         /** @type {import("../typedef.js").Player} */
         const player = await db.select('*').from('players').where({id: toPlayerId}).first();
@@ -1301,6 +1301,21 @@ async (req, res, next) => {
         }
 
         // auth complete, player found, store action into db
+        const nextstate = await stateMachine(player, req.user, action);
+        let hackerLevel_ = null
+        switch(nextstate) {
+            // confirm is hacker
+            case 1: {
+                hackerLevel_ = hackerLevel || null
+                break
+            }
+            case 3:
+            case 4:
+            case 8: {
+                hackerLevel_ = null
+                break
+            }
+        }
         const judgement = {
             type: 'judgement',
             byUserId: req.user.id,
@@ -1311,11 +1326,11 @@ async (req, res, next) => {
             judgeAction: action,
             content: handleRichTextInput(content),
             valid: 1,
+            hackerLevel: hackerLevel_,
             createTime: new Date(),
         };
         const insertId = (await db('comments').insert(judgement))[0];
         judgement.id = insertId;
-        const nextstate = await stateMachine(player, req.user, action);
         const stateChange = {prev: player.status, next: nextstate};
 
         player.status = nextstate;
@@ -1328,6 +1343,7 @@ async (req, res, next) => {
             cheatMethods: player.cheatMethods,
             updateTime: player.updateTime,
             commentsNum: player.commentsNum,
+            hackerLevel: hackerLevel_,
             appealStatus: player.appealStatus ? '2' : null
         }).where({id: player.id});
 
@@ -1337,6 +1353,7 @@ async (req, res, next) => {
         siteEvent.emit('action', {method: 'judge', params: {judgement, player, stateChange}});
         return res.status(200).json({
             success: 1, code: 'judgement.success', message: 'thank you.', data: {
+                nextstate,
                 laterStatus: player.status,     // Notifies the modified status
                 updateTime: player.updateTime   // change Time
             }
