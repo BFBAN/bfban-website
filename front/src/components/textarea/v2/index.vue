@@ -323,7 +323,7 @@ export default new application({
             <Button @click="onEmote"
                     class="btn"
                     :disabled="isOpenEmoji"
-                    v-if="toolbarAs.indexOf('emote') >= 0 && isAdmin">
+                    v-if="toolbarAs.indexOf('emote') >= 0">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <circle cx="184" cy="232" r="24"/>
                 <path

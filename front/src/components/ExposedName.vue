@@ -40,7 +40,7 @@ export default {
   <span>
     <code :class="[!disabled ?  'text-distinguishing': '']"
           v-selectable-text
-          class="text-distinguishing-letter" @dblclick="onDiffNameModel" @click.shift="onDiffNameModel">
+          class="text-distinguishing-letter" @click.shift="onDiffNameModel">
       <slot></slot>
     </code>
     <Modal v-model="diffPanelModel" class="exposed-name-diff" footer-hide>
@@ -50,7 +50,6 @@ export default {
         </Col>
         <Col>
           <Tag>Shift + Click</Tag>
-          <Tag>Click * 2</Tag>
         </Col>
       </Row>
       <p>{{$t('detail.exposedName.description')}}</p>

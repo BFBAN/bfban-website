@@ -25,10 +25,10 @@
               <!-- EA头像 S -->
               <Avatar shape="square"
                       class="default-avatar"
-                      :src="cheater.avatarLink"
+                      :src="player.avatarLink"
                       :size="'100%'"
                       :title="$t('detail.info.originAvatar')"
-                      v-if="cheater.avatarLink">
+                      v-if="player.avatarLink">
               </Avatar>
               <template v-else>
                 <Avatar shape="square"
@@ -49,13 +49,13 @@
                 <Row :gutter="10" type="flex" justify="space-between" align="top">
                   <Col :flex="isMobile ? 1 : null" :xs="isMobile ? {span: 24, order:1} : {}"
                        :lg="isMobile ? {span: 12, order: 1} : {}" class="tags">
-                    <cheater-status-view :status="cheater.status"/>
+                    <CheaterStatusView :status="player.status"/>
 
                     <!-- 被举报的游戏 S -->
-                    <router-link :to="{name: 'player_list', query: { game: cheater.games,status: -1 }}"
-                                 v-if="cheater.games">
+                    <router-link :to="{name: 'player_list', query: { game: player.games,status: -1 }}"
+                                 v-if="player.games">
                       <Poptip trigger="hover"
-                              v-for="(game,gameindex) in cheater.games" :key="gameindex">
+                              v-for="(game,gameindex) in player.games" :key="gameindex">
                         <Tag type="border" :alt="$t('detail.info.reportedGames')">
                           <img height="12" :src="require('/src/assets/images/games/' + game + '/logo.png')"/>
                         </Tag>
@@ -64,8 +64,8 @@
                     </router-link>
 
                     <!-- 被举报的类型 E -->
-                    <template v-if="cheater.cheatMethods && cheater.cheatMethods.length > 0">
-                      <Tag color="warning" v-for="(method_item, method_index) in cheater.cheatMethods"
+                    <template v-if="player.cheatMethods && player.cheatMethods.length > 0">
+                      <Tag color="warning" v-for="(method_item, method_index) in player.cheatMethods"
                            :key="method_index">
                         {{ $t("cheatMethods." + util.queryCheatMethodsGlossary(method_item) + ".title") }}
                       </Tag>
@@ -160,14 +160,14 @@
                     <Dropdown :transfer="isMobile" placement="bottom-start">
                       <h1>
                         <ExposedName>
-                          {{ cheater.originName || 'User Name' }}
+                          {{ player.originName || 'User Name' }}
                         </ExposedName>
                       </h1>
 
                       <!-- 历史ID -->
                       <DropdownMenu slot="list"
                                     :style="isMobile ? '' : 'min-width: 630px'"
-                                    v-if="cheater && cheater.history && cheater.history.length >= 0">
+                                    v-if="player && player.history && player.history.length >= 0">
                         <Row style="margin: 5px 18px">
                           <Col flex="1">
                             <b>{{ $t('detail.info.historyID') }}</b>
@@ -179,7 +179,7 @@
                           </Col>
                         </Row>
                         <div style="overflow: auto; max-height: 80vh">
-                          <div v-for="(origin, origin_index) in cheater.history" :key="origin_index">
+                          <div v-for="(origin, origin_index) in player.history" :key="origin_index">
                             <Row :gutter="5" type="flex" align="middle"
                                  style="padding: 0 16px;margin: 10px 0 ; width:100%">
                               <Col class="mobile-hide">
@@ -208,7 +208,7 @@
                   <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
                     <Poptip transfer width="400" placement="bottom-start">
                       <Card :padding="isMobile ? 5 : 10" dis-hover>
-                        <h3>{{ cheater.id || 0 }}</h3>
+                        <h3>{{ player.id || 0 }}</h3>
                         <span>IDs <Icon type="md-more"/></span>
                       </Card>
                       <div slot="content">
@@ -217,7 +217,7 @@
                           <Col flex="1">
                             <Divider dashed/>
                           </Col>
-                          <Col>{{ cheater.id || 'cheater id' }}</Col>
+                          <Col>{{ player.id || 'player id' }}</Col>
                         </Row>
                         <Row :gutter="10" type="flex" align="middle">
                           <Col>User id
@@ -229,7 +229,7 @@
                           <Col flex="1">
                             <Divider dashed/>
                           </Col>
-                          <Col>{{ cheater.originUserId || 'user id' }}</Col>
+                          <Col>{{ player.originUserId || 'user id' }}</Col>
                         </Row>
                         <Row :gutter="10" type="flex" align="middle">
                           <Col>Persona id
@@ -241,7 +241,7 @@
                           <Col flex="1">
                             <Divider dashed/>
                           </Col>
-                          <Col>{{ cheater.originPersonaId || 'persona id' }}</Col>
+                          <Col>{{ player.originPersonaId || 'persona id' }}</Col>
                         </Row>
                       </div>
                     </Poptip>
@@ -249,14 +249,14 @@
                   <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 6}" :lg="{span: 4}">
                     <Card :padding="isMobile ? 5 : 10" dis-hover>
                       <!-- 浏览次数 -->
-                      <h3>{{ cheater.viewNum || 0 }}</h3>
+                      <h3>{{ player.viewNum || 0 }}</h3>
                       <span>{{ $t('detail.info.viewTimes') }}</span>
                     </Card>
                   </Col>
                   <Col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 4}">
                     <Card :padding="isMobile ? 5 : 10" dis-hover>
                       <!-- 回复次数 -->
-                      <h3>{{ cheater.commentsNum || 0 }}</h3>
+                      <h3>{{ player.commentsNum || 0 }}</h3>
                       <span>{{ $t('basic.button.reply') }}</span>
                     </Card>
                   </Col>
@@ -264,8 +264,8 @@
                     <Card :padding="isMobile ? 5 : 10" dis-hover>
                       <!-- 第一次被举报时间 -->
                       <h3>
-                        <TimeView :time="cheater.createTime">
-                          <Time v-if="cheater.createTime" :time="cheater.createTime" type="datetime"></Time>
+                        <TimeView :time="player.createTime">
+                          <Time v-if="player.createTime" :time="player.createTime" type="datetime"></Time>
                         </TimeView>
                       </h3>
                       <span>{{ $t('detail.info.firstReportTime') }}</span>
@@ -275,8 +275,8 @@
                     <Card :padding="isMobile ? 5 : 10" dis-hover>
                       <!-- 最近更新时间 -->
                       <h3>
-                        <TimeView :time="cheater.updateTime">
-                          <Time v-if="cheater.updateTime" :time="cheater.updateTime" type="datetime"></Time>
+                        <TimeView :time="player.updateTime">
+                          <Time v-if="player.updateTime" :time="player.updateTime" type="datetime"></Time>
                         </TimeView>
                       </h3>
                       <span>{{ $t('detail.info.recentUpdateTime') }}</span>
@@ -295,7 +295,7 @@
           <h2><a href="javascript:void(0)">#</a> {{ $t('detail.info.gameScores') }}</h2>
           <br>
           <!-- 战绩链接 S -->
-          <RecordLink ref="recordLink" v-show="cheater.originUserId"></RecordLink>
+          <RecordLink ref="recordLink" v-show="player.originUserId"></RecordLink>
           <!-- 战绩链接 E -->
         </Card>
         <br>
@@ -481,14 +481,14 @@
             </Col>
           </Row>
 
-          <div v-if="cheater.status === '1'">
+          <div v-if="player.status === '1'">
             <Divider/>
           </div>
         </Card>
         <br v-if="isAdmin">
 
         <Card dis-hover v-if="isAdmin">
-          <JudgementActionView :cheater="cheater"
+          <JudgementActionView :cheater="player"
                                @submit-complete="onJudgementSubmitComplete"
                                @additional-event="onJudgementAdditionalEvent"></JudgementActionView>
         </Card>
@@ -557,7 +557,9 @@
           <Row :gutter="30">
             <Col flex="1">
               <Captcha ref="captcha"
-                       @getCaptchaData="(value) => getMiniCaptchaData('miniModeCaptcha', value)"></Captcha>
+                       height="35px"
+                       size="default"
+                       @getCaptchaData="(value) => getCaptchaData('miniModeCaptcha', value)"></Captcha>
             </Col>
             <Col>
               <Button @click="cancelReply" v-voice-button>{{ $t('basic.button.cancel') }}</Button>
@@ -580,7 +582,8 @@
           <PrivilegesTag :data="['admin','super','root','dev','bot']"></PrivilegesTag>
         </div>
         <div>
-          <Card style="margin: 2.5rem 0 1rem 0;" dis-hover>
+          <br>
+          <Card :padding="20" dis-hover>
             <Row :gutter="16" type="flex" justify="center" align="middle">
               <Col>
                 <Icon type="md-cloud" color="#535353" size="40"/>
@@ -594,13 +597,13 @@
             </Row>
           </Card>
           <br/>
-          <p class="hint">
+          <p class="hint hint-seriousness">
             {{ $t('detail.info.description1') }}，
-            <Tag>{{ $t('detail.info.updateButton') }}</Tag>
-            <span>{{ $t('detail.info.description2') }}</span>
+            <u><b>{{ $t('detail.info.updateButton') }}</b></u>
+            {{ $t('detail.info.description2') }}
           </p>
-          <p class="hint"> {{ $t('detail.info.description3') }} </p>
-          <p class="hint"> {{ $t('detail.info.description4') }} </p>
+          <p class="hint hint-seriousness"> {{ $t('detail.info.description3') }} </p>
+          <p class="hin hint-seriousness"> {{ $t('detail.info.description4') }} </p>
         </div>
         <div slot="footer">
           <Row :gutter="16">
@@ -627,7 +630,7 @@
 </template>
 
 <script>
-import {account_storage, api, application, http, http_token, storage, time, util,} from '../assets/js/index'
+import {account_storage, api, application, http, http_token, message, storage, time, util,} from "@/assets/js"
 import {formatTextarea} from "@/mixins/common";
 
 import AdsGoogle from "@/components/ads/google";
@@ -635,7 +638,7 @@ import Empty from '@/components/Empty'
 import TextareaView from "@/components/textarea";
 import BusinessCard from "@/components/BusinessCard";
 import RecordLink from "@/components/RecordLink";
-import cheaterStatusView from "@/components/CheaterStatusView";
+import CheaterStatusView from "@/components/CheaterStatusView";
 import JudgementActionView from "@/components/judgementActionView";
 import Captcha from "@/components/captcha";
 import TimeView from "@/components/TimeView"
@@ -662,7 +665,7 @@ export default new application({
         disable: this.$store.state.configuration.detailLeftAppealPanel ?? false,
       },
 
-      cheater: {
+      player: {
         originId: '',
         createTime: time.appStart(),
         updateTime: time.appStart(),
@@ -693,7 +696,7 @@ export default new application({
     TextareaView,
     BusinessCard,
     RecordLink,
-    cheaterStatusView,
+    CheaterStatusView,
     JudgementActionView,
     TimelineView,
     TimeView,
@@ -707,10 +710,7 @@ export default new application({
     ExposedName,
   },
   watch: {
-    "$route": "loadData",
-    "fastReply.selected": function () {
-      this.verify.suggestion = '' + this.fastReply.selected.map(i => i);
-    },
+    $route: "loadData",
   },
   created() {
     this.http = http_token.call(this);
@@ -720,17 +720,16 @@ export default new application({
     async loadData() {
       try {
         this.$Loading.start();
-
-        // set Token Http mode
-        this.http = http_token.call(this);
+        this.player = {};
 
         // get Detail data
         await this.getPlayerInfo();
 
         // get Timeline data
         if (this.$refs.timeline) {
-          await this.$refs.timeline.getPlayerInfo();
-          await this.$refs.timeline.getTimeline();
+          this.$refs.timeline
+              .setPlayerInfo(this.player)
+              .getTimeline();
         }
 
         this.$Loading.finish();
@@ -744,7 +743,7 @@ export default new application({
      */
     async checkPlayerSubscribes() {
       try {
-        const {id} = this.cheater;
+        const {id} = this.player;
 
         if (!this.isLogin || !this.$store.state.configuration.subscribes) return;
 
@@ -758,7 +757,6 @@ export default new application({
       } finally {
         this.subscribes.load = false;
       }
-
     },
     /**
      * 追踪此玩家
@@ -768,21 +766,21 @@ export default new application({
       this.subscribes.load = true;
 
       switch (this.subscribes.static) {
-        case false:
-          await this.http.post(api["user_subscribes_add"], {
-            data: {playerIds: [this.cheater.id]}
-          }).then(res => {
-            if (res.data.success === 1)
-              this.subscribes.static = true;
-          });
+        case false: {
+          let res = await this.http.post(api["user_subscribes_add"], {
+            data: {playerIds: [this.player.id]}
+          })
+          if (res.data.success === 1)
+            this.subscribes.static = true;
+        }
           break;
-        case true:
-          await this.http.post(api["user_subscribes_delete"], {
-            data: {playerIds: [this.cheater.id]}
-          }).then(res => {
-            if (res.data.success === 1)
-              this.subscribes.static = false;
+        case true: {
+          let res = await this.http.post(api["user_subscribes_delete"], {
+            data: {playerIds: [this.player.id]}
           });
+          if (res.data.success === 1)
+            this.subscribes.static = false;
+        }
           break;
       }
 
@@ -793,7 +791,7 @@ export default new application({
      */
     async onUpdateViewed() {
       let viewed = storage.local.get("viewed");
-      const id = this.cheater.id;
+      const id = this.player.id;
       const historyTime = new Date().getTime();
 
       if (!id) return;
@@ -814,7 +812,7 @@ export default new application({
       }
 
       await http.post(api["player_viewed"], {data: {data: {id}}});
-      this.cheater.viewNum++;
+      this.player.viewNum++;
     },
     /**
      * 获取基本字段
@@ -823,74 +821,74 @@ export default new application({
      * @returns {*|{dbId: *, userId: *, personaId: *}}
      */
     getParamsIds(name) {
-      const object_id = this.$route.params.ouid.split('.');
-      const object = {
-        userId: object_id[1],
-        personaId: object_id[0],
-        dbId: object_id[2],
+      const routeParamsIds = this.$route.params.ouid.split('.');
+      const ids = {
+        userId: routeParamsIds[1],
+        personaId: routeParamsIds[0],
+        dbId: routeParamsIds[2],
       };
-      return name ? object[name] : object;
+      return name ? ids[name] : ids;
     },
     /**
      * 获取举报玩家档案
      */
     async getPlayerInfo() {
-      const that = this;
-      return new Promise(resolve => {
-        let params = Object.assign({
-          history: true
-        }, {
+      try {
+        let params = {
+          history: true,
           personaId: this.$route.params.ouid
-        });
+        };
 
         // 旧网站URL, 兼容
         if (this.$route.query.oldUrl && this.$route.params.ouid) {
-          params = Object.assign({
-            history: true
-          }, {
+          params = Object.assign(params, {
+            history: true,
             userId: this.$route.params.ouid
           });
           delete params.personaId;
         }
 
-        that.cheater = {};
+        const result = await http.get(api["player"], {params}),
+            d = result.data;
 
-        http.get(api["player"], {params}).then(res => {
-          const d = res.data;
-
-          if (d.success === 1) {
-            // 历史名称排序
-            d.data.history = d.data.history.sort(function (a, b) {
-              let aTime = new Date(a.fromTime).getTime();
-              let bTime = new Date(b.fromTime).getTime();
-              return aTime > bTime ? 1 : -1;
-            })
-
-            that.cheater = d.data;
-            that.$refs.recordLink.generateTable(this.cheater);
-
-            document.title = document.title + ' - ' + this.cheater.originName + ' - ' + this.cheater.games.map(i => this.$i18n.t(`basic.games.${i}`));
-            return;
-          }
-
+        if (d.error === 1) {
           switch (d.code) {
             case "player.bad":
             case "player.notFound":
-              that.$router.push({name: 'player_list'})
+              setTimeout(() =>
+                  this.$router.push({name: 'notFound'}), 3000)
               break;
           }
+          throw new Error(this.$t('basic.tip.notFound'));
+        }
 
-          that.$Message.info(this.$t('basic.tip.notFound'));
-        }).finally(() => {
-          that.onUpdateViewed();
-          that.checkPlayerSubscribes();
+        // sort history player name
+        d.data.history = d.data.history.sort(function (a, b) {
+          let aTime = new Date(a.fromTime).getTime();
+          let bTime = new Date(b.fromTime).getTime();
+          return aTime > bTime ? 1 : -1;
+        })
 
-          resolve()
-        });
-      })
+        this.player = d.data;
+        if (this.$refs.recordLink)
+          this.$refs.recordLink.generateTable(this.player);
+
+        // update player page website title
+        document.title = `${this.$i18n.t('name')} / ${this.player.originName} - ${this.player.games.map(i => this.$i18n.t(`basic.games.${i}`))}`;
+      } catch (e) {
+        if (e instanceof Error) {
+          this.$Message.info(e.message);
+          return;
+        }
+        this.$Message.error(e.toString())
+      } finally {
+        await this.onUpdateViewed();
+        await this.checkPlayerSubscribes();
+      }
     },
     /**
      * 获取验证码
+     * @param id captcha id
      * @param value
      */
     getCaptchaData(id, value) {
@@ -902,10 +900,13 @@ export default new application({
     onJudgementSubmitComplete() {
       this.getPlayerInfo();
       if (this.$refs.timeline)
-        this.$refs.timeline.getTimeline();
+        this.$refs.timeline
+            .setPlayerInfo(this.player)
+            .getTimeline();
     },
     /**
      * 判决额外事件
+     * @param eventName
      */
     onJudgementAdditionalEvent(eventName) {
       switch (eventName) {
@@ -915,14 +916,20 @@ export default new application({
         case 'subscribes':
           this.onSubscribes();
           break;
+        case 'updateTimeline':
+          if (this.$refs.timeline)
+            this.$refs.timeline
+                .setPlayerInfo(this.player)
+                .getTimeline();
+          break;
       }
     },
     /**
      * 右键菜单滚动选项
-     * @param name
+     * @param dropdownsName
      */
-    onRollingDropdowns(name) {
-      switch (name) {
+    onRollingDropdowns(dropdownsName) {
+      switch (dropdownsName) {
         case 'recordLink':
           this.onRollingRecordLink();
           break;
@@ -964,7 +971,7 @@ export default new application({
         name: 'workflow_adds',
         query: {
           type: "persona",
-          ids: this.cheater.originPersonaId,
+          ids: this.player.originPersonaId,
           ...query
         }
       })
@@ -978,7 +985,7 @@ export default new application({
     },
     /**
      * 主动更新玩家信息
-     * update cheater
+     * update player
      */
     updatePlayerInfo() {
       if (!this.$store.state.user) {
@@ -989,16 +996,16 @@ export default new application({
       this.updateUserInfoSpinShow = true;
 
       this.http.post(api["player_update"], {
-        data: {personaId: this.cheater.originPersonaId}
+        data: {personaId: this.player.originPersonaId}
       }).then(res => {
         const d = res.data;
 
         if (d.success === 1) {
           const {cheaterGameName: originId, originUserId, avatarLink} = d.data.origin;
 
-          this.cheater.originId = originId;
-          this.cheater.originUserId = originUserId;
-          this.cheater.avatarLink = avatarLink;
+          this.player.originId = originId;
+          this.player.originUserId = originUserId;
+          this.player.avatarLink = avatarLink;
 
           this.$Message.success(this.$t(`basic.tip['${d.code}']`));
           return;
@@ -1012,7 +1019,11 @@ export default new application({
         this.updateCheaterModal = false;
 
         await this.getPlayerInfo()
-        await this.$refs.timeline.getTimeline();
+
+        if (this.$refs.timeline)
+          this.$refs.timeline
+              .setPlayerInfo(this.player)
+              .getTimeline();
       });
     },
     /**
@@ -1025,86 +1036,94 @@ export default new application({
     },
     /**
      * 用户评论/回复
-     * @param {string} replyType
+     * @param replyType 回复窗口模式
      */
     onReply(replyType = 'default') {
-      const cheaterId = this.cheater.id;
-      const {content = '', miniModeContent = '', captcha, miniModeCaptcha} = this.reply;
-      let message = "";
-      let data = {};
+      try {
+        const cheaterId = this.player.id;
+        const {content = '', miniModeContent = '', captcha, miniModeCaptcha} = this.reply;
+        let message = "";
+        let data = {};
 
-      if (this.$store.state.$userinfo && !(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
-        this.$Message.error({content: this.$i18n.t("basic.tip.needBindEaAccount"), duration: 3});
+        if (this.$store.state.$userinfo && !(this.$store.state.$userinfo.origin && this.$store.state.$userinfo.origin.originUserId)) {
+          setTimeout(() => {
+            this.$router.push({path: '/profile/information'})
+          }, 3000)
 
-        setTimeout(() => {
-          this.$router.push({path: '/profile/information'})
-        }, 3000)
-
-        return
-      }
-
-      // 依照不同回复窗口模式来填充提交表单
-      switch (replyType) {
-        case "default":
-          data = {
-            data: {
-              toPlayerId: cheaterId,
-              content: formatTextarea(content),
-            },
-            captcha,
-          };
-          break;
-        case "mini":
-          data = {
-            data: {
-              toPlayerId: cheaterId,
-              toCommentId: this.reply.toReplyId, // 楼中楼，填充回复的dbId
-              content: formatTextarea(miniModeContent),
-            },
-            captcha: miniModeCaptcha,
-          };
-          break;
-      }
-
-      this.replySpinShow = true;
-      this.http.post(api["player_reply"], {data}).then(res => {
-        const d = res.data;
-
-        if (d.success === 1) {
-          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
-            message: d.message || ""
-          }));
-
-          this.replyModal = false;
-          this.reply.toReplyId = null;
-          this.reply.content = "";
-          this.reply.captcha = {};
-          this.reply.miniModeContent = "";
-          this.reply.miniModeCaptcha = {};
-
-          // Actively update text
-          if (this.$refs.replyTextarea)
-            this.$refs.replyTextarea.updateContent('');
-          if (this.$refs.replyMiniModeTextarea)
-            this.$refs.replyMiniModeTextarea.updateContent('');
-
-          return;
+          throw new Error(this.$i18n.t("basic.tip.needBindEaAccount"));
         }
 
-        message = typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : this.$t(`basic.tip['${d.code}']`, {
+        // 依照不同回复窗口模式来填充提交表单
+        switch (replyType) {
+          case "default":
+            data = {
+              data: {
+                toPlayerId: cheaterId,
+                content: formatTextarea(content),
+              },
+              captcha,
+            };
+            break;
+          case "mini": {
+            const {toReplyId} = this.reply;
+            data = {
+              data: {
+                toPlayerId: cheaterId,
+                toCommentId: toReplyId, // 楼中楼，填充回复的dbId
+                content: formatTextarea(miniModeContent),
+              },
+              captcha: miniModeCaptcha,
+            };
+          }
+            break;
+        }
+
+        this.replySpinShow = true;
+        const result = this.http.post(api["player_reply"], {data}),
+            d = result.data;
+
+        if (d.error === 1) {
+          message = typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          });
+          throw new Error(message);
+        }
+
+        this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
           message: d.message || ""
-        });
-        this.$Message.error({content: message, duration: 10});
-      }).finally(() => {
+        }));
+
+        // Reset the content and validator
+        this.reply = Object.assign(this.reply, {
+          toReplyId: null,
+          content: '',
+          captcha: {},
+          miniModeContent: '',
+          miniModeCaptcha: {}
+        })
+      } catch (e) {
+        if (e instanceof Error)
+          this.$Message.error({content: e.message, duration: 10});
+      } finally {
         this.replySpinShow = false;
+        this.replyModal = false;
+
+        // Actively update text
+        if (this.$refs.replyTextarea)
+          this.$refs.replyTextarea.updateContent('');
+        if (this.$refs.replyMiniModeTextarea)
+          this.$refs.replyMiniModeTextarea.updateContent('');
 
         if (message.playSendVoice)
           message.playSendVoice();
 
         this.cancelReply(false);
         this.getPlayerInfo();
-        this.$refs.timeline.getTimeline();
-      });
+        if (this.$refs.timeline)
+          this.$refs.timeline
+              .setPlayerInfo(this.player)
+              .getTimeline();
+      }
     },
     /**
      * 展开回复小窗口

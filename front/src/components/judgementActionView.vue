@@ -169,8 +169,8 @@ export default new application({
         const d = response.data;
 
         if (d.success === 1) {
-          await this.$refs.timeline.getTimeline();
-          await this.getPlayerInfo();
+          this.$emit('additional-event', 'updateTimeline');
+          this.$emit('additional-event', 'updatePlayerInfo');
 
           this.appealdealModal = false;
           this.$Message.success({content: d.message || d.code, duration: 3});

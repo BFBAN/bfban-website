@@ -25,7 +25,7 @@ export default (vue) => {
      */
     vue.directive('selectable-text', {
         bind: function (el) {
-            el.addEventListener('click', function () {
+            el.addEventListener('dbclick', function () {
                 const range = document.createRange();
                 range.selectNodeContents(el);
                 const selection = window.getSelection();

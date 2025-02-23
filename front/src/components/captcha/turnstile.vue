@@ -133,10 +133,17 @@ export default {
 
 .captcha.captcha-size-default {
   height: 35px;
+
+  .turnstile-container {
+    margin: -17px -25px;
+  }
 }
 
 .captcha.captcha-size-large {
   height: 40px;
+  .turnstile-container {
+    margin: -14px -25px;
+  }
 }
 
 .captcha.turnstile-wrapper {
@@ -149,7 +156,6 @@ export default {
 }
 
 .captcha .turnstile-container {
-  margin: -14px -25px;
   position: relative;
   z-index: 2;
   overflow: hidden;
