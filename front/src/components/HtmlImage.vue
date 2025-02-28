@@ -1,57 +1,54 @@
 <template>
   <Card dis-hover :padding="0" class="img">
-    <template v-if="imageStatus === 0">
-      <div class="img-loading img-box">
+    <div class="img-box" :class="[
+        imageStatus === 0 ? 'img-loading': '',
+        imageStatus === -1 ? 'img-error' : '',
+    ]">
+      <div class="img-toolbar" v-if="imageStatus === 1">
+        <Row>
+          <Col>
+            <a class="user-select-none" href="javascript:void(0)" @click="onRotating(-90)">
+              <Icon type="md-redo" size="15" style="transform: rotate(-180deg)"/>
+            </a>
+            <Divider type="vertical"></Divider>
+            <a class="user-select-none" href="javascript:void(0)" @click="onRotating(90)">
+              <Icon type="md-redo" size="15"/>
+            </a>
+            <Divider type="vertical" v-if="rotateValue != 0"></Divider>
+            <a v-if="rotateValue != 0" class="user-select-none" type="dashed" href="javascript:void(0)"
+               @click="onRotating(0)">
+              <Icon type="md-refresh" size="15"/>
+            </a>
+          </Col>
+          <Col flex="1" class="img-title">
+            <span>{{ src }}</span>
+          </Col>
+          <Col v-if="src" class="user-select-none">
+            <a type="dashed" :href="src" target="_new">
+              <Icon type="md-link"/>
+            </a>
+          </Col>
+        </Row>
+      </div>
+
+      <template v-if="imageStatus === 0">
         <Badge class="user-select-none">
           <Icon type="md-refresh" slot="count" class="spin-icon-load" size="20"/>
           <Icon type="md-images" size="50"/>
         </Badge>
-        <img class="user-select-none" style="display: none" :src="src" :alt="src" @error="onError" @load="onLoad"/>
+        <img class="user-select-none" style="display: none" :src="src" :alt="src" @error="onError" @load="(e) => onLoad(e, src)"/>
         <p class="img-box-url">
           <html-link :isPoptip="false" :href="src"></html-link>
         </p>
-      </div>
-    </template>
-    <template v-else-if="imageStatus == 1">
-      <div class="img-box">
-        <div class="img-toolbar">
-          <Row>
-            <Col>
-              <a class="user-select-none" href="javascript:void(0)" @click="onRotating(-90)">
-                <Icon type="md-redo" size="15" style="transform: rotate(-180deg)"/>
-              </a>
-              <Divider type="vertical"></Divider>
-              <a class="user-select-none" href="javascript:void(0)" @click="onRotating(90)">
-                <Icon type="md-redo" size="15"/>
-              </a>
-              <Divider type="vertical" v-if="rotateValue != 0"></Divider>
-              <a v-if="rotateValue != 0" class="user-select-none" type="dashed" href="javascript:void(0)"
-                 @click="onRotating(0)">
-                <Icon type="md-refresh" size="15"/>
-              </a>
-            </Col>
-            <Col flex="1" class="img-title">
-              <span>{{ src }}</span>
-            </Col>
-            <Col v-if="src" class="user-select-none">
-              <a type="dashed" :href="src" target="_new">
-                <Icon type="md-link"/>
-              </a>
-            </Col>
-          </Row>
-        </div>
+      </template>
+      <template v-else-if="imageStatus === 1">
         <picture @click="onClickEdit">
           <source :srcset="src" media="(orientation: portrait)"/>
-          <img :src="src" :alt="src" class="img-tag user-select-none" :style="`transform: rotate(${rotateValue}deg)`"/>
+          <img id="image" @click="show" :usemap="`#${src}-image-map`" :src="src" :alt="src" class="img-tag user-select-none" draggable="false" :style="`transform: rotate(${rotateValue}deg)`"/>
+          <map :name="`${src}-image-map`" class="img-map"></map>
         </picture>
-
-        <div class="img-hover ivu-card user-select-none" @click="show" v-if="!isEdit">
-          <Icon type="ios-search" size="50"/>
-        </div>
-      </div>
-    </template>
-    <template v-else-if="imageStatus == -1">
-      <div class="img-error img-box" @click="openUrl">
+      </template>
+      <template v-else-if="imageStatus === -1">
         <Badge class="user-select-none">
           <Icon type="md-alert" slot="count" class="status" size="20"/>
           <Icon type="md-images" size="50"/>
@@ -59,8 +56,8 @@
         <p class="img-box-url">
           <html-link :isPoptip="false" :href="src"></html-link>
         </p>
-      </div>
-    </template>
+      </template>
+    </div>
   </Card>
 </template>
 
@@ -70,6 +67,7 @@ import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
 import Vue from "vue";
 import HtmlLink from "@/components/HtmlLink.vue";
+import Tesseract from "tesseract.js";
 
 Vue.use(VueViewer);
 
@@ -87,6 +85,10 @@ export default {
     images: {
       type: String,
       default: ""
+    },
+    isRecognize: {
+      type: Boolean,
+      default: true
     },
     isEdit: {
       type: Boolean,
@@ -113,8 +115,9 @@ export default {
     this.viewImages = this.images.split(",");
   },
   methods: {
-    onLoad() {
+    onLoad(e, src) {
       this.imageStatus = 1;
+      this.onImageRecognize(e, src);
     },
     onError() {
       this.imageStatus = -1;
@@ -127,8 +130,10 @@ export default {
       this.rotateValue += value
     },
     openUrl() {
-      if (this.src)
-        window.open(this.src);
+      if (this.imageStatus === -1) {
+        if (this.src)
+          window.open(this.src);
+      }
     },
     show() {
       if (this.imageStatus <= 0) return;
@@ -151,10 +156,59 @@ export default {
     onClickEdit() {
       if (this.isEdit)
         this.$emit('click-image')
+    },
+    /**
+     * 图像识别
+     * @param e
+     * @param src
+     */
+    async onImageRecognize(e, src) {
+      if (!this.isRecognize) return;
+
+      const image = e.target;
+      const imageMap = document.querySelector(`map[name="${src}-image-map"]`);
+
+      Tesseract.recognize(image, 'eng+chi_sim+chi_tra').then(({data: {text, lines}}) => {
+        lines.forEach(line => {
+          line.words.forEach(word => { // 遍历每个单词
+            const {bbox} = word;
+            const rect = image.getBoundingClientRect();
+            const x = bbox.x0 + rect.left;
+            const y = bbox.y0 + rect.top;
+            const width = bbox.x1 - bbox.x0;
+            const height = bbox.y1 - bbox.y0;
+
+            const span = document.createElement('span');
+            span.style.left = `${x}px`;
+            span.style.top = `${y}px`;
+            span.style.width = `${width}px`;
+            span.style.height = `${height}px`;
+            span.textContent = word.text; // 设置单词文本
+
+            if (imageMap)
+              imageMap.appendChild(span);
+          });
+        });
+      }).catch(err => {
+        console.error('识别失败:', err);
+      });
     }
   }
 }
 </script>
+
+<style>
+.img-map span {
+  outline: 1px solid red;
+  position: absolute;
+  cursor: text;
+  opacity: .5;
+}
+
+.img-map span:hover {
+  opacity: 1;
+}
+</style>
 
 <style lang="less" scoped>
 @import "@/assets/css/icon.less";
@@ -207,7 +261,6 @@ export default {
   }
 
   .img-hover {
-    cursor: pointer;
     border-radius: 0 !important;
     display: flex;
     justify-content: center;
@@ -221,6 +274,10 @@ export default {
     height: 100%;
     transition: all .25s;
     opacity: 0;
+  }
+
+  picture {
+    position: relative;
   }
 }
 

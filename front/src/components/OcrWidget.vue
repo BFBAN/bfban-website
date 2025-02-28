@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import {createWorker, PSM} from 'tesseract.js';
+import {createWorker} from 'tesseract.js';
 import {VueCropper} from 'vue-cropper'
 
 export default {
@@ -123,7 +123,6 @@ export default {
   created() {
     const that = this;
     this.worker = createWorker({
-
       errorHandler: err => {
         this.$Message.error(err.toString());
         this.onClear();

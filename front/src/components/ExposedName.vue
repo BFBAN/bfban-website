@@ -31,7 +31,7 @@ export default {
 
       this.getSlotName();
       this.diffPanelModel = true;
-    }
+    },
   }
 }
 </script>
@@ -46,13 +46,13 @@ export default {
     <Modal v-model="diffPanelModel" class="exposed-name-diff" footer-hide>
       <Row :gutter="10">
         <Col>
-          <h2>{{$t('detail.exposedName.title')}}</h2>
+          <h2>{{ $t('detail.exposedName.title') }}</h2>
         </Col>
         <Col>
           <Tag>Shift + Click</Tag>
         </Col>
       </Row>
-      <p>{{$t('detail.exposedName.description')}}</p>
+      <p>{{ $t('detail.exposedName.description') }}</p>
       <br class="user-select-none">
 
       <Card dis-hover class="exposed-name-diff-card">

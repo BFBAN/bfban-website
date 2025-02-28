@@ -13,7 +13,6 @@ import timeview from "@/components/TimeView"
 import privilegestag from "@/components/PrivilegesTag";
 import htmluser from "@/components/HtmlUser.vue"
 import emoteitem from "@/components/EmoteItem.vue"
-import {regular} from "@/assets/js";
 
 export default {
   name: "Html",
@@ -123,7 +122,6 @@ export default {
           video = vDom.getElementsByTagName("video"),
           img = vDom.getElementsByTagName("img"),
           link = vDom.getElementsByTagName("a"),
-          hr = vDom.getElementsByTagName("hr"),
           p = vDom.getElementsByTagName("p"),
           pres = vDom.getElementsByTagName("pre");
 
@@ -271,39 +269,9 @@ export default {
             }
           }
 
-          if (hr && hr.length > 0) {
-            let _hrs = Array.from(hr); // deep copy
-            for (let i = 0; i < _hrs.length; i++) {
-              console.log(_hrs[i]);
-            }
-          }
-
           if (p && p.length > 0) {
             let _p = Array.from(p); // deep copy
             for (let i = 0; i < _p.length; i++) {
-              // 可疑链接
-              // 将可疑的文本链接转换为链接widget
-              if (_p[i] && _p[i].innerText) {
-                if (regular.check("link", _p[i].innerHTML).code === 0) {
-                  _p[i].innerHTML = _p[i].innerHTML.replaceAll('\n', '\n\b');
-
-                  let p_textToLinkArray = regular.getCheckText("link", _p[i].innerText);
-
-                  if (p_textToLinkArray)
-                    for (let j = 0; j < p_textToLinkArray.length; j++) {
-                      let p_textToLinkItemURL = new URL(p_textToLinkArray[j]);
-
-                      if (
-                          p_textToLinkItemURL.searchParams.getAll("isWidget")[0] &&
-                          (p_textToLinkItemURL.protocol.indexOf('http') || p_textToLinkItemURL.protocol.indexOf('https'))
-                      ) {
-                        /// 卡片链接 =>
-                        _p[i].innerHTML = _p[i].innerText.replaceAll(p_textToLinkArray[j], `<htmllinkcard href="${encodeURI('$&')}"></htmllinkcard>`)
-                      }
-                    }
-                }
-              }
-
               /// 标准链接 =>
               // if (_p[i] && _p[i].innerText) {
               //   const urlRegex = /(?<!<[a|htmllink|img|video|iframe][^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&;//=]*))(?![^<]*<\/htmllink|a>)/g;
@@ -318,23 +286,9 @@ export default {
 
               // 时间
               if (_p[i] && _p[i].innerText) {
-                const dateTimeRegex = /\d{4}-\d{2}-\d{2}( |&nbsp;)?(\d{1,2}(:\d{1,2})?(:\d{2})?)?/gi;
+                const dateTimeRegex = /(?<!<img|a[^>]*)(\d{4}-\d{2}-\d{2}( |&nbsp;)?(\d{1,2}(:\d{1,2})?(:\d{2})?)?)(?![^<]*<\/img|a>)/gi;
                 _p[i].innerHTML = _p[i].innerHTML.replace(dateTimeRegex, `<timeview time="$&">$&</timeview>`);
               }
-
-              // 解析HR, 分割线
-              // if (_p[i] && _p[i].innerText) {
-              //   let calcStringCount = 0;
-              //
-              //   for (let j = 0; j < _p[i].innerText.length; j++) {
-              //     if (_p[i].innerText[j] === "-") {
-              //       calcStringCount += 1;
-              //     }
-              //   }
-              //
-              //   if (calcStringCount === _p[i].innerText.length && calcStringCount >= 4)
-              //     _p[i].innerHTML = `<Divider class="hr" dashed />`;
-              // }
             }
           }
 
