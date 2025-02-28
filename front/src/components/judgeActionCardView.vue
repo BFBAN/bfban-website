@@ -14,8 +14,6 @@ export default new application({
   },
   data() {
     return {
-      util,
-
       verifySpinShow: false,
       verify: {
         isSubscribeTrace: false,
@@ -197,6 +195,9 @@ export default new application({
       // 打开模态框
       this.appealdealModal = true;
     },
+  },
+  computed: {
+    util: () => util,
   }
 })
 </script>
@@ -218,7 +219,7 @@ export default new application({
 
       <Form ref='verifyForm' label-position="top">
         <Row :gutter="30">
-          <Col :xs="{span:24}" :lg="{span: 12}">
+          <Col :xs="{span:24}" :lg="{span: 8}">
             <FormItem :label="$t(`detail.judgement.behavior`)">
               <Select v-model="verify.status">
                 <!-- 判断选项 -->
@@ -241,7 +242,7 @@ export default new application({
               </Select>
             </FormItem>
           </Col>
-          <Col :xs="{span:24}" :lg="{span: 12}">
+          <Col :xs="{span:24}" :lg="{span: 8}">
             <FormItem v-show="['kill','guilt'].includes(verify.status)" :label="$t(`detail.judgement.methods`)">
               <Select v-model="verify.checkbox" multiple :placeholder="$t(`detail.judgement.methods`)">
                 <Option v-for="method in cheatMethodsGlossary" :key="method.value"
@@ -260,6 +261,19 @@ export default new application({
                       </Poptip>
                     </Col>
                   </Row>
+                </Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col :xs="{span:24}" :lg="{span: 8}" v-if="verify.checkbox.length > 0">
+            <FormItem v-show="['kill','guilt'].includes(verify.status)">
+              <template slot="label">
+                {{$t(`detail.judgement.hackerLevel`)}} (beta)
+              </template>
+              <Select v-model="verify.hackerLevel" clearable :placeholder="$t(`detail.judgement.hackerLevel`)">
+                <Option v-for="level in 4" :key="level"
+                        :value="level">
+                  Lv{{level}}
                 </Option>
               </Select>
             </FormItem>

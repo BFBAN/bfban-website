@@ -50,6 +50,7 @@
                   <Col :flex="isMobile ? 1 : null" :xs="isMobile ? {span: 24, order:1} : {}"
                        :lg="isMobile ? {span: 12, order: 1} : {}" class="tags">
                     <CheaterStatusView :status="player.status"/>
+                    <CheaterStatusLevel :hackerLevel="player.hackerLevel" v-if="player.hackerLevel" />
 
                     <!-- 被举报的游戏 S -->
                     <router-link :to="{name: 'player_list', query: { game: player.games,status: -1 }}"
@@ -639,7 +640,8 @@ import TextareaView from "@/components/textarea";
 import BusinessCard from "@/components/BusinessCard";
 import RecordLink from "@/components/RecordLink";
 import CheaterStatusView from "@/components/CheaterStatusView";
-import JudgementActionView from "@/components/judgementActionView";
+import CheaterStatusLevel from "@/components/CheaterStatusLevel.vue";
+import JudgementActionView from "@/components/judgeActionCardView.vue";
 import Captcha from "@/components/captcha";
 import TimeView from "@/components/TimeView"
 import TimelineView from "@/components/timeline";
@@ -697,6 +699,7 @@ export default new application({
     BusinessCard,
     RecordLink,
     CheaterStatusView,
+    CheaterStatusLevel,
     JudgementActionView,
     TimelineView,
     TimeView,
