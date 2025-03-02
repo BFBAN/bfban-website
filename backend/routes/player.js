@@ -1224,7 +1224,9 @@ async (req, res, next) => {
         siteEvent.emit('action', {method: 'playerUpdate', params: {profile}});
         return res.status(200).json({
             success: 1, code: 'update.success', data: {
-                originName: profile.username, originUserId: profile.userId, originPersonaId: profile.personaId,
+                originName: profile.username,
+                originUserId: updatePlayerData[0].originUserId,
+                originPersonaId: updatePlayerData[0].originPersonaId,
             }
         });
     } catch (err) {
