@@ -8,6 +8,7 @@ import HtmlCore from "@/components/Html.vue";
 import HtmlWidget from "@/components/HtmlWidget.vue";
 import Htmllink from "@/components/HtmlLink.vue";
 import Empty from "@/components/Empty.vue";
+import CheaterStatusLevel from "@/components/CheaterStatusLevel.vue";
 import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
 import Loading from "@/components/Loading.vue";
 import ExposedName from "@/components/ExposedName.vue"
@@ -80,6 +81,7 @@ export default new application({
     HtmlWidget,
     Htmllink,
     UserAvatar,
+    CheaterStatusLevel,
     judgeActionTypeView,
     Loading,
     Empty,
@@ -702,6 +704,7 @@ export default new application({
                 {{ $t('detail.info.judge') }}
 
                 <judgeActionTypeView :judgeAction="l.judgeAction"></judgeActionTypeView>
+                <CheaterStatusLevel :hackerLevel="l.hackerLevel"/>
 
                 <template v-if="l.cheatGame">
                   <!-- 在 -->

@@ -9,7 +9,7 @@ import Empty from "@/components/Empty.vue";
 import lodash from "lodash";
 import CheaterStatusView from "@/components/CheaterStatusView.vue";
 import TimeView from "@/components/TimeView.vue";
-import JudgementActionView from "@/components/judgementActionView.vue";
+import JudgementActionView from "@/components/judgeActionCardView.vue";
 import TimelineView from "@/components/timeline/index.vue";
 import SharePlayerCell from "@/components/SharePlayerCell.vue";
 import HtmlLink from "@/components/HtmlLink.vue";
