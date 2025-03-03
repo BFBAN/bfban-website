@@ -73,6 +73,7 @@
     "title": "Tools"
   },
   "basic": {
+    "hackerLevel": "Cheat Threat Level: Based on conclusive evidence analysis, a player's use of cheats is evaluated and assigned a corresponding threat level. The highest threat level currently is Lv4.",
     "action": {
       "discuss": {
         "describe": "More discussions are required from admins and players before a judgement can be issued since the incident from the above evidence contains high uncertainty.",
