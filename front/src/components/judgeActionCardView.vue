@@ -83,7 +83,7 @@ export default new application({
      * 提交判决
      */
     async onJudgement() {
-      const {suggestion, status} = this.verify;
+      const {suggestion, status, hackerLevel} = this.verify;
       const cheatMethods = this.verify.checkbox;
 
       if (this.verifySpinShow) return;
@@ -113,6 +113,7 @@ export default new application({
             cheatMethods: ['kill', 'guilt'].includes(this.verify.status) ? cheatMethods : null,
             action: this.verify.status,
             content: formatTextarea(suggestion),
+            hackerLevel
           },
         }
       }).then(res => {
