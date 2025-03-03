@@ -110,7 +110,10 @@ async (req, res, next) => {
         if (req.query.history) // that guy does exist
             result.history = await db.select('originName', 'fromTime', 'toTime').from('name_logs').where({originUserId: result.originUserId});
 
-        res.status(200).json({success: 1, code: 'player.ok', data: result});
+        res.status(200).json({success: 1, code: 'player.ok', data: {
+            ...result,
+            hackerLevel: result.status == 1 ? result.hackerLevel : null
+        }});
     } catch (err) {
         next(err);
     }
