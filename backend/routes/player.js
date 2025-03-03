@@ -1304,9 +1304,14 @@ async (req, res, next) => {
         const nextstate = await stateMachine(player, req.user, action);
         let hackerLevel_ = null
         switch(nextstate) {
-            // confirm is hacker
+            // confirm is hacker]
+            case 6:
             case 1: {
-                hackerLevel_ = hackerLevel || null
+                hackerLevel_ = hackerLevel || player.hackerLevel || null
+                break
+            }
+            case 2: {
+                hackerLevel_ = player.hackerLevel
                 break
             }
             case 3:
@@ -1358,6 +1363,15 @@ async (req, res, next) => {
                 updateTime: player.updateTime   // change Time
             }
         });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.post('/restoreAdmin', verifyJWT, allowPrivileges(['admin_']),
+async (req, res, next) => {
+    try {
+        
     } catch (err) {
         next(err);
     }

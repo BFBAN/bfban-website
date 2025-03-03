@@ -50,7 +50,7 @@
                   <Col :flex="isMobile ? 1 : null" :xs="isMobile ? {span: 24, order:1} : {}"
                        :lg="isMobile ? {span: 12, order: 1} : {}" class="tags">
                     <CheaterStatusView :status="player.status"/>
-                    <CheaterStatusLevel :hackerLevel="player.hackerLevel" v-if="player.hackerLevel" />
+                    <CheaterStatusLevel :hackerLevel="player.hackerLevel" v-if="player.hackerLevel && player.status == 1" />
 
                     <!-- 被举报的游戏 S -->
                     <router-link :to="{name: 'player_list', query: { game: player.games,status: -1 }}"
