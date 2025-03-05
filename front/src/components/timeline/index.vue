@@ -704,7 +704,8 @@ export default new application({
                 {{ $t('detail.info.judge') }}
 
                 <judgeActionTypeView :judgeAction="l.judgeAction"></judgeActionTypeView>
-                <CheaterStatusLevel :hackerLevel="l.hackerLevel"/>
+                <!-- only kill or guilt judgeAction type show CheaterStatusLevel -->
+                <CheaterStatusLevel :hackerLevel="l.hackerLevel" v-if="l.judgeAction == 'kill' || l.judgeAction == 'guilt' " />
 
                 <template v-if="l.cheatGame">
                   <!-- 在 -->

@@ -1306,6 +1306,21 @@ async (req, res, next) => {
         }
 
         // auth complete, player found, store action into db
+        
+        const judgement = {
+            type: 'judgement',
+            byUserId: req.user.id,
+            toPlayerId: player.id,
+            toOriginUserId: player.originUserId,
+            toOriginPersonaId: player.originPersonaId,
+            cheatMethods: cheatMethods ? JSON.stringify(cheatMethods) : '[]',
+            judgeAction: action,
+            content: handleRichTextInput(content),
+            valid: 1,
+            hackerLevel: hackerLevel || player.hackerLevel,
+            createTime: new Date(),
+        };
+        const insertId = (await db('comments').insert(judgement))[0];
         const nextstate = await stateMachine(player, req.user, action);
         let hackerLevel_ = null
         switch(nextstate) {
@@ -1326,20 +1341,6 @@ async (req, res, next) => {
                 break
             }
         }
-        const judgement = {
-            type: 'judgement',
-            byUserId: req.user.id,
-            toPlayerId: player.id,
-            toOriginUserId: player.originUserId,
-            toOriginPersonaId: player.originPersonaId,
-            cheatMethods: cheatMethods ? JSON.stringify(cheatMethods) : '[]',
-            judgeAction: action,
-            content: handleRichTextInput(content),
-            valid: 1,
-            hackerLevel: hackerLevel_,
-            createTime: new Date(),
-        };
-        const insertId = (await db('comments').insert(judgement))[0];
         judgement.id = insertId;
         const stateChange = {prev: player.status, next: nextstate};
 
