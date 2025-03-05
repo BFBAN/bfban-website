@@ -1,13 +1,13 @@
 {
-  "requestDevelopmentName": "production",
+  "requestDevelopmentName": "development",
   "requestProductionName": "production",
   "requestTestName": "staging",
   "requestUploadName": "upload",
   "child": {
     "development": {
       "protocol": "http",
-      "host": "localhost:3000",
-      "frontend_host": "localhost:4002",
+      "host": "localhost:4848",
+      "frontend_host": "localhost:4848",
       "pathname": "/api/"
     },
     "upload": {
