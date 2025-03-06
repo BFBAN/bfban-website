@@ -1,5 +1,5 @@
 <script>
-import {account_storage, api, application, http_token, util} from "@/assets/js";
+import {account_storage, api, application, http_token, message, util} from "@/assets/js";
 
 import Textarea from "@/components/textarea/index.vue";
 import JudgeActionTypeView from "@/components/JudgeActionTypeView.vue";
@@ -146,58 +146,48 @@ export default new application({
 
         // 判决处理
         this.verifySpinShow = true;
-        console.log(
-            {
+        this.http.post(api["player_judgement"], {
+          data: {
+            data: {
               toPlayerId: this.cheater.id,
               cheatMethods: ['kill', 'guilt'].includes(this.verify.status) ? cheatMethods : null,
               action: this.verify.status,
               content: formatTextarea(suggestion),
               hackerLevel
-            }
-        )
-        //   this.http.post(api["player_judgement"], {
-        //     data: {
-        //       data: {
-        //         toPlayerId: this.cheater.id,
-        //         cheatMethods: ['kill', 'guilt'].includes(this.verify.status) ? cheatMethods : null,
-        //         action: this.verify.status,
-        //         content: formatTextarea(suggestion),
-        //         hackerLevel
-        //       },
-        //     }
-        //   }).then(res => {
-        //     const d = res.data;
-        //
-        //     if (d.success === 1) {
-        //       // reset verifyForm
-        //       this.verify.status = '';
-        //       this.verify.suggestion = '';
-        //       this.verify.methods = [];
-        //       this.cheater.status = status;
-        //
-        //       this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
-        //         message: d.message || ""
-        //       }));
-        //       return;
-        //     }
-        //
-        //     this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
-        //       message: d.message || ""
-        //     }));
-        //   }).finally(() => {
-        //     this.verifySpinShow = false;
-        //     this.verify.isSubscribeTrace = !this.verify.isSubscribeTrace;
-        //     this.verify.isUpdateInformation = !this.verify.isUpdateInformation;
-        //
-        //     if (this.$refs.judgementTextarea)
-        //       this.$refs.judgementTextarea.updateContent("");
-        //
-        //     if (message.playSendVoice)
-        //       message.playSendVoice();
-        //
-        //     this.$emit('submit-complete');
-        //   })
-        // });
+            },
+          }
+        }).then(res => {
+          const d = res.data;
+
+          if (d.success === 1) {
+            // reset verifyForm
+            this.verify.status = '';
+            this.verify.suggestion = '';
+            this.verify.methods = [];
+            this.cheater.status = status;
+
+            this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+              message: d.message || ""
+            }));
+            return;
+          }
+
+          this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
+            message: d.message || ""
+          }));
+        }).finally(() => {
+          this.verifySpinShow = false;
+          this.verify.isSubscribeTrace = !this.verify.isSubscribeTrace;
+          this.verify.isUpdateInformation = !this.verify.isUpdateInformation;
+
+          if (this.$refs.judgementTextarea)
+            this.$refs.judgementTextarea.updateContent("");
+
+          if (message.playSendVoice)
+            message.playSendVoice();
+
+          this.$emit('submit-complete');
+        })
       });
     },
 
@@ -298,7 +288,7 @@ export default new application({
           </Col>
           <Col :lg="{span: 24}"></Col>
           <Col :xs="{span:24}" :lg="{span: 18}">
-            <FormItem v-show="['kill','guilt'].includes(verify.status)"
+            <FormItem v-if="['kill','guilt'].includes(verify.status)"
                       prop="methods"
                       :label="$t(`detail.judgement.methods`)"
                       :rules="Object.assign(verifyRuleValidate.methods[0], {required: ['kill','guilt'].includes(verify.status)})">
