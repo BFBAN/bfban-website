@@ -110,10 +110,12 @@ async (req, res, next) => {
         if (req.query.history) // that guy does exist
             result.history = await db.select('originName', 'fromTime', 'toTime').from('name_logs').where({originUserId: result.originUserId});
 
-        res.status(200).json({success: 1, code: 'player.ok', data: {
-            ...result,
-            hackerLevel: result.status == 1 ? result.hackerLevel : null
-        }});
+        res.status(200).json({
+            success: 1, code: 'player.ok', data: {
+                ...result,
+                hackerLevel: result.status == 1 ? result.hackerLevel : null
+            }
+        });
     } catch (err) {
         next(err);
     }
@@ -1225,13 +1227,7 @@ async (req, res, next) => {
         await pushOriginNameLog(profile.username, updatePlayerData[0].originUserId, updatePlayerData[0].originPersonaId);
 
         siteEvent.emit('action', {method: 'playerUpdate', params: {profile}});
-        return res.status(200).json({
-            success: 1, code: 'update.success', data: {
-                originName: profile.username,
-                originUserId: updatePlayerData[0].originUserId,
-                originPersonaId: updatePlayerData[0].originPersonaId,
-            }
-        });
+        return res.status(200).json({success: 1, code: 'update.success'});
     } catch (err) {
         if (err instanceof ServiceApiError) {
             logger.error(`ServiceApiError ${err.statusCode} ${err.message}`, err.body, err.statusCode > 0 ? err.stack : '');
@@ -1266,7 +1262,7 @@ async (req, res, next) => {
             code: 'judgement.permissionDenied',
             message: 'permission denied.'
         });
-        const {toPlayerId, cheatMethods, action, content, hackerLevel } = req.body.data;
+        const {toPlayerId, cheatMethods, action, content, hackerLevel} = req.body.data;
 
         /** @type {import("../typedef.js").Player} */
         const player = await db.select('*').from('players').where({id: toPlayerId}).first();
@@ -1306,7 +1302,7 @@ async (req, res, next) => {
         }
 
         // auth complete, player found, store action into db
-        
+
         const judgement = {
             type: 'judgement',
             byUserId: req.user.id,
@@ -1323,7 +1319,7 @@ async (req, res, next) => {
         const insertId = (await db('comments').insert(judgement))[0];
         const nextstate = await stateMachine(player, req.user, action);
         let hackerLevel_ = null
-        switch(nextstate) {
+        switch (nextstate) {
             // confirm is hacker]
             case 6:
             case 1: {
@@ -1375,13 +1371,13 @@ async (req, res, next) => {
 });
 
 router.post('/restoreAdmin', verifyJWT, allowPrivileges(['admin_']),
-async (req, res, next) => {
-    try {
-        
-    } catch (err) {
-        next(err);
-    }
-});
+    async (req, res, next) => {
+        try {
+
+        } catch (err) {
+            next(err);
+        }
+    });
 
 router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege(['volunteer']), forbidPrivileges(['freezed', 'blacklisted']), commentRateLimiter.limiter([{
     roles: ['admin', 'super', 'root', 'dev', 'bot'],
