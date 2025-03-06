@@ -5,7 +5,7 @@
       <slot name="header"/>
     </div>
     <div class="widget-banner-body mt-7">
-      <slot />
+      <slot/>
     </div>
     <div class="widget-banner-body-before"
          :style="`background: linear-gradient(rgba(21, 24, 41, 0) 0%,transparent ${showMask}%)`"></div>
@@ -19,11 +19,11 @@
 export default {
   props: {
     height: {
-      type: Number,
+      type: [Number, String],
       default: 280
     },
     showMask: {
-      type: Number,
+      type: [Number, String],
       default: 100
     }
   },

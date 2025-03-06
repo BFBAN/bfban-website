@@ -21,10 +21,13 @@
               </Button>
             </Col>
             <Col>
-              <Select v-model="chartConfig.timeFrame" @on-change="changeChartTime">
-                <Option value="all">All</Option>
-                <Option value="yearly">{{ $t('sitestats.timeRange.yearly') }}</Option>
-                <Option value="monthly">{{ $t('sitestats.timeRange.monthly') }}</Option>
+              <Select v-model="chartConfig.timeFrameValue" @on-change="changeChartTime">
+                <Option v-for="(i,index) in chartConfig.timeFrameList" :key="index" :value="i.label">
+                  <template v-if="i.label === 'all'">All</template>
+                  <template v-else>
+                    {{ $t(`sitestats.timeRange.${i.label}`) }}
+                  </template>
+                </Option>
               </Select>
             </Col>
           </Row>
@@ -243,8 +246,6 @@ import "echarts";
 export default new application({
   data() {
     return {
-      time,
-
       load: false,
       statistics: {},
       show: false,
@@ -268,15 +269,15 @@ export default new application({
             splitLine: {
               show: true,
             },
-            min: (value) => {
-              switch (this.chartConfig.timeFrame) {
+            min: () => {
+              switch (this.chartConfig.timeFrameValue) {
                 case 'yearly':
                   return new Date(new Date().getTime() - 360 * 24 * 3600 * 1000)
                 case 'monthly':
                   return new Date(new Date().getTime() - 24 * 3600 * 1000)
                 case 'all':
                 default:
-                  return time.appStart()
+                  return time.appStart
               }
             },
           },
@@ -291,7 +292,21 @@ export default new application({
         },
       },
       chartConfig: {
-        timeFrame: 'yearly',
+        timeFrameValue: 'yearly',
+        timeFrameList: [
+          {
+            label: 'all',
+            time: 1514764800000
+          },
+          {
+            label: 'yearly',
+            time: new Date().getTime() - 360 * 24 * 3600 * 1000
+          },
+          {
+            label: 'monthly',
+            time: new Date().getTime() - 24 * 3600 * 1000
+          }
+        ],
         array: [{
           name: "players",
           valName: 'playerStats',
@@ -416,47 +431,50 @@ export default new application({
     },
     async onChangePeriod() {
       await this.getActiveStatistical();
-      await this.$refs.trend.getTrend();
+      if (this.$refs.trend)
+        await this.$refs.trend.getTrend();
     },
     /**
      * 获取活跃统计
      */
-    getActiveStatistical() {
-      if (
-          !this.isLogin &&
-          !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, this.timeRange.privileges)
-      ) {
-        // 例子
-        let exp = [
-          {username: 'Tom', total: 10},
-          {username: 'Rudi', total: 5},
-          {username: 'まどか', total: 3},
-          {username: 'David', total: 5.1},
-          {username: '张小明', total: 2.4},
-          {username: 'Auston', total: 1},
-          {username: 'Marcia', total: 1}
-        ];
-        this.active.report = exp;
-        this.active.community = exp;
-        this.active.community.forEach(i => {
-          this.active.communityConf.series[0].data.push({value: i.total.toFixed(2), name: i.username})
-        })
-        return;
-      }
-
-      this.active.load = true;
-
-      let selectTime = this.timeArray.filter(i => i.value == this.timeRange)[0].value;
-
-      http.get(api['activeStatistical'], {
-        params: {
-          isBot: this.isIncludingRobots,
-          time: selectTime,
-          report: true,
-          community: true,
+    async getActiveStatistical() {
+      try {
+        if (
+            !this.isLogin &&
+            !account_storage.checkPrivilegeGroup(this.currentUser.userinfo, this.timeRange.privileges)
+        ) {
+          // 例子
+          let exp = [
+            {username: 'Tom', total: 10},
+            {username: 'Rudi', total: 5},
+            {username: 'まどか', total: 3},
+            {username: 'David', total: 5.1},
+            {username: '张小明', total: 2.4},
+            {username: 'Auston', total: 1},
+            {username: 'Marcia', total: 1}
+          ];
+          this.active.report = exp;
+          this.active.community = exp;
+          this.active.community.forEach(i => {
+            this.active.communityConf.series[0].data.push({value: i.total.toFixed(2), name: i.username})
+          })
+          return;
         }
-      }).then(res => {
-        const d = res.data;
+
+        this.active.load = true;
+
+        let selectTime = this.timeArray.filter(i => i.value === this.timeRange)[0].value;
+
+        const result = await http.get(api['activeStatistical'], {
+          params: {
+            isBot: this.isIncludingRobots,
+            time: selectTime,
+            report: true,
+            community: true,
+          }
+        });
+
+        const d = result.data;
 
         if (d.success === 1) {
           this.active = Object.assign(this.active, d.data);
@@ -466,9 +484,9 @@ export default new application({
             this.active.communityConf.series[0].data.push({value: i.total.toFixed(2), name: i.username})
           })
         }
-      }).finally(() => {
+      } finally {
         this.active.load = false;
-      });
+      }
     },
     /**
      * 更变统计视图时间范围
@@ -477,32 +495,39 @@ export default new application({
       this.$refs.chart.setOption(this.chart.stats);
     },
     /**
-     * 统计信息
+     * 获取网站统计信息
      * api/siteStats
      */
     async getSiteStats() {
-      http.get(api['siteStats'], {}).then(res => {
-        const d = res.data;
+      try {
+        const result = await http.get(api['siteStats']),
+            d = result.data;
 
-        if (d.success === 1) {
-          for (const dKey in d.data) {
-            this.chart.stats.series.forEach(i => {
-              if (i.valName === dKey)
-                d.data[dKey].forEach(t => {
-                  i.data.push([t.time, t.num]);
-                })
-            })
-          }
+        if (d.error === 1)
+          throw new Error(result.message);
+
+        for (const dataKey in d.data) {
+          this.chart.stats.series.forEach(i => {
+            if (i.valName === dataKey)
+              d.data[dataKey].forEach(t => {
+                i.data.push([t.time, t.num]);
+              })
+          })
         }
-      }).catch(res => {
-        this.$Message.error(res.message);
-      });
+      } catch (e) {
+        if (e instanceof Error) {
+          this.$Message.error(e);
+          return;
+        }
+
+        this.$Message.error(e.toString());
+      }
     },
     /**
-     * 获取统计
+     * 获取状态总数统计
      */
-    getStatisticsInfo() {
-      http.get(api["statistics"], {
+    async getStatisticsInfo() {
+      const result = await http.get(api["statistics"], {
         params: {
           reports: true,
           players: true,
@@ -512,14 +537,17 @@ export default new application({
           admins: true,
           from: 1514764800000
         }
-      }).then(res => {
-        const d = res.data;
-        if (d.success === 1) {
-          this.statistics = d.data;
-        }
-      });
+      })
+
+      const d = result.data;
+      if (d.success === 1) {
+        this.statistics = d.data;
+      }
     },
   },
+  computed: {
+    time: () => time
+  }
 });
 </script>
 

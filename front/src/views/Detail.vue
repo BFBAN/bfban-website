@@ -669,8 +669,8 @@ export default new application({
 
       player: {
         originId: '',
-        createTime: time.appStart(),
-        updateTime: time.appStart(),
+        createTime: time.appStartDate,
+        updateTime: time.appStartDate,
         isSubscribes: false
       },
 
@@ -991,8 +991,8 @@ export default new application({
      * update player
      */
     updatePlayerInfo() {
-      if (!this.$store.state.user) {
-        this.$Message.error(this.$i18n.t('detail.messages.signIn'));
+      if (!this.isLogin) {
+        this.$Message.error(this.$i18n.t('signin.loginFirst'));
         return;
       }
 

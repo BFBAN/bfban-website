@@ -88,7 +88,7 @@ export default {
     },
     isRecognize: {
       type: Boolean,
-      default: true
+      default: false
     },
     isEdit: {
       type: Boolean,

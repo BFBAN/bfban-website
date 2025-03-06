@@ -19,7 +19,11 @@ export default class Time {
     /**
      * 程序启动时间
      */
-    appStart() {
-        return new Date(1541260800000);
+    get appStart() {
+        return 1541260800000;
+    }
+
+    get appStartDate() {
+        return new Date(this.appStart);
     }
 }

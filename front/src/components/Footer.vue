@@ -108,7 +108,7 @@
         </Row>
       </div>
       <div align="center" class="footer-border-top footer-padding">
-        <p>&copy; {{ new Date(time.appStart()).getFullYear() }}-{{ new Date().getFullYear() }}
+        <p>&copy; {{ new Date(time.appStart).getFullYear() }}-{{ new Date().getFullYear() }}
           <u>{{ infos.name || '' }}</u> All Rights Reserved. v(f):
           {{ infos['front-version'] || '' }} v(b): {{ infos['backend-version'] || '' }}
           <iframe src="https://status.bfban.com/badge"

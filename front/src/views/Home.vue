@@ -38,7 +38,7 @@
                     </ButtonGroup>
                   </Col>
                   <Col class="mobile-hide">
-                    <a href="https://test.bfban.com" target="_blank">
+                    <a href="https://api.bfban.com" target="_blank">
                       <Button size="large" type="text">
                         API
                         <Icon type="md-open"></Icon>
@@ -275,7 +275,7 @@ export default new application({
         this.gameName = res.gameName;
       });
 
-      this.bannerTime = new Intl.DateTimeFormat(this.$i18n.locale || 'en-US').format(time.appStart());
+      this.bannerTime = new Intl.DateTimeFormat(this.$i18n.locale || 'en-US').format(time.appStartDate);
       this.onHomeHintRandom(true);
 
       try {
@@ -332,7 +332,7 @@ export default new application({
           confirmed: true,	// show confirmed number
           registers: true,	// show register number
           banAppeals: true,// show ban appeals number
-          from: new Date(time.appStart()).getTime()
+          from: time.appStart
         }
       }).then(res => {
         const d = res.data;

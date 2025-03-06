@@ -89,7 +89,6 @@ export default new application({
   },
   watch: {
     $route: 'loadData',
-    id: 'loadData'
   },
   created() {
     this.http = http_token.call(this);
