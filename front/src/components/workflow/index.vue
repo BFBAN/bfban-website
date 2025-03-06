@@ -9,7 +9,7 @@ import Empty from "@/components/Empty.vue";
 import lodash from "lodash";
 import CheaterStatusView from "@/components/CheaterStatusView.vue";
 import TimeView from "@/components/TimeView.vue";
-import JudgementActionView from "@/components/judgeActionCardView.vue";
+import JudgeActionCardView from "@/components/JudgeActionCardView.vue";
 import TimelineView from "@/components/timeline/index.vue";
 import SharePlayerCell from "@/components/SharePlayerCell.vue";
 import HtmlLink from "@/components/HtmlLink.vue";
@@ -84,7 +84,7 @@ export default {
     ExposedName,
     HtmlLink,
     SharePlayerCell,
-    JudgementActionView, TimelineView, TimeView, CheaterStatusView, Empty, Container, Draggable
+    JudgeActionCardView, TimelineView, TimeView, CheaterStatusView, Empty, Container, Draggable
   },
   created() {
     this.http = http_token.call(this);
@@ -671,7 +671,7 @@ export default {
       <div slot="default">
         <Row :gutter="20">
           <Col span="16">
-            <JudgementActionView :cheater="editPlayerModal.data"></JudgementActionView>
+            <JudgeActionCardView :cheater="editPlayerModal.data"></JudgeActionCardView>
 
             <template v-if="$route.name === 'workflow'">
               <br>

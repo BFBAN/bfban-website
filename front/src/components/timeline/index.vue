@@ -9,7 +9,7 @@ import HtmlWidget from "@/components/HtmlWidget.vue";
 import Htmllink from "@/components/HtmlLink.vue";
 import Empty from "@/components/Empty.vue";
 import CheaterStatusLevel from "@/components/CheaterStatusLevel.vue";
-import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
+import judgeActionTypeView from "@/components/JudgeActionTypeView.vue";
 import Loading from "@/components/Loading.vue";
 import ExposedName from "@/components/ExposedName.vue"
 

@@ -3,7 +3,7 @@
 - 储存管理员模板+判决类型+内容..
 -->
 
-<script setup>
+<script>
 import {storage, util} from "@/assets/js";
 import uuid from "uuid";
 

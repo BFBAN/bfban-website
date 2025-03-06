@@ -233,7 +233,7 @@
 import {api, application, http, number, time, util} from '../assets/js/index'
 
 import PrivilegesTag from "@/components/PrivilegesTag.vue";
-import judgeActionTypeView from "@/components/judgeActionTypeView.vue";
+import judgeActionTypeView from "@/components/JudgeActionTypeView.vue";
 import TimeView from "@/components/TimeView.vue";
 
 export default new application({

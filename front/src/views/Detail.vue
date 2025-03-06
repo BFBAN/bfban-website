@@ -489,9 +489,9 @@
         <br v-if="isAdmin">
 
         <Card dis-hover v-if="isAdmin">
-          <JudgementActionView :cheater="player"
+          <JudgeActionCardView :cheater="player"
                                @submit-complete="onJudgementSubmitComplete"
-                               @additional-event="onJudgementAdditionalEvent"></JudgementActionView>
+                               @additional-event="onJudgementAdditionalEvent"></JudgeActionCardView>
         </Card>
 
         <div v-if="!isCheaterExist">
@@ -641,7 +641,7 @@ import BusinessCard from "@/components/BusinessCard";
 import RecordLink from "@/components/RecordLink";
 import CheaterStatusView from "@/components/CheaterStatusView";
 import CheaterStatusLevel from "@/components/CheaterStatusLevel.vue";
-import JudgementActionView from "@/components/judgeActionCardView.vue";
+import JudgeActionCardView from "@/components/JudgeActionCardView.vue";
 import Captcha from "@/components/captcha";
 import TimeView from "@/components/TimeView"
 import TimelineView from "@/components/timeline";
@@ -700,7 +700,7 @@ export default new application({
     RecordLink,
     CheaterStatusView,
     CheaterStatusLevel,
-    JudgementActionView,
+    JudgeActionCardView,
     TimelineView,
     TimeView,
     Captcha,
