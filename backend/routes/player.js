@@ -569,6 +569,7 @@ async (req, res, next) => {
             videoLink: req.body.data.videoLink,
             content: handleRichTextInput(req.body.data.description),
             valid: 1,
+            btr: req.body.data.btr,
             createTime: new Date()
         };
         await db('comments').insert(report);
@@ -736,6 +737,7 @@ router.post('/reportById', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed'
                 cheatGame: req.body.data.game,
                 cheatMethods: JSON.stringify(req.body.data.cheatMethods),
                 videoLink: req.body.data.videoLink,
+                btr: req.body.data.btr,
                 content: handleRichTextInput(req.body.data.description),
                 valid: 1,
                 createTime: new Date()
