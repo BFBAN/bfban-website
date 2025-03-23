@@ -258,8 +258,6 @@ export default new application({
       page: 1,
       total: 0,
 
-      cheaterStatus: [],
-
       message: {
         id: '',
         show: false,

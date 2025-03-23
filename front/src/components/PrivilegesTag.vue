@@ -33,10 +33,10 @@ export default {
     }
   },
   created() {
-    this.update();
+    this.update(this.data);
   },
   watch: {
-    "data": {
+    data: {
       handler (value) {
         let _v = value
         if (typeof _v == 'string')

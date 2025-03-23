@@ -92,7 +92,6 @@
                     <Button v-if="button.submit"
                             long
                             @click.prevent.stop="onSubmit"
-                            :disabled="Object.keys(forgetPassword.captcha).length <= 0"
                             :loading="spinShow"
                             size="large" type="primary">
                       {{ $t('basic.button.submit') }}
@@ -284,11 +283,6 @@ export default new application({
       });
     },
   },
-  computed: {
-    currentUser() {
-      return this.$store.state.user || {token: ''};
-    }
-  }
 });
 </script>
 
