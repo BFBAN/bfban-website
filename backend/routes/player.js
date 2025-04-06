@@ -469,7 +469,7 @@ function raceGetOriginUserId(originName) {
  *       404:
  *         description: player.notFound
  */
-router.post('/report', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed', 'blacklisted']), [
+router.post('/report', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']), [
     checkbody('data.game').isIn(config.supportGames),
     checkbody('data.originName').isAscii().notEmpty(),
     checkbody('data.cheatMethods').isArray().custom(cheatMethodsSanitizer),
@@ -518,13 +518,20 @@ async (req, res, next) => {
         //     });
 
         const originUserId = await raceGetOriginUserId(req.body.data.originName);
+        // const userOriginInfo = await raceGetOriginUserId(req.body.data.originName);
+        // console.log(userOriginInfo)
         if (!originUserId) return res.status(403).json({
             error: 1,
             code: 'report.notFound',
             message: 'Report user not found.'
         });
         /** @type {{username:string, personaId:string, userId:string}} */
-        const profile = await serviceApi('eaAPI', '/userInfo').query({userId: originUserId}).get().then(r => r.data);
+        const profile = await serviceApi('eaAPI', '/userInfo').query({personaId: originUserId}).get().then(r => r.data);
+        // const profile = {
+        //     username: userOriginInfo.displayName,
+        //     personaId: userOriginInfo.personaId,
+        //     userId: userOriginInfo.pidId
+        // }
 
         // now the user being reported is found
         let avatarLink;

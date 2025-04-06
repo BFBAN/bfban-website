@@ -88,7 +88,7 @@ async (req, res, next)=>{
         let userId;
         if(req.query.name) {
             if(EaApiMethods.searchUserNameEA)
-                userId = await cluster.invokeMethod(EaApiMethods.searchUserNameEA, req.query.name).then(r=>r[0]?.pidId);
+                userId = await cluster.invokeMethod(EaApiMethods.searchUserNameEA, req.query.name).then(r=>r[0]?.personaId);
             else
                 userId = await cluster.invokeMethod(EaApiMethods.searchUserName, req.query.name).then(r=>r[0]);        
         } else
