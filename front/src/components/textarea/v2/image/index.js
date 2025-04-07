@@ -5,6 +5,7 @@ export default Node.create({
     name: 'Image',
     group: 'block',
     atom: true,
+    inline: false,
     selectable: false,
     draggable: false,
     addAttributes() {
@@ -33,13 +34,19 @@ export default Node.create({
     },
     addCommands() {
         return {
-            insertImage: (src) => ({commands}) => {
-                return commands.insertContent({
-                    type: this.name,
-                    attrs: {
-                        src,
-                    }
-                })
+            insertImage: (src) => ({commands, chain}) => {
+                return chain()
+                    .insertContent([
+                        {
+                            type: this.name,
+                            updateSelection: true,
+                            attrs: {
+                                src,
+                            }
+                        },
+                        {type: 'paragraph'}
+                    ])
+                    .run();
             },
         }
     },

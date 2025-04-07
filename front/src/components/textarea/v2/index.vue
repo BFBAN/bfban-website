@@ -2,6 +2,7 @@
 import {application, http_token} from "@/assets/js";
 import {Editor, EditorContent} from '@tiptap/vue-2'
 import StarterKit from '@tiptap/starter-kit'
+import Paragraph from '@tiptap/extension-paragraph'
 import Dropcursor from '@tiptap/extension-dropcursor'
 import lodash from "lodash";
 
@@ -99,6 +100,7 @@ export default new application({
         EPlaceholder.configure({
           placeholder: this.placeholder,
         }),
+        Paragraph,
 
         // 格式
         LinkWidget,
