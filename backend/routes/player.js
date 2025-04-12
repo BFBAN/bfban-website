@@ -113,7 +113,8 @@ async (req, res, next) => {
         res.status(200).json({
             success: 1, code: 'player.ok', data: {
                 ...result,
-                hackerLevel: result.status == 1 ? result.hackerLevel : null
+                hackerLevel: result.status == 1 ? result.hackerLevel : null,
+                avatarLink: result.avatarLink || 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG'
             }
         });
     } catch (err) {
@@ -534,13 +535,14 @@ async (req, res, next) => {
         // }
 
         // now the user being reported is found
-        let avatarLink;
-        try {   // get/update avatar each report
-            avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fails
-        } catch (err) {
-            logger.warn('/report: error while fetching user\'s avatar');
-            avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
-        }
+        // origin api down. dont update avatar now. 
+        // let avatarLink ;
+        // try {   // get/update avatar each report
+        //     avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fails
+        // } catch (err) {
+        //     logger.warn('/report: error while fetching user\'s avatar');
+        //     avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
+        // }
         /** @type {import('../typedef.js').Player|undefined} */
         const reported = await db.select('*').from('players').where({originUserId: profile.userId}).first();
         const player = {
@@ -550,7 +552,7 @@ async (req, res, next) => {
             originPersonaId: profile.personaId,
             games: JSON.stringify(Array.from(new Set(reported ? reported.games : []).add(req.body.data.game))),
             cheatMethods: JSON.stringify(reported ? reported.cheatMethods : []), // cheateMethod should be decided by admin
-            avatarLink: avatarLink,
+            // avatarLink: avatarLink,
             viewNum: reported ? reported.viewNum : 0,
             commentsNum: reported ? reported.commentsNum + 1 : 1,
             valid: 1,
