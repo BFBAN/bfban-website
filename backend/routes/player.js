@@ -114,6 +114,7 @@ async (req, res, next) => {
             success: 1, code: 'player.ok', data: {
                 ...result,
                 hackerLevel: result.status == 1 ? result.hackerLevel : null,
+                // origin get avatar server down, use defualt avatar now
                 avatarLink: result.avatarLink || 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG'
             }
         });
@@ -478,6 +479,7 @@ router.post('/report', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']), 
     checkbody('data.description').isString().trim().isLength({min: 1, max: 65535})
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
+    console.log('start report')
     try {
         const validateErr = validationResult(req);
         if (!validateErr.isEmpty()) return res.status(400).json({
@@ -706,13 +708,13 @@ router.post('/reportById', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed'
                 throw (err); // unknown error, throw it
             }
             // now the user being reported is found
-            let avatarLink;
-            try {   // get/update avatar each report
-                avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fails
-            } catch (err) {
-                logger.warn('/reportById: error while fetching user\'s avatar');
-                avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
-            }
+            // let avatarLink;
+            // try {   // get/update avatar each report
+            //     avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: profile.userId}).get().then(r => r.data); // this step is not such important, set avatar to default if it fails
+            // } catch (err) {
+            //     logger.warn('/reportById: error while fetching user\'s avatar');
+            //     avatarLink = 'https://secure.download.dm.origin.com/production/avatar/prod/1/599/208x208.JPEG';
+            // }
             /** @type {import('../typedef.js').Player|undefined} */
             const reported = await db.select('*').from('players').where({originUserId: profile.userId}).first();
             const player = {
@@ -722,7 +724,7 @@ router.post('/reportById', verifyJWT, verifyCaptcha, forbidPrivileges(['freezed'
                 originPersonaId: profile.personaId,
                 games: JSON.stringify(Array.from(new Set(reported ? reported.games : []).add(req.body.data.game))),
                 cheatMethods: JSON.stringify(reported ? reported.cheatMethods : []), // cheateMethod should be decided by admin
-                avatarLink: avatarLink,
+                // avatarLink: avatarLink,
                 viewNum: reported ? reported.viewNum : 0,
                 commentsNum: reported ? reported.commentsNum + 1 : 1,
                 valid: 1,
