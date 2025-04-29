@@ -6,9 +6,10 @@
           <Col>
             <DatePicker type="datetimerange"
                         :options="timeOptions"
-                        v-model="date"
                         format="yyyy-MM-dd"
-                        @on-ok="change"/>
+                        value-format="yyyy-MM-dd"
+                        v-model="date"
+                        @on-ok="dateChange"/>
           </Col>
           <Col flex="1" align="right">
             <RadioGroup
@@ -37,7 +38,7 @@
             v-model="adminId"
             type="button">
           <Radio v-for="i in adminTab" :key="i.byUserId" :label="i.byUserId">
-            {{ i.username }} - [{{ i[gameName] }}] - ({{ i.scale }}%)
+            {{ i.username }} - [{{ i.count }}] - ({{ i.scale }}%)
           </Radio>
         </RadioGroup>
       </FormItem>
@@ -96,6 +97,7 @@ export default new application({
       admin: [],
       adminId: '',
       date: [],
+      total: '',
       timeOptions: {
         disabledDate(date) {
           return date && date.valueOf() > Date.now();
@@ -168,42 +170,26 @@ export default new application({
 
       if (createTimeto) _params['createTimeto'] = createTimeto;
       if (createTimeFrom) _params['createTimeFrom'] = createTimeFrom;
-
+      _params['limit'] = 20
+      _params['game'] = this.gameName
       this.http.get(api['admin_adminLog'], {
         params: _params
       }).then(res => {
         const {data} = res.data
-        const admin = []
-        const log = data.filter(item => !item.privilege.includes('super'))
 
-        log.forEach(item => {
-          const index = admin.findIndex(i => i.byUserId == item.byUserId)
-          const game = item.games[0]
-          if (index == -1) {
-            admin.push({...item, username: item.username, byUserId: item.byUserId, [game]: 1})
-          } else if (!admin[index][game]) {
-            admin[index][game] = 1
-          } else {
-            admin[index][game]++
-          }
-        })
-
-        this.admin = admin
-        this.log = log
+        this.admin = data.stats
+        this.log = data.details
+        this.total = data.total
         this.adminId = this.admin[0] ? this.admin[0].byUserId : 0
       }).finally(() => {
         this.load = false;
       })
     },
-    change(e) {
-      const [start, end] = this.date
-      const startTime = new Date(start)
-      const endTime = new Date(end)
-      const createTimeFrom = `${startTime.getFullYear()}-${startTime.getMonth() + 1}-${startTime.getDate()}`
-      const createTimeto = `${endTime.getFullYear()}-${endTime.getMonth() + 1}-${endTime.getDate()}`
-
-      this.getAdminLog({createTimeFrom, createTimeto})
-    }
+    dateChange(e) {
+      const start = this.date[0]
+      const end = this.date[1]
+      this.getAdminLog({createTimeFrom: start, createTimeto: end})
+    },
   },
   computed: {
     util: () => util,
@@ -214,11 +200,15 @@ export default new application({
       return this.log.filter(item => item.games[0] == this.gameName)
     },
     adminTab() {
-      let {admin, currentlog, gameName} = this
-      const length = currentlog.length
-      return admin.sort((a, b) => b[gameName] - a[gameName]).map(item => {
-        return {...item, scale: parseInt(item[gameName] * 100 / length)}
-      }).filter(item => item.scale > 5)
+      let {admin, currentlog, gameName, total} = this
+      const length = total
+      return admin
+          .sort((a, b) => b.count - a.count)
+          .map(item => ({
+            ...item,
+            scale: Math.floor(item.count * 100 / length)
+          }))
+          .filter(item => item.scale > 1);
     }
   },
 })

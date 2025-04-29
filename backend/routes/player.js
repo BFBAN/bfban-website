@@ -1223,7 +1223,6 @@ async (req, res, next) => {
         const updatePlayerData = await db('players')
             .where({originPersonaId: originPersonaId})
             .update(
-                {originName: profile.username, avatarLink: avatarLink},
                 {originName: profile.username, avatarLink: avatarLink});
         await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
 

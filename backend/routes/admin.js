@@ -625,31 +625,98 @@ async (req, res, next) => {
 });
 
 router.get('/adminLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
-    checkquery('createTimeFrom').optional().isInt({min: 0}),
-    checkquery('createTimeTo').optional().isInt({min: 0}),
+    checkquery('createTimeFrom').optional().isISO8601(),
+    checkquery('createTimeto').optional().isISO8601(),
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0}),
     checkquery('order').optional().isIn(['asc', 'desc']),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
 async (req, res, next) => {
     try {
-        const createTimeFrom = new Date(req.query.createTimeFrom);
-        const createTimeTo = new Date(req.query.createTimeTo);
-        const skip = req.query.skip !== undefined ? req.query.skip : 0;
-        const limit = req.query.limit !== undefined ? req.query.limit : 20;
-        const order = req.query.order ? req.query.order : 'desc';
+        // parse dates (cover whole days)
+        // 1. 处理日期边界
+        const rawFrom = req.query.createTimeFrom;
+        const rawTo   = req.query.createTimeto || req.query.createTimeTo;
+        const game = req.query.game;
 
-        const result = await db('comments')
+        const createTimeFrom = rawFrom
+            ? (() => { const d = new Date(rawFrom); d.setHours(0,0,0,0); return d; })()
+            : new Date(0);
+
+        const createTimeTo = rawTo
+            ? (() => { const d = new Date(rawTo); d.setHours(23,59,59,999); return d; })()
+            : (() => { const d = new Date(); d.setHours(23,59,59,999); return d; })();
+
+        const skip  = req.query.skip  ? Number(req.query.skip)  : 0;
+        const limit = req.query.limit ? Number(req.query.limit) : 20;
+        const order = req.query.order || 'desc';
+
+        // 2. 基础过滤 —— 方便复用
+        let base = db('comments')
+            .join('players as p', 'comments.toOriginPersonaId', 'p.originPersonaId')
+            .join('users as u',   'comments.byUserId',          'u.id')
+            .whereNotIn('comments.type', ['report','reply'])
+            .andWhere('comments.createTime', '>=', createTimeFrom)
+            .andWhere('comments.createTime', '<=', createTimeTo)
+            .andWhereRaw(
+                'NOT JSON_CONTAINS(u.privilege, ?, "$")',
+                [ JSON.stringify('super') ]
+            )
+
+        //  apply the game filter if provided
+        if (game) {
+            base = base.andWhereRaw(
+                'JSON_CONTAINS(p.games, ?, "$")',
+                [ JSON.stringify(game) ]
+            );
+        }
+
+        // 3. 总数统计
+        const totalResult = await base
+            .clone()
+            .count({ total: 'comments.id' });
+        // MySQL 里可能返回字符串，转成数字
+        const total = Number(totalResult[0].total) || 0;
+
+        // 4. 明细列表
+        const details = await base
+            .clone()
+            .select([
+                'comments.id',
+                'comments.toOriginPersonaId',
+                'comments.createTime',
+                'comments.byUserId',
+                'u.username',
+                'p.originName as originName',
+                'comments.cheatMethods',
+                'comments.judgeAction',
+                'p.games as games'
+            ])
+            .orderBy('comments.createTime', order)
+            .offset(skip)
+            .limit(limit);
+
+        // 5. 用户维度统计
+        const stats = await base
+            .clone()
             .join('users', 'comments.byUserId', 'users.id')
-            .join('players', 'comments.toOriginPersonaId', 'players.originPersonaId')
-            .where('type', '!=', `report`).andWhere('type', '!=', `reply`)
-            .select('comments.*', 'users.username', 'users.privilege', 'players.games', 'players.originName')
-            .andWhere("comments.createTime", ">=", createTimeFrom)
-            .andWhere("comments.createTime", "<=", createTimeTo)
-            .orderBy('users.createTime', order)
-        // .offset(skip).limit(limit);
+            .groupBy('comments.byUserId','users.username')
+            .select([
+                'comments.byUserId as byUserId',
+                'users.username as username'
+            ])
+            .count({ count: 'comments.id' });
 
-        return res.status(200).json({success: 1, code: 'admin.log.ok', data: result});
+        // 6. 返回
+        return res.status(200).json({
+            success: 1,
+            code:    'admin.log.ok',
+            data: {
+                total,
+                stats,
+                details
+            }
+        });
     } catch (err) {
         next(err);
     }

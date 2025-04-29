@@ -27,7 +27,10 @@
               <DatePicker type="daterange"
                           split-panels
                           @on-change="handleCDatepicker"
-                          :placeholder="'createTime'"></DatePicker>
+                          :placeholder="'createTime'"
+                          format="yyyy-MM-dd"
+                          value-format="yyyy-MM-dd"
+              ></DatePicker>
             </FormItem>
             <Row :gutter="10">
               <Col>
@@ -243,9 +246,8 @@ export default {
       this.getAdminJudgementLog();
     },
     handleCDatepicker(date) {
-      this.createTimeFrom = new Date(date[0]).getTime();
-      this.createTimeTo = new Date(date[1]).getTime();
-
+      this.createTimeFrom = new Date(date[0]).toISOString();
+      this.createTimeTo   = new Date(date[1]).toISOString();
       this.skip = 1;
     },
     handlePageSizeChange(num) {
