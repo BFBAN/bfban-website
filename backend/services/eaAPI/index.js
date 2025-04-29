@@ -87,10 +87,7 @@ async (req, res, next)=>{
     try {
         let userId;
         if(req.query.name) {
-            if(EaApiMethods.searchUserNameEA)
                 userId = await cluster.invokeMethod(EaApiMethods.searchUserNameEA, req.query.name).then(r=>r[0]?.pidId);
-            else
-                userId = await cluster.invokeMethod(EaApiMethods.searchUserName, req.query.name).then(r=>r[0]);        
         } else
             userId = await cluster.invokeMethod(EaApiMethods.searchUserEmail, req.query.email);
 
