@@ -91,6 +91,7 @@ class OriginClient {
             const hash = location.split('#')[1] || '';
             const params = new URLSearchParams(hash);
             const ea_token = params.get('access_token');
+            this.tokens.access_token = ea_token;
             this.tokens.expires_when = Date.now() + params.get('expires_in')*1000;
 
             this.cur_state = 'OK';
