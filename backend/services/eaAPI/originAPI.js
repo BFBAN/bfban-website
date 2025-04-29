@@ -62,29 +62,40 @@ class OriginClient {
 
     /** @returns {Promise<{access_token:string, expires_in:number}> */
     async getSelfAccessToken() {
-        const url = 'https://accounts.ea.com/connect/auth?client_id=ORIGIN_JS_SDK&response_type=token&redirect_uri=nucleus:rest&prompt=none&release_type=prod';
+        const url = 'https://accounts.ea.com/connect/auth?client_id=EAX-JUNO-SPA&response_type=token&redirect_uri=https://pc.ea.com&prompt=none&release_type=prod';
         const t_start = Date.now();
         try {
             const response = await got.get(url, {
                 headers: {
-                    'Upgrade-Insecure-Requests': 1,
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+                    'Upgrade-Insecure-Requests': '1',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                        + 'AppleWebKit/537.36 (KHTML, like Gecko) '
+                        + 'Chrome/91.0.4472.114 Safari/537.36',
                     'Cookie': `sid=${this.cookies.sid}; remid=${this.cookies.remid}`
                 },
-            }).json();
+                followRedirect: false,     // ← 不跟随 302/301
+                throwHttpErrors: false,    // ← 不把非 2xx 当成异常抛出
+            });
             
             if(response.error_code == "login_required") {
                 this.cur_state = 'COOKIE_EXPIRED';
                 throw new EaApiError(401, response, `${this.tag} Cookies Expired`);
             } else if(response.error)
                 throw new EaApiError(500, response, `${this.tag} Bad Response`);
-            
-            this.tokens.access_token = response.access_token;
-            this.tokens.expires_when = Date.now() + response.expires_in*1000;
+
+            if (!response) return
+            const location = response.headers.location || response.headers.Location;
+            if (!location) {
+                return response.data?.access_token ?? null;
+            }
+            const hash = location.split('#')[1] || '';
+            const params = new URLSearchParams(hash);
+            const ea_token = params.get('access_token');
+            this.tokens.expires_when = Date.now() + params.get('expires_in')*1000;
 
             this.cur_state = 'OK';
-            logger.info('OriginClient.getSelfAccessToken Success:', {access_token: response.access_token, expires_in: response.expires_in});
-            return {access_token: response.access_token, expires_in: response.expires_in};
+            logger.info('OriginClient.getSelfAccessToken Success:', {access_token: ea_token, expires_in: params.get('expires_in')});
+            return {access_token: ea_token, expires_in: params.get('expires_in')};
         } catch(err) { // Handle request error or parse error
             this.cur_state = 'UNKNOWN_ERROR';
             if(err instanceof EaApiError)
