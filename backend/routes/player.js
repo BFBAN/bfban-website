@@ -1224,9 +1224,8 @@ async (req, res, next) => {
             .where({originPersonaId: originPersonaId})
             .update(
                 {originName: profile.username, avatarLink: avatarLink},
-                ['username', 'originUserId', 'originPersonaId']
-            );
-        await pushOriginNameLog(profile.username, updatePlayerData[0].originUserId, updatePlayerData[0].originPersonaId);
+                {originName: profile.username, avatarLink: avatarLink});
+        await pushOriginNameLog(profile.username, profile.userId, profile.personaId);
 
         siteEvent.emit('action', {method: 'playerUpdate', params: {profile}});
         return res.status(200).json({success: 1, code: 'update.success'});
