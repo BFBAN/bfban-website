@@ -42,7 +42,7 @@
                 <br>
 
                 <FormItem>
-                  <Button @click.prevent.stop="handleSignin" long :loading="spinShow" size="large" type="primary">
+                  <Button @click="onSignin" long :loading="spinShow" size="large" type="primary">
                     {{ $t('basic.button.submit') }}
                   </Button>
                 </FormItem>
@@ -181,7 +181,7 @@ export default new application({
     /**
      * 登录
      */
-    handleSignin() {
+    onSignin() {
       const that = this;
       const backPath = this.$route.query.backPath;
       let {username, password, captcha} = this.signin;
@@ -190,52 +190,54 @@ export default new application({
       username = username.trim();
       password = password.trim();
 
-      this.$refs['signin'].validate((valid) => {
-        if (!valid) {
-          this.$Message.error(this.$t('signin.fillEverything'));
-          return;
-        }
+      try {
+        this.$refs['signin'].validate(async (valid) => {
+          if (!valid) {
+            that.$Message.error(that.$t('signin.fillEverything'));
+            return;
+          }
 
-        this.spinShow = true;
+          that.spinShow = true;
+          const res = await http.post(api["account_signin"], {
+            data: {
+              data: {username, password},
+              captcha,
+            },
+          });
 
-        http.post(api["account_signin"], {
-          data: {
-            data: {username, password},
-            captcha,
-          },
-        }).then(async res => {
           const d = res.data;
 
           if (d.error === 1) {
             that.signin.password = '';
             that.signin.captcha = '';
-            that.serverReturnMessage = this.$t(`basic.tip['${d.code}']`, {
+            that.serverReturnMessage = that.$t(`basic.tip['${d.code}']`, {
               message: d.message || ""
             });
 
-            this.$Message.error(that.serverReturnMessage);
-            return;
+            throw new Error(that.serverReturnMessage);
           }
 
           await that.signinUser(d.data);
 
           // redirect backPath or home
           if (backPath) {
-            await this.$router.push({path: backPath});
+            await that.$router.push({path: backPath});
           } else {
-            this.$router.go('-1');
-            this.$router.go(-1);
+            that.$router.go(-1);
           }
 
-          this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
+          that.$Message.success(that.$t(`basic.tip['${d.code}']`, {
             message: d.message || ""
           }));
-        }).finally(err => {
+
           that.spinShow = false;
           if (that.$refs.captcha)
             that.$refs.captcha.refreshCaptcha();
         });
-      });
+      } catch (e) {
+        if (e instanceof Error)
+          this.$Message.error(e)
+      }
     }
   },
   computed: {

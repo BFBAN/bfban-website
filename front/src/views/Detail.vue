@@ -1087,7 +1087,7 @@ export default new application({
 
         if (d.error === 1) {
           message = typeof d.message == 'object' ? d.message.forEach((i) => message += `${i.param}: ${i.msg}`) : this.$t(`basic.tip['${d.code}']`, {
-            message: d.message || ""
+            message: d.message.toString() || ""
           });
           throw new Error(message);
         }

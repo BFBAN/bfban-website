@@ -115,14 +115,19 @@ export default class AccountStorage extends Storage {
                 throw e
             });
 
-            return res.data;
-        } finally {
             // 清除与账户相关的数据
             this.clearAll();
 
             store.dispatch('signout').then(() => {
                 router.push('/');
             });
+
+            return res.data;
+        } catch (e) {
+          return {
+              error: -1,
+              code: 'signout.bad'
+          }
         }
     }
 

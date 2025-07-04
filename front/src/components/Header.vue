@@ -246,14 +246,14 @@ export default new application({
         const result = await account_storage.signout();
         d = result.d;
 
-        this.$Message.success(this.$t(`basic.tip['${d.code}']`, {
-          message: d.code || d.message
-        }));
+        this.$Message.success(this.$t(`basic.tip['${d.code}']`));
       } catch (e) {
-        if (e instanceof Http)
+        if (e instanceof Http) {
           this.$Message.error(this.$t(`basic.tip['${d.code}']`, {
             message: d.code || d.message
           }));
+          return;
+        }
 
         this.$Message.error(e.toString());
       } finally {
