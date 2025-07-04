@@ -1,7 +1,5 @@
 "use strict";
-import express from "express";
 import config from "../config.js";
-import * as misc from "../lib/misc.js";
 import db from "../mysql.js";
 import {userHasRoles, verifyJWTToken} from '../lib/auth.js';
 
@@ -49,6 +47,7 @@ async function verifyJWT(req, res, next) {
         //console.log('token:'+JSON.stringify(decodedToken)); // DEBUG
         /** @type {import("../typedef.js").User} */
         const result = await db.select('*').from('users').where({id: decodedToken.userId, valid: 1}).first();
+              result.visitType = decodedToken.visitType; // Login type exposure
         delete result.subscribes; // useless, and may take up a lot of memory
         //console.log(result); // DEBUG
         if (!result)

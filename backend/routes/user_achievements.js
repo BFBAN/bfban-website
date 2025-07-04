@@ -3,10 +3,9 @@ import express from "express";
 import db from "../mysql.js";
 import config from "../config.js";
 import fetch from 'node-fetch';
-import logger from "../logger.js";
 
 import {allowPrivileges, forbidPrivileges, forbidVisitTypes, verifyJWT} from "../middleware/auth.js";
-import {body as checkbody, query as checkquery} from "express-validator/src/middlewares/validation-chain-builders.js";
+import {body as checkbody} from "express-validator/src/middlewares/validation-chain-builders.js";
 import {validationResult} from "express-validator";
 import {userSetAttributes} from "../lib/user.js";
 import {getGravatarAvatar} from "../lib/gravatar.js";
@@ -299,10 +298,12 @@ const achievementConfig = {
         another: ['site_20w_report_witnesses'],
         points: 1,
         async conditions(req, res, next) {
-            let response = await fetch(`http://${config.address}:${config.port}/api/statistics?reports=true`, {method: 'GET'});
-            let result = await response.json();
-            if (result.error === 1 && result.data.community.length <= 0) return false;
-            return result.data.reports.length >= 200000;
+            let response = await fetch(`http://${config.address}:${config.port}/api/statistics?reports=true`, {method: 'GET'}),
+                result = await response.json(),
+                conditionValue = 200000;
+
+            if (result.error === 1 && result.data.reports.length < conditionValue) return false;
+            return result.data.reports >= conditionValue;
         },
     },
     'app_use_mobile': {
