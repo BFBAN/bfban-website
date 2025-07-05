@@ -19,8 +19,16 @@ export default Node.create({
     },
     addCommands() {
         return {
-            insertHr: () => ({commands}) => {
-                return commands.insertContent({type: this.name})
+            insertHr: () => ({chain}) => {
+                return chain()
+                    .insertContent([
+                        {
+                            type: this.name,
+                            updateSelection: true,
+                        },
+                        {type: 'paragraph'}
+                    ])
+                    .run();
             },
         }
     },

@@ -42,9 +42,14 @@ export default {
     <template v-else-if="node.attrs.csType === 'egg'">
       <Icon type="md-egg" contenteditable="false"></Icon>
     </template>
+    <template v-else-if="node.attrs.csType === 'signature'">
+      <div class="user-select-none signature">
+        <img :src="node.attrs.csValue" width="100%" />
+      </div>
+    </template>
     <template v-else>
       <!--  不适合在编辑器内展示    -->
-      {<b>{{ node.attrs.csType }}:{{ node.attrs.csValue }}</b>}
+      / {<b>{{ node.attrs.csType }}:{{ node.attrs.csValue }}</b>} /
     </template>
   </node-view-wrapper>
 </template>
@@ -53,4 +58,11 @@ export default {
 .node-view {
   display: inline-flex;
 }
+
+.signature {
+  max-height: 120px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 </style>

@@ -266,6 +266,7 @@
               <br>
               <!-- 提交 S -->
               <Card dis-hover :padding="isMobile ? 20 : 50">
+
                 <FormItem prop="captcha" :label="$t('captcha.title')">
                   <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
                 </FormItem>

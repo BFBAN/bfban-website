@@ -1,6 +1,6 @@
 <template>
   <div class="html-widget-box">
-    <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-animation html-widget-size-${htmlSize}`"
+    <Html :html="html" :mode="htmlShowMode" :class="`html-widget-size-animation html-widget-size html-widget-size-${htmlSize}`"
           v-if="html"></Html>
     <div class="html-widget-box-divider ivu-divider ivu-divider-horizontal"></div>
     <Row class="html-widget-toolbar" type="flex" justify="center" align="middle" :gutter="5">
@@ -103,6 +103,10 @@ export default {
 .html-widget-box {
   transition: all .5s;
   margin-top: 5px;
+
+  .html-widget-size {
+    padding: 12px 15px !important;
+  }
 
   .html-widget-size-x-large {
     &, * {

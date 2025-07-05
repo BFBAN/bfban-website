@@ -14,6 +14,8 @@ import privilegestag from "@/components/PrivilegesTag";
 import htmluser from "@/components/HtmlUser.vue"
 import emoteitem from "@/components/EmoteItem.vue"
 
+import "@/assets/css/signature.less"
+
 export default {
   name: "Html",
   props: {
@@ -22,6 +24,10 @@ export default {
       default: ""
     },
     extensionData: Object,
+    version: {
+      type: String,
+      default: "v2"
+    },
     mode: {
       type: String,
       default: "renderer"
@@ -115,7 +121,8 @@ export default {
      * @returns {*|string}
      */
     packagingRender(html) {
-      let _html = `<div class="ql-editor">${html}</div>`;
+      const _htmlVersion = {'v1': 'ql-editor', 'v2': 'tiptap'}
+      let _html = `<div class="${_htmlVersion[this.version]}">${html}</div>`;
       let vDomString;
       const vDom = new DOMParser().parseFromString(_html, "text/html"),
           div = vDom.getElementsByTagName("div"),
@@ -156,7 +163,7 @@ export default {
             for (let i = 0; i < _divs.length; i++) {
               /// 标准链接 =>
               /// 排除标签a|htmllink|img|video|iframe、排除标签属性内链接、排除标签内的链接
-              const urlRegex = /(?<!<(a|htmllink|img|video|iframe)[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&;//=]*))(?![^<]*<\/htmllink|a>)/g;
+              const urlRegex = /(?<!<(a|htmllink|img|video|iframe)[^>]*)(?<!\{signature:)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&;//=]*))(?![^<]*<\/htmllink|a>)/g;              // const urlRegex = /(?<!<(a|htmllink|img|video|iframe)[^>]*)(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&;//=]*))(?![^<]*<\/htmllink|a>)/g;
               _divs[i].innerHTML = _divs[i].innerHTML.replace(urlRegex, `<htmllink text='${encodeURI('$&')}' href='${encodeURI('$&')}'></htmllink>`);
 
               // 解析HR, 分割线
@@ -173,10 +180,12 @@ export default {
                     return `<htmlplayercard :id="${value.toString()}"></htmlplayercard>`;
                   case "router":
                     return `<router-link :to="{path: '${value}'}">${value}</router-link>`
-                    case "floor":
-                      return `<htmlfloor id="${value}"></htmlfloor>`;
+                  case "floor":
+                    return `<htmlfloor id="${value}"></htmlfloor>`;
                   case "privilege":
                     return `<privilegestag data="${value.toString().split(',')}"></privilegestag>`;
+                  case "signature":
+                    return `<span class="signature-box"><htmlimage :original="true" src="${value}"/></span>`;
                   case "icon":
                     return `<Icon type='${value}'></Icon>`;
                 }

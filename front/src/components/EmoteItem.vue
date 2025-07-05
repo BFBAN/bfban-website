@@ -89,8 +89,37 @@ export default {
 </script>
 
 <template>
-  <Tooltip v-if="emojiItemData && emojiItemData.config" :disabled="isDisabledTooltip" :content="emojiItemData.name"
+  <Tooltip v-if="emojiItemData && emojiItemData.config" :disabled="isDisabledTooltip"
            placement="top" transfer>
+    <template v-slot:content>
+      <div align="center">
+        <br>
+        <template
+            v-if="emojiItemData && emojiItemData.config && (emojiItemData.config.type === 'gif' || emojiItemData.config.type === 'png')">
+          <img class="emote"
+               :alt="emojiItemData.name"
+               :src="emojiItemData.imageUrl"
+               :class="[
+                 isSpan ? 'emote-none-padding': ''
+              ]"
+               :style="`width: ${size * 3}px ;height: ${size * 3}px`"
+               v-if="emojiItemData"/>
+        </template>
+        <template v-else-if="emojiItemData && emojiItemData.config && emojiItemData.config.type === 'spriteDiagram'">
+          <span class="emote"
+                :class="[
+                   isSpan ? 'emote-none-padding': ''
+                ]"
+                :style="`width: ${size * 3}px;height: ${size * 3}px;background-image: url(${emojiItemData.imageUrl});background-size: ${emojiItemData.config.size};background-position: ${emojiItemData.config.position}`"
+                v-if="emojiItemData">
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                 :alt="emojiItemData.name"/>
+          </span>
+        </template>
+
+        <p class="emote-name">{{emojiItemData.name}}</p>
+      </div>
+    </template>
     <template
         v-if="emojiItemData && emojiItemData.config && (emojiItemData.config.type === 'gif' || emojiItemData.config.type === 'png')">
       <img class="emote"
@@ -142,6 +171,12 @@ img.emote {
   display: inline-flex !important;
   position: relative;
   cursor: pointer;
+
+  .emote-name {
+    opacity: .8;
+    margin-top: 4px;
+    font-size: 12px;
+  }
 
   img {
     position: absolute;

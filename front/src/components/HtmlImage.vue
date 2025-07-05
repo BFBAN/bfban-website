@@ -1,5 +1,6 @@
 <template>
-  <Card dis-hover :padding="0" class="img">
+  <img v-if="original" :src="src">
+  <Card v-else dis-hover :padding="0" class="img">
     <div class="img-box" :class="[
         imageStatus === 0 ? 'img-loading': '',
         imageStatus === -1 ? 'img-error' : '',
@@ -85,6 +86,10 @@ export default {
     images: {
       type: String,
       default: ""
+    },
+    original: {
+      type: Boolean,
+      default: false
     },
     isRecognize: {
       type: Boolean,

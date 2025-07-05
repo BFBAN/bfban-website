@@ -16,7 +16,7 @@
             <br>
 
             <Card v-if="!isLogin" class="signin-box" :padding="isMobile ? 20 : 30" dis-hover>
-              <Banner :style="`margin: -${isMobile ? 20 : 30}px -${isMobile ? 20 : 30}px 30px;`" :height="120"></Banner>
+              <Banner :style="`margin: -${isMobile ? 20 : 30}px -${isMobile ? 20 : 30}px 30px;`" :height="180"></Banner>
 
               <Form ref="signin" :model="signin" :rules="ruleValidate" label-position="top">
                 <Alert type="error" show-icon v-if="serverReturnMessage">

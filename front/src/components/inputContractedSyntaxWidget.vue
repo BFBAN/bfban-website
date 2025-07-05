@@ -80,6 +80,9 @@ export default {
             }
           ],
           'value-privilege': [],
+          'value-signature': [{
+            required: true,
+          }]
         }
       },
       inputHint: {
@@ -88,8 +91,10 @@ export default {
         'value-router': 'input router address, /,/player,/report ...',
         'value-user': 'input user Id',
         'value-privilege': 'input privilege, dev,bot,admin,super ...',
+        'value-signature': 'input signature src, http:// or https:// ...',
       },
       type: [
+        {value: 'signature', values: 'https://pic.imgdb.cn/item/66a8a18cd9c307b7e9fa6053.png'},
         {value: 'player', label: 'detail.appeal.info.player', values: ''},
         {value: 'icon', values: ''},
         {value: 'router', values: ''},

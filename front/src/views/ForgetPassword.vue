@@ -14,92 +14,112 @@
 
       <Row>
         <Col span="24">
-          <Card dis-hover>
-            <Steps :current="stepsIndex" slot="title">
-              <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].title')"></Step>
-              <Step :title="$t('signup.steps[1].title')" :content="$t('signup.steps[1].title')"></Step>
-              <Step :title="$t('signup.steps[2].title')" :content="$t('signup.steps[2].title')"></Step>
-              <Step :title="$t('signup.steps[3].title')" :content="$t('signup.steps[3].title')"></Step>
-              <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
-            </Steps>
+          <Card :padding="0" dis-hover>
+            <Row>
+              <Col :mg="{span: 0}" :lg="{span: 8}" v-show="!isMobile">
+                <Banner :style="`min-height:600px; height: 100%`" :show-align="'upDown'" :height="600">
+                  <Row style="padding: 20px" type="flex" align="middle">
+                    <Col>
+                      <Alert show-icon><span v-html="$t('forgetPassword.forgetUsername')"></span></Alert>
+                    </Col>
+                  </Row>
+                </Banner>
+              </Col>
+              <Col flex="1">
+                <Card :bordered="false" dis-hover>
+                  <Steps :current="stepsIndex" slot="title">
+                    <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].title')"></Step>
+                    <Step :title="$t('signup.steps[2].title')" :content="$t('signup.steps[2].title')"></Step>
+                    <Step :title="$t('signup.steps[3].title')" :content="$t('signup.steps[3].title')"></Step>
+                    <Step :title="$t('signup.steps[4].title')" :content="$t('signup.steps[4].title')"></Step>
+                  </Steps>
 
-            <div>
-              <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
-                <div v-if="stepsIndex == 0">
-                  <FormItem :label="$t('forgetPassword.form.username')" prop="username">
-                    <Input v-model="forgetPassword.username" size="large"
-                           :placeholder="$t('forgetPassword.placeholder.username')"/>
-                  </FormItem>
-                  <FormItem :label="$t('forgetPassword.form.originEmail')" prop="originEmail">
-                    <Input v-model="forgetPassword.originEmail" size="large"
-                           :placeholder="$t('forgetPassword.placeholder.originEmail')"/>
-                  </FormItem>
-                  <Alert show-icon><span v-html="$t('forgetPassword.forgetUsername')"></span></Alert>
-                </div>
+                  <div>
+                    <Form ref="formValidate" label-position="top" :rules="ruleValidate" style="position: relative;">
+                      <div v-if="stepsIndex == 0">
+                        <FormItem :label="$t('forgetPassword.form.username')" prop="username">
+                          <Input v-model="forgetPassword.username" size="large"
+                                 :placeholder="$t('forgetPassword.placeholder.username')"/>
+                        </FormItem>
+                        <FormItem :label="$t('forgetPassword.form.originEmail')" prop="originEmail">
+                          <Input v-model="forgetPassword.originEmail" size="large"
+                                 :placeholder="$t('forgetPassword.placeholder.originEmail')"/>
+                        </FormItem>
+                      </div>
 
-                <FormItem v-if="stepsIndex == 1" :label="$t('captcha.title')">
-                  <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
-                </FormItem>
+                      <FormItem v-if="stepsIndex == 1" :label="$t('captcha.title')">
+                        <Captcha ref="captcha" @getCaptchaData="getCaptchaData"></Captcha>
+                      </FormItem>
 
-                <div v-if="stepsIndex == 2">
-                  <EmailTip :email="forgetPassword.originEmail"></EmailTip>
-                  <Card dis-hover>
-                    <Row :gutter="16" type="flex" justify="center" align="middle">
-                      <Col>
-                        <Icon type="md-cloud" color="#535353" size="80"/>
-                      </Col>
-                      <Col>
-                        <Icon type="md-return-right" color="#aaa" size="30"/>
-                      </Col>
-                      <Col>
-                        <Icon type="md-mail" color="#535353" size="80"/>
-                      </Col>
-                    </Row>
-                  </Card>
-                  <br>
-                  <Alert type="success" show-icon>{{ $t('forgetPassword.checkEmail') }}</Alert>
-                </div>
+                      <div v-if="stepsIndex == 2">
+                        <EmailTip :email="forgetPassword.originEmail"></EmailTip>
+                        <Card dis-hover>
+                          <Row :gutter="16" type="flex" justify="center" align="middle">
+                            <Col>
+                              <Icon type="md-cloud" color="#535353" size="80"/>
+                            </Col>
+                            <Col>
+                              <Icon type="md-return-right" color="#aaa" size="30"/>
+                            </Col>
+                            <Col>
+                              <Icon type="md-mail" color="#535353" size="80"/>
+                            </Col>
+                          </Row>
+                        </Card>
+                        <br>
+                        <Alert type="success" show-icon>{{ $t('forgetPassword.checkEmail') }}</Alert>
+                      </div>
 
-                <div v-if="stepsIndex == 3">
-                  <FormItem :label="$t('signup.form.password')" prop="password">
-                    <Input type="password" password minlength="6" v-model="forgetPassword.password" size="large"
-                           :placeholder="$t('signup.placeholder.password')"/>
-                  </FormItem>
-                </div>
+                      <div v-if="stepsIndex == 3">
+                        <FormItem :label="$t('reset.form.newPassword')" prop="password">
+                          <Input type="password" password minlength="6" v-model="forgetPassword.password" size="large"
+                                 :placeholder="$t('signup.placeholder.password')"/>
+                        </FormItem>
+                      </div>
 
-                <!-- 重置成功 S -->
-                <div v-if="stepsIndex == 4" align="center">
-                  <h1>{{ $t('forgetPassword.resetSuccess') }}</h1>
-                </div>
-                <!-- 重置成功 E -->
+                      <!-- 重置成功 S -->
+                      <div v-if="stepsIndex == 4" align="center">
+                        <h1>{{ $t('forgetPassword.resetSuccess') }}</h1>
+                      </div>
+                      <!-- 重置成功 E -->
 
-                <Row>
-                  <Col span="12">
-                    <Button v-if="button.prev"
-                            :disabled="button.prevShow"
-                            @click.prevent.stop="stepsIndex--; onStepsIndex();" size="large">{{
-                        $t('basic.button.prev')
-                      }}
-                    </Button>
-                    <Divider type="vertical"/>
-                    <Button v-if="button.next"
-                            :disabled="button.nextShow"
-                            @click.prevent.stop="stepsIndex++; onStepsIndex();" size="large"
-                            type="primary">{{ $t('basic.button.next') }}
-                    </Button>
-                  </Col>
-                  <Col span="12" align="right" type="flex">
-                    <Button v-if="button.submit"
-                            long
-                            @click.prevent.stop="onSubmit"
-                            :loading="spinShow"
-                            size="large" type="primary">
-                      {{ $t('basic.button.submit') }}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            </div>
+                    </Form>
+                  </div>
+                </Card>
+              </Col>
+            </Row>
+
+            <template>
+              <Affix :offset-bottom="0" :useCapture="true" style="margin: 0px">
+                <Divider size="small" plain style="margin: 0px"></Divider>
+
+                <Card dis-hover :padding="8" :bordered="false">
+                  <Row>
+                    <Col flex="1"></Col>
+                    <Col span="12" align="right" type="flex">
+                      <Button v-if="button.prev"
+                              :disabled="button.prevShow"
+                              @click.prevent.stop="stepsIndex--; onStepsIndex();" size="large">{{
+                          $t('basic.button.prev')
+                        }}
+                      </Button>
+                      <Divider type="vertical"/>
+                      <Button v-if="button.next"
+                              :disabled="button.nextShow"
+                              @click.prevent.stop="stepsIndex++; onStepsIndex();" size="large"
+                              type="primary">{{ $t('basic.button.next') }}
+                      </Button>
+                      <Button v-if="button.submit"
+                              @click.prevent.stop="onSubmit"
+                              :loading="spinShow"
+                              size="large" type="primary">
+                        {{ $t('basic.button.submit') }}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Card>
+              </Affix>
+            </template>
           </Card>
         </Col>
       </Row>
@@ -112,6 +132,7 @@ import {api, application, http, mail} from "@/assets/js";
 
 import EmailTip from "@/components/EmailTip";
 import Captcha from "@/components/captcha/index";
+import Banner from "@/components/Banner"
 
 export default new application({
   name: 'userForgetPassword',
@@ -138,7 +159,7 @@ export default new application({
       },
     }
   },
-  components: {EmailTip, Captcha},
+  components: {EmailTip, Captcha, Banner},
   created() {
     const {code} = this.$route.query;
     if (code) {

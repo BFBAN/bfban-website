@@ -213,7 +213,6 @@ export default new application({
       }
     },
 
-
     /**
      * 编辑器触发事件
      * @param data
@@ -473,10 +472,10 @@ export default new application({
     margin-top: 0;
   }
 
-  img {
-    width: 100%;
-    display: block;
-  }
+  //img {
+  //  width: 100%;
+  //  display: block;
+  //}
 
   /* List styles */
 

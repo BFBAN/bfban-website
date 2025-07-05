@@ -1179,7 +1179,8 @@
       "originName": "EA account name",
       "password": "Password",
       "submitHint": "Already have a account? Sign In",
-      "username": "Username"
+      "username": "Username",
+      "agreeToTheTerms": "I have read and agree to the <b><a href='https://short.bfban.com/privacy-policy' target='_blank'>Privacy Policy</a></b> and <b><a href='https://short.bfban.com/user-policy' target='_blank'>User Guidelines</a></b>."
     },
     "placeholder": {
       "originEmail": "Enter your EA email.",

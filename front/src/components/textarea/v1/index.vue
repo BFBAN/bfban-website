@@ -396,11 +396,13 @@ export default {
   font-style: normal;
 }
 
+.tiptap a::before,
 .ql-editor a::before {
   user-select: none;
   content: "\f3d1";
 }
 
+.html-widget-box .tiptap a::before,
 .html-widget-box .ql-editor a::before {
   content: "" !important;
   display: none !important;
