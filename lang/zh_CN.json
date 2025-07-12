@@ -1185,7 +1185,8 @@
       "originName": "EA账户名字",
       "password": "密码",
       "submitHint": "已有账号？去登录",
-      "username": "用户名"
+      "username": "用户名",
+      "agreeToTheTerms": "我已阅读<b><a href='https://short.bfban.com/privacy-policy' target='_blank'>《用户隐私》</a></b>和<b><a href='https://short.bfban.com/user-policy' target='_blank'>《用户守则》</a></b>，并同意条款"
     },
     "placeholder": {
       "originEmail": "输入您的EA邮箱",
