@@ -50,7 +50,7 @@
                   <Card>
                     <Row :gutter="10">
                       <Col flex="1">
-                        <div @click="() => navigatorTo({to: {name: 'signin'}})">
+                        <div @click="() => navigatorTo({to: {name: 'signin', query: {byPath: $route.name}}})">
                           <Icon type="md-log-in" size="20"/>
                           {{ $t("header.signin") }}
                         </div>
@@ -93,7 +93,7 @@
 
         </div>
         <div class="header-nav">
-          <Button type="primary" v-show="!isLogin" class="mobile-hide" :to="{name: 'signin'}"
+          <Button type="primary" v-show="!isLogin" class="mobile-hide" :to="{name: 'signin', query: {byPath: $route.name}}"
                   icon="md-log-in"
                   v-if="$route.name !== 'signin'">
             {{ $t("header.signin") }}

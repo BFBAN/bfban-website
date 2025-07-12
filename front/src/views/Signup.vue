@@ -29,8 +29,8 @@
           </Col>
           <Col flex="1">
             <Card dis-hover :bordered="false">
-              <div slot="title">
-                <Steps :current="stepsIndex" v-if="!isMobile">
+              <div slot="title" v-if="!isMobile">
+                <Steps :current="stepsIndex">
                   <Step :title="$t('signup.steps[0].title')" :content="$t('signup.steps[0].supplement')"></Step>
                   <Step v-show="!isOneStepToTheStomach" :title="$t('signup.steps[1].title')"
                         :content="$t('signup.steps[1].title')"></Step>
@@ -123,7 +123,7 @@
             <Card dis-hover :padding="8" :bordered="false">
               <Row>
                 <Col flex="auto">
-                  <checkbox :border="true" :size="'large'" v-model="isOneStepToTheStomach">"One step to the stomach" Mode</checkbox>
+                  <checkbox :border="true" :size="'large'" v-model="isOneStepToTheStomach" v-show="!isMobile">"One step to the stomach" Mode</checkbox>
                 </Col>
 
                 <Col flex="auto" align="right" type="flex">

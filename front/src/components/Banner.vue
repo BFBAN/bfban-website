@@ -10,7 +10,7 @@
     <div class="widget-banner-body-before"
          :style="`background: linear-gradient(rgba(21, 24, 41, 0) 0%,transparent ${showMask}%)`"></div>
     <div class="widget-banner-bg ivu-btn-primary">
-      <img :class="`img ${showAlignConfig[showAlign]}`" :src="backgroundPath"/>
+      <img :class="`img ${showAlignConfig[showAlign]}`" :style="`transform: scale(${showScale})`" :src="backgroundPath"/>
     </div>
   </div>
 </template>
@@ -21,6 +21,10 @@ export default {
     height: {
       type: [Number, String],
       default: 280
+    },
+    showScale: {
+      type: [Number, String],
+      default: '1.5'
     },
     showAlign: {
       type: String,
@@ -123,7 +127,6 @@ export default {
     }
 
     .img {
-      transform: scale(1.5);
       position: absolute;
       opacity: .3;
       top: 0;

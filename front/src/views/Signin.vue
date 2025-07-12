@@ -16,7 +16,7 @@
             <br>
 
             <Card v-if="!isLogin" class="signin-box" :padding="isMobile ? 20 : 30" dis-hover>
-              <Banner :style="`margin: -${isMobile ? 20 : 30}px -${isMobile ? 20 : 30}px 30px;`" :height="180"></Banner>
+              <Banner :style="`margin: -${isMobile ? 20 : 30}px -${isMobile ? 20 : 30}px 30px;`" :showScale="2.5" :height="180"></Banner>
 
               <Form ref="signin" :model="signin" :rules="ruleValidate" label-position="top">
                 <Alert type="error" show-icon v-if="serverReturnMessage">
@@ -45,6 +45,9 @@
                   <Button @click="onSignin" long :loading="spinShow" size="large" type="primary">
                     {{ $t('basic.button.submit') }}
                   </Button>
+                  <Button @click="onBackRouter" v-show="$route.query.byPath" long size="large" type="text" style="margin-top: 10px;">
+                    {{ $t('basic.button.cancel') }}
+                  </Button>
                 </FormItem>
 
                 <spin fix v-if="spinShow">
@@ -65,16 +68,16 @@
                 <Col>
                   <router-link :to="{name: 'forgetPassword'}">{{ $t('signin.form.forgetPasswordHint') }}</router-link>
                 </Col>
-                <Col span="24">
-                  <Row :gutter="10">
-                    <Col>
-                      <a href="http://kook.top/wHwxhw">{{ $t('signin.form.Feedback') }}</a>
-                    </Col>
-                    <Col>
-                      <Icon type="md-open"></Icon>
-                    </Col>
-                  </Row>
-                </Col>
+                <!--                <Col span="24">-->
+                <!--                  <Row :gutter="10">-->
+                <!--                    <Col>-->
+                <!--                      <a href="http://kook.top/wHwxhw">{{ $t('signin.form.Feedback') }}</a>-->
+                <!--                    </Col>-->
+                <!--                    <Col>-->
+                <!--                      <Icon type="md-open"></Icon>-->
+                <!--                    </Col>-->
+                <!--                  </Row>-->
+                <!--                </Col>-->
               </Row>
             </Card>
             <Card v-if="isLogin" dis-hover :padding="isMobile ? 20 : 50">
@@ -237,6 +240,12 @@ export default new application({
       } catch (e) {
         if (e instanceof Error)
           this.$Message.error(e)
+      }
+    },
+    onBackRouter() {
+      const byPath = this.$route.query.byPath;
+      if (byPath) {
+        this.$router.push({name: byPath});
       }
     }
   },
