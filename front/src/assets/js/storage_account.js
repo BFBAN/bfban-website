@@ -124,10 +124,10 @@ export default class AccountStorage extends Storage {
 
             return res.data;
         } catch (e) {
-          return {
-              error: -1,
-              code: 'signout.bad'
-          }
+            return {
+                error: -1,
+                code: 'signout.bad'
+            }
         }
     }
 
@@ -220,14 +220,15 @@ export default class AccountStorage extends Storage {
     }
 
     /**
-     * 取得attr的值
+     * 取得User Config Local Storage Attr的值
      * @param key
+     * @param defaultValue
      * @returns {*|boolean}
      */
-    getConfiguration(key) {
+    getConfiguration(key, defaultValue) {
         let data = super.local.get(this.NAME);
 
-        if (data.code < 0) return false;
+        if (data.code < 0) return defaultValue || false;
         return key in data.data.value ? data.data.value[key] : false;
     }
 

@@ -16,8 +16,7 @@ export default new application({
   components: {HtmlLink, ThemeWidget},
   methods: {
     async loadData() {
-      const bannerAppData = account_storage.getConfiguration('ads.bfban-app.switch');
-      this.banner = bannerAppData;
+      this.banner = account_storage.getConfiguration('ads.bfban-app.switch', this.banner);
     },
     /**
      * 关闭底部广告
