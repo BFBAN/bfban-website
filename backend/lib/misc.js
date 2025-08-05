@@ -21,12 +21,11 @@ switch(config.errorHelperVerbose) {
 
 /** @param {Buffer|String} content @param {Buffer|String} key */
 function encrypt(content, key) {
-    content = Buffer.concat([Buffer.alloc(16), Buffer.from(content)]);
     key = Buffer.concat([Buffer.from(key), Buffer.alloc(32, 0)]).slice(0,32); // aes256 requires 32bytes long key
-    const cipher = crypto.createCipheriv(crypt_algo, key, crypto.randomBytes(16));
-    let crypted = cipher.update(content);
-    crypted = Buffer.concat([crypted, cipher.final()]);
-    return crypted;
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(crypt_algo, key, iv);
+    const crypted = cipher.update(Buffer.from(content));
+    return Buffer.concat([iv, crypted, cipher.final()]);
 }
 
 /** @param {Buffer|String} content @param {Buffer|String} key */
@@ -35,9 +34,8 @@ function decrypt(content, key) {
         content = Buffer.from(content);
         key = Buffer.concat([Buffer.from(key), Buffer.alloc(32, 0)]).slice(0,32);
         const decipher = crypto.createDecipheriv(crypt_algo, key, content.slice(0,16));
-        let decrypted = decipher.update(content.slice(16));
-        decrypted = Buffer.concat([decrypted, decipher.final()]);
-        return decrypted;
+        const decrypted = decipher.update(content.slice(16));
+        return Buffer.concat([decrypted, decipher.final()]);
     } catch(err) { // bad content
         return Buffer.alloc(0);
     }
