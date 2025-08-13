@@ -30,11 +30,13 @@
 
   // for color and unchecked
   &:not(&-border):not(&-dot):not(&-checked){
-    background: transparent;
-    border: 0;
-    color: @text-color;
+    background: fade(@primary-color, 8%);
+    border: 1px solid fade(@primary-color, 20%);
+    color: @primary-color;
+    border-radius: 999px;
+    box-shadow: 0 8px 18px -10px rgba(15, 23, 42, 0.28);
     .@{tag-close-prefix-cls} {
-      color: @text-color !important;
+      color: @primary-color !important;
     }
   }
 
