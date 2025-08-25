@@ -4,7 +4,7 @@
 
 body, html {
   overflow-x: hidden;
-  background-color: #1890ff!important;
+  background-color: #0b1020!important;
 }
 
 @media screen and (min-width: 1024px) {
@@ -20,16 +20,20 @@ body, html {
 
 // header
 header {
-  background-image: linear-gradient(#71a4f1,transparent) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.4), rgba(255,255,255,0));
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+  border-bottom: 1px solid fade(@black, 6%);
 }
 
 .styles-herosection {
   .styles_bg {
-    background: linear-gradient(302.61deg, rgba(0, 128, 255, 0) -0.71%, rgba(36, 79, 250, 0.43) 89.57%);
+    background: linear-gradient(302.61deg, fade(@primary-color, 0%) -0.71%, fade(@primary-color, 43%) 89.57%);
   }
 }
 
 .app {
-  background: linear-gradient(90deg, rgba(237, 238, 253, 0.7) 70%, rgb(from #faeeee r g b /.90) 100%);
+  background: rgba(255, 255, 255, 0.60);
   backdrop-filter: blur(10px);
+  box-shadow: @shadow-card;
+  border-radius: @border-radius-base;
 }

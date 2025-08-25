@@ -1,18 +1,18 @@
 // Color
-@primary-color          : #1890ff;         
-@info-color             : @primary-color;      
-@success-color          : #00bfff;         
+@primary-color          : #1f6feb;         // Karma Blue
+@info-color             : @primary-color;  
+@success-color          : #10b981;         // emerald-500
 @processing-color       : @primary-color;
-@warning-color          : #6f00ff;
-@error-color            : #ed4014;
-@normal-color           : #00c8ff;
-@link-color             : #000;     
+@warning-color          : #f59e0b;         // amber-500
+@error-color            : #ef4444;         // red-500
+@normal-color           : #60a5fa;         // blue-400
+@link-color             : @primary-color;  
 @link-hover-color       : tint(@link-color, 10%);
-@link-active-color      : shade(@primary-color, 5%);
+@link-active-color      : shade(@primary-color, 10%);
 @selected-color         : fade(@primary-color, 50%);
-@tooltip-color          : #549dfd;
-@subsidiary-color       : #549dfd;
-@rate-star-color        : #1890ff;
+@tooltip-color          : tint(@primary-color, 20%);
+@subsidiary-color       : tint(@primary-color, 10%);
+@rate-star-color        : @primary-color;
 @white: #fff;
 @black: #000;
 
@@ -21,18 +21,18 @@
 @component-background   : transparent;
 @font-family            : "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 @code-family            : Consolas,Menlo,Courier,monospace;
-@title-color            : @primary-color;
-@text-color             : #3d3a42;
-@text-color-secondary: fade(@black, 45%);
-@heading-color: fade(#000, 85%);
-@heading-color-dark: fade(#000, 100%);
+@title-color            : #0f172a;         // slate-900
+@text-color             : #1f2937;         // slate-700
+@text-color-secondary   : fade(@black, 45%);
+@heading-color          : #0f172a;
+@heading-color-dark     : fade(#000, 100%);
 @font-size-base         : 14px;
 @font-size-small        : 12px;
 @font-size-large        : @font-size-base + 2px;
 @line-height-base       : 1.5;
 @line-height-computed   : floor((@font-size-base * @line-height-base));
-@border-radius-base     : 6px;
-@border-radius-small    : 4px;
+@border-radius-base     : 10px;
+@border-radius-small    : 6px;
 @cursor-disabled        : not-allowed;
 
 
@@ -44,32 +44,32 @@
 @padding-xs: 8px; // small items
 
 // Border color
-@border-color-base      : fade(@primary-color, 30%);  // outside
-@border-color-split     : fade(@primary-color, 30%);  // inside
+@border-color-base      : fade(@black, 12%);  // outside
+@border-color-split     : fade(@black, 8%);   // inside
 @border-width-base      : 1px;            // width of the border for a component
 @border-style-base      : solid;          // style of a components border
 
 // Background color
-@background-color-base        : #84b8fc;  // base
+@background-color-base        : #f3f8ff;  // base light blue
 @background-color-select-hover: @input-disabled-bg;
-@tooltip-bg                   : rgba(70, 76, 91, .9);
-@head-bg                      : #000000;
-@table-thead-bg               : #a4edff;
-@table-td-stripe-bg           : #a4edff;
-@table-td-hover-bg            : #a4edff;
-@table-td-highlight-bg        : #a4edff;
-@menu-dark-title              : #1890ff;
-@menu-dark-active-bg          : #1890ff;
+@tooltip-bg                   : rgba(15, 23, 42, .9);
+@head-bg                      : transparent;
+@table-thead-bg               : fade(@primary-color, 10%);
+@table-td-stripe-bg           : fade(@primary-color, 6%);
+@table-td-hover-bg            : fade(@primary-color, 10%);
+@table-td-highlight-bg        : fade(@primary-color, 12%);
+@menu-dark-title              : @primary-color;
+@menu-dark-active-bg          : shade(@primary-color, 10%);
 @menu-dark-subsidiary-color   : rgba(255,255,255,.7);
 @menu-dark-group-title-color  : rgba(255,255,255,.36);
 @date-picker-cell-hover-bg    : fade(@primary-color, 10%);
 
 // Shadow
-@shadow-color           : fade(@primary-color, 30%);
+@shadow-color           : rgba(15, 23, 42, 0.18);
 @shadow-base            : @shadow-down;
-@shadow-card            : 0 1px 1px 0 fade(@primary-color, 30%);
+@shadow-card            : 0 12px 30px -12px rgba(15, 23, 42, 0.32);
 @shadow-up              : 0 -1px 6px @shadow-color;
-@shadow-down            : 0 1px 6px @shadow-color;
+@shadow-down            : 0 6px 18px @shadow-color;
 @shadow-left            : -1px 0 6px @shadow-color;
 @shadow-right           : 1px 0 6px @shadow-color;
 
@@ -93,20 +93,20 @@
 @btn-border-radius-small: 3px;
 @btn-group-border       : shade(@primary-color, 5%);
 
-@btn-disable-color      : #000000;
-@btn-disable-bg         : @background-color-base;
+@btn-disable-color      : #9ca3af;
+@btn-disable-bg         : #f3f4f6;
 @btn-disable-border     : @border-color-base;
 
 @btn-default-color      : @text-color;
-@btn-default-bg         : #1890ff;
+@btn-default-bg         : #ffffff;
 @btn-default-border     : @border-color-base;
 
-@btn-primary-color      : #1890ff;
+@btn-primary-color      : #ffffff;
 @btn-primary-bg         : @primary-color;
 
-@btn-ghost-color        : @text-color;
-@btn-ghost-bg           : rgb(10, 88, 255);
-@btn-ghost-border       : @border-color-base;
+@btn-ghost-color        : @primary-color;
+@btn-ghost-bg           : transparent;
+@btn-ghost-border       : fade(@primary-color, 40%);
 
 @btn-circle-size        : @btn-height-base;
 @btn-circle-size-large  : @btn-height-large;
@@ -119,15 +119,15 @@
 // Layout and Grid
 @grid-columns                : 24;
 @grid-gutter-width           : 0;
-@layout-body-background      : #9dc5f8;
-@layout-header-background    : #9dc5f8;
+@layout-body-background      : transparent;
+@layout-header-background    : transparent;
 @layout-header-height        : 64px;
 @layout-header-padding       : 0 50px;
 @layout-footer-padding       : 24px 50px;
-@layout-footer-background    : @layout-body-background;
-@layout-sider-background     : @layout-header-background;
+@layout-footer-background    : transparent;
+@layout-sider-background     : transparent;
 @layout-trigger-height       : 48px;
-@layout-trigger-color        : #9dc5f8;
+@layout-trigger-color        : @primary-color;
 @layout-zero-trigger-width   : 36px;
 @layout-zero-trigger-height  : 42px;
 
@@ -144,15 +144,15 @@
 @input-padding-vertical-small: 1px;
 @input-padding-vertical-large: 6px;
 
-@input-placeholder-color     : @btn-disable-color;
+@input-placeholder-color     : #9ca3af;
 @input-color                 : @text-color;
 @input-border-color          : @border-color-base;
-@input-bg                    : #9dc5f8;
-@input-group-bg              : #9dc5f8;
+@input-bg                    : #ffffff;
+@input-group-bg              : #ffffff;
 
 @input-hover-border-color    : @primary-color;
 @input-focus-border-color    : @primary-color;
-@input-disabled-bg           : #9dc5f8;
+@input-disabled-bg           : #f3f4f6;
 
 // Tag
 @tag-font-size          : 12px;
@@ -214,7 +214,7 @@
 @slider-margin             : 16px 0;
 @slider-button-wrap-size   : 18px;
 @slider-button-wrap-offset : -5px;
-@slider-disabled-color     : #9dc5f8;
+@slider-disabled-color     : #e5e7eb;
 
 // Avatar
 @avatar-size-base: 32px;
@@ -223,8 +223,8 @@
 @avatar-font-size-base: 18px;
 @avatar-font-size-lg: 24px;
 @avatar-font-size-sm: 14px;
-@avatar-bg: #9dc5f8;
-@avatar-color: #9dc5f8;
+@avatar-bg: fade(@primary-color, 10%);
+@avatar-color: @primary-color;
 @avatar-border-radius: @border-radius-small;
 
 // Anchor
@@ -239,3 +239,72 @@
 @list-item-meta-margin-bottom: @padding-md;
 @list-item-meta-avatar-margin-right: @padding-md;
 @list-item-meta-title-margin-bottom: @padding-sm;
+
+// Component overrides for a crisper, modern look
+.ivu-btn.ivu-btn-primary {
+  background-color: @btn-primary-bg;
+  border-color: @btn-primary-bg;
+  color: @btn-primary-color;
+  box-shadow: 0 8px 18px -10px rgba(15, 23, 42, 0.36);
+  border-radius: 999px;
+  &:hover {
+    background-color: tint(@btn-primary-bg, 8%);
+    border-color: tint(@btn-primary-bg, 8%);
+  }
+  &:active,
+  &.active {
+    background-color: shade(@btn-primary-bg, 8%);
+    border-color: shade(@btn-primary-bg, 8%);
+  }
+}
+
+.ivu-btn-default,
+.ivu-btn {
+  background-color: @btn-default-bg;
+  border-color: @btn-default-border;
+  color: @btn-default-color;
+  border-radius: 999px;
+  &:hover {
+    border-color: @primary-color;
+    color: @primary-color;
+  }
+}
+
+.ivu-input,
+.ivu-select-selection,
+.ivu-input-number-input,
+.ivu-auto-complete .ivu-input {
+  background-color: @input-bg;
+  border-color: @input-border-color;
+  color: @input-color;
+  &:hover {
+    border-color: @input-hover-border-color;
+  }
+  &:focus,
+  &:active {
+    border-color: @input-focus-border-color;
+    box-shadow: 0 0 0 3px fade(@primary-color, 14%);
+  }
+}
+
+.ivu-card,
+.ivu-list-bordered {
+  border-radius: @border-radius-base;
+  box-shadow: @shadow-card;
+}
+
+// Radio group button - pill corners
+.ivu-radio-group-button .ivu-radio-wrapper:first-child {
+  border-radius: 999px 0 0 999px;
+}
+.ivu-radio-group-button .ivu-radio-wrapper:last-child {
+  border-radius: 0 999px 999px 0;
+}
+.ivu-radio-group-button .ivu-radio-wrapper:first-child:last-child {
+  border-radius: 999px;
+}
+
+// Keep banners unrounded even if they use ivu-btn-primary utility class
+.widget-banner .ivu-btn-primary {
+  border-radius: 0;
+}
