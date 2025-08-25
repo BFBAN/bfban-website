@@ -91,7 +91,9 @@
               </div>
             </Col>
             <Col>
-              <Icon type="ios-eye" size="25"/>
+              <router-link :to="{name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}" target="_blank" @click.native.stop="$router.resolve({name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}).href && window.open($router.resolve({name: 'player', params: {ouid: i.toOriginPersonaId}, query: {byPath: $route.name}}).href, '_blank')">
+                <Icon type="ios-eye" size="25"/>
+              </router-link>
             </Col>
           </Row>
         </div>
