@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/_redirects"
   },
   {
-    "revision": "6349ac98633b1e9a07bb1fcc9c34291f",
+    "revision": "eacf7e56bcb14e59983d4e9933e35f5d",
     "url": "/ads.txt"
   },
   {
