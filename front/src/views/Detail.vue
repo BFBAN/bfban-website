@@ -15,7 +15,7 @@
         <br>
       </template>
 
-      <AdsGoogle id="7930151828"></AdsGoogle>
+      <AdsGoogle id="3340268100"></AdsGoogle>
       <br>
 
       <Card id="getSharePicture" v-if="isCheaterExist" dis-hover>
@@ -451,7 +451,7 @@
 
             <Col :xs="{span: 23, push: 0}" :lg="{span: 7, push: 0}" order="2" class="mobile-hide"
                  v-if="appeal.disable">
-              <AdsGoogle id="1760339032">
+              <AdsGoogle id="8672485837">
                 <br>
               </AdsGoogle>
 
@@ -501,7 +501,7 @@
     </div>
 
     <br>
-    <AdsGoogle id="6674125493" style="margin-bottom: 8px;"></AdsGoogle>
+    <AdsGoogle id="6397676285" style="margin-bottom: 8px;"></AdsGoogle>
 
     <template v-if="!isFull">
       <Affix :top="100">

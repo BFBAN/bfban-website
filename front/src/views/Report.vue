@@ -12,7 +12,7 @@
       </Row>
       <br>
 
-      <AdsGoogle id="7930151828" style="margin-bottom: 10px"></AdsGoogle>
+      <AdsGoogle id="3340268100" style="margin-bottom: 10px"></AdsGoogle>
 
       <Tabs type="card"
             v-model="tabs.count"

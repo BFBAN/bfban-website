@@ -95,7 +95,7 @@
 
             <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
 
-            <AdsGoogle id="7930151828" style="margin-bottom: 8px;"></AdsGoogle>
+            <AdsGoogle id="3340268100" style="margin-bottom: 8px;"></AdsGoogle>
 
             <div v-for="(d, d_index) in data" :key="d.originUserId" class="item-card" v-voice-button>
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
@@ -192,11 +192,11 @@
                   @on-page-size-change="handlePageSizeChange"/>
           </Card>
 
-          <AdsGoogle id="6674125493" style="margin: 10px 0;"></AdsGoogle>
+          <AdsGoogle id="6397676285" style="margin: 10px 0;"></AdsGoogle>
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 7, push: 0, pull: 0}">
           <br>
-          <AdsGoogle id="1760339032"></AdsGoogle>
+          <AdsGoogle id="8672485837"></AdsGoogle>
 
           <Affix :offset-top="20">
             <Card dis-hover>
