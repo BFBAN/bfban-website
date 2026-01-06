@@ -5,13 +5,13 @@
     <div class="ad-off" @click="offAds">
       <Icon size="10" type="md-close"></Icon>
     </div>
-    <!-- <Adsense
+    <Adsense
         v-if="adId"
         :data-ad-client="adClient.toString()"
         :data-ad-slot="adId.toString()"
         :data-ad-format="ads[adId].adFormat"
         :data-full-width-responsive="ads[adId].fullWidthResponsive">
-    </Adsense> -->
+    </Adsense>
     <slot></slot>
   </Card>
 </template>
@@ -24,7 +24,7 @@ export default {
   props: {
     id: {
       type: [Number, String],
-      default: () => '7930151828',
+      default: () => '3340268100',
     },
   },
   watch: {
@@ -39,22 +39,22 @@ export default {
       account_storage,
 
       adId: "",
-      adClient: "ca-pub-6625226616103631",
+      adClient: "ca-pub-1202177945078410",
       ads: {
-        7930151828: {
+        3340268100: {
           style: "width: 100%;min-height: 80px;",
           class: [],
           adFormat: 'true',
           fullWidthResponsive: 'true'
         },
-        1760339032: {
+        8672485837: {
           name: 'right',
           style: "width: 100%;min-height: 300px;margin-bottom: 10px;",
           class: [],
           adFormat: 'true',
           fullWidthResponsive: 'true'
         },
-        6674125493: {
+        6397676285: {
           name: 'bfban-x',
           style: "width: 100%;min-height: 200px;",
           class: [],
