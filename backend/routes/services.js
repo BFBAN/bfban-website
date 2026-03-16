@@ -70,6 +70,17 @@ async (req, res, next)=> {
     }
 }); */
 
+/**
+ * @swagger
+ * /api/services/myStorageQuota:
+ *   get:
+ *     tags:
+ *       - services
+ *     summary: get my storage quota
+ *     responses:
+ *       200:
+ *         description: quota.ok
+ */
 router.get('/myStorageQuota', verifyJWT,
     /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
     async (req, res, next) => {
@@ -86,6 +97,30 @@ router.get('/myStorageQuota', verifyJWT,
         }
     });
 
+/**
+ * @swagger
+ * /api/services/myFiles:
+ *   get:
+ *     tags:
+ *       - services
+ *     summary: get my files
+ *     parameters:
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: myFiles.ok
+ */
 router.get('/myFiles', verifyJWT, [
     checkquery('limit').optional().isInt({min: 0, max: 200}),
     checkquery('skip').optional().isInt({min: 0}),
@@ -122,6 +157,17 @@ async (req, res, next) => {
     }
 })
 
+/**
+ * @swagger
+ * /api/services/files:
+ *   post:
+ *     tags:
+ *       - services
+ *     summary: list files
+ *     responses:
+ *       200:
+ *         description: files.ok
+ */
 router.post('/files', verifyJWT, allowPrivileges(["root", "dev"]), [
         checkbody('data.userId').optional().isInt({min: 0}),
         checkbody('data.createTimeFrom').optional().isInt({min: 0}),
@@ -160,6 +206,26 @@ router.post('/files', verifyJWT, allowPrivileges(["root", "dev"]), [
         }
     });
 
+/**
+ * @swagger
+ * /api/services/file:
+ *   get:
+ *     tags:
+ *       - services
+ *     summary: get file
+ *     parameters:
+ *       - name: filename
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: explain
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: file.ok
+ */
 router.get('/file', [
     checkquery('filename').isString().isLength({min: 0, max: 64}),
     checkquery('explain').optional()
@@ -203,6 +269,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/services/file:
+ *   delete:
+ *     tags:
+ *       - services
+ *     summary: delete file
+ *     responses:
+ *       200:
+ *         description: deleteFile.ok
+ */
 router.delete('/file', verifyJWT, allowPrivileges(['root', 'dev', 'super']), [
     checkbody('filename').isString().isLength({min: 0, max: 64}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
@@ -239,6 +316,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/services/upload:
+ *   put:
+ *     tags:
+ *       - services
+ *     summary: upload file
+ *     responses:
+ *       201:
+ *         description: upload.success
+ */
 router.put('/upload', verifyJWT, forbidPrivileges(['blacklisted', 'freezed']), [
     checkheader('Content-Length').isInt({min: 0, max: 2048 * 1024}),
     checkheader('Content-Type').isMimeType()
@@ -300,6 +388,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/services/uploadBigFile:
+ *   post:
+ *     tags:
+ *       - services
+ *     summary: upload big file
+ *     responses:
+ *       201:
+ *         description: upload.success
+ */
 router.post('/uploadBigFile', verifyJWT, forbidPrivileges(['blacklisted', 'freezed']), [
     checkbody("data.size").isInt({min: 0, max: 2000 * 1000 * 1000}),
     checkbody("data.mimeType").isMimeType()
@@ -374,6 +473,17 @@ async (req, res, next) => {
 /**
  * External Auth S
  */
+/**
+ * @swagger
+ * /api/services/externalAuth:
+ *   post:
+ *     tags:
+ *       - services
+ *     summary: external auth
+ *     responses:
+ *       200:
+ *         description: externalAuth.success
+ */
 router.post('/externalAuth', verifyJWT, allowPrivileges(['root', 'admin', 'bot', 'dev', 'super']), [
     checkbody('id').isLength({min: 0}),
     checkbody('appId').optional().isString().trim(),
@@ -442,6 +552,17 @@ async (req, res, next) => {
     }
 })
 
+/**
+ * @swagger
+ * /api/services/confirmAuth:
+ *   post:
+ *     tags:
+ *       - services
+ *     summary: confirm auth
+ *     responses:
+ *       200:
+ *         description: confirmAuth.success
+ */
 router.post('/confirmAuth', verifyJWT, forbidPrivileges(['blacklisted', 'freezed']), [
     checkbody('code').isString({min: 0}).notEmpty()
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
@@ -517,6 +638,22 @@ async (req, res, next) => {
     }
 })
 
+/**
+ * @swagger
+ * /api/services/getAuthText:
+ *   get:
+ *     tags:
+ *       - services
+ *     summary: get auth text
+ *     parameters:
+ *       - name: appId
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: getAuth.success
+ */
 router.get('/getAuthText', verifyJWT, allowPrivileges(['root', 'admin', 'bot', 'dev', 'super']), [query("appId")], getAuth)
 
 /**

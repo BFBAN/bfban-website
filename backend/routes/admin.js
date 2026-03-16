@@ -4,8 +4,7 @@ import {body as checkbody, query as checkquery, validationResult} from "express-
 
 import db from "../mysql.js";
 import config from "../config.js";
-import {verifyJWT} from "../middleware/auth.js";
-import {allowPrivileges} from "../middleware/auth.js";
+import {allowPrivileges, verifyJWT} from "../middleware/auth.js";
 import {localeMessage, sendMessage} from "./message.js";
 import {generatePassword, privilegeGranter, privilegeRevoker, userHasRoles} from "../lib/auth.js";
 import {initUserStorageQuota, userDefaultAttribute, userSetAttributes} from "../lib/user.js";
@@ -18,6 +17,20 @@ import {siteEvent} from "../lib/bfban.js";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/admin/userStats:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: get user stats
+ *     description: get user stats
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: siteStats.ok
+ */
 let userStatsCache = {data: undefined, time: new Date(0)};
 router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "dev"]), [
         checkbody('createTimeFrom').optional().isInt({min: 0}),
@@ -104,6 +117,42 @@ router.get('/userStats', verifyJWT, allowPrivileges(["admin", "super", "root", "
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/searchUser:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: search user
+ *     parameters:
+ *       - name: name
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: type
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: parameter
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: searchUser.ok
+ */
 router.get('/searchUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('name').isString(),
     checkquery('type').optional().isIn(['all', 'admin', 'bot']),
@@ -184,6 +233,30 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/blockedUserAll:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: blocked user all
+ *     parameters:
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: admin.blockedUserAll.ok
+ */
 router.get('/blockedUserAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
@@ -216,6 +289,30 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/commentAppeal:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: get comment appeal
+ *     parameters:
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: admin.commentAll.ok
+ */
 router.get('/commentAppeal', verifyJWT, allowPrivileges(["super", "root", "dev", "bot"]), [
         // checkbody('type').optional().isString().isInt(['banAppeal']),
         checkquery('skip').optional().isInt({min: 0}),
@@ -262,6 +359,38 @@ router.get('/commentAppeal', verifyJWT, allowPrivileges(["super", "root", "dev",
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/commentAll:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: get all comments
+ *     parameters:
+ *       - name: id
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: userId
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: admin.commentAll.ok
+ */
 router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkbody('type').optional().isIn(['all', 'report', 'reply', 'judgement', 'banAppeal']),
         checkquery('id').optional().isInt({min: 0}),
@@ -313,6 +442,42 @@ router.get('/commentAll', verifyJWT, allowPrivileges(["super", "root", "dev"]), 
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/commentTypeList:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: comment type list
+ *     parameters:
+ *       - name: type
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: banAppealStats
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: judgeAction
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: admin.CommentTypeList.ok
+ */
 router.get('/commentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkquery('type').optional().isString().isIn(['banAppeal', 'judgement']),
         checkquery('banAppealStats').optional().isString(),
@@ -390,6 +555,17 @@ router.get('/commentTypeList', verifyJWT, allowPrivileges(["super", "root", "dev
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/setComment:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: set comment
+ *     responses:
+ *       200:
+ *         description: admin.setComment.ok
+ */
 router.post('/setComment', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.content').isString().isLength({max: 65535}),
@@ -443,6 +619,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/setAppeal:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: set appeal
+ *     responses:
+ *       200:
+ *         description: admin.setAppeal.ok
+ */
 router.post('/setAppeal', verifyJWT, allowPrivileges(["super", "root", "dev", "admin"]), [
     checkbody('data.toPlayerId').isInt({min: 0})
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
@@ -487,6 +674,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/setUserRole:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: set user role
+ *     responses:
+ *       200:
+ *         description: admin.setUserRole.ok
+ */
 router.post('/setUserRole', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.action').isIn(['grant', 'revoke']),
@@ -563,6 +761,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/judgementLog:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: judgement log
+ *     responses:
+ *       200:
+ *         description: admin.log.ok
+ */
 router.post('/judgementLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('userId').optional().isInt({min: 0}),
     checkbody('userName').optional().isString(),
@@ -624,6 +833,38 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/adminLog:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: admin log
+ *     parameters:
+ *       - name: createTimeFrom
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: createTimeto
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: admin.log.ok
+ */
 router.get('/adminLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('createTimeFrom').optional().isISO8601(),
     checkquery('createTimeto').optional().isISO8601(),
@@ -722,6 +963,30 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/chatLog:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: chat log
+ *     parameters:
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: admin.chatLog.ok
+ */
 router.get('/chatLog', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
@@ -745,6 +1010,34 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/userOperationLogs:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: get user operation logs
+ *     parameters:
+ *       - name: id
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: admin.userOperationLogs.ok
+ */
 router.get('/userOperationLogs', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkquery('id').optional().isString(),
         checkquery('skip').optional().isInt({min: 0}),
@@ -795,6 +1088,17 @@ router.get('/userOperationLogs', verifyJWT, allowPrivileges(["super", "root", "d
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/setUserAttr:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: set user attr
+ *     responses:
+ *       200:
+ *         description: admin.setUserAttr.ok
+ */
 router.post('/setUserAttr', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.attr').isObject(),
@@ -837,6 +1141,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/setUserBindData:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: set user bind data
+ *     responses:
+ *       200:
+ *         description: setUserBindData.success
+ */
 router.post('/setUserBindData', verifyJWT, allowPrivileges(["root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.originEmail').isString().trim().isEmail(),
@@ -869,6 +1184,17 @@ router.post('/setUserBindData', verifyJWT, allowPrivileges(["root", "dev"]), [
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/transferBindData:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: transfer bind data
+ *     responses:
+ *       200:
+ *         description: transferBindData.success
+ */
 router.post('/transferBindData', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.targetId').isInt({min: 0}),
@@ -945,6 +1271,17 @@ router.post('/transferBindData', verifyJWT, allowPrivileges(["super", "root", "d
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/setUserGeneratePassword:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: set user generate password
+ *     responses:
+ *       200:
+ *         description: setUserGeneratePassword.success
+ */
 router.post('/setUserGeneratePassword', verifyJWT, allowPrivileges(["root", "dev"]), [
     checkbody('data.id').isInt({min: 0}),
     checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40}),
@@ -987,6 +1324,17 @@ router.post('/setUserGeneratePassword', verifyJWT, allowPrivileges(["root", "dev
     }
 })
 
+/**
+ * @swagger
+ * /api/admin/addUser:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: add user
+ *     responses:
+ *       201:
+ *         description: admin.addUser.success
+ */
 router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         checkbody('data.username').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
         checkbody('data.password').isString().trim().isLength({min: 1, max: 40}),
@@ -1072,6 +1420,30 @@ router.post('/addUser', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/muteUserAll:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: mute user all
+ *     parameters:
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: admin.muteUserAll.ok
+ */
 router.get('/muteUserAll', verifyJWT, allowPrivileges(["root", "dev", "super", "admin"]), [
         checkquery('skip').optional().isInt({min: 0}),
         checkquery('limit').optional().isInt({min: 0, max: 100}),
@@ -1101,6 +1473,17 @@ router.get('/muteUserAll', verifyJWT, allowPrivileges(["root", "dev", "super", "
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/muteUser:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: mute user
+ *     responses:
+ *       200:
+ *         description: admin.muteUser.ok
+ */
 router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "admin"]), [
         checkbody('data.id').optional().isInt(),
         checkbody('data.value').optional().isInt(),
@@ -1185,6 +1568,17 @@ router.post('/muteUser', verifyJWT, allowPrivileges(["root", "dev", "super", "ad
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/delUser:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: delete user
+ *     responses:
+ *       201:
+ *         description: admin.delUser.success
+ */
 router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
         checkbody('data.id').optional().isInt(),
         checkbody('data.type').isIn(['logic', 'real', 'restore'])
@@ -1237,6 +1631,30 @@ router.post('/delUser', verifyJWT, allowPrivileges(["root", "dev"]), [
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/verifications:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: get verifications
+ *     parameters:
+ *       - name: skip
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: verifications.ok
+ */
 router.get('/verifications', verifyJWT, allowPrivileges(['dev', 'root']), [
         checkquery('skip').optional().isInt({min: 0}),
         checkquery('limit').optional().isInt({min: 0, max: 100}),
@@ -1268,6 +1686,17 @@ router.get('/verifications', verifyJWT, allowPrivileges(['dev', 'root']), [
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/msGraphStatus:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: get ms graph status
+ *     responses:
+ *       200:
+ *         description: msGraphStatus.ok
+ */
 router.get('/msGraphStatus', verifyJWT, allowPrivileges(['root']),
     /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
     async (req, res, next) => {
@@ -1282,6 +1711,17 @@ router.get('/msGraphStatus', verifyJWT, allowPrivileges(['root']),
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/msGraphInit:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: ms graph init
+ *     responses:
+ *       200:
+ *         description: msGraphInit.redirect
+ */
 router.get('/msGraphInit', verifyJWT, allowPrivileges(['root']),
     /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */
     async (req, res, next) => {
@@ -1295,6 +1735,17 @@ router.get('/msGraphInit', verifyJWT, allowPrivileges(['root']),
         }
     });
 
+/**
+ * @swagger
+ * /api/admin/msGraphAuthCode:
+ *   post:
+ *     tags:
+ *       - admin
+ *     summary: ms graph auth code
+ *     responses:
+ *       200:
+ *         description: msGraphAuthCode.ok
+ */
 router.post('/msGraphAuthCode', verifyJWT, allowPrivileges(['root']), [
     checkbody('data.code').isString()
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction) } */

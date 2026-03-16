@@ -173,7 +173,47 @@ router.get('/statistics', statisticsLimiter, [
     });
 
 /**
- * active statistical
+ * @swagger
+ * /api/activeStatistical:
+ *   get:
+ *     tags:
+ *       - statistic
+ *     summary: Get active statistical
+ *     description: active statistical
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: isBot
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *       - name: report
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *       - name: community
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *       - name: achievement
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *           minimum: 0
+ *       - name: time
+ *         in: query
+ *         schema:
+ *           type: string
+ *           enum: [daily, weekly, monthly, yearly]
+ *     responses:
+ *       200:
+ *         description: statistics.ok
+ *       400:
+ *         description: statistics.bad
  */
 router.get('/activeStatistical', [
         checkquery('isBot').optional().isBoolean(),
@@ -888,6 +928,20 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admins:
+ *   get:
+ *     tags:
+ *       - admin
+ *     summary: get admins list
+ *     description: Get a list of admins
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: getAdmins.success
+ */
 router.get('/admins', async (req, res, next) => {
     try {
         /** @type {import("../typedef.js").User[]} */
@@ -1125,7 +1179,10 @@ async (req, res, next) => {
  *       - application/json
  *     parameters:
  *       - name: param
- *         in: path
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
  *         value:
  *     responses:
  *       200: advSearch
@@ -1213,13 +1270,31 @@ router.get('/advanceSearch', verifyJWT, forbidPrivileges(['blacklisted', 'freeze
 
 /**
  * @swagger
- * /api/siteStats:
+ * /api/trend:
  *   get:
  *     tags:
  *       - statistic
+ *     summary: Hot case
  *     description: Hot case
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 10
+ *       - name: time
+ *         in: query
+ *         schema:
+ *           type: string
+ *           enum: [daily, weekly, monthly, yearly]
+ *     responses:
+ *       200:
+ *         description: trend.ok
+ *       400:
+ *         description: trend.bad
  */
 router.get('/trend', [
     checkquery('limit').optional().isInt({min: 1, max: 10}),
@@ -1265,11 +1340,13 @@ async (req, res, next) => {
  *   get:
  *     tags:
  *       - statistic
+ *     summary: Website basic data statistics
  *     description: Website basic data statistics
  *     produces:
  *       - application/json
  *     responses:
  *       200:
+ *         description: siteStats.ok
  */
 const siteStatsCache = {data: undefined, time: new Date(0)};
 router.get('/siteStats', async (req, res, next) => {

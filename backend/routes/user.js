@@ -9,13 +9,7 @@ import * as misc from "../lib/misc.js";
 import verifyCaptcha from "../middleware/captcha.js";
 import {getGravatarAvatar} from "../lib/gravatar.js";
 import {sendBindingOriginVerify, sendForgetPasswordVerify, sendRegisterVerify} from "../lib/mail.js";
-import {
-    allowPrivileges,
-    forbidPrivileges,
-    forbidVisitTypes,
-    verifyAllowPrivilege,
-    verifyJWT
-} from "../middleware/auth.js";
+import {allowPrivileges, forbidPrivileges, forbidVisitTypes, verifyAllowPrivilege, verifyJWT} from "../middleware/auth.js";
 import {comparePassword, generatePassword, privilegeRevoker, userHasRoles} from "../lib/auth.js";
 import {userDefaultAttribute, userSetAttributes, userShowAttributes} from "../lib/user.js";
 import {totalAachievementExp} from "./user_achievements.js"
@@ -125,6 +119,26 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/signupVerify:
+ *   get:
+ *     tags:
+ *       - user
+ *     summary: signup verify
+ *     parameters:
+ *       - name: code
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: lang
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       201:
+ *         description: signup.success
+ */
 router.get('/signupVerify', [
     checkquery('code').isString().notEmpty(),
     checkquery('lang').isIn(config.supportLanguages)
@@ -179,6 +193,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/signin4comm:
+ *   post:
+ *     tags:
+ *       - user
+ *     summary: signin for comm
+ *     responses:
+ *       200:
+ *         description: signin.success
+ */
 router.post('/signin4comm', verifyCaptcha, verifyJWT, allowPrivileges(['dev']),
 /** @type {(req:express.Request, res:express.Response, next:express.NextFunction)=>void} */
 async (req, res, next) => {
@@ -350,6 +375,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/bindOrigin:
+ *   post:
+ *     tags:
+ *       - user
+ *     summary: bind origin
+ *     responses:
+ *       200:
+ *         description: bindOrigin.needVerify
+ */
 router.post('/bindOrigin', verifyJWT, forbidPrivileges(['blacklisted']), verifyCaptcha, [
     checkbody('data.originEmail').isString().trim().isEmail(),
     checkbody('data.originName').isString().trim().notEmpty()
@@ -414,6 +450,22 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/bindOriginVerify:
+ *   get:
+ *     tags:
+ *       - user
+ *     summary: bind origin verify
+ *     parameters:
+ *       - name: code
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: bindOrigin.success
+ */
 router.get('/bindOriginVerify', verifyJWT, [
     checkquery('code').isString()
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
@@ -553,6 +605,22 @@ async function showUserInfo(req, res, next) {
  *       - application/json
  */
 router.get('/info', [checkquery('id').isInt({min: 0})], showUserInfo);
+/**
+ * @swagger
+ * /api/user/info4admin:
+ *   get:
+ *     tags:
+ *       - user
+ *     summary: info for admin
+ *     parameters:
+ *       - name: id
+ *         in: query
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: userInfo.success
+ */
 router.get('/info4admin', verifyJWT, allowPrivileges(['super', 'root', 'dev']), [
     checkquery('id').isInt({min: 0})
 ], showUserInfo);
@@ -638,6 +706,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/me:
+ *   post:
+ *     tags:
+ *       - user
+ *     summary: edit me
+ *     responses:
+ *       200:
+ *         description: me.success
+ */
 router.post('/me', verifyJWT, forbidPrivileges(['blacklisted']), forbidVisitTypes(['bot', 'external-auth']), [
     checkbody('data.subscribes').optional({nullable: true}).isArray().isLength({max: 100}).custom((val) => {
         for (const i of val)
@@ -668,6 +747,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/changeName:
+ *   post:
+ *     tags:
+ *       - user
+ *     summary: change name
+ *     responses:
+ *       200:
+ *         description: changeName.success
+ */
 router.post('/changeName', verifyJWT, forbidPrivileges(['blacklisted']), forbidVisitTypes(['bot', 'external-auth']), verifyCaptcha, [
     checkbody('data.newname').isString().trim().isAlphanumeric('en-US', {ignore: '-_'}).isLength({min: 1, max: 40}),
 ], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)=>void} */
@@ -708,6 +798,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/changePassword:
+ *   post:
+ *     tags:
+ *       - user
+ *     summary: change password
+ *     responses:
+ *       200:
+ *         description: changePassword.success
+ */
 router.post('/changePassword', verifyJWT, forbidVisitTypes(['bot', 'external-auth']), [
     checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.oldpassword').isString().trim().isLength({min: 1, max: 40})
@@ -740,6 +841,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/forgetPassword:
+ *   post:
+ *     tags:
+ *       - user
+ *     summary: forget password
+ *     responses:
+ *       200:
+ *         description: forgetPassword.needVerify
+ */
 router.post('/forgetPassword', verifyCaptcha, [
     checkbody('data.username').isString().trim().isLength({min: 1, max: 40}),
     checkbody('data.originEmail').trim().isEmail(),
@@ -787,6 +899,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/user/forgetPasswordVerify:
+ *   post:
+ *     tags:
+ *       - user
+ *     summary: forget password verify
+ *     responses:
+ *       200:
+ *         description: forgetPassword.success
+ */
 router.post('/forgetPasswordVerify', [
     checkbody('data.code').isString(),
     checkbody('data.newpassword').isString().trim().isLength({min: 1, max: 40})

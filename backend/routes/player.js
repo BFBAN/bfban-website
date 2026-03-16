@@ -1239,6 +1239,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/player/judgement:
+ *   post:
+ *     tags:
+ *       - player
+ *     summary: add judgement
+ *     responses:
+ *       200:
+ *         description: judgement.success
+ */
 router.post('/judgement', verifyJWT, allowPrivileges(['admin', 'super', 'root']), forbidVisitTypes(['external-auth']), [checkbody('data.toPlayerId').isInt({min: 0}), checkbody('data.cheatMethods').optional({nullable: true}).isArray().custom(cheatMethodsSanitizer), // if no kill or guilt judgment is made, this field is not required
     checkbody('data.action').isIn(['suspect', 'innocent', 'discuss', 'guilt', 'kill', 'invalid', 'more', 'farm']), checkbody('data.content').isString().trim().isLength({
         min: 1,
@@ -1370,6 +1381,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/player/restoreAdmin:
+ *   post:
+ *     tags:
+ *       - player
+ *     summary: restore admin
+ *     responses:
+ *       200:
+ *         description: restoreAdmin.success
+ */
 router.post('/restoreAdmin', verifyJWT, allowPrivileges(['admin_']),
     async (req, res, next) => {
         try {
@@ -1379,6 +1401,17 @@ router.post('/restoreAdmin', verifyJWT, allowPrivileges(['admin_']),
         }
     });
 
+/**
+ * @swagger
+ * /api/player/banAppeal:
+ *   post:
+ *     tags:
+ *       - player
+ *     summary: add ban appeal
+ *     responses:
+ *       201:
+ *         description: banAppeal.success
+ */
 router.post('/banAppeal', verifyJWT, verifySelfOrPrivilege(['volunteer']), forbidPrivileges(['freezed', 'blacklisted']), commentRateLimiter.limiter([{
     roles: ['admin', 'super', 'root', 'dev', 'bot'],
     value: 0
@@ -1459,6 +1492,17 @@ async (req, res, next) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/player/viewBanAppeal:
+ *   post:
+ *     tags:
+ *       - player
+ *     summary: view ban appeal
+ *     responses:
+ *       200:
+ *         description: viewBanAppeal.success
+ */
 router.post('/viewBanAppeal', verifyJWT, allowPrivileges(['admin', 'super', 'root']), [checkbody('data.id').isInt({min: 0}), checkbody('data.status').optional().isIn(['open', 'close', 'lock'])], /** @type {(req:express.Request&import("../typedef.js").ReqUser, res:express.Response, next:express.NextFunction)} */
 async (req, res, next) => {
     try {

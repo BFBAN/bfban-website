@@ -9,6 +9,18 @@ const maxSubscribes = 100;
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/user/subscribes:
+ *   post:
+ *     tags:
+ *       - user
+ *       - subscribes
+ *     summary: get subscribes
+ *     responses:
+ *       200:
+ *         description: subscribes.success
+ */
 router.post('/subscribes', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']), [
     checkquery('skip').optional().isInt({min: 0}),
     checkquery('limit').optional().isInt({min: 0, max: 100}),
@@ -41,6 +53,18 @@ router.post('/subscribes', verifyJWT, forbidPrivileges(['freezed', 'blacklisted'
     }
 });
 
+/**
+ * @swagger
+ * /api/user/isSubscribes:
+ *   post:
+ *     tags:
+ *       - user
+ *       - subscribes
+ *     summary: check is subscribes
+ *     responses:
+ *       200:
+ *         description: subscribes.success
+ */
 router.post('/isSubscribes', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']), [
     checkbody('id').isInt(),
 ], async (req, res, next) => {
@@ -66,6 +90,18 @@ router.post('/isSubscribes', verifyJWT, forbidPrivileges(['freezed', 'blackliste
     }
 });
 
+/**
+ * @swagger
+ * /api/user/subscribes/add:
+ *   post:
+ *     tags:
+ *       - user
+ *       - subscribes
+ *     summary: add subscribes
+ *     responses:
+ *       200:
+ *         description: subscribes.success
+ */
 router.post('/subscribes/add', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']), [
     checkbody('playerIds').isArray({min: 1, max: maxSubscribes})
 ], async (req, res, next) => {
@@ -93,6 +129,18 @@ router.post('/subscribes/add', verifyJWT, forbidPrivileges(['freezed', 'blacklis
     }
 });
 
+/**
+ * @swagger
+ * /api/user/subscribes/delete:
+ *   post:
+ *     tags:
+ *       - user
+ *       - subscribes
+ *     summary: delete subscribes
+ *     responses:
+ *       200:
+ *         description: subscribes.success
+ */
 router.post('/subscribes/delete', verifyJWT, forbidPrivileges(['freezed', 'blacklisted']), forbidVisitTypes(['bot', 'external-auth']), [
     checkbody('playerIds').isArray({min: 1})
 ], async (req, res, next) => {

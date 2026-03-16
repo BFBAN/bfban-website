@@ -426,6 +426,18 @@ router.post('/achievement', verifyJWT, forbidPrivileges(['freezed', 'blacklisted
     }
 });
 
+/**
+ * @swagger
+ * /api/user/achievement/admin/add:
+ *   post:
+ *     tags:
+ *       - user
+ *       - achievement
+ *     summary: add achievement admin
+ *     responses:
+ *       200:
+ *         description: achievement.success
+ */
 router.post('/achievement/admin/add', verifyJWT, allowPrivileges(["super", "root", "dev"]), [
     checkbody('userId').optional().isInt({min: 0}),
     checkbody('achievementId').isIn(Object.keys(achievementConfig))
@@ -455,6 +467,18 @@ router.post('/achievement/admin/add', verifyJWT, allowPrivileges(["super", "root
     }
 });
 
+/**
+ * @swagger
+ * /api/user/achievement/admin/delete:
+ *   post:
+ *     tags:
+ *       - user
+ *       - achievement
+ *     summary: delete achievement admin
+ *     responses:
+ *       200:
+ *         description: achievement.success
+ */
 router.post('/achievement/admin/delete', verifyJWT, allowPrivileges(["super", "root", "dev"]), forbidVisitTypes(['bot', 'external-auth']), [
     checkbody('userId').optional().isInt({min: 0}),
     checkbody('achievementId')
