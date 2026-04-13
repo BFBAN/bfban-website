@@ -89,7 +89,7 @@
           </Col>
         </Row>
       </div>
-      <div class="container mobile-hide footer-padding" v-if="links.footerStatic">
+      <div class="container footer-padding" v-if="links.footerStatic">
         <Row type="flex" align="middle" class="sponsor-box">
           <Col flex="auto">
             <div class="sponsor-title">
