@@ -253,6 +253,7 @@
 
 <script>
 import {api, application, http, util, voice} from "@/assets/js";
+import axios from 'axios';
 
 import lodash from "lodash";
 import store from "@/store";
@@ -515,6 +516,9 @@ export default new application({
             this.data = d.data.result || [];
             this.total = d.data.total;
 
+            // 仅对avatarLink为空的玩家请求GameTools API补充头像
+            this.fetchMissingAvatars();
+
             resolve(d);
           } else {
             this.catch(res);
@@ -584,6 +588,32 @@ export default new application({
     },
     onAvatarError(index) {
       this.data[index].avatarLink = ""
+    },
+    /**
+     * 仅对avatarLink为空的玩家从GameTools API获取头像
+     */
+    async fetchMissingAvatars() {
+      const tasks = this.data
+          .map((player, index) => ({ player, index }))
+          .filter(({ player }) => !player.avatarLink && player.originPersonaId);
+
+      for (const { player, index } of tasks) {
+        try {
+          const res = await axios.get('https://api.gametools.network/bfv/stats/', {
+            params: {
+              format_values: true,
+              playerid: player.originPersonaId,
+              platform: 'pc',
+              skip_battlelog: true
+            }
+          });
+          if (res.data && res.data.avatar) {
+            this.$set(this.data[index], 'avatarLink', res.data.avatar);
+          }
+        } catch (e) {
+          console.warn(`GameTools avatar fetch failed for ${player.originPersonaId}:`, e.message);
+        }
+      }
     }
   },
   computed: {
