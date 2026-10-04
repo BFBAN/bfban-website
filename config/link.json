@@ -35,27 +35,44 @@
       "title": "2042 BiliBili WIKI",
       "linkImage": "",
       "linkUrl": "https://wiki.biligame.com/zhandi2042/",
-      "tag": ["link"]
+      "tag": [
+        "link"
+      ]
     },
     {
       "title": "BFVHackers",
       "linkUrl": "https://bfvhackers.com/",
-      "tag": ["link"]
+      "tag": [
+        "link"
+      ]
     },
     {
       "title": "Game Tools",
       "linkUrl": "https://gametools.network",
-      "tag": ["link"]
+      "tag": [
+        "link"
+      ]
     },
     {
       "title": "BFVRobot",
       "linkUrl": "https://bfvrobot.net",
-      "tag": ["link"]
+      "tag": [
+        "link"
+      ]
     },
     {
       "title": "Rank BFVRobot",
       "linkUrl": "https://rank.bfvrobot.net",
-      "tag": ["link"]
+      "tag": [
+        "link"
+      ]
+    },
+    {
+      "title": "Rockstar Report",
+      "linkUrl": "https://rockstarreport.com",
+      "tag": [
+        "link"
+      ]
     }
   ],
   "footerStatic": true,

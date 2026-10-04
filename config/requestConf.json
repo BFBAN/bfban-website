@@ -6,8 +6,8 @@
   "child": {
     "development": {
       "protocol": "http",
-      "host": "localhost:4848",
-      "frontend_host": "localhost:4848",
+      "host": "localhost:3000",
+      "frontend_host": "localhost:3000",
       "pathname": "/api/"
     },
     "upload": {
