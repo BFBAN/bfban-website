@@ -106,6 +106,20 @@
             </a>
           </Col>
         </Row>
+
+        <Row :gutter="15" class="sponsor-box footer-friend-link">
+          <Col class="sponsor-title">
+            <span>
+              {{ $t("link.links") }}
+            </span>
+          </Col>
+          <Col>
+            <span v-for="(i, linkIndex) in links.linkChild" :key="linkIndex">
+              <HtmlLink :href="i.linkUrl" :text="i.title" target="_blank"></HtmlLink>
+              <Divider type="vertical" v-if="linkIndex + 1 < links.linkChild.length"></Divider>
+            </span>
+          </Col>
+        </Row>
       </div>
       <div align="center" class="footer-border-top footer-padding">
         <p>&copy; {{ new Date(time.appStart).getFullYear() }}-{{ new Date().getFullYear() }}
@@ -280,6 +294,14 @@ export default new application({
     min-width: 182px;
     max-width: 400px;
     border-radius: 10px;
+  }
+
+  .footer-friend-link {
+    line-height: 2rem;
+
+    &>span {
+      display: contents;
+    }
   }
 }
 
