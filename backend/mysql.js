@@ -12,12 +12,19 @@ const db = knex({
         database: config.mysql.database,
         charset: 'utf8mb4',
         typeCast: (field, next)=> {
-            if(field.type == 'JSON')
-                return JSON.parse(field.string());
-            else if(field.type == 'BIGINT')
-                return parseInt(field.string());    // MAX_INT is around 2^53, be awar of precision lost
-            return next();
+        if(field.type == 'JSON')
+            return JSON.parse(field.string());
+        else if(field.type == 'BLOB' || field.type == 'STRING') {
+            const str = field.string();
+            if(str && (str.startsWith('[') || str.startsWith('{'))) {
+                try { return JSON.parse(str); } catch(e) { return str; }
+            }
+            return str;
         }
+        else if(field.type == 'BIGINT')
+            return parseInt(field.string());    // MAX_INT is around 2^53, be awar of precision lost
+        return next();
+    }
     },
     pool: { min: 0, max: 10000 }  // 根据应用负载调整这些值
 });
