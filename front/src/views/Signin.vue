@@ -240,6 +240,8 @@ export default new application({
       } catch (e) {
         if (e instanceof Error)
           this.$Message.error(e)
+      } finally {
+        this.spinShow = false;
       }
     },
     onBackRouter() {

@@ -92,6 +92,7 @@ export default new application({
           codeBlock: false,
           heading: false,
           dropcursor: false,
+          paragraph: true
         }),
         Dropcursor.configure({
           color: "#ff0000",
@@ -457,7 +458,7 @@ export default new application({
 <style lang="less">
 .tiptap {
   font-family: "Ionicons", sans-serif;
-  padding: 0 15px;
+  padding: 10px 15px;
 
   :first-child {
     margin-top: 0;

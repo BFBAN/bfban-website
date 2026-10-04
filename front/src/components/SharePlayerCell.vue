@@ -158,7 +158,6 @@ export default {
 @import "@/assets/css/icon";
 
 .share {
-  overflow: hidden;
   display: flex;
   position: relative;
   flex-wrap: wrap;

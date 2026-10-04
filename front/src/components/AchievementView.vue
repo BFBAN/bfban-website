@@ -159,6 +159,7 @@ export default {
 
   .achievement-view-conditions {
     margin: 10px 0;
+    white-space: break-spaces;
   }
 }
 </style>
