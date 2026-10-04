@@ -137,6 +137,16 @@
         "host",
         "platinum"
       ]
+    },
+    {
+      "title": "Rockstar Report",
+      "linkUrl": "https://rockstarreport.com",
+      "describe": "",
+      "describeLang": {},
+      "localFilePath": "/images/links/rockstarreport.svg",
+      "tag": [
+        "platinum"
+      ]
     }
   ]
 }
