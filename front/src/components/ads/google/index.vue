@@ -1,17 +1,21 @@
 <template>
   <Card dis-hover :padding="0" class="ad-container" :class="adId && ads[adId].class || []"
-        v-if="false || adId && adsSwitch"
+        v-if="adId && adsSwitch"
         :style="ads[adId].style">
-    <div class="ad-off" @click="offAds">
+    <button type="button" class="ad-off" aria-label="Close ads" @click="offAds">
       <Icon size="10" type="md-close"></Icon>
-    </div>
-    <Adsense
-        v-if="adId"
+    </button>
+    <component
+        :is="ads[adId].component"
+        :key="adId"
+        v-if="adVisible"
+        is-new-ads-code="yes"
+        :ins-style="ads[adId].insStyle"
         :data-ad-client="adClient.toString()"
         :data-ad-slot="adId.toString()"
         :data-ad-format="ads[adId].adFormat"
         :data-full-width-responsive="ads[adId].fullWidthResponsive">
-    </Adsense>
+    </component>
     <slot></slot>
   </Card>
 </template>
@@ -28,6 +32,9 @@ export default {
     },
   },
   watch: {
+    adsSwitch() {
+      this.$nextTick(this.observeAd);
+    },
     id: {
       handler(value) {
         this.adId = value;
@@ -39,27 +46,32 @@ export default {
       account_storage,
 
       adId: "",
+      adVisible: false,
       adClient: "ca-pub-1202177945078410",
       ads: {
         3340268100: {
+          component: 'Adsense',
           style: "width: 100%;min-height: 80px;",
           class: [],
-          adFormat: 'true',
-          fullWidthResponsive: 'true'
+          adFormat: 'auto',
+          fullWidthResponsive: 'yes'
         },
         8672485837: {
+          component: 'Adsense',
           name: 'right',
           style: "width: 100%;min-height: 300px;margin-bottom: 10px;",
           class: [],
-          adFormat: 'true',
-          fullWidthResponsive: 'true'
+          adFormat: 'auto',
+          fullWidthResponsive: 'yes'
         },
         6397676285: {
+          component: 'InArticleAdsense',
           name: 'bfban-x',
           style: "width: 100%;min-height: 200px;",
           class: [],
-          adFormat: 'autorelaxed',
-          fullWidthResponsive: 'true'
+          insStyle: 'display:block; text-align:center;',
+          adFormat: 'fluid',
+          fullWidthResponsive: 'no'
         },
       }
     }
@@ -67,11 +79,29 @@ export default {
   created() {
     this.adId = this.id;
   },
+  mounted() {
+    this.observeAd();
+  },
+  beforeDestroy() {
+    if (this.adObserver) this.adObserver.disconnect();
+  },
   methods: {
+    observeAd() {
+      if (this.adObserver) this.adObserver.disconnect();
+      this.adVisible = false;
+      if (!this.adsSwitch) return;
+      this.adObserver = new ResizeObserver(entries => {
+        if (entries[0].contentRect.width > 0) {
+          this.adVisible = true;
+          this.adObserver.disconnect();
+        }
+      });
+      this.adObserver.observe(this.$el);
+    },
     offAds() {
       account_storage.updateConfiguration('ads.google.switch', false);
       this.$router.push({
-        name: this.$router.name,
+        name: this.$route.name,
         query: {
           ...this.$route.query,
           skipAds: true
@@ -82,7 +112,7 @@ export default {
   computed: {
     adsSwitch() {
       const isSkipAds = this.$route.query['skipAds'] || false;
-      const adsSwitchValue = account_storage.getConfiguration('ads.google.switch') || false; // On by default
+      const adsSwitchValue = this.$store.state.configuration['ads.google.switch'];
       return isSkipAds ? false : adsSwitchValue;
     },
   }
@@ -90,26 +120,16 @@ export default {
 </script>
 
 <style lang="less">
-.ad-container:hover,
-.ad-container:active,
-.ad-container:focus {
-  .ad-off {
-    display: flex;
-  }
-}
-
 .ad-container {
   .ad-off {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    display: none;
+    display: flex;
+    margin-left: auto;
     cursor: pointer;
     justify-content: center;
     align-items: center;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    border: 0;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.02);
 

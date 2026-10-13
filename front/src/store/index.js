@@ -19,6 +19,7 @@ const store = new Vuex.Store(lodash.mergeWith({
 
         // storage_account.js
         configuration: {
+            'ads.google.switch': true,
             history: false,
             subscribes: false,
             judgementTip: false,

@@ -32,6 +32,7 @@ Vue.component('v-chart', ECharts);
 
 Vue.use(require('vue-script2'))
 Vue.use(Ads.Adsense)
+Vue.use(Ads.InArticleAdsense)
 Vue.use(Less)
 Vue.use(ViewUI, {i18n: (key, value) => i18n.t(key,value)})
 Vue.use(VueQuillEditor)

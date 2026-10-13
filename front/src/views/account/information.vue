@@ -369,7 +369,7 @@ export default new application({
       languages: [],
       informationTab: 'info',
       adsSwitch: {
-        google: account_storage.getConfiguration('ads.google.switch'),
+        google: this.$store.state.configuration['ads.google.switch'],
         bfbanApp: account_storage.getConfiguration('ads.bfban-app.switch')
       },
       userInfoLoad: false, // 用户信息获取状态

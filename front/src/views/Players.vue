@@ -196,7 +196,7 @@
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 7, push: 0, pull: 0}">
           <br>
-          <AdsGoogle id="8672485837"></AdsGoogle>
+          <AdsGoogle id="8672485837" class="mobile-hide"></AdsGoogle>
 
           <Affix :offset-top="20">
             <Card dis-hover>
