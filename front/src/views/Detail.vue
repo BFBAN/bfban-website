@@ -632,7 +632,6 @@
 
 <script>
 import {account_storage, api, application, http, http_token, message, storage, time, util,} from "@/assets/js"
-import axios from 'axios'
 import {formatTextarea} from "@/mixins/common";
 
 import AdsGoogle from "@/components/ads/google";
@@ -875,9 +874,6 @@ export default new application({
 
         this.player = d.data;
 
-        // 从GameTools API获取玩家头像
-        this.fetchGameToolsAvatar(this.player.originPersonaId);
-
         if (this.$refs.recordLink)
           this.$refs.recordLink.generateTable(this.player);
 
@@ -892,28 +888,6 @@ export default new application({
       } finally {
         await this.onUpdateViewed();
         await this.checkPlayerSubscribes();
-      }
-    },
-    /**
-     * 从GameTools API获取玩家BFV头像
-     * @param {string|number} pid 玩家的personaId
-     */
-    async fetchGameToolsAvatar(pid) {
-      if (!pid) return;
-      try {
-        const res = await axios.get(`https://api.gametools.network/bfv/stats/`, {
-          params: {
-            format_values: true,
-            playerid: pid,
-            platform: 'pc',
-            skip_battlelog: true
-          }
-        });
-        if (res.data && res.data.avatar) {
-          this.$set(this.player, 'avatarLink', res.data.avatar);
-        }
-      } catch (e) {
-        console.warn('GameTools avatar fetch failed:', e.message);
       }
     },
     /**
