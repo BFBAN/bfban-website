@@ -3,6 +3,13 @@ import got, { HTTPError, ParseError } from "got";
 import xmldom from "@xmldom/xmldom";
 import * as xpath from "xpath";
 import { logger } from "./infrastruc.js";
+import { eaHeaders } from "./ea-headers.cjs";
+import { authorizeJuno, refreshJuno, authorizeCookies, JunoError } from "./juno.js";
+import { SEARCH_PLAYER_QUERY, emailSearchVariables, parseEmailPlayer } from "./player-email.js";
+
+const graphql_url = 'https://service-aggregation-layer.juno.ea.com/graphql';
+const gateway_url = 'https://gateway.ea.com';
+const EA_APP_UA = 'EAApp/PC/13.796.0.6309';
 
 class EaApiError extends Error {
     constructor(statusCode, body, msg) {
@@ -41,6 +48,7 @@ class OriginClient {
     };
     tokens = {
         access_token: '',
+        refresh_token: '',
         expires_when: 0,
     };
     self_prop = {
@@ -60,49 +68,63 @@ class OriginClient {
         return true; // if no error throwed, it will be always true here
     }
 
-    /** @returns {Promise<{access_token:string, expires_in:number}> */
+    /**
+     * 使用 remid/sid cookie 走 JUNO_PC_CLIENT 的 PKCE 授权流程换取 access token。
+     * 优先尝试 refresh_token 续期，失败则回退到完整授权。
+     * @returns {Promise<{access_token:string, expires_in:number}>}
+     */
     async getSelfAccessToken() {
-        const url = 'https://accounts.ea.com/connect/auth?client_id=EAX-JUNO-SPA&response_type=token&redirect_uri=https://pc.ea.com&prompt=none&release_type=prod';
         const t_start = Date.now();
         try {
-            const response = await got.get(url, {
-                headers: {
-                    'Upgrade-Insecure-Requests': '1',
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                        + 'AppleWebKit/537.36 (KHTML, like Gecko) '
-                        + 'Chrome/91.0.4472.114 Safari/537.36',
-                    'Cookie': `sid=${this.cookies.sid}; remid=${this.cookies.remid}`
-                },
-                followRedirect: false,     // ← 不跟随 302/301
-                throwHttpErrors: false,    // ← 不把非 2xx 当成异常抛出
-            });
-            
-            if(response.error_code == "login_required") {
-                this.cur_state = 'COOKIE_EXPIRED';
-                throw new EaApiError(401, response, `${this.tag} Cookies Expired`);
-            } else if(response.error)
-                throw new EaApiError(500, response, `${this.tag} Bad Response`);
-
-            if (!response) return
-            const location = response.headers.location || response.headers.Location;
-            if (!location) {
-                return response.data?.access_token ?? null;
+            // 1) 优先用 refresh_token 续期（成本更低）
+            if (this.tokens.refresh_token) {
+                try {
+                    const refreshed = await refreshJuno(this.tokens.refresh_token);
+                    this.tokens.access_token = refreshed.accessToken;
+                    this.tokens.refresh_token = refreshed.refreshToken || this.tokens.refresh_token;
+                    this.tokens.expires_when = Date.now() + refreshed.expiresIn * 1000;
+                    this.cur_state = 'OK';
+                    logger.info('OriginClient.getSelfAccessToken refreshed:', { expires_in: refreshed.expiresIn });
+                    return { access_token: refreshed.accessToken, expires_in: refreshed.expiresIn };
+                } catch (err) {
+                    // 续期失败则回退到完整授权
+                    if (!(err instanceof JunoError)) throw err;
+                    logger.warn('OriginClient.getSelfAccessToken refresh failed, retrying with cookies:', err.message);
+                }
             }
-            const hash = location.split('#')[1] || '';
-            const params = new URLSearchParams(hash);
-            const ea_token = params.get('access_token');
-            this.tokens.access_token = ea_token;
-            this.tokens.expires_when = Date.now() + params.get('expires_in')*1000;
+
+            // 2) 完整授权：PKCE 主路径，失败（cookie 过期）降级到 ORIGIN_JS_SDK 隐式流程
+            let result;
+            if (!this.cookies.remid && this.cookies.sid) {
+                // 只有 sid 没有 remid → 直接走隐式流程
+                result = await authorizeCookies({ remid: '', sid: this.cookies.sid });
+            } else {
+                try {
+                    result = await authorizeJuno({ remid: this.cookies.remid, sid: this.cookies.sid });
+                } catch (err) {
+                    if (!(err instanceof JunoError && err.status === 401)) throw err;
+                    logger.warn('OriginClient.getSelfAccessToken juno 401, fallback to authorizeCookies');
+                    result = await authorizeCookies({ remid: this.cookies.remid, sid: this.cookies.sid });
+                }
+            }
+            this.tokens.access_token = result.accessToken;
+            this.tokens.refresh_token = result.refreshToken || '';
+            this.tokens.expires_when = Date.now() + result.expiresIn * 1000;
+            // 更新可能被 EA 刷新的 cookie
+            if (result.cookies?.remid !== undefined) this.cookies.remid = result.cookies.remid;
+            if (result.cookies?.sid !== undefined) this.cookies.sid = result.cookies.sid;
 
             this.cur_state = 'OK';
-            logger.info('OriginClient.getSelfAccessToken Success:', {access_token: ea_token, expires_in: params.get('expires_in')});
-            return {access_token: ea_token, expires_in: params.get('expires_in')};
-        } catch(err) { // Handle request error or parse error
+            logger.info('OriginClient.getSelfAccessToken Success:', { expires_in: result.expiresIn });
+            return { access_token: result.accessToken, expires_in: result.expiresIn };
+        } catch (err) {
+            if (err instanceof JunoError && err.status === 401) {
+                this.cur_state = 'COOKIE_EXPIRED';
+                throw new EaApiError(401, err, `${this.tag} Cookies Expired`);
+            }
             this.cur_state = 'UNKNOWN_ERROR';
-            if(err instanceof EaApiError)
+            if (err instanceof EaApiError)
                 throw err;
-            if(err instanceof HTTPError || err instanceof ParseError)
-                throw new EaApiError(err.response.statusCode, err.response.body, `${this.tag} Bad Response`);
             throw new EaApiError(-1, null, err);
         } finally {
             logger.info(`OriginClient.getSelfAccessToken spent ${(Date.now()-t_start)/1000}s`);
@@ -216,42 +238,65 @@ class OriginClient {
         }
     }
 
-    /** @returns {Promise<string|null>} userId */
+    /**
+     * 通过 email 查询玩家，返回 userId（字符串）或 null。
+     * 优先用 GraphQL SearchPlayer 搜索；搜不到时回退到 pids/me 自检邮箱。
+     * @returns {Promise<string|null>} userId
+     */
     async searchUserEmail(userEmail, api_urls=origin_api_urls) {
-        const url = `https://gateway.ea.com/proxy/identity/preferenceUser?email=${userEmail}`;
         const t_start = Date.now();
+        let variables;
+        try {
+            variables = emailSearchVariables(userEmail);
+        } catch (err) {
+            throw new EaApiError(400, null, `${this.tag} Invalid Email`);
+        }
         try {
             await this.checkSelfTokenValid(true);
-            const response = await got.get(url, {
-                headers: {
-                    'Authorization': `Bearer ${this.tokens.access_token}`,
-                    'Upgrade-Insecure-Requests': 1,
-                    'X-Expand-Results': true,
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-                },
-                // body: userEmail,
-            }).json();
+            const token = this.tokens.access_token;
 
-            // if(typeof(response.totalCount) != 'number')
-            //     throw new EaApiError(500, response, `${this.tag} Bad Response`);
-            if(response.preferenceUser)
-                return response.preferenceUser.nucleusUserUri.replace('/pids/', '')
-            else
-                return null;
-        } catch(err) {
-            if(err instanceof EaApiError)
-                throw err;
-            if(err instanceof HTTPError || err instanceof ParseError) {
-                // 尝试解析 err.response.body 为 JSON 对象
-                const errorBody = JSON.parse(err.response.body);
-                // Check if the error message includes "NO_SUCH_PREFERENCE_USER"
-                if(errorBody.error && errorBody.error.code === "NO_SUCH_PREFERENCE_USER") {
-                    // throw new EaApiError(err.response.statusCode, err.response.body, `${this.tag} Cannot Search User`); // Return null for this specific error
-                    return null;
-                } else {
-                    throw new EaApiError(err.response.statusCode, err.response.body, `${this.tag} Bad Response`);
-                }
+            // 1) GraphQL SearchPlayer 按 email 搜索
+            const { body } = await got.post(graphql_url, {
+                headers: eaHeaders(graphql_url, {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    'x-client-id': 'EAX-JUNO-CLIENT',
+                    'User-Agent': EA_APP_UA,
+                }),
+                json: { query: SEARCH_PLAYER_QUERY, variables, operationName: 'SearchPlayer' },
+                responseType: 'json',
+                throwHttpErrors: false,
+            });
+
+            if (body.errors?.length)
+                throw new EaApiError(500, body.errors, `${this.tag} GraphQL error`);
+
+            const player = parseEmailPlayer(body.data);
+            if (player)
+                return String(player.userId);
+
+            // 2) 回退：自检当前账号邮箱（搜索目标可能就是账号本身）
+            const selfResponse = await got.get(`${gateway_url}/proxy/identity/pids/me`, {
+                headers: eaHeaders(gateway_url, {
+                    'Authorization': `Bearer ${token}`,
+                    'X-Origin-Platform': 'PCWIN',
+                    'X-Expand-Results': 'true',
+                }),
+                throwHttpErrors: false,
+                responseType: 'json',
+            });
+            const identity = selfResponse.body?.pid;
+            if (typeof identity?.email === 'string' &&
+                identity.email.toLowerCase() === variables.searchText.toLowerCase() &&
+                /^[1-9]\d{0,15}$/.test(String(identity.pidId))) {
+                return String(identity.pidId);
             }
+            return null;
+        } catch (err) {
+            if (err instanceof EaApiError)
+                throw err;
+            if (err instanceof HTTPError || err instanceof ParseError)
+                throw new EaApiError(err.response?.statusCode, err.response?.body, `${this.tag} Bad Response`);
             throw new EaApiError(-1, null, err);
         } finally {
             logger.info(`OriginClient.searchUserEmail spent ${(Date.now()-t_start)/1000}s`);
@@ -265,12 +310,11 @@ class OriginClient {
         try {
             await this.checkSelfTokenValid(true);
             const response = await got.get(url, {
-                headers: {
+                headers: eaHeaders(gateway_url, {
                     'Authorization': `Bearer ${this.tokens.access_token}`,
-                    'Upgrade-Insecure-Requests': 1,
-                    'X-Expand-Results': true,
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-                },
+                    'X-Expand-Results': 'true',
+                    'X-Origin-Platform': 'PCWIN',
+                }),
             }).json();
             if (response.personas && response.personas.persona) {
                 const result = response.personas.persona[0];
@@ -331,13 +375,12 @@ class OriginClient {
     `;
 
             const { body } = await got.post(url, {
-                headers: {
+                headers: eaHeaders(graphql_url, {
                     'Content-Type':  'application/json',
                     'Authorization': `Bearer ${this.tokens.access_token}`,
-                    'User-Agent':    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' +
-                        'AppleWebKit/537.36 (KHTML, like Gecko) ' +
-                        'Chrome/91.0.4472.114 Safari/537.36'
-                },
+                    'x-client-id':   'EAX-JUNO-CLIENT',
+                    'User-Agent':    EA_APP_UA,
+                }),
                 json: { query },
                 responseType: 'json',
             });
@@ -405,13 +448,12 @@ class OriginClient {
     `;
 
             const { body } = await got.post(url, {
-                headers: {
+                headers: eaHeaders(graphql_url, {
                     'Content-Type':  'application/json',
                     'Authorization': `Bearer ${this.tokens.access_token}`,
-                    'User-Agent':    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' +
-                        'AppleWebKit/537.36 (KHTML, like Gecko) ' +
-                        'Chrome/91.0.4472.114 Safari/537.36'
-                },
+                    'x-client-id':   'EAX-JUNO-CLIENT',
+                    'User-Agent':    EA_APP_UA,
+                }),
                 json: { query },
                 responseType: 'json',
             });

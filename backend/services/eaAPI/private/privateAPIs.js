@@ -1,29 +1,60 @@
 import got, { HTTPError, ParseError } from "got";
 import { OriginClient, EaApiError, OriginClientCluster, EaApiMethods } from "../originAPI.js";
 import { logger } from "../infrastruc.js";
+import { eaHeaders } from "../ea-headers.cjs";
+import { SEARCH_PLAYER_QUERY } from "../player-email.js";
 
-/** @this OriginClient @returns {{personaId:number,pidId:number,displayName:string}[]}*/
+const graphql_url = 'https://service-aggregation-layer.juno.ea.com/graphql';
+const EA_APP_UA = 'EAApp/PC/13.796.0.6309';
+
+/**
+ * 通过名称搜索玩家（GraphQL SearchPlayer 模糊搜索）。
+ * 对应 robot-backend 的 searchGraphqlPlayers，返回去掉了 `*` 通配符
+ * （GraphQL SearchPlayer 本身即为模糊搜索，无需通配符）。
+ * @this OriginClient
+ * @returns {Promise<{personaId:number,pidId:number,displayName:string}[]>}
+ */
 async function searchUserNameEA(username) {
-    username = encodeURIComponent(username);
-    const url = `https://gateway.ea.com/proxy/identity/personas?displayName=${username}&namespaceName=cem_ea_id`;
     const t_start = Date.now();
+    const searchText = String(username || '').trim().replace(/\*+$/g, '');
     try {
+        if (!searchText) return [];
         await this.checkSelfTokenValid(true);
-        const response = await got.get(url, {
-            headers: {
-                'Authorization': `Bearer ${this.tokens.access_token}`,
-                'Upgrade-Insecure-Requests': 1,
-                'X-Expand-Results': 'true',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-            }
-        }).json();
+        const token = this.tokens.access_token;
 
-        if(!response.personas.persona)
-            return [];
-        return response.personas.persona;
-    } catch(err) {
-        if(err instanceof HTTPError || err instanceof ParseError)
-            throw new EaApiError(err.response.statusCode, err.response.body, `${this.tag} Bad Response`);    
+        const { body } = await got.post(graphql_url, {
+            headers: eaHeaders(graphql_url, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'x-client-id': 'EAX-JUNO-CLIENT',
+                'User-Agent': EA_APP_UA,
+            }),
+            json: {
+                query: SEARCH_PLAYER_QUERY,
+                variables: { searchText, pageNumber: 1, pageSize: 20 },
+                operationName: 'SearchPlayer',
+            },
+            responseType: 'json',
+            throwHttpErrors: false,
+        });
+
+        if (body.errors?.length)
+            throw new EaApiError(500, body.errors, `${this.tag} GraphQL error`);
+
+        const items = body.data?.players?.items;
+        if (!Array.isArray(items) || items.length > 20)
+            throw new EaApiError(500, body, `${this.tag} Bad Response`);
+
+        return items.map(item => ({
+            personaId: Number(item.psd),
+            pidId: Number(item.pd),
+            displayName: item.displayName,
+        }));
+    } catch (err) {
+        if (err instanceof EaApiError)
+            throw err;
+        if (err instanceof HTTPError || err instanceof ParseError)
+            throw new EaApiError(err.response?.statusCode, err.response?.body, `${this.tag} Bad Response`);
         throw new EaApiError(-1, null, err);
     } finally {
         logger.info(`OriginClient.searchUserNameEA spent ${(Date.now()-t_start)/1000}s`);
