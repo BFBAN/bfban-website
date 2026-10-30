@@ -107,6 +107,15 @@ async (req, res, next) => {
         const result = await db.select('id', 'originName', 'originUserId', 'originPersonaId', 'games', 'cheatMethods', 'avatarLink', 'viewNum', 'commentsNum', 'status', 'createTime', 'updateTime', 'appealStatus', 'hackerLevel')
             .from('players').where(key, '=', val).first();
         if (!result) return res.status(404).json({error: 1, code: 'player.notFound'});
+        if (!result.avatarLink && result.originUserId) {
+            try {
+                const avatarLink = await serviceApi('eaAPI', '/userAvatar').query({userId: result.originUserId}).get().then(r => r.data);
+                if (avatarLink) {
+                    result.avatarLink = avatarLink;
+                    await db('players').update({avatarLink: avatarLink}).where('id', '=', result.id);
+                }
+            } catch (e) { /* ignore */ }
+        }
         if (req.query.history) // that guy does exist
             result.history = await db.select('originName', 'fromTime', 'toTime').from('name_logs').where({originUserId: result.originUserId});
 
