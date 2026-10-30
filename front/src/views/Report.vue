@@ -12,8 +12,6 @@
       </Row>
       <br>
 
-      <AdsGoogle id="3340268100" style="margin-bottom: 10px"></AdsGoogle>
-
       <Tabs type="card"
             v-model="tabs.count"
             @on-tab-remove="doCancel">
@@ -352,7 +350,6 @@
 <script>
 import {api, application, http, http_token, regular, util, voice} from "@/assets/js";
 
-import AdsGoogle from "@/components/ads/google/index.vue";
 import Html from "@/components/Html";
 import Captcha from "@/components/captcha/index";
 import OcrWidget from "@/components/OcrWidget";
@@ -379,7 +376,7 @@ export default new application({
       captcha: '',
     };
   },
-  components: {AdsGoogle, Textarea, ExposedName, Html, HtmlWidget, OcrWidget, Captcha, Loading, Empty},
+  components: { Textarea, ExposedName, Html, HtmlWidget, OcrWidget, Captcha, Loading, Empty},
   created() {
     const message = store.state.configuration['voice_message']
 

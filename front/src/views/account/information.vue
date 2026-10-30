@@ -353,7 +353,6 @@
 <script>
 import {account_storage, api, application, http, http_token} from "@/assets/js";
 
-import AdsGoogle from "@/components/ads/google";
 import Textarea from "@/components/textarea";
 import Captcha from "@/components/captcha";
 import UserAvatar from "@/components/UserAvatar";
@@ -393,7 +392,7 @@ export default new application({
       passwordCaptcha: "",
     }
   },
-  components: {Textarea, TimeView, Captcha, UserAvatar, PrivilegesTag, Banner, AdsGoogle},
+  components: {Textarea, TimeView, Captcha, UserAvatar, PrivilegesTag, Banner},
   created() {
     this.http = http_token.call(this);
     this.ready();

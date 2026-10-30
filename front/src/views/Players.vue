@@ -95,8 +95,6 @@
 
             <Spin size="large" fix show-elevator v-show="spinShow"></Spin>
 
-            <AdsGoogle id="3340268100" style="margin-bottom: 8px;"></AdsGoogle>
-
             <div v-for="(d, d_index) in data" :key="d.originUserId" class="item-card" v-voice-button>
               <Badge :text=" d.viewNum > 100 && d.commentsNum > 10 ? 'hot': ''" style="width: 100%">
                 <Row :gutter="10">
@@ -192,11 +190,9 @@
                   @on-page-size-change="handlePageSizeChange"/>
           </Card>
 
-          <AdsGoogle id="6397676285" style="margin: 10px 0;"></AdsGoogle>
         </Col>
         <Col :xs="{span: 22, push: 1, pull: 1}" :lg="{span: 7, push: 0, pull: 0}">
           <br>
-          <AdsGoogle id="8672485837" class="mobile-hide"></AdsGoogle>
 
           <Affix :offset-top="20">
             <Card dis-hover>
@@ -262,7 +258,6 @@ import cheaterStatus from '/public/config/cheaterStatus.json';
 import gameName from '/public/config/gameName.json';
 
 import Empty from "@/components/Empty";
-import AdsGoogle from "@/components/ads/google";
 import TimeView from "@/components/TimeView";
 import ExposedName from "@/components/ExposedName";
 
@@ -334,7 +329,7 @@ export default new application({
       cheaterStatus: null,
     };
   },
-  components: {Empty, AdsGoogle, TimeView, ExposedName},
+  components: {Empty, TimeView, ExposedName},
   watch: {
     "$route": "loadData",
     "gameName": function (val, oldVal) {

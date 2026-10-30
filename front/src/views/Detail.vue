@@ -15,7 +15,6 @@
         <br>
       </template>
 
-      <AdsGoogle id="3340268100"></AdsGoogle>
       <br>
 
       <Card id="getSharePicture" v-if="isCheaterExist" dis-hover>
@@ -451,9 +450,6 @@
 
             <Col :xs="{span: 23, push: 0}" :lg="{span: 7, push: 0}" order="2" class="mobile-hide"
                  v-if="appeal.disable">
-              <AdsGoogle id="8672485837">
-                <br>
-              </AdsGoogle>
 
               <!-- 申诉按钮 -->
               <Card dis-hover>
@@ -501,7 +497,6 @@
     </div>
 
     <br>
-    <AdsGoogle id="6397676285" style="margin-bottom: 8px;"></AdsGoogle>
 
     <template v-if="!isFull">
       <Affix :top="100">
@@ -635,7 +630,6 @@ import {account_storage, api, application, http, http_token, message, storage, t
 import axios from 'axios'
 import {formatTextarea} from "@/mixins/common";
 
-import AdsGoogle from "@/components/ads/google";
 import Empty from '@/components/Empty'
 import TextareaView from "@/components/textarea";
 import BusinessCard from "@/components/BusinessCard";
@@ -694,7 +688,6 @@ export default new application({
     }
   },
   components: {
-    AdsGoogle,
     Empty,
     TextareaView,
     BusinessCard,

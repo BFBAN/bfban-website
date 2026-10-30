@@ -517,7 +517,8 @@ async (req, res, next) => {
         //         message: 'The content you submitted contains spam, please revise it'
         //     });
 
-        const originUserId = await raceGetOriginUserId(req.body.data.originName);
+        // const originUserId = await raceGetOriginUserId(req.body.data.originName);
+        const originUserId = await serviceApi('eaAPI', '/searchUser').query({name: req.body.data.originName}).get().then(r => r.data);
         if (!originUserId) return res.status(403).json({
             error: 1,
             code: 'report.notFound',
